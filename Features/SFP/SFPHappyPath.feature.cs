@@ -138,113 +138,113 @@ namespace TestAutomation.Features.SFP
 #line 8
     await testRunner.WhenAsync("I enter valid credentials and Click LogIn", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-                global::Reqnroll.Table table1 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table20 = new global::Reqnroll.Table(new string[] {
                             "Question",
                             "Answer"});
-                table1.AddRow(new string[] {
+                table20.AddRow(new string[] {
                             "FirstName",
                             "{{male}}"});
-                table1.AddRow(new string[] {
+                table20.AddRow(new string[] {
                             "LastName",
                             "{{random}}"});
 #line 10
-    await testRunner.ThenAsync("user enters a Random Name in the search field and clicks search", ((string)(null)), table1, "Then ");
+    await testRunner.ThenAsync("user enters a Random Name in the search field and clicks search", ((string)(null)), table20, "Then ");
 #line hidden
 #line 15
     await testRunner.ThenAsync("user clicks New Quote button", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-                global::Reqnroll.Table table2 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table21 = new global::Reqnroll.Table(new string[] {
                             "Question",
                             "Answer"});
-                table2.AddRow(new string[] {
+                table21.AddRow(new string[] {
                             "DOB",
                             "08/08/1944"});
-                table2.AddRow(new string[] {
+                table21.AddRow(new string[] {
                             "BestPhone",
                             "(907) 227-0664"});
-                table2.AddRow(new string[] {
+                table21.AddRow(new string[] {
                             "EmailAddress",
                             "fake@email.com"});
 #line 17
-    await testRunner.ThenAsync("user enters client information and clicks search", ((string)(null)), table2, "Then ");
+    await testRunner.ThenAsync("user enters client information and clicks search", ((string)(null)), table21, "Then ");
 #line hidden
 #line 24
     await testRunner.ThenAsync("user selects Create New Client and clicks the Next button", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-                global::Reqnroll.Table table3 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table22 = new global::Reqnroll.Table(new string[] {
                             "Question",
                             "Answer"});
-                table3.AddRow(new string[] {
+                table22.AddRow(new string[] {
                             "MaritalStatus",
                             "Single"});
-                table3.AddRow(new string[] {
+                table22.AddRow(new string[] {
                             "StreetAddress",
                             "1206 Conway St"});
-                table3.AddRow(new string[] {
+                table22.AddRow(new string[] {
                             "AptNumber",
                             ""});
-                table3.AddRow(new string[] {
+                table22.AddRow(new string[] {
                             "City",
                             "Saint Paul"});
-                table3.AddRow(new string[] {
+                table22.AddRow(new string[] {
                             "State",
                             "Minnesota"});
-                table3.AddRow(new string[] {
+                table22.AddRow(new string[] {
                             "ZipCode",
                             "55106"});
-                table3.AddRow(new string[] {
+                table22.AddRow(new string[] {
                             "ReceivedMail",
                             "Yes"});
-                table3.AddRow(new string[] {
+                table22.AddRow(new string[] {
                             "WhereClientResides",
                             "Yes"});
 #line 26
-    await testRunner.ThenAsync("user enters account owner information and clicks Next", ((string)(null)), table3, "Then ");
+    await testRunner.ThenAsync("user enters account owner information and clicks Next", ((string)(null)), table22, "Then ");
 #line hidden
-                global::Reqnroll.Table table4 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table23 = new global::Reqnroll.Table(new string[] {
                             "Question",
                             "Answer"});
-                table4.AddRow(new string[] {
+                table23.AddRow(new string[] {
                             "EffectiveDate",
                             "2/15/2026"});
-                table4.AddRow(new string[] {
+                table23.AddRow(new string[] {
                             "PolicyTerm",
                             "12 months"});
-                table4.AddRow(new string[] {
+                table23.AddRow(new string[] {
                             "AgentCode",
                             "D2102"});
-                table4.AddRow(new string[] {
+                table23.AddRow(new string[] {
                             "RatingState",
                             "Minnesota"});
-                table4.AddRow(new string[] {
+                table23.AddRow(new string[] {
                             "SSN",
                             ""});
-                table4.AddRow(new string[] {
+                table23.AddRow(new string[] {
                             "WritingCompany",
                             "American National Property And Casualty Co."});
-                table4.AddRow(new string[] {
+                table23.AddRow(new string[] {
                             "RiskAddress",
                             "1206 Conway St, Saint Paul, MN 55106"});
 #line 37
-    await testRunner.ThenAsync("user selects Special Farm Package and inputs Quote Details", ((string)(null)), table4, "Then ");
+    await testRunner.ThenAsync("user selects Special Farm Package and inputs Quote Details", ((string)(null)), table23, "Then ");
 #line hidden
-                global::Reqnroll.Table table5 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table24 = new global::Reqnroll.Table(new string[] {
                             "Question",
                             "Answer"});
-                table5.AddRow(new string[] {
+                table24.AddRow(new string[] {
                             "PrimaryFarmType",
                             "Animals"});
-                table5.AddRow(new string[] {
+                table24.AddRow(new string[] {
                             "LivestockType",
                             "Beef"});
-                table5.AddRow(new string[] {
+                table24.AddRow(new string[] {
                             "GrossFarmIncome",
                             "75000"});
-                table5.AddRow(new string[] {
+                table24.AddRow(new string[] {
                             "GrowIndustrialHemp",
                             "No"});
 #line 47
-    await testRunner.ThenAsync("user enters SFP policy details and clicks Next button", ((string)(null)), table5, "Then ");
+    await testRunner.ThenAsync("user enters SFP policy details and clicks Next button", ((string)(null)), table24, "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
