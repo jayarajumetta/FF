@@ -1,0 +1,225 @@
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Playwright;
+using NUnit.Framework;
+using Playwright_POC.Configuration;
+using Playwright_POC.Context;
+using Playwright_POC.Helpers;
+using Playwright_POC.Locators;
+using Playwright_POC.Pages;
+using Playwright_POC.Pages.ExpertQuotePages;
+using Reqnroll;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Net;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using TestAutomation.Pages.ExpertQuotePages;
+using ReqContext = Playwright_POC.Context.TestContext;
+
+
+[Binding]
+
+public class PASteps
+{
+
+        private readonly ReqContext _context;
+        private readonly ScenarioContextData _contextData;
+        private readonly CredentialsConfig _credentials;
+        private readonly IConfiguration _configuration;
+        private Table _table;
+
+
+        public PASteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
+        {
+            _context = context;
+            _contextData = contextData;
+            _credentials = credentials;
+            _configuration = configuration;
+
+        }
+        [Then("user selects Personal Auto and inputs Quote Details")]
+    public async Task SelectPersonalAutoAndInputQuoteDetails(Table table)
+    {
+        TableMappingHelpers.PAQuoteDetailsFields(table, _contextData);
+
+        var proposalDetailsPage = new QuoteDetailsPage(_context.Page);
+
+        await proposalDetailsPage.WaitForProposalPageLoadAsync();
+        await proposalDetailsPage.SelectPersonalAutoProductAsync();
+        await proposalDetailsPage.EnterQuoteDetailsAsync(_contextData);
+        await proposalDetailsPage.SelectRatingStateAndCompanyAsync(_contextData);
+        await proposalDetailsPage.SelectRiskAddressAsync(_contextData);
+        await proposalDetailsPage.ClickStartQuoteAsync();
+        await proposalDetailsPage.HandleSSNPopupsAsync(_contextData);
+        await proposalDetailsPage.HandleClientExistsPopupAsync();
+    }
+
+    [Then("user enters Pre-Qualification information and continues")]
+    public async Task WhenUserEntersPreQualificationInfoAndContinuesAsync(Table table)
+    {
+        TableMappingHelpers.PreQualificationFields(table, _contextData);
+
+        var preQualificationPage = new PreQualificationPage(_context.Page);
+        await preQualificationPage.EnterPreQualificationInfoAndContinueAsync(_contextData.EligibilityRestrictions);
+    }
+
+    [Then("user selects existing Driver")]
+    public async Task UserSelectsExistingDriverAsync()
+    {
+        await _context.Page.ClickAsync(DriverSelectionPageLocators.ExistingClientButton);
+
+        // Click Next to Proceed
+        await _context.Page.ClickAsync(GlobalLocators.NextButton);
+    }
+
+
+
+    [Then("user enters Driver information and continues")]
+    public async Task WhenUserEntersDriverInfoAndContinuesAsync(Table table)
+    {
+        TableMappingHelpers.DriverInfoFields(table, _contextData);
+
+        var addDriverInfoPage = new AddDriverInfoPage(_context.Page);
+
+        await addDriverInfoPage.PreparePriorInsuranceReasonAsync(_contextData);
+        await addDriverInfoPage.CollectAndStoreQuoteNumberAsync(_contextData);
+        await addDriverInfoPage.WaitForPageLoadAsync();
+        await addDriverInfoPage.ValidateDriverFieldsAsync(_contextData);
+        await addDriverInfoPage.SelectDriverOptionsAsync(_contextData);
+        await addDriverInfoPage.FillDriverLicenseFieldsAsync(_contextData);
+        await addDriverInfoPage.SelectInsuranceOptionsAsync(_contextData);
+        await addDriverInfoPage.HandlePriorInsuranceAsync(_contextData);
+        await addDriverInfoPage.SaveAndContinueAsync();
+        await addDriverInfoPage.HandleMVRPopUpAsync();
+    }
+
+
+    [Then("user enters vehicle information and continues")]
+    public async Task WhenUserEntersVehicleInfoAndContinuesAsync(Table table)
+    {
+        TableMappingHelpers.MapVehicleFields(table, _contextData);
+
+        var addVehicleInfoPage = new AddVehicleInfoPage(_context.Page);
+
+        await addVehicleInfoPage.WaitForVehiclePageReadyAsync();
+        await addVehicleInfoPage.SelectUnlistedVehicleIfVisibleAsync();
+        await addVehicleInfoPage.EnterVINAndSelectVehicleAsync(_contextData);
+        await addVehicleInfoPage.SelectVehicleTypeAsync(_contextData.VehicleType);
+        await addVehicleInfoPage.ValidateVehicleDetailsAsync(_contextData);
+        await addVehicleInfoPage.SelectVehicleOptionsAsync(_contextData);
+        await addVehicleInfoPage.FillPurchaseAndMileageFieldsAsync(_contextData);
+        await addVehicleInfoPage.SaveAndContinueVehicleAsync();
+    }
+
+
+    [Then("user assigns a vehicle to the driver")]
+    public async Task WhenUserAssignsDriverAndVehicleAsync(Table table)
+    {
+        TableMappingHelpers.VehicleAssignmentFields(table, _contextData);
+
+        var addVehicleInfoPage = new AddVehicleInfoPage(_context.Page);
+        await addVehicleInfoPage.AssignVehicleToDriverAsync(_contextData.Vehicle, _contextData.DriverStatus);
+    }
+
+
+
+    [Then("user verifies there are no claims or violations")]
+    public async Task UserVerifiesNoClaimsOrViolationsAsync()
+    {
+        var claimsAndViolationsPage = new ClaimsViolationsPage(_context.Page);
+        await claimsAndViolationsPage.VerifyNoClaimsOrViolationsAndContinueAsync();
+    }
+
+    [Then("user selects discounts and clicks Next")]
+    public async Task UserSelectsDiscountsAsync()
+    {
+        var discountsPage = new DiscountsPage(_context.Page);
+        await discountsPage.ClickNextAsync();
+    }
+
+
+
+    [Then("user selects Policy Coverages")]
+    public async Task UserSelectsCoveragesAsync(Table table)
+    {
+        TableMappingHelpers.PolicyCoverageFields(table, _contextData);
+
+        var policyCoveragesPage = new PolicyCoveragesPage(_context.Page);
+
+        await policyCoveragesPage.SelectPolicyCoverageAsync(_contextData.PolicyCoverage);
+        await policyCoveragesPage.SelectCompCollOnlyAsync(_contextData.CompCollOnly);
+        await policyCoveragesPage.SelectCompDeductibleAsync(_contextData.CompDeductible);
+        await policyCoveragesPage.SelectCollDeductibleAsync(_contextData.CollDeductible);
+        await policyCoveragesPage.ClickNextAsync();
+    }
+
+
+
+
+
+    [Then("user selects Additional Coverages")]
+    public async Task UserSelectsAdditionalCoveragesAsync(Table table)
+    {
+        TableMappingHelpers.AdditionalCoverageFields(table, _contextData);
+
+        var additionalCoveragesPage = new AdditionalCoveragesPage(_context.Page);
+        string name = $"{_contextData.ClientFirstName} {_contextData.ClientLastName}";
+
+        await additionalCoveragesPage.SelectAccidentalDeathAndDismembermentAsync(_contextData.AccidentalDeathAndDismemberment);
+        await additionalCoveragesPage.WaitForCoverageOptionsLoadAsync();
+        await additionalCoveragesPage.SelectADDDriverAsync(name);
+        await additionalCoveragesPage.SelectLossOfIncomeAsync(name);
+        await additionalCoveragesPage.SelectRentalReimbursementAsync(_contextData.RentalReimbursement);
+        await additionalCoveragesPage.SelectRoadsideAssistanceAsync(_contextData.RoadsideAssistance);
+        await additionalCoveragesPage.ClickNextAsync();
+    }
+
+    [Then("user verifies Pricing Details")]
+    public async Task UserVerifiesPricingDetailsAsync()
+    {
+        var pricingDetailsPage = new PricingDetailsPage(_context.Page);
+        string name = $"{_contextData.ClientFirstName} {_contextData.ClientLastName}";
+
+        var accountOwner = await pricingDetailsPage.GetAccountOwnerAsync();
+        pricingDetailsPage.AssertAccountOwner(accountOwner, name);
+
+        var accountAddress = await pricingDetailsPage.GetAccountAddressAsync();
+        pricingDetailsPage.AssertAccountAddress(accountAddress, _contextData.RiskAddress);
+
+        // More verifications can be added here
+
+        await pricingDetailsPage.ClickNextAsync();
+    }
+
+
+
+    [Then("user verifies eligibility and clicks Next")]
+    public async Task UserVerifiesEligibilityAsync()
+    {
+        // Add any questions that may populate
+
+        await _context.Page.ClickAsync(GlobalLocators.NextButton);
+    }
+
+
+    [Then("user adds an Additional Interest")]
+    public async Task UserAddsAdditionalInterestAsync(Table table)
+    {
+        TableMappingHelpers.AdditionalInterestFields(table, _contextData);
+
+        var addAdditionalInterestPage = new AddAdditionalInterestPage(_context.Page);
+
+        await addAdditionalInterestPage.ClickAddAdditionalInterestAsync();
+        await addAdditionalInterestPage.SelectAdditionalInterestTypeAsync(_contextData.AdditionalInterestType);
+
+        if (_contextData.AdditionalInterestType == "Joint Owner")
+            await addAdditionalInterestPage.HandleJointOwnerFieldsAsync(_contextData);
+
+        await addAdditionalInterestPage.FillAdditionalInterestFieldsAsync(_contextData);
+        await addAdditionalInterestPage.SaveAndContinueAsync();
+        await addAdditionalInterestPage.HandleUWDialogIfPresentAsync();
+        await addAdditionalInterestPage.ClickNextAsync();
+    }
+}

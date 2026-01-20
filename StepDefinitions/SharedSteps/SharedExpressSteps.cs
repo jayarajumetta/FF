@@ -13,7 +13,7 @@ using TestAutomation.Pages.ExpressPages;
 using ReqContext = Playwright_POC.Context.TestContext;
 
 [Binding]
-public class ExpressSteps
+public class SharedExpressSteps
 {
     private readonly ReqContext _context;
     private readonly ExpressCredentialsConfig _expressCreds;
@@ -21,7 +21,7 @@ public class ExpressSteps
     private readonly ScenarioContextData _contextData;
     private Table _table;
 
-    public ExpressSteps(ReqContext context,
+    public SharedExpressSteps(ReqContext context,
                         ExpressCredentialsConfig expressCreds,
                         IConfiguration configuration,
                         ScenarioContextData contextData)
