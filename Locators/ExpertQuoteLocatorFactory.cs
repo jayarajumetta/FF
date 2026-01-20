@@ -36,12 +36,21 @@ namespace Playwright_POC.Locators
         {
             public static string SelectFarmTypeButton(string value) =>
                 $"css=button[data-testid*='farmTypeCategory'] div:has-text('{value}')";
-            
+    
+            // Improved: Target the radio button container directly
             public static string SelectLivestockTypeRadioButton(string value) =>
-                $"xpath=.//mat-radio-button[contains(@data-testid, 'farmType')]//span[normalize-space(.)='{value}']";
+                $"xpath=.//mat-radio-button[contains(@data-testid, 'farmType') and .//span[normalize-space(.)='{value}']]";
+    
+            // Alternative: Target the actual input element (most stable)
+            public static string SelectLivestockTypeInput(string value) =>
+                $"xpath=.//mat-radio-button[contains(@data-testid, 'farmType') and .//span[normalize-space(.)='{value}']]//input[@type='radio']";
 
-            public static string GrowIndustrialHemp(string yesOrNo) =>
-                $"xpath=.//button[contains(@data-testid, 'growsIndustrialHemp')]//div[contains(text(), '{yesOrNo}')]";
+            // New Quote button (no data-testid yet)
+            public const string NewQuoteButton = "button.btn-action:has-text('New Quote')";
+
+            // Industrial Hemp test IDs
+            public const string IndustrialHempYesTestId = "fields.account.policyInput$industrialHemp.value-1";
+            public const string IndustrialHempNoTestId = "fields.account.policyInput$industrialHemp.value-0";
         }
 
         internal class PreQualificationPageLocators

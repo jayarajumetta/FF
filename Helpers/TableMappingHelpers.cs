@@ -93,6 +93,9 @@ namespace Playwright_POC.Helpers
 
         public static void PAQuoteDetailsFields(Table table, ScenarioContextData _contextData)
         {
+            // Set default EffectiveDate to tomorrow if not provided in the table
+            _contextData.EffectiveDate = DateHelpers.GetTomorrowDate();
+
             foreach (var row in table.Rows)
             {
                 var question = row["Question"];
@@ -128,6 +131,9 @@ namespace Playwright_POC.Helpers
 
         public static void BOPQuoteDetailsFields(Table table, ScenarioContextData _contextData)
         {
+            // Set default EffectiveDate to tomorrow if not provided in the table
+            _contextData.EffectiveDate = DateHelpers.GetTomorrowDate();
+
             foreach (var row in table.Rows)
             {
                 var question = row["Question"];
@@ -135,7 +141,7 @@ namespace Playwright_POC.Helpers
                 switch (question)
                 {
                     case "EffectiveDate":
-                        _contextData.EffectiveDate = answer;
+                        _contextData.EffectiveDate = DateHelpers.ResolveDateToken(answer);
                         break;
                     case "PolicyTerm":
                         _contextData.PolicyTerm = answer;

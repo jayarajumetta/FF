@@ -31,7 +31,7 @@ namespace Playwright_POC.Locators
         public const string ClientSearchPage = "//div[text()='Search / Recently Accessed']";
         public const string IndividualSearchField = "input[name='quoteSearchInput']";
         public const string ClientSearchButton = "button[data-testid='quoteSearchButton']";
-        public const string NewQuoteButton = "//button[text()='New Quote']";
+        public const string NewQuoteButton = "button.btn-action:has-text('New Quote')";
     }
 
     public static class NewExistingClientSearchLocators
@@ -122,7 +122,7 @@ namespace Playwright_POC.Locators
 
         // Special Farm Package
         public const string FarmPackageSelectedIndicator = "xpath=.//button[contains(text(), 'Selected')]";
-        public const string GrossFarmIncomeInput = "input[contains(@data-testid, 'grossFarmIncome']";
+        public const string GrossFarmIncomeInput = "input[data-testid*='grossFarmIncome']";
     }
 
     public static class BOPPrequalificationPageLocators

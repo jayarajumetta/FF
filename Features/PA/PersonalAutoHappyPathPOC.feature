@@ -54,21 +54,21 @@ Feature: Personal Auto Happy Path POC
 
     Then user enters Driver information and continues
 	| Question                       | Answer                |
-    | PhoneType                      | Cell                  |
-    | Gender                         | Male                  |
-    | EmailType                      | Home                  |
-    | NamedInsured                   | Primary Named Insured |
-    | OperatorStatus                 | Assigned              |
-    | DLState                        | MO                    |
-    | DLNumber                       | D79774321            |
-    | YearsLicensed                  |                    30 |
-    | MonthsLicensed                 |                     0 |
-    | RequireFinancialResponsibility | No                    |
-    | PriorInsurance                 | Yes                   |
-    | PriorCarrier                   | Geico                 |
-    | PriorPolicyNumber              |             123456789 |
-    | YearsWithPriorCarrier          |                     5 |
-    | MonthsWithPriorCarrier         |                     2 |
+	| PhoneType                      | Cell                  |
+	| Gender                         | Male                  |
+	| EmailType                      | Home                  |
+	| NamedInsured                   | Primary Named Insured |
+	| OperatorStatus                 | Assigned              |
+	| DLState                        | MO                    |
+	| DLNumber                       | D79774321             |
+	| YearsLicensed                  |                    30 |
+	| MonthsLicensed                 |                     0 |
+	| RequireFinancialResponsibility | No                    |
+	| PriorInsurance                 | Yes                   |
+	| PriorCarrier                   | Geico                 |
+	| PriorPolicyNumber              |             123456789 |
+	| YearsWithPriorCarrier          |                     5 |
+	| MonthsWithPriorCarrier         |                     2 |
 	
 	
     Then user enters vehicle information and continues
