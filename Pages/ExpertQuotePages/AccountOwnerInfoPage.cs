@@ -1,5 +1,4 @@
-﻿
-// Pages/AccountInformationPage.cs
+﻿// Pages/AccountInformationPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Globalization;
@@ -20,7 +19,7 @@ namespace Playwright_POC.Pages
 
         public async Task WaitForPageReadyAsync()
         {
-            await _page.WaitForSelectorAsync(Locators.AccountInformationConstLocators.FirstName, new() { Timeout = 2000 });
+            await AccountInformationConstLocators.FirstName(_page).WaitForAsync(new() { Timeout = 2000 });
         }
 
 
@@ -29,9 +28,9 @@ namespace Playwright_POC.Pages
 
         public async Task ValidateAndFillNameFieldsAsync(ScenarioContextData contextData)
         {
-            var firstName = _page.Locator(Locators.AccountInformationConstLocators.FirstName);
-            var lastName = _page.Locator(Locators.AccountInformationConstLocators.LastName);
-            var dob = _page.Locator(Locators.AccountInformationConstLocators.DateOfBirth);
+            var firstName = Locators.AccountInformationConstLocators.FirstName(_page);
+            var lastName = Locators.AccountInformationConstLocators.LastName(_page);
+            var dob = Locators.AccountInformationConstLocators.DateOfBirth(_page);
 
             // First Name: fill only if empty
             var actualFirst = (await firstName.InputValueAsync())?.Trim();
