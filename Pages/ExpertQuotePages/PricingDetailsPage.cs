@@ -59,7 +59,7 @@ namespace Playwright_POC.Pages
       
         public async Task ClickNextAsync()
         {
-            await _page.ClickAsync(GlobalLocators.NextButton);
+            await GlobalLocators.NextButton(_page).ClickAsync();
         }
 
     }

@@ -1,5 +1,4 @@
-﻿
-// Pages/AddVehicleInfoPage.cs
+﻿// Pages/AddVehicleInfoPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
@@ -29,7 +28,7 @@ namespace Playwright_POC.Pages
             if (await _page.IsVisibleAsync(Locators.VehicleSummaryConstLocators.SelectVehicles))
             {
                 await _page.ClickAsync(Locators.VehicleSummaryConstLocators.SelectVehicles);
-                await _page.ClickAsync(Locators.GlobalLocators.NextButton);
+                await Locators.GlobalLocators.NextButton(_page).ClickAsync();
             }
         }
 
@@ -90,15 +89,15 @@ namespace Playwright_POC.Pages
         public async Task SaveAndContinueVehicleAsync()
         {
             await _page.ClickAsync(Locators.GlobalLocators.SaveAndContinueButton);
-            await _page.WaitForSelectorAsync(Locators.GlobalLocators.NextButton, new() { Timeout = 3000 });
-            await _page.ClickAsync(Locators.GlobalLocators.NextButton);
+            await _page.WaitForSelectorAsync(Locators.GlobalLocators.NextButton(_page).ToString(), new() { Timeout = 3000 });
+            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }
 
         public async Task AssignVehicleToDriverAsync(string vehicle, string driverStatus)
         {
             await _page.ClickAsync(ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleSelectButton(vehicle, StringComparison.OrdinalIgnoreCase));
             await _page.ClickAsync(ExpertQuoteLocatorFactory.VehicleDriverAssignmentPageLocators.GetDriverStatusButton(driverStatus));
-            await _page.ClickAsync(Locators.GlobalLocators.NextButton);
+            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }
 
 

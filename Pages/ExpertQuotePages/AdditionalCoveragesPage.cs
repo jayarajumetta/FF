@@ -39,7 +39,7 @@ namespace Playwright_POC.Pages
 
         public async Task SelectRentedMotorHomesAsync()
         {
-            await _page.ClickAsync(Locators.AdditionalCoveragesConstLocators.RentedMotorHomesCheckbox);
+            await Locators.AdditionalCoveragesConstLocators.RentedMotorHomesCheckbox(_page).ClickAsync();
         }
         public async Task SelectRentalReimbursementAsync(string value)
         {
@@ -48,7 +48,7 @@ namespace Playwright_POC.Pages
 
         public async Task SelectAddedCoverageEndorsement()
         {
-            await _page.ClickAsync(Locators.AdditionalCoveragesConstLocators.AddedCoverageEndorsementCheckbox);
+            await Locators.AdditionalCoveragesConstLocators.AddedCoverageEndorsementCheckbox(_page).ClickAsync();
         }
         public async Task SelectRoadsideAssistanceAsync(string value)
         {
@@ -57,12 +57,12 @@ namespace Playwright_POC.Pages
 
         public async Task SelectSoundReceivingEquipment()
         {
-            await _page.ClickAsync(Locators.AdditionalCoveragesConstLocators.SoundReceivingEquipmentCheckbox);
+            await Locators.AdditionalCoveragesConstLocators.SoundReceivingEquipmentCheckbox(_page).ClickAsync();
         }
 
         public async Task ClickNextAsync()
         {
-            await _page.ClickAsync(Locators.GlobalLocators.NextButton);
+            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }
 
     }

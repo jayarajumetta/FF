@@ -29,7 +29,7 @@ namespace Playwright_POC.Pages
 
         public async Task ClickAddAdditionalInterestAsync()
         {
-            await _page.ClickAsync(Locators.AdditionalInterestLocators.AddAdditionalInterestButton);
+            await Locators.AdditionalInterestLocators.AddAdditionalInterestButton(_page).ClickAsync();
         }
 
         public async Task SelectAdditionalInterestTypeAsync(string additionalInterestType)
@@ -102,7 +102,7 @@ namespace Playwright_POC.Pages
 
         public async Task ClickNextAsync()
         {
-            await _page.ClickAsync(Locators.GlobalLocators.NextButton);
+            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }
 
     }

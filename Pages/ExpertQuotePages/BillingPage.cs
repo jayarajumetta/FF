@@ -76,7 +76,7 @@ namespace Playwright_POC.Pages
 
         public async Task ClickNextAsync()
         {
-            await _page.ClickAsync(Locators.GlobalLocators.NextButton);
+            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }
 
         public void DisplayQuoteNumber(string quoteNumber)

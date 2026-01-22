@@ -25,38 +25,38 @@ namespace Playwright_POC.Pages
 
         public async Task SelectPersonalAutoProductAsync()
         {
-            await _page.ClickAsync(Locators.ProposalDetailsPageLocators.PersonalAutoButton);
+            await Locators.ProposalDetailsPageLocators.PersonalAutoButton(_page).ClickAsync();
         }
 
         public async Task SelectMotorcycleProductAsync()
         {
-            await _page.ClickAsync(Locators.ProposalDetailsPageLocators.MotorcycleButton);
+            await Locators.ProposalDetailsPageLocators.MotorcycleButton(_page).ClickAsync();
         }
 
         public async Task SelectRecreationalVehicleProductAsync()
         {
-            await _page.ClickAsync(Locators.ProposalDetailsPageLocators.RecreationalVehicleButton);
+            await Locators.ProposalDetailsPageLocators.RecreationalVehicleButton(_page).ClickAsync();
         }
 
         public async Task SelectHomeProductAsync()
         {
-            await _page.ClickAsync(Locators.ProposalDetailsPageLocators.HomeButton);
+            await Locators.ProposalDetailsPageLocators.HomeButton(_page).ClickAsync();
         }
 
         public async Task SelectBusinessOwnerProductAsync()
         {
-            await _page.ClickAsync(Locators.ProposalDetailsPageLocators.BusinessOwnerButton);
+            await Locators.ProposalDetailsPageLocators.BusinessOwnerButton(_page).ClickAsync();
         }
 
         public async Task SelectSpecialFarmPackageProductAsync()
         {
-            await _page.ClickAsync(Locators.ProposalDetailsPageLocators.FarmPackageButton);
+            await Locators.ProposalDetailsPageLocators.FarmPackageButton(_page).ClickAsync();
         }
 
         public async Task CheckSpecialFarmPackageSelected()
         {
             await _page.WaitForTimeoutAsync(2000);
-            bool isSelected = await _page.IsVisibleAsync(Locators.ProposalDetailsPageLocators.FarmPackageSelectedIndicator);
+            bool isSelected = await Locators.ProposalDetailsPageLocators.FarmPackageSelectedIndicator(_page).IsVisibleAsync();
             Assert.That(isSelected, Is.True, "Special Farm Package product is not selected.");
         }
 
@@ -110,9 +110,9 @@ namespace Playwright_POC.Pages
         {
             if ((contextData.BusinessEntity == "Individually Owned") || (contextData.BusinessEntity == "DBA") || (contextData.BusinessEntity == "T/A"))
             {
-                await _page.ClickAsync(Locators.ProposalDetailsPageLocators.IndividuallyOwnedCheckbox);
+                await Locators.ProposalDetailsPageLocators.IndividuallyOwnedCheckbox(_page).ClickAsync();
                 await _page.WaitForTimeoutAsync(2000);
-                await _page.FillAsync(Locators.ProposalDetailsPageLocators.DBANameInput, contextData.DBAName);
+                await Locators.ProposalDetailsPageLocators.DBANameInput(_page).FillAsync(contextData.DBAName);
             }
             else
             {

@@ -1,5 +1,4 @@
-﻿
-// Pages/DiscountsPage.cs
+﻿// Pages/DiscountsPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 using Playwright_POC.Locators;
@@ -18,8 +17,8 @@ namespace Playwright_POC.Pages
 
         public async Task ClickNextAsync()
         {
-            await _page.WaitForSelectorAsync(Locators.GlobalLocators.NextButton, new() { Timeout = 2000 });
-            await _page.ClickAsync(Locators.GlobalLocators.NextButton);
+            await Locators.GlobalLocators.NextButton(_page).WaitForAsync(new() { Timeout = 2000 });
+            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }
 
         public async Task SelectPolicyDiscountAsync(ScenarioContextData contextData)

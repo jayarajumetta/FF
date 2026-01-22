@@ -84,18 +84,18 @@ namespace Playwright_POC.Pages
 
         public async Task ValidateAndFillContactFieldsAsync(ScenarioContextData contextData)
         {
-            var actualPhone = await _page.InputValueAsync(Locators.AccountInformationConstLocators.BestPhone);
+            var actualPhone = await Locators.AccountInformationConstLocators.BestPhone(_page).InputValueAsync();
             if (!actualPhone.Equals(contextData.ClientPhoneNumber, StringComparison.OrdinalIgnoreCase))
             {
                 Console.WriteLine($"Phone mismatch: Expected '{contextData.ClientPhoneNumber}', Found '{actualPhone}'");
-                await _page.FillAsync(Locators.AccountInformationConstLocators.BestPhone, contextData.ClientPhoneNumber);
+                await Locators.AccountInformationConstLocators.BestPhone(_page).FillAsync(contextData.ClientPhoneNumber);
             }
 
-            var actualEmail = await _page.InputValueAsync(Locators.AccountInformationConstLocators.EmailAddress);
+            var actualEmail = await Locators.AccountInformationConstLocators.EmailAddress(_page).InputValueAsync();
             if (!actualEmail.Equals(contextData.ClientEmail, StringComparison.OrdinalIgnoreCase))
             {
                 Console.WriteLine($"Email mismatch: Expected '{contextData.ClientEmail}', Found '{actualEmail}'");
-                await _page.FillAsync(Locators.AccountInformationConstLocators.EmailAddress, contextData.ClientEmail);
+                await Locators.AccountInformationConstLocators.EmailAddress(_page).FillAsync(contextData.ClientEmail);
             }
         }
 
@@ -116,13 +116,13 @@ namespace Playwright_POC.Pages
 
         public async Task FillAddressFieldsAsync(ScenarioContextData contextData)
         {
-            await _page.FillAsync(Locators.AccountInformationConstLocators.StreetAddressInput, contextData.StreetAddress);
-            await _page.FillAsync(Locators.AccountInformationConstLocators.AptNumberInput, contextData.AptNumber);
-            await _page.FillAsync(Locators.AccountInformationConstLocators.CityInput, contextData.City);
+            await Locators.AccountInformationConstLocators.StreetAddressInput(_page).FillAsync(contextData.StreetAddress);
+            await Locators.AccountInformationConstLocators.AptNumberInput(_page).FillAsync(contextData.AptNumber);
+            await Locators.AccountInformationConstLocators.CityInput(_page).FillAsync(contextData.City);
 
-            await _page.ClickAsync(Locators.AccountInformationConstLocators.StateDropdown);
+            await Locators.AccountInformationConstLocators.StateDropdown(_page).ClickAsync();
             await _page.ClickAsync($"text={contextData.State.ToUpper()}");
-            await _page.FillAsync(Locators.AccountInformationConstLocators.ZipCodeInput, contextData.ZipCode);
+            await Locators.AccountInformationConstLocators.ZipCodeInput(_page).FillAsync(contextData.ZipCode);
         }
 
         public async Task WaitForAddressDetailsAsync()
@@ -142,7 +142,7 @@ namespace Playwright_POC.Pages
         }
         public async Task ClickNextAsync()
         {
-            await _page.ClickAsync(Locators.GlobalLocators.NextButton);
+            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }
 
     }

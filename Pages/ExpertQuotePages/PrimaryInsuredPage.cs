@@ -22,7 +22,7 @@ namespace TestAutomation.Pages.ExpertQuotePages
             await _page.WaitForSelectorAsync(PrimaryInsuredPageLocators.SelectPrimaryInsured, new() { Timeout = 10000 });
             await existingClientButton.ClickAsync();
 
-            await _page.ClickAsync(GlobalLocators.NextButton);
+            await GlobalLocators.NextButton(_page).ClickAsync();
         }
 
         public async Task SearchPersonAsync(ScenarioContextData contextData)
@@ -48,7 +48,7 @@ namespace TestAutomation.Pages.ExpertQuotePages
             await _page.FillAsync(AddPrimaryInsuredPageLocators.AddPrimaryInsuredFirstNameInput, contextData.ClientFirstName);
             await _page.FillAsync(AddPrimaryInsuredPageLocators.AddPrimaryInsuredLastNameInput, contextData.ClientLastName);
             await _page.FillAsync(AddPrimaryInsuredPageLocators.AddPrimaryInsuredDOBInput, contextData.ClientDOB);
-            await _page.ClickAsync(GlobalLocators.NextButton);
+            await GlobalLocators.NextButton(_page).ClickAsync();
         }
     }
 }

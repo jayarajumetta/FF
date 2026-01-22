@@ -96,7 +96,7 @@ public class SharedEQSteps
     [Then("user clicks New Quote button")]
     public async Task ThenUserClicksNewQuoteButton()
     {
-        await _context.Page.ClickAsync(ClientSearchLocators.NewQuoteButton);
+        await ClientSearchLocators.NewQuoteButton(_context.Page).ClickAsync();
     }
 
 
@@ -122,12 +122,12 @@ public class SharedEQSteps
     [Then("user selects Create New Client and clicks the Next button")]
     public async Task UserCreatesNewClientAndClicksNext()
     {
-        await _context.Page.ClickAsync(NewExistingClientSearchLocators.CreateNewClientButton);
-        await _context.Page.ClickAsync(GlobalLocators.NextButton);
+        await NewExistingClientSearchLocators.CreateNewClientButton(_context.Page).ClickAsync();
+        await GlobalLocators.NextButton(_context.Page).ClickAsync();
 
         //Wait for the next page to load
         await _context.Page.WaitForLoadStateAsync(LoadState.Load);
-        await _context.Page.WaitForSelectorAsync(AccountInformationConstLocators.PageHeader, new() { Timeout = 10000 });
+        await _context.Page.WaitForSelectorAsync(AccountInformationConstLocators.PageHeader(_context.Page).ToString(), new() { Timeout = 10000 });
     }
 
 

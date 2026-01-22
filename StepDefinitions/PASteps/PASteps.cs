@@ -71,7 +71,7 @@ public class PASteps
         await _context.Page.ClickAsync(DriverSelectionPageLocators.ExistingClientButton);
 
         // Click Next to Proceed
-        await _context.Page.ClickAsync(GlobalLocators.NextButton);
+        await GlobalLocators.NextButton(_context.Page).ClickAsync();
     }
 
 
@@ -200,7 +200,7 @@ public class PASteps
     {
         // Add any questions that may populate
 
-        await _context.Page.ClickAsync(GlobalLocators.NextButton);
+        await GlobalLocators.NextButton(_context.Page).ClickAsync();
     }
 
 

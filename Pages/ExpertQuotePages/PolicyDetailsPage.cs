@@ -28,7 +28,7 @@ namespace Playwright_POC.Pages
 
         public async Task EnterGrossFarmIncome(string grossFarmIncome)
         {
-            await _page.FillAsync(Locators.ProposalDetailsPageLocators.GrossFarmIncomeInput, grossFarmIncome);
+            await Locators.ProposalDetailsPageLocators.GrossFarmIncomeInput(_page).FillAsync(grossFarmIncome);
         }
 
         public async Task SelectGrowIndustrialHemp(string growHemp)

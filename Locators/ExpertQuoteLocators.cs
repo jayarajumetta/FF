@@ -373,8 +373,8 @@ namespace Playwright_POC.Locators
     {
         public const string NoClaimsBanner = "xpath=//main[contains(., 'Claims')]//div[contains(text(), 'No claims were found on reports')]";
         public const string NoViolationsBanner = "xpath=//main[contains(., 'Violations')]//div[contains(text(), 'No violations were found on reports')]";
-        public const string AddClaimsButton = "xpath=//button[contains(@data-testid, 'add_Claim')]";
-        public const string AddViolationsButton = "xpath=//button[contains(@data-testid, 'add_Violation')]";
+        public static ILocator AddClaimsButton(IPage page) => page.GetByTestId("add_Claim");
+        public static ILocator AddViolationsButton(IPage page) => page.GetByTestId("add_Violation");
     }
 
     public static class PolicyCoveragesConstLocators
@@ -384,9 +384,9 @@ namespace Playwright_POC.Locators
 
     public static class AdditionalCoveragesConstLocators
     {
-        public const string RentedMotorHomesCheckbox = "xpath=.//button[contains(@data-testid, 'RentedMotorHomeTravelTrailer')]";
-        public const string AddedCoverageEndorsementCheckbox = "xpath=.//button[contains(@data-testid, 'addedCoverageEndorsement')]";
-        public const string SoundReceivingEquipmentCheckbox = "xpath=.//button[contains(@data-testid, 'SoundRec')]";
+        public static ILocator RentedMotorHomesCheckbox(IPage page) => page.GetByTestId("RentedMotorHomeTravelTrailer");
+        public static ILocator AddedCoverageEndorsementCheckbox(IPage page) => page.GetByTestId("addedCoverageEndorsement");
+        public static ILocator SoundReceivingEquipmentCheckbox(IPage page) => page.GetByTestId("SoundRec");
     }
 
     internal class PricingDetailsConstLocators
@@ -399,7 +399,7 @@ namespace Playwright_POC.Locators
 
     public static class AdditionalInterestLocators
     {
-        public const string AddAdditionalInterestButton = "xpath=.//button[contains(@data-testid, 'add_Additional_Interest')]";
+        public static ILocator AddAdditionalInterestButton(IPage page) => page.GetByTestId("add_Additional_Interest");
         public const string AdditionalInterestNameInput = "input[name='fields.account.additionalOtherInterest.additionalOtherInterestInput$name.value']";
         public const string AdditionalInterestAddressInput = "input[name='fields.account.additionalOtherInterest.additionalOtherInterestInput$address1.value']";
         public const string AdditionalInterestCityInput = "input[name='fields.account.additionalOtherInterest.additionalOtherInterestInput$city.value']";

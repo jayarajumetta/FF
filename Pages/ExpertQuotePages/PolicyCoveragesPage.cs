@@ -1,5 +1,4 @@
-﻿
-// Pages/PolicyCoveragesPage.cs
+﻿// Pages/PolicyCoveragesPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 using Playwright_POC.Locators;
@@ -39,7 +38,7 @@ namespace Playwright_POC.Pages
 
         public async Task ClickNextAsync()
         {
-            await _page.ClickAsync(Locators.GlobalLocators.NextButton);
+            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }
 
         public async Task ClickViewPriorCarrierDetails()

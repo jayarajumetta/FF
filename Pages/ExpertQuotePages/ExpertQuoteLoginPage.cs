@@ -16,18 +16,17 @@ namespace Playwright_POC.Pages
 
         public async Task LoginAsync(string username, string password)
         {
-            await _page.FillAsync(LoginLocators.UsernameInput, username);
-            await _page.FillAsync(LoginLocators.PasswordInput, password);
-            await _page.ClickAsync(LoginLocators.LoginButton);
+            await LoginLocators.UsernameInput(_page).FillAsync(username);
+            await LoginLocators.PasswordInput(_page).FillAsync(password);
+            await LoginLocators.LoginButton(_page).ClickAsync();
 
             // Wait for login to complete
-            await _page.WaitForSelectorAsync(ClientSearchLocators.DashboardElement, new PageWaitForSelectorOptions { Timeout = 30000 });
+            await _page.WaitForSelectorAsync(ClientSearchLocators.DashboardElement(_page).ToString(), new PageWaitForSelectorOptions { Timeout = 30000 });
         }
 
         public async Task<bool> IsDashboardVisibleAsync()
         {
-            
-            return await _page.IsVisibleAsync(ClientSearchLocators.DashboardElement);
+            return await ClientSearchLocators.DashboardElement(_page).IsVisibleAsync();
         }
     }
 }
