@@ -1,3 +1,4 @@
+using Microsoft.Playwright;
 using System;
 using System.Net.NetworkInformation;
 
@@ -13,19 +14,28 @@ namespace Playwright_POC.Locators
         }
         internal class AccountInformationPageLocators
         {
-  
 
-            public static string GetReceivedMailButton(string yesOrNo) =>
-                 $"xpath=.//button[contains(@id,'owner.address.resided90days')]//div[contains(text(),'{yesOrNo}')]";
 
-            public static string GetClientResidesButton(string yesOrNo) =>
-                $"xpath=.//button[contains(@id, 'useAsResidence')]//div[contains(text(),'{yesOrNo}')]";
 
-            public static string SelectLessorsRiskExposureButton(string yesOrNo) =>
+            public static ILocator GetReceivedMailButton(IPage page, string yesOrNo) =>
+                page
+                    .Locator("[data-testid^='owner.address.resided90days-']") // group container (starts-with)
+                    .GetByRole(AriaRole.Button, new() { Name = yesOrNo });
+
+
+            public static ILocator GetClientResidesButton(IPage page, string yesOrNo) =>
+                page
+                    .Locator("[data-testid^='owner.address.usAsResidence']")
+                    .GetByRole(AriaRole.Button, new() { Name = yesOrNo } );
+        }
+
+        public static string SelectLessorsRiskExposureButton(string yesOrNo) =>
                 $"xpath=.//button[contains(@id, 'LessorsRiskExposure')]//div[contains(text(), '{yesOrNo}')]";
 
-            public static string SelectPolicyTermFromDropdown(string value) =>
-                $"xpath=.//mat-option[contains(@data-testid, 'proposal.term')]//span[contains(text(), '{value}')]";
+            public static ILocator SelectPolicyTermFromDropdown(IPage page, string value) =>
+                page
+                    .GetByRole(AriaRole.Listbox)
+                    .GetByRole(AriaRole.Option, new() { Name = value});
 
 
         }
@@ -189,13 +199,17 @@ namespace Playwright_POC.Locators
                 $"xpath=.//button[contains(@id, 'emailType') and .//div[text()='{value}']]";
 
             // Account Owner Information
-            public static string GetMaritalStatusSelection(string maritalStatus) =>
-                $"xpath=.//button[contains(@id, 'maritalStatus') and .//div[text()= '{maritalStatus}']]";
+            public static ILocator GetMaritalStatusSelection(IPage page, string maritalStatus) =>
+                page
+                    .Locator("[data-testid^='owner.maritalStatus']")
+                    .GetByRole(AriaRole.Button, new() { Name= maritalStatus});
 
 
             // Suffix Dropdown Values
-            public static string GetSuffixValueButton(string value) =>
-                $"xpath=.//mat-option[contains(text(), '{value}')]";
+            public static ILocator GetSuffixValueButton(IPage page, string value) =>
+               page
+                    .GetByRole(AriaRole.Listbox)
+                    .GetByRole(AriaRole.Option, new() {  Name = value });
 
 
             // Does driver require evidence of financial responsibility?
@@ -346,8 +360,10 @@ namespace Playwright_POC.Locators
                 $"xpath=.//button[contains(@id, 'paperlessCommunication')]//div[contains(text(), '{yesOrNo}')]";
         }
 
-        public static string GetStateDropdownSelectionLocator(string stateCode) =>
-            $"xpath=.//mat-option[contains(@id, 'mat-option')]//span[contains(text(), '{stateCode.ToUpper()}')]";
+        public static ILocator GetStateDropdownSelectionLocator(IPage page, string stateCode) =>
+            page
+                .GetByRole(AriaRole.Listbox)
+                .GetByRole(AriaRole.Option, new() {Name = stateCode.ToUpper()});
 
 
     }

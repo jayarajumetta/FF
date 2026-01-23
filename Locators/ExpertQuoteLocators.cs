@@ -147,7 +147,7 @@ namespace Playwright_POC.Locators
 
     }
 
-    public static class PrimaryInsuredPageLocators
+    public static class PrimaryInsuredPageConstLocators
     {
         public const string SelectPrimaryInsured = "xpath=.//button//div[contains(text(), 'Existing Client')]";
         public const string SearchPrimaryInsuredFirstNameInput = "input[name='temp.clientSearchFirstName']";
