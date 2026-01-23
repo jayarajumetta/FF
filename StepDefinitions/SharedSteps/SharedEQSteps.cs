@@ -29,6 +29,14 @@ public class SharedEQSteps
     private readonly IConfiguration _configuration;
     private Table _table;
 
+    public SharedEQSteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
+    {
+        _context = context;
+        _contextData = contextData;
+        _credentials = credentials;
+        _configuration = configuration;
+    }
+
 
     [When("I enter valid credentials and Click LogIn")]
     public async Task WhenIEnterValidCredentials()
