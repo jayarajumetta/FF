@@ -72,7 +72,7 @@ namespace Playwright_POC.Pages
         {
             await Locators.ProposalDetailsPageLocators.EffDateInput(_page).FillAsync(contextData.EffectiveDate);
             await Locators.ProposalDetailsPageLocators.ExpandPolicyTermDropdown(_page).ClickAsync();
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.AccountInformationPageLocators.SelectPolicyTermFromDropdown(contextData.PolicyTerm));
+            await ExpertQuoteLocatorFactory.AccountInformationPageLocators.SelectPolicyTermFromDropdown(_page, contextData.PolicyTerm).ClickAsync();
             await Locators.ProposalDetailsPageLocators.AgentPCCodeInput(_page).FillAsync(contextData.AgentCode);
         }
 

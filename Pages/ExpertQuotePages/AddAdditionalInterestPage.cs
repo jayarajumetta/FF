@@ -1,5 +1,4 @@
-﻿
-// Pages/AddAdditionalInterestPage.cs
+﻿// Pages/AddAdditionalInterestPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
@@ -53,7 +52,7 @@ namespace Playwright_POC.Pages
             await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestCityInput, contextData.AdditionalInterestCity);
 
             await _page.ClickAsync(Locators.AdditionalInterestLocators.AdditionalInterestStateDropdown);
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.GetStateDropdownSelectionLocator(contextData.AdditionalInterestState));
+            await ExpertQuoteLocatorFactory.AccountInformationPageLocators.GetStateDropdownSelectionLocator(_page, contextData.AdditionalInterestState).ClickAsync();
 
             await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestZipInput, contextData.AdditionalInterestZipCode);
             await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestPhoneInput, contextData.AdditionalInterestPhone);
@@ -61,7 +60,7 @@ namespace Playwright_POC.Pages
             await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestDLNumberInput, contextData.AdditionalInterestDLNumber);
 
             await _page.ClickAsync(Locators.AdditionalInterestLocators.AdditionalInterestLicenseState);
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.GetStateDropdownSelectionLocator(contextData.AdditionalInterestLicenseState));
+            await ExpertQuoteLocatorFactory.AccountInformationPageLocators.GetStateDropdownSelectionLocator(_page, contextData.AdditionalInterestLicenseState).ClickAsync();
         }
 
         // Helper method

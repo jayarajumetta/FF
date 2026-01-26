@@ -18,8 +18,8 @@ namespace TestAutomation.Pages.ExpertQuotePages
 
         public async Task SelectExistingClientAsPrimaryInsuredAsync(ScenarioContextData contextData)
         {
-            var existingClientButton = _page.Locator(PrimaryInsuredPageLocators.SelectPrimaryInsured);
-            await _page.WaitForSelectorAsync(PrimaryInsuredPageLocators.SelectPrimaryInsured, new() { Timeout = 10000 });
+            var existingClientButton = _page.Locator(PrimaryInsuredPageConstLocators.SelectPrimaryInsured);
+            await _page.WaitForSelectorAsync(PrimaryInsuredPageConstLocators.SelectPrimaryInsured, new() { Timeout = 10000 });
             await existingClientButton.ClickAsync();
 
             await GlobalLocators.NextButton(_page).ClickAsync();
@@ -27,9 +27,9 @@ namespace TestAutomation.Pages.ExpertQuotePages
 
         public async Task SearchPersonAsync(ScenarioContextData contextData)
         {
-            await _page.FillAsync(PrimaryInsuredPageLocators.SearchPrimaryInsuredFirstNameInput, contextData.ClientFirstName);
-            await _page.FillAsync(PrimaryInsuredPageLocators.SearchPrimaryInsuredLastNameInput, contextData.ClientLastName);
-            await _page.ClickAsync(PrimaryInsuredPageLocators   .PrimaryInsuredSearchButton);
+            await _page.FillAsync(PrimaryInsuredPageConstLocators.SearchPrimaryInsuredFirstNameInput, contextData.ClientFirstName);
+            await _page.FillAsync(PrimaryInsuredPageConstLocators.SearchPrimaryInsuredLastNameInput, contextData.ClientLastName);
+            await _page.ClickAsync(PrimaryInsuredPageConstLocators.PrimaryInsuredSearchButton);
 
             // Selection of Primary Insured from search results will be implemented here later.
         }

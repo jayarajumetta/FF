@@ -106,11 +106,11 @@ namespace Playwright_POC.Pages
                 !maritalStatus.Equals("Divorced", StringComparison.OrdinalIgnoreCase))
             {
                 await _page.ClickAsync(Locators.DriverSummaryConstLocators.MoreOptionsMaritalStatus);
-                await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetMaritalStatusSelection(maritalStatus));
+                await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetMaritalStatusSelection(_page, maritalStatus));
             }
             else
             {
-                await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetMaritalStatusSelection(maritalStatus));
+                await ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetMaritalStatusSelection(_page, maritalStatus).ClickAsync();
             }
         }
 
@@ -132,13 +132,13 @@ namespace Playwright_POC.Pages
 
         public async Task AnswerMailAndResidenceQuestionsAsync(ScenarioContextData contextData)
         {
-            await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.AccountInformationPageLocators.GetReceivedMailButton(contextData.RecievedMail));
-            await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.AccountInformationPageLocators.GetClientResidesButton(contextData.WhereClientResides));
+            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.AccountInformationPageLocators.GetReceivedMailButton(_page, contextData.RecievedMail));
+            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.AccountInformationPageLocators.GetClientResidesButton(_page, contextData.WhereClientResides));
         }
 
         public async Task AnswerReceivedMailAsync(ScenarioContextData contextData)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.AccountInformationPageLocators.GetReceivedMailButton(contextData.RecievedMail));
+            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.AccountInformationPageLocators.GetReceivedMailButton(_page, contextData.RecievedMail));
         }
         public async Task ClickNextAsync()
         {

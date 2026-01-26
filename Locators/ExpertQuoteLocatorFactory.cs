@@ -6,7 +6,7 @@ namespace Playwright_POC.Locators
 {
     public static class ExpertQuoteLocatorFactory
     {
-        
+
         internal class SearchRecentlyAccessedListLocators(string value)
         {
             public static string SelectRecentlyAccessedClient(string value) =>
@@ -26,19 +26,24 @@ namespace Playwright_POC.Locators
             public static ILocator GetClientResidesButton(IPage page, string yesOrNo) =>
                 page
                     .Locator("[data-testid^='owner.address.usAsResidence']")
-                    .GetByRole(AriaRole.Button, new() { Name = yesOrNo } );
-        }
+                    .GetByRole(AriaRole.Button, new() { Name = yesOrNo });
 
-        public static string SelectLessorsRiskExposureButton(string yesOrNo) =>
+
+            public static string SelectLessorsRiskExposureButton(string yesOrNo) =>
                 $"xpath=.//button[contains(@id, 'LessorsRiskExposure')]//div[contains(text(), '{yesOrNo}')]";
-
             public static ILocator SelectPolicyTermFromDropdown(IPage page, string value) =>
                 page
                     .GetByRole(AriaRole.Listbox)
-                    .GetByRole(AriaRole.Option, new() { Name = value});
+                    .GetByRole(AriaRole.Option, new() { Name = value });
 
-
+            public static ILocator GetStateDropdownSelectionLocator(IPage page, string stateCode) =>
+                page
+                    .GetByRole(AriaRole.Listbox)
+                    .GetByRole(AriaRole.Option, new() { Name = stateCode.ToUpper() });
         }
+
+
+
 
         //SFP Policy Details
         // Choose Farm Type
@@ -46,7 +51,7 @@ namespace Playwright_POC.Locators
         {
             public static string SelectFarmTypeButton(string value) =>
                 $"css=button[data-testid*='farmTypeCategory'] div:has-text('{value}')";
-            
+
             public static string SelectLivestockTypeRadioButton(string value) =>
                 $"xpath=.//mat-radio-button[contains(@data-testid, 'farmType')]//span[normalize-space(.)='{value}']";
 
@@ -128,7 +133,7 @@ namespace Playwright_POC.Locators
             public static string CheckboxByDescription(string description) =>
                 $"xpath=.//tr[td[contains(normalize-space(.),'{description}')]//input[@type='checkbox']";
 
-            public static string OccupancySqFtInputByClassCode(string classCode) => 
+            public static string OccupancySqFtInputByClassCode(string classCode) =>
                 $"xpath=.//tr[td[contains(normalize-space(.),'{classCode}')]//input[contains(@name, 'bOP_SquareFootage.value')]";
 
             public static string PersonalPropertyLimitInput(string description) =>
@@ -156,8 +161,8 @@ namespace Playwright_POC.Locators
             public static string SelectProtectiveSafeguardsButton(string yesOrNo) =>
                 $"xpath=.//button[contains(@data-testid, 'buildingInput$protectiveSafeguards')]//div[contains(text(), '{yesOrNo}')]";
 
-            
-            
+
+
         }
         internal class EditLocationPageLocators
         {
@@ -202,14 +207,14 @@ namespace Playwright_POC.Locators
             public static ILocator GetMaritalStatusSelection(IPage page, string maritalStatus) =>
                 page
                     .Locator("[data-testid^='owner.maritalStatus']")
-                    .GetByRole(AriaRole.Button, new() { Name= maritalStatus});
+                    .GetByRole(AriaRole.Button, new() { Name = maritalStatus });
 
 
             // Suffix Dropdown Values
             public static ILocator GetSuffixValueButton(IPage page, string value) =>
                page
                     .GetByRole(AriaRole.Listbox)
-                    .GetByRole(AriaRole.Option, new() {  Name = value });
+                    .GetByRole(AriaRole.Option, new() { Name = value });
 
 
             // Does driver require evidence of financial responsibility?
@@ -238,7 +243,7 @@ namespace Playwright_POC.Locators
 
             // Vehicle Type Options
             public static string GetVehicleTypeButton(string value) =>
-                $"xpath=.//button[contains(., '{value }')]";
+                $"xpath=.//button[contains(., '{value}')]";
 
 
             // More Options Dropdown Values
@@ -251,12 +256,12 @@ namespace Playwright_POC.Locators
                 $"xpath=.//button[contains(., '{value}')]";
 
             // Does this vehicle have any customized equipment?
-            public static string GetCustomizedEquipmentButton(string yesOrNo) => 
+            public static string GetCustomizedEquipmentButton(string yesOrNo) =>
                 $"xpath=.//button[contains(@id, 'CustomizedEquipment')]//div[contains(text(), '{yesOrNo}')]";
 
 
             // How is this vehicle used?
-            public static string GetVehicleUsageButton(string usageType) => 
+            public static string GetVehicleUsageButton(string usageType) =>
                 $"xpath=.//button[contains(., '{usageType}')]";
 
 
@@ -318,7 +323,7 @@ namespace Playwright_POC.Locators
             public static string AdditionalRatingDetailsButton(string yesOrNo) =>
            $"xpath=.//button[contains(@data-testid, 'AdditionalRatinginformation')]//div[contains(text(), '{yesOrNo}')]";
         }
-        
+
         internal class UnderwritingQuestionsPageLocators
         {
             public static string ConvictedOfFelonyQuestion(string yesOrNo) =>
@@ -336,7 +341,6 @@ namespace Playwright_POC.Locators
 
             public static string GetJointOwnerDrivesLocator(string yesOrNo) =>
                 $"xpath=.//button[contains(@id, 'hasAccessOrDrivesVehicle')]//div[contains(text(), '{yesOrNo}')]";
-
         }
 
         internal class BillingInformationsPageLocators
@@ -360,11 +364,8 @@ namespace Playwright_POC.Locators
                 $"xpath=.//button[contains(@id, 'paperlessCommunication')]//div[contains(text(), '{yesOrNo}')]";
         }
 
-        public static ILocator GetStateDropdownSelectionLocator(IPage page, string stateCode) =>
-            page
-                .GetByRole(AriaRole.Listbox)
-                .GetByRole(AriaRole.Option, new() {Name = stateCode.ToUpper()});
-
 
     }
+
+    
 }

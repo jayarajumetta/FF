@@ -1,5 +1,4 @@
-﻿
-// Pages/AddDriverInfoPage.cs
+﻿// Pages/AddDriverInfoPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Globalization;
@@ -75,11 +74,11 @@ namespace Playwright_POC.Pages
                     !contextData.MaritalStatus.Equals("Divorced", StringComparison.OrdinalIgnoreCase))
                 {
                     await _page.ClickAsync(Locators.DriverSummaryConstLocators.MoreOptionsMaritalStatus);
-                    await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetMaritalStatusSelection(contextData.MaritalStatus));
+                    await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetMaritalStatusSelection(_page, contextData.MaritalStatus));
                 }
                 else
                 {
-                    await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetMaritalStatusSelection(contextData.MaritalStatus));
+                    await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetMaritalStatusSelection(_page, contextData.MaritalStatus));
                 }
             }
 
