@@ -20,8 +20,7 @@ namespace Playwright_POC.Pages
             await _page.WaitForSelectorAsync(Locators.GlobalLocators.NextButton(_page).ToString(), new() { State = WaitForSelectorState.Visible });
 
             await Helpers.Helpers.ClickIfNotSelectedAsync(
-                _page,
-                ExpertQuoteLocatorFactory.PreQualificationPageLocators.GetQualificationSelection(eligibilityRestrictions)
+                ExpertQuoteLocatorFactory.PreQualificationPageLocators.GetQualificationSelection(_page, eligibilityRestrictions)
             );
 
             await _page.ClickAsync(Locators.GlobalLocators.NextButton(_page).ToString());

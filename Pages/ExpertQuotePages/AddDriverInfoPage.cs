@@ -42,27 +42,27 @@ namespace Playwright_POC.Pages
         public async Task ValidateDriverFieldsAsync(ScenarioContextData contextData)
         {
             DateTime expectedDOB = DateTime.Parse(contextData.ClientDOB, CultureInfo.InvariantCulture);
-            DateTime actualDob = DateTime.Parse(await _page.InputValueAsync(Locators.DriverSummaryConstLocators.DateOfBirthInput));
+            DateTime actualDob = DateTime.Parse(await (Locators.DriverSummaryConstLocators.DateOfBirthInput(_page)).InputValueAsync());
 
-            var actualFirstName = (await _page.InputValueAsync(Locators.DriverSummaryConstLocators.FirstNameInput)).Trim();
+            var actualFirstName = (await (Locators.DriverSummaryConstLocators.FirstNameInput(_page)).InputValueAsync()).Trim();
             var expectedFirstName = contextData.ClientFirstName.Trim();
             Assert.That(actualFirstName.Equals(expectedFirstName, StringComparison.OrdinalIgnoreCase),
                 $"First Name does not match expected value. Expected: '{expectedFirstName}', Actual: '{actualFirstName}'");
 
-            var actualLastName = (await _page.InputValueAsync(Locators.DriverSummaryConstLocators.LastNameInput)).Trim();
+            var actualLastName = (await (Locators.DriverSummaryConstLocators.LastNameInput(_page)).InputValueAsync()).Trim();
             var expectedLastName = contextData.ClientLastName.Trim();
             Assert.That(actualLastName.Equals(expectedLastName, StringComparison.OrdinalIgnoreCase),
                 $"Last Name does not match expected value. Expected: '{expectedLastName}', Actual: '{actualLastName}'");
             Assert.That(actualDob, Is.EqualTo(expectedDOB), "DOB does not match expected value.");
-            Assert.That(await _page.InputValueAsync(Locators.DriverSummaryConstLocators.PhoneNumberInput), Is.EqualTo(contextData.ClientPhoneNumber), "Phone Number does not match expected value.");
-            Assert.That(await _page.InputValueAsync(Locators.DriverSummaryConstLocators.EmailAddressInput), Is.EqualTo(contextData.ClientEmail), "Email Address does not match expected value.");
-            Assert.That(await _page.InnerTextAsync(Locators.DriverSummaryConstLocators.DLStateDropdown), Is.EqualTo(contextData.DLState), "State does not match expected value.");
+            Assert.That(await (Locators.DriverSummaryConstLocators.PhoneNumberInput(_page)).InputValueAsync(), Is.EqualTo(contextData.ClientPhoneNumber), "Phone Number does not match expected value.");
+            Assert.That(await (Locators.DriverSummaryConstLocators.EmailAddressInput(_page)).InputValueAsync(), Is.EqualTo(contextData.ClientEmail), "Email Address does not match expected value.");
+            Assert.That(await (Locators.DriverSummaryConstLocators.DLStateDropdown(_page)).InnerTextAsync(), Is.EqualTo(contextData.DLState), "State does not match expected value.");
         }
 
         public async Task SelectDriverOptionsAsync(ScenarioContextData contextData)
         {
-            await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetEmailTypeButton(contextData.EmailType));
-            await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetGenderButton(contextData.Gender));
+            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetEmailTypeButton(_page, contextData.EmailType));
+            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetGenderButton(_page, contextData.Gender));
 
             var selectedButtonLocator = _page.Locator("xpath=.//div[contains(@id, 'maritalStatus')]//button[contains(@class, 'mat-button-toggle-checked')]");
             bool anySelected = await selectedButtonLocator.CountAsync() > 0;
@@ -82,26 +82,26 @@ namespace Playwright_POC.Pages
                 }
             }
 
-            await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetNamedInsuredButton(contextData.NamedInsured));
+            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetNamedInsuredButton(_page, contextData.NamedInsured));
 
             if (!contextData.OperatorStatus.Equals("Assigned", StringComparison.OrdinalIgnoreCase) &&
                 !contextData.OperatorStatus.Equals("Non Driver", StringComparison.OrdinalIgnoreCase) &&
                 !contextData.OperatorStatus.Equals("Related", StringComparison.OrdinalIgnoreCase))
             {
                 await _page.ClickAsync(Locators.DriverSummaryConstLocators.MoreOptionsOperatorStatus);
-                await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetOperatorStatus(contextData.OperatorStatus));
+                await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetOperatorStatus(_page, contextData.OperatorStatus));
             }
             else
             {
-                await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetOperatorStatus(contextData.OperatorStatus));
+                await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetOperatorStatus(_page, contextData.OperatorStatus));
             }
         }
 
         public async Task FillDriverLicenseFieldsAsync(ScenarioContextData contextData)
         {
-            await _page.FillAsync(Locators.DriverSummaryConstLocators.DLNumberInput, contextData.DLNumber);
-            await _page.FillAsync(Locators.DriverSummaryConstLocators.YearsLicensedInput, contextData.YearsLicensed);
-            await _page.FillAsync(Locators.DriverSummaryConstLocators.MonthsLicensedInput, contextData.MonthsLicensed);
+            await Locators.DriverSummaryConstLocators.DLNumberInput(_page).FillAsync(contextData.DLNumber);
+            await Locators.DriverSummaryConstLocators.YearsLicensedInput(_page).FillAsync(contextData.YearsLicensed);
+            await Locators.DriverSummaryConstLocators.MonthsLicensedInput(_page).FillAsync(contextData.MonthsLicensed);
         }
 
         public async Task SelectInsuranceOptionsAsync(ScenarioContextData contextData)
@@ -151,7 +151,7 @@ namespace Playwright_POC.Pages
 
         public async Task SaveAndContinueAsync()
         {
-            await _page.ClickAsync(Locators.GlobalLocators.SaveAndContinueButton);
+            await Locators.GlobalLocators.SaveAndContinueButton(_page).ClickAsync();
             await _page.WaitForTimeoutAsync(10000);
         }
 
@@ -173,7 +173,7 @@ namespace Playwright_POC.Pages
             {
                 await _page.WaitForTimeoutAsync(2000);
                 Console.WriteLine("CONDITION TRIGGERED");
-                await _page.ClickAsync(Locators.GlobalLocators.SaveAndContinueButton);
+                await Locators.GlobalLocators.SaveAndContinueButton(_page).ClickAsync();
             }
         }
 

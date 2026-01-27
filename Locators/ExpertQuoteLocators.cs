@@ -14,7 +14,7 @@ namespace Playwright_POC.Locators
         public static ILocator MoreOptionsButton(IPage page) => page.GetByTestId("owner.maritalStatus-other");
         public static ILocator DialogSubmitButton(IPage page) => page.GetByTestId("btnConfirmYes");
         public static ILocator DialogCancelButton(IPage page) => page.GetByTestId("btnConfirmNo");
-        public const string SaveAndContinueButton = "xpath=.//button[contains(text(), 'Save and Continue')]";
+        public static ILocator SaveAndContinueButton(IPage page) => page.GetByTestId("fields.line.save_and_Continue");
         public const string CancelButton = "xpath=.//button[contains(text(), 'Cancel')]";
         public const string QuoteNumber = "xpath=//div[contains(@class, 'mat-tab-label-container')]//span";
         public const string SaveButton = "xpath=.//button[contains(text(), 'Save')]";
@@ -292,32 +292,32 @@ namespace Playwright_POC.Locators
 
     public static class DriverSelectionPageLocators
     {
-        public const string ExistingClientButton = "//button[.//div[text()='(Existing Client)']]";
+        public static ILocator ExistingClientButton(IPage page) => page.GetByRole(AriaRole.Button, new() { Name = "(Existing Client)" });
         public const string AdditionalDriverButton = "/button[id='unlistedDriver']";
     }
 
     public static class DriverSummaryConstLocators
     {
-        public const string PageHeader = "//h1[text()='Driver Summary']";
+        public static ILocator PageHeader(IPage page) => page.GetByRole(AriaRole.Heading, new() { Name = "Driver Summary" });
         public const string DriverNameSectionHeader = "//div[id='Driver_Headless.FullName-0-layout']";
-        public const string FirstNameInput = "input[name='fields.line.driver.rows[0].driverInput$firstName.value']";
-        public const string MiddleNameInput = "input[name='fields.line.driver.rows[0].driverInput$firstMiddleName.value']";
-        public const string LastNameInput = "input[name='fields.line.driver.rows[0].driverInput$lastName.value']";
-        public const string DateOfBirthInput = "input[name='fields.line.driver.rows[0].driverInput$dateOfBirth.value']";
-        public const string PhoneNumberInput = "input[name='fields.line.driver.rows[0].driverInput$phoneNumber.value']";
-        public const string EmailAddressInput = "input[name='fields.line.driver.rows[0].driverInput$email.value']";
+        public static ILocator FirstNameInput(IPage page) => page.GetByLabel("First Name");
+        public static ILocator MiddleNameInput(IPage page) => page.GetByLabel("Middle Name");
+        public static ILocator LastNameInput(IPage page) => page.GetByLabel("Last Name");
+        public static ILocator DateOfBirthInput(IPage page) => page.GetByLabel("Date Of Birth");
+        public static ILocator PhoneNumberInput(IPage page) => page.GetByLabel("Phone Number");
+        public static ILocator EmailAddressInput(IPage page) => page.GetByLabel("Email Address");
 
-        public const string EditSSNButton = "button[text()='Edit SSN#']";
-        public const string DLStateDropdown = "mat-select[id='fields.line.driver.rows[0].driverInput$driversLicenseState.value']";
-        public const string DLNumberInput = "input[name='fields.line.driver.rows[0].driverInput$driversLicenseNumber.value']";
+        public static ILocator EditSSNButton(IPage page) => page.GetByRole(AriaRole.Button, new() { Name = "Edit SSN#" });
+        public static ILocator DLStateDropdown(IPage page) => page.GetByRole(AriaRole.Combobox, new() { Name = "Driver's License State" });
+        public static ILocator DLNumberInput(IPage page) => page.GetByLabel("Driver's License Number");
 
 
         // Total Time Licensed in Current State
-        public const string YearsLicensedInput = "input[name='fields.line.driver.rows[0].driverInput$yearsLicensedCurrentState.value']";
-        public const string MonthsLicensedInput = "input[name='fields.line.driver.rows[0].driverInput$monthsLicensedCurrentState.value']";
+        public static ILocator YearsLicensedInput(IPage page) => page.GetByLabel("Years");
+        public static ILocator MonthsLicensedInput(IPage page) => page.GetByLabel("Months");
 
         // Suffix Dropdown and Values
-        public const string SuffixDropdown = "mat-select[id='fields.line.driver.rows[0].driverInput$suffix.value']";
+        public static ILocator SuffixDropdown(IPage page) => page.GetByRole(AriaRole.Combobox, new() { Name = "Suffix" });
 
         // Marital Status More Options Dropdown
         public const string MoreOptionsMaritalStatus = "xpath=.//*[contains(text(), 'Marital Status')]/following::button[.//div[text()='More Options']]";
@@ -349,13 +349,13 @@ namespace Playwright_POC.Locators
         // Vehicle info
         public const string SelectVehicles = "xpath=//button[contains(@id, 'unlistedVehicle')]";
         public const string Vehicle1Header = "xpath=//div[contains(text(), 'Vehicle 1')]";
-        public const string VINNumber = "//*[@id='fields.line.risk.rows[0].vehicleInput$vIN.value']";
-        public const string VehicleYearInput = "input[name='fields.line.risk.rows[0].vehicleInput$year.value']";
-        public const string MakeInput = "input[name='fields.line.risk.rows[0].vehicleInput$make.value']";
-        public const string ModelInput = "input[name='fields.line.risk.rows[0].vehicleInput$model.value']";
-        public const string TrimInput = "input[name='fields.line.risk.rows[0].vehicleInput$description.value']";
-        public const string PurchaseDateInput = "input[name='fields.line.risk.rows[0].vehicleInput$purchaseDate.value']";
-        public const string OdometerReadingInput = "input[name='fields.line.risk.rows[0].vehicleInput$odometer.value']";
+        public static ILocator VINNumber(IPage page) => page.GetByLabel("VIN");
+        public static ILocator VehicleYearInput(IPage page) => page.GetByLabel("Model Year");
+        public static ILocator MakeInput(IPage page) => page.GetByLabel("Make");
+        public static ILocator ModelInput(IPage page) => page.GetByLabel("Model");
+        public static ILocator TrimInput(IPage page) => page.GetByLabel("Trim");
+        public static ILocator PurchaseDateInput(IPage page) => page.GetByLabel("Purchase Date");
+        public static ILocator OdometerReadingInput(IPage page) => page.GetByLabel("Odometer Reading");
         public const string TotalAnnualMileageInput = "input[name='fields.line.risk.rows[0].vehicleInput$annualMileage.value']";
         
 

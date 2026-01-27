@@ -68,7 +68,7 @@ public class PASteps
     [Then("user selects existing Driver")]
     public async Task UserSelectsExistingDriverAsync()
     {
-        await _context.Page.ClickAsync(DriverSelectionPageLocators.ExistingClientButton);
+        await DriverSelectionPageLocators.ExistingClientButton(_context.Page).ClickAsync();
 
         // Click Next to Proceed
         await GlobalLocators.NextButton(_context.Page).ClickAsync();

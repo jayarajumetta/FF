@@ -81,7 +81,7 @@ namespace Playwright_POC.Pages
 
         public async Task SaveAndContinueAsync()
         {
-            await _page.ClickAsync(Locators.GlobalLocators.SaveAndContinueButton);
+            await Locators.GlobalLocators.SaveAndContinueButton(_page).ClickAsync();
         }
 
         public async Task HandleUWDialogIfPresentAsync()

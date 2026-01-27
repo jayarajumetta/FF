@@ -62,8 +62,10 @@ namespace Playwright_POC.Locators
         internal class PreQualificationPageLocators
         {
 
-            public static string GetQualificationSelection(string value) =>
-                $"xpath=.//button[contains(@id, 'preQualificationQuestionPolicy')]//span[contains(text(), '{value}')]";
+            public static ILocator GetQualificationSelection(IPage page, string value) =>
+                page
+                .GetByRole(AriaRole.Button, new() { Name = value });
+                
 
             //Add Class Code Section of Prequalifications Page
             public static string PrimaryClassCodeToggle(string classCode) =>
@@ -179,29 +181,35 @@ namespace Playwright_POC.Locators
         internal class DriverSummaryPageLocators
         {
 
-            public static string GetGenderButton(string value) =>
-                $"xpath=.//button[.//div[text()='{value}']]";
+            public static ILocator GetGenderButton(IPage page, string value) =>
+                page
+                .GetByRole(AriaRole.Button, new() { Name = value });
 
             // Is this driver a named insured?
-            public static string GetNamedInsuredButton(string value) =>
-                $"xpath=.//button[contains(@id, 'namedInsuredType') and .//div[text()= '{value}']]";
+            public static ILocator GetNamedInsuredButton(IPage page, string value) =>
+                page
+                .GetByRole(AriaRole.Button, new() { Name = value });
 
 
             // Operator Status
-            public static string GetOperatorStatus(string value) =>
-                $"xpath=.//button[contains(@id, 'operatorStatus') and .//div[text()='{value}']]";
+            public static ILocator GetOperatorStatus(IPage page, string value) =>
+                page
+                .GetByRole(AriaRole.Button, new() { Name = value });
 
             // More Options Dropdown Values
-            public static string GetMoreOptionsValues(string value) =>
-                $"xpath=//button[contains(text(), '{value}')]";
+            public static ILocator GetMoreOptionsValues(IPage page, string value) =>
+                page
+                .GetByRole(AriaRole.Button, new() { Name = value });
 
             // Phone Type Button Options
-            public static string GetPhoneTypeButton(string value) =>
-                $"xpath=.//button[contains(text(), '{value}')]";
+            public static ILocator GetPhoneTypeButton(IPage page, string value) =>
+                page
+                .GetByRole(AriaRole.Button, new() { Name = value });
 
             // Email Type Button Options
-            public static string GetEmailTypeButton(string value) =>
-                $"xpath=.//button[contains(@id, 'emailType') and .//div[text()='{value}']]";
+            public static ILocator GetEmailTypeButton(IPage page, string value) =>
+                page
+                .GetByRole(AriaRole.Button, new() { Name = value });
 
             // Account Owner Information
             public static ILocator GetMaritalStatusSelection(IPage page, string maritalStatus) =>
@@ -242,27 +250,35 @@ namespace Playwright_POC.Locators
                 $"xpath=.//button[contains(., '{value}')]";
 
             // Vehicle Type Options
-            public static string GetVehicleTypeButton(string value) =>
-                $"xpath=.//button[contains(., '{value}')]";
+            public static ILocator GetVehicleTypeButton(IPage page, string value) =>
+                page.
+                GetByRole(AriaRole.Button, new() { Name = value });
+               
 
 
             // More Options Dropdown Values
-            public static string GetMoreOptionsValues(string value) =>
-                $"xpath=.//button[contains(text(), '{value}')]";
+            public static ILocator GetMoreOptionsValues(IPage page, string value) =>
+                page
+                .GetByRole(AriaRole.Button, new() { Name = value });
 
 
             //Is this vehicle owned or financed?
-            public static string GetVehicleOwnershipButton(string value) =>
-                $"xpath=.//button[contains(., '{value}')]";
+            public static ILocator GetVehicleOwnershipButton(IPage page, string value) =>
+                page
+                .GetByRole(AriaRole.Button, new() { Name = value });
+
 
             // Does this vehicle have any customized equipment?
-            public static string GetCustomizedEquipmentButton(string yesOrNo) =>
-                $"xpath=.//button[contains(@id, 'CustomizedEquipment')]//div[contains(text(), '{yesOrNo}')]";
+            public static ILocator GetCustomizedEquipmentButton(IPage page, string yesOrNo) =>
+                page
+                .GetByRole(AriaRole.Button, new() { Name = yesOrNo });
+                
 
 
             // How is this vehicle used?
-            public static string GetVehicleUsageButton(string usageType) =>
-                $"xpath=.//button[contains(., '{usageType}')]";
+            public static ILocator GetVehicleUsageButton(IPage page, string usageType) =>
+                page
+                .GetByRole(AriaRole.Button, new() { Name = usageType });
 
 
         }

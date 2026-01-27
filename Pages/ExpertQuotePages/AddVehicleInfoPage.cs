@@ -34,7 +34,7 @@ namespace Playwright_POC.Pages
 
         public async Task EnterVINAndSelectVehicleAsync(ScenarioContextData contextData)
         {
-            await _page.FillAsync(Locators.VehicleSummaryConstLocators.VINNumber, contextData.VINNumber);
+            await Locators.VehicleSummaryConstLocators.VINNumber(_page).FillAsync(contextData.VINNumber);
             await _page.ClickAsync(Locators.VehicleSummaryConstLocators.Vehicle1Header);
             await _page.WaitForTimeoutAsync(2000);
 
@@ -49,7 +49,7 @@ namespace Playwright_POC.Pages
 
         public async Task SelectVehicleTypeAsync(string vehicleType)
         {
-            await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleTypeButton(vehicleType));
+            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleTypeButton(_page, vehicleType));
         }
 
         public async Task ValidateVehicleDetailsAsync(ScenarioContextData contextData)
@@ -69,26 +69,29 @@ namespace Playwright_POC.Pages
 
         public async Task SelectVehicleOptionsAsync(ScenarioContextData contextData)
         {
-            await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleOwnershipButton(contextData.VehicleOwnership));
-            await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetCustomizedEquipmentButton(contextData.CustomizedEquipment));
-            await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleUsageButton(contextData.VehicleUsage));
+            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleOwnershipButton(_page, contextData.VehicleOwnership));
+            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetCustomizedEquipmentButton(_page, contextData.CustomizedEquipment));
+            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleUsageButton(_page, contextData.VehicleUsage));
         }
 
         public async Task FillPurchaseAndMileageFieldsAsync(ScenarioContextData contextData)
         {
-            await _page.WaitForSelectorAsync(Locators.VehicleSummaryConstLocators.PurchaseDateInput, new() { Timeout = 2000 });
+
+            await Locators.VehicleSummaryConstLocators.PurchaseDateInput(_page)
+                .WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 2000 });
+
             await _page.WaitForTimeoutAsync(2000);
 
-            await _page.FillAsync(Locators.VehicleSummaryConstLocators.PurchaseDateInput, contextData.PurchaseDate);
+            await Locators.VehicleSummaryConstLocators.PurchaseDateInput(_page).FillAsync(contextData.PurchaseDate);
             await _page.WaitForTimeoutAsync(2000);
 
-            await _page.FillAsync(Locators.VehicleSummaryConstLocators.OdometerReadingInput, contextData.OdometerReading);
+            await Locators.VehicleSummaryConstLocators.OdometerReadingInput(_page).FillAsync(contextData.OdometerReading);
             await _page.FillAsync(Locators.VehicleSummaryConstLocators.TotalAnnualMileageInput, contextData.AnnualMileage);
         }
 
         public async Task SaveAndContinueVehicleAsync()
         {
-            await _page.ClickAsync(Locators.GlobalLocators.SaveAndContinueButton);
+            await Locators.GlobalLocators.SaveAndContinueButton(_page).ClickAsync();
             await _page.WaitForSelectorAsync(Locators.GlobalLocators.NextButton(_page).ToString(), new() { Timeout = 3000 });
             await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }
