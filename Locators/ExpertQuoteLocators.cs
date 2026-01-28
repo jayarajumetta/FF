@@ -357,13 +357,13 @@ namespace Playwright_POC.Locators
         public static ILocator PurchaseDateInput(IPage page) => page.GetByLabel("Purchase Date");
         public static ILocator OdometerReadingInput(IPage page) => page.GetByLabel("Odometer Reading");
         public const string TotalAnnualMileageInput = "input[name='fields.line.risk.rows[0].vehicleInput$annualMileage.value']";
-        
+
 
         // VIN Populated Vehicle Information (Read Only Fields)
-        public const string VehicleYearReadOnly = "xpath=//span[contains(text(), 'Year:')]/following-sibling::span[@class='readonly-value']";
-        public const string MakeReadOnly = "xpath=//span[contains(text(), 'Make:')]/following-sibling::span[@class='readonly-value']";
-        public const string ModelReadOnly = "xpath=//span[contains(text(), 'Model:')]/following-sibling::span[@class='readonly-value']";
-        public const string TrimReadOnly = "xpath=//span[contains(text(), 'Trim:')]/following-sibling::span[@class='readonly-value']";
+        public static ILocator VehicleYearReadOnly(IPage page) => page.Locator("div.readonly-field:has(span.readonly-label:has-text('Year')) >> span.readonly-value");
+        public static ILocator MakeReadOnly(IPage page) => page.Locator("div.readonly-field:has(span.readonly-label:has-text('Make')) >> span.readonly-value");
+        public static ILocator ModelReadOnly(IPage page) => page.Locator("div.readonly-field:has(span.readonly-label:has-text('Model')) >> span.readonly-value");
+        public static ILocator TrimReadOnly(IPage page) => page.Locator("div.readonly-field:has(span.readonly-label:has-text('Trim')) >> span.readonly-value");
         /// <summary>
         /// ^^^ Check locators for read only fields above ^^^
         /// </summary>
@@ -371,8 +371,8 @@ namespace Playwright_POC.Locators
 
     public static class ClaimsAndViolationsConstLocators
     {
-        public const string NoClaimsBanner = "xpath=//main[contains(., 'Claims')]//div[contains(text(), 'No claims were found on reports')]";
-        public const string NoViolationsBanner = "xpath=//main[contains(., 'Violations')]//div[contains(text(), 'No violations were found on reports')]";
+        public static ILocator NoClaimsBanner(IPage page) => page.GetByText("No claims were found on reports");
+        public static ILocator NoViolationsBanner(IPage page) => page.GetByText("No violations were found on reports");
         public static ILocator AddClaimsButton(IPage page) => page.GetByTestId("add_Claim");
         public static ILocator AddViolationsButton(IPage page) => page.GetByTestId("add_Violation");
     }
@@ -391,34 +391,34 @@ namespace Playwright_POC.Locators
 
     internal class PricingDetailsConstLocators
     {
-        public const string AccountOwner = "xpath=.//div[contains(@id, 'AccountOwner')]//span[contains(@class, 'readonly-value')]";
-        public const string AccountAddress = "xpath=.//div[contains(@id, 'FullAccountAddress')]//span[contains(@class, 'readonly-value')]";
-        public const string ProposalButton = "xpath=.//button[contains(text(), 'Proposal')]";
-        public const string CoverageOptionOverviewButton = "xpath=.//button[contains(text(), 'Coverage Option Overview')]";
+        public static ILocator AccountOwner(IPage page) => page.Locator("div.readonly-field:has(span.readonly-label:has-text('Account Owner')) >> span.readonly-value");
+        public static ILocator AccountAddress(IPage page) => page.Locator("div.readonly-field:has(span.readonly-label:has-text('Account Address')) >> span.readonly-value");
+        public static ILocator ProposalButton(IPage page) => page.GetByTestId("fields.data.create_Proposal");
+        public static ILocator CoverageOptionOverviewButton(IPage page) => page.GetByTestId("fields.data.create_CoverageOptionOverview");
     }
 
     public static class AdditionalInterestLocators
     {
         public static ILocator AddAdditionalInterestButton(IPage page) => page.GetByTestId("add_Additional_Interest");
-        public const string AdditionalInterestNameInput = "input[name='fields.account.additionalOtherInterest.additionalOtherInterestInput$name.value']";
-        public const string AdditionalInterestAddressInput = "input[name='fields.account.additionalOtherInterest.additionalOtherInterestInput$address1.value']";
-        public const string AdditionalInterestCityInput = "input[name='fields.account.additionalOtherInterest.additionalOtherInterestInput$city.value']";
-        public const string AdditionalInterestStateDropdown = "xpath=//mat-select[contains(@id, 'additionalOtherInterestInput$state.value')]//div[contains(@class, 'mat-select-arrow')]";
-        public const string AdditionalInterestZipInput = "input[name='fields.account.additionalOtherInterest.additionalOtherInterestInput$zipCode.value']";
-        public const string AdditionalInterestPhoneInput = "input[name='fields.account.additionalOtherInterest.additionalOtherInterestInput$primaryPhone.value']";
-        public const string RelationshipToAccountHolderInput = "input[name='fields.account.additionalOtherInterest.additionalOtherInterestInput$relationshipToInsured.value']";
-        public const string AdditionalInterestDOBInput = "input[name='fields.account.additionalOtherInterest.additionalOtherInterestInput$ownerDateOfBirth.value']";
-        public const string AdditionalInterestDLNumberInput = "input[name='fields.account.additionalOtherInterest.additionalOtherInterestInput$ownerDriversLicenseNumber.value']";
-        public const string AdditionalInterestLicenseState = "xpath=//mat-select[contains(@id, 'ownerLicenseState')]//div[contains(@class, 'mat-select-arrow')]";
-        public const string UWRulesDialogContinueButton = "xpath=//mat-dialog-container//a[contains(text(), 'Continue')]";
+        public static ILocator AdditionalInterestNameInput(IPage page) => page.GetByTestId("fields.account.additionalOtherInterest.additionalOtherInterestInput$name.value");
+        public static ILocator AdditionalInterestAddressInput(IPage page) => page.GetByTestId("fields.account.additionalOtherInterest.additionalOtherInterestInput$name.value");
+        public static ILocator AdditionalInterestCityInput(IPage page) => page.GetByTestId("fields.account.additionalOtherInterest.additionalOtherInterestInput$city.value");
+        public static ILocator AdditionalInterestStateDropdown(IPage page) => page.GetByTestId("fields.account.additionalOtherInterest.additionalOtherInterestInput$state.value");
+        public static ILocator AdditionalInterestZipInput(IPage page) => page.GetByTestId("fields.account.additionalOtherInterest.additionalOtherInterestInput$zipCode.value");
+        public static ILocator AdditionalInterestPhoneInput(IPage page) => page.GetByTestId("fields.account.additionalOtherInterest.additionalOtherInterestInput$primaryPhone.value");
+        public static ILocator RelationshipToAccountHolderInput(IPage page) => page.GetByTestId("fields.account.additionalOtherInterest.additionalOtherInterestInput$relationshipToInsured.value")
+        public static ILocator AdditionalInterestDOBInput(IPage page) => page.GetByLabel("Owner Date Of Birth");
+        public static ILocator AdditionalInterestDLNumberInput(IPage page) => page.GetByTestId("fields.account.additionalOtherInterest.additionalOtherInterestInput$ownerDriversLicenseNumber.value");
+        public static ILocator AdditionalInterestLicenseState(IPage page) => page.GetByLabel(" Owner License State ");
+        public static ILocator UWRulesDialogContinueButton(IPage page) => page.GetByTestId("btnConfirmYes");
     }
 
     public static class BillingInformationConstLocators
     {
-        public const string CreateNewBillingAccountButton = "xpath=.//button//div[contains(text(), 'Create New Billing Account')]";
-        public const string PaymentDueDateInput = "input[name='fields._PolicyPaymentInputDoc.subsequentPaymentData$dueDate.value']";
-        public const string ApplyRefundChecbox = "xpath=.//mat-checkbox//div[contains(text(), 'Apply Refund')]";
-        public const string CheckNumberInput = "input[name='fields._PolicyPaymentInputDoc.initialPaymentData$checkNumber.value']";
+        public static ILocator CreateNewBillingAccountButton(IPage page) => page.Locator("[data-testid*='billingCenterAccount']");
+        public static ILocator PaymentDueDateInput(IPage page) => page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$dueDate.value");
+        public static ILocator ApplyRefundChecbox(IPage page) => page.GetByTestId("fields._PolicyPaymentInputDoc.initialPaymentData$applyRefund.value");
+        public static ILocator CheckNumberInput(IPage page) => page.GetByTestId("fields._PolicyPaymentInputDoc.initialPaymentData$checkNumber.value");
     }
 
    

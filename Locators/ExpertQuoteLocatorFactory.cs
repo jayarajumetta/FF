@@ -1,4 +1,5 @@
 using Microsoft.Playwright;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Net.NetworkInformation;
 
@@ -246,8 +247,9 @@ namespace Playwright_POC.Locators
         internal class VehicleSummaryPageLocators
         {
             //Vehicle Selection Button
-            public static string GetVehicleSelectButton(string value, StringComparison comparison) =>
-                $"xpath=.//button[contains(., '{value}')]";
+            public static ILocator GetVehicleSelectButton(IPage page, string value, StringComparison comparison) =>
+                page.Locator("[id*='vehicle']")
+                    .GetByRole(AriaRole.Button, new() { Name = value });
 
             // Vehicle Type Options
             public static ILocator GetVehicleTypeButton(IPage page, string value) =>
@@ -285,53 +287,70 @@ namespace Playwright_POC.Locators
 
         internal class VehicleDriverAssignmentPageLocators
         {
-            public static string GetDriverStatusButton(string value) =>
-                $"xpath=.//button[contains(., '{value}')]";
+            public static ILocator DriverStatusButton(IPage page, string value) =>
+                page.Locator("[id*='assignmentType']")
+                    .GetByRole (AriaRole.Button, new() {Name = value});
         }
 
         internal class DiscountsPageLocators
         {
-            public static string GetPolicyDiscountCheckbox(string value) =>
-                $"xpath=.//button[contains(text(), '{value}')]";
+            public static ILocator GetPolicyDiscountCheckbox(IPage page, string value) =>
+                page.GetByRole(AriaRole.Button, new() { Name = value });
 
             public static string GetBenefitXpressDiscountButton(string value) =>
                 $"xpath=.//div[contains(@id, 'IsMemberOfBenefitesExpressGroup')]//button[contains(text(), '{value}')]";
 
-            public static string GetAccountCompositionCheckbox(string value) =>
-                $"xpath=.//div[contains(@id, 'AccountCompositionOverride')]//button[contains(text(), '{value}')]";
+            public static ILocator GetAccountCompositionButton(IPage page, string yesOrNo) =>
+                page.Locator("div[id*='AccountCompositionOverride']")
+                    .GetByRole(AriaRole.Button, new() { Name = yesOrNo })
+;
+            public static ILocator GetUpdateButton(IPage page, string yesOrNo) =>
+                page.Locator("div[id*='DriverInput.IsMemberOfBenefitsExpressGroup']")
+                    .GetByRole(AriaRole.Button, new() { Name = yesOrNo })
+;
         }
 
         internal class CoverageSelectionPageLocators
         {
-            public static string GetPolicyCoverageSelectionButton(string value) =>
-                $"xpath=.//button[contains(., '{value}')]";
+            public static ILocator GetPolicyCoverageSelectionButton(IPage page, string value) =>
+                page.GetByRole(AriaRole.Button, new() { Name = value });
 
-            public static string GetCompCollOnlyButton(string yesOrNo) =>
-                $"xpath=.//button[contains(@id, 'COMPCOLLBothOnly')]//div[contains(., '{yesOrNo}')]";
+            public static ILocator GetCompCollOnlyButton(IPage page, string yesOrNo) =>
+                page.GetByRole(AriaRole.Button, new() { Name = yesOrNo })
+                    .Filter(new() { Has = page.Locator("[id*='COMPCOLLBothOnly']") });
 
-            public static string GetCompDeductibleButton(string value) =>
-                $"xpath=.//button[contains(@id, 'comp_Option')]//div[contains(., '{value}')]";
 
-            public static string GetCollDeductibleButton(string value) =>
-                $"xpath=.//button[contains(@id, 'coll_Option')]//div[contains(., '{value}')]";
+            public static ILocator GetCompDeductibleButton(IPage page, string value) =>
+                page.Locator("[id*='comp_Option']")
+                    .GetByRole(AriaRole.Button, new() { Name = value });
+
+            public static ILocator GetCollDeductibleButton(IPage page, string value) =>
+                page.Locator("[id*='coll_Option']")
+                    .GetByRole(AriaRole.Button, new() { Name = value });
         }
 
         internal class AdditionalCoveragesPageLocators
         {
-            public static string GetAccidentalDeathAndDismembermentButton(string value) =>
-                $"xpath=.//button[contains(@id, 'AccidentalDeath')]//div[contains(., '{value}')]";
+            public static ILocator GetAccidentalDeathAndDismembermentButton(IPage page, string value) =>
+                page.Locator("[id*='AccidentalDeath']")
+                    .GetByRole(AriaRole.Button, new() { Name = value});
 
-            public static string GetLossOfIncomeCheckbox(string value) =>
-                $"xpath=.//button[contains(@id, 'driverIncomeLoss')]//span[contains(., '{value}')]";
+            public static ILocator GetLossOfIncomeCheckbox(IPage page, string value) =>
+                page.Locator("[id*='driverIncomeLoss']")
+                    .GetByRole(AriaRole.Button, new() { Name = value});
 
-            public static string GetRentalReimbursementButton(string value) =>
-                $"xpath=.//button[contains(@id, 'RentalReimbursement')]//div[contains(., '{value}')]";
+            public static ILocator GetRentalReimbursementButton(IPage page, string value) =>
+                page.Locator("[id*='RentalReimbursement']")
+                    .GetByRole(AriaRole.Button, new() { Name = value});
 
             public static string GetRoadsideAssistanceButton(string value) =>
                 $"xpath=.//button[contains(@id, 'RoadsideAssistance')]//div[contains(., '{value}')]";
 
-            public static string GetADDDriverCheckbox(string value) =>
-                $"xpath=.//button[contains(@id, 'aDDOperator')]//span[contains(., '{value}')]";
+            public static ILocator GetADDDriverCheckbox(IPage page, string value) =>
+                page.Locator("[id*='aDDOperator']")
+                    .GetByRole(AriaRole.Button, new());
+
+
         }
 
         internal class PricingDetailsPageLocators
@@ -342,42 +361,43 @@ namespace Playwright_POC.Locators
 
         internal class UnderwritingQuestionsPageLocators
         {
-            public static string ConvictedOfFelonyQuestion(string yesOrNo) =>
-                $"xpath=.//div[contains(@id, 'FelonyConviction')]//div[contains(text(), '{yesOrNo}')]";
+            public static ILocator ConvictedOfFelonyQuestion(IPage page, string yesOrNo) =>
+                page.Locator("[id*='felonyConviction']")
+                    .GetByRole(AriaRole.Button, new() { Name = yesOrNo});
         }
         internal class AdditionalInterestPageLocators
         {
             public static string OtherRegistrationQuestion(string yesOrNo) =>
                 $"xpath=.//div[contains(@id, 'AnyVehicleRegisteredToSomeone')]//div[contains(text(), '{yesOrNo}')]";
 
-            public static string SelectVehicleRegisteredToOther(string vehicleMake) =>
-                $"xpath=.//button[contains(@id, 'isREgisteredToOther')]//span[contains(text(), '{vehicleMake}')]";
-            public static string GetAdditionalInterestType(string value) =>
-                $"xpath=.//button[contains(@data-testid, 'additionalOtherInterest')]//div[contains(text(), '{value}')]";
+            public static ILocator SelectVehicleRegisteredToOther(IPage page, string vehicleMake) =>
+                page.GetByRole(AriaRole.Button, new() { NameRegex = new($@"\b{Regex.Escape(vehicleMake)}\b", RegexOptions.IgnoreCase) });
+            public static ILocator GetAdditionalInterestType(IPage page, string value) =>
+                page.GetByRole(AriaRole.Button, new() { Name = value });
 
-            public static string GetJointOwnerDrivesLocator(string yesOrNo) =>
-                $"xpath=.//button[contains(@id, 'hasAccessOrDrivesVehicle')]//div[contains(text(), '{yesOrNo}')]";
+            public static ILocator GetJointOwnerDrivesLocator(IPage page, string yesOrNo) =>
+                page.GetByRole(AriaRole.Button, new() { Name = yesOrNo});
         }
 
         internal class BillingInformationsPageLocators
         {
-            public static string GetPrimaryPayerButton(string value) =>
-                $"xpath=.//button[contains(@id, 'payerID')]//div[contains(text(), '{value}')]";
+            public static ILocator GetPrimaryPayerButton(IPage page, string value) =>
+                page.GetByRole(AriaRole.Button, new() { Name = value });
 
-            public static string GetPaymentTypeButton(string value) =>
-                $"xpath=.//button[contains(@id, 'paymentMethod')]//div[contains(text(), '{value}')]";
+            public static ILocator GetPaymentTypeButton(IPage page, string value) =>
+                page.GetByRole(AriaRole.Button, new() { Name = value});
 
-            public static string GetPaymentPlanButton(string value) =>
-                $"xpath=.//button[contains(@id, 'paymentPlan')]//div[contains(text(), '{value}')]";
+            public static ILocator GetPaymentPlanButton(IPage page, string value) =>
+                page.GetByRole(AriaRole.Button, new() { Name = value});
 
-            public static string GetPaymentAmountRadioButton(string value) =>
-                $"xpath=.//mat-radio-button[contains(@id, 'amountSelection') and .//span[contains(text(), '{value}')]]";
+            public static ILocator GetPaymentAmountRadioButton(IPage page, string value) =>
+                page.GetByRole(AriaRole.Radio, new() { Name = value});
 
-            public static string GetPaymentMethodButton(string value) =>
-                $"xpath=.//button[contains(@id, 'paymentMethod')]//div[contains(text(), '{value}')]";
+            public static ILocator GetPaymentMethodButton(IPage page, string value) =>
+                page.GetByRole(AriaRole.Button, new() { Name = value});
 
-            public static string GetPaperlessCommunicationButton(string yesOrNo) =>
-                $"xpath=.//button[contains(@id, 'paperlessCommunication')]//div[contains(text(), '{yesOrNo}')]";
+            public static ILocator GetPaperlessCommunicationButton(IPage page, string yesOrNo) =>
+                page.GetByRole(AriaRole.Button, new() { Name = yesOrNo});
         }
 
 
