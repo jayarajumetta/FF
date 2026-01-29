@@ -14,10 +14,10 @@ Feature: EQ SFP Smoke
     Then user clicks New Quote button
 
     Then user enters client information and clicks search
-      | Question     | Answer         |
-      | DOB          | 08/08/1944     |
-      | BestPhone    | (907) 227-0664 |
-      | EmailAddress | fake@email.com |
+      | Question     | Answer          |
+      | DOB          | {{randomDOB}}   |
+      | BestPhone    | {{randomPhone}} |
+      | EmailAddress | {{randomEmail}} |
 
     Then user selects Create New Client and clicks the Next button
 

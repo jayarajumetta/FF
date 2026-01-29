@@ -114,6 +114,17 @@ public class SharedEQSteps
     {
         TableMappingHelpers.NewExistingClientFields(table, _contextData);
 
+        // Replace tokens with generated values
+        // Supports: {{randomDOB}} for DOB (21-65 years old), {{randomPhone}} for phone, {{randomEmail}} for email
+        if (string.Equals(_contextData.ClientDOB, "{{randomDOB}}", StringComparison.OrdinalIgnoreCase))
+            _contextData.ClientDOB = RandomGenerators.GenerateRandomDOB();
+
+        if (string.Equals(_contextData.ClientPhoneNumber, "{{randomPhone}}", StringComparison.OrdinalIgnoreCase))
+            _contextData.ClientPhoneNumber = RandomGenerators.GenerateRandomPhoneNumber();
+
+        if (string.Equals(_contextData.ClientEmail, "{{randomEmail}}", StringComparison.OrdinalIgnoreCase))
+            _contextData.ClientEmail = RandomGenerators.GenerateRandomEmail(_contextData.ClientFirstName, _contextData.ClientLastName);
+
         var newClientPage = new NewClientPage(_context.Page);
 
         await newClientPage.WaitForFirstNameInputAsync();
