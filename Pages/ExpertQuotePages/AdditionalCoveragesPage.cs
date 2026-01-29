@@ -1,5 +1,4 @@
-﻿
-// Pages/AdditionalCoveragesPage.cs
+﻿// Pages/AdditionalCoveragesPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 using Playwright_POC.Locators;
@@ -19,7 +18,7 @@ namespace Playwright_POC.Pages
 
         public async Task SelectAccidentalDeathAndDismembermentAsync(string value)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.AdditionalCoveragesPageLocators.GetAccidentalDeathAndDismembermentButton(value));
+            await ExpertQuoteLocatorFactory.AdditionalCoveragesPageLocators.GetAccidentalDeathAndDismembermentButton(_page, value).ClickAsync();
         }
 
         public async Task WaitForCoverageOptionsLoadAsync()
@@ -29,12 +28,12 @@ namespace Playwright_POC.Pages
 
         public async Task SelectADDDriverAsync(string value)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.AdditionalCoveragesPageLocators.GetADDDriverCheckbox(value));
+            await ExpertQuoteLocatorFactory.AdditionalCoveragesPageLocators.GetADDDriverCheckbox(_page, value).ClickAsync();
         }
 
         public async Task SelectLossOfIncomeAsync(string value)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.AdditionalCoveragesPageLocators.GetLossOfIncomeCheckbox(value));
+            await ExpertQuoteLocatorFactory.AdditionalCoveragesPageLocators.GetLossOfIncomeCheckbox(_page, value).ClickAsync();
         }
 
         public async Task SelectRentedMotorHomesAsync()
@@ -43,7 +42,7 @@ namespace Playwright_POC.Pages
         }
         public async Task SelectRentalReimbursementAsync(string value)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.AdditionalCoveragesPageLocators.GetRentalReimbursementButton(value));
+            await ExpertQuoteLocatorFactory.AdditionalCoveragesPageLocators.GetRentalReimbursementButton(_page, value).ClickAsync();
         }
 
         public async Task SelectAddedCoverageEndorsement()

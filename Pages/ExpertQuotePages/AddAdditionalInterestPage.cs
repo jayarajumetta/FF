@@ -23,7 +23,7 @@ namespace Playwright_POC.Pages
 
         public async Task SelectVehicleRegisteredToSomeoneElseAsync(string vehicleMake)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.AdditionalInterestPageLocators.SelectVehicleRegisteredToOther(vehicleMake));
+            await ExpertQuoteLocatorFactory.AdditionalInterestPageLocators.SelectVehicleRegisteredToOther(_page, vehicleMake).ClickAsync();
         }
 
         public async Task ClickAddAdditionalInterestAsync()
@@ -33,43 +33,44 @@ namespace Playwright_POC.Pages
 
         public async Task SelectAdditionalInterestTypeAsync(string additionalInterestType)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.AdditionalInterestPageLocators.GetAdditionalInterestType(additionalInterestType));
+            await ExpertQuoteLocatorFactory.AdditionalInterestPageLocators.GetAdditionalInterestType(_page, additionalInterestType).ClickAsync();
         }
 
         public async Task HandleJointOwnerFieldsAsync(ScenarioContextData contextData)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleSelectButton(contextData.VehicleMake, StringComparison.OrdinalIgnoreCase));
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.AdditionalInterestPageLocators.GetJointOwnerDrivesLocator(contextData.JointOwnerDrive));
-            await _page.FillAsync(Locators.AdditionalInterestLocators.RelationshipToAccountHolderInput, contextData.RelationshipToAccountOwner);
+            await ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleSelectButton(_page, contextData.VehicleMake, StringComparison.OrdinalIgnoreCase).ClickAsync();
+            await ExpertQuoteLocatorFactory.AdditionalInterestPageLocators.GetJointOwnerDrivesLocator(_page, contextData.JointOwnerDrive).ClickAsync();
+            await AdditionalInterestLocators.RelationshipToAccountHolderInput(_page).FillAsync(contextData.RelationshipToAccountOwner);
         }
 
 
         public async Task FillAdditionalInterestFieldsAsync(ScenarioContextData contextData)
         {
-            await _page.WaitForTimeoutAsync(3000); 
-            await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestNameInput, contextData.AdditionalInterestName);
-            await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestAddressInput, contextData.AdditionalInterestAddress);
-            await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestCityInput, contextData.AdditionalInterestCity);
+            await _page.WaitForTimeoutAsync(3000);
 
-            await _page.ClickAsync(Locators.AdditionalInterestLocators.AdditionalInterestStateDropdown);
+            await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestNameInput(_page), contextData.AdditionalInterestName);
+            await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestAddressInput(_page), contextData.AdditionalInterestAddress);
+            await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestCityInput(_page), contextData.AdditionalInterestCity);
+
+            await Locators.AdditionalInterestLocators.AdditionalInterestStateDropdown(_page).ClickAsync();
             await ExpertQuoteLocatorFactory.AccountInformationPageLocators.GetStateDropdownSelectionLocator(_page, contextData.AdditionalInterestState).ClickAsync();
 
-            await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestZipInput, contextData.AdditionalInterestZipCode);
-            await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestPhoneInput, contextData.AdditionalInterestPhone);
-            await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestDOBInput, contextData.AdditionalInterestDOB);
-            await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestDLNumberInput, contextData.AdditionalInterestDLNumber);
+            await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestZipInput(_page), contextData.AdditionalInterestZipCode);
+            await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestPhoneInput(_page), contextData.AdditionalInterestPhone);
+            await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestDOBInput(_page), contextData.AdditionalInterestDOB);
+            await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestDLNumberInput(_page), contextData.AdditionalInterestDLNumber);
 
-            await _page.ClickAsync(Locators.AdditionalInterestLocators.AdditionalInterestLicenseState);
+            await Locators.AdditionalInterestLocators.AdditionalInterestLicenseState(_page).ClickAsync();
             await ExpertQuoteLocatorFactory.AccountInformationPageLocators.GetStateDropdownSelectionLocator(_page, contextData.AdditionalInterestLicenseState).ClickAsync();
         }
 
         // Helper method
-        public async Task FillInputIfDifferentAsync(string selector, string value)
+        public async Task FillInputIfDifferentAsync(ILocator locator, string value)
         {
-            var currentValue = await _page.InputValueAsync(selector);
+            var currentValue = await locator.InputValueAsync();
             if (!currentValue.Equals(value, StringComparison.OrdinalIgnoreCase))
             {
-                await _page.FillAsync(selector, value);
+                await locator.FillAsync(value);
             }
         }
         
@@ -86,16 +87,16 @@ namespace Playwright_POC.Pages
 
         public async Task HandleUWDialogIfPresentAsync()
         {
-            await _page.WaitForSelectorAsync(Locators.AdditionalInterestLocators.UWRulesDialogContinueButton, new()
+            await AdditionalInterestLocators.UWRulesDialogContinueButton(_page).WaitForAsync(new()
             {
                 State = WaitForSelectorState.Visible,
                 Timeout = 5000
             });
 
-            if (await _page.Locator(Locators.AdditionalInterestLocators.UWRulesDialogContinueButton).IsVisibleAsync())
+            if (await AdditionalInterestLocators.UWRulesDialogContinueButton(_page).IsVisibleAsync())
             {
-                await _page.WaitForSelectorAsync(Locators.AdditionalInterestLocators.UWRulesDialogContinueButton, new() { Timeout = 5000 });
-                await _page.ClickAsync(Locators.AdditionalInterestLocators.UWRulesDialogContinueButton);
+                await AdditionalInterestLocators.UWRulesDialogContinueButton(_page).WaitForAsync(new() { Timeout = 5000 });
+                await Locators.AdditionalInterestLocators.UWRulesDialogContinueButton(_page).ClickAsync();
             }
         }
 

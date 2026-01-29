@@ -300,7 +300,7 @@ namespace Playwright_POC.Locators
             public static string GetBenefitXpressDiscountButton(string value) =>
                 $"xpath=.//div[contains(@id, 'IsMemberOfBenefitesExpressGroup')]//button[contains(text(), '{value}')]";
 
-            public static ILocator GetAccountCompositionButton(IPage page, string yesOrNo) =>
+            public static ILocator GetAccountCompositionCheckbox(IPage page, string yesOrNo) =>
                 page.Locator("div[id*='AccountCompositionOverride']")
                     .GetByRole(AriaRole.Button, new() { Name = yesOrNo })
 ;
@@ -371,7 +371,7 @@ namespace Playwright_POC.Locators
                 $"xpath=.//div[contains(@id, 'AnyVehicleRegisteredToSomeone')]//div[contains(text(), '{yesOrNo}')]";
 
             public static ILocator SelectVehicleRegisteredToOther(IPage page, string vehicleMake) =>
-                page.GetByRole(AriaRole.Button, new() { NameRegex = new($@"\b{Regex.Escape(vehicleMake)}\b", RegexOptions.IgnoreCase) });
+                page.GetByRole(AriaRole.Button, new() { Name = vehicleMake, Exact = true });
             public static ILocator GetAdditionalInterestType(IPage page, string value) =>
                 page.GetByRole(AriaRole.Button, new() { Name = value });
 

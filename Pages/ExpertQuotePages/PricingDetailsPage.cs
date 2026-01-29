@@ -21,12 +21,12 @@ namespace Playwright_POC.Pages
         public async Task<string> GetAccountOwnerAsync()
         {
             await _page.WaitForTimeoutAsync(5000);
-            return await _page.Locator(PricingDetailsConstLocators.AccountOwner).InnerTextAsync();
+            return await PricingDetailsConstLocators.AccountOwner(_page).InnerTextAsync();
         }
 
         public async Task<string> GetAccountAddressAsync()
         {
-            return await _page.Locator(PricingDetailsConstLocators.AccountAddress).InnerTextAsync();
+            return await PricingDetailsConstLocators.AccountAddress(_page).InnerTextAsync();
         }
 
         public void AssertAccountOwner(string actual, string expected)
@@ -48,12 +48,12 @@ namespace Playwright_POC.Pages
 
         public void SelectProposalButton()
         {
-           _page.ClickAsync(PricingDetailsConstLocators.ProposalButton);
+           PricingDetailsConstLocators.ProposalButton(_page).ClickAsync();
         }
 
         public void SelectCoverageOptionOverviewButton()
         {
-            _page.ClickAsync(PricingDetailsConstLocators.CoverageOptionOverviewButton);
+            PricingDetailsConstLocators.CoverageOptionOverviewButton(_page).ClickAsync();
         }
 
       

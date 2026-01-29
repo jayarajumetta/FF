@@ -23,7 +23,7 @@ namespace Playwright_POC.Pages
 
         public async Task SelectPolicyDiscountAsync(ScenarioContextData contextData)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.DiscountsPageLocators.GetPolicyDiscountCheckbox(contextData.PolicyDiscount));
+            await ExpertQuoteLocatorFactory.DiscountsPageLocators.GetPolicyDiscountCheckbox(_page, contextData.PolicyDiscount).ClickAsync();
         }
 
         public async Task SelectBenifitXpressDiscount(ScenarioContextData contextData)
@@ -43,7 +43,7 @@ namespace Playwright_POC.Pages
 
         public async Task SelectAccountCompositionAsync(ScenarioContextData contextData)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.DiscountsPageLocators.GetAccountCompositionCheckbox(contextData.AccountCompositionDiscount));
+            await ExpertQuoteLocatorFactory.DiscountsPageLocators.GetAccountCompositionCheckbox(_page, contextData.AccountCompositionDiscount).ClickAsync();
         }
     }
 }

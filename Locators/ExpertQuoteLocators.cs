@@ -406,7 +406,7 @@ namespace Playwright_POC.Locators
         public static ILocator AdditionalInterestStateDropdown(IPage page) => page.GetByTestId("fields.account.additionalOtherInterest.additionalOtherInterestInput$state.value");
         public static ILocator AdditionalInterestZipInput(IPage page) => page.GetByTestId("fields.account.additionalOtherInterest.additionalOtherInterestInput$zipCode.value");
         public static ILocator AdditionalInterestPhoneInput(IPage page) => page.GetByTestId("fields.account.additionalOtherInterest.additionalOtherInterestInput$primaryPhone.value");
-        public static ILocator RelationshipToAccountHolderInput(IPage page) => page.GetByTestId("fields.account.additionalOtherInterest.additionalOtherInterestInput$relationshipToInsured.value")
+        public static ILocator RelationshipToAccountHolderInput(IPage page) => page.GetByTestId("fields.account.additionalOtherInterest.additionalOtherInterestInput$relationshipToInsured.value");
         public static ILocator AdditionalInterestDOBInput(IPage page) => page.GetByLabel("Owner Date Of Birth");
         public static ILocator AdditionalInterestDLNumberInput(IPage page) => page.GetByTestId("fields.account.additionalOtherInterest.additionalOtherInterestInput$ownerDriversLicenseNumber.value");
         public static ILocator AdditionalInterestLicenseState(IPage page) => page.GetByLabel(" Owner License State ");

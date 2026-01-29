@@ -39,11 +39,11 @@ namespace Playwright_POC.Pages
             await _page.WaitForTimeoutAsync(2000);
 
             await _page.WaitForSelectorAsync(
-                ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleSelectButton(contextData.VehicleMake, StringComparison.OrdinalIgnoreCase),
+                ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleSelectButton(_page, contextData.VehicleMake, StringComparison.OrdinalIgnoreCase).ToString(),
                 new() { State = WaitForSelectorState.Visible, Timeout = 3000 }
             );
 
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleSelectButton(contextData.VehicleMake, StringComparison.OrdinalIgnoreCase));
+            await ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleSelectButton(_page, contextData.VehicleMake, StringComparison.OrdinalIgnoreCase).ClickAsync();
             await _page.WaitForTimeoutAsync(3000);
         }
 
@@ -54,16 +54,16 @@ namespace Playwright_POC.Pages
 
         public async Task ValidateVehicleDetailsAsync(ScenarioContextData contextData)
         {
-            var yearText = await _page.Locator(Locators.VehicleSummaryConstLocators.VehicleYearReadOnly).InnerTextAsync();
+            var yearText = await Locators.VehicleSummaryConstLocators.VehicleYearReadOnly(_page).InnerTextAsync();
             Assert.That(yearText, Is.EqualTo(contextData.VehicleYear));
 
-            var makeText = await _page.Locator(Locators.VehicleSummaryConstLocators.MakeReadOnly).InnerTextAsync();
+            var makeText = await Locators.VehicleSummaryConstLocators.MakeReadOnly(_page).InnerTextAsync();
             Assert.That(makeText, Is.EqualTo(contextData.VehicleMake).IgnoreCase);
 
-            var modelText = await _page.Locator(Locators.VehicleSummaryConstLocators.ModelReadOnly).InnerTextAsync();
+            var modelText = await Locators.VehicleSummaryConstLocators.ModelReadOnly(_page).InnerTextAsync();
             Assert.That(modelText, Is.EqualTo(contextData.VehicleModel).IgnoreCase);
 
-            var trimText = await _page.Locator(Locators.VehicleSummaryConstLocators.TrimReadOnly).InnerTextAsync();
+            var trimText = await Locators.VehicleSummaryConstLocators.TrimReadOnly(_page).InnerTextAsync();
             Assert.That(trimText, Is.EqualTo(contextData.VehicleTrim).IgnoreCase);
         }
 
@@ -98,8 +98,8 @@ namespace Playwright_POC.Pages
 
         public async Task AssignVehicleToDriverAsync(string vehicle, string driverStatus)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleSelectButton(vehicle, StringComparison.OrdinalIgnoreCase));
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.VehicleDriverAssignmentPageLocators.GetDriverStatusButton(driverStatus));
+            await ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleSelectButton(_page, vehicle, StringComparison.OrdinalIgnoreCase).ClickAsync();
+            await ExpertQuoteLocatorFactory.VehicleDriverAssignmentPageLocators.DriverStatusButton(_page, driverStatus).ClickAsync();
             await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }
 
