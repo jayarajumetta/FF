@@ -299,7 +299,8 @@ namespace Playwright_POC.Locators
     public static class DriverSummaryConstLocators
     {
         public static ILocator PageHeader(IPage page) => page.GetByRole(AriaRole.Heading, new() { Name = "Driver Summary" });
-        public const string DriverNameSectionHeader = "//div[id='Driver_Headless.FullName-0-layout']";
+        public static ILocator DriverNameSectionHeader(IPage page, string driverName) => page.GetByText(driverName, new() { Exact = true });
+
         public static ILocator FirstNameInput(IPage page) => page.GetByLabel("First Name");
         public static ILocator MiddleNameInput(IPage page) => page.GetByLabel("Middle Name");
         public static ILocator LastNameInput(IPage page) => page.GetByLabel("Last Name");
@@ -320,25 +321,26 @@ namespace Playwright_POC.Locators
         public static ILocator SuffixDropdown(IPage page) => page.GetByRole(AriaRole.Combobox, new() { Name = "Suffix" });
 
         // Marital Status More Options Dropdown
-        public const string MoreOptionsMaritalStatus = "xpath=.//*[contains(text(), 'Marital Status')]/following::button[.//div[text()='More Options']]";
+        public static ILocator MoreOptionsMaritalStatus(IPage page) => page.Locator("[data-testid*='maritalStatus.value-other']");
 
         // Operator Status More Options Dropdown
-        public const string MoreOptionsOperatorStatus = "xpath=.//label[contains(text(), 'Operator Status')]following-sibling::div//button[contains(., 'More Options']";
+        public static ILocator MoreOptionsOperatorStatus(IPage page) => page.Locator("[data-testid*='operatorStatuc.value-other']");
 
         // Prior Insurance
-        public const string PriorCarrierNameInput = "xpath=//input[contains(@name, 'priorCarrierName')]";
-        public const string PriorPolicyNumberInput = "xpath=.//mat-label[contains(text(), 'Prior Policy Number')]/following::input[1]";
+        public static ILocator PriorCarrierNameInput(IPage page) => page.Locator("[data-testid*='priorCarrierName']");
+        public static ILocator PriorPolicyNumberInput(IPage page) => page.Locator("[data-testid*='priorPolicyNumber']");
         public const string PriorCarrierPrefill = "xpath=//div[contains(@id, 'PriorCarrierName')]//span[contains(@class, 'readonly-value')]";
 
         //Time with Prior Carrier
-        public const string PriorYearsWithCarrierInput = "xpath=//input[contains(@id, 'yearsWithPriorCarrier')]";
-        public const string PriorMonthsWithCarrierInput = "xpath=//input[contains(@id, 'monthsWithPriorCarrier')]";
+        public static ILocator PriorYearsWithCarrierInput(IPage page) => page.Locator("[data-testid*='yearsWithPriorCarrier']");
+        public static ILocator PriorMonthsWithCarrierInput(IPage page) => page.Locator("[data-testid*='monthsWithPriorCarrier']");
 
 
         // MVR Pop-Up Window
-        public const string MVRPopUpWindow = "xpath=//*[@id=\"mat-dialog-1\"]/ng-component/mat-dialog-content//*[@id=\"mat-dialog-1\"]";
-        public const string MVRPopUpContinueButton = "xpath=//mat-dialog-container//a[contains(text(), 'Continue')]";
-        public const string MVRPopUpBackToDetailsButton = "xpath=//button[@id='btnConfirmNo']";
+        public static ILocator MVRPopUpWindow(IPage page) => page.GetByRole(AriaRole.Dialog).Filter(new() { Has = page.Locator("[aria-modal='true']") });
+
+        public static ILocator MVRPopUpContinueButton(IPage page) => page.GetByTestId("btnConfirmYes");
+        public static ILocator MVRPopUpBackToDetailsButton(IPage page) => page.GetByTestId("btnConfirmNo");
 
         public const string PrefillDriverPageHeader = "xpath=/html/body/app-root/app-home/app-multi-quote-viewer/mat-tab-group/div/mat-tab-body[1]/div/app-quote-viewer/section/main/div/div/eq-dynamic-form/anico-form/ng-component/section/header/h1";
     }
@@ -356,7 +358,7 @@ namespace Playwright_POC.Locators
         public static ILocator TrimInput(IPage page) => page.GetByLabel("Trim");
         public static ILocator PurchaseDateInput(IPage page) => page.GetByLabel("Purchase Date");
         public static ILocator OdometerReadingInput(IPage page) => page.GetByLabel("Odometer Reading");
-        public const string TotalAnnualMileageInput = "input[name='fields.line.risk.rows[0].vehicleInput$annualMileage.value']";
+        public static ILocator TotalAnnualMileageInput(IPage page) => page.Locator("[data-testid*='annualMileage']");
 
 
         // VIN Populated Vehicle Information (Read Only Fields)

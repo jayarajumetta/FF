@@ -16,13 +16,13 @@ namespace Playwright_POC.Pages
 
         public async Task SelectPrimaryFarmType(string farmType)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.SFPPolicyDetailsPageLocators.SelectFarmTypeButton(farmType));
+            await ExpertQuoteLocatorFactory.SFPPolicyDetailsPageLocators.SelectFarmTypeButton(_page, farmType).ClickAsync();
 
         }
 
         public async Task SelectLivestockType(string livestockType)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.SFPPolicyDetailsPageLocators.SelectLivestockTypeRadioButton(livestockType));
+            await ExpertQuoteLocatorFactory.SFPPolicyDetailsPageLocators.SelectLivestockTypeRadioButton(_page, livestockType).ClickAsync();
 
         }
 
@@ -33,7 +33,7 @@ namespace Playwright_POC.Pages
 
         public async Task SelectGrowIndustrialHemp(string growHemp)
         {
-            await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.SFPPolicyDetailsPageLocators.GrowIndustrialHemp(growHemp));
+            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.SFPPolicyDetailsPageLocators.GrowIndustrialHemp(_page, growHemp));
         }
 
     }

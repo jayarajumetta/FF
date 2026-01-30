@@ -73,7 +73,7 @@ namespace Playwright_POC.Pages
                     !contextData.MaritalStatus.Equals("Married", StringComparison.OrdinalIgnoreCase) &&
                     !contextData.MaritalStatus.Equals("Divorced", StringComparison.OrdinalIgnoreCase))
                 {
-                    await _page.ClickAsync(Locators.DriverSummaryConstLocators.MoreOptionsMaritalStatus);
+                    await DriverSummaryConstLocators.MoreOptionsMaritalStatus(_page).ClickAsync();
                     await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetMaritalStatusSelection(_page, contextData.MaritalStatus));
                 }
                 else
@@ -88,7 +88,7 @@ namespace Playwright_POC.Pages
                 !contextData.OperatorStatus.Equals("Non Driver", StringComparison.OrdinalIgnoreCase) &&
                 !contextData.OperatorStatus.Equals("Related", StringComparison.OrdinalIgnoreCase))
             {
-                await _page.ClickAsync(Locators.DriverSummaryConstLocators.MoreOptionsOperatorStatus);
+                await DriverSummaryConstLocators.MoreOptionsOperatorStatus(_page).ClickAsync();
                 await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetOperatorStatus(_page, contextData.OperatorStatus));
             }
             else
@@ -127,15 +127,22 @@ namespace Playwright_POC.Pages
 
                 await _page.WaitForLoadStateAsync(LoadState.Load);
 
-                await _page.FillAsync(Locators.DriverSummaryConstLocators.PriorCarrierNameInput, contextData.PriorCarrier);
-                await _page.FillAsync(Locators.DriverSummaryConstLocators.PriorPolicyNumberInput, contextData.PriorPolicyNumber);
+                await Locators.DriverSummaryConstLocators.PriorCarrierNameInput(_page).FillAsync(contextData.PriorCarrier);
+                await Locators.DriverSummaryConstLocators.PriorPolicyNumberInput(_page).FillAsync(contextData.PriorPolicyNumber);
 
-                await _page.WaitForSelectorAsync(Locators.DriverSummaryConstLocators.PriorYearsWithCarrierInput, new() { Timeout = 2000 });
-                await _page.Locator(Locators.DriverSummaryConstLocators.PriorYearsWithCarrierInput)
+                await Locators.DriverSummaryConstLocators
+                    .PriorYearsWithCarrierInput(_page)
+                    .WaitForAsync(new()
+                    {
+                        State = WaitForSelectorState.Visible,
+                        Timeout = 2000
+                    });
+
+                await Locators.DriverSummaryConstLocators.PriorYearsWithCarrierInput(_page)
                     .WaitForAsync(new() { State = WaitForSelectorState.Visible });
 
-                await _page.FillAsync(Locators.DriverSummaryConstLocators.PriorYearsWithCarrierInput, contextData.PriorInsuranceYears);
-                await _page.FillAsync(Locators.DriverSummaryConstLocators.PriorMonthsWithCarrierInput, contextData.PriorInsuranceMonths);
+                await Locators.DriverSummaryConstLocators.PriorYearsWithCarrierInput(_page).FillAsync(contextData.PriorInsuranceYears);
+                await Locators.DriverSummaryConstLocators.PriorMonthsWithCarrierInput(_page).FillAsync(contextData.PriorInsuranceMonths);
             }
             else
             {
@@ -158,11 +165,11 @@ namespace Playwright_POC.Pages
         public async Task HandleMVRPopUpAsync()
         {
             await _page.WaitForTimeoutAsync(8000);
-            if (await _page.Locator(Locators.DriverSummaryConstLocators.MVRPopUpContinueButton).IsVisibleAsync())
+            if (await DriverSummaryConstLocators.MVRPopUpContinueButton(_page).IsVisibleAsync())
             {
                 await _page.WaitForTimeoutAsync(2000);
                 Console.WriteLine("Found Dialog Container");
-                await _page.ClickAsync(Locators.DriverSummaryConstLocators.MVRPopUpContinueButton);
+                await DriverSummaryConstLocators.MVRPopUpContinueButton(_page).ClickAsync();
             }
             else
             {

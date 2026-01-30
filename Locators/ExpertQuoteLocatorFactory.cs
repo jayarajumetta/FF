@@ -50,14 +50,14 @@ namespace Playwright_POC.Locators
         // Choose Farm Type
         internal class SFPPolicyDetailsPageLocators
         {
-            public static string SelectFarmTypeButton(string value) =>
-                $"css=button[data-testid*='farmTypeCategory'] div:has-text('{value}')";
+            public static ILocator SelectFarmTypeButton(IPage page, string value) =>
+                page.GetByRole(AriaRole.Button, new() { Name = value });
 
-            public static string SelectLivestockTypeRadioButton(string value) =>
-                $"xpath=.//mat-radio-button[contains(@data-testid, 'farmType')]//span[normalize-space(.)='{value}']";
+            public static ILocator SelectLivestockTypeRadioButton(IPage page, string value) =>
+                page.Locator("[data-testid*='farmType']").GetByRole(AriaRole.Radio, new() { Name = value });
 
-            public static string GrowIndustrialHemp(string yesOrNo) =>
-                $"xpath=.//button[contains(@data-testid, 'growsIndustrialHemp')]//div[contains(text(), '{yesOrNo}')]";
+            public static ILocator GrowIndustrialHemp(IPage page, string yesOrNo) =>
+                page.Locator("[data-testid*='growsIndustrialHemp']").GetByRole(AriaRole.Button, new() { Name = yesOrNo });
         }
 
         internal class PreQualificationPageLocators
