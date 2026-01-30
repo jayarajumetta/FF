@@ -8,9 +8,9 @@ Feature: SFP Happy Path
     When I enter valid credentials and Click LogIn
 
     Then user enters a Random Name in the search field and clicks search
-    | Question  | Answer   |
+    | Question  |  Answer    |
     | FirstName | {{male}}   |
-    | LastName  | {{random}}  |
+    | LastName  | {{random}} |
 
     Then user clicks New Quote button
    
@@ -24,29 +24,29 @@ Feature: SFP Happy Path
     Then user selects Create New Client and clicks the Next button
 
     Then user enters account owner information and clicks Next
-    | Question           | Answer        |
-    | MaritalStatus      | Single        |
-    | StreetAddress      | 1206 Conway St  |
-    | AptNumber          |               |
+    | Question           | Answer           |
+    | MaritalStatus      | Single           |
+    | StreetAddress      | 1206 Conway St   |
+    | AptNumber          |                  |
     | City               |   Saint Paul     |
-    | State              |   Minnesota    |
-    | ZipCode            |     55106     |
-    | ReceivedMail       |     Yes       |
-    | WhereClientResides |     Yes       |
+    | State              |   Minnesota      |
+    | ZipCode            |     55106        |
+    | ReceivedMail       |     Yes          |
+    | WhereClientResides |     Yes          |
 
     Then user selects Special Farm Package and inputs Quote Details
     | Question       | Answer                                      |
 	| EffectiveDate  | 2/15/2026                                   |
-	| PolicyTerm     | 12 months                                    |
+	| PolicyTerm     | 12 months                                   |
 	| AgentCode      | D2102                                       |
-	| RatingState    | Minnesota                                    |
+	| RatingState    | Minnesota                                   |
 	| SSN            |                                             |
 	| WritingCompany | American National Property And Casualty Co. |
-	| RiskAddress    | 1206 Conway St, Saint Paul, MN 55106             |
+	| RiskAddress    | 1206 Conway St, Saint Paul, MN 55106        |
 
     Then user enters SFP policy details and clicks Next button
-		| Question        | Answer  |
-		| PrimaryFarmType | Animals |
-		| LivestockType   | Beef    |
-		| GrossFarmIncome |   75000 |
+		| Question            | Answer  |
+		| PrimaryFarmType     | Animals |
+		| LivestockType       | Beef    |
+		| GrossFarmIncome     | 75000   |
 		| GrowIndustrialHemp  | No      |

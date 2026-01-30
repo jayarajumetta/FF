@@ -1,5 +1,4 @@
-﻿
-// Pages/PreQualificationPage.cs
+﻿// Pages/PreQualificationPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 using Playwright_POC.Locators;
@@ -18,19 +17,18 @@ namespace Playwright_POC.Pages
 
         public async Task EnterPreQualificationInfoAndContinueAsync(string eligibilityRestrictions)
         {
-            await _page.WaitForSelectorAsync(Locators.GlobalLocators.NextButton, new() { State = WaitForSelectorState.Visible });
+            await _page.WaitForSelectorAsync(Locators.GlobalLocators.NextButton(_page).ToString(), new() { State = WaitForSelectorState.Visible });
 
             await Helpers.Helpers.ClickIfNotSelectedAsync(
-                _page,
-                ExpertQuoteLocatorFactory.PreQualificationPageLocators.GetQualificationSelection(eligibilityRestrictions)
+                ExpertQuoteLocatorFactory.PreQualificationPageLocators.GetQualificationSelection(_page, eligibilityRestrictions)
             );
 
-            await _page.ClickAsync(Locators.GlobalLocators.NextButton);
+            await _page.ClickAsync(Locators.GlobalLocators.NextButton(_page).ToString());
         }
 
         public async Task SearchAddClassCodeAsync(ScenarioContextData contextData)
         {
-            await _page.WaitForSelectorAsync(Locators.GlobalLocators.NextButton, new() { State = WaitForSelectorState.Visible });
+            await _page.WaitForSelectorAsync(Locators.GlobalLocators.NextButton(_page).ToString(), new() { State = WaitForSelectorState.Visible });
             await _page.ClickAsync(Locators.BOPPrequalificationPageLocators.SearchAddClassCodeButton);
             await _page.WaitForTimeoutAsync(2000);
             if (contextData.ClassCodeNumber == null)
@@ -43,7 +41,7 @@ namespace Playwright_POC.Pages
             else
             {
                 await _page.FillAsync(Locators.BOPPrequalificationPageLocators.ClassCodeSearchInput, contextData.ClassCodeNumber);
-               // await _page.ClickAsync(Locators.BOPPrequalificationPageLocators.ClassCodeSearchButton);
+                // await _page.ClickAsync(Locators.BOPPrequalificationPageLocators.ClassCodeSearchButton);
                 await _page.WaitForTimeoutAsync(2000);
                 await _page.ClickAsync(ExpertQuoteLocatorFactory.PreQualificationPageLocators.CheckboxByClassCode(contextData.ClassCodeNumber));
             }
@@ -53,7 +51,7 @@ namespace Playwright_POC.Pages
 
         public async Task TogglePrimaryOccupancySliderAsync()
         {
-            await _page.ClickAsync(Locators.BOPPrequalificationPageLocators.PrimaryOccupancySlider);
+            await Locators.BOPPrequalificationPageLocators.PrimaryOccupancySlider(_page).ClickAsync();
         }
 
         public async Task SelectIndustryClassCodeRestrictionsAsync(ScenarioContextData contextData)

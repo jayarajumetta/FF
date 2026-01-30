@@ -1,5 +1,4 @@
-﻿
-// Pages/AccountInformationPage.cs
+﻿// Pages/AccountInformationPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Globalization;
@@ -20,7 +19,7 @@ namespace Playwright_POC.Pages
 
         public async Task WaitForPageReadyAsync()
         {
-            await _page.WaitForSelectorAsync(Locators.AccountInformationConstLocators.FirstName, new() { Timeout = 2000 });
+            await AccountInformationConstLocators.FirstName(_page).WaitForAsync(new() { Timeout = 2000 });
         }
 
 
@@ -29,9 +28,9 @@ namespace Playwright_POC.Pages
 
         public async Task ValidateAndFillNameFieldsAsync(ScenarioContextData contextData)
         {
-            var firstName = _page.Locator(Locators.AccountInformationConstLocators.FirstName);
-            var lastName = _page.Locator(Locators.AccountInformationConstLocators.LastName);
-            var dob = _page.Locator(Locators.AccountInformationConstLocators.DateOfBirth);
+            var firstName = Locators.AccountInformationConstLocators.FirstName(_page);
+            var lastName = Locators.AccountInformationConstLocators.LastName(_page);
+            var dob = Locators.AccountInformationConstLocators.DateOfBirth(_page);
 
             // First Name: fill only if empty
             var actualFirst = (await firstName.InputValueAsync())?.Trim();
@@ -85,18 +84,18 @@ namespace Playwright_POC.Pages
 
         public async Task ValidateAndFillContactFieldsAsync(ScenarioContextData contextData)
         {
-            var actualPhone = await _page.InputValueAsync(Locators.AccountInformationConstLocators.BestPhone);
+            var actualPhone = await Locators.AccountInformationConstLocators.BestPhone(_page).InputValueAsync();
             if (!actualPhone.Equals(contextData.ClientPhoneNumber, StringComparison.OrdinalIgnoreCase))
             {
                 Console.WriteLine($"Phone mismatch: Expected '{contextData.ClientPhoneNumber}', Found '{actualPhone}'");
-                await _page.FillAsync(Locators.AccountInformationConstLocators.BestPhone, contextData.ClientPhoneNumber);
+                await Locators.AccountInformationConstLocators.BestPhone(_page).FillAsync(contextData.ClientPhoneNumber);
             }
 
-            var actualEmail = await _page.InputValueAsync(Locators.AccountInformationConstLocators.EmailAddress);
+            var actualEmail = await Locators.AccountInformationConstLocators.EmailAddress(_page).InputValueAsync();
             if (!actualEmail.Equals(contextData.ClientEmail, StringComparison.OrdinalIgnoreCase))
             {
                 Console.WriteLine($"Email mismatch: Expected '{contextData.ClientEmail}', Found '{actualEmail}'");
-                await _page.FillAsync(Locators.AccountInformationConstLocators.EmailAddress, contextData.ClientEmail);
+                await Locators.AccountInformationConstLocators.EmailAddress(_page).FillAsync(contextData.ClientEmail);
             }
         }
 
@@ -106,24 +105,24 @@ namespace Playwright_POC.Pages
                 !maritalStatus.Equals("Married", StringComparison.OrdinalIgnoreCase) &&
                 !maritalStatus.Equals("Divorced", StringComparison.OrdinalIgnoreCase))
             {
-                await _page.ClickAsync(Locators.DriverSummaryConstLocators.MoreOptionsMaritalStatus);
-                await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetMaritalStatusSelection(maritalStatus));
+                await DriverSummaryConstLocators.MoreOptionsMaritalStatus(_page).ClickAsync();
+                await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetMaritalStatusSelection(_page, maritalStatus));
             }
             else
             {
-                await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetMaritalStatusSelection(maritalStatus));
+                await ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetMaritalStatusSelection(_page, maritalStatus).ClickAsync();
             }
         }
 
         public async Task FillAddressFieldsAsync(ScenarioContextData contextData)
         {
-            await _page.FillAsync(Locators.AccountInformationConstLocators.StreetAddressInput, contextData.StreetAddress);
-            await _page.FillAsync(Locators.AccountInformationConstLocators.AptNumberInput, contextData.AptNumber);
-            await _page.FillAsync(Locators.AccountInformationConstLocators.CityInput, contextData.City);
+            await Locators.AccountInformationConstLocators.StreetAddressInput(_page).FillAsync(contextData.StreetAddress);
+            await Locators.AccountInformationConstLocators.AptNumberInput(_page).FillAsync(contextData.AptNumber);
+            await Locators.AccountInformationConstLocators.CityInput(_page).FillAsync(contextData.City);
 
-            await _page.ClickAsync(Locators.AccountInformationConstLocators.StateDropdown);
+            await Locators.AccountInformationConstLocators.StateDropdown(_page).ClickAsync();
             await _page.ClickAsync($"text={contextData.State.ToUpper()}");
-            await _page.FillAsync(Locators.AccountInformationConstLocators.ZipCodeInput, contextData.ZipCode);
+            await Locators.AccountInformationConstLocators.ZipCodeInput(_page).FillAsync(contextData.ZipCode);
         }
 
         public async Task WaitForAddressDetailsAsync()
@@ -133,17 +132,17 @@ namespace Playwright_POC.Pages
 
         public async Task AnswerMailAndResidenceQuestionsAsync(ScenarioContextData contextData)
         {
-            await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.AccountInformationPageLocators.GetReceivedMailButton(contextData.RecievedMail));
-            await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.AccountInformationPageLocators.GetClientResidesButton(contextData.WhereClientResides));
+            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.AccountInformationPageLocators.GetReceivedMailButton(_page, contextData.RecievedMail));
+            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.AccountInformationPageLocators.GetClientResidesButton(_page, contextData.WhereClientResides));
         }
 
         public async Task AnswerReceivedMailAsync(ScenarioContextData contextData)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.AccountInformationPageLocators.GetReceivedMailButton(contextData.RecievedMail));
+            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.AccountInformationPageLocators.GetReceivedMailButton(_page, contextData.RecievedMail));
         }
         public async Task ClickNextAsync()
         {
-            await _page.ClickAsync(Locators.GlobalLocators.NextButton);
+            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }
 
     }

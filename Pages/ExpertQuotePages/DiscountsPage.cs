@@ -1,5 +1,4 @@
-﻿
-// Pages/DiscountsPage.cs
+﻿// Pages/DiscountsPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 using Playwright_POC.Locators;
@@ -18,13 +17,13 @@ namespace Playwright_POC.Pages
 
         public async Task ClickNextAsync()
         {
-            await _page.WaitForSelectorAsync(Locators.GlobalLocators.NextButton, new() { Timeout = 2000 });
-            await _page.ClickAsync(Locators.GlobalLocators.NextButton);
+            await Locators.GlobalLocators.NextButton(_page).WaitForAsync(new() { Timeout = 2000 });
+            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }
 
         public async Task SelectPolicyDiscountAsync(ScenarioContextData contextData)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.DiscountsPageLocators.GetPolicyDiscountCheckbox(contextData.PolicyDiscount));
+            await ExpertQuoteLocatorFactory.DiscountsPageLocators.GetPolicyDiscountCheckbox(_page, contextData.PolicyDiscount).ClickAsync();
         }
 
         public async Task SelectBenifitXpressDiscount(ScenarioContextData contextData)
@@ -44,7 +43,7 @@ namespace Playwright_POC.Pages
 
         public async Task SelectAccountCompositionAsync(ScenarioContextData contextData)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.DiscountsPageLocators.GetAccountCompositionCheckbox(contextData.AccountCompositionDiscount));
+            await ExpertQuoteLocatorFactory.DiscountsPageLocators.GetAccountCompositionCheckbox(_page, contextData.AccountCompositionDiscount).ClickAsync();
         }
     }
 }

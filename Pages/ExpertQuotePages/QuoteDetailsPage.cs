@@ -25,62 +25,62 @@ namespace Playwright_POC.Pages
 
         public async Task SelectPersonalAutoProductAsync()
         {
-            await _page.ClickAsync(Locators.ProposalDetailsPageLocators.PersonalAutoButton);
+            await Locators.ProposalDetailsPageLocators.PersonalAutoButton(_page).ClickAsync();
         }
 
         public async Task SelectMotorcycleProductAsync()
         {
-            await _page.ClickAsync(Locators.ProposalDetailsPageLocators.MotorcycleButton);
+            await Locators.ProposalDetailsPageLocators.MotorcycleButton(_page).ClickAsync();
         }
 
         public async Task SelectRecreationalVehicleProductAsync()
         {
-            await _page.ClickAsync(Locators.ProposalDetailsPageLocators.RecreationalVehicleButton);
+            await Locators.ProposalDetailsPageLocators.RecreationalVehicleButton(_page).ClickAsync();
         }
 
         public async Task SelectHomeProductAsync()
         {
-            await _page.ClickAsync(Locators.ProposalDetailsPageLocators.HomeButton);
+            await Locators.ProposalDetailsPageLocators.HomeButton(_page).ClickAsync();
         }
 
         public async Task SelectBusinessOwnerProductAsync()
         {
-            await _page.ClickAsync(Locators.ProposalDetailsPageLocators.BusinessOwnerButton);
+            await Locators.ProposalDetailsPageLocators.BusinessOwnerButton(_page).ClickAsync();
         }
 
         public async Task SelectSpecialFarmPackageProductAsync()
         {
-            await _page.ClickAsync(Locators.ProposalDetailsPageLocators.FarmPackageButton);
+            await Locators.ProposalDetailsPageLocators.FarmPackageButton(_page).ClickAsync();
         }
 
         public async Task CheckSpecialFarmPackageSelected()
         {
             await _page.WaitForTimeoutAsync(2000);
-            bool isSelected = await _page.IsVisibleAsync(Locators.ProposalDetailsPageLocators.FarmPackageSelectedIndicator);
+            bool isSelected = await Locators.ProposalDetailsPageLocators.FarmPackageSelectedIndicator(_page).IsVisibleAsync();
             Assert.That(isSelected, Is.True, "Special Farm Package product is not selected.");
         }
 
         public async Task EnterQuoteDetailsAsync(ScenarioContextData contextData)
         {
-            await _page.FillAsync(Locators.ProposalDetailsPageLocators.EffDateInput, contextData.EffectiveDate);
-            string actualPolicyTerm = await _page.InnerTextAsync(Locators.ProposalDetailsPageLocators.PolicyTermDropdownValue);
+            await Locators.ProposalDetailsPageLocators.EffDateInput(_page).FillAsync(contextData.EffectiveDate);
+            string actualPolicyTerm = await Locators.ProposalDetailsPageLocators.PolicyTermDropdownValue(_page).InnerTextAsync();
             Assert.That(actualPolicyTerm.Trim(), Is.EqualTo(contextData.PolicyTerm), "Policy Term does not match expected value.");
-            await _page.FillAsync(Locators.ProposalDetailsPageLocators.AgentPCCodeInput, contextData.AgentCode);
+            await Locators.ProposalDetailsPageLocators.AgentPCCodeInput(_page).FillAsync(contextData.AgentCode);
         }
 
         public async Task EnterSFPQuoteDetailsAsync(ScenarioContextData contextData)
         {
-            await _page.FillAsync(Locators.ProposalDetailsPageLocators.EffDateInput, contextData.EffectiveDate);
-            await _page.ClickAsync(Locators.ProposalDetailsPageLocators.ExpandPolicyTermDropdown);
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.AccountInformationPageLocators.SelectPolicyTermFromDropdown(contextData.PolicyTerm));
-            await _page.FillAsync(Locators.ProposalDetailsPageLocators.AgentPCCodeInput, contextData.AgentCode);
+            await Locators.ProposalDetailsPageLocators.EffDateInput(_page).FillAsync(contextData.EffectiveDate);
+            await Locators.ProposalDetailsPageLocators.ExpandPolicyTermDropdown(_page).ClickAsync();
+            await ExpertQuoteLocatorFactory.AccountInformationPageLocators.SelectPolicyTermFromDropdown(_page, contextData.PolicyTerm).ClickAsync();
+            await Locators.ProposalDetailsPageLocators.AgentPCCodeInput(_page).FillAsync(contextData.AgentCode);
         }
 
         public async Task SelectRatingStateAndCompanyAsync(ScenarioContextData contextData)
         {
-            await _page.ClickAsync(Locators.ProposalDetailsPageLocators.RatingStateDropdown);
+            await Locators.ProposalDetailsPageLocators.RatingStateDropdown(_page).ClickAsync();
             await _page.ClickAsync($"text={contextData.RatingState.ToUpper()}");
-            string actualWritingCompany = await _page.InnerTextAsync(Locators.ProposalDetailsPageLocators.WritingCompanyDropdownValue);
+            string actualWritingCompany = await Locators.ProposalDetailsPageLocators.WritingCompanyDropdownValue(_page).InnerTextAsync();
             Assert.That(actualWritingCompany.Trim(), Is.EqualTo(contextData.WritingCompany), "Writing Company does not match expected value.");
         }
 
@@ -110,9 +110,9 @@ namespace Playwright_POC.Pages
         {
             if ((contextData.BusinessEntity == "Individually Owned") || (contextData.BusinessEntity == "DBA") || (contextData.BusinessEntity == "T/A"))
             {
-                await _page.ClickAsync(Locators.ProposalDetailsPageLocators.IndividuallyOwnedCheckbox);
+                await Locators.ProposalDetailsPageLocators.IndividuallyOwnedCheckbox(_page).ClickAsync();
                 await _page.WaitForTimeoutAsync(2000);
-                await _page.FillAsync(Locators.ProposalDetailsPageLocators.DBANameInput, contextData.DBAName);
+                await Locators.ProposalDetailsPageLocators.DBANameInput(_page).FillAsync(contextData.DBAName);
             }
             else
             {
@@ -125,7 +125,7 @@ namespace Playwright_POC.Pages
 
         public async Task ClickStartQuoteAsync()
         {
-            await _page.ClickAsync(Locators.ProposalDetailsPageLocators.StartQuoteButton);
+            await Locators.ProposalDetailsPageLocators.StartQuoteButton(_page).ClickAsync();
             await _page.WaitForTimeoutAsync(3000);
         }
 
@@ -135,14 +135,14 @@ namespace Playwright_POC.Pages
             await _page.WaitForTimeoutAsync(3000);
 
             // SSN pop-up
-            if (await _page.IsVisibleAsync(Locators.SSNPopUpLocators.SSNPopup))
+            if (await Locators.SSNPopUpLocators.SSNPopup(_page).IsVisibleAsync())
             {
                 string ssnToUse = !string.IsNullOrWhiteSpace(contextData.SSN)
                     ? contextData.SSN
                     : RandomGenerators.GenerateRandomSSN();
 
-                await _page.FillAsync(Locators.SSNPopUpLocators.SSNInput, ssnToUse);
-                await _page.ClickAsync(Locators.GlobalLocators.DialogSubmitButton);
+                await Locators.SSNPopUpLocators.SSNInput(_page).FillAsync(ssnToUse);
+                await Locators.GlobalLocators.DialogSubmitButton(_page).ClickAsync();
             }
 
             // SSN Confirmation pop-up
@@ -165,7 +165,7 @@ namespace Playwright_POC.Pages
 
         public async Task SelectRatingStateAsync(ScenarioContextData contextData)
         {
-            await _page.ClickAsync(Locators.ProposalDetailsPageLocators.RatingStateDropdown);
+            await Locators.ProposalDetailsPageLocators.RatingStateDropdown(_page).ClickAsync();
             await _page.ClickAsync($"text={contextData.RatingState.ToUpper()}");
            
         }

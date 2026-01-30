@@ -8,20 +8,29 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using Microsoft.Playwright;
 
+
 namespace Playwright_POC.Helpers
 {
     internal class Helpers
     {
-        public static async Task ClickIfNotSelectedAsync(IPage page, string xpath)
+        // ✅ Old version: keep it for legacy string selectors (xpath/css)
+        public static async Task ClickIfNotSelectedAsync(IPage page, string selector)
         {
-            var buttonLocator = page.Locator(xpath);
-            bool isSelected = await buttonLocator.EvaluateAsync<bool>("el => el.classList.contains('mat-button-toggle-checked')");
-
-            if (!isSelected)
-            {
-                await buttonLocator.ClickAsync();
-            }
+            var locator = page.Locator(selector);
+            await ClickIfNotSelectedAsync(locator);
         }
 
+        // ✅ New version: works with GetBy... because it accepts ILocator
+        public static async Task ClickIfNotSelectedAsync(ILocator locator)
+        {
+            // Option 1: Your original logic (Angular Material toggle selected class)
+            bool isSelected = await locator.EvaluateAsync<bool>(
+                "el => el.classList.contains('mat-button-toggle-checked')"
+            );
+
+            if (!isSelected)
+                await locator.ClickAsync();
+        }
     }
 }
+
