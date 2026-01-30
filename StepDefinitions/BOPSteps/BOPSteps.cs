@@ -72,16 +72,10 @@ public class BOPSteps
         await GlobalLocators.NextButton(_context.Page).ClickAsync();
     }
 
-    [Then("user selects Primary Insured and continues")]
-    public async Task UserSelectsPrimaryInsuredAsync()
-    {
-        var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);
-        await primaryInsuredPage.SelectExistingClientAsPrimaryInsuredAsync(_contextData);
-    }
-
-    [Then("user Enters Primary Insured Information and continues")]
+    [Then("user Enters Primary Insured Information for BOP and continues")]
     public async Task UserEntersPrimaryInsuredInformationAndContinues(Table table)
     {
         // Map table data to context data and steps needed
     }
+
 }

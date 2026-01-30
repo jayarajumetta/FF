@@ -55,7 +55,7 @@ Feature: BOP Happy Path
 
 	Then user selects Primary Insured and continues
 
-    Then user Enters Primary Insured Information and continues
+    Then user Enters Primary Insured Information for BOP and continues
 		| Question   | Answer     |
 		| EntityType | Individual |
 		| BusinessPhone | (907) 227-0664 |

@@ -56,14 +56,7 @@ public class PASteps
         await proposalDetailsPage.HandleClientExistsPopupAsync();
     }
 
-    [Then("user enters Pre-Qualification information and continues")]
-    public async Task WhenUserEntersPreQualificationInfoAndContinuesAsync(Table table)
-    {
-        TableMappingHelpers.PreQualificationFields(table, _contextData);
 
-        var preQualificationPage = new PreQualificationPage(_context.Page);
-        await preQualificationPage.EnterPreQualificationInfoAndContinueAsync(_contextData.EligibilityRestrictions);
-    }
 
     [Then("user selects existing Driver")]
     public async Task UserSelectsExistingDriverAsync()

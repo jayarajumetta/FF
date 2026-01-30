@@ -168,6 +168,24 @@ public class SharedEQSteps
         await accountInformationPage.ClickNextAsync();
     }
 
+    [Then("user enters Pre-Qualification information and continues")]
+    public async Task WhenUserEntersPreQualificationInfoAndContinuesAsync(Table table)
+    {
+        TableMappingHelpers.PreQualificationFields(table, _contextData);
+
+        var preQualificationPage = new PreQualificationPage(_context.Page);
+        await preQualificationPage.EnterPreQualificationInfoAndContinueAsync(_contextData.EligibilityRestrictions);
+    }
+
+    [Then("user selects Primary Insured and continues")]
+    public async Task UserSelectsPrimaryInsuredAsync()
+    {
+        var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);
+        await primaryInsuredPage.SelectExistingClientAsPrimaryInsuredAsync(_contextData);
+    }
+
+
+
     [Then("user creates a new Billing Account and Submits payment")]
     public async Task UserCreatesBillingAccountAndSubmitsPaymentAsync(Table table)
     {
