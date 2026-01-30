@@ -1,0 +1,39 @@
+Running Playwright Test after CLAS.DE
+
+trigger: none
+
+resources:
+  pipelines:
+    - pipeline: CLAS.DevST.Dev
+      source: CLAS.DEVST.DEV
+      project: CLAS
+      trigger: true
+
+pool:
+ name: ToscaReleases
+
+variables:
+  CI: true
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '18.x'
+    displayName: 'Install Node.js'
+
+  - script: npm ci
+    displayName: 'Install dependencies'
+
+  - script: npx playwright install --with-deps
+    displayName: 'Install Playwright browsers'
+
+  - script: npx playwright test
+    displayName: 'Run Playwright tests'
+    env:
+      BASE_URL: $(PW_BASE_URL)
+      USERNAME: $(PW_USERNAME)
+      PASSWORD: $(PW_PASSWORD)
+
+  - publish: $(System.DefaultWorkingDirectory)/playwright-report
+    artifact: playwright-report
+    condition: always()
