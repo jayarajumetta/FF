@@ -15,24 +15,32 @@ namespace Playwright_POC.Helpers
 
         public async Task<IBrowser> GetBrowserAsync(string browserType)
         {
+            // Default to headed unless overridden by PLAYWRIGHT_HEADLESS env var
+            bool headless = false; // headed by default
+            var env = Environment.GetEnvironmentVariable("PLAYWRIGHT_HEADLESS");
+            if (!string.IsNullOrEmpty(env))
+            {
+                // Accept "1", "true", "yes" as headless, everything else as headed
+                headless = (env == "1" || env.ToLower() == "true" || env.ToLower() == "yes");
+            }
+
             return browserType.ToLower() switch
             {
                 "edge" => await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
                 {
-                    Headless = false,
+                    Headless = headless,
                     ExecutablePath = @"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
                     Args = new[] {"--start-fullscreen" }
-                
                 }),
                 "chromium" => await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
                 {
-                    Headless = false,
+                    Headless = headless,
                     ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe",
                     Args = new[] { "--start-fullscreen" }
                 }),
                 "firefox" => await _playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions
                 {
-                    Headless = false
+                    Headless = headless
                 }),
                 _ => throw new ArgumentException("Unsupported browser type")
             };

@@ -17,24 +17,24 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         }
         public async Task VerifyNoClaimsOrViolationsAndContinueAsync()
         {
-            var claimsText = await _page.Locator(Locators.ClaimsAndViolationsConstLocators.NoClaimsBanner).InnerTextAsync();
+            var claimsText = await ClaimsAndViolationsConstLocators.NoClaimsBanner(_page).InnerTextAsync();
             Assert.That(claimsText, Does.Contain("No claims were found on reports"));
 
-            var violationsText = await _page.Locator(Locators.ClaimsAndViolationsConstLocators.NoViolationsBanner).InnerTextAsync();
+            var violationsText = await ClaimsAndViolationsConstLocators.NoViolationsBanner(_page).InnerTextAsync();
             Assert.That(violationsText, Does.Contain("No violations were found on reports"));
 
-            await _page.ClickAsync(Locators.GlobalLocators.NextButton);
+            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }
 
         public async Task AddClaimsAsync()
         {
-                       await _page.ClickAsync(Locators.ClaimsAndViolationsConstLocators.AddClaimsButton);
+                       await Locators.ClaimsAndViolationsConstLocators.AddClaimsButton(_page).ClickAsync();
             // Additional steps to add claims can be implemented here
         }
 
         public async Task AddViolationsAsync()
         {
-            await _page.ClickAsync(Locators.ClaimsAndViolationsConstLocators.AddViolationsButton);
+            await Locators.ClaimsAndViolationsConstLocators.AddViolationsButton(_page).ClickAsync();
             // Additional steps to add violations can be implemented here
         }
     }

@@ -48,6 +48,9 @@ Generated\ Files/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Reqnroll/SpecFlow auto-generated files
+*.feature.cs
 seed.tmp
 
 # Build Results of an ATL Project

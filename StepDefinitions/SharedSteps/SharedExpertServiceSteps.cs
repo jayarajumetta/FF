@@ -19,7 +19,7 @@ using ReqContext = Playwright_POC.Context.TestContext;
 
 
 [Binding]
-public class ExpertServiceSteps
+public class SharedExpertServiceSteps
 {
     private readonly ReqContext _context;
     private readonly ScenarioContextData _contextData;
@@ -28,7 +28,7 @@ public class ExpertServiceSteps
     private Table _table;
 
 
-    public ExpertServiceSteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
+    public SharedExpertServiceSteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
     {
         _context = context;
         _contextData = contextData;

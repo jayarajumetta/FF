@@ -10,11 +10,9 @@ namespace Playwright_POC.Helpers
     {
         public static string GenerateRandomSSN()
         {
-            Random random = new Random();
-
-            int part1 = random.Next(100, 899); // First three digits
-            int part2 = random.Next(10, 99);   // Middle two digits
-            int part3 = random.Next(1000, 9999); // Last four digits
+            int part1 = Random.Shared.Next(100, 899); // First three digits
+            int part2 = Random.Shared.Next(10, 99);   // Middle two digits
+            int part3 = Random.Shared.Next(1000, 9999); // Last four digits
 
             return $"{part1}-{part2}-{part3}";
         }
@@ -32,8 +30,7 @@ namespace Playwright_POC.Helpers
 
         public static string GenerateRandomFirstName()
         {
-            var rnd = new Random();
-            int index = rnd.Next(MaleFirstNames.Length);
+            int index = Random.Shared.Next(MaleFirstNames.Length);
             return MaleFirstNames[index];
         }
 
@@ -49,8 +46,7 @@ namespace Playwright_POC.Helpers
 
         public static string GenerateRandomLastName()
         {
-            var rnd = new Random();
-            int index = rnd.Next(LastNames.Length);
+            int index = Random.Shared.Next(LastNames.Length);
             return LastNames[index];
         }
 
@@ -66,9 +62,105 @@ namespace Playwright_POC.Helpers
 
         public static string GenerateRandomFemaleFirstName()
         {
-            var rnd = new Random();
-            int index = rnd.Next(FemaleFirstNames.Length);
+            int index = Random.Shared.Next(FemaleFirstNames.Length);
             return FemaleFirstNames[index];
+        }
+
+        /// <summary>
+        /// Generates a random DOB for a person between 21 and 65 years old.
+        /// Returns date in MM/dd/yyyy format.
+        /// </summary>
+        public static string GenerateRandomDOB(int minAge = 21, int maxAge = 65)
+        {
+            int age = Random.Shared.Next(minAge, maxAge + 1);
+            
+            // Calculate birth year based on age
+            var today = DateTime.Today;
+            int birthYear = today.Year - age;
+            
+            // Random month and day
+            int month = Random.Shared.Next(1, 13);
+            int maxDay = DateTime.DaysInMonth(birthYear, month);
+            int day = Random.Shared.Next(1, maxDay + 1);
+            
+            var dob = new DateTime(birthYear, month, day);
+            
+            // Ensure the person is actually within the age range
+            var ageAtToday = today.Year - dob.Year;
+            if (dob > today.AddYears(-ageAtToday)) ageAtToday--;
+            
+            if (ageAtToday < minAge || ageAtToday > maxAge)
+            {
+                // Adjust if edge case
+                dob = today.AddYears(-Random.Shared.Next(minAge, maxAge + 1));
+            }
+            
+            return dob.ToString("MM/dd/yyyy");
+        }
+
+        /// <summary>
+        /// Generates a realistic looking US phone number in (XXX) XXX-XXXX format.
+        /// Uses valid area codes and avoids reserved number patterns.
+        /// </summary>
+        public static string GenerateRandomPhoneNumber()
+        {
+            // Common valid US area codes
+            int[] areaCodes = { 201, 202, 205, 206, 207, 208, 209, 210, 212, 213, 214, 215, 216, 217, 218, 219,
+                                224, 225, 228, 229, 231, 234, 239, 240, 248, 251, 252, 253, 254, 256, 260, 262,
+                                267, 269, 270, 272, 276, 281, 301, 302, 303, 304, 305, 307, 308, 309, 310, 312,
+                                313, 314, 315, 316, 317, 318, 319, 320, 321, 323, 325, 330, 331, 334, 336, 337,
+                                339, 347, 351, 352, 360, 361, 385, 386, 401, 402, 404, 405, 406, 407, 408, 409,
+                                410, 412, 413, 414, 415, 417, 419, 423, 424, 425, 430, 432, 434, 435, 440, 442,
+                                443, 469, 470, 475, 478, 479, 480, 484, 501, 502, 503, 504, 505, 507, 508, 509,
+                                510, 512, 513, 515, 516, 517, 518, 520, 530, 540, 541, 551, 559, 561, 562, 563,
+                                567, 570, 571, 573, 574, 575, 580, 585, 586, 601, 602, 603, 605, 606, 607, 608,
+                                609, 610, 612, 614, 615, 616, 617, 618, 619, 620, 623, 626, 630, 631, 636, 641,
+                                646, 650, 651, 657, 660, 661, 662, 678, 681, 682, 701, 702, 703, 704, 706, 707,
+                                708, 712, 713, 714, 715, 716, 717, 718, 719, 720, 724, 727, 731, 732, 734, 737,
+                                740, 747, 754, 757, 760, 762, 763, 765, 770, 772, 773, 774, 775, 779, 781, 785,
+                                786, 801, 802, 803, 804, 805, 806, 808, 810, 812, 813, 814, 815, 816, 817, 818,
+                                828, 830, 831, 832, 843, 845, 847, 848, 850, 856, 857, 858, 859, 860, 862, 863,
+                                864, 865, 870, 872, 878, 901, 903, 904, 906, 907, 908, 909, 910, 912, 913, 914,
+                                915, 916, 917, 918, 919, 920, 925, 928, 931, 936, 937, 940, 941, 947, 949, 951,
+                                952, 954, 956, 970, 971, 972, 973, 978, 979, 980, 984, 985 };
+            
+            int areaCode = areaCodes[Random.Shared.Next(areaCodes.Length)];
+            
+            // Exchange code (first digit cannot be 0 or 1)
+            int exchange = Random.Shared.Next(200, 999);
+            
+            // Subscriber number
+            int subscriber = Random.Shared.Next(1000, 9999);
+            
+            return $"({areaCode}) {exchange}-{subscriber}";
+        }
+
+        /// <summary>
+        /// Generates a fake email address using first name, last name, and random domain.
+        /// </summary>
+        public static string GenerateRandomEmail(string firstName = null, string lastName = null)
+        {
+            // Use provided names or generate random ones
+            firstName = firstName ?? GenerateRandomFirstName();
+            lastName = lastName ?? GenerateRandomLastName();
+            
+            // Common fake email domains
+            string[] domains = { "testmail.com", "fakemail.org", "example.com", "mailtest.net", 
+                                 "testuser.io", "mockmail.com", "tempmail.org", "demomail.com" };
+            
+            // Email patterns
+            string[] patterns = { 
+                $"{firstName.ToLower()}.{lastName.ToLower()}",
+                $"{firstName.ToLower()}{lastName.ToLower()}",
+                $"{firstName.ToLower()[0]}{lastName.ToLower()}",
+                $"{firstName.ToLower()}.{lastName.ToLower()}{Random.Shared.Next(1, 99)}",
+                $"{firstName.ToLower()}{Random.Shared.Next(100, 999)}"
+            };
+            
+            string localPart = patterns[Random.Shared.Next(patterns.Length)];
+            string domain = domains[Random.Shared.Next(domains.Length)];
+            
+            return $"{localPart}@{domain}";
         }
 
     }

@@ -1,5 +1,4 @@
-﻿
-// Pages/PolicyCoveragesPage.cs
+﻿// Pages/PolicyCoveragesPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 using Playwright_POC.Locators;
@@ -19,27 +18,32 @@ namespace Playwright_POC.Pages
 
         public async Task SelectPolicyCoverageAsync(string policyCoverage)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.CoverageSelectionPageLocators.GetPolicyCoverageSelectionButton(policyCoverage));
+            await ExpertQuoteLocatorFactory.CoverageSelectionPageLocators.GetPolicyCoverageSelectionButton(_page, policyCoverage).ClickAsync();
         }
 
         public async Task SelectCompCollOnlyAsync(string compCollOnly)
         {
-            await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.CoverageSelectionPageLocators.GetCompCollOnlyButton(compCollOnly));
+
+            var locator = ExpertQuoteLocatorFactory.CoverageSelectionPageLocators
+                    .GetCompCollOnlyButton(_page, compCollOnly);
+
+            await Helpers.Helpers.ClickIfNotSelectedAsync(locator);
+
         }
 
         public async Task SelectCompDeductibleAsync(string compDeductible)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.CoverageSelectionPageLocators.GetCompDeductibleButton(compDeductible));
+            await ExpertQuoteLocatorFactory.CoverageSelectionPageLocators.GetCompDeductibleButton(_page, compDeductible).ClickAsync();
         }
 
         public async Task SelectCollDeductibleAsync(string collDeductible)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.CoverageSelectionPageLocators.GetCollDeductibleButton(collDeductible));
+            await ExpertQuoteLocatorFactory.CoverageSelectionPageLocators.GetCollDeductibleButton(_page, collDeductible).ClickAsync();
         }
 
         public async Task ClickNextAsync()
         {
-            await _page.ClickAsync(Locators.GlobalLocators.NextButton);
+            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }
 
         public async Task ClickViewPriorCarrierDetails()

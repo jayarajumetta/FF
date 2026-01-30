@@ -20,63 +20,72 @@ namespace Playwright_POC.Pages
 
         public async Task ClickCreateNewBillingAccountAsync()
         {
-            await _page.ClickAsync(Locators.BillingInformationConstLocators.CreateNewBillingAccountButton);
+            await BillingInformationConstLocators.CreateNewBillingAccountButton(_page).ClickAsync();
         }
 
         public async Task SelectPrimaryPayerAsync(string primaryPayer)
         {
             await _page.WaitForTimeoutAsync(4000); 
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPrimaryPayerButton(primaryPayer));
+            await ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPrimaryPayerButton(_page, primaryPayer).ClickAsync();
         }
 
         public async Task SelectPaymentTypeAsync(string paymentType)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPaymentTypeButton(paymentType));
+            await ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPaymentTypeButton(_page, paymentType).ClickAsync();
         }
 
         public async Task WaitForPaymentPlanAsync(string paymentPlan)
+
         {
-            await _page.WaitForSelectorAsync(ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPaymentPlanButton(paymentPlan), new() { Timeout = 15000 });
+            var planBtn = ExpertQuoteLocatorFactory.BillingInformationsPageLocators
+                .GetPaymentPlanButton(_page, paymentPlan);  
+
+            await planBtn.WaitForAsync(new()
+            {
+                State = WaitForSelectorState.Visible,
+                Timeout = 15000
+            });
         }
+
 
         public async Task SelectPaymentPlanAsync(string paymentPlan)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPaymentPlanButton(paymentPlan));
+            await ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPaymentPlanButton(_page, paymentPlan).ClickAsync();
         }
 
         public async Task WaitForPaymentDueDateInputAsync()
         {
-            await _page.WaitForSelectorAsync(Locators.BillingInformationConstLocators.PaymentDueDateInput, new() { Timeout = 3000 });
+            await BillingInformationConstLocators.PaymentDueDateInput(_page).WaitForAsync(new() { Timeout = 3000 });
         }
 
         public async Task EnterPaymentDueDateAsync(string paymentDueDate)
         {
-            await _page.FillAsync(Locators.BillingInformationConstLocators.PaymentDueDateInput, paymentDueDate);
+            await BillingInformationConstLocators.PaymentDueDateInput(_page).FillAsync(paymentDueDate);
         }
 
         public async Task SelectPaymentAmountAsync(string paymentAmount)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPaymentAmountRadioButton(paymentAmount));
+            await ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPaymentAmountRadioButton(_page, paymentAmount).ClickAsync();
         }
 
         public async Task SelectPaymentMethodAsync(string paymentMethod)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPaymentMethodButton(paymentMethod));
+            await ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPaymentMethodButton(_page, paymentMethod).ClickAsync();
         }
 
         public async Task EnterCheckNumberAsync(string checkNumber)
         {
-            await _page.FillAsync(Locators.BillingInformationConstLocators.CheckNumberInput, checkNumber);
+            await BillingInformationConstLocators.CheckNumberInput(_page).FillAsync(checkNumber);
         }
 
         public async Task SelectPaperlessCommunicationAsync(string paperless)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPaperlessCommunicationButton(paperless));
+            await ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPaperlessCommunicationButton(_page, paperless).ClickAsync();
         }
 
         public async Task ClickNextAsync()
         {
-            await _page.ClickAsync(Locators.GlobalLocators.NextButton);
+            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }
 
         public void DisplayQuoteNumber(string quoteNumber)

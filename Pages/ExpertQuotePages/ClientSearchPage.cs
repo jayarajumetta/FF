@@ -17,13 +17,13 @@ namespace Playwright_POC.Pages
 
         public async Task EnterNameAndSearchAsync(string name)
         {
-            await _page.FillAsync(ClientSearchLocators.IndividualSearchField, name);
-            await _page.ClickAsync(ClientSearchLocators.ClientSearchButton);
+            await ClientSearchLocators.IndividualSearchField(_page).FillAsync(name);
+            await ClientSearchLocators.ClientSearchButton(_page).ClickAsync();
         }
 
         public async Task<bool> IsClientSearchPageVisibleAsync()
         {
-            return await _page.IsVisibleAsync(ClientSearchLocators.ClientSearchPage);
+            return await ClientSearchLocators.ClientSearchPage(_page).IsVisibleAsync();
         }
 
         // Table assertion 

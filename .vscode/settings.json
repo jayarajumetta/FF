@@ -1,0 +1,1 @@
+﻿@{ "files.exclude": { "**/*.feature.cs": true } }

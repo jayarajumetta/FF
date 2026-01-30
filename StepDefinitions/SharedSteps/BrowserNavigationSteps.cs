@@ -5,7 +5,7 @@ using Reqnroll;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.StepDefinitions
+namespace TestAutomation.StepDefinitions.SharedSteps
 {
     [Binding]
     public class NavigationSteps

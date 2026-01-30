@@ -1,5 +1,4 @@
-﻿
-// Pages/NewClientPage.cs
+﻿// Pages/NewClientPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 using Playwright_POC.Locators;
@@ -18,67 +17,67 @@ namespace Playwright_POC.Pages
 
         public async Task WaitForFirstNameInputAsync()
         {
-            await _page.WaitForSelectorAsync(NewExistingClientSearchLocators.FirstNameInput, new() { Timeout = 2000 });
+            await NewExistingClientSearchLocators.FirstNameInput(_page).WaitForAsync(new() { Timeout = 2000 });
         }
 
         public async Task FillFirstNameAsync(string firstName)
         {
-            await _page.FillAsync(NewExistingClientSearchLocators.FirstNameInput, firstName);
+            await NewExistingClientSearchLocators.FirstNameInput(_page).FillAsync(firstName);
         }
 
         public async Task FillLastNameAsync(string lastName)
         {
-            var currentValue = await _page.InputValueAsync(NewExistingClientSearchLocators.LastNameInput);
+            var currentValue = await NewExistingClientSearchLocators.LastNameInput(_page).InputValueAsync();
             if (!currentValue.Equals(lastName))
             {
 
                 // Clear the field first
-                await _page.FillAsync(NewExistingClientSearchLocators.LastNameInput, "");
+                await NewExistingClientSearchLocators.LastNameInput(_page).FillAsync("");
                 // Then fill with the new value
-                await _page.FillAsync(NewExistingClientSearchLocators.LastNameInput, lastName);
+                await NewExistingClientSearchLocators.LastNameInput(_page).FillAsync(lastName);
             }
             
         }
 
         public async Task FillDOBAsync(string dob)
         {
-            await _page.FillAsync(NewExistingClientSearchLocators.DateOfBirthInput, dob);
+            await NewExistingClientSearchLocators.DateOfBirthInput(_page).FillAsync(dob);
         }
 
         public async Task FillBestPhoneAsync(string phone)
         {
-            await _page.FillAsync(NewExistingClientSearchLocators.BestPhoneInput, phone);
+            await NewExistingClientSearchLocators.BestPhoneInput(_page).FillAsync(phone);
         }
 
         public async Task FillEmailAsync(string email)
         {
-            await _page.FillAsync(NewExistingClientSearchLocators.EmailAddressInput, email);
+            await NewExistingClientSearchLocators.EmailAddressInput(_page).FillAsync(email);
         }
 
         public async Task ClickSearchAsync()
         {
-            await _page.ClickAsync(NewExistingClientSearchLocators.SearchButton);
+            await NewExistingClientSearchLocators.SearchButton(_page).ClickAsync();
         }
 
         public async Task WaitForNextButtonAsync()
         {
-            await _page.WaitForSelectorAsync(GlobalLocators.NextButton, new() { Timeout = 10000 });
+            await GlobalLocators.NextButton(_page).WaitForAsync(new() { Timeout = 10000 });
         }
 
         public async Task ClickCreateNewClientAsync()
         {
-            await _page.ClickAsync(NewExistingClientSearchLocators.CreateNewClientButton);
+            await NewExistingClientSearchLocators.CreateNewClientButton(_page).ClickAsync();
         }
 
         public async Task ClickNextAsync()
         {
-            await _page.ClickAsync(GlobalLocators.NextButton);
+            await GlobalLocators.NextButton(_page).ClickAsync();
         }
 
         public async Task WaitForAccountInfoPageAsync()
         {
             await _page.WaitForLoadStateAsync(LoadState.Load);
-            await _page.WaitForSelectorAsync(AccountInformationConstLocators.PageHeader, new() { Timeout = 10000 });
+            await AccountInformationConstLocators.PageHeader(_page).WaitForAsync(new() { Timeout = 10000 });
         }
 
 

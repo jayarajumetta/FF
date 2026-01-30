@@ -17,7 +17,7 @@ namespace Playwright_POC.Pages
         public async Task AnswerFelonyQuestion(string yesOrNo)
         {
             // Have you or any household member ever been convicted of a felony?
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.UnderwritingQuestionsPageLocators.ConvictedOfFelonyQuestion(yesOrNo));
+            await ExpertQuoteLocatorFactory.UnderwritingQuestionsPageLocators.ConvictedOfFelonyQuestion(_page, yesOrNo).ClickAsync();
         }
     }
 }
