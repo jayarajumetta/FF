@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Reqnroll;
@@ -526,6 +527,30 @@ namespace Playwright_POC.Helpers
                         break;
                     case "GrowIndustrialHemp":
                         _contextData.GrowIndustrialHemp = answer;
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknown question: {question}");
+                }
+            }
+
+        }
+
+        public static void SFPPrimaryInsuredFields(Table table, ScenarioContextData _contextData)
+        {
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"];
+                var answer = row["Answer"];
+                switch (question)
+                {
+                    case "FirstName":
+                        _contextData.ClientFirstName = answer;
+                        break;
+                    case "LastName":
+                        _contextData.ClientLastName = answer;
+                        break;
+                    case "DOB":
+                        _contextData.ClientDOB = answer;
                         break;
                     default:
                         throw new ArgumentException($"Unknown question: {question}");

@@ -67,6 +67,7 @@ namespace Playwright_POC.Locators
         public static ILocator CityInput(IPage page) => page.GetByTestId("owner.address.city");
         public static ILocator StateDropdown(IPage page) => page.GetByTestId("owner.address.state");
         public static ILocator ZipCodeInput(IPage page) => page.GetByTestId("owner.address.zip");
+        
 
     }
 
@@ -157,20 +158,22 @@ namespace Playwright_POC.Locators
 
     public static class AddPrimaryInsuredPageLocators
     {
-        public const string AddPrimaryInsuredFirstNameInput = "input[name='fields.data.account.accountInput$nameFirst.value']";
-        public const string AddPrimaryInsuredMiddleNameInput = "input[name='fields.data.account.accountInput$nameMI.value']";
-        public const string AddPrimaryInsuredLastNameInput = "input[name='fields.data.account.accountInput$nameLast.value']";
+        public static ILocator AddPrimaryInsuredFirstNameInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$nameFirst.value");
+        public static ILocator AddPrimaryInsuredMiddleNameInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$nameMiddle.value");
+        public static ILocator AddPrimaryInsuredLastNameInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$nameLast.value");
         public static ILocator ExpandSuffixDropDown(IPage page) => page.GetByTestId("fields.data.account.accountInput$nameSuffix.value");
-        public const string AddPrimaryInsuredDOBInput = "input[name='fields.data.account.accountInput$dateOfBirth.value']";
+        public static ILocator AddPrimaryInsuredDOBInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$dateOfBirth.value");
         public static ILocator ExpandCountryDropdown(IPage page) => page.GetByTestId("fields.data.account.accountInput$country.value");
-        public const string AddPrimaryInsuredMailingAddressInput = "input[name='fields.data.account.accountInput$address1.value']";
-        public const string AddPrimaryInsuredAddress2Input = "input[name='fields.data.account.accountInput$address2.value']";
-        public const string AddPrimaryInsuredCityInput = "input[name='fields.data.account.accountInput$address2.value']";
+        public static ILocator AddPrimaryInsuredMailingAddressInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$address1.value");
+        public static ILocator AddPrimaryInsuredAddress2Input(IPage page) => page.GetByTestId("fields.data.account.accountInput$address2.value");
+        public static ILocator AddPrimaryInsuredCityInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$city.value");
         public static ILocator ExpandStateDropdown(IPage page) => page.GetByTestId("fields.data.account.accountInput$state.value");
-        public const string AddPrimaryInsuredZipCodeInput = "input[name='fields.data.account.accountInput$zipCode.value']";
-        public const string AddPrimaryInsuredMobilePhoneInput = "input[name='fields.data.account.accountInput$mobilePhoneNumber.value']";
-        public const string AddPrimaryInsuredBusinessPhoneInpute = "input[name='fields.data.account.accountInput$primaryPhone.value']";
-        public const string AddPrimaryInsuredEmailAddressInput = "input[name='fields.data.account.accountInput$email.value']";
+        public static ILocator StateValueReadOnly(IPage page) => page.GetByTestId("fields.account.accountInput$state.value");
+        public static ILocator AddPrimaryInsuredZipCodeInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$zipCode.value");
+        public static ILocator AddPrimaryInsuredMobilePhoneInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$mobilePhone.value");
+        public static ILocator AddPrimaryInsuredBusinessPhoneInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$businessPhone.value");
+        public static ILocator AddPrimaryInsuredPrimaryPhoneInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$primaryPhone.value");
+        public static ILocator AddPrimaryInsuredEmailAddressInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$email.value");
         public static ILocator AddPrimaryInsuredFEINInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$fEIN.value");
         public const string ClientSSNOnFile = "xpath=.//div[contains(@id, 'SSNDisplay')]"; // Read Only Field
     }

@@ -45,18 +45,12 @@ Feature: SFP Happy Path
 	| RiskAddress    | 1206 Conway St, Saint Paul, MN 55106        |
 
     Then user enters SFP policy details and clicks Next button
-<<<<<<< Updated upstream
 		| Question            | Answer  |
 		| PrimaryFarmType     | Animals |
 		| LivestockType       | Beef    |
 		| GrossFarmIncome     | 75000   |
 		| GrowIndustrialHemp  | No      |
-=======
-		| Question        | Answer  |
-		| PrimaryFarmType | Animals |
-		| LivestockType   | Beef    |
-		| GrossFarmIncome |   75000 |
-		| GrowIndustrialHemp  | No      |
+
 
     Then user enters Pre-Qualification information and continues
 	    | Question                | Answer            |
@@ -64,9 +58,9 @@ Feature: SFP Happy Path
 
     Then user selects Primary Insured and continues
 
-        Then user Enters Primary Insured Information and continues
+    Then user Enters Primary Insured Information for SFP and continues
 		| Question   | Answer     |
 		| EntityType | Individual |
 		| BusinessPhone | (907) 227-0664 |
 		| FEIN       | 12-3456789 |
->>>>>>> Stashed changes
+
