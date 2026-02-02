@@ -33,29 +33,29 @@ namespace Playwright_POC.Locators
         public static ILocator ClientSearchPage(IPage page) => page.GetByText("Search / Recently Accessed");
         public static ILocator IndividualSearchField(IPage page) => page.GetByTestId("quoteSearchInput");
         public static ILocator ClientSearchButton(IPage page) => page.GetByTestId("quoteSearchButton");
-        public static ILocator NewQuoteButton(IPage page) => page.GetByText("New Quote");
+        public static ILocator NewQuoteButton(IPage page) => page.GetByRole(AriaRole.Button, new() { Name = "New Quote" });
     }
 
     public static class NewExistingClientSearchLocators
     {
         public static ILocator FirstNameInput(IPage page) => page.GetByTestId("customer.name.first");
         public static ILocator LastNameInput(IPage page) => page.GetByTestId("customer.name.last");
-        public static ILocator DateOfBirthInput(IPage page) => page.GetByLabel("Date of Birth");
+        public static ILocator DateOfBirthInput(IPage page) => page.Locator("input[name='customer.dateOfBirth']");
         public static ILocator DateOfBirthCalendarIcon(IPage page) => page.GetByLabel("Open calendar");
         public static ILocator BestPhoneInput(IPage page) => page.GetByTestId("customer.phone");
         public static ILocator EmailAddressInput(IPage page) => page.GetByTestId("customer.email");
         public static ILocator SearchButton(IPage page) => page.GetByTestId("clientSearch");
-        public static ILocator CreateNewClientButton(IPage page) => page.GetByText("Create New Client");
+        public static ILocator CreateNewClientButton(IPage page) => page.GetByRole(AriaRole.Button, new() { Name = "CREATE NEW CLIENT" });
     }
 
     public static class AccountInformationConstLocators
     {
         // Account Owner Information
-        public static ILocator PageHeader(IPage page) => page.GetByText("Account Information");
+        public static ILocator PageHeader(IPage page) => page.GetByRole(AriaRole.Heading, new() {  Name = "Account Information", Exact = true});
         public static ILocator FirstName(IPage page) => page.GetByTestId("owner.name.first");
         public static ILocator MiddelName(IPage page) => page.GetByTestId("owner.name.middle");
         public static ILocator LastName(IPage page) => page.GetByTestId("owner.name.last");
-        public static ILocator DateOfBirth(IPage page) => page.GetByLabel("Date of Birth");
+        public static ILocator DateOfBirth(IPage page) => page.Locator("input[name='owner.dateOfBirth']");
         public static ILocator BestPhone(IPage page) => page.GetByTestId("owner.phone");
         public static ILocator EmailAddress(IPage page) => page.GetByTestId("owner.email");
 

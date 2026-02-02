@@ -146,7 +146,11 @@ public class SharedEQSteps
 
         //Wait for the next page to load
         await _context.Page.WaitForLoadStateAsync(LoadState.Load);
-        await _context.Page.WaitForSelectorAsync(AccountInformationConstLocators.PageHeader(_context.Page).ToString(), new() { Timeout = 10000 });
+
+        await AccountInformationConstLocators
+            .PageHeader(_context.Page)
+            .WaitForAsync(new() { Timeout = 10000 });
+
     }
 
 

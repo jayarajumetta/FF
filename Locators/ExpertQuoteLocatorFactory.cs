@@ -20,7 +20,7 @@ namespace Playwright_POC.Locators
 
             public static ILocator GetReceivedMailButton(IPage page, string yesOrNo) =>
                 page
-                    .Locator("[data-testid^='owner.address.resided90days-']") // group container (starts-with)
+                    .Locator("[data-testid*='owner.address.resided90days-']") // group container (starts-with)
                     .GetByRole(AriaRole.Button, new() { Name = yesOrNo });
 
 
@@ -213,10 +213,11 @@ namespace Playwright_POC.Locators
                 .GetByRole(AriaRole.Button, new() { Name = value });
 
             // Account Owner Information
+
             public static ILocator GetMaritalStatusSelection(IPage page, string maritalStatus) =>
-                page
-                    .Locator("[data-testid^='owner.maritalStatus']")
-                    .GetByRole(AriaRole.Button, new() { Name = maritalStatus });
+                page.Locator("button[data-testid^='owner.maritalStatus-']")
+                    .Filter(new() { HasTextString = maritalStatus.Trim() });
+
 
 
             // Suffix Dropdown Values

@@ -86,7 +86,7 @@ namespace Playwright_POC.Pages
             await _page.WaitForTimeoutAsync(2000);
 
             await Locators.VehicleSummaryConstLocators.OdometerReadingInput(_page).FillAsync(contextData.OdometerReading);
-            await _page.FillAsync(Locators.VehicleSummaryConstLocators.TotalAnnualMileageInput, contextData.AnnualMileage);
+            await VehicleSummaryConstLocators.TotalAnnualMileageInput(_page).FillAsync(contextData.AnnualMileage);
         }
 
         public async Task SaveAndContinueVehicleAsync()

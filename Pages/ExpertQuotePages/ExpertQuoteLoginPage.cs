@@ -21,12 +21,13 @@ namespace Playwright_POC.Pages
             await LoginLocators.LoginButton(_page).ClickAsync();
 
             // Wait for login to complete
-            await _page.WaitForSelectorAsync(ClientSearchLocators.DashboardElement(_page).ToString(), new PageWaitForSelectorOptions { Timeout = 30000 });
+            var dashboardLocator = ClientSearchLocators.NewQuoteButton(_page);
+            await dashboardLocator.WaitForAsync(new() { State = WaitForSelectorState.Visible });
         }
 
         public async Task<bool> IsDashboardVisibleAsync()
         {
-            return await ClientSearchLocators.DashboardElement(_page).IsVisibleAsync();
+            return await ClientSearchLocators.NewQuoteButton(_page).IsVisibleAsync();
         }
     }
 }

@@ -71,7 +71,7 @@ public class SFPSteps
 
     }
 
-    [Then("uset Validates Primary Insured Information for SFP and continues")]
+    [Then("user Validates Primary Insured Information for SFP and continues")]
     public async Task UserEntersPrimaryInsuredInformationForSFPAndContinues(Table table)
     {
         TableMappingHelpers.SFPPrimaryInsuredFields(table, _contextData);

@@ -41,7 +41,14 @@ namespace Playwright_POC.Pages
 
         public async Task FillDOBAsync(string dob)
         {
-            await NewExistingClientSearchLocators.DateOfBirthInput(_page).FillAsync(dob);
+
+            var dobInput = _page.Locator("input[name='customer.dateOfBirth']");
+
+            await dobInput.FillAsync(dob);
+
+           
+            await dobInput.PressAsync("Tab");
+
         }
 
         public async Task FillBestPhoneAsync(string phone)
@@ -51,11 +58,15 @@ namespace Playwright_POC.Pages
 
         public async Task FillEmailAsync(string email)
         {
+            var emailInput = _page.Locator("input[name='customer.email']");
             await NewExistingClientSearchLocators.EmailAddressInput(_page).FillAsync(email);
+
+            await emailInput.PressAsync("Tab");
         }
 
         public async Task ClickSearchAsync()
         {
+            await _page.WaitForTimeoutAsync(10000);
             await NewExistingClientSearchLocators.SearchButton(_page).ClickAsync();
         }
 
