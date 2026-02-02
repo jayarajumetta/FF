@@ -48,6 +48,11 @@ Feature: EQ SFP Smoke
       | GrossFarmIncome    | 75000   |
       | GrowIndustrialHemp | No      |
 
+    Then user captures the quote number
+    Then user closes the browser
+    Then user launches a new browser and logs in to Expert Quote
+    Then user verifies the quote exists in search results
+
     Examples:
       | State        | StateAbbv | StateFull    | Address          | AddressLine2 | City        | Zip   |
       | Minnesota    | MN        | Minnesota    | 115 S Main ST    | 111          | Warren      | 56762 |

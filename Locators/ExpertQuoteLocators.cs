@@ -24,7 +24,10 @@ namespace Playwright_POC.Locators
     {
         public static ILocator UsernameInput(IPage page) => page.GetByPlaceholder("Username");
         public static ILocator PasswordInput(IPage page) => page.GetByPlaceholder("Password");
-        public static ILocator  LoginButton(IPage page) => page.GetByTitle("Sign On");
+        public static ILocator LoginButton(IPage page) => page.GetByTitle("Sign On");
+        
+        // Logout locators
+        public static ILocator LogoutButton(IPage page) => page.Locator("app-core-log-out button");
     }
    
     public static class ClientSearchLocators

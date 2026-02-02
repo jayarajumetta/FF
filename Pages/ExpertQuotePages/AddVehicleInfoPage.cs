@@ -86,13 +86,13 @@ namespace Playwright_POC.Pages
             await _page.WaitForTimeoutAsync(2000);
 
             await Locators.VehicleSummaryConstLocators.OdometerReadingInput(_page).FillAsync(contextData.OdometerReading);
-            await _page.FillAsync(Locators.VehicleSummaryConstLocators.TotalAnnualMileageInput, contextData.AnnualMileage);
+            await Locators.VehicleSummaryConstLocators.TotalAnnualMileageInput(_page).FillAsync(contextData.AnnualMileage);
         }
 
         public async Task SaveAndContinueVehicleAsync()
         {
             await Locators.GlobalLocators.SaveAndContinueButton(_page).ClickAsync();
-            await _page.WaitForSelectorAsync(Locators.GlobalLocators.NextButton(_page).ToString(), new() { Timeout = 3000 });
+            await Locators.GlobalLocators.NextButton(_page).WaitForAsync(new() { Timeout = 3000 });
             await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }
 

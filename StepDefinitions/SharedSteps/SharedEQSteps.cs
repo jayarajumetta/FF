@@ -192,4 +192,265 @@ public class SharedEQSteps
         System.IO.File.WriteAllText("QuoteNumber.txt", _contextData.QuoteNumber ?? "");
     }
 
+
+    [Then("user captures the quote number")]
+    public async Task UserCapturesTheQuoteNumber()
+    {
+        // Wait for the page to stabilize after quote creation
+        await _context.Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+        await _context.Page.WaitForTimeoutAsync(2000); // Allow UI to update with quote number
+        
+        // Wait for the quote number element to be visible
+        await _context.Page.WaitForSelectorAsync(GlobalLocators.QuoteNumber, new() { Timeout = 15000 });
+        
+        // Read the full text which contains multiple lines (e.g., "PERSONAL AUTO\n(PA123456789)")
+        var fullText = await _context.Page.InnerTextAsync(GlobalLocators.QuoteNumber);
+        Console.WriteLine($"Raw Quote Label Text: '{fullText}'");
+        
+        // Split by newlines and look for the quote number pattern
+        var lines = fullText.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+        
+        string rawQuoteNumber = string.Empty;
+        
+        // Look for a line that contains a quote number pattern (letters followed by numbers, or in parentheses)
+        foreach (var line in lines)
+        {
+            var trimmed = line.Trim();
+            // Quote numbers typically look like: (PA123456789) or PA123456789 or contain digits
+            if (trimmed.Contains("(") || System.Text.RegularExpressions.Regex.IsMatch(trimmed, @"[A-Z]{2,}\d+"))
+            {
+                rawQuoteNumber = trimmed;
+                break;
+            }
+        }
+        
+        // Fallback: if no pattern found, use the last line (often the quote number)
+        if (string.IsNullOrEmpty(rawQuoteNumber) && lines.Length > 1)
+        {
+            rawQuoteNumber = lines[lines.Length - 1].Trim();
+        }
+        else if (string.IsNullOrEmpty(rawQuoteNumber))
+        {
+            rawQuoteNumber = fullText.Trim();
+        }
+        
+        // Normalize: remove parentheses if present
+        var normalized = rawQuoteNumber.Replace("(", "").Replace(")", "").Trim();
+        
+        if (string.IsNullOrWhiteSpace(normalized) || !System.Text.RegularExpressions.Regex.IsMatch(normalized, @"\d"))
+        {
+            throw new Exception($"Failed to capture a valid quote number. Raw text was: '{fullText}'");
+        }
+        
+        _contextData.QuoteNumber = normalized;
+        Console.WriteLine($"Captured Quote Number: {normalized}");
+    }
+
+    [Then("user searches for the captured quote and opens it for edit")]
+    public async Task UserSearchesForCapturedQuoteAndOpensForEdit()
+    {
+        var quoteNumber = _contextData.QuoteNumber;
+        
+        if (string.IsNullOrWhiteSpace(quoteNumber))
+            throw new Exception("No quote number was captured to search for.");
+
+        // Handle browser "Leave site?" dialog if it appears
+        _context.Page.Dialog += async (_, dialog) =>
+        {
+            Console.WriteLine($"Dialog appeared: {dialog.Type} - {dialog.Message}");
+            await dialog.AcceptAsync();
+        };
+
+        // Navigate back to the Expert Quote search page using direct URL navigation
+        var expertQuoteUrl = _configuration["Playwright:ExpertQuote"] ?? "https://expertquote-qa.americannational.com/expertquote/#/quote";
+        
+        try
+        {
+            await _context.Page.GotoAsync(expertQuoteUrl, new PageGotoOptions 
+            { 
+                Timeout = 30000,
+                WaitUntil = WaitUntilState.DOMContentLoaded 
+            });
+        }
+        catch (TimeoutException)
+        {
+            // If navigation times out, try accepting any dialogs and retry
+            Console.WriteLine("Navigation timed out, retrying...");
+            await _context.Page.GotoAsync(expertQuoteUrl, new PageGotoOptions 
+            { 
+                Timeout = 30000,
+                WaitUntil = WaitUntilState.DOMContentLoaded 
+            });
+        }
+        
+        await _context.Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+        
+        // Wait for search input to be available - try multiple selectors
+        var searchInputVisible = await ClientSearchLocators.IndividualSearchField(_context.Page).IsVisibleAsync();
+        
+        if (!searchInputVisible)
+        {
+            // Maybe we need to wait for login to complete or handle a redirect
+            Console.WriteLine("Search input not immediately visible, waiting...");
+            await _context.Page.WaitForTimeoutAsync(3000);
+        }
+        
+        await ClientSearchLocators.IndividualSearchField(_context.Page).WaitForAsync(new() { Timeout = 20000 });
+        
+        var clientSearchPage = new ClientSearchPage(_context.Page);
+        
+        // Search for the quote by quote number
+        await clientSearchPage.EnterNameAndSearchAsync(quoteNumber);
+        
+        // Wait for results to load
+        await _context.Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+        await _context.Page.WaitForTimeoutAsync(1000); // Allow results to render
+        
+        // Wait for results and click on the quote to open it
+        var quoteResultSelector = $"//td[contains(text(), '{quoteNumber}')] | //a[contains(text(), '{quoteNumber}')] | //*[contains(text(), '{quoteNumber}')]";
+        await _context.Page.WaitForSelectorAsync(quoteResultSelector, new() { Timeout = 10000 });
+        await _context.Page.ClickAsync(quoteResultSelector);
+        
+        // Wait for the quote to load
+        await _context.Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+        
+        Console.WriteLine($"Opened quote: {quoteNumber}");
+    }
+
+    [Then("the recalled quote number equals the captured quote number")]
+    public async Task TheRecalledQuoteNumberEqualsTheCapturedQuoteNumber()
+    {
+        // Wait for the quote number element
+        await _context.Page.WaitForSelectorAsync(GlobalLocators.QuoteNumber, new() { Timeout = 10000 });
+        
+        // Read the full text and extract quote number (same logic as capture)
+        var fullText = await _context.Page.InnerTextAsync(GlobalLocators.QuoteNumber);
+        var lines = fullText.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+        var displayedRaw = lines.Length > 1 ? lines[1].Trim() : fullText.Trim();
+        var displayedNormalized = displayedRaw.Replace("(", "").Replace(")", "").Trim();
+        
+        var expected = _contextData.QuoteNumber;
+        
+        if (!string.Equals(displayedNormalized, expected, StringComparison.OrdinalIgnoreCase))
+            throw new Exception($"Quote number mismatch. Expected '{expected}', got '{displayedNormalized}'.");
+        
+        Console.WriteLine($"Quote number verified: {displayedNormalized}");
+    }
+
+    /// <summary>
+    /// Normalizes a quote number by removing common prefixes and parentheses.
+    /// Examples: "PERSONAL AUTO (PA-12345)" → "PA-12345"
+    /// </summary>
+    private static string NormalizeQuoteNumber(string raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            return string.Empty;
+
+        var normalized = raw.Trim();
+
+        // Remove common prefixes
+        string[] prefixes = { "PERSONAL AUTO ", "SPECIAL FARM PACKAGE ", "BOP " };
+        foreach (var prefix in prefixes)
+        {
+            if (normalized.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            {
+                normalized = normalized.Substring(prefix.Length);
+                break;
+            }
+        }
+
+        // Remove parentheses
+        normalized = normalized.Replace("(", "").Replace(")", "").Trim();
+
+        return normalized;
+    }
+
+    [Then("user closes the browser")]
+    public async Task UserClosesTheBrowser()
+    {
+        // Close the browser context to clear the session
+        var browserContext = _context.Page.Context;
+        await browserContext.CloseAsync();
+        Console.WriteLine("Browser context closed - session cleared");
+    }
+
+    [Then("user launches a new browser and logs in to Expert Quote")]
+    public async Task UserLaunchesNewBrowserAndLogsInToExpertQuote()
+    {
+        // Create a new browser instance
+        var browserFactory = new BrowserFactory();
+        var browserType = Environment.GetEnvironmentVariable("BROWSER_TYPE") ?? "chromium";
+        var browser = await browserFactory.GetBrowserAsync(browserType);
+        
+        // Create new context and page
+        var newContext = await browser.NewContextAsync(new BrowserNewContextOptions
+        {
+            ViewportSize = new ViewportSize
+            {
+                Width = 1900,
+                Height = 1080
+            }
+        });
+        
+        var newPage = await newContext.NewPageAsync();
+        newPage.SetDefaultTimeout(60000);
+        newPage.SetDefaultNavigationTimeout(90000);
+        
+        // Update the test context with the new page
+        _context.Page = newPage;
+        Console.WriteLine("New browser instance created");
+        
+        // Navigate to Expert Quote
+        var expertQuoteUrl = _configuration["Playwright:ExpertQuote"] ?? "https://expertquote-qa.americannational.com/expertquote/#/quote";
+        await _context.Page.GotoAsync(expertQuoteUrl, new PageGotoOptions 
+        { 
+            Timeout = 30000,
+            WaitUntil = WaitUntilState.Load 
+        });
+        
+        await _context.Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+        // Login with credentials
+        await LoginLocators.LoginButton(_context.Page).WaitForAsync(new() { Timeout = 10000 });
+        
+        string username = _credentials.Username;
+        string password = _credentials.Password;
+
+        var loginPage = new ExpertQuoteLoginPage(_context.Page);
+        await loginPage.LoginAsync(username, password);
+
+        Assert.That(await loginPage.IsDashboardVisibleAsync(), Is.True);
+        Console.WriteLine("Logged in to Expert Quote with fresh session");
+        
+        // Wait for search page to be ready
+        await ClientSearchLocators.IndividualSearchField(_context.Page).WaitForAsync(new() { Timeout = 20000 });
+        Console.WriteLine("Search page is ready");
+    }
+
+    [Then("user verifies the quote exists in search results")]
+    public async Task UserVerifiesTheQuoteExistsInSearchResults()
+    {
+        var quoteNumber = _contextData.QuoteNumber;
+        
+        if (string.IsNullOrWhiteSpace(quoteNumber))
+            throw new Exception("No quote number was captured to verify.");
+
+        var clientSearchPage = new ClientSearchPage(_context.Page);
+        
+        // Search for the quote by quote number
+        await clientSearchPage.EnterNameAndSearchAsync(quoteNumber);
+        
+        // Wait for results to load
+        await _context.Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+        await _context.Page.WaitForTimeoutAsync(1000);
+        
+        // Verify the quote appears in search results
+        var quoteResultSelector = $"//td[contains(text(), '{quoteNumber}')] | //a[contains(text(), '{quoteNumber}')] | //*[contains(text(), '{quoteNumber}')]";
+        
+        var quoteFound = await _context.Page.Locator(quoteResultSelector).IsVisibleAsync();
+        
+        Assert.That(quoteFound, Is.True, $"Quote '{quoteNumber}' was not found in search results.");
+        Console.WriteLine($"Quote '{quoteNumber}' verified in search results");
+    }
+
 }
