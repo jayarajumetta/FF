@@ -17,7 +17,7 @@ namespace Playwright_POC.Locators
         public static ILocator SaveAndContinueButton(IPage page) => page.GetByTestId("fields.line.save_and_Continue");
         public const string CancelButton = "xpath=.//button[contains(text(), 'Cancel')]";
         public const string QuoteNumber = "xpath=//div[contains(@class, 'mat-tab-label-container')]//span";
-        public const string SaveButton = "xpath=.//button[contains(text(), 'Save')]";
+        public static ILocator SaveButton(IPage page) => page.GetByTestId("fields.data_Actions.save") ;
     }
 
     public static class LoginLocators
@@ -175,7 +175,9 @@ namespace Playwright_POC.Locators
         public static ILocator AddPrimaryInsuredPrimaryPhoneInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$primaryPhone.value");
         public static ILocator AddPrimaryInsuredEmailAddressInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$email.value");
         public static ILocator AddPrimaryInsuredFEINInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$fEIN.value");
-        public const string ClientSSNOnFile = "xpath=.//div[contains(@id, 'SSNDisplay')]"; // Read Only Field
+        public static ILocator ClientSSNOnFile(IPage page) => page.GetByText("Social Security #:", new() { Exact = true })
+                                                                .Locator("..")
+                                                                .Locator("readonly-value"); // Read Only Field
     }
     
     public static class EditGeneralInformationPgeLocators

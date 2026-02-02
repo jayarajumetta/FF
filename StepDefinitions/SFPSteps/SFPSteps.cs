@@ -71,8 +71,15 @@ public class SFPSteps
 
     }
 
-    [Then("uset Enters Primary Insured Information for SFP and continues")]
-    
-    
+    [Then("uset Validates Primary Insured Information for SFP and continues")]
+    public async Task UserEntersPrimaryInsuredInformationForSFPAndContinues(Table table)
+    {
+        TableMappingHelpers.SFPPrimaryInsuredFields(table, _contextData);
+        var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);
+        await primaryInsuredPage.SelectExistingClientAsPrimaryInsuredAsync(_contextData);
+        await primaryInsuredPage.ValidatePrimaryInsuredDetailsAsync(_contextData);
+        await GlobalLocators.SaveButton(_context.Page).ClickAsync();
+    }
+
 
 }

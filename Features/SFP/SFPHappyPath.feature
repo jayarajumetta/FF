@@ -58,9 +58,6 @@ Feature: SFP Happy Path
 
     Then user selects Primary Insured and continues
 
-    Then user Enters Primary Insured Information for SFP and continues
-		| Question   | Answer     |
-		| EntityType | Individual |
-		| BusinessPhone | (907) 227-0664 |
-		| FEIN       | 12-3456789 |
+    Then user Validates Primary Insured Information for SFP and continues
+
 

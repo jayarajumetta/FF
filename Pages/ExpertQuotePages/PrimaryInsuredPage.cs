@@ -64,6 +64,7 @@ namespace TestAutomation.Pages.ExpertQuotePages
             var zip = AddPrimaryInsuredPageLocators.AddPrimaryInsuredZipCodeInput(_page);
             var phone = AddPrimaryInsuredPageLocators.AddPrimaryInsuredPrimaryPhoneInput(_page);
             var email = AddPrimaryInsuredPageLocators.AddPrimaryInsuredEmailAddressInput(_page);
+            var ssnNumber = AddPrimaryInsuredPageLocators.ClientSSNOnFile(_page);
             var actualFirst = (await firstName.InputValueAsync())?.Trim();
             var actualLast = (await lastName.InputValueAsync())?.Trim();
             var actualDobText = (await dob.InputValueAsync())?.Trim();
@@ -73,6 +74,8 @@ namespace TestAutomation.Pages.ExpertQuotePages
             var actualZip = (await zip.InputValueAsync())?.Trim();
             var actualPhone = (await phone.InputValueAsync())?.Trim();
             var actualEmail = (await email.InputValueAsync())?.Trim();
+            var actualSSN = (await ssnNumber.InputValueAsync())?.Trim();
+            var ssnLast4 = actualSSN[^4..];
 
             Assert.That(
                 actualFirst,
@@ -124,6 +127,13 @@ namespace TestAutomation.Pages.ExpertQuotePages
                 Is.EqualTo(contextData.ClientEmail).IgnoreCase,
                 $"Email Address mismatch. Expected: {contextData.ClientEmail}, Actual: {actualEmail}"
             );
+            var clientSSNLas4 = contextData.SSN[^4..];
+            Assert.That(
+                ssnLast4,
+                Is.EqualTo(clientSSNLas4).IgnoreCase,
+                $"SSN Last 4 mismatch. Expected: {clientSSNLas4}, Actual: {ssnLast4}"
+            );
+
 
         }
     }
