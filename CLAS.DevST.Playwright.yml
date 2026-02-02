@@ -2,12 +2,6 @@
 
 trigger: none
 
-resources:
-  pipelines:
-    - pipeline: CLAS.DevST.Dev
-      source: CLAS.DEVST.DEV
-      project: CLAS
-      trigger: none
 pool:
  name: ToscaReleases
 
