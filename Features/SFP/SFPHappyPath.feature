@@ -7,23 +7,23 @@ Feature: SFP Happy Path
 
     When I enter valid credentials and Click LogIn
 
-    Then user enters a Random Name in the search field and clicks search
-    | Question  |  Answer    |
-    | FirstName | {{male}}   |
-    | LastName  | {{random}} |
+    And user enters a Random Name in the search field and clicks search
+    | Question  |  Answer        |
+    | FirstName | {{firstName}}  |
+    | LastName  | {{lastName}}   |
 
-    Then user clicks New Quote button
+    And user clicks New Quote button
    
-    Then user enters client information and clicks search
+    And user enters client information and clicks search
     | Question     | Answer         |
     | DOB          |  08/08/1944    |
     | BestPhone    | (907) 227-0664 |
     | EmailAddress | fake@email.com |
 
     
-    Then user selects Create New Client and clicks the Next button
+    And user selects Create New Client and clicks the Next button
 
-    Then user enters account owner information and clicks Next
+    And user enters account owner information and clicks Next
     | Question           | Answer           |
     | MaritalStatus      | Single           |
     | StreetAddress      | 1206 Conway St   |
@@ -34,9 +34,9 @@ Feature: SFP Happy Path
     | ReceivedMail       |     Yes          |
     | WhereClientResides |     Yes          |
 
-    Then user selects Special Farm Package and inputs Quote Details
+    And user selects Special Farm Package and inputs Quote Details
     | Question       | Answer                                      |
-	| EffectiveDate  | 2/15/2026                                   |
+	| EffectiveDate  | {{tomorrow}}                                |
 	| PolicyTerm     | 12 months                                   |
 	| AgentCode      | D2102                                       |
 	| RatingState    | Minnesota                                   |
@@ -44,7 +44,7 @@ Feature: SFP Happy Path
 	| WritingCompany | American National Property And Casualty Co. |
 	| RiskAddress    | 1206 Conway St, Saint Paul, MN 55106        |
 
-    Then user enters SFP policy details and clicks Next button
+    And user enters SFP policy details and clicks Next button
 		| Question            | Answer  |
 		| PrimaryFarmType     | Animals |
 		| LivestockType       | Beef    |

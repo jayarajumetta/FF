@@ -5,10 +5,22 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Playwright_POC.Locators;
 using Playwright_POC.Helpers;
-using NUnit.Framework;
 
 namespace Playwright_POC.Pages
 {
+    /// <summary>
+    /// Data class to hold driver field values for validation by the caller.
+    /// </summary>
+    public class DriverFieldValues
+    {
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public DateTime DateOfBirth { get; set; }
+        public string PhoneNumber { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string DLState { get; set; } = string.Empty;
+    }
+
     public class AddDriverInfoPage
     {
         private readonly IPage _page;
@@ -39,24 +51,23 @@ namespace Playwright_POC.Pages
             await _page.WaitForLoadStateAsync(LoadState.Load);
         }
 
-        public async Task ValidateDriverFieldsAsync(ScenarioContextData contextData)
+        /// <summary>
+        /// Gets the actual driver field values from the page. 
+        /// Returns values for the caller (Steps) to assert.
+        /// </summary>
+        public async Task<DriverFieldValues> GetDriverFieldValuesAsync()
         {
-            DateTime expectedDOB = DateTime.Parse(contextData.ClientDOB, CultureInfo.InvariantCulture);
-            DateTime actualDob = DateTime.Parse(await (Locators.DriverSummaryConstLocators.DateOfBirthInput(_page)).InputValueAsync());
-
-            var actualFirstName = (await (Locators.DriverSummaryConstLocators.FirstNameInput(_page)).InputValueAsync()).Trim();
-            var expectedFirstName = contextData.ClientFirstName.Trim();
-            Assert.That(actualFirstName.Equals(expectedFirstName, StringComparison.OrdinalIgnoreCase),
-                $"First Name does not match expected value. Expected: '{expectedFirstName}', Actual: '{actualFirstName}'");
-
-            var actualLastName = (await (Locators.DriverSummaryConstLocators.LastNameInput(_page)).InputValueAsync()).Trim();
-            var expectedLastName = contextData.ClientLastName.Trim();
-            Assert.That(actualLastName.Equals(expectedLastName, StringComparison.OrdinalIgnoreCase),
-                $"Last Name does not match expected value. Expected: '{expectedLastName}', Actual: '{actualLastName}'");
-            Assert.That(actualDob, Is.EqualTo(expectedDOB), "DOB does not match expected value.");
-            Assert.That(await (Locators.DriverSummaryConstLocators.PhoneNumberInput(_page)).InputValueAsync(), Is.EqualTo(contextData.ClientPhoneNumber), "Phone Number does not match expected value.");
-            Assert.That(await (Locators.DriverSummaryConstLocators.EmailAddressInput(_page)).InputValueAsync(), Is.EqualTo(contextData.ClientEmail), "Email Address does not match expected value.");
-            Assert.That(await (Locators.DriverSummaryConstLocators.DLStateDropdown(_page)).InnerTextAsync(), Is.EqualTo(contextData.DLState), "State does not match expected value.");
+            var dobString = await Locators.DriverSummaryConstLocators.DateOfBirthInput(_page).InputValueAsync();
+            
+            return new DriverFieldValues
+            {
+                FirstName = (await Locators.DriverSummaryConstLocators.FirstNameInput(_page).InputValueAsync()).Trim(),
+                LastName = (await Locators.DriverSummaryConstLocators.LastNameInput(_page).InputValueAsync()).Trim(),
+                DateOfBirth = DateTime.Parse(dobString, CultureInfo.InvariantCulture),
+                PhoneNumber = await Locators.DriverSummaryConstLocators.PhoneNumberInput(_page).InputValueAsync(),
+                Email = await Locators.DriverSummaryConstLocators.EmailAddressInput(_page).InputValueAsync(),
+                DLState = await Locators.DriverSummaryConstLocators.DLStateDropdown(_page).InnerTextAsync()
+            };
         }
 
         public async Task SelectDriverOptionsAsync(ScenarioContextData contextData)
@@ -108,7 +119,8 @@ namespace Playwright_POC.Pages
         {
             await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetFinancialResponsibilityButton(contextData.FinancialResponsibility));
             await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetPriorInsuranceButton(contextData.PriorInsurance));
-            await _page.WaitForTimeoutAsync(2000);
+            // Wait for any conditional fields to appear based on prior insurance selection
+            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
         }
 
         public async Task HandlePriorInsuranceAsync(ScenarioContextData contextData)
@@ -159,27 +171,31 @@ namespace Playwright_POC.Pages
         public async Task SaveAndContinueAsync()
         {
             await Locators.GlobalLocators.SaveAndContinueButton(_page).ClickAsync();
-            await _page.WaitForTimeoutAsync(10000);
+            // Wait for page transition and MVR check to complete
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
         }
 
         public async Task HandleMVRPopUpAsync()
         {
-            await _page.WaitForTimeoutAsync(8000);
-            if (await DriverSummaryConstLocators.MVRPopUpContinueButton(_page).IsVisibleAsync())
+            // Wait for MVR popup to potentially appear (with short timeout)
+            try
             {
-                await _page.WaitForTimeoutAsync(2000);
-                Console.WriteLine("Found Dialog Container");
+                await DriverSummaryConstLocators.MVRPopUpContinueButton(_page).WaitForAsync(
+                    new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
+                Console.WriteLine("Found MVR Dialog");
                 await DriverSummaryConstLocators.MVRPopUpContinueButton(_page).ClickAsync();
             }
-            else
+            catch (TimeoutException)
             {
-                Console.WriteLine("Dialog Container Not Found.");
+                Console.WriteLine("MVR Dialog Not Found - continuing.");
             }
 
+            // Check for prefill driver page
             if (await _page.Locator(Locators.DriverSummaryConstLocators.PrefillDriverPageHeader).IsVisibleAsync())
             {
-                await _page.WaitForTimeoutAsync(2000);
-                Console.WriteLine("CONDITION TRIGGERED");
+                Console.WriteLine("Prefill Driver Page detected - clicking Save and Continue");
+                await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
                 await Locators.GlobalLocators.SaveAndContinueButton(_page).ClickAsync();
             }
         }

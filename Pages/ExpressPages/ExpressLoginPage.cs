@@ -3,13 +3,18 @@ using Microsoft.Playwright;
 using System.Threading.Tasks;
 using Playwright_POC.Locators;
 
-namespace Playwright_POC.Pages
+namespace TestAutomation.Pages.ExpressPages
 {
     public class ExpressLoginPage
     {
         private readonly IPage _page;
 
         public ExpressLoginPage(IPage page) => _page = page;
+
+        /// <summary>
+        /// Exposes the default view model element for Playwright Expect assertions
+        /// </summary>
+        public ILocator DefaultViewModelElement => _page.Locator(ExpressDashboardConstLocators.ApplicationButton);
 
         public async Task ExpressLoginAsync(string username, string password)
         {

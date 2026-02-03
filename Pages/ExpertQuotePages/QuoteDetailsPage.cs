@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 using Playwright_POC.Locators;
 using Playwright_POC.Helpers;
-using NUnit.Framework;
+using static Microsoft.Playwright.Assertions;
 
 namespace Playwright_POC.Pages
 {
@@ -53,35 +53,59 @@ namespace Playwright_POC.Pages
             await Locators.ProposalDetailsPageLocators.FarmPackageButton(_page).ClickAsync();
         }
 
-        public async Task CheckSpecialFarmPackageSelected()
+        public async Task WaitForSpecialFarmPackageSelectedAsync()
         {
-            await _page.WaitForTimeoutAsync(2000);
-            bool isSelected = await Locators.ProposalDetailsPageLocators.FarmPackageSelectedIndicator(_page).IsVisibleAsync();
-            Assert.That(isSelected, Is.True, "Special Farm Package product is not selected.");
+            // Use Playwright Expect with auto-retry instead of arbitrary sleep
+            await Expect(Locators.ProposalDetailsPageLocators.FarmPackageSelectedIndicator(_page))
+                .ToBeVisibleAsync(new() { Timeout = 10000 });
         }
 
-        public async Task EnterQuoteDetailsAsync(ScenarioContextData contextData)
+        /// <summary>
+        /// Enters quote details and returns the actual policy term for verification by the caller.
+        /// </summary>
+        public async Task<string> EnterQuoteDetailsAsync(ScenarioContextData contextData)
         {
             await Locators.ProposalDetailsPageLocators.EffDateInput(_page).FillAsync(contextData.EffectiveDate);
             string actualPolicyTerm = await Locators.ProposalDetailsPageLocators.PolicyTermDropdownValue(_page).InnerTextAsync();
-            Assert.That(actualPolicyTerm.Trim(), Is.EqualTo(contextData.PolicyTerm), "Policy Term does not match expected value.");
             await Locators.ProposalDetailsPageLocators.AgentPCCodeInput(_page).FillAsync(contextData.AgentCode);
+            return actualPolicyTerm.Trim();
         }
 
         public async Task EnterSFPQuoteDetailsAsync(ScenarioContextData contextData)
         {
-            await Locators.ProposalDetailsPageLocators.EffDateInput(_page).FillAsync(contextData.EffectiveDate);
+            // Wait for the Quote Details form to be fully loaded using Expect
+            await Expect(_page.GetByText("Quote Details")).ToBeVisibleAsync(new() { Timeout = 30000 });
+            
+            // Try multiple locator strategies for effective date field
+            var effDateField = _page.Locator("input[formcontrolname='effectiveDate'], input[name='effectiveDate'], input[id*='effectiveDate'], input[data-testid*='effectiveDate']").First;
+            
+            // If the above doesn't work, try finding by the label text and getting the associated input
+            if (!await effDateField.IsVisibleAsync())
+            {
+                effDateField = _page.Locator("mat-form-field:has-text('Effective Date') input").First;
+            }
+            
+            await Expect(effDateField).ToBeVisibleAsync(new() { Timeout = 30000 });
+            await effDateField.FillAsync(contextData.EffectiveDate);
+            
             await Locators.ProposalDetailsPageLocators.ExpandPolicyTermDropdown(_page).ClickAsync();
             await ExpertQuoteLocatorFactory.AccountInformationPageLocators.SelectPolicyTermFromDropdown(_page, contextData.PolicyTerm).ClickAsync();
             await Locators.ProposalDetailsPageLocators.AgentPCCodeInput(_page).FillAsync(contextData.AgentCode);
         }
 
-        public async Task SelectRatingStateAndCompanyAsync(ScenarioContextData contextData)
+        /// <summary>
+        /// Selects rating state and returns the actual writing company for verification by the caller.
+        /// </summary>
+        public async Task<string> SelectRatingStateAndCompanyAsync(ScenarioContextData contextData)
         {
             await Locators.ProposalDetailsPageLocators.RatingStateDropdown(_page).ClickAsync();
-            await _page.ClickAsync($"text={contextData.RatingState.ToUpper()}");
+            await _page.GetByText(contextData.RatingState.ToUpper(), new() { Exact = true }).ClickAsync();
+            
+            // Wait for writing company to populate after state selection
+            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
+            
             string actualWritingCompany = await Locators.ProposalDetailsPageLocators.WritingCompanyDropdownValue(_page).InnerTextAsync();
-            Assert.That(actualWritingCompany.Trim(), Is.EqualTo(contextData.WritingCompany), "Writing Company does not match expected value.");
+            return actualWritingCompany.Trim();
         }
 
         public async Task SelectRiskAddressAsync(ScenarioContextData contextData)
@@ -99,11 +123,10 @@ namespace Playwright_POC.Pages
                 // Enter new risk address details here if needed
             }
         }
+
         public async Task SelectLessorsRiskExposureAsync(ScenarioContextData contextData)
         {
-
-                await _page.ClickAsync(ExpertQuoteLocatorFactory.AccountInformationPageLocators.SelectLessorsRiskExposureButton(contextData.LessorRiskExposure));
-
+            await _page.ClickAsync(ExpertQuoteLocatorFactory.AccountInformationPageLocators.SelectLessorsRiskExposureButton(contextData.LessorRiskExposure));
         }
 
         public async Task SelectBusinessEntityAsync(ScenarioContextData contextData)
@@ -111,14 +134,16 @@ namespace Playwright_POC.Pages
             if ((contextData.BusinessEntity == "Individually Owned") || (contextData.BusinessEntity == "DBA") || (contextData.BusinessEntity == "T/A"))
             {
                 await Locators.ProposalDetailsPageLocators.IndividuallyOwnedCheckbox(_page).ClickAsync();
-                await _page.WaitForTimeoutAsync(2000);
+                // Wait for DBA name input to become visible/enabled instead of arbitrary sleep
+                await Expect(Locators.ProposalDetailsPageLocators.DBANameInput(_page)).ToBeVisibleAsync();
                 await Locators.ProposalDetailsPageLocators.DBANameInput(_page).FillAsync(contextData.DBAName);
             }
             else
             {
                 await _page.FillAsync(Locators.ProposalDetailsPageLocators.BusinessEntitySearchInput, contextData.BusinessEntity);
                 await _page.ClickAsync(Locators.ProposalDetailsPageLocators.BusinessEntitySearchButton);
-                await _page.WaitForTimeoutAsync(2000);
+                // Wait for search results instead of arbitrary sleep
+                await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
             }
         }
 
@@ -126,17 +151,22 @@ namespace Playwright_POC.Pages
         public async Task ClickStartQuoteAsync()
         {
             await Locators.ProposalDetailsPageLocators.StartQuoteButton(_page).ClickAsync();
-            await _page.WaitForTimeoutAsync(3000);
+            // Wait for navigation/loading instead of arbitrary sleep
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
         }
 
 
         public async Task HandleSSNPopupsAsync(ScenarioContextData contextData)
         {
-            await _page.WaitForTimeoutAsync(3000);
+            // Wait for page to stabilize after Start Quote
+            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
 
-            // SSN pop-up
-            if (await Locators.SSNPopUpLocators.SSNPopup(_page).IsVisibleAsync())
+            // SSN pop-up - check with short timeout
+            var ssnPopup = Locators.SSNPopUpLocators.SSNPopup(_page);
+            try
             {
+                await ssnPopup.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 5000 });
+                
                 string ssnToUse = !string.IsNullOrWhiteSpace(contextData.SSN)
                     ? contextData.SSN
                     : RandomGenerators.GenerateRandomSSN();
@@ -144,32 +174,44 @@ namespace Playwright_POC.Pages
                 await Locators.SSNPopUpLocators.SSNInput(_page).FillAsync(ssnToUse);
                 await Locators.GlobalLocators.DialogSubmitButton(_page).ClickAsync();
             }
-
-            // SSN Confirmation pop-up
-            if (await _page.IsVisibleAsync(Locators.SSNPopUpLocators.SSNConfirmPopup))
+            catch (TimeoutException)
             {
-                await _page.ClickAsync(Locators.SSNPopUpLocators.SSNConfirmButton);
+                // SSN popup didn't appear - that's okay, continue
             }
 
-            await _page.WaitForTimeoutAsync(2000);
+            // SSN Confirmation pop-up - check with short timeout
+            try
+            {
+                await _page.WaitForSelectorAsync(Locators.SSNPopUpLocators.SSNConfirmPopup, new() { State = WaitForSelectorState.Visible, Timeout = 3000 });
+                await _page.ClickAsync(Locators.SSNPopUpLocators.SSNConfirmButton);
+            }
+            catch (TimeoutException)
+            {
+                // Confirmation popup didn't appear - that's okay, continue
+            }
+
+            // Wait for any remaining loading
+            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
         }
 
 
         public async Task HandleClientExistsPopupAsync()
         {
-            if (await _page.IsVisibleAsync(Locators.ClientExistsPopUpLocators.ClientExistsPopup))
+            try
             {
+                await _page.WaitForSelectorAsync(Locators.ClientExistsPopUpLocators.ClientExistsPopup, new() { State = WaitForSelectorState.Visible, Timeout = 3000 });
                 await _page.ClickAsync(Locators.ClientExistsPopUpLocators.CreateNewClientButton);
+            }
+            catch (TimeoutException)
+            {
+                // Popup didn't appear - that's okay, continue
             }
         }
 
         public async Task SelectRatingStateAsync(ScenarioContextData contextData)
         {
             await Locators.ProposalDetailsPageLocators.RatingStateDropdown(_page).ClickAsync();
-            await _page.ClickAsync($"text={contextData.RatingState.ToUpper()}");
-           
+            await _page.GetByText(contextData.RatingState.ToUpper(), new() { Exact = true }).ClickAsync();
         }
-
     }
 }
-

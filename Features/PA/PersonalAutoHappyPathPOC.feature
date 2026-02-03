@@ -7,23 +7,23 @@ Feature: Personal Auto Happy Path POC
 
     When I enter valid credentials and Click LogIn
 
-    Then user enters a Random Name in the search field and clicks search
-    | Question  | Answer   |
-    | FirstName | {{male}}   |
-    | LastName  | {{random}}  |
+    And user enters a Random Name in the search field and clicks search
+    | Question  | Answer         |
+    | FirstName | {{firstName}}  |
+    | LastName  | {{lastName}}   |
 
-    Then user clicks New Quote button
+    And user clicks New Quote button
    
-    Then user enters client information and clicks search
+    And user enters client information and clicks search
     | Question     | Answer         |
     | DOB          |  08/08/1944    |
     | BestPhone    | (907) 227-0664 |
     | EmailAddress | fake@email.com |
 
     
-    Then user selects Create New Client and clicks the Next button
+    And user selects Create New Client and clicks the Next button
 
-    Then user enters account owner information and clicks Next
+    And user enters account owner information and clicks Next
     | Question           | Answer        |
     | MaritalStatus      | Single        |
     | StreetAddress      | 6 Patriot Ln  |
@@ -34,25 +34,25 @@ Feature: Personal Auto Happy Path POC
     | ReceivedMail       |     Yes       |
     | WhereClientResides |     Yes       |
 
-    Then user selects Personal Auto and inputs Quote Details
+    And user selects Personal Auto and inputs Quote Details
 	| Question       | Answer                                      |
-	| EffectiveDate  | 2/15/2026                                  |
+	| EffectiveDate  | {{tomorrow}}                                |
 	| PolicyTerm     | 6 months                                    |
 	| AgentCode      | D2102                                       |
 	| RatingState    | Missouri                                    |
-	| SSN            |                                    |
+	| SSN            |                                             |
 	| WritingCompany | American National Property And Casualty Co. |
-	| RiskAddress    | 6 Patriot Ln, Buffalo, MO 65622      |
+	| RiskAddress    | 6 Patriot Ln, Buffalo, MO 65622             |
     
 
-    Then user enters Pre-Qualification information and continues
+    And user enters Pre-Qualification information and continues
 	| Question                | Answer            |
     | EligibilityRestrictions | None Of The Above |
     
 
-    Then user selects existing Driver
+    And user selects existing Driver
 
-    Then user enters Driver information and continues
+    And user enters Driver information and continues
 	| Question                       | Answer                |
 	| PhoneType                      | Cell                  |
 	| Gender                         | Male                  |
@@ -71,7 +71,7 @@ Feature: Personal Auto Happy Path POC
 	| MonthsWithPriorCarrier         |                     2 |
 	
 	
-    Then user enters vehicle information and continues
+    And user enters vehicle information and continues
 	| Question            | Answer                                         |
     | VIN                 |              1GNSKCKD2MR134828                 |
     | VehicleType         |                  Automobile                    |
@@ -87,17 +87,17 @@ Feature: Personal Auto Happy Path POC
     | AnnualMileage       |                    20000                       |
     
 	
-    Then user assigns a vehicle to the driver
+    And user assigns a vehicle to the driver
 	| Question     | Answer    |
     | Vehicle      | Chevrolet |
     | DriverStatus | Principal |
     
 
-    Then user verifies there are no claims or violations
+    And user verifies there are no claims or violations
 
-    Then user selects discounts and clicks Next
+    And user selects discounts and clicks Next
 
-    Then user selects Policy Coverages
+    And user selects Policy Coverages
 	| Question       | Answer  |
     | PolicyCoverage | 300,000 |
     | CompCollOnly   | No      |
@@ -105,47 +105,47 @@ Feature: Personal Auto Happy Path POC
     | CollDeductible |   1,000 |
     
 
-    Then user selects Additional Coverages
-	| Question                        | Answer        |
-    | AccidentalDeathAndDismemberment | $5,000        |
-    | LossOfIncomeCoverage            | {{male}} {{random}} |
-    | RentalReimbursement             | $50 Per Day   |
-    | RoadsideAssistance              | No Coverage   |
+    And user selects Additional Coverages
+	| Question                        | Answer                          |
+    | AccidentalDeathAndDismemberment | $5,000                          |
+    | LossOfIncomeCoverage            | {{firstName}} {{lastName}}      |
+    | RentalReimbursement             | $50 Per Day                     |
+    | RoadsideAssistance              | No Coverage                     |
    
 
-    Then user verifies Pricing Details
+    And user verifies Pricing Details
 
-    Then user verifies eligibility and clicks Next
+    And user verifies eligibility and clicks Next
 
-    Then user adds an Additional Interest
-	| Question                   | Answer         |
-    | AddInterestType            | Joint Owner    |
-    | AddInterestName            | {{female}} {{random}} |
-    | AddInterestAddress         | 6 Patriot Ln  |
-    | AddInterestCity            | Buffalo        |
-    | AddInterestState           | MO             |
-    | AddInterestZip             |          65622 |
-    | AddInterestPhone           | (417) 733-6789 |
-    | DoesJointOwnerDrive        | Yes            |
-    | RelationshipToAccountOwner | Spouse         |
-    | AddInterestDOB             | 03/24/1964     |
-    | AddInterestDLNumber        | S064184013     |
-    | AddInterestLicenseState    | MO             |
+    And user adds an Additional Interest
+	| Question                   | Answer                     |
+    | AddInterestType            | Joint Owner                |
+    | AddInterestName            | {{firstName}} {{lastName}} |
+    | AddInterestAddress         | 6 Patriot Ln               |
+    | AddInterestCity            | Buffalo                    |
+    | AddInterestState           | MO                         |
+    | AddInterestZip             |          65622             |
+    | AddInterestPhone           | (417) 733-6789             |
+    | DoesJointOwnerDrive        | Yes                        |
+    | RelationshipToAccountOwner | Spouse                     |
+    | AddInterestDOB             | 03/24/1964                 |
+    | AddInterestDLNumber        | S064184013                 |
+    | AddInterestLicenseState    | MO                         |
     
 
-    Then user creates a new Billing Account and Submits payment
-	| Question       | Answer        |
-	| PrimaryPayer   | {{male}} {{random}} |
-	| PaymentType    | Direct Bill   |
-	| PaymentPlan    | 1 Payment     |
-	| PaymentDueDate |            29 |
-	| PaymentAmount  | Full Balance  |
-	| PaymentMethod  | Check         |
-	| CheckNumber    |           473 |
-	| Paperless      | Yes           |
+    And user creates a new Billing Account and Submits payment
+	| Question       | Answer                     |
+	| PrimaryPayer   | {{firstName}} {{lastName}} |
+	| PaymentType    | Direct Bill                |
+	| PaymentPlan    | 1 Payment                  |
+	| PaymentDueDate |            29              |
+	| PaymentAmount  | Full Balance               |
+	| PaymentMethod  | Check                      |
+	| CheckNumber    |           473              |
+	| Paperless      | Yes                        |
     
-    Then user switches to QAExpress
-    Then user enters QAExpress credentials and Clicks LogIn
+    And user switches to QAExpress
+    And user enters QAExpress credentials and Clicks LogIn
     Then user selects search type from dropdown and enters quote number and clicks search
     |   Question |        Answer       |
     | SearchType | Quote |

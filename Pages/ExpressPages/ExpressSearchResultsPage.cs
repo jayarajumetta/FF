@@ -22,15 +22,19 @@ namespace Playwright_POC.Pages
         public async Task SelectFromSearchFiltersPolicyDropdown(string searchFiltersPolicy)
         {
             await _page.ClickAsync(ExpressSearchResultsPageConstLocators.ExpandSearchFiltersPolicyDropdown);
-            await _page.WaitForTimeoutAsync(2000); // Small wait to ensure dropdown is expanded
-            await _page.ClickAsync(ExpressLocatorFactory.ExpressSearchResultsPageLocators.SearchFiltersPolicySelection(searchFiltersPolicy));
+            // Wait for dropdown option to be visible before clicking
+            var optionLocator = _page.Locator(ExpressLocatorFactory.ExpressSearchResultsPageLocators.SearchFiltersPolicySelection(searchFiltersPolicy));
+            await Assertions.Expect(optionLocator).ToBeVisibleAsync();
+            await optionLocator.ClickAsync();
         }
 
         public async Task SelectFromOperatorDropdown(string operatorSelection)
         {
             await _page.ClickAsync(ExpressSearchResultsPageConstLocators.ExpandOperatorDropdown);
-            await _page.WaitForTimeoutAsync(2000); // Small wait to ensure dropdown is expanded
-            await _page.ClickAsync(ExpressLocatorFactory.ExpressSearchResultsPageLocators.OperatorSelectionFromDropdown(operatorSelection));
+            // Wait for dropdown option to be visible before clicking
+            var optionLocator = _page.Locator(ExpressLocatorFactory.ExpressSearchResultsPageLocators.OperatorSelectionFromDropdown(operatorSelection));
+            await Assertions.Expect(optionLocator).ToBeVisibleAsync();
+            await optionLocator.ClickAsync();
         }
 
         public async Task EnterSearchByValue(string searchByValue)
@@ -46,8 +50,10 @@ namespace Playwright_POC.Pages
         public async Task SelectFromSearchInDropdown(string searchInSelection)
         {
             await _page.ClickAsync(ExpressSearchResultsPageConstLocators.ExpandSearchInDropdown);
-            await _page.WaitForTimeoutAsync(2000); // Small wait to ensure dropdown is expanded
-            await _page.ClickAsync(ExpressLocatorFactory.ExpressSearchResultsPageLocators.SelectSearchInFromDropdown(searchInSelection));
+            // Wait for dropdown option to be visible before clicking
+            var optionLocator = _page.Locator(ExpressLocatorFactory.ExpressSearchResultsPageLocators.SelectSearchInFromDropdown(searchInSelection));
+            await Assertions.Expect(optionLocator).ToBeVisibleAsync();
+            await optionLocator.ClickAsync();
         }
 
         public async Task CheckIncludePreviousTerms()

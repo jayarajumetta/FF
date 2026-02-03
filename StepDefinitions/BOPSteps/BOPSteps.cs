@@ -23,13 +23,10 @@ using ReqContext = Playwright_POC.Context.TestContext;
 
 public class BOPSteps
 {
-
     private readonly ReqContext _context;
     private readonly ScenarioContextData _contextData;
     private readonly CredentialsConfig _credentials;
     private readonly IConfiguration _configuration;
-    private Table _table;
-
 
     public BOPSteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
     {
@@ -40,7 +37,7 @@ public class BOPSteps
 
     }
 
-    [Then("user selects Business Owners and inputs Quote Details")]
+    [StepDefinition("user selects Business Owners and inputs Quote Details")]
     public async Task SelectBusinessOwnersAndInputQuoteDetails(Table table)
     {
         TableMappingHelpers.BOPQuoteDetailsFields(table, _contextData);
@@ -59,7 +56,7 @@ public class BOPSteps
         await proposalDetailsPage.HandleClientExistsPopupAsync();
     }
 
-    [Then("user selects class codes and continues")]
+    [StepDefinition("user selects class codes and continues")]
     public async Task UserSelectesClassCodesAndContinues(Table table)
     {
         TableMappingHelpers.BOPPreQualificationFields(table, _contextData);
@@ -72,14 +69,14 @@ public class BOPSteps
         await GlobalLocators.NextButton(_context.Page).ClickAsync();
     }
 
-    [Then("user selects Primary Insured and continues")]
+    [StepDefinition("user selects Primary Insured and continues")]
     public async Task UserSelectsPrimaryInsuredAsync()
     {
         var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);
         await primaryInsuredPage.SelectExistingClientAsPrimaryInsuredAsync(_contextData);
     }
 
-    [Then("user Enters Primary Insured Information and continues")]
+    [StepDefinition("user Enters Primary Insured Information and continues")]
     public async Task UserEntersPrimaryInsuredInformationAndContinues(Table table)
     {
         // Map table data to context data and steps needed

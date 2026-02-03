@@ -23,7 +23,8 @@ namespace Playwright_POC.Pages
 
         public async Task WaitForCoverageOptionsLoadAsync()
         {
-            await _page.WaitForTimeoutAsync(2000);
+            // Wait for Angular spinner to finish and page to stabilize
+            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
         }
 
         public async Task SelectADDDriverAsync(string value)

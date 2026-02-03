@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 using Playwright_POC.Locators;
 using Playwright_POC.Helpers;
-using NUnit.Framework;
+using static Microsoft.Playwright.Assertions;
 
 namespace Playwright_POC.Pages
 {
@@ -20,7 +20,9 @@ namespace Playwright_POC.Pages
 
         public async Task WaitForVehiclePageReadyAsync()
         {
-            await _page.WaitForTimeoutAsync(3000);
+            // Wait for vehicle page to be ready
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
         }
 
         public async Task SelectUnlistedVehicleIfVisibleAsync()
@@ -36,15 +38,16 @@ namespace Playwright_POC.Pages
         {
             await Locators.VehicleSummaryConstLocators.VINNumber(_page).FillAsync(contextData.VINNumber);
             await _page.ClickAsync(Locators.VehicleSummaryConstLocators.Vehicle1Header);
-            await _page.WaitForTimeoutAsync(2000);
+            
+            // Wait for VIN lookup results
+            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
 
-            await _page.WaitForSelectorAsync(
-                ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleSelectButton(_page, contextData.VehicleMake, StringComparison.OrdinalIgnoreCase).ToString(),
-                new() { State = WaitForSelectorState.Visible, Timeout = 3000 }
-            );
-
-            await ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleSelectButton(_page, contextData.VehicleMake, StringComparison.OrdinalIgnoreCase).ClickAsync();
-            await _page.WaitForTimeoutAsync(3000);
+            var vehicleButton = ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleSelectButton(_page, contextData.VehicleMake, StringComparison.OrdinalIgnoreCase);
+            await Assertions.Expect(vehicleButton).ToBeVisibleAsync(new() { Timeout = 10000 });
+            await vehicleButton.ClickAsync();
+            
+            // Wait for vehicle selection to be processed
+            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
         }
 
         public async Task SelectVehicleTypeAsync(string vehicleType)
@@ -54,17 +57,17 @@ namespace Playwright_POC.Pages
 
         public async Task ValidateVehicleDetailsAsync(ScenarioContextData contextData)
         {
-            var yearText = await Locators.VehicleSummaryConstLocators.VehicleYearReadOnly(_page).InnerTextAsync();
-            Assert.That(yearText, Is.EqualTo(contextData.VehicleYear));
+            await Expect(Locators.VehicleSummaryConstLocators.VehicleYearReadOnly(_page))
+                .ToHaveTextAsync(contextData.VehicleYear);
 
-            var makeText = await Locators.VehicleSummaryConstLocators.MakeReadOnly(_page).InnerTextAsync();
-            Assert.That(makeText, Is.EqualTo(contextData.VehicleMake).IgnoreCase);
+            await Expect(Locators.VehicleSummaryConstLocators.MakeReadOnly(_page))
+                .ToHaveTextAsync(new System.Text.RegularExpressions.Regex(contextData.VehicleMake, System.Text.RegularExpressions.RegexOptions.IgnoreCase));
 
-            var modelText = await Locators.VehicleSummaryConstLocators.ModelReadOnly(_page).InnerTextAsync();
-            Assert.That(modelText, Is.EqualTo(contextData.VehicleModel).IgnoreCase);
+            await Expect(Locators.VehicleSummaryConstLocators.ModelReadOnly(_page))
+                .ToHaveTextAsync(new System.Text.RegularExpressions.Regex(contextData.VehicleModel, System.Text.RegularExpressions.RegexOptions.IgnoreCase));
 
-            var trimText = await Locators.VehicleSummaryConstLocators.TrimReadOnly(_page).InnerTextAsync();
-            Assert.That(trimText, Is.EqualTo(contextData.VehicleTrim).IgnoreCase);
+            await Expect(Locators.VehicleSummaryConstLocators.TrimReadOnly(_page))
+                .ToHaveTextAsync(new System.Text.RegularExpressions.Regex(contextData.VehicleTrim, System.Text.RegularExpressions.RegexOptions.IgnoreCase));
         }
 
         public async Task SelectVehicleOptionsAsync(ScenarioContextData contextData)
@@ -76,14 +79,12 @@ namespace Playwright_POC.Pages
 
         public async Task FillPurchaseAndMileageFieldsAsync(ScenarioContextData contextData)
         {
-
-            await Locators.VehicleSummaryConstLocators.PurchaseDateInput(_page)
-                .WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 2000 });
-
-            await _page.WaitForTimeoutAsync(2000);
+            // Wait for purchase date field to be ready
+            await Assertions.Expect(Locators.VehicleSummaryConstLocators.PurchaseDateInput(_page)).ToBeVisibleAsync();
 
             await Locators.VehicleSummaryConstLocators.PurchaseDateInput(_page).FillAsync(contextData.PurchaseDate);
-            await _page.WaitForTimeoutAsync(2000);
+            // Tab out to trigger validation
+            await Locators.VehicleSummaryConstLocators.PurchaseDateInput(_page).PressAsync("Tab");
 
             await Locators.VehicleSummaryConstLocators.OdometerReadingInput(_page).FillAsync(contextData.OdometerReading);
             await Locators.VehicleSummaryConstLocators.TotalAnnualMileageInput(_page).FillAsync(contextData.AnnualMileage);

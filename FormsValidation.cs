@@ -70,18 +70,19 @@ namespace FormsValidation
         }
     }
 
-    class Program
-    {
-        static async Task Main(string[] args)
-        {
-            var policyNumber = "4201C2088"; // Example
-            var clientId = "7142b7b0819eb9be6e2334aa4b51e9f7"; // Example
-            var csvPath = "expected_forms.csv"; // Path to your expected forms CSV
-
-            var validator = new FormsValidator();
-            var apiResponse = await validator.GetFormsFromApi(policyNumber, clientId);
-            var expectedForms = validator.ReadExpectedForms(csvPath);
-            validator.ValidateForms(expectedForms, apiResponse.forms);
-        }
-    }
+    // Commented out to avoid multiple Main entry point conflict
+    // class Program
+    // {
+    //     static async Task Main(string[] args)
+    //     {
+    //         var policyNumber = "4201C2088"; // Example
+    //         var clientId = "7142b7b0819eb9be6e2334aa4b51e9f7"; // Example
+    //         var csvPath = "expected_forms.csv"; // Path to your expected forms CSV
+    //
+    //         var validator = new FormsValidator();
+    //         var apiResponse = await validator.GetFormsFromApi(policyNumber, clientId);
+    //         var expectedForms = validator.ReadExpectedForms(csvPath);
+    //         validator.ValidateForms(expectedForms, apiResponse.forms);
+    //     }
+    // }
 }

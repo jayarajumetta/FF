@@ -3,7 +3,7 @@ using System;
 using System.Threading.Tasks;
 using Playwright_POC.Locators;
 using Playwright_POC.Helpers;
-using NUnit.Framework;
+using static Microsoft.Playwright.Assertions;
 
 namespace Playwright_POC.Pages.ExpertQuotePages
 {
@@ -17,11 +17,11 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         }
         public async Task VerifyNoClaimsOrViolationsAndContinueAsync()
         {
-            var claimsText = await ClaimsAndViolationsConstLocators.NoClaimsBanner(_page).InnerTextAsync();
-            Assert.That(claimsText, Does.Contain("No claims were found on reports"));
+            await Expect(ClaimsAndViolationsConstLocators.NoClaimsBanner(_page))
+                .ToContainTextAsync("No claims were found on reports");
 
-            var violationsText = await ClaimsAndViolationsConstLocators.NoViolationsBanner(_page).InnerTextAsync();
-            Assert.That(violationsText, Does.Contain("No violations were found on reports"));
+            await Expect(ClaimsAndViolationsConstLocators.NoViolationsBanner(_page))
+                .ToContainTextAsync("No violations were found on reports");
 
             await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }

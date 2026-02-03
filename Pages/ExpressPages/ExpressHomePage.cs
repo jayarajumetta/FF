@@ -17,9 +17,10 @@ namespace TestAutomation.Pages.ExpressPages
         {
             // Select the search type from the dropdown
             await _page.ClickAsync(ExpressDashboardConstLocators.ExpandSearchTypeDropDown);
-            await _page.WaitForTimeoutAsync(2000); // Small wait to ensure dropdown is expanded
-            await _page.ClickAsync(ExpressLocatorFactory.ExpressDashboardLocators.SelectSearchTypeFromDropDown(searchType));
-            
+            // Wait for dropdown option to be visible before clicking
+            var optionLocator = _page.Locator(ExpressLocatorFactory.ExpressDashboardLocators.SelectSearchTypeFromDropDown(searchType));
+            await Assertions.Expect(optionLocator).ToBeVisibleAsync();
+            await optionLocator.ClickAsync();
         }
 
         public async Task EnterQuoteNumber(string quoteNumber)

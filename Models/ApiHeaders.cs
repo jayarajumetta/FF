@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,12 @@ namespace Playwright_POC.Models
 {
     public class ApiHeaders
     {
+        private readonly string _baseUrl;
+
+        public ApiHeaders(string baseUrl = "https://expertquote-qa.americannational.com")
+        {
+            _baseUrl = baseUrl.TrimEnd('/');
+        }
 
         public Dictionary<string, string> GetDefaultHeaders(string? token = null)
         {
@@ -15,8 +22,8 @@ namespace Playwright_POC.Models
             {
                 { "accept", "application/json" },
                 { "content-type", "application/json" },
-                { "origin", "https://expertquote-qa.americannational.com" },
-                { "referer", "https://expertquote-qa.americannational.com/expertquote/" },
+                { "origin", _baseUrl },
+                { "referer", $"{_baseUrl}/expertquote/" },
                 { "user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0" }
             };
 

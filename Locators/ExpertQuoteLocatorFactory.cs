@@ -7,8 +7,7 @@ namespace Playwright_POC.Locators
 {
     public static class ExpertQuoteLocatorFactory
     {
-
-        internal class SearchRecentlyAccessedListLocators(string value)
+        internal static class SearchRecentlyAccessedListLocators
         {
             public static string SelectRecentlyAccessedClient(string value) =>
                 $"xpath=.//table//tr[td[contains(text(), '{value}')]]//button";
@@ -20,14 +19,14 @@ namespace Playwright_POC.Locators
 
             public static ILocator GetReceivedMailButton(IPage page, string yesOrNo) =>
                 page
-                    .Locator("[data-testid^='owner.address.resided90days-']") // group container (starts-with)
-                    .GetByRole(AriaRole.Button, new() { Name = yesOrNo });
+                    .Locator("[data-testid^='owner.address.resided90days-']")
+                    .Filter(new() { HasText = yesOrNo });
 
 
             public static ILocator GetClientResidesButton(IPage page, string yesOrNo) =>
                 page
-                    .Locator("[data-testid^='owner.address.usAsResidence']")
-                    .GetByRole(AriaRole.Button, new() { Name = yesOrNo });
+                    .Locator("[data-testid^='owner.address.useAsResidence']")
+                    .Filter(new() { HasText = yesOrNo });
 
 
             public static string SelectLessorsRiskExposureButton(string yesOrNo) =>
@@ -54,10 +53,10 @@ namespace Playwright_POC.Locators
                 page.GetByRole(AriaRole.Button, new() { Name = value });
 
             public static ILocator SelectLivestockTypeRadioButton(IPage page, string value) =>
-                page.Locator("[data-testid*='farmType']").GetByRole(AriaRole.Radio, new() { Name = value });
+                page.Locator("mat-radio-button").Filter(new() { HasText = value }).Locator("label").First;
 
             public static ILocator GrowIndustrialHemp(IPage page, string yesOrNo) =>
-                page.Locator("[data-testid*='growsIndustrialHemp']").GetByRole(AriaRole.Button, new() { Name = yesOrNo });
+                page.GetByTestId($"fields.account.policyInput$industrialHemp.value-{(yesOrNo.Equals("No", System.StringComparison.OrdinalIgnoreCase) ? "0" : "1")}");
         }
 
         internal class PreQualificationPageLocators
@@ -216,7 +215,7 @@ namespace Playwright_POC.Locators
             public static ILocator GetMaritalStatusSelection(IPage page, string maritalStatus) =>
                 page
                     .Locator("[data-testid^='owner.maritalStatus']")
-                    .GetByRole(AriaRole.Button, new() { Name = maritalStatus });
+                    .Filter(new() { HasText = maritalStatus });
 
 
             // Suffix Dropdown Values

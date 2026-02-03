@@ -23,15 +23,12 @@ using ReqContext = Playwright_POC.Context.TestContext;
 
 public class PASteps
 {
+    private readonly ReqContext _context;
+    private readonly ScenarioContextData _contextData;
+    private readonly CredentialsConfig _credentials;
+    private readonly IConfiguration _configuration;
 
-        private readonly ReqContext _context;
-        private readonly ScenarioContextData _contextData;
-        private readonly CredentialsConfig _credentials;
-        private readonly IConfiguration _configuration;
-        private Table _table;
-
-
-        public PASteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
+    public PASteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
         {
             _context = context;
             _contextData = contextData;
@@ -39,7 +36,7 @@ public class PASteps
             _configuration = configuration;
 
         }
-        [Then("user selects Personal Auto and inputs Quote Details")]
+        [StepDefinition("user selects Personal Auto and inputs Quote Details")]
     public async Task SelectPersonalAutoAndInputQuoteDetails(Table table)
     {
         TableMappingHelpers.PAQuoteDetailsFields(table, _contextData);
@@ -48,16 +45,22 @@ public class PASteps
 
         await proposalDetailsPage.WaitForProposalPageLoadAsync();
         await proposalDetailsPage.SelectPersonalAutoProductAsync();
-        await proposalDetailsPage.EnterQuoteDetailsAsync(_contextData);
-        await proposalDetailsPage.SelectRatingStateAndCompanyAsync(_contextData);
+        
+        // Get actual values and assert in step (PO returns values, step asserts)
+        var actualPolicyTerm = await proposalDetailsPage.EnterQuoteDetailsAsync(_contextData);
+        Assert.That(actualPolicyTerm, Is.EqualTo(_contextData.PolicyTerm), "Policy Term does not match expected value.");
+        
+        var actualWritingCompany = await proposalDetailsPage.SelectRatingStateAndCompanyAsync(_contextData);
+        Assert.That(actualWritingCompany, Is.EqualTo(_contextData.WritingCompany), "Writing Company does not match expected value.");
+        
         await proposalDetailsPage.SelectRiskAddressAsync(_contextData);
         await proposalDetailsPage.ClickStartQuoteAsync();
         await proposalDetailsPage.HandleSSNPopupsAsync(_contextData);
         await proposalDetailsPage.HandleClientExistsPopupAsync();
     }
 
-    [Then("user enters Pre-Qualification information and continues")]
-    public async Task WhenUserEntersPreQualificationInfoAndContinuesAsync(Table table)
+    [StepDefinition("user enters Pre-Qualification information and continues")]
+    public async Task UserEntersPreQualificationInfoAndContinues(Table table)
     {
         TableMappingHelpers.PreQualificationFields(table, _contextData);
 
@@ -65,8 +68,8 @@ public class PASteps
         await preQualificationPage.EnterPreQualificationInfoAndContinueAsync(_contextData.EligibilityRestrictions);
     }
 
-    [Then("user selects existing Driver")]
-    public async Task UserSelectsExistingDriverAsync()
+    [StepDefinition("user selects existing Driver")]
+    public async Task UserSelectsExistingDriver()
     {
         await DriverSelectionPageLocators.ExistingClientButton(_context.Page).ClickAsync();
 
@@ -76,8 +79,8 @@ public class PASteps
 
 
 
-    [Then("user enters Driver information and continues")]
-    public async Task WhenUserEntersDriverInfoAndContinuesAsync(Table table)
+    [StepDefinition("user enters Driver information and continues")]
+    public async Task UserEntersDriverInfoAndContinues(Table table)
     {
         TableMappingHelpers.DriverInfoFields(table, _contextData);
 
@@ -86,7 +89,20 @@ public class PASteps
         await addDriverInfoPage.PreparePriorInsuranceReasonAsync(_contextData);
         await addDriverInfoPage.CollectAndStoreQuoteNumberAsync(_contextData);
         await addDriverInfoPage.WaitForPageLoadAsync();
-        await addDriverInfoPage.ValidateDriverFieldsAsync(_contextData);
+        
+        // Get driver field values and validate in step (PO returns, Step asserts)
+        var driverFields = await addDriverInfoPage.GetDriverFieldValuesAsync();
+        var expectedDOB = DateTime.Parse(_contextData.ClientDOB, System.Globalization.CultureInfo.InvariantCulture);
+        
+        Assert.That(driverFields.FirstName, Is.EqualTo(_contextData.ClientFirstName).IgnoreCase, 
+            $"First Name mismatch. Expected: '{_contextData.ClientFirstName}', Actual: '{driverFields.FirstName}'");
+        Assert.That(driverFields.LastName, Is.EqualTo(_contextData.ClientLastName).IgnoreCase, 
+            $"Last Name mismatch. Expected: '{_contextData.ClientLastName}', Actual: '{driverFields.LastName}'");
+        Assert.That(driverFields.DateOfBirth, Is.EqualTo(expectedDOB), "DOB does not match expected value.");
+        Assert.That(driverFields.PhoneNumber, Is.EqualTo(_contextData.ClientPhoneNumber), "Phone Number does not match.");
+        Assert.That(driverFields.Email, Is.EqualTo(_contextData.ClientEmail), "Email does not match.");
+        Assert.That(driverFields.DLState, Is.EqualTo(_contextData.DLState), "DL State does not match.");
+        
         await addDriverInfoPage.SelectDriverOptionsAsync(_contextData);
         await addDriverInfoPage.FillDriverLicenseFieldsAsync(_contextData);
         await addDriverInfoPage.SelectInsuranceOptionsAsync(_contextData);
@@ -96,8 +112,8 @@ public class PASteps
     }
 
 
-    [Then("user enters vehicle information and continues")]
-    public async Task WhenUserEntersVehicleInfoAndContinuesAsync(Table table)
+    [StepDefinition("user enters vehicle information and continues")]
+    public async Task UserEntersVehicleInfoAndContinues(Table table)
     {
         TableMappingHelpers.MapVehicleFields(table, _contextData);
 
@@ -114,8 +130,8 @@ public class PASteps
     }
 
 
-    [Then("user assigns a vehicle to the driver")]
-    public async Task WhenUserAssignsDriverAndVehicleAsync(Table table)
+    [StepDefinition("user assigns a vehicle to the driver")]
+    public async Task UserAssignsVehicleToDriver(Table table)
     {
         TableMappingHelpers.VehicleAssignmentFields(table, _contextData);
 
@@ -125,14 +141,14 @@ public class PASteps
 
 
 
-    [Then("user verifies there are no claims or violations")]
+    [StepDefinition("user verifies there are no claims or violations")]
     public async Task UserVerifiesNoClaimsOrViolationsAsync()
     {
         var claimsAndViolationsPage = new ClaimsViolationsPage(_context.Page);
         await claimsAndViolationsPage.VerifyNoClaimsOrViolationsAndContinueAsync();
     }
 
-    [Then("user selects discounts and clicks Next")]
+    [StepDefinition("user selects discounts and clicks Next")]
     public async Task UserSelectsDiscountsAsync()
     {
         var discountsPage = new DiscountsPage(_context.Page);
@@ -141,7 +157,7 @@ public class PASteps
 
 
 
-    [Then("user selects Policy Coverages")]
+    [StepDefinition("user selects Policy Coverages")]
     public async Task UserSelectsCoveragesAsync(Table table)
     {
         TableMappingHelpers.PolicyCoverageFields(table, _contextData);
@@ -159,7 +175,7 @@ public class PASteps
 
 
 
-    [Then("user selects Additional Coverages")]
+    [StepDefinition("user selects Additional Coverages")]
     public async Task UserSelectsAdditionalCoveragesAsync(Table table)
     {
         TableMappingHelpers.AdditionalCoverageFields(table, _contextData);
@@ -176,17 +192,14 @@ public class PASteps
         await additionalCoveragesPage.ClickNextAsync();
     }
 
-    [Then("user verifies Pricing Details")]
+    [StepDefinition("user verifies Pricing Details")]
     public async Task UserVerifiesPricingDetailsAsync()
     {
         var pricingDetailsPage = new PricingDetailsPage(_context.Page);
         string name = $"{_contextData.ClientFirstName} {_contextData.ClientLastName}";
 
-        var accountOwner = await pricingDetailsPage.GetAccountOwnerAsync();
-        pricingDetailsPage.AssertAccountOwner(accountOwner, name);
-
-        var accountAddress = await pricingDetailsPage.GetAccountAddressAsync();
-        pricingDetailsPage.AssertAccountAddress(accountAddress, _contextData.RiskAddress);
+        await pricingDetailsPage.AssertAccountOwnerAsync(name);
+        await pricingDetailsPage.AssertAccountAddressAsync(_contextData.RiskAddress);
 
         // More verifications can be added here
 
@@ -195,7 +208,7 @@ public class PASteps
 
 
 
-    [Then("user verifies eligibility and clicks Next")]
+    [StepDefinition("user verifies eligibility and clicks Next")]
     public async Task UserVerifiesEligibilityAsync()
     {
         // Add any questions that may populate
@@ -204,7 +217,7 @@ public class PASteps
     }
 
 
-    [Then("user adds an Additional Interest")]
+    [StepDefinition("user adds an Additional Interest")]
     public async Task UserAddsAdditionalInterestAsync(Table table)
     {
         TableMappingHelpers.AdditionalInterestFields(table, _contextData);

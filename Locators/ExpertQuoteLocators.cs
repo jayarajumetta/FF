@@ -10,7 +10,8 @@ namespace Playwright_POC.Locators
 {
     public static class GlobalLocators
     {
-        public static ILocator NextButton(IPage page) => page.GetByTestId("next");
+        // Next button - handles multiple test-id patterns used across different pages
+        public static ILocator NextButton(IPage page) => page.Locator("[data-testid='next'], [data-testid='fields.data.next']");
         public static ILocator MoreOptionsButton(IPage page) => page.GetByTestId("owner.maritalStatus-other");
         public static ILocator DialogSubmitButton(IPage page) => page.GetByTestId("btnConfirmYes");
         public static ILocator DialogCancelButton(IPage page) => page.GetByTestId("btnConfirmNo");
@@ -32,45 +33,43 @@ namespace Playwright_POC.Locators
    
     public static class ClientSearchLocators
     {
-        public static ILocator DashboardElement(IPage page) => page.GetByText("Quote");
+        // Use exact match and target the <strong> element specifically
+        public static ILocator DashboardElement(IPage page) => page.Locator("strong").GetByText("Quote", new() { Exact = true }).First;
         public static ILocator ClientSearchPage(IPage page) => page.GetByText("Search / Recently Accessed");
         public static ILocator IndividualSearchField(IPage page) => page.GetByTestId("quoteSearchInput");
         public static ILocator ClientSearchButton(IPage page) => page.GetByTestId("quoteSearchButton");
-        public static ILocator NewQuoteButton(IPage page) => page.GetByText("New Quote");
+        public static ILocator NewQuoteButton(IPage page) => page.GetByRole(AriaRole.Button, new() { Name = "New Quote" });
     }
 
     public static class NewExistingClientSearchLocators
     {
-        public static ILocator FirstNameInput(IPage page) => page.GetByTestId("customer.name.first");
-        public static ILocator LastNameInput(IPage page) => page.GetByTestId("customer.name.last");
-        public static ILocator DateOfBirthInput(IPage page) => page.GetByLabel("Date of Birth");
-        public static ILocator DateOfBirthCalendarIcon(IPage page) => page.GetByLabel("Open calendar");
-        public static ILocator BestPhoneInput(IPage page) => page.GetByTestId("customer.phone");
-        public static ILocator EmailAddressInput(IPage page) => page.GetByTestId("customer.email");
-        public static ILocator SearchButton(IPage page) => page.GetByTestId("clientSearch");
-        public static ILocator CreateNewClientButton(IPage page) => page.GetByText("Create New Client");
+        public static ILocator FirstNameInput(IPage page) => page.Locator("input[name='customer.name.first']");
+        public static ILocator LastNameInput(IPage page) => page.Locator("input[name='customer.name.last']");
+        public static ILocator DateOfBirthInput(IPage page) => page.Locator("input[name='customer.dateOfBirth']");
+        public static ILocator DateOfBirthCalendarIcon(IPage page) => page.Locator("button[aria-label='Open calendar']");
+        public static ILocator BestPhoneInput(IPage page) => page.Locator("input[name='customer.phone']");
+        public static ILocator EmailAddressInput(IPage page) => page.Locator("input[name='customer.email']");
+        public static ILocator SearchButton(IPage page) => page.Locator("//button[text()='Search']");
+        public static ILocator CreateNewClientButton(IPage page) => page.Locator("//button[.//div[text()='Create New Client']]");
     }
 
     public static class AccountInformationConstLocators
     {
         // Account Owner Information
-        public static ILocator PageHeader(IPage page) => page.GetByText("Account Information");
-        public static ILocator FirstName(IPage page) => page.GetByTestId("owner.name.first");
-        public static ILocator MiddelName(IPage page) => page.GetByTestId("owner.name.middle");
-        public static ILocator LastName(IPage page) => page.GetByTestId("owner.name.last");
-        public static ILocator DateOfBirth(IPage page) => page.GetByLabel("Date of Birth");
-        public static ILocator BestPhone(IPage page) => page.GetByTestId("owner.phone");
-        public static ILocator EmailAddress(IPage page) => page.GetByTestId("owner.email");
-
-
+        public static ILocator PageHeader(IPage page) => page.Locator("//h1[text()='Account Information']");
+        public static ILocator FirstName(IPage page) => page.Locator("input[name='owner.name.first']");
+        public static ILocator MiddleName(IPage page) => page.Locator("input[name='owner.name.middle']");
+        public static ILocator LastName(IPage page) => page.Locator("input[name='owner.name.last']");
+        public static ILocator DateOfBirth(IPage page) => page.Locator("input[name='owner.dateOfBirth']");
+        public static ILocator BestPhone(IPage page) => page.Locator("input[name='owner.phone']");
+        public static ILocator EmailAddress(IPage page) => page.Locator("input[name='owner.email']");
 
         // Account/Mailing Address Information
-        public static ILocator StreetAddressInput(IPage page) => page.GetByPlaceholder("Enter a location");
-        public static ILocator AptNumberInput(IPage page) => page.GetByTestId("owner.address.line2");
-        public static ILocator CityInput(IPage page) => page.GetByTestId("owner.address.city");
-        public static ILocator StateDropdown(IPage page) => page.GetByTestId("owner.address.state");
-        public static ILocator ZipCodeInput(IPage page) => page.GetByTestId("owner.address.zip");
-
+        public static ILocator StreetAddressInput(IPage page) => page.Locator("input[name='owner.address.line1']");
+        public static ILocator AptNumberInput(IPage page) => page.Locator("input[name='owner.address.line2']");
+        public static ILocator CityInput(IPage page) => page.Locator("input[name='owner.address.city']");
+        public static ILocator StateDropdown(IPage page) => page.Locator("mat-select[id='owner.address.state']");
+        public static ILocator ZipCodeInput(IPage page) => page.Locator("input[name='owner.address.zip']");
     }
 
     public static class ClaimsPriorInsuranceConstLocators
@@ -111,7 +110,7 @@ namespace Playwright_POC.Locators
         public static ILocator FarmPackageButton(IPage page) => page.GetByTestId("proposal.product-5");
 
         // Quote Details
-        public static ILocator EffDateInput(IPage page) => page.GetByLabel("Effetive Date");
+        public static ILocator EffDateInput(IPage page) => page.GetByTestId("proposal.effectiveDate");
         public static ILocator ExpandPolicyTermDropdown(IPage page) => page.GetByTestId("proposal.term");
         public static ILocator PolicyTermDropdownValue(IPage page) => page.GetByTestId("proposal.term");
         public static ILocator AgentPCCodeInput(IPage page) => page.GetByTestId("proposal.agentPC");
@@ -128,7 +127,7 @@ namespace Playwright_POC.Locators
 
         // Special Farm Package
         public static ILocator FarmPackageSelectedIndicator(IPage page) => page.GetByTestId("sfp-button");
-        public static ILocator GrossFarmIncomeInput(IPage page) => page.GetByTestId("grossFarmIncome");
+        public static ILocator GrossFarmIncomeInput(IPage page) => page.GetByTestId("fields.account.policyInput$grossFarmIncome.value");
     }
 
     public static class BOPPrequalificationPageLocators

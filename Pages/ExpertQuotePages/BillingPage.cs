@@ -25,8 +25,11 @@ namespace Playwright_POC.Pages
 
         public async Task SelectPrimaryPayerAsync(string primaryPayer)
         {
-            await _page.WaitForTimeoutAsync(4000); 
-            await ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPrimaryPayerButton(_page, primaryPayer).ClickAsync();
+            // Wait for billing page to be fully loaded
+            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
+            var payerButton = ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPrimaryPayerButton(_page, primaryPayer);
+            await Assertions.Expect(payerButton).ToBeVisibleAsync();
+            await payerButton.ClickAsync();
         }
 
         public async Task SelectPaymentTypeAsync(string paymentType)

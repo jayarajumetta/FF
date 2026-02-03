@@ -23,13 +23,10 @@ using ReqContext = Playwright_POC.Context.TestContext;
 
 public class SFPSteps
 {
-
     private readonly ReqContext _context;
     private readonly ScenarioContextData _contextData;
     private readonly CredentialsConfig _credentials;
     private readonly IConfiguration _configuration;
-    private Table _table;
-
 
     public SFPSteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
     {
@@ -41,14 +38,14 @@ public class SFPSteps
     }
 
 
-    [Then("user selects Special Farm Package and inputs Quote Details")]
+    [StepDefinition("user selects Special Farm Package and inputs Quote Details")]
     public async Task SelectSpecialFarmPackageAndInputQuoteDetails(Table table)
     {
         TableMappingHelpers.BOPQuoteDetailsFields(table, _contextData);
         var proposalDetailsPage = new QuoteDetailsPage(_context.Page);
         await proposalDetailsPage.WaitForProposalPageLoadAsync();
         await proposalDetailsPage.SelectSpecialFarmPackageProductAsync();
-        await proposalDetailsPage.CheckSpecialFarmPackageSelected();
+        await proposalDetailsPage.WaitForSpecialFarmPackageSelectedAsync();
         await proposalDetailsPage.EnterSFPQuoteDetailsAsync(_contextData);
         await proposalDetailsPage.SelectRatingStateAsync(_contextData);
         await proposalDetailsPage.SelectRiskAddressAsync(_contextData);
@@ -57,7 +54,7 @@ public class SFPSteps
         await proposalDetailsPage.HandleClientExistsPopupAsync();
     }
 
-    [Then("user enters SFP policy details and clicks Next button")]
+    [StepDefinition("user enters SFP policy details and clicks Next button")]
     public async Task UserEntersSFPPolicyDetailsAndClicksNext(Table table)
     {
         TableMappingHelpers.SFPPolicyDataFields(table, _contextData);
@@ -67,7 +64,5 @@ public class SFPSteps
         await sfpPolicyDetailsPage.EnterGrossFarmIncome(_contextData.GrossFarmIncome);
         await sfpPolicyDetailsPage.SelectGrowIndustrialHemp(_contextData.GrowIndustrialHemp);
         await GlobalLocators.NextButton(_context.Page).ClickAsync();
-
-
     }
 }

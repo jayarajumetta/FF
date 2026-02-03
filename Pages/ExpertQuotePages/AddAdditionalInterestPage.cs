@@ -46,7 +46,9 @@ namespace Playwright_POC.Pages
 
         public async Task FillAdditionalInterestFieldsAsync(ScenarioContextData contextData)
         {
-            await _page.WaitForTimeoutAsync(3000);
+            // Wait for additional interest form to be ready
+            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
+            await Assertions.Expect(Locators.AdditionalInterestLocators.AdditionalInterestNameInput(_page)).ToBeVisibleAsync();
 
             await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestNameInput(_page), contextData.AdditionalInterestName);
             await FillInputIfDifferentAsync(Locators.AdditionalInterestLocators.AdditionalInterestAddressInput(_page), contextData.AdditionalInterestAddress);

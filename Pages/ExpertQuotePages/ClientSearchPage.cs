@@ -1,8 +1,6 @@
-﻿
-// Pages/ClientSearchPage.cs
+﻿// Pages/ClientSearchPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
-using Playwright_POC.Locators;
 
 namespace Playwright_POC.Pages
 {
@@ -15,15 +13,24 @@ namespace Playwright_POC.Pages
             _page = page;
         }
 
+        #region Locators
+        // Client search locators - moved from ClientSearchLocators static class
+        public ILocator DashboardElement => _page.Locator("strong").GetByText("Quote", new() { Exact = true }).First;
+        public ILocator ClientSearchPageHeader => _page.GetByText("Search / Recently Accessed");
+        public ILocator IndividualSearchField => _page.GetByTestId("quoteSearchInput");
+        public ILocator ClientSearchButton => _page.GetByTestId("quoteSearchButton");
+        public ILocator NewQuoteButton => _page.GetByRole(AriaRole.Button, new() { Name = "New Quote" });
+        #endregion
+
         public async Task EnterNameAndSearchAsync(string name)
         {
-            await ClientSearchLocators.IndividualSearchField(_page).FillAsync(name);
-            await ClientSearchLocators.ClientSearchButton(_page).ClickAsync();
+            await IndividualSearchField.FillAsync(name);
+            await ClientSearchButton.ClickAsync();
         }
 
         public async Task<bool> IsClientSearchPageVisibleAsync()
         {
-            return await ClientSearchLocators.ClientSearchPage(_page).IsVisibleAsync();
+            return await ClientSearchPageHeader.IsVisibleAsync();
         }
 
         // Table assertion 
@@ -34,7 +41,13 @@ namespace Playwright_POC.Pages
 
         public async Task SelectRecentlyAccessedAsync(string clientName)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.SearchRecentlyAccessedListLocators.SelectRecentlyAccessedClient(clientName));
+            var selector = $"xpath=.//table//tr[td[contains(text(), '{clientName}')]]//button";
+            await _page.ClickAsync(selector);
+        }
+
+        public async Task ClickNewQuoteButtonAsync()
+        {
+            await NewQuoteButton.ClickAsync();
         }
     }
 }

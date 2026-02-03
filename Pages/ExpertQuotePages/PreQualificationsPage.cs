@@ -17,33 +17,38 @@ namespace Playwright_POC.Pages
 
         public async Task EnterPreQualificationInfoAndContinueAsync(string eligibilityRestrictions)
         {
-            await _page.WaitForSelectorAsync(Locators.GlobalLocators.NextButton(_page).ToString(), new() { State = WaitForSelectorState.Visible });
+            await Locators.GlobalLocators.NextButton(_page).WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
 
             await Helpers.Helpers.ClickIfNotSelectedAsync(
                 ExpertQuoteLocatorFactory.PreQualificationPageLocators.GetQualificationSelection(_page, eligibilityRestrictions)
             );
 
-            await _page.ClickAsync(Locators.GlobalLocators.NextButton(_page).ToString());
+            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
         }
 
         public async Task SearchAddClassCodeAsync(ScenarioContextData contextData)
         {
-            await _page.WaitForSelectorAsync(Locators.GlobalLocators.NextButton(_page).ToString(), new() { State = WaitForSelectorState.Visible });
+            await Locators.GlobalLocators.NextButton(_page).WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
             await _page.ClickAsync(Locators.BOPPrequalificationPageLocators.SearchAddClassCodeButton);
-            await _page.WaitForTimeoutAsync(2000);
+            
+            // Wait for search input to be ready
+            await Assertions.Expect(_page.Locator(Locators.BOPPrequalificationPageLocators.ClassCodeSearchInput)).ToBeVisibleAsync();
+            
             if (contextData.ClassCodeNumber == null)
             {
                 await _page.FillAsync(Locators.BOPPrequalificationPageLocators.ClassCodeSearchInput, contextData.ClassDescription);
-                //await _page.ClickAsync(Locators.BOPPrequalificationPageLocators.ClassCodeSearchButton);
-                await _page.WaitForTimeoutAsync(2000);
-                await _page.ClickAsync(ExpertQuoteLocatorFactory.PreQualificationPageLocators.CheckboxByDescription(contextData.ClassDescription));
+                // Wait for search results (checkbox) to be visible
+                var checkboxSelector = ExpertQuoteLocatorFactory.PreQualificationPageLocators.CheckboxByDescription(contextData.ClassDescription);
+                await Assertions.Expect(_page.Locator(checkboxSelector)).ToBeVisibleAsync();
+                await _page.ClickAsync(checkboxSelector);
             }
             else
             {
                 await _page.FillAsync(Locators.BOPPrequalificationPageLocators.ClassCodeSearchInput, contextData.ClassCodeNumber);
-                // await _page.ClickAsync(Locators.BOPPrequalificationPageLocators.ClassCodeSearchButton);
-                await _page.WaitForTimeoutAsync(2000);
-                await _page.ClickAsync(ExpertQuoteLocatorFactory.PreQualificationPageLocators.CheckboxByClassCode(contextData.ClassCodeNumber));
+                // Wait for search results (checkbox) to be visible
+                var checkboxSelector = ExpertQuoteLocatorFactory.PreQualificationPageLocators.CheckboxByClassCode(contextData.ClassCodeNumber);
+                await Assertions.Expect(_page.Locator(checkboxSelector)).ToBeVisibleAsync();
+                await _page.ClickAsync(checkboxSelector);
             }
 
             await _page.ClickAsync(Locators.BOPPrequalificationPageLocators.AddClassCodeButton);
@@ -56,9 +61,10 @@ namespace Playwright_POC.Pages
 
         public async Task SelectIndustryClassCodeRestrictionsAsync(ScenarioContextData contextData)
         {
-            await _page.WaitForTimeoutAsync(5000);
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.PreQualificationPageLocators.SelectClassCodeRestrictionCheckbox(contextData.ClassCodeRestriction));
-            await _page.WaitForTimeoutAsync(2000);
+            // Wait for the restriction checkbox to be visible before clicking
+            var restrictionSelector = ExpertQuoteLocatorFactory.PreQualificationPageLocators.SelectClassCodeRestrictionCheckbox(contextData.ClassCodeRestriction);
+            await Assertions.Expect(_page.Locator(restrictionSelector)).ToBeVisibleAsync();
+            await _page.ClickAsync(restrictionSelector);
         }
     }
 }

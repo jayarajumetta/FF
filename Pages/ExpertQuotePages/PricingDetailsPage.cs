@@ -1,10 +1,9 @@
-﻿
-// Pages/PricingDetailsPage.cs
+﻿// Pages/PricingDetailsPage.cs
 using Microsoft.Playwright;
-using NUnit.Framework;
 using Playwright_POC.Helpers;
 using Playwright_POC.Locators;
 using System.Threading.Tasks;
+using static Microsoft.Playwright.Assertions;
 
 namespace Playwright_POC.Pages
 {
@@ -20,7 +19,9 @@ namespace Playwright_POC.Pages
 
         public async Task<string> GetAccountOwnerAsync()
         {
-            await _page.WaitForTimeoutAsync(5000);
+            // Wait for pricing details to load
+            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
+            await Assertions.Expect(PricingDetailsConstLocators.AccountOwner(_page)).ToBeVisibleAsync();
             return await PricingDetailsConstLocators.AccountOwner(_page).InnerTextAsync();
         }
 
@@ -29,16 +30,15 @@ namespace Playwright_POC.Pages
             return await PricingDetailsConstLocators.AccountAddress(_page).InnerTextAsync();
         }
 
-        public void AssertAccountOwner(string actual, string expected)
+        public async Task AssertAccountOwnerAsync(string expected)
         {
-            Assert.That(actual, Is.EqualTo(expected));
+            await Expect(PricingDetailsConstLocators.AccountOwner(_page)).ToHaveTextAsync(expected);
         }
 
-        public void AssertAccountAddress(string actual, string expected)
+        public async Task AssertAccountAddressAsync(string expected)
         {
-            var expectedLength = expected.Length;
-            var actualSubstring = actual.Substring(0, expectedLength);
-            Assert.That(actualSubstring, Is.EqualTo(expected).IgnoreCase);
+            await Expect(PricingDetailsConstLocators.AccountAddress(_page))
+                .ToContainTextAsync(expected);
         }
 
         public void SelectAdditionalRatingDetails(string yesOrNo)
