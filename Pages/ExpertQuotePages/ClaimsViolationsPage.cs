@@ -23,7 +23,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages
             var violationsText = await ClaimsAndViolationsConstLocators.NoViolationsBanner(_page).InnerTextAsync();
             Assert.That(violationsText, Does.Contain("No violations were found on reports"));
 
-            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
+            await Helpers.Helpers.ClickNextAsync(_page);
         }
 
         public async Task AddClaimsAsync()

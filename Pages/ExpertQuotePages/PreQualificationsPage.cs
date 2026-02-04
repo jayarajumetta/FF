@@ -17,18 +17,18 @@ namespace Playwright_POC.Pages
 
         public async Task EnterPreQualificationInfoAndContinueAsync(string eligibilityRestrictions)
         {
-            await _page.WaitForSelectorAsync(Locators.GlobalLocators.NextButton(_page).ToString(), new() { State = WaitForSelectorState.Visible });
+            await _page.WaitForTimeoutAsync(2000);
 
             await Helpers.Helpers.ClickIfNotSelectedAsync(
                 ExpertQuoteLocatorFactory.PreQualificationPageLocators.GetQualificationSelection(_page, eligibilityRestrictions)
             );
 
-            await _page.ClickAsync(Locators.GlobalLocators.NextButton(_page).ToString());
+            await Helpers.Helpers.ClickNextAsync(_page);
         }
 
         public async Task SearchAddClassCodeAsync(ScenarioContextData contextData)
         {
-            await _page.WaitForSelectorAsync(Locators.GlobalLocators.NextButton(_page).ToString(), new() { State = WaitForSelectorState.Visible });
+            await _page.WaitForTimeoutAsync(2000);
             await _page.ClickAsync(Locators.BOPPrequalificationPageLocators.SearchAddClassCodeButton);
             await _page.WaitForTimeoutAsync(2000);
             if (contextData.ClassCodeNumber == null)

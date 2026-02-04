@@ -70,20 +70,13 @@ namespace Playwright_POC.Pages
             await NewExistingClientSearchLocators.SearchButton(_page).ClickAsync();
         }
 
-        public async Task WaitForNextButtonAsync()
-        {
-            await GlobalLocators.NextButton(_page).WaitForAsync(new() { Timeout = 10000 });
-        }
 
         public async Task ClickCreateNewClientAsync()
         {
             await NewExistingClientSearchLocators.CreateNewClientButton(_page).ClickAsync();
         }
 
-        public async Task ClickNextAsync()
-        {
-            await GlobalLocators.NextButton(_page).ClickAsync();
-        }
+
 
         public async Task WaitForAccountInfoPageAsync()
         {

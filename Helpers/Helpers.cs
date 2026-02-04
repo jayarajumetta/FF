@@ -31,6 +31,29 @@ namespace Playwright_POC.Helpers
             if (!isSelected)
                 await locator.ClickAsync();
         }
+
+
+        public static async Task ClickNextAsync(IPage page)
+        {
+            var candidates = new[]
+            {
+        page.GetByTestId("fields.data.next"),
+        page.GetByTestId("fields.data-Next.next"),
+        page.GetByTestId("next")
+    };
+
+            foreach (var candidate in candidates)
+            {
+                if (await candidate.CountAsync() > 0 && await candidate.First.IsVisibleAsync())
+                {
+                    await candidate.First.ClickAsync();
+                    return;
+                }
+            }
+
+            throw new PlaywrightException("Next button not found using any known data-testid.");
+        }
+
     }
 }
 

@@ -20,14 +20,14 @@ namespace Playwright_POC.Locators
 
             public static ILocator GetReceivedMailButton(IPage page, string yesOrNo) =>
                 page
-                    .Locator("[data-testid*='owner.address.resided90days-']") // group container (starts-with)
-                    .GetByRole(AriaRole.Button, new() { Name = yesOrNo });
+                    .Locator("[data-testid^='owner.address.resided90days-']") 
+                    .Filter(new() { HasTextString = yesOrNo });
 
 
             public static ILocator GetClientResidesButton(IPage page, string yesOrNo) =>
                 page
-                    .Locator("[data-testid^='owner.address.usAsResidence']")
-                    .GetByRole(AriaRole.Button, new() { Name = yesOrNo });
+                    .Locator("button[data-testid^='owner.address.useAsResidence']")
+                    .Filter(new() { HasTextString = yesOrNo });
 
 
             public static string SelectLessorsRiskExposureButton(string yesOrNo) =>
@@ -54,10 +54,12 @@ namespace Playwright_POC.Locators
                 page.GetByRole(AriaRole.Button, new() { Name = value });
 
             public static ILocator SelectLivestockTypeRadioButton(IPage page, string value) =>
-                page.Locator("[data-testid*='farmType']").GetByRole(AriaRole.Radio, new() { Name = value });
+                page.Locator("mat-radio-button[data-testid*='farmType']").Filter(new() {Has = page.Locator($"span[style*='pointer-events: none']:text-is(\"{value}\")")});
+
+
 
             public static ILocator GrowIndustrialHemp(IPage page, string yesOrNo) =>
-                page.Locator("[data-testid*='growsIndustrialHemp']").GetByRole(AriaRole.Button, new() { Name = yesOrNo });
+                page.Locator("button[data-testid*='industrialHemp']").Filter(new() { HasTextString = yesOrNo });
         }
 
         internal class PreQualificationPageLocators

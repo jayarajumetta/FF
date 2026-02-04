@@ -64,7 +64,7 @@ public class PASteps
         await DriverSelectionPageLocators.ExistingClientButton(_context.Page).ClickAsync();
 
         // Click Next to Proceed
-        await GlobalLocators.NextButton(_context.Page).ClickAsync();
+        await Helpers.ClickNextAsync(_context.Page);
     }
 
 
@@ -129,7 +129,7 @@ public class PASteps
     public async Task UserSelectsDiscountsAsync()
     {
         var discountsPage = new DiscountsPage(_context.Page);
-        await discountsPage.ClickNextAsync();
+        await Helpers.ClickNextAsync(_context.Page);
     }
 
 
@@ -145,7 +145,7 @@ public class PASteps
         await policyCoveragesPage.SelectCompCollOnlyAsync(_contextData.CompCollOnly);
         await policyCoveragesPage.SelectCompDeductibleAsync(_contextData.CompDeductible);
         await policyCoveragesPage.SelectCollDeductibleAsync(_contextData.CollDeductible);
-        await policyCoveragesPage.ClickNextAsync();
+        await Helpers.ClickNextAsync(_context.Page);
     }
 
 
@@ -166,7 +166,7 @@ public class PASteps
         await additionalCoveragesPage.SelectLossOfIncomeAsync(name);
         await additionalCoveragesPage.SelectRentalReimbursementAsync(_contextData.RentalReimbursement);
         await additionalCoveragesPage.SelectRoadsideAssistanceAsync(_contextData.RoadsideAssistance);
-        await additionalCoveragesPage.ClickNextAsync();
+        await Helpers.ClickNextAsync(_context.Page);
     }
 
     [Then("user verifies Pricing Details")]
@@ -193,7 +193,7 @@ public class PASteps
     {
         // Add any questions that may populate
 
-        await GlobalLocators.NextButton(_context.Page).ClickAsync();
+        await Helpers.ClickNextAsync(_context.Page);
     }
 
 
@@ -213,6 +213,6 @@ public class PASteps
         await addAdditionalInterestPage.FillAdditionalInterestFieldsAsync(_contextData);
         await addAdditionalInterestPage.SaveAndContinueAsync();
         await addAdditionalInterestPage.HandleUWDialogIfPresentAsync();
-        await addAdditionalInterestPage.ClickNextAsync();
+        await Helpers.ClickNextAsync(_context.Page);
     }
 }

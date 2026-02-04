@@ -69,7 +69,7 @@ public class BOPSteps
         await preQualificationPage.SearchAddClassCodeAsync(_contextData);
         await preQualificationPage.TogglePrimaryOccupancySliderAsync();
         await preQualificationPage.SelectIndustryClassCodeRestrictionsAsync(_contextData);
-        await GlobalLocators.NextButton(_context.Page).ClickAsync();
+        await Helpers.ClickNextAsync(_context.Page);
     }
 
     [Then("user Enters Primary Insured Information for BOP and continues")]

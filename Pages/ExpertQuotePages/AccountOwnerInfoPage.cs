@@ -140,10 +140,7 @@ namespace Playwright_POC.Pages
         {
             await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.AccountInformationPageLocators.GetReceivedMailButton(_page, contextData.RecievedMail));
         }
-        public async Task ClickNextAsync()
-        {
-            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
-        }
+
 
     }
 }

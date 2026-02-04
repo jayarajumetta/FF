@@ -66,7 +66,7 @@ public class SFPSteps
         await sfpPolicyDetailsPage.SelectLivestockType(_contextData.LivestockType);
         await sfpPolicyDetailsPage.EnterGrossFarmIncome(_contextData.GrossFarmIncome);
         await sfpPolicyDetailsPage.SelectGrowIndustrialHemp(_contextData.GrowIndustrialHemp);
-        await GlobalLocators.NextButton(_context.Page).ClickAsync();
+        await Helpers.ClickNextAsync(_context.Page);
 
 
     }

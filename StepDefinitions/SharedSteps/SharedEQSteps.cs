@@ -134,7 +134,7 @@ public class SharedEQSteps
         await newClientPage.FillBestPhoneAsync(_contextData.ClientPhoneNumber);
         await newClientPage.FillEmailAsync(_contextData.ClientEmail);
         await newClientPage.ClickSearchAsync();
-        await newClientPage.WaitForNextButtonAsync();
+       // await newClientPage.WaitForNextButtonAsync();
     }
 
 
@@ -142,7 +142,7 @@ public class SharedEQSteps
     public async Task UserCreatesNewClientAndClicksNext()
     {
         await NewExistingClientSearchLocators.CreateNewClientButton(_context.Page).ClickAsync();
-        await GlobalLocators.NextButton(_context.Page).ClickAsync();
+        await Helpers.ClickNextAsync(_context.Page);
 
         //Wait for the next page to load
         await _context.Page.WaitForLoadStateAsync(LoadState.Load);
@@ -169,7 +169,7 @@ public class SharedEQSteps
         await accountInformationPage.FillAddressFieldsAsync(_contextData);
         await accountInformationPage.WaitForAddressDetailsAsync();
         await accountInformationPage.AnswerMailAndResidenceQuestionsAsync(_contextData);
-        await accountInformationPage.ClickNextAsync();
+        await Helpers.ClickNextAsync(_context.Page);
     }
 
     [Then("user enters Pre-Qualification information and continues")]

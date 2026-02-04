@@ -10,7 +10,6 @@ namespace Playwright_POC.Locators
 {
     public static class GlobalLocators
     {
-        public static ILocator NextButton(IPage page) => page.GetByTestId("next");
         public static ILocator MoreOptionsButton(IPage page) => page.GetByTestId("owner.maritalStatus-other");
         public static ILocator DialogSubmitButton(IPage page) => page.GetByTestId("btnConfirmYes");
         public static ILocator DialogCancelButton(IPage page) => page.GetByTestId("btnConfirmNo");
@@ -109,7 +108,7 @@ namespace Playwright_POC.Locators
         public static ILocator FarmPackageButton(IPage page) => page.GetByTestId("proposal.product-5");
 
         // Quote Details
-        public static ILocator EffDateInput(IPage page) => page.GetByLabel("Effetive Date");
+        public static ILocator EffDateInput(IPage page) => page.Locator("input[name='proposal.effectiveDate']");
         public static ILocator ExpandPolicyTermDropdown(IPage page) => page.GetByTestId("proposal.term");
         public static ILocator PolicyTermDropdownValue(IPage page) => page.GetByTestId("proposal.term");
         public static ILocator AgentPCCodeInput(IPage page) => page.GetByTestId("proposal.agentPC");
@@ -126,7 +125,7 @@ namespace Playwright_POC.Locators
 
         // Special Farm Package
         public static ILocator FarmPackageSelectedIndicator(IPage page) => page.GetByTestId("sfp-button");
-        public static ILocator GrossFarmIncomeInput(IPage page) => page.GetByTestId("grossFarmIncome");
+        public static ILocator GrossFarmIncomeInput(IPage page) => page.GetByTestId("fields.account.policyInput$grossFarmIncome.value");
     }
 
     public static class BOPPrequalificationPageLocators

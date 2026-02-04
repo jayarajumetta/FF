@@ -41,10 +41,6 @@ namespace Playwright_POC.Pages
             await ExpertQuoteLocatorFactory.CoverageSelectionPageLocators.GetCollDeductibleButton(_page, collDeductible).ClickAsync();
         }
 
-        public async Task ClickNextAsync()
-        {
-            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
-        }
 
         public async Task ClickViewPriorCarrierDetails()
         {

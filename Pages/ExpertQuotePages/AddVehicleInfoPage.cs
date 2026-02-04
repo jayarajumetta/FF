@@ -28,7 +28,7 @@ namespace Playwright_POC.Pages
             if (await _page.IsVisibleAsync(Locators.VehicleSummaryConstLocators.SelectVehicles))
             {
                 await _page.ClickAsync(Locators.VehicleSummaryConstLocators.SelectVehicles);
-                await Locators.GlobalLocators.NextButton(_page).ClickAsync();
+                await Helpers.Helpers.ClickNextAsync(_page);
             }
         }
 
@@ -92,15 +92,15 @@ namespace Playwright_POC.Pages
         public async Task SaveAndContinueVehicleAsync()
         {
             await Locators.GlobalLocators.SaveAndContinueButton(_page).ClickAsync();
-            await _page.WaitForSelectorAsync(Locators.GlobalLocators.NextButton(_page).ToString(), new() { Timeout = 3000 });
-            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
+
+            await Helpers.Helpers.ClickNextAsync(_page);
         }
 
         public async Task AssignVehicleToDriverAsync(string vehicle, string driverStatus)
         {
             await ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleSelectButton(_page, vehicle, StringComparison.OrdinalIgnoreCase).ClickAsync();
             await ExpertQuoteLocatorFactory.VehicleDriverAssignmentPageLocators.DriverStatusButton(_page, driverStatus).ClickAsync();
-            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
+            await Helpers.Helpers.ClickNextAsync(_page);
         }
 
 
