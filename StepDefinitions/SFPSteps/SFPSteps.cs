@@ -16,6 +16,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using TestAutomation.Pages.ExpertQuotePages;
+using static System.Net.Mime.MediaTypeNames;
 using ReqContext = Playwright_POC.Context.TestContext;
 
 
@@ -27,34 +28,37 @@ public class SFPSteps
     private readonly ScenarioContextData _contextData;
     private readonly CredentialsConfig _credentials;
     private readonly IConfiguration _configuration;
+    private readonly ScenarioContext _scenarioContext;
 
-    public SFPSteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
+
+    public SFPSteps(ReqContext context, ScenarioContext scenarioContext, CredentialsConfig credentials, IConfiguration configuration)
     {
         _context = context;
-        _contextData = contextData;
+        _scenarioContext = scenarioContext;
+        _contextData = _scenarioContext["ContextData"] as ScenarioContextData;
         _credentials = credentials;
         _configuration = configuration;
-
     }
 
 
-    [StepDefinition("user selects Special Farm Package and inputs Quote Details")]
+    [Then("user selects Special Farm Package and inputs Quote Details")]
     public async Task SelectSpecialFarmPackageAndInputQuoteDetails(Table table)
     {
         TableMappingHelpers.BOPQuoteDetailsFields(table, _contextData);
         var proposalDetailsPage = new QuoteDetailsPage(_context.Page);
         await proposalDetailsPage.WaitForProposalPageLoadAsync();
         await proposalDetailsPage.SelectSpecialFarmPackageProductAsync();
-        await proposalDetailsPage.WaitForSpecialFarmPackageSelectedAsync();
+        await proposalDetailsPage.CheckSpecialFarmPackageSelected();
         await proposalDetailsPage.EnterSFPQuoteDetailsAsync(_contextData);
         await proposalDetailsPage.SelectRatingStateAsync(_contextData);
         await proposalDetailsPage.SelectRiskAddressAsync(_contextData);
         await proposalDetailsPage.ClickStartQuoteAsync();
         await proposalDetailsPage.HandleSSNPopupsAsync(_contextData);
         await proposalDetailsPage.HandleClientExistsPopupAsync();
+        Console.WriteLine($"Client {_contextData.ClientFirstName}");
     }
 
-    [StepDefinition("user enters SFP policy details and clicks Next button")]
+    [Then("user enters SFP policy details and clicks Next button")]
     public async Task UserEntersSFPPolicyDetailsAndClicksNext(Table table)
     {
         TableMappingHelpers.SFPPolicyDataFields(table, _contextData);
@@ -63,6 +67,16 @@ public class SFPSteps
         await sfpPolicyDetailsPage.SelectLivestockType(_contextData.LivestockType);
         await sfpPolicyDetailsPage.EnterGrossFarmIncome(_contextData.GrossFarmIncome);
         await sfpPolicyDetailsPage.SelectGrowIndustrialHemp(_contextData.GrowIndustrialHemp);
-        await GlobalLocators.NextButton(_context.Page).ClickAsync();
+        await Helpers.ClickNextAsync(_context.Page);
+        Console.WriteLine($"Client {_contextData.ClientFirstName}");
+    }
+
+    [Then("user Validates Primary Insured Information for SFP and continues")]
+    public async Task UserValidatesPrimaryInsuredInformationForSFPAndContinues()
+    {
+        var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);
+        await primaryInsuredPage.ValidatePrimaryInsuredDetailsAsync(_contextData);
+        await Helpers.WaitForSpinnerToClearAsync(_context.Page);
+        await GlobalLocators.SaveButton(_context.Page).ClickAsync();
     }
 }

@@ -23,12 +23,15 @@ using ReqContext = Playwright_POC.Context.TestContext;
 
 public class PASteps
 {
-    private readonly ReqContext _context;
-    private readonly ScenarioContextData _contextData;
-    private readonly CredentialsConfig _credentials;
-    private readonly IConfiguration _configuration;
 
-    public PASteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
+        private readonly ReqContext _context;
+        private readonly ScenarioContextData _contextData;
+        private readonly CredentialsConfig _credentials;
+        private readonly IConfiguration _configuration;
+        private Table _table;
+
+
+        public PASteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
         {
             _context = context;
             _contextData = contextData;
@@ -36,7 +39,7 @@ public class PASteps
             _configuration = configuration;
 
         }
-        [StepDefinition("user selects Personal Auto and inputs Quote Details")]
+        [Then("user selects Personal Auto and inputs Quote Details")]
     public async Task SelectPersonalAutoAndInputQuoteDetails(Table table)
     {
         TableMappingHelpers.PAQuoteDetailsFields(table, _contextData);
@@ -45,42 +48,29 @@ public class PASteps
 
         await proposalDetailsPage.WaitForProposalPageLoadAsync();
         await proposalDetailsPage.SelectPersonalAutoProductAsync();
-        
-        // Get actual values and assert in step (PO returns values, step asserts)
-        var actualPolicyTerm = await proposalDetailsPage.EnterQuoteDetailsAsync(_contextData);
-        Assert.That(actualPolicyTerm, Is.EqualTo(_contextData.PolicyTerm), "Policy Term does not match expected value.");
-        
-        var actualWritingCompany = await proposalDetailsPage.SelectRatingStateAndCompanyAsync(_contextData);
-        Assert.That(actualWritingCompany, Is.EqualTo(_contextData.WritingCompany), "Writing Company does not match expected value.");
-        
+        await proposalDetailsPage.EnterQuoteDetailsAsync(_contextData);
+        await proposalDetailsPage.SelectRatingStateAndCompanyAsync(_contextData);
         await proposalDetailsPage.SelectRiskAddressAsync(_contextData);
         await proposalDetailsPage.ClickStartQuoteAsync();
         await proposalDetailsPage.HandleSSNPopupsAsync(_contextData);
         await proposalDetailsPage.HandleClientExistsPopupAsync();
     }
 
-    [StepDefinition("user enters Pre-Qualification information and continues")]
-    public async Task UserEntersPreQualificationInfoAndContinues(Table table)
-    {
-        TableMappingHelpers.PreQualificationFields(table, _contextData);
 
-        var preQualificationPage = new PreQualificationPage(_context.Page);
-        await preQualificationPage.EnterPreQualificationInfoAndContinueAsync(_contextData.EligibilityRestrictions);
-    }
 
-    [StepDefinition("user selects existing Driver")]
-    public async Task UserSelectsExistingDriver()
+    [Then("user selects existing Driver")]
+    public async Task UserSelectsExistingDriverAsync()
     {
         await DriverSelectionPageLocators.ExistingClientButton(_context.Page).ClickAsync();
 
         // Click Next to Proceed
-        await GlobalLocators.NextButton(_context.Page).ClickAsync();
+        await Helpers.ClickNextAsync(_context.Page);
     }
 
 
 
-    [StepDefinition("user enters Driver information and continues")]
-    public async Task UserEntersDriverInfoAndContinues(Table table)
+    [Then("user enters Driver information and continues")]
+    public async Task WhenUserEntersDriverInfoAndContinuesAsync(Table table)
     {
         TableMappingHelpers.DriverInfoFields(table, _contextData);
 
@@ -89,20 +79,7 @@ public class PASteps
         await addDriverInfoPage.PreparePriorInsuranceReasonAsync(_contextData);
         await addDriverInfoPage.CollectAndStoreQuoteNumberAsync(_contextData);
         await addDriverInfoPage.WaitForPageLoadAsync();
-        
-        // Get driver field values and validate in step (PO returns, Step asserts)
-        var driverFields = await addDriverInfoPage.GetDriverFieldValuesAsync();
-        var expectedDOB = DateTime.Parse(_contextData.ClientDOB, System.Globalization.CultureInfo.InvariantCulture);
-        
-        Assert.That(driverFields.FirstName, Is.EqualTo(_contextData.ClientFirstName).IgnoreCase, 
-            $"First Name mismatch. Expected: '{_contextData.ClientFirstName}', Actual: '{driverFields.FirstName}'");
-        Assert.That(driverFields.LastName, Is.EqualTo(_contextData.ClientLastName).IgnoreCase, 
-            $"Last Name mismatch. Expected: '{_contextData.ClientLastName}', Actual: '{driverFields.LastName}'");
-        Assert.That(driverFields.DateOfBirth, Is.EqualTo(expectedDOB), "DOB does not match expected value.");
-        Assert.That(driverFields.PhoneNumber, Is.EqualTo(_contextData.ClientPhoneNumber), "Phone Number does not match.");
-        Assert.That(driverFields.Email, Is.EqualTo(_contextData.ClientEmail), "Email does not match.");
-        Assert.That(driverFields.DLState, Is.EqualTo(_contextData.DLState), "DL State does not match.");
-        
+        await addDriverInfoPage.ValidateDriverFieldsAsync(_contextData);
         await addDriverInfoPage.SelectDriverOptionsAsync(_contextData);
         await addDriverInfoPage.FillDriverLicenseFieldsAsync(_contextData);
         await addDriverInfoPage.SelectInsuranceOptionsAsync(_contextData);
@@ -112,8 +89,8 @@ public class PASteps
     }
 
 
-    [StepDefinition("user enters vehicle information and continues")]
-    public async Task UserEntersVehicleInfoAndContinues(Table table)
+    [Then("user enters vehicle information and continues")]
+    public async Task WhenUserEntersVehicleInfoAndContinuesAsync(Table table)
     {
         TableMappingHelpers.MapVehicleFields(table, _contextData);
 
@@ -130,8 +107,8 @@ public class PASteps
     }
 
 
-    [StepDefinition("user assigns a vehicle to the driver")]
-    public async Task UserAssignsVehicleToDriver(Table table)
+    [Then("user assigns a vehicle to the driver")]
+    public async Task WhenUserAssignsDriverAndVehicleAsync(Table table)
     {
         TableMappingHelpers.VehicleAssignmentFields(table, _contextData);
 
@@ -141,23 +118,23 @@ public class PASteps
 
 
 
-    [StepDefinition("user verifies there are no claims or violations")]
+    [Then("user verifies there are no claims or violations")]
     public async Task UserVerifiesNoClaimsOrViolationsAsync()
     {
         var claimsAndViolationsPage = new ClaimsViolationsPage(_context.Page);
         await claimsAndViolationsPage.VerifyNoClaimsOrViolationsAndContinueAsync();
     }
 
-    [StepDefinition("user selects discounts and clicks Next")]
+    [Then("user selects discounts and clicks Next")]
     public async Task UserSelectsDiscountsAsync()
     {
         var discountsPage = new DiscountsPage(_context.Page);
-        await discountsPage.ClickNextAsync();
+        await Helpers.ClickNextAsync(_context.Page);
     }
 
 
 
-    [StepDefinition("user selects Policy Coverages")]
+    [Then("user selects Policy Coverages")]
     public async Task UserSelectsCoveragesAsync(Table table)
     {
         TableMappingHelpers.PolicyCoverageFields(table, _contextData);
@@ -168,14 +145,14 @@ public class PASteps
         await policyCoveragesPage.SelectCompCollOnlyAsync(_contextData.CompCollOnly);
         await policyCoveragesPage.SelectCompDeductibleAsync(_contextData.CompDeductible);
         await policyCoveragesPage.SelectCollDeductibleAsync(_contextData.CollDeductible);
-        await policyCoveragesPage.ClickNextAsync();
+        await Helpers.ClickNextAsync(_context.Page);
     }
 
 
 
 
 
-    [StepDefinition("user selects Additional Coverages")]
+    [Then("user selects Additional Coverages")]
     public async Task UserSelectsAdditionalCoveragesAsync(Table table)
     {
         TableMappingHelpers.AdditionalCoverageFields(table, _contextData);
@@ -189,17 +166,20 @@ public class PASteps
         await additionalCoveragesPage.SelectLossOfIncomeAsync(name);
         await additionalCoveragesPage.SelectRentalReimbursementAsync(_contextData.RentalReimbursement);
         await additionalCoveragesPage.SelectRoadsideAssistanceAsync(_contextData.RoadsideAssistance);
-        await additionalCoveragesPage.ClickNextAsync();
+        await Helpers.ClickNextAsync(_context.Page);
     }
 
-    [StepDefinition("user verifies Pricing Details")]
+    [Then("user verifies Pricing Details")]
     public async Task UserVerifiesPricingDetailsAsync()
     {
         var pricingDetailsPage = new PricingDetailsPage(_context.Page);
         string name = $"{_contextData.ClientFirstName} {_contextData.ClientLastName}";
 
-        await pricingDetailsPage.AssertAccountOwnerAsync(name);
-        await pricingDetailsPage.AssertAccountAddressAsync(_contextData.RiskAddress);
+        var accountOwner = await pricingDetailsPage.GetAccountOwnerAsync();
+        pricingDetailsPage.AssertAccountOwner(accountOwner, name);
+
+        var accountAddress = await pricingDetailsPage.GetAccountAddressAsync();
+        pricingDetailsPage.AssertAccountAddress(accountAddress, _contextData.RiskAddress);
 
         // More verifications can be added here
 
@@ -208,16 +188,16 @@ public class PASteps
 
 
 
-    [StepDefinition("user verifies eligibility and clicks Next")]
+    [Then("user verifies eligibility and clicks Next")]
     public async Task UserVerifiesEligibilityAsync()
     {
         // Add any questions that may populate
 
-        await GlobalLocators.NextButton(_context.Page).ClickAsync();
+        await Helpers.ClickNextAsync(_context.Page);
     }
 
 
-    [StepDefinition("user adds an Additional Interest")]
+    [Then("user adds an Additional Interest")]
     public async Task UserAddsAdditionalInterestAsync(Table table)
     {
         TableMappingHelpers.AdditionalInterestFields(table, _contextData);
@@ -233,6 +213,6 @@ public class PASteps
         await addAdditionalInterestPage.FillAdditionalInterestFieldsAsync(_contextData);
         await addAdditionalInterestPage.SaveAndContinueAsync();
         await addAdditionalInterestPage.HandleUWDialogIfPresentAsync();
-        await addAdditionalInterestPage.ClickNextAsync();
+        await Helpers.ClickNextAsync(_context.Page);
     }
 }

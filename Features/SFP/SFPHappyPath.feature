@@ -16,9 +16,9 @@ Feature: SFP Happy Path
    
     And user enters client information and clicks search
     | Question     | Answer         |
-    | DOB          |  08/08/1944    |
-    | BestPhone    | (907) 227-0664 |
-    | EmailAddress | fake@email.com |
+    | DOB          |  {{randomDOB}}  |
+    | BestPhone    | {{randomPhone}} |
+    | EmailAddress | {{randomEmail}} |
 
     
     And user selects Create New Client and clicks the Next button
@@ -50,3 +50,14 @@ Feature: SFP Happy Path
 		| LivestockType       | Beef    |
 		| GrossFarmIncome     | 75000   |
 		| GrowIndustrialHemp  | No      |
+
+
+    Then user enters Pre-Qualification information and continues
+	    | Question                | Answer            |
+        | EligibilityRestrictions | None Of The Above |
+
+    Then user selects Primary Insured and continues
+
+    Then user Validates Primary Insured Information for SFP and continues
+
+

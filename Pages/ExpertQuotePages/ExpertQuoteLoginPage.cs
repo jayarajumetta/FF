@@ -1,6 +1,7 @@
-// Pages/ExpertQuoteLoginPage.cs
+// Pages/LoginPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
+using Playwright_POC.Locators;
 
 namespace Playwright_POC.Pages
 {
@@ -13,29 +14,20 @@ namespace Playwright_POC.Pages
             _page = page;
         }
 
-        #region Locators
-        // Login locators - moved from LoginLocators static class
-        private ILocator UsernameInput => _page.GetByPlaceholder("Username");
-        private ILocator PasswordInput => _page.GetByPlaceholder("Password");
-        private ILocator LoginButton => _page.GetByTitle("Sign On");
-        
-        // Dashboard element for login verification - moved from ClientSearchLocators
-        public ILocator DashboardElement => _page.Locator("strong").GetByText("Quote", new() { Exact = true }).First;
-        #endregion
-
         public async Task LoginAsync(string username, string password)
         {
-            await UsernameInput.FillAsync(username);
-            await PasswordInput.FillAsync(password);
-            await LoginButton.ClickAsync();
+            await LoginLocators.UsernameInput(_page).FillAsync(username);
+            await LoginLocators.PasswordInput(_page).FillAsync(password);
+            await LoginLocators.LoginButton(_page).ClickAsync();
 
             // Wait for login to complete
-            await DashboardElement.WaitForAsync(new LocatorWaitForOptions { Timeout = 30000 });
+            var dashboardLocator = ClientSearchLocators.NewQuoteButton(_page);
+            await dashboardLocator.WaitForAsync(new() { State = WaitForSelectorState.Visible });
         }
 
         public async Task<bool> IsDashboardVisibleAsync()
         {
-            return await DashboardElement.IsVisibleAsync();
+            return await ClientSearchLocators.NewQuoteButton(_page).IsVisibleAsync();
         }
     }
 }

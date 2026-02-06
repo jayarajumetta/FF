@@ -150,8 +150,6 @@ namespace Playwright_POC.Pages
                         Timeout = 2000
                     });
 
-                await Locators.DriverSummaryConstLocators.PriorYearsWithCarrierInput(_page)
-                    .WaitForAsync(new() { State = WaitForSelectorState.Visible });
 
                 await Locators.DriverSummaryConstLocators.PriorYearsWithCarrierInput(_page).FillAsync(contextData.PriorInsuranceYears);
                 await Locators.DriverSummaryConstLocators.PriorMonthsWithCarrierInput(_page).FillAsync(contextData.PriorInsuranceMonths);

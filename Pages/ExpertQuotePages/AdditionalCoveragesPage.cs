@@ -60,10 +60,7 @@ namespace Playwright_POC.Pages
             await Locators.AdditionalCoveragesConstLocators.SoundReceivingEquipmentCheckbox(_page).ClickAsync();
         }
 
-        public async Task ClickNextAsync()
-        {
-            await Locators.GlobalLocators.NextButton(_page).ClickAsync();
-        }
+
 
     }
 }
