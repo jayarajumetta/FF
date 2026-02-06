@@ -41,7 +41,7 @@ public class SFPSteps
     }
 
 
-    [Then("user selects Special Farm Package and inputs Quote Details")]
+    [When("user selects Special Farm Package and inputs Quote Details")]
     public async Task SelectSpecialFarmPackageAndInputQuoteDetails(Table table)
     {
         TableMappingHelpers.BOPQuoteDetailsFields(table, _contextData);
@@ -57,7 +57,7 @@ public class SFPSteps
         Console.WriteLine($"Client {_contextData.ClientFirstName}");
     }
 
-    [Then("user enters SFP policy details and clicks Next button")]
+    [When("user enters SFP policy details and clicks Next button")]
     public async Task UserEntersSFPPolicyDetailsAndClicksNext(Table table)
     {
         TableMappingHelpers.SFPPolicyDataFields(table, _contextData);
@@ -70,7 +70,7 @@ public class SFPSteps
         Console.WriteLine($"Client {_contextData.ClientFirstName}");
     }
 
-    [Then("user Validates Primary Insured Information for SFP and continues")]
+    [When("user Validates Primary Insured Information for SFP and continues")]
     public async Task UserValidatesPrimaryInsuredInformationForSFPAndContinues()
     {
         var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);

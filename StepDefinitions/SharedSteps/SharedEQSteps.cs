@@ -54,7 +54,7 @@ public class SharedEQSteps
 
 
 
-    [Then("user enters a name in the search field and clicks search")]
+    [When("user enters a name in the search field and clicks search")]
     public async Task ThenUserEntersANameInTheSearchField(Table table)
     {
         TableMappingHelpers.ClientSearchFields(table, _contextData);
@@ -71,7 +71,7 @@ public class SharedEQSteps
         // await clientSearchPage.AssertNameNotInTableAsync(tableSelector, clientName);
     }
 
-    [Then("user enters a Random Name in the search field and clicks search")]
+    [When("user enters a Random Name in the search field and clicks search")]
 
     public async Task ThenUserEntersARandomNameInTheSearchField(Table table)
     {
@@ -79,14 +79,16 @@ public class SharedEQSteps
         TableMappingHelpers.ClientSearchFields(table, _contextData);
 
         // Replace tokens with generated values
-        // Supports: {{male}}, {{female}} for first names; {{random}} for last names
-        if (string.Equals(_contextData.ClientFirstName, "{{male}}", StringComparison.OrdinalIgnoreCase))
+        // Supports: {{firstName}}, {{male}}, {{female}} for first names; {{lastName}}, {{random}} for last names
+        if (string.Equals(_contextData.ClientFirstName, "{{firstName}}", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(_contextData.ClientFirstName, "{{male}}", StringComparison.OrdinalIgnoreCase))
             _contextData.ClientFirstName = RandomGenerators.GenerateRandomFirstName();
 
         if (string.Equals(_contextData.ClientFirstName, "{{female}}", StringComparison.OrdinalIgnoreCase))
             _contextData.ClientFirstName = RandomGenerators.GenerateRandomFemaleFirstName();
 
-        if (string.Equals(_contextData.ClientLastName, "{{random}}", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(_contextData.ClientLastName, "{{lastName}}", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(_contextData.ClientLastName, "{{random}}", StringComparison.OrdinalIgnoreCase))
             _contextData.ClientLastName = RandomGenerators.GenerateRandomLastName();
 
         // Build full name and perform the search
@@ -102,7 +104,7 @@ public class SharedEQSteps
     }
 
 
-    [Then("user clicks New Quote button")]
+    [When("user clicks New Quote button")]
     public async Task ThenUserClicksNewQuoteButton()
     {
         await ClientSearchLocators.NewQuoteButton(_context.Page).ClickAsync();
@@ -110,8 +112,8 @@ public class SharedEQSteps
     }
 
 
-
-    [Then("user enters client information and clicks search")]
+    
+    [When("user enters client information and clicks search")]
     public async Task AndUserEntersClientInformationAndClicksSearch(Table table)
     {
         TableMappingHelpers.NewExistingClientFields(table, _contextData);
@@ -141,7 +143,7 @@ public class SharedEQSteps
     }
 
 
-    [Then("user selects Create New Client and clicks the Next button")]
+    [When("user selects Create New Client and clicks the Next button")]
     public async Task UserCreatesNewClientAndClicksNext()
     {
         await NewExistingClientSearchLocators.CreateNewClientButton(_context.Page).ClickAsync();
@@ -157,7 +159,7 @@ public class SharedEQSteps
     }
 
 
-    [Then("user enters account owner information and clicks Next")]
+    [When("user enters account owner information and clicks Next")]
     public async Task EnterAccountOwnerInfo(Table table)
     {
         TableMappingHelpers.AccountOwnerFields(table, _contextData);
@@ -176,7 +178,7 @@ public class SharedEQSteps
         Console.WriteLine(_contextData.ClientFirstName);
     }
 
-    [Then("user enters Pre-Qualification information and continues")]
+    [When("user enters Pre-Qualification information and continues")]
     public async Task WhenUserEntersPreQualificationInfoAndContinuesAsync(Table table)
     {
         TableMappingHelpers.PreQualificationFields(table, _contextData);
@@ -185,7 +187,7 @@ public class SharedEQSteps
         await preQualificationPage.EnterPreQualificationInfoAndContinueAsync(_contextData.EligibilityRestrictions);
     }
 
-    [Then("user selects Primary Insured and continues")]
+    [When("user selects Primary Insured and continues")]
     public async Task UserSelectsPrimaryInsuredAsync()
     {
         var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);
@@ -194,7 +196,7 @@ public class SharedEQSteps
 
 
 
-    [Then("user creates a new Billing Account and Submits payment")]
+    [When("user creates a new Billing Account and Submits payment")]
     public async Task UserCreatesBillingAccountAndSubmitsPaymentAsync(Table table)
     {
         TableMappingHelpers.BillingAccountFields(table, _contextData);

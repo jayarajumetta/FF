@@ -40,7 +40,7 @@ public class BOPSteps
 
     }
 
-    [Then("user selects Business Owners and inputs Quote Details")]
+    [When("user selects Business Owners and inputs Quote Details")]
     public async Task SelectBusinessOwnersAndInputQuoteDetails(Table table)
     {
         TableMappingHelpers.BOPQuoteDetailsFields(table, _contextData);
@@ -59,7 +59,7 @@ public class BOPSteps
         await proposalDetailsPage.HandleClientExistsPopupAsync();
     }
 
-    [Then("user selects class codes and continues")]
+    [When("user selects class codes and continues")]
     public async Task UserSelectesClassCodesAndContinues(Table table)
     {
         TableMappingHelpers.BOPPreQualificationFields(table, _contextData);
@@ -72,7 +72,7 @@ public class BOPSteps
         await Helpers.ClickNextAsync(_context.Page);
     }
 
-    [Then("user Enters Primary Insured Information for BOP and continues")]
+    [When("user Enters Primary Insured Information for BOP and continues")]
     public async Task UserEntersPrimaryInsuredInformationAndContinues(Table table)
     {
         // Map table data to context data and steps needed

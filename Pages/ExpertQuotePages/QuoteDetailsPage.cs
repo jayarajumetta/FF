@@ -89,7 +89,13 @@ namespace Playwright_POC.Pages
             await effDateField.FillAsync(contextData.EffectiveDate);
             
             await Locators.ProposalDetailsPageLocators.ExpandPolicyTermDropdown(_page).ClickAsync();
-            await ExpertQuoteLocatorFactory.AccountInformationPageLocators.SelectPolicyTermFromDropdown(_page, contextData.PolicyTerm).ClickAsync();
+            
+            // Wait a moment for the dropdown animation to complete
+            await Task.Delay(500);
+            
+            // Use GetByText to find and click the option directly
+            await _page.GetByText(contextData.PolicyTerm, new() { Exact = true }).ClickAsync();
+            
             await Locators.ProposalDetailsPageLocators.AgentPCCodeInput(_page).FillAsync(contextData.AgentCode);
         }
 
@@ -157,7 +163,7 @@ namespace Playwright_POC.Pages
 
 
         public async Task HandleSSNPopupsAsync(ScenarioContextData contextData)
-        {
+        {   
             // Wait for page to stabilize after Start Quote
             await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
 

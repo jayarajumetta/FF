@@ -52,12 +52,12 @@ Feature: SFP Happy Path
 		| GrowIndustrialHemp  | No      |
 
 
-    Then user enters Pre-Qualification information and continues
+    When user enters Pre-Qualification information and continues
 	    | Question                | Answer            |
         | EligibilityRestrictions | None Of The Above |
 
-    Then user selects Primary Insured and continues
+    When user selects Primary Insured and continues
 
-    Then user Validates Primary Insured Information for SFP and continues
+    When user Validates Primary Insured Information for SFP and continues
 
 

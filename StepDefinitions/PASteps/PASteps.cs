@@ -39,7 +39,7 @@ public class PASteps
             _configuration = configuration;
 
         }
-        [Then("user selects Personal Auto and inputs Quote Details")]
+        [When("user selects Personal Auto and inputs Quote Details")]
     public async Task SelectPersonalAutoAndInputQuoteDetails(Table table)
     {
         TableMappingHelpers.PAQuoteDetailsFields(table, _contextData);
@@ -58,7 +58,7 @@ public class PASteps
 
 
 
-    [Then("user selects existing Driver")]
+    [When("user selects existing Driver")]
     public async Task UserSelectsExistingDriverAsync()
     {
         await DriverSelectionPageLocators.ExistingClientButton(_context.Page).ClickAsync();
@@ -69,7 +69,7 @@ public class PASteps
 
 
 
-    [Then("user enters Driver information and continues")]
+    [When("user enters Driver information and continues")]
     public async Task WhenUserEntersDriverInfoAndContinuesAsync(Table table)
     {
         TableMappingHelpers.DriverInfoFields(table, _contextData);
@@ -95,7 +95,7 @@ public class PASteps
     }
 
 
-    [Then("user enters vehicle information and continues")]
+    [When("user enters vehicle information and continues")]
     public async Task WhenUserEntersVehicleInfoAndContinuesAsync(Table table)
     {
         TableMappingHelpers.MapVehicleFields(table, _contextData);
@@ -113,7 +113,7 @@ public class PASteps
     }
 
 
-    [Then("user assigns a vehicle to the driver")]
+    [When("user assigns a vehicle to the driver")]
     public async Task WhenUserAssignsDriverAndVehicleAsync(Table table)
     {
         TableMappingHelpers.VehicleAssignmentFields(table, _contextData);
@@ -124,14 +124,14 @@ public class PASteps
 
 
 
-    [Then("user verifies there are no claims or violations")]
+    [When("user verifies there are no claims or violations")]
     public async Task UserVerifiesNoClaimsOrViolationsAsync()
     {
         var claimsAndViolationsPage = new ClaimsViolationsPage(_context.Page);
         await claimsAndViolationsPage.VerifyNoClaimsOrViolationsAndContinueAsync();
     }
 
-    [Then("user selects discounts and clicks Next")]
+    [When("user selects discounts and clicks Next")]
     public async Task UserSelectsDiscountsAsync()
     {
         var discountsPage = new DiscountsPage(_context.Page);
@@ -140,7 +140,7 @@ public class PASteps
 
 
 
-    [Then("user selects Policy Coverages")]
+    [When("user selects Policy Coverages")]
     public async Task UserSelectsCoveragesAsync(Table table)
     {
         TableMappingHelpers.PolicyCoverageFields(table, _contextData);
@@ -158,7 +158,7 @@ public class PASteps
 
 
 
-    [Then("user selects Additional Coverages")]
+    [When("user selects Additional Coverages")]
     public async Task UserSelectsAdditionalCoveragesAsync(Table table)
     {
         TableMappingHelpers.AdditionalCoverageFields(table, _contextData);
@@ -175,7 +175,7 @@ public class PASteps
         await Helpers.ClickNextAsync(_context.Page);
     }
 
-    [Then("user verifies Pricing Details")]
+    [When("user verifies Pricing Details")]
     public async Task UserVerifiesPricingDetailsAsync()
     {
         var pricingDetailsPage = new PricingDetailsPage(_context.Page);
@@ -194,7 +194,7 @@ public class PASteps
 
 
 
-    [Then("user verifies eligibility and clicks Next")]
+    [When("user verifies eligibility and clicks Next")]
     public async Task UserVerifiesEligibilityAsync()
     {
         // Add any questions that may populate
@@ -203,7 +203,7 @@ public class PASteps
     }
 
 
-    [Then("user adds an Additional Interest")]
+    [When("user adds an Additional Interest")]
     public async Task UserAddsAdditionalInterestAsync(Table table)
     {
         TableMappingHelpers.AdditionalInterestFields(table, _contextData);
