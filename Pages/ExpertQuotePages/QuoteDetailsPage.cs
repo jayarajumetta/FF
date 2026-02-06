@@ -141,6 +141,9 @@ namespace Playwright_POC.Pages
                     ? contextData.SSN
                     : RandomGenerators.GenerateRandomSSN();
 
+                // Persist the SSN used so later validation sees the same full SSN
+                contextData.SSN = ssnToUse;
+
                 await Locators.SSNPopUpLocators.SSNInput(_page).FillAsync(ssnToUse);
                 await Locators.GlobalLocators.DialogSubmitButton(_page).ClickAsync();
             }

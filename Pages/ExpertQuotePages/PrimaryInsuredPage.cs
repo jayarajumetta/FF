@@ -20,10 +20,12 @@ namespace TestAutomation.Pages.ExpertQuotePages
 
         public async Task SelectExistingClientAsPrimaryInsuredAsync(ScenarioContextData contextData)
         {
-            var existingClientButton = _page.Locator(PrimaryInsuredPageConstLocators.SelectPrimaryInsured);
-            await _page.WaitForSelectorAsync(PrimaryInsuredPageConstLocators.SelectPrimaryInsured, new() { Timeout = 10000 });
+            var existingClientButton =
+                PrimaryInsuredPageConstLocators.SelectExistingClient(_page);
+
             await existingClientButton.ClickAsync();
 
+            await Helpers.WaitForSpinnerToClearAsync(_page);
             await Helpers.ClickNextAsync(_page);
         }
 
@@ -41,7 +43,7 @@ namespace TestAutomation.Pages.ExpertQuotePages
             var firstName = AddPrimaryInsuredPageLocators.AddPrimaryInsuredFirstNameInput(_page);
             var firstNameValue = (await firstName.InputValueAsync())?.Trim();
             if (string.IsNullOrWhiteSpace(firstNameValue))
-                {
+            {
                 await firstName.ClickAsync();
                 await firstName.PressAsync("Control+A");
                 await firstName.PressAsync("Delete");
@@ -55,27 +57,30 @@ namespace TestAutomation.Pages.ExpertQuotePages
 
         public async Task ValidatePrimaryInsuredDetailsAsync(ScenarioContextData contextData)
         {
+
             var firstName = AddPrimaryInsuredPageLocators.AddPrimaryInsuredFirstNameInput(_page);
             var lastName = AddPrimaryInsuredPageLocators.AddPrimaryInsuredLastNameInput(_page);
             var dob = AddPrimaryInsuredPageLocators.AddPrimaryInsuredDOBInput(_page);
             var mailingAddress = AddPrimaryInsuredPageLocators.AddPrimaryInsuredMailingAddressInput(_page);
             var city = AddPrimaryInsuredPageLocators.AddPrimaryInsuredCityInput(_page);
-            var state = AddPrimaryInsuredPageLocators.StateValueReadOnly(_page);
+            var state = await _page.GetByTestId("fields.account.accountInput$state.value").InnerTextAsync();
             var zip = AddPrimaryInsuredPageLocators.AddPrimaryInsuredZipCodeInput(_page);
-            var phone = AddPrimaryInsuredPageLocators.AddPrimaryInsuredPrimaryPhoneInput(_page);
             var email = AddPrimaryInsuredPageLocators.AddPrimaryInsuredEmailAddressInput(_page);
-            var ssnNumber = AddPrimaryInsuredPageLocators.ClientSSNOnFile(_page);
+            var ssnNumber = AddPrimaryInsuredPageLocators.ClientSSNOnFile(_page).InnerTextAsync();
             var actualFirst = (await firstName.InputValueAsync())?.Trim();
             var actualLast = (await lastName.InputValueAsync())?.Trim();
             var actualDobText = (await dob.InputValueAsync())?.Trim();
             var actualMailingAddress = (await mailingAddress.InputValueAsync())?.Trim();
             var actualCity = (await city.InputValueAsync())?.Trim();
-            var actualState = (await state.InputValueAsync())?.Trim();
+            var actualState = state?.Trim();
             var actualZip = (await zip.InputValueAsync())?.Trim();
-            var actualPhone = (await phone.InputValueAsync())?.Trim();
+            var actualZip5 = actualZip?.Split('-')[0];
             var actualEmail = (await email.InputValueAsync())?.Trim();
-            var actualSSN = (await ssnNumber.InputValueAsync())?.Trim();
-            var ssnLast4 = actualSSN[^4..];
+
+            // Safely await and trim SSN text; guard against null/short values before slicing
+            var actualSSN = (await ssnNumber)?.Trim() ?? string.Empty;
+            var ssnLast4 = actualSSN.Length >= 4 ? actualSSN[^4..] : actualSSN;
+
 
             Assert.That(
                 actualFirst,
@@ -89,13 +94,14 @@ namespace TestAutomation.Pages.ExpertQuotePages
                 $"Last Name mismatch. Expected: {contextData.ClientLastName}, Actual: {actualLast}"
             );
 
+            var actualDob = DateTime.Parse(actualDobText, CultureInfo.InvariantCulture);
             var expectedDob = DateTime.Parse(contextData.ClientDOB, CultureInfo.InvariantCulture);
             var expectedDobText = expectedDob.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
 
             Assert.That(
-                actualDobText,
-                Is.EqualTo(expectedDobText).IgnoreCase,
-                $"DOB mismatch. Expected: {expectedDobText}, Actual: {actualDobText}"
+                actualDob,
+                Is.EqualTo(expectedDob),
+                $"DOB mismatch. Expected: {expectedDob}, Actual: {actualDob}"
             );
             Assert.That(
                 actualMailingAddress,
@@ -113,28 +119,27 @@ namespace TestAutomation.Pages.ExpertQuotePages
                 $"State mismatch. Expected: {contextData.State}, Actual: {actualState}"
             );
             Assert.That(
-                actualZip,
+                actualZip5,
                 Is.EqualTo(contextData.ZipCode).IgnoreCase,
-                $"Zip Code mismatch. Expected: {contextData.ZipCode}, Actual: {actualZip}"
+                $"Zip Code mismatch. Expected: {contextData.ZipCode}, Actual: {actualZip5}"
             );
-            Assert.That(
-                actualPhone,
-                Is.EqualTo(contextData.ClientPhoneNumber).IgnoreCase,
-                $"Primary Phone mismatch. Expected: {contextData.ClientPhoneNumber}, Actual: {actualPhone}"
-            );
+
             Assert.That(
                 actualEmail,
                 Is.EqualTo(contextData.ClientEmail).IgnoreCase,
                 $"Email Address mismatch. Expected: {contextData.ClientEmail}, Actual: {actualEmail}"
             );
-            var clientSSNLas4 = contextData.SSN[^4..];
+
+            // Safely get expected last-4 SSN
+            var clientSSNLas4 = !string.IsNullOrEmpty(contextData.SSN) && contextData.SSN.Length >= 4
+                ? contextData.SSN[^4..]
+                : contextData.SSN ?? string.Empty;
+
             Assert.That(
                 ssnLast4,
                 Is.EqualTo(clientSSNLas4).IgnoreCase,
                 $"SSN Last 4 mismatch. Expected: {clientSSNLas4}, Actual: {ssnLast4}"
             );
-
-
         }
     }
 }

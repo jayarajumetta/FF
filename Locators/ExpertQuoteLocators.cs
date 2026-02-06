@@ -149,7 +149,7 @@ namespace Playwright_POC.Locators
 
     public static class PrimaryInsuredPageConstLocators
     {
-        public const string SelectPrimaryInsured = "xpath=.//button//div[contains(text(), 'Existing Client')]";
+        public static ILocator SelectExistingClient(IPage page) => page.GetByTestId("temp.clientSuggestions-0");
         public const string SearchPrimaryInsuredFirstNameInput = "input[name='temp.clientSearchFirstName']";
         public const string SearchPrimaryInsuredLastNameInput = "input[name='temp.clientSearchLastName']";
         public const string PrimaryInsuredSearchButton = "//button[text()='Search']";
@@ -157,26 +157,32 @@ namespace Playwright_POC.Locators
 
     public static class AddPrimaryInsuredPageLocators
     {
-        public static ILocator AddPrimaryInsuredFirstNameInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$nameFirst.value");
-        public static ILocator AddPrimaryInsuredMiddleNameInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$nameMiddle.value");
-        public static ILocator AddPrimaryInsuredLastNameInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$nameLast.value");
-        public static ILocator ExpandSuffixDropDown(IPage page) => page.GetByTestId("fields.data.account.accountInput$nameSuffix.value");
-        public static ILocator AddPrimaryInsuredDOBInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$dateOfBirth.value");
-        public static ILocator ExpandCountryDropdown(IPage page) => page.GetByTestId("fields.data.account.accountInput$country.value");
-        public static ILocator AddPrimaryInsuredMailingAddressInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$address1.value");
-        public static ILocator AddPrimaryInsuredAddress2Input(IPage page) => page.GetByTestId("fields.data.account.accountInput$address2.value");
-        public static ILocator AddPrimaryInsuredCityInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$city.value");
-        public static ILocator ExpandStateDropdown(IPage page) => page.GetByTestId("fields.data.account.accountInput$state.value");
-        public static ILocator StateValueReadOnly(IPage page) => page.GetByTestId("fields.account.accountInput$state.value");
-        public static ILocator AddPrimaryInsuredZipCodeInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$zipCode.value");
-        public static ILocator AddPrimaryInsuredMobilePhoneInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$mobilePhone.value");
-        public static ILocator AddPrimaryInsuredBusinessPhoneInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$businessPhone.value");
-        public static ILocator AddPrimaryInsuredPrimaryPhoneInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$primaryPhone.value");
-        public static ILocator AddPrimaryInsuredEmailAddressInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$email.value");
-        public static ILocator AddPrimaryInsuredFEINInput(IPage page) => page.GetByTestId("fields.data.account.accountInput$fEIN.value");
+        public static ILocator AddPrimaryInsuredFirstNameInput(IPage page) => page.GetByTestId("fields.account.accountInput$nameFirst.value");
+        public static ILocator AddPrimaryInsuredMiddleNameInput(IPage page) => page.GetByTestId("fields.account.accountInput$nameMiddle.value");
+        public static ILocator AddPrimaryInsuredLastNameInput(IPage page) => page.GetByTestId("fields.account.accountInput$nameLast.value");
+        public static ILocator ExpandSuffixDropDown(IPage page) => page.GetByTestId("fields.account.accountInput$nameSuffix.value");
+        public static ILocator AddPrimaryInsuredDOBInput(IPage page) => page.Locator("input[name='fields.account.accountInput$dateOfBirth.value']");
+        public static ILocator ExpandCountryDropdown(IPage page) => page.GetByTestId("fields.account.accountInput$country.value");
+        public static ILocator AddPrimaryInsuredMailingAddressInput(IPage page) => page.Locator("input[name='fields.account.accountInput$address1.value']");
+        public static ILocator AddPrimaryInsuredAddress2Input(IPage page) => page.GetByTestId("fields.account.accountInput$address2.value");
+        public static ILocator AddPrimaryInsuredCityInput(IPage page) => page.GetByTestId("fields.account.accountInput$city.value");
+        public static ILocator ExpandStateDropdown(IPage page) => page.GetByTestId("fields.account.accountInput$state.value");
+        public static ILocator StateValueReadOnly(IPage page) => page.GetByTestId("fields.account.accountInput$state.value").Locator("mat-select-value");
+
+        public static ILocator AddPrimaryInsuredZipCodeInput(IPage page) => page.GetByTestId("fields.account.accountInput$zipCode.value");
+        public static ILocator AddPrimaryInsuredMobilePhoneInput(IPage page) => page.GetByTestId("fields.account.accountInput$mobilePhone.value");
+        public static ILocator AddPrimaryInsuredBusinessPhoneInput(IPage page) => page.GetByTestId("fields.account.accountInput$businessPhone.value");
+        public static ILocator AddPrimaryInsuredPrimaryPhoneInput(IPage page) => page.GetByTestId("fields.account.accountInput$primaryPhone.value");
+        public static ILocator AddPrimaryInsuredEmailAddressInput(IPage page) => page.GetByTestId("fields.account.accountInput$email.value");
+        public static ILocator AddPrimaryInsuredFEINInput(IPage page) => page.GetByTestId("fields.account.accountInput$fEIN.value");
         public static ILocator ClientSSNOnFile(IPage page) => page.GetByText("Social Security #:", new() { Exact = true })
                                                                 .Locator("..")
-                                                                .Locator("readonly-value"); // Read Only Field
+                                                                .Locator(".readonly-value"); // Read Only Field
+    }
+
+    public static class ValidatePrimaryInsuredInfoLocators
+    {
+
     }
     
     public static class EditGeneralInformationPgeLocators

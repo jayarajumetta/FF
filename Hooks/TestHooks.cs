@@ -1,4 +1,3 @@
-
 // Pages/TestHooks.cs
 using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
@@ -68,19 +67,20 @@ namespace Playwright_POC.Hooks
             container.RegisterTypeAs<PocTestContext, PocTestContext>();
             container.RegisterTypeAs<BrowserFactory, BrowserFactory>();
             container.RegisterTypeAs<ApiService, IApiService>();
-
-            // NOTE:
-            // ScenarioContextData will be registered per scenario (instance),
-            // not globally, to guarantee one shared object across all bindings
-            // within a single scenario.
+            
+            // Register ScenarioContextData as InstancePerDependency with a shared backing field
+            container.RegisterFactoryAs<ScenarioContextData>(() => 
+            {
+                // This will be called once per scenario context
+                return new ScenarioContextData();
+            }).InstancePerContext();
         }
 
         [BeforeScenario]
         public async Task BeforeScenarioAsync()
         {
-            //  Register ONE shared ScenarioContextData instance for the entire scenario.
-            //    This ensures ExpertQuoteSteps and ExpressSteps read/write the same object.
-            _container.RegisterInstanceAs(new ScenarioContextData());
+            // Store in Reqnroll's ScenarioContext instead of DI container
+            _scenarioContext["ContextData"] = new ScenarioContextData();
             Console.WriteLine("[Hooks] ScenarioContextData registered for this scenario.");
 
             // Initialize HttpClient for API scenarios (kept from your original code)

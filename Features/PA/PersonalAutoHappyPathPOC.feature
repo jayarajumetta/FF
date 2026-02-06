@@ -40,7 +40,7 @@ Feature: Personal Auto Happy Path POC
 	| PolicyTerm     | 6 months                                    |
 	| AgentCode      | D2102                                       |
 	| RatingState    | Missouri                                    |
-	| SSN            |                                    |
+	| SSN            |                                   |
 	| WritingCompany | American National Property And Casualty Co. |
 	| RiskAddress    | 6 Patriot Ln, Buffalo, MO 65622      |
     

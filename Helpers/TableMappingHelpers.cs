@@ -535,28 +535,6 @@ namespace Playwright_POC.Helpers
 
         }
 
-        public static void SFPPrimaryInsuredFields(Table table, ScenarioContextData _contextData)
-        {
-            foreach (var row in table.Rows)
-            {
-                var question = row["Question"];
-                var answer = row["Answer"];
-                switch (question)
-                {
-                    case "FirstName":
-                        _contextData.ClientFirstName = answer;
-                        break;
-                    case "LastName":
-                        _contextData.ClientLastName = answer;
-                        break;
-                    case "DOB":
-                        _contextData.ClientDOB = answer;
-                        break;
-                    default:
-                        throw new ArgumentException($"Unknown question: {question}");
-                }
-            }
-        }
     }
 
 }

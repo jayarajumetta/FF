@@ -39,7 +39,8 @@ namespace Playwright_POC.Helpers
             {
         page.GetByTestId("fields.data.next"),
         page.GetByTestId("fields.data-Next.next"),
-        page.GetByTestId("next")
+        page.GetByTestId("next"),
+        page.GetByRole(AriaRole.Button, new() { Name = "Next" })
     };
 
             foreach (var candidate in candidates)
@@ -54,6 +55,21 @@ namespace Playwright_POC.Helpers
             throw new PlaywrightException("Next button not found using any known data-testid.");
         }
 
+
+
+        public static async Task WaitForSpinnerToClearAsync(IPage page, int timeoutMs = 60000)
+        {
+            // Covers common ngx-spinner overlay patterns
+            var overlay = page.Locator(".ngx-spinner-overlay");
+
+            // If it exists, wait for it to be hidden (display:none/opacity/removed)
+            if (await overlay.CountAsync() > 0)
+            {
+                await overlay.First.WaitForAsync(new() { State = WaitForSelectorState.Hidden, Timeout = timeoutMs });
+            }
+
+
+        }
     }
 }
 

@@ -16,6 +16,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using TestAutomation.Pages.ExpertQuotePages;
+using static System.Net.Mime.MediaTypeNames;
 using ReqContext = Playwright_POC.Context.TestContext;
 
 
@@ -23,21 +24,20 @@ using ReqContext = Playwright_POC.Context.TestContext;
 
 public class SFPSteps
 {
-
     private readonly ReqContext _context;
     private readonly ScenarioContextData _contextData;
     private readonly CredentialsConfig _credentials;
     private readonly IConfiguration _configuration;
-    private Table _table;
+    private readonly ScenarioContext _scenarioContext;
 
 
-    public SFPSteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
+    public SFPSteps(ReqContext context, ScenarioContext scenarioContext, CredentialsConfig credentials, IConfiguration configuration)
     {
         _context = context;
-        _contextData = contextData;
+        _scenarioContext = scenarioContext;
+        _contextData = _scenarioContext["ContextData"] as ScenarioContextData;
         _credentials = credentials;
         _configuration = configuration;
-
     }
 
 
@@ -55,6 +55,7 @@ public class SFPSteps
         await proposalDetailsPage.ClickStartQuoteAsync();
         await proposalDetailsPage.HandleSSNPopupsAsync(_contextData);
         await proposalDetailsPage.HandleClientExistsPopupAsync();
+        Console.WriteLine($"Client {_contextData.ClientFirstName}");
     }
 
     [Then("user enters SFP policy details and clicks Next button")]
@@ -67,19 +68,15 @@ public class SFPSteps
         await sfpPolicyDetailsPage.EnterGrossFarmIncome(_contextData.GrossFarmIncome);
         await sfpPolicyDetailsPage.SelectGrowIndustrialHemp(_contextData.GrowIndustrialHemp);
         await Helpers.ClickNextAsync(_context.Page);
-
-
+        Console.WriteLine($"Client {_contextData.ClientFirstName}");
     }
 
     [Then("user Validates Primary Insured Information for SFP and continues")]
-    public async Task UserEntersPrimaryInsuredInformationForSFPAndContinues(Table table)
+    public async Task UserValidatesPrimaryInsuredInformationForSFPAndContinues()
     {
-        TableMappingHelpers.SFPPrimaryInsuredFields(table, _contextData);
         var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);
-        await primaryInsuredPage.SelectExistingClientAsPrimaryInsuredAsync(_contextData);
         await primaryInsuredPage.ValidatePrimaryInsuredDetailsAsync(_contextData);
+        await Helpers.WaitForSpinnerToClearAsync(_context.Page);
         await GlobalLocators.SaveButton(_context.Page).ClickAsync();
     }
-
-
 }

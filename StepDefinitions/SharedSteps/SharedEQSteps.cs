@@ -27,12 +27,13 @@ public class SharedEQSteps
     private readonly ScenarioContextData _contextData;
     private readonly CredentialsConfig _credentials;
     private readonly IConfiguration _configuration;
-    private Table _table;
+    private readonly ScenarioContext _scenarioContext;
 
-    public SharedEQSteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
+    public SharedEQSteps(ReqContext context, ScenarioContext scenarioContext, CredentialsConfig credentials, IConfiguration configuration)
     {
         _context = context;
-        _contextData = contextData;
+        _scenarioContext = scenarioContext;
+        _contextData = _scenarioContext["ContextData"] as ScenarioContextData;
         _credentials = credentials;
         _configuration = configuration;
     }
@@ -96,7 +97,7 @@ public class SharedEQSteps
 
         // Keep follow-on format for assertions
         string clientName = $"{_contextData.ClientLastName}, {_contextData.ClientFirstName}";
-
+        Console.WriteLine($"Client Name Is: {clientName}");
 
     }
 
@@ -105,6 +106,7 @@ public class SharedEQSteps
     public async Task ThenUserClicksNewQuoteButton()
     {
         await ClientSearchLocators.NewQuoteButton(_context.Page).ClickAsync();
+        Console.WriteLine(_contextData.ClientFirstName);
     }
 
 
@@ -135,6 +137,7 @@ public class SharedEQSteps
         await newClientPage.FillEmailAsync(_contextData.ClientEmail);
         await newClientPage.ClickSearchAsync();
        // await newClientPage.WaitForNextButtonAsync();
+       Console.WriteLine(_contextData.ClientFirstName);
     }
 
 
@@ -150,7 +153,7 @@ public class SharedEQSteps
         await AccountInformationConstLocators
             .PageHeader(_context.Page)
             .WaitForAsync(new() { Timeout = 10000 });
-
+        Console.WriteLine(_contextData.ClientFirstName);
     }
 
 
@@ -170,6 +173,7 @@ public class SharedEQSteps
         await accountInformationPage.WaitForAddressDetailsAsync();
         await accountInformationPage.AnswerMailAndResidenceQuestionsAsync(_contextData);
         await Helpers.ClickNextAsync(_context.Page);
+        Console.WriteLine(_contextData.ClientFirstName);
     }
 
     [Then("user enters Pre-Qualification information and continues")]
