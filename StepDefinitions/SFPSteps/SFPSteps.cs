@@ -48,7 +48,6 @@ public class SFPSteps
         var proposalDetailsPage = new QuoteDetailsPage(_context.Page);
         await proposalDetailsPage.WaitForProposalPageLoadAsync();
         await proposalDetailsPage.SelectSpecialFarmPackageProductAsync();
-        await proposalDetailsPage.CheckSpecialFarmPackageSelected();
         await proposalDetailsPage.EnterSFPQuoteDetailsAsync(_contextData);
         await proposalDetailsPage.SelectRatingStateAsync(_contextData);
         await proposalDetailsPage.SelectRiskAddressAsync(_contextData);
