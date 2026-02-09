@@ -78,4 +78,16 @@ public class SFPSteps
         await Helpers.WaitForSpinnerToClearAsync(_context.Page);
         await GlobalLocators.SaveButton(_context.Page).ClickAsync();
     }
+
+    [When("user answers UW Questions and continues")]
+    public async Task UserAnswersUWQuestionsAndContinues(Table table)
+    {
+
+        var states = TableMappingHelpers.MapYesNoTableToBool(table);
+
+        var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);
+        await primaryInsuredPage.AnswerUwQuestionsAsync(states, clickNext: true);
+
+
+    }
 }

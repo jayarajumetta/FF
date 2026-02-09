@@ -110,6 +110,7 @@ namespace Playwright_POC.Helpers
         public string LivestockType { get; set; }
         public string GrossFarmIncome { get; set; }
         public string GrowIndustrialHemp { get; set; }
+        public string GeneralUWQuestionAnswer { get; set; }
 
-        }
+    }
 }

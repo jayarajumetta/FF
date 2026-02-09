@@ -60,4 +60,9 @@ Feature: SFP Happy Path
 
     When user Validates Primary Insured Information for SFP and continues
 
-
+    When user answers UW Questions and continues
+    | Question               | Answer |
+    | ConvictionFelony       | No    |
+    | PolicyDeclined5Years   | No     |
+    | AlcoholOnPremises      | No    |
+    | NoneOfTheAbove         | Yes     |
