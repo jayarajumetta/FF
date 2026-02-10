@@ -66,3 +66,9 @@ Feature: SFP Happy Path
     | PolicyDeclined5Years   | No     |
     | AlcoholOnPremises      | No    |
     | NoneOfTheAbove         | Yes     |
+
+    When user enters Claims and Prior Insurance Information and continues
+		| Question                 | Answer |
+		| PriorFFANPolicy          | No     |
+		| YearsInBusiness          |      5 |
+		| YearsContinuousCoverage  |      5 |

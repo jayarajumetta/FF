@@ -90,4 +90,14 @@ public class SFPSteps
 
 
     }
+
+    [When("user enters Claims and Prior Insurance Information and continues")]
+    public async Task UserEntersClaimsAndPriorInsuranceInformationAndContinues(Table table)
+    {
+        var claimsViolationsPage = new ClaimsViolationsPage(_context.Page);
+        TableMappingHelpers.ClaimsAndPriorInsuranceFields(table, _contextData);
+        await claimsViolationsPage.SetExposuresInsuredAN90DaysAsync(_contextData.PriorFFANPolicy);
+        await claimsViolationsPage.EnterYearsInBusinessAsync(_contextData.YearsInBusiness);
+        await Helpers.ClickNextAsync(_context.Page);
+    }
 }

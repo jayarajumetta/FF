@@ -20,7 +20,7 @@ namespace Playwright_POC.Locators
 
             public static ILocator GetReceivedMailButton(IPage page, string yesOrNo) =>
                 page
-                    .Locator("[data-testid^='owner.address.resided90days-']") 
+                    .Locator("[data-testid^='owner.address.resided90days-']")
                     .Filter(new() { HasTextString = yesOrNo });
 
 
@@ -54,7 +54,7 @@ namespace Playwright_POC.Locators
                 page.GetByRole(AriaRole.Button, new() { Name = value });
 
             public static ILocator SelectLivestockTypeRadioButton(IPage page, string value) =>
-                page.Locator("mat-radio-button[data-testid*='farmType']").Filter(new() {Has = page.Locator($"span[style*='pointer-events: none']:text-is(\"{value}\")")});
+                page.Locator("mat-radio-button[data-testid*='farmType']").Filter(new() { Has = page.Locator($"span[style*='pointer-events: none']:text-is(\"{value}\")") });
 
 
 
@@ -68,7 +68,7 @@ namespace Playwright_POC.Locators
             public static ILocator GetQualificationSelection(IPage page, string value) =>
                 page
                 .GetByRole(AriaRole.Button, new() { Name = value });
-                
+
 
             //Add Class Code Section of Prequalifications Page
             public static string PrimaryClassCodeToggle(string classCode) =>
@@ -112,13 +112,10 @@ namespace Playwright_POC.Locators
 
         internal class ClaimsPriorInsurancePageLocators
         {
-            // Wer the exposures insured on this policy previously insured for this client on another Farm Family/American National Policy within the last 90 days?
-            public static string PriorFFANPolicies(string yesOrNo) =>
-                $"xpath=.//button[contains(@data-testid, 'fields.data.policy.policyInput$exposuresInsuredAN90Days')]//div[contains(text(), '{yesOrNo}')]";
-
             // How many years have you maintained continuous insurance coverage?
             public static string YearsOfContinuousCoverage(string value) =>
                 $"xpath=.//button[contains(@data-testid, 'fields.data.policy.policyUnderwriting.policyUnderwritingInput$yearsMaintainedContinuousInsuranceCoverage')]//div[contains(text(), '{value}')]";
+
         }
 
         internal class AddBuildingPageLocators
@@ -258,7 +255,7 @@ namespace Playwright_POC.Locators
             public static ILocator GetVehicleTypeButton(IPage page, string value) =>
                 page.
                 GetByRole(AriaRole.Button, new() { Name = value });
-               
+
 
 
             // More Options Dropdown Values
@@ -277,7 +274,7 @@ namespace Playwright_POC.Locators
             public static ILocator GetCustomizedEquipmentButton(IPage page, string yesOrNo) =>
                 page
                 .GetByRole(AriaRole.Button, new() { Name = yesOrNo });
-                
+
 
 
             // How is this vehicle used?
@@ -292,7 +289,7 @@ namespace Playwright_POC.Locators
         {
             public static ILocator DriverStatusButton(IPage page, string value) =>
                 page.Locator("[id*='assignmentType']")
-                    .GetByRole (AriaRole.Button, new() {Name = value});
+                    .GetByRole(AriaRole.Button, new() { Name = value });
         }
 
         internal class DiscountsPageLocators
@@ -336,15 +333,15 @@ namespace Playwright_POC.Locators
         {
             public static ILocator GetAccidentalDeathAndDismembermentButton(IPage page, string value) =>
                 page.Locator("[id*='AccidentalDeath']")
-                    .GetByRole(AriaRole.Button, new() { Name = value});
+                    .GetByRole(AriaRole.Button, new() { Name = value });
 
             public static ILocator GetLossOfIncomeCheckbox(IPage page, string value) =>
                 page.Locator("[id*='driverIncomeLoss']")
-                    .GetByRole(AriaRole.Button, new() { Name = value});
+                    .GetByRole(AriaRole.Button, new() { Name = value });
 
             public static ILocator GetRentalReimbursementButton(IPage page, string value) =>
                 page.Locator("[id*='RentalReimbursement']")
-                    .GetByRole(AriaRole.Button, new() { Name = value});
+                    .GetByRole(AriaRole.Button, new() { Name = value });
 
             public static string GetRoadsideAssistanceButton(string value) =>
                 $"xpath=.//button[contains(@id, 'RoadsideAssistance')]//div[contains(., '{value}')]";
@@ -366,7 +363,7 @@ namespace Playwright_POC.Locators
         {
             public static ILocator ConvictedOfFelonyQuestion(IPage page, string yesOrNo) =>
                 page.Locator("[id*='felonyConviction']")
-                    .GetByRole(AriaRole.Button, new() { Name = yesOrNo});
+                    .GetByRole(AriaRole.Button, new() { Name = yesOrNo });
         }
         internal class AdditionalInterestPageLocators
         {
@@ -379,7 +376,7 @@ namespace Playwright_POC.Locators
                 page.GetByRole(AriaRole.Button, new() { Name = value });
 
             public static ILocator GetJointOwnerDrivesLocator(IPage page, string yesOrNo) =>
-                page.GetByRole(AriaRole.Button, new() { Name = yesOrNo});
+                page.GetByRole(AriaRole.Button, new() { Name = yesOrNo });
         }
 
         internal class BillingInformationsPageLocators
@@ -388,23 +385,23 @@ namespace Playwright_POC.Locators
                 page.GetByRole(AriaRole.Button, new() { Name = value });
 
             public static ILocator GetPaymentTypeButton(IPage page, string value) =>
-                page.GetByRole(AriaRole.Button, new() { Name = value});
+                page.GetByRole(AriaRole.Button, new() { Name = value });
 
             public static ILocator GetPaymentPlanButton(IPage page, string value) =>
-                page.GetByRole(AriaRole.Button, new() { Name = value});
+                page.GetByRole(AriaRole.Button, new() { Name = value });
 
             public static ILocator GetPaymentAmountRadioButton(IPage page, string value) =>
-                page.GetByRole(AriaRole.Radio, new() { Name = value});
+                page.GetByRole(AriaRole.Radio, new() { Name = value });
 
             public static ILocator GetPaymentMethodButton(IPage page, string value) =>
-                page.GetByRole(AriaRole.Button, new() { Name = value});
+                page.GetByRole(AriaRole.Button, new() { Name = value });
 
             public static ILocator GetPaperlessCommunicationButton(IPage page, string yesOrNo) =>
-                page.GetByRole(AriaRole.Button, new() { Name = yesOrNo});
+                page.GetByRole(AriaRole.Button, new() { Name = yesOrNo });
         }
 
 
     }
+}
 
     
-}

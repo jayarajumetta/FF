@@ -111,6 +111,9 @@ namespace Playwright_POC.Helpers
         public string GrossFarmIncome { get; set; }
         public string GrowIndustrialHemp { get; set; }
         public string GeneralUWQuestionAnswer { get; set; }
+        public bool PriorFFANPolicy { get; set; }
+        public string YearsInBusiness { get; set; }
+        public string YearsContinuousCoverage { get; set; }
 
     }
 }

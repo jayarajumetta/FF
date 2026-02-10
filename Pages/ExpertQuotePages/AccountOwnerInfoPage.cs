@@ -106,7 +106,7 @@ namespace Playwright_POC.Pages
                 !maritalStatus.Equals("Divorced", StringComparison.OrdinalIgnoreCase))
             {
                 await DriverSummaryConstLocators.MoreOptionsMaritalStatus(_page).ClickAsync();
-                await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetMaritalStatusSelection(_page, maritalStatus));
+                await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetMoreOptionsValues(_page, maritalStatus));
             }
             else
             {
