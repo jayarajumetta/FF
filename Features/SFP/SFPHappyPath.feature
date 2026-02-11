@@ -72,3 +72,7 @@ Feature: SFP Happy Path
 		| PriorFFANPolicy          | No     |
 		| YearsInBusiness          |      5 |
 		| YearsContinuousCoverage  |      5 |
+
+    When user validates Client Details and continues
+
+    

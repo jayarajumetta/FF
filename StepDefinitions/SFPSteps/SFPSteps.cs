@@ -100,4 +100,15 @@ public class SFPSteps
         await claimsViolationsPage.EnterYearsInBusinessAsync(_contextData.YearsInBusiness);
         await Helpers.ClickNextAsync(_context.Page);
     }
+
+
+    [When("user validates Client Details and continues")]
+    public async Task UserValidatesClientDetailsAndContinues()
+    {
+        var clientDetailsPage = new ClientDetailsPage(_context.Page);
+        await clientDetailsPage.VerifyClientName(_contextData.ClientFirstName, _contextData.ClientLastName);
+        await clientDetailsPage.VerifyClientStreetAddress(_contextData.StreetAddress);
+        //await clientDetailsPage.VerifyClientPhone(_contextData.ClientPhoneNumber);
+        await Helpers.ClickNextAsync(_context.Page);
+    }
 }
