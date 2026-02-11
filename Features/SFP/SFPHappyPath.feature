@@ -60,4 +60,19 @@ Feature: SFP Happy Path
 
     When user Validates Primary Insured Information for SFP and continues
 
+    When user answers UW Questions and continues
+    | Question               | Answer |
+    | ConvictionFelony       | No    |
+    | PolicyDeclined5Years   | No     |
+    | AlcoholOnPremises      | No    |
+    | NoneOfTheAbove         | Yes     |
 
+    When user enters Claims and Prior Insurance Information and continues
+		| Question                 | Answer |
+		| PriorFFANPolicy          | No     |
+		| YearsInBusiness          |      5 |
+		| YearsContinuousCoverage  |      5 |
+
+    When user validates Client Details and continues
+
+    

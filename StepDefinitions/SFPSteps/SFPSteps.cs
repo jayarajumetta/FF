@@ -78,4 +78,37 @@ public class SFPSteps
         await Helpers.WaitForSpinnerToClearAsync(_context.Page);
         await GlobalLocators.SaveButton(_context.Page).ClickAsync();
     }
+
+    [When("user answers UW Questions and continues")]
+    public async Task UserAnswersUWQuestionsAndContinues(Table table)
+    {
+
+        var states = TableMappingHelpers.MapYesNoTableToBool(table);
+
+        var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);
+        await primaryInsuredPage.AnswerUwQuestionsAsync(states, clickNext: true);
+
+
+    }
+
+    [When("user enters Claims and Prior Insurance Information and continues")]
+    public async Task UserEntersClaimsAndPriorInsuranceInformationAndContinues(Table table)
+    {
+        var claimsViolationsPage = new ClaimsViolationsPage(_context.Page);
+        TableMappingHelpers.ClaimsAndPriorInsuranceFields(table, _contextData);
+        await claimsViolationsPage.SetExposuresInsuredAN90DaysAsync(_contextData.PriorFFANPolicy);
+        await claimsViolationsPage.EnterYearsInBusinessAsync(_contextData.YearsInBusiness);
+        await Helpers.ClickNextAsync(_context.Page);
+    }
+
+
+    [When("user validates Client Details and continues")]
+    public async Task UserValidatesClientDetailsAndContinues()
+    {
+        var clientDetailsPage = new ClientDetailsPage(_context.Page);
+        await clientDetailsPage.VerifyClientName(_contextData.ClientFirstName, _contextData.ClientLastName);
+        await clientDetailsPage.VerifyClientStreetAddress(_contextData.StreetAddress);
+        //await clientDetailsPage.VerifyClientPhone(_contextData.ClientPhoneNumber);
+        await Helpers.ClickNextAsync(_context.Page);
+    }
 }

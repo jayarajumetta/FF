@@ -218,6 +218,29 @@ namespace Playwright_POC.Helpers
                 }
             }
         }
+
+
+        public static Dictionary<string, bool> MapYesNoTableToBool(Table table)
+        {
+            var result = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"].Trim();
+                var answer = row["Answer"].Trim();
+
+                var state =
+                    answer.Equals("Yes", StringComparison.OrdinalIgnoreCase) ||
+                    answer.Equals("Y", StringComparison.OrdinalIgnoreCase) ||
+                    answer.Equals("True", StringComparison.OrdinalIgnoreCase) ||
+                    answer.Equals("1", StringComparison.OrdinalIgnoreCase);
+
+                result[question] = state;
+            }
+
+            return result;
+        }
+
         public static void DriverInfoFields(Table table, ScenarioContextData _contextData)
         {
             foreach (var row in table.Rows)
@@ -533,6 +556,33 @@ namespace Playwright_POC.Helpers
                 }
             }
 
+        }
+
+        public static void ClaimsAndPriorInsuranceFields(Table table, ScenarioContextData _contextData)
+        {
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"];
+                var answer = row["Answer"];
+                switch (question)
+                {
+                    case "PriorFFANPolicy":
+                        _contextData.PriorFFANPolicy =
+                            answer.Equals("Yes", StringComparison.OrdinalIgnoreCase) ||
+                            answer.Equals("Y", StringComparison.OrdinalIgnoreCase) ||
+                            answer.Equals("True", StringComparison.OrdinalIgnoreCase) ||
+                            answer.Equals("1", StringComparison.OrdinalIgnoreCase);
+                        break;
+                    case "YearsInBusiness":
+                        _contextData.YearsInBusiness = answer;
+                        break;
+                    case "YearsContinuousCoverage":
+                        _contextData.YearsContinuousCoverage = answer;
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknown question: {question}");
+                }
+            }
         }
 
     }

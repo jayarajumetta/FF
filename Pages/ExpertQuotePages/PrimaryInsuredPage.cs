@@ -4,7 +4,9 @@ using NUnit.Framework;
 using Playwright_POC.Helpers;
 using Playwright_POC.Locators;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace TestAutomation.Pages.ExpertQuotePages
@@ -140,6 +142,83 @@ namespace TestAutomation.Pages.ExpertQuotePages
                 Is.EqualTo(clientSSNLas4).IgnoreCase,
                 $"SSN Last 4 mismatch. Expected: {clientSSNLas4}, Actual: {ssnLast4}"
             );
+        }
+
+
+        // --- UW Questions (toggle-checkbox buttons) ---
+
+        // Map stable keys (from Gherkin table "Question" column) -> data-testid attributes in DOM
+        // NOTE: Replace the testid values with the real ones from your app.
+        private static readonly Dictionary<string, string> UwQuestionTestIds = new(StringComparer.OrdinalIgnoreCase)
+        {
+            // Example from your DOM screenshot (replace/expand as needed)
+            // ["ConvictionFelony"] = "fields.underwritingQuestionsGeneralUWQuestions.generalInformationNewInput$convictedOfAnyOtherTypeOfCrime.value",
+
+            ["ConvictionFelony"] = "fields.underwritingQuestionsGeneralUWQuestions.generalInformationNewInput$convictedOfAnyOtherTypeOfCrime.value",
+            ["PolicyDeclined5Years"] = "fields.underwritingQuestionsGeneralUWQuestions.generalInformationNewInput$insurancePolicyDeclinedCancelledNonRenewed.value",
+            ["AlcoholOnPremises"] = "fields.underwritingQuestionsGeneralUWQuestions.preQualificationInput$anyAlcoholOnPremise.value",
+            ["PublicAttractions"] = "fields.underwritingQuestionsGeneralUWQuestions.preQualificationInput$anyHighExposureActivities.value",
+            ["OtherOpsOnPremises"] = "fields.underwritingQuestionsGeneralUWQuestions.sFPGeneralQuestionsInput$anyOperationsNotListed.value",
+            ["SolidFuelDevices"] = "fields.underwritingQuestionsGeneralUWQuestions.sFPGeneralQuestionsInput$anySolidFuelHeating.value",
+            ["NoneOfTheAbove"] = "fields.underwritingQuestionsGeneralUWQuestions.generalInformationNewInput$noneOfTheAboveGeneralUWQuestions.value",
+        };
+
+        private ILocator UwToggleButton(string key)
+        {
+            if (!UwQuestionTestIds.TryGetValue(key, out var testId))
+                throw new ArgumentException($"Unknown UW Question key '{key}'. Add it to UwQuestionTestIds.");
+
+            return _page.Locator($"button[data-testid='{testId}']");
+        }
+
+        private async Task<bool> UwIsCheckedAsync(string key)
+        {
+            var btn = UwToggleButton(key);
+
+            // Your buttons contain material-icons. Typically:
+            // unchecked = "check_box_outline_blank"
+            // checked   = "check_box" (or similar)
+            var icon = btn.Locator("i.material-icons").First;
+
+            // If icon not found, fallback to attribute-based detection (if present)
+            if (await icon.CountAsync() == 0)
+            {
+                var ariaPressed = await btn.GetAttributeAsync("aria-pressed");
+                return string.Equals(ariaPressed, "true", StringComparison.OrdinalIgnoreCase);
+            }
+
+            var iconText = (await icon.InnerTextAsync())?.Trim() ?? "";
+            return !iconText.Contains("check_box_outline_blank", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private async Task UwSetCheckedAsync(string key, bool shouldBeChecked)
+        {
+            var btn = UwToggleButton(key);
+            var isChecked = await UwIsCheckedAsync(key);
+
+            if (isChecked != shouldBeChecked)
+                await btn.ClickAsync();
+        }
+
+        /// <summary>
+        /// Applies UW toggle states from a dictionary of QuestionKey -> bool.
+        /// </summary>
+        public async Task AnswerUwQuestionsAsync(Dictionary<string, bool> states, bool clickNext = true)
+        {
+            // Optional: enforce mutual exclusivity for NoneOfTheAbove
+            if (states.TryGetValue("NoneOfTheAbove", out var none) && none)
+            {
+                foreach (var k in states.Keys.Cast<string>().Where(k => !k.Equals("NoneOfTheAbove", StringComparison.OrdinalIgnoreCase)).ToList())
+                    states[k] = false;
+            }
+
+            foreach (var kvp in states)
+                await UwSetCheckedAsync(kvp.Key, kvp.Value);
+
+            await Helpers.WaitForSpinnerToClearAsync(_page);
+
+            if (clickNext)
+                await Helpers.ClickNextAsync(_page);
         }
     }
 }

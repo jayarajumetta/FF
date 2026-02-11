@@ -1,11 +1,12 @@
 ﻿using Microsoft.Playwright;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace Playwright_POC.Helpers
@@ -69,6 +70,25 @@ namespace Playwright_POC.Helpers
 
 
         }
+
+        public static class UiToggleHelpers
+        {
+            public static async Task ClickYesNoAsync(
+                IPage page,
+                string testId,
+                bool yes)
+            {
+                var value = yes ? "Yes" : "No";
+
+                var button = page.Locator(
+                    $"button[data-testid^='{testId}'] >> text={value}"
+                );
+
+                await button.ClickAsync();
+                await Helpers.WaitForSpinnerToClearAsync(page);
+            }
+        }
+
     }
 }
 
