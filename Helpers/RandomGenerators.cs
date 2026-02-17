@@ -11,15 +11,24 @@ namespace Playwright_POC.Helpers
     /// </summary>
     /// <remarks>
     /// Supported tokens in feature files:
-    /// - {{firstName}} - Random male first name (also accepts legacy {{male}})
+    /// - {{firstName}} - Random male first name with "PW" prefix (also accepts legacy {{male}})
     /// - {{lastName}} - Random last name (also accepts legacy {{random}})
     /// - {{randomDOB}} - Random DOB for person aged 21-65
     /// - {{randomPhone}} - Random US phone number
     /// - {{randomEmail}} - Random email address
     /// - {{randomSSN}} - Random SSN in XXX-XX-XXXX format
+    /// 
+    /// Note: First names are prefixed with "PW" (e.g., "PWMichael") to identify 
+    /// automated test records in the system.
     /// </remarks>
     public class RandomGenerators
     {
+        /// <summary>
+        /// Prefix added to first names to identify Playwright test records.
+        /// Change to "Playwright" for full prefix, or "" for no prefix.
+        /// </summary>
+        private const string TestNamePrefix = "PW";
+        
         /// <summary>
         /// Generates a random SSN in XXX-XX-XXXX format.
         /// Note: This is for testing purposes only - not a valid SSN.
@@ -62,7 +71,7 @@ namespace Playwright_POC.Helpers
         public static string GenerateRandomFirstName()
         {
             int index = Random.Shared.Next(MaleFirstNames.Length);
-            return MaleFirstNames[index];
+            return $"{TestNamePrefix}{MaleFirstNames[index]}";
         }
 
         // List of Last Names for random generation
@@ -94,7 +103,7 @@ namespace Playwright_POC.Helpers
         public static string GenerateRandomFemaleFirstName()
         {
             int index = Random.Shared.Next(FemaleFirstNames.Length);
-            return FemaleFirstNames[index];
+            return $"{TestNamePrefix}{FemaleFirstNames[index]}";
         }
 
         /// <summary>

@@ -73,13 +73,12 @@ namespace Playwright_POC.Pages
 
         public async Task EnterSFPQuoteDetailsAsync(ScenarioContextData contextData)
         {
-            // Wait for the Quote Details form to be fully loaded using Expect
+            // Wait for the Quote Details form to be fully loaded
             await Expect(_page.GetByText("Quote Details")).ToBeVisibleAsync(new() { Timeout = 30000 });
             
-            // Try multiple locator strategies for effective date field
+            // Find effective date field
             var effDateField = _page.Locator("input[formcontrolname='effectiveDate'], input[name='effectiveDate'], input[id*='effectiveDate'], input[data-testid*='effectiveDate']").First;
             
-            // If the above doesn't work, try finding by the label text and getting the associated input
             if (!await effDateField.IsVisibleAsync())
             {
                 effDateField = _page.Locator("mat-form-field:has-text('Effective Date') input").First;
@@ -88,12 +87,14 @@ namespace Playwright_POC.Pages
             await Expect(effDateField).ToBeVisibleAsync(new() { Timeout = 30000 });
             await effDateField.FillAsync(contextData.EffectiveDate);
             
-            await Locators.ProposalDetailsPageLocators.ExpandPolicyTermDropdown(_page).ClickAsync();
+            // Click the Policy Term dropdown to expand it
+            var policyTermDropdown = Locators.ProposalDetailsPageLocators.ExpandPolicyTermDropdown(_page);
+            await policyTermDropdown.ClickAsync();
             
-            // Wait a moment for the dropdown animation to complete
-            await Task.Delay(500);
+            // Wait for dropdown to fully open (timing issue when running at full speed)
+            await Task.Delay(1000);
             
-            // Use GetByText to find and click the option directly
+            // Click the policy term option
             await _page.GetByText(contextData.PolicyTerm, new() { Exact = true }).ClickAsync();
             
             await Locators.ProposalDetailsPageLocators.AgentPCCodeInput(_page).FillAsync(contextData.AgentCode);

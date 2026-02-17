@@ -220,4 +220,120 @@ public class SharedEQSteps
         System.IO.File.WriteAllText("QuoteNumber.txt", _contextData.QuoteNumber ?? "");
     }
 
+    [When("user captures the quote number")]
+    public async Task UserCapturesTheQuoteNumber()
+    {
+        // Get the quote number from the page using the global quote number locator
+        var fullText = await _context.Page.InnerTextAsync(Playwright_POC.Locators.GlobalLocators.QuoteNumber);
+        var lines = fullText.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        var quoteNumber = lines.Length > 1 ? lines[1].Trim() : fullText.Trim();
+        _contextData.QuoteNumber = quoteNumber;
+        Console.WriteLine($"Captured Quote Number: {quoteNumber}");
+        
+        // Also save to file for cross-browser-session persistence
+        System.IO.File.WriteAllText("QuoteNumber.txt", quoteNumber);
+    }
+
+    [When("user closes the browser")]
+    public async Task UserClosesTheBrowser()
+    {
+        if (_context.Page != null)
+        {
+            var browserContext = _context.Page.Context;
+            var browser = browserContext.Browser;
+            
+            try { await _context.Page.CloseAsync(); } catch { /* ignore */ }
+            try { await browserContext.CloseAsync(); } catch { /* ignore */ }
+            try { if (browser != null) await browser.CloseAsync(); } catch { /* ignore */ }
+            
+            _context.Page = null;
+            Console.WriteLine("Browser closed successfully.");
+        }
+    }
+
+    [When("user launches a new browser and logs in to Expert Quote")]
+    public async Task UserLaunchesNewBrowserAndLogsInToExpertQuote()
+    {
+        // Launch new browser
+        var browserFactory = new BrowserFactory();
+        var browserType = Environment.GetEnvironmentVariable("BROWSER_TYPE") ?? "chromium";
+        var browser = await browserFactory.GetBrowserAsync(browserType);
+        
+        var browserContext = await browser.NewContextAsync(new BrowserNewContextOptions
+        {
+            ViewportSize = new ViewportSize { Width = 1900, Height = 1080 }
+        });
+        
+        var page = await browserContext.NewPageAsync();
+        page.SetDefaultTimeout(30000);
+        page.SetDefaultNavigationTimeout(60000);
+        
+        _context.Page = page;
+        
+        // Navigate to Expert Quote
+        var expertQuoteUrl = _configuration["Playwright:ExpertQuote"] 
+            ?? "https://expertquote-qa.americannational.com";
+        await page.GotoAsync(expertQuoteUrl, new PageGotoOptions 
+        { 
+            Timeout = 90000, 
+            WaitUntil = WaitUntilState.NetworkIdle 
+        });
+        
+        // Login with credentials
+        var loginPage = new ExpertQuoteLoginPage(page);
+        await loginPage.LoginAsync(_credentials.Username, _credentials.Password);
+        
+        Assert.That(await loginPage.IsDashboardVisibleAsync(), Is.True, "Dashboard should be visible after login");
+        Console.WriteLine("New browser launched and logged in successfully.");
+    }
+
+    [Then("user verifies the quote exists in search results")]
+    public async Task UserVerifiesTheQuoteExistsInSearchResults()
+    {
+        // Read quote number from context or file
+        var quoteNumber = _contextData.QuoteNumber;
+        if (string.IsNullOrWhiteSpace(quoteNumber))
+        {
+            quoteNumber = System.IO.File.ReadAllText("QuoteNumber.txt").Trim();
+            _contextData.QuoteNumber = quoteNumber;
+        }
+        
+        Console.WriteLine($"Searching for quote: {quoteNumber}");
+        
+        // Use the quote search input
+        var searchInput = _context.Page.GetByTestId("quoteSearchInput");
+        await searchInput.FillAsync(quoteNumber);
+        
+        var searchButton = _context.Page.GetByTestId("quoteSearchButton");
+        await searchButton.ClickAsync();
+        
+        // Wait for search results
+        await _context.Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+        await Task.Delay(2000); // Allow time for results to populate
+        
+        // Try multiple strategies to find the quote
+        var isQuoteVisible = false;
+        
+        // Strategy 1: Link with quote number
+        var quoteLocator = _context.Page.GetByRole(AriaRole.Link, new() { Name = quoteNumber });
+        isQuoteVisible = await quoteLocator.IsVisibleAsync();
+        
+        // Strategy 2: Cell or text containing quote number
+        if (!isQuoteVisible)
+        {
+            var cellLocator = _context.Page.Locator($"td:has-text('{quoteNumber}'), span:has-text('{quoteNumber}')").First;
+            isQuoteVisible = await cellLocator.IsVisibleAsync();
+        }
+        
+        // Strategy 3: Any element containing the quote number
+        if (!isQuoteVisible)
+        {
+            var anyLocator = _context.Page.GetByText(quoteNumber);
+            isQuoteVisible = await anyLocator.IsVisibleAsync();
+        }
+        
+        Assert.That(isQuoteVisible, Is.True, $"Quote {quoteNumber} should be visible in search results");
+        Console.WriteLine($"Quote {quoteNumber} verified in search results.");
+    }
+
 }
