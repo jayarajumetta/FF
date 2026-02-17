@@ -111,4 +111,22 @@ public class SFPSteps
         //await clientDetailsPage.VerifyClientPhone(_contextData.ClientPhoneNumber);
         await Helpers.ClickNextAsync(_context.Page);
     }
+
+    [When("user Adds Narrative and continues")]
+    public async Task UserAddsNarrativeAndContinues(Table table)
+    {
+        var narrativePage = new NarrativePage(_context.Page);
+        TableMappingHelpers.NarrativeFields(table, _contextData);
+        await narrativePage.ClickAddNarrativeButtonAsync();
+        await narrativePage.EnterNarrativeAndClickSaveAsync(_contextData.Narrative);
+        await Helpers.ClickNextAsync(_context.Page);
+    }
+
+    [When("user selects Policy Wide or Division Specific Coverages and continues")]
+    public async Task UserselectsPolicyWideDivisionSpecificCoveragesAndContinues(Table table)
+    {
+        var coverageCatalogPage = new PolicyWideDivisionSpecificCoveragePage(_context.Page);
+        await coverageCatalogPage.ApplyCoverageSelectionsAsync(table);
+        await Helpers.ClickNextAsync(_context.Page);
+    }
 }

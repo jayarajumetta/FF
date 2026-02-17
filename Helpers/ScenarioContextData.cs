@@ -115,5 +115,6 @@ namespace Playwright_POC.Helpers
         public string YearsInBusiness { get; set; }
         public string YearsContinuousCoverage { get; set; }
 
+        public string Narrative { get; set; }
     }
 }

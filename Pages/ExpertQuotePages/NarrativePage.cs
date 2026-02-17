@@ -27,22 +27,30 @@ namespace Playwright_POC.Pages
 
         public async Task EnterNarrativeAndClickSaveAsync(string narrative)
         {
+
             var text = narrative?.Trim() ?? string.Empty;
 
-            var narrativeInput = _page.Locator("textarea[data-testid^='fields.data.notes.rows'][data-testid*='notesInput$remarks.value']");
+            // Wait for the Narrative section to be open
+            await _page.Locator("text=Create Narrative").First
+                .WaitForAsync(new() { State = WaitForSelectorState.Visible });
 
-            if (await narrativeInput.CountAsync() == 0)
-            {
-                narrativeInput = _page.Locator("input[data-testid^='fields.data.notes.rows'][data-testid*='notesInput$remarks.value']");
-            }
+            // Match textarea by testid for either remarks OR note (covers both implementations)
+            var narrativeField = _page.Locator(
+                "textarea[data-testid^='fields.data.notes.rows']" +
+                "[data-testid*='notesInput$'][data-testid$='.value']"
+            ).First;
 
-            await narrativeInput.First.WaitForAsync(new() { State = WaitForSelectorState.Visible });
-            await narrativeInput.First.FillAsync(text);
+            // Don't use CountAsync branching (it can evaluate too early and send you down the wrong path)
+            await narrativeField.WaitForAsync(new() { State = WaitForSelectorState.Attached });
+            await narrativeField.ScrollIntoViewIfNeededAsync();
+            await narrativeField.FillAsync(text);
 
-            var saveButton = _page.Locator("button[data-testid^='fields.data.notes.rows'][data-testid$='.save']");
+            var saveButton = _page.Locator("button[data-testid^='fields.data.notes.rows'][data-testid$='.save']").First;
+            await saveButton.WaitForAsync(new() { State = WaitForSelectorState.Visible });
+            await saveButton.ClickAsync();
 
-            await saveButton.First.WaitForAsync(new() { State = WaitForSelectorState.Visible });
-            await saveButton.First.ClickAsync();
+            await Helpers.Helpers.WaitForSpinnerToClearAsync(_page);
+
         }
 
     }
