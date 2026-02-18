@@ -4,7 +4,6 @@ using NUnit.Framework;
 using Playwright_POC.Configuration;
 using Playwright_POC.Context;
 using Playwright_POC.Helpers;
-using Playwright_POC.Locators;
 using Playwright_POC.Pages;
 using Playwright_POC.Pages.ExpertQuotePages;
 using Reqnroll;
@@ -15,7 +14,6 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using TestAutomation.Pages.ExpertQuotePages;
 using static System.Net.Mime.MediaTypeNames;
 using ReqContext = Playwright_POC.Context.TestContext;
 
@@ -76,7 +74,7 @@ public class SFPSteps
         var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);
         await primaryInsuredPage.ValidatePrimaryInsuredDetailsAsync(_contextData);
         await Helpers.WaitForSpinnerToClearAsync(_context.Page);
-        await GlobalLocators.SaveButton(_context.Page).ClickAsync();
+        await _context.Page.GetByTestId("fields.data_Actions.save").ClickAsync();
     }
 
     [When("user answers UW Questions and continues")]

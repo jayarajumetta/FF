@@ -3,7 +3,6 @@ using Microsoft.Playwright;
 using Playwright_POC.Configuration;
 using Playwright_POC.Context;
 using Playwright_POC.Helpers;
-using Playwright_POC.Locators;
 using Playwright_POC.Pages;
 using Reqnroll;
 using System;

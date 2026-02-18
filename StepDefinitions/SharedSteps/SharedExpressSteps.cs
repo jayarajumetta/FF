@@ -5,11 +5,10 @@ using Playwright_POC.Configuration;
 using Playwright_POC.Context;
 using Playwright_POC.Helpers;
 using Playwright_POC.Pages;
-using Playwright_POC.Locators;
 using Reqnroll;
 using System;
 using System.Threading.Tasks;
-using TestAutomation.Pages.ExpressPages;
+using Playwright_POC.Pages.ExpressPages;
 using static Microsoft.Playwright.Assertions;
 using ReqContext = Playwright_POC.Context.TestContext;
 

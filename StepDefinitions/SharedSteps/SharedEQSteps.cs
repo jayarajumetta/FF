@@ -4,7 +4,6 @@ using NUnit.Framework;
 using Playwright_POC.Configuration;
 using Playwright_POC.Context;
 using Playwright_POC.Helpers;
-using Playwright_POC.Locators;
 using Playwright_POC.Pages;
 using Playwright_POC.Pages.ExpertQuotePages;
 using Reqnroll;
@@ -15,7 +14,6 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using TestAutomation.Pages.ExpertQuotePages;
 using ReqContext = Playwright_POC.Context.TestContext;
 
 
@@ -62,13 +60,12 @@ public class SharedEQSteps
         string name = $"{_contextData.ClientFirstName} {_contextData.ClientLastName}";
         var clientSearchPage = new ClientSearchPage(_context.Page);
 
-        await clientSearchPage.EnterNameAndSearchAsync(name);
+        await clientSearchPage.SearchForClientAsync(name);
 
         string clientName = $"{_contextData.ClientLastName}, {_contextData.ClientFirstName}";
-        string tableSelector = "table";
 
         // Uncomment if you want to use the assertion
-        // await clientSearchPage.AssertNameNotInTableAsync(tableSelector, clientName);
+        // await clientSearchPage.AssertNameNotInTableAsync("table", clientName);
     }
 
     [When("user enters a Random Name in the search field and clicks search")]
@@ -95,7 +92,7 @@ public class SharedEQSteps
         string name = $"{_contextData.ClientFirstName} {_contextData.ClientLastName}";
         var clientSearchPage = new ClientSearchPage(_context.Page);
 
-        await clientSearchPage.EnterNameAndSearchAsync(name);
+        await clientSearchPage.SearchForClientAsync(name);
 
         // Keep follow-on format for assertions
         string clientName = $"{_contextData.ClientLastName}, {_contextData.ClientFirstName}";
@@ -107,7 +104,7 @@ public class SharedEQSteps
     [When("user clicks New Quote button")]
     public async Task ThenUserClicksNewQuoteButton()
     {
-        await ClientSearchLocators.NewQuoteButton(_context.Page).ClickAsync();
+        await _context.Page.GetByTestId("new-quote-button").ClickAsync();
         Console.WriteLine(_contextData.ClientFirstName);
     }
 
@@ -146,14 +143,13 @@ public class SharedEQSteps
     [When("user selects Create New Client and clicks the Next button")]
     public async Task UserCreatesNewClientAndClicksNext()
     {
-        await NewExistingClientSearchLocators.CreateNewClientButton(_context.Page).ClickAsync();
+        await _context.Page.GetByRole(AriaRole.Button, new() { Name = "Create New Client" }).ClickAsync();
         await Helpers.ClickNextAsync(_context.Page);
 
         //Wait for the next page to load
         await _context.Page.WaitForLoadStateAsync(LoadState.Load);
 
-        await AccountInformationConstLocators
-            .PageHeader(_context.Page)
+        await _context.Page.GetByRole(AriaRole.Heading, new() { Name = "Account Owner Information" })
             .WaitForAsync(new() { Timeout = 10000 });
         Console.WriteLine(_contextData.ClientFirstName);
     }
@@ -224,7 +220,7 @@ public class SharedEQSteps
     public async Task UserCapturesTheQuoteNumber()
     {
         // Get the quote number from the page using the global quote number locator
-        var fullText = await _context.Page.InnerTextAsync(Playwright_POC.Locators.GlobalLocators.QuoteNumber);
+        var fullText = await _context.Page.GetByTestId("header-quote-number").InnerTextAsync();
         var lines = fullText.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         var quoteNumber = lines.Length > 1 ? lines[1].Trim() : fullText.Trim();
         _contextData.QuoteNumber = quoteNumber;

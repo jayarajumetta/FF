@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Microsoft.Playwright.Assertions;
 
-namespace TestAutomation.StepDefinitions.SharedSteps
+namespace Playwright_POC.StepDefinitions.SharedSteps
 {
     [Binding]
     public class NavigationSteps

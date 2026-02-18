@@ -4,7 +4,6 @@ using NUnit.Framework;
 using Playwright_POC.Configuration;
 using Playwright_POC.Context;
 using Playwright_POC.Helpers;
-using Playwright_POC.Locators;
 using Playwright_POC.Pages;
 using Playwright_POC.Pages.ExpertQuotePages;
 using Reqnroll;
@@ -15,7 +14,6 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using TestAutomation.Pages.ExpertQuotePages;
 using ReqContext = Playwright_POC.Context.TestContext;
 
 
@@ -28,7 +26,6 @@ public class PASteps
         private readonly ScenarioContextData _contextData;
         private readonly CredentialsConfig _credentials;
         private readonly IConfiguration _configuration;
-        private Table _table;
 
 
         public PASteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
@@ -61,7 +58,7 @@ public class PASteps
     [When("user selects existing Driver")]
     public async Task UserSelectsExistingDriverAsync()
     {
-        await DriverSelectionPageLocators.ExistingClientButton(_context.Page).ClickAsync();
+        await _context.Page.GetByRole(AriaRole.Button, new() { Name = "Existing Client" }).ClickAsync();
 
         // Click Next to Proceed
         await Helpers.ClickNextAsync(_context.Page);
@@ -189,7 +186,7 @@ public class PASteps
 
         // More verifications can be added here
 
-        await pricingDetailsPage.ClickNextAsync();
+        await Helpers.ClickNextAsync(_context.Page);
     }
 
 
