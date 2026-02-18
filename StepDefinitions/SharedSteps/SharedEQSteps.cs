@@ -104,7 +104,8 @@ public class SharedEQSteps
     [When("user clicks New Quote button")]
     public async Task ThenUserClicksNewQuoteButton()
     {
-        await _context.Page.GetByTestId("new-quote-button").ClickAsync();
+        var clientSearchPage = new ClientSearchPage(_context.Page);
+        await clientSearchPage.ClickNewQuoteAsync();
         Console.WriteLine(_contextData.ClientFirstName);
     }
 
