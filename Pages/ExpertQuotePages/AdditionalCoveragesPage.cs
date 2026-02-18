@@ -1,66 +1,79 @@
 ﻿// Pages/AdditionalCoveragesPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
-using Playwright_POC.Locators;
 using Playwright_POC.Helpers;
 
 namespace Playwright_POC.Pages
 {
-    public class AdditionalCoveragesPage
+    public class AdditionalCoveragesPage : BasePage
     {
-        private readonly IPage _page;
+        public AdditionalCoveragesPage(IPage page) : base(page) { }
 
-        public AdditionalCoveragesPage(IPage page)
-        {
-            _page = page;
-        }
+        #region Locators
+        private ILocator RentedMotorHomesCheckbox => _page.GetByTestId("RentedMotorHomeTravelTrailer");
+        private ILocator AddedCoverageEndorsementCheckbox => _page.GetByTestId("addedCoverageEndorsement");
+        private ILocator SoundReceivingEquipmentCheckbox => _page.GetByTestId("SoundRec");
 
+        // Dynamic locators
+        private ILocator GetAccidentalDeathAndDismembermentButton(string value) =>
+            _page.Locator("[id*='AccidentalDeath']").GetByRole(AriaRole.Button, new() { Name = value });
+
+        private ILocator GetLossOfIncomeCheckbox(string value) =>
+            _page.Locator("[id*='driverIncomeLoss']").GetByRole(AriaRole.Button, new() { Name = value });
+
+        private ILocator GetRentalReimbursementButton(string value) =>
+            _page.Locator("[id*='RentalReimbursement']").GetByRole(AriaRole.Button, new() { Name = value });
+
+        private ILocator GetRoadsideAssistanceButton(string value) =>
+            _page.Locator($"button[id*='RoadsideAssistance'] div:has-text('{value}')");
+
+        private ILocator GetADDDriverCheckbox(string value) =>
+            _page.Locator("[id*='aDDOperator']").GetByRole(AriaRole.Button);
+        #endregion
 
         public async Task SelectAccidentalDeathAndDismembermentAsync(string value)
         {
-            await ExpertQuoteLocatorFactory.AdditionalCoveragesPageLocators.GetAccidentalDeathAndDismembermentButton(_page, value).ClickAsync();
+            await GetAccidentalDeathAndDismembermentButton(value).ClickAsync();
         }
 
         public async Task WaitForCoverageOptionsLoadAsync()
         {
-            // Wait for Angular spinner to finish and page to stabilize
-            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
+            await WaitForSpinnerAsync();
         }
 
         public async Task SelectADDDriverAsync(string value)
         {
-            await ExpertQuoteLocatorFactory.AdditionalCoveragesPageLocators.GetADDDriverCheckbox(_page, value).ClickAsync();
+            await GetADDDriverCheckbox(value).ClickAsync();
         }
 
         public async Task SelectLossOfIncomeAsync(string value)
         {
-            await ExpertQuoteLocatorFactory.AdditionalCoveragesPageLocators.GetLossOfIncomeCheckbox(_page, value).ClickAsync();
+            await GetLossOfIncomeCheckbox(value).ClickAsync();
         }
 
         public async Task SelectRentedMotorHomesAsync()
         {
-            await Locators.AdditionalCoveragesConstLocators.RentedMotorHomesCheckbox(_page).ClickAsync();
+            await RentedMotorHomesCheckbox.ClickAsync();
         }
+
         public async Task SelectRentalReimbursementAsync(string value)
         {
-            await ExpertQuoteLocatorFactory.AdditionalCoveragesPageLocators.GetRentalReimbursementButton(_page, value).ClickAsync();
+            await GetRentalReimbursementButton(value).ClickAsync();
         }
 
         public async Task SelectAddedCoverageEndorsement()
         {
-            await Locators.AdditionalCoveragesConstLocators.AddedCoverageEndorsementCheckbox(_page).ClickAsync();
+            await AddedCoverageEndorsementCheckbox.ClickAsync();
         }
+
         public async Task SelectRoadsideAssistanceAsync(string value)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.AdditionalCoveragesPageLocators.GetRoadsideAssistanceButton(value));
+            await GetRoadsideAssistanceButton(value).ClickAsync();
         }
 
         public async Task SelectSoundReceivingEquipment()
         {
-            await Locators.AdditionalCoveragesConstLocators.SoundReceivingEquipmentCheckbox(_page).ClickAsync();
+            await SoundReceivingEquipmentCheckbox.ClickAsync();
         }
-
-
-
     }
 }

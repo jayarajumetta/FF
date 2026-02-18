@@ -1,9 +1,8 @@
-﻿// Pages/AddDriverInfoPage.cs
+// Pages/AddDriverInfoPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using Playwright_POC.Locators;
 using Playwright_POC.Helpers;
 
 namespace Playwright_POC.Pages
@@ -21,15 +20,70 @@ namespace Playwright_POC.Pages
         public string DLState { get; set; } = string.Empty;
     }
 
-    public class AddDriverInfoPage
+    public class AddDriverInfoPage : BasePage
     {
-        private readonly IPage _page;
+        public AddDriverInfoPage(IPage page) : base(page) { }
 
-        public AddDriverInfoPage(IPage page)
-        {
-            _page = page;
-        }
+        #region Locators
+        // Quote Number
+        private ILocator QuoteNumberLocator => _page.Locator("div[class*='mat-tab-label-container'] span");
 
+        // Driver Summary Fields
+        private ILocator FirstNameInput => _page.GetByLabel("First Name");
+        private ILocator MiddleNameInput => _page.GetByLabel("Middle Name");
+        private ILocator LastNameInput => _page.GetByLabel("Last Name");
+        private ILocator DateOfBirthInput => _page.GetByLabel("Date Of Birth");
+        private ILocator PhoneNumberInput => _page.GetByLabel("Phone Number");
+        private ILocator EmailAddressInput => _page.GetByLabel("Email Address");
+        private ILocator EditSSNButton => _page.GetByRole(AriaRole.Button, new() { Name = "Edit SSN#" });
+        private ILocator DLStateDropdown => _page.GetByRole(AriaRole.Combobox, new() { Name = "Driver's License State" });
+        private ILocator DLNumberInput => _page.GetByLabel("Driver's License Number");
+        private ILocator YearsLicensedInput => _page.GetByLabel("Years");
+        private ILocator MonthsLicensedInput => _page.GetByLabel("Months");
+        private ILocator SuffixDropdown => _page.GetByRole(AriaRole.Combobox, new() { Name = "Suffix" });
+        private ILocator MoreOptionsMaritalStatus => _page.Locator("[data-testid*='maritalStatus.value-other']");
+        private ILocator MoreOptionsOperatorStatus => _page.Locator("[data-testid*='operatorStatuc.value-other']");
+
+        // Prior Insurance
+        private ILocator PriorCarrierNameInput => _page.Locator("[data-testid*='priorCarrierName']");
+        private ILocator PriorPolicyNumberInput => _page.Locator("[data-testid*='priorPolicyNumber']");
+        private ILocator PriorCarrierPrefill => _page.Locator("div[id*='PriorCarrierName'] span.readonly-value");
+        private ILocator PriorYearsWithCarrierInput => _page.Locator("[data-testid*='yearsWithPriorCarrier']");
+        private ILocator PriorMonthsWithCarrierInput => _page.Locator("[data-testid*='monthsWithPriorCarrier']");
+
+        // MVR Pop-Up
+        private ILocator MVRPopUpContinueButton => _page.GetByTestId("btnConfirmYes");
+        private ILocator MVRPopUpBackToDetailsButton => _page.GetByTestId("btnConfirmNo");
+        private ILocator PrefillDriverPageHeader => _page.Locator("section header h1");
+
+        // Global buttons
+        private ILocator SaveAndContinueButton => _page.GetByTestId("fields.line.save_and_Continue");
+
+        // Dynamic locators
+        private ILocator GetGenderButton(string value) =>
+            _page.GetByRole(AriaRole.Button, new() { Name = value });
+
+        private ILocator GetEmailTypeButton(string value) =>
+            _page.GetByRole(AriaRole.Button, new() { Name = value });
+
+        private ILocator GetMaritalStatusButton(string maritalStatus) =>
+            _page.Locator("button[data-testid^='owner.maritalStatus-']").Filter(new() { HasTextString = maritalStatus.Trim() });
+
+        private ILocator GetNamedInsuredButton(string value) =>
+            _page.GetByRole(AriaRole.Button, new() { Name = value });
+
+        private ILocator GetOperatorStatusButton(string value) =>
+            _page.GetByRole(AriaRole.Button, new() { Name = value });
+
+        private ILocator GetFinancialResponsibilityButton(string yesOrNo) =>
+            _page.Locator($"button[id*='sR22Indicator'] div:has-text('{yesOrNo}')").First;
+
+        private ILocator GetPriorInsuranceButton(string yesOrNo) =>
+            _page.Locator($"button[id*='priorInsurance'] div:has-text('{yesOrNo}')").First;
+
+        private ILocator GetReasonForNoPriorInsuranceButton(string value) =>
+            _page.Locator($"button:has-text('{value}')");
+        #endregion
 
         public async Task PreparePriorInsuranceReasonAsync(ScenarioContextData contextData)
         {
@@ -39,7 +93,7 @@ namespace Playwright_POC.Pages
 
         public async Task CollectAndStoreQuoteNumberAsync(ScenarioContextData contextData)
         {
-            var fullText = await _page.InnerTextAsync(Locators.GlobalLocators.QuoteNumber);
+            var fullText = await QuoteNumberLocator.InnerTextAsync();
             var lines = fullText.Split('\n', StringSplitOptions.RemoveEmptyEntries);
             var quoteNumber = lines.Length > 1 ? lines[1].Trim() : fullText.Trim();
             contextData.QuoteNumber = quoteNumber;
@@ -51,31 +105,27 @@ namespace Playwright_POC.Pages
             await _page.WaitForLoadStateAsync(LoadState.Load);
         }
 
-        /// <summary>
-        /// Gets the actual driver field values from the page. 
-        /// Returns values for the caller (Steps) to assert.
-        /// </summary>
         public async Task<DriverFieldValues> GetDriverFieldValuesAsync()
         {
-            var dobString = await Locators.DriverSummaryConstLocators.DateOfBirthInput(_page).InputValueAsync();
-            
+            var dobString = await DateOfBirthInput.InputValueAsync();
+
             return new DriverFieldValues
             {
-                FirstName = (await Locators.DriverSummaryConstLocators.FirstNameInput(_page).InputValueAsync()).Trim(),
-                LastName = (await Locators.DriverSummaryConstLocators.LastNameInput(_page).InputValueAsync()).Trim(),
+                FirstName = (await FirstNameInput.InputValueAsync()).Trim(),
+                LastName = (await LastNameInput.InputValueAsync()).Trim(),
                 DateOfBirth = DateTime.Parse(dobString, CultureInfo.InvariantCulture),
-                PhoneNumber = await Locators.DriverSummaryConstLocators.PhoneNumberInput(_page).InputValueAsync(),
-                Email = await Locators.DriverSummaryConstLocators.EmailAddressInput(_page).InputValueAsync(),
-                DLState = await Locators.DriverSummaryConstLocators.DLStateDropdown(_page).InnerTextAsync()
+                PhoneNumber = await PhoneNumberInput.InputValueAsync(),
+                Email = await EmailAddressInput.InputValueAsync(),
+                DLState = await DLStateDropdown.InnerTextAsync()
             };
         }
 
         public async Task SelectDriverOptionsAsync(ScenarioContextData contextData)
         {
-            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetEmailTypeButton(_page, contextData.EmailType));
-            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetGenderButton(_page, contextData.Gender));
+            await ClickIfNotSelectedAsync(GetEmailTypeButton(contextData.EmailType));
+            await ClickIfNotSelectedAsync(GetGenderButton(contextData.Gender));
 
-            var selectedButtonLocator = _page.Locator("xpath=.//div[contains(@id, 'maritalStatus')]//button[contains(@class, 'mat-button-toggle-checked')]");
+            var selectedButtonLocator = _page.Locator("div[id*='maritalStatus'] button.mat-button-toggle-checked");
             bool anySelected = await selectedButtonLocator.CountAsync() > 0;
 
             if (!anySelected)
@@ -84,43 +134,42 @@ namespace Playwright_POC.Pages
                     !contextData.MaritalStatus.Equals("Married", StringComparison.OrdinalIgnoreCase) &&
                     !contextData.MaritalStatus.Equals("Divorced", StringComparison.OrdinalIgnoreCase))
                 {
-                    await DriverSummaryConstLocators.MoreOptionsMaritalStatus(_page).ClickAsync();
-                    await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetMaritalStatusSelection(_page, contextData.MaritalStatus));
+                    await MoreOptionsMaritalStatus.ClickAsync();
+                    await ClickIfNotSelectedAsync(GetMaritalStatusButton(contextData.MaritalStatus));
                 }
                 else
                 {
-                    await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetMaritalStatusSelection(_page, contextData.MaritalStatus));
+                    await ClickIfNotSelectedAsync(GetMaritalStatusButton(contextData.MaritalStatus));
                 }
             }
 
-            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetNamedInsuredButton(_page, contextData.NamedInsured));
+            await ClickIfNotSelectedAsync(GetNamedInsuredButton(contextData.NamedInsured));
 
             if (!contextData.OperatorStatus.Equals("Assigned", StringComparison.OrdinalIgnoreCase) &&
                 !contextData.OperatorStatus.Equals("Non Driver", StringComparison.OrdinalIgnoreCase) &&
                 !contextData.OperatorStatus.Equals("Related", StringComparison.OrdinalIgnoreCase))
             {
-                await DriverSummaryConstLocators.MoreOptionsOperatorStatus(_page).ClickAsync();
-                await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetOperatorStatus(_page, contextData.OperatorStatus));
+                await MoreOptionsOperatorStatus.ClickAsync();
+                await ClickIfNotSelectedAsync(GetOperatorStatusButton(contextData.OperatorStatus));
             }
             else
             {
-                await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetOperatorStatus(_page, contextData.OperatorStatus));
+                await ClickIfNotSelectedAsync(GetOperatorStatusButton(contextData.OperatorStatus));
             }
         }
 
         public async Task FillDriverLicenseFieldsAsync(ScenarioContextData contextData)
         {
-            await Locators.DriverSummaryConstLocators.DLNumberInput(_page).FillAsync(contextData.DLNumber);
-            await Locators.DriverSummaryConstLocators.YearsLicensedInput(_page).FillAsync(contextData.YearsLicensed);
-            await Locators.DriverSummaryConstLocators.MonthsLicensedInput(_page).FillAsync(contextData.MonthsLicensed);
+            await DLNumberInput.FillAsync(contextData.DLNumber);
+            await YearsLicensedInput.FillAsync(contextData.YearsLicensed);
+            await MonthsLicensedInput.FillAsync(contextData.MonthsLicensed);
         }
 
         public async Task SelectInsuranceOptionsAsync(ScenarioContextData contextData)
         {
-            await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetFinancialResponsibilityButton(contextData.FinancialResponsibility));
-            await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetPriorInsuranceButton(contextData.PriorInsurance));
-            // Wait for any conditional fields to appear based on prior insurance selection
-            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
+            await ClickIfNotSelectedAsync(GetFinancialResponsibilityButton(contextData.FinancialResponsibility));
+            await ClickIfNotSelectedAsync(GetPriorInsuranceButton(contextData.PriorInsurance));
+            await WaitForSpinnerAsync();
         }
 
         public async Task HandlePriorInsuranceAsync(ScenarioContextData contextData)
@@ -128,9 +177,9 @@ namespace Playwright_POC.Pages
             if (!string.IsNullOrWhiteSpace(contextData.PriorInsurance) &&
                 contextData.PriorInsurance.Trim().Equals("Yes", StringComparison.OrdinalIgnoreCase))
             {
-                if (await _page.IsVisibleAsync(Locators.DriverSummaryConstLocators.PriorCarrierPrefill))
+                if (await PriorCarrierPrefill.IsVisibleAsync())
                 {
-                    var priorCarrierValue = await _page.TextContentAsync(Locators.DriverSummaryConstLocators.PriorCarrierPrefill);
+                    var priorCarrierValue = await PriorCarrierPrefill.TextContentAsync();
                     if (!string.IsNullOrWhiteSpace(priorCarrierValue))
                     {
                         return;
@@ -139,65 +188,58 @@ namespace Playwright_POC.Pages
 
                 await _page.WaitForLoadStateAsync(LoadState.Load);
 
-                await Locators.DriverSummaryConstLocators.PriorCarrierNameInput(_page).FillAsync(contextData.PriorCarrier);
-                await Locators.DriverSummaryConstLocators.PriorPolicyNumberInput(_page).FillAsync(contextData.PriorPolicyNumber);
+                await PriorCarrierNameInput.FillAsync(contextData.PriorCarrier);
+                await PriorPolicyNumberInput.FillAsync(contextData.PriorPolicyNumber);
 
-                await Locators.DriverSummaryConstLocators
-                    .PriorYearsWithCarrierInput(_page)
-                    .WaitForAsync(new()
-                    {
-                        State = WaitForSelectorState.Visible,
-                        Timeout = 2000
-                    });
+                await PriorYearsWithCarrierInput.WaitForAsync(new()
+                {
+                    State = WaitForSelectorState.Visible,
+                    Timeout = 2000
+                });
 
-
-                await Locators.DriverSummaryConstLocators.PriorYearsWithCarrierInput(_page).FillAsync(contextData.PriorInsuranceYears);
-                await Locators.DriverSummaryConstLocators.PriorMonthsWithCarrierInput(_page).FillAsync(contextData.PriorInsuranceMonths);
+                await PriorYearsWithCarrierInput.FillAsync(contextData.PriorInsuranceYears);
+                await PriorMonthsWithCarrierInput.FillAsync(contextData.PriorInsuranceMonths);
             }
             else
             {
-                await _page.WaitForSelectorAsync(ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetReasonForNoPriorInsurance(contextData.NoPriorInsuranceReason), new()
+                var reasonButton = GetReasonForNoPriorInsuranceButton(contextData.NoPriorInsuranceReason);
+                await reasonButton.WaitForAsync(new()
                 {
                     State = WaitForSelectorState.Visible,
                     Timeout = 5000
                 });
 
-                await Helpers.Helpers.ClickIfNotSelectedAsync(_page, ExpertQuoteLocatorFactory.DriverSummaryPageLocators.GetReasonForNoPriorInsurance(contextData.NoPriorInsuranceReason));
+                await ClickIfNotSelectedAsync(reasonButton);
             }
         }
 
         public async Task SaveAndContinueAsync()
         {
-            await Locators.GlobalLocators.SaveAndContinueButton(_page).ClickAsync();
-            // Wait for page transition and MVR check to complete
+            await SaveAndContinueButton.ClickAsync();
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
+            await WaitForSpinnerAsync();
         }
 
         public async Task HandleMVRPopUpAsync()
         {
-            // Wait for MVR popup to potentially appear (with short timeout)
             try
             {
-                await DriverSummaryConstLocators.MVRPopUpContinueButton(_page).WaitForAsync(
+                await MVRPopUpContinueButton.WaitForAsync(
                     new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
                 Console.WriteLine("Found MVR Dialog");
-                await DriverSummaryConstLocators.MVRPopUpContinueButton(_page).ClickAsync();
+                await MVRPopUpContinueButton.ClickAsync();
             }
             catch (TimeoutException)
             {
                 Console.WriteLine("MVR Dialog Not Found - continuing.");
             }
 
-            // Check for prefill driver page
-            if (await _page.Locator(Locators.DriverSummaryConstLocators.PrefillDriverPageHeader).IsVisibleAsync())
+            if (await PrefillDriverPageHeader.IsVisibleAsync())
             {
                 Console.WriteLine("Prefill Driver Page detected - clicking Save and Continue");
-                await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
-                await Locators.GlobalLocators.SaveAndContinueButton(_page).ClickAsync();
+                await WaitForSpinnerAsync();
+                await SaveAndContinueButton.ClickAsync();
             }
         }
-
     }
 }
-

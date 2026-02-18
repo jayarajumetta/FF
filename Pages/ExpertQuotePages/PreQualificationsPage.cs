@@ -1,63 +1,73 @@
 ﻿// Pages/PreQualificationPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
-using Playwright_POC.Locators;
 using Playwright_POC.Helpers;
 
 namespace Playwright_POC.Pages
 {
-    public class PreQualificationPage
+    public class PreQualificationPage : BasePage
     {
-        private readonly IPage _page;
+        public PreQualificationPage(IPage page) : base(page) { }
 
-        public PreQualificationPage(IPage page)
-        {
-            _page = page;
-        }
+        #region Locators
+        private ILocator SearchAddClassCodeButton => _page.Locator("button:has-text('Search/Add Class Code')");
+        private ILocator ClassCodeSearchInput => _page.Locator("input[name='temp.filter']");
+        private ILocator ClassCodeSearchButton => _page.GetByTestId("temp.filter--search");
+        private ILocator AddClassCodeButton => _page.Locator("a:has-text('Add')");
+        private ILocator PrimaryOccupancySlider => _page.GetByTestId("occupancyClass$isPrimaryClass");
+
+        // Dynamic locators
+        private ILocator GetQualificationSelection(string value) =>
+            _page.GetByRole(AriaRole.Button, new() { Name = value });
+
+        private ILocator GetCheckboxByClassCode(string classCode) =>
+            _page.Locator($"tr:has(td:has-text('{classCode}')) label.mat-checkbox-layout");
+
+        private ILocator GetCheckboxByDescription(string description) =>
+            _page.Locator($"tr:has(td:has-text('{description}')) label.mat-checkbox-layout");
+
+        private ILocator GetClassCodeRestrictionCheckbox(string restriction) =>
+            _page.Locator($"button span:has-text('{restriction}')");
+        #endregion
 
         public async Task EnterPreQualificationInfoAndContinueAsync(string eligibilityRestrictions)
         {
             await _page.WaitForTimeoutAsync(2000);
-
-            await Helpers.Helpers.ClickIfNotSelectedAsync(
-                ExpertQuoteLocatorFactory.PreQualificationPageLocators.GetQualificationSelection(_page, eligibilityRestrictions)
-            );
-
-            await Helpers.Helpers.ClickNextAsync(_page);
+            await ClickIfNotSelectedAsync(GetQualificationSelection(eligibilityRestrictions));
+            await ClickNextAsync();
         }
 
         public async Task SearchAddClassCodeAsync(ScenarioContextData contextData)
         {
             await _page.WaitForTimeoutAsync(2000);
-            await _page.ClickAsync(Locators.BOPPrequalificationPageLocators.SearchAddClassCodeButton);
+            await SearchAddClassCodeButton.ClickAsync();
             await _page.WaitForTimeoutAsync(2000);
+            
             if (contextData.ClassCodeNumber == null)
             {
-                await _page.FillAsync(Locators.BOPPrequalificationPageLocators.ClassCodeSearchInput, contextData.ClassDescription);
-                //await _page.ClickAsync(Locators.BOPPrequalificationPageLocators.ClassCodeSearchButton);
+                await ClassCodeSearchInput.FillAsync(contextData.ClassDescription);
                 await _page.WaitForTimeoutAsync(2000);
-                await _page.ClickAsync(ExpertQuoteLocatorFactory.PreQualificationPageLocators.CheckboxByDescription(contextData.ClassDescription));
+                await GetCheckboxByDescription(contextData.ClassDescription).ClickAsync();
             }
             else
             {
-                await _page.FillAsync(Locators.BOPPrequalificationPageLocators.ClassCodeSearchInput, contextData.ClassCodeNumber);
-                // await _page.ClickAsync(Locators.BOPPrequalificationPageLocators.ClassCodeSearchButton);
+                await ClassCodeSearchInput.FillAsync(contextData.ClassCodeNumber);
                 await _page.WaitForTimeoutAsync(2000);
-                await _page.ClickAsync(ExpertQuoteLocatorFactory.PreQualificationPageLocators.CheckboxByClassCode(contextData.ClassCodeNumber));
+                await GetCheckboxByClassCode(contextData.ClassCodeNumber).ClickAsync();
             }
 
-            await _page.ClickAsync(Locators.BOPPrequalificationPageLocators.AddClassCodeButton);
+            await AddClassCodeButton.ClickAsync();
         }
 
         public async Task TogglePrimaryOccupancySliderAsync()
         {
-            await Locators.BOPPrequalificationPageLocators.PrimaryOccupancySlider(_page).ClickAsync();
+            await PrimaryOccupancySlider.ClickAsync();
         }
 
         public async Task SelectIndustryClassCodeRestrictionsAsync(ScenarioContextData contextData)
         {
             await _page.WaitForTimeoutAsync(5000);
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.PreQualificationPageLocators.SelectClassCodeRestrictionCheckbox(contextData.ClassCodeRestriction));
+            await GetClassCodeRestrictionCheckbox(contextData.ClassCodeRestriction).ClickAsync();
             await _page.WaitForTimeoutAsync(2000);
         }
     }

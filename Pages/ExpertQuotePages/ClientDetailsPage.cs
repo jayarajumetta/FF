@@ -1,25 +1,26 @@
 ﻿using Microsoft.Playwright;
 using NUnit.Framework;
 using Playwright_POC.Helpers;
-using Playwright_POC.Locators;
 using System;
 using System.Threading.Tasks;
 
 namespace Playwright_POC.Pages
 {
-    public class ClientDetailsPage
+    public class ClientDetailsPage : BasePage
     {
-        private readonly IPage _page;
-        public ClientDetailsPage(IPage page)
-        {
-            _page = page;
-        }
+        public ClientDetailsPage(IPage page) : base(page) { }
+
+        #region Locators
+        private ILocator AuditContactCheckbox => _page.GetByTestId("fields.primaryInsured.accountInput$isAuditContact.value");
+        private ILocator InspectionContactCheckbox => _page.GetByTestId("fields.primaryInsured.accountInput$isInspectionContact.value");
+        private ILocator AddEntityButton => _page.Locator("button:has-text('Add Entity')");
+        #endregion
 
         public async Task VerifyClientName(string firstName, string lastName)
         {
             var expected = $"{lastName?.Trim()}, {firstName?.Trim()}";
 
-            var nameDisplayed = _page.Locator("h2").Filter(new() {  HasTextString = expected });
+            var nameDisplayed = _page.Locator("h2").Filter(new() { HasTextString = expected });
 
             await nameDisplayed.First.WaitForAsync(new() { State = WaitForSelectorState.Visible });
 
@@ -89,30 +90,22 @@ namespace Playwright_POC.Pages
 
         public async Task CheckAuditContact()
         {
-
-            var checkbox = _page
-                .Locator("[data-testid='fields.primaryInsured.accountInput$isAuditContact.value']")
-                .Locator("input[type='checkbox']");
+            var checkbox = AuditContactCheckbox.Locator("input[type='checkbox']");
 
             await checkbox.WaitForAsync(new() { State = WaitForSelectorState.Attached });
 
-            // Only click if not already checked (idempotent)
             if (!await checkbox.IsCheckedAsync())
             {
                 await checkbox.ClickAsync();
             }
-
         }
 
         public async Task CheckInspectionContact()
         {
-            var checkbox = _page
-                .Locator("[data=testid='fields.primaryInsured.accountInput#isInspectionsContact.value']")
-                .Locator("input[type='checkbox']");
+            var checkbox = InspectionContactCheckbox.Locator("input[type='checkbox']");
 
             await checkbox.WaitForAsync(new() { State = WaitForSelectorState.Attached });
 
-            // Only click if not already checked (idempotent)
             if (!await checkbox.IsCheckedAsync())
             {
                 await checkbox.ClickAsync();

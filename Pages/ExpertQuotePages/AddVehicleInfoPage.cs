@@ -2,21 +2,53 @@
 using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
-using Playwright_POC.Locators;
 using Playwright_POC.Helpers;
 using NUnit.Framework;
 
 namespace Playwright_POC.Pages
 {
-    public class AddVehicleInfoPage
+    public class AddVehicleInfoPage : BasePage
     {
-        private readonly IPage _page;
+        public AddVehicleInfoPage(IPage page) : base(page) { }
 
-        public AddVehicleInfoPage(IPage page)
-        {
-            _page = page;
-        }
+        #region Locators
+        private ILocator SelectVehiclesButton => _page.Locator("button[id*='unlistedVehicle']");
+        private ILocator Vehicle1Header => _page.Locator("div:has-text('Vehicle 1')");
+        private ILocator VINNumberInput => _page.GetByLabel("VIN");
+        private ILocator VehicleYearInput => _page.GetByLabel("Model Year");
+        private ILocator MakeInput => _page.GetByLabel("Make");
+        private ILocator ModelInput => _page.GetByLabel("Model");
+        private ILocator TrimInput => _page.GetByLabel("Trim");
+        private ILocator PurchaseDateInput => _page.GetByLabel("Purchase Date");
+        private ILocator OdometerReadingInput => _page.GetByLabel("Odometer Reading");
+        private ILocator TotalAnnualMileageInput => _page.Locator("[data-testid*='annualMileage']");
+        private ILocator SaveAndContinueButton => _page.GetByTestId("fields.line.save_and_Continue");
 
+        // Read-only fields
+        private ILocator VehicleYearReadOnly => _page.Locator("div.readonly-field:has(span.readonly-label:has-text('Year')) >> span.readonly-value");
+        private ILocator MakeReadOnly => _page.Locator("div.readonly-field:has(span.readonly-label:has-text('Make')) >> span.readonly-value");
+        private ILocator ModelReadOnly => _page.Locator("div.readonly-field:has(span.readonly-label:has-text('Model')) >> span.readonly-value");
+        private ILocator TrimReadOnly => _page.Locator("div.readonly-field:has(span.readonly-label:has-text('Trim')) >> span.readonly-value");
+
+        // Dynamic locators
+        private ILocator GetVehicleSelectButton(string value) =>
+            _page.Locator("[id*='vehicle']").GetByRole(AriaRole.Button, new() { Name = value });
+
+        private ILocator GetVehicleTypeButton(string value) =>
+            _page.GetByRole(AriaRole.Button, new() { Name = value });
+
+        private ILocator GetVehicleOwnershipButton(string value) =>
+            _page.GetByRole(AriaRole.Button, new() { Name = value });
+
+        private ILocator GetCustomizedEquipmentButton(string yesOrNo) =>
+            _page.GetByRole(AriaRole.Button, new() { Name = yesOrNo });
+
+        private ILocator GetVehicleUsageButton(string usageType) =>
+            _page.GetByRole(AriaRole.Button, new() { Name = usageType });
+
+        private ILocator GetDriverStatusButton(string value) =>
+            _page.Locator("[id*='assignmentType']").GetByRole(AriaRole.Button, new() { Name = value });
+        #endregion
 
         public async Task WaitForVehiclePageReadyAsync()
         {
@@ -25,84 +57,75 @@ namespace Playwright_POC.Pages
 
         public async Task SelectUnlistedVehicleIfVisibleAsync()
         {
-            if (await _page.IsVisibleAsync(Locators.VehicleSummaryConstLocators.SelectVehicles))
+            if (await SelectVehiclesButton.IsVisibleAsync())
             {
-                await _page.ClickAsync(Locators.VehicleSummaryConstLocators.SelectVehicles);
-                await Helpers.Helpers.ClickNextAsync(_page);
+                await SelectVehiclesButton.ClickAsync();
+                await ClickNextAsync();
             }
         }
 
         public async Task EnterVINAndSelectVehicleAsync(ScenarioContextData contextData)
         {
-            await Locators.VehicleSummaryConstLocators.VINNumber(_page).FillAsync(contextData.VINNumber);
-            await _page.ClickAsync(Locators.VehicleSummaryConstLocators.Vehicle1Header);
+            await VINNumberInput.FillAsync(contextData.VINNumber);
+            await Vehicle1Header.ClickAsync();
             await _page.WaitForTimeoutAsync(2000);
 
-            await _page.WaitForSelectorAsync(
-                ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleSelectButton(_page, contextData.VehicleMake, StringComparison.OrdinalIgnoreCase).ToString(),
-                new() { State = WaitForSelectorState.Visible, Timeout = 3000 }
-            );
-
-            await ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleSelectButton(_page, contextData.VehicleMake, StringComparison.OrdinalIgnoreCase).ClickAsync();
+            var vehicleButton = GetVehicleSelectButton(contextData.VehicleMake);
+            await vehicleButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 3000 });
+            await vehicleButton.ClickAsync();
             await _page.WaitForTimeoutAsync(3000);
         }
 
         public async Task SelectVehicleTypeAsync(string vehicleType)
         {
-            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleTypeButton(_page, vehicleType));
+            await ClickIfNotSelectedAsync(GetVehicleTypeButton(vehicleType));
         }
 
         public async Task ValidateVehicleDetailsAsync(ScenarioContextData contextData)
         {
-            var yearText = await Locators.VehicleSummaryConstLocators.VehicleYearReadOnly(_page).InnerTextAsync();
+            var yearText = await VehicleYearReadOnly.InnerTextAsync();
             Assert.That(yearText, Is.EqualTo(contextData.VehicleYear));
 
-            var makeText = await Locators.VehicleSummaryConstLocators.MakeReadOnly(_page).InnerTextAsync();
+            var makeText = await MakeReadOnly.InnerTextAsync();
             Assert.That(makeText, Is.EqualTo(contextData.VehicleMake).IgnoreCase);
 
-            var modelText = await Locators.VehicleSummaryConstLocators.ModelReadOnly(_page).InnerTextAsync();
+            var modelText = await ModelReadOnly.InnerTextAsync();
             Assert.That(modelText, Is.EqualTo(contextData.VehicleModel).IgnoreCase);
 
-            var trimText = await Locators.VehicleSummaryConstLocators.TrimReadOnly(_page).InnerTextAsync();
+            var trimText = await TrimReadOnly.InnerTextAsync();
             Assert.That(trimText, Is.EqualTo(contextData.VehicleTrim).IgnoreCase);
         }
 
         public async Task SelectVehicleOptionsAsync(ScenarioContextData contextData)
         {
-            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleOwnershipButton(_page, contextData.VehicleOwnership));
-            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetCustomizedEquipmentButton(_page, contextData.CustomizedEquipment));
-            await Helpers.Helpers.ClickIfNotSelectedAsync(ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleUsageButton(_page, contextData.VehicleUsage));
+            await ClickIfNotSelectedAsync(GetVehicleOwnershipButton(contextData.VehicleOwnership));
+            await ClickIfNotSelectedAsync(GetCustomizedEquipmentButton(contextData.CustomizedEquipment));
+            await ClickIfNotSelectedAsync(GetVehicleUsageButton(contextData.VehicleUsage));
         }
 
         public async Task FillPurchaseAndMileageFieldsAsync(ScenarioContextData contextData)
         {
-
-            await Locators.VehicleSummaryConstLocators.PurchaseDateInput(_page)
-                .WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 2000 });
-
+            await PurchaseDateInput.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 2000 });
             await _page.WaitForTimeoutAsync(2000);
 
-            await Locators.VehicleSummaryConstLocators.PurchaseDateInput(_page).FillAsync(contextData.PurchaseDate);
+            await PurchaseDateInput.FillAsync(contextData.PurchaseDate);
             await _page.WaitForTimeoutAsync(2000);
 
-            await Locators.VehicleSummaryConstLocators.OdometerReadingInput(_page).FillAsync(contextData.OdometerReading);
-            await VehicleSummaryConstLocators.TotalAnnualMileageInput(_page).FillAsync(contextData.AnnualMileage);
+            await OdometerReadingInput.FillAsync(contextData.OdometerReading);
+            await TotalAnnualMileageInput.FillAsync(contextData.AnnualMileage);
         }
 
         public async Task SaveAndContinueVehicleAsync()
         {
-            await Locators.GlobalLocators.SaveAndContinueButton(_page).ClickAsync();
-
-            await Helpers.Helpers.ClickNextAsync(_page);
+            await SaveAndContinueButton.ClickAsync();
+            await ClickNextAsync();
         }
 
         public async Task AssignVehicleToDriverAsync(string vehicle, string driverStatus)
         {
-            await ExpertQuoteLocatorFactory.VehicleSummaryPageLocators.GetVehicleSelectButton(_page, vehicle, StringComparison.OrdinalIgnoreCase).ClickAsync();
-            await ExpertQuoteLocatorFactory.VehicleDriverAssignmentPageLocators.DriverStatusButton(_page, driverStatus).ClickAsync();
-            await Helpers.Helpers.ClickNextAsync(_page);
+            await GetVehicleSelectButton(vehicle).ClickAsync();
+            await GetDriverStatusButton(driverStatus).ClickAsync();
+            await ClickNextAsync();
         }
-
-
     }
 }

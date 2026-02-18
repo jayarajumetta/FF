@@ -1,49 +1,44 @@
 ﻿using Microsoft.Playwright;
 using NUnit.Framework;
 using Playwright_POC.Helpers;
-using Playwright_POC.Locators;
 using System;
 using System.Threading.Tasks;
 
 namespace Playwright_POC.Pages
 {
-    public class NarrativePage
+    public class NarrativePage : BasePage
     {
-        private readonly IPage _page;
-        public NarrativePage(IPage page)
-        {
-            _page = page;
-        }
+        public NarrativePage(IPage page) : base(page) { }
+
+        #region Locators
+        private ILocator AddNarrativeButton => _page.GetByTestId("fields.data.notes.addNarrative");
+        private ILocator NarrativeInput => _page.Locator("textarea[data-testid^='fields.data.notes.rows'][data-testid*='notesInput$remarks.value']");
+        private ILocator NarrativeInputAlt => _page.Locator("input[data-testid^='fields.data.notes.rows'][data-testid*='notesInput$remarks.value']");
+        private ILocator SaveNarrativeButton => _page.Locator("button[data-testid^='fields.data.notes.rows'][data-testid$='.save']");
+        #endregion
 
         public async Task ClickAddNarrativeButtonAsync()
         {
-            var addNarrativeButton = _page.GetByTestId("fields.data.notes.addNarrative");
-
-            await addNarrativeButton.WaitForAsync(new() { State = WaitForSelectorState.Visible });
-
-            await addNarrativeButton.ClickAsync();
-
+            await AddNarrativeButton.WaitForAsync(new() { State = WaitForSelectorState.Visible });
+            await AddNarrativeButton.ClickAsync();
         }
 
         public async Task EnterNarrativeAndClickSaveAsync(string narrative)
         {
             var text = narrative?.Trim() ?? string.Empty;
 
-            var narrativeInput = _page.Locator("textarea[data-testid^='fields.data.notes.rows'][data-testid*='notesInput$remarks.value']");
+            var narrativeInput = NarrativeInput;
 
             if (await narrativeInput.CountAsync() == 0)
             {
-                narrativeInput = _page.Locator("input[data-testid^='fields.data.notes.rows'][data-testid*='notesInput$remarks.value']");
+                narrativeInput = NarrativeInputAlt;
             }
 
             await narrativeInput.First.WaitForAsync(new() { State = WaitForSelectorState.Visible });
             await narrativeInput.First.FillAsync(text);
 
-            var saveButton = _page.Locator("button[data-testid^='fields.data.notes.rows'][data-testid$='.save']");
-
-            await saveButton.First.WaitForAsync(new() { State = WaitForSelectorState.Visible });
-            await saveButton.First.ClickAsync();
+            await SaveNarrativeButton.First.WaitForAsync(new() { State = WaitForSelectorState.Visible });
+            await SaveNarrativeButton.First.ClickAsync();
         }
-
     }
 }

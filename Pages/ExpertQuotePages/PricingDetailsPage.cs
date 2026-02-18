@@ -1,66 +1,61 @@
 ﻿// Pages/PricingDetailsPage.cs
 using Microsoft.Playwright;
 using Playwright_POC.Helpers;
-using Playwright_POC.Locators;
 using System.Threading.Tasks;
 using static Microsoft.Playwright.Assertions;
 
 namespace Playwright_POC.Pages
 {
-    public class PricingDetailsPage
+    public class PricingDetailsPage : BasePage
     {
-        private readonly IPage _page;
+        public PricingDetailsPage(IPage page) : base(page) { }
 
-        public PricingDetailsPage(IPage page)
-        {
-            _page = page;
-        }
+        #region Locators
+        private ILocator AccountOwner => _page.Locator("div.readonly-field:has(span.readonly-label:has-text('Account Owner')) >> span.readonly-value");
+        private ILocator AccountAddress => _page.Locator("div.readonly-field:has(span.readonly-label:has-text('Account Address')) >> span.readonly-value");
+        private ILocator ProposalButton => _page.GetByTestId("fields.data.create_Proposal");
+        private ILocator CoverageOptionOverviewButton => _page.GetByTestId("fields.data.create_CoverageOptionOverview");
 
+        // Dynamic locators
+        private ILocator GetAdditionalRatingDetailsButton(string yesOrNo) =>
+            _page.Locator($"button[data-testid*='AdditionalRatinginformation'] div:has-text('{yesOrNo}')");
+        #endregion
 
         public async Task<string> GetAccountOwnerAsync()
         {
-            // Wait for pricing details to load
-            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
-            await Assertions.Expect(PricingDetailsConstLocators.AccountOwner(_page)).ToBeVisibleAsync();
-            return await PricingDetailsConstLocators.AccountOwner(_page).InnerTextAsync();
+            await WaitForSpinnerAsync();
+            await Expect(AccountOwner).ToBeVisibleAsync();
+            return await AccountOwner.InnerTextAsync();
         }
 
         public async Task<string> GetAccountAddressAsync()
         {
-            return await PricingDetailsConstLocators.AccountAddress(_page).InnerTextAsync();
+            return await AccountAddress.InnerTextAsync();
         }
 
         public async Task AssertAccountOwnerAsync(string expected)
         {
-            await Expect(PricingDetailsConstLocators.AccountOwner(_page)).ToHaveTextAsync(expected);
+            await Expect(AccountOwner).ToHaveTextAsync(expected);
         }
 
         public async Task AssertAccountAddressAsync(string expected)
         {
-            await Expect(PricingDetailsConstLocators.AccountAddress(_page))
-                .ToContainTextAsync(expected);
+            await Expect(AccountAddress).ToContainTextAsync(expected);
         }
 
         public void SelectAdditionalRatingDetails(string yesOrNo)
         {
-            _page.ClickAsync(ExpertQuoteLocatorFactory.PricingDetailsPageLocators.AdditionalRatingDetailsButton(yesOrNo));
+            GetAdditionalRatingDetailsButton(yesOrNo).ClickAsync();
         }
 
         public void SelectProposalButton()
         {
-           PricingDetailsConstLocators.ProposalButton(_page).ClickAsync();
+            ProposalButton.ClickAsync();
         }
 
         public void SelectCoverageOptionOverviewButton()
         {
-            PricingDetailsConstLocators.CoverageOptionOverviewButton(_page).ClickAsync();
+            CoverageOptionOverviewButton.ClickAsync();
         }
-
-      
-        public async Task ClickNextAsync()
-        {
-            await Helpers.Helpers.ClickNextAsync(_page);
-        }
-
     }
 }

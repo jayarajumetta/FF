@@ -1,20 +1,16 @@
 ﻿using Microsoft.Playwright;
 using System.Threading.Tasks;
 using Playwright_POC.Helpers;
+using Playwright_POC.Pages;
 
-namespace Playwright_POC.Pages
+namespace Playwright_POC.Pages.ExpertQuotePages
 {
-    public class PolicyDetailsPage
+    public class PolicyDetailsPage : BasePage
     {
-        private readonly IPage _page;
-
-        public PolicyDetailsPage(IPage page)
-        {
-            _page = page;
-        }
+        public PolicyDetailsPage(IPage page) : base(page) { }
 
         #region Locators
-        // SFP Policy Details locators - moved from ExpertQuoteLocatorFactory.SFPPolicyDetailsPageLocators
+        // SFP Policy Details locators
         private ILocator GetFarmTypeButton(string value) => _page.GetByRole(AriaRole.Button, new() { Name = value });
         
         private ILocator GetLivestockTypeRadioButton(string value) => 
@@ -25,26 +21,23 @@ namespace Playwright_POC.Pages
         
         private ILocator GetGrowIndustrialHempButton(string yesOrNo) =>
             _page.GetByTestId($"fields.account.policyInput$industrialHemp.value-{(yesOrNo.Equals("No", System.StringComparison.OrdinalIgnoreCase) ? "0" : "1")}");
-        
-        // Global locators
-        private ILocator NextButton => _page.GetByTestId("next");
         #endregion
 
         public async Task SelectPrimaryFarmType(string farmType)
         {
-            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
+            await WaitForSpinnerAsync();
             await GetFarmTypeButton(farmType).ClickAsync();
         }
 
         public async Task SelectLivestockType(string livestockType)
         {
-            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
+            await WaitForSpinnerAsync();
             await GetLivestockTypeRadioButton(livestockType).ClickAsync();
         }
 
         public async Task EnterGrossFarmIncome(string grossFarmIncome)
         {
-            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
+            await WaitForSpinnerAsync();
             await GrossFarmIncomeInput.ScrollIntoViewIfNeededAsync();
             await GrossFarmIncomeInput.ClearAsync();
             await GrossFarmIncomeInput.FillAsync(grossFarmIncome);
@@ -52,16 +45,10 @@ namespace Playwright_POC.Pages
 
         public async Task SelectGrowIndustrialHemp(string growHemp)
         {
-            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
+            await WaitForSpinnerAsync();
             var hempButton = GetGrowIndustrialHempButton(growHemp);
             await hempButton.ScrollIntoViewIfNeededAsync();
-            await Helpers.Helpers.ClickIfNotSelectedAsync(hempButton);
-        }
-
-        public async Task ClickNextAsync()
-        {
-            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
-            await NextButton.ClickAsync();
+            await ClickIfNotSelectedAsync(hempButton);
         }
     }
 }

@@ -1,50 +1,58 @@
 ﻿// Pages/PolicyCoveragesPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
-using Playwright_POC.Locators;
 using Playwright_POC.Helpers;
 
 namespace Playwright_POC.Pages
 {
-    public class PolicyCoveragesPage
+    public class PolicyCoveragesPage : BasePage
     {
-        private readonly IPage _page;
+        public PolicyCoveragesPage(IPage page) : base(page) { }
 
-        public PolicyCoveragesPage(IPage page)
-        {
-            _page = page;
-        }
+        #region Locators
+        private ILocator ViewPriorCarrierDetailsButton => _page.Locator("button:has-text('VIEW PRIOR CARRIER DETAILS')");
 
+        // Dynamic locators
+        private ILocator GetPolicyCoverageSelectionButton(string value) =>
+            _page.GetByRole(AriaRole.Button, new() { Name = value });
+
+        private ILocator GetCompCollOnlyButton(string yesOrNo) =>
+            _page.GetByRole(AriaRole.Button, new() { Name = yesOrNo })
+                .Filter(new() { Has = _page.Locator("[id*='COMPCOLLBothOnly']") });
+
+        private ILocator GetCompDeductibleButton(string value) =>
+            _page.Locator("[id*='comp_Option']")
+                .GetByRole(AriaRole.Button, new() { Name = value });
+
+        private ILocator GetCollDeductibleButton(string value) =>
+            _page.Locator("[id*='coll_Option']")
+                .GetByRole(AriaRole.Button, new() { Name = value });
+        #endregion
 
         public async Task SelectPolicyCoverageAsync(string policyCoverage)
         {
-            await ExpertQuoteLocatorFactory.CoverageSelectionPageLocators.GetPolicyCoverageSelectionButton(_page, policyCoverage).ClickAsync();
+            await GetPolicyCoverageSelectionButton(policyCoverage).ClickAsync();
         }
 
         public async Task SelectCompCollOnlyAsync(string compCollOnly)
         {
-
-            var locator = ExpertQuoteLocatorFactory.CoverageSelectionPageLocators
-                    .GetCompCollOnlyButton(_page, compCollOnly);
-
-            await Helpers.Helpers.ClickIfNotSelectedAsync(locator);
-
+            var locator = GetCompCollOnlyButton(compCollOnly);
+            await ClickIfNotSelectedAsync(locator);
         }
 
         public async Task SelectCompDeductibleAsync(string compDeductible)
         {
-            await ExpertQuoteLocatorFactory.CoverageSelectionPageLocators.GetCompDeductibleButton(_page, compDeductible).ClickAsync();
+            await GetCompDeductibleButton(compDeductible).ClickAsync();
         }
 
         public async Task SelectCollDeductibleAsync(string collDeductible)
         {
-            await ExpertQuoteLocatorFactory.CoverageSelectionPageLocators.GetCollDeductibleButton(_page, collDeductible).ClickAsync();
+            await GetCollDeductibleButton(collDeductible).ClickAsync();
         }
-
 
         public async Task ClickViewPriorCarrierDetails()
         {
-                       await _page.ClickAsync(Locators.PolicyCoveragesConstLocators.ViewPriorCarrierDetailsButton);
+            await ViewPriorCarrierDetailsButton.ClickAsync();
         }
     }
 }

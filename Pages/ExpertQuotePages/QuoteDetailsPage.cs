@@ -1,22 +1,62 @@
-﻿// Pages/ProposalDetailsPage.cs
+// Pages/QuoteDetailsPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
-using Playwright_POC.Locators;
 using Playwright_POC.Helpers;
 using static Microsoft.Playwright.Assertions;
 
 namespace Playwright_POC.Pages
 {
-    public class QuoteDetailsPage
+    public class QuoteDetailsPage : BasePage
     {
-        private readonly IPage _page;
+        public QuoteDetailsPage(IPage page) : base(page) { }
 
-        public QuoteDetailsPage(IPage page)
-        {
-            _page = page;
-        }
+        #region Locators
+        // Page Header
+        private ILocator PageHeader => _page.GetByText("Proposal Details");
 
+        // Insurance Products
+        private ILocator PersonalAutoButton => _page.GetByTestId("proposal.product-0");
+        private ILocator MotorcycleButton => _page.GetByTestId("proposal.product-1");
+        private ILocator RecreationalVehicleButton => _page.GetByTestId("proposal.product-2");
+        private ILocator HomeButton => _page.GetByTestId("proposal.product-3");
+        private ILocator BusinessOwnerButton => _page.GetByTestId("proposal.product-4");
+        private ILocator FarmPackageButton => _page.GetByTestId("proposal.product-5");
+        private ILocator FarmPackageSelectedIndicator => _page.GetByTestId("sfp-button");
+
+        // Quote Details
+        private ILocator EffDateInput => _page.Locator("input[name='proposal.effectiveDate']");
+        private ILocator PolicyTermDropdown => _page.GetByTestId("proposal.term");
+        private ILocator AgentPCCodeInput => _page.GetByTestId("proposal.agentPC");
+        private ILocator SalesAssociatePCCodeInput => _page.GetByTestId("proposal.associatePC");
+        private ILocator RatingStateDropdown => _page.GetByTestId("proposal.ratingState");
+        private ILocator WritingCompanyDropdownValue => _page.GetByTestId("proposal.writingCompany");
+        private ILocator RiskAddressRadioButton => _page.Locator("mat-radio-button[id='proposal.riskAddressSelection-0']");
+        private ILocator AddNewRiskAddressRadioButton => _page.Locator("mat-radio-button[id='proposal.riskAddressSelection-1']");
+        private ILocator StartQuoteButton => _page.GetByTestId("startQuote");
+        private ILocator IndividuallyOwnedCheckbox => _page.GetByTestId("business.isIndividualDba");
+        private ILocator DBANameInput => _page.GetByTestId("business.individualDba");
+        private ILocator GrossFarmIncomeInput => _page.GetByTestId("fields.account.policyInput$grossFarmIncome.value");
+
+        // Business Entity Search
+        private ILocator BusinessEntitySearchInput => _page.Locator("input[name='business.search.businessName']");
+        private ILocator BusinessEntitySearchButton => _page.Locator("button:has-text('Search')");
+
+        // SSN Pop-Up
+        private ILocator SSNPopup => _page.GetByRole(AriaRole.Heading, new() { Name = "Enter the Client's Full SSN#" });
+        private ILocator SSNInput => _page.GetByTestId("ssn");
+        private ILocator SSNConfirmPopup => _page.Locator("mat-dialog-container h2:has-text(\"Confirm the Client's SSN#\")");
+        private ILocator SSNConfirmButton => _page.Locator("mat-dialog-container a:has-text('Confirm')");
+        private ILocator DialogSubmitButton => _page.GetByTestId("btnConfirmYes");
+
+        // Client Exists Pop-Up
+        private ILocator ClientExistsPopup => _page.Locator("mat-dialog-container h2:has-text('Client Already Exists')");
+        private ILocator CreateNewClientPopupButton => _page.Locator("mat-dialog-container a:has-text('Create New Account')");
+
+        // Dynamic locators
+        private ILocator GetLessorsRiskExposureButton(string yesOrNo) =>
+            _page.Locator($"button[id*='LessorsRiskExposure'] div:has-text('{yesOrNo}')");
+        #endregion
 
         public async Task WaitForProposalPageLoadAsync()
         {
@@ -25,202 +65,172 @@ namespace Playwright_POC.Pages
 
         public async Task SelectPersonalAutoProductAsync()
         {
-            await Locators.ProposalDetailsPageLocators.PersonalAutoButton(_page).ClickAsync();
+            await PersonalAutoButton.ClickAsync();
         }
 
         public async Task SelectMotorcycleProductAsync()
         {
-            await Locators.ProposalDetailsPageLocators.MotorcycleButton(_page).ClickAsync();
+            await MotorcycleButton.ClickAsync();
         }
 
         public async Task SelectRecreationalVehicleProductAsync()
         {
-            await Locators.ProposalDetailsPageLocators.RecreationalVehicleButton(_page).ClickAsync();
+            await RecreationalVehicleButton.ClickAsync();
         }
 
         public async Task SelectHomeProductAsync()
         {
-            await Locators.ProposalDetailsPageLocators.HomeButton(_page).ClickAsync();
+            await HomeButton.ClickAsync();
         }
 
         public async Task SelectBusinessOwnerProductAsync()
         {
-            await Locators.ProposalDetailsPageLocators.BusinessOwnerButton(_page).ClickAsync();
+            await BusinessOwnerButton.ClickAsync();
         }
 
         public async Task SelectSpecialFarmPackageProductAsync()
         {
-            await Locators.ProposalDetailsPageLocators.FarmPackageButton(_page).ClickAsync();
+            await FarmPackageButton.ClickAsync();
         }
 
         public async Task WaitForSpecialFarmPackageSelectedAsync()
         {
-            // Use Playwright Expect with auto-retry instead of arbitrary sleep
-            await Expect(Locators.ProposalDetailsPageLocators.FarmPackageSelectedIndicator(_page))
-                .ToBeVisibleAsync(new() { Timeout = 10000 });
+            await Expect(FarmPackageSelectedIndicator).ToBeVisibleAsync(new() { Timeout = 10000 });
         }
 
-        /// <summary>
-        /// Enters quote details and returns the actual policy term for verification by the caller.
-        /// </summary>
         public async Task<string> EnterQuoteDetailsAsync(ScenarioContextData contextData)
         {
-            await Locators.ProposalDetailsPageLocators.EffDateInput(_page).FillAsync(contextData.EffectiveDate);
-            string actualPolicyTerm = await Locators.ProposalDetailsPageLocators.PolicyTermDropdownValue(_page).InnerTextAsync();
-            await Locators.ProposalDetailsPageLocators.AgentPCCodeInput(_page).FillAsync(contextData.AgentCode);
+            await EffDateInput.FillAsync(contextData.EffectiveDate);
+            string actualPolicyTerm = await PolicyTermDropdown.InnerTextAsync();
+            await AgentPCCodeInput.FillAsync(contextData.AgentCode);
             return actualPolicyTerm.Trim();
         }
 
         public async Task EnterSFPQuoteDetailsAsync(ScenarioContextData contextData)
         {
-            // Wait for the Quote Details form to be fully loaded
             await Expect(_page.GetByText("Quote Details")).ToBeVisibleAsync(new() { Timeout = 30000 });
-            
-            // Find effective date field
+
             var effDateField = _page.Locator("input[formcontrolname='effectiveDate'], input[name='effectiveDate'], input[id*='effectiveDate'], input[data-testid*='effectiveDate']").First;
-            
+
             if (!await effDateField.IsVisibleAsync())
             {
                 effDateField = _page.Locator("mat-form-field:has-text('Effective Date') input").First;
             }
-            
+
             await Expect(effDateField).ToBeVisibleAsync(new() { Timeout = 30000 });
             await effDateField.FillAsync(contextData.EffectiveDate);
-            
-            // Click the Policy Term dropdown to expand it
-            var policyTermDropdown = Locators.ProposalDetailsPageLocators.ExpandPolicyTermDropdown(_page);
-            await policyTermDropdown.ClickAsync();
-            
-            // Wait for dropdown to fully open (timing issue when running at full speed)
+
+            await PolicyTermDropdown.ClickAsync();
             await Task.Delay(1000);
-            
-            // Click the policy term option
             await _page.GetByText(contextData.PolicyTerm, new() { Exact = true }).ClickAsync();
-            
-            await Locators.ProposalDetailsPageLocators.AgentPCCodeInput(_page).FillAsync(contextData.AgentCode);
+
+            await AgentPCCodeInput.FillAsync(contextData.AgentCode);
         }
 
-        /// <summary>
-        /// Selects rating state and returns the actual writing company for verification by the caller.
-        /// </summary>
         public async Task<string> SelectRatingStateAndCompanyAsync(ScenarioContextData contextData)
         {
-            await Locators.ProposalDetailsPageLocators.RatingStateDropdown(_page).ClickAsync();
+            await RatingStateDropdown.ClickAsync();
             await _page.GetByText(contextData.RatingState.ToUpper(), new() { Exact = true }).ClickAsync();
-            
-            // Wait for writing company to populate after state selection
-            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
-            
-            string actualWritingCompany = await Locators.ProposalDetailsPageLocators.WritingCompanyDropdownValue(_page).InnerTextAsync();
+
+            await WaitForSpinnerAsync();
+
+            string actualWritingCompany = await WritingCompanyDropdownValue.InnerTextAsync();
             return actualWritingCompany.Trim();
         }
 
         public async Task SelectRiskAddressAsync(ScenarioContextData contextData)
         {
-            var displayedRiskAddress = await _page.Locator(Locators.ProposalDetailsPageLocators.RiskAddressRadioButton).InnerTextAsync();
+            var displayedRiskAddress = await RiskAddressRadioButton.InnerTextAsync();
             Console.WriteLine($"Displayed Risk Address: {displayedRiskAddress}");
             Console.WriteLine($"Provided Risk Address: {contextData.RiskAddress}");
             if (displayedRiskAddress.Trim().Equals(contextData.RiskAddress.Trim(), StringComparison.OrdinalIgnoreCase))
             {
-                await _page.ClickAsync(Locators.ProposalDetailsPageLocators.RiskAddressRadioButton);
+                await RiskAddressRadioButton.ClickAsync();
             }
             else
             {
-                await _page.ClickAsync(Locators.ProposalDetailsPageLocators.AddNewRiskAddressRadioButton);
-                // Enter new risk address details here if needed
+                await AddNewRiskAddressRadioButton.ClickAsync();
             }
         }
 
         public async Task SelectLessorsRiskExposureAsync(ScenarioContextData contextData)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.AccountInformationPageLocators.SelectLessorsRiskExposureButton(contextData.LessorRiskExposure));
+            await GetLessorsRiskExposureButton(contextData.LessorRiskExposure).ClickAsync();
         }
 
         public async Task SelectBusinessEntityAsync(ScenarioContextData contextData)
         {
             if ((contextData.BusinessEntity == "Individually Owned") || (contextData.BusinessEntity == "DBA") || (contextData.BusinessEntity == "T/A"))
             {
-                await Locators.ProposalDetailsPageLocators.IndividuallyOwnedCheckbox(_page).ClickAsync();
-                // Wait for DBA name input to become visible/enabled instead of arbitrary sleep
-                await Expect(Locators.ProposalDetailsPageLocators.DBANameInput(_page)).ToBeVisibleAsync();
-                await Locators.ProposalDetailsPageLocators.DBANameInput(_page).FillAsync(contextData.DBAName);
+                await IndividuallyOwnedCheckbox.ClickAsync();
+                await Expect(DBANameInput).ToBeVisibleAsync();
+                await DBANameInput.FillAsync(contextData.DBAName);
             }
             else
             {
-                await _page.FillAsync(Locators.ProposalDetailsPageLocators.BusinessEntitySearchInput, contextData.BusinessEntity);
-                await _page.ClickAsync(Locators.ProposalDetailsPageLocators.BusinessEntitySearchButton);
-                // Wait for search results instead of arbitrary sleep
+                await BusinessEntitySearchInput.FillAsync(contextData.BusinessEntity);
+                await BusinessEntitySearchButton.ClickAsync();
                 await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
             }
         }
 
-
         public async Task ClickStartQuoteAsync()
         {
-            await Locators.ProposalDetailsPageLocators.StartQuoteButton(_page).ClickAsync();
-            // Wait for navigation/loading instead of arbitrary sleep
+            await StartQuoteButton.ClickAsync();
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
         }
 
-
         public async Task HandleSSNPopupsAsync(ScenarioContextData contextData)
-        {   
-            // Wait for page to stabilize after Start Quote
-            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
+        {
+            await WaitForSpinnerAsync();
 
-            // SSN pop-up - check with short timeout
-            var ssnPopup = Locators.SSNPopUpLocators.SSNPopup(_page);
             try
             {
-                await ssnPopup.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 5000 });
-                
+                await SSNPopup.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 5000 });
+
                 string ssnToUse = !string.IsNullOrWhiteSpace(contextData.SSN)
                     ? contextData.SSN
                     : RandomGenerators.GenerateRandomSSN();
 
-                // Persist the SSN used so later validation sees the same full SSN
                 contextData.SSN = ssnToUse;
 
-                await Locators.SSNPopUpLocators.SSNInput(_page).FillAsync(ssnToUse);
-                await Locators.GlobalLocators.DialogSubmitButton(_page).ClickAsync();
+                await SSNInput.FillAsync(ssnToUse);
+                await DialogSubmitButton.ClickAsync();
             }
             catch (TimeoutException)
             {
-                // SSN popup didn't appear - that's okay, continue
+                // SSN popup didn't appear - continue
             }
 
-            // SSN Confirmation pop-up - check with short timeout
             try
             {
-                await _page.WaitForSelectorAsync(Locators.SSNPopUpLocators.SSNConfirmPopup, new() { State = WaitForSelectorState.Visible, Timeout = 3000 });
-                await _page.ClickAsync(Locators.SSNPopUpLocators.SSNConfirmButton);
+                await SSNConfirmPopup.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 3000 });
+                await SSNConfirmButton.ClickAsync();
             }
             catch (TimeoutException)
             {
-                // Confirmation popup didn't appear - that's okay, continue
+                // Confirmation popup didn't appear - continue
             }
 
-            // Wait for any remaining loading
-            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
+            await WaitForSpinnerAsync();
         }
-
 
         public async Task HandleClientExistsPopupAsync()
         {
             try
             {
-                await _page.WaitForSelectorAsync(Locators.ClientExistsPopUpLocators.ClientExistsPopup, new() { State = WaitForSelectorState.Visible, Timeout = 3000 });
-                await _page.ClickAsync(Locators.ClientExistsPopUpLocators.CreateNewClientButton);
+                await ClientExistsPopup.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 3000 });
+                await CreateNewClientPopupButton.ClickAsync();
             }
             catch (TimeoutException)
             {
-                // Popup didn't appear - that's okay, continue
+                // Popup didn't appear - continue
             }
         }
 
         public async Task SelectRatingStateAsync(ScenarioContextData contextData)
         {
-            await Locators.ProposalDetailsPageLocators.RatingStateDropdown(_page).ClickAsync();
+            await RatingStateDropdown.ClickAsync();
             await _page.GetByText(contextData.RatingState.ToUpper(), new() { Exact = true }).ClickAsync();
         }
     }

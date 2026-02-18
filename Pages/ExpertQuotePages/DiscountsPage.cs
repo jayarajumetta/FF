@@ -1,34 +1,35 @@
 ﻿// Pages/DiscountsPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
-using Playwright_POC.Locators;
 using Playwright_POC.Helpers;
 
 namespace Playwright_POC.Pages
 {
-    public class DiscountsPage
+    public class DiscountsPage : BasePage
     {
-        private readonly IPage _page;
+        public DiscountsPage(IPage page) : base(page) { }
 
-        public DiscountsPage(IPage page)
-        {
-            _page = page;
-        }
+        #region Locators
+        // Dynamic locators
+        private ILocator GetPolicyDiscountCheckbox(string value) =>
+            _page.GetByRole(AriaRole.Button, new() { Name = value });
 
-        public async Task ClickNextAsync()
-        {
+        private ILocator GetBenefitXpressDiscountButton(string value) =>
+            _page.Locator($"div[id*='IsMemberOfBenefitesExpressGroup'] button:has-text('{value}')");
 
-            await Helpers.Helpers.ClickNextAsync(_page);
-        }
+        private ILocator GetAccountCompositionCheckbox(string yesOrNo) =>
+            _page.Locator("div[id*='AccountCompositionOverride']")
+                .GetByRole(AriaRole.Button, new() { Name = yesOrNo });
+        #endregion
 
         public async Task SelectPolicyDiscountAsync(ScenarioContextData contextData)
         {
-            await ExpertQuoteLocatorFactory.DiscountsPageLocators.GetPolicyDiscountCheckbox(_page, contextData.PolicyDiscount).ClickAsync();
+            await GetPolicyDiscountCheckbox(contextData.PolicyDiscount).ClickAsync();
         }
 
         public async Task SelectBenifitXpressDiscount(ScenarioContextData contextData)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.DiscountsPageLocators.GetBenefitXpressDiscountButton(contextData.BenefitXpressDiscount));
+            await GetBenefitXpressDiscountButton(contextData.BenefitXpressDiscount).ClickAsync();
         }
 
         public async Task SelectDriverDistcountsAsync(ScenarioContextData contextData)
@@ -43,7 +44,7 @@ namespace Playwright_POC.Pages
 
         public async Task SelectAccountCompositionAsync(ScenarioContextData contextData)
         {
-            await ExpertQuoteLocatorFactory.DiscountsPageLocators.GetAccountCompositionCheckbox(_page, contextData.AccountCompositionDiscount).ClickAsync();
+            await GetAccountCompositionCheckbox(contextData.AccountCompositionDiscount).ClickAsync();
         }
     }
 }

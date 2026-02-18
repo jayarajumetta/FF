@@ -1,48 +1,62 @@
-﻿
-// Pages/BillingPage.cs
+﻿// Pages/BillingPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
-using Playwright_POC.Locators;
 using Playwright_POC.Helpers;
 
 namespace Playwright_POC.Pages
 {
-    public class BillingPage
+    public class BillingPage : BasePage
     {
-        private readonly IPage _page;
+        public BillingPage(IPage page) : base(page) { }
 
-        public BillingPage(IPage page)
-        {
-            _page = page;
-        }
+        #region Locators
+        private ILocator CreateNewBillingAccountButton => _page.Locator("[data-testid*='billingCenterAccount']");
+        private ILocator PaymentDueDateInput => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$dueDate.value");
+        private ILocator ApplyRefundCheckbox => _page.GetByTestId("fields._PolicyPaymentInputDoc.initialPaymentData$applyRefund.value");
+        private ILocator CheckNumberInput => _page.GetByTestId("fields._PolicyPaymentInputDoc.initialPaymentData$checkNumber.value");
 
+        // Dynamic locators
+        private ILocator GetPrimaryPayerButton(string value) =>
+            _page.GetByRole(AriaRole.Button, new() { Name = value });
+
+        private ILocator GetPaymentTypeButton(string value) =>
+            _page.GetByRole(AriaRole.Button, new() { Name = value });
+
+        private ILocator GetPaymentPlanButton(string value) =>
+            _page.GetByRole(AriaRole.Button, new() { Name = value });
+
+        private ILocator GetPaymentAmountRadioButton(string value) =>
+            _page.GetByRole(AriaRole.Radio, new() { Name = value });
+
+        private ILocator GetPaymentMethodButton(string value) =>
+            _page.GetByRole(AriaRole.Button, new() { Name = value });
+
+        private ILocator GetPaperlessCommunicationButton(string yesOrNo) =>
+            _page.GetByRole(AriaRole.Button, new() { Name = yesOrNo });
+        #endregion
 
         public async Task ClickCreateNewBillingAccountAsync()
         {
-            await BillingInformationConstLocators.CreateNewBillingAccountButton(_page).ClickAsync();
+            await CreateNewBillingAccountButton.ClickAsync();
         }
 
         public async Task SelectPrimaryPayerAsync(string primaryPayer)
         {
-            // Wait for billing page to be fully loaded
-            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
-            var payerButton = ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPrimaryPayerButton(_page, primaryPayer);
+            await WaitForSpinnerAsync();
+            var payerButton = GetPrimaryPayerButton(primaryPayer);
             await Assertions.Expect(payerButton).ToBeVisibleAsync();
             await payerButton.ClickAsync();
         }
 
         public async Task SelectPaymentTypeAsync(string paymentType)
         {
-            await ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPaymentTypeButton(_page, paymentType).ClickAsync();
+            await GetPaymentTypeButton(paymentType).ClickAsync();
         }
 
         public async Task WaitForPaymentPlanAsync(string paymentPlan)
-
         {
-            var planBtn = ExpertQuoteLocatorFactory.BillingInformationsPageLocators
-                .GetPaymentPlanButton(_page, paymentPlan);  
-
+            var planBtn = GetPaymentPlanButton(paymentPlan);
             await planBtn.WaitForAsync(new()
             {
                 State = WaitForSelectorState.Visible,
@@ -50,51 +64,53 @@ namespace Playwright_POC.Pages
             });
         }
 
-
         public async Task SelectPaymentPlanAsync(string paymentPlan)
         {
-            await ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPaymentPlanButton(_page, paymentPlan).ClickAsync();
+            await GetPaymentPlanButton(paymentPlan).ClickAsync();
         }
 
         public async Task WaitForPaymentDueDateInputAsync()
         {
-            await BillingInformationConstLocators.PaymentDueDateInput(_page).WaitForAsync(new() { Timeout = 3000 });
+            await PaymentDueDateInput.WaitForAsync(new() { Timeout = 3000 });
         }
 
         public async Task EnterPaymentDueDateAsync(string paymentDueDate)
         {
-            await BillingInformationConstLocators.PaymentDueDateInput(_page).FillAsync(paymentDueDate);
+            await PaymentDueDateInput.FillAsync(paymentDueDate);
         }
 
         public async Task SelectPaymentAmountAsync(string paymentAmount)
         {
-            await ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPaymentAmountRadioButton(_page, paymentAmount).ClickAsync();
+            await GetPaymentAmountRadioButton(paymentAmount).ClickAsync();
         }
 
         public async Task SelectPaymentMethodAsync(string paymentMethod)
         {
-            await ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPaymentMethodButton(_page, paymentMethod).ClickAsync();
+            await GetPaymentMethodButton(paymentMethod).ClickAsync();
         }
 
         public async Task EnterCheckNumberAsync(string checkNumber)
         {
-            await BillingInformationConstLocators.CheckNumberInput(_page).FillAsync(checkNumber);
+            await CheckNumberInput.FillAsync(checkNumber);
         }
 
         public async Task SelectPaperlessCommunicationAsync(string paperless)
         {
-            await ExpertQuoteLocatorFactory.BillingInformationsPageLocators.GetPaperlessCommunicationButton(_page, paperless).ClickAsync();
+            await GetPaperlessCommunicationButton(paperless).ClickAsync();
         }
 
-        public async Task ClickNextAsync()
+        /// <summary>
+        /// Click the Next button and wait for spinner to clear
+        /// </summary>
+        public new async Task ClickNextAsync()
         {
-            await Helpers.Helpers.ClickNextAsync(_page);
+            await base.ClickNextAsync();
+            await WaitForSpinnerAsync();
         }
 
         public void DisplayQuoteNumber(string quoteNumber)
         {
             Console.WriteLine($"QUOTE NUMBER IS: {quoteNumber}");
         }
-
     }
 }
