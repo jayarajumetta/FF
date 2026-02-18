@@ -150,8 +150,8 @@ public class SharedEQSteps
         //Wait for the next page to load
         await _context.Page.WaitForLoadStateAsync(LoadState.Load);
 
-        await _context.Page.GetByRole(AriaRole.Heading, new() { Name = "Account Owner Information" })
-            .WaitForAsync(new() { Timeout = 10000 });
+        await _context.Page.GetByRole(AriaRole.Heading, new() { Name = "Account Information", Exact = true })
+            .WaitForAsync(new() { Timeout = 15000 });
         Console.WriteLine(_contextData.ClientFirstName);
     }
 
@@ -220,8 +220,9 @@ public class SharedEQSteps
     [When("user captures the quote number")]
     public async Task UserCapturesTheQuoteNumber()
     {
-        // Get the quote number from the page using the global quote number locator
-        var fullText = await _context.Page.GetByTestId("header-quote-number").InnerTextAsync();
+        // Get the quote number from the header tab label
+        var quoteNumberLocator = _context.Page.Locator("div[class*='mat-tab-label-container'] span");
+        var fullText = await quoteNumberLocator.InnerTextAsync();
         var lines = fullText.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         var quoteNumber = lines.Length > 1 ? lines[1].Trim() : fullText.Trim();
         _contextData.QuoteNumber = quoteNumber;
