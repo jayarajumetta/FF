@@ -250,20 +250,24 @@ namespace Playwright_POC.Tools.LocatorScan
         const onclick = el.hasAttribute('onclick');
         const isInteractable = interactableTags.has(tag) || !!role || (tabindex !== null && parseInt(tabindex, 10) >= 0) || onclick;
         
-        // Skip non-interactable elements unless includeAllElements is true
-        if (!isInteractable && !includeAllElements) continue;
+        // Check for testId early - elements with testIds should ALWAYS be included
+        const testIdAttrs = ['data-testid','data-test','data-qa'];
+        let testId = '';
+        for (const a of testIdAttrs) { testId = el.getAttribute(a) || testId; if (testId) break; }
+        const hasTestId = !!testId;
+        
+        // Skip non-interactable elements unless includeAllElements is true OR has testId
+        if (!isInteractable && !includeAllElements && !hasTestId) continue;
 
         const hiddenStatus = getHiddenStatus(el);
         
-        // Skip hidden elements if visibleOnly is true
-        if (visibleOnly && hiddenStatus.isHidden) continue;
+        // Skip hidden elements if visibleOnly is true, UNLESS element has a testId
+        // (testIds are explicitly for automation and should always be included)
+        if (visibleOnly && hiddenStatus.isHidden && !hasTestId) continue;
 
         const type = (el.getAttribute('type') || '').toLowerCase();
         const id = el.id || '';
         const classList = [...el.classList].join(' ');
-        const testIdAttrs = ['data-testid','data-test','data-qa'];
-        let testId = '';
-        for (const a of testIdAttrs) { testId = el.getAttribute(a) || testId; if (testId) break; }
         const text = truncate(norm(el.textContent), 120);
         const placeholder = el.getAttribute('placeholder') || '';
         const ariaLabel = el.getAttribute('aria-label') || '';

@@ -13,9 +13,21 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         #region Locators
         private ILocator NoClaimsBanner => _page.GetByText("No claims were found on reports");
         private ILocator NoViolationsBanner => _page.GetByText("No violations were found on reports");
-        private ILocator AddClaimsButton => _page.GetByTestId("add_Claim");
+        private ILocator AddClaimButton => _page.GetByTestId("fields.data.policy.policyUnderwriting.underwritingLossExperience.addClaim");
         private ILocator AddViolationsButton => _page.GetByTestId("add_Violation");
         private ILocator YearsInBusinessInput => _page.GetByTestId("fields.data.policy.policyUnderwriting.accountInput$yearsInBusiness.value");
+        
+        // Prior Insurance fields
+        private ILocator PriorPolicyNumberInput => _page.GetByTestId("fields.data.policy.policyInput$priorPolicyNumberAN.value");
+        private ILocator ReasonForNewCoverageDropdown => _page.GetByTestId("fields.data.policy.policyInput$reasonForNewCoverage.value");
+        private ILocator PriorInsuranceCarrierInput => _page.GetByTestId("fields.data.policy.policyUnderwriting.policyUnderwritingInput$priorInsuranceLatestCarrier.value");
+        
+        // Yes/No button pairs
+        private ILocator GetFullyCancelledButton(bool yes) =>
+            _page.GetByTestId($"fields.data.policy.policyInput$fullyCancelled.value-{(yes ? "0" : "1")}");
+        
+        private ILocator GetTransferUnearnedPremiumButton(bool yes) =>
+            _page.GetByTestId($"fields.data.policy.policyInput$transferUnearnedPremium.value-{(yes ? "0" : "1")}");
 
         // Dynamic locators
         private ILocator GetExposuresInsuredButton(bool insured) =>
@@ -35,7 +47,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages
 
         public async Task AddClaimsAsync()
         {
-            await AddClaimsButton.ClickAsync();
+            await AddClaimButton.ClickAsync();
         }
 
         public async Task AddViolationsAsync()
@@ -72,6 +84,42 @@ namespace Playwright_POC.Pages.ExpertQuotePages
             };
 
             await GetYearsOfContinuousCoverageButton(optionText).First.ClickAsync();
+            await WaitForSpinnerAsync();
+        }
+
+        public async Task EnterPriorPolicyNumberAsync(string policyNumber)
+        {
+            await PriorPolicyNumberInput.FillAsync(policyNumber);
+        }
+
+        public async Task SelectReasonForNewCoverageAsync(string reason)
+        {
+            await ReasonForNewCoverageDropdown.ClickAsync();
+            await Task.Delay(500);
+            await _page.GetByText(reason, new() { Exact = true }).ClickAsync();
+            await WaitForSpinnerAsync();
+        }
+
+        public async Task EnterPriorInsuranceCarrierAsync(string carrier)
+        {
+            await PriorInsuranceCarrierInput.FillAsync(carrier);
+        }
+
+        public async Task SetFullyCancelledAsync(bool yes)
+        {
+            await GetFullyCancelledButton(yes).ClickAsync();
+            await WaitForSpinnerAsync();
+        }
+
+        public async Task SetTransferUnearnedPremiumAsync(bool yes)
+        {
+            await GetTransferUnearnedPremiumButton(yes).ClickAsync();
+            await WaitForSpinnerAsync();
+        }
+
+        public async Task ClickAddClaimAsync()
+        {
+            await AddClaimButton.ClickAsync();
             await WaitForSpinnerAsync();
         }
     }

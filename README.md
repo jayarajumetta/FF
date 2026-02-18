@@ -11,6 +11,7 @@ A Playwright-based test automation framework for P&C (Property & Casualty) insur
 - [Data Tokens](#data-tokens)
 - [Writing Tests](#writing-tests)
 - [Best Practices](#best-practices)
+- [LocatorScan Tool](#locatorscan-tool)
 - [Troubleshooting](#troubleshooting)
 
 ---
@@ -39,11 +40,17 @@ PnC-TestAutomation/
 │   ├── BOPSteps/                # BOP-specific steps
 │   ├── PASteps/                 # PA-specific steps
 │   └── SFPSteps/                # SFP-specific steps
-├── Pages/                       # Page Object Models
+├── Pages/                       # Page Object Models (inherit BasePage)
+│   ├── BasePage.cs              # Base class with common helpers
 │   ├── ExpertQuotePages/        # Expert Quote application pages
 │   ├── ExpressPages/            # Express application pages
 │   └── ExpertServicePages/      # Expert Service pages
-├── Locators/                    # Element locator definitions
+├── Models/                      # Domain data models
+│   ├── AccountOwnerData.cs      # Account owner information
+│   ├── QuoteDetailsData.cs      # Quote details
+│   └── ...                      # Other domain models
+├── Tools/                       # Development tools
+│   └── LocatorScan/             # CDP-based locator scanner
 ├── Helpers/                     # Utility classes
 │   ├── LoadingHelpers.cs        # Wait/sync helpers
 │   ├── DateHelpers.cs           # Date token processing
@@ -231,32 +238,52 @@ Feature: SFP Quote Creation
 | `Then` | Verification | Assertions only |
 
 ### Step Definitions
-Use `[StepDefinition]` for maximum flexibility:
+Use `[StepDefinition]` for maximum flexibility. Instantiate page objects with `_context.Page`:
 ```csharp
 [StepDefinition("user clicks New Quote button")]
 public async Task UserClicksNewQuoteButton()
 {
-    await ClientSearchLocators.NewQuoteButton(_context.Page).ClickAsync();
+    var clientSearchPage = new ClientSearchPage(_context.Page);
+    await clientSearchPage.ClickNewQuoteAsync();
 }
 ```
 
 ### Page Objects
+All page objects inherit from `BasePage` which provides common helpers:
 ```csharp
-public class ClientSearchPage
+public class ClientSearchPage : BasePage
 {
-    private readonly IPage _page;
-    
-    // Locators as properties
-    private ILocator SearchInput => _page.GetByTestId("search-input");
-    private ILocator SearchButton => _page.GetByRole(AriaRole.Button, new() { Name = "Search" });
-    
-    public async Task SearchAsync(string query)
+    public ClientSearchPage(IPage page) : base(page) { }
+
+    #region Locators
+    private ILocator SearchInput => _page.GetByTestId("quoteSearchInput");
+    private ILocator SearchButton => _page.GetByTestId("quoteSearchButton");
+    private ILocator NewQuoteButton => _page.GetByRole(AriaRole.Button, new() { Name = "New Quote" });
+    #endregion
+
+    public async Task SearchForClientAsync(string name)
     {
-        await SearchInput.FillAsync(query);
+        await SearchInput.FillAsync(name);
         await SearchButton.ClickAsync();
+        await WaitForSpinnerAsync();  // Inherited from BasePage
+    }
+
+    public async Task ClickNewQuoteAsync()
+    {
+        await NewQuoteButton.ClickAsync();
+        await WaitForSpinnerAsync();
     }
 }
 ```
+
+### BasePage Helpers
+All pages inherit these methods from `BasePage`:
+| Method | Purpose |
+|--------|--------|
+| `WaitForSpinnerAsync()` | Wait for Angular loading spinner to disappear |
+| `ClickNextAsync()` | Click the standard "Next" button |
+| `ClickIfNotSelectedAsync(locator)` | Click only if not already selected |
+| `_page` | Protected access to the Playwright IPage |
 
 ---
 
@@ -293,6 +320,50 @@ await LoadingHelpers.WaitForAngularSpinnerAsync(page);
 await LoadingHelpers.WaitForElementEnabledAsync(page, button);
 await LoadingHelpers.FillAndTabAsync(page, input, "value");
 ```
+
+---
+
+## LocatorScan Tool
+
+A CDP-based tool that scans live application pages and generates locator code.
+
+### Setup
+1. Start Chrome with remote debugging:
+   ```powershell
+   chrome --remote-debugging-port=9222
+   ```
+2. Navigate to the page you want to scan in Chrome
+
+### Running the Scan
+```powershell
+# Use the 'scan' alias (defined in scan.runsettings)
+scan
+
+# Or run directly
+dotnet test --settings scan.runsettings
+```
+
+### How It Works
+1. Connects to Chrome via CDP (Chrome DevTools Protocol)
+2. Scans visible elements for interactable controls
+3. Generates C# locator code prioritized by stability:
+   - **Gold**: `data-testid` → `GetByTestId()`
+   - **Silver**: `aria-label` → `GetByRole()` with accessible name
+   - **Bronze**: Angular Material components (mat-checkbox, mat-slide-toggle)
+   - **Fallback**: Placeholder or label text
+
+### Output
+Generated files appear in:
+```
+TestResults/{date}/LocatorScan/
+└── ExpertQuote_{PageSection}_{timestamp}_Locators.cs
+```
+
+### Features
+- **Duplicate detection**: Skips locators already in repo
+- **Semantic naming**: Extracts meaningful names from testIds
+- **Hidden element inclusion**: Includes hidden elements if they have `data-testid`
+- **Angular Material support**: Detects mat-select, mat-datepicker, mat-slide-toggle
 
 ---
 

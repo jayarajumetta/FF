@@ -49,6 +49,9 @@ namespace Playwright_POC.Tools.LocatorScan
                 // Generate organized locator classes
                 var locatorContent = GenerateLocatorClasses(candidateElements, pageIdentifier, url, timestamp);
                 
+                // Ensure output directory exists
+                Directory.CreateDirectory(outputDir);
+                
                 await File.WriteAllTextAsync(filePath, locatorContent, ct);
                 
                 Console.WriteLine($"[LocatorFileGenerator] Generated: {fileName}");
@@ -156,12 +159,14 @@ namespace Playwright_POC.Tools.LocatorScan
         private static List<ElementReport> FilterToBestCandidates(List<ElementReport> reports)
         {
             // STRICT FILTER: Only include high-quality locators matching repo patterns
-            // Repo pattern: STRONGLY prefer GetByTestId, skip generic buttons
+            // Repo pattern: STRONGLY prefer GetByTestId, then GetByRole with aria-label
             return reports
                 .Where(r => 
                 {
                     var topCandidate = r.Candidates.FirstOrDefault();
                     var text = (r.Text ?? "").Trim();
+                    var ariaLabel = (r.AriaLabel ?? "").Trim();
+                    var tagName = (r.Tag ?? "").ToLower();
                     
                     // Must have generated code
                     if (topCandidate == null || string.IsNullOrEmpty(topCandidate.CodeSnippet)) return false;
@@ -175,6 +180,23 @@ namespace Playwright_POC.Tools.LocatorScan
                     
                     // GOLD STANDARD: Elements with testId - ALWAYS include
                     if (!string.IsNullOrEmpty(r.TestId))
+                        return true;
+                    
+                    // SILVER STANDARD: Elements with aria-label (GetByRole is stable)
+                    // Include buttons, inputs, and interactive elements with aria-label
+                    if (!string.IsNullOrEmpty(ariaLabel) && ariaLabel.Length >= 3 && !IsGenericAriaLabel(ariaLabel))
+                    {
+                        // Button with aria-label (e.g., "Open calendar", "Next month")
+                        if (r.ControlType == "Button" || r.Role == "button")
+                            return true;
+                        
+                        // Form inputs with aria-label
+                        if (r.ControlType?.Contains("Input") == true || tagName == "input")
+                            return true;
+                    }
+                    
+                    // Angular Material components with stable semantic classes
+                    if (IsAngularMaterialComponent(r))
                         return true;
                     
                     // Skip generic/useless buttons (table sorters, edit icons, etc.)
@@ -193,12 +215,60 @@ namespace Playwright_POC.Tools.LocatorScan
                     if (r.ControlType == "Button" && IsHighValueButton(text))
                         return true;
                     
-                    // Skip everything else - if no testId, placeholder, or label, it's not useful
+                    // Skip everything else - if no testId, aria-label, placeholder, or label, it's not useful
                     return false;
                 })
                 .OrderBy(r => GetPriority(r))
                 .Take(50)
                 .ToList();
+        }
+        
+        /// <summary>
+        /// Detect Angular Material components that can be reliably located
+        /// </summary>
+        private static bool IsAngularMaterialComponent(ElementReport element)
+        {
+            var tagName = (element.Tag ?? "").ToLower();
+            var classList = (element.ClassList ?? "").ToLower();
+            
+            // Angular Material datepicker toggle
+            if (tagName == "mat-datepicker-toggle" || classList.Contains("mat-datepicker-toggle"))
+                return true;
+            
+            // Angular Material slide toggle
+            if (tagName == "mat-slide-toggle" || classList.Contains("mat-slide-toggle"))
+                return true;
+            
+            // Angular Material checkbox
+            if (tagName == "mat-checkbox" || classList.Contains("mat-checkbox"))
+                return true;
+            
+            // Angular Material radio button
+            if (tagName == "mat-radio-button" || classList.Contains("mat-radio-button"))
+                return true;
+            
+            // Calendar navigation buttons
+            if (classList.Contains("mat-calendar-previous-button") || classList.Contains("mat-calendar-next-button"))
+                return true;
+            
+            return false;
+        }
+        
+        /// <summary>
+        /// Detect generic aria-labels that should be skipped
+        /// </summary>
+        private static bool IsGenericAriaLabel(string ariaLabel)
+        {
+            if (string.IsNullOrEmpty(ariaLabel)) return true;
+            
+            var lower = ariaLabel.ToLower().Trim();
+            
+            // Skip single-word generic aria-labels
+            var genericLabels = new[] {
+                "close", "expand", "collapse", "menu", "loading", "spinner"
+            };
+            
+            return genericLabels.Any(g => lower == g);
         }
         
         /// <summary>
@@ -394,17 +464,61 @@ namespace Playwright_POC.Tools.LocatorScan
         
         private static string ConvertTestIdToSemanticName(string testId)
         {
-            // Convert common testId patterns to semantic names
+            // Extract the meaningful part from testIds like:
+            // "fields.underwritingLossExperience.rows[0].addLoss.rows[0].addLossInput$amountPaid.value"
+            // -> "amountPaid" -> "AmountPaid"
+            
+            // Pattern 1: Has $ - extract the part after $ and before .value
+            if (testId.Contains("$"))
+            {
+                var afterDollar = testId.Split('$').Last();
+                // Remove .value suffix
+                var semanticPart = afterDollar
+                    .Replace(".value", "")
+                    .Split('-').First(); // Remove button index like "-0", "-1"
+                
+                if (!string.IsNullOrEmpty(semanticPart))
+                {
+                    return ToPascalCase(semanticPart);
+                }
+            }
+            
+            // Pattern 2: Has common action suffixes - extract last meaningful segment
+            var segments = testId.Split('.');
+            var lastSegment = segments.LastOrDefault() ?? testId;
+            
+            // Remove common suffixes/prefixes
+            lastSegment = lastSegment
+                .Replace("value", "")
+                .Replace("Input", "")
+                .Split('-').First();
+            
+            // If the last segment is meaningful, use it
+            if (lastSegment.Length >= 3 && !string.IsNullOrWhiteSpace(lastSegment))
+            {
+                return ToPascalCase(lastSegment);
+            }
+            
+            // Pattern 3: Try second-to-last segment for actions like "addClaim", "save", "cancel"
+            if (segments.Length >= 2)
+            {
+                var secondLast = segments[segments.Length - 2];
+                if (secondLast.Length >= 3)
+                {
+                    return ToPascalCase(secondLast);
+                }
+            }
+            
+            // Fallback: Clean up the full testId
             return testId
-                .Replace("quoteSearchInput", "QuoteSearchInput")
-                .Replace("businessNameInput", "BusinessNameInput")
-                .Replace("owner.maritalStatus-other", "MaritalStatusMoreOptions")
-                .Replace("btnConfirmYes", "ConfirmButton")
-                .Replace("btnConfirmNo", "CancelButton")
-                .Replace(".save_and_Continue", "SaveAndContinueButton")
-                .Replace(".save", "SaveButton")
-                .Replace("Button", "")
-                .Replace("Input", "");
+                .Replace("fields.", "")
+                .Replace("data.", "")
+                .Replace(".value", "")
+                .Replace("rows[0].", "")
+                .Replace("rows[1].", "")
+                .Replace("Input$", "")
+                .Replace("$", "")
+                .Split('.').Last();
         }
         
         private static string AddControlTypeSuffix(string baseName, string? controlType)
