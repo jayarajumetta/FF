@@ -9,7 +9,7 @@
 //   dotnet test --filter "Category=Tools&Name~Scan" `
 //     -- TestRunParameters.Parameter(name=\"CDP\",value=\"http://localhost:9222\")
 //
-// ── FULL SCAN (with uniqueness checking & repo comparison, ~2-5 minutes) ──
+// ── FULL SCAN (with all candidates, ~1-2 minutes) ──
 //   dotnet test --filter "Category=Tools&Name~Scan" `
 //     -- TestRunParameters.Parameter(name=\"CDP\",value=\"http://localhost:9222\") `
 //        TestRunParameters.Parameter(name=\"FAST_MODE\",value=\"false\")
@@ -24,10 +24,9 @@
 //     -- TestRunParameters.Parameter(name=\"URL\",value=\"https://example.com\")
 //
 // ── PARAMETERS ──
-//   FAST_MODE     (default: true)  - Skips uniqueness checking & repo comparison
+//   FAST_MODE     (default: true)  - Limits candidates per element for performance
 //   CS_ONLY       (default: true)  - Only generate .cs locator file (no CSV/JSON)
-//   SCAN_HIDDEN   (default: false) - Include hidden/conditional elements (dropdowns, modals, etc)
-//   CHECK_UNIQUE  (default: false) - Check if each locator is unique on the page (SLOW)
+//   SCAN_HIDDEN   (default: true)  - Include hidden/conditional elements (dropdowns, modals, etc)
 //   COMPARE       (default: true)  - Compare against existing repo locators and exclude duplicates
 //   NEW_ONLY      (default: false) - Only show elements not in repo (requires COMPARE=true)
 //   SCENARIO      (optional)       - Name for output folder
@@ -61,13 +60,11 @@ namespace Playwright_POC.Tools.LocatorScan
                 TestContext.Parameters.Get("HEADED", "false"), "true", StringComparison.OrdinalIgnoreCase);
             var scenario = TestContext.Parameters.Get("SCENARIO", "");
             
-            // PERFORMANCE: FAST_MODE (default: true) - skips uniqueness checking and repo comparison
+            // PERFORMANCE: FAST_MODE (default: true) - limits candidates per element
             var fastMode = string.Equals(
                 TestContext.Parameters.Get("FAST_MODE", "true"), "true", StringComparison.OrdinalIgnoreCase);
             
-            // Individual overrides (only apply if not in fast mode, or explicitly set)
-            var checkUnique = string.Equals(
-                TestContext.Parameters.Get("CHECK_UNIQUE", fastMode ? "false" : "true"), "true", StringComparison.OrdinalIgnoreCase);
+            // Individual overrides
             var compare = string.Equals(
                 TestContext.Parameters.Get("COMPARE", "true"), "true", StringComparison.OrdinalIgnoreCase);  // Always compare - it's fast
             var newOnly = string.Equals(
@@ -79,9 +76,9 @@ namespace Playwright_POC.Tools.LocatorScan
             var skipCsv = csOnly;  // Skip CSV when CS_ONLY is true
             var skipJson = true;  // Always skip JSON unless explicitly requested
             
-            // Hidden element scanning - useful for conditional fields that appear after selections
+            // Hidden element scanning - includes elements hidden via CSS (modals, dropdowns, conditional fields)
             var scanHidden = string.Equals(
-                TestContext.Parameters.Get("SCAN_HIDDEN", "false"), "true", StringComparison.OrdinalIgnoreCase);
+                TestContext.Parameters.Get("SCAN_HIDDEN", "true"), "true", StringComparison.OrdinalIgnoreCase);
 
             // Derive scenario name if not provided
             if (string.IsNullOrWhiteSpace(scenario))
@@ -120,7 +117,7 @@ namespace Playwright_POC.Tools.LocatorScan
             Directory.CreateDirectory(outputDir);
 
             TestContext.Progress.WriteLine($"[LocatorScanTool] Output dir: {outputDir}");
-            TestContext.Progress.WriteLine($"[LocatorScanTool] URL={url}  CDP={cdp}  FAST_MODE={fastMode}  CHECK_UNIQUE={checkUnique}  COMPARE={compare}");
+            TestContext.Progress.WriteLine($"[LocatorScanTool] URL={url}  CDP={cdp}  FAST_MODE={fastMode}  COMPARE={compare}");
 
             // ── Set up Playwright ──
             IPlaywright? pw = null;
@@ -251,8 +248,6 @@ namespace Playwright_POC.Tools.LocatorScan
                 // ── Scan ──
                 var scanOptions = new LocatorScanOptions
                 {
-                    CheckUniqueness = checkUnique,  // BIGGEST performance impact - disabled by default in FAST_MODE
-                    OnlyKeepUniqueTop = checkUnique,
                     MaxCandidates = fastMode ? 2 : 5,  // Limit candidates per element
                     VisibleOnly = !scanHidden  // Scan hidden elements if SCAN_HIDDEN=true
                 };

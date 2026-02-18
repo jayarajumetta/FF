@@ -11,7 +11,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Playwright_POC.Helpers
 {
-    internal class Helpers
+    public class Helpers
     {
         // ✅ Old version: keep it for legacy string selectors (xpath/css)
         public static async Task ClickIfNotSelectedAsync(IPage page, string selector)

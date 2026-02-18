@@ -254,12 +254,11 @@ namespace Playwright_POC.Tools.LocatorScan
 
         private static int GetPriority(ElementReport element)
         {
-            var topCandidate = element.Candidates.FirstOrDefault();
             // Lower number = higher priority
             if (!string.IsNullOrEmpty(element.TestId)) return 1;
             if (!string.IsNullOrEmpty(element.Placeholder)) return 2;
             if (!string.IsNullOrEmpty(element.Label)) return 3;
-            if (topCandidate?.IsUnique == true && !string.IsNullOrEmpty(element.Id)) return 4;
+            if (!string.IsNullOrEmpty(element.Id)) return 4;
             if (element.ControlType == "Button") return 5;
             if (element.Role == "tab") return 6;
             if (element.ControlType == "Link") return 5;

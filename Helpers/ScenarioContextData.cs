@@ -1,119 +1,161 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Playwright_POC.Models;
 
 namespace Playwright_POC.Helpers
 {
+    /// <summary>
+    /// Scenario context data using composition with domain models.
+    /// Legacy property names are preserved for backward compatibility.
+    /// New code should use the domain model objects directly (Client, Address, Driver, etc.)
+    /// </summary>
     public class ScenarioContextData
     {
-        public string QuoteNumber { get; set; }
-        public string ClientFirstName { get; set; }
-        public string ClientLastName { get; set; }
+        // ══════════════════════════════════════════════════════════════════
+        // DOMAIN MODELS (New code should use these directly)
+        // ══════════════════════════════════════════════════════════════════
 
-        public string ClientDOB { get; set; }
-        public string ClientPhoneNumber { get; set; }
-        public string ClientEmail { get; set; }
-        public string MaritalStatus { get; set; }
-        public string StreetAddress { get; set; }
-        public string AptNumber { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string ZipCode { get; set; }
-        public string RecievedMail { get; set; }
-        public string WhereClientResides { get; set; }
-        public string EffectiveDate { get; set; }
-        public string PolicyTerm { get; set; }
-        public string AgentCode { get; set; }
-        public string RatingState { get; set; }
-        public string WritingCompany { get; set; }
-        public string RiskAddress { get; set; }
-        public string EligibilityRestrictions { get; set; }
-        public string DriverFirstName { get; set; }
-        public string DriverLastName { get; set; }
-        public string DriverDOB { get; set; }
-        public string DriverPhoneNumber { get; set; }
-        public string DriverEmail { get; set; }
-        public string DriverState { get; set; }
-        public string PhoneType { get; set; }
-        public string Gender { get; set; }
-        public string EmailType { get; set; }
-        public string NamedInsured { get; set; }
-        public string OperatorStatus { get; set; }
-        public string DLState { get; set; }
-        public string SSN { get; set; }
-        public string DLNumber { get; set; }
-        public string YearsLicensed { get; set; }
-        public string MonthsLicensed { get; set; }
-        public string FinancialResponsibility { get; set; }
-        public string PriorInsurance { get; set; }
-        public string PriorCarrier { get; set; }
-        public string PriorPolicyNumber { get; set; }
-        public string PriorInsuranceYears { get; set; }
-        public string PriorInsuranceMonths { get; set; }
-        public string NoPriorInsuranceReason { get; set; }
-        public string VINNumber { get; set; }
-        public string VehicleType { get; set; }
-        public string VehicleYear { get; set; }
-        public string VehicleMake { get; set; }
-        public string VehicleModel { get; set; }
-        public string VehicleTrim { get; set; }
-        public string VehicleOwnership { get; set; }
-        public string CustomizedEquipment { get; set; }
-        public string VehicleUsage { get; set; }
-        public string PurchaseDate { get; set; }
-        public string OdometerReading { get; set; }
-        public string AnnualMileage { get; set; }
-        public string Vehicle { get; set; }
-        public string DriverStatus { get; set; }
-        public string PolicyDiscount { get; set; }
-        public string BenefitXpressDiscount { get; set; }
-        public string AccountCompositionDiscount { get; set; }
-        public string PolicyCoverage { get; set; }
-        public string CompCollOnly { get; set; }
-        public string CompDeductible { get; set; }
-        public string CollDeductible { get; set; }
-        public string AccidentalDeathAndDismemberment { get; set; }
-        public string LossOfIncome { get; set; }
-        public string RentalReimbursement { get; set; }
-        public string RoadsideAssistance { get; set; }
-        public string AdditionalInterestType { get; set; }
-        public string AdditionalInterestName { get; set; }
-        public string AdditionalInterestAddress { get; set; }
-        public string AdditionalInterestCity { get; set; }
-        public string AdditionalInterestState { get; set; }
-        public string AdditionalInterestZipCode { get; set; }
-        public string AdditionalInterestPhone { get; set; }
-        public string JointOwnerDrive { get; set; }
-        public string RelationshipToAccountOwner { get; set; }
-        public string AdditionalInterestDOB { get; set; }
-        public string AdditionalInterestDLNumber { get; set; }
-        public string AdditionalInterestLicenseState { get; set; }
-        public string PrimaryPayer { get; set; }
-        public string PaymentType { get; set; }
-        public string PaymentPlan { get; set; }
-        public string PaymentDueDate { get; set; }
-        public string PaymentAmount { get; set; }
-        public string PaymentMethod { get; set; }
-        public string CheckNumber { get; set; }
-        public string Paperless { get; set; }
+        public ClientData Client { get; set; } = new();
+        public AddressData Address { get; set; } = new();
+        public DriverData Driver { get; set; } = new();
+        public VehicleData VehicleInfo { get; set; } = new();
+        public PolicyData Policy { get; set; } = new();
+        public PaymentData Payment { get; set; } = new();
+        public AdditionalInterestData AdditionalInterest { get; set; } = new();
+        public PriorInsuranceData PriorInsuranceInfo { get; set; } = new();
+        public BusinessData Business { get; set; } = new();
+        public FarmData Farm { get; set; } = new();
+        public UnderwritingData Underwriting { get; set; } = new();
+
+        // ══════════════════════════════════════════════════════════════════
+        // LEGACY PROPERTIES (Backward compatible - delegate to domain models)
+        // ══════════════════════════════════════════════════════════════════
+
+        // --- Client Info (maps to Client) ---
+        public string ClientFirstName { get => Client.FirstName; set => Client.FirstName = value; }
+        public string ClientLastName { get => Client.LastName; set => Client.LastName = value; }
+        public string ClientDOB { get => Client.DateOfBirth; set => Client.DateOfBirth = value; }
+        public string ClientPhoneNumber { get => Client.Phone; set => Client.Phone = value; }
+        public string ClientEmail { get => Client.Email; set => Client.Email = value; }
+        public string MaritalStatus { get => Client.MaritalStatus; set => Client.MaritalStatus = value; }
+        public string Gender { get => Client.Gender; set => Client.Gender = value; }
+        public string SSN { get => Client.SSN; set => Client.SSN = value; }
+        public string PhoneType { get => Client.PhoneType; set => Client.PhoneType = value; }
+        public string EmailType { get => Client.EmailType; set => Client.EmailType = value; }
+
+        // --- Address Info (maps to Address) ---
+        public string StreetAddress { get => Address.Street; set => Address.Street = value; }
+        public string AptNumber { get => Address.AptNumber; set => Address.AptNumber = value; }
+        public string City { get => Address.City; set => Address.City = value; }
+        public string State { get => Address.State; set => Address.State = value; }
+        public string ZipCode { get => Address.ZipCode; set => Address.ZipCode = value; }
+        public string RecievedMail { get => Address.ReceivesMail; set => Address.ReceivesMail = value; }
+        public string WhereClientResides { get => Address.IsResidence; set => Address.IsResidence = value; }
+
+        // --- Policy Info (maps to Policy) ---
+        public string QuoteNumber { get => Policy.QuoteNumber; set => Policy.QuoteNumber = value; }
+        public string EffectiveDate { get => Policy.EffectiveDate; set => Policy.EffectiveDate = value; }
+        public string PolicyTerm { get => Policy.PolicyTerm; set => Policy.PolicyTerm = value; }
+        public string AgentCode { get => Policy.AgentCode; set => Policy.AgentCode = value; }
+        public string RatingState { get => Policy.RatingState; set => Policy.RatingState = value; }
+        public string WritingCompany { get => Policy.WritingCompany; set => Policy.WritingCompany = value; }
+        public string RiskAddress { get => Policy.RiskAddress; set => Policy.RiskAddress = value; }
+        public string EligibilityRestrictions { get => Policy.EligibilityRestrictions; set => Policy.EligibilityRestrictions = value; }
+        public string PolicyCoverage { get => Policy.PolicyCoverage; set => Policy.PolicyCoverage = value; }
+        public string CompCollOnly { get => Policy.CompCollOnly; set => Policy.CompCollOnly = value; }
+        public string CompDeductible { get => Policy.CompDeductible; set => Policy.CompDeductible = value; }
+        public string CollDeductible { get => Policy.CollDeductible; set => Policy.CollDeductible = value; }
+        public string AccidentalDeathAndDismemberment { get => Policy.AccidentalDeathAndDismemberment; set => Policy.AccidentalDeathAndDismemberment = value; }
+        public string LossOfIncome { get => Policy.LossOfIncome; set => Policy.LossOfIncome = value; }
+        public string RentalReimbursement { get => Policy.RentalReimbursement; set => Policy.RentalReimbursement = value; }
+        public string RoadsideAssistance { get => Policy.RoadsideAssistance; set => Policy.RoadsideAssistance = value; }
+        public string PolicyDiscount { get => Policy.PolicyDiscount; set => Policy.PolicyDiscount = value; }
+        public string BenefitXpressDiscount { get => Policy.BenefitXpressDiscount; set => Policy.BenefitXpressDiscount = value; }
+        public string AccountCompositionDiscount { get => Policy.AccountCompositionDiscount; set => Policy.AccountCompositionDiscount = value; }
+
+        // --- Driver Info (maps to Driver) ---
+        public string DriverFirstName { get => Driver.FirstName; set => Driver.FirstName = value; }
+        public string DriverLastName { get => Driver.LastName; set => Driver.LastName = value; }
+        public string DriverDOB { get => Driver.DateOfBirth; set => Driver.DateOfBirth = value; }
+        public string DriverPhoneNumber { get => Driver.Phone; set => Driver.Phone = value; }
+        public string DriverEmail { get => Driver.Email; set => Driver.Email = value; }
+        public string DriverState { get => Driver.LicenseState; set => Driver.LicenseState = value; }
+        public string NamedInsured { get => Driver.IsNamedInsured; set => Driver.IsNamedInsured = value; }
+        public string OperatorStatus { get => Driver.OperatorStatus; set => Driver.OperatorStatus = value; }
+        public string DLState { get => Driver.LicenseState; set => Driver.LicenseState = value; }
+        public string DLNumber { get => Driver.LicenseNumber; set => Driver.LicenseNumber = value; }
+        public string YearsLicensed { get => Driver.YearsLicensed; set => Driver.YearsLicensed = value; }
+        public string MonthsLicensed { get => Driver.MonthsLicensed; set => Driver.MonthsLicensed = value; }
+        public string FinancialResponsibility { get => Driver.FinancialResponsibility; set => Driver.FinancialResponsibility = value; }
+        public string DriverStatus { get => Driver.DriverStatus; set => Driver.DriverStatus = value; }
+        public string RelationshipToAccountOwner { get => Driver.RelationshipToAccountOwner; set => Driver.RelationshipToAccountOwner = value; }
+
+        // --- Vehicle Info (maps to VehicleInfo) ---
+        public string VINNumber { get => VehicleInfo.VIN; set => VehicleInfo.VIN = value; }
+        public string VehicleType { get => VehicleInfo.VehicleType; set => VehicleInfo.VehicleType = value; }
+        public string VehicleYear { get => VehicleInfo.Year; set => VehicleInfo.Year = value; }
+        public string VehicleMake { get => VehicleInfo.Make; set => VehicleInfo.Make = value; }
+        public string VehicleModel { get => VehicleInfo.Model; set => VehicleInfo.Model = value; }
+        public string VehicleTrim { get => VehicleInfo.Trim; set => VehicleInfo.Trim = value; }
+        public string VehicleOwnership { get => VehicleInfo.Ownership; set => VehicleInfo.Ownership = value; }
+        public string VehicleUsage { get => VehicleInfo.Usage; set => VehicleInfo.Usage = value; }
+        public string CustomizedEquipment { get => VehicleInfo.CustomizedEquipment; set => VehicleInfo.CustomizedEquipment = value; }
+        public string PurchaseDate { get => VehicleInfo.PurchaseDate; set => VehicleInfo.PurchaseDate = value; }
+        public string OdometerReading { get => VehicleInfo.OdometerReading; set => VehicleInfo.OdometerReading = value; }
+        public string AnnualMileage { get => VehicleInfo.AnnualMileage; set => VehicleInfo.AnnualMileage = value; }
+        public string Vehicle { get; set; }  // Legacy standalone property
+
+        // --- Prior Insurance (maps to PriorInsuranceInfo) ---
+        public string PriorInsurance { get => PriorInsuranceInfo.HasPriorInsurance; set => PriorInsuranceInfo.HasPriorInsurance = value; }
+        public string PriorCarrier { get => PriorInsuranceInfo.CarrierName; set => PriorInsuranceInfo.CarrierName = value; }
+        public string PriorPolicyNumber { get => PriorInsuranceInfo.PolicyNumber; set => PriorInsuranceInfo.PolicyNumber = value; }
+        public string PriorInsuranceYears { get => PriorInsuranceInfo.YearsWithCarrier; set => PriorInsuranceInfo.YearsWithCarrier = value; }
+        public string PriorInsuranceMonths { get => PriorInsuranceInfo.MonthsWithCarrier; set => PriorInsuranceInfo.MonthsWithCarrier = value; }
+        public string NoPriorInsuranceReason { get => PriorInsuranceInfo.NoPriorInsuranceReason; set => PriorInsuranceInfo.NoPriorInsuranceReason = value; }
+        public bool PriorFFANPolicy { get => PriorInsuranceInfo.PriorFFANPolicy; set => PriorInsuranceInfo.PriorFFANPolicy = value; }
+        public string YearsInBusiness { get => PriorInsuranceInfo.YearsInBusiness; set => PriorInsuranceInfo.YearsInBusiness = value; }
+        public string YearsContinuousCoverage { get => PriorInsuranceInfo.YearsContinuousCoverage; set => PriorInsuranceInfo.YearsContinuousCoverage = value; }
+
+        // --- Additional Interest (maps to AdditionalInterest) ---
+        public string AdditionalInterestType { get => AdditionalInterest.Type; set => AdditionalInterest.Type = value; }
+        public string AdditionalInterestName { get => AdditionalInterest.Name; set => AdditionalInterest.Name = value; }
+        public string AdditionalInterestAddress { get => AdditionalInterest.Address; set => AdditionalInterest.Address = value; }
+        public string AdditionalInterestCity { get => AdditionalInterest.City; set => AdditionalInterest.City = value; }
+        public string AdditionalInterestState { get => AdditionalInterest.State; set => AdditionalInterest.State = value; }
+        public string AdditionalInterestZipCode { get => AdditionalInterest.ZipCode; set => AdditionalInterest.ZipCode = value; }
+        public string AdditionalInterestPhone { get => AdditionalInterest.Phone; set => AdditionalInterest.Phone = value; }
+        public string JointOwnerDrive { get => AdditionalInterest.JointOwnerDrive; set => AdditionalInterest.JointOwnerDrive = value; }
+        public string AdditionalInterestDOB { get => AdditionalInterest.DateOfBirth; set => AdditionalInterest.DateOfBirth = value; }
+        public string AdditionalInterestDLNumber { get => AdditionalInterest.LicenseNumber; set => AdditionalInterest.LicenseNumber = value; }
+        public string AdditionalInterestLicenseState { get => AdditionalInterest.LicenseState; set => AdditionalInterest.LicenseState = value; }
+
+        // --- Payment (maps to Payment) ---
+        public string PrimaryPayer { get => Payment.PrimaryPayer; set => Payment.PrimaryPayer = value; }
+        public string PaymentType { get => Payment.PaymentType; set => Payment.PaymentType = value; }
+        public string PaymentPlan { get => Payment.PaymentPlan; set => Payment.PaymentPlan = value; }
+        public string PaymentDueDate { get => Payment.PaymentDueDate; set => Payment.PaymentDueDate = value; }
+        public string PaymentAmount { get => Payment.PaymentAmount; set => Payment.PaymentAmount = value; }
+        public string PaymentMethod { get => Payment.PaymentMethod; set => Payment.PaymentMethod = value; }
+        public string CheckNumber { get => Payment.CheckNumber; set => Payment.CheckNumber = value; }
+        public string Paperless { get => Payment.Paperless; set => Payment.Paperless = value; }
+
+        // --- Business (BOP - maps to Business) ---
+        public string BusinessEntity { get => Business.EntityType; set => Business.EntityType = value; }
+        public string DBAName { get => Business.DBAName; set => Business.DBAName = value; }
+        public string LessorRiskExposure { get => Business.LessorRiskExposure; set => Business.LessorRiskExposure = value; }
+        public string ClassCodeNumber { get => Business.ClassCodeNumber; set => Business.ClassCodeNumber = value; }
+        public string ClassDescription { get => Business.ClassDescription; set => Business.ClassDescription = value; }
+        public string ClassCodeRestriction { get => Business.ClassCodeRestriction; set => Business.ClassCodeRestriction = value; }
+
+        // --- Farm (SFP - maps to Farm) ---
+        public string PrimaryFarmType { get => Farm.PrimaryFarmType; set => Farm.PrimaryFarmType = value; }
+        public string LivestockType { get => Farm.LivestockType; set => Farm.LivestockType = value; }
+        public string GrossFarmIncome { get => Farm.GrossFarmIncome; set => Farm.GrossFarmIncome = value; }
+        public string GrowIndustrialHemp { get => Farm.GrowIndustrialHemp; set => Farm.GrowIndustrialHemp = value; }
+
+        // --- Underwriting (maps to Underwriting) ---
+        public string GeneralUWQuestionAnswer { get => Underwriting.GeneralAnswer; set => Underwriting.GeneralAnswer = value; }
+
+        // --- Misc (no domain model) ---
         public string SearchType { get; set; }
         public string LookingFor { get; set; }
-        public string LessorRiskExposure { get; set; }
-        public string BusinessEntity { get; set; }
-        public string DBAName { get; set; }
-        public string ClassCodeNumber { get; set; }
-        public string ClassDescription { get; set; }
-        public string ClassCodeRestriction { get; set; }
-        public string PrimaryFarmType { get; set; }
-        public string LivestockType { get; set; }
-        public string GrossFarmIncome { get; set; }
-        public string GrowIndustrialHemp { get; set; }
-        public string GeneralUWQuestionAnswer { get; set; }
-        public bool PriorFFANPolicy { get; set; }
-        public string YearsInBusiness { get; set; }
-        public string YearsContinuousCoverage { get; set; }
-
     }
 }

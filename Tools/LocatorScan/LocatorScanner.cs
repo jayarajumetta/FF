@@ -20,8 +20,6 @@ namespace Playwright_POC.Tools.LocatorScan
     // ──────────────────────────────────────────────────────────────────────
     public sealed class LocatorScanOptions
     {
-        public bool CheckUniqueness { get; set; } = false;      // DISABLED by default - major performance gain (was causing 1000+ DOM queries)
-        public bool OnlyKeepUniqueTop { get; set; } = false;
         public string TestIdAttribute { get; set; } = "data-testid";
         public bool VisibleOnly { get; set; } = true;           // Only scan visible elements
         public bool IncludeAllElements { get; set; } = false;   // Include non-interactable elements
@@ -36,8 +34,6 @@ namespace Playwright_POC.Tools.LocatorScan
         public string Strategy { get; set; } = string.Empty;
         public string CodeSnippet { get; set; } = string.Empty;
         public int Score { get; set; }
-        public bool IsUnique { get; set; }
-        public int UniquenessCount { get; set; }
     }
 
     public sealed class ExistingMatch
@@ -372,50 +368,6 @@ namespace Playwright_POC.Tools.LocatorScan
                 reports.Add(report);
             }
 
-            // Uniqueness check (optional)
-            if (options.CheckUniqueness)
-            {
-                foreach (var r in reports)
-                {
-                    ct.ThrowIfCancellationRequested();
-                    foreach (var c in r.Candidates)
-                    {
-                        try
-                        {
-                            var locator = BuildLocator(page, c);
-                            if (locator is not null)
-                            {
-                                var count = await locator.CountAsync();
-                                c.UniquenessCount = count;
-                                c.IsUnique = count == 1;
-                            }
-                            else
-                            {
-                                c.UniquenessCount = 99;
-                                c.IsUnique = false;
-                            }
-                        }
-                        catch
-                        {
-                            c.UniquenessCount = 99;
-                            c.IsUnique = false;
-                        }
-                    }
-                }
-            }
-
-            // OnlyKeepUniqueTop: remove candidates that are not unique, keep only top
-            if (options.OnlyKeepUniqueTop)
-            {
-                foreach (var r in reports)
-                {
-                    var unique = r.Candidates.Where(c => c.IsUnique).OrderBy(c => c.Score).ToList();
-                    if (unique.Count > 0)
-                        r.Candidates = unique;
-                    // else keep all (fallback)
-                }
-            }
-
             return reports;
         }
 
@@ -637,61 +589,6 @@ namespace Playwright_POC.Tools.LocatorScan
             return list.OrderBy(c => c.Score).ToList();
         }
 
-        // ────── Helper: build a live ILocator from a candidate ──────
-
-        private static ILocator? BuildLocator(IPage page, LocatorCandidate c)
-        {
-            try
-            {
-                // Parse strategy from CodeSnippet via strategy name
-                var code = c.CodeSnippet;
-                if (c.Strategy == "GetByTestId")
-                {
-                    var val = ExtractFirstQuotedValue(code);
-                    return val is not null ? page.GetByTestId(val) : null;
-                }
-                if (c.Strategy == "GetByLabel")
-                {
-                    var val = ExtractFirstQuotedValue(code);
-                    return val is not null ? page.GetByLabel(val) : null;
-                }
-                if (c.Strategy == "GetByPlaceholder")
-                {
-                    var val = ExtractFirstQuotedValue(code);
-                    return val is not null ? page.GetByPlaceholder(val) : null;
-                }
-                if (c.Strategy == "GetByText")
-                {
-                    var val = ExtractFirstQuotedValue(code);
-                    return val is not null ? page.GetByText(val) : null;
-                }
-                if (c.Strategy == "CssId")
-                {
-                    var val = ExtractFirstQuotedValue(code);
-                    return val is not null ? page.Locator(val) : null;
-                }
-                if (c.Strategy == "GetByRole")
-                {
-                    // Extract AriaRole.X and optional Name
-                    var roleMatch = Regex.Match(code, @"AriaRole\.(\w+)");
-                    if (!roleMatch.Success) return null;
-                    var roleName = roleMatch.Groups[1].Value;
-                    if (!Enum.TryParse<AriaRole>(roleName, true, out var ariaRole)) return null;
-
-                    var nameMatch = Regex.Match(code, @"Name\s*=\s*""([^""]+)""");
-                    if (nameMatch.Success)
-                        return page.GetByRole(ariaRole, new() { Name = nameMatch.Groups[1].Value });
-                    else
-                        return page.GetByRole(ariaRole);
-                }
-            }
-            catch
-            {
-                // defensive
-            }
-            return null;
-        }
-
         // ────── Inference helpers ──────
 
         public static string InferControlType(string tag, string type, string role, string classes)
@@ -792,12 +689,6 @@ namespace Playwright_POC.Tools.LocatorScan
         private static string Escape(string s) =>
             s?.Replace("\\", "\\\\").Replace("\"", "\\\"") ?? string.Empty;
 
-        private static string? ExtractFirstQuotedValue(string code)
-        {
-            var m = Regex.Match(code, "\"([^\"]+)\"");
-            return m.Success ? m.Groups[1].Value : null;
-        }
-
         private static string FirstNonEmpty(params string?[] values)
         {
             foreach (var v in values)
@@ -841,7 +732,7 @@ namespace Playwright_POC.Tools.LocatorScan
             var sb = new StringBuilder();
 
             // Header
-            sb.Append("tag,type,role,controlType,action,purpose,region,group,required,disabled,isHidden,hiddenReasons,help,id,testId,text,placeholder,target,topStrategy,topCode,isUnique,uniquenessCount,debugXPath");
+            sb.Append("tag,type,role,controlType,action,purpose,region,group,required,disabled,isHidden,hiddenReasons,help,id,testId,text,placeholder,target,topStrategy,topCode,debugXPath");
             if (includeRepoColumns)
                 sb.Append(",matchType,matchStrategy,matchCanonicalKey,matchFile,matchMember,matchCode");
             sb.AppendLine();
@@ -869,8 +760,6 @@ namespace Playwright_POC.Tools.LocatorScan
                 sb.Append(CsvField(r.Target)).Append(',');
                 sb.Append(CsvField(top?.Strategy ?? "")).Append(',');
                 sb.Append(CsvField(top?.CodeSnippet ?? "")).Append(',');
-                sb.Append(top?.IsUnique == true ? "true" : "false").Append(',');
-                sb.Append(top?.UniquenessCount ?? 0).Append(',');
                 sb.Append(CsvField(r.DebugXPath));
 
                 if (includeRepoColumns)
