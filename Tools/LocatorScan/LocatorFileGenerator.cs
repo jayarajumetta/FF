@@ -148,19 +148,23 @@ namespace Playwright_POC.Tools.LocatorScan
         {
             if (string.IsNullOrEmpty(input)) return "Page";
             
-            // Clean up the input - remove special characters, convert to PascalCase
-            var cleaned = Regex.Replace(input, @"[^a-zA-Z0-9]", " ");
+            // First, insert spaces before capitals in camelCase (e.g., additionalDescription -> additional Description)
+            var withSpaces = Regex.Replace(input, @"(?<=[a-z])(?=[A-Z])", " ");
+            
+            // Clean up special characters
+            var cleaned = Regex.Replace(withSpaces, @"[^a-zA-Z0-9]", " ");
             var words = cleaned.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             
+            // Capitalize first letter of each word, preserve rest of casing for acronyms
             return string.Join("", words.Select(w => 
-                char.ToUpper(w[0]) + w.Substring(1).ToLower()));
+                char.ToUpper(w[0]) + (w.Length > 1 ? w.Substring(1) : "")));
         }
 
         private static List<ElementReport> FilterToBestCandidates(List<ElementReport> reports)
         {
             // STRICT FILTER: Only include high-quality locators matching repo patterns
             // Repo pattern: STRONGLY prefer GetByTestId, then GetByRole with aria-label
-            return reports
+            var filtered = reports
                 .Where(r => 
                 {
                     var topCandidate = r.Candidates.FirstOrDefault();
@@ -171,16 +175,28 @@ namespace Playwright_POC.Tools.LocatorScan
                     // Must have generated code
                     if (topCandidate == null || string.IsNullOrEmpty(topCandidate.CodeSnippet)) return false;
                     
-                    // SKIP if already exists in repo (exact match)
+                    // SKIP fragile/generic locators (dynamic IDs, .First patterns, generic tag selectors)
+                    if (IsFragileLocator(topCandidate.CodeSnippet))
+                        return false;
+                    
+                    // GOLD STANDARD: Elements with testId - ALWAYS include if testId is new
+                    // For elements with testId, only consider it "matched" if the GetByTestId candidate exists
+                    // Ignore matches from generic candidates like GetByRole(Textbox)
+                    if (!string.IsNullOrEmpty(r.TestId))
+                    {
+                        // Check if the specific testId exists in repo (not other candidates)
+                        var testIdMatch = r.ExistingMatches?.FirstOrDefault(m => 
+                            m.MatchType == "Exact" && 
+                            (m.CanonicalKey?.StartsWith("getbytestid|", StringComparison.OrdinalIgnoreCase) == true));
+                        return testIdMatch == null; // Include if testId is NOT in repo
+                    }
+                    
+                    // SKIP if already exists in repo (exact match) - for non-testId elements only
                     if (r.ExistingMatches?.Any(m => m.MatchType == "Exact") == true)
                         return false;
                     
-                    // Skip dynamic/meaningless data
+                    // Skip dynamic/meaningless data (only for non-testId elements)
                     if (IsDynamicData(text)) return false;
-                    
-                    // GOLD STANDARD: Elements with testId - ALWAYS include
-                    if (!string.IsNullOrEmpty(r.TestId))
-                        return true;
                     
                     // SILVER STANDARD: Elements with aria-label (GetByRole is stable)
                     // Include buttons, inputs, and interactive elements with aria-label
@@ -219,8 +235,15 @@ namespace Playwright_POC.Tools.LocatorScan
                     return false;
                 })
                 .OrderBy(r => GetPriority(r))
-                .Take(50)
                 .ToList();
+            
+            // ALWAYS include all elements with testId (developer-intended test hooks) - no limit
+            var withTestId = filtered.Where(e => !string.IsNullOrEmpty(e.TestId)).ToList();
+            
+            // Cap non-testId elements at 150 to balance usefulness vs noise
+            var withoutTestId = filtered.Where(e => string.IsNullOrEmpty(e.TestId)).Take(150).ToList();
+            
+            return withTestId.Concat(withoutTestId).ToList();
         }
         
         /// <summary>
@@ -230,6 +253,10 @@ namespace Playwright_POC.Tools.LocatorScan
         {
             var tagName = (element.Tag ?? "").ToLower();
             var classList = (element.ClassList ?? "").ToLower();
+            
+            // Angular Material select (dropdown)
+            if (tagName == "mat-select" || classList.Contains("mat-select"))
+                return true;
             
             // Angular Material datepicker toggle
             if (tagName == "mat-datepicker-toggle" || classList.Contains("mat-datepicker-toggle"))
@@ -247,8 +274,16 @@ namespace Playwright_POC.Tools.LocatorScan
             if (tagName == "mat-radio-button" || classList.Contains("mat-radio-button"))
                 return true;
             
+            // Angular Material button toggle (segmented button groups)
+            if (tagName == "mat-button-toggle" || classList.Contains("mat-button-toggle"))
+                return true;
+            
             // Calendar navigation buttons
             if (classList.Contains("mat-calendar-previous-button") || classList.Contains("mat-calendar-next-button"))
+                return true;
+            
+            // Angular Material datepicker INPUT (the actual date field)
+            if (tagName == "input" && classList.Contains("mat-datepicker-input"))
                 return true;
             
             return false;
@@ -269,6 +304,33 @@ namespace Playwright_POC.Tools.LocatorScan
             };
             
             return genericLabels.Any(g => lower == g);
+        }
+        
+        /// <summary>
+        /// Detect fragile locators that should be excluded (dynamic IDs, .First patterns, generic selectors)
+        /// </summary>
+        private static bool IsFragileLocator(string codeSnippet)
+        {
+            if (string.IsNullOrEmpty(codeSnippet)) return true;
+            
+            // .First patterns are fragile (depend on DOM order)
+            if (codeSnippet.Contains(".First"))
+                return true;
+            
+            // Dynamic CSS IDs (mat-select-value-55, cdk-overlay-123, etc.)
+            if (Regex.IsMatch(codeSnippet, @"#[a-z-]+-\d+"))
+                return true;
+            
+            // Generic tag-only selectors without specificity
+            var genericTagPatterns = new[] {
+                "Locator(\"div\")", "Locator(\"span\")", "Locator(\"button\")",
+                "Locator(\"input\")", "Locator(\"a\")", "Locator(\"li\")",
+                "Locator(\"mat-form-field\")", "Locator(\"mat-option\")"
+            };
+            if (genericTagPatterns.Any(p => codeSnippet.Contains(p)))
+                return true;
+            
+            return false;
         }
         
         /// <summary>
@@ -438,12 +500,32 @@ namespace Playwright_POC.Tools.LocatorScan
             // Priority 2: Clean, meaningful text
             else if (!string.IsNullOrEmpty(element.Text) && IsStableUIElement(element.Text))
             {
-                baseName = ToPascalCase(element.Text.Length > 25 ? element.Text.Substring(0, 25) : element.Text);
+                baseName = ExtractMeaningfulName(element.Text);
             }
-            // Priority 3: Semantic ID (not random)
-            else if (!string.IsNullOrEmpty(element.Id) && !IsDynamicData(element.Id))
+            // Priority 3: Associated label (from <label> element - used by GetByLabel)
+            else if (!string.IsNullOrEmpty(element.Label) && element.Label.Length >= 3)
             {
-                baseName = ToPascalCase(element.Id);
+                baseName = ExtractMeaningfulName(element.Label);
+            }
+            // Priority 4: Aria-label (common for buttons, icons, interactive elements)
+            else if (!string.IsNullOrEmpty(element.AriaLabel) && element.AriaLabel.Length >= 3)
+            {
+                baseName = ExtractMeaningfulName(element.AriaLabel);
+            }
+            // Priority 5: Semantic ID - extract meaningful part first, then check if dynamic
+            else if (!string.IsNullOrEmpty(element.Id))
+            {
+                var semanticName = ConvertIdToSemanticName(element.Id);
+                // Only use if the extracted name is meaningful and not dynamic
+                if (semanticName.Length >= 3 && !IsDynamicData(semanticName))
+                {
+                    baseName = semanticName;
+                }
+                else
+                {
+                    // Fallback within Priority 5
+                    baseName = (element.ControlType ?? "Element") + "Control";
+                }
             }
             // Fallback: Use control type with context
             else
@@ -460,6 +542,69 @@ namespace Playwright_POC.Tools.LocatorScan
                 baseName = "Element" + baseName;
 
             return baseName;
+        }
+        
+        /// <summary>
+        /// Extract meaningful words from a label/text to create a concise method name.
+        /// Removes question words, articles, prepositions, and keeps nouns/verbs.
+        /// </summary>
+        private static string ExtractMeaningfulName(string input)
+        {
+            if (string.IsNullOrEmpty(input)) return "Element";
+            
+            // If short enough, just use PascalCase
+            if (input.Length <= 30)
+            {
+                return ToPascalCase(input);
+            }
+            
+            // Stop words to remove (common filler words)
+            var stopWords = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "a", "an", "the", "is", "are", "was", "were", "be", "been", "being",
+                "do", "does", "did", "doing", "have", "has", "had", "having",
+                "you", "your", "this", "that", "these", "those", "it", "its", "there",
+                "to", "of", "in", "for", "on", "with", "at", "by", "from", "as",
+                "and", "or", "but", "if", "then", "else", "when", "where", "why", "how",
+                "all", "any", "both", "each", "few", "more", "most", "some", "such",
+                "no", "not", "only", "same", "so", "than", "too", "very",
+                "can", "will", "just", "should", "would", "could", "may", "might",
+                "want", "like", "need"
+            };
+            
+            // Split into words
+            var words = Regex.Split(input, @"[^a-zA-Z0-9]+")
+                .Where(w => !string.IsNullOrEmpty(w) && w.Length >= 2)
+                .Where(w => !stopWords.Contains(w))
+                .ToList();
+            
+            // Take up to 5 meaningful words to keep name reasonable
+            var meaningfulWords = words.Take(5).ToList();
+            
+            if (meaningfulWords.Count == 0)
+            {
+                // Fallback: take first few words regardless
+                meaningfulWords = Regex.Split(input, @"[^a-zA-Z0-9]+")
+                    .Where(w => !string.IsNullOrEmpty(w) && w.Length >= 2)
+                    .Take(3)
+                    .ToList();
+            }
+            
+            // Convert to PascalCase
+            return string.Join("", meaningfulWords.Select(w => 
+                char.ToUpper(w[0]) + (w.Length > 1 ? w.Substring(1) : "")));
+        }
+        /// <summary>
+        /// Extract semantic name from an ID attribute (similar logic to TestId extraction)
+        /// </summary>
+        private static string ConvertIdToSemanticName(string id)
+        {
+            // IDs often follow similar patterns to testIds
+            // e.g., "fields.underwritingLossExperience.rows[0].addLoss.rows[0].addLossInput$dateOfOccurrence.value"
+            // -> "dateOfOccurrence" -> "DateOfOccurrence"
+            
+            // Use the same extraction logic as TestId
+            return ConvertTestIdToSemanticName(id);
         }
         
         private static string ConvertTestIdToSemanticName(string testId)
