@@ -1,4 +1,4 @@
-﻿// Pages/PricingDetailsPage.cs
+﻿// Pages/ExpertQuotePages/PA_PricingDetailsPage.cs
 using Microsoft.Playwright;
 using Playwright_POC.Helpers;
 using System.Threading.Tasks;
@@ -6,9 +6,9 @@ using static Microsoft.Playwright.Assertions;
 
 namespace Playwright_POC.Pages
 {
-    public class PricingDetailsPage : BasePage
+    public class PA_PricingDetailsPage : BasePage
     {
-        public PricingDetailsPage(IPage page) : base(page) { }
+        public PA_PricingDetailsPage(IPage page) : base(page) { }
 
         #region Locators
         private ILocator AccountOwner => _page.Locator("div.readonly-field:has(span.readonly-label:has-text('Account Owner')) >> span.readonly-value");

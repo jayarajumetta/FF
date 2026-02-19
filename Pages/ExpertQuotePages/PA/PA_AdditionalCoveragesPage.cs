@@ -1,13 +1,13 @@
-﻿// Pages/AdditionalCoveragesPage.cs
+﻿// Pages/ExpertQuotePages/PA_AdditionalCoveragesPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 using Playwright_POC.Helpers;
 
 namespace Playwright_POC.Pages
 {
-    public class AdditionalCoveragesPage : BasePage
+    public class PA_AdditionalCoveragesPage : BasePage
     {
-        public AdditionalCoveragesPage(IPage page) : base(page) { }
+        public PA_AdditionalCoveragesPage(IPage page) : base(page) { }
 
         #region Locators
         private ILocator RentedMotorHomesCheckbox => _page.GetByTestId("RentedMotorHomeTravelTrailer");

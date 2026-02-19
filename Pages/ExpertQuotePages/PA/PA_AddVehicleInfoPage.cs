@@ -1,4 +1,4 @@
-﻿// Pages/AddVehicleInfoPage.cs
+﻿// Pages/ExpertQuotePages/PA_AddVehicleInfoPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
@@ -7,9 +7,9 @@ using NUnit.Framework;
 
 namespace Playwright_POC.Pages
 {
-    public class AddVehicleInfoPage : BasePage
+    public class PA_AddVehicleInfoPage : BasePage
     {
-        public AddVehicleInfoPage(IPage page) : base(page) { }
+        public PA_AddVehicleInfoPage(IPage page) : base(page) { }
 
         #region Locators
         private ILocator SelectVehiclesButton => _page.Locator("button[id*='unlistedVehicle']");

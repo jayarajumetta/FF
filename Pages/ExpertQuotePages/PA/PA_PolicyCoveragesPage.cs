@@ -1,13 +1,13 @@
-﻿// Pages/PolicyCoveragesPage.cs
+﻿// Pages/ExpertQuotePages/PA_PolicyCoveragesPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 using Playwright_POC.Helpers;
 
 namespace Playwright_POC.Pages
 {
-    public class PolicyCoveragesPage : BasePage
+    public class PA_PolicyCoveragesPage : BasePage
     {
-        public PolicyCoveragesPage(IPage page) : base(page) { }
+        public PA_PolicyCoveragesPage(IPage page) : base(page) { }
 
         #region Locators
         private ILocator ViewPriorCarrierDetailsButton => _page.Locator("button:has-text('VIEW PRIOR CARRIER DETAILS')");
