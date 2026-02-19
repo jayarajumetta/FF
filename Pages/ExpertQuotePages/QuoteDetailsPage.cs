@@ -124,10 +124,10 @@ namespace Playwright_POC.Pages
             await PolicyTermDropdown.ClickAsync();
 
             // Wait for dropdown to fully open
-            await Task.Delay(1000);
+            await Task.Delay(500);
 
-            // Click the policy term option
-            await _page.GetByText(contextData.PolicyTerm, new() { Exact = true }).ClickAsync();
+            // Click the policy term option (Angular Material mat-option)
+            await _page.GetByRole(AriaRole.Option, new() { Name = contextData.PolicyTerm }).ClickAsync();
 
             await AgentPCCodeInput.FillAsync(contextData.AgentCode);
         }
@@ -136,8 +136,8 @@ namespace Playwright_POC.Pages
         {
             await RatingStateDropdown.ClickAsync();
             await Task.Delay(500);
-            // Dropdown shows states in UPPERCASE
-            await _page.GetByText(contextData.RatingState.ToUpper(), new() { Exact = true }).ClickAsync();
+            // Dropdown shows states in UPPERCASE (Angular Material mat-option)
+            await _page.GetByRole(AriaRole.Option, new() { Name = contextData.RatingState.ToUpper() }).ClickAsync();
 
             await WaitForSpinnerAsync();
 
@@ -239,8 +239,8 @@ namespace Playwright_POC.Pages
         {
             await RatingStateDropdown.ClickAsync();
             await Task.Delay(500);
-            // Dropdown shows states in UPPERCASE
-            await _page.GetByText(contextData.RatingState.ToUpper(), new() { Exact = true }).ClickAsync();
+            // Dropdown shows states in UPPERCASE (Angular Material mat-option)
+            await _page.GetByRole(AriaRole.Option, new() { Name = contextData.RatingState.ToUpper() }).ClickAsync();
         }
     }
 }
