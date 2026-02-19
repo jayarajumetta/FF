@@ -18,7 +18,7 @@ namespace Playwright_POC.Pages
         /// <summary>
         /// Wait for the page-specific loading indicator to clear
         /// </summary>
-        protected async Task WaitForSpinnerAsync(int timeoutMs = 60000)
+        public async Task WaitForSpinnerAsync(int timeoutMs = 60000)
         {
             var overlay = _page.Locator(".ngx-spinner-overlay");
             if (await overlay.CountAsync() > 0)
@@ -30,12 +30,14 @@ namespace Playwright_POC.Pages
         /// <summary>
         /// Click the standard Next button
         /// </summary>
-        protected async Task ClickNextAsync()
+        public async Task ClickNextAsync()
         {
             var candidates = new[]
             {
                 _page.GetByTestId("fields.data.next"),
                 _page.GetByTestId("fields.data-Next.next"),
+                _page.GetByTestId("fields.data_Next.next"),
+                _page.GetByTestId("fields.data_Rules.next"),
                 _page.GetByTestId("next"),
                 _page.GetByRole(AriaRole.Button, new() { Name = "Next" })
             };
@@ -53,18 +55,34 @@ namespace Playwright_POC.Pages
         }
 
         /// <summary>
-        /// Click the standard Save button
+        /// Click the standard Save button (tries multiple known data-testids)
         /// </summary>
-        protected async Task ClickSaveAsync()
+        public async Task ClickSaveAsync()
         {
-            await _page.GetByTestId("fields.data_Actions.save").ClickAsync();
-            await WaitForSpinnerAsync();
+            var candidates = new[]
+            {
+                _page.GetByTestId("fields.data_Actions.save"),
+                _page.GetByTestId("fields.line.save"),
+                _page.GetByRole(AriaRole.Button, new() { Name = "Save" })
+            };
+
+            foreach (var candidate in candidates)
+            {
+                if (await candidate.CountAsync() > 0 && await candidate.First.IsVisibleAsync())
+                {
+                    await candidate.First.ClickAsync();
+                    await WaitForSpinnerAsync();
+                    return;
+                }
+            }
+
+            throw new PlaywrightException("Save button not found using any known data-testid.");
         }
 
         /// <summary>
         /// Click Save and Continue button
         /// </summary>
-        protected async Task ClickSaveAndContinueAsync()
+        public async Task ClickSaveAndContinueAsync()
         {
             await _page.GetByTestId("fields.line.save_and_Continue").ClickAsync();
             await WaitForSpinnerAsync();
@@ -73,7 +91,7 @@ namespace Playwright_POC.Pages
         /// <summary>
         /// Click an Angular Material toggle button only if not already selected
         /// </summary>
-        protected async Task ClickIfNotSelectedAsync(ILocator locator)
+        public async Task ClickIfNotSelectedAsync(ILocator locator)
         {
             bool isSelected = await locator.EvaluateAsync<bool>(
                 "el => el.classList.contains('mat-button-toggle-checked')"

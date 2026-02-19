@@ -13,17 +13,23 @@ namespace Playwright_POC.Helpers
 {
     public class Helpers
     {
-        // ✅ Old version: keep it for legacy string selectors (xpath/css)
+        /// <summary>
+        /// Legacy string selector version. Prefer BasePage.ClickIfNotSelectedAsync with ILocator.
+        /// </summary>
+        [Obsolete("Use page object methods via BasePage instead. This will be removed in a future release.")]
         public static async Task ClickIfNotSelectedAsync(IPage page, string selector)
         {
             var locator = page.Locator(selector);
             await ClickIfNotSelectedAsync(locator);
         }
 
-        // ✅ New version: works with GetBy... because it accepts ILocator
+        /// <summary>
+        /// Works with GetBy locators. Prefer page object methods via BasePage.
+        /// </summary>
+        [Obsolete("Use page object methods via BasePage instead. This will be removed in a future release.")]
         public static async Task ClickIfNotSelectedAsync(ILocator locator)
         {
-            // Option 1: Your original logic (Angular Material toggle selected class)
+            // Angular Material toggle selected class check
             bool isSelected = await locator.EvaluateAsync<bool>(
                 "el => el.classList.contains('mat-button-toggle-checked')"
             );
@@ -33,15 +39,20 @@ namespace Playwright_POC.Helpers
         }
 
 
+        /// <summary>
+        /// Clicks the Next button using testId fallbacks. Prefer page object methods via BasePage.
+        /// </summary>
+        [Obsolete("Use page object ClickNextAsync() via BasePage instead. This will be removed in a future release.")]
         public static async Task ClickNextAsync(IPage page)
         {
             var candidates = new[]
             {
-        page.GetByTestId("fields.data.next"),
-        page.GetByTestId("fields.data-Next.next"),
-        page.GetByTestId("next"),
-        page.GetByRole(AriaRole.Button, new() { Name = "Next" })
-    };
+                page.GetByTestId("fields.data.next"),
+                page.GetByTestId("fields.data-Next.next"),
+                page.GetByTestId("fields.data_Rules.next"),
+                page.GetByTestId("next"),
+                page.GetByRole(AriaRole.Button, new() { Name = "Next" })
+            };
 
             foreach (var candidate in candidates)
             {
@@ -57,6 +68,10 @@ namespace Playwright_POC.Helpers
 
 
 
+        /// <summary>
+        /// Waits for ngx-spinner overlay to clear. Prefer BasePage.WaitForSpinnerAsync().
+        /// </summary>
+        [Obsolete("Use page object WaitForSpinnerAsync() via BasePage instead. This will be removed in a future release.")]
         public static async Task WaitForSpinnerToClearAsync(IPage page, int timeoutMs = 60000)
         {
             // Covers common ngx-spinner overlay patterns
@@ -67,12 +82,14 @@ namespace Playwright_POC.Helpers
             {
                 await overlay.First.WaitForAsync(new() { State = WaitForSelectorState.Hidden, Timeout = timeoutMs });
             }
-
-
         }
 
+        [Obsolete("Use page object Yes/No methods. This will be removed in a future release.")]
         public static class UiToggleHelpers
         {
+            /// <summary>
+            /// Clicks Yes/No toggle buttons. Prefer page-specific methods.
+            /// </summary>
             public static async Task ClickYesNoAsync(
                 IPage page,
                 string testId,
@@ -85,7 +102,9 @@ namespace Playwright_POC.Helpers
                 );
 
                 await button.ClickAsync();
+#pragma warning disable CS0618 // Type or member is obsolete
                 await Helpers.WaitForSpinnerToClearAsync(page);
+#pragma warning restore CS0618
             }
         }
 

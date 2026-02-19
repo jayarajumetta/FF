@@ -122,10 +122,10 @@ namespace Playwright_POC.Pages
 
             // Click the Policy Term dropdown to expand it
             await PolicyTermDropdown.ClickAsync();
-            
+
             // Wait for dropdown to fully open
             await Task.Delay(1000);
-            
+
             // Click the policy term option
             await _page.GetByText(contextData.PolicyTerm, new() { Exact = true }).ClickAsync();
 

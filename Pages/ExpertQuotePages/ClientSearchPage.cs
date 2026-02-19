@@ -2,7 +2,7 @@
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages
+namespace Playwright_POC.Pages.ExpertQuotePages
 {
     /// <summary>
     /// Page Object for ExpertQuote Client Search / Dashboard page
@@ -12,20 +12,22 @@ namespace Playwright_POC.Pages
     {
         public ClientSearchPage(IPage page) : base(page) { }
 
-        // ══════════════════════════════════════════════════════════════════
-        // LOCATORS
-        // ══════════════════════════════════════════════════════════════════
-
+        #region Locators
+        // Dashboard/Search page
         private ILocator DashboardElement => _page.Locator("strong").GetByText("Quote", new() { Exact = true }).First;
         private ILocator PageHeader => _page.GetByText("Search / Recently Accessed");
         private ILocator SearchInput => _page.GetByTestId("quoteSearchInput");
         private ILocator SearchButton => _page.GetByTestId("quoteSearchButton");
         private ILocator NewQuoteButton => _page.GetByRole(AriaRole.Button, new() { Name = "New Quote" });
+        
+        // Client Search/Suggestions panel (within quote flow)
+        private ILocator ClientSearchSuggestionNav => _page.GetByTestId("ClientSearchSuggestion-nav");
+        private ILocator ClientSearchInputGroup => _page.GetByTestId("temp.clientSearchInputGroup");
+        private ILocator CreateNewClientCheckbox => _page.GetByTestId("temp.createNewClient");
+        private ILocator CancelButton => _page.GetByTestId("fields.data.account.client.cancel");
+        #endregion
 
-        // ══════════════════════════════════════════════════════════════════
-        // PUBLIC METHODS
-        // ══════════════════════════════════════════════════════════════════
-
+        #region Actions
         /// <summary>
         /// Enter client name in search and click search button
         /// </summary>
@@ -79,10 +81,25 @@ namespace Playwright_POC.Pages
             await Playwright_POC.Helpers.TableAssertions.AssertNameNotInTableAsync(_page, "table", clientName);
         }
 
-        // ══════════════════════════════════════════════════════════════════
-        // LEGACY COMPATIBILITY (for existing step definitions)
-        // ══════════════════════════════════════════════════════════════════
+        /// <summary>
+        /// Check the "Create New Client" checkbox in the client search panel
+        /// </summary>
+        public async Task CheckCreateNewClientAsync()
+        {
+            await CreateNewClientCheckbox.CheckAsync();
+        }
 
+        /// <summary>
+        /// Click Cancel button in client search panel
+        /// </summary>
+        public async Task ClickCancelAsync()
+        {
+            await CancelButton.ClickAsync();
+            await WaitForSpinnerAsync();
+        }
+        #endregion
+
+        #region Legacy Compatibility
         [System.Obsolete("Use SearchForClientAsync instead")]
         public async Task EnterNameAndSearchAsync(string name) => await SearchForClientAsync(name);
 
@@ -95,5 +112,6 @@ namespace Playwright_POC.Pages
         [System.Obsolete("Use AssertClientNotInResultsAsync instead")]
         public async Task AssertNameNotInTableAsync(string tableSelector, string clientName) =>
             await AssertClientNotInResultsAsync(clientName);
+        #endregion
     }
 }
