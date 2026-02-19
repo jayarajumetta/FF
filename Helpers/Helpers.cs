@@ -89,6 +89,27 @@ namespace Playwright_POC.Helpers
             }
         }
 
+        public static async Task ClickSaveAsync(IPage page)
+        {
+            var candidates = new[]
+            {
+                page.GetByTestId("fields.data_Actions.save"),
+                page.GetByTestId("fields.data_Next.saveLocation"),
+
+            };
+
+            foreach (var candidate in candidates)
+            {
+                if (await candidate.CountAsync() > 0 && await candidate.First.IsVisibleAsync())
+                {
+                    await candidate.First.ClickAsync();
+                    return;
+                }
+            }
+
+            throw new PlaywrightException("Save button not found using any known data-testid.");
+        }
+
     }
 }
 

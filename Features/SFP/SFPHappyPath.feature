@@ -84,3 +84,12 @@ Feature: SFP Happy Path
      | Policy       | Agribusiness         | No     |
      | Division I   | Excess Debris Removal | Yes    |
      | Division II  | Excess Debris Removal | Yes    |
+
+
+     When user provides location information and continues
+     | Question                | Answer  |
+     | LocationNickname        | Farm 1  |
+     | LocationType            | Both    |
+     | MilesFromFireDepartment |      25 |
+     | FeetFromHydrant         | 501-750 |
+     | TotalAcreage            |     300 |

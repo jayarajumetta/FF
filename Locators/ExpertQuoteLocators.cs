@@ -16,7 +16,6 @@ namespace Playwright_POC.Locators
         public static ILocator SaveAndContinueButton(IPage page) => page.GetByTestId("fields.line.save_and_Continue");
         public const string CancelButton = "xpath=.//button[contains(text(), 'Cancel')]";
         public const string QuoteNumber = "xpath=//div[contains(@class, 'mat-tab-label-container')]//span";
-        public static ILocator SaveButton(IPage page) => page.GetByTestId("fields.data_Actions.save") ;
     }
 
     public static class LoginLocators
@@ -109,7 +108,7 @@ namespace Playwright_POC.Locators
 
         // Quote Details
         public static ILocator EffDateInput(IPage page) => page.Locator("input[name='proposal.effectiveDate']");
-        public static ILocator ExpandPolicyTermDropdown(IPage page) => page.GetByTestId("proposal.term");
+        public static ILocator ExpandPolicyTermDropdown(IPage page) => page.Locator("mat-select[data-testid='proposal.term']");
         public static ILocator PolicyTermDropdownValue(IPage page) => page.GetByTestId("proposal.term");
         public static ILocator AgentPCCodeInput(IPage page) => page.GetByTestId("proposal.agentPC");
         public static ILocator SalesAssociatePCCodeInput(IPage page) => page.GetByTestId("proposal.associatePC");

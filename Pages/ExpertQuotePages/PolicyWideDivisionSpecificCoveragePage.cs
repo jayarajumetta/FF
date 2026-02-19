@@ -22,8 +22,12 @@ namespace Playwright_POC.Pages
         private const string CoverageTypeSelector = "td.cdk-column-column1 span.readonly-value-no-label, mat-cell.cdk-column-column1 span.readonly-value-no-label";
         private const string CoverageNameSelector = "td.cdk-column-column2 span.readonly-value-no-label, mat-cell.cdk-column-column2 span.readonly-value-no-label";
         private const string CheckboxInputSelector = "td.cdk-column-select input[type='checkbox'], mat-cell.cdk-column-select input[type='checkbox']";
-        private const string CheckboxHostSelector = "td.cdk-column-select mat-checkbox, mat-cell.cdk-column-select mat-checkbox";
         private const string CheckboxClickableSelector = "td.cdk-column-select label.mat-checkbox-layout, mat-cell.cdk-column-select label.mat-checkbox-layout";
+        private const string AddCoverageButtonSelector =
+                                        "button[data-testid^='fields.data.CoverageSections'][data-testid*='.addEdit'], " +
+                                        "button[data-testid^='fields.data.CoverageSections']:has-text('Add Coverage'), " +
+                                        "button:has-text('ADD COVERAGE'), button:has-text('Add Coverage')";
+
 
         public async Task SetCoverageSelectedAsync(string coverageType, string coverageName, bool selected)
         {
@@ -181,6 +185,58 @@ namespace Playwright_POC.Pages
                 || v.Equals("True", StringComparison.OrdinalIgnoreCase)
                 || v.Equals("1");
 
+        }
+
+        public async Task ClickAllAddCoverageButtonsAsync()
+        {
+            var buttons = _page.Locator(AddCoverageButtonSelector);
+            var count = await buttons.CountAsync();
+
+            for (int i = 0; i < count; i++)
+            {
+                var btn = buttons.Nth(i);
+
+                if (!await btn.IsVisibleAsync())
+                    continue;
+
+                await btn.ScrollIntoViewIfNeededAsync();
+                await btn.ClickAsync(new() { Force = true });
+
+                await Helpers.Helpers.WaitForSpinnerToClearAsync(_page);
+            }
+        }
+
+        public async Task ClickAddCoverageForSelectionAsync(string coverageType, string coverageName)
+        {
+            coverageType = coverageType.Trim();
+            coverageName = coverageName.Trim();
+
+            var cardTitle = coverageType.Equals("Policy", StringComparison.OrdinalIgnoreCase) ? coverageName : $"{coverageName} - {coverageType}";
+
+            var card = _page.Locator($"text={cardTitle}").Locator("xpath=ancestor::*[self::div or self::mat-card][1]");
+
+            var addBtn = card.Locator("button:has-text('ADD COVERAGE'), button:has-text('Add Coverage')").First;
+
+            await addBtn.WaitForAsync(new() { State = WaitForSelectorState.Visible });
+            await addBtn.ScrollIntoViewIfNeededAsync();
+            await addBtn.ClickAsync(new() { Force = true });
+
+            await Helpers.Helpers.WaitForSpinnerToClearAsync(_page);
+        }
+
+        public async Task ApplySelectionsAndAddCoveragesAsync(Table table)
+        {
+            await ApplyCoverageSelectionsAsync(table);
+
+            foreach (var row in table.Rows)
+            {
+                var type = row["CoverageType"].Trim();
+                var name = row["CoverageName"].Trim();
+                var selected = ParseYesNo(row["Select"]);
+
+                if (selected)
+                    await ClickAddCoverageForSelectionAsync(type, name);
+            }
         }
     }
    

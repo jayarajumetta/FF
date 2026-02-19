@@ -116,5 +116,12 @@ namespace Playwright_POC.Helpers
         public string YearsContinuousCoverage { get; set; }
 
         public string Narrative { get; set; }
+
+        public string LocationNickname { get; set; }
+        public string LocationType { get; set; }
+        public string MilesFromFireDepartment { get; set; }
+        public string FeetFromHydrant { get; set; }
+        public string TotalAcreage { get; set; }
+
     }
 }

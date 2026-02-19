@@ -76,7 +76,7 @@ public class SFPSteps
         var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);
         await primaryInsuredPage.ValidatePrimaryInsuredDetailsAsync(_contextData);
         await Helpers.WaitForSpinnerToClearAsync(_context.Page);
-        await GlobalLocators.SaveButton(_context.Page).ClickAsync();
+        await Helpers.ClickSaveAsync(_context.Page);
     }
 
     [When("user answers UW Questions and continues")]
@@ -126,7 +126,18 @@ public class SFPSteps
     public async Task UserselectsPolicyWideDivisionSpecificCoveragesAndContinues(Table table)
     {
         var coverageCatalogPage = new PolicyWideDivisionSpecificCoveragePage(_context.Page);
-        await coverageCatalogPage.ApplyCoverageSelectionsAsync(table);
+        await coverageCatalogPage.ApplySelectionsAndAddCoveragesAsync(table);
         await Helpers.ClickNextAsync(_context.Page);
+    }
+
+    [When("user provides location information and continues")]
+    public async Task UserProvidesLocationInformationAndContinues(Table table)
+    {
+        TableMappingHelpers.LocationInformationFields(table, _contextData);
+
+        var locationPage = new LocationPage(_context.Page, _contextData);
+        await locationPage.EnterLocationInformationAsync();
+
+        await Helpers.ClickSaveAsync(_context.Page);
     }
 }
