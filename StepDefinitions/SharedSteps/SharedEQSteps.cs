@@ -145,7 +145,8 @@ public class SharedEQSteps
     public async Task UserCreatesNewClientAndClicksNext()
     {
         await _context.Page.GetByRole(AriaRole.Button, new() { Name = "Create New Client" }).ClickAsync();
-        await Helpers.ClickNextAsync(_context.Page);
+        var clientSearchPage = new ClientSearchPage(_context.Page);
+        await clientSearchPage.ClickNextAsync();
 
         //Wait for the next page to load
         await _context.Page.WaitForLoadStateAsync(LoadState.Load);
@@ -171,7 +172,7 @@ public class SharedEQSteps
         await accountInformationPage.FillAddressFieldsAsync(_contextData);
         await accountInformationPage.WaitForAddressDetailsAsync();
         await accountInformationPage.AnswerMailAndResidenceQuestionsAsync(_contextData);
-        await Helpers.ClickNextAsync(_context.Page);
+        await accountInformationPage.ClickNextAsync();
         Console.WriteLine(_contextData.ClientFirstName);
     }
 

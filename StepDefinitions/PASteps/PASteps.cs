@@ -61,7 +61,8 @@ public class PASteps
         await _context.Page.GetByRole(AriaRole.Button, new() { Name = "Existing Client" }).ClickAsync();
 
         // Click Next to Proceed
-        await Helpers.ClickNextAsync(_context.Page);
+        var addDriverInfoPage = new PA_AddDriverInfoPage(_context.Page);
+        await addDriverInfoPage.ClickNextAsync();
     }
 
 
@@ -71,7 +72,7 @@ public class PASteps
     {
         TableMappingHelpers.DriverInfoFields(table, _contextData);
 
-        var addDriverInfoPage = new AddDriverInfoPage(_context.Page);
+        var addDriverInfoPage = new PA_AddDriverInfoPage(_context.Page);
 
         await addDriverInfoPage.PreparePriorInsuranceReasonAsync(_contextData);
         await addDriverInfoPage.CollectAndStoreQuoteNumberAsync(_contextData);
@@ -97,7 +98,7 @@ public class PASteps
     {
         TableMappingHelpers.MapVehicleFields(table, _contextData);
 
-        var addVehicleInfoPage = new AddVehicleInfoPage(_context.Page);
+        var addVehicleInfoPage = new PA_AddVehicleInfoPage(_context.Page);
 
         await addVehicleInfoPage.WaitForVehiclePageReadyAsync();
         await addVehicleInfoPage.SelectUnlistedVehicleIfVisibleAsync();
@@ -115,7 +116,7 @@ public class PASteps
     {
         TableMappingHelpers.VehicleAssignmentFields(table, _contextData);
 
-        var addVehicleInfoPage = new AddVehicleInfoPage(_context.Page);
+        var addVehicleInfoPage = new PA_AddVehicleInfoPage(_context.Page);
         await addVehicleInfoPage.AssignVehicleToDriverAsync(_contextData.Vehicle, _contextData.DriverStatus);
     }
 
@@ -124,15 +125,15 @@ public class PASteps
     [When("user verifies there are no claims or violations")]
     public async Task UserVerifiesNoClaimsOrViolationsAsync()
     {
-        var claimsAndViolationsPage = new ClaimsViolationsPage(_context.Page);
-        await claimsAndViolationsPage.VerifyNoClaimsOrViolationsAndContinueAsync();
+        var claimsPriorInsurancePage = new ClaimsPriorInsurancePage(_context.Page);
+        await claimsPriorInsurancePage.VerifyNoClaimsOrViolationsAndContinueAsync();
     }
 
     [When("user selects discounts and clicks Next")]
     public async Task UserSelectsDiscountsAsync()
     {
-        var discountsPage = new DiscountsPage(_context.Page);
-        await Helpers.ClickNextAsync(_context.Page);
+        var discountsPage = new PA_DiscountsPage(_context.Page);
+        await discountsPage.ClickNextAsync();
     }
 
 
@@ -142,13 +143,13 @@ public class PASteps
     {
         TableMappingHelpers.PolicyCoverageFields(table, _contextData);
 
-        var policyCoveragesPage = new PolicyCoveragesPage(_context.Page);
+        var policyCoveragesPage = new PA_PolicyCoveragesPage(_context.Page);
 
         await policyCoveragesPage.SelectPolicyCoverageAsync(_contextData.PolicyCoverage);
         await policyCoveragesPage.SelectCompCollOnlyAsync(_contextData.CompCollOnly);
         await policyCoveragesPage.SelectCompDeductibleAsync(_contextData.CompDeductible);
         await policyCoveragesPage.SelectCollDeductibleAsync(_contextData.CollDeductible);
-        await Helpers.ClickNextAsync(_context.Page);
+        await policyCoveragesPage.ClickNextAsync();
     }
 
 
@@ -160,7 +161,7 @@ public class PASteps
     {
         TableMappingHelpers.AdditionalCoverageFields(table, _contextData);
 
-        var additionalCoveragesPage = new AdditionalCoveragesPage(_context.Page);
+        var additionalCoveragesPage = new PA_AdditionalCoveragesPage(_context.Page);
         string name = $"{_contextData.ClientFirstName} {_contextData.ClientLastName}";
 
         await additionalCoveragesPage.SelectAccidentalDeathAndDismembermentAsync(_contextData.AccidentalDeathAndDismemberment);
@@ -169,13 +170,13 @@ public class PASteps
         await additionalCoveragesPage.SelectLossOfIncomeAsync(name);
         await additionalCoveragesPage.SelectRentalReimbursementAsync(_contextData.RentalReimbursement);
         await additionalCoveragesPage.SelectRoadsideAssistanceAsync(_contextData.RoadsideAssistance);
-        await Helpers.ClickNextAsync(_context.Page);
+        await additionalCoveragesPage.ClickNextAsync();
     }
 
     [When("user verifies Pricing Details")]
     public async Task UserVerifiesPricingDetailsAsync()
     {
-        var pricingDetailsPage = new PricingDetailsPage(_context.Page);
+        var pricingDetailsPage = new PA_PricingDetailsPage(_context.Page);
         string name = $"{_contextData.ClientFirstName} {_contextData.ClientLastName}";
 
         var accountOwner = await pricingDetailsPage.GetAccountOwnerAsync();
@@ -186,7 +187,7 @@ public class PASteps
 
         // More verifications can be added here
 
-        await Helpers.ClickNextAsync(_context.Page);
+        await pricingDetailsPage.ClickNextAsync();
     }
 
 
@@ -195,8 +196,8 @@ public class PASteps
     public async Task UserVerifiesEligibilityAsync()
     {
         // Add any questions that may populate
-
-        await Helpers.ClickNextAsync(_context.Page);
+        var basePage = new PA_PricingDetailsPage(_context.Page); // Any BasePage-derived page works
+        await basePage.ClickNextAsync();
     }
 
 
@@ -205,7 +206,7 @@ public class PASteps
     {
         TableMappingHelpers.AdditionalInterestFields(table, _contextData);
 
-        var addAdditionalInterestPage = new AddAdditionalInterestPage(_context.Page);
+        var addAdditionalInterestPage = new PA_AddAdditionalInterestPage(_context.Page);
 
         await addAdditionalInterestPage.ClickAddAdditionalInterestAsync();
         await addAdditionalInterestPage.SelectAdditionalInterestTypeAsync(_contextData.AdditionalInterestType);
@@ -216,6 +217,6 @@ public class PASteps
         await addAdditionalInterestPage.FillAdditionalInterestFieldsAsync(_contextData);
         await addAdditionalInterestPage.SaveAndContinueAsync();
         await addAdditionalInterestPage.HandleUWDialogIfPresentAsync();
-        await Helpers.ClickNextAsync(_context.Page);
+        await addAdditionalInterestPage.ClickNextAsync();
     }
 }

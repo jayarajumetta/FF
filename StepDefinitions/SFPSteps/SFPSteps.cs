@@ -59,12 +59,12 @@ public class SFPSteps
     public async Task UserEntersSFPPolicyDetailsAndClicksNext(Table table)
     {
         TableMappingHelpers.SFPPolicyDataFields(table, _contextData);
-        var sfpPolicyDetailsPage = new PolicyDetailsPage(_context.Page);
+        var sfpPolicyDetailsPage = new SFP_PolicyDetailsPage(_context.Page);
         await sfpPolicyDetailsPage.SelectPrimaryFarmType(_contextData.PrimaryFarmType);
         await sfpPolicyDetailsPage.SelectLivestockType(_contextData.LivestockType);
         await sfpPolicyDetailsPage.EnterGrossFarmIncome(_contextData.GrossFarmIncome);
         await sfpPolicyDetailsPage.SelectGrowIndustrialHemp(_contextData.GrowIndustrialHemp);
-        await Helpers.ClickNextAsync(_context.Page);
+        await sfpPolicyDetailsPage.ClickNextAsync();
         Console.WriteLine($"Client {_contextData.ClientFirstName}");
     }
 
@@ -73,7 +73,7 @@ public class SFPSteps
     {
         var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);
         await primaryInsuredPage.ValidatePrimaryInsuredDetailsAsync(_contextData);
-        await Helpers.WaitForSpinnerToClearAsync(_context.Page);
+        await primaryInsuredPage.WaitForSpinnerAsync();
         await _context.Page.GetByTestId("fields.data_Actions.save").ClickAsync();
     }
 
@@ -92,21 +92,21 @@ public class SFPSteps
     [When("user enters Claims and Prior Insurance Information and continues")]
     public async Task UserEntersClaimsAndPriorInsuranceInformationAndContinues(Table table)
     {
-        var claimsViolationsPage = new ClaimsViolationsPage(_context.Page);
+        var claimsPriorInsurancePage = new ClaimsPriorInsurancePage(_context.Page);
         TableMappingHelpers.ClaimsAndPriorInsuranceFields(table, _contextData);
-        await claimsViolationsPage.SetExposuresInsuredAN90DaysAsync(_contextData.PriorFFANPolicy);
-        await claimsViolationsPage.EnterYearsInBusinessAsync(_contextData.YearsInBusiness);
-        await Helpers.ClickNextAsync(_context.Page);
+        await claimsPriorInsurancePage.SetExposuresInsuredAN90DaysAsync(_contextData.PriorFFANPolicy);
+        await claimsPriorInsurancePage.EnterYearsInBusinessAsync(_contextData.YearsInBusiness);
+        await claimsPriorInsurancePage.ClickNextAsync();
     }
 
 
     [When("user validates Client Details and continues")]
     public async Task UserValidatesClientDetailsAndContinues()
     {
-        var clientDetailsPage = new ClientDetailsPage(_context.Page);
-        await clientDetailsPage.VerifyClientName(_contextData.ClientFirstName, _contextData.ClientLastName);
-        await clientDetailsPage.VerifyClientStreetAddress(_contextData.StreetAddress);
-        //await clientDetailsPage.VerifyClientPhone(_contextData.ClientPhoneNumber);
-        await Helpers.ClickNextAsync(_context.Page);
+        var clientDetailsPage = new SFP_ClientDetailsPage(_context.Page);
+        await clientDetailsPage.VerifyClientNameAsync(_contextData.ClientFirstName, _contextData.ClientLastName);
+        await clientDetailsPage.VerifyClientStreetAddressAsync(_contextData.StreetAddress);
+        //await clientDetailsPage.VerifyClientPhoneAsync(_contextData.ClientPhoneNumber);
+        await clientDetailsPage.ClickNextAsync();
     }
 }
