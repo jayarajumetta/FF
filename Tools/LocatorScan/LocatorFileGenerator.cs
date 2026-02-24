@@ -15,12 +15,34 @@ using Microsoft.Playwright;
 
 namespace Playwright_POC.Tools.LocatorScan
 {
+    /// <summary>
+    /// Output format for generated locator files
+    /// </summary>
+    public enum LocatorOutputFormat
+    {
+        /// <summary>Static locator methods in Locators namespace (legacy)</summary>
+        StaticLocators,
+        /// <summary>SFP page object class inheriting from BasePage</summary>
+        SfpPageObject
+    }
+
     public class LocatorFileGenerator
     {
         public static async Task GenerateLocatorFileAsync(
             List<ElementReport> reports, 
             string outputDir, 
             IPage page,
+            CancellationToken ct = default)
+        {
+            // Default to SFP page object format
+            await GenerateLocatorFileAsync(reports, outputDir, page, LocatorOutputFormat.SfpPageObject, ct);
+        }
+
+        public static async Task GenerateLocatorFileAsync(
+            List<ElementReport> reports, 
+            string outputDir, 
+            IPage page,
+            LocatorOutputFormat format,
             CancellationToken ct = default)
         {
             try
@@ -39,20 +61,31 @@ namespace Playwright_POC.Tools.LocatorScan
                 
                 Console.WriteLine($"[LocatorFileGenerator] Page section: {pageIdentifier}");
                 
-                // Generate filename: ExpertQuote_PolicyDetails_17FEB2026_123456_Locators.cs
-                var fileName = $"ExpertQuote_{pageIdentifier}_{timestamp}_Locators.cs";
-                var filePath = Path.Combine(outputDir, fileName);
-                
                 // Filter to best locator candidates
                 var candidateElements = FilterToBestCandidates(reports);
                 
-                // Generate organized locator classes
-                var locatorContent = GenerateLocatorClasses(candidateElements, pageIdentifier, url, timestamp);
+                string fileName;
+                string fileContent;
+                
+                if (format == LocatorOutputFormat.SfpPageObject)
+                {
+                    // Generate SFP page object: SFP_PolicyDetails_Page.cs
+                    fileName = $"SFP_{pageIdentifier}Page.cs";
+                    fileContent = GenerateSfpPageClass(candidateElements, pageIdentifier, url);
+                }
+                else
+                {
+                    // Generate static locators: ExpertQuote_PolicyDetails_17FEB2026_123456_Locators.cs
+                    fileName = $"ExpertQuote_{pageIdentifier}_{timestamp}_Locators.cs";
+                    fileContent = GenerateLocatorClasses(candidateElements, pageIdentifier, url, timestamp);
+                }
+                
+                var filePath = Path.Combine(outputDir, fileName);
                 
                 // Ensure output directory exists
                 Directory.CreateDirectory(outputDir);
                 
-                await File.WriteAllTextAsync(filePath, locatorContent, ct);
+                await File.WriteAllTextAsync(filePath, fileContent, ct);
                 
                 Console.WriteLine($"[LocatorFileGenerator] Generated: {fileName}");
             }
@@ -470,6 +503,108 @@ namespace Playwright_POC.Tools.LocatorScan
         }
         
         /// <summary>
+        /// Generate SFP page object class format matching existing page patterns
+        /// </summary>
+        private static string GenerateSfpPageClass(
+            List<ElementReport> elements,
+            string pageIdentifier,
+            string url)
+        {
+            var sb = new StringBuilder();
+            
+            // File header - minimal like existing SFP pages
+            sb.AppendLine("using Microsoft.Playwright;");
+            sb.AppendLine();
+            sb.AppendLine("namespace Playwright_POC.Pages");
+            sb.AppendLine("{");
+            sb.AppendLine($"    public class SFP_{pageIdentifier}Page : BasePage");
+            sb.AppendLine("    {");
+            sb.AppendLine($"        public SFP_{pageIdentifier}Page(IPage page) : base(page) {{ }}");
+            sb.AppendLine();
+            
+            // Deduplicate elements by their locator code snippet
+            var seenLocators = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var uniqueElements = new List<ElementReport>();
+            
+            foreach (var element in elements)
+            {
+                var topCandidate = element.Candidates.FirstOrDefault();
+                if (topCandidate == null) continue;
+                
+                // Skip if we've already seen this exact locator
+                if (seenLocators.Contains(topCandidate.CodeSnippet))
+                    continue;
+                    
+                seenLocators.Add(topCandidate.CodeSnippet);
+                uniqueElements.Add(element);
+            }
+            
+            // Group elements by control type for organization
+            var buttons = uniqueElements.Where(e => e.ControlType == "Button").ToList();
+            var inputs = uniqueElements.Where(e => e.ControlType?.Contains("Input") == true || e.Tag == "input").ToList();
+            var selects = uniqueElements.Where(e => e.Tag == "mat-select" || e.Tag == "select").ToList();
+            var checkboxes = uniqueElements.Where(e => e.Tag == "mat-checkbox" || (e.Tag == "input" && e.Type == "checkbox")).ToList();
+            var toggles = uniqueElements.Where(e => e.Tag == "mat-slide-toggle").ToList();
+            var others = uniqueElements.Except(buttons).Except(inputs).Except(selects).Except(checkboxes).Except(toggles).ToList();
+            
+            // Track used property names to avoid duplicates
+            var usedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            
+            // Generate properties by category
+            if (inputs.Any() || selects.Any())
+            {
+                sb.AppendLine("        // Form Fields");
+                GenerateSfpProperties(sb, inputs.Concat(selects).ToList(), usedNames);
+                sb.AppendLine();
+            }
+            
+            if (buttons.Any())
+            {
+                sb.AppendLine("        // Buttons");
+                GenerateSfpProperties(sb, buttons, usedNames);
+                sb.AppendLine();
+            }
+            
+            if (checkboxes.Any() || toggles.Any())
+            {
+                sb.AppendLine("        // Checkboxes & Toggles");
+                GenerateSfpProperties(sb, checkboxes.Concat(toggles).ToList(), usedNames);
+                sb.AppendLine();
+            }
+            
+            if (others.Any())
+            {
+                sb.AppendLine("        // Other Elements");
+                GenerateSfpProperties(sb, others, usedNames);
+            }
+            
+            sb.AppendLine("    }");
+            sb.AppendLine("}");
+            
+            return sb.ToString();
+        }
+        
+        /// <summary>
+        /// Generate SFP-style properties for a list of elements
+        /// </summary>
+        private static void GenerateSfpProperties(StringBuilder sb, List<ElementReport> elements, HashSet<string> usedNames)
+        {
+            foreach (var element in elements)
+            {
+                var propertyName = GenerateUniqueMethodName(element, usedNames);
+                usedNames.Add(propertyName);
+                
+                var topCandidate = element.Candidates.FirstOrDefault();
+                if (topCandidate == null) continue;
+                
+                // Convert page.XYZ to _page.XYZ format
+                var locatorCode = topCandidate.CodeSnippet.Replace("page.", "_page.");
+                
+                sb.AppendLine($"        public ILocator {propertyName} => {locatorCode};");
+            }
+        }
+        
+        /// <summary>
         /// Generate a unique method name, adding numeric suffix if needed
         /// </summary>
         private static string GenerateUniqueMethodName(ElementReport element, HashSet<string> usedNames)
@@ -492,38 +627,41 @@ namespace Playwright_POC.Tools.LocatorScan
         {
             var baseName = "";
             
-            // Priority 1: TestId (convert to semantic name)
-            if (!string.IsNullOrEmpty(element.TestId))
-            {
-                baseName = ConvertTestIdToSemanticName(element.TestId);
-            }
-            // Priority 2: Clean, meaningful text
-            else if (!string.IsNullOrEmpty(element.Text) && IsStableUIElement(element.Text))
-            {
-                baseName = ExtractMeaningfulName(element.Text);
-            }
-            // Priority 3: Associated label (from <label> element - used by GetByLabel)
-            else if (!string.IsNullOrEmpty(element.Label) && element.Label.Length >= 3)
+            // Priority 1: Associated label (from <label> element - most readable UI name)
+            if (!string.IsNullOrEmpty(element.Label) && element.Label.Length >= 3 && !IsDynamicData(element.Label))
             {
                 baseName = ExtractMeaningfulName(element.Label);
             }
-            // Priority 4: Aria-label (common for buttons, icons, interactive elements)
-            else if (!string.IsNullOrEmpty(element.AriaLabel) && element.AriaLabel.Length >= 3)
+            // Priority 2: Aria-label (UI-visible accessible name)
+            else if (!string.IsNullOrEmpty(element.AriaLabel) && element.AriaLabel.Length >= 3 && !IsDynamicData(element.AriaLabel))
             {
                 baseName = ExtractMeaningfulName(element.AriaLabel);
             }
-            // Priority 5: Semantic ID - extract meaningful part first, then check if dynamic
+            // Priority 3: Clean, meaningful visible text
+            else if (!string.IsNullOrEmpty(element.Text) && element.Text.Length >= 3 && element.Text.Length <= 50 && !IsDynamicData(element.Text))
+            {
+                baseName = ExtractMeaningfulName(element.Text);
+            }
+            // Priority 4: Placeholder text (for inputs)
+            else if (!string.IsNullOrEmpty(element.Placeholder) && element.Placeholder.Length >= 3)
+            {
+                baseName = ExtractMeaningfulName(element.Placeholder);
+            }
+            // Priority 5: TestId (fallback - extract semantic part)
+            else if (!string.IsNullOrEmpty(element.TestId))
+            {
+                baseName = ConvertTestIdToSemanticName(element.TestId);
+            }
+            // Priority 6: Semantic ID - extract meaningful part
             else if (!string.IsNullOrEmpty(element.Id))
             {
                 var semanticName = ConvertIdToSemanticName(element.Id);
-                // Only use if the extracted name is meaningful and not dynamic
                 if (semanticName.Length >= 3 && !IsDynamicData(semanticName))
                 {
                     baseName = semanticName;
                 }
                 else
                 {
-                    // Fallback within Priority 5
                     baseName = (element.ControlType ?? "Element") + "Control";
                 }
             }
@@ -533,8 +671,8 @@ namespace Playwright_POC.Tools.LocatorScan
                 baseName = (element.ControlType ?? "Element") + "Control";
             }
 
-            // Add appropriate suffix
-            baseName = AddControlTypeSuffix(baseName, element.ControlType);
+            // Add appropriate suffix based on element type
+            baseName = AddControlTypeSuffix(baseName, element.ControlType, element);
 
             // Ensure valid C# identifier
             baseName = Regex.Replace(baseName, @"[^a-zA-Z0-9]", "");
@@ -666,18 +804,49 @@ namespace Playwright_POC.Tools.LocatorScan
                 .Split('.').Last();
         }
         
-        private static string AddControlTypeSuffix(string baseName, string? controlType)
+        private static string AddControlTypeSuffix(string baseName, string? controlType, ElementReport? element = null)
         {
-            if (string.IsNullOrEmpty(controlType)) return baseName;
+            if (string.IsNullOrEmpty(controlType) && element == null) return baseName;
             
-            var suffix = controlType switch
+            var tag = element?.Tag?.ToLower() ?? "";
+            var type = element?.Type?.ToLower() ?? "";
+            
+            // Determine suffix based on element tag/type for more accurate naming
+            string suffix;
+            
+            // Check for specific element types first
+            if (tag == "mat-select" || tag == "select")
             {
-                "Button" when !baseName.EndsWith("Button") => "Button",
-                "Link" when !baseName.EndsWith("Link") => "Link", 
-                "SearchInput" when !baseName.EndsWith("Input") => "Input",
-                "Tab" when !baseName.EndsWith("Tab") => "Tab",
-                _ => ""
-            };
+                suffix = baseName.EndsWith("Select") ? "" : "Select";
+            }
+            else if (tag == "mat-checkbox" || (tag == "input" && type == "checkbox"))
+            {
+                suffix = baseName.EndsWith("Checkbox") ? "" : "Checkbox";
+            }
+            else if (tag == "mat-slide-toggle")
+            {
+                suffix = baseName.EndsWith("Toggle") ? "" : "Toggle";
+            }
+            else if (tag == "input" || tag == "textarea")
+            {
+                suffix = baseName.EndsWith("Input") ? "" : "Input";
+            }
+            else if (controlType == "Button" || tag == "button")
+            {
+                suffix = baseName.EndsWith("Button") ? "" : "Button";
+            }
+            else if (controlType == "Link" || tag == "a")
+            {
+                suffix = baseName.EndsWith("Link") ? "" : "Link";
+            }
+            else if (controlType == "Tab")
+            {
+                suffix = baseName.EndsWith("Tab") ? "" : "Tab";
+            }
+            else
+            {
+                suffix = "";
+            }
             
             return baseName + suffix;
         }
