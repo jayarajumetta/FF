@@ -4,7 +4,6 @@ using NUnit.Framework;
 using Playwright_POC.Configuration;
 using Playwright_POC.Context;
 using Playwright_POC.Helpers;
-using Playwright_POC.Locators;
 using Playwright_POC.Pages;
 using Playwright_POC.Pages.ExpertQuotePages;
 using Reqnroll;
@@ -15,7 +14,6 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using TestAutomation.Pages.ExpertQuotePages;
 using ReqContext = Playwright_POC.Context.TestContext;
 
 
@@ -28,7 +26,6 @@ public class BOPSteps
     private readonly ScenarioContextData _contextData;
     private readonly CredentialsConfig _credentials;
     private readonly IConfiguration _configuration;
-    private Table _table;
 
 
     public BOPSteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
@@ -40,7 +37,7 @@ public class BOPSteps
 
     }
 
-    [Then("user selects Business Owners and inputs Quote Details")]
+    [When("user selects Business Owners and inputs Quote Details")]
     public async Task SelectBusinessOwnersAndInputQuoteDetails(Table table)
     {
         TableMappingHelpers.BOPQuoteDetailsFields(table, _contextData);
@@ -59,7 +56,7 @@ public class BOPSteps
         await proposalDetailsPage.HandleClientExistsPopupAsync();
     }
 
-    [Then("user selects class codes and continues")]
+    [When("user selects class codes and continues")]
     public async Task UserSelectesClassCodesAndContinues(Table table)
     {
         TableMappingHelpers.BOPPreQualificationFields(table, _contextData);
@@ -69,19 +66,13 @@ public class BOPSteps
         await preQualificationPage.SearchAddClassCodeAsync(_contextData);
         await preQualificationPage.TogglePrimaryOccupancySliderAsync();
         await preQualificationPage.SelectIndustryClassCodeRestrictionsAsync(_contextData);
-        await GlobalLocators.NextButton(_context.Page).ClickAsync();
+        await preQualificationPage.ClickNextAsync();
     }
 
-    [Then("user selects Primary Insured and continues")]
-    public async Task UserSelectsPrimaryInsuredAsync()
-    {
-        var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);
-        await primaryInsuredPage.SelectExistingClientAsPrimaryInsuredAsync(_contextData);
-    }
-
-    [Then("user Enters Primary Insured Information and continues")]
+    [When("user Enters Primary Insured Information for BOP and continues")]
     public async Task UserEntersPrimaryInsuredInformationAndContinues(Table table)
     {
         // Map table data to context data and steps needed
     }
+
 }

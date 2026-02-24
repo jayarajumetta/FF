@@ -1,40 +1,117 @@
-﻿
-// Pages/ClientSearchPage.cs
+﻿// Pages/ExpertQuotePages/ClientSearchPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
-using Playwright_POC.Locators;
 
-namespace Playwright_POC.Pages
+namespace Playwright_POC.Pages.ExpertQuotePages
 {
-    public class ClientSearchPage
+    /// <summary>
+    /// Page Object for ExpertQuote Client Search / Dashboard page
+    /// This is the landing page after login where you search for or create clients
+    /// </summary>
+    public class ClientSearchPage : BasePage
     {
-        private readonly IPage _page;
+        public ClientSearchPage(IPage page) : base(page) { }
 
-        public ClientSearchPage(IPage page)
+        #region Locators
+        // Dashboard/Search page
+        private ILocator DashboardElement => _page.Locator("strong").GetByText("Quote", new() { Exact = true }).First;
+        private ILocator PageHeader => _page.GetByText("Search / Recently Accessed");
+        private ILocator SearchInput => _page.GetByTestId("quoteSearchInput");
+        private ILocator SearchButton => _page.GetByTestId("quoteSearchButton");
+        private ILocator NewQuoteButton => _page.GetByRole(AriaRole.Button, new() { Name = "New Quote" });
+        
+        // Client Search/Suggestions panel (within quote flow)
+        private ILocator ClientSearchSuggestionNav => _page.GetByTestId("ClientSearchSuggestion-nav");
+        private ILocator ClientSearchInputGroup => _page.GetByTestId("temp.clientSearchInputGroup");
+        private ILocator CreateNewClientCheckbox => _page.GetByTestId("temp.createNewClient");
+        private ILocator CancelButton => _page.GetByTestId("fields.data.account.client.cancel");
+        #endregion
+
+        #region Actions
+        /// <summary>
+        /// Enter client name in search and click search button
+        /// </summary>
+        public async Task SearchForClientAsync(string name)
         {
-            _page = page;
+            await SearchInput.FillAsync(name);
+            await SearchButton.ClickAsync();
+            await WaitForSpinnerAsync();
         }
 
-        public async Task EnterNameAndSearchAsync(string name)
+        /// <summary>
+        /// Click the New Quote button to start a new quote
+        /// </summary>
+        public async Task ClickNewQuoteAsync()
         {
-            await ClientSearchLocators.IndividualSearchField(_page).FillAsync(name);
-            await ClientSearchLocators.ClientSearchButton(_page).ClickAsync();
+            await NewQuoteButton.ClickAsync();
+            await WaitForSpinnerAsync();
         }
 
-        public async Task<bool> IsClientSearchPageVisibleAsync()
+        /// <summary>
+        /// Check if the search/dashboard page is visible
+        /// </summary>
+        public async Task<bool> IsVisibleAsync()
         {
-            return await ClientSearchLocators.ClientSearchPage(_page).IsVisibleAsync();
+            return await PageHeader.IsVisibleAsync();
         }
 
-        // Table assertion 
-        public async Task AssertNameNotInTableAsync(string tableSelector, string clientName)
+        /// <summary>
+        /// Wait for the page to be ready
+        /// </summary>
+        public async Task WaitForPageReadyAsync()
         {
-            await Playwright_POC.Helpers.TableAssertions.AssertNameNotInTableAsync(_page, tableSelector, clientName);
+            await SearchInput.WaitForAsync(new() { State = WaitForSelectorState.Visible });
         }
 
-        public async Task SelectRecentlyAccessedAsync(string clientName)
+        /// <summary>
+        /// Select a client from the recently accessed table
+        /// </summary>
+        public async Task SelectRecentlyAccessedClientAsync(string clientName)
         {
-            await _page.ClickAsync(ExpertQuoteLocatorFactory.SearchRecentlyAccessedListLocators.SelectRecentlyAccessedClient(clientName));
+            var row = _page.Locator($"table tr:has-text('{clientName}')").First;
+            await row.Locator("button").First.ClickAsync();
+            await WaitForSpinnerAsync();
         }
+
+        /// <summary>
+        /// Assert that a client name is NOT in the search results table
+        /// </summary>
+        public async Task AssertClientNotInResultsAsync(string clientName)
+        {
+            await Playwright_POC.Helpers.TableAssertions.AssertNameNotInTableAsync(_page, "table", clientName);
+        }
+
+        /// <summary>
+        /// Check the "Create New Client" checkbox in the client search panel
+        /// </summary>
+        public async Task CheckCreateNewClientAsync()
+        {
+            await CreateNewClientCheckbox.CheckAsync();
+        }
+
+        /// <summary>
+        /// Click Cancel button in client search panel
+        /// </summary>
+        public async Task ClickCancelAsync()
+        {
+            await CancelButton.ClickAsync();
+            await WaitForSpinnerAsync();
+        }
+        #endregion
+
+        #region Legacy Compatibility
+        [System.Obsolete("Use SearchForClientAsync instead")]
+        public async Task EnterNameAndSearchAsync(string name) => await SearchForClientAsync(name);
+
+        [System.Obsolete("Use IsVisibleAsync instead")]
+        public async Task<bool> IsClientSearchPageVisibleAsync() => await IsVisibleAsync();
+
+        [System.Obsolete("Use ClickNewQuoteAsync instead")]
+        public async Task ClickNewQuoteButtonAsync() => await ClickNewQuoteAsync();
+
+        [System.Obsolete("Use AssertClientNotInResultsAsync instead")]
+        public async Task AssertNameNotInTableAsync(string tableSelector, string clientName) =>
+            await AssertClientNotInResultsAsync(clientName);
+        #endregion
     }
 }

@@ -1,35 +1,38 @@
 ﻿using Microsoft.Playwright;
+using Playwright_POC.Pages;
 using System.Threading.Tasks;
-using Playwright_POC.Locators;
+using Playwright_POC.Helpers;
 
-namespace TestAutomation.Pages.ExpressPages
+namespace Playwright_POC.Pages.ExpressPages
 {
-    public class ExpressHomePage
+    public class ExpressHomePage : BasePage
     {
-        private readonly IPage _page;
+        public ExpressHomePage(IPage page) : base(page) { }
 
-        public ExpressHomePage(IPage page)
-        {
-            _page = page;
-        }
+        #region Locators
+        private ILocator ExpandSearchTypeDropDown => _page.Locator("button[data-toggle*='SearchType']");
+        private ILocator SearchBarInput => _page.Locator("input[fieldref='PolicyHeaderInput.SearchText']");
+        private ILocator SearchButton => _page.Locator("button[title*='Search']");
+
+        private ILocator GetSearchTypeOption(string searchType) => _page.Locator($"a:has-text('{searchType}')");
+        #endregion
 
         public async Task SelectSearchTypeAsync(string searchType)
         {
-            // Select the search type from the dropdown
-            await _page.ClickAsync(ExpressDashboardConstLocators.ExpandSearchTypeDropDown);
-            await _page.WaitForTimeoutAsync(2000); // Small wait to ensure dropdown is expanded
-            await _page.ClickAsync(ExpressLocatorFactory.ExpressDashboardLocators.SelectSearchTypeFromDropDown(searchType));
-            
+            await ExpandSearchTypeDropDown.ClickAsync();
+            var optionLocator = GetSearchTypeOption(searchType);
+            await Assertions.Expect(optionLocator).ToBeVisibleAsync();
+            await optionLocator.ClickAsync();
         }
 
         public async Task EnterQuoteNumber(string quoteNumber)
         {
-            await _page.FillAsync(ExpressDashboardConstLocators.SearchBarInput, quoteNumber);
+            await SearchBarInput.FillAsync(quoteNumber);
         }
 
         public async Task ClickSearchButtonAsync()
         {
-            await _page.ClickAsync(ExpressDashboardConstLocators.SearchButton);
+            await SearchButton.ClickAsync();
         }
     }
 }

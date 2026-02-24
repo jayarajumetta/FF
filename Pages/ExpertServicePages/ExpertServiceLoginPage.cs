@@ -1,32 +1,34 @@
-// Pages/LoginPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
-using Playwright_POC.Locators;
+using Playwright_POC.Helpers;
+using Playwright_POC.Pages;
 
-namespace Playwright_POC.Pages
+namespace Playwright_POC.Pages.ExpertServicePages
 {
-    public class ExpertServiceLoginPage
+    public class ExpertServiceLoginPage : BasePage
     {
-        private readonly IPage _page;
+        public ExpertServiceLoginPage(IPage page) : base(page) { }
 
-        public ExpertServiceLoginPage(IPage page)
-        {
-            _page = page;
-        }
+        #region Locators
+        private ILocator UsernameInput => _page.GetByTestId("login-username-input");
+        private ILocator PasswordInput => _page.GetByTestId("login-password-input");
+        private ILocator LoginButton => _page.GetByTestId("login-submit-button");
+        private ILocator DashboardElement => _page.GetByTestId("dashboard-container");
+        #endregion
 
         public async Task LoginAsync(string username, string password)
         {
-            await LoginLocators.UsernameInput(_page).FillAsync(username);
-            await LoginLocators.PasswordInput(_page).FillAsync(password);
-            await LoginLocators.LoginButton(_page).ClickAsync();
+            await UsernameInput.FillAsync(username);
+            await PasswordInput.FillAsync(password);
+            await LoginButton.ClickAsync();
 
             // Wait for login to complete
-            await ClientSearchLocators.DashboardElement(_page).WaitForAsync(new LocatorWaitForOptions { Timeout = 8000 });
+            await DashboardElement.WaitForAsync(new LocatorWaitForOptions { Timeout = 8000 });
         }
 
         public async Task<bool> IsDashboardVisibleAsync()
         {
-            return await ClientSearchLocators.DashboardElement(_page).IsVisibleAsync();
+            return await DashboardElement.IsVisibleAsync();
         }
     }
 }

@@ -150,5 +150,100 @@ namespace Playwright_POC.Helpers
             // Wait for any overlays to clear
             await WaitForAngularSpinnerAsync(page);
         }
+
+        /// <summary>
+        /// Waits for an element to be enabled.
+        /// Useful for buttons that are disabled during form validation.
+        /// </summary>
+        public static async Task WaitForElementEnabledAsync(ILocator locator, int timeoutMs = 15000)
+        {
+            var timeout = DateTime.Now.AddMilliseconds(timeoutMs);
+            while (DateTime.Now < timeout)
+            {
+                if (await locator.IsEnabledAsync())
+                    return;
+                await Task.Delay(100);
+            }
+            throw new TimeoutException($"Element not enabled within {timeoutMs}ms");
+        }
+
+        /// <summary>
+        /// Dismisses any modal dialogs, popups, or overlays that may be blocking interaction.
+        /// Attempts to click common close buttons or press Escape.
+        /// </summary>
+        public static async Task DismissPopupsAsync(IPage page)
+        {
+            // Common close button selectors
+            var closeSelectors = new[]
+            {
+                "[aria-label='Close']",
+                "[aria-label='close']",
+                ".mat-dialog-close",
+                ".close-button",
+                ".modal-close",
+                "button.close",
+                "[data-dismiss='modal']"
+            };
+
+            foreach (var selector in closeSelectors)
+            {
+                try
+                {
+                    var closeButton = page.Locator(selector).First;
+                    if (await closeButton.IsVisibleAsync())
+                    {
+                        await closeButton.ClickAsync(new() { Timeout = 1000 });
+                        await Task.Delay(300);
+                        return;
+                    }
+                }
+                catch
+                {
+                    // Continue to next selector
+                }
+            }
+
+            // Try pressing Escape as fallback
+            try
+            {
+                await page.Keyboard.PressAsync("Escape");
+                await Task.Delay(300);
+            }
+            catch
+            {
+                // Escape didn't work, continue
+            }
+        }
+
+        /// <summary>
+        /// Fills an input field and then presses Tab to trigger Angular validation.
+        /// Essential for Material/Angular forms that validate on blur.
+        /// </summary>
+        public static async Task FillAndTabAsync(ILocator locator, string value)
+        {
+            await locator.FillAsync(value);
+            await locator.PressAsync("Tab");
+            await Task.Delay(200); // Brief delay for validation
+        }
+
+        /// <summary>
+        /// Fills an input field using page selector, then presses Tab.
+        /// </summary>
+        public static async Task FillAndTabAsync(IPage page, string selector, string value)
+        {
+            var locator = page.Locator(selector);
+            await FillAndTabAsync(locator, value);
+        }
+
+        /// <summary>
+        /// Clicks and waits for navigation or network idle.
+        /// Use for buttons that trigger page transitions.
+        /// </summary>
+        public static async Task ClickAndWaitForNavigationAsync(ILocator locator, IPage page, int timeoutMs = 30000)
+        {
+            await locator.ClickAsync();
+            await page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = timeoutMs });
+            await WaitForAngularSpinnerAsync(page, timeoutMs);
+        }
     }
 }

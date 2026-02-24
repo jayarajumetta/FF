@@ -4,7 +4,6 @@ using NUnit.Framework;
 using Playwright_POC.Configuration;
 using Playwright_POC.Context;
 using Playwright_POC.Helpers;
-using Playwright_POC.Locators;
 using Playwright_POC.Pages;
 using Playwright_POC.Pages.ExpertQuotePages;
 using Reqnroll;
@@ -15,7 +14,6 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using TestAutomation.Pages.ExpertQuotePages;
 using ReqContext = Playwright_POC.Context.TestContext;
 
 
@@ -27,12 +25,13 @@ public class SharedEQSteps
     private readonly ScenarioContextData _contextData;
     private readonly CredentialsConfig _credentials;
     private readonly IConfiguration _configuration;
-    private Table _table;
+    private readonly ScenarioContext _scenarioContext;
 
-    public SharedEQSteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
+    public SharedEQSteps(ReqContext context, ScenarioContext scenarioContext, CredentialsConfig credentials, IConfiguration configuration)
     {
         _context = context;
-        _contextData = contextData;
+        _scenarioContext = scenarioContext;
+        _contextData = _scenarioContext["ContextData"] as ScenarioContextData;
         _credentials = credentials;
         _configuration = configuration;
     }
@@ -53,7 +52,7 @@ public class SharedEQSteps
 
 
 
-    [Then("user enters a name in the search field and clicks search")]
+    [When("user enters a name in the search field and clicks search")]
     public async Task ThenUserEntersANameInTheSearchField(Table table)
     {
         TableMappingHelpers.ClientSearchFields(table, _contextData);
@@ -61,16 +60,15 @@ public class SharedEQSteps
         string name = $"{_contextData.ClientFirstName} {_contextData.ClientLastName}";
         var clientSearchPage = new ClientSearchPage(_context.Page);
 
-        await clientSearchPage.EnterNameAndSearchAsync(name);
+        await clientSearchPage.SearchForClientAsync(name);
 
         string clientName = $"{_contextData.ClientLastName}, {_contextData.ClientFirstName}";
-        string tableSelector = "table";
 
         // Uncomment if you want to use the assertion
-        // await clientSearchPage.AssertNameNotInTableAsync(tableSelector, clientName);
+        // await clientSearchPage.AssertNameNotInTableAsync("table", clientName);
     }
 
-    [Then("user enters a Random Name in the search field and clicks search")]
+    [When("user enters a Random Name in the search field and clicks search")]
 
     public async Task ThenUserEntersARandomNameInTheSearchField(Table table)
     {
@@ -78,38 +76,42 @@ public class SharedEQSteps
         TableMappingHelpers.ClientSearchFields(table, _contextData);
 
         // Replace tokens with generated values
-        // Supports: {{male}}, {{female}} for first names; {{random}} for last names
-        if (string.Equals(_contextData.ClientFirstName, "{{male}}", StringComparison.OrdinalIgnoreCase))
+        // Supports: {{firstName}}, {{male}}, {{female}} for first names; {{lastName}}, {{random}} for last names
+        if (string.Equals(_contextData.ClientFirstName, "{{firstName}}", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(_contextData.ClientFirstName, "{{male}}", StringComparison.OrdinalIgnoreCase))
             _contextData.ClientFirstName = RandomGenerators.GenerateRandomFirstName();
 
         if (string.Equals(_contextData.ClientFirstName, "{{female}}", StringComparison.OrdinalIgnoreCase))
             _contextData.ClientFirstName = RandomGenerators.GenerateRandomFemaleFirstName();
 
-        if (string.Equals(_contextData.ClientLastName, "{{random}}", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(_contextData.ClientLastName, "{{lastName}}", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(_contextData.ClientLastName, "{{random}}", StringComparison.OrdinalIgnoreCase))
             _contextData.ClientLastName = RandomGenerators.GenerateRandomLastName();
 
         // Build full name and perform the search
         string name = $"{_contextData.ClientFirstName} {_contextData.ClientLastName}";
         var clientSearchPage = new ClientSearchPage(_context.Page);
 
-        await clientSearchPage.EnterNameAndSearchAsync(name);
+        await clientSearchPage.SearchForClientAsync(name);
 
         // Keep follow-on format for assertions
         string clientName = $"{_contextData.ClientLastName}, {_contextData.ClientFirstName}";
-
+        Console.WriteLine($"Client Name Is: {clientName}");
 
     }
 
 
-    [Then("user clicks New Quote button")]
+    [When("user clicks New Quote button")]
     public async Task ThenUserClicksNewQuoteButton()
     {
-        await ClientSearchLocators.NewQuoteButton(_context.Page).ClickAsync();
+        var clientSearchPage = new ClientSearchPage(_context.Page);
+        await clientSearchPage.ClickNewQuoteAsync();
+        Console.WriteLine(_contextData.ClientFirstName);
     }
 
 
-
-    [Then("user enters client information and clicks search")]
+    
+    [When("user enters client information and clicks search")]
     public async Task AndUserEntersClientInformationAndClicksSearch(Table table)
     {
         TableMappingHelpers.NewExistingClientFields(table, _contextData);
@@ -134,23 +136,28 @@ public class SharedEQSteps
         await newClientPage.FillBestPhoneAsync(_contextData.ClientPhoneNumber);
         await newClientPage.FillEmailAsync(_contextData.ClientEmail);
         await newClientPage.ClickSearchAsync();
-        await newClientPage.WaitForNextButtonAsync();
+       // await newClientPage.WaitForNextButtonAsync();
+       Console.WriteLine(_contextData.ClientFirstName);
     }
 
 
-    [Then("user selects Create New Client and clicks the Next button")]
+    [When("user selects Create New Client and clicks the Next button")]
     public async Task UserCreatesNewClientAndClicksNext()
     {
-        await NewExistingClientSearchLocators.CreateNewClientButton(_context.Page).ClickAsync();
-        await GlobalLocators.NextButton(_context.Page).ClickAsync();
+        await _context.Page.GetByRole(AriaRole.Button, new() { Name = "Create New Client" }).ClickAsync();
+        var clientSearchPage = new ClientSearchPage(_context.Page);
+        await clientSearchPage.ClickNextAsync();
 
         //Wait for the next page to load
         await _context.Page.WaitForLoadStateAsync(LoadState.Load);
-        await _context.Page.WaitForSelectorAsync(AccountInformationConstLocators.PageHeader(_context.Page).ToString(), new() { Timeout = 10000 });
+
+        await _context.Page.GetByRole(AriaRole.Heading, new() { Name = "Account Information", Exact = true })
+            .WaitForAsync(new() { Timeout = 15000 });
+        Console.WriteLine(_contextData.ClientFirstName);
     }
 
 
-    [Then("user enters account owner information and clicks Next")]
+    [When("user enters account owner information and clicks Next")]
     public async Task EnterAccountOwnerInfo(Table table)
     {
         TableMappingHelpers.AccountOwnerFields(table, _contextData);
@@ -166,9 +173,28 @@ public class SharedEQSteps
         await accountInformationPage.WaitForAddressDetailsAsync();
         await accountInformationPage.AnswerMailAndResidenceQuestionsAsync(_contextData);
         await accountInformationPage.ClickNextAsync();
+        Console.WriteLine(_contextData.ClientFirstName);
     }
 
-    [Then("user creates a new Billing Account and Submits payment")]
+    [When("user enters Pre-Qualification information and continues")]
+    public async Task WhenUserEntersPreQualificationInfoAndContinuesAsync(Table table)
+    {
+        TableMappingHelpers.PreQualificationFields(table, _contextData);
+
+        var preQualificationPage = new PreQualificationPage(_context.Page);
+        await preQualificationPage.EnterPreQualificationInfoAndContinueAsync(_contextData.EligibilityRestrictions);
+    }
+
+    [When("user selects Primary Insured and continues")]
+    public async Task UserSelectsPrimaryInsuredAsync()
+    {
+        var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);
+        await primaryInsuredPage.SelectExistingClientAsPrimaryInsuredAsync(_contextData);
+    }
+
+
+
+    [When("user creates a new Billing Account and Submits payment")]
     public async Task UserCreatesBillingAccountAndSubmitsPaymentAsync(Table table)
     {
         TableMappingHelpers.BillingAccountFields(table, _contextData);
@@ -190,6 +216,123 @@ public class SharedEQSteps
         await billingPage.ClickNextAsync();
         billingPage.DisplayQuoteNumber(_contextData.QuoteNumber);
         System.IO.File.WriteAllText("QuoteNumber.txt", _contextData.QuoteNumber ?? "");
+    }
+
+    [When("user captures the quote number")]
+    public async Task UserCapturesTheQuoteNumber()
+    {
+        // Get the quote number from the header tab label
+        var quoteNumberLocator = _context.Page.Locator("div[class*='mat-tab-label-container'] span");
+        var fullText = await quoteNumberLocator.InnerTextAsync();
+        var lines = fullText.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        var quoteNumber = lines.Length > 1 ? lines[1].Trim() : fullText.Trim();
+        _contextData.QuoteNumber = quoteNumber;
+        Console.WriteLine($"Captured Quote Number: {quoteNumber}");
+        
+        // Also save to file for cross-browser-session persistence
+        System.IO.File.WriteAllText("QuoteNumber.txt", quoteNumber);
+    }
+
+    [When("user closes the browser")]
+    public async Task UserClosesTheBrowser()
+    {
+        if (_context.Page != null)
+        {
+            var browserContext = _context.Page.Context;
+            var browser = browserContext.Browser;
+            
+            try { await _context.Page.CloseAsync(); } catch { /* ignore */ }
+            try { await browserContext.CloseAsync(); } catch { /* ignore */ }
+            try { if (browser != null) await browser.CloseAsync(); } catch { /* ignore */ }
+            
+            _context.Page = null;
+            Console.WriteLine("Browser closed successfully.");
+        }
+    }
+
+    [When("user launches a new browser and logs in to Expert Quote")]
+    public async Task UserLaunchesNewBrowserAndLogsInToExpertQuote()
+    {
+        // Launch new browser
+        var browserFactory = new BrowserFactory();
+        var browserType = Environment.GetEnvironmentVariable("BROWSER_TYPE") ?? "chromium";
+        var browser = await browserFactory.GetBrowserAsync(browserType);
+        
+        var browserContext = await browser.NewContextAsync(new BrowserNewContextOptions
+        {
+            ViewportSize = new ViewportSize { Width = 1900, Height = 1080 }
+        });
+        
+        var page = await browserContext.NewPageAsync();
+        page.SetDefaultTimeout(30000);
+        page.SetDefaultNavigationTimeout(60000);
+        
+        _context.Page = page;
+        
+        // Navigate to Expert Quote
+        var expertQuoteUrl = _configuration["Playwright:ExpertQuote"] 
+            ?? "https://expertquote-qa.americannational.com";
+        await page.GotoAsync(expertQuoteUrl, new PageGotoOptions 
+        { 
+            Timeout = 90000, 
+            WaitUntil = WaitUntilState.NetworkIdle 
+        });
+        
+        // Login with credentials
+        var loginPage = new ExpertQuoteLoginPage(page);
+        await loginPage.LoginAsync(_credentials.Username, _credentials.Password);
+        
+        Assert.That(await loginPage.IsDashboardVisibleAsync(), Is.True, "Dashboard should be visible after login");
+        Console.WriteLine("New browser launched and logged in successfully.");
+    }
+
+    [Then("user verifies the quote exists in search results")]
+    public async Task UserVerifiesTheQuoteExistsInSearchResults()
+    {
+        // Read quote number from context or file
+        var quoteNumber = _contextData.QuoteNumber;
+        if (string.IsNullOrWhiteSpace(quoteNumber))
+        {
+            quoteNumber = System.IO.File.ReadAllText("QuoteNumber.txt").Trim();
+            _contextData.QuoteNumber = quoteNumber;
+        }
+        
+        Console.WriteLine($"Searching for quote: {quoteNumber}");
+        
+        // Use the quote search input
+        var searchInput = _context.Page.GetByTestId("quoteSearchInput");
+        await searchInput.FillAsync(quoteNumber);
+        
+        var searchButton = _context.Page.GetByTestId("quoteSearchButton");
+        await searchButton.ClickAsync();
+        
+        // Wait for search results
+        await _context.Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+        await Task.Delay(2000); // Allow time for results to populate
+        
+        // Try multiple strategies to find the quote
+        var isQuoteVisible = false;
+        
+        // Strategy 1: Link with quote number
+        var quoteLocator = _context.Page.GetByRole(AriaRole.Link, new() { Name = quoteNumber });
+        isQuoteVisible = await quoteLocator.IsVisibleAsync();
+        
+        // Strategy 2: Cell or text containing quote number
+        if (!isQuoteVisible)
+        {
+            var cellLocator = _context.Page.Locator($"td:has-text('{quoteNumber}'), span:has-text('{quoteNumber}')").First;
+            isQuoteVisible = await cellLocator.IsVisibleAsync();
+        }
+        
+        // Strategy 3: Any element containing the quote number
+        if (!isQuoteVisible)
+        {
+            var anyLocator = _context.Page.GetByText(quoteNumber);
+            isQuoteVisible = await anyLocator.IsVisibleAsync();
+        }
+        
+        Assert.That(isQuoteVisible, Is.True, $"Quote {quoteNumber} should be visible in search results");
+        Console.WriteLine($"Quote {quoteNumber} verified in search results.");
     }
 
 }

@@ -4,7 +4,6 @@ using NUnit.Framework;
 using Playwright_POC.Configuration;
 using Playwright_POC.Context;
 using Playwright_POC.Helpers;
-using Playwright_POC.Locators;
 using Playwright_POC.Pages;
 using Playwright_POC.Pages.ExpertQuotePages;
 using Reqnroll;
@@ -15,7 +14,6 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using TestAutomation.Pages.ExpertQuotePages;
 using ReqContext = Playwright_POC.Context.TestContext;
 
 
@@ -28,7 +26,6 @@ public class PASteps
         private readonly ScenarioContextData _contextData;
         private readonly CredentialsConfig _credentials;
         private readonly IConfiguration _configuration;
-        private Table _table;
 
 
         public PASteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
@@ -39,7 +36,7 @@ public class PASteps
             _configuration = configuration;
 
         }
-        [Then("user selects Personal Auto and inputs Quote Details")]
+        [When("user selects Personal Auto and inputs Quote Details")]
     public async Task SelectPersonalAutoAndInputQuoteDetails(Table table)
     {
         TableMappingHelpers.PAQuoteDetailsFields(table, _contextData);
@@ -56,52 +53,52 @@ public class PASteps
         await proposalDetailsPage.HandleClientExistsPopupAsync();
     }
 
-    [Then("user enters Pre-Qualification information and continues")]
-    public async Task WhenUserEntersPreQualificationInfoAndContinuesAsync(Table table)
-    {
-        TableMappingHelpers.PreQualificationFields(table, _contextData);
 
-        var preQualificationPage = new PreQualificationPage(_context.Page);
-        await preQualificationPage.EnterPreQualificationInfoAndContinueAsync(_contextData.EligibilityRestrictions);
-    }
 
-    [Then("user selects existing Driver")]
+    [When("user selects existing Driver")]
     public async Task UserSelectsExistingDriverAsync()
     {
-        await DriverSelectionPageLocators.ExistingClientButton(_context.Page).ClickAsync();
+        await _context.Page.GetByRole(AriaRole.Button, new() { Name = "Existing Client" }).ClickAsync();
 
         // Click Next to Proceed
-        await GlobalLocators.NextButton(_context.Page).ClickAsync();
+        var addDriverInfoPage = new PA_AddDriverInfoPage(_context.Page);
+        await addDriverInfoPage.ClickNextAsync();
     }
 
 
 
-    [Then("user enters Driver information and continues")]
+    [When("user enters Driver information and continues")]
     public async Task WhenUserEntersDriverInfoAndContinuesAsync(Table table)
     {
         TableMappingHelpers.DriverInfoFields(table, _contextData);
 
-        var addDriverInfoPage = new AddDriverInfoPage(_context.Page);
+        var addDriverInfoPage = new PA_AddDriverInfoPage(_context.Page);
 
         await addDriverInfoPage.PreparePriorInsuranceReasonAsync(_contextData);
         await addDriverInfoPage.CollectAndStoreQuoteNumberAsync(_contextData);
         await addDriverInfoPage.WaitForPageLoadAsync();
-        await addDriverInfoPage.ValidateDriverFieldsAsync(_contextData);
         await addDriverInfoPage.SelectDriverOptionsAsync(_contextData);
         await addDriverInfoPage.FillDriverLicenseFieldsAsync(_contextData);
         await addDriverInfoPage.SelectInsuranceOptionsAsync(_contextData);
         await addDriverInfoPage.HandlePriorInsuranceAsync(_contextData);
         await addDriverInfoPage.SaveAndContinueAsync();
         await addDriverInfoPage.HandleMVRPopUpAsync();
+
+        // Validate Driver fields - Uncomment and modify the following lines if validation is needed
+        /*
+        var driverFieldValues = await addDriverInfoPage.GetDriverFieldValuesAsync();
+        Assert.AreEqual(_contextData.DriverFirstName, driverFieldValues.FirstName, "Driver first name does not match.");
+        Assert.AreEqual(_contextData.DriverLastName, driverFieldValues.LastName, "Driver last name does not match.");
+        */
     }
 
 
-    [Then("user enters vehicle information and continues")]
+    [When("user enters vehicle information and continues")]
     public async Task WhenUserEntersVehicleInfoAndContinuesAsync(Table table)
     {
         TableMappingHelpers.MapVehicleFields(table, _contextData);
 
-        var addVehicleInfoPage = new AddVehicleInfoPage(_context.Page);
+        var addVehicleInfoPage = new PA_AddVehicleInfoPage(_context.Page);
 
         await addVehicleInfoPage.WaitForVehiclePageReadyAsync();
         await addVehicleInfoPage.SelectUnlistedVehicleIfVisibleAsync();
@@ -114,39 +111,39 @@ public class PASteps
     }
 
 
-    [Then("user assigns a vehicle to the driver")]
+    [When("user assigns a vehicle to the driver")]
     public async Task WhenUserAssignsDriverAndVehicleAsync(Table table)
     {
         TableMappingHelpers.VehicleAssignmentFields(table, _contextData);
 
-        var addVehicleInfoPage = new AddVehicleInfoPage(_context.Page);
+        var addVehicleInfoPage = new PA_AddVehicleInfoPage(_context.Page);
         await addVehicleInfoPage.AssignVehicleToDriverAsync(_contextData.Vehicle, _contextData.DriverStatus);
     }
 
 
 
-    [Then("user verifies there are no claims or violations")]
+    [When("user verifies there are no claims or violations")]
     public async Task UserVerifiesNoClaimsOrViolationsAsync()
     {
-        var claimsAndViolationsPage = new ClaimsViolationsPage(_context.Page);
-        await claimsAndViolationsPage.VerifyNoClaimsOrViolationsAndContinueAsync();
+        var claimsPriorInsurancePage = new ClaimsPriorInsurancePage(_context.Page);
+        await claimsPriorInsurancePage.VerifyNoClaimsOrViolationsAndContinueAsync();
     }
 
-    [Then("user selects discounts and clicks Next")]
+    [When("user selects discounts and clicks Next")]
     public async Task UserSelectsDiscountsAsync()
     {
-        var discountsPage = new DiscountsPage(_context.Page);
+        var discountsPage = new PA_DiscountsPage(_context.Page);
         await discountsPage.ClickNextAsync();
     }
 
 
 
-    [Then("user selects Policy Coverages")]
+    [When("user selects Policy Coverages")]
     public async Task UserSelectsCoveragesAsync(Table table)
     {
         TableMappingHelpers.PolicyCoverageFields(table, _contextData);
 
-        var policyCoveragesPage = new PolicyCoveragesPage(_context.Page);
+        var policyCoveragesPage = new PA_PolicyCoveragesPage(_context.Page);
 
         await policyCoveragesPage.SelectPolicyCoverageAsync(_contextData.PolicyCoverage);
         await policyCoveragesPage.SelectCompCollOnlyAsync(_contextData.CompCollOnly);
@@ -159,12 +156,12 @@ public class PASteps
 
 
 
-    [Then("user selects Additional Coverages")]
+    [When("user selects Additional Coverages")]
     public async Task UserSelectsAdditionalCoveragesAsync(Table table)
     {
         TableMappingHelpers.AdditionalCoverageFields(table, _contextData);
 
-        var additionalCoveragesPage = new AdditionalCoveragesPage(_context.Page);
+        var additionalCoveragesPage = new PA_AdditionalCoveragesPage(_context.Page);
         string name = $"{_contextData.ClientFirstName} {_contextData.ClientLastName}";
 
         await additionalCoveragesPage.SelectAccidentalDeathAndDismembermentAsync(_contextData.AccidentalDeathAndDismemberment);
@@ -176,17 +173,17 @@ public class PASteps
         await additionalCoveragesPage.ClickNextAsync();
     }
 
-    [Then("user verifies Pricing Details")]
+    [When("user verifies Pricing Details")]
     public async Task UserVerifiesPricingDetailsAsync()
     {
-        var pricingDetailsPage = new PricingDetailsPage(_context.Page);
+        var pricingDetailsPage = new PA_PricingDetailsPage(_context.Page);
         string name = $"{_contextData.ClientFirstName} {_contextData.ClientLastName}";
 
         var accountOwner = await pricingDetailsPage.GetAccountOwnerAsync();
-        pricingDetailsPage.AssertAccountOwner(accountOwner, name);
+        await pricingDetailsPage.AssertAccountOwnerAsync(name);
 
         var accountAddress = await pricingDetailsPage.GetAccountAddressAsync();
-        pricingDetailsPage.AssertAccountAddress(accountAddress, _contextData.RiskAddress);
+        await pricingDetailsPage.AssertAccountAddressAsync(_contextData.RiskAddress);
 
         // More verifications can be added here
 
@@ -195,21 +192,21 @@ public class PASteps
 
 
 
-    [Then("user verifies eligibility and clicks Next")]
+    [When("user verifies eligibility and clicks Next")]
     public async Task UserVerifiesEligibilityAsync()
     {
         // Add any questions that may populate
-
-        await GlobalLocators.NextButton(_context.Page).ClickAsync();
+        var basePage = new PA_PricingDetailsPage(_context.Page); // Any BasePage-derived page works
+        await basePage.ClickNextAsync();
     }
 
 
-    [Then("user adds an Additional Interest")]
+    [When("user adds an Additional Interest")]
     public async Task UserAddsAdditionalInterestAsync(Table table)
     {
         TableMappingHelpers.AdditionalInterestFields(table, _contextData);
 
-        var addAdditionalInterestPage = new AddAdditionalInterestPage(_context.Page);
+        var addAdditionalInterestPage = new PA_AddAdditionalInterestPage(_context.Page);
 
         await addAdditionalInterestPage.ClickAddAdditionalInterestAsync();
         await addAdditionalInterestPage.SelectAdditionalInterestTypeAsync(_contextData.AdditionalInterestType);

@@ -6,7 +6,9 @@ using Playwright_POC.Context;
 using Playwright_POC.Helpers;
 using Playwright_POC.Models;
 using Playwright_POC.Pages;
+using Playwright_POC.Pages.ExpertQuotePages;
 using Playwright_POC.Services;
+using Playwright_POC.Pages.ExpressPages;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -54,19 +56,20 @@ namespace Playwright_POC
             services.AddSingleton<ApiHeaders>();
             services.AddTransient<ScenarioContextData>();
             services.AddSingleton<AccountOwnerInfoPage>();
-            services.AddSingleton<AddAdditionalInterestPage>();
-            services.AddSingleton<AddDriverInfoPage>();
-            services.AddSingleton<AddVehicleInfoPage>();
+            services.AddSingleton<PA_AddAdditionalInterestPage>();
+            services.AddSingleton<PA_AddDriverInfoPage>();
+            services.AddSingleton<PA_AddVehicleInfoPage>();
             services.AddSingleton<BillingPage>();
             services.AddSingleton<ClientSearchPage>();
-            services.AddSingleton<DiscountsPage>();
+            services.AddSingleton<PA_DiscountsPage>();
             services.AddSingleton<ExpertQuoteLoginPage>();
             services.AddSingleton<NewClientPage>();
-            services.AddSingleton<PolicyCoveragesPage>();
+            services.AddSingleton<PA_PolicyCoveragesPage>();
             services.AddSingleton<PreQualificationPage>();
-            services.AddSingleton<PricingDetailsPage>();
+            services.AddSingleton<PA_PricingDetailsPage>();
             services.AddSingleton<QuoteDetailsPage>();
-            services.AddSingleton<AdditionalCoveragesPage>();
+            services.AddSingleton<PA_AdditionalCoveragesPage>();
+            services.AddSingleton<SFP_EditLocationPage>();
             services.AddSingleton<ExpressLoginPage>();
         }
     }

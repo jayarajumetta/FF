@@ -1,4 +1,3 @@
-
 // Pages/TestHooks.cs
 using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
@@ -30,6 +29,7 @@ namespace Playwright_POC.Hooks
         private readonly BrowserFactory _browserFactory;
         private readonly IObjectContainer _container;
         private IBrowser _browser;
+        private IBrowserContext _browserContext;
         private IPage _page;
 
         private readonly ScenarioContext _scenarioContext;
@@ -38,6 +38,9 @@ namespace Playwright_POC.Hooks
         private readonly OAuthConfig _oauthConfig;
         private readonly PingSecretProvider _pingSecretProvider;
         private readonly IConfiguration _configuration;
+
+        // Test results folder for this run
+        private static string _testResultsRunFolder;
 
         public TestHooks(
             PocTestContext context,
@@ -69,24 +72,41 @@ namespace Playwright_POC.Hooks
             container.RegisterTypeAs<BrowserFactory, BrowserFactory>();
             container.RegisterTypeAs<ApiService, IApiService>();
 
+            // Create timestamped test results folder for this run
+            var root = Directory.GetCurrentDirectory();
+            var testResultsRoot = Path.Combine(root, "TestResults");
+            _testResultsRunFolder = Path.Combine(testResultsRoot, DateTime.Now.ToString("yyyy-MM-dd_HHmmss"));
+            Directory.CreateDirectory(_testResultsRunFolder);
+
+            // Auto-cleanup: Delete TestResults folders older than 7 days
+            CleanupOldTestResults(testResultsRoot, days: 7);
+
             // NOTE:
             // ScenarioContextData will be registered per scenario (instance),
             // not globally, to guarantee one shared object across all bindings
             // within a single scenario.
+
+            
+            // Register ScenarioContextData as InstancePerDependency with a shared backing field
+            container.RegisterFactoryAs<ScenarioContextData>(() => 
+            {
+                // This will be called once per scenario context
+                return new ScenarioContextData();
+            }).InstancePerContext();
+
         }
 
         [BeforeScenario]
         public async Task BeforeScenarioAsync()
         {
-            //  Register ONE shared ScenarioContextData instance for the entire scenario.
-            //    This ensures ExpertQuoteSteps and ExpressSteps read/write the same object.
-            _container.RegisterInstanceAs(new ScenarioContextData());
+            // Store in Reqnroll's ScenarioContext instead of DI container
+            _scenarioContext["ContextData"] = new ScenarioContextData();
             Console.WriteLine("[Hooks] ScenarioContextData registered for this scenario.");
 
             // Initialize HttpClient for API scenarios (kept from your original code)
             _context.HttpClient = new System.Net.Http.HttpClient
             {
-                BaseAddress = new Uri("https://expertquote-qa.americannational.com")
+                BaseAddress = new Uri(_configuration["Playwright:ExpertQuoteBase"] ?? "https://expertquote-qa.americannational.com")
             };
             _container.RegisterInstanceAs(_context.HttpClient);
 
@@ -106,17 +126,34 @@ namespace Playwright_POC.Hooks
             {
                 var browserType = Environment.GetEnvironmentVariable("BROWSER_TYPE") ?? "chromium";
                 _browser = await _browserFactory.GetBrowserAsync(browserType);
-                _page = await _browserFactory.GetPageAsync(_browser, "about:blank");
+                
+                // Create browser context with tracing and video enabled
+                _browserContext = await _browser.NewContextAsync(new BrowserNewContextOptions
+                {
+                    ViewportSize = new ViewportSize { Width = 1900, Height = 1080 },
+                    RecordVideoDir = Path.Combine(_testResultsRunFolder, "Videos")
+                });
+                
+                // Start tracing for potential failure capture
+                await _browserContext.Tracing.StartAsync(new TracingStartOptions
+                {
+                    Screenshots = true,
+                    Snapshots = true,
+                    Sources = true
+                });
+                
+                _page = await _browserContext.NewPageAsync();
 
-                // Harden timeouts for slow environments
-                _page.SetDefaultTimeout(60000);
-                _page.SetDefaultNavigationTimeout(90000);
+                // Timeouts: 30s element / 60s navigation (industry standard)
+                _page.SetDefaultTimeout(30000);
+                _page.SetDefaultNavigationTimeout(60000);
 
                 _context.Page = _page;
 
                 // Register live Playwright objects in the scenario container
                 _container.RegisterInstanceAs(_context.Page);
                 _container.RegisterInstanceAs(_browser);
+                _container.RegisterInstanceAs(_browserContext);
 
                 Console.WriteLine("Browser and Page initialized successfully.");
             }
@@ -127,26 +164,75 @@ namespace Playwright_POC.Hooks
         {
             if (_scenarioContext.TestError != null && _context.Page != null)
             {
-                var root = Directory.GetCurrentDirectory();
-                var screenshotDir = Path.Combine(root, "Screenshots");
-                Directory.CreateDirectory(screenshotDir);
+                var scenarioFolder = GetScenarioResultsFolder();
+                Directory.CreateDirectory(scenarioFolder);
 
                 var stepText = SanitizeFileName(_scenarioContext.StepContext.StepInfo.Text);
-                var fileName = $"{SanitizeFileName(_scenarioContext.ScenarioInfo.Title)}__{stepText}.png";
-                var screenshotFile = Path.Combine(screenshotDir, fileName);
+                var fileName = $"Step__{stepText}.png";
+                var screenshotFile = Path.Combine(scenarioFolder, fileName);
 
-                await _context.Page.ScreenshotAsync(new() { Path = screenshotFile, FullPage = true });
-
-                // Log screenshot path for debugging
-                NUnitTestContext.WriteLine($"[screenshot] {screenshotFile}");
+                try
+                {
+                    await _context.Page.ScreenshotAsync(new() { Path = screenshotFile, FullPage = true });
+                    NUnitTestContext.WriteLine($"[screenshot] {screenshotFile}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[Warning] Failed to capture screenshot: {ex.Message}");
+                }
             }
         }
 
         [AfterScenario]
         public async Task AfterScenarioAsync()
         {
+            var hasFailed = _scenarioContext.TestError != null;
+            
+            // Handle tracing and video on failure
+            if (_browserContext != null)
+            {
+                var scenarioFolder = GetScenarioResultsFolder();
+                
+                if (hasFailed)
+                {
+                    Directory.CreateDirectory(scenarioFolder);
+                    
+                    // Save trace on failure
+                    var traceFile = Path.Combine(scenarioFolder, "trace.zip");
+                    try
+                    {
+                        await _browserContext.Tracing.StopAsync(new TracingStopOptions { Path = traceFile });
+                        NUnitTestContext.WriteLine($"[trace] {traceFile}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[Warning] Failed to save trace: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    // Stop tracing without saving if test passed
+                    try { await _browserContext.Tracing.StopAsync(); } catch { /* ignore */ }
+                }
+            }
+
             // Close Playwright resources safely
             try { if (_context.Page != null) await _context.Page.CloseAsync(); } catch { /* ignore */ }
+            try 
+            { 
+                if (_browserContext != null) 
+                {
+                    await _browserContext.CloseAsync();
+                    
+                    // Move video to scenario folder on failure, delete on success
+                    if (hasFailed)
+                    {
+                        // Video is saved automatically when context closes
+                        Console.WriteLine("[video] Video saved for failed test");
+                    }
+                }
+            } 
+            catch { /* ignore */ }
             try { if (_browser != null) await _browser.CloseAsync(); } catch { /* ignore */ }
 
             // Dispose HttpClient (API and UI scenarios)
@@ -156,7 +242,26 @@ namespace Playwright_POC.Hooks
         [AfterTestRun]
         public static void FinalizeRun()
         {
-            // No reporting to finalize
+            // Cleanup empty folders in TestResults
+            if (Directory.Exists(_testResultsRunFolder))
+            {
+                try
+                {
+                    // Remove Videos folder if empty
+                    var videosFolder = Path.Combine(_testResultsRunFolder, "Videos");
+                    if (Directory.Exists(videosFolder) && !Directory.EnumerateFiles(videosFolder).Any())
+                    {
+                        Directory.Delete(videosFolder, true);
+                    }
+                    
+                    // Remove run folder if empty
+                    if (!Directory.EnumerateFileSystemEntries(_testResultsRunFolder).Any())
+                    {
+                        Directory.Delete(_testResultsRunFolder);
+                    }
+                }
+                catch { /* ignore cleanup errors */ }
+            }
         }
 
         // ------------ Helpers ------------
@@ -175,6 +280,36 @@ namespace Playwright_POC.Hooks
             foreach (var c in Path.GetInvalidFileNameChars())
                 name = name.Replace(c, '_');
             return name;
+        }
+
+        private string GetScenarioResultsFolder()
+        {
+            var scenarioName = SanitizeFileName(_scenarioContext.ScenarioInfo.Title);
+            return Path.Combine(_testResultsRunFolder, scenarioName);
+        }
+
+        private static void CleanupOldTestResults(string testResultsRoot, int days)
+        {
+            if (!Directory.Exists(testResultsRoot)) return;
+
+            var cutoff = DateTime.Now.AddDays(-days);
+            
+            foreach (var dir in Directory.GetDirectories(testResultsRoot))
+            {
+                try
+                {
+                    var dirInfo = new DirectoryInfo(dir);
+                    if (dirInfo.CreationTime < cutoff)
+                    {
+                        Directory.Delete(dir, true);
+                        Console.WriteLine($"[Cleanup] Deleted old test results: {dirInfo.Name}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[Warning] Failed to cleanup {dir}: {ex.Message}");
+                }
+            }
         }
     }
 }

@@ -29,4 +29,9 @@
     </None>
   </ItemGroup>
 
+  <!-- Exclude generated locator files from compilation -->
+  <ItemGroup>
+    <Compile Remove="TestResults\**\*.cs" />
+  </ItemGroup>
+
 </Project>

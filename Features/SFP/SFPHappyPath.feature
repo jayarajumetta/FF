@@ -7,23 +7,23 @@ Feature: SFP Happy Path
 
     When I enter valid credentials and Click LogIn
 
-    Then user enters a Random Name in the search field and clicks search
-    | Question  |  Answer    |
-    | FirstName | {{male}}   |
-    | LastName  | {{random}} |
+    And user enters a Random Name in the search field and clicks search
+    | Question  | Answer        |
+    | FirstName | {{firstName}} |
+    | LastName  | {{lastName}}  |
 
-    Then user clicks New Quote button
+    And user clicks New Quote button
    
-    Then user enters client information and clicks search
-    | Question     | Answer         |
-    | DOB          |  08/08/1944    |
-    | BestPhone    | (907) 227-0664 |
-    | EmailAddress | fake@email.com |
+    And user enters client information and clicks search
+    | Question     | Answer          |
+    | DOB          | {{randomDOB}}   |
+    | BestPhone    | {{randomPhone}} |
+    | EmailAddress | {{randomEmail}} |
 
     
-    Then user selects Create New Client and clicks the Next button
+    And user selects Create New Client and clicks the Next button
 
-    Then user enters account owner information and clicks Next
+    And user enters account owner information and clicks Next
     | Question           | Answer           |
     | MaritalStatus      | Single           |
     | StreetAddress      | 1206 Conway St   |
@@ -34,19 +34,63 @@ Feature: SFP Happy Path
     | ReceivedMail       |     Yes          |
     | WhereClientResides |     Yes          |
 
-    Then user selects Special Farm Package and inputs Quote Details
+    And user selects Special Farm Package and inputs Quote Details
     | Question       | Answer                                      |
-	| EffectiveDate  | 2/15/2026                                   |
-	| PolicyTerm     | 12 months                                   |
-	| AgentCode      | D2102                                       |
-	| RatingState    | Minnesota                                   |
-	| SSN            |                                             |
-	| WritingCompany | American National Property And Casualty Co. |
-	| RiskAddress    | 1206 Conway St, Saint Paul, MN 55106        |
+    | EffectiveDate  | {{tomorrow}}                                |
+    | PolicyTerm     | 12 months                                   |
+    | AgentCode      | D2102                                       |
+    | RatingState    | Minnesota                                   |
+    | SSN            |                                             |
+    | WritingCompany | American National Property And Casualty Co. |
+    | RiskAddress    | 1206 Conway St, Saint Paul, MN 55106        |
 
-    Then user enters SFP policy details and clicks Next button
+    And user enters SFP policy details and clicks Next button
 		| Question            | Answer  |
 		| PrimaryFarmType     | Animals |
 		| LivestockType       | Beef    |
 		| GrossFarmIncome     | 75000   |
 		| GrowIndustrialHemp  | No      |
+
+
+    When user enters Pre-Qualification information and continues
+     | Question                | Answer            |
+     | EligibilityRestrictions | None Of The Above |
+
+    When user selects Primary Insured and continues
+
+    When user Validates Primary Insured Information for SFP and continues
+
+    When user answers UW Questions and continues
+    | Question             | Answer |
+    | ConvictionFelony     | No     |
+    | PolicyDeclined5Years | No     |
+    | AlcoholOnPremises    | No     |
+    | NoneOfTheAbove       | Yes    |
+
+    When user enters Claims and Prior Insurance Information and continues
+		| Question                 | Answer |
+		| PriorFFANPolicy          | No     |
+		| YearsInBusiness          |      5 |
+		| YearsContinuousCoverage  |      5 |
+
+    When user validates Client Details and continues
+
+    When user Adds Narrative and continues
+		| Question  | Answer        |
+		| Narrative | Raises Cattle |
+
+    When user selects Policy Wide or Division Specific Coverages and continues
+     | CoverageType | CoverageName         | Select |
+     | Policy       | Agribusiness         | No     |
+     | Division I   | Excess Debris Removal | Yes    |
+     | Division II  | Excess Debris Removal | Yes    |
+
+
+     When user provides location information and continues
+     | Question                | Answer  |
+     | LocationNickname        | Farm 1  |
+     | LocationType            | Both    |
+     | MilesFromFireDepartment |      5 |
+     | FeetFromHydrant         | 501-750 |
+     | TotalAcreage            |     300 |
+     | WindHailDeductible      | 2%      |

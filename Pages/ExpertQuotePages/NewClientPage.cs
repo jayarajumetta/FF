@@ -1,7 +1,6 @@
 ﻿// Pages/NewClientPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
-using Playwright_POC.Locators;
 
 namespace Playwright_POC.Pages
 {
@@ -14,72 +13,82 @@ namespace Playwright_POC.Pages
             _page = page;
         }
 
+        #region Locators
+        // New/Existing Client Search locators - moved from NewExistingClientSearchLocators
+        private ILocator FirstNameInput => _page.Locator("input[name='customer.name.first']");
+        private ILocator LastNameInput => _page.Locator("input[name='customer.name.last']");
+        private ILocator DateOfBirthInput => _page.Locator("input[name='customer.dateOfBirth']");
+        private ILocator BestPhoneInput => _page.Locator("input[name='customer.phone']");
+        private ILocator EmailAddressInput => _page.Locator("input[name='customer.email']");
+        private ILocator SearchButton => _page.Locator("//button[text()='Search']");
+        private ILocator CreateNewClientButton => _page.Locator("//button[.//div[text()='Create New Client']]");
+        
+        // Global locators used in this page
+        private ILocator NextButton => _page.GetByTestId("next");
+        private ILocator AccountInfoPageHeader => _page.Locator("//h1[text()='Account Information']");
+        #endregion
 
         public async Task WaitForFirstNameInputAsync()
         {
-            await NewExistingClientSearchLocators.FirstNameInput(_page).WaitForAsync(new() { Timeout = 2000 });
+            await FirstNameInput.WaitForAsync(new() { Timeout = 2000 });
         }
 
         public async Task FillFirstNameAsync(string firstName)
         {
-            await NewExistingClientSearchLocators.FirstNameInput(_page).FillAsync(firstName);
+            await FirstNameInput.FillAsync(firstName);
         }
 
         public async Task FillLastNameAsync(string lastName)
         {
-            var currentValue = await NewExistingClientSearchLocators.LastNameInput(_page).InputValueAsync();
+            var currentValue = await LastNameInput.InputValueAsync();
             if (!currentValue.Equals(lastName))
             {
-
                 // Clear the field first
-                await NewExistingClientSearchLocators.LastNameInput(_page).FillAsync("");
+                await LastNameInput.FillAsync("");
                 // Then fill with the new value
-                await NewExistingClientSearchLocators.LastNameInput(_page).FillAsync(lastName);
+                await LastNameInput.FillAsync(lastName);
             }
-            
         }
 
         public async Task FillDOBAsync(string dob)
         {
-            await NewExistingClientSearchLocators.DateOfBirthInput(_page).FillAsync(dob);
+            await DateOfBirthInput.FillAsync(dob);
         }
 
         public async Task FillBestPhoneAsync(string phone)
         {
-            await NewExistingClientSearchLocators.BestPhoneInput(_page).FillAsync(phone);
+            await BestPhoneInput.FillAsync(phone);
         }
 
         public async Task FillEmailAsync(string email)
         {
-            await NewExistingClientSearchLocators.EmailAddressInput(_page).FillAsync(email);
+            await EmailAddressInput.FillAsync(email);
         }
 
         public async Task ClickSearchAsync()
         {
-            await NewExistingClientSearchLocators.SearchButton(_page).ClickAsync();
+            await SearchButton.ClickAsync();
         }
 
         public async Task WaitForNextButtonAsync()
         {
-            await GlobalLocators.NextButton(_page).WaitForAsync(new() { Timeout = 10000 });
+            await NextButton.WaitForAsync(new() { Timeout = 10000 });
         }
 
         public async Task ClickCreateNewClientAsync()
         {
-            await NewExistingClientSearchLocators.CreateNewClientButton(_page).ClickAsync();
+            await CreateNewClientButton.ClickAsync();
         }
 
         public async Task ClickNextAsync()
         {
-            await GlobalLocators.NextButton(_page).ClickAsync();
+            await NextButton.ClickAsync();
         }
 
         public async Task WaitForAccountInfoPageAsync()
         {
             await _page.WaitForLoadStateAsync(LoadState.Load);
-            await AccountInformationConstLocators.PageHeader(_page).WaitForAsync(new() { Timeout = 10000 });
+            await AccountInfoPageHeader.WaitForAsync(new() { Timeout = 10000 });
         }
-
-
     }
 }

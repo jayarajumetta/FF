@@ -1,4 +1,5 @@
-﻿using Microsoft.Playwright;
+﻿#nullable enable
+using Microsoft.Playwright;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace Playwright_POC.Helpers
        string? cookieHeader = null,
        int maxRetries = 2)
         {
-            HttpResponseMessage response = null;
+            HttpResponseMessage? response = null;
 
             for (int attempt = 1; attempt <= maxRetries; attempt++)
             {
@@ -69,7 +70,7 @@ namespace Playwright_POC.Helpers
                 await Task.Delay(1000);
             }
 
-            return response;
+            return response!;
         }
     }
     }

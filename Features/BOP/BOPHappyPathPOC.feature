@@ -7,23 +7,23 @@ Feature: BOP Happy Path
 
     When I enter valid credentials and Click LogIn
 
-    Then user enters a Random Name in the search field and clicks search
-    | Question  | Answer   |
-    | FirstName | {{male}}   |
-    | LastName  | {{random}}  |
+    And user enters a Random Name in the search field and clicks search
+    | Question  | Answer         |
+    | FirstName | {{firstName}}  |
+    | LastName  | {{lastName}}   |
 
-    Then user clicks New Quote button
+    And user clicks New Quote button
    
-    Then user enters client information and clicks search
+    And user enters client information and clicks search
     | Question     | Answer         |
     | DOB          |  08/08/1944    |
     | BestPhone    | (907) 227-0664 |
     | EmailAddress | fake@email.com |
 
     
-    Then user selects Create New Client and clicks the Next button
+    And user selects Create New Client and clicks the Next button
 
-    Then user enters account owner information and clicks Next
+    And user enters account owner information and clicks Next
     | Question           | Answer        |
     | MaritalStatus      | Single        |
     | StreetAddress      | 6 Patriot Ln  |
@@ -34,9 +34,9 @@ Feature: BOP Happy Path
     | ReceivedMail       |     Yes       |
     | WhereClientResides |     Yes       |
 
-    Then user selects Business Owners and inputs Quote Details
+    And user selects Business Owners and inputs Quote Details
 	| Question           | Answer                                      |
-	| EffectiveDate      | 2/15/2026                                  |
+	| EffectiveDate      | {{tomorrow}}                                |
 	| PolicyTerm         | 12 months                                   |
 	| AgentCode          | D2102                                       |
 	| RatingState        | Missouri                                    |
@@ -48,14 +48,14 @@ Feature: BOP Happy Path
 	| RiskAddress        | 6 Patriot Ln, Buffalo, MO 65622             |
   
 
-	Then user selects class codes and continues
+	And user selects class codes and continues
 		| Question        | Answer            |
 		| ClassCodeNumber |             63611 |
 		| Restrictions    | None Of The Above |
 
-	Then user selects Primary Insured and continues
+	And user selects Primary Insured and continues
 
-    Then user Enters Primary Insured Information and continues
+    And user Enters Primary Insured Information and continues
 		| Question   | Answer     |
 		| EntityType | Individual |
 		| BusinessPhone | (907) 227-0664 |

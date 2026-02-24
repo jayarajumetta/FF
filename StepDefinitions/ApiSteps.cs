@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Microsoft.Extensions.Configuration;
 using Playwright_POC.Configuration;
 using Playwright_POC.Helpers;
 using Playwright_POC.Models;
@@ -21,19 +22,22 @@ public class ApiSteps
     private readonly CredentialsConfig _credentials;
     private readonly OAuthConfig _oauthConfig;
     private readonly ScenarioContext _scenarioContext;
+    private readonly IConfiguration _configuration;
 
     public ApiSteps(
         ReqContext context,
         IApiService apiService,
         ScenarioContext scenarioContext,
         CredentialsConfig credentials,
-        OAuthConfig oauthConfig)
+        OAuthConfig oauthConfig,
+        IConfiguration configuration)
     {
         _context = context;
         _apiService = apiService;
         _scenarioContext = scenarioContext;
         _credentials = credentials;
         _oauthConfig = oauthConfig;
+        _configuration = configuration;
     }
 
 
@@ -71,7 +75,7 @@ public class ApiSteps
             row["Email"],
             row["PhoneNumber"]);
 
-        var endpoint = "https://expertquote-qa.americannational.com/expertquote/api/apmi/mlsearch/search";
+        var endpoint = $"{_configuration["Playwright:ExpertQuoteApi"]}/apmi/mlsearch/search";
 
         var token = _scenarioContext.ContainsKey("AuthToken") ? _scenarioContext["AuthToken"].ToString() : string.Empty;
         Assert.That(!string.IsNullOrEmpty(token), "Access token is missing.");

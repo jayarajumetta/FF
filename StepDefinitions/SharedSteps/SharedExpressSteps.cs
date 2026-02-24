@@ -1,7 +1,6 @@
 ﻿
 using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
-using NUnit.Framework;
 using Playwright_POC.Configuration;
 using Playwright_POC.Context;
 using Playwright_POC.Helpers;
@@ -9,7 +8,8 @@ using Playwright_POC.Pages;
 using Reqnroll;
 using System;
 using System.Threading.Tasks;
-using TestAutomation.Pages.ExpressPages;
+using Playwright_POC.Pages.ExpressPages;
+using static Microsoft.Playwright.Assertions;
 using ReqContext = Playwright_POC.Context.TestContext;
 
 [Binding]
@@ -19,7 +19,6 @@ public class SharedExpressSteps
     private readonly ExpressCredentialsConfig _expressCreds;
     private readonly IConfiguration _configuration;
     private readonly ScenarioContextData _contextData;
-    private Table _table;
 
     public SharedExpressSteps(ReqContext context,
                         ExpressCredentialsConfig expressCreds,
@@ -33,8 +32,8 @@ public class SharedExpressSteps
     }
 
     
-    [Then("user enters QAExpress credentials and Clicks LogIn")]
-    public async Task WhenIEnterQAExpressCredentialsAndClickLogIn()
+    [StepDefinition("user enters QAExpress credentials and Clicks LogIn")]
+    public async Task EnterQAExpressCredentialsAndLogin()
     {
         var expressUrl = _configuration["Playwright:QAExpress"];
         await _context.Page.GotoAsync(expressUrl, new() {  WaitUntil = WaitUntilState.NetworkIdle});
@@ -47,10 +46,12 @@ public class SharedExpressSteps
 
         _contextData.QuoteNumber = System.IO.File.ReadAllText("QuoteNumber.txt");
         Console.WriteLine($"Quote Number: {_contextData.QuoteNumber}");
-        Assert.That(await loginPage.IsDefaultViewModelVisibleAsync(), Is.True, "Default View Model is not visible after login.");
+        
+        // Use Playwright Expect for visibility assertion with auto-retry
+        await Expect(loginPage.DefaultViewModelElement).ToBeVisibleAsync();
     }
-    [Then("user selects search type from dropdown and enters quote number and clicks search")]
-    public async Task ThenUserEntersQuoteNumberAndClicksSearch(Table table)
+    [StepDefinition("user selects search type from dropdown and enters quote number and clicks search")]
+    public async Task UserSelectsSearchTypeAndEntersQuoteNumber(Table table)
     {
         TableMappingHelpers.SearchExpress(table, _contextData);
         var searchType = _contextData.SearchType;

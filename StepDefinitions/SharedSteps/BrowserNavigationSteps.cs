@@ -1,11 +1,10 @@
-﻿
-using NUnit.Framework;
-using Playwright_POC.Services;
+﻿using Playwright_POC.Services;
 using Reqnroll;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static Microsoft.Playwright.Assertions;
 
-namespace TestAutomation.StepDefinitions.SharedSteps
+namespace Playwright_POC.StepDefinitions.SharedSteps
 {
     [Binding]
     public class NavigationSteps
@@ -17,35 +16,29 @@ namespace TestAutomation.StepDefinitions.SharedSteps
             _nav = nav;
         }
 
-        [Given(@"I navigate to the Expert Quote login page")]
-        public async Task GivenIStartInExpertQuote() => await _nav.GoToExpertQuoteAsync();
+        [StepDefinition(@"I navigate to the Expert Quote login page")]
+        public async Task NavigateToExpertQuoteLogin() => await _nav.GoToExpertQuoteAsync();
 
-        [Then(@"user switches to QAExpress")]
-        public async Task WhenISwitchToQAExpress() => await _nav.GoToQAExpressAsync();
+        [StepDefinition(@"user switches to QAExpress")]
+        public async Task SwitchToQAExpress() => await _nav.GoToQAExpressAsync();
 
-        [When(@"I return to ExpertQuote")]
-        public async Task WhenIReturnToExpertQuote() => await _nav.GoToExpertQuoteAsync();
+        [StepDefinition(@"I return to ExpertQuote")]
+        public async Task ReturnToExpertQuote() => await _nav.GoToExpertQuoteAsync();
 
-        // --- Assertions (NUnit) ---
+        // --- Assertions (Playwright Expect) ---
 
-        [Then(@"I should be on ExpertQuote")]
-        public async Task ThenIShouldBeOnExpertQuote()
+        [StepDefinition(@"I should be on ExpertQuote")]
+        public async Task VerifyOnExpertQuote()
         {
-            // Validate by URL
-            var url = await _nav.Page.EvaluateAsync<string>("() => window.location.href");
-
-            // Option A: StringAssert
-            Assert.That(url, Does.Contain("expertquote-qa"));
-
-            // Option B: Assert.That with constraint syntax (pick one style)
-            // Assert.That(url, Does.Contain("expertquote-qa"));
+            // Validate by URL using Playwright Expect
+            await Expect(_nav.Page).ToHaveURLAsync(new Regex("expertquote-qa"));
 
             // Optional: element-based readiness check (replace with a stable EQ selector if you have one)
             // await _nav.Page.Locator("#main, [data-app='ExpertQuote']").WaitForAsync(new() { Timeout = 30000 });
         }
 
-        [Then(@"I should be on QAExpress")]
-        public async Task ThenIShouldBeOnQAExpress()
+        [StepDefinition(@"I should be on QAExpress")]
+        public async Task VerifyOnQAExpress()
         {
             // Confirm final route after possible SSO redirects
             await _nav.Page.WaitForURLAsync(
