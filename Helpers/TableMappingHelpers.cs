@@ -163,7 +163,7 @@ namespace Playwright_POC.Helpers
                         _contextData.LessorRiskExposure = answer;
                         break;
                     case "BusinessEntity":
-                         _contextData.BusinessEntity = answer;
+                        _contextData.BusinessEntity = answer;
                         break;
                     case "DBAName":
                         _contextData.DBAName = answer;
@@ -585,6 +585,63 @@ namespace Playwright_POC.Helpers
             }
         }
 
-    }
+        public static void NarrativeFields(Table table, ScenarioContextData _contextData)
+        {
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"];
+                var answer = row["Answer"];
+                switch (question)
+                {
+                    case "Narrative":
+                        _contextData.Narrative = answer;
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknown question: {question}");
+                }
+            }
 
+        }
+
+
+        public static void LocationInformationFields(Table table, ScenarioContextData _contextData)
+        {
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"];
+                var answer = row["Answer"];
+
+                switch (question)
+                {
+                    case "LocationNickname":
+                        _contextData.LocationNickname = answer;
+                        break;
+
+                    case "LocationType":
+                        _contextData.LocationType = answer;
+                        break;
+
+                    case "MilesFromFireDepartment":
+                        _contextData.MilesFromFireDepartment = answer;
+                        break;
+
+                    case "FeetFromHydrant":
+                        _contextData.FeetFromHydrant = answer;
+                        break;
+
+                    case "TotalAcreage":
+                        _contextData.TotalAcreage = answer;
+                        break;
+
+                    case "WindHailDeductible":
+                        _contextData.WindHailDeductible = answer;
+                        break;
+
+                    default:
+                        throw new ArgumentException($"Unknown question: {question}");
+                        
+                    }
+            }
+        }
+    }
 }

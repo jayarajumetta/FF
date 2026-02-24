@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Playwright_POC.Configuration;
 using Playwright_POC.Context;
 using Playwright_POC.Helpers;
+using Playwright_POC.Locators;
 using Playwright_POC.Pages;
 using Playwright_POC.Pages.ExpertQuotePages;
 using Reqnroll;
@@ -14,6 +15,7 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using TestAutomation.Pages.ExpertQuotePages;
 using static System.Net.Mime.MediaTypeNames;
 using ReqContext = Playwright_POC.Context.TestContext;
 
@@ -74,7 +76,7 @@ public class SFPSteps
         var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);
         await primaryInsuredPage.ValidatePrimaryInsuredDetailsAsync(_contextData);
         await Helpers.WaitForSpinnerToClearAsync(_context.Page);
-        await _context.Page.GetByTestId("fields.data_Actions.save").ClickAsync();
+        await Helpers.ClickSaveAsync(_context.Page);
     }
 
     [When("user answers UW Questions and continues")]
@@ -108,5 +110,35 @@ public class SFPSteps
         await clientDetailsPage.VerifyClientStreetAddress(_contextData.StreetAddress);
         //await clientDetailsPage.VerifyClientPhone(_contextData.ClientPhoneNumber);
         await Helpers.ClickNextAsync(_context.Page);
+    }
+
+    [When("user Adds Narrative and continues")]
+    public async Task UserAddsNarrativeAndContinues(Table table)
+    {
+        var narrativePage = new NarrativePage(_context.Page);
+        TableMappingHelpers.NarrativeFields(table, _contextData);
+        await narrativePage.ClickAddNarrativeButtonAsync();
+        await narrativePage.EnterNarrativeAndClickSaveAsync(_contextData.Narrative);
+        await Helpers.ClickNextAsync(_context.Page);
+    }
+
+    [When("user selects Policy Wide or Division Specific Coverages and continues")]
+    public async Task UserselectsPolicyWideDivisionSpecificCoveragesAndContinues(Table table)
+    {
+        var coverageCatalogPage = new PolicyWideDivisionSpecificCoveragePage(_context.Page);
+        await coverageCatalogPage.ApplySelectionsAndAddCoveragesAsync(table);
+        await Helpers.ClickNextAsync(_context.Page);
+    }
+
+    [When("user provides location information and continues")]
+    public async Task UserProvidesLocationInformationAndContinues(Table table)
+    {
+        TableMappingHelpers.LocationInformationFields(table, _contextData);
+
+        var locationPage = new LocationPage(_context.Page, _contextData);
+        await locationPage.EnterLocationInformationAsync();
+        await locationPage.SelectWindHailDeductibleAsync(_contextData.WindHailDeductible);
+
+        await Helpers.ClickSaveAsync(_context.Page);
     }
 }

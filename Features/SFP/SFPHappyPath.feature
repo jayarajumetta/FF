@@ -75,4 +75,22 @@ Feature: SFP Happy Path
 
     When user validates Client Details and continues
 
-    
+    When user Adds Narrative and continues
+		| Question  | Answer        |
+		| Narrative | Raises Cattle |
+
+    When user selects Policy Wide or Division Specific Coverages and continues
+     | CoverageType | CoverageName         | Select |
+     | Policy       | Agribusiness         | No     |
+     | Division I   | Excess Debris Removal | Yes    |
+     | Division II  | Excess Debris Removal | Yes    |
+
+
+     When user provides location information and continues
+     | Question                | Answer  |
+     | LocationNickname        | Farm 1  |
+     | LocationType            | Both    |
+     | MilesFromFireDepartment |      5 |
+     | FeetFromHydrant         | 501-750 |
+     | TotalAcreage            |     300 |
+     | WindHailDeductible      | 2%      |
