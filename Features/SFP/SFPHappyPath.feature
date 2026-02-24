@@ -8,15 +8,15 @@ Feature: SFP Happy Path
     When I enter valid credentials and Click LogIn
 
     And user enters a Random Name in the search field and clicks search
-    | Question  |  Answer        |
-    | FirstName | {{firstName}}  |
-    | LastName  | {{lastName}}   |
+    | Question  | Answer        |
+    | FirstName | {{firstName}} |
+    | LastName  | {{lastName}}  |
 
     And user clicks New Quote button
    
     And user enters client information and clicks search
-    | Question     | Answer         |
-    | DOB          |  {{randomDOB}}  |
+    | Question     | Answer          |
+    | DOB          | {{randomDOB}}   |
     | BestPhone    | {{randomPhone}} |
     | EmailAddress | {{randomEmail}} |
 
@@ -36,13 +36,13 @@ Feature: SFP Happy Path
 
     And user selects Special Farm Package and inputs Quote Details
     | Question       | Answer                                      |
-	| EffectiveDate  | {{tomorrow}}                                |
-	| PolicyTerm     | 12 months                                   |
-	| AgentCode      | D2102                                       |
-	| RatingState    | Minnesota                                   |
-	| SSN            |                                             |
-	| WritingCompany | American National Property And Casualty Co. |
-	| RiskAddress    | 1206 Conway St, Saint Paul, MN 55106        |
+    | EffectiveDate  | {{tomorrow}}                                |
+    | PolicyTerm     | 12 months                                   |
+    | AgentCode      | D2102                                       |
+    | RatingState    | Minnesota                                   |
+    | SSN            |                                             |
+    | WritingCompany | American National Property And Casualty Co. |
+    | RiskAddress    | 1206 Conway St, Saint Paul, MN 55106        |
 
     And user enters SFP policy details and clicks Next button
 		| Question            | Answer  |
@@ -53,19 +53,19 @@ Feature: SFP Happy Path
 
 
     When user enters Pre-Qualification information and continues
-	    | Question                | Answer            |
-        | EligibilityRestrictions | None Of The Above |
+     | Question                | Answer            |
+     | EligibilityRestrictions | None Of The Above |
 
     When user selects Primary Insured and continues
 
     When user Validates Primary Insured Information for SFP and continues
 
     When user answers UW Questions and continues
-    | Question               | Answer |
-    | ConvictionFelony       | No    |
-    | PolicyDeclined5Years   | No     |
-    | AlcoholOnPremises      | No    |
-    | NoneOfTheAbove         | Yes     |
+    | Question             | Answer |
+    | ConvictionFelony     | No     |
+    | PolicyDeclined5Years | No     |
+    | AlcoholOnPremises    | No     |
+    | NoneOfTheAbove       | Yes    |
 
     When user enters Claims and Prior Insurance Information and continues
 		| Question                 | Answer |

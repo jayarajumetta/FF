@@ -64,28 +64,38 @@ namespace Playwright_POC.Pages
         public async Task SetMilesFromFireDepartment(string miles)
         {
             var input = MilesFromFireDepartment().First;
-            await input.WaitForAsync(new() { State = WaitForSelectorState.Visible });
-            await input.FillAsync(miles);
-            await _page.WaitForTimeoutAsync(3000);
+            await input.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+            await input.ScrollIntoViewIfNeededAsync();
+            await input.ClearAsync();
+            await input.FillAsync(miles?.Trim() ?? string.Empty);
+            await input.PressAsync("Tab"); // Blur to trigger Angular validation
+            await WaitForSpinnerAsync();
         }
 
         private ILocator FeetFromHydrantSelect() =>
-            _page.Locator("[data-testid*='locationInput$feetFromHydrant.value']").First;
+            _page.Locator("mat-select[data-testid*='locationInput$feetFromHydrant.value']").First;
 
         public async Task SelectFeetFromHydrant(string value)
         {
+            var normalizedValue = value?.Trim() ?? string.Empty;
+            
             var select = FeetFromHydrantSelect();
-            await _page.WaitForTimeoutAsync(3000);
-            await Helpers.Helpers.SelectByTextAsync(
-                page: _page,
-                matSelect: select,
-                optionText: value,
-                timeoutMs: 30000,
-                blurAfterSelect: true);
-
+            await select.ScrollIntoViewIfNeededAsync();
             await WaitForSpinnerAsync();
-
-
+            
+            // Click to open the dropdown
+            await select.ClickAsync(new() { Timeout = 30000 });
+            await _page.WaitForTimeoutAsync(500);
+            
+            // Wait for panel to appear and select option by text
+            var option = _page.Locator(".cdk-overlay-pane mat-option").GetByText(normalizedValue, new() { Exact = true });
+            await option.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+            await option.ClickAsync();
+            
+            // Wait for panel to close
+            await _page.WaitForTimeoutAsync(300);
+            await _page.Keyboard.PressAsync("Tab");
+            await WaitForSpinnerAsync();
         }
 
         private ILocator TotalAcreageInput() => _page.Locator("input[data-testid*='locationInput$acreage.value']");

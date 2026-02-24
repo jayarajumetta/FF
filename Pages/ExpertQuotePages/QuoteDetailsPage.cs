@@ -120,24 +120,16 @@ namespace Playwright_POC.Pages
             await Expect(effDateField).ToBeVisibleAsync(new() { Timeout = 30000 });
             await effDateField.FillAsync(contextData.EffectiveDate);
 
-            // Click the Policy Term dropdown to expand it
-            await PolicyTermDropdown.ClickAsync();
-
-            // Wait for dropdown to fully open
-            await Task.Delay(500);
-
-            // Click the policy term option (Angular Material mat-option)
-            await _page.GetByRole(AriaRole.Option, new() { Name = contextData.PolicyTerm }).ClickAsync();
+            // Select Policy Term using robust mat-select handler
+            await Playwright_POC.Helpers.Helpers.SelectByTextAsync(_page, PolicyTermDropdown, contextData.PolicyTerm, timeoutMs: 30000, blurAfterSelect: false);
 
             await AgentPCCodeInput.FillAsync(contextData.AgentCode);
         }
 
         public async Task<string> SelectRatingStateAndCompanyAsync(ScenarioContextData contextData)
         {
-            await RatingStateDropdown.ClickAsync();
-            await Task.Delay(500);
-            // Dropdown shows states in UPPERCASE (Angular Material mat-option)
-            await _page.GetByRole(AriaRole.Option, new() { Name = contextData.RatingState.ToUpper() }).ClickAsync();
+            // Select Rating State using robust mat-select handler
+            await Playwright_POC.Helpers.Helpers.SelectByTextAsync(_page, RatingStateDropdown, contextData.RatingState.ToUpper(), timeoutMs: 30000, blurAfterSelect: false);
 
             await WaitForSpinnerAsync();
 

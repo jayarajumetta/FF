@@ -21,24 +21,22 @@ namespace Playwright_POC.Pages
         {
             await AddNarrativeButton.WaitForAsync(new() { State = WaitForSelectorState.Visible });
             await AddNarrativeButton.ClickAsync();
+            await WaitForSpinnerAsync();
         }
 
         public async Task EnterNarrativeAndClickSaveAsync(string narrative)
         {
             var text = narrative?.Trim() ?? string.Empty;
 
-            var narrativeInput = NarrativeInput;
-
-            if (await narrativeInput.CountAsync() == 0)
-            {
-                narrativeInput = NarrativeInputAlt;
-            }
-
-            await narrativeInput.First.WaitForAsync(new() { State = WaitForSelectorState.Visible });
+            // Wait for either textarea or input to appear (Angular may render either)
+            var narrativeInput = NarrativeInput.Or(NarrativeInputAlt);
+            
+            await narrativeInput.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
             await narrativeInput.First.FillAsync(text);
 
             await SaveNarrativeButton.First.WaitForAsync(new() { State = WaitForSelectorState.Visible });
             await SaveNarrativeButton.First.ClickAsync();
+            await WaitForSpinnerAsync();
         }
     }
 }

@@ -25,9 +25,8 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         public async Task VerifyClientNameAsync(string firstName, string lastName)
         {
             var expected = $"{lastName?.Trim()}, {firstName?.Trim()}";
-            var nameLocator = ClientNameHeading.Filter(new() { HasTextString = expected });
-            await Expect(nameLocator.First).ToBeVisibleAsync();
-            await Expect(nameLocator.First).ToContainTextAsync(expected);
+            // Use case-insensitive matching since UI may capitalize differently
+            await Expect(ClientNameHeading.First).ToContainTextAsync(expected, new() { IgnoreCase = true });
         }
 
         public async Task VerifyClientStreetAddressAsync(string address)
