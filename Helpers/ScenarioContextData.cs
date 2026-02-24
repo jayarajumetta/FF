@@ -150,6 +150,13 @@ namespace Playwright_POC.Helpers
         public string LivestockType { get => Farm.LivestockType; set => Farm.LivestockType = value; }
         public string GrossFarmIncome { get => Farm.GrossFarmIncome; set => Farm.GrossFarmIncome = value; }
         public string GrowIndustrialHemp { get => Farm.GrowIndustrialHemp; set => Farm.GrowIndustrialHemp = value; }
+        public string LocationNickname { get => Farm.LocationNickname; set => Farm.LocationNickname = value; }
+        public string LocationType { get => Farm.LocationType; set => Farm.LocationType = value; }
+        public string MilesFromFireDepartment { get => Farm.MilesFromFireDepartment; set => Farm.MilesFromFireDepartment = value; }
+        public string FeetFromHydrant { get => Farm.FeetFromHydrant; set => Farm.FeetFromHydrant = value; }
+        public string TotalAcreage { get => Farm.TotalAcreage; set => Farm.TotalAcreage = value; }
+        public string WindHailDeductible { get => Farm.WindHailDeductible; set => Farm.WindHailDeductible = value; }
+        public string Narrative { get => Farm.Narrative; set => Farm.Narrative = value; }
 
         // --- Underwriting (maps to Underwriting) ---
         public string GeneralUWQuestionAnswer { get => Underwriting.GeneralAnswer; set => Underwriting.GeneralAnswer = value; }

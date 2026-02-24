@@ -4,7 +4,6 @@ using NUnit.Framework;
 using Playwright_POC.Configuration;
 using Playwright_POC.Context;
 using Playwright_POC.Helpers;
-using Playwright_POC.Locators;
 using Playwright_POC.Pages;
 using Playwright_POC.Pages.ExpertQuotePages;
 using Reqnroll;
@@ -15,7 +14,6 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using TestAutomation.Pages.ExpertQuotePages;
 using static System.Net.Mime.MediaTypeNames;
 using ReqContext = Playwright_POC.Context.TestContext;
 
@@ -61,7 +59,7 @@ public class SFPSteps
     public async Task UserEntersSFPPolicyDetailsAndClicksNext(Table table)
     {
         TableMappingHelpers.SFPPolicyDataFields(table, _contextData);
-        var sfpPolicyDetailsPage = new PolicyDetailsPage(_context.Page);
+        var sfpPolicyDetailsPage = new SFP_PolicyDetailsPage(_context.Page);
         await sfpPolicyDetailsPage.SelectPrimaryFarmType(_contextData.PrimaryFarmType);
         await sfpPolicyDetailsPage.SelectLivestockType(_contextData.LivestockType);
         await sfpPolicyDetailsPage.EnterGrossFarmIncome(_contextData.GrossFarmIncome);
@@ -94,10 +92,10 @@ public class SFPSteps
     [When("user enters Claims and Prior Insurance Information and continues")]
     public async Task UserEntersClaimsAndPriorInsuranceInformationAndContinues(Table table)
     {
-        var claimsViolationsPage = new ClaimsViolationsPage(_context.Page);
+        var claimsPriorInsurancePage = new ClaimsPriorInsurancePage(_context.Page);
         TableMappingHelpers.ClaimsAndPriorInsuranceFields(table, _contextData);
-        await claimsViolationsPage.SetExposuresInsuredAN90DaysAsync(_contextData.PriorFFANPolicy);
-        await claimsViolationsPage.EnterYearsInBusinessAsync(_contextData.YearsInBusiness);
+        await claimsPriorInsurancePage.SetExposuresInsuredAN90DaysAsync(_contextData.PriorFFANPolicy);
+        await claimsPriorInsurancePage.EnterYearsInBusinessAsync(_contextData.YearsInBusiness);
         await Helpers.ClickNextAsync(_context.Page);
     }
 
@@ -105,9 +103,9 @@ public class SFPSteps
     [When("user validates Client Details and continues")]
     public async Task UserValidatesClientDetailsAndContinues()
     {
-        var clientDetailsPage = new ClientDetailsPage(_context.Page);
-        await clientDetailsPage.VerifyClientName(_contextData.ClientFirstName, _contextData.ClientLastName);
-        await clientDetailsPage.VerifyClientStreetAddress(_contextData.StreetAddress);
+        var clientDetailsPage = new SFP_ClientDetailsPage(_context.Page);
+        await clientDetailsPage.VerifyClientNameAsync(_contextData.ClientFirstName, _contextData.ClientLastName);
+        await clientDetailsPage.VerifyClientStreetAddressAsync(_contextData.StreetAddress);
         //await clientDetailsPage.VerifyClientPhone(_contextData.ClientPhoneNumber);
         await Helpers.ClickNextAsync(_context.Page);
     }

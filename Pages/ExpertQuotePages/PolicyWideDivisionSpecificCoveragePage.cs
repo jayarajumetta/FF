@@ -1,7 +1,6 @@
 ﻿using Microsoft.Playwright;
 using NUnit.Framework;
 using Playwright_POC.Helpers;
-using Playwright_POC.Locators;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
