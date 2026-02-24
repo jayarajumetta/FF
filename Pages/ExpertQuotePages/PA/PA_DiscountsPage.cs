@@ -1,13 +1,13 @@
-﻿// Pages/DiscountsPage.cs
+﻿// Pages/ExpertQuotePages/PA_DiscountsPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 using Playwright_POC.Helpers;
 
 namespace Playwright_POC.Pages
 {
-    public class DiscountsPage : BasePage
+    public class PA_DiscountsPage : BasePage
     {
-        public DiscountsPage(IPage page) : base(page) { }
+        public PA_DiscountsPage(IPage page) : base(page) { }
 
         #region Locators
         // Dynamic locators

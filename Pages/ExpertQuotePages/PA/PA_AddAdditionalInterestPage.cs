@@ -1,4 +1,4 @@
-﻿// Pages/AddAdditionalInterestPage.cs
+﻿// Pages/ExpertQuotePages/PA_AddAdditionalInterestPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
@@ -6,9 +6,9 @@ using Playwright_POC.Helpers;
 
 namespace Playwright_POC.Pages
 {
-    public class AddAdditionalInterestPage : BasePage
+    public class PA_AddAdditionalInterestPage : BasePage
     {
-        public AddAdditionalInterestPage(IPage page) : base(page) { }
+        public PA_AddAdditionalInterestPage(IPage page) : base(page) { }
 
         #region Locators
         private ILocator AddAdditionalInterestButton => _page.GetByTestId("add_Additional_Interest");

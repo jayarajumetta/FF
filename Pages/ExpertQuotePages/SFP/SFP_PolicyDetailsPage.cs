@@ -5,9 +5,9 @@ using Playwright_POC.Pages;
 
 namespace Playwright_POC.Pages.ExpertQuotePages
 {
-    public class PolicyDetailsPage : BasePage
+    public class SFP_PolicyDetailsPage : BasePage
     {
-        public PolicyDetailsPage(IPage page) : base(page) { }
+        public SFP_PolicyDetailsPage(IPage page) : base(page) { }
 
         #region Locators
         // SFP Policy Details locators
@@ -21,6 +21,9 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         
         private ILocator GetGrowIndustrialHempButton(string yesOrNo) =>
             _page.GetByTestId($"fields.account.policyInput$industrialHemp.value-{(yesOrNo.Equals("No", System.StringComparison.OrdinalIgnoreCase) ? "0" : "1")}");
+
+        private ILocator SecondaryFarmTypeToggle =>
+            _page.GetByTestId("fields.account.policyInput$secondaryFarmTypeApplicable.value");
         #endregion
 
         public async Task SelectPrimaryFarmType(string farmType)
@@ -49,6 +52,21 @@ namespace Playwright_POC.Pages.ExpertQuotePages
             var hempButton = GetGrowIndustrialHempButton(growHemp);
             await hempButton.ScrollIntoViewIfNeededAsync();
             await ClickIfNotSelectedAsync(hempButton);
+        }
+
+        public async Task SetSecondaryFarmTypeAsync(bool enable)
+        {
+            await WaitForSpinnerAsync();
+            var toggle = SecondaryFarmTypeToggle;
+            await toggle.ScrollIntoViewIfNeededAsync();
+            
+            // mat-slide-toggle has 'mat-checked' class when enabled
+            var isChecked = await toggle.GetAttributeAsync("class") is string cls && cls.Contains("mat-checked");
+            
+            if (enable != isChecked)
+            {
+                await toggle.ClickAsync();
+            }
         }
     }
 }

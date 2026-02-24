@@ -140,11 +140,29 @@ namespace Playwright_POC.Tools.LocatorScan
                     {
                         context = await browser.NewContextAsync();
                     }
-                    page = context.Pages.FirstOrDefault();
+                    
+                    // Get all pages and filter to actual content pages (not chrome://, extensions, etc.)
+                    var allPages = context.Pages.ToList();
+                    var contentPages = allPages
+                        .Where(p => !string.IsNullOrEmpty(p.Url) 
+                            && !p.Url.StartsWith("chrome://") 
+                            && !p.Url.StartsWith("chrome-extension://")
+                            && !p.Url.StartsWith("about:"))
+                        .ToList();
+                    
+                    TestContext.Progress.WriteLine($"[LocatorScanTool] Found {allPages.Count} total pages, {contentPages.Count} content pages");
+                    
+                    // Use LAST content page (most recently opened/active) instead of first
+                    page = contentPages.LastOrDefault() ?? allPages.FirstOrDefault();
+                    
                     if (page is null)
                     {
                         page = await context.NewPageAsync();
                     }
+                    
+                    // Bring this page to front and force DOM refresh
+                    await page.BringToFrontAsync();
+                    await page.WaitForTimeoutAsync(200); // Brief wait for focus
 
                     // Debug: Show current page info
                     var currentUrl = page.Url;
@@ -244,6 +262,20 @@ namespace Playwright_POC.Tools.LocatorScan
                 TestContext.Progress.WriteLine($"[LocatorScanTool] Page has {elementCount} total DOM elements.");
                 var interactableCount = await page.EvaluateAsync<int>("() => document.querySelectorAll('input, button, select, textarea, [onclick], [role=\"button\"]').length");
                 TestContext.Progress.WriteLine($"[LocatorScanTool] Found {interactableCount} potentially interactable elements in DOM.");
+                
+                // DEBUG: Check for iframes
+                var iframeCount = await page.EvaluateAsync<int>("() => document.querySelectorAll('iframe').length");
+                TestContext.Progress.WriteLine($"[LocatorScanTool] Iframes on page: {iframeCount}");
+                
+                // DEBUG: Check for Angular Material components directly
+                var matCheckboxCount = await page.EvaluateAsync<int>("() => document.querySelectorAll('mat-checkbox, .mat-checkbox').length");
+                var matSelectCount = await page.EvaluateAsync<int>("() => document.querySelectorAll('mat-select, .mat-select').length");
+                var matRadioCount = await page.EvaluateAsync<int>("() => document.querySelectorAll('mat-radio-button, .mat-radio-button').length");
+                TestContext.Progress.WriteLine($"[LocatorScanTool] Angular Material components: mat-checkbox={matCheckboxCount}, mat-select={matSelectCount}, mat-radio={matRadioCount}");
+                
+                // DEBUG: Check for any input with coverage/policy in id
+                var coverageInputs = await page.EvaluateAsync<int>("() => document.querySelectorAll('input[id*=\"policy\"], input[id*=\"Coverage\"], input[id*=\"coverage\"]').length");
+                TestContext.Progress.WriteLine($"[LocatorScanTool] Coverage/policy inputs: {coverageInputs}");
 
                 // ── Scan ──
                 var scanOptions = new LocatorScanOptions

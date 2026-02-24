@@ -93,7 +93,12 @@ namespace Playwright_POC.Tools.LocatorScan
 (options) => {
     const visibleOnly = options?.visibleOnly ?? true;
     const includeAllElements = options?.includeAllElements ?? false;
-    const interactableTags = new Set(['button','a','input','select','textarea','summary','option']);
+    // Include standard HTML interactables AND Angular Material custom elements
+    const interactableTags = new Set([
+        'button','a','input','select','textarea','summary','option',
+        'mat-checkbox','mat-select','mat-slide-toggle','mat-radio-button','mat-radio-group',
+        'mat-button-toggle','mat-datepicker-toggle','mat-expansion-panel','mat-expansion-panel-header'
+    ]);
     const results = [];
 
     function truncate(s, max) { return s && s.length > max ? s.substring(0, max) : (s || ''); }
@@ -248,22 +253,33 @@ namespace Playwright_POC.Tools.LocatorScan
         const role = el.getAttribute('role') || '';
         const tabindex = el.getAttribute('tabindex');
         const onclick = el.hasAttribute('onclick');
-        const isInteractable = interactableTags.has(tag) || !!role || (tabindex !== null && parseInt(tabindex, 10) >= 0) || onclick;
+        const classListLower = [...el.classList].join(' ').toLowerCase();
         
-        // Skip non-interactable elements unless includeAllElements is true
-        if (!isInteractable && !includeAllElements) continue;
+        // Check for Angular Material components by class (they may use attribute selectors on regular elements)
+        const isAngularMaterial = classListLower.includes('mat-checkbox') || classListLower.includes('mat-select') ||
+            classListLower.includes('mat-slide-toggle') || classListLower.includes('mat-radio-button') ||
+            classListLower.includes('mat-button-toggle') || classListLower.includes('mat-expansion-panel');
+        
+        const isInteractable = interactableTags.has(tag) || !!role || (tabindex !== null && parseInt(tabindex, 10) >= 0) || onclick || isAngularMaterial;
+        
+        // Check for testId early - elements with testIds should ALWAYS be included
+        const testIdAttrs = ['data-testid','data-test','data-qa'];
+        let testId = '';
+        for (const a of testIdAttrs) { testId = el.getAttribute(a) || testId; if (testId) break; }
+        const hasTestId = !!testId;
+        
+        // Skip non-interactable elements unless includeAllElements is true OR has testId
+        if (!isInteractable && !includeAllElements && !hasTestId) continue;
 
         const hiddenStatus = getHiddenStatus(el);
         
-        // Skip hidden elements if visibleOnly is true
-        if (visibleOnly && hiddenStatus.isHidden) continue;
+        // Skip hidden elements if visibleOnly is true, UNLESS element has a testId
+        // (testIds are explicitly for automation and should always be included)
+        if (visibleOnly && hiddenStatus.isHidden && !hasTestId) continue;
 
         const type = (el.getAttribute('type') || '').toLowerCase();
         const id = el.id || '';
         const classList = [...el.classList].join(' ');
-        const testIdAttrs = ['data-testid','data-test','data-qa'];
-        let testId = '';
-        for (const a of testIdAttrs) { testId = el.getAttribute(a) || testId; if (testId) break; }
         const text = truncate(norm(el.textContent), 120);
         const placeholder = el.getAttribute('placeholder') || '';
         const ariaLabel = el.getAttribute('aria-label') || '';
@@ -561,6 +577,19 @@ namespace Playwright_POC.Tools.LocatorScan
                     Strategy = "GetByText",
                     CodeSnippet = $"page.GetByText(\"{Escape(raw.Text)}\")",
                     Score = 6
+                });
+            }
+            
+            // 5b) GetByText fallback for any element with label or accessible name
+            // This helps Angular Material inputs that lack testId/aria-label
+            var labelText = FirstNonEmpty(raw.Label, raw.AccessibleName);
+            if (!string.IsNullOrWhiteSpace(labelText) && labelText.Length <= 60 && labelText.Length >= 3)
+            {
+                list.Add(new LocatorCandidate
+                {
+                    Strategy = "GetByLabel",
+                    CodeSnippet = $"page.GetByLabel(\"{Escape(labelText)}\")",
+                    Score = 7
                 });
             }
 

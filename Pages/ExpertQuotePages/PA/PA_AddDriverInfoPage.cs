@@ -1,4 +1,4 @@
-// Pages/AddDriverInfoPage.cs
+// Pages/ExpertQuotePages/PA_AddDriverInfoPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Globalization;
@@ -20,9 +20,9 @@ namespace Playwright_POC.Pages
         public string DLState { get; set; } = string.Empty;
     }
 
-    public class AddDriverInfoPage : BasePage
+    public class PA_AddDriverInfoPage : BasePage
     {
-        public AddDriverInfoPage(IPage page) : base(page) { }
+        public PA_AddDriverInfoPage(IPage page) : base(page) { }
 
         #region Locators
         // Quote Number
