@@ -52,9 +52,14 @@ namespace Playwright_POC.Pages
 
             var btn = LocationTypeButton(normalized);
             await btn.ScrollIntoViewIfNeededAsync();
+
+            // Check if already selected
+            var cls = await btn.GetAttributeAsync("class") ?? string.Empty;
+            if (cls.Contains("mat-button-toggle-checked", StringComparison.OrdinalIgnoreCase))
+                return; // already selected, no action needed
+
             await btn.ClickAsync(new() { Force = true });
-            await _page.WaitForTimeoutAsync(8000);
-            await Helpers.Helpers.WaitForSpinnerToClearAsync(_page);
+            await _page.WaitForTimeoutAsync(3000);
         }
 
         private ILocator MilesFromFireDepartment() => _page.Locator("input[data-testid*='locationInput$milesFromFireDepartment.value']");
@@ -64,14 +69,16 @@ namespace Playwright_POC.Pages
             var input = MilesFromFireDepartment().First;
             await input.WaitForAsync(new() { State = WaitForSelectorState.Visible });
             await input.FillAsync(miles);
+            await _page.WaitForTimeoutAsync(3000);
         }
 
         private ILocator FeetFromHydrantSelect() =>
-            _page.Locator("mat-select[data-testid*='locationInput$feetFromHydrant']");
+            _page.Locator("[data-testid*='locationInput$feetFromHydrant.value']").First;
 
         public async Task SelectFeetFromHydrant(string value)
         {
             var select = FeetFromHydrantSelect();
+            await _page.WaitForTimeoutAsync(3000);
             await Helpers.Helpers.SelectByTextAsync(
                 page: _page,
                 matSelect: select,
@@ -80,6 +87,7 @@ namespace Playwright_POC.Pages
                 blurAfterSelect: true);
 
             await Helpers.Helpers.WaitForSpinnerToClearAsync(_page);
+
 
         }
 

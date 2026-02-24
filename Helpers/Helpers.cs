@@ -127,6 +127,7 @@ namespace Playwright_POC.Helpers
                 clickTarget = matSelect;
 
             await clickTarget.ScrollIntoViewIfNeededAsync();
+            await page.WaitForTimeoutAsync(3000);
             await clickTarget.ClickAsync(new() { Timeout = timeoutMs });
 
             var panelId = await matSelect.GetAttributeAsync("aria-controls") ?? await clickTarget.GetAttributeAsync("aria-controls");
@@ -136,11 +137,15 @@ namespace Playwright_POC.Helpers
 
             await page.WaitForTimeoutAsync(3000);
             // Select option inside overlay
-            var option = panel.Locator("mat-option .mat-option-text").Filter(new() { HasTextString = value }).First;
+            var option = page
+                .GetByRole(AriaRole.Listbox)
+                .GetByRole(AriaRole.Option, new() { Name = value });
 
 
+            await option.ScrollIntoViewIfNeededAsync();
             await Expect(option).ToBeVisibleAsync(new() { Timeout = timeoutMs });
-            await option.ClickAsync(new() { Timeout = timeoutMs });
+            await option.EvaluateAsync("el => el.click()"); // Use native click to avoid Playwright's scroll/hover logic which can cause issues in overlays
+            // await option.ClickAsync(new() { Timeout = timeoutMs });
 
             await page.WaitForTimeoutAsync(3000);
 
