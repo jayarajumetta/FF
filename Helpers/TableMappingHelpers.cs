@@ -633,6 +633,10 @@ namespace Playwright_POC.Helpers
                         _contextData.TotalAcreage = answer;
                         break;
 
+                    case "WindHailDeductible":
+                        _contextData.WindHailDeductible = answer;
+                        break;
+
                     default:
                         throw new ArgumentException($"Unknown question: {question}");
                         

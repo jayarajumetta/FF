@@ -122,6 +122,7 @@ namespace Playwright_POC.Helpers
         public string MilesFromFireDepartment { get; set; }
         public string FeetFromHydrant { get; set; }
         public string TotalAcreage { get; set; }
+        public string WindHailDeductible { get; set; }
 
     }
 }

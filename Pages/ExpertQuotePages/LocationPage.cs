@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Reqnroll;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Diagnostics.CodeAnalysis;
+using static Microsoft.Playwright.Assertions;
 
 namespace Playwright_POC.Pages
 {
@@ -39,6 +41,7 @@ namespace Playwright_POC.Pages
             var input = LocationNicknameInput();
             await input.WaitForAsync(new() { State = WaitForSelectorState.Visible });
             await input.FillAsync(nickname);
+            await _page.WaitForTimeoutAsync(3000);
         }
 
         private ILocator LocationTypeButton(string typeText) => _page.GetByRole(AriaRole.Button, new() { Name = typeText });
@@ -50,6 +53,8 @@ namespace Playwright_POC.Pages
             var btn = LocationTypeButton(normalized);
             await btn.ScrollIntoViewIfNeededAsync();
             await btn.ClickAsync(new() { Force = true });
+            await _page.WaitForTimeoutAsync(8000);
+            await Helpers.Helpers.WaitForSpinnerToClearAsync(_page);
         }
 
         private ILocator MilesFromFireDepartment() => _page.Locator("input[data-testid*='locationInput$milesFromFireDepartment.value']");
@@ -61,25 +66,57 @@ namespace Playwright_POC.Pages
             await input.FillAsync(miles);
         }
 
-        private ILocator FeetFromHydrantSelect() => _page.Locator("mat-select[data-testid*='locationInput$feetFromHydrant.value']");
+        private ILocator FeetFromHydrantSelect() =>
+            _page.Locator("mat-select[data-testid*='locationInput$feetFromHydrant']");
 
         public async Task SelectFeetFromHydrant(string value)
         {
-            var select = FeetFromHydrantSelect().First;
-            await select.WaitForAsync(new() { State = WaitForSelectorState.Visible });
-            await select.ClickAsync(new() { Force = true });
+            var select = FeetFromHydrantSelect();
+            await Helpers.Helpers.SelectByTextAsync(
+                page: _page,
+                matSelect: select,
+                optionText: value,
+                timeoutMs: 30000,
+                blurAfterSelect: true);
 
-            var option = _page.Locator("mat-option", new() { HasTextString = value }).First;
-            await option.ClickAsync(new() { Force = true });
+            await Helpers.Helpers.WaitForSpinnerToClearAsync(_page);
+
         }
 
         private ILocator TotalAcreageInput() => _page.Locator("input[data-testid*='locationInput$acreage.value']");
 
         public async Task SetTotalFarmingAcreage(string acreage)
         {
-            var input = TotalAcreageInput().First;
+            var input = TotalAcreageInput();
             await input.WaitForAsync(new() { State = WaitForSelectorState.Visible });
             await input.FillAsync(acreage);
+        }
+
+        private ILocator WindHailScope() => _page.Locator("div:has(button[data-testid*='locationInput$windHailDeductible.value'])").First;
+        private ILocator WindHailDeductibleChip(string text) => WindHailScope()
+                                        .Locator("button[data-testid*='locationInput$windHailDeductible.value']")
+                                        .Filter(new() { HasTextString = text });
+
+        private ILocator WindHailMoreOptionsButton() =>
+                WindHailScope().GetByRole(AriaRole.Button, new() { Name = "More Options", Exact = true });
+        private ILocator WindHailMenuItem(string text) =>
+                _page.Locator(".cdk-overlay-pane .mat-menu.panel, .cdk-overlay-pane .mat-mdc-menu-panel")
+                .Last
+                .GetByRole(AriaRole.Menuitem, new() { Name = text, Exact = true });
+
+
+        public async Task SelectWindHailDeductibleAsync(string deductible)
+        {
+            var choice = (deductible ?? "").Trim().ToUpperInvariant();
+
+            await Helpers.Helpers.SelectButtonAsync(
+                page: _page,
+                scope: WindHailScope(),
+                value: choice,
+                moreOptionsButton: WindHailMoreOptionsButton(),
+                timeoutMs: 30000);
+
+            await Helpers.Helpers.WaitForSpinnerToClearAsync(_page);
         }
     }
 }

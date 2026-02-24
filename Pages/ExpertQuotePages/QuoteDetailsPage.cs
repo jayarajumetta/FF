@@ -87,14 +87,9 @@ namespace Playwright_POC.Pages
             
             await Expect(effDateField).ToBeVisibleAsync(new() { Timeout = 30000 });
             await effDateField.FillAsync(contextData.EffectiveDate);
-            
-            await Locators.ProposalDetailsPageLocators.ExpandPolicyTermDropdown(_page).ClickAsync();
-            
-            // Wait a moment for the dropdown animation to complete
-            await Task.Delay(500);
-            
-            // Use GetByText to find and click the option directly
-            await _page.GetByText(contextData.PolicyTerm, new() { Exact = true }).ClickAsync();
+
+            await Helpers.Helpers.SelectByTextAsync(_page, Locators.ProposalDetailsPageLocators.ExpandPolicyTermDropdown(_page), 
+                  contextData.PolicyTerm);
             
             await Locators.ProposalDetailsPageLocators.AgentPCCodeInput(_page).FillAsync(contextData.AgentCode);
         }

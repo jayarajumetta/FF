@@ -137,6 +137,7 @@ public class SFPSteps
 
         var locationPage = new LocationPage(_context.Page, _contextData);
         await locationPage.EnterLocationInformationAsync();
+        await locationPage.SelectWindHailDeductibleAsync(_contextData.WindHailDeductible);
 
         await Helpers.ClickSaveAsync(_context.Page);
     }

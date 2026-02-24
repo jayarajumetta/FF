@@ -90,6 +90,7 @@ Feature: SFP Happy Path
      | Question                | Answer  |
      | LocationNickname        | Farm 1  |
      | LocationType            | Both    |
-     | MilesFromFireDepartment |      25 |
+     | MilesFromFireDepartment |      5 |
      | FeetFromHydrant         | 501-750 |
      | TotalAcreage            |     300 |
+     | WindHailDeductible      | 2%      |
