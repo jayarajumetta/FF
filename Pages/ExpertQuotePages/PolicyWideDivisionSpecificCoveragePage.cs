@@ -9,12 +9,10 @@ using System.Runtime.InteropServices;
 
 namespace Playwright_POC.Pages
 {
-    public class PolicyWideDivisionSpecificCoveragePage
+    public class PolicyWideDivisionSpecificCoveragePage : BasePage
     {
-        private readonly IPage _page;
-        public PolicyWideDivisionSpecificCoveragePage(IPage page)
+        public PolicyWideDivisionSpecificCoveragePage(IPage page) : base(page)
         {
-            _page = page;
         }
         // -----Column Selectors-----
         private const string RowSelector = "tr.mat-row, mat-row.mat-row";
@@ -54,7 +52,7 @@ namespace Playwright_POC.Pages
                 await clickable.ClickAsync(new() { Force = true });
             }
 
-            await Helpers.Helpers.WaitForSpinnerToClearAsync(_page);
+            await WaitForSpinnerAsync();
         }
 
         public Task CheckCoverageAsync(string coverageType, string coverageName) => SetCoverageSelectedAsync(coverageType, coverageName, selected: true);
@@ -201,7 +199,7 @@ namespace Playwright_POC.Pages
                 await btn.ScrollIntoViewIfNeededAsync();
                 await btn.ClickAsync(new() { Force = true });
 
-                await Helpers.Helpers.WaitForSpinnerToClearAsync(_page);
+                await WaitForSpinnerAsync();
             }
         }
 
@@ -220,7 +218,7 @@ namespace Playwright_POC.Pages
             await addBtn.ScrollIntoViewIfNeededAsync();
             await addBtn.ClickAsync(new() { Force = true });
 
-            await Helpers.Helpers.WaitForSpinnerToClearAsync(_page);
+            await WaitForSpinnerAsync();
         }
 
         public async Task ApplySelectionsAndAddCoveragesAsync(Table table)

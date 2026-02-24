@@ -64,7 +64,7 @@ public class SFPSteps
         await sfpPolicyDetailsPage.SelectLivestockType(_contextData.LivestockType);
         await sfpPolicyDetailsPage.EnterGrossFarmIncome(_contextData.GrossFarmIncome);
         await sfpPolicyDetailsPage.SelectGrowIndustrialHemp(_contextData.GrowIndustrialHemp);
-        await Helpers.ClickNextAsync(_context.Page);
+        await sfpPolicyDetailsPage.ClickNextAsync();
         Console.WriteLine($"Client {_contextData.ClientFirstName}");
     }
 
@@ -73,8 +73,8 @@ public class SFPSteps
     {
         var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);
         await primaryInsuredPage.ValidatePrimaryInsuredDetailsAsync(_contextData);
-        await Helpers.WaitForSpinnerToClearAsync(_context.Page);
-        await Helpers.ClickSaveAsync(_context.Page);
+        await primaryInsuredPage.WaitForSpinnerAsync();
+        await primaryInsuredPage.ClickSaveAsync();
     }
 
     [When("user answers UW Questions and continues")]
@@ -96,7 +96,7 @@ public class SFPSteps
         TableMappingHelpers.ClaimsAndPriorInsuranceFields(table, _contextData);
         await claimsPriorInsurancePage.SetExposuresInsuredAN90DaysAsync(_contextData.PriorFFANPolicy);
         await claimsPriorInsurancePage.EnterYearsInBusinessAsync(_contextData.YearsInBusiness);
-        await Helpers.ClickNextAsync(_context.Page);
+        await claimsPriorInsurancePage.ClickNextAsync();
     }
 
 
@@ -107,7 +107,7 @@ public class SFPSteps
         await clientDetailsPage.VerifyClientNameAsync(_contextData.ClientFirstName, _contextData.ClientLastName);
         await clientDetailsPage.VerifyClientStreetAddressAsync(_contextData.StreetAddress);
         //await clientDetailsPage.VerifyClientPhone(_contextData.ClientPhoneNumber);
-        await Helpers.ClickNextAsync(_context.Page);
+        await clientDetailsPage.ClickNextAsync();
     }
 
     [When("user Adds Narrative and continues")]
@@ -117,7 +117,7 @@ public class SFPSteps
         TableMappingHelpers.NarrativeFields(table, _contextData);
         await narrativePage.ClickAddNarrativeButtonAsync();
         await narrativePage.EnterNarrativeAndClickSaveAsync(_contextData.Narrative);
-        await Helpers.ClickNextAsync(_context.Page);
+        await narrativePage.ClickNextAsync();
     }
 
     [When("user selects Policy Wide or Division Specific Coverages and continues")]
@@ -125,7 +125,7 @@ public class SFPSteps
     {
         var coverageCatalogPage = new PolicyWideDivisionSpecificCoveragePage(_context.Page);
         await coverageCatalogPage.ApplySelectionsAndAddCoveragesAsync(table);
-        await Helpers.ClickNextAsync(_context.Page);
+        await coverageCatalogPage.ClickNextAsync();
     }
 
     [When("user provides location information and continues")]

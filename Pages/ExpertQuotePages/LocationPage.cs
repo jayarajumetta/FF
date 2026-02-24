@@ -12,13 +12,11 @@ using static Microsoft.Playwright.Assertions;
 
 namespace Playwright_POC.Pages
 {
-    public class LocationPage
+    public class LocationPage : BasePage
     {
-        private readonly IPage _page;
         private readonly ScenarioContextData _contextData;
-        public LocationPage(IPage page, ScenarioContextData contextData)
+        public LocationPage(IPage page, ScenarioContextData contextData) : base(page)
         {
-            _page = page;
             _contextData = contextData;
         }
 
@@ -30,7 +28,7 @@ namespace Playwright_POC.Pages
             await SelectFeetFromHydrant(_contextData.FeetFromHydrant);
             await SetTotalFarmingAcreage(_contextData.TotalAcreage);
 
-            await Helpers.Helpers.WaitForSpinnerToClearAsync(_page);
+            await WaitForSpinnerAsync();
         }
 
         private ILocator LocationNicknameInput() => _page.Locator("input[data-testid*='locationInput$additionalDescription.value']");
@@ -85,7 +83,7 @@ namespace Playwright_POC.Pages
                 timeoutMs: 30000,
                 blurAfterSelect: true);
 
-            await Helpers.Helpers.WaitForSpinnerToClearAsync(_page);
+            await WaitForSpinnerAsync();
 
 
         }
@@ -123,7 +121,7 @@ namespace Playwright_POC.Pages
                 moreOptionsButton: WindHailMoreOptionsButton(),
                 timeoutMs: 30000);
 
-            await Helpers.Helpers.WaitForSpinnerToClearAsync(_page);
+            await WaitForSpinnerAsync();
         }
     }
 }
