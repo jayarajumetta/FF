@@ -80,8 +80,8 @@ Feature: SFP Happy Path
 		| Narrative | Raises Cattle |
 
     When user selects Policy Wide or Division Specific Coverages and continues
-     | CoverageType | CoverageName         | Select |
-     | Policy       | Agribusiness         | No     |
+     | CoverageType | CoverageName          | Select |
+     | Policy       | Agribusiness          | No     |
      | Division I   | Excess Debris Removal | Yes    |
      | Division II  | Excess Debris Removal | Yes    |
 
@@ -90,7 +90,7 @@ Feature: SFP Happy Path
      | Question                | Answer  |
      | LocationNickname        | Farm 1  |
      | LocationType            | Both    |
-     | MilesFromFireDepartment |      5 |
+     | MilesFromFireDepartment | 5       |
      | FeetFromHydrant         | 501-750 |
-     | TotalAcreage            |     300 |
+     | TotalAcreage            | 300     |
      | WindHailDeductible      | 2%      |
