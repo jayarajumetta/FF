@@ -37,7 +37,7 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         [When("user selects Special Farm Package and inputs Quote Details")]
         public async Task SelectSpecialFarmPackageAndInputQuoteDetails(Table table)
         {
-            TableMappingHelpers.BOPQuoteDetailsFields(table, _contextData);
+            TableMappingHelpers.SFPQuoteDetailsFields(table, _contextData);
             var proposalDetailsPage = new QuoteDetailsPage(_context.Page);
             await proposalDetailsPage.WaitForProposalPageLoadAsync();
             await proposalDetailsPage.SelectSpecialFarmPackageProductAsync();
@@ -60,6 +60,44 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
 
             var quoteDetailsPage = new QuoteDetailsPage(_context.Page);
             await quoteDetailsPage.HandleSSNPopupsAsync(_contextData);
+            
+            // Capture quote number from URL or tab
+            await CaptureQuoteNumberAsync();
+        }
+
+        private async Task CaptureQuoteNumberAsync()
+        {
+            try
+            {
+                // Try to get quote number from URL (e.g., /quote/123456)
+                var url = _context.Page.Url;
+                var match = System.Text.RegularExpressions.Regex.Match(url, @"/quote/(\d+)");
+                if (match.Success)
+                {
+                    _contextData.QuoteNumber = match.Groups[1].Value;
+                }
+                else
+                {
+                    // Try tab label
+                    var tabLabel = _context.Page.Locator("div[class*='mat-tab-label-container'] span");
+                    if (await tabLabel.CountAsync() > 0)
+                    {
+                        var text = await tabLabel.First.InnerTextAsync();
+                        var lines = text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                        _contextData.QuoteNumber = lines.Length > 1 ? lines[1].Trim() : text.Trim();
+                    }
+                }
+                
+                if (!string.IsNullOrEmpty(_contextData.QuoteNumber))
+                {
+                    Console.WriteLine($"*** QUOTE NUMBER: {_contextData.QuoteNumber} ***");
+                    System.IO.File.WriteAllText("QuoteNumber.txt", _contextData.QuoteNumber);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Could not capture quote number: {ex.Message}");
+            }
         }
 
         [When("user enters SFP policy details and clicks Next button")]

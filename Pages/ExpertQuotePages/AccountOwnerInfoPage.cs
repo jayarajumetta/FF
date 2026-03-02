@@ -61,6 +61,15 @@ namespace Playwright_POC.Pages
                 await FirstNameInput.FillAsync(contextData.ClientFirstName ?? string.Empty);
             }
 
+            // Middle Name: fill if provided
+            if (!string.IsNullOrWhiteSpace(contextData.ClientMiddleName))
+            {
+                await MiddleNameInput.ClickAsync();
+                await MiddleNameInput.PressAsync("Control+A");
+                await MiddleNameInput.PressAsync("Delete");
+                await MiddleNameInput.FillAsync(contextData.ClientMiddleName);
+            }
+
             // Last Name: fill only if empty
             var actualLast = (await LastNameInput.InputValueAsync())?.Trim();
             if (string.IsNullOrWhiteSpace(actualLast))
