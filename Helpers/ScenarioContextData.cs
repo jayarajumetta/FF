@@ -31,6 +31,7 @@ namespace Playwright_POC.Helpers
 
         // --- Client Info (maps to Client) ---
         public string ClientFirstName { get => Client.FirstName; set => Client.FirstName = value; }
+        public string ClientMiddleName { get => Client.MiddleName; set => Client.MiddleName = value; }
         public string ClientLastName { get => Client.LastName; set => Client.LastName = value; }
         public string ClientDOB { get => Client.DateOfBirth; set => Client.DateOfBirth = value; }
         public string ClientPhoneNumber { get => Client.Phone; set => Client.Phone = value; }
@@ -58,6 +59,8 @@ namespace Playwright_POC.Helpers
         public string RatingState { get => Policy.RatingState; set => Policy.RatingState = value; }
         public string WritingCompany { get => Policy.WritingCompany; set => Policy.WritingCompany = value; }
         public string RiskAddress { get => Policy.RiskAddress; set => Policy.RiskAddress = value; }
+        public string OwnershipType { get => Policy.OwnershipType; set => Policy.OwnershipType = value; }
+        public string LessorRisk { get => Policy.LessorRisk; set => Policy.LessorRisk = value; }
         public string EligibilityRestrictions { get => Policy.EligibilityRestrictions; set => Policy.EligibilityRestrictions = value; }
         public string PolicyCoverage { get => Policy.PolicyCoverage; set => Policy.PolicyCoverage = value; }
         public string CompCollOnly { get => Policy.CompCollOnly; set => Policy.CompCollOnly = value; }
@@ -113,6 +116,8 @@ namespace Playwright_POC.Helpers
         public bool PriorFFANPolicy { get => PriorInsuranceInfo.PriorFFANPolicy; set => PriorInsuranceInfo.PriorFFANPolicy = value; }
         public string YearsInBusiness { get => PriorInsuranceInfo.YearsInBusiness; set => PriorInsuranceInfo.YearsInBusiness = value; }
         public string YearsContinuousCoverage { get => PriorInsuranceInfo.YearsContinuousCoverage; set => PriorInsuranceInfo.YearsContinuousCoverage = value; }
+        public string PriorInsuranceExpDate { get => PriorInsuranceInfo.PriorInsuranceExpDate; set => PriorInsuranceInfo.PriorInsuranceExpDate = value; }
+        public string PriorInsuranceCarrier { get => PriorInsuranceInfo.PriorInsuranceCarrier; set => PriorInsuranceInfo.PriorInsuranceCarrier = value; }
 
         // --- Additional Interest (maps to AdditionalInterest) ---
         public string AdditionalInterestType { get => AdditionalInterest.Type; set => AdditionalInterest.Type = value; }

@@ -62,6 +62,9 @@ namespace Playwright_POC.Helpers
                 var answer = row["Answer"];
                 switch (question)
                 {
+                    case "MiddleName":
+                        _contextData.ClientMiddleName = answer;
+                        break;
                     case "MaritalStatus":
                         _contextData.MaritalStatus = answer;
                         break;
@@ -176,6 +179,51 @@ namespace Playwright_POC.Helpers
                 }
             }
         }
+
+        public static void SFPQuoteDetailsFields(Table table, ScenarioContextData _contextData)
+        {
+            // Set default EffectiveDate to tomorrow if not provided
+            _contextData.EffectiveDate = DateHelpers.GetTomorrowDate();
+
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"];
+                var answer = row["Answer"];
+                switch (question)
+                {
+                    case "EffectiveDate":
+                        _contextData.EffectiveDate = DateHelpers.ResolveDateToken(answer);
+                        break;
+                    case "PolicyTerm":
+                        _contextData.PolicyTerm = answer;
+                        break;
+                    case "AgentCode":
+                        _contextData.AgentCode = answer;
+                        break;
+                    case "RatingState":
+                        _contextData.RatingState = answer;
+                        break;
+                    case "SSN":
+                        _contextData.SSN = answer;
+                        break;
+                    case "OwnershipType":
+                        _contextData.OwnershipType = answer;
+                        break;
+                    case "WritingCompany":
+                        _contextData.WritingCompany = answer;
+                        break;
+                    case "RiskAddress":
+                        _contextData.RiskAddress = answer;
+                        break;
+                    case "LessorRisk":
+                        _contextData.LessorRisk = answer;
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknown question: {question}");
+                }
+            }
+        }
+
         public static void PreQualificationFields(Table table, ScenarioContextData _contextData)
         {
             foreach (var row in table.Rows)
@@ -542,6 +590,9 @@ namespace Playwright_POC.Helpers
                     case "PrimaryFarmType":
                         _contextData.PrimaryFarmType = answer;
                         break;
+                    case "SecondaryFarmType":
+                        _contextData.SecondaryFarmType = answer;
+                        break;
                     case "LivestockType":
                         _contextData.LivestockType = answer;
                         break;
@@ -578,6 +629,12 @@ namespace Playwright_POC.Helpers
                         break;
                     case "YearsContinuousCoverage":
                         _contextData.YearsContinuousCoverage = answer;
+                        break;
+                    case "PriorInsuranceExpDate":
+                        _contextData.PriorInsuranceExpDate = DateHelpers.ResolveDateToken(answer);
+                        break;
+                    case "PriorInsuranceCarrier":
+                        _contextData.PriorInsuranceCarrier = answer;
                         break;
                     default:
                         throw new ArgumentException($"Unknown question: {question}");
