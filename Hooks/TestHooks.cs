@@ -186,9 +186,33 @@ namespace Playwright_POC.Hooks
         [AfterScenario]
         public async Task AfterScenarioAsync()
         {
+            // Handle tracing and video on failure
             var hasFailed = _scenarioContext.TestError != null;
             
-            // Handle tracing and video on failure
+            // Check if we should pause on failure for debugging
+            var pauseOnFailure = _configuration.GetValue<bool>("Debugging:PauseOnFailure", false);
+            var pauseTimeoutSeconds = _configuration.GetValue<int>("Debugging:PauseTimeoutSeconds", 300);
+            
+            if (hasFailed && pauseOnFailure && _context.Page != null)
+            {
+                Console.WriteLine("\n" + new string('=', 60));
+                Console.WriteLine("TEST FAILED - BROWSER PAUSED FOR DEBUGGING");
+                Console.WriteLine($"Error: {_scenarioContext.TestError?.Message}");
+                Console.WriteLine($"Browser will remain open for {pauseTimeoutSeconds} seconds.");
+                Console.WriteLine("Press any key in the console to continue, or wait for timeout.");
+                Console.WriteLine(new string('=', 60) + "\n");
+                
+                try
+                {
+                    // Use Playwright's pause for interactive debugging
+                    await _context.Page.PauseAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[Debug] Pause ended: {ex.Message}");
+                }
+            }
+            
             if (_browserContext != null)
             {
                 var scenarioFolder = GetScenarioResultsFolder();
