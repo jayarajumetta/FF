@@ -6,6 +6,7 @@ using Playwright_POC.Context;
 using Playwright_POC.Helpers;
 using Playwright_POC.Pages;
 using Playwright_POC.Pages.ExpertQuotePages;
+using Playwright_POC.Pages.ExpertQuotePages.SFP;
 using Reqnroll;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,10 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using ReqContext = Playwright_POC.Context.TestContext;
 
-
-[Binding]
-
-public class SharedEQSteps
+namespace Playwright_POC.StepDefinitions.SharedSteps
+{
+    [Binding]
+    public class SharedEQSteps
 {
     private readonly ReqContext _context;
     private readonly ScenarioContextData _contextData;
@@ -27,14 +28,16 @@ public class SharedEQSteps
     private readonly IConfiguration _configuration;
     private readonly ScenarioContext _scenarioContext;
 
-    public SharedEQSteps(ReqContext context, ScenarioContext scenarioContext, CredentialsConfig credentials, IConfiguration configuration)
-    {
-        _context = context;
-        _scenarioContext = scenarioContext;
-        _contextData = _scenarioContext["ContextData"] as ScenarioContextData;
-        _credentials = credentials;
-        _configuration = configuration;
-    }
+        private static readonly char[] NewLineSeparator = ['\n'];
+
+        public SharedEQSteps(ReqContext context, ScenarioContext scenarioContext, CredentialsConfig credentials, IConfiguration configuration)
+        {
+            _context = context;
+            _scenarioContext = scenarioContext;
+            _contextData = _scenarioContext["ContextData"] as ScenarioContextData;
+            _credentials = credentials;
+            _configuration = configuration;
+        }
 
 
     [When("I enter valid credentials and Click LogIn")]
@@ -62,10 +65,9 @@ public class SharedEQSteps
 
         await clientSearchPage.SearchForClientAsync(name);
 
-        string clientName = $"{_contextData.ClientLastName}, {_contextData.ClientFirstName}";
-
         // Uncomment if you want to use the assertion
-        // await clientSearchPage.AssertNameNotInTableAsync("table", clientName);
+        // string clientName = $"{_contextData.ClientLastName}, {_contextData.ClientFirstName}";
+        //await clientSearchPage.AssertNameNotInTableAsync("table", clientName);
     }
 
     [When("user enters a Random Name in the search field and clicks search")]
@@ -94,9 +96,8 @@ public class SharedEQSteps
 
         await clientSearchPage.SearchForClientAsync(name);
 
-        // Keep follow-on format for assertions
-        string clientName = $"{_contextData.ClientLastName}, {_contextData.ClientFirstName}";
-        Console.WriteLine($"Client Name Is: {clientName}");
+        // Log for diagnostics
+        Console.WriteLine($"Client Name Is: {_contextData.ClientLastName}, {_contextData.ClientFirstName}");
 
     }
 
@@ -188,7 +189,7 @@ public class SharedEQSteps
     [When("user selects Primary Insured and continues")]
     public async Task UserSelectsPrimaryInsuredAsync()
     {
-        var primaryInsuredPage = new PrimaryInsuredPage(_context.Page);
+        var primaryInsuredPage = new SFP_PrimaryInsuredPage(_context.Page);
         await primaryInsuredPage.SelectExistingClientAsPrimaryInsuredAsync(_contextData);
     }
 
@@ -224,7 +225,7 @@ public class SharedEQSteps
         // Get the quote number from the header tab label
         var quoteNumberLocator = _context.Page.Locator("div[class*='mat-tab-label-container'] span");
         var fullText = await quoteNumberLocator.InnerTextAsync();
-        var lines = fullText.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        var lines = fullText.Split(NewLineSeparator, StringSplitOptions.RemoveEmptyEntries);
         var quoteNumber = lines.Length > 1 ? lines[1].Trim() : fullText.Trim();
         _contextData.QuoteNumber = quoteNumber;
         Console.WriteLine($"Captured Quote Number: {quoteNumber}");
@@ -311,11 +312,9 @@ public class SharedEQSteps
         await Task.Delay(2000); // Allow time for results to populate
         
         // Try multiple strategies to find the quote
-        var isQuoteVisible = false;
-        
         // Strategy 1: Link with quote number
         var quoteLocator = _context.Page.GetByRole(AriaRole.Link, new() { Name = quoteNumber });
-        isQuoteVisible = await quoteLocator.IsVisibleAsync();
+        var isQuoteVisible = await quoteLocator.IsVisibleAsync();
         
         // Strategy 2: Cell or text containing quote number
         if (!isQuoteVisible)
@@ -335,4 +334,5 @@ public class SharedEQSteps
         Console.WriteLine($"Quote {quoteNumber} verified in search results.");
     }
 
+    }
 }
