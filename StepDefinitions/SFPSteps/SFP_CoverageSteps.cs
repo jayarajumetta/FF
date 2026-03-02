@@ -35,6 +35,15 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             await coverageCatalogPage.ClickNextAsync();
         }
 
+        [When("user skips Policy Wide and Division Specific Coverages and continues")]
+        public async Task UserSkipsPolicyWideDivisionSpecificCoveragesAndContinues()
+        {
+            var coverageCatalogPage = new PolicyWideDivisionSpecificCoveragePage(_context.Page);
+            await coverageCatalogPage.WaitForSpinnerAsync();
+            Console.WriteLine("No policy-wide or division-specific coverages selected - continuing to next page");
+            await coverageCatalogPage.ClickNextAsync();
+        }
+
         [When("user adds Equipment Breakdown information")]
         public async Task UserAddsEquipmentBreakdownInformation(Table table)
         {
