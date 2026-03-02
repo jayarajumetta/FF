@@ -70,13 +70,16 @@ Feature: SFP Basic Policy
       | Question                | Answer            |
       | EligibilityRestrictions | None Of The Above |
 
-    # Step 11: Enter Primary Insured Info
-    When user selects Primary Insured and continues
+    When user enters Claims and Prior Insurance Information and continues
+      | Question                | Answer     |
+      | PriorFFANPolicy         | No         |
+      | YearsInBusiness         | 5          |
+      | YearsContinuousCoverage | 3+ Years   |
+      | PriorInsuranceExpDate   | {{today}}  |
+      | PriorInsuranceCarrier   | State Farm |
 
-    When user Validates Primary Insured Information for SFP and continues
-      | Question       | Answer                    |
-      | EntityType     | Individual/Sole Proprietor|
-      | Phone          | {{randomPhone}}           |
+    # Step 11: Enter Primary Insured Info
+    When user selects Primary Insured and continues    
 
     When user answers UW Questions and continues
       | Question             | Answer |
@@ -86,21 +89,19 @@ Feature: SFP Basic Policy
       | NoneOfTheAbove       | Yes    |
 
     # Step 12: Edit Client Role on Client Details page
-    When user validates Client Details and selects Inspection Contact
+    When user validates Client Details and selects contact role
+      | Question    | Answer             |
+      | ContactRole | Inspection Contact |
 
     # Step 13: Add a Narrative
     When user Adds Narrative and continues
       | Question  | Answer        |
-      | Narrative | Raises Cattle |
+      | Narrative | Raises Cattle |    
 
-    # Step 14: Add Claims/Prior Insurance
-    When user enters Claims and Prior Insurance Information and continues
-      | Question                | Answer     |
-      | PriorFFANPolicy         | No         |
-      | YearsInBusiness         | 5          |
-      | YearsContinuousCoverage | 3+ Years   |
-      | PriorInsuranceExpDate   | {{today}}  |
-      | PriorInsuranceCarrier   | State Farm |
+
+
+
+
 
     # Step 15: Add a Primary Location
     When user provides location information and continues
