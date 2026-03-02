@@ -1,1 +1,5 @@
-﻿@{ "files.exclude": { "**/*.feature.cs": true } }
+{
+    "files.exclude": {
+        "**/*.feature.cs": true
+    }
+}
