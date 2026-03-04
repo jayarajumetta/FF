@@ -65,8 +65,25 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             var claimsPriorInsurancePage = new ClaimsPriorInsurancePage(_context.Page);
             TableMappingHelpers.ClaimsAndPriorInsuranceFields(table, _contextData);
+
+            // Tosca: Prior FFAN Policy (Exposures Insured AN 90 Days)
             await claimsPriorInsurancePage.SetExposuresInsuredAN90DaysAsync(_contextData.PriorFFANPolicy);
+
+            // Tosca: Years In Business
             await claimsPriorInsurancePage.EnterYearsInBusinessAsync(_contextData.YearsInBusiness);
+
+            // Tosca: Years Continuous Coverage (No Prior, 1 Year, 2 Years, 3+ Years)
+            if (!string.IsNullOrEmpty(_contextData.YearsContinuousCoverage))
+            {
+                await claimsPriorInsurancePage.SelectYearsOfContinuousCoverageAsync(_contextData.YearsContinuousCoverage);
+            }
+
+            // Tosca: Prior Insurance Carrier
+            if (!string.IsNullOrEmpty(_contextData.PriorInsuranceCarrier))
+            {
+                await claimsPriorInsurancePage.EnterPriorInsuranceCarrierAsync(_contextData.PriorInsuranceCarrier);
+            }
+
             await claimsPriorInsurancePage.ClickNextAsync();
         }
 
@@ -84,7 +101,6 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             var clientDetailsPage = new SFP_ClientDetailsPage(_context.Page);
             await clientDetailsPage.WaitForSpinnerAsync();
 
-            // Get contact role from table (supports multiple roles if needed)
             foreach (var row in table.Rows)
             {
                 var contactRole = row["Answer"];
@@ -99,7 +115,7 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             var clientDetailsPage = new SFP_ClientDetailsPage(_context.Page);
             await clientDetailsPage.WaitForSpinnerAsync();
-            await clientDetailsPage.CheckInspectionContactAsync();
+            await clientDetailsPage.SelectContactRoleAsync("Inspection Contact");
             await clientDetailsPage.ClickNextAsync();
         }
 

@@ -10,9 +10,6 @@ using ReqContext = Playwright_POC.Context.TestContext;
 
 namespace Playwright_POC.StepDefinitions.SFPSteps
 {
-    /// <summary>
-    /// Steps for SFP Location, Residence, Buildings, and Farm Personal Property
-    /// </summary>
     [Binding]
     public class SFP_LocationPropertySteps
     {
@@ -43,11 +40,17 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             TableMappingHelpers.ResidenceFields(table, _contextData);
 
-            // TODO: Implement when SFP_LocationsResidencesBuildingsPage methods are mapped
-            Console.WriteLine("STUB: Add Residence to Location - page methods need implementation");
-            Console.WriteLine($"  Description: {_contextData.ResidenceAdditionalDesc}");
-            Console.WriteLine($"  Year Built: {_contextData.ResidenceYearBuilt}");
-            await _context.Page.WaitForTimeoutAsync(500);
+            // TODO: Implement residence creation via Add Residence button + form
+            Console.WriteLine($"STUB: Add Residence - Description: {_contextData.ResidenceAdditionalDesc}, Year: {_contextData.ResidenceYearBuilt}");
+
+            // Navigate to Locations/Buildings list so downstream steps can continue
+            var nav = new SideMenuNavigation(_context.Page);
+            await nav.GoToLocationsBuildingsAsync();
+
+            // Click Next to advance past Locations page
+            var locPage = new SFP_LocationsResidencesBuildingsPage(_context.Page);
+            await locPage.WaitForSpinnerAsync();
+            await locPage.ClickNextAsync();
         }
 
         [When("user adds Residence Coverage")]
@@ -55,11 +58,13 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             TableMappingHelpers.ResidenceCoverageFields(table, _contextData);
 
-            // TODO: Implement when SFP_LocationsResidencesBuildingsPage methods are mapped
-            Console.WriteLine("STUB: Add Residence Coverage - page methods need implementation");
-            Console.WriteLine($"  Insurance Amount: {_contextData.ResidenceInsuranceAmount}");
-            Console.WriteLine($"  Perils: {_contextData.ResidencePerils}");
-            await _context.Page.WaitForTimeoutAsync(500);
+            // TODO: Implement residence coverage entry
+            Console.WriteLine($"STUB: Residence Coverage - Amount: {_contextData.ResidenceInsuranceAmount}, Perils: {_contextData.ResidencePerils}");
+
+            // We should now be on Optional Coverages — click Next to advance
+            var optCov = new SFP_OptionalCoveragesPage(_context.Page);
+            await optCov.WaitForSpinnerAsync();
+            await optCov.ClickNextAsync();
         }
 
         [When("user adds Farm Personal Property")]
@@ -67,11 +72,14 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             TableMappingHelpers.FarmPersonalPropertyFields(table, _contextData);
 
-            // TODO: Implement when SFP_FarmPersonalPropertyPage methods are mapped
-            Console.WriteLine("STUB: Add Farm Personal Property - page methods need implementation");
-            Console.WriteLine($"  Code: {_contextData.FarmPropertyCode}");
-            Console.WriteLine($"  Limit: {_contextData.FarmPropertyLimit}");
-            await _context.Page.WaitForTimeoutAsync(500);
+            // TODO: Implement FPP coverage selection
+            Console.WriteLine($"STUB: Farm Personal Property - Code: {_contextData.FarmPropertyCode}, Limit: {_contextData.FarmPropertyLimit}");
+
+            // We should now be on Farm Personal Property page — click Next to advance to Equipment Breakdown
+            var fppPage = new SFP_FarmPersonalPropertyPage(_context.Page);
+            await fppPage.WaitForSpinnerAsync();
+            await fppPage.NextButton.ClickAsync();
+            await fppPage.WaitForSpinnerAsync();
         }
     }
 }

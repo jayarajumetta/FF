@@ -4,6 +4,7 @@ using Playwright_POC.Context;
 using Playwright_POC.Helpers;
 using Playwright_POC.Pages;
 using Playwright_POC.Pages.ExpertQuotePages;
+using Playwright_POC.Pages.ExpertQuotePages.SFP;
 using Reqnroll;
 using System;
 using System.Threading.Tasks;
@@ -89,6 +90,100 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             Console.WriteLine("Premium verified on Pricing screen");
         }
 
+        [When("user completes Billing Information")]
+        public async Task UserCompletesBillingInformation(Table table)
+        {
+            TableMappingHelpers.BillingAccountFields(table, _contextData);
+
+            var billingPage = new SFP_BillingInformationPage(_context.Page);
+            await billingPage.WaitForSpinnerAsync();
+
+            // Billing Account Setup
+            if (_contextData.PrimaryPayer?.ToLower() == "primary insured")
+            {
+                await billingPage.CreateNewBillingAccountButton.ClickAsync();
+                await billingPage.WaitForSpinnerAsync();
+                await billingPage.PrimaryPayerPrimaryInsuredButton.ClickAsync();
+            }
+            else
+            {
+                await billingPage.CreateNewBillingAccountButton.ClickAsync();
+                await billingPage.WaitForSpinnerAsync();
+                await billingPage.PrimaryPayerOtherButton.ClickAsync();
+            }
+            await billingPage.WaitForSpinnerAsync();
+
+            // Future Payment Plan - Payment Type
+            if (_contextData.PaymentType?.ToLower() == "easypay")
+                await billingPage.PaymentTypeEasyPayButton.ClickAsync();
+            else
+                await billingPage.PaymentTypeDirectBillButton.ClickAsync();
+            await billingPage.WaitForSpinnerAsync();
+
+            // Payment Plan selection
+            switch (_contextData.PaymentPlan?.ToLower())
+            {
+                case "1 payment":
+                    await billingPage.PaymentPlan1PaymentButton.ClickAsync();
+                    break;
+                case "2 payments":
+                    await billingPage.PaymentPlan2PaymentsButton.ClickAsync();
+                    break;
+                case "4 payments":
+                    await billingPage.PaymentPlan4PaymentsButton.ClickAsync();
+                    break;
+                case "12 payments":
+                    await billingPage.PaymentPlan12PaymentsButton.ClickAsync();
+                    break;
+                default:
+                    await billingPage.PaymentPlan1PaymentButton.ClickAsync();
+                    break;
+            }
+            await billingPage.WaitForSpinnerAsync();
+
+            // Initial Payment - Amount
+            switch (_contextData.PaymentAmount?.ToLower())
+            {
+                case "minimum due":
+                case "minimum":
+                    await billingPage.PaymentAmountMinimumButton.ClickAsync();
+                    break;
+                case "full balance":
+                case "full":
+                    await billingPage.PaymentAmountFullBalanceButton.ClickAsync();
+                    break;
+                case "custom":
+                    await billingPage.PaymentAmountCustomButton.ClickAsync();
+                    break;
+                default:
+                    await billingPage.PaymentAmountMinimumButton.ClickAsync();
+                    break;
+            }
+            await billingPage.WaitForSpinnerAsync();
+
+            // Initial Payment - Payment Method
+            switch (_contextData.PaymentMethod?.ToLower())
+            {
+                case "quickpay":
+                case "quick pay":
+                    await billingPage.InitialPaymentMethodQuickPayButton.ClickAsync();
+                    break;
+                case "check":
+                    await billingPage.InitialPaymentMethodCheckButton.ClickAsync();
+                    break;
+                case "credit card":
+                    await billingPage.InitialPaymentMethodCreditCardButton.ClickAsync();
+                    break;
+                default:
+                    await billingPage.InitialPaymentMethodCheckButton.ClickAsync();
+                    break;
+            }
+            await billingPage.WaitForSpinnerAsync();
+
+            await billingPage.ClickNextAsync();
+            Console.WriteLine($"Billing completed: {_contextData.PaymentType}, {_contextData.PaymentPlan}, {_contextData.PaymentMethod}");
+        }
+
         [When("user validates Forms via Duckcreek")]
         public async Task UserValidatesFormsViaDuckcreek(Table table)
         {
@@ -129,6 +224,13 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
 
             await clientSearchPage.SearchForClientAsync(quoteNumber);
             Console.WriteLine($"Searched for Quote: {quoteNumber}");
+        }
+
+        [When("user navigates to Submission page")]
+        public async Task UserNavigatesToSubmissionPage()
+        {
+            var sideMenu = new SideMenuNavigation(_context.Page);
+            await sideMenu.GoToSubmissionAsync();
         }
 
         [When("user navigates to Submission and opens Checklist")]

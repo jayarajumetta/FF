@@ -6,6 +6,7 @@ using Playwright_POC.Context;
 using Playwright_POC.Helpers;
 using Playwright_POC.Pages;
 using Playwright_POC.Pages.ExpertQuotePages;
+using Playwright_POC.Pages.ExpertQuotePages.SFP;
 using Reqnroll;
 using System;
 using System.Threading.Tasks;
@@ -105,10 +106,23 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             TableMappingHelpers.SFPPolicyDataFields(table, _contextData);
             var sfpPolicyDetailsPage = new SFP_PolicyDetailsPage(_context.Page);
-            await sfpPolicyDetailsPage.SelectPrimaryFarmType(_contextData.PrimaryFarmType);
-            await sfpPolicyDetailsPage.SelectLivestockType(_contextData.LivestockType);
-            await sfpPolicyDetailsPage.EnterGrossFarmIncome(_contextData.GrossFarmIncome);
-            await sfpPolicyDetailsPage.SelectGrowIndustrialHemp(_contextData.GrowIndustrialHemp);
+            await sfpPolicyDetailsPage.SelectPrimaryFarmCategoryAsync(_contextData.PrimaryFarmType);
+            await sfpPolicyDetailsPage.SelectPrimaryFarmSubTypeAsync(_contextData.LivestockType);
+
+            // Handle secondary farm type if specified (Tosca: Secondary Farm + Farm Type Secondary)
+            if (!string.IsNullOrEmpty(_contextData.SecondaryFarmType))
+            {
+                await sfpPolicyDetailsPage.SetSecondaryFarmTypeAsync(true);
+                await sfpPolicyDetailsPage.SelectSecondaryFarmCategoryAsync(_contextData.SecondaryFarmType);
+
+                if (!string.IsNullOrEmpty(_contextData.SecondaryFarmSubType))
+                {
+                    await sfpPolicyDetailsPage.SelectSecondaryFarmSubTypeAsync(_contextData.SecondaryFarmSubType);
+                }
+            }
+
+            await sfpPolicyDetailsPage.EnterGrossFarmIncomeAsync(_contextData.GrossFarmIncome);
+            await sfpPolicyDetailsPage.SelectGrowIndustrialHempAsync(_contextData.GrowIndustrialHemp);
             await sfpPolicyDetailsPage.ClickNextAsync();
             Console.WriteLine($"Client {_contextData.ClientFirstName}");
         }

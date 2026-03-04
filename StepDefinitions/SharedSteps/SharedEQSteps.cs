@@ -190,7 +190,10 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
     public async Task UserSelectsPrimaryInsuredAsync()
     {
         var primaryInsuredPage = new SFP_PrimaryInsuredPage(_context.Page);
+        // Select existing client and click Next
         await primaryInsuredPage.SelectExistingClientAsPrimaryInsuredAsync(_contextData);
+        // Then Save on the Add Primary Insured page
+        await primaryInsuredPage.SavePrimaryInsuredAsync();
     }
 
 

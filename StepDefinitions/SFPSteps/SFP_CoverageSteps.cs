@@ -58,15 +58,19 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
 
                 switch (fieldName.ToLower())
                 {
+                    case "powergreaterthan250kw":
                     case "powergeneration":
                         await (value ? equipmentPage.PowerGenerationYesButton : equipmentPage.PowerGenerationNoButton).ClickAsync();
                         break;
+                    case "twoormorelosses":
                     case "twoormoreloss":
                         await (value ? equipmentPage.TwoOrMoreLossIn24MonthYesButton : equipmentPage.TwoOrMoreLossIn24MonthNoButton).ClickAsync();
                         break;
+                    case "greaterthan25000":
                     case "lossgreaterthan24k":
                         await (value ? equipmentPage.LossGreaterThan24KEverYesButton : equipmentPage.LossGreaterThan24KEverNoButton).ClickAsync();
                         break;
+                    case "farmimplements":
                     case "farmimplement":
                         await (value ? equipmentPage.FarmImplementYesButton : equipmentPage.FarmImplementNoButton).ClickAsync();
                         break;
