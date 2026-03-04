@@ -46,11 +46,24 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
                                                     .Locator(".readonly-value");
         #endregion
 
+
+        /// <summary>
+        /// Selects the existing client as Primary Insured and clicks Next to proceed
+        /// </summary>
         public async Task SelectExistingClientAsPrimaryInsuredAsync(ScenarioContextData contextData)
         {
             await SelectExistingClientButton.ClickAsync();
             await WaitForSpinnerAsync();
             await ClickNextAsync();
+        }
+
+        /// <summary>
+        /// Clicks Save on the Add Primary Insured page after validation
+        /// </summary>
+        public async Task SavePrimaryInsuredAsync()
+        {
+            await WaitForSpinnerAsync();
+            await ClickSaveAsync();
         }
 
         public async Task SearchPersonAsync(ScenarioContextData contextData)

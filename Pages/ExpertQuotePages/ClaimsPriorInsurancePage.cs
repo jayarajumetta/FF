@@ -72,16 +72,28 @@ namespace Playwright_POC.Pages.ExpertQuotePages
 
         public async Task SelectYearsOfContinuousCoverageAsync(string years)
         {
-            int y = 0;
-            int.TryParse((years ?? "").Trim(), out y);
+            var normalized = (years ?? "").Trim().ToLower();
 
-            var button = y switch
+            // Support Tosca-style values: "No Prior", "1 Year", "2 Years", "3+ Years"
+            // as well as raw integers: "0", "1", "2", "3"
+            ILocator button;
+            if (normalized.Contains("no prior") || normalized == "0")
             {
-                <= 0 => YearsCoverageNoPriorButton,
-                1 => YearsCoverage1YearButton,
-                2 => YearsCoverage2YearsButton,
-                _ => YearsCoverage3PlusButton
-            };
+                button = YearsCoverageNoPriorButton;
+            }
+            else if (normalized.StartsWith("1"))
+            {
+                button = YearsCoverage1YearButton;
+            }
+            else if (normalized.StartsWith("2"))
+            {
+                button = YearsCoverage2YearsButton;
+            }
+            else
+            {
+                // "3+ Years", "3", "4", etc. all map to 3+
+                button = YearsCoverage3PlusButton;
+            }
 
             await button.ClickAsync();
             await WaitForSpinnerAsync();

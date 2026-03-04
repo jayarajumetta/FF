@@ -8,38 +8,25 @@ namespace Playwright_POC.Pages.ExpertQuotePages
     {
         public SFP_ClientDetailsPage(IPage page) : base(page) { }
 
-        #region Locators
         private ILocator GetContactRoleCheckbox(string role) => _page.Locator($"mat-checkbox:has-text('{role}')");
-        private ILocator GetContactRoleLabel(string role) => _page.Locator($"label:has-text('{role}')");
-        #endregion
 
-        #region Actions
         /// <summary>
-        /// Selects a contact role checkbox (e.g., "Inspection Contact", "Audit Contact")
+        /// Clicks a contact role checkbox. Returns true if found and clicked, false otherwise.
         /// </summary>
-        public async Task SelectContactRoleAsync(string contactRole)
+        public async Task<bool> SelectContactRoleAsync(string contactRole)
         {
             var checkbox = GetContactRoleCheckbox(contactRole);
-            var label = GetContactRoleLabel(contactRole);
-
-            if (await checkbox.CountAsync() > 0)
+            try
             {
-                await checkbox.ClickAsync();
+                await checkbox.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
+                await checkbox.First.ClickAsync();
+                return true;
             }
-            else if (await label.CountAsync() > 0)
+            catch (TimeoutException)
             {
-                await label.ClickAsync();
-            }
-            else
-            {
-                Console.WriteLine($"WARNING: {contactRole} checkbox not found - skipping");
+                Console.WriteLine($"WARNING: '{contactRole}' checkbox not found — skipping.");
+                return false;
             }
         }
-
-        /// <summary>
-        /// Legacy method for backward compatibility
-        /// </summary>
-        public async Task CheckInspectionContactAsync() => await SelectContactRoleAsync("Inspection Contact");
-        #endregion
     }
 }
