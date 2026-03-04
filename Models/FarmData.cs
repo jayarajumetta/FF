@@ -7,6 +7,7 @@ namespace Playwright_POC.Models
     {
         public string PrimaryFarmType { get; set; }
         public string SecondaryFarmType { get; set; }
+        public string SecondaryFarmSubType { get; set; }
         public string LivestockType { get; set; }
         public string GrossFarmIncome { get; set; }
         public string GrowIndustrialHemp { get; set; }

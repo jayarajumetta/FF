@@ -153,6 +153,7 @@ namespace Playwright_POC.Helpers
         // --- Farm (SFP - maps to Farm) ---
         public string PrimaryFarmType { get => Farm.PrimaryFarmType; set => Farm.PrimaryFarmType = value; }
         public string SecondaryFarmType { get => Farm.SecondaryFarmType; set => Farm.SecondaryFarmType = value; }
+        public string SecondaryFarmSubType { get => Farm.SecondaryFarmSubType; set => Farm.SecondaryFarmSubType = value; }
         public string LivestockType { get => Farm.LivestockType; set => Farm.LivestockType = value; }
         public string GrossFarmIncome { get => Farm.GrossFarmIncome; set => Farm.GrossFarmIncome = value; }
         public string GrowIndustrialHemp { get => Farm.GrowIndustrialHemp; set => Farm.GrowIndustrialHemp = value; }

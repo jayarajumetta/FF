@@ -531,6 +531,10 @@ namespace Playwright_POC.Helpers
                 var answer = row["Answer"];
                 switch (question)
                 {
+                    case "BillingAccount":
+                        // Tosca: Select existing or Create New billing account
+                        // Value stored for step logic ("Create New" vs existing)
+                        break;
                     case "PrimaryPayer":
                         _contextData.PrimaryPayer = answer;
                         break;
@@ -592,6 +596,9 @@ namespace Playwright_POC.Helpers
                         break;
                     case "SecondaryFarmType":
                         _contextData.SecondaryFarmType = answer;
+                        break;
+                    case "SecondaryFarmSubType":
+                        _contextData.SecondaryFarmSubType = answer;
                         break;
                     case "LivestockType":
                         _contextData.LivestockType = answer;
