@@ -1,294 +1,284 @@
-param([string]$Path = "Path", [string]$FileNameUsed = "FileNameUsed", [string]$State = "State", [string]$QuoteID = "QuoteID")
+<#
+.SYNOPSIS
+    Forms Validation — Standalone PowerShell runner.
+    Validates a DuckCreek FormsEngine XML response against a CSV baseline.
 
-#### Set the DebugMode to 1 if you want to use parameters below
-$devDebugMode=0
-$localDebugMode=0
-if($localDebugMode)
-{
-$Path ="\\mis\sys\QLTY\Test_Automation\Tricentis_Tosca\Forms_Check\BAP\"
-$FileNameUsed="BAP_BASICtest"  #file name to use for the excel doc with all expected results
-$State="CO"
-$QuoteID="777178"
+.DESCRIPTION
+    Modernised replacement for the legacy Tosca FormsCheckQA.ps1.
+
+    Improvements over the original:
+      - Supports merged single-CSV-per-LOB format with Type column filtering
+      - Human-readable messages alongside C1-C15 codes
+      - Color-coded console output
+      - Self-contained HTML report generation
+      - Clean parameter handling (no debug mode flags)
+
+.PARAMETER BaselinePath
+    Full path to the CSV baseline file (e.g. SFP.csv or SFP_BASIC.csv).
+
+.PARAMETER XmlPath
+    Full path to the DuckCreek FormsEngine XML response file.
+
+.PARAMETER State
+    Two-letter state abbreviation (must match a CSV column).
+
+.PARAMETER QuoteID
+    Quote / policy ID (used for output file naming).
+
+.PARAMETER TestCase
+    Test case name: BASIC, CE, etc.  Drives the Type column filter.
+    Default: BASIC
+
+.PARAMETER OutputDir
+    Folder for results CSV and HTML report.  Default: same folder as BaselinePath.
+
+.EXAMPLE
+    .\FormsCheck.ps1 -BaselinePath .\SFP.csv -XmlPath .\response.xml -State CO -QuoteID 777178
+    .\FormsCheck.ps1 -BaselinePath .\SFP.csv -XmlPath .\response.xml -State TX -QuoteID 123456 -TestCase CE
+#>
+
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory)][string]$BaselinePath,
+    [Parameter(Mandatory)][string]$XmlPath,
+    [Parameter(Mandatory)][string]$State,
+    [Parameter(Mandatory)][string]$QuoteID,
+    [string]$TestCase = "BASIC",
+    [string]$OutputDir = ""
+)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
+
+$startTime = Get-Date
+Write-Host "`n=== Forms Validation ===" -ForegroundColor Cyan
+Write-Host "  Baseline : $BaselinePath"
+Write-Host "  XML      : $XmlPath"
+Write-Host "  State    : $State"
+Write-Host "  QuoteID  : $QuoteID"
+Write-Host "  TestCase : $TestCase"
+Write-Host ""
+
+# ── Resolve output directory ──────────────────────────────────────────────────
+if (-not $OutputDir) { $OutputDir = Split-Path $BaselinePath -Parent }
+if (-not (Test-Path $OutputDir)) { New-Item -Path $OutputDir -ItemType Directory -Force | Out-Null }
+
+$baseName    = [System.IO.Path]::GetFileNameWithoutExtension($BaselinePath)
+$resultsPath = Join-Path $OutputDir "${baseName}_${State}_${QuoteID}Results.csv"
+$htmlPath    = Join-Path $OutputDir "${baseName}_${State}_${QuoteID}Report.html"
+
+# ── Type code mapping ─────────────────────────────────────────────────────────
+$typeCodeMap = @{ "BASIC" = "B"; "CE" = "C" }
+$typeCode    = if ($typeCodeMap.ContainsKey($TestCase.ToUpper())) { $typeCodeMap[$TestCase.ToUpper()] } else { $TestCase.Substring(0,1).ToUpper() }
+$allowedTypes = @("BASE", $typeCode)
+Write-Host "  Type filter: $($allowedTypes -join ' + ')" -ForegroundColor DarkGray
+
+# ── Status name lookups ───────────────────────────────────────────────────────
+$statusNames   = @{ "YM" = "Mandatory"; "YS" = "Selected"; "YU" = "Listed (Unchecked)"; "N" = "Not Expected" }
+$selectedNames = @{ 0 = "Not Checked"; 1 = "Selected"; 2 = "Mandatory (Checked)" }
+
+function Get-StatusName($code)  { if ($statusNames.ContainsKey($code))        { $statusNames[$code] }        else { $code } }
+function Get-SelectedName($val) { if ($selectedNames.ContainsKey([int]$val))   { $selectedNames[[int]$val] }  else { "selected=$val" } }
+
+# ── Load baseline CSV with Type filtering ─────────────────────────────────────
+Write-Host "Loading baseline..." -NoNewline
+$rawData = Import-Csv $BaselinePath
+
+$hasTypeColumn = ($rawData | Get-Member -Name "Type" -MemberType NoteProperty) -ne $null
+if ($hasTypeColumn) {
+    $filtered = $rawData | Where-Object { $allowedTypes -contains $_.Type }
+} else {
+    $filtered = $rawData
 }
-       
 
-$FileNameUsedOnPolicyRs = $FileNameUsed  #this will be used by the response file and results file.
-$b = Get-Date
-$startTime =$b
-Write-Output "$b begin powershell "
-# Build file name from the parameters passed
-
-$PathAndFileNotExcel  =$Path + $FileNameUsed + ".csv" 
- Write-Output "$b Excel File with items to check is csv:  $PathAndFileNotExcel"
-
-$FileNameUsedExtended = $FileNameUsed + "_"+ $State + "_"+ $QuoteID
- Write-Output "$b File name with state and quote id referenced in building csv and excel:   $FileNameUsedExtended"
-$FileNameUsedExtendedWithPath = $Path + $FileNameUsedExtended
- Write-Output "$b Filename with path (used to tack on .csv or .xml or results.csv: "  $FileNameUsedExtendedWithPath
-
-$PathAndFileCSV      = $FileNameUsedExtendedWithPath + ".CSV"
- Write-Output "$b CSV File the excel doc gets converted to: $PathAndFileCSV"
-#this is for the list of forms that came back from the response.
-$PathAndFileOnPolicy = $FileNameUsedExtendedWithPath + ".XML"
-Write-Output "$b Location we are checking for the list of forms that come back from the response: $PathAndFileOnPolicy"
-$PathAndFileResults = $FileNameUsedExtendedWithPath + "Results.CSV"
-Write-Output "$b Location and name of final results file created: $PathAndFileResults"
-
-
-
- # if the csv file exists delete it
-if (Test-Path $PathAndFileCSV) 
- {$b = Get-Date
-    Write-Output "$b CSV file $PathAndFile already exists it will get deleted before trying to convert this excel doc to a new csv file"
-     Remove-Item $PathAndFileCSV
-     if (!(Test-Path $PathAndFileCSV)) 
-     {$b = Get-Date
-     Write-Output "$b CSV file deletion is complete"
-     }
- }
-
- ####New trial using Import-Csv instead of Excel (IMPORTS THE EXPECTED RESULTS FILE ALREADY SAVED AS CSV AND THEN RENAMES IT TO REQUIRED PATH)
- $importeddata = Import-Csv $PathAndFileNotExcel
- $importeddata | Export-Csv $PathAndFileCSV -NoTypeInformation -Encoding UTF8
- 
-# load the xml file
-[xml]$XmlDocument = Get-Content -Path $PathAndFileOnPolicy
-$XMLFormsList = $XmlDocument.server.responses.'FormsEngine.initPrintJobRs'.printJob.printDoc
-
- #This selected and then listed the form names and the status
-#$XmlDocument.server.responses.'FormsEngine.initPrintJobRs'.printJob.printDoc | Select-Object -Property name, selected
-
-#load the csv file with the list of forms that need to be tested.
-# load the data to an array list
-if($devDebugMode)
-{
-Write-Output "$b BEGIN Load CSV file into an array "
-}
-$array = Import-Csv $PathAndFileCSV
-
-#create a results array
-$resultsArray = @()
-#Create an object to populate the results table
-$objTemplateObject = New-Object psobject
-$objTemplateObject | Add-Member -MemberType NoteProperty -Name Form -Value $null
-$objTemplateObject | Add-Member -MemberType NoteProperty -Name $State -Value $null
-$objTemplateObject | Add-Member -MemberType NoteProperty -Name Results -Value $null
-$objTemplateObject | Add-Member -MemberType NoteProperty -Name ResultsDetails -Value $null
-
-#iterate through eachitem and see if it is in
-if($devDebugMode)
-{
-Write-Output "$b BEGIN FORM ANALYSIS going through the array "
-}
-ForEach( $form in $array)
-    {
-    #assign each columns value a name
-    $formName = $form.Form
-    $AttachCondition = $form.$State.ToString()
-
-    #Check if form is on policy. If so update the test results.
-    #$result= ($XmlDocument.server.responses.'FormsEngine.initPrintJobRs'.printJob.printDoc| Where {$_.name -eq $formName}).name
-    $objTemp = $objTemplateObject | Select-Object *
-    #lets now populate our custom properties that will get mapped to the result file
-    $objTemp.Form = $form.Form
-    $objTemp.$State = $AttachCondition
-    $policyForm=($XmlDocument.server.responses.'FormsEngine.initPrintJobRs'.printJob.printDoc| Where {$_.name -eq $formName}).name
-    $policyFormSelected=($XmlDocument.server.responses.'FormsEngine.initPrintJobRs'.printJob.printDoc| Where {$_.name -eq $formName}).selected
-    #if forms names match then write out test results.
-    if($devDebugMode)
-        {
-        Write-Output "$b About to start checking $policyForm "
+$expectedForms = [ordered]@{}
+foreach ($row in $filtered) {
+    $formName = $row.Form.Trim()
+    $stateVal = if ($row.PSObject.Properties.Name -contains $State) { $row.$State.Trim().ToUpper() } else { "" }
+    if ($formName -and -not $expectedForms.Contains($formName)) {
+        $expectedForms[$formName] = @{ Form = $formName; Expected = $stateVal }
     }
-    if( $policyForm )
-  {
-    if ($AttachCondition -eq "YM" -and $policyFormSelected -eq 2)
-            {
-            $objTemp.ResultsDetails= "C1 PASS: Form $policyForm is Listed and checked"
-            $objTemp.Results= "PASS"
-            }
-    elseif ( $AttachCondition -eq "YM" -and $policyFormSelected -eq 1)
-            {
-             $objTemp.ResultsDetails= "C2 PASS: Form $policyForm is Listed and checked (Not listed as MANDATORY)"
-            $objTemp.Results= "PASS"          
-            }
-    elseif ( $AttachCondition -eq "YS" -and $policyFormSelected -eq 1)
-            {
-             $objTemp.ResultsDetails= "C3 PASS: Form $policyForm is Listed and Selected"
-            $objTemp.Results= "PASS"          
-            }
-    elseif ( $AttachCondition -eq "YS" -and $policyFormSelected -eq 0)
-            {
-            $objTemp.ResultsDetails= "C4 FAIL: Form $policyForm is Listed and not checked"
-            $objTemp.Results= "FAIL"          
-            }
-    elseif ( $AttachCondition -eq "N" -and $policyFormSelected -eq 2)
-           {
-            $objTemp.ResultsDetails= "C5 FAIL: Form $policyForm has $AttachCondition but is Listed and checked"  
-           $objTemp.Results= "FAIL"          
-           }
-    elseif ($AttachCondition -eq "YM" -and $policyFormSelected -eq 0)
-            {
-            $objTemp.ResultsDetails= "C6 FAIL: Form $policyForm is Listed but not checked"
-            $objTemp.Results= "FAIL"            
-            }
-    elseif ($AttachCondition -eq "N" -and $policyFormSelected -eq 0)
-            {
-            $objTemp.ResultsDetails= "C7 FAIL: Form $policyForm is Listed but not checked"  
-            $objTemp.Results= "FAIL"          
-            }
-    elseif ($AttachCondition -eq "YU" -and $policyFormSelected -eq 0)
-            {
-            $objTemp.ResultsDetails= "C8 PASS: Form $policyForm is Listed and not checked"  
-            $objTemp.Results= "PASS"          
-            }
-    elseif ($AttachCondition -eq "N" -and $policyFormSelected -eq 1)
-            {
-           $objTemp.ResultsDetails = "C9 FAIL: Form $policyForm has $AttachCondition but is Listed and checked (Not listed as MANDATORY)"
-           $objTemp.Results= "FAIL"
-            }
-    else
-            {
-            $objTemp.ResultsDetails = "C10 ISSUE: CHECK $formName is listed but doesn't match a test scenario"
-            $objTemp.Results= "ISSUE"
-            }
- }
-    elseif ($AttachCondition -eq "YM" )
-                            {
-            $objTemp.ResultsDetails = "C11 FAIL: Form $formName has $AttachCondition but is not listed"
-            $objTemp.Results= "FAIL"
-            }
-    elseif ($AttachCondition -eq "YU" )
-                            {
-            $objTemp.ResultsDetails = "C11 FAIL: Form $formName has $AttachCondition but is not listed"
-            $objTemp.Results= "FAIL"
-            }
-    elseif ($AttachCondition -eq "YS" )
-                            {
-            $objTemp.ResultsDetails = "C11 FAIL: Form $formName has $AttachCondition but is not listed"
-            $objTemp.Results= "FAIL"
-            }
-    elseif ($AttachCondition -eq "N" )
-                {
-                $objTemp.ResultsDetails = "C12 PASS: Form $formName has $AttachCondition and is not listed"
-                $objTemp.Results= "PASS"
-                }
-    else 
-            {
-            $objTemp.ResultsDetails = "C13 ISSUE: CHECK $formName is not listed and doesn't match test scenario"
-            $objTemp.Results= "ISSUE"
+}
+Write-Host " $($expectedForms.Count) forms loaded" -ForegroundColor Green
+
+# ── Load XML response ─────────────────────────────────────────────────────────
+Write-Host "Loading XML response..." -NoNewline
+if (-not (Test-Path $XmlPath)) { throw "XML file not found: $XmlPath" }
+[xml]$xml = Get-Content -Path $XmlPath
+$policyForms = $xml.server.responses.'FormsEngine.initPrintJobRs'.printJob.printDoc
+
+$actualLookup = @{}
+foreach ($pf in $policyForms) { $actualLookup[$pf.name] = [int]$pf.selected }
+Write-Host " $($actualLookup.Count) forms on policy" -ForegroundColor Green
+
+# ── Validation engine ─────────────────────────────────────────────────────────
+$results = [System.Collections.Generic.List[psobject]]::new()
+$pass = 0; $fail = 0; $info = 0; $issue = 0
+
+function Add-Result($form, $expected, $actualSel, $result, $code, $message) {
+    $actualText = if ($actualSel -ge 0) { Get-SelectedName $actualSel } else { "Not On Policy" }
+    $obj = [PSCustomObject]@{
+        Form     = $form
+        Expected = $expected
+        Actual   = $actualText
+        Result   = $result
+        Code     = $code
+        Message  = $message
     }
-    
-      # if($devDebugMode)
-       # {
-        #Write-Output $objTemp
-        #Write-Output "Checked form name $policyForm  xml form name $formName results:" $objTemp.Results
-        #Write-Output ($XmlDocument.server.responses.'FormsEngine.initPrintJobRs'.printJob.printDoc| Where-Object {$XMLFormsList.name -eq $formName}).name
-        #Write-Output "ResultsArray Count" $resultsArray.Count
-       # }
-    $resultsArray += $objTemp 
-     }
+    $results.Add($obj)
 
-if($devDebugMode)
-{
-Write-Output "$b END End of the for each  FORM ANALYSIS going through the array & begin non-listed forms analysis."
-}
- #Add any forms that are in policy but not listed
-  $count =0
-  $objTempList = $resultsArray 
+    $color = switch ($result) { "FAIL" { "Red" } "ISSUE" { "Yellow" } "INFO" { "DarkCyan" } default { "DarkGray" } }
+    if ($result -ne "PASS") {
+        Write-Host "  [$result] $form - $message" -ForegroundColor $color
+    }
 
- ForEach( $PolicyForm in $XmlDocument.server.responses.'FormsEngine.initPrintJobRs'.printJob.printDoc | Where {  -not ($objTempList.Form.Contains($_.name))})
- {
-    $objTemp = $objTemplateObject | Select-Object *
-    $objTemp.Form =  $PolicyForm.name
-    $objTemp.Results = "INFO"
-    If ($PolicyForm.selected -eq 2)
-         {
-         $objTemp.ResultsDetails = "C14 INFO: Form " +  $PolicyForm.name + " is not on test case but is listed & CHECKED on policy"
-         }
-    else 
-         {
-         $objTemp.ResultsDetails = "C15 INFO: Form " +  $PolicyForm.name + " is not on test case but is listed on policy"
-         #$InfoForm
-         }
-    $count= $count +1
-    $count
-  $resultsArray += $objTemp 
- }
-if($devDebugMode)
-{
-Write-Output "$b END non-listed forms analysis."
+    switch ($result) {
+        "PASS"  { $script:pass++  }
+        "FAIL"  { $script:fail++  }
+        "INFO"  { $script:info++  }
+        "ISSUE" { $script:issue++ }
+    }
 }
 
- $TotalPassed =0
- $TotalFailed = 0
- $TotalInfo =0
- $TotalFomrsListed=0
- $TotalOther=0
- ForEach ($item in $resultsArray)
- {
-     if ($item.Results -eq "PASS"){
-      $TotalPassed = $TotalPassed+1
-      }
-     elseif ($item.Results -eq "FAIL"){
-      $TotalFailed = $TotalFailed+1
-      }
-      elseif ($item.Results -eq "INFO"){
-      $TotalInfo = $TotalInfo+1
-      }
-      else {
-      $TotalOther = $TotalOther+1
-      if($devDebugMode)
-            {
-          Write-Output  $item
-            }
-      }
-  $TotalFomrsListed=$TotalFomrsListed+1
- }
+Write-Host "`nValidating..." -ForegroundColor Cyan
 
- $objTempT = $objTemplateObject | Select-Object *
- #$TotalPassed 
- #$TotalFailed 
- #$TotalInfo 
- #$TotalFomrsListed
-  $objTempT.Form = "Total#Forms Listed:$TotalFomrsListed  Total PASS:$TotalPassed Total FAIL:$TotalFailed Total INFO:$TotalInfo Other: $TotalOther "
-   $resultsArray += $objTempT 
-#$resultsArray
- $resultsArray | Export-CSV $PathAndFileResults -Force
- Write-Output  $objTempT.Form
+# Phase 1 — Check each expected form against the policy
+foreach ($formName in $expectedForms.Keys) {
+    $exp       = $expectedForms[$formName]
+    $expStatus = $exp.Expected
+    $expDesc   = Get-StatusName $expStatus
 
+    if ($actualLookup.ContainsKey($formName)) {
+        $sel     = $actualLookup[$formName]
+        $actDesc = Get-SelectedName $sel
 
-#Set-Clipboard -Value $objTempT.Form 
+        switch ("$expStatus|$sel") {
+            "YM|2"  { Add-Result $formName $expStatus $sel "PASS"  "C1"  "Expected $expDesc, found $actDesc" }
+            "YM|1"  { Add-Result $formName $expStatus $sel "PASS"  "C2"  "Expected $expDesc, found $actDesc (not flagged mandatory but checked)" }
+            "YS|1"  { Add-Result $formName $expStatus $sel "PASS"  "C3"  "Expected $expDesc, found $actDesc" }
+            "YS|0"  { Add-Result $formName $expStatus $sel "FAIL"  "C4"  "Expected $expDesc, but form is $actDesc" }
+            "N|2"   { Add-Result $formName $expStatus $sel "FAIL"  "C5"  "Expected $expDesc, but form is present and $actDesc" }
+            "YM|0"  { Add-Result $formName $expStatus $sel "FAIL"  "C6"  "Expected $expDesc, but form is $actDesc" }
+            "N|0"   { Add-Result $formName $expStatus $sel "FAIL"  "C7"  "Expected $expDesc, but form is present on policy (unchecked)" }
+            "YU|0"  { Add-Result $formName $expStatus $sel "PASS"  "C8"  "Expected $expDesc, found $actDesc - correctly listed but unchecked" }
+            "N|1"   { Add-Result $formName $expStatus $sel "FAIL"  "C9"  "Expected $expDesc, but form is present and $actDesc" }
+            default { Add-Result $formName $expStatus $sel "ISSUE" "C10" "Unexpected combination: expected=$expStatus, actual selected=$sel" }
+        }
+    }
+    else {
+        switch ($expStatus) {
+            { $_ -in "YM","YS","YU" } { Add-Result $formName $expStatus -1 "FAIL"  "C11" "Expected $expDesc, but form is missing from policy entirely" }
+            "N"                        { Add-Result $formName $expStatus -1 "PASS"  "C12" "Correctly absent - expected $expDesc and form is not on policy" }
+            default                    { Add-Result $formName $expStatus -1 "ISSUE" "C13" "Unknown expected status '$expStatus' and form is not on policy" }
+        }
+    }
+}
 
-$objTempT.Form | C:\Windows\System32\clip.exe
+# Phase 2 — Unexpected forms (on policy but not in baseline)
+foreach ($pf in $policyForms) {
+    if (-not $expectedForms.Contains($pf.name)) {
+        $sel     = [int]$pf.selected
+        $actDesc = Get-SelectedName $sel
+        $code    = if ($sel -eq 2) { "C14" } else { "C15" }
+        Add-Result $pf.name "" $sel "INFO" $code "Not in baseline but found on policy as $actDesc"
+    }
+}
 
-#Clean up. Remove the XML File used to hold the forms
-# if the xml file exists delete it
- if($devDebugMode -ne 1)
- {
-    if (Test-Path $PathAndFileOnPolicy) 
-     {
-     $b = Get-Date
-       Write-Output "$b end cleanup --XML file $PathAndFileOnPolicy IS BEING DELETED"
-         Remove-Item $PathAndFileOnPolicy
-         if (!(Test-Path $PathAndFileOnPolicy)) 
-         { $b = Get-Date
-         Write-Output "$b XML file deletion is complete"
-         }
-      }
-    if (Test-Path $PathAndFileCSV) 
-     {
-     $b = Get-Date
-       Write-Output "$b end cleanup --CSV file $PathAndFileCSV IS BEING DELETED"
-         Remove-Item $PathAndFileCSV
-         if (!(Test-Path $PathAndFileCSV)) 
-         { $b = Get-Date
-         Write-Output "$b CSV file deletion is complete"
-         }
-      }  
-   }
+$total = $results.Count
 
-  $b = Get-Date
-  $endTime =$b
-  $elapsedTime= $endTime -$startTime 
-Write-Output "$b End Powershell script complete began at $startTime and ended at $endTime  =$elapsedTime"
+# ── Console summary ───────────────────────────────────────────────────────────
+Write-Host ""
+Write-Host ("=" * 60) -ForegroundColor Cyan
+Write-Host "  FORMS VALIDATION: $State / Quote $QuoteID" -ForegroundColor Cyan
+Write-Host ("=" * 60) -ForegroundColor Cyan
+$summaryColor = if ($fail -eq 0 -and $issue -eq 0) { "Green" } else { "Red" }
+Write-Host "  Total: $total   PASS: $pass   FAIL: $fail   INFO: $info   ISSUE: $issue" -ForegroundColor $summaryColor
+Write-Host ("=" * 60) -ForegroundColor Cyan
+
+# ── Save results CSV ──────────────────────────────────────────────────────────
+$results | Export-Csv $resultsPath -NoTypeInformation -Encoding UTF8
+Write-Host "`nResults CSV : $resultsPath" -ForegroundColor DarkGray
+
+# ── Generate HTML report ──────────────────────────────────────────────────────
+$bannerClass = if ($fail -eq 0 -and $issue -eq 0) { "banner-pass" } else { "banner-fail" }
+$bannerText  = if ($fail -eq 0 -and $issue -eq 0) { "ALL PASSED" } else { "FAILURES DETECTED" }
+
+$tableRows = ""
+foreach ($r in $results) {
+    $rowClass   = switch ($r.Result) { "FAIL" { "row-fail" } "ISSUE" { "row-issue" } "INFO" { "row-info" } default { "row-pass" } }
+    $badgeClass = $r.Result.ToLower()
+    $tableRows += @"
+<tr class="$rowClass">
+  <td>$([System.Net.WebUtility]::HtmlEncode($r.Form))</td>
+  <td>$([System.Net.WebUtility]::HtmlEncode($r.Expected))</td>
+  <td>$([System.Net.WebUtility]::HtmlEncode($r.Actual))</td>
+  <td><span class="badge badge-$badgeClass">$($r.Result)</span></td>
+  <td>$($r.Code)</td>
+  <td>$([System.Net.WebUtility]::HtmlEncode($r.Message))</td>
+</tr>
+"@
+}
+
+$timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+$htmlContent = @"
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forms Validation - $State / $QuoteID</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; padding: 24px; background: #f4f6f8; color: #1a1a1a; }
+h1 { font-size: 1.8rem; margin-bottom: 4px; }
+.subtitle { color: #555; margin-bottom: 16px; }
+.banner { padding: 14px 20px; border-radius: 8px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+.banner-pass { background: #d4edda; border: 1px solid #28a745; }
+.banner-fail { background: #f8d7da; border: 1px solid #dc3545; }
+.banner-status { font-weight: 700; font-size: 1.1rem; }
+.banner-detail { font-size: 0.95rem; }
+.cards { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.card { border-radius: 8px; padding: 12px 20px; min-width: 100px; text-align: center; }
+.card-value { font-size: 1.6rem; font-weight: 700; }
+.card-label { font-size: 0.85rem; color: #555; }
+.card-total { background: #e9ecef; } .card-pass { background: #d4edda; }
+.card-fail { background: #f8d7da; } .card-info { background: #d1ecf1; } .card-issue { background: #fff3cd; }
+table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 16px; }
+thead th { background: #343a40; color: #fff; padding: 8px 10px; text-align: left; position: sticky; top: 0; }
+tbody td { padding: 6px 10px; border-bottom: 1px solid #dee2e6; }
+.row-fail { background: #fff0f0; } .row-issue { background: #fff9e6; } .row-info { background: #f0f8ff; } .row-pass { background: #fff; }
+.badge { padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.8rem; }
+.badge-pass { background: #28a745; color: #fff; } .badge-fail { background: #dc3545; color: #fff; }
+.badge-info { background: #17a2b8; color: #fff; } .badge-issue { background: #ffc107; color: #000; }
+footer { text-align: center; color: #888; font-size: 0.8rem; margin-top: 24px; padding: 12px; }
+</style></head><body>
+<h1>Forms Validation Report</h1>
+<p class="subtitle">Baseline: <strong>$([System.IO.Path]::GetFileName($BaselinePath))</strong> | State: <strong>$State</strong> | Quote: <strong>$QuoteID</strong> | TestCase: <strong>$TestCase</strong> | Generated: $timestamp</p>
+<div class="banner $bannerClass">
+  <span class="banner-status">$bannerText</span>
+  <span class="banner-detail">Total: $total &bull; Pass: $pass &bull; Fail: $fail &bull; Info: $info &bull; Issue: $issue</span>
+</div>
+<div class="cards">
+  <div class="card card-total"><div class="card-value">$total</div><div class="card-label">Total</div></div>
+  <div class="card card-pass"><div class="card-value">$pass</div><div class="card-label">Pass</div></div>
+  <div class="card $(if ($fail -gt 0) { 'card-fail' } else { 'card-pass' })"><div class="card-value">$fail</div><div class="card-label">Fail</div></div>
+  <div class="card card-info"><div class="card-value">$info</div><div class="card-label">Info</div></div>
+  <div class="card $(if ($issue -gt 0) { 'card-issue' } else { 'card-pass' })"><div class="card-value">$issue</div><div class="card-label">Issue</div></div>
+</div>
+<table>
+<thead><tr><th>Form</th><th>Expected</th><th>Actual</th><th>Result</th><th>Code</th><th>Message</th></tr></thead>
+<tbody>
+$tableRows
+</tbody></table>
+<footer>Generated by PnC Test Automation &mdash; FormsCheck.ps1</footer>
+</body></html>
+"@
+
+[System.IO.File]::WriteAllText($htmlPath, $htmlContent)
+Write-Host "HTML report : $htmlPath" -ForegroundColor DarkGray
+
+# ── Copy summary to clipboard ────────────────────────────────────────────────
+$summaryText = "Total: $total | PASS: $pass | FAIL: $fail | INFO: $info | ISSUE: $issue"
+try { $summaryText | Set-Clipboard } catch { }
+
+$elapsed = (Get-Date) - $startTime
+Write-Host "`nCompleted in $($elapsed.TotalSeconds.ToString('F1'))s" -ForegroundColor DarkGray
 
