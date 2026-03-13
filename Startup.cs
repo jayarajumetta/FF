@@ -8,6 +8,7 @@ using Playwright_POC.Models;
 using Playwright_POC.Pages;
 using Playwright_POC.Pages.ExpertQuotePages;
 using Playwright_POC.Services;
+using Playwright_POC.Clients;
 using Playwright_POC.Pages.ExpressPages;
 using System;
 using System.IO;
@@ -20,8 +21,10 @@ namespace Playwright_POC
         public void ConfigureServices(IServiceCollection services)
         {
             var configPath = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
+            var env = Environment.GetEnvironmentVariable("TEST_ENVIRONMENT") ?? "QA";
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile(configPath)
+                .AddJsonFile(Path.Combine(AppContext.BaseDirectory, $"appsettings.{env}.json"), optional: true)
                 .Build();
 
             services.AddSingleton<IConfiguration>(configuration);
@@ -71,6 +74,27 @@ namespace Playwright_POC
             services.AddSingleton<PA_AdditionalCoveragesPage>();
             services.AddSingleton<SFP_EditLocationPage>();
             services.AddSingleton<ExpressLoginPage>();
+
+            // ── Forms Checking services ──
+            var formsConfig = configuration.GetSection("DuckCreekForms").Get<DuckCreekFormsConfig>();
+            if (formsConfig != null)
+            {
+                // Allow env-var override for the password so it's not committed to source control
+                var envPassword = Environment.GetEnvironmentVariable("DUCKCREEK_PASSWORD");
+                if (!string.IsNullOrEmpty(envPassword))
+                    formsConfig.Password = envPassword;
+
+                services.AddSingleton(formsConfig);
+            }
+            else
+            {
+                // Provide a default so DI doesn't fail when config section is missing
+                services.AddSingleton(new DuckCreekFormsConfig());
+            }
+
+            services.AddScoped<SessionService>();
+            services.AddScoped<FormsValidationService>();
+            services.AddHttpClient<DuckCreekFormsClient>();
         }
     }
 }

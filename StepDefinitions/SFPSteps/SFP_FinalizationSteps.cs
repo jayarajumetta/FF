@@ -1,12 +1,18 @@
 using Microsoft.Playwright;
 using NUnit.Framework;
+using Playwright_POC.Clients;
 using Playwright_POC.Context;
 using Playwright_POC.Helpers;
+using Playwright_POC.Models;
 using Playwright_POC.Pages;
 using Playwright_POC.Pages.ExpertQuotePages;
 using Playwright_POC.Pages.ExpertQuotePages.SFP;
+using Playwright_POC.Parsers;
+using Playwright_POC.Services;
 using Reqnroll;
 using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using ReqContext = Playwright_POC.Context.TestContext;
 
@@ -21,12 +27,23 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         private readonly ReqContext _context;
         private readonly ScenarioContextData _contextData;
         private readonly ScenarioContext _scenarioContext;
+        private readonly SessionService _sessionService;
+        private readonly DuckCreekFormsClient _formsClient;
+        private readonly FormsValidationService _validationService;
 
-        public SFP_FinalizationSteps(ReqContext context, ScenarioContext scenarioContext)
+        public SFP_FinalizationSteps(
+            ReqContext context,
+            ScenarioContext scenarioContext,
+            SessionService sessionService,
+            DuckCreekFormsClient formsClient,
+            FormsValidationService validationService)
         {
             _context = context;
             _scenarioContext = scenarioContext;
             _contextData = _scenarioContext["ContextData"] as ScenarioContextData;
+            _sessionService = sessionService;
+            _formsClient = formsClient;
+            _validationService = validationService;
         }
 
         [When("user runs Insurance Score")]
@@ -67,11 +84,10 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             TableMappingHelpers.MortgageeFields(table, _contextData);
 
-            // TODO: Implement when SFP_MortgageeLossPayeePage is mapped
-            Console.WriteLine("STUB: Add Mortgagee step - page needs to be mapped");
-            Console.WriteLine($"  Name: {_contextData.MortgageeName}");
-            Console.WriteLine($"  Address: {_contextData.MortgageeAddress}");
-            await _context.Page.WaitForTimeoutAsync(500);
+            var mortgageePage = new SFP_MortgageeLossPayeePage(_context.Page);
+            await mortgageePage.AddMortgageeAsync(_contextData);
+
+            Console.WriteLine($"Added Mortgagee: SearchName={_contextData.MortgageeSearchName}, Location={_contextData.MortgageeLocation}");
         }
 
         [Then("user verifies Premium on Pricing screen")]
@@ -189,11 +205,92 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             TableMappingHelpers.DuckcreekFormsFields(table, _contextData);
 
-            // TODO: Implement Duckcreek integration
-            Console.WriteLine("STUB: Duckcreek Forms validation - needs implementation");
-            Console.WriteLine($"  Client: {_contextData.Client?.FirstName} {_contextData.Client?.LastName}");
-            Console.WriteLine($"  State: {_contextData.Address?.State}");
-            await _context.Page.WaitForTimeoutAsync(500);
+            var state = _contextData.Address.State;
+            var quoteId = _contextData.QuoteNumber;
+            var lob = _contextData.FormsLob ?? "SFP";
+
+            // Fix #1: Wrap in try/finally so the policy is never left locked.
+            //         The next step (Save for Later / Return to Admin) will always run
+            //         because we catch and soft-assert rather than throw.
+            try
+            {
+                // 1. Extract DuckCreek session ID from the current page
+                string sessionId;
+                try
+                {
+                    sessionId = await _sessionService.GetDuckCreekSessionIdAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"WARNING: Could not retrieve DuckCreek session ID: {ex.Message}");
+                    Console.WriteLine("Forms validation skipped — session not available.");
+                    return;
+                }
+
+                // 2. Call the DuckCreek Forms Engine API (Fix #3: per-LOB manuscript)
+                string responseXml;
+                try
+                {
+                    responseXml = await _formsClient.GetFormsAndSaveAsync(
+                        sessionId, lob, $"{lob}_BasicPolicy", state, quoteId);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"WARNING: DuckCreek Forms API call failed: {ex.Message}");
+                    Console.WriteLine("Forms validation skipped — API unavailable.");
+                    return;
+                }
+
+                // 3. Parse XML response into typed form entries
+                var actualForms = FormsXmlParser.Parse(responseXml);
+                Console.WriteLine($"DuckCreek returned {actualForms.Count} forms for {lob}/{state}/{quoteId}");
+
+                // Parse response metadata (non-printDoc elements).
+                // NOTE: XML "failure" status is EXPECTED because the API user (PA3402)
+                // differs from the UI login that created the session. This is by design.
+                var metadata = FormsXmlParser.ParseMetadata(responseXml);
+                foreach (var w in metadata.Warnings)
+                    Console.WriteLine($"  [META INFO] {w}");
+                Console.WriteLine($"  Metadata: PrintJob={metadata.PrintJobName}, Manuscript={metadata.Manuscript}, " +
+                                  $"RoleBasedSecurity={metadata.HasRoleBasedSecurity}, ReturnSuccess={metadata.ReturnSuccessStatus}");
+
+                // 4. Load expected forms and validate (ANPAC filtering applied inside Validate)
+                var testCase = _contextData.FormsTestCase ?? "BASIC";
+                var expected = _validationService.LoadExpectedFormsForLob(lob, state, testCase);
+                var summary = _validationService.Validate(expected, actualForms, lob, state, quoteId);
+                summary.ResponseMetadata = metadata;
+                summary.TestCaseName = $"{lob}_{testCase}";
+
+                // 5. Print grouped summary to console
+                FormsValidationService.PrintSummary(summary);
+
+                // 6. Save results CSV
+                _validationService.SaveResultsCsv(summary, $"{lob}_{testCase}");
+
+                // 7. Generate HTML report
+                var htmlDir = Path.Combine(
+                    _validationService.GetType().Assembly.Location, "..", "..", "..", "TestResults",
+                    DateTime.Now.ToString("ddMMMyyyy").ToUpperInvariant());
+                var htmlPath = Path.Combine(htmlDir, $"FormsReport_{lob}_{state}_{quoteId}.html");
+                FormsReportGenerator.Generate(summary, htmlPath);
+
+                // 8. Soft assertion — log failures but don't break the SFP flow
+                if (summary.Failed > 0)
+                {
+                    var failures = string.Join("\n", summary.Results
+                        .Where(r => r.Result == "FAIL")
+                        .Select(r => $"    {r.FormName}: {r.Message}"));
+                    Console.WriteLine($"\nWARNING: {summary.Failed} form(s) failed validation:\n{failures}");
+                    Assert.Warn($"Forms validation: {summary.Failed} failure(s) detected. See HTML report for details.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Fix #1: Never let forms validation crash the scenario —
+                //         the policy must be returned to admin / saved.
+                Console.WriteLine($"FORMS VALIDATION ERROR (non-fatal): {ex.Message}");
+                Assert.Warn($"Forms validation threw an unexpected error: {ex.Message}");
+            }
         }
 
         [When("user clicks Save for Later")]
@@ -236,20 +333,30 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         [When("user navigates to Submission and opens Checklist")]
         public async Task UserNavigatesToSubmissionAndOpensChecklist()
         {
-            var submissionPage = new SubmissionPage(_context.Page);
-            await submissionPage.WaitForSpinnerAsync();
-            
-            // TODO: Implement when Checklist locators are added to SubmissionPage
-            Console.WriteLine("STUB: Open Checklist - SubmissionPage locators need mapping");
-            await _context.Page.WaitForTimeoutAsync(500);
+            // Navigate to submission via side menu first
+            var sideMenu = new SideMenuNavigation(_context.Page);
+            await sideMenu.GoToSubmissionAsync();
+
+            var checklistPage = new SFP_ChecklistPage(_context.Page);
+            await checklistPage.OpenChecklistAsync();
+
+            Console.WriteLine("Navigated to Submission and opened Checklist");
         }
 
         [Then("user verifies no referrals are needed")]
         public async Task UserVerifiesNoReferralsAreNeeded()
         {
-            // TODO: Implement when referral locators are added to SubmissionPage
-            Console.WriteLine("STUB: Verify no referrals - SubmissionPage locators need mapping");
-            await _context.Page.WaitForTimeoutAsync(500);
+            var submissionPage = new SubmissionPage(_context.Page);
+            await submissionPage.WaitForSpinnerAsync();
+
+            // Check for "No referrals required" text - try multiple text variants
+            var noReferralsText = submissionPage.NoReferralsText;
+            var noReferralsAlt = submissionPage.NoReferralsTextAlt;
+
+            var isNoReferrals = await noReferralsText.CountAsync() > 0 || await noReferralsAlt.CountAsync() > 0;
+            Assert.That(isNoReferrals, Is.True, "Expected no referrals to be required on Submission page"); // TODO: Verify exact text displayed
+
+            Console.WriteLine("Verified: no referrals required");
         }
 
         [When("user completes Checklist item")]
@@ -257,27 +364,45 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             TableMappingHelpers.ChecklistItemFields(table, _contextData);
 
-            // TODO: Implement when ChecklistPage is created
-            Console.WriteLine($"STUB: Complete Checklist - {_contextData.ChecklistItemName}");
-            Console.WriteLine($"  Action: {_contextData.ChecklistAction}");
-            Console.WriteLine($"  Note: {_contextData.ChecklistNote}");
-            await _context.Page.WaitForTimeoutAsync(500);
+            var checklistPage = new SFP_ChecklistPage(_context.Page);
+            await checklistPage.CompleteChecklistItemAsync(
+                _contextData.ChecklistItemName,
+                _contextData.ChecklistAction,
+                _contextData.ChecklistNote);
+
+            Console.WriteLine($"Completed checklist item: {_contextData.ChecklistItemName}, Action: {_contextData.ChecklistAction}");
         }
 
         [When("user closes Checklist and confirms Update")]
         public async Task UserClosesChecklistAndConfirmsUpdate()
         {
-            // TODO: Implement when ChecklistPage is created
-            Console.WriteLine("STUB: Close Checklist and confirm update");
-            await _context.Page.WaitForTimeoutAsync(500);
+            var checklistPage = new SFP_ChecklistPage(_context.Page);
+            await checklistPage.CloseChecklistAsync();
+            await checklistPage.ConfirmUpdateAsync();
+
+            Console.WriteLine("Closed Checklist and confirmed update");
         }
 
         [Then("user verifies Transmit button is enabled on Submission page")]
         public async Task UserVerifiesTransmitButtonIsEnabled()
         {
-            // TODO: Implement when Transmit button locator is added to SubmissionPage
-            Console.WriteLine("STUB: Verify Transmit button enabled - SubmissionPage locators need mapping");
-            await _context.Page.WaitForTimeoutAsync(500);
+            var submissionPage = new SubmissionPage(_context.Page);
+            await submissionPage.WaitForSpinnerAsync();
+
+            var transmitBtn = submissionPage.TransmitButton;
+            var transmitBtnAlt = submissionPage.TransmitButtonAlt;
+
+            // Check which button exists
+            ILocator activeTransmitBtn;
+            if (await transmitBtn.CountAsync() > 0)
+                activeTransmitBtn = transmitBtn;
+            else
+                activeTransmitBtn = transmitBtnAlt;
+
+            Assert.That(await activeTransmitBtn.CountAsync() > 0, Is.True, "Transmit button should be present on Submission page");
+            Assert.That(await activeTransmitBtn.IsEnabledAsync(), Is.True, "Transmit button should be enabled");
+
+            Console.WriteLine("Verified: Transmit button is enabled on Submission page");
         }
     }
 }

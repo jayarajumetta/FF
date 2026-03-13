@@ -3,6 +3,7 @@ using Playwright_POC.Context;
 using Playwright_POC.Helpers;
 using Playwright_POC.Pages;
 using Playwright_POC.Pages.ExpertQuotePages;
+using Playwright_POC.Pages.ExpertQuotePages.SFP;
 using Reqnroll;
 using System;
 using System.Threading.Tasks;
@@ -40,17 +41,27 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             TableMappingHelpers.ResidenceFields(table, _contextData);
 
-            // TODO: Implement residence creation via Add Residence button + form
-            Console.WriteLine($"STUB: Add Residence - Description: {_contextData.ResidenceAdditionalDesc}, Year: {_contextData.ResidenceYearBuilt}");
+            // Navigate back to the Locations/Residences/Buildings list page
+            var navButton = _context.Page.GetByTestId("LocationsBuildings-nav");
+            await navButton.ClickAsync();
 
-            // Navigate to Locations/Buildings list so downstream steps can continue
-            var nav = new SideMenuNavigation(_context.Page);
-            await nav.GoToLocationsBuildingsAsync();
-
-            // Click Next to advance past Locations page
             var locPage = new SFP_LocationsResidencesBuildingsPage(_context.Page);
             await locPage.WaitForSpinnerAsync();
-            await locPage.ClickNextAsync();
+
+            // Click the "Add Residence" button
+            await locPage.AddResidenceButtonByRole.ClickAsync();
+            await locPage.WaitForSpinnerAsync();
+
+            // Fill residence form using page object method
+            var residencePage = new SFP_AddResidencePage(_context.Page);
+            await residencePage.FillResidenceFormAsync(_contextData);
+
+            // Select Residence Coverage checkbox — coverage detail section expands inline
+            await residencePage.ResidenceCoverageCheckbox.ClickAsync();
+            await residencePage.WaitForSpinnerAsync();
+
+            // NOTE: Do NOT click Save here — coverage detail fields must be filled first (UserAddsResidenceCoverage step)
+            Console.WriteLine($"Added Residence: {_contextData.ResidenceAdditionalDesc}, Year: {_contextData.ResidenceYearBuilt}");
         }
 
         [When("user adds Residence Coverage")]
@@ -58,13 +69,16 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             TableMappingHelpers.ResidenceCoverageFields(table, _contextData);
 
-            // TODO: Implement residence coverage entry
-            Console.WriteLine($"STUB: Residence Coverage - Amount: {_contextData.ResidenceInsuranceAmount}, Perils: {_contextData.ResidencePerils}");
+            var residenceCovPage = new SFP_ResidenceCoveragePage(_context.Page);
+            await residenceCovPage.FillResidenceCoverageAsync(_contextData);
+            await residenceCovPage.WaitForSpinnerAsync();
+            await residenceCovPage.ClickSaveAsync();
 
-            // We should now be on Optional Coverages — click Next to advance
-            var optCov = new SFP_OptionalCoveragesPage(_context.Page);
-            await optCov.WaitForSpinnerAsync();
-            await optCov.ClickNextAsync();
+            var locationsPage = new SFP_LocationsResidencesBuildingsPage(_context.Page);
+            await locationsPage.NextButton.ClickAsync();
+            await locationsPage.WaitForSpinnerAsync();
+
+            Console.WriteLine($"Residence Coverage: Amount={_contextData.ResidenceInsuranceAmount}, Perils={_contextData.ResidencePerils}");
         }
 
         [When("user adds Farm Personal Property")]
@@ -72,14 +86,46 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             TableMappingHelpers.FarmPersonalPropertyFields(table, _contextData);
 
-            // TODO: Implement FPP coverage selection
-            Console.WriteLine($"STUB: Farm Personal Property - Code: {_contextData.FarmPropertyCode}, Limit: {_contextData.FarmPropertyLimit}");
-
-            // We should now be on Farm Personal Property page — click Next to advance to Equipment Breakdown
             var fppPage = new SFP_FarmPersonalPropertyPage(_context.Page);
             await fppPage.WaitForSpinnerAsync();
+
+            // Resolve row index by code first, then fall back to name-based lookup
+            var rowIndex = fppPage.GetCoverageRowIndexByCode(_contextData.FarmPropertyCode);
+            if (rowIndex < 0)
+                rowIndex = fppPage.GetCoverageRowIndex(_contextData.FarmPropertyDescription);
+
+            if (rowIndex < 0)
+            {
+                Console.WriteLine($"WARNING: FPP code '{_contextData.FarmPropertyCode}' not mapped - skipping");
+                return;
+            }
+
+            await fppPage.CoverageCheckbox(rowIndex).ClickAsync();
+            await fppPage.WaitForSpinnerAsync();
+
+            // Click Add Coverage and fill item details
+            await fppPage.AddCoverageButton.ClickAsync();
+            await fppPage.WaitForSpinnerAsync();
+
+            if (!string.IsNullOrEmpty(_contextData.FarmPropertyDescription))
+                await fppPage.ItemDescription().FillAsync(_contextData.FarmPropertyDescription);
+
+            if (!string.IsNullOrEmpty(_contextData.FarmPropertyLimit))
+                await fppPage.ItemLimit().FillAsync(_contextData.FarmPropertyLimit);
+
+            if (!string.IsNullOrEmpty(_contextData.FarmPropertyDeductible))
+            {
+                await fppPage.ItemDeductible().ClickAsync();
+                await _context.Page.GetByRole(AriaRole.Option, new() { Name = _contextData.FarmPropertyDeductible }).ClickAsync();
+            }
+
+            await fppPage.SaveItemButton.ClickAsync();
+            await fppPage.WaitForSpinnerAsync();
+
             await fppPage.NextButton.ClickAsync();
             await fppPage.WaitForSpinnerAsync();
+
+            Console.WriteLine($"Selected FPP coverage code '{_contextData.FarmPropertyCode}'");
         }
     }
 }

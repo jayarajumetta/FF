@@ -25,6 +25,10 @@ namespace Playwright_POC.Helpers
         public FarmData Farm { get; set; } = new();
         public UnderwritingData Underwriting { get; set; } = new();
 
+        // --- Forms Validation ---
+        public string FormsLob { get; set; }
+        public string FormsTestCase { get; set; }
+
         // ══════════════════════════════════════════════════════════════════
         // LEGACY PROPERTIES (Backward compatible - delegate to domain models)
         // ══════════════════════════════════════════════════════════════════
@@ -170,6 +174,8 @@ namespace Playwright_POC.Helpers
         public string ResidenceAdditionalDesc { get => Farm.ResidenceAdditionalDesc; set => Farm.ResidenceAdditionalDesc = value; }
         public string ResidenceYearBuilt { get => Farm.ResidenceYearBuilt; set => Farm.ResidenceYearBuilt = value; }
         public string ResidenceRateType { get => Farm.ResidenceRateType; set => Farm.ResidenceRateType = value; }
+        public string ResidenceNumberOfFamilies { get => Farm.ResidenceNumberOfFamilies; set => Farm.ResidenceNumberOfFamilies = value; }
+        public string ResidenceConditionRating { get => Farm.ResidenceConditionRating; set => Farm.ResidenceConditionRating = value; }
         public string ResidenceRoofYear { get => Farm.ResidenceRoofYear; set => Farm.ResidenceRoofYear = value; }
         public string ResidenceRoofType { get => Farm.ResidenceRoofType; set => Farm.ResidenceRoofType = value; }
         public string ResidenceRoofImpact { get => Farm.ResidenceRoofImpact; set => Farm.ResidenceRoofImpact = value; }

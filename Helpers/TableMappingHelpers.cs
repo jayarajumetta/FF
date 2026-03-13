@@ -752,6 +752,12 @@ namespace Playwright_POC.Helpers
                     case "RateType":
                         _contextData.ResidenceRateType = answer;
                         break;
+                    case "NumberOfFamilies":
+                        _contextData.ResidenceNumberOfFamilies = answer;
+                        break;
+                    case "ConditionRating":
+                        _contextData.ResidenceConditionRating = answer;
+                        break;
                     case "RoofYear":
                         _contextData.ResidenceRoofYear = answer;
                         break;
@@ -887,6 +893,9 @@ namespace Playwright_POC.Helpers
                     case "LivestockLarge":
                         _contextData.LivestockLarge = answer;
                         break;
+                    case "NumberOfEmployees":
+                        _contextData.NumberOfEmployees = answer;
+                        break;
                     case "UnlistedAcreage":
                         _contextData.UnlistedAcreage = answer;
                         break;
@@ -990,10 +999,15 @@ namespace Playwright_POC.Helpers
                         // Parse {{fullName}} or use as-is
                         if (answer.Contains("{{fullName}}"))
                             answer = $"{_contextData.ClientFirstName} {_contextData.ClientLastName}";
-                        // Store in a temporary location (could add to Client model)
                         break;
                     case "State":
                         _contextData.Address.State = answer;
+                        break;
+                    case "LOB":
+                        _contextData.FormsLob = answer;
+                        break;
+                    case "TestCase":
+                        _contextData.FormsTestCase = answer;
                         break;
                     default:
                         throw new ArgumentException($"Unknown Duckcreek Forms question: {question}");

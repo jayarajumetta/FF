@@ -3,6 +3,7 @@ using Playwright_POC.Context;
 using Playwright_POC.Helpers;
 using Playwright_POC.Pages;
 using Playwright_POC.Pages.ExpertQuotePages;
+using Playwright_POC.Pages.ExpertQuotePages.SFP;
 using Reqnroll;
 using System;
 using System.Threading.Tasks;
@@ -42,6 +43,16 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             await coverageCatalogPage.WaitForSpinnerAsync();
             Console.WriteLine("No policy-wide or division-specific coverages selected - continuing to next page");
             await coverageCatalogPage.ClickNextAsync();
+        }
+
+        [When("user skips Optional Coverages and continues")]
+        public async Task UserSkipsOptionalCoveragesAndContinues()
+        {
+            var optionalPage = new SFP_OptionalCoveragesPage(_context.Page);
+            await optionalPage.WaitForSpinnerAsync();
+            await optionalPage.NextButton.ClickAsync();
+            await optionalPage.WaitForSpinnerAsync();
+            Console.WriteLine("Optional Coverages page - no selections, continuing");
         }
 
         [When("user adds Equipment Breakdown information")]
@@ -86,19 +97,52 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             TableMappingHelpers.ScheduledPersonalPropertyFields(table, _contextData);
 
             var sppPage = new SFP_ScheduledPersonalPropertyPage(_context.Page);
+            await sppPage.WaitForSpinnerAsync();
 
-            // Filter if category specified
-            if (!string.IsNullOrEmpty(_contextData.SPPCategory))
+            // Resolve row index by code first, then fall back to name-based lookup
+            var rowIndex = sppPage.GetCategoryRowIndexByCode(_contextData.SPPCategory);
+            if (rowIndex < 0)
+                rowIndex = sppPage.GetCategoryRowIndex(_contextData.SPPCategory);
+
+            if (rowIndex < 0)
             {
-                await sppPage.FilterInput.FillAsync(_contextData.SPPCategory);
-                await _context.Page.WaitForTimeoutAsync(500);
+                Console.WriteLine($"WARNING: SPP category '{_contextData.SPPCategory}' not mapped - skipping");
+                return;
             }
 
-            // TODO: Add logic to select coverage checkbox by category name
-            // For now, navigate to next step
-            Console.WriteLine($"STUB: Select SPP category '{_contextData.SPPCategory}' with value '{_contextData.SPPValue}'");
-            
+            await sppPage.CoverageCheckbox(rowIndex).ClickAsync();
+            await sppPage.WaitForSpinnerAsync();
+
+            await sppPage.AddCoverageButton.ClickAsync();
+            await sppPage.WaitForSpinnerAsync();
+
+            if (!string.IsNullOrEmpty(_contextData.SPPDescription))
+            {
+                await sppPage.ItemDescription().ClickAsync();
+                await sppPage.ItemDescription().FillAsync(_contextData.SPPDescription);
+                await sppPage.ItemDescription().PressAsync("Tab");
+            }
+
+            if (!string.IsNullOrEmpty(_contextData.SPPLimit))
+            {
+                await sppPage.ItemLimit().ClickAsync();
+                await sppPage.ItemLimit().FillAsync(_contextData.SPPLimit);
+                await sppPage.ItemLimit().PressAsync("Tab");
+            }
+
+            if (!string.IsNullOrEmpty(_contextData.SPPYearOfAppraisal))
+            {
+                await sppPage.ItemYearOfAppraisal().ClickAsync();
+                await sppPage.ItemYearOfAppraisal().FillAsync(_contextData.SPPYearOfAppraisal);
+                await sppPage.ItemYearOfAppraisal().PressAsync("Tab");
+            }
+
+            await sppPage.SaveItemButton.ClickAsync();
+            await sppPage.WaitForSpinnerAsync();
+
             await sppPage.NextLiabilityButton.ClickAsync();
+
+            Console.WriteLine($"Selected SPP category '{_contextData.SPPCategory}', item '{_contextData.SPPDescription}'");
         }
 
         [When("user adds Liability coverage")]
@@ -107,18 +151,26 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             TableMappingHelpers.LiabilityFields(table, _contextData);
 
             var liabilityPage = new SFP_LiabilityPage(_context.Page);
+            await liabilityPage.WaitForSpinnerAsync();
 
-            // Enter livestock counts if provided
+            // Select Yes to enable liability coverage and reveal remaining fields
+            await liabilityPage.BaseLiabilityYesButton.ClickAsync();
+            await liabilityPage.WaitForSpinnerAsync();
+
+            // Enter livestock counts and employee/acreage fields.
+            // These are Angular masked inputs (type="search" with ng-mask). FillAsync bypasses
+            // the mask directive, so we use TripleClick + PressSequentiallyAsync to type
+            // character-by-character and properly trigger Angular change detection.
             if (!string.IsNullOrEmpty(_contextData.LivestockHorses))
-                await liabilityPage.LivestockHorsesInput.FillAsync(_contextData.LivestockHorses);
+                await FillMaskedInputAsync(liabilityPage.LivestockHorsesInput, _contextData.LivestockHorses);
             if (!string.IsNullOrEmpty(_contextData.LivestockSmall))
-                await liabilityPage.LivestockSmallInput.FillAsync(_contextData.LivestockSmall);
+                await FillMaskedInputAsync(liabilityPage.LivestockSmallInput, _contextData.LivestockSmall);
             if (!string.IsNullOrEmpty(_contextData.LivestockLarge))
-                await liabilityPage.LivestockLargeInput.FillAsync(_contextData.LivestockLarge);
+                await FillMaskedInputAsync(liabilityPage.LivestockLargeInput, _contextData.LivestockLarge);
             if (!string.IsNullOrEmpty(_contextData.NumberOfEmployees))
-                await liabilityPage.NumberOfEmployeesInput.FillAsync(_contextData.NumberOfEmployees);
+                await FillMaskedInputAsync(liabilityPage.NumberOfEmployeesInput, _contextData.NumberOfEmployees);
             if (!string.IsNullOrEmpty(_contextData.UnlistedAcreage))
-                await liabilityPage.UnlistedAcreageInput.FillAsync(_contextData.UnlistedAcreage);
+                await FillMaskedInputAsync(liabilityPage.UnlistedAcreageInput, _contextData.UnlistedAcreage);
 
             // Select liability limit if provided
             if (!string.IsNullOrEmpty(_contextData.LiabilityLimit))
@@ -127,7 +179,20 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
                 await _context.Page.GetByRole(AriaRole.Option, new() { Name = _contextData.LiabilityLimit }).ClickAsync();
             }
 
-            await liabilityPage.ClickSaveAsync();
+            await liabilityPage.NextMortgageeLossPayeeButton.ClickAsync();
+        }
+
+        /// <summary>
+        /// Properly fills an Angular masked numeric input by clicking to focus,
+        /// selecting all existing content, then typing character-by-character
+        /// to trigger Angular's mask directive and change detection correctly.
+        /// </summary>
+        private static async Task FillMaskedInputAsync(ILocator locator, string value)
+        {
+            await locator.ClickAsync();
+            await locator.PressAsync("Control+A");
+            await locator.PressSequentiallyAsync(value);
+            await locator.PressAsync("Tab");
         }
     }
 }
