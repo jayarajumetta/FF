@@ -116,28 +116,33 @@ Feature: SFP Basic Policy
 
     # Step 17: Add a Residence
     When user adds a Residence to the Location
-      | Question          | Answer      |
-      | AdditionalDesc    | Main House  |
-      | YearBuilt         | 2000        |
-      | RateType          | Frame       |
-      | RoofYear          | 2015        |
-      | RoofType          | Composition |
-      | RoofImpact        | Class 3     |
-      | SeasonalOrVacant  | No          |
-      | SolidFuelQuestion | No          |
+      | Question          | Answer       |
+      | AdditionalDesc    | Main House   |
+      | YearBuilt         | 2020         |
+      | NumberOfFamilies  | Single Family|
+      | RateType          | Frame        |
+      | ConditionRating   | 1            |
+      | RoofYear          | 2015         |
+      | RoofType          | Composition  |
+      | RoofImpact        | UL 3         |
+      | SeasonalOrVacant  | No           |
+      | SolidFuelQuestion | No           |
 
     # Step 18: Add Residence Coverage
     When user adds Residence Coverage
       | Question           | Answer           |
       | InsuranceAmount    | 250000           |
       | SquareFeet         | 2500             |
-      | Perils             | Basic            |
+      | Perils             | 1                |
       | ThermostatQuestion | Yes              |
       | ActualCashValue    | Replacement Cost |
       | RCTOption          | Standard         |
       | UseDefaults        | Yes              |
 
-    # Step 19: Add Farm Personal Property
+    # Step 19: Skip Optional Coverages
+    When user skips Optional Coverages and continues
+
+    # Step 20: Add Farm Personal Property
     When user adds Farm Personal Property
       | Question    | Answer          |
       | Code        | 464             |
@@ -164,20 +169,15 @@ Feature: SFP Basic Policy
 
     # Step 22: Add Liability
     When user adds Liability coverage
-      | Question        | Answer            |
-      | LiabilityLimit  | $100,000/$100,000 |
-      | LivestockHorses | 0                 |
-      | LivestockSmall  | 2                 |
-      | LivestockLarge  | 3                 |
-      | UnlistedAcreage | 0                 |
+      | Question          | Answer            |
+      | LiabilityLimit    | $100,000/$100,000 |
+      | LivestockHorses   |                 0 |
+      | LivestockSmall    |                 2 |
+      | LivestockLarge    |                 3 |
+      | NumberOfEmployees |                 1 |
+      | UnlistedAcreage   |                 0 |
 
-    # Step 23: Run the Insurance Score
-    When user runs Insurance Score
-      | Question              | Answer          |
-      | EntityType            | Primary Insured |
-      | InsuranceScoreConsent | Accept          |
-
-    # Step 24: Add a Mortgagee
+    # Step 23: Add a Mortgagee
     When user adds Additional Interest Mortgagee
       | Question              | Answer           |
       | SearchName            | Connect One Bank |
@@ -187,6 +187,12 @@ Feature: SFP Basic Policy
       | AccountNumber         | 123456789        |
       | DescriptionOfInterest | Mortgage Lender  |
       | EscrowBilled          | Yes              |
+
+    # Step 24: Run the Insurance Score
+    When user runs Insurance Score
+      | Question              | Answer          |
+      | EntityType            | Primary Insured |
+      | InsuranceScoreConsent | Accept          |
 
     # Step 25: Verify Premium on Pricing Screen
     Then user verifies Premium on Pricing screen
