@@ -61,6 +61,7 @@ namespace Playwright_POC.Pages
         {
             var candidates = new[]
             {
+                _page.GetByTestId("fields.data.save"),
                 _page.GetByTestId("fields.data_Actions.save"),
                 _page.GetByTestId("fields.line.save"),
                 _page.GetByRole(AriaRole.Button, new() { Name = "Save" })

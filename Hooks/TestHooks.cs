@@ -194,7 +194,7 @@ namespace Playwright_POC.Hooks
             var pauseOnFailure = _configuration.GetValue<bool>("Debugging:PauseOnFailure", false);
             var pauseTimeoutSeconds = _configuration.GetValue<int>("Debugging:PauseTimeoutSeconds", 300);
             
-            if (hasFailed && pauseOnFailure && Debugger.IsAttached && _context.Page != null)
+            if (hasFailed && pauseOnFailure && _context.Page != null)
             {
                 Console.WriteLine("\n" + new string('=', 60));
                 Console.WriteLine("TEST FAILED - BROWSER PAUSED FOR DEBUGGING");

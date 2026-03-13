@@ -53,8 +53,9 @@ namespace Playwright_POC.Pages.ExpertQuotePages
 
         public async Task SelectPrimaryFarmCategoryAsync(string category)
         {
-            await WaitForSpinnerAsync();
-            await GetPrimaryFarmCategoryButton(category).ClickAsync();
+            var btn = GetPrimaryFarmCategoryButton(category);
+            await btn.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 60000 });
+            await btn.ClickAsync();
         }
 
         public async Task SelectPrimaryFarmSubTypeAsync(string subType)
