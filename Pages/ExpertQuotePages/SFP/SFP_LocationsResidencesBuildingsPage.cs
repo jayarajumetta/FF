@@ -20,7 +20,10 @@ namespace Playwright_POC.Pages
             _page.GetByTestId($"fields.data.accountDetail.locationDetail.rows[{row}].deleteLocation");
 
         public ILocator AddResidenceButton(int row = 0) =>
-            _page.GetByTestId($"fields.data.accountDetail.locationDetail.rows[{row}].addResidenceButton");
+            _page.GetByTestId("HD1Residence-nav");
+
+        public ILocator AddResidenceButtonByRole =>
+            _page.GetByRole(AriaRole.Button, new() { Name = "Add Residence" });
 
         public ILocator AddBuildingButton(int row = 0) =>
             _page.GetByTestId($"fields.data.accountDetail.locationDetail.rows[{row}].addBuildingButton");

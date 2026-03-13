@@ -28,6 +28,8 @@ namespace Playwright_POC.Models
         public string ResidenceAdditionalDesc { get; set; }
         public string ResidenceYearBuilt { get; set; }
         public string ResidenceRateType { get; set; }
+        public string ResidenceNumberOfFamilies { get; set; }
+        public string ResidenceConditionRating { get; set; }
         public string ResidenceRoofYear { get; set; }
         public string ResidenceRoofType { get; set; }
         public string ResidenceRoofImpact { get; set; }
