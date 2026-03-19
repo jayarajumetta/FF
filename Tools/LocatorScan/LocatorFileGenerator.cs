@@ -259,9 +259,22 @@ namespace Playwright_POC.Tools.LocatorScan
                     // Form inputs with label (GetByLabel is stable)
                     if (!string.IsNullOrEmpty(r.Label) && r.ControlType?.Contains("Input") == true)
                         return true;
+
+                    // CLAS/DuckCreek inputs: no testId or placeholder, but have an accessible name
+                    // captured via GetByRole(Name=) or GetByLabel — include these
+                    if ((r.ControlType?.Contains("Input") == true || r.ControlType == "Select")
+                        && topCandidate.CodeSnippet.Contains("Name ="))
+                        return true;
                     
                     // High-value unique buttons only (multi-word, specific actions)
                     if (r.ControlType == "Button" && IsHighValueButton(text))
+                        return true;
+
+                    // Non-hidden navigation links with meaningful stable text
+                    if (r.ControlType == "Link" && !r.IsHidden
+                        && !string.IsNullOrEmpty(r.Text)
+                        && r.Text.Length >= 3 && r.Text.Length <= 60
+                        && !IsDynamicData(r.Text))
                         return true;
                     
                     // Skip everything else - if no testId, aria-label, placeholder, or label, it's not useful
@@ -402,17 +415,14 @@ namespace Playwright_POC.Tools.LocatorScan
             
             var lower = text.ToLower().Trim();
             
-            // Multi-word action buttons are usually high value
-            if (text.Contains(" ") && text.Length > 8)
-            {
-                // Specific high-value patterns
-                var highValuePatterns = new[] {
-                    "new quote", "create new", "save and continue", "submit", 
-                    "sign on", "sign in", "log in", "log out", "sign out"
-                };
-                
-                return highValuePatterns.Any(p => lower.Contains(p));
-            }
+            // Multi-word action buttons are high value
+            if (text.Contains(" ") && text.Length > 5)
+                return true;
+
+            // Single-word specific action verbs
+            var specificVerbs = new[] { "submit", "search", "logout", "login" };
+            if (specificVerbs.Contains(lower))
+                return true;
             
             return false;
         }
