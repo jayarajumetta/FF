@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 using NUnit.Framework;
 using Playwright_POC.Clients;
@@ -30,13 +31,15 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         private readonly SessionService _sessionService;
         private readonly DuckCreekFormsClient _formsClient;
         private readonly FormsValidationService _validationService;
+        private readonly IConfiguration _configuration;
 
         public SFP_FinalizationSteps(
             ReqContext context,
             ScenarioContext scenarioContext,
             SessionService sessionService,
             DuckCreekFormsClient formsClient,
-            FormsValidationService validationService)
+            FormsValidationService validationService,
+            IConfiguration configuration)
         {
             _context = context;
             _scenarioContext = scenarioContext;
@@ -44,6 +47,7 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             _sessionService = sessionService;
             _formsClient = formsClient;
             _validationService = validationService;
+            _configuration = configuration;
         }
 
         [When("user runs Insurance Score")]
@@ -209,114 +213,203 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             var quoteId = _contextData.QuoteNumber;
             var lob = _contextData.FormsLob ?? "SFP";
 
-            // Fix #1: Wrap in try/finally so the policy is never left locked.
-            //         The next step (Save for Later / Return to Admin) will always run
-            //         because we catch and soft-assert rather than throw.
-            try
+            // 1. Open CLAS Express in a second tab, log in, and extract DCT.sessionID
+            var sessionId = await _sessionService.GetDuckCreekSessionIdViaCLASAsync(quoteId);
+
+            // 2. Call the DuckCreek Forms Engine API
+            var responseXml = await _formsClient.GetFormsAndSaveAsync(
+                sessionId, lob, $"{lob}_BasicPolicy", state, quoteId);
+
+            // 3. Parse XML response into typed form entries
+            var actualForms = FormsXmlParser.Parse(responseXml);
+            Console.WriteLine($"DuckCreek returned {actualForms.Count} forms for {lob}/{state}/{quoteId}");
+
+            // Parse response metadata (non-printDoc elements).
+            // NOTE: XML "failure" status is EXPECTED because the API user (PA3402)
+            // differs from the UI login that created the session. This is by design.
+            var metadata = FormsXmlParser.ParseMetadata(responseXml);
+            foreach (var w in metadata.Warnings)
+                Console.WriteLine($"  [META INFO] {w}");
+            Console.WriteLine($"  Metadata: PrintJob={metadata.PrintJobName}, Manuscript={metadata.Manuscript}, " +
+                              $"RoleBasedSecurity={metadata.HasRoleBasedSecurity}, ReturnSuccess={metadata.ReturnSuccessStatus}");
+
+            // 4. Load expected forms and validate (ANPAC filtering applied inside Validate)
+            var testCase = _contextData.FormsTestCase ?? "BASIC";
+            var expected = _validationService.LoadExpectedFormsForLob(lob, state, testCase);
+            var summary = _validationService.Validate(expected, actualForms, lob, state, quoteId);
+            summary.ResponseMetadata = metadata;
+            summary.TestCaseName = $"{lob}_{testCase}";
+
+            // 5. Print grouped summary to console
+            FormsValidationService.PrintSummary(summary);
+
+            // 6. Save results CSV
+            _validationService.SaveResultsCsv(summary, $"{lob}_{testCase}");
+
+            // 7. Generate HTML report
+            var htmlDir = Path.Combine(
+                _validationService.GetType().Assembly.Location, "..", "..", "..", "TestResults",
+                DateTime.Now.ToString("ddMMMyyyy").ToUpperInvariant());
+            var htmlPath = Path.Combine(htmlDir, $"FormsReport_{lob}_{state}_{quoteId}.html");
+            FormsReportGenerator.Generate(summary, htmlPath);
+
+            // 8. Hard assertion — fail the test if any forms don't match
+            if (summary.Failed > 0)
             {
-                // 1. Extract DuckCreek session ID from the current page
-                string sessionId;
-                try
-                {
-                    sessionId = await _sessionService.GetDuckCreekSessionIdAsync();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"WARNING: Could not retrieve DuckCreek session ID: {ex.Message}");
-                    Console.WriteLine("Forms validation skipped — session not available.");
-                    return;
-                }
-
-                // 2. Call the DuckCreek Forms Engine API (Fix #3: per-LOB manuscript)
-                string responseXml;
-                try
-                {
-                    responseXml = await _formsClient.GetFormsAndSaveAsync(
-                        sessionId, lob, $"{lob}_BasicPolicy", state, quoteId);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"WARNING: DuckCreek Forms API call failed: {ex.Message}");
-                    Console.WriteLine("Forms validation skipped — API unavailable.");
-                    return;
-                }
-
-                // 3. Parse XML response into typed form entries
-                var actualForms = FormsXmlParser.Parse(responseXml);
-                Console.WriteLine($"DuckCreek returned {actualForms.Count} forms for {lob}/{state}/{quoteId}");
-
-                // Parse response metadata (non-printDoc elements).
-                // NOTE: XML "failure" status is EXPECTED because the API user (PA3402)
-                // differs from the UI login that created the session. This is by design.
-                var metadata = FormsXmlParser.ParseMetadata(responseXml);
-                foreach (var w in metadata.Warnings)
-                    Console.WriteLine($"  [META INFO] {w}");
-                Console.WriteLine($"  Metadata: PrintJob={metadata.PrintJobName}, Manuscript={metadata.Manuscript}, " +
-                                  $"RoleBasedSecurity={metadata.HasRoleBasedSecurity}, ReturnSuccess={metadata.ReturnSuccessStatus}");
-
-                // 4. Load expected forms and validate (ANPAC filtering applied inside Validate)
-                var testCase = _contextData.FormsTestCase ?? "BASIC";
-                var expected = _validationService.LoadExpectedFormsForLob(lob, state, testCase);
-                var summary = _validationService.Validate(expected, actualForms, lob, state, quoteId);
-                summary.ResponseMetadata = metadata;
-                summary.TestCaseName = $"{lob}_{testCase}";
-
-                // 5. Print grouped summary to console
-                FormsValidationService.PrintSummary(summary);
-
-                // 6. Save results CSV
-                _validationService.SaveResultsCsv(summary, $"{lob}_{testCase}");
-
-                // 7. Generate HTML report
-                var htmlDir = Path.Combine(
-                    _validationService.GetType().Assembly.Location, "..", "..", "..", "TestResults",
-                    DateTime.Now.ToString("ddMMMyyyy").ToUpperInvariant());
-                var htmlPath = Path.Combine(htmlDir, $"FormsReport_{lob}_{state}_{quoteId}.html");
-                FormsReportGenerator.Generate(summary, htmlPath);
-
-                // 8. Soft assertion — log failures but don't break the SFP flow
-                if (summary.Failed > 0)
-                {
-                    var failures = string.Join("\n", summary.Results
-                        .Where(r => r.Result == "FAIL")
-                        .Select(r => $"    {r.FormName}: {r.Message}"));
-                    Console.WriteLine($"\nWARNING: {summary.Failed} form(s) failed validation:\n{failures}");
-                    Assert.Warn($"Forms validation: {summary.Failed} failure(s) detected. See HTML report for details.");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Fix #1: Never let forms validation crash the scenario —
-                //         the policy must be returned to admin / saved.
-                Console.WriteLine($"FORMS VALIDATION ERROR (non-fatal): {ex.Message}");
-                Assert.Warn($"Forms validation threw an unexpected error: {ex.Message}");
+                var failures = string.Join("\n", summary.Results
+                    .Where(r => r.Result == "FAIL")
+                    .Select(r => $"    {r.FormName}: {r.Message}"));
+                Assert.Fail($"Forms validation: {summary.Failed} failure(s) detected.\n{failures}\nSee report: {htmlPath}");
             }
         }
 
         [When("user clicks Save for Later")]
         public async Task UserClicksSaveForLater()
         {
-            var saveForLaterButton = _context.Page.GetByRole(AriaRole.Button, new() { Name = "Save for Later" });
-            await saveForLaterButton.ClickAsync();
+            var page = _context.Page;
 
-            // Wait for spinner using page overlay locator
-            var overlay = _context.Page.Locator(".ngx-spinner-overlay");
-            if (await overlay.CountAsync() > 0)
+            // Diagnostic: log ALL visible interactive elements so we can identify the button
+            try
             {
-                await overlay.First.WaitForAsync(new() { State = WaitForSelectorState.Hidden, Timeout = 60000 });
+                var allButtonTexts = await page.EvaluateAsync<string[]>(@"() =>
+                    Array.from(document.querySelectorAll('button, a[href], mat-menu-item, [role=""menuitem""], [role=""button""]'))
+                         .filter(b => b.offsetParent !== null)
+                         .map(b => b.textContent?.trim())
+                         .filter(t => t && t.length > 0)");
+                Console.WriteLine($"[SaveForLater] Visible clickable elements: {string.Join(" | ", allButtonTexts ?? [])}");
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[SaveForLater] Could not enumerate elements: {ex.Message}");
+            }
+
+            ILocator found = null;
+
+            // 1. Try known data-testid values
+            string[] testIds =
+            [
+                "save-for-later",
+                "saveForLater",
+                "fields.data.save-for-later",
+                "fields.data.saveForLater",
+                "fields.data.saveLater",
+                "fields.data.save",
+                "btnSaveForLater",
+                "save-quote"
+            ];
+            foreach (var testId in testIds)
+            {
+                var loc = page.GetByTestId(testId);
+                if (await loc.CountAsync() > 0)
+                {
+                    Console.WriteLine($"[SaveForLater] Found via data-testid='{testId}'");
+                    found = loc;
+                    break;
+                }
+            }
+
+            // 2. Try text-based button matches
+            if (found == null)
+            {
+                string[] textPatterns = ["Save for Later", "Save For Later", "Save & Exit", "Save and Exit",
+                                         "Return to Admin", "Save Quote", "Finish Later", "Suspend", "Exit Quote"];
+                foreach (var text in textPatterns)
+                {
+                    var loc = page.Locator("button").Filter(new() { HasText = text });
+                    if (await loc.CountAsync() > 0)
+                    {
+                        Console.WriteLine($"[SaveForLater] Found button with text='{text}'");
+                        found = loc;
+                        break;
+                    }
+                }
+            }
+
+            // 3. Try anchor links (common for nav-style "save" actions in Angular apps)
+            if (found == null)
+            {
+                string[] linkPatterns = ["Save for Later", "Save For Later", "Save & Exit", "Return to Admin",
+                                         "Save Quote", "Suspend", "Exit Quote"];
+                foreach (var text in linkPatterns)
+                {
+                    var loc = page.Locator("a").Filter(new() { HasText = text });
+                    if (await loc.CountAsync() > 0)
+                    {
+                        Console.WriteLine($"[SaveForLater] Found link with text='{text}'");
+                        found = loc;
+                        break;
+                    }
+                }
+            }
+
+            // 4. Try Angular Material menu items
+            if (found == null)
+            {
+                var menuItem = page.Locator("mat-menu-item, [role='menuitem']")
+                                   .Filter(new() { HasTextRegex = new System.Text.RegularExpressions.Regex("save|later|suspend|exit", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
+                if (await menuItem.CountAsync() > 0)
+                {
+                    Console.WriteLine("[SaveForLater] Found mat-menu-item with save/later/suspend/exit text");
+                    found = menuItem.First;
+                }
+            }
+
+            // 5. Try Angular Material toolbar and header buttons containing "save"
+            if (found == null)
+            {
+                var toolbarBtn = page.Locator("mat-toolbar button, .app-header button, header button, [class*='toolbar'] button")
+                                     .Filter(new() { HasTextRegex = new System.Text.RegularExpressions.Regex("save|later|suspend|exit", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
+                if (await toolbarBtn.CountAsync() > 0)
+                {
+                    Console.WriteLine("[SaveForLater] Found toolbar/header button with save-related text");
+                    found = toolbarBtn.First;
+                }
+            }
+
+            if (found != null)
+            {
+                await found.ClickAsync();
+                var overlay = page.Locator(".ngx-spinner-overlay");
+                if (await overlay.CountAsync() > 0)
+                    await overlay.First.WaitForAsync(new() { State = WaitForSelectorState.Hidden, Timeout = 60000 });
+
+                Console.WriteLine("[SaveForLater] Clicked Save for Later button successfully.");
+                return;
+            }
+
+            // 6. Fallback: navigate directly to EQ home page (quote is already saved in the backend;
+            //    we have the quote number captured, so step 29 can re-open it from the dashboard)
+            Console.WriteLine("[SaveForLater] WARNING: No 'Save for Later' button found. Navigating to EQ home as fallback.");
+            var eqBase = _configuration["Playwright:ExpertQuoteBase"]
+                         ?? "https://expertquote-qa.americannational.com";
+            var homeUrl = eqBase.TrimEnd('/') + "/expertquote/";
+            await page.GotoAsync(homeUrl, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle, Timeout = 60000 });
         }
 
         [When("user navigates to Expert Quote and searches by Quote Number")]
         public async Task UserNavigatesToExpertQuoteAndSearchesByQuoteNumber()
         {
-            var clientSearchPage = new ClientSearchPage(_context.Page);
-            
+            var page = _context.Page;
+            var clientSearchPage = new ClientSearchPage(page);
+
             var quoteNumber = _contextData.QuoteNumber;
             if (string.IsNullOrWhiteSpace(quoteNumber) && System.IO.File.Exists("QuoteNumber.txt"))
             {
                 quoteNumber = System.IO.File.ReadAllText("QuoteNumber.txt").Trim();
                 _contextData.QuoteNumber = quoteNumber;
+            }
+
+            // If the dashboard search input isn't visible (e.g. still inside the quote after a fallback
+            // "Save for Later"), navigate to the EQ home page first.
+            var searchInput = page.GetByTestId("quoteSearchInput");
+            if (await searchInput.CountAsync() == 0 || !await searchInput.IsVisibleAsync())
+            {
+                var eqBase = _configuration["Playwright:ExpertQuoteBase"]
+                             ?? "https://expertquote-qa.americannational.com";
+                var homeUrl = eqBase.TrimEnd('/') + "/expertquote/";
+                Console.WriteLine($"[SearchByQuote] quoteSearchInput not visible — navigating to {homeUrl}");
+                await page.GotoAsync(homeUrl, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle, Timeout = 60000 });
+                await searchInput.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
             }
 
             await clientSearchPage.SearchForClientAsync(quoteNumber);

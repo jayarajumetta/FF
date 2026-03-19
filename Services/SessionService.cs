@@ -1,44 +1,102 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Playwright;
 using Playwright_POC.Context;
+using Playwright_POC.Models;
+using Playwright_POC.Pages.ExpressPages;
 
 namespace Playwright_POC.Services
 {
     /// <summary>
-    /// Extracts the DuckCreek session ID from CLAS via Playwright JavaScript evaluation.
-    /// Replaces the Tosca bookmarklet: javascript:alert("SessionID: " + DCT.sessionID)
-    /// 
-    /// NOTE: The session ID can also be captured from the already-open ExpertQuote page
-    /// if it shares the DuckCreek context. Adjust the navigation target as needed.
+    /// Opens CLAS Express in a second tab, logs in, opens a quote, and extracts
+    /// the DuckCreek_SessionId cookie — the colon-separated session ID that
+    /// Session.resumeRq expects.
     /// </summary>
     public class SessionService
     {
         private readonly TestContext _context;
+        private readonly DuckCreekFormsConfig _formsConfig;
 
-        public SessionService(TestContext context)
+        public SessionService(TestContext context, DuckCreekFormsConfig formsConfig)
         {
             _context = context;
+            _formsConfig = formsConfig;
         }
 
         /// <summary>
-        /// Evaluates DCT.sessionID in the current page's JavaScript context.
-        /// Assumes the page is already on a DuckCreek-powered application (CLAS / ExpertQuote).
+        /// Opens CLAS, logs in, opens the policy, and extracts the DuckCreek_SessionId cookie.
+        /// Returns (sessionId, empty list) — the list is kept for API compatibility.
         /// </summary>
-        public async Task<string> GetDuckCreekSessionIdAsync()
+        public async Task<(string SessionId, List<string> ApiCalls)> GetDuckCreekSessionIdAndInterceptClasAsync(string quoteNumber)
         {
-            var page = _context.Page
-                ?? throw new InvalidOperationException("No Playwright page is available. Launch a browser first.");
-
-            // The same JS that the Tosca bookmarklet used
-            var sessionId = await page.EvaluateAsync<string>("() => DCT.sessionID");
-
-            if (string.IsNullOrWhiteSpace(sessionId))
-                throw new InvalidOperationException(
-                    "DCT.sessionID returned null/empty. Ensure you are on an active DuckCreek quote.");
-
-            Console.WriteLine($"DuckCreek Session ID retrieved: {sessionId[..Math.Min(12, sessionId.Length)]}...");
-            return sessionId;
+            var sessionId = await GetDuckCreekSessionIdViaCLASAsync(quoteNumber);
+            return (sessionId, new List<string>());
         }
 
+        public async Task<string> GetDuckCreekSessionIdViaCLASAsync(string quoteNumber)
+        {
+            var page = _context.Page
+                ?? throw new InvalidOperationException("No Playwright page is available.");
+
+            var clasPage = await page.Context.NewPageAsync();
+            try
+            {
+                // 1. Navigate to CLAS
+                Console.WriteLine($"[SessionService] Navigating to CLAS: {_formsConfig.CLASBaseUrl}");
+                await clasPage.GotoAsync(_formsConfig.CLASBaseUrl,
+                    new() { WaitUntil = WaitUntilState.NetworkIdle, Timeout = 30000 });
+
+                // 2. Log in
+                Console.WriteLine($"[SessionService] Logging in as {_formsConfig.CLASUsername}");
+                var loginPage = new ExpressLoginPage(clasPage);
+                await loginPage.ExpressLoginAsync(_formsConfig.CLASUsername, _formsConfig.CLASPassword);
+
+                // 3. Search for the quote
+                Console.WriteLine($"[SessionService] Searching for quote: {quoteNumber}");
+                var homePage = new ExpressHomePage(clasPage);
+                await homePage.EnterQuoteNumber(quoteNumber);
+                await homePage.ClickSearchButtonAsync();
+
+                // 4. Validate the quote number appears in the results grid
+                var quoteCell = clasPage.Locator($"p[fieldref='PolicyInput.PolicyNumber']:has-text('{quoteNumber}')");
+                await quoteCell.WaitForAsync(new() { Timeout = 30000 });
+                var displayedNumber = (await quoteCell.TextContentAsync())?.Trim();
+                Console.WriteLine($"[SessionService] Found quote in grid: {displayedNumber}");
+
+                if (displayedNumber != quoteNumber)
+                    throw new InvalidOperationException(
+                        $"Quote mismatch: searched for '{quoteNumber}' but grid shows '{displayedNumber}'");
+
+                // 5. Click "View Policy" to open the policy and establish the DuckCreek session
+                var viewPolicyButton = clasPage.Locator("button[title='View Policy']").First;
+                await viewPolicyButton.ClickAsync();
+                await clasPage.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 60000 });
+
+                // 6. Extract DuckCreek_SessionId from cookies
+                var cookies = await clasPage.Context.CookiesAsync(new[] { _formsConfig.CLASBaseUrl });
+                var dckCookie = cookies.FirstOrDefault(c =>
+                    c.Name.Equals("DuckCreek_SessionId", StringComparison.OrdinalIgnoreCase));
+
+                if (dckCookie != null && !string.IsNullOrWhiteSpace(dckCookie.Value))
+                {
+                    Console.WriteLine($"[SessionService] DuckCreek_SessionId cookie: {dckCookie.Value}");
+                    return dckCookie.Value;
+                }
+
+                Console.WriteLine("[SessionService] DuckCreek_SessionId cookie not found. All cookies:");
+                foreach (var c in cookies)
+                    Console.WriteLine($"  {c.Name} = {c.Value[..Math.Min(60, c.Value.Length)]}...");
+
+                throw new InvalidOperationException(
+                    $"Opened quote {quoteNumber} in CLAS but DuckCreek_SessionId cookie was not set.");
+            }
+            finally
+            {
+                try { await clasPage.CloseAsync(); } catch { }
+            }
+        }
     }
 }
+

@@ -1,4 +1,5 @@
-﻿using Microsoft.Playwright;
+﻿using System;
+using Microsoft.Playwright;
 using System.Threading.Tasks;
 using Playwright_POC.Helpers;
 using Playwright_POC.Pages;
@@ -10,10 +11,17 @@ namespace Playwright_POC.Pages.ExpressPages
         public ExpressLoginPage(IPage page) : base(page) { }
 
         #region Locators
-        private ILocator UsernameInput => _page.Locator("input[name='pf.username']");
-        private ILocator PasswordInput => _page.Locator("input[name='pf.pass']");
-        private ILocator LoginButton => _page.Locator("a[id*='signInBtn']");
+        // PingFederate SSO login (QA Express)
+        private ILocator PfUsernameInput => _page.Locator("input[name='pf.username']");
+        private ILocator PfPasswordInput => _page.Locator("input[name='pf.pass']");
+        private ILocator PfLoginButton => _page.Locator("a[id*='signInBtn']");
         private ILocator ApplicationButton => _page.Locator("button div:has-text('Application')");
+
+        // DuckCreek ExtJS login (CLAS Express)
+        private ILocator DctUsernameInput => _page.Locator("input[name='_username']");
+        private ILocator DctPasswordInput => _page.Locator("input[name='_password']");
+        private ILocator DctLoginButton => _page.Locator("#home a");
+        private ILocator SearchBarInput => _page.Locator("input[fieldref='PolicyHeaderInput.SearchText']");
         #endregion
 
         /// <summary>
@@ -23,12 +31,28 @@ namespace Playwright_POC.Pages.ExpressPages
 
         public async Task ExpressLoginAsync(string username, string password)
         {
-            await UsernameInput.WaitForAsync(new() { Timeout = 30000 });
-            await UsernameInput.FillAsync(username);
-            await PasswordInput.FillAsync(password);
-            await LoginButton.ClickAsync();
+            // Wait for either login form to appear (CLAS vs QA Express)
+            var either = _page.Locator("input[name='_username'], input[name='pf.username']");
+            await either.First.WaitForAsync(new() { Timeout = 30000 });
 
-            await ApplicationButton.WaitForAsync(new() { Timeout = 60000 });
+            if (await DctUsernameInput.IsVisibleAsync())
+            {
+                // DuckCreek ExtJS login (CLAS Express)
+                Console.WriteLine("[ExpressLogin] DuckCreek ExtJS login detected");
+                await DctUsernameInput.FillAsync(username);
+                await DctPasswordInput.FillAsync(password);
+                await DctLoginButton.ClickAsync();
+                await SearchBarInput.WaitForAsync(new() { Timeout = 60000 });
+            }
+            else
+            {
+                // PingFederate SSO login (QA Express)
+                Console.WriteLine("[ExpressLogin] PingFederate SSO login detected");
+                await PfUsernameInput.FillAsync(username);
+                await PfPasswordInput.FillAsync(password);
+                await PfLoginButton.ClickAsync();
+                await ApplicationButton.WaitForAsync(new() { Timeout = 60000 });
+            }
         }
 
         public async Task<bool> IsDefaultViewModelVisibleAsync()

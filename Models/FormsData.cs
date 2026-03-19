@@ -113,6 +113,18 @@ namespace Playwright_POC.Models
         public string Endpoint { get; set; } = "/duckcreek/dctserver.aspx";
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Credentials for logging into DuckCreek CLAS browser app.
+        /// These are different from the Forms API credentials above.
+        /// </summary>
+        public string CLASUsername { get; set; } = string.Empty;
+        public string CLASPassword { get; set; } = string.Empty;
+
+        /// <summary>
+        /// URL for the DuckCreek CLAS Express application (browser login).
+        /// </summary>
+        public string CLASBaseUrl { get; set; } = string.Empty;
         public string PrintJob { get; set; } = "TransactionPrint";
         public string ResultsBasePath { get; set; } = string.Empty;
 
@@ -128,6 +140,11 @@ namespace Playwright_POC.Models
         public Dictionary<string, string> Manuscripts { get; set; } = new();
 
         /// <summary>
+        /// Per-LOB print job overrides. Key = LOB code. Falls back to PrintJob if not found.
+        /// </summary>
+        public Dictionary<string, string> PrintJobs { get; set; } = new();
+
+        /// <summary>
         /// Company filter rules by state. E.g., TX → exclude ANPAC prefixes for new business.
         /// </summary>
         public List<CompanyFilterRule> CompanyFilters { get; set; } = new();
@@ -140,6 +157,16 @@ namespace Playwright_POC.Models
             if (Manuscripts != null && Manuscripts.TryGetValue(lob.ToUpperInvariant(), out var m))
                 return m;
             return Manuscript;
+        }
+
+        /// <summary>
+        /// Resolves the correct print job for a given LOB.
+        /// </summary>
+        public string GetPrintJobForLob(string lob)
+        {
+            if (PrintJobs != null && PrintJobs.TryGetValue(lob.ToUpperInvariant(), out var pj))
+                return pj;
+            return PrintJob;
         }
     }
 }
