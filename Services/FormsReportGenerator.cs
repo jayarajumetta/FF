@@ -28,7 +28,20 @@ namespace Playwright_POC.Services
             sb.AppendLine("<title>Forms Validation Report</title>");
             sb.AppendLine("<style>");
             sb.AppendLine(GetCss());
-            sb.AppendLine("</style></head><body>");
+            sb.AppendLine("</style>");
+            sb.AppendLine("<script>");
+            sb.AppendLine(GetJs());
+            sb.AppendLine("</script>");
+            sb.AppendLine("</head><body>");
+
+            // Share toolbar
+            sb.AppendLine("<div class=\"share-toolbar\">");
+            sb.AppendLine("  <div class=\"share-label\">&#128Share this report:</div>");
+            sb.AppendLine("  <button class=\"share-btn\" onclick=\"window.print()\">&#128438; Save as PDF</button>");
+            sb.AppendLine($"  <button class=\"share-btn\" onclick=\"copyPath()\">&#128203; Copy file path</button>");
+            sb.AppendLine($"  <span class=\"share-hint\">or attach <strong>{Enc(Path.GetFileName(outputPath))}</strong> directly to email / Teams</span>");
+            sb.AppendLine("</div>");
+            sb.AppendLine($"<input type=\"hidden\" id=\"reportPath\" value=\"{Enc(Path.GetFullPath(outputPath))}\">");
 
             // Header
             var first = summaries[0];
@@ -145,6 +158,18 @@ namespace Playwright_POC.Services
 
         private static string Enc(string value) => System.Net.WebUtility.HtmlEncode(value ?? "");
 
+        private static string GetJs() => @"
+function copyPath() {
+    var path = document.getElementById('reportPath').value;
+    navigator.clipboard.writeText(path).then(function() {
+        var btn = event.target;
+        var orig = btn.textContent;
+        btn.textContent = '\u2713 Copied!';
+        setTimeout(function() { btn.textContent = orig; }, 2000);
+    });
+}
+";
+
         private static string GetCss() => @"
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Segoe UI', system-ui, sans-serif; padding: 24px; background: #f4f6f8; color: #1a1a1a; }
@@ -182,7 +207,12 @@ tbody td { padding: 6px 10px; border-bottom: 1px solid #dee2e6; }
 .badge-info { background: #17a2b8; color: #fff; }
 .badge-issue { background: #ffc107; color: #000; }
 footer { text-align: center; color: #888; font-size: 0.8rem; margin-top: 24px; padding: 12px; }
-@media print { body { background: #fff; } .section { box-shadow: none; } }
+.share-toolbar { display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 10px 16px; margin-bottom: 20px; flex-wrap: wrap; }
+.share-label { font-weight: 600; color: #555; margin-right: 4px; }
+.share-btn { padding: 6px 14px; border: 1px solid #6c757d; border-radius: 6px; background: #f8f9fa; cursor: pointer; font-size: 0.88rem; }
+.share-btn:hover { background: #e2e6ea; }
+.share-hint { color: #888; font-size: 0.85rem; }
+@media print { .share-toolbar { display: none; } body { background: #fff; } .section { box-shadow: none; } }
 ";
     }
 }

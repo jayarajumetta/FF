@@ -91,6 +91,11 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             var htmlPath = Path.Combine(htmlDir, $"FormsReport_{_lob}_{_state}_{_quoteNumber}.html");
             FormsReportGenerator.Generate(summary, htmlPath);
 
+            var absoluteHtmlPath = Path.GetFullPath(htmlPath);
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(absoluteHtmlPath) { UseShellExecute = true });
+            // Open the containing folder so the file can easily be attached to Teams/email
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", $"/select,\"{absoluteHtmlPath}\"") { UseShellExecute = true });
+
             if (summary.Failed > 0)
             {
                 var failures = string.Join("\n", summary.Results

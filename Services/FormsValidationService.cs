@@ -57,7 +57,15 @@ namespace Playwright_POC.Services
         {
             var basePath = Path.Combine(AppContext.BaseDirectory, "Resources", "ExpectedForms", lob);
 
-            // 1. Merged CSV: one file per LOB, filtered by Type column
+            // 1. Include-only JSON: {LOB}.json — preferred format, easy to maintain
+            var includeOnlyJson = Path.Combine(basePath, $"{lob}.json");
+            if (File.Exists(includeOnlyJson))
+            {
+                Console.WriteLine($"Loading include-only JSON: {lob}.json for state {state}, testCase {testCase}");
+                return LoadFromIncludeOnlyJson(includeOnlyJson, state, testCase);
+            }
+
+            // 2. Merged CSV: one file per LOB, filtered by Type column
             var mergedCsv = Path.Combine(basePath, $"{lob}.csv");
             if (File.Exists(mergedCsv))
             {
@@ -66,7 +74,7 @@ namespace Playwright_POC.Services
                 return LoadFromCsv(mergedCsv, state, typeFilter: new[] { "BASE", typeCode });
             }
 
-            // 2. Legacy CSV: separate file per test case (e.g., SFP_BASIC.csv)
+            // 3. Legacy CSV: separate file per test case (e.g., SFP_BASIC.csv)
             var legacyCsv = Path.Combine(basePath, $"{lob}_{testCase}.csv");
             if (File.Exists(legacyCsv))
             {
@@ -74,14 +82,14 @@ namespace Playwright_POC.Services
                 return LoadFromCsv(legacyCsv, state);
             }
 
-            // 3. Per-state JSON (backward compat)
+            // 4. Per-state JSON (backward compat)
             var jsonPath = Path.Combine(basePath, $"{lob}_{state}.json");
             if (File.Exists(jsonPath))
                 return LoadFromJson(jsonPath);
 
             throw new FileNotFoundException(
                 $"No baseline found for {lob}/{state} (testCase={testCase}). " +
-                $"Place {lob}.csv (merged) or {lob}_{testCase}.csv in Resources/ExpectedForms/{lob}/");
+                $"Place {lob}.json (include-only) or {lob}.csv (merged) in Resources/ExpectedForms/{lob}/");
         }
 
         /// <summary>
@@ -170,6 +178,81 @@ namespace Playwright_POC.Services
                 e.ExpectedStatus = (e.ExpectedStatus ?? "").Trim().ToUpperInvariant();
 
             return entries;
+        }
+
+        /// <summary>
+        /// Loads the include-only JSON format: { BASE: { form: "all" | [states] }, BASIC: {...}, CE: {...} }
+        /// Only forms expected for the given state+testCase are returned (implicit N for all others).
+        /// Supports // line comments and /* */ block comments in the JSON file.
+        /// </summary>
+        private List<ExpectedFormEntry> LoadFromIncludeOnlyJson(string jsonPath, string state, string testCase)
+        {
+            var sectionForTestCase = testCase?.ToUpperInvariant() switch
+            {
+                "CE" => "CE",
+                _    => "BASIC"
+            };
+
+            var json = File.ReadAllText(jsonPath);
+            using var doc = JsonDocument.Parse(json, new JsonDocumentOptions
+            {
+                CommentHandling = JsonCommentHandling.Skip
+            });
+
+            var root = doc.RootElement;
+            var entries = new List<ExpectedFormEntry>();
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var sectionName in new[] { "BASE", sectionForTestCase })
+            {
+                if (!root.TryGetProperty(sectionName, out var section)) continue;
+
+                foreach (var prop in section.EnumerateObject())
+                {
+                    var formName = prop.Name;
+                    if (!seen.Add(formName)) continue;
+
+                    var status = ResolveStatusFromJsonElement(prop.Value, state);
+                    if (status == null) continue; // not expected in this state
+
+                    entries.Add(new ExpectedFormEntry
+                    {
+                        FormName = formName,
+                        ExpectedStatus = status,
+                        Type = sectionName
+                    });
+                }
+            }
+
+            Console.WriteLine($"  Loaded {entries.Count} expected forms for state {state} " +
+                $"(sections: BASE + {sectionForTestCase})");
+            return entries;
+        }
+
+        private static string ResolveStatusFromJsonElement(JsonElement value, string state)
+        {
+            switch (value.ValueKind)
+            {
+                case JsonValueKind.String:
+                    return value.GetString()?.Equals("all", StringComparison.OrdinalIgnoreCase) == true
+                        ? "YM" : null;
+
+                case JsonValueKind.Array:
+                    foreach (var item in value.EnumerateArray())
+                    {
+                        if (item.GetString()?.Equals(state, StringComparison.OrdinalIgnoreCase) == true)
+                            return "YM";
+                    }
+                    return null;
+
+                case JsonValueKind.Object:
+                    return value.TryGetProperty(state, out var statusEl)
+                        ? statusEl.GetString()?.ToUpperInvariant()
+                        : null;
+
+                default:
+                    return null;
+            }
         }
 
         /// <summary>
