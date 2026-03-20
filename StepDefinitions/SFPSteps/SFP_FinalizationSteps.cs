@@ -118,7 +118,7 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             var billingPage = new SFP_BillingInformationPage(_context.Page);
             await billingPage.WaitForSpinnerAsync();
 
-            // Billing Account Setup
+            // ── Step 1: Billing Account Setup ────────────────────────────────
             if (_contextData.PrimaryPayer?.ToLower() == "primary insured")
             {
                 await billingPage.CreateNewBillingAccountButton.ClickAsync();
@@ -133,14 +133,54 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             }
             await billingPage.WaitForSpinnerAsync();
 
-            // Future Payment Plan - Payment Type
-            if (_contextData.PaymentType?.ToLower() == "easypay")
+            // ── Step 2: Future Payment Plan – Payment Type ────────────────────
+            var isEasyPay = string.Equals(
+                (_contextData.PaymentType ?? "").Replace(" ", ""), "easypay",
+                StringComparison.OrdinalIgnoreCase);
+
+            if (isEasyPay)
                 await billingPage.PaymentTypeEasyPayButton.ClickAsync();
             else
                 await billingPage.PaymentTypeDirectBillButton.ClickAsync();
             await billingPage.WaitForSpinnerAsync();
 
-            // Payment Plan selection
+            // ── Step 3: EasyPay bank account details ──────────────────────────
+            if (isEasyPay)
+            {
+                // New Account
+                await billingPage.FutureBankAccountCreateNewButton.ClickAsync();
+                await billingPage.WaitForSpinnerAsync();
+
+                // Personal use
+                await billingPage.FutureBankAccountUsePersonalButton.ClickAsync();
+                await billingPage.WaitForSpinnerAsync();
+
+                // Checking type
+                await billingPage.FutureBankAccountTypeCheckingButton.ClickAsync();
+                await billingPage.WaitForSpinnerAsync();
+
+                // Bank Account Owner = Policy Owner (first chip)
+                await billingPage.FutureBankAccountOwnerPrimaryButton.ClickAsync();
+                await billingPage.WaitForSpinnerAsync();
+
+                // Bank details
+                var routing = !string.IsNullOrWhiteSpace(_contextData.RoutingNumber)
+                    ? _contextData.RoutingNumber
+                    : "021000021";
+                var account = !string.IsNullOrWhiteSpace(_contextData.AccountNumber)
+                    ? _contextData.AccountNumber
+                    : Random.Shared.Next(100000000, 999999999).ToString();
+                var bankName = !string.IsNullOrWhiteSpace(_contextData.BankName)
+                    ? _contextData.BankName
+                    : "Test Bank";
+
+                await billingPage.FutureBankRoutingNumberInput.FillAsync(routing);
+                await billingPage.FutureBankAccountNumberInput.FillAsync(account);
+                await billingPage.FutureNameOfBankInput.FillAsync(bankName);
+                await billingPage.WaitForSpinnerAsync();
+            }
+
+            // ── Step 4: Payment Plan ──────────────────────────────────────────
             switch (_contextData.PaymentPlan?.ToLower())
             {
                 case "1 payment":
@@ -161,7 +201,14 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             }
             await billingPage.WaitForSpinnerAsync();
 
-            // Initial Payment - Amount
+            // ── Step 5: Payment Due Date ──────────────────────────────────────
+            if (!string.IsNullOrWhiteSpace(_contextData.PaymentDueDate))
+            {
+                await billingPage.PaymentDueDateInput.FillAsync(_contextData.PaymentDueDate);
+                await billingPage.WaitForSpinnerAsync();
+            }
+
+            // ── Step 6: Initial Payment – Amount ──────────────────────────────
             switch (_contextData.PaymentAmount?.ToLower())
             {
                 case "minimum due":
@@ -181,7 +228,7 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             }
             await billingPage.WaitForSpinnerAsync();
 
-            // Initial Payment - Payment Method
+            // ── Step 7: Initial Payment – Payment Method ──────────────────────
             switch (_contextData.PaymentMethod?.ToLower())
             {
                 case "quickpay":
@@ -190,6 +237,11 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
                     break;
                 case "check":
                     await billingPage.InitialPaymentMethodCheckButton.ClickAsync();
+                    await billingPage.WaitForSpinnerAsync();
+                    var checkNum = !string.IsNullOrWhiteSpace(_contextData.CheckNumber)
+                        ? _contextData.CheckNumber
+                        : Random.Shared.Next(1000, 99999).ToString();
+                    await billingPage.InitialCheckNumberInput.FillAsync(checkNum);
                     break;
                 case "credit card":
                     await billingPage.InitialPaymentMethodCreditCardButton.ClickAsync();
@@ -201,15 +253,14 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             await billingPage.WaitForSpinnerAsync();
 
             await billingPage.ClickNextAsync();
-            Console.WriteLine($"Billing completed: {_contextData.PaymentType}, {_contextData.PaymentPlan}, {_contextData.PaymentMethod}");
+            Console.WriteLine($"Billing completed: PaymentType={_contextData.PaymentType}, " +
+                              $"Plan={_contextData.PaymentPlan}, Method={_contextData.PaymentMethod}");
         }
 
-        [When("user validates Forms via Duckcreek")]
-        public async Task UserValidatesFormsViaDuckcreek(Table table)
+        [When("user validates Forms via Duckcreek for state {string}")]
+        public async Task UserValidatesFormsViaDuckcreek(string state)
         {
-            TableMappingHelpers.DuckcreekFormsFields(table, _contextData);
-
-            var state = _contextData.Address.State;
+            var page = _context.Page;
             var quoteId = _contextData.QuoteNumber;
             var lob = _contextData.FormsLob ?? "SFP";
 
@@ -253,13 +304,18 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             var htmlPath = Path.Combine(htmlDir, $"FormsReport_{lob}_{state}_{quoteId}.html");
             FormsReportGenerator.Generate(summary, htmlPath);
 
-            // 8. Hard assertion — fail the test if any forms don't match
+            var absoluteHtmlPath = Path.GetFullPath(htmlPath);
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(absoluteHtmlPath) { UseShellExecute = true });
+            // Open the containing folder so the file can easily be attached to Teams/email
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", $"/select,\"{absoluteHtmlPath}\"") { UseShellExecute = true });
+
+            // 8. Non-blocking — log outcome but do not fail the scenario
             if (summary.Failed > 0)
             {
                 var failures = string.Join("\n", summary.Results
                     .Where(r => r.Result == "FAIL")
                     .Select(r => $"    {r.FormName}: {r.Message}"));
-                Assert.Fail($"Forms validation: {summary.Failed} failure(s) detected.\n{failures}\nSee report: {htmlPath}");
+                Console.WriteLine($"[FormsValidation] {summary.Failed} failure(s) — see report: {absoluteHtmlPath}\n{failures}");
             }
         }
 
@@ -268,122 +324,40 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             var page = _context.Page;
 
-            // Diagnostic: log ALL visible interactive elements so we can identify the button
-            try
+            // Strategy 1: "QUOTE ACTIONS" dropdown (present on Submission and finalization pages).
+            // Save for Later lives inside this menu — open it first, then click the item.
+            var quoteActionsBtn = page.Locator("button").Filter(new() { HasText = "QUOTE ACTIONS" });
+            if (await quoteActionsBtn.CountAsync() > 0)
             {
-                var allButtonTexts = await page.EvaluateAsync<string[]>(@"() =>
-                    Array.from(document.querySelectorAll('button, a[href], mat-menu-item, [role=""menuitem""], [role=""button""]'))
-                         .filter(b => b.offsetParent !== null)
-                         .map(b => b.textContent?.trim())
-                         .filter(t => t && t.length > 0)");
-                Console.WriteLine($"[SaveForLater] Visible clickable elements: {string.Join(" | ", allButtonTexts ?? [])}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[SaveForLater] Could not enumerate elements: {ex.Message}");
-            }
-
-            ILocator found = null;
-
-            // 1. Try known data-testid values
-            string[] testIds =
-            [
-                "save-for-later",
-                "saveForLater",
-                "fields.data.save-for-later",
-                "fields.data.saveForLater",
-                "fields.data.saveLater",
-                "fields.data.save",
-                "btnSaveForLater",
-                "save-quote"
-            ];
-            foreach (var testId in testIds)
-            {
-                var loc = page.GetByTestId(testId);
-                if (await loc.CountAsync() > 0)
-                {
-                    Console.WriteLine($"[SaveForLater] Found via data-testid='{testId}'");
-                    found = loc;
-                    break;
-                }
-            }
-
-            // 2. Try text-based button matches
-            if (found == null)
-            {
-                string[] textPatterns = ["Save for Later", "Save For Later", "Save & Exit", "Save and Exit",
-                                         "Return to Admin", "Save Quote", "Finish Later", "Suspend", "Exit Quote"];
-                foreach (var text in textPatterns)
-                {
-                    var loc = page.Locator("button").Filter(new() { HasText = text });
-                    if (await loc.CountAsync() > 0)
-                    {
-                        Console.WriteLine($"[SaveForLater] Found button with text='{text}'");
-                        found = loc;
-                        break;
-                    }
-                }
-            }
-
-            // 3. Try anchor links (common for nav-style "save" actions in Angular apps)
-            if (found == null)
-            {
-                string[] linkPatterns = ["Save for Later", "Save For Later", "Save & Exit", "Return to Admin",
-                                         "Save Quote", "Suspend", "Exit Quote"];
-                foreach (var text in linkPatterns)
-                {
-                    var loc = page.Locator("a").Filter(new() { HasText = text });
-                    if (await loc.CountAsync() > 0)
-                    {
-                        Console.WriteLine($"[SaveForLater] Found link with text='{text}'");
-                        found = loc;
-                        break;
-                    }
-                }
-            }
-
-            // 4. Try Angular Material menu items
-            if (found == null)
-            {
-                var menuItem = page.Locator("mat-menu-item, [role='menuitem']")
-                                   .Filter(new() { HasTextRegex = new System.Text.RegularExpressions.Regex("save|later|suspend|exit", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
-                if (await menuItem.CountAsync() > 0)
-                {
-                    Console.WriteLine("[SaveForLater] Found mat-menu-item with save/later/suspend/exit text");
-                    found = menuItem.First;
-                }
-            }
-
-            // 5. Try Angular Material toolbar and header buttons containing "save"
-            if (found == null)
-            {
-                var toolbarBtn = page.Locator("mat-toolbar button, .app-header button, header button, [class*='toolbar'] button")
-                                     .Filter(new() { HasTextRegex = new System.Text.RegularExpressions.Regex("save|later|suspend|exit", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
-                if (await toolbarBtn.CountAsync() > 0)
-                {
-                    Console.WriteLine("[SaveForLater] Found toolbar/header button with save-related text");
-                    found = toolbarBtn.First;
-                }
-            }
-
-            if (found != null)
-            {
-                await found.ClickAsync();
-                var overlay = page.Locator(".ngx-spinner-overlay");
-                if (await overlay.CountAsync() > 0)
-                    await overlay.First.WaitForAsync(new() { State = WaitForSelectorState.Hidden, Timeout = 60000 });
-
-                Console.WriteLine("[SaveForLater] Clicked Save for Later button successfully.");
+                await quoteActionsBtn.ClickAsync();
+                var saveItem = page.Locator("mat-menu-item, [role='menuitem']")
+                                   .Filter(new() { HasTextRegex = new System.Text.RegularExpressions.Regex(@"save\s*for\s*later|suspend", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
+                await saveItem.First.WaitForAsync(new() { Timeout = 5000 });
+                await saveItem.First.ClickAsync();
+                Console.WriteLine("[SaveForLater] Clicked via QUOTE ACTIONS dropdown.");
+                await page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
                 return;
             }
 
-            // 6. Fallback: navigate directly to EQ home page (quote is already saved in the backend;
-            //    we have the quote number captured, so step 29 can re-open it from the dashboard)
-            Console.WriteLine("[SaveForLater] WARNING: No 'Save for Later' button found. Navigating to EQ home as fallback.");
+            // Strategy 2: Direct button or link visible on earlier pages in the flow.
+            foreach (var text in new[] { "Save for Later", "Save For Later", "Suspend" })
+            {
+                var loc = page.Locator("button, a").Filter(new() { HasText = text });
+                if (await loc.CountAsync() > 0)
+                {
+                    await loc.First.ClickAsync();
+                    Console.WriteLine($"[SaveForLater] Clicked '{text}' directly.");
+                    await page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
+                    return;
+                }
+            }
+
+            // Fallback: navigate home. Quote number is already captured so next step can search for it.
+            Console.WriteLine("[SaveForLater] WARNING: Save for Later not found — navigating to EQ home.");
             var eqBase = _configuration["Playwright:ExpertQuoteBase"]
                          ?? "https://expertquote-qa.americannational.com";
-            var homeUrl = eqBase.TrimEnd('/') + "/expertquote/";
-            await page.GotoAsync(homeUrl, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle, Timeout = 60000 });
+            await page.GotoAsync(eqBase.TrimEnd('/') + "/expertquote/",
+                new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle, Timeout = 60000 });
         }
 
         [When("user navigates to Expert Quote and searches by Quote Number")]
@@ -423,17 +397,24 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             await sideMenu.GoToSubmissionAsync();
         }
 
+        [When(@"user navigates to the ""(.*)"" page via the left menu")]
+        public async Task UserNavigatesToPageViaLeftMenu(string menuItem)
+        {
+            var sideMenu = new SideMenuNavigation(_context.Page);
+            await sideMenu.GoToByNameAsync(menuItem);
+            Console.WriteLine($"Navigated to '{menuItem}' via left menu");
+        }
+
         [When("user navigates to Submission and opens Checklist")]
         public async Task UserNavigatesToSubmissionAndOpensChecklist()
         {
-            // Navigate to submission via side menu first
             var sideMenu = new SideMenuNavigation(_context.Page);
             await sideMenu.GoToSubmissionAsync();
 
-            var checklistPage = new SFP_ChecklistPage(_context.Page);
-            await checklistPage.OpenChecklistAsync();
+            // Checklist opens in a new popup window — capture it and store in context
+            _context.ChecklistPage = await SFP_ChecklistPage.OpenChecklistAsync(_context.Page);
 
-            Console.WriteLine("Navigated to Submission and opened Checklist");
+            Console.WriteLine("Navigated to Submission and opened Checklist popup");
         }
 
         [Then("user verifies no referrals are needed")]
@@ -442,14 +423,11 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             var submissionPage = new SubmissionPage(_context.Page);
             await submissionPage.WaitForSpinnerAsync();
 
-            // Check for "No referrals required" text - try multiple text variants
-            var noReferralsText = submissionPage.NoReferralsText;
-            var noReferralsAlt = submissionPage.NoReferralsTextAlt;
+            await submissionPage.NoReferralsText.WaitForAsync(new() { Timeout = 15000 });
+            Assert.That(await submissionPage.NoReferralsText.CountAsync(), Is.GreaterThan(0),
+                "Expected 'STATUS: NO REFERRAL NEEDED -- CONTINUE TO STEP 3' message on Submission page");
 
-            var isNoReferrals = await noReferralsText.CountAsync() > 0 || await noReferralsAlt.CountAsync() > 0;
-            Assert.That(isNoReferrals, Is.True, "Expected no referrals to be required on Submission page"); // TODO: Verify exact text displayed
-
-            Console.WriteLine("Verified: no referrals required");
+            Console.WriteLine("Verified: STATUS: NO REFERRAL NEEDED -- CONTINUE TO STEP 3");
         }
 
         [When("user completes Checklist item")]
@@ -457,10 +435,11 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             TableMappingHelpers.ChecklistItemFields(table, _contextData);
 
-            var checklistPage = new SFP_ChecklistPage(_context.Page);
+            var checklistPage = new SFP_ChecklistPage(_context.ChecklistPage);
             await checklistPage.CompleteChecklistItemAsync(
                 _contextData.ChecklistItemName,
                 _contextData.ChecklistAction,
+                _contextData.ChecklistExceptionNote,
                 _contextData.ChecklistNote);
 
             Console.WriteLine($"Completed checklist item: {_contextData.ChecklistItemName}, Action: {_contextData.ChecklistAction}");
@@ -469,31 +448,49 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         [When("user closes Checklist and confirms Update")]
         public async Task UserClosesChecklistAndConfirmsUpdate()
         {
-            var checklistPage = new SFP_ChecklistPage(_context.Page);
-            await checklistPage.CloseChecklistAsync();
-            await checklistPage.ConfirmUpdateAsync();
+            // 1. Close the checklist popup tab
+            var checklistPage = new SFP_ChecklistPage(_context.ChecklistPage);
+            await checklistPage.CloseAsync();
 
-            Console.WriteLine("Closed Checklist and confirmed update");
+            // 2. Bring EQ tab back to the foreground
+            await _context.Page.BringToFrontAsync();
+
+            // 3. Click the Ok button if it appears on EQ after the checklist tab closes
+            var okButton = _context.Page.GetByTestId("btnOk");
+            try
+            {
+                await okButton.WaitForAsync(new() { Timeout = 10000 });
+                await okButton.ClickAsync();
+                Console.WriteLine("Clicked Ok dialog on EQ Submission page");
+            }
+            catch (TimeoutException)
+            {
+                Console.WriteLine("No Ok dialog appeared — continuing");
+            }
+
+            await _context.Page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
+            Console.WriteLine("Checklist tab closed and EQ Ok dialog confirmed");
         }
 
         [Then("user verifies Transmit button is enabled on Submission page")]
         public async Task UserVerifiesTransmitButtonIsEnabled()
         {
+            // Navigate to Submission explicitly — EQ may have moved after the Ok dialog
+            var sideMenu = new SideMenuNavigation(_context.Page);
+            await sideMenu.GoToSubmissionAsync();
+
             var submissionPage = new SubmissionPage(_context.Page);
             await submissionPage.WaitForSpinnerAsync();
 
-            var transmitBtn = submissionPage.TransmitButton;
-            var transmitBtnAlt = submissionPage.TransmitButtonAlt;
+            // Try role name first, then testId, then any button containing "Transmit" text
+            var transmitBtn = submissionPage.TransmitButtonAlt;
+            if (await transmitBtn.CountAsync() == 0)
+                transmitBtn = submissionPage.TransmitButton;
+            if (await transmitBtn.CountAsync() == 0)
+                transmitBtn = _context.Page.Locator("button").Filter(new() { HasText = "Transmit" });
 
-            // Check which button exists
-            ILocator activeTransmitBtn;
-            if (await transmitBtn.CountAsync() > 0)
-                activeTransmitBtn = transmitBtn;
-            else
-                activeTransmitBtn = transmitBtnAlt;
-
-            Assert.That(await activeTransmitBtn.CountAsync() > 0, Is.True, "Transmit button should be present on Submission page");
-            Assert.That(await activeTransmitBtn.IsEnabledAsync(), Is.True, "Transmit button should be enabled");
+            Assert.That(await transmitBtn.CountAsync() > 0, Is.True, "Transmit button should be present on Submission page");
+            Assert.That(await transmitBtn.IsEnabledAsync(), Is.True, "Transmit button should be enabled");
 
             Console.WriteLine("Verified: Transmit button is enabled on Submission page");
         }

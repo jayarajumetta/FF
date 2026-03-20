@@ -187,11 +187,23 @@ namespace Playwright_POC.Hooks
         [AfterScenario]
         public async Task AfterScenarioAsync()
         {
+            // Close the checklist popup tab if it is still open (e.g. test failed mid-checklist)
+            if (_context.ChecklistPage != null)
+            {
+                try
+                {
+                    if (!_context.ChecklistPage.IsClosed)
+                        await _context.ChecklistPage.CloseAsync();
+                }
+                catch { /* ignore — tab may already be gone */ }
+                _context.ChecklistPage = null;
+            }
             // Handle tracing and video on failure
             var hasFailed = _scenarioContext.TestError != null;
             
-            // Check if we should pause on failure for debugging
-            var pauseOnFailure = _configuration.GetValue<bool>("Debugging:PauseOnFailure", false);
+            // Pause on failure only when a debugger is attached (i.e. Run > Debug in VS/Rider).
+            // Normal CI / right-click "Run Test" runs are never blocked.
+            var pauseOnFailure = System.Diagnostics.Debugger.IsAttached;
             var pauseTimeoutSeconds = _configuration.GetValue<int>("Debugging:PauseTimeoutSeconds", 300);
             
             if (hasFailed && pauseOnFailure && _context.Page != null)

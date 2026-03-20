@@ -26,10 +26,10 @@ namespace Playwright_POC.Pages.ExpertQuotePages
 
         /// <summary>Text indicating no referrals required</summary>
         public ILocator NoReferralsText =>
-            _page.GetByText("No referrals required");
+            _page.GetByText("NO REFERRAL NEEDED", new() { Exact = false });
 
         public ILocator NoReferralsTextAlt =>
-            _page.GetByText("No Referrals");
+            _page.GetByText("NO REFERRAL NEEDED");
 
         /// <summary>Transmit button to submit the policy</summary>
         public ILocator TransmitButton =>
