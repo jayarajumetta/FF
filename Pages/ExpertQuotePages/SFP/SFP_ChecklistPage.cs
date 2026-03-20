@@ -1,116 +1,129 @@
 using Microsoft.Playwright;
+using System;
 using System.Threading.Tasks;
 
 namespace Playwright_POC.Pages.ExpertQuotePages.SFP
 {
     /// <summary>
-    /// SFP Checklist page/panel - opened from the Submission page to complete underwriting checklist items.
+    /// SFP Checklist — opens as a popup window from the Submission page.
+    /// Use the static OpenChecklistAsync to capture the popup IPage, then pass that
+    /// popup IPage to the constructor for all subsequent item operations.
     /// </summary>
     public class SFP_ChecklistPage : BasePage
     {
         public SFP_ChecklistPage(IPage page) : base(page) { }
 
-        #region Locators
-        /// <summary>Button to open the checklist panel on the Submission page</summary>
-        public ILocator OpenChecklistButton =>
-            _page.GetByTestId("fields.data.submission.openChecklist"); // TODO: Verify testId
+        #region EChecklist popup locators
 
-        public ILocator OpenChecklistButtonAlt =>
-            _page.GetByRole(AriaRole.Button, new() { Name = "Checklist" });
+        /// <summary>
+        /// Summary table link for an item — always visible regardless of accordion state.
+        /// Clicking this loads the detail panel with Exception/Note controls.
+        /// </summary>
+        public ILocator ItemRow(string itemName) =>
+            _page.Locator("a.js-checklist-summary-item").Filter(new() { HasText = itemName });
 
-        /// <summary>Checklist item row by item name</summary>
-        public ILocator ChecklistItemRow(string itemName) =>
-            _page.GetByRole(AriaRole.Row, new() { Name = itemName });
+        // Exception flow
+        public ILocator ExceptionButton      => _page.Locator("button.js-exception");
+        public ILocator ExceptionNoteTextarea => _page.Locator(".js-exception-note-text textarea");
+        public ILocator ExceptionNoteConfirm => _page.Locator("#exception-note-confirm");
 
-        /// <summary>Action dropdown for a specific checklist item row</summary>
-        public ILocator ActionSelect(string itemName) =>
-            ChecklistItemRow(itemName).GetByRole(AriaRole.Combobox); // TODO: May need testId approach
+        // Main note + Add Note
+        public ILocator MainNoteTextarea => _page.Locator("textarea.js-note");
+        public ILocator AddNoteButton    => _page.Locator("button.js-add-note");
 
-        /// <summary>Note input for a checklist item</summary>
-        public ILocator NoteInput =>
-            _page.GetByTestId("fields.data.checklist.checklistInput$note.value"); // TODO: Verify testId
+        /// <summary>Submit button to finalise and close the checklist popup.</summary>
+        public ILocator SubmitButton =>
+            _page.GetByRole(AriaRole.Button, new() { Name = "Submit" });
 
-        public ILocator NoteInputAlt =>
-            _page.GetByLabel("Note");
-
-        /// <summary>Save/Complete button for checklist item</summary>
-        public ILocator SaveChecklistItemButton =>
-            _page.GetByTestId("fields.data.checklist.saveChecklistItem"); // TODO: Verify testId
-
-        public ILocator SaveChecklistItemButtonAlt =>
-            _page.GetByRole(AriaRole.Button, new() { Name = "Save" });
-
-        /// <summary>Close checklist panel</summary>
-        public ILocator CloseChecklistButton =>
-            _page.GetByTestId("fields.data.checklist.closeChecklist"); // TODO: Verify testId
-
-        public ILocator CloseChecklistButtonAlt =>
-            _page.GetByRole(AriaRole.Button, new() { Name = "Close" });
-
-        /// <summary>Confirm Update dialog button</summary>
-        public ILocator ConfirmUpdateButton =>
-            _page.GetByTestId("btnConfirmYes"); // Reuses existing pattern
-
-        public ILocator ConfirmUpdateButtonAlt =>
-            _page.GetByRole(AriaRole.Button, new() { Name = "Update" });
         #endregion
 
         #region Actions
-        public async Task OpenChecklistAsync()
+
+        /// <summary>
+        /// Clicks the Checklist button on the EQ Submission page and captures the popup window.
+        /// Returns the popup IPage — store it in _context.ChecklistPage.
+        /// </summary>
+        public static async Task<IPage> OpenChecklistAsync(IPage eqPage)
         {
-            var btn = await OpenChecklistButton.CountAsync() > 0 ? OpenChecklistButton : OpenChecklistButtonAlt;
-            await btn.ClickAsync();
-            await WaitForSpinnerAsync();
+            var openBtn = eqPage.GetByRole(AriaRole.Button, new() { Name = "Checklist" });
+
+            // Use Context.WaitForPageAsync so we capture both true popups (window.open)
+            // and plain new-tab navigations (target="_blank" links).
+            var newPageTask = eqPage.Context.WaitForPageAsync();
+            await openBtn.ClickAsync();
+            var checklistPage = await newPageTask;
+            await checklistPage.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
+            Console.WriteLine($"[Checklist] New tab opened: {checklistPage.Url}");
+            return checklistPage;
         }
 
-        public async Task CompleteChecklistItemAsync(string itemName, string action, string note)
+        /// <summary>
+        /// Full interaction for a single checklist item:
+        /// 1. Click the item row.
+        /// 2. If action == "Exception": click Exception → fill modal note → click OK.
+        /// 3. Fill the main note field.
+        /// 4. Click Add Note.
+        /// </summary>
+        public async Task CompleteChecklistItemAsync(string itemName, string action, string exceptionNote, string note)
         {
-            await WaitForSpinnerAsync();
+            // 1. Click the item row in the accordion
+            var row = ItemRow(itemName);
+            await row.First.WaitForAsync(new() { Timeout = 15000 });
+            await row.First.ClickAsync();
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 15000 });
 
-            // Click on the checklist item to expand/select it
-            if (!string.IsNullOrEmpty(itemName))
+            // 2. Handle action — Exception button may not exist for all item types (e.g. Attachment Not Required)
+            if (string.Equals(action, "Exception", StringComparison.OrdinalIgnoreCase))
             {
-                var itemRow = ChecklistItemRow(itemName);
-                if (await itemRow.CountAsync() > 0)
-                    await itemRow.ClickAsync();
+                var exceptionBtnVisible = await ExceptionButton.IsVisibleAsync();
+                if (!exceptionBtnVisible)
+                {
+                    try { await ExceptionButton.WaitForAsync(new() { Timeout = 5000 }); exceptionBtnVisible = true; }
+                    catch (TimeoutException) { Console.WriteLine($"[Checklist] No Exception button for '{itemName}' — skipping exception flow"); }
+                }
+
+                if (exceptionBtnVisible)
+                {
+                    await ExceptionButton.ClickAsync();
+
+                    // Fill the exception modal note via JS — single clean event, no multi-keyup noise
+                    await ExceptionNoteTextarea.WaitForAsync(new() { Timeout = 10000 });
+                    await ExceptionNoteTextarea.EvaluateAsync(@"(el, text) => {
+                        el.value = text;
+                        el.dispatchEvent(new Event('input', { bubbles: true }));
+                        el.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
+                    }", exceptionNote ?? note);
+
+                    // Confirm
+                    await ExceptionNoteConfirm.ClickAsync();
+                    await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 15000 });
+                }
             }
 
-            // Select action
-            if (!string.IsNullOrEmpty(action))
-            {
-                var actionSelect = string.IsNullOrEmpty(itemName)
-                    ? _page.GetByRole(AriaRole.Combobox).Last
-                    : ActionSelect(itemName);
-                await actionSelect.ClickAsync();
-                await _page.GetByRole(AriaRole.Option, new() { Name = action }).ClickAsync();
-            }
+            // 3. Fill main note field via JS — fires a single keyup to enable Add Note
+            await MainNoteTextarea.WaitForAsync(new() { Timeout = 10000 });
+            await MainNoteTextarea.EvaluateAsync(@"(el, text) => {
+                el.value = text;
+                el.dispatchEvent(new Event('input', { bubbles: true }));
+                el.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
+            }", note);
 
-            // Enter note
-            if (!string.IsNullOrEmpty(note))
-            {
-                var noteInput = await NoteInput.CountAsync() > 0 ? NoteInput : NoteInputAlt;
-                await noteInput.FillAsync(note);
-            }
+            // 4. Verify Add Note is enabled, then force-click to bypass CSS transition stability check
+            await Assertions.Expect(AddNoteButton).ToBeEnabledAsync(new() { Timeout = 10000 });
+            await AddNoteButton.ClickAsync(new() { Force = true });
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 15000 });
 
-            // Save checklist item
-            var saveBtn = await SaveChecklistItemButton.CountAsync() > 0 ? SaveChecklistItemButton : SaveChecklistItemButtonAlt;
-            await saveBtn.ClickAsync();
-            await WaitForSpinnerAsync();
+            // 5. Reload to return to the summary table view so the next item's link is visible
+            await _page.ReloadAsync();
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
         }
 
-        public async Task CloseChecklistAsync()
+        /// <summary>Closes the checklist popup tab — no Submit needed to enable Transmit.</summary>
+        public async Task CloseAsync()
         {
-            var closeBtn = await CloseChecklistButton.CountAsync() > 0 ? CloseChecklistButton : CloseChecklistButtonAlt;
-            await closeBtn.ClickAsync();
-            await WaitForSpinnerAsync();
+            await _page.CloseAsync();
         }
 
-        public async Task ConfirmUpdateAsync()
-        {
-            var confirmBtn = await ConfirmUpdateButton.CountAsync() > 0 ? ConfirmUpdateButton : ConfirmUpdateButtonAlt;
-            await confirmBtn.ClickAsync();
-            await WaitForSpinnerAsync();
-        }
         #endregion
     }
 }
