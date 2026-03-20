@@ -559,6 +559,15 @@ namespace Playwright_POC.Helpers
                     case "Paperless":
                         _contextData.Paperless = answer;
                         break;
+                    case "RoutingNumber":
+                        _contextData.RoutingNumber = answer;
+                        break;
+                    case "AccountNumber":
+                        _contextData.AccountNumber = answer;
+                        break;
+                    case "BankName":
+                        _contextData.BankName = answer;
+                        break;
                     default:
                         throw new ArgumentException($"Unknown question: {question}");
                 }
@@ -976,6 +985,9 @@ namespace Playwright_POC.Helpers
                         break;
                     case "Action":
                         _contextData.ChecklistAction = answer;
+                        break;
+                    case "ExceptionNote":
+                        _contextData.ChecklistExceptionNote = answer;
                         break;
                     case "Note":
                         _contextData.ChecklistNote = answer;

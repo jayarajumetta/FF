@@ -45,8 +45,8 @@ namespace Playwright_POC.Pages
         public ILocator PaymentPlan4PaymentsButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$paymentPlan.value-2");
         public ILocator PaymentPlan12PaymentsButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$paymentPlan.value-3");
 
-        // Choose payment due date
-        public ILocator PaymentDueDateSelect => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$paymentDueDate.value");
+        // Choose payment due date (text input, max 2 digits)
+        public ILocator PaymentDueDateInput => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$dueDate.value");
 
         // ===== Initial Payment =====
         // Select a payment amount
@@ -58,6 +58,9 @@ namespace Playwright_POC.Pages
         public ILocator InitialPaymentMethodQuickPayButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.initialPaymentData$paymentMethod.value-0");
         public ILocator InitialPaymentMethodCheckButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.initialPaymentData$paymentMethod.value-1");
         public ILocator InitialPaymentMethodCreditCardButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.initialPaymentData$paymentMethod.value-2");
+
+        // Initial Payment - Check Number
+        public ILocator InitialCheckNumberInput => _page.GetByTestId("fields._PolicyPaymentInputDoc.initialPaymentData$checkNumber.value");
 
         // Select Create New to input Quick Pay details
         public ILocator InitialBankAccountCreateNewButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.bankData$existingDraftAccount.value-0");

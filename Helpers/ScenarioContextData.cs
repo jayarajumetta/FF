@@ -145,6 +145,9 @@ namespace Playwright_POC.Helpers
         public string PaymentMethod { get => Payment.PaymentMethod; set => Payment.PaymentMethod = value; }
         public string CheckNumber { get => Payment.CheckNumber; set => Payment.CheckNumber = value; }
         public string Paperless { get => Payment.Paperless; set => Payment.Paperless = value; }
+        public string RoutingNumber { get => Payment.RoutingNumber; set => Payment.RoutingNumber = value; }
+        public string AccountNumber { get => Payment.AccountNumber; set => Payment.AccountNumber = value; }
+        public string BankName { get => Payment.BankName; set => Payment.BankName = value; }
 
         // --- Business (BOP - maps to Business) ---
         public string BusinessEntity { get => Business.EntityType; set => Business.EntityType = value; }
@@ -232,6 +235,7 @@ namespace Playwright_POC.Helpers
         // --- Checklist (SFP - maps to Farm) ---
         public string ChecklistItemName { get => Farm.ChecklistItemName; set => Farm.ChecklistItemName = value; }
         public string ChecklistAction { get => Farm.ChecklistAction; set => Farm.ChecklistAction = value; }
+        public string ChecklistExceptionNote { get => Farm.ChecklistExceptionNote; set => Farm.ChecklistExceptionNote = value; }
         public string ChecklistNote { get => Farm.ChecklistNote; set => Farm.ChecklistNote = value; }
 
         // --- Underwriting (maps to Underwriting) ---

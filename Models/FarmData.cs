@@ -86,6 +86,7 @@ namespace Playwright_POC.Models
         // Checklist
         public string ChecklistItemName { get; set; }
         public string ChecklistAction { get; set; }
+        public string ChecklistExceptionNote { get; set; }
         public string ChecklistNote { get; set; }
     }
 }
