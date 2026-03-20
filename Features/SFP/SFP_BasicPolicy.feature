@@ -88,61 +88,56 @@ Feature: SFP Basic Policy
       | PriorInsuranceExpDate   | 1/1/2025 |
       | PriorInsuranceCarrier   | GEICO    |
 
-    # Step 13: Navigate to Client Details - Set Inspection Contact
+    # Step 14: Navigate to Client Details - Set Inspection Contact
     When user validates Client Details and selects Inspection Contact
 
-    # Step 14: Add Narrative
+    # Step 15: Add Narrative
     When user Adds Narrative and continues
       | Question  | Answer           |
       | Narrative | Test Narrative 1 |
 
-    # Step 15: Policy Wide or Division Specific Coverages
-    When user selects Policy Wide or Division Specific Coverages and continues
-      | CoverageType | CoverageName          | Select |
-      | Policy       | Agribusiness          | No     |
-      | Division I   | Excess Debris Removal | Yes    |
-      | Division II  | Excess Debris Removal | Yes    |
+    # Step 16: Policy Wide or Division Specific Coverages
+    When user skips Policy Wide and Division Specific Coverages and continues
 
-    # Step 16: Add a Primary Location
+    # Step 17: Add a Primary Location
     When user provides location information and continues
       | Question                | Answer           |
       | LocationNickname        | Primary Location |
       | LocationType            | Both             |
-      | MilesFromFireDepartment | 5                |
-      | FeetFromHydrant         | 501-750          |
-      | PPC                     | 5                |
-      | TotalAcreage            | 300              |
+      | MilesFromFireDepartment | 3                |
+      | FeetFromHydrant         | 101-250          |      
+      | TotalAcreage            | 6                |
       | WindHailDeductible      | 1%               |
 
-    # Step 17: Add a Residence
+    # Step 18: Add a Residence
     When user adds a Residence to the Location
-      | Question          | Answer       |
-      | AdditionalDesc    | Main House   |
-      | YearBuilt         | 2020         |
-      | NumberOfFamilies  | Single Family|
-      | RateType          | Frame        |
-      | ConditionRating   | 1            |
-      | RoofYear          | 2015         |
-      | RoofType          | Composition  |
-      | RoofImpact        | UL 3         |
-      | SeasonalOrVacant  | No           |
-      | SolidFuelQuestion | No           |
+      | Question          | Answer        |
+      | AdditionalDesc    | Main House    |
+      | YearBuilt         | 2022          |
+      | NumberOfFamilies  | Single Family |
+      | RateType          | Frame         |
+      | ConditionRating   | 1             |
+      | RoofYear          | 2022          |
+      | RoofType          | Asphalt       |
+      | RoofImpact        | UL 2          |
+      | SeasonalOrVacant  | No            |
+      | SolidFuelQuestion | No            |
 
-    # Step 18: Add Residence Coverage
+    # Step 19: Add Residence Coverage
     When user adds Residence Coverage
       | Question           | Answer           |
-      | InsuranceAmount    | 250000           |
-      | SquareFeet         | 2500             |
+      | InsuranceAmount    | 375000           |
+      | SquareFeet         | 1800             |
       | Perils             | 1                |
       | ThermostatQuestion | Yes              |
       | ActualCashValue    | Replacement Cost |
       | RCTOption          | Standard         |
       | UseDefaults        | Yes              |
 
-    # Step 19: Skip Optional Coverages
+    # Step 20: Skip Optional Coverages
     When user skips Optional Coverages and continues
 
-    # Step 20: Add Farm Personal Property
+    # Step 21: Add Farm Personal Property
     When user adds Farm Personal Property
       | Question    | Answer          |
       | Code        | 464             |
@@ -150,7 +145,7 @@ Feature: SFP Basic Policy
       | Limit       | 15000           |
       | Deductible  | $1,000          |
 
-    # Step 20: Add Equipment Breakdown
+    # Step 22: Add Equipment Breakdown
     When user adds Equipment Breakdown information
       | Question              | Answer |
       | PowerGreaterThan250kw | No     |
@@ -158,7 +153,7 @@ Feature: SFP Basic Policy
       | GreaterThan25000      | No     |
       | FarmImplements        | No     |
 
-    # Step 21: Add Div 4 Scheduled Personal Property
+    # Step 23: Add Div 4 Scheduled Personal Property
     When user adds Scheduled Personal Property
       | Question        | Answer    |
       | Category        | 401       |
@@ -167,17 +162,17 @@ Feature: SFP Basic Policy
       | Limit           | 750       |
       | YearOfAppraisal | 2025      |
 
-    # Step 22: Add Liability
+    # Step 24: Add Liability
     When user adds Liability coverage
       | Question          | Answer            |
       | LiabilityLimit    | $100,000/$100,000 |
       | LivestockHorses   |                 0 |
       | LivestockSmall    |                 2 |
       | LivestockLarge    |                 3 |
-      | NumberOfEmployees |                 1 |
+      | NumberOfEmployees |                 0 |
       | UnlistedAcreage   |                 0 |
 
-    # Step 23: Add a Mortgagee
+    # Step 25: Add a Mortgagee
     When user adds Additional Interest Mortgagee
       | Question              | Answer           |
       | SearchName            | Connect One Bank |
@@ -188,79 +183,78 @@ Feature: SFP Basic Policy
       | DescriptionOfInterest | Mortgage Lender  |
       | EscrowBilled          | Yes              |
 
-    # Step 24: Run the Insurance Score
+    # Step 26: Run the Insurance Score
     When user runs Insurance Score
       | Question              | Answer          |
       | EntityType            | Primary Insured |
       | InsuranceScoreConsent | Accept          |
 
-    # Step 25: Verify Premium on Pricing Screen
+    # Step 27: Verify Premium on Pricing Screen
     Then user verifies Premium on Pricing screen
 
-    # Step 26: Navigate to Submission
-    When user navigates to Submission page
-
-    # Step 27: Validate Forms attachment via Duckcreek
-    When user validates Forms via Duckcreek
-      | Question   | Answer       |
-      | ClientName | {{fullName}} |
-      | State      | <StateAbbv>  |
-
-    # Step 28: Save for Later
-    And user clicks Save for Later
+    # Step 28: Validate Forms attachment via Duckcreek
+    When user validates Forms via Duckcreek for state "<StateAbbv>"
 
     # Step 29: Re-Log back in to EQ and Search by Quote Number
     When user navigates to Expert Quote and searches by Quote Number
 
-    # Step 30: Complete Billing Information
-    When user completes Billing Information
-      | Question       | Answer           |
-      | BillingAccount | Create New       |
-      | AccountName    | Tommy Automation |
-      | CompanyName    | Auto Corp        |
-      | StreetAddress  | 9 Center Road    |
-      | City           | Mahopac          |
-      | State          | NY               |
-      | ZipCode        | 10541            |
-      | PaymentDueDate | 01               |
-      | PaymentMethod  | Check            |
+    # Step 30: Navigate to Billing via left menu
+    When user navigates to the "Billing" page via the left menu
 
-    # Step 31: Visit the Checklist page
+    # Step 31: Complete Billing Information
+    When user completes Billing Information
+      | Question       | Answer          |
+      | BillingAccount | Create New      |
+      | PrimaryPayer   | Primary Insured |
+      | PaymentType    | Easy Pay        |
+      | RoutingNumber  | 021000021       |
+      | AccountNumber  | 123456789       |
+      | BankName       | Test Bank       |
+      | PaymentPlan    | 12 Payments     |
+      | PaymentDueDate | 01              |
+      | PaymentAmount  | Minimum         |
+      | PaymentMethod  | Check           |
+
+    # Step 32: Visit the Checklist page
     When user navigates to Submission and opens Checklist
     Then user verifies no referrals are needed
 
-    # Step 32: Enter required information for Checklist (Residence Photo #1)
+    # Step 33: Enter required information for Checklist (Residence Photo #1)
     When user completes Checklist item
-      | Question | Answer             |
-      | ItemName | Residence Photo #1 |
-      | Action   | Exception          |
-      | Note     | Photo not available|
+      | Question      | Answer              |
+      | ItemName      | Residence Photo #1  |
+      | Action        | Exception           |
+      | ExceptionNote | Photo not available |
+      | Note          | Photo not available |
 
-    # Step 33: Enter required information for Checklist (UL Roof Type)
+    # Step 34: Enter required information for Checklist (UL Roof Type Credit)
     When user completes Checklist item
-      | Question | Answer              |
-      | ItemName | UL Roof Type        |
-      | Action   | Exception           |
-      | Note     | Roof type confirmed |
+      | Question      | Answer              |
+      | ItemName      | UL Roof Type Credit |
+      | Action        | Exception           |
+      | ExceptionNote | Roof type confirmed |
+      | Note          | Roof type confirmed |
 
-    # Step 34: Enter required information for Checklist (Loss Runs)
+    # Step 35: Enter required information for Checklist (Easy Pay)
     When user completes Checklist item
-      | Question | Answer            |
-      | ItemName | Loss Runs         |
-      | Action   | Exception         |
-      | Note     | Loss runs on file |
+      | Question      | Answer      |
+      | ItemName      | Easy Pay    |
+      | Action        | Exception   |
+      | ExceptionNote | EasyPay set |
+      | Note          | EasyPay set |
 
-    # Step 35: Enter required information for Checklist (Signature Page)
+    # Step 36: Enter required information for Checklist (Loss Runs)
     When user completes Checklist item
-      | Question | Answer             |
-      | ItemName | Signature Page     |
-      | Action   | Exception          |
-      | Note     | Signature obtained |
+      | Question      | Answer                                               |
+      | ItemName      | Loss Runs (Tiered - 5 Years; Not tiered - 3 years)   |
+      | Action        | Exception                                            |
+      | ExceptionNote | Loss runs on file                                    |
+      | Note          | Loss runs on file                                    |    
 
-    # Step 36: Close Checklist and Click OK to Update
+    # Step 38: Close Checklist and Click OK to Update
     When user closes Checklist and confirms Update
 
-    # Step 37: Transmit and Verify Premium
+    # Step 39: Transmit and Verify Premium
     Then user verifies Transmit button is enabled on Submission page
 
     Examples:
