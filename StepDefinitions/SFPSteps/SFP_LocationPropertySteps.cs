@@ -32,6 +32,7 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
 
             var locationPage = new LocationPage(_context.Page, _contextData);
             await locationPage.EnterLocationInformationAsync();
+            await locationPage.OrderWildfireRiskScoreIfAvailableAsync();
             await locationPage.SelectWindHailDeductibleAsync(_contextData.WindHailDeductible);
             await locationPage.ClickSaveAsync();
         }

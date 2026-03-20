@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Playwright_POC.Helpers;
 using Playwright_POC.Pages;
+using System;
 
 namespace Playwright_POC.Pages.ExpertQuotePages
 {
@@ -60,6 +61,42 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         public async Task GoToPricingAsync() { await PricingNav.ClickAsync(); await WaitForSpinnerAsync(); }
         public async Task GoToBillingAsync() { await BillingNav.ClickAsync(); await WaitForSpinnerAsync(); }
         public async Task GoToSubmissionAsync() { await SubmissionNav.ClickAsync(); await WaitForSpinnerAsync(); }
+
+        /// <summary>
+        /// Navigates to any left-menu item by friendly name (case-insensitive).
+        /// Delegates to the existing typed GoToXxxAsync methods — test IDs stay in one place.
+        /// </summary>
+        public Task GoToByNameAsync(string name) =>
+            name.Trim().ToLowerInvariant() switch
+            {
+                "client" or "client info"                                    => GoToClientAsync(),
+                "account" or "account details"                               => GoToAccountDetailsAsync(),
+                "proposal" or "proposal start"                               => GoToProposalStartAsync(),
+                "sfp" or "special farm package"                              => GoToSfpAsync(),
+                "policy details" or "policy"                                 => GoToPolicyDetailsAsync(),
+                "pre-qualification" or "prequalification"                    => GoToPreQualificationAsync(),
+                "primary insured" or "business details"                      => GoToPrimaryInsuredDetailsAsync(),
+                "claims" or "claims & prior insurance"
+                    or "claims and prior insurance"                           => GoToClaimsPriorInsuranceAsync(),
+                "add claim"                                                   => GoToAddClaimAsync(),
+                "client details"                                             => GoToClientDetailsAsync(),
+                "narrative"                                                   => GoToNarrativeAsync(),
+                "policy coverages" or "coverages"                            => GoToPolicyCoveragesAsync(),
+                "locations" or "locations & buildings"
+                    or "locations and buildings"                              => GoToLocationsBuildingsAsync(),
+                "optional coverages" or "optional"                           => GoToOptionalCoveragesAsync(),
+                "farm personal property" or "farm property"                  => GoToFarmPersonalPropertyAsync(),
+                "scheduled personal property" or "scheduled"                 => GoToScheduledPersonalPropertyAsync(),
+                "liability"                                                   => GoToLiabilityAsync(),
+                "mortgagee" or "additional interests"
+                    or "mortgagee & loss payee"                               => GoToMortgageeLossPayeeAsync(),
+                "insurance score" or "insurance designee"                    => GoToInsuranceScoreAsync(),
+                "pricing"                                                     => GoToPricingAsync(),
+                "billing"                                                     => GoToBillingAsync(),
+                "submission"                                                  => GoToSubmissionAsync(),
+                _ => throw new ArgumentException(
+                    $"Unknown nav menu item: '{name}'. Check SideMenuNavigation.GoToByNameAsync for valid names.")
+            };
         #endregion
     }
 }

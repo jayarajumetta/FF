@@ -119,6 +119,38 @@ namespace Playwright_POC.Pages
                 .Last
                 .GetByRole(AriaRole.Menuitem, new() { Name = text, Exact = true });
 
+        private ILocator OrderWildfireRiskScoreButton() => 
+                _page.GetByTestId("fields.data.account.location.rows[0].orderWildfire");
+
+        /// <summary>
+        /// Clicks the "Order Wildfire Risk Score" button if it is visible and enabled.
+        /// Some states require this step; others do not show the button.
+        /// </summary>
+        public async Task OrderWildfireRiskScoreIfAvailableAsync()
+        {
+            var button = OrderWildfireRiskScoreButton();
+            
+            // Check if button exists and is visible
+            if (await button.CountAsync() > 0 && await button.IsVisibleAsync())
+            {
+                // Check if button is enabled (not disabled)
+                var isDisabled = await button.IsDisabledAsync();
+                if (!isDisabled)
+                {
+                    await button.ClickAsync();
+                    await WaitForSpinnerAsync();
+                    Console.WriteLine("Clicked 'Order Wildfire Risk Score' button.");
+                }
+                else
+                {
+                    Console.WriteLine("'Order Wildfire Risk Score' button is present but disabled - skipping.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("'Order Wildfire Risk Score' button not present on this page - skipping.");
+            }
+        }
 
         public async Task SelectWindHailDeductibleAsync(string deductible)
         {
