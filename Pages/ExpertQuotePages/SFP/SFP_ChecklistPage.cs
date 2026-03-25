@@ -42,6 +42,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         /// <summary>
         /// Clicks the Checklist button on the EQ Submission page and captures the popup window.
         /// Returns the popup IPage — store it in _context.ChecklistPage.
+        /// Handles SSO redirects that may occur when opening the checklist in a new tab.
         /// </summary>
         public static async Task<IPage> OpenChecklistAsync(IPage eqPage)
         {
@@ -52,9 +53,65 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             var newPageTask = eqPage.Context.WaitForPageAsync();
             await openBtn.ClickAsync();
             var checklistPage = await newPageTask;
-            await checklistPage.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
+            
+            // Wait for initial load
+            await checklistPage.WaitForLoadStateAsync(LoadState.Load, new() { Timeout = 60000 });
             Console.WriteLine($"[Checklist] New tab opened: {checklistPage.Url}");
+            
+            // Handle SSO redirect - wait for SSO flow to complete if we're on an SSO page
+            await WaitForSsoRedirectAsync(checklistPage, timeoutMs: 60000);
+            
             return checklistPage;
+        }
+
+        /// <summary>
+        /// Waits for SSO redirect to complete if the page is currently on an SSO URL.
+        /// This handles cases where the session has expired and needs re-authentication.
+        /// </summary>
+        private static async Task WaitForSsoRedirectAsync(IPage page, int timeoutMs = 60000)
+        {
+            var startTime = DateTime.UtcNow;
+            var timeout = TimeSpan.FromMilliseconds(timeoutMs);
+            
+            while (DateTime.UtcNow - startTime < timeout)
+            {
+                var currentUrl = page.Url;
+                
+                // Check if we're on an SSO page
+                if (currentUrl.Contains("ssoqa.anico.com", StringComparison.OrdinalIgnoreCase) ||
+                    currentUrl.Contains("/idp/SSO", StringComparison.OrdinalIgnoreCase) ||
+                    currentUrl.Contains("/ACS.saml2", StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine($"[Checklist] SSO redirect detected: {currentUrl}");
+                    
+                    // Wait for navigation to complete
+                    try
+                    {
+                        await page.WaitForURLAsync(
+                            url => !url.Contains("ssoqa.anico.com", StringComparison.OrdinalIgnoreCase) &&
+                                   !url.Contains("/idp/SSO", StringComparison.OrdinalIgnoreCase) &&
+                                   !url.Contains("/ACS.saml2", StringComparison.OrdinalIgnoreCase),
+                            new() { Timeout = 30000 });
+                        
+                        Console.WriteLine($"[Checklist] SSO redirect completed. Now at: {page.Url}");
+                        await page.WaitForLoadStateAsync(LoadState.Load, new() { Timeout = 30000 });
+                        break;
+                    }
+                    catch (TimeoutException)
+                    {
+                        Console.WriteLine($"[Checklist] SSO redirect timed out, retrying...");
+                    }
+                }
+                else if (currentUrl.Contains("echecklist", StringComparison.OrdinalIgnoreCase) ||
+                         currentUrl.Contains("checklist", StringComparison.OrdinalIgnoreCase))
+                {
+                    // We're on the checklist page, SSO flow complete
+                    Console.WriteLine($"[Checklist] Checklist page loaded: {currentUrl}");
+                    break;
+                }
+                
+                await page.WaitForTimeoutAsync(500);
+            }
         }
 
         /// <summary>
@@ -63,14 +120,33 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         /// 2. If action == "Exception": click Exception → fill modal note → click OK.
         /// 3. Fill the main note field.
         /// 4. Click Add Note.
+        /// Includes SSO redirect handling for session timeout scenarios.
         /// </summary>
         public async Task CompleteChecklistItemAsync(string itemName, string action, string exceptionNote, string note)
         {
-            // 1. Click the item row in the accordion
+            // Ensure we're not on an SSO page before starting — SSO may have been triggered
+            // by the previous step's reload or by session expiry mid-flow.
+            await WaitForSsoRedirectAsync(_page, timeoutMs: 60000);
+            await _page.WaitForLoadStateAsync(LoadState.Load, new() { Timeout = 30000 });
+
+            // 1. Click the item row in the accordion.
+            // Use a generous timeout (60 s) so that if SSO fires during the wait the
+            // page has time to complete the redirect and reload the checklist.
             var row = ItemRow(itemName);
-            await row.First.WaitForAsync(new() { Timeout = 15000 });
+            try
+            {
+                await row.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 60000 });
+            }
+            catch (TimeoutException)
+            {
+                // SSO may have occurred during the wait — handle redirect and retry once.
+                Console.WriteLine($"[Checklist] Item '{itemName}' not visible — handling possible SSO redirect and retrying.");
+                await WaitForSsoRedirectAsync(_page, timeoutMs: 60000);
+                await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
+                await row.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+            }
             await row.First.ClickAsync();
-            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 15000 });
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
 
             // 2. Handle action — Exception button may not exist for all item types (e.g. Attachment Not Required)
             if (string.Equals(action, "Exception", StringComparison.OrdinalIgnoreCase))

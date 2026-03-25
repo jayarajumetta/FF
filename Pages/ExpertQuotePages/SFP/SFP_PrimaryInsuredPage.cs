@@ -52,6 +52,8 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         /// </summary>
         public async Task SelectExistingClientAsPrimaryInsuredAsync(ScenarioContextData contextData)
         {
+            await WaitForSpinnerAsync();
+            await SelectExistingClientButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 60000 });
             await SelectExistingClientButton.ClickAsync();
             await WaitForSpinnerAsync();
             await ClickNextAsync();
@@ -188,6 +190,15 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
                 await btn.ClickAsync();
         }
 
+        // Additional UW sections that appear conditionally based on farm type selection.
+        // When Beef/Dairy livestock is chosen, the app renders an extra
+        // "Farm Type - Animal - Beef, Dairy, or Dairy Replacement" questions section,
+        // each with their own "None Of The Above" button.
+        private static readonly string[] ConditionalNoneOfTheAboveTestIds = new[]
+        {
+            "fields.data.underwritingQuestions.farmBeefDairyOrReplacementQuestions.farmBeefDairyOrReplacementQuestions$eqNoneOfTheAbove.value",
+        };
+
         public async Task AnswerUwQuestionsAsync(Dictionary<string, bool> states, bool clickNext = true)
         {
             if (states.TryGetValue("NoneOfTheAbove", out var none) && none)
@@ -200,6 +211,23 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
                 await UwSetCheckedAsync(kvp.Key, kvp.Value);
 
             await WaitForSpinnerAsync();
+
+            // Handle any conditional UW sections (e.g. Beef/Dairy/Replacement) that appear
+            // based on the selected farm type. If NoneOfTheAbove was requested and one of
+            // these extra sections is visible, click its own None Of The Above too.
+            if (states.TryGetValue("NoneOfTheAbove", out var noneRequested) && noneRequested)
+            {
+                foreach (var testId in ConditionalNoneOfTheAboveTestIds)
+                {
+                    var btn = _page.GetByTestId(testId);
+                    if (await btn.CountAsync() > 0 && await btn.IsVisibleAsync())
+                    {
+                        Console.WriteLine($"[UWQuestions] Clicking conditional NoneOfTheAbove: {testId}");
+                        await btn.ClickAsync();
+                        await WaitForSpinnerAsync();
+                    }
+                }
+            }
 
             if (clickNext)
                 await ClickNextAsync();

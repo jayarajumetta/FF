@@ -38,6 +38,7 @@ namespace Playwright_POC.Pages
                 _page.GetByTestId("fields.data-Next.next"),
                 _page.GetByTestId("fields.data_Next.next"),
                 _page.GetByTestId("fields.data_Rules.next"),
+                _page.GetByTestId("fields.data_Rules.nextEB"),
                 _page.GetByTestId("next"),
                 _page.GetByRole(AriaRole.Button, new() { Name = "Next" })
             };

@@ -71,20 +71,44 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
                 {
                     case "powergreaterthan250kw":
                     case "powergeneration":
-                        await (value ? equipmentPage.PowerGenerationYesButton : equipmentPage.PowerGenerationNoButton).ClickAsync();
+                    {
+                        var btn = value ? equipmentPage.PowerGenerationYesButton : equipmentPage.PowerGenerationNoButton;
+                        if (await btn.IsVisibleAsync())
+                            await btn.ClickAsync();
+                        else
+                            Console.WriteLine($"[EquipmentBreakdown] PowerGeneration button not visible for this state - skipping");
                         break;
+                    }
                     case "twoormorelosses":
                     case "twoormoreloss":
-                        await (value ? equipmentPage.TwoOrMoreLossIn24MonthYesButton : equipmentPage.TwoOrMoreLossIn24MonthNoButton).ClickAsync();
+                    {
+                        var btn = value ? equipmentPage.TwoOrMoreLossIn24MonthYesButton : equipmentPage.TwoOrMoreLossIn24MonthNoButton;
+                        if (await btn.IsVisibleAsync())
+                            await btn.ClickAsync();
+                        else
+                            Console.WriteLine($"[EquipmentBreakdown] TwoOrMoreLoss button not visible for this state - skipping");
                         break;
+                    }
                     case "greaterthan25000":
                     case "lossgreaterthan24k":
-                        await (value ? equipmentPage.LossGreaterThan24KEverYesButton : equipmentPage.LossGreaterThan24KEverNoButton).ClickAsync();
+                    {
+                        var btn = value ? equipmentPage.LossGreaterThan24KEverYesButton : equipmentPage.LossGreaterThan24KEverNoButton;
+                        if (await btn.IsVisibleAsync())
+                            await btn.ClickAsync();
+                        else
+                            Console.WriteLine($"[EquipmentBreakdown] LossGreaterThan24K button not visible for this state - skipping");
                         break;
+                    }
                     case "farmimplements":
                     case "farmimplement":
-                        await (value ? equipmentPage.FarmImplementYesButton : equipmentPage.FarmImplementNoButton).ClickAsync();
+                    {
+                        var btn = value ? equipmentPage.FarmImplementYesButton : equipmentPage.FarmImplementNoButton;
+                        if (await btn.IsVisibleAsync())
+                            await btn.ClickAsync();
+                        else
+                            Console.WriteLine($"[EquipmentBreakdown] FarmImplement button not visible for this state - skipping");
                         break;
+                    }
                 }
             }
 

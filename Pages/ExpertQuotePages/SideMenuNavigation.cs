@@ -97,6 +97,17 @@ namespace Playwright_POC.Pages.ExpertQuotePages
                 _ => throw new ArgumentException(
                     $"Unknown nav menu item: '{name}'. Check SideMenuNavigation.GoToByNameAsync for valid names.")
             };
+
+        /// <summary>
+        /// Returns true if the Insurance Score / Insurance Designee nav item is present
+        /// and visible in the side menu for the current state/transaction.
+        /// The app only renders this nav item when the business rules require it
+        /// (inception date >= 11/14/2014, or SD/WI renewal conversions).
+        /// </summary>
+        public async Task<bool> IsInsuranceScoreNavPresentAsync()
+        {
+            return await InsuranceScoreNav.CountAsync() > 0 && await InsuranceScoreNav.IsVisibleAsync();
+        }
         #endregion
     }
 }

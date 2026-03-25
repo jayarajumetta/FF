@@ -1,5 +1,6 @@
 ﻿// Pages/PreQualificationPage.cs
 using Microsoft.Playwright;
+using System;
 using System.Threading.Tasks;
 using Playwright_POC.Helpers;
 
@@ -16,9 +17,17 @@ namespace Playwright_POC.Pages
         private ILocator AddClassCodeButton => _page.Locator("a:has-text('Add')");
         private ILocator PrimaryOccupancySlider => _page.GetByTestId("occupancyClass$isPrimaryClass");
 
-        // Dynamic locators
-        private ILocator GetQualificationSelection(string value) =>
-            _page.GetByRole(AriaRole.Button, new() { Name = value });
+        // Dynamic locators - use specific test-id for preQualification to avoid matching other "None Of The Above" buttons
+        private ILocator GetQualificationSelection(string value)
+        {
+            // For "None Of The Above", use the specific preQualification test-id to avoid strict mode violations
+            // when other sections (like farmBeefDairyOrReplacementQuestions) also have this button
+            if (value.Equals("None Of The Above", StringComparison.OrdinalIgnoreCase))
+            {
+                return _page.GetByTestId("fields.data.underwritingQuestions.preQualification.preQualificationInput$eqNoneOfTheAbove.value");
+            }
+            return _page.GetByRole(AriaRole.Button, new() { Name = value, Exact = true });
+        }
 
         private ILocator GetCheckboxByClassCode(string classCode) =>
             _page.Locator($"tr:has(td:has-text('{classCode}')) label.mat-checkbox-layout");

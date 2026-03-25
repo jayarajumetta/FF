@@ -142,7 +142,8 @@ namespace Playwright_POC.Pages
             await CityInput.FillAsync(contextData.City);
 
             await StateDropdown.ClickAsync();
-            await _page.ClickAsync($"text={contextData.State.ToUpper()}");
+            // Use exact matching to prevent "KANSAS" from matching "ARKANSAS"
+            await _page.GetByRole(AriaRole.Option, new() { Name = contextData.State.ToUpper(), Exact = true }).ClickAsync();
             await ZipCodeInput.FillAsync(contextData.ZipCode);
         }
 

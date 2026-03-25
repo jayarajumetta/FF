@@ -119,6 +119,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             {
                 var isYes = contextData.MortgageeEscrowBilled.ToLower() is "yes" or "true";
                 await (isYes ? EscrowBilledYesButton : EscrowBilledNoButton).ClickAsync();
+                await WaitForSpinnerAsync();
             }
 
             // Save the mortgagee
@@ -126,7 +127,8 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             await WaitForSpinnerAsync();
 
             // Navigate to next page (Insurance Score)
-            await NextButton.ClickAsync();
+            // Use ClickNextAsync() to handle variations in the Next button test ID across page states
+            await ClickNextAsync();
             await WaitForSpinnerAsync();
         }
         #endregion

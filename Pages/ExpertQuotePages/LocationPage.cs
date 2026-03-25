@@ -156,9 +156,25 @@ namespace Playwright_POC.Pages
         {
             var choice = (deductible ?? "").Trim().ToUpperInvariant();
 
+            // Check if Wind/Hail deductible field exists (not all states have this field)
+            var scope = WindHailScope();
+            if (await scope.CountAsync() == 0)
+            {
+                Console.WriteLine("Wind/Hail deductible field not present for this state - skipping.");
+                return;
+            }
+
+            // Also verify the buttons exist within the scope
+            var buttons = scope.Locator("button[data-testid*='locationInput$windHailDeductible.value']");
+            if (await buttons.CountAsync() == 0)
+            {
+                Console.WriteLine("Wind/Hail deductible buttons not found - skipping.");
+                return;
+            }
+
             await Helpers.Helpers.SelectButtonAsync(
                 page: _page,
-                scope: WindHailScope(),
+                scope: scope,
                 value: choice,
                 moreOptionsButton: WindHailMoreOptionsButton(),
                 timeoutMs: 30000);

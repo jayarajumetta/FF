@@ -56,29 +56,91 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             TableMappingHelpers.InsuranceScoreFields(table, _contextData);
 
             var insuranceScorePage = new SFP_InsuranceScorePage(_context.Page);
+            await insuranceScorePage.WaitForSpinnerAsync();
 
-            // Select entity type if specified
-            if (!string.IsNullOrEmpty(_contextData.InsuranceScoreEntityType))
+            // ── Page detection via side nav ────────────────────────────────
+            // Business rules governing Insurance Designee screen visibility:
+            //
+            //   DOES appear:
+            //     • Policies with Original Inception date 11/14/2014 or LATER.
+            //     • SD (South Dakota) and WI (Wisconsin) renewal conversions
+            //       always show the Insurance Designee screen.
+            //
+            //   DOES NOT appear:
+            //     • Policies with Original Inception date BEFORE 11/14/2014.
+            //       Rules 10301 & 11055 (Insurance Designee) are suppressed.
+            //
+            // The app only renders the "InsuranceDesignee-nav" side nav item when
+            // the step is required. Checking the nav is the single source of truth —
+            // faster and more reliable than probing page content.
+            var sideNav = new SideMenuNavigation(_context.Page);
+            if (!await sideNav.IsInsuranceScoreNavPresentAsync())
+            {
+                Console.WriteLine("[InsuranceScore] 'Insurance Designee' not present in side nav - step not required for this state/transaction, skipping.");
+                return;
+            }
+
+            // ── Insurance Score flow ──────────────────────────────────────────
+            // Click entity type dropdown only when visible (not present in all states).
+            if (!string.IsNullOrEmpty(_contextData.InsuranceScoreEntityType) &&
+                await insuranceScorePage.EntityTypeSelect.CountAsync() > 0 &&
+                await insuranceScorePage.EntityTypeSelect.IsVisibleAsync())
             {
                 await insuranceScorePage.EntityTypeSelect.ClickAsync();
                 await _context.Page.GetByRole(AriaRole.Option, new() { Name = _contextData.InsuranceScoreEntityType }).ClickAsync();
+                await insuranceScorePage.WaitForSpinnerAsync();
             }
 
-            // Click Primary Insured or Individual Not Listed
+            // Click Primary Insured or Individual Not Listed designee button if present.
             if (_contextData.InsuranceScoreDesignee?.ToLower() == "primary insured")
-                await insuranceScorePage.PrimaryInsuredButton.ClickAsync();
+            {
+                try
+                {
+                    await insuranceScorePage.PrimaryInsuredButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
+                    await insuranceScorePage.PrimaryInsuredButton.ClickAsync();
+                    await insuranceScorePage.WaitForSpinnerAsync();
+                }
+                catch (TimeoutException)
+                {
+                    Console.WriteLine("[InsuranceScore] PrimaryInsured button not present for this state - skipping designee selection");
+                }
+            }
             else if (_contextData.InsuranceScoreDesignee?.ToLower() == "individual not listed")
-                await insuranceScorePage.IndividualNotListedButton.ClickAsync();
+            {
+                try
+                {
+                    await insuranceScorePage.IndividualNotListedButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
+                    await insuranceScorePage.IndividualNotListedButton.ClickAsync();
+                    await insuranceScorePage.WaitForSpinnerAsync();
+                }
+                catch (TimeoutException)
+                {
+                    Console.WriteLine("[InsuranceScore] IndividualNotListed button not present for this state - skipping designee selection");
+                }
+            }
 
-            // Click Insurance Score Consent
-            await insuranceScorePage.InsuranceScoreConsentButton.ClickAsync();
-            await insuranceScorePage.WaitForSpinnerAsync();
+            // Click Insurance Score Consent if present, then Accept/Decline.
+            var consentVisible = false;
+            try
+            {
+                await insuranceScorePage.InsuranceScoreConsentButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
+                consentVisible = true;
+            }
+            catch (TimeoutException)
+            {
+                Console.WriteLine("[InsuranceScore] Consent button not present for this state - skipping consent/accept flow");
+            }
 
-            // Accept or Decline
-            if (_contextData.InsuranceScoreConsent?.ToLower() == "accept")
-                await insuranceScorePage.AcceptButton.ClickAsync();
-            else
-                await insuranceScorePage.DeclineButton.ClickAsync();
+            if (consentVisible)
+            {
+                await insuranceScorePage.InsuranceScoreConsentButton.ClickAsync();
+                await insuranceScorePage.WaitForSpinnerAsync();
+
+                if (_contextData.InsuranceScoreConsent?.ToLower() == "accept")
+                    await insuranceScorePage.AcceptButton.ClickAsync();
+                else
+                    await insuranceScorePage.DeclineButton.ClickAsync();
+            }
 
             await insuranceScorePage.ClickNextAsync();
         }

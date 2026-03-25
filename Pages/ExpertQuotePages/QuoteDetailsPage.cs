@@ -232,7 +232,8 @@ namespace Playwright_POC.Pages
             await RatingStateDropdown.ClickAsync();
             await Task.Delay(500);
             // Dropdown shows states in UPPERCASE (Angular Material mat-option)
-            await _page.GetByRole(AriaRole.Option, new() { Name = contextData.RatingState.ToUpper() }).ClickAsync();
+            // Use Exact = true to prevent "KANSAS" from matching "ARKANSAS"
+            await _page.GetByRole(AriaRole.Option, new() { Name = contextData.RatingState.ToUpper(), Exact = true }).ClickAsync();
         }
     }
 }

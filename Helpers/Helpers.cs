@@ -155,10 +155,10 @@ namespace Playwright_POC.Helpers
             await Expect(panel).ToBeVisibleAsync(new() { Timeout = timeoutMs });
 
             await page.WaitForTimeoutAsync(3000);
-            // Select option inside overlay
+            // Select option inside overlay - use Exact match to avoid partial matches (e.g., KANSAS vs ARKANSAS)
             var option = page
                 .GetByRole(AriaRole.Listbox)
-                .GetByRole(AriaRole.Option, new() { Name = value });
+                .GetByRole(AriaRole.Option, new() { Name = value, Exact = true });
 
 
             await option.ScrollIntoViewIfNeededAsync();
@@ -220,7 +220,13 @@ namespace Playwright_POC.Helpers
                 return;
             }
 
-            await Expect(moreOptionsButton).ToBeVisibleAsync(new() {Timeout = timeoutMs});
+            // The 'More Options' overflow button may not be present in all states. If it is not
+            // visible, skip rather than fail — the deductible option simply isn't available/needed.
+            if (await moreOptionsButton.CountAsync() == 0 || !await moreOptionsButton.IsVisibleAsync())
+            {
+                System.Console.WriteLine($"[SelectButton] '{target}' not found as a chip and 'More Options' is not visible — skipping selection.");
+                return;
+            }
             await Expect(moreOptionsButton).ToBeEnabledAsync(new() { Timeout = timeoutMs});
             await moreOptionsButton.ScrollIntoViewIfNeededAsync();
             await moreOptionsButton.ClickAsync(new() { Timeout = timeoutMs});

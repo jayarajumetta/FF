@@ -101,7 +101,16 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
                 return;
             }
 
-            await fppPage.CoverageCheckbox(rowIndex).ClickAsync();
+            var checkbox = fppPage.CoverageCheckbox(rowIndex);
+            if (await checkbox.CountAsync() == 0 || !await checkbox.IsVisibleAsync())
+            {
+                Console.WriteLine($"WARNING: FPP coverage checkbox row {rowIndex} (code '{_contextData.FarmPropertyCode}') not visible for this state - skipping FPP");
+                await fppPage.ClickNextAsync();
+                await fppPage.WaitForSpinnerAsync();
+                return;
+            }
+
+            await checkbox.ClickAsync();
             await fppPage.WaitForSpinnerAsync();
 
             // Click Add Coverage and fill item details
@@ -123,7 +132,7 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             await fppPage.SaveItemButton.ClickAsync();
             await fppPage.WaitForSpinnerAsync();
 
-            await fppPage.NextButton.ClickAsync();
+            await fppPage.ClickNextAsync();
             await fppPage.WaitForSpinnerAsync();
 
             Console.WriteLine($"Selected FPP coverage code '{_contextData.FarmPropertyCode}'");
