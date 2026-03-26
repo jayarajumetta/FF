@@ -4,7 +4,17 @@ using System.Threading.Tasks;
 namespace Playwright_POC.Pages
 {
     /// <summary>
-    /// Base class for all Page Objects providing common functionality
+    /// Base class for all Page Objects providing common functionality.
+    ///
+    /// Selector strategy:
+    ///   - DuckCreek form engine fields use <c>GetByTestId("fields.data.*")</c> — those test IDs
+    ///     are owned by DuckCreek and are not being migrated.
+    ///   - ANi-built UI components (nav, dashboard, landing page) are migrating from
+    ///     <c>data-testid</c> attributes to standard HTML <c>id</c> attributes as part of the
+    ///     internal library migration (INC0183313 and subsequent rollout).
+    ///     Use <c>GetById(id)</c> for <c>#id</c> lookups, or the dual-selector helper
+    ///     <c>_page.Locator($"[data-testid='{x}'], #{x}")</c> for elements currently in
+    ///     transition so they work whether or not the attribute has been migrated yet.
     /// </summary>
     public abstract class BasePage
     {
@@ -14,6 +24,12 @@ namespace Playwright_POC.Pages
         {
             _page = page;
         }
+
+        /// <summary>
+        /// Locate an element by standard HTML <c>id</c> attribute.
+        /// Use this for ANi-built components that have been migrated away from <c>data-testid</c>.
+        /// </summary>
+        protected ILocator GetById(string id) => _page.Locator($"#{id}");
 
         /// <summary>
         /// Wait for the page-specific loading indicator to clear

@@ -924,10 +924,7 @@ namespace Playwright_POC.Helpers
                 switch (question)
                 {
                     case "EntityType":
-                        // "EntityType" in the feature table identifies the designee (e.g. "Primary Insured"),
-                        // not the entity classification dropdown. Map to InsuranceScoreDesignee so the
-                        // correct headless-selection button is clicked instead of the entityType dropdown.
-                        _contextData.InsuranceScoreDesignee = answer;
+                        _contextData.InsuranceScoreEntityType = answer;
                         break;
                     case "InsuranceScoreConsent":
                         _contextData.InsuranceScoreConsent = answer;

@@ -16,9 +16,10 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         // Dashboard/Search page
         private ILocator DashboardElement => _page.Locator("strong").GetByText("Quote", new() { Exact = true }).First;
         private ILocator PageHeader => _page.GetByText("Search / Recently Accessed");
-        private ILocator SearchInput => _page.GetByTestId("quoteSearchInput");
-        private ILocator SearchButton => _page.GetByTestId("quoteSearchButton");
-        private ILocator NewQuoteButton => _page.GetByRole(AriaRole.Button, new() { Name = "New Quote" });
+        // Note: These use regular HTML id attributes, not data-testid
+        private ILocator SearchInput => _page.Locator("#quoteSearchInput");
+        private ILocator SearchButton => _page.Locator("#quoteSearchButton");
+        private ILocator NewQuoteButton => _page.Locator("#new-quote-button");
         
         // Client Search/Suggestions panel (within quote flow)
         private ILocator ClientSearchSuggestionNav => _page.GetByTestId("ClientSearchSuggestion-nav");
@@ -33,7 +34,12 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         /// </summary>
         public async Task SearchForClientAsync(string name)
         {
+            // Wait for page to be ready after login - the search input should be visible
+            await SearchInput.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
             await SearchInput.FillAsync(name);
+            
+            // Wait for search button to be visible and clickable
+            await SearchButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
             await SearchButton.ClickAsync();
             await WaitForSpinnerAsync();
         }
