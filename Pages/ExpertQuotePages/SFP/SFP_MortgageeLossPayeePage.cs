@@ -1,4 +1,5 @@
 using Microsoft.Playwright;
+using System;
 using System.Threading.Tasks;
 using Playwright_POC.Helpers;
 
@@ -12,7 +13,12 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         public SFP_MortgageeLossPayeePage(IPage page) : base(page) { }
 
         #region Locators - Add Mortgagee Button
+        // Primary: button text "ADD ADDITIONAL INTEREST" (robust against testid changes)
         public ILocator AddMortgageeButton =>
+            _page.GetByRole(AriaRole.Button, new() { NameRegex = new System.Text.RegularExpressions.Regex("add additional interest", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
+
+        // Legacy testid fallback (kept for reference — may no longer be present in DOM)
+        public ILocator AddMortgageeButtonByTestId =>
             _page.GetByTestId("fields.data.account.additionalOtherInterest.addAdditionalInterests");
         #endregion
 
@@ -68,7 +74,16 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             await WaitForSpinnerAsync();
 
             // Click + ADD ADDITIONAL INTEREST to open the mortgagee form
-            await AddMortgageeButton.ClickAsync();
+            // Try role-based locator first (robust against testid changes), fall back to testid
+            ILocator addBtn;
+            if (await AddMortgageeButton.CountAsync() > 0 && await AddMortgageeButton.IsVisibleAsync())
+                addBtn = AddMortgageeButton;
+            else if (await AddMortgageeButtonByTestId.CountAsync() > 0 && await AddMortgageeButtonByTestId.IsVisibleAsync())
+                addBtn = AddMortgageeButtonByTestId;
+            else
+                throw new PlaywrightException("+ ADD ADDITIONAL INTEREST button not found on Mortgagee/Loss Payee page.");
+
+            await addBtn.ClickAsync();
             await WaitForSpinnerAsync();
 
             // Search for mortgagee by name
