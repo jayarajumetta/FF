@@ -1,4 +1,5 @@
 using Microsoft.Playwright;
+using System;
 using System.Threading.Tasks;
 
 namespace Playwright_POC.Pages.ExpertQuotePages.SFP
@@ -27,14 +28,18 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
 
         public ILocator NextLiabilityButton => _page.GetByTestId("fields.data-Next.next");
 
-        // Add Coverage button - testid varies by coverage type.
-        // Use dynamic locator to find any Add button in the fields.line section.
+        // Add Coverage button — testid varies by coverage type.
+        // Strategy 1: covEndorsements add — standard DuckCreek SFP SPP pattern
         public ILocator AddCoverageButton =>
+            _page.Locator("[data-testid*='covEndorsements'][data-testid*='add']").First;
+
+        // Strategy 2: any button whose testid contains "fields.line." and ".add"
+        public ILocator AddCoverageButtonByLineTestId =>
             _page.Locator("button[data-testid*='fields.line.'][data-testid*='.add']").First;
 
-        // Fallback: Find by role with "+ ADD" text pattern
+        // Strategy 3: any button whose accessible name contains "ADD COVERAGE" or "+ ADD"
         public ILocator AddCoverageButtonByRole =>
-            _page.GetByRole(AriaRole.Button, new() { NameRegex = new System.Text.RegularExpressions.Regex("^\\+ ADD", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
+            _page.GetByRole(AriaRole.Button, new() { NameRegex = new System.Text.RegularExpressions.Regex("add", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
 
         // Item entry fields (appear after clicking Add Coverage)
         public ILocator ItemDescription(int row = 0) =>
@@ -49,14 +54,14 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         public ILocator SaveItemButton => _page.GetByTestId("fields.data.save");
 
         /// <summary>
-        /// Clicks the Add Coverage button. The testid varies by coverage type so we use a partial
-        /// data-testid match; if that misses, fall back to the button's ARIA role and "+ ADD" label.
+        /// Clicks the Add Coverage button. Tries multiple locator strategies, logs available
+        /// button testids on failure to aid diagnosis.
         /// </summary>
         public async Task ClickAddCoverageButtonAsync()
         {
             await WaitForSpinnerAsync();
 
-            // Primary: partial testid match catches all coverage types
+            // Strategy 1: covEndorsements add — standard DuckCreek SFP SPP pattern
             if (await AddCoverageButton.CountAsync() > 0 && await AddCoverageButton.IsVisibleAsync())
             {
                 await AddCoverageButton.ScrollIntoViewIfNeededAsync();
@@ -64,16 +69,35 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
                 return;
             }
 
-            // Fallback: role-based "+ ADD" button text
-            if (await AddCoverageButtonByRole.CountAsync() > 0 && await AddCoverageButtonByRole.First.IsVisibleAsync())
+            // Strategy 2: partial testid match on "fields.line." + ".add"
+            if (await AddCoverageButtonByLineTestId.CountAsync() > 0 && await AddCoverageButtonByLineTestId.IsVisibleAsync())
             {
-                await AddCoverageButtonByRole.First.ScrollIntoViewIfNeededAsync();
-                await AddCoverageButtonByRole.First.ClickAsync();
+                await AddCoverageButtonByLineTestId.ScrollIntoViewIfNeededAsync();
+                await AddCoverageButtonByLineTestId.ClickAsync();
                 return;
             }
 
+            // Strategy 3: any visible button whose accessible name contains "ADD"
+            var count = await AddCoverageButtonByRole.CountAsync();
+            for (var i = 0; i < count; i++)
+            {
+                var btn = AddCoverageButtonByRole.Nth(i);
+                if (await btn.IsVisibleAsync())
+                {
+                    await btn.ScrollIntoViewIfNeededAsync();
+                    await btn.ClickAsync();
+                    return;
+                }
+            }
+
+            // Diagnostic: log all button testids so we know what is on the page
+            var testIds = await _page.EvaluateAsync<string[]>(@"
+                () => Array.from(document.querySelectorAll('button[data-testid]'))
+                          .map(b => b.getAttribute('data-testid'))");
+            Console.WriteLine($"[SPP] Available button testids: {string.Join(", ", testIds ?? System.Array.Empty<string>())}");
+
             throw new PlaywrightException(
-                "SPP Add Coverage button not found. Expected button[data-testid*='fields.line.'][data-testid*='.add'] or a '+ ADD' button.");
+                "SPP Add Coverage button not found. Tried covEndorsements+add, fields.line.+.add, and role-based 'ADD'. See console for available testids.");
         }
         #endregion
 
