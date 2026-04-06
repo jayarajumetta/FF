@@ -92,7 +92,8 @@ namespace Playwright_POC.Pages.ExpertQuotePages
             }
         }
 
-        public async Task SetSecondaryFarmTypeAsync(bool enable)
+        /// <returns>True if the toggle was found and set; false if the toggle was not present (skip secondary farm type).</returns>
+        public async Task<bool> SetSecondaryFarmTypeAsync(bool enable)
         {
             await WaitForSpinnerAsync();
 
@@ -108,7 +109,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages
             catch (TimeoutException)
             {
                 Console.WriteLine("[PolicyDetails] Secondary farm type toggle not visible — skipping.");
-                return;
+                return false;
             }
 
             await toggle.ScrollIntoViewIfNeededAsync();
@@ -122,6 +123,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages
                 await toggle.ClickAsync();
                 await WaitForSpinnerAsync();
             }
+            return true;
         }
 
         public async Task SelectSecondaryFarmCategoryAsync(string category)

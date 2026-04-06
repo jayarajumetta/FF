@@ -110,10 +110,13 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
 
             if (!string.IsNullOrEmpty(_contextData.SecondaryFarmType))
             {
-                await sfpPolicyDetailsPage.SetSecondaryFarmTypeAsync(true);
-                await sfpPolicyDetailsPage.SelectSecondaryFarmCategoryAsync(_contextData.SecondaryFarmType);
-                if (!string.IsNullOrEmpty(_contextData.SecondaryFarmSubType))
-                    await sfpPolicyDetailsPage.SelectSecondaryFarmSubTypeAsync(_contextData.SecondaryFarmSubType);
+                var toggled = await sfpPolicyDetailsPage.SetSecondaryFarmTypeAsync(true);
+                if (toggled)
+                {
+                    await sfpPolicyDetailsPage.SelectSecondaryFarmCategoryAsync(_contextData.SecondaryFarmType);
+                    if (!string.IsNullOrEmpty(_contextData.SecondaryFarmSubType))
+                        await sfpPolicyDetailsPage.SelectSecondaryFarmSubTypeAsync(_contextData.SecondaryFarmSubType);
+                }
             }
 
             await sfpPolicyDetailsPage.EnterGrossFarmIncomeAsync(_contextData.GrossFarmIncome);
