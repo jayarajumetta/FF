@@ -46,7 +46,6 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             await proposalDetailsPage.SelectRatingStateAsync(_contextData);
             await proposalDetailsPage.SelectRiskAddressAsync(_contextData);
             await proposalDetailsPage.ClickStartQuoteAsync();
-            await proposalDetailsPage.HandleSSNPopupsAsync(_contextData);
             await proposalDetailsPage.HandleClientExistsPopupAsync();
             Console.WriteLine($"Client {_contextData.ClientFirstName}");
         }
@@ -109,16 +108,12 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             await sfpPolicyDetailsPage.SelectPrimaryFarmCategoryAsync(_contextData.PrimaryFarmType);
             await sfpPolicyDetailsPage.SelectPrimaryFarmSubTypeAsync(_contextData.LivestockType);
 
-            // Handle secondary farm type if specified (Tosca: Secondary Farm + Farm Type Secondary)
             if (!string.IsNullOrEmpty(_contextData.SecondaryFarmType))
             {
                 await sfpPolicyDetailsPage.SetSecondaryFarmTypeAsync(true);
                 await sfpPolicyDetailsPage.SelectSecondaryFarmCategoryAsync(_contextData.SecondaryFarmType);
-
                 if (!string.IsNullOrEmpty(_contextData.SecondaryFarmSubType))
-                {
                     await sfpPolicyDetailsPage.SelectSecondaryFarmSubTypeAsync(_contextData.SecondaryFarmSubType);
-                }
             }
 
             await sfpPolicyDetailsPage.EnterGrossFarmIncomeAsync(_contextData.GrossFarmIncome);

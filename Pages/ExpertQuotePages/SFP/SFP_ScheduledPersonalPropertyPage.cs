@@ -14,8 +14,10 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         public ILocator FilterInput => _page.GetByTestId("temp.filter");
         public ILocator CoverageTable => _page.GetByTestId("coverageTableSPP");
 
+        // DuckCreek checkboxes have both <label> and <input> with the same data-testid.
+        // Target the label specifically to avoid strict mode violations.
         public ILocator CoverageCheckbox(int row) =>
-            _page.GetByTestId($"fields.page.covCatEntry.rows[{row}].covCatEntryInput$selected.value");
+            _page.Locator($"label[data-testid='fields.page.covCatEntry.rows[{row}].covCatEntryInput$selected.value']");
 
         public ILocator CoverageLimit(int row) =>
             _page.GetByTestId($"fields.page.covCatEntry.rows[{row}].covCatEntryInput$limit.value");
@@ -25,8 +27,14 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
 
         public ILocator NextLiabilityButton => _page.GetByTestId("fields.data-Next.next");
 
-        // Add Coverage button for Bicycles (code 401) - appears after checking checkbox
-        public ILocator AddCoverageButton => _page.GetByTestId("fields.line.covBicycles.addBicycles");
+        // Add Coverage button - testid varies by coverage type.
+        // Use dynamic locator to find any Add button in the fields.line section.
+        public ILocator AddCoverageButton =>
+            _page.Locator("button[data-testid*='fields.line.'][data-testid*='.add']").First;
+
+        // Fallback: Find by role with "+ ADD" text pattern
+        public ILocator AddCoverageButtonByRole =>
+            _page.GetByRole(AriaRole.Button, new() { NameRegex = new System.Text.RegularExpressions.Regex("^\\+ ADD", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
 
         // Item entry fields (appear after clicking Add Coverage)
         public ILocator ItemDescription(int row = 0) =>
@@ -39,6 +47,34 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             _page.GetByTestId($"fields.covEndorsements.rows[{row}].covEndorsementsInput$yearOfLastAppraisal.value");
 
         public ILocator SaveItemButton => _page.GetByTestId("fields.data.save");
+
+        /// <summary>
+        /// Clicks the Add Coverage button. The testid varies by coverage type so we use a partial
+        /// data-testid match; if that misses, fall back to the button's ARIA role and "+ ADD" label.
+        /// </summary>
+        public async Task ClickAddCoverageButtonAsync()
+        {
+            await WaitForSpinnerAsync();
+
+            // Primary: partial testid match catches all coverage types
+            if (await AddCoverageButton.CountAsync() > 0 && await AddCoverageButton.IsVisibleAsync())
+            {
+                await AddCoverageButton.ScrollIntoViewIfNeededAsync();
+                await AddCoverageButton.ClickAsync();
+                return;
+            }
+
+            // Fallback: role-based "+ ADD" button text
+            if (await AddCoverageButtonByRole.CountAsync() > 0 && await AddCoverageButtonByRole.First.IsVisibleAsync())
+            {
+                await AddCoverageButtonByRole.First.ScrollIntoViewIfNeededAsync();
+                await AddCoverageButtonByRole.First.ClickAsync();
+                return;
+            }
+
+            throw new PlaywrightException(
+                "SPP Add Coverage button not found. Expected button[data-testid*='fields.line.'][data-testid*='.add'] or a '+ ADD' button.");
+        }
         #endregion
 
         #region Coverage Mapping

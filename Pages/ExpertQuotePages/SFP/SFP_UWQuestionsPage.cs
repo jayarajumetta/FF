@@ -31,31 +31,51 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             if (!UwQuestionTestIds.TryGetValue(key, out var testId))
                 throw new ArgumentException($"Unknown UW Question key '{key}'. Valid keys: {string.Join(", ", UwQuestionTestIds.Keys)}");
 
-            return _page.Locator($"button[data-testid='{testId}']");
+            // DuckCreek renders these as checkboxes (label + input), not buttons
+            // Target the label (first match) to avoid strict mode violation when both label and input share the testId
+            return _page.GetByTestId(testId).First;
         }
 
         private async Task<bool> IsCheckedAsync(string key)
         {
-            var btn = UwToggleButton(key);
-            var icon = btn.Locator("i.material-icons").First;
+            if (!UwQuestionTestIds.TryGetValue(key, out var testId))
+                throw new ArgumentException($"Unknown UW Question key '{key}'.");
 
-            if (await icon.CountAsync() == 0)
+            // Check the inner input's checked state
+            var input = _page.Locator($"input[data-testid='{testId}']");
+            if (await input.CountAsync() > 0)
+                return await input.First.IsCheckedAsync();
+
+            // Fallback: aria-pressed on button-style elements
+            var btn = _page.Locator($"button[data-testid='{testId}']");
+            if (await btn.CountAsync() > 0)
             {
-                var ariaPressed = await btn.GetAttributeAsync("aria-pressed");
+                var ariaPressed = await btn.First.GetAttributeAsync("aria-pressed");
                 return string.Equals(ariaPressed, "true", StringComparison.OrdinalIgnoreCase);
             }
 
-            var iconText = (await icon.InnerTextAsync())?.Trim() ?? "";
-            return !iconText.Contains("check_box_outline_blank", StringComparison.OrdinalIgnoreCase);
+            return false;
         }
 
         private async Task SetCheckedAsync(string key, bool shouldBeChecked)
         {
-            var btn = UwToggleButton(key);
-            var isChecked = await IsCheckedAsync(key);
+            if (!UwQuestionTestIds.TryGetValue(key, out var testId))
+                throw new ArgumentException($"Unknown UW Question key '{key}'.");
 
-            if (isChecked != shouldBeChecked)
-                await btn.ClickAsync();
+            var isChecked = await IsCheckedAsync(key);
+            if (isChecked == shouldBeChecked) return;
+
+            // New UI: checkbox — use CheckAsync/UncheckAsync so hidden inputs work correctly
+            var input = _page.Locator($"input[type='checkbox'][data-testid='{testId}']");
+            if (await input.CountAsync() > 0)
+            {
+                if (shouldBeChecked) await input.First.CheckAsync();
+                else await input.First.UncheckAsync();
+                return;
+            }
+
+            // Old UI or label-wrapped checkbox — click the label or button
+            await _page.GetByTestId(testId).First.ClickAsync();
         }
 
         /// <summary>

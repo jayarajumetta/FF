@@ -225,16 +225,42 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
     [When("user captures the quote number")]
     public async Task UserCapturesTheQuoteNumber()
     {
-        // Get the quote number from the header tab label
-        var quoteNumberLocator = _context.Page.Locator("div[class*='mat-tab-label-container'] span");
-        var fullText = await quoteNumberLocator.InnerTextAsync();
-        var lines = fullText.Split(NewLineSeparator, StringSplitOptions.RemoveEmptyEntries);
-        var quoteNumber = lines.Length > 1 ? lines[1].Trim() : fullText.Trim();
-        _contextData.QuoteNumber = quoteNumber;
-        Console.WriteLine($"Captured Quote Number: {quoteNumber}");
+        // Primary: Get quote number from the SFP nav menu header (has data-testid)
+        // Format: "SFP  (01945221)"
+        var sfpNavLocator = _context.Page.GetByTestId("cl-sfp-nav");
         
-        // Also save to file for cross-browser-session persistence
-        System.IO.File.WriteAllText("QuoteNumber.txt", quoteNumber);
+        if (await sfpNavLocator.CountAsync() > 0)
+        {
+            var navText = await sfpNavLocator.InnerTextAsync();
+            // Extract 8-digit quote number from parentheses: "SFP  (01945221)" -> "01945221"
+            var match = System.Text.RegularExpressions.Regex.Match(navText, @"\((\d{8})\)");
+            if (match.Success)
+            {
+                _contextData.QuoteNumber = match.Groups[1].Value;
+                Console.WriteLine($"Captured Quote Number from nav: {_contextData.QuoteNumber}");
+                System.IO.File.WriteAllText("QuoteNumber.txt", _contextData.QuoteNumber);
+                return;
+            }
+        }
+        
+        // Fallback: Try the tab label (older UI structure)
+        var tabLocator = _context.Page.Locator("[role='tab'] .mdc-tab__text-label span").First;
+        if (await tabLocator.CountAsync() > 0)
+        {
+            var fullText = await tabLocator.InnerTextAsync();
+            var lines = fullText.Split(NewLineSeparator, StringSplitOptions.RemoveEmptyEntries);
+            var quoteNumber = lines.Length > 1 ? lines[1].Trim() : fullText.Trim();
+            
+            if (System.Text.RegularExpressions.Regex.IsMatch(quoteNumber, @"^\d{8}$"))
+            {
+                _contextData.QuoteNumber = quoteNumber;
+                Console.WriteLine($"Captured Quote Number from tab: {_contextData.QuoteNumber}");
+                System.IO.File.WriteAllText("QuoteNumber.txt", _contextData.QuoteNumber);
+                return;
+            }
+        }
+        
+        throw new Exception("Could not find quote number on page. Check UI for changes to cl-sfp-nav or tab labels.");
     }
 
     [When("user closes the browser")]
@@ -303,11 +329,10 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
         
         Console.WriteLine($"Searching for quote: {quoteNumber}");
         
-        // Use the quote search input
         var searchInput = _context.Page.GetByTestId("quoteSearchInput");
         await searchInput.FillAsync(quoteNumber);
         
-        var searchButton = _context.Page.GetByTestId("quoteSearchButton");
+        var searchButton = _context.Page.GetByRole(AriaRole.Button, new() { Name = "Search" });
         await searchButton.ClickAsync();
         
         // Wait for search results

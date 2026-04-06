@@ -55,14 +55,16 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         #endregion
 
         #region Coverage Checkboxes (TestId-based)
-        public ILocator LightningRodCreditCheckbox => _page.GetByTestId("fields.building.rows[0].buildingInput$lightningRodCredit.value");
-        public ILocator NonSmokersCreditCheckbox => _page.GetByTestId("fields.building.rows[0].buildingInput$nonSmokersCredit.value");
-        public ILocator OrdinanceOrLawCheckbox => _page.GetByTestId("fields.building.rows[0].buildingInput$ordinanceOrLaw.value");
-        public ILocator ProtectiveDeviceCreditCheckbox => _page.GetByTestId("fields.building.rows[0].buildingInput$protectiveDeviceCreditControl.value");
-        public ILocator BuildersRiskCoverageCheckbox => _page.GetByTestId("fields.risk.rows[0].riskInput$eqCovResidenceBuildersRisk.value");
-        public ILocator ResidenceCoverageCheckbox => _page.GetByTestId("fields.risk.rows[0].riskInput$eQResidenceCoverage.value");
-        public ILocator ContentsCoverageCheckbox => _page.GetByTestId("fields.risk.rows[0].riskInput$eQResidenceContentsCoverage.value");
-        public ILocator OptionalCoverageCheckbox => _page.GetByTestId("fields.risk.rows[0].riskInput$eQOptionalCoveragesCatalog.value");
+        // DuckCreek renders checkboxes with both a <label> and <input> sharing the same data-testid.
+        // Target the label element specifically to avoid strict mode violations.
+        public ILocator LightningRodCreditCheckbox => _page.Locator("label[data-testid='fields.building.rows[0].buildingInput$lightningRodCredit.value']");
+        public ILocator NonSmokersCreditCheckbox => _page.Locator("label[data-testid='fields.building.rows[0].buildingInput$nonSmokersCredit.value']");
+        public ILocator OrdinanceOrLawCheckbox => _page.Locator("label[data-testid='fields.building.rows[0].buildingInput$ordinanceOrLaw.value']");
+        public ILocator ProtectiveDeviceCreditCheckbox => _page.Locator("label[data-testid='fields.building.rows[0].buildingInput$protectiveDeviceCreditControl.value']");
+        public ILocator BuildersRiskCoverageCheckbox => _page.Locator("label[data-testid='fields.risk.rows[0].riskInput$eqCovResidenceBuildersRisk.value']");
+        public ILocator ResidenceCoverageCheckbox => _page.Locator("label[data-testid='fields.risk.rows[0].riskInput$eQResidenceCoverage.value']");
+        public ILocator ContentsCoverageCheckbox => _page.Locator("label[data-testid='fields.risk.rows[0].riskInput$eQResidenceContentsCoverage.value']");
+        public ILocator OptionalCoverageCheckbox => _page.Locator("label[data-testid='fields.risk.rows[0].riskInput$eQOptionalCoveragesCatalog.value']");
         #endregion
 
         #region Actions

@@ -1,10 +1,14 @@
 using Microsoft.Playwright;
+using System;
 using System.Threading.Tasks;
 
 namespace Playwright_POC.Pages.ExpertQuotePages.SFP
 {
     /// <summary>
     /// SFP Farm Personal Property page - select FPP coverages with limits and deductibles.
+    /// Row indices in DuckCreek testIds are positional and vary by state — always resolve
+    /// the row index dynamically from the DOM using FindRowByCodeAsync() rather than
+    /// hardcoding indices.
     /// </summary>
     public class SFP_FarmPersonalPropertyPage : BasePage
     {
@@ -14,9 +18,11 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         public ILocator FilterInput => _page.GetByTestId("temp.filter");
         public ILocator CoverageTable => _page.GetByTestId("coverageTable");
 
-        // Coverage Checkboxes (by row index)
+        // Coverage controls by row index (resolved dynamically — do not hardcode)
+        // DuckCreek checkboxes have both <label> and <input> with the same data-testid.
+        // Target the label specifically to avoid strict mode violations.
         public ILocator CoverageCheckbox(int row) =>
-            _page.GetByTestId($"fields.page.covCatEntry.rows[{row}].covCatEntryInput$selected.value");
+            _page.Locator($"label[data-testid='fields.page.covCatEntry.rows[{row}].covCatEntryInput$selected.value']");
 
         public ILocator CoverageLimit(int row) =>
             _page.GetByTestId($"fields.page.covCatEntry.rows[{row}].covCatEntryInput$limit.value");
@@ -26,11 +32,17 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
 
         public ILocator NextButton => _page.GetByTestId("fields.data_Rules.nextEB");
 
-        // Add Coverage button (appears after checking code 464 checkbox)
+        // Add Coverage button - appears after checking a coverage checkbox.
+        // The testid varies by coverage type, so we use multiple locator strategies.
+        // Primary: Find any button with testid containing "add" in the fields.line section
         public ILocator AddCoverageButton =>
-            _page.GetByTestId("fields.line.covAudioVisualDataElectronicEquipment.addAudioVisualDataElectronicEquipment");
+            _page.Locator("button[data-testid*='fields.line.'][data-testid*='.add']").First;
 
-        // Item entry fields (appear after clicking Add Coverage, row 0 = first/new item)
+        // Fallback: Find by role with common button text patterns
+        public ILocator AddCoverageButtonByRole =>
+            _page.GetByRole(AriaRole.Button, new() { NameRegex = new System.Text.RegularExpressions.Regex("^\\+ ADD", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
+
+        // Item entry fields (appear after clicking Add Coverage)
         public ILocator ItemDescription(int row = 0) =>
             _page.GetByTestId($"fields.covEndorsements.rows[{row}].covEndorsementsInput$description.value");
 
@@ -41,44 +53,81 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             _page.GetByTestId($"fields.covEndorsements.rows[{row}].covEndorsementsInput$deductible.value");
 
         public ILocator SaveItemButton => _page.GetByTestId("fields.covEndorsements.save");
+
+        /// <summary>
+        /// Clicks the Add Coverage button. The testid varies by coverage type so we use a partial
+        /// data-testid match; if that misses, fall back to the button's ARIA role and "+ ADD" label.
+        /// </summary>
+        public async System.Threading.Tasks.Task ClickAddCoverageButtonAsync()
+        {
+            await WaitForSpinnerAsync();
+
+            // Primary: partial testid match catches all coverage types
+            // (e.g. covAudioVisualDataElectronicEquipment, covFarmTools, etc.)
+            if (await AddCoverageButton.CountAsync() > 0 && await AddCoverageButton.IsVisibleAsync())
+            {
+                await AddCoverageButton.ScrollIntoViewIfNeededAsync();
+                await AddCoverageButton.ClickAsync();
+                return;
+            }
+
+            // Try role-based locator for "+ ADD" buttons
+            if (await AddCoverageButtonByRole.CountAsync() > 0 && await AddCoverageButtonByRole.First.IsVisibleAsync())
+            {
+                await AddCoverageButtonByRole.First.ScrollIntoViewIfNeededAsync();
+                await AddCoverageButtonByRole.First.ClickAsync();
+                return;
+            }
+
+            throw new Microsoft.Playwright.PlaywrightException(
+                "Add Coverage button not found. Expected button[data-testid*='fields.line.'][data-testid*='.add'] or a '+ ADD' button.");
+        }
         #endregion
 
-        #region Coverage Mapping
-        // Maps FPP coverage codes to their fixed row index in the catalog table
-        private static readonly System.Collections.Generic.Dictionary<string, int> _codeToRow = new()
-        {
-            { "464", 1 }, // Audio, Visual and Data Electronic Equipment
-        };
-
+        #region Dynamic Row Lookup
         /// <summary>
-        /// Get the row index for a coverage by its catalog code (e.g. "464"). Returns -1 if not found.
+        /// Finds the DuckCreek row index for a coverage by scanning the visible table rows for
+        /// a cell whose text matches <paramref name="code"/> (exact) or <paramref name="descriptionFragment"/>
+        /// (partial, case-insensitive). Returns -1 when no match is found.
+        ///
+        /// This avoids hardcoded positional indices that shift when a state omits certain coverages.
         /// </summary>
-        public int GetCoverageRowIndexByCode(string code) =>
-            !string.IsNullOrEmpty(code) && _codeToRow.TryGetValue(code.Trim(), out var idx) ? idx : -1;
-
-        /// <summary>
-        /// Get the row index for a coverage by name/code. Returns -1 if not found.
-        /// </summary>
-        public int GetCoverageRowIndex(string coverageName) => coverageName?.ToLower() switch
+        public async Task<int> FindRowByCodeAsync(string code, string descriptionFragment = null)
         {
-            var s when s?.Contains("rental") == true => 0,
-            var s when s?.Contains("audio") == true || s?.Contains("electronic") == true => 1,
-            var s when s?.Contains("silo") == true || s?.Contains("unloader") == true => 2,
-            var s when s?.Contains("borrowed") == true || s?.Contains("rented") == true => 3,
-            var s when s?.Contains("multifunctional") == true || s?.Contains("multi-functional") == true => 4,
-            var s when s?.Contains("livestock specific") == true => 5,
-            var s when s?.Contains("livestock blanket") == true => 6,
-            var s when s?.Contains("machinery specific") == true || s?.Contains("farm machinery specific") == true => 7,
-            var s when s?.Contains("machinery blanket") == true || s?.Contains("farm machinery blanket") == true => 8,
-            var s when s?.Contains("products") == true && s?.Contains("specific") == true => 9,
-            var s when s?.Contains("products") == true && s?.Contains("blanket") == true => 10,
-            var s when s?.Contains("nursery") == true || s?.Contains("greenhouse") == true => 11,
-            var s when s?.Contains("pacc crop") == true || s?.Contains("crops feed") == true => 12,
-            var s when s?.Contains("hay") == true || s?.Contains("grain") == true || s?.Contains("fodder") == true => 13,
-            var s when s?.Contains("livestock freezing") == true || s?.Contains("freezing") == true => 14,
-            var s when s?.Contains("trellis") == true || s?.Contains("growers") == true => 15,
-            _ => -1
-        };
+            // Scan all covCatEntry checkbox testIds present on the page and check sibling text
+            var rowCount = await _page.Locator("[data-testid*='covCatEntry.rows'][data-testid$='selected.value']").CountAsync();
+            for (var i = 0; i < rowCount; i++)
+            {
+                // The row container sits above the checkbox — walk up to tr-level via JS
+                var rowText = await _page.EvaluateAsync<string>($@"
+                    () => {{
+                        const cb = document.querySelector(
+                            '[data-testid=""fields.page.covCatEntry.rows[{i}].covCatEntryInput$selected.value""]');
+                        if (!cb) return '';
+                        const row = cb.closest('tr') ?? cb.closest('[class*=""row""]') ?? cb.parentElement;
+                        return row ? row.textContent.trim() : '';
+                    }}");
+
+                if (string.IsNullOrEmpty(rowText)) continue;
+
+                // Match by exact code number (e.g. "464")
+                if (!string.IsNullOrEmpty(code) && rowText.Contains(code, StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine($"[FPP] Matched code '{code}' at row {i}: {rowText.Substring(0, Math.Min(80, rowText.Length))}");
+                    return i;
+                }
+
+                // Match by description fragment (e.g. "electronic", "audio")
+                if (!string.IsNullOrEmpty(descriptionFragment) && rowText.Contains(descriptionFragment, StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine($"[FPP] Matched description '{descriptionFragment}' at row {i}: {rowText.Substring(0, Math.Min(80, rowText.Length))}");
+                    return i;
+                }
+            }
+
+            Console.WriteLine($"[FPP] No row found for code='{code}' description='{descriptionFragment}' (scanned {rowCount} rows)");
+            return -1;
+        }
         #endregion
 
         #region Actions
@@ -87,10 +136,10 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         /// </summary>
         public async Task SelectCoverageAsync(string coverageName, string limit = null, string deductible = null)
         {
-            var rowIndex = GetCoverageRowIndex(coverageName);
+            var rowIndex = await FindRowByCodeAsync(null, coverageName);
             if (rowIndex < 0)
             {
-                System.Console.WriteLine($"WARNING: FPP coverage '{coverageName}' not matched - no checkbox selected");
+                Console.WriteLine($"WARNING: FPP coverage '{coverageName}' not found in table");
                 return;
             }
 
@@ -114,7 +163,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
                 }
             }
 
-            System.Console.WriteLine($"Selected FPP coverage '{coverageName}' with limit '{limit}'");
+            Console.WriteLine($"Selected FPP coverage '{coverageName}' with limit '{limit}'");
         }
         #endregion
     }

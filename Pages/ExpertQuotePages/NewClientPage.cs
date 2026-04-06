@@ -20,8 +20,8 @@ namespace Playwright_POC.Pages
         private ILocator DateOfBirthInput => _page.Locator("input[name='customer.dateOfBirth']");
         private ILocator BestPhoneInput => _page.Locator("input[name='customer.phone']");
         private ILocator EmailAddressInput => _page.Locator("input[name='customer.email']");
-        private ILocator SearchButton => _page.Locator("//button[text()='Search']");
-        private ILocator CreateNewClientButton => _page.Locator("//button[.//div[text()='Create New Client']]");
+        private ILocator SearchButton => _page.GetByRole(AriaRole.Button, new() { Name = "Search" });
+        private ILocator CreateNewClientButton => _page.GetByRole(AriaRole.Button, new() { Name = "Create New Client" });
         
         // Global locators used in this page
         private ILocator NextButton => _page.GetByTestId("next");

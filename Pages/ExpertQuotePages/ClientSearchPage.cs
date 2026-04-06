@@ -16,9 +16,8 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         // Dashboard/Search page
         private ILocator DashboardElement => _page.Locator("strong").GetByText("Quote", new() { Exact = true }).First;
         private ILocator PageHeader => _page.GetByText("Search / Recently Accessed");
-        // Note: These use regular HTML id attributes, not data-testid
-        private ILocator SearchInput => _page.Locator("#quoteSearchInput");
-        private ILocator SearchButton => _page.Locator("#quoteSearchButton");
+        private ILocator SearchInput => _page.GetByTestId("quoteSearchInput");
+        private ILocator SearchButton => _page.GetByRole(AriaRole.Button, new() { Name = "Search" });
         private ILocator NewQuoteButton => _page.Locator("#new-quote-button");
         
         // Client Search/Suggestions panel (within quote flow)

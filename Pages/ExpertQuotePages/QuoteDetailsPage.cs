@@ -1,6 +1,7 @@
 // Pages/QuoteDetailsPage.cs
 using Microsoft.Playwright;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Playwright_POC.Helpers;
 using static Microsoft.Playwright.Assertions;
@@ -33,7 +34,7 @@ namespace Playwright_POC.Pages
         private ILocator WritingCompanyDropdownValue => _page.GetByTestId("proposal.writingCompany");
         private ILocator RiskAddressRadioButton => _page.Locator("mat-radio-button[id='proposal.riskAddressSelection-0']");
         private ILocator AddNewRiskAddressRadioButton => _page.Locator("mat-radio-button[id='proposal.riskAddressSelection-1']");
-        private ILocator StartQuoteButton => _page.GetByTestId("startQuote");
+        private ILocator StartQuoteButton => _page.Locator("#startQuote");
         private ILocator IndividuallyOwnedCheckbox => _page.GetByTestId("business.isIndividualDba");
         private ILocator DBANameInput => _page.GetByTestId("business.individualDba");
         private ILocator GrossFarmIncomeInput => _page.GetByTestId("fields.account.policyInput$grossFarmIncome.value");
@@ -45,8 +46,8 @@ namespace Playwright_POC.Pages
         // SSN Pop-Up
         private ILocator SSNPopup => _page.GetByRole(AriaRole.Heading, new() { Name = "Enter the Client's Full SSN#" });
         private ILocator SSNInput => _page.GetByTestId("ssn");
-        private ILocator SSNConfirmPopup => _page.Locator("mat-dialog-container h2:has-text(\"Confirm the Client's SSN#\")");
-        private ILocator SSNConfirmButton => _page.Locator("mat-dialog-container a:has-text('Confirm')");
+        // btnConfirmYes is wrapped in <ng-component> which intercepts pointer events.
+        // Use DispatchEventAsync("click") instead of ClickAsync everywhere this is used.
         private ILocator DialogSubmitButton => _page.GetByTestId("btnConfirmYes");
 
         // Client Exists Pop-Up
@@ -181,37 +182,72 @@ namespace Playwright_POC.Pages
 
         public async Task HandleSSNPopupsAsync(ScenarioContextData contextData)
         {
-            await WaitForSpinnerAsync();
-
+            // Wait up to 15s for the SSN popup — it can appear well after ClickStartQuoteAsync
+            var popupVisible = false;
             try
             {
-                await SSNPopup.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 5000 });
-
-                string ssnToUse = !string.IsNullOrWhiteSpace(contextData.SSN)
-                    ? contextData.SSN
-                    : RandomGenerators.GenerateRandomSSN();
-
-                contextData.SSN = ssnToUse;
-
-                await SSNInput.FillAsync(ssnToUse);
-                await DialogSubmitButton.ClickAsync();
+                await SSNPopup.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
+                popupVisible = true;
             }
             catch (TimeoutException)
             {
                 // SSN popup didn't appear - continue
             }
 
+            if (!popupVisible)
+            {
+                await WaitForSpinnerAsync();
+                return;
+            }
+
+            string ssnToUse = !string.IsNullOrWhiteSpace(contextData.SSN)
+                ? contextData.SSN
+                : RandomGenerators.GenerateRandomSSN();
+            contextData.SSN = ssnToUse;
+
+            // ngx-mask input: type digits only, the mask inserts dashes automatically.
+            // PressSequentiallyAsync fires real keystroke events that the mask processes.
+            var digitsOnly = new string(ssnToUse.Where(char.IsDigit).ToArray());
+            await SSNInput.ClickAsync();
+            await SSNInput.PressSequentiallyAsync(digitsOnly, new() { Delay = 50 });
+            await Task.Delay(500);
+
+            Console.WriteLine($"[SSN] Typed SSN digits, clicking Submit");
+            await DialogSubmitButton.DispatchEventAsync("click");
+            Console.WriteLine($"[SSN] Submit clicked, waiting for popup to close");
+
+            // Wait for the popup to close (up to 15s) before continuing
             try
             {
-                await SSNConfirmPopup.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 3000 });
-                await SSNConfirmButton.ClickAsync();
+                await SSNPopup.WaitForAsync(new() { State = WaitForSelectorState.Hidden, Timeout = 15000 });
+                Console.WriteLine($"[SSN] First popup closed");
             }
             catch (TimeoutException)
             {
-                // Confirmation popup didn't appear - continue
+                Console.WriteLine($"[SSN] Warning: First popup did not close — Submit may not have worked");
             }
 
+            // Check for confirm dialog (same btnConfirmYes) — allow up to 10s.
+            try
+            {
+                await DialogSubmitButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
+                Console.WriteLine($"[SSN] Confirm dialog appeared, clicking Submit");
+                await DialogSubmitButton.DispatchEventAsync("click");
+
+                // Wait for the confirm dialog to close before proceeding
+                await DialogSubmitButton.WaitForAsync(new() { State = WaitForSelectorState.Hidden, Timeout = 15000 });
+                Console.WriteLine($"[SSN] Confirm dialog closed");
+                await Task.Delay(500);
+            }
+            catch (TimeoutException)
+            {
+                Console.WriteLine($"[SSN] No confirm dialog appeared - continuing");
+            }
+
+            // Wait for DuckCreek's full page navigation after SSN submission to settle
+            await _page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             await WaitForSpinnerAsync();
+            Console.WriteLine($"[SSN] Page settled after SSN — URL: {_page.Url}");
         }
 
         public async Task HandleClientExistsPopupAsync()

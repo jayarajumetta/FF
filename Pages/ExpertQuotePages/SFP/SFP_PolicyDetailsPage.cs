@@ -53,29 +53,47 @@ namespace Playwright_POC.Pages.ExpertQuotePages
 
         public async Task SelectPrimaryFarmCategoryAsync(string category)
         {
+            // Wait for Policy Details page to be fully loaded before interacting
+            await _page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+            await WaitForSpinnerAsync();
+
             var btn = GetPrimaryFarmCategoryButton(category);
             await btn.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 60000 });
             await btn.ClickAsync();
+            // Wait for DuckCreek's XHR spinner to appear then clear
+            var overlay = _page.Locator(".ngx-spinner-overlay");
+            try { await overlay.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 3000 }); }
+            catch (TimeoutException) { }
+            await WaitForSpinnerAsync();
         }
 
         public async Task SelectPrimaryFarmSubTypeAsync(string subType)
         {
             await WaitForSpinnerAsync();
             await GetPrimaryFarmSubTypeRadio(subType).ClickAsync();
+            // DuckCreek fires an XHR after radio click — spinner appears ~200ms later, so wait for it to appear first
+            var overlay = _page.Locator(".ngx-spinner-overlay");
+            try { await overlay.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 3000 }); }
+            catch (TimeoutException) { }
+            await WaitForSpinnerAsync();
         }
 
         public async Task SetSecondaryFarmTypeAsync(bool enable)
         {
+            var overlay = _page.Locator(".ngx-spinner-overlay");
+            try { await overlay.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 2000 }); }
+            catch (TimeoutException) { }
             await WaitForSpinnerAsync();
+
             var toggle = SecondaryFarmTypeToggle;
+            await toggle.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 60000 });
             await toggle.ScrollIntoViewIfNeededAsync();
 
-            // mat-slide-toggle has 'mat-checked' class when enabled
-            var isChecked = await toggle.GetAttributeAsync("class") is string cls && cls.Contains("mat-checked");
-
+            var isChecked = await toggle.Locator("input").IsCheckedAsync();
             if (enable != isChecked)
             {
                 await toggle.ClickAsync();
+                await WaitForSpinnerAsync();
             }
         }
 

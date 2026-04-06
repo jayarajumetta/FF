@@ -90,10 +90,9 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             var fppPage = new SFP_FarmPersonalPropertyPage(_context.Page);
             await fppPage.WaitForSpinnerAsync();
 
-            // Resolve row index by code first, then fall back to name-based lookup
-            var rowIndex = fppPage.GetCoverageRowIndexByCode(_contextData.FarmPropertyCode);
-            if (rowIndex < 0)
-                rowIndex = fppPage.GetCoverageRowIndex(_contextData.FarmPropertyDescription);
+            // Resolve row index dynamically by scanning DOM text — avoids positional index
+            // assumptions that break when states omit certain coverage categories
+            var rowIndex = await fppPage.FindRowByCodeAsync(_contextData.FarmPropertyCode, _contextData.FarmPropertyDescription);
 
             if (rowIndex < 0)
             {
@@ -113,8 +112,8 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             await checkbox.ClickAsync();
             await fppPage.WaitForSpinnerAsync();
 
-            // Click Add Coverage and fill item details
-            await fppPage.AddCoverageButton.ClickAsync();
+            // Click Add Coverage using dynamic locator
+            await fppPage.ClickAddCoverageButtonAsync();
             await fppPage.WaitForSpinnerAsync();
 
             if (!string.IsNullOrEmpty(_contextData.FarmPropertyDescription))

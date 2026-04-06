@@ -158,36 +158,86 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             ["NoneOfTheAbove"] = "fields.underwritingQuestionsGeneralUWQuestions.generalInformationNewInput$noneOfTheAboveGeneralUWQuestions.value",
         };
 
-        private ILocator UwToggleButton(string key)
+
+        /// <summary>
+        /// Gets the UW question element - handles both button-style and checkbox-style elements.
+        /// The UI was updated to use checkboxes instead of buttons for some UW questions.
+        /// </summary>
+        private ILocator UwToggleElement(string key)
         {
             if (!UwQuestionTestIds.TryGetValue(key, out var testId))
                 throw new ArgumentException($"Unknown UW Question key '{key}'. Add it to UwQuestionTestIds.");
 
-            return _page.Locator($"button[data-testid='{testId}']");
+            // Try to find checkbox input first (new UI), then fall back to button (old UI)
+            return _page.GetByTestId(testId).First;
         }
 
         private async Task<bool> UwIsCheckedAsync(string key)
         {
-            var btn = UwToggleButton(key);
-            var icon = btn.Locator("i.material-icons").First;
+            if (!UwQuestionTestIds.TryGetValue(key, out var testId))
+                throw new ArgumentException($"Unknown UW Question key '{key}'.");
 
-            if (await icon.CountAsync() == 0)
+            // Try checkbox input first (new UI structure)
+            var checkbox = _page.Locator($"input[type='checkbox'][data-testid='{testId}']");
+            if (await checkbox.CountAsync() > 0)
             {
-                var ariaPressed = await btn.GetAttributeAsync("aria-pressed");
-                return string.Equals(ariaPressed, "true", StringComparison.OrdinalIgnoreCase);
+                return await checkbox.First.IsCheckedAsync();
             }
 
-            var iconText = (await icon.InnerTextAsync())?.Trim() ?? "";
-            return !iconText.Contains("check_box_outline_blank", StringComparison.OrdinalIgnoreCase);
+            // Fall back to button-style element (old UI structure)
+            var btn = _page.Locator($"button[data-testid='{testId}']");
+            if (await btn.CountAsync() > 0)
+            {
+                var icon = btn.Locator("i.material-icons").First;
+                if (await icon.CountAsync() == 0)
+                {
+                    var ariaPressed = await btn.GetAttributeAsync("aria-pressed");
+                    return string.Equals(ariaPressed, "true", StringComparison.OrdinalIgnoreCase);
+                }
+                var iconText = (await icon.InnerTextAsync())?.Trim() ?? "";
+                return !iconText.Contains("check_box_outline_blank", StringComparison.OrdinalIgnoreCase);
+            }
+
+            throw new Exception($"Could not find UW question element with testId '{testId}'. UI may have changed.");
         }
 
         private async Task UwSetCheckedAsync(string key, bool shouldBeChecked)
         {
-            var btn = UwToggleButton(key);
-            var isChecked = await UwIsCheckedAsync(key);
+            if (!UwQuestionTestIds.TryGetValue(key, out var testId))
+                throw new ArgumentException($"Unknown UW Question key '{key}'.");
 
-            if (isChecked != shouldBeChecked)
+            var isChecked = await UwIsCheckedAsync(key);
+            if (isChecked == shouldBeChecked)
+                return; // Already in desired state
+
+            // Try checkbox input first (new UI structure)
+            var checkbox = _page.Locator($"input[type='checkbox'][data-testid='{testId}']");
+            if (await checkbox.CountAsync() > 0)
+            {
+                if (shouldBeChecked)
+                    await checkbox.First.CheckAsync();
+                else
+                    await checkbox.First.UncheckAsync();
+                return;
+            }
+
+            // Fall back to label click (checkbox wrapped in label)
+            var label = _page.Locator($"label[data-testid='{testId}']");
+            if (await label.CountAsync() > 0)
+            {
+                await label.First.ClickAsync();
+                return;
+            }
+
+            // Fall back to button-style element (old UI structure)
+            var btn = _page.Locator($"button[data-testid='{testId}']");
+            if (await btn.CountAsync() > 0)
+            {
                 await btn.ClickAsync();
+                return;
+            }
+
+            throw new Exception($"Could not find UW question element with testId '{testId}'. UI may have changed.");
         }
 
         // Additional UW sections that appear conditionally based on farm type selection.

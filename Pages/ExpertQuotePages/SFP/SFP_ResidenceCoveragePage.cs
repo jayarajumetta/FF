@@ -112,12 +112,41 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
                 await WaitForSpinnerAsync();
             }
 
-            // Step 3: Click Get Valuation button
-            if (await GetValuationButton.CountAsync() > 0)
+            // Step 3: Click Get Valuation button to trigger RCT calculation
+            await ClickGetValuationButtonAsync();
+        }
+
+        /// <summary>
+        /// Clicks the Get Valuation / Order RCT button and waits for the RCT calculation to complete.
+        /// Tries the DuckCreek testid first, then falls back to the button's visible text.
+        /// </summary>
+        private async Task ClickGetValuationButtonAsync()
+        {
+            // Primary: DuckCreek-assigned testid
+            if (await GetValuationButton.CountAsync() > 0 && await GetValuationButton.IsVisibleAsync())
             {
                 await GetValuationButton.ClickAsync();
                 await WaitForSpinnerAsync();
+                await _page.WaitForTimeoutAsync(2000);
+                await WaitForSpinnerAsync();
+                System.Console.WriteLine("RCT calculation completed.");
+                return;
             }
+
+            // Fallback: any visible button labelled "Get Valuation" or "Order RCT"
+            var byText = _page.GetByRole(AriaRole.Button, new() { NameRegex = new System.Text.RegularExpressions.Regex("Get Valuation|Order RCT", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
+            if (await byText.CountAsync() > 0 && await byText.First.IsVisibleAsync())
+            {
+                await byText.First.ClickAsync();
+                await WaitForSpinnerAsync();
+                await _page.WaitForTimeoutAsync(2000);
+                await WaitForSpinnerAsync();
+                System.Console.WriteLine("RCT calculation completed.");
+                return;
+            }
+
+            // Some states auto-calculate — log a warning rather than failing
+            System.Console.WriteLine("WARNING: No 'Get Valuation' / 'Order RCT' button found — RCT may be auto-calculated or not required.");
         }
         #endregion
     }

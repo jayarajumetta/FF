@@ -24,7 +24,8 @@ namespace Playwright_POC.Pages
             // when other sections (like farmBeefDairyOrReplacementQuestions) also have this button
             if (value.Equals("None Of The Above", StringComparison.OrdinalIgnoreCase))
             {
-                return _page.GetByTestId("fields.data.underwritingQuestions.preQualification.preQualificationInput$eqNoneOfTheAbove.value");
+                // Both <label> and <input> share this testId — use First to avoid strict mode violation
+                return _page.GetByTestId("fields.data.underwritingQuestions.preQualification.preQualificationInput$eqNoneOfTheAbove.value").First;
             }
             return _page.GetByRole(AriaRole.Button, new() { Name = value, Exact = true });
         }

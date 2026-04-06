@@ -145,9 +145,9 @@ namespace Playwright_POC.Hooks
                 
                 _page = await _browserContext.NewPageAsync();
 
-                // Timeouts: 30s element / 60s navigation (industry standard)
+                // Timeouts: 30s element / 90s navigation (SSO redirect chains can exceed 60s)
                 _page.SetDefaultTimeout(30000);
-                _page.SetDefaultNavigationTimeout(60000);
+                _page.SetDefaultNavigationTimeout(90000);
 
                 _context.Page = _page;
 

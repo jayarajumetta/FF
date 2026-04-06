@@ -37,9 +37,12 @@ Feature: EQ SFP Smoke
       | PolicyTerm     | 12 months                                   |
       | AgentCode      | D2102                                       |
       | RatingState    | <StateFull>                                 |
-      | SSN            |                                             |
       | WritingCompany | American National Property And Casualty Co. |
       | RiskAddress    | <Address>, <City>, <StateAbbv> <Zip>        |
+
+    When user handles SSN popup and enters SSN
+      | Question | Answer        |
+      | SSN      | {{randomSSN}} |
 
     And user enters SFP policy details and clicks Next button
       | Question           | Answer  |

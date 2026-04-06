@@ -137,7 +137,7 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             await sppPage.CoverageCheckbox(rowIndex).ClickAsync();
             await sppPage.WaitForSpinnerAsync();
 
-            await sppPage.AddCoverageButton.ClickAsync();
+            await sppPage.ClickAddCoverageButtonAsync();
             await sppPage.WaitForSpinnerAsync();
 
             if (!string.IsNullOrEmpty(_contextData.SPPDescription))
