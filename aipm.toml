@@ -1,0 +1,21 @@
+# AI Plugin Manager — Workspace Configuration
+# Docs: https://github.com/thelarkinn/aipm
+
+[workspace]
+members = [".ai/*"]
+plugins_dir = ".ai"
+
+# Shared dependency versions for all workspace members.
+# Members reference these via: dep = { workspace = "*" }
+# [workspace.dependencies]
+
+# Direct registry installs (available project-wide).
+# [dependencies]
+
+# Environment requirements for all plugins in this workspace.
+# [environment]
+# requires = ["git"]
+
+[workspace.lints]
+# Skills are intentionally in .github/copilot/ for Copilot discovery — not an error
+"source/misplaced-features" = "allow"

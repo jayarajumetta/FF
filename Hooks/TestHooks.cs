@@ -250,6 +250,16 @@ namespace Playwright_POC.Hooks
                 {
                     // Stop tracing without saving if test passed
                     try { await _browserContext.Tracing.StopAsync(); } catch { /* ignore */ }
+
+                    // Write pass record for telemetry (time-to-resolution tracking)
+                    try
+                    {
+                        var passRecord = Path.Combine(_testResultsRunFolder, "pass-records.csv");
+                        var scenarioName = _scenarioContext.ScenarioInfo.Title;
+                        var line = $"{DateTime.UtcNow:O},{scenarioName}";
+                        File.AppendAllText(passRecord, line + Environment.NewLine);
+                    }
+                    catch { /* ignore — telemetry must never block test execution */ }
                 }
             }
 
