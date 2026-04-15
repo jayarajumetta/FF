@@ -128,7 +128,7 @@ Feature: SFP Basic Policy
       | Question           | Answer           |
       | InsuranceAmount    | 375000           |
       | SquareFeet         | 1800             |
-      | Perils             | 1                |
+      | Perils             | 3                |
       | ThermostatQuestion | Yes              |
       | ActualCashValue    | Replacement Cost |
       | RCTOption          | Standard         |
@@ -192,16 +192,10 @@ Feature: SFP Basic Policy
     # Step 27: Verify Premium on Pricing Screen
     Then user verifies Premium on Pricing screen
 
-    # Step 28: Validate Forms attachment via Duckcreek
-    When user validates Forms via Duckcreek for state "<StateAbbv>"
-
-    # Step 29: Re-Log back in to EQ and Search by Quote Number
-    When user navigates to Expert Quote and searches by Quote Number
-
-    # Step 30: Navigate to Billing via left menu
+    # Step 28: Navigate to Billing via left menu
     When user navigates to the "Billing" page via the left menu
 
-    # Step 31: Complete Billing Information
+    # Step 29: Complete Billing Information
     When user completes Billing Information
       | Question       | Answer          |
       | BillingAccount | Create New      |
@@ -215,11 +209,11 @@ Feature: SFP Basic Policy
       | PaymentAmount  | Minimum         |
       | PaymentMethod  | Check           |
 
-    # Step 32: Visit the Checklist page
+    # Step 30: Visit the Checklist page
     When user navigates to Submission and opens Checklist
     Then user verifies no referrals are needed
 
-    # Step 33: Enter required information for Checklist (Residence Photo #1)
+    # Step 31: Enter required information for Checklist (Residence Photo #1)
     When user completes Checklist item
       | Question      | Answer              |
       | ItemName      | Residence Photo #1  |
@@ -227,7 +221,7 @@ Feature: SFP Basic Policy
       | ExceptionNote | Photo not available |
       | Note          | Photo not available |
 
-    # Step 34: Enter required information for Checklist (UL Roof Type Credit)
+    # Step 32: Enter required information for Checklist (UL Roof Type Credit)
     When user completes Checklist item
       | Question      | Answer              |
       | ItemName      | UL Roof Type Credit |
@@ -235,7 +229,7 @@ Feature: SFP Basic Policy
       | ExceptionNote | Roof type confirmed |
       | Note          | Roof type confirmed |
 
-    # Step 35: Enter required information for Checklist (Easy Pay)
+    # Step 33: Enter required information for Checklist (Easy Pay)
     When user completes Checklist item
       | Question      | Answer      |
       | ItemName      | Easy Pay    |
@@ -243,7 +237,7 @@ Feature: SFP Basic Policy
       | ExceptionNote | EasyPay set |
       | Note          | EasyPay set |
 
-    # Step 36: Enter required information for Checklist (Loss Runs)
+    # Step 34: Enter required information for Checklist (Loss Runs)
     When user completes Checklist item
       | Question      | Answer                                               |
       | ItemName      | Loss Runs (Tiered - 5 Years; Not tiered - 3 years)   |
@@ -251,11 +245,14 @@ Feature: SFP Basic Policy
       | ExceptionNote | Loss runs on file                                    |
       | Note          | Loss runs on file                                    |    
 
-    # Step 38: Close Checklist and Click OK to Update
+    # Step 35: Close Checklist and Click OK to Update
     When user closes Checklist and confirms Update
 
-    # Step 39: Transmit and Verify Premium
+    # Step 36: Transmit and Verify Premium
     Then user verifies Transmit button is enabled on Submission page
+
+    # Step 37: Validate Forms attachment via Duckcreek
+    When user validates Forms via Duckcreek for state "<StateAbbv>"
 
     Examples:
       | State          | StateAbbv | StateFull      | Address            | AddressLine2 | City           | Zip   | County       |
