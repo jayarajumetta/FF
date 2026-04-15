@@ -58,12 +58,27 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
                 ["Division 4"]   = "BASIC",
                 ["Division V"]   = "BASIC",
                 ["Division 5"]   = "BASIC",
-                ["CE"]           = "CE",
-                ["Country"]      = "CE",
+                ["Division VI"]  = "BASIC",
+                ["Division 6"]   = "BASIC",
+                ["Division VII"] = "BASIC",
+                ["Division 7"]   = "BASIC",
+                ["X-Form"]       = "BASIC",
+                ["T-Notice"]     = "BASE",
+                // NOTE: do NOT add a bare "CE" key — it substring-matches "T-Notices"
+                ["Country Estate"] = "CE",
+                ["Country"]        = "CE",
             };
 
         /// <summary>Fallback section when a sheet name doesn't match any entry above.</summary>
         public string DefaultSection { get; set; } = "BASE";
+
+        /// <summary>
+        /// If non-empty, only sheets whose names contain at least one of these substrings
+        /// (case-insensitive) will be parsed. Use to scope the generator to a specific
+        /// test policy profile — e.g. "Division 0,Division 1" for a basic Div 0+1 policy.
+        /// Leave empty to parse all sheets (default / full masterlist).
+        /// </summary>
+        public string[] IncludeSheets { get; set; } = Array.Empty<string>();
 
         /// <summary>
         /// Only state abbreviations in this list will be extracted.
@@ -99,6 +114,18 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
             foreach (var sheet in workbook.Worksheets)
             {
                 Console.WriteLine($"  Sheet: \"{sheet.Name}\"");
+
+                // ── Sheet filter (INCLUDE_SHEETS) ─────────────────────────────────────
+                if (options.IncludeSheets.Length > 0)
+                {
+                    var matched = options.IncludeSheets.Any(
+                        p => sheet.Name.Contains(p, StringComparison.OrdinalIgnoreCase));
+                    if (!matched)
+                    {
+                        Console.WriteLine("    (excluded by INCLUDE_SHEETS — skipped)");
+                        continue;
+                    }
+                }
 
                 if (!sheet.RowsUsed().Any())
                 {

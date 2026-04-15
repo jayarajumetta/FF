@@ -12,8 +12,11 @@
 //             (default: Resources/ExpectedForms/{LOB}/{LOB}.json relative to project source)
 //   LOB       Line-of-business prefix — used for folder/file naming  (default: SFP)
 //   DRY_RUN   Print the diff and new JSON preview without writing     (default: false)
-//   FORM_COL  Excel column header that contains form numbers          (default: auto-detect)
-//   TYPE_COL  Excel column header that contains BASE/BASIC/CE type    (default: auto-detect)
+//   FORM_COL       Excel column header that contains form numbers          (default: auto-detect)
+//   TYPE_COL       Excel column header that contains BASE/BASIC/CE type    (default: auto-detect)
+//   INCLUDE_SHEETS Comma-separated sheet name substrings to include from the LOB masterlist.
+//                  Omit to parse all sheets (full masterlist).
+//                  Example: "Division 0,Division 1" for a basic Div 0+1 policy.
 //
 // HOW IT WORKS:
 //   1. Reads every worksheet in the Excel file.
@@ -37,10 +40,10 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
     public class FormsBaselineGeneratorTool
     {
         private static readonly string[] SupportedStates =
-        {
+        [
             "AL","AR","AZ","CO","ID","IL","KS","KY","LA","MN",
             "MT","NE","NV","ND","OR","SC","SD","TN","TX","UT","WA","WI","WY"
-        };
+        ];
 
         [Test]
         [Category("Tools")]
@@ -49,12 +52,19 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
         public void GenerateFormsBaseline()
         {
             // ── Read parameters ──────────────────────────────────────────────────
-            var excelPath       = TestContext.Parameters.Get("EXCEL", "");
-            var commonExcelPath = TestContext.Parameters.Get("COMMON_EXCEL", "");
-            var lob             = TestContext.Parameters.Get("LOB", "SFP");
-            var formCol         = TestContext.Parameters.Get("FORM_COL", "");
-            var typeCol         = TestContext.Parameters.Get("TYPE_COL", "");
-            var dryRun          = BoolParam("DRY_RUN",  false);
+            var excelPath        = TestContext.Parameters.Get("EXCEL", "");
+            var commonExcelPath  = TestContext.Parameters.Get("COMMON_EXCEL", "");
+            var lob              = TestContext.Parameters.Get("LOB", "SFP");
+            var formCol          = TestContext.Parameters.Get("FORM_COL", "");
+            var typeCol          = TestContext.Parameters.Get("TYPE_COL", "");
+            var includeSheetsRaw = TestContext.Parameters.Get("INCLUDE_SHEETS", "");
+            var includeSheets    = string.IsNullOrWhiteSpace(includeSheetsRaw)
+                ? Array.Empty<string>()
+                : includeSheetsRaw.Split(',')
+                    .Select(s => s.Trim())
+                    .Where(s => s.Length > 0)
+                    .ToArray();
+            var dryRun           = BoolParam("DRY_RUN", false);
 
             // Default output: <project-root>/Resources/ExpectedForms/{LOB}/{LOB}.json
             // AppContext.BaseDirectory = bin/Debug/net8.0 → go up three levels
@@ -68,13 +78,14 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
             Console.WriteLine("╔══════════════════════════════════════════════════════════════╗");
             Console.WriteLine("║           Forms Baseline Generator                          ║");
             Console.WriteLine("╚══════════════════════════════════════════════════════════════╝");
-            Console.WriteLine($"  Excel   : {excelPath}");
-            Console.WriteLine($"  Common  : {(string.IsNullOrEmpty(commonExcelPath) ? "(none)" : commonExcelPath)}");
-            Console.WriteLine($"  Output  : {outputPath}");
-            Console.WriteLine($"  LOB     : {lob}");
-            Console.WriteLine($"  DryRun  : {dryRun}");
-            Console.WriteLine($"  FormCol : {(string.IsNullOrEmpty(formCol) ? "auto-detect" : formCol)}");
-            Console.WriteLine($"  TypeCol : {(string.IsNullOrEmpty(typeCol) ? "auto-detect" : typeCol)}");
+            Console.WriteLine($"  Excel        : {excelPath}");
+            Console.WriteLine($"  Common       : {(string.IsNullOrEmpty(commonExcelPath) ? "(none)" : commonExcelPath)}");
+            Console.WriteLine($"  Output       : {outputPath}");
+            Console.WriteLine($"  LOB          : {lob}");
+            Console.WriteLine($"  DryRun       : {dryRun}");
+            Console.WriteLine($"  FormCol      : {(string.IsNullOrEmpty(formCol) ? "auto-detect" : formCol)}");
+            Console.WriteLine($"  TypeCol      : {(string.IsNullOrEmpty(typeCol) ? "auto-detect" : typeCol)}");
+            Console.WriteLine($"  IncludeSheets: {(includeSheets.Length == 0 ? "(all)" : string.Join(", ", includeSheets))}");
             Console.WriteLine();
 
             if (string.IsNullOrWhiteSpace(excelPath) || !File.Exists(excelPath))
@@ -92,6 +103,7 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
                 FormColumnHeader = formCol,
                 TypeColumnHeader = typeCol,
                 SupportedStates  = SupportedStates,
+                IncludeSheets    = includeSheets,
             };
 
             var parser = new ExcelFormsParser();
@@ -112,7 +124,7 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
             Console.WriteLine();
             Console.WriteLine($"Total rows parsed: {rows.Count}");
 
-            if (!rows.Any())
+            if (rows.Count == 0)
             {
                 Console.WriteLine();
                 Console.WriteLine("No form rows found. Tips:");
@@ -189,18 +201,18 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
 
             var lines = new List<string>();
 
-            if (!added.Any() && !removed.Any())
+            if (added.Count == 0 && removed.Count == 0)
             {
                 lines.Add("No additions or removals — only state values may have changed.");
             }
             else
             {
-                if (added.Any())
+                if (added.Count > 0)
                 {
                     lines.Add($"ADDED ({added.Count}):");
                     foreach (var f in added) lines.Add($"  + {f}");
                 }
-                if (removed.Any())
+                if (removed.Count > 0)
                 {
                     lines.Add($"REMOVED ({removed.Count}):");
                     foreach (var f in removed) lines.Add($"  - {f}");
