@@ -69,6 +69,18 @@ namespace Playwright_POC.Clients
                 throw new InvalidOperationException(
                     $"DuckCreek Forms API returned an empty or too-short response (HTTP {statusCode}, {responseBody.Length} bytes).");
 
+            // Detect HTML error pages (e.g. IIS 503, 500 splash pages) — not valid XML.
+            // HTTP 200 and 500 both return valid forms XML; any HTML body is an infrastructure error.
+            var trimmed = responseBody.TrimStart();
+            if (trimmed.StartsWith("<!", StringComparison.OrdinalIgnoreCase) ||
+                trimmed.StartsWith("<html", StringComparison.OrdinalIgnoreCase))
+            {
+                var snippet = responseBody[..Math.Min(200, responseBody.Length)];
+                throw new InvalidOperationException(
+                    $"DuckCreek Forms API returned an HTML error page instead of XML (HTTP {statusCode}). " +
+                    $"The DuckCreek server may be unavailable. Snippet: {snippet}");
+            }
+
             return responseBody;
         }
 

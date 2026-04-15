@@ -49,20 +49,22 @@ namespace Playwright_POC.Services
         /// Primary loader: resolves the correct baseline file for a LOB/state/testCase combination.
         ///
         /// File resolution order:
-        ///   1. Merged CSV:  {LOB}.csv  → filter by Type column (BASE + testCase code)
-        ///   2. Legacy CSV:  {LOB}_{testCase}.csv  → load all rows
-        ///   3. Per-state JSON: {LOB}_{state}.json
+        ///   1. Test-case CSV: {LOB}_{testCase}.csv  → load all rows (e.g. SFP_BASIC.csv — Tosca baseline)
+        ///   2. Merged CSV:    {LOB}.csv  → filter by Type column (BASE + testCase code)
+        ///   3. Include-only JSON: {LOB}.json
+        ///   4. Per-state JSON: {LOB}_{state}.json
         /// </summary>
         public List<ExpectedFormEntry> LoadExpectedFormsForLob(string lob, string state, string testCase = "BASIC")
         {
             var basePath = Path.Combine(AppContext.BaseDirectory, "Resources", "ExpectedForms", lob);
 
-            // 1. Include-only JSON: {LOB}.json — preferred format, easy to maintain
-            var includeOnlyJson = Path.Combine(basePath, $"{lob}.json");
-            if (File.Exists(includeOnlyJson))
+            // 1. Test-case-specific CSV: {LOB}_{testCase}.csv (e.g. SFP_BASIC.csv) — highest priority,
+            //    matches the Tosca baseline exactly.
+            var legacyCsv = Path.Combine(basePath, $"{lob}_{testCase}.csv");
+            if (File.Exists(legacyCsv))
             {
-                Console.WriteLine($"Loading include-only JSON: {lob}.json for state {state}, testCase {testCase}");
-                return LoadFromIncludeOnlyJson(includeOnlyJson, state, testCase);
+                Console.WriteLine($"Loading test-case baseline: {lob}_{testCase}.csv for state {state}");
+                return LoadFromCsv(legacyCsv, state);
             }
 
             // 2. Merged CSV: one file per LOB, filtered by Type column
@@ -74,12 +76,12 @@ namespace Playwright_POC.Services
                 return LoadFromCsv(mergedCsv, state, typeFilter: new[] { "BASE", typeCode });
             }
 
-            // 3. Legacy CSV: separate file per test case (e.g., SFP_BASIC.csv)
-            var legacyCsv = Path.Combine(basePath, $"{lob}_{testCase}.csv");
-            if (File.Exists(legacyCsv))
+            // 3. Include-only JSON: {LOB}.json
+            var includeOnlyJson = Path.Combine(basePath, $"{lob}.json");
+            if (File.Exists(includeOnlyJson))
             {
-                Console.WriteLine($"Loading legacy baseline: {lob}_{testCase}.csv for state {state}");
-                return LoadFromCsv(legacyCsv, state);
+                Console.WriteLine($"Loading include-only JSON: {lob}.json for state {state}, testCase {testCase}");
+                return LoadFromIncludeOnlyJson(includeOnlyJson, state, testCase);
             }
 
             // 4. Per-state JSON (backward compat)

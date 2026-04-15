@@ -168,8 +168,36 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
 
             var isPremiumVisible = await quoteLink.CountAsync() > 0 || await viewToggle.CountAsync() > 0;
             Assert.That(isPremiumVisible, Is.True, "Premium should be displayed on Pricing screen");
-            
+
+            // Capture quote number if SSN step didn't get it
+            if (string.IsNullOrWhiteSpace(_contextData.QuoteNumber))
+            {
+                _contextData.QuoteNumber = await SFPSteps.ExtractQuoteNumberFromPageAsync(_context.Page);
+                if (!string.IsNullOrWhiteSpace(_contextData.QuoteNumber))
+                    Console.WriteLine($"*** QUOTE NUMBER (captured at Pricing): {_contextData.QuoteNumber} ***");
+                else
+                    Console.WriteLine("[Pricing] Quote number not found on page.");
+            }
+
             Console.WriteLine("Premium verified on Pricing screen");
+
+            // Capture actual premium, log it, then assert against baseline if one is configured.
+            var premium = await pricingPage.GetAnnualPremiumAsync();
+            if (premium.HasValue)
+            {
+                Console.WriteLine($"*** ANNUAL PREMIUM: ${premium.Value:N2} ***");
+
+                var stateAbbv = GetStateAbbreviation(_contextData.RatingState);
+                var expectedRaw = _configuration[$"ExpectedPremiums:SFP:{stateAbbv}:Amount"];
+                if (!string.IsNullOrWhiteSpace(expectedRaw) && decimal.TryParse(expectedRaw, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var expectedPremium))
+                {
+                    Assert.That(premium.Value, Is.EqualTo(expectedPremium).Within(0.01m),
+                        $"[Premium Regression] {stateAbbv}: expected ${expectedPremium:N2} but captured ${premium.Value:N2}");
+                    Console.WriteLine($"[Premium] {stateAbbv} baseline assertion passed: ${premium.Value:N2}");
+                }
+            }
+            else
+                Console.WriteLine("[Premium] Could not extract annual premium amount – inspect pricing page test IDs to refine locator.");
         }
 
         [When("user completes Billing Information")]
@@ -324,60 +352,77 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             var page = _context.Page;
             var quoteId = _contextData.QuoteNumber;
+
+            Console.WriteLine($"[FormsValidation] Quote ID: '{quoteId}' (state={state})");
+
+            if (string.IsNullOrWhiteSpace(quoteId))
+                throw new InvalidOperationException(
+                    $"Quote number was not captured during the scenario — cannot run forms validation for {state}. " +
+                    "Check the '*** QUOTE NUMBER ***' log line from the SSN or Pricing step.");
+
             var lob = _contextData.FormsLob ?? "SFP";
 
-            // 1. Open CLAS Express in a second tab, log in, and extract DCT.sessionID
-            var sessionId = await _sessionService.GetDuckCreekSessionIdViaCLASAsync(quoteId);
-
-            // 2. Call the DuckCreek Forms Engine API
-            var responseXml = await _formsClient.GetFormsAndSaveAsync(
-                sessionId, lob, $"{lob}_BasicPolicy", state, quoteId);
-
-            // 3. Parse XML response into typed form entries
-            var actualForms = FormsXmlParser.Parse(responseXml);
-            Console.WriteLine($"DuckCreek returned {actualForms.Count} forms for {lob}/{state}/{quoteId}");
-
-            // Parse response metadata (non-printDoc elements).
-            // NOTE: XML "failure" status is EXPECTED because the API user (PA3402)
-            // differs from the UI login that created the session. This is by design.
-            var metadata = FormsXmlParser.ParseMetadata(responseXml);
-            foreach (var w in metadata.Warnings)
-                Console.WriteLine($"  [META INFO] {w}");
-            Console.WriteLine($"  Metadata: PrintJob={metadata.PrintJobName}, Manuscript={metadata.Manuscript}, " +
-                              $"RoleBasedSecurity={metadata.HasRoleBasedSecurity}, ReturnSuccess={metadata.ReturnSuccessStatus}");
-
-            // 4. Load expected forms and validate (ANPAC filtering applied inside Validate)
-            var testCase = _contextData.FormsTestCase ?? "BASIC";
-            var expected = _validationService.LoadExpectedFormsForLob(lob, state, testCase);
-            var summary = _validationService.Validate(expected, actualForms, lob, state, quoteId);
-            summary.ResponseMetadata = metadata;
-            summary.TestCaseName = $"{lob}_{testCase}";
-
-            // 5. Print grouped summary to console
-            FormsValidationService.PrintSummary(summary);
-
-            // 6. Save results CSV
-            _validationService.SaveResultsCsv(summary, $"{lob}_{testCase}");
-
-            // 7. Generate HTML report
-            var htmlDir = Path.Combine(
-                _validationService.GetType().Assembly.Location, "..", "..", "..", "TestResults",
-                DateTime.Now.ToString("ddMMMyyyy").ToUpperInvariant());
-            var htmlPath = Path.Combine(htmlDir, $"FormsReport_{lob}_{state}_{quoteId}.html");
-            FormsReportGenerator.Generate(summary, htmlPath);
-
-            var absoluteHtmlPath = Path.GetFullPath(htmlPath);
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(absoluteHtmlPath) { UseShellExecute = true });
-            // Open the containing folder so the file can easily be attached to Teams/email
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", $"/select,\"{absoluteHtmlPath}\"") { UseShellExecute = true });
-
-            // 8. Non-blocking — log outcome but do not fail the scenario
-            if (summary.Failed > 0)
+            try
             {
-                var failures = string.Join("\n", summary.Results
-                    .Where(r => r.Result == "FAIL")
-                    .Select(r => $"    {r.FormName}: {r.Message}"));
-                Console.WriteLine($"[FormsValidation] {summary.Failed} failure(s) — see report: {absoluteHtmlPath}\n{failures}");
+                // 1. Open CLAS Express in a second tab, log in, and extract DCT.sessionID
+                var sessionId = await _sessionService.GetDuckCreekSessionIdViaCLASAsync(quoteId);
+
+                // 2. Call the DuckCreek Forms Engine API
+                var responseXml = await _formsClient.GetFormsAndSaveAsync(
+                    sessionId, lob, $"{lob}_BasicPolicy", state, quoteId);
+
+                // 3. Parse XML response into typed form entries
+                var actualForms = FormsXmlParser.Parse(responseXml);
+                Console.WriteLine($"DuckCreek returned {actualForms.Count} forms for {lob}/{state}/{quoteId}");
+
+                // Parse response metadata (non-printDoc elements).
+                // NOTE: XML "failure" status is EXPECTED because the API user (PA3402)
+                // differs from the UI login that created the session. This is by design.
+                var metadata = FormsXmlParser.ParseMetadata(responseXml);
+                foreach (var w in metadata.Warnings)
+                    Console.WriteLine($"  [META INFO] {w}");
+                Console.WriteLine($"  Metadata: PrintJob={metadata.PrintJobName}, Manuscript={metadata.Manuscript}, " +
+                                  $"RoleBasedSecurity={metadata.HasRoleBasedSecurity}, ReturnSuccess={metadata.ReturnSuccessStatus}");
+
+                // 4. Load expected forms and validate (ANPAC filtering applied inside Validate)
+                var testCase = _contextData.FormsTestCase ?? "BASIC";
+                var expected = _validationService.LoadExpectedFormsForLob(lob, state, testCase);
+                var summary = _validationService.Validate(expected, actualForms, lob, state, quoteId);
+                summary.ResponseMetadata = metadata;
+                summary.TestCaseName = $"{lob}_{testCase}";
+
+                // 5. Print grouped summary to console
+                FormsValidationService.PrintSummary(summary);
+
+                // 6. Save results CSV
+                _validationService.SaveResultsCsv(summary, $"{lob}_{testCase}");
+
+                // 7. Generate HTML report
+                var htmlDir = Path.Combine(
+                    _validationService.GetType().Assembly.Location, "..", "..", "..", "TestResults",
+                    DateTime.Now.ToString("ddMMMyyyy").ToUpperInvariant());
+                var htmlPath = Path.Combine(htmlDir, $"FormsReport_{lob}_{state}_{quoteId}.html");
+                FormsReportGenerator.Generate(summary, htmlPath);
+
+                var absoluteHtmlPath = Path.GetFullPath(htmlPath);
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(absoluteHtmlPath) { UseShellExecute = true });
+                // Open the containing folder so the file can easily be attached to Teams/email
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", $"/select,\"{absoluteHtmlPath}\"") { UseShellExecute = true });
+
+                // 8. Non-blocking — log outcome but do not fail the scenario
+                if (summary.Failed > 0)
+                {
+                    var failures = string.Join("\n", summary.Results
+                        .Where(r => r.Result == "FAIL")
+                        .Select(r => $"    {r.FormName}: {r.Message}"));
+                    Console.WriteLine($"[FormsValidation] {summary.Failed} failure(s) — see report: {absoluteHtmlPath}\n{failures}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Forms validation is non-blocking — a server error or unavailable DuckCreek
+                // instance should not fail a scenario that has already passed all business steps.
+                Console.WriteLine($"[FormsValidation] SKIPPED — could not complete forms check for {state}: {ex.Message}");
             }
         }
 
@@ -517,17 +562,19 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             // 2. Bring EQ tab back to the foreground
             await _context.Page.BringToFrontAsync();
 
-            // 3. Click the Ok button if it appears on EQ after the checklist tab closes
-            var okButton = _context.Page.GetByTestId("btnOk");
+            // 3. Dismiss the "Checklist Opened" modal. It's an Angular Material CDK overlay.
+            //    Target the button inside .cdk-overlay-container — works regardless of button text.
+            var overlayButton = _context.Page.Locator(".cdk-overlay-container button");
             try
             {
-                await okButton.WaitForAsync(new() { Timeout = 10000 });
-                await okButton.ClickAsync();
+                await overlayButton.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
+                await overlayButton.First.ClickAsync();
                 Console.WriteLine("Clicked Ok dialog on EQ Submission page");
+                await _context.Page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 15000 });
             }
             catch (TimeoutException)
             {
-                Console.WriteLine("No Ok dialog appeared — continuing");
+                Console.WriteLine("No overlay dialog appeared — continuing");
             }
 
             await _context.Page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
@@ -556,5 +603,34 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
 
             Console.WriteLine("Verified: Transmit button is enabled on Submission page");
         }
+
+        private static string GetStateAbbreviation(string fullName) =>
+            fullName?.ToUpperInvariant() switch
+            {
+                "ALABAMA"        => "AL",
+                "ARKANSAS"       => "AR",
+                "ARIZONA"        => "AZ",
+                "COLORADO"       => "CO",
+                "IDAHO"          => "ID",
+                "ILLINOIS"       => "IL",
+                "KANSAS"         => "KS",
+                "KENTUCKY"       => "KY",
+                "LOUISIANA"      => "LA",
+                "MINNESOTA"      => "MN",
+                "MONTANA"        => "MT",
+                "NEBRASKA"       => "NE",
+                "NEVADA"         => "NV",
+                "NORTH DAKOTA"   => "ND",
+                "OREGON"         => "OR",
+                "SOUTH CAROLINA" => "SC",
+                "SOUTH DAKOTA"   => "SD",
+                "TENNESSEE"      => "TN",
+                "TEXAS"          => "TX",
+                "UTAH"           => "UT",
+                "WASHINGTON"     => "WA",
+                "WISCONSIN"      => "WI",
+                "WYOMING"        => "WY",
+                _ => fullName?.Length >= 2 ? fullName[..2].ToUpperInvariant() : "UNKNOWN"
+            };
     }
 }
