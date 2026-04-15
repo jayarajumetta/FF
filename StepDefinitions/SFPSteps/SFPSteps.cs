@@ -67,37 +67,38 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
 
         private async Task CaptureQuoteNumberAsync()
         {
+            _contextData.QuoteNumber = await ExtractQuoteNumberFromPageAsync(_context.Page);
+            if (!string.IsNullOrEmpty(_contextData.QuoteNumber))
+                Console.WriteLine($"*** QUOTE NUMBER: {_contextData.QuoteNumber} ***");
+            else
+                Console.WriteLine("[CaptureQuoteNumber] Not found yet — will retry at Pricing.");
+        }
+
+        internal static async Task<string> ExtractQuoteNumberFromPageAsync(IPage page)
+        {
             try
             {
-                // Try to get quote number from URL (e.g., /quote/123456)
-                var url = _context.Page.Url;
-                var match = System.Text.RegularExpressions.Regex.Match(url, @"/quote/(\d+)");
-                if (match.Success)
+                // Try the Angular Material tab header component (works regardless of MDC/legacy class names)
+                foreach (var selector in new[] { "mat-tab-header", "[class*='tab-header']", "[class*='tab-label']" })
                 {
-                    _contextData.QuoteNumber = match.Groups[1].Value;
-                }
-                else
-                {
-                    // Try tab label
-                    var tabLabel = _context.Page.Locator("div[class*='mat-tab-label-container'] span");
-                    if (await tabLabel.CountAsync() > 0)
+                    var el = page.Locator(selector).First;
+                    if (await el.CountAsync() > 0)
                     {
-                        var text = await tabLabel.First.InnerTextAsync();
-                        var lines = text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                        _contextData.QuoteNumber = lines.Length > 1 ? lines[1].Trim() : text.Trim();
+                        var text = await el.InnerTextAsync(new() { Timeout = 3000 });
+                        var m = System.Text.RegularExpressions.Regex.Match(text, @"\b(\d{7,9})\b");
+                        if (m.Success) return m.Groups[1].Value;
                     }
                 }
-                
-                if (!string.IsNullOrEmpty(_contextData.QuoteNumber))
-                {
-                    Console.WriteLine($"*** QUOTE NUMBER: {_contextData.QuoteNumber} ***");
-                    System.IO.File.WriteAllText("QuoteNumber.txt", _contextData.QuoteNumber);
-                }
+                // Final fallback: scan body text
+                var body = await page.Locator("body").InnerTextAsync(new() { Timeout = 3000 });
+                var match = System.Text.RegularExpressions.Regex.Match(body, @"\b(0\d{7})\b");
+                if (match.Success) return match.Groups[1].Value;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Could not capture quote number: {ex.Message}");
+                Console.WriteLine($"[ExtractQuoteNumber] Error: {ex.Message}");
             }
+            return null;
         }
 
         [When("user enters SFP policy details and clicks Next button")]
@@ -113,8 +114,8 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
                 var toggled = await sfpPolicyDetailsPage.SetSecondaryFarmTypeAsync(true);
                 if (toggled)
                 {
-                    await sfpPolicyDetailsPage.SelectSecondaryFarmCategoryAsync(_contextData.SecondaryFarmType);
-                    if (!string.IsNullOrEmpty(_contextData.SecondaryFarmSubType))
+                    var categorySelected = await sfpPolicyDetailsPage.SelectSecondaryFarmCategoryAsync(_contextData.SecondaryFarmType);
+                    if (categorySelected && !string.IsNullOrEmpty(_contextData.SecondaryFarmSubType))
                         await sfpPolicyDetailsPage.SelectSecondaryFarmSubTypeAsync(_contextData.SecondaryFarmSubType);
                 }
             }

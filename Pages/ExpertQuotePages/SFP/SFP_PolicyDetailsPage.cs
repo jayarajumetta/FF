@@ -32,10 +32,13 @@ namespace Playwright_POC.Pages.ExpertQuotePages
                  .Filter(new() { Has = _page.GetByText(subType, new() { Exact = true }) });
 
         // ANi aa-toggle component — role="switch" with aria-checked for state.
-        // GetByTestId targets the outer host element; GetByRole is preferred as it
-        // also validates the element is interactive (not just present in the DOM).
-        private ILocator SecondaryFarmTypeToggle =>
-            _page.GetByRole(AriaRole.Switch, new() { Name = "Add Secondary Farm Type" });
+        // The toggle is an <input type="checkbox"> inside a custom aa-toggle component.
+        // The native input is CSS-hidden — use Attached (not Visible) to wait for it.
+        // Click goes to the visible <label for=...> which wraps the visual track.
+        private ILocator SecondaryFarmTypeToggleInput =>
+            _page.Locator("[data-testid='fields.account.policyInput$secondaryFarmTypeApplicable.value'] input[type='checkbox']");
+        private ILocator SecondaryFarmTypeToggleLabel =>
+            _page.Locator("label[for='fields.account.policyInput$secondaryFarmTypeApplicable.value']");
 
         private ILocator GetSecondaryFarmCategoryButton(string category) =>
             _page.GetByTestId($"fields.account.policyInput$farmTypeSecondaryCategory.value-{FarmCategoryIndex[category]}");
@@ -90,6 +93,18 @@ namespace Playwright_POC.Pages.ExpertQuotePages
             {
                 Console.WriteLine("[PolicyDetails] GrossFarmIncome not visible after 15s — page may still be rendering.");
             }
+
+            // Focus dance: click into GrossFarmIncome then blur it.
+            // This mirrors the Tosca workaround — Angular's change detection on this screen
+            // is triggered by focus/blur events; without it the secondary farm type section
+            // may remain in an unrendered/unattached state.
+            try
+            {
+                await GrossFarmIncomeInput.ClickAsync();
+                await _page.Keyboard.PressAsync("Tab");
+                await WaitForSpinnerAsync();
+            }
+            catch (Exception) { }
         }
 
         /// <returns>True if the toggle was found and set; false if the toggle was not present (skip secondary farm type).</returns>
@@ -97,45 +112,117 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         {
             await WaitForSpinnerAsync();
 
-            var toggle = SecondaryFarmTypeToggle;
+            var input = SecondaryFarmTypeToggleInput;
+            var label = SecondaryFarmTypeToggleLabel;
 
-            // The toggle appears after DuckCreek re-renders following the subtype XHR.
-            // Use a 15s window; if the toggle never becomes visible the current
-            // farm type/state combination does not offer secondary farm type — skip.
+            // Input is CSS-hidden (ANi toggle pattern) — wait for Attached, not Visible.
+            // Label wraps the visual track and IS visible; used for clicking.
             try
             {
-                await toggle.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
+                await input.WaitForAsync(new() { State = WaitForSelectorState.Attached, Timeout = 25000 });
             }
             catch (TimeoutException)
             {
-                Console.WriteLine("[PolicyDetails] Secondary farm type toggle not visible — skipping.");
+                Console.WriteLine("[PolicyDetails] Secondary farm type toggle not found after 25s — skipping.");
                 return false;
             }
 
-            await toggle.ScrollIntoViewIfNeededAsync();
+            await label.ScrollIntoViewIfNeededAsync();
 
-            // ANi aa-toggle uses aria-checked (not an <input>) to expose its state.
-            var ariaChecked = await toggle.GetAttributeAsync("aria-checked");
-            var isChecked = string.Equals(ariaChecked, "true", StringComparison.OrdinalIgnoreCase);
+            var isChecked = await input.IsCheckedAsync();
 
             if (enable != isChecked)
             {
-                await toggle.ClickAsync();
+                await label.ClickAsync();
+                // Focus dance after toggle click: tab through to nudge Angular into rendering
+                // the secondary category buttons (same Tosca workaround pattern).
+                try
+                {
+                    await _page.Keyboard.PressAsync("Tab");
+                    await GrossFarmIncomeInput.ClickAsync();
+                    await _page.Keyboard.PressAsync("Tab");
+                }
+                catch (Exception) { }
                 await WaitForSpinnerAsync();
             }
             return true;
         }
 
-        public async Task SelectSecondaryFarmCategoryAsync(string category)
+        public async Task<bool> SelectSecondaryFarmCategoryAsync(string category)
         {
             await WaitForSpinnerAsync();
-            await GetSecondaryFarmCategoryButton(category).ClickAsync();
+            var idx = FarmCategoryIndex[category];
+
+            // Strategy 1: dedicated secondary testid (most states)
+            var btn = GetSecondaryFarmCategoryButton(category);
+            try
+            {
+                await btn.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 5000 });
+                await btn.ClickAsync();
+                Console.WriteLine($"[PolicyDetails] Secondary farm category '{category}' selected via secondary testid.");
+                return true;
+            }
+            catch (TimeoutException) { }
+
+            // Strategy 2: some states (e.g. TN) reuse the primary farmTypeCategory testid for both
+            // sections — the secondary section renders a second set of the same buttons.
+            // Nth(1) targets the second occurrence in DOM order = the secondary category row.
+            var primaryBtn = _page.GetByTestId($"fields.account.policyInput$farmTypeCategory.value-{idx}");
+            try
+            {
+                var count = await primaryBtn.CountAsync();
+                if (count > 1)
+                {
+                    await primaryBtn.Nth(1).WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 5000 });
+                    await primaryBtn.Nth(1).ClickAsync();
+                    Console.WriteLine($"[PolicyDetails] Secondary farm category '{category}' selected via Nth(1) fallback.");
+                    return true;
+                }
+            }
+            catch (TimeoutException) { }
+
+            // Strategy 3: text-based button click scoped to the secondary farm type section.
+            // Finds any visible button with the category text that is NOT the already-active primary button.
+            var textBtn = _page.GetByRole(AriaRole.Button, new() { Name = category.ToUpper(), Exact = true })
+                               .Or(_page.GetByRole(AriaRole.Button, new() { Name = category, Exact = true }));
+            try
+            {
+                var count = await textBtn.CountAsync();
+                // Skip index 0 (primary) — click the next available visible one
+                for (var i = 1; i < count; i++)
+                {
+                    if (await textBtn.Nth(i).IsVisibleAsync())
+                    {
+                        await textBtn.Nth(i).ClickAsync();
+                        Console.WriteLine($"[PolicyDetails] Secondary farm category '{category}' selected via text button Nth({i}).");
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[PolicyDetails] Text-button strategy failed: {ex.Message}");
+            }
+
+            Console.WriteLine($"[PolicyDetails] Secondary farm category '{category}' could not be selected — skipping.");
+            return false;
         }
 
-        public async Task SelectSecondaryFarmSubTypeAsync(string subType)
+        public async Task<bool> SelectSecondaryFarmSubTypeAsync(string subType)
         {
             await WaitForSpinnerAsync();
-            await GetSecondaryFarmSubTypeRadio(subType).ClickAsync();
+            var radio = GetSecondaryFarmSubTypeRadio(subType);
+            try
+            {
+                await radio.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
+                await radio.First.ClickAsync();
+                return true;
+            }
+            catch (TimeoutException)
+            {
+                Console.WriteLine($"[PolicyDetails] Secondary farm sub-type '{subType}' radio not visible — skipping.");
+                return false;
+            }
         }
 
         public async Task EnterGrossFarmIncomeAsync(string grossFarmIncome)
