@@ -102,17 +102,50 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         #endregion
 
         #region Coverage Mapping
-        // Maps SPP coverage codes to their fixed row index in the catalog table
-        private static readonly System.Collections.Generic.Dictionary<string, int> _codeToRow = new()
-        {
-            { "401", 1 }, // Bicycles
-        };
-
         /// <summary>
-        /// Get the row index for an SPP category by its catalog code (e.g. "401"). Returns -1 if not found.
+        /// Scans the live DOM for the coverage code cell and returns the row index.
+        /// Uses <c>id="CovCatEntryOutput.CoverageID-{N}-layout"</c> cells.
+        /// Returns -1 if the code is not found.
         /// </summary>
-        public int GetCategoryRowIndexByCode(string code) =>
-            !string.IsNullOrEmpty(code) && _codeToRow.TryGetValue(code.Trim(), out var idx) ? idx : -1;
+        public async Task<int> FindRowByCodeAsync(string code)
+        {
+            if (string.IsNullOrWhiteSpace(code)) return -1;
+            var target = code.Trim();
+
+            // Strategy 1: id-based cells (standard DuckCreek SPP layout)
+            var cells = _page.Locator("[id*='CovCatEntryOutput.CoverageID-'][id$='-layout']");
+            var count = await cells.CountAsync();
+            for (var i = 0; i < count; i++)
+            {
+                var text = (await cells.Nth(i).InnerTextAsync()).Trim();
+                if (text == target)
+                    return i;
+            }
+
+            // Strategy 2: testid-based rows (some states use a different DOM — e.g. WA)
+            // Scan all covCatEntry rows for a cell whose text matches the code.
+            if (count == 0)
+            {
+                var rows = _page.Locator("[data-testid*='covCatEntry.rows']");
+                var rowCount = await rows.CountAsync();
+                for (var i = 0; i < rowCount; i++)
+                {
+                    var text = (await rows.Nth(i).InnerTextAsync()).Trim();
+                    if (text.Contains(target, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Console.WriteLine($"[SPP] Code '{target}' found via testid rows at index {i}.");
+                        return i;
+                    }
+                }
+                Console.WriteLine($"[SPP] Code '{target}' not found in {rowCount} testid rows either.");
+            }
+            else
+            {
+                Console.WriteLine($"[SPP] Code '{target}' not found in {count} coverage rows.");
+            }
+            return -1;
+        }
+
         /// <summary>
         /// Get the row index for an SPP category by name. Returns -1 if not found.
         /// </summary>
