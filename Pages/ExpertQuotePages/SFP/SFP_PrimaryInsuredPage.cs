@@ -48,12 +48,39 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
 
 
         /// <summary>
-        /// Selects the existing client as Primary Insured and clicks Next to proceed
+        /// Selects the existing client as Primary Insured and clicks Next to proceed.
+        /// First tries to click the pre-populated suggestion (most states). If it doesn't
+        /// appear within 10 s (e.g. Texas), falls back to searching by name so the
+        /// suggestion row is rendered before clicking it.
         /// </summary>
         public async Task SelectExistingClientAsPrimaryInsuredAsync(ScenarioContextData contextData)
         {
             await WaitForSpinnerAsync();
-            await SelectExistingClientButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 60000 });
+
+            var suggestionVisible = false;
+            try
+            {
+                await SelectExistingClientButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
+                suggestionVisible = true;
+            }
+            catch (TimeoutException)
+            {
+                Console.WriteLine("[PrimaryInsured] Client suggestion not auto-populated — searching by name.");
+            }
+
+            if (!suggestionVisible)
+            {
+                // Some states (e.g. TX) require an explicit search before the suggestion renders
+                if (await SearchFirstNameInput.IsVisibleAsync())
+                {
+                    await SearchFirstNameInput.FillAsync(contextData.ClientFirstName ?? string.Empty);
+                    await SearchLastNameInput.FillAsync(contextData.ClientLastName ?? string.Empty);
+                    await SearchButton.ClickAsync();
+                    await WaitForSpinnerAsync();
+                }
+                await SelectExistingClientButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+            }
+
             await SelectExistingClientButton.ClickAsync();
             await WaitForSpinnerAsync();
             await ClickNextAsync();

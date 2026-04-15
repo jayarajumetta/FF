@@ -123,8 +123,8 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             var sppPage = new SFP_ScheduledPersonalPropertyPage(_context.Page);
             await sppPage.WaitForSpinnerAsync();
 
-            // Resolve row index by code first, then fall back to name-based lookup
-            var rowIndex = sppPage.GetCategoryRowIndexByCode(_contextData.SPPCategory);
+            // Resolve row index — dynamic DOM scan first (state-safe), then name heuristic
+            var rowIndex = await sppPage.FindRowByCodeAsync(_contextData.SPPCategory);
             if (rowIndex < 0)
                 rowIndex = sppPage.GetCategoryRowIndex(_contextData.SPPCategory);
 

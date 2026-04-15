@@ -24,8 +24,11 @@ namespace Playwright_POC.Pages
             // when other sections (like farmBeefDairyOrReplacementQuestions) also have this button
             if (value.Equals("None Of The Above", StringComparison.OrdinalIgnoreCase))
             {
-                // Both <label> and <input> share this testId — use First to avoid strict mode violation
-                return _page.GetByTestId("fields.data.underwritingQuestions.preQualification.preQualificationInput$eqNoneOfTheAbove.value").First;
+                // The test-id lives on the hidden <input> inside the mat-checkbox.
+                // Target the outer mat-checkbox wrapper (which IS visible and has proper Angular click handlers)
+                // by using a :has() CSS selector scoped to the preQualification test-id.
+                return _page.Locator(
+                    "mat-checkbox:has([data-testid='fields.data.underwritingQuestions.preQualification.preQualificationInput$eqNoneOfTheAbove.value'])");
             }
             return _page.GetByRole(AriaRole.Button, new() { Name = value, Exact = true });
         }
@@ -42,9 +45,41 @@ namespace Playwright_POC.Pages
 
         public async Task EnterPreQualificationInfoAndContinueAsync(string eligibilityRestrictions)
         {
-            await _page.WaitForTimeoutAsync(2000);
-            await ClickIfNotSelectedAsync(GetQualificationSelection(eligibilityRestrictions));
+            await WaitForSpinnerAsync();
+
+            if (eligibilityRestrictions.Equals("None Of The Above", StringComparison.OrdinalIgnoreCase))
+            {
+                // DuckCreek renders this as a mat-checkbox whose input is cdk-visually-hidden.
+                // Use CheckAsync() on the input directly — same pattern as SFP_UWQuestionsPage.SetCheckedAsync.
+                var checkbox = _page.Locator(
+                    "input[type='checkbox'][data-testid='fields.data.underwritingQuestions.preQualification.preQualificationInput$eqNoneOfTheAbove.value']");
+                await checkbox.First.CheckAsync();
+            }
+            else
+            {
+                var selection = GetQualificationSelection(eligibilityRestrictions);
+                await selection.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+                await selection.ClickAsync();
+            }
+
+            // Some states (e.g. TX) render additional farm-type restriction sections below
+            // General Eligibility. Each has its own "None Of The Above" checkbox that must be
+            // answered before the page will navigate forward. Check any that are still unchecked.
+            var extraNoneCheckboxes = _page.Locator(
+                "input[type='checkbox'][data-testid$='eqNoneOfTheAbove.value']:not([data-testid*='preQualification'])");
+            var extraCount = await extraNoneCheckboxes.CountAsync();
+            for (var i = 0; i < extraCount; i++)
+            {
+                var cb = extraNoneCheckboxes.Nth(i);
+                if (await cb.IsVisibleAsync() && !await cb.IsCheckedAsync())
+                {
+                    await cb.CheckAsync();
+                    Console.WriteLine($"[PreQual] Answered extra restriction section {i + 1} with None Of The Above.");
+                }
+            }
+
             await ClickNextAsync();
+            await WaitForSpinnerAsync();
         }
 
         public async Task SearchAddClassCodeAsync(ScenarioContextData contextData)

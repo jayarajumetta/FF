@@ -189,8 +189,10 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             await AddNoteButton.ClickAsync(new() { Force = true });
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 15000 });
 
-            // 5. Reload to return to the summary table view so the next item's link is visible
-            await _page.ReloadAsync();
+            // 5. Reload to return to the summary table view so the next item's link is visible.
+            // Use a generous timeout — the checklist server can be slow after saving a note.
+            await _page.ReloadAsync(new PageReloadOptions { Timeout = 60000 });
+            await WaitForSsoRedirectAsync(_page, timeoutMs: 60000);
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
         }
 

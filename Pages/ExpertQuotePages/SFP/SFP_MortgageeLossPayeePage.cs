@@ -30,7 +30,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             _page.GetByTestId("searchActionButton");
 
         public ILocator FirstSearchResultCheckbox =>
-            _page.GetByTestId("additionalInsuredSelected.0");
+            _page.GetByTestId("additionalInsuredSelected.0-checkbox-wrapper").GetByTestId("additionalInsuredSelected.0");
         #endregion
 
         #region Locators - Mortgagee Details Form

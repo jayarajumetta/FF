@@ -104,6 +104,14 @@ namespace Playwright_POC.Hooks
             _scenarioContext["ContextData"] = new ScenarioContextData();
             Console.WriteLine("[Hooks] ScenarioContextData registered for this scenario.");
 
+            // Delete any stale QuoteNumber.txt from a previous run so the file-based
+            // fallback in UserValidatesFormsViaDuckcreek can never pick up an old quote.
+            if (File.Exists("QuoteNumber.txt"))
+            {
+                File.Delete("QuoteNumber.txt");
+                Console.WriteLine("[Hooks] Deleted stale QuoteNumber.txt");
+            }
+
             // Initialize HttpClient for API scenarios (kept from your original code)
             _context.HttpClient = new System.Net.Http.HttpClient
             {

@@ -265,11 +265,8 @@ namespace Playwright_POC.Pages
 
         public async Task SelectRatingStateAsync(ScenarioContextData contextData)
         {
-            await RatingStateDropdown.ClickAsync();
-            await Task.Delay(500);
-            // Dropdown shows states in UPPERCASE (Angular Material mat-option)
-            // Use Exact = true to prevent "KANSAS" from matching "ARKANSAS"
-            await _page.GetByRole(AriaRole.Option, new() { Name = contextData.RatingState.ToUpper(), Exact = true }).ClickAsync();
+            // Use robust mat-select handler to avoid race conditions with the dropdown panel
+            await Playwright_POC.Helpers.Helpers.SelectByTextAsync(_page, RatingStateDropdown, contextData.RatingState.ToUpper(), timeoutMs: 30000, blurAfterSelect: false);
         }
     }
 }
