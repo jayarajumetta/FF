@@ -95,9 +95,66 @@
 - Interfaces: `I` prefix (e.g., `IApiService`)
 - Test data tokens: `{{camelCase}}`
 
+## Forms Validation System
+
+### Overview
+End-of-policy forms validation verifies that DuckCreek attaches the correct mandatory forms to a policy. It runs as the **last step** in each scenario (e.g., `When user validates Forms via Duckcreek for state "<StateAbbv>"`).
+
+### How It Works
+1. **API call**: `FormsValidationService` POSTs to the DuckCreek forms API using `DuckCreekFormsClient`, parses the XML response, and builds a list of `ActualFormEntry` objects from `printDoc` elements.
+2. **Baseline load**: `FormsValidationService.LoadExpectedFormsForLob(lob, state, testCase)` loads `Resources/ExpectedForms/{LOB}/{LOB}.json`.
+3. **Validate**: Expected vs actual are compared. Results are written to an HTML report in `TestResults/{timestamp}/`.
+4. **Test always continues** — forms failures are soft-asserts (reported but do not fail the scenario step).
+
+### Baseline JSON Format (`Resources/ExpectedForms/SFP/SFP.json`)
+Include-only format — forms not in the file are treated as "not expected":
+```json
+{
+  "BASE":  { "SF00010120": ["AL","AR",...], "SF00020120": "all" },
+  "BASIC": { "X32100925": ["IL"] },
+  "CE":    { ... }
+}
+```
+- **BASE**: forms loaded for ALL test cases (Basic Policy + Country Estate)
+- **BASIC**: forms loaded only for Basic Policy test cases (in addition to BASE)
+- **CE**: forms loaded only for Country Estate test cases (in addition to BASE)
+- Value `"all"` = mandatory for every supported state
+- Value `["AL","AR",...]` = mandatory only for listed states
+
+### Section Mapping (How Sections Are Assigned by the Generator)
+Excel sheet names map to JSON sections via `ExcelFormsParser.SheetToSection`:
+| Excel Sheet | JSON Section |
+|-------------|-------------|
+| Division 0, Division 1 | BASE |
+| Division 2–7, X-Forms | BASIC |
+| T-Notices | BASE |
+| Country Estate | CE |
+
+### Regenerating the Baseline (Excel Masterlist → SFP.json)
+Use the built-in `FormsBaselineGeneratorTool` (Category=Tools NUnit test):
+```powershell
+cd "c:\PnC Test Automation\PnC-TestAutomation"
+dotnet test TestAutomation.csproj --filter "Category=Tools&Name~GenerateFormsBaseline" `
+  -- 'TestRunParameters.Parameter(name="EXCEL",value="path\to\SFP Forms Masterlist v9.00.xlsx")' `
+     'TestRunParameters.Parameter(name="LOB",value="SFP")' `
+     'TestRunParameters.Parameter(name="COMMON_EXCEL",value="path\to\Common Forms MASTERLIST.xlsx")'
+```
+- Add `'TestRunParameters.Parameter(name="DRY_RUN",value="true")'` to preview changes without writing
+- The diff is also saved to `TestResults/FormsBaseline/SFP_diff.txt`
+- Both Excel files live in `Resources/ExpectedForms/SFP/`
+
+### Excel Files Used
+| File | Purpose |
+|------|---------|
+| `SFP Forms Masterlist v9.00 (1).xlsx` | SFP-specific forms — all divisions, X-Forms, T-Notices |
+| `Common Forms MASTERLIST (all States) - Version 80.00 (2).xlsx` | Cross-LOB forms shared across product lines |
+
+The parser (`ExcelFormsParser.cs`) auto-detects header rows by looking for 2-letter state abbreviations. State columns with `Y` = Mandatory (mapped to `YM`). Blank = Not Expected (omitted from baseline). The Common Forms file uses an LOB column lookup (column `SFP`) to find which state columns apply; common forms are merged into BASE and deduplicated against LOB-specific forms.
+
 ## What NOT to Do
 - Do NOT use `[TestMethod]` — this is Reqnroll/NUnit, not MSTest
 - Do NOT edit `.feature.cs` files — they are auto-generated
+- Do NOT edit `SFP.json` by hand — regenerate it using the Excel masterlist tool above
 - Do NOT hardcode credentials or environment URLs
 - Do NOT make page objects transient — they must be singletons
 - Do NOT skip registering new page objects in `Startup.cs`

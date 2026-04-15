@@ -1,8 +1,12 @@
 {
+    "git.path": "C:\\Program Files\\Git\\cmd\\git.exe",
     "files.exclude": {
         "**/*.feature.cs": true
     },
     "files.associations": {
         "**/ExpectedForms/**/*.json": "jsonc"
-    }
+    },
+    "csharp-dev-tools.roslyn.projectOrSolutionFiles": [
+        "c:\\PnC Test Automation\\PnC-TestAutomation\\Playwright_POC.sln"
+    ]
 }
