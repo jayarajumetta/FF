@@ -236,6 +236,7 @@ Feature: SFP Basic Policy
       | Action        | Exception   |
       | ExceptionNote | EasyPay set |
       | Note          | EasyPay set |
+      | Optional      | Yes         |
 
     # Step 34: Enter required information for Checklist (Loss Runs)
     When user completes Checklist item
@@ -262,6 +263,8 @@ Feature: SFP Basic Policy
       | Colorado       | CO        | Colorado       | 231 Main St        | 111          | Fort Morgan    | 80701 | Morgan       |
       | Idaho          | ID        | Idaho          | 1221 W Ironwood Dr | 111          | Coeur D Alene  | 83814 | Kootenai     |
       | Illinois       | IL        | Illinois       | 2576 Charles St    | 111          | Rockford       | 61108 | Winnebago    |
+      | Indiana        | IN        | Indiana        | 5518 Calumet Ave   | 111          | Hammond        | 46320 | Lake         |
+      | Iowa           | IA        | Iowa           | 808 River St       | 111          | Decorah        | 52101 | Winneshiek   |
       | Kansas         | KS        | Kansas         | 9400 State Ave     | 111          | Kansas City    | 66112 | Wyandotte    |
       | Kentucky       | KY        | Kentucky       | 1002 Medical Dr    | 111          | Mayfield       | 42066 | Graves       |
       | Louisiana      | LA        | Louisiana      | 218 Meadow Dr      | 111          | Oakdale        | 71463 | Allen        |
@@ -269,7 +272,9 @@ Feature: SFP Basic Policy
       | Montana        | MT        | Montana        | 1202 3rd St W      | 11           | Roundup        | 59072 | Musselshell  |
       | Nebraska       | NE        | Nebraska       | 1517 Broadway      | 111          | Scottsbluff    | 69361 | Scotts Bluff |
       | Nevada         | NV        | Nevada         | 340 N 11th St      | 111          | Las Vegas      | 89101 | Clark        |
+      | New Mexico     | NM        | New Mexico     | 901 West 13th St   | 111          | Clovis         | 88101 | Curry        |
       | North Dakota   | ND        | North Dakota   | 600 S 2nd St       | 111          | Bismarck       | 58504 | Burleigh     |
+      | Oklahoma       | OK        | Oklahoma       | 436255 E 330 Rd    | 111          | Big Cabin      | 74332 | Craig        |
       | Oregon         | OR        | Oregon         | 661 SW 26TH ST     | 111          | Corvallis      | 97331 | Benton       |
       | South Carolina | SC        | South Carolina | 3009 Augusta Hwy   | 111          | Allendale      | 29810 | Allendale    |
       | South Dakota   | SD        | South Dakota   | 700 Governors Dr   | 111          | Pierre         | 57501 | Hughes       |

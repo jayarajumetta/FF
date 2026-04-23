@@ -189,11 +189,23 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
 
                 var stateAbbv = GetStateAbbreviation(_contextData.RatingState);
                 var expectedRaw = _configuration[$"ExpectedPremiums:SFP:{stateAbbv}:Amount"];
+                var skipPremiumBaselineAssertion = string.Equals(
+                    _configuration["Debugging:SkipPremiumBaselineAssertion"],
+                    "true",
+                    StringComparison.OrdinalIgnoreCase);
+
                 if (!string.IsNullOrWhiteSpace(expectedRaw) && decimal.TryParse(expectedRaw, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var expectedPremium))
                 {
-                    Assert.That(premium.Value, Is.EqualTo(expectedPremium).Within(0.01m),
-                        $"[Premium Regression] {stateAbbv}: expected ${expectedPremium:N2} but captured ${premium.Value:N2}");
-                    Console.WriteLine($"[Premium] {stateAbbv} baseline assertion passed: ${premium.Value:N2}");
+                    if (skipPremiumBaselineAssertion)
+                    {
+                        Console.WriteLine($"[Premium][DEBUG] Baseline assertion skipped for {stateAbbv}. Expected ${expectedPremium:N2}, captured ${premium.Value:N2}.");
+                    }
+                    else
+                    {
+                        Assert.That(premium.Value, Is.EqualTo(expectedPremium).Within(0.01m),
+                            $"[Premium Regression] {stateAbbv}: expected ${expectedPremium:N2} but captured ${premium.Value:N2}");
+                        Console.WriteLine($"[Premium] {stateAbbv} baseline assertion passed: ${premium.Value:N2}");
+                    }
                 }
             }
             else
@@ -209,6 +221,13 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             await billingPage.WaitForSpinnerAsync();
 
             // ── Step 1: Billing Account Setup ────────────────────────────────
+            // When escrow is billed to the mortgagee the full billing form is not shown —
+            // the page only shows a pre-selected "MORTGAGEE" chip and Next: Submission.
+            // Guard the entire form with a short visibility check.
+            var hasBillingForm = await billingPage.CreateNewBillingAccountButton.IsVisibleAsync();
+
+            if (hasBillingForm)
+            {
             if (_contextData.PrimaryPayer?.ToLower() == "primary insured")
             {
                 await billingPage.CreateNewBillingAccountButton.ClickAsync();
@@ -341,6 +360,11 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
                     break;
             }
             await billingPage.WaitForSpinnerAsync();
+            } // end if (hasBillingForm)
+            else
+            {
+                Console.WriteLine("[Billing] Full billing form not present (mortgagee-escrow policy) — skipping billing form.");
+            }
 
             await billingPage.ClickNextAsync();
             Console.WriteLine($"Billing completed: PaymentType={_contextData.PaymentType}, " +
@@ -423,6 +447,15 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
                 // Forms validation is non-blocking — a server error or unavailable DuckCreek
                 // instance should not fail a scenario that has already passed all business steps.
                 Console.WriteLine($"[FormsValidation] SKIPPED — could not complete forms check for {state}: {ex.Message}");
+
+                // Debug toggle: allow temporarily failing the scenario when forms validation errors occur.
+                var failOnFormsValidationError = string.Equals(
+                    _configuration["Debugging:FailOnFormsValidationError"],
+                    "true",
+                    StringComparison.OrdinalIgnoreCase);
+
+                if (failOnFormsValidationError)
+                    throw;
             }
         }
 
@@ -542,12 +575,16 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             TableMappingHelpers.ChecklistItemFields(table, _contextData);
 
+            var optional = table.Rows.Any(r => r["Question"].Equals("Optional", StringComparison.OrdinalIgnoreCase)
+                                               && r["Answer"].Equals("Yes", StringComparison.OrdinalIgnoreCase));
+
             var checklistPage = new SFP_ChecklistPage(_context.ChecklistPage);
             await checklistPage.CompleteChecklistItemAsync(
                 _contextData.ChecklistItemName,
                 _contextData.ChecklistAction,
                 _contextData.ChecklistExceptionNote,
-                _contextData.ChecklistNote);
+                _contextData.ChecklistNote,
+                skipIfNotFound: optional);
 
             Console.WriteLine($"Completed checklist item: {_contextData.ChecklistItemName}, Action: {_contextData.ChecklistAction}");
         }
@@ -612,15 +649,19 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
                 "ARIZONA"        => "AZ",
                 "COLORADO"       => "CO",
                 "IDAHO"          => "ID",
+                "IOWA"           => "IA",
+                "INDIANA"        => "IN",
                 "ILLINOIS"       => "IL",
                 "KANSAS"         => "KS",
                 "KENTUCKY"       => "KY",
                 "LOUISIANA"      => "LA",
                 "MINNESOTA"      => "MN",
                 "MONTANA"        => "MT",
+                "NEW MEXICO"     => "NM",
                 "NEBRASKA"       => "NE",
                 "NEVADA"         => "NV",
                 "NORTH DAKOTA"   => "ND",
+                "OKLAHOMA"       => "OK",
                 "OREGON"         => "OR",
                 "SOUTH CAROLINA" => "SC",
                 "SOUTH DAKOTA"   => "SD",

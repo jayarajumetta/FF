@@ -130,7 +130,9 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
 
             if (rowIndex < 0)
             {
-                Console.WriteLine($"WARNING: SPP category '{_contextData.SPPCategory}' not mapped - skipping");
+                Console.WriteLine($"WARNING: SPP category '{_contextData.SPPCategory}' not mapped - navigating to next page");
+                await sppPage.NextLiabilityButton.ClickAsync();
+                await sppPage.WaitForSpinnerAsync();
                 return;
             }
 

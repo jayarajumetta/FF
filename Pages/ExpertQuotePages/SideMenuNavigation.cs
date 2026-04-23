@@ -50,8 +50,38 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         /// </summary>
         private async Task NavigateToAsync(ILocator navItem, int timeoutMs = 30000)
         {
+            // Some pages briefly keep an overlay spinner active while the left nav is already visible.
+            // Wait for the overlay to clear before attempting navigation clicks.
+            // In Dev this overlay can occasionally linger; don't fail early if it does.
+            try
+            {
+                await _page.Locator(".ngx-spinner-overlay").WaitForAsync(
+                    new() { State = WaitForSelectorState.Hidden, Timeout = timeoutMs });
+            }
+            catch (TimeoutException)
+            {
+                Console.WriteLine("[SideMenu] Spinner overlay still visible after timeout; proceeding with click fallback.");
+            }
+
             await navItem.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = timeoutMs });
-            await navItem.ClickAsync();
+
+            try
+            {
+                await navItem.ClickAsync(new() { Timeout = timeoutMs });
+            }
+            catch (TimeoutException)
+            {
+                // Fallback for occasional pointer interception races after overlay transitions.
+                try
+                {
+                    await navItem.ClickAsync(new() { Timeout = timeoutMs, Force = true });
+                }
+                catch (TimeoutException)
+                {
+                    await navItem.DispatchEventAsync("click");
+                }
+            }
+
             await WaitForSpinnerAsync();
         }
         

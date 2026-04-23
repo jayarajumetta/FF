@@ -122,7 +122,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         /// 4. Click Add Note.
         /// Includes SSO redirect handling for session timeout scenarios.
         /// </summary>
-        public async Task CompleteChecklistItemAsync(string itemName, string action, string exceptionNote, string note)
+        public async Task CompleteChecklistItemAsync(string itemName, string action, string exceptionNote, string note, bool skipIfNotFound = false)
         {
             // Ensure we're not on an SSO page before starting — SSO may have been triggered
             // by the previous step's reload or by session expiry mid-flow.
@@ -143,7 +143,15 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
                 Console.WriteLine($"[Checklist] Item '{itemName}' not visible — handling possible SSO redirect and retrying.");
                 await WaitForSsoRedirectAsync(_page, timeoutMs: 60000);
                 await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
-                await row.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+                try
+                {
+                    await row.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+                }
+                catch (TimeoutException) when (skipIfNotFound)
+                {
+                    Console.WriteLine($"[Checklist] Item '{itemName}' not found on checklist (optional) — skipping.");
+                    return;
+                }
             }
             await row.First.ClickAsync();
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });

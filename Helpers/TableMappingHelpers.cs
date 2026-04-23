@@ -992,6 +992,9 @@ namespace Playwright_POC.Helpers
                     case "Note":
                         _contextData.ChecklistNote = answer;
                         break;
+                    case "Optional":
+                        // Handled directly by the step definition — not stored in context
+                        break;
                     default:
                         throw new ArgumentException($"Unknown Checklist question: {question}");
                 }
