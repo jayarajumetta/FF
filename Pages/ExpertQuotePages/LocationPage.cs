@@ -40,7 +40,7 @@ namespace Playwright_POC.Pages
             var input = LocationNicknameInput();
             await input.WaitForAsync(new() { State = WaitForSelectorState.Visible });
             await input.FillAsync(nickname);
-            await _page.WaitForTimeoutAsync(3000);
+            await WaitForSpinnerAsync();
         }
 
         private ILocator LocationTypeButton(string typeText) =>
@@ -69,7 +69,7 @@ namespace Playwright_POC.Pages
                 return;
 
             await btn.ClickAsync(new() { Force = true });
-            await _page.WaitForTimeoutAsync(3000);
+            await WaitForSpinnerAsync();
         }
 
         private ILocator MilesFromFireDepartment() => _page.Locator("input[data-testid*='locationInput$milesFromFireDepartment.value']");
@@ -98,15 +98,14 @@ namespace Playwright_POC.Pages
             
             // Click to open the dropdown
             await select.ClickAsync(new() { Timeout = 30000 });
-            await _page.WaitForTimeoutAsync(500);
             
             // Wait for panel to appear and select option by text
             var option = _page.Locator(".cdk-overlay-pane mat-option").GetByText(normalizedValue, new() { Exact = true });
             await option.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
             await option.ClickAsync();
-            
-            // Wait for panel to close
-            await _page.WaitForTimeoutAsync(300);
+
+            // Wait for panel to close before tabbing onward
+            await _page.Locator(".cdk-overlay-pane mat-option").First.WaitForAsync(new() { State = WaitForSelectorState.Hidden, Timeout = 10000 });
             await _page.Keyboard.PressAsync("Tab");
             await WaitForSpinnerAsync();
         }
@@ -120,10 +119,8 @@ namespace Playwright_POC.Pages
             await input.FillAsync(acreage);
         }
 
-        private ILocator WindHailScope() => _page.Locator("div:has(button[data-testid*='locationInput$windHailDeductible.value'])").First;
-        private ILocator WindHailDeductibleChip(string text) => WindHailScope()
-                                        .Locator("button[data-testid*='locationInput$windHailDeductible.value']")
-                                        .Filter(new() { HasTextString = text });
+        private ILocator WindHailScope() => _page.Locator("div:has([data-testid*='locationInput$windHailDeductible.value'])").First;
+        private ILocator WindHailOptionsInScope() => WindHailScope().Locator("[data-testid*='locationInput$windHailDeductible.value']");
 
         private ILocator WindHailMoreOptionsButton() =>
                 WindHailScope().GetByRole(AriaRole.Button, new() { Name = "More Options", Exact = true });
@@ -131,6 +128,173 @@ namespace Playwright_POC.Pages
                 _page.Locator(".cdk-overlay-pane .mat-menu.panel, .cdk-overlay-pane .mat-mdc-menu-panel")
                 .Last
                 .GetByRole(AriaRole.Menuitem, new() { Name = text, Exact = true });
+
+        private static string NormalizeWhText(string text) =>
+            (text ?? string.Empty).Trim().Replace(" ", string.Empty).ToUpperInvariant();
+
+        private static decimal? TryParsePercent(string option)
+        {
+            var normalized = NormalizeWhText(option).Replace("%", string.Empty);
+            return decimal.TryParse(normalized, NumberStyles.Any, CultureInfo.InvariantCulture, out var value)
+                ? value
+                : null;
+        }
+
+        private static bool IsNoiseOption(string option) =>
+            string.IsNullOrWhiteSpace(option)
+            || NormalizeWhText(option) == "MOREOPTIONS";
+
+        private static IEnumerable<string> SplitOptionText(string raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw))
+                yield break;
+
+            var parts = raw
+                .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(p => p.Trim())
+                .Where(p => !string.IsNullOrWhiteSpace(p));
+
+            foreach (var part in parts)
+                yield return part;
+        }
+
+        private async Task<List<string>> GetAllWindHailOptionsAsync(ILocator scope)
+        {
+            var optionTexts = new List<string>();
+
+            var inScope = scope.Locator("[data-testid*='locationInput$windHailDeductible.value']");
+            var count = await inScope.CountAsync();
+            for (var i = 0; i < count; i++)
+            {
+                var raw = await inScope.Nth(i).InnerTextAsync();
+                optionTexts.AddRange(SplitOptionText(raw));
+            }
+
+            var hasNumericOptions = optionTexts.Any(t => TryParsePercent(t).HasValue);
+            if (!hasNumericOptions)
+            {
+                var moreOpts = WindHailMoreOptionsButton();
+                if (await moreOpts.CountAsync() > 0 && await moreOpts.IsVisibleAsync())
+                {
+                    await moreOpts.ClickAsync();
+                    await _page.WaitForTimeoutAsync(500);
+
+                    var menuPanel = _page.Locator(".cdk-overlay-pane .mat-menu-panel, .cdk-overlay-pane .mat-mdc-menu-panel").Last;
+                    if (await menuPanel.CountAsync() > 0 && await menuPanel.IsVisibleAsync())
+                    {
+                        var menuItems = menuPanel.GetByRole(AriaRole.Menuitem);
+                        var menuCount = await menuItems.CountAsync();
+                        for (var i = 0; i < menuCount; i++)
+                            optionTexts.AddRange(SplitOptionText(await menuItems.Nth(i).InnerTextAsync()));
+                    }
+
+                    await _page.Keyboard.PressAsync("Escape");
+                    await _page.WaitForTimeoutAsync(300);
+                }
+            }
+
+            return optionTexts
+                .Select(t => t.Trim())
+                .Where(t => !IsNoiseOption(t))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+
+        private async Task<bool> TrySelectWindHailOptionAsync(ILocator scope, string target, int timeoutMs = 30000)
+        {
+            var normalizedTarget = NormalizeWhText(target);
+            if (string.IsNullOrWhiteSpace(normalizedTarget))
+                return false;
+
+            // Prefer direct chip selection by testid+text (works for non-button chip wrappers).
+            var chips = scope.Locator("[data-testid*='locationInput$windHailDeductible.value']");
+            var chipCount = await chips.CountAsync();
+            for (var i = 0; i < chipCount; i++)
+            {
+                var candidate = chips.Nth(i);
+                if (!await candidate.IsVisibleAsync())
+                    continue;
+
+                var text = NormalizeWhText(await candidate.InnerTextAsync());
+                if (text == normalizedTarget)
+                {
+                    await candidate.ScrollIntoViewIfNeededAsync();
+                    await candidate.ClickAsync(new() { Timeout = timeoutMs, Force = true });
+                    return true;
+                }
+            }
+
+            // Fallback to overflow menu when direct chip isn't visible.
+            var moreOptionsButton = WindHailMoreOptionsButton();
+            if (await moreOptionsButton.CountAsync() == 0 || !await moreOptionsButton.IsVisibleAsync())
+                return false;
+
+            await moreOptionsButton.ClickAsync(new() { Timeout = timeoutMs });
+            var menuPanel = _page.Locator(".cdk-overlay-pane .mat-menu-panel, .cdk-overlay-pane .mat-mdc-menu-panel").Last;
+            await Expect(menuPanel).ToBeVisibleAsync(new() { Timeout = timeoutMs });
+
+            var menuItem = menuPanel.GetByRole(AriaRole.Menuitem, new() { Name = target, Exact = true }).First;
+            if (await menuItem.CountAsync() > 0 && await menuItem.IsVisibleAsync())
+            {
+                await menuItem.ClickAsync(new() { Timeout = timeoutMs });
+                await Expect(menuPanel).ToBeHiddenAsync(new() { Timeout = timeoutMs });
+                return true;
+            }
+
+            await _page.Keyboard.PressAsync("Escape");
+            await _page.WaitForTimeoutAsync(200);
+            return false;
+        }
+
+        private static string ResolveBaselineSelection((bool cannotBeAdded, string minDeductible) rules, List<string> options)
+        {
+            if (rules.cannotBeAdded)
+                return null;
+
+            if (!string.IsNullOrWhiteSpace(rules.minDeductible))
+                return rules.minDeductible;
+
+            var na = options.FirstOrDefault(o => NormalizeWhText(o) == "N/A");
+            if (!string.IsNullOrEmpty(na))
+                return na;
+
+            var smallestNumeric = options
+                .Select(o => new { Raw = o, Value = TryParsePercent(o) })
+                .Where(x => x.Value.HasValue)
+                .OrderBy(x => x.Value.Value)
+                .Select(x => x.Raw)
+                .FirstOrDefault();
+
+            return smallestNumeric;
+        }
+
+        private static string ResolveNextAboveSelection(string baseline, List<string> options)
+        {
+            if (string.IsNullOrWhiteSpace(baseline))
+                return null;
+
+            var baselineNormalized = NormalizeWhText(baseline);
+            if (baselineNormalized == "N/A")
+            {
+                return options
+                    .Select(o => new { Raw = o, Value = TryParsePercent(o) })
+                    .Where(x => x.Value.HasValue)
+                    .OrderBy(x => x.Value.Value)
+                    .Select(x => x.Raw)
+                    .FirstOrDefault();
+            }
+
+            var baselineValue = TryParsePercent(baseline);
+            if (!baselineValue.HasValue)
+                return null;
+
+            return options
+                .Select(o => new { Raw = o, Value = TryParsePercent(o) })
+                .Where(x => x.Value.HasValue && x.Value.Value > baselineValue.Value)
+                .OrderBy(x => x.Value.Value)
+                .Select(x => x.Raw)
+                .FirstOrDefault();
+        }
 
         private ILocator OrderWildfireRiskScoreButton() => 
                 _page.GetByTestId("fields.data.account.location.rows[0].orderWildfire");
@@ -167,37 +331,6 @@ namespace Playwright_POC.Pages
 
         public async Task SelectWindHailDeductibleAsync(string deductible, string zipCode = null)
         {
-            // Resolve the correct choice using the same zip-to-zone rules used for verification.
-            // States with no minimum (minDeductible = null) should always select "N/A" regardless
-            // of what the feature file specifies — this matches the Tosca baseline behaviour.
-            // States where WH cannot be added (cannotBeAdded = true) skip entirely; the field
-            // won't exist so the scope check below will also skip.
-            string choice;
-            if (!string.IsNullOrEmpty(zipCode))
-            {
-                var rules = GetWindHailRulesForZip(zipCode);
-                if (rules?.cannotBeAdded == true)
-                {
-                    Console.WriteLine($"[WindHail] Zip {zipCode} — WH cannot be added, skipping selection.");
-                    return;
-                }
-                if (rules?.minDeductible == null)
-                {
-                    // No minimum state — Tosca selects N/A
-                    choice = "N/A";
-                    Console.WriteLine($"[WindHail] Zip {zipCode} — no minimum state, overriding to 'N/A'.");
-                }
-                else
-                {
-                    // Minimum required — use the requested value (e.g. 1%)
-                    choice = (deductible ?? "").Trim().ToUpperInvariant();
-                }
-            }
-            else
-            {
-                choice = (deductible ?? "").Trim().ToUpperInvariant();
-            }
-
             // Check if Wind/Hail deductible field exists (not all states have this field)
             var scope = WindHailScope();
             if (await scope.CountAsync() == 0)
@@ -206,22 +339,63 @@ namespace Playwright_POC.Pages
                 return;
             }
 
-            // Also verify the options exist within the scope
-            var buttons = scope.Locator("[data-testid*='locationInput$windHailDeductible.value']");
-            if (await buttons.CountAsync() == 0)
+            var optionsInScope = WindHailOptionsInScope();
+            if (await optionsInScope.CountAsync() == 0)
             {
                 Console.WriteLine("Wind/Hail deductible buttons not found - skipping.");
                 return;
             }
 
-            await Helpers.Helpers.SelectButtonAsync(
-                page: _page,
-                scope: scope,
-                value: choice,
-                moreOptionsButton: WindHailMoreOptionsButton(),
-                timeoutMs: 30000);
+            var rules = !string.IsNullOrWhiteSpace(zipCode)
+                ? GetWindHailRulesForZip(zipCode)
+                : null;
+
+            if (rules?.cannotBeAdded == true)
+            {
+                Console.WriteLine($"[WindHail] Zip {zipCode} — WH cannot be added, skipping selection.");
+                return;
+            }
+
+            var availableOptions = await GetAllWindHailOptionsAsync(scope);
+            Console.WriteLine($"[WindHail] Available options for selection: {string.Join(", ", availableOptions)}");
+
+            // Step 17: select the minimum/baseline option (minimum required or N/A/lowest available)
+            var baselineChoice = rules.HasValue
+                ? ResolveBaselineSelection(rules.Value, availableOptions)
+                : (deductible ?? string.Empty).Trim();
+
+            if (string.IsNullOrWhiteSpace(baselineChoice))
+            {
+                Console.WriteLine("[WindHail] No baseline deductible option resolved - skipping selection.");
+                return;
+            }
+
+            var baselineSelected = await TrySelectWindHailOptionAsync(scope, baselineChoice);
+            if (!baselineSelected)
+            {
+                Console.WriteLine($"[WindHail] Could not select baseline '{baselineChoice}' - skipping next-above selection.");
+                return;
+            }
 
             await WaitForSpinnerAsync();
+
+            // Step 18: select the next option above the baseline when available.
+            var nextAbove = ResolveNextAboveSelection(baselineChoice, availableOptions);
+            if (string.IsNullOrWhiteSpace(nextAbove))
+            {
+                Console.WriteLine($"[WindHail] No option above '{baselineChoice}' is available for this zip/state.");
+                return;
+            }
+
+            var nextSelected = await TrySelectWindHailOptionAsync(scope, nextAbove);
+            if (!nextSelected)
+            {
+                Console.WriteLine($"[WindHail] Baseline '{baselineChoice}' selected, but next-above '{nextAbove}' could not be selected.");
+                return;
+            }
+
+            await WaitForSpinnerAsync();
+            Console.WriteLine($"[WindHail] Selected baseline '{baselineChoice}', then next-above '{nextAbove}'.");
         }
 
         // ── Wind/Hail zip-to-zone rules ───────────────────────────────────────
@@ -291,37 +465,12 @@ namespace Playwright_POC.Pages
             Assert.That(buttonCount, Is.GreaterThan(0),
                 $"[WindHail] Zip {zipCode}: WH deductible field present but no option buttons found.");
 
-            // Collect and normalise all visible option texts
-            var optionTexts = new List<string>();
-            for (var i = 0; i < buttonCount; i++)
-                optionTexts.Add((await buttons.Nth(i).InnerTextAsync()).Trim().Replace(" ", ""));
+            var optionTexts = (await GetAllWindHailOptionsAsync(scope))
+                .Select(NormalizeWhText)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
 
-            Console.WriteLine($"[WindHail] Zip {zipCode}: Available options – {string.Join(", ", optionTexts)}");
-
-            // After EQ upgrade, percentage options may be hidden behind a "More Options" overflow.
-            // If no numeric options are visible, open the overflow menu to collect all options.
-            var hasNumericOptions = optionTexts.Any(t =>
-                decimal.TryParse(t.Replace("%", "").Trim(), NumberStyles.Any, CultureInfo.InvariantCulture, out _));
-            if (!hasNumericOptions)
-            {
-                var moreOpts = WindHailMoreOptionsButton();
-                if (await moreOpts.CountAsync() > 0 && await moreOpts.IsVisibleAsync())
-                {
-                    await moreOpts.ClickAsync();
-                    await _page.WaitForTimeoutAsync(500);
-                    var menuPanel = _page.Locator(".cdk-overlay-pane .mat-menu-panel, .cdk-overlay-pane .mat-mdc-menu-panel").Last;
-                    if (await menuPanel.CountAsync() > 0 && await menuPanel.IsVisibleAsync())
-                    {
-                        var menuItems = menuPanel.GetByRole(AriaRole.Menuitem);
-                        var menuCount = await menuItems.CountAsync();
-                        for (var i = 0; i < menuCount; i++)
-                            optionTexts.Add((await menuItems.Nth(i).InnerTextAsync()).Trim().Replace(" ", ""));
-                    }
-                    await _page.Keyboard.PressAsync("Escape");
-                    await _page.WaitForTimeoutAsync(300);
-                    Console.WriteLine($"[WindHail] Zip {zipCode}: Expanded overflow – all options: {string.Join(", ", optionTexts)}");
-                }
-            }
+            Console.WriteLine($"[WindHail] Zip {zipCode}: Available options - {string.Join(", ", optionTexts)}");
 
             if (rules.Value.minDeductible == "1%")
             {

@@ -46,7 +46,6 @@ namespace Playwright_POC.Pages.ExpressPages
                 // DEV environment may be slower - wait for navigation and DOM to settle
                 Console.WriteLine("[ExpressLogin] Waiting for post-login navigation...");
                 await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 90000 });
-                await Task.Delay(2000); // Allow ExtJS to fully initialize
 
                 // Verify the search input appears
                 try

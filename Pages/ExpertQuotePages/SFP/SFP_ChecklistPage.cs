@@ -124,6 +124,9 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         /// </summary>
         public async Task CompleteChecklistItemAsync(string itemName, string action, string exceptionNote, string note, bool skipIfNotFound = false)
         {
+            var itemVisibilityTimeoutMs = skipIfNotFound ? 12000 : 60000;
+            var retryVisibilityTimeoutMs = skipIfNotFound ? 8000 : 30000;
+
             // Ensure we're not on an SSO page before starting — SSO may have been triggered
             // by the previous step's reload or by session expiry mid-flow.
             await WaitForSsoRedirectAsync(_page, timeoutMs: 60000);
@@ -135,7 +138,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             var row = ItemRow(itemName);
             try
             {
-                await row.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 60000 });
+                await row.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = itemVisibilityTimeoutMs });
             }
             catch (TimeoutException)
             {
@@ -145,7 +148,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
                 await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
                 try
                 {
-                    await row.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+                    await row.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = retryVisibilityTimeoutMs });
                 }
                 catch (TimeoutException) when (skipIfNotFound)
                 {
