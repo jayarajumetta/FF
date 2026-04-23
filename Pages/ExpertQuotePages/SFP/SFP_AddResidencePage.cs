@@ -25,33 +25,35 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         #endregion
 
         #region Toggle Buttons
-        // Occupancy
-        public ILocator OwnerButton => _page.GetByTestId("fields.building.rows[0].buildingInput$occupancy.value-0");
-        public ILocator TenantButton => _page.GetByTestId("fields.building.rows[0].buildingInput$occupancy.value-1");
+        // Occupancy (Owner / Tenant)
+        private ILocator GetOccupancyButton(string value) =>
+            _page.GetByTestId("fields.building.rows[0].buildingInput$occupancy.value-chip-item-wrapper")
+                 .Filter(new() { HasText = value }).First;
 
-        // Number of Families
-        public ILocator SingleFamilyButton => _page.GetByTestId("fields.building.rows[0].buildingInput$eQNumberOfFamilies.value-0");
-        public ILocator DuplexButton => _page.GetByTestId("fields.building.rows[0].buildingInput$eQNumberOfFamilies.value-1");
-        public ILocator TriplexButton => _page.GetByTestId("fields.building.rows[0].buildingInput$eQNumberOfFamilies.value-2");
-        public ILocator FourplexButton => _page.GetByTestId("fields.building.rows[0].buildingInput$eQNumberOfFamilies.value-3");
+        // Number of Families (Single Family / Duplex / Triplex / Fourplex)
+        public ILocator GetNumberOfFamiliesButton(string value) =>
+            _page.GetByTestId("fields.building.rows[0].buildingInput$eQNumberOfFamilies.value-chip-item-wrapper")
+                 .Filter(new() { HasText = value }).First;
 
-        // Service Panel
-        public ILocator MainBreakerButton => _page.GetByTestId("fields.building.rows[0].buildingInput$eQServicePanel.value-0");
-        public ILocator FuseBlockButton => _page.GetByTestId("fields.building.rows[0].buildingInput$eQServicePanel.value-1");
+        // Service Panel (Main Breaker / Fuse Block)
+        private ILocator GetServicePanelButton(string value) =>
+            _page.GetByTestId("fields.building.rows[0].buildingInput$eQServicePanel.value-chip-item-wrapper")
+                 .Filter(new() { HasText = value }).First;
 
-        // Condition Rating (1/2/3)
-        public ILocator ConditionRating1Button => _page.GetByTestId("fields.building.rows[0].buildingInput$rateType.value-0");
-        public ILocator ConditionRating2Button => _page.GetByTestId("fields.building.rows[0].buildingInput$rateType.value-1");
-        public ILocator ConditionRating3Button => _page.GetByTestId("fields.building.rows[0].buildingInput$rateType.value-2");
+        // Condition Rating (1 / 2 / 3)
+        public ILocator GetConditionRatingButton(string rating) =>
+            _page.GetByTestId("fields.building.rows[0].buildingInput$rateType.value-chip-item-wrapper")
+                 .Filter(new() { HasText = rating }).First;
 
-        // Vacant/Seasonal
-        public ILocator NotVacantSeasonalButton => _page.GetByTestId("fields.building.rows[0].buildingInput$eQVacantSeasonal.value-0");
-        public ILocator SeasonalButton => _page.GetByTestId("fields.building.rows[0].buildingInput$eQVacantSeasonal.value-1");
-        public ILocator VacantButton => _page.GetByTestId("fields.building.rows[0].buildingInput$eQVacantSeasonal.value-2");
+        // Vacant/Seasonal (No / Seasonal / Vacant)
+        public ILocator GetVacantSeasonalButton(string value) =>
+            _page.GetByTestId("fields.building.rows[0].buildingInput$eQVacantSeasonal.value-chip-item-wrapper")
+                 .Filter(new() { HasText = value?.Trim() ?? "No" }).First;
 
-        // Solid Fuel Heating Devices
-        public ILocator SolidFuelNoButton => _page.GetByTestId("fields.building_SolidFuel.rows[0].buildingInput$solidFuelHeatingDevices.value-0");
-        public ILocator SolidFuelYesButton => _page.GetByTestId("fields.building_SolidFuel.rows[0].buildingInput$solidFuelHeatingDevices.value-1");
+        // Solid Fuel Heating Devices (No / Yes)
+        private ILocator GetSolidFuelButton(string yesOrNo) =>
+            _page.GetByTestId("fields.building_SolidFuel.rows[0].buildingInput$solidFuelHeatingDevices.value-chip-item-wrapper")
+                 .Filter(new() { HasText = yesOrNo }).First;
         #endregion
 
         #region Coverage Checkboxes (TestId-based)
@@ -71,38 +73,6 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         public ILocator SaveButton => _page.GetByTestId("fields.data.save");
 
         /// <summary>
-        /// Get the Number of Families button by value (Single, Duplex, Triplex, Fourplex)
-        /// </summary>
-        public ILocator GetNumberOfFamiliesButton(string value) => value?.ToLower() switch
-        {
-            var s when s.Contains("single") => SingleFamilyButton,
-            var s when s.Contains("duplex") => DuplexButton,
-            var s when s.Contains("triplex") => TriplexButton,
-            var s when s.Contains("fourplex") => FourplexButton,
-            _ => SingleFamilyButton
-        };
-
-        /// <summary>
-        /// Get the Condition Rating button by rating (1, 2, 3)
-        /// </summary>
-        public ILocator GetConditionRatingButton(string rating) => rating?.Trim() switch
-        {
-            "2" => ConditionRating2Button,
-            "3" => ConditionRating3Button,
-            _ => ConditionRating1Button
-        };
-
-        /// <summary>
-        /// Get the Vacant/Seasonal button by value
-        /// </summary>
-        public ILocator GetVacantSeasonalButton(string value) => value?.ToLower() switch
-        {
-            "seasonal" => SeasonalButton,
-            "vacant" => VacantButton,
-            _ => NotVacantSeasonalButton
-        };
-
-        /// <summary>
         /// Fill the residence form using context data
         /// </summary>
         public async Task FillResidenceFormAsync(ScenarioContextData contextData)
@@ -118,7 +88,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             await WaitForSpinnerAsync();
 
             // Set Occupancy first — NumberOfFamilies depends on it being set
-            await OwnerButton.ClickAsync();
+            await GetOccupancyButton("Owner").ClickAsync();
             await WaitForSpinnerAsync();
 
             if (!string.IsNullOrEmpty(contextData.ResidenceNumberOfFamilies))
@@ -153,10 +123,8 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
 
             if (!string.IsNullOrEmpty(contextData.ResidenceSolidFuelQuestion))
             {
-                var btn = contextData.ResidenceSolidFuelQuestion.ToLower() is "yes" or "true"
-                    ? SolidFuelYesButton
-                    : SolidFuelNoButton;
-                await btn.ClickAsync();
+                var yesOrNo = contextData.ResidenceSolidFuelQuestion.ToLower() is "yes" or "true" ? "Yes" : "No";
+                await GetSolidFuelButton(yesOrNo).ClickAsync();
             }
         }
         #endregion

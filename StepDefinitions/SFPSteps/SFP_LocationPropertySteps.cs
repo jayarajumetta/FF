@@ -51,7 +51,7 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             await locPage.WaitForSpinnerAsync();
 
             // Click the "Add Residence" button
-            await locPage.AddResidenceButtonByRole.ClickAsync();
+            await locPage.AddResidenceButton().ClickAsync();
             await locPage.WaitForSpinnerAsync();
 
             // Fill residence form using page object method

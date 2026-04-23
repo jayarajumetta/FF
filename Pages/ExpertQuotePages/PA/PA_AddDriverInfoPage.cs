@@ -67,7 +67,7 @@ namespace Playwright_POC.Pages
             _page.GetByRole(AriaRole.Button, new() { Name = value });
 
         private ILocator GetMaritalStatusButton(string maritalStatus) =>
-            _page.Locator("button[data-testid^='owner.maritalStatus-']").Filter(new() { HasTextString = maritalStatus.Trim() });
+            _page.Locator("[data-testid^='owner.maritalStatus-']").Filter(new() { HasText = maritalStatus.Trim() });
 
         private ILocator GetNamedInsuredButton(string value) =>
             _page.GetByRole(AriaRole.Button, new() { Name = value });

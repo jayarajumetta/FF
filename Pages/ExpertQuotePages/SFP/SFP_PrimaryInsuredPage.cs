@@ -18,10 +18,12 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
 
         #region Locators
         // Primary Insured Selection
-        private ILocator SelectExistingClientButton => _page.GetByTestId("temp.clientSuggestions-0");
+        // New chip format: temp.clientSuggestions-cif-client-{id}-chip — select first chip in the container
+        private ILocator SelectExistingClientButton =>
+            _page.GetByTestId("temp.clientSuggestions").Locator("[data-testid$='-chip']").First;
         private ILocator SearchFirstNameInput => _page.Locator("input[name='temp.clientSearchFirstName']");
         private ILocator SearchLastNameInput => _page.Locator("input[name='temp.clientSearchLastName']");
-        private ILocator SearchButton => _page.Locator("button:has-text('Search')");
+        private ILocator SearchButton => _page.GetByTestId("temp.clientSearch-search");
 
         // Add Primary Insured Form
         private ILocator FirstNameInput => _page.GetByTestId("fields.account.accountInput$nameFirst.value");

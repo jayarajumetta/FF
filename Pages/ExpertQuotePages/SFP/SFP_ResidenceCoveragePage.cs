@@ -22,28 +22,23 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         public ILocator PerilsSelect =>
             _page.GetByTestId("fields.risk.rows[0].residenceCoverage.rows[0].coverageInput$perilGroup.value");
 
-        public ILocator ThermostatQuestionYesButton =>
-            _page.GetByTestId("fields.risk.rows[0].residenceCoverage.rows[0].buildingInput$buildingThermostatQuestion.value-1");
-
-        public ILocator ThermostatQuestionNoButton =>
-            _page.GetByTestId("fields.risk.rows[0].residenceCoverage.rows[0].buildingInput$buildingThermostatQuestion.value-0");
+        // Thermostat Question (No / Yes)
+        private ILocator GetThermostatButton(string yesOrNo) =>
+            _page.GetByTestId("fields.risk.rows[0].residenceCoverage.rows[0].buildingInput$buildingThermostatQuestion.value-chip-item-wrapper")
+                 .Filter(new() { HasText = yesOrNo }).First;
 
         public ILocator ReplacementCostSelect =>
             _page.GetByTestId("fields.risk.rows[0].residenceCoverage.rows[0].coverageInput$replacementCost.value");
 
-        // Note: typo "Valuatioin" is intentional — matches the actual data-testid in the app
-        // Estimator Type — must click first; reveals the Valuation Type buttons
+        // Estimator Type — "RCT" is the only option; must be clicked to reveal Valuation Type
         public ILocator EstimatorTypeRCTButton =>
-            _page.GetByTestId("fields.risk.rows[0].residenceCoverage.rows[0].buildingValuatioinInput$estimatorType.value-0");
+            _page.GetByTestId("fields.risk.rows[0].residenceCoverage.rows[0].buildingValuatioinInput$estimatorType.value-chip-item-wrapper")
+                 .Filter(new() { HasText = "RCT" }).First;
 
-        public ILocator ValuationTypeStandardUseDefaultsButton =>
-            _page.GetByTestId("fields.risk.rows[0].residenceCoverage.rows[0].buildingValuatioinInput$valuationType.value-0");
-
-        public ILocator ValuationTypeStandardNoDefaultsButton =>
-            _page.GetByTestId("fields.risk.rows[0].residenceCoverage.rows[0].buildingValuatioinInput$valuationType.value-1");
-
-        public ILocator ValuationTypeHighValueUseDefaultsButton =>
-            _page.GetByTestId("fields.risk.rows[0].residenceCoverage.rows[0].buildingValuatioinInput$valuationType.value-2");
+        // Valuation Type (Standard / No Defaults / High Value)
+        private ILocator GetValuationTypeChip(string text) =>
+            _page.GetByTestId("fields.risk.rows[0].residenceCoverage.rows[0].buildingValuatioinInput$valuationType.value-chip-item-wrapper")
+                 .Filter(new() { HasText = text }).First;
 
         // Get Valuation button — appears after Valuation Type is selected
         public ILocator GetValuationButton =>
@@ -57,9 +52,9 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             var isHighValue = rctOption?.ToLower().Contains("high") == true;
             var isNoDefaults = useDefaults?.ToLower() is "no" or "false";
 
-            if (isHighValue) return ValuationTypeHighValueUseDefaultsButton;
-            if (isNoDefaults) return ValuationTypeStandardNoDefaultsButton;
-            return ValuationTypeStandardUseDefaultsButton;
+            if (isHighValue) return GetValuationTypeChip("High Value");
+            if (isNoDefaults) return GetValuationTypeChip("No Defaults");
+            return GetValuationTypeChip("Standard");
         }
         #endregion
 
@@ -91,7 +86,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             if (!string.IsNullOrEmpty(contextData.ResidenceThermostatQuestion))
             {
                 var isYes = contextData.ResidenceThermostatQuestion.ToLower() is "yes" or "true";
-                await (isYes ? ThermostatQuestionYesButton : ThermostatQuestionNoButton).ClickAsync();
+                await GetThermostatButton(isYes ? "Yes" : "No").ClickAsync();
             }
 
             // ActualCashValue selects the settlement/replacement cost option from a dropdown

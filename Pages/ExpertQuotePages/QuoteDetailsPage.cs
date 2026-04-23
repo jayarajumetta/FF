@@ -17,12 +17,12 @@ namespace Playwright_POC.Pages
         private ILocator PageHeader => _page.GetByText("Proposal Details");
 
         // Insurance Products
-        private ILocator PersonalAutoButton => _page.GetByTestId("proposal.product-0");
-        private ILocator MotorcycleButton => _page.GetByTestId("proposal.product-1");
-        private ILocator RecreationalVehicleButton => _page.GetByTestId("proposal.product-2");
-        private ILocator HomeButton => _page.GetByTestId("proposal.product-3");
-        private ILocator BusinessOwnerButton => _page.GetByTestId("proposal.product-4");
-        private ILocator FarmPackageButton => _page.GetByTestId("proposal.product-5");
+        private ILocator PersonalAutoButton => _page.GetByTestId("proposal.product-chip-item-wrapper").Filter(new() { HasText = "Personal Auto" }).First;
+        private ILocator MotorcycleButton => _page.GetByTestId("proposal.product-chip-item-wrapper").Filter(new() { HasText = "Motorcycle" }).First;
+        private ILocator RecreationalVehicleButton => _page.GetByTestId("proposal.product-chip-item-wrapper").Filter(new() { HasText = "Recreational Vehicle" }).First;
+        private ILocator HomeButton => _page.GetByTestId("proposal.product-chip-item-wrapper").Filter(new() { HasText = "Home" }).First;
+        private ILocator BusinessOwnerButton => _page.GetByTestId("proposal.product-chip-item-wrapper").Filter(new() { HasText = "Business Owner" }).First;
+        private ILocator FarmPackageButton => _page.GetByTestId("proposal.product-chip-item-wrapper").Filter(new() { HasText = "Special Farm Package" }).First;
         private ILocator FarmPackageSelectedIndicator => _page.GetByTestId("sfp-button");
 
         // Quote Details

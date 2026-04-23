@@ -40,8 +40,9 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         public ILocator ResidenceSelect =>
             _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$buildingID.value");
 
+        // Residence/Building is a mat-select dropdown — options appear in a CDK overlay with role="option", no test IDs
         public ILocator FirstResidenceOption =>
-            _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$buildingID.value-0");
+            _page.GetByRole(AriaRole.Option).First;
 
         public ILocator DescriptionOfInterestInput =>
             _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$descriptionOfInterest.value");
@@ -50,16 +51,20 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$accountNumber.value");
 
         public ILocator ProofOfCoverageYesButton =>
-            _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$proofOfCoverageRequired.value-1");
+            _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$proofOfCoverageRequired.value-chip-item-wrapper")
+                 .Filter(new() { HasText = "Yes" }).First;
 
         public ILocator ProofOfCoverageNoButton =>
-            _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$proofOfCoverageRequired.value-0");
+            _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$proofOfCoverageRequired.value-chip-item-wrapper")
+                 .Filter(new() { HasText = "No" }).First;
 
         public ILocator EscrowBilledYesButton =>
-            _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$mortgageeResponsibleForEscrow.value-1");
+            _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$mortgageeResponsibleForEscrow.value-chip-item-wrapper")
+                 .Filter(new() { HasText = "Yes" }).First;
 
         public ILocator EscrowBilledNoButton =>
-            _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$mortgageeResponsibleForEscrow.value-0");
+            _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$mortgageeResponsibleForEscrow.value-chip-item-wrapper")
+                 .Filter(new() { HasText = "No" }).First;
 
         public ILocator SaveMortgageeButton =>
             _page.GetByRole(AriaRole.Button, new() { Name = "Save" });

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Playwright;
 using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Playwright_POC.Pages;
@@ -11,20 +10,11 @@ namespace Playwright_POC.Pages.ExpertQuotePages
     {
         public SFP_PolicyDetailsPage(IPage page) : base(page) { }
 
-        #region TestId Lookup
-
-        // Category indices are stable (always Animals=0, Crops=1, Other=2)
-        private static readonly Dictionary<string, int> FarmCategoryIndex = new(StringComparer.OrdinalIgnoreCase)
-        {
-            ["Animals"] = 0, ["Crops"] = 1, ["Other"] = 2
-        };
-
-        #endregion
-
         #region Locators
 
         private ILocator GetPrimaryFarmCategoryButton(string category) =>
-            _page.GetByTestId($"fields.account.policyInput$farmTypeCategory.value-{FarmCategoryIndex[category]}");
+            _page.GetByTestId("fields.account.policyInput$farmTypeCategory.value-chip-item-wrapper")
+                 .Filter(new() { HasText = category }).First;
 
         // Sub-type indices re-index per category, so match by GetByTestId regex + exact text
         private ILocator GetPrimaryFarmSubTypeRadio(string subType) =>
@@ -41,7 +31,8 @@ namespace Playwright_POC.Pages.ExpertQuotePages
             _page.Locator("label[for='fields.account.policyInput$secondaryFarmTypeApplicable.value']");
 
         private ILocator GetSecondaryFarmCategoryButton(string category) =>
-            _page.GetByTestId($"fields.account.policyInput$farmTypeSecondaryCategory.value-{FarmCategoryIndex[category]}");
+            _page.GetByTestId("fields.account.policyInput$farmTypeSecondaryCategory.value-chip-item-wrapper")
+                 .Filter(new() { HasText = category }).First;
 
         private ILocator GetSecondaryFarmSubTypeRadio(string subType) =>
             _page.GetByTestId(new Regex(@"^fields\.account\.policyInput\$farmTypeSecondary\.value-\d+$"))
@@ -51,7 +42,8 @@ namespace Playwright_POC.Pages.ExpertQuotePages
             _page.GetByTestId("fields.account.policyInput$grossFarmIncome.value");
 
         private ILocator GetGrowIndustrialHempButton(string yesOrNo) =>
-            _page.GetByTestId($"fields.account.policyInput$industrialHemp.value-{(yesOrNo.Equals("No", StringComparison.OrdinalIgnoreCase) ? "0" : "1")}");
+            _page.GetByTestId("fields.account.policyInput$industrialHemp.value-chip-wrapper")
+                 .Filter(new() { HasText = yesOrNo });
 
         #endregion
 
@@ -104,9 +96,15 @@ namespace Playwright_POC.Pages.ExpertQuotePages
                 await _page.Keyboard.PressAsync("Tab");
                 await WaitForSpinnerAsync();
             }
-            catch (Exception) { }
+            catch (PlaywrightException ex)
+            {
+                Console.WriteLine($"[PolicyDetails] Focus/blur nudge failed: {ex.Message}");
+            }
         }
 
+        /// <summary>
+        /// Enables or disables the secondary farm type toggle when the control is present.
+        /// </summary>
         /// <returns>True if the toggle was found and set; false if the toggle was not present (skip secondary farm type).</returns>
         public async Task<bool> SetSecondaryFarmTypeAsync(bool enable)
         {
@@ -142,7 +140,10 @@ namespace Playwright_POC.Pages.ExpertQuotePages
                     await GrossFarmIncomeInput.ClickAsync();
                     await _page.Keyboard.PressAsync("Tab");
                 }
-                catch (Exception) { }
+                catch (PlaywrightException ex)
+                {
+                    Console.WriteLine($"[PolicyDetails] Secondary toggle focus nudge failed: {ex.Message}");
+                }
                 await WaitForSpinnerAsync();
             }
             return true;
@@ -151,7 +152,6 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         public async Task<bool> SelectSecondaryFarmCategoryAsync(string category)
         {
             await WaitForSpinnerAsync();
-            var idx = FarmCategoryIndex[category];
 
             // Strategy 1: dedicated secondary testid (most states)
             var btn = GetSecondaryFarmCategoryButton(category);
@@ -166,15 +166,16 @@ namespace Playwright_POC.Pages.ExpertQuotePages
 
             // Strategy 2: some states (e.g. TN) reuse the primary farmTypeCategory testid for both
             // sections — the secondary section renders a second set of the same buttons.
-            // Nth(1) targets the second occurrence in DOM order = the secondary category row.
-            var primaryBtn = _page.GetByTestId($"fields.account.policyInput$farmTypeCategory.value-{idx}");
+            // Nth(1) targets the second chip with matching text = the secondary category row.
+            var primaryBtn = _page.GetByTestId("fields.account.policyInput$farmTypeCategory.value-chip-item-wrapper")
+                                  .Filter(new() { HasText = category });
             try
             {
                 var count = await primaryBtn.CountAsync();
-                if (count > 1)
+                if (count > 2)
                 {
-                    await primaryBtn.Nth(1).WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 5000 });
-                    await primaryBtn.Nth(1).ClickAsync();
+                    await primaryBtn.Nth(2).WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 5000 });
+                    await primaryBtn.Nth(2).ClickAsync();
                     Console.WriteLine($"[PolicyDetails] Secondary farm category '{category}' selected via Nth(1) fallback.");
                     return true;
                 }

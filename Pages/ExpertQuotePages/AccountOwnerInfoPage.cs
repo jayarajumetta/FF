@@ -30,13 +30,13 @@ namespace Playwright_POC.Pages
 
         // Dynamic locators
         private ILocator GetReceivedMailButton(string yesOrNo) =>
-            _page.Locator("[data-testid^='owner.address.resided90days-']").Filter(new() { HasTextString = yesOrNo });
+            _page.GetByTestId("owner.address.resided90days-chip-item-wrapper").Filter(new() { HasText = yesOrNo }).First;
 
         private ILocator GetClientResidesButton(string yesOrNo) =>
-            _page.Locator("button[data-testid^='owner.address.useAsResidence']").Filter(new() { HasTextString = yesOrNo });
+            _page.GetByTestId("owner.address.useAsResidence-chip-item-wrapper").Filter(new() { HasText = yesOrNo }).First;
 
         private ILocator GetMaritalStatusButton(string maritalStatus) =>
-            _page.Locator("button[data-testid^='owner.maritalStatus-']").Filter(new() { HasTextString = maritalStatus.Trim() });
+            _page.GetByTestId("owner.maritalStatus-chip-item-wrapper").Filter(new() { HasText = maritalStatus.Trim() }).First;
 
         private ILocator MoreOptionsMaritalStatus => _page.Locator("[data-testid*='maritalStatus.value-other']");
 

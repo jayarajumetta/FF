@@ -1,11 +1,9 @@
 using Microsoft.Playwright;
 
-namespace Playwright_POC.Pages
+namespace Playwright_POC.Pages.ExpertQuotePages.SFP
 {
-    public class SFP_LocationsResidencesBuildingsPage : BasePage
+    public class SFP_LocationsResidencesBuildingsPage(IPage page) : BasePage(page)
     {
-        public SFP_LocationsResidencesBuildingsPage(IPage page) : base(page) { }
-
         // Locators
         public ILocator AddLocationButton => _page.GetByTestId("fields.data.account.location.addLocationButton");
         public ILocator NextButton => _page.GetByTestId("fields.data_Rules.next");
@@ -20,10 +18,7 @@ namespace Playwright_POC.Pages
             _page.GetByTestId($"fields.data.accountDetail.locationDetail.rows[{row}].deleteLocation");
 
         public ILocator AddResidenceButton(int row = 0) =>
-            _page.GetByTestId("HD1Residence-nav");
-
-        public ILocator AddResidenceButtonByRole =>
-            _page.GetByRole(AriaRole.Button, new() { Name = "Add Residence" });
+            _page.GetByTestId($"fields.data.accountDetail.locationDetail.rows[{row}].addResidenceButton");
 
         public ILocator AddBuildingButton(int row = 0) =>
             _page.GetByTestId($"fields.data.accountDetail.locationDetail.rows[{row}].addBuildingButton");
