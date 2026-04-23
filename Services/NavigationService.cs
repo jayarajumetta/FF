@@ -22,8 +22,14 @@ namespace Playwright_POC.Services
 
         public IPage Page => _ctx.Page ?? throw new InvalidOperationException("Page is not initialized yet.");
 
-        public async Task GoToExpertQuoteAsync() =>
-            await GotoWithRetryAsync(_config["Playwright:ExpertQuote"] ?? throw new InvalidOperationException("Missing Playwright:ExpertQuote"));
+        public async Task GoToExpertQuoteAsync()
+        {
+            var env = _config["Environment"] ?? "QA";
+            var urlKey = env.Equals("Dev", StringComparison.OrdinalIgnoreCase)
+                ? "Playwright:ExpertQuoteDev"
+                : "Playwright:ExpertQuote";
+            await GotoWithRetryAsync(_config[urlKey] ?? throw new InvalidOperationException($"Missing config key: {urlKey}"));
+        }
 
         public async Task GoToQAExpressAsync()
         {

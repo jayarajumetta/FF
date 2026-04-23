@@ -42,7 +42,27 @@ namespace Playwright_POC.Pages.ExpressPages
                 await DctUsernameInput.FillAsync(username);
                 await DctPasswordInput.FillAsync(password);
                 await DctLoginButton.ClickAsync();
-                await SearchBarInput.WaitForAsync(new() { Timeout = 60000 });
+
+                // DEV environment may be slower - wait for navigation and DOM to settle
+                Console.WriteLine("[ExpressLogin] Waiting for post-login navigation...");
+                await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 90000 });
+                await Task.Delay(2000); // Allow ExtJS to fully initialize
+
+                // Verify the search input appears
+                try
+                {
+                    await SearchBarInput.WaitForAsync(new() { Timeout = 90000 });
+                    Console.WriteLine("[ExpressLogin] CLAS homepage loaded successfully - search input visible");
+                }
+                catch (TimeoutException ex)
+                {
+                    Console.WriteLine($"[ExpressLogin] ERROR: Search input not visible after 90s. Current URL: {_page.Url}");
+                    // Take a screenshot for debugging
+                    var screenshotPath = $"clas_login_timeout_{DateTime.Now:yyyyMMdd_HHmmss}.png";
+                    await _page.ScreenshotAsync(new() { Path = screenshotPath });
+                    Console.WriteLine($"[ExpressLogin] Screenshot saved: {screenshotPath}");
+                    throw new TimeoutException($"CLAS homepage did not load after login. Search input not found. Current URL: {_page.Url}", ex);
+                }
             }
             else
             {

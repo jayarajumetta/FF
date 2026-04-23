@@ -84,6 +84,16 @@ namespace Playwright_POC
                 if (!string.IsNullOrEmpty(envPassword))
                     formsConfig.Password = envPassword;
 
+                // Swap in Dev CLAS/server URLs when running against the Dev environment
+                var envSetting = configuration["Environment"] ?? "QA";
+                if (envSetting.Equals("Dev", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (!string.IsNullOrEmpty(formsConfig.CLASBaseUrlDev))
+                        formsConfig.CLASBaseUrl = formsConfig.CLASBaseUrlDev;
+                    if (!string.IsNullOrEmpty(formsConfig.ServerBaseUrlDev))
+                        formsConfig.ServerBaseUrl = formsConfig.ServerBaseUrlDev;
+                }
+
                 services.AddSingleton(formsConfig);
             }
             else

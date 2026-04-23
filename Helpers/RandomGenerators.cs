@@ -35,11 +35,11 @@ namespace Playwright_POC.Helpers
         /// </summary>
         public static string GenerateRandomSSN()
         {
-            int part1 = Random.Shared.Next(100, 899); // First three digits
-            int part2 = Random.Shared.Next(10, 99);   // Middle two digits
+            // 666 is the Lexis Nexis test SSN prefix — required for Dev env CLAS lookup, safe on QA too.
+            int part2 = Random.Shared.Next(10, 99);     // Middle two digits
             int part3 = Random.Shared.Next(1000, 9999); // Last four digits
 
-            return $"{part1}-{part2}-{part3}";
+            return $"666-{part2:D2}-{part3}";
         }
 
         /// <summary>

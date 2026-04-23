@@ -125,6 +125,10 @@ namespace Playwright_POC.Models
         /// URL for the DuckCreek CLAS Express application (browser login).
         /// </summary>
         public string CLASBaseUrl { get; set; } = string.Empty;
+
+        /// <summary>Dev environment overrides — swapped in by Startup when Environment=Dev.</summary>
+        public string CLASBaseUrlDev { get; set; } = string.Empty;
+        public string ServerBaseUrlDev { get; set; } = string.Empty;
         public string PrintJob { get; set; } = "TransactionPrint";
         public string ResultsBasePath { get; set; } = string.Empty;
 

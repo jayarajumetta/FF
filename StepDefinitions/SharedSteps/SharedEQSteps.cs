@@ -51,6 +51,14 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
 
         // Wait for login to complete and assert dashboard is visible
         Assert.That(await loginPage.IsDashboardVisibleAsync(), Is.True);
+
+        // Dev environment requires feature flags to be configured after login
+        var env = _configuration["Environment"] ?? "QA";
+        if (env.Equals("Dev", StringComparison.OrdinalIgnoreCase))
+        {
+            var flagsPage = new FeatureFlagsPage(_context.Page);
+            await flagsPage.ConfigureDevEnvironmentAsync();
+        }
     }
 
 
@@ -145,8 +153,12 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
     [When("user selects Create New Client and clicks the Next button")]
     public async Task UserCreatesNewClientAndClicksNext()
     {
-        await _context.Page.GetByRole(AriaRole.Button, new() { Name = "Create New Client" }).ClickAsync();
+        var createNewClientChip = _context.Page.GetByText("Create New Client", new() { Exact = true });
+        await createNewClientChip.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+        await createNewClientChip.ClickAsync();
         var clientSearchPage = new ClientSearchPage(_context.Page);
+        // Wait for Next button to become enabled after chip selection
+        await _context.Page.WaitForFunctionAsync("() => !document.querySelector('[data-testid*=\"next\"]')?.hasAttribute('disabled')");
         await clientSearchPage.ClickNextAsync();
 
         //Wait for the next page to load
@@ -284,7 +296,7 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
     public async Task UserLaunchesNewBrowserAndLogsInToExpertQuote()
     {
         // Launch new browser
-        var browserFactory = new BrowserFactory();
+        var browserFactory = new BrowserFactory(_configuration);
         var browserType = Environment.GetEnvironmentVariable("BROWSER_TYPE") ?? "chromium";
         var browser = await browserFactory.GetBrowserAsync(browserType);
         
