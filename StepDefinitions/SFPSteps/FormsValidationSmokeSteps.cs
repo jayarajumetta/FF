@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using Playwright_POC.Clients;
 using Playwright_POC.Helpers;
@@ -18,6 +19,7 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         private readonly SessionService _sessionService;
         private readonly DuckCreekFormsClient _formsClient;
         private readonly FormsValidationService _validationService;
+        private readonly IConfiguration _configuration;
 
         private string _quoteNumber;
         private string _state;
@@ -28,11 +30,13 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         public FormsValidationSmokeSteps(
             SessionService sessionService,
             DuckCreekFormsClient formsClient,
-            FormsValidationService validationService)
+            FormsValidationService validationService,
+            IConfiguration configuration)
         {
             _sessionService = sessionService;
             _formsClient = formsClient;
             _validationService = validationService;
+            _configuration = configuration;
         }
 
         [Given(@"I have an existing quote ""(.*)"" in state ""(.*)"" for LOB ""(.*)""")]
@@ -92,9 +96,8 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             FormsReportGenerator.Generate(summary, htmlPath);
 
             var absoluteHtmlPath = Path.GetFullPath(htmlPath);
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(absoluteHtmlPath) { UseShellExecute = true });
-            // Open the containing folder so the file can easily be attached to Teams/email
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", $"/select,\"{absoluteHtmlPath}\"") { UseShellExecute = true });
+            Console.WriteLine($"[FormsValidation] HTML report saved: {absoluteHtmlPath}");
+            MaybeOpenFormsReport(absoluteHtmlPath, summary.Failed > 0);
 
             if (summary.Failed > 0)
             {
@@ -103,6 +106,45 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
                     .Select(r => $"    {r.FormName}: {r.Message}"));
                 Assert.Fail($"Forms validation: {summary.Failed} failure(s) detected.\n{failures}\nSee report: {htmlPath}");
             }
+        }
+
+        private void MaybeOpenFormsReport(string absoluteHtmlPath, bool hasFailures)
+        {
+            var mode = (_configuration["Debugging:FormsReportOpenMode"] ?? "on-failure").Trim().ToLowerInvariant();
+
+            var openHtml = false;
+            var openFolder = false;
+
+            switch (mode)
+            {
+                case "none":
+                    break;
+                case "html":
+                    openHtml = true;
+                    break;
+                case "folder":
+                    openFolder = true;
+                    break;
+                case "both":
+                    openHtml = true;
+                    openFolder = true;
+                    break;
+                case "on-failure":
+                    openHtml = hasFailures;
+                    openFolder = hasFailures;
+                    break;
+                default:
+                    Console.WriteLine($"[FormsValidation] Unknown Debugging:FormsReportOpenMode '{mode}'. Using 'on-failure'.");
+                    openHtml = hasFailures;
+                    openFolder = hasFailures;
+                    break;
+            }
+
+            if (openHtml)
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(absoluteHtmlPath) { UseShellExecute = true });
+
+            if (openFolder)
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", $"/select,\"{absoluteHtmlPath}\"") { UseShellExecute = true });
         }
     }
 }

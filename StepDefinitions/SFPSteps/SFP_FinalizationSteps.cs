@@ -429,9 +429,8 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
                 FormsReportGenerator.Generate(summary, htmlPath);
 
                 var absoluteHtmlPath = Path.GetFullPath(htmlPath);
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(absoluteHtmlPath) { UseShellExecute = true });
-                // Open the containing folder so the file can easily be attached to Teams/email
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", $"/select,\"{absoluteHtmlPath}\"") { UseShellExecute = true });
+                Console.WriteLine($"[FormsValidation] HTML report saved: {absoluteHtmlPath}");
+                MaybeOpenFormsReport(absoluteHtmlPath, summary.Failed > 0);
 
                 // 8. Non-blocking — log outcome but do not fail the scenario
                 if (summary.Failed > 0)
@@ -457,6 +456,45 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
                 if (failOnFormsValidationError)
                     throw;
             }
+        }
+
+        private void MaybeOpenFormsReport(string absoluteHtmlPath, bool hasFailures)
+        {
+            var mode = (_configuration["Debugging:FormsReportOpenMode"] ?? "on-failure").Trim().ToLowerInvariant();
+
+            var openHtml = false;
+            var openFolder = false;
+
+            switch (mode)
+            {
+                case "none":
+                    break;
+                case "html":
+                    openHtml = true;
+                    break;
+                case "folder":
+                    openFolder = true;
+                    break;
+                case "both":
+                    openHtml = true;
+                    openFolder = true;
+                    break;
+                case "on-failure":
+                    openHtml = hasFailures;
+                    openFolder = hasFailures;
+                    break;
+                default:
+                    Console.WriteLine($"[FormsValidation] Unknown Debugging:FormsReportOpenMode '{mode}'. Using 'on-failure'.");
+                    openHtml = hasFailures;
+                    openFolder = hasFailures;
+                    break;
+            }
+
+            if (openHtml)
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(absoluteHtmlPath) { UseShellExecute = true });
+
+            if (openFolder)
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", $"/select,\"{absoluteHtmlPath}\"") { UseShellExecute = true });
         }
 
         [When("user clicks Save for Later")]
