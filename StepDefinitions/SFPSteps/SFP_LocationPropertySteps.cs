@@ -36,8 +36,8 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             
             // Wind/Hail deductible is not available in ID, OR, UT, WA
             // Don't expect a value for these states - validation will confirm field is absent
-            var statesWithoutWindHail = new[] { "ID", "OR", "UT", "WA" };
-            var windHailDeductible = statesWithoutWindHail.Contains(_contextData.State?.ToUpper()) 
+            var statesWithoutWindHail = new[] { "Idaho", "Oregon", "Utah", "Washington" };
+            var windHailDeductible = statesWithoutWindHail.Contains(_contextData.State) 
                 ? null 
                 : _contextData.WindHailDeductible;
             
