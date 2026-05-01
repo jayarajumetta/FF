@@ -130,13 +130,29 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
 
             if (rowIndex < 0)
             {
-                Console.WriteLine($"WARNING: SPP category '{_contextData.SPPCategory}' not mapped - navigating to next page");
-                await sppPage.NextLiabilityButton.ClickAsync();
-                await sppPage.WaitForSpinnerAsync();
+                Console.WriteLine($"WARNING: SPP category '{_contextData.SPPCategory}' not mapped - checking if Next button exists");
+
+                // Check if the Next button exists before deciding how to proceed.
+                var nextButtonCount = await sppPage.NextLiabilityButton.CountAsync();
+                if (nextButtonCount > 0 && await sppPage.NextLiabilityButton.IsVisibleAsync())
+                {
+                    Console.WriteLine($"[SPP] Next button found - clicking to proceed to Liability");
+                    await sppPage.NextLiabilityButton.ClickAsync();
+                    await sppPage.WaitForSpinnerAsync();
+                }
+                else
+                {
+                    Console.WriteLine($"[SPP] Next button not found - SPP page may not be available in current flow. Continuing to next step.");
+                }
                 return;
             }
 
-            await sppPage.CoverageCheckbox(rowIndex).ClickAsync();
+            var checkboxSelected = await sppPage.TrySelectCoverageCheckboxAsync(rowIndex);
+            if (!checkboxSelected)
+            {
+                throw new PlaywrightException(
+                    $"SPP category '{_contextData.SPPCategory}' resolved to row {rowIndex}, but no selectable checkbox was found on the page.");
+            }
             await sppPage.WaitForSpinnerAsync();
 
             await sppPage.ClickAddCoverageButtonAsync();

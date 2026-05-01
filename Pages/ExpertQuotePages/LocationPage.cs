@@ -331,10 +331,15 @@ namespace Playwright_POC.Pages
 
         public async Task SelectWindHailDeductibleAsync(string deductible, string zipCode = null)
         {
+            var expectsWindHailSelection = !string.IsNullOrWhiteSpace(deductible);
+
             // Check if Wind/Hail deductible field exists (not all states have this field)
             var scope = WindHailScope();
             if (await scope.CountAsync() == 0)
             {
+                if (expectsWindHailSelection)
+                    Assert.Fail($"[WindHail] Zip {zipCode}: expected Wind/Hail deductible field for requested value '{deductible}', but field was not present.");
+
                 Console.WriteLine("Wind/Hail deductible field not present for this state - skipping.");
                 return;
             }
@@ -342,6 +347,9 @@ namespace Playwright_POC.Pages
             var optionsInScope = WindHailOptionsInScope();
             if (await optionsInScope.CountAsync() == 0)
             {
+                if (expectsWindHailSelection)
+                    Assert.Fail($"[WindHail] Zip {zipCode}: expected Wind/Hail deductible buttons for requested value '{deductible}', but none were found.");
+
                 Console.WriteLine("Wind/Hail deductible buttons not found - skipping.");
                 return;
             }
@@ -352,6 +360,9 @@ namespace Playwright_POC.Pages
 
             if (rules?.cannotBeAdded == true)
             {
+                if (expectsWindHailSelection)
+                    Assert.Fail($"[WindHail] Zip {zipCode}: rules indicate Wind/Hail cannot be added, but test requested '{deductible}'.");
+
                 Console.WriteLine($"[WindHail] Zip {zipCode} — WH cannot be added, skipping selection.");
                 return;
             }
@@ -366,6 +377,9 @@ namespace Playwright_POC.Pages
 
             if (string.IsNullOrWhiteSpace(baselineChoice))
             {
+                if (expectsWindHailSelection)
+                    Assert.Fail($"[WindHail] Zip {zipCode}: no Wind/Hail baseline option could be resolved for requested value '{deductible}'.");
+
                 Console.WriteLine("[WindHail] No baseline deductible option resolved - skipping selection.");
                 return;
             }
@@ -373,7 +387,7 @@ namespace Playwright_POC.Pages
             var baselineSelected = await TrySelectWindHailOptionAsync(scope, baselineChoice);
             if (!baselineSelected)
             {
-                Console.WriteLine($"[WindHail] Could not select baseline '{baselineChoice}' - skipping next-above selection.");
+                Assert.Fail($"[WindHail] Zip {zipCode}: could not select required baseline option '{baselineChoice}'.");
                 return;
             }
 
@@ -390,7 +404,7 @@ namespace Playwright_POC.Pages
             var nextSelected = await TrySelectWindHailOptionAsync(scope, nextAbove);
             if (!nextSelected)
             {
-                Console.WriteLine($"[WindHail] Baseline '{baselineChoice}' selected, but next-above '{nextAbove}' could not be selected.");
+                Assert.Fail($"[WindHail] Zip {zipCode}: baseline '{baselineChoice}' was selected, but required next-above option '{nextAbove}' could not be selected.");
                 return;
             }
 
@@ -412,6 +426,8 @@ namespace Playwright_POC.Pages
                 "80701" => (false, "1%"),   // CO – zone 2, min 1%
                 "83814" => (true,  null),   // ID – WH cannot be added
                 "61108" => (false, null),   // IL – zone 1, no minimum
+                "46320" => (false, null),   // IN – no mandatory minimum
+                "52101" => (false, null),   // IA – no mandatory minimum
                 "66112" => (false, null),   // KS – zone 1, no minimum
                 "42066" => (false, "1%"),   // KY – zone 2, min 1%
                 "71463" => (false, "1%"),   // LA – zone 2, min 1%
@@ -419,7 +435,9 @@ namespace Playwright_POC.Pages
                 "59072" => (false, "1%"),   // MT – zone 2, min 1%
                 "69361" => (false, null),   // NE – zone 1, no minimum
                 "89101" => (false, null),   // NV – zone 1, no minimum
+                "88101" => (false, null),   // NM – no mandatory minimum
                 "58504" => (false, "1%"),   // ND – zone 1, min 1%
+                "74332" => (false, null),   // OK – no mandatory minimum
                 "97331" => (true,  null),   // OR – WH cannot be added
                 "29810" => (false, null),   // SC – zone 2, no minimum
                 "57501" => (false, "1%"),   // SD – zone 3, min 1%
@@ -437,12 +455,28 @@ namespace Playwright_POC.Pages
         /// ADO step 16: asserts field absent for WH-cannot-be-added states; asserts minimum for others.
         /// ADO step 18: asserts above-minimum option is present and enabled where applicable.
         /// </summary>
-        public async Task VerifyWindHailDeductibleOptionsAsync(string zipCode)
+        public async Task VerifyWindHailDeductibleOptionsAsync(string zipCode, string expectedDeductible = null)
         {
             var rules = GetWindHailRulesForZip(zipCode);
             if (rules is null)
             {
-                Console.WriteLine($"[WindHail] No rules defined for zip '{zipCode}' – skipping WH verification.");
+                if (string.IsNullOrWhiteSpace(expectedDeductible))
+                {
+                    Console.WriteLine($"[WindHail] No rules defined for zip '{zipCode}' – skipping WH verification.");
+                    return;
+                }
+
+                var unknownScope = WindHailScope();
+                var unknownFieldPresent = await unknownScope.CountAsync() > 0;
+                Assert.That(unknownFieldPresent, Is.True,
+                    $"[WindHail] Zip {zipCode}: no WH rule exists, but test requested deductible '{expectedDeductible}' and WH field was not found.");
+
+                var unknownButtons = unknownScope.Locator("[data-testid*='locationInput$windHailDeductible.value']");
+                var unknownButtonCount = await unknownButtons.CountAsync();
+                Assert.That(unknownButtonCount, Is.GreaterThan(0),
+                    $"[WindHail] Zip {zipCode}: no WH rule exists, but test requested deductible '{expectedDeductible}' and no WH options were found.");
+
+                Console.WriteLine($"[WindHail] Zip {zipCode}: no explicit rule found; enforced WH field presence because test requested '{expectedDeductible}'.");
                 return;
             }
 

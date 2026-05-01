@@ -33,8 +33,16 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             var locationPage = new LocationPage(_context.Page, _contextData);
             await locationPage.EnterLocationInformationAsync();
             await locationPage.OrderWildfireRiskScoreIfAvailableAsync();
-            await locationPage.VerifyWindHailDeductibleOptionsAsync(_contextData.ZipCode);
-            await locationPage.SelectWindHailDeductibleAsync(_contextData.WindHailDeductible, _contextData.ZipCode);
+            
+            // Wind/Hail deductible is not available in ID, OR, UT, WA
+            // Don't expect a value for these states - validation will confirm field is absent
+            var statesWithoutWindHail = new[] { "ID", "OR", "UT", "WA" };
+            var windHailDeductible = statesWithoutWindHail.Contains(_contextData.State?.ToUpper()) 
+                ? null 
+                : _contextData.WindHailDeductible;
+            
+            await locationPage.VerifyWindHailDeductibleOptionsAsync(_contextData.ZipCode, windHailDeductible);
+            await locationPage.SelectWindHailDeductibleAsync(windHailDeductible, _contextData.ZipCode);
             await locationPage.ClickSaveAsync();
         }
 

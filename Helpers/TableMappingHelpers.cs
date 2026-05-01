@@ -8,7 +8,7 @@ using Reqnroll;
 
 namespace Playwright_POC.Helpers
 {
-    internal class TableMappingHelpers
+    internal static class TableMappingHelpers
     {
         public static void ClientSearchFields(Table table, ScenarioContextData _contextData)
         {

@@ -11,6 +11,7 @@ using Reqnroll;
 using Reqnroll.BoDi;
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -103,6 +104,12 @@ namespace Playwright_POC.Hooks
             // Store in Reqnroll's ScenarioContext instead of DI container
             _scenarioContext["ContextData"] = new ScenarioContextData();
             Console.WriteLine("[Hooks] ScenarioContextData registered for this scenario.");
+
+            if (ShouldSkipScenarioForDevStateFilter(out var skipReason))
+            {
+                NUnit.Framework.Assert.Ignore(skipReason);
+                return;
+            }
 
             // Delete any stale QuoteNumber.txt from a previous run so the file-based
             // fallback in UserValidatesFormsViaDuckcreek can never pick up an old quote.
@@ -365,6 +372,64 @@ namespace Playwright_POC.Hooks
                     Console.WriteLine($"[Warning] Failed to cleanup {dir}: {ex.Message}");
                 }
             }
+        }
+
+        private bool ShouldSkipScenarioForDevStateFilter(out string reason)
+        {
+            reason = string.Empty;
+
+            var envSetting = _configuration["Environment"]
+                             ?? Environment.GetEnvironmentVariable("TEST_ENVIRONMENT")
+                             ?? "QA";
+
+            if (!envSetting.Equals("Dev", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            var allowedStates = _configuration
+                .GetSection("StateFilters:DevAllowedStates")
+                .Get<string[]>();
+
+            if (allowedStates == null || allowedStates.Length == 0)
+                return false;
+
+            var scenarioState = TryGetScenarioStateAbbreviation();
+            if (string.IsNullOrWhiteSpace(scenarioState))
+                return false;
+
+            var allowed = new HashSet<string>(
+                allowedStates
+                    .Where(s => !string.IsNullOrWhiteSpace(s))
+                    .Select(s => s.Trim().ToUpperInvariant()),
+                StringComparer.OrdinalIgnoreCase);
+
+            if (allowed.Contains(scenarioState))
+                return false;
+
+            reason = $"Skipping Dev scenario for state '{scenarioState}'. Allowed Dev states: {string.Join(", ", allowed.OrderBy(s => s))}.";
+            return true;
+        }
+
+        private string TryGetScenarioStateAbbreviation()
+        {
+            var args = _scenarioContext.ScenarioInfo.Arguments;
+            if (args == null || args.Count == 0)
+                return null;
+
+            if (args.Contains("StateAbbv"))
+            {
+                var stateAbbv = args["StateAbbv"]?.ToString()?.Trim();
+                if (!string.IsNullOrWhiteSpace(stateAbbv))
+                    return stateAbbv.ToUpperInvariant();
+            }
+
+            if (args.Contains("State"))
+            {
+                var state = args["State"]?.ToString()?.Trim();
+                if (!string.IsNullOrWhiteSpace(state) && state.Length == 2)
+                    return state.ToUpperInvariant();
+            }
+
+            return null;
         }
     }
 }

@@ -20,6 +20,10 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         public ILocator CoverageCheckbox(int row) =>
             _page.Locator($"label[data-testid='fields.page.covCatEntry.rows[{row}].covCatEntryInput$selected.value']");
 
+        // Fallback for states/pages where the testid path prefix differs.
+        public ILocator CoverageCheckboxByIndex(int row) =>
+            _page.Locator("label[data-testid*='covCatEntryInput$selected.value']").Nth(row);
+
         public ILocator CoverageLimit(int row) =>
             _page.GetByTestId($"fields.page.covCatEntry.rows[{row}].covCatEntryInput$limit.value");
 
@@ -99,6 +103,47 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             throw new PlaywrightException(
                 "SPP Add Coverage button not found. Tried covEndorsements+add, fields.line.+.add, and role-based 'ADD'. See console for available testids.");
         }
+
+        /// <summary>
+        /// Attempts to select an SPP checkbox for the given row using exact and fallback locators.
+        /// Returns true if a checkbox was clicked/checked; false if no viable checkbox was found.
+        /// </summary>
+        public async Task<bool> TrySelectCoverageCheckboxAsync(int rowIndex)
+        {
+            // 1) Exact locator path used by most states.
+            var exact = CoverageCheckbox(rowIndex);
+            if (await exact.CountAsync() > 0)
+            {
+                await exact.First.ScrollIntoViewIfNeededAsync();
+                await exact.First.ClickAsync();
+                return true;
+            }
+
+            // 2) Generic label list fallback (DOM variant-safe).
+            var labels = _page.Locator("label[data-testid*='covCatEntryInput$selected.value']");
+            var labelCount = await labels.CountAsync();
+            if (labelCount > rowIndex)
+            {
+                var label = labels.Nth(rowIndex);
+                await label.ScrollIntoViewIfNeededAsync();
+                await label.ClickAsync();
+                return true;
+            }
+
+            // 3) Input fallback for cases where label is not rendered/clickable.
+            var inputs = _page.Locator("input[data-testid*='covCatEntryInput$selected.value']");
+            var inputCount = await inputs.CountAsync();
+            if (inputCount > rowIndex)
+            {
+                var input = inputs.Nth(rowIndex);
+                await input.ScrollIntoViewIfNeededAsync();
+                await input.CheckAsync();
+                return true;
+            }
+
+            Console.WriteLine($"[SPP] No selectable checkbox found for row index {rowIndex}. labelCount={labelCount}, inputCount={inputCount}");
+            return false;
+        }
         #endregion
 
         #region Coverage Mapping
@@ -112,14 +157,39 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             if (string.IsNullOrWhiteSpace(code)) return -1;
             var target = code.Trim();
 
+            // Wait for SPP content to attach before scanning rows.
+            try
+            {
+                await _page
+                    .Locator("[id*='CovCatEntryOutput.CoverageID-'][id$='-layout'], [data-testid*='covCatEntryInput$selected.value']")
+                    .First
+                    .WaitForAsync(new LocatorWaitForOptions
+                    {
+                        State = WaitForSelectorState.Attached,
+                        Timeout = 10000
+                    });
+            }
+            catch
+            {
+                // Continue to diagnostics below.
+            }
+
             // Strategy 1: id-based cells (standard DuckCreek SPP layout)
             var cells = _page.Locator("[id*='CovCatEntryOutput.CoverageID-'][id$='-layout']");
             var count = await cells.CountAsync();
             for (var i = 0; i < count; i++)
             {
-                var text = (await cells.Nth(i).InnerTextAsync()).Trim();
+                var cell = cells.Nth(i);
+                var text = (await cell.InnerTextAsync()).Trim();
                 if (text == target)
+                {
+                    var id = await cell.GetAttributeAsync("id") ?? string.Empty;
+                    var m = System.Text.RegularExpressions.Regex.Match(id, @"CoverageID-(\d+)-layout");
+                    if (m.Success && int.TryParse(m.Groups[1].Value, out var parsedRow))
+                        return parsedRow;
+
                     return i;
+                }
             }
 
             // Strategy 2: testid-based rows (some states use a different DOM — e.g. WA)

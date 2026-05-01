@@ -38,11 +38,14 @@ namespace Playwright_POC.Pages
             // The Ping SSO redirect chain (login → Ping → OAuth callback → dashboard) can
             // take well over 30s on slow QA environments. Temporarily raise the navigation
             // timeout for this page so the click's built-in navigation wait doesn't expire.
-            _page.SetDefaultNavigationTimeout(120000);
+            _page.SetDefaultNavigationTimeout(180000);
             await SignOnButton.ClickAsync();
 
+            // Wait for page to navigate and network to be mostly idle
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 180000 });
+
             // Wait for login to complete - dashboard should be visible
-            await NewQuoteButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 120000 });
+            await NewQuoteButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 180000 });
         }
 
         /// <summary>
