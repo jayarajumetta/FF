@@ -1,0 +1,41 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Test: Edge",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "$env:BROWSER_TYPE='edge'; dotnet test; Remove-Item Env:BROWSER_TYPE -ErrorAction SilentlyContinue"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Test: Chrome",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "$env:BROWSER_TYPE='chrome'; dotnet test; Remove-Item Env:BROWSER_TYPE -ErrorAction SilentlyContinue"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Test: Default (appsettings)",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "Remove-Item Env:BROWSER_TYPE -ErrorAction SilentlyContinue; dotnet test"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    }
+  ]
+}

@@ -27,25 +27,63 @@ namespace Playwright_POC.Helpers
                 headless = ParseTruthy(env);
             }
 
-            return browserType.ToLower() switch
+            var normalizedBrowser = NormalizeBrowserType(browserType);
+
+            return normalizedBrowser switch
             {
                 "edge" => await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
                 {
                     Headless = headless,
-                    ExecutablePath = @"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+                    Channel = "msedge",
                     Args = new[] {"--start-fullscreen" }
+                }),
+                "chrome" => await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+                {
+                    Headless = headless,
+                    Channel = "chrome",
+                    Args = new[] { "--start-fullscreen" }
                 }),
                 "chromium" => await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
                 {
                     Headless = headless,
-                    ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe",
                     Args = new[] { "--start-fullscreen" }
                 }),
                 "firefox" => await _playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions
                 {
                     Headless = headless
                 }),
+                "webkit" => await _playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions
+                {
+                    Headless = headless
+                }),
                 _ => throw new ArgumentException("Unsupported browser type")
+            };
+        }
+
+        public string ResolveBrowserType()
+        {
+            // Env var wins for one-off runs. appsettings is the default.
+            var configured = Environment.GetEnvironmentVariable("BROWSER_TYPE");
+            if (string.IsNullOrWhiteSpace(configured))
+                configured = _configuration["Playwright:BrowserType"];
+
+            return NormalizeBrowserType(configured);
+        }
+
+        private static string NormalizeBrowserType(string browserType)
+        {
+            var normalized = (browserType ?? "chromium").Trim().ToLowerInvariant();
+
+            return normalized switch
+            {
+                "msedge" => "edge",
+                "edge" => "edge",
+                "chrome" => "chrome",
+                "chromium" => "chromium",
+                "firefox" => "firefox",
+                "webkit" => "webkit",
+                _ => throw new ArgumentException(
+                    "Unsupported browser type. Use one of: chrome, edge, chromium, firefox, webkit")
             };
         }
 
