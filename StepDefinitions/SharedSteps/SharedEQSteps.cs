@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 using NUnit.Framework;
 using Playwright_POC.Configuration;
@@ -8,6 +8,7 @@ using Playwright_POC.Pages;
 using Playwright_POC.Pages.ExpertQuotePages;
 using Playwright_POC.Pages.ExpertQuotePages.SFP;
 using Reqnroll;
+using System.Text.RegularExpressions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -20,8 +21,8 @@ using ReqContext = Playwright_POC.Context.TestContext;
 namespace Playwright_POC.StepDefinitions.SharedSteps
 {
     [Binding]
-    public class SharedEQSteps
-{
+    public partial class SharedEQSteps
+    {
     private readonly ReqContext _context;
     private readonly ScenarioContextData _contextData;
     private readonly CredentialsConfig _credentials;
@@ -119,7 +120,7 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
     }
 
 
-    
+
     [When("user enters client information and clicks search")]
     public async Task AndUserEntersClientInformationAndClicksSearch(Table table)
     {
@@ -240,12 +241,12 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
         // Primary: Get quote number from the SFP nav menu header (has data-testid)
         // Format: "SFP  (01945221)"
         var sfpNavLocator = _context.Page.GetByTestId("cl-sfp-nav");
-        
+
         if (await sfpNavLocator.CountAsync() > 0)
         {
             var navText = await sfpNavLocator.InnerTextAsync();
             // Extract 8-digit quote number from parentheses: "SFP  (01945221)" -> "01945221"
-            var match = System.Text.RegularExpressions.Regex.Match(navText, @"\((\d{8})\)");
+            var match = QuoteNumberNavPattern().Match(navText);
             if (match.Success)
             {
                 _contextData.QuoteNumber = match.Groups[1].Value;
@@ -254,7 +255,7 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
                 return;
             }
         }
-        
+
         // Fallback: Try the tab label (older UI structure)
         var tabLocator = _context.Page.Locator("[role='tab'] .mdc-tab__text-label span").First;
         if (await tabLocator.CountAsync() > 0)
@@ -262,8 +263,8 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
             var fullText = await tabLocator.InnerTextAsync();
             var lines = fullText.Split(NewLineSeparator, StringSplitOptions.RemoveEmptyEntries);
             var quoteNumber = lines.Length > 1 ? lines[1].Trim() : fullText.Trim();
-            
-            if (System.Text.RegularExpressions.Regex.IsMatch(quoteNumber, @"^\d{8}$"))
+
+            if (QuoteNumberTabPattern().IsMatch(quoteNumber))
             {
                 _contextData.QuoteNumber = quoteNumber;
                 Console.WriteLine($"Captured Quote Number from tab: {_contextData.QuoteNumber}");
@@ -271,7 +272,7 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
                 return;
             }
         }
-        
+
         throw new Exception("Could not find quote number on page. Check UI for changes to cl-sfp-nav or tab labels.");
     }
 
@@ -282,11 +283,11 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
         {
             var browserContext = _context.Page.Context;
             var browser = browserContext.Browser;
-            
+
             try { await _context.Page.CloseAsync(); } catch { /* ignore */ }
             try { await browserContext.CloseAsync(); } catch { /* ignore */ }
             try { if (browser != null) await browser.CloseAsync(); } catch { /* ignore */ }
-            
+
             _context.Page = null;
             Console.WriteLine("Browser closed successfully.");
         }
@@ -299,31 +300,31 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
         var browserFactory = new BrowserFactory(_configuration);
         var browserType = Environment.GetEnvironmentVariable("BROWSER_TYPE") ?? "chromium";
         var browser = await browserFactory.GetBrowserAsync(browserType);
-        
+
         var browserContext = await browser.NewContextAsync(new BrowserNewContextOptions
         {
             ViewportSize = new ViewportSize { Width = 1900, Height = 1080 }
         });
-        
+
         var page = await browserContext.NewPageAsync();
         page.SetDefaultTimeout(30000);
         page.SetDefaultNavigationTimeout(60000);
-        
+
         _context.Page = page;
-        
+
         // Navigate to Expert Quote
-        var expertQuoteUrl = _configuration["Playwright:ExpertQuote"] 
+        var expertQuoteUrl = _configuration["Playwright:ExpertQuote"]
             ?? "https://expertquote-qa.americannational.com";
-        await page.GotoAsync(expertQuoteUrl, new PageGotoOptions 
-        { 
-            Timeout = 90000, 
-            WaitUntil = WaitUntilState.NetworkIdle 
+        await page.GotoAsync(expertQuoteUrl, new PageGotoOptions
+        {
+            Timeout = 90000,
+            WaitUntil = WaitUntilState.NetworkIdle
         });
-        
+
         // Login with credentials
         var loginPage = new ExpertQuoteLoginPage(page);
         await loginPage.LoginAsync(_credentials.Username, _credentials.Password);
-        
+
         Assert.That(await loginPage.IsDashboardVisibleAsync(), Is.True, "Dashboard should be visible after login");
         Console.WriteLine("New browser launched and logged in successfully.");
     }
@@ -338,41 +339,46 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
             quoteNumber = System.IO.File.ReadAllText("QuoteNumber.txt").Trim();
             _contextData.QuoteNumber = quoteNumber;
         }
-        
+
         Console.WriteLine($"Searching for quote: {quoteNumber}");
-        
+
         var searchInput = _context.Page.GetByTestId("quoteSearchInput");
         await searchInput.FillAsync(quoteNumber);
-        
+
         var searchButton = _context.Page.GetByRole(AriaRole.Button, new() { Name = "Search" });
         await searchButton.ClickAsync();
-        
+
         // Wait for search results
         await _context.Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
         await Task.Delay(2000); // Allow time for results to populate
-        
+
         // Try multiple strategies to find the quote
         // Strategy 1: Link with quote number
         var quoteLocator = _context.Page.GetByRole(AriaRole.Link, new() { Name = quoteNumber });
         var isQuoteVisible = await quoteLocator.IsVisibleAsync();
-        
+
         // Strategy 2: Cell or text containing quote number
         if (!isQuoteVisible)
         {
             var cellLocator = _context.Page.Locator($"td:has-text('{quoteNumber}'), span:has-text('{quoteNumber}')").First;
             isQuoteVisible = await cellLocator.IsVisibleAsync();
         }
-        
+
         // Strategy 3: Any element containing the quote number
         if (!isQuoteVisible)
         {
             var anyLocator = _context.Page.GetByText(quoteNumber);
             isQuoteVisible = await anyLocator.IsVisibleAsync();
         }
-        
+
         Assert.That(isQuoteVisible, Is.True, $"Quote {quoteNumber} should be visible in search results");
         Console.WriteLine($"Quote {quoteNumber} verified in search results.");
     }
 
-    }
+    [GeneratedRegex(@"\((\d{8})\)")]
+    private static partial Regex QuoteNumberNavPattern();
+
+    [GeneratedRegex(@"^\d{8}$")]
+    private static partial Regex QuoteNumberTabPattern();
+}
 }

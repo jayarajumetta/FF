@@ -161,10 +161,31 @@ dotnet test --filter "FullyQualifiedName~SFPSmoke"
 - **Video:** Recorded on failure only
 
 ### Supported Browsers
-Set via `BROWSER_TYPE` environment variable:
-- `chromium` (default)
+Default is set in `appsettings.json` under `Playwright:BrowserType`.
+
+For one-off runs, override via `BROWSER_TYPE` environment variable.
+
+Supported values:
+- `chrome`
+- `edge`
+- `chromium`
 - `firefox`
 - `webkit`
+
+PowerShell examples:
+```powershell
+# One session on Edge
+$env:BROWSER_TYPE = "edge"
+dotnet test
+
+# Switch to Chrome
+$env:BROWSER_TYPE = "chrome"
+dotnet test
+
+# Clear override and use appsettings default
+Remove-Item Env:BROWSER_TYPE
+dotnet test
+```
 
 ---
 

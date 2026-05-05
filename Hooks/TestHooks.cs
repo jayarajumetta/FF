@@ -140,7 +140,7 @@ namespace Playwright_POC.Hooks
             }
             else
             {
-                var browserType = Environment.GetEnvironmentVariable("BROWSER_TYPE") ?? "chromium";
+                var browserType = _browserFactory.ResolveBrowserType();
                 _browser = await _browserFactory.GetBrowserAsync(browserType);
                 
                 // Create browser context with tracing and video enabled
