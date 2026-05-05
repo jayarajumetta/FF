@@ -5,6 +5,7 @@ using Microsoft.Playwright;
 using Playwright_POC.Configuration;
 using Playwright_POC.Context;
 using Playwright_POC.Helpers;            // <-- ScenarioContextData lives here
+using Playwright_POC.Pages;
 using Playwright_POC.Services;
 
 using Reqnroll;
@@ -73,6 +74,19 @@ namespace Playwright_POC.Hooks
             container.RegisterTypeAs<PocTestContext, PocTestContext>();
             container.RegisterTypeAs<BrowserFactory, BrowserFactory>();
             container.RegisterTypeAs<ApiService, IApiService>();
+
+            // Configure locator rescue from appsettings
+            var configPath = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
+            if (File.Exists(configPath))
+            {
+                var config = new ConfigurationBuilder().AddJsonFile(configPath).Build();
+                var rescueEnabled = string.Equals(
+                    config["LocatorRescue:Enabled"], "true", StringComparison.OrdinalIgnoreCase);
+                var rescueAutoHeal = string.Equals(
+                    config["LocatorRescue:AutoHeal"], "true", StringComparison.OrdinalIgnoreCase);
+                BasePage.ConfigureRescue(rescueEnabled, rescueAutoHeal);
+                Console.WriteLine($"[Hooks] LocatorRescue: Enabled={rescueEnabled}, AutoHeal={rescueAutoHeal}");
+            }
 
             // Create timestamped test results folder for this run
             var root = Directory.GetCurrentDirectory();
