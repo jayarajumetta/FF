@@ -87,10 +87,8 @@ namespace Playwright_POC.Hooks
             // ScenarioContextData will be registered per scenario (instance),
             // not globally, to guarantee one shared object across all bindings
             // within a single scenario.
-
-            
             // Register ScenarioContextData as InstancePerDependency with a shared backing field
-            container.RegisterFactoryAs<ScenarioContextData>(() => 
+            container.RegisterFactoryAs<ScenarioContextData>(() =>
             {
                 // This will be called once per scenario context
                 return new ScenarioContextData();
@@ -142,14 +140,14 @@ namespace Playwright_POC.Hooks
             {
                 var browserType = _browserFactory.ResolveBrowserType();
                 _browser = await _browserFactory.GetBrowserAsync(browserType);
-                
+
                 // Create browser context with tracing and video enabled
                 _browserContext = await _browser.NewContextAsync(new BrowserNewContextOptions
                 {
                     ViewportSize = new ViewportSize { Width = 1900, Height = 1080 },
                     RecordVideoDir = Path.Combine(_testResultsRunFolder, "Videos")
                 });
-                
+
                 // Start tracing for potential failure capture
                 await _browserContext.Tracing.StartAsync(new TracingStartOptions
                 {
@@ -157,7 +155,7 @@ namespace Playwright_POC.Hooks
                     Snapshots = true,
                     Sources = true
                 });
-                
+
                 _page = await _browserContext.NewPageAsync();
 
                 // Timeouts: 30s element / 90s navigation (SSO redirect chains can exceed 60s)
@@ -215,12 +213,12 @@ namespace Playwright_POC.Hooks
             }
             // Handle tracing and video on failure
             var hasFailed = _scenarioContext.TestError != null;
-            
+
             // Pause on failure only when a debugger is attached (i.e. Run > Debug in VS/Rider).
             // Normal CI / right-click "Run Test" runs are never blocked.
             var pauseOnFailure = System.Diagnostics.Debugger.IsAttached;
             var pauseTimeoutSeconds = _configuration.GetValue<int>("Debugging:PauseTimeoutSeconds", 300);
-            
+
             if (hasFailed && pauseOnFailure && _context.Page != null)
             {
                 Console.WriteLine("\n" + new string('=', 60));
@@ -229,7 +227,7 @@ namespace Playwright_POC.Hooks
                 Console.WriteLine($"Browser will remain open for {pauseTimeoutSeconds} seconds.");
                 Console.WriteLine("Press any key in the console to continue, or wait for timeout.");
                 Console.WriteLine(new string('=', 60) + "\n");
-                
+
                 try
                 {
                     // Use Playwright's pause for interactive debugging
@@ -240,15 +238,15 @@ namespace Playwright_POC.Hooks
                     Console.WriteLine($"[Debug] Pause ended: {ex.Message}");
                 }
             }
-            
+
             if (_browserContext != null)
             {
                 var scenarioFolder = GetScenarioResultsFolder();
-                
+
                 if (hasFailed)
                 {
                     Directory.CreateDirectory(scenarioFolder);
-                    
+
                     // Save trace on failure
                     var traceFile = Path.Combine(scenarioFolder, "trace.zip");
                     try
@@ -280,12 +278,12 @@ namespace Playwright_POC.Hooks
 
             // Close Playwright resources safely
             try { if (_context.Page != null) await _context.Page.CloseAsync(); } catch { /* ignore */ }
-            try 
-            { 
-                if (_browserContext != null) 
+            try
+            {
+                if (_browserContext != null)
                 {
                     await _browserContext.CloseAsync();
-                    
+
                     // Move video to scenario folder on failure, delete on success
                     if (hasFailed)
                     {
@@ -293,7 +291,7 @@ namespace Playwright_POC.Hooks
                         Console.WriteLine("[video] Video saved for failed test");
                     }
                 }
-            } 
+            }
             catch { /* ignore */ }
             try { if (_browser != null) await _browser.CloseAsync(); } catch { /* ignore */ }
 
@@ -315,7 +313,7 @@ namespace Playwright_POC.Hooks
                     {
                         Directory.Delete(videosFolder, true);
                     }
-                    
+
                     // Remove run folder if empty
                     if (!Directory.EnumerateFileSystemEntries(_testResultsRunFolder).Any())
                     {
@@ -330,8 +328,8 @@ namespace Playwright_POC.Hooks
 
         private bool IsApiScenario()
         {
-            var scenarioTags = _scenarioContext.ScenarioInfo.Tags ?? Array.Empty<string>();
-            var featureTags = _featureContext.FeatureInfo.Tags ?? Array.Empty<string>();
+            var scenarioTags = _scenarioContext.ScenarioInfo.Tags ?? [];
+            var featureTags = _featureContext.FeatureInfo.Tags ?? [];
 
             return scenarioTags.Any(t => t.Equals("API", StringComparison.OrdinalIgnoreCase))
                 || featureTags.Any(t => t.Equals("API", StringComparison.OrdinalIgnoreCase));
@@ -355,7 +353,7 @@ namespace Playwright_POC.Hooks
             if (!Directory.Exists(testResultsRoot)) return;
 
             var cutoff = DateTime.Now.AddDays(-days);
-            
+
             foreach (var dir in Directory.GetDirectories(testResultsRoot))
             {
                 try
@@ -405,7 +403,7 @@ namespace Playwright_POC.Hooks
             if (allowed.Contains(scenarioState))
                 return false;
 
-            reason = $"Skipping Dev scenario for state '{scenarioState}'. Allowed Dev states: {string.Join(", ", allowed.OrderBy(s => s))}.";
+            reason = $"Skipping Dev scenario for state '{scenarioState}'. Allowed Dev states: {string.Join(", ", allowed.Order())}.";
             return true;
         }
 

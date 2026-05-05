@@ -54,13 +54,13 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         public async Task UserHandlesSSNPopupAndEntersSSN(Table table)
         {
             TableMappingHelpers.SSNFields(table, _contextData);
-            
+
             if (string.Equals(_contextData.SSN, "{{randomSSN}}", StringComparison.OrdinalIgnoreCase))
                 _contextData.SSN = RandomGenerators.GenerateRandomSSN();
 
             var quoteDetailsPage = new QuoteDetailsPage(_context.Page);
             await quoteDetailsPage.HandleSSNPopupsAsync(_contextData);
-            
+
             // Capture quote number from URL or tab
             await CaptureQuoteNumberAsync();
         }

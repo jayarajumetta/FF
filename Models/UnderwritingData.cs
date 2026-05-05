@@ -6,7 +6,7 @@ namespace Playwright_POC.Models
     public class UnderwritingData
     {
         public string GeneralAnswer { get; set; }
-        
+
         // Common UW questions - can be extended per LOB
         public bool? ConvictionFelony { get; set; }
         public bool? PolicyDeclined5Years { get; set; }

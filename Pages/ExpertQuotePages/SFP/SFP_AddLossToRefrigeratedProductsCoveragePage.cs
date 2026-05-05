@@ -15,7 +15,7 @@ namespace Playwright_POC.Pages
         #region Locators - Navigation
         /// <summary> Side nav: Loss to Refrigerated Products coverage section </summary>
         public ILocator LossToRefrigeratedProductsNavItem => _page.GetByTestId("LossToRefrigeratedProducts-nav");
-        
+
         /// <summary> Side nav: Equipment Breakdown and Farm Implements section </summary>
         public ILocator EquipmentBreakdownNavItem => _page.GetByTestId("EquipmentBreakdownFarmImplements-nav");
         #endregion
@@ -23,7 +23,7 @@ namespace Playwright_POC.Pages
         #region Locators - Coverage Fields
         /// <summary> Input: Coverage Limit amount (currency, required) </summary>
         public ILocator LimitInput => _page.GetByTestId("fields.line.covLossToRefrigeratedProducts.covLossToRefrigeratedProductsInput$limit.value");
-        
+
         /// <summary> Dropdown: Deductible amount selection </summary>
         public ILocator DeductibleSelect => _page.GetByTestId("fields.line.covLossToRefrigeratedProducts.covLossToRefrigeratedProductsInput$deductible.value");
         #endregion
@@ -31,7 +31,7 @@ namespace Playwright_POC.Pages
         #region Locators - Actions
         /// <summary> Cancel button - closes modal without saving </summary>
         public ILocator CancelButton => _page.GetByTestId("fields.line.cancel");
-        
+
         /// <summary> Save button - saves coverage and closes modal </summary>
         public ILocator SaveButton => _page.GetByTestId("fields.line.save");
         #endregion
@@ -43,7 +43,7 @@ namespace Playwright_POC.Pages
             await LimitInput.ClearAsync();
             await LimitInput.FillAsync(amount);
         }
-        
+
         /// <summary> Select deductible from dropdown </summary>
         public async Task SelectDeductibleAsync(string deductible)
         {
@@ -55,7 +55,7 @@ namespace Playwright_POC.Pages
         #region Actions - Modal Controls
         /// <summary> Click Cancel to close modal without saving </summary>
         public async Task ClickCancelAsync() => await CancelButton.ClickAsync();
-        
+
         // ClickSaveAsync inherited from BasePage - uses SaveButton via test ID discovery
         #endregion
 

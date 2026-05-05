@@ -32,9 +32,9 @@ namespace Playwright_POC.Tools.ExcelInspector
 
             var snapshot = new ExcelWorkbookSnapshot
             {
-                Source      = Path.GetFileName(excelPath),
+                Source = Path.GetFileName(excelPath),
                 GeneratedOn = DateTime.UtcNow.ToString("o"),
-                Sheets      = new Dictionary<string, List<Dictionary<string, string>>>()
+                Sheets = new Dictionary<string, List<Dictionary<string, string>>>()
             };
 
             using var workbook = new XLWorkbook(excelPath);
@@ -49,8 +49,8 @@ namespace Playwright_POC.Tools.ExcelInspector
                     continue;
 
                 // First used row → headers
-                var headerRow  = usedRows[0];
-                var headers    = new List<(int ColNumber, string Header)>();
+                var headerRow = usedRows[0];
+                var headers = new List<(int ColNumber, string Header)>();
 
                 foreach (var cell in headerRow.CellsUsed())
                 {
@@ -73,7 +73,7 @@ namespace Playwright_POC.Tools.ExcelInspector
 
                     foreach (var (colNumber, header) in headers)
                     {
-                        var cell  = row.Cell(colNumber);
+                        var cell = row.Cell(colNumber);
                         var value = GetCellText(cell);
                         record[header] = value;
                     }

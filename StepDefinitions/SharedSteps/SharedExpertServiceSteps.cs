@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 using Playwright_POC.Configuration;
 using Playwright_POC.Context;
@@ -40,7 +40,7 @@ public class SharedExpertServiceSteps
         // Page is already initialized in TestHooks
         var url = _configuration["Playwright:ExpertService"];
         await _context.Page.GotoAsync(url);
-        
+
         // Use Playwright Expect instead of NUnit Assert
         await Expect(_context.Page).Not.ToHaveURLAsync("about:blank");
     }
@@ -48,13 +48,13 @@ public class SharedExpertServiceSteps
     [StepDefinition("I log in with valid Expert Service credentials")]
     public async Task EnterExpertServiceCredentialsAndLogin()
     {
-    string username = _credentials.Username;
-    string password = _credentials.Password;
+        string username = _credentials.Username;
+        string password = _credentials.Password;
 
-    var loginPage = new ExpertQuoteLoginPage(_context.Page);
-    await loginPage.LoginAsync(username, password);
+        var loginPage = new ExpertQuoteLoginPage(_context.Page);
+        await loginPage.LoginAsync(username, password);
 
-    // Wait for login to complete and assert dashboard is visible (once locators are available)
-    //Assert.That(await );
+        // Wait for login to complete and assert dashboard is visible (once locators are available)
+        //Assert.That(await );
     }
 }

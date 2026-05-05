@@ -1,4 +1,4 @@
-﻿// Pages/ExpertQuotePages/PA_AddAdditionalInterestPage.cs
+// Pages/ExpertQuotePages/PA_AddAdditionalInterestPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;

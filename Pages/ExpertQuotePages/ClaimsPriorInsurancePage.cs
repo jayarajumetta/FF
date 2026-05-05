@@ -1,4 +1,4 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using System.Threading.Tasks;
 using static Microsoft.Playwright.Assertions;
 
@@ -15,12 +15,12 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         private ILocator AddViolationsButton => _page.GetByTestId("add_Violation");
         private ILocator YearsInBusinessInput => _page.GetByTestId("fields.data.policy.policyUnderwriting.accountInput$yearsInBusiness.value");
         private ILocator EditClaimButton => _page.GetByTestId("fields.data.policy.policyUnderwriting.underwritingLossExperience.rows[0].addLoss.rows[0].editClaim");
-        
+
         // Prior Insurance fields
         private ILocator PriorPolicyNumberInput => _page.GetByTestId("fields.data.policy.policyInput$priorPolicyNumberAN.value");
         private ILocator ReasonForNewCoverageDropdown => _page.GetByTestId("fields.data.policy.policyInput$reasonForNewCoverage.value");
         private ILocator PriorInsuranceCarrierInput => _page.GetByTestId("fields.data.policy.policyUnderwriting.policyUnderwritingInput$priorInsuranceLatestCarrier.value");
-        
+
         // Exposures Insured (Yes/No)
         private ILocator GetExposuresInsuredButton(string yesOrNo) =>
             _page.GetByTestId("fields.data.policy.policyInput$exposuresInsuredAN90Days.value-chip-item-wrapper")

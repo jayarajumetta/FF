@@ -1,4 +1,4 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using NUnit.Framework;
 using Playwright_POC.Helpers;
 using System;
@@ -91,14 +91,14 @@ namespace Playwright_POC.Pages
         public async Task SelectFeetFromHydrant(string value)
         {
             var normalizedValue = value?.Trim() ?? string.Empty;
-            
+
             var select = FeetFromHydrantSelect();
             await select.ScrollIntoViewIfNeededAsync();
             await WaitForSpinnerAsync();
-            
+
             // Click to open the dropdown
             await select.ClickAsync(new() { Timeout = 30000 });
-            
+
             // Wait for panel to appear and select option by text
             var option = _page.Locator(".cdk-overlay-pane mat-option").GetByText(normalizedValue, new() { Exact = true });
             await option.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
@@ -296,7 +296,7 @@ namespace Playwright_POC.Pages
                 .FirstOrDefault();
         }
 
-        private ILocator OrderWildfireRiskScoreButton() => 
+        private ILocator OrderWildfireRiskScoreButton() =>
                 _page.GetByTestId("fields.data.account.location.rows[0].orderWildfire");
 
         /// <summary>
@@ -306,7 +306,7 @@ namespace Playwright_POC.Pages
         public async Task OrderWildfireRiskScoreIfAvailableAsync()
         {
             var button = OrderWildfireRiskScoreButton();
-            
+
             // Check if button exists and is visible
             if (await button.CountAsync() > 0 && await button.IsVisibleAsync())
             {
@@ -424,7 +424,7 @@ namespace Playwright_POC.Pages
                 "72503" => (false, "1%"),   // AR – zone 1, min 1%
                 "85016" => (false, null),   // AZ – zone 1, no minimum
                 "80701" => (false, "1%"),   // CO – zone 2, min 1%
-                "83814" => (true,  null),   // ID – WH cannot be added
+                "83814" => (true, null),   // ID – WH cannot be added
                 "61108" => (false, null),   // IL – zone 1, no minimum
                 "46320" => (false, null),   // IN – no mandatory minimum
                 "52101" => (false, null),   // IA – no mandatory minimum
@@ -438,16 +438,16 @@ namespace Playwright_POC.Pages
                 "88101" => (false, null),   // NM – no mandatory minimum
                 "58504" => (false, "1%"),   // ND – zone 1, min 1%
                 "74332" => (false, null),   // OK – no mandatory minimum
-                "97331" => (true,  null),   // OR – WH cannot be added
+                "97331" => (true, null),   // OR – WH cannot be added
                 "29810" => (false, null),   // SC – zone 2, no minimum
                 "57501" => (false, "1%"),   // SD – zone 3, min 1%
                 "37604" => (false, null),   // TN – zone 1, no minimum
                 "78205" => (false, "1%"),   // TX – zone 1, min 1%
-                "84321" => (true,  null),   // UT – WH cannot be added
-                "98368" => (true,  null),   // WA – WH cannot be added
+                "84321" => (true, null),   // UT – WH cannot be added
+                "98368" => (true, null),   // WA – WH cannot be added
                 "53704" => (false, null),   // WI – zone 1, no minimum
                 "82601" => (false, "1%"),   // WY – zone 2, min 1%
-                _       => null
+                _ => null
             };
 
         /// <summary>

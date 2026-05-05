@@ -1,4 +1,4 @@
-﻿// Pages/ExpertQuotePages/ClientSearchPage.cs
+// Pages/ExpertQuotePages/ClientSearchPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 
@@ -19,7 +19,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         private ILocator SearchInput => _page.GetByTestId("quoteSearchInput");
         private ILocator SearchButton => _page.GetByRole(AriaRole.Button, new() { Name = "Search" });
         private ILocator NewQuoteButton => _page.Locator("#new-quote-button");
-        
+
         // Client Search/Suggestions panel (within quote flow)
         private ILocator ClientSearchSuggestionNav => _page.GetByTestId("ClientSearchSuggestion-nav");
         private ILocator ClientSearchInputGroup => _page.GetByTestId("temp.clientSearchInputGroup");
@@ -36,7 +36,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages
             // Wait for page to be ready after login - the search input should be visible
             await SearchInput.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
             await SearchInput.FillAsync(name);
-            
+
             // Wait for search button to be visible and clickable
             await SearchButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
             await SearchButton.ClickAsync();

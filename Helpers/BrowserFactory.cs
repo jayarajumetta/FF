@@ -1,4 +1,4 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +7,7 @@ namespace Playwright_POC.Helpers
 {
     public class BrowserFactory
     {
+        private static readonly string[] FullscreenArgs = ["--start-fullscreen"];
         private readonly IPlaywright _playwright;
         private readonly IConfiguration _configuration;
 
@@ -35,18 +36,18 @@ namespace Playwright_POC.Helpers
                 {
                     Headless = headless,
                     Channel = "msedge",
-                    Args = new[] {"--start-fullscreen" }
+                    Args = FullscreenArgs
                 }),
                 "chrome" => await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
                 {
                     Headless = headless,
                     Channel = "chrome",
-                    Args = new[] { "--start-fullscreen" }
+                    Args = FullscreenArgs
                 }),
                 "chromium" => await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
                 {
                     Headless = headless,
-                    Args = new[] { "--start-fullscreen" }
+                    Args = FullscreenArgs
                 }),
                 "firefox" => await _playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions
                 {
@@ -98,7 +99,7 @@ namespace Playwright_POC.Helpers
                    || value.Equals("on", StringComparison.OrdinalIgnoreCase);
         }
 
-        public async Task<IPage> GetPageAsync(IBrowser browser, string url)
+        public static async Task<IPage> GetPageAsync(IBrowser browser, string url)
         {
             var context = await browser.NewContextAsync(new BrowserNewContextOptions
             {

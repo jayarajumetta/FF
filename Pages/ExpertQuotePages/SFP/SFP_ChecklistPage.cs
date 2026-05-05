@@ -23,13 +23,13 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             _page.Locator("a.js-checklist-summary-item").Filter(new() { HasText = itemName });
 
         // Exception flow
-        public ILocator ExceptionButton      => _page.Locator("button.js-exception");
+        public ILocator ExceptionButton => _page.Locator("button.js-exception");
         public ILocator ExceptionNoteTextarea => _page.Locator(".js-exception-note-text textarea");
         public ILocator ExceptionNoteConfirm => _page.Locator("#exception-note-confirm");
 
         // Main note + Add Note
         public ILocator MainNoteTextarea => _page.Locator("textarea.js-note");
-        public ILocator AddNoteButton    => _page.Locator("button.js-add-note");
+        public ILocator AddNoteButton => _page.Locator("button.js-add-note");
 
         /// <summary>Submit button to finalise and close the checklist popup.</summary>
         public ILocator SubmitButton =>
@@ -53,14 +53,14 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             var newPageTask = eqPage.Context.WaitForPageAsync();
             await openBtn.ClickAsync();
             var checklistPage = await newPageTask;
-            
+
             // Wait for initial load
             await checklistPage.WaitForLoadStateAsync(LoadState.Load, new() { Timeout = 60000 });
             Console.WriteLine($"[Checklist] New tab opened: {checklistPage.Url}");
-            
+
             // Handle SSO redirect - wait for SSO flow to complete if we're on an SSO page
             await WaitForSsoRedirectAsync(checklistPage, timeoutMs: 60000);
-            
+
             return checklistPage;
         }
 
@@ -72,18 +72,18 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
         {
             var startTime = DateTime.UtcNow;
             var timeout = TimeSpan.FromMilliseconds(timeoutMs);
-            
+
             while (DateTime.UtcNow - startTime < timeout)
             {
                 var currentUrl = page.Url;
-                
+
                 // Check if we're on an SSO page
                 if (currentUrl.Contains("ssoqa.anico.com", StringComparison.OrdinalIgnoreCase) ||
                     currentUrl.Contains("/idp/SSO", StringComparison.OrdinalIgnoreCase) ||
                     currentUrl.Contains("/ACS.saml2", StringComparison.OrdinalIgnoreCase))
                 {
                     Console.WriteLine($"[Checklist] SSO redirect detected: {currentUrl}");
-                    
+
                     // Wait for navigation to complete
                     try
                     {
@@ -92,7 +92,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
                                    !url.Contains("/idp/SSO", StringComparison.OrdinalIgnoreCase) &&
                                    !url.Contains("/ACS.saml2", StringComparison.OrdinalIgnoreCase),
                             new() { Timeout = 30000 });
-                        
+
                         Console.WriteLine($"[Checklist] SSO redirect completed. Now at: {page.Url}");
                         await page.WaitForLoadStateAsync(LoadState.Load, new() { Timeout = 30000 });
                         break;
@@ -109,7 +109,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
                     Console.WriteLine($"[Checklist] Checklist page loaded: {currentUrl}");
                     break;
                 }
-                
+
                 await page.WaitForTimeoutAsync(500);
             }
         }

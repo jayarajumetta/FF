@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -716,8 +716,8 @@ namespace Playwright_POC.Helpers
 
                     default:
                         throw new ArgumentException($"Unknown question: {question}");
-                        
-                    }
+
+                }
             }
         }
 

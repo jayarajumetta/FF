@@ -125,7 +125,7 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             var narrativePage = new NarrativePage(_context.Page);
             await narrativePage.WaitForSpinnerAsync();
             TableMappingHelpers.NarrativeFields(table, _contextData);
-            
+
             // Check if we're on the narrative page (button exists)
             if (await narrativePage.IsOnNarrativePageAsync())
             {
@@ -136,7 +136,7 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             {
                 Console.WriteLine("NOTE: Not on Narrative page or button not found - skipping narrative entry");
             }
-            
+
             await narrativePage.ClickNextAsync();
         }
     }

@@ -332,24 +332,24 @@ namespace Playwright_POC.Tools.LocatorScan
 
             // Evaluate in-page script to collect raw element data
             List<RawElement>? rawElements = null;
-            
+
             Console.WriteLine($"[LocatorScanner] Scanning page for interactable elements...");
             try
             {
                 // Pass options to the ScanScript
-                var scriptOptions = new 
-                { 
+                var scriptOptions = new
+                {
                     visibleOnly = options.VisibleOnly,
                     includeAllElements = options.IncludeAllElements
                 };
-                
+
                 // Use JSON workaround with the full ScanScript
                 var jsonResult = await page.EvaluateAsync<string>(
                     $"({ScanScript})({{visibleOnly: {scriptOptions.visibleOnly.ToString().ToLower()}, includeAllElements: {scriptOptions.includeAllElements.ToString().ToLower()}}})"
                 );
-                
+
                 Console.WriteLine($"[LocatorScanner] Got JSON result, length: {jsonResult?.Length ?? 0}");
-                
+
                 if (!string.IsNullOrEmpty(jsonResult))
                 {
                     var jsonOptions = new JsonSerializerOptions
@@ -492,13 +492,13 @@ namespace Playwright_POC.Tools.LocatorScan
 
             // Build ranked candidates
             report.Candidates = BuildCandidates(raw, options);
-            
+
             // Limit candidates for performance
             if (options.MaxCandidates > 0 && report.Candidates.Count > options.MaxCandidates)
             {
                 report.Candidates = report.Candidates.Take(options.MaxCandidates).ToList();
             }
-            
+
             return report;
         }
 
@@ -579,7 +579,7 @@ namespace Playwright_POC.Tools.LocatorScan
                     Score = 6
                 });
             }
-            
+
             // 5b) GetByText fallback for any element with label or accessible name
             // This helps Angular Material inputs that lack testId/aria-label
             var labelText = FirstNonEmpty(raw.Label, raw.AccessibleName);

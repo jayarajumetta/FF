@@ -1,4 +1,4 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using NUnit.Framework;
 using Playwright_POC.Helpers;
 using System;
@@ -86,7 +86,7 @@ namespace Playwright_POC.Pages
             var row = await FindUniqueRowAsync(coverageType, coverageName);
 
             var checkbox = row.Locator(CheckboxInputSelector).First;
-            await checkbox.WaitForAsync(new() {  State = WaitForSelectorState.Attached });
+            await checkbox.WaitForAsync(new() { State = WaitForSelectorState.Attached });
 
             var actual = await checkbox.IsCheckedAsync();
 
@@ -159,7 +159,7 @@ namespace Playwright_POC.Pages
             var diagnostics = new List<string>();
             var diagLimit = Math.Min(rowCount, 10);
 
-            for (int i = 0; i<diagLimit; i++)
+            for (int i = 0; i < diagLimit; i++)
             {
                 var r = allRows.Nth(i);
                 var t = await r.Locator(CoverageTypeSelector).First.InnerTextAsync();
@@ -236,5 +236,5 @@ namespace Playwright_POC.Pages
             }
         }
     }
-   
+
 }

@@ -15,20 +15,20 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         public FeatureFlagsPage(IPage page) : base(page) { }
 
         #region Locators
-        private ILocator LogoButton         => _page.GetByTestId("feature-flag-editor-button");
+        private ILocator LogoButton => _page.GetByTestId("feature-flag-editor-button");
 
         // BOP server section
-        private ILocator BopAltServerCheckbox  => _page.GetByTestId("featureFlags.bop-alt-server-checkbox-wrapper");
-        private ILocator BopAltServerWrapper   => _page.Locator("[data-testid='featureFlags.bop-alt-server'] .chip-wrapper").First;
-        private ILocator BopServerDropdown     => _page.GetByTestId("serverConfig.clBop.server");
+        private ILocator BopAltServerCheckbox => _page.GetByTestId("featureFlags.bop-alt-server-checkbox-wrapper");
+        private ILocator BopAltServerWrapper => _page.Locator("[data-testid='featureFlags.bop-alt-server'] .chip-wrapper").First;
+        private ILocator BopServerDropdown => _page.GetByTestId("serverConfig.clBop.server");
 
         // SFP server section
-        private ILocator SfpAltServerCheckbox  => _page.GetByTestId("featureFlags.sfp-alt-server-checkbox-wrapper");
-        private ILocator SfpAltServerWrapper   => _page.Locator("[data-testid='featureFlags.sfp-alt-server'] .chip-wrapper").First;
-        private ILocator SfpServerDropdown     => _page.GetByTestId("serverConfig.clSfp.server");
+        private ILocator SfpAltServerCheckbox => _page.GetByTestId("featureFlags.sfp-alt-server-checkbox-wrapper");
+        private ILocator SfpAltServerWrapper => _page.Locator("[data-testid='featureFlags.sfp-alt-server'] .chip-wrapper").First;
+        private ILocator SfpServerDropdown => _page.GetByTestId("serverConfig.clSfp.server");
 
         // Dialog actions
-        private ILocator ApplyFlagsButton   => _page.GetByTestId("btnConfirmYes");
+        private ILocator ApplyFlagsButton => _page.GetByTestId("btnConfirmYes");
         #endregion
 
         /// <summary>

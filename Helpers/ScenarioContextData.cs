@@ -1,4 +1,4 @@
-﻿using Playwright_POC.Models;
+using Playwright_POC.Models;
 
 namespace Playwright_POC.Helpers
 {

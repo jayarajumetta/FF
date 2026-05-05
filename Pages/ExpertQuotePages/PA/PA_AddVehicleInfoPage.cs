@@ -1,4 +1,4 @@
-﻿// Pages/ExpertQuotePages/PA_AddVehicleInfoPage.cs
+// Pages/ExpertQuotePages/PA_AddVehicleInfoPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;

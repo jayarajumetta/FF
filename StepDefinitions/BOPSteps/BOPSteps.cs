@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 using NUnit.Framework;
 using Playwright_POC.Configuration;

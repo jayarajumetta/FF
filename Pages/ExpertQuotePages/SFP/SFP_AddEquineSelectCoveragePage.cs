@@ -20,7 +20,7 @@ namespace Playwright_POC.Pages
         #region Locators - Affinity Group
         /// <summary> Affinity Group: Ranch Sorting National Championship </summary>
         public ILocator RanchSortingAffinityButton => _page.GetByTestId("fields.line.covEquineSelectInput$affinityGroup.value-0");
-        
+
         /// <summary> Affinity Group: World Series of Team Roping </summary>
         public ILocator TeamRopingAffinityButton => _page.GetByTestId("fields.line.covEquineSelectInput$affinityGroup.value-1");
         #endregion
@@ -28,7 +28,7 @@ namespace Playwright_POC.Pages
         #region Locators - Actions
         /// <summary> Cancel button - closes modal without saving </summary>
         public ILocator CancelButton => _page.GetByTestId("fields.line.cancel");
-        
+
         /// <summary> Save button - saves coverage and closes modal </summary>
         public ILocator SaveButton => _page.GetByTestId("fields.line.save");
         #endregion
@@ -36,10 +36,10 @@ namespace Playwright_POC.Pages
         #region Actions - Affinity Group
         /// <summary> Select Ranch Sorting National Championship affinity group </summary>
         public async Task SelectRanchSortingAffinityAsync() => await RanchSortingAffinityButton.ClickAsync();
-        
+
         /// <summary> Select World Series of Team Roping affinity group </summary>
         public async Task SelectTeamRopingAffinityAsync() => await TeamRopingAffinityButton.ClickAsync();
-        
+
         /// <summary> Select an affinity group by name </summary>
         public async Task SelectAffinityGroupAsync(string affinityGroup)
         {
@@ -62,7 +62,7 @@ namespace Playwright_POC.Pages
         #region Actions - Modal Controls
         /// <summary> Click Cancel to close modal without saving </summary>
         public async Task ClickCancelAsync() => await CancelButton.ClickAsync();
-        
+
         // ClickSaveAsync inherited from BasePage - uses SaveButton via test ID discovery
         #endregion
     }

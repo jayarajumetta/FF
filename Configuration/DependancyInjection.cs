@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Playwright_POC;
 using Reqnroll;
 using Reqnroll.Microsoft.Extensions.DependencyInjection;

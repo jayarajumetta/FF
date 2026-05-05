@@ -1,4 +1,4 @@
-﻿// Pages/NewClientPage.cs
+// Pages/NewClientPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 
@@ -22,7 +22,7 @@ namespace Playwright_POC.Pages
         private ILocator EmailAddressInput => _page.Locator("input[name='customer.email']");
         private ILocator SearchButton => _page.GetByRole(AriaRole.Button, new() { Name = "Search" });
         private ILocator CreateNewClientButton => _page.GetByText("Create New Client", new() { Exact = true });
-        
+
         // Global locators used in this page
         private ILocator NextButton => _page.GetByTestId("next");
         private ILocator AccountInfoPageHeader => _page.Locator("//h1[text()='Account Information']");

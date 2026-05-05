@@ -27,7 +27,7 @@ namespace Playwright_POC.Services
             ["YM"] = "Mandatory",
             ["YS"] = "Selected",
             ["YU"] = "Listed (Unchecked)",
-            ["N"]  = "Not Expected"
+            ["N"] = "Not Expected"
         };
 
         // Human-readable names for DuckCreek selected values
@@ -192,7 +192,7 @@ namespace Playwright_POC.Services
             var sectionForTestCase = testCase?.ToUpperInvariant() switch
             {
                 "CE" => "CE",
-                _    => "BASIC"
+                _ => "BASIC"
             };
 
             var json = File.ReadAllText(jsonPath);
@@ -266,7 +266,7 @@ namespace Playwright_POC.Services
             return testCase?.ToUpperInvariant() switch
             {
                 "BASIC" => "B",
-                "CE"    => "C",
+                "CE" => "C",
                 _ => testCase?.Length > 0 ? testCase[..1].ToUpperInvariant() : "B"
             };
         }

@@ -17,36 +17,36 @@ namespace Playwright_POC.Helpers
         public static async Task WaitForAngularSpinnerAsync(IPage page, int timeoutMs = 30000)
         {
             var spinnerLocator = page.Locator(".ngx-spinner-overlay");
-            
+
             try
             {
                 // First, check if spinner is visible
                 var isVisible = await spinnerLocator.IsVisibleAsync();
-                
+
                 if (isVisible)
                 {
                     // Spinner is visible, wait for it to disappear
-                    await spinnerLocator.WaitForAsync(new() 
-                    { 
+                    await spinnerLocator.WaitForAsync(new()
+                    {
                         State = WaitForSelectorState.Hidden,
-                        Timeout = timeoutMs 
+                        Timeout = timeoutMs
                     });
                 }
                 else
                 {
                     // Spinner not visible, wait briefly in case it's about to appear
                     await Task.Delay(500);
-                    
+
                     // Check again if it appeared
                     isVisible = await spinnerLocator.IsVisibleAsync();
-                    
+
                     if (isVisible)
                     {
                         // It appeared, now wait for it to disappear
-                        await spinnerLocator.WaitForAsync(new() 
-                        { 
+                        await spinnerLocator.WaitForAsync(new()
+                        {
                             State = WaitForSelectorState.Hidden,
-                            Timeout = timeoutMs 
+                            Timeout = timeoutMs
                         });
                     }
                 }
@@ -57,7 +57,7 @@ namespace Playwright_POC.Helpers
                 Console.WriteLine($"Warning: Loading spinner did not disappear within {timeoutMs}ms");
                 throw; // Re-throw to fail the test - spinner should always disappear
             }
-            
+
             // Additional wait to ensure page is stable after spinner
             await Task.Delay(300);
         }
@@ -70,10 +70,10 @@ namespace Playwright_POC.Helpers
             try
             {
                 var overlay = page.Locator(overlaySelector);
-                await overlay.WaitForAsync(new() 
-                { 
+                await overlay.WaitForAsync(new()
+                {
                     State = WaitForSelectorState.Hidden,
-                    Timeout = timeoutMs 
+                    Timeout = timeoutMs
                 });
             }
             catch
@@ -98,10 +98,10 @@ namespace Playwright_POC.Helpers
         {
             // Wait for spinner
             await WaitForAngularSpinnerAsync(page, timeoutMs);
-            
+
             // Wait for network to be idle
             await page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = timeoutMs });
-            
+
             // Final stability delay
             await Task.Delay(500);
         }
@@ -113,13 +113,13 @@ namespace Playwright_POC.Helpers
         public static async Task ForceClickAsync(IPage page, string selector, int timeoutMs = 15000)
         {
             var locator = page.Locator(selector);
-            
+
             // Wait for element to exist
             await locator.WaitForAsync(new() { State = WaitForSelectorState.Attached, Timeout = timeoutMs });
-            
+
             // Wait for any spinners
             await WaitForAngularSpinnerAsync(page);
-            
+
             // Force click
             await locator.ClickAsync(new() { Force = true, Timeout = timeoutMs });
         }
@@ -130,10 +130,10 @@ namespace Playwright_POC.Helpers
         public static async Task WaitForElementClickableAsync(IPage page, string selector, int timeoutMs = 15000)
         {
             var locator = page.Locator(selector);
-            
+
             // Wait for visible
             await locator.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = timeoutMs });
-            
+
             // Wait for enabled
             await Task.Run(async () =>
             {
@@ -146,7 +146,7 @@ namespace Playwright_POC.Helpers
                 }
                 throw new TimeoutException($"Element {selector} not enabled within {timeoutMs}ms");
             });
-            
+
             // Wait for any overlays to clear
             await WaitForAngularSpinnerAsync(page);
         }

@@ -52,19 +52,19 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
         public void GenerateFormsBaseline()
         {
             // ── Read parameters ──────────────────────────────────────────────────
-            var excelPath        = TestContext.Parameters.Get("EXCEL", "");
-            var commonExcelPath  = TestContext.Parameters.Get("COMMON_EXCEL", "");
-            var lob              = TestContext.Parameters.Get("LOB", "SFP");
-            var formCol          = TestContext.Parameters.Get("FORM_COL", "");
-            var typeCol          = TestContext.Parameters.Get("TYPE_COL", "");
+            var excelPath = TestContext.Parameters.Get("EXCEL", "");
+            var commonExcelPath = TestContext.Parameters.Get("COMMON_EXCEL", "");
+            var lob = TestContext.Parameters.Get("LOB", "SFP");
+            var formCol = TestContext.Parameters.Get("FORM_COL", "");
+            var typeCol = TestContext.Parameters.Get("TYPE_COL", "");
             var includeSheetsRaw = TestContext.Parameters.Get("INCLUDE_SHEETS", "");
-            var includeSheets    = string.IsNullOrWhiteSpace(includeSheetsRaw)
+            var includeSheets = string.IsNullOrWhiteSpace(includeSheetsRaw)
                 ? Array.Empty<string>()
                 : includeSheetsRaw.Split(',')
                     .Select(s => s.Trim())
                     .Where(s => s.Length > 0)
                     .ToArray();
-            var dryRun           = BoolParam("DRY_RUN", false);
+            var dryRun = BoolParam("DRY_RUN", false);
 
             // Default output: <project-root>/Resources/ExpectedForms/{LOB}/{LOB}.json
             // AppContext.BaseDirectory = bin/Debug/net8.0 → go up three levels
@@ -102,21 +102,21 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
             {
                 FormColumnHeader = formCol,
                 TypeColumnHeader = typeCol,
-                SupportedStates  = SupportedStates,
-                IncludeSheets    = includeSheets,
+                SupportedStates = SupportedStates,
+                IncludeSheets = includeSheets,
             };
 
             var parser = new ExcelFormsParser();
-            var rows   = parser.Parse(excelPath, options);
+            var rows = parser.Parse(excelPath, options);
 
             // ── Merge Common Forms ───────────────────────────────────────────────
             if (!string.IsNullOrWhiteSpace(commonExcelPath) && File.Exists(commonExcelPath))
             {
                 Console.WriteLine();
                 Console.WriteLine("Parsing Common Forms...");
-                var commonRows     = parser.ParseCommonForms(commonExcelPath, lob, options);
+                var commonRows = parser.ParseCommonForms(commonExcelPath, lob, options);
                 var lobFormNumbers = new HashSet<string>(rows.Select(r => r.FormNumber), StringComparer.OrdinalIgnoreCase);
-                var added          = commonRows.Where(r => !lobFormNumbers.Contains(r.FormNumber)).ToList();
+                var added = commonRows.Where(r => !lobFormNumbers.Contains(r.FormNumber)).ToList();
                 rows = rows.Concat(added).ToList();
                 Console.WriteLine($"  Common forms merged: {added.Count}");
             }
@@ -196,7 +196,7 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
             var newNames = new HashSet<string>(
                 newRows.Select(r => r.FormNumber), StringComparer.OrdinalIgnoreCase);
 
-            var added   = newNames.Except(existingNames).OrderBy(x => x).ToList();
+            var added = newNames.Except(existingNames).OrderBy(x => x).ToList();
             var removed = existingNames.Except(newNames).OrderBy(x => x).ToList();
 
             var lines = new List<string>();

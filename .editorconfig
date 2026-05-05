@@ -1,0 +1,159 @@
+# Top-level EditorConfig — applies to all files in this repo
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+indent_style = space
+indent_size = 4
+tab_width = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{cs,csx}]
+# Trailing whitespace — ERROR so dotnet format removes it
+dotnet_diagnostic.RCS1037.severity = error
+
+# ── Suppressed: too invasive or stylistic preference ──
+
+# Primary constructor
+dotnet_diagnostic.IDE0290.severity = none
+
+# Use GeneratedRegex (requires partial on every class)
+dotnet_diagnostic.SYSLIB1045.severity = none
+
+# Namespace must match folder (would break all using statements)
+dotnet_diagnostic.IDE0130.severity = none
+
+# Member can be static
+dotnet_diagnostic.CA1822.severity = none
+
+# Collection init simplification
+dotnet_diagnostic.IDE0300.severity = none
+dotnet_diagnostic.IDE0301.severity = none
+dotnet_diagnostic.IDE0305.severity = none
+dotnet_diagnostic.IDE0028.severity = none
+
+# Remove unused parameter (Reqnroll bindings need signatures)
+dotnet_diagnostic.IDE0060.severity = none
+
+# Use range/index operators
+dotnet_diagnostic.IDE0057.severity = none
+dotnet_diagnostic.IDE0056.severity = none
+
+# Prefer string.Contains/StartsWith/EndsWith(char)
+dotnet_diagnostic.CA1860.severity = none
+dotnet_diagnostic.CA1847.severity = none
+dotnet_diagnostic.CA1866.severity = none
+dotnet_diagnostic.CA1850.severity = none
+
+# Remove unnecessary value assignment
+dotnet_diagnostic.IDE0059.severity = none
+
+# Namespace does not contain visible member
+dotnet_diagnostic.CA1050.severity = none
+
+# Cache JsonSerializerOptions
+dotnet_diagnostic.CA1869.severity = none
+
+# Use pattern matching switch
+dotnet_diagnostic.IDE0066.severity = none
+
+# Naming rule violation
+dotnet_diagnostic.IDE1006.severity = none
+
+# Use coalesce expression
+dotnet_diagnostic.IDE0270.severity = none
+dotnet_diagnostic.IDE0074.severity = none
+
+# Use compound assignment
+dotnet_diagnostic.IDE0054.severity = none
+
+# Use 'using' declaration
+dotnet_diagnostic.IDE0063.severity = none
+
+# Constant array args
+dotnet_diagnostic.CA1861.severity = none
+
+# Avoid constant expected argument
+dotnet_diagnostic.CA1862.severity = none
+
+# Use target-typed 'new'
+dotnet_diagnostic.IDE0090.severity = none
+
+# Use inferred member name
+dotnet_diagnostic.IDE0037.severity = none
+
+# Use Length/Count instead of Any()
+dotnet_diagnostic.CA1826.severity = none
+
+# Do not discard method return value
+dotnet_diagnostic.CA1806.severity = none
+
+# Prefer TryGetValue over ContainsKey + indexer
+dotnet_diagnostic.CA1854.severity = none
+
+# Use object initializers
+dotnet_diagnostic.IDE0017.severity = none
+
+# Optimize LINQ
+dotnet_diagnostic.RCS1077.severity = none
+
+# Make class static
+dotnet_diagnostic.CA1052.severity = none
+dotnet_diagnostic.RCS1102.severity = none
+
+# ── Roslynator (RCS) rules — suppressed ──
+
+# Add braces (multi-line)
+dotnet_diagnostic.RCS1001.severity = none
+
+# Add paragraph to doc comment
+dotnet_diagnostic.RCS1226.severity = none
+
+# Use compound assignment (Roslynator)
+dotnet_diagnostic.RCS1058.severity = none
+
+# Remove unused member declaration
+dotnet_diagnostic.RCS1213.severity = none
+
+# Unused parameter (Roslynator)
+dotnet_diagnostic.RCS1163.severity = none
+
+# Unnecessary verbatim string literal
+dotnet_diagnostic.RCS1192.severity = none
+
+# Use element access
+dotnet_diagnostic.RCS1246.severity = none
+
+# Optimize string.Join
+dotnet_diagnostic.RCS1235.severity = none
+
+# Convert if to return statement
+dotnet_diagnostic.RCS1073.severity = none
+
+# Unnecessary interpolated string
+dotnet_diagnostic.RCS1214.severity = none
+
+# Combine Enumerable.Where chain
+dotnet_diagnostic.RCS1112.severity = none
+
+# ── csharp-dev-tools (CDT) rules — suppressed ──
+
+# Async/await is redundant
+dotnet_diagnostic.CDT1003.severity = none
+
+# Use 'is true' instead of '== true'
+dotnet_diagnostic.CDT1001.severity = none
+
+[*.json]
+indent_size = 2
+
+[*.{yml,yaml}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.feature]
+indent_size = 2

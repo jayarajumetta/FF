@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 using Microsoft.Playwright;
 using System;
 using System.Collections.Generic;
@@ -73,4 +73,4 @@ namespace Playwright_POC.Helpers
             return response!;
         }
     }
-    }
+}

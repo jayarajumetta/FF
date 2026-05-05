@@ -19,7 +19,7 @@ namespace Playwright_POC.Pages
         private ILocator UsernameInput => _page.GetByPlaceholder("Username");
         private ILocator PasswordInput => _page.GetByPlaceholder("Password");
         private ILocator SignOnButton => _page.GetByTitle("Sign On");
-        
+
         // Dashboard indicator - confirms login was successful
         private ILocator NewQuoteButton => _page.GetByRole(AriaRole.Button, new() { Name = "New Quote" });
 

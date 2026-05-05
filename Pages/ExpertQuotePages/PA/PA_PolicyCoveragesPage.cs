@@ -1,4 +1,4 @@
-﻿// Pages/ExpertQuotePages/PA_PolicyCoveragesPage.cs
+// Pages/ExpertQuotePages/PA_PolicyCoveragesPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 using Playwright_POC.Helpers;

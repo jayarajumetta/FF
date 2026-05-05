@@ -1,4 +1,4 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using System.Threading.Tasks;
 using Playwright_POC.Helpers;
 

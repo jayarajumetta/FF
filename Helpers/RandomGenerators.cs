@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,18 +17,18 @@ namespace Playwright_POC.Helpers
     /// - {{randomPhone}} - Random US phone number
     /// - {{randomEmail}} - Random email address
     /// - {{randomSSN}} - Random SSN in XXX-XX-XXXX format
-    /// 
-    /// Note: First names are prefixed with "PW" (e.g., "PWMichael") to identify 
+    ///
+    /// Note: First names are prefixed with "PW" (e.g., "PWMichael") to identify
     /// automated test records in the system.
     /// </remarks>
-    public class RandomGenerators
+    public static class RandomGenerators
     {
         /// <summary>
         /// Prefix added to first names to identify Playwright test records.
         /// Change to "Playwright" for full prefix, or "" for no prefix.
         /// </summary>
         private const string TestNamePrefix = "PW";
-        
+
         /// <summary>
         /// Generates a random SSN in XXX-XX-XXXX format.
         /// Note: This is for testing purposes only - not a valid SSN.
@@ -113,28 +113,28 @@ namespace Playwright_POC.Helpers
         public static string GenerateRandomDOB(int minAge = 21, int maxAge = 65)
         {
             int age = Random.Shared.Next(minAge, maxAge + 1);
-            
+
             // Calculate birth year based on age
             var today = DateTime.Today;
             int birthYear = today.Year - age;
-            
+
             // Random month and day
             int month = Random.Shared.Next(1, 13);
             int maxDay = DateTime.DaysInMonth(birthYear, month);
             int day = Random.Shared.Next(1, maxDay + 1);
-            
+
             var dob = new DateTime(birthYear, month, day);
-            
+
             // Ensure the person is actually within the age range
             var ageAtToday = today.Year - dob.Year;
             if (dob > today.AddYears(-ageAtToday)) ageAtToday--;
-            
+
             if (ageAtToday < minAge || ageAtToday > maxAge)
             {
                 // Adjust if edge case
                 dob = today.AddYears(-Random.Shared.Next(minAge, maxAge + 1));
             }
-            
+
             return dob.ToString("MM/dd/yyyy");
         }
 
@@ -163,15 +163,15 @@ namespace Playwright_POC.Helpers
                                 864, 865, 870, 872, 878, 901, 903, 904, 906, 907, 908, 909, 910, 912, 913, 914,
                                 915, 916, 917, 918, 919, 920, 925, 928, 931, 936, 937, 940, 941, 947, 949, 951,
                                 952, 954, 956, 970, 971, 972, 973, 978, 979, 980, 984, 985 };
-            
+
             int areaCode = areaCodes[Random.Shared.Next(areaCodes.Length)];
-            
+
             // Exchange code (first digit cannot be 0 or 1)
             int exchange = Random.Shared.Next(200, 999);
-            
+
             // Subscriber number
             int subscriber = Random.Shared.Next(1000, 9999);
-            
+
             return $"({areaCode}) {exchange}-{subscriber}";
         }
 
@@ -183,23 +183,23 @@ namespace Playwright_POC.Helpers
             // Use provided names or generate random ones
             firstName = firstName ?? GenerateRandomFirstName();
             lastName = lastName ?? GenerateRandomLastName();
-            
+
             // Common fake email domains
-            string[] domains = { "testmail.com", "fakemail.org", "example.com", "mailtest.net", 
+            string[] domains = { "testmail.com", "fakemail.org", "example.com", "mailtest.net",
                                  "testuser.io", "mockmail.com", "tempmail.org", "demomail.com" };
-            
+
             // Email patterns
-            string[] patterns = { 
+            string[] patterns = {
                 $"{firstName.ToLower()}.{lastName.ToLower()}",
                 $"{firstName.ToLower()}{lastName.ToLower()}",
                 $"{firstName.ToLower()[0]}{lastName.ToLower()}",
                 $"{firstName.ToLower()}.{lastName.ToLower()}{Random.Shared.Next(1, 99)}",
                 $"{firstName.ToLower()}{Random.Shared.Next(100, 999)}"
             };
-            
+
             string localPart = patterns[Random.Shared.Next(patterns.Length)];
             string domain = domains[Random.Shared.Next(domains.Length)];
-            
+
             return $"{localPart}@{domain}";
         }
 

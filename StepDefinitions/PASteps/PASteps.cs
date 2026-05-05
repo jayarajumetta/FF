@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 using NUnit.Framework;
 using Playwright_POC.Configuration;
@@ -22,21 +22,21 @@ using ReqContext = Playwright_POC.Context.TestContext;
 public class PASteps
 {
 
-        private readonly ReqContext _context;
-        private readonly ScenarioContextData _contextData;
-        private readonly CredentialsConfig _credentials;
-        private readonly IConfiguration _configuration;
+    private readonly ReqContext _context;
+    private readonly ScenarioContextData _contextData;
+    private readonly CredentialsConfig _credentials;
+    private readonly IConfiguration _configuration;
 
 
-        public PASteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
-        {
-            _context = context;
-            _contextData = contextData;
-            _credentials = credentials;
-            _configuration = configuration;
+    public PASteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
+    {
+        _context = context;
+        _contextData = contextData;
+        _credentials = credentials;
+        _configuration = configuration;
 
-        }
-        [When("user selects Personal Auto and inputs Quote Details")]
+    }
+    [When("user selects Personal Auto and inputs Quote Details")]
     public async Task SelectPersonalAutoAndInputQuoteDetails(Table table)
     {
         TableMappingHelpers.PAQuoteDetailsFields(table, _contextData);

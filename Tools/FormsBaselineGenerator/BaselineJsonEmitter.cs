@@ -22,9 +22,9 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
 
         private static readonly Dictionary<string, string> SectionDescriptions = new()
         {
-            ["BASE"]  = "shared by Basic Policy and Country Estate",
+            ["BASE"] = "shared by Basic Policy and Country Estate",
             ["BASIC"] = "SFP Basic Policy only — loaded in addition to BASE",
-            ["CE"]    = "Country Estate only — loaded in addition to BASE",
+            ["CE"] = "Country Estate only — loaded in addition to BASE",
         };
 
         public static void Emit(
@@ -59,11 +59,11 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
 
                 for (int ri = 0; ri < sectionRows.Count; ri++)
                 {
-                    var row       = sectionRows[ri];
+                    var row = sectionRows[ri];
                     var isLastRow = ri == sectionRows.Count - 1;
-                    var value     = ComputeValue(row.StateValues, supportedStates);
-                    var padding   = new string(' ', maxLen - row.FormNumber.Length);
-                    var comma     = isLastRow ? "" : ",";
+                    var value = ComputeValue(row.StateValues, supportedStates);
+                    var padding = new string(' ', maxLen - row.FormNumber.Length);
+                    var comma = isLastRow ? "" : ",";
 
                     sb.AppendLine($"    \"{row.FormNumber}\":{padding} {value}{comma}");
                 }
@@ -101,7 +101,7 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
             if (!included.Any())
                 return "\"N\"";  // shouldn't reach here (all-N rows filtered in parser)
 
-            var allYm     = included.All(x => x.Status == "YM");
+            var allYm = included.All(x => x.Status == "YM");
             var coversAll = included.Count == supportedStates.Length;
 
             // All 23 states, all YM → "all"
@@ -124,8 +124,8 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
 
         private static void AppendFileHeader(StringBuilder sb, string lob, string[] states)
         {
-            var rule  = new string('═', 77);
-            var dash  = new string('─', 77);
+            var rule = new string('═', 77);
+            var dash = new string('─', 77);
             var stateList = string.Join("  ", states);
 
             sb.AppendLine($"  // {rule}");

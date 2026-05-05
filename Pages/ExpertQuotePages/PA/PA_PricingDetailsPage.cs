@@ -1,4 +1,4 @@
-﻿// Pages/ExpertQuotePages/PA_PricingDetailsPage.cs
+// Pages/ExpertQuotePages/PA_PricingDetailsPage.cs
 using Microsoft.Playwright;
 using Playwright_POC.Helpers;
 using System.Threading.Tasks;

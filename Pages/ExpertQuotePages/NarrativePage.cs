@@ -1,4 +1,4 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
 
@@ -27,7 +27,7 @@ namespace Playwright_POC.Pages
                 await AddNarrativeButton.ClickAsync();
             else
                 await AddNarrativeButtonAlt.ClickAsync();
-            
+
             await WaitForSpinnerAsync();
         }
 

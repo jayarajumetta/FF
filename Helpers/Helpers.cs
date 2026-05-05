@@ -1,4 +1,4 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -214,7 +214,7 @@ namespace Playwright_POC.Helpers
 
             if (await button.CountAsync() > 0 && await button.First.IsVisibleAsync())
             {
-                await Expect(button.First).ToBeEnabledAsync(new() { Timeout = timeoutMs});
+                await Expect(button.First).ToBeEnabledAsync(new() { Timeout = timeoutMs });
                 await button.First.ScrollIntoViewIfNeededAsync();
                 await button.First.ClickAsync(new() { Timeout = timeoutMs });
                 return;
@@ -227,9 +227,9 @@ namespace Playwright_POC.Helpers
                 System.Console.WriteLine($"[SelectButton] '{target}' not found as a chip and 'More Options' is not visible — skipping selection.");
                 return;
             }
-            await Expect(moreOptionsButton).ToBeEnabledAsync(new() { Timeout = timeoutMs});
+            await Expect(moreOptionsButton).ToBeEnabledAsync(new() { Timeout = timeoutMs });
             await moreOptionsButton.ScrollIntoViewIfNeededAsync();
-            await moreOptionsButton.ClickAsync(new() { Timeout = timeoutMs});
+            await moreOptionsButton.ClickAsync(new() { Timeout = timeoutMs });
 
             var menuPanel = page.Locator(".cdk-overlay-pane .mat-menu-panel, .cdk-overlay-pane .mat-mdc-menu-panel").Last;
             await Expect(menuPanel).ToBeVisibleAsync(new() { Timeout = timeoutMs });
@@ -237,7 +237,7 @@ namespace Playwright_POC.Helpers
             var menuItem = menuPanel.GetByRole(AriaRole.Menuitem, new LocatorGetByRoleOptions { Name = target, Exact = true });
 
             await Expect(menuItem.First).ToBeVisibleAsync(new() { Timeout = timeoutMs });
-            await menuItem.First.ClickAsync(new() { Timeout= timeoutMs });
+            await menuItem.First.ClickAsync(new() { Timeout = timeoutMs });
 
             await Expect(menuPanel).ToBeHiddenAsync(new() { Timeout = timeoutMs });
 

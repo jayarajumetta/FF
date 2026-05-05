@@ -1,4 +1,4 @@
-﻿// Pages/PreQualificationPage.cs
+// Pages/PreQualificationPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
@@ -87,7 +87,7 @@ namespace Playwright_POC.Pages
             await _page.WaitForTimeoutAsync(2000);
             await SearchAddClassCodeButton.ClickAsync();
             await _page.WaitForTimeoutAsync(2000);
-            
+
             if (contextData.ClassCodeNumber == null)
             {
                 await ClassCodeSearchInput.FillAsync(contextData.ClassDescription);

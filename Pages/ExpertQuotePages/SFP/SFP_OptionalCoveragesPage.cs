@@ -7,19 +7,19 @@ namespace Playwright_POC.Pages
         public SFP_OptionalCoveragesPage(IPage page) : base(page) { }
 
         // Farm and Business Income Coverage
-        public ILocator FarmBusinessIncomeCoverageCheckbox => 
+        public ILocator FarmBusinessIncomeCoverageCheckbox =>
             _page.GetByTestId("fields.line.lineCoverages$isAnyFarmAndBusinessIncome.value");
 
-        public ILocator LimitInput => 
+        public ILocator LimitInput =>
             _page.GetByTestId("fields.line.covFarmBusinessIncome.covFarmBusinessIncomeInput$limit.value");
 
-        public ILocator BusinessDescriptionInput => 
+        public ILocator BusinessDescriptionInput =>
             _page.GetByTestId("fields.line.covFarmBusinessIncome.covFarmBusinessIncomeInput$businessDescription.value");
 
-        public ILocator LeasedBuildingsNoButton => 
+        public ILocator LeasedBuildingsNoButton =>
             _page.GetByTestId("fields.line.covFarmBusinessIncome.lineCoverages$isAnyFBILeasedBuildings.value-0");
 
-        public ILocator LeasedBuildingsYesButton => 
+        public ILocator LeasedBuildingsYesButton =>
             _page.GetByTestId("fields.line.covFarmBusinessIncome.lineCoverages$isAnyFBILeasedBuildings.value-1");
 
         // Unscheduled Buildings (row-based)
@@ -50,7 +50,7 @@ namespace Playwright_POC.Pages
         public ILocator DescriptionCodeSelect(int row = 0) =>
             _page.GetByTestId($"fields.line.covFarmBusinessIncome.farmBusinessUnschedBuildings.rows[{row}].farmBusinessUnschedBuildingsInput$descriptionCode.value");
 
-        public ILocator AddLeasedBuildingButton => 
+        public ILocator AddLeasedBuildingButton =>
             _page.GetByTestId("fields.line.covFarmBusinessIncome.farmBusinessUnschedBuildings.addLeasedBuilding");
 
         // Navigation

@@ -1,4 +1,4 @@
-﻿// Pages/BillingPage.cs
+// Pages/BillingPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;

@@ -1,4 +1,4 @@
-﻿// Pages/AccountOwnerInfoPage.cs
+// Pages/AccountOwnerInfoPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Globalization;

@@ -1,4 +1,4 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using Newtonsoft.Json;
 using Playwright_POC.Configuration;
 using System;

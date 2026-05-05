@@ -67,13 +67,13 @@ namespace Playwright_POC.Tools.ExcelInspector
             Console.WriteLine("Reading workbook...");
             var snapshot = ExcelToJsonConverter.Convert(excelPath);
 
-            int totalRows  = 0;
+            int totalRows = 0;
             int totalSheets = 0;
 
             foreach (var (sheetName, rows) in snapshot.Sheets)
             {
                 Console.WriteLine($"  Sheet: \"{sheetName}\" — {rows.Count} rows");
-                totalRows  += rows.Count;
+                totalRows += rows.Count;
                 totalSheets++;
             }
 
@@ -83,17 +83,17 @@ namespace Playwright_POC.Tools.ExcelInspector
             // ── Write JSON ───────────────────────────────────────────────────
             var jsonOptions = new JsonSerializerOptions
             {
-                WriteIndented        = true,
+                WriteIndented = true,
                 DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-                Encoder              = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             };
 
             // Map to the exact output shape: _source, _generatedOn, Sheets
             var outputDoc = new
             {
-                _source      = snapshot.Source,
+                _source = snapshot.Source,
                 _generatedOn = snapshot.GeneratedOn,
-                Sheets       = snapshot.Sheets
+                Sheets = snapshot.Sheets
             };
 
             var json = JsonSerializer.Serialize(outputDoc, jsonOptions);

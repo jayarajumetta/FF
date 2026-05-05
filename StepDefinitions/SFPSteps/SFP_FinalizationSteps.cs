@@ -161,7 +161,7 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             var pricingPage = new SFP_PricingPage(_context.Page);
             await pricingPage.WaitForSpinnerAsync();
-            
+
             // Check if either the Quote Link or View Full Details is visible (indicating pricing loaded)
             var quoteLink = pricingPage.QuoteLink;
             var viewToggle = pricingPage.ViewFullDetailsToggle;
@@ -228,138 +228,138 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
 
             if (hasBillingForm)
             {
-            if (_contextData.PrimaryPayer?.ToLower() == "primary insured")
-            {
-                await billingPage.CreateNewBillingAccountButton.ClickAsync();
-                await billingPage.WaitForSpinnerAsync();
-                await billingPage.PrimaryPayerPrimaryInsuredButton.ClickAsync();
-            }
-            else
-            {
-                await billingPage.CreateNewBillingAccountButton.ClickAsync();
-                await billingPage.WaitForSpinnerAsync();
-                await billingPage.PrimaryPayerOtherButton.ClickAsync();
-            }
-            await billingPage.WaitForSpinnerAsync();
-
-            // ── Step 2: Future Payment Plan – Payment Type ────────────────────
-            var isEasyPay = string.Equals(
-                (_contextData.PaymentType ?? "").Replace(" ", ""), "easypay",
-                StringComparison.OrdinalIgnoreCase);
-
-            if (isEasyPay)
-                await billingPage.PaymentTypeEasyPayButton.ClickAsync();
-            else
-                await billingPage.PaymentTypeDirectBillButton.ClickAsync();
-            await billingPage.WaitForSpinnerAsync();
-
-            // ── Step 3: EasyPay bank account details ──────────────────────────
-            if (isEasyPay)
-            {
-                // New Account
-                await billingPage.FutureBankAccountCreateNewButton.ClickAsync();
-                await billingPage.WaitForSpinnerAsync();
-
-                // Personal use
-                await billingPage.FutureBankAccountUsePersonalButton.ClickAsync();
-                await billingPage.WaitForSpinnerAsync();
-
-                // Checking type
-                await billingPage.FutureBankAccountTypeCheckingButton.ClickAsync();
-                await billingPage.WaitForSpinnerAsync();
-
-                // Bank Account Owner = Policy Owner (first chip)
-                await billingPage.FutureBankAccountOwnerPrimaryButton.ClickAsync();
-                await billingPage.WaitForSpinnerAsync();
-
-                // Bank details
-                var routing = !string.IsNullOrWhiteSpace(_contextData.RoutingNumber)
-                    ? _contextData.RoutingNumber
-                    : "021000021";
-                var account = !string.IsNullOrWhiteSpace(_contextData.AccountNumber)
-                    ? _contextData.AccountNumber
-                    : Random.Shared.Next(100000000, 999999999).ToString();
-                var bankName = !string.IsNullOrWhiteSpace(_contextData.BankName)
-                    ? _contextData.BankName
-                    : "Test Bank";
-
-                await billingPage.FutureBankRoutingNumberInput.FillAsync(routing);
-                await billingPage.FutureBankAccountNumberInput.FillAsync(account);
-                await billingPage.FutureNameOfBankInput.FillAsync(bankName);
-                await billingPage.WaitForSpinnerAsync();
-            }
-
-            // ── Step 4: Payment Plan ──────────────────────────────────────────
-            switch (_contextData.PaymentPlan?.ToLower())
-            {
-                case "1 payment":
-                    await billingPage.PaymentPlan1PaymentButton.ClickAsync();
-                    break;
-                case "2 payments":
-                    await billingPage.PaymentPlan2PaymentsButton.ClickAsync();
-                    break;
-                case "4 payments":
-                    await billingPage.PaymentPlan4PaymentsButton.ClickAsync();
-                    break;
-                case "12 payments":
-                    await billingPage.PaymentPlan12PaymentsButton.ClickAsync();
-                    break;
-                default:
-                    await billingPage.PaymentPlan1PaymentButton.ClickAsync();
-                    break;
-            }
-            await billingPage.WaitForSpinnerAsync();
-
-            // ── Step 5: Payment Due Date ──────────────────────────────────────
-            if (!string.IsNullOrWhiteSpace(_contextData.PaymentDueDate))
-            {
-                await billingPage.PaymentDueDateInput.FillAsync(_contextData.PaymentDueDate);
-                await billingPage.WaitForSpinnerAsync();
-            }
-
-            // ── Step 6: Initial Payment – Amount ──────────────────────────────
-            switch (_contextData.PaymentAmount?.ToLower())
-            {
-                case "minimum due":
-                case "minimum":
-                    await billingPage.PaymentAmountMinimumButton.ClickAsync();
-                    break;
-                case "full balance":
-                case "full":
-                    await billingPage.PaymentAmountFullBalanceButton.ClickAsync();
-                    break;
-                case "custom":
-                    await billingPage.PaymentAmountCustomButton.ClickAsync();
-                    break;
-                default:
-                    await billingPage.PaymentAmountMinimumButton.ClickAsync();
-                    break;
-            }
-            await billingPage.WaitForSpinnerAsync();
-
-            // ── Step 7: Initial Payment – Payment Method ──────────────────────
-            switch (_contextData.PaymentMethod?.ToLower())
-            {
-                case "quickpay":
-                case "quick pay":
-                    await billingPage.InitialPaymentMethodQuickPayButton.ClickAsync();
-                    break;
-                case "check":
-                    await billingPage.InitialPaymentMethodCheckButton.ClickAsync();
+                if (_contextData.PrimaryPayer?.ToLower() == "primary insured")
+                {
+                    await billingPage.CreateNewBillingAccountButton.ClickAsync();
                     await billingPage.WaitForSpinnerAsync();
-                    var checkNum = !string.IsNullOrWhiteSpace(_contextData.CheckNumber)
-                        ? _contextData.CheckNumber
-                        : Random.Shared.Next(1000, 99999).ToString();
-                    await billingPage.InitialCheckNumberInput.FillAsync(checkNum);
-                    break;
-                case "credit card":
-                    await billingPage.InitialPaymentMethodCreditCardButton.ClickAsync();
-                    break;
-                default:
-                    await billingPage.InitialPaymentMethodCheckButton.ClickAsync();
-                    break;
-            }
-            await billingPage.WaitForSpinnerAsync();
+                    await billingPage.PrimaryPayerPrimaryInsuredButton.ClickAsync();
+                }
+                else
+                {
+                    await billingPage.CreateNewBillingAccountButton.ClickAsync();
+                    await billingPage.WaitForSpinnerAsync();
+                    await billingPage.PrimaryPayerOtherButton.ClickAsync();
+                }
+                await billingPage.WaitForSpinnerAsync();
+
+                // ── Step 2: Future Payment Plan – Payment Type ────────────────────
+                var isEasyPay = string.Equals(
+                    (_contextData.PaymentType ?? "").Replace(" ", ""), "easypay",
+                    StringComparison.OrdinalIgnoreCase);
+
+                if (isEasyPay)
+                    await billingPage.PaymentTypeEasyPayButton.ClickAsync();
+                else
+                    await billingPage.PaymentTypeDirectBillButton.ClickAsync();
+                await billingPage.WaitForSpinnerAsync();
+
+                // ── Step 3: EasyPay bank account details ──────────────────────────
+                if (isEasyPay)
+                {
+                    // New Account
+                    await billingPage.FutureBankAccountCreateNewButton.ClickAsync();
+                    await billingPage.WaitForSpinnerAsync();
+
+                    // Personal use
+                    await billingPage.FutureBankAccountUsePersonalButton.ClickAsync();
+                    await billingPage.WaitForSpinnerAsync();
+
+                    // Checking type
+                    await billingPage.FutureBankAccountTypeCheckingButton.ClickAsync();
+                    await billingPage.WaitForSpinnerAsync();
+
+                    // Bank Account Owner = Policy Owner (first chip)
+                    await billingPage.FutureBankAccountOwnerPrimaryButton.ClickAsync();
+                    await billingPage.WaitForSpinnerAsync();
+
+                    // Bank details
+                    var routing = !string.IsNullOrWhiteSpace(_contextData.RoutingNumber)
+                        ? _contextData.RoutingNumber
+                        : "021000021";
+                    var account = !string.IsNullOrWhiteSpace(_contextData.AccountNumber)
+                        ? _contextData.AccountNumber
+                        : Random.Shared.Next(100000000, 999999999).ToString();
+                    var bankName = !string.IsNullOrWhiteSpace(_contextData.BankName)
+                        ? _contextData.BankName
+                        : "Test Bank";
+
+                    await billingPage.FutureBankRoutingNumberInput.FillAsync(routing);
+                    await billingPage.FutureBankAccountNumberInput.FillAsync(account);
+                    await billingPage.FutureNameOfBankInput.FillAsync(bankName);
+                    await billingPage.WaitForSpinnerAsync();
+                }
+
+                // ── Step 4: Payment Plan ──────────────────────────────────────────
+                switch (_contextData.PaymentPlan?.ToLower())
+                {
+                    case "1 payment":
+                        await billingPage.PaymentPlan1PaymentButton.ClickAsync();
+                        break;
+                    case "2 payments":
+                        await billingPage.PaymentPlan2PaymentsButton.ClickAsync();
+                        break;
+                    case "4 payments":
+                        await billingPage.PaymentPlan4PaymentsButton.ClickAsync();
+                        break;
+                    case "12 payments":
+                        await billingPage.PaymentPlan12PaymentsButton.ClickAsync();
+                        break;
+                    default:
+                        await billingPage.PaymentPlan1PaymentButton.ClickAsync();
+                        break;
+                }
+                await billingPage.WaitForSpinnerAsync();
+
+                // ── Step 5: Payment Due Date ──────────────────────────────────────
+                if (!string.IsNullOrWhiteSpace(_contextData.PaymentDueDate))
+                {
+                    await billingPage.PaymentDueDateInput.FillAsync(_contextData.PaymentDueDate);
+                    await billingPage.WaitForSpinnerAsync();
+                }
+
+                // ── Step 6: Initial Payment – Amount ──────────────────────────────
+                switch (_contextData.PaymentAmount?.ToLower())
+                {
+                    case "minimum due":
+                    case "minimum":
+                        await billingPage.PaymentAmountMinimumButton.ClickAsync();
+                        break;
+                    case "full balance":
+                    case "full":
+                        await billingPage.PaymentAmountFullBalanceButton.ClickAsync();
+                        break;
+                    case "custom":
+                        await billingPage.PaymentAmountCustomButton.ClickAsync();
+                        break;
+                    default:
+                        await billingPage.PaymentAmountMinimumButton.ClickAsync();
+                        break;
+                }
+                await billingPage.WaitForSpinnerAsync();
+
+                // ── Step 7: Initial Payment – Payment Method ──────────────────────
+                switch (_contextData.PaymentMethod?.ToLower())
+                {
+                    case "quickpay":
+                    case "quick pay":
+                        await billingPage.InitialPaymentMethodQuickPayButton.ClickAsync();
+                        break;
+                    case "check":
+                        await billingPage.InitialPaymentMethodCheckButton.ClickAsync();
+                        await billingPage.WaitForSpinnerAsync();
+                        var checkNum = !string.IsNullOrWhiteSpace(_contextData.CheckNumber)
+                            ? _contextData.CheckNumber
+                            : Random.Shared.Next(1000, 99999).ToString();
+                        await billingPage.InitialCheckNumberInput.FillAsync(checkNum);
+                        break;
+                    case "credit card":
+                        await billingPage.InitialPaymentMethodCreditCardButton.ClickAsync();
+                        break;
+                    default:
+                        await billingPage.InitialPaymentMethodCheckButton.ClickAsync();
+                        break;
+                }
+                await billingPage.WaitForSpinnerAsync();
             } // end if (hasBillingForm)
             else
             {
@@ -682,33 +682,33 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         private static string GetStateAbbreviation(string fullName) =>
             fullName?.ToUpperInvariant() switch
             {
-                "ALABAMA"        => "AL",
-                "ARKANSAS"       => "AR",
-                "ARIZONA"        => "AZ",
-                "COLORADO"       => "CO",
-                "IDAHO"          => "ID",
-                "IOWA"           => "IA",
-                "INDIANA"        => "IN",
-                "ILLINOIS"       => "IL",
-                "KANSAS"         => "KS",
-                "KENTUCKY"       => "KY",
-                "LOUISIANA"      => "LA",
-                "MINNESOTA"      => "MN",
-                "MONTANA"        => "MT",
-                "NEW MEXICO"     => "NM",
-                "NEBRASKA"       => "NE",
-                "NEVADA"         => "NV",
-                "NORTH DAKOTA"   => "ND",
-                "OKLAHOMA"       => "OK",
-                "OREGON"         => "OR",
+                "ALABAMA" => "AL",
+                "ARKANSAS" => "AR",
+                "ARIZONA" => "AZ",
+                "COLORADO" => "CO",
+                "IDAHO" => "ID",
+                "IOWA" => "IA",
+                "INDIANA" => "IN",
+                "ILLINOIS" => "IL",
+                "KANSAS" => "KS",
+                "KENTUCKY" => "KY",
+                "LOUISIANA" => "LA",
+                "MINNESOTA" => "MN",
+                "MONTANA" => "MT",
+                "NEW MEXICO" => "NM",
+                "NEBRASKA" => "NE",
+                "NEVADA" => "NV",
+                "NORTH DAKOTA" => "ND",
+                "OKLAHOMA" => "OK",
+                "OREGON" => "OR",
                 "SOUTH CAROLINA" => "SC",
-                "SOUTH DAKOTA"   => "SD",
-                "TENNESSEE"      => "TN",
-                "TEXAS"          => "TX",
-                "UTAH"           => "UT",
-                "WASHINGTON"     => "WA",
-                "WISCONSIN"      => "WI",
-                "WYOMING"        => "WY",
+                "SOUTH DAKOTA" => "SD",
+                "TENNESSEE" => "TN",
+                "TEXAS" => "TX",
+                "UTAH" => "UT",
+                "WASHINGTON" => "WA",
+                "WISCONSIN" => "WI",
+                "WYOMING" => "WY",
                 _ => fullName?.Length >= 2 ? fullName[..2].ToUpperInvariant() : "UNKNOWN"
             };
     }

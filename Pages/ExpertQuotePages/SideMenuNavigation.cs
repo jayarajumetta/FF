@@ -1,4 +1,4 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using System.Threading.Tasks;
 using Playwright_POC.Helpers;
 using Playwright_POC.Pages;
@@ -19,32 +19,32 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         // NavItem() matches whichever attribute is present so locators survive the transition.
         private ILocator NavItem(string name) => _page.Locator($"[data-testid='{name}'], #{name}");
 
-        private ILocator ClientNav                    => NavItem("client-info-nav");
-        private ILocator AccountDetailsNav            => NavItem("accountInfoPage-nav");
-        private ILocator ProposalStartNav             => NavItem("proposalStart-nav");
-        private ILocator SfpNav                       => NavItem("cl-sfp-nav");
-        private ILocator PolicyDetailsNav             => NavItem("PolicyDetails-nav");
-        private ILocator PreQualificationNav          => NavItem("PreQualification-nav");
-        private ILocator PrimaryInsuredDetailsNav     => NavItem("BusinessDetails-nav");
-        private ILocator ClaimsPriorInsuranceNav      => NavItem("ClaimsPriorInsurance-nav");
-        private ILocator AddClaimNav                  => NavItem("AddClaim-nav");
-        private ILocator ClientDetailsNav             => NavItem("ClientDetails-nav");
-        private ILocator NarrativeNav                 => NavItem("Narrative-nav");
-        private ILocator PolicyCoveragesNav           => NavItem("PolicyCoverages-nav");
-        private ILocator LocationsBuildingsNav        => NavItem("AddEditLocation-nav");
-        private ILocator OptionalCoveragesNav         => NavItem("OptionalCoverages-nav");
-        private ILocator FarmPersonalPropertyNav      => NavItem("FarmPersonalProperty-nav");
+        private ILocator ClientNav => NavItem("client-info-nav");
+        private ILocator AccountDetailsNav => NavItem("accountInfoPage-nav");
+        private ILocator ProposalStartNav => NavItem("proposalStart-nav");
+        private ILocator SfpNav => NavItem("cl-sfp-nav");
+        private ILocator PolicyDetailsNav => NavItem("PolicyDetails-nav");
+        private ILocator PreQualificationNav => NavItem("PreQualification-nav");
+        private ILocator PrimaryInsuredDetailsNav => NavItem("BusinessDetails-nav");
+        private ILocator ClaimsPriorInsuranceNav => NavItem("ClaimsPriorInsurance-nav");
+        private ILocator AddClaimNav => NavItem("AddClaim-nav");
+        private ILocator ClientDetailsNav => NavItem("ClientDetails-nav");
+        private ILocator NarrativeNav => NavItem("Narrative-nav");
+        private ILocator PolicyCoveragesNav => NavItem("PolicyCoverages-nav");
+        private ILocator LocationsBuildingsNav => NavItem("AddEditLocation-nav");
+        private ILocator OptionalCoveragesNav => NavItem("OptionalCoverages-nav");
+        private ILocator FarmPersonalPropertyNav => NavItem("FarmPersonalProperty-nav");
         private ILocator ScheduledPersonalPropertyNav => NavItem("ScheduledPersonalProperty-nav");
-        private ILocator LiabilityNav                 => NavItem("Liability-nav");
-        private ILocator MortgageeLossPayeeNav        => NavItem("AdditionalInterests-nav");
-        private ILocator InsuranceScoreNav            => NavItem("InsuranceDesignee-nav");
-        private ILocator PricingNav                   => NavItem("Pricing-nav");
-        private ILocator BillingNav                   => NavItem("Billing-nav");
-        private ILocator SubmissionNav                => NavItem("Submission-nav");
+        private ILocator LiabilityNav => NavItem("Liability-nav");
+        private ILocator MortgageeLossPayeeNav => NavItem("AdditionalInterests-nav");
+        private ILocator InsuranceScoreNav => NavItem("InsuranceDesignee-nav");
+        private ILocator PricingNav => NavItem("Pricing-nav");
+        private ILocator BillingNav => NavItem("Billing-nav");
+        private ILocator SubmissionNav => NavItem("Submission-nav");
         #endregion
 
         #region Navigation Methods
-        
+
         /// <summary>
         /// Helper method to safely navigate to a menu item, waiting for it to be visible first.
         /// </summary>
@@ -84,7 +84,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages
 
             await WaitForSpinnerAsync();
         }
-        
+
         public async Task GoToClientAsync() { await NavigateToAsync(ClientNav); }
         public async Task GoToAccountDetailsAsync() { await NavigateToAsync(AccountDetailsNav); }
         public async Task GoToProposalStartAsync() { await NavigateToAsync(ProposalStartNav); }
@@ -115,31 +115,31 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         public Task GoToByNameAsync(string name) =>
             name.Trim().ToLowerInvariant() switch
             {
-                "client" or "client info"                                    => GoToClientAsync(),
-                "account" or "account details"                               => GoToAccountDetailsAsync(),
-                "proposal" or "proposal start"                               => GoToProposalStartAsync(),
-                "sfp" or "special farm package"                              => GoToSfpAsync(),
-                "policy details" or "policy"                                 => GoToPolicyDetailsAsync(),
-                "pre-qualification" or "prequalification"                    => GoToPreQualificationAsync(),
-                "primary insured" or "business details"                      => GoToPrimaryInsuredDetailsAsync(),
+                "client" or "client info" => GoToClientAsync(),
+                "account" or "account details" => GoToAccountDetailsAsync(),
+                "proposal" or "proposal start" => GoToProposalStartAsync(),
+                "sfp" or "special farm package" => GoToSfpAsync(),
+                "policy details" or "policy" => GoToPolicyDetailsAsync(),
+                "pre-qualification" or "prequalification" => GoToPreQualificationAsync(),
+                "primary insured" or "business details" => GoToPrimaryInsuredDetailsAsync(),
                 "claims" or "claims & prior insurance"
-                    or "claims and prior insurance"                           => GoToClaimsPriorInsuranceAsync(),
-                "add claim"                                                   => GoToAddClaimAsync(),
-                "client details"                                             => GoToClientDetailsAsync(),
-                "narrative"                                                   => GoToNarrativeAsync(),
-                "policy coverages" or "coverages"                            => GoToPolicyCoveragesAsync(),
+                    or "claims and prior insurance" => GoToClaimsPriorInsuranceAsync(),
+                "add claim" => GoToAddClaimAsync(),
+                "client details" => GoToClientDetailsAsync(),
+                "narrative" => GoToNarrativeAsync(),
+                "policy coverages" or "coverages" => GoToPolicyCoveragesAsync(),
                 "locations" or "locations & buildings"
-                    or "locations and buildings"                              => GoToLocationsBuildingsAsync(),
-                "optional coverages" or "optional"                           => GoToOptionalCoveragesAsync(),
-                "farm personal property" or "farm property"                  => GoToFarmPersonalPropertyAsync(),
-                "scheduled personal property" or "scheduled"                 => GoToScheduledPersonalPropertyAsync(),
-                "liability"                                                   => GoToLiabilityAsync(),
+                    or "locations and buildings" => GoToLocationsBuildingsAsync(),
+                "optional coverages" or "optional" => GoToOptionalCoveragesAsync(),
+                "farm personal property" or "farm property" => GoToFarmPersonalPropertyAsync(),
+                "scheduled personal property" or "scheduled" => GoToScheduledPersonalPropertyAsync(),
+                "liability" => GoToLiabilityAsync(),
                 "mortgagee" or "additional interests"
-                    or "mortgagee & loss payee"                               => GoToMortgageeLossPayeeAsync(),
-                "insurance score" or "insurance designee"                    => GoToInsuranceScoreAsync(),
-                "pricing"                                                     => GoToPricingAsync(),
-                "billing"                                                     => GoToBillingAsync(),
-                "submission"                                                  => GoToSubmissionAsync(),
+                    or "mortgagee & loss payee" => GoToMortgageeLossPayeeAsync(),
+                "insurance score" or "insurance designee" => GoToInsuranceScoreAsync(),
+                "pricing" => GoToPricingAsync(),
+                "billing" => GoToBillingAsync(),
+                "submission" => GoToSubmissionAsync(),
                 _ => throw new ArgumentException(
                     $"Unknown nav menu item: '{name}'. Check SideMenuNavigation.GoToByNameAsync for valid names.")
             };

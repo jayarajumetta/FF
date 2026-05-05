@@ -227,7 +227,7 @@ namespace Playwright_POC.Tools.LocatorScan
                 var memberName = m.Groups[1].Value;
                 var selectorValue = m.Groups[2].Value;
                 var cls = ClassAt(m.Index);
-                
+
                 // Determine strategy from selector prefix
                 var strategy = "css";
                 var cleanSelector = selectorValue;
@@ -241,7 +241,7 @@ namespace Playwright_POC.Tools.LocatorScan
                     strategy = "css";
                     cleanSelector = selectorValue.Substring(4);
                 }
-                
+
                 results.Add(new ExistingLocator
                 {
                     Strategy = strategy,
@@ -260,7 +260,7 @@ namespace Playwright_POC.Tools.LocatorScan
             {
                 var memberName = m.Groups[1].Value;
                 var cls = ClassAt(m.Index);
-                
+
                 results.Add(new ExistingLocator
                 {
                     Strategy = "factory",

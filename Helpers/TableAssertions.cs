@@ -1,4 +1,4 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

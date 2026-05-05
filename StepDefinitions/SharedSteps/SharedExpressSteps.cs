@@ -1,4 +1,4 @@
-﻿
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 using Playwright_POC.Configuration;
@@ -31,12 +31,12 @@ public class SharedExpressSteps
         _contextData = contextData;
     }
 
-    
+
     [StepDefinition("user enters QAExpress credentials and Clicks LogIn")]
     public async Task EnterQAExpressCredentialsAndLogin()
     {
         var expressUrl = _configuration["Playwright:QAExpress"];
-        await _context.Page.GotoAsync(expressUrl, new() {  WaitUntil = WaitUntilState.NetworkIdle});
+        await _context.Page.GotoAsync(expressUrl, new() { WaitUntil = WaitUntilState.NetworkIdle });
 
         var loginPage = new ExpressLoginPage(_context.Page);
         string username = _expressCreds.Username;
@@ -46,7 +46,7 @@ public class SharedExpressSteps
 
         _contextData.QuoteNumber = System.IO.File.ReadAllText("QuoteNumber.txt");
         Console.WriteLine($"Quote Number: {_contextData.QuoteNumber}");
-        
+
         // Use Playwright Expect for visibility assertion with auto-retry
         await Expect(loginPage.DefaultViewModelElement).ToBeVisibleAsync();
     }
@@ -55,7 +55,7 @@ public class SharedExpressSteps
     {
         TableMappingHelpers.SearchExpress(table, _contextData);
         var searchType = _contextData.SearchType;
-        var quoteNumber = _contextData.QuoteNumber; 
+        var quoteNumber = _contextData.QuoteNumber;
         var home = new ExpressHomePage(_context.Page);
         Console.WriteLine($"Search Type: {searchType}, Quote Number: {quoteNumber}");
         await home.SelectSearchTypeAsync(searchType);

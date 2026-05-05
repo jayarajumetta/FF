@@ -11,8 +11,8 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
     /// </summary>
     public class ParsedFormRow
     {
-        public string FormNumber  { get; set; } = "";
-        public string Section     { get; set; } = "BASE";  // BASE / BASIC / CE
+        public string FormNumber { get; set; } = "";
+        public string Section { get; set; } = "BASE";  // BASE / BASIC / CE
 
         /// <summary>State abbreviation → status (YM / YS / YU / N)</summary>
         public Dictionary<string, string> StateValues { get; set; }
@@ -45,28 +45,28 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
         public Dictionary<string, string> SheetToSection { get; set; }
             = new(StringComparer.OrdinalIgnoreCase)
             {
-                ["Division 0"]   = "BASE",
-                ["Div 0"]        = "BASE",
-                ["Base"]         = "BASE",
-                ["Division I"]   = "BASE",
-                ["Division 1"]   = "BASE",
-                ["Division II"]  = "BASIC",
-                ["Division 2"]   = "BASIC",
+                ["Division 0"] = "BASE",
+                ["Div 0"] = "BASE",
+                ["Base"] = "BASE",
+                ["Division I"] = "BASE",
+                ["Division 1"] = "BASE",
+                ["Division II"] = "BASIC",
+                ["Division 2"] = "BASIC",
                 ["Division III"] = "BASIC",
-                ["Division 3"]   = "BASIC",
-                ["Division IV"]  = "BASIC",
-                ["Division 4"]   = "BASIC",
-                ["Division V"]   = "BASIC",
-                ["Division 5"]   = "BASIC",
-                ["Division VI"]  = "BASIC",
-                ["Division 6"]   = "BASIC",
+                ["Division 3"] = "BASIC",
+                ["Division IV"] = "BASIC",
+                ["Division 4"] = "BASIC",
+                ["Division V"] = "BASIC",
+                ["Division 5"] = "BASIC",
+                ["Division VI"] = "BASIC",
+                ["Division 6"] = "BASIC",
                 ["Division VII"] = "BASIC",
-                ["Division 7"]   = "BASIC",
-                ["X-Form"]       = "BASIC",
-                ["T-Notice"]     = "BASE",
+                ["Division 7"] = "BASIC",
+                ["X-Form"] = "BASIC",
+                ["T-Notice"] = "BASE",
                 // NOTE: do NOT add a bare "CE" key — it substring-matches "T-Notices"
                 ["Country Estate"] = "CE",
-                ["Country"]        = "CE",
+                ["Country"] = "CE",
             };
 
         /// <summary>Fallback section when a sheet name doesn't match any entry above.</summary>
@@ -105,9 +105,9 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
 
         public List<ParsedFormRow> Parse(string excelPath, ParserOptions options)
         {
-            var allRows  = new List<ParsedFormRow>();
+            var allRows = new List<ParsedFormRow>();
             var stateSet = new HashSet<string>(options.SupportedStates, StringComparer.OrdinalIgnoreCase);
-            var seen     = new HashSet<string>(StringComparer.OrdinalIgnoreCase); // dedup form numbers
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase); // dedup form numbers
 
             using var workbook = new XLWorkbook(excelPath);
 
@@ -138,20 +138,20 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
 
                 // ── Locate the header row (first row that has ≥3 state-abbrev columns) ──
                 int headerRowIndex = -1;
-                int formColNum     = -1;
-                int typeColNum     = -1;
-                var stateColumns   = new Dictionary<int, string>(); // columnNumber → stateAbbrev
+                int formColNum = -1;
+                int typeColNum = -1;
+                var stateColumns = new Dictionary<int, string>(); // columnNumber → stateAbbrev
 
                 for (int ri = 0; ri < Math.Min(dataRows.Count, 15); ri++)
                 {
-                    var candidate     = dataRows[ri];
-                    var statesFound   = new Dictionary<int, string>();
-                    int formFound     = -1;
-                    int typeFound     = -1;
+                    var candidate = dataRows[ri];
+                    var statesFound = new Dictionary<int, string>();
+                    int formFound = -1;
+                    int typeFound = -1;
 
                     foreach (var cell in candidate.CellsUsed())
                     {
-                        var text   = GetCellText(cell);
+                        var text = GetCellText(cell);
                         var colNum = cell.Address.ColumnNumber;
 
                         if (stateSet.Contains(text))
@@ -167,13 +167,13 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
                     if (statesFound.Count >= 3)
                     {
                         headerRowIndex = ri;
-                        stateColumns   = statesFound;
-                        formColNum     = formFound;
-                        typeColNum     = typeFound;
+                        stateColumns = statesFound;
+                        formColNum = formFound;
+                        typeColNum = typeFound;
 
                         Console.WriteLine($"    Header at row {candidate.RowNumber()}: " +
-                            $"FormCol={( formColNum > 0 ? formColNum.ToString() : "auto-detect" )}, " +
-                            $"TypeCol={( typeColNum > 0 ? typeColNum.ToString() : "none" )}, " +
+                            $"FormCol={(formColNum > 0 ? formColNum.ToString() : "auto-detect")}, " +
+                            $"TypeCol={(typeColNum > 0 ? typeColNum.ToString() : "none")}, " +
                             $"States=[{string.Join(",", statesFound.Values.OrderBy(s => s))}]");
                         break;
                     }
@@ -218,9 +218,9 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
                         var raw = GetCellText(row.Cell(colNum)).ToUpperInvariant();
                         stateValues[stateAbbv] = raw switch
                         {
-                            "Y"                  => "YM",
+                            "Y" => "YM",
                             "YM" or "YS" or "YU" => raw,
-                            _                    => "N"
+                            _ => "N"
                         };
                     }
 
@@ -230,8 +230,8 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
 
                     allRows.Add(new ParsedFormRow
                     {
-                        FormNumber  = formNumber.ToUpperInvariant(),
-                        Section     = section,
+                        FormNumber = formNumber.ToUpperInvariant(),
+                        Section = section,
                         StateValues = stateValues
                     });
                     rowsParsed++;
@@ -304,10 +304,10 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
 
         private static string NormalizeSection(string raw, string fallback) => raw switch
         {
-            "BASE"  => "BASE",
+            "BASE" => "BASE",
             "BASIC" => "BASIC",
-            "CE"    => "CE",
-            _       => fallback
+            "CE" => "CE",
+            _ => fallback
         };
 
         // ── Common Forms (multi-LOB file) ─────────────────────────────────────────
@@ -323,8 +323,8 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
         public List<ParsedFormRow> ParseCommonForms(string excelPath, string lob, ParserOptions options)
         {
             var stateSet = new HashSet<string>(options.SupportedStates, StringComparer.OrdinalIgnoreCase);
-            var allRows  = new List<ParsedFormRow>();
-            var seen     = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var allRows = new List<ParsedFormRow>();
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             var gapLabel = $"{lob} GAP";
 
             using var workbook = new XLWorkbook(excelPath);
@@ -338,9 +338,9 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
             var lastCol = sheet.RangeUsed()?.LastCell().Address.ColumnNumber ?? 0;
 
             // ── Row 1: find the single LOB column and the "{LOB} GAP" group ──────
-            int lobCol   = -1;
+            int lobCol = -1;
             int gapStart = -1;
-            int gapEnd   = lastCol;
+            int gapEnd = lastCol;
 
             for (int c = 1; c <= lastCol; c++)
             {
@@ -433,8 +433,8 @@ namespace Playwright_POC.Tools.FormsBaselineGenerator
 
                 allRows.Add(new ParsedFormRow
                 {
-                    FormNumber  = fn,
-                    Section     = "BASE",
+                    FormNumber = fn,
+                    Section = "BASE",
                     StateValues = stateValues
                 });
                 rowsParsed++;
