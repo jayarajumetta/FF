@@ -1,0 +1,10 @@
+{
+  "name": "add-step-definition",
+  "version": "0.1.0",
+  "description": "Scaffold a new Reqnroll step definition class for this framework, with correct Binding attribute, constructor injection of ScenarioContextData and page objects, and TableMappingHelpers usage.",
+  "author": {
+    "name": "TODO",
+    "email": "TODO"
+  },
+  "skills": "./skills/"
+}

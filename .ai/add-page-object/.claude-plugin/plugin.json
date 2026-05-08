@@ -1,0 +1,10 @@
+{
+  "name": "add-page-object",
+  "version": "0.1.0",
+  "description": "Scaffold a new Playwright page object for this framework, following the BasePage inheritance pattern, async method conventions, and DI singleton registration.",
+  "author": {
+    "name": "TODO",
+    "email": "TODO"
+  },
+  "skills": "./skills/"
+}

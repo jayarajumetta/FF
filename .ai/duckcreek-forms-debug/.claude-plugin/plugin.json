@@ -1,0 +1,10 @@
+{
+  "name": "duckcreek-forms-debug",
+  "version": "0.1.0",
+  "description": "Debug and work with the DuckCreek Forms API in this framework. Covers the dual-user architecture, valid HTTP response codes, XML status handling, and session extraction pattern.",
+  "author": {
+    "name": "TODO",
+    "email": "TODO"
+  },
+  "skills": "./skills/"
+}
