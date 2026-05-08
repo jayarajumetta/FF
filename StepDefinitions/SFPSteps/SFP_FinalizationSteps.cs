@@ -507,14 +507,32 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             var quoteActionsBtn = page.Locator("button").Filter(new() { HasText = "QUOTE ACTIONS" });
             if (await quoteActionsBtn.CountAsync() > 0)
             {
-                await quoteActionsBtn.ClickAsync();
-                var saveItem = page.Locator("mat-menu-item, [role='menuitem']")
-                                   .Filter(new() { HasTextRegex = new System.Text.RegularExpressions.Regex(@"save\s*for\s*later|suspend", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
-                await saveItem.First.WaitForAsync(new() { Timeout = 5000 });
-                await saveItem.First.ClickAsync();
-                Console.WriteLine("[SaveForLater] Clicked via QUOTE ACTIONS dropdown.");
-                await page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
-                return;
+                try
+                {
+                    await quoteActionsBtn.First.ClickAsync();
+                    var saveItem = page.Locator("mat-menu-item, [role='menuitem'], button")
+                        .Filter(new()
+                        {
+                            HasTextRegex = new System.Text.RegularExpressions.Regex(
+                                @"save\s*for\s*later|suspend",
+                                System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+                        });
+
+                    if (await saveItem.CountAsync() > 0)
+                    {
+                        await saveItem.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 3000 });
+                        await saveItem.First.ClickAsync();
+                        Console.WriteLine("[SaveForLater] Clicked via QUOTE ACTIONS dropdown.");
+                        await page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
+                        return;
+                    }
+
+                    Console.WriteLine("[SaveForLater] QUOTE ACTIONS opened, but no Save for Later item was found.");
+                }
+                catch (TimeoutException)
+                {
+                    Console.WriteLine("[SaveForLater] QUOTE ACTIONS menu item did not become visible in time; trying fallback strategies.");
+                }
             }
 
             // Strategy 2: Direct button or link visible on earlier pages in the flow.

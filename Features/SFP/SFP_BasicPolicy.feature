@@ -74,15 +74,17 @@ Feature: SFP Basic Policy
     # Step 11: Navigate to Primary Insured
     When user selects Primary Insured and continues
 
-    # Step 11B: Workaround - Refill phone/email that were cleared by the form
-    And user refills cleared phone and email fields on Primary Insured page
+    # Step 12: Workaround - save and reopen quote to restore populated data
+    And user clicks Save for Later
+    And user navigates to Expert Quote and searches by Quote Number
+    And user navigates to the "Primary Insured" page via the left menu
 
-    # Step 12: Answer UW Questions
+    # Step 13: Answer UW Questions
     When user answers UW Questions and continues
       | Question       | Answer |
       | NoneOfTheAbove | Yes    |
 
-    # Step 13: Enter Claims and Prior Insurance
+    # Step 14: Enter Claims and Prior Insurance
     When user enters Claims and Prior Insurance Information and continues
       | Question                | Answer   |
       | PriorFFANPolicy         | No       |
@@ -91,10 +93,10 @@ Feature: SFP Basic Policy
       | PriorInsuranceExpDate   | 1/1/2025 |
       | PriorInsuranceCarrier   | GEICO    |
 
-    # Step 14: Navigate to Client Details - Set Inspection Contact
+    # Step 15: Navigate to Client Details - Set Inspection Contact
     When user validates Client Details and selects Inspection Contact
 
-    # Step 15: Add Narrative
+    # Step 16: Add Narrative
     When user Adds Narrative and continues
       | Question  | Answer           |
       | Narrative | Test Narrative 1 |

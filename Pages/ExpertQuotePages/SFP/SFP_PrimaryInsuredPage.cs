@@ -80,7 +80,23 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
                     await SearchButton.ClickAsync();
                     await WaitForSpinnerAsync();
                 }
-                await SelectExistingClientButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+
+                try
+                {
+                    await SelectExistingClientButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+                }
+                catch (TimeoutException)
+                {
+                    // Reopened quotes can land directly on Edit Primary Insured without suggestion chips.
+                    if (await FirstNameInput.CountAsync() > 0 && await FirstNameInput.IsVisibleAsync())
+                    {
+                        Console.WriteLine("[PrimaryInsured] Suggestion chip not found after reopen; continuing from populated Edit Primary Insured screen.");
+                        await ClickNextAsync();
+                        return;
+                    }
+
+                    throw;
+                }
             }
 
             await SelectExistingClientButton.ClickAsync();
