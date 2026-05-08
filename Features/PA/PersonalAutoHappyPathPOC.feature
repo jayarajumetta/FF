@@ -1,7 +1,7 @@
-@UI,
+@PA @ExpertQuote
 Feature: Personal Auto Happy Path POC
 
-  @ExpertQuote
+  @Regression
   Scenario: Create a Personal Auto Quote and Submit for Issuance
     Given I navigate to the Expert Quote login page
 
@@ -13,14 +13,14 @@ Feature: Personal Auto Happy Path POC
     | LastName  | {{lastName}}   |
 
     And user clicks New Quote button
-   
+
     And user enters client information and clicks search
     | Question     | Answer         |
     | DOB          |  08/08/1944    |
     | BestPhone    | (907) 227-0664 |
     | EmailAddress | fake@email.com |
 
-    
+
     And user selects Create New Client and clicks the Next button
 
     And user enters account owner information and clicks Next
@@ -43,12 +43,12 @@ Feature: Personal Auto Happy Path POC
 	| SSN            |                                             |
 	| WritingCompany | American National Property And Casualty Co. |
 	| RiskAddress    | 6 Patriot Ln, Buffalo, MO 65622             |
-    
+
 
     And user enters Pre-Qualification information and continues
 	| Question                | Answer            |
     | EligibilityRestrictions | None Of The Above |
-    
+
 
     And user selects existing Driver
 
@@ -69,8 +69,8 @@ Feature: Personal Auto Happy Path POC
 	| PriorPolicyNumber              |             123456789 |
 	| YearsWithPriorCarrier          |                     5 |
 	| MonthsWithPriorCarrier         |                     2 |
-	
-	
+
+
     And user enters vehicle information and continues
 	| Question            | Answer                                         |
     | VIN                 |              1GNSKCKD2MR134828                 |
@@ -78,20 +78,20 @@ Feature: Personal Auto Happy Path POC
     | ModelYear           |                   2021                         |
     | Make                |                 Chevrolet                      |
     | Model               |                 Suburban 1500                  |
-    | Trim                | SUBURBAN 1500 4D LT ETHAN 4WD 6 SPD AUTO 8 CYL | 
+    | Trim                | SUBURBAN 1500 4D LT ETHAN 4WD 6 SPD AUTO 8 CYL |
     | OwnedFinanced       |                     Own                        |
     | CustomizedEquipment |                     No                         |
     | VehicleUse          |                   Pleasure                     |
     | PurchaseDate        |                  01/15/2021                    |
     | OdometerReading     |                    150000                      |
     | AnnualMileage       |                    20000                       |
-    
-	
+
+
     And user assigns a vehicle to the driver
 	| Question     | Answer    |
     | Vehicle      | Chevrolet |
     | DriverStatus | Principal |
-    
+
 
     And user verifies there are no claims or violations
 
@@ -103,7 +103,7 @@ Feature: Personal Auto Happy Path POC
     | CompCollOnly   | No      |
     | CompDeductible |   1,000 |
     | CollDeductible |   1,000 |
-    
+
 
     And user selects Additional Coverages
 	| Question                        | Answer                          |
@@ -111,7 +111,7 @@ Feature: Personal Auto Happy Path POC
     | LossOfIncomeCoverage            | {{firstName}} {{lastName}}      |
     | RentalReimbursement             | $50 Per Day                     |
     | RoadsideAssistance              | No Coverage                     |
-   
+
 
     And user verifies Pricing Details
 
@@ -131,7 +131,7 @@ Feature: Personal Auto Happy Path POC
     | AddInterestDOB             | 03/24/1964                 |
     | AddInterestDLNumber        | S064184013                 |
     | AddInterestLicenseState    | MO                         |
-    
+
 
     And user creates a new Billing Account and Submits payment
 	| Question       | Answer                     |
@@ -143,10 +143,9 @@ Feature: Personal Auto Happy Path POC
 	| PaymentMethod  | Check                      |
 	| CheckNumber    |           473              |
 	| Paperless      | Yes                        |
-    
+
     And user switches to QAExpress
     And user enters QAExpress credentials and Clicks LogIn
     Then user selects search type from dropdown and enters quote number and clicks search
     |   Question |        Answer       |
     | SearchType | Quote |
-    

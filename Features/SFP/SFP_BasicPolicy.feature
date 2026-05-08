@@ -1,7 +1,7 @@
-@UI
+@SFP @ExpertQuote
 Feature: SFP Basic Policy
 
-  @ExpertQuote @Smoke
+  @Smoke
   Scenario Outline: SFP Basic Policy - <State>
     # Step 1: Log into Expert Quote
     Given I navigate to the Expert Quote login page
@@ -105,7 +105,7 @@ Feature: SFP Basic Policy
       | LocationNickname        | Primary Location |
       | LocationType            | Both             |
       | MilesFromFireDepartment | 3                |
-      | FeetFromHydrant         | 101-250          |      
+      | FeetFromHydrant         | 101-250          |
       | TotalAcreage            | 6                |
       | WindHailDeductible      | 1%               |
 
@@ -244,7 +244,7 @@ Feature: SFP Basic Policy
       | ItemName      | Loss Runs (Tiered - 5 Years; Not tiered - 3 years)   |
       | Action        | Exception                                            |
       | ExceptionNote | Loss runs on file                                    |
-      | Note          | Loss runs on file                                    |    
+      | Note          | Loss runs on file                                    |
 
     # Step 35: Close Checklist and Click OK to Update
     When user closes Checklist and confirms Update

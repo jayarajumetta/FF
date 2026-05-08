@@ -37,13 +37,6 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             await ValidatePrimaryInsuredCoreAsync();
         }
 
-        [When("user Validates Primary Insured Information for SFP and continues")]
-        public async Task UserValidatesPrimaryInsuredInformationForSFPAndContinues(Table table)
-        {
-            // Table captured for future use (EntityType, Phone)
-            await ValidatePrimaryInsuredCoreAsync();
-        }
-
         private async Task ValidatePrimaryInsuredCoreAsync()
         {
             var primaryInsuredPage = new SFP_PrimaryInsuredPage(_context.Page);

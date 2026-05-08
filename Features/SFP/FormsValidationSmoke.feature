@@ -1,4 +1,4 @@
-@FormsSmoke
+@SFP @Forms
 Feature: Forms Validation Smoke Test
 
   Standalone test that grabs the DuckCreek_SessionId cookie from CLAS Express

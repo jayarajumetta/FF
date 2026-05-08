@@ -1,7 +1,7 @@
-@UI, 
+@BOP @ExpertQuote
 Feature: BOP Happy Path
 
-  @ExpertQuote
+  @Regression
   Scenario: Create a BOP Quote and Submit for Issuance
     Given I navigate to the Expert Quote login page
 
@@ -13,14 +13,14 @@ Feature: BOP Happy Path
     | LastName  | {{lastName}}   |
 
     And user clicks New Quote button
-   
+
     And user enters client information and clicks search
     | Question     | Answer         |
     | DOB          |  08/08/1944    |
     | BestPhone    | (907) 227-0664 |
     | EmailAddress | fake@email.com |
 
-    
+
     And user selects Create New Client and clicks the Next button
 
     And user enters account owner information and clicks Next
@@ -46,7 +46,7 @@ Feature: BOP Happy Path
 	| DBAName            | Testing BOP Workflow                        |
 	| WritingCompany     | American National Property And Casualty Co. |
 	| RiskAddress        | 6 Patriot Ln, Buffalo, MO 65622             |
-  
+
 
 	And user selects class codes and continues
 		| Question        | Answer            |

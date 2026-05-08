@@ -1,7 +1,7 @@
-@UI
+@SFP @CE @ExpertQuote
 Feature: SFP Country Estate Policy
 
-  @ExpertQuote @Regression
+  @Regression
   Scenario Outline: SFP Country Estate Policy - <State>
 
     # Step 1: Log into Expert Quote

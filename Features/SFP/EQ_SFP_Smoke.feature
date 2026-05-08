@@ -1,7 +1,7 @@
-@UI
+@SFP @ExpertQuote
 Feature: EQ SFP Smoke
 
-  @ExpertQuote @Smoke
+  @Smoke
   Scenario Outline: SFP Smoke Test - <State>
     Given I navigate to the Expert Quote login page
     When I enter valid credentials and Click LogIn
