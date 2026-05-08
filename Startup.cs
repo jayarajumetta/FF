@@ -55,7 +55,10 @@ namespace Playwright_POC
             // Scenario-scoped NavigationService (resolved in step constructors)
             services.AddScoped<NavigationService>();
 
-            // Page objects and other services
+            // ⚠️ CRITICAL: Page objects MUST be Transient, never Singleton
+            // Singleton = all scenarios share the same page object instance = state bleed between tests ❌
+            // Transient = each step/scenario gets a fresh page object = clean isolated tests ✅
+            // This prevents cross-scenario contamination and flaky tests from leftover state.
             services.AddSingleton<ApiHeaders>();
             services.AddTransient<ScenarioContextData>();
             services.AddTransient<AccountOwnerInfoPage>();

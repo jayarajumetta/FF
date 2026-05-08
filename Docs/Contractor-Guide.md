@@ -220,6 +220,7 @@ Every PR must meet **all** of the following before requesting review:
 ### Code quality requirements
 
 - [ ] New page objects inherit `BasePage`
+- [ ] **New page objects registered as `Transient` in `Startup.cs`, never `Singleton`** (prevents state bleed between scenarios)
 - [ ] Locators are private properties, not created inline inside methods
 - [ ] `await WaitForSpinnerAsync()` called after actions that trigger page transitions
 - [ ] No `Thread.Sleep` / `Task.Delay`
