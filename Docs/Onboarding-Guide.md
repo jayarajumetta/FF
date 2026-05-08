@@ -179,14 +179,25 @@ pwsh bin/Debug/net8.0/playwright.ps1 install
 
 ### 3.4 Set credentials
 
-**Never put passwords in `appsettings.json` or any tracked file.** Use environment variables:
+`appsettings.json` contains only `"PLACEHOLDER"` values — **no real passwords are stored in the repository.**
+You must set credentials as environment variables. Ask your team lead for the actual values.
 
 ```powershell
+# Required for all UI tests
 $env:EQ_USERNAME = "your-eq-username"
 $env:EQ_PASSWORD = "your-eq-password"
+
+# Required for Forms validation tests
+$env:DUCKCREEK_PASSWORD = "your-duckcreek-password"
 ```
 
-Ask your team lead for the credentials. If the tests fail with "Invalid credentials" immediately, the env vars haven't taken effect in the current session.
+Environment variables only persist for the current PowerShell session. You will need to re-set them
+each time you open a new terminal, or add them to your Windows user environment variables via
+System Properties → Advanced → Environment Variables.
+
+> 🚨 **If you see real usernames or passwords anywhere in `appsettings.json` or any tracked file,
+> report it to the QA lead immediately. Do not use those credentials and do not commit anything
+> that contains them.**
 
 ### 3.5 Verify everything works
 
@@ -390,7 +401,9 @@ When running in **Debug mode** (VS: right-click test → Debug), the browser wil
 
 | Mistake | Why it's wrong | What to do instead |
 |---------|---------------|-------------------|
-| Hardcoding credentials in `appsettings.json` | File is committed to git — credentials become visible to everyone | Use environment variables |
+| Hardcoding credentials in `appsettings.json` | File is committed to git — credentials become visible to everyone and the build history | Use environment variables (see section 3.4) |
+| Replacing a `"PLACEHOLDER"` value and committing it | Same risk as above | Set the env var; do not edit the placeholder |
+| Injecting a page object from DI (e.g. constructor parameter `AccountOwnerInfoPage page`) | Page objects are registered as singletons but `IPage` is scenario-scoped — you will get a stale page reference after the first test | Construct page objects inline: `new AccountOwnerInfoPage(_context.Page)` |
 | Using `Thread.Sleep()` or `Task.Delay()` to wait | Fragile — too short fails, too long wastes time | Use `WaitForSpinnerAsync()`, `WaitForAsync()`, or Playwright `Expect` |
 | `IsVisibleAsync()` in a loop to wait | No auto-retry — will burn CPU and still fail | Use `locator.WaitForAsync(new(){ State = WaitForSelectorState.Visible })` |
 | Complex CSS selector like `div.container > ul > li:nth-child(3)` | Breaks on any layout change | Use `data-testid` or ARIA role |

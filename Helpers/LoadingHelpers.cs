@@ -125,29 +125,13 @@ namespace Playwright_POC.Helpers
         }
 
         /// <summary>
-        /// Waits for an element to be clickable (visible, enabled, not covered).
+        /// Waits for an element to be clickable (visible and enabled).
         /// </summary>
         public static async Task WaitForElementClickableAsync(IPage page, string selector, int timeoutMs = 15000)
         {
             var locator = page.Locator(selector);
-
-            // Wait for visible
-            await locator.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = timeoutMs });
-
-            // Wait for enabled
-            await Task.Run(async () =>
-            {
-                var timeout = DateTime.Now.AddMilliseconds(timeoutMs);
-                while (DateTime.Now < timeout)
-                {
-                    if (await locator.IsEnabledAsync())
-                        return;
-                    await Task.Delay(100);
-                }
-                throw new TimeoutException($"Element {selector} not enabled within {timeoutMs}ms");
-            });
-
-            // Wait for any overlays to clear
+            await Microsoft.Playwright.Assertions.Expect(locator).ToBeVisibleAsync(new() { Timeout = timeoutMs });
+            await Microsoft.Playwright.Assertions.Expect(locator).ToBeEnabledAsync(new() { Timeout = timeoutMs });
             await WaitForAngularSpinnerAsync(page);
         }
 
@@ -157,14 +141,8 @@ namespace Playwright_POC.Helpers
         /// </summary>
         public static async Task WaitForElementEnabledAsync(ILocator locator, int timeoutMs = 15000)
         {
-            var timeout = DateTime.Now.AddMilliseconds(timeoutMs);
-            while (DateTime.Now < timeout)
-            {
-                if (await locator.IsEnabledAsync())
-                    return;
-                await Task.Delay(100);
-            }
-            throw new TimeoutException($"Element not enabled within {timeoutMs}ms");
+            await Microsoft.Playwright.Assertions.Expect(locator)
+                .ToBeEnabledAsync(new() { Timeout = timeoutMs });
         }
 
         /// <summary>

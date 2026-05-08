@@ -86,7 +86,7 @@
 - HTTP 401/403 are the only true failures
 - `Session.resumeRs status='failure'` in XML is EXPECTED — do not treat as an error
 - Parse `printDoc` elements regardless of XML status attribute
-- DuckCreek server: `http://svqw-clas21:8080/duckcreek/dctserver.aspx`
+- DuckCreek server: `{DuckCreekForms:ServerBaseUrl}/duckcreek/dctserver.aspx` (set via env var)
 
 ## Naming Conventions
 - Classes: PascalCase

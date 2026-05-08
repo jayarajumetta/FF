@@ -140,7 +140,13 @@ namespace Playwright_POC.Hooks
 
             if (IsApiScenario())
             {
-                var clientSecret = await _pingSecretProvider.GetSecretAsync("<your-secret-id>");
+                var pingSecretId = _configuration["OAuthConfig:PingSecretId"]
+                    ?? Environment.GetEnvironmentVariable("PING_SECRET_ID")
+                    ?? throw new InvalidOperationException(
+                        "PING_SECRET_ID is not configured. Set OAuthConfig:PingSecretId in appsettings.json " +
+                        "or the PING_SECRET_ID environment variable.");
+
+                var clientSecret = await _pingSecretProvider.GetSecretAsync(pingSecretId);
                 if (string.IsNullOrWhiteSpace(clientSecret))
                     throw new Exception("Failed to retrieve ClientSecret from Ping.");
 

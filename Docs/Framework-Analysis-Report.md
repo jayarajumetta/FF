@@ -35,10 +35,10 @@ However, several categories of issues block the framework from scaling safely. T
 
 | File | Lines | What is exposed |
 |------|-------|-----------------|
-| `appsettings.json` | ~30–45 | EQ username + password (`YDH040 / Anico456`) |
-| `appsettings.json` | ~30–45 | Express credentials (`AQ7314` + 26-char password) |
+| `appsettings.json` | ~30–45 | EQ username + password (`<redacted>`) |
+| `appsettings.json` | ~30–45 | Express credentials (`<redacted>`) |
 | `appsettings.json` | ~30–45 | DuckCreek server + CLAS passwords |
-| `appsettings.json` | ~30–45 | OAuth `ClientSecret` (`Anico1234`) |
+| `appsettings.json` | ~30–45 | OAuth `ClientSecret` (`<redacted>`) |
 
 **Why it matters:** Anyone with read access to the ADO repo has login credentials to QA systems. If the repo is ever cloned by a contractor, audited, or leaked, those credentials are compromised immediately.
 

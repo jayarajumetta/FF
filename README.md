@@ -114,16 +114,16 @@ dotnet restore TestAutomation.csproj
 dotnet build TestAutomation.csproj
 pwsh bin/Debug/net8.0/playwright.ps1 install
 
-# 4. Set credentials (never commit these to appsettings.json)
-$env:EQ_USERNAME     = "your-eq-username"
-$env:EQ_PASSWORD     = "your-eq-password"
+# 4. Set credentials — ask QA lead for values, NEVER commit them
+$env:EQ_USERNAME  = "your-eq-username"
+$env:EQ_PASSWORD  = "your-eq-password"
 
 # 5. Run Smoke tests
 dotnet test TestAutomation.csproj --filter "Category=Smoke"
 ```
 
-> **Credentials note:** `appsettings.json` contains placeholder values for credentials. Override them
-> with environment variables before running tests. See [Configuration](#configuration) for details.
+> ⚠️ `appsettings.json` contains only `"PLACEHOLDER"` values for all credentials.
+> Tests will fail immediately with a login error until you set the env vars above.
 
 ---
 
@@ -194,16 +194,40 @@ See [Docs/Tagging-Convention.md](Docs/Tagging-Convention.md) for the full specif
 
 ## Configuration
 
-### Environment Variables (override `appsettings.json`)
+> ⚠️ **`appsettings.json` contains placeholder values only.** Real credentials must be supplied via
+> environment variables. **Never replace a placeholder with a real password and commit it.**
 
-| Variable | Purpose | Example |
-|----------|---------|---------|
-| `TEST_ENVIRONMENT` | Target environment (`QA` or `Dev`) | `QA` |
-| `BROWSER_TYPE` | Browser override | `chrome`, `edge`, `chromium` |
-| `PLAYWRIGHT_HEADLESS` | Run headless | `true` or `1` |
-| `EQ_USERNAME` | ExpertQuote username | `YDH040` |
-| `EQ_PASSWORD` | ExpertQuote password | (your password) |
-| `DUCKCREEK_PASSWORD` | DuckCreek forms password | (your password) |
+### Environment Variables
+
+Set these before running tests. They override the corresponding `appsettings.json` values.
+
+| Variable | Overrides | Required for |
+|----------|-----------|--------------|
+| `EQ_USERNAME` | `Credentials:Username` | All UI tests |
+| `EQ_PASSWORD` | `Credentials:Password` | All UI tests |
+| `EXPRESS_USERNAME` | `QAExpressCreds:Username` | Express/CLAS tests |
+| `EXPRESS_PASSWORD` | `QAExpressCreds:Password` | Express/CLAS tests |
+| `OAUTH_CLIENT_SECRET` | `OAuthConfig:ClientSecret` | API tests |
+| `PING_SECRET_ID` | `OAuthConfig:PingSecretId` | API tests |
+| `DUCKCREEK_PASSWORD` | `DuckCreekForms:Password` | Forms validation |
+| `TEST_ENVIRONMENT` | `Environment` | Dev environment runs |
+| `BROWSER_TYPE` | `Playwright:BrowserType` | Browser override |
+| `PLAYWRIGHT_HEADLESS` | `Playwright:Headless` | Headless mode |
+
+```powershell
+# Minimum required for UI tests
+$env:EQ_USERNAME = "your-eq-username"
+$env:EQ_PASSWORD = "your-eq-password"
+
+# For Forms validation tests
+$env:DUCKCREEK_PASSWORD = "your-duckcreek-password"
+
+# For API tests
+$env:PING_SECRET_ID   = "your-ping-secret-id"
+$env:OAUTH_CLIENT_SECRET = "your-oauth-secret"
+```
+
+Ask your QA lead for the credential values. Do **not** commit them to any file.
 
 ### `appsettings.json` Key Sections
 

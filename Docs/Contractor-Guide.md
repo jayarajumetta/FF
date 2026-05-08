@@ -173,15 +173,29 @@ Use this priority order:
 
 ### Security
 
+`appsettings.json` contains only `"PLACEHOLDER"` values. **Real credentials are never stored in any tracked file.**
+
+You must set credentials as environment variables before running tests:
+
+| Env Var | Purpose |
+|---------|---------|
+| `EQ_USERNAME` | ExpertQuote login username |
+| `EQ_PASSWORD` | ExpertQuote login password |
+| `EXPRESS_USERNAME` | Express/CLAS login username |
+| `EXPRESS_PASSWORD` | Express/CLAS login password |
+| `DUCKCREEK_PASSWORD` | DuckCreek Forms service password |
+| `OAUTH_CLIENT_SECRET` | OAuth client secret (API tests) |
+| `PING_SECRET_ID` | Ping secret ID (API tests) |
+
 **Do not commit any of the following to any tracked file:**
 
-- Passwords
-- Usernames (these are in `appsettings.json` as placeholders — do not replace with real values)
+- Passwords or usernames
 - OAuth client secrets
 - API keys or tokens
 - Personal information (real names, real SSNs, real addresses)
+- Internal server hostnames or IP addresses
 
-If you see credentials committed anywhere, report it to the QA lead immediately — do not include them in your own commits.
+If you discover any of these already in a file, **report it to the QA lead immediately** — do not include them in your own commits, and do not assume it is intentional.
 
 ---
 
@@ -266,9 +280,11 @@ If a scenario passes only on retry, it is **flaky** and must be investigated. Fl
 | Use `WaitForSpinnerAsync()` after page transitions | Use `Task.Delay()` or `Thread.Sleep()` |
 | Use `{{random*}}` tokens for all test data | Hardcode names, DOBs, or phones |
 | Inherit from `BasePage` for all page objects | Access `_page` directly from step definitions |
+| Construct page objects inline: `new SFP_XPage(_context.Page)` | Inject page objects via constructor parameters (they are not scenario-scoped in DI) |
 | Run tests twice before submitting a PR | Submit a PR with only one passing run |
 | Add correct tags to every new scenario | Submit scenarios with no run-type or LOB tags |
 | Ask before changing `Startup.cs` or hooks | Edit lifecycle hooks without approval |
 | Report credentials exposure immediately | Include any password in any file |
 | Target `Development` branch in your PR | Open PRs to `main` directly |
 | Use `await Expect(locator).ToBeVisibleAsync()` for assertions | Use `Assert.That(await locator.IsVisibleAsync(), Is.True)` |
+| Set credentials via environment variables | Replace `"PLACEHOLDER"` values in `appsettings.json` and commit |

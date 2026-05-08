@@ -15,5 +15,10 @@ namespace Playwright_POC.Configuration
         public string RedirectUri { get; set; }
         public string Scope { get; set; } = "openid profile";
         public string GrantType { get; set; } = "password";
+        /// <summary>
+        /// The secret ID passed to PingSecretProvider for API test token retrieval.
+        /// Set via OAuthConfig:PingSecretId in appsettings or PING_SECRET_ID env var.
+        /// </summary>
+        public string PingSecretId { get; set; }
     }
 }

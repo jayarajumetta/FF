@@ -13,8 +13,8 @@ There are TWO separate user accounts involved and they **never match by design**
 
 | Role | Account | Purpose |
 |------|---------|---------|
-| UI Login User | e.g. `FFQA018` | Logs into CLAS browser, opens quotes, generates the DuckCreek session ID |
-| API Service Account | e.g. `PA3402` | Used ONLY for Basic Auth on `/duckcreek/dctserver.aspx` calls |
+| UI Login User | e.g. `CLAS_UI_USER` | Logs into CLAS browser, opens quotes, generates the DuckCreek session ID |
+| API Service Account | e.g. `DC_API_USER` | Used ONLY for Basic Auth on `/duckcreek/dctserver.aspx` calls |
 
 These users are different on purpose. Do not try to make them match.
 
@@ -52,18 +52,16 @@ Common XML messages that are EXPECTED and should NOT trigger test failures:
 ## API Call Structure
 
 ```xml
-POST http://svqw-clas21:8080/duckcreek/dctserver.aspx
-Authorization: Basic {PA3402 credentials}
+POST {DuckCreekForms:ServerBaseUrl}/duckcreek/dctserver.aspx
+Authorization: Basic {DuckCreekForms:Username credentials}
 
 <Session.resumeRq sessionID="9CFEB9B9:33C24A91:8152E654:..." />
 ```
 
 ## Config Locations
 
-- API credentials: `appsettings.json` → `DuckCreekForms` section (`Username: PA3402`)
-- UI login credentials: `appsettings.json` → `Credentials` section
-- Manuscript: `Carrier_CommercialLines_Forms_US_4_0_0_0` (default)
-- Personal Auto may use: `Carrier_PersonalLines_Forms_US_4_0_0_0`
+- API credentials: `appsettings.json` → `DuckCreekForms` section (`Username` / `Password` — set via env var)
+- UI login credentials: `appsettings.json` → `QAExpressCreds` section (set via env var)
 
 ## Rules for Automation Code
 

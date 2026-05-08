@@ -354,9 +354,8 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
             var searchButton = _context.Page.GetByRole(AriaRole.Button, new() { Name = "Search" });
             await searchButton.ClickAsync();
 
-            // Wait for search results
+            // Wait for search results to populate
             await _context.Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-            await Task.Delay(2000); // Allow time for results to populate
 
             // Try multiple strategies to find the quote
             // Strategy 1: Link with quote number
