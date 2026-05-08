@@ -58,22 +58,22 @@ namespace Playwright_POC
             // Page objects and other services
             services.AddSingleton<ApiHeaders>();
             services.AddTransient<ScenarioContextData>();
-            services.AddSingleton<AccountOwnerInfoPage>();
-            services.AddSingleton<PA_AddAdditionalInterestPage>();
-            services.AddSingleton<PA_AddDriverInfoPage>();
-            services.AddSingleton<PA_AddVehicleInfoPage>();
-            services.AddSingleton<BillingPage>();
-            services.AddSingleton<ClientSearchPage>();
-            services.AddSingleton<PA_DiscountsPage>();
-            services.AddSingleton<ExpertQuoteLoginPage>();
-            services.AddSingleton<NewClientPage>();
-            services.AddSingleton<PA_PolicyCoveragesPage>();
-            services.AddSingleton<PreQualificationPage>();
-            services.AddSingleton<PA_PricingDetailsPage>();
-            services.AddSingleton<QuoteDetailsPage>();
-            services.AddSingleton<PA_AdditionalCoveragesPage>();
-            services.AddSingleton<SFP_EditLocationPage>();
-            services.AddSingleton<ExpressLoginPage>();
+            services.AddTransient<AccountOwnerInfoPage>();
+            services.AddTransient<PA_AddAdditionalInterestPage>();
+            services.AddTransient<PA_AddDriverInfoPage>();
+            services.AddTransient<PA_AddVehicleInfoPage>();
+            services.AddTransient<BillingPage>();
+            services.AddTransient<ClientSearchPage>();
+            services.AddTransient<PA_DiscountsPage>();
+            services.AddTransient<ExpertQuoteLoginPage>();
+            services.AddTransient<NewClientPage>();
+            services.AddTransient<PA_PolicyCoveragesPage>();
+            services.AddTransient<PreQualificationPage>();
+            services.AddTransient<PA_PricingDetailsPage>();
+            services.AddTransient<QuoteDetailsPage>();
+            services.AddTransient<PA_AdditionalCoveragesPage>();
+            services.AddTransient<SFP_EditLocationPage>();
+            services.AddTransient<ExpressLoginPage>();
 
             // ── Forms Checking services ──
             var formsConfig = configuration.GetSection("DuckCreekForms").Get<DuckCreekFormsConfig>();
