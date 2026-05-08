@@ -74,6 +74,9 @@ Feature: SFP Basic Policy
     # Step 11: Navigate to Primary Insured
     When user selects Primary Insured and continues
 
+    # Step 11B: Workaround - Refill phone/email that were cleared by the form
+    And user refills cleared phone and email fields on Primary Insured page
+
     # Step 12: Answer UW Questions
     When user answers UW Questions and continues
       | Question       | Answer |
