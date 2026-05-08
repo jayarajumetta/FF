@@ -175,6 +175,41 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             }
         }
 
+        /// <summary>
+        /// TEMPORARY WORKAROUND: When re-accessing the same quote, EQ clears phone and email fields.
+        /// This method refills them to prevent form validation failures.
+        /// TODO: Remove once backend form caching issue is fixed.
+        /// </summary>
+        public async Task RefillClearedPhoneAndEmailAsync(ScenarioContextData contextData)
+        {
+            await WaitForSpinnerAsync();
+
+            var currentEmail = (await EmailAddressInput.InputValueAsync())?.Trim();
+            var currentPhone = (await MobilePhoneInput.InputValueAsync())?.Trim() ??
+                              (await BusinessPhoneInput.InputValueAsync())?.Trim() ??
+                              (await PrimaryPhoneInput.InputValueAsync())?.Trim();
+
+            // If email is empty but we have a value in context, refill it
+            if (string.IsNullOrEmpty(currentEmail) && !string.IsNullOrEmpty(contextData.ClientEmail))
+            {
+                Console.WriteLine($"[WORKAROUND] Email field cleared - refilling with: {contextData.ClientEmail}");
+                await EmailAddressInput.ClickAsync();
+                await EmailAddressInput.FillAsync(contextData.ClientEmail);
+                await _page.Keyboard.PressAsync("Tab"); // Trigger blur event for validation
+            }
+
+            // If phone is empty but we have a value in context, refill it
+            if (string.IsNullOrEmpty(currentPhone) && !string.IsNullOrEmpty(contextData.ClientPhoneNumber))
+            {
+                Console.WriteLine($"[WORKAROUND] Phone field cleared - refilling with: {contextData.ClientPhoneNumber}");
+                await MobilePhoneInput.ClickAsync();
+                await MobilePhoneInput.FillAsync(contextData.ClientPhoneNumber);
+                await _page.Keyboard.PressAsync("Tab"); // Trigger blur event for validation
+            }
+
+            await WaitForSpinnerAsync();
+        }
+
         #region UW Questions
         private static readonly Dictionary<string, string> UwQuestionTestIds = new(StringComparer.OrdinalIgnoreCase)
         {

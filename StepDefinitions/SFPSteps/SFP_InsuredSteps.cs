@@ -37,6 +37,13 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             await ValidatePrimaryInsuredCoreAsync();
         }
 
+        [When("user refills cleared phone and email fields on Primary Insured page")]
+        public async Task UserRefillsClearedPhoneAndEmailFields()
+        {
+            var primaryInsuredPage = new SFP_PrimaryInsuredPage(_context.Page);
+            await primaryInsuredPage.RefillClearedPhoneAndEmailAsync(_contextData);
+        }
+
         private async Task ValidatePrimaryInsuredCoreAsync()
         {
             var primaryInsuredPage = new SFP_PrimaryInsuredPage(_context.Page);
