@@ -1,7 +1,0 @@
-# Copilot Instructions
-
-This project uses [aipm](https://github.com/TheLarkInn/aipm) to manage AI plugins.
-The local marketplace lives at `.ai/` and is registered as `local-repo-plugins`.
-
-<!-- aipm marketplace pointer; do not edit between markers -->
-<!-- AIPM_MARKETPLACE: local-repo-plugins -->

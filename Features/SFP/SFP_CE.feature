@@ -74,20 +74,25 @@ Feature: SFP Country Estate Policy
     # Step 11: Navigate to Primary Insured
     When user selects Primary Insured and continues
 
-    # Step 12: Answer UW Questions
+    # Step 12: Workaround - save and reopen quote to restore populated data
+    And user clicks Save for Later
+    And user navigates to Expert Quote and searches by Quote Number
+    And user navigates to the "Primary Insured" page via the left menu
+
+    # Step 13: Answer UW Questions
     When user answers UW Questions and continues
       | Question       | Answer |
       | NoneOfTheAbove | Yes    |
 
-    # Step 13: Edit Client Role on Client Details page
+    # Step 14: Edit Client Role on Client Details page
     When user validates Client Details and selects Inspection Contact
 
-    # Step 14: Add a Narrative
+    # Step 15: Add a Narrative
     When user Adds Narrative and continues
       | Question  | Answer           |
       | Narrative | Test Narrative 1 |
 
-    # Step 15: Add Claims/Prior Insurance
+    # Step 16: Add Claims/Prior Insurance
     When user enters Claims and Prior Insurance Information and continues
       | Question                | Answer   |
       | PriorFFANPolicy         | No       |
