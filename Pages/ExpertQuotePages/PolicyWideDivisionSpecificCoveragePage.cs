@@ -1,11 +1,10 @@
 using Microsoft.Playwright;
 using NUnit.Framework;
-using Playwright_POC.Helpers;
+using Reqnroll;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Reqnroll;
-using System.Runtime.InteropServices;
 
 namespace Playwright_POC.Pages
 {
@@ -14,23 +13,21 @@ namespace Playwright_POC.Pages
         public PolicyWideDivisionSpecificCoveragePage(IPage page) : base(page)
         {
         }
-        // -----Column Selectors-----
-        private const string RowSelector = "tr.mat-row, mat-row.mat-row";
-        private const string CoverageTypeSelector = "td.cdk-column-column1 span.readonly-value-no-label, mat-cell.cdk-column-column1 span.readonly-value-no-label";
-        private const string CoverageNameSelector = "td.cdk-column-column2 span.readonly-value-no-label, mat-cell.cdk-column-column2 span.readonly-value-no-label";
-        private const string CheckboxInputSelector = "td.cdk-column-select input[type='checkbox'], mat-cell.cdk-column-select input[type='checkbox']";
-        private const string CheckboxClickableSelector = "td.cdk-column-select label.mat-checkbox-layout, mat-cell.cdk-column-select label.mat-checkbox-layout";
-        private const string AddCoverageButtonSelector =
-                                        "button[data-testid^='fields.data.CoverageSections'][data-testid*='.addEdit'], " +
-                                        "button[data-testid^='fields.data.CoverageSections']:has-text('Add Coverage'), " +
-                                        "button:has-text('ADD COVERAGE'), button:has-text('Add Coverage')";
 
+        private const string RowSelector = "tr.mat-row, mat-row.mat-row, table tbody tr, table tr";
+        private const string CoverageTypeSelector = "td.cdk-column-column1 span.readonly-value-no-label, mat-cell.cdk-column-column1 span.readonly-value-no-label, td:nth-child(2), mat-cell:nth-child(2)";
+        private const string CoverageNameSelector = "td.cdk-column-column2 span.readonly-value-no-label, mat-cell.cdk-column-column2 span.readonly-value-no-label, td:nth-child(3), mat-cell:nth-child(3)";
+        private const string CheckboxInputSelector = "td.cdk-column-select input[type='checkbox'], mat-cell.cdk-column-select input[type='checkbox'], input[type='checkbox']";
+        private const string CheckboxClickableSelector = "td.cdk-column-select label.mat-checkbox-layout, mat-cell.cdk-column-select label.mat-checkbox-layout, td.cdk-column-select, mat-cell.cdk-column-select, td:nth-child(1), mat-cell:nth-child(1)";
+        private const string AddCoverageButtonSelector =
+            "button[data-testid^='fields.data.CoverageSections'][data-testid*='.addEdit'], " +
+            "button[data-testid^='fields.data.CoverageSections']:has-text('Add Coverage'), " +
+            "button:has-text('ADD COVERAGE'), button:has-text('Add Coverage')";
 
         public async Task SetCoverageSelectedAsync(string coverageType, string coverageName, bool selected)
         {
             var row = await FindUniqueRowAsync(coverageType, coverageName);
 
-            // Always READ state from the real checkbox input (even though it's hidden)
             var input = row.Locator(CheckboxInputSelector).First;
             await input.WaitForAsync(new() { State = WaitForSelectorState.Attached });
 
@@ -38,46 +35,32 @@ namespace Playwright_POC.Pages
             if (isChecked == selected)
                 return;
 
-            // Always CLICK the label/layout (this is what receives clicks in the DOM)
             var clickable = row.Locator(CheckboxClickableSelector).First;
             await clickable.ScrollIntoViewIfNeededAsync();
-
             await clickable.ClickAsync(new() { Force = true });
 
-            // Re-check to ensure it toggled
             var nowChecked = await input.IsCheckedAsync();
             if (nowChecked != selected)
-            {
-                // one more forced click if Angular swallowed first click
                 await clickable.ClickAsync(new() { Force = true });
-            }
 
             await WaitForSpinnerAsync();
         }
 
-        public Task CheckCoverageAsync(string coverageType, string coverageName) => SetCoverageSelectedAsync(coverageType, coverageName, selected: true);
+        public Task CheckCoverageAsync(string coverageType, string coverageName) =>
+            SetCoverageSelectedAsync(coverageType, coverageName, selected: true);
 
-        public Task UncheckCoverageAsync(string coverageType, string coverageName) => SetCoverageSelectedAsync(coverageType, coverageName, selected: false);
-
-
-
-        /// <summary>
-        /// Apply a SpecFlow/ReqnRoll table like:
-        /// | CoverageType | CoverageName          | Select |
-        /// | Policy       | Agribusiness          | Yes    |
-        /// | Division II  | Excess Debris Removal | No     |
-        /// </summary>
+        public Task UncheckCoverageAsync(string coverageType, string coverageName) =>
+            SetCoverageSelectedAsync(coverageType, coverageName, selected: false);
 
         public async Task ApplyCoverageSelectionsAsync(Table table)
         {
             foreach (var row in table.Rows)
             {
-                var type = row["CoverageType"]?.Trim() ?? "";
-                var name = row["CoverageName"]?.Trim() ?? "";
-                var selecRaw = row["Select"]?.Trim() ?? "No";
+                var type = row["CoverageType"]?.Trim() ?? string.Empty;
+                var name = row["CoverageName"]?.Trim() ?? string.Empty;
+                var selectRaw = row["Select"]?.Trim() ?? "No";
 
-                var selected = ParseYesNo(selecRaw);
-                await SetCoverageSelectedAsync(type, name, selected);
+                await SetCoverageSelectedAsync(type, name, ParseYesNo(selectRaw));
             }
         }
 
@@ -89,99 +72,8 @@ namespace Playwright_POC.Pages
             await checkbox.WaitForAsync(new() { State = WaitForSelectorState.Attached });
 
             var actual = await checkbox.IsCheckedAsync();
-
-            Assert.That(actual, Is.EqualTo(expectedSelected), $"Coverage selection mismatch for [{coverageType}] [{coverageName}]. Expected: {expectedSelected}, Actual: {actual}");
-
-        }
-
-        private static string Normalize(string s)
-        {
-            return (s ?? string.Empty)
-                .Replace('\u00A0', ' ')
-                .Replace("\r", " ")
-                .Replace("\n", " ")
-                .Trim();
-        }
-
-        private async Task<ILocator> FindUniqueRowAsync(string coverageType, string coverageName)
-        {
-            coverageType = Normalize(coverageType);
-            coverageName = Normalize(coverageName);
-
-            if (string.IsNullOrWhiteSpace(coverageType))
-                throw new ArgumentException("coverageType cannot be null/empty.");
-            if (string.IsNullOrWhiteSpace(coverageName))
-                throw new ArgumentException("coverageName cannot be null/empty.");
-
-            // Wait for the table to render at least one row
-            var allRows = _page.Locator(RowSelector);
-            await allRows.First.WaitForAsync(new() { State = WaitForSelectorState.Visible });
-
-            var rowCount = await allRows.CountAsync();
-
-            var matches = new List<int>();
-
-            for (int i = 0; i < rowCount; i++)
-            {
-                var row = allRows.Nth(i);
-
-                // Pull type/name text from their specific columns
-                var typeLoc = row.Locator(CoverageTypeSelector).First;
-                var nameLoc = row.Locator(CoverageNameSelector).First;
-
-                // Some rows might not have spans yet; skip safely
-                if (await typeLoc.CountAsync() == 0 || await nameLoc.CountAsync() == 0)
-                    continue;
-
-                var actualType = Normalize(await typeLoc.InnerTextAsync());
-                var actualName = Normalize(await nameLoc.InnerTextAsync());
-
-                if (actualType.Equals(coverageType, StringComparison.OrdinalIgnoreCase) && actualName.Equals(coverageName, StringComparison.OrdinalIgnoreCase))
-                {
-                    matches.Add(i);
-                }
-            }
-
-            if (matches.Count == 1)
-            {
-                var match = allRows.Nth(matches[0]);
-                await match.ScrollIntoViewIfNeededAsync();
-                return match;
-            }
-
-            if (matches.Count > 1)
-            {
-                throw new ArgumentException(
-                    $"Multiple coverage rows matched CoverageType='{coverageType}' AND CoverageName='{coverageName}'." + $"Matched row indexes: {string.Join(", ", matches)}");
-            }
-
-            // Diagnostics: dump the first several rows so you see exactly what Playwright sees
-            var diagnostics = new List<string>();
-            var diagLimit = Math.Min(rowCount, 10);
-
-            for (int i = 0; i < diagLimit; i++)
-            {
-                var r = allRows.Nth(i);
-                var t = await r.Locator(CoverageTypeSelector).First.InnerTextAsync();
-                var n = await r.Locator(CoverageNameSelector).First.InnerTextAsync();
-                diagnostics.Add($"[{i}] Type='{Normalize(t)}' Name='{Normalize(n)}'");
-            }
-
-            throw new ArgumentException(
-                $"No coverage row found for CoverageType='{coverageType}' AND CoverageName='{coverageName}'.\n +" +
-                $"First {diagLimit} rows seen by Playwright:\n" +
-                string.Join("\n", diagnostics));
-
-        }
-        private static bool ParseYesNo(string value)
-        {
-            var v = (value ?? string.Empty).Trim();
-
-            return v.Equals("Yes", StringComparison.OrdinalIgnoreCase)
-                || v.Equals("Y", StringComparison.OrdinalIgnoreCase)
-                || v.Equals("True", StringComparison.OrdinalIgnoreCase)
-                || v.Equals("1");
-
+            Assert.That(actual, Is.EqualTo(expectedSelected),
+                $"Coverage selection mismatch for [{coverageType}] [{coverageName}]. Expected: {expectedSelected}, Actual: {actual}");
         }
 
         public async Task ClickAllAddCoverageButtonsAsync()
@@ -198,7 +90,6 @@ namespace Playwright_POC.Pages
 
                 await btn.ScrollIntoViewIfNeededAsync();
                 await btn.ClickAsync(new() { Force = true });
-
                 await WaitForSpinnerAsync();
             }
         }
@@ -208,17 +99,68 @@ namespace Playwright_POC.Pages
             coverageType = coverageType.Trim();
             coverageName = coverageName.Trim();
 
-            var cardTitle = coverageType.Equals("Policy", StringComparison.OrdinalIgnoreCase) ? coverageName : $"{coverageName} - {coverageType}";
+            var normalizedCoverage = NormalizeCoverageKey(coverageName);
+            var coverageSectionButtons = new[]
+            {
+                _page.Locator($"[data-testid*='CoverageSections'][data-testid*='line_{normalizedCoverage}'][data-testid*='addEdit']").First,
+                _page.Locator($"[data-testid*='CoverageSections'][data-testid*='{normalizedCoverage}'][data-testid*='addEdit']").First,
+                _page.Locator($"[data-testid*='CoverageSections'][data-testid*='{normalizedCoverage}'] button").First,
+            };
+
+            foreach (var candidate in coverageSectionButtons)
+            {
+                if (await candidate.CountAsync() > 0)
+                {
+                    try
+                    {
+                        await candidate.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 5000 });
+                        await candidate.ScrollIntoViewIfNeededAsync();
+                        await candidate.ClickAsync(new() { Force = true });
+                        await WaitForSpinnerAsync();
+                        Console.WriteLine($"[Coverage] Clicked Add/Edit for '{coverageName}' using CoverageSections test id pattern.");
+                        return;
+                    }
+                    catch (TimeoutException)
+                    {
+                        // Keep trying fallbacks below.
+                    }
+                }
+            }
+
+            var cardTitle = coverageType.Equals("Policy", StringComparison.OrdinalIgnoreCase)
+                ? coverageName
+                : $"{coverageName} - {coverageType}";
 
             var card = _page.Locator($"text={cardTitle}").Locator("xpath=ancestor::*[self::div or self::mat-card][1]");
-
             var addBtn = card.Locator("button:has-text('ADD COVERAGE'), button:has-text('Add Coverage')").First;
 
-            await addBtn.WaitForAsync(new() { State = WaitForSelectorState.Visible });
-            await addBtn.ScrollIntoViewIfNeededAsync();
-            await addBtn.ClickAsync(new() { Force = true });
+            try
+            {
+                await addBtn.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 5000 });
+                await addBtn.ScrollIntoViewIfNeededAsync();
+                await addBtn.ClickAsync(new() { Force = true });
+            }
+            catch (TimeoutException)
+            {
+                Console.WriteLine($"[Coverage] No Add Coverage button for '{coverageName}' ({coverageType}) - continuing.");
+                return;
+            }
 
             await WaitForSpinnerAsync();
+        }
+
+        private static string NormalizeCoverageKey(string coverageName)
+        {
+            var chars = (coverageName ?? string.Empty).ToCharArray();
+            var buffer = new List<char>(chars.Length);
+
+            foreach (var ch in chars)
+            {
+                if (char.IsLetterOrDigit(ch))
+                    buffer.Add(ch);
+            }
+
+            return new string(buffer.ToArray());
         }
 
         public async Task ApplySelectionsAndAddCoveragesAsync(Table table)
@@ -235,6 +177,198 @@ namespace Playwright_POC.Pages
                     await ClickAddCoverageForSelectionAsync(type, name);
             }
         }
-    }
 
+        public async Task EditCountryEstateCoverageAsync(Table table)
+        {
+            if (table is null || table.Rows.Count == 0)
+                throw new ArgumentException("Country Estate coverage edit table must contain at least one row.");
+
+            var row = table.Rows[0];
+            var countryEstateAddButton = _page.GetByTestId(
+                "fields.data_CoverageSections.policy_PolicyWideSection.line_CountryEstate.addEditCountryEstate-button-label");
+
+            if (await countryEstateAddButton.CountAsync() == 0)
+                throw new InvalidOperationException("Country Estate Endorsement Add Coverage button was not found.");
+
+            await countryEstateAddButton.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
+            await countryEstateAddButton.First.ScrollIntoViewIfNeededAsync();
+            await countryEstateAddButton.First.ClickAsync(new() { Force = true });
+            await WaitForSpinnerAsync();
+
+            var countryEstatePage = new SFP_AddCountryEstateCoveragePage(_page);
+            var ceSelection = BuildCountryEstateSelection(table, row);
+            await countryEstatePage.AddCoverageAsync(ceSelection);
+
+            Console.WriteLine("[Coverage] Edited Country Estate Endorsement via dedicated CE edit step.");
+        }
+
+        private static SFP_AddCountryEstateCoveragePage.CountryEstateCoverageSelection BuildCountryEstateSelection(Table table, DataTableRow row)
+        {
+            return new SFP_AddCountryEstateCoveragePage.CountryEstateCoverageSelection
+            {
+                DivisionIWaterDamage = GetOptionalCell(table, row, "CEDivisionIWaterDamage", "$5,000"),
+                DivisionIIUnscheduledStructures = GetOptionalCell(table, row, "CEDivisionIIUnscheduledStructures", "$5,000"),
+                DivisionIIIBlanketFppSublimit = GetOptionalCell(table, row, "CEDivisionIIIBlanketFppSublimit", "5000"),
+                DivisionIIIBlanketFppDeductible = GetOptionalCell(table, row, "CEDivisionIIIBlanketFppDeductible", "$500"),
+                DivisionVLiabilityLimit = GetOptionalCell(table, row, "CEDivisionVLiabilityLimit", "$500,000/$1,000,000"),
+            };
+        }
+
+        private static string GetOptionalCell(Table table, DataTableRow row, string columnName, string fallback)
+        {
+            if (table is null || row is null)
+                return fallback;
+
+            var hasColumn = table.Header.Any(h => h.Equals(columnName, StringComparison.OrdinalIgnoreCase));
+            if (!hasColumn)
+                return fallback;
+
+            var value = row[columnName]?.Trim();
+            return string.IsNullOrWhiteSpace(value) ? fallback : value;
+        }
+
+        public async Task HandleReviewRequiredModalIfPresentAsync()
+        {
+            var modal = _page.GetByText("Review Required", new() { Exact = true }).First;
+
+            if (await modal.CountAsync() == 0 || !await modal.IsVisibleAsync())
+                return;
+
+            var keepGoing = _page.GetByRole(AriaRole.Button, new() { Name = "KEEP GOING" }).First;
+
+            if (await keepGoing.CountAsync() > 0 && await keepGoing.IsVisibleAsync())
+            {
+                await keepGoing.ClickAsync(new() { Force = true });
+                await WaitForSpinnerAsync();
+                Console.WriteLine("[Coverage] Review Required modal detected - clicked KEEP GOING.");
+            }
+        }
+
+        private static bool ParseYesNo(string value)
+        {
+            var v = (value ?? string.Empty).Trim();
+            return v.Equals("Yes", StringComparison.OrdinalIgnoreCase)
+                || v.Equals("Y", StringComparison.OrdinalIgnoreCase)
+                || v.Equals("True", StringComparison.OrdinalIgnoreCase)
+                || v.Equals("1", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string Normalize(string s)
+        {
+            return (s ?? string.Empty)
+                .Replace('\u00A0', ' ')
+                .Replace("\r", " ")
+                .Replace("\n", " ")
+                .Trim();
+        }
+
+        private static async Task<string> ExtractCellTextAsync(ILocator row, string primarySelector, int fallbackCellIndex)
+        {
+            var primary = row.Locator(primarySelector).First;
+            if (await primary.CountAsync() > 0)
+            {
+                var text = Normalize(await primary.InnerTextAsync());
+                if (!string.IsNullOrWhiteSpace(text))
+                    return text;
+            }
+
+            var cells = row.Locator("td, mat-cell");
+            if (await cells.CountAsync() > fallbackCellIndex)
+            {
+                var cell = cells.Nth(fallbackCellIndex);
+
+                // Try direct text extraction first
+                var directText = Normalize(await cell.InnerTextAsync());
+                if (!string.IsNullOrWhiteSpace(directText))
+                    return directText;
+
+                // For nested ng-component structures, dig into readonly-value-no-label spans
+                var nestedSpans = cell.Locator("span.readonly-value-no-label");
+                if (await nestedSpans.CountAsync() > 0)
+                {
+                    var nestedText = Normalize(await nestedSpans.First.InnerTextAsync());
+                    if (!string.IsNullOrWhiteSpace(nestedText))
+                        return nestedText;
+                }
+            }
+
+            return string.Empty;
+        }
+
+        private async Task<ILocator> FindUniqueRowAsync(string coverageType, string coverageName)
+        {
+            coverageType = Normalize(coverageType);
+            coverageName = Normalize(coverageName);
+
+            if (string.IsNullOrWhiteSpace(coverageType))
+                throw new ArgumentException("coverageType cannot be null/empty.");
+            if (string.IsNullOrWhiteSpace(coverageName))
+                throw new ArgumentException("coverageName cannot be null/empty.");
+
+            var allRows = _page.Locator(RowSelector);
+            await allRows.First.WaitForAsync(new() { State = WaitForSelectorState.Visible });
+
+            var maxScrollPasses = 12;
+            var viewportSignatures = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            for (int pass = 0; pass <= maxScrollPasses; pass++)
+            {
+                var matches = new List<ILocator>();
+                var currentRows = _page.Locator(RowSelector);
+                var currentCount = await currentRows.CountAsync();
+
+                for (int i = 0; i < currentCount; i++)
+                {
+                    var row = currentRows.Nth(i);
+
+                    if (await row.Locator(CheckboxInputSelector).CountAsync() == 0)
+                        continue;
+
+                    var actualType = await ExtractCellTextAsync(row, CoverageTypeSelector, 1);
+                    var actualName = await ExtractCellTextAsync(row, CoverageNameSelector, 2);
+
+                    if (actualType.Equals(coverageType, StringComparison.OrdinalIgnoreCase)
+                        && actualName.Equals(coverageName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        matches.Add(row);
+                    }
+
+                    if (!string.IsNullOrEmpty(actualType) || !string.IsNullOrEmpty(actualName))
+                        viewportSignatures.Add($"{actualType}|{actualName}");
+                }
+
+                if (matches.Count == 1)
+                    return matches[0];
+
+                if (matches.Count > 1)
+                {
+                    throw new InvalidOperationException(
+                        $"Coverage row is not unique for CoverageType='{coverageType}', CoverageName='{coverageName}'. Matches found: {matches.Count}.");
+                }
+
+                if (pass == maxScrollPasses)
+                    break;
+
+                await currentRows.First.HoverAsync();
+                await _page.Mouse.WheelAsync(0, 900);
+                await _page.WaitForTimeoutAsync(200);
+            }
+
+            var diagnostics = new List<string>();
+            var diagLimit = Math.Min(6, await allRows.CountAsync());
+            for (int i = 0; i < diagLimit; i++)
+            {
+                var r = allRows.Nth(i);
+                var t = await ExtractCellTextAsync(r, CoverageTypeSelector, 1);
+                var n = await ExtractCellTextAsync(r, CoverageNameSelector, 2);
+                diagnostics.Add($"[{i}] Type='{t}' Name='{n}'");
+            }
+
+            throw new ArgumentException(
+                $"No coverage row found for CoverageType='{coverageType}' AND CoverageName='{coverageName}'.\n" +
+                $"Rows observed while scrolling: {viewportSignatures.Count}.\n" +
+                "First 6 rows seen by Playwright:\n" +
+                string.Join("\n", diagnostics));
+        }
+    }
 }

@@ -80,6 +80,10 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
                 return;
             }
 
+            // Ensure we are on the Insurance Score page before interacting with controls.
+            await sideNav.GoToInsuranceScoreAsync();
+            await insuranceScorePage.WaitForSpinnerAsync();
+
             // ── Insurance Score flow ──────────────────────────────────────────
             // Click entity type dropdown only when visible (not present in all states).
             if (!string.IsNullOrEmpty(_contextData.InsuranceScoreEntityType) &&
@@ -150,6 +154,11 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             TableMappingHelpers.MortgageeFields(table, _contextData);
 
+            // Navigate explicitly to Mortgagee/Loss Payee so this step does not depend
+            // on implicit page progression from prior steps.
+            var sideNav = new SideMenuNavigation(_context.Page);
+            await sideNav.GoToMortgageeLossPayeeAsync();
+
             var mortgageePage = new SFP_MortgageeLossPayeePage(_context.Page);
             await mortgageePage.AddMortgageeAsync(_contextData);
 
@@ -159,6 +168,17 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         [Then("user verifies Premium on Pricing screen")]
         public async Task UserVerifiesPremiumOnPricingScreen()
         {
+            // Do not assume the previous step landed on Pricing; navigate explicitly.
+            var sideNav = new SideMenuNavigation(_context.Page);
+            try
+            {
+                await sideNav.GoToPricingAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Pricing] Could not navigate via side menu to Pricing: {ex.Message}");
+            }
+
             var pricingPage = new SFP_PricingPage(_context.Page);
             await pricingPage.WaitForSpinnerAsync();
 
@@ -188,7 +208,8 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
                 Console.WriteLine($"*** ANNUAL PREMIUM: ${premium.Value:N2} ***");
 
                 var stateAbbv = GetStateAbbreviation(_contextData.RatingState);
-                var expectedRaw = _configuration[$"ExpectedPremiums:SFP:{stateAbbv}:Amount"];
+                var productKey = GetPremiumBaselineProductKey();
+                var expectedRaw = _configuration[$"ExpectedPremiums:{productKey}:{stateAbbv}:Amount"];
                 var skipPremiumBaselineAssertion = string.Equals(
                     _configuration["Debugging:SkipPremiumBaselineAssertion"],
                     "true",
@@ -198,18 +219,48 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
                 {
                     if (skipPremiumBaselineAssertion)
                     {
-                        Console.WriteLine($"[Premium][DEBUG] Baseline assertion skipped for {stateAbbv}. Expected ${expectedPremium:N2}, captured ${premium.Value:N2}.");
+                        Console.WriteLine($"[Premium][DEBUG] Baseline assertion skipped for {productKey}/{stateAbbv}. Expected ${expectedPremium:N2}, captured ${premium.Value:N2}.");
                     }
                     else
                     {
                         Assert.That(premium.Value, Is.EqualTo(expectedPremium).Within(0.01m),
-                            $"[Premium Regression] {stateAbbv}: expected ${expectedPremium:N2} but captured ${premium.Value:N2}");
-                        Console.WriteLine($"[Premium] {stateAbbv} baseline assertion passed: ${premium.Value:N2}");
+                            $"[Premium Regression] {productKey}/{stateAbbv}: expected ${expectedPremium:N2} but captured ${premium.Value:N2}");
+                        Console.WriteLine($"[Premium] {productKey}/{stateAbbv} baseline assertion passed: ${premium.Value:N2}");
                     }
+                }
+                else
+                {
+                    Console.WriteLine($"[Premium] No configured baseline for {productKey}/{stateAbbv}; captured ${premium.Value:N2}.");
                 }
             }
             else
                 Console.WriteLine("[Premium] Could not extract annual premium amount – inspect pricing page test IDs to refine locator.");
+        }
+
+        private string GetPremiumBaselineProductKey()
+        {
+            var productSelection = (_contextData?.ProductSelection ?? string.Empty).Trim();
+            if (productSelection.Equals("CE", StringComparison.OrdinalIgnoreCase)
+                || productSelection.Equals("Country Estate", StringComparison.OrdinalIgnoreCase))
+            {
+                return "CE";
+            }
+
+            if (productSelection.Equals("SFP", StringComparison.OrdinalIgnoreCase)
+                || productSelection.Equals("Special Farm Package", StringComparison.OrdinalIgnoreCase))
+            {
+                return "SFP";
+            }
+
+            var tags = _scenarioContext?.ScenarioInfo?.Tags ?? Array.Empty<string>();
+            if (tags.Any(t => t.Equals("CE", StringComparison.OrdinalIgnoreCase)))
+                return "CE";
+
+            var scenarioTitle = _scenarioContext?.ScenarioInfo?.Title ?? string.Empty;
+            if (scenarioTitle.IndexOf("Country Estate", StringComparison.OrdinalIgnoreCase) >= 0)
+                return "CE";
+
+            return "SFP";
         }
 
         [When("user completes Billing Information")]
@@ -655,23 +706,30 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             // 2. Bring EQ tab back to the foreground
             await _context.Page.BringToFrontAsync();
 
+            var submissionPage = new SubmissionPage(_context.Page);
+            await submissionPage.WaitForSpinnerAsync();
+
             // 3. Dismiss the "Checklist Opened" modal. It's an Angular Material CDK overlay.
             //    Target the button inside .cdk-overlay-container — works regardless of button text.
-            var overlayButton = _context.Page.Locator(".cdk-overlay-container button");
+            var overlayContainer = _context.Page.Locator(".cdk-overlay-container");
+            var overlayButton = overlayContainer.Locator("button");
             try
             {
-                await overlayButton.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
+                await overlayButton.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 8000 });
                 await overlayButton.First.ClickAsync();
                 Console.WriteLine("Clicked Ok dialog on EQ Submission page");
-                await _context.Page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 15000 });
+
+                // Wait for modal container to clear instead of relying on network idle in SPA.
+                await overlayContainer.WaitForAsync(new() { State = WaitForSelectorState.Hidden, Timeout = 10000 });
             }
             catch (TimeoutException)
             {
                 Console.WriteLine("No overlay dialog appeared — continuing");
             }
 
-            await _context.Page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
-            Console.WriteLine("Checklist tab closed and EQ Ok dialog confirmed");
+            await submissionPage.WaitForSpinnerAsync();
+            await submissionPage.NoReferralsText.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
+            Console.WriteLine("Checklist tab closed and EQ Submission page is ready");
         }
 
         [Then("user verifies Transmit button is enabled on Submission page")]
@@ -692,7 +750,14 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
                 transmitBtn = _context.Page.Locator("button").Filter(new() { HasText = "Transmit" });
 
             Assert.That(await transmitBtn.CountAsync() > 0, Is.True, "Transmit button should be present on Submission page");
-            Assert.That(await transmitBtn.IsEnabledAsync(), Is.True, "Transmit button should be enabled");
+
+            var cannotTransmitMessage = _context.Page.GetByText("Cannot Transmit", new() { Exact = false });
+            var blockerDetails = await cannotTransmitMessage.CountAsync() > 0
+                ? (await cannotTransmitMessage.First.InnerTextAsync()).Trim()
+                : "No explicit transmit blocker message was found.";
+
+            Assert.That(await transmitBtn.IsEnabledAsync(), Is.True,
+                $"Transmit button should be enabled. UI blocker details: {blockerDetails}");
 
             Console.WriteLine("Verified: Transmit button is enabled on Submission page");
         }

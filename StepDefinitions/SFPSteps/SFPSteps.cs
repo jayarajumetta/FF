@@ -9,6 +9,7 @@ using Playwright_POC.Pages.ExpertQuotePages;
 using Playwright_POC.Pages.ExpertQuotePages.SFP;
 using Reqnroll;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ReqContext = Playwright_POC.Context.TestContext;
 
@@ -38,16 +39,54 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         [When("user selects Special Farm Package and inputs Quote Details")]
         public async Task SelectSpecialFarmPackageAndInputQuoteDetails(Table table)
         {
+            var productSelection = GetProductSelection(table) ?? "SFP";
+            _contextData.ProductSelection = productSelection;
             TableMappingHelpers.SFPQuoteDetailsFields(table, _contextData);
             var proposalDetailsPage = new QuoteDetailsPage(_context.Page);
             await proposalDetailsPage.WaitForProposalPageLoadAsync();
-            await proposalDetailsPage.SelectSpecialFarmPackageProductAsync();
+            await SelectInsuranceProductAsync(proposalDetailsPage, productSelection);
             await proposalDetailsPage.EnterSFPQuoteDetailsAsync(_contextData);
             await proposalDetailsPage.SelectRatingStateAsync(_contextData);
             await proposalDetailsPage.SelectRiskAddressAsync(_contextData);
             await proposalDetailsPage.ClickStartQuoteAsync();
             await proposalDetailsPage.HandleClientExistsPopupAsync();
             Console.WriteLine($"Client {_contextData.ClientFirstName}");
+        }
+
+        [When("user selects Country Estate and inputs Quote Details")]
+        public async Task SelectCountryEstateAndInputQuoteDetails(Table table)
+        {
+            // Backward-compatible wrapper; CE can now also be selected via ProductSelection in the shared step table.
+            await SelectSpecialFarmPackageAndInputQuoteDetails(table);
+        }
+
+        private static string GetProductSelection(Table table)
+        {
+            var row = table.Rows.FirstOrDefault(r =>
+                string.Equals(r["Question"], "ProductSelection", StringComparison.OrdinalIgnoreCase));
+            return row?["Answer"]?.Trim();
+        }
+
+        private static async Task SelectInsuranceProductAsync(QuoteDetailsPage proposalDetailsPage, string productSelection)
+        {
+            var normalized = (productSelection ?? string.Empty).Trim();
+
+            if (normalized.Equals("CE", StringComparison.OrdinalIgnoreCase)
+                || normalized.Equals("Country Estate", StringComparison.OrdinalIgnoreCase))
+            {
+                await proposalDetailsPage.SelectCountryEstateProductAsync();
+                return;
+            }
+
+            if (normalized.Equals("SFP", StringComparison.OrdinalIgnoreCase)
+                || normalized.Equals("Special Farm Package", StringComparison.OrdinalIgnoreCase)
+                || string.IsNullOrEmpty(normalized))
+            {
+                await proposalDetailsPage.SelectSpecialFarmPackageProductAsync();
+                return;
+            }
+
+            throw new ArgumentException($"Unsupported ProductSelection '{productSelection}'. Use SFP or CE.");
         }
 
         [When("user handles SSN popup and enters SSN")]

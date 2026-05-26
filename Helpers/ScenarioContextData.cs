@@ -244,5 +244,6 @@ namespace Playwright_POC.Helpers
         // --- Misc (no domain model) ---
         public string SearchType { get; set; }
         public string LookingFor { get; set; }
+        public string ProductSelection { get; set; }
     }
 }

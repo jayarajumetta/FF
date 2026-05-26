@@ -34,6 +34,23 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             var coverageCatalogPage = new PolicyWideDivisionSpecificCoveragePage(_context.Page);
             await coverageCatalogPage.ApplySelectionsAndAddCoveragesAsync(table);
             await coverageCatalogPage.ClickNextAsync();
+            await coverageCatalogPage.HandleReviewRequiredModalIfPresentAsync();
+        }
+
+        [When("user selects Policy Wide or Division Specific Coverages")]
+        public async Task UserSelectsPolicyWideDivisionSpecificCoverages(Table table)
+        {
+            var coverageCatalogPage = new PolicyWideDivisionSpecificCoveragePage(_context.Page);
+            await coverageCatalogPage.ApplyCoverageSelectionsAsync(table);
+        }
+
+        [When("user edits Country Estate coverage and continues")]
+        public async Task UserEditsCountryEstateCoverageAndContinues(Table table)
+        {
+            var coverageCatalogPage = new PolicyWideDivisionSpecificCoveragePage(_context.Page);
+            await coverageCatalogPage.EditCountryEstateCoverageAsync(table);
+            await coverageCatalogPage.ClickNextAsync();
+            await coverageCatalogPage.HandleReviewRequiredModalIfPresentAsync();
         }
 
         [When("user skips Policy Wide and Division Specific Coverages and continues")]

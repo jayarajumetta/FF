@@ -41,17 +41,17 @@ Feature: SFP Country Estate Policy
       | WhereClientResides | Yes            |
 
     # Step 7: Select SFP Country Estate and quote details
-    # TODO: Confirm SelectSpecialFarmPackageProductAsync selects the Country Estate product type
     And user selects Special Farm Package and inputs Quote Details
-      | Question       | Answer                                      |
-      | EffectiveDate  | {{tomorrow}}                                |
-      | PolicyTerm     | 12 months                                   |
-      | AgentCode      | D2102                                       |
-      | RatingState    | <StateFull>                                 |
-      | OwnershipType  | Individually Owned                          |
-      | WritingCompany | American National Property And Casualty Co. |
-      | RiskAddress    | <Address>, <City>, <StateAbbv> <Zip>        |
-      | LessorRisk     | No                                          |
+      | Question         | Answer                                      |
+      | ProductSelection | CE                                          |
+      | EffectiveDate    | {{tomorrow}}                                |
+      | PolicyTerm       | 12 months                                   |
+      | AgentCode        | D2102                                       |
+      | RatingState      | <StateFull>                                 |
+      | OwnershipType    | Individually Owned                          |
+      | WritingCompany   | American National Property And Casualty Co. |
+      | RiskAddress      | <Address>, <City>, <StateAbbv> <Zip>        |
+      | LessorRisk       | No                                          |
 
     # Step 8: Answer SSN Popup
     When user handles SSN popup and enters SSN
@@ -74,25 +74,12 @@ Feature: SFP Country Estate Policy
     # Step 11: Navigate to Primary Insured
     When user selects Primary Insured and continues
 
-    # Step 12: Workaround - save and reopen quote to restore populated data
-    And user clicks Save for Later
-    And user navigates to Expert Quote and searches by Quote Number
-    And user navigates to the "Primary Insured" page via the left menu
-
     # Step 13: Answer UW Questions
     When user answers UW Questions and continues
       | Question       | Answer |
       | NoneOfTheAbove | Yes    |
 
-    # Step 14: Edit Client Role on Client Details page
-    When user validates Client Details and selects Inspection Contact
-
-    # Step 15: Add a Narrative
-    When user Adds Narrative and continues
-      | Question  | Answer           |
-      | Narrative | Test Narrative 1 |
-
-    # Step 16: Add Claims/Prior Insurance
+    # Step 14: Add Claims/Prior Insurance
     When user enters Claims and Prior Insurance Information and continues
       | Question                | Answer   |
       | PriorFFANPolicy         | No       |
@@ -101,7 +88,26 @@ Feature: SFP Country Estate Policy
       | PriorInsuranceExpDate   | 1/1/2025 |
       | PriorInsuranceCarrier   | GEICO    |
 
-    # Step 16: Add a Primary Location
+    # Step 15: Edit Client Role on Client Details page
+    When user validates Client Details and selects Inspection Contact
+
+    # Step 16: Add a Narrative
+    When user Adds Narrative and continues
+      | Question  | Answer           |
+      | Narrative | Test Narrative 1 |
+
+    # Step 17: Add Policy Wide Coverages
+    When user selects Policy Wide or Division Specific Coverages
+      | CoverageType | CoverageName               | Select |
+      | Policy       | Country Estate Endorsement | Yes    |
+
+    # Step 17A: Edit Coverage - Country Estate (data-driven row/column values)
+    When user edits Country Estate coverage and continues
+      | CEDivisionIWaterDamage | CEDivisionIIUnscheduledStructures | CEDivisionIIIBlanketFppSublimit | CEDivisionIIIBlanketFppDeductible | CEDivisionVLiabilityLimit |
+      | $5,000                 | $5,000                            | 31000                           | $500                              | $500,000/$1,000,000       |
+
+
+    # Step 18: Add a Primary Location
     # Wind/Hail deductible verification and selection are performed within this step based on zip code and state
     When user provides location information and continues
       | Question                | Answer           |
@@ -112,7 +118,7 @@ Feature: SFP Country Estate Policy
       | TotalAcreage            | 6                |
       | WindHailDeductible      | 1%               |
 
-    # Step 17: Add a Residence
+    # Step 19: Add a Residence
     When user adds a Residence to the Location
       | Question          | Answer        |
       | AdditionalDesc    | Main House    |
@@ -126,7 +132,7 @@ Feature: SFP Country Estate Policy
       | SeasonalOrVacant  | No            |
       | SolidFuelQuestion | No            |
 
-    # Step 18: Add Residence Coverage
+    # Step 20: Add Residence Coverage
     When user adds Residence Coverage
       | Question           | Answer                    |
       | InsuranceAmount    | 375000                    |
@@ -137,23 +143,16 @@ Feature: SFP Country Estate Policy
       | RCTOption          | Standard                  |
       | UseDefaults        | Yes                       |
 
-    # Step 19: Add Policy Wide Coverages
-    # TODO: After clicking Add Coverage, each coverage may require entering limit amounts on a sub-page
-    # (Water Damage: $5,000 | Unscheduled Structures: $5,000 | Blanket FPP: $31,000 | Liability: $500,000/$1,000,000)
-    When user selects Policy Wide or Division Specific Coverages and continues
-      | CoverageType | CoverageName          | Select |
-      | Policy       | Water Damage          | Yes    |
-      | Policy       | Unscheduled Structures| Yes    |
-      | Policy       | Blanket FPP           | Yes    |
-      | Policy       | Liability             | Yes    |
+    # Step 21: Skip Optional Coverages
+    When user skips Optional Coverages and continues
 
-    # Step 20: Run the Insurance Score
+    # Step 22: Run the Insurance Score
     When user runs Insurance Score
       | Question              | Answer          |
       | EntityType            | Primary Insured |
       | InsuranceScoreConsent | Accept          |
 
-    # Step 21: Add a Mortgagee
+    # Step 23: Add a Mortgagee
     When user adds Additional Interest Mortgagee
       | Question              | Answer           |
       | SearchName            | Connect One Bank |
@@ -164,13 +163,13 @@ Feature: SFP Country Estate Policy
       | DescriptionOfInterest | Mortgage Lender  |
       | EscrowBilled          | Yes              |
 
-    # Step 22: Verify Premium on Pricing Screen
+    # Step 23: Verify Premium on Pricing Screen
     Then user verifies Premium on Pricing screen
 
-    # Step 23: Validate Forms via Duckcreek
+    # Step 24: Validate Forms via Duckcreek
     When user validates Forms via Duckcreek for state "<StateAbbv>"
 
-    # Step 24: Save for Later and re-open by quote number
+    # Step 25: Save for Later and re-open by quote number
     When user clicks Save for Later
     And user navigates to Expert Quote and searches by Quote Number
 

@@ -79,8 +79,18 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
 
             if (!string.IsNullOrEmpty(contextData.ResidencePerils))
             {
-                await PerilsSelect.ClickAsync();
-                await _page.GetByRole(AriaRole.Listbox).Last.GetByRole(AriaRole.Option, new() { Name = contextData.ResidencePerils }).First.ClickAsync();
+                var perilsAriaDisabled = await PerilsSelect.GetAttributeAsync("aria-disabled");
+                var perilsDisabled = string.Equals(perilsAriaDisabled, "true", System.StringComparison.OrdinalIgnoreCase);
+
+                if (perilsDisabled)
+                {
+                    System.Console.WriteLine($"[ResidenceCoverage] Perils is disabled for this flow/state. Requested='{contextData.ResidencePerils}'. Skipping selection.");
+                }
+                else
+                {
+                    await PerilsSelect.ClickAsync();
+                    await _page.GetByRole(AriaRole.Listbox).Last.GetByRole(AriaRole.Option, new() { Name = contextData.ResidencePerils }).First.ClickAsync();
+                }
             }
 
             if (!string.IsNullOrEmpty(contextData.ResidenceThermostatQuestion))

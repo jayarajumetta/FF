@@ -144,6 +144,9 @@ namespace Playwright_POC.Helpers
                 var answer = row["Answer"];
                 switch (question)
                 {
+                    case "ProductSelection":
+                        // Used by table-driven product selector in SFPSteps; no context mapping needed.
+                        break;
                     case "EffectiveDate":
                         _contextData.EffectiveDate = DateHelpers.ResolveDateToken(answer);
                         break;
@@ -191,6 +194,11 @@ namespace Playwright_POC.Helpers
                 var answer = row["Answer"];
                 switch (question)
                 {
+                    case "ProductSelection":
+                    case "Product Selection":
+                        // Consumed by step definition for product selection (SFP vs CE).
+                        // No direct ScenarioContext mapping needed here.
+                        break;
                     case "EffectiveDate":
                         _contextData.EffectiveDate = DateHelpers.ResolveDateToken(answer);
                         break;

@@ -50,6 +50,10 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             _page.GetByTestId("fields.building.rows[0].buildingInput$eQVacantSeasonal.value-chip-item-wrapper")
                  .Filter(new() { HasText = value?.Trim() ?? "No" }).First;
 
+        // Some states/products render Vacant/Seasonal as a dropdown instead of chips
+        public ILocator VacantSeasonalSelect =>
+            _page.GetByTestId("fields.building.rows[0].buildingInput$eQVacantSeasonal.value").First;
+
         // Solid Fuel Heating Devices (No / Yes)
         private ILocator GetSolidFuelButton(string yesOrNo) =>
             _page.GetByTestId("fields.building_SolidFuel.rows[0].buildingInput$solidFuelHeatingDevices.value-chip-item-wrapper")
@@ -119,13 +123,38 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             }
 
             if (!string.IsNullOrEmpty(contextData.ResidenceSeasonalOrVacant))
-                await GetVacantSeasonalButton(contextData.ResidenceSeasonalOrVacant).ClickAsync();
+                await SelectVacantSeasonalAsync(contextData.ResidenceSeasonalOrVacant);
 
             if (!string.IsNullOrEmpty(contextData.ResidenceSolidFuelQuestion))
             {
                 var yesOrNo = contextData.ResidenceSolidFuelQuestion.ToLower() is "yes" or "true" ? "Yes" : "No";
                 await GetSolidFuelButton(yesOrNo).ClickAsync();
             }
+        }
+
+        private async Task SelectVacantSeasonalAsync(string value)
+        {
+            var normalized = (value ?? "No").Trim();
+
+            // 1) Preferred: chip control
+            var chipOption = GetVacantSeasonalButton(normalized);
+            if (await chipOption.CountAsync() > 0 && await chipOption.IsVisibleAsync())
+            {
+                await chipOption.ClickAsync();
+                await WaitForSpinnerAsync();
+                return;
+            }
+
+            // 2) Fallback: mat-select dropdown
+            if (await VacantSeasonalSelect.CountAsync() > 0 && await VacantSeasonalSelect.IsVisibleAsync())
+            {
+                await Playwright_POC.Helpers.Helpers.SelectByTextAsync(_page, VacantSeasonalSelect, normalized, timeoutMs: 15000, blurAfterSelect: false);
+                await WaitForSpinnerAsync();
+                return;
+            }
+
+            // 3) Optional/hidden in some variants - continue
+            System.Console.WriteLine($"[Residence] Vacant/Seasonal control not found. Requested='{normalized}'. Skipping.");
         }
         #endregion
     }

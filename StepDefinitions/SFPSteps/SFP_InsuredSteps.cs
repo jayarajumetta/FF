@@ -63,6 +63,14 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         [When("user enters Claims and Prior Insurance Information and continues")]
         public async Task UserEntersClaimsAndPriorInsuranceInformationAndContinues(Table table)
         {
+            // CE/re-open flows can land on a different page; force the expected page before interacting.
+            var exposuresChip = _context.Page.GetByTestId("fields.data.policy.policyInput$exposuresInsuredAN90Days.value-chip-item-wrapper");
+            if (await exposuresChip.CountAsync() == 0)
+            {
+                var sideMenu = new SideMenuNavigation(_context.Page);
+                await sideMenu.GoToByNameAsync("claims and prior insurance");
+            }
+
             var claimsPriorInsurancePage = new ClaimsPriorInsurancePage(_context.Page);
             TableMappingHelpers.ClaimsAndPriorInsuranceFields(table, _contextData);
 
@@ -127,6 +135,13 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             TableMappingHelpers.NarrativeFields(table, _contextData);
 
             // Check if we're on the narrative page (button exists)
+            if (!await narrativePage.IsOnNarrativePageAsync())
+            {
+                var sideMenu = new SideMenuNavigation(_context.Page);
+                await sideMenu.GoToByNameAsync("narrative");
+                await narrativePage.WaitForSpinnerAsync();
+            }
+
             if (await narrativePage.IsOnNarrativePageAsync())
             {
                 await narrativePage.ClickAddNarrativeButtonAsync();
@@ -134,7 +149,7 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
             }
             else
             {
-                Console.WriteLine("NOTE: Not on Narrative page or button not found - skipping narrative entry");
+                throw new InvalidOperationException("Narrative page could not be reached or Add Narrative button is unavailable.");
             }
 
             await narrativePage.ClickNextAsync();
