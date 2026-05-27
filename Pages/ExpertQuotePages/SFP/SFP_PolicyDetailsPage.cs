@@ -49,6 +49,26 @@ namespace Playwright_POC.Pages.ExpertQuotePages
 
         #region Public Methods
 
+        public async Task EnsureOnPolicyDetailsPageAsync(int timeoutMs = 15000)
+        {
+            var primaryFarmTypeOptions =
+                _page.GetByTestId("fields.account.policyInput$farmTypeCategory.value-chip-item-wrapper");
+
+            try
+            {
+                await primaryFarmTypeOptions.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = timeoutMs });
+                return;
+            }
+            catch (TimeoutException)
+            {
+                var ssnPopup = _page.GetByRole(AriaRole.Heading, new() { Name = "Enter the Client's Full SSN#" });
+                var ssnVisible = await ssnPopup.CountAsync() > 0 && await ssnPopup.IsVisibleAsync();
+
+                throw new InvalidOperationException(
+                    $"Policy Details is not ready. Expected farm type controls were not visible within {timeoutMs}ms. URL='{_page.Url}', SSNPopupVisible={ssnVisible}.");
+            }
+        }
+
         public async Task SelectPrimaryFarmCategoryAsync(string category)
         {
             // Wait for Policy Details page to be fully loaded before interacting

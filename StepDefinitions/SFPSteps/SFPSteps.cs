@@ -145,6 +145,7 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             TableMappingHelpers.SFPPolicyDataFields(table, _contextData);
             var sfpPolicyDetailsPage = new SFP_PolicyDetailsPage(_context.Page);
+            await sfpPolicyDetailsPage.EnsureOnPolicyDetailsPageAsync();
             await sfpPolicyDetailsPage.SelectPrimaryFarmCategoryAsync(_contextData.PrimaryFarmType);
             await sfpPolicyDetailsPage.SelectPrimaryFarmSubTypeAsync(_contextData.LivestockType);
 

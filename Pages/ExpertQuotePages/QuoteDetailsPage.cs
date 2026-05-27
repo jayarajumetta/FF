@@ -348,7 +348,22 @@ namespace Playwright_POC.Pages
             }
             catch (TimeoutException)
             {
-                Console.WriteLine($"[SSN] Warning: First popup did not close — Submit may not have worked");
+                var dialogText = string.Empty;
+                var dialog = _page.Locator("mat-dialog-container").First;
+                if (await dialog.CountAsync() > 0)
+                {
+                    try
+                    {
+                        dialogText = (await dialog.InnerTextAsync()).Replace("\r", " ").Replace("\n", " ").Trim();
+                    }
+                    catch
+                    {
+                        // Keep default empty text if dialog extraction fails.
+                    }
+                }
+
+                throw new InvalidOperationException(
+                    $"SSN submit did not close the SSN popup. URL='{_page.Url}'. Dialog='{dialogText}'.");
             }
 
             // Check for confirm dialog (same btnConfirmYes) — allow up to 10s.
@@ -371,6 +386,13 @@ namespace Playwright_POC.Pages
             // Wait for DuckCreek's full page navigation after SSN submission to settle
             await _page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             await WaitForSpinnerAsync();
+
+            // Hard guard: never continue into Policy Details while SSN modal is still blocking.
+            if (await SSNPopup.CountAsync() > 0 && await SSNPopup.IsVisibleAsync())
+            {
+                throw new InvalidOperationException($"SSN popup is still visible after submission. URL='{_page.Url}'.");
+            }
+
             Console.WriteLine($"[SSN] Page settled after SSN — URL: {_page.Url}");
         }
 
