@@ -309,7 +309,10 @@ namespace Playwright_POC.Services
                     EvaluateFormNotOnPolicy(result, exp.ExpectedStatus);
                 }
 
-                results.Add(result);
+                // Keep reports focused on actionable items by excluding
+                // "correctly absent" rows (C12) from output.
+                if (!string.Equals(result.ResultCode, "C12", StringComparison.OrdinalIgnoreCase))
+                    results.Add(result);
             }
 
             // Phase 2: Unexpected forms (on policy but not in baseline)

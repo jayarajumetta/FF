@@ -17,7 +17,7 @@ namespace Playwright_POC.Pages
             public string DivisionIWaterDamage { get; init; } = "$5,000";
             public string DivisionIIUnscheduledStructures { get; init; } = "$5,000";
             public string DivisionIIIBlanketFppSublimit { get; init; } = "5000";
-            public string DivisionIIIBlanketFppDeductible { get; init; } = "$500";
+            public string DivisionIIIBlanketFppDeductible { get; init; } = "$1,000";
             public string DivisionVLiabilityLimit { get; init; } = "$500,000/$1,000,000";
         }
 

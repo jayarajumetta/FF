@@ -206,12 +206,36 @@ namespace Playwright_POC.Pages
         {
             return new SFP_AddCountryEstateCoveragePage.CountryEstateCoverageSelection
             {
-                DivisionIWaterDamage = GetOptionalCell(table, row, "CEDivisionIWaterDamage", "$5,000"),
-                DivisionIIUnscheduledStructures = GetOptionalCell(table, row, "CEDivisionIIUnscheduledStructures", "$5,000"),
-                DivisionIIIBlanketFppSublimit = GetOptionalCell(table, row, "CEDivisionIIIBlanketFppSublimit", "5000"),
-                DivisionIIIBlanketFppDeductible = GetOptionalCell(table, row, "CEDivisionIIIBlanketFppDeductible", "$500"),
-                DivisionVLiabilityLimit = GetOptionalCell(table, row, "CEDivisionVLiabilityLimit", "$500,000/$1,000,000"),
+                DivisionIWaterDamage = GetCountryEstateValue(table, row, "CEDivisionIWaterDamage", "$5,000"),
+                DivisionIIUnscheduledStructures = GetCountryEstateValue(table, row, "CEDivisionIIUnscheduledStructures", "$5,000"),
+                DivisionIIIBlanketFppSublimit = GetCountryEstateValue(table, row, "CEDivisionIIIBlanketFppSublimit", "5000"),
+                DivisionIIIBlanketFppDeductible = GetCountryEstateValue(table, row, "CEDivisionIIIBlanketFppDeductible", "$1,000"),
+                DivisionVLiabilityLimit = GetCountryEstateValue(table, row, "CEDivisionVLiabilityLimit", "$500,000/$1,000,000"),
             };
+        }
+
+        private static string GetCountryEstateValue(Table table, DataTableRow row, string key, string fallback)
+        {
+            // Backward compatible path: original wide one-row table with CE keys as columns.
+            var wideValue = GetOptionalCell(table, row, key, fallback);
+            if (!string.Equals(wideValue, fallback, StringComparison.Ordinal))
+                return wideValue;
+
+            // Preferred path: vertical Question/Answer table.
+            var hasQuestionAnswerSchema = table.Header.Any(h => h.Equals("Question", StringComparison.OrdinalIgnoreCase))
+                                        && table.Header.Any(h => h.Equals("Answer", StringComparison.OrdinalIgnoreCase));
+
+            if (!hasQuestionAnswerSchema)
+                return wideValue;
+
+            var qaRow = table.Rows.FirstOrDefault(r =>
+                r["Question"].Equals(key, StringComparison.OrdinalIgnoreCase));
+
+            if (qaRow == null)
+                return fallback;
+
+            var value = qaRow["Answer"]?.Trim();
+            return string.IsNullOrWhiteSpace(value) ? fallback : value;
         }
 
         private static string GetOptionalCell(Table table, DataTableRow row, string columnName, string fallback)
