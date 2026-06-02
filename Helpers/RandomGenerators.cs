@@ -184,17 +184,26 @@ namespace Playwright_POC.Helpers
             firstName = firstName ?? GenerateRandomFirstName();
             lastName = lastName ?? GenerateRandomLastName();
 
+            // Remove spaces/special characters so local-part remains valid when names include labels.
+            var safeFirst = new string(firstName.Where(char.IsLetterOrDigit).ToArray());
+            var safeLast = new string(lastName.Where(char.IsLetterOrDigit).ToArray());
+
+            if (string.IsNullOrWhiteSpace(safeFirst))
+                safeFirst = GenerateRandomFirstName();
+            if (string.IsNullOrWhiteSpace(safeLast))
+                safeLast = GenerateRandomLastName();
+
             // Common fake email domains
             string[] domains = { "testmail.com", "fakemail.org", "example.com", "mailtest.net",
                                  "testuser.io", "mockmail.com", "tempmail.org", "demomail.com" };
 
             // Email patterns
             string[] patterns = {
-                $"{firstName.ToLower()}.{lastName.ToLower()}",
-                $"{firstName.ToLower()}{lastName.ToLower()}",
-                $"{firstName.ToLower()[0]}{lastName.ToLower()}",
-                $"{firstName.ToLower()}.{lastName.ToLower()}{Random.Shared.Next(1, 99)}",
-                $"{firstName.ToLower()}{Random.Shared.Next(100, 999)}"
+                $"{safeFirst.ToLower()}.{safeLast.ToLower()}",
+                $"{safeFirst.ToLower()}{safeLast.ToLower()}",
+                $"{safeFirst.ToLower()[0]}{safeLast.ToLower()}",
+                $"{safeFirst.ToLower()}.{safeLast.ToLower()}{Random.Shared.Next(1, 99)}",
+                $"{safeFirst.ToLower()}{Random.Shared.Next(100, 999)}"
             };
 
             string localPart = patterns[Random.Shared.Next(patterns.Length)];

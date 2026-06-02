@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -105,6 +106,16 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
                 _contextData.ClientLastName = RandomGenerators.GenerateRandomLastName();
             }
 
+            // Apply consistent automation naming so quote search results are easy to identify.
+            // First: "PW <RandomFirst>", Last: "<Basic|CE> <RandomLast>"
+            var firstNameBase = _contextData.ClientFirstName ?? string.Empty;
+            if (firstNameBase.StartsWith("PW", StringComparison.OrdinalIgnoreCase))
+                firstNameBase = firstNameBase[2..].TrimStart();
+
+            var productLabel = GetScenarioProductLabel();
+            _contextData.ClientFirstName = $"PW {firstNameBase.Trim()}";
+            _contextData.ClientLastName = $"{productLabel} {_contextData.ClientLastName?.Trim()}";
+
             // Build full name and perform the search
             string name = $"{_contextData.ClientFirstName} {_contextData.ClientLastName}";
             var clientSearchPage = new ClientSearchPage(_context.Page);
@@ -182,6 +193,9 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
         {
             TableMappingHelpers.AccountOwnerFields(table, _contextData);
 
+            // Standardize middle name to the current state abbreviation (e.g., UT, AR).
+            _contextData.ClientMiddleName = ToStateAbbreviation(_contextData.State);
+
             var accountInformationPage = new AccountOwnerInfoPage(_context.Page);
 
             // Modular, explicit calls for each logical segment:
@@ -194,6 +208,58 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
             await accountInformationPage.AnswerMailAndResidenceQuestionsAsync(_contextData);
             await accountInformationPage.ClickNextAsync();
             Console.WriteLine(_contextData.ClientFirstName);
+        }
+
+        private string GetScenarioProductLabel()
+        {
+            var tags = _scenarioContext?.ScenarioInfo?.Tags ?? Array.Empty<string>();
+            if (tags.Any(t => t.Equals("CE", StringComparison.OrdinalIgnoreCase)))
+                return "CE";
+
+            var title = _scenarioContext?.ScenarioInfo?.Title ?? string.Empty;
+            if (title.IndexOf("Country Estate", StringComparison.OrdinalIgnoreCase) >= 0)
+                return "CE";
+
+            return "Basic";
+        }
+
+        private static string ToStateAbbreviation(string state)
+        {
+            var value = (state ?? string.Empty).Trim();
+            if (value.Length == 2)
+                return value.ToUpperInvariant();
+
+            return value.ToUpperInvariant() switch
+            {
+                "ALABAMA" => "AL",
+                "ARKANSAS" => "AR",
+                "ARIZONA" => "AZ",
+                "COLORADO" => "CO",
+                "IDAHO" => "ID",
+                "IOWA" => "IA",
+                "INDIANA" => "IN",
+                "ILLINOIS" => "IL",
+                "KANSAS" => "KS",
+                "KENTUCKY" => "KY",
+                "LOUISIANA" => "LA",
+                "MINNESOTA" => "MN",
+                "MONTANA" => "MT",
+                "NEW MEXICO" => "NM",
+                "NEBRASKA" => "NE",
+                "NEVADA" => "NV",
+                "NORTH DAKOTA" => "ND",
+                "OKLAHOMA" => "OK",
+                "OREGON" => "OR",
+                "SOUTH CAROLINA" => "SC",
+                "SOUTH DAKOTA" => "SD",
+                "TENNESSEE" => "TN",
+                "TEXAS" => "TX",
+                "UTAH" => "UT",
+                "WASHINGTON" => "WA",
+                "WISCONSIN" => "WI",
+                "WYOMING" => "WY",
+                _ => value
+            };
         }
 
         [When("user enters Pre-Qualification information and continues")]

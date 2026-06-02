@@ -35,7 +35,7 @@ Feature: SFP Country Estate Policy
       | StreetAddress      | <Address>      |
       | AptNumber          | <AddressLine2> |
       | City               | <City>         |
-      | State              | <StateFull>    |
+      | State              | <State>        |
       | ZipCode            | <Zip>          |
       | ReceivedMail       | Yes            |
       | WhereClientResides | Yes            |
@@ -47,7 +47,7 @@ Feature: SFP Country Estate Policy
       | EffectiveDate    | {{tomorrow}}                                |
       | PolicyTerm       | 12 months                                   |
       | AgentCode        | D2102                                       |
-      | RatingState      | <StateFull>                                 |
+      | RatingState      | <State>                                     |
       | OwnershipType    | Individually Owned                          |
       | WritingCompany   | American National Property And Casualty Co. |
       | RiskAddress      | <Address>, <City>, <StateAbbv> <Zip>        |
@@ -101,10 +101,14 @@ Feature: SFP Country Estate Policy
       | CoverageType | CoverageName               | Select |
       | Policy       | Country Estate Endorsement | Yes    |
 
-    # Step 17A: Edit Coverage - Country Estate (data-driven row/column values)
+    # Step 17A: Edit Coverage - Country Estate
     When user edits Country Estate coverage and continues
-      | CEDivisionIWaterDamage | CEDivisionIIUnscheduledStructures | CEDivisionIIIBlanketFppSublimit | CEDivisionIIIBlanketFppDeductible | CEDivisionVLiabilityLimit |
-      | $5,000                 | $5,000                            | 31000                           | $500                              | $500,000/$1,000,000       |
+      | Question                          | Answer              |
+      | CEDivisionIWaterDamage            | $5,000              |
+      | CEDivisionIIUnscheduledStructures | $5,000              |
+      | CEDivisionIIIBlanketFppSublimit   |               31000 |
+      | CEDivisionIIIBlanketFppDeductible | $1,000              |
+      | CEDivisionVLiabilityLimit         | $500,000/$1,000,000 |
 
 
     # Step 18: Add a Primary Location
@@ -217,31 +221,35 @@ Feature: SFP Country Estate Policy
     Then user verifies Transmit button is enabled on Submission page
 
     Examples:
-      | State          | StateAbbv | StateFull      | Address            | AddressLine2 | City           | Zip   | County       |
-      | Alabama        | AL        | Alabama        | 1918 Avalon Ave    | 111          | Muscle Shoals  | 35661 | Colbert      |
-      | Arkansas       | AR        | Arkansas       | 3998 Harrison St   | 111          | Batesville     | 72503 | Independence |
-      | Arizona        | AZ        | Arizona        | 4201 N 24th St     | 111          | Phoenix        | 85016 | Maricopa     |
-      | Colorado       | CO        | Colorado       | 231 Main St        | 111          | Fort Morgan    | 80701 | Morgan       |
-      | Idaho          | ID        | Idaho          | 1221 W Ironwood Dr | 111          | Coeur D Alene  | 83814 | Kootenai     |
-      | Illinois       | IL        | Illinois       | 2576 Charles St    | 111          | Rockford       | 61108 | Winnebago    |
-      | Indiana        | IN        | Indiana        | 5518 Calumet Ave   | 111          | Hammond        | 46320 | Lake         |
-      | Iowa           | IA        | Iowa           | 808 River St       | 111          | Decorah        | 52101 | Winneshiek   |
-      | Kansas         | KS        | Kansas         | 9400 State Ave     | 111          | Kansas City    | 66112 | Wyandotte    |
-      | Kentucky       | KY        | Kentucky       | 1002 Medical Dr    | 111          | Mayfield       | 42066 | Graves       |
-      | Louisiana      | LA        | Louisiana      | 218 Meadow Dr      | 111          | Oakdale        | 71463 | Allen        |
-      | Minnesota      | MN        | Minnesota      | 115 S Main ST      | 111          | Warren         | 56762 | Marshall     |
-      | Montana        | MT        | Montana        | 1202 3rd St W      | 11           | Roundup        | 59072 | Musselshell  |
-      | Nebraska       | NE        | Nebraska       | 1517 Broadway      | 111          | Scottsbluff    | 69361 | Scotts Bluff |
-      | Nevada         | NV        | Nevada         | 340 N 11th St      | 111          | Las Vegas      | 89101 | Clark        |
-      | New Mexico     | NM        | New Mexico     | 901 West 13th St   | 111          | Clovis         | 88101 | Curry        |
-      | North Dakota   | ND        | North Dakota   | 600 S 2nd St       | 111          | Bismarck       | 58504 | Burleigh     |
-      | Oklahoma       | OK        | Oklahoma       | 436255 E 330 Rd    | 111          | Big Cabin      | 74332 | Craig        |
-      | Oregon         | OR        | Oregon         | 661 SW 26TH ST     | 111          | Corvallis      | 97331 | Benton       |
-      | South Carolina | SC        | South Carolina | 3009 Augusta Hwy   | 111          | Allendale      | 29810 | Allendale    |
-      | South Dakota   | SD        | South Dakota   | 700 Governors Dr   | 111          | Pierre         | 57501 | Hughes       |
-      | Tennessee      | TN        | Tennessee      | 207 N Boone St     | 111          | Johnson City   | 37604 | Washington   |
-      | Texas          | TX        | Texas          | 118 Broadway       | 111          | San Antonio    | 78205 | Bexar        |
-      | Utah           | UT        | Utah           | 170 N Main         | 111          | Logan          | 84321 | Cache        |
-      | Washington     | WA        | Washington     | 834 Sheridan St    | 111          | Port Townsend  | 98368 | Jefferson    |
-      | Wisconsin      | WI        | Wisconsin      | 3601 Memorial Dr   | 111          | Madison        | 53704 | Dane         |
-      | Wyoming        | WY        | Wyoming        | 100 E B St         | 111          | Casper         | 82601 | Natrona      |
+      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
+      | Alabama        | AL        | 1918 Avalon Ave               |          111 | Muscle Shoals | 35661 | Colbert      |
+      | Arkansas       | AR        | 3998 Harrison St              |          111 | Batesville    | 72503 | Independence |
+      | Arizona        | AZ        | 4201 N 24th St                |          111 | Phoenix       | 85016 | Maricopa     |
+      | Colorado       | CO        | 231 Main St                   |          111 | Fort Morgan   | 80701 | Morgan       |
+      | Idaho          | ID        | 1221 W Ironwood Dr            |          111 | Coeur D Alene | 83814 | Kootenai     |
+      | Illinois       | IL        | 2576 Charles St               |          111 | Rockford      | 61108 | Winnebago    |
+      | Indiana        | IN        | 5518 Calumet Ave              |          111 | Hammond       | 46320 | Lake         |
+      | Iowa           | IA        | 808 River St                  |          111 | Decorah       | 52101 | Winneshiek   |
+      | Kansas         | KS        | 9400 State Ave                |          111 | Kansas City   | 66112 | Wyandotte    |
+      | Kentucky       | KY        | 1002 Medical Dr               |          111 | Mayfield      | 42066 | Graves       |
+      | Louisiana      | LA        | 218 Meadow Dr                 |          111 | Oakdale       | 71463 | Allen        |
+      | Mississippi    | MS        | 4105 Washington Ave           |          111 | Gulfport      | 39507 | Harrison     |
+      | Missouri       | MO        | 1895 S Forrest Heights Avenue |          111 | Springfield   | 65809 | Greene       |
+      | Minnesota      | MN        | 115 S Main ST                 |          111 | Warren        | 56762 | Marshall     |
+      | Montana        | MT        | 1202 3rd St W                 |           11 | Roundup       | 59072 | Musselshell  |
+      | Nebraska       | NE        | 1517 Broadway                 |          111 | Scottsbluff   | 69361 | Scotts Bluff |
+      | Nevada         | NV        | 340 N 11th St                 |          111 | Las Vegas     | 89101 | Clark        |
+      | New Hampshire  | NH        | 67 Comstock Road              |          111 | Alstead       | 03602 | Cheshire     |
+      | New Mexico     | NM        | 901 West 13th St              |          111 | Clovis        | 88101 | Curry        |
+      | North Dakota   | ND        | 600 S 2nd St                  |          111 | Bismarck      | 58504 | Burleigh     |
+      | Oklahoma       | OK        | 436255 E 330 Rd               |          111 | Big Cabin     | 74332 | Craig        |
+      | Ohio           | OH        | 1566 Northeast Ave            |          111 | Tallmadge     | 44278 | Summit       |
+      | Oregon         | OR        | 661 SW 26TH ST                |          111 | Corvallis     | 97331 | Benton       |
+      | South Carolina | SC        | 3009 Augusta Hwy              |          111 | Allendale     | 29810 | Allendale    |
+      | South Dakota   | SD        | 700 Governors Dr              |          111 | Pierre        | 57501 | Hughes       |
+      | Tennessee      | TN        | 207 N Boone St                |          111 | Johnson City  | 37604 | Washington   |
+      | Texas          | TX        | 118 Broadway                  |          111 | San Antonio   | 78205 | Bexar        |
+      | Utah           | UT        | 170 N Main                    |          111 | Logan         | 84321 | Cache        |
+      | Washington     | WA        | 834 Sheridan St               |          111 | Port Townsend | 98368 | Jefferson    |
+      | Wisconsin      | WI        | 3601 Memorial Dr              |          111 | Madison       | 53704 | Dane         |
+      | Wyoming        | WY        | 100 E B St                    |          111 | Casper        | 82601 | Natrona      |
