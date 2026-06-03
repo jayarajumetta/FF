@@ -1,4 +1,4 @@
-// Tools/LocatorScan/LocatorFileGenerator.cs
+﻿// Tools/LocatorScan/LocatorFileGenerator.cs
 //
 // Generates C# locator files from scan results with proper naming and organization
 
@@ -13,7 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 
-namespace Playwright_POC.Tools.LocatorScan
+namespace PnCTestAutomation.Tools.LocatorScan
 {
     /// <summary>
     /// Output format for generated locator files
@@ -456,7 +456,7 @@ namespace Playwright_POC.Tools.LocatorScan
             sb.AppendLine("using System.Text;");
             sb.AppendLine("using System.Threading.Tasks;");
             sb.AppendLine();
-            sb.AppendLine("namespace Playwright_POC.Locators");
+            sb.AppendLine("namespace PnCTestAutomation.Locators");
             sb.AppendLine("{");
 
             // Deduplicate elements by their locator code snippet
@@ -525,7 +525,7 @@ namespace Playwright_POC.Tools.LocatorScan
             // File header - minimal like existing SFP pages
             sb.AppendLine("using Microsoft.Playwright;");
             sb.AppendLine();
-            sb.AppendLine("namespace Playwright_POC.Pages");
+            sb.AppendLine("namespace PnCTestAutomation.Pages");
             sb.AppendLine("{");
             sb.AppendLine($"    public class SFP_{pageIdentifier}Page : BasePage");
             sb.AppendLine("    {");

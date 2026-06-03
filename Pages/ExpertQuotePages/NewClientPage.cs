@@ -1,8 +1,8 @@
-// Pages/NewClientPage.cs
+﻿// Pages/NewClientPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     public class NewClientPage
     {

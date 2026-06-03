@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -6,9 +6,9 @@ using System.Net.Http.Headers;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
-using Playwright_POC.Models;
+using PnCTestAutomation.Models;
 
-namespace Playwright_POC.Clients
+namespace PnCTestAutomation.Clients
 {
     /// <summary>
     /// HTTP client for the DuckCreek Forms Engine API.

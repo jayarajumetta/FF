@@ -1,10 +1,10 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Helpers
+namespace PnCTestAutomation.Helpers
 {
     /// <summary>
     /// Lightweight on-failure locator rescue. When a locator can't find an element,

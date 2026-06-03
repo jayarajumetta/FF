@@ -1,4 +1,4 @@
-namespace Playwright_POC.Models
+﻿namespace PnCTestAutomation.Models
 {
     /// <summary>
     /// Underwriting question answers

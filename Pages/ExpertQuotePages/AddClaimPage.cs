@@ -1,9 +1,9 @@
-using Microsoft.Playwright;
-using Playwright_POC.Helpers;
+﻿using Microsoft.Playwright;
+using PnCTestAutomation.Helpers;
 using System;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages.ExpertQuotePages
+namespace PnCTestAutomation.Pages.ExpertQuotePages
 {
     /// <summary>
     /// Page object for the Add Claim dialog/modal in Claims & Violations

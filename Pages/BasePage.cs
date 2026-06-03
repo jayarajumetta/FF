@@ -1,9 +1,9 @@
-using Microsoft.Playwright;
-using Playwright_POC.Helpers;
+﻿using Microsoft.Playwright;
+using PnCTestAutomation.Helpers;
 using System;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     /// <summary>
     /// Base class for all Page Objects providing common functionality.

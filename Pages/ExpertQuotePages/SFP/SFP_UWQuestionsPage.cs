@@ -1,10 +1,10 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages.ExpertQuotePages.SFP
+namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 {
     /// <summary>
     /// SFP-specific UW Questions page - handles General UW Questions checkboxes

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,11 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 using Microsoft.Extensions.Configuration;
-using Playwright_POC.Context;
-using Playwright_POC.Models;
-using Playwright_POC.Pages.ExpressPages;
+using PnCTestAutomation.Context;
+using PnCTestAutomation.Models;
+using PnCTestAutomation.Pages.ExpressPages;
 
-namespace Playwright_POC.Services
+namespace PnCTestAutomation.Services
 {
     /// <summary>
     /// Opens CLAS Express in a second tab, logs in, opens a quote, and extracts

@@ -1,9 +1,9 @@
-using Microsoft.Playwright;
-using Playwright_POC.Pages;
+﻿using Microsoft.Playwright;
+using PnCTestAutomation.Pages;
 using System;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages.ExpertQuotePages
+namespace PnCTestAutomation.Pages.ExpertQuotePages
 {
     /// <summary>
     /// Feature Flags modal — Dev environment only.

@@ -1,4 +1,4 @@
-// Tools/LocatorScan/LocatorScanner.cs
+﻿// Tools/LocatorScan/LocatorScanner.cs
 #nullable enable
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 
-namespace Playwright_POC.Tools.LocatorScan
+namespace PnCTestAutomation.Tools.LocatorScan
 {
     // ──────────────────────────────────────────────────────────────────────
     // Options

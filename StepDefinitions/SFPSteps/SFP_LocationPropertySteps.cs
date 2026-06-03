@@ -1,14 +1,14 @@
-using Microsoft.Playwright;
-using Playwright_POC.Context;
-using Playwright_POC.Helpers;
-using Playwright_POC.Pages;
-using Playwright_POC.Pages.ExpertQuotePages;
-using Playwright_POC.Pages.ExpertQuotePages.SFP;
+﻿using Microsoft.Playwright;
+using PnCTestAutomation.Context;
+using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Pages;
+using PnCTestAutomation.Pages.ExpertQuotePages;
+using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 using Reqnroll;
 using System;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.StepDefinitions.SFPSteps
+namespace PnCTestAutomation.StepDefinitions.SFPSteps
 {
     [Binding]
     public class SFP_LocationPropertySteps

@@ -1,6 +1,6 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 
-namespace Playwright_POC.Pages.ExpertQuotePages.SFP
+namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 {
     public class SFP_LocationsResidencesBuildingsPage(IPage page) : BasePage(page)
     {

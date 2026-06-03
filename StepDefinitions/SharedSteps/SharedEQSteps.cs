@@ -1,12 +1,12 @@
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 using NUnit.Framework;
-using Playwright_POC.Configuration;
-using Playwright_POC.Context;
-using Playwright_POC.Helpers;
-using Playwright_POC.Pages;
-using Playwright_POC.Pages.ExpertQuotePages;
-using Playwright_POC.Pages.ExpertQuotePages.SFP;
+using PnCTestAutomation.Configuration;
+using PnCTestAutomation.Context;
+using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Pages;
+using PnCTestAutomation.Pages.ExpertQuotePages;
+using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 using Reqnroll;
 using System.Text.RegularExpressions;
 using System;
@@ -18,7 +18,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.StepDefinitions.SharedSteps
+namespace PnCTestAutomation.StepDefinitions.SharedSteps
 {
     [Binding]
     public partial class SharedEQSteps

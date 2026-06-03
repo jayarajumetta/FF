@@ -1,9 +1,9 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
-using Playwright_POC.Helpers;
+using PnCTestAutomation.Helpers;
 
-namespace Playwright_POC.Pages.ExpertQuotePages.SFP
+namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 {
     /// <summary>
     /// SFP Mortgagee / Loss Payee page - for adding mortgagee additional interest to a policy.

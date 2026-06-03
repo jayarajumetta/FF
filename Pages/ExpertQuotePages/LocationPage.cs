@@ -1,6 +1,6 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 using NUnit.Framework;
-using Playwright_POC.Helpers;
+using PnCTestAutomation.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,7 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Diagnostics.CodeAnalysis;
 using static Microsoft.Playwright.Assertions;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     public class LocationPage : BasePage
     {

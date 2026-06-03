@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 
-namespace Playwright_POC.Helpers
+namespace PnCTestAutomation.Helpers
 {
     /// <summary>
     /// Provides helper methods for date-related operations in test automation.

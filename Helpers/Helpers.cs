@@ -1,11 +1,11 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using static Microsoft.Playwright.Assertions;
 
 
-namespace Playwright_POC.Helpers
+namespace PnCTestAutomation.Helpers
 {
     public class Helpers
     {

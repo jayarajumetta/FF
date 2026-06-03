@@ -1,11 +1,11 @@
-// Tools/ExcelInspector/ExcelWorkbookSnapshot.cs
+﻿// Tools/ExcelInspector/ExcelWorkbookSnapshot.cs
 //
 // Strongly-typed model representing the raw JSON snapshot of an Excel workbook.
 // Every cell value is preserved as a string — no summarisation, no domain mapping.
 
 using System.Collections.Generic;
 
-namespace Playwright_POC.Tools.ExcelInspector
+namespace PnCTestAutomation.Tools.ExcelInspector
 {
     /// <summary>
     /// Root container for a full Excel workbook snapshot.

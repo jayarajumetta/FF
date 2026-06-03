@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 using Microsoft.Playwright;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Helpers
+namespace PnCTestAutomation.Helpers
 {
     public static class ApiHelpers
     {

@@ -1,18 +1,16 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 using NUnit.Framework;
-using Playwright_POC.Configuration;
-using Playwright_POC.Context;
-using Playwright_POC.Helpers;
-using Playwright_POC.Pages;
-using Playwright_POC.Pages.ExpertQuotePages;
-using Playwright_POC.Pages.ExpertQuotePages.SFP;
+using PnCTestAutomation.Context;
+using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Pages;
+using PnCTestAutomation.Pages.ExpertQuotePages;
+using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 using Reqnroll;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.StepDefinitions.SFPSteps
+namespace PnCTestAutomation.StepDefinitions.SFPSteps
 {
     /// <summary>
     /// Core SFP Steps - Quote Details, Policy Details, SSN Handling
@@ -22,18 +20,14 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
     {
         private readonly PlaywrightContext _context;
         private readonly ScenarioContextData _contextData;
-        private readonly CredentialsConfig _credentials;
-        private readonly IConfiguration _configuration;
         private readonly ScenarioContext _scenarioContext;
 
-        public SFPSteps(PlaywrightContext context, ScenarioContext scenarioContext, CredentialsConfig credentials, IConfiguration configuration)
+        public SFPSteps(PlaywrightContext context, ScenarioContext scenarioContext)
         {
             _context = context;
             _scenarioContext = scenarioContext;
             _contextData = _scenarioContext["ContextData"] as ScenarioContextData
                 ?? throw new InvalidOperationException("ScenarioContextData not found. Ensure TestHooks.BeforeTestRun registered it.");
-            _credentials = credentials;
-            _configuration = configuration;
         }
 
         [When("user selects Special Farm Package and inputs Quote Details")]

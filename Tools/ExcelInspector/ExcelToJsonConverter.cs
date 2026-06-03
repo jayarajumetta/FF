@@ -1,4 +1,4 @@
-// Tools/ExcelInspector/ExcelToJsonConverter.cs
+﻿// Tools/ExcelInspector/ExcelToJsonConverter.cs
 //
 // Converts any Excel (.xlsx) workbook into an ExcelWorkbookSnapshot.
 // Rules:
@@ -16,7 +16,7 @@ using System.IO;
 using System.Linq;
 using ClosedXML.Excel;
 
-namespace Playwright_POC.Tools.ExcelInspector
+namespace PnCTestAutomation.Tools.ExcelInspector
 {
     public static class ExcelToJsonConverter
     {

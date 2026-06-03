@@ -1,9 +1,9 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages.ExpertQuotePages
+namespace PnCTestAutomation.Pages.ExpertQuotePages
 {
     public class SFP_ClientDetailsPage : BasePage
     {

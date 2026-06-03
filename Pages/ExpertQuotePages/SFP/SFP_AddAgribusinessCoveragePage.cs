@@ -1,8 +1,8 @@
-// Pages/ExpertQuotePages/SFP/SFP_AddAgribusinessCoveragePage.cs
+﻿// Pages/ExpertQuotePages/SFP/SFP_AddAgribusinessCoveragePage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     /// <summary>
     /// SFP Add Coverage: Agribusiness modal/panel

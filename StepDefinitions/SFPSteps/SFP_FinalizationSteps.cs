@@ -1,22 +1,22 @@
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 using NUnit.Framework;
-using Playwright_POC.Clients;
-using Playwright_POC.Context;
-using Playwright_POC.Helpers;
-using Playwright_POC.Models;
-using Playwright_POC.Pages;
-using Playwright_POC.Pages.ExpertQuotePages;
-using Playwright_POC.Pages.ExpertQuotePages.SFP;
-using Playwright_POC.Parsers;
-using Playwright_POC.Services;
+using PnCTestAutomation.Clients;
+using PnCTestAutomation.Context;
+using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Models;
+using PnCTestAutomation.Pages;
+using PnCTestAutomation.Pages.ExpertQuotePages;
+using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
+using PnCTestAutomation.Parsers;
+using PnCTestAutomation.Services;
 using Reqnroll;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.StepDefinitions.SFPSteps
+namespace PnCTestAutomation.StepDefinitions.SFPSteps
 {
     /// <summary>
     /// Steps for SFP Finalization - Insurance Score, Mortgagee, Pricing, Submission, Checklist

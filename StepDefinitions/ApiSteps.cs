@@ -1,16 +1,16 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Microsoft.Extensions.Configuration;
-using Playwright_POC.Configuration;
-using Playwright_POC.Helpers;
-using Playwright_POC.Models;
-using Playwright_POC.Services;
+using PnCTestAutomation.Configuration;
+using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Models;
+using PnCTestAutomation.Services;
 using Newtonsoft.Json.Linq;
 using Reqnroll;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Playwright_POC.Context;
+using PnCTestAutomation.Context;
 using Newtonsoft.Json;
 
 [Binding]

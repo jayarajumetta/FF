@@ -1,7 +1,7 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     /// <summary>
     /// Page Object for Primary Insured Suggestions popup/modal for SFP

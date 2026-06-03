@@ -1,7 +1,7 @@
-using System.Net.Http;
+﻿using System.Net.Http;
 
 
-namespace Playwright_POC.Context
+namespace PnCTestAutomation.Context
 {
     public class PlaywrightContext
     {

@@ -1,20 +1,20 @@
-
+﻿
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Playwright_POC.Configuration;
-using Playwright_POC.Context;
-using Playwright_POC.Helpers;
-using Playwright_POC.Models;
-using Playwright_POC.Pages;
-using Playwright_POC.Pages.ExpertQuotePages;
-using Playwright_POC.Services;
-using Playwright_POC.Clients;
-using Playwright_POC.Pages.ExpressPages;
+using PnCTestAutomation.Configuration;
+using PnCTestAutomation.Context;
+using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Models;
+using PnCTestAutomation.Pages;
+using PnCTestAutomation.Pages.ExpertQuotePages;
+using PnCTestAutomation.Services;
+using PnCTestAutomation.Clients;
+using PnCTestAutomation.Pages.ExpressPages;
 using System;
 using System.IO;
 using System.Net.Http;
 
-namespace Playwright_POC
+namespace PnCTestAutomation
 {
     public class Startup
     {

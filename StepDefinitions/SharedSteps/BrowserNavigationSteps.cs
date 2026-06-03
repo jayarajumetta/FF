@@ -1,10 +1,10 @@
-using Playwright_POC.Services;
+﻿using PnCTestAutomation.Services;
 using Reqnroll;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Microsoft.Playwright.Assertions;
 
-namespace Playwright_POC.StepDefinitions.SharedSteps
+namespace PnCTestAutomation.StepDefinitions.SharedSteps
 {
     [Binding]
     public class NavigationSteps

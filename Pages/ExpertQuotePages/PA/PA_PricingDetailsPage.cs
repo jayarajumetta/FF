@@ -1,10 +1,10 @@
-// Pages/ExpertQuotePages/PA_PricingDetailsPage.cs
+﻿// Pages/ExpertQuotePages/PA_PricingDetailsPage.cs
 using Microsoft.Playwright;
-using Playwright_POC.Helpers;
+using PnCTestAutomation.Helpers;
 using System.Threading.Tasks;
 using static Microsoft.Playwright.Assertions;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     public class PA_PricingDetailsPage : BasePage
     {

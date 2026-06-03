@@ -1,8 +1,8 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages.ExpertQuotePages.SFP
+namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 {
     /// <summary>
     /// SFP Checklist — opens as a popup window from the Submission page.

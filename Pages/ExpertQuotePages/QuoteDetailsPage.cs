@@ -1,13 +1,13 @@
-// Pages/QuoteDetailsPage.cs
+﻿// Pages/QuoteDetailsPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Playwright_POC.Helpers;
+using PnCTestAutomation.Helpers;
 using static Microsoft.Playwright.Assertions;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     public class QuoteDetailsPage : BasePage
     {
@@ -246,7 +246,7 @@ namespace Playwright_POC.Pages
             await effDateField.FillAsync(contextData.EffectiveDate);
 
             // Select Policy Term using robust mat-select handler
-            await Playwright_POC.Helpers.Helpers.SelectByTextAsync(_page, PolicyTermDropdown, contextData.PolicyTerm, timeoutMs: 30000, blurAfterSelect: false);
+            await PnCTestAutomation.Helpers.Helpers.SelectByTextAsync(_page, PolicyTermDropdown, contextData.PolicyTerm, timeoutMs: 30000, blurAfterSelect: false);
 
             await AgentPCCodeInput.FillAsync(contextData.AgentCode);
         }
@@ -254,7 +254,7 @@ namespace Playwright_POC.Pages
         public async Task<string> SelectRatingStateAndCompanyAsync(ScenarioContextData contextData)
         {
             // Select Rating State using robust mat-select handler
-            await Playwright_POC.Helpers.Helpers.SelectByTextAsync(_page, RatingStateDropdown, contextData.RatingState.ToUpper(), timeoutMs: 30000, blurAfterSelect: false);
+            await PnCTestAutomation.Helpers.Helpers.SelectByTextAsync(_page, RatingStateDropdown, contextData.RatingState.ToUpper(), timeoutMs: 30000, blurAfterSelect: false);
 
             await WaitForSpinnerAsync();
 
@@ -412,7 +412,7 @@ namespace Playwright_POC.Pages
         public async Task SelectRatingStateAsync(ScenarioContextData contextData)
         {
             // Use robust mat-select handler to avoid race conditions with the dropdown panel
-            await Playwright_POC.Helpers.Helpers.SelectByTextAsync(_page, RatingStateDropdown, contextData.RatingState.ToUpper(), timeoutMs: 30000, blurAfterSelect: false);
+            await PnCTestAutomation.Helpers.Helpers.SelectByTextAsync(_page, RatingStateDropdown, contextData.RatingState.ToUpper(), timeoutMs: 30000, blurAfterSelect: false);
         }
     }
 }

@@ -1,4 +1,4 @@
-// Tools/ExcelInspector/ExcelInspectorTool.cs
+﻿// Tools/ExcelInspector/ExcelInspectorTool.cs
 //
 // ─────────────────────────────────────────────────────────────────────────────
 // USAGE (PowerShell)
@@ -26,7 +26,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using NUnit.Framework;
 
-namespace Playwright_POC.Tools.ExcelInspector
+namespace PnCTestAutomation.Tools.ExcelInspector
 {
     [TestFixture]
     public class ExcelInspectorTool

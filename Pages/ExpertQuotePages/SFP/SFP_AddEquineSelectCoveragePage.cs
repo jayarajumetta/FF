@@ -1,8 +1,8 @@
-// Pages/ExpertQuotePages/SFP/SFP_AddEquineSelectCoveragePage.cs
+﻿// Pages/ExpertQuotePages/SFP/SFP_AddEquineSelectCoveragePage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     /// <summary>
     /// SFP Add Coverage: Equine Select modal/panel

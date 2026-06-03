@@ -1,9 +1,9 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using Playwright_POC.Models;
+using PnCTestAutomation.Models;
 
-namespace Playwright_POC.Parsers
+namespace PnCTestAutomation.Parsers
 {
     /// <summary>
     /// Parses the DuckCreek FormsEngine.initPrintJobRs XML response into strongly-typed models.

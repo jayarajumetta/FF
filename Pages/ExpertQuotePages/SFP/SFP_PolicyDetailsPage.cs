@@ -1,10 +1,10 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Playwright_POC.Pages;
+using PnCTestAutomation.Pages;
 
-namespace Playwright_POC.Pages.ExpertQuotePages
+namespace PnCTestAutomation.Pages.ExpertQuotePages
 {
     public class SFP_PolicyDetailsPage : BasePage
     {

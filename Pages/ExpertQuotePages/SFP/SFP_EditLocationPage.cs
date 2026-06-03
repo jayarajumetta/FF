@@ -1,8 +1,8 @@
-// Pages/ExpertQuotePages/SFP/SFP_EditLocationPage.cs
+﻿// Pages/ExpertQuotePages/SFP/SFP_EditLocationPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     /// <summary>
     /// SFP Edit Location modal - for editing location details including

@@ -1,17 +1,17 @@
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 using NUnit.Framework;
-using Playwright_POC.Configuration;
-using Playwright_POC.Context;
-using Playwright_POC.Helpers;
-using Playwright_POC.Pages;
-using Playwright_POC.Pages.ExpertQuotePages;
-using Playwright_POC.Pages.ExpertQuotePages.SFP;
+using PnCTestAutomation.Configuration;
+using PnCTestAutomation.Context;
+using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Pages;
+using PnCTestAutomation.Pages.ExpertQuotePages;
+using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 using Reqnroll;
 using System;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.StepDefinitions.SFPSteps
+namespace PnCTestAutomation.StepDefinitions.SFPSteps
 {
     /// <summary>
     /// Steps for SFP Primary Insured, UW Questions, Client Details, and Narrative

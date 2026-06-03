@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Reqnroll;
 
-namespace Playwright_POC.Helpers
+namespace PnCTestAutomation.Helpers
 {
     internal static class TableMappingHelpers
     {

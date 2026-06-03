@@ -1,11 +1,11 @@
-// Pages/AccountOwnerInfoPage.cs
+﻿// Pages/AccountOwnerInfoPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using Playwright_POC.Helpers;
+using PnCTestAutomation.Helpers;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     public class AccountOwnerInfoPage : BasePage
     {

@@ -1,8 +1,8 @@
-using Microsoft.Playwright;
-using Playwright_POC.Helpers;
+﻿using Microsoft.Playwright;
+using PnCTestAutomation.Helpers;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages.ExpertQuotePages.SFP
+namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 {
     /// <summary>
     /// SFP Add Residence form - appears when clicking "Add Residence" on the Locations page.
@@ -148,7 +148,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages.SFP
             // 2) Fallback: mat-select dropdown
             if (await VacantSeasonalSelect.CountAsync() > 0 && await VacantSeasonalSelect.IsVisibleAsync())
             {
-                await Playwright_POC.Helpers.Helpers.SelectByTextAsync(_page, VacantSeasonalSelect, normalized, timeoutMs: 15000, blurAfterSelect: false);
+                await PnCTestAutomation.Helpers.Helpers.SelectByTextAsync(_page, VacantSeasonalSelect, normalized, timeoutMs: 15000, blurAfterSelect: false);
                 await WaitForSpinnerAsync();
                 return;
             }

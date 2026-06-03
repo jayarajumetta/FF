@@ -1,6 +1,6 @@
-using Playwright_POC.Models;
+﻿using PnCTestAutomation.Models;
 
-namespace Playwright_POC.Helpers
+namespace PnCTestAutomation.Helpers
 {
     /// <summary>
     /// Scenario context data using composition with domain models.

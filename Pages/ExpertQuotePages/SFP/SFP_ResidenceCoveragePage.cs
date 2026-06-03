@@ -1,8 +1,8 @@
-using Microsoft.Playwright;
-using Playwright_POC.Helpers;
+﻿using Microsoft.Playwright;
+using PnCTestAutomation.Helpers;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages.ExpertQuotePages.SFP
+namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 {
     /// <summary>
     /// SFP Residence Coverage detail section — expands inline on the Add Residence page

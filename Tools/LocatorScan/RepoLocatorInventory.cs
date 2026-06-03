@@ -1,4 +1,4 @@
-// Tools/LocatorScan/RepoLocatorInventory.cs
+﻿// Tools/LocatorScan/RepoLocatorInventory.cs
 #nullable enable
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Tools.LocatorScan
+namespace PnCTestAutomation.Tools.LocatorScan
 {
     // ──────────────────────────────────────────────────────────────────────
     // Model

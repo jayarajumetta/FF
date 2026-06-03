@@ -1,11 +1,11 @@
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 
-using Playwright_POC.Configuration;
-using Playwright_POC.Context;
-using Playwright_POC.Helpers;            // <-- ScenarioContextData lives here
-using Playwright_POC.Pages;
-using Playwright_POC.Services;
+using PnCTestAutomation.Configuration;
+using PnCTestAutomation.Context;
+using PnCTestAutomation.Helpers;            // <-- ScenarioContextData lives here
+using PnCTestAutomation.Pages;
+using PnCTestAutomation.Services;
 
 using Reqnroll;
 using Reqnroll.BoDi;
@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 using NUnitTestContext = NUnit.Framework.TestContext;
 
-namespace Playwright_POC.Hooks
+namespace PnCTestAutomation.Hooks
 {
     [Binding]
     public class TestHooks

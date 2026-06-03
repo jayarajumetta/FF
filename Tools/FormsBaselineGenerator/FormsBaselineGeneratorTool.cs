@@ -1,4 +1,4 @@
-// Tools/FormsBaselineGenerator/FormsBaselineGeneratorTool.cs
+﻿// Tools/FormsBaselineGenerator/FormsBaselineGeneratorTool.cs
 //
 // ─────────────────────────────────────────────────────────────────────────────
 // USAGE (PowerShell)
@@ -34,7 +34,7 @@ using System.Linq;
 using System.Text.Json;
 using NUnit.Framework;
 
-namespace Playwright_POC.Tools.FormsBaselineGenerator
+namespace PnCTestAutomation.Tools.FormsBaselineGenerator
 {
     [TestFixture]
     public class FormsBaselineGeneratorTool

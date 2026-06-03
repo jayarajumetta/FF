@@ -1,8 +1,8 @@
-// Pages/ExpertQuotePages/SFP/SFP_AddLossToRefrigeratedProductsCoveragePage.cs
+﻿// Pages/ExpertQuotePages/SFP/SFP_AddLossToRefrigeratedProductsCoveragePage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     /// <summary>
     /// SFP Add Coverage: Loss to Refrigerated Products modal/panel

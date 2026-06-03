@@ -1,8 +1,8 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 using System.Threading.Tasks;
 using static Microsoft.Playwright.Assertions;
 
-namespace Playwright_POC.Pages.ExpertQuotePages
+namespace PnCTestAutomation.Pages.ExpertQuotePages
 {
     internal class ClaimsPriorInsurancePage : BasePage
     {

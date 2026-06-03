@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Playwright_POC.Models;
+using PnCTestAutomation.Models;
 
-namespace Playwright_POC.Services
+namespace PnCTestAutomation.Services
 {
     /// <summary>
     /// Generates color-coded HTML reports for forms validation results.

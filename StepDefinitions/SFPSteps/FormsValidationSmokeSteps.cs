@@ -1,17 +1,17 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
-using Playwright_POC.Clients;
-using Playwright_POC.Helpers;
-using Playwright_POC.Models;
-using Playwright_POC.Parsers;
-using Playwright_POC.Services;
+using PnCTestAutomation.Clients;
+using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Models;
+using PnCTestAutomation.Parsers;
+using PnCTestAutomation.Services;
 using Reqnroll;
 
-namespace Playwright_POC.StepDefinitions.SFPSteps
+namespace PnCTestAutomation.StepDefinitions.SFPSteps
 {
     [Binding]
     public class FormsValidationSmokeSteps

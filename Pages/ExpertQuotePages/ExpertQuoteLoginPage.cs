@@ -1,8 +1,8 @@
-// Pages/ExpertQuotePages/ExpertQuoteLoginPage.cs
+﻿// Pages/ExpertQuotePages/ExpertQuoteLoginPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     /// <summary>
     /// Page Object for ExpertQuote Login / Ping SSO page

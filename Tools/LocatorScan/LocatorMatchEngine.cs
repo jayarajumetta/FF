@@ -1,4 +1,4 @@
-// Tools/LocatorScan/LocatorMatchEngine.cs
+﻿// Tools/LocatorScan/LocatorMatchEngine.cs
 #nullable enable
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Tools.LocatorScan
+namespace PnCTestAutomation.Tools.LocatorScan
 {
     /// <summary>
     /// Compares freshly scanned locator candidates against the repo inventory

@@ -1,8 +1,8 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     /// <summary>
     /// SFP Add Coverage: Country Estate Endorsement panel.
@@ -73,14 +73,14 @@ namespace Playwright_POC.Pages
 
         public async Task SelectWaterDamageDivisionIAsync(string value)
         {
-            await Playwright_POC.Helpers.Helpers.SelectByTextAsync(_page, WaterDamageDivisionISelect, value, timeoutMs: 30000, blurAfterSelect: false);
+            await PnCTestAutomation.Helpers.Helpers.SelectByTextAsync(_page, WaterDamageDivisionISelect, value, timeoutMs: 30000, blurAfterSelect: false);
             await WaitForSpinnerAsync();
         }
 
         public async Task SelectWaterDamageDivisionIIAsync(string value)
         {
             await WaterDamageDivisionIISelect.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
-            await Playwright_POC.Helpers.Helpers.SelectByTextAsync(_page, WaterDamageDivisionIISelect, value, timeoutMs: 30000, blurAfterSelect: false);
+            await PnCTestAutomation.Helpers.Helpers.SelectByTextAsync(_page, WaterDamageDivisionIISelect, value, timeoutMs: 30000, blurAfterSelect: false);
             await WaitForSpinnerAsync();
         }
 
@@ -96,14 +96,14 @@ namespace Playwright_POC.Pages
         public async Task SelectBlanketFppDivisionIIIDeductibleAsync(string value)
         {
             await BlanketFppDivisionIIIDeductibleSelect.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
-            await Playwright_POC.Helpers.Helpers.SelectByTextAsync(_page, BlanketFppDivisionIIIDeductibleSelect, value, timeoutMs: 30000, blurAfterSelect: false);
+            await PnCTestAutomation.Helpers.Helpers.SelectByTextAsync(_page, BlanketFppDivisionIIIDeductibleSelect, value, timeoutMs: 30000, blurAfterSelect: false);
             await WaitForSpinnerAsync();
         }
 
         public async Task SelectLiabilityDivisionVAsync(string value)
         {
             await LiabilityDivisionVSelect.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
-            await Playwright_POC.Helpers.Helpers.SelectByTextAsync(_page, LiabilityDivisionVSelect, value, timeoutMs: 30000, blurAfterSelect: false);
+            await PnCTestAutomation.Helpers.Helpers.SelectByTextAsync(_page, LiabilityDivisionVSelect, value, timeoutMs: 30000, blurAfterSelect: false);
             await WaitForSpinnerAsync();
         }
 

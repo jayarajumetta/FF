@@ -1,4 +1,4 @@
-// Tools/LocatorScan/LocatorScanTool.cs
+﻿// Tools/LocatorScan/LocatorScanTool.cs
 //
 // ─────────────────────────────────────────────────────────────────
 // USAGE (PowerShell examples)
@@ -43,7 +43,7 @@ using System.Threading.Tasks;
 using Microsoft.Playwright;
 using NUnit.Framework;
 
-namespace Playwright_POC.Tools.LocatorScan
+namespace PnCTestAutomation.Tools.LocatorScan
 {
     [TestFixture]
     public class LocatorScanTool

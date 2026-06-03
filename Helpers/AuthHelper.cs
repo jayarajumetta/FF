@@ -1,6 +1,6 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 using Newtonsoft.Json;
-using Playwright_POC.Configuration;
+using PnCTestAutomation.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Helpers
+namespace PnCTestAutomation.Helpers
 {
     // Custom exception to carry response body for troubleshooting
     public class TokenRequestException : Exception

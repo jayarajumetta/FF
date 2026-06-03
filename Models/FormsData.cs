@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Playwright_POC.Models
+namespace PnCTestAutomation.Models
 {
     /// <summary>
     /// A single form returned from the DuckCreek FormsEngine response.

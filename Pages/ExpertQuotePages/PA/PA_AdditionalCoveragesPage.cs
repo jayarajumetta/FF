@@ -1,9 +1,9 @@
-// Pages/ExpertQuotePages/PA_AdditionalCoveragesPage.cs
+﻿// Pages/ExpertQuotePages/PA_AdditionalCoveragesPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
-using Playwright_POC.Helpers;
+using PnCTestAutomation.Helpers;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     public class PA_AdditionalCoveragesPage : BasePage
     {
