@@ -31,7 +31,8 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             _context = context;
             _scenarioContext = scenarioContext;
-            _contextData = _scenarioContext["ContextData"] as ScenarioContextData;
+            _contextData = _scenarioContext["ContextData"] as ScenarioContextData
+                ?? throw new InvalidOperationException("ScenarioContextData not found. Ensure TestHooks.BeforeTestRun registered it.");
             _credentials = credentials;
             _configuration = configuration;
         }

@@ -77,6 +77,12 @@ namespace Playwright_POC.Models
         public DateTime Timestamp { get; set; } = DateTime.Now;
         public string TestCaseName { get; set; } = string.Empty;
         public bool AllPassed => Failed == 0 && Issues == 0;
+
+        /// <summary>Human-readable label derived from TestCaseName (e.g. "SFP_CE" → "Country Estate").</summary>
+        public string PolicyTypeLabel =>
+            TestCaseName?.IndexOf("CE", StringComparison.OrdinalIgnoreCase) >= 0 ? "Country Estate" :
+            TestCaseName?.IndexOf("BASIC", StringComparison.OrdinalIgnoreCase) >= 0 ? "Basic Policy" :
+            string.IsNullOrWhiteSpace(TestCaseName) ? string.Empty : TestCaseName;
     }
 
     /// <summary>

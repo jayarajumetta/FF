@@ -1,7 +1,6 @@
 // Pages/ExpertQuotePages/SFP/SFP_EditLocationPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
-using Playwright_POC.Helpers;
 
 namespace Playwright_POC.Pages
 {
@@ -132,7 +131,7 @@ namespace Playwright_POC.Pages
         public async Task SaveLocationAsync()
         {
             await SaveButton.ClickAsync();
-            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
+            await WaitForSpinnerAsync();
         }
 
         /// <summary>

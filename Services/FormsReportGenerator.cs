@@ -47,7 +47,9 @@ namespace Playwright_POC.Services
             var first = summaries[0];
             var timestamp = first.Timestamp.ToString("yyyy-MM-dd HH:mm:ss");
             sb.AppendLine($"<h1>Forms Validation Report</h1>");
-            sb.AppendLine($"<p class=\"subtitle\">LOB: <strong>{Enc(first.LOB)}</strong> &mdash; Generated: {timestamp}</p>");
+            var policyLabel = summaries.Select(s => s.PolicyTypeLabel).FirstOrDefault(l => !string.IsNullOrWhiteSpace(l)) ?? string.Empty;
+            var policyDisplay = string.IsNullOrWhiteSpace(policyLabel) ? string.Empty : $" &mdash; Policy: <strong>{Enc(policyLabel)}</strong>";
+            sb.AppendLine($"<p class=\"subtitle\">LOB: <strong>{Enc(first.LOB)}</strong>{policyDisplay} &mdash; Generated: {timestamp}</p>");
 
             // Aggregate banner
             var totalPass = summaries.Sum(s => s.Passed);
@@ -67,7 +69,8 @@ namespace Playwright_POC.Services
             foreach (var summary in summaries)
             {
                 sb.AppendLine($"<div class=\"section\">");
-                sb.AppendLine($"<h2>{Enc(summary.LOB)} / {Enc(summary.State)} &mdash; Quote {Enc(summary.QuoteId)}</h2>");
+                var sectionPolicy = string.IsNullOrWhiteSpace(summary.PolicyTypeLabel) ? string.Empty : $" &mdash; {Enc(summary.PolicyTypeLabel)}";
+                sb.AppendLine($"<h2>{Enc(summary.LOB)} / {Enc(summary.State)}{sectionPolicy} &mdash; Quote {Enc(summary.QuoteId)}</h2>");
 
                 // Summary cards
                 sb.AppendLine("<div class=\"cards\">");

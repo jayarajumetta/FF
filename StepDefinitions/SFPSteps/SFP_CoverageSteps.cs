@@ -25,7 +25,8 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         {
             _context = context;
             _scenarioContext = scenarioContext;
-            _contextData = _scenarioContext["ContextData"] as ScenarioContextData;
+            _contextData = _scenarioContext["ContextData"] as ScenarioContextData
+                ?? throw new InvalidOperationException("ScenarioContextData not found. Ensure TestHooks.BeforeTestRun registered it.");
         }
 
         [When("user selects Policy Wide or Division Specific Coverages and continues")]
