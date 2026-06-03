@@ -39,7 +39,7 @@ namespace Playwright_POC
             if (oauthConfig != null) services.AddSingleton(oauthConfig);
 
             services.AddSingleton<BrowserFactory>();
-            services.AddSingleton<TestContext>();
+            services.AddSingleton<PlaywrightContext>();
 
             services.AddSingleton<PingSecretProvider>(provider =>
                 new PingSecretProvider(

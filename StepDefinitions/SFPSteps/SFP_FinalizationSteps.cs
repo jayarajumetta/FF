@@ -15,7 +15,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using ReqContext = Playwright_POC.Context.TestContext;
 
 namespace Playwright_POC.StepDefinitions.SFPSteps
 {
@@ -25,7 +24,7 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
     [Binding]
     public class SFP_FinalizationSteps
     {
-        private readonly ReqContext _context;
+        private readonly PlaywrightContext _context;
         private readonly ScenarioContextData _contextData;
         private readonly ScenarioContext _scenarioContext;
         private readonly SessionService _sessionService;
@@ -34,7 +33,7 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
         private readonly IConfiguration _configuration;
 
         public SFP_FinalizationSteps(
-            ReqContext context,
+            PlaywrightContext context,
             ScenarioContext scenarioContext,
             SessionService sessionService,
             DuckCreekFormsClient formsClient,

@@ -10,14 +10,14 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using ReqContext = Playwright_POC.Context.TestContext;
+using Playwright_POC.Context;
 using Newtonsoft.Json;
 
 [Binding]
 
 public class ApiSteps
 {
-    private readonly ReqContext _context;
+    private readonly PlaywrightContext _context;
     private readonly IApiService _apiService;
     private readonly CredentialsConfig _credentials;
     private readonly OAuthConfig _oauthConfig;
@@ -25,7 +25,7 @@ public class ApiSteps
     private readonly IConfiguration _configuration;
 
     public ApiSteps(
-        ReqContext context,
+        PlaywrightContext context,
         IApiService apiService,
         ScenarioContext scenarioContext,
         CredentialsConfig credentials,

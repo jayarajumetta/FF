@@ -11,10 +11,10 @@ namespace Playwright_POC.Services
     // Drives navigation on the same Playwright Page while preserving session/SSO
     public class NavigationService
     {
-        private readonly TestContext _ctx;
+        private readonly PlaywrightContext _ctx;
         private readonly IConfiguration _config;
 
-        public NavigationService(TestContext ctx, IConfiguration config)
+        public NavigationService(PlaywrightContext ctx, IConfiguration config)
         {
             _ctx = ctx ?? throw new ArgumentNullException(nameof(ctx));
             _config = config ?? throw new ArgumentNullException(nameof(config));

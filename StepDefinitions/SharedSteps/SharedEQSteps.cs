@@ -17,14 +17,13 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using ReqContext = Playwright_POC.Context.TestContext;
 
 namespace Playwright_POC.StepDefinitions.SharedSteps
 {
     [Binding]
     public partial class SharedEQSteps
     {
-        private readonly ReqContext _context;
+        private readonly PlaywrightContext _context;
         private readonly ScenarioContextData _contextData;
         private readonly CredentialsConfig _credentials;
         private readonly IConfiguration _configuration;
@@ -32,7 +31,7 @@ namespace Playwright_POC.StepDefinitions.SharedSteps
 
         private static readonly char[] NewLineSeparator = ['\n'];
 
-        public SharedEQSteps(ReqContext context, ScenarioContext scenarioContext, CredentialsConfig credentials, IConfiguration configuration)
+        public SharedEQSteps(PlaywrightContext context, ScenarioContext scenarioContext, CredentialsConfig credentials, IConfiguration configuration)
         {
             _context = context;
             _scenarioContext = scenarioContext;

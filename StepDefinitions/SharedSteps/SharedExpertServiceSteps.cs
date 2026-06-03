@@ -13,19 +13,18 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using static Microsoft.Playwright.Assertions;
-using ReqContext = Playwright_POC.Context.TestContext;
 
 
 
 [Binding]
 public class SharedExpertServiceSteps
 {
-    private readonly ReqContext _context;
+    private readonly PlaywrightContext _context;
     private readonly ScenarioContextData _contextData;
     private readonly CredentialsConfig _credentials;
     private readonly IConfiguration _configuration;
 
-    public SharedExpertServiceSteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
+    public SharedExpertServiceSteps(PlaywrightContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
     {
         _context = context;
         _contextData = contextData;

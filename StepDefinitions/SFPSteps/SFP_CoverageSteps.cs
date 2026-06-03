@@ -7,7 +7,6 @@ using Playwright_POC.Pages.ExpertQuotePages.SFP;
 using Reqnroll;
 using System;
 using System.Threading.Tasks;
-using ReqContext = Playwright_POC.Context.TestContext;
 
 namespace Playwright_POC.StepDefinitions.SFPSteps
 {
@@ -17,11 +16,11 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
     [Binding]
     public class SFP_CoverageSteps
     {
-        private readonly ReqContext _context;
+        private readonly PlaywrightContext _context;
         private readonly ScenarioContextData _contextData;
         private readonly ScenarioContext _scenarioContext;
 
-        public SFP_CoverageSteps(ReqContext context, ScenarioContext scenarioContext)
+        public SFP_CoverageSteps(PlaywrightContext context, ScenarioContext scenarioContext)
         {
             _context = context;
             _scenarioContext = scenarioContext;

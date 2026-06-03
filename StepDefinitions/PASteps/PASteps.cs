@@ -14,7 +14,6 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using ReqContext = Playwright_POC.Context.TestContext;
 
 
 [Binding]
@@ -22,13 +21,13 @@ using ReqContext = Playwright_POC.Context.TestContext;
 public class PASteps
 {
 
-    private readonly ReqContext _context;
+    private readonly PlaywrightContext _context;
     private readonly ScenarioContextData _contextData;
     private readonly CredentialsConfig _credentials;
     private readonly IConfiguration _configuration;
 
 
-    public PASteps(ReqContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
+    public PASteps(PlaywrightContext context, ScenarioContextData contextData, CredentialsConfig credentials, IConfiguration configuration)
     {
         _context = context;
         _contextData = contextData;

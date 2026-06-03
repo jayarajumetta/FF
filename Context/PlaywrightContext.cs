@@ -3,7 +3,7 @@ using System.Net.Http;
 
 namespace Playwright_POC.Context
 {
-    public class TestContext
+    public class PlaywrightContext
     {
         public HttpClient HttpClient { get; set; }
         public HttpResponseMessage ApiResponse { get; set; }

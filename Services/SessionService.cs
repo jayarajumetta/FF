@@ -19,11 +19,11 @@ namespace Playwright_POC.Services
     /// </summary>
     public class SessionService
     {
-        private readonly TestContext _context;
+        private readonly PlaywrightContext _context;
         private readonly DuckCreekFormsConfig _formsConfig;
         private readonly IConfiguration _configuration;
 
-        public SessionService(TestContext context, DuckCreekFormsConfig formsConfig, IConfiguration configuration)
+        public SessionService(PlaywrightContext context, DuckCreekFormsConfig formsConfig, IConfiguration configuration)
         {
             _context = context;
             _formsConfig = formsConfig;
@@ -214,4 +214,3 @@ namespace Playwright_POC.Services
         }
     }
 }
-

@@ -1,4 +1,3 @@
-// Pages/TestHooks.cs
 using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 
@@ -19,8 +18,6 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-// Alias the two TestContext types to avoid ambiguity
-using PocTestContext = Playwright_POC.Context.TestContext;
 using NUnitTestContext = NUnit.Framework.TestContext;
 
 namespace Playwright_POC.Hooks
@@ -28,7 +25,7 @@ namespace Playwright_POC.Hooks
     [Binding]
     public class TestHooks
     {
-        private readonly PocTestContext _context;
+        private readonly PlaywrightContext _context;
         private readonly BrowserFactory _browserFactory;
         private readonly IObjectContainer _container;
         private IBrowser _browser;
@@ -46,7 +43,7 @@ namespace Playwright_POC.Hooks
         private static string _testResultsRunFolder;
 
         public TestHooks(
-            PocTestContext context,
+            PlaywrightContext context,
             BrowserFactory browserFactory,
             IObjectContainer container,
             ScenarioContext scenarioContext,
@@ -71,7 +68,7 @@ namespace Playwright_POC.Hooks
         public static void RegisterDependencies(IObjectContainer container)
         {
             // Global type registrations
-            container.RegisterTypeAs<PocTestContext, PocTestContext>();
+            container.RegisterTypeAs<PlaywrightContext, PlaywrightContext>();
             container.RegisterTypeAs<BrowserFactory, BrowserFactory>();
             container.RegisterTypeAs<ApiService, IApiService>();
 

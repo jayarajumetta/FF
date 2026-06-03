@@ -10,17 +10,16 @@ using System;
 using System.Threading.Tasks;
 using Playwright_POC.Pages.ExpressPages;
 using static Microsoft.Playwright.Assertions;
-using ReqContext = Playwright_POC.Context.TestContext;
 
 [Binding]
 public class SharedExpressSteps
 {
-    private readonly ReqContext _context;
+    private readonly PlaywrightContext _context;
     private readonly ExpressCredentialsConfig _expressCreds;
     private readonly IConfiguration _configuration;
     private readonly ScenarioContextData _contextData;
 
-    public SharedExpressSteps(ReqContext context,
+    public SharedExpressSteps(PlaywrightContext context,
                         ExpressCredentialsConfig expressCreds,
                         IConfiguration configuration,
                         ScenarioContextData contextData)

@@ -11,7 +11,6 @@ using Reqnroll;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ReqContext = Playwright_POC.Context.TestContext;
 
 namespace Playwright_POC.StepDefinitions.SFPSteps
 {
@@ -21,13 +20,13 @@ namespace Playwright_POC.StepDefinitions.SFPSteps
     [Binding]
     public class SFPSteps
     {
-        private readonly ReqContext _context;
+        private readonly PlaywrightContext _context;
         private readonly ScenarioContextData _contextData;
         private readonly CredentialsConfig _credentials;
         private readonly IConfiguration _configuration;
         private readonly ScenarioContext _scenarioContext;
 
-        public SFPSteps(ReqContext context, ScenarioContext scenarioContext, CredentialsConfig credentials, IConfiguration configuration)
+        public SFPSteps(PlaywrightContext context, ScenarioContext scenarioContext, CredentialsConfig credentials, IConfiguration configuration)
         {
             _context = context;
             _scenarioContext = scenarioContext;
