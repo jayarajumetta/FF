@@ -1,0 +1,98 @@
+# Pipeline: SFP Smoke — .NET Playwright (Reqnroll + NUnit)
+# Trigger: Manual only
+#
+# REQUIREMENT: Must run on a self-hosted agent with access to:
+#   - expertquote-qa.americannational.com
+#   - svqw-clas21:8080 (DuckCreek internal server)
+#
+# To run: Pipelines → Queue → select branch (Development)
+
+trigger: none
+pr: none
+
+pool:
+  name: "Default"   # Self-hosted agent REQUIRED
+
+variables:
+  DOTNET_VERSION: "8.x"
+  BUILD_CONFIGURATION: "Release"
+
+stages:
+- stage: SFP_Smoke
+  displayName: "SFP Smoke Tests"
+
+  jobs:
+  - job: RunSFPSmoke
+    displayName: "Run SFP Smoke"
+    timeoutInMinutes: 120
+
+    steps:
+
+    # 1. Checkout
+    - checkout: self
+      displayName: "Checkout source"
+
+    # 2. Install .NET
+    - task: UseDotNet@2
+      displayName: "Install .NET SDK $(DOTNET_VERSION)"
+      inputs:
+        packageType: sdk
+        version: $(DOTNET_VERSION)
+
+    # 3. Restore
+    - script: dotnet restore TestAutomation.csproj
+      displayName: "Restore NuGet packages"
+      workingDirectory: $(Build.SourcesDirectory)
+
+    # 4. Build
+    - script: dotnet build TestAutomation.csproj --configuration $(BUILD_CONFIGURATION) --no-restore
+      displayName: "Build project"
+      workingDirectory: $(Build.SourcesDirectory)
+
+    # 5. Install Playwright Browsers (.NET version)
+    - powershell: |
+        Write-Host "Locating playwright.ps1..."
+        $playwright = Get-ChildItem -Recurse -Filter playwright.ps1 | Select-Object -First 1
+
+        if ($playwright) {
+            Write-Host "Installing browsers using $($playwright.FullName)"
+            & pwsh $playwright.FullName install chromium --with-deps
+        } else {
+            Write-Error "playwright.ps1 not found — build may have failed"
+        }
+      displayName: "Install Playwright Chromium"
+      workingDirectory: $(Build.SourcesDirectory)
+
+    # 6. Run Tests
+    - script: |
+        dotnet test TestAutomation.csproj ^
+          --configuration $(BUILD_CONFIGURATION) ^
+          --no-build ^
+          --filter "TestCategory=SFP&TestCategory=Smoke" ^
+          --logger "trx;LogFileName=SFP_Smoke_Results.trx" ^
+          --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
+      displayName: "Run SFP Smoke Tests"
+      workingDirectory: $(Build.SourcesDirectory)
+      env:
+        Playwright__Headless: "true"
+        Playwright__BrowserType: "chromium"
+        TEST_ENVIRONMENT: "qa"
+
+    # 7. Publish Results
+    - task: PublishTestResults@2
+      displayName: "Publish Test Results"
+      condition: always()
+      inputs:
+        testResultsFormat: VSTest
+        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/*.trx"
+        failTaskOnFailedTests: true
+        mergeTestResults: true
+        testRunTitle: "SFP Smoke — $(Build.BuildNumber)"
+
+    # 8. Publish Artifacts
+    - task: PublishPipelineArtifact@1
+      displayName: "Publish Test Artifacts"
+      condition: always()
+      inputs:
+        targetPath: "$(Build.ArtifactStagingDirectory)/TestResults"
+        artifact: "SFP_Smoke_Results"
