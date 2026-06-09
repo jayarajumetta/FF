@@ -1,4 +1,4 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -32,18 +32,8 @@ namespace PnCTestAutomation.Helpers
 
             return normalizedBrowser switch
             {
-                "edge" => await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
-                {
-                    Headless = headless,
-                    Channel = "msedge",
-                    Args = FullscreenArgs
-                }),
-                "chrome" => await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
-                {
-                    Headless = headless,
-                    Channel = "chrome",
-                    Args = FullscreenArgs
-                }),
+                "edge" => await LaunchChromiumWithChannelFallbackAsync("msedge", headless),
+                "chrome" => await LaunchChromiumWithChannelFallbackAsync("chrome", headless),
                 "chromium" => await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
                 {
                     Headless = headless,
@@ -59,6 +49,28 @@ namespace PnCTestAutomation.Helpers
                 }),
                 _ => throw new ArgumentException("Unsupported browser type")
             };
+        }
+
+        private async Task<IBrowser> LaunchChromiumWithChannelFallbackAsync(string channel, bool headless)
+        {
+            try
+            {
+                return await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+                {
+                    Headless = headless,
+                    Channel = channel,
+                    Args = FullscreenArgs
+                });
+            }
+            catch (PlaywrightException)
+            {
+                // Fall back to Playwright's bundled Chromium when the requested channel is not installed
+                return await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+                {
+                    Headless = headless,
+                    Args = FullscreenArgs
+                });
+            }
         }
 
         public string ResolveBrowserType()
