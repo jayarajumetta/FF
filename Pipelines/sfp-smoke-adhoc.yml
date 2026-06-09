@@ -56,7 +56,7 @@ stages:
 
         if ($playwright) {
             Write-Host "Installing browsers using $($playwright.FullName)"
-            & pwsh $playwright.FullName install chromium --with-deps
+            & powershell -File $playwright.FullName install chromium --with-deps
         } else {
             Write-Error "playwright.ps1 not found — build may have failed"
         }
