@@ -1,7 +1,7 @@
 @SFP @ExpertQuote
 Feature: SFP Basic Policy
 
-  @Smoke
+  @Smoke @adhocTestRun
   Scenario Outline: SFP Basic Policy - <State>
     # Step 1: Log into Expert Quote
     Given I navigate to the Expert Quote login page
