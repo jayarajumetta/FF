@@ -68,7 +68,7 @@ stages:
         dotnet test TestAutomation.csproj ^
           --configuration $(BUILD_CONFIGURATION) ^
           --no-build ^
-          --filter "TestCategory=SFP&TestCategory=Smoke" ^
+          --filter "TestCategory=Smoke" ^
           --logger "trx;LogFileName=SFP_Smoke_Results.trx" ^
           --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
       displayName: "Run SFP Smoke Tests"
