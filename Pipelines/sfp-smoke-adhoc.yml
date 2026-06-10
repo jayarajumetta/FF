@@ -1,32 +1,17 @@
 # Pipeline: SFP Smoke — .NET Playwright (Reqnroll + NUnit)
 # Trigger: Manual only
-#
-# REQUIREMENT: Self-hosted agents with network access to:
-#   - expertquote-qa.americannational.com
-#   - svqw-clas21:8080 (DuckCreek internal server)
-#
-# PARALLELISM: Builds once, then splits the 31-state test suite across 3 agents
-#   simultaneously using round-robin assignment via --list-tests discovery.
-#   Expected speedup: ~3x (from ~90 min → ~30 min)
-#
-# To run: Pipelines → Queue → select branch (Development)
-#
-# To change scope: edit the SHARD_FILTER values in the strategy matrix below
-# To change shard count: add/remove matrix entries and redistribute states
 
 trigger: none
 pr: none
 
 pool:
-  name: "Default"   # Self-hosted agent REQUIRED — all stages use this pool
+  name: "Default"
 
 variables:
   DOTNET_VERSION: "8.x"
   BUILD_CONFIGURATION: "Release"
 
-# ── Stage 1: Build once ────────────────────────────────────────────────────────
-# Compiles the project and publishes the binary output as a pipeline artifact.
-# The 3 test agents download this artifact instead of rebuilding independently.
+# ── Stage 1: Build ─────────────────────────────────────────────────────────────
 stages:
 - stage: Build
   displayName: "Build"
@@ -39,7 +24,6 @@ stages:
     steps:
 
     - checkout: self
-      displayName: "Checkout source"
 
     - task: UseDotNet@2
       displayName: "Install .NET SDK $(DOTNET_VERSION)"
@@ -58,26 +42,21 @@ stages:
     - powershell: |
         $playwright = Get-ChildItem -Recurse -Filter playwright.ps1 | Select-Object -First 1
         if ($playwright) {
-            Write-Host "Installing Playwright browsers via $($playwright.FullName)"
+            Write-Host "Installing Playwright via $($playwright.FullName)"
             & powershell -File $playwright.FullName install chromium --with-deps
         } else {
-            Write-Error "playwright.ps1 not found — build may have failed"
+            Write-Error "playwright.ps1 not found"
             exit 1
         }
       displayName: "Install Playwright Chromium"
-      workingDirectory: $(Build.SourcesDirectory)
 
-    # Publish the compiled output so test agents don't need to rebuild
     - task: PublishPipelineArtifact@1
       displayName: "Publish Build Output"
       inputs:
         targetPath: "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0"
         artifact: "BuildOutput"
 
-# ── Stage 2: Test — 3 parallel shards ─────────────────────────────────────────
-# Each matrix leg runs on a separate agent simultaneously.
-# States are split statically — edit SHARD_FILTER entries to add/remove states.
-# To add a 4th shard: add a Shard4 entry and move ~8 states into it.
+# ── Stage 2: Test ─────────────────────────────────────────────────────────────
 - stage: Test
   displayName: "Test (3 Parallel Shards)"
   dependsOn: Build
@@ -86,63 +65,68 @@ stages:
   - job: TestShard
     displayName: "SFP Smoke"
     timeoutInMinutes: 60
+
     strategy:
       matrix:
-        # Shard 1 — 11 states (AL AR AZ CO ID IL IN IA KS KY LA)
         Shard1:
           SHARD_NUMBER: "1"
           SHARD_FILTER: "FullyQualifiedName~SFP_BasicPolicy&(Name~Alabama|Name~Arkansas|Name~Arizona|Name~Colorado|Name~Idaho|Name~Illinois|Name~Indiana|Name~Iowa|Name~Kansas|Name~Kentucky|Name~Louisiana)"
-        # Shard 2 — 10 states (MS MO MN MT NE NV NH NM ND OK)
         Shard2:
           SHARD_NUMBER: "2"
           SHARD_FILTER: "FullyQualifiedName~SFP_BasicPolicy&(Name~Mississippi|Name~Missouri|Name~Minnesota|Name~Montana|Name~Nebraska|Name~Nevada|Name~New Hampshire|Name~New Mexico|Name~North Dakota|Name~Oklahoma)"
-        # Shard 3 — 10 states (OH OR SC SD TN TX UT WA WI WY)
         Shard3:
           SHARD_NUMBER: "3"
           SHARD_FILTER: "FullyQualifiedName~SFP_BasicPolicy&(Name~Ohio|Name~Oregon|Name~South Carolina|Name~South Dakota|Name~Tennessee|Name~Texas|Name~Utah|Name~Washington|Name~Wisconsin|Name~Wyoming)"
 
     steps:
 
-    # Needed for dotnet test to locate TestAutomation.csproj
     - checkout: self
-      displayName: "Checkout source"
 
-    # Restore the compiled binaries from Stage 1 — no rebuild on any agent
     - task: DownloadPipelineArtifact@2
       displayName: "Download Build Output"
       inputs:
         artifact: "BuildOutput"
         targetPath: "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0"
 
-    # Playwright browsers must be present on every test agent
     - powershell: |
         $playwright = Get-ChildItem `
             -Path "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0" `
             -Filter playwright.ps1 | Select-Object -First 1
+
         if ($playwright) {
-            Write-Host "Installing Playwright browsers via $($playwright.FullName)"
+            Write-Host "Installing Playwright via $($playwright.FullName)"
             & powershell -File $playwright.FullName install chromium --with-deps
         } else {
-            Write-Warning "playwright.ps1 not found in artifact — assuming browsers pre-installed on agent"
+            Write-Warning "playwright.ps1 not found — assuming pre-installed"
         }
       displayName: "Ensure Playwright Chromium"
 
-    # Always create results dir so the Publish steps never fail on a missing path
+    # ✅ Always create results directory
     - powershell: |
         New-Item -ItemType Directory -Force -Path "$(Build.ArtifactStagingDirectory)/TestResults" | Out-Null
       displayName: "Create TestResults Directory"
       condition: always()
 
-    # Run this shard's tests. SHARD_FILTER is defined in the matrix above.
-    # PowerShell (not script/cmd) is used so | inside SHARD_FILTER is not
-    # interpreted as a shell pipe operator.
+    # ✅ Run shard
     - powershell: |
+        if (-not $env:SHARD_FILTER) {
+            Write-Error "SHARD_FILTER is empty!"
+            exit 1
+        }
+
+        Write-Host "===================================="
+        Write-Host "Running Shard $($env:SHARD_NUMBER)"
+        Write-Host "Using filter:"
+        Write-Host "$env:SHARD_FILTER"
+        Write-Host "===================================="
+
         & dotnet test TestAutomation.csproj `
             --configuration "$(BUILD_CONFIGURATION)" `
             --no-build `
             --filter "$env:SHARD_FILTER" `
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Results.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
+
         exit $LASTEXITCODE
       displayName: "Run Shard $(SHARD_NUMBER)"
       workingDirectory: $(Build.SourcesDirectory)
@@ -157,8 +141,8 @@ stages:
       inputs:
         testResultsFormat: VSTest
         testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/*.trx"
-        failTaskOnFailedTests: true
         mergeTestResults: true
+        failTaskOnFailedTests: true
         testRunTitle: "SFP Smoke — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
 
     - task: PublishPipelineArtifact@1
