@@ -107,7 +107,20 @@ stages:
         artifact: "BuildOutput"
         targetPath: "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0"
 
+    - task: Cache@2
+      displayName: "Cache Playwright Chromium"
+      inputs:
+        key: 'playwright | "$(Agent.OS)" | $(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.deps.json'
+        restoreKeys: |
+          playwright | "$(Agent.OS)"
+        path: "$(PLAYWRIGHT_BROWSERS_PATH)"
+      env:
+        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+
     - powershell: |
+        $playwrightBrowsersPath = "$(Agent.ToolsDirectory)/playwright-browsers"
+        $env:PLAYWRIGHT_BROWSERS_PATH = $playwrightBrowsersPath
+
         $playwright = Get-ChildItem `
             -Path "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0" `
             -Filter playwright.ps1 | Select-Object -First 1
@@ -119,6 +132,8 @@ stages:
             Write-Warning "playwright.ps1 not found — assuming pre-installed"
         }
       displayName: "Ensure Playwright Chromium"
+      env:
+        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
 
     # ✅ Create results folder
     - powershell: |
@@ -156,6 +171,8 @@ stages:
         Playwright__Headless: "true"
         Playwright__BrowserType: "chromium"
         TEST_ENVIRONMENT: "qa"
+        CI: "true"
+        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
         SMOKE_MODE: ${{ parameters.smokeMode }}
         SHARD_FILTER_FULL: $(SHARD_FILTER_FULL)
         SHARD_FILTER_SMOKE: $(SHARD_FILTER_SMOKE)

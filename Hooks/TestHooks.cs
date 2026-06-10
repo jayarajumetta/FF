@@ -165,13 +165,21 @@ namespace PnCTestAutomation.Hooks
                     RecordVideoDir = Path.Combine(_testResultsRunFolder, "Videos")
                 });
 
-                // Start tracing for potential failure capture
-                await _browserContext.Tracing.StartAsync(new TracingStartOptions
+                // Start tracing — skip on CI unless a full trace is needed for debugging.
+                // On CI, traces are only saved on failure anyway, so the overhead is wasted
+                // for passing tests. Locally, always trace for developer convenience.
+                var isCI = string.Equals(Environment.GetEnvironmentVariable("CI"), "true",
+                    StringComparison.OrdinalIgnoreCase);
+
+                if (!isCI)
                 {
-                    Screenshots = true,
-                    Snapshots = true,
-                    Sources = true
-                });
+                    await _browserContext.Tracing.StartAsync(new TracingStartOptions
+                    {
+                        Screenshots = true,
+                        Snapshots = true,
+                        Sources = true
+                    });
+                }
 
                 _page = await _browserContext.NewPageAsync();
 
@@ -260,26 +268,35 @@ namespace PnCTestAutomation.Hooks
             {
                 var scenarioFolder = GetScenarioResultsFolder();
 
+                var isCI = string.Equals(Environment.GetEnvironmentVariable("CI"), "true",
+                    StringComparison.OrdinalIgnoreCase);
+
                 if (hasFailed)
                 {
                     Directory.CreateDirectory(scenarioFolder);
 
-                    // Save trace on failure
-                    var traceFile = Path.Combine(scenarioFolder, "trace.zip");
-                    try
+                    // Save trace on failure (only if tracing was started — not on CI)
+                    if (!isCI)
                     {
-                        await _browserContext.Tracing.StopAsync(new TracingStopOptions { Path = traceFile });
-                        NUnitTestContext.WriteLine($"[trace] {traceFile}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"[Warning] Failed to save trace: {ex.Message}");
+                        var traceFile = Path.Combine(scenarioFolder, "trace.zip");
+                        try
+                        {
+                            await _browserContext.Tracing.StopAsync(new TracingStopOptions { Path = traceFile });
+                            NUnitTestContext.WriteLine($"[trace] {traceFile}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"[Warning] Failed to save trace: {ex.Message}");
+                        }
                     }
                 }
                 else
                 {
-                    // Stop tracing without saving if test passed
-                    try { await _browserContext.Tracing.StopAsync(); } catch { /* ignore */ }
+                    // Stop tracing without saving if test passed (only if it was started)
+                    if (!isCI)
+                    {
+                        try { await _browserContext.Tracing.StopAsync(); } catch { /* ignore */ }
+                    }
 
                     // Write pass record for telemetry (time-to-resolution tracking)
                     try
