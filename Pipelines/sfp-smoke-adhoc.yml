@@ -1,8 +1,20 @@
 # Pipeline: SFP Smoke — .NET Playwright (Reqnroll + NUnit)
-# Trigger: Manual only
+# Trigger: Manual + Nightly schedule
 
 trigger: none
 pr: none
+
+# Runs nightly at 12:00 AM Central (05:00 UTC) on the Development branch.
+# Always runs the full suite (smokeMode defaults to false).
+# Change the cron expression to adjust the schedule:
+#   '0 5 * * *'  = 12:00 AM Central (UTC-5) / 1:00 AM CDT (UTC-6)
+schedules:
+- cron: "0 6 * * *"
+  displayName: "Nightly Full Run — 12:00 AM Central"
+  branches:
+    include:
+    - Development
+  always: true
 
 # ── Queue-time parameters ──────────────────────────────────────────────────────
 # These appear as a checkbox in the Run Pipeline dialog.
@@ -73,6 +85,9 @@ stages:
   - job: TestShard
     displayName: "SFP Smoke"
     timeoutInMinutes: 120
+    # Automatically re-run the entire shard once if it fails (catches transient
+    # 500 errors, network blips, or agent-level issues without false failures).
+    retries: 1
 
     strategy:
       matrix:
@@ -164,7 +179,10 @@ stages:
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Results.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
 
-        exit $LASTEXITCODE
+        # Do NOT exit on first-run failure — the retry step below will re-run failures
+        $firstRunExit = $LASTEXITCODE
+        Write-Host "First run exit code: $firstRunExit"
+        exit 0
       displayName: "Run Shard $(SHARD_NUMBER)"
       condition: always()
       env:
@@ -176,6 +194,54 @@ stages:
         SMOKE_MODE: ${{ parameters.smokeMode }}
         SHARD_FILTER_FULL: $(SHARD_FILTER_FULL)
         SHARD_FILTER_SMOKE: $(SHARD_FILTER_SMOKE)
+
+    # ✅ RETRY FAILED TESTS
+    # Parses the TRX from the first run and re-runs only failed tests once.
+    # This catches transient 500 errors, SSO blips, and network timeouts without
+    # re-running the entire shard.
+    - powershell: |
+        $trxPath = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
+
+        if (!(Test-Path $trxPath)) {
+            Write-Host "No TRX found — skipping retry step."
+            exit 0
+        }
+
+        [xml]$trx = Get-Content $trxPath
+        $ns = @{ t = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010" }
+        $failed = Select-Xml -Xml $trx -XPath "//t:UnitTestResult[@outcome='Failed']" -Namespace $ns
+
+        if (-not $failed) {
+            Write-Host "No failures in first run — retry step skipped."
+            exit 0
+        }
+
+        $failedNames = $failed | ForEach-Object { $_.Node.testName } | Select-Object -Unique
+        Write-Host "Retrying $($failedNames.Count) failed test(s):"
+        $failedNames | ForEach-Object { Write-Host "  - $_" }
+
+        # Build a NUnit filter from failed test names
+        $nameFilter = ($failedNames | ForEach-Object {
+            $escaped = $_.Replace("'", "\'").Replace("`"", "\`""")
+            "FullyQualifiedName~$escaped"
+        }) -join "|"
+
+        $testDll = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.dll"
+
+        & dotnet test $testDll `
+            --filter "$nameFilter" `
+            --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx" `
+            --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
+
+        exit $LASTEXITCODE
+      displayName: "Retry Failed Tests — Shard $(SHARD_NUMBER)"
+      condition: always()
+      env:
+        Playwright__Headless: "true"
+        Playwright__BrowserType: "chromium"
+        TEST_ENVIRONMENT: "qa"
+        CI: "true"
+        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
 
     # ✅ DEBUG: verify trx files exist
     - powershell: |

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <NUnit>
+    <!--
+      Single worker per shard — tests are not thread-safe (shared browser context).
+      Parallelism is achieved at the shard/job level in the pipeline, not within a shard.
+    -->
+    <NumberOfTestWorkers>1</NumberOfTestWorkers>
+  </NUnit>
+</RunSettings>
