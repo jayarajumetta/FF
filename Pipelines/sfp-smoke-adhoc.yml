@@ -11,8 +11,8 @@
 #
 # To run: Pipelines → Queue → select branch (Development)
 #
-# To change scope: update BASE_FILTER (e.g. add "&Name~Alabama" to target one state)
-# To change shard count: update strategy.parallel and SHARD_COUNT together
+# To change scope: edit the SHARD_FILTER values in the strategy matrix below
+# To change shard count: add/remove matrix entries and redistribute states
 
 trigger: none
 pr: none
@@ -23,9 +23,6 @@ pool:
 variables:
   DOTNET_VERSION: "8.x"
   BUILD_CONFIGURATION: "Release"
-  # Base NUnit filter applied before sharding. All matching tests are then split
-  # evenly across agents. Remove the Name~ clause to run all 31 states.
-  BASE_FILTER: "FullyQualifiedName~SFP_BasicPolicy"
 
 # ── Stage 1: Build once ────────────────────────────────────────────────────────
 # Compiles the project and publishes the binary output as a pipeline artifact.
@@ -78,23 +75,35 @@ stages:
         artifact: "BuildOutput"
 
 # ── Stage 2: Test — 3 parallel shards ─────────────────────────────────────────
-# Each of the 3 job instances runs on a separate agent simultaneously.
-# System.JobPositionInPhase (1/2/3) and System.TotalJobsInPhase (3) are
-# injected automatically by Azure DevOps for parallel strategy jobs.
+# Each matrix leg runs on a separate agent simultaneously.
+# States are split statically — edit SHARD_FILTER entries to add/remove states.
+# To add a 4th shard: add a Shard4 entry and move ~8 states into it.
 - stage: Test
   displayName: "Test (3 Parallel Shards)"
   dependsOn: Build
 
   jobs:
   - job: TestShard
-    displayName: "Shard"   # ADO appends " 1/3", " 2/3", " 3/3" automatically
+    displayName: "SFP Smoke"
     timeoutInMinutes: 60
     strategy:
-      parallel: 3    # ← change this (and SHARD_COUNT above) to scale up/down
+      matrix:
+        # Shard 1 — 11 states (AL AR AZ CO ID IL IN IA KS KY LA)
+        Shard1:
+          SHARD_NUMBER: "1"
+          SHARD_FILTER: "FullyQualifiedName~SFP_BasicPolicy&(Name~Alabama|Name~Arkansas|Name~Arizona|Name~Colorado|Name~Idaho|Name~Illinois|Name~Indiana|Name~Iowa|Name~Kansas|Name~Kentucky|Name~Louisiana)"
+        # Shard 2 — 10 states (MS MO MN MT NE NV NH NM ND OK)
+        Shard2:
+          SHARD_NUMBER: "2"
+          SHARD_FILTER: "FullyQualifiedName~SFP_BasicPolicy&(Name~Mississippi|Name~Missouri|Name~Minnesota|Name~Montana|Name~Nebraska|Name~Nevada|Name~New Hampshire|Name~New Mexico|Name~North Dakota|Name~Oklahoma)"
+        # Shard 3 — 10 states (OH OR SC SD TN TX UT WA WI WY)
+        Shard3:
+          SHARD_NUMBER: "3"
+          SHARD_FILTER: "FullyQualifiedName~SFP_BasicPolicy&(Name~Ohio|Name~Oregon|Name~South Carolina|Name~South Dakota|Name~Tennessee|Name~Texas|Name~Utah|Name~Washington|Name~Wisconsin|Name~Wyoming)"
 
     steps:
 
-    # Needed for dotnet test to locate TestAutomation.csproj and resolve the project
+    # Needed for dotnet test to locate TestAutomation.csproj
     - checkout: self
       displayName: "Checkout source"
 
@@ -118,68 +127,24 @@ stages:
         }
       displayName: "Ensure Playwright Chromium"
 
-    # Discover all tests matching BASE_FILTER, then assign every Nth test to this
-    # shard (round-robin). Writes TEST_FILTER and HAS_TESTS pipeline variables.
+    # Always create results dir so the Publish steps never fail on a missing path
     - powershell: |
-        $shardIndex = [int]$env:SYSTEM_JOBPOSITIONINPHASE - 1   # 0-based (0, 1, 2)
-        $totalShards = [int]$env:SYSTEM_TOTALJOBSINPHASE         # 3
-        Write-Host "=== Shard $($shardIndex + 1) of $totalShards ==="
+        New-Item -ItemType Directory -Force -Path "$(Build.ArtifactStagingDirectory)/TestResults" | Out-Null
+      displayName: "Create TestResults Directory"
+      condition: always()
 
-        # List every test that matches the base filter (no rebuild needed)
-        $rawOutput = & dotnet test TestAutomation.csproj `
-            --configuration "$(BUILD_CONFIGURATION)" `
-            --no-build `
-            --filter "$(BASE_FILTER)" `
-            --list-tests 2>&1
-
-        $headerLine = $rawOutput | Select-String "The following Tests are available:" | Select-Object -First 1
-        if (-not $headerLine) {
-            Write-Error "No tests found. Check BASE_FILTER='$(BASE_FILTER)' or inspect build output."
-            exit 1
-        }
-
-        $allTests = $rawOutput[$headerLine.LineNumber..($rawOutput.Length - 1)] |
-            Where-Object { $_ -match "^\s+\S" } |
-            ForEach-Object { $_.Trim() }
-
-        Write-Host "Total tests discovered: $($allTests.Count)"
-
-        # Round-robin: shard 0 → indices 0,3,6...  shard 1 → 1,4,7...  shard 2 → 2,5,8...
-        $myTests = @(for ($i = $shardIndex; $i -lt $allTests.Count; $i += $totalShards) {
-            $allTests[$i]
-        })
-
-        Write-Host "Tests assigned to this shard ($($myTests.Count)):"
-        $myTests | ForEach-Object { Write-Host "  - $_" }
-
-        if ($myTests.Count -eq 0) {
-            Write-Host "##vso[task.logissue type=warning]No tests assigned to shard $($shardIndex + 1) — skipping run."
-            Write-Host "##vso[task.setvariable variable=HAS_TESTS]false"
-            exit 0
-        }
-
-        # Build NUnit OR filter: "FullyQualifiedName=A|FullyQualifiedName=B|..."
-        # Uses PowerShell (not cmd) so the pipe character is safe inside a quoted string
-        $filter = ($myTests | ForEach-Object { "FullyQualifiedName=$_" }) -join "|"
-        Write-Host "Filter string length: $($filter.Length) chars"
-        Write-Host "##vso[task.setvariable variable=TEST_FILTER]$filter"
-        Write-Host "##vso[task.setvariable variable=HAS_TESTS]true"
-      displayName: "Compute Test Shard"
-      workingDirectory: $(Build.SourcesDirectory)
-
-    # Run only this shard's tests. Uses PowerShell (not script/cmd) so the
-    # pipe characters inside TEST_FILTER are passed correctly to dotnet.
+    # Run this shard's tests. SHARD_FILTER is defined in the matrix above.
+    # PowerShell (not script/cmd) is used so | inside SHARD_FILTER is not
+    # interpreted as a shell pipe operator.
     - powershell: |
-        $null = New-Item -ItemType Directory -Force -Path "$(Build.ArtifactStagingDirectory)/TestResults"
         & dotnet test TestAutomation.csproj `
             --configuration "$(BUILD_CONFIGURATION)" `
             --no-build `
-            --filter "$env:TEST_FILTER" `
-            --logger "trx;LogFileName=Shard_$env:SYSTEM_JOBPOSITIONINPHASE`_Results.trx" `
+            --filter "$env:SHARD_FILTER" `
+            --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Results.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
         exit $LASTEXITCODE
-      displayName: "Run Shard $(System.JobPositionInPhase)"
-      condition: eq(variables['HAS_TESTS'], 'true')
+      displayName: "Run Shard $(SHARD_NUMBER)"
       workingDirectory: $(Build.SourcesDirectory)
       env:
         Playwright__Headless: "true"
@@ -194,11 +159,11 @@ stages:
         testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/*.trx"
         failTaskOnFailedTests: true
         mergeTestResults: true
-        testRunTitle: "SFP Smoke — Shard $(System.JobPositionInPhase)/$(System.TotalJobsInPhase) — $(Build.BuildNumber)"
+        testRunTitle: "SFP Smoke — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
 
     - task: PublishPipelineArtifact@1
       displayName: "Publish Shard Artifacts"
       condition: always()
       inputs:
         targetPath: "$(Build.ArtifactStagingDirectory)/TestResults"
-        artifact: "SFP_Smoke_Shard_$(System.JobPositionInPhase)"
+        artifact: "SFP_Smoke_Shard_$(SHARD_NUMBER)"
