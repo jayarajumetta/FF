@@ -112,8 +112,11 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             }
 
             // Select Residence if specified
+            // Wait explicitly for the Residence dropdown to become visible — it only renders
+            // after Location is selected and the page re-renders (slower on CI agents).
             if (!string.IsNullOrEmpty(contextData.MortgageeResidence))
             {
+                await ResidenceSelect.WaitForAsync(new() { State = WaitForSelectorState.Visible });
                 await ResidenceSelect.ClickAsync();
                 await FirstResidenceOption.ClickAsync();
                 await WaitForSpinnerAsync();
