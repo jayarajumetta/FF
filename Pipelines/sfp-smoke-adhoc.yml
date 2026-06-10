@@ -10,6 +10,10 @@ pool:
 variables:
   DOTNET_VERSION: "8.x"
   BUILD_CONFIGURATION: "Release"
+  # ── Debug mode ────────────────────────────────────────────────────────────────
+  # Set SMOKE_MODE to true at queue time to run only @Smoke-tagged rows (1 per
+  # shard, 3 tests total). Leave false for the full suite.
+  SMOKE_MODE: "false"
 
 # ── Stage 1: Build ─────────────────────────────────────────────────────────────
 stages:
@@ -62,19 +66,24 @@ stages:
   jobs:
   - job: TestShard
     displayName: "SFP Smoke"
-    timeoutInMinutes: 60
+    timeoutInMinutes: 120
 
     strategy:
       matrix:
+        # SMOKE_MODE=true  → runs only @Smoke-tagged rows (1 per shard, ~3 tests total)
+        # SMOKE_MODE=false → runs the full shard (default)
         Shard1:
           SHARD_NUMBER: "1"
-          SHARD_FILTER: "TestCategory=Shard1"
+          SHARD_FILTER_FULL: "TestCategory=Shard1"
+          SHARD_FILTER_SMOKE: "TestCategory=Shard1&TestCategory=Smoke"
         Shard2:
           SHARD_NUMBER: "2"
-          SHARD_FILTER: "TestCategory=Shard2"
+          SHARD_FILTER_FULL: "TestCategory=Shard2"
+          SHARD_FILTER_SMOKE: "TestCategory=Shard2&TestCategory=Smoke"
         Shard3:
           SHARD_NUMBER: "3"
-          SHARD_FILTER: "TestCategory=Shard3"
+          SHARD_FILTER_FULL: "TestCategory=Shard3"
+          SHARD_FILTER_SMOKE: "TestCategory=Shard3&TestCategory=Smoke"
 
     steps:
 
@@ -113,12 +122,15 @@ stages:
 
     # ✅ RUN TESTS (FIXED)
     - powershell: |
+        $smokeMode = $env:SMOKE_MODE -eq "true"
+        $filter = if ($smokeMode) { $env:SHARD_FILTER_SMOKE } else { $env:SHARD_FILTER_FULL }
         $testDll = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.dll"
 
         Write-Host "===================================="
         Write-Host "Running Shard $($env:SHARD_NUMBER)"
-        Write-Host "Filter: $($env:SHARD_FILTER)"
-        Write-Host "DLL Path: $testDll"
+        Write-Host "Mode:   $(if ($smokeMode) { 'SMOKE (debug)' } else { 'FULL' })"
+        Write-Host "Filter: $filter"
+        Write-Host "DLL:    $testDll"
         Write-Host "===================================="
 
         if (!(Test-Path $testDll)) {
@@ -127,7 +139,7 @@ stages:
         }
 
         & dotnet test $testDll `
-            --filter "$env:SHARD_FILTER" `
+            --filter "$filter" `
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Results.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
 
@@ -138,6 +150,9 @@ stages:
         Playwright__Headless: "true"
         Playwright__BrowserType: "chromium"
         TEST_ENVIRONMENT: "qa"
+        SMOKE_MODE: $(SMOKE_MODE)
+        SHARD_FILTER_FULL: $(SHARD_FILTER_FULL)
+        SHARD_FILTER_SMOKE: $(SHARD_FILTER_SMOKE)
 
     # ✅ DEBUG: verify trx files exist
     - powershell: |
