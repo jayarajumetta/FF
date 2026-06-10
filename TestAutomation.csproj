@@ -1,4 +1,4 @@
-﻿
+
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Gherkin" Version="37.0.1" />
+
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.1" />
@@ -35,8 +36,11 @@
   </ItemGroup>
 
   <!-- Exclude generated locator files from compilation -->
+  <!-- Exclude nested project folders so their obj-generated files are not globbed -->
   <ItemGroup>
     <Compile Remove="TestResults\**\*.cs" />
+    <Compile Remove="TestAutomation.ApiTests\**\*" />
+    <Compile Remove="SimpleCapture\**\*" />
   </ItemGroup>
 
 </Project>

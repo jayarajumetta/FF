@@ -1,4 +1,3 @@
-﻿
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PnCTestAutomation.Configuration;
@@ -11,11 +10,18 @@ using PnCTestAutomation.Services;
 using PnCTestAutomation.Clients;
 using PnCTestAutomation.Pages.ExpressPages;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net.Http;
 
 namespace PnCTestAutomation
 {
+    // This is a DI composition root for a NUnit/Reqnroll test runner, not a web application.
+    // Only ConfigureServices() is invoked via [ScenarioDependencies]. There is no ASP.NET Core
+    // HTTP pipeline, no Kestrel host, and no HTTP responses. HSTS (CWE-346) does not apply.
+    [SuppressMessage("Security", "CWE-346",
+        Justification = "Not a web application. This class is a Reqnroll DI composition root. " +
+                        "No HTTP server or pipeline exists; HSTS is inapplicable.")]
     public class Startup
     {
         public void ConfigureServices(IServiceCollection services)
@@ -109,5 +115,6 @@ namespace PnCTestAutomation
             services.AddScoped<FormsValidationService>();
             services.AddHttpClient<DuckCreekFormsClient>();
         }
-    }
+
+        }
 }
