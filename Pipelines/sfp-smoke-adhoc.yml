@@ -33,11 +33,9 @@ stages:
 
     - script: dotnet restore TestAutomation.csproj
       displayName: "Restore NuGet packages"
-      workingDirectory: $(Build.SourcesDirectory)
 
     - script: dotnet build TestAutomation.csproj --configuration $(BUILD_CONFIGURATION) --no-restore
       displayName: "Build project"
-      workingDirectory: $(Build.SourcesDirectory)
 
     - powershell: |
         $playwright = Get-ChildItem -Recurse -Filter playwright.ps1 | Select-Object -First 1
@@ -68,18 +66,15 @@ stages:
 
     strategy:
       matrix:
-        # Filters use Category= (exact tag match) — no state names, no escaping, no collisions.
-        # To rebalance shards: move rows between @Shard1/2/3 blocks in SFP_BasicPolicy.feature.
-        # To add a new feature: tag its Examples block @Shard1/2/3 and it is picked up automatically.
         Shard1:
           SHARD_NUMBER: "1"
-          SHARD_FILTER: "Category=Shard1"
+          SHARD_FILTER: "TestCategory=Shard1"
         Shard2:
           SHARD_NUMBER: "2"
-          SHARD_FILTER: "Category=Shard2"
+          SHARD_FILTER: "TestCategory=Shard2"
         Shard3:
           SHARD_NUMBER: "3"
-          SHARD_FILTER: "Category=Shard3"
+          SHARD_FILTER: "TestCategory=Shard3"
 
     steps:
 
@@ -110,29 +105,28 @@ stages:
         }
       displayName: "Ensure Playwright Chromium"
 
-    # ✅ Always create results directory
+    # ✅ Create results folder
     - powershell: |
         New-Item -ItemType Directory -Force -Path "$(Build.ArtifactStagingDirectory)/TestResults" | Out-Null
       displayName: "Create TestResults Directory"
       condition: always()
 
-    # ✅ Run shard (condition: always() so it runs even if Playwright install step fails,
-    #    ensuring we always get a test run attempt and a .trx artifact)
+    # ✅ RUN TESTS (FIXED)
     - powershell: |
-        if (-not $env:SHARD_FILTER) {
-            Write-Error "SHARD_FILTER is empty!"
-            exit 1
-        }
+        $testDll = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.dll"
 
         Write-Host "===================================="
         Write-Host "Running Shard $($env:SHARD_NUMBER)"
-        Write-Host "Using filter:"
-        Write-Host "$env:SHARD_FILTER"
+        Write-Host "Filter: $($env:SHARD_FILTER)"
+        Write-Host "DLL Path: $testDll"
         Write-Host "===================================="
 
-        & dotnet test TestAutomation.csproj `
-            --configuration "$(BUILD_CONFIGURATION)" `
-            --no-build `
+        if (!(Test-Path $testDll)) {
+            Write-Error "Test DLL not found!"
+            exit 1
+        }
+
+        & dotnet test $testDll `
             --filter "$env:SHARD_FILTER" `
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Results.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
@@ -140,11 +134,17 @@ stages:
         exit $LASTEXITCODE
       displayName: "Run Shard $(SHARD_NUMBER)"
       condition: always()
-      workingDirectory: $(Build.SourcesDirectory)
       env:
         Playwright__Headless: "true"
         Playwright__BrowserType: "chromium"
         TEST_ENVIRONMENT: "qa"
+
+    # ✅ DEBUG: verify trx files exist
+    - powershell: |
+        Write-Host "==== TEST RESULTS CONTENT ===="
+        Get-ChildItem -Recurse "$(Build.ArtifactStagingDirectory)/TestResults"
+      displayName: "Debug TestResults Output"
+      condition: always()
 
     - task: PublishTestResults@2
       displayName: "Publish Test Results"
