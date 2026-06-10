@@ -255,6 +255,7 @@ Feature: SFP Basic Policy
     # Step 37: Validate Forms attachment via Duckcreek
     When user validates Forms via Duckcreek for state "<StateAbbv>"
 
+    @Shard1
     Examples:
       | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Alabama        | AL        | 1918 Avalon Ave               |          111 | Muscle Shoals | 35661 | Colbert      |
@@ -268,6 +269,10 @@ Feature: SFP Basic Policy
       | Kansas         | KS        | 9400 State Ave                |          111 | Kansas City   | 66112 | Wyandotte    |
       | Kentucky       | KY        | 1002 Medical Dr               |          111 | Mayfield      | 42066 | Graves       |
       | Louisiana      | LA        | 218 Meadow Dr                 |          111 | Oakdale       | 71463 | Allen        |
+
+    @Shard2
+    Examples:
+      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Mississippi    | MS        | 4105 Washington Ave           |          111 | Gulfport      | 39507 | Harrison     |
       | Missouri       | MO        | 1895 S Forrest Heights Avenue |          111 | Springfield   | 65809 | Greene       |
       | Minnesota      | MN        | 115 S Main ST                 |          111 | Warren        | 56762 | Marshall     |
@@ -278,6 +283,10 @@ Feature: SFP Basic Policy
       | New Mexico     | NM        | 901 West 13th St              |          111 | Clovis        | 88101 | Curry        |
       | North Dakota   | ND        | 600 S 2nd St                  |          111 | Bismarck      | 58504 | Burleigh     |
       | Oklahoma       | OK        | 436255 E 330 Rd               |          111 | Big Cabin     | 74332 | Craig        |
+
+    @Shard3
+    Examples:
+      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Ohio           | OH        | 1566 Northeast Ave            |          111 | Tallmadge     | 44278 | Summit       |
       | Oregon         | OR        | 661 SW 26TH ST                |          111 | Corvallis     | 97331 | Benton       |
       | South Carolina | SC        | 3009 Augusta Hwy              |          111 | Allendale     | 29810 | Allendale    |

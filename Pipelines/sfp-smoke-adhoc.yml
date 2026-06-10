@@ -68,23 +68,18 @@ stages:
 
     strategy:
       matrix:
-        # Shard 1 — 11 states: AL AR AZ CO ID IL IN IA KS KY LA (all single-word, no escaping needed)
+        # Filters use Category= (exact tag match) — no state names, no escaping, no collisions.
+        # To rebalance shards: move rows between @Shard1/2/3 blocks in SFP_BasicPolicy.feature.
+        # To add a new feature: tag its Examples block @Shard1/2/3 and it is picked up automatically.
         Shard1:
           SHARD_NUMBER: "1"
-          SHARD_FILTER: "FullyQualifiedName~SFP_BasicPolicy&(FullyQualifiedName~Alabama|FullyQualifiedName~Arkansas|FullyQualifiedName~Arizona|FullyQualifiedName~Colorado|FullyQualifiedName~Idaho|FullyQualifiedName~Illinois|FullyQualifiedName~Indiana|FullyQualifiedName~Iowa|FullyQualifiedName~Kansas|FullyQualifiedName~Kentucky|FullyQualifiedName~Louisiana)"
-        # Shard 2 — 10 states: MS MO MN MT NE NV NH NM ND OK
-        # Multi-word states use \" so NUnit parses the full phrase (e.g. "North Dakota")
-        # rather than just "North" which would collide with Ohio's "Northeast Ave" address.
+          SHARD_FILTER: "Category=Shard1"
         Shard2:
           SHARD_NUMBER: "2"
-          SHARD_FILTER: "FullyQualifiedName~SFP_BasicPolicy&(FullyQualifiedName~Mississippi|FullyQualifiedName~Missouri|FullyQualifiedName~Minnesota|FullyQualifiedName~Montana|FullyQualifiedName~Nebraska|FullyQualifiedName~Nevada|FullyQualifiedName~\"New Hampshire\"|FullyQualifiedName~\"New Mexico\"|FullyQualifiedName~\"North Dakota\"|FullyQualifiedName~Oklahoma)"
-        # Shard 3 — 10 states: OH OR SC SD TN TX UT WA WI WY
-        # South Carolina/South Dakota use full quoted names to avoid partial "South" or "Dakota" matches.
-        # Washington (WA) is matched via its unique Jefferson county to avoid collisions with
-        # Mississippi ("4105 Washington Ave") and Tennessee (Washington county).
+          SHARD_FILTER: "Category=Shard2"
         Shard3:
           SHARD_NUMBER: "3"
-          SHARD_FILTER: "FullyQualifiedName~SFP_BasicPolicy&(FullyQualifiedName~Ohio|FullyQualifiedName~Oregon|FullyQualifiedName~\"South Carolina\"|FullyQualifiedName~\"South Dakota\"|FullyQualifiedName~Tennessee|FullyQualifiedName~Texas|FullyQualifiedName~Utah|FullyQualifiedName~Jefferson|FullyQualifiedName~Wisconsin|FullyQualifiedName~Wyoming)"
+          SHARD_FILTER: "Category=Shard3"
 
     steps:
 
@@ -115,7 +110,8 @@ stages:
       displayName: "Create TestResults Directory"
       condition: always()
 
-    # ✅ Run shard
+    # ✅ Run shard (condition: always() so it runs even if Playwright install step fails,
+    #    ensuring we always get a test run attempt and a .trx artifact)
     - powershell: |
         if (-not $env:SHARD_FILTER) {
             Write-Error "SHARD_FILTER is empty!"
@@ -137,6 +133,7 @@ stages:
 
         exit $LASTEXITCODE
       displayName: "Run Shard $(SHARD_NUMBER)"
+      condition: always()
       workingDirectory: $(Build.SourcesDirectory)
       env:
         Playwright__Headless: "true"
