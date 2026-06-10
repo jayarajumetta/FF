@@ -6,6 +6,7 @@ using PnCTestAutomation.Pages.ExpertQuotePages;
 using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 using Reqnroll;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PnCTestAutomation.StepDefinitions.SFPSteps
