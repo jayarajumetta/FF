@@ -219,7 +219,7 @@ stages:
 
         # Build a NUnit filter from failed test names
         $nameFilter = ($failedNames | ForEach-Object {
-            $escaped = $_.Replace("'", "\'").Replace("`"", "\`""")
+            $escaped = $_.Replace("'", "").Replace('"', '')
             "FullyQualifiedName~$escaped"
         }) -join "|"
 
