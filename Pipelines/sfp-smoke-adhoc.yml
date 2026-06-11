@@ -10,7 +10,7 @@ pr: none
 #   '0 5 * * *'  = 12:00 AM Central (UTC-5) / 1:00 AM CDT (UTC-6)
 schedules:
 - cron: "30 17 * * *"
-  displayName: "Nightly Full Run — 11:15 AM Central"
+  displayName: "Nightly Full Run — 11:30 AM Central"
   branches:
     include:
     - Development
