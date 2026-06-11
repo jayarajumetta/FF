@@ -115,13 +115,20 @@ namespace PnCTestAutomation.Pages
                 _page.GetByRole(AriaRole.Button, new() { Name = "Next" })
             };
 
-            foreach (var candidate in candidates)
+            // Retry for up to 10 seconds — on slower CI agents the Next button
+            // may not be visible immediately after the previous step completes.
+            var deadline = DateTime.UtcNow.AddSeconds(10);
+            while (DateTime.UtcNow < deadline)
             {
-                if (await candidate.CountAsync() > 0 && await candidate.First.IsVisibleAsync())
+                foreach (var candidate in candidates)
                 {
-                    await candidate.First.ClickAsync();
-                    return;
+                    if (await candidate.CountAsync() > 0 && await candidate.First.IsVisibleAsync())
+                    {
+                        await candidate.First.ClickAsync();
+                        return;
+                    }
                 }
+                await _page.WaitForTimeoutAsync(500);
             }
 
             throw new PlaywrightException("Next button not found using any known data-testid.");
