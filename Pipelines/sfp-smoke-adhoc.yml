@@ -263,3 +263,38 @@ stages:
       inputs:
         targetPath: "$(Build.ArtifactStagingDirectory)/TestResults"
         artifact: "SFP_Smoke_Shard_$(SHARD_NUMBER)"
+
+    # ✅ FORMS REPORTS
+    # Copies the HTML forms validation reports generated during the test run into
+    # the staging directory and publishes them as a pipeline artifact.
+    # After the run: ADO pipeline → Artifacts tab → "Forms_Reports_Shard_X"
+    # → download and open any FormsReport_SFP_<State>_<QuoteID>.html in a browser.
+    - powershell: |
+        $reportsDir = "$(Build.ArtifactStagingDirectory)/FormsReports"
+        New-Item -ItemType Directory -Force -Path $reportsDir | Out-Null
+
+        # The test writes reports to <workdir>/TestResults/<date>/FormsReport_*.html
+        $sourceBase = "$(Build.SourcesDirectory)/TestResults"
+        if (Test-Path $sourceBase) {
+            $reports = Get-ChildItem -Path $sourceBase -Recurse -Filter "FormsReport_*.html"
+            if ($reports.Count -gt 0) {
+                $reports | ForEach-Object {
+                    Copy-Item $_.FullName -Destination $reportsDir
+                    Write-Host "Collected: $($_.Name)"
+                }
+                Write-Host "Collected $($reports.Count) forms report(s)."
+            } else {
+                Write-Host "No forms reports found — forms validation may not have run or all states skipped."
+            }
+        } else {
+            Write-Host "TestResults directory not found — skipping forms report collection."
+        }
+      displayName: "Collect Forms Validation Reports"
+      condition: always()
+
+    - task: PublishPipelineArtifact@1
+      displayName: "Publish Forms Reports"
+      condition: always()
+      inputs:
+        targetPath: "$(Build.ArtifactStagingDirectory)/FormsReports"
+        artifact: "Forms_Reports_Shard_$(SHARD_NUMBER)"
