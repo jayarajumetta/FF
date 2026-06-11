@@ -9,8 +9,8 @@ pr: none
 # Change the cron expression to adjust the schedule:
 #   '0 5 * * *'  = 12:00 AM Central (UTC-5) / 1:00 AM CDT (UTC-6)
 schedules:
-- cron: "0 6 * * *"
-  displayName: "Nightly Full Run — 12:00 AM Central"
+- cron: "30 17 * * *"
+  displayName: "Nightly Full Run — 11:03 AM Central"
   branches:
     include:
     - Development
@@ -85,9 +85,6 @@ stages:
   - job: TestShard
     displayName: "SFP Smoke"
     timeoutInMinutes: 120
-    # Automatically re-run the entire shard once if it fails (catches transient
-    # 500 errors, network blips, or agent-level issues without false failures).
-    retries: 1
 
     strategy:
       matrix:
