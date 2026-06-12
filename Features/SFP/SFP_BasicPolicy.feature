@@ -255,10 +255,14 @@ Feature: SFP Basic Policy
     # Step 37: Validate Forms attachment via Duckcreek
     When user validates Forms via Duckcreek for state "<StateAbbv>"
 
-    @Shard1
+    @Shard1 @Smoke
     Examples:
       | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Alabama        | AL        | 1918 Avalon Ave               |          111 | Muscle Shoals | 35661 | Colbert      |
+
+    @Shard1
+    Examples:
+      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Arkansas       | AR        | 3998 Harrison St              |          111 | Batesville    | 72503 | Independence |
       | Arizona        | AZ        | 4201 N 24th St                |          111 | Phoenix       | 85016 | Maricopa     |
       | Colorado       | CO        | 231 Main St                   |          111 | Fort Morgan   | 80701 | Morgan       |
@@ -270,10 +274,14 @@ Feature: SFP Basic Policy
       | Kentucky       | KY        | 1002 Medical Dr               |          111 | Mayfield      | 42066 | Graves       |
       | Louisiana      | LA        | 218 Meadow Dr                 |          111 | Oakdale       | 71463 | Allen        |
 
-    @Shard2
+    @Shard2 @Smoke
     Examples:
       | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Mississippi    | MS        | 4105 Washington Ave           |          111 | Gulfport      | 39507 | Harrison     |
+
+    @Shard2
+    Examples:
+      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Missouri       | MO        | 1895 S Forrest Heights Avenue |          111 | Springfield   | 65809 | Greene       |
       | Minnesota      | MN        | 115 S Main ST                 |          111 | Warren        | 56762 | Marshall     |
       | Montana        | MT        | 1202 3rd St W                 |           11 | Roundup       | 59072 | Musselshell  |
@@ -284,10 +292,14 @@ Feature: SFP Basic Policy
       | North Dakota   | ND        | 600 S 2nd St                  |          111 | Bismarck      | 58504 | Burleigh     |
       | Oklahoma       | OK        | 436255 E 330 Rd               |          111 | Big Cabin     | 74332 | Craig        |
 
-    @Shard3
+    @Shard3 @Smoke
     Examples:
       | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Ohio           | OH        | 1566 Northeast Ave            |          111 | Tallmadge     | 44278 | Summit       |
+
+    @Shard3
+    Examples:
+      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Oregon         | OR        | 661 SW 26TH ST                |          111 | Corvallis     | 97331 | Benton       |
       | South Carolina | SC        | 3009 Augusta Hwy              |          111 | Allendale     | 29810 | Allendale    |
       | South Dakota   | SD        | 700 Governors Dr              |          111 | Pierre        | 57501 | Hughes       |
