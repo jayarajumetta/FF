@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -87,15 +87,28 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             summary.TestCaseName = $"{_lob}_{testCase}";
 
             FormsValidationService.PrintSummary(summary);
-            _validationService.SaveResultsCsv(summary, $"{_lob}_{testCase}");
 
-            var htmlDir = Path.Combine(
+            // Sanitize externally-supplied values before use in file path construction.
+            // Mitigates stored path traversal (CWE-22): inputs originate from Gherkin
+            // step arguments and could contain traversal sequences or invalid characters.
+            var safeLob = SanitizeFileName(_lob);
+            var safeState = SanitizeFileName(_state);
+            var safeQuoteNumber = SanitizeFileName(_quoteNumber);
+            var safeTestCase = SanitizeFileName(testCase);
+
+            _validationService.SaveResultsCsv(summary, $"{safeLob}_{safeTestCase}");
+
+            var htmlDir = Path.GetFullPath(Path.Combine(
                 _validationService.GetType().Assembly.Location, "..", "..", "..", "TestResults",
-                DateTime.Now.ToString("ddMMMyyyy").ToUpperInvariant());
-            var htmlPath = Path.Combine(htmlDir, $"FormsReport_{_lob}_{_state}_{_quoteNumber}.html");
-            FormsReportGenerator.Generate(summary, htmlPath);
+                DateTime.Now.ToString("ddMMMyyyy").ToUpperInvariant()));
+            var htmlPath = Path.Combine(htmlDir, $"FormsReport_{safeLob}_{safeState}_{safeQuoteNumber}.html");
 
+            // Verify the resolved path stays within the intended output directory.
             var absoluteHtmlPath = Path.GetFullPath(htmlPath);
+            if (!absoluteHtmlPath.StartsWith(htmlDir + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException("Path traversal detected: report path escapes the intended output directory.");
+
+            FormsReportGenerator.Generate(summary, htmlPath);
             Console.WriteLine($"[FormsValidation] HTML report saved: {absoluteHtmlPath}");
             MaybeOpenFormsReport(absoluteHtmlPath, summary.Failed > 0);
 
@@ -106,6 +119,28 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                     .Select(r => $"    {r.FormName}: {r.Message}"));
                 Assert.Fail($"Forms validation: {summary.Failed} failure(s) detected.\n{failures}\nSee report: {htmlPath}");
             }
+        }
+
+        /// <summary>
+        /// Sanitizes a value for safe use as a file name component.
+        /// Neutralizes directory traversal sequences and replaces characters
+        /// that are invalid in file names with underscores.
+        /// Required because file names are derived from externally-supplied
+        /// test inputs (path traversal mitigation, CWE-22).
+        /// </summary>
+        private static string SanitizeFileName(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return "_";
+
+            // Neutralize traversal sequences before character-level sanitization
+            var sanitized = input.Replace("..", "_");
+
+            // Replace all OS-invalid file name characters with underscores
+            foreach (var c in Path.GetInvalidFileNameChars())
+                sanitized = sanitized.Replace(c, '_');
+
+            return sanitized;
         }
 
         private void MaybeOpenFormsReport(string absoluteHtmlPath, bool hasFailures)
