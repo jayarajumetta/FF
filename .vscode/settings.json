@@ -1,1 +1,15 @@
-﻿@{ "files.exclude": { "**/*.feature.cs": true } }
+{
+    "git.path": "C:\\Program Files\\Git\\cmd\\git.exe",
+    "files.exclude": {
+        "**/*.feature.cs": true
+    },
+    "files.associations": {
+        "**/ExpectedForms/**/*.json": "jsonc"
+    },
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "csharp-dev-tools.roslyn.projectOrSolutionFiles": [
+        "c:\\PnC Test Automation\\PnC-TestAutomation\\Playwright_POC.sln"
+    ]
+}

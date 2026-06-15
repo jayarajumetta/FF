@@ -3,9 +3,9 @@ using Microsoft.Playwright;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using Playwright_POC.Helpers;
+using PnCTestAutomation.Helpers;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     public class AccountOwnerInfoPage : BasePage
     {
@@ -30,13 +30,13 @@ namespace Playwright_POC.Pages
 
         // Dynamic locators
         private ILocator GetReceivedMailButton(string yesOrNo) =>
-            _page.Locator("[data-testid^='owner.address.resided90days-']").Filter(new() { HasTextString = yesOrNo });
+            _page.GetByTestId("owner.address.resided90days-chip-item-wrapper").Filter(new() { HasText = yesOrNo }).First;
 
         private ILocator GetClientResidesButton(string yesOrNo) =>
-            _page.Locator("button[data-testid^='owner.address.useAsResidence']").Filter(new() { HasTextString = yesOrNo });
+            _page.GetByTestId("owner.address.useAsResidence-chip-item-wrapper").Filter(new() { HasText = yesOrNo }).First;
 
         private ILocator GetMaritalStatusButton(string maritalStatus) =>
-            _page.Locator("button[data-testid^='owner.maritalStatus-']").Filter(new() { HasTextString = maritalStatus.Trim() });
+            _page.GetByTestId("owner.maritalStatus-chip-item-wrapper").Filter(new() { HasText = maritalStatus.Trim() }).First;
 
         private ILocator MoreOptionsMaritalStatus => _page.Locator("[data-testid*='maritalStatus.value-other']");
 
@@ -59,6 +59,15 @@ namespace Playwright_POC.Pages
                 await FirstNameInput.PressAsync("Control+A");
                 await FirstNameInput.PressAsync("Delete");
                 await FirstNameInput.FillAsync(contextData.ClientFirstName ?? string.Empty);
+            }
+
+            // Middle Name: fill if provided
+            if (!string.IsNullOrWhiteSpace(contextData.ClientMiddleName))
+            {
+                await MiddleNameInput.ClickAsync();
+                await MiddleNameInput.PressAsync("Control+A");
+                await MiddleNameInput.PressAsync("Delete");
+                await MiddleNameInput.FillAsync(contextData.ClientMiddleName);
             }
 
             // Last Name: fill only if empty
@@ -133,7 +142,8 @@ namespace Playwright_POC.Pages
             await CityInput.FillAsync(contextData.City);
 
             await StateDropdown.ClickAsync();
-            await _page.ClickAsync($"text={contextData.State.ToUpper()}");
+            // Use exact matching to prevent "KANSAS" from matching "ARKANSAS"
+            await _page.GetByRole(AriaRole.Option, new() { Name = contextData.State.ToUpper(), Exact = true }).ClickAsync();
             await ZipCodeInput.FillAsync(contextData.ZipCode);
         }
 

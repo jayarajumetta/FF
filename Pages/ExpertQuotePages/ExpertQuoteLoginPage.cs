@@ -1,8 +1,8 @@
-// Pages/ExpertQuotePages/ExpertQuoteLoginPage.cs
+﻿// Pages/ExpertQuotePages/ExpertQuoteLoginPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     /// <summary>
     /// Page Object for ExpertQuote Login / Ping SSO page
@@ -19,7 +19,7 @@ namespace Playwright_POC.Pages
         private ILocator UsernameInput => _page.GetByPlaceholder("Username");
         private ILocator PasswordInput => _page.GetByPlaceholder("Password");
         private ILocator SignOnButton => _page.GetByTitle("Sign On");
-        
+
         // Dashboard indicator - confirms login was successful
         private ILocator NewQuoteButton => _page.GetByRole(AriaRole.Button, new() { Name = "New Quote" });
 
@@ -34,10 +34,18 @@ namespace Playwright_POC.Pages
         {
             await UsernameInput.FillAsync(username);
             await PasswordInput.FillAsync(password);
+
+            // The Ping SSO redirect chain (login → Ping → OAuth callback → dashboard) can
+            // take well over 30s on slow QA environments. Temporarily raise the navigation
+            // timeout for this page so the click's built-in navigation wait doesn't expire.
+            _page.SetDefaultNavigationTimeout(180000);
             await SignOnButton.ClickAsync();
 
+            // Wait for page to navigate and network to be mostly idle
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 180000 });
+
             // Wait for login to complete - dashboard should be visible
-            await NewQuoteButton.WaitForAsync(new() { State = WaitForSelectorState.Visible });
+            await NewQuoteButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 180000 });
         }
 
         /// <summary>

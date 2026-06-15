@@ -1,9 +1,9 @@
-
-using Playwright_POC.Models;
+﻿
+using PnCTestAutomation.Models;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Services
+namespace PnCTestAutomation.Services
 {
     public interface IApiService
     {

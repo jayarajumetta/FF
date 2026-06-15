@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Helpers
+namespace PnCTestAutomation.Helpers
 {
     public static class ApiHelpers
     {
@@ -73,4 +73,4 @@ namespace Playwright_POC.Helpers
             return response!;
         }
     }
-    }
+}

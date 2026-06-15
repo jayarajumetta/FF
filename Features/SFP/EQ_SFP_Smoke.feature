@@ -1,7 +1,7 @@
-@UI
+@SFP @ExpertQuote
 Feature: EQ SFP Smoke
 
-  @ExpertQuote @Smoke
+  @Smoke
   Scenario Outline: SFP Smoke Test - <State>
     Given I navigate to the Expert Quote login page
     When I enter valid credentials and Click LogIn
@@ -37,9 +37,12 @@ Feature: EQ SFP Smoke
       | PolicyTerm     | 12 months                                   |
       | AgentCode      | D2102                                       |
       | RatingState    | <StateFull>                                 |
-      | SSN            |                                             |
       | WritingCompany | American National Property And Casualty Co. |
       | RiskAddress    | <Address>, <City>, <StateAbbv> <Zip>        |
+
+    When user handles SSN popup and enters SSN
+      | Question | Answer        |
+      | SSN      | {{randomSSN}} |
 
     And user enters SFP policy details and clicks Next button
       | Question           | Answer  |

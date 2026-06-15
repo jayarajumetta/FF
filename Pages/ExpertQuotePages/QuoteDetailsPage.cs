@@ -1,11 +1,13 @@
-// Pages/QuoteDetailsPage.cs
+﻿// Pages/QuoteDetailsPage.cs
 using Microsoft.Playwright;
 using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Playwright_POC.Helpers;
+using PnCTestAutomation.Helpers;
 using static Microsoft.Playwright.Assertions;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     public class QuoteDetailsPage : BasePage
     {
@@ -16,13 +18,18 @@ namespace Playwright_POC.Pages
         private ILocator PageHeader => _page.GetByText("Proposal Details");
 
         // Insurance Products
-        private ILocator PersonalAutoButton => _page.GetByTestId("proposal.product-0");
-        private ILocator MotorcycleButton => _page.GetByTestId("proposal.product-1");
-        private ILocator RecreationalVehicleButton => _page.GetByTestId("proposal.product-2");
-        private ILocator HomeButton => _page.GetByTestId("proposal.product-3");
-        private ILocator BusinessOwnerButton => _page.GetByTestId("proposal.product-4");
-        private ILocator FarmPackageButton => _page.GetByTestId("proposal.product-5");
+        private ILocator PersonalAutoButton => _page.GetByTestId("proposal.product-chip-item-wrapper").Filter(new() { HasText = "Personal Auto" }).First;
+        private ILocator MotorcycleButton => _page.GetByTestId("proposal.product-chip-item-wrapper").Filter(new() { HasText = "Motorcycle" }).First;
+        private ILocator RecreationalVehicleButton => _page.GetByTestId("proposal.product-chip-item-wrapper").Filter(new() { HasText = "Recreational Vehicle" }).First;
+        private ILocator HomeButton => _page.GetByTestId("proposal.product-chip-item-wrapper").Filter(new() { HasText = "Home" }).First;
+        private ILocator BusinessOwnerButton => _page.GetByTestId("proposal.product-chip-item-wrapper").Filter(new() { HasText = "Business Owner" }).First;
+        private ILocator FarmPackageButton => _page.GetByTestId("proposal.product-chip-item-wrapper").Filter(new() { HasText = "Special Farm Package" }).First;
         private ILocator FarmPackageSelectedIndicator => _page.GetByTestId("sfp-button");
+        // CE confirm-product card — matched by its chip-item-wrapper testid or by card text as fallback
+        private ILocator CountryEstateSection =>
+            _page.GetByTestId("proposal.sfpProductSelection-chip-item-wrapper")
+                 .Filter(new() { HasText = "Country Estate" })
+                 .First;
 
         // Quote Details
         private ILocator EffDateInput => _page.Locator("input[name='proposal.effectiveDate']");
@@ -33,7 +40,7 @@ namespace Playwright_POC.Pages
         private ILocator WritingCompanyDropdownValue => _page.GetByTestId("proposal.writingCompany");
         private ILocator RiskAddressRadioButton => _page.Locator("mat-radio-button[id='proposal.riskAddressSelection-0']");
         private ILocator AddNewRiskAddressRadioButton => _page.Locator("mat-radio-button[id='proposal.riskAddressSelection-1']");
-        private ILocator StartQuoteButton => _page.GetByTestId("startQuote");
+        private ILocator StartQuoteButton => _page.Locator("#startQuote");
         private ILocator IndividuallyOwnedCheckbox => _page.GetByTestId("business.isIndividualDba");
         private ILocator DBANameInput => _page.GetByTestId("business.individualDba");
         private ILocator GrossFarmIncomeInput => _page.GetByTestId("fields.account.policyInput$grossFarmIncome.value");
@@ -45,8 +52,8 @@ namespace Playwright_POC.Pages
         // SSN Pop-Up
         private ILocator SSNPopup => _page.GetByRole(AriaRole.Heading, new() { Name = "Enter the Client's Full SSN#" });
         private ILocator SSNInput => _page.GetByTestId("ssn");
-        private ILocator SSNConfirmPopup => _page.Locator("mat-dialog-container h2:has-text(\"Confirm the Client's SSN#\")");
-        private ILocator SSNConfirmButton => _page.Locator("mat-dialog-container a:has-text('Confirm')");
+        // btnConfirmYes is wrapped in <ng-component> which intercepts pointer events.
+        // Use DispatchEventAsync("click") instead of ClickAsync everywhere this is used.
         private ILocator DialogSubmitButton => _page.GetByTestId("btnConfirmYes");
 
         // Client Exists Pop-Up
@@ -93,6 +100,124 @@ namespace Playwright_POC.Pages
             await FarmPackageButton.ClickAsync();
         }
 
+        public async Task SelectCountryEstateProductAsync()
+        {
+            // Country Estate lives under the SFP umbrella: click SFP first to reveal the sub-product picker.
+            await SelectSpecialFarmPackageProductAsync();
+            await WaitForSpinnerAsync();
+
+            // Wait for the Confirm Product Selection heading to appear
+            await _page.GetByText("Confirm Product Selection").First
+                       .WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
+
+            // Make sure the CE/SFP compare content has rendered.
+            await _page.GetByText(new Regex(@"Country\s*Estate", RegexOptions.IgnoreCase)).First
+                       .WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
+
+            // In this two-column layout, CE is the right column.
+            // If the right-most SELECTED button is already selected, CE is already active.
+            if (await IsRightColumnSelectedAsync())
+            {
+                Console.WriteLine("[CE] Country Estate already selected");
+                return;
+            }
+
+            // Click the right-most visible SELECT button (CE column button).
+            var selectButtons = _page.GetByText(new Regex(@"^\s*SELECT\s*$", RegexOptions.IgnoreCase));
+            await selectButtons.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
+
+            var selectBtn = await GetRightMostVisibleButtonAsync(selectButtons);
+            await selectBtn.ClickAsync();
+            await WaitForSpinnerAsync();
+
+            // Give UI a moment to swap SELECT -> SELECTED labels.
+            await _page.WaitForTimeoutAsync(400);
+
+            // Confirm CE (right column) is now selected.
+            if (!await IsRightColumnSelectedAsync() && !await IsCountryEstateSelectedByButtonLayoutAsync())
+                throw new InvalidOperationException("[CE] Clicked SELECT for Country Estate but selection state could not be confirmed.");
+
+            Console.WriteLine("[CE] Country Estate product selected successfully");
+        }
+
+        private async Task<bool> IsCountryEstateSelectedByButtonLayoutAsync()
+        {
+            // Fallback when SELECTED text isn't exposed to Playwright:
+            // if only one visible SELECT remains and it is on the left, CE is selected on the right.
+            var selectButtons = _page.GetByText(new Regex(@"^\s*SELECT\s*$", RegexOptions.IgnoreCase));
+            var count = await selectButtons.CountAsync();
+            if (count == 0)
+                return false;
+
+            var visible = new System.Collections.Generic.List<ILocator>();
+            for (int i = 0; i < count; i++)
+            {
+                var candidate = selectButtons.Nth(i);
+                var box = await candidate.BoundingBoxAsync();
+                if (box != null && box.Width > 0 && box.Height > 0)
+                    visible.Add(candidate);
+            }
+
+            if (visible.Count != 1)
+                return false;
+
+            var only = visible[0];
+            var onlyBox = await only.BoundingBoxAsync();
+            var viewport = _page.ViewportSize;
+            if (onlyBox == null || viewport == null)
+                return false;
+
+            return onlyBox.X < (viewport.Width / 2.0);
+        }
+
+        private async Task<bool> IsRightColumnSelectedAsync()
+        {
+            var selectedButtons = _page.GetByText(new Regex(@"^\s*SELECTED\s*$", RegexOptions.IgnoreCase));
+            if (await selectedButtons.CountAsync() == 0)
+                return false;
+
+            var rightMostSelected = await GetRightMostVisibleButtonAsync(selectedButtons);
+            var box = await rightMostSelected.BoundingBoxAsync();
+            if (box == null)
+                return false;
+
+            var viewport = _page.ViewportSize;
+            if (viewport == null)
+                return false;
+
+            return box.X > (viewport.Width / 2.0);
+        }
+
+        private static async Task<ILocator> GetRightMostVisibleButtonAsync(ILocator buttons)
+        {
+            var count = await buttons.CountAsync();
+            ILocator best = null;
+            double bestX = double.MinValue;
+
+            for (int i = 0; i < count; i++)
+            {
+                var btn = buttons.Nth(i);
+
+                var box = await btn.BoundingBoxAsync();
+                if (box == null)
+                    continue;
+
+                if (box.Width <= 0 || box.Height <= 0)
+                    continue;
+
+                if (box.X > bestX)
+                {
+                    best = btn;
+                    bestX = box.X;
+                }
+            }
+
+            if (best == null)
+                throw new TimeoutException("No visible SELECT/SELECTED product action button found.");
+
+            return best;
+        }
+
         public async Task WaitForSpecialFarmPackageSelectedAsync()
         {
             await Expect(FarmPackageSelectedIndicator).ToBeVisibleAsync(new() { Timeout = 10000 });
@@ -121,7 +246,7 @@ namespace Playwright_POC.Pages
             await effDateField.FillAsync(contextData.EffectiveDate);
 
             // Select Policy Term using robust mat-select handler
-            await Playwright_POC.Helpers.Helpers.SelectByTextAsync(_page, PolicyTermDropdown, contextData.PolicyTerm, timeoutMs: 30000, blurAfterSelect: false);
+            await PnCTestAutomation.Helpers.Helpers.SelectByTextAsync(_page, PolicyTermDropdown, contextData.PolicyTerm, timeoutMs: 30000, blurAfterSelect: false);
 
             await AgentPCCodeInput.FillAsync(contextData.AgentCode);
         }
@@ -129,7 +254,7 @@ namespace Playwright_POC.Pages
         public async Task<string> SelectRatingStateAndCompanyAsync(ScenarioContextData contextData)
         {
             // Select Rating State using robust mat-select handler
-            await Playwright_POC.Helpers.Helpers.SelectByTextAsync(_page, RatingStateDropdown, contextData.RatingState.ToUpper(), timeoutMs: 30000, blurAfterSelect: false);
+            await PnCTestAutomation.Helpers.Helpers.SelectByTextAsync(_page, RatingStateDropdown, contextData.RatingState.ToUpper(), timeoutMs: 30000, blurAfterSelect: false);
 
             await WaitForSpinnerAsync();
 
@@ -181,37 +306,94 @@ namespace Playwright_POC.Pages
 
         public async Task HandleSSNPopupsAsync(ScenarioContextData contextData)
         {
-            await WaitForSpinnerAsync();
-
+            // Wait up to 15s for the SSN popup — it can appear well after ClickStartQuoteAsync
+            var popupVisible = false;
             try
             {
-                await SSNPopup.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 5000 });
-
-                string ssnToUse = !string.IsNullOrWhiteSpace(contextData.SSN)
-                    ? contextData.SSN
-                    : RandomGenerators.GenerateRandomSSN();
-
-                contextData.SSN = ssnToUse;
-
-                await SSNInput.FillAsync(ssnToUse);
-                await DialogSubmitButton.ClickAsync();
+                await SSNPopup.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
+                popupVisible = true;
             }
             catch (TimeoutException)
             {
                 // SSN popup didn't appear - continue
             }
 
+            if (!popupVisible)
+            {
+                await WaitForSpinnerAsync();
+                return;
+            }
+
+            string ssnToUse = !string.IsNullOrWhiteSpace(contextData.SSN)
+                ? contextData.SSN
+                : RandomGenerators.GenerateRandomSSN();
+            contextData.SSN = ssnToUse;
+
+            // ngx-mask input: type digits only, the mask inserts dashes automatically.
+            // PressSequentiallyAsync fires real keystroke events that the mask processes.
+            var digitsOnly = new string(ssnToUse.Where(char.IsDigit).ToArray());
+            await SSNInput.ClickAsync();
+            await SSNInput.PressSequentiallyAsync(digitsOnly, new() { Delay = 50 });
+            await Task.Delay(500);
+
+            Console.WriteLine($"[SSN] Typed SSN digits, clicking Submit");
+            await DialogSubmitButton.DispatchEventAsync("click");
+            Console.WriteLine($"[SSN] Submit clicked, waiting for popup to close");
+
+            // Wait for the popup to close (up to 15s) before continuing
             try
             {
-                await SSNConfirmPopup.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 3000 });
-                await SSNConfirmButton.ClickAsync();
+                await SSNPopup.WaitForAsync(new() { State = WaitForSelectorState.Hidden, Timeout = 15000 });
+                Console.WriteLine($"[SSN] First popup closed");
             }
             catch (TimeoutException)
             {
-                // Confirmation popup didn't appear - continue
+                var dialogText = string.Empty;
+                var dialog = _page.Locator("mat-dialog-container").First;
+                if (await dialog.CountAsync() > 0)
+                {
+                    try
+                    {
+                        dialogText = (await dialog.InnerTextAsync()).Replace("\r", " ").Replace("\n", " ").Trim();
+                    }
+                    catch
+                    {
+                        // Keep default empty text if dialog extraction fails.
+                    }
+                }
+
+                throw new InvalidOperationException(
+                    $"SSN submit did not close the SSN popup. URL='{_page.Url}'. Dialog='{dialogText}'.");
             }
 
+            // Check for confirm dialog (same btnConfirmYes) — allow up to 10s.
+            try
+            {
+                await DialogSubmitButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
+                Console.WriteLine($"[SSN] Confirm dialog appeared, clicking Submit");
+                await DialogSubmitButton.DispatchEventAsync("click");
+
+                // Wait for the confirm dialog to close before proceeding
+                await DialogSubmitButton.WaitForAsync(new() { State = WaitForSelectorState.Hidden, Timeout = 15000 });
+                Console.WriteLine($"[SSN] Confirm dialog closed");
+                await Task.Delay(500);
+            }
+            catch (TimeoutException)
+            {
+                Console.WriteLine($"[SSN] No confirm dialog appeared - continuing");
+            }
+
+            // Wait for DuckCreek's full page navigation after SSN submission to settle
+            await _page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             await WaitForSpinnerAsync();
+
+            // Hard guard: never continue into Policy Details while SSN modal is still blocking.
+            if (await SSNPopup.CountAsync() > 0 && await SSNPopup.IsVisibleAsync())
+            {
+                throw new InvalidOperationException($"SSN popup is still visible after submission. URL='{_page.Url}'.");
+            }
+
+            Console.WriteLine($"[SSN] Page settled after SSN — URL: {_page.Url}");
         }
 
         public async Task HandleClientExistsPopupAsync()
@@ -229,10 +411,8 @@ namespace Playwright_POC.Pages
 
         public async Task SelectRatingStateAsync(ScenarioContextData contextData)
         {
-            await RatingStateDropdown.ClickAsync();
-            await Task.Delay(500);
-            // Dropdown shows states in UPPERCASE (Angular Material mat-option)
-            await _page.GetByRole(AriaRole.Option, new() { Name = contextData.RatingState.ToUpper() }).ClickAsync();
+            // Use robust mat-select handler to avoid race conditions with the dropdown panel
+            await PnCTestAutomation.Helpers.Helpers.SelectByTextAsync(_page, RatingStateDropdown, contextData.RatingState.ToUpper(), timeoutMs: 30000, blurAfterSelect: false);
         }
     }
 }

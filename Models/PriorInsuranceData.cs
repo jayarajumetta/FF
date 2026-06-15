@@ -1,4 +1,4 @@
-namespace Playwright_POC.Models
+﻿namespace PnCTestAutomation.Models
 {
     /// <summary>
     /// Prior insurance and claims history
@@ -19,5 +19,7 @@ namespace Playwright_POC.Models
 
         public string YearsInBusiness { get; set; }
         public string YearsContinuousCoverage { get; set; }
+        public string PriorInsuranceExpDate { get; set; }
+        public string PriorInsuranceCarrier { get; set; }
     }
 }

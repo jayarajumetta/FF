@@ -1,4 +1,4 @@
-namespace Playwright_POC.Models
+﻿namespace PnCTestAutomation.Models
 {
     /// <summary>
     /// Billing and payment information
@@ -13,5 +13,8 @@ namespace Playwright_POC.Models
         public string PaymentMethod { get; set; }
         public string CheckNumber { get; set; }
         public string Paperless { get; set; }
+        public string RoutingNumber { get; set; }
+        public string AccountNumber { get; set; }
+        public string BankName { get; set; }
     }
 }

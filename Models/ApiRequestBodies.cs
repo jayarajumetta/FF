@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Models
+namespace PnCTestAutomation.Models
 {
     internal class ApiRequestBodies
     {

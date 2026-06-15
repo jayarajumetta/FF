@@ -1,6 +1,6 @@
-﻿using Playwright_POC.Models;
+﻿using PnCTestAutomation.Models;
 
-namespace Playwright_POC.Helpers
+namespace PnCTestAutomation.Helpers
 {
     /// <summary>
     /// Scenario context data using composition with domain models.
@@ -25,12 +25,17 @@ namespace Playwright_POC.Helpers
         public FarmData Farm { get; set; } = new();
         public UnderwritingData Underwriting { get; set; } = new();
 
+        // --- Forms Validation ---
+        public string FormsLob { get; set; }
+        public string FormsTestCase { get; set; }
+
         // ══════════════════════════════════════════════════════════════════
         // LEGACY PROPERTIES (Backward compatible - delegate to domain models)
         // ══════════════════════════════════════════════════════════════════
 
         // --- Client Info (maps to Client) ---
         public string ClientFirstName { get => Client.FirstName; set => Client.FirstName = value; }
+        public string ClientMiddleName { get => Client.MiddleName; set => Client.MiddleName = value; }
         public string ClientLastName { get => Client.LastName; set => Client.LastName = value; }
         public string ClientDOB { get => Client.DateOfBirth; set => Client.DateOfBirth = value; }
         public string ClientPhoneNumber { get => Client.Phone; set => Client.Phone = value; }
@@ -58,6 +63,8 @@ namespace Playwright_POC.Helpers
         public string RatingState { get => Policy.RatingState; set => Policy.RatingState = value; }
         public string WritingCompany { get => Policy.WritingCompany; set => Policy.WritingCompany = value; }
         public string RiskAddress { get => Policy.RiskAddress; set => Policy.RiskAddress = value; }
+        public string OwnershipType { get => Policy.OwnershipType; set => Policy.OwnershipType = value; }
+        public string LessorRisk { get => Policy.LessorRisk; set => Policy.LessorRisk = value; }
         public string EligibilityRestrictions { get => Policy.EligibilityRestrictions; set => Policy.EligibilityRestrictions = value; }
         public string PolicyCoverage { get => Policy.PolicyCoverage; set => Policy.PolicyCoverage = value; }
         public string CompCollOnly { get => Policy.CompCollOnly; set => Policy.CompCollOnly = value; }
@@ -113,6 +120,8 @@ namespace Playwright_POC.Helpers
         public bool PriorFFANPolicy { get => PriorInsuranceInfo.PriorFFANPolicy; set => PriorInsuranceInfo.PriorFFANPolicy = value; }
         public string YearsInBusiness { get => PriorInsuranceInfo.YearsInBusiness; set => PriorInsuranceInfo.YearsInBusiness = value; }
         public string YearsContinuousCoverage { get => PriorInsuranceInfo.YearsContinuousCoverage; set => PriorInsuranceInfo.YearsContinuousCoverage = value; }
+        public string PriorInsuranceExpDate { get => PriorInsuranceInfo.PriorInsuranceExpDate; set => PriorInsuranceInfo.PriorInsuranceExpDate = value; }
+        public string PriorInsuranceCarrier { get => PriorInsuranceInfo.PriorInsuranceCarrier; set => PriorInsuranceInfo.PriorInsuranceCarrier = value; }
 
         // --- Additional Interest (maps to AdditionalInterest) ---
         public string AdditionalInterestType { get => AdditionalInterest.Type; set => AdditionalInterest.Type = value; }
@@ -136,6 +145,9 @@ namespace Playwright_POC.Helpers
         public string PaymentMethod { get => Payment.PaymentMethod; set => Payment.PaymentMethod = value; }
         public string CheckNumber { get => Payment.CheckNumber; set => Payment.CheckNumber = value; }
         public string Paperless { get => Payment.Paperless; set => Payment.Paperless = value; }
+        public string RoutingNumber { get => Payment.RoutingNumber; set => Payment.RoutingNumber = value; }
+        public string AccountNumber { get => Payment.AccountNumber; set => Payment.AccountNumber = value; }
+        public string BankName { get => Payment.BankName; set => Payment.BankName = value; }
 
         // --- Business (BOP - maps to Business) ---
         public string BusinessEntity { get => Business.EntityType; set => Business.EntityType = value; }
@@ -147,6 +159,8 @@ namespace Playwright_POC.Helpers
 
         // --- Farm (SFP - maps to Farm) ---
         public string PrimaryFarmType { get => Farm.PrimaryFarmType; set => Farm.PrimaryFarmType = value; }
+        public string SecondaryFarmType { get => Farm.SecondaryFarmType; set => Farm.SecondaryFarmType = value; }
+        public string SecondaryFarmSubType { get => Farm.SecondaryFarmSubType; set => Farm.SecondaryFarmSubType = value; }
         public string LivestockType { get => Farm.LivestockType; set => Farm.LivestockType = value; }
         public string GrossFarmIncome { get => Farm.GrossFarmIncome; set => Farm.GrossFarmIncome = value; }
         public string GrowIndustrialHemp { get => Farm.GrowIndustrialHemp; set => Farm.GrowIndustrialHemp = value; }
@@ -154,9 +168,75 @@ namespace Playwright_POC.Helpers
         public string LocationType { get => Farm.LocationType; set => Farm.LocationType = value; }
         public string MilesFromFireDepartment { get => Farm.MilesFromFireDepartment; set => Farm.MilesFromFireDepartment = value; }
         public string FeetFromHydrant { get => Farm.FeetFromHydrant; set => Farm.FeetFromHydrant = value; }
+        public string PPC { get => Farm.PPC; set => Farm.PPC = value; }
         public string TotalAcreage { get => Farm.TotalAcreage; set => Farm.TotalAcreage = value; }
         public string WindHailDeductible { get => Farm.WindHailDeductible; set => Farm.WindHailDeductible = value; }
         public string Narrative { get => Farm.Narrative; set => Farm.Narrative = value; }
+
+        // --- Residence (SFP - maps to Farm) ---
+        public string ResidenceAdditionalDesc { get => Farm.ResidenceAdditionalDesc; set => Farm.ResidenceAdditionalDesc = value; }
+        public string ResidenceYearBuilt { get => Farm.ResidenceYearBuilt; set => Farm.ResidenceYearBuilt = value; }
+        public string ResidenceRateType { get => Farm.ResidenceRateType; set => Farm.ResidenceRateType = value; }
+        public string ResidenceNumberOfFamilies { get => Farm.ResidenceNumberOfFamilies; set => Farm.ResidenceNumberOfFamilies = value; }
+        public string ResidenceConditionRating { get => Farm.ResidenceConditionRating; set => Farm.ResidenceConditionRating = value; }
+        public string ResidenceRoofYear { get => Farm.ResidenceRoofYear; set => Farm.ResidenceRoofYear = value; }
+        public string ResidenceRoofType { get => Farm.ResidenceRoofType; set => Farm.ResidenceRoofType = value; }
+        public string ResidenceRoofImpact { get => Farm.ResidenceRoofImpact; set => Farm.ResidenceRoofImpact = value; }
+        public string ResidenceSeasonalOrVacant { get => Farm.ResidenceSeasonalOrVacant; set => Farm.ResidenceSeasonalOrVacant = value; }
+        public string ResidenceSolidFuelQuestion { get => Farm.ResidenceSolidFuelQuestion; set => Farm.ResidenceSolidFuelQuestion = value; }
+
+        // --- Residence Coverage (SFP - maps to Farm) ---
+        public string ResidenceInsuranceAmount { get => Farm.ResidenceInsuranceAmount; set => Farm.ResidenceInsuranceAmount = value; }
+        public string ResidenceSquareFeet { get => Farm.ResidenceSquareFeet; set => Farm.ResidenceSquareFeet = value; }
+        public string ResidencePerils { get => Farm.ResidencePerils; set => Farm.ResidencePerils = value; }
+        public string ResidenceThermostatQuestion { get => Farm.ResidenceThermostatQuestion; set => Farm.ResidenceThermostatQuestion = value; }
+        public string ResidenceActualCashValue { get => Farm.ResidenceActualCashValue; set => Farm.ResidenceActualCashValue = value; }
+        public string ResidenceRCTOption { get => Farm.ResidenceRCTOption; set => Farm.ResidenceRCTOption = value; }
+        public string ResidenceUseDefaults { get => Farm.ResidenceUseDefaults; set => Farm.ResidenceUseDefaults = value; }
+
+        // --- Farm Personal Property (SFP - maps to Farm) ---
+        public string FarmPropertyCode { get => Farm.FarmPropertyCode; set => Farm.FarmPropertyCode = value; }
+        public string FarmPropertyDescription { get => Farm.FarmPropertyDescription; set => Farm.FarmPropertyDescription = value; }
+        public string FarmPropertyLimit { get => Farm.FarmPropertyLimit; set => Farm.FarmPropertyLimit = value; }
+        public string FarmPropertyDeductible { get => Farm.FarmPropertyDeductible; set => Farm.FarmPropertyDeductible = value; }
+
+        // --- Scheduled Personal Property (SFP - maps to Farm) ---
+        public string SPPCategory { get => Farm.SPPCategory; set => Farm.SPPCategory = value; }
+        public string SPPItemType { get => Farm.SPPItemType; set => Farm.SPPItemType = value; }
+        public string SPPDescription { get => Farm.SPPDescription; set => Farm.SPPDescription = value; }
+        public string SPPLimit { get => Farm.SPPLimit; set => Farm.SPPLimit = value; }
+        public string SPPValue { get => Farm.SPPValue; set => Farm.SPPValue = value; }
+        public string SPPYearOfAppraisal { get => Farm.SPPYearOfAppraisal; set => Farm.SPPYearOfAppraisal = value; }
+
+        // --- Liability (SFP - maps to Farm) ---
+        public string LiabilityLimit { get => Farm.LiabilityLimit; set => Farm.LiabilityLimit = value; }
+        public string LivestockHorses { get => Farm.LivestockHorses; set => Farm.LivestockHorses = value; }
+        public string LivestockSmall { get => Farm.LivestockSmall; set => Farm.LivestockSmall = value; }
+        public string LivestockLarge { get => Farm.LivestockLarge; set => Farm.LivestockLarge = value; }
+        public string UnlistedAcreage { get => Farm.UnlistedAcreage; set => Farm.UnlistedAcreage = value; }
+        public string NumberOfEmployees { get => Farm.NumberOfEmployees; set => Farm.NumberOfEmployees = value; }
+
+        // --- Insurance Score (SFP - maps to Farm) ---
+        public string InsuranceScoreEntityType { get => Farm.InsuranceScoreEntityType; set => Farm.InsuranceScoreEntityType = value; }
+        public string InsuranceScoreDesignee { get => Farm.InsuranceScoreDesignee; set => Farm.InsuranceScoreDesignee = value; }
+        public string InsuranceScoreConsent { get => Farm.InsuranceScoreConsent; set => Farm.InsuranceScoreConsent = value; }
+
+        // --- Mortgagee (SFP - maps to Farm) ---
+        public string MortgageeName { get => Farm.MortgageeName; set => Farm.MortgageeName = value; }
+        public string MortgageeAddress { get => Farm.MortgageeAddress; set => Farm.MortgageeAddress = value; }
+        public string MortgageeSearchName { get => Farm.MortgageeSearchName; set => Farm.MortgageeSearchName = value; }
+        public string MortgageeLocation { get => Farm.MortgageeLocation; set => Farm.MortgageeLocation = value; }
+        public string MortgageeResidence { get => Farm.MortgageeResidence; set => Farm.MortgageeResidence = value; }
+        public string MortgageeCopyOfDEC { get => Farm.MortgageeCopyOfDEC; set => Farm.MortgageeCopyOfDEC = value; }
+        public string MortgageeAccountNumber { get => Farm.MortgageeAccountNumber; set => Farm.MortgageeAccountNumber = value; }
+        public string MortgageeDescriptionOfInterest { get => Farm.MortgageeDescriptionOfInterest; set => Farm.MortgageeDescriptionOfInterest = value; }
+        public string MortgageeEscrowBilled { get => Farm.MortgageeEscrowBilled; set => Farm.MortgageeEscrowBilled = value; }
+
+        // --- Checklist (SFP - maps to Farm) ---
+        public string ChecklistItemName { get => Farm.ChecklistItemName; set => Farm.ChecklistItemName = value; }
+        public string ChecklistAction { get => Farm.ChecklistAction; set => Farm.ChecklistAction = value; }
+        public string ChecklistExceptionNote { get => Farm.ChecklistExceptionNote; set => Farm.ChecklistExceptionNote = value; }
+        public string ChecklistNote { get => Farm.ChecklistNote; set => Farm.ChecklistNote = value; }
 
         // --- Underwriting (maps to Underwriting) ---
         public string GeneralUWQuestionAnswer { get => Underwriting.GeneralAnswer; set => Underwriting.GeneralAnswer = value; }
@@ -164,5 +244,6 @@ namespace Playwright_POC.Helpers
         // --- Misc (no domain model) ---
         public string SearchType { get; set; }
         public string LookingFor { get; set; }
+        public string ProductSelection { get; set; }
     }
 }

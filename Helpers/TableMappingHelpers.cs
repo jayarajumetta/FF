@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Reqnroll;
 
-namespace Playwright_POC.Helpers
+namespace PnCTestAutomation.Helpers
 {
-    internal class TableMappingHelpers
+    internal static class TableMappingHelpers
     {
         public static void ClientSearchFields(Table table, ScenarioContextData _contextData)
         {
@@ -62,6 +62,9 @@ namespace Playwright_POC.Helpers
                 var answer = row["Answer"];
                 switch (question)
                 {
+                    case "MiddleName":
+                        _contextData.ClientMiddleName = answer;
+                        break;
                     case "MaritalStatus":
                         _contextData.MaritalStatus = answer;
                         break;
@@ -141,6 +144,9 @@ namespace Playwright_POC.Helpers
                 var answer = row["Answer"];
                 switch (question)
                 {
+                    case "ProductSelection":
+                        // Used by table-driven product selector in SFPSteps; no context mapping needed.
+                        break;
                     case "EffectiveDate":
                         _contextData.EffectiveDate = DateHelpers.ResolveDateToken(answer);
                         break;
@@ -176,6 +182,56 @@ namespace Playwright_POC.Helpers
                 }
             }
         }
+
+        public static void SFPQuoteDetailsFields(Table table, ScenarioContextData _contextData)
+        {
+            // Set default EffectiveDate to tomorrow if not provided
+            _contextData.EffectiveDate = DateHelpers.GetTomorrowDate();
+
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"];
+                var answer = row["Answer"];
+                switch (question)
+                {
+                    case "ProductSelection":
+                    case "Product Selection":
+                        // Consumed by step definition for product selection (SFP vs CE).
+                        // No direct ScenarioContext mapping needed here.
+                        break;
+                    case "EffectiveDate":
+                        _contextData.EffectiveDate = DateHelpers.ResolveDateToken(answer);
+                        break;
+                    case "PolicyTerm":
+                        _contextData.PolicyTerm = answer;
+                        break;
+                    case "AgentCode":
+                        _contextData.AgentCode = answer;
+                        break;
+                    case "RatingState":
+                        _contextData.RatingState = answer;
+                        break;
+                    case "SSN":
+                        _contextData.SSN = answer;
+                        break;
+                    case "OwnershipType":
+                        _contextData.OwnershipType = answer;
+                        break;
+                    case "WritingCompany":
+                        _contextData.WritingCompany = answer;
+                        break;
+                    case "RiskAddress":
+                        _contextData.RiskAddress = answer;
+                        break;
+                    case "LessorRisk":
+                        _contextData.LessorRisk = answer;
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknown question: {question}");
+                }
+            }
+        }
+
         public static void PreQualificationFields(Table table, ScenarioContextData _contextData)
         {
             foreach (var row in table.Rows)
@@ -483,6 +539,10 @@ namespace Playwright_POC.Helpers
                 var answer = row["Answer"];
                 switch (question)
                 {
+                    case "BillingAccount":
+                        // Tosca: Select existing or Create New billing account
+                        // Value stored for step logic ("Create New" vs existing)
+                        break;
                     case "PrimaryPayer":
                         _contextData.PrimaryPayer = answer;
                         break;
@@ -506,6 +566,15 @@ namespace Playwright_POC.Helpers
                         break;
                     case "Paperless":
                         _contextData.Paperless = answer;
+                        break;
+                    case "RoutingNumber":
+                        _contextData.RoutingNumber = answer;
+                        break;
+                    case "AccountNumber":
+                        _contextData.AccountNumber = answer;
+                        break;
+                    case "BankName":
+                        _contextData.BankName = answer;
                         break;
                     default:
                         throw new ArgumentException($"Unknown question: {question}");
@@ -541,6 +610,12 @@ namespace Playwright_POC.Helpers
                 {
                     case "PrimaryFarmType":
                         _contextData.PrimaryFarmType = answer;
+                        break;
+                    case "SecondaryFarmType":
+                        _contextData.SecondaryFarmType = answer;
+                        break;
+                    case "SecondaryFarmSubType":
+                        _contextData.SecondaryFarmSubType = answer;
                         break;
                     case "LivestockType":
                         _contextData.LivestockType = answer;
@@ -578,6 +653,12 @@ namespace Playwright_POC.Helpers
                         break;
                     case "YearsContinuousCoverage":
                         _contextData.YearsContinuousCoverage = answer;
+                        break;
+                    case "PriorInsuranceExpDate":
+                        _contextData.PriorInsuranceExpDate = DateHelpers.ResolveDateToken(answer);
+                        break;
+                    case "PriorInsuranceCarrier":
+                        _contextData.PriorInsuranceCarrier = answer;
                         break;
                     default:
                         throw new ArgumentException($"Unknown question: {question}");
@@ -629,6 +710,10 @@ namespace Playwright_POC.Helpers
                         _contextData.FeetFromHydrant = answer;
                         break;
 
+                    case "PPC":
+                        _contextData.PPC = answer;
+                        break;
+
                     case "TotalAcreage":
                         _contextData.TotalAcreage = answer;
                         break;
@@ -639,8 +724,317 @@ namespace Playwright_POC.Helpers
 
                     default:
                         throw new ArgumentException($"Unknown question: {question}");
-                        
-                    }
+
+                }
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // SFP BASIC POLICY MAPPINGS
+        // ══════════════════════════════════════════════════════════════════
+
+        public static void SSNFields(Table table, ScenarioContextData _contextData)
+        {
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"];
+                var answer = row["Answer"];
+
+                switch (question)
+                {
+                    case "SSN":
+                        _contextData.SSN = answer;
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknown question: {question}");
+                }
+            }
+        }
+
+        public static void ResidenceFields(Table table, ScenarioContextData _contextData)
+        {
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"];
+                var answer = row["Answer"];
+
+                switch (question)
+                {
+                    case "AdditionalDesc":
+                        _contextData.ResidenceAdditionalDesc = answer;
+                        break;
+                    case "YearBuilt":
+                        _contextData.ResidenceYearBuilt = answer;
+                        break;
+                    case "RateType":
+                        _contextData.ResidenceRateType = answer;
+                        break;
+                    case "NumberOfFamilies":
+                        _contextData.ResidenceNumberOfFamilies = answer;
+                        break;
+                    case "ConditionRating":
+                        _contextData.ResidenceConditionRating = answer;
+                        break;
+                    case "RoofYear":
+                        _contextData.ResidenceRoofYear = answer;
+                        break;
+                    case "RoofType":
+                        _contextData.ResidenceRoofType = answer;
+                        break;
+                    case "RoofImpact":
+                        _contextData.ResidenceRoofImpact = answer;
+                        break;
+                    case "SeasonalOrVacant":
+                        _contextData.ResidenceSeasonalOrVacant = answer;
+                        break;
+                    case "SolidFuelQuestion":
+                        _contextData.ResidenceSolidFuelQuestion = answer;
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknown Residence question: {question}");
+                }
+            }
+        }
+
+        public static void ResidenceCoverageFields(Table table, ScenarioContextData _contextData)
+        {
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"];
+                var answer = row["Answer"];
+
+                switch (question)
+                {
+                    case "InsuranceAmount":
+                        _contextData.ResidenceInsuranceAmount = answer;
+                        break;
+                    case "SquareFeet":
+                        _contextData.ResidenceSquareFeet = answer;
+                        break;
+                    case "Perils":
+                        _contextData.ResidencePerils = answer;
+                        break;
+                    case "ThermostatQuestion":
+                        _contextData.ResidenceThermostatQuestion = answer;
+                        break;
+                    case "ActualCashValue":
+                        _contextData.ResidenceActualCashValue = answer;
+                        break;
+                    case "RCTOption":
+                        _contextData.ResidenceRCTOption = answer;
+                        break;
+                    case "UseDefaults":
+                        _contextData.ResidenceUseDefaults = answer;
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknown Residence Coverage question: {question}");
+                }
+            }
+        }
+
+        public static void FarmPersonalPropertyFields(Table table, ScenarioContextData _contextData)
+        {
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"];
+                var answer = row["Answer"];
+
+                switch (question)
+                {
+                    case "Code":
+                        _contextData.FarmPropertyCode = answer;
+                        break;
+                    case "Description":
+                        _contextData.FarmPropertyDescription = answer;
+                        break;
+                    case "Limit":
+                        _contextData.FarmPropertyLimit = answer;
+                        break;
+                    case "Deductible":
+                        _contextData.FarmPropertyDeductible = answer;
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknown Farm Personal Property question: {question}");
+                }
+            }
+        }
+
+        public static void ScheduledPersonalPropertyFields(Table table, ScenarioContextData _contextData)
+        {
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"];
+                var answer = row["Answer"];
+
+                switch (question)
+                {
+                    case "Category":
+                        _contextData.SPPCategory = answer;
+                        break;
+                    case "ItemType":
+                        _contextData.SPPItemType = answer;
+                        break;
+                    case "Description":
+                        _contextData.SPPDescription = answer;
+                        break;
+                    case "Limit":
+                        _contextData.SPPLimit = answer;
+                        break;
+                    case "YearOfAppraisal":
+                        _contextData.SPPYearOfAppraisal = answer;
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknown Scheduled Personal Property question: {question}");
+                }
+            }
+        }
+
+        public static void LiabilityFields(Table table, ScenarioContextData _contextData)
+        {
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"];
+                var answer = row["Answer"];
+
+                switch (question)
+                {
+                    case "LiabilityLimit":
+                        _contextData.LiabilityLimit = answer;
+                        break;
+                    case "LivestockHorses":
+                        _contextData.LivestockHorses = answer;
+                        break;
+                    case "LivestockSmall":
+                        _contextData.LivestockSmall = answer;
+                        break;
+                    case "LivestockLarge":
+                        _contextData.LivestockLarge = answer;
+                        break;
+                    case "NumberOfEmployees":
+                        _contextData.NumberOfEmployees = answer;
+                        break;
+                    case "UnlistedAcreage":
+                        _contextData.UnlistedAcreage = answer;
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknown Liability question: {question}");
+                }
+            }
+        }
+
+        public static void InsuranceScoreFields(Table table, ScenarioContextData _contextData)
+        {
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"];
+                var answer = row["Answer"];
+
+                switch (question)
+                {
+                    case "EntityType":
+                        _contextData.InsuranceScoreEntityType = answer;
+                        break;
+                    case "InsuranceScoreConsent":
+                        _contextData.InsuranceScoreConsent = answer;
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknown Insurance Score question: {question}");
+                }
+            }
+        }
+
+        public static void MortgageeFields(Table table, ScenarioContextData _contextData)
+        {
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"];
+                var answer = row["Answer"];
+
+                switch (question)
+                {
+                    case "SearchName":
+                        _contextData.MortgageeSearchName = answer;
+                        break;
+                    case "Location":
+                        _contextData.MortgageeLocation = answer;
+                        break;
+                    case "Residence":
+                        _contextData.MortgageeResidence = answer;
+                        break;
+                    case "CopyOfDEC":
+                        _contextData.MortgageeCopyOfDEC = answer;
+                        break;
+                    case "AccountNumber":
+                        _contextData.MortgageeAccountNumber = answer;
+                        break;
+                    case "DescriptionOfInterest":
+                        _contextData.MortgageeDescriptionOfInterest = answer;
+                        break;
+                    case "EscrowBilled":
+                        _contextData.MortgageeEscrowBilled = answer;
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknown Mortgagee question: {question}");
+                }
+            }
+        }
+
+        public static void ChecklistItemFields(Table table, ScenarioContextData _contextData)
+        {
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"];
+                var answer = row["Answer"];
+
+                switch (question)
+                {
+                    case "ItemName":
+                        _contextData.ChecklistItemName = answer;
+                        break;
+                    case "Action":
+                        _contextData.ChecklistAction = answer;
+                        break;
+                    case "ExceptionNote":
+                        _contextData.ChecklistExceptionNote = answer;
+                        break;
+                    case "Note":
+                        _contextData.ChecklistNote = answer;
+                        break;
+                    case "Optional":
+                        // Handled directly by the step definition — not stored in context
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknown Checklist question: {question}");
+                }
+            }
+        }
+
+        public static void DuckcreekFormsFields(Table table, ScenarioContextData _contextData)
+        {
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"];
+                var answer = row["Answer"];
+
+                switch (question)
+                {
+                    case "ClientName":
+                        // Parse {{fullName}} or use as-is
+                        if (answer.Contains("{{fullName}}"))
+                            answer = $"{_contextData.ClientFirstName} {_contextData.ClientLastName}";
+                        break;
+                    case "State":
+                        _contextData.Address.State = answer;
+                        break;
+                    case "LOB":
+                        _contextData.FormsLob = answer;
+                        break;
+                    case "TestCase":
+                        _contextData.FormsTestCase = answer;
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknown Duckcreek Forms question: {question}");
+                }
             }
         }
     }

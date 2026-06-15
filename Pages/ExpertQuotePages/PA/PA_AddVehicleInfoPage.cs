@@ -2,10 +2,10 @@
 using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
-using Playwright_POC.Helpers;
+using PnCTestAutomation.Helpers;
 using NUnit.Framework;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     public class PA_AddVehicleInfoPage : BasePage
     {

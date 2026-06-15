@@ -1,4 +1,4 @@
-namespace Playwright_POC.Models
+﻿namespace PnCTestAutomation.Models
 {
     /// <summary>
     /// Policy-level information (quote details, coverages, discounts)
@@ -15,6 +15,8 @@ namespace Playwright_POC.Models
         public string RatingState { get; set; }
         public string WritingCompany { get; set; }
         public string RiskAddress { get; set; }
+        public string OwnershipType { get; set; }
+        public string LessorRisk { get; set; }
         public string EligibilityRestrictions { get; set; }
 
         // Coverages

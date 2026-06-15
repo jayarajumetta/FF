@@ -1,23 +1,23 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Microsoft.Extensions.Configuration;
-using Playwright_POC.Configuration;
-using Playwright_POC.Helpers;
-using Playwright_POC.Models;
-using Playwright_POC.Services;
+using PnCTestAutomation.Configuration;
+using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Models;
+using PnCTestAutomation.Services;
 using Newtonsoft.Json.Linq;
 using Reqnroll;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using ReqContext = Playwright_POC.Context.TestContext;
+using PnCTestAutomation.Context;
 using Newtonsoft.Json;
 
 [Binding]
 
 public class ApiSteps
 {
-    private readonly ReqContext _context;
+    private readonly PlaywrightContext _context;
     private readonly IApiService _apiService;
     private readonly CredentialsConfig _credentials;
     private readonly OAuthConfig _oauthConfig;
@@ -25,7 +25,7 @@ public class ApiSteps
     private readonly IConfiguration _configuration;
 
     public ApiSteps(
-        ReqContext context,
+        PlaywrightContext context,
         IApiService apiService,
         ScenarioContext scenarioContext,
         CredentialsConfig credentials,

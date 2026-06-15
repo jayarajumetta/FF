@@ -3,12 +3,14 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>PnCTestAutomation</RootNamespace>
     <IsPackable>false</IsPackable>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Gherkin" Version="37.0.1" />
+
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.1" />
@@ -21,17 +23,24 @@
     <PackageReference Include="Reqnroll.Microsoft.Extensions.DependencyInjection" Version="3.3.0" />
     <PackageReference Include="Reqnroll.NUnit" Version="3.3.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageReference Include="ClosedXML" Version="0.102.3" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Include="Resources\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <!-- Exclude generated locator files from compilation -->
+  <!-- Exclude nested project folders so their obj-generated files are not globbed -->
   <ItemGroup>
     <Compile Remove="TestResults\**\*.cs" />
+    <Compile Remove="TestAutomation.ApiTests\**\*" />
+    <Compile Remove="SimpleCapture\**\*" />
   </ItemGroup>
 
 </Project>

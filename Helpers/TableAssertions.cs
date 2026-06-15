@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Helpers
+namespace PnCTestAutomation.Helpers
 {
     public static class TableAssertions
     {

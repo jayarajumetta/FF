@@ -1,9 +1,9 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 using System.Threading.Tasks;
-using Playwright_POC.Helpers;
-using Playwright_POC.Pages;
+using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Pages;
 
-namespace Playwright_POC.Pages.ExpertServicePages
+namespace PnCTestAutomation.Pages.ExpertServicePages
 {
     public class ExpertServiceLoginPage : BasePage
     {

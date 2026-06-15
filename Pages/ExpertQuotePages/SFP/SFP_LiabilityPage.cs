@@ -1,6 +1,6 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     public class SFP_LiabilityPage : BasePage
     {
@@ -37,8 +37,12 @@ namespace Playwright_POC.Pages
         public ILocator CoverageTable => _page.GetByTestId("coverageTableLiability");
 
         // Base Liability Toggle
-        public ILocator BaseLiabilityYesButton => _page.GetByTestId("fields.policy.line.lineCoverages$isBaseLiability.value-0");
-        public ILocator BaseLiabilityNoButton => _page.GetByTestId("fields.policy.line.lineCoverages$isBaseLiability.value-1");
+        public ILocator BaseLiabilityYesButton =>
+            _page.GetByTestId("fields.policy.line.lineCoverages$isBaseLiability.value-chip-item-wrapper")
+                 .Filter(new() { HasText = "Yes" }).First;
+        public ILocator BaseLiabilityNoButton =>
+            _page.GetByTestId("fields.policy.line.lineCoverages$isBaseLiability.value-chip-item-wrapper")
+                 .Filter(new() { HasText = "No" }).First;
 
         // Coverage Checkboxes (by row index for flexibility)
         public ILocator CoverageCheckbox(int row) =>

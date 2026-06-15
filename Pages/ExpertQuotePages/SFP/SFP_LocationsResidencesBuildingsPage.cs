@@ -1,11 +1,9 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 {
-    public class SFP_LocationsResidencesBuildingsPage : BasePage
+    public class SFP_LocationsResidencesBuildingsPage(IPage page) : BasePage(page)
     {
-        public SFP_LocationsResidencesBuildingsPage(IPage page) : base(page) { }
-
         // Locators
         public ILocator AddLocationButton => _page.GetByTestId("fields.data.account.location.addLocationButton");
         public ILocator NextButton => _page.GetByTestId("fields.data_Rules.next");

@@ -1,9 +1,9 @@
 ﻿using Microsoft.Playwright;
 using System.Threading.Tasks;
-using Playwright_POC.Helpers;
-using Playwright_POC.Pages;
+using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Pages;
 
-namespace Playwright_POC.Pages.ExpressPages
+namespace PnCTestAutomation.Pages.ExpressPages
 {
     public class ExpressSearchResultsPage : BasePage
     {

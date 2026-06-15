@@ -1,4 +1,4 @@
-namespace Playwright_POC.Models
+﻿namespace PnCTestAutomation.Models
 {
     /// <summary>
     /// Reusable address structure for mailing, risk, location addresses

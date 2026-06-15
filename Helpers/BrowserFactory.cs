@@ -1,44 +1,49 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
-namespace Playwright_POC.Helpers
+namespace PnCTestAutomation.Helpers
 {
     public class BrowserFactory
     {
+        private static readonly string[] FullscreenArgs = ["--start-fullscreen"];
         private readonly IPlaywright _playwright;
+        private readonly IConfiguration _configuration;
 
-        public BrowserFactory()
+        public BrowserFactory(IConfiguration configuration)
         {
             _playwright = Playwright.CreateAsync().Result;
+            _configuration = configuration;
         }
 
         public async Task<IBrowser> GetBrowserAsync(string browserType)
         {
-            // Default to headed unless overridden by PLAYWRIGHT_HEADLESS env var
-            bool headless = false; // headed by default
+            // Default to appsettings value unless overridden by PLAYWRIGHT_HEADLESS env var
+            bool headless = ParseTruthy(_configuration["Playwright:Headless"]);
             var env = Environment.GetEnvironmentVariable("PLAYWRIGHT_HEADLESS");
             if (!string.IsNullOrEmpty(env))
             {
                 // Accept "1", "true", "yes" as headless, everything else as headed
-                headless = (env == "1" || env.ToLower() == "true" || env.ToLower() == "yes");
+                headless = ParseTruthy(env);
             }
 
-            return browserType.ToLower() switch
+            var normalizedBrowser = NormalizeBrowserType(browserType);
+
+            return normalizedBrowser switch
             {
-                "edge" => await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
-                {
-                    Headless = headless,
-                    ExecutablePath = @"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
-                    Args = new[] {"--start-fullscreen" }
-                }),
+                "edge" => await LaunchChromiumWithChannelFallbackAsync("msedge", headless),
+                "chrome" => await LaunchChromiumWithChannelFallbackAsync("chrome", headless),
                 "chromium" => await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
                 {
                     Headless = headless,
-                    ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe",
-                    Args = new[] { "--start-fullscreen" }
+                    Args = FullscreenArgs
                 }),
                 "firefox" => await _playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions
+                {
+                    Headless = headless
+                }),
+                "webkit" => await _playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions
                 {
                     Headless = headless
                 }),
@@ -46,7 +51,67 @@ namespace Playwright_POC.Helpers
             };
         }
 
-        public async Task<IPage> GetPageAsync(IBrowser browser, string url)
+        private async Task<IBrowser> LaunchChromiumWithChannelFallbackAsync(string channel, bool headless)
+        {
+            try
+            {
+                return await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+                {
+                    Headless = headless,
+                    Channel = channel,
+                    Args = FullscreenArgs
+                });
+            }
+            catch (PlaywrightException)
+            {
+                // Fall back to Playwright's bundled Chromium when the requested channel is not installed
+                return await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+                {
+                    Headless = headless,
+                    Args = FullscreenArgs
+                });
+            }
+        }
+
+        public string ResolveBrowserType()
+        {
+            // Env var wins for one-off runs. appsettings is the default.
+            var configured = Environment.GetEnvironmentVariable("BROWSER_TYPE");
+            if (string.IsNullOrWhiteSpace(configured))
+                configured = _configuration["Playwright:BrowserType"];
+
+            return NormalizeBrowserType(configured);
+        }
+
+        private static string NormalizeBrowserType(string browserType)
+        {
+            var normalized = (browserType ?? "chromium").Trim().ToLowerInvariant();
+
+            return normalized switch
+            {
+                "msedge" => "edge",
+                "edge" => "edge",
+                "chrome" => "chrome",
+                "chromium" => "chromium",
+                "firefox" => "firefox",
+                "webkit" => "webkit",
+                _ => throw new ArgumentException(
+                    "Unsupported browser type. Use one of: chrome, edge, chromium, firefox, webkit")
+            };
+        }
+
+        private static bool ParseTruthy(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return false;
+
+            return value.Equals("1", StringComparison.OrdinalIgnoreCase)
+                   || value.Equals("true", StringComparison.OrdinalIgnoreCase)
+                   || value.Equals("yes", StringComparison.OrdinalIgnoreCase)
+                   || value.Equals("on", StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static async Task<IPage> GetPageAsync(IBrowser browser, string url)
         {
             var context = await browser.NewContextAsync(new BrowserNewContextOptions
             {

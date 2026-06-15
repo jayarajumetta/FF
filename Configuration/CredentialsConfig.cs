@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Configuration
+namespace PnCTestAutomation.Configuration
 {
     public class CredentialsConfig
     {

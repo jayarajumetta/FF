@@ -1,29 +1,43 @@
 # PnC Test Automation Framework
 
-A Playwright-based test automation framework for P&C (Property & Casualty) insurance applications using Reqnroll (SpecFlow) for BDD-style test scenarios.
+End-to-end UI and API test automation for American National P&C (Property & Casualty) insurance applications. Built on Playwright + Reqnroll (BDD/Gherkin) + NUnit, targeting the ExpertQuote, ExpertService, and Express platforms.
+
+> **New to the framework?** Start with [Docs/Onboarding-Guide.md](Docs/Onboarding-Guide.md).  
+> **Contractor?** Read [Docs/Contractor-Guide.md](Docs/Contractor-Guide.md) before writing any code.  
+> **Architecture deep-dive:** [Docs/Framework-Overview.md](Docs/Framework-Overview.md)  
+> **Open issues & findings:** [Docs/Framework-Analysis-Report.md](Docs/Framework-Analysis-Report.md)
+
+---
 
 ## Table of Contents
+
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
 - [Running Tests](#running-tests)
-- [Test Configuration](#test-configuration)
+- [Tag Reference](#tag-reference)
+- [Configuration](#configuration)
 - [Data Tokens](#data-tokens)
-- [Writing Tests](#writing-tests)
-- [Best Practices](#best-practices)
-- [LocatorScan Tool](#locatorscan-tool)
+- [Writing New Tests](#writing-new-tests)
+- [Page Object Model](#page-object-model)
+- [Test Artifacts](#test-artifacts)
+- [Tools](#tools)
 - [Troubleshooting](#troubleshooting)
+- [Branching & Contributing](#branching--contributing)
 
 ---
 
 ## Tech Stack
 
-| Component  | Version |      Purpose          |
-|------------|---------|-----------------------|
-| .NET       | 8.0     | Runtime               |
-| Playwright | 1.57.0  | Browser automation    |
-| Reqnroll   | 3.3.0   | BDD/Gherkin framework |
-| NUnit      | 4.4.0   | Test runner           |
+| Component | Version | Purpose |
+|-----------|---------|---------|
+| .NET | 8.0 | Runtime |
+| Playwright | 1.57.0 | Browser automation |
+| Reqnroll | 3.3.0 | BDD / Gherkin binding |
+| NUnit | 4.4.0 | Test runner |
+| Microsoft.Extensions.DependencyInjection | — | Service wiring |
+| Microsoft.Extensions.Configuration | — | Env-aware settings |
 
 ---
 
@@ -31,381 +45,466 @@ A Playwright-based test automation framework for P&C (Property & Casualty) insur
 
 ```
 PnC-TestAutomation/
-├── Features/                    # Gherkin feature files
-│   ├── BOP/                     # Business Owners Policy tests
-│   ├── PA/                      # Personal Auto tests
-│   └── SFP/                     # Special Farm Package tests
-├── StepDefinitions/             # Step definition implementations
-│   ├── SharedSteps/             # Reusable steps across all products
-│   ├── BOPSteps/                # BOP-specific steps
-│   ├── PASteps/                 # PA-specific steps
-│   └── SFPSteps/                # SFP-specific steps
-├── Pages/                       # Page Object Models (inherit BasePage)
-│   ├── BasePage.cs              # Base class with common helpers
-│   ├── ExpertQuotePages/        # Expert Quote application pages
-│   ├── ExpressPages/            # Express application pages
-│   └── ExpertServicePages/      # Expert Service pages
-├── Models/                      # Domain data models
-│   ├── AccountOwnerData.cs      # Account owner information
-│   ├── QuoteDetailsData.cs      # Quote details
-│   └── ...                      # Other domain models
-├── Tools/                       # Development tools
-│   └── LocatorScan/             # CDP-based locator scanner
-├── Helpers/                     # Utility classes
-│   ├── LoadingHelpers.cs        # Wait/sync helpers
-│   ├── DateHelpers.cs           # Date token processing
-│   ├── RandomGenerators.cs      # Random data generation
-│   └── TableMappingHelpers.cs   # Gherkin table mapping
-├── Hooks/                       # Test lifecycle hooks
-│   └── TestHooks.cs             # Setup, teardown, tracing
-├── Configuration/               # Config classes
-├── Context/                     # Test context management
-├── Services/                    # Navigation and API services
-├── Docs/                        # Documentation
-└── appsettings.json             # Environment configuration
+├── Features/                    # Gherkin .feature files (source of truth for test coverage)
+│   ├── BOP/                     # Business Owners Policy scenarios
+│   ├── PA/                      # Personal Auto scenarios
+│   └── SFP/                     # Special Farm Package scenarios (primary LOB)
+│
+├── StepDefinitions/             # C# step bindings
+│   ├── SharedSteps/             # Steps shared across all products (login, client search, etc.)
+│   ├── BOPSteps/                # BOP-only steps
+│   ├── PASteps/                 # PA-only steps
+│   └── SFPSteps/                # SFP-only steps
+│
+├── Pages/                       # Page Object Model — one class per application page
+│   ├── BasePage.cs              # Abstract base: spinner wait, rescue, common locators
+│   ├── ExpertQuotePages/        # ExpertQuote application pages
+│   │   ├── SFP/                 # SFP-specific pages
+│   │   └── PA/                  # PA-specific pages
+│   ├── ExpressPages/            # CLAS Express pages
+│   └── ExpertServicePages/      # ExpertService pages
+│
+├── Models/                      # Domain data models (ClientData, PolicyData, FarmData, etc.)
+├── Helpers/                     # Utility classes (random data, table mapping, wait helpers)
+├── Hooks/                       # Reqnroll lifecycle hooks (browser setup, tracing, teardown)
+├── Configuration/               # Strongly-typed config classes (CredentialsConfig, OAuthConfig)
+├── Context/                     # TestContext — holds IPage and HttpClient per scenario
+├── Services/                    # NavigationService, ApiService, FormsValidationService
+├── Clients/                     # HTTP clients (DuckCreekFormsClient)
+├── Integrations/                # External integrations (PingSecretProvider)
+├── Parsers/                     # FormsXmlParser
+├── Tools/                       # Developer tools (not test scenarios)
+│   ├── LocatorScan/             # Live DOM locator scanner
+│   └── FormsBaselineGenerator/  # Generates forms expectation JSON from Excel
+├── Docs/                        # Framework documentation
+├── Pipelines/                   # Azure DevOps pipeline YAML definitions
+├── Resources/                   # Static test data (expected forms JSON)
+├── Scripts/                     # PowerShell helper scripts
+├── appsettings.json             # Default (QA) configuration
+└── appsettings.Dev.json         # Dev environment overrides
 ```
 
 ---
 
-## Getting Started
+## Prerequisites
 
-### Prerequisites
-- .NET 8.0 SDK
-- Visual Studio 2026 or VS Code
-- Playwright browsers installed
+| Requirement | How to get it |
+|-------------|--------------|
+| .NET 8.0 SDK | https://dotnet.microsoft.com/download |
+| PowerShell 7+ | `winget install Microsoft.PowerShell` |
+| Git | https://git-scm.com |
+| Chrome or Edge (latest) | Standard install |
+| Playwright browsers | Installed via `playwright.ps1 install` (see below) |
+| Access to ADO repo | Request from QA lead |
+| QA environment credentials | Provide via environment variables — do **not** hardcode |
 
-### Installation
+---
 
-1. **Clone the repository**
-   ```powershell
-   git clone <repository-url>
-   cd PnC-TestAutomation
-   ```
+## Quick Start
 
-2. **Restore NuGet packages**
-   ```powershell
-   dotnet restore
-   ```
+```powershell
+# 1. Clone
+git clone https://dev.azure.com/ANCollection/PnC%20Test%20Automation/_git/PnC-TestAutomation
+cd PnC-TestAutomation
 
-3. **Install Playwright browsers**
-   ```powershell
-   pwsh bin/Debug/net8.0/playwright.ps1 install
-   ```
+# 2. Restore packages
+dotnet restore TestAutomation.csproj
 
-4. **Configure credentials**
-   
-   Update `appsettings.json` with your environment URLs and credentials:
-   ```json
-   {
-     "Playwright": {
-       "ExpertQuote": "https://expertquote-qa.americannational.com/...",
-       "QAExpress": "https://express-qa.americannational.com/..."
-     },
-     "Credentials": {
-       "Username": "your-username",
-       "Password": "your-password"
-     }
-   }
-   ```
+# 3. Install Playwright browsers (run once after first clone or Playwright upgrade)
+dotnet build TestAutomation.csproj
+pwsh bin/Debug/net8.0/playwright.ps1 install
 
-5. **Build the project**
-   ```powershell
-   dotnet build
-   ```
+# 4. Set credentials — ask QA lead for values, NEVER commit them
+$env:EQ_USERNAME  = "your-eq-username"
+$env:EQ_PASSWORD  = "your-eq-password"
+
+# 5. Run Smoke tests
+dotnet test TestAutomation.csproj --filter "Category=Smoke"
+```
+
+> ⚠️ `appsettings.json` contains only `"PLACEHOLDER"` values for all credentials.
+> Tests will fail immediately with a login error until you set the env vars above.
 
 ---
 
 ## Running Tests
 
-### Visual Studio Test Explorer (Recommended)
-1. Open `Playwright_POC.sln` in Visual Studio
-2. Build the solution (`Ctrl+Shift+B`)
-3. Open Test Explorer (`Ctrl+E, T`)
-4. Run all tests or filter by tags
+### Visual Studio / Rider — Test Explorer (recommended for local dev)
+
+1. Open `Playwright_POC.sln`
+2. Build (`Ctrl+Shift+B`)
+3. Open Test Explorer (`Ctrl+E, T` in VS, `Alt+8` in Rider)
+4. Filter by tag or run all
 
 ### Command Line
+
 ```powershell
-# Run all tests
-dotnet test
+# Run all Smoke tests
+dotnet test TestAutomation.csproj --filter "Category=Smoke"
 
-# Run by tag
-dotnet test --filter "Category=Smoke"
-dotnet test --filter "Category=Regression"
+# Run SFP Regression tests
+dotnet test TestAutomation.csproj --filter "Category=SFP&Category=Regression"
 
-# Run specific feature
-dotnet test --filter "FullyQualifiedName~SFPSmoke"
+# Run a specific feature file (by class name fragment)
+dotnet test TestAutomation.csproj --filter "FullyQualifiedName~SFP_BasicPolicy"
+
+# Run in headless mode
+$env:PLAYWRIGHT_HEADLESS = "true"
+dotnet test TestAutomation.csproj --filter "Category=Smoke"
+
+# Run against Dev environment
+$env:TEST_ENVIRONMENT = "Dev"
+dotnet test TestAutomation.csproj --filter "Category=Smoke"
+
+# Override browser
+$env:BROWSER_TYPE = "edge"
+dotnet test TestAutomation.csproj --filter "Category=Smoke"
 ```
 
-### Tag Strategy
-| Tag | Purpose | When to Run |
-|-----|---------|-------------|
-| `@Smoke` | Critical path tests | Every build |
-| `@Regression` | Full test suite | Nightly/Release |
-| `@DataGen` | Data generation tests | On-demand |
-| `@WIP` | Work in progress | Exclude from CI |
+### Using `.runsettings` Files
+
+| File | Purpose |
+|------|---------|
+| `scan.runsettings` | Run the LocatorScan tool against a live page |
+| `locatorscan.runsettings` | Alternative locator scan configuration |
+| `generate-baseline.runsettings` | Generate forms baseline JSON from CLAS |
 
 ---
 
-## Test Configuration
+## Tag Reference
 
-### Timeouts
-| Type | Value | Purpose |
-|------|-------|---------|
-| Element | 30 seconds | Accounts for Angular rendering |
-| Navigation | 60 seconds | Handles slow page loads |
+See [Docs/Tagging-Convention.md](Docs/Tagging-Convention.md) for the full specification.
 
-### Test Artifacts
-- **Location:** `./TestResults/{timestamp}/{ScenarioName}/`
-- **Retention:** 7 days (auto-cleanup)
-- **Tracing:** Captured on failure only
-- **Video:** Recorded on failure only
+| Tag | Meaning | Run when |
+|-----|---------|----------|
+| `@Smoke` | Critical path, single happy path | Before every deployment |
+| `@Regression` | Full workflow + edge cases | Nightly, before releases |
+| `@Forms` | Forms-only validation (no UI nav) | Forms check runs |
+| `@API` | API-only scenarios | API integration checks |
+| `@Ignore` | Temporarily disabled | Never — skipped automatically |
+| `@Manual` | Not yet automated | Never — documentation only |
+| `@SFP` | Special Farm Package LOB | With SFP-specific runs |
+| `@BOP` | Business Owners Policy LOB | With BOP-specific runs |
+| `@PA` | Personal Auto LOB | With PA-specific runs |
+| `@ExpertQuote` | ExpertQuote application | All EQ tests |
+| `@Express` | CLAS Express application | Express tests |
+| `@ExpertService` | ExpertService application | ES tests |
 
-### Supported Browsers
-Set via `BROWSER_TYPE` environment variable:
-- `chromium` (default)
-- `firefox`
-- `webkit`
+---
+
+## Configuration
+
+> ⚠️ **`appsettings.json` contains placeholder values only.** Real credentials must be supplied via
+> environment variables. **Never replace a placeholder with a real password and commit it.**
+
+### Environment Variables
+
+Set these before running tests. They override the corresponding `appsettings.json` values.
+
+| Variable | Overrides | Required for |
+|----------|-----------|--------------|
+| `EQ_USERNAME` | `Credentials:Username` | All UI tests |
+| `EQ_PASSWORD` | `Credentials:Password` | All UI tests |
+| `EXPRESS_USERNAME` | `QAExpressCreds:Username` | Express/CLAS tests |
+| `EXPRESS_PASSWORD` | `QAExpressCreds:Password` | Express/CLAS tests |
+| `OAUTH_CLIENT_SECRET` | `OAuthConfig:ClientSecret` | API tests |
+| `PING_SECRET_ID` | `OAuthConfig:PingSecretId` | API tests |
+| `DUCKCREEK_PASSWORD` | `DuckCreekForms:Password` | Forms validation |
+| `TEST_ENVIRONMENT` | `Environment` | Dev environment runs |
+| `BROWSER_TYPE` | `Playwright:BrowserType` | Browser override |
+| `PLAYWRIGHT_HEADLESS` | `Playwright:Headless` | Headless mode |
+
+```powershell
+# Minimum required for UI tests
+$env:EQ_USERNAME = "your-eq-username"
+$env:EQ_PASSWORD = "your-eq-password"
+
+# For Forms validation tests
+$env:DUCKCREEK_PASSWORD = "your-duckcreek-password"
+
+# For API tests
+$env:PING_SECRET_ID   = "your-ping-secret-id"
+$env:OAUTH_CLIENT_SECRET = "your-oauth-secret"
+```
+
+Ask your QA lead for the credential values. Do **not** commit them to any file.
+
+### `appsettings.json` Key Sections
+
+```json
+{
+  "Environment": "QA",
+  "Playwright": {
+    "BrowserType": "chrome",
+    "Headless": false,
+    "ExpertQuote": "https://expertquote-qa.americannational.com/expertquote/#/quote"
+  },
+  "Debugging": {
+    "PauseOnFailure": false,
+    "FailOnFormsValidationError": false,
+    "SkipPremiumBaselineAssertion": false
+  },
+  "LocatorRescue": {
+    "Enabled": true,
+    "AutoHeal": false
+  }
+}
+```
+
+### Multi-Environment
+
+- **QA (default):** `appsettings.json`
+- **Dev:** `appsettings.Dev.json` (overrides selected keys; merged at runtime)
+- **Env-specific selection:** Set `TEST_ENVIRONMENT=Dev` before running
+
+### State Filtering (Dev environment)
+
+In `appsettings.Dev.json`, `StateFilters:DevAllowedStates` limits which states run:
+```json
+{
+  "StateFilters": {
+    "DevAllowedStates": ["MN", "NE"]
+  }
+}
+```
+Scenarios whose address state is not in the allowlist are skipped automatically — no tag change needed.
 
 ---
 
 ## Data Tokens
 
-Use tokens in feature files for dynamic test data:
+Use tokens in feature file tables to generate randomized test data at runtime:
 
-### Name & Contact
-| Token | Description | Example Output |
-|-------|-------------|----------------|
-| `{{firstName}}` | Random first name | John |
-| `{{lastName}}` | Random last name | Smith |
-| `{{randomDOB}}` | Random DOB (21-65 yrs) | 01/15/1985 |
-| `{{randomPhone}}` | US phone number | 555-123-4567 |
-| `{{randomEmail}}` | Email address | john.smith@test.com |
-| `{{randomSSN}}` | SSN format | 123-45-6789 |
+### Name & Identity
+
+| Token | Description | Example |
+|-------|-------------|---------|
+| `{{firstName}}` | Random male first name | `James` |
+| `{{female}}` | Random female first name | `Sarah` |
+| `{{lastName}}` | Random last name | `Anderson` |
+| `{{randomDOB}}` | DOB — 21 to 65 years old | `03/14/1978` |
+| `{{randomPhone}}` | US 10-digit phone | `(612) 555-0198` |
+| `{{randomEmail}}` | Email from generated name | `james.anderson@test.com` |
+| `{{randomSSN}}` | SSN format XXX-XX-XXXX | `401-55-9124` |
 
 ### Dates
-| Token | Description | Example Output |
-|-------|-------------|----------------|
-| `{{today}}` | Today's date | 02/03/2026 |
-| `{{tomorrow}}` | Tomorrow's date | 02/04/2026 |
-| `{{futureDate:+30d}}` | 30 days from now | 03/05/2026 |
-| `{{pastDate:-7d}}` | 7 days ago | 01/27/2026 |
 
-### Example Usage
+| Token | Description | Example |
+|-------|-------------|---------|
+| `{{today}}` | Today's date | `05/08/2026` |
+| `{{tomorrow}}` | Tomorrow's date | `05/09/2026` |
+
+### Usage in Feature Files
+
 ```gherkin
-And user enters a Random Name in the search field
+And user enters a Random Name in the search field and clicks search
   | Question  | Answer        |
   | FirstName | {{firstName}} |
   | LastName  | {{lastName}}  |
 
-And user enters Quote Details
-  | Question      | Answer              |
-  | EffectiveDate | {{futureDate:+30d}} |
-  | SSN           | {{randomSSN}}       |
+And user enters client information and clicks search
+  | Question     | Answer          |
+  | DOB          | {{randomDOB}}   |
+  | BestPhone    | {{randomPhone}} |
+  | EmailAddress | {{randomEmail}} |
+
+And user selects Special Farm Package and inputs Quote Details
+  | Question      | Answer       |
+  | EffectiveDate | {{tomorrow}} |
 ```
 
 ---
 
-## Writing Tests
+## Writing New Tests
 
-### Feature File Structure
+### Step 1 — Feature File
+
+Create a `.feature` file in the appropriate `Features/` subdirectory.
+
 ```gherkin
-@UI @ExpertQuote
-Feature: SFP Quote Creation
+@SFP @ExpertQuote
+Feature: SFP New Coverage Type
 
   @Smoke
-  Scenario Outline: Create SFP Quote - <State>
+  Scenario Outline: SFP New Coverage Smoke - <State>
     Given I navigate to the Expert Quote login page
     When I enter valid credentials and Click LogIn
-    And user enters a Random Name in the search field
+    And user enters a Random Name in the search field and clicks search
       | Question  | Answer        |
       | FirstName | {{firstName}} |
       | LastName  | {{lastName}}  |
-    And user clicks New Quote button
     # ... more steps
-    Then user verifies the quote exists in search results
-
+    
     Examples:
-      | State     | Address       | City   | Zip   |
-      | Minnesota | 115 S Main ST | Warren | 56762 |
+      | State     | StateFull | Address       | City   | Zip   |
+      | Minnesota | Minnesota | 115 S Main ST | Warren | 56762 |
 ```
 
-### Gherkin Keywords
-| Keyword | Purpose | Use For |
-|---------|---------|---------|
-| `Given` | Preconditions | Setup, navigation |
-| `When` | Action | Primary action being tested |
-| `And` | Continuation | Additional setup or actions |
-| `Then` | Verification | Assertions only |
+### Step 2 — Reuse or Add Step Definitions
 
-### Step Definitions
-Use `[StepDefinition]` for maximum flexibility. Instantiate page objects with `_context.Page`:
+Check `SharedSteps/` first — most common steps (login, client creation, account owner, etc.) are already there.
+
+If adding a new step, put it in the LOB-specific file (e.g. `SFPSteps/SFP_CoverageSteps.cs`):
+
 ```csharp
-[StepDefinition("user clicks New Quote button")]
-public async Task UserClicksNewQuoteButton()
+[When("user enters new coverage information and continues")]
+public async Task UserEntersNewCoverageInfoAndContinues(Table table)
 {
-    var clientSearchPage = new ClientSearchPage(_context.Page);
-    await clientSearchPage.ClickNewQuoteAsync();
+    var page = new SFP_NewCoveragePage(_context.Page);
+    await page.WaitForSpinnerAsync();
+    // ... fill data from table
+    await page.ClickNextAsync();
 }
 ```
 
-### Page Objects
-All page objects inherit from `BasePage` which provides common helpers:
+### Step 3 — Add a Page Object (if new page)
+
+Inherit from `BasePage`:
+
 ```csharp
-public class ClientSearchPage : BasePage
+public class SFP_NewCoveragePage : BasePage
 {
-    public ClientSearchPage(IPage page) : base(page) { }
+    public SFP_NewCoveragePage(IPage page) : base(page) { }
 
-    #region Locators
-    private ILocator SearchInput => _page.GetByTestId("quoteSearchInput");
-    private ILocator SearchButton => _page.GetByTestId("quoteSearchButton");
-    private ILocator NewQuoteButton => _page.GetByRole(AriaRole.Button, new() { Name = "New Quote" });
-    #endregion
+    // Define locators as properties
+    private ILocator CoverageInput => _page.GetByTestId("fields.coverage.newInput.value");
+    private ILocator NextButton => _page.GetByTestId("next-button");
 
-    public async Task SearchForClientAsync(string name)
+    public async Task EnterCoverageAmountAsync(string amount)
     {
-        await SearchInput.FillAsync(name);
-        await SearchButton.ClickAsync();
-        await WaitForSpinnerAsync();  // Inherited from BasePage
-    }
-
-    public async Task ClickNewQuoteAsync()
-    {
-        await NewQuoteButton.ClickAsync();
-        await WaitForSpinnerAsync();
+        await CoverageInput.FillAsync(amount);
     }
 }
 ```
 
-### BasePage Helpers
-All pages inherit these methods from `BasePage`:
-| Method | Purpose |
-|--------|--------|
-| `WaitForSpinnerAsync()` | Wait for Angular loading spinner to disappear |
-| `ClickNextAsync()` | Click the standard "Next" button |
-| `ClickIfNotSelectedAsync(locator)` | Click only if not already selected |
-| `_page` | Protected access to the Playwright IPage |
+---
+
+## Page Object Model
+
+All page objects inherit from `BasePage` which provides:
+
+| Method / Property | Description |
+|-------------------|-------------|
+| `_page` | The Playwright `IPage` instance |
+| `WaitForSpinnerAsync()` | Waits for Angular loading overlay to clear |
+| `ClickNextAsync()` | Clicks the standard "Next" workflow button |
+| `ClickSaveAsync()` | Clicks the standard "Save" button |
+| `GetById(id)` | Locates element by HTML `id` attribute |
+| `RescueAsync(locator, hint)` | Runs locator rescue scan on failure |
+| `GetByTestIdRescueAsync(testId)` | `GetByTestId` + automatic rescue on miss |
+
+### Selector Strategy
+
+1. **DuckCreek form fields** — use `GetByTestId("fields.data.*")`. These are DuckCreek-owned IDs; do not change them.
+2. **ANi-built UI components** — prefer `GetByTestId()` for elements still in transition; use `GetById()` for elements that have been migrated to `id` attributes.
+3. **Navigation / buttons by role** — use `GetByRole(AriaRole.Button, ...)`.
+4. **Avoid** complex CSS selectors, XPath, or selectors based on position (`.first`, `:nth-child`) unless there is no stable alternative.
+
+### Locator Rescue
+
+When a `GetByTestId` call finds 0 elements and `LocatorRescue:Enabled = true` in `appsettings.json`, the framework automatically scans the live DOM for similar elements and logs candidates. Set `AutoHeal = true` to automatically substitute the best candidate (use with caution — review logs before enabling in CI).
 
 ---
 
-## Best Practices
+## Test Artifacts
 
-### Locators
-1. **Prefer `data-testid`** - Stable, developer-controlled
-   ```csharp
-   _page.GetByTestId("fields.account.grossIncome")
-   ```
+On scenario failure, the following are automatically saved:
 
-2. **Use Role as fallback** - Semantic and accessible
-   ```csharp
-   _page.GetByRole(AriaRole.Button, new() { Name = "Submit" })
-   ```
-
-3. **Avoid brittle selectors** - No complex XPath or CSS paths
-
-### Assertions
-Use Playwright's `Expect` for UI assertions (auto-retry built-in):
-```csharp
-// ✅ Good - auto-retries for up to 5 seconds
-await Expect(element).ToBeVisibleAsync();
-await Expect(element).ToHaveTextAsync("Expected Text");
-
-// ❌ Avoid - no auto-retry
-Assert.That(await element.IsVisibleAsync(), Is.True);
+```
+TestResults/
+└── {yyyy-MM-dd_HHmmss}/              ← one folder per test run
+    ├── pass-records.csv              ← telemetry for all passing scenarios
+    └── {ScenarioName}/               ← one folder per FAILED scenario
+        ├── trace.zip                 ← Playwright trace (upload to trace.playwright.dev)
+        ├── Videos/                   ← screen recording
+        └── Step__{StepText}.png      ← screenshot at point of failure
 ```
 
-### Waits
-Use the `LoadingHelpers` for Angular synchronization:
-```csharp
-await LoadingHelpers.WaitForAngularSpinnerAsync(page);
-await LoadingHelpers.WaitForElementEnabledAsync(page, button);
-await LoadingHelpers.FillAndTabAsync(page, input, "value");
-```
+Folders older than 7 days are automatically deleted.
+
+### Viewing a Playwright Trace
+
+1. Go to [trace.playwright.dev](https://trace.playwright.dev)
+2. Drag and drop the `trace.zip` file
+3. Step through DOM snapshots, network calls, and console logs
 
 ---
 
-## LocatorScan Tool
+## Tools
 
-A CDP-based tool that scans live application pages and generates locator code.
+### LocatorScan
 
-### Setup
-1. Start Chrome with remote debugging:
-   ```powershell
-   chrome --remote-debugging-port=9222
-   ```
-2. Navigate to the page you want to scan in Chrome
+Scans a live browser page and generates C# locator code for new or changed elements.
 
-### Running the Scan
+**When to use:** A DuckCreek form page has changed and you need to find the new `data-testid` values.
+
 ```powershell
-# Use the 'scan' alias (defined in scan.runsettings)
-scan
+# 1. Open Chrome with DevTools remote debugging enabled
+Start-Process "chrome" "--remote-debugging-port=9222"
 
-# Or run directly
-dotnet test --settings scan.runsettings
+# 2. Navigate to the page you want to scan in that Chrome window
+
+# 3. Run the scanner
+dotnet test TestAutomation.csproj --settings locatorscan.runsettings
 ```
 
-### How It Works
-1. Connects to Chrome via CDP (Chrome DevTools Protocol)
-2. Scans visible elements for interactable controls
-3. Generates C# locator code prioritized by stability:
-   - **Gold**: `data-testid` → `GetByTestId()`
-   - **Silver**: `aria-label` → `GetByRole()` with accessible name
-   - **Bronze**: Angular Material components (mat-checkbox, mat-slide-toggle)
-   - **Fallback**: Placeholder or label text
+Output appears in `TestResults/{date}/LocatorScan/`.
 
-### Output
-Generated files appear in:
-```
-TestResults/{date}/LocatorScan/
-└── ExpertQuote_{PageSection}_{timestamp}_Locators.cs
+### Forms Baseline Generator
+
+Generates the expected-forms JSON files used by `FormsValidationService`.
+
+```powershell
+# Run via the dedicated runsettings
+dotnet test TestAutomation.csproj --settings generate-baseline.runsettings
+
+# Or via the PowerShell helper
+.\Scripts\generate-baseline.ps1
 ```
 
-### Features
-- **Duplicate detection**: Skips locators already in repo
-- **Semantic naming**: Extracts meaningful names from testIds
-- **Hidden element inclusion**: Includes hidden elements if they have `data-testid`
-- **Angular Material support**: Detects mat-select, mat-datepicker, mat-slide-toggle
+See `Tools/FormsBaselineGenerator/` for source and `Resources/ExpectedForms/` for output.
 
 ---
 
 ## Troubleshooting
 
-### Test Artifacts Location
-Failed tests generate artifacts in:
-```
-TestResults/{timestamp}/{ScenarioName}/
-├── trace.zip          # Playwright trace (view at trace.playwright.dev)
-├── video.webm         # Screen recording
-└── Step_*.png         # Screenshots
-```
-
-### Common Issues
-
-| Issue | Solution |
-|-------|----------|
-| Timeout waiting for element | Check if `data-testid` is correct; use browser DevTools |
-| Element not interactable | Add `WaitForElementEnabledAsync()` before click |
-| Angular spinner blocking | Use `WaitForAngularSpinnerAsync()` |
-| Test data expired | Use dynamic tokens (`{{futureDate:+30d}}`) |
-| Flaky assertions | Migrate to Playwright `Expect()` |
-
-### Viewing Traces
-1. Go to [trace.playwright.dev](https://trace.playwright.dev)
-2. Upload the `trace.zip` file from TestResults
-3. Inspect DOM snapshots, network calls, and console logs
+| Symptom | Most Likely Cause | Fix |
+|---------|------------------|-----|
+| `TimeoutException` on first page load | SSO redirect chain exceeded 30 s | Navigation timeout is set to 90 s — check network or VPN |
+| `TimeoutException` on element | `data-testid` changed in latest DuckCreek deploy | Run LocatorScan, update the page object locator |
+| `AmbiguousMatchException` from Reqnroll | Two step definitions match the same text | Search for duplicate `[When("...")]` bindings |
+| `ScenarioContextData` fields are null | Table key in Gherkin doesn't match a mapped case | Check `TableMappingHelpers` for the relevant mapper method |
+| Browser not found | Playwright browsers not installed | Run `pwsh bin/Debug/net8.0/playwright.ps1 install` |
+| Test passes locally but fails in CI | Headless rendering difference | Reproduce with `$env:PLAYWRIGHT_HEADLESS = "true"` locally |
+| "Failed to retrieve ClientSecret from Ping" | API test — Ping secret ID not configured | Set `OAuthConfig:PingSecretId` in config or contact QA lead |
+| Quote number not found | Nav element changed | Check `cl-sfp-nav` testId or the tab label XPath in `SharedEQSteps` |
+| Video/trace not saved | `AfterScenario` hook error swallowed | Check test output for `[Warning]` lines |
 
 ---
 
-## Contributing
+## Branching & Contributing
 
-1. Create feature branch from `main`
-2. Follow existing patterns for new pages/steps
-3. Use `[StepDefinition]` attribute for step definitions
-4. Add appropriate tags (`@Smoke`, `@Regression`)
-5. Ensure tests pass locally before PR
-6. Update documentation for new features
+### Branch Strategy
 
----
+| Branch | Purpose |
+|--------|---------|
+| `main` | Stable, deployable. Protected — no direct push. |
+| `Development` | Integration branch. PRs target this. |
+| `{LOB}_{Description}` | Feature branches (e.g. `SFP_WorkflowUpgrades`) |
 
-## Documentation
+### Workflow
 
-See [Docs/Framework-Configuration-Decisions.md](Docs/Framework-Configuration-Decisions.md) for detailed framework decisions and rationale.
+```
+feature branch → PR to Development → review → merge → periodic merge Development → main
+```
+
+### Before You PR
+
+- [ ] `dotnet build TestAutomation.csproj` — zero errors
+- [ ] `dotnet format TestAutomation.csproj --verify-no-changes` — zero formatting issues
+- [ ] New/changed scenarios have appropriate tags (`@Smoke` or `@Regression`, LOB tag, App tag)
+- [ ] Page objects use `BasePage` and follow the selector strategy
+- [ ] No new credentials, passwords, or secrets added to any committed file
+- [ ] **Definition of Done:** scenario passes in two consecutive local runs
+
+See [Docs/Contractor-Guide.md](Docs/Contractor-Guide.md) for contractor-specific rules.

@@ -5,7 +5,7 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Playwright_POC.Helpers
+namespace PnCTestAutomation.Helpers
 {
     public class PingSecretProvider
     {

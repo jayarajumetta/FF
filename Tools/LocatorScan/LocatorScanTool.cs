@@ -1,4 +1,4 @@
-// Tools/LocatorScan/LocatorScanTool.cs
+﻿// Tools/LocatorScan/LocatorScanTool.cs
 //
 // ─────────────────────────────────────────────────────────────────
 // USAGE (PowerShell examples)
@@ -43,7 +43,7 @@ using System.Threading.Tasks;
 using Microsoft.Playwright;
 using NUnit.Framework;
 
-namespace Playwright_POC.Tools.LocatorScan
+namespace PnCTestAutomation.Tools.LocatorScan
 {
     [TestFixture]
     public class LocatorScanTool
@@ -59,23 +59,23 @@ namespace Playwright_POC.Tools.LocatorScan
             var headed = string.Equals(
                 TestContext.Parameters.Get("HEADED", "false"), "true", StringComparison.OrdinalIgnoreCase);
             var scenario = TestContext.Parameters.Get("SCENARIO", "");
-            
+
             // PERFORMANCE: FAST_MODE (default: true) - limits candidates per element
             var fastMode = string.Equals(
                 TestContext.Parameters.Get("FAST_MODE", "true"), "true", StringComparison.OrdinalIgnoreCase);
-            
+
             // Individual overrides
             var compare = string.Equals(
                 TestContext.Parameters.Get("COMPARE", "true"), "true", StringComparison.OrdinalIgnoreCase);  // Always compare - it's fast
             var newOnly = string.Equals(
                 TestContext.Parameters.Get("NEW_ONLY", "false"), "true", StringComparison.OrdinalIgnoreCase);
-            
+
             // Output control - CS_ONLY=true (default) generates only .cs file, no CSV/JSON
             var csOnly = string.Equals(
                 TestContext.Parameters.Get("CS_ONLY", "true"), "true", StringComparison.OrdinalIgnoreCase);
             var skipCsv = csOnly;  // Skip CSV when CS_ONLY is true
             var skipJson = true;  // Always skip JSON unless explicitly requested
-            
+
             // Hidden element scanning - includes elements hidden via CSS (modals, dropdowns, conditional fields)
             var scanHidden = string.Equals(
                 TestContext.Parameters.Get("SCAN_HIDDEN", "true"), "true", StringComparison.OrdinalIgnoreCase);
@@ -140,26 +140,26 @@ namespace Playwright_POC.Tools.LocatorScan
                     {
                         context = await browser.NewContextAsync();
                     }
-                    
+
                     // Get all pages and filter to actual content pages (not chrome://, extensions, etc.)
                     var allPages = context.Pages.ToList();
                     var contentPages = allPages
-                        .Where(p => !string.IsNullOrEmpty(p.Url) 
-                            && !p.Url.StartsWith("chrome://") 
+                        .Where(p => !string.IsNullOrEmpty(p.Url)
+                            && !p.Url.StartsWith("chrome://")
                             && !p.Url.StartsWith("chrome-extension://")
                             && !p.Url.StartsWith("about:"))
                         .ToList();
-                    
+
                     TestContext.Progress.WriteLine($"[LocatorScanTool] Found {allPages.Count} total pages, {contentPages.Count} content pages");
-                    
+
                     // Use LAST content page (most recently opened/active) instead of first
                     page = contentPages.LastOrDefault() ?? allPages.FirstOrDefault();
-                    
+
                     if (page is null)
                     {
                         page = await context.NewPageAsync();
                     }
-                    
+
                     // Bring this page to front and force DOM refresh
                     await page.BringToFrontAsync();
                     await page.WaitForTimeoutAsync(200); // Brief wait for focus
@@ -215,7 +215,7 @@ namespace Playwright_POC.Tools.LocatorScan
 
                 // Page is already loaded (user navigated to it), just quick stability check
                 TestContext.Progress.WriteLine("[LocatorScanTool] Waiting for Angular app to fully render...");
-                
+
                 // Check if this looks like an Angular app
                 var hasAngular = await page.EvaluateAsync<bool>("() => !!window.getAllAngularTestabilities || !!window.ng || !!document.querySelector('app-root')");
                 if (hasAngular)
@@ -230,11 +230,11 @@ namespace Playwright_POC.Tools.LocatorScan
                 try
                 {
                     // Wait for Angular to be ready (if present) - reduced timeout since page is already loaded
-                    await page.WaitForFunctionAsync("() => window.getAllAngularTestabilities && window.getAllAngularTestabilities().findIndex(x=>!x.isStable()) === -1", 
+                    await page.WaitForFunctionAsync("() => window.getAllAngularTestabilities && window.getAllAngularTestabilities().findIndex(x=>!x.isStable()) === -1",
                         new PageWaitForFunctionOptions { Timeout = 2000 }).ConfigureAwait(false);
                     TestContext.Progress.WriteLine("[LocatorScanTool] Angular stability confirmed.");
                 }
-                catch 
+                catch
                 {
                     // Page is already loaded, just quick fallback
                     TestContext.Progress.WriteLine("[LocatorScanTool] Angular stability timeout, proceeding...");
@@ -262,17 +262,17 @@ namespace Playwright_POC.Tools.LocatorScan
                 TestContext.Progress.WriteLine($"[LocatorScanTool] Page has {elementCount} total DOM elements.");
                 var interactableCount = await page.EvaluateAsync<int>("() => document.querySelectorAll('input, button, select, textarea, [onclick], [role=\"button\"]').length");
                 TestContext.Progress.WriteLine($"[LocatorScanTool] Found {interactableCount} potentially interactable elements in DOM.");
-                
+
                 // DEBUG: Check for iframes
                 var iframeCount = await page.EvaluateAsync<int>("() => document.querySelectorAll('iframe').length");
                 TestContext.Progress.WriteLine($"[LocatorScanTool] Iframes on page: {iframeCount}");
-                
+
                 // DEBUG: Check for Angular Material components directly
                 var matCheckboxCount = await page.EvaluateAsync<int>("() => document.querySelectorAll('mat-checkbox, .mat-checkbox').length");
                 var matSelectCount = await page.EvaluateAsync<int>("() => document.querySelectorAll('mat-select, .mat-select').length");
                 var matRadioCount = await page.EvaluateAsync<int>("() => document.querySelectorAll('mat-radio-button, .mat-radio-button').length");
                 TestContext.Progress.WriteLine($"[LocatorScanTool] Angular Material components: mat-checkbox={matCheckboxCount}, mat-select={matSelectCount}, mat-radio={matRadioCount}");
-                
+
                 // DEBUG: Check for any input with coverage/policy in id
                 var coverageInputs = await page.EvaluateAsync<int>("() => document.querySelectorAll('input[id*=\"policy\"], input[id*=\"Coverage\"], input[id*=\"coverage\"]').length");
                 TestContext.Progress.WriteLine($"[LocatorScanTool] Coverage/policy inputs: {coverageInputs}");

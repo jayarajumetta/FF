@@ -1,6 +1,6 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     public class SFP_InsuranceScorePage : BasePage
     {

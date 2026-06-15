@@ -1,9 +1,8 @@
-// Pages/ExpertQuotePages/SFP/SFP_EditLocationPage.cs
+﻿// Pages/ExpertQuotePages/SFP/SFP_EditLocationPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
-using Playwright_POC.Helpers;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     /// <summary>
     /// SFP Edit Location modal - for editing location details including
@@ -21,19 +20,19 @@ namespace Playwright_POC.Pages
         #region Locators - Location Details
         /// <summary> Input: Additional Description for the location </summary>
         public ILocator AdditionalDescriptionInput => _page.GetByTestId("fields.data.account.location.rows[0].locationInput$additionalDescription.value");
-        
+
         /// <summary> Button: Location Type - Property </summary>
         public ILocator LocationTypePropertyButton => _page.GetByTestId("fields.data.account.location.rows[0].locationOutput$locationType.value-0");
-        
+
         /// <summary> Button: Location Type - Liability </summary>
         public ILocator LocationTypeLiabilityButton => _page.GetByTestId("fields.data.account.location.rows[0].locationOutput$locationType.value-1");
-        
+
         /// <summary> Button: Location Type - Both (Property and Liability) </summary>
         public ILocator LocationTypeBothButton => _page.GetByTestId("fields.data.account.location.rows[0].locationOutput$locationType.value-2");
-        
+
         /// <summary> Input: Miles from Fire Department </summary>
         public ILocator MilesFromFireDepartmentInput => _page.GetByTestId("fields.data.account.location.rows[0].locationInput$milesFromFireDepartment.value");
-        
+
         /// <summary> Select: Feet from Hydrant dropdown </summary>
         public ILocator FeetFromHydrantSelect => _page.GetByTestId("fields.data.account.location.rows[0].locationInput$feetFromHydrant.value");
         #endregion
@@ -41,16 +40,16 @@ namespace Playwright_POC.Pages
         #region Locators - Farm-Specific Fields
         /// <summary> Checkbox: Tower question (Excess Power, Light Poles, Windmills, Frost Protection Towers) </summary>
         public ILocator TowerQuestionCheckbox => _page.GetByTestId("fields.data.account.location2.rows[0].locationInput$towerQuestion.value");
-        
+
         /// <summary> Label for tower question (for GetByLabel interactions) </summary>
         public ILocator TowerQuestionLabel => _page.GetByLabel("Do you want to add optional coverage for Excess Power, Light Poles, Windmills and Frost Protection Towers?");
-        
+
         /// <summary> Checkbox: No farming at this location </summary>
         public ILocator NoFarmingCheckbox => _page.GetByTestId("fields.data.account.location2.rows[0].locationInput$farmingIndicator.value");
-        
+
         /// <summary> Checkbox role locator for No Farming (alternative) </summary>
         public ILocator NoFarmingCheckboxRole => _page.GetByRole(AriaRole.Checkbox, new() { Name = "There is no farming at this Location" });
-        
+
         /// <summary> Input: Acreage </summary>
         public ILocator AcreageInput => _page.GetByTestId("fields.data.account.location2.rows[0].locationInput$acreage.value");
         #endregion
@@ -58,7 +57,7 @@ namespace Playwright_POC.Pages
         #region Locators - Modal Actions
         /// <summary> Button: Cancel changes </summary>
         public ILocator CancelButton => _page.GetByTestId("fields.data_Next.cancelChanges");
-        
+
         /// <summary> Button: Save location </summary>
         public ILocator SaveButton => _page.GetByTestId("fields.data_Next.saveLocation");
         #endregion
@@ -132,7 +131,7 @@ namespace Playwright_POC.Pages
         public async Task SaveLocationAsync()
         {
             await SaveButton.ClickAsync();
-            await LoadingHelpers.WaitForAngularSpinnerAsync(_page);
+            await WaitForSpinnerAsync();
         }
 
         /// <summary>

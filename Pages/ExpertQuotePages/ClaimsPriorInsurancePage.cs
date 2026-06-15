@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using static Microsoft.Playwright.Assertions;
 
-namespace Playwright_POC.Pages.ExpertQuotePages
+namespace PnCTestAutomation.Pages.ExpertQuotePages
 {
     internal class ClaimsPriorInsurancePage : BasePage
     {
@@ -15,29 +15,31 @@ namespace Playwright_POC.Pages.ExpertQuotePages
         private ILocator AddViolationsButton => _page.GetByTestId("add_Violation");
         private ILocator YearsInBusinessInput => _page.GetByTestId("fields.data.policy.policyUnderwriting.accountInput$yearsInBusiness.value");
         private ILocator EditClaimButton => _page.GetByTestId("fields.data.policy.policyUnderwriting.underwritingLossExperience.rows[0].addLoss.rows[0].editClaim");
-        
+
         // Prior Insurance fields
         private ILocator PriorPolicyNumberInput => _page.GetByTestId("fields.data.policy.policyInput$priorPolicyNumberAN.value");
         private ILocator ReasonForNewCoverageDropdown => _page.GetByTestId("fields.data.policy.policyInput$reasonForNewCoverage.value");
         private ILocator PriorInsuranceCarrierInput => _page.GetByTestId("fields.data.policy.policyUnderwriting.policyUnderwritingInput$priorInsuranceLatestCarrier.value");
-        
+
         // Exposures Insured (Yes/No)
-        private ILocator ExposuresInsuredYesButton => _page.GetByTestId("fields.data.policy.policyInput$exposuresInsuredAN90Days.value-0");
-        private ILocator ExposuresInsuredNoButton => _page.GetByTestId("fields.data.policy.policyInput$exposuresInsuredAN90Days.value-1");
-        
+        private ILocator GetExposuresInsuredButton(string yesOrNo) =>
+            _page.GetByTestId("fields.data.policy.policyInput$exposuresInsuredAN90Days.value-chip-item-wrapper")
+                 .Filter(new() { HasText = yesOrNo }).First;
+
         // Fully Cancelled (Yes/No)
-        private ILocator FullyCancelledYesButton => _page.GetByTestId("fields.data.policy.policyInput$fullyCancelled.value-0");
-        private ILocator FullyCancelledNoButton => _page.GetByTestId("fields.data.policy.policyInput$fullyCancelled.value-1");
-        
+        private ILocator GetFullyCancelledButton(string yesOrNo) =>
+            _page.GetByTestId("fields.data.policy.policyInput$fullyCancelled.value-chip-item-wrapper")
+                 .Filter(new() { HasText = yesOrNo }).First;
+
         // Transfer Unearned Premium (Yes/No)
-        private ILocator TransferUnearnedPremiumYesButton => _page.GetByTestId("fields.data.policy.policyInput$transferUnearnedPremium.value-0");
-        private ILocator TransferUnearnedPremiumNoButton => _page.GetByTestId("fields.data.policy.policyInput$transferUnearnedPremium.value-1");
-        
+        private ILocator GetTransferUnearnedPremiumButton(string yesOrNo) =>
+            _page.GetByTestId("fields.data.policy.policyInput$transferUnearnedPremium.value-chip-item-wrapper")
+                 .Filter(new() { HasText = yesOrNo }).First;
+
         // Years of Continuous Coverage
-        private ILocator YearsCoverageNoPriorButton => _page.GetByTestId("fields.data.policy.policyUnderwriting.policyUnderwritingInput$yearsMaintainedContinuousInsuranceCoverage.value-0");
-        private ILocator YearsCoverage1YearButton => _page.GetByTestId("fields.data.policy.policyUnderwriting.policyUnderwritingInput$yearsMaintainedContinuousInsuranceCoverage.value-1");
-        private ILocator YearsCoverage2YearsButton => _page.GetByTestId("fields.data.policy.policyUnderwriting.policyUnderwritingInput$yearsMaintainedContinuousInsuranceCoverage.value-2");
-        private ILocator YearsCoverage3PlusButton => _page.GetByTestId("fields.data.policy.policyUnderwriting.policyUnderwritingInput$yearsMaintainedContinuousInsuranceCoverage.value-3");
+        private ILocator GetYearsContinuousCoverageButton(string chipLabel) =>
+            _page.GetByTestId("fields.data.policy.policyUnderwriting.policyUnderwritingInput$yearsMaintainedContinuousInsuranceCoverage.value-chip-item-wrapper")
+                 .Filter(new() { HasText = chipLabel }).First;
         #endregion
 
         #region Actions
@@ -60,8 +62,7 @@ namespace Playwright_POC.Pages.ExpertQuotePages
 
         public async Task SetExposuresInsuredAN90DaysAsync(bool insured)
         {
-            var button = insured ? ExposuresInsuredYesButton : ExposuresInsuredNoButton;
-            await button.ClickAsync();
+            await GetExposuresInsuredButton(insured ? "Yes" : "No").ClickAsync();
             await WaitForSpinnerAsync();
         }
 
@@ -72,18 +73,20 @@ namespace Playwright_POC.Pages.ExpertQuotePages
 
         public async Task SelectYearsOfContinuousCoverageAsync(string years)
         {
-            int y = 0;
-            int.TryParse((years ?? "").Trim(), out y);
+            var normalized = (years ?? "").Trim().ToLower();
 
-            var button = y switch
-            {
-                <= 0 => YearsCoverageNoPriorButton,
-                1 => YearsCoverage1YearButton,
-                2 => YearsCoverage2YearsButton,
-                _ => YearsCoverage3PlusButton
-            };
+            // Map input values to chip label text in DOM
+            string chipLabel;
+            if (normalized.Contains("no prior") || normalized == "0")
+                chipLabel = "No Prior Carrier";
+            else if (normalized.StartsWith("1"))
+                chipLabel = "1 year";
+            else if (normalized.StartsWith("2"))
+                chipLabel = "2 years";
+            else
+                chipLabel = "3+ years";
 
-            await button.ClickAsync();
+            await GetYearsContinuousCoverageButton(chipLabel).ClickAsync();
             await WaitForSpinnerAsync();
         }
 
@@ -106,15 +109,13 @@ namespace Playwright_POC.Pages.ExpertQuotePages
 
         public async Task SetFullyCancelledAsync(bool yes)
         {
-            var button = yes ? FullyCancelledYesButton : FullyCancelledNoButton;
-            await button.ClickAsync();
+            await GetFullyCancelledButton(yes ? "Yes" : "No").ClickAsync();
             await WaitForSpinnerAsync();
         }
 
         public async Task SetTransferUnearnedPremiumAsync(bool yes)
         {
-            var button = yes ? TransferUnearnedPremiumYesButton : TransferUnearnedPremiumNoButton;
-            await button.ClickAsync();
+            await GetTransferUnearnedPremiumButton(yes ? "Yes" : "No").ClickAsync();
             await WaitForSpinnerAsync();
         }
 

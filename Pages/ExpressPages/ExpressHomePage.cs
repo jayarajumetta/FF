@@ -1,9 +1,9 @@
 ﻿using Microsoft.Playwright;
-using Playwright_POC.Pages;
+using PnCTestAutomation.Pages;
 using System.Threading.Tasks;
-using Playwright_POC.Helpers;
+using PnCTestAutomation.Helpers;
 
-namespace Playwright_POC.Pages.ExpressPages
+namespace PnCTestAutomation.Pages.ExpressPages
 {
     public class ExpressHomePage : BasePage
     {

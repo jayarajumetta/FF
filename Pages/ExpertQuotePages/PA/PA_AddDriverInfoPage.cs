@@ -1,11 +1,11 @@
-// Pages/ExpertQuotePages/PA_AddDriverInfoPage.cs
+﻿// Pages/ExpertQuotePages/PA_AddDriverInfoPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using Playwright_POC.Helpers;
+using PnCTestAutomation.Helpers;
 
-namespace Playwright_POC.Pages
+namespace PnCTestAutomation.Pages
 {
     /// <summary>
     /// Data class to hold driver field values for validation by the caller.
@@ -67,7 +67,7 @@ namespace Playwright_POC.Pages
             _page.GetByRole(AriaRole.Button, new() { Name = value });
 
         private ILocator GetMaritalStatusButton(string maritalStatus) =>
-            _page.Locator("button[data-testid^='owner.maritalStatus-']").Filter(new() { HasTextString = maritalStatus.Trim() });
+            _page.Locator("[data-testid^='owner.maritalStatus-']").Filter(new() { HasText = maritalStatus.Trim() });
 
         private ILocator GetNamedInsuredButton(string value) =>
             _page.GetByRole(AriaRole.Button, new() { Name = value });
