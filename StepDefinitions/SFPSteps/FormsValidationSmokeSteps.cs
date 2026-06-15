@@ -60,6 +60,16 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         [Then(@"the forms should match the baseline")]
         public async Task ThenTheFormsShouldMatchTheBaseline()
         {
+            // Sanitize all externally-supplied values immediately on entry, before any use.
+            // Mitigates stored path traversal (CWE-22): _lob, _state, and _quoteNumber
+            // originate from Gherkin step arguments and could contain traversal sequences
+            // or characters that are invalid in file names.
+            const string testCase = "BASIC";
+            var safeLob         = SanitizeFileName(_lob);
+            var safeState       = SanitizeFileName(_state);
+            var safeQuoteNumber = SanitizeFileName(_quoteNumber);
+            var safeTestCase    = SanitizeFileName(testCase);
+
             // Log any interesting CLAS API calls captured during session setup
             if (_clasApiCalls?.Count > 0)
             {
@@ -69,10 +79,10 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             }
 
             var responseXml = await _formsClient.GetFormsAndSaveAsync(
-                _sessionId, _lob, $"{_lob}_BasicPolicy", _state, _quoteNumber);
+                _sessionId, safeLob, $"{safeLob}_BasicPolicy", safeState, safeQuoteNumber);
 
             var actualForms = FormsXmlParser.Parse(responseXml);
-            Console.WriteLine($"DuckCreek returned {actualForms.Count} forms for {_lob}/{_state}/{_quoteNumber}");
+            Console.WriteLine($"DuckCreek returned {actualForms.Count} forms for {safeLob}/{safeState}/{safeQuoteNumber}");
 
             var metadata = FormsXmlParser.ParseMetadata(responseXml);
             foreach (var w in metadata.Warnings)
@@ -80,25 +90,15 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             Console.WriteLine($"  Metadata: PrintJob={metadata.PrintJobName}, Manuscript={metadata.Manuscript}, " +
                               $"RoleBasedSecurity={metadata.HasRoleBasedSecurity}, ReturnSuccess={metadata.ReturnSuccessStatus}");
 
-            var testCase = "BASIC";
-            var expected = _validationService.LoadExpectedFormsForLob(_lob, _state, testCase);
-            var summary = _validationService.Validate(expected, actualForms, _lob, _state, _quoteNumber);
+            var expected = _validationService.LoadExpectedFormsForLob(safeLob, safeState, safeTestCase);
+            var summary  = _validationService.Validate(expected, actualForms, safeLob, safeState, safeQuoteNumber);
             summary.ResponseMetadata = metadata;
-            summary.TestCaseName = $"{_lob}_{testCase}";
+            summary.TestCaseName     = $"{safeLob}_{safeTestCase}";
 
             FormsValidationService.PrintSummary(summary);
-
-            // Sanitize externally-supplied values before use in file path construction.
-            // Mitigates stored path traversal (CWE-22): inputs originate from Gherkin
-            // step arguments and could contain traversal sequences or invalid characters.
-            var safeLob = SanitizeFileName(_lob);
-            var safeState = SanitizeFileName(_state);
-            var safeQuoteNumber = SanitizeFileName(_quoteNumber);
-            var safeTestCase = SanitizeFileName(testCase);
-
             _validationService.SaveResultsCsv(summary, $"{safeLob}_{safeTestCase}");
 
-            var htmlDir = Path.GetFullPath(Path.Combine(
+            var htmlDir  = Path.GetFullPath(Path.Combine(
                 _validationService.GetType().Assembly.Location, "..", "..", "..", "TestResults",
                 DateTime.Now.ToString("ddMMMyyyy").ToUpperInvariant()));
             var htmlPath = Path.Combine(htmlDir, $"FormsReport_{safeLob}_{safeState}_{safeQuoteNumber}.html");
