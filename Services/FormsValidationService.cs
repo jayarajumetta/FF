@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using PnCTestAutomation.Models;
 
 namespace PnCTestAutomation.Services
@@ -437,11 +438,24 @@ namespace PnCTestAutomation.Services
         /// </summary>
         public string SaveResultsCsv(FormsValidationSummary summary, string testCaseName)
         {
-            var dir = Path.Combine(_config.ResultsBasePath, summary.LOB);
-            Directory.CreateDirectory(dir);
+            // Sanitize at the sink: testCaseName and the summary fields used in the file
+            // name all originate from external data (CSV ReadLine / Gherkin arguments).
+            // Path traversal mitigation (CWE-22): strip traversal sequences, apply an
+            // allowlist, then verify the final path stays inside the intended directory.
+            var safeTestCase  = SanitizeFileNameSegment(testCaseName);
+            var safeLob       = SanitizeFileNameSegment(summary.LOB);
+            var safeState     = SanitizeFileNameSegment(summary.State);
+            var safeQuoteId   = SanitizeFileNameSegment(summary.QuoteId);
 
-            var fileName = $"{testCaseName}_{summary.State}_{summary.QuoteId}Results.csv";
-            var filePath = Path.Combine(dir, fileName);
+            var baseDir  = Path.GetFullPath(Path.Combine(_config.ResultsBasePath, safeLob));
+            Directory.CreateDirectory(baseDir);
+
+            var safeFile = Path.GetFileName($"{safeTestCase}_{safeState}_{safeQuoteId}Results.csv");
+            var filePath = Path.GetFullPath(Path.Combine(baseDir, safeFile));
+
+            // Containment check: reject any path that escapes the intended output directory.
+            if (!filePath.StartsWith(baseDir + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException("Path traversal detected: CSV path escapes the intended output directory.");
 
             using var writer = new StreamWriter(filePath);
             writer.WriteLine("Form,Expected,Actual,Result,Code,Message");
@@ -461,6 +475,29 @@ namespace PnCTestAutomation.Services
 
             Console.WriteLine($"Results CSV saved: {filePath}");
             return filePath;
+        }
+
+        /// <summary>
+        /// Sanitizes a single file name segment against path traversal (CWE-22).
+        /// Strips OS-invalid characters, neutralizes traversal sequences, then
+        /// applies an allowlist so only letters, digits, underscores, and dashes remain.
+        /// </summary>
+        private static string SanitizeFileNameSegment(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return "_";
+
+            // Neutralize traversal sequences before character-level checks
+            var value = input.Replace("..", "_");
+
+            // Strip OS-invalid file name characters
+            foreach (var c in Path.GetInvalidFileNameChars())
+                value = value.Replace(c, '_');
+
+            // Allowlist: permit only letters, digits, underscore, and dash
+            value = Regex.Replace(value, @"[^a-zA-Z0-9_\-]", "_");
+
+            return value;
         }
 
         // ───────────────────────── Output: Console summary ───────────────────────
