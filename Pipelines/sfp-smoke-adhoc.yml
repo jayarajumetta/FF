@@ -9,8 +9,8 @@ pr: none
 # Change the cron expression to adjust the schedule:
 #   '0 5 * * *'  = 12:00 AM Central (UTC-5) / 1:00 AM CDT (UTC-6)
 schedules:
-- cron: "30 17 * * *"
-  displayName: "Nightly Full Run — 11:30 AM Central"
+- cron: "0 10 * * *"
+  displayName: "Nightly Full Run — 4:00 AM CST"
   branches:
     include:
     - Development
@@ -25,6 +25,14 @@ parameters:
   displayName: "Smoke Mode (1 test per shard)"
   type: boolean
   default: false
+- name: suiteToRun
+  displayName: "Suite to Run"
+  type: string
+  default: All
+  values:
+  - All
+  - BasicPolicy Only
+  - CE Only
 
 pool:
   name: "Default"
@@ -80,6 +88,7 @@ stages:
 - stage: Test
   displayName: "Test (3 Parallel Shards)"
   dependsOn: Build
+  condition: ne('${{ parameters.suiteToRun }}', 'CE Only')
 
   jobs:
   - job: TestShard
@@ -230,7 +239,8 @@ stages:
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
 
-        exit $LASTEXITCODE
+        # Always exit 0 — test pass/fail is gated by PublishTestResults below
+        exit 0
       displayName: "Retry Failed Tests — Shard $(SHARD_NUMBER)"
       condition: always()
       env:
@@ -245,6 +255,35 @@ stages:
         Write-Host "==== TEST RESULTS CONTENT ===="
         Get-ChildItem -Recurse "$(Build.ArtifactStagingDirectory)/TestResults"
       displayName: "Debug TestResults Output"
+      condition: always()
+
+    # ✅ COLLECT SCREENSHOTS & TRACES
+    # TestHooks saves failure screenshots and Playwright traces to
+    # bin/Release/net8.0/TestResults/<timestamp>/ on the agent.
+    # Copy them into the staging directory so they land in the published artifact.
+    - powershell: |
+        $screenshotsStaging = "$(Build.ArtifactStagingDirectory)/TestResults/Screenshots"
+        New-Item -ItemType Directory -Force -Path $screenshotsStaging | Out-Null
+
+        $sourceBase = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestResults"
+        if (Test-Path $sourceBase) {
+            $files = Get-ChildItem -Path $sourceBase -Recurse -Include "*.png","*.zip" -ErrorAction SilentlyContinue
+            if ($files.Count -gt 0) {
+                $files | ForEach-Object {
+                    # Preserve the relative subfolder structure under Screenshots/
+                    $rel = $_.FullName.Substring($sourceBase.Length).TrimStart('\','/')
+                    $dest = Join-Path $screenshotsStaging $rel
+                    New-Item -ItemType Directory -Force -Path (Split-Path $dest) | Out-Null
+                    Copy-Item $_.FullName -Destination $dest
+                }
+                Write-Host "Collected $($files.Count) screenshot/trace file(s)."
+            } else {
+                Write-Host "No screenshots or traces found (all tests may have passed)."
+            }
+        } else {
+            Write-Host "TestResults source directory not found — skipping screenshot collection."
+        }
+      displayName: "Collect Screenshots & Traces"
       condition: always()
 
     - task: PublishTestResults@2
@@ -298,3 +337,236 @@ stages:
       inputs:
         targetPath: "$(Build.ArtifactStagingDirectory)/FormsReports"
         artifact: "Forms_Reports_Shard_$(SHARD_NUMBER)"
+
+# ── Stage 3: CE Test ───────────────────────────────────────────────────────────
+# Runs after BasicPolicy (Stage 2) regardless of pass/fail.
+# Reuses the same BuildOutput artifact — no second build needed.
+- stage: CE_Test
+  displayName: "CE Test (3 Parallel Shards)"
+  dependsOn: Test
+  condition: and(in(dependencies.Test.result, 'Succeeded', 'SucceededWithIssues', 'Failed', 'Skipped'), ne('${{ parameters.suiteToRun }}', 'BasicPolicy Only'))
+
+  jobs:
+  - job: CETestShard
+    displayName: "SFP CE"
+    timeoutInMinutes: 120
+
+    strategy:
+      matrix:
+        Shard1:
+          SHARD_NUMBER: "1"
+          SHARD_FILTER_FULL: "TestCategory=CE&TestCategory=Shard1"
+          SHARD_FILTER_SMOKE: "TestCategory=CE&TestCategory=Shard1&TestCategory=Smoke"
+        Shard2:
+          SHARD_NUMBER: "2"
+          SHARD_FILTER_FULL: "TestCategory=CE&TestCategory=Shard2"
+          SHARD_FILTER_SMOKE: "TestCategory=CE&TestCategory=Shard2&TestCategory=Smoke"
+        Shard3:
+          SHARD_NUMBER: "3"
+          SHARD_FILTER_FULL: "TestCategory=CE&TestCategory=Shard3"
+          SHARD_FILTER_SMOKE: "TestCategory=CE&TestCategory=Shard3&TestCategory=Smoke"
+
+    steps:
+
+    - checkout: self
+
+    - task: UseDotNet@2
+      displayName: "Install .NET SDK $(DOTNET_VERSION)"
+      inputs:
+        packageType: sdk
+        version: $(DOTNET_VERSION)
+
+    - task: DownloadPipelineArtifact@2
+      displayName: "Download Build Output"
+      inputs:
+        artifact: "BuildOutput"
+        targetPath: "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0"
+
+    - task: Cache@2
+      displayName: "Cache Playwright Chromium"
+      inputs:
+        key: 'playwright | "$(Agent.OS)" | $(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.deps.json'
+        restoreKeys: |
+          playwright | "$(Agent.OS)"
+        path: "$(PLAYWRIGHT_BROWSERS_PATH)"
+      env:
+        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+
+    - powershell: |
+        $playwrightBrowsersPath = "$(Agent.ToolsDirectory)/playwright-browsers"
+        $env:PLAYWRIGHT_BROWSERS_PATH = $playwrightBrowsersPath
+
+        $playwright = Get-ChildItem `
+            -Path "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0" `
+            -Filter playwright.ps1 | Select-Object -First 1
+
+        if ($playwright) {
+            Write-Host "Installing Playwright via $($playwright.FullName)"
+            & powershell -File $playwright.FullName install chromium --with-deps
+        } else {
+            Write-Warning "playwright.ps1 not found — assuming pre-installed"
+        }
+      displayName: "Ensure Playwright Chromium"
+      env:
+        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+
+    - powershell: |
+        New-Item -ItemType Directory -Force -Path "$(Build.ArtifactStagingDirectory)/TestResults" | Out-Null
+      displayName: "Create TestResults Directory"
+      condition: always()
+
+    - powershell: |
+        $smokeMode = $env:SMOKE_MODE -eq "True"
+        $filter = if ($smokeMode) { $env:SHARD_FILTER_SMOKE } else { $env:SHARD_FILTER_FULL }
+        $testDll = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.dll"
+
+        Write-Host "===================================="
+        Write-Host "Running CE Shard $($env:SHARD_NUMBER)"
+        Write-Host "Mode:   $(if ($smokeMode) { 'SMOKE (debug)' } else { 'FULL' })"
+        Write-Host "Filter: $filter"
+        Write-Host "DLL:    $testDll"
+        Write-Host "===================================="
+
+        if (!(Test-Path $testDll)) {
+            Write-Error "Test DLL not found!"
+            exit 1
+        }
+
+        & dotnet test $testDll `
+            --filter "$filter" `
+            --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Results.trx" `
+            --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
+
+        $firstRunExit = $LASTEXITCODE
+        Write-Host "First run exit code: $firstRunExit"
+        exit 0
+      displayName: "Run CE Shard $(SHARD_NUMBER)"
+      condition: always()
+      env:
+        Playwright__Headless: "true"
+        Playwright__BrowserType: "chromium"
+        TEST_ENVIRONMENT: "qa"
+        CI: "true"
+        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+        SMOKE_MODE: ${{ parameters.smokeMode }}
+        SHARD_FILTER_FULL: $(SHARD_FILTER_FULL)
+        SHARD_FILTER_SMOKE: $(SHARD_FILTER_SMOKE)
+
+    - powershell: |
+        $trxPath = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
+
+        if (!(Test-Path $trxPath)) {
+            Write-Host "No TRX found — skipping retry step."
+            exit 0
+        }
+
+        [xml]$trx = Get-Content $trxPath
+        $ns = @{ t = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010" }
+        $failed = Select-Xml -Xml $trx -XPath "//t:UnitTestResult[@outcome='Failed']" -Namespace $ns
+
+        if (-not $failed) {
+            Write-Host "No failures in first run — retry step skipped."
+            exit 0
+        }
+
+        $failedNames = $failed | ForEach-Object { $_.Node.testName } | Select-Object -Unique
+        Write-Host "Retrying $($failedNames.Count) failed test(s):"
+        $failedNames | ForEach-Object { Write-Host "  - $_" }
+
+        $nameFilter = ($failedNames | ForEach-Object {
+            $escaped = $_.Replace("'", "").Replace('"', '')
+            "FullyQualifiedName~$escaped"
+        }) -join "|"
+
+        $testDll = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.dll"
+
+        & dotnet test $testDll `
+            --filter "$nameFilter" `
+            --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx" `
+            --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
+
+        exit 0
+      displayName: "Retry Failed Tests — Shard $(SHARD_NUMBER)"
+      condition: always()
+      env:
+        Playwright__Headless: "true"
+        Playwright__BrowserType: "chromium"
+        TEST_ENVIRONMENT: "qa"
+        CI: "true"
+        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+
+    - powershell: |
+        Write-Host "==== CE TEST RESULTS CONTENT ===="
+        Get-ChildItem -Recurse "$(Build.ArtifactStagingDirectory)/TestResults"
+      displayName: "Debug TestResults Output"
+      condition: always()
+
+    - powershell: |
+        $screenshotsStaging = "$(Build.ArtifactStagingDirectory)/TestResults/Screenshots"
+        New-Item -ItemType Directory -Force -Path $screenshotsStaging | Out-Null
+
+        $sourceBase = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestResults"
+        if (Test-Path $sourceBase) {
+            $files = Get-ChildItem -Path $sourceBase -Recurse -Include "*.png","*.zip" -ErrorAction SilentlyContinue
+            if ($files.Count -gt 0) {
+                $files | ForEach-Object {
+                    $rel = $_.FullName.Substring($sourceBase.Length).TrimStart('\','/')
+                    $dest = Join-Path $screenshotsStaging $rel
+                    New-Item -ItemType Directory -Force -Path (Split-Path $dest) | Out-Null
+                    Copy-Item $_.FullName -Destination $dest
+                }
+                Write-Host "Collected $($files.Count) screenshot/trace file(s)."
+            } else {
+                Write-Host "No screenshots or traces found (all tests may have passed)."
+            }
+        } else {
+            Write-Host "TestResults source directory not found — skipping screenshot collection."
+        }
+      displayName: "Collect Screenshots & Traces"
+      condition: always()
+
+    - task: PublishTestResults@2
+      displayName: "Publish Test Results"
+      condition: always()
+      inputs:
+        testResultsFormat: VSTest
+        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/*.trx"
+        mergeTestResults: true
+        failTaskOnFailedTests: true
+        testRunTitle: "SFP CE — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
+
+    - task: PublishPipelineArtifact@1
+      displayName: "Publish Shard Artifacts"
+      condition: always()
+      inputs:
+        targetPath: "$(Build.ArtifactStagingDirectory)/TestResults"
+        artifact: "SFP_CE_Shard_$(SHARD_NUMBER)"
+
+    - powershell: |
+        $reportsDir = "$(Build.ArtifactStagingDirectory)/FormsReports"
+        New-Item -ItemType Directory -Force -Path $reportsDir | Out-Null
+
+        $sourceBase = "$(Build.SourcesDirectory)/TestResults"
+        if (Test-Path $sourceBase) {
+            $reports = Get-ChildItem -Path $sourceBase -Recurse -Filter "FormsReport_*.html"
+            if ($reports.Count -gt 0) {
+                $reports | ForEach-Object {
+                    Copy-Item $_.FullName -Destination $reportsDir
+                    Write-Host "Collected: $($_.Name)"
+                }
+                Write-Host "Collected $($reports.Count) forms report(s)."
+            } else {
+                Write-Host "No forms reports found — forms validation may not have run or all states skipped."
+            }
+        } else {
+            Write-Host "TestResults directory not found — skipping forms report collection."
+        }
+      displayName: "Collect Forms Validation Reports"
+      condition: always()
+
+    - task: PublishPipelineArtifact@1
+      displayName: "Publish Forms Reports"
+      condition: always()
+      inputs:
+        targetPath: "$(Build.ArtifactStagingDirectory)/FormsReports"
+        artifact: "Forms_Reports_CE_Shard_$(SHARD_NUMBER)"

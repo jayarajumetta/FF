@@ -257,6 +257,12 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             if (!UwQuestionTestIds.TryGetValue(key, out var testId))
                 throw new ArgumentException($"Unknown UW Question key '{key}'.");
 
+            // Wait for any variant of the element to appear before checking — on CI the UW
+            // questions section renders after the spinner clears, causing CountAsync to return
+            // 0 for all fallbacks if we check immediately.
+            await _page.Locator($"[data-testid='{testId}']").First
+                .WaitForAsync(new() { State = WaitForSelectorState.Attached, Timeout = 15000 });
+
             // Try checkbox input first (new UI structure)
             var checkbox = _page.Locator($"input[type='checkbox'][data-testid='{testId}']");
             if (await checkbox.CountAsync() > 0)

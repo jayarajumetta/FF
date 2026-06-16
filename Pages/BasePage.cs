@@ -125,6 +125,7 @@ namespace PnCTestAutomation.Pages
                     if (await candidate.CountAsync() > 0 && await candidate.First.IsVisibleAsync())
                     {
                         await candidate.First.ClickAsync();
+                        await WaitForSpinnerAsync();
                         return;
                     }
                 }
