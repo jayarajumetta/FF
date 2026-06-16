@@ -1,0 +1,46 @@
+[
+  {
+    "Id": "SFP-2026-AL-001",
+    "Type": "Quote",
+    "Status": "available",
+    "IsCommittedReferral": false,
+    "State": "AL",
+    "Notes": "Country Estate basic coverage",
+    "ClaimedBy": null,
+    "ConsumedBy": null,
+    "CreatedAt": "2026-06-16T10:00:00Z"
+  },
+  {
+    "Id": "SFP-2026-TX-001",
+    "Type": "Quote",
+    "Status": "available",
+    "IsCommittedReferral": true,
+    "State": "TX",
+    "Notes": "Committed referral — high value account",
+    "ClaimedBy": null,
+    "ConsumedBy": null,
+    "CreatedAt": "2026-06-16T10:05:00Z"
+  },
+  {
+    "Id": "SFP-2026-OH-001",
+    "Type": "Policy",
+    "Status": "available",
+    "IsCommittedReferral": false,
+    "State": "OH",
+    "Notes": null,
+    "ClaimedBy": null,
+    "ConsumedBy": null,
+    "CreatedAt": "2026-06-16T10:10:00Z"
+  },
+  {
+    "Id": "SFP-2026-MS-001",
+    "Type": "Quote",
+    "Status": "available",
+    "IsCommittedReferral": true,
+    "State": "MS",
+    "Notes": "BasicPolicy smoke state",
+    "ClaimedBy": null,
+    "ConsumedBy": null,
+    "CreatedAt": "2026-06-16T10:15:00Z"
+  }
+]
