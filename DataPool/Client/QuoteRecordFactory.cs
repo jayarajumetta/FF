@@ -49,7 +49,7 @@ namespace PnCTestAutomation.DataPool
                 Status             = "available",
                 Lob                = lob,
                 SfpVariant         = sfpVariant,
-                State              = ctx.RatingState ?? ctx.State,
+                State              = NormalizeState(ctx.RatingState ?? ctx.State),
                 IsCommittedReferral = IsCommittedReferral(ctx),
                 Notes              = BuildNotes(ctx, lob, sfpVariant),
                 CreatedAt          = DateTime.UtcNow,
@@ -138,5 +138,28 @@ namespace PnCTestAutomation.DataPool
 
         private static bool ContainsIgnoreCase(string source, string value)
             => source.Contains(value, StringComparison.OrdinalIgnoreCase);
+
+        private static readonly Dictionary<string, string> _stateAbbreviations = new(StringComparer.OrdinalIgnoreCase)
+        {
+            ["Alabama"] = "AL", ["Alaska"] = "AK", ["Arizona"] = "AZ", ["Arkansas"] = "AR",
+            ["California"] = "CA", ["Colorado"] = "CO", ["Connecticut"] = "CT", ["Delaware"] = "DE",
+            ["Florida"] = "FL", ["Georgia"] = "GA", ["Hawaii"] = "HI", ["Idaho"] = "ID",
+            ["Illinois"] = "IL", ["Indiana"] = "IN", ["Iowa"] = "IA", ["Kansas"] = "KS",
+            ["Kentucky"] = "KY", ["Louisiana"] = "LA", ["Maine"] = "ME", ["Maryland"] = "MD",
+            ["Massachusetts"] = "MA", ["Michigan"] = "MI", ["Minnesota"] = "MN", ["Mississippi"] = "MS",
+            ["Missouri"] = "MO", ["Montana"] = "MT", ["Nebraska"] = "NE", ["Nevada"] = "NV",
+            ["New Hampshire"] = "NH", ["New Jersey"] = "NJ", ["New Mexico"] = "NM", ["New York"] = "NY",
+            ["North Carolina"] = "NC", ["North Dakota"] = "ND", ["Ohio"] = "OH", ["Oklahoma"] = "OK",
+            ["Oregon"] = "OR", ["Pennsylvania"] = "PA", ["Rhode Island"] = "RI", ["South Carolina"] = "SC",
+            ["South Dakota"] = "SD", ["Tennessee"] = "TN", ["Texas"] = "TX", ["Utah"] = "UT",
+            ["Vermont"] = "VT", ["Virginia"] = "VA", ["Washington"] = "WA", ["West Virginia"] = "WV",
+            ["Wisconsin"] = "WI", ["Wyoming"] = "WY"
+        };
+
+        private static string? NormalizeState(string? state)
+        {
+            if (string.IsNullOrWhiteSpace(state)) return null;
+            return _stateAbbreviations.TryGetValue(state.Trim(), out var abbr) ? abbr : state.Trim();
+        }
     }
 }
