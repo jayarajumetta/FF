@@ -5,7 +5,7 @@ trigger: none
 pr: none
 
 # Runs nightly at 12:00 AM Central (05:00 UTC) on the Development branch.
-# Always runs the full suite (debugMode defaults to false).
+# Always runs the full suite (debug modes default to false).
 # Change the cron expression to adjust the schedule:
 #   '0 5 * * *'  = 12:00 AM Central (UTC-5) / 1:00 AM CDT (UTC-6)
 schedules:
@@ -18,11 +18,15 @@ schedules:
 
 # ── Queue-time parameters ──────────────────────────────────────────────────────
 # These appear as a checkbox in the Run Pipeline dialog.
-# debugMode=true  → 1 test per shard (Alabama, Mississippi, Ohio) — quick sanity check
-# debugMode=false → full suite (31 tests across 3 shards)
+# debugModeBasic=true → BasicPolicy: 1 test per shard (AL, MS, OH) — quick sanity check
+# debugModeCE=true    → CE: 1 test per shard (AL, MS, OH) — quick sanity check
 parameters:
-- name: debugMode
-  displayName: "Debug Mode (1 test per shard)"
+- name: debugModeBasic
+  displayName: "Debug Mode: BasicPolicy (1 test per shard)"
+  type: boolean
+  default: false
+- name: debugModeCE
+  displayName: "Debug Mode: CE (1 test per shard)"
   type: boolean
   default: false
 - name: suiteToRun
@@ -97,8 +101,8 @@ stages:
 
     strategy:
       matrix:
-        # debugMode=true  → runs only @Debug-tagged rows (1 per shard, ~3 tests total)
-        # debugMode=false → runs the full shard (default)
+        # debugModeBasic=true → runs only @Debug-tagged rows (1 per shard, ~3 tests total)
+        # debugModeBasic=false → runs the full shard (default)
         Shard1:
           SHARD_NUMBER: "1"
           SHARD_FILTER_FULL: "TestCategory=Shard1"
@@ -197,7 +201,7 @@ stages:
         TEST_ENVIRONMENT: "qa"
         CI: "true"
         PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
-        DEBUG_MODE: ${{ parameters.debugMode }}
+        DEBUG_MODE: ${{ parameters.debugModeBasic }}
         SHARD_FILTER_FULL: $(SHARD_FILTER_FULL)
         SHARD_FILTER_DEBUG: $(SHARD_FILTER_DEBUG)
 
@@ -448,7 +452,7 @@ stages:
         TEST_ENVIRONMENT: "qa"
         CI: "true"
         PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
-        DEBUG_MODE: ${{ parameters.debugMode }}
+        DEBUG_MODE: ${{ parameters.debugModeCE }}
         SHARD_FILTER_FULL: $(SHARD_FILTER_FULL)
         SHARD_FILTER_DEBUG: $(SHARD_FILTER_DEBUG)
 
