@@ -28,5 +28,8 @@ namespace DataPool.Models
         public string? ClaimedBy { get; set; }
         public string? ConsumedBy { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        /// <summary>Policy effective date (e.g. "06/16/2026"), extracted from quote data.</summary>
+        public string? EffectiveDate { get; set; }
     }
 }

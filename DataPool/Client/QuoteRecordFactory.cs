@@ -53,6 +53,7 @@ namespace PnCTestAutomation.DataPool
                 IsCommittedReferral = IsCommittedReferral(ctx),
                 Notes              = BuildNotes(ctx, lob, sfpVariant),
                 CreatedAt          = DateTime.UtcNow,
+                EffectiveDate      = ctx.Policy?.EffectiveDate,
             };
         }
 

@@ -48,6 +48,13 @@
             <button class="btn btn-outline-secondary" data-filter="sfp-basic" onclick="setFilter('sfp-basic')">SFP BasicPolicy</button>
             <button class="btn btn-outline-secondary" data-filter="sfp-ce"    onclick="setFilter('sfp-ce')">SFP CE</button>
         </div>
+        <!-- State dropdown -->
+        <select id="stateFilter" class="form-select form-select-sm" style="width:auto" onchange="applyClientFilters()">
+            <option value="">All States</option>
+        </select>
+        <!-- Search box -->
+        <input type="text" id="searchInput" class="form-control form-control-sm" style="width:200px"
+               placeholder="Search quote ID, type..." oninput="applyClientFilters()" />
         <button class="btn btn-sm btn-outline-primary" onclick="loadQuotes()" title="Refresh">&#8635; Refresh</button>
     </div>
 </div>
@@ -67,6 +74,244 @@
     const API = '/api/quotes';
     let currentFilter = 'available';
     let currentUser   = localStorage.getItem('dpUsername');
+    let allQuotes     = [];   // full result set from API
+    let sortCol       = null; // 'state' | 'effectiveDate' | 'createdAt'
+    let sortDir       = 'asc';
+
+    // ── Username modal ────────────────────────────────────────────────────────
+    const usernameModal = new bootstrap.Modal(document.getElementById('usernameModal'));
+
+    function saveUsername() {
+        const name = document.getElementById('usernameInput').value.trim();
+        if (!name) {
+            document.getElementById('usernameError').classList.remove('d-none');
+            return;
+        }
+        localStorage.setItem('dpUsername', name);
+        currentUser = name;
+        document.getElementById('nav-username').textContent = currentUser;
+        usernameModal.hide();
+        initPage();
+    }
+
+    document.getElementById('saveUsernameBtn').addEventListener('click', saveUsername);
+    document.getElementById('usernameInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') saveUsername();
+    });
+
+    // ── Boot ──────────────────────────────────────────────────────────────────
+    if (!currentUser) {
+        usernameModal.show();
+    } else {
+        initPage();
+    }
+
+    function initPage() {
+        document.getElementById('nav-username').textContent = currentUser;
+        updateFilterButtons();
+        loadQuotes();
+    }
+
+    // ── Status filter ─────────────────────────────────────────────────────────
+    function setFilter(filter) {
+        currentFilter = filter;
+        updateFilterButtons();
+        loadQuotes();
+    }
+
+    function updateFilterButtons() {
+        document.querySelectorAll('[data-filter]').forEach(btn => {
+            const active = btn.dataset.filter === currentFilter;
+            btn.classList.toggle('btn-secondary',         active);
+            btn.classList.toggle('btn-outline-secondary', !active);
+        });
+    }
+
+    // ── Load from API ─────────────────────────────────────────────────────────
+    async function loadQuotes() {
+        let url = API;
+        if (currentFilter === 'available')  url = `${API}/available`;
+        else if (currentFilter === 'referral')  url = `${API}?isCommittedReferral=true`;
+        else if (currentFilter === 'sfp-basic') url = `${API}?lob=SFP&sfpVariant=BasicPolicy`;
+        else if (currentFilter === 'sfp-ce')    url = `${API}?lob=SFP&sfpVariant=CE`;
+
+        document.getElementById('quoteCount').textContent = '';
+        try {
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            allQuotes = await resp.json();
+            populateStateDropdown(allQuotes);
+            applyClientFilters();
+        } catch (err) {
+            document.getElementById('tableContainer').innerHTML =
+                `<div class="alert alert-danger">Could not load quotes: ${escHtml(err.message)}</div>`;
+        }
+    }
+
+    // ── Populate state dropdown from data ─────────────────────────────────────
+    function populateStateDropdown(quotes) {
+        const sel = document.getElementById('stateFilter');
+        const current = sel.value;
+        const states = [...new Set(quotes.map(q => q.state).filter(Boolean))].sort();
+        sel.innerHTML = '<option value="">All States</option>' +
+            states.map(s => `<option value="${escHtml(s)}" ${s === current ? 'selected' : ''}>${escHtml(s)}</option>`).join('');
+    }
+
+    // ── Client-side search + state filter + sort ──────────────────────────────
+    function applyClientFilters() {
+        const search      = (document.getElementById('searchInput').value ?? '').toLowerCase();
+        const stateFilter = document.getElementById('stateFilter').value;
+
+        let data = allQuotes.filter(q => {
+            if (stateFilter && q.state !== stateFilter) return false;
+            if (search) {
+                const hay = [q.id, q.type, q.lob, q.sfpVariant, q.state, q.claimedBy, q.notes]
+                    .map(v => (v ?? '').toLowerCase()).join(' ');
+                if (!hay.includes(search)) return false;
+            }
+            return true;
+        });
+
+        if (sortCol) data = sortData(data, sortCol, sortDir);
+        renderTable(data);
+    }
+
+    // ── Sorting ───────────────────────────────────────────────────────────────
+    function toggleSort(col) {
+        if (sortCol === col) {
+            sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            sortCol = col;
+            sortDir = 'asc';
+        }
+        applyClientFilters();
+    }
+
+    function sortData(data, col, dir) {
+        return [...data].sort((a, b) => {
+            let av = a[col] ?? '';
+            let bv = b[col] ?? '';
+            // Treat date strings and ISO dates uniformly
+            if (col === 'createdAt') { av = new Date(av); bv = new Date(bv); }
+            if (col === 'effectiveDate') { av = av.toString(); bv = bv.toString(); }
+            const cmp = av < bv ? -1 : av > bv ? 1 : 0;
+            return dir === 'asc' ? cmp : -cmp;
+        });
+    }
+
+    function sortIcon(col) {
+        if (sortCol !== col) return ' <span class="text-muted" style="font-size:.7em">⇅</span>';
+        return sortDir === 'asc'
+            ? ' <span style="font-size:.8em">▲</span>'
+            : ' <span style="font-size:.8em">▼</span>';
+    }
+
+    // ── Render table ──────────────────────────────────────────────────────────
+    function renderTable(quotes) {
+        document.getElementById('quoteCount').textContent = `${quotes.length} quote(s) shown`;
+
+        if (quotes.length === 0) {
+            document.getElementById('tableContainer').innerHTML =
+                '<div class="alert alert-info mb-0">No quotes match the current filter.</div>';
+            return;
+        }
+
+        const statusBadge = {
+            available: '<span class="badge bg-success">Available</span>',
+            claimed:   '<span class="badge bg-warning text-dark">Claimed</span>',
+            consumed:  '<span class="badge bg-secondary">Consumed</span>'
+        };
+
+        const rows = quotes.map(q => {
+            const canClaim   = q.status === 'available';
+            const canConsume = q.status === 'claimed' && q.claimedBy === currentUser;
+            const canRelease = q.status === 'claimed' && q.claimedBy === currentUser;
+            const badge = statusBadge[q.status]
+                ?? `<span class="badge bg-light text-dark">${escHtml(q.status)}</span>`;
+            const created = q.createdAt
+                ? new Date(q.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                : '';
+
+            return `<tr>
+                <td><code class="fw-semibold">${escHtml(q.id)}</code></td>
+                <td>${escHtml(q.type)}</td>
+                <td>${escHtml(q.lob ?? '')}</td>
+                <td>${escHtml(q.sfpVariant ?? '')}</td>
+                <td>${badge}</td>
+                <td class="text-center">${q.isCommittedReferral ? '<span class="text-success fw-bold" title="Yes">&#10003;</span>' : ''}</td>
+                <td>${escHtml(q.state ?? '')}</td>
+                <td class="text-muted small">${escHtml(q.effectiveDate ?? '')}</td>
+                <td class="text-muted small">${escHtml(q.claimedBy ?? '')}</td>
+                <td class="text-muted small">${created}</td>
+                <td class="text-nowrap">
+                    <button class="btn btn-primary btn-sm me-1" data-action="claim" data-id="${escHtml(q.id)}"
+                            onclick="handleAction(this)" ${canClaim ? '' : 'disabled'}>Claim</button>
+                    <button class="btn btn-success btn-sm me-1" data-action="consume" data-id="${escHtml(q.id)}"
+                            onclick="handleAction(this)" ${canConsume ? '' : 'disabled'}>Mark&nbsp;Consumed</button>
+                    <button class="btn btn-outline-danger btn-sm" data-action="release" data-id="${escHtml(q.id)}"
+                            onclick="handleAction(this)" ${canRelease ? '' : 'disabled'}>Release</button>
+                </td>
+            </tr>`;
+        }).join('');
+
+        document.getElementById('tableContainer').innerHTML = `
+            <div class="table-responsive">
+                <table class="table table-hover table-sm align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Quote ID</th>
+                            <th>Type</th>
+                            <th>LOB</th>
+                            <th>Variant</th>
+                            <th>Status</th>
+                            <th class="text-center">Referral</th>
+                            <th style="cursor:pointer" onclick="toggleSort('state')">State${sortIcon('state')}</th>
+                            <th style="cursor:pointer" onclick="toggleSort('effectiveDate')">Effective Date${sortIcon('effectiveDate')}</th>
+                            <th>Claimed By</th>
+                            <th style="cursor:pointer" onclick="toggleSort('createdAt')">Created${sortIcon('createdAt')}</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>`;
+    }
+
+    // ── Actions ───────────────────────────────────────────────────────────────
+    function handleAction(btn) { doAction(btn.dataset.action, btn.dataset.id); }
+
+    async function doAction(action, id) {
+        const url = `${API}/${encodeURIComponent(id)}/${action}`;
+        const needsUser = action === 'claim' || action === 'consume';
+        const body = needsUser ? JSON.stringify({ username: currentUser }) : undefined;
+        const successMsg = {
+            claim:   `Quote ${id} claimed — it's yours!`,
+            consume: `Quote ${id} marked as consumed.`,
+            release: `Quote ${id} released back to Available.`
+        }[action];
+        try {
+            const resp = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body });
+            if (resp.ok) { showToast(successMsg, 'bg-success'); loadQuotes(); }
+            else { const msg = await resp.text(); showToast(msg || 'Action failed.', 'bg-danger'); }
+        } catch { showToast('Network error. Please try again.', 'bg-danger'); }
+    }
+
+    // ── Toast ─────────────────────────────────────────────────────────────────
+    function showToast(message, bgClass) {
+        const el = document.getElementById('appToast');
+        el.className = `toast align-items-center text-white border-0 ${bgClass}`;
+        document.getElementById('toastMessage').textContent = message;
+        bootstrap.Toast.getOrCreateInstance(el, { delay: 4000 }).show();
+    }
+
+    // ── HTML escaping ─────────────────────────────────────────────────────────
+    function escHtml(str) {
+        return String(str ?? '')
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+</script>
+}
 
     // ── Username modal ────────────────────────────────────────────────────────
     const usernameModal = new bootstrap.Modal(document.getElementById('usernameModal'));
