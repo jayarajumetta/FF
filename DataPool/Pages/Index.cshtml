@@ -52,6 +52,10 @@
         <select id="stateFilter" class="form-select form-select-sm" style="width:auto" onchange="applyClientFilters()">
             <option value="">All States</option>
         </select>
+        <!-- Env dropdown -->
+        <select id="envFilter" class="form-select form-select-sm" style="width:auto" onchange="applyClientFilters()">
+            <option value="">All Envs</option>
+        </select>
         <!-- Search box -->
         <input type="text" id="searchInput" class="form-control form-control-sm" style="width:200px"
                placeholder="Search quote ID, type..." oninput="applyClientFilters()" />
@@ -141,6 +145,7 @@
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             allQuotes = await resp.json();
             populateStateDropdown(allQuotes);
+            populateEnvDropdown(allQuotes);
             applyClientFilters();
         } catch (err) {
             document.getElementById('tableContainer').innerHTML =
@@ -157,15 +162,26 @@
             states.map(s => `<option value="${escHtml(s)}" ${s === current ? 'selected' : ''}>${escHtml(s)}</option>`).join('');
     }
 
-    // ── Client-side search + state filter + sort ──────────────────────────────
+    // ── Populate env dropdown from data ───────────────────────────────────────
+    function populateEnvDropdown(quotes) {
+        const sel = document.getElementById('envFilter');
+        const current = sel.value;
+        const envs = [...new Set(quotes.map(q => q.environment).filter(Boolean))].sort();
+        sel.innerHTML = '<option value="">All Envs</option>' +
+            envs.map(e => `<option value="${escHtml(e)}" ${e === current ? 'selected' : ''}>${escHtml(e).toUpperCase()}</option>`).join('');
+    }
+
+    // ── Client-side search + state filter + env filter + sort ─────────────────
     function applyClientFilters() {
         const search      = (document.getElementById('searchInput').value ?? '').toLowerCase();
         const stateFilter = document.getElementById('stateFilter').value;
+        const envFilter   = document.getElementById('envFilter').value;
 
         let data = allQuotes.filter(q => {
             if (stateFilter && q.state !== stateFilter) return false;
+            if (envFilter   && (q.environment ?? '').toLowerCase() !== envFilter.toLowerCase()) return false;
             if (search) {
-                const hay = [q.id, q.type, q.lob, q.sfpVariant, q.state, q.claimedBy, q.notes]
+                const hay = [q.id, q.type, q.lob, q.sfpVariant, q.state, q.environment, q.claimedBy, q.notes]
                     .map(v => (v ?? '').toLowerCase()).join(' ');
                 if (!hay.includes(search)) return false;
             }
@@ -237,6 +253,7 @@
                 <td>${escHtml(q.type)}</td>
                 <td>${escHtml(q.lob ?? '')}</td>
                 <td>${escHtml(q.sfpVariant ?? '')}</td>
+                <td>${escHtml(q.environment ?? '')}</td>
                 <td>${badge}</td>
                 <td class="text-center">${q.isCommittedReferral ? '<span class="text-success fw-bold" title="Yes">&#10003;</span>' : ''}</td>
                 <td>${escHtml(q.state ?? '')}</td>
@@ -263,6 +280,7 @@
                             <th>Type</th>
                             <th>LOB</th>
                             <th>Variant</th>
+                            <th>Env</th>
                             <th>Status</th>
                             <th class="text-center">Referral</th>
                             <th style="cursor:pointer" onclick="toggleSort('state')">State${sortIcon('state')}</th>

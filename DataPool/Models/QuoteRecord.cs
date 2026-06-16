@@ -31,5 +31,8 @@ namespace DataPool.Models
 
         /// <summary>Policy effective date (e.g. "06/16/2026"), extracted from quote data.</summary>
         public string? EffectiveDate { get; set; }
+
+        /// <summary>Test environment the quote was generated in (e.g. "qa", "dev").</summary>
+        public string? Environment { get; set; }
     }
 }

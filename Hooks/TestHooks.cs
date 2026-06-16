@@ -343,7 +343,8 @@ namespace PnCTestAutomation.Hooks
                 try
                 {
                     var ctx = _scenarioContext["ContextData"] as ScenarioContextData;
-                    var record = QuoteRecordFactory.FromScenarioContext(ctx);
+                    var env = _configuration["Environment"] ?? Environment.GetEnvironmentVariable("TEST_ENVIRONMENT") ?? "qa";
+                    var record = QuoteRecordFactory.FromScenarioContext(ctx, env);
                     if (record != null)
                         await _dataPoolClient.TryPersistAsync(record);
                 }

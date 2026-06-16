@@ -31,7 +31,7 @@ namespace PnCTestAutomation.DataPool
     /// </summary>
     public static class QuoteRecordFactory
     {
-        public static QuoteRecord? FromScenarioContext(ScenarioContextData ctx)
+        public static QuoteRecord? FromScenarioContext(ScenarioContextData ctx, string? environment = null)
         {
             if (ctx is null) return null;
 
@@ -54,6 +54,7 @@ namespace PnCTestAutomation.DataPool
                 Notes              = BuildNotes(ctx, lob, sfpVariant),
                 CreatedAt          = DateTime.UtcNow,
                 EffectiveDate      = ctx.Policy?.EffectiveDate,
+                Environment        = environment,
             };
         }
 
