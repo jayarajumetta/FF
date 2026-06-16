@@ -27,6 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="DataPool\DataPool.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -41,7 +45,9 @@
     <Compile Remove="TestResults\**\*.cs" />
     <Compile Remove="TestAutomation.ApiTests\**\*" />
     <Compile Remove="SimpleCapture\**\*" />
+    <!-- Exclude DataPool web project source, but KEEP DataPool/Client (test-side helpers) -->
     <Compile Remove="DataPool\**\*" />
+    <Compile Include="DataPool\Client\**\*.cs" />
   </ItemGroup>
 
 </Project>

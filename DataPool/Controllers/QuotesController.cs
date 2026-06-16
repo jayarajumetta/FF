@@ -13,13 +13,15 @@ namespace DataPool.Controllers
         public QuotesController(IDataPoolService service)
             => _service = service;
 
-        // GET /api/quotes?status=available&type=Quote&isCommittedReferral=true
+        // GET /api/quotes?status=available&type=Quote&isCommittedReferral=true&lob=SFP&sfpVariant=CE
         [HttpGet]
         public IActionResult GetAll(
             [FromQuery] string? status,
             [FromQuery] bool? isCommittedReferral,
-            [FromQuery] string? type)
-            => Ok(_service.GetAll(status, isCommittedReferral, type));
+            [FromQuery] string? type,
+            [FromQuery] string? lob,
+            [FromQuery] string? sfpVariant)
+            => Ok(_service.GetAll(status, isCommittedReferral, type, lob, sfpVariant));
 
         // GET /api/quotes/available
         [HttpGet("available")]

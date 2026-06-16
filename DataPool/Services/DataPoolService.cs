@@ -43,7 +43,7 @@ namespace DataPool.Services
 
         // ── Public interface ──────────────────────────────────────────────────
 
-        public IReadOnlyList<QuoteRecord> GetAll(string? status = null, bool? isCommittedReferral = null, string? type = null)
+        public IReadOnlyList<QuoteRecord> GetAll(string? status = null, bool? isCommittedReferral = null, string? type = null, string? lob = null, string? sfpVariant = null)
         {
             lock (_lock)
             {
@@ -54,6 +54,10 @@ namespace DataPool.Services
                     records = records.Where(r => r.IsCommittedReferral == isCommittedReferral.Value);
                 if (type != null)
                     records = records.Where(r => r.Type.Equals(type, StringComparison.OrdinalIgnoreCase));
+                if (lob != null)
+                    records = records.Where(r => string.Equals(r.Lob, lob, StringComparison.OrdinalIgnoreCase));
+                if (sfpVariant != null)
+                    records = records.Where(r => string.Equals(r.SfpVariant, sfpVariant, StringComparison.OrdinalIgnoreCase));
                 return records.ToList();
             }
         }

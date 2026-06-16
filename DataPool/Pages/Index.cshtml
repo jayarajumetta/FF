@@ -45,6 +45,8 @@
             <button class="btn btn-outline-secondary" data-filter="available" onclick="setFilter('available')">Available</button>
             <button class="btn btn-outline-secondary" data-filter="all"       onclick="setFilter('all')">All</button>
             <button class="btn btn-outline-secondary" data-filter="referral"  onclick="setFilter('referral')">Referral Only</button>
+            <button class="btn btn-outline-secondary" data-filter="sfp-basic" onclick="setFilter('sfp-basic')">SFP BasicPolicy</button>
+            <button class="btn btn-outline-secondary" data-filter="sfp-ce"    onclick="setFilter('sfp-ce')">SFP CE</button>
         </div>
         <button class="btn btn-sm btn-outline-primary" onclick="loadQuotes()" title="Refresh">&#8635; Refresh</button>
     </div>
@@ -118,14 +120,24 @@
     // ── Load quotes ───────────────────────────────────────────────────────────
     async function loadQuotes() {
         let url = API;
-        if (currentFilter === 'available') url = `${API}/available`;
-        else if (currentFilter === 'referral') url = `${API}?isCommittedReferral=true`;
+        if (currentFilter === 'available')  url = `${API}/available`;
+        else if (currentFilter === 'referral')   url = `${API}?isCommittedReferral=true`;
+        else if (currentFilter === 'sfp-basic')  url = `${API}?status=available&type=Quote`;  // refined client-side below
+        else if (currentFilter === 'sfp-ce')     url = `${API}?status=available&type=Quote`;  // same — filter client-side
 
         document.getElementById('quoteCount').textContent = '';
         try {
             const resp = await fetch(url);
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-            renderTable(await resp.json());
+            let data = await resp.json();
+
+            // Client-side post-filter for LOB/variant (API doesn't have those query params yet)
+            if (currentFilter === 'sfp-basic')
+                data = data.filter(q => q.lob === 'SFP' && q.sfpVariant === 'BasicPolicy');
+            else if (currentFilter === 'sfp-ce')
+                data = data.filter(q => q.lob === 'SFP' && q.sfpVariant === 'CE');
+
+            renderTable(data);
         } catch (err) {
             document.getElementById('tableContainer').innerHTML =
                 `<div class="alert alert-danger">Could not load quotes: ${escHtml(err.message)}</div>`;
@@ -165,6 +177,8 @@
             return `<tr>
                 <td><code class="fw-semibold">${escHtml(q.id)}</code></td>
                 <td>${escHtml(q.type)}</td>
+                <td>${escHtml(q.lob ?? '')}</td>
+                <td>${escHtml(q.sfpVariant ?? '')}</td>
                 <td>${badge}</td>
                 <td class="text-center">${q.isCommittedReferral
                     ? '<span class="text-success fw-bold" title="Yes">&#10003;</span>' : ''}</td>
@@ -195,6 +209,8 @@
                         <tr>
                             <th>Quote ID</th>
                             <th>Type</th>
+                            <th>LOB</th>
+                            <th>Variant</th>
                             <th>Status</th>
                             <th class="text-center">Referral</th>
                             <th>State</th>

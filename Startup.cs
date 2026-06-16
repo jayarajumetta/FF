@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PnCTestAutomation.Configuration;
 using PnCTestAutomation.Context;
+using PnCTestAutomation.DataPool;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Models;
 using PnCTestAutomation.Pages;
@@ -57,6 +58,19 @@ namespace PnCTestAutomation
                 ));
 
             services.AddHttpClient<IApiService, ApiService>();
+
+            // DataPool client — optional; silently no-ops if DataPool:BaseUrl is absent.
+            var dataPoolUrl = configuration["DataPool:BaseUrl"];
+            if (!string.IsNullOrWhiteSpace(dataPoolUrl))
+            {
+                services.AddHttpClient<IDataPoolClient, DataPoolClient>(c =>
+                    c.BaseAddress = new Uri(dataPoolUrl));
+            }
+            else
+            {
+                // Register a no-op so dependants resolve without error when DataPool is not running.
+                services.AddSingleton<IDataPoolClient, NullDataPoolClient>();
+            }
 
             // Scenario-scoped NavigationService (resolved in step constructors)
             services.AddScoped<NavigationService>();

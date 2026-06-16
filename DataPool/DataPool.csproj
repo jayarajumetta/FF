@@ -7,4 +7,10 @@
     <RootNamespace>DataPool</RootNamespace>
   </PropertyGroup>
 
+  <!-- Client/ contains test-side helpers that reference ScenarioContextData.
+       They are compiled as part of TestAutomation.csproj, not the web project. -->
+  <ItemGroup>
+    <Compile Remove="Client\**\*" />
+  </ItemGroup>
+
 </Project>

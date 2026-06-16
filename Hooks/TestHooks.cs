@@ -3,6 +3,7 @@ using Microsoft.Playwright;
 
 using PnCTestAutomation.Configuration;
 using PnCTestAutomation.Context;
+using PnCTestAutomation.DataPool;
 using PnCTestAutomation.Helpers;            // <-- ScenarioContextData lives here
 using PnCTestAutomation.Pages;
 using PnCTestAutomation.Services;
@@ -38,6 +39,7 @@ namespace PnCTestAutomation.Hooks
         private readonly OAuthConfig _oauthConfig;
         private readonly PingSecretProvider _pingSecretProvider;
         private readonly IConfiguration _configuration;
+        private readonly IDataPoolClient _dataPoolClient;
 
         // Test results folder for this run
         private static string _testResultsRunFolder;
@@ -50,7 +52,8 @@ namespace PnCTestAutomation.Hooks
             FeatureContext featureContext,
             OAuthConfig oauthConfig,
             PingSecretProvider pingSecretProvider,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IDataPoolClient dataPoolClient)
         {
             _context = context;
             _browserFactory = browserFactory;
@@ -62,6 +65,7 @@ namespace PnCTestAutomation.Hooks
             _oauthConfig = oauthConfig;
             _pingSecretProvider = pingSecretProvider;
             _configuration = configuration;
+            _dataPoolClient = dataPoolClient;
         }
 
         [BeforeTestRun]
@@ -331,6 +335,23 @@ namespace PnCTestAutomation.Hooks
 
             // Dispose HttpClient (API and UI scenarios)
             _context.HttpClient?.Dispose();
+
+            // ── DataPool: persist quote if test passed and a quote number was captured ──
+            // Only persist on success — failed tests may have partial/invalid data.
+            if (!hasFailed)
+            {
+                try
+                {
+                    var ctx = _scenarioContext["ContextData"] as ScenarioContextData;
+                    var record = QuoteRecordFactory.FromScenarioContext(ctx);
+                    if (record != null)
+                        await _dataPoolClient.TryPersistAsync(record);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[DataPool] Error building quote record: {ex.Message}");
+                }
+            }
         }
 
         [AfterTestRun]
