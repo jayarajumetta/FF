@@ -5,7 +5,7 @@ trigger: none
 pr: none
 
 # Runs nightly at 12:00 AM Central (05:00 UTC) on the Development branch.
-# Always runs the full suite (smokeMode defaults to false).
+# Always runs the full suite (debugMode defaults to false).
 # Change the cron expression to adjust the schedule:
 #   '0 5 * * *'  = 12:00 AM Central (UTC-5) / 1:00 AM CDT (UTC-6)
 schedules:
@@ -18,11 +18,11 @@ schedules:
 
 # ── Queue-time parameters ──────────────────────────────────────────────────────
 # These appear as a checkbox in the Run Pipeline dialog.
-# smokeMode=true  → 1 test per shard (Alabama, Mississippi, Ohio) — fast validation
-# smokeMode=false → full suite (31 tests across 3 shards)
+# debugMode=true  → 1 test per shard (Alabama, Mississippi, Ohio) — quick sanity check
+# debugMode=false → full suite (31 tests across 3 shards)
 parameters:
-- name: smokeMode
-  displayName: "Smoke Mode (1 test per shard)"
+- name: debugMode
+  displayName: "Debug Mode (1 test per shard)"
   type: boolean
   default: false
 - name: suiteToRun
@@ -97,20 +97,20 @@ stages:
 
     strategy:
       matrix:
-        # smokeMode=true  → runs only @Smoke-tagged rows (1 per shard, ~3 tests total)
-        # smokeMode=false → runs the full shard (default)
+        # debugMode=true  → runs only @Debug-tagged rows (1 per shard, ~3 tests total)
+        # debugMode=false → runs the full shard (default)
         Shard1:
           SHARD_NUMBER: "1"
           SHARD_FILTER_FULL: "TestCategory=Shard1"
-          SHARD_FILTER_SMOKE: "TestCategory=Shard1&TestCategory=Smoke"
+          SHARD_FILTER_DEBUG: "TestCategory=Shard1&TestCategory=Debug"
         Shard2:
           SHARD_NUMBER: "2"
           SHARD_FILTER_FULL: "TestCategory=Shard2"
-          SHARD_FILTER_SMOKE: "TestCategory=Shard2&TestCategory=Smoke"
+          SHARD_FILTER_DEBUG: "TestCategory=Shard2&TestCategory=Debug"
         Shard3:
           SHARD_NUMBER: "3"
           SHARD_FILTER_FULL: "TestCategory=Shard3"
-          SHARD_FILTER_SMOKE: "TestCategory=Shard3&TestCategory=Smoke"
+          SHARD_FILTER_DEBUG: "TestCategory=Shard3&TestCategory=Debug"
 
     steps:
 
@@ -164,13 +164,13 @@ stages:
 
     # ✅ RUN TESTS (FIXED)
     - powershell: |
-        $smokeMode = $env:SMOKE_MODE -eq "True"
-        $filter = if ($smokeMode) { $env:SHARD_FILTER_SMOKE } else { $env:SHARD_FILTER_FULL }
+        $debugMode = $env:DEBUG_MODE -eq "True"
+        $filter = if ($debugMode) { $env:SHARD_FILTER_DEBUG } else { $env:SHARD_FILTER_FULL }
         $testDll = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.dll"
 
         Write-Host "===================================="
         Write-Host "Running Shard $($env:SHARD_NUMBER)"
-        Write-Host "Mode:   $(if ($smokeMode) { 'SMOKE (debug)' } else { 'FULL' })"
+        Write-Host "Mode:   $(if ($debugMode) { 'DEBUG' } else { 'FULL' })"
         Write-Host "Filter: $filter"
         Write-Host "DLL:    $testDll"
         Write-Host "===================================="
@@ -197,9 +197,9 @@ stages:
         TEST_ENVIRONMENT: "qa"
         CI: "true"
         PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
-        SMOKE_MODE: ${{ parameters.smokeMode }}
+        DEBUG_MODE: ${{ parameters.debugMode }}
         SHARD_FILTER_FULL: $(SHARD_FILTER_FULL)
-        SHARD_FILTER_SMOKE: $(SHARD_FILTER_SMOKE)
+        SHARD_FILTER_DEBUG: $(SHARD_FILTER_DEBUG)
 
     # ✅ RETRY FAILED TESTS
     # Parses the TRX from the first run and re-runs only failed tests once.
@@ -356,15 +356,15 @@ stages:
         Shard1:
           SHARD_NUMBER: "1"
           SHARD_FILTER_FULL: "TestCategory=CE&TestCategory=Shard1"
-          SHARD_FILTER_SMOKE: "TestCategory=CE&TestCategory=Shard1&TestCategory=Smoke"
+          SHARD_FILTER_DEBUG: "TestCategory=CE&TestCategory=Shard1&TestCategory=Debug"
         Shard2:
           SHARD_NUMBER: "2"
           SHARD_FILTER_FULL: "TestCategory=CE&TestCategory=Shard2"
-          SHARD_FILTER_SMOKE: "TestCategory=CE&TestCategory=Shard2&TestCategory=Smoke"
+          SHARD_FILTER_DEBUG: "TestCategory=CE&TestCategory=Shard2&TestCategory=Debug"
         Shard3:
           SHARD_NUMBER: "3"
           SHARD_FILTER_FULL: "TestCategory=CE&TestCategory=Shard3"
-          SHARD_FILTER_SMOKE: "TestCategory=CE&TestCategory=Shard3&TestCategory=Smoke"
+          SHARD_FILTER_DEBUG: "TestCategory=CE&TestCategory=Shard3&TestCategory=Debug"
 
     steps:
 
@@ -416,13 +416,13 @@ stages:
       condition: always()
 
     - powershell: |
-        $smokeMode = $env:SMOKE_MODE -eq "True"
-        $filter = if ($smokeMode) { $env:SHARD_FILTER_SMOKE } else { $env:SHARD_FILTER_FULL }
+        $debugMode = $env:DEBUG_MODE -eq "True"
+        $filter = if ($debugMode) { $env:SHARD_FILTER_DEBUG } else { $env:SHARD_FILTER_FULL }
         $testDll = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.dll"
 
         Write-Host "===================================="
         Write-Host "Running CE Shard $($env:SHARD_NUMBER)"
-        Write-Host "Mode:   $(if ($smokeMode) { 'SMOKE (debug)' } else { 'FULL' })"
+        Write-Host "Mode:   $(if ($debugMode) { 'DEBUG' } else { 'FULL' })"
         Write-Host "Filter: $filter"
         Write-Host "DLL:    $testDll"
         Write-Host "===================================="
@@ -448,9 +448,9 @@ stages:
         TEST_ENVIRONMENT: "qa"
         CI: "true"
         PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
-        SMOKE_MODE: ${{ parameters.smokeMode }}
+        DEBUG_MODE: ${{ parameters.debugMode }}
         SHARD_FILTER_FULL: $(SHARD_FILTER_FULL)
-        SHARD_FILTER_SMOKE: $(SHARD_FILTER_SMOKE)
+        SHARD_FILTER_DEBUG: $(SHARD_FILTER_DEBUG)
 
     - powershell: |
         $trxPath = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"

@@ -255,7 +255,7 @@ Feature: SFP Basic Policy
     # Step 37: Validate Forms attachment via Duckcreek
     When user validates Forms via Duckcreek for state "<StateAbbv>"
 
-    @Shard1 @Smoke
+    @Shard1 @Debug
     Examples:
       | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Alabama        | AL        | 1918 Avalon Ave               |          111 | Muscle Shoals | 35661 | Colbert      |
@@ -274,7 +274,7 @@ Feature: SFP Basic Policy
       | Kentucky       | KY        | 1002 Medical Dr               |          111 | Mayfield      | 42066 | Graves       |
       | Louisiana      | LA        | 218 Meadow Dr                 |          111 | Oakdale       | 71463 | Allen        |
 
-    @Shard2 @Smoke
+    @Shard2 @Debug
     Examples:
       | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Mississippi    | MS        | 4105 Washington Ave           |          111 | Gulfport      | 39507 | Harrison     |
@@ -292,7 +292,7 @@ Feature: SFP Basic Policy
       | North Dakota   | ND        | 600 S 2nd St                  |          111 | Bismarck      | 58504 | Burleigh     |
       | Oklahoma       | OK        | 436255 E 330 Rd               |          111 | Big Cabin     | 74332 | Craig        |
 
-    @Shard3 @Smoke
+    @Shard3 @Debug
     Examples:
       | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Ohio           | OH        | 1566 Northeast Ave            |          111 | Tallmadge     | 44278 | Summit       |
