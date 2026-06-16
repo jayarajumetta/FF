@@ -155,6 +155,10 @@ stages:
 
     # ✅ RUN TESTS (FIXED)
     - powershell: |
+        # LIMIT CPU CORES USED BY .NET
+        $env:DOTNET_PROCESSOR_COUNT = "2"
+
+
         $smokeMode = $env:SMOKE_MODE -eq "True"
         $filter = if ($smokeMode) { $env:SHARD_FILTER_SMOKE } else { $env:SHARD_FILTER_FULL }
         $testDll = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.dll"
