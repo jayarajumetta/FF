@@ -8,13 +8,13 @@ pr: none
 # Always runs the full suite (smokeMode defaults to false).
 # Change the cron expression to adjust the schedule:
 #   '0 5 * * *'  = 12:00 AM Central (UTC-5) / 1:00 AM CDT (UTC-6)
-schedules:
-- cron: "30 17 * * *"
-  displayName: "Nightly Full Run — 11:30 AM Central"
-  branches:
-    include:
-    - Development
-  always: true
+#schedules:
+#- cron: "30 17 * * *"
+#  displayName: "Nightly Full Run — 11:30 AM Central"
+#  branches:
+#    include:
+#    - Development
+#  always: true
 
 # ── Queue-time parameters ──────────────────────────────────────────────────────
 # These appear as a checkbox in the Run Pipeline dialog.
