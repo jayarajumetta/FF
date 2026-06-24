@@ -43,7 +43,7 @@ namespace DataPool.Services
 
         // ── Public interface ──────────────────────────────────────────────────
 
-        public IReadOnlyList<QuoteRecord> GetAll(string? status = null, bool? isCommittedReferral = null, string? type = null, string? lob = null, string? sfpVariant = null)
+        public IReadOnlyList<QuoteRecord> GetAll(string? status = null, bool? isCommittedReferral = null, string? transaction = null, string? lob = null, string? sfpVariant = null)
         {
             lock (_lock)
             {
@@ -52,8 +52,8 @@ namespace DataPool.Services
                     records = records.Where(r => r.Status.Equals(status, StringComparison.OrdinalIgnoreCase));
                 if (isCommittedReferral.HasValue)
                     records = records.Where(r => r.IsCommittedReferral == isCommittedReferral.Value);
-                if (type != null)
-                    records = records.Where(r => r.Type.Equals(type, StringComparison.OrdinalIgnoreCase));
+                if (transaction != null)
+                    records = records.Where(r => r.Transaction.Equals(transaction, StringComparison.OrdinalIgnoreCase));
                 if (lob != null)
                     records = records.Where(r => string.Equals(r.Lob, lob, StringComparison.OrdinalIgnoreCase));
                 if (sfpVariant != null)
@@ -90,6 +90,7 @@ namespace DataPool.Services
                     throw new InvalidOperationException($"Quote '{id}' is '{record.Status}' and cannot be claimed.");
                 record.Status = "claimed";
                 record.ClaimedBy = claimedBy;
+                record.ClaimedAt = DateTime.UtcNow;
                 Save(records);
                 return record;
             }
@@ -120,8 +121,40 @@ namespace DataPool.Services
                     throw new InvalidOperationException($"Quote '{id}' is '{record.Status}' and cannot be released.");
                 record.Status = "available";
                 record.ClaimedBy = null;
+                record.ClaimedAt = null;
                 Save(records);
                 return record;
+            }
+        }
+
+        public (int Released, int Removed) CleanupOldRecords(int consumedDaysOld, int staleClaimedHours)
+        {
+            lock (_lock)
+            {
+                var records = Load();
+                int released = 0;
+                int removed  = 0;
+
+                var staleThreshold   = DateTime.UtcNow.AddHours(-staleClaimedHours);
+                var consumedThreshold = DateTime.UtcNow.AddDays(-consumedDaysOld);
+
+                foreach (var r in records.Where(r => r.Status == "claimed"
+                    && r.ClaimedAt.HasValue && r.ClaimedAt.Value < staleThreshold).ToList())
+                {
+                    r.Status    = "available";
+                    r.ClaimedBy = null;
+                    r.ClaimedAt = null;
+                    released++;
+                }
+
+                var before = records.Count;
+                records.RemoveAll(r => r.Status == "consumed" && r.CreatedAt < consumedThreshold);
+                removed = before - records.Count;
+
+                if (released > 0 || removed > 0)
+                    Save(records);
+
+                return (released, removed);
             }
         }
     }

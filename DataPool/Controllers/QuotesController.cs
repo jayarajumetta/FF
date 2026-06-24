@@ -13,15 +13,15 @@ namespace DataPool.Controllers
         public QuotesController(IDataPoolService service)
             => _service = service;
 
-        // GET /api/quotes?status=available&type=Quote&isCommittedReferral=true&lob=SFP&sfpVariant=CE
+        // GET /api/quotes?status=available&transaction=Quote&isCommittedReferral=true&lob=SFP&sfpVariant=CE
         [HttpGet]
         public IActionResult GetAll(
             [FromQuery] string? status,
             [FromQuery] bool? isCommittedReferral,
-            [FromQuery] string? type,
+            [FromQuery] string? transaction,
             [FromQuery] string? lob,
             [FromQuery] string? sfpVariant)
-            => Ok(_service.GetAll(status, isCommittedReferral, type, lob, sfpVariant));
+            => Ok(_service.GetAll(status, isCommittedReferral, transaction, lob, sfpVariant));
 
         // GET /api/quotes/available
         [HttpGet("available")]
@@ -79,6 +79,16 @@ namespace DataPool.Controllers
             }
             catch (KeyNotFoundException ex) { return NotFound(ex.Message); }
             catch (InvalidOperationException ex) { return Conflict(ex.Message); }
+        }
+
+        // DELETE /api/quotes/cleanup?consumedDaysOld=30&staleClaimedHours=48
+        [HttpDelete("cleanup")]
+        public IActionResult Cleanup(
+            [FromQuery] int consumedDaysOld = 30,
+            [FromQuery] int staleClaimedHours = 48)
+        {
+            var (released, removed) = _service.CleanupOldRecords(consumedDaysOld, staleClaimedHours);
+            return Ok(new { released, removed });
         }
     }
 

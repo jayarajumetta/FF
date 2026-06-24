@@ -15,6 +15,7 @@ if (!Path.IsPathRooted(dataFilePath))
     dataFilePath = Path.Combine(builder.Environment.ContentRootPath, dataFilePath);
 
 builder.Services.AddSingleton<IDataPoolService>(_ => new DataPoolService(dataFilePath));
+builder.Services.AddHostedService<CleanupHostedService>();
 
 var app = builder.Build();
 

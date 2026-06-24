@@ -45,7 +45,7 @@ namespace PnCTestAutomation.DataPool
             return new QuoteRecord
             {
                 Id                 = quoteId,
-                Type               = type,
+                Transaction        = type,
                 Status             = "available",
                 Lob                = lob,
                 SfpVariant         = sfpVariant,

@@ -5,10 +5,13 @@ namespace DataPool.Models
         public string Id { get; set; } = string.Empty;
 
         /// <summary>"Quote" or "Policy"</summary>
-        public string Type { get; set; } = "Quote";
+        public string Transaction { get; set; } = "Quote";
 
         /// <summary>"available", "claimed", or "consumed"</summary>
         public string Status { get; set; } = "available";
+
+        /// <summary>UTC timestamp when this record was claimed. Used for stale-claim detection.</summary>
+        public DateTime? ClaimedAt { get; set; }
 
         /// <summary>Line of business: "SFP", "BOP", "PA", etc.</summary>
         public string? Lob { get; set; }

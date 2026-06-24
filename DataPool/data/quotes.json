@@ -1,7 +1,7 @@
 [
   {
     "Id": "02020636",
-    "Type": "Quote",
+    "Transaction": "Quote",
     "Status": "available",
     "Lob": "SFP",
     "SfpVariant": "BasicPolicy",
@@ -16,7 +16,7 @@
   },
   {
     "Id": "02020639",
-    "Type": "Quote",
+    "Transaction": "Quote",
     "Status": "available",
     "Lob": "SFP",
     "SfpVariant": "BasicPolicy",
@@ -31,7 +31,7 @@
   },
   {
     "Id": "02020650",
-    "Type": "Quote",
+    "Transaction": "Quote",
     "Status": "available",
     "Lob": "SFP",
     "SfpVariant": "BasicPolicy",
@@ -46,7 +46,7 @@
   },
   {
     "Id": "02020655",
-    "Type": "Quote",
+    "Transaction": "Quote",
     "Status": "available",
     "Lob": "SFP",
     "SfpVariant": "BasicPolicy",
@@ -61,7 +61,7 @@
   },
   {
     "Id": "02020664",
-    "Type": "Quote",
+    "Transaction": "Quote",
     "Status": "available",
     "Lob": "SFP",
     "SfpVariant": "BasicPolicy",
@@ -76,7 +76,7 @@
   },
   {
     "Id": "02020668",
-    "Type": "Quote",
+    "Transaction": "Quote",
     "Status": "available",
     "Lob": "SFP",
     "SfpVariant": "BasicPolicy",
@@ -91,7 +91,7 @@
   },
   {
     "Id": "02020671",
-    "Type": "Quote",
+    "Transaction": "Quote",
     "Status": "available",
     "Lob": "SFP",
     "SfpVariant": "BasicPolicy",
@@ -106,7 +106,7 @@
   },
   {
     "Id": "02020818",
-    "Type": "Quote",
+    "Transaction": "Quote",
     "Status": "available",
     "Lob": "SFP",
     "SfpVariant": "CE",
@@ -120,3 +120,5 @@
     "Environment": "qa"
   }
 ]
+
+

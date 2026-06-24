@@ -39,15 +39,17 @@
 
 <!-- ── Toolbar ────────────────────────────────────────────────────────────── -->
 <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
-    <h5 class="mb-0">Quote Pool</h5>
+    <h5 class="mb-0">Data Pool</h5>
     <div class="d-flex align-items-center gap-2 flex-wrap">
-        <div class="btn-group btn-group-sm" role="group" aria-label="Filter quotes">
+        <div class="btn-group btn-group-sm" role="group" aria-label="Filter records">
             <button class="btn btn-outline-secondary" data-filter="available" onclick="setFilter('available')">Available</button>
             <button class="btn btn-outline-secondary" data-filter="all"       onclick="setFilter('all')">All</button>
             <button class="btn btn-outline-secondary" data-filter="referral"  onclick="setFilter('referral')">Referral Only</button>
-            <button class="btn btn-outline-secondary" data-filter="sfp-basic" onclick="setFilter('sfp-basic')">SFP BasicPolicy</button>
-            <button class="btn btn-outline-secondary" data-filter="sfp-ce"    onclick="setFilter('sfp-ce')">SFP CE</button>
         </div>
+        <!-- LOB dropdown -->
+        <select id="lobFilter" class="form-select form-select-sm" style="width:auto" onchange="applyClientFilters()">
+            <option value="">All LOBs</option>
+        </select>
         <!-- State dropdown -->
         <select id="stateFilter" class="form-select form-select-sm" style="width:auto" onchange="applyClientFilters()">
             <option value="">All States</option>
@@ -58,7 +60,8 @@
         </select>
         <!-- Search box -->
         <input type="text" id="searchInput" class="form-control form-control-sm" style="width:200px"
-               placeholder="Search quote ID, type..." oninput="applyClientFilters()" />
+               placeholder="Search ID, notes..." oninput="applyClientFilters()" />
+        <button class="btn btn-sm btn-outline-secondary" onclick="copyIds()" title="Copy IDs of all records in current view to clipboard">&#128203; Copy IDs</button>
         <button class="btn btn-sm btn-outline-primary" onclick="loadQuotes()" title="Refresh">&#8635; Refresh</button>
     </div>
 </div>
@@ -79,6 +82,7 @@
     let currentFilter = 'available';
     let currentUser   = localStorage.getItem('dpUsername');
     let allQuotes     = [];   // full result set from API
+    let displayedQuotes = []; // subset currently rendered in the table
     let sortCol       = null; // 'state' | 'effectiveDate' | 'createdAt'
     let sortDir       = 'asc';
 
@@ -134,16 +138,15 @@
     // ── Load from API ─────────────────────────────────────────────────────────
     async function loadQuotes() {
         let url = API;
-        if (currentFilter === 'available')  url = `${API}/available`;
-        else if (currentFilter === 'referral')  url = `${API}?isCommittedReferral=true`;
-        else if (currentFilter === 'sfp-basic') url = `${API}?lob=SFP&sfpVariant=BasicPolicy`;
-        else if (currentFilter === 'sfp-ce')    url = `${API}?lob=SFP&sfpVariant=CE`;
+        if (currentFilter === 'available')   url = `${API}/available`;
+        else if (currentFilter === 'referral') url = `${API}?isCommittedReferral=true`;
 
         document.getElementById('quoteCount').textContent = '';
         try {
             const resp = await fetch(url);
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             allQuotes = await resp.json();
+            populateLobDropdown(allQuotes);
             populateStateDropdown(allQuotes);
             populateEnvDropdown(allQuotes);
             applyClientFilters();
@@ -151,6 +154,15 @@
             document.getElementById('tableContainer').innerHTML =
                 `<div class="alert alert-danger">Could not load quotes: ${escHtml(err.message)}</div>`;
         }
+    }
+
+    // ── Populate LOB dropdown from data ───────────────────────────────────────
+    function populateLobDropdown(quotes) {
+        const sel = document.getElementById('lobFilter');
+        const current = sel.value;
+        const lobs = [...new Set(quotes.map(q => q.lob).filter(Boolean))].sort();
+        sel.innerHTML = '<option value="">All LOBs</option>' +
+            lobs.map(l => `<option value="${escHtml(l)}" ${l.toLowerCase() === current.toLowerCase() ? 'selected' : ''}>${escHtml(l)}</option>`).join('');
     }
 
     // ── Populate state dropdown from data ─────────────────────────────────────
@@ -171,17 +183,19 @@
             envs.map(e => `<option value="${escHtml(e)}" ${e === current ? 'selected' : ''}>${escHtml(e).toUpperCase()}</option>`).join('');
     }
 
-    // ── Client-side search + state filter + env filter + sort ─────────────────
+    // ── Client-side search + LOB + state + env filter + sort ─────────────────
     function applyClientFilters() {
         const search      = (document.getElementById('searchInput').value ?? '').toLowerCase();
+        const lobFilter   = document.getElementById('lobFilter').value;
         const stateFilter = document.getElementById('stateFilter').value;
         const envFilter   = document.getElementById('envFilter').value;
 
         let data = allQuotes.filter(q => {
+            if (lobFilter   && (q.lob ?? '').toLowerCase() !== lobFilter.toLowerCase()) return false;
             if (stateFilter && q.state !== stateFilter) return false;
             if (envFilter   && (q.environment ?? '').toLowerCase() !== envFilter.toLowerCase()) return false;
             if (search) {
-                const hay = [q.id, q.type, q.lob, q.sfpVariant, q.state, q.environment, q.claimedBy, q.notes]
+                const hay = [q.id, q.transaction, q.lob, q.sfpVariant, q.state, q.environment, q.claimedBy, q.notes]
                     .map(v => (v ?? '').toLowerCase()).join(' ');
                 if (!hay.includes(search)) return false;
             }
@@ -224,7 +238,8 @@
 
     // ── Render table ──────────────────────────────────────────────────────────
     function renderTable(quotes) {
-        document.getElementById('quoteCount').textContent = `${quotes.length} quote(s) shown`;
+        displayedQuotes = quotes;
+        document.getElementById('quoteCount').textContent = `${quotes.length} record(s) shown`;
 
         if (quotes.length === 0) {
             document.getElementById('tableContainer').innerHTML =
@@ -240,17 +255,22 @@
 
         const rows = quotes.map(q => {
             const canClaim   = q.status === 'available';
-            const canConsume = q.status === 'claimed' && q.claimedBy === currentUser;
             const canRelease = q.status === 'claimed' && q.claimedBy === currentUser;
-            const badge = statusBadge[q.status]
+            const isStale    = q.status === 'claimed' && q.claimedAt
+                               && (Date.now() - new Date(q.claimedAt).getTime()) > 48 * 3600000;
+            const baseBadge  = statusBadge[q.status]
                 ?? `<span class="badge bg-light text-dark">${escHtml(q.status)}</span>`;
+            const staleBadge = isStale
+                ? ' <span class="badge bg-warning text-dark" title="Claimed 48+ hours ago — consider releasing">&#9888; Stale</span>'
+                : '';
+            const badge = baseBadge + staleBadge;
             const created = q.createdAt
                 ? new Date(q.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                 : '';
 
             return `<tr>
                 <td><code class="fw-semibold">${escHtml(q.id)}</code></td>
-                <td>${escHtml(q.type)}</td>
+                <td>${escHtml(q.transaction ?? '')}</td>
                 <td>${escHtml(q.lob ?? '')}</td>
                 <td>${escHtml(q.sfpVariant ?? '')}</td>
                 <td>${escHtml(q.environment ?? '')}</td>
@@ -263,8 +283,6 @@
                 <td class="text-nowrap">
                     <button class="btn btn-primary btn-sm me-1" data-action="claim" data-id="${escHtml(q.id)}"
                             onclick="handleAction(this)" ${canClaim ? '' : 'disabled'}>Claim</button>
-                    <button class="btn btn-success btn-sm me-1" data-action="consume" data-id="${escHtml(q.id)}"
-                            onclick="handleAction(this)" ${canConsume ? '' : 'disabled'}>Mark&nbsp;Consumed</button>
                     <button class="btn btn-outline-danger btn-sm" data-action="release" data-id="${escHtml(q.id)}"
                             onclick="handleAction(this)" ${canRelease ? '' : 'disabled'}>Release</button>
                 </td>
@@ -276,8 +294,8 @@
                 <table class="table table-hover table-sm align-middle">
                     <thead class="table-dark">
                         <tr>
-                            <th>Quote ID</th>
-                            <th>Type</th>
+                            <th>ID</th>
+                            <th>Transaction</th>
                             <th>LOB</th>
                             <th>Variant</th>
                             <th>Env</th>
@@ -320,6 +338,18 @@
         el.className = `toast align-items-center text-white border-0 ${bgClass}`;
         document.getElementById('toastMessage').textContent = message;
         bootstrap.Toast.getOrCreateInstance(el, { delay: 4000 }).show();
+    }
+
+    // ── Copy IDs to clipboard ─────────────────────────────────────────────────
+    function copyIds() {
+        if (displayedQuotes.length === 0) {
+            showToast('No records in current view to copy.', 'bg-warning text-dark');
+            return;
+        }
+        const text = displayedQuotes.map(q => q.id).join('\n');
+        navigator.clipboard.writeText(text)
+            .then(() => showToast(`Copied ${displayedQuotes.length} ID(s) to clipboard.`, 'bg-success'))
+            .catch(() => showToast('Clipboard copy failed — try again.', 'bg-danger'));
     }
 
     // ── HTML escaping ─────────────────────────────────────────────────────────
