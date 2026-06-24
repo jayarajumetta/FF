@@ -7,6 +7,7 @@
 *.rsuser
 *.suo
 *.user
+**/Properties/launchSettings.json
 *.userosscache
 *.sln.docstates
 
@@ -408,4 +409,3 @@ TestReport.html
 # JetBrains Rider
 *.sln.iml
 .idea/
- 
