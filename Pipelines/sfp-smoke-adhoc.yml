@@ -1,20 +1,9 @@
 # Pipeline: SFP Smoke — .NET Playwright (Reqnroll + NUnit)
-# Trigger: Manual + Nightly schedule
+# Trigger: Manual only
 
 trigger: none
 pr: none
-
-# Runs nightly at 12:00 AM Central (05:00 UTC) on the Development branch.
-# Always runs the full suite (debug modes default to false).
-# Change the cron expression to adjust the schedule:
-#   '0 5 * * *'  = 12:00 AM Central (UTC-5) / 1:00 AM CDT (UTC-6)
-schedules:
-- cron: "0 10 * * *"
-  displayName: "Nightly Full Run — 4:00 AM CST"
-  branches:
-    include:
-    - Development
-  always: true
+schedules: []   # Schedules disabled — manual runs only
 
 # ── Queue-time parameters ──────────────────────────────────────────────────────
 # These appear as a checkbox in the Run Pipeline dialog.
