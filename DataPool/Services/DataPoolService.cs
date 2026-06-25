@@ -127,34 +127,27 @@ namespace DataPool.Services
             }
         }
 
-        public (int Released, int Removed) CleanupOldRecords(int consumedDaysOld, int staleClaimedHours)
+        public (int RemovedConsumed, int RemovedAvailable) CleanupOldRecords(int consumedDaysOld, int availableDaysOld)
         {
             lock (_lock)
             {
                 var records = Load();
-                int released = 0;
-                int removed  = 0;
 
-                var staleThreshold   = DateTime.UtcNow.AddHours(-staleClaimedHours);
-                var consumedThreshold = DateTime.UtcNow.AddDays(-consumedDaysOld);
+                var consumedThreshold  = DateTime.UtcNow.AddDays(-consumedDaysOld);
+                var availableThreshold = DateTime.UtcNow.AddDays(-availableDaysOld);
 
-                foreach (var r in records.Where(r => r.Status == "claimed"
-                    && r.ClaimedAt.HasValue && r.ClaimedAt.Value < staleThreshold).ToList())
-                {
-                    r.Status    = "available";
-                    r.ClaimedBy = null;
-                    r.ClaimedAt = null;
-                    released++;
-                }
-
-                var before = records.Count;
+                var beforeConsumed = records.Count;
                 records.RemoveAll(r => r.Status == "consumed" && r.CreatedAt < consumedThreshold);
-                removed = before - records.Count;
+                int removedConsumed = beforeConsumed - records.Count;
 
-                if (released > 0 || removed > 0)
+                var beforeAvailable = records.Count;
+                records.RemoveAll(r => r.Status == "available" && r.CreatedAt < availableThreshold);
+                int removedAvailable = beforeAvailable - records.Count;
+
+                if (removedConsumed > 0 || removedAvailable > 0)
                     Save(records);
 
-                return (released, removed);
+                return (removedConsumed, removedAvailable);
             }
         }
     }

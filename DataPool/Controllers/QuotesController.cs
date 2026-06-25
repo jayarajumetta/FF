@@ -81,14 +81,14 @@ namespace DataPool.Controllers
             catch (InvalidOperationException ex) { return Conflict(ex.Message); }
         }
 
-        // DELETE /api/quotes/cleanup?consumedDaysOld=30&staleClaimedHours=48
+        // DELETE /api/quotes/cleanup?consumedDaysOld=30&availableDaysOld=90
         [HttpDelete("cleanup")]
         public IActionResult Cleanup(
-            [FromQuery] int consumedDaysOld = 30,
-            [FromQuery] int staleClaimedHours = 48)
+            [FromQuery] int consumedDaysOld  = 30,
+            [FromQuery] int availableDaysOld = 90)
         {
-            var (released, removed) = _service.CleanupOldRecords(consumedDaysOld, staleClaimedHours);
-            return Ok(new { released, removed });
+            var (removedConsumed, removedAvailable) = _service.CleanupOldRecords(consumedDaysOld, availableDaysOld);
+            return Ok(new { removedConsumed, removedAvailable });
         }
     }
 
