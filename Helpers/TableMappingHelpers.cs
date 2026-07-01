@@ -916,6 +916,18 @@ namespace PnCTestAutomation.Helpers
                     case "UnlistedAcreage":
                         _contextData.UnlistedAcreage = answer;
                         break;
+                    case "WorkersCompFullTimeIn":
+                        _contextData.WorkersCompFullTimeInServants = answer;
+                        break;
+                    case "WorkersCompPartTimeIn":
+                        _contextData.WorkersCompPartTimeInServants = answer;
+                        break;
+                    case "WorkersCompFullTimeOut":
+                        _contextData.WorkersCompFullTimeOutServants = answer;
+                        break;
+                    case "WorkersCompPartTimeOut":
+                        _contextData.WorkersCompPartTimeOutServants = answer;
+                        break;
                     default:
                         throw new ArgumentException($"Unknown Liability question: {question}");
                 }

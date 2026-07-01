@@ -2,28 +2,31 @@ namespace DataPool.Services
 {
     /// <summary>
     /// Runs on startup (and then every 24 hours) to:
-    ///   1. Auto-release claims that have been held longer than StaleClaimedHours.
-    ///   2. Delete consumed records older than ConsumedDaysOld days.
+    ///   1. Delete consumed records older than ConsumedDaysOld days.
+    ///   2. Delete unclaimed (available) records older than AvailableDaysOld days.
+    ///
+    /// Claimed records are NEVER auto-released — only a manual Release action
+    /// or a future automated process can return them to Available.
     ///
     /// Configure in DataPool/appsettings.json:
-    ///   "Cleanup": { "ConsumedDaysOld": 30, "StaleClaimedHours": 48 }
+    ///   "Cleanup": { "ConsumedDaysOld": 30, "AvailableDaysOld": 90 }
     /// </summary>
     public class CleanupHostedService : BackgroundService
     {
         private readonly IDataPoolService _service;
         private readonly ILogger<CleanupHostedService> _logger;
         private readonly int _consumedDaysOld;
-        private readonly int _staleClaimedHours;
+        private readonly int _availableDaysOld;
 
         public CleanupHostedService(
             IDataPoolService service,
             ILogger<CleanupHostedService> logger,
             IConfiguration configuration)
         {
-            _service           = service;
-            _logger            = logger;
-            _consumedDaysOld   = configuration.GetValue<int>("Cleanup:ConsumedDaysOld",   30);
-            _staleClaimedHours = configuration.GetValue<int>("Cleanup:StaleClaimedHours", 48);
+            _service          = service;
+            _logger           = logger;
+            _consumedDaysOld  = configuration.GetValue<int>("Cleanup:ConsumedDaysOld",  30);
+            _availableDaysOld = configuration.GetValue<int>("Cleanup:AvailableDaysOld", 90);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -41,11 +44,11 @@ namespace DataPool.Services
         {
             try
             {
-                var (released, removed) = _service.CleanupOldRecords(_consumedDaysOld, _staleClaimedHours);
-                if (released > 0 || removed > 0)
+                var (removedConsumed, removedAvailable) = _service.CleanupOldRecords(_consumedDaysOld, _availableDaysOld);
+                if (removedConsumed > 0 || removedAvailable > 0)
                     _logger.LogInformation(
-                        "[DataPool Cleanup] Released {Released} stale claim(s) (>{Hours}h), removed {Removed} consumed record(s) (>{Days}d).",
-                        released, _staleClaimedHours, removed, _consumedDaysOld);
+                        "[DataPool Cleanup] Removed {Consumed} consumed record(s) (>{ConsumedDays}d), {Available} unclaimed record(s) (>{AvailableDays}d).",
+                        removedConsumed, _consumedDaysOld, removedAvailable, _availableDaysOld);
                 else
                     _logger.LogDebug("[DataPool Cleanup] Nothing to clean up.");
             }

@@ -238,6 +238,24 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 await _context.Page.GetByRole(AriaRole.Option, new() { Name = _contextData.LiabilityLimit }).ClickAsync();
             }
 
+            // Some states (e.g. NH) require filling the Workers' Compensation - Residence Employees
+            // optional coverage before proceeding. The page shows "Required Info Missing" and surfaces
+            // an Edit Coverage button that navigates to a full edit page (not a popup).
+            // Use explicit NH check so Angular rendering delay doesn't cause IsVisibleAsync to miss it.
+            var ratingState = (_contextData?.Address?.State ?? string.Empty).Trim();
+            var isNH = ratingState.Equals("NH", StringComparison.OrdinalIgnoreCase)
+                    || ratingState.Equals("New Hampshire", StringComparison.OrdinalIgnoreCase);
+            var isWorkersCompVisible = isNH || await liabilityPage.WorkersCompEditCoverageButton.IsVisibleAsync();
+
+            if (isWorkersCompVisible)
+            {
+                await liabilityPage.EditWorkersCompCoverageAsync(
+                    _contextData.WorkersCompFullTimeInServants  ?? "1",
+                    _contextData.WorkersCompPartTimeInServants  ?? "1",
+                    _contextData.WorkersCompFullTimeOutServants ?? "0",
+                    _contextData.WorkersCompPartTimeOutServants ?? "0");
+            }
+
             await liabilityPage.NextMortgageeLossPayeeButton.ClickAsync();
         }
 

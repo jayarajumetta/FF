@@ -237,6 +237,33 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 Console.WriteLine("[Premium] Could not extract annual premium amount – inspect pricing page test IDs to refine locator.");
         }
 
+        /// <summary>
+        /// Derives the forms test case key ("CE" or "BASIC") from the scenario context.
+        /// Checks (in order): explicit FormsTestCase on context, ProductSelection, scenario tags, scenario title.
+        /// </summary>
+        private string DeriveFormsTestCase()
+        {
+            // Explicit override from feature table takes highest priority.
+            if (!string.IsNullOrWhiteSpace(_contextData?.FormsTestCase))
+                return _contextData.FormsTestCase;
+
+            var productSelection = (_contextData?.ProductSelection ?? string.Empty).Trim();
+            if (productSelection.Equals("CE", StringComparison.OrdinalIgnoreCase)
+                || productSelection.Equals("Country Estate", StringComparison.OrdinalIgnoreCase))
+                return "CE";
+
+            var tags = _scenarioContext?.ScenarioInfo?.Tags ?? Array.Empty<string>();
+            if (tags.Any(t => t.Equals("CE", StringComparison.OrdinalIgnoreCase)))
+                return "CE";
+
+            var scenarioTitle = _scenarioContext?.ScenarioInfo?.Title ?? string.Empty;
+            if (scenarioTitle.IndexOf("Country Estate", StringComparison.OrdinalIgnoreCase) >= 0
+                || scenarioTitle.IndexOf("CE", StringComparison.OrdinalIgnoreCase) >= 0)
+                return "CE";
+
+            return "BASIC";
+        }
+
         private string GetPremiumBaselineProductKey()
         {
             var productSelection = (_contextData?.ProductSelection ?? string.Empty).Trim();
@@ -443,8 +470,9 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 var sessionId = await _sessionService.GetDuckCreekSessionIdViaCLASAsync(quoteId);
 
                 // 2. Call the DuckCreek Forms Engine API
+                var testCase = DeriveFormsTestCase();
                 var responseXml = await _formsClient.GetFormsAndSaveAsync(
-                    sessionId, lob, $"{lob}_BasicPolicy", state, quoteId);
+                    sessionId, lob, $"{lob}_{testCase}", state, quoteId);
 
                 // 3. Parse XML response into typed form entries
                 var actualForms = FormsXmlParser.Parse(responseXml);
@@ -460,7 +488,6 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                                   $"RoleBasedSecurity={metadata.HasRoleBasedSecurity}, ReturnSuccess={metadata.ReturnSuccessStatus}");
 
                 // 4. Load expected forms and validate (ANPAC filtering applied inside Validate)
-                var testCase = _contextData.FormsTestCase ?? "BASIC";
                 var expected = _validationService.LoadExpectedFormsForLob(lob, state, testCase);
                 var summary = _validationService.Validate(expected, actualForms, lob, state, quoteId);
                 summary.ResponseMetadata = metadata;

@@ -12,10 +12,11 @@ namespace DataPool.Services
         QuoteRecord Release(string id);
 
         /// <summary>
-        /// Releases claims stale for more than <paramref name="staleClaimedHours"/> hours
-        /// and removes consumed records older than <paramref name="consumedDaysOld"/> days.
-        /// Returns (releasedCount, removedCount).
+        /// Removes consumed records older than <paramref name="consumedDaysOld"/> days
+        /// and unclaimed (available) records older than <paramref name="availableDaysOld"/> days.
+        /// Claimed records are never touched — only a manual Release can change their status.
+        /// Returns (removedConsumed, removedAvailable).
         /// </summary>
-        (int Released, int Removed) CleanupOldRecords(int consumedDaysOld, int staleClaimedHours);
+        (int RemovedConsumed, int RemovedAvailable) CleanupOldRecords(int consumedDaysOld, int availableDaysOld);
     }
 }

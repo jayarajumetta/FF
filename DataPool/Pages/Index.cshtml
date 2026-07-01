@@ -256,14 +256,8 @@
         const rows = quotes.map(q => {
             const canClaim   = q.status === 'available';
             const canRelease = q.status === 'claimed' && q.claimedBy === currentUser;
-            const isStale    = q.status === 'claimed' && q.claimedAt
-                               && (Date.now() - new Date(q.claimedAt).getTime()) > 48 * 3600000;
-            const baseBadge  = statusBadge[q.status]
+            const badge      = statusBadge[q.status]
                 ?? `<span class="badge bg-light text-dark">${escHtml(q.status)}</span>`;
-            const staleBadge = isStale
-                ? ' <span class="badge bg-warning text-dark" title="Claimed 48+ hours ago — consider releasing">&#9888; Stale</span>'
-                : '';
-            const badge = baseBadge + staleBadge;
             const created = q.createdAt
                 ? new Date(q.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                 : '';
