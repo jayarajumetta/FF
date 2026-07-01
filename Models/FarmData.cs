@@ -67,6 +67,12 @@
         public string UnlistedAcreage { get; set; }
         public string NumberOfEmployees { get; set; }
 
+        // Workers' Compensation - Residence Employees optional coverage (NH and similar states)
+        public string WorkersCompFullTimeInServants { get; set; }
+        public string WorkersCompPartTimeInServants { get; set; }
+        public string WorkersCompFullTimeOutServants { get; set; }
+        public string WorkersCompPartTimeOutServants { get; set; }
+
         // Insurance Score
         public string InsuranceScoreEntityType { get; set; }
         public string InsuranceScoreDesignee { get; set; }

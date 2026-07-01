@@ -79,7 +79,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             }
 
             var responseXml = await _formsClient.GetFormsAndSaveAsync(
-                _sessionId, safeLob, $"{safeLob}_BasicPolicy", safeState, safeQuoteNumber);
+                _sessionId, safeLob, $"{safeLob}_{safeTestCase}", safeState, safeQuoteNumber);
 
             var actualForms = FormsXmlParser.Parse(responseXml);
             Console.WriteLine($"DuckCreek returned {actualForms.Count} forms for {safeLob}/{safeState}/{safeQuoteNumber}");
