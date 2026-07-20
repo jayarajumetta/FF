@@ -444,7 +444,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 Console.WriteLine("[Billing] Full billing form not present (mortgagee-escrow policy) — skipping billing form.");
             }
 
-            await billingPage.ClickNextAsync();
+            // Escrow billing navigation can be slower than usual — allow up to 2 minutes.
+            await billingPage.ClickNextAsync(spinnerTimeoutMs: 120000);
             Console.WriteLine($"Billing completed: PaymentType={_contextData.PaymentType}, " +
                               $"Plan={_contextData.PaymentPlan}, Method={_contextData.PaymentMethod}");
         }
@@ -487,7 +488,21 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 Console.WriteLine($"  Metadata: PrintJob={metadata.PrintJobName}, Manuscript={metadata.Manuscript}, " +
                                   $"RoleBasedSecurity={metadata.HasRoleBasedSecurity}, ReturnSuccess={metadata.ReturnSuccessStatus}");
 
-                // 4. Load expected forms and validate (ANPAC filtering applied inside Validate)
+                // 4a. Record mode: capture actual forms as proposed baseline and skip comparison
+                var recordBaseline = string.Equals(
+                    _configuration["Debugging:RecordBaseline"], "true",
+                    StringComparison.OrdinalIgnoreCase);
+
+                if (recordBaseline)
+                {
+                    var currentBaseline = _validationService.LoadExpectedFormsForLob(lob, state, testCase);
+                    var proposedPath = _validationService.SaveProposedBaseline(actualForms, currentBaseline, lob, state, testCase);
+                    Console.WriteLine($"[FormsValidation][RECORD] {lob}/{state}/{testCase} — {actualForms.Count} forms captured.");
+                    Console.WriteLine($"[FormsValidation][RECORD] Proposed baseline: {proposedPath}");
+                    return;
+                }
+
+                // 4b. Normal mode: load expected forms and validate (ANPAC filtering applied inside Validate)
                 var expected = _validationService.LoadExpectedFormsForLob(lob, state, testCase);
                 var summary = _validationService.Validate(expected, actualForms, lob, state, quoteId);
                 summary.ResponseMetadata = metadata;

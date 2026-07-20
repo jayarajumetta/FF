@@ -562,7 +562,8 @@ namespace PnCTestAutomation.Services
         {
             var basePath = Path.Combine(AppContext.BaseDirectory, "Resources", "ExpectedForms", lob);
             Directory.CreateDirectory(basePath);
-            var proposedPath = Path.Combine(basePath, $"{lob}_PROPOSED.csv");
+            var suffix = string.IsNullOrWhiteSpace(testCase) ? "" : $"_{testCase.ToUpperInvariant()}";
+            var proposedPath = Path.Combine(basePath, $"{lob}{suffix}_PROPOSED.csv");
 
             // If the proposed file already exists, read it and merge the new state column.
             // Otherwise, start from the current baseline structure.
@@ -670,7 +671,7 @@ namespace PnCTestAutomation.Services
             }
 
             Console.WriteLine($"\n  PROPOSED BASELINE saved: {proposedPath}");
-            Console.WriteLine($"  Review the file, then rename it to {lob}.csv to apply.");
+            Console.WriteLine($"  Review the file, then merge into {lob}.json (or rename to {lob}.csv) to activate.");
             return proposedPath;
         }
 

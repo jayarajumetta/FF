@@ -424,7 +424,11 @@ namespace PnCTestAutomation.Pages
                 "72503" => (false, "1%"),   // AR – zone 1, min 1%
                 "85016" => (false, null),   // AZ – zone 1, no minimum
                 "80701" => (false, "1%"),   // CO – zone 2, min 1%
+                "19720" => (false, "2%"),  // DE – min 2%
+                "30327" => (false, "1%"),  // GA – min 1%
                 "83814" => (true, null),   // ID – WH cannot be added
+                "01201" => (false, "1%"),  // MA – min 1%
+                "04769" => (true, null),   // ME – WH cannot be added
                 "61108" => (false, null),   // IL – zone 1, no minimum
                 "46320" => (false, null),   // IN – no mandatory minimum
                 "52101" => (false, null),   // IA – no mandatory minimum

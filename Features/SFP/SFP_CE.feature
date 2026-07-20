@@ -231,6 +231,8 @@ Feature: SFP Country Estate Policy
       | Arkansas       | AR        | 3998 Harrison St              |          111 | Batesville    | 72503 | Independence |
       | Arizona        | AZ        | 4201 N 24th St                |          111 | Phoenix       | 85016 | Maricopa     |
       | Colorado       | CO        | 231 Main St                   |          111 | Fort Morgan   | 80701 | Morgan       |
+      | Delaware       | DE        | 424 Delaware St               |          111 | New Castle    | 19720 | New Castle   |
+      | Georgia        | GA        | 3715 Northside Pkwy           |          111 | Atlanta       | 30327 | Fulton       |
       | Idaho          | ID        | 1221 W Ironwood Dr            |          111 | Coeur D Alene | 83814 | Kootenai     |
       | Illinois       | IL        | 2576 Charles St               |          111 | Rockford      | 61108 | Winnebago    |
       | Indiana        | IN        | 5518 Calumet Ave              |          111 | Hammond       | 46320 | Lake         |
@@ -248,6 +250,8 @@ Feature: SFP Country Estate Policy
     Examples:
       | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Missouri       | MO        | 1895 S Forrest Heights Avenue |          111 | Springfield   | 65809 | Greene       |
+      | Massachusetts  | MA        | 66 Wendell Ave                |          111 | Pittsfield    | 01201 | Berkshire    |
+      | Maine          | ME        | 33 Davis St                   |          111 | Presque Isle  | 04769 | Aroostook    |
       | Minnesota      | MN        | 115 S Main ST                 |          111 | Warren        | 56762 | Marshall     |
       | Montana        | MT        | 1202 3rd St W                 |           11 | Roundup       | 59072 | Musselshell  |
       | Nebraska       | NE        | 1517 Broadway                 |          111 | Scottsbluff   | 69361 | Scotts Bluff |

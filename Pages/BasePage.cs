@@ -102,7 +102,8 @@ namespace PnCTestAutomation.Pages
         /// <summary>
         /// Click the standard Next button
         /// </summary>
-        public async Task ClickNextAsync()
+        /// <param name="spinnerTimeoutMs">How long to wait for the spinner to clear after clicking. Defaults to 60s.</param>
+        public async Task ClickNextAsync(int spinnerTimeoutMs = 60000)
         {
             var candidates = new[]
             {
@@ -125,7 +126,7 @@ namespace PnCTestAutomation.Pages
                     if (await candidate.CountAsync() > 0 && await candidate.First.IsVisibleAsync())
                     {
                         await candidate.First.ClickAsync();
-                        await WaitForSpinnerAsync();
+                        await WaitForSpinnerAsync(spinnerTimeoutMs);
                         return;
                     }
                 }
