@@ -146,7 +146,6 @@ $formIndex = @{}
 $sectionClose = @{}
 
 $curSection  = $null
-$sectionOpen = -1
 $depth       = 0
 
 for ($i = 0; $i -lt $fileLines.Count; $i++) {
@@ -155,7 +154,6 @@ for ($i = 0; $i -lt $fileLines.Count; $i++) {
     # Detect section header: "BASE": {  /  "BASIC": {  /  "CE": {
     if ($line -match '^\s*"(BASE|BASIC|CE)"\s*:\s*\{') {
         $curSection  = $Matches[1]
-        $sectionOpen = $i
         $depth       = 1
         continue
     }
@@ -368,7 +366,6 @@ foreach ($sec in $sectionOrder) {
 
 [IO.File]::WriteAllLines($SfpJsonPath, $lines.ToArray(), [Text.Encoding]::UTF8)
 
-$total = $updates.Count + $newForms.Count
 Write-Host "`n  SFP.json updated: $($updates.Count) entries modified, $($newForms.Count) entries added." -ForegroundColor Green
 
 if ($updates.Count -gt 0) {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
   <TestRunParameters>
-    <Parameter name="CDP"      value="ws://localhost:9222/devtools/browser/a6f824d8-d526-4b24-b4c3-06818fe4a21a"     />
-    <Parameter name="COMPARE"  value="true"  />
-    <Parameter name="NEW_ONLY" value="False"  />
-    <Parameter name="CS_ONLY"  value="false"     />
+    <Parameter name="CDP"      value="http://localhost:9222"     />
+    <Parameter name="COMPARE"  value="false"  />
+    <Parameter name="NEW_ONLY" value="false"  />
+    <Parameter name="CS_ONLY"  value="true"      />
   </TestRunParameters>
 </RunSettings>
