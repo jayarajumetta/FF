@@ -61,4 +61,10 @@ $newOnlyValue = if ($NewOnly)   { 'true'  } else { 'false' }
 </RunSettings>
 "@ | Out-File -Encoding utf8 $runSettings
 
-dotnet test $project --filter "Category=Tools&Name~Scan" --settings $runSettings
+$env:DataPool__AutoStart = 'false'
+try {
+    dotnet test $project --filter "Category=Tools&Name~Scan" --settings $runSettings
+}
+finally {
+    Remove-Item Env:DataPool__AutoStart -ErrorAction SilentlyContinue
+}
