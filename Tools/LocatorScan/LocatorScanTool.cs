@@ -327,12 +327,17 @@ namespace PnCTestAutomation.Tools.LocatorScan
                 }
 
                 // ── Generate Locator File ──
-                await LocatorFileGenerator.GenerateLocatorFileAsync(reports, outputDir, page);
+                // Generated .cs goes to Pages/_Staged/ so it appears immediately in VS Solution Explorer.
+                // Raw artifacts (CSV/JSON) stay in the timestamped TestResults folder.
+                var stagedDir = Path.Combine(repoRoot, "Pages", "_Staged");
+                Directory.CreateDirectory(stagedDir);
+                await LocatorFileGenerator.GenerateLocatorFileAsync(reports, stagedDir, page);
 
                 // ── Summary ──
                 TestContext.Progress.WriteLine("─────────────────────────────────────────");
                 TestContext.Progress.WriteLine("[LocatorScanTool] ✅ Scan complete.");
                 TestContext.Progress.WriteLine($"  Artifacts: {outputDir}");
+                TestContext.Progress.WriteLine($"  Generated .cs: {stagedDir}");
                 TestContext.Progress.WriteLine("─────────────────────────────────────────");
             }
             finally

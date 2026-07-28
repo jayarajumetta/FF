@@ -27,10 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="DataPool\DataPool.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <!-- Glob rather than just appsettings.json: Startup loads appsettings.{TEST_ENVIRONMENT}.json
          with optional:true, so an env file that never reaches the output folder fails silently. -->
     <None Update="appsettings*.json">
@@ -47,9 +43,8 @@
     <Compile Remove="TestResults\**\*.cs" />
     <Compile Remove="TestAutomation.ApiTests\**\*" />
     <Compile Remove="SimpleCapture\**\*" />
-    <!-- Exclude DataPool web project source, but KEEP DataPool/Client (test-side helpers) -->
+    <!-- DataPool is a fully standalone web project — exclude all its source from TestAutomation compilation -->
     <Compile Remove="DataPool\**\*" />
-    <Compile Include="DataPool\Client\**\*.cs" />
   </ItemGroup>
 
 </Project>

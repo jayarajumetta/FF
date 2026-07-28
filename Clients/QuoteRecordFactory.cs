@@ -1,4 +1,4 @@
-using DataPool.Models;
+using PnCTestAutomation.Models;
 using PnCTestAutomation.Helpers;
 using System;
 using System.Collections.Generic;

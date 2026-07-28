@@ -45,6 +45,9 @@ Generated\ Files/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
+# Locator scan generated drafts — review and move to Pages/ subdirectory, don't commit
+Pages/_Staged/
+
 # NUnit
 *.VisualState.xml
 TestResult.xml
