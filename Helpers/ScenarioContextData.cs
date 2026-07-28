@@ -9,6 +9,13 @@ namespace PnCTestAutomation.Helpers
     /// </summary>
     public class ScenarioContextData
     {
+        /// <summary>
+        /// Key this object is stored under in Reqnroll's ScenarioContext. Bindings either
+        /// inject <see cref="ScenarioContextData"/> or read this key directly; both resolve
+        /// to the same instance (see Startup.ConfigureServices).
+        /// </summary>
+        public const string ContextKey = "ContextData";
+
         // ══════════════════════════════════════════════════════════════════
         // DOMAIN MODELS (New code should use these directly)
         // ══════════════════════════════════════════════════════════════════

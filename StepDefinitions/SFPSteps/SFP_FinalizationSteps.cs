@@ -42,7 +42,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         {
             _context = context;
             _scenarioContext = scenarioContext;
-            _contextData = _scenarioContext["ContextData"] as ScenarioContextData
+            _contextData = _scenarioContext[ScenarioContextData.ContextKey] as ScenarioContextData
                 ?? throw new InvalidOperationException("ScenarioContextData not found. Ensure TestHooks.BeforeTestRun registered it.");
             _sessionService = sessionService;
             _formsClient = formsClient;
@@ -207,7 +207,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             {
                 Console.WriteLine($"*** ANNUAL PREMIUM: ${premium.Value:N2} ***");
 
-                var stateAbbv = GetStateAbbreviation(_contextData.RatingState);
+                var stateAbbv = StateAbbreviations.ToAbbreviation(_contextData.RatingState);
                 var productKey = GetPremiumBaselineProductKey();
                 var expectedRaw = _configuration[$"ExpectedPremiums:{productKey}:{stateAbbv}:Amount"];
                 var skipPremiumBaselineAssertion = string.Equals(
@@ -804,45 +804,5 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             Console.WriteLine("Verified: Transmit button is enabled on Submission page");
         }
 
-        private static string GetStateAbbreviation(string fullName) =>
-            fullName?.ToUpperInvariant() switch
-            {
-                "ALABAMA" => "AL",
-                "ARKANSAS" => "AR",
-                "ARIZONA" => "AZ",
-                "COLORADO" => "CO",
-                "DELAWARE" => "DE",
-                "GEORGIA" => "GA",
-                "IDAHO" => "ID",
-                "IOWA" => "IA",
-                "INDIANA" => "IN",
-                "ILLINOIS" => "IL",
-                "KANSAS" => "KS",
-                "KENTUCKY" => "KY",
-                "LOUISIANA" => "LA",
-                "MAINE" => "ME",
-                "MASSACHUSETTS" => "MA",
-                "MISSISSIPPI" => "MS",
-                "MISSOURI" => "MO",
-                "MINNESOTA" => "MN",
-                "MONTANA" => "MT",
-                "NEW HAMPSHIRE" => "NH",
-                "NEW MEXICO" => "NM",
-                "NEBRASKA" => "NE",
-                "NEVADA" => "NV",
-                "NORTH DAKOTA" => "ND",
-                "OHIO" => "OH",
-                "OKLAHOMA" => "OK",
-                "OREGON" => "OR",
-                "SOUTH CAROLINA" => "SC",
-                "SOUTH DAKOTA" => "SD",
-                "TENNESSEE" => "TN",
-                "TEXAS" => "TX",
-                "UTAH" => "UT",
-                "WASHINGTON" => "WA",
-                "WISCONSIN" => "WI",
-                "WYOMING" => "WY",
-                _ => fullName?.Length >= 2 ? fullName[..2].ToUpperInvariant() : "UNKNOWN"
-            };
     }
 }

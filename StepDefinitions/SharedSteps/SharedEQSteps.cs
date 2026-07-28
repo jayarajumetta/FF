@@ -35,7 +35,7 @@ namespace PnCTestAutomation.StepDefinitions.SharedSteps
         {
             _context = context;
             _scenarioContext = scenarioContext;
-            _contextData = _scenarioContext["ContextData"] as ScenarioContextData
+            _contextData = _scenarioContext[ScenarioContextData.ContextKey] as ScenarioContextData
                 ?? throw new InvalidOperationException("ScenarioContextData not found. Ensure TestHooks.BeforeTestRun registered it.");
             _credentials = credentials;
             _configuration = configuration;
@@ -194,7 +194,7 @@ namespace PnCTestAutomation.StepDefinitions.SharedSteps
             TableMappingHelpers.AccountOwnerFields(table, _contextData);
 
             // Standardize middle name to the current state abbreviation (e.g., UT, AR).
-            _contextData.ClientMiddleName = ToStateAbbreviation(_contextData.State);
+            _contextData.ClientMiddleName = StateAbbreviations.ToAbbreviation(_contextData.State);
 
             var accountInformationPage = new AccountOwnerInfoPage(_context.Page);
 
@@ -221,45 +221,6 @@ namespace PnCTestAutomation.StepDefinitions.SharedSteps
                 return "CE";
 
             return "Basic";
-        }
-
-        private static string ToStateAbbreviation(string state)
-        {
-            var value = (state ?? string.Empty).Trim();
-            if (value.Length == 2)
-                return value.ToUpperInvariant();
-
-            return value.ToUpperInvariant() switch
-            {
-                "ALABAMA" => "AL",
-                "ARKANSAS" => "AR",
-                "ARIZONA" => "AZ",
-                "COLORADO" => "CO",
-                "IDAHO" => "ID",
-                "IOWA" => "IA",
-                "INDIANA" => "IN",
-                "ILLINOIS" => "IL",
-                "KANSAS" => "KS",
-                "KENTUCKY" => "KY",
-                "LOUISIANA" => "LA",
-                "MINNESOTA" => "MN",
-                "MONTANA" => "MT",
-                "NEW MEXICO" => "NM",
-                "NEBRASKA" => "NE",
-                "NEVADA" => "NV",
-                "NORTH DAKOTA" => "ND",
-                "OKLAHOMA" => "OK",
-                "OREGON" => "OR",
-                "SOUTH CAROLINA" => "SC",
-                "SOUTH DAKOTA" => "SD",
-                "TENNESSEE" => "TN",
-                "TEXAS" => "TX",
-                "UTAH" => "UT",
-                "WASHINGTON" => "WA",
-                "WISCONSIN" => "WI",
-                "WYOMING" => "WY",
-                _ => value
-            };
         }
 
         [When("user enters Pre-Qualification information and continues")]
