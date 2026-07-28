@@ -87,6 +87,13 @@ namespace PnCTestAutomation.Hooks
                     config["LocatorRescue:AutoHeal"], "true", StringComparison.OrdinalIgnoreCase);
                 BasePage.ConfigureRescue(rescueEnabled, rescueAutoHeal);
                 Console.WriteLine($"[Hooks] LocatorRescue: Enabled={rescueEnabled}, AutoHeal={rescueAutoHeal}");
+
+                // Quotes are persisted over HTTP at the end of each passing scenario, so the
+                // DataPool app has to be up before the first one finishes. Opt out with
+                // "DataPool:AutoStart": false when something else owns its lifetime.
+                var autoStart = !string.Equals(
+                    config["DataPool:AutoStart"], "false", StringComparison.OrdinalIgnoreCase);
+                DataPoolLauncher.EnsureRunning(config["DataPool:BaseUrl"], autoStart);
             }
 
             // Create timestamped test results folder for this run
@@ -97,26 +104,19 @@ namespace PnCTestAutomation.Hooks
 
             // Auto-cleanup: Delete TestResults folders older than 7 days
             CleanupOldTestResults(testResultsRoot, days: 7);
-
-            // NOTE:
-            // ScenarioContextData will be registered per scenario (instance),
-            // not globally, to guarantee one shared object across all bindings
-            // within a single scenario.
-            // Register ScenarioContextData as InstancePerDependency with a shared backing field
-            container.RegisterFactoryAs<ScenarioContextData>(() =>
-            {
-                // This will be called once per scenario context
-                return new ScenarioContextData();
-            }).InstancePerContext();
-
         }
 
         [BeforeScenario]
         public async Task BeforeScenarioAsync()
         {
-            // Store in Reqnroll's ScenarioContext instead of DI container
-            _scenarioContext["ContextData"] = new ScenarioContextData();
-            Console.WriteLine("[Hooks] ScenarioContextData registered for this scenario.");
+            // Seeds the single ScenarioContextData for this scenario. Startup's DI factory
+            // returns this same instance to bindings that inject it rather than reading the key.
+            // Only seed if absent: if anything resolved it ahead of this hook, overwriting here
+            // would leave that holder pointing at an orphaned object.
+            if (!_scenarioContext.ContainsKey(ScenarioContextData.ContextKey))
+            {
+                _scenarioContext[ScenarioContextData.ContextKey] = new ScenarioContextData();
+            }
 
             if (ShouldSkipScenarioForDevStateFilter(out var skipReason))
             {
@@ -245,21 +245,17 @@ namespace PnCTestAutomation.Hooks
 
             // Pause on failure only when a debugger is attached (i.e. Run > Debug in VS/Rider).
             // Normal CI / right-click "Run Test" runs are never blocked.
-            var pauseOnFailure = System.Diagnostics.Debugger.IsAttached;
-            var pauseTimeoutSeconds = _configuration.GetValue<int>("Debugging:PauseTimeoutSeconds", 300);
-
-            if (hasFailed && pauseOnFailure && _context.Page != null)
+            if (hasFailed && System.Diagnostics.Debugger.IsAttached && _context.Page != null)
             {
                 Console.WriteLine("\n" + new string('=', 60));
                 Console.WriteLine("TEST FAILED - BROWSER PAUSED FOR DEBUGGING");
                 Console.WriteLine($"Error: {_scenarioContext.TestError?.Message}");
-                Console.WriteLine($"Browser will remain open for {pauseTimeoutSeconds} seconds.");
-                Console.WriteLine("Press any key in the console to continue, or wait for timeout.");
+                Console.WriteLine("Playwright Inspector is open. Hit Resume there to finish the run.");
                 Console.WriteLine(new string('=', 60) + "\n");
 
                 try
                 {
-                    // Use Playwright's pause for interactive debugging
+                    // Blocks until Resume is clicked in the Inspector — there is no timeout.
                     await _context.Page.PauseAsync();
                 }
                 catch (Exception ex)
@@ -314,35 +310,52 @@ namespace PnCTestAutomation.Hooks
                 }
             }
 
-            // Close Playwright resources safely
-            try { if (_context.Page != null) await _context.Page.CloseAsync(); } catch { /* ignore */ }
-            try
-            {
-                if (_browserContext != null)
-                {
-                    await _browserContext.CloseAsync();
+            // Close Playwright resources safely. Grab the video handle first — it hangs off the
+            // page and we need it after both the page and the context are gone.
+            var video = _context.Page?.Video;
 
-                    // Move video to scenario folder on failure, delete on success
+            try { if (_context.Page != null) await _context.Page.CloseAsync(); } catch { /* ignore */ }
+            try { if (_browserContext != null) await _browserContext.CloseAsync(); } catch { /* ignore */ }
+
+            // Playwright only finalizes the .webm once the context closes, which is why this
+            // runs here. Keep it for failures, drop it otherwise: previously every scenario left
+            // a video behind and FinalizeRun only removed the folder when it was empty, so it
+            // never was.
+            if (video != null)
+            {
+                try
+                {
                     if (hasFailed)
                     {
-                        // Video is saved automatically when context closes
-                        Console.WriteLine("[video] Video saved for failed test");
+                        var videoFolder = GetScenarioResultsFolder();
+                        Directory.CreateDirectory(videoFolder);
+                        var videoFile = Path.Combine(videoFolder, "video.webm");
+                        await video.SaveAsAsync(videoFile);
+                        NUnitTestContext.WriteLine($"[video] {videoFile}");
                     }
+
+                    await video.DeleteAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[Warning] Failed to handle scenario video: {ex.Message}");
                 }
             }
-            catch { /* ignore */ }
+
             try { if (_browser != null) await _browser.CloseAsync(); } catch { /* ignore */ }
 
             // Dispose HttpClient (API and UI scenarios)
             _context.HttpClient?.Dispose();
 
-            // ── DataPool: persist quote if test passed and a quote number was captured ──
-            // Only persist on success — failed tests may have partial/invalid data.
-            if (!hasFailed)
+            // ── DataPool: persist quote only from truly passing tests ──
+            // Exclude: failed tests (TestError != null), skipped tests (outcome = Skipped),
+            // and scenarios without a captured quote number.
+            var isPassing = !hasFailed && _scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.OK;
+            if (isPassing)
             {
                 try
                 {
-                    var ctx = _scenarioContext["ContextData"] as ScenarioContextData;
+                    var ctx = _scenarioContext[ScenarioContextData.ContextKey] as ScenarioContextData;
                     var env = _configuration["Environment"] ?? Environment.GetEnvironmentVariable("TEST_ENVIRONMENT") ?? "qa";
                     var record = QuoteRecordFactory.FromScenarioContext(ctx, env);
                     if (record != null)
@@ -358,6 +371,12 @@ namespace PnCTestAutomation.Hooks
         [AfterTestRun]
         public static void FinalizeRun()
         {
+            // Shut down the shared Playwright driver process (see BrowserFactory).
+            BrowserFactory.DisposeShared();
+
+            // Only stops DataPool if this run was the one that started it.
+            DataPoolLauncher.StopIfStarted();
+
             // Cleanup empty folders in TestResults
             if (Directory.Exists(_testResultsRunFolder))
             {

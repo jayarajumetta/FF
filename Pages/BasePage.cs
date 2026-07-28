@@ -1,6 +1,7 @@
 ﻿using Microsoft.Playwright;
 using PnCTestAutomation.Helpers;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PnCTestAutomation.Pages
@@ -88,15 +89,60 @@ namespace PnCTestAutomation.Pages
         }
 
         /// <summary>
-        /// Wait for the page-specific loading indicator to clear
+        /// Default window for the spinner to render before we conclude the action did not
+        /// trigger one. Angular usually renders the overlay in the same change-detection pass
+        /// that dispatches the HTTP call, but DuckCreek has been measured at roughly 200ms on
+        /// some XHR-backed controls, so this leaves headroom over that.
         /// </summary>
-        public async Task WaitForSpinnerAsync(int timeoutMs = 60000)
+        private const int DefaultSpinnerGraceMs = 500;
+
+        /// <summary>
+        /// How long a Next/Save button is allowed to take to appear before we give up on it.
+        /// </summary>
+        private const int ButtonVisibleTimeoutMs = 10000;
+
+        /// <summary>
+        /// Wait for the page-specific loading indicator to appear and then clear.
+        /// </summary>
+        /// <param name="timeoutMs">How long to wait for the spinner to clear once it has appeared.</param>
+        /// <param name="appearanceGraceMs">
+        /// How long to wait for the spinner to show up in the first place. Raise this on controls
+        /// known to be slow to fire their XHR; if the spinner has not appeared within the window
+        /// we assume there is nothing to wait for and return.
+        /// </param>
+        /// <remarks>
+        /// This used to check <c>CountAsync() &gt; 0</c> and return when the count was zero.
+        /// Called immediately after a click — which is how nearly all 160+ call sites use it —
+        /// the overlay had not rendered yet, so the method returned having waited for nothing
+        /// and the next action raced the spinner. Waiting briefly for the spinner to *appear*
+        /// before waiting for it to clear is what makes the wait meaningful.
+        /// </remarks>
+        public async Task WaitForSpinnerAsync(int timeoutMs = 60000, int appearanceGraceMs = DefaultSpinnerGraceMs)
         {
-            var overlay = _page.Locator(".ngx-spinner-overlay");
-            if (await overlay.CountAsync() > 0)
+            var overlay = _page.Locator(".ngx-spinner-overlay").First;
+
+            try
             {
-                await overlay.First.WaitForAsync(new() { State = WaitForSelectorState.Hidden, Timeout = timeoutMs });
+                await overlay.WaitForAsync(new()
+                {
+                    State = WaitForSelectorState.Visible,
+                    Timeout = appearanceGraceMs
+                });
             }
+            catch (TimeoutException)
+            {
+                // No spinner for this action — either it never showed one, or the response
+                // came back faster than the grace window. Either way there is nothing to wait on.
+                // NB: Playwright surfaces waiter timeouts as System.TimeoutException, not
+                // PlaywrightException. Catching the latter here silently breaks every call site.
+                return;
+            }
+
+            await overlay.WaitForAsync(new()
+            {
+                State = WaitForSelectorState.Hidden,
+                Timeout = timeoutMs
+            });
         }
 
         /// <summary>
@@ -105,6 +151,7 @@ namespace PnCTestAutomation.Pages
         /// <param name="spinnerTimeoutMs">How long to wait for the spinner to clear after clicking. Defaults to 60s.</param>
         public async Task ClickNextAsync(int spinnerTimeoutMs = 60000)
         {
+            // Ordered most-specific first; the generic role lookup is the last resort.
             var candidates = new[]
             {
                 _page.GetByTestId("fields.data.next"),
@@ -116,24 +163,57 @@ namespace PnCTestAutomation.Pages
                 _page.GetByRole(AriaRole.Button, new() { Name = "Next" })
             };
 
-            // Retry for up to 10 seconds — on slower CI agents the Next button
-            // may not be visible immediately after the previous step completes.
-            var deadline = DateTime.UtcNow.AddSeconds(10);
-            while (DateTime.UtcNow < deadline)
+            await ClickFirstVisibleAsync(candidates, "Next", spinnerTimeoutMs);
+        }
+
+        /// <summary>
+        /// Waits for any one of several interchangeable buttons to become visible, clicks the
+        /// highest-priority one that is on screen, then lets the resulting spinner clear.
+        /// </summary>
+        /// <remarks>
+        /// The variants are combined with <see cref="ILocator.Or"/> so the wait is a single
+        /// server-side operation rather than a client-side poll over every variant. The
+        /// <c>Visible</c> filter is load-bearing: some DuckCreek pages render a hidden Next
+        /// button earlier in the DOM, and waiting on the first raw match would block until
+        /// timeout while the real button sat there ready to click.
+        /// </remarks>
+        private async Task ClickFirstVisibleAsync(ILocator[] candidates, string label, int spinnerTimeoutMs)
+        {
+            var anyVisible = candidates
+                .Aggregate((combined, candidate) => combined.Or(candidate))
+                .Filter(new() { Visible = true });
+
+            try
             {
-                foreach (var candidate in candidates)
+                // Generous, because on slower agents the button may not render immediately
+                // after the previous step settles.
+                await anyVisible.First.WaitForAsync(new()
                 {
-                    if (await candidate.CountAsync() > 0 && await candidate.First.IsVisibleAsync())
-                    {
-                        await candidate.First.ClickAsync();
-                        await WaitForSpinnerAsync(spinnerTimeoutMs);
-                        return;
-                    }
-                }
-                await _page.WaitForTimeoutAsync(500);
+                    State = WaitForSelectorState.Visible,
+                    Timeout = ButtonVisibleTimeoutMs
+                });
+            }
+            catch (TimeoutException ex)
+            {
+                throw new PlaywrightException(
+                    $"{label} button not found using any known data-testid.", ex);
             }
 
-            throw new PlaywrightException("Next button not found using any known data-testid.");
+            // Something is on screen; now honour the caller's ordering rather than DOM order.
+            // Falls back to whatever the union matched if the DOM shifted under us.
+            var target = anyVisible.First;
+            foreach (var candidate in candidates)
+            {
+                var visible = candidate.Filter(new() { Visible = true });
+                if (await visible.CountAsync() > 0)
+                {
+                    target = visible.First;
+                    break;
+                }
+            }
+
+            await target.ClickAsync();
+            await WaitForSpinnerAsync(spinnerTimeoutMs);
         }
 
         /// <summary>
@@ -149,17 +229,7 @@ namespace PnCTestAutomation.Pages
                 _page.GetByRole(AriaRole.Button, new() { Name = "Save" })
             };
 
-            foreach (var candidate in candidates)
-            {
-                if (await candidate.CountAsync() > 0 && await candidate.First.IsVisibleAsync())
-                {
-                    await candidate.First.ClickAsync();
-                    await WaitForSpinnerAsync();
-                    return;
-                }
-            }
-
-            throw new PlaywrightException("Save button not found using any known data-testid.");
+            await ClickFirstVisibleAsync(candidates, "Save", 60000);
         }
 
         /// <summary>

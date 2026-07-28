@@ -1,5 +1,6 @@
 using Microsoft.Playwright;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
@@ -8,17 +9,44 @@ namespace PnCTestAutomation.Helpers
     public class BrowserFactory
     {
         private static readonly string[] FullscreenArgs = ["--start-fullscreen"];
-        private readonly IPlaywright _playwright;
+
+        // Reqnroll's [ScenarioDependencies] builds a fresh ServiceProvider for every scenario,
+        // so a "singleton" BrowserFactory is really one instance per scenario. Creating
+        // IPlaywright in the constructor therefore spawned — and leaked — one Node driver
+        // process per scenario. The driver is thread-safe and meant to be shared, so it lives
+        // here for the lifetime of the process and is disposed once by TestHooks.FinalizeRun.
+        private static readonly Lazy<Task<IPlaywright>> SharedPlaywright =
+            new(Playwright.CreateAsync, LazyThreadSafetyMode.ExecutionAndPublication);
+
         private readonly IConfiguration _configuration;
 
         public BrowserFactory(IConfiguration configuration)
         {
-            _playwright = Playwright.CreateAsync().Result;
             _configuration = configuration;
+        }
+
+        /// <summary>
+        /// Disposes the shared Playwright driver. Call once at the end of the test run.
+        /// </summary>
+        public static void DisposeShared()
+        {
+            if (!SharedPlaywright.IsValueCreated)
+                return;
+
+            try
+            {
+                SharedPlaywright.Value.GetAwaiter().GetResult().Dispose();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[BrowserFactory] Failed to dispose Playwright driver: {ex.Message}");
+            }
         }
 
         public async Task<IBrowser> GetBrowserAsync(string browserType)
         {
+            var playwright = await SharedPlaywright.Value;
+
             // Default to appsettings value unless overridden by PLAYWRIGHT_HEADLESS env var
             bool headless = ParseTruthy(_configuration["Playwright:Headless"]);
             var env = Environment.GetEnvironmentVariable("PLAYWRIGHT_HEADLESS");
@@ -32,18 +60,18 @@ namespace PnCTestAutomation.Helpers
 
             return normalizedBrowser switch
             {
-                "edge" => await LaunchChromiumWithChannelFallbackAsync("msedge", headless),
-                "chrome" => await LaunchChromiumWithChannelFallbackAsync("chrome", headless),
-                "chromium" => await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+                "edge" => await LaunchChromiumWithChannelFallbackAsync(playwright, "msedge", headless),
+                "chrome" => await LaunchChromiumWithChannelFallbackAsync(playwright, "chrome", headless),
+                "chromium" => await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
                 {
                     Headless = headless,
                     Args = FullscreenArgs
                 }),
-                "firefox" => await _playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions
+                "firefox" => await playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions
                 {
                     Headless = headless
                 }),
-                "webkit" => await _playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions
+                "webkit" => await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions
                 {
                     Headless = headless
                 }),
@@ -51,11 +79,12 @@ namespace PnCTestAutomation.Helpers
             };
         }
 
-        private async Task<IBrowser> LaunchChromiumWithChannelFallbackAsync(string channel, bool headless)
+        private static async Task<IBrowser> LaunchChromiumWithChannelFallbackAsync(
+            IPlaywright playwright, string channel, bool headless)
         {
             try
             {
-                return await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+                return await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
                 {
                     Headless = headless,
                     Channel = channel,
@@ -65,7 +94,7 @@ namespace PnCTestAutomation.Helpers
             catch (PlaywrightException)
             {
                 // Fall back to Playwright's bundled Chromium when the requested channel is not installed
-                return await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+                return await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
                 {
                     Headless = headless,
                     Args = FullscreenArgs
