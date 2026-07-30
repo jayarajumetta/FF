@@ -46,5 +46,8 @@
     <!-- DataPool is a fully standalone web project — exclude all its source from TestAutomation compilation -->
     <Compile Remove="DataPool\**\*" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Pages\_Staged\" />
+  </ItemGroup>
 
 </Project>
