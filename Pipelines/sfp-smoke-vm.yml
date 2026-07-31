@@ -4,17 +4,23 @@
 trigger: none
 pr: none
 
-# Runs nightly at 12:00 AM Central (05:00 UTC) on the Development branch.
+# Runs twice daily on the Development branch (CST = UTC-6):
+#   10:00 PM CST = 04:00 UTC
+#    5:00 AM CST = 11:00 UTC
 # Always runs the full suite (smokeMode defaults to false).
-# Change the cron expression to adjust the schedule:
-#   '0 5 * * *'  = 12:00 AM Central (UTC-5) / 1:00 AM CDT (UTC-6)
-#schedules:
-#- cron: "30 17 * * *"
-#  displayName: "Nightly Full Run — 11:30 AM Central"
-#  branches:
-#    include:
-#    - Development
-#  always: true
+schedules:
+- cron: "0 4 * * *"
+  displayName: "Nightly Run — 10:00 PM CST"
+  branches:
+    include:
+    - main
+  always: true
+- cron: "0 11 * * *"
+  displayName: "Morning Run — 5:00 AM CST"
+  branches:
+    include:
+    - main
+  always: true
 
 # ── Queue-time parameters ──────────────────────────────────────────────────────
 # These appear as a checkbox in the Run Pipeline dialog.
