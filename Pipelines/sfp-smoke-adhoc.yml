@@ -56,6 +56,12 @@ stages:
     steps:
     - checkout: self
 
+    - task: UseDotNet@2
+      displayName: "Install .NET SDK"
+      inputs:
+        packageType: sdk
+        version: $(DOTNET_VERSION)
+
     - script: dotnet publish DataPool\DataPool.csproj -c Release -o C:\Services\DataPool
       displayName: "Publish DataPool"
 
