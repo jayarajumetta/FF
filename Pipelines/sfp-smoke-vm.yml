@@ -25,7 +25,7 @@ schedules:
 # ── Queue-time parameters ──────────────────────────────────────────────────────
 # These appear as a checkbox in the Run Pipeline dialog.
 # smokeMode=true  → 1 test per shard (Alabama, Mississippi, Ohio) — fast validation
-# smokeMode=false → full suite (31 tests across 3 shards)
+# smokeMode=false → full suite (70 tests across 3 shards: 35 BasicPolicy + 35 CE)
 parameters:
 - name: smokeMode
   displayName: "Smoke Mode (1 test per shard)"
@@ -94,20 +94,33 @@ stages:
 
     strategy:
       matrix:
-        # smokeMode=true  → runs only @Smoke-tagged rows (1 per shard, ~3 tests total)
-        # smokeMode=false → runs the full shard (default)
+        # smokeMode=true  → runs only @Debug-tagged rows (1 per shard, ~6 tests total)
+        # smokeMode=false → full suite: Shards 1-3 = BasicPolicy (35), Shards 4-6 = CE (35)
+        # With 3 agents, Shards 1-3 run first, then Shards 4-6 run on the same agents.
         Shard1:
           SHARD_NUMBER: "1"
           SHARD_FILTER_FULL: "TestCategory=Shard1"
-          SHARD_FILTER_SMOKE: "TestCategory=Shard1&TestCategory=Smoke"
+          SHARD_FILTER_SMOKE: "TestCategory=Shard1&TestCategory=Debug"
         Shard2:
           SHARD_NUMBER: "2"
           SHARD_FILTER_FULL: "TestCategory=Shard2"
-          SHARD_FILTER_SMOKE: "TestCategory=Shard2&TestCategory=Smoke"
+          SHARD_FILTER_SMOKE: "TestCategory=Shard2&TestCategory=Debug"
         Shard3:
           SHARD_NUMBER: "3"
           SHARD_FILTER_FULL: "TestCategory=Shard3"
-          SHARD_FILTER_SMOKE: "TestCategory=Shard3&TestCategory=Smoke"
+          SHARD_FILTER_SMOKE: "TestCategory=Shard3&TestCategory=Debug"
+        Shard4:
+          SHARD_NUMBER: "4"
+          SHARD_FILTER_FULL: "TestCategory=Shard4"
+          SHARD_FILTER_SMOKE: "TestCategory=Shard4&TestCategory=Debug"
+        Shard5:
+          SHARD_NUMBER: "5"
+          SHARD_FILTER_FULL: "TestCategory=Shard5"
+          SHARD_FILTER_SMOKE: "TestCategory=Shard5&TestCategory=Debug"
+        Shard6:
+          SHARD_NUMBER: "6"
+          SHARD_FILTER_FULL: "TestCategory=Shard6"
+          SHARD_FILTER_SMOKE: "TestCategory=Shard6&TestCategory=Debug"
 
     steps:
 

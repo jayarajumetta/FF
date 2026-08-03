@@ -346,18 +346,18 @@ stages:
 
     strategy:
       matrix:
-        Shard1:
-          SHARD_NUMBER: "1"
-          SHARD_FILTER_FULL: "TestCategory=CE&TestCategory=Shard1"
-          SHARD_FILTER_DEBUG: "TestCategory=CE&TestCategory=Shard1&TestCategory=Debug"
-        Shard2:
-          SHARD_NUMBER: "2"
-          SHARD_FILTER_FULL: "TestCategory=CE&TestCategory=Shard2"
-          SHARD_FILTER_DEBUG: "TestCategory=CE&TestCategory=Shard2&TestCategory=Debug"
-        Shard3:
-          SHARD_NUMBER: "3"
-          SHARD_FILTER_FULL: "TestCategory=CE&TestCategory=Shard3"
-          SHARD_FILTER_DEBUG: "TestCategory=CE&TestCategory=Shard3&TestCategory=Debug"
+        Shard4:
+          SHARD_NUMBER: "4"
+          SHARD_FILTER_FULL: "TestCategory=Shard4"
+          SHARD_FILTER_DEBUG: "TestCategory=Shard4&TestCategory=Debug"
+        Shard5:
+          SHARD_NUMBER: "5"
+          SHARD_FILTER_FULL: "TestCategory=Shard5"
+          SHARD_FILTER_DEBUG: "TestCategory=Shard5&TestCategory=Debug"
+        Shard6:
+          SHARD_NUMBER: "6"
+          SHARD_FILTER_FULL: "TestCategory=Shard6"
+          SHARD_FILTER_DEBUG: "TestCategory=Shard6&TestCategory=Debug"
 
     steps:
 

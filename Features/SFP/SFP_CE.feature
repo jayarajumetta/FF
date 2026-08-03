@@ -220,12 +220,12 @@ Feature: SFP Country Estate Policy
     # Step 31: Verify Transmit button is enabled
     Then user verifies Transmit button is enabled on Submission page
 
-    @Shard1 @Debug
+    @Shard4 @Debug
     Examples:
       | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Alabama        | AL        | 1918 Avalon Ave               |          111 | Muscle Shoals | 35661 | Colbert      |
 
-    @Shard1
+    @Shard4
     Examples:
       | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Arkansas       | AR        | 3998 Harrison St              |          111 | Batesville    | 72503 | Independence |
@@ -241,12 +241,12 @@ Feature: SFP Country Estate Policy
       | Kentucky       | KY        | 1002 Medical Dr               |          111 | Mayfield      | 42066 | Graves       |
       | Louisiana      | LA        | 218 Meadow Dr                 |          111 | Oakdale       | 71463 | Allen        |
 
-    @Shard2 @Debug
+    @Shard5 @Debug
     Examples:
       | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Mississippi    | MS        | 4105 Washington Ave           |          111 | Gulfport      | 39507 | Harrison     |
 
-    @Shard2
+    @Shard5
     Examples:
       | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Missouri       | MO        | 1895 S Forrest Heights Avenue |          111 | Springfield   | 65809 | Greene       |
@@ -261,12 +261,12 @@ Feature: SFP Country Estate Policy
       | North Dakota   | ND        | 600 S 2nd St                  |          111 | Bismarck      | 58504 | Burleigh     |
       | Oklahoma       | OK        | 436255 E 330 Rd               |          111 | Big Cabin     | 74332 | Craig        |
 
-    @Shard3 @Debug
+    @Shard6 @Debug
     Examples:
       | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Ohio           | OH        | 1566 Northeast Ave            |          111 | Tallmadge     | 44278 | Summit       |
 
-    @Shard3
+    @Shard6
     Examples:
       | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Oregon         | OR        | 661 SW 26TH ST                |          111 | Corvallis     | 97331 | Benton       |
