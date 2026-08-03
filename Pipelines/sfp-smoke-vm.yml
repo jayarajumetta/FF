@@ -82,6 +82,12 @@ stages:
         targetPath: "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0"
         artifact: "BuildOutput"
 
+    - task: PublishPipelineArtifact@1
+      displayName: "Publish DataPool Output"
+      inputs:
+        targetPath: "$(Build.SourcesDirectory)/DataPool/bin/$(BUILD_CONFIGURATION)/net8.0"
+        artifact: "DataPoolOutput"
+
 # ── Stage 2: Test ─────────────────────────────────────────────────────────────
 - stage: Test
   displayName: "Test (3 Parallel Shards)"
@@ -121,6 +127,11 @@ stages:
           SHARD_NUMBER: "6"
           SHARD_FILTER_FULL: "TestCategory=Shard6"
           SHARD_FILTER_SMOKE: "TestCategory=Shard6&TestCategory=Debug"
+        # Catch-all: any @SFP test added without a shard tag runs here automatically
+        ShardMisc:
+          SHARD_NUMBER: "misc"
+          SHARD_FILTER_FULL: "TestCategory=SFP&TestCategory=Smoke"
+          SHARD_FILTER_SMOKE: "TestCategory=SFP&TestCategory=Smoke"
 
     steps:
 
@@ -137,6 +148,12 @@ stages:
       inputs:
         artifact: "BuildOutput"
         targetPath: "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0"
+
+    - task: DownloadPipelineArtifact@2
+      displayName: "Download DataPool Output"
+      inputs:
+        artifact: "DataPoolOutput"
+        targetPath: "$(Build.SourcesDirectory)/DataPool/bin/$(BUILD_CONFIGURATION)/net8.0"
 
     - task: Cache@2
       displayName: "Cache Playwright Chromium"
@@ -213,6 +230,7 @@ stages:
         SMOKE_MODE: ${{ parameters.smokeMode }}
         SHARD_FILTER_FULL: $(SHARD_FILTER_FULL)
         SHARD_FILTER_SMOKE: $(SHARD_FILTER_SMOKE)
+        DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
 
     # ✅ RETRY FAILED TESTS
     # Parses the TRX from the first run and re-runs only failed tests once.
@@ -261,6 +279,7 @@ stages:
         TEST_ENVIRONMENT: "qa"
         CI: "true"
         PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+        DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
 
     # ✅ DEBUG: verify trx files exist
     - powershell: |

@@ -26,6 +26,11 @@
     <PackageReference Include="ClosedXML" Version="0.102.3" />
   </ItemGroup>
 
+  <!-- DataPool must be built so DataPoolLauncher can find and start it at runtime -->
+  <ItemGroup>
+    <ProjectReference Include="DataPool\DataPool.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
   <ItemGroup>
     <!-- Glob rather than just appsettings.json: Startup loads appsettings.{TEST_ENVIRONMENT}.json
          with optional:true, so an env file that never reaches the output folder fails silently. -->

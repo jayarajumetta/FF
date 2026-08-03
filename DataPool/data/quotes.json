@@ -622,5 +622,37 @@
     "CreatedAt": "2026-07-20T19:51:48.5044159Z",
     "EffectiveDate": "7/21/2026",
     "Environment": "qa"
+  },
+  {
+    "Id": "02040950",
+    "Transaction": "Quote",
+    "Status": "available",
+    "ClaimedAt": null,
+    "Lob": "SFP",
+    "SfpVariant": "BasicPolicy",
+    "IsCommittedReferral": false,
+    "State": "SD",
+    "Notes": "LOB=SFP, Variant=BasicPolicy, FarmType=Animals, Effective=8/4/2026",
+    "ClaimedBy": null,
+    "ConsumedBy": null,
+    "CreatedAt": "2026-08-03T15:01:02.901855Z",
+    "EffectiveDate": "8/4/2026",
+    "Environment": "qa"
+  },
+  {
+    "Id": "02040973",
+    "Transaction": "Quote",
+    "Status": "available",
+    "ClaimedAt": null,
+    "Lob": "SFP",
+    "SfpVariant": "CE",
+    "IsCommittedReferral": false,
+    "State": "SD",
+    "Notes": "LOB=SFP, Variant=CE, FarmType=Crops, Effective=8/4/2026",
+    "ClaimedBy": null,
+    "ConsumedBy": null,
+    "CreatedAt": "2026-08-03T15:11:22.6203104Z",
+    "EffectiveDate": "8/4/2026",
+    "Environment": "qa"
   }
 ]

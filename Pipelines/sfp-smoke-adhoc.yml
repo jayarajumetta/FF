@@ -28,7 +28,7 @@ parameters:
   - CE Only
 
 pool:
-  name: "Default"
+  name: "Playwright"
 
 variables:
   DOTNET_VERSION: "8.x"
@@ -77,6 +77,12 @@ stages:
         targetPath: "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0"
         artifact: "BuildOutput"
 
+    - task: PublishPipelineArtifact@1
+      displayName: "Publish DataPool Output"
+      inputs:
+        targetPath: "$(Build.SourcesDirectory)/DataPool/bin/$(BUILD_CONFIGURATION)/net8.0"
+        artifact: "DataPoolOutput"
+
 # ── Stage 2: Test ─────────────────────────────────────────────────────────────
 - stage: Test
   displayName: "Test (3 Parallel Shards)"
@@ -104,6 +110,11 @@ stages:
           SHARD_NUMBER: "3"
           SHARD_FILTER_FULL: "TestCategory=Shard3"
           SHARD_FILTER_DEBUG: "TestCategory=Shard3&TestCategory=Debug"
+        # Catch-all: any @SFP test added without a shard tag runs here automatically
+        ShardMisc:
+          SHARD_NUMBER: "misc"
+          SHARD_FILTER_FULL: "TestCategory=SFP&TestCategory=Smoke"
+          SHARD_FILTER_DEBUG: "TestCategory=SFP&TestCategory=Smoke"
 
     steps:
 
@@ -120,6 +131,12 @@ stages:
       inputs:
         artifact: "BuildOutput"
         targetPath: "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0"
+
+    - task: DownloadPipelineArtifact@2
+      displayName: "Download DataPool Output"
+      inputs:
+        artifact: "DataPoolOutput"
+        targetPath: "$(Build.SourcesDirectory)/DataPool/bin/$(BUILD_CONFIGURATION)/net8.0"
 
     - task: Cache@2
       displayName: "Cache Playwright Chromium"
@@ -193,6 +210,7 @@ stages:
         DEBUG_MODE: ${{ parameters.debugModeBasic }}
         SHARD_FILTER_FULL: $(SHARD_FILTER_FULL)
         SHARD_FILTER_DEBUG: $(SHARD_FILTER_DEBUG)
+        DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
 
     # ✅ RETRY FAILED TESTS
     # Parses the TRX from the first run and re-runs only failed tests once.
@@ -242,6 +260,7 @@ stages:
         TEST_ENVIRONMENT: "qa"
         CI: "true"
         PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+        DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
 
     # ✅ DEBUG: verify trx files exist
     - powershell: |
@@ -375,6 +394,12 @@ stages:
         artifact: "BuildOutput"
         targetPath: "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0"
 
+    - task: DownloadPipelineArtifact@2
+      displayName: "Download DataPool Output"
+      inputs:
+        artifact: "DataPoolOutput"
+        targetPath: "$(Build.SourcesDirectory)/DataPool/bin/$(BUILD_CONFIGURATION)/net8.0"
+
     - task: Cache@2
       displayName: "Cache Playwright Chromium"
       inputs:
@@ -444,6 +469,7 @@ stages:
         DEBUG_MODE: ${{ parameters.debugModeCE }}
         SHARD_FILTER_FULL: $(SHARD_FILTER_FULL)
         SHARD_FILTER_DEBUG: $(SHARD_FILTER_DEBUG)
+        DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
 
     - powershell: |
         $trxPath = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
@@ -487,6 +513,7 @@ stages:
         TEST_ENVIRONMENT: "qa"
         CI: "true"
         PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+        DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
 
     - powershell: |
         Write-Host "==== CE TEST RESULTS CONTENT ===="

@@ -9,7 +9,7 @@ trigger: none
 schedules: []   # Schedules disabled — manual runs only
 
 pool:
-  vmImage: "windows-latest"
+  name: "Default"
 
 variables:
   - name: TEST_ENVIRONMENT
@@ -40,7 +40,7 @@ stages:
               dotnet test TestAutomation.csproj ^
                 --configuration Release ^
                 --no-build ^
-                --filter "Category=FormsCheck&Category=SFP" ^
+                --filter "Category=Forms&Category=SFP" ^
                 --logger "trx;LogFileName=SFP_FormsResults.trx" ^
                 --results-directory $(Build.ArtifactStagingDirectory)/TestResults
             displayName: "Run SFP Forms Validation"
@@ -49,15 +49,16 @@ stages:
               TEST_ENVIRONMENT: $(TEST_ENVIRONMENT)
 
           - task: PublishTestResults@2
-            displayName: "Publish Test Results"
+            displayName: "Publish SFP Forms Test Results"
             condition: always()
             inputs:
               testResultsFormat: "VSTest"
               testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/*.trx"
               mergeTestResults: true
+              testRunTitle: "SFP Forms Validation"
 
-          - publish: TestResults/FormsCheck
-            displayName: "Publish Forms CSV Results"
+          - publish: $(Build.SourcesDirectory)/TestResults
+            displayName: "Publish SFP Forms HTML Reports"
             artifact: "SFP_FormsResults"
             condition: always()
 
@@ -80,7 +81,7 @@ stages:
               dotnet test TestAutomation.csproj ^
                 --configuration Release ^
                 --no-build ^
-                --filter "Category=FormsCheck&Category=CE" ^
+                --filter "Category=Forms&Category=CE" ^
                 --logger "trx;LogFileName=CE_FormsResults.trx" ^
                 --results-directory $(Build.ArtifactStagingDirectory)/TestResults
             displayName: "Run Country Estate Forms Validation"
@@ -89,14 +90,15 @@ stages:
               TEST_ENVIRONMENT: $(TEST_ENVIRONMENT)
 
           - task: PublishTestResults@2
-            displayName: "Publish Test Results"
+            displayName: "Publish CE Forms Test Results"
             condition: always()
             inputs:
               testResultsFormat: "VSTest"
               testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/*.trx"
               mergeTestResults: true
+              testRunTitle: "CE Forms Validation"
 
-          - publish: TestResults/FormsCheck
-            displayName: "Publish Forms CSV Results"
+          - publish: $(Build.SourcesDirectory)/TestResults
+            displayName: "Publish CE Forms HTML Reports"
             artifact: "CE_FormsResults"
             condition: always()

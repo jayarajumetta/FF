@@ -525,13 +525,21 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 Console.WriteLine($"[FormsValidation] HTML report saved: {absoluteHtmlPath}");
                 MaybeOpenFormsReport(absoluteHtmlPath, summary.Failed > 0);
 
-                // 8. Non-blocking — log outcome but do not fail the scenario
+                // 8. Log outcome; assert when FailOnFormsValidationError=true so failures surface in ADO
                 if (summary.Failed > 0)
                 {
                     var failures = string.Join("\n", summary.Results
                         .Where(r => r.Result == "FAIL")
                         .Select(r => $"    {r.FormName}: {r.Message}"));
-                    Console.WriteLine($"[FormsValidation] {summary.Failed} failure(s) — see report: {absoluteHtmlPath}\n{failures}");
+                    var message = $"[FormsValidation] {summary.Failed} failure(s) — see report: {absoluteHtmlPath}\n{failures}";
+                    Console.WriteLine(message);
+
+                    var failOnFormsValidationError = string.Equals(
+                        _configuration["Debugging:FailOnFormsValidationError"],
+                        "true",
+                        StringComparison.OrdinalIgnoreCase);
+                    if (failOnFormsValidationError)
+                        Assert.Fail(message);
                 }
             }
             catch (Exception ex)
