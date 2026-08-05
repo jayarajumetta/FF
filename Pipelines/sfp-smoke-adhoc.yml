@@ -1,9 +1,26 @@
 # Pipeline: SFP Smoke — .NET Playwright (Reqnroll + NUnit)
-# Trigger: Manual only
+# Trigger: Manual + Scheduled (Midnight & 11 AM Central)
 
 trigger: none
 pr: none
-schedules: []   # Schedules disabled — manual runs only
+
+# Cron times are UTC. Central Time offsets:
+#   CST (UTC-6): midnight CST = 06:00 UTC | 11:00 AM CST = 17:00 UTC
+#   CDT (UTC-5): midnight CDT = 05:00 UTC | 11:00 AM CDT = 16:00 UTC
+# Using CST (UTC-6) — adjust in summer if needed.
+schedules:
+- cron: "0 6 * * *"
+  displayName: "Midnight Central — Full Suite"
+  branches:
+    include:
+    - Development
+  always: true
+- cron: "0 17 * * *"
+  displayName: "11:00 AM Central — Full Suite"
+  branches:
+    include:
+    - Development
+  always: true
 
 # ── Queue-time parameters ──────────────────────────────────────────────────────
 # These appear as a checkbox in the Run Pipeline dialog.
