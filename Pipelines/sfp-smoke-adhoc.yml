@@ -15,7 +15,6 @@ schedules:
     include:
     - Development
   always: true
-
 - cron: "0 17 * * *"
   displayName: "11:00 AM Central — Full Suite"
   branches:

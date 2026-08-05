@@ -1,0 +1,70 @@
+trigger: none  # Run manually once — safe to delete after DataPool service is confirmed running
+
+pool:
+  name: "Playwright"
+  demands:
+    - Agent.Name -equals scpw-pnc-plw1
+
+jobs:
+- job: SetupDataPoolService
+  displayName: "Install DataPool as a Windows Service on scpw-pnc-plw1"
+  timeoutInMinutes: 10
+
+  steps:
+  - checkout: self
+
+  - script: dotnet publish DataPool\DataPool.csproj -c Release -o C:\Services\DataPool
+    displayName: "Publish DataPool"
+
+  - powershell: |
+      # Remove existing service if present from a previous install attempt
+      $svc = Get-Service -Name "DataPool" -ErrorAction SilentlyContinue
+      if ($svc) {
+          Write-Host "Stopping and removing existing DataPool service..."
+          sc.exe stop DataPool | Out-Null
+          Start-Sleep -Seconds 3
+          sc.exe delete DataPool | Out-Null
+          Start-Sleep -Seconds 2
+      }
+
+      sc.exe create DataPool `
+          binPath= "dotnet C:\Services\DataPool\DataPool.dll --urls http://0.0.0.0:5100" `
+          start= auto `
+          DisplayName= "PnC DataPool"
+      sc.exe start DataPool
+      Write-Host "Service started."
+    displayName: "Register and Start DataPool Service"
+
+  - powershell: |
+      Write-Host "Waiting for DataPool to become ready..."
+      $ready = $false
+      for ($i = 0; $i -lt 12; $i++) {
+          Start-Sleep -Seconds 5
+          try {
+              $result = Invoke-RestMethod http://localhost:5100/api/quotes -TimeoutSec 3
+              Write-Host "DataPool is up. Current quote count: $($result.Count)"
+              $ready = $true
+              break
+          } catch {
+              Write-Host "Not ready yet ($i)..."
+          }
+      }
+      if (-not $ready) {
+          Write-Error "DataPool did not become ready in time."
+          exit 1
+      }
+    displayName: "Verify DataPool is Responding"
+
+  - powershell: |
+      # Seed with the quotes.json already in the repo so existing data is preserved
+      $dataDir = "C:\Services\DataPool\data"
+      New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
+      Copy-Item "$(Build.SourcesDirectory)\DataPool\data\quotes.json" "$dataDir\quotes.json" -Force
+      Write-Host "Seeded quotes.json. Restarting service to load seeded data..."
+      sc.exe stop DataPool | Out-Null
+      Start-Sleep -Seconds 3
+      sc.exe start DataPool | Out-Null
+      Start-Sleep -Seconds 5
+      $result = Invoke-RestMethod http://localhost:5100/api/quotes -TimeoutSec 5
+      Write-Host "DataPool ready with $($result.Count) quotes loaded."
+    displayName: "Seed Existing Quotes and Restart"

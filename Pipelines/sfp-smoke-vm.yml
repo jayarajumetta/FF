@@ -1,0 +1,341 @@
+# Pipeline: SFP Smoke — .NET Playwright (Reqnroll + NUnit)
+# Trigger: Manual + Nightly schedule
+
+trigger: none
+pr: none
+
+# Runs twice daily on the Development branch (CST = UTC-6):
+#   10:00 PM CST = 04:00 UTC
+#    5:00 AM CST = 11:00 UTC
+# Always runs the full suite (smokeMode defaults to false).
+schedules:
+- cron: "0 4 * * *"
+  displayName: "Nightly Run — 10:00 PM CST"
+  branches:
+    include:
+    - main
+  always: true
+- cron: "0 11 * * *"
+  displayName: "Morning Run — 5:00 AM CST"
+  branches:
+    include:
+    - main
+  always: true
+
+# ── Queue-time parameters ──────────────────────────────────────────────────────
+# These appear as a checkbox in the Run Pipeline dialog.
+# smokeMode=true  → 1 test per shard (Alabama, Mississippi, Ohio) — fast validation
+# smokeMode=false → full suite (70 tests across 3 shards: 35 BasicPolicy + 35 CE)
+parameters:
+- name: smokeMode
+  displayName: "Smoke Mode (1 test per shard)"
+  type: boolean
+  default: false
+
+pool:
+  name: "Playwright"
+
+variables:
+  DOTNET_VERSION: "8.x"
+  BUILD_CONFIGURATION: "Release"
+
+# ── Stage 1: Build ─────────────────────────────────────────────────────────────
+stages:
+- stage: Build
+  displayName: "Build"
+
+  jobs:
+  - job: Build
+    displayName: "Restore, Build & Publish Artifact"
+    timeoutInMinutes: 20
+
+    steps:
+
+    - checkout: self
+
+    - task: UseDotNet@2
+      displayName: "Install .NET SDK $(DOTNET_VERSION)"
+      inputs:
+        packageType: sdk
+        version: $(DOTNET_VERSION)
+
+    - script: dotnet restore TestAutomation.csproj
+      displayName: "Restore NuGet packages"
+
+    - script: dotnet build TestAutomation.csproj --configuration $(BUILD_CONFIGURATION) --no-restore
+      displayName: "Build project"
+
+    - powershell: |
+        $playwright = Get-ChildItem -Recurse -Filter playwright.ps1 | Select-Object -First 1
+        if ($playwright) {
+            Write-Host "Installing Playwright via $($playwright.FullName)"
+            & powershell -File $playwright.FullName install chromium --with-deps
+        } else {
+            Write-Error "playwright.ps1 not found"
+            exit 1
+        }
+      displayName: "Install Playwright Chromium"
+
+    - task: PublishPipelineArtifact@1
+      displayName: "Publish Build Output"
+      inputs:
+        targetPath: "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0"
+        artifact: "BuildOutput"
+
+    - task: PublishPipelineArtifact@1
+      displayName: "Publish DataPool Output"
+      inputs:
+        targetPath: "$(Build.SourcesDirectory)/DataPool/bin/$(BUILD_CONFIGURATION)/net8.0"
+        artifact: "DataPoolOutput"
+
+# ── Stage 2: Test ─────────────────────────────────────────────────────────────
+- stage: Test
+  displayName: "Test (3 Parallel Shards)"
+  dependsOn: Build
+
+  jobs:
+  - job: TestShard
+    displayName: "SFP Smoke"
+    timeoutInMinutes: 120
+
+    strategy:
+      matrix:
+        # smokeMode=true  → runs only @Debug-tagged rows (1 per shard, ~6 tests total)
+        # smokeMode=false → full suite: Shards 1-3 = BasicPolicy (35), Shards 4-6 = CE (35)
+        # With 3 agents, Shards 1-3 run first, then Shards 4-6 run on the same agents.
+        Shard1:
+          SHARD_NUMBER: "1"
+          SHARD_FILTER_FULL: "TestCategory=Shard1"
+          SHARD_FILTER_SMOKE: "TestCategory=Shard1&TestCategory=Debug"
+        Shard2:
+          SHARD_NUMBER: "2"
+          SHARD_FILTER_FULL: "TestCategory=Shard2"
+          SHARD_FILTER_SMOKE: "TestCategory=Shard2&TestCategory=Debug"
+        Shard3:
+          SHARD_NUMBER: "3"
+          SHARD_FILTER_FULL: "TestCategory=Shard3"
+          SHARD_FILTER_SMOKE: "TestCategory=Shard3&TestCategory=Debug"
+        Shard4:
+          SHARD_NUMBER: "4"
+          SHARD_FILTER_FULL: "TestCategory=Shard4"
+          SHARD_FILTER_SMOKE: "TestCategory=Shard4&TestCategory=Debug"
+        Shard5:
+          SHARD_NUMBER: "5"
+          SHARD_FILTER_FULL: "TestCategory=Shard5"
+          SHARD_FILTER_SMOKE: "TestCategory=Shard5&TestCategory=Debug"
+        Shard6:
+          SHARD_NUMBER: "6"
+          SHARD_FILTER_FULL: "TestCategory=Shard6"
+          SHARD_FILTER_SMOKE: "TestCategory=Shard6&TestCategory=Debug"
+        # Catch-all: any @SFP test added without a shard tag runs here automatically
+        ShardMisc:
+          SHARD_NUMBER: "misc"
+          SHARD_FILTER_FULL: "TestCategory=SFP&TestCategory=Smoke"
+          SHARD_FILTER_SMOKE: "TestCategory=SFP&TestCategory=Smoke"
+
+    steps:
+
+    - checkout: self
+
+    - task: UseDotNet@2
+      displayName: "Install .NET SDK $(DOTNET_VERSION)"
+      inputs:
+        packageType: sdk
+        version: $(DOTNET_VERSION)
+
+    - task: DownloadPipelineArtifact@2
+      displayName: "Download Build Output"
+      inputs:
+        artifact: "BuildOutput"
+        targetPath: "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0"
+
+    - task: DownloadPipelineArtifact@2
+      displayName: "Download DataPool Output"
+      inputs:
+        artifact: "DataPoolOutput"
+        targetPath: "$(Build.SourcesDirectory)/DataPool/bin/$(BUILD_CONFIGURATION)/net8.0"
+
+    - task: Cache@2
+      displayName: "Cache Playwright Chromium"
+      inputs:
+        key: 'playwright | "$(Agent.OS)" | $(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.deps.json'
+        restoreKeys: |
+          playwright | "$(Agent.OS)"
+        path: "$(PLAYWRIGHT_BROWSERS_PATH)"
+      env:
+        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+
+    - powershell: |
+        $playwrightBrowsersPath = "$(Agent.ToolsDirectory)/playwright-browsers"
+        $env:PLAYWRIGHT_BROWSERS_PATH = $playwrightBrowsersPath
+
+        $playwright = Get-ChildItem `
+            -Path "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0" `
+            -Filter playwright.ps1 | Select-Object -First 1
+
+        if ($playwright) {
+            Write-Host "Installing Playwright via $($playwright.FullName)"
+            & powershell -File $playwright.FullName install chromium --with-deps
+        } else {
+            Write-Warning "playwright.ps1 not found — assuming pre-installed"
+        }
+      displayName: "Ensure Playwright Chromium"
+      env:
+        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+
+    # ✅ Create results folder
+    - powershell: |
+        New-Item -ItemType Directory -Force -Path "$(Build.ArtifactStagingDirectory)/TestResults" | Out-Null
+      displayName: "Create TestResults Directory"
+      condition: always()
+
+    # ✅ RUN TESTS
+    - powershell: |
+        # LIMIT CPU CORES USED BY .NET
+        $env:DOTNET_PROCESSOR_COUNT = "2"
+
+        $smokeMode = $env:SMOKE_MODE -eq "True"
+        $filter = if ($smokeMode) { $env:SHARD_FILTER_SMOKE } else { $env:SHARD_FILTER_FULL }
+        $testDll = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.dll"
+
+        Write-Host "===================================="
+        Write-Host "Running Shard $($env:SHARD_NUMBER)"
+        Write-Host "Mode:   $(if ($smokeMode) { 'SMOKE (debug)' } else { 'FULL' })"
+        Write-Host "Filter: $filter"
+        Write-Host "DLL:    $testDll"
+        Write-Host "===================================="
+
+        if (!(Test-Path $testDll)) {
+            Write-Error "Test DLL not found!"
+            exit 1
+        }
+
+        & dotnet test $testDll `
+            --filter "$filter" `
+            --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Results.trx" `
+            --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
+
+        # Do NOT exit on first-run failure — the retry step below will re-run failures
+        $firstRunExit = $LASTEXITCODE
+        Write-Host "First run exit code: $firstRunExit"
+        exit 0
+      displayName: "Run Shard $(SHARD_NUMBER)"
+      condition: always()
+      env:
+        Playwright__Headless: "true"
+        Playwright__BrowserType: "chromium"
+        TEST_ENVIRONMENT: "qa"
+        CI: "true"
+        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+        SMOKE_MODE: ${{ parameters.smokeMode }}
+        SHARD_FILTER_FULL: $(SHARD_FILTER_FULL)
+        SHARD_FILTER_SMOKE: $(SHARD_FILTER_SMOKE)
+        DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
+
+    # ✅ RETRY FAILED TESTS
+    # Parses the TRX from the first run and re-runs only failed tests once.
+    # This catches transient 500 errors, SSO blips, and network timeouts without
+    # re-running the entire shard.
+    - powershell: |
+        $trxPath = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
+
+        if (!(Test-Path $trxPath)) {
+            Write-Host "No TRX found — skipping retry step."
+            exit 0
+        }
+
+        [xml]$trx = Get-Content $trxPath
+        $ns = @{ t = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010" }
+        $failed = Select-Xml -Xml $trx -XPath "//t:UnitTestResult[@outcome='Failed']" -Namespace $ns
+
+        if (-not $failed) {
+            Write-Host "No failures in first run — retry step skipped."
+            exit 0
+        }
+
+        $failedNames = $failed | ForEach-Object { $_.Node.testName } | Select-Object -Unique
+        Write-Host "Retrying $($failedNames.Count) failed test(s):"
+        $failedNames | ForEach-Object { Write-Host "  - $_" }
+
+        # Build a NUnit filter from failed test names
+        $nameFilter = ($failedNames | ForEach-Object {
+            $escaped = $_.Replace("'", "").Replace('"', '')
+            "FullyQualifiedName~$escaped"
+        }) -join "|"
+
+        $testDll = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.dll"
+
+        & dotnet test $testDll `
+            --filter "$nameFilter" `
+            --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx" `
+            --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
+
+        exit $LASTEXITCODE
+      displayName: "Retry Failed Tests — Shard $(SHARD_NUMBER)"
+      condition: always()
+      env:
+        Playwright__Headless: "true"
+        Playwright__BrowserType: "chromium"
+        TEST_ENVIRONMENT: "qa"
+        CI: "true"
+        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+        DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
+
+    # ✅ DEBUG: verify trx files exist
+    - powershell: |
+        Write-Host "==== TEST RESULTS CONTENT ===="
+        Get-ChildItem -Recurse "$(Build.ArtifactStagingDirectory)/TestResults"
+      displayName: "Debug TestResults Output"
+      condition: always()
+
+    - task: PublishTestResults@2
+      displayName: "Publish Test Results"
+      condition: always()
+      inputs:
+        testResultsFormat: VSTest
+        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/*.trx"
+        mergeTestResults: true
+        failTaskOnFailedTests: true
+        testRunTitle: "SFP Smoke — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
+
+    - task: PublishPipelineArtifact@1
+      displayName: "Publish Shard Artifacts"
+      condition: always()
+      inputs:
+        targetPath: "$(Build.ArtifactStagingDirectory)/TestResults"
+        artifact: "SFP_Smoke_Shard_$(SHARD_NUMBER)"
+
+    # ✅ FORMS REPORTS
+    # Copies the HTML forms validation reports generated during the test run into
+    # the staging directory and publishes them as a pipeline artifact.
+    # After the run: ADO pipeline → Artifacts tab → "Forms_Reports_Shard_X"
+    # → download and open any FormsReport_SFP_<State>_<QuoteID>.html in a browser.
+    - powershell: |
+        $reportsDir = "$(Build.ArtifactStagingDirectory)/FormsReports"
+        New-Item -ItemType Directory -Force -Path $reportsDir | Out-Null
+
+        # The test writes reports to <workdir>/TestResults/<date>/FormsReport_*.html
+        $sourceBase = "$(Build.SourcesDirectory)/TestResults"
+        if (Test-Path $sourceBase) {
+            $reports = Get-ChildItem -Path $sourceBase -Recurse -Filter "FormsReport_*.html"
+            if ($reports.Count -gt 0) {
+                $reports | ForEach-Object {
+                    Copy-Item $_.FullName -Destination $reportsDir
+                    Write-Host "Collected: $($_.Name)"
+                }
+                Write-Host "Collected $($reports.Count) forms report(s)."
+            } else {
+                Write-Host "No forms reports found — forms validation may not have run or all states skipped."
+            }
+        } else {
+            Write-Host "TestResults directory not found — skipping forms report collection."
+        }
+      displayName: "Collect Forms Validation Reports"
+      condition: always()
+
+    - task: PublishPipelineArtifact@1
+      displayName: "Publish Forms Reports"
+      condition: always()
+      inputs:
+        targetPath: "$(Build.ArtifactStagingDirectory)/FormsReports"
+        artifact: "Forms_Reports_Shard_$(SHARD_NUMBER)"

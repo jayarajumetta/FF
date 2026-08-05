@@ -9,6 +9,13 @@ namespace PnCTestAutomation.Helpers
     /// </summary>
     public class ScenarioContextData
     {
+        /// <summary>
+        /// Key this object is stored under in Reqnroll's ScenarioContext. Bindings either
+        /// inject <see cref="ScenarioContextData"/> or read this key directly; both resolve
+        /// to the same instance (see Startup.ConfigureServices).
+        /// </summary>
+        public const string ContextKey = "ContextData";
+
         // ══════════════════════════════════════════════════════════════════
         // DOMAIN MODELS (New code should use these directly)
         // ══════════════════════════════════════════════════════════════════
@@ -215,6 +222,10 @@ namespace PnCTestAutomation.Helpers
         public string LivestockLarge { get => Farm.LivestockLarge; set => Farm.LivestockLarge = value; }
         public string UnlistedAcreage { get => Farm.UnlistedAcreage; set => Farm.UnlistedAcreage = value; }
         public string NumberOfEmployees { get => Farm.NumberOfEmployees; set => Farm.NumberOfEmployees = value; }
+        public string WorkersCompFullTimeInServants { get => Farm.WorkersCompFullTimeInServants; set => Farm.WorkersCompFullTimeInServants = value; }
+        public string WorkersCompPartTimeInServants { get => Farm.WorkersCompPartTimeInServants; set => Farm.WorkersCompPartTimeInServants = value; }
+        public string WorkersCompFullTimeOutServants { get => Farm.WorkersCompFullTimeOutServants; set => Farm.WorkersCompFullTimeOutServants = value; }
+        public string WorkersCompPartTimeOutServants { get => Farm.WorkersCompPartTimeOutServants; set => Farm.WorkersCompPartTimeOutServants = value; }
 
         // --- Insurance Score (SFP - maps to Farm) ---
         public string InsuranceScoreEntityType { get => Farm.InsuranceScoreEntityType; set => Farm.InsuranceScoreEntityType = value; }

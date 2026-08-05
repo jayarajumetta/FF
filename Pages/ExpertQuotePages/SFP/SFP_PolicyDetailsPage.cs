@@ -78,22 +78,17 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
             var btn = GetPrimaryFarmCategoryButton(category);
             await btn.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 60000 });
             await btn.ClickAsync();
-            // Wait for DuckCreek's XHR spinner to appear then clear
-            var overlay = _page.Locator(".ngx-spinner-overlay");
-            try { await overlay.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 3000 }); }
-            catch (TimeoutException) { }
-            await WaitForSpinnerAsync();
+            // DuckCreek is slow to fire the XHR behind this control, so allow well beyond the
+            // default grace period for the spinner to show up before assuming there isn't one.
+            await WaitForSpinnerAsync(appearanceGraceMs: 3000);
         }
 
         public async Task SelectPrimaryFarmSubTypeAsync(string subType)
         {
             await WaitForSpinnerAsync();
             await GetPrimaryFarmSubTypeRadio(subType).ClickAsync();
-            // DuckCreek fires an XHR after radio click — spinner appears ~200ms later, so wait for it to appear first
-            var overlay = _page.Locator(".ngx-spinner-overlay");
-            try { await overlay.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 3000 }); }
-            catch (TimeoutException) { }
-            await WaitForSpinnerAsync();
+            // Same story as the category buttons: the spinner trails the radio click by ~200ms.
+            await WaitForSpinnerAsync(appearanceGraceMs: 3000);
             // Wait for DuckCreek to finish re-rendering the form section.
             // GrossFarmIncome and the secondary farm type toggle render in the same XHR pass;
             // confirming GrossFarmIncome is visible means the whole section is ready.

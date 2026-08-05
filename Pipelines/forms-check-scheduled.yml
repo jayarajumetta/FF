@@ -1,31 +1,15 @@
-# Azure DevOps Pipeline: Scheduled Forms Checking
-# Mirrors the Tosca execution schedules for automated forms validation.
-#
-# Schedule (CST → UTC):
-#   SFP Daily:           11:30 AM CST = 17:30 UTC  (Mon–Fri)
-#   Country Estate Daily: 12:45 PM CST = 18:45 UTC  (Mon–Fri)
+# Azure DevOps Pipeline: Forms Checking (Manual)
+# Run manually from Azure DevOps — no automatic schedule.
 #
 # Set pipeline variables in Azure DevOps:
 #   DUCKCREEK_PASSWORD  (secret) — DuckCreek Basic Auth password
 #   TEST_ENVIRONMENT    (plain)  — QA | DEV | STG  (defaults to QA)
 
-trigger: none          # No CI trigger — schedule only
-
-schedules:
-  - cron: "30 17 * * 1-5"     # SFP at 11:30 AM CST (Mon–Fri)
-    displayName: "SFP Forms Check – Daily 11:30 AM CST"
-    branches:
-      include: [ main ]
-    always: true
-
-  - cron: "45 18 * * 1-5"     # Country Estate at 12:45 PM CST (Mon–Fri)
-    displayName: "Country Estate Forms Check – Daily 12:45 PM CST"
-    branches:
-      include: [ main ]
-    always: true
+trigger: none
+schedules: []   # Schedules disabled — manual runs only
 
 pool:
-  vmImage: "windows-latest"
+  name: "Default"
 
 variables:
   - name: TEST_ENVIRONMENT
@@ -39,11 +23,6 @@ stages:
     jobs:
       - job: SFP_FormsCheck
         displayName: "SFP Forms Check"
-        condition: |
-          or(
-            eq(variables['Build.CronSchedule.DisplayName'], 'SFP Forms Check – Daily 11:30 AM CST'),
-            eq(variables['Build.Reason'], 'Manual')
-          )
         steps:
           - task: UseDotNet@2
             displayName: "Install .NET SDK"
@@ -61,7 +40,7 @@ stages:
               dotnet test TestAutomation.csproj ^
                 --configuration Release ^
                 --no-build ^
-                --filter "Category=FormsCheck&Category=SFP" ^
+                --filter "Category=Forms&Category=SFP" ^
                 --logger "trx;LogFileName=SFP_FormsResults.trx" ^
                 --results-directory $(Build.ArtifactStagingDirectory)/TestResults
             displayName: "Run SFP Forms Validation"
@@ -70,25 +49,21 @@ stages:
               TEST_ENVIRONMENT: $(TEST_ENVIRONMENT)
 
           - task: PublishTestResults@2
-            displayName: "Publish Test Results"
+            displayName: "Publish SFP Forms Test Results"
             condition: always()
             inputs:
               testResultsFormat: "VSTest"
               testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/*.trx"
               mergeTestResults: true
+              testRunTitle: "SFP Forms Validation"
 
-          - publish: TestResults/FormsCheck
-            displayName: "Publish Forms CSV Results"
+          - publish: $(Build.SourcesDirectory)/TestResults
+            displayName: "Publish SFP Forms HTML Reports"
             artifact: "SFP_FormsResults"
             condition: always()
 
       - job: CE_FormsCheck
         displayName: "Country Estate Forms Check"
-        condition: |
-          or(
-            eq(variables['Build.CronSchedule.DisplayName'], 'Country Estate Forms Check – Daily 12:45 PM CST'),
-            eq(variables['Build.Reason'], 'Manual')
-          )
         steps:
           - task: UseDotNet@2
             displayName: "Install .NET SDK"
@@ -106,7 +81,7 @@ stages:
               dotnet test TestAutomation.csproj ^
                 --configuration Release ^
                 --no-build ^
-                --filter "Category=FormsCheck&Category=CE" ^
+                --filter "Category=Forms&Category=CE" ^
                 --logger "trx;LogFileName=CE_FormsResults.trx" ^
                 --results-directory $(Build.ArtifactStagingDirectory)/TestResults
             displayName: "Run Country Estate Forms Validation"
@@ -115,14 +90,15 @@ stages:
               TEST_ENVIRONMENT: $(TEST_ENVIRONMENT)
 
           - task: PublishTestResults@2
-            displayName: "Publish Test Results"
+            displayName: "Publish CE Forms Test Results"
             condition: always()
             inputs:
               testResultsFormat: "VSTest"
               testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/*.trx"
               mergeTestResults: true
+              testRunTitle: "CE Forms Validation"
 
-          - publish: TestResults/FormsCheck
-            displayName: "Publish Forms CSV Results"
+          - publish: $(Build.SourcesDirectory)/TestResults
+            displayName: "Publish CE Forms HTML Reports"
             artifact: "CE_FormsResults"
             condition: always()

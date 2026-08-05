@@ -37,8 +37,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 using NUnit.Framework;
@@ -66,23 +64,23 @@ namespace PnCTestAutomation.Tools.LocatorScan
 
             // Individual overrides
             var compare = string.Equals(
-                TestContext.Parameters.Get("COMPARE", "true"), "true", StringComparison.OrdinalIgnoreCase);  // Always compare - it's fast
+                TestContext.Parameters.Get("COMPARE", "true"), "true", StringComparison.OrdinalIgnoreCase);
             var newOnly = string.Equals(
                 TestContext.Parameters.Get("NEW_ONLY", "false"), "true", StringComparison.OrdinalIgnoreCase);
 
             // Output control - CS_ONLY=true (default) generates only .cs file, no CSV/JSON
-            var csOnly = string.Equals(
+            var skipCsv = string.Equals(
                 TestContext.Parameters.Get("CS_ONLY", "true"), "true", StringComparison.OrdinalIgnoreCase);
-            var skipCsv = csOnly;  // Skip CSV when CS_ONLY is true
-            var skipJson = true;  // Always skip JSON unless explicitly requested
+            var skipJson = true;  // JSON output disabled
 
             // Hidden element scanning - includes elements hidden via CSS (modals, dropdowns, conditional fields)
             var scanHidden = string.Equals(
                 TestContext.Parameters.Get("SCAN_HIDDEN", "true"), "true", StringComparison.OrdinalIgnoreCase);
 
-            // Derive scenario name if not provided
+            // Derive scenario name from URL if not provided
             if (string.IsNullOrWhiteSpace(scenario))
             {
+                scenario = "LocatorScan";
                 if (!string.IsNullOrWhiteSpace(url))
                 {
                     try
@@ -91,14 +89,7 @@ namespace PnCTestAutomation.Tools.LocatorScan
                         scenario = (uri.Host + uri.AbsolutePath)
                             .Replace("/", "_").Replace(".", "_").Trim('_');
                     }
-                    catch
-                    {
-                        scenario = "LocatorScan";
-                    }
-                }
-                else
-                {
-                    scenario = "LocatorScan";
+                    catch { /* keep default */ }
                 }
             }
 
@@ -124,7 +115,7 @@ namespace PnCTestAutomation.Tools.LocatorScan
             IBrowser? browser = null;
             IBrowserContext? context = null;
             IPage? page = null;
-            bool ownsBrowser = false;
+            var ownsBrowser = false;
 
             try
             {
@@ -135,11 +126,7 @@ namespace PnCTestAutomation.Tools.LocatorScan
                     // ── Attach via CDP ──
                     TestContext.Progress.WriteLine($"[LocatorScanTool] Attaching via CDP: {cdp}");
                     browser = await pw.Chromium.ConnectOverCDPAsync(cdp);
-                    context = browser.Contexts.FirstOrDefault();
-                    if (context is null)
-                    {
-                        context = await browser.NewContextAsync();
-                    }
+                    context = browser.Contexts.FirstOrDefault() ?? await browser.NewContextAsync();
 
                     // Get all pages and filter to actual content pages (not chrome://, extensions, etc.)
                     var allPages = context.Pages.ToList();
@@ -213,32 +200,35 @@ namespace PnCTestAutomation.Tools.LocatorScan
                     });
                 }
 
-                // Page is already loaded (user navigated to it), just quick stability check
-                TestContext.Progress.WriteLine("[LocatorScanTool] Waiting for Angular app to fully render...");
-
-                // Check if this looks like an Angular app
-                var hasAngular = await page.EvaluateAsync<bool>("() => !!window.getAllAngularTestabilities || !!window.ng || !!document.querySelector('app-root')");
-                if (hasAngular)
-                {
-                    TestContext.Progress.WriteLine("[LocatorScanTool] Angular app detected, waiting for stability...");
-                }
-                else
-                {
-                    TestContext.Progress.WriteLine("[LocatorScanTool] No Angular detected, but waiting for dynamic content...");
-                }
+                // Wait for the page to fully render before scanning
+                TestContext.Progress.WriteLine("[LocatorScanTool] Waiting for page to fully render...");
 
                 try
                 {
                     // Wait for Angular to be ready (if present) - reduced timeout since page is already loaded
-                    await page.WaitForFunctionAsync("() => window.getAllAngularTestabilities && window.getAllAngularTestabilities().findIndex(x=>!x.isStable()) === -1",
-                        new PageWaitForFunctionOptions { Timeout = 2000 }).ConfigureAwait(false);
+                    await page.WaitForFunctionAsync(
+                        "() => window.getAllAngularTestabilities && window.getAllAngularTestabilities().findIndex(x=>!x.isStable()) === -1",
+                        new PageWaitForFunctionOptions { Timeout = 2000 });
                     TestContext.Progress.WriteLine("[LocatorScanTool] Angular stability confirmed.");
                 }
                 catch
                 {
-                    // Page is already loaded, just quick fallback
-                    TestContext.Progress.WriteLine("[LocatorScanTool] Angular stability timeout, proceeding...");
-                    await page.WaitForTimeoutAsync(500);
+                    // Angular 17+ / zoneless apps may not expose getAllAngularTestabilities.
+                    // Wait for input elements to appear in the DOM instead.
+                    TestContext.Progress.WriteLine("[LocatorScanTool] Angular stability API not available, waiting for DOM readiness...");
+                    try
+                    {
+                        await page.WaitForFunctionAsync(
+                            "() => document.querySelectorAll('input').length > 0",
+                            new PageWaitForFunctionOptions { Timeout = 5000 });
+                        await page.WaitForTimeoutAsync(500);
+                        TestContext.Progress.WriteLine("[LocatorScanTool] DOM readiness confirmed.");
+                    }
+                    catch
+                    {
+                        TestContext.Progress.WriteLine("[LocatorScanTool] DOM readiness timeout, using fallback delay.");
+                        await page.WaitForTimeoutAsync(2000);
+                    }
                 }
 
                 // Detect current section from UI
@@ -337,12 +327,17 @@ namespace PnCTestAutomation.Tools.LocatorScan
                 }
 
                 // ── Generate Locator File ──
-                await LocatorFileGenerator.GenerateLocatorFileAsync(reports, outputDir, page);
+                // Generated .cs goes to Pages/_Staged/ so it appears immediately in VS Solution Explorer.
+                // Raw artifacts (CSV/JSON) stay in the timestamped TestResults folder.
+                var stagedDir = Path.Combine(repoRoot, "Pages", "_Staged");
+                Directory.CreateDirectory(stagedDir);
+                await LocatorFileGenerator.GenerateLocatorFileAsync(reports, stagedDir, page);
 
                 // ── Summary ──
                 TestContext.Progress.WriteLine("─────────────────────────────────────────");
                 TestContext.Progress.WriteLine("[LocatorScanTool] ✅ Scan complete.");
                 TestContext.Progress.WriteLine($"  Artifacts: {outputDir}");
+                TestContext.Progress.WriteLine($"  Generated .cs: {stagedDir}");
                 TestContext.Progress.WriteLine("─────────────────────────────────────────");
             }
             finally

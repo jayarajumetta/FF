@@ -26,8 +26,15 @@
     <PackageReference Include="ClosedXML" Version="0.102.3" />
   </ItemGroup>
 
+  <!-- DataPool must be built so DataPoolLauncher can find and start it at runtime -->
   <ItemGroup>
-    <None Update="appsettings.json">
+    <ProjectReference Include="DataPool\DataPool.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Glob rather than just appsettings.json: Startup loads appsettings.{TEST_ENVIRONMENT}.json
+         with optional:true, so an env file that never reaches the output folder fails silently. -->
+    <None Update="appsettings*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Include="Resources\**\*">
@@ -41,6 +48,11 @@
     <Compile Remove="TestResults\**\*.cs" />
     <Compile Remove="TestAutomation.ApiTests\**\*" />
     <Compile Remove="SimpleCapture\**\*" />
+    <!-- DataPool is a fully standalone web project — exclude all its source from TestAutomation compilation -->
+    <Compile Remove="DataPool\**\*" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Pages\_Staged\" />
   </ItemGroup>
 
 </Project>

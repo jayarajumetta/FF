@@ -79,6 +79,11 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await WaitForSpinnerAsync();
 
             // Click + ADD ADDITIONAL INTEREST to open the mortgagee form
+            // Wait explicitly for the button to appear — it renders after the spinner on CI.
+            await AddMortgageeButton
+                .Or(AddMortgageeButtonByTestId)
+                .First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
+
             // Try role-based locator first (robust against testid changes), fall back to testid
             ILocator addBtn;
             if (await AddMortgageeButton.CountAsync() > 0 && await AddMortgageeButton.IsVisibleAsync())

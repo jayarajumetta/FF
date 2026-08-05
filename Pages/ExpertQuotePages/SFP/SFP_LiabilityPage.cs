@@ -1,4 +1,6 @@
-﻿using Microsoft.Playwright;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Playwright;
 
 namespace PnCTestAutomation.Pages
 {
@@ -96,5 +98,53 @@ namespace PnCTestAutomation.Pages
         // Navigation
         public ILocator BackButton => _page.GetByTestId("fields.data.back");
         public ILocator NextMortgageeLossPayeeButton => _page.GetByTestId("fields.data.next");
+
+        // Workers' Compensation - Residence Employees optional coverage (NH and similar states).
+        // Clicking this button navigates to a dedicated full Edit Coverage page (not a popup).
+        // Use button element + HasText because EDIT COVERAGE may be CSS-uppercased in the DOM.
+        public ILocator WorkersCompEditCoverageButton =>
+            _page.Locator("button").Filter(new() { HasText = "Edit Coverage" });
+
+        // Fields on the Edit Coverage: Workers' Compensation full page.
+        // These inputs are the only four inputs on that page and appear in a fixed order.
+        // Using a plain input selector because the Angular custom components do not expose
+        // Spinbutton or Textbox ARIA roles.
+        private ILocator WorkersCompServantInput(int index) =>
+            _page.Locator("input").Nth(index);
+
+        public ILocator WorkersCompFullTimeInInput  => WorkersCompServantInput(0);
+        public ILocator WorkersCompPartTimeInInput  => WorkersCompServantInput(1);
+        public ILocator WorkersCompFullTimeOutInput => WorkersCompServantInput(2);
+        public ILocator WorkersCompPartTimeOutInput => WorkersCompServantInput(3);
+
+        public ILocator WorkersCompSaveButton =>
+            _page.Locator("button").Filter(new() { HasText = "Save" });
+
+        /// <summary>
+        /// Clicks Edit Coverage for Workers' Compensation - Residence Employees (navigates to a full
+        /// edit page), fills servant counts, then clicks Save to return to the Liability page.
+        /// </summary>
+        public async Task EditWorkersCompCoverageAsync(
+            string fullTimeIn  = "1",
+            string partTimeIn  = "1",
+            string fullTimeOut = "0",
+            string partTimeOut = "0")
+        {
+            // Wait for the Edit Coverage button to be rendered before clicking
+            await WorkersCompEditCoverageButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
+            await WorkersCompEditCoverageButton.ClickAsync();
+            await WaitForSpinnerAsync();
+
+            // Fill all four servant count fields on the dedicated Edit Coverage page
+            await WorkersCompFullTimeInInput.FillAsync(fullTimeIn);
+            await WorkersCompPartTimeInInput.FillAsync(partTimeIn);
+            await WorkersCompFullTimeOutInput.FillAsync(fullTimeOut);
+            await WorkersCompPartTimeOutInput.FillAsync(partTimeOut);
+
+            await WorkersCompSaveButton.ClickAsync();
+            await WaitForSpinnerAsync();
+
+            Console.WriteLine($"[WorkersComp] Saved: FullTimeIn={fullTimeIn}, PartTimeIn={partTimeIn}, FullTimeOut={fullTimeOut}, PartTimeOut={partTimeOut}");
+        }
     }
 }

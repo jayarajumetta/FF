@@ -2,13 +2,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PnCTestAutomation.Configuration;
 using PnCTestAutomation.Context;
+using PnCTestAutomation.DataPool;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Models;
 using PnCTestAutomation.Pages;
 using PnCTestAutomation.Pages.ExpertQuotePages;
 using PnCTestAutomation.Services;
 using PnCTestAutomation.Clients;
-using PnCTestAutomation.Pages.ExpressPages;
+using Reqnroll;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -58,31 +59,42 @@ namespace PnCTestAutomation
 
             services.AddHttpClient<IApiService, ApiService>();
 
+            // DataPool client — optional; silently no-ops if DataPool:BaseUrl is absent.
+            var dataPoolUrl = configuration["DataPool:BaseUrl"];
+            if (!string.IsNullOrWhiteSpace(dataPoolUrl))
+            {
+                services.AddHttpClient<IDataPoolClient, DataPoolClient>(c =>
+                    c.BaseAddress = new Uri(dataPoolUrl));
+            }
+            else
+            {
+                // Register a no-op so dependants resolve without error when DataPool is not running.
+                services.AddSingleton<IDataPoolClient, NullDataPoolClient>();
+            }
+
             // Scenario-scoped NavigationService (resolved in step constructors)
             services.AddScoped<NavigationService>();
 
-            // ⚠️ CRITICAL: Page objects MUST be Transient, never Singleton
-            // Singleton = all scenarios share the same page object instance = state bleed between tests ❌
-            // Transient = each step/scenario gets a fresh page object = clean isolated tests ✅
-            // This prevents cross-scenario contamination and flaky tests from leftover state.
             services.AddSingleton<ApiHeaders>();
-            services.AddTransient<ScenarioContextData>();
-            services.AddTransient<AccountOwnerInfoPage>();
-            services.AddTransient<PA_AddAdditionalInterestPage>();
-            services.AddTransient<PA_AddDriverInfoPage>();
-            services.AddTransient<PA_AddVehicleInfoPage>();
-            services.AddTransient<BillingPage>();
-            services.AddTransient<ClientSearchPage>();
-            services.AddTransient<PA_DiscountsPage>();
-            services.AddTransient<ExpertQuoteLoginPage>();
-            services.AddTransient<NewClientPage>();
-            services.AddTransient<PA_PolicyCoveragesPage>();
-            services.AddTransient<PreQualificationPage>();
-            services.AddTransient<PA_PricingDetailsPage>();
-            services.AddTransient<QuoteDetailsPage>();
-            services.AddTransient<PA_AdditionalCoveragesPage>();
-            services.AddTransient<SFP_EditLocationPage>();
-            services.AddTransient<ExpressLoginPage>();
+
+            // One ScenarioContextData per scenario, shared by every binding that touches it.
+            // Some step classes inject it; others read ScenarioContext["ContextData"]. Both routes
+            // have to return the same object, otherwise data written through one is invisible to
+            // the other. TestHooks seeds the entry in [BeforeScenario] and this factory hands back
+            // that same instance instead of minting a new one.
+            services.AddTransient(provider =>
+            {
+                var scenarioContext = provider.GetRequiredService<ScenarioContext>();
+                if (scenarioContext.ContainsKey(ScenarioContextData.ContextKey) &&
+                    scenarioContext[ScenarioContextData.ContextKey] is ScenarioContextData existing)
+                {
+                    return existing;
+                }
+
+                var created = new ScenarioContextData();
+                scenarioContext[ScenarioContextData.ContextKey] = created;
+                return created;
+            });
 
             // ── Forms Checking services ──
             var formsConfig = configuration.GetSection("DuckCreekForms").Get<DuckCreekFormsConfig>();
@@ -115,6 +127,5 @@ namespace PnCTestAutomation
             services.AddScoped<FormsValidationService>();
             services.AddHttpClient<DuckCreekFormsClient>();
         }
-
-        }
+    }
 }

@@ -69,8 +69,8 @@ namespace PnCTestAutomation.Tools.LocatorScan
 
                 if (format == LocatorOutputFormat.SfpPageObject)
                 {
-                    // Generate SFP page object: SFP_PolicyDetails_Page.cs
-                    fileName = $"SFP_{pageIdentifier}Page.cs";
+                    // Generate page object: PolicyDetailsPage.cs
+                    fileName = $"{pageIdentifier}Page.cs";
                     fileContent = GenerateSfpPageClass(candidateElements, pageIdentifier, url);
                 }
                 else
@@ -527,9 +527,9 @@ namespace PnCTestAutomation.Tools.LocatorScan
             sb.AppendLine();
             sb.AppendLine("namespace PnCTestAutomation.Pages");
             sb.AppendLine("{");
-            sb.AppendLine($"    public class SFP_{pageIdentifier}Page : BasePage");
+            sb.AppendLine($"    public class {pageIdentifier}Page : BasePage");
             sb.AppendLine("    {");
-            sb.AppendLine($"        public SFP_{pageIdentifier}Page(IPage page) : base(page) {{ }}");
+            sb.AppendLine($"        public {pageIdentifier}Page(IPage page) : base(page) {{ }}");
             sb.AppendLine();
 
             // Deduplicate elements by their locator code snippet

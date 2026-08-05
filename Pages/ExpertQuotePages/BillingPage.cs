@@ -102,7 +102,7 @@ namespace PnCTestAutomation.Pages
         /// <summary>
         /// Click the Next button and wait for spinner to clear
         /// </summary>
-        public new async Task ClickNextAsync()
+        public async Task ClickNextAsync()
         {
             await base.ClickNextAsync();
             await WaitForSpinnerAsync();

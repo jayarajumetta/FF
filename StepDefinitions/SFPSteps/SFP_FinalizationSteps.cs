@@ -42,7 +42,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         {
             _context = context;
             _scenarioContext = scenarioContext;
-            _contextData = _scenarioContext["ContextData"] as ScenarioContextData
+            _contextData = _scenarioContext[ScenarioContextData.ContextKey] as ScenarioContextData
                 ?? throw new InvalidOperationException("ScenarioContextData not found. Ensure TestHooks.BeforeTestRun registered it.");
             _sessionService = sessionService;
             _formsClient = formsClient;
@@ -207,7 +207,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             {
                 Console.WriteLine($"*** ANNUAL PREMIUM: ${premium.Value:N2} ***");
 
-                var stateAbbv = GetStateAbbreviation(_contextData.RatingState);
+                var stateAbbv = StateAbbreviations.ToAbbreviation(_contextData.RatingState);
                 var productKey = GetPremiumBaselineProductKey();
                 var expectedRaw = _configuration[$"ExpectedPremiums:{productKey}:{stateAbbv}:Amount"];
                 var skipPremiumBaselineAssertion = string.Equals(
@@ -235,6 +235,33 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             }
             else
                 Console.WriteLine("[Premium] Could not extract annual premium amount – inspect pricing page test IDs to refine locator.");
+        }
+
+        /// <summary>
+        /// Derives the forms test case key ("CE" or "BASIC") from the scenario context.
+        /// Checks (in order): explicit FormsTestCase on context, ProductSelection, scenario tags, scenario title.
+        /// </summary>
+        private string DeriveFormsTestCase()
+        {
+            // Explicit override from feature table takes highest priority.
+            if (!string.IsNullOrWhiteSpace(_contextData?.FormsTestCase))
+                return _contextData.FormsTestCase;
+
+            var productSelection = (_contextData?.ProductSelection ?? string.Empty).Trim();
+            if (productSelection.Equals("CE", StringComparison.OrdinalIgnoreCase)
+                || productSelection.Equals("Country Estate", StringComparison.OrdinalIgnoreCase))
+                return "CE";
+
+            var tags = _scenarioContext?.ScenarioInfo?.Tags ?? Array.Empty<string>();
+            if (tags.Any(t => t.Equals("CE", StringComparison.OrdinalIgnoreCase)))
+                return "CE";
+
+            var scenarioTitle = _scenarioContext?.ScenarioInfo?.Title ?? string.Empty;
+            if (scenarioTitle.IndexOf("Country Estate", StringComparison.OrdinalIgnoreCase) >= 0
+                || scenarioTitle.IndexOf("CE", StringComparison.OrdinalIgnoreCase) >= 0)
+                return "CE";
+
+            return "BASIC";
         }
 
         private string GetPremiumBaselineProductKey()
@@ -417,7 +444,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 Console.WriteLine("[Billing] Full billing form not present (mortgagee-escrow policy) — skipping billing form.");
             }
 
-            await billingPage.ClickNextAsync();
+            // Escrow billing navigation can be slower than usual — allow up to 2 minutes.
+            await billingPage.ClickNextAsync(spinnerTimeoutMs: 120000);
             Console.WriteLine($"Billing completed: PaymentType={_contextData.PaymentType}, " +
                               $"Plan={_contextData.PaymentPlan}, Method={_contextData.PaymentMethod}");
         }
@@ -443,8 +471,9 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 var sessionId = await _sessionService.GetDuckCreekSessionIdViaCLASAsync(quoteId);
 
                 // 2. Call the DuckCreek Forms Engine API
+                var testCase = DeriveFormsTestCase();
                 var responseXml = await _formsClient.GetFormsAndSaveAsync(
-                    sessionId, lob, $"{lob}_BasicPolicy", state, quoteId);
+                    sessionId, lob, $"{lob}_{testCase}", state, quoteId);
 
                 // 3. Parse XML response into typed form entries
                 var actualForms = FormsXmlParser.Parse(responseXml);
@@ -459,8 +488,21 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 Console.WriteLine($"  Metadata: PrintJob={metadata.PrintJobName}, Manuscript={metadata.Manuscript}, " +
                                   $"RoleBasedSecurity={metadata.HasRoleBasedSecurity}, ReturnSuccess={metadata.ReturnSuccessStatus}");
 
-                // 4. Load expected forms and validate (ANPAC filtering applied inside Validate)
-                var testCase = _contextData.FormsTestCase ?? "BASIC";
+                // 4a. Record mode: capture actual forms as proposed baseline and skip comparison
+                var recordBaseline = string.Equals(
+                    _configuration["Debugging:RecordBaseline"], "true",
+                    StringComparison.OrdinalIgnoreCase);
+
+                if (recordBaseline)
+                {
+                    var currentBaseline = _validationService.LoadExpectedFormsForLob(lob, state, testCase);
+                    var proposedPath = _validationService.SaveProposedBaseline(actualForms, currentBaseline, lob, state, testCase);
+                    Console.WriteLine($"[FormsValidation][RECORD] {lob}/{state}/{testCase} — {actualForms.Count} forms captured.");
+                    Console.WriteLine($"[FormsValidation][RECORD] Proposed baseline: {proposedPath}");
+                    return;
+                }
+
+                // 4b. Normal mode: load expected forms and validate (ANPAC filtering applied inside Validate)
                 var expected = _validationService.LoadExpectedFormsForLob(lob, state, testCase);
                 var summary = _validationService.Validate(expected, actualForms, lob, state, quoteId);
                 summary.ResponseMetadata = metadata;
@@ -483,13 +525,21 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 Console.WriteLine($"[FormsValidation] HTML report saved: {absoluteHtmlPath}");
                 MaybeOpenFormsReport(absoluteHtmlPath, summary.Failed > 0);
 
-                // 8. Non-blocking — log outcome but do not fail the scenario
+                // 8. Log outcome; assert when FailOnFormsValidationError=true so failures surface in ADO
                 if (summary.Failed > 0)
                 {
                     var failures = string.Join("\n", summary.Results
                         .Where(r => r.Result == "FAIL")
                         .Select(r => $"    {r.FormName}: {r.Message}"));
-                    Console.WriteLine($"[FormsValidation] {summary.Failed} failure(s) — see report: {absoluteHtmlPath}\n{failures}");
+                    var message = $"[FormsValidation] {summary.Failed} failure(s) — see report: {absoluteHtmlPath}\n{failures}";
+                    Console.WriteLine(message);
+
+                    var failOnFormsValidationError = string.Equals(
+                        _configuration["Debugging:FailOnFormsValidationError"],
+                        "true",
+                        StringComparison.OrdinalIgnoreCase);
+                    if (failOnFormsValidationError)
+                        Assert.Fail(message);
                 }
             }
             catch (Exception ex)
@@ -762,41 +812,5 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             Console.WriteLine("Verified: Transmit button is enabled on Submission page");
         }
 
-        private static string GetStateAbbreviation(string fullName) =>
-            fullName?.ToUpperInvariant() switch
-            {
-                "ALABAMA" => "AL",
-                "ARKANSAS" => "AR",
-                "ARIZONA" => "AZ",
-                "COLORADO" => "CO",
-                "IDAHO" => "ID",
-                "IOWA" => "IA",
-                "INDIANA" => "IN",
-                "ILLINOIS" => "IL",
-                "KANSAS" => "KS",
-                "KENTUCKY" => "KY",
-                "LOUISIANA" => "LA",
-                "MISSISSIPPI" => "MS",
-                "MISSOURI" => "MO",
-                "MINNESOTA" => "MN",
-                "MONTANA" => "MT",
-                "NEW HAMPSHIRE" => "NH",
-                "NEW MEXICO" => "NM",
-                "NEBRASKA" => "NE",
-                "NEVADA" => "NV",
-                "NORTH DAKOTA" => "ND",
-                "OHIO" => "OH",
-                "OKLAHOMA" => "OK",
-                "OREGON" => "OR",
-                "SOUTH CAROLINA" => "SC",
-                "SOUTH DAKOTA" => "SD",
-                "TENNESSEE" => "TN",
-                "TEXAS" => "TX",
-                "UTAH" => "UT",
-                "WASHINGTON" => "WA",
-                "WISCONSIN" => "WI",
-                "WYOMING" => "WY",
-                _ => fullName?.Length >= 2 ? fullName[..2].ToUpperInvariant() : "UNKNOWN"
-            };
     }
 }
