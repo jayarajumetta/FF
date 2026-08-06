@@ -49,7 +49,7 @@ parameters:
   default: false
 
 pool:
-  name: "Playwright"
+  name: "Default"
 
 variables:
   DOTNET_VERSION: "8.x"
@@ -62,7 +62,7 @@ stages:
   condition: eq('${{ parameters.setupDataPoolService }}', true)
 
   pool:
-    name: "Playwright"
+    name: "Default"
     demands:
       - Agent.Name -equals scpw-pnc-plw1
 
