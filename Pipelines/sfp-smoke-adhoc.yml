@@ -49,7 +49,7 @@ parameters:
   default: false
 
 pool:
-  name: "Default"
+  name: "Playwright"
 
 variables:
   DOTNET_VERSION: "8.x"
