@@ -154,6 +154,49 @@ namespace PnCTestAutomation.Services
         public static string Generate(FormsValidationSummary summary, string outputPath)
             => Generate(new[] { summary }, outputPath);
 
+        /// <summary>
+        /// Writes a Markdown summary file and emits ##vso[task.uploadsummary] so ADO attaches it to the pipeline run page.
+        /// </summary>
+        public static void WritePipelineSummary(FormsValidationSummary summary, string outputDirectory)
+        {
+            var overall = summary.AllPassed ? "✅ ALL PASSED" : $"❌ {summary.Failed} FAILURE(S)";
+            var md = new StringBuilder();
+            md.AppendLine($"# Forms Validation — {summary.LOB} / {summary.State}");
+            md.AppendLine();
+            md.AppendLine("| Item | Value |");
+            md.AppendLine("|---|---|");
+            md.AppendLine($"| Policy Type | {summary.PolicyTypeLabel} |");
+            md.AppendLine($"| State | {summary.State} |");
+            md.AppendLine($"| Quote | {summary.QuoteId} |");
+            md.AppendLine($"| Generated | {summary.Timestamp:yyyy-MM-dd HH:mm:ss} |");
+            md.AppendLine();
+            md.AppendLine("| Forms Checked | Pass | Fail | Info | Result |");
+            md.AppendLine("|---:|---:|---:|---:|---|");
+            md.AppendLine($"| {summary.TotalForms} | {summary.Passed} | {summary.Failed} | {summary.Info} | {overall} |");
+
+            var attention = summary.Results
+                .Where(r => r.Result == "FAIL" || r.Result == "INFO" || r.Result == "ISSUE")
+                .ToList();
+
+            if (attention.Any())
+            {
+                md.AppendLine();
+                md.AppendLine("## Attention Items");
+                md.AppendLine();
+                md.AppendLine("| Form | Result | Message |");
+                md.AppendLine("|---|---|---|");
+                foreach (var item in attention)
+                    md.AppendLine($"| {item.FormName} | {item.Result} | {item.Message?.Replace("|", "\\|")} |");
+            }
+
+            Directory.CreateDirectory(outputDirectory);
+            var mdPath = Path.GetFullPath(Path.Combine(outputDirectory, $"FormsValidationSummary_{summary.LOB}_{summary.State}.md"));
+            File.WriteAllText(mdPath, md.ToString(), Encoding.UTF8);
+
+            // ADO reads this from stdout and pins the Markdown to the pipeline run summary tab.
+            Console.WriteLine($"##vso[task.uploadsummary]{mdPath}");
+        }
+
         private static void AppendCard(StringBuilder sb, string label, int value, string cssClass)
         {
             sb.AppendLine($"<div class=\"card {cssClass}\"><div class=\"card-value\">{value}</div><div class=\"card-label\">{label}</div></div>");
