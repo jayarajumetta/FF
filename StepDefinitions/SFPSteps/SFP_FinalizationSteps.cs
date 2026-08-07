@@ -523,6 +523,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
                 var absoluteHtmlPath = Path.GetFullPath(htmlPath);
                 Console.WriteLine($"[FormsValidation] HTML report saved: {absoluteHtmlPath}");
+                FormsReportGenerator.WritePipelineSummary(summary, Path.GetDirectoryName(absoluteHtmlPath)!);
+                FormsReportGenerator.WriteTrxResults(summary, Path.GetDirectoryName(absoluteHtmlPath)!);
                 MaybeOpenFormsReport(absoluteHtmlPath, summary.Failed > 0);
 
                 // 8. Log outcome; assert when FailOnFormsValidationError=true so failures surface in ADO

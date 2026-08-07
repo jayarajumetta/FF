@@ -154,6 +154,108 @@ namespace PnCTestAutomation.Services
         public static string Generate(FormsValidationSummary summary, string outputPath)
             => Generate(new[] { summary }, outputPath);
 
+        /// <summary>
+        /// Writes a Markdown summary file and emits ##vso[task.uploadsummary] so ADO attaches it to the pipeline run page.
+        /// </summary>
+        public static void WritePipelineSummary(FormsValidationSummary summary, string outputDirectory)
+        {
+            var overall = summary.AllPassed ? "✅ ALL PASSED" : $"❌ {summary.Failed} FAILURE(S)";
+            var md = new StringBuilder();
+            md.AppendLine($"# Forms Validation — {summary.LOB} / {summary.State}");
+            md.AppendLine();
+            md.AppendLine("| Item | Value |");
+            md.AppendLine("|---|---|");
+            md.AppendLine($"| Policy Type | {summary.PolicyTypeLabel} |");
+            md.AppendLine($"| State | {summary.State} |");
+            md.AppendLine($"| Quote | {summary.QuoteId} |");
+            md.AppendLine($"| Generated | {summary.Timestamp:yyyy-MM-dd HH:mm:ss} |");
+            md.AppendLine();
+            md.AppendLine("| Forms Checked | Pass | Fail | Info | Result |");
+            md.AppendLine("|---:|---:|---:|---:|---|");
+            md.AppendLine($"| {summary.TotalForms} | {summary.Passed} | {summary.Failed} | {summary.Info} | {overall} |");
+
+            var attention = summary.Results
+                .Where(r => r.Result == "FAIL" || r.Result == "INFO" || r.Result == "ISSUE")
+                .ToList();
+
+            if (attention.Any())
+            {
+                md.AppendLine();
+                md.AppendLine("## Attention Items");
+                md.AppendLine();
+                md.AppendLine("| Form | Result | Message |");
+                md.AppendLine("|---|---|---|");
+                foreach (var item in attention)
+                    md.AppendLine($"| {item.FormName} | {item.Result} | {item.Message?.Replace("|", "\\|")} |");
+            }
+
+            Directory.CreateDirectory(outputDirectory);
+            var mdPath = Path.GetFullPath(Path.Combine(outputDirectory, $"FormsValidationSummary_{summary.LOB}_{summary.State}.md"));
+            File.WriteAllText(mdPath, md.ToString(), Encoding.UTF8);
+
+            // ADO reads this from stdout and pins the Markdown to the pipeline run summary tab.
+            Console.WriteLine($"##vso[task.uploadsummary]{mdPath}");
+        }
+
+        /// <summary>
+        /// Writes a TRX file so ADO's Tests tab and Test Results Trend dashboard widget reflect forms health over time.
+        /// One test entry per state run: pass if AllPassed, fail otherwise.
+        /// </summary>
+        public static void WriteTrxResults(FormsValidationSummary summary, string outputDirectory)
+        {
+            var runId = Guid.NewGuid().ToString();
+            var testId = Guid.NewGuid().ToString();
+            var execId = Guid.NewGuid().ToString();
+            var listId = "8c84fa94-04c1-424b-9868-57a2d4851a1d"; // ADO default list GUID
+            var testName = $"Forms Validation - {summary.LOB} - {summary.State} - {summary.PolicyTypeLabel}";
+            var outcome = summary.AllPassed ? "Passed" : "Failed";
+            var now = summary.Timestamp.ToString("O");
+            var duration = "00:00:00.001";
+
+            var failureBlock = string.Empty;
+            if (!summary.AllPassed)
+            {
+                var failures = string.Join("\n", summary.Results
+                    .Where(r => r.Result == "FAIL" || r.Result == "ISSUE")
+                    .Select(r => $"  {r.FormName}: {r.Message}"));
+                failureBlock = $@"
+          <Output>
+            <ErrorInfo>
+              <Message>{System.Security.SecurityElement.Escape(failures)}</Message>
+            </ErrorInfo>
+          </Output>";
+            }
+
+            var trx = $@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<TestRun id=""{runId}"" name=""Forms Validation — {summary.LOB}/{summary.State}"" xmlns=""http://microsoft.com/schemas/VisualStudio/TeamTest/2010"">
+  <TestDefinitions>
+    <UnitTest name=""{testName}"" id=""{testId}"">
+      <TestMethod className=""FormsValidation"" name=""{testName}"" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId=""{testId}"" testListId=""{listId}"" executionId=""{execId}"" />
+  </TestEntries>
+  <TestLists>
+    <TestList name=""Results Not in a List"" id=""{listId}"" />
+  </TestLists>
+  <Results>
+    <UnitTestResult executionId=""{execId}"" testId=""{testId}"" testName=""{testName}""
+      outcome=""{outcome}"" duration=""{duration}"" startTime=""{now}"" endTime=""{now}""
+      testListId=""{listId}"">{failureBlock}
+    </UnitTestResult>
+  </Results>
+  <ResultSummary outcome=""{outcome}"">
+    <Counters total=""1"" executed=""1"" passed=""{(summary.AllPassed ? 1 : 0)}"" failed=""{(summary.AllPassed ? 0 : 1)}"" />
+  </ResultSummary>
+</TestRun>";
+
+            Directory.CreateDirectory(outputDirectory);
+            var trxPath = Path.GetFullPath(Path.Combine(outputDirectory, $"FormsValidation_{summary.LOB}_{summary.State}.trx"));
+            File.WriteAllText(trxPath, trx, Encoding.UTF8);
+            Console.WriteLine($"[FormsValidation] TRX written: {trxPath}");
+        }
+
         private static void AppendCard(StringBuilder sb, string label, int value, string cssClass)
         {
             sb.AppendLine($"<div class=\"card {cssClass}\"><div class=\"card-value\">{value}</div><div class=\"card-label\">{label}</div></div>");
