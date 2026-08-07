@@ -403,15 +403,12 @@ stages:
         artifact: "SFP_Smoke_Shard_$(SHARD_NUMBER)"
 
     # ✅ FORMS REPORTS
-    # Copies the HTML forms validation reports generated during the test run into
-    # the staging directory and publishes them as a pipeline artifact.
-    # After the run: ADO pipeline → Artifacts tab → "Forms_Reports_Shard_X"
-    # → download and open any FormsReport_SFP_<State>_<QuoteID>.html in a browser.
+    # Copies HTML reports to FormsReports artifact and TRX files to TestResults
+    # so PublishTestResults@2 includes forms outcomes in the ADO Tests tab.
     - powershell: |
         $reportsDir = "$(Build.ArtifactStagingDirectory)/FormsReports"
         New-Item -ItemType Directory -Force -Path $reportsDir | Out-Null
 
-        # The test writes reports to <workdir>/TestResults/<date>/FormsReport_*.html
         $sourceBase = "$(Build.SourcesDirectory)/TestResults"
         if (Test-Path $sourceBase) {
             $reports = Get-ChildItem -Path $sourceBase -Recurse -Filter "FormsReport_*.html"
@@ -423,6 +420,15 @@ stages:
                 Write-Host "Collected $($reports.Count) forms report(s)."
             } else {
                 Write-Host "No forms reports found — forms validation may not have run or all states skipped."
+            }
+
+            # Copy forms TRX to staging TestResults so PublishTestResults@2 picks them up
+            $trxFiles = Get-ChildItem -Path $sourceBase -Recurse -Filter "FormsValidation_*.trx"
+            if ($trxFiles.Count -gt 0) {
+                $trxFiles | ForEach-Object {
+                    Copy-Item $_.FullName -Destination "$(Build.ArtifactStagingDirectory)/TestResults"
+                    Write-Host "Collected TRX: $($_.Name)"
+                }
             }
         } else {
             Write-Host "TestResults directory not found — skipping forms report collection."
@@ -664,6 +670,15 @@ stages:
                 Write-Host "Collected $($reports.Count) forms report(s)."
             } else {
                 Write-Host "No forms reports found — forms validation may not have run or all states skipped."
+            }
+
+            # Copy forms TRX to staging TestResults so PublishTestResults@2 picks them up
+            $trxFiles = Get-ChildItem -Path $sourceBase -Recurse -Filter "FormsValidation_*.trx"
+            if ($trxFiles.Count -gt 0) {
+                $trxFiles | ForEach-Object {
+                    Copy-Item $_.FullName -Destination "$(Build.ArtifactStagingDirectory)/TestResults"
+                    Write-Host "Collected TRX: $($_.Name)"
+                }
             }
         } else {
             Write-Host "TestResults directory not found — skipping forms report collection."
