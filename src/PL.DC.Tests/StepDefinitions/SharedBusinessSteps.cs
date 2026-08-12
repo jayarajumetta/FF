@@ -139,8 +139,8 @@ public sealed class SharedBusinessSteps
         await eUPricing.WaitForBtnApproveAsync();
         await eUPricing.ClickBtnApproveAsync();
         await eUPricing.ClickLnkHomeAsync();
-        await eQNewQuote.SetTxtQuotePolicySearchAsync(_data.Get("EQ New Quote.Txt_Quote\Policy Search", "\"^{a}\""));
-        await eQNewQuote.SetTxtQuotePolicySearchAsync(_data.Get("EQ New Quote.Txt_Quote\Policy Search", "{{buffer:QuoteNumber}}"));
+        //await eQNewQuote.SetTxtQuotePolicySearchAsync(_data.Get("EQ New Quote.Txt_Quote\Policy Search", "\"^{a}\""));
+        //await eQNewQuote.SetTxtQuotePolicySearchAsync(_data.Get("EQ New Quote.Txt_Quote\Policy Search", "{{buffer:QuoteNumber}}"));
         await eQNewQuote.ClickBtnSearchAsync();
         await eQAutoTabs.ClickDIVSubmissionAsync();
     
