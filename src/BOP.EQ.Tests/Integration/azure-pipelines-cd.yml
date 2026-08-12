@@ -1,0 +1,35 @@
+trigger: none
+parameters:
+- name: filter
+  type: string
+  default: ''
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: DownloadPipelineArtifact@2
+  inputs:
+    artifact: insurance-automation
+    path: $(Pipeline.Workspace)/automation
+- task: UseDotNet@2
+  inputs:
+    packageType: sdk
+    version: 8.x
+- script: |
+    cd $(Pipeline.Workspace)/automation
+    dotnet test -c Release --logger "trx;LogFileName=results.trx" ${{ parameters.filter }}
+  displayName: Execute tests
+  continueOnError: true
+- task: PublishTestResults@2
+  condition: always()
+  inputs:
+    testResultsFormat: VSTest
+    testResultsFiles: '**/*.trx'
+    mergeTestResults: true
+    failTaskOnFailedTests: true
+- task: PublishPipelineArtifact@1
+  condition: always()
+  inputs:
+    targetPath: $(Pipeline.Workspace)/automation/Reports
+    artifact: test-evidence

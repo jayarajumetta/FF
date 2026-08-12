@@ -1,0 +1,12 @@
+{
+  "BOP_EQ": {
+    "project": "src/BOP.EQ.Tests/ClientAutomation.BOPEQ.Tests.csproj",
+    "tag": "@bop-eq",
+    "assembly": "ClientAutomation.BOPEQ.Tests"
+  },
+  "PL_DC": {
+    "project": "src/PL.DC.Tests/ClientAutomation.PLDC.Tests.csproj",
+    "tag": "@pl-dc",
+    "assembly": "ClientAutomation.PLDC.Tests"
+  }
+}

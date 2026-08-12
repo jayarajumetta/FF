@@ -1,0 +1,16 @@
+{
+  "Agent PC Code": "D2102",
+  "CloseBrowser.Title": "ExpertQuote*",
+  "EQ Client Selection.Lbl_Client Info": "Client Info",
+  "EQ OpenUrl.Url": "https://expertquote-qa.americannational.com/expertquote/#/quote",
+  "EQ OpenUrl.WebDriverBrowserArguments": "--silent-debugger-extension-api",
+  "EQ Proposal Details/Start.County_ComboBox": "Adair",
+  "EQ Proposal Details/Start.EffectiveDate": "{{date}}",
+  "EQ Tabs.Lbl_QNum": "{{buffer:QuoteNumber2}}",
+  "EQ Tabs.Txt_quoteSearchInput": "{{buffer:QuoteNumber}}",
+  "Old_TestData - Find & provide item.Alias name (item)": "NM_ClientData",
+  "Old_TestData - Find & provide item.Existing TDS type": "NM_ClientData",
+  "State": "NEW MEXICO",
+  "URL": "https://expertquote-qa.americannational.com/expertquote/#/quote",
+  "WritingCompany": "American National Property And Casualty Co."
+}

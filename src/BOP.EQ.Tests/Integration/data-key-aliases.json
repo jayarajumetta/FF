@@ -1,0 +1,10 @@
+{
+  "State": "StateCode",
+  "State Abbv": "StateCode",
+  "State Abbreviation": "StateCode",
+  "State Name": "StateName",
+  "Login.UserName": "Login.Username",
+  "Username": "Login.Username",
+  "UserName": "Login.Username",
+  "Password": "Login.Password"
+}

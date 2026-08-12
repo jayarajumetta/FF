@@ -1,0 +1,82 @@
+{
+  "version": "35.0.0",
+  "repositoryModel": "one repository, two isolated ReqnRoll/NUnit test assemblies",
+  "baselineCompilerContracts": {
+    "BOP_EQ": {
+      "version": "34.0.0",
+      "source": "BOP/EQ",
+      "bindingDeduplication": {
+        "sharedPhrases": 38,
+        "removedScopedMethods": 86,
+        "remainingFeatureScopedFiles": 3
+      },
+      "staticCompilerContract": {
+        "errors": [],
+        "warnings": []
+      },
+      "stats": {
+        "csharpFiles": 173,
+        "types": 175,
+        "pageTypes": 80,
+        "bindings": 119
+      },
+      "releaseRules": [
+        "no stale StepDefinition directories under project root",
+        "one effective binding per feature step",
+        "all constructed page types exist",
+        "all awaited page methods exist",
+        "no member/type identifier collision",
+        "balanced C# delimiters",
+        "unique C# type names",
+        "valid csproj XML"
+      ]
+    },
+    "PL_DC": {
+      "version": "34.0.0",
+      "source": "PL-DC",
+      "bindingDeduplication": {
+        "sharedPhrases": 22,
+        "removedScopedMethods": 143,
+        "remainingFeatureScopedFiles": 9
+      },
+      "staticCompilerContract": {
+        "errors": [],
+        "warnings": []
+      },
+      "stats": {
+        "csharpFiles": 117,
+        "types": 119,
+        "pageTypes": 49,
+        "bindings": 43
+      },
+      "releaseRules": [
+        "no stale StepDefinition directories under project root",
+        "one effective binding per feature step",
+        "all constructed page types exist",
+        "all awaited page methods exist",
+        "no member/type identifier collision",
+        "balanced C# delimiters",
+        "unique C# type names",
+        "valid csproj XML"
+      ]
+    }
+  },
+  "combinedSanity": {
+    "BOP_EQ": {
+      "errors": [],
+      "assembly": "ClientAutomation.BOPEQ.Tests",
+      "featureFiles": 4,
+      "visibleBusinessSteps": 317,
+      "staleBindingFiles": 0
+    },
+    "PL_DC": {
+      "errors": [],
+      "assembly": "ClientAutomation.PLDC.Tests",
+      "featureFiles": 11,
+      "visibleBusinessSteps": 189,
+      "staleBindingFiles": 0
+    },
+    "assemblyNamesUnique": true,
+    "crossDomainBindingPolicy": "Bindings are uniqueness-gated inside each test assembly. Identical wording across BOP/EQ and PL-DC cannot create ReqnRoll ambiguity because assemblies execute as separate test projects."
+  }
+}

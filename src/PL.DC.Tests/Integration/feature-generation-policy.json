@@ -1,0 +1,16 @@
+{
+  "featureName": "TemplateInstance.Name, otherwise business TestCase.Name",
+  "scenarioName": "Concrete business TestCase or instance name",
+  "visibleSteps": "Detailed business workflow derived from folders, reusable blocks, and named TestSteps",
+  "examples": "Canonical non-duplicate business dimensions plus dataFile",
+  "implementation": "Explicit scoped binding -> workflow -> page method -> final locator",
+  "technicalSetup": "Hooks",
+  "technicalData": "Flat JSON/runtime templates",
+  "forbidden": [
+    "source GUIDs",
+    "ObjectClass names",
+    "sequence prefixes",
+    "location/building coordinates in Gherkin",
+    "generic execute-test wrapper"
+  ]
+}

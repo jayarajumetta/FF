@@ -1,0 +1,18 @@
+{
+  "version": "21.0.0",
+  "preconditionFolderCounts": {
+    "PreCondition": 128,
+    "Precondition": 462
+  },
+  "postconditionFolderCounts": {
+    "Post Condition": 57,
+    "PostCondition": 72,
+    "Postcondition": 461
+  },
+  "policy": {
+    "businessPrerequisites": "Remain as Given steps.",
+    "technicalSetup": "BeforeScenario Hook.",
+    "businessPostconditions": "Remain explicit when they validate or change business state.",
+    "technicalCleanup": "AfterScenario Hook and BrowserContext disposal."
+  }
+}

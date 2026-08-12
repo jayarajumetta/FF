@@ -1,0 +1,42 @@
+{
+  "version": "28.0.0",
+  "businessVisible": {
+    "examples": [
+      "create a new client",
+      "enter account information",
+      "calculate and verify the premium",
+      "refer the quote to underwriting"
+    ],
+    "location": "Features/"
+  },
+  "automationVisible": {
+    "examples": [
+      "FillAsync",
+      "ClickAsync",
+      "SelectOptionAsync",
+      "PressAsync",
+      "Expect(...).ToBeVisibleAsync",
+      "capture/store runtime values"
+    ],
+    "location": "StepDefinitions/ and Pages/"
+  },
+  "frameworkOnly": {
+    "examples": [
+      "browser/context setup",
+      "loading synchronization",
+      "screenshots/traces/video",
+      "safe cleanup and recovery",
+      "environment/secret resolution"
+    ],
+    "location": "Hooks/, Utils/, Integration/"
+  },
+  "reviewRequired": {
+    "examples": [
+      "unsupported engine",
+      "unresolved locator",
+      "business-changing recovery",
+      "missing external resource"
+    ],
+    "policy": "Never silently approximate."
+  }
+}

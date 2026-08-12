@@ -1,0 +1,21 @@
+{
+  "version": "35.0.0",
+  "repositoryModel": "single-client-repository",
+  "projects": [
+    "ClientAutomation.BOPEQ.Tests",
+    "ClientAutomation.PLDC.Tests"
+  ],
+  "compilerContractErrors": {
+    "BOP_EQ": 0,
+    "PL_DC": 0
+  },
+  "combinedSanityErrors": {
+    "BOP_EQ": 0,
+    "PL_DC": 0
+  },
+  "sourceSpecificConsiderations": {
+    "PL_DC_UIChildren": 3,
+    "PL_DC_UIParent": 3,
+    "BOP_EQ_ApiModule": 4
+  }
+}

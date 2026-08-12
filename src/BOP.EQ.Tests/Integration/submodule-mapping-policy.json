@@ -1,0 +1,43 @@
+{
+  "version": "25.0.0",
+  "moduleExpansion": {
+    "recursiveAttributes": true,
+    "associations": [
+      "Attributes",
+      "ReferencedModule",
+      "DefaultSpecializationModule",
+      "Generalization",
+      "Specializations"
+    ],
+    "testStepValueSpecializationModule": "honor when present",
+    "cycles": "detect and stop"
+  },
+  "featureGeneration": {
+    "preconditions": "Background when shared and non-parameterized; otherwise Given",
+    "businessSteps": "Name attributes from folders/reusable blocks/direct steps",
+    "implementation": "Step definitions call page methods directly; no generated workflow layer required"
+  },
+  "dataResolution": {
+    "static": "plain JSON",
+    "testSheetAndInstance": "resolve before generation",
+    "parameterReference": "resolve at invocation scope",
+    "buffer": "{{buffer:Name}}",
+    "random": "{{randomText:10}} / {{randomDigits:6}} / {{randomNumber:min:max}}",
+    "date": "{{date}} / {{dateOffsetDays:n:format}}",
+    "environment": "{{env:NAME}}",
+    "missing": "fail clearly"
+  },
+  "locatorPriority": [
+    "test-id",
+    "stable exact id",
+    "role+accessible name",
+    "associated label/aria-label",
+    "application-specific id",
+    "name",
+    "placeholder",
+    "title",
+    "concise css",
+    "short exact text",
+    "xpath review fallback"
+  ]
+}

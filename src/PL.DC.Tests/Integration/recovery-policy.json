@@ -1,0 +1,63 @@
+{
+  "version": "21.0.0",
+  "principle": "Each scenario receives a fresh BrowserContext. On failure the framework captures evidence, attempts safe logout, and always disposes the context.",
+  "counts": {
+    "collections": 286,
+    "scenarios": 830,
+    "steps": 2000,
+    "classifications": {
+      "evidence": 387,
+      "cleanup": 286,
+      "safe-logout": 157
+    },
+    "retryLevels": {
+      "0": 572,
+      "1": 129,
+      "2": 129
+    },
+    "scenarioTypes": {
+      "0": 544,
+      "1": 286
+    }
+  },
+  "default": {
+    "captureScreenshot": true,
+    "captureDom": true,
+    "saveTrace": true,
+    "saveVideo": true,
+    "attemptSafeLogout": true,
+    "closeBrowserContext": true,
+    "retryMode": "whole-scenario-in-CI",
+    "actionLevelRetries": false
+  },
+  "safeLogoutSelectors": [
+    "[data-testid='logout']",
+    "[data-duckcreek-id='Logout']",
+    "a:has-text('Log Out')",
+    "button:has-text('Log Out')",
+    "a:has-text('Sign Out')",
+    "button:has-text('Sign Out')"
+  ],
+  "sourceSummary": {
+    "stepNames": {
+      "Take Screenshot when Error Occurs": 387,
+      "Close Explorer Browsers": 129,
+      "Close Chrome Browsers": 129,
+      "Close Firefox Browsers": 129,
+      "Close Edge Browsers": 129,
+      "Close Edge Beta Browsers": 129,
+      "TBox Take Screenshot of failure(during initial run) at TC level": 13,
+      "Log Out from the ExpertQuote EQ": 314,
+      "Wait Until EQ-Log In page shows up": 314,
+      "CloseBrowser": 314,
+      "TBox Take Screenshot of failure(during recovery run)": 13
+    },
+    "modules": {
+      "TBox Take Screenshot": 413,
+      "TBox Start Program": 645,
+      "EQ||Log Out": 314,
+      "EQ||Sign On": 314,
+      "CloseBrowser": 314
+    }
+  }
+}

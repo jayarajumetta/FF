@@ -1,0 +1,1505 @@
+{
+  "version": "21.0.0",
+  "sourceFiles": {
+    "CL-EQ Total.tsu": 81217,
+    "PL-DC-Modules - Production.tsu": 28612,
+    "PL-DC-TestCaseDesign.tsu": 27377,
+    "TestCase PL-DC.tsu": 111095
+  },
+  "uniqueEntities": 213691,
+  "objectClasses": [
+    {
+      "objectClass": "ApiModule",
+      "count": 4,
+      "disposition": "executable",
+      "rationale": "Converted to API request/response builder operations.",
+      "attributes": [
+        "BusinessType",
+        "CheckOutState",
+        "CheckoutWorkspace",
+        "Description",
+        "ExplicitConnection",
+        "Headers",
+        "ImplementationType",
+        "IncludeForSynchronization",
+        "InterfaceType",
+        "IsAbstract",
+        "MessageProperties",
+        "Name",
+        "Payload",
+        "PayloadParts",
+        "Revision",
+        "Script",
+        "SpecialIcon",
+        "SynchronizationPolicy",
+        "TCProperties",
+        "TechnicalId",
+        "ValueSelectionGroup"
+      ],
+      "associations": [
+        {
+          "association": "Attributes",
+          "target": "XModuleAttribute",
+          "count": 10
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TCFolder",
+          "count": 4
+        },
+        {
+          "association": "Properties",
+          "target": "ApiParameter",
+          "count": 2
+        },
+        {
+          "association": "Properties",
+          "target": "XParam",
+          "count": 8
+        },
+        {
+          "association": "TestSteps",
+          "target": "XTestStep",
+          "count": 12
+        }
+      ]
+    },
+    {
+      "objectClass": "ApiParameter",
+      "count": 2,
+      "disposition": "configuration",
+      "rationale": "API configuration/property metadata.",
+      "attributes": [
+        "Name",
+        "Parameter",
+        "Readonly",
+        "SupressCopy",
+        "Value",
+        "Visible"
+      ],
+      "associations": [
+        {
+          "association": "ExtendableObject",
+          "target": "ApiModule",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "objectClass": "FileContent",
+      "count": 237,
+      "disposition": "asset",
+      "rationale": "Embedded bytes or external-file reference.",
+      "attributes": [
+        "Data",
+        "ExternalFileDirectory",
+        "ExternalFileId",
+        "ExternalFileRevision"
+      ],
+      "associations": [
+        {
+          "association": "File",
+          "target": "OwnedFile",
+          "count": 232
+        },
+        {
+          "association": "Object",
+          "target": "XModuleAttributeFile",
+          "count": 5
+        }
+      ]
+    },
+    {
+      "objectClass": "OwnedFile",
+      "count": 232,
+      "disposition": "asset",
+      "rationale": "Attachment/external-resource manifest.",
+      "attributes": [
+        "CheckOutState",
+        "CheckoutWorkspace",
+        "Description",
+        "FileExtension",
+        "FileName",
+        "FilePath",
+        "FileType",
+        "IncludeForSynchronization",
+        "Name",
+        "Revision",
+        "SynchronizationPolicy"
+      ],
+      "associations": [
+        {
+          "association": "AttachedTo",
+          "target": "XModule",
+          "count": 232
+        },
+        {
+          "association": "EmbeddedContent",
+          "target": "FileContent",
+          "count": 232
+        }
+      ]
+    },
+    {
+      "objectClass": "Parameter",
+      "count": 642,
+      "disposition": "data",
+      "rationale": "Business parameter name/range/description.",
+      "attributes": [
+        "Description",
+        "Name",
+        "ValueSelectionGroup"
+      ],
+      "associations": [
+        {
+          "association": "ParameterLayer",
+          "target": "ParameterLayer",
+          "count": 642
+        },
+        {
+          "association": "ParameterReferences",
+          "target": "ParameterReference",
+          "count": 35058
+        }
+      ]
+    },
+    {
+      "objectClass": "ParameterLayer",
+      "count": 145,
+      "disposition": "data",
+      "rationale": "Defines business parameters.",
+      "attributes": [
+        "Name"
+      ],
+      "associations": [
+        {
+          "association": "ParameterLayerReferences",
+          "target": "ParameterLayerReference",
+          "count": 11988
+        },
+        {
+          "association": "Parameters",
+          "target": "Parameter",
+          "count": 642
+        },
+        {
+          "association": "ReuseableTestStepBlock",
+          "target": "ReuseableTestStepBlock",
+          "count": 145
+        }
+      ]
+    },
+    {
+      "objectClass": "ParameterLayerReference",
+      "count": 12049,
+      "disposition": "data",
+      "rationale": "Creates the per-reference parameter scope.",
+      "attributes": [
+        "Name"
+      ],
+      "associations": [
+        {
+          "association": "AllParameterReferences",
+          "target": "ParameterReference",
+          "count": 35077
+        },
+        {
+          "association": "DerivedFrom",
+          "target": "ParameterLayerReference",
+          "count": 11167
+        },
+        {
+          "association": "ParameterLayer",
+          "target": "ParameterLayer",
+          "count": 11988
+        },
+        {
+          "association": "TestStepFolderReference",
+          "target": "TestStepFolderReference",
+          "count": 12049
+        }
+      ]
+    },
+    {
+      "objectClass": "ParameterReference",
+      "count": 35077,
+      "disposition": "data",
+      "rationale": "Concrete value or expression supplied to a shared workflow.",
+      "attributes": [
+        "Value"
+      ],
+      "associations": [
+        {
+          "association": "DerivedFrom",
+          "target": "ParameterReference",
+          "count": 32299
+        },
+        {
+          "association": "Parameter",
+          "target": "Parameter",
+          "count": 35058
+        },
+        {
+          "association": "ParameterLayerReference",
+          "target": "ParameterLayerReference",
+          "count": 35077
+        }
+      ]
+    },
+    {
+      "objectClass": "RecoveryScenario",
+      "count": 830,
+      "disposition": "recovery",
+      "rationale": "Classified into evidence, safe correction, cleanup, or review.",
+      "attributes": [
+        "BreakInstantiation",
+        "Condition",
+        "DisabledDescription",
+        "Name",
+        "Path",
+        "Pausable",
+        "Repetition",
+        "RetryLevel",
+        "ScenarioType"
+      ],
+      "associations": [
+        {
+          "association": "DerivedFrom",
+          "target": "RecoveryScenario",
+          "count": 814
+        },
+        {
+          "association": "Items",
+          "target": "XTestStep",
+          "count": 2000
+        },
+        {
+          "association": "ScenarioCollection",
+          "target": "RecoveryScenarioCollection",
+          "count": 830
+        }
+      ]
+    },
+    {
+      "objectClass": "RecoveryScenarioCollection",
+      "count": 286,
+      "disposition": "recovery",
+      "rationale": "Defines inherited recovery/cleanup scope.",
+      "attributes": [
+        "BreakInstantiation",
+        "Condition",
+        "DisabledDescription",
+        "Name",
+        "Path",
+        "Pausable",
+        "Repetition"
+      ],
+      "associations": [
+        {
+          "association": "DerivedFrom",
+          "target": "RecoveryScenarioCollection",
+          "count": 279
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TestStepFolder",
+          "count": 2
+        },
+        {
+          "association": "Scenarios",
+          "target": "RecoveryScenario",
+          "count": 830
+        },
+        {
+          "association": "TestCase",
+          "target": "TestCase",
+          "count": 284
+        }
+      ]
+    },
+    {
+      "objectClass": "ReuseableTestStepBlock",
+      "count": 274,
+      "disposition": "executable",
+      "rationale": "Generated once as a reusable workflow.",
+      "attributes": [
+        "BreakInstantiation",
+        "Condition",
+        "Description",
+        "DisabledDescription",
+        "Name",
+        "Path",
+        "Pausable",
+        "Repetition"
+      ],
+      "associations": [
+        {
+          "association": "Items",
+          "target": "TestCaseControlFlowItem",
+          "count": 102
+        },
+        {
+          "association": "Items",
+          "target": "TestStepFolder",
+          "count": 21
+        },
+        {
+          "association": "Items",
+          "target": "TestStepFolderReference",
+          "count": 100
+        },
+        {
+          "association": "Items",
+          "target": "XTestStep",
+          "count": 967
+        },
+        {
+          "association": "Library",
+          "target": "TestStepLibrary",
+          "count": 274
+        },
+        {
+          "association": "ParameterLayer",
+          "target": "ParameterLayer",
+          "count": 145
+        },
+        {
+          "association": "UsedBy",
+          "target": "TestStepFolderReference",
+          "count": 18386
+        }
+      ]
+    },
+    {
+      "objectClass": "TCComponentFolder",
+      "count": 5,
+      "disposition": "metadata",
+      "rationale": "Infers product area, grouping, and inherited configuration.",
+      "attributes": [
+        "CheckOutState",
+        "CheckoutWorkspace",
+        "ContentPolicy",
+        "Description",
+        "IncludeForSynchronization",
+        "Name",
+        "Revision",
+        "SynchronizationPolicy",
+        "TestConfigurationParameters"
+      ],
+      "associations": [
+        {
+          "association": "Items",
+          "target": "TCComponentFolder",
+          "count": 4
+        },
+        {
+          "association": "Items",
+          "target": "TCFolder",
+          "count": 11
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TCComponentFolder",
+          "count": 4
+        },
+        {
+          "association": "Project",
+          "target": "TCProject",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "objectClass": "TCConfiguration",
+      "count": 4,
+      "disposition": "configuration",
+      "rationale": "Converted to environment/runtime configuration when referenced.",
+      "attributes": [
+        "CheckOutState",
+        "CheckoutWorkspace",
+        "Description",
+        "IncludeForSynchronization",
+        "Name",
+        "Predefined",
+        "ProvidesNamespace",
+        "Revision",
+        "SynchronizationPolicy",
+        "TestConfigurationParameters"
+      ],
+      "associations": [
+        {
+          "association": "ParentFolder",
+          "target": "TCFolder",
+          "count": 4
+        },
+        {
+          "association": "UsedBy",
+          "target": "TCConfigurationLink",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "objectClass": "TCConfigurationLink",
+      "count": 4,
+      "disposition": "configuration",
+      "rationale": "Resolves inherited folder configuration.",
+      "attributes": [
+        "Name"
+      ],
+      "associations": [
+        {
+          "association": "ConfiguredItem",
+          "target": "TCFolder",
+          "count": 4
+        },
+        {
+          "association": "UsedConfiguration",
+          "target": "TCConfiguration",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "objectClass": "TCFolder",
+      "count": 202,
+      "disposition": "metadata",
+      "rationale": "Infers tags, groups, configuration scope, and recovery inheritance.",
+      "attributes": [
+        "CheckOutState",
+        "CheckoutWorkspace",
+        "ContentPolicy",
+        "Description",
+        "IncludeForSynchronization",
+        "Name",
+        "Revision",
+        "SynchronizationPolicy",
+        "TestConfigurationParameters"
+      ],
+      "associations": [
+        {
+          "association": "ConfigurationLinks",
+          "target": "TCConfigurationLink",
+          "count": 4
+        },
+        {
+          "association": "Items",
+          "target": "ApiModule",
+          "count": 4
+        },
+        {
+          "association": "Items",
+          "target": "TCConfiguration",
+          "count": 4
+        },
+        {
+          "association": "Items",
+          "target": "TCFolder",
+          "count": 189
+        },
+        {
+          "association": "Items",
+          "target": "TDClass",
+          "count": 92
+        },
+        {
+          "association": "Items",
+          "target": "TestCase",
+          "count": 20
+        },
+        {
+          "association": "Items",
+          "target": "TestCaseTemplateInstance",
+          "count": 17
+        },
+        {
+          "association": "Items",
+          "target": "TestSheet",
+          "count": 41
+        },
+        {
+          "association": "Items",
+          "target": "TestStepLibrary",
+          "count": 8
+        },
+        {
+          "association": "Items",
+          "target": "XModule",
+          "count": 503
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TCComponentFolder",
+          "count": 11
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TCFolder",
+          "count": 189
+        },
+        {
+          "association": "Project",
+          "target": "TCProject",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "objectClass": "TCProject",
+      "count": 1,
+      "disposition": "metadata",
+      "rationale": "Repository boundary; not executable.",
+      "attributes": [
+        "CheckOutState",
+        "CheckoutWorkspace",
+        "Description",
+        "IncludeForSynchronization",
+        "Name",
+        "Revision",
+        "SpecialProjectName",
+        "SynchronizationPolicy"
+      ],
+      "associations": [
+        {
+          "association": "Items",
+          "target": "TCComponentFolder",
+          "count": 1
+        },
+        {
+          "association": "Items",
+          "target": "TCFolder",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "objectClass": "TDAttribute",
+      "count": 1514,
+      "disposition": "data",
+      "rationale": "Named data dimension and nested structure.",
+      "attributes": [
+        "BusinessRelevant",
+        "Description",
+        "Name",
+        "TDM",
+        "Weight"
+      ],
+      "associations": [
+        {
+          "association": "Instances",
+          "target": "TDInstances",
+          "count": 689
+        },
+        {
+          "association": "Items",
+          "target": "TDAttribute",
+          "count": 95
+        },
+        {
+          "association": "OwningClass",
+          "target": "TDClass",
+          "count": 750
+        },
+        {
+          "association": "ParentItem",
+          "target": "TDAttribute",
+          "count": 95
+        },
+        {
+          "association": "ReferencedClass",
+          "target": "TDClass",
+          "count": 561
+        },
+        {
+          "association": "TestSheet",
+          "target": "TestSheet",
+          "count": 669
+        },
+        {
+          "association": "Values",
+          "target": "TDInstanceValue",
+          "count": 27025
+        }
+      ]
+    },
+    {
+      "objectClass": "TDClass",
+      "count": 92,
+      "disposition": "data",
+      "rationale": "Reusable TestCase Design data class.",
+      "attributes": [
+        "CheckOutState",
+        "CheckoutWorkspace",
+        "Description",
+        "IncludeForSynchronization",
+        "Name",
+        "Revision",
+        "SynchronizationPolicy",
+        "TDMClass"
+      ],
+      "associations": [
+        {
+          "association": "Attributes",
+          "target": "TDAttribute",
+          "count": 750
+        },
+        {
+          "association": "Instances",
+          "target": "TDInstances",
+          "count": 91
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TCFolder",
+          "count": 92
+        },
+        {
+          "association": "ReferencingAttributes",
+          "target": "TDAttribute",
+          "count": 561
+        }
+      ]
+    },
+    {
+      "objectClass": "TDInstance",
+      "count": 9420,
+      "disposition": "data",
+      "rationale": "One concrete example/data combination.",
+      "attributes": [
+        "Character",
+        "Description",
+        "InstanceUsage",
+        "Name",
+        "Position",
+        "Weight",
+        "Workstate"
+      ],
+      "associations": [
+        {
+          "association": "Instances",
+          "target": "TDInstances",
+          "count": 9420
+        },
+        {
+          "association": "UsedInValues",
+          "target": "TDInstanceValue",
+          "count": 21823
+        },
+        {
+          "association": "Values",
+          "target": "TDInstanceValue",
+          "count": 27025
+        }
+      ]
+    },
+    {
+      "objectClass": "TDInstanceValue",
+      "count": 27025,
+      "disposition": "data",
+      "rationale": "Concrete value or referenced data instance.",
+      "attributes": [
+        "Value"
+      ],
+      "associations": [
+        {
+          "association": "Element",
+          "target": "TDAttribute",
+          "count": 27025
+        },
+        {
+          "association": "Instance",
+          "target": "TDInstance",
+          "count": 27025
+        },
+        {
+          "association": "ValueInstance",
+          "target": "TDInstance",
+          "count": 21823
+        }
+      ]
+    },
+    {
+      "objectClass": "TDInstances",
+      "count": 821,
+      "disposition": "data",
+      "rationale": "Container for concrete data instances.",
+      "attributes": [
+        "Name"
+      ],
+      "associations": [
+        {
+          "association": "DefiningElement",
+          "target": "TDAttribute",
+          "count": 689
+        },
+        {
+          "association": "DefiningItem",
+          "target": "TDClass",
+          "count": 91
+        },
+        {
+          "association": "DefiningItem",
+          "target": "TestSheet",
+          "count": 41
+        },
+        {
+          "association": "Items",
+          "target": "TDInstance",
+          "count": 9420
+        }
+      ]
+    },
+    {
+      "objectClass": "TestCase",
+      "count": 590,
+      "disposition": "executable",
+      "rationale": "Feature/scenario identity and root execution order.",
+      "attributes": [
+        "CheckOutState",
+        "CheckoutWorkspace",
+        "DerivedFromName",
+        "Description",
+        "IncludeForSynchronization",
+        "IsBusinessTestCase",
+        "Name",
+        "Pausable",
+        "Revision",
+        "SynchronizationPolicy",
+        "TCProperties",
+        "TestCaseWorkState",
+        "TestConfigurationParameters"
+      ],
+      "associations": [
+        {
+          "association": "DerivedFrom",
+          "target": "TDInstance",
+          "count": 579
+        },
+        {
+          "association": "Items",
+          "target": "RecoveryScenarioCollection",
+          "count": 284
+        },
+        {
+          "association": "Items",
+          "target": "TestCaseControlFlowItem",
+          "count": 1
+        },
+        {
+          "association": "Items",
+          "target": "TestStepFolder",
+          "count": 1766
+        },
+        {
+          "association": "Items",
+          "target": "TestStepFolderReference",
+          "count": 20
+        },
+        {
+          "association": "Items",
+          "target": "XTestStep",
+          "count": 1
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TCFolder",
+          "count": 20
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TestCaseTemplateInstance",
+          "count": 570
+        },
+        {
+          "association": "TemplateDetail",
+          "target": "TestCaseTemplateDetail",
+          "count": 20
+        }
+      ]
+    },
+    {
+      "objectClass": "TestCaseControlFlowFolder",
+      "count": 1743,
+      "disposition": "executable",
+      "rationale": "Contains condition/loop branch bodies.",
+      "attributes": [
+        "BreakInstantiation",
+        "Condition",
+        "DisabledDescription",
+        "Name",
+        "Path",
+        "Pausable",
+        "Repetition",
+        "StatementType"
+      ],
+      "associations": [
+        {
+          "association": "DerivedFrom",
+          "target": "TestCaseControlFlowFolder",
+          "count": 1298
+        },
+        {
+          "association": "Items",
+          "target": "TestCaseControlFlowItem",
+          "count": 34
+        },
+        {
+          "association": "Items",
+          "target": "TestStepFolder",
+          "count": 11
+        },
+        {
+          "association": "Items",
+          "target": "TestStepFolderReference",
+          "count": 49
+        },
+        {
+          "association": "Items",
+          "target": "XTestStep",
+          "count": 1861
+        },
+        {
+          "association": "ParentControlFlowItem",
+          "target": "TestCaseControlFlowItem",
+          "count": 1743
+        }
+      ]
+    },
+    {
+      "objectClass": "TestCaseControlFlowItem",
+      "count": 855,
+      "disposition": "executable",
+      "rationale": "Converted to bounded condition or loop.",
+      "attributes": [
+        "BreakInstantiation",
+        "Condition",
+        "DisabledDescription",
+        "MaximumRepetitions",
+        "Name",
+        "Path",
+        "Pausable",
+        "Repetition",
+        "StatementType"
+      ],
+      "associations": [
+        {
+          "association": "ControlFlowFolders",
+          "target": "TestCaseControlFlowFolder",
+          "count": 1743
+        },
+        {
+          "association": "DerivedFrom",
+          "target": "TestCaseControlFlowItem",
+          "count": 649
+        },
+        {
+          "association": "ParentFolder",
+          "target": "ReuseableTestStepBlock",
+          "count": 102
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TestCaseControlFlowFolder",
+          "count": 34
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TestStepFolder",
+          "count": 718
+        },
+        {
+          "association": "TestCase",
+          "target": "TestCase",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "objectClass": "TestCaseTemplateDetail",
+      "count": 20,
+      "disposition": "data/executable",
+      "rationale": "Links a base template to its data schema.",
+      "attributes": [
+        "Condition",
+        "InstanceName",
+        "SchemaPath"
+      ],
+      "associations": [
+        {
+          "association": "Instances",
+          "target": "TestCaseTemplateInstance",
+          "count": 17
+        },
+        {
+          "association": "SchemaDefinition",
+          "target": "TestSheet",
+          "count": 20
+        },
+        {
+          "association": "TestCase",
+          "target": "TestCase",
+          "count": 20
+        }
+      ]
+    },
+    {
+      "objectClass": "TestCaseTemplateInstance",
+      "count": 17,
+      "disposition": "data/executable",
+      "rationale": "Names the generated feature family and contains generated tests.",
+      "attributes": [
+        "CheckOutState",
+        "CheckoutWorkspace",
+        "Condition",
+        "ContentPolicy",
+        "DataSourcePath",
+        "Description",
+        "IncludeForSynchronization",
+        "InstanceName",
+        "InstantiationSelector",
+        "Name",
+        "Revision",
+        "SynchronizationPolicy",
+        "TestConfigurationParameters"
+      ],
+      "associations": [
+        {
+          "association": "DataSourceDefinition",
+          "target": "TestSheet",
+          "count": 17
+        },
+        {
+          "association": "Items",
+          "target": "TestCase",
+          "count": 570
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TCFolder",
+          "count": 17
+        },
+        {
+          "association": "TemplateDetail",
+          "target": "TestCaseTemplateDetail",
+          "count": 17
+        }
+      ]
+    },
+    {
+      "objectClass": "TestSheet",
+      "count": 41,
+      "disposition": "data",
+      "rationale": "Data schema and Scenario Outline family.",
+      "attributes": [
+        "CheckOutState",
+        "CheckoutWorkspace",
+        "Description",
+        "IncludeForSynchronization",
+        "Name",
+        "Revision",
+        "SynchronizationPolicy"
+      ],
+      "associations": [
+        {
+          "association": "Instances",
+          "target": "TDInstances",
+          "count": 41
+        },
+        {
+          "association": "Items",
+          "target": "TDAttribute",
+          "count": 669
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TCFolder",
+          "count": 41
+        }
+      ]
+    },
+    {
+      "objectClass": "TestStepFolder",
+      "count": 8387,
+      "disposition": "executable",
+      "rationale": "Business section, prerequisite, postcondition, or grouped workflow.",
+      "attributes": [
+        "BreakInstantiation",
+        "Condition",
+        "DisabledDescription",
+        "Name",
+        "Path",
+        "Pausable",
+        "Repetition"
+      ],
+      "associations": [
+        {
+          "association": "DerivedFrom",
+          "target": "TestStepFolder",
+          "count": 8022
+        },
+        {
+          "association": "DerivedFrom",
+          "target": "TestStepFolderReference",
+          "count": 36
+        },
+        {
+          "association": "Items",
+          "target": "RecoveryScenarioCollection",
+          "count": 2
+        },
+        {
+          "association": "Items",
+          "target": "TestCaseControlFlowItem",
+          "count": 718
+        },
+        {
+          "association": "Items",
+          "target": "TestStepFolder",
+          "count": 6589
+        },
+        {
+          "association": "Items",
+          "target": "TestStepFolderReference",
+          "count": 18219
+        },
+        {
+          "association": "Items",
+          "target": "XTestStep",
+          "count": 5313
+        },
+        {
+          "association": "ParentFolder",
+          "target": "ReuseableTestStepBlock",
+          "count": 21
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TestCaseControlFlowFolder",
+          "count": 11
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TestStepFolder",
+          "count": 6589
+        },
+        {
+          "association": "TestCase",
+          "target": "TestCase",
+          "count": 1766
+        }
+      ]
+    },
+    {
+      "objectClass": "TestStepFolderReference",
+      "count": 18388,
+      "disposition": "executable",
+      "rationale": "Invokes a reusable workflow with scoped parameters.",
+      "attributes": [
+        "BreakInstantiation",
+        "Condition",
+        "DisabledDescription",
+        "Name",
+        "Path",
+        "Pausable",
+        "Repetition"
+      ],
+      "associations": [
+        {
+          "association": "DerivedFrom",
+          "target": "TestStepFolderReference",
+          "count": 16936
+        },
+        {
+          "association": "ParameterLayerReference",
+          "target": "ParameterLayerReference",
+          "count": 12049
+        },
+        {
+          "association": "ParentFolder",
+          "target": "ReuseableTestStepBlock",
+          "count": 100
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TestCaseControlFlowFolder",
+          "count": 49
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TestStepFolder",
+          "count": 18219
+        },
+        {
+          "association": "ReusedItem",
+          "target": "ReuseableTestStepBlock",
+          "count": 18386
+        },
+        {
+          "association": "TestCase",
+          "target": "TestCase",
+          "count": 20
+        }
+      ]
+    },
+    {
+      "objectClass": "TestStepLibrary",
+      "count": 8,
+      "disposition": "metadata",
+      "rationale": "Library boundary only; shared workflows hold implementation.",
+      "attributes": [
+        "CheckOutState",
+        "CheckoutWorkspace",
+        "Description",
+        "IncludeForSynchronization",
+        "Name",
+        "Revision",
+        "SynchronizationPolicy"
+      ],
+      "associations": [
+        {
+          "association": "ParentFolder",
+          "target": "TCFolder",
+          "count": 8
+        },
+        {
+          "association": "ReusableItems",
+          "target": "ReuseableTestStepBlock",
+          "count": 274
+        }
+      ]
+    },
+    {
+      "objectClass": "XModule",
+      "count": 503,
+      "disposition": "executable",
+      "rationale": "Page/component/API capability.",
+      "attributes": [
+        "BusinessType",
+        "CheckOutState",
+        "CheckoutWorkspace",
+        "Description",
+        "ImplementationType",
+        "IncludeForSynchronization",
+        "InterfaceType",
+        "IsAbstract",
+        "Name",
+        "Revision",
+        "SpecialIcon",
+        "SynchronizationPolicy",
+        "TCProperties",
+        "TechnicalId",
+        "ValueSelectionGroup"
+      ],
+      "associations": [
+        {
+          "association": "AttachedFiles",
+          "target": "OwnedFile",
+          "count": 232
+        },
+        {
+          "association": "Attributes",
+          "target": "XModuleAttribute",
+          "count": 5930
+        },
+        {
+          "association": "Generalization",
+          "target": "XModule",
+          "count": 29
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TCFolder",
+          "count": 503
+        },
+        {
+          "association": "Properties",
+          "target": "XParam",
+          "count": 2004
+        },
+        {
+          "association": "ReferencingAttributes",
+          "target": "XModuleAttribute",
+          "count": 32
+        },
+        {
+          "association": "Specializations",
+          "target": "XModule",
+          "count": 29
+        },
+        {
+          "association": "TestSteps",
+          "target": "XTestStep",
+          "count": 10127
+        },
+        {
+          "association": "UsedAsDefaultSpecializationIn",
+          "target": "XModuleAttribute",
+          "count": 12
+        },
+        {
+          "association": "UsedAsSpecializationIn",
+          "target": "XTestStepValue",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "objectClass": "XModuleAttribute",
+      "count": 8596,
+      "disposition": "executable",
+      "rationale": "Named field/control used for locator and method naming.",
+      "attributes": [
+        "BusinessType",
+        "Cardinality",
+        "DefaultActionMode",
+        "DefaultDataType",
+        "DefaultValue",
+        "Description",
+        "InterfaceType",
+        "Name",
+        "SpecialIcon",
+        "TCProperties",
+        "ValueSelectionGroup",
+        "Visible"
+      ],
+      "associations": [
+        {
+          "association": "Attachments",
+          "target": "XModuleAttributeFile",
+          "count": 2
+        },
+        {
+          "association": "Attributes",
+          "target": "XModuleAttribute",
+          "count": 2672
+        },
+        {
+          "association": "DefaultSpecializationModule",
+          "target": "XModule",
+          "count": 12
+        },
+        {
+          "association": "Module",
+          "target": "ApiModule",
+          "count": 10
+        },
+        {
+          "association": "Module",
+          "target": "XModule",
+          "count": 5930
+        },
+        {
+          "association": "ParentAttribute",
+          "target": "XModuleAttribute",
+          "count": 2672
+        },
+        {
+          "association": "Properties",
+          "target": "XParam",
+          "count": 42644
+        },
+        {
+          "association": "ReferencedModule",
+          "target": "XModule",
+          "count": 32
+        },
+        {
+          "association": "TestStepValues",
+          "target": "XTestStepValue",
+          "count": 30554
+        },
+        {
+          "association": "UIChildren",
+          "target": "XModuleAttribute",
+          "count": 3
+        },
+        {
+          "association": "UIParent",
+          "target": "XModuleAttribute",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "objectClass": "XModuleAttributeFile",
+      "count": 5,
+      "disposition": "asset",
+      "rationale": "ModuleAttribute attachment relation.",
+      "attributes": [
+        "FileExtension",
+        "FileName",
+        "FilePath",
+        "FileType",
+        "Name",
+        "TCProperties"
+      ],
+      "associations": [
+        {
+          "association": "EmbeddedContent",
+          "target": "FileContent",
+          "count": 5
+        },
+        {
+          "association": "Files",
+          "target": "XModuleAttributeFile",
+          "count": 3
+        },
+        {
+          "association": "ModuleAttribute",
+          "target": "XModuleAttribute",
+          "count": 2
+        },
+        {
+          "association": "ParentFile",
+          "target": "XModuleAttributeFile",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "objectClass": "XParam",
+      "count": 44656,
+      "disposition": "locator/configuration",
+      "rationale": "Analyzed by parameter category; only one final locator is emitted.",
+      "attributes": [
+        "Name",
+        "ParamType",
+        "Readonly",
+        "SupressCopy",
+        "Value",
+        "Visible"
+      ],
+      "associations": [
+        {
+          "association": "ExtendableObject",
+          "target": "ApiModule",
+          "count": 8
+        },
+        {
+          "association": "ExtendableObject",
+          "target": "XModule",
+          "count": 2004
+        },
+        {
+          "association": "ExtendableObject",
+          "target": "XModuleAttribute",
+          "count": 42644
+        }
+      ]
+    },
+    {
+      "objectClass": "XTestStep",
+      "count": 10142,
+      "disposition": "executable",
+      "rationale": "Named operation linked to a UI or API Module.",
+      "attributes": [
+        "BreakInstantiation",
+        "Condition",
+        "DisabledDescription",
+        "Name",
+        "Path",
+        "Pausable",
+        "ReorderAllowed",
+        "Repetition"
+      ],
+      "associations": [
+        {
+          "association": "DerivedFrom",
+          "target": "XTestStep",
+          "count": 8362
+        },
+        {
+          "association": "Module",
+          "target": "ApiModule",
+          "count": 12
+        },
+        {
+          "association": "Module",
+          "target": "XModule",
+          "count": 10127
+        },
+        {
+          "association": "ParentFolder",
+          "target": "RecoveryScenario",
+          "count": 2000
+        },
+        {
+          "association": "ParentFolder",
+          "target": "ReuseableTestStepBlock",
+          "count": 967
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TestCaseControlFlowFolder",
+          "count": 1861
+        },
+        {
+          "association": "ParentFolder",
+          "target": "TestStepFolder",
+          "count": 5313
+        },
+        {
+          "association": "TestCase",
+          "target": "TestCase",
+          "count": 1
+        },
+        {
+          "association": "TestStepValues",
+          "target": "XTestStepValue",
+          "count": 22887
+        }
+      ]
+    },
+    {
+      "objectClass": "XTestStepValue",
+      "count": 30874,
+      "disposition": "executable",
+      "rationale": "Field action, value, operator, condition, and nested value.",
+      "attributes": [
+        "ActionMode",
+        "ActionProperty",
+        "Condition",
+        "DataType",
+        "DisabledDescription",
+        "ExplicitName",
+        "Operator",
+        "Path",
+        "Value"
+      ],
+      "associations": [
+        {
+          "association": "DerivedFrom",
+          "target": "XTestStepValue",
+          "count": 26072
+        },
+        {
+          "association": "ModuleAttribute",
+          "target": "XModuleAttribute",
+          "count": 30554
+        },
+        {
+          "association": "ParentValue",
+          "target": "XTestStepValue",
+          "count": 7987
+        },
+        {
+          "association": "SpecializationModule",
+          "target": "XModule",
+          "count": 4
+        },
+        {
+          "association": "SubValues",
+          "target": "XTestStepValue",
+          "count": 7987
+        },
+        {
+          "association": "TestStep",
+          "target": "XTestStep",
+          "count": 22887
+        }
+      ]
+    }
+  ],
+  "conflictedEntities": 0,
+  "unresolvedAssociations": []
+}

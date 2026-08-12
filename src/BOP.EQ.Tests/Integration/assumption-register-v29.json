@@ -1,0 +1,69 @@
+{
+  "version": "29.0.0",
+  "assumptions": [
+    {
+      "id": "A01",
+      "area": "Feature semantic grouping",
+      "decision": "Rich nested reusable blocks are grouped into business-readable steps when individual leaf steps would expose UI mechanics.",
+      "riskIfWrong": "A BA may expect more granular wording for a particular business operation.",
+      "mitigation": "Every recursive leaf is classified in Reports/EXECUTABLE-LEAF-ACCOUNTING-V29.json; review-required leaves are never silently dropped.",
+      "artifact": "Reports/EXECUTABLE-LEAF-ACCOUNTING-V29.json"
+    },
+    {
+      "id": "A02",
+      "area": "Preconditions",
+      "decision": "Repeated non-parameterized setup is represented as Background; technical setup is in Hooks.",
+      "riskIfWrong": "A prerequisite that changes business state may be hidden as setup.",
+      "mitigation": "Background conversion is limited to stable setup phrases; business postconditions remain visible.",
+      "artifact": "Integration/precondition-postcondition-policy-v29.json"
+    },
+    {
+      "id": "A03",
+      "area": "Locator selection",
+      "decision": "One final locator is emitted per used field, selected from the effective Module/submodule tree.",
+      "riskIfWrong": "A fallback XPath or text locator may be fragile.",
+      "mitigation": "Fallback selectors are annotated REVIEW and counted in Reports/LOCATOR-CONFIDENCE-V29.json.",
+      "artifact": "Reports/LOCATOR-CONFIDENCE-V29.json"
+    },
+    {
+      "id": "A04",
+      "area": "Data aliases",
+      "decision": "Duplicate aliases such as State/State Abbv collapse to StateCode only when they represent the same semantic dimension.",
+      "riskIfWrong": "A distinct state concept such as risk state vs mailing state could be over-canonicalized.",
+      "mitigation": "Semantic alias rules are explicit and backward-compatible lookup remains in ScenarioData.",
+      "artifact": "Integration/data-key-aliases.json"
+    },
+    {
+      "id": "A05",
+      "area": "Runtime generated values",
+      "decision": "Random/date values are resolved once per scenario key and cached.",
+      "riskIfWrong": "If a test intentionally needs two different random values from the same key, reuse would be wrong.",
+      "mitigation": "Separate keys must be generated for independent values; cache behavior is documented in runtime-data-flow.",
+      "artifact": "Integration/runtime-data-flow-v28.json"
+    },
+    {
+      "id": "A06",
+      "area": "Buffers",
+      "decision": "Buffers are either produced by a prior step or derived from canonical scenario inputs.",
+      "riskIfWrong": "A true runtime-only extraction could be missing.",
+      "mitigation": "Unresolved buffers fail during quality audit or execution rather than carrying legacy expressions.",
+      "artifact": "Integration/runtime-data-flow-v28.json"
+    },
+    {
+      "id": "A07",
+      "area": "Obsolete tests",
+      "decision": "Source names prefixed by old/obsolete/zz are retained but isolated and tagged obsolete.",
+      "riskIfWrong": "A team might still want to execute them in a special legacy suite.",
+      "mitigation": "Feature path and @obsolete/@legacy tags make filtering explicit.",
+      "artifact": "Features/Obsolete/"
+    },
+    {
+      "id": "A08",
+      "area": "Unsupported engines",
+      "decision": "Unsupported/custom engine operations are not invented as browser automation.",
+      "riskIfWrong": "Some business behavior may require a custom adapter.",
+      "mitigation": "Review-required classification keeps them visible outside the happy-path browser layer.",
+      "artifact": "Reports/RECURSIVE-OBJECTCLASS-COVERAGE.json"
+    }
+  ]
+}

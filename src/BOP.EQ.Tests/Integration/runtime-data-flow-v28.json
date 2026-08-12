@@ -1,0 +1,130 @@
+{
+  "version": "28.0.0",
+  "bufferConsumers": {
+    "QuoteDescription": 80,
+    "FirstName": 47,
+    "LastName": 47,
+    "Quote_Num": 46,
+    "Policy#": 31,
+    "Effective Date": 5,
+    "Quote_NameNum": 2,
+    "Last4SSN": 1,
+    "Product (LOB)": 1
+  },
+  "bufferProducers": {
+    "AgentListcount": 7,
+    "QuoteNum": 7,
+    "Premium": 8,
+    "PolicyNumber": 13,
+    "QuoteNumber": 1,
+    "TransactionType": 64,
+    "EffectiveDate": 7,
+    "CheckListID": 7,
+    "LblQuote": 3,
+    "QuoteNumber2": 3,
+    "QuoteNumber6": 3,
+    "Driver_1": 5,
+    "TotalPremium": 1,
+    "LNQuoteNumber": 4,
+    "HomeQuoteNumber5": 2,
+    "Tab": 2,
+    "HomeQuoteNumber1": 2,
+    "NBEffDate": 1,
+    "EffDate": 2,
+    "Quote_NameNum": 2,
+    "SSN": 1,
+    "Policy": 1,
+    "InnerText": 1
+  },
+  "resolution": [
+    {
+      "consumer": "Effective Date",
+      "references": 5,
+      "candidateProducers": [
+        "EffectiveDate"
+      ]
+    },
+    {
+      "consumer": "FirstName",
+      "references": 47,
+      "candidateProducers": [
+        "ScenarioData:First Name"
+      ]
+    },
+    {
+      "consumer": "Last4SSN",
+      "references": 1,
+      "candidateProducers": [
+        "ScenarioData:derived from resolved SSN value"
+      ]
+    },
+    {
+      "consumer": "LastName",
+      "references": 47,
+      "candidateProducers": [
+        "ScenarioData:Last Name"
+      ]
+    },
+    {
+      "consumer": "Policy#",
+      "references": 31,
+      "candidateProducers": [
+        "PolicyNumber",
+        "QuoteNumber"
+      ]
+    },
+    {
+      "consumer": "Product (LOB)",
+      "references": 1,
+      "candidateProducers": [
+        "ScenarioData:LOB"
+      ]
+    },
+    {
+      "consumer": "QuoteDescription",
+      "references": 80,
+      "candidateProducers": [
+        "ScenarioData:Description"
+      ]
+    },
+    {
+      "consumer": "Quote_NameNum",
+      "references": 2,
+      "candidateProducers": [
+        "Quote_NameNum",
+        "QuoteNum",
+        "QuoteNumber"
+      ]
+    },
+    {
+      "consumer": "Quote_Num",
+      "references": 46,
+      "candidateProducers": [
+        "QuoteNum",
+        "QuoteNumber",
+        "QuoteNumber2",
+        "QuoteNumber6"
+      ]
+    }
+  ],
+  "unresolved": [],
+  "runtimeTemplates": {
+    "randomText": "{{randomText:N}}",
+    "randomDigits": "{{randomDigits:N}}",
+    "randomNumber": "{{randomNumber:min:max}}",
+    "randomEmail": "{{randomEmail}}",
+    "randomPhone": "{{randomPhone}}",
+    "buffer": "{{buffer:Name}}",
+    "environment": "{{env:NAME}}",
+    "date": "{{date}} / {{dateOffsetYears:-N:format}}"
+  },
+  "policy": "Runtime generators live in JSON; extracted values are produced by a prior step and consumed as buffers. Missing buffers fail clearly.",
+  "derivedScenarioBufferProducers": {
+    "FirstName": "First Name",
+    "LastName": "Last Name",
+    "Product (LOB)": "LOB",
+    "QuoteDescription": "Description",
+    "Last4SSN": "derived from resolved SSN value"
+  },
+  "runtimeStability": "Random/date/environment templates are resolved once per data key and cached for the scenario, so repeated reads return the same value."
+}
