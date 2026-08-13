@@ -149,12 +149,25 @@ stages:
 
     - powershell: |
         $playwright = Get-ChildItem -Recurse -Filter playwright.ps1 | Select-Object -First 1
-        if ($playwright) {
-            Write-Host "Installing Playwright via $($playwright.FullName)"
-            & powershell -File $playwright.FullName install chromium --with-deps
-        } else {
+        if (-not $playwright) {
             Write-Error "playwright.ps1 not found"
             exit 1
+        }
+
+        # Resolve the expected browsers path (default: %LOCALAPPDATA%\ms-playwright)
+        $browsersRoot = if ($env:PLAYWRIGHT_BROWSERS_PATH) {
+            $env:PLAYWRIGHT_BROWSERS_PATH
+        } else {
+            Join-Path $env:LOCALAPPDATA "ms-playwright"
+        }
+
+        $chromiumInstalled = Test-Path (Join-Path $browsersRoot "chromium-*")
+        if ($chromiumInstalled) {
+            Write-Host "Chromium already present at '$browsersRoot' — skipping download."
+        } else {
+            Write-Host "Installing Playwright via $($playwright.FullName)"
+            & powershell -File $playwright.FullName install chromium --with-deps
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         }
       displayName: "Install Playwright Chromium"
 
@@ -182,6 +195,7 @@ stages:
     timeoutInMinutes: 120
 
     strategy:
+      maxParallel: 2  # 3 agents share 1 machine — cap to 2 browsers to avoid CPU saturation
       matrix:
         # debugModeBasic=true → runs only @Debug-tagged rows (1 per shard, ~3 tests total)
         # debugModeBasic=false → runs the full shard (default)
@@ -197,11 +211,11 @@ stages:
           SHARD_NUMBER: "3"
           SHARD_FILTER_FULL: "TestCategory=Shard3"
           SHARD_FILTER_DEBUG: "TestCategory=Shard3&TestCategory=Debug"
-        # Catch-all: any @SFP test added without a shard tag runs here automatically
+        # Catch-all: any @SFP @Smoke test not already assigned to a numbered shard
         ShardMisc:
           SHARD_NUMBER: "misc"
-          SHARD_FILTER_FULL: "TestCategory=SFP&TestCategory=Smoke"
-          SHARD_FILTER_DEBUG: "TestCategory=SFP&TestCategory=Smoke"
+          SHARD_FILTER_FULL: "TestCategory=SFP&TestCategory=Smoke&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3"
+          SHARD_FILTER_DEBUG: "TestCategory=SFP&TestCategory=Smoke&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3"
 
     steps:
 
@@ -279,6 +293,8 @@ stages:
 
         & dotnet test $testDll `
             --filter "$filter" `
+            --settings "$(Build.SourcesDirectory)/ci.runsettings" `
+            --blame-hang --blame-hang-timeout 5min `
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Results.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
 
@@ -287,7 +303,7 @@ stages:
         Write-Host "First run exit code: $firstRunExit"
         exit 0
       displayName: "Run Shard $(SHARD_NUMBER)"
-      condition: always()
+      condition: succeeded()
       env:
         Playwright__Headless: "true"
         Playwright__BrowserType: "chromium"
@@ -457,6 +473,7 @@ stages:
     timeoutInMinutes: 120
 
     strategy:
+      maxParallel: 2  # 3 agents share 1 machine — cap to 2 browsers to avoid CPU saturation
       matrix:
         Shard4:
           SHARD_NUMBER: "4"
@@ -545,6 +562,8 @@ stages:
 
         & dotnet test $testDll `
             --filter "$filter" `
+            --settings "$(Build.SourcesDirectory)/ci.runsettings" `
+            --blame-hang --blame-hang-timeout 5min `
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Results.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
 
@@ -552,7 +571,7 @@ stages:
         Write-Host "First run exit code: $firstRunExit"
         exit 0
       displayName: "Run CE Shard $(SHARD_NUMBER)"
-      condition: always()
+      condition: succeeded()
       env:
         Playwright__Headless: "true"
         Playwright__BrowserType: "chromium"
