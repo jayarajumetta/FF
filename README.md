@@ -1,91 +1,38 @@
-# Client Automation — BOP/EQ + PL-DC v35
+# Tosca Modernized Standalone Framework
 
-This is the final **single client repository** containing both standalone automation domains.
+A standalone **C# / .NET 8 / ReqnRoll / Microsoft Playwright** framework generated from the supplied Commercial Lines Duck Creek, Commercial Lines ExpertQuote, and Personal Lines Duck Creek Tosca-derived business features.
 
-```text
-ClientAutomation.sln
-├─ src/BOP.EQ.Tests/
-└─ src/PL.DC.Tests/
-```
+## What is included
 
-They are two test projects, not two repositories. `dotnet test ClientAutomation.sln` runs both.
+- 248 business-rich `.feature` files.
+- One exact ordered ScenarioPlan and one static-data JSON file per feature.
+- Source-derived locator repositories ranked by stable HTML IDs, Duck Creek identifiers, test IDs, accessibility metadata, names, text, and XPath fallback.
+- Scenario-scoped random/runtime data; no mutable static test state.
+- Application-specific Gherkin Background; technical/source Background behavior runs through Hooks.
+- Dedicated system-action handling so TBox operations do not become page locators.
+- Runtime audit, screenshots, run-data snapshots, strict sequence validation, and central TDM/source overrides.
 
-## Why two projects inside one repo?
-
-BOP/EQ and PL-DC contain overlapping generated names such as Login, State, Billing, Next,
-Proposal, and common business phrases. Keeping them in separate test assemblies removes C#
-type collisions and ReqnRoll binding ambiguity while preserving one client codebase, one root
-README, one set of run scripts, and one pipeline boundary.
-
-## Run
+## First run
 
 ```powershell
-.\RunScripts\setup.ps1
-.\RunScripts\run.ps1 -Domain all
-.\RunScripts\run.ps1 -Domain bop-eq
-.\RunScripts\run.ps1 -Domain pl-dc
+./scripts/build.ps1
+./scripts/install-playwright.ps1
+$env:CL_EQ_PASSWORD = "..."
+$env:CL_DC_PASSWORD = "..."
+$env:PL_DC_PASSWORD = "..."
+./scripts/run.ps1
 ```
 
-Optional:
+Linux/macOS equivalents are under `scripts/*.sh`.
 
-```powershell
-.\RunScripts\run.ps1 -Domain all -Filter "TestCategory=smoke"
-```
+## Required data
 
-## Duplicate/syntax release gate
+Populate unresolved TDM keys in `tests/ToscaModernized.Tests/TestData/TdmOverrides.json` and source-configured values in `SourceValueOverrides.json`. Empty required values fail with the exact missing key; they are never guessed.
 
-Both domain repositories retain the v34 zero-error static compiler contracts.
+## Security defaults
 
-Combined v35 checks also ensure:
+Process execution, source file deletion, and Edge preference mutation are disabled by default. Enable only in an isolated test agent after reviewing `appsettings.json`.
 
-- no stale/backup StepDefinition source directories compile;
-- both projects have unique assembly names;
-- all Features are explicitly tagged with their domain;
-- JSON and project XML are valid;
-- BOP/EQ and PL-DC remain isolated from cross-assembly binding/type collisions.
+## Design note
 
-Current result:
-
-```text
-BOP/EQ static compiler-contract errors: 0
-PL-DC static compiler-contract errors:  0
-BOP/EQ combined sanity errors:          0
-PL-DC combined sanity errors:           0
-```
-
-Run the root gate:
-
-```powershell
-.\RunScripts\quality-gate.ps1
-```
-
-## Quick cross-check of the latest TSUs
-
-Yes — the latest PL-DC files contain a consideration that is not present in the BOP/EQ source:
-`XModuleAttribute.UIParent/UIChildren`. The combined audit now treats those as additional UI
-hierarchy/context for locator grouping.
-
-The inverse also exists: BOP/EQ has `ApiModule`/`ApiParameter` objects plus Module
-reference/generalization/specialization relations not present in the latest PL-DC source.
-
-Other considerations handled holistically across the two domains are:
-
-- PL-DC's dense `DerivedFrom` inheritance;
-- nested TestStepFolder trees;
-- nested `XTestStepValue.SubValues`;
-- TestSheet/TestCase Design/template instances;
-- recovery and cleanup scenarios;
-- owning `Items` execution order and TestStep reordering;
-- effective Module/submodule locator resolution.
-
-See `Reports/CROSS-SOURCE-CONSIDERATION-AUDIT-V35.json`.
-
-## Acceptance on the client machine
-
-A real .NET compiler is not available in this environment, so the final client-side acceptance is:
-
-```bash
-dotnet restore ClientAutomation.sln
-dotnet build ClientAutomation.sln --no-restore
-dotnet test ClientAutomation.sln --no-build
-```
+The Features remain readable business specifications. The generated plan is the technical traceability and ordering contract. A single non-ambiguous binding delegates each step to the exact plan instruction, preventing duplicated bindings and silent reordering.

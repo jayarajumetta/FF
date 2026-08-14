@@ -1,0 +1,7 @@
+{
+  "generatedAtUtc": "2026-08-14T04:13:57.356881+00:00",
+  "pythonVersion": "3.13.5",
+  "dotnetAvailableAtGeneration": false,
+  "compilerValidationPerformed": false,
+  "note": "The archive is statically validated. Run scripts/build.ps1 or scripts/build.sh on a .NET 8 agent for Roslyn/NuGet validation."
+}

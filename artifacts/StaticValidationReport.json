@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "features": 248,
+  "plans": 248,
+  "staticDataFiles": 248,
+  "backgroundInstructions": 6344,
+  "scenarioInstructions": 101601,
+  "totalInstructions": 107945,
+  "missingFeaturePlanBindings": 0,
+  "duplicateFeaturePlanBindings": 0,
+  "featurePlanOrderMismatches": 0,
+  "duplicateInstructionIds": 0,
+  "unsupportedOperations": 0,
+  "jsonParsingErrors": 0
+}

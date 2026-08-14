@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "strictOrdering": true,
+  "backgroundMovedToHooks": true,
+  "universalBinding": true,
+  "sourceBackgroundInstructionCount": 6344,
+  "scenarioInstructionCount": 101601,
+  "supportedOperations": [
+    "Capture",
+    "Click",
+    "Conditional",
+    "FileOperation",
+    "Fill",
+    "GenerateRandom",
+    "JsonOperation",
+    "Login",
+    "ManualAction",
+    "Navigate",
+    "Press",
+    "Select",
+    "SetRuntime",
+    "SystemCommand",
+    "TableInput",
+    "UseRuntime",
+    "VerifyExists",
+    "VerifyText",
+    "VerifyVisible",
+    "Wait"
+  ]
+}

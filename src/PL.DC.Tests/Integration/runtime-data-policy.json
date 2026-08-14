@@ -1,9 +1,0 @@
-{
-  "static": "plain value",
-  "buffer": "{{buffer:Name}}",
-  "randomText": "{{randomText:length}}",
-  "randomDigits": "{{randomDigits:length}}",
-  "randomNumber": "{{randomNumber:min:max}}",
-  "environment": "{{env:NAME}}",
-  "rule": "Buffers are populated by the page/step that extracts the value; consumers fail if the buffer is missing."
-}

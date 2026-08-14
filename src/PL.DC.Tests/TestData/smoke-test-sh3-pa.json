@@ -1,8 +1,0 @@
-{
-  "(Old) EQ Proposal Start.Txt_Agent 5-Digit PCCode": "D2102",
-  "(Old) EQ Proposal Start.Txt_Effective Date_1": "10",
-  "(Old) EQ Proposal Start.Txt_SSN": "{{buffer:SSN}}",
-  "CloseBrowser.Title": "Sign On*",
-  "EQ New Quote.Txt_QuoteSearch_Input": "{{buffer:QuoteNumber}}",
-  "Wait": "3000"
-}

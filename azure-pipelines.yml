@@ -1,0 +1,24 @@
+trigger:
+- main
+pool:
+  vmImage: windows-latest
+steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: sdk
+    version: 8.0.x
+- pwsh: ./scripts/build.ps1
+  displayName: Restore, build and validate
+- pwsh: ./scripts/install-playwright.ps1
+  displayName: Install Playwright Chromium
+- pwsh: ./scripts/run.ps1
+  displayName: Execute ReqnRoll tests
+  env:
+    CL_EQ_PASSWORD: $(CL_EQ_PASSWORD)
+    CL_DC_PASSWORD: $(CL_DC_PASSWORD)
+    PL_DC_PASSWORD: $(PL_DC_PASSWORD)
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testResultsFormat: VSTest
+    testResultsFiles: '**/*.trx'
