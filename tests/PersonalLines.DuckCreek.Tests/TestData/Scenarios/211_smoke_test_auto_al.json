@@ -1,0 +1,33 @@
+{
+  "_meta": {
+    "schemaVersion": "2.0",
+    "sourceFile": "211_Smoke_Test_Auto_AL.feature",
+    "sourceSha256": "20687c5a13836e75eb1a2e6662bc44b0a6ff51feef58ffe12f386472e738e3d5",
+    "sourceRevision": "55681",
+    "application": "PL_DC",
+    "feature": "Personal Lines Duck Creek - Smoke Test Auto",
+    "representativeIteration": "AL",
+    "note": "Only the attached representative flow is generated."
+  },
+  "dimensions": {
+    "state": "Alabama",
+    "stateCode": "AL",
+    "product": "Personal Auto",
+    "productCode": "AUTO",
+    "transaction": "Smoke Test",
+    "effectiveDateMode": "Current"
+  },
+  "values": {
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "statename": "ALABAMA",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "state_44": "ALABAMA",
+    "writingcompany_48": "American National Property And Casualty Co.",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair"
+  },
+  "random": {}
+}

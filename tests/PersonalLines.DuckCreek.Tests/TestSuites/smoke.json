@@ -1,0 +1,9 @@
+{
+  "name": "PL_DC Smoke",
+  "filter": "TestCategory=PL_DC&TestCategory=smoke",
+  "features": [
+    "Personal Lines Duck Creek - Smoke Test Auto",
+    "Personal Lines Duck Creek - Smoke Test Cycle",
+    "Personal Lines Duck Creek - Smoke Test RV"
+  ]
+}

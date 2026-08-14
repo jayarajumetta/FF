@@ -1,0 +1,1207 @@
+[
+  {
+    "path": ".env.example",
+    "sha256": "4c9666b137f8857ada0225962dcc9500dc578f06143de312b6fd9d0ca0171b72",
+    "sizeBytes": 256
+  },
+  {
+    "path": ".github/workflows/automation.yml",
+    "sha256": "bada50efcba1daa29e658f228e0c39ccc9f817f1a8914e5483ba8be41f430bce",
+    "sizeBytes": 1268
+  },
+  {
+    "path": ".gitignore",
+    "sha256": "39d5fe5e0fec3093bc62c207068dda6bb3316184ff1f41982b380a5fe0176a69",
+    "sizeBytes": 82
+  },
+  {
+    "path": "Artifacts/BindingManifest.json",
+    "sha256": "221b871e0b80f167006d01ef014fc175cd03e405ea0630649b11f17748988fdc",
+    "sizeBytes": 58777
+  },
+  {
+    "path": "Artifacts/BuildEnvironmentReport.json",
+    "sha256": "4cf8891e6c9c1c2756bc152b53e23089e744287a764383c5d09277920e83938d",
+    "sizeBytes": 385
+  },
+  {
+    "path": "Artifacts/CanonicalMappingManifest.json",
+    "sha256": "9d477ef4e2cc6b8268ab7f470a6f90dde73eaa2919c4351d8fb246fdba185b07",
+    "sizeBytes": 10396934
+  },
+  {
+    "path": "Artifacts/FeatureInventory.json",
+    "sha256": "70e938cf436c82e482df77b54483cf511818e5ce8690134ac3d6f23c79efd01c",
+    "sizeBytes": 21375
+  },
+  {
+    "path": "Artifacts/SourceHashes.json",
+    "sha256": "d38a634cf2db603c5171962c08d76cd408dd96c820af98f819175720e30e4025",
+    "sizeBytes": 4497
+  },
+  {
+    "path": "Artifacts/SystemAndRecoveryMapping.json",
+    "sha256": "214479ae60fa7de2b6f0cd96a425006db59bb68417cf50324b032d0205f346d1",
+    "sizeBytes": 295100
+  },
+  {
+    "path": "Artifacts/UnresolvedConditionReview.json",
+    "sha256": "f52d03a555661f969314adaec6340c3958f2392d38f626394b030b7de6e77bb1",
+    "sizeBytes": 35746
+  },
+  {
+    "path": "Artifacts/VersionLearningTrace.json",
+    "sha256": "dea06eda8bab5dd6826ba4ff60ca204569299e1811478f377b0485e212292aa6",
+    "sizeBytes": 1639
+  },
+  {
+    "path": "Directory.Build.props",
+    "sha256": "e5b786a2e93f9d69d61d76173db76ece776dc85366a02fa0184a258426ef0db8",
+    "sizeBytes": 365
+  },
+  {
+    "path": "Docs/ARCHITECTURE.md",
+    "sha256": "22ec2a14a90c16b46d2c8db967e6cdcfc91335156242a88cbc62a064d0878363",
+    "sizeBytes": 1582
+  },
+  {
+    "path": "Docs/CANONICAL_MAPPING.md",
+    "sha256": "175ad3a6e3fd035b2b80b60c6ba29045651309ee6d540344233f6d2d67e79304",
+    "sizeBytes": 1883
+  },
+  {
+    "path": "README.md",
+    "sha256": "f292c8ffddd68d3eb6a1f20f2ef4260955c9dc19b453a09f9017ec6b47b30dc0",
+    "sizeBytes": 2555
+  },
+  {
+    "path": "ToscaArtifactAutomation.sln",
+    "sha256": "738fd8a24de767c5d118c662e4be4ffa973e2ac41d51e82405aea373d1512c01",
+    "sizeBytes": 2705
+  },
+  {
+    "path": "VERSION",
+    "sha256": "dde73e6c2833dbe510784f4c556b246c6a27b2c07b52b723bc6e77c2c4e13308",
+    "sizeBytes": 35
+  },
+  {
+    "path": "artifacts/GenerationValidationReport.json",
+    "sha256": "f7456d2ab8ee771c76d1d2bdb07de45aaf8721f0a39cf1da45e1281316f1ce13",
+    "sizeBytes": 9916
+  },
+  {
+    "path": "artifacts/PackagedQualityGateOutput.txt",
+    "sha256": "bf790e33e6f11a2e24e31b3b09a65fc43545369f062c968ddf5c2b06cd119e63",
+    "sizeBytes": 574
+  },
+  {
+    "path": "artifacts/RuntimeQualityGateReport.json",
+    "sha256": "bf790e33e6f11a2e24e31b3b09a65fc43545369f062c968ddf5c2b06cd119e63",
+    "sizeBytes": 574
+  },
+  {
+    "path": "azure-pipelines.yml",
+    "sha256": "59ca39d3ae5a5ef97d60c30e5d56e6e4e2b621bdf57f35aad3d536530855f8e1",
+    "sizeBytes": 815
+  },
+  {
+    "path": "client.runsettings",
+    "sha256": "9d9e5a993be539a38d37c3366403853f25e2b68d7336fa2abc66989036561868",
+    "sizeBytes": 267
+  },
+  {
+    "path": "global.json",
+    "sha256": "e78610f629cefc5a02e40d3476082b68b8c593b9f2320152a3a9b8d83363c725",
+    "sizeBytes": 108
+  },
+  {
+    "path": "scripts/quality-gate.ps1",
+    "sha256": "844ea97f26e33feeaa88cfef01ad3706e393a35fb23ebf421692274fe80ec464",
+    "sizeBytes": 306
+  },
+  {
+    "path": "scripts/quality-gate.sh",
+    "sha256": "62e3ba7a391e2f90fcde4694423ee27620e01f09539f6b304cd75b6cf7e8d18b",
+    "sizeBytes": 283
+  },
+  {
+    "path": "scripts/run.ps1",
+    "sha256": "444a56bb0532f55b1570679abda3b4e7925df6c02760cb369c015d39fc6c686a",
+    "sizeBytes": 616
+  },
+  {
+    "path": "scripts/run.sh",
+    "sha256": "d4abb035e1710f7ceeddc9f4329ba1747ced8c42eb34bbba391a8ebe6aa2b489",
+    "sizeBytes": 644
+  },
+  {
+    "path": "scripts/setup.ps1",
+    "sha256": "4b01c00d03b31c3c7fad1340ddae2669beaf024ddf54cc9a4346eea219704acb",
+    "sizeBytes": 490
+  },
+  {
+    "path": "scripts/setup.sh",
+    "sha256": "d85e6ad737596ee5f81d2d61af0474a75d6d7984f4c055fb859c9b74ade6fa6d",
+    "sizeBytes": 305
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Actions/SystemActionService.cs",
+    "sha256": "99cb61bff5bc04aad6dc9d0fe5f5525883278c83bc4a61ddccaf615354f397c1",
+    "sizeBytes": 1557
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Actions/UiActions.cs",
+    "sha256": "f4b13630e54e0497f1796a0cbaba58ef5b6174ad60c55ddf80401a6fac092a87",
+    "sizeBytes": 5893
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Actions/UiAssertions.cs",
+    "sha256": "c8d66623cf99deabe2e404888240938e233e3740d309b38a246779288183b58c",
+    "sizeBytes": 6449
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Application/ApplicationSessionService.cs",
+    "sha256": "c3b9324c2c263e9a7d37e8eed9df9d3eceeffd801f990c395e7c4d516e32f3b5",
+    "sizeBytes": 8712
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Browser/BrowserSession.cs",
+    "sha256": "6ff2e73eef9a58e956e0297d2e513b7de668258b66bcfe3bcad8fc11972eb97a",
+    "sizeBytes": 5116
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Canonical/CanonicalAction.cs",
+    "sha256": "7ae1951e321a3b05377fd500d87a8716260619e1f40c30ae5879bc412acdb6e7",
+    "sizeBytes": 1694
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Canonical/CanonicalActionExecutor.cs",
+    "sha256": "f857b52469f275b460d712670bddc91cd8d11ffc6093d3517ec5c47c53aed61f",
+    "sizeBytes": 7991
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Canonical/ConditionEvaluator.cs",
+    "sha256": "10dfb5a6077e906c4cbb13cc74b6bd827f21b6c93ff229db8c29e3e719d60dd1",
+    "sizeBytes": 4798
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Canonical/SourceInstructionExecutor.cs",
+    "sha256": "e406cea0855bad8ef21e96e92712947e884c072cddd9ecd171114e0d0f447580",
+    "sizeBytes": 2167
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Configuration/FrameworkSettings.cs",
+    "sha256": "3323d88b4dc7c8df9896599429802476a2546bd15fb93f12f705f0ca4d2b10ac",
+    "sizeBytes": 4743
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Locators/LocatorModels.cs",
+    "sha256": "86b76f295ca7287b69da9c341df6fd405808412d301ec131599492614664235e",
+    "sizeBytes": 2115
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Locators/LocatorResolver.cs",
+    "sha256": "9a414d9436ed428bc30dd6d006007f08927f82f6f132a73761fa67624cee58da",
+    "sizeBytes": 8107
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Reporting/ArtifactPaths.cs",
+    "sha256": "f7d6c5703de547585888dc38b5d76172aaea889d822b81f6d7037f2f35b83896",
+    "sizeBytes": 1229
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Reporting/ExecutionReporting.cs",
+    "sha256": "8edcb2c0a4c08323341d424122c5477edf097a9bff0ac6edb39c37b87ed512d5",
+    "sizeBytes": 8456
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Runtime/IFlowPage.cs",
+    "sha256": "e935931e77f366d36da7783fa9579bbef39f5aff3550e903d2f33c3920e18b6d",
+    "sizeBytes": 217
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Runtime/ScenarioDataContext.cs",
+    "sha256": "a1f38c35b383d47a2b24c2d522230f9278ffd6bb7db8c694156e58c881bf953e",
+    "sizeBytes": 9384
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/ToscaArtifactAutomation.Core.csproj",
+    "sha256": "10c267356b66bf7c3c47291c31fecf481fdaa905d9eee06430d4c85c07e70589",
+    "sizeBytes": 590
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Utils/RandomDataService.cs",
+    "sha256": "5e04c0338a4ec609f3cdbd27d85b07c52585d550b7953d8698576473fa864cef",
+    "sizeBytes": 3180
+  },
+  {
+    "path": "src/ToscaArtifactAutomation.Core/Utils/ToscaExpressionResolver.cs",
+    "sha256": "6428430e7c0096c02b066a737b17b6e5a415a2e4d0683ca2ab23ef523cb54123",
+    "sizeBytes": 7196
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Bootstrap/FlowRegistration.cs",
+    "sha256": "09025d3af0eb50f61221b2e48c09bf05abec97e2dba10c4fae88a0f4d3ca5ff7",
+    "sizeBytes": 1250
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/BAPBasicPolicyCanonicalMap.g.cs",
+    "sha256": "d690a1ca85c7e1f15280aa88962814fa97cafc8141c88a1a6d80ebe2a0a184bd",
+    "sizeBytes": 273879
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/BAPExpandedCanonicalMap.g.cs",
+    "sha256": "4e3baf1aaf598c584cda8f64b67de3ed9704603d19b31de62ed5868682f7d884",
+    "sizeBytes": 850887
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/BAPSmokeTestCanonicalMap.g.cs",
+    "sha256": "5ab4d0af6fa0d29a0208c12a7b53234518d0273366f94b74b042fa33aef18a03",
+    "sizeBytes": 133027
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/CPBasicPolicyCanonicalMap.g.cs",
+    "sha256": "37d748f359f854b7646af45280b9ce3f72fbfc2dbb4e9713d9e9ce81f4d28956",
+    "sizeBytes": 355180
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/CPPBasicPolicyCanonicalMap.g.cs",
+    "sha256": "687c45faeb80756854792507d0d6e31bff76a72d9a2952427ef7950aa6c27a7d",
+    "sizeBytes": 669420
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/CPPSmokeTestCanonicalMap.g.cs",
+    "sha256": "424934104694fea18d1a65513cebf0864e4a9486ba241aab7823a6819faf1db8",
+    "sizeBytes": 113016
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/CPSmokeTestCanonicalMap.g.cs",
+    "sha256": "487c3dafae64381968d1c84cd69134437bdb3b7da004272195a076ffd2d0271a",
+    "sizeBytes": 109834
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/GLBasicPolicyCanonicalMap.g.cs",
+    "sha256": "fbd03403dc073b0e5fdd6580e8f87bae7537438af256bf25fa3675b120451ed4",
+    "sizeBytes": 262591
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/GLOCPPolicyCanonicalMap.g.cs",
+    "sha256": "2ab91688a47cf3666fe821ca191dc86bc95e45d56812e0b0fa536ffdba7a1bb1",
+    "sizeBytes": 258808
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/GLSmokeTestCanonicalMap.g.cs",
+    "sha256": "dce1c8cb1612db172b9f1f5857b84d8d0bf6edae536024ee15ae10d3d6646994",
+    "sizeBytes": 111945
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/IMBasicPolicyCanonicalMap.g.cs",
+    "sha256": "0900a37c6129efc504efcdc04b9aa35e7a67a9146c7786ba754003fb1cbc34e0",
+    "sizeBytes": 419308
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/IMSmokeTestCanonicalMap.g.cs",
+    "sha256": "e0430dd3bf73bcae13b53a1b88963277eb6c4cf95856d7f935d6051ed700e8bc",
+    "sizeBytes": 109845
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/UMBBasicPolicyCanonicalMap.g.cs",
+    "sha256": "cd4ee227d68c1c58afc5cac041c36c8be6964016a5897599b8b2bc8526524960",
+    "sizeBytes": 289970
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/UMBExpandedCanonicalMap.g.cs",
+    "sha256": "9a3e56cfba014bc47531447cd8bdf14fb25be0d20b1c72ccfef2a1aa4887c763",
+    "sizeBytes": 562637
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/UMBSmokeTestCanonicalMap.g.cs",
+    "sha256": "916c973c6eb1c424715e269ff8f627ebb856b86d67edc403e26dae55d802b9d6",
+    "sizeBytes": 110315
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/WCBasicPolicyCanonicalMap.g.cs",
+    "sha256": "5725de15caf8f4bb214c0a15b3cfc3607a78981721e4bfe1fee9dcbd457e00c2",
+    "sizeBytes": 288415
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/WCExpandedCanonicalMap.g.cs",
+    "sha256": "4e2cdce885f0a7d89bf48a79a99dbded567e54ed2b96b348bebc0309569539c0",
+    "sizeBytes": 326700
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CanonicalMaps/WCSmokeTestCanonicalMap.g.cs",
+    "sha256": "abe58f42aa3471f5061a703355fdb58aa81a5bc7b539946a3d82f25d8c46e77e",
+    "sizeBytes": 137619
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/CommercialLines.DuckCreek.Tests.csproj",
+    "sha256": "c07b68cd518c5b67602e5a67a689381e47655f43013e941a57b9cd7cab869795",
+    "sizeBytes": 1440
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/001_BAP_Basic_Policy_AL.feature",
+    "sha256": "ca4a3ac2dd7e10447371c8b1fa827b16e9a480987b4ddb240b9e608e5acdbe93",
+    "sizeBytes": 1614
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/002_BAP_Expanded_AL.feature",
+    "sha256": "3de520c2b844dc40364b71c10a5a45795e6907b1447360c7dd4843c5d18cb328",
+    "sizeBytes": 1590
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/003_CPP_Basic_Policy_AZ.feature",
+    "sha256": "e3f257dde407dcb19d8e6cbe3cbfbf96d4704c9174e24630a601c305945f0a5e",
+    "sizeBytes": 1205
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/004_CP_Basic_Policy_AZ.feature",
+    "sha256": "e713709822192f9466c31094a189624c3b1c1c8d14ed38d89457e20694a7f8c2",
+    "sizeBytes": 1205
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/005_GL_Basic_Policy_AZ.feature",
+    "sha256": "57da5c4e289be6c01f8a83a83c58ff42740bba712434830f45c0ba982b07a354",
+    "sizeBytes": 1199
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/006_GL_OCP_Policy_AZ.feature",
+    "sha256": "3191751b0941a641baa8b4f89233a7b2a7f3f0e8c62fbaa23e798abbdc6b06a2",
+    "sizeBytes": 1279
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/007_IM_Basic_Policy_AZ.feature",
+    "sha256": "da4cd37dd7fee4404c318451b3dbb0303dffcffd4f05eac37fc333cbb6374001",
+    "sizeBytes": 1187
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/008_UMB_Basic_Policy_AL.feature",
+    "sha256": "e93455809fc066eec5cb6e9829d167ff7b3211fd80da037ed837667d1e549711",
+    "sizeBytes": 1208
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/009_UMB_Expanded_AL.feature",
+    "sha256": "14ceb3730e1061d384474828ed49e5fd790f1251a0b47e52b7f9246187eb6820",
+    "sizeBytes": 1184
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/010_WC_Basic_Policy_AL.feature",
+    "sha256": "0c62fcf5bb161a7153adb6e5d9cb6a3f40ee6ddc87304de9e1bf5e28bcb655e8",
+    "sizeBytes": 1208
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/011_WC_Expanded_AL.feature",
+    "sha256": "be2def7aa24a65e4f9469fdebc2963b26def171841e73b530cfb5b661df11da9",
+    "sizeBytes": 1184
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/012_BAP_Smoke_Test_AL.feature",
+    "sha256": "df406a066a0245143e5d63046da054b6478d2073cd934636464219ad54e1f830",
+    "sizeBytes": 1058
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/013_CP_Smoke_Test_AZ.feature",
+    "sha256": "9a0ed182d16409713e9c5f677e2b3b79762991869eac2faac21ebdf50a14383f",
+    "sizeBytes": 1073
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/014_GL_Smoke_Test_AZ.feature",
+    "sha256": "b7669f16615d30e564dca4ac8f8340a3472194d57c81462ad87b8afb6bce51dd",
+    "sizeBytes": 1067
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/015_IM_Smoke_Test_AZ.feature",
+    "sha256": "b56d79a8ec8a567a73497a350569364d895f072bed28b807117a3f08766754d1",
+    "sizeBytes": 1055
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/016_WC_Smoke_Test_AL.feature",
+    "sha256": "23e410699a3d222ce5a54e474827ceefca911d184d95c951708771a90dd6adc8",
+    "sizeBytes": 1076
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/017_CPP_Smoke_Test_AZ.feature",
+    "sha256": "884a10c128d0bc171602f6e1068deb7a23323be678dbd7e7a10656fbd3dc961f",
+    "sizeBytes": 1073
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Features/018_UMB_Smoke_Test_AL.feature",
+    "sha256": "208e19a0b41ee21b226d0966a01f107c95ffb69eb5c2b35325a0f0ab57728b8d",
+    "sizeBytes": 1076
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Locators/PageLocatorKeys.g.cs",
+    "sha256": "ccef3eed1425ff05c41bb88933e0b684c0e36292a70444f9e357968c5f255837",
+    "sizeBytes": 136360
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Locators/locator-catalog.json",
+    "sha256": "e79fd1ec10265887004ffb7bf3bcc7e928708011944b2069a6d3578514c24556",
+    "sizeBytes": 2019075
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/BAPBasicPolicyFlowPage.cs",
+    "sha256": "88b33a3edda4fa4564622d92fabd0ecd2c2b7d23d6779fe1b86f4df393a962af",
+    "sizeBytes": 2103
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/BAPExpandedFlowPage.cs",
+    "sha256": "7762f8c348b7440014dd861c22a0f2810cf89b8ad03d9d6db9a9e9d1add2da91",
+    "sizeBytes": 2073
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/BAPSmokeTestFlowPage.cs",
+    "sha256": "c269f83c029ecf4c1982eb4df5da01e41fa7f15fadc88e3773e4aea38554175d",
+    "sizeBytes": 799
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/CPBasicPolicyFlowPage.cs",
+    "sha256": "a8ab0aa872a1b82cc22cb94a9cd8c5e7126a80b9cfc7a8d0274421af6f537474",
+    "sizeBytes": 993
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/CPPBasicPolicyFlowPage.cs",
+    "sha256": "7f36ff3b0b888906a8046db1a7ee7e3984450fb61deb597fd3d6d9f7a3b9588d",
+    "sizeBytes": 997
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/CPPSmokeTestFlowPage.cs",
+    "sha256": "8c4085af05a4dab8aad31f5b5776f7905864097ac59a7069a8347b11a6046926",
+    "sizeBytes": 799
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/CPSmokeTestFlowPage.cs",
+    "sha256": "47a660a241bc2d7fba50aa22c903e05e8000b62d7325776255aa4f02f8c4f5dc",
+    "sizeBytes": 796
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/GLBasicPolicyFlowPage.cs",
+    "sha256": "76d702cb2d60102b4f1972e93c546627a6520538503c8cac6d1288b6db577d9f",
+    "sizeBytes": 993
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/GLOCPPolicyFlowPage.cs",
+    "sha256": "8710a00e5e07ada45020b1821dd0d53466a2906a4f4e35bdb662c302092b8fc1",
+    "sizeBytes": 985
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/GLSmokeTestFlowPage.cs",
+    "sha256": "6cd283d0ce4c59039389f9f925ec20b14bdf2bba504afc1cac5e27369dad0bf7",
+    "sizeBytes": 796
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/IMBasicPolicyFlowPage.cs",
+    "sha256": "385bcf55f76a6c0cf1806311a155d76db4bea632320d2b6c6643b4231d647967",
+    "sizeBytes": 993
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/IMSmokeTestFlowPage.cs",
+    "sha256": "141af16158ce77c544cf099ec868e53939f6ed6e69b41cb0ce8a0ba66aadcff0",
+    "sizeBytes": 796
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/UMBBasicPolicyFlowPage.cs",
+    "sha256": "2f64f4b871242a38122b91becf88834c8f5a7f5b6d8959ce14bb9b976b1d5412",
+    "sizeBytes": 997
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/UMBExpandedFlowPage.cs",
+    "sha256": "b000aee82719c5e94df18264adcaa120dc77582f4ed5a083b73f7af73ba18d4f",
+    "sizeBytes": 985
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/UMBSmokeTestFlowPage.cs",
+    "sha256": "317f1a7d4b01fee831c561a8874928b60fb77d9bb393351627eec8d78069be21",
+    "sizeBytes": 799
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/WCBasicPolicyFlowPage.cs",
+    "sha256": "801f1a3d27def7550b85d71fb50dce2a32dfd975ea45881c31c02f2f3bde1e57",
+    "sizeBytes": 993
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/WCExpandedFlowPage.cs",
+    "sha256": "4272b62ef3d092fa73a710e67ea92c2fdabca11f703cb482e3cdaef772977b25",
+    "sizeBytes": 981
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/Pages/WCSmokeTestFlowPage.cs",
+    "sha256": "29b1e41ddd849d3f04bc158243bf61ac6bcbd1dc50145269fb789d48e8e59324",
+    "sizeBytes": 796
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/BAPBasicPolicyStepDefinitions.cs",
+    "sha256": "3b87b06eafda112a16d5841b37632846bb951adfe6ceeba340cc2781b16093fa",
+    "sizeBytes": 1815
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/BAPExpandedStepDefinitions.cs",
+    "sha256": "93135d2b72daa238fd4018e4c7048bee0595bb81b8c6af40bec2569262024cd9",
+    "sizeBytes": 1799
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/BAPSmokeTestStepDefinitions.cs",
+    "sha256": "4bfaa018eb875a038f2a232271a04ed4bfb915f2bf003b7c22324b45b19154ea",
+    "sizeBytes": 679
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/CPBasicPolicyStepDefinitions.cs",
+    "sha256": "04982acfdcbdb599a2842f55223e7bb1289949564dcc03aa61f84be3d76ecd11",
+    "sizeBytes": 844
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/CPPBasicPolicyStepDefinitions.cs",
+    "sha256": "a9443eebc6f4c10ce0bbb1cf0217a52adc13f1d5fb98ff1287ff454344e3aec8",
+    "sizeBytes": 849
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/CPPSmokeTestStepDefinitions.cs",
+    "sha256": "36fbe2a8310d5ad05423f05b3049fb12527b6b7c0b48b1db17b7a61a6af13a8a",
+    "sizeBytes": 679
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/CPSmokeTestStepDefinitions.cs",
+    "sha256": "a98826bf0dc46ea416f6c086ad3647ebff9d1a871baf64b559473b7282b89c1a",
+    "sizeBytes": 674
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/GLBasicPolicyStepDefinitions.cs",
+    "sha256": "ee2c1cebaf56fd1ece8481acd8b355f59248017344a8f3bbe74721349df3ec66",
+    "sizeBytes": 844
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/GLOCPPolicyStepDefinitions.cs",
+    "sha256": "9293fba3ae3d4f845de2468c3fdb9c0dfcd1d086e68fe58550a8ee11dc43b5de",
+    "sizeBytes": 834
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/GLSmokeTestStepDefinitions.cs",
+    "sha256": "8fa8b3b79e2bb98638252eb368c75d0acd1615189042e0649b919394bb92774b",
+    "sizeBytes": 674
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/IMBasicPolicyStepDefinitions.cs",
+    "sha256": "7e71dc1e337861abe243f9a899bd2f95ce9f535c5b1313bca3fa409ab3f48635",
+    "sizeBytes": 844
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/IMSmokeTestStepDefinitions.cs",
+    "sha256": "a7a8c7856213379b56df8692b7dd16f9ffa6b87e554baeeb24bf02715f66e28b",
+    "sizeBytes": 674
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/UMBBasicPolicyStepDefinitions.cs",
+    "sha256": "ff2974452af1adc6a42f53302a09440a92535d1db312242db7403b16ec7fb599",
+    "sizeBytes": 849
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/UMBExpandedStepDefinitions.cs",
+    "sha256": "744b0d914526000f6a54266086a92daf69edc3623e84d8c7d85030f2f7b40658",
+    "sizeBytes": 833
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/UMBSmokeTestStepDefinitions.cs",
+    "sha256": "ff3abe6a67b784addbafb7333ef6d17da457f0752fa3ff8821eee69612ef660b",
+    "sizeBytes": 679
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/WCBasicPolicyStepDefinitions.cs",
+    "sha256": "5591df5e5c4e659c7cd580968a7df66c825a058b4b2175d4829179fa5b460979",
+    "sizeBytes": 844
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/WCExpandedStepDefinitions.cs",
+    "sha256": "d2b0ebadd2e8121096ad136d45bfd9f595d9f81d68f6f37336c629026f964fe5",
+    "sizeBytes": 828
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/WCSmokeTestStepDefinitions.cs",
+    "sha256": "67f85dc847b9eb3d0547a9d3e9d3c716fffaca1c730c9189cc9f68dbfbc72bbd",
+    "sizeBytes": 674
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/ExternalDataOverrides.json",
+    "sha256": "27c196632995f829b5e9cf88a9faf07f7364ae2c973b8060a15a78100feb297e",
+    "sizeBytes": 174
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/001_bap_basic_policy_al.json",
+    "sha256": "4fc4f4f36fbda565a5bbef0b6b2e66108f3ed3bfb4ca536f4041a701557e2d13",
+    "sizeBytes": 6615
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/002_bap_expanded_al.json",
+    "sha256": "b159b3258175527fb9b3cdceeef7b63b8e539bfdc32584fd234ce51230e35873",
+    "sizeBytes": 14616
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/003_cpp_basic_policy_az.json",
+    "sha256": "7563138ec2a227918ee479ab552a554ff00d023c681ad43765cfc5ae1ac75c32",
+    "sizeBytes": 18643
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/004_cp_basic_policy_az.json",
+    "sha256": "92304a089b53a9e1c6bfacb85216b0f4bfc676760d3ed8eb876ad2783bcbf305",
+    "sizeBytes": 8495
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/005_gl_basic_policy_az.json",
+    "sha256": "7dae70e75b9cb5f15b3710ea1bba6022a024bf4c4bf1ada6734b2b3683f8fd49",
+    "sizeBytes": 6523
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/006_gl_ocp_policy_az.json",
+    "sha256": "9a349028fb387902d1f7e2d080b7411b22ce346330bcd4148de308d227c42ca1",
+    "sizeBytes": 6829
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/007_im_basic_policy_az.json",
+    "sha256": "110764f4e09d2f055b65f590bcf08df7122a3f9b6f83c5d0fd5055b79db25f5f",
+    "sizeBytes": 12864
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/008_umb_basic_policy_al.json",
+    "sha256": "8cfa27f26c9655e128bddd5ed70f5ca58f890975a88ace173a68fb358c159db6",
+    "sizeBytes": 6016
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/009_umb_expanded_al.json",
+    "sha256": "e50c8eb8d6d05b886ef05eb1c1154ce4e4117033de1bf4d71760b2bdcf7cfc67",
+    "sizeBytes": 13266
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/010_wc_basic_policy_al.json",
+    "sha256": "568b969e9f7c90dae5dcf7d025513045d1b7bcac1cfd5287a82bdfb0b371f605",
+    "sizeBytes": 8377
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/011_wc_expanded_al.json",
+    "sha256": "8ea0cb8fd84beb2458b516cad0ecce642a6fb97c9b7b45c32d0d852920e436f7",
+    "sizeBytes": 9340
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/012_bap_smoke_test_al.json",
+    "sha256": "8ce230dd5fbf1b01fbf048eb753485f6b60edbee8a0eb92c57957e160bb3dd8b",
+    "sizeBytes": 3838
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/013_cp_smoke_test_az.json",
+    "sha256": "3638a1ab96b9d02ead618d13ae66f6329adaa05a3c2696c3ab89bec487ebc444",
+    "sizeBytes": 3406
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/014_gl_smoke_test_az.json",
+    "sha256": "f6fb5a150e6f669178cf069fb46453615f934f7e6524c1b87603dec751f5d397",
+    "sizeBytes": 3502
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/015_im_smoke_test_az.json",
+    "sha256": "61294be6be88ec6640adbbcfa56af0f4eac9061ed3d8f6c726285b1550554439",
+    "sizeBytes": 3411
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/016_wc_smoke_test_al.json",
+    "sha256": "a222ea3539c6f760f08a580f91bf8daa68c683034ab1fc06bfeb8a8dd94f4cd7",
+    "sizeBytes": 4198
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/017_cpp_smoke_test_az.json",
+    "sha256": "adf75e36953aab3a6a701e0666f84d64e0109e8e596c1633bd7f3e9f725c992d",
+    "sizeBytes": 3423
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestData/Scenarios/018_umb_smoke_test_al.json",
+    "sha256": "d3447e1e9f03d29d4eaada6f68d40ef93f5cff4cad8213ac125c20dca63c0bae",
+    "sizeBytes": 3229
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestSuites/all.json",
+    "sha256": "55eebc65ed46eb0ab52f91839a7fd3c80966e1c0edcd6abf26a2b5a536e9ce61",
+    "sizeBytes": 1025
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestSuites/regression.json",
+    "sha256": "45ed38435b79da3801c8ea52f3a7c851767e44712e8ae066ea85e563699964ca",
+    "sizeBytes": 685
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/TestSuites/smoke.json",
+    "sha256": "fb637b792d71b62907f00ed420398fa6e944d52da7a82f0b8198b16a1745551d",
+    "sizeBytes": 461
+  },
+  {
+    "path": "tests/CommercialLines.DuckCreek.Tests/appsettings.json",
+    "sha256": "51ea8ca712954478d37b10a06ffaad93e5cf01122cbb70c44f52b15d4441edc1",
+    "sizeBytes": 1608
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/Bootstrap/FlowRegistration.cs",
+    "sha256": "8de456b567f8119148c22188090314b09362510bab5fcfdb75aa30d60ae53bf5",
+    "sizeBytes": 597
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/CanonicalMaps/EQBOPBasicPolicyCanonicalMap.g.cs",
+    "sha256": "b33cb3e7d1ce5c298cc9d0f55e2657b67b0929d54d4dcd53586a24db908f473d",
+    "sizeBytes": 710397
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/CanonicalMaps/EQBOPSmokeTestCanonicalMap.g.cs",
+    "sha256": "652616d7e854d87794c30eeca7661e42d42707488f41059a8c29e17e5b28d37f",
+    "sizeBytes": 59307
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/CanonicalMaps/EQSFPBasicPolicyCanonicalMap.g.cs",
+    "sha256": "0981cdb955892bb3bbf789280eb5d5ad3227f1ac0aca666292fda4210e8115f0",
+    "sizeBytes": 366562
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/CanonicalMaps/EQSFPCountryEstatePolicyCanonicalMap.g.cs",
+    "sha256": "a8a6e3f98836dfadea87fa3999fef97ad9293edd25f1cf77a5d1fc34036aea6e",
+    "sizeBytes": 323983
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/CanonicalMaps/EQSFPSmokeTestCanonicalMap.g.cs",
+    "sha256": "8a1a04d32788d1390fe8aceab6c86a91d3d2703b7a080597d3ef838bbc20b6dc",
+    "sizeBytes": 68300
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/CommercialLines.ExpertQuote.Tests.csproj",
+    "sha256": "61ae4c65a2c8dd34cabf16b2d20f10828cb0c76ff6ea8b94d226c884b52a8d97",
+    "sizeBytes": 1442
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/Features/02_EQ_BOP_Basic_Policy_AL.feature",
+    "sha256": "c9b3f2cb8ac70570f47474ab34d65d05fd8db9be796df1982191972124a69d40",
+    "sizeBytes": 1651
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/Features/03_EQ_BOP_Smoke_Test_MO.feature",
+    "sha256": "28863036e187815d4a3a6f3c87c0ac83880c9dff9347e6b9d85e1cfa4252dbee",
+    "sizeBytes": 1367
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/Features/04_EQ_SFP_Smoke_Test_MN.feature",
+    "sha256": "6bc8cef60eff054c9a084b2647d026a0ff38d87a36a6b7e19d89bb4fe9384ab3",
+    "sizeBytes": 1380
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/Features/05_EQ_SFP_Basic_Policy_AL.feature",
+    "sha256": "f01fff9aa51c08de8bcdfa2598395ecd78777878ed77ad7bd626d0f293f6d31a",
+    "sizeBytes": 1681
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/Features/06_EQ_SFP_Country_Estate_Policy_AL.feature",
+    "sha256": "42679482967431c07e9ff4e565535d37841e6684d5041fafc20a79808581a0e8",
+    "sizeBytes": 1735
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/Locators/PageLocatorKeys.g.cs",
+    "sha256": "422ef812e0bb9850220c2491dc205d1d45429674bb6161b33d878c53d3d81f08",
+    "sizeBytes": 40252
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/Locators/locator-catalog.json",
+    "sha256": "d9c40be70e80d0a317f0ec2193ba0636b053a0a868df1cbd64575fd7a7b712ab",
+    "sizeBytes": 624680
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/EQBOPBasicPolicyFlowPage.cs",
+    "sha256": "aa8b8c27fca410e188ae0d5771b44fdd4e5dfe43f42dba2c64aa868561ef270c",
+    "sizeBytes": 2129
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/EQBOPSmokeTestFlowPage.cs",
+    "sha256": "abf39528c3125203f7664a25eb619300cb00d313d7a9dc6feb372e6b81e3c39a",
+    "sizeBytes": 1563
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/EQSFPBasicPolicyFlowPage.cs",
+    "sha256": "27a724a7bd896c374d7c7d55ee9484ac35af854db18ef8b3a6223e7c7a42044a",
+    "sizeBytes": 2127
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/EQSFPCountryEstatePolicyFlowPage.cs",
+    "sha256": "6f9cb016784ea0f960f6769690583e5c0075d7e8c114f60deee67e33d3af26f2",
+    "sizeBytes": 2207
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/EQSFPSmokeTestFlowPage.cs",
+    "sha256": "bf5202dfe941565654f19fa72fe95c17c18693cca8b7f67cd34948a19975276b",
+    "sizeBytes": 1557
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/StepDefinitions/EQBOPBasicPolicyStepDefinitions.cs",
+    "sha256": "8181e00f517170815cf048b92cdc4379b1f77aeab5a5c7e6f7a4982e1b1f090f",
+    "sizeBytes": 1854
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/StepDefinitions/EQBOPSmokeTestStepDefinitions.cs",
+    "sha256": "daf41e82ef02a1ec8700e363a3757013869bf8f96c3e34778d7ab32c512c069a",
+    "sizeBytes": 1362
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/StepDefinitions/EQSFPBasicPolicyStepDefinitions.cs",
+    "sha256": "e7e59431beaa305d34150f6c2feb9c10ca329eb7279baaaee6b936542381c2a9",
+    "sizeBytes": 1867
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/StepDefinitions/EQSFPCountryEstatePolicyStepDefinitions.cs",
+    "sha256": "1d08e490cbbbb43b0f72261dd97f2edaccb895ca834561b08c1bb96c262884a3",
+    "sizeBytes": 1908
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/StepDefinitions/EQSFPSmokeTestStepDefinitions.cs",
+    "sha256": "8e5e9776bc72457adbc6a84a39021bdbe738e1e1d53ab00e7e7ace7a227d5c4a",
+    "sizeBytes": 1355
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/TestData/ExternalDataOverrides.json",
+    "sha256": "27c196632995f829b5e9cf88a9faf07f7364ae2c973b8060a15a78100feb297e",
+    "sizeBytes": 174
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/TestData/Scenarios/02_eq_bop_basic_policy_al.json",
+    "sha256": "ab0c69b1181870ce2762eaac20c51e6070cf4ca0e421f6ab4a69193e8e2094ba",
+    "sizeBytes": 5436
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/TestData/Scenarios/03_eq_bop_smoke_test_mo.json",
+    "sha256": "bacef564a43f6baeab3ab4f04cfd56f59345a232c5b0b8ec8053b27aff97641a",
+    "sizeBytes": 2229
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/TestData/Scenarios/04_eq_sfp_smoke_test_mn.json",
+    "sha256": "c29986af4fb410e558aab29c36f9f3f6f566a392ecc3430557d2c14737a1c63e",
+    "sizeBytes": 2009
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/TestData/Scenarios/05_eq_sfp_basic_policy_al.json",
+    "sha256": "398bcf9a4367d795ea3dccdac10a8c8b4c9c776976c266912ef22479fde69d7a",
+    "sizeBytes": 3684
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/TestData/Scenarios/06_eq_sfp_country_estate_policy_al.json",
+    "sha256": "4661ffccdb29f07c0a78122c74f753a1a98e3df58a806a587ab0cefccd87a2da",
+    "sizeBytes": 3700
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/TestSuites/all.json",
+    "sha256": "acc5080eab5093b14e676df37d8d173f17424540b90215482011c748767243bf",
+    "sizeBytes": 386
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/TestSuites/regression.json",
+    "sha256": "6bbf7060eebfa55f5ec1a057a299b89340502f165e994cf6e4d6544d72ea4b46",
+    "sizeBytes": 294
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/TestSuites/smoke.json",
+    "sha256": "b1da2105fd23eec47fe3d9a32d06c2fec99122a44aa223ace5bd99cfd6875f8c",
+    "sizeBytes": 213
+  },
+  {
+    "path": "tests/CommercialLines.ExpertQuote.Tests/appsettings.json",
+    "sha256": "cda19a6d7f1d598a6662c93361a5e72fa57399f41b4cf97479176bd0fd1d4c74",
+    "sizeBytes": 1633
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Bootstrap/FlowRegistration.cs",
+    "sha256": "a93f7ff858593abf5e85c91f66ba139eb30c5c1d29c424ad4ae7d2b617375919",
+    "sizeBytes": 904
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/CanonicalMaps/AutoRateFilingsCommonPolicyNBCanonicalMap.g.cs",
+    "sha256": "03d54280aa9deea95b7a0d2f1b23e5c0b4521849d010ef4364fe1eaf4810d043",
+    "sizeBytes": 640467
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/CanonicalMaps/AutoRateFilingsCommonPolicyNBPriorEffDateCanonicalMap.g.cs",
+    "sha256": "5c65c7c28f5f261151510b2e8f4d2c5d82d0ac35412ddaf19c506008297fd2f1",
+    "sizeBytes": 650455
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/CanonicalMaps/AutoRateFilingsPolicy1NBCanonicalMap.g.cs",
+    "sha256": "47dc7a59a51dceca6368d161f0e1934b51b2e6fa2af183d5914e1afca0552634",
+    "sizeBytes": 654685
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/CanonicalMaps/AutoRateFilingsPolicy3NBPriorEffDateCanonicalMap.g.cs",
+    "sha256": "395bf546a31d3c66cb2df10adc956419f8a7f53839ca101d30b5c0329b3cc0db",
+    "sizeBytes": 663897
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/CanonicalMaps/CycleRateFilingsPolicy1NB1CanonicalMap.g.cs",
+    "sha256": "e098cbc673871f3266399e01097af5de1d43a5c932eefcaac17c9ea5ae672ec0",
+    "sizeBytes": 603981
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/CanonicalMaps/CycleRateFilingsPolicy3NBPriorEffDateCanonicalMap.g.cs",
+    "sha256": "a238f9f24ddf4513d3878e6512f0d906c6615baf0d8d1dcd839c70d4438821a1",
+    "sizeBytes": 630287
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/CanonicalMaps/SmokeTestAutoCanonicalMap.g.cs",
+    "sha256": "2a31aaae857f7a66cbef3c57dca93a03b35c3f4933b8961f9c91cf9c2ec2ba46",
+    "sizeBytes": 76193
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/CanonicalMaps/SmokeTestCycleCanonicalMap.g.cs",
+    "sha256": "feecaa5e4b9eda54b20b709eec450e24feac5679973cdd1a5e4c6b8aa4f56f02",
+    "sizeBytes": 76275
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/CanonicalMaps/SmokeTestRVCanonicalMap.g.cs",
+    "sha256": "f66e36f3de636e534a2def399bc05fcf2363f7768d0dc903f26e7e85368a2645",
+    "sizeBytes": 76029
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Features/181_Auto_Rate_Filings_Policy_1_NB_AL.feature",
+    "sha256": "51ae0ec7120e3c1ed133f700e3522fb93d9f38d5744c9c794f466b21ea4a2155",
+    "sizeBytes": 1899
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Features/182_Auto_Rate_Filings_Policy_3_NB_Prior_Eff_Date_AL.feature",
+    "sha256": "a87d4c4e790ca4f6b3cc0ec4040145050eec208416ec5185ecdc543e1fcf45b6",
+    "sizeBytes": 1969
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Features/183_Auto_Rate_Filings_Common_Policy_NB_AL.feature",
+    "sha256": "9b8583f3cd83b51d5781afae583edc2fef92cae79294d64ad959edc83c924501",
+    "sizeBytes": 1909
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Features/184_Auto_Rate_Filings_Common_Policy_NB_Prior_Eff_Date_AL.feature",
+    "sha256": "15c6fd25786ae381289ed8ca398a3278db7545c963bf902abf9d58c156ce2853",
+    "sizeBytes": 1979
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Features/185_Cycle_Rate_Filings_Policy_1_NB_1_AL.feature",
+    "sha256": "1415e36d297f579c853839f84455e367ddce29bba13a2ae6f4229d8d5c374723",
+    "sizeBytes": 1897
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Features/186_Cycle_Rate_Filings_Policy_3_NB_Prior_Eff_Date_AL.feature",
+    "sha256": "cecd224629f870e86f937744e38418641464a8a8da8f652d3867fa6eb762e5a8",
+    "sizeBytes": 1963
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Features/211_Smoke_Test_Auto_AL.feature",
+    "sha256": "0b96a3398774b8cdc38c5e0f83a57a1e7e67c748f1c315afc7dfa87945916264",
+    "sizeBytes": 1203
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Features/212_Smoke_Test_Cycle_AL.feature",
+    "sha256": "9ffdb789ac087bf2d88e0a94bf2ae3dc756207deca60a8e93f384585e33ed2e4",
+    "sizeBytes": 1197
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Features/215_Smoke_Test_RV_AL.feature",
+    "sha256": "8c9692dd1a988fb6bc8fa1fc2ca3a09dc1f01759f75a6027cd03a93e898c71b9",
+    "sizeBytes": 1218
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Locators/PageLocatorKeys.g.cs",
+    "sha256": "a0faabed108c236bdac2e5c4fe17dc9fca52bb2b3d1c2b95bbc3ebb045d27ec2",
+    "sizeBytes": 75405
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Locators/locator-catalog.json",
+    "sha256": "b993b90a5d4c29b9650c9ac63c3b1ee81c609608e32e9c1a9481d01750074f1d",
+    "sizeBytes": 1157691
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Pages/AutoRateFilingsCommonPolicyNBFlowPage.cs",
+    "sha256": "2df1f331eb92504f97a268f5045de46d90ffa2c80805e77fd4ec26cef3049230",
+    "sizeBytes": 3087
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Pages/AutoRateFilingsCommonPolicyNBPriorEffDateFlowPage.cs",
+    "sha256": "1bed02c0f8eca19160fcbe111155176254aa6cd216808493a1045fc8fa96575a",
+    "sizeBytes": 3255
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Pages/AutoRateFilingsPolicy1NBFlowPage.cs",
+    "sha256": "4ef15dc821c902d4dcd789546f1db7e9b52a30b41843b32e5f045f01a47c4b4d",
+    "sizeBytes": 3017
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Pages/AutoRateFilingsPolicy3NBPriorEffDateFlowPage.cs",
+    "sha256": "d2d20cbf5cf4caf359879c00a12df0362d89eddd028d5f0f4353286df979c434",
+    "sizeBytes": 3185
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Pages/CycleRateFilingsPolicy1NB1FlowPage.cs",
+    "sha256": "e4294b944d5be23f3b174ed2244f9b7e1653fb3e80761652681758302500c70e",
+    "sizeBytes": 3045
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Pages/CycleRateFilingsPolicy3NBPriorEffDateFlowPage.cs",
+    "sha256": "341a528a74cdf3dc5da4671cbe0742942b772e2c032ef57814a2851e4bd20372",
+    "sizeBytes": 3199
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Pages/SmokeTestAutoFlowPage.cs",
+    "sha256": "f76d201e0e33b1fe41769e75f15d8217db05997bc6e2fd574053d59b10b678b5",
+    "sizeBytes": 1170
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Pages/SmokeTestCycleFlowPage.cs",
+    "sha256": "de0f1a4e7aa9a6099d207a5aaa1f89ddcb02d5d464a5b32270c66dca0a0cbc20",
+    "sizeBytes": 1175
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/Pages/SmokeTestRVFlowPage.cs",
+    "sha256": "d29dc371ab6e2bf23fbae6da1c7036abf68143a171bf932029972ab9bcb663ee",
+    "sizeBytes": 1160
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/PersonalLines.DuckCreek.Tests.csproj",
+    "sha256": "f6ffd0094ea9bc9d091f33284682f397ae90e9a4d5bd7b7358bae72bc33fc896",
+    "sizeBytes": 1438
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/AutoRateFilingsCommonPolicyNBPriorEffDateStepDefinitions.cs",
+    "sha256": "57f2128d5dfdeac6a202c93543c2e9af8ecca97b615605816dd47795a847c952",
+    "sizeBytes": 2604
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/AutoRateFilingsCommonPolicyNBStepDefinitions.cs",
+    "sha256": "1b4b2a65c3cc0bb732318dce160a6bbfdf1bd21dbf71baed300044ce4b84efab",
+    "sizeBytes": 2541
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/AutoRateFilingsPolicy1NBStepDefinitions.cs",
+    "sha256": "99fec78ce80b82bba32900f365da266683b86a95bdea4c850ec27dca0406b56b",
+    "sizeBytes": 2516
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/AutoRateFilingsPolicy3NBPriorEffDateStepDefinitions.cs",
+    "sha256": "e0df2e7f3d1f43088a6b1ce612641b8688e473c8c4a76eadfe94b231970c9593",
+    "sizeBytes": 2579
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/CycleRateFilingsPolicy1NB1StepDefinitions.cs",
+    "sha256": "da90730ac13dac49a549f2e03ef2fd81c5b4e0dd3cbdb922c1719cee0baba4f3",
+    "sizeBytes": 2527
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/CycleRateFilingsPolicy3NBPriorEffDateStepDefinitions.cs",
+    "sha256": "f40f66da6c235fba5aa61e98b9b6ffeb63cac4da3f254557978309c129025ed7",
+    "sizeBytes": 2584
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/SmokeTestAutoStepDefinitions.cs",
+    "sha256": "b1e5cf2031baaef367feeda24eff4254b9f6f3b76aeb9e30bc9b2545c4764b2d",
+    "sizeBytes": 1007
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/SmokeTestCycleStepDefinitions.cs",
+    "sha256": "9244604f67f11324876706796f13a269157c773d5f7ca319621eebe040219771",
+    "sizeBytes": 1012
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/SmokeTestRVStepDefinitions.cs",
+    "sha256": "52de3f1121ad48367f856fd2ec83608fb036d90c8edda70796745e5434187089",
+    "sizeBytes": 997
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/TestData/ExternalDataOverrides.json",
+    "sha256": "9d58da96ddfbb9ced9276ab7fd5febd5cbdee9fd065f074b107b691667b4b218",
+    "sizeBytes": 42513
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/TestData/Scenarios/181_auto_rate_filings_policy_1_nb_al.json",
+    "sha256": "32e4ee59c6c188904fdd728c9e2cff926b01b1ac5302b3085ff1ebc274b84ae6",
+    "sizeBytes": 5670
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_al.json",
+    "sha256": "00405bfd606fd5745130d2319035c2d05342bba2473ecdcb82041db7ff09dca5",
+    "sizeBytes": 5484
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/TestData/Scenarios/183_auto_rate_filings_common_policy_nb_al.json",
+    "sha256": "958fe1e5afeb2199a6aaa389a639c847c5c0d1ff7a8a6d7309bfe5d4c1321783",
+    "sizeBytes": 5176
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/TestData/Scenarios/184_auto_rate_filings_common_policy_nb_prior_eff_date_al.json",
+    "sha256": "3fadb34d934647a2c089fe69ce383d3f52f9242468955dc60931db862f31c511",
+    "sizeBytes": 5288
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/TestData/Scenarios/185_cycle_rate_filings_policy_1_nb_1_al.json",
+    "sha256": "a51827537873fa3d3836f10315c4bd69a202173b9f5cc03aea6ae2d205fa1aab",
+    "sizeBytes": 4518
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/TestData/Scenarios/186_cycle_rate_filings_policy_3_nb_prior_eff_date_al.json",
+    "sha256": "9a2c5cd2010693d4726e1ce0364e7b0dea1b6b1d4ee7b2885b078fd8893cfbde",
+    "sizeBytes": 5145
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/TestData/Scenarios/211_smoke_test_auto_al.json",
+    "sha256": "171c7aee05707ac51f20efeeaa60003c20b1d9d6a9747a4e492d45710bbb6ac1",
+    "sizeBytes": 1063
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/TestData/Scenarios/212_smoke_test_cycle_al.json",
+    "sha256": "b11731ef4504f1b66e7aa2afd9ebf71a88a15feabc8e4bffa18ed7ff47e2b52c",
+    "sizeBytes": 1063
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/TestData/Scenarios/215_smoke_test_rv_al.json",
+    "sha256": "a7e60f29f7b94cee75e29e8f3c01ee03cf6d18febdf6a99f2d4890f47b5d3b6a",
+    "sizeBytes": 1064
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/TestSuites/all.json",
+    "sha256": "40bb865d366edbca2b7e50cd97c64bfe694f130623164e21f78f67c1d014c4cd",
+    "sizeBytes": 692
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/TestSuites/rate-filings.json",
+    "sha256": "8f835d9a2bda9b1fb8530e3fd3209f06b9a0fac3aa3ca9aa88a635e1b77b9cd5",
+    "sizeBytes": 318
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/TestSuites/regression.json",
+    "sha256": "9e12858c6c590a1dea8ac94a9bebaf1f58497460ab1953255324233d72f98b4f",
+    "sizeBytes": 560
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/TestSuites/smoke.json",
+    "sha256": "ca6ed660c9199b2ac7900bb31c92adc956552edc7785755083ab189b51de2842",
+    "sizeBytes": 253
+  },
+  {
+    "path": "tests/PersonalLines.DuckCreek.Tests/appsettings.json",
+    "sha256": "1c4ade80f25a3e540f8b4cfc45d5001101d7b2de4434df9aecccd2ba05badbe3",
+    "sizeBytes": 1646
+  },
+  {
+    "path": "tests/Shared/Bindings/ApplicationSessionSteps.cs",
+    "sha256": "42d9e015355790eb08215bb39a5ebf21122e16ede22d2a769ecabdb76ef0d0b3",
+    "sizeBytes": 785
+  },
+  {
+    "path": "tests/Shared/Bindings/ScenarioDataSteps.cs",
+    "sha256": "2937a29e1b81a35e05f6bc8ad81a1ddeaaa6688f8a82fe7d87ed7eb9c47f7f3a",
+    "sizeBytes": 856
+  },
+  {
+    "path": "tests/Shared/Hooks/AutomationHooks.cs",
+    "sha256": "1d460b9472d30833ce8343590e0a63a0822deea01bd696d936b0e3c6d0e62525",
+    "sizeBytes": 4980
+  },
+  {
+    "path": "tests/Shared/Hooks/DependencyInjection.cs",
+    "sha256": "1ac171ff8f53a1bb88076c691fd0b7e1f9255ec7f4c9834a61b3a53dc9fd0e61",
+    "sizeBytes": 2249
+  },
+  {
+    "path": "tools/quality_gate.py",
+    "sha256": "0cb29a4301ed9e6e599c578b41d9e9a53a3a2e76bf4083dc1555c1a6332ba425",
+    "sizeBytes": 12156
+  }
+]

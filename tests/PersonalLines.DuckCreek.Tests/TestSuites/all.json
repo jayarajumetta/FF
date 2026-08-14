@@ -1,0 +1,15 @@
+{
+  "name": "PL_DC Attached Flows",
+  "filter": "TestCategory=PL_DC",
+  "features": [
+    "Personal Lines Duck Creek - Auto Rate Filings Policy 1 NB",
+    "Personal Lines Duck Creek - Auto Rate Filings Policy 3 NB Prior Eff Date",
+    "Personal Lines Duck Creek - Auto Rate Filings Common Policy NB",
+    "Personal Lines Duck Creek - Auto Rate Filings Common Policy NB Prior Eff Date",
+    "Personal Lines Duck Creek - Cycle Rate Filings Policy 1 NB 1",
+    "Personal Lines Duck Creek - Cycle Rate Filings Policy 3 NB Prior Eff Date",
+    "Personal Lines Duck Creek - Smoke Test Auto",
+    "Personal Lines Duck Creek - Smoke Test Cycle",
+    "Personal Lines Duck Creek - Smoke Test RV"
+  ]
+}

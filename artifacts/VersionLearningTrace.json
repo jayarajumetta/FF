@@ -1,0 +1,42 @@
+{
+  "version": "38.0.0-artifact-canonical-hardened",
+  "lineage": [
+    {
+      "version": "v29",
+      "learning": "Assumption audit: no silent invented values; missing inputs become explicit contracts."
+    },
+    {
+      "version": "v31",
+      "learning": "Feature/StepDefinition/PageMethod order and locator ownership are statically reconciled."
+    },
+    {
+      "version": "v32",
+      "learning": "Runtime observations, buffers, generated values, and precondition order are scenario-scoped."
+    },
+    {
+      "version": "v33-v34",
+      "learning": "Compile-oriented contract: unique types/signatures, valid project XML, no stale duplicate artifacts."
+    },
+    {
+      "version": "v35",
+      "learning": "Single repository with isolated application test assemblies prevents cross-domain binding collisions."
+    },
+    {
+      "version": "v36 discoveries",
+      "learning": "TBox/system operations are removed from PageLocators; TDM references use explicit override contracts."
+    },
+    {
+      "version": "v38",
+      "learning": "Business-rich lifecycle Features with typed artifacts; hardened conditions, steering, random patterns, tables, and expressions."
+    }
+  ],
+  "sourceScope": "Only the 32 attached eligible Features.",
+  "canonicalObjectMapping": [
+    "TestCase/TemplateInstance -> Feature/Scenario Outline",
+    "TestCase Design iteration -> Examples + scenario JSON",
+    "XTestStep -> ordered business stage/action",
+    "XTestStepValue -> operation/value/assertion/data expression",
+    "XModule/XModuleAttribute -> locator ownership and target",
+    "Recovery/TBox -> Hooks/SystemAction evidence"
+  ]
+}

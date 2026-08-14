@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsTestProject>true</IsTestProject>
+    <AssemblyName>CommercialLines.ExpertQuote.Tests</AssemblyName>
+    <RootNamespace>ToscaArtifactAutomation.CLEQ</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ToscaArtifactAutomation.Core\ToscaArtifactAutomation.Core.csproj" />
+    <PackageReference Include="Reqnroll.NUnit" Version="3.3.4" />
+    <PackageReference Include="Reqnroll.Microsoft.Extensions.DependencyInjection" Version="3.3.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="NUnit" Version="4.6.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="5.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Shared\Bindings\*.cs" Link="Bindings\%(Filename)%(Extension)" />
+    <Compile Include="..\Shared\Hooks\*.cs" Link="Hooks\%(Filename)%(Extension)" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Features\**\*.feature" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="TestData\**\*.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Locators\**\*.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="TestSuites\**\*.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

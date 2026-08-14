@@ -1,0 +1,11 @@
+{
+  "name": "CL_EQ Attached Flows",
+  "filter": "TestCategory=CL_EQ",
+  "features": [
+    "Commercial Lines ExpertQuote - EQ BOP Basic Policy",
+    "Commercial Lines ExpertQuote - EQ BOP Smoke Test",
+    "Commercial Lines ExpertQuote - EQ SFP Smoke Test",
+    "Commercial Lines ExpertQuote - EQ SFP Basic Policy",
+    "Commercial Lines ExpertQuote - EQ SFP Country Estate Policy"
+  ]
+}

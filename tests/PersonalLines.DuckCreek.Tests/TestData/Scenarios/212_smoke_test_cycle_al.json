@@ -1,0 +1,33 @@
+{
+  "_meta": {
+    "schemaVersion": "2.0",
+    "sourceFile": "212_Smoke_Test_Cycle_AL.feature",
+    "sourceSha256": "11ccf7b372f5203904ce529981c438f925189c7b733ef40d0b15504af2a115b8",
+    "sourceRevision": "48026",
+    "application": "PL_DC",
+    "feature": "Personal Lines Duck Creek - Smoke Test Cycle",
+    "representativeIteration": "AL",
+    "note": "Only the attached representative flow is generated."
+  },
+  "dimensions": {
+    "state": "Alabama",
+    "stateCode": "AL",
+    "product": "Motorcycle",
+    "productCode": "CYCLE",
+    "transaction": "Smoke Test",
+    "effectiveDateMode": "Current"
+  },
+  "values": {
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "statename": "ALABAMA",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "state_44": "ALABAMA",
+    "writingcompany_48": "American National Property And Casualty Co.",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair"
+  },
+  "random": {}
+}

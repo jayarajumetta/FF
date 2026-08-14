@@ -1,0 +1,97 @@
+{
+  "_meta": {
+    "schemaVersion": "2.0",
+    "sourceFile": "06_EQ_SFP_Country_Estate_Policy_AL.feature",
+    "sourceSha256": "3c4af74217d0ea027c4c6f793e58b0ac2e174c6ef1e135b4de595ec4a5d965f0",
+    "sourceRevision": "56022",
+    "application": "CL_EQ",
+    "feature": "Commercial Lines ExpertQuote - EQ SFP Country Estate Policy",
+    "representativeIteration": "AL",
+    "note": "Only the attached representative flow is generated."
+  },
+  "dimensions": {
+    "state": "Alabama",
+    "stateCode": "AL",
+    "product": "Special Farm Package",
+    "productCode": "SFP",
+    "transaction": "Country Estate New Business Policy",
+    "effectiveDateMode": "Current"
+  },
+  "values": {
+    "customer_dateofbirth_7": "08/13/2004",
+    "statename": "Alabama",
+    "true_35": "newAccountAddress",
+    "policyterm_37": "12 months",
+    "lob": "SFP",
+    "screen": "Policy Details",
+    "primaryfarmcategory": "CROPS",
+    "primaryfarmtype": "Berry",
+    "gross_farm_income_76": "500",
+    "screen_2": "Pre Qualification",
+    "screen_3": "Primary Insured Details",
+    "screen_4": "Client Details",
+    "inspectioncontactindex": "1",
+    "screen_5": "Narrative",
+    "description_of_the_business_exposures_activities_and_experience_130": "Test Narrative 1",
+    "expected_user_date_and_timestamp_innertext_133": "Null",
+    "policy": "Test1111",
+    "screen_6": "Claims Prior Insurance",
+    "feet_from_hydrant_161": "101-250",
+    "total_farming_acreage_163": "\"\"",
+    "roof_type_1_189": "Asphalt",
+    "roof_impact_1_190": "UL 2",
+    "expected_residence_coverage_203": "True",
+    "actual_cash_value_209": "Expanded Replacement Cost",
+    "screen_7": "Policy-Wide and Division-Specific Coverages",
+    "water_damage_234": "$5,000",
+    "unscheduled_structures_235": "$5,000",
+    "blanket_fpp_236": "\"\"",
+    "liability_limit_239": "$500,000/$1,000,000",
+    "screen_8": "Insurance Score",
+    "entity_type_248": "Primary  Insured",
+    "screen_9": "Mortgagee/Loss Payee",
+    "true_271": "Mortgage CheckBox",
+    "residence_274": "Residence #1",
+    "screen_10": "Pricing",
+    "screen_11": "Submission",
+    "application_url": "https://connect.anico.com/Pages/default.aspx",
+    "application_url_2": "http://svqw-clas21:8080/express/",
+    "search_mode_331": "Client Name",
+    "get_session_id_buffer_342": "Title",
+    "get_session_id_buffer_343": "JavaScript",
+    "serveraddress": "http://svqw-clas21:8080/duckcreek/dctserver.aspx",
+    "forms_api_response_348": "StatusCode",
+    "forms_api_response_349": "Content-Length",
+    "summaryresults": "*Forms Listed:0 *",
+    "summaryresults_2": "*FAIL:0 *",
+    "summaryresults_3": "*INFO:0 *",
+    "summaryresults_4": "*Other: 0*"
+  },
+  "random": {
+    "LastName": {
+      "pattern": "CE-[A-Z]{4}",
+      "sourceSentence": "I generate and retain a RANDOM value matching \"CE-[A-Z]{4}\" as runtime value \"LastName\"",
+      "sourceStep": "0029"
+    },
+    "FirstName": {
+      "pattern": "SFP[A-Z]{3}",
+      "sourceSentence": "I generate and retain a RANDOM value matching \"SFP[A-Z]{3}\" as runtime value \"FirstName\"",
+      "sourceStep": "0029"
+    },
+    "OwnerPhone": {
+      "pattern": "3[0-9]{9}",
+      "sourceSentence": "I enter a RANDOM value matching \"3[0-9]{9}\" in \"Owner Phone\"",
+      "sourceStep": "0033"
+    },
+    "OwnerEmail": {
+      "pattern": "test@[a-z]{4}\\.com",
+      "sourceSentence": "I enter a RANDOM value matching \"test@[a-z]{4}\\\\.com\" in \"Owner Email\"",
+      "sourceStep": "0033"
+    },
+    "InsuredSSN": {
+      "pattern": "025[0-9]{6}",
+      "sourceSentence": "I enter a RANDOM value consisting of fixed prefix \"025\", followed by 6 random digits in \"ssn\"",
+      "sourceStep": "0041"
+    }
+  }
+}

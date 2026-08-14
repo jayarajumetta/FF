@@ -1,0 +1,13 @@
+{
+  "name": "CL_DC Smoke",
+  "filter": "TestCategory=CL_DC&TestCategory=smoke",
+  "features": [
+    "Commercial Lines Duck Creek - BAP Smoke Test",
+    "Commercial Lines Duck Creek - CP Smoke Test",
+    "Commercial Lines Duck Creek - GL Smoke Test",
+    "Commercial Lines Duck Creek - IM Smoke Test",
+    "Commercial Lines Duck Creek - WC Smoke Test",
+    "Commercial Lines Duck Creek - CPP Smoke Test",
+    "Commercial Lines Duck Creek - UMB Smoke Test"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "PL DC Rate Filings",
+  "filter": "TestCategory=PL_DC&TestCategory=rate_filings",
+  "features": [
+    "Personal Lines Duck Creek - Auto Rate Filings Policy 1 NB",
+    "Personal Lines Duck Creek - Auto Rate Filings Common Policy NB",
+    "Personal Lines Duck Creek - Cycle Rate Filings Policy 1 NB 1"
+  ]
+}

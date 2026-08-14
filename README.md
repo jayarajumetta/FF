@@ -1,38 +1,54 @@
-# Tosca Modernized Standalone Framework
+# Tosca Canonical Artifact Automation Framework v38
 
-A standalone **C# / .NET 8 / ReqnRoll / Microsoft Playwright** framework generated from the supplied Commercial Lines Duck Creek, Commercial Lines ExpertQuote, and Personal Lines Duck Creek Tosca-derived business features.
+This repository is a standalone **C# / Playwright / ReqnRoll / NUnit** modernization package generated only for the **32 attached eligible business flows**.
 
-## What is included
+It uses the explicit artifact architecture retained from the v29-v35 line:
 
-- 248 business-rich `.feature` files.
-- One exact ordered ScenarioPlan and one static-data JSON file per feature.
-- Source-derived locator repositories ranked by stable HTML IDs, Duck Creek identifiers, test IDs, accessibility metadata, names, text, and XPath fallback.
-- Scenario-scoped random/runtime data; no mutable static test state.
-- Application-specific Gherkin Background; technical/source Background behavior runs through Hooks.
-- Dedicated system-action handling so TBox operations do not become page locators.
-- Runtime audit, screenshots, run-data snapshots, strict sequence validation, and central TDM/source overrides.
-
-## First run
-
-```powershell
-./scripts/build.ps1
-./scripts/install-playwright.ps1
-$env:CL_EQ_PASSWORD = "..."
-$env:CL_DC_PASSWORD = "..."
-$env:PL_DC_PASSWORD = "..."
-./scripts/run.ps1
+```text
+Feature / Scenario Outline / Examples
+    -> feature-scoped StepDefinition in Feature order
+        -> typed Flow PageMethod
+            -> source-ordered CanonicalAction artifact
+                -> typed PageLocator key + application locator catalog
+                    -> Playwright
 ```
 
-Linux/macOS equivalents are under `scripts/*.sh`.
+No catch-all ReqnRoll binding and no natural-language JSON plan interpreter is used.
 
-## Required data
+## Scope
 
-Populate unresolved TDM keys in `tests/ToscaModernized.Tests/TestData/TdmOverrides.json` and source-configured values in `SourceValueOverrides.json`. Empty required values fail with the exact missing key; they are never guessed.
+| Application | Attached flows |
+|---|---:|
+| Commercial Lines Duck Creek | 18 |
+| Commercial Lines ExpertQuote | 5 |
+| Personal Lines Duck Creek | 9 |
+| **Total** | **32** |
 
-## Security defaults
+The package contains **11,650 source-ordered business/data actions**. Another **1,217 technical, session, resource, cleanup, and recovery actions** are separated from PageLocators and represented by Hooks/SystemAction evidence.
 
-Process execution, source file deletion, and Edge preference mutation are disabled by default. Enable only in an isolated test agent after reviewing `appsettings.json`.
+## Data handling
 
-## Design note
+- Scenario Outline `Examples` hold business dimensions and dataset selection.
+- Fixed values are stored in scenario JSON files.
+- Random patterns are stored in scenario JSON and generated once into scenario-scoped runtime aliases before the first consuming PageMethod.
+- Buffers and captured values are isolated per scenario and also recorded in run evidence.
+- Unavailable TDM/reusable parameters are declared in `ExternalDataOverrides.json` with `SYNTHETIC_REPLACE_ME`; execution fails until approved values replace them.
+- Credentials are supplied only through environment variables.
 
-The Features remain readable business specifications. The generated plan is the technical traceability and ordering contract. A single non-ambiguous binding delegates each step to the exact plan instruction, preventing duplicated bindings and silent reordering.
+## Evidence and reporting
+
+Hooks capture manual-equivalent step logs, screenshots, DOM on failure, Playwright trace, video, runtime-data snapshots, and a self-contained HTML report. Optional SMTP summary email is configuration-driven and disabled by default.
+
+## Run
+
+```bash
+./scripts/setup.sh
+./scripts/quality-gate.sh
+./scripts/run.sh all
+```
+
+PowerShell equivalents and Azure Pipelines/GitHub Actions definitions are included.
+
+## Validation boundary
+
+Generation performs JSON/XML parsing, Feature/StepDefinition/PageMethod order reconciliation, canonical action contracts, duplicate signature/type audits, locator/system separation, C# lexical/delimiter checks, and ZIP CRC/SHA-256 validation. The generation container does not expose the .NET SDK, so Roslyn compilation and test discovery must run through the supplied CI gate before application execution.

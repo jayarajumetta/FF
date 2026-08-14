@@ -1,0 +1,24 @@
+{
+  "name": "CL_DC Attached Flows",
+  "filter": "TestCategory=CL_DC",
+  "features": [
+    "Commercial Lines Duck Creek - BAP Basic Policy",
+    "Commercial Lines Duck Creek - BAP Expanded",
+    "Commercial Lines Duck Creek - CPP Basic Policy",
+    "Commercial Lines Duck Creek - CP Basic Policy",
+    "Commercial Lines Duck Creek - GL Basic Policy",
+    "Commercial Lines Duck Creek - GL OCP Policy",
+    "Commercial Lines Duck Creek - IM Basic Policy",
+    "Commercial Lines Duck Creek - UMB Basic Policy",
+    "Commercial Lines Duck Creek - UMB Expanded",
+    "Commercial Lines Duck Creek - WC Basic Policy",
+    "Commercial Lines Duck Creek - WC Expanded",
+    "Commercial Lines Duck Creek - BAP Smoke Test",
+    "Commercial Lines Duck Creek - CP Smoke Test",
+    "Commercial Lines Duck Creek - GL Smoke Test",
+    "Commercial Lines Duck Creek - IM Smoke Test",
+    "Commercial Lines Duck Creek - WC Smoke Test",
+    "Commercial Lines Duck Creek - CPP Smoke Test",
+    "Commercial Lines Duck Creek - UMB Smoke Test"
+  ]
+}

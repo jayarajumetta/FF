@@ -1,7 +1,7 @@
 {
-  "generatedAtUtc": "2026-08-14T04:13:57.356881+00:00",
-  "pythonVersion": "3.13.5",
+  "generatedAtUtc": "2026-08-14T10:56:20.624781+00:00",
+  "generationVersion": "38.0.0-artifact-canonical-hardened",
   "dotnetAvailableAtGeneration": false,
-  "compilerValidationPerformed": false,
-  "note": "The archive is statically validated. Run scripts/build.ps1 or scripts/build.sh on a .NET 8 agent for Roslyn/NuGet validation."
+  "roslynCompilationPerformed": false,
+  "reason": "The generation container did not expose a .NET SDK. Static compiler and contract validation were performed; CI definitions run restore/build/test discovery independently."
 }
