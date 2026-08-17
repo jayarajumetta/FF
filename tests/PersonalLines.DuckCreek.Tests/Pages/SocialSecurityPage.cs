@@ -7,9 +7,9 @@ public sealed class SocialSecurityPage
 {
     private readonly SocialSecurityLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public SocialSecurityPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public SocialSecurityPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new SocialSecurityLocators(browser.Page);
         _data = data;
@@ -22,39 +22,39 @@ public sealed class SocialSecurityPage
         // EQSideMenu_e12e67Page.EQSideMenu_0074_8f9ff6Async
         if (_data.Condition("'Additional Drivers?' == \"Yes\""))
         {
-        await _ui.ClickAsync(_locators.DriverInformation);
+            await _ui.ClickAsync(_locators.DriverInformation);
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0075_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.PrefilledDrivers))
         {
-        await _ui.WaitAsync(_locators.PrefilledDrivers, "Exists");
+            await _ui.WaitAsync(_locators.PrefilledDrivers, "Exists");
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0076_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.PrefilledDrivers))
         {
-        _data.Set("NumberOfDrivers", await _ui.CaptureAsync(_locators.PrefilledDrivers, "ResultCount"));
+            _data.Set("NumberOfDrivers", await _ui.CaptureAsync(_locators.PrefilledDrivers, "ResultCount"));
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0077_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.MATFORMFIELD))
         {
-        await _ui.FillAsync(_locators.MATFORMFIELD, _data.Resolve(""));
+            await _ui.FillAsync(_locators.MATFORMFIELD, _data.Resolve(""));
         }
         await _ui.PressAsync(_locators.NeverResidedInTheHouseholdAndDoesnTRegularlyUseOrHaveAccessToPolicyVehicleS, "PRE:return");
         await _ui.PressAsync(_locators.NeverResidedInTheHouseholdAndDoesnTRegularlyUseOrHaveAccessToPolicyVehicleS, "return");
         // EQPrefilHouseholdDrivers_d424d2Page.SaveContinue_0078_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.SaveAndContinue))
         {
-        await _ui.ClickAsync(_locators.SaveAndContinue);
+            await _ui.ClickAsync(_locators.SaveAndContinue);
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0079_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.UnselectedClientSuggestions))
         {
-        await _ui.VerifyAsync(_locators.UnselectedClientSuggestions, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.UnselectedClientSuggestions, _data.Resolve("Exists"), "");
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0080_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.SaveAndContinue))
         {
-        await _ui.ClickAsync(_locators.SaveAndContinue);
+            await _ui.ClickAsync(_locators.SaveAndContinue);
         }
     }
 
@@ -64,39 +64,39 @@ public sealed class SocialSecurityPage
         // EQSideMenu_e12e67Page.EQSideMenu_0074_8f5301Async
         if (_data.Condition("'Additional Drivers?' == \"Yes\""))
         {
-        await _ui.ClickAsync(_locators.DriverInformation);
+            await _ui.ClickAsync(_locators.DriverInformation);
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0075_8f5301Async
         if (await _ui.ExistsAsync(_locators.PrefilledDrivers))
         {
-        await _ui.WaitAsync(_locators.PrefilledDrivers, "Exists");
+            await _ui.WaitAsync(_locators.PrefilledDrivers, "Exists");
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0076_8f5301Async
         if (await _ui.ExistsAsync(_locators.PrefilledDrivers))
         {
-        _data.Set("NumberOfDrivers", await _ui.CaptureAsync(_locators.PrefilledDrivers, "ResultCount"));
+            _data.Set("NumberOfDrivers", await _ui.CaptureAsync(_locators.PrefilledDrivers, "ResultCount"));
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0077_8f5301Async
         if (await _ui.ExistsAsync(_locators.MATFORMFIELD))
         {
-        await _ui.FillAsync(_locators.MATFORMFIELD, _data.Resolve(""));
+            await _ui.FillAsync(_locators.MATFORMFIELD, _data.Resolve(""));
         }
         await _ui.PressAsync(_locators.NeverResidedInTheHouseholdAndDoesnTRegularlyUseOrHaveAccessToPolicyVehicleS, "PRE:return");
         await _ui.PressAsync(_locators.NeverResidedInTheHouseholdAndDoesnTRegularlyUseOrHaveAccessToPolicyVehicleS, "return");
         // EQPrefilHouseholdDrivers_d424d2Page.SaveContinue_0078_8f5301Async
         if (await _ui.ExistsAsync(_locators.SaveAndContinue))
         {
-        await _ui.ClickAsync(_locators.SaveAndContinue);
+            await _ui.ClickAsync(_locators.SaveAndContinue);
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0079_8f5301Async
         if (await _ui.ExistsAsync(_locators.UnselectedClientSuggestions))
         {
-        await _ui.VerifyAsync(_locators.UnselectedClientSuggestions, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.UnselectedClientSuggestions, _data.Resolve("Exists"), "");
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0080_8f5301Async
         if (await _ui.ExistsAsync(_locators.SaveAndContinue))
         {
-        await _ui.ClickAsync(_locators.SaveAndContinue);
+            await _ui.ClickAsync(_locators.SaveAndContinue);
         }
         // TBoxSetBuffer_e51da1Page.TBoxSetBuffer_0084_8f5301Async
         _data.Set("Farm/Use", _data.Get("Farm/Use"));
@@ -115,39 +115,39 @@ public sealed class SocialSecurityPage
         // EQSideMenu_e12e67Page.EQSideMenu_0074_e2e0d7Async
         if (_data.Condition("'Additional Drivers?' == \"Yes\""))
         {
-        await _ui.ClickAsync(_locators.DriverInformation);
+            await _ui.ClickAsync(_locators.DriverInformation);
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0075_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.PrefilledDrivers))
         {
-        await _ui.WaitAsync(_locators.PrefilledDrivers, "Exists");
+            await _ui.WaitAsync(_locators.PrefilledDrivers, "Exists");
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0076_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.PrefilledDrivers))
         {
-        _data.Set("NumberOfDrivers", await _ui.CaptureAsync(_locators.PrefilledDrivers, "ResultCount"));
+            _data.Set("NumberOfDrivers", await _ui.CaptureAsync(_locators.PrefilledDrivers, "ResultCount"));
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0077_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.MATFORMFIELD))
         {
-        await _ui.FillAsync(_locators.MATFORMFIELD, _data.Resolve(""));
+            await _ui.FillAsync(_locators.MATFORMFIELD, _data.Resolve(""));
         }
         await _ui.PressAsync(_locators.NeverResidedInTheHouseholdAndDoesnTRegularlyUseOrHaveAccessToPolicyVehicleS, "PRE:return");
         await _ui.PressAsync(_locators.NeverResidedInTheHouseholdAndDoesnTRegularlyUseOrHaveAccessToPolicyVehicleS, "return");
         // EQPrefilHouseholdDrivers_d424d2Page.SaveContinue_0078_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.SaveAndContinue))
         {
-        await _ui.ClickAsync(_locators.SaveAndContinue);
+            await _ui.ClickAsync(_locators.SaveAndContinue);
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0079_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.UnselectedClientSuggestions))
         {
-        await _ui.VerifyAsync(_locators.UnselectedClientSuggestions, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.UnselectedClientSuggestions, _data.Resolve("Exists"), "");
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0080_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.SaveAndContinue))
         {
-        await _ui.ClickAsync(_locators.SaveAndContinue);
+            await _ui.ClickAsync(_locators.SaveAndContinue);
         }
         // TBoxSetBuffer_e51da1Page.TBoxSetBuffer_0084_e2e0d7Async
         _data.Set("Farm/Use", _data.Get("Farm/Use"));
@@ -166,39 +166,39 @@ public sealed class SocialSecurityPage
         // EQSideMenu_e12e67Page.EQSideMenu_0074_bafd4aAsync
         if (_data.Condition("'Additional Drivers?' == \"Yes\""))
         {
-        await _ui.ClickAsync(_locators.DriverInformation);
+            await _ui.ClickAsync(_locators.DriverInformation);
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0075_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.PrefilledDrivers))
         {
-        await _ui.WaitAsync(_locators.PrefilledDrivers, "Exists");
+            await _ui.WaitAsync(_locators.PrefilledDrivers, "Exists");
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0076_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.PrefilledDrivers))
         {
-        _data.Set("NumberOfDrivers", await _ui.CaptureAsync(_locators.PrefilledDrivers, "ResultCount"));
+            _data.Set("NumberOfDrivers", await _ui.CaptureAsync(_locators.PrefilledDrivers, "ResultCount"));
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0077_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.MATFORMFIELD))
         {
-        await _ui.FillAsync(_locators.MATFORMFIELD, _data.Resolve(""));
+            await _ui.FillAsync(_locators.MATFORMFIELD, _data.Resolve(""));
         }
         await _ui.PressAsync(_locators.NeverResidedInTheHouseholdAndDoesnTRegularlyUseOrHaveAccessToPolicyVehicleS, "PRE:return");
         await _ui.PressAsync(_locators.NeverResidedInTheHouseholdAndDoesnTRegularlyUseOrHaveAccessToPolicyVehicleS, "return");
         // EQPrefilHouseholdDrivers_d424d2Page.SaveContinue_0078_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.SaveAndContinue))
         {
-        await _ui.ClickAsync(_locators.SaveAndContinue);
+            await _ui.ClickAsync(_locators.SaveAndContinue);
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0079_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.UnselectedClientSuggestions))
         {
-        await _ui.VerifyAsync(_locators.UnselectedClientSuggestions, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.UnselectedClientSuggestions, _data.Resolve("Exists"), "");
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0080_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.SaveAndContinue))
         {
-        await _ui.ClickAsync(_locators.SaveAndContinue);
+            await _ui.ClickAsync(_locators.SaveAndContinue);
         }
         // TBoxSetBuffer_e51da1Page.TBoxSetBuffer_0084_bafd4aAsync
         _data.Set("Farm/Use", _data.Get("Farm/Use"));
@@ -217,39 +217,39 @@ public sealed class SocialSecurityPage
         // EQSideMenu_e12e67Page.EQSideMenu_0074_8f4c8fAsync
         if (_data.Condition("'Additional Drivers?' == \"Yes\""))
         {
-        await _ui.ClickAsync(_locators.DriverInformation);
+            await _ui.ClickAsync(_locators.DriverInformation);
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0075_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.PrefilledDrivers))
         {
-        await _ui.WaitAsync(_locators.PrefilledDrivers, "Exists");
+            await _ui.WaitAsync(_locators.PrefilledDrivers, "Exists");
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0076_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.PrefilledDrivers))
         {
-        _data.Set("NumberOfDrivers", await _ui.CaptureAsync(_locators.PrefilledDrivers, "ResultCount"));
+            _data.Set("NumberOfDrivers", await _ui.CaptureAsync(_locators.PrefilledDrivers, "ResultCount"));
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0077_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.MATFORMFIELD))
         {
-        await _ui.FillAsync(_locators.MATFORMFIELD, _data.Resolve(""));
+            await _ui.FillAsync(_locators.MATFORMFIELD, _data.Resolve(""));
         }
         await _ui.PressAsync(_locators.NeverResidedInTheHouseholdAndDoesnTRegularlyUseOrHaveAccessToPolicyVehicleS, "PRE:return");
         await _ui.PressAsync(_locators.NeverResidedInTheHouseholdAndDoesnTRegularlyUseOrHaveAccessToPolicyVehicleS, "return");
         // EQPrefilHouseholdDrivers_d424d2Page.SaveContinue_0078_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.SaveAndContinue))
         {
-        await _ui.ClickAsync(_locators.SaveAndContinue);
+            await _ui.ClickAsync(_locators.SaveAndContinue);
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0079_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.UnselectedClientSuggestions))
         {
-        await _ui.VerifyAsync(_locators.UnselectedClientSuggestions, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.UnselectedClientSuggestions, _data.Resolve("Exists"), "");
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0080_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.SaveAndContinue))
         {
-        await _ui.ClickAsync(_locators.SaveAndContinue);
+            await _ui.ClickAsync(_locators.SaveAndContinue);
         }
         // TBoxSetBuffer_e51da1Page.TBoxSetBuffer_0084_8f4c8fAsync
         _data.Set("Farm/Use", _data.Get("Farm/Use"));
@@ -268,39 +268,39 @@ public sealed class SocialSecurityPage
         // EQSideMenu_e12e67Page.EQSideMenu_0074_10f911Async
         if (_data.Condition("'Additional Drivers?' == \"Yes\""))
         {
-        await _ui.ClickAsync(_locators.DriverInformation);
+            await _ui.ClickAsync(_locators.DriverInformation);
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0075_10f911Async
         if (await _ui.ExistsAsync(_locators.PrefilledDrivers))
         {
-        await _ui.WaitAsync(_locators.PrefilledDrivers, "Exists");
+            await _ui.WaitAsync(_locators.PrefilledDrivers, "Exists");
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0076_10f911Async
         if (await _ui.ExistsAsync(_locators.PrefilledDrivers))
         {
-        _data.Set("NumberOfDrivers", await _ui.CaptureAsync(_locators.PrefilledDrivers, "ResultCount"));
+            _data.Set("NumberOfDrivers", await _ui.CaptureAsync(_locators.PrefilledDrivers, "ResultCount"));
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0077_10f911Async
         if (await _ui.ExistsAsync(_locators.MATFORMFIELD))
         {
-        await _ui.FillAsync(_locators.MATFORMFIELD, _data.Resolve(""));
+            await _ui.FillAsync(_locators.MATFORMFIELD, _data.Resolve(""));
         }
         await _ui.PressAsync(_locators.NeverResidedInTheHouseholdAndDoesnTRegularlyUseOrHaveAccessToPolicyVehicleS, "PRE:return");
         await _ui.PressAsync(_locators.NeverResidedInTheHouseholdAndDoesnTRegularlyUseOrHaveAccessToPolicyVehicleS, "return");
         // EQPrefilHouseholdDrivers_d424d2Page.SaveContinue_0078_10f911Async
         if (await _ui.ExistsAsync(_locators.SaveAndContinue))
         {
-        await _ui.ClickAsync(_locators.SaveAndContinue);
+            await _ui.ClickAsync(_locators.SaveAndContinue);
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0079_10f911Async
         if (await _ui.ExistsAsync(_locators.UnselectedClientSuggestions))
         {
-        await _ui.VerifyAsync(_locators.UnselectedClientSuggestions, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.UnselectedClientSuggestions, _data.Resolve("Exists"), "");
         }
         // EQPrefilHouseholdDrivers_d424d2Page.PrefilHouseholdDrivers_0080_10f911Async
         if (await _ui.ExistsAsync(_locators.SaveAndContinue))
         {
-        await _ui.ClickAsync(_locators.SaveAndContinue);
+            await _ui.ClickAsync(_locators.SaveAndContinue);
         }
     }
 

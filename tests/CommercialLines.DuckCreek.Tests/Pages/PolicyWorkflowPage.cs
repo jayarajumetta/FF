@@ -7,9 +7,9 @@ public sealed class PolicyWorkflowPage
 {
     private readonly PolicyWorkflowLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public PolicyWorkflowPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public PolicyWorkflowPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new PolicyWorkflowLocators(browser.Page);
         _data = data;
@@ -475,7 +475,7 @@ public sealed class PolicyWorkflowPage
         // PolicyInfoCPPSpecificFields_d2689aPage.PolicyInfoCPPSpecificFields_0099_aad19bAsync
         if (_data.Condition("'CPP LOB' == \"CP\""))
         {
-        await _ui.ClickAsync(_locators.CPDetail);
+            await _ui.ClickAsync(_locators.CPDetail);
         }
     }
 
@@ -526,93 +526,93 @@ public sealed class PolicyWorkflowPage
         await _ui.WaitAsync(_locators.PolicyCovg6B651, "Exists");
         if (_data.Condition("'Occurence Limit' != NULL"))
         {
-        await _ui.FillAsync(_locators.OccurenceLimit, _data.Resolve("{{data:occurence_limit_259}}"));
-        await _ui.PressAsync(_locators.OccurenceLimit, "CLICK");
-        await _ui.PressAsync(_locators.OccurenceLimit, "Enter");
-        await _ui.PressAsync(_locators.OccurenceLimit, "Tab");
+            await _ui.FillAsync(_locators.OccurenceLimit, _data.Resolve("{{data:occurence_limit_259}}"));
+            await _ui.PressAsync(_locators.OccurenceLimit, "CLICK");
+            await _ui.PressAsync(_locators.OccurenceLimit, "Enter");
+            await _ui.PressAsync(_locators.OccurenceLimit, "Tab");
         }
         if (_data.Condition("'Aggregate Limit' != NULL"))
         {
-        await _ui.FillAsync(_locators.AggregateLimit, _data.Resolve("{{data:aggregate_limit_260}}"));
-        await _ui.PressAsync(_locators.AggregateLimit, "CLICK");
-        await _ui.PressAsync(_locators.AggregateLimit, "Enter");
-        await _ui.PressAsync(_locators.AggregateLimit, "Tab");
+            await _ui.FillAsync(_locators.AggregateLimit, _data.Resolve("{{data:aggregate_limit_260}}"));
+            await _ui.PressAsync(_locators.AggregateLimit, "CLICK");
+            await _ui.PressAsync(_locators.AggregateLimit, "Enter");
+            await _ui.PressAsync(_locators.AggregateLimit, "Tab");
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.ProductsAggLimit, _data.Resolve(""));
+            await _ui.FillAsync(_locators.ProductsAggLimit, _data.Resolve(""));
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.DedType, _data.Resolve("{{data:ded_type_262}}"));
-        await _ui.PressAsync(_locators.DedType, "Tab");
+            await _ui.FillAsync(_locators.DedType, _data.Resolve("{{data:ded_type_262}}"));
+            await _ui.PressAsync(_locators.DedType, "Tab");
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.DeductibleBasis, _data.Resolve("{{data:deductible_basis_263}}"));
-        await _ui.PressAsync(_locators.DeductibleBasis, "Tab");
+            await _ui.FillAsync(_locators.DeductibleBasis, _data.Resolve("{{data:deductible_basis_263}}"));
+            await _ui.PressAsync(_locators.DeductibleBasis, "Tab");
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.PremOpDed, _data.Resolve("{{data:premop_ded_264}}"));
-        await _ui.PressAsync(_locators.PremOpDed, "Tab");
+            await _ui.FillAsync(_locators.PremOpDed, _data.Resolve("{{data:premop_ded_264}}"));
+            await _ui.PressAsync(_locators.PremOpDed, "Tab");
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.PremOpPDDed, _data.Resolve(""));
+            await _ui.FillAsync(_locators.PremOpPDDed, _data.Resolve(""));
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.SmartSetAsync(_locators.SplitBIDed, _data.Resolve("{{data:split_bi_ded_266}}"));
-        await _ui.PressAsync(_locators.SplitBIDed, "Tab");
+            await _ui.SmartSetAsync(_locators.SplitBIDed, _data.Resolve("{{data:split_bi_ded_266}}"));
+            await _ui.PressAsync(_locators.SplitBIDed, "Tab");
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.SplitPDDed, _data.Resolve(""));
+            await _ui.FillAsync(_locators.SplitPDDed, _data.Resolve(""));
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.ProdBIDed, _data.Resolve("{{data:prod_bi_ded_268}}"));
-        await _ui.PressAsync(_locators.ProdBIDed, "CLICK");
-        await _ui.PressAsync(_locators.ProdBIDed, "Tab");
+            await _ui.FillAsync(_locators.ProdBIDed, _data.Resolve("{{data:prod_bi_ded_268}}"));
+            await _ui.PressAsync(_locators.ProdBIDed, "CLICK");
+            await _ui.PressAsync(_locators.ProdBIDed, "Tab");
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.ProdPDDed, _data.Resolve(""));
+            await _ui.FillAsync(_locators.ProdPDDed, _data.Resolve(""));
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.FireDamage, _data.Resolve(""));
+            await _ui.FillAsync(_locators.FireDamage, _data.Resolve(""));
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.Medical, _data.Resolve(""));
+            await _ui.FillAsync(_locators.Medical, _data.Resolve(""));
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.PersAdvInj, _data.Resolve(""));
+            await _ui.FillAsync(_locators.PersAdvInj, _data.Resolve(""));
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, _data.Resolve("{{data:is_the_insured_engaged_in_any_snow_or_ice_removal_operations_273}}"));
-        await _ui.PressAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, "CLICK");
-        await _ui.PressAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, "Enter");
-        await _ui.PressAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, "Tab");
+            await _ui.FillAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, _data.Resolve("{{data:is_the_insured_engaged_in_any_snow_or_ice_removal_operations_273}}"));
+            await _ui.PressAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, "CLICK");
+            await _ui.PressAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, "Enter");
+            await _ui.PressAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, "Tab");
         }
         if (_data.Condition("(State==\"NY\")||(State == \"NJ\")||(State == \"WV\")||(State == \"MA\")||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\")||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.OfFullTimeEmployees, _data.Resolve("{{data:of_full_time_employees_274}}"));
-        await _ui.PressAsync(_locators.OfFullTimeEmployees, "Tab");
+            await _ui.FillAsync(_locators.OfFullTimeEmployees, _data.Resolve("{{data:of_full_time_employees_274}}"));
+            await _ui.PressAsync(_locators.OfFullTimeEmployees, "Tab");
         }
         if (_data.Condition("(State==\"NY\")||(State == \"NJ\")||(State == \"WV\")||(State == \"MA\") ||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\")||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.OfPartTimeEmployees, _data.Resolve("{{data:of_part_time_employees_275}}"));
-        await _ui.PressAsync(_locators.OfPartTimeEmployees, "Tab");
+            await _ui.FillAsync(_locators.OfPartTimeEmployees, _data.Resolve("{{data:of_part_time_employees_275}}"));
+            await _ui.PressAsync(_locators.OfPartTimeEmployees, "Tab");
         }
         if (_data.Condition("(State==\"NY\")||(State == \"NJ\")||(State == \"WV\")||(State == \"MA\")||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\") ||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.OfSeasonalTemporaryEmployees, _data.Resolve("{{data:of_seasonal_temporary_employees_276}}"));
-        await _ui.PressAsync(_locators.OfSeasonalTemporaryEmployees, "Tab");
+            await _ui.FillAsync(_locators.OfSeasonalTemporaryEmployees, _data.Resolve("{{data:of_seasonal_temporary_employees_276}}"));
+            await _ui.PressAsync(_locators.OfSeasonalTemporaryEmployees, "Tab");
         }
     }
 
@@ -629,7 +629,7 @@ public sealed class PolicyWorkflowPage
         // PolicyInfoCPPSpecificFields_d2689aPage.PolicyInfoCPPSpecificFields_0187_aad19bAsync
         if (_data.Condition("'CPP LOB' == \"IM\""))
         {
-        await _ui.ClickAsync(_locators.IMDetail);
+            await _ui.ClickAsync(_locators.IMDetail);
         }
     }
 

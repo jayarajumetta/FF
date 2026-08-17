@@ -5,12 +5,16 @@ namespace InsuranceAutomation.CLDC.Pages;
 
 public sealed class LoginPage
 {
+    private readonly BrowserSession _browser;
+
     private readonly LoginLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public LoginPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public LoginPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
+        _browser = browser;
+
         _locators = new LoginLocators(browser.Page);
         _data = data;
         _ui = ui;

@@ -7,9 +7,9 @@ public sealed class LocationsPage
 {
     private readonly LocationsLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public LocationsPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public LocationsPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new LocationsLocators(browser.Page);
         _data = data;
@@ -46,32 +46,32 @@ public sealed class LocationsPage
         // CLEQSFPLocationAddALocation_99017dPage.CLEQSFPLocationAddALocationFireHydrantAndWindHail_0137_503012Async
         if (_data.Condition("WindHail == \"1%\" && '1% Mandatory' != \"Yes\""))
         {
-        await _ui.ClickAsync(_locators.WindHail1);
+            await _ui.ClickAsync(_locators.WindHail1);
         }
         if (_data.Condition("WindHail == \"2%\""))
         {
-        await _ui.ClickAsync(_locators.WindHail2);
+            await _ui.ClickAsync(_locators.WindHail2);
         }
         if (_data.Condition("WindHail == \"5%\""))
         {
-        await _ui.ClickAsync(_locators.WindHail5);
+            await _ui.ClickAsync(_locators.WindHail5);
         }
         // CLEQSFPLocationAddALocationCLEQCommonWaitOnLoadingIndicator_fb07bcPage.EQLoadingIndicatorWait_0141_503012Async
         await _ui.WaitAsync(_locators.Loading, "Absent");
         // CLEQSFPLocationAddALocation_99017dPage.CheckIfSaveExists_0142_503012Async
         if (await _ui.ExistsAsync(_locators.Save))
         {
-        await _ui.VerifyAsync(_locators.Save, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Save, _data.Resolve("Exists"), "");
         }
         // CLEQSFPLocationAddALocation_99017dPage.CLEQSFPLocationAddALocationClickSave_0143_503012Async
         if (await _ui.ExistsAsync(_locators.Save))
         {
-        await _ui.ClickAsync(_locators.Save);
+            await _ui.ClickAsync(_locators.Save);
         }
         // CLEQSFPLocationAddALocationCLEQCommonWaitOnLoadingIndicator_fb07bcPage.EQLoadingIndicatorWait_0144_503012Async
         if (await _ui.ExistsAsync(_locators.Loading))
         {
-        await _ui.WaitAsync(_locators.Loading, "Absent");
+            await _ui.WaitAsync(_locators.Loading, "Absent");
         }
     }
 
@@ -97,7 +97,7 @@ public sealed class LocationsPage
         await _ui.WaitAsync(_locators.Save, "Absent");
         if (_data.Condition("'Order Wildfire Risk Score' == \"Yes\""))
         {
-        await _ui.ClickAsync(_locators.OrderWildfireRiskScore);
+            await _ui.ClickAsync(_locators.OrderWildfireRiskScore);
         }
     }
 
@@ -131,32 +131,32 @@ public sealed class LocationsPage
         // CLEQSFPLocationAddALocation_99017dPage.CLEQSFPLocationAddALocationFireHydrantAndWindHail_0137_08f3f1Async
         if (_data.Condition("WindHail == \"1%\" && '1% Mandatory' != \"Yes\""))
         {
-        await _ui.ClickAsync(_locators.WindHail1);
+            await _ui.ClickAsync(_locators.WindHail1);
         }
         if (_data.Condition("WindHail == \"2%\""))
         {
-        await _ui.ClickAsync(_locators.WindHail2);
+            await _ui.ClickAsync(_locators.WindHail2);
         }
         if (_data.Condition("WindHail == \"5%\""))
         {
-        await _ui.ClickAsync(_locators.WindHail5);
+            await _ui.ClickAsync(_locators.WindHail5);
         }
         // CLEQSFPLocationAddALocationCLEQCommonWaitOnLoadingIndicator_fb07bcPage.EQLoadingIndicatorWait_0141_08f3f1Async
         await _ui.WaitAsync(_locators.Loading, "Absent");
         // CLEQSFPLocationAddALocation_99017dPage.CheckIfSaveExists_0142_08f3f1Async
         if (await _ui.ExistsAsync(_locators.Save))
         {
-        await _ui.VerifyAsync(_locators.Save, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Save, _data.Resolve("Exists"), "");
         }
         // CLEQSFPLocationAddALocation_99017dPage.CLEQSFPLocationAddALocationClickSave_0143_08f3f1Async
         if (await _ui.ExistsAsync(_locators.Save))
         {
-        await _ui.ClickAsync(_locators.Save);
+            await _ui.ClickAsync(_locators.Save);
         }
         // CLEQSFPLocationAddALocationCLEQCommonWaitOnLoadingIndicator_fb07bcPage.EQLoadingIndicatorWait_0144_08f3f1Async
         if (await _ui.ExistsAsync(_locators.Loading))
         {
-        await _ui.WaitAsync(_locators.Loading, "Absent");
+            await _ui.WaitAsync(_locators.Loading, "Absent");
         }
     }
 

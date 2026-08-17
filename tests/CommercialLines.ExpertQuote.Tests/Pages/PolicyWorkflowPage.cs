@@ -5,12 +5,16 @@ namespace InsuranceAutomation.CLEQ.Pages;
 
 public sealed class PolicyWorkflowPage
 {
+    private readonly BrowserSession _browser;
+
     private readonly PolicyWorkflowLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public PolicyWorkflowPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public PolicyWorkflowPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
+        _browser = browser;
+
         _locators = new PolicyWorkflowLocators(browser.Page);
         _data = data;
         _ui = ui;
@@ -22,24 +26,24 @@ public sealed class PolicyWorkflowPage
         // EQCommonPreQualificationGeneralEligibilityRestrictionsVerifyNoneOfTheAbove_2820ccPage.VerifyNoneOfTheAboveStatus_0075_503012Async
         if (await _ui.ExistsAsync(_locators.UncheckedNoneOfTheAbove))
         {
-        await _ui.VerifyAsync(_locators.UncheckedNoneOfTheAbove, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.UncheckedNoneOfTheAbove, _data.Resolve("Exists"), "");
         }
         // EQCommonPreQualificationGeneralEligibilityRestrictionsVerifyNoneOfTheAbove_2820ccPage.CheckNoneOfTheAbove_0076_503012Async
         if (await _ui.ExistsAsync(_locators.UncheckedNoneOfTheAbove))
         {
-        await _ui.PressAsync(_locators.UncheckedNoneOfTheAbove, "POST:TAB");
-        await _ui.PressAsync(_locators.UncheckedNoneOfTheAbove, "Tab");
+            await _ui.PressAsync(_locators.UncheckedNoneOfTheAbove, "POST:TAB");
+            await _ui.PressAsync(_locators.UncheckedNoneOfTheAbove, "Tab");
         }
         if (await _ui.ExistsAsync(_locators.ResponseRequiredToContinue))
         {
-        await _ui.WaitAsync(_locators.ResponseRequiredToContinue, "Exists");
+            await _ui.WaitAsync(_locators.ResponseRequiredToContinue, "Exists");
         }
         // EQCommonNavigateToScreen_b3fe17Page.BufferScreenName_0078_503012Async
         _data.Set("Screen", _data.Resolve("{{data:screen_3}}"));
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0079_503012Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeading9696C))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
         }
     }
 
@@ -59,41 +63,41 @@ public sealed class PolicyWorkflowPage
         // CLEQCommonPrimaryInsuredEnterRequiredInfo_3aad61Page.EQPrimaryInsuredClickEditGeneralInfo_0090_503012Async
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.ClickAsync(_locators.EQCommonPrimaryInsuredRequired);
+            await _ui.ClickAsync(_locators.EQCommonPrimaryInsuredRequired);
         }
         // CLEQCommonPrimaryInsuredEnterRequiredInfo_3aad61Page.EQLoadingIndicatorWait_0091_503012Async
         await _ui.WaitAsync(_locators.Loading, "Absent");
         // CLEQCommonPrimaryInsuredEnterRequiredInfo_3aad61Page.EQPrimaryInsuredGeneralInfoQuoteDescription_0092_503012Async
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.PressAsync(_locators.DescriptionOfOperations, "POST:TAB");
-        await _ui.PressAsync(_locators.DescriptionOfOperations, "Tab");
+            await _ui.PressAsync(_locators.DescriptionOfOperations, "POST:TAB");
+            await _ui.PressAsync(_locators.DescriptionOfOperations, "Tab");
         }
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "POST:ENTER");
-        await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "Enter");
-        await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "Tab");
+            await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "POST:ENTER");
+            await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "Enter");
+            await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "Tab");
         }
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "POST:ENTER");
-        await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "Enter");
-        await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "Tab");
+            await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "POST:ENTER");
+            await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "Enter");
+            await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "Tab");
         }
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "POST:ENTER");
-        await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "Enter");
-        await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "Tab");
+            await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "POST:ENTER");
+            await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "Enter");
+            await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "Tab");
         }
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.ClickAsync(_locators.Save);
+            await _ui.ClickAsync(_locators.Save);
         }
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.VerifyAsync(_locators.DescriptionOfOperations, _data.Resolve("{{runtime:QuoteDescription}}"), "");
+            await _ui.VerifyAsync(_locators.DescriptionOfOperations, _data.Resolve("{{runtime:QuoteDescription}}"), "");
         }
         // CLEQCommonPrimaryInsuredEnterRequiredInfo_3aad61Page.EQLoadingIndicatorWait_0093_503012Async
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -105,7 +109,7 @@ public sealed class PolicyWorkflowPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0096_503012Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeading9696C))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
         }
     }
 
@@ -120,7 +124,7 @@ public sealed class PolicyWorkflowPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0106_503012Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeading9696C))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
         }
     }
 
@@ -133,13 +137,13 @@ public sealed class PolicyWorkflowPage
         await _ui.FillAsync(_locators.DescriptionOfTheBusinessExposuresActivitiesAndExperience, _data.Resolve("{{data:description_of_the_business_exposures_activities_and_experience_130}}"));
         if (_data.Condition("'Referred and Locked' != \"Yes\""))
         {
-        await _ui.ClickAsync(_locators.Save);
+            await _ui.ClickAsync(_locators.Save);
         }
         await _ui.WaitAsync(_locators.UserDateAndTimestamp, "Visible");
         await _ui.VerifyAsync(_locators.UserDateAndTimestamp, _data.Resolve("{{data:expected_user_date_and_timestamp_innertext_133}}"), "NotEqual:InnerText");
         if (_data.Condition("'Referred and Locked' == \"Yes\""))
         {
-        await _ui.VerifyAsync(_locators.LockedThisQuoteHasBeenSubmittedAndYouCanNoLongerMakeChangesToThisText, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.LockedThisQuoteHasBeenSubmittedAndYouCanNoLongerMakeChangesToThisText, _data.Resolve("Exists"), "");
         }
         await _ui.FillAsync(_locators.DescriptionOfTheBusinessExposuresActivitiesAndExperience, _data.Resolve(""));
         _data.Set("NameQuoteNum", await _ui.CaptureAsync(_locators.NameAndQuoteNum8EB77, "InnerText"));
@@ -153,7 +157,7 @@ public sealed class PolicyWorkflowPage
         // CLEQSFPPriorClaimsEnterRequiredEQCommonNavigateToScreen_ffe85bPage.CheckIfOnCorrectScreen_0117_503012Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeadingDCABF))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeadingDCABF, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeadingDCABF, _data.Resolve("Absent"), "");
         }
     }
 
@@ -176,12 +180,12 @@ public sealed class PolicyWorkflowPage
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1CLEQCommonGeneralRestartEdgePopup_a88089Page.RestartMicrosoftEdgeMessageExists_0250_503012Async
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.VerifyAsync(_locators.EChecklistEChecklistOK, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.EChecklistEChecklistOK, _data.Resolve("Exists"), "");
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1CLEQCommonGeneralRestartEdgePopup_a88089Page.RestartMicrosoftEdgeMessageClickOK_0251_503012Async
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
+            await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
         }
     }
 
@@ -191,7 +195,7 @@ public sealed class PolicyWorkflowPage
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1_d98ea2Page.VerifyUsernameExists_0252_503012Async
         if (await _ui.ExistsAsync(_locators.UserNameE0ACD))
         {
-        await _ui.VerifyAsync(_locators.UserNameE0ACD, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.UserNameE0ACD, _data.Resolve("Absent"), "");
         }
     }
 
@@ -201,40 +205,40 @@ public sealed class PolicyWorkflowPage
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1CommonGeneralLogout_20b896Page.Logout_0253_503012Async
         if (await _ui.ExistsAsync(_locators.LoggedInUser8A0DD))
         {
-        await _ui.ClickAsync(_locators.LoggedInUser8A0DD);
+            await _ui.ClickAsync(_locators.LoggedInUser8A0DD);
         }
         if (await _ui.ExistsAsync(_locators.Logout))
         {
-        await _ui.ClickAsync(_locators.Logout);
+            await _ui.ClickAsync(_locators.Logout);
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1CommonGeneralLogout_20b896Page.SyncForLogOut_0254_503012Async
         if (_data.Condition("if an existing CLAS session is still logged in"))
         {
-        await _ui.ReviewRequiredAsync("Source operation requires environment-specific implementation.");
+            await _ui.ReviewRequiredAsync("Source operation requires environment-specific implementation.");
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1CommonGeneralLogout_20b896Page.CheckForHttpErrorMsg_0255_503012Async
         if (await _ui.ExistsAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0B8256))
         {
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0B8256, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0B8256, _data.Resolve("Exists"), "");
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1CommonGeneralLogout_20b896Page.ClickOKOnHttpErrorMsg_0256_503012Async
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
+            await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1CommonGeneralLogout_20b896Page.CheckHttpErrorMsgDoesNotExist_0257_503012Async
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.WaitAsync(_locators.EChecklistEChecklistOK, "Absent");
+            await _ui.WaitAsync(_locators.EChecklistEChecklistOK, "Absent");
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1CommonGeneralLogout_20b896Page.Logout_0258_503012Async
         if (await _ui.ExistsAsync(_locators.LoggedInUser8A0DD))
         {
-        await _ui.ClickAsync(_locators.LoggedInUser8A0DD);
+            await _ui.ClickAsync(_locators.LoggedInUser8A0DD);
         }
         if (await _ui.ExistsAsync(_locators.Logout))
         {
-        await _ui.ClickAsync(_locators.Logout);
+            await _ui.ClickAsync(_locators.Logout);
         }
     }
 
@@ -244,34 +248,34 @@ public sealed class PolicyWorkflowPage
         // CommonGeneralSaveForLaterReturnToAdmin_e67622Page.CheckForSaveForLaterButton_0292_503012Async
         if (await _ui.ExistsAsync(_locators.SaveForLater))
         {
-        await _ui.VerifyAsync(_locators.SaveForLater, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.SaveForLater, _data.Resolve("Exists"), "");
         }
         // CommonGeneralSaveForLaterReturnToAdmin_e67622Page.SaveForLater_0293_503012Async
         if (await _ui.ExistsAsync(_locators.SaveForLater))
         {
-        await _ui.ClickAsync(_locators.SaveForLater);
+            await _ui.ClickAsync(_locators.SaveForLater);
         }
         if (await _ui.ExistsAsync(_locators.SaveForLaterOK))
         {
-        await _ui.WaitAsync(_locators.SaveForLaterOK, "Exists");
+            await _ui.WaitAsync(_locators.SaveForLaterOK, "Exists");
         }
         if (await _ui.ExistsAsync(_locators.SaveForLaterOK))
         {
-        await _ui.ClickAsync(_locators.SaveForLaterOK);
+            await _ui.ClickAsync(_locators.SaveForLaterOK);
         }
         // CommonGeneralSaveForLaterReturnToAdmin_e67622Page.CheckForReturnToAdminButton_0294_503012Async
         if (await _ui.ExistsAsync(_locators.ReturnToAdmin))
         {
-        await _ui.VerifyAsync(_locators.ReturnToAdmin, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.ReturnToAdmin, _data.Resolve("Exists"), "");
         }
         // CommonGeneralSaveForLaterReturnToAdmin_e67622Page.ReturnToAdmin_0295_503012Async
         if (await _ui.ExistsAsync(_locators.ReturnToAdmin))
         {
-        await _ui.ClickAsync(_locators.ReturnToAdmin);
+            await _ui.ClickAsync(_locators.ReturnToAdmin);
         }
         if (await _ui.ExistsAsync(_locators.ReturnToAdmin))
         {
-        await _ui.WaitAsync(_locators.ReturnToAdmin, "Absent");
+            await _ui.WaitAsync(_locators.ReturnToAdmin, "Absent");
         }
     }
 
@@ -304,7 +308,7 @@ public sealed class PolicyWorkflowPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0061_656be2Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeading9696C))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
         }
     }
 
@@ -332,42 +336,42 @@ public sealed class PolicyWorkflowPage
         // CLEQCommonPrimaryInsuredEnterRequiredInfo_3aad61Page.EQPrimaryInsuredClickEditGeneralInfo_0075_d18a3eAsync
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.ClickAsync(_locators.EQCommonPrimaryInsuredRequired);
+            await _ui.ClickAsync(_locators.EQCommonPrimaryInsuredRequired);
         }
         // CLEQCommonPrimaryInsuredEnterRequiredInfo_3aad61Page.EQLoadingIndicatorWait_0076_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
         // CLEQCommonPrimaryInsuredEnterRequiredInfo_3aad61Page.EQPrimaryInsuredGeneralInfoQuoteDescription_0077_d18a3eAsync
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.PressAsync(_locators.DescriptionOfOperations, "POST:ENTER");
-        await _ui.PressAsync(_locators.DescriptionOfOperations, "Enter");
-        await _ui.PressAsync(_locators.DescriptionOfOperations, "Tab");
+            await _ui.PressAsync(_locators.DescriptionOfOperations, "POST:ENTER");
+            await _ui.PressAsync(_locators.DescriptionOfOperations, "Enter");
+            await _ui.PressAsync(_locators.DescriptionOfOperations, "Tab");
         }
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "POST:ENTER");
-        await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "Enter");
-        await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "Tab");
+            await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "POST:ENTER");
+            await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "Enter");
+            await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "Tab");
         }
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "POST:ENTER");
-        await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "Enter");
-        await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "Tab");
+            await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "POST:ENTER");
+            await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "Enter");
+            await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "Tab");
         }
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "POST:ENTER");
-        await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "Enter");
-        await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "Tab");
+            await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "POST:ENTER");
+            await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "Enter");
+            await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "Tab");
         }
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.ClickAsync(_locators.Save);
+            await _ui.ClickAsync(_locators.Save);
         }
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.VerifyAsync(_locators.DescriptionOfOperations, _data.Resolve("{{runtime:QuoteDescription}}"), "");
+            await _ui.VerifyAsync(_locators.DescriptionOfOperations, _data.Resolve("{{runtime:QuoteDescription}}"), "");
         }
         // CLEQCommonPrimaryInsuredEnterRequiredInfo_3aad61Page.EQLoadingIndicatorWait_0078_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -386,7 +390,7 @@ public sealed class PolicyWorkflowPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0095_d18a3eAsync
         if (!await _ui.ExistsAsync(_locators.ScreenHeading9696C))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
         }
     }
 
@@ -399,13 +403,13 @@ public sealed class PolicyWorkflowPage
         await _ui.FillAsync(_locators.DescriptionOfTheBusinessExposuresActivitiesAndExperience, _data.Resolve("{{data:description_of_the_business_exposures_activities_and_experience_118}}"));
         if (_data.Condition("'Referred and Locked' != \"Yes\""))
         {
-        await _ui.ClickAsync(_locators.Save);
+            await _ui.ClickAsync(_locators.Save);
         }
         await _ui.WaitAsync(_locators.UserDateAndTimestamp, "Visible");
         await _ui.VerifyAsync(_locators.UserDateAndTimestamp, _data.Resolve("{{data:expected_user_date_and_timestamp_innertext_121}}"), "NotEqual:InnerText");
         if (_data.Condition("'Referred and Locked' == \"Yes\""))
         {
-        await _ui.VerifyAsync(_locators.LockedThisQuoteHasBeenSubmittedAndYouCanNoLongerMakeChangesToThisText, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.LockedThisQuoteHasBeenSubmittedAndYouCanNoLongerMakeChangesToThisText, _data.Resolve("Exists"), "");
         }
         await _ui.FillAsync(_locators.DescriptionOfTheBusinessExposuresActivitiesAndExperience, _data.Resolve(""));
         _data.Set("NameQuoteNum", await _ui.CaptureAsync(_locators.NameAndQuoteNum8EB77, "InnerText"));
@@ -419,7 +423,7 @@ public sealed class PolicyWorkflowPage
         // EQBOPPriorClaimsEnterRequiredEQCommonNavigateToScreen_d65742Page.CheckIfOnCorrectScreen_0106_d18a3eAsync
         if (!await _ui.ExistsAsync(_locators.ScreenHeading69631))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading69631, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading69631, _data.Resolve("Absent"), "");
         }
     }
 
@@ -429,12 +433,12 @@ public sealed class PolicyWorkflowPage
         // EQCommonOpenEQInBrowserCLEQCommonGeneralRestartEdgePopup_d7303fPage.RestartMicrosoftEdgeMessageExists_0366_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.VerifyAsync(_locators.EChecklistEChecklistOK, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.EChecklistEChecklistOK, _data.Resolve("Exists"), "");
         }
         // EQCommonOpenEQInBrowserCLEQCommonGeneralRestartEdgePopup_d7303fPage.RestartMicrosoftEdgeMessageClickOK_0367_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
+            await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
         }
         // EQCommonOpenEQInBrowser_5597edPage.EQLoadingIndicatorWait_0370_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -446,16 +450,16 @@ public sealed class PolicyWorkflowPage
         // EQCommonOpenEQInBrowser_5597edPage.EQCommonCheckIfLogoutExists_0371_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.Logout))
         {
-        await _ui.VerifyAsync(_locators.Logout, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Logout, _data.Resolve("Exists"), "");
         }
         // EQCommonOpenEQInBrowser_5597edPage.EQCommonClickLogoutOfEQ_0372_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.Logout))
         {
-        await _ui.ClickAsync(_locators.Logout);
+            await _ui.ClickAsync(_locators.Logout);
         }
         if (await _ui.ExistsAsync(_locators.LogoutLogOut))
         {
-        await _ui.ClickAsync(_locators.LogoutLogOut);
+            await _ui.ClickAsync(_locators.LogoutLogOut);
         }
     }
 
@@ -477,26 +481,26 @@ public sealed class PolicyWorkflowPage
         // CLEQCommonSearchResultsTable_9c0390Page.CLEQCommonSearchPolicyResultsTable_0378_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.ResultsTABLE))
         {
-        await _ui.VerifyAsync(_locators.ResultsTABLE, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.ResultsTABLE, _data.Resolve("Exists"), "");
         }
         // CLEQCommonSearchResultsTable_9c0390Page.CLEQCommonSearchPolicyResultsTable_0379_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.ResultsTABLERowCellExplicitNameName))
         {
-        await _ui.VerifyAsync(_locators.ResultsTABLERowCellExplicitNameName, _data.Resolve("{STRINGTOUPPER[{B[LastName]}, {B[FirstName]}]}"), "");
+            await _ui.VerifyAsync(_locators.ResultsTABLERowCellExplicitNameName, _data.Resolve("{STRINGTOUPPER[{B[LastName]}, {B[FirstName]}]}"), "");
         }
         if (await _ui.ExistsAsync(_locators.Edit))
         {
-        await _ui.ClickAsync(_locators.Edit);
+            await _ui.ClickAsync(_locators.Edit);
         }
         // CLEQCommonSearchResultsTable_9c0390Page.WaitonNameAndQuoteNum_0380_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.NameAndQuoteNumCA893))
         {
-        await _ui.WaitAsync(_locators.NameAndQuoteNumCA893, "NotEqual");
+            await _ui.WaitAsync(_locators.NameAndQuoteNumCA893, "NotEqual");
         }
         // CLEQCommonSearchResultsTable_9c0390Page.VerifyQuoteNum_0381_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.NameAndQuoteNumCA893))
         {
-        await _ui.VerifyAsync(_locators.NameAndQuoteNumCA893, _data.Resolve("{B[NameQuoteNum]}|{B[Quote_Num]}|{B[Policy#]}"), "Regex:InnerText");
+            await _ui.VerifyAsync(_locators.NameAndQuoteNumCA893, _data.Resolve("{B[NameQuoteNum]}|{B[Quote_Num]}|{B[Policy#]}"), "Regex:InnerText");
         }
     }
 
@@ -514,17 +518,17 @@ public sealed class PolicyWorkflowPage
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescription_f027fePage.EdgePopupMessageImageBased_0396_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.Button))
         {
-        await _ui.VerifyAsync(_locators.Button, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Button, _data.Resolve("Exists"), "");
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescription_f027fePage.EdgePopupMessageImageBased_0397_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.Button))
         {
-        await _ui.ClickAsync(_locators.Button);
+            await _ui.ClickAsync(_locators.Button);
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescription_f027fePage.VerifyUsernameExists_0398_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.UserNameE65A8))
         {
-        await _ui.VerifyAsync(_locators.UserNameE65A8, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.UserNameE65A8, _data.Resolve("Absent"), "");
         }
     }
 
@@ -534,40 +538,40 @@ public sealed class PolicyWorkflowPage
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCommonGeneralLogout_708864Page.Logout_0399_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoggedInUser5A005))
         {
-        await _ui.ClickAsync(_locators.LoggedInUser5A005);
+            await _ui.ClickAsync(_locators.LoggedInUser5A005);
         }
         if (await _ui.ExistsAsync(_locators.Logout))
         {
-        await _ui.ClickAsync(_locators.Logout);
+            await _ui.ClickAsync(_locators.Logout);
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCommonGeneralLogout_708864Page.SyncForLogOut_0400_d18a3eAsync
         if (_data.Condition("if an existing CLAS session is still logged in"))
         {
-        await _ui.ReviewRequiredAsync("Source operation requires environment-specific implementation.");
+            await _ui.ReviewRequiredAsync("Source operation requires environment-specific implementation.");
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCommonGeneralLogout_708864Page.CheckForHttpErrorMsg_0401_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740))
         {
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740, _data.Resolve("Exists"), "");
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCommonGeneralLogout_708864Page.ClickOKOnHttpErrorMsg_0402_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
+            await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCommonGeneralLogout_708864Page.CheckHttpErrorMsgDoesNotExist_0403_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.WaitAsync(_locators.EChecklistEChecklistOK, "Absent");
+            await _ui.WaitAsync(_locators.EChecklistEChecklistOK, "Absent");
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCommonGeneralLogout_708864Page.Logout_0404_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoggedInUser5A005))
         {
-        await _ui.ClickAsync(_locators.LoggedInUser5A005);
+            await _ui.ClickAsync(_locators.LoggedInUser5A005);
         }
         if (await _ui.ExistsAsync(_locators.Logout))
         {
-        await _ui.ClickAsync(_locators.Logout);
+            await _ui.ClickAsync(_locators.Logout);
         }
     }
 
@@ -591,7 +595,7 @@ public sealed class PolicyWorkflowPage
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCLEQCommonSearchByDescInDCDCEQCommonGeneralWaitOnLoadingI_428cf1Page.CheckForLoadingIndicator_0411_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoadingMessageC7A0D))
         {
-        await _ui.VerifyAsync(_locators.LoadingMessageC7A0D, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.LoadingMessageC7A0D, _data.Resolve("Visible"), "");
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCLEQCommonSearchByDescInDCDCEQCommonGeneralWaitOnLoadingI_428cf1Page.Wait2Secs_0412_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -605,7 +609,7 @@ public sealed class PolicyWorkflowPage
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCLEQCommonSearchByDescInDCDCEQCommonGeneralWaitOnLoadingI_428cf1Page.CheckForLoadingIndicator_0414_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoadingMessageC7A0D))
         {
-        await _ui.VerifyAsync(_locators.LoadingMessageC7A0D, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.LoadingMessageC7A0D, _data.Resolve("Visible"), "");
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCLEQCommonSearchByDescInDCDCEQCommonGeneralWaitOnLoadingI_428cf1Page.Wait2Secs_0415_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -619,7 +623,7 @@ public sealed class PolicyWorkflowPage
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionDCEQCommonGeneralWaitOnLoadingIndicator_3822baPage.CheckForLoadingIndicator_0417_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoadingMessage4DE37))
         {
-        await _ui.VerifyAsync(_locators.LoadingMessage4DE37, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.LoadingMessage4DE37, _data.Resolve("Visible"), "");
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionDCEQCommonGeneralWaitOnLoadingIndicator_3822baPage.Wait2Secs_0418_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -628,7 +632,7 @@ public sealed class PolicyWorkflowPage
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionDCEQCommonGeneralWaitOnLoadingIndicator_3822baPage.CheckForLoadingIndicator_0420_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoadingMessage4DE37))
         {
-        await _ui.VerifyAsync(_locators.LoadingMessage4DE37, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.LoadingMessage4DE37, _data.Resolve("Visible"), "");
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionDCEQCommonGeneralWaitOnLoadingIndicator_3822baPage.Wait2Secs_0421_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -644,34 +648,34 @@ public sealed class PolicyWorkflowPage
         // CommonGeneralSaveForLaterReturnToAdmin_e67622Page.CheckForSaveForLaterButton_0465_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.SaveForLater))
         {
-        await _ui.VerifyAsync(_locators.SaveForLater, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.SaveForLater, _data.Resolve("Exists"), "");
         }
         // CommonGeneralSaveForLaterReturnToAdmin_e67622Page.SaveForLater_0466_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.SaveForLater))
         {
-        await _ui.ClickAsync(_locators.SaveForLater);
+            await _ui.ClickAsync(_locators.SaveForLater);
         }
         if (await _ui.ExistsAsync(_locators.SaveForLaterOK))
         {
-        await _ui.WaitAsync(_locators.SaveForLaterOK, "Exists");
+            await _ui.WaitAsync(_locators.SaveForLaterOK, "Exists");
         }
         if (await _ui.ExistsAsync(_locators.SaveForLaterOK))
         {
-        await _ui.ClickAsync(_locators.SaveForLaterOK);
+            await _ui.ClickAsync(_locators.SaveForLaterOK);
         }
         // CommonGeneralSaveForLaterReturnToAdmin_e67622Page.CheckForReturnToAdminButton_0467_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.ReturnToAdmin))
         {
-        await _ui.VerifyAsync(_locators.ReturnToAdmin, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.ReturnToAdmin, _data.Resolve("Exists"), "");
         }
         // CommonGeneralSaveForLaterReturnToAdmin_e67622Page.ReturnToAdmin_0468_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.ReturnToAdmin))
         {
-        await _ui.ClickAsync(_locators.ReturnToAdmin);
+            await _ui.ClickAsync(_locators.ReturnToAdmin);
         }
         if (await _ui.ExistsAsync(_locators.ReturnToAdmin))
         {
-        await _ui.WaitAsync(_locators.ReturnToAdmin, "Absent");
+            await _ui.WaitAsync(_locators.ReturnToAdmin, "Absent");
         }
     }
 
@@ -681,12 +685,12 @@ public sealed class PolicyWorkflowPage
         // EQCommonOpenEQInBrowserCLEQCommonGeneralRestartEdgePopup_d7303fPage.RestartMicrosoftEdgeMessageExists_0484_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.VerifyAsync(_locators.EChecklistEChecklistOK, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.EChecklistEChecklistOK, _data.Resolve("Exists"), "");
         }
         // EQCommonOpenEQInBrowserCLEQCommonGeneralRestartEdgePopup_d7303fPage.RestartMicrosoftEdgeMessageClickOK_0485_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
+            await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
         }
         // EQCommonOpenEQInBrowser_5597edPage.EQLoadingIndicatorWait_0488_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -698,16 +702,16 @@ public sealed class PolicyWorkflowPage
         // EQCommonOpenEQInBrowser_5597edPage.EQCommonCheckIfLogoutExists_0489_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.Logout))
         {
-        await _ui.VerifyAsync(_locators.Logout, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Logout, _data.Resolve("Exists"), "");
         }
         // EQCommonOpenEQInBrowser_5597edPage.EQCommonClickLogoutOfEQ_0490_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.Logout))
         {
-        await _ui.ClickAsync(_locators.Logout);
+            await _ui.ClickAsync(_locators.Logout);
         }
         if (await _ui.ExistsAsync(_locators.LogoutLogOut))
         {
-        await _ui.ClickAsync(_locators.LogoutLogOut);
+            await _ui.ClickAsync(_locators.LogoutLogOut);
         }
     }
 
@@ -729,33 +733,33 @@ public sealed class PolicyWorkflowPage
         // CLEQCommonSearchResultsTable_9c0390Page.CLEQCommonSearchPolicyResultsTable_0496_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.ResultsTABLE))
         {
-        await _ui.VerifyAsync(_locators.ResultsTABLE, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.ResultsTABLE, _data.Resolve("Exists"), "");
         }
         // CLEQCommonSearchResultsTable_9c0390Page.CLEQCommonSearchPolicyResultsTable_0497_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.ResultsTABLERowCellExplicitNameName))
         {
-        await _ui.VerifyAsync(_locators.ResultsTABLERowCellExplicitNameName, _data.Resolve("{STRINGTOUPPER[{B[LastName]}, {B[FirstName]}]}"), "");
+            await _ui.VerifyAsync(_locators.ResultsTABLERowCellExplicitNameName, _data.Resolve("{STRINGTOUPPER[{B[LastName]}, {B[FirstName]}]}"), "");
         }
         if (await _ui.ExistsAsync(_locators.Edit))
         {
-        await _ui.ClickAsync(_locators.Edit);
+            await _ui.ClickAsync(_locators.Edit);
         }
         // CLEQCommonSearchResultsTable_9c0390Page.WaitonNameAndQuoteNum_0498_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.NameAndQuoteNumCA893))
         {
-        await _ui.WaitAsync(_locators.NameAndQuoteNumCA893, "NotEqual");
+            await _ui.WaitAsync(_locators.NameAndQuoteNumCA893, "NotEqual");
         }
         // CLEQCommonSearchResultsTable_9c0390Page.VerifyQuoteNum_0499_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.NameAndQuoteNumCA893))
         {
-        await _ui.VerifyAsync(_locators.NameAndQuoteNumCA893, _data.Resolve("{B[NameQuoteNum]}|{B[Quote_Num]}|{B[Policy#]}"), "Regex:InnerText");
+            await _ui.VerifyAsync(_locators.NameAndQuoteNumCA893, _data.Resolve("{B[NameQuoteNum]}|{B[Quote_Num]}|{B[Policy#]}"), "Regex:InnerText");
         }
         // EQCommonNavigateToScreen_b3fe17Page.BufferScreenName_0500_d18a3eAsync
         _data.Set("Screen", _data.Resolve("{{data:screen_11}}"));
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0501_d18a3eAsync
         if (!await _ui.ExistsAsync(_locators.ScreenHeading9696C))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
         }
     }
 
@@ -769,7 +773,7 @@ public sealed class PolicyWorkflowPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0553_d18a3eAsync
         if (!await _ui.ExistsAsync(_locators.ScreenHeading9696C))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
         }
     }
 
@@ -787,17 +791,17 @@ public sealed class PolicyWorkflowPage
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescription_f027fePage.EdgePopupMessageImageBased_0577_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.Button))
         {
-        await _ui.VerifyAsync(_locators.Button, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Button, _data.Resolve("Exists"), "");
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescription_f027fePage.EdgePopupMessageImageBased_0578_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.Button))
         {
-        await _ui.ClickAsync(_locators.Button);
+            await _ui.ClickAsync(_locators.Button);
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescription_f027fePage.VerifyUsernameExists_0579_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.UserNameE65A8))
         {
-        await _ui.VerifyAsync(_locators.UserNameE65A8, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.UserNameE65A8, _data.Resolve("Absent"), "");
         }
     }
 
@@ -807,40 +811,40 @@ public sealed class PolicyWorkflowPage
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCommonGeneralLogout_708864Page.Logout_0580_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoggedInUser5A005))
         {
-        await _ui.ClickAsync(_locators.LoggedInUser5A005);
+            await _ui.ClickAsync(_locators.LoggedInUser5A005);
         }
         if (await _ui.ExistsAsync(_locators.Logout))
         {
-        await _ui.ClickAsync(_locators.Logout);
+            await _ui.ClickAsync(_locators.Logout);
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCommonGeneralLogout_708864Page.SyncForLogOut_0581_d18a3eAsync
         if (_data.Condition("if an existing CLAS session is still logged in"))
         {
-        await _ui.ReviewRequiredAsync("Source operation requires environment-specific implementation.");
+            await _ui.ReviewRequiredAsync("Source operation requires environment-specific implementation.");
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCommonGeneralLogout_708864Page.CheckForHttpErrorMsg_0582_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740))
         {
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740, _data.Resolve("Exists"), "");
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCommonGeneralLogout_708864Page.ClickOKOnHttpErrorMsg_0583_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
+            await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCommonGeneralLogout_708864Page.CheckHttpErrorMsgDoesNotExist_0584_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.WaitAsync(_locators.EChecklistEChecklistOK, "Absent");
+            await _ui.WaitAsync(_locators.EChecklistEChecklistOK, "Absent");
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCommonGeneralLogout_708864Page.Logout_0585_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoggedInUser5A005))
         {
-        await _ui.ClickAsync(_locators.LoggedInUser5A005);
+            await _ui.ClickAsync(_locators.LoggedInUser5A005);
         }
         if (await _ui.ExistsAsync(_locators.Logout))
         {
-        await _ui.ClickAsync(_locators.Logout);
+            await _ui.ClickAsync(_locators.Logout);
         }
     }
 
@@ -864,7 +868,7 @@ public sealed class PolicyWorkflowPage
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCLEQCommonSearchByDescInDCDCEQCommonGeneralWaitOnLoadingI_428cf1Page.CheckForLoadingIndicator_0592_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoadingMessageC7A0D))
         {
-        await _ui.VerifyAsync(_locators.LoadingMessageC7A0D, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.LoadingMessageC7A0D, _data.Resolve("Visible"), "");
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCLEQCommonSearchByDescInDCDCEQCommonGeneralWaitOnLoadingI_428cf1Page.Wait2Secs_0593_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -878,7 +882,7 @@ public sealed class PolicyWorkflowPage
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCLEQCommonSearchByDescInDCDCEQCommonGeneralWaitOnLoadingI_428cf1Page.CheckForLoadingIndicator_0595_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoadingMessageC7A0D))
         {
-        await _ui.VerifyAsync(_locators.LoadingMessageC7A0D, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.LoadingMessageC7A0D, _data.Resolve("Visible"), "");
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionCLEQCommonSearchByDescInDCDCEQCommonGeneralWaitOnLoadingI_428cf1Page.Wait2Secs_0596_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -892,7 +896,7 @@ public sealed class PolicyWorkflowPage
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionDCEQCommonGeneralWaitOnLoadingIndicator_3822baPage.CheckForLoadingIndicator_0598_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoadingMessage4DE37))
         {
-        await _ui.VerifyAsync(_locators.LoadingMessage4DE37, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.LoadingMessage4DE37, _data.Resolve("Visible"), "");
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionDCEQCommonGeneralWaitOnLoadingIndicator_3822baPage.Wait2Secs_0599_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -901,7 +905,7 @@ public sealed class PolicyWorkflowPage
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionDCEQCommonGeneralWaitOnLoadingIndicator_3822baPage.CheckForLoadingIndicator_0601_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoadingMessage4DE37))
         {
-        await _ui.VerifyAsync(_locators.LoadingMessage4DE37, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.LoadingMessage4DE37, _data.Resolve("Visible"), "");
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescriptionDCEQCommonGeneralWaitOnLoadingIndicator_3822baPage.Wait2Secs_0602_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -915,31 +919,31 @@ public sealed class PolicyWorkflowPage
         // DCEQCommonSubmissionReferApplicationPolicyCommonGeneralAlertErrorCheck_c6c7f3Page.AlertError_0746_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe))
         {
-        await _ui.VerifyAsync(_locators.AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe, _data.Resolve("Exists"), "");
         }
         // DCEQCommonSubmissionReferApplicationPolicyCommonGeneralAlertErrorCheck_c6c7f3Page.SetBufferForError_0747_d18a3eAsync
         _data.Set("Alert Error", _data.Resolve("{{data:alert_error}}"));
         // DCEQCommonSubmissionReferApplicationPolicyCommonGeneralAlertErrorCheck_c6c7f3Page.ForceAFail_0748_d18a3eAsync
         if (_data.Condition("while check for IFRAME"))
         {
-        _data.Set("ForceAFail", _data.Resolve("{\"Expression\": \"{B[Alert Error]} == 'TRUE'\"}"));
+            _data.Set("ForceAFail", _data.Resolve("{\"Expression\": \"{B[Alert Error]} == 'TRUE'\"}"));
         }
         // DCEQCommonSubmissionReferApplicationPolicyCommonGeneralAlertErrorCheck_c6c7f3Page.IFrame_0749_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.IFRAME))
         {
-        await _ui.VerifyAsync(_locators.IFRAME, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.IFRAME, _data.Resolve("Exists"), "");
         }
         // DCEQCommonSubmissionReferApplicationPolicyCommonGeneralAlertErrorCheck_c6c7f3Page.AlertError_0750_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.IFRAMEDuckCreekPolicyAlertErrorMessage))
         {
-        await _ui.VerifyAsync(_locators.IFRAMEDuckCreekPolicyAlertErrorMessage, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.IFRAMEDuckCreekPolicyAlertErrorMessage, _data.Resolve("Exists"), "");
         }
         // DCEQCommonSubmissionReferApplicationPolicyCommonGeneralAlertErrorCheck_c6c7f3Page.SetBufferForError_0751_d18a3eAsync
         _data.Set("Alert Error", _data.Resolve("{{data:alert_error}}"));
         // DCEQCommonSubmissionReferApplicationPolicyCommonGeneralAlertErrorCheck_c6c7f3Page.ForceAFail_0752_d18a3eAsync
         if (_data.Condition("while check for IFRAME"))
         {
-        _data.Set("ForceAFail", _data.Resolve("{\"Expression\": \"{B[Alert Error]} == 'TRUE'\"}"));
+            _data.Set("ForceAFail", _data.Resolve("{\"Expression\": \"{B[Alert Error]} == 'TRUE'\"}"));
         }
         // DCEQCommonSubmissionReferApplicationPolicy_13acc3Page.WaitForSyncronization_0753_d18a3eAsync
         await Task.Delay(1000);
@@ -953,34 +957,34 @@ public sealed class PolicyWorkflowPage
         // CommonGeneralSaveForLaterReturnToAdmin_e67622Page.CheckForSaveForLaterButton_0757_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.SaveForLater))
         {
-        await _ui.VerifyAsync(_locators.SaveForLater, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.SaveForLater, _data.Resolve("Exists"), "");
         }
         // CommonGeneralSaveForLaterReturnToAdmin_e67622Page.SaveForLater_0758_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.SaveForLater))
         {
-        await _ui.ClickAsync(_locators.SaveForLater);
+            await _ui.ClickAsync(_locators.SaveForLater);
         }
         if (await _ui.ExistsAsync(_locators.SaveForLaterOK))
         {
-        await _ui.WaitAsync(_locators.SaveForLaterOK, "Exists");
+            await _ui.WaitAsync(_locators.SaveForLaterOK, "Exists");
         }
         if (await _ui.ExistsAsync(_locators.SaveForLaterOK))
         {
-        await _ui.ClickAsync(_locators.SaveForLaterOK);
+            await _ui.ClickAsync(_locators.SaveForLaterOK);
         }
         // CommonGeneralSaveForLaterReturnToAdmin_e67622Page.CheckForReturnToAdminButton_0759_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.ReturnToAdmin))
         {
-        await _ui.VerifyAsync(_locators.ReturnToAdmin, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.ReturnToAdmin, _data.Resolve("Exists"), "");
         }
         // CommonGeneralSaveForLaterReturnToAdmin_e67622Page.ReturnToAdmin_0760_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.ReturnToAdmin))
         {
-        await _ui.ClickAsync(_locators.ReturnToAdmin);
+            await _ui.ClickAsync(_locators.ReturnToAdmin);
         }
         if (await _ui.ExistsAsync(_locators.ReturnToAdmin))
         {
-        await _ui.WaitAsync(_locators.ReturnToAdmin, "Absent");
+            await _ui.WaitAsync(_locators.ReturnToAdmin, "Absent");
         }
     }
 
@@ -990,12 +994,12 @@ public sealed class PolicyWorkflowPage
         // EQCommonOpenEQInBrowserCLEQCommonGeneralRestartEdgePopup_d7303fPage.RestartMicrosoftEdgeMessageExists_0801_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.VerifyAsync(_locators.EChecklistEChecklistOK, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.EChecklistEChecklistOK, _data.Resolve("Exists"), "");
         }
         // EQCommonOpenEQInBrowserCLEQCommonGeneralRestartEdgePopup_d7303fPage.RestartMicrosoftEdgeMessageClickOK_0802_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
+            await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
         }
         // EQCommonOpenEQInBrowser_5597edPage.EQLoadingIndicatorWait_0805_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -1007,16 +1011,16 @@ public sealed class PolicyWorkflowPage
         // EQCommonOpenEQInBrowser_5597edPage.EQCommonCheckIfLogoutExists_0806_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.Logout))
         {
-        await _ui.VerifyAsync(_locators.Logout, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Logout, _data.Resolve("Exists"), "");
         }
         // EQCommonOpenEQInBrowser_5597edPage.EQCommonClickLogoutOfEQ_0807_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.Logout))
         {
-        await _ui.ClickAsync(_locators.Logout);
+            await _ui.ClickAsync(_locators.Logout);
         }
         if (await _ui.ExistsAsync(_locators.LogoutLogOut))
         {
-        await _ui.ClickAsync(_locators.LogoutLogOut);
+            await _ui.ClickAsync(_locators.LogoutLogOut);
         }
     }
 
@@ -1035,7 +1039,7 @@ public sealed class PolicyWorkflowPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0826_d18a3eAsync
         if (!await _ui.ExistsAsync(_locators.ScreenHeading9696C))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
         }
     }
 
@@ -1045,12 +1049,12 @@ public sealed class PolicyWorkflowPage
         // CommonGeneralLogInToDuckCreekCLEQCommonGeneralRestartEdgePopup_6c649cPage.RestartMicrosoftEdgeMessageExists_0854_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.VerifyAsync(_locators.EChecklistEChecklistOK, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.EChecklistEChecklistOK, _data.Resolve("Exists"), "");
         }
         // CommonGeneralLogInToDuckCreekCLEQCommonGeneralRestartEdgePopup_6c649cPage.RestartMicrosoftEdgeMessageClickOK_0855_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
+            await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
         }
     }
 
@@ -1060,40 +1064,40 @@ public sealed class PolicyWorkflowPage
         // CommonGeneralLogInToDuckCreekCommonGeneralLogout_d9eb6bPage.Logout_0858_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoggedInUser6AD12))
         {
-        await _ui.ClickAsync(_locators.LoggedInUser6AD12);
+            await _ui.ClickAsync(_locators.LoggedInUser6AD12);
         }
         if (await _ui.ExistsAsync(_locators.Logout))
         {
-        await _ui.ClickAsync(_locators.Logout);
+            await _ui.ClickAsync(_locators.Logout);
         }
         // CommonGeneralLogInToDuckCreekCommonGeneralLogout_d9eb6bPage.SyncForLogOut_0859_d18a3eAsync
         if (_data.Condition("during loop for the Login [max=30]"))
         {
-        await _ui.ReviewRequiredAsync("Source operation requires environment-specific implementation.");
+            await _ui.ReviewRequiredAsync("Source operation requires environment-specific implementation.");
         }
         // CommonGeneralLogInToDuckCreekCommonGeneralLogout_d9eb6bPage.CheckForHttpErrorMsg_0860_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus01C36B))
         {
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus01C36B, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus01C36B, _data.Resolve("Exists"), "");
         }
         // CommonGeneralLogInToDuckCreekCommonGeneralLogout_d9eb6bPage.ClickOKOnHttpErrorMsg_0861_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
+            await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
         }
         // CommonGeneralLogInToDuckCreekCommonGeneralLogout_d9eb6bPage.CheckHttpErrorMsgDoesNotExist_0862_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.WaitAsync(_locators.EChecklistEChecklistOK, "Absent");
+            await _ui.WaitAsync(_locators.EChecklistEChecklistOK, "Absent");
         }
         // CommonGeneralLogInToDuckCreekCommonGeneralLogout_d9eb6bPage.Logout_0863_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoggedInUser6AD12))
         {
-        await _ui.ClickAsync(_locators.LoggedInUser6AD12);
+            await _ui.ClickAsync(_locators.LoggedInUser6AD12);
         }
         if (await _ui.ExistsAsync(_locators.Logout))
         {
-        await _ui.ClickAsync(_locators.Logout);
+            await _ui.ClickAsync(_locators.Logout);
         }
     }
 
@@ -1103,24 +1107,24 @@ public sealed class PolicyWorkflowPage
         // EQCommonPreQualificationGeneralEligibilityRestrictionsVerifyNoneOfTheAbove_2820ccPage.VerifyNoneOfTheAboveStatus_0075_08f3f1Async
         if (await _ui.ExistsAsync(_locators.UncheckedNoneOfTheAbove))
         {
-        await _ui.VerifyAsync(_locators.UncheckedNoneOfTheAbove, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.UncheckedNoneOfTheAbove, _data.Resolve("Exists"), "");
         }
         // EQCommonPreQualificationGeneralEligibilityRestrictionsVerifyNoneOfTheAbove_2820ccPage.CheckNoneOfTheAbove_0076_08f3f1Async
         if (await _ui.ExistsAsync(_locators.UncheckedNoneOfTheAbove))
         {
-        await _ui.PressAsync(_locators.UncheckedNoneOfTheAbove, "POST:TAB");
-        await _ui.PressAsync(_locators.UncheckedNoneOfTheAbove, "Tab");
+            await _ui.PressAsync(_locators.UncheckedNoneOfTheAbove, "POST:TAB");
+            await _ui.PressAsync(_locators.UncheckedNoneOfTheAbove, "Tab");
         }
         if (await _ui.ExistsAsync(_locators.ResponseRequiredToContinue))
         {
-        await _ui.WaitAsync(_locators.ResponseRequiredToContinue, "Exists");
+            await _ui.WaitAsync(_locators.ResponseRequiredToContinue, "Exists");
         }
         // EQCommonNavigateToScreen_b3fe17Page.BufferScreenName_0078_08f3f1Async
         _data.Set("Screen", _data.Resolve("{{data:screen_3}}"));
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0079_08f3f1Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeading9696C))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
         }
     }
 
@@ -1140,41 +1144,41 @@ public sealed class PolicyWorkflowPage
         // CLEQCommonPrimaryInsuredEnterRequiredInfo_3aad61Page.EQPrimaryInsuredClickEditGeneralInfo_0090_08f3f1Async
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.ClickAsync(_locators.EQCommonPrimaryInsuredRequired);
+            await _ui.ClickAsync(_locators.EQCommonPrimaryInsuredRequired);
         }
         // CLEQCommonPrimaryInsuredEnterRequiredInfo_3aad61Page.EQLoadingIndicatorWait_0091_08f3f1Async
         await _ui.WaitAsync(_locators.Loading, "Absent");
         // CLEQCommonPrimaryInsuredEnterRequiredInfo_3aad61Page.EQPrimaryInsuredGeneralInfoQuoteDescription_0092_08f3f1Async
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.PressAsync(_locators.DescriptionOfOperations, "POST:TAB");
-        await _ui.PressAsync(_locators.DescriptionOfOperations, "Tab");
+            await _ui.PressAsync(_locators.DescriptionOfOperations, "POST:TAB");
+            await _ui.PressAsync(_locators.DescriptionOfOperations, "Tab");
         }
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "POST:ENTER");
-        await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "Enter");
-        await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "Tab");
+            await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "POST:ENTER");
+            await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "Enter");
+            await _ui.PressAsync(_locators.NumberOfFulltimeEmployees, "Tab");
         }
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "POST:ENTER");
-        await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "Enter");
-        await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "Tab");
+            await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "POST:ENTER");
+            await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "Enter");
+            await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "Tab");
         }
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "POST:ENTER");
-        await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "Enter");
-        await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "Tab");
+            await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "POST:ENTER");
+            await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "Enter");
+            await _ui.PressAsync(_locators.NumberOfSeasonalEmployees, "Tab");
         }
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.ClickAsync(_locators.Save);
+            await _ui.ClickAsync(_locators.Save);
         }
         if (_data.Condition("ReadOnly == NULL"))
         {
-        await _ui.VerifyAsync(_locators.DescriptionOfOperations, _data.Resolve("{{runtime:QuoteDescription}}"), "");
+            await _ui.VerifyAsync(_locators.DescriptionOfOperations, _data.Resolve("{{runtime:QuoteDescription}}"), "");
         }
         // CLEQCommonPrimaryInsuredEnterRequiredInfo_3aad61Page.EQLoadingIndicatorWait_0093_08f3f1Async
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -1186,7 +1190,7 @@ public sealed class PolicyWorkflowPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0096_08f3f1Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeading9696C))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
         }
     }
 
@@ -1201,7 +1205,7 @@ public sealed class PolicyWorkflowPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0106_08f3f1Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeading9696C))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
         }
     }
 
@@ -1214,13 +1218,13 @@ public sealed class PolicyWorkflowPage
         await _ui.FillAsync(_locators.DescriptionOfTheBusinessExposuresActivitiesAndExperience, _data.Resolve("{{data:description_of_the_business_exposures_activities_and_experience_129}}"));
         if (_data.Condition("'Referred and Locked' != \"Yes\""))
         {
-        await _ui.ClickAsync(_locators.Save);
+            await _ui.ClickAsync(_locators.Save);
         }
         await _ui.WaitAsync(_locators.UserDateAndTimestamp, "Visible");
         await _ui.VerifyAsync(_locators.UserDateAndTimestamp, _data.Resolve("{{data:expected_user_date_and_timestamp_innertext_132}}"), "NotEqual:InnerText");
         if (_data.Condition("'Referred and Locked' == \"Yes\""))
         {
-        await _ui.VerifyAsync(_locators.LockedThisQuoteHasBeenSubmittedAndYouCanNoLongerMakeChangesToThisText, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.LockedThisQuoteHasBeenSubmittedAndYouCanNoLongerMakeChangesToThisText, _data.Resolve("Exists"), "");
         }
         await _ui.FillAsync(_locators.DescriptionOfTheBusinessExposuresActivitiesAndExperience, _data.Resolve(""));
         _data.Set("NameQuoteNum", await _ui.CaptureAsync(_locators.NameAndQuoteNum8EB77, "InnerText"));
@@ -1234,7 +1238,7 @@ public sealed class PolicyWorkflowPage
         // CLEQSFPPriorClaimsEnterRequiredEQCommonNavigateToScreen_ffe85bPage.CheckIfOnCorrectScreen_0117_08f3f1Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeadingDCABF))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeadingDCABF, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeadingDCABF, _data.Resolve("Absent"), "");
         }
     }
 
@@ -1281,7 +1285,7 @@ public sealed class PolicyWorkflowPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0235_08f3f1Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeading9696C))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading9696C, _data.Resolve("Absent"), "");
         }
     }
 
@@ -1304,12 +1308,12 @@ public sealed class PolicyWorkflowPage
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1CLEQCommonGeneralRestartEdgePopup_a88089Page.RestartMicrosoftEdgeMessageExists_0302_08f3f1Async
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.VerifyAsync(_locators.EChecklistEChecklistOK, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.EChecklistEChecklistOK, _data.Resolve("Exists"), "");
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1CLEQCommonGeneralRestartEdgePopup_a88089Page.RestartMicrosoftEdgeMessageClickOK_0303_08f3f1Async
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
+            await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
         }
     }
 
@@ -1319,7 +1323,7 @@ public sealed class PolicyWorkflowPage
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1_d98ea2Page.VerifyUsernameExists_0304_08f3f1Async
         if (await _ui.ExistsAsync(_locators.UserNameE0ACD))
         {
-        await _ui.VerifyAsync(_locators.UserNameE0ACD, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.UserNameE0ACD, _data.Resolve("Absent"), "");
         }
     }
 
@@ -1329,40 +1333,40 @@ public sealed class PolicyWorkflowPage
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1CommonGeneralLogout_20b896Page.Logout_0305_08f3f1Async
         if (await _ui.ExistsAsync(_locators.LoggedInUser8A0DD))
         {
-        await _ui.ClickAsync(_locators.LoggedInUser8A0DD);
+            await _ui.ClickAsync(_locators.LoggedInUser8A0DD);
         }
         if (await _ui.ExistsAsync(_locators.Logout))
         {
-        await _ui.ClickAsync(_locators.Logout);
+            await _ui.ClickAsync(_locators.Logout);
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1CommonGeneralLogout_20b896Page.SyncForLogOut_0306_08f3f1Async
         if (_data.Condition("if an existing CLAS session is still logged in"))
         {
-        await _ui.ReviewRequiredAsync("Source operation requires environment-specific implementation.");
+            await _ui.ReviewRequiredAsync("Source operation requires environment-specific implementation.");
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1CommonGeneralLogout_20b896Page.CheckForHttpErrorMsg_0307_08f3f1Async
         if (await _ui.ExistsAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0B8256))
         {
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0B8256, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0B8256, _data.Resolve("Exists"), "");
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1CommonGeneralLogout_20b896Page.ClickOKOnHttpErrorMsg_0308_08f3f1Async
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
+            await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1CommonGeneralLogout_20b896Page.CheckHttpErrorMsgDoesNotExist_0309_08f3f1Async
         if (await _ui.ExistsAsync(_locators.EChecklistEChecklistOK))
         {
-        await _ui.WaitAsync(_locators.EChecklistEChecklistOK, "Absent");
+            await _ui.WaitAsync(_locators.EChecklistEChecklistOK, "Absent");
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1CommonGeneralLogout_20b896Page.Logout_0310_08f3f1Async
         if (await _ui.ExistsAsync(_locators.LoggedInUser8A0DD))
         {
-        await _ui.ClickAsync(_locators.LoggedInUser8A0DD);
+            await _ui.ClickAsync(_locators.LoggedInUser8A0DD);
         }
         if (await _ui.ExistsAsync(_locators.Logout))
         {
-        await _ui.ClickAsync(_locators.Logout);
+            await _ui.ClickAsync(_locators.Logout);
         }
     }
 
@@ -1372,34 +1376,34 @@ public sealed class PolicyWorkflowPage
         // CommonGeneralSaveForLaterReturnToAdmin_e67622Page.CheckForSaveForLaterButton_0364_08f3f1Async
         if (await _ui.ExistsAsync(_locators.SaveForLater))
         {
-        await _ui.VerifyAsync(_locators.SaveForLater, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.SaveForLater, _data.Resolve("Exists"), "");
         }
         // CommonGeneralSaveForLaterReturnToAdmin_e67622Page.SaveForLater_0365_08f3f1Async
         if (await _ui.ExistsAsync(_locators.SaveForLater))
         {
-        await _ui.ClickAsync(_locators.SaveForLater);
+            await _ui.ClickAsync(_locators.SaveForLater);
         }
         if (await _ui.ExistsAsync(_locators.SaveForLaterOK))
         {
-        await _ui.WaitAsync(_locators.SaveForLaterOK, "Exists");
+            await _ui.WaitAsync(_locators.SaveForLaterOK, "Exists");
         }
         if (await _ui.ExistsAsync(_locators.SaveForLaterOK))
         {
-        await _ui.ClickAsync(_locators.SaveForLaterOK);
+            await _ui.ClickAsync(_locators.SaveForLaterOK);
         }
         // CommonGeneralSaveForLaterReturnToAdmin_e67622Page.CheckForReturnToAdminButton_0366_08f3f1Async
         if (await _ui.ExistsAsync(_locators.ReturnToAdmin))
         {
-        await _ui.VerifyAsync(_locators.ReturnToAdmin, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.ReturnToAdmin, _data.Resolve("Exists"), "");
         }
         // CommonGeneralSaveForLaterReturnToAdmin_e67622Page.ReturnToAdmin_0367_08f3f1Async
         if (await _ui.ExistsAsync(_locators.ReturnToAdmin))
         {
-        await _ui.ClickAsync(_locators.ReturnToAdmin);
+            await _ui.ClickAsync(_locators.ReturnToAdmin);
         }
         if (await _ui.ExistsAsync(_locators.ReturnToAdmin))
         {
-        await _ui.WaitAsync(_locators.ReturnToAdmin, "Absent");
+            await _ui.WaitAsync(_locators.ReturnToAdmin, "Absent");
         }
     }
 

@@ -15,7 +15,11 @@ public sealed class EQSFPSmokeTestSteps
     [Then(@"^I enter client search information$")]
     public async Task EnterClientSearchInformationAsync()
     {
-        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("LastName", "Smoke[a-z]{4}");
+        data.GenerateRandom("FirstName", "SFP [a-z]{3}");
+
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.EnterClientSearchInformationAsync2();
     }
 
@@ -24,7 +28,7 @@ public sealed class EQSFPSmokeTestSteps
     [Then(@"^I create a new client$")]
     public async Task CreateANewClientAsync()
     {
-        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CreateANewClientAsync2();
     }
 
@@ -33,7 +37,11 @@ public sealed class EQSFPSmokeTestSteps
     [Then(@"^I enter account details$")]
     public async Task EnterAccountDetailsAsync()
     {
-        var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("OwnerPhone", "3[0-9]{9}");
+        data.GenerateRandom("OwnerEmail", "test@[a-z]{4}\\\\.com");
+
+        var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.EnterAccountDetailsAsync2();
     }
 
@@ -42,7 +50,7 @@ public sealed class EQSFPSmokeTestSteps
     [Then(@"^I start the policy proposal$")]
     public async Task StartThePolicyProposalAsync()
     {
-        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.StartThePolicyProposalAsync2();
     }
 
@@ -51,7 +59,10 @@ public sealed class EQSFPSmokeTestSteps
     [Then(@"^I enter and validate the insured social security number$")]
     public async Task EnterAndValidateTheInsuredSocialSecurityNumberAsync()
     {
-        var page = new SocialSecurityPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("InsuredSSN", "025[0-9]{6}");
+
+        var page = new SocialSecurityPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.EnterAndValidateTheInsuredSocialSecurityNumberAsync2();
     }
 
@@ -60,7 +71,7 @@ public sealed class EQSFPSmokeTestSteps
     [Then(@"^I navigate to the required policy screen$")]
     public async Task NavigateToTheRequiredPolicyScreenAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToTheRequiredPolicyScreenAsync2();
     }
 
@@ -69,7 +80,7 @@ public sealed class EQSFPSmokeTestSteps
     [Then(@"^I complete quote Identifying and Close Quote$")]
     public async Task CompleteQuoteIdentifyingAndCloseQuoteAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteQuoteIdentifyingAndCloseQuoteAsync();
     }
 
@@ -78,7 +89,7 @@ public sealed class EQSFPSmokeTestSteps
     [Then(@"^I search by QuoteNum$")]
     public async Task SearchByQuoteNumAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.SearchByQuoteNumAsync();
     }
 
@@ -87,7 +98,7 @@ public sealed class EQSFPSmokeTestSteps
     [Then(@"^I navigate to the required policy screen for screen$")]
     public async Task NavigateToTheRequiredPolicyScreenForScreenAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToTheRequiredPolicyScreenForScreenAsync2();
     }
 
@@ -96,7 +107,7 @@ public sealed class EQSFPSmokeTestSteps
     [Then(@"^I complete verifying Quote$")]
     public async Task CompleteVerifyingQuoteAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteVerifyingQuoteAsync();
     }
 

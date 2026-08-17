@@ -7,9 +7,9 @@ public sealed class AdditionalInterestsPage
 {
     private readonly AdditionalInterestsLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public AdditionalInterestsPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public AdditionalInterestsPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new AdditionalInterestsLocators(browser.Page);
         _data = data;

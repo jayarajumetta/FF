@@ -7,9 +7,9 @@ public sealed class FormsPage
 {
     private readonly FormsLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public FormsPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public FormsPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new FormsLocators(browser.Page);
         _data = data;
@@ -22,26 +22,26 @@ public sealed class FormsPage
         // CLEQCommonGeneralFormsVerificationForEQInCLAS_4a1c59Page.CheckToSeeIfContentLengthIsLessThan40_0274_503012Async
         if (_data.Condition("during run the API and repeat if Content Length is less than 40 [max=4]"))
         {
-        _data.Set("CheckToSeeIfContentLengthIsLessThan40", _data.Resolve("{\"Expression\": \"{B[Content]} <40\"}"));
+            _data.Set("CheckToSeeIfContentLengthIsLessThan40", _data.Resolve("{\"Expression\": \"{B[Content]} <40\"}"));
         }
         // CLEQCommonGeneralFormsVerificationForEQInCLAS_4a1c59Page.FormsAPIRequest_0275_503012Async
         if (_data.Condition("during run the API and repeat if Content Length is less than 40 [max=4]"))
         {
-        await _ui.FillAsync(_locators.FormsAPIRequest01660, _data.Resolve("{{runtime:SessionId}}"));
+            await _ui.FillAsync(_locators.FormsAPIRequest01660, _data.Resolve("{{runtime:SessionId}}"));
         }
         // CLEQCommonGeneralFormsVerificationForEQInCLAS_4a1c59Page.FormsAPIResponse_0276_503012Async
         if (_data.Condition("during run the API and repeat if Content Length is less than 40 [max=4]"))
         {
-        await _ui.FillAsync(_locators.FormsAPIResponse53891, _data.Resolve("{{data:forms_api_response_348}}"));
+            await _ui.FillAsync(_locators.FormsAPIResponse53891, _data.Resolve("{{data:forms_api_response_348}}"));
         }
         if (_data.Condition("during run the API and repeat if Content Length is less than 40 [max=4]"))
         {
-        await _ui.FillAsync(_locators.FormsAPIResponse53891, _data.Resolve("{{data:forms_api_response_349}}"));
+            await _ui.FillAsync(_locators.FormsAPIResponse53891, _data.Resolve("{{data:forms_api_response_349}}"));
         }
         // CLEQCommonGeneralFormsVerificationForEQInCLAS_4a1c59Page.SyncAPI_0277_503012Async
         if (_data.Condition("during run the API and repeat if Content Length is less than 40 [max=4]"))
         {
-        await _ui.ReviewRequiredAsync("Browser-console/forms verification requires environment-specific implementation.");
+            await _ui.ReviewRequiredAsync("Browser-console/forms verification requires environment-specific implementation.");
         }
         // CLEQCommonGeneralFormsVerificationForEQInCLAS_4a1c59Page.SyncAPI_0279_503012Async
         await _ui.ReviewRequiredAsync("Browser-console/forms verification requires environment-specific implementation.");
@@ -111,7 +111,7 @@ public sealed class FormsPage
         // CommonDashboardPerformQuickSearchAndOpenPolicyCommonGeneralWaitOnLoadingIndicator_def0c7Page.CheckForLoadingIndicator_0873_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoadingMessage))
         {
-        await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
         }
         // CommonDashboardPerformQuickSearchAndOpenPolicyCommonGeneralWaitOnLoadingIndicator_def0c7Page.Wait2Secs_0874_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -125,7 +125,7 @@ public sealed class FormsPage
         // CommonDashboardPerformQuickSearchAndOpenPolicyCommonGeneralWaitOnLoadingIndicator_def0c7Page.CheckForLoadingIndicator_0878_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoadingMessage))
         {
-        await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
         }
         // CommonDashboardPerformQuickSearchAndOpenPolicyCommonGeneralWaitOnLoadingIndicator_def0c7Page.Wait2Secs_0879_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -134,27 +134,27 @@ public sealed class FormsPage
         // CommonDashboardPerformQuickSearchAndOpenPolicy_3431c5Page.ViewPolicyExists_0881_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.ViewPolicy))
         {
-        await _ui.VerifyAsync(_locators.ViewPolicy, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.ViewPolicy, _data.Resolve("Visible"), "");
         }
         // CommonDashboardPerformQuickSearchAndOpenPolicy_3431c5Page.N5sWaitForSyncronization_0882_d18a3eAsync
         if (_data.Condition("while view Policy Exists [max=90]"))
         {
-        await Task.Delay(1000);
+            await Task.Delay(1000);
         }
         // CommonDashboardPerformQuickSearchAndOpenPolicy_3431c5Page.ViewPolicyExists_0883_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.ViewPolicy))
         {
-        await _ui.VerifyAsync(_locators.ViewPolicy, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.ViewPolicy, _data.Resolve("Visible"), "");
         }
         // CommonDashboardPerformQuickSearchAndOpenPolicy_3431c5Page.ClickViewPolicy_0884_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.ViewPolicy))
         {
-        await _ui.ClickAsync(_locators.ViewPolicy);
+            await _ui.ClickAsync(_locators.ViewPolicy);
         }
         // CommonDashboardPerformQuickSearchAndOpenPolicy_3431c5Page.N500msWaitForSyncronization_0885_d18a3eAsync
         if (_data.Condition("while view Policy Exists [max=90]"))
         {
-        await Task.Delay(1000);
+            await Task.Delay(1000);
         }
     }
 

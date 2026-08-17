@@ -7,9 +7,9 @@ public sealed class SubmissionPage
 {
     private readonly SubmissionLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public SubmissionPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public SubmissionPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new SubmissionLocators(browser.Page);
         _data = data;
@@ -23,12 +23,12 @@ public sealed class SubmissionPage
         await _ui.WaitAsync(_locators.SubmissionScreenHeading, "Exists");
         if (_data.Condition("'Referral Needed' != NULL"))
         {
-        await _ui.VerifyAsync(_locators.NoReferralNeededVerification, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.NoReferralNeededVerification, _data.Resolve("Absent"), "");
         }
         await _ui.ClickAsync(_locators.LaunchToChecklistButton);
         if (_data.Condition("'Referral Needed' == NULL"))
         {
-        await _ui.VerifyAsync(_locators.NoReferralNeededVerification, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.NoReferralNeededVerification, _data.Resolve("Exists"), "");
         }
         // EQCommonSubmissionChecklistAndEsign_2e6388Page.SetBufferForWaitOnTime_0509_d18a3eAsync
         _data.Set("WaitOnTime", _data.Resolve("{{data:waitontime_2}}"));
@@ -50,35 +50,35 @@ public sealed class SubmissionPage
         // CommonSubmissionRunStoplight_076e05Page.CheckToSeeCoverageIsBoundExists_0615_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.IsThisCoverageBound))
         {
-        await _ui.VerifyAsync(_locators.IsThisCoverageBound, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.IsThisCoverageBound, _data.Resolve("Exists"), "");
         }
         // CommonSubmissionRunStoplight_076e05Page.CheckIsCoverageBoundSelect_0616_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.IsThisCoverageBound))
         {
-        await _ui.VerifyAsync(_locators.IsThisCoverageBound, _data.Resolve("{{data:expected_is_this_coverage_bound_661}}"), "");
+            await _ui.VerifyAsync(_locators.IsThisCoverageBound, _data.Resolve("{{data:expected_is_this_coverage_bound_661}}"), "");
         }
         // CommonSubmissionRunStoplight_076e05Page.AnswerIsCoverageBound_0617_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.IsThisCoverageBound))
         {
-        await _ui.PressAsync(_locators.IsThisCoverageBound, "POST:TAB");
-        await _ui.PressAsync(_locators.IsThisCoverageBound, "Tab");
+            await _ui.PressAsync(_locators.IsThisCoverageBound, "POST:TAB");
+            await _ui.PressAsync(_locators.IsThisCoverageBound, "Tab");
         }
         // CommonSubmissionRunStoplight_076e05Page.RunStoplight_0618_d18a3eAsync
         await _ui.ClickAsync(_locators.CompleteApplication);
         // CommonSubmissionRunStoplight_076e05Page.RunStoplight_0619_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.Close))
         {
-        await _ui.VerifyAsync(_locators.Close, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.Close, _data.Resolve("Absent"), "");
         }
         // CommonSubmissionRunStoplight_076e05Page.Wait2Seconds_0620_d18a3eAsync
         if (_data.Condition("during do (Wait for Stoplight to Run) [max=90]"))
         {
-        await Task.Delay(1000);
+            await Task.Delay(1000);
         }
         // CommonSubmissionRunStoplight_076e05Page.CheckForError_0621_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.StoplightWaitingWindowError))
         {
-        await _ui.VerifyAsync(_locators.StoplightWaitingWindowError, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.StoplightWaitingWindowError, _data.Resolve("Exists"), "");
         }
         // CommonSubmissionRunStoplight_076e05Page.SetErrorFlag_0622_d18a3eAsync
         _data.Set("ErrorFlag", _data.Resolve("{{data:errorflag}}"));
@@ -87,22 +87,22 @@ public sealed class SubmissionPage
         // CommonSubmissionRunStoplight_076e05Page.ClickFirstCloseButtonOnError_0666_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.StoplightWaitingWindowFirstCloseButtonOnError))
         {
-        await _ui.ClickAsync(_locators.StoplightWaitingWindowFirstCloseButtonOnError);
+            await _ui.ClickAsync(_locators.StoplightWaitingWindowFirstCloseButtonOnError);
         }
         // CommonSubmissionRunStoplight_076e05Page.Wait3Seconds_0667_d18a3eAsync
         if (_data.Condition("during do (Wait for Stoplight to Run) [max=90]"))
         {
-        await Task.Delay(1000);
+            await Task.Delay(1000);
         }
         // CommonSubmissionRunStoplight_076e05Page.ClickCompleteApp_0668_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.CompleteApplication))
         {
-        await _ui.ClickAsync(_locators.CompleteApplication);
+            await _ui.ClickAsync(_locators.CompleteApplication);
         }
         // CommonSubmissionRunStoplight_076e05Page.Wait3Seconds_0669_d18a3eAsync
         if (_data.Condition("during do (Wait for Stoplight to Run) [max=90]"))
         {
-        await Task.Delay(1000);
+            await Task.Delay(1000);
         }
         // CommonSubmissionRunStoplight_076e05Page.CloseStoplightWindow_0670_d18a3eAsync
         await _ui.ClickAsync(_locators.Close);
@@ -111,7 +111,7 @@ public sealed class SubmissionPage
         // CommonSubmissionRunStoplightCommonGeneralWaitOnLoadingIndicator_d0bd99Page.CheckForLoadingIndicator_0672_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoadingMessage))
         {
-        await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
         }
         // CommonSubmissionRunStoplightCommonGeneralWaitOnLoadingIndicator_d0bd99Page.Wait2Secs_0673_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -123,69 +123,69 @@ public sealed class SubmissionPage
         // CommonSubmissionRunStoplightCommonGeneralWaitOnLoadingIndicator_d0bd99Page.CheckForLoadingIndicator_0676_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoadingMessage))
         {
-        await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
         }
         // CommonSubmissionRunStoplightCommonGeneralWaitOnLoadingIndicator_d0bd99Page.Wait2Secs_0677_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
         // CommonSubmissionRunStoplight_076e05Page.StoplightMessageIsVisible_0678_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.AllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabs))
         {
-        await _ui.VerifyAsync(_locators.AllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabs, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.AllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabs, _data.Resolve("Exists"), "");
         }
         // CommonSubmissionRunStoplight_076e05Page.RunStoplight_0679_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.CompleteApplication))
         {
-        await _ui.ClickAsync(_locators.CompleteApplication);
+            await _ui.ClickAsync(_locators.CompleteApplication);
         }
         // CommonSubmissionRunStoplight_076e05Page.RunStoplight_0680_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.Close))
         {
-        await _ui.VerifyAsync(_locators.Close, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.Close, _data.Resolve("Absent"), "");
         }
         // CommonSubmissionRunStoplight_076e05Page.Wait2Seconds_0681_d18a3eAsync
         if (_data.Condition("if stoplight error"))
         {
-        await Task.Delay(1000);
+            await Task.Delay(1000);
         }
         // CommonSubmissionRunStoplight_076e05Page.CheckForError_0682_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.StoplightWaitingWindowError))
         {
-        await _ui.VerifyAsync(_locators.StoplightWaitingWindowError, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.StoplightWaitingWindowError, _data.Resolve("Exists"), "");
         }
         // CommonSubmissionRunStoplight_076e05Page.ClickFirstCloseButtonOnError_0726_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.StoplightWaitingWindowFirstCloseButtonOnError))
         {
-        await _ui.ClickAsync(_locators.StoplightWaitingWindowFirstCloseButtonOnError);
+            await _ui.ClickAsync(_locators.StoplightWaitingWindowFirstCloseButtonOnError);
         }
         // CommonSubmissionRunStoplight_076e05Page.Wait3Seconds_0727_d18a3eAsync
         if (_data.Condition("if stoplight error"))
         {
-        await Task.Delay(1000);
+            await Task.Delay(1000);
         }
         // CommonSubmissionRunStoplight_076e05Page.ClickCompleteApp_0728_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.CompleteApplication))
         {
-        await _ui.ClickAsync(_locators.CompleteApplication);
+            await _ui.ClickAsync(_locators.CompleteApplication);
         }
         // CommonSubmissionRunStoplight_076e05Page.Wait3Seconds_0729_d18a3eAsync
         if (_data.Condition("if stoplight error"))
         {
-        await Task.Delay(1000);
+            await Task.Delay(1000);
         }
         // CommonSubmissionRunStoplight_076e05Page.CloseStoplightWindow_0730_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.Close))
         {
-        await _ui.ClickAsync(_locators.Close);
+            await _ui.ClickAsync(_locators.Close);
         }
         // CommonSubmissionRunStoplight_076e05Page.WaitOnStoplightWindowToGoAway_0731_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.StoplightWaitingWindow))
         {
-        await _ui.WaitAsync(_locators.StoplightWaitingWindow, "Absent");
+            await _ui.WaitAsync(_locators.StoplightWaitingWindow, "Absent");
         }
         // CommonSubmissionRunStoplight_076e05Page.Wait35Seconds_0732_d18a3eAsync
         if (_data.Condition("if stoplight error"))
         {
-        await Task.Delay(1000);
+            await Task.Delay(1000);
         }
         // CommonSubmissionRunStoplight_076e05Page.VerifyStoplightSuccessfullyRan_0733_d18a3eAsync
         await _ui.VerifyAsync(_locators.AllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabs, _data.Resolve("Absent"), "");

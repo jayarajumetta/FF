@@ -7,9 +7,9 @@ public sealed class BuildingsPage
 {
     private readonly BuildingsLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public BuildingsPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public BuildingsPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new BuildingsLocators(browser.Page);
         _data = data;
@@ -126,7 +126,7 @@ public sealed class BuildingsPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0173_503012Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeading))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
         }
     }
 
@@ -144,26 +144,26 @@ public sealed class BuildingsPage
         await _ui.WaitAsync(_locators.SelectIfClientOwnsOrRentsTheBuilding, "Visible");
         if (_data.Condition("'Select Building Coverage' == \"Building Coverage\""))
         {
-        await _ui.PressAsync(_locators.BuildingCoverageAngular, "POST:TAB");
-        await _ui.PressAsync(_locators.BuildingCoverageAngular, "Tab");
+            await _ui.PressAsync(_locators.BuildingCoverageAngular, "POST:TAB");
+            await _ui.PressAsync(_locators.BuildingCoverageAngular, "Tab");
         }
         if (_data.Condition("'Select Functional Personal Property' == \"Include Functional Personal Property\""))
         {
-        await _ui.PressAsync(_locators.FunctionalPersonalPropertyUnchecked, "POST:ENTER");
-        await _ui.PressAsync(_locators.FunctionalPersonalPropertyUnchecked, "Enter");
+            await _ui.PressAsync(_locators.FunctionalPersonalPropertyUnchecked, "POST:ENTER");
+            await _ui.PressAsync(_locators.FunctionalPersonalPropertyUnchecked, "Enter");
         }
         if (_data.Condition("'Select Building contains habitational occupancy' == \"Building contains habitational occupancies\""))
         {
-        await _ui.PressAsync(_locators.BuildingContainsHabitationalOccupanciesUnchecked, "POST:ENTER");
-        await _ui.PressAsync(_locators.BuildingContainsHabitationalOccupanciesUnchecked, "Enter");
+            await _ui.PressAsync(_locators.BuildingContainsHabitationalOccupanciesUnchecked, "POST:ENTER");
+            await _ui.PressAsync(_locators.BuildingContainsHabitationalOccupanciesUnchecked, "Enter");
         }
         if (_data.Condition("'Select Functional Personal Property' == \"Include Functional Personal Property\""))
         {
-        await _ui.WaitAsync(_locators.FunctionalPersonalPropertyChecked, "Visible");
+            await _ui.WaitAsync(_locators.FunctionalPersonalPropertyChecked, "Visible");
         }
         if (_data.Condition("'Select Building contains habitational occupancy' == \"Building contains habitational occupancies\""))
         {
-        await _ui.WaitAsync(_locators.BuildingContainsHabitationalOccupanciesChecked, "Visible");
+            await _ui.WaitAsync(_locators.BuildingContainsHabitationalOccupanciesChecked, "Visible");
         }
         // EQBOPBuilding2SelectAdditionalCoveragesBuildingFunctionalPersonalPropertyOrHabitational_eb7ffcPage.EQLoadingIndicatorWait_0178_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -294,21 +294,21 @@ public sealed class BuildingsPage
         await _ui.WaitAsync(_locators.BuildingDetailsHeading, "Exists");
         if (_data.Condition("'Actual Cash Value' != NULL"))
         {
-        await _ui.PressAsync(_locators.ActualCashValue, "POST:TAB");
-        await _ui.PressAsync(_locators.ActualCashValue, "Tab");
+            await _ui.PressAsync(_locators.ActualCashValue, "POST:TAB");
+            await _ui.PressAsync(_locators.ActualCashValue, "Tab");
         }
         if (_data.Condition("'Actual Cash Value' != NULL"))
         {
-        await _ui.ClickAsync(_locators.ActualCashValue);
+            await _ui.ClickAsync(_locators.ActualCashValue);
         }
         if (_data.Condition("'Replacement Cost' != NULL"))
         {
-        await _ui.PressAsync(_locators.ReplacementCost, "POST:TAB");
-        await _ui.PressAsync(_locators.ReplacementCost, "Tab");
+            await _ui.PressAsync(_locators.ReplacementCost, "POST:TAB");
+            await _ui.PressAsync(_locators.ReplacementCost, "Tab");
         }
         if (_data.Condition("'Replacement Cost' != NULL"))
         {
-        await _ui.ClickAsync(_locators.ReplacementCost);
+            await _ui.ClickAsync(_locators.ReplacementCost);
         }
         // EQBOPBuilding19SelectBuildingDetailFields_fd996aPage.EQLoadingIndicatorWait_0217_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -378,7 +378,7 @@ public sealed class BuildingsPage
         // EQBOPBuilding19SelectBuildingDetailFields_fd996aPage.EQBOPBuildingBuildingDetailsSelectAnsulSystemForRestaurantClass_0237_d18a3eAsync
         if (_data.Condition("ANSUL != NULL"))
         {
-        await _ui.SelectAsync(_locators.AutomaticCommercialCookingExhaustAndExtinguishingANSULSystemYes, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.AutomaticCommercialCookingExhaustAndExtinguishingANSULSystemYes, _data.Resolve(""));
         }
         // EQBOPBuilding19SelectBuildingDetailFields_fd996aPage.EQLoadingIndicatorWait_0238_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -592,7 +592,7 @@ public sealed class BuildingsPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0173_08f3f1Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeading))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
         }
     }
 

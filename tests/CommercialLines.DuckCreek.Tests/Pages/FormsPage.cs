@@ -7,9 +7,9 @@ public sealed class FormsPage
 {
     private readonly FormsLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public FormsPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public FormsPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new FormsLocators(browser.Page);
         _data = data;
@@ -28,13 +28,13 @@ public sealed class FormsPage
         await _ui.PressAsync(_locators.PolicyNumber, "Tab");
         if (_data.Condition("'BOP Policy Number' != \"BOPPOL#\""))
         {
-        await _ui.ClickAsync(_locators.ImportPolicyDataButton);
+            await _ui.ClickAsync(_locators.ImportPolicyDataButton);
         }
         await _ui.WaitAsync(_locators.EffectiveDate, "NotEqual");
         // Businessowners_acf6e3Page.VerifyEmployerSLiabilityCheckBoxExistsNotExists_0130_f7819aAsync
         if (_data.Condition("'Employers Liability Checkbox' == NULL"))
         {
-        await _ui.VerifyAsync(_locators.EmployerSLiabilityCheckBox, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.EmployerSLiabilityCheckBox, _data.Resolve("Absent"), "");
         }
         // IndicatorsAndErrors_ea9144Page.CheckForLoadingIndicator_0134_f7819aAsync
         await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
@@ -85,10 +85,10 @@ public sealed class FormsPage
         await _ui.PressAsync(_locators.LiabilityLimit, "Tab");
         if (_data.Condition("'PD Limit' != NULL"))
         {
-        await _ui.FillAsync(_locators.PDLimit, _data.Resolve("{{data:pd_limit_250}}"));
-        await _ui.PressAsync(_locators.PDLimit, "CLICK");
-        await _ui.PressAsync(_locators.PDLimit, "Enter");
-        await _ui.PressAsync(_locators.PDLimit, "Tab");
+            await _ui.FillAsync(_locators.PDLimit, _data.Resolve("{{data:pd_limit_250}}"));
+            await _ui.PressAsync(_locators.PDLimit, "CLICK");
+            await _ui.PressAsync(_locators.PDLimit, "Enter");
+            await _ui.PressAsync(_locators.PDLimit, "Tab");
         }
         await _ui.FillAsync(_locators.TotalSubjectPremium, _data.Resolve("{{data:total_subject_premium_251}}"));
         await _ui.PressAsync(_locators.TotalSubjectPremium, "Tab");
@@ -292,13 +292,13 @@ public sealed class FormsPage
         await _ui.PressAsync(_locators.PolicyNumber, "Tab");
         if (_data.Condition("'BOP Policy Number' != \"BOPPOL#\""))
         {
-        await _ui.ClickAsync(_locators.ImportPolicyDataButton);
+            await _ui.ClickAsync(_locators.ImportPolicyDataButton);
         }
         await _ui.WaitAsync(_locators.EffectiveDate, "NotEqual");
         // Businessowners_acf6e3Page.VerifyEmployerSLiabilityCheckBoxExistsNotExists_0117_767d1bAsync
         if (_data.Condition("'Employers Liability Checkbox' == NULL"))
         {
-        await _ui.VerifyAsync(_locators.EmployerSLiabilityCheckBox, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.EmployerSLiabilityCheckBox, _data.Resolve("Absent"), "");
         }
         // IndicatorsAndErrors_ea9144Page.CheckForLoadingIndicator_0121_767d1bAsync
         await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");

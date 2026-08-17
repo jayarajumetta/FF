@@ -15,7 +15,7 @@ public sealed class SmokeTestCycleSteps
     [Then(@"^I start New Quote$")]
     public async Task StartNewQuoteAsync()
     {
-        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.StartNewQuoteAsync();
     }
 
@@ -24,7 +24,7 @@ public sealed class SmokeTestCycleSteps
     [Then(@"^I select or create the policy client$")]
     public async Task SelectOrCreateThePolicyClientAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.SelectOrCreateThePolicyClientAsync();
     }
 
@@ -33,7 +33,7 @@ public sealed class SmokeTestCycleSteps
     [Then(@"^I enter account details$")]
     public async Task EnterAccountDetailsAsync()
     {
-        var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.EnterAccountDetailsAsync();
     }
 
@@ -42,7 +42,7 @@ public sealed class SmokeTestCycleSteps
     [Then(@"^I start the policy proposal$")]
     public async Task StartThePolicyProposalAsync()
     {
-        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.StartThePolicyProposalAsync();
     }
 
@@ -51,7 +51,7 @@ public sealed class SmokeTestCycleSteps
     [Then(@"^I capture the proposal number$")]
     public async Task CaptureTheProposalNumberAsync()
     {
-        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CaptureTheProposalNumberAsync();
     }
 
@@ -60,7 +60,7 @@ public sealed class SmokeTestCycleSteps
     [Then(@"^I complete tabs$")]
     public async Task CompleteTabsAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteTabsAsync();
     }
 

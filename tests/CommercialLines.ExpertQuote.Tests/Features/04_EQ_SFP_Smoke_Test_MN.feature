@@ -1,7 +1,8 @@
-# Locator Resilience: direct Playwright locator -> validated cache -> deterministic DOM -> GitHub Copilot proposal
-# Copilot Healing: opt-in with COPILOT_SELF_HEAL=true; business action and expected result never change
+# Runtime: Background opens one browser session; Feature data flows through StepDefinitions to PageMethods
+# Locator self-heal: enabled by default on locator/actionability failures
 
-@CL_EQ @SFP @smoke_test @automated @canonical_simple_v39 @state_data_driven
+
+@CL_EQ @SFP @smoke_test @automated @canonical_simple_v44 @state_data_driven
 # Automation Maturity: 96/100
 # Business Flow: 19/20 | Canonical Mapping: 20/20 | StepDefinitions: 15/15 | Page Model: 15/15 | Locator Quality: 17/20 | Test Data: 10/10
 # Page Objects Used: 6 | Locator Confidence Average: 84/100 | Review-required operations: 0
@@ -13,10 +14,9 @@ Feature: EQ SFP Smoke Test
   So that the business transaction is executed with source-traceable data and verification
 
   Background: Prepare Commercial Lines ExpertQuote for policy processing
-    Given the Commercial Lines ExpertQuote browser session is ready
-
+    Given I open a browser session
   Scenario Outline: EQ SFP Smoke Test - <stateCode>
-    Given test data file "<dataFile>" is loaded
+    Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
     And I open the configured Commercial Lines ExpertQuote application
     And I sign in to Commercial Lines ExpertQuote using configured credentials
     When I enter client search information
@@ -31,8 +31,8 @@ Feature: EQ SFP Smoke Test
     Then I complete verifying Quote
 
     Examples:
-      | dataFile | stateCode | stateVariant | stateName |
-      | TestData/Scenarios/04_eq_sfp_smoke_test_mn.json | MN | MN | Minnesota |
-      | TestData/Scenarios/04_eq_sfp_smoke_test_ne.json | NE | NE | Nebraska |
-      | TestData/Scenarios/04_eq_sfp_smoke_test_sd.json | SD | SD | South Dakota |
-      | TestData/Scenarios/04_eq_sfp_smoke_test_wi.json | WI | WI | Wisconsin |
+      | dataFile | stateCode | stateVariant | stateName | externalDataFile |
+      | TestData/Scenarios/04_eq_sfp_smoke_test_mn.json | MN | MN | Minnesota | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/04_eq_sfp_smoke_test_ne.json | NE | NE | Nebraska | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/04_eq_sfp_smoke_test_sd.json | SD | SD | South Dakota | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/04_eq_sfp_smoke_test_wi.json | WI | WI | Wisconsin | TestData/ExternalDataOverrides.json |

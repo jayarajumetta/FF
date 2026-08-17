@@ -7,9 +7,9 @@ public sealed class ClientSearchPage
 {
     private readonly ClientSearchLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public ClientSearchPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public ClientSearchPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new ClientSearchLocators(browser.Page);
         _data = data;
@@ -37,7 +37,7 @@ public sealed class ClientSearchPage
         // ClientNamedInsuredCommon_9ad77bPage.EnterBusinessInfo_0041_f7819aAsync
         await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_8}}"));
         await _ui.PressAsync(_locators.EntityType, "Tab");
-        _data.Set("PrimaryPhone_0041", _data.Random("PrimaryPhone_0041", "[0-9]{10}"));
+        // Random data PrimaryPhone_0041 is generated in the StepDefinition before this PageMethod runs.
         await _ui.PressAsync(_locators.Address17A1FB, "PRE:TAB");
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         await _ui.FillAsync(_locators.ZipCode26D22, _data.Resolve("{{data:zipcode_11}}"));
@@ -51,7 +51,7 @@ public sealed class ClientSearchPage
         await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_14}}"));
         await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         // ClientNamedInsuredBusiness_f0e34fPage.EnterFEIN_0044_f7819aAsync
-        _data.Set("FEIN_0044", _data.Random("FEIN_0044", "486[0-9]{6}"));
+        // Random data FEIN_0044 is generated in the StepDefinition before this PageMethod runs.
         // ClientOtherInsuredInfo_945242Page.EnterDetailsInOtherInformationSection_0045_f7819aAsync
         await _ui.FillAsync(_locators.NameOfInspectionContact, _data.Resolve("{{data:name_of_inspection_contact_16}}"));
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
@@ -59,7 +59,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0045", _data.Random("InspectionTelephone_0045", "[0-9]{10}"));
+        // Random data InspectionTelephone_0045 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_18}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -91,8 +91,8 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.FirstNameC5387, "PRE:TAB");
         await _ui.PressAsync(_locators.FirstNameC5387, "Tab");
         await _ui.PressAsync(_locators.FirstNameC5387, "Tab");
-        _data.Set("MiddleName_0057", _data.Random("MiddleName_0057", "^[a-z]{1}$"));
-        _data.Set("LastName_0057", _data.Random("LastName_0057", "^[a-z]{7}$"));
+        // Random data MiddleName_0057 is generated in the StepDefinition before this PageMethod runs.
+        // Random data LastName_0057 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.DateOfBirth338D7, _data.Resolve("{{data:dateofbirth_50}}"));
         await _ui.PressAsync(_locators.DateOfBirth338D7, "Tab");
         await _ui.FillAsync(_locators.Address1D319B, _data.Resolve("{{data:address1_51}}"));
@@ -114,7 +114,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.Gender4973C, "Tab");
         await _ui.WaitAsync(_locators.ClientSearch41F28, "Exists");
         await _ui.ClickAsync(_locators.ClientSearch41F28);
-        _data.Set("FirstName_0057", _data.Random("FirstName_0057", "^[a-z]{4}$"));
+        // Random data FirstName_0057 is generated in the StepDefinition before this PageMethod runs.
         // ClientSearchResults_88c18bPage.VerifyNoResultsReturnedAndClickOK_0058_f7819aAsync
         await _ui.VerifyAsync(_locators.SearchResultsDuckCreekPolicyFirstCheckbox, _data.Resolve("Absent"), "");
         await _ui.ClickAsync(_locators.OK);
@@ -185,17 +185,17 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.DOB, "Tab");
         if (_data.Condition("State!=\"CA\""))
         {
-        await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_11}}"));
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_11}}"));
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
         }
-        _data.Set("LastName_0040", _data.Random("LastName_0040", "^[a-z]{4}$"));
+        // Random data LastName_0040 is generated in the StepDefinition before this PageMethod runs.
         // ClientNamedInsuredCommon_9ad77bPage.SelectIndividualSoleProprietor_0041_515771Async
         await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_13}}"));
         await _ui.PressAsync(_locators.EntityType, "Enter");
         await _ui.PressAsync(_locators.EntityType, "Tab");
         await _ui.PressAsync(_locators.EntityType, "Tab");
-        _data.Set("PrimaryPhone_0041", _data.Random("PrimaryPhone_0041", "[0-9]{10}"));
+        // Random data PrimaryPhone_0041 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.Address17A1FB, _data.Resolve("{{data:address1_15}}"));
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
@@ -214,7 +214,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "PRE:TAB");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Tab");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Enter");
-        _data.Set("InsuredSSN", _data.Random("InsuredSSN", "125[0-9]{6}"));
+        // Random data InsuredSSN is generated in the StepDefinition before this PageMethod runs.
         _data.Set("SSN", await _ui.CaptureAsync(_locators.EnterSSN6B3FB, "InnerText"));
         await _ui.ClickAsync(_locators.EnterSSN6B3FB);
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Doubleclick");
@@ -231,21 +231,21 @@ public sealed class ClientSearchPage
         // ClientOtherInsuredInfo_945242Page.EnterOtherInsuredInfo_0048_515771Async
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_33}}"));
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_33}}"));
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        _data.Set("AuditTelephone_0048", _data.Random("AuditTelephone_0048", "[0-9]{10}"));
+            // Random data AuditTelephone_0048 is generated in the StepDefinition before this PageMethod runs.
         }
         await _ui.FillAsync(_locators.NameOfInspectionContact, _data.Resolve("{{data:name_of_inspection_contact_35}}"));
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0048", _data.Random("InspectionTelephone_0048", "[0-9]{10}"));
+        // Random data InspectionTelephone_0048 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_37}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -298,17 +298,17 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.DOB, "Tab");
         if (_data.Condition("State!=\"CA\""))
         {
-        await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_11}}"));
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_11}}"));
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
         }
-        _data.Set("LastName_0040", _data.Random("LastName_0040", "^[a-z]{4}$"));
+        // Random data LastName_0040 is generated in the StepDefinition before this PageMethod runs.
         // ClientNamedInsuredCommon_9ad77bPage.SelectIndividualSoleProprietor_0041_d65717Async
         await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_13}}"));
         await _ui.PressAsync(_locators.EntityType, "Enter");
         await _ui.PressAsync(_locators.EntityType, "Tab");
         await _ui.PressAsync(_locators.EntityType, "Tab");
-        _data.Set("PrimaryPhone_0041", _data.Random("PrimaryPhone_0041", "[0-9]{10}"));
+        // Random data PrimaryPhone_0041 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.Address17A1FB, _data.Resolve("{{data:address1_15}}"));
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
@@ -327,7 +327,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "PRE:TAB");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Tab");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Enter");
-        _data.Set("InsuredSSN", _data.Random("InsuredSSN", "125[0-9]{6}"));
+        // Random data InsuredSSN is generated in the StepDefinition before this PageMethod runs.
         _data.Set("SSN", await _ui.CaptureAsync(_locators.EnterSSN6B3FB, "InnerText"));
         await _ui.ClickAsync(_locators.EnterSSN6B3FB);
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Doubleclick");
@@ -344,21 +344,21 @@ public sealed class ClientSearchPage
         // ClientOtherInsuredInfo_945242Page.EnterOtherInsuredInfo_0048_d65717Async
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_33}}"));
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_33}}"));
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        _data.Set("AuditTelephone_0048", _data.Random("AuditTelephone_0048", "[0-9]{10}"));
+            // Random data AuditTelephone_0048 is generated in the StepDefinition before this PageMethod runs.
         }
         await _ui.FillAsync(_locators.NameOfInspectionContact, _data.Resolve("{{data:name_of_inspection_contact_35}}"));
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0048", _data.Random("InspectionTelephone_0048", "[0-9]{10}"));
+        // Random data InspectionTelephone_0048 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_37}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -411,17 +411,17 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.DOB, "Tab");
         if (_data.Condition("State!=\"CA\""))
         {
-        await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_60}}"));
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_60}}"));
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
         }
-        _data.Set("LastName_0067", _data.Random("LastName_0067", "^[a-z]{4}$"));
+        // Random data LastName_0067 is generated in the StepDefinition before this PageMethod runs.
         // ClientNamedInsuredCommon_9ad77bPage.SelectIndividualSoleProprietor_0068_d344b2Async
         await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_62}}"));
         await _ui.PressAsync(_locators.EntityType, "Enter");
         await _ui.PressAsync(_locators.EntityType, "Tab");
         await _ui.PressAsync(_locators.EntityType, "Tab");
-        _data.Set("PrimaryPhone_0068", _data.Random("PrimaryPhone_0068", "[0-9]{10}"));
+        // Random data PrimaryPhone_0068 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.Address17A1FB, _data.Resolve("{{data:address1_64}}"));
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
@@ -440,7 +440,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "PRE:TAB");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Tab");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Enter");
-        _data.Set("InsuredSSN", _data.Random("InsuredSSN", "125[0-9]{6}"));
+        // Random data InsuredSSN is generated in the StepDefinition before this PageMethod runs.
         _data.Set("SSN", await _ui.CaptureAsync(_locators.EnterSSN6B3FB, "InnerText"));
         await _ui.ClickAsync(_locators.EnterSSN6B3FB);
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Doubleclick");
@@ -457,21 +457,21 @@ public sealed class ClientSearchPage
         // ClientOtherInsuredInfo_945242Page.EnterOtherInsuredInfo_0075_d344b2Async
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_82}}"));
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_82}}"));
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        _data.Set("AuditTelephone_0075", _data.Random("AuditTelephone_0075", "[0-9]{10}"));
+            // Random data AuditTelephone_0075 is generated in the StepDefinition before this PageMethod runs.
         }
         await _ui.FillAsync(_locators.NameOfInspectionContact, _data.Resolve("{{data:name_of_inspection_contact_84}}"));
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0075", _data.Random("InspectionTelephone_0075", "[0-9]{10}"));
+        // Random data InspectionTelephone_0075 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_86}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -528,17 +528,17 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.DOB, "Tab");
         if (_data.Condition("State!=\"CA\""))
         {
-        await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_60}}"));
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_60}}"));
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
         }
-        _data.Set("LastName_0067", _data.Random("LastName_0067", "^[a-z]{4}$"));
+        // Random data LastName_0067 is generated in the StepDefinition before this PageMethod runs.
         // ClientNamedInsuredCommon_9ad77bPage.SelectIndividualSoleProprietor_0068_a1ba9cAsync
         await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_62}}"));
         await _ui.PressAsync(_locators.EntityType, "Enter");
         await _ui.PressAsync(_locators.EntityType, "Tab");
         await _ui.PressAsync(_locators.EntityType, "Tab");
-        _data.Set("PrimaryPhone_0068", _data.Random("PrimaryPhone_0068", "[0-9]{10}"));
+        // Random data PrimaryPhone_0068 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.Address17A1FB, _data.Resolve("{{data:address1_64}}"));
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
@@ -557,7 +557,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "PRE:TAB");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Tab");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Enter");
-        _data.Set("InsuredSSN", _data.Random("InsuredSSN", "125[0-9]{6}"));
+        // Random data InsuredSSN is generated in the StepDefinition before this PageMethod runs.
         _data.Set("SSN", await _ui.CaptureAsync(_locators.EnterSSN6B3FB, "InnerText"));
         await _ui.ClickAsync(_locators.EnterSSN6B3FB);
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Doubleclick");
@@ -574,21 +574,21 @@ public sealed class ClientSearchPage
         // ClientOtherInsuredInfo_945242Page.EnterOtherInsuredInfo_0075_a1ba9cAsync
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_82}}"));
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_82}}"));
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        _data.Set("AuditTelephone_0075", _data.Random("AuditTelephone_0075", "[0-9]{10}"));
+            // Random data AuditTelephone_0075 is generated in the StepDefinition before this PageMethod runs.
         }
         await _ui.FillAsync(_locators.NameOfInspectionContact, _data.Resolve("{{data:name_of_inspection_contact_84}}"));
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0075", _data.Random("InspectionTelephone_0075", "[0-9]{10}"));
+        // Random data InspectionTelephone_0075 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_86}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -645,17 +645,17 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.DOB, "Tab");
         if (_data.Condition("State!=\"CA\""))
         {
-        await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_11}}"));
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_11}}"));
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
         }
-        _data.Set("LastName_0040", _data.Random("LastName_0040", "^[a-z]{4}$"));
+        // Random data LastName_0040 is generated in the StepDefinition before this PageMethod runs.
         // ClientNamedInsuredCommon_9ad77bPage.SelectIndividualSoleProprietor_0041_f90f36Async
         await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_13}}"));
         await _ui.PressAsync(_locators.EntityType, "Enter");
         await _ui.PressAsync(_locators.EntityType, "Tab");
         await _ui.PressAsync(_locators.EntityType, "Tab");
-        _data.Set("PrimaryPhone_0041", _data.Random("PrimaryPhone_0041", "[0-9]{10}"));
+        // Random data PrimaryPhone_0041 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.Address17A1FB, _data.Resolve("{{data:address1_15}}"));
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
@@ -674,7 +674,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "PRE:TAB");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Tab");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Enter");
-        _data.Set("InsuredSSN", _data.Random("InsuredSSN", "125[0-9]{6}"));
+        // Random data InsuredSSN is generated in the StepDefinition before this PageMethod runs.
         _data.Set("SSN", await _ui.CaptureAsync(_locators.EnterSSN6B3FB, "InnerText"));
         await _ui.ClickAsync(_locators.EnterSSN6B3FB);
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Doubleclick");
@@ -691,21 +691,21 @@ public sealed class ClientSearchPage
         // ClientOtherInsuredInfo_945242Page.EnterOtherInsuredInfo_0048_f90f36Async
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_33}}"));
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_33}}"));
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        _data.Set("AuditTelephone_0048", _data.Random("AuditTelephone_0048", "[0-9]{10}"));
+            // Random data AuditTelephone_0048 is generated in the StepDefinition before this PageMethod runs.
         }
         await _ui.FillAsync(_locators.NameOfInspectionContact, _data.Resolve("{{data:name_of_inspection_contact_35}}"));
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0048", _data.Random("InspectionTelephone_0048", "[0-9]{10}"));
+        // Random data InspectionTelephone_0048 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_37}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -762,17 +762,17 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.DOB, "Tab");
         if (_data.Condition("State!=\"CA\""))
         {
-        await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_60}}"));
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_60}}"));
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
         }
-        _data.Set("LastName_0067", _data.Random("LastName_0067", "^[a-z]{4}$"));
+        // Random data LastName_0067 is generated in the StepDefinition before this PageMethod runs.
         // ClientNamedInsuredCommon_9ad77bPage.SelectIndividualSoleProprietor_0068_85cb3fAsync
         await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_62}}"));
         await _ui.PressAsync(_locators.EntityType, "Enter");
         await _ui.PressAsync(_locators.EntityType, "Tab");
         await _ui.PressAsync(_locators.EntityType, "Tab");
-        _data.Set("PrimaryPhone_0068", _data.Random("PrimaryPhone_0068", "[0-9]{10}"));
+        // Random data PrimaryPhone_0068 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.Address17A1FB, _data.Resolve("{{data:address1_64}}"));
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
@@ -791,7 +791,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "PRE:TAB");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Tab");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Enter");
-        _data.Set("InsuredSSN", _data.Random("InsuredSSN", "125[0-9]{6}"));
+        // Random data InsuredSSN is generated in the StepDefinition before this PageMethod runs.
         _data.Set("SSN", await _ui.CaptureAsync(_locators.EnterSSN6B3FB, "InnerText"));
         await _ui.ClickAsync(_locators.EnterSSN6B3FB);
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Doubleclick");
@@ -810,7 +810,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0075", _data.Random("InspectionTelephone_0075", "[0-9]{10}"));
+        // Random data InspectionTelephone_0075 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_84}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -854,7 +854,7 @@ public sealed class ClientSearchPage
         // ClientNamedInsuredCommon_9ad77bPage.EnterBusinessInfo_0082_c839dfAsync
         await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_57}}"));
         await _ui.PressAsync(_locators.EntityType, "Tab");
-        _data.Set("PrimaryPhone_0082", _data.Random("PrimaryPhone_0082", "[0-9]{10}"));
+        // Random data PrimaryPhone_0082 is generated in the StepDefinition before this PageMethod runs.
         await _ui.PressAsync(_locators.Address17A1FB, "PRE:TAB");
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         await _ui.FillAsync(_locators.ZipCode26D22, _data.Resolve("{{data:zipcode_60}}"));
@@ -868,17 +868,17 @@ public sealed class ClientSearchPage
         await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_63}}"));
         await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         // ClientNamedInsuredBusiness_f0e34fPage.EnterFEIN_0085_c839dfAsync
-        _data.Set("FEIN_0085", _data.Random("FEIN_0085", "486[0-9]{6}"));
+        // Random data FEIN_0085 is generated in the StepDefinition before this PageMethod runs.
         // ClientOtherInsuredInfo_945242Page.EnterDetailsInOtherInformationSection_0086_c839dfAsync
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_65}}"));
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_65}}"));
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        _data.Set("AuditTelephone_0086", _data.Random("AuditTelephone_0086", "[0-9]{10}"));
+            // Random data AuditTelephone_0086 is generated in the StepDefinition before this PageMethod runs.
         }
         await _ui.FillAsync(_locators.NameOfInspectionContact, _data.Resolve("{{data:name_of_inspection_contact_67}}"));
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
@@ -886,7 +886,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0086", _data.Random("InspectionTelephone_0086", "[0-9]{10}"));
+        // Random data InspectionTelephone_0086 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_69}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -918,8 +918,8 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.FirstNameC5387, "PRE:TAB");
         await _ui.PressAsync(_locators.FirstNameC5387, "Tab");
         await _ui.PressAsync(_locators.FirstNameC5387, "Tab");
-        _data.Set("MiddleName_0098", _data.Random("MiddleName_0098", "^[a-z]{1}$"));
-        _data.Set("LastName_0098", _data.Random("LastName_0098", "^[a-z]{7}$"));
+        // Random data MiddleName_0098 is generated in the StepDefinition before this PageMethod runs.
+        // Random data LastName_0098 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.DateOfBirth338D7, _data.Resolve("{{data:dateofbirth_101}}"));
         await _ui.PressAsync(_locators.DateOfBirth338D7, "Tab");
         await _ui.FillAsync(_locators.Address1D319B, _data.Resolve("{{data:address1_102}}"));
@@ -941,7 +941,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.Gender4973C, "Tab");
         await _ui.WaitAsync(_locators.ClientSearch41F28, "Exists");
         await _ui.ClickAsync(_locators.ClientSearch41F28);
-        _data.Set("FirstName_0098", _data.Random("FirstName_0098", "^[a-z]{4}$"));
+        // Random data FirstName_0098 is generated in the StepDefinition before this PageMethod runs.
         // ClientSearchResults_88c18bPage.VerifyNoResultsReturnedAndClickOK_0099_c839dfAsync
         await _ui.VerifyAsync(_locators.SearchResultsDuckCreekPolicyFirstCheckbox, _data.Resolve("Absent"), "");
         await _ui.ClickAsync(_locators.OK);
@@ -1003,7 +1003,7 @@ public sealed class ClientSearchPage
         // ClientNamedInsuredCommon_9ad77bPage.EnterBusinessInfo_0041_aad19bAsync
         await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_8}}"));
         await _ui.PressAsync(_locators.EntityType, "Tab");
-        _data.Set("PrimaryPhone_0041", _data.Random("PrimaryPhone_0041", "[0-9]{10}"));
+        // Random data PrimaryPhone_0041 is generated in the StepDefinition before this PageMethod runs.
         await _ui.PressAsync(_locators.Address17A1FB, "PRE:TAB");
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         await _ui.FillAsync(_locators.ZipCode26D22, _data.Resolve("{{data:zipcode_11}}"));
@@ -1017,17 +1017,17 @@ public sealed class ClientSearchPage
         await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_14}}"));
         await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         // ClientNamedInsuredBusiness_f0e34fPage.EnterFEIN_0044_aad19bAsync
-        _data.Set("FEIN_0044", _data.Random("FEIN_0044", "486[0-9]{6}"));
+        // Random data FEIN_0044 is generated in the StepDefinition before this PageMethod runs.
         // ClientOtherInsuredInfo_945242Page.EnterDetailsInOtherInformationSection_0045_aad19bAsync
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_16}}"));
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_16}}"));
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        _data.Set("AuditTelephone_0045", _data.Random("AuditTelephone_0045", "[0-9]{10}"));
+            // Random data AuditTelephone_0045 is generated in the StepDefinition before this PageMethod runs.
         }
         await _ui.FillAsync(_locators.NameOfInspectionContact, _data.Resolve("{{data:name_of_inspection_contact_18}}"));
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
@@ -1035,7 +1035,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0045", _data.Random("InspectionTelephone_0045", "[0-9]{10}"));
+        // Random data InspectionTelephone_0045 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_20}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -1067,8 +1067,8 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.FirstNameC5387, "PRE:TAB");
         await _ui.PressAsync(_locators.FirstNameC5387, "Tab");
         await _ui.PressAsync(_locators.FirstNameC5387, "Tab");
-        _data.Set("MiddleName_0057", _data.Random("MiddleName_0057", "^[a-z]{1}$"));
-        _data.Set("LastName_0057", _data.Random("LastName_0057", "^[a-z]{7}$"));
+        // Random data MiddleName_0057 is generated in the StepDefinition before this PageMethod runs.
+        // Random data LastName_0057 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.DateOfBirth338D7, _data.Resolve("{{data:dateofbirth_52}}"));
         await _ui.PressAsync(_locators.DateOfBirth338D7, "Tab");
         await _ui.FillAsync(_locators.Address1D319B, _data.Resolve("{{data:address1_53}}"));
@@ -1090,7 +1090,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.Gender4973C, "Tab");
         await _ui.WaitAsync(_locators.ClientSearch41F28, "Exists");
         await _ui.ClickAsync(_locators.ClientSearch41F28);
-        _data.Set("FirstName_0057", _data.Random("FirstName_0057", "^[a-z]{4}$"));
+        // Random data FirstName_0057 is generated in the StepDefinition before this PageMethod runs.
         // ClientSearchResults_88c18bPage.VerifyNoResultsReturnedAndClickOK_0058_aad19bAsync
         await _ui.VerifyAsync(_locators.SearchResultsDuckCreekPolicyFirstCheckbox, _data.Resolve("Absent"), "");
         await _ui.ClickAsync(_locators.OK);
@@ -1148,7 +1148,7 @@ public sealed class ClientSearchPage
         // ClientNamedInsuredCommon_9ad77bPage.EnterBusinessInfo_0041_677267Async
         await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_8}}"));
         await _ui.PressAsync(_locators.EntityType, "Tab");
-        _data.Set("PrimaryPhone_0041", _data.Random("PrimaryPhone_0041", "[0-9]{10}"));
+        // Random data PrimaryPhone_0041 is generated in the StepDefinition before this PageMethod runs.
         await _ui.PressAsync(_locators.Address17A1FB, "PRE:TAB");
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         await _ui.FillAsync(_locators.ZipCode26D22, _data.Resolve("{{data:zipcode_11}}"));
@@ -1162,17 +1162,17 @@ public sealed class ClientSearchPage
         await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_14}}"));
         await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         // ClientNamedInsuredBusiness_f0e34fPage.EnterFEIN_0044_677267Async
-        _data.Set("FEIN_0044", _data.Random("FEIN_0044", "486[0-9]{6}"));
+        // Random data FEIN_0044 is generated in the StepDefinition before this PageMethod runs.
         // ClientOtherInsuredInfo_945242Page.EnterDetailsInOtherInformationSection_0045_677267Async
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_16}}"));
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_16}}"));
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        _data.Set("AuditTelephone_0045", _data.Random("AuditTelephone_0045", "[0-9]{10}"));
+            // Random data AuditTelephone_0045 is generated in the StepDefinition before this PageMethod runs.
         }
         await _ui.FillAsync(_locators.NameOfInspectionContact, _data.Resolve("{{data:name_of_inspection_contact_18}}"));
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
@@ -1180,7 +1180,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0045", _data.Random("InspectionTelephone_0045", "[0-9]{10}"));
+        // Random data InspectionTelephone_0045 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_20}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -1212,8 +1212,8 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.FirstNameC5387, "PRE:TAB");
         await _ui.PressAsync(_locators.FirstNameC5387, "Tab");
         await _ui.PressAsync(_locators.FirstNameC5387, "Tab");
-        _data.Set("MiddleName_0057", _data.Random("MiddleName_0057", "^[a-z]{1}$"));
-        _data.Set("LastName_0057", _data.Random("LastName_0057", "^[a-z]{7}$"));
+        // Random data MiddleName_0057 is generated in the StepDefinition before this PageMethod runs.
+        // Random data LastName_0057 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.DateOfBirth338D7, _data.Resolve("{{data:dateofbirth_52}}"));
         await _ui.PressAsync(_locators.DateOfBirth338D7, "Tab");
         await _ui.FillAsync(_locators.Address1D319B, _data.Resolve("{{data:address1_53}}"));
@@ -1235,7 +1235,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.Gender4973C, "Tab");
         await _ui.WaitAsync(_locators.ClientSearch41F28, "Exists");
         await _ui.ClickAsync(_locators.ClientSearch41F28);
-        _data.Set("FirstName_0057", _data.Random("FirstName_0057", "^[a-z]{4}$"));
+        // Random data FirstName_0057 is generated in the StepDefinition before this PageMethod runs.
         // ClientSearchResults_88c18bPage.VerifyNoResultsReturnedAndClickOK_0058_677267Async
         await _ui.VerifyAsync(_locators.SearchResultsDuckCreekPolicyFirstCheckbox, _data.Resolve("Absent"), "");
         await _ui.ClickAsync(_locators.OK);
@@ -1306,17 +1306,17 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.DOB, "Tab");
         if (_data.Condition("State!=\"CA\""))
         {
-        await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_11}}"));
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_11}}"));
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
         }
-        _data.Set("LastName_0040", _data.Random("LastName_0040", "^[a-z]{4}$"));
+        // Random data LastName_0040 is generated in the StepDefinition before this PageMethod runs.
         // ClientNamedInsuredCommon_9ad77bPage.SelectIndividualSoleProprietor_0041_a6f47eAsync
         await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_13}}"));
         await _ui.PressAsync(_locators.EntityType, "Enter");
         await _ui.PressAsync(_locators.EntityType, "Tab");
         await _ui.PressAsync(_locators.EntityType, "Tab");
-        _data.Set("PrimaryPhone_0041", _data.Random("PrimaryPhone_0041", "[0-9]{10}"));
+        // Random data PrimaryPhone_0041 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.Address17A1FB, _data.Resolve("{{data:address1_15}}"));
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
@@ -1335,7 +1335,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "PRE:TAB");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Tab");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Enter");
-        _data.Set("InsuredSSN", _data.Random("InsuredSSN", "125[0-9]{6}"));
+        // Random data InsuredSSN is generated in the StepDefinition before this PageMethod runs.
         _data.Set("SSN", await _ui.CaptureAsync(_locators.EnterSSN6B3FB, "InnerText"));
         await _ui.ClickAsync(_locators.EnterSSN6B3FB);
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Doubleclick");
@@ -1352,21 +1352,21 @@ public sealed class ClientSearchPage
         // ClientOtherInsuredInfo_945242Page.EnterOtherInsuredInfo_0048_a6f47eAsync
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_33}}"));
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_33}}"));
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        _data.Set("AuditTelephone_0048", _data.Random("AuditTelephone_0048", "[0-9]{10}"));
+            // Random data AuditTelephone_0048 is generated in the StepDefinition before this PageMethod runs.
         }
         await _ui.FillAsync(_locators.NameOfInspectionContact, _data.Resolve("{{data:name_of_inspection_contact_35}}"));
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0048", _data.Random("InspectionTelephone_0048", "[0-9]{10}"));
+        // Random data InspectionTelephone_0048 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_37}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -1404,7 +1404,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.AdditionalInsuredFirstName, "Tab");
         await _ui.FillAsync(_locators.AdditionalInsuredMiddleName, _data.Resolve("{{data:additional_insured_middle_name_66}}"));
         await _ui.PressAsync(_locators.AdditionalInsuredMiddleName, "Tab");
-        _data.Set("AdditionalInsuredLastName_0062", _data.Random("AdditionalInsuredLastName_0062", "^[a-z]{15}$"));
+        // Random data AdditionalInsuredLastName_0062 is generated in the StepDefinition before this PageMethod runs.
         await _ui.ClickAsync(_locators.Detail704E6);
         // ClientAdditionalInsuredIndividual_86ed73Page.EnterIndividualAddressInfo_0064_a6f47eAsync
         await _ui.WaitAsync(_locators.Address1CB379, "Exists");
@@ -1427,7 +1427,7 @@ public sealed class ClientSearchPage
         await _ui.ClickAsync(_locators.OrderSSN710BF);
         await _ui.WaitAsync(_locators.SSNWasNotReturned, "Exists");
         // ClientAdditionalInsuredIndividual_86ed73Page.EnterSSN_0069_a6f47eAsync
-        _data.Set("InsuredSSN", _data.Random("InsuredSSN", "025[0-9]{6}"));
+        // Random data InsuredSSN is generated in the StepDefinition before this PageMethod runs.
         await _ui.WaitAsync(_locators.EnterSSNE3801, "Exists");
         await _ui.ClickAsync(_locators.EnterSSNE3801);
         await _ui.PressAsync(_locators.EnterSSNE3801, "Doubleclick");
@@ -1470,7 +1470,7 @@ public sealed class ClientSearchPage
         // ClientNamedInsuredCommon_9ad77bPage.EnterBusinessInfo_0041_767d1bAsync
         await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_8}}"));
         await _ui.PressAsync(_locators.EntityType, "Tab");
-        _data.Set("PrimaryPhone_0041", _data.Random("PrimaryPhone_0041", "[0-9]{10}"));
+        // Random data PrimaryPhone_0041 is generated in the StepDefinition before this PageMethod runs.
         await _ui.PressAsync(_locators.Address17A1FB, "PRE:TAB");
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         await _ui.FillAsync(_locators.ZipCode26D22, _data.Resolve("{{data:zipcode_11}}"));
@@ -1484,7 +1484,7 @@ public sealed class ClientSearchPage
         await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_14}}"));
         await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         // ClientNamedInsuredBusiness_f0e34fPage.EnterFEIN_0044_767d1bAsync
-        _data.Set("FEIN_0044", _data.Random("FEIN_0044", "486[0-9]{6}"));
+        // Random data FEIN_0044 is generated in the StepDefinition before this PageMethod runs.
         // ClientOtherInsuredInfo_945242Page.EnterDetailsInOtherInformationSection_0045_767d1bAsync
         await _ui.FillAsync(_locators.NameOfInspectionContact, _data.Resolve("{{data:name_of_inspection_contact_16}}"));
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
@@ -1492,7 +1492,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0045", _data.Random("InspectionTelephone_0045", "[0-9]{10}"));
+        // Random data InspectionTelephone_0045 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_18}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -1524,8 +1524,8 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.FirstNameC5387, "PRE:TAB");
         await _ui.PressAsync(_locators.FirstNameC5387, "Tab");
         await _ui.PressAsync(_locators.FirstNameC5387, "Tab");
-        _data.Set("MiddleName_0057", _data.Random("MiddleName_0057", "^[a-z]{1}$"));
-        _data.Set("LastName_0057", _data.Random("LastName_0057", "^[a-z]{7}$"));
+        // Random data MiddleName_0057 is generated in the StepDefinition before this PageMethod runs.
+        // Random data LastName_0057 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.DateOfBirth338D7, _data.Resolve("{{data:dateofbirth_50}}"));
         await _ui.PressAsync(_locators.DateOfBirth338D7, "Tab");
         await _ui.FillAsync(_locators.Address1D319B, _data.Resolve("{{data:address1_51}}"));
@@ -1547,7 +1547,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.Gender4973C, "Tab");
         await _ui.WaitAsync(_locators.ClientSearch41F28, "Exists");
         await _ui.ClickAsync(_locators.ClientSearch41F28);
-        _data.Set("FirstName_0057", _data.Random("FirstName_0057", "^[a-z]{4}$"));
+        // Random data FirstName_0057 is generated in the StepDefinition before this PageMethod runs.
         // ClientSearchResults_88c18bPage.VerifyNoResultsReturnedAndClickOK_0058_767d1bAsync
         await _ui.VerifyAsync(_locators.SearchResultsDuckCreekPolicyFirstCheckbox, _data.Resolve("Absent"), "");
         await _ui.ClickAsync(_locators.OK);
@@ -1605,7 +1605,7 @@ public sealed class ClientSearchPage
         // ClientNamedInsuredCommon_9ad77bPage.EnterBusinessInfo_0041_bb930cAsync
         await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_8}}"));
         await _ui.PressAsync(_locators.EntityType, "Tab");
-        _data.Set("PrimaryPhone_0041", _data.Random("PrimaryPhone_0041", "[0-9]{10}"));
+        // Random data PrimaryPhone_0041 is generated in the StepDefinition before this PageMethod runs.
         await _ui.PressAsync(_locators.Address17A1FB, "PRE:TAB");
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         await _ui.FillAsync(_locators.ZipCode26D22, _data.Resolve("{{data:zipcode_11}}"));
@@ -1619,17 +1619,17 @@ public sealed class ClientSearchPage
         await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_14}}"));
         await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         // ClientNamedInsuredBusiness_f0e34fPage.EnterFEIN_0044_bb930cAsync
-        _data.Set("FEIN_0044", _data.Random("FEIN_0044", "486[0-9]{6}"));
+        // Random data FEIN_0044 is generated in the StepDefinition before this PageMethod runs.
         // ClientOtherInsuredInfo_945242Page.EnterDetailsInOtherInformationSection_0045_bb930cAsync
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_16}}"));
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_16}}"));
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        _data.Set("AuditTelephone_0045", _data.Random("AuditTelephone_0045", "[0-9]{10}"));
+            // Random data AuditTelephone_0045 is generated in the StepDefinition before this PageMethod runs.
         }
         await _ui.FillAsync(_locators.NameOfInspectionContact, _data.Resolve("{{data:name_of_inspection_contact_18}}"));
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
@@ -1637,7 +1637,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0045", _data.Random("InspectionTelephone_0045", "[0-9]{10}"));
+        // Random data InspectionTelephone_0045 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_20}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -1669,8 +1669,8 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.FirstNameC5387, "PRE:TAB");
         await _ui.PressAsync(_locators.FirstNameC5387, "Tab");
         await _ui.PressAsync(_locators.FirstNameC5387, "Tab");
-        _data.Set("MiddleName_0057", _data.Random("MiddleName_0057", "^[a-z]{1}$"));
-        _data.Set("LastName_0057", _data.Random("LastName_0057", "^[a-z]{7}$"));
+        // Random data MiddleName_0057 is generated in the StepDefinition before this PageMethod runs.
+        // Random data LastName_0057 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.DateOfBirth338D7, _data.Resolve("{{data:dateofbirth_52}}"));
         await _ui.PressAsync(_locators.DateOfBirth338D7, "Tab");
         await _ui.FillAsync(_locators.Address1D319B, _data.Resolve("{{data:address1_53}}"));
@@ -1692,7 +1692,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.Gender4973C, "Tab");
         await _ui.WaitAsync(_locators.ClientSearch41F28, "Exists");
         await _ui.ClickAsync(_locators.ClientSearch41F28);
-        _data.Set("FirstName_0057", _data.Random("FirstName_0057", "^[a-z]{4}$"));
+        // Random data FirstName_0057 is generated in the StepDefinition before this PageMethod runs.
         // ClientSearchResults_88c18bPage.VerifyNoResultsReturnedAndClickOK_0058_bb930cAsync
         await _ui.VerifyAsync(_locators.SearchResultsDuckCreekPolicyFirstCheckbox, _data.Resolve("Absent"), "");
         await _ui.ClickAsync(_locators.OK);
@@ -1750,7 +1750,7 @@ public sealed class ClientSearchPage
         // ClientNamedInsuredCommon_9ad77bPage.EnterBusinessInfo_0041_a8e5f5Async
         await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_8}}"));
         await _ui.PressAsync(_locators.EntityType, "Tab");
-        _data.Set("PrimaryPhone_0041", _data.Random("PrimaryPhone_0041", "[0-9]{10}"));
+        // Random data PrimaryPhone_0041 is generated in the StepDefinition before this PageMethod runs.
         await _ui.PressAsync(_locators.Address17A1FB, "PRE:TAB");
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         await _ui.FillAsync(_locators.ZipCode26D22, _data.Resolve("{{data:zipcode_11}}"));
@@ -1764,17 +1764,17 @@ public sealed class ClientSearchPage
         await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_14}}"));
         await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         // ClientNamedInsuredBusiness_f0e34fPage.EnterFEIN_0044_a8e5f5Async
-        _data.Set("FEIN_0044", _data.Random("FEIN_0044", "486[0-9]{6}"));
+        // Random data FEIN_0044 is generated in the StepDefinition before this PageMethod runs.
         // ClientOtherInsuredInfo_945242Page.EnterDetailsInOtherInformationSection_0045_a8e5f5Async
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_16}}"));
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_16}}"));
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        _data.Set("AuditTelephone_0045", _data.Random("AuditTelephone_0045", "[0-9]{10}"));
+            // Random data AuditTelephone_0045 is generated in the StepDefinition before this PageMethod runs.
         }
         await _ui.FillAsync(_locators.NameOfInspectionContact, _data.Resolve("{{data:name_of_inspection_contact_18}}"));
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
@@ -1782,7 +1782,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0045", _data.Random("InspectionTelephone_0045", "[0-9]{10}"));
+        // Random data InspectionTelephone_0045 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_20}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -1814,8 +1814,8 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.FirstNameC5387, "PRE:TAB");
         await _ui.PressAsync(_locators.FirstNameC5387, "Tab");
         await _ui.PressAsync(_locators.FirstNameC5387, "Tab");
-        _data.Set("MiddleName_0057", _data.Random("MiddleName_0057", "^[a-z]{1}$"));
-        _data.Set("LastName_0057", _data.Random("LastName_0057", "^[a-z]{7}$"));
+        // Random data MiddleName_0057 is generated in the StepDefinition before this PageMethod runs.
+        // Random data LastName_0057 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.DateOfBirth338D7, _data.Resolve("{{data:dateofbirth_52}}"));
         await _ui.PressAsync(_locators.DateOfBirth338D7, "Tab");
         await _ui.FillAsync(_locators.Address1D319B, _data.Resolve("{{data:address1_53}}"));
@@ -1837,7 +1837,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.Gender4973C, "Tab");
         await _ui.WaitAsync(_locators.ClientSearch41F28, "Exists");
         await _ui.ClickAsync(_locators.ClientSearch41F28);
-        _data.Set("FirstName_0057", _data.Random("FirstName_0057", "^[a-z]{4}$"));
+        // Random data FirstName_0057 is generated in the StepDefinition before this PageMethod runs.
         // ClientSearchResults_88c18bPage.VerifyNoResultsReturnedAndClickOK_0058_a8e5f5Async
         await _ui.VerifyAsync(_locators.SearchResultsDuckCreekPolicyFirstCheckbox, _data.Resolve("Absent"), "");
         await _ui.ClickAsync(_locators.OK);
@@ -1908,17 +1908,17 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.DOB, "Tab");
         if (_data.Condition("State!=\"CA\""))
         {
-        await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_60}}"));
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_60}}"));
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
         }
-        _data.Set("LastName_0067", _data.Random("LastName_0067", "^[a-z]{4}$"));
+        // Random data LastName_0067 is generated in the StepDefinition before this PageMethod runs.
         // ClientNamedInsuredCommon_9ad77bPage.SelectIndividualSoleProprietor_0068_b3ff07Async
         await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_62}}"));
         await _ui.PressAsync(_locators.EntityType, "Enter");
         await _ui.PressAsync(_locators.EntityType, "Tab");
         await _ui.PressAsync(_locators.EntityType, "Tab");
-        _data.Set("PrimaryPhone_0068", _data.Random("PrimaryPhone_0068", "[0-9]{10}"));
+        // Random data PrimaryPhone_0068 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.Address17A1FB, _data.Resolve("{{data:address1_64}}"));
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
@@ -1937,7 +1937,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "PRE:TAB");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Tab");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Enter");
-        _data.Set("InsuredSSN", _data.Random("InsuredSSN", "125[0-9]{6}"));
+        // Random data InsuredSSN is generated in the StepDefinition before this PageMethod runs.
         _data.Set("SSN", await _ui.CaptureAsync(_locators.EnterSSN6B3FB, "InnerText"));
         await _ui.ClickAsync(_locators.EnterSSN6B3FB);
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Doubleclick");
@@ -1954,21 +1954,21 @@ public sealed class ClientSearchPage
         // ClientOtherInsuredInfo_945242Page.EnterOtherInsuredInfo_0075_b3ff07Async
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_82}}"));
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_82}}"));
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        _data.Set("AuditTelephone_0075", _data.Random("AuditTelephone_0075", "[0-9]{10}"));
+            // Random data AuditTelephone_0075 is generated in the StepDefinition before this PageMethod runs.
         }
         await _ui.FillAsync(_locators.NameOfInspectionContact, _data.Resolve("{{data:name_of_inspection_contact_84}}"));
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0075", _data.Random("InspectionTelephone_0075", "[0-9]{10}"));
+        // Random data InspectionTelephone_0075 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_86}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -2025,17 +2025,17 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.DOB, "Tab");
         if (_data.Condition("State!=\"CA\""))
         {
-        await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_60}}"));
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_60}}"));
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
         }
-        _data.Set("LastName_0068", _data.Random("LastName_0068", "^[a-z]{4}$"));
+        // Random data LastName_0068 is generated in the StepDefinition before this PageMethod runs.
         // ClientNamedInsuredCommon_9ad77bPage.SelectIndividualSoleProprietor_0069_c7d608Async
         await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_62}}"));
         await _ui.PressAsync(_locators.EntityType, "Enter");
         await _ui.PressAsync(_locators.EntityType, "Tab");
         await _ui.PressAsync(_locators.EntityType, "Tab");
-        _data.Set("PrimaryPhone_0069", _data.Random("PrimaryPhone_0069", "[0-9]{10}"));
+        // Random data PrimaryPhone_0069 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.Address17A1FB, _data.Resolve("{{data:address1_64}}"));
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
@@ -2054,7 +2054,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "PRE:TAB");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Tab");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Enter");
-        _data.Set("InsuredSSN", _data.Random("InsuredSSN", "125[0-9]{6}"));
+        // Random data InsuredSSN is generated in the StepDefinition before this PageMethod runs.
         _data.Set("SSN", await _ui.CaptureAsync(_locators.EnterSSN6B3FB, "InnerText"));
         await _ui.ClickAsync(_locators.EnterSSN6B3FB);
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Doubleclick");
@@ -2071,21 +2071,21 @@ public sealed class ClientSearchPage
         // ClientOtherInsuredInfo_945242Page.EnterOtherInsuredInfo_0076_c7d608Async
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_82}}"));
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_82}}"));
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        _data.Set("AuditTelephone_0076", _data.Random("AuditTelephone_0076", "[0-9]{10}"));
+            // Random data AuditTelephone_0076 is generated in the StepDefinition before this PageMethod runs.
         }
         await _ui.FillAsync(_locators.NameOfInspectionContact, _data.Resolve("{{data:name_of_inspection_contact_84}}"));
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0076", _data.Random("InspectionTelephone_0076", "[0-9]{10}"));
+        // Random data InspectionTelephone_0076 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_86}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -2142,17 +2142,17 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.DOB, "Tab");
         if (_data.Condition("State!=\"CA\""))
         {
-        await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_60}}"));
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
-        await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.FillAsync(_locators.Gender1DC4A, _data.Resolve("{{data:gender_60}}"));
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
+            await _ui.PressAsync(_locators.Gender1DC4A, "Tab");
         }
-        _data.Set("LastName_0067", _data.Random("LastName_0067", "^[a-z]{4}$"));
+        // Random data LastName_0067 is generated in the StepDefinition before this PageMethod runs.
         // ClientNamedInsuredCommon_9ad77bPage.SelectIndividualSoleProprietor_0068_2a8772Async
         await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_62}}"));
         await _ui.PressAsync(_locators.EntityType, "Enter");
         await _ui.PressAsync(_locators.EntityType, "Tab");
         await _ui.PressAsync(_locators.EntityType, "Tab");
-        _data.Set("PrimaryPhone_0068", _data.Random("PrimaryPhone_0068", "[0-9]{10}"));
+        // Random data PrimaryPhone_0068 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.Address17A1FB, _data.Resolve("{{data:address1_64}}"));
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         await _ui.PressAsync(_locators.Address17A1FB, "Tab");
@@ -2171,7 +2171,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "PRE:TAB");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Tab");
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Enter");
-        _data.Set("InsuredSSN", _data.Random("InsuredSSN", "125[0-9]{6}"));
+        // Random data InsuredSSN is generated in the StepDefinition before this PageMethod runs.
         _data.Set("SSN", await _ui.CaptureAsync(_locators.EnterSSN6B3FB, "InnerText"));
         await _ui.ClickAsync(_locators.EnterSSN6B3FB);
         await _ui.PressAsync(_locators.EnterSSN6B3FB, "Doubleclick");
@@ -2188,21 +2188,21 @@ public sealed class ClientSearchPage
         // ClientOtherInsuredInfo_945242Page.EnterOtherInsuredInfo_0075_2a8772Async
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_82}}"));
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_82}}"));
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        _data.Set("AuditTelephone_0075", _data.Random("AuditTelephone_0075", "[0-9]{10}"));
+            // Random data AuditTelephone_0075 is generated in the StepDefinition before this PageMethod runs.
         }
         await _ui.FillAsync(_locators.NameOfInspectionContact, _data.Resolve("{{data:name_of_inspection_contact_84}}"));
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0075", _data.Random("InspectionTelephone_0075", "[0-9]{10}"));
+        // Random data InspectionTelephone_0075 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_86}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -2236,47 +2236,47 @@ public sealed class ClientSearchPage
         // ClientNamedInsuredCommon_9ad77bPage.SelectBusinessInsured_0039_f2d6bdAsync
         if (_data.Condition("'Insured Type' != NULL"))
         {
-        await _ui.FillAsync(_locators.InsuredType, _data.Resolve("{{data:insured_type_4}}"));
-        await _ui.PressAsync(_locators.InsuredType, "Tab");
-        await _ui.PressAsync(_locators.InsuredType, "CLICK");
-        await _ui.PressAsync(_locators.InsuredType, "Tab");
-        await _ui.PressAsync(_locators.InsuredType, "Tab");
+            await _ui.FillAsync(_locators.InsuredType, _data.Resolve("{{data:insured_type_4}}"));
+            await _ui.PressAsync(_locators.InsuredType, "Tab");
+            await _ui.PressAsync(_locators.InsuredType, "CLICK");
+            await _ui.PressAsync(_locators.InsuredType, "Tab");
+            await _ui.PressAsync(_locators.InsuredType, "Tab");
         }
         if (_data.Condition("'Insured Type' != NULL"))
         {
-        await _ui.ClickAsync(_locators.EntityType);
+            await _ui.ClickAsync(_locators.EntityType);
         }
         // ClientNamedInsuredBusiness_f0e34fPage.EnterBusinessName_0040_f2d6bdAsync
         await _ui.WaitAsync(_locators.BusinessName, "Visible");
         if (_data.Condition("'Business Name' != NULL"))
         {
-        await _ui.FillAsync(_locators.BusinessName, _data.Resolve("{{data:business_name_7}}"));
-        await _ui.PressAsync(_locators.BusinessName, "Tab");
-        await _ui.PressAsync(_locators.BusinessName, "CLICK");
-        await _ui.PressAsync(_locators.BusinessName, "Tab");
+            await _ui.FillAsync(_locators.BusinessName, _data.Resolve("{{data:business_name_7}}"));
+            await _ui.PressAsync(_locators.BusinessName, "Tab");
+            await _ui.PressAsync(_locators.BusinessName, "CLICK");
+            await _ui.PressAsync(_locators.BusinessName, "Tab");
         }
         // ClientNamedInsuredCommon_9ad77bPage.EnterBusinessInfo_0041_f2d6bdAsync
         if (_data.Condition("'Legal Nature' != NULL"))
         {
-        await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_8}}"));
-        await _ui.PressAsync(_locators.EntityType, "Tab");
-        await _ui.PressAsync(_locators.EntityType, "CLICK");
-        await _ui.PressAsync(_locators.EntityType, "Tab");
+            await _ui.FillAsync(_locators.EntityType, _data.Resolve("{{data:entity_type_8}}"));
+            await _ui.PressAsync(_locators.EntityType, "Tab");
+            await _ui.PressAsync(_locators.EntityType, "CLICK");
+            await _ui.PressAsync(_locators.EntityType, "Tab");
         }
-        _data.Set("PrimaryPhone_0041", _data.Random("PrimaryPhone_0041", "[0-9]{10}"));
+        // Random data PrimaryPhone_0041 is generated in the StepDefinition before this PageMethod runs.
         if (_data.Condition("'Address 1' != NULL"))
         {
-        await _ui.FillAsync(_locators.Address17A1FB, _data.Resolve("{{data:address1_10}}"));
-        await _ui.PressAsync(_locators.Address17A1FB, "Tab");
-        await _ui.PressAsync(_locators.Address17A1FB, "CLICK");
-        await _ui.PressAsync(_locators.Address17A1FB, "Tab");
+            await _ui.FillAsync(_locators.Address17A1FB, _data.Resolve("{{data:address1_10}}"));
+            await _ui.PressAsync(_locators.Address17A1FB, "Tab");
+            await _ui.PressAsync(_locators.Address17A1FB, "CLICK");
+            await _ui.PressAsync(_locators.Address17A1FB, "Tab");
         }
         if (_data.Condition("ZipCode != NULL"))
         {
-        await _ui.FillAsync(_locators.ZipCode26D22, _data.Resolve("{{data:zipcode_11}}"));
-        await _ui.PressAsync(_locators.ZipCode26D22, "Tab");
-        await _ui.PressAsync(_locators.ZipCode26D22, "CLICK");
-        await _ui.PressAsync(_locators.ZipCode26D22, "Tab");
+            await _ui.FillAsync(_locators.ZipCode26D22, _data.Resolve("{{data:zipcode_11}}"));
+            await _ui.PressAsync(_locators.ZipCode26D22, "Tab");
+            await _ui.PressAsync(_locators.ZipCode26D22, "CLICK");
+            await _ui.PressAsync(_locators.ZipCode26D22, "Tab");
         }
         // ClientNamedInsuredCommon_9ad77bPage.EnterBusinessInfo_0042_f2d6bdAsync
         await _ui.VerifyAsync(_locators.YearsInBusiness, _data.Resolve("Exists"), "");
@@ -2284,24 +2284,24 @@ public sealed class ClientSearchPage
         await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_13}}"));
         await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         // ClientNamedInsuredBusiness_f0e34fPage.EnterFEIN_0044_f2d6bdAsync
-        _data.Set("FEIN_0044", _data.Random("FEIN_0044", "[0-9]{9}"));
+        // Random data FEIN_0044 is generated in the StepDefinition before this PageMethod runs.
         // ClientOtherInsuredInfo_945242Page.EnterDetailsInOtherInformationSection_0045_f2d6bdAsync
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_15}}"));
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
-        await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.FillAsync(_locators.NameOfAuditContact, _data.Resolve("{{data:name_of_audit_contact_15}}"));
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "CLICK");
+            await _ui.PressAsync(_locators.NameOfAuditContact, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"UMB\""))
         {
-        _data.Set("AuditTelephone_0045", _data.Random("AuditTelephone_0045", "[0-9]{10}"));
+            // Random data AuditTelephone_0045 is generated in the StepDefinition before this PageMethod runs.
         }
         await _ui.FillAsync(_locators.NameOfInspectionContact, _data.Resolve("{{data:name_of_inspection_contact_17}}"));
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "CLICK");
         await _ui.PressAsync(_locators.NameOfInspectionContact, "Tab");
-        _data.Set("InspectionTelephone_0045", _data.Random("InspectionTelephone_0045", "[0-9]{10}"));
+        // Random data InspectionTelephone_0045 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.InsuredEMailAddress, _data.Resolve("{{data:insured_e_mail_address_19}}"));
         await _ui.PressAsync(_locators.InsuredEMailAddress, "Tab");
         await _ui.PressAsync(_locators.InsuredEMailAddress, "CLICK");
@@ -2328,8 +2328,8 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.FirstNameC5387, "PRE:TAB");
         await _ui.PressAsync(_locators.FirstNameC5387, "Tab");
         await _ui.PressAsync(_locators.FirstNameC5387, "Tab");
-        _data.Set("MiddleName_0056", _data.Random("MiddleName_0056", "^[a-z]{1}$"));
-        _data.Set("LastName_0056", _data.Random("LastName_0056", "^[a-z]{7}$"));
+        // Random data MiddleName_0056 is generated in the StepDefinition before this PageMethod runs.
+        // Random data LastName_0056 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.DateOfBirth338D7, _data.Resolve("{{data:dateofbirth_47}}"));
         await _ui.PressAsync(_locators.DateOfBirth338D7, "Tab");
         await _ui.FillAsync(_locators.Address1D319B, _data.Resolve("{{data:address1_48}}"));
@@ -2351,7 +2351,7 @@ public sealed class ClientSearchPage
         await _ui.PressAsync(_locators.Gender4973C, "Tab");
         await _ui.WaitAsync(_locators.ClientSearch41F28, "Exists");
         await _ui.ClickAsync(_locators.ClientSearch41F28);
-        _data.Set("FirstName_0056", _data.Random("FirstName_0056", "^[a-z]{4}$"));
+        // Random data FirstName_0056 is generated in the StepDefinition before this PageMethod runs.
         // ClientSearchResults_88c18bPage.VerifyNoResultsReturnedAndClickOK_0057_f2d6bdAsync
         await _ui.VerifyAsync(_locators.SearchResultsDuckCreekPolicyFirstCheckbox, _data.Resolve("Absent"), "");
         await _ui.ClickAsync(_locators.OK);

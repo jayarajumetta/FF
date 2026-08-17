@@ -1,0 +1,13 @@
+{
+  "version": "44.2-simple-executable",
+  "errors": [],
+  "warnings": [],
+  "counts": {
+    "features": 32,
+    "examples": 1074,
+    "stepDefRandomCalls": 137,
+    "csharpFiles": 150,
+    "pageFiles": 54,
+    "locatorFiles": 51
+  }
+}

@@ -7,9 +7,9 @@ public sealed class LossHistoryPage
 {
     private readonly LossHistoryLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public LossHistoryPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public LossHistoryPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new LossHistoryLocators(browser.Page);
         _data = data;
@@ -151,7 +151,7 @@ public sealed class LossHistoryPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0142_d18a3eAsync
         if (!await _ui.ExistsAsync(_locators.ScreenHeading))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
         }
     }
 

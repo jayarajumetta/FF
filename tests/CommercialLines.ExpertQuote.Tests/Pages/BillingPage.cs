@@ -7,9 +7,9 @@ public sealed class BillingPage
 {
     private readonly BillingLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public BillingPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public BillingPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new BillingLocators(browser.Page);
         _data = data;
@@ -76,48 +76,48 @@ public sealed class BillingPage
         // CLEQCommonBillingInitialPayment_1b850ePage.EQCommonBillingSelectInitialPaymentMethod_0299_d18a3eAsync
         if (_data.Condition("'Payment Type' ==\"Check\""))
         {
-        await _ui.PressAsync(_locators.CheckButton, "POST:TAB");
-        await _ui.PressAsync(_locators.CheckButton, "Tab");
+            await _ui.PressAsync(_locators.CheckButton, "POST:TAB");
+            await _ui.PressAsync(_locators.CheckButton, "Tab");
         }
         if (_data.Condition("'Payment Type' ==\"Credit Card\""))
         {
-        await _ui.PressAsync(_locators.CreditCardButton, "POST:TAB");
-        await _ui.PressAsync(_locators.CreditCardButton, "Tab");
+            await _ui.PressAsync(_locators.CreditCardButton, "POST:TAB");
+            await _ui.PressAsync(_locators.CreditCardButton, "Tab");
         }
         // CLEQCommonBillingInitialPayment_1b850ePage.EQCommonLoadingIndicatorWait_0300_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
         // CLEQCommonBillingInitialPayment_1b850ePage.EQCommonBillingFillInCheckNumber_0301_d18a3eAsync
         if (_data.Condition("'Payment Type' == \"Check\""))
         {
-        await _ui.VerifyAsync(_locators.CheckNumber, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.CheckNumber, _data.Resolve("Absent"), "");
         }
         // CLEQCommonBillingInitialPayment_1b850ePage.EQCommonBillingSelectInitialPaymentMethod_0302_d18a3eAsync
         if (_data.Condition("'Payment Type' == \"Check\""))
         {
-        await _ui.PressAsync(_locators.CheckButton, "POST:TAB");
-        await _ui.PressAsync(_locators.CheckButton, "Tab");
+            await _ui.PressAsync(_locators.CheckButton, "POST:TAB");
+            await _ui.PressAsync(_locators.CheckButton, "Tab");
         }
         if (_data.Condition("'Payment Type' == \"Check\""))
         {
-        await _ui.PressAsync(_locators.CreditCardButton, "POST:TAB");
-        await _ui.PressAsync(_locators.CreditCardButton, "Tab");
+            await _ui.PressAsync(_locators.CreditCardButton, "POST:TAB");
+            await _ui.PressAsync(_locators.CreditCardButton, "Tab");
         }
         // CLEQCommonBillingInitialPayment_1b850ePage.EQCommonLoadingIndicatorWait_0303_d18a3eAsync
         if (_data.Condition("'Payment Type' == \"Check\""))
         {
-        await _ui.WaitAsync(_locators.Loading, "Absent");
+            await _ui.WaitAsync(_locators.Loading, "Absent");
         }
         // CLEQCommonBillingInitialPayment_1b850ePage.EQCommonBillingFillInCheckNumber_0304_d18a3eAsync
         if (_data.Condition("'Payment Type' == \"Check\""))
         {
-        await _ui.WaitAsync(_locators.CheckNumber, "Exists");
+            await _ui.WaitAsync(_locators.CheckNumber, "Exists");
         }
         // CLEQCommonBillingInitialPayment_1b850ePage.EQCommonBillingFillInCheckNumber_0305_d18a3eAsync
         if (_data.Condition("'Payment Type' == \"Check\""))
         {
-        await _ui.PressAsync(_locators.CheckNumber, "POST:ENTER");
-        await _ui.PressAsync(_locators.CheckNumber, "Enter");
-        await _ui.PressAsync(_locators.CheckNumber, "Tab");
+            await _ui.PressAsync(_locators.CheckNumber, "POST:ENTER");
+            await _ui.PressAsync(_locators.CheckNumber, "Enter");
+            await _ui.PressAsync(_locators.CheckNumber, "Tab");
         }
         // CLEQCommonBillingInitialPayment_1b850ePage.EQCommonLoadingIndicatorWait_0306_d18a3eAsync
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -128,7 +128,7 @@ public sealed class BillingPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0309_d18a3eAsync
         if (!await _ui.ExistsAsync(_locators.ScreenHeading))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
         }
     }
 

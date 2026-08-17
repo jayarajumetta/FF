@@ -15,7 +15,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I start New Quote$")]
     public async Task StartNewQuoteAsync()
     {
-        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.StartNewQuoteAsync2();
     }
 
@@ -24,7 +24,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I select or create the policy client$")]
     public async Task SelectOrCreateThePolicyClientAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.SelectOrCreateThePolicyClientAsync2();
     }
 
@@ -33,7 +33,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I enter account details$")]
     public async Task EnterAccountDetailsAsync()
     {
-        var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.EnterAccountDetailsAsync2();
     }
 
@@ -42,7 +42,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I start the policy proposal$")]
     public async Task StartThePolicyProposalAsync()
     {
-        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.StartThePolicyProposalAsync2();
     }
 
@@ -51,7 +51,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete prequalification$")]
     public async Task CompletePrequalificationAsync()
     {
-        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompletePrequalificationAsync();
     }
 
@@ -60,7 +60,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I capture the proposal number$")]
     public async Task CaptureTheProposalNumberAsync()
     {
-        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CaptureTheProposalNumberAsync2();
     }
 
@@ -69,7 +69,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete driver information$")]
     public async Task CompleteDriverInformationAsync()
     {
-        var page = new DriversPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new DriversPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteDriverInformationAsync();
     }
 
@@ -78,7 +78,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I open the configured policy application$")]
     public async Task OpenTheConfiguredPolicyApplicationAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.OpenTheConfiguredPolicyApplicationAsync();
     }
 
@@ -87,7 +87,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I approve Level 9B$")]
     public async Task ApproveLevel9BAsync()
     {
-        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.ApproveLevel9BAsync();
     }
 
@@ -96,7 +96,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete driver information for txt quote policy search$")]
     public async Task CompleteDriverInformationForTxtQuotePolicySearchAsync()
     {
-        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteDriverInformationForTxtQuotePolicySearchAsync();
     }
 
@@ -105,7 +105,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete driver information for existing client 1$")]
     public async Task CompleteDriverInformationForExistingClient1Async()
     {
-        var page = new DriversPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new DriversPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteDriverInformationForExistingClient1Async();
     }
 
@@ -114,7 +114,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I review the driver information summary$")]
     public async Task ReviewTheDriverInformationSummaryAsync()
     {
-        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.ReviewTheDriverInformationSummaryAsync();
     }
 
@@ -123,7 +123,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I review household\\-driver prefill results$")]
     public async Task ReviewHouseholdDriverPrefillResultsAsync()
     {
-        var page = new SocialSecurityPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new SocialSecurityPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.ReviewHouseholdDriverPrefillResultsAsync();
     }
 
@@ -132,7 +132,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete vehicle Summary 1st Cycle Summary$")]
     public async Task CompleteVehicleSummary1stCycleSummaryAsync()
     {
-        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteVehicleSummary1stCycleSummaryAsync();
     }
 
@@ -141,7 +141,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete vehicle Summary Add Cycle/Next$")]
     public async Task CompleteVehicleSummaryAddCycleNextAsync()
     {
-        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteVehicleSummaryAddCycleNextAsync();
     }
 
@@ -150,7 +150,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete vehicle Summary Vintage Cycle$")]
     public async Task CompleteVehicleSummaryVintageCycleAsync()
     {
-        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteVehicleSummaryVintageCycleAsync();
     }
 
@@ -159,7 +159,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete vehicle Summary Add Cycle/Next for add additional vehicle$")]
     public async Task CompleteVehicleSummaryAddCycleNextForAddAdditionalVehicleAsync()
     {
-        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteVehicleSummaryAddCycleNextForAddAdditionalVehicleAsync();
     }
 
@@ -168,7 +168,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete driver Assignment$")]
     public async Task CompleteDriverAssignmentAsync()
     {
-        var page = new DriversPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new DriversPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteDriverAssignmentAsync();
     }
 
@@ -177,7 +177,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete multiple Driver Assignment$")]
     public async Task CompleteMultipleDriverAssignmentAsync()
     {
-        var page = new DriversPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new DriversPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteMultipleDriverAssignmentAsync();
     }
 
@@ -186,7 +186,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete claims/Violations$")]
     public async Task CompleteClaimsViolationsAsync()
     {
-        var page = new LossHistoryPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new LossHistoryPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteClaimsViolationsAsync();
     }
 
@@ -195,7 +195,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete editClaimsViolations$")]
     public async Task CompleteEditClaimsViolationsAsync()
     {
-        var page = new LossHistoryPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new LossHistoryPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteEditClaimsViolationsAsync();
     }
 
@@ -204,7 +204,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete discount 1$")]
     public async Task CompleteDiscount1Async()
     {
-        var page = new DiscountsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new DiscountsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteDiscount1Async();
     }
 
@@ -213,7 +213,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete coverages$")]
     public async Task CompleteCoveragesAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteCoveragesAsync();
     }
 
@@ -222,7 +222,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete auto AddlCov policy coveragess$")]
     public async Task CompleteAutoAddlCovPolicyCoveragessAsync()
     {
-        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteAutoAddlCovPolicyCoveragessAsync();
     }
 
@@ -231,7 +231,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete auto AddlCov PIP$")]
     public async Task CompleteAutoAddlCovPIPAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteAutoAddlCovPIPAsync();
     }
 
@@ -240,7 +240,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete auto AddlCov Vehicle Coverages$")]
     public async Task CompleteAutoAddlCovVehicleCoveragesAsync()
     {
-        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteAutoAddlCovVehicleCoveragesAsync();
     }
 
@@ -249,7 +249,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete auto AddlCov Next$")]
     public async Task CompleteAutoAddlCovNextAsync()
     {
-        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteAutoAddlCovNextAsync();
     }
 
@@ -258,7 +258,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete pricing and verify the premium$")]
     public async Task CompletePricingAndVerifyThePremiumAsync()
     {
-        var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompletePricingAndVerifyThePremiumAsync();
     }
 
@@ -267,7 +267,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete underwriting Page Cycle$")]
     public async Task CompleteUnderwritingPageCycleAsync()
     {
-        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteUnderwritingPageCycleAsync();
     }
 
@@ -276,7 +276,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete additional Interest Page$")]
     public async Task CompleteAdditionalInterestPageAsync()
     {
-        var page = new AdditionalInterestsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new AdditionalInterestsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteAdditionalInterestPageAsync();
     }
 
@@ -285,7 +285,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I configure direct\\-pay billing$")]
     public async Task ConfigureDirectPayBillingAsync()
     {
-        var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.ConfigureDirectPayBillingAsync();
     }
 
@@ -294,7 +294,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete submission underwriting comments and review$")]
     public async Task CompleteSubmissionUnderwritingCommentsAndReviewAsync()
     {
-        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteSubmissionUnderwritingCommentsAndReviewAsync();
     }
 
@@ -303,7 +303,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I open the configured policy application for openurl$")]
     public async Task OpenTheConfiguredPolicyApplicationForOpenurlAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.OpenTheConfiguredPolicyApplicationForOpenurlAsync();
     }
 
@@ -312,7 +312,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete the Express underwriting review$")]
     public async Task CompleteTheExpressUnderwritingReviewAsync()
     {
-        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteTheExpressUnderwritingReviewAsync();
     }
 
@@ -321,7 +321,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I recall the quote in ExpertQuote$")]
     public async Task RecallTheQuoteInExpertQuoteAsync()
     {
-        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.RecallTheQuoteInExpertQuoteAsync();
     }
 
@@ -330,7 +330,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete the Level 9 underwriting bypass$")]
     public async Task CompleteTheLevel9UnderwritingBypassAsync()
     {
-        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteTheLevel9UnderwritingBypassAsync();
     }
 
@@ -339,7 +339,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I open the configured policy application for approve in express ui$")]
     public async Task OpenTheConfiguredPolicyApplicationForApproveInExpressUiAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.OpenTheConfiguredPolicyApplicationForApproveInExpressUiAsync();
     }
 
@@ -348,7 +348,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I approve the underwriting referral in Express$")]
     public async Task ApproveTheUnderwritingReferralInExpressAsync()
     {
-        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.ApproveTheUnderwritingReferralInExpressAsync();
     }
 
@@ -357,7 +357,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete the Level 9 underwriting bypass for txt quote policy search$")]
     public async Task CompleteTheLevel9UnderwritingBypassForTxtQuotePolicySearchAsync()
     {
-        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteTheLevel9UnderwritingBypassForTxtQuotePolicySearchAsync();
     }
 
@@ -366,7 +366,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I complete the submission checklist$")]
     public async Task CompleteTheSubmissionChecklistAsync()
     {
-        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteTheSubmissionChecklistAsync();
     }
 
@@ -375,7 +375,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I transmit the policy$")]
     public async Task TransmitThePolicyAsync()
     {
-        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.TransmitThePolicyAsync();
     }
 
@@ -384,7 +384,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
     [Then(@"^I verify policy transmission confirmation$")]
     public async Task VerifyPolicyTransmissionConfirmationAsync()
     {
-        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.VerifyPolicyTransmissionConfirmationAsync();
     }
 

@@ -15,7 +15,12 @@ public sealed class UMBExpandedSteps
     [Then(@"^I enter business client information$")]
     public async Task EnterBusinessClientInformationAsync()
     {
-        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("PrimaryPhone_0041", "[0-9]{10}");
+        data.GenerateRandom("FEIN_0044", "486[0-9]{6}");
+        data.GenerateRandom("InspectionTelephone_0045", "[0-9]{10}");
+
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.EnterBusinessClientInformationAsync();
     }
 
@@ -24,7 +29,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add a new Associated Client \\- Business Owner Type \\- Click Add Client$")]
     public async Task AddANewAssociatedClientBusinessOwnerTypeClickAddClientAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddANewAssociatedClientBusinessOwnerTypeClickAddClientAsync();
     }
 
@@ -33,7 +38,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete aJAX Error Check$")]
     public async Task CompleteAJAXErrorCheckAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteAJAXErrorCheckAsync();
     }
 
@@ -42,7 +47,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required billing information$")]
     public async Task CompleteRequiredBillingInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredBillingInformationAsync();
     }
 
@@ -51,7 +56,12 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete the Associated Client Info$")]
     public async Task CompleteTheAssociatedClientInfoAsync()
     {
-        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("MiddleName_0057", "^[a-z]{1}$");
+        data.GenerateRandom("LastName_0057", "^[a-z]{7}$");
+        data.GenerateRandom("FirstName_0057", "^[a-z]{4}$");
+
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteTheAssociatedClientInfoAsync();
     }
 
@@ -60,7 +70,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I navigate to Underwriting Info Screen$")]
     public async Task NavigateToUnderwritingInfoScreenAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToUnderwritingInfoScreenAsync();
     }
 
@@ -69,7 +79,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required policy information$")]
     public async Task CompleteRequiredPolicyInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredPolicyInformationAsync();
     }
 
@@ -78,7 +88,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required policy covg information$")]
     public async Task CompleteRequiredPolicyCovgInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredPolicyCovgInformationAsync();
     }
 
@@ -87,7 +97,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Commercial Auto Underlying LOB$")]
     public async Task AddCommercialAutoUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddCommercialAutoUnderlyingLOBAsync();
     }
 
@@ -96,7 +106,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add General Liability Underlying LOB$")]
     public async Task AddGeneralLiabilityUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddGeneralLiabilityUnderlyingLOBAsync();
     }
 
@@ -105,7 +115,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Businessowners Underlying LOB$")]
     public async Task AddBusinessownersUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddBusinessownersUnderlyingLOBAsync();
     }
 
@@ -114,7 +124,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add SFP \\- 10 Liability Farm Underlying LOB$")]
     public async Task AddSFP10LiabilityFarmUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddSFP10LiabilityFarmUnderlyingLOBAsync();
     }
 
@@ -123,7 +133,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Commercial Package Policy Liability Underlying LOB$")]
     public async Task AddCommercialPackagePolicyLiabilityUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddCommercialPackagePolicyLiabilityUnderlyingLOBAsync();
     }
 
@@ -132,7 +142,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Employers Liability Underlying LOB$")]
     public async Task AddEmployersLiabilityUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddEmployersLiabilityUnderlyingLOBAsync();
     }
 
@@ -141,7 +151,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Homeowner's Liability Underlying LOB$")]
     public async Task AddHomeownerSLiabilityUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddHomeownerSLiabilityUnderlyingLOBAsync();
     }
 
@@ -150,7 +160,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Motorcycle Liability Underlying LOB$")]
     public async Task AddMotorcycleLiabilityUnderlyingLOBAsync()
     {
-        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddMotorcycleLiabilityUnderlyingLOBAsync();
     }
 
@@ -159,7 +169,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Personal Auto Liability Underlying LOB$")]
     public async Task AddPersonalAutoLiabilityUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddPersonalAutoLiabilityUnderlyingLOBAsync();
     }
 
@@ -168,7 +178,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Recreational Vehicle Liability Underlying LOB$")]
     public async Task AddRecreationalVehicleLiabilityUnderlyingLOBAsync()
     {
-        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddRecreationalVehicleLiabilityUnderlyingLOBAsync();
     }
 
@@ -177,7 +187,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Rental Owner's Liability Underlying LOB$")]
     public async Task AddRentalOwnerSLiabilityUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddRentalOwnerSLiabilityUnderlyingLOBAsync();
     }
 
@@ -186,7 +196,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Watercraft Liability Underlying LOB$")]
     public async Task AddWatercraftLiabilityUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddWatercraftLiabilityUnderlyingLOBAsync();
     }
 
@@ -195,7 +205,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required location information$")]
     public async Task CompleteRequiredLocationInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredLocationInformationAsync();
     }
 
@@ -204,7 +214,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required commercial auto information$")]
     public async Task CompleteRequiredCommercialAutoInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredCommercialAutoInformationAsync();
     }
 
@@ -213,7 +223,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required general liability information$")]
     public async Task CompleteRequiredGeneralLiabilityInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredGeneralLiabilityInformationAsync();
     }
 
@@ -222,7 +232,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required businessowners information$")]
     public async Task CompleteRequiredBusinessownersInformationAsync()
     {
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredBusinessownersInformationAsync();
     }
 
@@ -231,7 +241,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required sfp 10 information$")]
     public async Task CompleteRequiredSfp10InformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredSfp10InformationAsync();
     }
 
@@ -240,7 +250,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required employers liability information$")]
     public async Task CompleteRequiredEmployersLiabilityInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredEmployersLiabilityInformationAsync();
     }
 
@@ -249,7 +259,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required homeowners liability information$")]
     public async Task CompleteRequiredHomeownersLiabilityInformationAsync()
     {
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredHomeownersLiabilityInformationAsync();
     }
 
@@ -258,7 +268,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required motorcycle liability information$")]
     public async Task CompleteRequiredMotorcycleLiabilityInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredMotorcycleLiabilityInformationAsync();
     }
 
@@ -267,7 +277,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required personal auto liability information$")]
     public async Task CompleteRequiredPersonalAutoLiabilityInformationAsync()
     {
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredPersonalAutoLiabilityInformationAsync();
     }
 
@@ -276,7 +286,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required rental owners liability information$")]
     public async Task CompleteRequiredRentalOwnersLiabilityInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredRentalOwnersLiabilityInformationAsync();
     }
 
@@ -285,7 +295,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required cpp information$")]
     public async Task CompleteRequiredCppInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredCppInformationAsync();
     }
 
@@ -294,7 +304,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required watercraft liability information$")]
     public async Task CompleteRequiredWatercraftLiabilityInformationAsync()
     {
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredWatercraftLiabilityInformationAsync();
     }
 
@@ -303,7 +313,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required recreational vehicle information$")]
     public async Task CompleteRequiredRecreationalVehicleInformationAsync()
     {
-        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredRecreationalVehicleInformationAsync();
     }
 
@@ -312,7 +322,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required endorsement information$")]
     public async Task CompleteRequiredEndorsementInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredEndorsementInformationAsync();
     }
 
@@ -321,7 +331,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete fill in CU2103 if it exists$")]
     public async Task CompleteFillInCU2103IfItExistsAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteFillInCU2103IfItExistsAsync();
     }
 
@@ -330,7 +340,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required underwriting question information$")]
     public async Task CompleteRequiredUnderwritingQuestionInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredUnderwritingQuestionInformationAsync();
     }
 
@@ -339,7 +349,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required billing information for billing$")]
     public async Task CompleteRequiredBillingInformationForBillingAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredBillingInformationForBillingAsync();
     }
 
@@ -348,7 +358,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add notepad comment$")]
     public async Task AddNotepadCommentAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddNotepadCommentAsync();
     }
 
@@ -357,7 +367,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required submission information$")]
     public async Task CompleteRequiredSubmissionInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredSubmissionInformationAsync();
     }
 
@@ -366,7 +376,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I run Stoplight$")]
     public async Task RunStoplightAsync()
     {
-        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.RunStoplightAsync();
     }
 
@@ -375,7 +385,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete forms verification UMB$")]
     public async Task CompleteFormsVerificationUMBAsync()
     {
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteFormsVerificationUMBAsync();
     }
 
@@ -384,7 +394,7 @@ public sealed class UMBExpandedSteps
     [Then(@"^I sign out of the application$")]
     public async Task SignOutOfTheApplicationAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.SignOutOfTheApplicationAsync();
     }
 

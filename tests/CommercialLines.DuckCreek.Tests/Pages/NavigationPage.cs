@@ -7,9 +7,9 @@ public sealed class NavigationPage
 {
     private readonly NavigationLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public NavigationPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public NavigationPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new NavigationLocators(browser.Page);
         _data = data;
@@ -100,30 +100,30 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.EffectiveDate95094, "Tab");
         if (_data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
         {
-        await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_106}}"));
-        await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
+            await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_106}}"));
+            await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0075_f7819aAsync
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0076_f7819aAsync
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_108}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_108}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.ClickAsync(_locators.PrimaryRatingState);
+            await _ui.ClickAsync(_locators.PrimaryRatingState);
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_112}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -133,44 +133,44 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0078_f7819aAsync
         if (_data.Condition("'Product (LOB)' == \"UMB\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_114}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_114}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' == \"BOP\" || 'Product (LOB)' == \"UMB\" || 'Product (LOB)' == \"BAP\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_115}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_115}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsVirginia_0079_f7819aAsync
         _data.Set("StateIsVirginia", _data.Resolve("Alabama==\"Virginia\"; Expression= 'Alabama'=='Virginia'"));
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0080_f7819aAsync
         if (_data.Condition("'Product (LOB)' == \"UMB\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_117}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_117}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' == \"UMB\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_118}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_118}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0081_f7819aAsync
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.TabOutOfPrimaryRatingStateFieldForSyncronization_0082_f7819aAsync
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
+            await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_122}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "CLICK");
@@ -200,35 +200,35 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.PolicyCovgFF145, "Visible");
         if (_data.Condition("'Umb Limit' != \"$1,000,000\""))
         {
-        await _ui.FillAsync(_locators.UmbrellaLimit, _data.Resolve("{{data:umbrella_limit_134}}"));
-        await _ui.PressAsync(_locators.UmbrellaLimit, "CLICK");
-        await _ui.PressAsync(_locators.UmbrellaLimit, "Enter");
-        await _ui.PressAsync(_locators.UmbrellaLimit, "Tab");
+            await _ui.FillAsync(_locators.UmbrellaLimit, _data.Resolve("{{data:umbrella_limit_134}}"));
+            await _ui.PressAsync(_locators.UmbrellaLimit, "CLICK");
+            await _ui.PressAsync(_locators.UmbrellaLimit, "Enter");
+            await _ui.PressAsync(_locators.UmbrellaLimit, "Tab");
         }
         if (_data.Condition("'Umb Limit' == \"Over $15M\""))
         {
-        await _ui.FillAsync(_locators.RequestedUmbrellaLimit, _data.Resolve("{{data:requested_umbrella_limit_135}}"));
-        await _ui.PressAsync(_locators.RequestedUmbrellaLimit, "Enter");
-        await _ui.PressAsync(_locators.RequestedUmbrellaLimit, "Tab");
+            await _ui.FillAsync(_locators.RequestedUmbrellaLimit, _data.Resolve("{{data:requested_umbrella_limit_135}}"));
+            await _ui.PressAsync(_locators.RequestedUmbrellaLimit, "Enter");
+            await _ui.PressAsync(_locators.RequestedUmbrellaLimit, "Tab");
         }
         if (_data.Condition("'Excluded Liability' != \"CU2186\""))
         {
-        await _ui.FillAsync(_locators.ExcludedLiabilityConfidentialInformation, _data.Resolve("{{data:excluded_liability_confidential_information_136}}"));
-        await _ui.PressAsync(_locators.ExcludedLiabilityConfidentialInformation, "CLICK");
-        await _ui.PressAsync(_locators.ExcludedLiabilityConfidentialInformation, "Enter");
-        await _ui.PressAsync(_locators.ExcludedLiabilityConfidentialInformation, "Tab");
-        await _ui.PressAsync(_locators.ExcludedLiabilityConfidentialInformation, "Tab");
-        await _ui.PressAsync(_locators.ExcludedLiabilityConfidentialInformation, "Tab");
+            await _ui.FillAsync(_locators.ExcludedLiabilityConfidentialInformation, _data.Resolve("{{data:excluded_liability_confidential_information_136}}"));
+            await _ui.PressAsync(_locators.ExcludedLiabilityConfidentialInformation, "CLICK");
+            await _ui.PressAsync(_locators.ExcludedLiabilityConfidentialInformation, "Enter");
+            await _ui.PressAsync(_locators.ExcludedLiabilityConfidentialInformation, "Tab");
+            await _ui.PressAsync(_locators.ExcludedLiabilityConfidentialInformation, "Tab");
+            await _ui.PressAsync(_locators.ExcludedLiabilityConfidentialInformation, "Tab");
         }
         if (_data.Condition("'Excluded Liability' != \"CU2186\""))
         {
-        await _ui.WaitAsync(_locators.ExcludedLiabilityConfidentialInformation, "NotEqual");
+            await _ui.WaitAsync(_locators.ExcludedLiabilityConfidentialInformation, "NotEqual");
         }
         if (_data.Condition("'Products - Aggregate Limit' != \"Umbrella Policy Limit\""))
         {
-        await _ui.FillAsync(_locators.ProductsCompletedOperationsAggregateLimit, _data.Resolve("{{data:products_completed_operations_aggregate_limit_138}}"));
-        await _ui.PressAsync(_locators.ProductsCompletedOperationsAggregateLimit, "Tab");
-        await _ui.PressAsync(_locators.ProductsCompletedOperationsAggregateLimit, "Tab");
+            await _ui.FillAsync(_locators.ProductsCompletedOperationsAggregateLimit, _data.Resolve("{{data:products_completed_operations_aggregate_limit_138}}"));
+            await _ui.PressAsync(_locators.ProductsCompletedOperationsAggregateLimit, "Tab");
+            await _ui.PressAsync(_locators.ProductsCompletedOperationsAggregateLimit, "Tab");
         }
         // IndicatorsAndErrors_ea9144Page.CheckForLoadingIndicator_0089_f7819aAsync
         await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
@@ -260,7 +260,7 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.PolicyNumber461C7, "Tab");
         if (_data.Condition("'BAP Policy Number' != \"BAPPOL#\""))
         {
-        await _ui.ClickAsync(_locators.ImportPolicyDataButton89922);
+            await _ui.ClickAsync(_locators.ImportPolicyDataButton89922);
         }
         await _ui.WaitAsync(_locators.EffectiveDate68A1B, "NotEqual");
         await _ui.WaitAsync(_locators.StoplightMessageTotalSubjectPremium, "Absent");
@@ -285,26 +285,26 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.PolicyNumberFDF5C, "Tab");
         if (_data.Condition("'GL Policy Number' == \"GLPOL#\""))
         {
-        await _ui.FillAsync(_locators.EffectiveDateB3600, _data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
-        await _ui.PressAsync(_locators.EffectiveDateB3600, "Tab");
+            await _ui.FillAsync(_locators.EffectiveDateB3600, _data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+            await _ui.PressAsync(_locators.EffectiveDateB3600, "Tab");
         }
         await _ui.WaitAsync(_locators.EffectiveDateB3600, "NotEqual");
         if (_data.Condition("'GL Policy Number' == \"GLPOL#\""))
         {
-        await _ui.FillAsync(_locators.ExpirationDateB437C, _data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
-        await _ui.PressAsync(_locators.ExpirationDateB437C, "Tab");
+            await _ui.FillAsync(_locators.ExpirationDateB437C, _data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+            await _ui.PressAsync(_locators.ExpirationDateB437C, "Tab");
         }
         if (_data.Condition("'GL Policy Number' == \"GLPOL#\""))
         {
-        await _ui.FillAsync(_locators.CGLLimits, _data.Resolve("{{data:cgl_limits_197}}"));
-        await _ui.PressAsync(_locators.CGLLimits, "CLICK");
-        await _ui.PressAsync(_locators.CGLLimits, "Enter");
-        await _ui.PressAsync(_locators.CGLLimits, "Tab");
+            await _ui.FillAsync(_locators.CGLLimits, _data.Resolve("{{data:cgl_limits_197}}"));
+            await _ui.PressAsync(_locators.CGLLimits, "CLICK");
+            await _ui.PressAsync(_locators.CGLLimits, "Enter");
+            await _ui.PressAsync(_locators.CGLLimits, "Tab");
         }
         if (_data.Condition("'GL Policy Number' == \"GLPOL#\""))
         {
-        await _ui.FillAsync(_locators.TotalSubjectPremium19B44, _data.Resolve("{{data:total_subject_premium_198}}"));
-        await _ui.PressAsync(_locators.TotalSubjectPremium19B44, "Tab");
+            await _ui.FillAsync(_locators.TotalSubjectPremium19B44, _data.Resolve("{{data:total_subject_premium_198}}"));
+            await _ui.PressAsync(_locators.TotalSubjectPremium19B44, "Tab");
         }
         // IndicatorsAndErrors_ea9144Page.CheckForLoadingIndicator_0126_f7819aAsync
         await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
@@ -349,7 +349,7 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.PolicyNumber6566F, "Tab");
         if (_data.Condition("'WC Policy Number' != \"WCPOL#\""))
         {
-        await _ui.ClickAsync(_locators.ImportPolicyDataButtonEF44C);
+            await _ui.ClickAsync(_locators.ImportPolicyDataButtonEF44C);
         }
         await _ui.WaitAsync(_locators.EffectiveDate6CF3D, "NotEqual");
         // IndicatorsAndErrors_ea9144Page.CheckForLoadingIndicator_0143_f7819aAsync
@@ -377,8 +377,8 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.ExpirationDate82561, "Tab");
         if (_data.Condition("'Motocycle Libaility Limit' != NULL"))
         {
-        await _ui.FillAsync(_locators.LiabilityLimit1AE2B, _data.Resolve("{{data:liability_limit_240}}"));
-        await _ui.PressAsync(_locators.LiabilityLimit1AE2B, "Tab");
+            await _ui.FillAsync(_locators.LiabilityLimit1AE2B, _data.Resolve("{{data:liability_limit_240}}"));
+            await _ui.PressAsync(_locators.LiabilityLimit1AE2B, "Tab");
         }
         await _ui.FillAsync(_locators.TotalSubjectPremiumE8AF0, _data.Resolve("{{data:total_subject_premium_241}}"));
         await _ui.PressAsync(_locators.TotalSubjectPremiumE8AF0, "Tab");
@@ -419,26 +419,26 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.PolicyNumber6566F, "Tab");
         if (_data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
         {
-        await _ui.FillAsync(_locators.EffectiveDate6CF3D, _data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
-        await _ui.PressAsync(_locators.EffectiveDate6CF3D, "Tab");
+            await _ui.FillAsync(_locators.EffectiveDate6CF3D, _data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+            await _ui.PressAsync(_locators.EffectiveDate6CF3D, "Tab");
         }
         await _ui.WaitAsync(_locators.EffectiveDate6CF3D, "NotEqual");
         if (_data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
         {
-        await _ui.FillAsync(_locators.ExpirationDate82561, _data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
-        await _ui.PressAsync(_locators.ExpirationDate82561, "Tab");
+            await _ui.FillAsync(_locators.ExpirationDate82561, _data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+            await _ui.PressAsync(_locators.ExpirationDate82561, "Tab");
         }
         if (_data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
         {
-        await _ui.FillAsync(_locators.LiabilityLimit1AE2B, _data.Resolve("{{data:liability_limit_267}}"));
-        await _ui.PressAsync(_locators.LiabilityLimit1AE2B, "CLICK");
-        await _ui.PressAsync(_locators.LiabilityLimit1AE2B, "Enter");
-        await _ui.PressAsync(_locators.LiabilityLimit1AE2B, "Tab");
+            await _ui.FillAsync(_locators.LiabilityLimit1AE2B, _data.Resolve("{{data:liability_limit_267}}"));
+            await _ui.PressAsync(_locators.LiabilityLimit1AE2B, "CLICK");
+            await _ui.PressAsync(_locators.LiabilityLimit1AE2B, "Enter");
+            await _ui.PressAsync(_locators.LiabilityLimit1AE2B, "Tab");
         }
         if (_data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
         {
-        await _ui.FillAsync(_locators.TotalSubjectPremiumE8AF0, _data.Resolve("{{data:total_subject_premium_268}}"));
-        await _ui.PressAsync(_locators.TotalSubjectPremiumE8AF0, "Tab");
+            await _ui.FillAsync(_locators.TotalSubjectPremiumE8AF0, _data.Resolve("{{data:total_subject_premium_268}}"));
+            await _ui.PressAsync(_locators.TotalSubjectPremiumE8AF0, "Tab");
         }
         // IndicatorsAndErrors_ea9144Page.CheckForLoadingIndicator_0155_f7819aAsync
         await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
@@ -1040,30 +1040,30 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.EffectiveDate95094, "Tab");
         if (_data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
         {
-        await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_72}}"));
-        await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
+            await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_72}}"));
+            await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0061_515771Async
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0062_515771Async
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_74}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_74}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.ClickAsync(_locators.PrimaryRatingState);
+            await _ui.ClickAsync(_locators.PrimaryRatingState);
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_78}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -1075,28 +1075,28 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0066_515771Async
         if (_data.Condition("'Product (LOB)' == \"GL\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_81}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_81}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' == \"GL\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_82}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_82}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0067_515771Async
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.TabOutOfPrimaryRatingStateFieldForSyncronization_0068_515771Async
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
+            await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_86}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "CLICK");
@@ -1126,108 +1126,108 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.PolicyCovg6B651, "Exists");
         if (_data.Condition("'Coverage Form' != NULL"))
         {
-        await _ui.FillAsync(_locators.CoverageForm3B382, _data.Resolve("{{data:coverage_form_98}}"));
-        await _ui.PressAsync(_locators.CoverageForm3B382, "CLICK");
-        await _ui.PressAsync(_locators.CoverageForm3B382, "Enter");
-        await _ui.PressAsync(_locators.CoverageForm3B382, "Tab");
+            await _ui.FillAsync(_locators.CoverageForm3B382, _data.Resolve("{{data:coverage_form_98}}"));
+            await _ui.PressAsync(_locators.CoverageForm3B382, "CLICK");
+            await _ui.PressAsync(_locators.CoverageForm3B382, "Enter");
+            await _ui.PressAsync(_locators.CoverageForm3B382, "Tab");
         }
         if (_data.Condition("'Occurence Limit' != NULL"))
         {
-        await _ui.FillAsync(_locators.OccurenceLimit, _data.Resolve("{{data:occurence_limit_99}}"));
-        await _ui.PressAsync(_locators.OccurenceLimit, "CLICK");
-        await _ui.PressAsync(_locators.OccurenceLimit, "Enter");
-        await _ui.PressAsync(_locators.OccurenceLimit, "Tab");
+            await _ui.FillAsync(_locators.OccurenceLimit, _data.Resolve("{{data:occurence_limit_99}}"));
+            await _ui.PressAsync(_locators.OccurenceLimit, "CLICK");
+            await _ui.PressAsync(_locators.OccurenceLimit, "Enter");
+            await _ui.PressAsync(_locators.OccurenceLimit, "Tab");
         }
         if (_data.Condition("'Aggregate Limit' != NULL"))
         {
-        await _ui.FillAsync(_locators.AggregateLimit, _data.Resolve("{{data:aggregate_limit_100}}"));
-        await _ui.PressAsync(_locators.AggregateLimit, "CLICK");
-        await _ui.PressAsync(_locators.AggregateLimit, "Enter");
-        await _ui.PressAsync(_locators.AggregateLimit, "Tab");
+            await _ui.FillAsync(_locators.AggregateLimit, _data.Resolve("{{data:aggregate_limit_100}}"));
+            await _ui.PressAsync(_locators.AggregateLimit, "CLICK");
+            await _ui.PressAsync(_locators.AggregateLimit, "Enter");
+            await _ui.PressAsync(_locators.AggregateLimit, "Tab");
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.ProductsAggLimit, _data.Resolve("{{data:products_agg_limit_101}}"));
-        await _ui.PressAsync(_locators.ProductsAggLimit, "Tab");
+            await _ui.FillAsync(_locators.ProductsAggLimit, _data.Resolve("{{data:products_agg_limit_101}}"));
+            await _ui.PressAsync(_locators.ProductsAggLimit, "Tab");
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.DedType, _data.Resolve("{{data:ded_type_102}}"));
-        await _ui.PressAsync(_locators.DedType, "Tab");
+            await _ui.FillAsync(_locators.DedType, _data.Resolve("{{data:ded_type_102}}"));
+            await _ui.PressAsync(_locators.DedType, "Tab");
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.DeductibleBasis, _data.Resolve("{{data:deductible_basis_103}}"));
-        await _ui.PressAsync(_locators.DeductibleBasis, "Tab");
+            await _ui.FillAsync(_locators.DeductibleBasis, _data.Resolve("{{data:deductible_basis_103}}"));
+            await _ui.PressAsync(_locators.DeductibleBasis, "Tab");
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.PremOpDed, _data.Resolve("{{data:premop_ded_104}}"));
-        await _ui.PressAsync(_locators.PremOpDed, "Tab");
+            await _ui.FillAsync(_locators.PremOpDed, _data.Resolve("{{data:premop_ded_104}}"));
+            await _ui.PressAsync(_locators.PremOpDed, "Tab");
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.PremOpPDDed, _data.Resolve(""));
+            await _ui.FillAsync(_locators.PremOpPDDed, _data.Resolve(""));
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.SmartSetAsync(_locators.SplitBIDed, _data.Resolve("{{data:split_bi_ded_106}}"));
-        await _ui.PressAsync(_locators.SplitBIDed, "Tab");
+            await _ui.SmartSetAsync(_locators.SplitBIDed, _data.Resolve("{{data:split_bi_ded_106}}"));
+            await _ui.PressAsync(_locators.SplitBIDed, "Tab");
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.SplitPDDed, _data.Resolve(""));
+            await _ui.FillAsync(_locators.SplitPDDed, _data.Resolve(""));
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.ProdBIDed, _data.Resolve("{{data:prod_bi_ded_108}}"));
-        await _ui.PressAsync(_locators.ProdBIDed, "CLICK");
-        await _ui.PressAsync(_locators.ProdBIDed, "Tab");
+            await _ui.FillAsync(_locators.ProdBIDed, _data.Resolve("{{data:prod_bi_ded_108}}"));
+            await _ui.PressAsync(_locators.ProdBIDed, "CLICK");
+            await _ui.PressAsync(_locators.ProdBIDed, "Tab");
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.ProdPDDed, _data.Resolve(""));
+            await _ui.FillAsync(_locators.ProdPDDed, _data.Resolve(""));
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.FireDamage, _data.Resolve("{{data:fire_damage_110}}"));
-        await _ui.PressAsync(_locators.FireDamage, "Tab");
+            await _ui.FillAsync(_locators.FireDamage, _data.Resolve("{{data:fire_damage_110}}"));
+            await _ui.PressAsync(_locators.FireDamage, "Tab");
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.Medical, _data.Resolve("{{data:medical_111}}"));
-        await _ui.PressAsync(_locators.Medical, "Tab");
+            await _ui.FillAsync(_locators.Medical, _data.Resolve("{{data:medical_111}}"));
+            await _ui.PressAsync(_locators.Medical, "Tab");
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.PersAdvInj, _data.Resolve("{{data:pers_adv_inj_112}}"));
-        await _ui.PressAsync(_locators.PersAdvInj, "Tab");
+            await _ui.FillAsync(_locators.PersAdvInj, _data.Resolve("{{data:pers_adv_inj_112}}"));
+            await _ui.PressAsync(_locators.PersAdvInj, "Tab");
         }
         if (_data.Condition("'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, _data.Resolve("{{data:is_the_insured_engaged_in_any_snow_or_ice_removal_operations_113}}"));
-        await _ui.PressAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, "CLICK");
-        await _ui.PressAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, "Enter");
-        await _ui.PressAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, "Tab");
+            await _ui.FillAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, _data.Resolve("{{data:is_the_insured_engaged_in_any_snow_or_ice_removal_operations_113}}"));
+            await _ui.PressAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, "CLICK");
+            await _ui.PressAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, "Enter");
+            await _ui.PressAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, "Tab");
         }
         if (_data.Condition("(State==\"NY\")||(State == \"NJ\")||(State == \"WV\")||(State == \"MA\")||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\")||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.OfFullTimeEmployees, _data.Resolve("{{data:of_full_time_employees_114}}"));
-        await _ui.PressAsync(_locators.OfFullTimeEmployees, "Tab");
+            await _ui.FillAsync(_locators.OfFullTimeEmployees, _data.Resolve("{{data:of_full_time_employees_114}}"));
+            await _ui.PressAsync(_locators.OfFullTimeEmployees, "Tab");
         }
         if (_data.Condition("(State==\"NY\")||(State == \"NJ\")||(State == \"WV\")||(State == \"MA\") ||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\")||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.OfPartTimeEmployees, _data.Resolve("{{data:of_part_time_employees_115}}"));
-        await _ui.PressAsync(_locators.OfPartTimeEmployees, "Tab");
+            await _ui.FillAsync(_locators.OfPartTimeEmployees, _data.Resolve("{{data:of_part_time_employees_115}}"));
+            await _ui.PressAsync(_locators.OfPartTimeEmployees, "Tab");
         }
         if (_data.Condition("(State==\"NY\")||(State == \"NJ\")||(State == \"WV\")||(State == \"MA\")||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\") ||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.OfSeasonalTemporaryEmployees, _data.Resolve("{{data:of_seasonal_temporary_employees_116}}"));
-        await _ui.PressAsync(_locators.OfSeasonalTemporaryEmployees, "Tab");
+            await _ui.FillAsync(_locators.OfSeasonalTemporaryEmployees, _data.Resolve("{{data:of_seasonal_temporary_employees_116}}"));
+            await _ui.PressAsync(_locators.OfSeasonalTemporaryEmployees, "Tab");
         }
         if (_data.Condition("'Coverage Form' != NULL"))
         {
-        await _ui.WaitAsync(_locators.CoverageForm3B382, "Equal");
+            await _ui.WaitAsync(_locators.CoverageForm3B382, "Equal");
         }
     }
 
@@ -1255,7 +1255,7 @@ public sealed class NavigationPage
         // GLNavigationLinks_6f2588Page.NavigateToEndorsementsScreen_0079_515771Async
         if (_data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
         {
-        await _ui.ClickAsync(_locators.Endorsements7572E);
+            await _ui.ClickAsync(_locators.Endorsements7572E);
         }
         // EndorsementsMain_a2a05aPage.EndorsementsMain_0080_515771Async
         await _ui.WaitAsync(_locators.Endorsements9626E, "Exists");
@@ -1274,7 +1274,7 @@ public sealed class NavigationPage
         // GLNavigationLinks_6f2588Page.NavigateToEndorsementsScreen_0082_515771Async
         if (_data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
         {
-        await _ui.ClickAsync(_locators.Endorsements7572E);
+            await _ui.ClickAsync(_locators.Endorsements7572E);
         }
         // EndorsementsMain_a2a05aPage.EndorsementsMain_0083_515771Async
         await _ui.WaitAsync(_locators.Endorsements9626E, "Exists");
@@ -1292,7 +1292,7 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.DescriptionOfOperationS, "Tab");
         if (_data.Condition("State != \"VA\""))
         {
-        await _ui.ClickAsync(_locators.CG2142ExclusionExplosionCollapseAndUndergroundPropertyDamageHazardSpecifiedOperationsOK);
+            await _ui.ClickAsync(_locators.CG2142ExclusionExplosionCollapseAndUndergroundPropertyDamageHazardSpecifiedOperationsOK);
         }
     }
 
@@ -1302,7 +1302,7 @@ public sealed class NavigationPage
         // GLNavigationLinks_6f2588Page.NavigateToEndorsementsScreen_0085_515771Async
         if (_data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
         {
-        await _ui.ClickAsync(_locators.Endorsements7572E);
+            await _ui.ClickAsync(_locators.Endorsements7572E);
         }
         // EndorsementsMain_a2a05aPage.EndorsementsMain_0086_515771Async
         await _ui.WaitAsync(_locators.Endorsements9626E, "Exists");
@@ -1324,18 +1324,18 @@ public sealed class NavigationPage
         // CG2007AddLInsuredEngineersArchitects_cacd4ePage.AddCG2007AddLInsuredEngineersArchitects_0092_515771Async
         if (_data.Condition("Type != NULL"))
         {
-        await _ui.WaitAsync(_locators.TypeD0639, "Exists");
+            await _ui.WaitAsync(_locators.TypeD0639, "Exists");
         }
         await _ui.ClickAsync(_locators.CG2007AddLInsuredEngineersArchitectsOK);
         if (_data.Condition("Type != NULL"))
         {
-        await _ui.ClickAsync(_locators.TypeD0639);
+            await _ui.ClickAsync(_locators.TypeD0639);
         }
         if (_data.Condition("Type != NULL"))
         {
-        await _ui.FillAsync(_locators.TypeD0639, _data.Resolve("{{data:type_159}}"));
-        await _ui.PressAsync(_locators.TypeD0639, "Enter");
-        await _ui.PressAsync(_locators.TypeD0639, "Tab");
+            await _ui.FillAsync(_locators.TypeD0639, _data.Resolve("{{data:type_159}}"));
+            await _ui.PressAsync(_locators.TypeD0639, "Enter");
+            await _ui.PressAsync(_locators.TypeD0639, "Tab");
         }
     }
 
@@ -1350,15 +1350,15 @@ public sealed class NavigationPage
         // CG2020AddLInsuredCharitableInstitution_e6edeePage.AddCG2020AddLInsuredCharitableInstitution_0095_515771Async
         if (_data.Condition("Type != NULL"))
         {
-        await _ui.FillAsync(_locators.TypeA75B5, _data.Resolve("{{data:type_163}}"));
-        await _ui.PressAsync(_locators.TypeA75B5, "Tab");
+            await _ui.FillAsync(_locators.TypeA75B5, _data.Resolve("{{data:type_163}}"));
+            await _ui.PressAsync(_locators.TypeA75B5, "Tab");
         }
         if (_data.Condition("'Type of License' != NULL"))
         {
-        await _ui.FillAsync(_locators.TypeOfLicense, _data.Resolve("{{data:type_of_license_164}}"));
-        await _ui.PressAsync(_locators.TypeOfLicense, "Tab");
-        await _ui.PressAsync(_locators.TypeOfLicense, "CLICK");
-        await _ui.PressAsync(_locators.TypeOfLicense, "Tab");
+            await _ui.FillAsync(_locators.TypeOfLicense, _data.Resolve("{{data:type_of_license_164}}"));
+            await _ui.PressAsync(_locators.TypeOfLicense, "Tab");
+            await _ui.PressAsync(_locators.TypeOfLicense, "CLICK");
+            await _ui.PressAsync(_locators.TypeOfLicense, "Tab");
         }
         await _ui.ClickAsync(_locators.CG2020AddLInsuredCharitableInstitutionOK);
     }
@@ -1374,8 +1374,8 @@ public sealed class NavigationPage
         // CG2023AddLInsuredExecutors_a048ecPage.AddCG2023AddLInsuredExecutors_0098_515771Async
         if (_data.Condition("Type != NULL"))
         {
-        await _ui.FillAsync(_locators.TypeD972C, _data.Resolve("{{data:type_169}}"));
-        await _ui.PressAsync(_locators.TypeD972C, "Tab");
+            await _ui.FillAsync(_locators.TypeD972C, _data.Resolve("{{data:type_169}}"));
+            await _ui.PressAsync(_locators.TypeD972C, "Tab");
         }
         await _ui.ClickAsync(_locators.OK);
     }
@@ -1391,8 +1391,8 @@ public sealed class NavigationPage
         // CG2025AddLInsuredExecutiveOfficers_fa3c1aPage.AddCG2025AddLInsuredExecutiveOfficers_0101_515771Async
         if (_data.Condition("Type != NULL"))
         {
-        await _ui.FillAsync(_locators.TypeD972C, _data.Resolve("{{data:type_174}}"));
-        await _ui.PressAsync(_locators.TypeD972C, "Tab");
+            await _ui.FillAsync(_locators.TypeD972C, _data.Resolve("{{data:type_174}}"));
+            await _ui.PressAsync(_locators.TypeD972C, "Tab");
         }
         await _ui.ClickAsync(_locators.OK);
     }
@@ -1408,14 +1408,14 @@ public sealed class NavigationPage
         // CG2034AddLInsuredLeasedEquipmentAutomatic_7d6157Page.AddCG2034AddLInsuredLeasedEquipmentAutomatic_0104_515771Async
         if (_data.Condition("Type != NULL"))
         {
-        await _ui.FillAsync(_locators.TypeD972C, _data.Resolve("{{data:type_179}}"));
-        await _ui.PressAsync(_locators.TypeD972C, "Tab");
+            await _ui.FillAsync(_locators.TypeD972C, _data.Resolve("{{data:type_179}}"));
+            await _ui.PressAsync(_locators.TypeD972C, "Tab");
         }
         if (_data.Condition("'Type of Equipment' != NULL"))
         {
-        await _ui.FillAsync(_locators.TypeOfEquipment, _data.Resolve("{{data:type_of_equipment_180}}"));
-        await _ui.PressAsync(_locators.TypeOfEquipment, "CLICK");
-        await _ui.PressAsync(_locators.TypeOfEquipment, "Tab");
+            await _ui.FillAsync(_locators.TypeOfEquipment, _data.Resolve("{{data:type_of_equipment_180}}"));
+            await _ui.PressAsync(_locators.TypeOfEquipment, "CLICK");
+            await _ui.PressAsync(_locators.TypeOfEquipment, "Tab");
         }
         await _ui.ClickAsync(_locators.OK);
     }
@@ -1576,22 +1576,22 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0062_d65717Async
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_73}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_73}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.ClickAsync(_locators.PrimaryRatingState);
+            await _ui.ClickAsync(_locators.PrimaryRatingState);
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_77}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -1603,28 +1603,28 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0066_d65717Async
         if (_data.Condition("'Product (LOB)' == \"GL OCP\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_80}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_80}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' == \"GL OCP\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_81}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_81}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0067_d65717Async
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.TabOutOfPrimaryRatingStateFieldForSyncronization_0068_d65717Async
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
+            await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_85}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "CLICK");
@@ -1635,7 +1635,7 @@ public sealed class NavigationPage
         await _ui.VerifyAsync(_locators.IsThisPolicyBeingFullyCancelled, _data.Resolve("Absent"), "");
         if (_data.Condition("'Product (LOB)' == \"SFP\"||'Product (LOB)' == \"GL OCP\""))
         {
-        await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_89}}"));
+            await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_89}}"));
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0069_d65717Async
         await Task.Delay(1000);
@@ -1658,40 +1658,40 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.PolicyCovg6B651, "Exists");
         if (_data.Condition("'Coverage Form' != NULL"))
         {
-        await _ui.FillAsync(_locators.CoverageForm3B382, _data.Resolve("{{data:coverage_form_98}}"));
-        await _ui.PressAsync(_locators.CoverageForm3B382, "CLICK");
-        await _ui.PressAsync(_locators.CoverageForm3B382, "Enter");
-        await _ui.PressAsync(_locators.CoverageForm3B382, "Tab");
+            await _ui.FillAsync(_locators.CoverageForm3B382, _data.Resolve("{{data:coverage_form_98}}"));
+            await _ui.PressAsync(_locators.CoverageForm3B382, "CLICK");
+            await _ui.PressAsync(_locators.CoverageForm3B382, "Enter");
+            await _ui.PressAsync(_locators.CoverageForm3B382, "Tab");
         }
         if (_data.Condition("'Occurence Limit' != NULL"))
         {
-        await _ui.FillAsync(_locators.OccurenceLimit, _data.Resolve("{{data:occurence_limit_99}}"));
-        await _ui.PressAsync(_locators.OccurenceLimit, "CLICK");
-        await _ui.PressAsync(_locators.OccurenceLimit, "Enter");
-        await _ui.PressAsync(_locators.OccurenceLimit, "Tab");
+            await _ui.FillAsync(_locators.OccurenceLimit, _data.Resolve("{{data:occurence_limit_99}}"));
+            await _ui.PressAsync(_locators.OccurenceLimit, "CLICK");
+            await _ui.PressAsync(_locators.OccurenceLimit, "Enter");
+            await _ui.PressAsync(_locators.OccurenceLimit, "Tab");
         }
         if (_data.Condition("'Aggregate Limit' != NULL"))
         {
-        await _ui.FillAsync(_locators.AggregateLimit, _data.Resolve("{{data:aggregate_limit_100}}"));
-        await _ui.PressAsync(_locators.AggregateLimit, "CLICK");
-        await _ui.PressAsync(_locators.AggregateLimit, "Enter");
-        await _ui.PressAsync(_locators.AggregateLimit, "Tab");
+            await _ui.FillAsync(_locators.AggregateLimit, _data.Resolve("{{data:aggregate_limit_100}}"));
+            await _ui.PressAsync(_locators.AggregateLimit, "CLICK");
+            await _ui.PressAsync(_locators.AggregateLimit, "Enter");
+            await _ui.PressAsync(_locators.AggregateLimit, "Tab");
         }
         if (_data.Condition("(State == \"NJ\")||(State == \"WV\")||(State == \"MA\")||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\")||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.OfFullTimeEmployees, _data.Resolve(""));
+            await _ui.FillAsync(_locators.OfFullTimeEmployees, _data.Resolve(""));
         }
         if (_data.Condition("(State == \"NJ\")||(State == \"WV\")||(State == \"MA\") ||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\")||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.OfPartTimeEmployees, _data.Resolve(""));
+            await _ui.FillAsync(_locators.OfPartTimeEmployees, _data.Resolve(""));
         }
         if (_data.Condition("(State == \"NJ\")||(State == \"WV\")||(State == \"MA\")||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\") ||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
         {
-        await _ui.FillAsync(_locators.OfSeasonalTemporaryEmployees, _data.Resolve(""));
+            await _ui.FillAsync(_locators.OfSeasonalTemporaryEmployees, _data.Resolve(""));
         }
         if (_data.Condition("'Coverage Form' != NULL"))
         {
-        await _ui.WaitAsync(_locators.CoverageForm3B382, "Equal");
+            await _ui.WaitAsync(_locators.CoverageForm3B382, "Equal");
         }
     }
 
@@ -1806,9 +1806,9 @@ public sealed class NavigationPage
         // CG0424CoverageForInjuryToLeasedWorkers_e1a960Page.CG0424CoverageForInjuryToLeasedWorkers_0086_d65717Async
         if (_data.Condition("'Endorsement Type' != NULL"))
         {
-        await _ui.FillAsync(_locators.EndorsementTypeCE99F, _data.Resolve("{{data:endorsement_type_141}}"));
-        await _ui.PressAsync(_locators.EndorsementTypeCE99F, "Tab");
-        await _ui.PressAsync(_locators.EndorsementTypeCE99F, "Tab");
+            await _ui.FillAsync(_locators.EndorsementTypeCE99F, _data.Resolve("{{data:endorsement_type_141}}"));
+            await _ui.PressAsync(_locators.EndorsementTypeCE99F, "Tab");
+            await _ui.PressAsync(_locators.EndorsementTypeCE99F, "Tab");
         }
         await _ui.FillAsync(_locators.WhyIsThisCoverageDesired, _data.Resolve("{{data:why_is_this_coverage_desired_142}}"));
         await _ui.PressAsync(_locators.WhyIsThisCoverageDesired, "Tab");
@@ -1827,9 +1827,9 @@ public sealed class NavigationPage
         // CG2401NonBindingArbitration_265bcaPage.CG2401NonBindingArbitration_0089_d65717Async
         if (_data.Condition("'Endorsement Type' != NULL"))
         {
-        await _ui.FillAsync(_locators.EndorsementType3503E, _data.Resolve("{{data:endorsement_type_147}}"));
-        await _ui.PressAsync(_locators.EndorsementType3503E, "Tab");
-        await _ui.PressAsync(_locators.EndorsementType3503E, "Tab");
+            await _ui.FillAsync(_locators.EndorsementType3503E, _data.Resolve("{{data:endorsement_type_147}}"));
+            await _ui.PressAsync(_locators.EndorsementType3503E, "Tab");
+            await _ui.PressAsync(_locators.EndorsementType3503E, "Tab");
         }
         await _ui.ClickAsync(_locators.CG2401NonBindingArbitrationOK);
     }
@@ -1845,9 +1845,9 @@ public sealed class NavigationPage
         // CG2812PesticideOrHerbicideApplicatorCoverage_284620Page.CG2812PesticideOrHerbicideApplicatorCoverage_0092_d65717Async
         if (_data.Condition("'Endorsement Type' != NULL"))
         {
-        await _ui.FillAsync(_locators.EndorsementTypeC75E4, _data.Resolve("{{data:endorsement_type_152}}"));
-        await _ui.PressAsync(_locators.EndorsementTypeC75E4, "Tab");
-        await _ui.PressAsync(_locators.EndorsementTypeC75E4, "Tab");
+            await _ui.FillAsync(_locators.EndorsementTypeC75E4, _data.Resolve("{{data:endorsement_type_152}}"));
+            await _ui.PressAsync(_locators.EndorsementTypeC75E4, "Tab");
+            await _ui.PressAsync(_locators.EndorsementTypeC75E4, "Tab");
         }
         await _ui.FillAsync(_locators.DescriptionOfOperations, _data.Resolve("{{data:description_of_operations_153}}"));
         await _ui.PressAsync(_locators.DescriptionOfOperations, "Tab");
@@ -2030,30 +2030,30 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.EffectiveDate95094, "Tab");
         if (_data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
         {
-        await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_101}}"));
-        await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
+            await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_101}}"));
+            await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0083_d344b2Async
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0084_d344b2Async
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_103}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_103}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.ClickAsync(_locators.PrimaryRatingState);
+            await _ui.ClickAsync(_locators.PrimaryRatingState);
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_107}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -2067,12 +2067,12 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.TabOutOfPrimaryRatingStateFieldForSyncronization_0090_d344b2Async
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
+            await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_113}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "CLICK");
@@ -2108,30 +2108,30 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.EffectiveDate95094, "Tab");
         if (_data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
         {
-        await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_101}}"));
-        await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
+            await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_101}}"));
+            await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0083_a1ba9cAsync
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0084_a1ba9cAsync
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_103}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_103}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.ClickAsync(_locators.PrimaryRatingState);
+            await _ui.ClickAsync(_locators.PrimaryRatingState);
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_107}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -2141,46 +2141,46 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0086_a1ba9cAsync
         if (_data.Condition("'Product (LOB)' == \"BOP\" || 'Product (LOB)' == \"BAP\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_109}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_109}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' == \"BOP\" || 'Product (LOB)' == \"UMB\" || 'Product (LOB)' == \"BAP\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_110}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_110}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsVirginia_0087_a1ba9cAsync
         _data.Set("StateIsVirginia", _data.Resolve("Alabama==\"Virginia\"; Expression= 'Alabama'=='Virginia'"));
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0088_a1ba9cAsync
         if (_data.Condition("'Product (LOB)' == \"BAP\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_112}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_112}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' == \"BAP\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_113}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_113}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0089_a1ba9cAsync
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.TabOutOfPrimaryRatingStateFieldForSyncronization_0090_a1ba9cAsync
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
+            await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_117}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "CLICK");
@@ -2226,30 +2226,30 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.EffectiveDate95094, "Tab");
         if (_data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
         {
-        await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_52}}"));
-        await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
+            await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_52}}"));
+            await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0056_f90f36Async
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0057_f90f36Async
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_54}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_54}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.ClickAsync(_locators.PrimaryRatingState);
+            await _ui.ClickAsync(_locators.PrimaryRatingState);
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_58}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -2259,46 +2259,46 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0059_f90f36Async
         if (_data.Condition("'Product (LOB)' == \"BOP\" || 'Product (LOB)' == \"BAP\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_60}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_60}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' == \"BOP\" || 'Product (LOB)' == \"UMB\" || 'Product (LOB)' == \"BAP\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_61}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_61}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsVirginia_0060_f90f36Async
         _data.Set("StateIsVirginia", _data.Resolve("Alabama==\"Virginia\"; Expression= 'Alabama'=='Virginia'"));
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0061_f90f36Async
         if (_data.Condition("'Product (LOB)' == \"BAP\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_63}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_63}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' == \"BAP\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_64}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_64}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0062_f90f36Async
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.TabOutOfPrimaryRatingStateFieldForSyncronization_0063_f90f36Async
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
+            await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_68}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "CLICK");
@@ -2494,19 +2494,19 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.EndorsementDetail, "Exists");
         if (_data.Condition("Year != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
         }
         if (_data.Condition("Make != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
         }
         if (_data.Condition("Model != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
         }
         await _ui.WaitAsync(_locators.OK, "Exists");
         await _ui.WaitAsync(_locators.EndorsementType624AD, "Exists");
@@ -2667,30 +2667,30 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.EffectiveDate95094, "Tab");
         if (_data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
         {
-        await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_99}}"));
-        await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
+            await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_99}}"));
+            await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0083_85cb3fAsync
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0084_85cb3fAsync
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_101}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_101}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.ClickAsync(_locators.PrimaryRatingState);
+            await _ui.ClickAsync(_locators.PrimaryRatingState);
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_105}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -2700,44 +2700,44 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0086_85cb3fAsync
         if (_data.Condition("'Product (LOB)' == \"UMB\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_107}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_107}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' == \"BOP\" || 'Product (LOB)' == \"UMB\" || 'Product (LOB)' == \"BAP\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_108}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_108}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsVirginia_0087_85cb3fAsync
         _data.Set("StateIsVirginia", _data.Resolve("Alabama==\"Virginia\"; Expression= 'Alabama'=='Virginia'"));
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0088_85cb3fAsync
         if (_data.Condition("'Product (LOB)' == \"UMB\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_110}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_110}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' == \"UMB\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_111}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_111}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0089_85cb3fAsync
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.TabOutOfPrimaryRatingStateFieldForSyncronization_0090_85cb3fAsync
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
+            await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_115}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "CLICK");
@@ -2804,8 +2804,8 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0113_c839dfAsync
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_140}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_140}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_141}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -2880,30 +2880,30 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.EffectiveDate95094, "Tab");
         if (_data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
         {
-        await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_87}}"));
-        await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
+            await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_87}}"));
+            await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0070_aad19bAsync
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0071_aad19bAsync
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_89}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_89}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.ClickAsync(_locators.PrimaryRatingState);
+            await _ui.ClickAsync(_locators.PrimaryRatingState);
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_93}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -2917,12 +2917,12 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.TabOutOfPrimaryRatingStateFieldForSyncronization_0077_aad19bAsync
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
+            await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_99}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "CLICK");
@@ -3037,98 +3037,98 @@ public sealed class NavigationPage
         // BuildingDetail_497f3cPage.BuildingFillInBuildingDetailFields_0130_aad19bAsync
         if (_data.Condition("Construction != NULL"))
         {
-        await _ui.FillAsync(_locators.Construction39800, _data.Resolve("{{data:construction_170}}"));
-        await _ui.PressAsync(_locators.Construction39800, "Tab");
-        await _ui.PressAsync(_locators.Construction39800, "Tab");
+            await _ui.FillAsync(_locators.Construction39800, _data.Resolve("{{data:construction_170}}"));
+            await _ui.PressAsync(_locators.Construction39800, "Tab");
+            await _ui.PressAsync(_locators.Construction39800, "Tab");
         }
         if (_data.Condition("'Year Built' != NULL"))
         {
-        await _ui.FillAsync(_locators.YearBuilt, _data.Resolve("{{data:year_built_171}}"));
-        await _ui.PressAsync(_locators.YearBuilt, "Tab");
-        await _ui.PressAsync(_locators.YearBuilt, "Tab");
+            await _ui.FillAsync(_locators.YearBuilt, _data.Resolve("{{data:year_built_171}}"));
+            await _ui.PressAsync(_locators.YearBuilt, "Tab");
+            await _ui.PressAsync(_locators.YearBuilt, "Tab");
         }
         if (_data.Condition("'Square Feet' != NULL"))
         {
-        await _ui.FillAsync(_locators.SquareFeet, _data.Resolve("{{data:square_feet_172}}"));
-        await _ui.PressAsync(_locators.SquareFeet, "Tab");
-        await _ui.PressAsync(_locators.SquareFeet, "Tab");
+            await _ui.FillAsync(_locators.SquareFeet, _data.Resolve("{{data:square_feet_172}}"));
+            await _ui.PressAsync(_locators.SquareFeet, "Tab");
+            await _ui.PressAsync(_locators.SquareFeet, "Tab");
         }
         if (_data.Condition("Stories != NULL"))
         {
-        await _ui.FillAsync(_locators.Stories, _data.Resolve("{{data:stories_173}}"));
-        await _ui.PressAsync(_locators.Stories, "Tab");
-        await _ui.PressAsync(_locators.Stories, "Tab");
+            await _ui.FillAsync(_locators.Stories, _data.Resolve("{{data:stories_173}}"));
+            await _ui.PressAsync(_locators.Stories, "Tab");
+            await _ui.PressAsync(_locators.Stories, "Tab");
         }
         if (_data.Condition("Interest != NULL"))
         {
-        await _ui.FillAsync(_locators.Interest, _data.Resolve("{{data:interest_174}}"));
-        await _ui.PressAsync(_locators.Interest, "Tab");
-        await _ui.PressAsync(_locators.Interest, "Tab");
+            await _ui.FillAsync(_locators.Interest, _data.Resolve("{{data:interest_174}}"));
+            await _ui.PressAsync(_locators.Interest, "Tab");
+            await _ui.PressAsync(_locators.Interest, "Tab");
         }
         if (_data.Condition("'Roof Type' != NULL"))
         {
-        await _ui.FillAsync(_locators.RoofType, _data.Resolve("{{data:roof_type_175}}"));
-        await _ui.PressAsync(_locators.RoofType, "Tab");
-        await _ui.PressAsync(_locators.RoofType, "Tab");
+            await _ui.FillAsync(_locators.RoofType, _data.Resolve("{{data:roof_type_175}}"));
+            await _ui.PressAsync(_locators.RoofType, "Tab");
+            await _ui.PressAsync(_locators.RoofType, "Tab");
         }
         if (_data.Condition("Deductible != NULL"))
         {
-        await _ui.FillAsync(_locators.Deductible592D9, _data.Resolve("{{data:deductible_176}}"));
-        await _ui.PressAsync(_locators.Deductible592D9, "Tab");
-        await _ui.PressAsync(_locators.Deductible592D9, "Tab");
-        await _ui.PressAsync(_locators.Deductible592D9, "CLICK");
-        await _ui.PressAsync(_locators.Deductible592D9, "CLICK");
-        await _ui.PressAsync(_locators.Deductible592D9, "Tab");
+            await _ui.FillAsync(_locators.Deductible592D9, _data.Resolve("{{data:deductible_176}}"));
+            await _ui.PressAsync(_locators.Deductible592D9, "Tab");
+            await _ui.PressAsync(_locators.Deductible592D9, "Tab");
+            await _ui.PressAsync(_locators.Deductible592D9, "CLICK");
+            await _ui.PressAsync(_locators.Deductible592D9, "CLICK");
+            await _ui.PressAsync(_locators.Deductible592D9, "Tab");
         }
         if (_data.Condition("'Deductible Increased Theft' != NULL"))
         {
-        await _ui.FillAsync(_locators.DeductibleIncreasedTheft99E5F, _data.Resolve("{{data:deductible_increased_theft_177}}"));
-        await _ui.PressAsync(_locators.DeductibleIncreasedTheft99E5F, "Tab");
-        await _ui.PressAsync(_locators.DeductibleIncreasedTheft99E5F, "Tab");
+            await _ui.FillAsync(_locators.DeductibleIncreasedTheft99E5F, _data.Resolve("{{data:deductible_increased_theft_177}}"));
+            await _ui.PressAsync(_locators.DeductibleIncreasedTheft99E5F, "Tab");
+            await _ui.PressAsync(_locators.DeductibleIncreasedTheft99E5F, "Tab");
         }
         if (_data.Condition("'Deductible Wind Hail' != NULL"))
         {
-        await _ui.FillAsync(_locators.DeductibleWindHail911AF, _data.Resolve("{{data:deductible_wind_hail_178}}"));
-        await _ui.PressAsync(_locators.DeductibleWindHail911AF, "Tab");
-        await _ui.PressAsync(_locators.DeductibleWindHail911AF, "Tab");
+            await _ui.FillAsync(_locators.DeductibleWindHail911AF, _data.Resolve("{{data:deductible_wind_hail_178}}"));
+            await _ui.PressAsync(_locators.DeductibleWindHail911AF, "Tab");
+            await _ui.PressAsync(_locators.DeductibleWindHail911AF, "Tab");
         }
         if (_data.Condition("'BG2 Symbol' != NULL"))
         {
-        await _ui.FillAsync(_locators.BG2Symbol, _data.Resolve("{{data:bg2_symbol_179}}"));
-        await _ui.PressAsync(_locators.BG2Symbol, "Tab");
-        await _ui.PressAsync(_locators.BG2Symbol, "Tab");
+            await _ui.FillAsync(_locators.BG2Symbol, _data.Resolve("{{data:bg2_symbol_179}}"));
+            await _ui.PressAsync(_locators.BG2Symbol, "Tab");
+            await _ui.PressAsync(_locators.BG2Symbol, "Tab");
         }
         if (_data.Condition("'BG2 Symbol Prefix' != NULL"))
         {
-        await _ui.FillAsync(_locators.BG2SymbolPrefix, _data.Resolve("{{data:bg2_symbol_prefix_180}}"));
-        await _ui.PressAsync(_locators.BG2SymbolPrefix, "CLICK");
-        await _ui.PressAsync(_locators.BG2SymbolPrefix, "Tab");
+            await _ui.FillAsync(_locators.BG2SymbolPrefix, _data.Resolve("{{data:bg2_symbol_prefix_180}}"));
+            await _ui.PressAsync(_locators.BG2SymbolPrefix, "CLICK");
+            await _ui.PressAsync(_locators.BG2SymbolPrefix, "Tab");
         }
         if (_data.Condition("'Is the building cooled?' != NULL"))
         {
-        await _ui.FillAsync(_locators.IsTheBuildingCooled, _data.Resolve("{{data:is_the_building_cooled_181}}"));
-        await _ui.PressAsync(_locators.IsTheBuildingCooled, "Tab");
-        await _ui.PressAsync(_locators.IsTheBuildingCooled, "Tab");
+            await _ui.FillAsync(_locators.IsTheBuildingCooled, _data.Resolve("{{data:is_the_building_cooled_181}}"));
+            await _ui.PressAsync(_locators.IsTheBuildingCooled, "Tab");
+            await _ui.PressAsync(_locators.IsTheBuildingCooled, "Tab");
         }
         if (_data.Condition("'Is the building heated with a Solid Fuel Heating Device?' != NULL"))
         {
-        await _ui.FillAsync(_locators.IsTheBuildingHeatedWithASolidFuelHeatingDevice, _data.Resolve("{{data:is_the_building_heated_with_a_solid_fuel_heating_device_182}}"));
-        await _ui.PressAsync(_locators.IsTheBuildingHeatedWithASolidFuelHeatingDevice, "Tab");
-        await _ui.PressAsync(_locators.IsTheBuildingHeatedWithASolidFuelHeatingDevice, "CLICK");
-        await _ui.PressAsync(_locators.IsTheBuildingHeatedWithASolidFuelHeatingDevice, "Tab");
+            await _ui.FillAsync(_locators.IsTheBuildingHeatedWithASolidFuelHeatingDevice, _data.Resolve("{{data:is_the_building_heated_with_a_solid_fuel_heating_device_182}}"));
+            await _ui.PressAsync(_locators.IsTheBuildingHeatedWithASolidFuelHeatingDevice, "Tab");
+            await _ui.PressAsync(_locators.IsTheBuildingHeatedWithASolidFuelHeatingDevice, "CLICK");
+            await _ui.PressAsync(_locators.IsTheBuildingHeatedWithASolidFuelHeatingDevice, "Tab");
         }
         if (_data.Condition("'Provide a List of Surrounding Exposure/Other Occupancies within 100 ft (Including North, East, South, and West)' != NULL"))
         {
-        await _ui.FillAsync(_locators.ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest, _data.Resolve("{{data:provide_a_list_of_surrounding_exposure_other_occupancies_within_100_ft_including_north_east_south_and_west_183}}"));
-        await _ui.PressAsync(_locators.ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest, "Tab");
-        await _ui.PressAsync(_locators.ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest, "CLICK");
-        await _ui.PressAsync(_locators.ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest, "Tab");
+            await _ui.FillAsync(_locators.ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest, _data.Resolve("{{data:provide_a_list_of_surrounding_exposure_other_occupancies_within_100_ft_including_north_east_south_and_west_183}}"));
+            await _ui.PressAsync(_locators.ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest, "Tab");
+            await _ui.PressAsync(_locators.ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest, "CLICK");
+            await _ui.PressAsync(_locators.ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest, "Tab");
         }
         if (_data.Condition("'Eligible For Enhanced Wind Rating Program' != NULL"))
         {
-        await _ui.FillAsync(_locators.EligibleForEnhancedWindRatingProgram, _data.Resolve("{{data:eligible_for_enhanced_wind_rating_program_184}}"));
-        await _ui.PressAsync(_locators.EligibleForEnhancedWindRatingProgram, "Tab");
-        await _ui.PressAsync(_locators.EligibleForEnhancedWindRatingProgram, "Tab");
+            await _ui.FillAsync(_locators.EligibleForEnhancedWindRatingProgram, _data.Resolve("{{data:eligible_for_enhanced_wind_rating_program_184}}"));
+            await _ui.PressAsync(_locators.EligibleForEnhancedWindRatingProgram, "Tab");
+            await _ui.PressAsync(_locators.EligibleForEnhancedWindRatingProgram, "Tab");
         }
         await _ui.ClickAsync(_locators.BuildingDetailOK);
     }
@@ -3142,51 +3142,51 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.RatingGroups46DD2, "Exists");
         if (_data.Condition("Description != NULL"))
         {
-        await _ui.FillAsync(_locators.Description8A08D, _data.Resolve("{{data:description_188}}"));
-        await _ui.PressAsync(_locators.Description8A08D, "Tab");
-        await _ui.PressAsync(_locators.Description8A08D, "Tab");
+            await _ui.FillAsync(_locators.Description8A08D, _data.Resolve("{{data:description_188}}"));
+            await _ui.PressAsync(_locators.Description8A08D, "Tab");
+            await _ui.PressAsync(_locators.Description8A08D, "Tab");
         }
         if (_data.Condition("'Risk Type' != NULL"))
         {
-        await _ui.FillAsync(_locators.RiskType, _data.Resolve("{{data:risk_type_189}}"));
-        await _ui.PressAsync(_locators.RiskType, "Tab");
-        await _ui.PressAsync(_locators.RiskType, "Tab");
+            await _ui.FillAsync(_locators.RiskType, _data.Resolve("{{data:risk_type_189}}"));
+            await _ui.PressAsync(_locators.RiskType, "Tab");
+            await _ui.PressAsync(_locators.RiskType, "Tab");
         }
         if (_data.Condition("Coinsurance != NULL"))
         {
-        await _ui.FillAsync(_locators.Coinsurance6348B, _data.Resolve("{{data:coinsurance_190}}"));
-        await _ui.PressAsync(_locators.Coinsurance6348B, "Tab");
-        await _ui.PressAsync(_locators.Coinsurance6348B, "Tab");
+            await _ui.FillAsync(_locators.Coinsurance6348B, _data.Resolve("{{data:coinsurance_190}}"));
+            await _ui.PressAsync(_locators.Coinsurance6348B, "Tab");
+            await _ui.PressAsync(_locators.Coinsurance6348B, "Tab");
         }
         if (_data.Condition("Deductible != NULL"))
         {
-        await _ui.FillAsync(_locators.Deductible01AB9, _data.Resolve("{{data:deductible_191}}"));
-        await _ui.PressAsync(_locators.Deductible01AB9, "Tab");
-        await _ui.PressAsync(_locators.Deductible01AB9, "Tab");
+            await _ui.FillAsync(_locators.Deductible01AB9, _data.Resolve("{{data:deductible_191}}"));
+            await _ui.PressAsync(_locators.Deductible01AB9, "Tab");
+            await _ui.PressAsync(_locators.Deductible01AB9, "Tab");
         }
         if (_data.Condition("'Deductible Increased Theft' != NULL"))
         {
-        await _ui.FillAsync(_locators.DeductibleIncreasedTheftF76DB, _data.Resolve("{{data:deductible_increased_theft_192}}"));
-        await _ui.PressAsync(_locators.DeductibleIncreasedTheftF76DB, "Tab");
-        await _ui.PressAsync(_locators.DeductibleIncreasedTheftF76DB, "Tab");
+            await _ui.FillAsync(_locators.DeductibleIncreasedTheftF76DB, _data.Resolve("{{data:deductible_increased_theft_192}}"));
+            await _ui.PressAsync(_locators.DeductibleIncreasedTheftF76DB, "Tab");
+            await _ui.PressAsync(_locators.DeductibleIncreasedTheftF76DB, "Tab");
         }
         if (_data.Condition("'Deductible Wind Hail' != NULL"))
         {
-        await _ui.FillAsync(_locators.DeductibleWindHailAB1C3, _data.Resolve("{{data:deductible_wind_hail_193}}"));
-        await _ui.PressAsync(_locators.DeductibleWindHailAB1C3, "Tab");
-        await _ui.PressAsync(_locators.DeductibleWindHailAB1C3, "Tab");
+            await _ui.FillAsync(_locators.DeductibleWindHailAB1C3, _data.Resolve("{{data:deductible_wind_hail_193}}"));
+            await _ui.PressAsync(_locators.DeductibleWindHailAB1C3, "Tab");
+            await _ui.PressAsync(_locators.DeductibleWindHailAB1C3, "Tab");
         }
         if (_data.Condition("'Cause Of Loss' != NULL"))
         {
-        await _ui.FillAsync(_locators.CauseOfLoss, _data.Resolve("{{data:cause_of_loss_194}}"));
-        await _ui.PressAsync(_locators.CauseOfLoss, "Tab");
-        await _ui.PressAsync(_locators.CauseOfLoss, "Tab");
+            await _ui.FillAsync(_locators.CauseOfLoss, _data.Resolve("{{data:cause_of_loss_194}}"));
+            await _ui.PressAsync(_locators.CauseOfLoss, "Tab");
+            await _ui.PressAsync(_locators.CauseOfLoss, "Tab");
         }
         if (_data.Condition("Valuation != NULL"))
         {
-        await _ui.FillAsync(_locators.Valuation, _data.Resolve("{{data:valuation_195}}"));
-        await _ui.PressAsync(_locators.Valuation, "Tab");
-        await _ui.PressAsync(_locators.Valuation, "Tab");
+            await _ui.FillAsync(_locators.Valuation, _data.Resolve("{{data:valuation_195}}"));
+            await _ui.PressAsync(_locators.Valuation, "Tab");
+            await _ui.PressAsync(_locators.Valuation, "Tab");
         }
         await _ui.ClickAsync(_locators.AddGroup);
     }
@@ -3199,93 +3199,93 @@ public sealed class NavigationPage
         // PropertyMain_a49a9ePage.FillOutMainPropertyQuestions_0134_aad19bAsync
         if (_data.Condition("'Increased Pollutant Cleanup' != NULL"))
         {
-        await _ui.FillAsync(_locators.IncreasedPollutantCleanup, _data.Resolve("{{data:increased_pollutant_cleanup_198}}"));
-        await _ui.PressAsync(_locators.IncreasedPollutantCleanup, "Tab");
-        await _ui.PressAsync(_locators.IncreasedPollutantCleanup, "Tab");
+            await _ui.FillAsync(_locators.IncreasedPollutantCleanup, _data.Resolve("{{data:increased_pollutant_cleanup_198}}"));
+            await _ui.PressAsync(_locators.IncreasedPollutantCleanup, "Tab");
+            await _ui.PressAsync(_locators.IncreasedPollutantCleanup, "Tab");
         }
         if (_data.Condition("'Debris Removal Additional' != NULL"))
         {
-        await _ui.FillAsync(_locators.DebrisRemovalAdditional, _data.Resolve("{{data:debris_removal_additional_199}}"));
-        await _ui.PressAsync(_locators.DebrisRemovalAdditional, "Tab");
-        await _ui.PressAsync(_locators.DebrisRemovalAdditional, "Tab");
+            await _ui.FillAsync(_locators.DebrisRemovalAdditional, _data.Resolve("{{data:debris_removal_additional_199}}"));
+            await _ui.PressAsync(_locators.DebrisRemovalAdditional, "Tab");
+            await _ui.PressAsync(_locators.DebrisRemovalAdditional, "Tab");
         }
         if (_data.Condition("'Debris Removal Additional Limit' != NULL"))
         {
-        await _ui.FillAsync(_locators.DebrisRemovalAdditionalLimit, _data.Resolve("{{data:debris_removal_additional_limit_200}}"));
-        await _ui.PressAsync(_locators.DebrisRemovalAdditionalLimit, "Tab");
-        await _ui.PressAsync(_locators.DebrisRemovalAdditionalLimit, "Tab");
+            await _ui.FillAsync(_locators.DebrisRemovalAdditionalLimit, _data.Resolve("{{data:debris_removal_additional_limit_200}}"));
+            await _ui.PressAsync(_locators.DebrisRemovalAdditionalLimit, "Tab");
+            await _ui.PressAsync(_locators.DebrisRemovalAdditionalLimit, "Tab");
         }
         if (_data.Condition("'Vacant Building' != NULL"))
         {
-        await _ui.FillAsync(_locators.VacantBuilding, _data.Resolve("{{data:vacant_building_201}}"));
-        await _ui.PressAsync(_locators.VacantBuilding, "Tab");
-        await _ui.PressAsync(_locators.VacantBuilding, "Tab");
+            await _ui.FillAsync(_locators.VacantBuilding, _data.Resolve("{{data:vacant_building_201}}"));
+            await _ui.PressAsync(_locators.VacantBuilding, "Tab");
+            await _ui.PressAsync(_locators.VacantBuilding, "Tab");
         }
         if (_data.Condition("'% Occupied' != NULL"))
         {
-        await _ui.FillAsync(_locators.Occupied, _data.Resolve("{{data:occupied_202}}"));
-        await _ui.PressAsync(_locators.Occupied, "Tab");
-        await _ui.PressAsync(_locators.Occupied, "Tab");
+            await _ui.FillAsync(_locators.Occupied, _data.Resolve("{{data:occupied_202}}"));
+            await _ui.PressAsync(_locators.Occupied, "Tab");
+            await _ui.PressAsync(_locators.Occupied, "Tab");
         }
         if (_data.Condition("'Pier Or Wharf' != NULL"))
         {
-        await _ui.FillAsync(_locators.PierOrWharf, _data.Resolve("{{data:pier_or_wharf_203}}"));
-        await _ui.PressAsync(_locators.PierOrWharf, "Tab");
-        await _ui.PressAsync(_locators.PierOrWharf, "Tab");
+            await _ui.FillAsync(_locators.PierOrWharf, _data.Resolve("{{data:pier_or_wharf_203}}"));
+            await _ui.PressAsync(_locators.PierOrWharf, "Tab");
+            await _ui.PressAsync(_locators.PierOrWharf, "Tab");
         }
         if (_data.Condition("'Pier Or Wharf Construction' != NULL"))
         {
-        await _ui.FillAsync(_locators.PierOrWharfConstruction, _data.Resolve("{{data:pier_or_wharf_construction_204}}"));
-        await _ui.PressAsync(_locators.PierOrWharfConstruction, "Tab");
-        await _ui.PressAsync(_locators.PierOrWharfConstruction, "Tab");
+            await _ui.FillAsync(_locators.PierOrWharfConstruction, _data.Resolve("{{data:pier_or_wharf_construction_204}}"));
+            await _ui.PressAsync(_locators.PierOrWharfConstruction, "Tab");
+            await _ui.PressAsync(_locators.PierOrWharfConstruction, "Tab");
         }
         if (_data.Condition("'Pier Or Wharf Cause Of Loss' != NULL"))
         {
-        await _ui.FillAsync(_locators.PierOrWharfCauseOfLoss, _data.Resolve("{{data:pier_or_wharf_cause_of_loss_205}}"));
-        await _ui.PressAsync(_locators.PierOrWharfCauseOfLoss, "Tab");
-        await _ui.PressAsync(_locators.PierOrWharfCauseOfLoss, "Tab");
-        await _ui.PressAsync(_locators.PierOrWharfCauseOfLoss, "Tab");
+            await _ui.FillAsync(_locators.PierOrWharfCauseOfLoss, _data.Resolve("{{data:pier_or_wharf_cause_of_loss_205}}"));
+            await _ui.PressAsync(_locators.PierOrWharfCauseOfLoss, "Tab");
+            await _ui.PressAsync(_locators.PierOrWharfCauseOfLoss, "Tab");
+            await _ui.PressAsync(_locators.PierOrWharfCauseOfLoss, "Tab");
         }
         if (_data.Condition("'Pier Or Wharf COL Options' != NULL"))
         {
-        await _ui.FillAsync(_locators.PierOrWharfCOLOptions, _data.Resolve("{{data:pier_or_wharf_col_options_206}}"));
-        await _ui.PressAsync(_locators.PierOrWharfCOLOptions, "Tab");
-        await _ui.PressAsync(_locators.PierOrWharfCOLOptions, "CLICK");
-        await _ui.PressAsync(_locators.PierOrWharfCOLOptions, "Tab");
+            await _ui.FillAsync(_locators.PierOrWharfCOLOptions, _data.Resolve("{{data:pier_or_wharf_col_options_206}}"));
+            await _ui.PressAsync(_locators.PierOrWharfCOLOptions, "Tab");
+            await _ui.PressAsync(_locators.PierOrWharfCOLOptions, "CLICK");
+            await _ui.PressAsync(_locators.PierOrWharfCOLOptions, "Tab");
         }
         if (_data.Condition("'Vacancy Permit' != NULL"))
         {
-        await _ui.FillAsync(_locators.VacancyPermit, _data.Resolve("{{data:vacancy_permit_207}}"));
-        await _ui.PressAsync(_locators.VacancyPermit, "Tab");
-        await _ui.PressAsync(_locators.VacancyPermit, "Tab");
+            await _ui.FillAsync(_locators.VacancyPermit, _data.Resolve("{{data:vacancy_permit_207}}"));
+            await _ui.PressAsync(_locators.VacancyPermit, "Tab");
+            await _ui.PressAsync(_locators.VacancyPermit, "Tab");
         }
         if (_data.Condition("'Pier Or Wharf COL Options' != NULL"))
         {
-        await _ui.WaitAsync(_locators.PierOrWharfCOLOptions, "Exists");
+            await _ui.WaitAsync(_locators.PierOrWharfCOLOptions, "Exists");
         }
         // PropertyAddClass_ed4d5dPage.PropertyAddClass_0135_aad19bAsync
         await _ui.ClickAsync(_locators.AddClassDCD8F);
         if (_data.Condition("(State !=\"OR\")||(State!=\"WA\")||(State!=\"VT\")"))
         {
-        await _ui.FillAsync(_locators.SearchValue54F3C, _data.Resolve("{{data:search_value_210}}"));
-        await _ui.PressAsync(_locators.SearchValue54F3C, "CLICK");
-        await _ui.PressAsync(_locators.SearchValue54F3C, "Tab");
-        await _ui.PressAsync(_locators.SearchValue54F3C, "Tab");
+            await _ui.FillAsync(_locators.SearchValue54F3C, _data.Resolve("{{data:search_value_210}}"));
+            await _ui.PressAsync(_locators.SearchValue54F3C, "CLICK");
+            await _ui.PressAsync(_locators.SearchValue54F3C, "Tab");
+            await _ui.PressAsync(_locators.SearchValue54F3C, "Tab");
         }
         if (_data.Condition("(State !=\"OR\")||(State!=\"WA\")||(State!=\"VT\")"))
         {
-        await _ui.FillAsync(_locators.SearchResultsD0AA8, _data.Resolve("{{data:search_results_211}}"));
-        await _ui.PressAsync(_locators.SearchResultsD0AA8, "CLICK");
-        await _ui.PressAsync(_locators.SearchResultsD0AA8, "Enter");
-        await _ui.PressAsync(_locators.SearchResultsD0AA8, "Tab");
-        await _ui.PressAsync(_locators.SearchResultsD0AA8, "Tab");
+            await _ui.FillAsync(_locators.SearchResultsD0AA8, _data.Resolve("{{data:search_results_211}}"));
+            await _ui.PressAsync(_locators.SearchResultsD0AA8, "CLICK");
+            await _ui.PressAsync(_locators.SearchResultsD0AA8, "Enter");
+            await _ui.PressAsync(_locators.SearchResultsD0AA8, "Tab");
+            await _ui.PressAsync(_locators.SearchResultsD0AA8, "Tab");
         }
         await _ui.FillAsync(_locators.OccupancyType, _data.Resolve("{{data:occupancy_type_212}}"));
         await _ui.PressAsync(_locators.OccupancyType, "CLICK");
         await _ui.PressAsync(_locators.OccupancyType, "Tab");
         if (_data.Condition("(State ==\"OR\")||(State==\"WA\")"))
         {
-        await _ui.FillAsync(_locators.SearchResultsD0AA8, _data.Resolve(""));
+            await _ui.FillAsync(_locators.SearchResultsD0AA8, _data.Resolve(""));
         }
         await _ui.ClickAsync(_locators.PropertyAddClassOK);
         await _ui.FillAsync(_locators.BuildingRatingGroup, _data.Resolve("{{data:building_rating_group_215}}"));
@@ -3310,10 +3310,10 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.PropertyOfOthersLimit, "Tab");
         if (_data.Condition("(State ==\"OR\")||(State==\"WA\")"))
         {
-        await _ui.FillAsync(_locators.SearchValue54F3C, _data.Resolve("{{data:search_value_221}}"));
-        await _ui.PressAsync(_locators.SearchValue54F3C, "CLICK");
-        await _ui.PressAsync(_locators.SearchValue54F3C, "Tab");
-        await _ui.PressAsync(_locators.SearchValue54F3C, "Tab");
+            await _ui.FillAsync(_locators.SearchValue54F3C, _data.Resolve("{{data:search_value_221}}"));
+            await _ui.PressAsync(_locators.SearchValue54F3C, "CLICK");
+            await _ui.PressAsync(_locators.SearchValue54F3C, "Tab");
+            await _ui.PressAsync(_locators.SearchValue54F3C, "Tab");
         }
         // PropertyEnterBuildingRCT_b0af04Page.PropertyEnterBuildingRCT_0136_aad19bAsync
         await _ui.ClickAsync(_locators.Detail7F662);
@@ -3350,7 +3350,7 @@ public sealed class NavigationPage
         // PolicyInfoCPPSpecificFields_d2689aPage.PolicyInfoCPPSpecificFields_0148_aad19bAsync
         if (_data.Condition("'CPP LOB' == \"GL\""))
         {
-        await _ui.ClickAsync(_locators.GLDetail);
+            await _ui.ClickAsync(_locators.GLDetail);
         }
     }
 
@@ -3378,7 +3378,7 @@ public sealed class NavigationPage
         // GLNavigationLinks_6f2588Page.NavigateToEndorsementsScreen_0155_aad19bAsync
         if (_data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
         {
-        await _ui.ClickAsync(_locators.Endorsements7572E);
+            await _ui.ClickAsync(_locators.Endorsements7572E);
         }
         // EndorsementsMain_a2a05aPage.EndorsementsMain_0156_aad19bAsync
         await _ui.WaitAsync(_locators.Endorsements9626E, "Exists");
@@ -3397,7 +3397,7 @@ public sealed class NavigationPage
         // GLNavigationLinks_6f2588Page.NavigateToEndorsementsScreen_0158_aad19bAsync
         if (_data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
         {
-        await _ui.ClickAsync(_locators.Endorsements7572E);
+            await _ui.ClickAsync(_locators.Endorsements7572E);
         }
         // EndorsementsMain_a2a05aPage.EndorsementsMain_0159_aad19bAsync
         await _ui.WaitAsync(_locators.Endorsements9626E, "Exists");
@@ -3415,11 +3415,11 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.DescriptionOfOperationS, "Tab");
         if (_data.Condition("State != \"VA\""))
         {
-        await _ui.ClickAsync(_locators.CG2142ExclusionExplosionCollapseAndUndergroundPropertyDamageHazardSpecifiedOperationsOK);
+            await _ui.ClickAsync(_locators.CG2142ExclusionExplosionCollapseAndUndergroundPropertyDamageHazardSpecifiedOperationsOK);
         }
         if (_data.Condition("State == \"VA\""))
         {
-        await _ui.ClickAsync(_locators.CG2142ExclusionExplosionCollapseAndUndergroundPropertyDamageHazardSpecifiedOperationsOK);
+            await _ui.ClickAsync(_locators.CG2142ExclusionExplosionCollapseAndUndergroundPropertyDamageHazardSpecifiedOperationsOK);
         }
     }
 
@@ -3429,7 +3429,7 @@ public sealed class NavigationPage
         // GLNavigationLinks_6f2588Page.NavigateToEndorsementsScreen_0161_aad19bAsync
         if (_data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
         {
-        await _ui.ClickAsync(_locators.Endorsements7572E);
+            await _ui.ClickAsync(_locators.Endorsements7572E);
         }
         // EndorsementsMain_a2a05aPage.EndorsementsMain_0162_aad19bAsync
         await _ui.WaitAsync(_locators.Endorsements9626E, "Exists");
@@ -3451,18 +3451,18 @@ public sealed class NavigationPage
         // CG2007AddLInsuredEngineersArchitects_cacd4ePage.AddCG2007AddLInsuredEngineersArchitects_0168_aad19bAsync
         if (_data.Condition("Type != NULL"))
         {
-        await _ui.WaitAsync(_locators.TypeD0639, "Exists");
+            await _ui.WaitAsync(_locators.TypeD0639, "Exists");
         }
         await _ui.ClickAsync(_locators.CG2007AddLInsuredEngineersArchitectsOK);
         if (_data.Condition("Type != NULL"))
         {
-        await _ui.ClickAsync(_locators.TypeD0639);
+            await _ui.ClickAsync(_locators.TypeD0639);
         }
         if (_data.Condition("Type != NULL"))
         {
-        await _ui.FillAsync(_locators.TypeD0639, _data.Resolve("{{data:type_319}}"));
-        await _ui.PressAsync(_locators.TypeD0639, "Enter");
-        await _ui.PressAsync(_locators.TypeD0639, "Tab");
+            await _ui.FillAsync(_locators.TypeD0639, _data.Resolve("{{data:type_319}}"));
+            await _ui.PressAsync(_locators.TypeD0639, "Enter");
+            await _ui.PressAsync(_locators.TypeD0639, "Tab");
         }
     }
 
@@ -3477,15 +3477,15 @@ public sealed class NavigationPage
         // CG2020AddLInsuredCharitableInstitution_e6edeePage.AddCG2020AddLInsuredCharitableInstitution_0171_aad19bAsync
         if (_data.Condition("Type != NULL"))
         {
-        await _ui.FillAsync(_locators.TypeA75B5, _data.Resolve("{{data:type_323}}"));
-        await _ui.PressAsync(_locators.TypeA75B5, "Tab");
+            await _ui.FillAsync(_locators.TypeA75B5, _data.Resolve("{{data:type_323}}"));
+            await _ui.PressAsync(_locators.TypeA75B5, "Tab");
         }
         if (_data.Condition("'Type of License' != NULL"))
         {
-        await _ui.FillAsync(_locators.TypeOfLicense, _data.Resolve("{{data:type_of_license_324}}"));
-        await _ui.PressAsync(_locators.TypeOfLicense, "Tab");
-        await _ui.PressAsync(_locators.TypeOfLicense, "CLICK");
-        await _ui.PressAsync(_locators.TypeOfLicense, "Tab");
+            await _ui.FillAsync(_locators.TypeOfLicense, _data.Resolve("{{data:type_of_license_324}}"));
+            await _ui.PressAsync(_locators.TypeOfLicense, "Tab");
+            await _ui.PressAsync(_locators.TypeOfLicense, "CLICK");
+            await _ui.PressAsync(_locators.TypeOfLicense, "Tab");
         }
         await _ui.ClickAsync(_locators.CG2020AddLInsuredCharitableInstitutionOK);
     }
@@ -3501,8 +3501,8 @@ public sealed class NavigationPage
         // CG2023AddLInsuredExecutors_a048ecPage.AddCG2023AddLInsuredExecutors_0174_aad19bAsync
         if (_data.Condition("Type != NULL"))
         {
-        await _ui.FillAsync(_locators.TypeD972C, _data.Resolve("{{data:type_329}}"));
-        await _ui.PressAsync(_locators.TypeD972C, "Tab");
+            await _ui.FillAsync(_locators.TypeD972C, _data.Resolve("{{data:type_329}}"));
+            await _ui.PressAsync(_locators.TypeD972C, "Tab");
         }
         await _ui.ClickAsync(_locators.OK);
     }
@@ -3518,8 +3518,8 @@ public sealed class NavigationPage
         // CG2025AddLInsuredExecutiveOfficers_fa3c1aPage.AddCG2025AddLInsuredExecutiveOfficers_0177_aad19bAsync
         if (_data.Condition("Type != NULL"))
         {
-        await _ui.FillAsync(_locators.TypeD972C, _data.Resolve("{{data:type_334}}"));
-        await _ui.PressAsync(_locators.TypeD972C, "Tab");
+            await _ui.FillAsync(_locators.TypeD972C, _data.Resolve("{{data:type_334}}"));
+            await _ui.PressAsync(_locators.TypeD972C, "Tab");
         }
         await _ui.ClickAsync(_locators.OK);
     }
@@ -3535,14 +3535,14 @@ public sealed class NavigationPage
         // CG2034AddLInsuredLeasedEquipmentAutomatic_7d6157Page.AddCG2034AddLInsuredLeasedEquipmentAutomatic_0180_aad19bAsync
         if (_data.Condition("Type != NULL"))
         {
-        await _ui.FillAsync(_locators.TypeD972C, _data.Resolve("{{data:type_339}}"));
-        await _ui.PressAsync(_locators.TypeD972C, "Tab");
+            await _ui.FillAsync(_locators.TypeD972C, _data.Resolve("{{data:type_339}}"));
+            await _ui.PressAsync(_locators.TypeD972C, "Tab");
         }
         if (_data.Condition("'Type of Equipment' != NULL"))
         {
-        await _ui.FillAsync(_locators.TypeOfEquipment, _data.Resolve("{{data:type_of_equipment_340}}"));
-        await _ui.PressAsync(_locators.TypeOfEquipment, "CLICK");
-        await _ui.PressAsync(_locators.TypeOfEquipment, "Tab");
+            await _ui.FillAsync(_locators.TypeOfEquipment, _data.Resolve("{{data:type_of_equipment_340}}"));
+            await _ui.PressAsync(_locators.TypeOfEquipment, "CLICK");
+            await _ui.PressAsync(_locators.TypeOfEquipment, "Tab");
         }
         await _ui.ClickAsync(_locators.OK);
     }
@@ -4532,30 +4532,30 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.EffectiveDate95094, "Tab");
         if (_data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
         {
-        await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_110}}"));
-        await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
+            await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_110}}"));
+            await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0076_677267Async
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0077_677267Async
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_112}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_112}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.ClickAsync(_locators.PrimaryRatingState);
+            await _ui.ClickAsync(_locators.PrimaryRatingState);
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_116}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -4569,12 +4569,12 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.TabOutOfPrimaryRatingStateFieldForSyncronization_0083_677267Async
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
+            await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_122}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "CLICK");
@@ -4698,98 +4698,98 @@ public sealed class NavigationPage
         // BuildingDetail_497f3cPage.BuildingFillInBuildingDetailFields_0128_677267Async
         if (_data.Condition("Construction != NULL"))
         {
-        await _ui.FillAsync(_locators.Construction39800, _data.Resolve("{{data:construction_186}}"));
-        await _ui.PressAsync(_locators.Construction39800, "Tab");
-        await _ui.PressAsync(_locators.Construction39800, "Tab");
+            await _ui.FillAsync(_locators.Construction39800, _data.Resolve("{{data:construction_186}}"));
+            await _ui.PressAsync(_locators.Construction39800, "Tab");
+            await _ui.PressAsync(_locators.Construction39800, "Tab");
         }
         if (_data.Condition("'Year Built' != NULL"))
         {
-        await _ui.FillAsync(_locators.YearBuilt, _data.Resolve("{{data:year_built_187}}"));
-        await _ui.PressAsync(_locators.YearBuilt, "Tab");
-        await _ui.PressAsync(_locators.YearBuilt, "Tab");
+            await _ui.FillAsync(_locators.YearBuilt, _data.Resolve("{{data:year_built_187}}"));
+            await _ui.PressAsync(_locators.YearBuilt, "Tab");
+            await _ui.PressAsync(_locators.YearBuilt, "Tab");
         }
         if (_data.Condition("'Square Feet' != NULL"))
         {
-        await _ui.FillAsync(_locators.SquareFeet, _data.Resolve("{{data:square_feet_188}}"));
-        await _ui.PressAsync(_locators.SquareFeet, "Tab");
-        await _ui.PressAsync(_locators.SquareFeet, "Tab");
+            await _ui.FillAsync(_locators.SquareFeet, _data.Resolve("{{data:square_feet_188}}"));
+            await _ui.PressAsync(_locators.SquareFeet, "Tab");
+            await _ui.PressAsync(_locators.SquareFeet, "Tab");
         }
         if (_data.Condition("Stories != NULL"))
         {
-        await _ui.FillAsync(_locators.Stories, _data.Resolve("{{data:stories_189}}"));
-        await _ui.PressAsync(_locators.Stories, "Tab");
-        await _ui.PressAsync(_locators.Stories, "Tab");
+            await _ui.FillAsync(_locators.Stories, _data.Resolve("{{data:stories_189}}"));
+            await _ui.PressAsync(_locators.Stories, "Tab");
+            await _ui.PressAsync(_locators.Stories, "Tab");
         }
         if (_data.Condition("Interest != NULL"))
         {
-        await _ui.FillAsync(_locators.Interest, _data.Resolve("{{data:interest_190}}"));
-        await _ui.PressAsync(_locators.Interest, "Tab");
-        await _ui.PressAsync(_locators.Interest, "Tab");
+            await _ui.FillAsync(_locators.Interest, _data.Resolve("{{data:interest_190}}"));
+            await _ui.PressAsync(_locators.Interest, "Tab");
+            await _ui.PressAsync(_locators.Interest, "Tab");
         }
         if (_data.Condition("'Roof Type' != NULL"))
         {
-        await _ui.FillAsync(_locators.RoofType, _data.Resolve("{{data:roof_type_191}}"));
-        await _ui.PressAsync(_locators.RoofType, "Tab");
-        await _ui.PressAsync(_locators.RoofType, "Tab");
+            await _ui.FillAsync(_locators.RoofType, _data.Resolve("{{data:roof_type_191}}"));
+            await _ui.PressAsync(_locators.RoofType, "Tab");
+            await _ui.PressAsync(_locators.RoofType, "Tab");
         }
         if (_data.Condition("Deductible != NULL"))
         {
-        await _ui.FillAsync(_locators.Deductible592D9, _data.Resolve("{{data:deductible_192}}"));
-        await _ui.PressAsync(_locators.Deductible592D9, "Tab");
-        await _ui.PressAsync(_locators.Deductible592D9, "Tab");
-        await _ui.PressAsync(_locators.Deductible592D9, "CLICK");
-        await _ui.PressAsync(_locators.Deductible592D9, "CLICK");
-        await _ui.PressAsync(_locators.Deductible592D9, "Tab");
+            await _ui.FillAsync(_locators.Deductible592D9, _data.Resolve("{{data:deductible_192}}"));
+            await _ui.PressAsync(_locators.Deductible592D9, "Tab");
+            await _ui.PressAsync(_locators.Deductible592D9, "Tab");
+            await _ui.PressAsync(_locators.Deductible592D9, "CLICK");
+            await _ui.PressAsync(_locators.Deductible592D9, "CLICK");
+            await _ui.PressAsync(_locators.Deductible592D9, "Tab");
         }
         if (_data.Condition("'Deductible Increased Theft' != NULL"))
         {
-        await _ui.FillAsync(_locators.DeductibleIncreasedTheft99E5F, _data.Resolve("{{data:deductible_increased_theft_193}}"));
-        await _ui.PressAsync(_locators.DeductibleIncreasedTheft99E5F, "Tab");
-        await _ui.PressAsync(_locators.DeductibleIncreasedTheft99E5F, "Tab");
+            await _ui.FillAsync(_locators.DeductibleIncreasedTheft99E5F, _data.Resolve("{{data:deductible_increased_theft_193}}"));
+            await _ui.PressAsync(_locators.DeductibleIncreasedTheft99E5F, "Tab");
+            await _ui.PressAsync(_locators.DeductibleIncreasedTheft99E5F, "Tab");
         }
         if (_data.Condition("'Deductible Wind Hail' != NULL"))
         {
-        await _ui.FillAsync(_locators.DeductibleWindHail911AF, _data.Resolve("{{data:deductible_wind_hail_194}}"));
-        await _ui.PressAsync(_locators.DeductibleWindHail911AF, "Tab");
-        await _ui.PressAsync(_locators.DeductibleWindHail911AF, "Tab");
+            await _ui.FillAsync(_locators.DeductibleWindHail911AF, _data.Resolve("{{data:deductible_wind_hail_194}}"));
+            await _ui.PressAsync(_locators.DeductibleWindHail911AF, "Tab");
+            await _ui.PressAsync(_locators.DeductibleWindHail911AF, "Tab");
         }
         if (_data.Condition("'BG2 Symbol' != NULL"))
         {
-        await _ui.FillAsync(_locators.BG2Symbol, _data.Resolve("{{data:bg2_symbol_195}}"));
-        await _ui.PressAsync(_locators.BG2Symbol, "Tab");
-        await _ui.PressAsync(_locators.BG2Symbol, "Tab");
+            await _ui.FillAsync(_locators.BG2Symbol, _data.Resolve("{{data:bg2_symbol_195}}"));
+            await _ui.PressAsync(_locators.BG2Symbol, "Tab");
+            await _ui.PressAsync(_locators.BG2Symbol, "Tab");
         }
         if (_data.Condition("'BG2 Symbol Prefix' != NULL"))
         {
-        await _ui.FillAsync(_locators.BG2SymbolPrefix, _data.Resolve("{{data:bg2_symbol_prefix_196}}"));
-        await _ui.PressAsync(_locators.BG2SymbolPrefix, "CLICK");
-        await _ui.PressAsync(_locators.BG2SymbolPrefix, "Tab");
+            await _ui.FillAsync(_locators.BG2SymbolPrefix, _data.Resolve("{{data:bg2_symbol_prefix_196}}"));
+            await _ui.PressAsync(_locators.BG2SymbolPrefix, "CLICK");
+            await _ui.PressAsync(_locators.BG2SymbolPrefix, "Tab");
         }
         if (_data.Condition("'Is the building cooled?' != NULL"))
         {
-        await _ui.FillAsync(_locators.IsTheBuildingCooled, _data.Resolve("{{data:is_the_building_cooled_197}}"));
-        await _ui.PressAsync(_locators.IsTheBuildingCooled, "Tab");
-        await _ui.PressAsync(_locators.IsTheBuildingCooled, "Tab");
+            await _ui.FillAsync(_locators.IsTheBuildingCooled, _data.Resolve("{{data:is_the_building_cooled_197}}"));
+            await _ui.PressAsync(_locators.IsTheBuildingCooled, "Tab");
+            await _ui.PressAsync(_locators.IsTheBuildingCooled, "Tab");
         }
         if (_data.Condition("'Is the building heated with a Solid Fuel Heating Device?' != NULL"))
         {
-        await _ui.FillAsync(_locators.IsTheBuildingHeatedWithASolidFuelHeatingDevice, _data.Resolve("{{data:is_the_building_heated_with_a_solid_fuel_heating_device_198}}"));
-        await _ui.PressAsync(_locators.IsTheBuildingHeatedWithASolidFuelHeatingDevice, "Tab");
-        await _ui.PressAsync(_locators.IsTheBuildingHeatedWithASolidFuelHeatingDevice, "CLICK");
-        await _ui.PressAsync(_locators.IsTheBuildingHeatedWithASolidFuelHeatingDevice, "Tab");
+            await _ui.FillAsync(_locators.IsTheBuildingHeatedWithASolidFuelHeatingDevice, _data.Resolve("{{data:is_the_building_heated_with_a_solid_fuel_heating_device_198}}"));
+            await _ui.PressAsync(_locators.IsTheBuildingHeatedWithASolidFuelHeatingDevice, "Tab");
+            await _ui.PressAsync(_locators.IsTheBuildingHeatedWithASolidFuelHeatingDevice, "CLICK");
+            await _ui.PressAsync(_locators.IsTheBuildingHeatedWithASolidFuelHeatingDevice, "Tab");
         }
         if (_data.Condition("'Provide a List of Surrounding Exposure/Other Occupancies within 100 ft (Including North, East, South, and West)' != NULL"))
         {
-        await _ui.FillAsync(_locators.ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest, _data.Resolve("{{data:provide_a_list_of_surrounding_exposure_other_occupancies_within_100_ft_including_north_east_south_and_west_199}}"));
-        await _ui.PressAsync(_locators.ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest, "Tab");
-        await _ui.PressAsync(_locators.ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest, "CLICK");
-        await _ui.PressAsync(_locators.ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest, "Tab");
+            await _ui.FillAsync(_locators.ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest, _data.Resolve("{{data:provide_a_list_of_surrounding_exposure_other_occupancies_within_100_ft_including_north_east_south_and_west_199}}"));
+            await _ui.PressAsync(_locators.ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest, "Tab");
+            await _ui.PressAsync(_locators.ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest, "CLICK");
+            await _ui.PressAsync(_locators.ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest, "Tab");
         }
         if (_data.Condition("'Eligible For Enhanced Wind Rating Program' != NULL"))
         {
-        await _ui.FillAsync(_locators.EligibleForEnhancedWindRatingProgram, _data.Resolve("{{data:eligible_for_enhanced_wind_rating_program_200}}"));
-        await _ui.PressAsync(_locators.EligibleForEnhancedWindRatingProgram, "Tab");
-        await _ui.PressAsync(_locators.EligibleForEnhancedWindRatingProgram, "Tab");
+            await _ui.FillAsync(_locators.EligibleForEnhancedWindRatingProgram, _data.Resolve("{{data:eligible_for_enhanced_wind_rating_program_200}}"));
+            await _ui.PressAsync(_locators.EligibleForEnhancedWindRatingProgram, "Tab");
+            await _ui.PressAsync(_locators.EligibleForEnhancedWindRatingProgram, "Tab");
         }
         await _ui.ClickAsync(_locators.BuildingDetailOK);
     }
@@ -4803,51 +4803,51 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.RatingGroups46DD2, "Exists");
         if (_data.Condition("Description != NULL"))
         {
-        await _ui.FillAsync(_locators.Description8A08D, _data.Resolve("{{data:description_204}}"));
-        await _ui.PressAsync(_locators.Description8A08D, "Tab");
-        await _ui.PressAsync(_locators.Description8A08D, "Tab");
+            await _ui.FillAsync(_locators.Description8A08D, _data.Resolve("{{data:description_204}}"));
+            await _ui.PressAsync(_locators.Description8A08D, "Tab");
+            await _ui.PressAsync(_locators.Description8A08D, "Tab");
         }
         if (_data.Condition("'Risk Type' != NULL"))
         {
-        await _ui.FillAsync(_locators.RiskType, _data.Resolve("{{data:risk_type_205}}"));
-        await _ui.PressAsync(_locators.RiskType, "Tab");
-        await _ui.PressAsync(_locators.RiskType, "Tab");
+            await _ui.FillAsync(_locators.RiskType, _data.Resolve("{{data:risk_type_205}}"));
+            await _ui.PressAsync(_locators.RiskType, "Tab");
+            await _ui.PressAsync(_locators.RiskType, "Tab");
         }
         if (_data.Condition("Coinsurance != NULL"))
         {
-        await _ui.FillAsync(_locators.Coinsurance6348B, _data.Resolve("{{data:coinsurance_206}}"));
-        await _ui.PressAsync(_locators.Coinsurance6348B, "Tab");
-        await _ui.PressAsync(_locators.Coinsurance6348B, "Tab");
+            await _ui.FillAsync(_locators.Coinsurance6348B, _data.Resolve("{{data:coinsurance_206}}"));
+            await _ui.PressAsync(_locators.Coinsurance6348B, "Tab");
+            await _ui.PressAsync(_locators.Coinsurance6348B, "Tab");
         }
         if (_data.Condition("Deductible != NULL"))
         {
-        await _ui.FillAsync(_locators.Deductible01AB9, _data.Resolve("{{data:deductible_207}}"));
-        await _ui.PressAsync(_locators.Deductible01AB9, "Tab");
-        await _ui.PressAsync(_locators.Deductible01AB9, "Tab");
+            await _ui.FillAsync(_locators.Deductible01AB9, _data.Resolve("{{data:deductible_207}}"));
+            await _ui.PressAsync(_locators.Deductible01AB9, "Tab");
+            await _ui.PressAsync(_locators.Deductible01AB9, "Tab");
         }
         if (_data.Condition("'Deductible Increased Theft' != NULL"))
         {
-        await _ui.FillAsync(_locators.DeductibleIncreasedTheftF76DB, _data.Resolve("{{data:deductible_increased_theft_208}}"));
-        await _ui.PressAsync(_locators.DeductibleIncreasedTheftF76DB, "Tab");
-        await _ui.PressAsync(_locators.DeductibleIncreasedTheftF76DB, "Tab");
+            await _ui.FillAsync(_locators.DeductibleIncreasedTheftF76DB, _data.Resolve("{{data:deductible_increased_theft_208}}"));
+            await _ui.PressAsync(_locators.DeductibleIncreasedTheftF76DB, "Tab");
+            await _ui.PressAsync(_locators.DeductibleIncreasedTheftF76DB, "Tab");
         }
         if (_data.Condition("'Deductible Wind Hail' != NULL"))
         {
-        await _ui.FillAsync(_locators.DeductibleWindHailAB1C3, _data.Resolve("{{data:deductible_wind_hail_209}}"));
-        await _ui.PressAsync(_locators.DeductibleWindHailAB1C3, "Tab");
-        await _ui.PressAsync(_locators.DeductibleWindHailAB1C3, "Tab");
+            await _ui.FillAsync(_locators.DeductibleWindHailAB1C3, _data.Resolve("{{data:deductible_wind_hail_209}}"));
+            await _ui.PressAsync(_locators.DeductibleWindHailAB1C3, "Tab");
+            await _ui.PressAsync(_locators.DeductibleWindHailAB1C3, "Tab");
         }
         if (_data.Condition("'Cause Of Loss' != NULL"))
         {
-        await _ui.FillAsync(_locators.CauseOfLoss, _data.Resolve("{{data:cause_of_loss_210}}"));
-        await _ui.PressAsync(_locators.CauseOfLoss, "Tab");
-        await _ui.PressAsync(_locators.CauseOfLoss, "Tab");
+            await _ui.FillAsync(_locators.CauseOfLoss, _data.Resolve("{{data:cause_of_loss_210}}"));
+            await _ui.PressAsync(_locators.CauseOfLoss, "Tab");
+            await _ui.PressAsync(_locators.CauseOfLoss, "Tab");
         }
         if (_data.Condition("Valuation != NULL"))
         {
-        await _ui.FillAsync(_locators.Valuation, _data.Resolve("{{data:valuation_211}}"));
-        await _ui.PressAsync(_locators.Valuation, "Tab");
-        await _ui.PressAsync(_locators.Valuation, "Tab");
+            await _ui.FillAsync(_locators.Valuation, _data.Resolve("{{data:valuation_211}}"));
+            await _ui.PressAsync(_locators.Valuation, "Tab");
+            await _ui.PressAsync(_locators.Valuation, "Tab");
         }
         await _ui.ClickAsync(_locators.AddGroup);
     }
@@ -4860,93 +4860,93 @@ public sealed class NavigationPage
         // PropertyMain_a49a9ePage.FillOutMainPropertyQuestions_0132_677267Async
         if (_data.Condition("'Increased Pollutant Cleanup' != NULL"))
         {
-        await _ui.FillAsync(_locators.IncreasedPollutantCleanup, _data.Resolve("{{data:increased_pollutant_cleanup_214}}"));
-        await _ui.PressAsync(_locators.IncreasedPollutantCleanup, "Tab");
-        await _ui.PressAsync(_locators.IncreasedPollutantCleanup, "Tab");
+            await _ui.FillAsync(_locators.IncreasedPollutantCleanup, _data.Resolve("{{data:increased_pollutant_cleanup_214}}"));
+            await _ui.PressAsync(_locators.IncreasedPollutantCleanup, "Tab");
+            await _ui.PressAsync(_locators.IncreasedPollutantCleanup, "Tab");
         }
         if (_data.Condition("'Debris Removal Additional' != NULL"))
         {
-        await _ui.FillAsync(_locators.DebrisRemovalAdditional, _data.Resolve("{{data:debris_removal_additional_215}}"));
-        await _ui.PressAsync(_locators.DebrisRemovalAdditional, "Tab");
-        await _ui.PressAsync(_locators.DebrisRemovalAdditional, "Tab");
+            await _ui.FillAsync(_locators.DebrisRemovalAdditional, _data.Resolve("{{data:debris_removal_additional_215}}"));
+            await _ui.PressAsync(_locators.DebrisRemovalAdditional, "Tab");
+            await _ui.PressAsync(_locators.DebrisRemovalAdditional, "Tab");
         }
         if (_data.Condition("'Debris Removal Additional Limit' != NULL"))
         {
-        await _ui.FillAsync(_locators.DebrisRemovalAdditionalLimit, _data.Resolve("{{data:debris_removal_additional_limit_216}}"));
-        await _ui.PressAsync(_locators.DebrisRemovalAdditionalLimit, "Tab");
-        await _ui.PressAsync(_locators.DebrisRemovalAdditionalLimit, "Tab");
+            await _ui.FillAsync(_locators.DebrisRemovalAdditionalLimit, _data.Resolve("{{data:debris_removal_additional_limit_216}}"));
+            await _ui.PressAsync(_locators.DebrisRemovalAdditionalLimit, "Tab");
+            await _ui.PressAsync(_locators.DebrisRemovalAdditionalLimit, "Tab");
         }
         if (_data.Condition("'Vacant Building' != NULL"))
         {
-        await _ui.FillAsync(_locators.VacantBuilding, _data.Resolve("{{data:vacant_building_217}}"));
-        await _ui.PressAsync(_locators.VacantBuilding, "Tab");
-        await _ui.PressAsync(_locators.VacantBuilding, "Tab");
+            await _ui.FillAsync(_locators.VacantBuilding, _data.Resolve("{{data:vacant_building_217}}"));
+            await _ui.PressAsync(_locators.VacantBuilding, "Tab");
+            await _ui.PressAsync(_locators.VacantBuilding, "Tab");
         }
         if (_data.Condition("'% Occupied' != NULL"))
         {
-        await _ui.FillAsync(_locators.Occupied, _data.Resolve("{{data:occupied_218}}"));
-        await _ui.PressAsync(_locators.Occupied, "Tab");
-        await _ui.PressAsync(_locators.Occupied, "Tab");
+            await _ui.FillAsync(_locators.Occupied, _data.Resolve("{{data:occupied_218}}"));
+            await _ui.PressAsync(_locators.Occupied, "Tab");
+            await _ui.PressAsync(_locators.Occupied, "Tab");
         }
         if (_data.Condition("'Pier Or Wharf' != NULL"))
         {
-        await _ui.FillAsync(_locators.PierOrWharf, _data.Resolve("{{data:pier_or_wharf_219}}"));
-        await _ui.PressAsync(_locators.PierOrWharf, "Tab");
-        await _ui.PressAsync(_locators.PierOrWharf, "Tab");
+            await _ui.FillAsync(_locators.PierOrWharf, _data.Resolve("{{data:pier_or_wharf_219}}"));
+            await _ui.PressAsync(_locators.PierOrWharf, "Tab");
+            await _ui.PressAsync(_locators.PierOrWharf, "Tab");
         }
         if (_data.Condition("'Pier Or Wharf Construction' != NULL"))
         {
-        await _ui.FillAsync(_locators.PierOrWharfConstruction, _data.Resolve("{{data:pier_or_wharf_construction_220}}"));
-        await _ui.PressAsync(_locators.PierOrWharfConstruction, "Tab");
-        await _ui.PressAsync(_locators.PierOrWharfConstruction, "Tab");
+            await _ui.FillAsync(_locators.PierOrWharfConstruction, _data.Resolve("{{data:pier_or_wharf_construction_220}}"));
+            await _ui.PressAsync(_locators.PierOrWharfConstruction, "Tab");
+            await _ui.PressAsync(_locators.PierOrWharfConstruction, "Tab");
         }
         if (_data.Condition("'Pier Or Wharf Cause Of Loss' != NULL"))
         {
-        await _ui.FillAsync(_locators.PierOrWharfCauseOfLoss, _data.Resolve("{{data:pier_or_wharf_cause_of_loss_221}}"));
-        await _ui.PressAsync(_locators.PierOrWharfCauseOfLoss, "Tab");
-        await _ui.PressAsync(_locators.PierOrWharfCauseOfLoss, "Tab");
-        await _ui.PressAsync(_locators.PierOrWharfCauseOfLoss, "Tab");
+            await _ui.FillAsync(_locators.PierOrWharfCauseOfLoss, _data.Resolve("{{data:pier_or_wharf_cause_of_loss_221}}"));
+            await _ui.PressAsync(_locators.PierOrWharfCauseOfLoss, "Tab");
+            await _ui.PressAsync(_locators.PierOrWharfCauseOfLoss, "Tab");
+            await _ui.PressAsync(_locators.PierOrWharfCauseOfLoss, "Tab");
         }
         if (_data.Condition("'Pier Or Wharf COL Options' != NULL"))
         {
-        await _ui.FillAsync(_locators.PierOrWharfCOLOptions, _data.Resolve("{{data:pier_or_wharf_col_options_222}}"));
-        await _ui.PressAsync(_locators.PierOrWharfCOLOptions, "Tab");
-        await _ui.PressAsync(_locators.PierOrWharfCOLOptions, "CLICK");
-        await _ui.PressAsync(_locators.PierOrWharfCOLOptions, "Tab");
+            await _ui.FillAsync(_locators.PierOrWharfCOLOptions, _data.Resolve("{{data:pier_or_wharf_col_options_222}}"));
+            await _ui.PressAsync(_locators.PierOrWharfCOLOptions, "Tab");
+            await _ui.PressAsync(_locators.PierOrWharfCOLOptions, "CLICK");
+            await _ui.PressAsync(_locators.PierOrWharfCOLOptions, "Tab");
         }
         if (_data.Condition("'Vacancy Permit' != NULL"))
         {
-        await _ui.FillAsync(_locators.VacancyPermit, _data.Resolve("{{data:vacancy_permit_223}}"));
-        await _ui.PressAsync(_locators.VacancyPermit, "Tab");
-        await _ui.PressAsync(_locators.VacancyPermit, "Tab");
+            await _ui.FillAsync(_locators.VacancyPermit, _data.Resolve("{{data:vacancy_permit_223}}"));
+            await _ui.PressAsync(_locators.VacancyPermit, "Tab");
+            await _ui.PressAsync(_locators.VacancyPermit, "Tab");
         }
         if (_data.Condition("'Pier Or Wharf COL Options' != NULL"))
         {
-        await _ui.WaitAsync(_locators.PierOrWharfCOLOptions, "Exists");
+            await _ui.WaitAsync(_locators.PierOrWharfCOLOptions, "Exists");
         }
         // PropertyAddClass_ed4d5dPage.PropertyAddClass_0133_677267Async
         await _ui.ClickAsync(_locators.AddClassDCD8F);
         if (_data.Condition("(State !=\"OR\")||(State!=\"WA\")||(State!=\"VT\")"))
         {
-        await _ui.FillAsync(_locators.SearchValue54F3C, _data.Resolve("{{data:search_value_226}}"));
-        await _ui.PressAsync(_locators.SearchValue54F3C, "CLICK");
-        await _ui.PressAsync(_locators.SearchValue54F3C, "Tab");
-        await _ui.PressAsync(_locators.SearchValue54F3C, "Tab");
+            await _ui.FillAsync(_locators.SearchValue54F3C, _data.Resolve("{{data:search_value_226}}"));
+            await _ui.PressAsync(_locators.SearchValue54F3C, "CLICK");
+            await _ui.PressAsync(_locators.SearchValue54F3C, "Tab");
+            await _ui.PressAsync(_locators.SearchValue54F3C, "Tab");
         }
         if (_data.Condition("(State !=\"OR\")||(State!=\"WA\")||(State!=\"VT\")"))
         {
-        await _ui.FillAsync(_locators.SearchResultsD0AA8, _data.Resolve("{{data:search_results_227}}"));
-        await _ui.PressAsync(_locators.SearchResultsD0AA8, "CLICK");
-        await _ui.PressAsync(_locators.SearchResultsD0AA8, "Enter");
-        await _ui.PressAsync(_locators.SearchResultsD0AA8, "Tab");
-        await _ui.PressAsync(_locators.SearchResultsD0AA8, "Tab");
+            await _ui.FillAsync(_locators.SearchResultsD0AA8, _data.Resolve("{{data:search_results_227}}"));
+            await _ui.PressAsync(_locators.SearchResultsD0AA8, "CLICK");
+            await _ui.PressAsync(_locators.SearchResultsD0AA8, "Enter");
+            await _ui.PressAsync(_locators.SearchResultsD0AA8, "Tab");
+            await _ui.PressAsync(_locators.SearchResultsD0AA8, "Tab");
         }
         await _ui.FillAsync(_locators.OccupancyType, _data.Resolve("{{data:occupancy_type_228}}"));
         await _ui.PressAsync(_locators.OccupancyType, "CLICK");
         await _ui.PressAsync(_locators.OccupancyType, "Tab");
         if (_data.Condition("(State ==\"OR\")||(State==\"WA\")"))
         {
-        await _ui.FillAsync(_locators.SearchResultsD0AA8, _data.Resolve(""));
+            await _ui.FillAsync(_locators.SearchResultsD0AA8, _data.Resolve(""));
         }
         await _ui.ClickAsync(_locators.PropertyAddClassOK);
         await _ui.FillAsync(_locators.BuildingRatingGroup, _data.Resolve("{{data:building_rating_group_231}}"));
@@ -4971,10 +4971,10 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.PropertyOfOthersLimit, "Tab");
         if (_data.Condition("(State ==\"OR\")||(State==\"WA\")"))
         {
-        await _ui.FillAsync(_locators.SearchValue54F3C, _data.Resolve("{{data:search_value_237}}"));
-        await _ui.PressAsync(_locators.SearchValue54F3C, "CLICK");
-        await _ui.PressAsync(_locators.SearchValue54F3C, "Tab");
-        await _ui.PressAsync(_locators.SearchValue54F3C, "Tab");
+            await _ui.FillAsync(_locators.SearchValue54F3C, _data.Resolve("{{data:search_value_237}}"));
+            await _ui.PressAsync(_locators.SearchValue54F3C, "CLICK");
+            await _ui.PressAsync(_locators.SearchValue54F3C, "Tab");
+            await _ui.PressAsync(_locators.SearchValue54F3C, "Tab");
         }
         // PropertyEnterBuildingRCT_b0af04Page.PropertyEnterBuildingRCT_0134_677267Async
         await _ui.ClickAsync(_locators.Detail7F662);
@@ -5101,7 +5101,7 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.AdditionalOtherInterestInputFirstName, "Tab");
         await _ui.PressAsync(_locators.AdditionalOtherInterestInputFirstName, "CLICK");
         await _ui.WaitAsync(_locators.AdditionalOtherInterestInputLastName, "Exists");
-        _data.Set("AdditionalOtherInterestInputLastName_0055", _data.Random("AdditionalOtherInterestInputLastName_0055", "^[a-z]{15}$"));
+        // Random data AdditionalOtherInterestInputLastName_0055 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.AdditionalOtherInterestInputAddress1, _data.Resolve("{{data:additionalotherinterestinput_address1_55}}"));
         await _ui.PressAsync(_locators.AdditionalOtherInterestInputAddress1, "Tab");
         await _ui.FillAsync(_locators.ZipCodeBCEA0, _data.Resolve("{{data:zip_code_56}}"));
@@ -5126,30 +5126,30 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.EffectiveDate95094, "Tab");
         if (_data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
         {
-        await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_95}}"));
-        await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
+            await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_95}}"));
+            await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0079_a6f47eAsync
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0080_a6f47eAsync
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_97}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_97}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.ClickAsync(_locators.PrimaryRatingState);
+            await _ui.ClickAsync(_locators.PrimaryRatingState);
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_101}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -5159,46 +5159,46 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0082_a6f47eAsync
         if (_data.Condition("'Product (LOB)' == \"BOP\" || 'Product (LOB)' == \"BAP\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_103}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_103}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' == \"BOP\" || 'Product (LOB)' == \"UMB\" || 'Product (LOB)' == \"BAP\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_104}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_104}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsVirginia_0083_a6f47eAsync
         _data.Set("StateIsVirginia", _data.Resolve("Alabama==\"Virginia\"; Expression= 'Alabama'=='Virginia'"));
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0084_a6f47eAsync
         if (_data.Condition("'Product (LOB)' == \"BAP\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_106}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_106}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' == \"BAP\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_107}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_107}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0085_a6f47eAsync
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.TabOutOfPrimaryRatingStateFieldForSyncronization_0086_a6f47eAsync
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
+            await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_111}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "CLICK");
@@ -5338,20 +5338,20 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.StateDetails72631, "Exists");
         if (_data.Condition("'UM Type Default' != NULL"))
         {
-        await _ui.FillAsync(_locators.UMTypeDefaultSelections, _data.Resolve("{{data:um_type_default_selections_211}}"));
-        await _ui.PressAsync(_locators.UMTypeDefaultSelections, "CLICK");
-        await _ui.PressAsync(_locators.UMTypeDefaultSelections, "RETURN");
-        await _ui.PressAsync(_locators.UMTypeDefaultSelections, "Tab");
-        await _ui.PressAsync(_locators.UMTypeDefaultSelections, "Tab");
-        await _ui.PressAsync(_locators.UMTypeDefaultSelections, "Tab");
+            await _ui.FillAsync(_locators.UMTypeDefaultSelections, _data.Resolve("{{data:um_type_default_selections_211}}"));
+            await _ui.PressAsync(_locators.UMTypeDefaultSelections, "CLICK");
+            await _ui.PressAsync(_locators.UMTypeDefaultSelections, "RETURN");
+            await _ui.PressAsync(_locators.UMTypeDefaultSelections, "Tab");
+            await _ui.PressAsync(_locators.UMTypeDefaultSelections, "Tab");
+            await _ui.PressAsync(_locators.UMTypeDefaultSelections, "Tab");
         }
         if (_data.Condition("'UMBI Limit' != NULL AND 'UM Type Default' != \"UMBIPD CSL\""))
         {
-        await _ui.FillAsync(_locators.UMBILimit, _data.Resolve("{{data:umbi_limit_212}}"));
-        await _ui.PressAsync(_locators.UMBILimit, "CLICK");
-        await _ui.PressAsync(_locators.UMBILimit, "Tab");
-        await _ui.PressAsync(_locators.UMBILimit, "Tab");
-        await _ui.PressAsync(_locators.UMBILimit, "Tab");
+            await _ui.FillAsync(_locators.UMBILimit, _data.Resolve("{{data:umbi_limit_212}}"));
+            await _ui.PressAsync(_locators.UMBILimit, "CLICK");
+            await _ui.PressAsync(_locators.UMBILimit, "Tab");
+            await _ui.PressAsync(_locators.UMBILimit, "Tab");
+            await _ui.PressAsync(_locators.UMBILimit, "Tab");
         }
         // StateDetailsUMUIM_f65252Page.EnterBasicUIMInfo_0142_a6f47eAsync
         await _ui.WaitAsync(_locators.StateDetails72631, "Exists");
@@ -5472,58 +5472,58 @@ public sealed class NavigationPage
         // RiskScheduleVehicleInformation_e69550Page.EnterVIN_0174_a6f47eAsync
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.WaitAsync(_locators.VIN, "Visible");
+            await _ui.WaitAsync(_locators.VIN, "Visible");
         }
         if (_data.Condition("Year != NULL"))
         {
-        await _ui.FillAsync(_locators.Year, _data.Resolve(""));
+            await _ui.FillAsync(_locators.Year, _data.Resolve(""));
         }
         if (_data.Condition("Make != NULL"))
         {
-        await _ui.FillAsync(_locators.Make, _data.Resolve(""));
+            await _ui.FillAsync(_locators.Make, _data.Resolve(""));
         }
         if (_data.Condition("Model != NULL"))
         {
-        await _ui.FillAsync(_locators.Model, _data.Resolve(""));
+            await _ui.FillAsync(_locators.Model, _data.Resolve(""));
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.PressAsync(_locators.VIN, "PRE:TAB");
-        await _ui.PressAsync(_locators.VIN, "Tab");
-        await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "PRE:TAB");
+            await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "Tab");
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.FillAsync(_locators.VIN, _data.Resolve("{{data:vin_275}}"));
-        await _ui.PressAsync(_locators.VIN, "Tab");
-        await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.FillAsync(_locators.VIN, _data.Resolve("{{data:vin_275}}"));
+            await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsKY_0175_a6f47eAsync
         _data.Set("StateIsKY", _data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0176_a6f47eAsync
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.VerifyAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("Exists"), "");
         }
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0177_a6f47eAsync
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_278}}"));
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Click");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Enter");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
+            await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_278}}"));
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Click");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Enter");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsNotUT_0178_a6f47eAsync
         _data.Set("StateIsNotUT", _data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0181_a6f47eAsync
         if (_data.Condition("GCW != NULL"))
         {
-        await _ui.FillAsync(_locators.GCW, _data.Resolve(""));
+            await _ui.FillAsync(_locators.GCW, _data.Resolve(""));
         }
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve(""));
+            await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve(""));
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsNJ_0185_a6f47eAsync
         _data.Set("StateIsNJ", _data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
@@ -5536,10 +5536,10 @@ public sealed class NavigationPage
         // RiskSchedulePhysicalDamage_c46a6aPage.AnswerCollisionAsNoIfNull_0191_a6f47eAsync
         if (_data.Condition("'Collision Coverage' == NULL"))
         {
-        await _ui.FillAsync(_locators.CollisionCoverage, _data.Resolve("{{data:collision_coverage_286}}"));
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.FillAsync(_locators.CollisionCoverage, _data.Resolve("{{data:collision_coverage_286}}"));
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
         }
         // RiskSchedulePhysicalDamage_c46a6aPage.ConfirmVehicleAddition_0192_a6f47eAsync
         await _ui.ClickAsync(_locators.PhysicalDamageOK);
@@ -5577,69 +5577,69 @@ public sealed class NavigationPage
         // RiskScheduleVehicleInformation_e69550Page.EnterVIN_0203_a6f47eAsync
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.WaitAsync(_locators.VIN, "Visible");
+            await _ui.WaitAsync(_locators.VIN, "Visible");
         }
         if (_data.Condition("Year != NULL"))
         {
-        await _ui.FillAsync(_locators.Year, _data.Resolve(""));
+            await _ui.FillAsync(_locators.Year, _data.Resolve(""));
         }
         if (_data.Condition("Make != NULL"))
         {
-        await _ui.FillAsync(_locators.Make, _data.Resolve(""));
+            await _ui.FillAsync(_locators.Make, _data.Resolve(""));
         }
         if (_data.Condition("Model != NULL"))
         {
-        await _ui.FillAsync(_locators.Model, _data.Resolve(""));
+            await _ui.FillAsync(_locators.Model, _data.Resolve(""));
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.PressAsync(_locators.VIN, "PRE:TAB");
-        await _ui.PressAsync(_locators.VIN, "Tab");
-        await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "PRE:TAB");
+            await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "Tab");
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.FillAsync(_locators.VIN, _data.Resolve("{{data:vin_309}}"));
-        await _ui.PressAsync(_locators.VIN, "Tab");
-        await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.FillAsync(_locators.VIN, _data.Resolve("{{data:vin_309}}"));
+            await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsKY_0204_a6f47eAsync
         _data.Set("StateIsKY", _data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0205_a6f47eAsync
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.VerifyAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("Exists"), "");
         }
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0206_a6f47eAsync
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_312}}"));
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Click");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Enter");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
+            await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_312}}"));
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Click");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Enter");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsNotUT_0207_a6f47eAsync
         _data.Set("StateIsNotUT", _data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0210_a6f47eAsync
         if (_data.Condition("GCW != NULL"))
         {
-        await _ui.FillAsync(_locators.GCW, _data.Resolve(""));
+            await _ui.FillAsync(_locators.GCW, _data.Resolve(""));
         }
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_315}}"));
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Click");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Enter");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
+            await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_315}}"));
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Click");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Enter");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
         }
         // RiskSchedulePhysicalDamage_c46a6aPage.AddRemovePhysicalDamage_0213_a6f47eAsync
         if (_data.Condition("'OTC Causes of Loss' != NULL"))
         {
-        await _ui.FillAsync(_locators.OTCCausesOfLoss, _data.Resolve("{{data:otc_causes_of_loss_316}}"));
-        await _ui.PressAsync(_locators.OTCCausesOfLoss, "CLICK");
-        await _ui.PressAsync(_locators.OTCCausesOfLoss, "Tab");
+            await _ui.FillAsync(_locators.OTCCausesOfLoss, _data.Resolve("{{data:otc_causes_of_loss_316}}"));
+            await _ui.PressAsync(_locators.OTCCausesOfLoss, "CLICK");
+            await _ui.PressAsync(_locators.OTCCausesOfLoss, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsNJ_0214_a6f47eAsync
         _data.Set("StateIsNJ", _data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
@@ -5652,10 +5652,10 @@ public sealed class NavigationPage
         // RiskSchedulePhysicalDamage_c46a6aPage.AnswerCollisionAsNoIfNull_0220_a6f47eAsync
         if (_data.Condition("'Collision Coverage' == NULL"))
         {
-        await _ui.FillAsync(_locators.CollisionCoverage, _data.Resolve("{{data:collision_coverage_321}}"));
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.FillAsync(_locators.CollisionCoverage, _data.Resolve("{{data:collision_coverage_321}}"));
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
         }
         // RiskSchedulePhysicalDamage_c46a6aPage.ConfirmVehicleAddition_0221_a6f47eAsync
         await _ui.ClickAsync(_locators.PhysicalDamageOK);
@@ -5693,62 +5693,62 @@ public sealed class NavigationPage
         // RiskScheduleVehicleInformation_e69550Page.EnterVIN_0232_a6f47eAsync
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.WaitAsync(_locators.VIN, "Visible");
+            await _ui.WaitAsync(_locators.VIN, "Visible");
         }
         if (_data.Condition("Year != NULL"))
         {
-        await _ui.FillAsync(_locators.Year, _data.Resolve(""));
+            await _ui.FillAsync(_locators.Year, _data.Resolve(""));
         }
         if (_data.Condition("Make != NULL"))
         {
-        await _ui.FillAsync(_locators.Make, _data.Resolve(""));
+            await _ui.FillAsync(_locators.Make, _data.Resolve(""));
         }
         if (_data.Condition("Model != NULL"))
         {
-        await _ui.FillAsync(_locators.Model, _data.Resolve(""));
+            await _ui.FillAsync(_locators.Model, _data.Resolve(""));
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.PressAsync(_locators.VIN, "PRE:TAB");
-        await _ui.PressAsync(_locators.VIN, "Tab");
-        await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "PRE:TAB");
+            await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "Tab");
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.FillAsync(_locators.VIN, _data.Resolve("{{data:vin_344}}"));
-        await _ui.PressAsync(_locators.VIN, "Tab");
-        await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.FillAsync(_locators.VIN, _data.Resolve("{{data:vin_344}}"));
+            await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsKY_0233_a6f47eAsync
         _data.Set("StateIsKY", _data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0234_a6f47eAsync
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.VerifyAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("Exists"), "");
         }
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0235_a6f47eAsync
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_347}}"));
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Click");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Enter");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
+            await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_347}}"));
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Click");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Enter");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsNotUT_0236_a6f47eAsync
         _data.Set("StateIsNotUT", _data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0239_a6f47eAsync
         if (_data.Condition("GCW != NULL"))
         {
-        await _ui.FillAsync(_locators.GCW, _data.Resolve("{{data:gcw_349}}"));
-        await _ui.PressAsync(_locators.GCW, "Click");
-        await _ui.PressAsync(_locators.GCW, "Enter");
-        await _ui.PressAsync(_locators.GCW, "Tab");
-        await _ui.PressAsync(_locators.GCW, "Tab");
+            await _ui.FillAsync(_locators.GCW, _data.Resolve("{{data:gcw_349}}"));
+            await _ui.PressAsync(_locators.GCW, "Click");
+            await _ui.PressAsync(_locators.GCW, "Enter");
+            await _ui.PressAsync(_locators.GCW, "Tab");
+            await _ui.PressAsync(_locators.GCW, "Tab");
         }
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve(""));
+            await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve(""));
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsNJ_0243_a6f47eAsync
         _data.Set("StateIsNJ", _data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
@@ -5761,10 +5761,10 @@ public sealed class NavigationPage
         // RiskSchedulePhysicalDamage_c46a6aPage.AnswerCollisionAsNoIfNull_0249_a6f47eAsync
         if (_data.Condition("'Collision Coverage' == NULL"))
         {
-        await _ui.FillAsync(_locators.CollisionCoverage, _data.Resolve("{{data:collision_coverage_355}}"));
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.FillAsync(_locators.CollisionCoverage, _data.Resolve("{{data:collision_coverage_355}}"));
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
         }
         // RiskSchedulePhysicalDamage_c46a6aPage.ConfirmVehicleAddition_0250_a6f47eAsync
         await _ui.ClickAsync(_locators.PhysicalDamageOK);
@@ -5802,99 +5802,99 @@ public sealed class NavigationPage
         // RiskScheduleVehicleInformation_e69550Page.EnterVIN_0261_a6f47eAsync
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.WaitAsync(_locators.VIN, "Visible");
+            await _ui.WaitAsync(_locators.VIN, "Visible");
         }
         if (_data.Condition("Year != NULL"))
         {
-        await _ui.FillAsync(_locators.Year, _data.Resolve(""));
+            await _ui.FillAsync(_locators.Year, _data.Resolve(""));
         }
         if (_data.Condition("Make != NULL"))
         {
-        await _ui.FillAsync(_locators.Make, _data.Resolve(""));
+            await _ui.FillAsync(_locators.Make, _data.Resolve(""));
         }
         if (_data.Condition("Model != NULL"))
         {
-        await _ui.FillAsync(_locators.Model, _data.Resolve(""));
+            await _ui.FillAsync(_locators.Model, _data.Resolve(""));
         }
         if (_data.Condition("'Value Basis' != NULL"))
         {
-        await _ui.FillAsync(_locators.ValueBasis, _data.Resolve("{{data:value_basis_377}}"));
-        await _ui.PressAsync(_locators.ValueBasis, "Click");
-        await _ui.PressAsync(_locators.ValueBasis, "Tab");
-        await _ui.PressAsync(_locators.ValueBasis, "Tab");
+            await _ui.FillAsync(_locators.ValueBasis, _data.Resolve("{{data:value_basis_377}}"));
+            await _ui.PressAsync(_locators.ValueBasis, "Click");
+            await _ui.PressAsync(_locators.ValueBasis, "Tab");
+            await _ui.PressAsync(_locators.ValueBasis, "Tab");
         }
         if (_data.Condition("'Original Cost New' != NULL"))
         {
-        await _ui.FillAsync(_locators.OriginalCostNew, _data.Resolve("{{data:original_cost_new_378}}"));
-        await _ui.PressAsync(_locators.OriginalCostNew, "CLICK");
-        await _ui.PressAsync(_locators.OriginalCostNew, "Tab");
-        await _ui.PressAsync(_locators.OriginalCostNew, "Tab");
+            await _ui.FillAsync(_locators.OriginalCostNew, _data.Resolve("{{data:original_cost_new_378}}"));
+            await _ui.PressAsync(_locators.OriginalCostNew, "CLICK");
+            await _ui.PressAsync(_locators.OriginalCostNew, "Tab");
+            await _ui.PressAsync(_locators.OriginalCostNew, "Tab");
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.PressAsync(_locators.VIN, "PRE:TAB");
-        await _ui.PressAsync(_locators.VIN, "Tab");
-        await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "PRE:TAB");
+            await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "Tab");
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.FillAsync(_locators.VIN, _data.Resolve("{{data:vin_380}}"));
-        await _ui.PressAsync(_locators.VIN, "Tab");
-        await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.FillAsync(_locators.VIN, _data.Resolve("{{data:vin_380}}"));
+            await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsKY_0262_a6f47eAsync
         _data.Set("StateIsKY", _data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0263_a6f47eAsync
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.VerifyAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("Exists"), "");
         }
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0264_a6f47eAsync
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_383}}"));
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Click");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Enter");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
+            await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_383}}"));
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Click");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Enter");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsNotUT_0265_a6f47eAsync
         _data.Set("StateIsNotUT", _data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
         // RiskScheduleGeneralCoverage_61d1eaPage.EnterGeneralCoverage_0266_a6f47eAsync
         if (_data.Condition("'Used as Showroom' != NULL"))
         {
-        await _ui.FillAsync(_locators.UsedAsShowroom, _data.Resolve("{{data:used_as_showroom_385}}"));
-        await _ui.PressAsync(_locators.UsedAsShowroom, "CLICK");
-        await _ui.PressAsync(_locators.UsedAsShowroom, "Tab");
+            await _ui.FillAsync(_locators.UsedAsShowroom, _data.Resolve("{{data:used_as_showroom_385}}"));
+            await _ui.PressAsync(_locators.UsedAsShowroom, "CLICK");
+            await _ui.PressAsync(_locators.UsedAsShowroom, "Tab");
         }
         // RiskScheduleGeneralCoverage_61d1eaPage.EnterGeneralCoverage_0267_a6f47eAsync
         if (_data.Condition("'Used as Showroom' != NULL"))
         {
-        await _ui.FillAsync(_locators.UsedAsShowroom, _data.Resolve("{{data:used_as_showroom_386}}"));
-        await _ui.PressAsync(_locators.UsedAsShowroom, "CLICK");
-        await _ui.PressAsync(_locators.UsedAsShowroom, "Tab");
+            await _ui.FillAsync(_locators.UsedAsShowroom, _data.Resolve("{{data:used_as_showroom_386}}"));
+            await _ui.PressAsync(_locators.UsedAsShowroom, "CLICK");
+            await _ui.PressAsync(_locators.UsedAsShowroom, "Tab");
         }
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0268_a6f47eAsync
         if (_data.Condition("GCW != NULL"))
         {
-        await _ui.FillAsync(_locators.GCW, _data.Resolve(""));
+            await _ui.FillAsync(_locators.GCW, _data.Resolve(""));
         }
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve(""));
+            await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve(""));
         }
         if (_data.Condition("'2nd Class Category' != NULL"))
         {
-        await _ui.FillAsync(_locators.N2ndClassCategory, _data.Resolve("{{data:2nd_class_category_389}}"));
-        await _ui.PressAsync(_locators.N2ndClassCategory, "Click");
-        await _ui.PressAsync(_locators.N2ndClassCategory, "Tab");
+            await _ui.FillAsync(_locators.N2ndClassCategory, _data.Resolve("{{data:2nd_class_category_389}}"));
+            await _ui.PressAsync(_locators.N2ndClassCategory, "Click");
+            await _ui.PressAsync(_locators.N2ndClassCategory, "Tab");
         }
         if (_data.Condition("'2nd Class Code' != NULL"))
         {
-        await _ui.FillAsync(_locators.N2ndClassCode, _data.Resolve("{{data:2nd_class_code_390}}"));
-        await _ui.PressAsync(_locators.N2ndClassCode, "Click");
-        await _ui.PressAsync(_locators.N2ndClassCode, "Tab");
-        await _ui.PressAsync(_locators.N2ndClassCode, "Tab");
+            await _ui.FillAsync(_locators.N2ndClassCode, _data.Resolve("{{data:2nd_class_code_390}}"));
+            await _ui.PressAsync(_locators.N2ndClassCode, "Click");
+            await _ui.PressAsync(_locators.N2ndClassCode, "Tab");
+            await _ui.PressAsync(_locators.N2ndClassCode, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsNJ_0272_a6f47eAsync
         _data.Set("StateIsNJ", _data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
@@ -5907,10 +5907,10 @@ public sealed class NavigationPage
         // RiskSchedulePhysicalDamage_c46a6aPage.AnswerCollisionAsNoIfNull_0278_a6f47eAsync
         if (_data.Condition("'Collision Coverage' == NULL"))
         {
-        await _ui.FillAsync(_locators.CollisionCoverage, _data.Resolve("{{data:collision_coverage_395}}"));
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.FillAsync(_locators.CollisionCoverage, _data.Resolve("{{data:collision_coverage_395}}"));
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
         }
         // RiskSchedulePhysicalDamage_c46a6aPage.ConfirmVehicleAddition_0279_a6f47eAsync
         await _ui.ClickAsync(_locators.PhysicalDamageOK);
@@ -5948,97 +5948,97 @@ public sealed class NavigationPage
         // RiskScheduleVehicleInformation_e69550Page.EnterVIN_0290_a6f47eAsync
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.WaitAsync(_locators.VIN, "Visible");
+            await _ui.WaitAsync(_locators.VIN, "Visible");
         }
         if (_data.Condition("Year != NULL"))
         {
-        await _ui.FillAsync(_locators.Year, _data.Resolve("{{data:year_414}}"));
-        await _ui.PressAsync(_locators.Year, "Tab");
-        await _ui.PressAsync(_locators.Year, "Tab");
-        await _ui.PressAsync(_locators.Year, "Tab");
+            await _ui.FillAsync(_locators.Year, _data.Resolve("{{data:year_414}}"));
+            await _ui.PressAsync(_locators.Year, "Tab");
+            await _ui.PressAsync(_locators.Year, "Tab");
+            await _ui.PressAsync(_locators.Year, "Tab");
         }
         if (_data.Condition("Make != NULL"))
         {
-        await _ui.FillAsync(_locators.Make, _data.Resolve("{{data:make_415}}"));
-        await _ui.PressAsync(_locators.Make, "Tab");
-        await _ui.PressAsync(_locators.Make, "Tab");
-        await _ui.PressAsync(_locators.Make, "Tab");
+            await _ui.FillAsync(_locators.Make, _data.Resolve("{{data:make_415}}"));
+            await _ui.PressAsync(_locators.Make, "Tab");
+            await _ui.PressAsync(_locators.Make, "Tab");
+            await _ui.PressAsync(_locators.Make, "Tab");
         }
         if (_data.Condition("Model != NULL"))
         {
-        await _ui.FillAsync(_locators.Model, _data.Resolve("{{data:model_416}}"));
-        await _ui.PressAsync(_locators.Model, "Tab");
-        await _ui.PressAsync(_locators.Model, "Tab");
-        await _ui.PressAsync(_locators.Model, "Tab");
+            await _ui.FillAsync(_locators.Model, _data.Resolve("{{data:model_416}}"));
+            await _ui.PressAsync(_locators.Model, "Tab");
+            await _ui.PressAsync(_locators.Model, "Tab");
+            await _ui.PressAsync(_locators.Model, "Tab");
         }
         if (_data.Condition("'Body Style' != NULL"))
         {
-        await _ui.FillAsync(_locators.BodyStyle, _data.Resolve("{{data:body_style_417}}"));
-        await _ui.PressAsync(_locators.BodyStyle, "Tab");
-        await _ui.PressAsync(_locators.BodyStyle, "Tab");
-        await _ui.PressAsync(_locators.BodyStyle, "Tab");
+            await _ui.FillAsync(_locators.BodyStyle, _data.Resolve("{{data:body_style_417}}"));
+            await _ui.PressAsync(_locators.BodyStyle, "Tab");
+            await _ui.PressAsync(_locators.BodyStyle, "Tab");
+            await _ui.PressAsync(_locators.BodyStyle, "Tab");
         }
         if (_data.Condition("'Stated Amount' != NULL"))
         {
-        await _ui.FillAsync(_locators.StatedAmount, _data.Resolve("{{data:stated_amount_418}}"));
-        await _ui.PressAsync(_locators.StatedAmount, "Tab");
-        await _ui.PressAsync(_locators.StatedAmount, "Tab");
-        await _ui.PressAsync(_locators.StatedAmount, "Tab");
+            await _ui.FillAsync(_locators.StatedAmount, _data.Resolve("{{data:stated_amount_418}}"));
+            await _ui.PressAsync(_locators.StatedAmount, "Tab");
+            await _ui.PressAsync(_locators.StatedAmount, "Tab");
+            await _ui.PressAsync(_locators.StatedAmount, "Tab");
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.PressAsync(_locators.VIN, "PRE:TAB");
-        await _ui.PressAsync(_locators.VIN, "Tab");
-        await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "PRE:TAB");
+            await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "Tab");
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.FillAsync(_locators.VIN, _data.Resolve("{{data:vin_420}}"));
-        await _ui.PressAsync(_locators.VIN, "Tab");
-        await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.FillAsync(_locators.VIN, _data.Resolve("{{data:vin_420}}"));
+            await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsKY_0291_a6f47eAsync
         _data.Set("StateIsKY", _data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0292_a6f47eAsync
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.VerifyAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("Exists"), "");
         }
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0293_a6f47eAsync
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_423}}"));
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Click");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Enter");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
+            await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_423}}"));
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Click");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Enter");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsNotUT_0294_a6f47eAsync
         _data.Set("StateIsNotUT", _data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
         // RiskScheduleGeneralCoverage_61d1eaPage.EnterGeneralCoverage_0295_a6f47eAsync
         if (_data.Condition("'Engine Size' != NULL"))
         {
-        await _ui.FillAsync(_locators.EngineSizeCc, _data.Resolve("{{data:engine_size_cc_425}}"));
-        await _ui.PressAsync(_locators.EngineSizeCc, "Click");
-        await _ui.PressAsync(_locators.EngineSizeCc, "Tab");
-        await _ui.PressAsync(_locators.EngineSizeCc, "Tab");
+            await _ui.FillAsync(_locators.EngineSizeCc, _data.Resolve("{{data:engine_size_cc_425}}"));
+            await _ui.PressAsync(_locators.EngineSizeCc, "Click");
+            await _ui.PressAsync(_locators.EngineSizeCc, "Tab");
+            await _ui.PressAsync(_locators.EngineSizeCc, "Tab");
         }
         // RiskScheduleGeneralCoverage_61d1eaPage.EnterGeneralCoverage_0296_a6f47eAsync
         if (_data.Condition("'Engine Size' != NULL"))
         {
-        await _ui.FillAsync(_locators.EngineSizeCc, _data.Resolve("{{data:engine_size_cc_426}}"));
-        await _ui.PressAsync(_locators.EngineSizeCc, "Click");
-        await _ui.PressAsync(_locators.EngineSizeCc, "Tab");
-        await _ui.PressAsync(_locators.EngineSizeCc, "Tab");
+            await _ui.FillAsync(_locators.EngineSizeCc, _data.Resolve("{{data:engine_size_cc_426}}"));
+            await _ui.PressAsync(_locators.EngineSizeCc, "Click");
+            await _ui.PressAsync(_locators.EngineSizeCc, "Tab");
+            await _ui.PressAsync(_locators.EngineSizeCc, "Tab");
         }
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0297_a6f47eAsync
         if (_data.Condition("GCW != NULL"))
         {
-        await _ui.FillAsync(_locators.GCW, _data.Resolve(""));
+            await _ui.FillAsync(_locators.GCW, _data.Resolve(""));
         }
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve(""));
+            await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve(""));
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsNJ_0301_a6f47eAsync
         _data.Set("StateIsNJ", _data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
@@ -6051,10 +6051,10 @@ public sealed class NavigationPage
         // RiskSchedulePhysicalDamage_c46a6aPage.AnswerCollisionAsNoIfNull_0307_a6f47eAsync
         if (_data.Condition("'Collision Coverage' == NULL"))
         {
-        await _ui.FillAsync(_locators.CollisionCoverage, _data.Resolve("{{data:collision_coverage_433}}"));
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.FillAsync(_locators.CollisionCoverage, _data.Resolve("{{data:collision_coverage_433}}"));
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
         }
         // RiskSchedulePhysicalDamage_c46a6aPage.ConfirmVehicleAddition_0308_a6f47eAsync
         await _ui.ClickAsync(_locators.PhysicalDamageOK);
@@ -6092,81 +6092,81 @@ public sealed class NavigationPage
         // RiskScheduleVehicleInformation_e69550Page.EnterVIN_0319_a6f47eAsync
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.WaitAsync(_locators.VIN, "Visible");
+            await _ui.WaitAsync(_locators.VIN, "Visible");
         }
         if (_data.Condition("Year != NULL"))
         {
-        await _ui.FillAsync(_locators.Year, _data.Resolve("{{data:year_452}}"));
-        await _ui.PressAsync(_locators.Year, "Tab");
-        await _ui.PressAsync(_locators.Year, "Tab");
-        await _ui.PressAsync(_locators.Year, "Tab");
+            await _ui.FillAsync(_locators.Year, _data.Resolve("{{data:year_452}}"));
+            await _ui.PressAsync(_locators.Year, "Tab");
+            await _ui.PressAsync(_locators.Year, "Tab");
+            await _ui.PressAsync(_locators.Year, "Tab");
         }
         if (_data.Condition("Make != NULL"))
         {
-        await _ui.FillAsync(_locators.Make, _data.Resolve("{{data:make_453}}"));
-        await _ui.PressAsync(_locators.Make, "Tab");
-        await _ui.PressAsync(_locators.Make, "Tab");
-        await _ui.PressAsync(_locators.Make, "Tab");
+            await _ui.FillAsync(_locators.Make, _data.Resolve("{{data:make_453}}"));
+            await _ui.PressAsync(_locators.Make, "Tab");
+            await _ui.PressAsync(_locators.Make, "Tab");
+            await _ui.PressAsync(_locators.Make, "Tab");
         }
         if (_data.Condition("Model != NULL"))
         {
-        await _ui.FillAsync(_locators.Model, _data.Resolve("{{data:model_454}}"));
-        await _ui.PressAsync(_locators.Model, "Tab");
-        await _ui.PressAsync(_locators.Model, "Tab");
-        await _ui.PressAsync(_locators.Model, "Tab");
+            await _ui.FillAsync(_locators.Model, _data.Resolve("{{data:model_454}}"));
+            await _ui.PressAsync(_locators.Model, "Tab");
+            await _ui.PressAsync(_locators.Model, "Tab");
+            await _ui.PressAsync(_locators.Model, "Tab");
         }
         if (_data.Condition("'Body Style' != NULL"))
         {
-        await _ui.FillAsync(_locators.BodyStyle, _data.Resolve("{{data:body_style_455}}"));
-        await _ui.PressAsync(_locators.BodyStyle, "Tab");
-        await _ui.PressAsync(_locators.BodyStyle, "Tab");
-        await _ui.PressAsync(_locators.BodyStyle, "Tab");
+            await _ui.FillAsync(_locators.BodyStyle, _data.Resolve("{{data:body_style_455}}"));
+            await _ui.PressAsync(_locators.BodyStyle, "Tab");
+            await _ui.PressAsync(_locators.BodyStyle, "Tab");
+            await _ui.PressAsync(_locators.BodyStyle, "Tab");
         }
         if (_data.Condition("'Stated Amount' != NULL"))
         {
-        await _ui.FillAsync(_locators.StatedAmount, _data.Resolve("{{data:stated_amount_456}}"));
-        await _ui.PressAsync(_locators.StatedAmount, "Tab");
-        await _ui.PressAsync(_locators.StatedAmount, "Tab");
-        await _ui.PressAsync(_locators.StatedAmount, "Tab");
+            await _ui.FillAsync(_locators.StatedAmount, _data.Resolve("{{data:stated_amount_456}}"));
+            await _ui.PressAsync(_locators.StatedAmount, "Tab");
+            await _ui.PressAsync(_locators.StatedAmount, "Tab");
+            await _ui.PressAsync(_locators.StatedAmount, "Tab");
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.PressAsync(_locators.VIN, "PRE:TAB");
-        await _ui.PressAsync(_locators.VIN, "Tab");
-        await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "PRE:TAB");
+            await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "Tab");
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.FillAsync(_locators.VIN, _data.Resolve("{{data:vin_458}}"));
-        await _ui.PressAsync(_locators.VIN, "Tab");
-        await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.FillAsync(_locators.VIN, _data.Resolve("{{data:vin_458}}"));
+            await _ui.PressAsync(_locators.VIN, "Tab");
+            await _ui.PressAsync(_locators.VIN, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsKY_0320_a6f47eAsync
         _data.Set("StateIsKY", _data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0321_a6f47eAsync
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.VerifyAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("Exists"), "");
         }
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0322_a6f47eAsync
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_461}}"));
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Click");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Enter");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
-        await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
+            await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_461}}"));
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Click");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Enter");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
+            await _ui.PressAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsNotUT_0323_a6f47eAsync
         _data.Set("StateIsNotUT", _data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
         // RiskScheduleRiskSpecific_88fa13Page.EnterRiskSpecific_0326_a6f47eAsync
         if (_data.Condition("GCW != NULL"))
         {
-        await _ui.FillAsync(_locators.GCW, _data.Resolve(""));
+            await _ui.FillAsync(_locators.GCW, _data.Resolve(""));
         }
         if (_data.Condition("Snowplow != NULL"))
         {
-        await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve(""));
+            await _ui.FillAsync(_locators.IsThisVehicleUsedInSnowPlowOperations, _data.Resolve(""));
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsNJ_0330_a6f47eAsync
         _data.Set("StateIsNJ", _data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
@@ -6179,10 +6179,10 @@ public sealed class NavigationPage
         // RiskSchedulePhysicalDamage_c46a6aPage.AnswerCollisionAsNoIfNull_0336_a6f47eAsync
         if (_data.Condition("'Collision Coverage' == NULL"))
         {
-        await _ui.FillAsync(_locators.CollisionCoverage, _data.Resolve("{{data:collision_coverage_469}}"));
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
-        await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.FillAsync(_locators.CollisionCoverage, _data.Resolve("{{data:collision_coverage_469}}"));
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
+            await _ui.PressAsync(_locators.CollisionCoverage, "Tab");
         }
         // RiskSchedulePhysicalDamage_c46a6aPage.ConfirmVehicleAddition_0337_a6f47eAsync
         await _ui.ClickAsync(_locators.PhysicalDamageOK);
@@ -6283,39 +6283,39 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.HiredAutoForm, "NotEqual");
         if (_data.Condition("'First Name' != NULL"))
         {
-        await _ui.PressAsync(_locators.HiredAutoCA2001FirstName, "PRE:TAB");
-        await _ui.PressAsync(_locators.HiredAutoCA2001FirstName, "Tab");
+            await _ui.PressAsync(_locators.HiredAutoCA2001FirstName, "PRE:TAB");
+            await _ui.PressAsync(_locators.HiredAutoCA2001FirstName, "Tab");
         }
         if (_data.Condition("'Last Name' != NULL"))
         {
-        await _ui.FillAsync(_locators.HiredAutoCA2001LastName, _data.Resolve("{{data:hiredauto_ca2001_last_name_514}}"));
-        await _ui.PressAsync(_locators.HiredAutoCA2001LastName, "Tab");
-        await _ui.PressAsync(_locators.HiredAutoCA2001LastName, "Tab");
+            await _ui.FillAsync(_locators.HiredAutoCA2001LastName, _data.Resolve("{{data:hiredauto_ca2001_last_name_514}}"));
+            await _ui.PressAsync(_locators.HiredAutoCA2001LastName, "Tab");
+            await _ui.PressAsync(_locators.HiredAutoCA2001LastName, "Tab");
         }
         if (_data.Condition("'Address 1' != NULL"))
         {
-        await _ui.PressAsync(_locators.HiredAutoCA2001Address1, "PRE:TAB");
-        await _ui.PressAsync(_locators.HiredAutoCA2001Address1, "Tab");
+            await _ui.PressAsync(_locators.HiredAutoCA2001Address1, "PRE:TAB");
+            await _ui.PressAsync(_locators.HiredAutoCA2001Address1, "Tab");
         }
         if (_data.Condition("'Zip Code' != NULL"))
         {
-        await _ui.FillAsync(_locators.HiredAutoCA2001ZipCode, _data.Resolve("{{data:hiredauto_ca2001_zipcode_516}}"));
-        await _ui.PressAsync(_locators.HiredAutoCA2001ZipCode, "Tab");
-        await _ui.PressAsync(_locators.HiredAutoCA2001ZipCode, "Tab");
+            await _ui.FillAsync(_locators.HiredAutoCA2001ZipCode, _data.Resolve("{{data:hiredauto_ca2001_zipcode_516}}"));
+            await _ui.PressAsync(_locators.HiredAutoCA2001ZipCode, "Tab");
+            await _ui.PressAsync(_locators.HiredAutoCA2001ZipCode, "Tab");
         }
         if (_data.Condition("'First Name' != NULL"))
         {
-        await _ui.ClickAsync(_locators.HiredAutoOK);
+            await _ui.ClickAsync(_locators.HiredAutoOK);
         }
         if (_data.Condition("'First Name' != NULL"))
         {
-        await _ui.FillAsync(_locators.HiredAutoCA2001FirstName, _data.Resolve("{{data:hiredauto_ca2001_first_name_518}}"));
-        await _ui.PressAsync(_locators.HiredAutoCA2001FirstName, "Tab");
+            await _ui.FillAsync(_locators.HiredAutoCA2001FirstName, _data.Resolve("{{data:hiredauto_ca2001_first_name_518}}"));
+            await _ui.PressAsync(_locators.HiredAutoCA2001FirstName, "Tab");
         }
         if (_data.Condition("'Address 1' != NULL"))
         {
-        await _ui.FillAsync(_locators.HiredAutoCA2001Address1, _data.Resolve("{{data:hiredauto_ca2001_address1_519}}"));
-        await _ui.PressAsync(_locators.HiredAutoCA2001Address1, "Tab");
+            await _ui.FillAsync(_locators.HiredAutoCA2001Address1, _data.Resolve("{{data:hiredauto_ca2001_address1_519}}"));
+            await _ui.PressAsync(_locators.HiredAutoCA2001Address1, "Tab");
         }
         // RiskScheduleHiredAuto_6eb213Page.WaitForSynchronizationSamePage_0362_a6f47eAsync
         await _ui.WaitAsync(_locators.HiredAutoOK, "Absent");
@@ -6337,7 +6337,7 @@ public sealed class NavigationPage
         // RiskScheduleLiabilityUMMedicalPIP_5d9957Page.VerifyUMUIMPIP_0367_a6f47eAsync
         if (_data.Condition("'Accept UM' != NULL"))
         {
-        await _ui.VerifyAsync(_locators.AcceptUM, _data.Resolve("{{data:expected_accept_um_innertext_527}}"), "InnerText");
+            await _ui.VerifyAsync(_locators.AcceptUM, _data.Resolve("{{data:expected_accept_um_innertext_527}}"), "InnerText");
         }
         // RiskSchedulePhysicalDamage_c46a6aPage.ReturnToRiskSchedule_0368_a6f47eAsync
         await _ui.ClickAsync(_locators.PhysicalDamageOK);
@@ -6361,33 +6361,33 @@ public sealed class NavigationPage
         // RiskSchedulePhysicalDamage_c46a6aPage.AddCoverages_0375_a6f47eAsync
         if (_data.Condition("'Loan/Lease Gap' != NULL"))
         {
-        await _ui.FillAsync(_locators.LoanLeaseGap, _data.Resolve("{{data:loan_lease_gap_536}}"));
-        await _ui.PressAsync(_locators.LoanLeaseGap, "Click");
-        await _ui.PressAsync(_locators.LoanLeaseGap, "Enter");
-        await _ui.PressAsync(_locators.LoanLeaseGap, "Tab");
-        await _ui.PressAsync(_locators.LoanLeaseGap, "Tab");
+            await _ui.FillAsync(_locators.LoanLeaseGap, _data.Resolve("{{data:loan_lease_gap_536}}"));
+            await _ui.PressAsync(_locators.LoanLeaseGap, "Click");
+            await _ui.PressAsync(_locators.LoanLeaseGap, "Enter");
+            await _ui.PressAsync(_locators.LoanLeaseGap, "Tab");
+            await _ui.PressAsync(_locators.LoanLeaseGap, "Tab");
         }
         if (_data.Condition("'Tapes Coverage' != NULL"))
         {
-        await _ui.FillAsync(_locators.TapesCoverage, _data.Resolve("{{data:tapes_coverage_537}}"));
-        await _ui.PressAsync(_locators.TapesCoverage, "Tab");
+            await _ui.FillAsync(_locators.TapesCoverage, _data.Resolve("{{data:tapes_coverage_537}}"));
+            await _ui.PressAsync(_locators.TapesCoverage, "Tab");
         }
         if (_data.Condition("'Audio Visual' != NULL"))
         {
-        await _ui.FillAsync(_locators.AudioVisual, _data.Resolve("{{data:audio_visual_538}}"));
-        await _ui.PressAsync(_locators.AudioVisual, "Tab");
-        await _ui.PressAsync(_locators.AudioVisual, "Tab");
+            await _ui.FillAsync(_locators.AudioVisual, _data.Resolve("{{data:audio_visual_538}}"));
+            await _ui.PressAsync(_locators.AudioVisual, "Tab");
+            await _ui.PressAsync(_locators.AudioVisual, "Tab");
         }
         if (_data.Condition("'Audio Visual' != NULL"))
         {
-        await _ui.FillAsync(_locators.AVCostNew, _data.Resolve("{{data:av_cost_new_539}}"));
-        await _ui.PressAsync(_locators.AVCostNew, "Tab");
-        await _ui.PressAsync(_locators.AVCostNew, "Tab");
-        await _ui.PressAsync(_locators.AVCostNew, "Tab");
+            await _ui.FillAsync(_locators.AVCostNew, _data.Resolve("{{data:av_cost_new_539}}"));
+            await _ui.PressAsync(_locators.AVCostNew, "Tab");
+            await _ui.PressAsync(_locators.AVCostNew, "Tab");
+            await _ui.PressAsync(_locators.AVCostNew, "Tab");
         }
         if (_data.Condition("Towing != NULL && 'Vehicle Type' == \"Private Passenger\""))
         {
-        await _ui.FillAsync(_locators.Towing, _data.Resolve(""));
+            await _ui.FillAsync(_locators.Towing, _data.Resolve(""));
         }
         await _ui.WaitAsync(_locators.PhysicalDamageOK, "Exists");
         // RiskSchedulePhysicalDamage_c46a6aPage.ConfirmAddition_0376_a6f47eAsync
@@ -6409,29 +6409,29 @@ public sealed class NavigationPage
         // RiskSchedulePhysicalDamage_c46a6aPage.AddCoverages_0384_a6f47eAsync
         if (_data.Condition("'Loan/Lease Gap' != NULL"))
         {
-        await _ui.FillAsync(_locators.LoanLeaseGap, _data.Resolve("{{data:loan_lease_gap_551}}"));
-        await _ui.PressAsync(_locators.LoanLeaseGap, "Click");
-        await _ui.PressAsync(_locators.LoanLeaseGap, "Enter");
-        await _ui.PressAsync(_locators.LoanLeaseGap, "Tab");
-        await _ui.PressAsync(_locators.LoanLeaseGap, "Tab");
+            await _ui.FillAsync(_locators.LoanLeaseGap, _data.Resolve("{{data:loan_lease_gap_551}}"));
+            await _ui.PressAsync(_locators.LoanLeaseGap, "Click");
+            await _ui.PressAsync(_locators.LoanLeaseGap, "Enter");
+            await _ui.PressAsync(_locators.LoanLeaseGap, "Tab");
+            await _ui.PressAsync(_locators.LoanLeaseGap, "Tab");
         }
         if (_data.Condition("'Tapes Coverage' != NULL"))
         {
-        await _ui.FillAsync(_locators.TapesCoverage, _data.Resolve("{{data:tapes_coverage_552}}"));
-        await _ui.PressAsync(_locators.TapesCoverage, "Tab");
+            await _ui.FillAsync(_locators.TapesCoverage, _data.Resolve("{{data:tapes_coverage_552}}"));
+            await _ui.PressAsync(_locators.TapesCoverage, "Tab");
         }
         if (_data.Condition("'Audio Visual' != NULL"))
         {
-        await _ui.FillAsync(_locators.AudioVisual, _data.Resolve("{{data:audio_visual_553}}"));
-        await _ui.PressAsync(_locators.AudioVisual, "Tab");
-        await _ui.PressAsync(_locators.AudioVisual, "Tab");
+            await _ui.FillAsync(_locators.AudioVisual, _data.Resolve("{{data:audio_visual_553}}"));
+            await _ui.PressAsync(_locators.AudioVisual, "Tab");
+            await _ui.PressAsync(_locators.AudioVisual, "Tab");
         }
         if (_data.Condition("'Audio Visual' != NULL"))
         {
-        await _ui.FillAsync(_locators.AVCostNew, _data.Resolve("{{data:av_cost_new_554}}"));
-        await _ui.PressAsync(_locators.AVCostNew, "Tab");
-        await _ui.PressAsync(_locators.AVCostNew, "Tab");
-        await _ui.PressAsync(_locators.AVCostNew, "Tab");
+            await _ui.FillAsync(_locators.AVCostNew, _data.Resolve("{{data:av_cost_new_554}}"));
+            await _ui.PressAsync(_locators.AVCostNew, "Tab");
+            await _ui.PressAsync(_locators.AVCostNew, "Tab");
+            await _ui.PressAsync(_locators.AVCostNew, "Tab");
         }
         await _ui.WaitAsync(_locators.PhysicalDamageOK, "Exists");
         // RiskSchedulePhysicalDamage_c46a6aPage.ConfirmAddition_0385_a6f47eAsync
@@ -6538,12 +6538,12 @@ public sealed class NavigationPage
         await _ui.VerifyAsync(_locators.EndorsementScheduleRow1, _data.Resolve("__BLANK__"), "InnerText");
         if (_data.Condition("'Endorsement Type' ==\"[CA2394] Silica or Silica-Related Dust Exclusion\""))
         {
-        await _ui.VerifyAsync(_locators.EndorsementScheduleRow1, _data.Resolve("{{data:expected_endorsement_schedule_row_1_innertext_598}}"), "InnerText");
+            await _ui.VerifyAsync(_locators.EndorsementScheduleRow1, _data.Resolve("{{data:expected_endorsement_schedule_row_1_innertext_598}}"), "InnerText");
         }
         await _ui.VerifyAsync(_locators.EndorsementTableRow1, _data.Resolve("__BLANK__"), "InnerText");
         if (_data.Condition("'Endorsement Type' ==\"[CA2394] Silica or Silica-Related Dust Exclusion\""))
         {
-        await _ui.VerifyAsync(_locators.EndorsementTableRow2, _data.Resolve("{{data:expected_endorsement_table_row_2_innertext_600}}"), "InnerText");
+            await _ui.VerifyAsync(_locators.EndorsementTableRow2, _data.Resolve("{{data:expected_endorsement_table_row_2_innertext_600}}"), "InnerText");
         }
     }
 
@@ -6562,19 +6562,19 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.EndorsementDetail, "Exists");
         if (_data.Condition("Year != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
         }
         if (_data.Condition("Make != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
         }
         if (_data.Condition("Model != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
         }
         await _ui.WaitAsync(_locators.OK, "Exists");
         await _ui.WaitAsync(_locators.EndorsementType624AD, "Exists");
@@ -6606,19 +6606,19 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.EndorsementDetail, "Exists");
         if (_data.Condition("Year != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
         }
         if (_data.Condition("Make != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
         }
         if (_data.Condition("Model != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
         }
         await _ui.WaitAsync(_locators.OK, "Exists");
         await _ui.WaitAsync(_locators.EndorsementType624AD, "Exists");
@@ -6650,23 +6650,23 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.EndorsementDetail, "Exists");
         if (_data.Condition("'Endorsement Type' == \"[CA2325] Leased Workers Coverage\""))
         {
-        await _ui.WaitAsync(_locators.CA2325LeasedWorkersCoverage, "Exists");
+            await _ui.WaitAsync(_locators.CA2325LeasedWorkersCoverage, "Exists");
         }
         if (_data.Condition("Year != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
         }
         if (_data.Condition("Make != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
         }
         if (_data.Condition("Model != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
         }
         await _ui.WaitAsync(_locators.OK, "Exists");
         await _ui.WaitAsync(_locators.EndorsementType624AD, "Exists");
@@ -6698,33 +6698,33 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.EndorsementDetail, "Exists");
         if (_data.Condition("'Add Excluded Driver' != NULL"))
         {
-        await _ui.WaitAsync(_locators.ClickAddExcludedDriver, "Exists");
+            await _ui.WaitAsync(_locators.ClickAddExcludedDriver, "Exists");
         }
         if (_data.Condition("'Add Excluded Driver' != NULL"))
         {
-        await _ui.ClickAsync(_locators.ClickAddExcludedDriver);
+            await _ui.ClickAsync(_locators.ClickAddExcludedDriver);
         }
         if (_data.Condition("'Driver Name' != NULL"))
         {
-        await _ui.FillAsync(_locators.AddDriverName, _data.Resolve("{{data:iframe_duck_creek_policy_add_driver_name_667}}"));
-        await _ui.PressAsync(_locators.AddDriverName, "Tab");
-        await _ui.PressAsync(_locators.AddDriverName, "Tab");
+            await _ui.FillAsync(_locators.AddDriverName, _data.Resolve("{{data:iframe_duck_creek_policy_add_driver_name_667}}"));
+            await _ui.PressAsync(_locators.AddDriverName, "Tab");
+            await _ui.PressAsync(_locators.AddDriverName, "Tab");
         }
         if (_data.Condition("Year != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
         }
         if (_data.Condition("Make != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
         }
         if (_data.Condition("Model != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
         }
         await _ui.WaitAsync(_locators.OK, "Exists");
         await _ui.WaitAsync(_locators.EndorsementType624AD, "Exists");
@@ -6756,26 +6756,26 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.EndorsementDetail, "Exists");
         if (_data.Condition("Year != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
         }
         if (_data.Condition("Make != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
         }
         if (_data.Condition("Model != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
         }
         if (_data.Condition("'Commodities Transported' != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9948ClassesOfCommoditiesTransported, _data.Resolve("{{data:iframe_duck_creek_policy_ca9948_classes_of_commodities_transported_691}}"));
-        await _ui.PressAsync(_locators.CA9948ClassesOfCommoditiesTransported, "Click");
-        await _ui.PressAsync(_locators.CA9948ClassesOfCommoditiesTransported, "Enter");
-        await _ui.PressAsync(_locators.CA9948ClassesOfCommoditiesTransported, "Tab");
+            await _ui.FillAsync(_locators.CA9948ClassesOfCommoditiesTransported, _data.Resolve("{{data:iframe_duck_creek_policy_ca9948_classes_of_commodities_transported_691}}"));
+            await _ui.PressAsync(_locators.CA9948ClassesOfCommoditiesTransported, "Click");
+            await _ui.PressAsync(_locators.CA9948ClassesOfCommoditiesTransported, "Enter");
+            await _ui.PressAsync(_locators.CA9948ClassesOfCommoditiesTransported, "Tab");
         }
         await _ui.WaitAsync(_locators.OK, "Exists");
         await _ui.WaitAsync(_locators.EndorsementType624AD, "Exists");
@@ -6807,19 +6807,19 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.EndorsementDetail, "Exists");
         if (_data.Condition("Year != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
         }
         if (_data.Condition("Make != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
         }
         if (_data.Condition("Model != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
         }
         await _ui.WaitAsync(_locators.OK, "Exists");
         await _ui.WaitAsync(_locators.EndorsementType624AD, "Exists");
@@ -6851,31 +6851,31 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.EndorsementDetail, "Exists");
         if (_data.Condition("Year != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
         }
         if (_data.Condition("Make != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
         }
         if (_data.Condition("Model != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
         }
         if (_data.Condition("'Endorsement Type' ==\"Trailer Interchange Coverage\""))
         {
-        await _ui.FillAsync(_locators.TrailerInterchangeEnterDaysInsured, _data.Resolve("{{data:iframe_duck_creek_policy_trailer_interchange_enter_days_insured_730}}"));
-        await _ui.PressAsync(_locators.TrailerInterchangeEnterDaysInsured, "Tab");
-        await _ui.PressAsync(_locators.TrailerInterchangeEnterDaysInsured, "Tab");
+            await _ui.FillAsync(_locators.TrailerInterchangeEnterDaysInsured, _data.Resolve("{{data:iframe_duck_creek_policy_trailer_interchange_enter_days_insured_730}}"));
+            await _ui.PressAsync(_locators.TrailerInterchangeEnterDaysInsured, "Tab");
+            await _ui.PressAsync(_locators.TrailerInterchangeEnterDaysInsured, "Tab");
         }
         if (_data.Condition("'Endorsement Type' ==\"Trailer Interchange Coverage\""))
         {
-        await _ui.FillAsync(_locators.TrailerInterchangeEnterOfTrailers, _data.Resolve("{{data:iframe_duck_creek_policy_trailer_interchange_enter_of_trailers_731}}"));
-        await _ui.PressAsync(_locators.TrailerInterchangeEnterOfTrailers, "Tab");
-        await _ui.PressAsync(_locators.TrailerInterchangeEnterOfTrailers, "Tab");
+            await _ui.FillAsync(_locators.TrailerInterchangeEnterOfTrailers, _data.Resolve("{{data:iframe_duck_creek_policy_trailer_interchange_enter_of_trailers_731}}"));
+            await _ui.PressAsync(_locators.TrailerInterchangeEnterOfTrailers, "Tab");
+            await _ui.PressAsync(_locators.TrailerInterchangeEnterOfTrailers, "Tab");
         }
         await _ui.WaitAsync(_locators.OK, "Exists");
         await _ui.WaitAsync(_locators.EndorsementType624AD, "Exists");
@@ -6907,34 +6907,34 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.EndorsementDetail, "Exists");
         if (_data.Condition("Year != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Year, _data.Resolve("{{data:iframe_duck_creek_policy_ca9940_year_747}}"));
-        await _ui.PressAsync(_locators.CA9940Year, "Tab");
-        await _ui.PressAsync(_locators.CA9940Year, "Tab");
+            await _ui.FillAsync(_locators.CA9940Year, _data.Resolve("{{data:iframe_duck_creek_policy_ca9940_year_747}}"));
+            await _ui.PressAsync(_locators.CA9940Year, "Tab");
+            await _ui.PressAsync(_locators.CA9940Year, "Tab");
         }
         if (_data.Condition("Make != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Make, _data.Resolve("{{data:iframe_duck_creek_policy_ca9940_make_748}}"));
-        await _ui.PressAsync(_locators.CA9940Make, "Tab");
-        await _ui.PressAsync(_locators.CA9940Make, "Tab");
+            await _ui.FillAsync(_locators.CA9940Make, _data.Resolve("{{data:iframe_duck_creek_policy_ca9940_make_748}}"));
+            await _ui.PressAsync(_locators.CA9940Make, "Tab");
+            await _ui.PressAsync(_locators.CA9940Make, "Tab");
         }
         if (_data.Condition("Model != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Model, _data.Resolve("{{data:iframe_duck_creek_policy_ca9940_model_749}}"));
-        await _ui.PressAsync(_locators.CA9940Model, "Tab");
-        await _ui.PressAsync(_locators.CA9940Model, "Tab");
+            await _ui.FillAsync(_locators.CA9940Model, _data.Resolve("{{data:iframe_duck_creek_policy_ca9940_model_749}}"));
+            await _ui.PressAsync(_locators.CA9940Model, "Tab");
+            await _ui.PressAsync(_locators.CA9940Model, "Tab");
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve("{{data:iframe_duck_creek_policy_ca_9940_vin_750}}"));
-        await _ui.PressAsync(_locators.CA9940VIN, "Tab");
-        await _ui.PressAsync(_locators.CA9940VIN, "Tab");
+            await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve("{{data:iframe_duck_creek_policy_ca_9940_vin_750}}"));
+            await _ui.PressAsync(_locators.CA9940VIN, "Tab");
+            await _ui.PressAsync(_locators.CA9940VIN, "Tab");
         }
         if (_data.Condition("'Contract Provisions' != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940ContractProvisions, _data.Resolve("{{data:iframe_duck_creek_policy_ca9940_contract_provisions_751}}"));
-        await _ui.PressAsync(_locators.CA9940ContractProvisions, "CLICK");
-        await _ui.PressAsync(_locators.CA9940ContractProvisions, "Enter");
-        await _ui.PressAsync(_locators.CA9940ContractProvisions, "Tab");
+            await _ui.FillAsync(_locators.CA9940ContractProvisions, _data.Resolve("{{data:iframe_duck_creek_policy_ca9940_contract_provisions_751}}"));
+            await _ui.PressAsync(_locators.CA9940ContractProvisions, "CLICK");
+            await _ui.PressAsync(_locators.CA9940ContractProvisions, "Enter");
+            await _ui.PressAsync(_locators.CA9940ContractProvisions, "Tab");
         }
         await _ui.WaitAsync(_locators.OK, "Exists");
         await _ui.WaitAsync(_locators.EndorsementType624AD, "Exists");
@@ -6966,19 +6966,19 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.EndorsementDetail, "Exists");
         if (_data.Condition("Year != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Year, _data.Resolve(""));
         }
         if (_data.Condition("Make != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Make, _data.Resolve(""));
         }
         if (_data.Condition("Model != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940Model, _data.Resolve(""));
         }
         if (_data.Condition("VIN != NULL"))
         {
-        await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
+            await _ui.FillAsync(_locators.CA9940VIN, _data.Resolve(""));
         }
         await _ui.WaitAsync(_locators.OK, "Exists");
         await _ui.WaitAsync(_locators.EndorsementType624AD, "Exists");
@@ -7019,34 +7019,34 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.FirstName813D1, "Exists");
         if (_data.Condition("'First Name' != NULL"))
         {
-        await _ui.PressAsync(_locators.FirstName813D1, "PRE:TAB");
-        await _ui.PressAsync(_locators.FirstName813D1, "Tab");
-        await _ui.PressAsync(_locators.FirstName813D1, "Tab");
+            await _ui.PressAsync(_locators.FirstName813D1, "PRE:TAB");
+            await _ui.PressAsync(_locators.FirstName813D1, "Tab");
+            await _ui.PressAsync(_locators.FirstName813D1, "Tab");
         }
         if (_data.Condition("'First Name' != NULL"))
         {
-        await _ui.FillAsync(_locators.FirstName813D1, _data.Resolve("{{data:iframe_duck_creek_policy_first_name_788}}"));
-        await _ui.PressAsync(_locators.FirstName813D1, "Tab");
-        await _ui.PressAsync(_locators.FirstName813D1, "Tab");
+            await _ui.FillAsync(_locators.FirstName813D1, _data.Resolve("{{data:iframe_duck_creek_policy_first_name_788}}"));
+            await _ui.PressAsync(_locators.FirstName813D1, "Tab");
+            await _ui.PressAsync(_locators.FirstName813D1, "Tab");
         }
         if (_data.Condition("'Last Name' != NULL"))
         {
-        await _ui.FillAsync(_locators.LastName34FF6, _data.Resolve("{{data:iframe_duck_creek_policy_last_name_789}}"));
-        await _ui.PressAsync(_locators.LastName34FF6, "Tab");
-        await _ui.PressAsync(_locators.LastName34FF6, "Tab");
-        await _ui.PressAsync(_locators.LastName34FF6, "Tab");
+            await _ui.FillAsync(_locators.LastName34FF6, _data.Resolve("{{data:iframe_duck_creek_policy_last_name_789}}"));
+            await _ui.PressAsync(_locators.LastName34FF6, "Tab");
+            await _ui.PressAsync(_locators.LastName34FF6, "Tab");
+            await _ui.PressAsync(_locators.LastName34FF6, "Tab");
         }
         if (_data.Condition("Address != NULL"))
         {
-        await _ui.FillAsync(_locators.Address193FF8, _data.Resolve("{{data:iframe_duck_creek_policy_address_1_790}}"));
-        await _ui.PressAsync(_locators.Address193FF8, "Tab");
-        await _ui.PressAsync(_locators.Address193FF8, "Tab");
+            await _ui.FillAsync(_locators.Address193FF8, _data.Resolve("{{data:iframe_duck_creek_policy_address_1_790}}"));
+            await _ui.PressAsync(_locators.Address193FF8, "Tab");
+            await _ui.PressAsync(_locators.Address193FF8, "Tab");
         }
         if (_data.Condition("ZIP != NULL"))
         {
-        await _ui.FillAsync(_locators.ZipCodeB286B, _data.Resolve("{{data:iframe_duck_creek_policy_zip_code_791}}"));
-        await _ui.PressAsync(_locators.ZipCodeB286B, "Tab");
-        await _ui.PressAsync(_locators.ZipCodeB286B, "Tab");
+            await _ui.FillAsync(_locators.ZipCodeB286B, _data.Resolve("{{data:iframe_duck_creek_policy_zip_code_791}}"));
+            await _ui.PressAsync(_locators.ZipCodeB286B, "Tab");
+            await _ui.PressAsync(_locators.ZipCodeB286B, "Tab");
         }
         await _ui.WaitAsync(_locators.State64A10, "Visible");
         await _ui.ClickAsync(_locators.OK);
@@ -7069,52 +7069,52 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.FirstName813D1, "Exists");
         if (_data.Condition("'First Name' != NULL"))
         {
-        await _ui.PressAsync(_locators.FirstName813D1, "PRE:TAB");
-        await _ui.PressAsync(_locators.FirstName813D1, "Tab");
-        await _ui.PressAsync(_locators.FirstName813D1, "Tab");
+            await _ui.PressAsync(_locators.FirstName813D1, "PRE:TAB");
+            await _ui.PressAsync(_locators.FirstName813D1, "Tab");
+            await _ui.PressAsync(_locators.FirstName813D1, "Tab");
         }
         if (_data.Condition("'First Name' != NULL"))
         {
-        await _ui.FillAsync(_locators.FirstName813D1, _data.Resolve("{{data:iframe_duck_creek_policy_first_name_804}}"));
-        await _ui.PressAsync(_locators.FirstName813D1, "Tab");
-        await _ui.PressAsync(_locators.FirstName813D1, "Tab");
+            await _ui.FillAsync(_locators.FirstName813D1, _data.Resolve("{{data:iframe_duck_creek_policy_first_name_804}}"));
+            await _ui.PressAsync(_locators.FirstName813D1, "Tab");
+            await _ui.PressAsync(_locators.FirstName813D1, "Tab");
         }
         if (_data.Condition("'Last Name' != NULL"))
         {
-        await _ui.FillAsync(_locators.LastName34FF6, _data.Resolve("{{data:iframe_duck_creek_policy_last_name_805}}"));
-        await _ui.PressAsync(_locators.LastName34FF6, "Tab");
-        await _ui.PressAsync(_locators.LastName34FF6, "Tab");
-        await _ui.PressAsync(_locators.LastName34FF6, "Tab");
+            await _ui.FillAsync(_locators.LastName34FF6, _data.Resolve("{{data:iframe_duck_creek_policy_last_name_805}}"));
+            await _ui.PressAsync(_locators.LastName34FF6, "Tab");
+            await _ui.PressAsync(_locators.LastName34FF6, "Tab");
+            await _ui.PressAsync(_locators.LastName34FF6, "Tab");
         }
         if (_data.Condition("Address != NULL"))
         {
-        await _ui.FillAsync(_locators.Address193FF8, _data.Resolve("{{data:iframe_duck_creek_policy_address_1_806}}"));
-        await _ui.PressAsync(_locators.Address193FF8, "Tab");
-        await _ui.PressAsync(_locators.Address193FF8, "Tab");
+            await _ui.FillAsync(_locators.Address193FF8, _data.Resolve("{{data:iframe_duck_creek_policy_address_1_806}}"));
+            await _ui.PressAsync(_locators.Address193FF8, "Tab");
+            await _ui.PressAsync(_locators.Address193FF8, "Tab");
         }
         if (_data.Condition("ZIP != NULL"))
         {
-        await _ui.FillAsync(_locators.ZipCodeB286B, _data.Resolve("{{data:iframe_duck_creek_policy_zip_code_807}}"));
-        await _ui.PressAsync(_locators.ZipCodeB286B, "Tab");
-        await _ui.PressAsync(_locators.ZipCodeB286B, "Tab");
+            await _ui.FillAsync(_locators.ZipCodeB286B, _data.Resolve("{{data:iframe_duck_creek_policy_zip_code_807}}"));
+            await _ui.PressAsync(_locators.ZipCodeB286B, "Tab");
+            await _ui.PressAsync(_locators.ZipCodeB286B, "Tab");
         }
         await _ui.WaitAsync(_locators.State64A10, "Visible");
         if (_data.Condition("'Vehicle Association' != NULL"))
         {
-        await _ui.ClickAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation);
+            await _ui.ClickAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation);
         }
         if (_data.Condition("'Vehicle Association' != NULL"))
         {
-        await _ui.ClickAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation);
-        await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "DOUBLECLICK");
-        await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "DOWN");
-        await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "DOWN");
-        await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "Enter");
-        await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "Tab");
+            await _ui.ClickAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation);
+            await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "DOUBLECLICK");
+            await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "DOWN");
+            await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "DOWN");
+            await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "Enter");
+            await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "Tab");
         }
         if (_data.Condition("'Vehicle Association' != NULL"))
         {
-        await _ui.WaitAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "NotEqual");
+            await _ui.WaitAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "NotEqual");
         }
         await _ui.ClickAsync(_locators.OK);
         // AdditionalInterestsSchedule_145f1fPage.WaitForSynchronization_0499_a6f47eAsync
@@ -7136,52 +7136,52 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.FirstName813D1, "Exists");
         if (_data.Condition("'First Name' != NULL"))
         {
-        await _ui.PressAsync(_locators.FirstName813D1, "PRE:TAB");
-        await _ui.PressAsync(_locators.FirstName813D1, "Tab");
-        await _ui.PressAsync(_locators.FirstName813D1, "Tab");
+            await _ui.PressAsync(_locators.FirstName813D1, "PRE:TAB");
+            await _ui.PressAsync(_locators.FirstName813D1, "Tab");
+            await _ui.PressAsync(_locators.FirstName813D1, "Tab");
         }
         if (_data.Condition("'First Name' != NULL"))
         {
-        await _ui.FillAsync(_locators.FirstName813D1, _data.Resolve("{{data:iframe_duck_creek_policy_first_name_823}}"));
-        await _ui.PressAsync(_locators.FirstName813D1, "Tab");
-        await _ui.PressAsync(_locators.FirstName813D1, "Tab");
+            await _ui.FillAsync(_locators.FirstName813D1, _data.Resolve("{{data:iframe_duck_creek_policy_first_name_823}}"));
+            await _ui.PressAsync(_locators.FirstName813D1, "Tab");
+            await _ui.PressAsync(_locators.FirstName813D1, "Tab");
         }
         if (_data.Condition("'Last Name' != NULL"))
         {
-        await _ui.FillAsync(_locators.LastName34FF6, _data.Resolve("{{data:iframe_duck_creek_policy_last_name_824}}"));
-        await _ui.PressAsync(_locators.LastName34FF6, "Tab");
-        await _ui.PressAsync(_locators.LastName34FF6, "Tab");
-        await _ui.PressAsync(_locators.LastName34FF6, "Tab");
+            await _ui.FillAsync(_locators.LastName34FF6, _data.Resolve("{{data:iframe_duck_creek_policy_last_name_824}}"));
+            await _ui.PressAsync(_locators.LastName34FF6, "Tab");
+            await _ui.PressAsync(_locators.LastName34FF6, "Tab");
+            await _ui.PressAsync(_locators.LastName34FF6, "Tab");
         }
         if (_data.Condition("Address != NULL"))
         {
-        await _ui.FillAsync(_locators.Address193FF8, _data.Resolve("{{data:iframe_duck_creek_policy_address_1_825}}"));
-        await _ui.PressAsync(_locators.Address193FF8, "Tab");
-        await _ui.PressAsync(_locators.Address193FF8, "Tab");
+            await _ui.FillAsync(_locators.Address193FF8, _data.Resolve("{{data:iframe_duck_creek_policy_address_1_825}}"));
+            await _ui.PressAsync(_locators.Address193FF8, "Tab");
+            await _ui.PressAsync(_locators.Address193FF8, "Tab");
         }
         if (_data.Condition("ZIP != NULL"))
         {
-        await _ui.FillAsync(_locators.ZipCodeB286B, _data.Resolve("{{data:iframe_duck_creek_policy_zip_code_826}}"));
-        await _ui.PressAsync(_locators.ZipCodeB286B, "Tab");
-        await _ui.PressAsync(_locators.ZipCodeB286B, "Tab");
+            await _ui.FillAsync(_locators.ZipCodeB286B, _data.Resolve("{{data:iframe_duck_creek_policy_zip_code_826}}"));
+            await _ui.PressAsync(_locators.ZipCodeB286B, "Tab");
+            await _ui.PressAsync(_locators.ZipCodeB286B, "Tab");
         }
         await _ui.WaitAsync(_locators.State64A10, "Visible");
         if (_data.Condition("'Vehicle Association' != NULL"))
         {
-        await _ui.ClickAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation);
+            await _ui.ClickAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation);
         }
         if (_data.Condition("'Vehicle Association' != NULL"))
         {
-        await _ui.ClickAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation);
-        await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "DOUBLECLICK");
-        await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "DOWN");
-        await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "DOWN");
-        await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "Enter");
-        await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "Tab");
+            await _ui.ClickAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation);
+            await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "DOUBLECLICK");
+            await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "DOWN");
+            await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "DOWN");
+            await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "Enter");
+            await _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "Tab");
         }
         if (_data.Condition("'Vehicle Association' != NULL"))
         {
-        await _ui.WaitAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "NotEqual");
+            await _ui.WaitAsync(_locators.IFRAMEDuckCreekPolicyVehicleAssociation, "NotEqual");
         }
         await _ui.ClickAsync(_locators.OK);
         // AdditionalInterestsSchedule_145f1fPage.WaitForSynchronization_0504_a6f47eAsync
@@ -7386,30 +7386,30 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.EffectiveDate95094, "Tab");
         if (_data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
         {
-        await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_106}}"));
-        await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
+            await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_106}}"));
+            await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0075_767d1bAsync
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0076_767d1bAsync
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_108}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_108}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.ClickAsync(_locators.PrimaryRatingState);
+            await _ui.ClickAsync(_locators.PrimaryRatingState);
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_112}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -7419,44 +7419,44 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0078_767d1bAsync
         if (_data.Condition("'Product (LOB)' == \"UMB\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_114}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_114}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' == \"BOP\" || 'Product (LOB)' == \"UMB\" || 'Product (LOB)' == \"BAP\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_115}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_115}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         // TBoxEvaluationTool_b95b5cPage.StateIsVirginia_0079_767d1bAsync
         _data.Set("StateIsVirginia", _data.Resolve("Alabama==\"Virginia\"; Expression= 'Alabama'=='Virginia'"));
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0080_767d1bAsync
         if (_data.Condition("'Product (LOB)' == \"UMB\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_117}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_117}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' == \"UMB\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_118}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_118}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0081_767d1bAsync
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.TabOutOfPrimaryRatingStateFieldForSyncronization_0082_767d1bAsync
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
+            await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_122}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "CLICK");
@@ -7486,15 +7486,15 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.PolicyCovgFF145, "Visible");
         if (_data.Condition("'Umb Limit' == \"$1,000,000\""))
         {
-        await _ui.VerifyAsync(_locators.UmbrellaLimit, _data.Resolve("{{data:expected_umbrella_limit_value_134}}"), "Value");
+            await _ui.VerifyAsync(_locators.UmbrellaLimit, _data.Resolve("{{data:expected_umbrella_limit_value_134}}"), "Value");
         }
         if (_data.Condition("'Excluded Liability' == \"CU2186\""))
         {
-        await _ui.VerifyAsync(_locators.ExcludedLiabilityConfidentialInformation, _data.Resolve("{{data:expected_excluded_liability_confidential_information_value_135}}"), "value");
+            await _ui.VerifyAsync(_locators.ExcludedLiabilityConfidentialInformation, _data.Resolve("{{data:expected_excluded_liability_confidential_information_value_135}}"), "value");
         }
         if (_data.Condition("'Products - Aggregate Limit' == \"Umbrella Policy Limit\""))
         {
-        await _ui.VerifyAsync(_locators.ProductsCompletedOperationsAggregateLimit, _data.Resolve("{{data:expected_products_completed_operations_aggregate_limit_value_136}}"), "value");
+            await _ui.VerifyAsync(_locators.ProductsCompletedOperationsAggregateLimit, _data.Resolve("{{data:expected_products_completed_operations_aggregate_limit_value_136}}"), "value");
         }
         // IndicatorsAndErrors_ea9144Page.CheckForLoadingIndicator_0089_767d1bAsync
         await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
@@ -7526,7 +7526,7 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.PolicyNumber461C7, "Tab");
         if (_data.Condition("'BAP Policy Number' != \"BAPPOL#\""))
         {
-        await _ui.ClickAsync(_locators.ImportPolicyDataButton89922);
+            await _ui.ClickAsync(_locators.ImportPolicyDataButton89922);
         }
         await _ui.WaitAsync(_locators.EffectiveDate68A1B, "NotEqual");
         await _ui.WaitAsync(_locators.StoplightMessageTotalSubjectPremium, "Absent");
@@ -7551,26 +7551,26 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.PolicyNumberFDF5C, "Tab");
         if (_data.Condition("'GL Policy Number' == \"GLPOL#\""))
         {
-        await _ui.FillAsync(_locators.EffectiveDateB3600, _data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
-        await _ui.PressAsync(_locators.EffectiveDateB3600, "Tab");
+            await _ui.FillAsync(_locators.EffectiveDateB3600, _data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+            await _ui.PressAsync(_locators.EffectiveDateB3600, "Tab");
         }
         await _ui.WaitAsync(_locators.EffectiveDateB3600, "NotEqual");
         if (_data.Condition("'GL Policy Number' == \"GLPOL#\""))
         {
-        await _ui.FillAsync(_locators.ExpirationDateB437C, _data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
-        await _ui.PressAsync(_locators.ExpirationDateB437C, "Tab");
+            await _ui.FillAsync(_locators.ExpirationDateB437C, _data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+            await _ui.PressAsync(_locators.ExpirationDateB437C, "Tab");
         }
         if (_data.Condition("'GL Policy Number' == \"GLPOL#\""))
         {
-        await _ui.FillAsync(_locators.CGLLimits, _data.Resolve("{{data:cgl_limits_177}}"));
-        await _ui.PressAsync(_locators.CGLLimits, "CLICK");
-        await _ui.PressAsync(_locators.CGLLimits, "Enter");
-        await _ui.PressAsync(_locators.CGLLimits, "Tab");
+            await _ui.FillAsync(_locators.CGLLimits, _data.Resolve("{{data:cgl_limits_177}}"));
+            await _ui.PressAsync(_locators.CGLLimits, "CLICK");
+            await _ui.PressAsync(_locators.CGLLimits, "Enter");
+            await _ui.PressAsync(_locators.CGLLimits, "Tab");
         }
         if (_data.Condition("'GL Policy Number' == \"GLPOL#\""))
         {
-        await _ui.FillAsync(_locators.TotalSubjectPremium19B44, _data.Resolve("{{data:total_subject_premium_178}}"));
-        await _ui.PressAsync(_locators.TotalSubjectPremium19B44, "Tab");
+            await _ui.FillAsync(_locators.TotalSubjectPremium19B44, _data.Resolve("{{data:total_subject_premium_178}}"));
+            await _ui.PressAsync(_locators.TotalSubjectPremium19B44, "Tab");
         }
         // IndicatorsAndErrors_ea9144Page.CheckForLoadingIndicator_0113_767d1bAsync
         await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
@@ -7592,7 +7592,7 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.PolicyNumber6566F, "Tab");
         if (_data.Condition("'WC Policy Number' != \"WCPOL#\""))
         {
-        await _ui.ClickAsync(_locators.ImportPolicyDataButtonEF44C);
+            await _ui.ClickAsync(_locators.ImportPolicyDataButtonEF44C);
         }
         await _ui.WaitAsync(_locators.EffectiveDate6CF3D, "NotEqual");
         // IndicatorsAndErrors_ea9144Page.CheckForLoadingIndicator_0125_767d1bAsync
@@ -7615,26 +7615,26 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.PolicyNumber6566F, "Tab");
         if (_data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
         {
-        await _ui.FillAsync(_locators.EffectiveDate6CF3D, _data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
-        await _ui.PressAsync(_locators.EffectiveDate6CF3D, "Tab");
+            await _ui.FillAsync(_locators.EffectiveDate6CF3D, _data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+            await _ui.PressAsync(_locators.EffectiveDate6CF3D, "Tab");
         }
         await _ui.WaitAsync(_locators.EffectiveDate6CF3D, "NotEqual");
         if (_data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
         {
-        await _ui.FillAsync(_locators.ExpirationDate82561, _data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
-        await _ui.PressAsync(_locators.ExpirationDate82561, "Tab");
+            await _ui.FillAsync(_locators.ExpirationDate82561, _data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
+            await _ui.PressAsync(_locators.ExpirationDate82561, "Tab");
         }
         if (_data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
         {
-        await _ui.FillAsync(_locators.LiabilityLimit1AE2B, _data.Resolve("{{data:liability_limit_204}}"));
-        await _ui.PressAsync(_locators.LiabilityLimit1AE2B, "CLICK");
-        await _ui.PressAsync(_locators.LiabilityLimit1AE2B, "Enter");
-        await _ui.PressAsync(_locators.LiabilityLimit1AE2B, "Tab");
+            await _ui.FillAsync(_locators.LiabilityLimit1AE2B, _data.Resolve("{{data:liability_limit_204}}"));
+            await _ui.PressAsync(_locators.LiabilityLimit1AE2B, "CLICK");
+            await _ui.PressAsync(_locators.LiabilityLimit1AE2B, "Enter");
+            await _ui.PressAsync(_locators.LiabilityLimit1AE2B, "Tab");
         }
         if (_data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
         {
-        await _ui.FillAsync(_locators.TotalSubjectPremiumE8AF0, _data.Resolve("{{data:total_subject_premium_205}}"));
-        await _ui.PressAsync(_locators.TotalSubjectPremiumE8AF0, "Tab");
+            await _ui.FillAsync(_locators.TotalSubjectPremiumE8AF0, _data.Resolve("{{data:total_subject_premium_205}}"));
+            await _ui.PressAsync(_locators.TotalSubjectPremiumE8AF0, "Tab");
         }
         // IndicatorsAndErrors_ea9144Page.CheckForLoadingIndicator_0129_767d1bAsync
         await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
@@ -7862,8 +7862,8 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0076_bb930cAsync
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_108}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_108}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_109}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -7963,10 +7963,10 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.TotalPayrollEstimated, "Tab");
         if (_data.Condition("State != \"MD\""))
         {
-        await _ui.FillAsync(_locators.TotalPayrollEstimated, _data.Resolve("{{data:class_code_frame_class_code_window_total_payroll_estimated_150}}"));
-        await _ui.PressAsync(_locators.TotalPayrollEstimated, "Tab");
-        await _ui.PressAsync(_locators.TotalPayrollEstimated, "CLICK");
-        await _ui.PressAsync(_locators.TotalPayrollEstimated, "Tab");
+            await _ui.FillAsync(_locators.TotalPayrollEstimated, _data.Resolve("{{data:class_code_frame_class_code_window_total_payroll_estimated_150}}"));
+            await _ui.PressAsync(_locators.TotalPayrollEstimated, "Tab");
+            await _ui.PressAsync(_locators.TotalPayrollEstimated, "CLICK");
+            await _ui.PressAsync(_locators.TotalPayrollEstimated, "Tab");
         }
         await _ui.FillAsync(_locators.NumberOfPartTimeEmployees, _data.Resolve("{{data:class_code_frame_class_code_window_number_of_part_time_employees_151}}"));
         await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "Tab");
@@ -8029,10 +8029,10 @@ public sealed class NavigationPage
         // EntityScheduleFirstEntityInfo_409441Page.EnterFirstEntityInfo_0109_bb930cAsync
         await _ui.ClickAsync(_locators.Detail238D5);
         await _ui.WaitAsync(_locators.InsuredType, "Exists");
-        _data.Set("EntityInfoFrameEntityInfoWindowFax_0109", _data.Random("EntityInfoFrameEntityInfoWindowFax_0109", "[0-9]{10}"));
+        // Random data EntityInfoFrameEntityInfoWindowFax_0109 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.EMail, _data.Resolve("{{data:entity_info_frame_entity_info_window_e_mail_178}}"));
-        _data.Set("EntityInfoFrameEntityInfoWindowBureauNumber_0109", _data.Random("EntityInfoFrameEntityInfoWindowBureauNumber_0109", "[0-9]{7}"));
-        _data.Set("EntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefault_0109", _data.Random("EntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefault_0109", "[0-9]{6}"));
+        // Random data EntityInfoFrameEntityInfoWindowBureauNumber_0109 is generated in the StepDefinition before this PageMethod runs.
+        // Random data EntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefault_0109 is generated in the StepDefinition before this PageMethod runs.
         await _ui.ClickAsync(_locators.OK);
         await _ui.WaitAsync(_locators.EntityInfoFrame, "Absent");
         // EntityScheduleLocationAssignment_077082Page.EnterLocationAssignmentUpToNAICS_0110_bb930cAsync
@@ -8279,30 +8279,30 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.EffectiveDate95094, "Tab");
         if (_data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
         {
-        await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_99}}"));
-        await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
+            await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_99}}"));
+            await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0076_a8e5f5Async
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0077_a8e5f5Async
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_101}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_101}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.ClickAsync(_locators.PrimaryRatingState);
+            await _ui.ClickAsync(_locators.PrimaryRatingState);
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_105}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -8316,12 +8316,12 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.TabOutOfPrimaryRatingStateFieldForSyncronization_0083_a8e5f5Async
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
+            await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_111}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "CLICK");
@@ -9204,30 +9204,30 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.EffectiveDate95094, "Tab");
         if (_data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
         {
-        await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_101}}"));
-        await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
+            await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_101}}"));
+            await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0083_b3ff07Async
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0084_b3ff07Async
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_103}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_103}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.ClickAsync(_locators.PrimaryRatingState);
+            await _ui.ClickAsync(_locators.PrimaryRatingState);
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_107}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -9241,12 +9241,12 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.TabOutOfPrimaryRatingStateFieldForSyncronization_0090_b3ff07Async
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
+            await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_113}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "CLICK");
@@ -9290,30 +9290,30 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.EffectiveDate95094, "Tab");
         if (_data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
         {
-        await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_101}}"));
-        await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
+            await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_101}}"));
+            await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0084_c7d608Async
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0085_c7d608Async
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_103}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_103}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.ClickAsync(_locators.PrimaryRatingState);
+            await _ui.ClickAsync(_locators.PrimaryRatingState);
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_107}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -9325,28 +9325,28 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0089_c7d608Async
         if (_data.Condition("'Product (LOB)' == \"GL\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_110}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_110}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' == \"GL\""))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_111}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_111}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Down");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Enter");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0090_c7d608Async
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.TabOutOfPrimaryRatingStateFieldForSyncronization_0091_c7d608Async
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
+            await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_115}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "CLICK");
@@ -9390,30 +9390,30 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.EffectiveDate95094, "Tab");
         if (_data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
         {
-        await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_101}}"));
-        await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
+            await _ui.FillAsync(_locators.YearsInBusiness, _data.Resolve("{{data:years_in_business_101}}"));
+            await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0083_2a8772Async
         await Task.Delay(1000);
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0084_2a8772Async
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_103}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_103}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.ClickAsync(_locators.PrimaryRatingState);
+            await _ui.ClickAsync(_locators.PrimaryRatingState);
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_107}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -9427,12 +9427,12 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.TabOutOfPrimaryRatingStateFieldForSyncronization_0090_2a8772Async
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
+            await _ui.WaitAsync(_locators.PrimaryRatingState, "Exists");
         }
         if (_data.Condition("'Product (LOB)' != \"WC\""))
         {
-        await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "PRE:TAB");
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_113}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "CLICK");
@@ -9548,8 +9548,8 @@ public sealed class NavigationPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.EnterPrimaryRatingState_0075_f2d6bdAsync
         if (_data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
-        await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_103}}"));
-        await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
+            await _ui.FillAsync(_locators.PrimaryRatingState, _data.Resolve("{{data:primaryratingstate_103}}"));
+            await _ui.PressAsync(_locators.PrimaryRatingState, "Tab");
         }
         await _ui.FillAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, _data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_104}}"));
         await _ui.PressAsync(_locators.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days, "Tab");
@@ -9590,21 +9590,21 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.PrimaryLocationState, "Exists");
         if (_data.Condition("'Primary Rating State' != NULL"))
         {
-        await _ui.VerifyAsync(_locators.PrimaryLocationState, _data.Resolve("(?i)^Alabama$"), "Regex:value");
+            await _ui.VerifyAsync(_locators.PrimaryLocationState, _data.Resolve("(?i)^Alabama$"), "Regex:value");
         }
         if (_data.Condition("('Experience Rated' != NULL)&&(State!=\"OK\")"))
         {
-        await _ui.FillAsync(_locators.ExperienceRated, _data.Resolve("{{data:experience_rated_124}}"));
-        await _ui.PressAsync(_locators.ExperienceRated, "Tab");
+            await _ui.FillAsync(_locators.ExperienceRated, _data.Resolve("{{data:experience_rated_124}}"));
+            await _ui.PressAsync(_locators.ExperienceRated, "Tab");
         }
         if (_data.Condition("('Default Experience Mod Type' != NULL)&&(State!=\"OK\")&&(State!=\"NY\")"))
         {
-        _data.Set("ExpMod", await _ui.CaptureAsync(_locators.DefaultExperienceMod, "InnerText"));
+            _data.Set("ExpMod", await _ui.CaptureAsync(_locators.DefaultExperienceMod, "InnerText"));
         }
         if (_data.Condition("('Default Experience Mod Type' != NULL)&&(State!=\"OK\")&&(State!=\"NY\")"))
         {
-        await _ui.FillAsync(_locators.DefaultExpModType, _data.Resolve("{{data:default_exp_mod_type_126}}"));
-        await _ui.PressAsync(_locators.DefaultExpModType, "Tab");
+            await _ui.FillAsync(_locators.DefaultExpModType, _data.Resolve("{{data:default_exp_mod_type_126}}"));
+            await _ui.PressAsync(_locators.DefaultExpModType, "Tab");
         }
     }
 
@@ -9628,53 +9628,53 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.IntrastateRiskID, "Exists");
         if (_data.Condition("'Waiver of Subrogation' != NULL"))
         {
-        await _ui.FillAsync(_locators.WaiverOfSubrogation, _data.Resolve("{{data:waiver_of_subrogation_133}}"));
-        await _ui.PressAsync(_locators.WaiverOfSubrogation, "Tab");
-        await _ui.PressAsync(_locators.WaiverOfSubrogation, "Tab");
+            await _ui.FillAsync(_locators.WaiverOfSubrogation, _data.Resolve("{{data:waiver_of_subrogation_133}}"));
+            await _ui.PressAsync(_locators.WaiverOfSubrogation, "Tab");
+            await _ui.PressAsync(_locators.WaiverOfSubrogation, "Tab");
         }
         if (_data.Condition("'Small Deductible' != NULL"))
         {
-        await _ui.FillAsync(_locators.SmallDeductible, _data.Resolve("{{data:small_deductible_134}}"));
-        await _ui.PressAsync(_locators.SmallDeductible, "Tab");
-        await _ui.PressAsync(_locators.SmallDeductible, "Tab");
+            await _ui.FillAsync(_locators.SmallDeductible, _data.Resolve("{{data:small_deductible_134}}"));
+            await _ui.PressAsync(_locators.SmallDeductible, "Tab");
+            await _ui.PressAsync(_locators.SmallDeductible, "Tab");
         }
         if (_data.Condition("'Company Name' != NULL"))
         {
-        await _ui.FillAsync(_locators.CompanyName, _data.Resolve("{{data:company_name_135}}"));
-        await _ui.PressAsync(_locators.CompanyName, "Tab");
-        await _ui.PressAsync(_locators.CompanyName, "CLICK");
-        await _ui.PressAsync(_locators.CompanyName, "Tab");
-        await _ui.PressAsync(_locators.CompanyName, "Tab");
+            await _ui.FillAsync(_locators.CompanyName, _data.Resolve("{{data:company_name_135}}"));
+            await _ui.PressAsync(_locators.CompanyName, "Tab");
+            await _ui.PressAsync(_locators.CompanyName, "CLICK");
+            await _ui.PressAsync(_locators.CompanyName, "Tab");
+            await _ui.PressAsync(_locators.CompanyName, "Tab");
         }
         if (_data.Condition("('Merit Rating' != NULL)&&(State!=\"NY\")"))
         {
-        await _ui.FillAsync(_locators.MeritRating, _data.Resolve(""));
+            await _ui.FillAsync(_locators.MeritRating, _data.Resolve(""));
         }
         if (_data.Condition("Deductible != NULL"))
         {
-        await _ui.FillAsync(_locators.Deductible5F45D, _data.Resolve(""));
+            await _ui.FillAsync(_locators.Deductible5F45D, _data.Resolve(""));
         }
         if (_data.Condition("Deductible != NULL"))
         {
-        await _ui.FillAsync(_locators.Deductible5F45D, _data.Resolve(""));
+            await _ui.FillAsync(_locators.Deductible5F45D, _data.Resolve(""));
         }
         // StateDetailsExperienceRated_ecd96fPage.StateDetailsExperienceRated_0096_f2d6bdAsync
         if (_data.Condition("'Experience Rating Options' != NULL"))
         {
-        await _ui.FillAsync(_locators.ExperienceRatingOptions, _data.Resolve("{{data:experience_rating_options_139}}"));
-        await _ui.PressAsync(_locators.ExperienceRatingOptions, "Tab");
-        await _ui.PressAsync(_locators.ExperienceRatingOptions, "Tab");
+            await _ui.FillAsync(_locators.ExperienceRatingOptions, _data.Resolve("{{data:experience_rating_options_139}}"));
+            await _ui.PressAsync(_locators.ExperienceRatingOptions, "Tab");
+            await _ui.PressAsync(_locators.ExperienceRatingOptions, "Tab");
         }
         if (_data.Condition("'Experience Mod Type' != NULL"))
         {
-        await _ui.FillAsync(_locators.ExperienceModType, _data.Resolve("{{data:experience_mod_type_140}}"));
-        await _ui.PressAsync(_locators.ExperienceModType, "Tab");
-        await _ui.PressAsync(_locators.ExperienceModType, "Tab");
+            await _ui.FillAsync(_locators.ExperienceModType, _data.Resolve("{{data:experience_mod_type_140}}"));
+            await _ui.PressAsync(_locators.ExperienceModType, "Tab");
+            await _ui.PressAsync(_locators.ExperienceModType, "Tab");
         }
         // StateDetailsMain_44b0fcPage.StateDetailsCheckForPendingRateChange_0097_f2d6bdAsync
         if (_data.Condition("'Pending Rate Change' != NULL"))
         {
-        await _ui.VerifyAsync(_locators.PendingRateChange, _data.Resolve("{{data:expected_pending_rate_change_value_141}}"), "value");
+            await _ui.VerifyAsync(_locators.PendingRateChange, _data.Resolve("{{data:expected_pending_rate_change_value_141}}"), "value");
         }
     }
 
@@ -9693,20 +9693,20 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.SearchValue53135, "Exists");
         if (_data.Condition("'Class Code 1' != NULL"))
         {
-        await _ui.FillAsync(_locators.SearchValue53135, _data.Resolve("{{data:class_code_frame_class_code_window_searchvalue_148}}"));
-        await _ui.PressAsync(_locators.SearchValue53135, "Tab");
+            await _ui.FillAsync(_locators.SearchValue53135, _data.Resolve("{{data:class_code_frame_class_code_window_searchvalue_148}}"));
+            await _ui.PressAsync(_locators.SearchValue53135, "Tab");
         }
         await _ui.PressAsync(_locators.SearchValue53135, "PRE:TAB");
         await _ui.PressAsync(_locators.SearchValue53135, "Tab");
         if (_data.Condition("'Class Code 1' != NULL"))
         {
-        await _ui.FillAsync(_locators.SelectClassCode, _data.Resolve("{{data:class_code_frame_class_code_window_select_class_code_150}}"));
-        await _ui.PressAsync(_locators.SelectClassCode, "CLICK");
-        await _ui.PressAsync(_locators.SelectClassCode, "Enter");
-        await _ui.PressAsync(_locators.SelectClassCode, "Tab");
-        await _ui.PressAsync(_locators.SelectClassCode, "CLICK");
-        await _ui.PressAsync(_locators.SelectClassCode, "Tab");
-        await _ui.PressAsync(_locators.SelectClassCode, "Tab");
+            await _ui.FillAsync(_locators.SelectClassCode, _data.Resolve("{{data:class_code_frame_class_code_window_select_class_code_150}}"));
+            await _ui.PressAsync(_locators.SelectClassCode, "CLICK");
+            await _ui.PressAsync(_locators.SelectClassCode, "Enter");
+            await _ui.PressAsync(_locators.SelectClassCode, "Tab");
+            await _ui.PressAsync(_locators.SelectClassCode, "CLICK");
+            await _ui.PressAsync(_locators.SelectClassCode, "Tab");
+            await _ui.PressAsync(_locators.SelectClassCode, "Tab");
         }
         await _ui.PressAsync(_locators.SelectClassCode, "PRE:TAB");
         await _ui.PressAsync(_locators.SelectClassCode, "Tab");
@@ -9715,23 +9715,23 @@ public sealed class NavigationPage
         // WCScheduleMainPage_7a7413Page.InputFirstClassCodeDetails_0104_f2d6bdAsync
         if (_data.Condition("'Class Code 1' != NULL"))
         {
-        await _ui.VerifyAsync(_locators.SelectClassCode, _data.Resolve("{{data:expected_class_code_frame_class_code_window_select_class_code_value_153}}"), "value");
+            await _ui.VerifyAsync(_locators.SelectClassCode, _data.Resolve("{{data:expected_class_code_frame_class_code_window_select_class_code_value_153}}"), "value");
         }
         await _ui.WaitAsync(_locators.OKClassCode, "Exists");
         await _ui.ClickAsync(_locators.OKClassCode);
         if (_data.Condition("State != \"MD\""))
         {
-        await _ui.FillAsync(_locators.TotalPayrollEstimated, _data.Resolve("{{data:class_code_frame_class_code_window_total_payroll_estimated_156}}"));
-        await _ui.PressAsync(_locators.TotalPayrollEstimated, "Tab");
-        await _ui.PressAsync(_locators.TotalPayrollEstimated, "CLICK");
-        await _ui.PressAsync(_locators.TotalPayrollEstimated, "Tab");
+            await _ui.FillAsync(_locators.TotalPayrollEstimated, _data.Resolve("{{data:class_code_frame_class_code_window_total_payroll_estimated_156}}"));
+            await _ui.PressAsync(_locators.TotalPayrollEstimated, "Tab");
+            await _ui.PressAsync(_locators.TotalPayrollEstimated, "CLICK");
+            await _ui.PressAsync(_locators.TotalPayrollEstimated, "Tab");
         }
         if (_data.Condition("'Waiver of Subrogation Exposure' != NULL"))
         {
-        await _ui.FillAsync(_locators.WaiverOfSubrogationExposure, _data.Resolve("{{data:class_code_frame_class_code_window_waiver_of_subrogation_exposure_157}}"));
-        await _ui.PressAsync(_locators.WaiverOfSubrogationExposure, "Tab");
-        await _ui.PressAsync(_locators.WaiverOfSubrogationExposure, "CLICK");
-        await _ui.PressAsync(_locators.WaiverOfSubrogationExposure, "Tab");
+            await _ui.FillAsync(_locators.WaiverOfSubrogationExposure, _data.Resolve("{{data:class_code_frame_class_code_window_waiver_of_subrogation_exposure_157}}"));
+            await _ui.PressAsync(_locators.WaiverOfSubrogationExposure, "Tab");
+            await _ui.PressAsync(_locators.WaiverOfSubrogationExposure, "CLICK");
+            await _ui.PressAsync(_locators.WaiverOfSubrogationExposure, "Tab");
         }
         await _ui.FillAsync(_locators.NumberOfPartTimeEmployees, _data.Resolve("{{data:class_code_frame_class_code_window_number_of_part_time_employees_158}}"));
         await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "Tab");
@@ -9752,20 +9752,20 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.SearchValue53135, "Exists");
         if (_data.Condition("'Class Code 2' != NULL"))
         {
-        await _ui.FillAsync(_locators.SearchValue53135, _data.Resolve("{{data:class_code_frame_class_code_window_searchvalue_166}}"));
-        await _ui.PressAsync(_locators.SearchValue53135, "Tab");
+            await _ui.FillAsync(_locators.SearchValue53135, _data.Resolve("{{data:class_code_frame_class_code_window_searchvalue_166}}"));
+            await _ui.PressAsync(_locators.SearchValue53135, "Tab");
         }
         await _ui.PressAsync(_locators.SearchValue53135, "PRE:TAB");
         await _ui.PressAsync(_locators.SearchValue53135, "Tab");
         if (_data.Condition("'Class Code 2' != NULL"))
         {
-        await _ui.FillAsync(_locators.SelectClassCode, _data.Resolve("{{data:class_code_frame_class_code_window_select_class_code_168}}"));
-        await _ui.PressAsync(_locators.SelectClassCode, "CLICK");
-        await _ui.PressAsync(_locators.SelectClassCode, "Enter");
-        await _ui.PressAsync(_locators.SelectClassCode, "Tab");
-        await _ui.PressAsync(_locators.SelectClassCode, "CLICK");
-        await _ui.PressAsync(_locators.SelectClassCode, "Tab");
-        await _ui.PressAsync(_locators.SelectClassCode, "Tab");
+            await _ui.FillAsync(_locators.SelectClassCode, _data.Resolve("{{data:class_code_frame_class_code_window_select_class_code_168}}"));
+            await _ui.PressAsync(_locators.SelectClassCode, "CLICK");
+            await _ui.PressAsync(_locators.SelectClassCode, "Enter");
+            await _ui.PressAsync(_locators.SelectClassCode, "Tab");
+            await _ui.PressAsync(_locators.SelectClassCode, "CLICK");
+            await _ui.PressAsync(_locators.SelectClassCode, "Tab");
+            await _ui.PressAsync(_locators.SelectClassCode, "Tab");
         }
         await _ui.PressAsync(_locators.SelectClassCode, "PRE:TAB");
         await _ui.PressAsync(_locators.SelectClassCode, "Tab");
@@ -9774,7 +9774,7 @@ public sealed class NavigationPage
         // WCScheduleMainPage_7a7413Page.InputSecondClassCodeDetails_0109_f2d6bdAsync
         if (_data.Condition("'Class Code 2' != NULL"))
         {
-        await _ui.VerifyAsync(_locators.SelectClassCode, _data.Resolve("{{data:expected_class_code_frame_class_code_window_select_class_code_value_171}}"), "value");
+            await _ui.VerifyAsync(_locators.SelectClassCode, _data.Resolve("{{data:expected_class_code_frame_class_code_window_select_class_code_value_171}}"), "value");
         }
         await _ui.WaitAsync(_locators.OKClassCode, "Exists");
         await _ui.ClickAsync(_locators.OKClassCode);
@@ -9784,8 +9784,8 @@ public sealed class NavigationPage
         await _ui.PressAsync(_locators.TotalPayrollEstimated, "Tab");
         if (_data.Condition("'Waiver of Subrogation Exposure' != NULL"))
         {
-        await _ui.FillAsync(_locators.WaiverOfSubrogationExposure, _data.Resolve("{{data:class_code_frame_class_code_window_waiver_of_subrogation_exposure_175}}"));
-        await _ui.PressAsync(_locators.WaiverOfSubrogationExposure, "Tab");
+            await _ui.FillAsync(_locators.WaiverOfSubrogationExposure, _data.Resolve("{{data:class_code_frame_class_code_window_waiver_of_subrogation_exposure_175}}"));
+            await _ui.PressAsync(_locators.WaiverOfSubrogationExposure, "Tab");
         }
         await _ui.FillAsync(_locators.NumberOfPartTimeEmployees, _data.Resolve("{{data:class_code_frame_class_code_window_number_of_part_time_employees_176}}"));
         await _ui.PressAsync(_locators.NumberOfPartTimeEmployees, "Tab");
@@ -9810,10 +9810,10 @@ public sealed class NavigationPage
         // EntityScheduleFirstEntityInfo_409441Page.EnterFirstEntityInfo_0113_f2d6bdAsync
         await _ui.ClickAsync(_locators.Detail238D5);
         await _ui.WaitAsync(_locators.InsuredType, "Exists");
-        _data.Set("EntityInfoFrameEntityInfoWindowFax_0113", _data.Random("EntityInfoFrameEntityInfoWindowFax_0113", "[0-9]{10}"));
+        // Random data EntityInfoFrameEntityInfoWindowFax_0113 is generated in the StepDefinition before this PageMethod runs.
         await _ui.FillAsync(_locators.EMail, _data.Resolve("{{data:entity_info_frame_entity_info_window_e_mail_186}}"));
-        _data.Set("EntityInfoFrameEntityInfoWindowBureauNumber_0113", _data.Random("EntityInfoFrameEntityInfoWindowBureauNumber_0113", "[0-9]{7}"));
-        _data.Set("EntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefault_0113", _data.Random("EntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefault_0113", "[0-9]{6}"));
+        // Random data EntityInfoFrameEntityInfoWindowBureauNumber_0113 is generated in the StepDefinition before this PageMethod runs.
+        // Random data EntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefault_0113 is generated in the StepDefinition before this PageMethod runs.
         await _ui.ClickAsync(_locators.OK);
         await _ui.WaitAsync(_locators.EntityInfoFrame, "Absent");
         // EntityScheduleLocationAssignment_077082Page.EnterLocationAssignmentUpToNAICS_0114_f2d6bdAsync
@@ -9885,10 +9885,10 @@ public sealed class NavigationPage
         // EndorsementsWaitonAddEndorsementButton_20beaePage.EndorsementsWaitonAddEndorsementButton_0119_f2d6bdAsync
         if (_data.Condition("State == \"NY\""))
         {
-        await _ui.FillAsync(_locators.AreThereAnyOfficersThatShouldBeExcluded, _data.Resolve("{{data:are_there_any_officers_that_should_be_excluded_218}}"));
-        await _ui.PressAsync(_locators.AreThereAnyOfficersThatShouldBeExcluded, "Tab");
-        await _ui.PressAsync(_locators.AreThereAnyOfficersThatShouldBeExcluded, "CLICK");
-        await _ui.PressAsync(_locators.AreThereAnyOfficersThatShouldBeExcluded, "Tab");
+            await _ui.FillAsync(_locators.AreThereAnyOfficersThatShouldBeExcluded, _data.Resolve("{{data:are_there_any_officers_that_should_be_excluded_218}}"));
+            await _ui.PressAsync(_locators.AreThereAnyOfficersThatShouldBeExcluded, "Tab");
+            await _ui.PressAsync(_locators.AreThereAnyOfficersThatShouldBeExcluded, "CLICK");
+            await _ui.PressAsync(_locators.AreThereAnyOfficersThatShouldBeExcluded, "Tab");
         }
         await _ui.WaitAsync(_locators.AddEndorsementB6452, "Exists");
     }
@@ -9903,21 +9903,21 @@ public sealed class NavigationPage
         await _ui.ClickAsync(_locators.AddEndorsement9E5F4);
         if (_data.Condition("'Endorsement Type' != NULL"))
         {
-        await _ui.FillAsync(_locators.EndorsementType8DB33, _data.Resolve("{{data:endorsement_type_223}}"));
-        await _ui.PressAsync(_locators.EndorsementType8DB33, "Tab");
-        await _ui.PressAsync(_locators.EndorsementType8DB33, "Tab");
+            await _ui.FillAsync(_locators.EndorsementType8DB33, _data.Resolve("{{data:endorsement_type_223}}"));
+            await _ui.PressAsync(_locators.EndorsementType8DB33, "Tab");
+            await _ui.PressAsync(_locators.EndorsementType8DB33, "Tab");
         }
         if (_data.Condition("City != NULL"))
         {
-        await _ui.FillAsync(_locators.City, _data.Resolve("{{data:city_224}}"));
-        await _ui.PressAsync(_locators.City, "Tab");
-        await _ui.PressAsync(_locators.City, "Tab");
+            await _ui.FillAsync(_locators.City, _data.Resolve("{{data:city_224}}"));
+            await _ui.PressAsync(_locators.City, "Tab");
+            await _ui.PressAsync(_locators.City, "Tab");
         }
         if (_data.Condition("State != NULL"))
         {
-        await _ui.FillAsync(_locators.State89468, _data.Resolve("{{data:state_225}}"));
-        await _ui.PressAsync(_locators.State89468, "Tab");
-        await _ui.PressAsync(_locators.State89468, "Tab");
+            await _ui.FillAsync(_locators.State89468, _data.Resolve("{{data:state_225}}"));
+            await _ui.PressAsync(_locators.State89468, "Tab");
+            await _ui.PressAsync(_locators.State89468, "Tab");
         }
         await _ui.ClickAsync(_locators.DesignatedWorkplacesExclusionOK);
     }
@@ -9931,35 +9931,35 @@ public sealed class NavigationPage
         await _ui.WaitAsync(_locators.AddEndorsementCE8DD, "Exists");
         if (_data.Condition("'Endorsement Type' != NULL"))
         {
-        await _ui.FillAsync(_locators.EndorsementTypeF8D4A, _data.Resolve("{{data:endorsement_type_229}}"));
-        await _ui.PressAsync(_locators.EndorsementTypeF8D4A, "Tab");
-        await _ui.PressAsync(_locators.EndorsementTypeF8D4A, "Tab");
+            await _ui.FillAsync(_locators.EndorsementTypeF8D4A, _data.Resolve("{{data:endorsement_type_229}}"));
+            await _ui.PressAsync(_locators.EndorsementTypeF8D4A, "Tab");
+            await _ui.PressAsync(_locators.EndorsementTypeF8D4A, "Tab");
         }
         if (_data.Condition("(State!=\"MO\")&&(State!=\"ID\")"))
         {
-        await _ui.ClickAsync(_locators.AddExcludedOfficerInformation);
+            await _ui.ClickAsync(_locators.AddExcludedOfficerInformation);
         }
         if (_data.Condition("(Officers != NULL)&&(State!=\"MO\")&&(State!=\"ID\")"))
         {
-        await _ui.FillAsync(_locators.Officers, _data.Resolve("{{data:officers_231}}"));
-        await _ui.PressAsync(_locators.Officers, "Tab");
-        await _ui.PressAsync(_locators.Officers, "Tab");
+            await _ui.FillAsync(_locators.Officers, _data.Resolve("{{data:officers_231}}"));
+            await _ui.PressAsync(_locators.Officers, "Tab");
+            await _ui.PressAsync(_locators.Officers, "Tab");
         }
         if (_data.Condition("('Position Held' != NULL)&&(State!=\"MO\")&&(State!=\"ID\")"))
         {
-        await _ui.FillAsync(_locators.OfficersPositionHeld, _data.Resolve("{{data:officers_position_held_232}}"));
-        await _ui.PressAsync(_locators.OfficersPositionHeld, "Tab");
-        await _ui.PressAsync(_locators.OfficersPositionHeld, "Tab");
+            await _ui.FillAsync(_locators.OfficersPositionHeld, _data.Resolve("{{data:officers_position_held_232}}"));
+            await _ui.PressAsync(_locators.OfficersPositionHeld, "Tab");
+            await _ui.PressAsync(_locators.OfficersPositionHeld, "Tab");
         }
         if (_data.Condition("(State != \"IA\")&&(State != \"IN\")&&(State!=\"MA\")&&(State!=\"ID\")&&(State!=\"MS\")&&(State!=\"KY\")&&(State!=\"SC\")&&(State!=\"MT\")&&(State!=\"KS\")&&(State!=\"ME\")"))
         {
-        await _ui.ClickAsync(_locators.AddExcludedOthersInformation);
+            await _ui.ClickAsync(_locators.AddExcludedOthersInformation);
         }
         if (_data.Condition("(State != \"IA\")&&(State != \"IN\")&&(State!=\"MA\")&&(State!=\"ID\")&&(State!=\"MS\")&&(State!=\"KY\")&&(State!=\"SC\")&&(State!=\"MT\")&&(State!=\"KS\")&&(State!=\"ME\")"))
         {
-        await _ui.FillAsync(_locators.OthersB1A1B, _data.Resolve("{{data:others_234}}"));
-        await _ui.PressAsync(_locators.OthersB1A1B, "Tab");
-        await _ui.PressAsync(_locators.OthersB1A1B, "Tab");
+            await _ui.FillAsync(_locators.OthersB1A1B, _data.Resolve("{{data:others_234}}"));
+            await _ui.PressAsync(_locators.OthersB1A1B, "Tab");
+            await _ui.PressAsync(_locators.OthersB1A1B, "Tab");
         }
         await _ui.ClickAsync(_locators.PartnersOfficersAndOthersExclusionOK);
         await _ui.ClickAsync(_locators.AddEndorsementCE8DD);
@@ -9975,33 +9975,33 @@ public sealed class NavigationPage
         await _ui.ClickAsync(_locators.AddEndorsement44E6A);
         if (_data.Condition("'Endorsement Type' != NULL"))
         {
-        await _ui.FillAsync(_locators.EndorsementTypeAEC4F, _data.Resolve("{{data:endorsement_type_240}}"));
-        await _ui.PressAsync(_locators.EndorsementTypeAEC4F, "Tab");
-        await _ui.PressAsync(_locators.EndorsementTypeAEC4F, "Tab");
+            await _ui.FillAsync(_locators.EndorsementTypeAEC4F, _data.Resolve("{{data:endorsement_type_240}}"));
+            await _ui.PressAsync(_locators.EndorsementTypeAEC4F, "Tab");
+            await _ui.PressAsync(_locators.EndorsementTypeAEC4F, "Tab");
         }
         await _ui.ClickAsync(_locators.AddSoleProprietorInformation);
         if (_data.Condition("'Sole Proprietors' != NULL"))
         {
-        await _ui.FillAsync(_locators.SoleProprietors, _data.Resolve("{{data:sole_proprietors_242}}"));
-        await _ui.PressAsync(_locators.SoleProprietors, "Tab");
-        await _ui.PressAsync(_locators.SoleProprietors, "Tab");
+            await _ui.FillAsync(_locators.SoleProprietors, _data.Resolve("{{data:sole_proprietors_242}}"));
+            await _ui.PressAsync(_locators.SoleProprietors, "Tab");
+            await _ui.PressAsync(_locators.SoleProprietors, "Tab");
         }
         await _ui.ClickAsync(_locators.AddPartnerInformation);
         if (_data.Condition("Partners != NULL"))
         {
-        await _ui.FillAsync(_locators.Partners, _data.Resolve("{{data:partners_244}}"));
-        await _ui.PressAsync(_locators.Partners, "Tab");
-        await _ui.PressAsync(_locators.Partners, "Tab");
+            await _ui.FillAsync(_locators.Partners, _data.Resolve("{{data:partners_244}}"));
+            await _ui.PressAsync(_locators.Partners, "Tab");
+            await _ui.PressAsync(_locators.Partners, "Tab");
         }
         if (_data.Condition("(State!=\"CO\")&&(State!=\"DE\")&&(State!=\"IA\")&&(State!=\"MN\")&&(State!=\"MO\")&&(State!=\"NH\")&&(State!=\"SD\")&&(State!=\"AL\")"))
         {
-        await _ui.ClickAsync(_locators.AddOthersInformation);
+            await _ui.ClickAsync(_locators.AddOthersInformation);
         }
         if (_data.Condition("(State!=\"CO\")&&(State!=\"DE\")&&(State!=\"IA\")&&(State!=\"MN\")&&(State!=\"MO\")&&(State!=\"NH\")&&(State!=\"SD\")&&(State!=\"AL\")"))
         {
-        await _ui.FillAsync(_locators.Others9E098, _data.Resolve("{{data:others_246}}"));
-        await _ui.PressAsync(_locators.Others9E098, "Tab");
-        await _ui.PressAsync(_locators.Others9E098, "Tab");
+            await _ui.FillAsync(_locators.Others9E098, _data.Resolve("{{data:others_246}}"));
+            await _ui.PressAsync(_locators.Others9E098, "Tab");
+            await _ui.PressAsync(_locators.Others9E098, "Tab");
         }
         await _ui.ClickAsync(_locators.SoleProprietorsPartnersOfficersAndOthersCoverageOK);
     }

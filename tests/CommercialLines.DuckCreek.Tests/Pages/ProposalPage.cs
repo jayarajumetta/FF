@@ -7,9 +7,9 @@ public sealed class ProposalPage
 {
     private readonly ProposalLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public ProposalPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public ProposalPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new ProposalLocators(browser.Page);
         _data = data;
@@ -27,10 +27,10 @@ public sealed class ProposalPage
         _data.Set("NBEffDate", await _ui.CaptureAsync(_locators.EffectiveDate, "InnerText"));
         if (_data.Condition("'Product:*' != \"Carrier_SpecialFarmPackage  Pages   US   (4.0.0.0)\""))
         {
-        await _ui.FillAsync(_locators.Product, _data.Resolve("{{data:product_45}}"));
-        await _ui.PressAsync(_locators.Product, "CLICK");
-        await _ui.PressAsync(_locators.Product, "Enter");
-        await _ui.PressAsync(_locators.Product, "Tab");
+            await _ui.FillAsync(_locators.Product, _data.Resolve("{{data:product_45}}"));
+            await _ui.PressAsync(_locators.Product, "CLICK");
+            await _ui.PressAsync(_locators.Product, "Enter");
+            await _ui.PressAsync(_locators.Product, "Tab");
         }
         await _ui.WaitAsync(_locators.Start, "Visible");
         await _ui.ClickAsync(_locators.Start);
@@ -50,10 +50,10 @@ public sealed class ProposalPage
         _data.Set("NBEffDate", await _ui.CaptureAsync(_locators.EffectiveDate, "InnerText"));
         if (_data.Condition("'Product:*' != \"Carrier_SpecialFarmPackage  Pages   US   (4.0.0.0)\""))
         {
-        await _ui.FillAsync(_locators.Product, _data.Resolve("{{data:product_45}}"));
-        await _ui.PressAsync(_locators.Product, "CLICK");
-        await _ui.PressAsync(_locators.Product, "Enter");
-        await _ui.PressAsync(_locators.Product, "Tab");
+            await _ui.FillAsync(_locators.Product, _data.Resolve("{{data:product_45}}"));
+            await _ui.PressAsync(_locators.Product, "CLICK");
+            await _ui.PressAsync(_locators.Product, "Enter");
+            await _ui.PressAsync(_locators.Product, "Tab");
         }
         await _ui.WaitAsync(_locators.Start, "Visible");
         await _ui.ClickAsync(_locators.Start);
@@ -73,10 +73,10 @@ public sealed class ProposalPage
         _data.Set("NBEffDate", await _ui.CaptureAsync(_locators.EffectiveDate, "InnerText"));
         if (_data.Condition("'Product:*' != \"Carrier_SpecialFarmPackage  Pages   US   (4.0.0.0)\""))
         {
-        await _ui.FillAsync(_locators.Product, _data.Resolve("{{data:product_45}}"));
-        await _ui.PressAsync(_locators.Product, "CLICK");
-        await _ui.PressAsync(_locators.Product, "Enter");
-        await _ui.PressAsync(_locators.Product, "Tab");
+            await _ui.FillAsync(_locators.Product, _data.Resolve("{{data:product_45}}"));
+            await _ui.PressAsync(_locators.Product, "CLICK");
+            await _ui.PressAsync(_locators.Product, "Enter");
+            await _ui.PressAsync(_locators.Product, "Tab");
         }
         await _ui.WaitAsync(_locators.Start, "Visible");
         await _ui.ClickAsync(_locators.Start);
@@ -96,10 +96,10 @@ public sealed class ProposalPage
         _data.Set("NBEffDate", await _ui.CaptureAsync(_locators.EffectiveDate, "InnerText"));
         if (_data.Condition("'Product:*' != \"Carrier_SpecialFarmPackage  Pages   US   (4.0.0.0)\""))
         {
-        await _ui.FillAsync(_locators.Product, _data.Resolve("{{data:product_45}}"));
-        await _ui.PressAsync(_locators.Product, "CLICK");
-        await _ui.PressAsync(_locators.Product, "Enter");
-        await _ui.PressAsync(_locators.Product, "Tab");
+            await _ui.FillAsync(_locators.Product, _data.Resolve("{{data:product_45}}"));
+            await _ui.PressAsync(_locators.Product, "CLICK");
+            await _ui.PressAsync(_locators.Product, "Enter");
+            await _ui.PressAsync(_locators.Product, "Tab");
         }
         await _ui.WaitAsync(_locators.Start, "Visible");
         await _ui.ClickAsync(_locators.Start);
@@ -119,10 +119,10 @@ public sealed class ProposalPage
         _data.Set("NBEffDate", await _ui.CaptureAsync(_locators.EffectiveDate, "InnerText"));
         if (_data.Condition("'Product:*' != \"Carrier_SpecialFarmPackage  Pages   US   (4.0.0.0)\""))
         {
-        await _ui.FillAsync(_locators.Product, _data.Resolve("{{data:product_45}}"));
-        await _ui.PressAsync(_locators.Product, "CLICK");
-        await _ui.PressAsync(_locators.Product, "Enter");
-        await _ui.PressAsync(_locators.Product, "Tab");
+            await _ui.FillAsync(_locators.Product, _data.Resolve("{{data:product_45}}"));
+            await _ui.PressAsync(_locators.Product, "CLICK");
+            await _ui.PressAsync(_locators.Product, "Enter");
+            await _ui.PressAsync(_locators.Product, "Tab");
         }
         await _ui.WaitAsync(_locators.Start, "Visible");
         await _ui.ClickAsync(_locators.Start);
@@ -142,10 +142,10 @@ public sealed class ProposalPage
         _data.Set("NBEffDate", await _ui.CaptureAsync(_locators.EffectiveDate, "InnerText"));
         if (_data.Condition("'Product:*' != \"Carrier_SpecialFarmPackage  Pages   US   (4.0.0.0)\""))
         {
-        await _ui.FillAsync(_locators.Product, _data.Resolve("{{data:product_45}}"));
-        await _ui.PressAsync(_locators.Product, "CLICK");
-        await _ui.PressAsync(_locators.Product, "Enter");
-        await _ui.PressAsync(_locators.Product, "Tab");
+            await _ui.FillAsync(_locators.Product, _data.Resolve("{{data:product_45}}"));
+            await _ui.PressAsync(_locators.Product, "CLICK");
+            await _ui.PressAsync(_locators.Product, "Enter");
+            await _ui.PressAsync(_locators.Product, "Tab");
         }
         await _ui.WaitAsync(_locators.Start, "Visible");
         await _ui.ClickAsync(_locators.Start);
@@ -165,10 +165,10 @@ public sealed class ProposalPage
         _data.Set("NBEffDate", await _ui.CaptureAsync(_locators.EffectiveDate, "InnerText"));
         if (_data.Condition("'Product:*' != \"Carrier_SpecialFarmPackage  Pages   US   (4.0.0.0)\""))
         {
-        await _ui.FillAsync(_locators.Product, _data.Resolve("{{data:product_45}}"));
-        await _ui.PressAsync(_locators.Product, "CLICK");
-        await _ui.PressAsync(_locators.Product, "Enter");
-        await _ui.PressAsync(_locators.Product, "Tab");
+            await _ui.FillAsync(_locators.Product, _data.Resolve("{{data:product_45}}"));
+            await _ui.PressAsync(_locators.Product, "CLICK");
+            await _ui.PressAsync(_locators.Product, "Enter");
+            await _ui.PressAsync(_locators.Product, "Tab");
         }
         await _ui.WaitAsync(_locators.Start, "Visible");
         await _ui.ClickAsync(_locators.Start);

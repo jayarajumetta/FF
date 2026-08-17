@@ -15,7 +15,11 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I enter client search information$")]
     public async Task EnterClientSearchInformationAsync()
     {
-        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("LastName", "FETT[A-Z]{4}");
+        data.GenerateRandom("FirstName", "SFP[A-Z]{3}");
+
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.EnterClientSearchInformationAsync4();
     }
 
@@ -24,7 +28,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I create a new client$")]
     public async Task CreateANewClientAsync()
     {
-        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CreateANewClientAsync4();
     }
 
@@ -33,7 +37,11 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I enter account details$")]
     public async Task EnterAccountDetailsAsync()
     {
-        var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("OwnerPhone", "3[0-9]{9}");
+        data.GenerateRandom("OwnerEmail", "test@[a-z]{4}\\\\.com");
+
+        var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.EnterAccountDetailsAsync4();
     }
 
@@ -42,7 +50,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I start the policy proposal$")]
     public async Task StartThePolicyProposalAsync()
     {
-        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.StartThePolicyProposalAsync4();
     }
 
@@ -51,7 +59,10 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I enter and validate the insured social security number$")]
     public async Task EnterAndValidateTheInsuredSocialSecurityNumberAsync()
     {
-        var page = new SocialSecurityPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("InsuredSSN", "025[0-9]{6}");
+
+        var page = new SocialSecurityPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.EnterAndValidateTheInsuredSocialSecurityNumberAsync4();
     }
 
@@ -60,7 +71,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen$")]
     public async Task NavigateToTheRequiredPolicyScreenAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToTheRequiredPolicyScreenAsync5();
     }
 
@@ -69,7 +80,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I complete policy Details \\(Optimized\\)$")]
     public async Task CompletePolicyDetailsOptimizedAsync()
     {
-        var page = new PolicyInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompletePolicyDetailsOptimizedAsync2();
     }
 
@@ -78,7 +89,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for screen$")]
     public async Task NavigateToTheRequiredPolicyScreenForScreenAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToTheRequiredPolicyScreenForScreenAsync4();
     }
 
@@ -87,7 +98,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I verify None of the Above$")]
     public async Task VerifyNoneOfTheAboveAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.VerifyNoneOfTheAboveAsync2();
     }
 
@@ -96,7 +107,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for navigate to screen$")]
     public async Task NavigateToTheRequiredPolicyScreenForNavigateToScreenAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToTheRequiredPolicyScreenForNavigateToScreenAsync3();
     }
 
@@ -105,7 +116,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I enter Required Info$")]
     public async Task EnterRequiredInfoAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.EnterRequiredInfoAsync3();
     }
 
@@ -114,7 +125,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for navigate to correct screen$")]
     public async Task NavigateToTheRequiredPolicyScreenForNavigateToCorrectScreenAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToTheRequiredPolicyScreenForNavigateToCorrectScreenAsync3();
     }
 
@@ -123,7 +134,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I complete edit Client Roles$")]
     public async Task CompleteEditClientRolesAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteEditClientRolesAsync3();
     }
 
@@ -132,7 +143,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for policy data entry$")]
     public async Task NavigateToTheRequiredPolicyScreenForPolicyDataEntryAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToTheRequiredPolicyScreenForPolicyDataEntryAsync3();
     }
 
@@ -141,7 +152,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I add/Edit a Narrative and Verify Timestamp$")]
     public async Task AddEditANarrativeAndVerifyTimestampAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddEditANarrativeAndVerifyTimestampAsync3();
     }
 
@@ -150,7 +161,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for subsequent screen 0118$")]
     public async Task NavigateToTheRequiredPolicyScreenForSubsequentScreen0118Async()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToTheRequiredPolicyScreenForSubsequentScreen0118Async2();
     }
 
@@ -159,7 +170,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I enter Required$")]
     public async Task EnterRequiredAsync()
     {
-        var page = new LossHistoryPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new LossHistoryPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.EnterRequiredAsync3();
     }
 
@@ -168,7 +179,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I add a Location$")]
     public async Task AddALocationAsync()
     {
-        var page = new LocationsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new LocationsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddALocationAsync2();
     }
 
@@ -177,7 +188,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I add a Residence$")]
     public async Task AddAResidenceAsync()
     {
-        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddAResidenceAsync2();
     }
 
@@ -186,7 +197,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I add Residence Covg$")]
     public async Task AddResidenceCovgAsync()
     {
-        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddResidenceCovgAsync2();
     }
 
@@ -195,7 +206,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for subsequent screen 0174$")]
     public async Task NavigateToTheRequiredPolicyScreenForSubsequentScreen0174Async()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToTheRequiredPolicyScreenForSubsequentScreen0174Async2();
     }
 
@@ -204,7 +215,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I enter FPP$")]
     public async Task EnterFPPAsync()
     {
-        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.EnterFPPAsync();
     }
 
@@ -213,7 +224,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for subsequent screen 0184$")]
     public async Task NavigateToTheRequiredPolicyScreenForSubsequentScreen0184Async()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToTheRequiredPolicyScreenForSubsequentScreen0184Async2();
     }
 
@@ -222,7 +233,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I complete equipment Breakdown and Implements Coverage$")]
     public async Task CompleteEquipmentBreakdownAndImplementsCoverageAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteEquipmentBreakdownAndImplementsCoverageAsync();
     }
 
@@ -231,7 +242,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for subsequent screen 0201$")]
     public async Task NavigateToTheRequiredPolicyScreenForSubsequentScreen0201Async()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToTheRequiredPolicyScreenForSubsequentScreen0201Async();
     }
 
@@ -240,7 +251,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I add bicycle$")]
     public async Task AddBicycleAsync()
     {
-        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddBicycleAsync();
     }
 
@@ -249,7 +260,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for subsequent screen 0215$")]
     public async Task NavigateToTheRequiredPolicyScreenForSubsequentScreen0215Async()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToTheRequiredPolicyScreenForSubsequentScreen0215Async();
     }
 
@@ -258,7 +269,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I complete nOT CE$")]
     public async Task CompleteNOTCEAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteNOTCEAsync();
     }
 
@@ -267,7 +278,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for subsequent screen 0236$")]
     public async Task NavigateToTheRequiredPolicyScreenForSubsequentScreen0236Async()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToTheRequiredPolicyScreenForSubsequentScreen0236Async();
     }
 
@@ -276,7 +287,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I complete insurance Score$")]
     public async Task CompleteInsuranceScoreAsync()
     {
-        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteInsuranceScoreAsync2();
     }
 
@@ -285,7 +296,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for subsequent screen 0250$")]
     public async Task NavigateToTheRequiredPolicyScreenForSubsequentScreen0250Async()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToTheRequiredPolicyScreenForSubsequentScreen0250Async();
     }
 
@@ -294,7 +305,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I complete mortgagee/Loss Payee Information$")]
     public async Task CompleteMortgageeLossPayeeInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteMortgageeLossPayeeInformationAsync2();
     }
 
@@ -303,7 +314,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for subsequent screen 0273$")]
     public async Task NavigateToTheRequiredPolicyScreenForSubsequentScreen0273Async()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToTheRequiredPolicyScreenForSubsequentScreen0273Async();
     }
 
@@ -312,7 +323,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I verify premium$")]
     public async Task VerifyPremiumAsync()
     {
-        var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.VerifyPremiumAsync2();
     }
 
@@ -321,7 +332,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for subsequent screen 0282$")]
     public async Task NavigateToTheRequiredPolicyScreenForSubsequentScreen0282Async()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToTheRequiredPolicyScreenForSubsequentScreen0282Async();
     }
 
@@ -330,7 +341,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I open a CLAS Browser and Search for EQ by Description 1$")]
     public async Task OpenACLASBrowserAndSearchForEQByDescription1Async()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.OpenACLASBrowserAndSearchForEQByDescription1Async2();
     }
 
@@ -339,7 +350,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I complete restart Edge Popup$")]
     public async Task CompleteRestartEdgePopupAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRestartEdgePopupAsync3();
     }
 
@@ -348,7 +359,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I open a CLAS Browser and Search for EQ by Description 1 for username$")]
     public async Task OpenACLASBrowserAndSearchForEQByDescription1ForUsernameAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.OpenACLASBrowserAndSearchForEQByDescription1ForUsernameAsync2();
     }
 
@@ -357,7 +368,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I sign out of the application$")]
     public async Task SignOutOfTheApplicationAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.SignOutOfTheApplicationAsync3();
     }
 
@@ -366,7 +377,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I open a CLAS Browser and Search for EQ by Description 1 for open a clas browser and search for eq by description 1$")]
     public async Task OpenACLASBrowserAndSearchForEQByDescription1ForOpenAClasBrowserAndSearchForEqByDescription1Async()
     {
-        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.OpenACLASBrowserAndSearchForEQByDescription1ForOpenAClasBrowserAndSearchForEqByDescription1Async2();
     }
 
@@ -375,7 +386,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I complete forms verification Retrieve QuoteID \\& SessionID by Browser Console$")]
     public async Task CompleteFormsVerificationRetrieveQuoteIDSessionIDByBrowserConsoleAsync()
     {
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteFormsVerificationRetrieveQuoteIDSessionIDByBrowserConsoleAsync2();
     }
 
@@ -384,7 +395,7 @@ public sealed class EQSFPBasicPolicySteps
     [Then(@"^I complete save for Later/Return to Admin$")]
     public async Task CompleteSaveForLaterReturnToAdminAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteSaveForLaterReturnToAdminAsync3();
     }
 

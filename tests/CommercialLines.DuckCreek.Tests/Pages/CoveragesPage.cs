@@ -7,9 +7,9 @@ public sealed class CoveragesPage
 {
     private readonly CoveragesLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public CoveragesPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public CoveragesPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new CoveragesLocators(browser.Page);
         _data = data;
@@ -46,9 +46,9 @@ public sealed class CoveragesPage
         // CG3132LimitedFungiOrBacteriaCoverage_262060Page.CG3132LimitedFungiOrBacteriaCoverage_0095_d65717Async
         if (_data.Condition("'Endorsement Type' != NULL"))
         {
-        await _ui.FillAsync(_locators.EndorsementType, _data.Resolve("{{data:endorsement_type_158}}"));
-        await _ui.PressAsync(_locators.EndorsementType, "Tab");
-        await _ui.PressAsync(_locators.EndorsementType, "Tab");
+            await _ui.FillAsync(_locators.EndorsementType, _data.Resolve("{{data:endorsement_type_158}}"));
+            await _ui.PressAsync(_locators.EndorsementType, "Tab");
+            await _ui.PressAsync(_locators.EndorsementType, "Tab");
         }
         await _ui.ClickAsync(_locators.CG3132LimitedFungiOrBacteriaCoverageOK);
     }
@@ -59,11 +59,11 @@ public sealed class CoveragesPage
         // PolicyInfoCPPSpecificFields_d2689aPage.PolicyInfoCPPSpecificFieldsSelectIMCheckbox_0092_d344b2Async
         if (_data.Condition("(State == \"MD\")||(State == \"NJ\")||(State == \"NY\")||(State == \"VT\")"))
         {
-        await _ui.FillAsync(_locators.EstimatedPremium, _data.Resolve(""));
+            await _ui.FillAsync(_locators.EstimatedPremium, _data.Resolve(""));
         }
         if (_data.Condition("'CPP LOB' == \"GL\""))
         {
-        await _ui.ClickAsync(_locators.GL);
+            await _ui.ClickAsync(_locators.GL);
         }
     }
 
@@ -73,7 +73,7 @@ public sealed class CoveragesPage
         // PolicyInfoCPPSpecificFields_d2689aPage.PolicyInfoCPPSpecificFieldsSelectCPCheckbox_0093_d344b2Async
         if (_data.Condition("'CPP LOB' == \"CP\""))
         {
-        await _ui.ClickAsync(_locators.CP);
+            await _ui.ClickAsync(_locators.CP);
         }
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.DESCRIPTIONBUFFER_0094_d344b2Async
         await _ui.WaitAsync(_locators.PolicyInfoHeader, "Visible");
@@ -91,11 +91,11 @@ public sealed class CoveragesPage
         // PolicyInfoCPPSpecificFields_d2689aPage.PolicyInfoCPPSpecificFieldsSelectIMCheckbox_0096_aad19bAsync
         if (_data.Condition("(State == \"MD\")||(State == \"NJ\")||(State == \"NY\")||(State == \"VT\")"))
         {
-        await _ui.FillAsync(_locators.EstimatedPremium, _data.Resolve(""));
+            await _ui.FillAsync(_locators.EstimatedPremium, _data.Resolve(""));
         }
         if (_data.Condition("'CPP LOB' == \"GL\""))
         {
-        await _ui.ClickAsync(_locators.GL);
+            await _ui.ClickAsync(_locators.GL);
         }
     }
 
@@ -105,7 +105,7 @@ public sealed class CoveragesPage
         // PolicyInfoCPPSpecificFields_d2689aPage.PolicyInfoCPPSpecificFieldsSelectCPCheckbox_0097_aad19bAsync
         if (_data.Condition("'CPP LOB' == \"CP\""))
         {
-        await _ui.ClickAsync(_locators.CP);
+            await _ui.ClickAsync(_locators.CP);
         }
     }
 
@@ -115,7 +115,7 @@ public sealed class CoveragesPage
         // PolicyInfoCPPSpecificFields_d2689aPage.PolicyInfoCPPSpecificFieldsSelectIMCheckbox_0098_aad19bAsync
         if (_data.Condition("'CPP LOB' == \"IM\""))
         {
-        await _ui.ClickAsync(_locators.IM);
+            await _ui.ClickAsync(_locators.IM);
         }
     }
 
@@ -127,20 +127,20 @@ public sealed class CoveragesPage
         await _ui.PressAsync(_locators.PolicyCoverage, "Tab");
         if (_data.Condition("'Property Extension Endorsements' != NULL"))
         {
-        await _ui.FillAsync(_locators.PropertyExtensionEndorsements, _data.Resolve("{{data:property_extension_endorsements_133}}"));
-        await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "CLICK");
-        await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "Enter");
-        await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "Tab");
+            await _ui.FillAsync(_locators.PropertyExtensionEndorsements, _data.Resolve("{{data:property_extension_endorsements_133}}"));
+            await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "CLICK");
+            await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "Enter");
+            await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "Tab");
         }
         if (_data.Condition("'Utility Services' != NULL"))
         {
-        await _ui.FillAsync(_locators.UtilityServices, _data.Resolve("{{data:utility_services_134}}"));
-        await _ui.PressAsync(_locators.UtilityServices, "Tab");
+            await _ui.FillAsync(_locators.UtilityServices, _data.Resolve("{{data:utility_services_134}}"));
+            await _ui.PressAsync(_locators.UtilityServices, "Tab");
         }
         if (_data.Condition("Fungus != NULL"))
         {
-        await _ui.FillAsync(_locators.Fungus, _data.Resolve("{{data:fungus_135}}"));
-        await _ui.PressAsync(_locators.Fungus, "Tab");
+            await _ui.FillAsync(_locators.Fungus, _data.Resolve("{{data:fungus_135}}"));
+            await _ui.PressAsync(_locators.Fungus, "Tab");
         }
     }
 
@@ -199,19 +199,19 @@ public sealed class CoveragesPage
         await _ui.PressAsync(_locators.PolicyCoverage, "Tab");
         if (_data.Condition("'Property Extension Endorsements' != NULL"))
         {
-        await _ui.FillAsync(_locators.PropertyExtensionEndorsements, _data.Resolve("{{data:property_extension_endorsements_149}}"));
-        await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "CLICK");
-        await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "Enter");
-        await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "Tab");
+            await _ui.FillAsync(_locators.PropertyExtensionEndorsements, _data.Resolve("{{data:property_extension_endorsements_149}}"));
+            await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "CLICK");
+            await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "Enter");
+            await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "Tab");
         }
         if (_data.Condition("'Utility Services' != NULL"))
         {
-        await _ui.FillAsync(_locators.UtilityServices, _data.Resolve("{{data:utility_services_150}}"));
-        await _ui.PressAsync(_locators.UtilityServices, "Tab");
+            await _ui.FillAsync(_locators.UtilityServices, _data.Resolve("{{data:utility_services_150}}"));
+            await _ui.PressAsync(_locators.UtilityServices, "Tab");
         }
         if (_data.Condition("Fungus != NULL"))
         {
-        await _ui.FillAsync(_locators.Fungus, _data.Resolve(""));
+            await _ui.FillAsync(_locators.Fungus, _data.Resolve(""));
         }
     }
 

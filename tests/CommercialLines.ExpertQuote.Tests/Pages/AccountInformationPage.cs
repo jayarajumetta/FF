@@ -7,9 +7,9 @@ public sealed class AccountInformationPage
 {
     private readonly AccountInformationLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public AccountInformationPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public AccountInformationPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new AccountInformationLocators(browser.Page);
         _data = data;
@@ -24,8 +24,8 @@ public sealed class AccountInformationPage
         await _ui.PressAsync(_locators.OwnerMiddleName, "POST:ENTER");
         await _ui.PressAsync(_locators.OwnerMiddleName, "Enter");
         await _ui.PressAsync(_locators.OwnerMiddleName, "Tab");
-        _data.Set("OwnerPhone", _data.Random("OwnerPhone", "3[0-9]{9}"));
-        _data.Set("OwnerEmail", _data.Random("OwnerEmail", "test@[a-z]{4}\\.com"));
+        // Random data OwnerPhone is generated in the StepDefinition before this PageMethod runs.
+        // Random data OwnerEmail is generated in the StepDefinition before this PageMethod runs.
         // EQCommonEnterAccountDetailsAccountInfo_a911afPage.AccountDetailsSelectMarried_0034_503012Async
         await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
         // EQCommonEnterAccountDetailsAccountInfo_a911afPage.NavigateDownTheScreen_0035_503012Async
@@ -64,8 +64,8 @@ public sealed class AccountInformationPage
         await _ui.WaitAsync(_locators.AccountInformationHeader, "Visible");
         await _ui.PressAsync(_locators.OwnerMiddleName, "POST:TAB");
         await _ui.PressAsync(_locators.OwnerMiddleName, "Tab");
-        _data.Set("OwnerPhone", _data.Random("OwnerPhone", "3[0-9]{9}"));
-        _data.Set("OwnerEmail", _data.Random("OwnerEmail", "test@[a-z]{4}\\.com"));
+        // Random data OwnerPhone is generated in the StepDefinition before this PageMethod runs.
+        // Random data OwnerEmail is generated in the StepDefinition before this PageMethod runs.
         // EQCommonEnterAccountDetailsAccountInfo_a911afPage.AccountDetailsSelectMarried_0034_656be2Async
         await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
         // EQCommonEnterAccountDetailsAccountInfo_a911afPage.NavigateDownTheScreen_0035_656be2Async
@@ -105,8 +105,8 @@ public sealed class AccountInformationPage
         await _ui.PressAsync(_locators.OwnerMiddleName, "POST:ENTER");
         await _ui.PressAsync(_locators.OwnerMiddleName, "Enter");
         await _ui.PressAsync(_locators.OwnerMiddleName, "Tab");
-        _data.Set("OwnerPhone", _data.Random("OwnerPhone", "3[0-9]{9}"));
-        _data.Set("OwnerEmail", _data.Random("OwnerEmail", "test@[a-z]{4}\\.com"));
+        // Random data OwnerPhone is generated in the StepDefinition before this PageMethod runs.
+        // Random data OwnerEmail is generated in the StepDefinition before this PageMethod runs.
         // EQCommonEnterAccountDetailsAccountInfo_a911afPage.AccountDetailsSelectMarried_0034_d18a3eAsync
         await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
         // EQCommonEnterAccountDetailsAccountInfo_a911afPage.NavigateDownTheScreen_0035_d18a3eAsync
@@ -143,8 +143,8 @@ public sealed class AccountInformationPage
         // Common_7de90aPage.AccountInformationAndAddress_00320038_8fa692Async
         await _ui.VerifyAsync(_locators.AccountInformation, _data.Resolve("Visible"), "");
         await _ui.FillAsync(_locators.OwnerMiddleName, _data.Resolve(""));
-        _data.Set("OwnerPhone", _data.Random("OwnerPhone", "3[0-9]{9}"));
-        _data.Set("OwnerEmail", _data.Random("OwnerEmail", "test@[a-z]{4}.com"));
+        // Random data OwnerPhone is generated in the StepDefinition before this PageMethod runs.
+        // Random data OwnerEmail is generated in the StepDefinition before this PageMethod runs.
         await _ui.ClickAsync(_locators.Married);
         await _ui.VerifyAsync(_locators.Map, _data.Resolve("Exists"), "");
         await _ui.VerifyAsync(_locators.Satellite, _data.Resolve("Exists"), "");
@@ -171,8 +171,8 @@ public sealed class AccountInformationPage
         await _ui.PressAsync(_locators.OwnerMiddleName, "POST:ENTER");
         await _ui.PressAsync(_locators.OwnerMiddleName, "Enter");
         await _ui.PressAsync(_locators.OwnerMiddleName, "Tab");
-        _data.Set("OwnerPhone", _data.Random("OwnerPhone", "3[0-9]{9}"));
-        _data.Set("OwnerEmail", _data.Random("OwnerEmail", "test@[a-z]{4}\\.com"));
+        // Random data OwnerPhone is generated in the StepDefinition before this PageMethod runs.
+        // Random data OwnerEmail is generated in the StepDefinition before this PageMethod runs.
         // EQCommonEnterAccountDetailsAccountInfo_a911afPage.AccountDetailsSelectMarried_0034_08f3f1Async
         await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
         // EQCommonEnterAccountDetailsAccountInfo_a911afPage.NavigateDownTheScreen_0035_08f3f1Async

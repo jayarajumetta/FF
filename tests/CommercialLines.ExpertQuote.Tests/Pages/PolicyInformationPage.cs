@@ -7,9 +7,9 @@ public sealed class PolicyInformationPage
 {
     private readonly PolicyInformationLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public PolicyInformationPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public PolicyInformationPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new PolicyInformationLocators(browser.Page);
         _data = data;
@@ -47,18 +47,18 @@ public sealed class PolicyInformationPage
         // CLEQSFPPolicyDetailsOptimized_d0a0daPage.AnswerIndustrialHempQuestionNo_0065_503012Async
         if (_data.Condition("'Industrial Hemp Answer' == \"No\""))
         {
-        await _ui.SelectAsync(_locators.IndustrialHempNo, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.IndustrialHempNo, _data.Resolve(""));
         }
         if (_data.Condition("'Industrial Hemp Answer' == \"Yes\""))
         {
-        await _ui.SelectAsync(_locators.IndustrialHempYes, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.IndustrialHempYes, _data.Resolve(""));
         }
         // EQCommonNavigateToScreen_b3fe17Page.BufferScreenName_0066_503012Async
         _data.Set("Screen", _data.Resolve("{{data:screen_2}}"));
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0067_503012Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeading))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
         }
     }
 
@@ -93,18 +93,18 @@ public sealed class PolicyInformationPage
         // CLEQSFPPolicyDetailsOptimized_d0a0daPage.AnswerIndustrialHempQuestionNo_0065_08f3f1Async
         if (_data.Condition("'Industrial Hemp Answer' == \"No\""))
         {
-        await _ui.SelectAsync(_locators.IndustrialHempNo, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.IndustrialHempNo, _data.Resolve(""));
         }
         if (_data.Condition("'Industrial Hemp Answer' == \"Yes\""))
         {
-        await _ui.SelectAsync(_locators.IndustrialHempYes, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.IndustrialHempYes, _data.Resolve(""));
         }
         // EQCommonNavigateToScreen_b3fe17Page.BufferScreenName_0066_08f3f1Async
         _data.Set("Screen", _data.Resolve("{{data:screen_2}}"));
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0067_08f3f1Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeading))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
         }
     }
 

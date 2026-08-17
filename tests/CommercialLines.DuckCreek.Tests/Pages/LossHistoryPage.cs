@@ -7,9 +7,9 @@ public sealed class LossHistoryPage
 {
     private readonly LossHistoryLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public LossHistoryPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public LossHistoryPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new LossHistoryLocators(browser.Page);
         _data = data;
@@ -74,7 +74,7 @@ public sealed class LossHistoryPage
         await _ui.ClickAsync(_locators.OtherInterestPremisesScheduleOK);
         if (_data.Condition("State != \"OR\""))
         {
-        await _ui.ClickAsync(_locators.AddlInterestsMainOK);
+            await _ui.ClickAsync(_locators.AddlInterestsMainOK);
         }
     }
 
@@ -136,7 +136,7 @@ public sealed class LossHistoryPage
         await _ui.ClickAsync(_locators.OtherInterestPremisesScheduleOK);
         if (_data.Condition("State != \"OR\""))
         {
-        await _ui.ClickAsync(_locators.AddlInterestsMainOK);
+            await _ui.ClickAsync(_locators.AddlInterestsMainOK);
         }
     }
 

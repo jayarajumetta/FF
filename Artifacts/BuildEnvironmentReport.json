@@ -1,0 +1,11 @@
+{
+  "requestedSdk": "8.0.424",
+  "publishedSdkUsedInGlobalJson": "8.0.423",
+  "rollForward": "latestPatch",
+  "dotnetAvailableInGenerationContainer": false,
+  "restorePerformed": false,
+  "buildPerformed": false,
+  "reason": "The generation container has no .NET SDK and direct binary/package downloads from the container are blocked. Static lexical, symbol, binding, PageMethod, locator, Gherkin, JSON and XML checks were executed instead.",
+  "localBuildCommand": ".\\setup.cmd",
+  "browserProvisioning": "setup.cmd builds and installs Playwright Chromium; runtime defaults to installed Microsoft Edge and can auto-install Chromium as fallback."
+}

@@ -7,9 +7,9 @@ public sealed class BusinessClassificationPage
 {
     private readonly BusinessClassificationLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public BusinessClassificationPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public BusinessClassificationPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new BusinessClassificationLocators(browser.Page);
         _data = data;

@@ -1,3 +1,65 @@
-using InsuranceAutomation.Core; using Reqnroll; using InsuranceAutomation.PLDC.Pages;
+using InsuranceAutomation.Core;
+using Reqnroll;
+using InsuranceAutomation.PLDC.Pages;
+
 namespace InsuranceAutomation.PLDC.StepDefinitions;
-[Binding] public sealed class ApplicationSteps {readonly ScenarioContext _scenario; public ApplicationSteps(ScenarioContext scenario){_scenario=scenario;} [Given("the Personal Lines Duck Creek browser session is ready")] public void BrowserReady(){_=_scenario.Get<BrowserSession>().Page;} [Given("test data file {string} is loaded")] public void Load(string file){var path=Path.Combine(AppContext.BaseDirectory,file.Replace('/',Path.DirectorySeparatorChar));var ext=Path.Combine(AppContext.BaseDirectory,"TestData","ExternalDataOverrides.json");_scenario.Get<ScenarioData>().Load(path,ext);} [Given("I open the configured Personal Lines Duck Creek application")] public Task Open()=>new ApplicationPage(_scenario.Get<BrowserSession>(),_scenario.Get<ScenarioData>(),_scenario.Get<PageUiActions>()).OpenAsync(); [Given("I sign in to Personal Lines Duck Creek using configured credentials")] public Task Login()=>new ApplicationPage(_scenario.Get<BrowserSession>(),_scenario.Get<ScenarioData>(),_scenario.Get<PageUiActions>()).SignInAsync(); }
+
+[Binding]
+public sealed class ApplicationSteps
+{
+    private readonly ScenarioContext _scenario;
+
+    public ApplicationSteps(ScenarioContext scenario)
+    {
+        _scenario = scenario;
+    }
+
+    [Given("I open a browser session")]
+    public Task OpenBrowserSessionAsync() =>
+    _scenario.Get<BrowserSession>().OpenAsync(_scenario.Get<RunLogger>());
+
+    [Given("test data {string} and external data {string} are loaded")]
+    public void LoadScenarioData(string scenarioDataFile, string externalDataFile)
+    {
+        var scenarioPath = ResolvePath(scenarioDataFile);
+        var externalPath = ResolvePath(externalDataFile);
+        _scenario.Get<ScenarioData>().Load(scenarioPath, externalPath);
+        _scenario.Get<RunLogger>().Info($"Loaded scenario data: {scenarioPath}");
+    }
+
+    [Given("I open the configured Personal Lines Duck Creek application")]
+    public Task OpenApplicationAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+        var page = new ApplicationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        return page.NavigateAsync(data.GetRequired("url"));
+    }
+
+    [Given("I sign in to Personal Lines Duck Creek using configured credentials")]
+    public Task SignInAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+        var page = new ApplicationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        var username = ResolveCredential(data, "username", "PL_DC_USERNAME");
+        var password = ResolveCredential(data, "password", "PL_DC_PASSWORD");
+        return page.SignInAsync(username, password);
+    }
+
+    private static string ResolveCredential(ScenarioData data, string key, string environmentVariable)
+    {
+        var value = data.Get(key);
+        if (!ScenarioData.IsSynthetic(value)) return value;
+
+        value = Environment.GetEnvironmentVariable(environmentVariable) ?? string.Empty;
+        if (ScenarioData.IsSynthetic(value))
+        {
+            throw new InvalidOperationException(
+                $"Credential '{key}' is not available. Set {environmentVariable} or provide it in TestData/ExternalDataOverrides.json.");
+        }
+
+        return value;
+    }
+
+    private static string ResolvePath(string relativePath) =>
+    Path.Combine(AppContext.BaseDirectory, relativePath.Replace('/', Path.DirectorySeparatorChar));
+}

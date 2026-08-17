@@ -7,9 +7,9 @@ public sealed class VehiclesPage
 {
     private readonly VehiclesLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public VehiclesPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public VehiclesPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new VehiclesLocators(browser.Page);
         _data = data;
@@ -57,8 +57,8 @@ public sealed class VehiclesPage
         await _ui.PressAsync(_locators.LiabilityLimit, "Tab");
         if (_data.Condition("'PD Limit' != NULL"))
         {
-        await _ui.FillAsync(_locators.PDLimit, _data.Resolve("{{data:pd_limit_288}}"));
-        await _ui.PressAsync(_locators.PDLimit, "Tab");
+            await _ui.FillAsync(_locators.PDLimit, _data.Resolve("{{data:pd_limit_288}}"));
+            await _ui.PressAsync(_locators.PDLimit, "Tab");
         }
         await _ui.FillAsync(_locators.TotalSubjectPremium, _data.Resolve("{{data:total_subject_premium_289}}"));
         await _ui.PressAsync(_locators.TotalSubjectPremium, "Tab");

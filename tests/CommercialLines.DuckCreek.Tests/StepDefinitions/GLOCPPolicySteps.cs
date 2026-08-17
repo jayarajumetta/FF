@@ -15,7 +15,14 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I enter individual client information$")]
     public async Task EnterIndividualClientInformationAsync()
     {
-        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("LastName_0040", "^[a-z]{4}$");
+        data.GenerateRandom("PrimaryPhone_0041", "[0-9]{10}");
+        data.GenerateRandom("InsuredSSN", "125[0-9]{6}");
+        data.GenerateRandom("AuditTelephone_0048", "[0-9]{10}");
+        data.GenerateRandom("InspectionTelephone_0048", "[0-9]{10}");
+
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.EnterIndividualClientInformationAsync2();
     }
 
@@ -24,7 +31,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I complete Underwriting Info from Client Screen$")]
     public async Task CompleteUnderwritingInfoFromClientScreenAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteUnderwritingInfoFromClientScreenAsync2();
     }
 
@@ -33,7 +40,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I complete required policy information$")]
     public async Task CompleteRequiredPolicyInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredPolicyInformationAsync3();
     }
 
@@ -42,7 +49,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I complete OCP Fields$")]
     public async Task CompleteOCPFieldsAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteOCPFieldsAsync();
     }
 
@@ -51,7 +58,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I complete OCP Risk Fields$")]
     public async Task CompleteOCPRiskFieldsAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteOCPRiskFieldsAsync();
     }
 
@@ -60,7 +67,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I complete \\[CG0424\\] Coverage for Injury to Leased Workers$")]
     public async Task CompleteCG0424CoverageForInjuryToLeasedWorkersAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteCG0424CoverageForInjuryToLeasedWorkersAsync();
     }
 
@@ -69,7 +76,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I complete \\[CG2401\\] Non\\-Binding Arbitration$")]
     public async Task CompleteCG2401NonBindingArbitrationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteCG2401NonBindingArbitrationAsync();
     }
 
@@ -78,7 +85,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I complete \\[CG2812\\] Pesticide or Herbicide Applicator Coverage$")]
     public async Task CompleteCG2812PesticideOrHerbicideApplicatorCoverageAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteCG2812PesticideOrHerbicideApplicatorCoverageAsync();
     }
 
@@ -87,7 +94,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I complete \\[CG3132\\] Limited Fungi or Bacteria Coverage$")]
     public async Task CompleteCG3132LimitedFungiOrBacteriaCoverageAsync()
     {
-        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteCG3132LimitedFungiOrBacteriaCoverageAsync();
     }
 
@@ -96,7 +103,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I complete \\[CG 20 31\\] Add'l Insured\\-Engineers, Architects OCP$")]
     public async Task CompleteCG2031AddLInsuredEngineersArchitectsOCPAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteCG2031AddLInsuredEngineersArchitectsOCPAsync();
     }
 
@@ -105,7 +112,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I complete \\[CG 29 35\\] Add'l Insured\\-State or Political \\(Permits\\)$")]
     public async Task CompleteCG2935AddLInsuredStateOrPoliticalPermitsAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteCG2935AddLInsuredStateOrPoliticalPermitsAsync();
     }
 
@@ -114,7 +121,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I complete \\[FG0013\\] \\- Automatic Additional Insured \\- Specific$")]
     public async Task CompleteFG0013AutomaticAdditionalInsuredSpecificAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteFG0013AutomaticAdditionalInsuredSpecificAsync();
     }
 
@@ -123,7 +130,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I answer GL UW Questions OR \\& WA$")]
     public async Task AnswerGLUWQuestionsORWAAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AnswerGLUWQuestionsORWAAsync2();
     }
 
@@ -132,7 +139,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I complete required billing information$")]
     public async Task CompleteRequiredBillingInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredBillingInformationAsync3();
     }
 
@@ -141,7 +148,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I add notepad comment$")]
     public async Task AddNotepadCommentAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddNotepadCommentAsync3();
     }
 
@@ -150,7 +157,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I complete required submission information$")]
     public async Task CompleteRequiredSubmissionInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredSubmissionInformationAsync3();
     }
 
@@ -159,7 +166,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I run Stoplight$")]
     public async Task RunStoplightAsync()
     {
-        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.RunStoplightAsync3();
     }
 
@@ -168,7 +175,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I verify values in premium fields$")]
     public async Task VerifyValuesInPremiumFieldsAsync()
     {
-        var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.VerifyValuesInPremiumFieldsAsync2();
     }
 
@@ -177,7 +184,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I complete forms verification$")]
     public async Task CompleteFormsVerificationAsync()
     {
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteFormsVerificationAsync2();
     }
 
@@ -186,7 +193,7 @@ public sealed class GLOCPPolicySteps
     [Then(@"^I sign out of the application$")]
     public async Task SignOutOfTheApplicationAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.SignOutOfTheApplicationAsync3();
     }
 

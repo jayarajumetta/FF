@@ -15,7 +15,11 @@ public sealed class EQBOPSmokeTestSteps
     [Then(@"^I create a new client and begin the quote$")]
     public async Task CreateANewClientAndBeginTheQuoteAsync()
     {
-        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("FirstName", "BOP [a-z]{3}");
+        data.GenerateRandom("LastName", "Smoke[a-z]{4}");
+
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CreateANewClientAndBeginTheQuoteAsync();
     }
 
@@ -24,7 +28,11 @@ public sealed class EQBOPSmokeTestSteps
     [Then(@"^I enter the client account and address information$")]
     public async Task EnterTheClientAccountAndAddressInformationAsync()
     {
-        var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("OwnerPhone", "3[0-9]{9}");
+        data.GenerateRandom("OwnerEmail", "test@[a-z]{4}.com");
+
+        var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.EnterTheClientAccountAndAddressInformationAsync();
     }
 
@@ -33,7 +41,7 @@ public sealed class EQBOPSmokeTestSteps
     [Then(@"^I start the configured policy proposal$")]
     public async Task StartTheConfiguredPolicyProposalAsync()
     {
-        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.StartTheConfiguredPolicyProposalAsync();
     }
 
@@ -42,7 +50,10 @@ public sealed class EQBOPSmokeTestSteps
     [Then(@"^I enter the insured social security number and handle any prefill result$")]
     public async Task EnterTheInsuredSocialSecurityNumberAndHandleAnyPrefillResultAsync()
     {
-        var page = new SocialSecurityPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("InsuredSSN", "025[0-9]{6}");
+
+        var page = new SocialSecurityPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.EnterTheInsuredSocialSecurityNumberAndHandleAnyPrefillResultAsync();
     }
 
@@ -51,7 +62,7 @@ public sealed class EQBOPSmokeTestSteps
     [Then(@"^I navigate to the required policy screen$")]
     public async Task NavigateToTheRequiredPolicyScreenAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.NavigateToTheRequiredPolicyScreenAsync4();
     }
 
@@ -60,7 +71,7 @@ public sealed class EQBOPSmokeTestSteps
     [Then(@"^I capture the quote identity and close the current quote$")]
     public async Task CaptureTheQuoteIdentityAndCloseTheCurrentQuoteAsync()
     {
-        var page = new QuoteSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new QuoteSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CaptureTheQuoteIdentityAndCloseTheCurrentQuoteAsync();
     }
 
@@ -69,7 +80,7 @@ public sealed class EQBOPSmokeTestSteps
     [Then(@"^I retrieve the quote and verify its identity$")]
     public async Task RetrieveTheQuoteAndVerifyItsIdentityAsync()
     {
-        var page = new QuoteSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new QuoteSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.RetrieveTheQuoteAndVerifyItsIdentityAsync();
     }
 

@@ -7,9 +7,9 @@ public sealed class BusinessClassificationPage
 {
     private readonly BusinessClassificationLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public BusinessClassificationPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public BusinessClassificationPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new BusinessClassificationLocators(browser.Page);
         _data = data;
@@ -28,7 +28,7 @@ public sealed class BusinessClassificationPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0064_d18a3eAsync
         if (!await _ui.ExistsAsync(_locators.ScreenHeading))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
         }
     }
 
@@ -43,7 +43,7 @@ public sealed class BusinessClassificationPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0085_d18a3eAsync
         if (!await _ui.ExistsAsync(_locators.ScreenHeading))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
         }
     }
 

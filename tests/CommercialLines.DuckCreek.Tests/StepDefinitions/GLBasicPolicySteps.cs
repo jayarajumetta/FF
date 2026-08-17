@@ -15,7 +15,14 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I enter individual client information$")]
     public async Task EnterIndividualClientInformationAsync()
     {
-        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("LastName_0040", "^[a-z]{4}$");
+        data.GenerateRandom("PrimaryPhone_0041", "[0-9]{10}");
+        data.GenerateRandom("InsuredSSN", "125[0-9]{6}");
+        data.GenerateRandom("AuditTelephone_0048", "[0-9]{10}");
+        data.GenerateRandom("InspectionTelephone_0048", "[0-9]{10}");
+
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.EnterIndividualClientInformationAsync();
     }
 
@@ -24,7 +31,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I complete Underwriting Info from Client Screen$")]
     public async Task CompleteUnderwritingInfoFromClientScreenAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteUnderwritingInfoFromClientScreenAsync();
     }
 
@@ -33,7 +40,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I complete required policy information$")]
     public async Task CompleteRequiredPolicyInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredPolicyInformationAsync2();
     }
 
@@ -42,7 +49,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I complete CGL Fields$")]
     public async Task CompleteCGLFieldsAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteCGLFieldsAsync();
     }
 
@@ -51,7 +58,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I add Class$")]
     public async Task AddClassAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddClassAsync();
     }
 
@@ -60,7 +67,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I add \\[CG0435\\] Employee Benefits Liability Endorsement$")]
     public async Task AddCG0435EmployeeBenefitsLiabilityEndorsementAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddCG0435EmployeeBenefitsLiabilityEndorsementAsync();
     }
 
@@ -69,7 +76,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I add \\[CG2142\\] Exclusion \\- Explosion, Collapse and Underground Property Damage Hazard \\(Specified Operations\\)$")]
     public async Task AddCG2142ExclusionExplosionCollapseAndUndergroundPropertyDamageHazardSpecifiedOperationsAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddCG2142ExclusionExplosionCollapseAndUndergroundPropertyDamageHazardSpecifiedOperationsAsync();
     }
 
@@ -78,7 +85,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I add \\[CG 2149\\] Total Pollution Exclusion Endorsement$")]
     public async Task AddCG2149TotalPollutionExclusionEndorsementAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddCG2149TotalPollutionExclusionEndorsementAsync();
     }
 
@@ -87,7 +94,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I verify and Fill out \\[FG0055\\] Employment Practices Liability Insurance Coverage Endorsement$")]
     public async Task VerifyAndFillOutFG0055EmploymentPracticesLiabilityInsuranceCoverageEndorsementAsync()
     {
-        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.VerifyAndFillOutFG0055EmploymentPracticesLiabilityInsuranceCoverageEndorsementAsync();
     }
 
@@ -96,7 +103,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I add Addl Interest \\[CG2007\\] \\- Engineers$")]
     public async Task AddAddlInterestCG2007EngineersAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddAddlInterestCG2007EngineersAsync();
     }
 
@@ -105,7 +112,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I add Addl Interest \\[CG2020\\] Add'l Insured\\-Charitable Institution$")]
     public async Task AddAddlInterestCG2020AddLInsuredCharitableInstitutionAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddAddlInterestCG2020AddLInsuredCharitableInstitutionAsync();
     }
 
@@ -114,7 +121,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I add Addl Interest \\[CG2023\\] Add'l Insured\\-Executors$")]
     public async Task AddAddlInterestCG2023AddLInsuredExecutorsAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddAddlInterestCG2023AddLInsuredExecutorsAsync();
     }
 
@@ -123,7 +130,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I add Addl Interest \\[CG2025\\] Add'l Insured\\-Executive Officers$")]
     public async Task AddAddlInterestCG2025AddLInsuredExecutiveOfficersAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddAddlInterestCG2025AddLInsuredExecutiveOfficersAsync();
     }
 
@@ -132,7 +139,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I add Addl Interest \\[CG2034\\] Add'l Insured\\-Leased Equipment Automatic$")]
     public async Task AddAddlInterestCG2034AddLInsuredLeasedEquipmentAutomaticAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddAddlInterestCG2034AddLInsuredLeasedEquipmentAutomaticAsync();
     }
 
@@ -141,7 +148,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I add notepad comment$")]
     public async Task AddNotepadCommentAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AddNotepadCommentAsync2();
     }
 
@@ -150,7 +157,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I answer GL UW Questions OR \\& WA$")]
     public async Task AnswerGLUWQuestionsORWAAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.AnswerGLUWQuestionsORWAAsync();
     }
 
@@ -159,7 +166,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I complete required billing information$")]
     public async Task CompleteRequiredBillingInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredBillingInformationAsync2();
     }
 
@@ -168,7 +175,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I complete required submission information$")]
     public async Task CompleteRequiredSubmissionInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteRequiredSubmissionInformationAsync2();
     }
 
@@ -177,7 +184,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I run Stoplight$")]
     public async Task RunStoplightAsync()
     {
-        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.RunStoplightAsync2();
     }
 
@@ -186,7 +193,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I verify values in premium fields$")]
     public async Task VerifyValuesInPremiumFieldsAsync()
     {
-        var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.VerifyValuesInPremiumFieldsAsync();
     }
 
@@ -195,7 +202,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I complete forms verification$")]
     public async Task CompleteFormsVerificationAsync()
     {
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.CompleteFormsVerificationAsync();
     }
 
@@ -204,7 +211,7 @@ public sealed class GLBasicPolicySteps
     [Then(@"^I sign out of the application$")]
     public async Task SignOutOfTheApplicationAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<PageUiActions>());
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
         await page.SignOutOfTheApplicationAsync2();
     }
 

@@ -7,9 +7,9 @@ public sealed class ClientSearchPage
 {
     private readonly ClientSearchLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public ClientSearchPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public ClientSearchPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new ClientSearchLocators(browser.Page);
         _data = data;
@@ -20,8 +20,8 @@ public sealed class ClientSearchPage
     public async Task EnterClientSearchInformationAsync()
     {
         // EQCommonEnterClientSearchInfo_116bf9Page.SetBufferForLastName_0029_503012Async
-        _data.Set("LastName", _data.Random("LastName", "CE-[A-Z]{4}"));
-        _data.Set("FirstName", _data.Random("FirstName", "SFP[A-Z]{3}"));
+        // Random data LastName is generated in the StepDefinition before this PageMethod runs.
+        // Random data FirstName is generated in the StepDefinition before this PageMethod runs.
         // EQCommonEnterClientSearchInfo_116bf9Page.ClientInfo_0030_503012Async
         await _ui.WaitAsync(_locators.ClientInfo, "Visible");
         await _ui.WaitAsync(_locators.NewExistingClientSearch, "Visible");
@@ -47,8 +47,8 @@ public sealed class ClientSearchPage
     public async Task EnterClientSearchInformationAsync2()
     {
         // EQCommonEnterClientSearchInfo_116bf9Page.SetBufferForLastName_0029_656be2Async
-        _data.Set("LastName", _data.Random("LastName", "Smoke[a-z]{4}"));
-        _data.Set("FirstName", _data.Random("FirstName", "SFP [a-z]{3}"));
+        // Random data LastName is generated in the StepDefinition before this PageMethod runs.
+        // Random data FirstName is generated in the StepDefinition before this PageMethod runs.
         // EQCommonEnterClientSearchInfo_116bf9Page.ClientInfo_0030_656be2Async
         await _ui.WaitAsync(_locators.ClientInfo, "Visible");
         await _ui.WaitAsync(_locators.NewExistingClientSearch, "Visible");
@@ -74,8 +74,8 @@ public sealed class ClientSearchPage
     public async Task EnterClientSearchInformationAsync3()
     {
         // EQCommonEnterClientSearchInfo_116bf9Page.SetBufferForLastName_0029_d18a3eAsync
-        _data.Set("LastName", _data.Random("LastName", "BASIC[A-Z]{4}"));
-        _data.Set("FirstName", _data.Random("FirstName", "BOP[a-z]{3}"));
+        // Random data LastName is generated in the StepDefinition before this PageMethod runs.
+        // Random data FirstName is generated in the StepDefinition before this PageMethod runs.
         // EQCommonEnterClientSearchInfo_116bf9Page.ClientInfo_0030_d18a3eAsync
         await _ui.WaitAsync(_locators.ClientInfo, "Visible");
         await _ui.WaitAsync(_locators.NewExistingClientSearch, "Visible");
@@ -103,8 +103,8 @@ public sealed class ClientSearchPage
         // Common_7de90aPage.BeginQuoteAndCreateANewClient_00280031_8fa692Async
         await _ui.VerifyAsync(_locators.NewQuote, _data.Resolve("Visible"), "");
         await _ui.ClickAsync(_locators.NewQuote);
-        _data.Set("FirstName", _data.Random("FirstName", "BOP [a-z]{3}"));
-        _data.Set("LastName", _data.Random("LastName", "Smoke[a-z]{4}"));
+        // Random data FirstName is generated in the StepDefinition before this PageMethod runs.
+        // Random data LastName is generated in the StepDefinition before this PageMethod runs.
         await _ui.VerifyAsync(_locators.ClientInfo, _data.Resolve("Visible"), "");
         await _ui.FillAsync(_locators.CustomerNameFirst, _data.Resolve("{{runtime:FirstName}}"));
         await _ui.FillAsync(_locators.CustomerNameLast, _data.Resolve("{{runtime:LastName}}"));
@@ -119,8 +119,8 @@ public sealed class ClientSearchPage
     public async Task EnterClientSearchInformationAsync4()
     {
         // EQCommonEnterClientSearchInfo_116bf9Page.SetBufferForLastName_0029_08f3f1Async
-        _data.Set("LastName", _data.Random("LastName", "FETT[A-Z]{4}"));
-        _data.Set("FirstName", _data.Random("FirstName", "SFP[A-Z]{3}"));
+        // Random data LastName is generated in the StepDefinition before this PageMethod runs.
+        // Random data FirstName is generated in the StepDefinition before this PageMethod runs.
         // EQCommonEnterClientSearchInfo_116bf9Page.ClientInfo_0030_08f3f1Async
         await _ui.WaitAsync(_locators.ClientInfo, "Visible");
         await _ui.WaitAsync(_locators.NewExistingClientSearch, "Visible");

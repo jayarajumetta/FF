@@ -7,9 +7,9 @@ public sealed class PricingPage
 {
     private readonly PricingLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public PricingPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public PricingPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new PricingLocators(browser.Page);
         _data = data;

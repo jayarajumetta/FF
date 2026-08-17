@@ -1,0 +1,74 @@
+using System.Net;
+using System.Text;
+
+namespace InsuranceAutomation.Core;
+
+public sealed class ScenarioReport
+{
+    private readonly List<StepResult> _steps = [];
+    private readonly string _artifactDirectory;
+    private DateTime _currentStart;
+    private string _currentStep = string.Empty;
+
+    public ScenarioReport(string artifactDirectory)
+    {
+        _artifactDirectory = artifactDirectory;
+    }
+
+    public void StartStep(string step)
+    {
+        _currentStep = step;
+        _currentStart = DateTime.Now;
+    }
+
+    public void EndStep(bool passed, string? error, IReadOnlyDictionary<string, string> data, string? screenshot)
+    {
+        _steps.Add(new StepResult
+        {
+            Step = _currentStep,
+            Passed = passed,
+            Error = error ?? string.Empty,
+            Duration = DateTime.Now - _currentStart,
+            Data = string.Join("; ", data.Select(item => $"{item.Key}={item.Value}")),
+            Screenshot = screenshot ?? string.Empty
+        });
+    }
+
+    public void Write(string feature, string scenario, string logPath, string? tracePath, string? videoPath)
+    {
+        var file = Path.Combine(_artifactDirectory, "report.html");
+        var rows = new StringBuilder();
+        foreach (var step in _steps)
+        {
+            var status = step.Passed ? "PASS" : "FAIL";
+            var screenshot = string.IsNullOrWhiteSpace(step.Screenshot)
+                ? string.Empty
+                : $"<a href='{Rel(step.Screenshot)}'>screenshot</a>";
+            rows.Append($"<tr class='{status.ToLowerInvariant()}'><td>{Encode(step.Step)}</td><td>{status}</td><td>{step.Duration.TotalSeconds:F1}s</td><td>{Encode(step.Data)}</td><td>{Encode(step.Error)}</td><td>{screenshot}</td></tr>");
+        }
+
+        var html = $$"""
+        <!doctype html>
+        <html><head><meta charset="utf-8"><title>{{Encode(scenario)}}</title>
+        <style>body{font-family:Segoe UI,Arial;margin:24px;color:#1f2937}h1{margin-bottom:4px}.meta{color:#6b7280;margin-bottom:18px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{border:1px solid #d1d5db;padding:8px;vertical-align:top}th{background:#16324f;color:#fff}.pass td:nth-child(2){color:#16713b;font-weight:700}.fail{background:#fff0f0}.fail td:nth-child(2){color:#b42318;font-weight:700}.artifacts a{margin-right:16px}</style></head>
+        <body><h1>{{Encode(feature)}}</h1><div class="meta">Scenario: {{Encode(scenario)}}</div>
+        <div class="artifacts"><a href='{{Rel(logPath)}}'>execution log</a>{{Link("trace", tracePath)}}{{Link("video", videoPath)}}</div>
+        <h2>Execution steps</h2><table><thead><tr><th>Business step</th><th>Status</th><th>Duration</th><th>Resolved data</th><th>Error</th><th>Evidence</th></tr></thead><tbody>{{rows}}</tbody></table></body></html>
+        """;
+        File.WriteAllText(file, html);
+    }
+
+    private string Link(string label, string? path) => string.IsNullOrWhiteSpace(path) ? string.Empty : $"<a href='{Rel(path)}'>{label}</a>";
+    private string Rel(string path) => Path.GetRelativePath(_artifactDirectory, path).Replace('\\', '/');
+    private static string Encode(string value) => WebUtility.HtmlEncode(value);
+
+    private sealed class StepResult
+    {
+        public string Step { get; set; } = string.Empty;
+        public bool Passed { get; set; }
+        public string Error { get; set; } = string.Empty;
+        public TimeSpan Duration { get; set; }
+        public string Data { get; set; } = string.Empty;
+        public string Screenshot { get; set; } = string.Empty;
+    }
+}

@@ -1,7 +1,8 @@
-# Locator Resilience: direct Playwright locator -> validated cache -> deterministic DOM -> GitHub Copilot proposal
-# Copilot Healing: opt-in with COPILOT_SELF_HEAL=true; business action and expected result never change
+# Runtime: Background opens one browser session; Feature data flows through StepDefinitions to PageMethods
+# Locator self-heal: enabled by default on locator/actionability failures
 
-@CL_EQ @BOP @smoke_test @automated @canonical_simple_v39 @state_data_driven
+
+@CL_EQ @BOP @smoke_test @automated @canonical_simple_v44 @state_data_driven
 # Automation Maturity: 95/100
 # Business Flow: 19/20 | Canonical Mapping: 20/20 | StepDefinitions: 15/15 | Page Model: 15/15 | Locator Quality: 16/20 | Test Data: 10/10
 # Page Objects Used: 6 | Locator Confidence Average: 80/100 | Review-required operations: 0
@@ -13,10 +14,9 @@ Feature: EQ BOP Smoke Test
   So that the business transaction is executed with source-traceable data and verification
 
   Background: Prepare Commercial Lines ExpertQuote for policy processing
-    Given the Commercial Lines ExpertQuote browser session is ready
-
+    Given I open a browser session
   Scenario Outline: EQ BOP Smoke Test - <stateCode>
-    Given test data file "<dataFile>" is loaded
+    Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
     And I open the configured Commercial Lines ExpertQuote application
     And I sign in to Commercial Lines ExpertQuote using configured credentials
     When I create a new client and begin the quote
@@ -28,5 +28,5 @@ Feature: EQ BOP Smoke Test
     And I retrieve the quote and verify its identity
 
     Examples:
-      | dataFile | stateCode | stateVariant | stateName |
-      | TestData/Scenarios/03_eq_bop_smoke_test_mo.json | MO | MO | Missouri |
+      | dataFile | stateCode | stateVariant | stateName | externalDataFile |
+      | TestData/Scenarios/03_eq_bop_smoke_test_mo.json | MO | MO | Missouri | TestData/ExternalDataOverrides.json |

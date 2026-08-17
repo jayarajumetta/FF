@@ -7,9 +7,9 @@ public sealed class PolicyInformationPage
 {
     private readonly PolicyInformationLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public PolicyInformationPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public PolicyInformationPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new PolicyInformationLocators(browser.Page);
         _data = data;

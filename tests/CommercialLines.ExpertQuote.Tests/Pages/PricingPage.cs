@@ -7,9 +7,9 @@ public sealed class PricingPage
 {
     private readonly PricingLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public PricingPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public PricingPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new PricingLocators(browser.Page);
         _data = data;
@@ -26,7 +26,7 @@ public sealed class PricingPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0229_503012Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeading))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
         }
     }
 
@@ -48,7 +48,7 @@ public sealed class PricingPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0281_08f3f1Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeading))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
         }
     }
 

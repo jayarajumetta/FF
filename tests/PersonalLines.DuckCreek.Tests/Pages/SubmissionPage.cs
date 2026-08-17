@@ -5,12 +5,16 @@ namespace InsuranceAutomation.PLDC.Pages;
 
 public sealed class SubmissionPage
 {
+    private readonly BrowserSession _browser;
+
     private readonly SubmissionLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public SubmissionPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public SubmissionPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
+        _browser = browser;
+
         _locators = new SubmissionLocators(browser.Page);
         _data = data;
         _ui = ui;
@@ -24,27 +28,27 @@ public sealed class SubmissionPage
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0153_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0154_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0155_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.FillAsync(_locators.Comments, _data.Resolve("{{data:comments_530}}"));
+            await _ui.FillAsync(_locators.Comments, _data.Resolve("{{data:comments_530}}"));
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0156_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.ReferUW))
         {
-        await _ui.VerifyAsync(_locators.ReferUW, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.ReferUW, _data.Resolve("Visible"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0157_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.ReferUW))
         {
-        await _ui.ClickAsync(_locators.ReferUW);
+            await _ui.ClickAsync(_locators.ReferUW);
         }
         await _ui.ClickAsync(_locators.SaveExit1);
     }
@@ -55,15 +59,15 @@ public sealed class SubmissionPage
         // EQNewQuote_785181Page.RecallQuotePolicy_0183_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.QuotePolicySearch))
         {
-        await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_551}}"));
-        await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
+            await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_551}}"));
+            await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
         }
         await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{runtime:QuoteNumber}}"));
         await _ui.ClickAsync(_locators.NewQuoteSearch);
         // EQAutoTabs_bf9a1ePage.EQClickOnSubmissionPage_0184_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.DIVSubmission))
         {
-        await _ui.ClickAsync(_locators.DIVSubmission);
+            await _ui.ClickAsync(_locators.DIVSubmission);
         }
     }
 
@@ -73,12 +77,12 @@ public sealed class SubmissionPage
         // EQSubmissionNEW_5224d2Page.EQSubmissionNEW_0188_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.CorrectionNeededStep1))
         {
-        await _ui.VerifyAsync(_locators.CorrectionNeededStep1, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.CorrectionNeededStep1, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionNEW_0189_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.SaveExit1))
         {
-        await _ui.ClickAsync(_locators.SaveExit1);
+            await _ui.ClickAsync(_locators.SaveExit1);
         }
     }
 
@@ -88,15 +92,15 @@ public sealed class SubmissionPage
         // EQNewQuote_785181Page.RecallQuotePolicy_0205_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.QuotePolicySearch))
         {
-        await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_583}}"));
-        await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
+            await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_583}}"));
+            await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
         }
         await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{runtime:QuoteNumber}}"));
         await _ui.ClickAsync(_locators.NewQuoteSearch);
         // EQAutoTabs_bf9a1ePage.EQClickOnSubmissionPage_0206_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.DIVSubmission))
         {
-        await _ui.ClickAsync(_locators.DIVSubmission);
+            await _ui.ClickAsync(_locators.DIVSubmission);
         }
     }
 
@@ -123,35 +127,35 @@ public sealed class SubmissionPage
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0250_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.Checklist1))
         {
-        await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0251_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.Checklist1))
         {
-        await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
         }
         // EQECheckList_45a110Page.EQECheckList_0252_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.AutoCycleRVApplication))
         {
-        await _ui.ClickAsync(_locators.AutoCycleRVApplication);
+            await _ui.ClickAsync(_locators.AutoCycleRVApplication);
         }
         await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
         // TBoxSaveAs_c1c647Page.TBoxSaveAs_0253_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.Caption))
         {
-        await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_602}}"));
+            await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_602}}"));
         }
         await _ui.FillAsync(_locators.FilePath, _data.Resolve("{{data:filepath_603}}"));
         await _ui.FillAsync(_locators.Button, _data.Resolve("{{data:button_604}}"));
         // EQECheckList_45a110Page.EQECheckList1_0254_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer))
         {
-        await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
+            await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
         }
         // TBoxSaveAs_c1c647Page.TBoxSaveAs1_0256_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.Caption))
         {
-        await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_606}}"));
+            await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_606}}"));
         }
         await _ui.FillAsync(_locators.FilePath, _data.Resolve("{{data:filepath_607}}"));
         await _ui.FillAsync(_locators.Button, _data.Resolve("{{data:button_608}}"));
@@ -193,27 +197,27 @@ public sealed class SubmissionPage
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0165_8f5301Async
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0166_8f5301Async
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0167_8f5301Async
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.FillAsync(_locators.Comments, _data.Resolve("{{data:comments_581}}"));
+            await _ui.FillAsync(_locators.Comments, _data.Resolve("{{data:comments_581}}"));
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0168_8f5301Async
         if (await _ui.ExistsAsync(_locators.ReferUW))
         {
-        await _ui.VerifyAsync(_locators.ReferUW, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.ReferUW, _data.Resolve("Visible"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0169_8f5301Async
         if (await _ui.ExistsAsync(_locators.ReferUW))
         {
-        await _ui.ClickAsync(_locators.ReferUW);
+            await _ui.ClickAsync(_locators.ReferUW);
         }
         await _ui.ClickAsync(_locators.SaveExit1);
     }
@@ -224,15 +228,15 @@ public sealed class SubmissionPage
         // EQNewQuote_785181Page.RecallQuotePolicy_0195_8f5301Async
         if (await _ui.ExistsAsync(_locators.QuotePolicySearch))
         {
-        await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_602}}"));
-        await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
+            await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_602}}"));
+            await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
         }
         await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{runtime:QuoteNumber}}"));
         await _ui.ClickAsync(_locators.NewQuoteSearch);
         // EQAutoTabs_bf9a1ePage.EQClickOnSubmissionPage_0196_8f5301Async
         if (await _ui.ExistsAsync(_locators.DIVSubmission))
         {
-        await _ui.ClickAsync(_locators.DIVSubmission);
+            await _ui.ClickAsync(_locators.DIVSubmission);
         }
     }
 
@@ -259,35 +263,35 @@ public sealed class SubmissionPage
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0207_8f5301Async
         if (await _ui.ExistsAsync(_locators.Checklist1))
         {
-        await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0208_8f5301Async
         if (await _ui.ExistsAsync(_locators.Checklist1))
         {
-        await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
         }
         // EQECheckList_45a110Page.EQECheckList_0209_8f5301Async
         if (await _ui.ExistsAsync(_locators.AutoCycleRVApplication))
         {
-        await _ui.ClickAsync(_locators.AutoCycleRVApplication);
+            await _ui.ClickAsync(_locators.AutoCycleRVApplication);
         }
         await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
         // TBoxSaveAs_c1c647Page.TBoxSaveAs_0210_8f5301Async
         if (await _ui.ExistsAsync(_locators.Caption))
         {
-        await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_621}}"));
+            await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_621}}"));
         }
         await _ui.FillAsync(_locators.FilePath, _data.Resolve("{{data:filepath_622}}"));
         await _ui.FillAsync(_locators.Button, _data.Resolve("{{data:button_623}}"));
         // EQECheckList_45a110Page.EQECheckList1_0211_8f5301Async
         if (await _ui.ExistsAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer))
         {
-        await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
+            await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
         }
         // TBoxSaveAs_c1c647Page.TBoxSaveAs1_0213_8f5301Async
         if (await _ui.ExistsAsync(_locators.Caption))
         {
-        await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_625}}"));
+            await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_625}}"));
         }
         await _ui.FillAsync(_locators.FilePath, _data.Resolve("{{data:filepath_626}}"));
         await _ui.FillAsync(_locators.Button, _data.Resolve("{{data:button_627}}"));
@@ -326,12 +330,12 @@ public sealed class SubmissionPage
         // EQSubmissionNEW_5224d2Page.EQSubmissionNEW_0165_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.CorrectionNeededStep1))
         {
-        await _ui.VerifyAsync(_locators.CorrectionNeededStep1, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.CorrectionNeededStep1, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionNEW_0166_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.SaveExit1))
         {
-        await _ui.ClickAsync(_locators.SaveExit1);
+            await _ui.ClickAsync(_locators.SaveExit1);
         }
     }
 
@@ -341,15 +345,15 @@ public sealed class SubmissionPage
         // EQNewQuote_785181Page.RecallQuotePolicy_0182_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.QuotePolicySearch))
         {
-        await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_591}}"));
-        await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
+            await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_591}}"));
+            await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
         }
         await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{runtime:QuoteNumber}}"));
         await _ui.ClickAsync(_locators.NewQuoteSearch);
         // EQAutoTabs_bf9a1ePage.EQClickOnSubmissionPage_0183_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.DIVSubmission))
         {
-        await _ui.ClickAsync(_locators.DIVSubmission);
+            await _ui.ClickAsync(_locators.DIVSubmission);
         }
     }
 
@@ -361,27 +365,27 @@ public sealed class SubmissionPage
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0221_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0222_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0223_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.FillAsync(_locators.Comments, _data.Resolve("{{data:comments_598}}"));
+            await _ui.FillAsync(_locators.Comments, _data.Resolve("{{data:comments_598}}"));
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0224_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.ReferUW))
         {
-        await _ui.VerifyAsync(_locators.ReferUW, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.ReferUW, _data.Resolve("Visible"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0225_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.ReferUW))
         {
-        await _ui.ClickAsync(_locators.ReferUW);
+            await _ui.ClickAsync(_locators.ReferUW);
         }
         await _ui.ClickAsync(_locators.SaveExit1);
     }
@@ -392,7 +396,7 @@ public sealed class SubmissionPage
         // EQOpenUrl_bc49e2Page.EQOpenUrl_0243_e2e0d7Async
         if (_data.Condition("If Referral Button > Then"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
         }
     }
 
@@ -402,15 +406,15 @@ public sealed class SubmissionPage
         // EQNewQuote_785181Page.RecallQuotePolicy_0251_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.QuotePolicySearch))
         {
-        await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_619}}"));
-        await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
+            await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_619}}"));
+            await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
         }
         await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{runtime:QuoteNumber}}"));
         await _ui.ClickAsync(_locators.NewQuoteSearch);
         // EQAutoTabs_bf9a1ePage.EQClickOnSubmissionPage_0252_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.DIVSubmission))
         {
-        await _ui.ClickAsync(_locators.DIVSubmission);
+            await _ui.ClickAsync(_locators.DIVSubmission);
         }
     }
 
@@ -437,35 +441,35 @@ public sealed class SubmissionPage
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0263_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.Checklist1))
         {
-        await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0264_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.Checklist1))
         {
-        await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
         }
         // EQECheckList_45a110Page.EQECheckList_0265_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.AutoCycleRVApplication))
         {
-        await _ui.ClickAsync(_locators.AutoCycleRVApplication);
+            await _ui.ClickAsync(_locators.AutoCycleRVApplication);
         }
         await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
         // TBoxSaveAs_c1c647Page.TBoxSaveAs_0266_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.Caption))
         {
-        await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_638}}"));
+            await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_638}}"));
         }
         await _ui.FillAsync(_locators.FilePath, _data.Resolve("{{data:filepath_639}}"));
         await _ui.FillAsync(_locators.Button, _data.Resolve("{{data:button_640}}"));
         // EQECheckList_45a110Page.EQECheckList1_0267_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer))
         {
-        await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
+            await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
         }
         // TBoxSaveAs_c1c647Page.TBoxSaveAs1_0269_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.Caption))
         {
-        await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_642}}"));
+            await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_642}}"));
         }
         await _ui.FillAsync(_locators.FilePath, _data.Resolve("{{data:filepath_643}}"));
         await _ui.FillAsync(_locators.Button, _data.Resolve("{{data:button_644}}"));
@@ -505,12 +509,12 @@ public sealed class SubmissionPage
         // EQSubmissionNEW_5224d2Page.EQSubmissionNEW_0165_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.CorrectionNeededStep1))
         {
-        await _ui.VerifyAsync(_locators.CorrectionNeededStep1, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.CorrectionNeededStep1, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionNEW_0166_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.SaveExit1))
         {
-        await _ui.ClickAsync(_locators.SaveExit1);
+            await _ui.ClickAsync(_locators.SaveExit1);
         }
     }
 
@@ -520,15 +524,15 @@ public sealed class SubmissionPage
         // EQNewQuote_785181Page.RecallQuotePolicy_0182_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.QuotePolicySearch))
         {
-        await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_591}}"));
-        await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
+            await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_591}}"));
+            await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
         }
         await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{runtime:QuoteNumber}}"));
         await _ui.ClickAsync(_locators.NewQuoteSearch);
         // EQAutoTabs_bf9a1ePage.EQClickOnSubmissionPage_0183_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.DIVSubmission))
         {
-        await _ui.ClickAsync(_locators.DIVSubmission);
+            await _ui.ClickAsync(_locators.DIVSubmission);
         }
     }
 
@@ -540,27 +544,27 @@ public sealed class SubmissionPage
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0221_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0222_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0223_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.FillAsync(_locators.Comments, _data.Resolve("{{data:comments_598}}"));
+            await _ui.FillAsync(_locators.Comments, _data.Resolve("{{data:comments_598}}"));
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0224_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.ReferUW))
         {
-        await _ui.VerifyAsync(_locators.ReferUW, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.ReferUW, _data.Resolve("Visible"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0225_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.ReferUW))
         {
-        await _ui.ClickAsync(_locators.ReferUW);
+            await _ui.ClickAsync(_locators.ReferUW);
         }
         await _ui.ClickAsync(_locators.SaveExit1);
     }
@@ -571,7 +575,7 @@ public sealed class SubmissionPage
         // EQOpenUrl_bc49e2Page.EQOpenUrl_0243_bafd4aAsync
         if (_data.Condition("If Referral Button > Then"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
         }
     }
 
@@ -581,15 +585,15 @@ public sealed class SubmissionPage
         // EQNewQuote_785181Page.RecallQuotePolicy_0251_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.QuotePolicySearch))
         {
-        await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_619}}"));
-        await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
+            await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_619}}"));
+            await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
         }
         await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{runtime:QuoteNumber}}"));
         await _ui.ClickAsync(_locators.NewQuoteSearch);
         // EQAutoTabs_bf9a1ePage.EQClickOnSubmissionPage_0252_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.DIVSubmission))
         {
-        await _ui.ClickAsync(_locators.DIVSubmission);
+            await _ui.ClickAsync(_locators.DIVSubmission);
         }
     }
 
@@ -616,35 +620,35 @@ public sealed class SubmissionPage
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0263_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.Checklist1))
         {
-        await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0264_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.Checklist1))
         {
-        await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
         }
         // EQECheckList_45a110Page.EQECheckList_0265_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.AutoCycleRVApplication))
         {
-        await _ui.ClickAsync(_locators.AutoCycleRVApplication);
+            await _ui.ClickAsync(_locators.AutoCycleRVApplication);
         }
         await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
         // TBoxSaveAs_c1c647Page.TBoxSaveAs_0266_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.Caption))
         {
-        await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_638}}"));
+            await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_638}}"));
         }
         await _ui.FillAsync(_locators.FilePath, _data.Resolve("{{data:filepath_639}}"));
         await _ui.FillAsync(_locators.Button, _data.Resolve("{{data:button_640}}"));
         // EQECheckList_45a110Page.EQECheckList1_0267_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer))
         {
-        await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
+            await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
         }
         // TBoxSaveAs_c1c647Page.TBoxSaveAs1_0269_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.Caption))
         {
-        await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_642}}"));
+            await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_642}}"));
         }
         await _ui.FillAsync(_locators.FilePath, _data.Resolve("{{data:filepath_643}}"));
         await _ui.FillAsync(_locators.Button, _data.Resolve("{{data:button_644}}"));
@@ -684,12 +688,12 @@ public sealed class SubmissionPage
         // EQSubmissionNEW_5224d2Page.EQSubmissionNEW_0168_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.CorrectionNeededStep1))
         {
-        await _ui.VerifyAsync(_locators.CorrectionNeededStep1, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.CorrectionNeededStep1, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionNEW_0169_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.SaveExit1))
         {
-        await _ui.ClickAsync(_locators.SaveExit1);
+            await _ui.ClickAsync(_locators.SaveExit1);
         }
     }
 
@@ -699,15 +703,15 @@ public sealed class SubmissionPage
         // EQNewQuote_785181Page.RecallQuotePolicy_0185_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.QuotePolicySearch))
         {
-        await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_608}}"));
-        await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
+            await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_608}}"));
+            await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
         }
         await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{runtime:QuoteNumber}}"));
         await _ui.ClickAsync(_locators.NewQuoteSearch);
         // EQAutoTabs_bf9a1ePage.EQClickOnSubmissionPage_0186_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.DIVSubmission))
         {
-        await _ui.ClickAsync(_locators.DIVSubmission);
+            await _ui.ClickAsync(_locators.DIVSubmission);
         }
     }
 
@@ -719,27 +723,27 @@ public sealed class SubmissionPage
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0224_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0225_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0226_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.FillAsync(_locators.Comments, _data.Resolve("{{data:comments_615}}"));
+            await _ui.FillAsync(_locators.Comments, _data.Resolve("{{data:comments_615}}"));
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0227_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.ReferUW))
         {
-        await _ui.VerifyAsync(_locators.ReferUW, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.ReferUW, _data.Resolve("Visible"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0228_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.ReferUW))
         {
-        await _ui.ClickAsync(_locators.ReferUW);
+            await _ui.ClickAsync(_locators.ReferUW);
         }
         await _ui.ClickAsync(_locators.SaveExit1);
     }
@@ -750,7 +754,7 @@ public sealed class SubmissionPage
         // EQOpenUrl_bc49e2Page.EQOpenUrl_0246_8f4c8fAsync
         if (_data.Condition("If Referral Button > Then"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
         }
     }
 
@@ -760,15 +764,15 @@ public sealed class SubmissionPage
         // EQNewQuote_785181Page.RecallQuotePolicy_0254_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.QuotePolicySearch))
         {
-        await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_636}}"));
-        await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
+            await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_636}}"));
+            await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
         }
         await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{runtime:QuoteNumber}}"));
         await _ui.ClickAsync(_locators.NewQuoteSearch);
         // EQAutoTabs_bf9a1ePage.EQClickOnSubmissionPage_0255_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.DIVSubmission))
         {
-        await _ui.ClickAsync(_locators.DIVSubmission);
+            await _ui.ClickAsync(_locators.DIVSubmission);
         }
     }
 
@@ -795,35 +799,35 @@ public sealed class SubmissionPage
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0266_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.Checklist1))
         {
-        await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0267_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.Checklist1))
         {
-        await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
         }
         // EQECheckList_45a110Page.EQECheckList_0268_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.AutoCycleRVApplication))
         {
-        await _ui.ClickAsync(_locators.AutoCycleRVApplication);
+            await _ui.ClickAsync(_locators.AutoCycleRVApplication);
         }
         await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
         // TBoxSaveAs_c1c647Page.TBoxSaveAs_0269_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.Caption))
         {
-        await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_655}}"));
+            await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_655}}"));
         }
         await _ui.FillAsync(_locators.FilePath, _data.Resolve("{{data:filepath_656}}"));
         await _ui.FillAsync(_locators.Button, _data.Resolve("{{data:button_657}}"));
         // EQECheckList_45a110Page.EQECheckList1_0270_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer))
         {
-        await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
+            await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
         }
         // TBoxSaveAs_c1c647Page.TBoxSaveAs1_0272_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.Caption))
         {
-        await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_659}}"));
+            await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_659}}"));
         }
         await _ui.FillAsync(_locators.FilePath, _data.Resolve("{{data:filepath_660}}"));
         await _ui.FillAsync(_locators.Button, _data.Resolve("{{data:button_661}}"));
@@ -864,12 +868,12 @@ public sealed class SubmissionPage
         // EQSubmissionNEW_5224d2Page.EQSubmissionNEW_0168_10f911Async
         if (await _ui.ExistsAsync(_locators.CorrectionNeededStep1))
         {
-        await _ui.VerifyAsync(_locators.CorrectionNeededStep1, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.CorrectionNeededStep1, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionNEW_0169_10f911Async
         if (await _ui.ExistsAsync(_locators.SaveExit1))
         {
-        await _ui.ClickAsync(_locators.SaveExit1);
+            await _ui.ClickAsync(_locators.SaveExit1);
         }
     }
 
@@ -879,15 +883,15 @@ public sealed class SubmissionPage
         // EQNewQuote_785181Page.RecallQuotePolicy_0185_10f911Async
         if (await _ui.ExistsAsync(_locators.QuotePolicySearch))
         {
-        await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_611}}"));
-        await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
+            await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_611}}"));
+            await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
         }
         await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{runtime:QuoteNumber}}"));
         await _ui.ClickAsync(_locators.NewQuoteSearch);
         // EQAutoTabs_bf9a1ePage.EQClickOnSubmissionPage_0186_10f911Async
         if (await _ui.ExistsAsync(_locators.DIVSubmission))
         {
-        await _ui.ClickAsync(_locators.DIVSubmission);
+            await _ui.ClickAsync(_locators.DIVSubmission);
         }
     }
 
@@ -899,27 +903,27 @@ public sealed class SubmissionPage
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0224_10f911Async
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0225_10f911Async
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Comments, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0226_10f911Async
         if (await _ui.ExistsAsync(_locators.Comments))
         {
-        await _ui.FillAsync(_locators.Comments, _data.Resolve("{{data:comments_618}}"));
+            await _ui.FillAsync(_locators.Comments, _data.Resolve("{{data:comments_618}}"));
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0227_10f911Async
         if (await _ui.ExistsAsync(_locators.ReferUW))
         {
-        await _ui.VerifyAsync(_locators.ReferUW, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.ReferUW, _data.Resolve("Visible"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0228_10f911Async
         if (await _ui.ExistsAsync(_locators.ReferUW))
         {
-        await _ui.ClickAsync(_locators.ReferUW);
+            await _ui.ClickAsync(_locators.ReferUW);
         }
         await _ui.ClickAsync(_locators.SaveExit1);
     }
@@ -930,7 +934,7 @@ public sealed class SubmissionPage
         // EQOpenUrl_bc49e2Page.EQOpenUrl_0246_10f911Async
         if (_data.Condition("If Referral Button > Then"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
         }
     }
 
@@ -940,15 +944,15 @@ public sealed class SubmissionPage
         // EQNewQuote_785181Page.RecallQuotePolicy_0254_10f911Async
         if (await _ui.ExistsAsync(_locators.QuotePolicySearch))
         {
-        await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_639}}"));
-        await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
+            await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_639}}"));
+            await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
         }
         await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{runtime:QuoteNumber}}"));
         await _ui.ClickAsync(_locators.NewQuoteSearch);
         // EQAutoTabs_bf9a1ePage.EQClickOnSubmissionPage_0255_10f911Async
         if (await _ui.ExistsAsync(_locators.DIVSubmission))
         {
-        await _ui.ClickAsync(_locators.DIVSubmission);
+            await _ui.ClickAsync(_locators.DIVSubmission);
         }
     }
 
@@ -975,35 +979,35 @@ public sealed class SubmissionPage
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0266_10f911Async
         if (await _ui.ExistsAsync(_locators.Checklist1))
         {
-        await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
         }
         // EQSubmissionNEW_5224d2Page.EQSubmissionUWCommentsNEW_0267_10f911Async
         if (await _ui.ExistsAsync(_locators.Checklist1))
         {
-        await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.Checklist1, _data.Resolve("Exists"), "");
         }
         // EQECheckList_45a110Page.EQECheckList_0268_10f911Async
         if (await _ui.ExistsAsync(_locators.AutoCycleRVApplication))
         {
-        await _ui.ClickAsync(_locators.AutoCycleRVApplication);
+            await _ui.ClickAsync(_locators.AutoCycleRVApplication);
         }
         await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
         // TBoxSaveAs_c1c647Page.TBoxSaveAs_0269_10f911Async
         if (await _ui.ExistsAsync(_locators.Caption))
         {
-        await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_658}}"));
+            await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_658}}"));
         }
         await _ui.FillAsync(_locators.FilePath, _data.Resolve("{{data:filepath_659}}"));
         await _ui.FillAsync(_locators.Button, _data.Resolve("{{data:button_660}}"));
         // EQECheckList_45a110Page.EQECheckList1_0270_10f911Async
         if (await _ui.ExistsAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer))
         {
-        await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
+            await _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
         }
         // TBoxSaveAs_c1c647Page.TBoxSaveAs1_0272_10f911Async
         if (await _ui.ExistsAsync(_locators.Caption))
         {
-        await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_662}}"));
+            await _ui.FillAsync(_locators.Caption, _data.Resolve("{{data:caption_662}}"));
         }
         await _ui.FillAsync(_locators.FilePath, _data.Resolve("{{data:filepath_663}}"));
         await _ui.FillAsync(_locators.Button, _data.Resolve("{{data:button_664}}"));

@@ -1,0 +1,18 @@
+{
+  "version": "44.0-simple",
+  "errors": [],
+  "warnings": [],
+  "counts": {
+    "features": 32,
+    "scenarioOutlineExamples": 1074,
+    "pageRandomCalls": 0,
+    "stepDefinitionRandomCalls": 137,
+    "csharpFiles": 150,
+    "pageFiles": 54,
+    "locatorFiles": 51,
+    "stepDefinitionFiles": 35,
+    "jsonFiles": 1097
+  },
+  "dotnetBuildPerformed": false,
+  "dotnetBuildReason": "Generation container initially had no .NET SDK and outbound container download was unavailable; package uses official published SDK reference and includes build/setup scripts."
+}

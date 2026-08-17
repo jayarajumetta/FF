@@ -7,9 +7,9 @@ public sealed class DiscountsPage
 {
     private readonly DiscountsLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public DiscountsPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public DiscountsPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new DiscountsLocators(browser.Page);
         _data = data;
@@ -38,9 +38,9 @@ public sealed class DiscountsPage
         // PolicyInfoBAPSpecificFields_c8933aPage.EnterAccountCredit_0111_a1ba9cAsync
         if (_data.Condition("State != \"NY\""))
         {
-        await _ui.FillAsync(_locators.AccountCredit, _data.Resolve("{{data:account_credit_143}}"));
-        await _ui.PressAsync(_locators.AccountCredit, "Tab");
-        await _ui.PressAsync(_locators.AccountCredit, "Tab");
+            await _ui.FillAsync(_locators.AccountCredit, _data.Resolve("{{data:account_credit_143}}"));
+            await _ui.PressAsync(_locators.AccountCredit, "Tab");
+            await _ui.PressAsync(_locators.AccountCredit, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0112_a1ba9cAsync
         await Task.Delay(1000);
@@ -72,9 +72,9 @@ public sealed class DiscountsPage
         // PolicyInfoBAPSpecificFields_c8933aPage.EnterAccountCredit_0073_f90f36Async
         if (_data.Condition("State != \"NY\""))
         {
-        await _ui.FillAsync(_locators.AccountCredit, _data.Resolve("{{data:account_credit_83}}"));
-        await _ui.PressAsync(_locators.AccountCredit, "Tab");
-        await _ui.PressAsync(_locators.AccountCredit, "Tab");
+            await _ui.FillAsync(_locators.AccountCredit, _data.Resolve("{{data:account_credit_83}}"));
+            await _ui.PressAsync(_locators.AccountCredit, "Tab");
+            await _ui.PressAsync(_locators.AccountCredit, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0074_f90f36Async
         await Task.Delay(1000);
@@ -108,9 +108,9 @@ public sealed class DiscountsPage
         // PolicyInfoBAPSpecificFields_c8933aPage.EnterAccountCredit_0096_a6f47eAsync
         if (_data.Condition("State != \"NY\""))
         {
-        await _ui.FillAsync(_locators.AccountCredit, _data.Resolve("{{data:account_credit_126}}"));
-        await _ui.PressAsync(_locators.AccountCredit, "Tab");
-        await _ui.PressAsync(_locators.AccountCredit, "Tab");
+            await _ui.FillAsync(_locators.AccountCredit, _data.Resolve("{{data:account_credit_126}}"));
+            await _ui.PressAsync(_locators.AccountCredit, "Tab");
+            await _ui.PressAsync(_locators.AccountCredit, "Tab");
         }
         // TBoxWait_7ea9e1Page.WaitForSynchronization_0097_a6f47eAsync
         await Task.Delay(1000);

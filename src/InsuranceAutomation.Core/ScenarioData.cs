@@ -1,15 +1,245 @@
-using System.Text.Json; using System.Text.RegularExpressions;
+using System.Text.Json;
+using System.Text.RegularExpressions;
+
 namespace InsuranceAutomation.Core;
-public sealed class ScenarioData {
- readonly Dictionary<string,string> _values=new(StringComparer.OrdinalIgnoreCase); readonly Dictionary<string,string> _runtime=new(StringComparer.OrdinalIgnoreCase); readonly Dictionary<string,(string Pattern,string Value)> _random=new(StringComparer.OrdinalIgnoreCase); readonly Dictionary<string,string> _external=new(StringComparer.OrdinalIgnoreCase);
- public string CurrentFile {get;private set;}=""; public bool IsLoaded=>CurrentFile.Length>0;
- public void Load(string file,string? externalFile=null){ _values.Clear();_runtime.Clear();_random.Clear();_external.Clear(); CurrentFile=file; using var d=JsonDocument.Parse(File.ReadAllText(file)); var r=d.RootElement; ReadObj(r,"application"); ReadObj(r,"dimensions"); ReadObj(r,"values"); if(r.TryGetProperty("random",out var rnd)) foreach(var p in rnd.EnumerateObject()){var pat=p.Value.TryGetProperty("pattern",out var q)?q.GetString()??"":"";_random[p.Name]=(pat,"");} if(externalFile!=null&&File.Exists(externalFile)){using var e=JsonDocument.Parse(File.ReadAllText(externalFile)); foreach(var p in e.RootElement.EnumerateObject()) _external[p.Name]=p.Value.GetString()??"";} }
- void ReadObj(JsonElement root,string name){if(!root.TryGetProperty(name,out var o)||o.ValueKind!=JsonValueKind.Object)return;foreach(var p in o.EnumerateObject())_values[p.Name]=p.Value.ValueKind==JsonValueKind.String?p.Value.GetString()??"":p.Value.ToString();}
- public string Get(string key,string fallback=""){ if(_runtime.TryGetValue(key,out var r))return r;if(_values.TryGetValue(key,out var v))return v;if(_external.TryGetValue(key,out var e)){if(e=="SYNTHETIC_REPLACE_ME"||string.IsNullOrWhiteSpace(e))throw new InvalidOperationException($"Replace synthetic/external test data key '{key}'.");return e;} return fallback;}
- public void Set(string key,string value)=>_runtime[key]=value;
- public string Random(string key,string pattern){if(_runtime.TryGetValue(key,out var v))return v; var p=string.IsNullOrWhiteSpace(pattern)&&_random.TryGetValue(key,out var rp)?rp.Pattern:pattern; v=RandomData.Generate(p);_runtime[key]=v;return v;}
- public string Resolve(string expr){ if(string.IsNullOrEmpty(expr))return ""; return Regex.Replace(expr,@"\{\{(data|runtime|external):([^}]+)\}\}",m=>Get(m.Groups[2].Value)); }
- public bool Condition(string expr){ if(string.IsNullOrWhiteSpace(expr))return true; expr=expr.Trim(); var op=expr.Contains("!=",StringComparison.Ordinal)?"!=":expr.Contains("==",StringComparison.Ordinal)?"==":""; if(op.Length==0)return true; var parts=expr.Split(new[]{op},2,StringSplitOptions.None); var key=parts[0].Trim().Trim('\"','\''); var right=parts[1].Trim().Trim('\"','\''); if(right.Equals("NULL",StringComparison.OrdinalIgnoreCase))right=""; var left=Get(key,key); var eq=string.Equals(left,right,StringComparison.OrdinalIgnoreCase); return op=="=="?eq:!eq; }
- public IReadOnlyDictionary<string,string> Snapshot(){var all=new Dictionary<string,string>(_values,StringComparer.OrdinalIgnoreCase);foreach(var p in _runtime)all[p.Key]=p.Value;if(all.ContainsKey("password"))all["password"]="***";return all;}
+
+public sealed class ScenarioData
+{
+    private readonly Dictionary<string, string> _static = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, string> _runtime = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, string> _external = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, string> _randomPatterns = new(StringComparer.OrdinalIgnoreCase);
+
+    public string CurrentFile { get; private set; } = string.Empty;
+    public bool IsLoaded => !string.IsNullOrWhiteSpace(CurrentFile);
+
+    public void Load(string scenarioFile, string externalFile)
+    {
+        _static.Clear();
+        _runtime.Clear();
+        _external.Clear();
+        _randomPatterns.Clear();
+
+        CurrentFile = scenarioFile;
+        using var document = JsonDocument.Parse(File.ReadAllText(scenarioFile));
+        var root = document.RootElement;
+
+        ReadFlatObject(root, "application", _static);
+        ReadFlatObject(root, "dimensions", _static);
+        ReadFlatObject(root, "values", _static);
+
+        if (root.TryGetProperty("random", out var random) && random.ValueKind == JsonValueKind.Object)
+        {
+            foreach (var property in random.EnumerateObject())
+            {
+                if (property.Value.TryGetProperty("pattern", out var pattern))
+                {
+                    _randomPatterns[property.Name] = pattern.GetString() ?? string.Empty;
+                }
+            }
+        }
+
+        if (File.Exists(externalFile))
+        {
+            using var externalDocument = JsonDocument.Parse(File.ReadAllText(externalFile));
+            Flatten(externalDocument.RootElement, string.Empty, _external);
+        }
+    }
+
+    public string GetRequired(string key)
+    {
+        var value = Get(key);
+        if (string.IsNullOrWhiteSpace(value) || IsSynthetic(value))
+        {
+            throw new InvalidOperationException($"Required test data '{key}' is missing or still synthetic. Scenario data: {CurrentFile}");
+        }
+
+        return value;
+    }
+
+    public string Get(string key, string fallback = "")
+    {
+        if (_runtime.TryGetValue(key, out var runtimeValue)) return runtimeValue;
+
+        // An explicit external override wins over the source/static value.
+        if (_external.TryGetValue(key, out var externalValue) && !IsSynthetic(externalValue))
+        {
+            return externalValue;
+        }
+
+        if (_static.TryGetValue(key, out var staticValue)) return staticValue;
+        return fallback;
+    }
+
+    public static bool IsSynthetic(string? value) =>
+        string.IsNullOrWhiteSpace(value) || value.Equals("SYNTHETIC_REPLACE_ME", StringComparison.OrdinalIgnoreCase);
+
+    public void SetRuntime(string key, string value) => _runtime[key] = value;
+
+    // Kept as a compatibility alias for source-derived runtime captures.
+    public void Set(string key, string value) => SetRuntime(key, value);
+
+    public string GenerateRandom(string key, string? pattern = null)
+    {
+        if (_runtime.TryGetValue(key, out var existing))
+        {
+            return existing;
+        }
+
+        var effectivePattern = string.IsNullOrWhiteSpace(pattern) && _randomPatterns.TryGetValue(key, out var configured)
+            ? configured
+            : pattern ?? string.Empty;
+
+        var value = RandomData.Generate(effectivePattern);
+        _runtime[key] = value;
+        return value;
+    }
+
+    // Compatibility alias. Page objects should not call this in v44; random data is created in StepDefinitions.
+    public string Random(string key, string pattern) => GenerateRandom(key, pattern);
+
+    public string Resolve(string expression)
+    {
+        if (string.IsNullOrEmpty(expression)) return string.Empty;
+
+        var resolved = Regex.Replace(
+            expression,
+            @"\{\{(data|runtime|external|env):([^}]+)\}\}",
+            match => match.Groups[1].Value.Equals("env", StringComparison.OrdinalIgnoreCase)
+                ? Environment.GetEnvironmentVariable(match.Groups[2].Value) ?? string.Empty
+                : Get(match.Groups[2].Value));
+
+        resolved = Regex.Replace(resolved, @"\{B\[([^\]]+)\]\}", match => Get(match.Groups[1].Value));
+        resolved = Regex.Replace(resolved, @"\{PL\[([^\]]+)\]\}", match => Get(match.Groups[1].Value));
+        return resolved;
+    }
+
+    public bool Condition(string expression)
+    {
+        if (string.IsNullOrWhiteSpace(expression)) return true;
+
+        var normalized = expression.Trim();
+        var comparison = Regex.Match(normalized, @"^['""]?(.+?)['""]?\s*(==|!=)\s*['""]?(.*?)['""]?$");
+        if (!comparison.Success)
+        {
+            // Tosca control-flow labels that are not data comparisons are retained as source trace but should not crash the run.
+            return true;
+        }
+
+        var key = comparison.Groups[1].Value.Trim();
+        var op = comparison.Groups[2].Value;
+        var expected = comparison.Groups[3].Value.Trim();
+        if (expected.Equals("NULL", StringComparison.OrdinalIgnoreCase)) expected = string.Empty;
+
+        var actual = Get(key);
+        var equals = string.Equals(actual, expected, StringComparison.OrdinalIgnoreCase);
+        return op == "==" ? equals : !equals;
+    }
+
+    public IReadOnlyDictionary<string, string> Snapshot()
+    {
+        var result = new Dictionary<string, string>(_static, StringComparer.OrdinalIgnoreCase);
+        foreach (var item in _runtime) result[item.Key] = item.Value;
+
+        foreach (var key in result.Keys.Where(key =>
+                     key.Contains("password", StringComparison.OrdinalIgnoreCase) ||
+                     key.Contains("secret", StringComparison.OrdinalIgnoreCase)))
+        {
+            result[key] = "***";
+        }
+
+        return result;
+    }
+
+    private static void ReadFlatObject(JsonElement root, string name, IDictionary<string, string> target)
+    {
+        if (!root.TryGetProperty(name, out var value) || value.ValueKind != JsonValueKind.Object) return;
+        foreach (var property in value.EnumerateObject())
+        {
+            target[property.Name] = property.Value.ValueKind == JsonValueKind.String
+                ? property.Value.GetString() ?? string.Empty
+                : property.Value.ToString();
+        }
+    }
+
+    private static void Flatten(JsonElement element, string prefix, IDictionary<string, string> target)
+    {
+        if (element.ValueKind != JsonValueKind.Object) return;
+        foreach (var property in element.EnumerateObject())
+        {
+            var key = string.IsNullOrWhiteSpace(prefix) ? property.Name : $"{prefix}.{property.Name}";
+            if (property.Value.ValueKind == JsonValueKind.Object)
+            {
+                Flatten(property.Value, key, target);
+            }
+            else
+            {
+                var value = property.Value.ValueKind == JsonValueKind.String
+                    ? property.Value.GetString() ?? string.Empty
+                    : property.Value.ToString();
+                target[property.Name] = value;
+                target[key] = value;
+            }
+        }
+    }
 }
-public static class RandomData { static readonly Random R=new(); public static string Generate(string pattern){pattern=(pattern??"").Trim('^','$'); var sb=new System.Text.StringBuilder(); for(int i=0;i<pattern.Length;){ if(pattern[i]=='\\'&&i+1<pattern.Length){sb.Append(pattern[i+1]);i+=2;continue;} if(pattern[i]=='['){var end=pattern.IndexOf(']',i);if(end<0){sb.Append(pattern[i++]);continue;}var cls=pattern[(i+1)..end];int count=1;var qm=Regex.Match(pattern[(end+1)..],@"^\{(\d+)\}");if(qm.Success){count=int.Parse(qm.Groups[1].Value);end+=qm.Length;}for(int j=0;j<count;j++)sb.Append(cls.Contains("A-Z")?(char)('A'+R.Next(26)):cls.Contains("a-z")?(char)('a'+R.Next(26)):(char)('0'+R.Next(10)));i=end+1;continue;} sb.Append(pattern[i++]);}return sb.ToString(); } }
+
+public static class RandomData
+{
+    private static readonly Random Random = new();
+
+    public static string Generate(string pattern)
+    {
+        pattern = (pattern ?? string.Empty).Trim().TrimStart('^').TrimEnd('$');
+        if (string.IsNullOrWhiteSpace(pattern))
+        {
+            return Guid.NewGuid().ToString("N")[..10];
+        }
+
+        var output = new System.Text.StringBuilder();
+        for (var index = 0; index < pattern.Length;)
+        {
+            if (pattern[index] == '\\' && index + 1 < pattern.Length)
+            {
+                output.Append(pattern[index + 1]);
+                index += 2;
+                continue;
+            }
+
+            if (pattern[index] == '[')
+            {
+                var close = pattern.IndexOf(']', index);
+                if (close < 0)
+                {
+                    output.Append(pattern[index++]);
+                    continue;
+                }
+
+                var characterClass = pattern[(index + 1)..close];
+                var count = 1;
+                var countMatch = Regex.Match(pattern[(close + 1)..], @"^\{(\d+)\}");
+                if (countMatch.Success)
+                {
+                    count = int.Parse(countMatch.Groups[1].Value);
+                    close += countMatch.Length;
+                }
+
+                for (var item = 0; item < count; item++)
+                {
+                    output.Append(characterClass.Contains("A-Z", StringComparison.Ordinal)
+                        ? (char)('A' + Random.Next(26))
+                        : characterClass.Contains("a-z", StringComparison.Ordinal)
+                            ? (char)('a' + Random.Next(26))
+                            : (char)('0' + Random.Next(10)));
+                }
+
+                index = close + 1;
+                continue;
+            }
+
+            output.Append(pattern[index++]);
+        }
+
+        return output.ToString();
+    }
+}

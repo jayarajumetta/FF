@@ -7,9 +7,9 @@ public sealed class UnderwritingPage
 {
     private readonly UnderwritingLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public UnderwritingPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public UnderwritingPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new UnderwritingLocators(browser.Page);
         _data = data;
@@ -32,15 +32,15 @@ public sealed class UnderwritingPage
         // EQNewQuote_785181Page.RecallQuotePolicy_0044_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.QuotePolicySearch))
         {
-        await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_87}}"));
-        await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
+            await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_87}}"));
+            await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
         }
         await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{runtime:QuoteNumber}}"));
         await _ui.ClickAsync(_locators.NewQuoteSearch);
         // EQPreQualification_44547dPage.EnterPreQualification_0045_8f9ff6Async
         if (await _ui.ExistsAsync(_locators.PreQualificationNext))
         {
-        await _ui.ClickAsync(_locators.PreQualificationNext);
+            await _ui.ClickAsync(_locators.PreQualificationNext);
         }
     }
 
@@ -71,15 +71,15 @@ public sealed class UnderwritingPage
         // EQNewQuote_785181Page.RecallQuotePolicy_0044_8f5301Async
         if (await _ui.ExistsAsync(_locators.QuotePolicySearch))
         {
-        await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_87}}"));
-        await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
+            await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_87}}"));
+            await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
         }
         await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{runtime:QuoteNumber}}"));
         await _ui.ClickAsync(_locators.NewQuoteSearch);
         // EQPreQualification_44547dPage.EnterPreQualification_0045_8f5301Async
         if (await _ui.ExistsAsync(_locators.PreQualificationNext))
         {
-        await _ui.ClickAsync(_locators.PreQualificationNext);
+            await _ui.ClickAsync(_locators.PreQualificationNext);
         }
     }
 
@@ -110,15 +110,15 @@ public sealed class UnderwritingPage
         // EQNewQuote_785181Page.RecallQuotePolicy_0044_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.QuotePolicySearch))
         {
-        await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_87}}"));
-        await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
+            await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_87}}"));
+            await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
         }
         await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{runtime:QuoteNumber}}"));
         await _ui.ClickAsync(_locators.NewQuoteSearch);
         // EQPreQualification_44547dPage.EnterPreQualification_0045_e2e0d7Async
         if (await _ui.ExistsAsync(_locators.PreQualificationNext))
         {
-        await _ui.ClickAsync(_locators.PreQualificationNext);
+            await _ui.ClickAsync(_locators.PreQualificationNext);
         }
     }
 
@@ -134,12 +134,12 @@ public sealed class UnderwritingPage
         // EQUnderwritingCollectorAndVintageInformation_2936bfPage.EQUnderwritingCollectorAndVintageInformation_0154_e2e0d7Async
         if (_data.Condition("EQ | Underwriting Collector And Vintage Information > Condition"))
         {
-        await _ui.WaitAsync(_locators.AreAllCollectorVehiclesKeptInAFullyEnclosedAndLockedStructure, "Visible");
+            await _ui.WaitAsync(_locators.AreAllCollectorVehiclesKeptInAFullyEnclosedAndLockedStructure, "Visible");
         }
         // EQUnderwritingCollectorAndVintageInformation_2936bfPage.EQUnderwritingCollectorAndVintageInformation_0155_e2e0d7Async
         if (_data.Condition("EQ | Underwriting Collector And Vintage Information > Then"))
         {
-        await _ui.SelectAsync(_locators.Yes71588, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.Yes71588, _data.Resolve(""));
         }
         // EQUnderwritingUnderwritingNext_00dbdfPage.EQUnderwritingUnderwritingNext_0156_e2e0d7Async
         await _ui.ClickAsync(_locators.UnderwritingUnderwritingNextNext);
@@ -163,15 +163,15 @@ public sealed class UnderwritingPage
         // EQNewQuote_785181Page.RecallQuotePolicy_0044_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.QuotePolicySearch))
         {
-        await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_87}}"));
-        await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
+            await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_87}}"));
+            await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
         }
         await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{runtime:QuoteNumber}}"));
         await _ui.ClickAsync(_locators.NewQuoteSearch);
         // EQPreQualification_44547dPage.EnterPreQualification_0045_bafd4aAsync
         if (await _ui.ExistsAsync(_locators.PreQualificationNext))
         {
-        await _ui.ClickAsync(_locators.PreQualificationNext);
+            await _ui.ClickAsync(_locators.PreQualificationNext);
         }
     }
 
@@ -187,12 +187,12 @@ public sealed class UnderwritingPage
         // EQUnderwritingCollectorAndVintageInformation_2936bfPage.EQUnderwritingCollectorAndVintageInformation_0154_bafd4aAsync
         if (_data.Condition("EQ | Underwriting Collector And Vintage Information > Condition"))
         {
-        await _ui.WaitAsync(_locators.AreAllCollectorVehiclesKeptInAFullyEnclosedAndLockedStructure, "Visible");
+            await _ui.WaitAsync(_locators.AreAllCollectorVehiclesKeptInAFullyEnclosedAndLockedStructure, "Visible");
         }
         // EQUnderwritingCollectorAndVintageInformation_2936bfPage.EQUnderwritingCollectorAndVintageInformation_0155_bafd4aAsync
         if (_data.Condition("EQ | Underwriting Collector And Vintage Information > Then"))
         {
-        await _ui.SelectAsync(_locators.Yes71588, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.Yes71588, _data.Resolve(""));
         }
         // EQUnderwritingUnderwritingNext_00dbdfPage.EQUnderwritingUnderwritingNext_0156_bafd4aAsync
         await _ui.ClickAsync(_locators.UnderwritingUnderwritingNextNext);
@@ -216,15 +216,15 @@ public sealed class UnderwritingPage
         // EQNewQuote_785181Page.RecallQuotePolicy_0044_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.QuotePolicySearch))
         {
-        await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_87}}"));
-        await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
+            await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_87}}"));
+            await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
         }
         await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{runtime:QuoteNumber}}"));
         await _ui.ClickAsync(_locators.NewQuoteSearch);
         // EQPreQualification_44547dPage.EnterPreQualification_0045_8f4c8fAsync
         if (await _ui.ExistsAsync(_locators.PreQualificationNext))
         {
-        await _ui.ClickAsync(_locators.PreQualificationNext);
+            await _ui.ClickAsync(_locators.PreQualificationNext);
         }
     }
 
@@ -240,12 +240,12 @@ public sealed class UnderwritingPage
         // EQUnderwritingCollectorAndVintageInformation_2936bfPage.EQUnderwritingCollectorAndVintageInformation_0157_8f4c8fAsync
         if (_data.Condition("EQ | Underwriting Collector And Vintage Information > Condition"))
         {
-        await _ui.WaitAsync(_locators.AreAllCollectorVehiclesKeptInAFullyEnclosedAndLockedStructure, "Visible");
+            await _ui.WaitAsync(_locators.AreAllCollectorVehiclesKeptInAFullyEnclosedAndLockedStructure, "Visible");
         }
         // EQUnderwritingCollectorAndVintageInformation_2936bfPage.EQUnderwritingCollectorAndVintageInformation_0158_8f4c8fAsync
         if (_data.Condition("EQ | Underwriting Collector And Vintage Information > Then"))
         {
-        await _ui.SelectAsync(_locators.Yes71588, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.Yes71588, _data.Resolve(""));
         }
         // EQUnderwritingUnderwritingNext_00dbdfPage.EQUnderwritingUnderwritingNext_0159_8f4c8fAsync
         await _ui.ClickAsync(_locators.UnderwritingUnderwritingNextNext);
@@ -269,15 +269,15 @@ public sealed class UnderwritingPage
         // EQNewQuote_785181Page.RecallQuotePolicy_0044_10f911Async
         if (await _ui.ExistsAsync(_locators.QuotePolicySearch))
         {
-        await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_87}}"));
-        await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
+            await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{data:txt_quote_policy_search_87}}"));
+            await _ui.PressAsync(_locators.QuotePolicySearch, "CTRL+A");
         }
         await _ui.FillAsync(_locators.QuotePolicySearch, _data.Resolve("{{runtime:QuoteNumber}}"));
         await _ui.ClickAsync(_locators.NewQuoteSearch);
         // EQPreQualification_44547dPage.EnterPreQualification_0045_10f911Async
         if (await _ui.ExistsAsync(_locators.PreQualificationNext))
         {
-        await _ui.ClickAsync(_locators.PreQualificationNext);
+            await _ui.ClickAsync(_locators.PreQualificationNext);
         }
     }
 
@@ -293,12 +293,12 @@ public sealed class UnderwritingPage
         // EQUnderwritingCollectorAndVintageInformation_2936bfPage.EQUnderwritingCollectorAndVintageInformation_0157_10f911Async
         if (_data.Condition("EQ | Underwriting Collector And Vintage Information > Condition"))
         {
-        await _ui.WaitAsync(_locators.AreAllCollectorVehiclesKeptInAFullyEnclosedAndLockedStructure, "Visible");
+            await _ui.WaitAsync(_locators.AreAllCollectorVehiclesKeptInAFullyEnclosedAndLockedStructure, "Visible");
         }
         // EQUnderwritingCollectorAndVintageInformation_2936bfPage.EQUnderwritingCollectorAndVintageInformation_0158_10f911Async
         if (_data.Condition("EQ | Underwriting Collector And Vintage Information > Then"))
         {
-        await _ui.SelectAsync(_locators.Yes71588, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.Yes71588, _data.Resolve(""));
         }
         // EQUnderwritingUnderwritingNext_00dbdfPage.EQUnderwritingUnderwritingNext_0159_10f911Async
         await _ui.ClickAsync(_locators.UnderwritingUnderwritingNextNext);

@@ -7,9 +7,9 @@ public sealed class BillingPage
 {
     private readonly BillingLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public BillingPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public BillingPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new BillingLocators(browser.Page);
         _data = data;

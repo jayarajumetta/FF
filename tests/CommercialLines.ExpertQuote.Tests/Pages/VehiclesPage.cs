@@ -7,9 +7,9 @@ public sealed class VehiclesPage
 {
     private readonly VehiclesLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public VehiclesPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public VehiclesPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new VehiclesLocators(browser.Page);
         _data = data;
@@ -50,7 +50,7 @@ public sealed class VehiclesPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0214_08f3f1Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeading))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
         }
     }
 

@@ -7,9 +7,9 @@ public sealed class AccountInformationPage
 {
     private readonly AccountInformationLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public AccountInformationPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public AccountInformationPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new AccountInformationLocators(browser.Page);
         _data = data;
@@ -28,15 +28,15 @@ public sealed class AccountInformationPage
         await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
         if (_data.Condition("'Marital Status' == \"Single\""))
         {
-        await _ui.ClickAsync(_locators.Single);
+            await _ui.ClickAsync(_locators.Single);
         }
         if (_data.Condition("'Marital Status' == \"Married\""))
         {
-        await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
         }
         if (_data.Condition("'Marital Status' == \"Divorced\""))
         {
-        await _ui.ClickAsync(_locators.Divorced);
+            await _ui.ClickAsync(_locators.Divorced);
         }
         await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
         await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("Apartment"));
@@ -67,15 +67,15 @@ public sealed class AccountInformationPage
         await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
         if (_data.Condition("'Marital Status' == \"Single\""))
         {
-        await _ui.ClickAsync(_locators.Single);
+            await _ui.ClickAsync(_locators.Single);
         }
         if (_data.Condition("'Marital Status' == \"Married\""))
         {
-        await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
         }
         if (_data.Condition("'Marital Status' == \"Divorced\""))
         {
-        await _ui.ClickAsync(_locators.Divorced);
+            await _ui.ClickAsync(_locators.Divorced);
         }
         await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
         await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("AL_ClientData.Apartment"));
@@ -108,15 +108,15 @@ public sealed class AccountInformationPage
         await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
         if (_data.Condition("'Marital Status' == \"Single\""))
         {
-        await _ui.ClickAsync(_locators.Single);
+            await _ui.ClickAsync(_locators.Single);
         }
         if (_data.Condition("'Marital Status' == \"Married\""))
         {
-        await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
         }
         if (_data.Condition("'Marital Status' == \"Divorced\""))
         {
-        await _ui.ClickAsync(_locators.Divorced);
+            await _ui.ClickAsync(_locators.Divorced);
         }
         await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
         await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("Apartment"));
@@ -147,15 +147,15 @@ public sealed class AccountInformationPage
         await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
         if (_data.Condition("'Marital Status' == \"Single\""))
         {
-        await _ui.ClickAsync(_locators.Single);
+            await _ui.ClickAsync(_locators.Single);
         }
         if (_data.Condition("'Marital Status' == \"Married\""))
         {
-        await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
         }
         if (_data.Condition("'Marital Status' == \"Divorced\""))
         {
-        await _ui.ClickAsync(_locators.Divorced);
+            await _ui.ClickAsync(_locators.Divorced);
         }
         await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
         await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("AL_ClientData.Apartment"));
@@ -188,15 +188,15 @@ public sealed class AccountInformationPage
         await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
         if (_data.Condition("'Marital Status' == \"Single\""))
         {
-        await _ui.ClickAsync(_locators.Single);
+            await _ui.ClickAsync(_locators.Single);
         }
         if (_data.Condition("'Marital Status' == \"Married\""))
         {
-        await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
         }
         if (_data.Condition("'Marital Status' == \"Divorced\""))
         {
-        await _ui.ClickAsync(_locators.Divorced);
+            await _ui.ClickAsync(_locators.Divorced);
         }
         await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
         await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("AL_ClientData.Apartment"));
@@ -229,15 +229,15 @@ public sealed class AccountInformationPage
         await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
         if (_data.Condition("'Marital Status' == \"Single\""))
         {
-        await _ui.ClickAsync(_locators.Single);
+            await _ui.ClickAsync(_locators.Single);
         }
         if (_data.Condition("'Marital Status' == \"Married\""))
         {
-        await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
         }
         if (_data.Condition("'Marital Status' == \"Divorced\""))
         {
-        await _ui.ClickAsync(_locators.Divorced);
+            await _ui.ClickAsync(_locators.Divorced);
         }
         await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
         await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("AL_ClientData.Apartment"));
@@ -270,15 +270,15 @@ public sealed class AccountInformationPage
         await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
         if (_data.Condition("'Marital Status' == \"Single\""))
         {
-        await _ui.ClickAsync(_locators.Single);
+            await _ui.ClickAsync(_locators.Single);
         }
         if (_data.Condition("'Marital Status' == \"Married\""))
         {
-        await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
         }
         if (_data.Condition("'Marital Status' == \"Divorced\""))
         {
-        await _ui.ClickAsync(_locators.Divorced);
+            await _ui.ClickAsync(_locators.Divorced);
         }
         await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
         await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("AL_ClientData.Apartment"));
@@ -311,15 +311,15 @@ public sealed class AccountInformationPage
         await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
         if (_data.Condition("'Marital Status' == \"Single\""))
         {
-        await _ui.ClickAsync(_locators.Single);
+            await _ui.ClickAsync(_locators.Single);
         }
         if (_data.Condition("'Marital Status' == \"Married\""))
         {
-        await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
         }
         if (_data.Condition("'Marital Status' == \"Divorced\""))
         {
-        await _ui.ClickAsync(_locators.Divorced);
+            await _ui.ClickAsync(_locators.Divorced);
         }
         await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
         await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("AL_ClientData.Apartment"));
@@ -352,15 +352,15 @@ public sealed class AccountInformationPage
         await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
         if (_data.Condition("'Marital Status' == \"Single\""))
         {
-        await _ui.ClickAsync(_locators.Single);
+            await _ui.ClickAsync(_locators.Single);
         }
         if (_data.Condition("'Marital Status' == \"Married\""))
         {
-        await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
         }
         if (_data.Condition("'Marital Status' == \"Divorced\""))
         {
-        await _ui.ClickAsync(_locators.Divorced);
+            await _ui.ClickAsync(_locators.Divorced);
         }
         await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
         await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("Apartment"));

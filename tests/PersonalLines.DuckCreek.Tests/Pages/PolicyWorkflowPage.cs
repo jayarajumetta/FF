@@ -5,12 +5,16 @@ namespace InsuranceAutomation.PLDC.Pages;
 
 public sealed class PolicyWorkflowPage
 {
+    private readonly BrowserSession _browser;
+
     private readonly PolicyWorkflowLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public PolicyWorkflowPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public PolicyWorkflowPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
+        _browser = browser;
+
         _locators = new PolicyWorkflowLocators(browser.Page);
         _data = data;
         _ui = ui;
@@ -58,7 +62,7 @@ public sealed class PolicyWorkflowPage
         // EQOpenUrl_bc49e2Page.EQOpenUrl_0036_8f9ff6Async
         if (_data.Condition("If > Then"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
         }
     }
 
@@ -68,51 +72,51 @@ public sealed class PolicyWorkflowPage
         // EQPersonalInjuryProtectionSectionNew_834ca4Page.EQPersonalInjuryProtectionSection_0138_8f9ff6Async
         if (_data.Condition("'All HH Members 65 or Pension' != NULL"))
         {
-        await _ui.ClickAsync(_locators.HouseholdMembersAge65OrReceivingPension);
+            await _ui.ClickAsync(_locators.HouseholdMembersAge65OrReceivingPension);
         }
         if (_data.Condition("'PIP Limit' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPLimit);
+            await _ui.ClickAsync(_locators.PIPLimit);
         }
         if (_data.Condition("'PIP Deductible' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPDeductible);
+            await _ui.ClickAsync(_locators.PIPDeductible);
         }
         if (_data.Condition("'Additional PIP' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AdditionalPIP);
+            await _ui.ClickAsync(_locators.AdditionalPIP);
         }
         if (_data.Condition("'PIP Stacking' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPStacking);
+            await _ui.ClickAsync(_locators.PIPStacking);
         }
         if (_data.Condition("'Extra PIP Option' != NULL"))
         {
-        await _ui.SelectAsync(_locators.ExtraPIPOption, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.ExtraPIPOption, _data.Resolve(""));
         }
         if (_data.Condition("'Auto Health Insurer' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AutoHealthInsurer);
+            await _ui.ClickAsync(_locators.AutoHealthInsurer);
         }
         if (_data.Condition("'Medical Expense Elimination' != NULL"))
         {
-        await _ui.ClickAsync(_locators.MedicalExpenseElimination);
+            await _ui.ClickAsync(_locators.MedicalExpenseElimination);
         }
         if (_data.Condition("'Work Loss Coordination Of Benefits' != NULL"))
         {
-        await _ui.SelectAsync(_locators.WorkLossNo, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.WorkLossNo, _data.Resolve(""));
         }
         if (_data.Condition("'Broadened PIP' != NULL"))
         {
-        await _ui.ClickAsync(_locators.BroadenedPIP);
+            await _ui.ClickAsync(_locators.BroadenedPIP);
         }
         if (_data.Condition("'Additional Death Benefit' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AdditionalDeathBenefit);
+            await _ui.ClickAsync(_locators.AdditionalDeathBenefit);
         }
         if (_data.Condition("'Waiver of Income Loss' != NULL"))
         {
-        await _ui.ClickAsync(_locators.WaiverOfIncomeLoss);
+            await _ui.ClickAsync(_locators.WaiverOfIncomeLoss);
         }
         // TBoxSetBuffer_e51da1Page.TBoxSetBuffer_0139_8f9ff6Async
         _data.Set("UMPD/UIMPD_V1", _data.Get("UMPD/UIMPD_V1"));
@@ -159,7 +163,7 @@ public sealed class PolicyWorkflowPage
         // EQOpenUrl_bc49e2Page.EQOpenUrl_0175_8f9ff6Async
         if (_data.Condition("If Referral Button > Then"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
         }
     }
 
@@ -169,7 +173,7 @@ public sealed class PolicyWorkflowPage
         // OpenUrl_677fdaPage.OpenUrl_0190_8f9ff6Async
         if (_data.Condition("If Correction Needed > Then go to Express to bypass L9"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
         }
     }
 
@@ -215,7 +219,7 @@ public sealed class PolicyWorkflowPage
         // EQOpenUrl_bc49e2Page.EQOpenUrl_0036_8f5301Async
         if (_data.Condition("If > Then"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
         }
     }
 
@@ -225,51 +229,51 @@ public sealed class PolicyWorkflowPage
         // EQPersonalInjuryProtectionSectionNew_834ca4Page.EQPersonalInjuryProtectionSection_0150_8f5301Async
         if (_data.Condition("'All HH Members 65 or Pension' != NULL"))
         {
-        await _ui.ClickAsync(_locators.HouseholdMembersAge65OrReceivingPension);
+            await _ui.ClickAsync(_locators.HouseholdMembersAge65OrReceivingPension);
         }
         if (_data.Condition("'PIP Limit' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPLimit);
+            await _ui.ClickAsync(_locators.PIPLimit);
         }
         if (_data.Condition("'PIP Deductible' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPDeductible);
+            await _ui.ClickAsync(_locators.PIPDeductible);
         }
         if (_data.Condition("'Additional PIP' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AdditionalPIP);
+            await _ui.ClickAsync(_locators.AdditionalPIP);
         }
         if (_data.Condition("'PIP Stacking' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPStacking);
+            await _ui.ClickAsync(_locators.PIPStacking);
         }
         if (_data.Condition("'Extra PIP Option' != NULL"))
         {
-        await _ui.SelectAsync(_locators.ExtraPIPOption, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.ExtraPIPOption, _data.Resolve(""));
         }
         if (_data.Condition("'Auto Health Insurer' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AutoHealthInsurer);
+            await _ui.ClickAsync(_locators.AutoHealthInsurer);
         }
         if (_data.Condition("'Medical Expense Elimination' != NULL"))
         {
-        await _ui.ClickAsync(_locators.MedicalExpenseElimination);
+            await _ui.ClickAsync(_locators.MedicalExpenseElimination);
         }
         if (_data.Condition("'Work Loss Coordination Of Benefits' != NULL"))
         {
-        await _ui.SelectAsync(_locators.WorkLossNo, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.WorkLossNo, _data.Resolve(""));
         }
         if (_data.Condition("'Broadened PIP' != NULL"))
         {
-        await _ui.ClickAsync(_locators.BroadenedPIP);
+            await _ui.ClickAsync(_locators.BroadenedPIP);
         }
         if (_data.Condition("'Additional Death Benefit' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AdditionalDeathBenefit);
+            await _ui.ClickAsync(_locators.AdditionalDeathBenefit);
         }
         if (_data.Condition("'Waiver of Income Loss' != NULL"))
         {
-        await _ui.ClickAsync(_locators.WaiverOfIncomeLoss);
+            await _ui.ClickAsync(_locators.WaiverOfIncomeLoss);
         }
         // TBoxSetBuffer_e51da1Page.TBoxSetBuffer_0151_8f5301Async
         _data.Set("UMPD/UIMPD_V1", _data.Get("UMPD/UIMPD_V1"));
@@ -316,7 +320,7 @@ public sealed class PolicyWorkflowPage
         // EQOpenUrl_bc49e2Page.EQOpenUrl_0187_8f5301Async
         if (_data.Condition("If Referral Button > Then"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
         }
     }
 
@@ -344,7 +348,7 @@ public sealed class PolicyWorkflowPage
         // EQOpenUrl_bc49e2Page.EQOpenUrl_0036_e2e0d7Async
         if (_data.Condition("If > Then"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
         }
     }
 
@@ -354,51 +358,51 @@ public sealed class PolicyWorkflowPage
         // EQPersonalInjuryProtectionSectionNew_834ca4Page.EQPersonalInjuryProtectionSection_0147_e2e0d7Async
         if (_data.Condition("'All HH Members 65 or Pension' != NULL"))
         {
-        await _ui.ClickAsync(_locators.HouseholdMembersAge65OrReceivingPension);
+            await _ui.ClickAsync(_locators.HouseholdMembersAge65OrReceivingPension);
         }
         if (_data.Condition("'PIP Limit' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPLimit);
+            await _ui.ClickAsync(_locators.PIPLimit);
         }
         if (_data.Condition("'PIP Deductible' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPDeductible);
+            await _ui.ClickAsync(_locators.PIPDeductible);
         }
         if (_data.Condition("'Additional PIP' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AdditionalPIP);
+            await _ui.ClickAsync(_locators.AdditionalPIP);
         }
         if (_data.Condition("'PIP Stacking' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPStacking);
+            await _ui.ClickAsync(_locators.PIPStacking);
         }
         if (_data.Condition("'Extra PIP Option' != NULL"))
         {
-        await _ui.SelectAsync(_locators.ExtraPIPOption, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.ExtraPIPOption, _data.Resolve(""));
         }
         if (_data.Condition("'Auto Health Insurer' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AutoHealthInsurer);
+            await _ui.ClickAsync(_locators.AutoHealthInsurer);
         }
         if (_data.Condition("'Medical Expense Elimination' != NULL"))
         {
-        await _ui.ClickAsync(_locators.MedicalExpenseElimination);
+            await _ui.ClickAsync(_locators.MedicalExpenseElimination);
         }
         if (_data.Condition("'Work Loss Coordination Of Benefits' != NULL"))
         {
-        await _ui.SelectAsync(_locators.WorkLossNo, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.WorkLossNo, _data.Resolve(""));
         }
         if (_data.Condition("'Broadened PIP' != NULL"))
         {
-        await _ui.ClickAsync(_locators.BroadenedPIP);
+            await _ui.ClickAsync(_locators.BroadenedPIP);
         }
         if (_data.Condition("'Additional Death Benefit' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AdditionalDeathBenefit);
+            await _ui.ClickAsync(_locators.AdditionalDeathBenefit);
         }
         if (_data.Condition("'Waiver of Income Loss' != NULL"))
         {
-        await _ui.ClickAsync(_locators.WaiverOfIncomeLoss);
+            await _ui.ClickAsync(_locators.WaiverOfIncomeLoss);
         }
         // TBoxSetBuffer_e51da1Page.TBoxSetBuffer_0148_e2e0d7Async
         _data.Set("UMPD/UIMPD_V1", _data.Get("UMPD/UIMPD_V1"));
@@ -445,7 +449,7 @@ public sealed class PolicyWorkflowPage
         // OpenUrl_677fdaPage.OpenUrl_0167_e2e0d7Async
         if (_data.Condition("If Correction Needed > Then go to Express to bypass L9"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
         }
     }
 
@@ -473,7 +477,7 @@ public sealed class PolicyWorkflowPage
         // EQOpenUrl_bc49e2Page.EQOpenUrl_0036_bafd4aAsync
         if (_data.Condition("If > Then"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
         }
     }
 
@@ -483,51 +487,51 @@ public sealed class PolicyWorkflowPage
         // EQPersonalInjuryProtectionSectionNew_834ca4Page.EQPersonalInjuryProtectionSection_0147_bafd4aAsync
         if (_data.Condition("'All HH Members 65 or Pension' != NULL"))
         {
-        await _ui.ClickAsync(_locators.HouseholdMembersAge65OrReceivingPension);
+            await _ui.ClickAsync(_locators.HouseholdMembersAge65OrReceivingPension);
         }
         if (_data.Condition("'PIP Limit' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPLimit);
+            await _ui.ClickAsync(_locators.PIPLimit);
         }
         if (_data.Condition("'PIP Deductible' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPDeductible);
+            await _ui.ClickAsync(_locators.PIPDeductible);
         }
         if (_data.Condition("'Additional PIP' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AdditionalPIP);
+            await _ui.ClickAsync(_locators.AdditionalPIP);
         }
         if (_data.Condition("'PIP Stacking' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPStacking);
+            await _ui.ClickAsync(_locators.PIPStacking);
         }
         if (_data.Condition("'Extra PIP Option' != NULL"))
         {
-        await _ui.SelectAsync(_locators.ExtraPIPOption, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.ExtraPIPOption, _data.Resolve(""));
         }
         if (_data.Condition("'Auto Health Insurer' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AutoHealthInsurer);
+            await _ui.ClickAsync(_locators.AutoHealthInsurer);
         }
         if (_data.Condition("'Medical Expense Elimination' != NULL"))
         {
-        await _ui.ClickAsync(_locators.MedicalExpenseElimination);
+            await _ui.ClickAsync(_locators.MedicalExpenseElimination);
         }
         if (_data.Condition("'Work Loss Coordination Of Benefits' != NULL"))
         {
-        await _ui.SelectAsync(_locators.WorkLossNo, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.WorkLossNo, _data.Resolve(""));
         }
         if (_data.Condition("'Broadened PIP' != NULL"))
         {
-        await _ui.ClickAsync(_locators.BroadenedPIP);
+            await _ui.ClickAsync(_locators.BroadenedPIP);
         }
         if (_data.Condition("'Additional Death Benefit' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AdditionalDeathBenefit);
+            await _ui.ClickAsync(_locators.AdditionalDeathBenefit);
         }
         if (_data.Condition("'Waiver of Income Loss' != NULL"))
         {
-        await _ui.ClickAsync(_locators.WaiverOfIncomeLoss);
+            await _ui.ClickAsync(_locators.WaiverOfIncomeLoss);
         }
         // TBoxSetBuffer_e51da1Page.TBoxSetBuffer_0148_bafd4aAsync
         _data.Set("UMPD/UIMPD_V1", _data.Get("UMPD/UIMPD_V1"));
@@ -574,7 +578,7 @@ public sealed class PolicyWorkflowPage
         // OpenUrl_677fdaPage.OpenUrl_0167_bafd4aAsync
         if (_data.Condition("If Correction Needed > Then go to Express to bypass L9"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url_2}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url_2}}"));
         }
     }
 
@@ -602,7 +606,7 @@ public sealed class PolicyWorkflowPage
         // EQOpenUrl_bc49e2Page.EQOpenUrl_0036_8f4c8fAsync
         if (_data.Condition("If > Then"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
         }
     }
 
@@ -612,51 +616,51 @@ public sealed class PolicyWorkflowPage
         // EQPersonalInjuryProtectionSectionNew_834ca4Page.EQPersonalInjuryProtectionSection_0150_8f4c8fAsync
         if (_data.Condition("'All HH Members 65 or Pension' != NULL"))
         {
-        await _ui.ClickAsync(_locators.HouseholdMembersAge65OrReceivingPension);
+            await _ui.ClickAsync(_locators.HouseholdMembersAge65OrReceivingPension);
         }
         if (_data.Condition("'PIP Limit' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPLimit);
+            await _ui.ClickAsync(_locators.PIPLimit);
         }
         if (_data.Condition("'PIP Deductible' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPDeductible);
+            await _ui.ClickAsync(_locators.PIPDeductible);
         }
         if (_data.Condition("'Additional PIP' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AdditionalPIP);
+            await _ui.ClickAsync(_locators.AdditionalPIP);
         }
         if (_data.Condition("'PIP Stacking' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPStacking);
+            await _ui.ClickAsync(_locators.PIPStacking);
         }
         if (_data.Condition("'Extra PIP Option' != NULL"))
         {
-        await _ui.SelectAsync(_locators.ExtraPIPOption, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.ExtraPIPOption, _data.Resolve(""));
         }
         if (_data.Condition("'Auto Health Insurer' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AutoHealthInsurer);
+            await _ui.ClickAsync(_locators.AutoHealthInsurer);
         }
         if (_data.Condition("'Medical Expense Elimination' != NULL"))
         {
-        await _ui.ClickAsync(_locators.MedicalExpenseElimination);
+            await _ui.ClickAsync(_locators.MedicalExpenseElimination);
         }
         if (_data.Condition("'Work Loss Coordination Of Benefits' != NULL"))
         {
-        await _ui.SelectAsync(_locators.WorkLossNo, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.WorkLossNo, _data.Resolve(""));
         }
         if (_data.Condition("'Broadened PIP' != NULL"))
         {
-        await _ui.ClickAsync(_locators.BroadenedPIP);
+            await _ui.ClickAsync(_locators.BroadenedPIP);
         }
         if (_data.Condition("'Additional Death Benefit' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AdditionalDeathBenefit);
+            await _ui.ClickAsync(_locators.AdditionalDeathBenefit);
         }
         if (_data.Condition("'Waiver of Income Loss' != NULL"))
         {
-        await _ui.ClickAsync(_locators.WaiverOfIncomeLoss);
+            await _ui.ClickAsync(_locators.WaiverOfIncomeLoss);
         }
         // TBoxSetBuffer_e51da1Page.TBoxSetBuffer_0151_8f4c8fAsync
         _data.Set("UMPD/UIMPD_V1", _data.Get("UMPD/UIMPD_V1"));
@@ -703,7 +707,7 @@ public sealed class PolicyWorkflowPage
         // OpenUrl_677fdaPage.OpenUrl_0170_8f4c8fAsync
         if (_data.Condition("If Correction Needed > Then go to Express to bypass L9"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
         }
     }
 
@@ -731,7 +735,7 @@ public sealed class PolicyWorkflowPage
         // EQOpenUrl_bc49e2Page.EQOpenUrl_0036_10f911Async
         if (_data.Condition("If > Then"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
         }
     }
 
@@ -741,51 +745,51 @@ public sealed class PolicyWorkflowPage
         // EQPersonalInjuryProtectionSectionNew_834ca4Page.EQPersonalInjuryProtectionSection_0150_10f911Async
         if (_data.Condition("'All HH Members 65 or Pension' != NULL"))
         {
-        await _ui.ClickAsync(_locators.HouseholdMembersAge65OrReceivingPension);
+            await _ui.ClickAsync(_locators.HouseholdMembersAge65OrReceivingPension);
         }
         if (_data.Condition("'PIP Limit' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPLimit);
+            await _ui.ClickAsync(_locators.PIPLimit);
         }
         if (_data.Condition("'PIP Deductible' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPDeductible);
+            await _ui.ClickAsync(_locators.PIPDeductible);
         }
         if (_data.Condition("'Additional PIP' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AdditionalPIP);
+            await _ui.ClickAsync(_locators.AdditionalPIP);
         }
         if (_data.Condition("'PIP Stacking' != NULL"))
         {
-        await _ui.ClickAsync(_locators.PIPStacking);
+            await _ui.ClickAsync(_locators.PIPStacking);
         }
         if (_data.Condition("'Extra PIP Option' != NULL"))
         {
-        await _ui.SelectAsync(_locators.ExtraPIPOption, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.ExtraPIPOption, _data.Resolve(""));
         }
         if (_data.Condition("'Auto Health Insurer' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AutoHealthInsurer);
+            await _ui.ClickAsync(_locators.AutoHealthInsurer);
         }
         if (_data.Condition("'Medical Expense Elimination' != NULL"))
         {
-        await _ui.ClickAsync(_locators.MedicalExpenseElimination);
+            await _ui.ClickAsync(_locators.MedicalExpenseElimination);
         }
         if (_data.Condition("'Work Loss Coordination Of Benefits' != NULL"))
         {
-        await _ui.SelectAsync(_locators.WorkLossNo, _data.Resolve(""));
+            await _ui.SelectAsync(_locators.WorkLossNo, _data.Resolve(""));
         }
         if (_data.Condition("'Broadened PIP' != NULL"))
         {
-        await _ui.ClickAsync(_locators.BroadenedPIP);
+            await _ui.ClickAsync(_locators.BroadenedPIP);
         }
         if (_data.Condition("'Additional Death Benefit' != NULL"))
         {
-        await _ui.ClickAsync(_locators.AdditionalDeathBenefit);
+            await _ui.ClickAsync(_locators.AdditionalDeathBenefit);
         }
         if (_data.Condition("'Waiver of Income Loss' != NULL"))
         {
-        await _ui.ClickAsync(_locators.WaiverOfIncomeLoss);
+            await _ui.ClickAsync(_locators.WaiverOfIncomeLoss);
         }
         // TBoxSetBuffer_e51da1Page.TBoxSetBuffer_0151_10f911Async
         _data.Set("UMPD/UIMPD_V1", _data.Get("UMPD/UIMPD_V1"));
@@ -832,7 +836,7 @@ public sealed class PolicyWorkflowPage
         // OpenUrl_677fdaPage.OpenUrl_0170_10f911Async
         if (_data.Condition("If Correction Needed > Then go to Express to bypass L9"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url}}"));
         }
     }
 

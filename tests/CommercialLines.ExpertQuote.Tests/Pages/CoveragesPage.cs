@@ -7,9 +7,9 @@ public sealed class CoveragesPage
 {
     private readonly CoveragesLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public CoveragesPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public CoveragesPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new CoveragesLocators(browser.Page);
         _data = data;
@@ -28,33 +28,33 @@ public sealed class CoveragesPage
         // CLEQSFPCEPolicyWide_c536c5Page.EQSFPCECoverages_0181_503012Async
         if (_data.Condition("CoverageType == \"Choice\""))
         {
-        await _ui.PressAsync(_locators.Choice, "POST:SHIFTTAB");
-        await _ui.PressAsync(_locators.Choice, "SHIFTTAB");
+            await _ui.PressAsync(_locators.Choice, "POST:SHIFTTAB");
+            await _ui.PressAsync(_locators.Choice, "SHIFTTAB");
         }
         if (_data.Condition("CoverageType == \"Choice Horse\""))
         {
-        await _ui.PressAsync(_locators.ChoiceWithHorse, "POST:TAB");
-        await _ui.PressAsync(_locators.ChoiceWithHorse, "Tab");
+            await _ui.PressAsync(_locators.ChoiceWithHorse, "POST:TAB");
+            await _ui.PressAsync(_locators.ChoiceWithHorse, "Tab");
         }
         if (_data.Condition("CoverageType == \"Select\""))
         {
-        await _ui.PressAsync(_locators.Select, "POST:TAB");
-        await _ui.PressAsync(_locators.Select, "Tab");
+            await _ui.PressAsync(_locators.Select, "POST:TAB");
+            await _ui.PressAsync(_locators.Select, "Tab");
         }
         if (_data.Condition("CoverageType == \"Select Horse\""))
         {
-        await _ui.PressAsync(_locators.SelectWithHorse, "POST:TAB");
-        await _ui.PressAsync(_locators.SelectWithHorse, "Tab");
+            await _ui.PressAsync(_locators.SelectWithHorse, "POST:TAB");
+            await _ui.PressAsync(_locators.SelectWithHorse, "Tab");
         }
         if (_data.Condition("CoverageType == \"Premier\""))
         {
-        await _ui.PressAsync(_locators.Premier, "POST:TAB");
-        await _ui.PressAsync(_locators.Premier, "Tab");
+            await _ui.PressAsync(_locators.Premier, "POST:TAB");
+            await _ui.PressAsync(_locators.Premier, "Tab");
         }
         if (_data.Condition("CoverageType == \"Premier Horse\""))
         {
-        await _ui.PressAsync(_locators.PremierWithHorse, "POST:TAB");
-        await _ui.PressAsync(_locators.PremierWithHorse, "Tab");
+            await _ui.PressAsync(_locators.PremierWithHorse, "POST:TAB");
+            await _ui.PressAsync(_locators.PremierWithHorse, "Tab");
         }
         await _ui.FillAsync(_locators.WaterDamage, _data.Resolve("{{data:water_damage_234}}"));
         await _ui.FillAsync(_locators.UnscheduledStructures, _data.Resolve("{{data:unscheduled_structures_235}}"));
@@ -71,7 +71,7 @@ public sealed class CoveragesPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0183_503012Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeading))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
         }
     }
 
@@ -94,7 +94,7 @@ public sealed class CoveragesPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0284_d18a3eAsync
         if (!await _ui.ExistsAsync(_locators.ScreenHeading))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
         }
     }
 
@@ -104,44 +104,44 @@ public sealed class CoveragesPage
         // DCEQCommonSubmissionReferApplicationPolicy_13acc3Page.CheckForREFER_0738_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.ReferRequestIssuance))
         {
-        await _ui.VerifyAsync(_locators.ReferRequestIssuance, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ReferRequestIssuance, _data.Resolve("Absent"), "");
         }
         // DCEQCommonSubmissionReferApplicationPolicy_13acc3Page.CheckToSeeCoverageIsBoundExists_0739_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.IsThisCoverageBound))
         {
-        await _ui.VerifyAsync(_locators.IsThisCoverageBound, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.IsThisCoverageBound, _data.Resolve("Exists"), "");
         }
         // DCEQCommonSubmissionReferApplicationPolicy_13acc3Page.CheckIsCoverageBoundSelect_0740_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.IsThisCoverageBound))
         {
-        await _ui.VerifyAsync(_locators.IsThisCoverageBound, _data.Resolve("{{data:expected_is_this_coverage_bound_value_698}}"), "Value");
+            await _ui.VerifyAsync(_locators.IsThisCoverageBound, _data.Resolve("{{data:expected_is_this_coverage_bound_value_698}}"), "Value");
         }
         // DCEQCommonSubmissionReferApplicationPolicy_13acc3Page.AnswerIsCoverageBound_0741_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.IsThisCoverageBound))
         {
-        await _ui.PressAsync(_locators.IsThisCoverageBound, "POST:TAB");
-        await _ui.PressAsync(_locators.IsThisCoverageBound, "Tab");
+            await _ui.PressAsync(_locators.IsThisCoverageBound, "POST:TAB");
+            await _ui.PressAsync(_locators.IsThisCoverageBound, "Tab");
         }
         // DCEQCommonSubmissionReferApplicationPolicy_13acc3Page.REFER_0743_d18a3eAsync
         if (_data.Condition("'Refer Needed' == NULL"))
         {
-        await _ui.ClickAsync(_locators.ReferRequestIssuance);
+            await _ui.ClickAsync(_locators.ReferRequestIssuance);
         }
         if (_data.Condition("'Refer Needed' != NULL"))
         {
-        await _ui.ClickAsync(_locators.Approve);
+            await _ui.ClickAsync(_locators.Approve);
         }
         await _ui.WaitAsync(_locators.IFRAMEDuckCreekPolicyIFRAMEOK, "Exists");
         await _ui.ClickAsync(_locators.IFRAMEDuckCreekPolicyIFRAMEOK);
         // DCEQCommonSubmissionReferApplicationPolicy_13acc3Page.CheckForIFRAME_0744_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.IFRAME))
         {
-        await _ui.VerifyAsync(_locators.IFRAME, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.IFRAME, _data.Resolve("Exists"), "");
         }
         // DCEQCommonSubmissionReferApplicationPolicy_13acc3Page.Wait1SecondForAMaxOf120Seconds_0745_d18a3eAsync
         if (_data.Condition("while check for IFRAME"))
         {
-        await Task.Delay(1000);
+            await Task.Delay(1000);
         }
     }
 
@@ -170,7 +170,7 @@ public sealed class CoveragesPage
         // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0183_08f3f1Async
         if (!await _ui.ExistsAsync(_locators.ScreenHeading))
         {
-        await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
         }
     }
 

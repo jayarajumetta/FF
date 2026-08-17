@@ -7,9 +7,9 @@ public sealed class PricingPage
 {
     private readonly PricingLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public PricingPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public PricingPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new PricingLocators(browser.Page);
         _data = data;
@@ -118,7 +118,7 @@ public sealed class PricingPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.PolicyInfoEstimatedPremium_0088_bb930cAsync
         if (_data.Condition("'Estimated Premium' == NULL"))
         {
-        await _ui.VerifyAsync(_locators.EstimatedPremium, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.EstimatedPremium, _data.Resolve("Absent"), "");
         }
     }
 
@@ -167,7 +167,7 @@ public sealed class PricingPage
         // PolicyInfoRequiredAndOptionalFields_f7216aPage.PolicyInfoEstimatedPremium_0087_f2d6bdAsync
         if (_data.Condition("'Estimated Premium' == NULL"))
         {
-        await _ui.VerifyAsync(_locators.EstimatedPremium, _data.Resolve("Absent"), "");
+            await _ui.VerifyAsync(_locators.EstimatedPremium, _data.Resolve("Absent"), "");
         }
     }
 

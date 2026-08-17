@@ -1,7 +1,8 @@
-# Locator Resilience: direct Playwright locator -> validated cache -> deterministic DOM -> GitHub Copilot proposal
-# Copilot Healing: opt-in with COPILOT_SELF_HEAL=true; business action and expected result never change
+# Runtime: Background opens one browser session; Feature data flows through StepDefinitions to PageMethods
+# Locator self-heal: enabled by default on locator/actionability failures
 
-@CL_DC @BAP @expanded_new_business @automated @canonical_simple_v39 @state_data_driven
+
+@CL_DC @BAP @expanded_new_business @automated @canonical_simple_v44 @state_data_driven
 # Automation Maturity: 96/100
 # Business Flow: 19/20 | Canonical Mapping: 20/20 | StepDefinitions: 15/15 | Page Model: 15/15 | Locator Quality: 17/20 | Test Data: 10/10
 # Page Objects Used: 8 | Locator Confidence Average: 85/100 | Review-required operations: 0
@@ -13,10 +14,9 @@ Feature: BAP Expanded
   So that the business transaction is executed with source-traceable data and verification
 
   Background: Prepare Commercial Lines Duck Creek for policy processing
-    Given the Commercial Lines Duck Creek browser session is ready
-
+    Given I open a browser session
   Scenario Outline: BAP Expanded - <stateCode>
-    Given test data file "<dataFile>" is loaded
+    Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
     And I open the configured Commercial Lines Duck Creek application
     And I sign in to Commercial Lines Duck Creek using configured credentials
     When I enter individual client information
@@ -50,48 +50,48 @@ Feature: BAP Expanded
     And I complete save for Later/Return to Admin
 
     Examples:
-      | dataFile | stateCode | stateVariant | stateName |
-      | TestData/Scenarios/002_bap_expanded_al.json | AL | AL | Alabama |
-      | TestData/Scenarios/002_bap_expanded_ar.json | AR | AR | Arkansas |
-      | TestData/Scenarios/002_bap_expanded_az.json | AZ | AZ | Arizona |
-      | TestData/Scenarios/002_bap_expanded_ca.json | CA | CA | California |
-      | TestData/Scenarios/002_bap_expanded_ct.json | CT | CT | Connecticut |
-      | TestData/Scenarios/002_bap_expanded_co.json | CO | CO | Colorado |
-      | TestData/Scenarios/002_bap_expanded_de.json | DE | DE | Delaware |
-      | TestData/Scenarios/002_bap_expanded_ga.json | GA | GA | Georgia |
-      | TestData/Scenarios/002_bap_expanded_ia.json | IA | IA | Iowa |
-      | TestData/Scenarios/002_bap_expanded_id.json | ID | ID | Idaho |
-      | TestData/Scenarios/002_bap_expanded_il.json | IL | IL | Illinois |
-      | TestData/Scenarios/002_bap_expanded_in.json | IN | IN | Indiana |
-      | TestData/Scenarios/002_bap_expanded_ks.json | KS | KS | Kansas |
-      | TestData/Scenarios/002_bap_expanded_ky.json | KY | KY | Kentucky |
-      | TestData/Scenarios/002_bap_expanded_la.json | LA | LA | Louisiana |
-      | TestData/Scenarios/002_bap_expanded_md.json | MD | MD | Maryland |
-      | TestData/Scenarios/002_bap_expanded_me.json | ME | ME | Maine |
-      | TestData/Scenarios/002_bap_expanded_mn.json | MN | MN | Minnesota |
-      | TestData/Scenarios/002_bap_expanded_mo.json | MO | MO | Missouri |
-      | TestData/Scenarios/002_bap_expanded_ms.json | MS | MS | Mississippi |
-      | TestData/Scenarios/002_bap_expanded_mt.json | MT | MT | Montana |
-      | TestData/Scenarios/002_bap_expanded_nd.json | ND | ND | North Dakota |
-      | TestData/Scenarios/002_bap_expanded_ne.json | NE | NE | Nebraska |
-      | TestData/Scenarios/002_bap_expanded_nh.json | NH | NH | New Hampshire |
-      | TestData/Scenarios/002_bap_expanded_nj.json | NJ | NJ | New Jersey |
-      | TestData/Scenarios/002_bap_expanded_nm.json | NM | NM | New Mexico |
-      | TestData/Scenarios/002_bap_expanded_nv.json | NV | NV | Nevada |
-      | TestData/Scenarios/002_bap_expanded_ny.json | NY | NY | New York |
-      | TestData/Scenarios/002_bap_expanded_oh.json | OH | OH | Ohio |
-      | TestData/Scenarios/002_bap_expanded_ok.json | OK | OK | Oklahoma |
-      | TestData/Scenarios/002_bap_expanded_or.json | OR | OR | Oregon |
-      | TestData/Scenarios/002_bap_expanded_pa.json | PA | PA | Pennsylvania |
-      | TestData/Scenarios/002_bap_expanded_ri.json | RI | RI | Rhode Island |
-      | TestData/Scenarios/002_bap_expanded_sc.json | SC | SC | South Carolina |
-      | TestData/Scenarios/002_bap_expanded_sd.json | SD | SD | South Dakota |
-      | TestData/Scenarios/002_bap_expanded_tn.json | TN | TN | Tennessee |
-      | TestData/Scenarios/002_bap_expanded_tx.json | TX | TX | Texas |
-      | TestData/Scenarios/002_bap_expanded_ut.json | UT | UT | Utah |
-      | TestData/Scenarios/002_bap_expanded_va.json | VA | VA | Virginia |
-      | TestData/Scenarios/002_bap_expanded_vt.json | VT | VT | Vermont |
-      | TestData/Scenarios/002_bap_expanded_wa.json | WA | WA | Washington |
-      | TestData/Scenarios/002_bap_expanded_wi.json | WI | WI | Wisconsin |
-      | TestData/Scenarios/002_bap_expanded_wv.json | WV | WV | West Virginia |
-      | TestData/Scenarios/002_bap_expanded_wy.json | WY | WY | Wyoming |
+      | dataFile | stateCode | stateVariant | stateName | externalDataFile |
+      | TestData/Scenarios/002_bap_expanded_al.json | AL | AL | Alabama | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_ar.json | AR | AR | Arkansas | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_az.json | AZ | AZ | Arizona | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_ca.json | CA | CA | California | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_ct.json | CT | CT | Connecticut | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_co.json | CO | CO | Colorado | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_de.json | DE | DE | Delaware | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_ga.json | GA | GA | Georgia | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_ia.json | IA | IA | Iowa | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_id.json | ID | ID | Idaho | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_il.json | IL | IL | Illinois | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_in.json | IN | IN | Indiana | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_ks.json | KS | KS | Kansas | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_ky.json | KY | KY | Kentucky | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_la.json | LA | LA | Louisiana | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_md.json | MD | MD | Maryland | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_me.json | ME | ME | Maine | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_mn.json | MN | MN | Minnesota | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_mo.json | MO | MO | Missouri | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_ms.json | MS | MS | Mississippi | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_mt.json | MT | MT | Montana | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_nd.json | ND | ND | North Dakota | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_ne.json | NE | NE | Nebraska | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_nh.json | NH | NH | New Hampshire | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_nj.json | NJ | NJ | New Jersey | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_nm.json | NM | NM | New Mexico | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_nv.json | NV | NV | Nevada | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_ny.json | NY | NY | New York | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_oh.json | OH | OH | Ohio | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_ok.json | OK | OK | Oklahoma | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_or.json | OR | OR | Oregon | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_pa.json | PA | PA | Pennsylvania | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_ri.json | RI | RI | Rhode Island | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_sc.json | SC | SC | South Carolina | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_sd.json | SD | SD | South Dakota | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_tn.json | TN | TN | Tennessee | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_tx.json | TX | TX | Texas | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_ut.json | UT | UT | Utah | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_va.json | VA | VA | Virginia | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_vt.json | VT | VT | Vermont | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_wa.json | WA | WA | Washington | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_wi.json | WI | WI | Wisconsin | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_wv.json | WV | WV | West Virginia | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/002_bap_expanded_wy.json | WY | WY | Wyoming | TestData/ExternalDataOverrides.json |

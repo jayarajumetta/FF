@@ -5,12 +5,18 @@ namespace InsuranceAutomation.CLEQ.Pages;
 
 public sealed class LoginPage
 {
+    private readonly BrowserSession _browser;
+    private readonly ApplicationLogin _auth;
+
     private readonly LoginLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public LoginPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public LoginPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
+        _browser = browser;
+        _auth = new ApplicationLogin(browser, data, ui);
+
         _locators = new LoginLocators(browser.Page);
         _data = data;
         _ui = ui;
@@ -22,7 +28,7 @@ public sealed class LoginPage
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1_d98ea2Page.OpenUrl_0260_503012Async
         if (_data.Condition("if an existing CLAS session is still logged in"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url_2}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url_2}}"));
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1_d98ea2Page.Login_0261_503012Async
         await _ui.WaitAsync(_locators.UserName, "Exists");
@@ -39,7 +45,7 @@ public sealed class LoginPage
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1DCEQCommonGeneralWaitOnLoadingIndicator_b4e5d2Page.CheckForLoadingIndicator_0265_503012Async
         if (await _ui.ExistsAsync(_locators.LoadingMessage))
         {
-        await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1DCEQCommonGeneralWaitOnLoadingIndicator_b4e5d2Page.Wait2Secs_0266_503012Async
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -48,7 +54,7 @@ public sealed class LoginPage
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1DCEQCommonGeneralWaitOnLoadingIndicator_b4e5d2Page.CheckForLoadingIndicator_0268_503012Async
         if (await _ui.ExistsAsync(_locators.LoadingMessage))
         {
-        await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1DCEQCommonGeneralWaitOnLoadingIndicator_b4e5d2Page.Wait2Secs_0269_503012Async
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -81,7 +87,7 @@ public sealed class LoginPage
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescription_f027fePage.OpenUrl_0406_d18a3eAsync
         if (_data.Condition("if an existing CLAS session is still logged in"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url_3}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url_3}}"));
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescription_f027fePage.Login_0407_d18a3eAsync
         await _auth.SignInAsync("CL_DC");
@@ -108,7 +114,7 @@ public sealed class LoginPage
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescription_f027fePage.OpenUrl_0587_d18a3eAsync
         if (_data.Condition("if an existing CLAS session is still logged in"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url_3}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url_3}}"));
         }
         // CLEQCommonOpenACLASBrowserAndSearchForEQByDescription_f027fePage.Login_0588_d18a3eAsync
         await _auth.SignInAsync("CL_DC");
@@ -137,7 +143,7 @@ public sealed class LoginPage
         // CommonGeneralLogInToDuckCreek_bd7c3ePage.CheckTheLoopLogin_0839_d18a3eAsync
         if (_data.Condition("during loop for the Login [max=30]"))
         {
-        _data.Set("CheckTheLoopLogin", _data.Resolve("{\"Expression\": \"{B[Loop Login]} = 0\"}"));
+            _data.Set("CheckTheLoopLogin", _data.Resolve("{\"Expression\": \"{B[Loop Login]} = 0\"}"));
         }
         // CommonGeneralLogInToDuckCreek_bd7c3ePage.SetLoopBuffer_0840_d18a3eAsync
         _data.Set("Loop Login", _data.Resolve("{{data:loop_login}}"));
@@ -147,17 +153,17 @@ public sealed class LoginPage
         // CommonGeneralLogInToDuckCreek_bd7c3ePage.OpenUrl_0851_d18a3eAsync
         if (_data.Condition("during loop for the Login [max=30]"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url_4}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url_4}}"));
         }
         // CommonGeneralLogInToDuckCreek_bd7c3ePage.WaitOnEdgeBrowserToOpen_0852_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.BODY))
         {
-        await _ui.WaitAsync(_locators.BODY, "Exists");
+            await _ui.WaitAsync(_locators.BODY, "Exists");
         }
         // CommonGeneralLogInToDuckCreek_bd7c3ePage.PolicyLoadSync_0853_d18a3eAsync
         if (_data.Condition("during loop for the Login [max=30]"))
         {
-        await _ui.ReviewRequiredAsync("Source operation requires environment-specific implementation.");
+            await _ui.ReviewRequiredAsync("Source operation requires environment-specific implementation.");
         }
     }
 
@@ -167,7 +173,7 @@ public sealed class LoginPage
         // CommonGeneralLogInToDuckCreek_bd7c3ePage.CheckForLogIn_0857_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.LoggedInUser))
         {
-        await _ui.VerifyAsync(_locators.LoggedInUser, _data.Resolve("Exists"), "");
+            await _ui.VerifyAsync(_locators.LoggedInUser, _data.Resolve("Exists"), "");
         }
     }
 
@@ -179,7 +185,7 @@ public sealed class LoginPage
         // CommonGeneralLogInToDuckCreek_bd7c3ePage.WaitForLoginScreenToGoAway_0866_d18a3eAsync
         if (await _ui.ExistsAsync(_locators.Login07237))
         {
-        await _ui.WaitAsync(_locators.Login07237, "Absent");
+            await _ui.WaitAsync(_locators.Login07237, "Absent");
         }
         // CommonGeneralLogInToDuckCreek_bd7c3ePage.SetLoopBufferToExitLoop_0867_d18a3eAsync
         _data.Set("Loop Login", _data.Resolve("{{data:loop_login_2}}"));
@@ -198,7 +204,7 @@ public sealed class LoginPage
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1_d98ea2Page.OpenUrl_0312_08f3f1Async
         if (_data.Condition("if an existing CLAS session is still logged in"))
         {
-        await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url_2}}"));
+            await _browser.Page.GotoAsync(_data.Resolve("{{data:application_url_2}}"));
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1_d98ea2Page.Login_0313_08f3f1Async
         await _ui.WaitAsync(_locators.UserName, "Exists");
@@ -215,7 +221,7 @@ public sealed class LoginPage
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1DCEQCommonGeneralWaitOnLoadingIndicator_b4e5d2Page.CheckForLoadingIndicator_0317_08f3f1Async
         if (await _ui.ExistsAsync(_locators.LoadingMessage))
         {
-        await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1DCEQCommonGeneralWaitOnLoadingIndicator_b4e5d2Page.Wait2Secs_0318_08f3f1Async
         await _ui.WaitAsync(_locators.Loading, "Absent");
@@ -224,7 +230,7 @@ public sealed class LoginPage
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1DCEQCommonGeneralWaitOnLoadingIndicator_b4e5d2Page.CheckForLoadingIndicator_0320_08f3f1Async
         if (await _ui.ExistsAsync(_locators.LoadingMessage))
         {
-        await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
+            await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
         }
         // CLEQSFPOpenACLASBrowserAndSearchForEQByDescription1DCEQCommonGeneralWaitOnLoadingIndicator_b4e5d2Page.Wait2Secs_0321_08f3f1Async
         await _ui.WaitAsync(_locators.Loading, "Absent");

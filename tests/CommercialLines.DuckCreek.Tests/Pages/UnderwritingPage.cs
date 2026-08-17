@@ -7,9 +7,9 @@ public sealed class UnderwritingPage
 {
     private readonly UnderwritingLocators _locators;
     private readonly ScenarioData _data;
-    private readonly PageUiActions _ui;
+    private readonly UiActions _ui;
 
-    public UnderwritingPage(BrowserSession browser, ScenarioData data, PageUiActions ui)
+    public UnderwritingPage(BrowserSession browser, ScenarioData data, UiActions ui)
     {
         _locators = new UnderwritingLocators(browser.Page);
         _data = data;

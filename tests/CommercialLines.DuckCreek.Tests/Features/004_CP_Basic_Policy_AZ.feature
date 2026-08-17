@@ -1,7 +1,8 @@
-# Locator Resilience: direct Playwright locator -> validated cache -> deterministic DOM -> GitHub Copilot proposal
-# Copilot Healing: opt-in with COPILOT_SELF_HEAL=true; business action and expected result never change
+# Runtime: Background opens one browser session; Feature data flows through StepDefinitions to PageMethods
+# Locator self-heal: enabled by default on locator/actionability failures
 
-@CL_DC @basic_new_business_policy @automated @canonical_simple_v39 @state_data_driven
+
+@CL_DC @basic_new_business_policy @automated @canonical_simple_v44 @state_data_driven
 # Automation Maturity: 96/100
 # Business Flow: 19/20 | Canonical Mapping: 20/20 | StepDefinitions: 15/15 | Page Model: 15/15 | Locator Quality: 17/20 | Test Data: 10/10
 # Page Objects Used: 10 | Locator Confidence Average: 87/100 | Review-required operations: 0
@@ -13,10 +14,9 @@ Feature: CP Basic Policy
   So that the business transaction is executed with source-traceable data and verification
 
   Background: Prepare Commercial Lines Duck Creek for policy processing
-    Given the Commercial Lines Duck Creek browser session is ready
-
+    Given I open a browser session
   Scenario Outline: CP Basic Policy - <stateCode>
-    Given test data file "<dataFile>" is loaded
+    Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
     And I open the configured Commercial Lines Duck Creek application
     And I sign in to Commercial Lines Duck Creek using configured credentials
     When I enter business client information
@@ -50,20 +50,20 @@ Feature: CP Basic Policy
     And I complete forms verification
 
     Examples:
-      | dataFile | stateCode | stateVariant | stateName |
-      | TestData/Scenarios/004_cp_basic_policy_az.json | AZ | AZ | Arizona |
-      | TestData/Scenarios/004_cp_basic_policy_ct.json | CT | CT | Connecticut |
-      | TestData/Scenarios/004_cp_basic_policy_de.json | DE | DE | Delaware |
-      | TestData/Scenarios/004_cp_basic_policy_ma.json | MA | MA | Massachusetts |
-      | TestData/Scenarios/004_cp_basic_policy_md.json | MD | MD | Maryland |
-      | TestData/Scenarios/004_cp_basic_policy_me.json | ME | ME | Maine |
-      | TestData/Scenarios/004_cp_basic_policy_nh.json | NH | NH | New Hampshire |
-      | TestData/Scenarios/004_cp_basic_policy_nj.json | NJ | NJ | New Jersey |
-      | TestData/Scenarios/004_cp_basic_policy_ny.json | NY | NY | New York |
-      | TestData/Scenarios/004_cp_basic_policy_or.json | OR | OR | Oregon |
-      | TestData/Scenarios/004_cp_basic_policy_pa.json | PA | PA | Pennsylvania |
-      | TestData/Scenarios/004_cp_basic_policy_ri.json | RI | RI | Rhode Island |
-      | TestData/Scenarios/004_cp_basic_policy_va.json | VA | VA | Virginia |
-      | TestData/Scenarios/004_cp_basic_policy_vt.json | VT | VT | Vermont |
-      | TestData/Scenarios/004_cp_basic_policy_wa.json | WA | WA | Washington |
-      | TestData/Scenarios/004_cp_basic_policy_wv.json | WV | WV | West Virginia |
+      | dataFile | stateCode | stateVariant | stateName | externalDataFile |
+      | TestData/Scenarios/004_cp_basic_policy_az.json | AZ | AZ | Arizona | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/004_cp_basic_policy_ct.json | CT | CT | Connecticut | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/004_cp_basic_policy_de.json | DE | DE | Delaware | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/004_cp_basic_policy_ma.json | MA | MA | Massachusetts | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/004_cp_basic_policy_md.json | MD | MD | Maryland | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/004_cp_basic_policy_me.json | ME | ME | Maine | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/004_cp_basic_policy_nh.json | NH | NH | New Hampshire | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/004_cp_basic_policy_nj.json | NJ | NJ | New Jersey | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/004_cp_basic_policy_ny.json | NY | NY | New York | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/004_cp_basic_policy_or.json | OR | OR | Oregon | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/004_cp_basic_policy_pa.json | PA | PA | Pennsylvania | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/004_cp_basic_policy_ri.json | RI | RI | Rhode Island | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/004_cp_basic_policy_va.json | VA | VA | Virginia | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/004_cp_basic_policy_vt.json | VT | VT | Vermont | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/004_cp_basic_policy_wa.json | WA | WA | Washington | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/004_cp_basic_policy_wv.json | WV | WV | West Virginia | TestData/ExternalDataOverrides.json |
