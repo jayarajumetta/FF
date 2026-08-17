@@ -1,139 +1,56 @@
 using InsuranceAutomation.Core;
+using Microsoft.Playwright;
 using InsuranceAutomation.PLDC.Pages.Locators;
 
 namespace InsuranceAutomation.PLDC.Pages;
 
 public sealed class BillingPage
 {
+    private readonly BrowserSession _browser;
     private readonly BillingLocators _locators;
-    private readonly ScenarioData _data;
     private readonly UiActions _ui;
 
-    public BillingPage(BrowserSession browser, ScenarioData data, UiActions ui)
+    public BillingPage(BrowserSession browser, UiActions ui)
     {
+        _browser = browser;
         _locators = new BillingLocators(browser.Page);
-        _data = data;
         _ui = ui;
     }
 
-    // Business step: I configure direct\-pay billing
-    public async Task ConfigureDirectPayBillingAsync()
-    {
-        // EQBilling_48a6fbPage.BillingCreateAndUpdateBillingDetails_0147_8f9ff6Async
-        await _ui.WaitAsync(_locators.HdrBilling, "Visible");
-        await _ui.ClickAsync(_locators.CreateNewBillingAccount);
-        await _ui.ClickAsync(_locators.PrimaryAccountHolderName);
-        await _ui.PressAsync(_locators.PrimaryAccountHolderName, "Click");
-        await _ui.PressAsync(_locators.PrimaryAccountHolderName, "Scroll[3]");
-        await _ui.ClickAsync(_locators.DirectBill);
-        await _ui.PressAsync(_locators.DirectBill, "Click");
-        await _ui.PressAsync(_locators.DirectBill, "scroll[3]");
-        await _ui.ClickAsync(_locators.N1Payment);
-        await _ui.FillAsync(_locators.PaymentDueDate, _data.Resolve("{{data:txt_paymentduedate_522}}"));
-        await _ui.ClickAsync(_locators.RdBtnFullBalance);
-        await _ui.ClickAsync(_locators.CHECK);
-        await _ui.FillAsync(_locators.CheckNumber, _data.Resolve("{{data:txt_check_number_525}}"));
-        await _ui.ClickAsync(_locators.BillingNEXT);
-    }
+    public Task ClickBillingNEXTAsync() =>
+        _ui.ClickAsync(_locators.BillingNEXT, new ControlIntent("Billing", "BillingNEXT"));
 
-    // Business step: I configure direct\-pay billing
-    public async Task ConfigureDirectPayBillingAsync2()
-    {
-        // EQBilling_48a6fbPage.BillingCreateAndUpdateBillingDetails_0159_8f5301Async
-        await _ui.WaitAsync(_locators.HdrBilling, "Visible");
-        await _ui.ClickAsync(_locators.CreateNewBillingAccount);
-        await _ui.ClickAsync(_locators.PrimaryAccountHolderName);
-        await _ui.PressAsync(_locators.PrimaryAccountHolderName, "Click");
-        await _ui.PressAsync(_locators.PrimaryAccountHolderName, "Scroll[3]");
-        await _ui.ClickAsync(_locators.DirectBill);
-        await _ui.PressAsync(_locators.DirectBill, "Click");
-        await _ui.PressAsync(_locators.DirectBill, "scroll[3]");
-        await _ui.ClickAsync(_locators.N1Payment);
-        await _ui.FillAsync(_locators.PaymentDueDate, _data.Resolve("{{data:txt_paymentduedate_573}}"));
-        await _ui.ClickAsync(_locators.RdBtnFullBalance);
-        await _ui.ClickAsync(_locators.CHECK);
-        await _ui.FillAsync(_locators.CheckNumber, _data.Resolve("{{data:txt_check_number_576}}"));
-        await _ui.ClickAsync(_locators.BillingNEXT);
-    }
+    public Task ClickCHECKAsync() =>
+        _ui.ClickAsync(_locators.CHECK, new ControlIntent("Billing", "CHECK"));
 
-    // Business step: I configure direct\-pay billing
-    public async Task ConfigureDirectPayBillingAsync3()
-    {
-        // EQBilling_48a6fbPage.BillingCreateAndUpdateBillingDetails_0160_e2e0d7Async
-        await _ui.WaitAsync(_locators.HdrBilling, "Visible");
-        await _ui.ClickAsync(_locators.CreateNewBillingAccount);
-        await _ui.ClickAsync(_locators.PrimaryAccountHolderName);
-        await _ui.PressAsync(_locators.PrimaryAccountHolderName, "Click");
-        await _ui.PressAsync(_locators.PrimaryAccountHolderName, "Scroll[3]");
-        await _ui.ClickAsync(_locators.DirectBill);
-        await _ui.PressAsync(_locators.DirectBill, "Click");
-        await _ui.PressAsync(_locators.DirectBill, "scroll[3]");
-        await _ui.ClickAsync(_locators.N1Payment);
-        await _ui.FillAsync(_locators.PaymentDueDate, _data.Resolve("{{data:txt_paymentduedate_558}}"));
-        await _ui.ClickAsync(_locators.RdBtnFullBalance);
-        await _ui.ClickAsync(_locators.CHECK);
-        await _ui.FillAsync(_locators.CheckNumber, _data.Resolve("{{data:txt_check_number_561}}"));
-        await _ui.ClickAsync(_locators.BillingNEXT);
-    }
+    public Task EnterCheckNumberAsync(string value) =>
+        _ui.FillAsync(_locators.CheckNumber, value, new ControlIntent("Billing", "CheckNumber"));
 
-    // Business step: I configure direct\-pay billing
-    public async Task ConfigureDirectPayBillingAsync4()
-    {
-        // EQBilling_48a6fbPage.BillingCreateAndUpdateBillingDetails_0160_bafd4aAsync
-        await _ui.WaitAsync(_locators.HdrBilling, "Visible");
-        await _ui.ClickAsync(_locators.CreateNewBillingAccount);
-        await _ui.ClickAsync(_locators.PrimaryAccountHolderName);
-        await _ui.PressAsync(_locators.PrimaryAccountHolderName, "Click");
-        await _ui.PressAsync(_locators.PrimaryAccountHolderName, "Scroll[3]");
-        await _ui.ClickAsync(_locators.DirectBill);
-        await _ui.PressAsync(_locators.DirectBill, "Click");
-        await _ui.PressAsync(_locators.DirectBill, "scroll[3]");
-        await _ui.ClickAsync(_locators.N1Payment);
-        await _ui.FillAsync(_locators.PaymentDueDate, _data.Resolve("{{data:txt_paymentduedate_558}}"));
-        await _ui.ClickAsync(_locators.RdBtnFullBalance);
-        await _ui.ClickAsync(_locators.CHECK);
-        await _ui.FillAsync(_locators.CheckNumber, _data.Resolve("{{data:txt_check_number_561}}"));
-        await _ui.ClickAsync(_locators.BillingNEXT);
-    }
+    public Task ClickCreateNewBillingAccountAsync() =>
+        _ui.ClickAsync(_locators.CreateNewBillingAccount, new ControlIntent("Billing", "CreateNewBillingAccount"));
 
-    // Business step: I configure direct\-pay billing
-    public async Task ConfigureDirectPayBillingAsync5()
-    {
-        // EQBilling_48a6fbPage.BillingCreateAndUpdateBillingDetails_0163_8f4c8fAsync
-        await _ui.WaitAsync(_locators.HdrBilling, "Visible");
-        await _ui.ClickAsync(_locators.CreateNewBillingAccount);
-        await _ui.ClickAsync(_locators.PrimaryAccountHolderName);
-        await _ui.PressAsync(_locators.PrimaryAccountHolderName, "Click");
-        await _ui.PressAsync(_locators.PrimaryAccountHolderName, "Scroll[3]");
-        await _ui.ClickAsync(_locators.DirectBill);
-        await _ui.PressAsync(_locators.DirectBill, "Click");
-        await _ui.PressAsync(_locators.DirectBill, "scroll[3]");
-        await _ui.ClickAsync(_locators.N1Payment);
-        await _ui.FillAsync(_locators.PaymentDueDate, _data.Resolve("{{data:txt_paymentduedate_575}}"));
-        await _ui.ClickAsync(_locators.RdBtnFullBalance);
-        await _ui.ClickAsync(_locators.CHECK);
-        await _ui.FillAsync(_locators.CheckNumber, _data.Resolve("{{data:txt_check_number_578}}"));
-        await _ui.ClickAsync(_locators.BillingNEXT);
-    }
+    public Task PressDirectBillAsync(string key) =>
+        _ui.PressAsync(_locators.DirectBill, key, new ControlIntent("Billing", "DirectBill"));
 
-    // Business step: I configure direct\-pay billing
-    public async Task ConfigureDirectPayBillingAsync6()
-    {
-        // EQBilling_48a6fbPage.BillingCreateAndUpdateBillingDetails_0163_10f911Async
-        await _ui.WaitAsync(_locators.HdrBilling, "Visible");
-        await _ui.ClickAsync(_locators.CreateNewBillingAccount);
-        await _ui.ClickAsync(_locators.PrimaryAccountHolderName);
-        await _ui.PressAsync(_locators.PrimaryAccountHolderName, "Click");
-        await _ui.PressAsync(_locators.PrimaryAccountHolderName, "Scroll[3]");
-        await _ui.ClickAsync(_locators.DirectBill);
-        await _ui.PressAsync(_locators.DirectBill, "Click");
-        await _ui.PressAsync(_locators.DirectBill, "scroll[3]");
-        await _ui.ClickAsync(_locators.N1Payment);
-        await _ui.FillAsync(_locators.PaymentDueDate, _data.Resolve("{{data:txt_paymentduedate_578}}"));
-        await _ui.ClickAsync(_locators.RdBtnFullBalance);
-        await _ui.ClickAsync(_locators.CHECK);
-        await _ui.FillAsync(_locators.CheckNumber, _data.Resolve("{{data:txt_check_number_581}}"));
-        await _ui.ClickAsync(_locators.BillingNEXT);
-    }
+    public Task ClickDirectBillAsync() =>
+        _ui.ClickAsync(_locators.DirectBill, new ControlIntent("Billing", "DirectBill"));
+
+    public Task WaitForHdrBillingAsync(string expected) =>
+        _ui.WaitAsync(_locators.HdrBilling, expected, new ControlIntent("Billing", "HdrBilling"));
+
+    public Task ClickN1PaymentAsync() =>
+        _ui.ClickAsync(_locators.N1Payment, new ControlIntent("Billing", "N1Payment"));
+
+    public Task EnterPaymentDueDateAsync(string value) =>
+        _ui.FillAsync(_locators.PaymentDueDate, value, new ControlIntent("Billing", "PaymentDueDate"));
+
+    public Task PressPrimaryAccountHolderNameAsync(string key) =>
+        _ui.PressAsync(_locators.PrimaryAccountHolderName, key, new ControlIntent("Billing", "PrimaryAccountHolderName"));
+
+    public Task ClickPrimaryAccountHolderNameAsync() =>
+        _ui.ClickAsync(_locators.PrimaryAccountHolderName, new ControlIntent("Billing", "PrimaryAccountHolderName"));
+
+    public Task ClickRdBtnFullBalanceAsync() =>
+        _ui.ClickAsync(_locators.RdBtnFullBalance, new ControlIntent("Billing", "RdBtnFullBalance"));
 
 }

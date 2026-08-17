@@ -1,145 +1,65 @@
 using InsuranceAutomation.Core;
+using Microsoft.Playwright;
 using InsuranceAutomation.CLEQ.Pages.Locators;
 
 namespace InsuranceAutomation.CLEQ.Pages;
 
 public sealed class ClientSearchPage
 {
+    private readonly BrowserSession _browser;
     private readonly ClientSearchLocators _locators;
-    private readonly ScenarioData _data;
     private readonly UiActions _ui;
 
-    public ClientSearchPage(BrowserSession browser, ScenarioData data, UiActions ui)
+    public ClientSearchPage(BrowserSession browser, UiActions ui)
     {
+        _browser = browser;
         _locators = new ClientSearchLocators(browser.Page);
-        _data = data;
         _ui = ui;
     }
 
-    // Business step: I enter client search information
-    public async Task EnterClientSearchInformationAsync()
-    {
-        // EQCommonEnterClientSearchInfo_116bf9Page.SetBufferForLastName_0029_503012Async
-        // Random data LastName is generated in the StepDefinition before this PageMethod runs.
-        // Random data FirstName is generated in the StepDefinition before this PageMethod runs.
-        // EQCommonEnterClientSearchInfo_116bf9Page.ClientInfo_0030_503012Async
-        await _ui.WaitAsync(_locators.ClientInfo, "Visible");
-        await _ui.WaitAsync(_locators.NewExistingClientSearch, "Visible");
-        await _ui.FillAsync(_locators.CustomerNameFirst, _data.Resolve("{{runtime:FirstName}}"));
-        await _ui.FillAsync(_locators.CustomerNameLast, _data.Resolve("{{runtime:LastName}}"));
-        await _ui.FillAsync(_locators.CustomerDateOfBirth, _data.Resolve("{{data:customer_dateofbirth_7}}"));
-        await _ui.ClickAsync(_locators.ClientInfoSearch);
-    }
+    public Task PressAdditionalInterestsNextAsync(string key) =>
+        _ui.PressAsync(_locators.AdditionalInterestsNext, key, new ControlIntent("ClientSearch", "AdditionalInterestsNext"));
 
-    // Business step: I create a new client
-    public async Task CreateANewClientAsync()
-    {
-        // CLEQCommonCreateNewClient_d32265Page.CreateNewClient_0031_503012Async
-        await _ui.WaitAsync(_locators.ExistingClientMatch, "Exists");
-        await _ui.ClickAsync(_locators.CreateNewClient1);
-        await _ui.PressAsync(_locators.AdditionalInterestsNext, "POST:TAB");
-        await _ui.PressAsync(_locators.AdditionalInterestsNext, "Tab");
-        // EQCommonEnterAccountDetailsAccountInfo_a911afPage.SetStateNameBuffer_0032_503012Async
-        _data.Set("StateName", _data.Resolve("{{data:statename}}"));
-    }
+    public Task ClickAdditionalInterestsNextAsync() =>
+        _ui.ClickAsync(_locators.AdditionalInterestsNext, new ControlIntent("ClientSearch", "AdditionalInterestsNext"));
 
-    // Business step: I enter client search information
-    public async Task EnterClientSearchInformationAsync2()
-    {
-        // EQCommonEnterClientSearchInfo_116bf9Page.SetBufferForLastName_0029_656be2Async
-        // Random data LastName is generated in the StepDefinition before this PageMethod runs.
-        // Random data FirstName is generated in the StepDefinition before this PageMethod runs.
-        // EQCommonEnterClientSearchInfo_116bf9Page.ClientInfo_0030_656be2Async
-        await _ui.WaitAsync(_locators.ClientInfo, "Visible");
-        await _ui.WaitAsync(_locators.NewExistingClientSearch, "Visible");
-        await _ui.FillAsync(_locators.CustomerNameFirst, _data.Resolve("{{runtime:FirstName}}"));
-        await _ui.FillAsync(_locators.CustomerNameLast, _data.Resolve("{{runtime:LastName}}"));
-        await _ui.FillAsync(_locators.CustomerDateOfBirth, _data.Resolve("{{data:customer_dateofbirth_7}}"));
-        await _ui.ClickAsync(_locators.ClientInfoSearch);
-    }
+    public Task WaitForClientInfoAsync(string expected) =>
+        _ui.WaitAsync(_locators.ClientInfo, expected, new ControlIntent("ClientSearch", "ClientInfo"));
 
-    // Business step: I create a new client
-    public async Task CreateANewClientAsync2()
-    {
-        // CLEQCommonCreateNewClient_d32265Page.CreateNewClient_0031_656be2Async
-        await _ui.WaitAsync(_locators.ExistingClientMatch, "Exists");
-        await _ui.ClickAsync(_locators.CreateNewClient1);
-        await _ui.PressAsync(_locators.AdditionalInterestsNext, "POST:TAB");
-        await _ui.PressAsync(_locators.AdditionalInterestsNext, "Tab");
-        // EQCommonEnterAccountDetailsAccountInfo_a911afPage.SetStateNameBuffer_0032_656be2Async
-        _data.Set("StateName", _data.Resolve("{{data:statename}}"));
-    }
+    public Task VerifyClientInfoAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.ClientInfo, expected, property, new ControlIntent("ClientSearch", "ClientInfo"));
 
-    // Business step: I enter client search information
-    public async Task EnterClientSearchInformationAsync3()
-    {
-        // EQCommonEnterClientSearchInfo_116bf9Page.SetBufferForLastName_0029_d18a3eAsync
-        // Random data LastName is generated in the StepDefinition before this PageMethod runs.
-        // Random data FirstName is generated in the StepDefinition before this PageMethod runs.
-        // EQCommonEnterClientSearchInfo_116bf9Page.ClientInfo_0030_d18a3eAsync
-        await _ui.WaitAsync(_locators.ClientInfo, "Visible");
-        await _ui.WaitAsync(_locators.NewExistingClientSearch, "Visible");
-        await _ui.FillAsync(_locators.CustomerNameFirst, _data.Resolve("{{runtime:FirstName}}"));
-        await _ui.FillAsync(_locators.CustomerNameLast, _data.Resolve("{{runtime:LastName}}"));
-        await _ui.FillAsync(_locators.CustomerDateOfBirth, _data.Resolve("{{data:customer_dateofbirth_7}}"));
-        await _ui.ClickAsync(_locators.ClientInfoSearch);
-    }
+    public Task ClickClientInfoSearchAsync() =>
+        _ui.ClickAsync(_locators.ClientInfoSearch, new ControlIntent("ClientSearch", "ClientInfoSearch"));
 
-    // Business step: I create a new client
-    public async Task CreateANewClientAsync3()
-    {
-        // CLEQCommonCreateNewClient_d32265Page.CreateNewClient_0031_d18a3eAsync
-        await _ui.WaitAsync(_locators.ExistingClientMatch, "Exists");
-        await _ui.ClickAsync(_locators.CreateNewClient1);
-        await _ui.PressAsync(_locators.AdditionalInterestsNext, "POST:TAB");
-        await _ui.PressAsync(_locators.AdditionalInterestsNext, "Tab");
-        // EQCommonEnterAccountDetailsAccountInfo_a911afPage.SetStateNameBuffer_0032_d18a3eAsync
-        _data.Set("StateName", _data.Resolve("{{data:statename}}"));
-    }
+    public Task ClickCreateNewClientAsync() =>
+        _ui.ClickAsync(_locators.CreateNewClient, new ControlIntent("ClientSearch", "CreateNewClient"));
 
-    // Business step: I create a new client and begin the quote
-    public async Task CreateANewClientAndBeginTheQuoteAsync()
-    {
-        // Common_7de90aPage.BeginQuoteAndCreateANewClient_00280031_8fa692Async
-        await _ui.VerifyAsync(_locators.NewQuote, _data.Resolve("Visible"), "");
-        await _ui.ClickAsync(_locators.NewQuote);
-        // Random data FirstName is generated in the StepDefinition before this PageMethod runs.
-        // Random data LastName is generated in the StepDefinition before this PageMethod runs.
-        await _ui.VerifyAsync(_locators.ClientInfo, _data.Resolve("Visible"), "");
-        await _ui.FillAsync(_locators.CustomerNameFirst, _data.Resolve("{{runtime:FirstName}}"));
-        await _ui.FillAsync(_locators.CustomerNameLast, _data.Resolve("{{runtime:LastName}}"));
-        await _ui.FillAsync(_locators.CustomerDateOfBirth, _data.Resolve("{{data:customer_dateofbirth}}"));
-        await _ui.ClickAsync(_locators.ClientInfoSearch);
-        await _ui.VerifyAsync(_locators.ExistingClientMatch, _data.Resolve("Exists"), "");
-        await _ui.ClickAsync(_locators.CreateNewClient);
-        await _ui.ClickAsync(_locators.AdditionalInterestsNext);
-    }
+    public Task ClickCreateNewClient1Async() =>
+        _ui.ClickAsync(_locators.CreateNewClient1, new ControlIntent("ClientSearch", "CreateNewClient1"));
 
-    // Business step: I enter client search information
-    public async Task EnterClientSearchInformationAsync4()
-    {
-        // EQCommonEnterClientSearchInfo_116bf9Page.SetBufferForLastName_0029_08f3f1Async
-        // Random data LastName is generated in the StepDefinition before this PageMethod runs.
-        // Random data FirstName is generated in the StepDefinition before this PageMethod runs.
-        // EQCommonEnterClientSearchInfo_116bf9Page.ClientInfo_0030_08f3f1Async
-        await _ui.WaitAsync(_locators.ClientInfo, "Visible");
-        await _ui.WaitAsync(_locators.NewExistingClientSearch, "Visible");
-        await _ui.FillAsync(_locators.CustomerNameFirst, _data.Resolve("{{runtime:FirstName}}"));
-        await _ui.FillAsync(_locators.CustomerNameLast, _data.Resolve("{{runtime:LastName}}"));
-        await _ui.FillAsync(_locators.CustomerDateOfBirth, _data.Resolve("{{data:customer_dateofbirth_7}}"));
-        await _ui.ClickAsync(_locators.ClientInfoSearch);
-    }
+    public Task EnterCustomerDateOfBirthAsync(string value) =>
+        _ui.FillAsync(_locators.CustomerDateOfBirth, value, new ControlIntent("ClientSearch", "CustomerDateOfBirth"));
 
-    // Business step: I create a new client
-    public async Task CreateANewClientAsync4()
-    {
-        // CLEQCommonCreateNewClient_d32265Page.CreateNewClient_0031_08f3f1Async
-        await _ui.WaitAsync(_locators.ExistingClientMatch, "Exists");
-        await _ui.ClickAsync(_locators.CreateNewClient1);
-        await _ui.PressAsync(_locators.AdditionalInterestsNext, "POST:TAB");
-        await _ui.PressAsync(_locators.AdditionalInterestsNext, "Tab");
-        // EQCommonEnterAccountDetailsAccountInfo_a911afPage.SetStateNameBuffer_0032_08f3f1Async
-        _data.Set("StateName", _data.Resolve("{{data:statename}}"));
-    }
+    public Task EnterCustomerNameFirstAsync(string value) =>
+        _ui.FillAsync(_locators.CustomerNameFirst, value, new ControlIntent("ClientSearch", "CustomerNameFirst"));
+
+    public Task EnterCustomerNameLastAsync(string value) =>
+        _ui.FillAsync(_locators.CustomerNameLast, value, new ControlIntent("ClientSearch", "CustomerNameLast"));
+
+    public Task WaitForExistingClientMatchAsync(string expected) =>
+        _ui.WaitAsync(_locators.ExistingClientMatch, expected, new ControlIntent("ClientSearch", "ExistingClientMatch"));
+
+    public Task VerifyExistingClientMatchAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.ExistingClientMatch, expected, property, new ControlIntent("ClientSearch", "ExistingClientMatch"));
+
+    public Task WaitForNewExistingClientSearchAsync(string expected) =>
+        _ui.WaitAsync(_locators.NewExistingClientSearch, expected, new ControlIntent("ClientSearch", "NewExistingClientSearch"));
+
+    public Task VerifyNewQuoteAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.NewQuote, expected, property, new ControlIntent("ClientSearch", "NewQuote"));
+
+    public Task ClickNewQuoteAsync() =>
+        _ui.ClickAsync(_locators.NewQuote, new ControlIntent("ClientSearch", "NewQuote"));
 
 }

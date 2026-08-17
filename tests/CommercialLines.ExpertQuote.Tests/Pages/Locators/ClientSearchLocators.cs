@@ -23,13 +23,13 @@ public sealed class ClientSearchLocators
     public ILocator CreateNewClient1 => _page.GetByTestId("customer.selected-new-chip");
 
     // Source modules: EQ|Common|Client Info | confidence=High score=127
-    public ILocator CustomerDateOfBirth => _page.GetByRole(AriaRole.Textbox, new() { Name = "customer.dateOfBirth", Exact = true });
+    public ILocator CustomerDateOfBirth => _page.Locator("[name=\"customer.dateOfBirth\"], [id=\"customer.dateOfBirth\"]").First;
 
     // Source modules: EQ|Common|Client Info | confidence=High score=127
-    public ILocator CustomerNameFirst => _page.GetByRole(AriaRole.Textbox, new() { Name = "customer.name.first", Exact = true });
+    public ILocator CustomerNameFirst => _page.Locator("[name=\"customer.name.first\"], [id=\"customer.name.first\"]").First;
 
     // Source modules: EQ|Common|Client Info | confidence=High score=127
-    public ILocator CustomerNameLast => _page.GetByRole(AriaRole.Textbox, new() { Name = "customer.name.last", Exact = true });
+    public ILocator CustomerNameLast => _page.Locator("[name=\"customer.name.last\"], [id=\"customer.name.last\"]").First;
 
     // Source modules: EQ|Common|Create New Client | confidence=Medium score=108
     public ILocator ExistingClientMatch => _page.GetByLabel("Existing Client Match", new() { Exact = true });

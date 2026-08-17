@@ -21,7 +21,7 @@ public sealed class ProposalLocators
     public ILocator ClientAlreadyExists => _page.GetByText("Client Already Exists", new() { Exact = true });
 
     // Source modules: EQ || Proposal Details/Start | confidence=High score=97
-    public ILocator CountyComboBox => _page.GetByRole(AriaRole.Combobox, new() { Name = "County_ComboBox", Exact = true });
+    public ILocator CountyComboBox => _page.Locator("[name=\"County_ComboBox\"], [id=\"County_ComboBox\"]").First;
 
     // Source modules: EQ || Proposal Details/Start | confidence=Medium score=83
     public ILocator CountyYes => _page.GetByRole(AriaRole.Link, new() { Name = "County_Yes", Exact = true });
@@ -55,7 +55,7 @@ public sealed class ProposalLocators
     public ILocator RecreationalVehicle => _page.GetByTestId("proposal.product-chip-label");
 
     // Source modules: EQ||Proposal Start Proceed & SSN | confidence=High score=127
-    public ILocator SSN => _page.GetByRole(AriaRole.Textbox, new() { Name = "Txt_SSN", Exact = true });
+    public ILocator SSN => _page.Locator("[name=\"Txt_SSN\"], [id=\"Txt_SSN\"]").First;
 
     // Source modules: EQ || Proposal Details/Start | confidence=Medium score=113
     public ILocator SameAsMailingAddress => _page.GetByRole(AriaRole.Radio, new() { Name = "SameAsMailingAddress", Exact = true });

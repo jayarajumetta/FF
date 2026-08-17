@@ -41,6 +41,7 @@ public sealed class TestHooks
     public void BeforeStep()
     {
         var step = _scenario.StepContext.StepInfo.Text;
+        ExecutionIntent.Set(_feature.FeatureInfo.Title, _scenario.ScenarioInfo.Title, step);
         _scenario.Get<RunLogger>().Info($"START STEP: {step}");
         _scenario.Get<ScenarioReport>().StartStep(step);
     }

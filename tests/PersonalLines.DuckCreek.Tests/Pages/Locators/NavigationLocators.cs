@@ -44,7 +44,7 @@ public sealed class NavigationLocators
     public ILocator QNum => _page.GetByLabel("Lbl_QNum", new() { Exact = true });
 
     // Source modules: EQ||Tabs | confidence=High score=127
-    public ILocator QuoteSearchInput => _page.GetByRole(AriaRole.Textbox, new() { Name = "Txt_quoteSearchInput", Exact = true });
+    public ILocator QuoteSearchInput => _page.Locator("[name=\"Txt_quoteSearchInput\"], [id=\"Txt_quoteSearchInput\"]").First;
 
     // Source modules: Edit Coverage Option (New) | confidence=Medium score=113
     public ILocator SaveAndContinue => _page.GetByRole(AriaRole.Button, new() { Name = "Save and Continue", Exact = true });

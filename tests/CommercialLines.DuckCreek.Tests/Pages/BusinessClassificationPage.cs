@@ -1,33 +1,23 @@
 using InsuranceAutomation.Core;
+using Microsoft.Playwright;
 using InsuranceAutomation.CLDC.Pages.Locators;
 
 namespace InsuranceAutomation.CLDC.Pages;
 
 public sealed class BusinessClassificationPage
 {
+    private readonly BrowserSession _browser;
     private readonly BusinessClassificationLocators _locators;
-    private readonly ScenarioData _data;
     private readonly UiActions _ui;
 
-    public BusinessClassificationPage(BrowserSession browser, ScenarioData data, UiActions ui)
+    public BusinessClassificationPage(BrowserSession browser, UiActions ui)
     {
+        _browser = browser;
         _locators = new BusinessClassificationLocators(browser.Page);
-        _data = data;
         _ui = ui;
     }
 
-    // Business step: I verify Class Codes on Policy are Valid
-    public async Task VerifyClassCodesOnPolicyAreValidAsync()
-    {
-        // Pricing_a0d9bbPage.VerifyInvalidClassCodesMessageDoesNotExist_0122_bb930cAsync
-        await _ui.VerifyAsync(_locators.InvalidClassCodeMessage, _data.Resolve("Absent"), "");
-    }
-
-    // Business step: I verify Class Codes on Policy are Valid
-    public async Task VerifyClassCodesOnPolicyAreValidAsync2()
-    {
-        // Pricing_a0d9bbPage.VerifyInvalidClassCodesMessageDoesNotExist_0143_f2d6bdAsync
-        await _ui.VerifyAsync(_locators.InvalidClassCodeMessage, _data.Resolve("Absent"), "");
-    }
+    public Task VerifyInvalidClassCodeMessageAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.InvalidClassCodeMessage, expected, property, new ControlIntent("BusinessClassification", "InvalidClassCodeMessage"));
 
 }

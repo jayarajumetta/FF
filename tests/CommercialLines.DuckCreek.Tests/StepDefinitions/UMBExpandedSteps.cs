@@ -20,8 +20,51 @@ public sealed class UMBExpandedSteps
         data.GenerateRandom("FEIN_0044", "486[0-9]{6}");
         data.GenerateRandom("InspectionTelephone_0045", "[0-9]{10}");
 
-        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.EnterBusinessClientInformationAsync();
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForQuickQuoteAsync("Exists");
+        await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_2}}"));
+        await page.WaitForUnderwritingInfoAsync("Exists");
+        await page.EnterInsuredTypeAsync(data.Resolve("{{data:insured_type_4}}"));
+        await page.PressInsuredTypeAsync("Enter");
+        await page.PressInsuredTypeAsync("Tab");
+        await page.PressInsuredTypeAsync("Tab");
+        await page.ClickEntityTypeAsync();
+        await page.WaitForBusinessNameAsync("Visible");
+        await page.EnterBusinessNameAsync(data.Resolve("{{data:business_name_7}}"));
+        await page.PressBusinessNameAsync("Tab");
+        await page.EnterEntityTypeAsync(data.Resolve("{{data:entity_type_8}}"));
+        await page.PressEntityTypeAsync("Tab");
+        await page.PressAddress17A1FBAsync("TAB");
+        await page.EnterZipCode26D22Async(data.Resolve("{{data:zipcode_11}}"));
+        await page.PressZipCode26D22Async("Tab");
+        await page.PressZipCode26D22Async("Tab");
+        await page.EnterAddress17A1FBAsync(data.Resolve("{{data:address1_12}}"));
+        await page.PressAddress17A1FBAsync("Tab");
+        await page.VerifyYearsInBusinessAsync("Exists", "");
+        await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_14}}"));
+        await page.PressYearsInBusinessAsync("Tab");
+        await page.EnterNameOfInspectionContactAsync(data.Resolve("{{data:name_of_inspection_contact_16}}"));
+        await page.PressNameOfInspectionContactAsync("Tab");
+        await page.PressNameOfInspectionContactAsync("Tab");
+        await page.PressNameOfInspectionContactAsync("CLICK");
+        await page.PressNameOfInspectionContactAsync("CLICK");
+        await page.PressNameOfInspectionContactAsync("Tab");
+        await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_18}}"));
+        await page.PressInsuredEMailAddressAsync("Tab");
+        await page.PressInsuredEMailAddressAsync("CLICK");
+        await page.PressInsuredEMailAddressAsync("Tab");
+        await page.EnterWebsiteAddressAsync(data.Resolve("{{data:website_address_19}}"));
+        await page.PressWebsiteAddressAsync("Tab");
+        await page.PressAddress2Async("TAB");
+        await page.PressAddress2Async("Tab");
+        await page.VerifyZipCode26D22Async("[0-9]{5}-[0-9]{4}", "Regex:value");
+        data.Set("State", data.Resolve("{{data:state}}"));
+        data.Set("Product (LOB)", data.Resolve("{{data:product_lob}}"));
+        data.Set("FormOnPolicyDocName", data.Resolve("{{data:formonpolicydocname}}"));
+        data.Set("Server", data.Resolve("{{data:server}}"));
+
     }
 
     [Given(@"^I add a new Associated Client \\- Business Owner Type \\- Click Add Client$")]
@@ -29,8 +72,16 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add a new Associated Client \\- Business Owner Type \\- Click Add Client$")]
     public async Task AddANewAssociatedClientBusinessOwnerTypeClickAddClientAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddANewAssociatedClientBusinessOwnerTypeClickAddClientAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForAddClientAsync("Exists");
+        await page.PressAddClientAsync("TAB");
+        await page.ClickAddClientAsync();
+        await page.VerifyIndividualTypeAsync("Absent", "");
+
     }
 
     [Given(@"^I complete aJAX Error Check$")]
@@ -38,8 +89,15 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete aJAX Error Check$")]
     public async Task CompleteAJAXErrorCheckAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteAJAXErrorCheckAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyAJAXErrorCheckAsync("Exists", "");
+        data.Set("AJAX Error", data.Resolve("The scripts experienced an AJAX error with the following information: {B[AJAX]}"));
+        data.Set("ForceAFail", "'FALSE' == 'TRUE'");
+
     }
 
     [Given(@"^I complete required billing information$")]
@@ -47,8 +105,30 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required billing information$")]
     public async Task CompleteRequiredBillingInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredBillingInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickBilling6ED79Async();
+        await page.WaitForBillingD1518Async("Exists");
+        await page.EnterBillTypeAsync(data.Resolve("{{data:bill_type_35}}"));
+        await page.PressBillTypeAsync("Tab");
+        await page.PressBillTypeAsync("TAB");
+        await page.WaitForBillTypeAsync("Equal");
+        await page.EnterPayPlanAsync(data.Resolve("{{data:pay_plan_38}}"));
+        await page.PressPayPlanAsync("Tab");
+        await page.PressPayPlanAsync("TAB");
+        await page.WaitForPayPlanAsync("Equal");
+        await page.WaitForEasyPayAsync("Exists");
+        await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_42}}"));
+        await page.PressEasyPayAsync("CLICK");
+        await page.PressEasyPayAsync("Enter");
+        await page.PressEasyPayAsync("Tab");
+        await page.PressEasyPayAsync("Tab");
+        await page.PressEasyPayAsync("TAB");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I complete the Associated Client Info$")]
@@ -61,8 +141,63 @@ public sealed class UMBExpandedSteps
         data.GenerateRandom("LastName_0057", "^[a-z]{7}$");
         data.GenerateRandom("FirstName_0057", "^[a-z]{4}$");
 
-        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteTheAssociatedClientInfoAsync();
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.EnterIndividualTypeAsync(data.Resolve("{{data:individualtype_45}}"));
+        await page.PressIndividualTypeAsync("Tab");
+        await page.PressIndividualTypeAsync("CLICK");
+        await page.PressIndividualTypeAsync("Tab");
+        await page.WaitForPleaseVerifySSNF738AAsync("Exists");
+        await page.PressFirstNameC5387Async("TAB");
+        await page.PressFirstNameC5387Async("Tab");
+        await page.EnterDateOfBirth338D7Async(data.Resolve("{{data:dateofbirth_50}}"));
+        await page.PressDateOfBirth338D7Async("Tab");
+        await page.EnterAddress1D319BAsync(data.Resolve("{{data:address1_51}}"));
+        await page.PressAddress1D319BAsync("Tab");
+        await page.PressAddress1D319BAsync("Tab");
+        await page.EnterCityAsync(data.Resolve("{{data:city_52}}"));
+        await page.PressCityAsync("Tab");
+        await page.PressCityAsync("Tab");
+        await page.PressCityAsync("Tab");
+        await page.EnterStateAsync(data.Resolve("{{data:state_53}}"));
+        await page.PressStateAsync("Tab");
+        await page.PressStateAsync("Tab");
+        await page.PressStateAsync("Tab");
+        await page.EnterZipCodeA088EAsync(data.Resolve("{{data:zipcode_54}}"));
+        await page.PressZipCodeA088EAsync("Tab");
+        await page.PressZipCodeA088EAsync("Tab");
+        await page.PressZipCodeA088EAsync("Tab");
+        await page.EnterGender4973CAsync(data.Resolve("{{data:gender_55}}"));
+        await page.PressGender4973CAsync("Tab");
+        await page.WaitForClientSearch41F28Async("Exists");
+        await page.ClickClientSearch41F28Async();
+        await page.VerifySearchResultsDuckCreekPolicyFirstCheckboxAsync("Absent", "");
+        await page.ClickOKAsync();
+        await page.ClickOrderSSN5E031Async();
+        await page.PressEnterSSNFA186Async("TAB");
+        await page.PressEnterSSNFA186Async("Enter");
+        await page.EnterEnterSSNFA186Async(data.Resolve("{{data:enter_ssn_63}}"));
+        await page.PressEnterSSNFA186Async("Tab");
+        await page.PressEnterSSNFA186Async("Tab");
+        await page.ClickEnterSSNFA186Async();
+        await page.VerifyVerify7A388Async("Absent", "");
+        await page.ClickCompleteAsync();
+        await page.ClickDetail6D228Async();
+        await page.WaitForEnterSSNFA186Async("Exists");
+        await page.ClickVerify7A388Async();
+        await page.WaitForPleaseVerifySSNF738AAsync("Absent");
+        await page.ClickCompleteAsync();
+        await page.WaitForEnterSSNFA186Async("Exists");
+        await page.ClickVerify7A388Async();
+        await page.WaitForPleaseVerifySSNF738AAsync("Absent");
+        await page.ClickCompleteAsync();
+        await page.WaitForClientSearchFDC36Async("Exists");
+        await page.ClickClientSearchFDC36Async();
+        await page.WaitForOKAsync("Exists");
+        await page.ClickOKAsync();
+        await page.WaitForClientSearchFDC36Async("Absent");
+
     }
 
     [Given(@"^I navigate to Underwriting Info Screen$")]
@@ -70,8 +205,43 @@ public sealed class UMBExpandedSteps
     [Then(@"^I navigate to Underwriting Info Screen$")]
     public async Task NavigateToUnderwritingInfoScreenAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.NavigateToUnderwritingInfoScreenAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickUnderwritingInfoAsync();
+        await page.WaitForIsThereAPriorCarrierAsync("Exists");
+        await page.EnterIsThereAPriorCarrierAsync(data.Resolve("{{data:is_there_a_prior_carrier_83}}"));
+        await page.PressIsThereAPriorCarrierAsync("Tab");
+        await page.ClickAddPriorCarrierAsync();
+        await page.WaitForCarrierAsync("Exists");
+        await page.EnterCarrierAsync(data.Resolve("{{data:carrier_86}}"));
+        await page.PressCarrierAsync("Tab");
+        await page.PressCarrierAsync("Tab");
+        await page.EnterPolicyNumberBA28EAsync(data.Resolve("{{data:policy_number_87}}"));
+        await page.PressPolicyNumberBA28EAsync("Tab");
+        await page.EnterPolicyTypeAsync(data.Resolve("{{data:policy_type_88}}"));
+        await page.PressPolicyTypeAsync("Tab");
+        await page.EnterEffectiveDateB557FAsync("{DATE[][-2y][MM'/'dd'/'yyyy]}");
+        await page.PressEffectiveDateB557FAsync("Tab");
+        await page.EnterExpirationDate34EACAsync("{DATE[][][MM'/'dd'/'yyyy]}");
+        await page.PressExpirationDate34EACAsync("Tab");
+        await page.EnterModificationFactorAsync(data.Resolve("{{data:modificationfactor_91}}"));
+        await page.PressModificationFactorAsync("Tab");
+        await page.EnterTotalPremiumAsync(data.Resolve("{{data:total_premium_92}}"));
+        await page.PressTotalPremiumAsync("Tab");
+        await page.ClickOtherInsuranceHistoryOKAsync();
+        await page.WaitForDetail0F8C6Async("Exists");
+        await page.ClickLossExperienceAsync();
+        await page.WaitForNoKnownLossesAsync("Exists");
+        await page.SetNoKnownLossesAsync(data.Resolve("{{data:no_known_losses_97}}"));
+        await page.PressNoKnownLossesAsync("Tab");
+        await page.ClickReturnToQuoteAsync();
+        await page.EnterTitleAsync(data.Resolve("{{data:title_99}}"));
+        await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_100}}"));
+        await page.VerifyResultAsync(data.Resolve("{{data:expected_result_value_101}}"), "value");
+
     }
 
     [Given(@"^I complete required policy information$")]
@@ -79,8 +249,94 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required policy information$")]
     public async Task CompleteRequiredPolicyInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredPolicyInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickPolicyInfoAsync();
+        await page.WaitForPolicyInfoHeaderAsync("Exists");
+        await page.PauseAsync(1000);
+        await page.EnterEffectiveDate95094Async(data.Resolve("{{data:effectivedate_105}}"));
+        await page.PressEffectiveDate95094Async("Tab");
+        if (data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
+        {
+                    await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_106}}"));
+                    await page.PressYearsInBusinessAsync("Tab");
+        }
+        await page.PauseAsync(1000);
+        if (data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
+        {
+                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_108}}"));
+                    await page.PressPrimaryRatingStateAsync("Tab");
+        }
+        if (data.Condition("'Product (LOB)' != \"WC\""))
+        {
+                    await page.ClickPrimaryRatingStateAsync();
+        }
+        if (data.Condition("'Product (LOB)' != \"WC\""))
+        {
+                    await page.PressPrimaryRatingStateAsync("TAB");
+        }
+        if (data.Condition("'Product (LOB)' != \"WC\""))
+        {
+                    await page.PressPrimaryRatingStateAsync("TAB");
+        }
+        await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_112}}"));
+        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
+        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
+        data.Set("StateIsKansas", "Alabama==\"Kansas\"; Expression= 'Alabama'=='Kansas'");
+        if (data.Condition("'Product (LOB)' == \"UMB\""))
+        {
+                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_114}}"));
+                    await page.PressPrimaryRatingStateAsync("Tab");
+        }
+        if (data.Condition("'Product (LOB)' == \"BOP\" || 'Product (LOB)' == \"UMB\" || 'Product (LOB)' == \"BAP\""))
+        {
+                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_115}}"));
+                    await page.PressPrimaryRatingStateAsync("Down");
+                    await page.PressPrimaryRatingStateAsync("Enter");
+                    await page.PressPrimaryRatingStateAsync("Tab");
+                    await page.PressPrimaryRatingStateAsync("Tab");
+        }
+        data.Set("StateIsVirginia", "Alabama==\"Virginia\"; Expression= 'Alabama'=='Virginia'");
+        if (data.Condition("'Product (LOB)' == \"UMB\""))
+        {
+                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_117}}"));
+                    await page.PressPrimaryRatingStateAsync("Tab");
+        }
+        if (data.Condition("'Product (LOB)' == \"UMB\""))
+        {
+                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_118}}"));
+                    await page.PressPrimaryRatingStateAsync("Down");
+                    await page.PressPrimaryRatingStateAsync("Enter");
+                    await page.PressPrimaryRatingStateAsync("Tab");
+                    await page.PressPrimaryRatingStateAsync("Tab");
+        }
+        await page.PauseAsync(1000);
+        if (data.Condition("'Product (LOB)' != \"WC\""))
+        {
+                    await page.WaitForPrimaryRatingStateAsync("Exists");
+        }
+        if (data.Condition("'Product (LOB)' != \"WC\""))
+        {
+                    await page.PressPrimaryRatingStateAsync("TAB");
+        }
+        await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_122}}"));
+        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("CLICK");
+        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Enter");
+        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
+        await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
+        await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
+        await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
+        await page.PauseAsync(1000);
+        await page.WaitForPolicyInfoHeaderAsync("Visible");
+        await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
+        await page.PressDescriptionOfSpecifiedOperationAsync("TAB");
+        await page.EnterDescriptionOfSpecifiedOperationAsync("AL UMB StraightThrough {NMONTH}.{NDAY}.{NYEAR} {Time}");
+        await page.PressDescriptionOfSpecifiedOperationAsync("Tab");
+        await page.VerifyDescriptionOfSpecifiedOperationAsync("{XB[QuoteDescription]}", "value");
+
     }
 
     [Given(@"^I complete required policy covg information$")]
@@ -88,8 +344,48 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required policy covg information$")]
     public async Task CompleteRequiredPolicyCovgInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredPolicyCovgInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickPolicyCovg35BE4Async();
+        await page.WaitForPolicyCovgFF145Async("Visible");
+        if (data.Condition("'Umb Limit' != \"$1,000,000\""))
+        {
+                    await page.EnterUmbrellaLimitAsync(data.Resolve("{{data:umbrella_limit_134}}"));
+                    await page.PressUmbrellaLimitAsync("CLICK");
+                    await page.PressUmbrellaLimitAsync("Enter");
+                    await page.PressUmbrellaLimitAsync("Tab");
+        }
+        if (data.Condition("'Umb Limit' == \"Over $15M\""))
+        {
+                    await page.EnterRequestedUmbrellaLimitAsync(data.Resolve("{{data:requested_umbrella_limit_135}}"));
+                    await page.PressRequestedUmbrellaLimitAsync("Enter");
+                    await page.PressRequestedUmbrellaLimitAsync("Tab");
+        }
+        if (data.Condition("'Excluded Liability' != \"CU2186\""))
+        {
+                    await page.EnterExcludedLiabilityConfidentialInformationAsync(data.Resolve("{{data:excluded_liability_confidential_information_136}}"));
+                    await page.PressExcludedLiabilityConfidentialInformationAsync("CLICK");
+                    await page.PressExcludedLiabilityConfidentialInformationAsync("Enter");
+                    await page.PressExcludedLiabilityConfidentialInformationAsync("Tab");
+                    await page.PressExcludedLiabilityConfidentialInformationAsync("Tab");
+                    await page.PressExcludedLiabilityConfidentialInformationAsync("Tab");
+        }
+        if (data.Condition("'Excluded Liability' != \"CU2186\""))
+        {
+                    await page.WaitForExcludedLiabilityConfidentialInformationAsync("NotEqual");
+        }
+        if (data.Condition("'Products - Aggregate Limit' != \"Umbrella Policy Limit\""))
+        {
+                    await page.EnterProductsCompletedOperationsAggregateLimitAsync(data.Resolve("{{data:products_completed_operations_aggregate_limit_138}}"));
+                    await page.PressProductsCompletedOperationsAggregateLimitAsync("Tab");
+                    await page.PressProductsCompletedOperationsAggregateLimitAsync("Tab");
+        }
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I add Commercial Auto Underlying LOB$")]
@@ -97,8 +393,14 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Commercial Auto Underlying LOB$")]
     public async Task AddCommercialAutoUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddCommercialAutoUnderlyingLOBAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickIncludeCommercialAutoAsync();
+        await page.WaitForCommercialAutoAsync("Visible");
+
     }
 
     [Given(@"^I add General Liability Underlying LOB$")]
@@ -106,8 +408,15 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add General Liability Underlying LOB$")]
     public async Task AddGeneralLiabilityUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddGeneralLiabilityUnderlyingLOBAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForPolicyCovgFF145Async("Visible");
+        await page.ClickIncludeGeneralLiabilityAsync();
+        await page.WaitForGeneralLiabAsync("Visible");
+
     }
 
     [Given(@"^I add Businessowners Underlying LOB$")]
@@ -115,8 +424,15 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Businessowners Underlying LOB$")]
     public async Task AddBusinessownersUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddBusinessownersUnderlyingLOBAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForPolicyCovgFF145Async("Visible");
+        await page.ClickIncludeBusinessownersAsync();
+        await page.WaitForBusinessownersAsync("Visible");
+
     }
 
     [Given(@"^I add SFP \\- 10 Liability Farm Underlying LOB$")]
@@ -124,8 +440,15 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add SFP \\- 10 Liability Farm Underlying LOB$")]
     public async Task AddSFP10LiabilityFarmUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddSFP10LiabilityFarmUnderlyingLOBAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForPolicyCovgFF145Async("Visible");
+        await page.ClickIncludeSFP10LiabilityFarmAsync();
+        await page.WaitForSFP10LiabilityFarmAsync("Visible");
+
     }
 
     [Given(@"^I add Commercial Package Policy Liability Underlying LOB$")]
@@ -133,8 +456,15 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Commercial Package Policy Liability Underlying LOB$")]
     public async Task AddCommercialPackagePolicyLiabilityUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddCommercialPackagePolicyLiabilityUnderlyingLOBAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForPolicyCovgFF145Async("Visible");
+        await page.ClickIncludeCommercialPackagePolicyLiabilityAsync();
+        await page.WaitForCPPLiabilityAsync("Visible");
+
     }
 
     [Given(@"^I add Employers Liability Underlying LOB$")]
@@ -142,8 +472,15 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Employers Liability Underlying LOB$")]
     public async Task AddEmployersLiabilityUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddEmployersLiabilityUnderlyingLOBAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForPolicyCovgFF145Async("Visible");
+        await page.ClickIncludeEmployersLiabilityAsync();
+        await page.WaitForEmployersLiabAsync("Visible");
+
     }
 
     [Given(@"^I add Homeowner's Liability Underlying LOB$")]
@@ -151,8 +488,15 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Homeowner's Liability Underlying LOB$")]
     public async Task AddHomeownerSLiabilityUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddHomeownerSLiabilityUnderlyingLOBAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForPolicyCovgFF145Async("Visible");
+        await page.ClickIncludeHomeownerSLiabilityAsync();
+        await page.WaitForHomeownerSLiabilityAsync("Visible");
+
     }
 
     [Given(@"^I add Motorcycle Liability Underlying LOB$")]
@@ -160,8 +504,15 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Motorcycle Liability Underlying LOB$")]
     public async Task AddMotorcycleLiabilityUnderlyingLOBAsync()
     {
-        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddMotorcycleLiabilityUnderlyingLOBAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForPolicyCovgAsync("Visible");
+        await page.ClickIncludeMotorcycleLiabilityAsync();
+        await page.WaitForMotorcycleLiabilityAsync("Visible");
+
     }
 
     [Given(@"^I add Personal Auto Liability Underlying LOB$")]
@@ -169,8 +520,15 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Personal Auto Liability Underlying LOB$")]
     public async Task AddPersonalAutoLiabilityUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddPersonalAutoLiabilityUnderlyingLOBAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForPolicyCovgFF145Async("Visible");
+        await page.ClickIncludePersonalAutoLiabilityAsync();
+        await page.WaitForPersonalAutoAsync("Visible");
+
     }
 
     [Given(@"^I add Recreational Vehicle Liability Underlying LOB$")]
@@ -178,8 +536,15 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Recreational Vehicle Liability Underlying LOB$")]
     public async Task AddRecreationalVehicleLiabilityUnderlyingLOBAsync()
     {
-        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddRecreationalVehicleLiabilityUnderlyingLOBAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForPolicyCovgAsync("Visible");
+        await page.ClickIncludeRecreationalVehicleLiabilityAsync();
+        await page.WaitForRecreationalVehicleLiabilityAsync("Visible");
+
     }
 
     [Given(@"^I add Rental Owner's Liability Underlying LOB$")]
@@ -187,8 +552,15 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Rental Owner's Liability Underlying LOB$")]
     public async Task AddRentalOwnerSLiabilityUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddRentalOwnerSLiabilityUnderlyingLOBAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForPolicyCovgFF145Async("Visible");
+        await page.ClickIncludeRentalOwnerSLiabilityAsync();
+        await page.WaitForRentalOwnersLiabilityAsync("Visible");
+
     }
 
     [Given(@"^I add Watercraft Liability Underlying LOB$")]
@@ -196,8 +568,15 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add Watercraft Liability Underlying LOB$")]
     public async Task AddWatercraftLiabilityUnderlyingLOBAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddWatercraftLiabilityUnderlyingLOBAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForPolicyCovgFF145Async("Visible");
+        await page.ClickIncludeWatercraftLiabilityAsync();
+        await page.WaitForWatercraftLiabilityAsync("Visible");
+
     }
 
     [Given(@"^I complete required location information$")]
@@ -205,8 +584,17 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required location information$")]
     public async Task CompleteRequiredLocationInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredLocationInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickLocationE16BCAsync();
+        await page.WaitForLocation82D95Async("Visible");
+        await page.VerifyZipCodeD2DBAAsync("[0-9]{5}-[0-9]{4}", "Regex:value");
+        await page.ClickLocationOKAsync();
+        await page.WaitForDetail33F0DAsync("Visible");
+
     }
 
     [Given(@"^I complete required commercial auto information$")]
@@ -214,8 +602,25 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required commercial auto information$")]
     public async Task CompleteRequiredCommercialAutoInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredCommercialAutoInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickCommercialAutoAsync();
+        await page.WaitForCommercialAutoDetailAsync("Visible");
+        await page.EnterPolicyNumber461C7Async(data.Resolve("{{data:policy_number_183}}"));
+        await page.PressPolicyNumber461C7Async("Tab");
+        await page.PressPolicyNumber461C7Async("Tab");
+        if (data.Condition("'BAP Policy Number' != \"BAPPOL#\""))
+        {
+                    await page.ClickImportPolicyDataButton89922Async();
+        }
+        await page.WaitForEffectiveDate68A1BAsync("NotEqual");
+        await page.WaitForStoplightMessageTotalSubjectPremiumAsync("Absent");
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I complete required general liability information$")]
@@ -223,8 +628,44 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required general liability information$")]
     public async Task CompleteRequiredGeneralLiabilityInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredGeneralLiabilityInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForGeneralLiabAsync("Visible");
+        await page.PressGeneralLiabAsync("TAB");
+        await page.ClickGeneralLiabAsync();
+        await page.WaitForGeneralLiabilityAsync("Visible");
+        await page.EnterPolicyNumberFDF5CAsync(data.Resolve("{{data:policy_number_193}}"));
+        await page.PressPolicyNumberFDF5CAsync("Tab");
+        await page.PressPolicyNumberFDF5CAsync("Tab");
+        if (data.Condition("'GL Policy Number' == \"GLPOL#\""))
+        {
+                    await page.EnterEffectiveDateB3600Async("{DATE[][][MM'/'dd'/'yyyy]}");
+                    await page.PressEffectiveDateB3600Async("Tab");
+        }
+        await page.WaitForEffectiveDateB3600Async("NotEqual");
+        if (data.Condition("'GL Policy Number' == \"GLPOL#\""))
+        {
+                    await page.EnterExpirationDateB437CAsync("{DATE[][+1y][MM'/'dd'/'yyyy]}");
+                    await page.PressExpirationDateB437CAsync("Tab");
+        }
+        if (data.Condition("'GL Policy Number' == \"GLPOL#\""))
+        {
+                    await page.EnterCGLLimitsAsync(data.Resolve("{{data:cgl_limits_197}}"));
+                    await page.PressCGLLimitsAsync("CLICK");
+                    await page.PressCGLLimitsAsync("Enter");
+                    await page.PressCGLLimitsAsync("Tab");
+        }
+        if (data.Condition("'GL Policy Number' == \"GLPOL#\""))
+        {
+                    await page.EnterTotalSubjectPremium19B44Async(data.Resolve("{{data:total_subject_premium_198}}"));
+                    await page.PressTotalSubjectPremium19B44Async("Tab");
+        }
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I complete required businessowners information$")]
@@ -232,8 +673,28 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required businessowners information$")]
     public async Task CompleteRequiredBusinessownersInformationAsync()
     {
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredBusinessownersInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickBusinessownersAsync();
+        await page.WaitForBusinessownersHeadingAsync("Visible");
+        await page.EnterPolicyNumberAsync(data.Resolve("{{data:policy_number_203}}"));
+        await page.PressPolicyNumberAsync("Tab");
+        await page.PressPolicyNumberAsync("Tab");
+        if (data.Condition("'BOP Policy Number' != \"BOPPOL#\""))
+        {
+                    await page.ClickImportPolicyDataButtonAsync();
+        }
+        await page.WaitForEffectiveDateAsync("NotEqual");
+        if (data.Condition("'Employers Liability Checkbox' == NULL"))
+        {
+                    await page.VerifyEmployerSLiabilityCheckBoxAsync("Absent", "");
+        }
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I complete required sfp 10 information$")]
@@ -241,8 +702,28 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required sfp 10 information$")]
     public async Task CompleteRequiredSfp10InformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredSfp10InformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickSFP10LiabilityFarmAsync();
+        await page.WaitForSFP10LiabilityFarmHeadingAsync("Visible");
+        await page.EnterPolicyNumber78B85Async(data.Resolve("{{data:policy_number_211}}"));
+        await page.PressPolicyNumber78B85Async("Tab");
+        await page.PressPolicyNumber78B85Async("Tab");
+        await page.EnterEffectiveDate0E335Async("{DATE[][][MM'/'dd'/'yyyy]}");
+        await page.PressEffectiveDate0E335Async("Tab");
+        await page.WaitForEffectiveDate0E335Async("NotEqual");
+        await page.EnterExpirationDate664A1Async("{DATE[][+1y][MM'/'dd'/'yyyy]}");
+        await page.PressExpirationDate664A1Async("Tab");
+        await page.EnterLiabilityLimit56E57Async(data.Resolve("{{data:liability_limit_215}}"));
+        await page.PressLiabilityLimit56E57Async("CLICK");
+        await page.PressLiabilityLimit56E57Async("Enter");
+        await page.PressLiabilityLimit56E57Async("Tab");
+        await page.EnterTotalSubjectPremiumAF452Async(data.Resolve("{{data:total_subject_premium_216}}"));
+        await page.PressTotalSubjectPremiumAF452Async("Tab");
+
     }
 
     [Given(@"^I complete required employers liability information$")]
@@ -250,8 +731,25 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required employers liability information$")]
     public async Task CompleteRequiredEmployersLiabilityInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredEmployersLiabilityInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForEmployersLiabAsync("Visible");
+        await page.PressEmployersLiabAsync("TAB");
+        await page.ClickEmployersLiabAsync();
+        await page.EnterPolicyNumber6566FAsync(data.Resolve("{{data:policy_number_220}}"));
+        await page.PressPolicyNumber6566FAsync("Tab");
+        await page.PressPolicyNumber6566FAsync("Tab");
+        if (data.Condition("'WC Policy Number' != \"WCPOL#\""))
+        {
+                    await page.ClickImportPolicyDataButtonEF44CAsync();
+        }
+        await page.WaitForEffectiveDate6CF3DAsync("NotEqual");
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I complete required homeowners liability information$")]
@@ -259,8 +757,26 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required homeowners liability information$")]
     public async Task CompleteRequiredHomeownersLiabilityInformationAsync()
     {
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredHomeownersLiabilityInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForHomeownerSLiabilityAsync("Visible");
+        await page.PressHomeownerSLiabilityAsync("TAB");
+        await page.PressHomeownerSLiabilityAsync("HOME");
+        await page.ClickHomeownerSLiabilityAsync();
+        await page.EnterPolicyNumberAsync(data.Resolve("{{data:policy_number_228}}"));
+        await page.PressPolicyNumberAsync("Tab");
+        await page.PressPolicyNumberAsync("Tab");
+        await page.EnterEffectiveDateAsync("{DATE[][][MM'/'dd'/'yyyy]}");
+        await page.PressEffectiveDateAsync("Tab");
+        await page.WaitForEffectiveDateAsync("NotEqual");
+        await page.EnterExpirationDateAsync("{DATE[][+1y][MM'/'dd'/'yyyy]}");
+        await page.PressExpirationDateAsync("Tab");
+        await page.EnterLiabilityLimitAsync(data.Resolve("{{data:liability_limit_232}}"));
+        await page.PressLiabilityLimitAsync("Tab");
+
     }
 
     [Given(@"^I complete required motorcycle liability information$")]
@@ -268,8 +784,30 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required motorcycle liability information$")]
     public async Task CompleteRequiredMotorcycleLiabilityInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredMotorcycleLiabilityInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForMotorcycleLiabilityAsync("Visible");
+        await page.PressMotorcycleLiabilityAsync("TAB");
+        await page.ClickMotorcycleLiabilityAsync();
+        await page.EnterPolicyNumber6566FAsync(data.Resolve("{{data:policy_number_236}}"));
+        await page.PressPolicyNumber6566FAsync("Tab");
+        await page.PressPolicyNumber6566FAsync("Tab");
+        await page.EnterEffectiveDate6CF3DAsync("{DATE[][][MM'/'dd'/'yyyy]}");
+        await page.PressEffectiveDate6CF3DAsync("Tab");
+        await page.WaitForEffectiveDate6CF3DAsync("NotEqual");
+        await page.EnterExpirationDate82561Async("{DATE[][+1y][MM'/'dd'/'yyyy]}");
+        await page.PressExpirationDate82561Async("Tab");
+        if (data.Condition("'Motocycle Libaility Limit' != NULL"))
+        {
+                    await page.EnterLiabilityLimit1AE2BAsync(data.Resolve("{{data:liability_limit_240}}"));
+                    await page.PressLiabilityLimit1AE2BAsync("Tab");
+        }
+        await page.EnterTotalSubjectPremiumE8AF0Async(data.Resolve("{{data:total_subject_premium_241}}"));
+        await page.PressTotalSubjectPremiumE8AF0Async("Tab");
+
     }
 
     [Given(@"^I complete required personal auto liability information$")]
@@ -277,8 +815,34 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required personal auto liability information$")]
     public async Task CompleteRequiredPersonalAutoLiabilityInformationAsync()
     {
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredPersonalAutoLiabilityInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForPersonalAutoAsync("Visible");
+        await page.PressPersonalAutoAsync("TAB");
+        await page.ClickPersonalAutoAsync();
+        await page.EnterPolicyNumberAsync(data.Resolve("{{data:policy_number_245}}"));
+        await page.PressPolicyNumberAsync("Tab");
+        await page.PressPolicyNumberAsync("Tab");
+        await page.EnterEffectiveDateAsync("{DATE[][][MM'/'dd'/'yyyy]}");
+        await page.PressEffectiveDateAsync("Tab");
+        await page.WaitForEffectiveDateAsync("NotEqual");
+        await page.EnterExpirationDateAsync("{DATE[][+1y][MM'/'dd'/'yyyy]}");
+        await page.PressExpirationDateAsync("Tab");
+        await page.EnterLiabilityLimitAsync(data.Resolve("{{data:liability_limit_249}}"));
+        await page.PressLiabilityLimitAsync("Tab");
+        if (data.Condition("'PD Limit' != NULL"))
+        {
+                    await page.EnterPDLimitAsync(data.Resolve("{{data:pd_limit_250}}"));
+                    await page.PressPDLimitAsync("CLICK");
+                    await page.PressPDLimitAsync("Enter");
+                    await page.PressPDLimitAsync("Tab");
+        }
+        await page.EnterTotalSubjectPremiumAsync(data.Resolve("{{data:total_subject_premium_251}}"));
+        await page.PressTotalSubjectPremiumAsync("Tab");
+
     }
 
     [Given(@"^I complete required rental owners liability information$")]
@@ -286,8 +850,25 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required rental owners liability information$")]
     public async Task CompleteRequiredRentalOwnersLiabilityInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredRentalOwnersLiabilityInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForRentalOwnersLiabilityAsync("Visible");
+        await page.PressRentalOwnersLiabilityAsync("TAB");
+        await page.ClickRentalOwnersLiabilityAsync();
+        await page.EnterPolicyNumber6566FAsync(data.Resolve("{{data:policy_number_255}}"));
+        await page.PressPolicyNumber6566FAsync("Tab");
+        await page.PressPolicyNumber6566FAsync("Tab");
+        await page.EnterEffectiveDate6CF3DAsync("{DATE[][][MM'/'dd'/'yyyy]}");
+        await page.PressEffectiveDate6CF3DAsync("Tab");
+        await page.WaitForEffectiveDate6CF3DAsync("NotEqual");
+        await page.EnterExpirationDate82561Async("{DATE[][+1y][MM'/'dd'/'yyyy]}");
+        await page.PressExpirationDate82561Async("Tab");
+        await page.EnterLiabilityLimit1AE2BAsync(data.Resolve("{{data:liability_limit_259}}"));
+        await page.PressLiabilityLimit1AE2BAsync("Tab");
+
     }
 
     [Given(@"^I complete required cpp information$")]
@@ -295,8 +876,43 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required cpp information$")]
     public async Task CompleteRequiredCppInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredCppInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForCPPLiabilityAsync("Visible");
+        await page.PressCPPLiabilityAsync("TAB");
+        await page.ClickCPPLiabilityAsync();
+        await page.EnterPolicyNumber6566FAsync(data.Resolve("{{data:policy_number_263}}"));
+        await page.PressPolicyNumber6566FAsync("Tab");
+        await page.PressPolicyNumber6566FAsync("Tab");
+        if (data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
+        {
+                    await page.EnterEffectiveDate6CF3DAsync("{DATE[][][MM'/'dd'/'yyyy]}");
+                    await page.PressEffectiveDate6CF3DAsync("Tab");
+        }
+        await page.WaitForEffectiveDate6CF3DAsync("NotEqual");
+        if (data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
+        {
+                    await page.EnterExpirationDate82561Async("{DATE[][+1y][MM'/'dd'/'yyyy]}");
+                    await page.PressExpirationDate82561Async("Tab");
+        }
+        if (data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
+        {
+                    await page.EnterLiabilityLimit1AE2BAsync(data.Resolve("{{data:liability_limit_267}}"));
+                    await page.PressLiabilityLimit1AE2BAsync("CLICK");
+                    await page.PressLiabilityLimit1AE2BAsync("Enter");
+                    await page.PressLiabilityLimit1AE2BAsync("Tab");
+        }
+        if (data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
+        {
+                    await page.EnterTotalSubjectPremiumE8AF0Async(data.Resolve("{{data:total_subject_premium_268}}"));
+                    await page.PressTotalSubjectPremiumE8AF0Async("Tab");
+        }
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I complete required watercraft liability information$")]
@@ -304,8 +920,27 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required watercraft liability information$")]
     public async Task CompleteRequiredWatercraftLiabilityInformationAsync()
     {
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredWatercraftLiabilityInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForWatercraftLiabilityAsync("Visible");
+        await page.PressWatercraftLiabilityAsync("TAB");
+        await page.ClickWatercraftLiabilityAsync();
+        await page.EnterPolicyNumberAsync(data.Resolve("{{data:policy_number_274}}"));
+        await page.PressPolicyNumberAsync("Tab");
+        await page.PressPolicyNumberAsync("Tab");
+        await page.EnterEffectiveDateAsync("{DATE[][][MM'/'dd'/'yyyy]}");
+        await page.PressEffectiveDateAsync("Tab");
+        await page.WaitForEffectiveDateAsync("NotEqual");
+        await page.EnterExpirationDateAsync("{DATE[][+1y][MM'/'dd'/'yyyy]}");
+        await page.PressExpirationDateAsync("Tab");
+        await page.EnterLiabilityLimitAsync(data.Resolve("{{data:liability_limit_278}}"));
+        await page.PressLiabilityLimitAsync("Tab");
+        await page.EnterTotalSubjectPremiumAsync(data.Resolve("{{data:total_subject_premium_279}}"));
+        await page.PressTotalSubjectPremiumAsync("Tab");
+
     }
 
     [Given(@"^I complete required recreational vehicle information$")]
@@ -313,8 +948,33 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required recreational vehicle information$")]
     public async Task CompleteRequiredRecreationalVehicleInformationAsync()
     {
-        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredRecreationalVehicleInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickRecreationalVehicleLiabilityAsync();
+        await page.WaitForRecreationalVehicleLiabilityHeadingAsync("Visible");
+        await page.EnterPolicyNumberAsync(data.Resolve("{{data:policy_number_282}}"));
+        await page.PressPolicyNumberAsync("Tab");
+        await page.PressPolicyNumberAsync("Tab");
+        await page.EnterCarrierNameAsync(data.Resolve("{{data:carrier_name_283}}"));
+        await page.PressCarrierNameAsync("Tab");
+        await page.EnterEffectiveDateAsync("{DATE[][][MM'/'dd'/'yyyy]}");
+        await page.PressEffectiveDateAsync("Tab");
+        await page.WaitForEffectiveDateAsync("NotEqual");
+        await page.EnterExpirationDateAsync("{DATE[][+1y][MM'/'dd'/'yyyy]}");
+        await page.PressExpirationDateAsync("Tab");
+        await page.EnterLiabilityLimitAsync(data.Resolve("{{data:liability_limit_287}}"));
+        await page.PressLiabilityLimitAsync("Tab");
+        if (data.Condition("'PD Limit' != NULL"))
+        {
+                    await page.EnterPDLimitAsync(data.Resolve("{{data:pd_limit_288}}"));
+                    await page.PressPDLimitAsync("Tab");
+        }
+        await page.EnterTotalSubjectPremiumAsync(data.Resolve("{{data:total_subject_premium_289}}"));
+        await page.PressTotalSubjectPremiumAsync("Tab");
+
     }
 
     [Given(@"^I complete required endorsement information$")]
@@ -322,8 +982,327 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required endorsement information$")]
     public async Task CompleteRequiredEndorsementInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredEndorsementInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifySelectEndorsement0EAB0Async(data.Resolve("{{data:expected_select_endorsement_value_300}}"), "Value");
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_301}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement04BD0Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.ClickOKAsync();
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_305}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement34EE3Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.EnterIFRAMEDuckCreekPolicyDescriptionOfPremisesOrActivitiesAsync(data.Resolve("{{data:iframe_duck_creek_policy_description_of_premises_or_activities_308}}"));
+        await page.PressIFRAMEDuckCreekPolicyDescriptionOfPremisesOrActivitiesAsync("Tab");
+        await page.ClickOKAsync();
+        await page.WaitForSelectEndorsement0EAB0Async("Exists");
+        await page.PauseAsync(1000);
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifySelectEndorsement0EAB0Async(data.Resolve("{{data:expected_select_endorsement_value_322}}"), "Value");
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_323}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement04BD0Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.ClickOKAsync();
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_327}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement34EE3Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.ClickOKAsync();
+        await page.WaitForSelectEndorsement0EAB0Async("Exists");
+        await page.PauseAsync(1000);
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifySelectEndorsement0EAB0Async(data.Resolve("{{data:expected_select_endorsement_value_338}}"), "Value");
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_339}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement04BD0Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.ClickOKAsync();
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_343}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement34EE3Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.EnterAggregateLimitAsync(data.Resolve("{{data:iframe_duck_creek_policy_aggregate_limit_346}}"));
+        await page.PressAggregateLimitAsync("Tab");
+        await page.ClickOKAsync();
+        await page.WaitForSelectEndorsement0EAB0Async("Exists");
+        await page.PauseAsync(1000);
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifySelectEndorsement0EAB0Async(data.Resolve("{{data:expected_select_endorsement_value_355}}"), "Value");
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_356}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement04BD0Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.ClickOKAsync();
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_360}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement34EE3Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.EnterIFRAMEDuckCreekPolicyExcludedDriverAsync(data.Resolve("{{data:iframe_duck_creek_policy_excluded_driver_363}}"));
+        await page.PressIFRAMEDuckCreekPolicyExcludedDriverAsync("Tab");
+        await page.ClickOKAsync();
+        await page.WaitForSelectEndorsement0EAB0Async("Exists");
+        await page.PauseAsync(1000);
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifySelectEndorsement0EAB0Async(data.Resolve("{{data:expected_select_endorsement_value_382}}"), "Value");
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_383}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement04BD0Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.ClickOKAsync();
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_387}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement34EE3Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.ClickOKAsync();
+        await page.WaitForSelectEndorsement0EAB0Async("Exists");
+        await page.PauseAsync(1000);
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifySelectEndorsement0EAB0Async(data.Resolve("{{data:expected_select_endorsement_value_398}}"), "Value");
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_399}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement04BD0Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.ClickOKAsync();
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_403}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement34EE3Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.ClickOKAsync();
+        await page.WaitForSelectEndorsement0EAB0Async("Exists");
+        await page.PauseAsync(1000);
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifySelectEndorsement0EAB0Async(data.Resolve("{{data:expected_select_endorsement_value_414}}"), "Value");
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_415}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement04BD0Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.ClickOKAsync();
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_419}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement34EE3Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.EnterIFRAMEDuckCreekPolicyAddressEsOrDescriptionSOfDesignatedFarmLocationSAsync(data.Resolve("{{data:iframe_duck_creek_policy_address_es_or_description_s_of_designated_farm_location_s_422}}"));
+        await page.PressIFRAMEDuckCreekPolicyAddressEsOrDescriptionSOfDesignatedFarmLocationSAsync("Tab");
+        await page.ClickOKAsync();
+        await page.WaitForSelectEndorsement0EAB0Async("Exists");
+        await page.PauseAsync(1000);
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifySelectEndorsement0EAB0Async(data.Resolve("{{data:expected_select_endorsement_value_431}}"), "Value");
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_432}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement04BD0Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.ClickOKAsync();
+        await page.EnterSelectEndorsement63E0EAsync(data.Resolve("{{data:select_endorsement_436}}"));
+        await page.PressSelectEndorsement63E0EAsync("CLICK");
+        await page.PressSelectEndorsement63E0EAsync("Enter");
+        await page.PressSelectEndorsement63E0EAsync("Tab");
+        await page.ClickAddEndorsementD15B0Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.EnterNameSOrDescriptionSAndDateSOfDesignatedActivitiesOrServicesAsync(data.Resolve("{{data:iframe_duck_creek_policy_name_s_or_description_s_and_date_s_of_designated_activities_or_services_439}}"));
+        await page.PressNameSOrDescriptionSAndDateSOfDesignatedActivitiesOrServicesAsync("Tab");
+        await page.ClickOKAsync();
+        await page.WaitForSelectEndorsement0EAB0Async("Exists");
+        await page.PauseAsync(1000);
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifySelectEndorsement0EAB0Async(data.Resolve("{{data:expected_select_endorsement_value_448}}"), "Value");
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_449}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement04BD0Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.ClickOKAsync();
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_453}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement34EE3Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.EnterIFRAMEDuckCreekPolicyNameSOrDescriptionSOfDesignatedAnimalSAsync(data.Resolve("{{data:iframe_duck_creek_policy_name_s_or_description_s_of_designated_animal_s_456}}"));
+        await page.PressIFRAMEDuckCreekPolicyNameSOrDescriptionSOfDesignatedAnimalSAsync("Tab");
+        await page.ClickOKAsync();
+        await page.WaitForSelectEndorsement0EAB0Async("Exists");
+        await page.PauseAsync(1000);
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifySelectEndorsement0EAB0Async(data.Resolve("{{data:expected_select_endorsement_value_465}}"), "Value");
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_466}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement04BD0Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.ClickOKAsync();
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_470}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement34EE3Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.EnterIFRAMEDuckCreekPolicyAddressEsOrDescriptionSOfDesignatedPremisesAsync(data.Resolve("{{data:iframe_duck_creek_policy_address_es_or_description_s_of_designated_premises_473}}"));
+        await page.PressIFRAMEDuckCreekPolicyAddressEsOrDescriptionSOfDesignatedPremisesAsync("Tab");
+        await page.ClickOKAsync();
+        await page.WaitForSelectEndorsement0EAB0Async("Exists");
+        await page.PauseAsync(1000);
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifyEndorsementsHeading8FD33Async("Absent", "");
+        await page.WaitForEndorsements9D4A5Async("Visible");
+        await page.PressEndorsements9D4A5Async("TAB");
+        await page.PressEndorsements9D4A5Async("END");
+        await page.ClickEndorsements9D4A5Async();
+        await page.WaitForEndorsementsHeading8FD33Async("Exists");
+        await page.VerifySelectEndorsement0EAB0Async(data.Resolve("{{data:expected_select_endorsement_value_502}}"), "Value");
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_503}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement34EE3Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.ClickOKAsync();
+        await page.EnterSelectEndorsement0EAB0Async(data.Resolve("{{data:select_endorsement_507}}"));
+        await page.PressSelectEndorsement0EAB0Async("CLICK");
+        await page.PressSelectEndorsement0EAB0Async("Enter");
+        await page.PressSelectEndorsement0EAB0Async("Tab");
+        await page.ClickAddEndorsement04BD0Async();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.ClickOKAsync();
+        await page.WaitForSelectEndorsement0EAB0Async("Exists");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I complete fill in CU2103 if it exists$")]
@@ -331,8 +1310,24 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete fill in CU2103 if it exists$")]
     public async Task CompleteFillInCU2103IfItExistsAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteFillInCU2103IfItExistsAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyValueAsync("Exists", "");
+        await page.ClickValueAsync();
+        await page.WaitForEndorsementHeadingAsync("Equal");
+        await page.ClickIFRAMEDuckCreekPolicyOtherCheckBoxAsync();
+        await page.EnterIFRAMEDuckCreekPolicyDescriptionOfOtherAsync(data.Resolve("{{data:iframe_duck_creek_policy_description_of_other_517}}"));
+        await page.ClickOKAsync();
+        await page.PressOKAsync("CLICK");
+        await page.PressOKAsync("Tab");
+        await page.PressOKAsync("Tab");
+        await page.PressOKAsync("Tab");
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I complete required underwriting question information$")]
@@ -340,8 +1335,18 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required underwriting question information$")]
     public async Task CompleteRequiredUnderwritingQuestionInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredUnderwritingQuestionInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickUWQuestionsUmbrella9F47EAsync();
+        await page.PressUWQuestionsUmbrella9F47EAsync("LongClick");
+        await page.WaitForUWQuestionsUmbrellaFF014Async("Exists");
+        await page.ClickUpdateAnswersB41BEAsync();
+        await page.WaitForHaveYouHadAnyLiabilityLossesInTheLast5YearsOnAnyPrimaryOrExcessPolicyAsync("Equal");
+        await page.EnterPleaseProvideWebsiteAddressEsAsync(data.Resolve("{{data:please_provide_website_address_es_525}}"));
+
     }
 
     [Given(@"^I complete required billing information for billing$")]
@@ -349,8 +1354,30 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required billing information for billing$")]
     public async Task CompleteRequiredBillingInformationForBillingAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredBillingInformationForBillingAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickBilling6ED79Async();
+        await page.WaitForBillingD1518Async("Exists");
+        await page.EnterBillTypeAsync(data.Resolve("{{data:bill_type_528}}"));
+        await page.PressBillTypeAsync("Tab");
+        await page.PressBillTypeAsync("TAB");
+        await page.WaitForBillTypeAsync("Equal");
+        await page.EnterPayPlanAsync(data.Resolve("{{data:pay_plan_531}}"));
+        await page.PressPayPlanAsync("Tab");
+        await page.PressPayPlanAsync("TAB");
+        await page.WaitForPayPlanAsync("Equal");
+        await page.WaitForEasyPayAsync("Exists");
+        await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_535}}"));
+        await page.PressEasyPayAsync("CLICK");
+        await page.PressEasyPayAsync("Enter");
+        await page.PressEasyPayAsync("Tab");
+        await page.PressEasyPayAsync("Tab");
+        await page.PressEasyPayAsync("TAB");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I add notepad comment$")]
@@ -358,8 +1385,17 @@ public sealed class UMBExpandedSteps
     [Then(@"^I add notepad comment$")]
     public async Task AddNotepadCommentAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddNotepadCommentAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickNotepadAsync();
+        await page.WaitForNotepadHeadingAsync("Exists");
+        await page.ClickAddNotesRemarksAsync();
+        await page.EnterTextBoxAsync(data.Resolve("Test {B[Product (LOB)]}"));
+        await page.ClickNotePadOKAsync();
+
     }
 
     [Given(@"^I complete required submission information$")]
@@ -367,8 +1403,28 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete required submission information$")]
     public async Task CompleteRequiredSubmissionInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredSubmissionInformationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForSubmissionAsync("Visible");
+        await page.ClickSubmissionAsync();
+        await page.WaitForSubmissionHeadingAsync("Exists");
+        await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_546}}"));
+        await page.PressIsThisCoverageBoundAsync("Tab");
+        await page.PressIsThisCoverageBoundAsync("CLICK");
+        await page.PressIsThisCoverageBoundAsync("Tab");
+        await page.VerifyOrderAuditAsync("Exists", "");
+        await page.EnterOrderAuditAsync(data.Resolve("{{data:order_audit_548}}"));
+        await page.PressOrderAuditAsync("Tab");
+        await page.VerifySubmissionHeadingAsync("Absent", "");
+        await page.PressSubmissionAsync("TAB");
+        await page.ClickSubmissionAsync();
+        await page.PauseAsync(1000);
+        await page.WaitForSubmissionHeadingAsync("Exists");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I run Stoplight$")]
@@ -376,8 +1432,51 @@ public sealed class UMBExpandedSteps
     [Then(@"^I run Stoplight$")]
     public async Task RunStoplightAsync()
     {
-        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.RunStoplightAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyIsThisCoverageBoundAsync("Exists", "");
+        await page.VerifyIsThisCoverageBoundAsync(data.Resolve("{{data:expected_is_this_coverage_bound_value_556}}"), "Value");
+        await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_557}}"));
+        await page.PressIsThisCoverageBoundAsync("Tab");
+        await page.PressIsThisCoverageBoundAsync("Tab");
+        await page.ClickCompleteApplicationAsync();
+        await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
+        await page.PauseAsync(1000);
+        await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
+        data.Set("ErrorFlag", data.Resolve("{{data:errorflag}}"));
+        data.Set("ErrorFlag", data.Resolve("{{data:errorflag_2}}"));
+        data.Set("ErrorFlag", data.Resolve("{{data:errorflag_2}}"));
+        data.Set("REPETITION", data.Resolve("{{data:repetition}}"));
+        await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
+        await page.PauseAsync(1000);
+        await page.ClickCompleteApplicationAsync();
+        await page.PauseAsync(1000);
+        await page.ClickStoplightWaitingWindowCloseAsync();
+        await page.WaitForStoplightWaitingWindowAsync("Absent");
+        await page.PauseAsync(1000);
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.PauseAsync(1000);
+        await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists", "");
+        await page.ClickCompleteApplicationAsync();
+        await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
+        await page.PauseAsync(1000);
+        await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
+        await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
+        await page.PauseAsync(1000);
+        await page.ClickCompleteApplicationAsync();
+        await page.PauseAsync(1000);
+        await page.ClickStoplightWaitingWindowCloseAsync();
+        await page.WaitForStoplightWaitingWindowAsync("Absent");
+        await page.PauseAsync(1000);
+        await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
+        await page.EnterTitleAsync(data.Resolve("{{data:title_589}}"));
+        await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_590}}"));
+        await page.VerifyResultAsync("{XB[SessionId]}", "value");
+        data.Set("ServerAddress", data.Resolve("{{data:serveraddress}}"));
+
     }
 
     [Given(@"^I complete forms verification UMB$")]
@@ -385,8 +1484,21 @@ public sealed class UMBExpandedSteps
     [Then(@"^I complete forms verification UMB$")]
     public async Task CompleteFormsVerificationUMBAsync()
     {
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteFormsVerificationUMBAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.EnterSessionIDAsync(data.Resolve("{B[SessionId]}"));
+        await page.VerifyStatusCodeAsync(data.Resolve("{{data:expected_statuscode_value_594}}"), "value");
+        await page.PauseAsync(1000);
+        await page.PauseAsync(1000);
+        data.Set("PowershellArguments", data.Resolve("powershell.exe -ExecutionPolicy Bypass -File FormsCheckQA_UMB_variant.ps1  -Path \"\\\\mis\\sys\\QLTY\\Test_Automation\\Tricentis_Tosca\\Forms_Check\\SUMB\\\"  -FileName \"SUMB_StraightThrough\" -State  \"AL\" -QuoteID \"{B[QuoteID]}\""));
+        data.Set("SummaryResults", await page.CaptureValueAsync("InnerText"));
+        data.Set("SummaryResults", data.Resolve("{{data:summaryresults}}"));
+        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_2}}"));
+        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_3}}"));
+
     }
 
     [Given(@"^I sign out of the application$")]
@@ -394,8 +1506,20 @@ public sealed class UMBExpandedSteps
     [Then(@"^I sign out of the application$")]
     public async Task SignOutOfTheApplicationAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SignOutOfTheApplicationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickLoggedInUserAsync();
+        await page.ClickLogoutAsync();
+        await page.PauseAsync(1000);
+        await page.VerifyTheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0Async("Exists", "");
+        await page.ClickHttpErrorMsgOKAsync();
+        await page.WaitForHttpErrorMsgOKAsync("Absent");
+        await page.ClickLoggedInUserAsync();
+        await page.ClickLogoutAsync();
+
     }
 
 }

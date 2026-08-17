@@ -1,202 +1,125 @@
 using InsuranceAutomation.Core;
+using Microsoft.Playwright;
 using InsuranceAutomation.CLEQ.Pages.Locators;
 
 namespace InsuranceAutomation.CLEQ.Pages;
 
 public sealed class LossHistoryPage
 {
+    private readonly BrowserSession _browser;
     private readonly LossHistoryLocators _locators;
-    private readonly ScenarioData _data;
     private readonly UiActions _ui;
 
-    public LossHistoryPage(BrowserSession browser, ScenarioData data, UiActions ui)
+    public LossHistoryPage(BrowserSession browser, UiActions ui)
     {
+        _browser = browser;
         _locators = new LossHistoryLocators(browser.Page);
-        _data = data;
         _ui = ui;
     }
 
-    // Business step: I enter Required
-    public async Task EnterRequiredAsync()
-    {
-        // CLEQSFPPriorClaimsEnterRequired_faf113Page.EQPriorCarrierClaimsEnterRequiredInfo_0124_503012Async
-        await _ui.ClickAsync(_locators.PriorPolicyNo);
-        // CLEQSFPPriorClaimsEnterRequired_faf113Page.EQLoadingIndicatorWait_0125_503012Async
-        await _ui.WaitAsync(_locators.Loading, "Absent");
-        // CLEQSFPPriorClaimsEnterRequired_faf113Page.EQPriorCarrierClaimsClick3_0126_503012Async
-        await _ui.PressAsync(_locators.YearsInBusiness, "POST:ENTER");
-        await _ui.PressAsync(_locators.YearsInBusiness, "Enter");
-        await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
-        await _ui.ClickAsync(_locators.N3Years);
-        await _ui.PressAsync(_locators.N3Years, "POST:TAB");
-        await _ui.PressAsync(_locators.N3Years, "Tab");
-        // CLEQSFPPriorClaimsEnterRequired_faf113Page.EQLoadingIndicatorWait_0127_503012Async
-        await _ui.WaitAsync(_locators.Loading, "Absent");
-        // CLEQSFPPriorClaimsEnterRequired_faf113Page.EQPriorCarrierClaimsEnterLatestExpiration_0128_503012Async
-        await _ui.PressAsync(_locators.PriorInsuranceLatestExpirationDate, "POST:ENTER");
-        await _ui.PressAsync(_locators.PriorInsuranceLatestExpirationDate, "Enter");
-        await _ui.PressAsync(_locators.PriorInsuranceLatestExpirationDate, "Tab");
-        // CLEQSFPPriorClaimsEnterRequired_faf113Page.EQLoadingIndicatorWait_0129_503012Async
-        await _ui.WaitAsync(_locators.Loading, "Absent");
-        // CLEQSFPPriorClaimsEnterRequired_faf113Page.EQPriorCarrierClaimsEnterLatestCarrier_0130_503012Async
-        await _ui.PressAsync(_locators.PriorInsuranceLatestCarrier, "POST:ENTER");
-        await _ui.PressAsync(_locators.PriorInsuranceLatestCarrier, "Enter");
-        await _ui.PressAsync(_locators.PriorInsuranceLatestCarrier, "Tab");
-    }
+    public Task ClickADDCLAIMAsync() =>
+        _ui.ClickAsync(_locators.ADDCLAIM, new ControlIntent("LossHistory", "ADDCLAIM"));
 
-    // Business step: I enter Required
-    public async Task EnterRequiredAsync2()
-    {
-        // EQBOPPriorClaimsEnterRequired_b29b5bPage.EQPriorCarrierClaimsEnterRequiredInfo_0113_d18a3eAsync
-        await _ui.SelectAsync(_locators.PriorPolicyNo, _data.Resolve(""));
-        // EQBOPPriorClaimsEnterRequired_b29b5bPage.EQLoadingIndicatorWait_0114_d18a3eAsync
-        await _ui.WaitAsync(_locators.Loading, "Absent");
-        // EQBOPPriorClaimsEnterRequired_b29b5bPage.EQPriorCarrierClaimsEnterRequiredInfo_0115_d18a3eAsync
-        await _ui.PressAsync(_locators.YearsInBusiness, "POST:ENTER");
-        await _ui.PressAsync(_locators.YearsInBusiness, "Enter");
-        await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
-        // EQBOPPriorClaimsEnterRequired_b29b5bPage.EQLoadingIndicatorWait_0116_d18a3eAsync
-        await _ui.WaitAsync(_locators.Loading, "Absent");
-        // EQBOPPriorClaimsEnterRequired_b29b5bPage.EQPriorCarrierClaimsClick3_0117_d18a3eAsync
-        await _ui.ClickAsync(_locators.N3Years);
-        await _ui.PressAsync(_locators.N3Years, "POST:TAB");
-        await _ui.PressAsync(_locators.N3Years, "Tab");
-        // EQBOPPriorClaimsEnterRequired_b29b5bPage.EQLoadingIndicatorWait_0118_d18a3eAsync
-        await _ui.WaitAsync(_locators.Loading, "Absent");
-        // EQBOPPriorClaimsEnterRequired_b29b5bPage.EQPriorCarrierClaimsEnterLatestExpiration_0119_d18a3eAsync
-        await _ui.PressAsync(_locators.PriorInsuranceLatestExpirationDate, "POST:ENTER");
-        await _ui.PressAsync(_locators.PriorInsuranceLatestExpirationDate, "Enter");
-        await _ui.PressAsync(_locators.PriorInsuranceLatestExpirationDate, "Tab");
-        // EQBOPPriorClaimsEnterRequired_b29b5bPage.EQLoadingIndicatorWait_0120_d18a3eAsync
-        await _ui.WaitAsync(_locators.Loading, "Absent");
-        // EQBOPPriorClaimsEnterRequired_b29b5bPage.EQPriorCarrierClaimsEnterLatestCarrier_0121_d18a3eAsync
-        await _ui.PressAsync(_locators.PriorInsuranceLatestCarrier, "POST:ENTER");
-        await _ui.PressAsync(_locators.PriorInsuranceLatestCarrier, "Enter");
-        await _ui.PressAsync(_locators.PriorInsuranceLatestCarrier, "Tab");
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.TBoxSetBuffer_0122_d18a3eAsync
-        _data.Set("Type of Loss", _data.Resolve("{{data:type_of_loss}}"));
-    }
+    public Task WaitForAddANoteAsync(string expected) =>
+        _ui.WaitAsync(_locators.AddANote, expected, new ControlIntent("LossHistory", "AddANote"));
 
-    // Business step: I add/Verify/Delete Claims
-    public async Task AddVerifyDeleteClaimsAsync()
-    {
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.EQBOPClaimsPriorInsuranceAddClaimsDateOfOccurence_0123_d18a3eAsync
-        await _ui.ClickAsync(_locators.ADDCLAIM);
-        await _ui.PressAsync(_locators.DateOfOccurrence, "POST:CTRL+A");
-        await _ui.PressAsync(_locators.DateOfOccurrence, "CTRL+A");
-        await _ui.PressAsync(_locators.DateOfOccurrence, "Enter");
-        await _ui.PressAsync(_locators.DateOfOccurrence, "Tab");
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.EQLoadingIndicatorWait_0124_d18a3eAsync
-        await _ui.WaitAsync(_locators.Loading, "Absent");
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.EQBOPClaimsPriorInsuranceAddClaimsPolicyStart_0125_d18a3eAsync
-        await _ui.PressAsync(_locators.PolicyStart, "POST:CTRL+A");
-        await _ui.PressAsync(_locators.PolicyStart, "CTRL+A");
-        await _ui.PressAsync(_locators.PolicyStart, "Enter");
-        await _ui.PressAsync(_locators.PolicyStart, "Tab");
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.EQLoadingIndicatorWait_0126_d18a3eAsync
-        await _ui.WaitAsync(_locators.Loading, "Absent");
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.EQBOPClaimsPriorInsuranceAddClaimsPolicyExpire_0127_d18a3eAsync
-        await _ui.PressAsync(_locators.PolicyExpire, "POST:CTRL+A");
-        await _ui.PressAsync(_locators.PolicyExpire, "CTRL+A");
-        await _ui.PressAsync(_locators.PolicyExpire, "Enter");
-        await _ui.PressAsync(_locators.PolicyExpire, "Tab");
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.EQLoadingIndicatorWait_0128_d18a3eAsync
-        await _ui.WaitAsync(_locators.Loading, "Absent");
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.EQBOPClaimsPriorInsuranceAddClaimsAmountPaid_0129_d18a3eAsync
-        await _ui.PressAsync(_locators.AmountPaid, "POST:CTRL+A");
-        await _ui.PressAsync(_locators.AmountPaid, "CTRL+A");
-        await _ui.PressAsync(_locators.AmountPaid, "Enter");
-        await _ui.PressAsync(_locators.AmountPaid, "Tab");
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.EQLoadingIndicatorWait_0130_d18a3eAsync
-        await _ui.WaitAsync(_locators.Loading, "Absent");
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.EQBOPClaimsPriorInsuranceAddClaimsAmountReserved_0131_d18a3eAsync
-        await _ui.PressAsync(_locators.AmountReserved, "POST:CTRL+A");
-        await _ui.PressAsync(_locators.AmountReserved, "CTRL+A");
-        await _ui.PressAsync(_locators.AmountReserved, "Enter");
-        await _ui.PressAsync(_locators.AmountReserved, "Tab");
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.EQLoadingIndicatorWait_0132_d18a3eAsync
-        await _ui.WaitAsync(_locators.Loading, "Absent");
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.EQBOPClaimsPriorInsuranceAddClaimsExpenseAmount_0133_d18a3eAsync
-        await _ui.PressAsync(_locators.ExpenseAmount, "POST:CTRL+A");
-        await _ui.PressAsync(_locators.ExpenseAmount, "CTRL+A");
-        await _ui.PressAsync(_locators.ExpenseAmount, "Enter");
-        await _ui.PressAsync(_locators.ExpenseAmount, "Tab");
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.EQLoadingIndicatorWait_0134_d18a3eAsync
-        await _ui.WaitAsync(_locators.Loading, "Absent");
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.EQBOPClaimsPriorInsuranceAddClaimsTypeOfLoss_0135_d18a3eAsync
-        await _ui.PressAsync(_locators.TypeOfLossDropdown, "POST:TAB");
-        await _ui.PressAsync(_locators.TypeOfLossDropdown, "Tab");
-        await _ui.ClickAsync(_locators.TypeOfLossSelection);
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.EQLoadingIndicatorWait_0136_d18a3eAsync
-        await _ui.WaitAsync(_locators.Loading, "Absent");
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.EQBOPClaimsPriorInsuranceAddClaimsDescriptionOfClaim_0137_d18a3eAsync
-        await _ui.PressAsync(_locators.DescriptionOfOccurrenceOrClaim, "POST:ENTER");
-        await _ui.PressAsync(_locators.DescriptionOfOccurrenceOrClaim, "Enter");
-        await _ui.PressAsync(_locators.DescriptionOfOccurrenceOrClaim, "Tab");
-        await _ui.ClickAsync(_locators.OpenButton);
-        await _ui.ClickAsync(_locators.Save);
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.EQBOPClaimsPriorInsuranceAddClaimClaimsSummaryTableVerifyHeadings_0138_d18a3eAsync
-        await _ui.VerifyAsync(_locators.ClaimSummaryTableRowCellExplicitNameClaimDate, _data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_claim_date_165}}"), "");
-        await _ui.VerifyAsync(_locators.ClaimSummaryTableRowCellExplicitNameAmount, _data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_amount_166}}"), "");
-        await _ui.VerifyAsync(_locators.ClaimSummaryTableRowCellExplicitNameLineOfCoverage, _data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_line_of_coverage_167}}"), "");
-        await _ui.VerifyAsync(_locators.ClaimSummaryTableRowCellExplicitNameTypeOfLoss, _data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_type_of_loss_168}}"), "");
-        await _ui.VerifyAsync(_locators.ClaimSummaryTableRowCellExplicitNameCATClaim, _data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_cat_claim_169}}"), "");
-        // EQBOPClaimsPriorInsuranceAddVerifyDeleteClaims_574436Page.EQBOPClaimsPriorInsuranceAddClaimClaimsSummaryTableVerifyCorrectValues_0139_d18a3eAsync
-        await _ui.VerifyAsync(_locators.ClaimSummaryTableRowCellExplicitNameClaimDate, _data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_claim_date_170}}"), "");
-        await _ui.VerifyAsync(_locators.ClaimSummaryTableRowCellExplicitNameAmount, _data.Resolve("__BLANK__"), "");
-        await _ui.VerifyAsync(_locators.ClaimSummaryTableRowCellExplicitNameLineOfCoverage, _data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_line_of_coverage_172}}"), "");
-        await _ui.VerifyAsync(_locators.ClaimSummaryTableRowCellExplicitNameTypeOfLoss, _data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_type_of_loss_173}}"), "");
-        // EQCommonNavigateToScreen_b3fe17Page.BufferScreenName_0141_d18a3eAsync
-        _data.Set("Screen", _data.Resolve("{{data:screen_6}}"));
-        // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0142_d18a3eAsync
-        if (!await _ui.ExistsAsync(_locators.ScreenHeading))
-        {
-            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
-        }
-    }
+    public Task PressAddANoteAsync(string key) =>
+        _ui.PressAsync(_locators.AddANote, key, new ControlIntent("LossHistory", "AddANote"));
 
-    // Business step: I complete eChecklist \- Loss Runs \- 3 Years
-    public async Task CompleteEChecklistLossRuns3YearsAsync()
-    {
-        // CLEQCommonEChecklistLossRuns3Years_99f5d4Page.CLEQEChecklistLossRuns3Yrs_0518_d18a3eAsync
-        await _ui.FillAsync(_locators.AllLink, _data.Resolve(""));
-        await _ui.WaitAsync(_locators.LossRunsHeader, "Exists");
-        await _ui.ClickAsync(_locators.Exception);
-        await _ui.WaitAsync(_locators.AddANote, "Visible");
-        await _ui.PressAsync(_locators.AddANote, "POST:TAB");
-        await _ui.PressAsync(_locators.AddANote, "Tab");
-        await _ui.ClickAsync(_locators.EChecklistEChecklistOK);
-        await _ui.WaitAsync(_locators.EChecklistEChecklistOK, "Absent");
-        // CLEQCommonEChecklistLossRuns3Years_99f5d4Page.CLEQEChecklistSync_0519_d18a3eAsync
-        await _ui.WaitAsync(_locators.LossRuns3YearsHeader, "Absent");
-    }
+    public Task EnterAllLinkAsync(string value) =>
+        _ui.FillAsync(_locators.AllLink, value, new ControlIntent("LossHistory", "AllLink"));
 
-    // Business step: I enter Required
-    public async Task EnterRequiredAsync3()
-    {
-        // CLEQSFPPriorClaimsEnterRequired_faf113Page.EQPriorCarrierClaimsEnterRequiredInfo_0124_08f3f1Async
-        await _ui.ClickAsync(_locators.PriorPolicyNo);
-        // CLEQSFPPriorClaimsEnterRequired_faf113Page.EQLoadingIndicatorWait_0125_08f3f1Async
-        await _ui.WaitAsync(_locators.Loading, "Absent");
-        // CLEQSFPPriorClaimsEnterRequired_faf113Page.EQPriorCarrierClaimsClick3_0126_08f3f1Async
-        await _ui.PressAsync(_locators.YearsInBusiness, "POST:ENTER");
-        await _ui.PressAsync(_locators.YearsInBusiness, "Enter");
-        await _ui.PressAsync(_locators.YearsInBusiness, "Tab");
-        await _ui.ClickAsync(_locators.N3Years);
-        await _ui.PressAsync(_locators.N3Years, "POST:TAB");
-        await _ui.PressAsync(_locators.N3Years, "Tab");
-        // CLEQSFPPriorClaimsEnterRequired_faf113Page.EQLoadingIndicatorWait_0127_08f3f1Async
-        await _ui.WaitAsync(_locators.Loading, "Absent");
-        // CLEQSFPPriorClaimsEnterRequired_faf113Page.EQPriorCarrierClaimsEnterLatestExpiration_0128_08f3f1Async
-        await _ui.PressAsync(_locators.PriorInsuranceLatestExpirationDate, "POST:ENTER");
-        await _ui.PressAsync(_locators.PriorInsuranceLatestExpirationDate, "Enter");
-        await _ui.PressAsync(_locators.PriorInsuranceLatestExpirationDate, "Tab");
-        // CLEQSFPPriorClaimsEnterRequired_faf113Page.EQLoadingIndicatorWait_0129_08f3f1Async
-        await _ui.WaitAsync(_locators.Loading, "Absent");
-        // CLEQSFPPriorClaimsEnterRequired_faf113Page.EQPriorCarrierClaimsEnterLatestCarrier_0130_08f3f1Async
-        await _ui.PressAsync(_locators.PriorInsuranceLatestCarrier, "POST:ENTER");
-        await _ui.PressAsync(_locators.PriorInsuranceLatestCarrier, "Enter");
-        await _ui.PressAsync(_locators.PriorInsuranceLatestCarrier, "Tab");
-    }
+    public Task PressAmountPaidAsync(string key) =>
+        _ui.PressAsync(_locators.AmountPaid, key, new ControlIntent("LossHistory", "AmountPaid"));
+
+    public Task PressAmountReservedAsync(string key) =>
+        _ui.PressAsync(_locators.AmountReserved, key, new ControlIntent("LossHistory", "AmountReserved"));
+
+    public Task VerifyClaimSummaryTableRowCellExplicitNameAmountAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.ClaimSummaryTableRowCellExplicitNameAmount, expected, property, new ControlIntent("LossHistory", "ClaimSummaryTableRowCellExplicitNameAmount"));
+
+    public Task VerifyClaimSummaryTableRowCellExplicitNameCATClaimAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.ClaimSummaryTableRowCellExplicitNameCATClaim, expected, property, new ControlIntent("LossHistory", "ClaimSummaryTableRowCellExplicitNameCATClaim"));
+
+    public Task VerifyClaimSummaryTableRowCellExplicitNameClaimDateAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.ClaimSummaryTableRowCellExplicitNameClaimDate, expected, property, new ControlIntent("LossHistory", "ClaimSummaryTableRowCellExplicitNameClaimDate"));
+
+    public Task VerifyClaimSummaryTableRowCellExplicitNameLineOfCoverageAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.ClaimSummaryTableRowCellExplicitNameLineOfCoverage, expected, property, new ControlIntent("LossHistory", "ClaimSummaryTableRowCellExplicitNameLineOfCoverage"));
+
+    public Task VerifyClaimSummaryTableRowCellExplicitNameTypeOfLossAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.ClaimSummaryTableRowCellExplicitNameTypeOfLoss, expected, property, new ControlIntent("LossHistory", "ClaimSummaryTableRowCellExplicitNameTypeOfLoss"));
+
+    public Task PressDateOfOccurrenceAsync(string key) =>
+        _ui.PressAsync(_locators.DateOfOccurrence, key, new ControlIntent("LossHistory", "DateOfOccurrence"));
+
+    public Task PressDescriptionOfOccurrenceOrClaimAsync(string key) =>
+        _ui.PressAsync(_locators.DescriptionOfOccurrenceOrClaim, key, new ControlIntent("LossHistory", "DescriptionOfOccurrenceOrClaim"));
+
+    public Task WaitForEChecklistEChecklistOKAsync(string expected) =>
+        _ui.WaitAsync(_locators.EChecklistEChecklistOK, expected, new ControlIntent("LossHistory", "EChecklistEChecklistOK"));
+
+    public Task ClickEChecklistEChecklistOKAsync() =>
+        _ui.ClickAsync(_locators.EChecklistEChecklistOK, new ControlIntent("LossHistory", "EChecklistEChecklistOK"));
+
+    public Task ClickExceptionAsync() =>
+        _ui.ClickAsync(_locators.Exception, new ControlIntent("LossHistory", "Exception"));
+
+    public Task PressExpenseAmountAsync(string key) =>
+        _ui.PressAsync(_locators.ExpenseAmount, key, new ControlIntent("LossHistory", "ExpenseAmount"));
+
+    public Task WaitForLoadingAsync(string expected) =>
+        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("LossHistory", "Loading"));
+
+    public Task WaitForLossRuns3YearsHeaderAsync(string expected) =>
+        _ui.WaitAsync(_locators.LossRuns3YearsHeader, expected, new ControlIntent("LossHistory", "LossRuns3YearsHeader"));
+
+    public Task WaitForLossRunsHeaderAsync(string expected) =>
+        _ui.WaitAsync(_locators.LossRunsHeader, expected, new ControlIntent("LossHistory", "LossRunsHeader"));
+
+    public Task PressN3YearsAsync(string key) =>
+        _ui.PressAsync(_locators.N3Years, key, new ControlIntent("LossHistory", "N3Years"));
+
+    public Task ClickN3YearsAsync() =>
+        _ui.ClickAsync(_locators.N3Years, new ControlIntent("LossHistory", "N3Years"));
+
+    public Task ClickOpenButtonAsync() =>
+        _ui.ClickAsync(_locators.OpenButton, new ControlIntent("LossHistory", "OpenButton"));
+
+    public Task PressPolicyExpireAsync(string key) =>
+        _ui.PressAsync(_locators.PolicyExpire, key, new ControlIntent("LossHistory", "PolicyExpire"));
+
+    public Task PressPolicyStartAsync(string key) =>
+        _ui.PressAsync(_locators.PolicyStart, key, new ControlIntent("LossHistory", "PolicyStart"));
+
+    public Task PressPriorInsuranceLatestCarrierAsync(string key) =>
+        _ui.PressAsync(_locators.PriorInsuranceLatestCarrier, key, new ControlIntent("LossHistory", "PriorInsuranceLatestCarrier"));
+
+    public Task PressPriorInsuranceLatestExpirationDateAsync(string key) =>
+        _ui.PressAsync(_locators.PriorInsuranceLatestExpirationDate, key, new ControlIntent("LossHistory", "PriorInsuranceLatestExpirationDate"));
+
+    public Task SelectPriorPolicyNoAsync(string value) =>
+        _ui.SelectAsync(_locators.PriorPolicyNo, value, new ControlIntent("LossHistory", "PriorPolicyNo"));
+
+    public Task ClickPriorPolicyNoAsync() =>
+        _ui.ClickAsync(_locators.PriorPolicyNo, new ControlIntent("LossHistory", "PriorPolicyNo"));
+
+    public Task ClickSaveAsync() =>
+        _ui.ClickAsync(_locators.Save, new ControlIntent("LossHistory", "Save"));
+
+    public Task VerifyScreenHeadingAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.ScreenHeading, expected, property, new ControlIntent("LossHistory", "ScreenHeading"));
+
+    public Task<bool> IsScreenHeadingPresentAsync() =>
+        _ui.ExistsAsync(_locators.ScreenHeading);
+
+    public Task PressTypeOfLossDropdownAsync(string key) =>
+        _ui.PressAsync(_locators.TypeOfLossDropdown, key, new ControlIntent("LossHistory", "TypeOfLossDropdown"));
+
+    public Task ClickTypeOfLossSelectionAsync() =>
+        _ui.ClickAsync(_locators.TypeOfLossSelection, new ControlIntent("LossHistory", "TypeOfLossSelection"));
+
+    public Task PressYearsInBusinessAsync(string key) =>
+        _ui.PressAsync(_locators.YearsInBusiness, key, new ControlIntent("LossHistory", "YearsInBusiness"));
 
 }

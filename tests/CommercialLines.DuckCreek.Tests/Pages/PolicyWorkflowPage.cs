@@ -1,1210 +1,398 @@
 using InsuranceAutomation.Core;
+using Microsoft.Playwright;
 using InsuranceAutomation.CLDC.Pages.Locators;
 
 namespace InsuranceAutomation.CLDC.Pages;
 
 public sealed class PolicyWorkflowPage
 {
+    private readonly BrowserSession _browser;
     private readonly PolicyWorkflowLocators _locators;
-    private readonly ScenarioData _data;
     private readonly UiActions _ui;
 
-    public PolicyWorkflowPage(BrowserSession browser, ScenarioData data, UiActions ui)
+    public PolicyWorkflowPage(BrowserSession browser, UiActions ui)
     {
+        _browser = browser;
         _locators = new PolicyWorkflowLocators(browser.Page);
-        _data = data;
         _ui = ui;
     }
 
-    // Business step: I add a new Associated Client \- Business Owner Type \- Click Add Client
-    public async Task AddANewAssociatedClientBusinessOwnerTypeClickAddClientAsync()
-    {
-        // ClientAddAssociatedClient_cb1bd9Page.AddANewAssociatedClientBusinessOwnerTypeClickAddClient_0048_f7819aAsync
-        await _ui.WaitAsync(_locators.AddClient, "Exists");
-        await _ui.PressAsync(_locators.AddClient, "PRE:TAB");
-        await _ui.PressAsync(_locators.AddClient, "Tab");
-        await _ui.ClickAsync(_locators.AddClient);
-        // ClientAddAssociatedClient_cb1bd9Page.CheckIfIndividualTypeExists_0049_f7819aAsync
-        await _ui.VerifyAsync(_locators.IndividualType, _data.Resolve("Absent"), "");
-    }
-
-    // Business step: I complete aJAX Error Check
-    public async Task CompleteAJAXErrorCheckAsync()
-    {
-        // AJAXError_19aa70Page.AJAXErrorCheck_0050_f7819aAsync
-        await _ui.VerifyAsync(_locators.AJAXErrorCheck, _data.Resolve("Exists"), "");
-        // TBoxSetBuffer_e51da1Page.SetBufferForError_0051_f7819aAsync
-        _data.Set("AJAX Error", _data.Resolve("The scripts experienced an AJAX error with the following information: {B[AJAX]}"));
-        // TBoxEvaluationTool_b95b5cPage.ForceAFail_0052_f7819aAsync
-        _data.Set("ForceAFail", _data.Resolve("'FALSE' == 'TRUE'"));
-    }
-
-    // Business step: I add Commercial Auto Underlying LOB
-    public async Task AddCommercialAutoUnderlyingLOBAsync()
-    {
-        // PolicyCovg_0dff37Page.SelectCommercialAutoUnderlyingLOB_0091_f7819aAsync
-        await _ui.ClickAsync(_locators.IncludeCommercialAuto);
-        // UMBNavigationLinks_77d89fPage.WaitForCommercialAutoTabToAppear_0092_f7819aAsync
-        await _ui.WaitAsync(_locators.CommercialAuto, "Visible");
-    }
-
-    // Business step: I add General Liability Underlying LOB
-    public async Task AddGeneralLiabilityUnderlyingLOBAsync()
-    {
-        // PolicyCovg_0dff37Page.SelectGeneralLiabilityUnderlyingLOB_0093_f7819aAsync
-        await _ui.WaitAsync(_locators.PolicyCovgFF145, "Visible");
-        await _ui.ClickAsync(_locators.IncludeGeneralLiability);
-        // UMBNavigationLinks_77d89fPage.WaitForGeneralLiabilityTabToAppear_0094_f7819aAsync
-        await _ui.WaitAsync(_locators.GeneralLiab, "Visible");
-    }
-
-    // Business step: I add Businessowners Underlying LOB
-    public async Task AddBusinessownersUnderlyingLOBAsync()
-    {
-        // PolicyCovg_0dff37Page.SelectGeneralLiabilityUnderlyingLOB_0095_f7819aAsync
-        await _ui.WaitAsync(_locators.PolicyCovgFF145, "Visible");
-        await _ui.ClickAsync(_locators.IncludeBusinessowners);
-        // UMBNavigationLinks_77d89fPage.WaitForBusinessownersTabToAppear_0096_f7819aAsync
-        await _ui.WaitAsync(_locators.Businessowners, "Visible");
-    }
-
-    // Business step: I add SFP \- 10 Liability Farm Underlying LOB
-    public async Task AddSFP10LiabilityFarmUnderlyingLOBAsync()
-    {
-        // PolicyCovg_0dff37Page.SelectSFP10UnderlyingLOB_0097_f7819aAsync
-        await _ui.WaitAsync(_locators.PolicyCovgFF145, "Visible");
-        await _ui.ClickAsync(_locators.IncludeSFP10LiabilityFarm);
-        // UMBNavigationLinks_77d89fPage.WaitForSFP10LiabilityFarmTabToAppear_0098_f7819aAsync
-        await _ui.WaitAsync(_locators.SFP10LiabilityFarm, "Visible");
-    }
-
-    // Business step: I add Commercial Package Policy Liability Underlying LOB
-    public async Task AddCommercialPackagePolicyLiabilityUnderlyingLOBAsync()
-    {
-        // PolicyCovg_0dff37Page.SelectCommercialPackagePolicyLiabilityUnderlyingLOB_0099_f7819aAsync
-        await _ui.WaitAsync(_locators.PolicyCovgFF145, "Visible");
-        await _ui.ClickAsync(_locators.IncludeCommercialPackagePolicyLiability);
-        // UMBNavigationLinks_77d89fPage.WaitForCommercialPackagePolicyLiabilityTabToAppear_0100_f7819aAsync
-        await _ui.WaitAsync(_locators.CPPLiability, "Visible");
-    }
-
-    // Business step: I add Employers Liability Underlying LOB
-    public async Task AddEmployersLiabilityUnderlyingLOBAsync()
-    {
-        // PolicyCovg_0dff37Page.SelectEmployersLiabilityUnderlyingLOB_0101_f7819aAsync
-        await _ui.WaitAsync(_locators.PolicyCovgFF145, "Visible");
-        await _ui.ClickAsync(_locators.IncludeEmployersLiability);
-        // UMBNavigationLinks_77d89fPage.WaitForEmployersLiabilityTabToAppear_0102_f7819aAsync
-        await _ui.WaitAsync(_locators.EmployersLiab, "Visible");
-    }
-
-    // Business step: I add Homeowner's Liability Underlying LOB
-    public async Task AddHomeownerSLiabilityUnderlyingLOBAsync()
-    {
-        // PolicyCovg_0dff37Page.SelectHomeownerSLiabilityUnderlyingLOB_0103_f7819aAsync
-        await _ui.WaitAsync(_locators.PolicyCovgFF145, "Visible");
-        await _ui.ClickAsync(_locators.IncludeHomeownerSLiability);
-        // UMBNavigationLinks_77d89fPage.WaitForHomeownerSLiabilityTabToAppear_0104_f7819aAsync
-        await _ui.WaitAsync(_locators.HomeownerSLiability, "Visible");
-    }
-
-    // Business step: I add Personal Auto Liability Underlying LOB
-    public async Task AddPersonalAutoLiabilityUnderlyingLOBAsync()
-    {
-        // PolicyCovg_0dff37Page.SelectPersonalAutoLiabilityUnderlyingLOB_0107_f7819aAsync
-        await _ui.WaitAsync(_locators.PolicyCovgFF145, "Visible");
-        await _ui.ClickAsync(_locators.IncludePersonalAutoLiability);
-        // UMBNavigationLinks_77d89fPage.WaitForPersonalAutoLiabilityTabToAppear_0108_f7819aAsync
-        await _ui.WaitAsync(_locators.PersonalAuto, "Visible");
-    }
-
-    // Business step: I add Rental Owner's Liability Underlying LOB
-    public async Task AddRentalOwnerSLiabilityUnderlyingLOBAsync()
-    {
-        // PolicyCovg_0dff37Page.SelectRentalOwnerSLiabilityUnderlyingLOB_0111_f7819aAsync
-        await _ui.WaitAsync(_locators.PolicyCovgFF145, "Visible");
-        await _ui.ClickAsync(_locators.IncludeRentalOwnerSLiability);
-        // UMBNavigationLinks_77d89fPage.WaitForRentalOwnerSLiabilityTabToAppear_0112_f7819aAsync
-        await _ui.WaitAsync(_locators.RentalOwnersLiability, "Visible");
-    }
-
-    // Business step: I add Watercraft Liability Underlying LOB
-    public async Task AddWatercraftLiabilityUnderlyingLOBAsync()
-    {
-        // PolicyCovg_0dff37Page.SelectWatercraftLiabilityUnderlyingLOB_0113_f7819aAsync
-        await _ui.WaitAsync(_locators.PolicyCovgFF145, "Visible");
-        await _ui.ClickAsync(_locators.IncludeWatercraftLiability);
-        // UMBNavigationLinks_77d89fPage.WaitForWatercraftLiabilityTabToAppear_0114_f7819aAsync
-        await _ui.WaitAsync(_locators.WatercraftLiability, "Visible");
-    }
-
-    // Business step: I complete fill in CU2103 if it exists
-    public async Task CompleteFillInCU2103IfItExistsAsync()
-    {
-        // UnresolvedModule_b8894dPage.CU2103DetailButton_1054_f7819aAsync
-        await _ui.VerifyAsync(_locators.Value, _data.Resolve("Exists"), "");
-        // UnresolvedModule_b8894dPage.CU2103DetailButton_1055_f7819aAsync
-        await _ui.ClickAsync(_locators.Value);
-        // CU2103ExclusionDesignatedWork_cce866Page.CU2103ExclusionDesignatedWorkSelectCheckboxAndDescription_1056_f7819aAsync
-        await _ui.WaitAsync(_locators.EndorsementHeading, "Equal");
-        await _ui.ClickAsync(_locators.IFRAMEDuckCreekPolicyOtherCheckBox);
-        await _ui.FillAsync(_locators.IFRAMEDuckCreekPolicyDescriptionOfOther, _data.Resolve("{{data:iframe_duck_creek_policy_description_of_other_517}}"));
-        await _ui.ClickAsync(_locators.OK);
-        await _ui.PressAsync(_locators.OK, "CLICK");
-        await _ui.PressAsync(_locators.OK, "Tab");
-        await _ui.PressAsync(_locators.OK, "Tab");
-        await _ui.PressAsync(_locators.OK, "Tab");
-        // IndicatorsAndErrors_ea9144Page.CheckForLoadingIndicator_1057_f7819aAsync
-        await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
-        // TBoxWait_7ea9e1Page.Wait2Secs_1058_f7819aAsync
-        await Task.Delay(1000);
-    }
-
-    // Business step: I sign out of the application
-    public async Task SignOutOfTheApplicationAsync()
-    {
-        // Logout_e43d61Page.Logout_1232_f7819aAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_1233_f7819aAsync
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_1234_f7819aAsync
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_1235_f7819aAsync
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_1236_f7819aAsync
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_1237_f7819aAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I sign out of the application
-    public async Task SignOutOfTheApplicationAsync2()
-    {
-        // Logout_e43d61Page.Logout_0275_515771Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0276_515771Async
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0277_515771Async
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0278_515771Async
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0279_515771Async
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0280_515771Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I sign out of the application
-    public async Task SignOutOfTheApplicationAsync3()
-    {
-        // Logout_e43d61Page.Logout_0275_d65717Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0276_d65717Async
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0277_d65717Async
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0278_d65717Async
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0279_d65717Async
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0280_d65717Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I complete restart Edge Popup
-    public async Task CompleteRestartEdgePopupAsync()
-    {
-        // RestartMicrosoftEdgeMessage_4c4f32Page.RestartMicrosoftEdgeMessageExists_0044_d344b2Async
-        await _ui.VerifyAsync(_locators.RestartMicrosoftEdgeMessageOK, _data.Resolve("Exists"), "");
-        // RestartMicrosoftEdgeMessage_4c4f32Page.RestartMicrosoftEdgeMessageClickOK_0045_d344b2Async
-        await _ui.ClickAsync(_locators.RestartMicrosoftEdgeMessageOK);
-    }
-
-    // Business step: I sign out of the application
-    public async Task SignOutOfTheApplicationAsync4()
-    {
-        // Logout_e43d61Page.Logout_0048_d344b2Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0049_d344b2Async
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0050_d344b2Async
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0051_d344b2Async
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0052_d344b2Async
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0053_d344b2Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I sign out of the application for logged in user
-    public async Task SignOutOfTheApplicationForLoggedInUserAsync()
-    {
-        // Logout_e43d61Page.Logout_0132_d344b2Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0133_d344b2Async
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0134_d344b2Async
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0135_d344b2Async
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0136_d344b2Async
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0137_d344b2Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I complete restart Edge Popup
-    public async Task CompleteRestartEdgePopupAsync2()
-    {
-        // RestartMicrosoftEdgeMessage_4c4f32Page.RestartMicrosoftEdgeMessageExists_0044_a1ba9cAsync
-        await _ui.VerifyAsync(_locators.RestartMicrosoftEdgeMessageOK, _data.Resolve("Exists"), "");
-        // RestartMicrosoftEdgeMessage_4c4f32Page.RestartMicrosoftEdgeMessageClickOK_0045_a1ba9cAsync
-        await _ui.ClickAsync(_locators.RestartMicrosoftEdgeMessageOK);
-    }
-
-    // Business step: I sign out of the application
-    public async Task SignOutOfTheApplicationAsync5()
-    {
-        // Logout_e43d61Page.Logout_0048_a1ba9cAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0049_a1ba9cAsync
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0050_a1ba9cAsync
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0051_a1ba9cAsync
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0052_a1ba9cAsync
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0053_a1ba9cAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I sign out of the application for logged in user
-    public async Task SignOutOfTheApplicationForLoggedInUserAsync2()
-    {
-        // Logout_e43d61Page.Logout_0149_a1ba9cAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0150_a1ba9cAsync
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0151_a1ba9cAsync
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0152_a1ba9cAsync
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0153_a1ba9cAsync
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0154_a1ba9cAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I complete restart Edge Popup
-    public async Task CompleteRestartEdgePopupAsync3()
-    {
-        // RestartMicrosoftEdgeMessage_4c4f32Page.RestartMicrosoftEdgeMessageExists_0044_85cb3fAsync
-        await _ui.VerifyAsync(_locators.RestartMicrosoftEdgeMessageOK, _data.Resolve("Exists"), "");
-        // RestartMicrosoftEdgeMessage_4c4f32Page.RestartMicrosoftEdgeMessageClickOK_0045_85cb3fAsync
-        await _ui.ClickAsync(_locators.RestartMicrosoftEdgeMessageOK);
-    }
-
-    // Business step: I sign out of the application
-    public async Task SignOutOfTheApplicationAsync6()
-    {
-        // Logout_e43d61Page.Logout_0048_85cb3fAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0049_85cb3fAsync
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0050_85cb3fAsync
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0051_85cb3fAsync
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0052_85cb3fAsync
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0053_85cb3fAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I sign out of the application for logged in user
-    public async Task SignOutOfTheApplicationForLoggedInUserAsync3()
-    {
-        // Logout_e43d61Page.Logout_0128_85cb3fAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0129_85cb3fAsync
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0130_85cb3fAsync
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0131_85cb3fAsync
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0132_85cb3fAsync
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0133_85cb3fAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I complete restart Edge Popup
-    public async Task CompleteRestartEdgePopupAsync4()
-    {
-        // RestartMicrosoftEdgeMessage_4c4f32Page.RestartMicrosoftEdgeMessageExists_0044_c839dfAsync
-        await _ui.VerifyAsync(_locators.RestartMicrosoftEdgeMessageOK, _data.Resolve("Exists"), "");
-        // RestartMicrosoftEdgeMessage_4c4f32Page.RestartMicrosoftEdgeMessageClickOK_0045_c839dfAsync
-        await _ui.ClickAsync(_locators.RestartMicrosoftEdgeMessageOK);
-    }
-
-    // Business step: I sign out of the application
-    public async Task SignOutOfTheApplicationAsync7()
-    {
-        // Logout_e43d61Page.Logout_0048_c839dfAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0049_c839dfAsync
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0050_c839dfAsync
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0051_c839dfAsync
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0052_c839dfAsync
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0053_c839dfAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I add a new Associated Client \- Business Owner Type \- Click Add Client
-    public async Task AddANewAssociatedClientBusinessOwnerTypeClickAddClientAsync2()
-    {
-        // ClientAddAssociatedClient_cb1bd9Page.AddANewAssociatedClientBusinessOwnerTypeClickAddClient_0089_c839dfAsync
-        await _ui.WaitAsync(_locators.AddClient, "Exists");
-        await _ui.PressAsync(_locators.AddClient, "PRE:TAB");
-        await _ui.PressAsync(_locators.AddClient, "Tab");
-        await _ui.ClickAsync(_locators.AddClient);
-        // ClientAddAssociatedClient_cb1bd9Page.CheckIfIndividualTypeExists_0090_c839dfAsync
-        await _ui.VerifyAsync(_locators.IndividualType, _data.Resolve("Absent"), "");
-    }
-
-    // Business step: I complete aJAX Error Check
-    public async Task CompleteAJAXErrorCheckAsync2()
-    {
-        // AJAXError_19aa70Page.AJAXErrorCheck_0091_c839dfAsync
-        await _ui.VerifyAsync(_locators.AJAXErrorCheck, _data.Resolve("Exists"), "");
-        // TBoxSetBuffer_e51da1Page.SetBufferForError_0092_c839dfAsync
-        _data.Set("AJAX Error", _data.Resolve("The scripts experienced an AJAX error with the following information: {B[AJAX]}"));
-        // TBoxEvaluationTool_b95b5cPage.ForceAFail_0093_c839dfAsync
-        _data.Set("ForceAFail", _data.Resolve("'FALSE' == 'TRUE'"));
-    }
-
-    // Business step: I complete WC Specific Fields
-    public async Task CompleteWCSpecificFieldsAsync()
-    {
-        // PolicyInfoWCSpecificFields_35da7aPage.PolicyInfoWCSpecificFields_0121_c839dfAsync
-        await _ui.FillAsync(_locators.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage, _data.Resolve("{{data:has_the_applicant_been_in_business_for_at_least_3_years_with_continuous_workers_compensation_coverage_150}}"));
-        await _ui.PressAsync(_locators.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage, "CLICK");
-        await _ui.PressAsync(_locators.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage, "Enter");
-        await _ui.PressAsync(_locators.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage, "Tab");
-        // PolicyInfoRequiredAndOptionalFields_f7216aPage.DESCRIPTIONBUFFER_0122_c839dfAsync
-        await _ui.WaitAsync(_locators.PolicyInfoHeader, "Visible");
-        await _ui.WaitAsync(_locators.DescriptionOfSpecifiedOperation, "Visible");
-        await _ui.PressAsync(_locators.DescriptionOfSpecifiedOperation, "PRE:TAB");
-        await _ui.PressAsync(_locators.DescriptionOfSpecifiedOperation, "Tab");
-        await _ui.FillAsync(_locators.DescriptionOfSpecifiedOperation, _data.Resolve("AL WC Basic {NMONTH}.{NDAY}.{NYEAR} {Time}"));
-        await _ui.PressAsync(_locators.DescriptionOfSpecifiedOperation, "Tab");
-        await _ui.VerifyAsync(_locators.DescriptionOfSpecifiedOperation, _data.Resolve("{XB[QuoteDescription]}"), "value");
-    }
-
-    // Business step: I sign out of the application for logged in user
-    public async Task SignOutOfTheApplicationForLoggedInUserAsync4()
-    {
-        // Logout_e43d61Page.Logout_0160_c839dfAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0161_c839dfAsync
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0162_c839dfAsync
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0163_c839dfAsync
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0164_c839dfAsync
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0165_c839dfAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I add a new Associated Client \- Business Owner Type \- Click Add Client
-    public async Task AddANewAssociatedClientBusinessOwnerTypeClickAddClientAsync3()
-    {
-        // ClientAddAssociatedClient_cb1bd9Page.AddANewAssociatedClientBusinessOwnerTypeClickAddClient_0048_aad19bAsync
-        await _ui.WaitAsync(_locators.AddClient, "Exists");
-        await _ui.PressAsync(_locators.AddClient, "PRE:TAB");
-        await _ui.PressAsync(_locators.AddClient, "Tab");
-        await _ui.ClickAsync(_locators.AddClient);
-        // ClientAddAssociatedClient_cb1bd9Page.CheckIfIndividualTypeExists_0049_aad19bAsync
-        await _ui.VerifyAsync(_locators.IndividualType, _data.Resolve("Absent"), "");
-    }
-
-    // Business step: I complete aJAX Error Check
-    public async Task CompleteAJAXErrorCheckAsync3()
-    {
-        // AJAXError_19aa70Page.AJAXErrorCheck_0050_aad19bAsync
-        await _ui.VerifyAsync(_locators.AJAXErrorCheck, _data.Resolve("Exists"), "");
-        // TBoxSetBuffer_e51da1Page.SetBufferForError_0051_aad19bAsync
-        _data.Set("AJAX Error", _data.Resolve("The scripts experienced an AJAX error with the following information: {B[AJAX]}"));
-        // TBoxEvaluationTool_b95b5cPage.ForceAFail_0052_aad19bAsync
-        _data.Set("ForceAFail", _data.Resolve("'FALSE' == 'TRUE'"));
-    }
-
-    // Business step: I select CP Detail
-    public async Task SelectCPDetailAsync()
-    {
-        // PolicyInfoCPPSpecificFields_d2689aPage.PolicyInfoCPPSpecificFields_0099_aad19bAsync
-        if (_data.Condition("'CPP LOB' == \"CP\""))
-        {
-            await _ui.ClickAsync(_locators.CPDetail);
-        }
-    }
-
-    // Business step: I complete CP Fields
-    public async Task CompleteCPFieldsAsync()
-    {
-        // PolicyCovg_0dff37Page.AnswerCPPolicyCovgPrivateWindmillsQuestion_0101_aad19bAsync
-        await _ui.WaitAsync(_locators.PolicyCovgFF145, "Exists");
-        await _ui.FillAsync(_locators.DoesAnyRiskGeneratePowerOtherThanPrivateWindmillsOrEmergencyBackup, _data.Resolve("{{data:does_any_risk_generate_power_other_than_private_windmills_or_emergency_backup_129}}"));
-        await _ui.PressAsync(_locators.DoesAnyRiskGeneratePowerOtherThanPrivateWindmillsOrEmergencyBackup, "CLICK");
-        await _ui.PressAsync(_locators.DoesAnyRiskGeneratePowerOtherThanPrivateWindmillsOrEmergencyBackup, "Enter");
-        await _ui.PressAsync(_locators.DoesAnyRiskGeneratePowerOtherThanPrivateWindmillsOrEmergencyBackup, "Tab");
-    }
-
-    // Business step: I complete mask Error Recovery
-    public async Task CompleteMaskErrorRecoveryAsync()
-    {
-        // TaskbarStartButton_d5f6cePage.TaskbarStartButtonClickOnce_0102_aad19bAsync
-        await _ui.ClickAsync(_locators.Start);
-        // TaskbarStartButton_d5f6cePage.TaskbarStartButtonClickOnce_0103_aad19bAsync
-        await _ui.ClickAsync(_locators.Start);
-    }
-
-    // Business step: I complete ensure Property of Others Rating Group has been entered
-    public async Task CompleteEnsurePropertyOfOthersRatingGroupHasBeenEnteredAsync()
-    {
-        // PropertyAddClass_ed4d5dPage.PropertyAddClass_0137_aad19bAsync
-        await _ui.VerifyAsync(_locators.PropertyOfOthersRatingGroup, _data.Resolve("{{data:expected_property_of_others_rating_group_value_228}}"), "NotEqual:Value");
-        // PropertyAddClass_ed4d5dPage.PropertyAddClass_0138_aad19bAsync
-        await _ui.VerifyAsync(_locators.PropertyOfOthersRatingGroup, _data.Resolve("{{data:expected_property_of_others_rating_group_value_229}}"), "NotEqual:Value");
-        // PropertyAddClass_ed4d5dPage.PropertyAddClass_0139_aad19bAsync
-        await _ui.FillAsync(_locators.PropertyOfOthersRatingGroup, _data.Resolve("{{data:property_of_others_rating_group_230}}"));
-        await _ui.PressAsync(_locators.PropertyOfOthersRatingGroup, "Tab");
-        await _ui.PressAsync(_locators.PropertyOfOthersRatingGroup, "Tab");
-    }
-
-    // Business step: I return to CPP Navigation
-    public async Task ReturnToCPPNavigationAsync()
-    {
-        // CommonNavigationLinks_dba56bPage.CommonNavigationLinks_0146_aad19bAsync
-        await _ui.ClickAsync(_locators.ReturnToCPP);
-    }
-
-    // Business step: I complete CGL Fields
-    public async Task CompleteCGLFieldsAsync()
-    {
-        // PolicyCovgGL_e538c3Page.PolicyCovgGL_0150_aad19bAsync
-        await _ui.WaitAsync(_locators.PolicyCovg6B651, "Exists");
-        if (_data.Condition("'Occurence Limit' != NULL"))
-        {
-            await _ui.FillAsync(_locators.OccurenceLimit, _data.Resolve("{{data:occurence_limit_259}}"));
-            await _ui.PressAsync(_locators.OccurenceLimit, "CLICK");
-            await _ui.PressAsync(_locators.OccurenceLimit, "Enter");
-            await _ui.PressAsync(_locators.OccurenceLimit, "Tab");
-        }
-        if (_data.Condition("'Aggregate Limit' != NULL"))
-        {
-            await _ui.FillAsync(_locators.AggregateLimit, _data.Resolve("{{data:aggregate_limit_260}}"));
-            await _ui.PressAsync(_locators.AggregateLimit, "CLICK");
-            await _ui.PressAsync(_locators.AggregateLimit, "Enter");
-            await _ui.PressAsync(_locators.AggregateLimit, "Tab");
-        }
-        if (_data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await _ui.FillAsync(_locators.ProductsAggLimit, _data.Resolve(""));
-        }
-        if (_data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await _ui.FillAsync(_locators.DedType, _data.Resolve("{{data:ded_type_262}}"));
-            await _ui.PressAsync(_locators.DedType, "Tab");
-        }
-        if (_data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await _ui.FillAsync(_locators.DeductibleBasis, _data.Resolve("{{data:deductible_basis_263}}"));
-            await _ui.PressAsync(_locators.DeductibleBasis, "Tab");
-        }
-        if (_data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await _ui.FillAsync(_locators.PremOpDed, _data.Resolve("{{data:premop_ded_264}}"));
-            await _ui.PressAsync(_locators.PremOpDed, "Tab");
-        }
-        if (_data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await _ui.FillAsync(_locators.PremOpPDDed, _data.Resolve(""));
-        }
-        if (_data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await _ui.SmartSetAsync(_locators.SplitBIDed, _data.Resolve("{{data:split_bi_ded_266}}"));
-            await _ui.PressAsync(_locators.SplitBIDed, "Tab");
-        }
-        if (_data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await _ui.FillAsync(_locators.SplitPDDed, _data.Resolve(""));
-        }
-        if (_data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await _ui.FillAsync(_locators.ProdBIDed, _data.Resolve("{{data:prod_bi_ded_268}}"));
-            await _ui.PressAsync(_locators.ProdBIDed, "CLICK");
-            await _ui.PressAsync(_locators.ProdBIDed, "Tab");
-        }
-        if (_data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await _ui.FillAsync(_locators.ProdPDDed, _data.Resolve(""));
-        }
-        if (_data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await _ui.FillAsync(_locators.FireDamage, _data.Resolve(""));
-        }
-        if (_data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await _ui.FillAsync(_locators.Medical, _data.Resolve(""));
-        }
-        if (_data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await _ui.FillAsync(_locators.PersAdvInj, _data.Resolve(""));
-        }
-        if (_data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await _ui.FillAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, _data.Resolve("{{data:is_the_insured_engaged_in_any_snow_or_ice_removal_operations_273}}"));
-            await _ui.PressAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, "CLICK");
-            await _ui.PressAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, "Enter");
-            await _ui.PressAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, "Tab");
-        }
-        if (_data.Condition("(State==\"NY\")||(State == \"NJ\")||(State == \"WV\")||(State == \"MA\")||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\")||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
-        {
-            await _ui.FillAsync(_locators.OfFullTimeEmployees, _data.Resolve("{{data:of_full_time_employees_274}}"));
-            await _ui.PressAsync(_locators.OfFullTimeEmployees, "Tab");
-        }
-        if (_data.Condition("(State==\"NY\")||(State == \"NJ\")||(State == \"WV\")||(State == \"MA\") ||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\")||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
-        {
-            await _ui.FillAsync(_locators.OfPartTimeEmployees, _data.Resolve("{{data:of_part_time_employees_275}}"));
-            await _ui.PressAsync(_locators.OfPartTimeEmployees, "Tab");
-        }
-        if (_data.Condition("(State==\"NY\")||(State == \"NJ\")||(State == \"WV\")||(State == \"MA\")||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\") ||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
-        {
-            await _ui.FillAsync(_locators.OfSeasonalTemporaryEmployees, _data.Resolve("{{data:of_seasonal_temporary_employees_276}}"));
-            await _ui.PressAsync(_locators.OfSeasonalTemporaryEmployees, "Tab");
-        }
-    }
-
-    // Business step: I return to CPP Navigation for return to cpp
-    public async Task ReturnToCPPNavigationForReturnToCppAsync()
-    {
-        // CommonNavigationLinks_dba56bPage.CommonNavigationLinks_0186_aad19bAsync
-        await _ui.ClickAsync(_locators.ReturnToCPP);
-    }
-
-    // Business step: I select IM Detail
-    public async Task SelectIMDetailAsync()
-    {
-        // PolicyInfoCPPSpecificFields_d2689aPage.PolicyInfoCPPSpecificFields_0187_aad19bAsync
-        if (_data.Condition("'CPP LOB' == \"IM\""))
-        {
-            await _ui.ClickAsync(_locators.IMDetail);
-        }
-    }
-
-    // Business step: I complete if search result Alert exists
-    public async Task CompleteIfSearchResultAlertExistsAsync()
-    {
-        // DuckCreekPolicy_59f415Page.IfSearchResultAlertExists_0212_aad19bAsync
-        await _ui.VerifyAsync(_locators.ShowMe, _data.Resolve("Exists"), "");
-        // DuckCreekPolicy_59f415Page.SelectShowMeButton_0213_aad19bAsync
-        await _ui.ClickAsync(_locators.ShowMe);
-    }
-
-    // Business step: I complete ensure Class has been entered for Accounts Receivable
-    public async Task CompleteEnsureClassHasBeenEnteredForAccountsReceivableAsync()
-    {
-        // RiskAccountsReceivable_1ef8eePage.RiskAccountsReceivable_0214_aad19bAsync
-        await _ui.VerifyAsync(_locators.SearchResultEAFB8, _data.Resolve("{{data:expected_search_result_value_452}}"), "Value");
-        // RiskAccountsReceivable_1ef8eePage.RiskAccountsReceivable_0215_aad19bAsync
-        await _ui.VerifyAsync(_locators.SearchResultEAFB8, _data.Resolve("{{data:expected_search_result_value_453}}"), "Value");
-        // RiskAccountsReceivable_1ef8eePage.RiskAccountsReceivable_0216_aad19bAsync
-        await _ui.WaitAsync(_locators.AccountsReceivableHeading, "Exists");
-        await _ui.FillAsync(_locators.SearchValue79E46, _data.Resolve("{{data:search_value_455}}"));
-        await _ui.PressAsync(_locators.SearchValue79E46, "Tab");
-        await _ui.PressAsync(_locators.SearchValue79E46, "CLICK");
-        await _ui.PressAsync(_locators.SearchValue79E46, "Tab");
-        await _ui.FillAsync(_locators.SearchResultEAFB8, _data.Resolve("{{data:search_result_456}}"));
-        await _ui.PressAsync(_locators.SearchResultEAFB8, "Tab");
-        await _ui.PressAsync(_locators.SearchResultEAFB8, "CLICK");
-        await _ui.PressAsync(_locators.SearchResultEAFB8, "Enter");
-        await _ui.PressAsync(_locators.SearchResultEAFB8, "Tab");
-        await _ui.ClickAsync(_locators.RiskAccountsReceivableOK);
-    }
-
-    // Business step: I complete if search result Alert exists for show me
-    public async Task CompleteIfSearchResultAlertExistsForShowMeAsync()
-    {
-        // DuckCreekPolicy_59f415Page.IfSearchResultAlertExists_0220_aad19bAsync
-        await _ui.VerifyAsync(_locators.ShowMe, _data.Resolve("Exists"), "");
-        // DuckCreekPolicy_59f415Page.SelectShowMeButton_0221_aad19bAsync
-        await _ui.ClickAsync(_locators.ShowMe);
-    }
-
-    // Business step: I complete ensure Class has been entered for Bailees Customers
-    public async Task CompleteEnsureClassHasBeenEnteredForBaileesCustomersAsync()
-    {
-        // RiskBaileesCustomers_a875f1Page.RiskBaileesCustomers_0222_aad19bAsync
-        await _ui.VerifyAsync(_locators.SearchResultA1BFB, _data.Resolve("{{data:expected_search_result_value_479}}"), "Value");
-        // RiskBaileesCustomers_a875f1Page.RiskBaileesCustomers_0223_aad19bAsync
-        await _ui.VerifyAsync(_locators.SearchResultA1BFB, _data.Resolve("{{data:expected_search_result_value_480}}"), "Value");
-        // RiskBaileesCustomers_a875f1Page.RiskBaileesCustomers_0224_aad19bAsync
-        await _ui.FillAsync(_locators.SearchValueCA6A6, _data.Resolve("{{data:search_value_481}}"));
-        await _ui.PressAsync(_locators.SearchValueCA6A6, "Tab");
-        await _ui.PressAsync(_locators.SearchValueCA6A6, "CLICK");
-        await _ui.PressAsync(_locators.SearchValueCA6A6, "Tab");
-        await _ui.FillAsync(_locators.SearchResultA1BFB, _data.Resolve("{{data:search_result_482}}"));
-        await _ui.PressAsync(_locators.SearchResultA1BFB, "Tab");
-        await _ui.PressAsync(_locators.SearchResultA1BFB, "CLICK");
-        await _ui.PressAsync(_locators.SearchResultA1BFB, "Enter");
-        await _ui.PressAsync(_locators.SearchResultA1BFB, "Tab");
-        await _ui.ClickAsync(_locators.RiskBaileesCustomersOK);
-    }
-
-    // Business step: I complete if search result Alert exists for duck creek policy
-    public async Task CompleteIfSearchResultAlertExistsForDuckCreekPolicyAsync()
-    {
-        // DuckCreekPolicy_59f415Page.IfSearchResultAlertExists_0228_aad19bAsync
-        await _ui.VerifyAsync(_locators.ShowMe, _data.Resolve("Exists"), "");
-        // DuckCreekPolicy_59f415Page.SelectShowMeButton_0229_aad19bAsync
-        await _ui.ClickAsync(_locators.ShowMe);
-    }
-
-    // Business step: I complete ensure Class has been entered for Computer Systems
-    public async Task CompleteEnsureClassHasBeenEnteredForComputerSystemsAsync()
-    {
-        // RiskComputerSystems_7b4caaPage.RiskComputerSystems_0230_aad19bAsync
-        await _ui.VerifyAsync(_locators.SearchResult4E620, _data.Resolve("{{data:expected_search_result_value_497}}"), "Value");
-        // RiskComputerSystems_7b4caaPage.RiskComputerSystems_0231_aad19bAsync
-        await _ui.VerifyAsync(_locators.SearchResult4E620, _data.Resolve("{{data:expected_search_result_value_498}}"), "Value");
-        // RiskComputerSystems_7b4caaPage.RiskComputerSystems_0232_aad19bAsync
-        await _ui.FillAsync(_locators.SearchValue9FCD1, _data.Resolve("{{data:search_value_499}}"));
-        await _ui.PressAsync(_locators.SearchValue9FCD1, "Tab");
-        await _ui.PressAsync(_locators.SearchValue9FCD1, "CLICK");
-        await _ui.PressAsync(_locators.SearchValue9FCD1, "Tab");
-        await _ui.FillAsync(_locators.SearchResult4E620, _data.Resolve("{{data:search_result_500}}"));
-        await _ui.PressAsync(_locators.SearchResult4E620, "Tab");
-        await _ui.PressAsync(_locators.SearchResult4E620, "CLICK");
-        await _ui.PressAsync(_locators.SearchResult4E620, "Enter");
-        await _ui.PressAsync(_locators.SearchResult4E620, "Tab");
-        await _ui.PressAsync(_locators.SearchResult4E620, "Tab");
-        await _ui.ClickAsync(_locators.RiskComputerSystemsOK);
-    }
-
-    // Business step: I return to CPP policy navigation
-    public async Task ReturnToCPPPolicyNavigationAsync()
-    {
-        // CommonNavigationLinks_dba56bPage.CommonNavigationLinks_0260_aad19bAsync
-        await _ui.ClickAsync(_locators.ReturnToCPP);
-        // IndicatorsAndErrors_ea9144Page.CheckForLoadingIndicator_0261_aad19bAsync
-        await _ui.VerifyAsync(_locators.LoadingMessage, _data.Resolve("Visible"), "");
-        // TBoxWait_7ea9e1Page.Wait2Secs_0262_aad19bAsync
-        await Task.Delay(1000);
-        // TBoxWait_7ea9e1Page.WaitForScreenToFullyRefresh_0263_aad19bAsync
-        await Task.Delay(1000);
-    }
-
-    // Business step: I add a new Associated Client \- Business Owner Type \- Click Add Client
-    public async Task AddANewAssociatedClientBusinessOwnerTypeClickAddClientAsync4()
-    {
-        // ClientAddAssociatedClient_cb1bd9Page.AddANewAssociatedClientBusinessOwnerTypeClickAddClient_0048_677267Async
-        await _ui.WaitAsync(_locators.AddClient, "Exists");
-        await _ui.PressAsync(_locators.AddClient, "PRE:TAB");
-        await _ui.PressAsync(_locators.AddClient, "Tab");
-        await _ui.ClickAsync(_locators.AddClient);
-        // ClientAddAssociatedClient_cb1bd9Page.CheckIfIndividualTypeExists_0049_677267Async
-        await _ui.VerifyAsync(_locators.IndividualType, _data.Resolve("Absent"), "");
-    }
-
-    // Business step: I complete aJAX Error Check
-    public async Task CompleteAJAXErrorCheckAsync4()
-    {
-        // AJAXError_19aa70Page.AJAXErrorCheck_0050_677267Async
-        await _ui.VerifyAsync(_locators.AJAXErrorCheck, _data.Resolve("Exists"), "");
-        // TBoxSetBuffer_e51da1Page.SetBufferForError_0051_677267Async
-        _data.Set("AJAX Error", _data.Resolve("The scripts experienced an AJAX error with the following information: {B[AJAX]}"));
-        // TBoxEvaluationTool_b95b5cPage.ForceAFail_0052_677267Async
-        _data.Set("ForceAFail", _data.Resolve("'FALSE' == 'TRUE'"));
-    }
-
-    // Business step: I complete mask Error Recovery
-    public async Task CompleteMaskErrorRecoveryAsync2()
-    {
-        // TaskbarStartButton_d5f6cePage.TaskbarStartButtonClickOnce_0101_677267Async
-        await _ui.ClickAsync(_locators.Start);
-        // TaskbarStartButton_d5f6cePage.TaskbarStartButtonClickOnce_0102_677267Async
-        await _ui.ClickAsync(_locators.Start);
-    }
-
-    // Business step: I complete restart Edge Popup
-    public async Task CompleteRestartEdgePopupAsync5()
-    {
-        // RestartMicrosoftEdgeMessage_4c4f32Page.RestartMicrosoftEdgeMessageExists_0163_677267Async
-        await _ui.VerifyAsync(_locators.RestartMicrosoftEdgeMessageOK, _data.Resolve("Exists"), "");
-        // RestartMicrosoftEdgeMessage_4c4f32Page.RestartMicrosoftEdgeMessageClickOK_0164_677267Async
-        await _ui.ClickAsync(_locators.RestartMicrosoftEdgeMessageOK);
-    }
-
-    // Business step: I sign out of the application
-    public async Task SignOutOfTheApplicationAsync8()
-    {
-        // Logout_e43d61Page.Logout_0167_677267Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0168_677267Async
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0169_677267Async
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0170_677267Async
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0171_677267Async
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0172_677267Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I search by Desc
-    public async Task SearchByDescAsync()
-    {
-        // DashboardQuickSearch_8fcc82Page.EnterDescInQuickSearch_0180_677267Async
-        await _ui.FillAsync(_locators.SearchText, _data.Resolve("{B[QuoteDescription]}"));
-        await _ui.PressAsync(_locators.SearchText, "Tab");
-        await _ui.PressAsync(_locators.SearchText, "Tab");
-        await _ui.PressAsync(_locators.SearchText, "Tab");
-        await _ui.PressAsync(_locators.SearchText, "Tab");
-        await _ui.ClickAsync(_locators.QuickSearchButton);
-        // DashboardSearchForPoliciesQuotes_824a16Page.EnterInfoToSearchByDesc_0181_677267Async
-        await _ui.FillAsync(_locators.SearchMethodEGDescriptionPolicy, _data.Resolve("{{data:search_method_e_g_description_policy_333}}"));
-        await _ui.PressAsync(_locators.SearchMethodEGDescriptionPolicy, "Tab");
-        await _ui.ClickAsync(_locators.SearchButton);
-        await _ui.WaitAsync(_locators.ViewPolicy, "Exists");
-        await _ui.PressAsync(_locators.ViewPolicy, "PRE:TAB");
-        await _ui.PressAsync(_locators.ViewPolicy, "Tab");
-        await _ui.ClickAsync(_locators.ViewPolicy);
-    }
-
-    // Business step: I complete cT StraightThrough Liability Limit to 1M
-    public async Task CompleteCTStraightThroughLiabilityLimitTo1MAsync()
-    {
-        // PolicyCoverageLimits_bce0bdPage.CTStraightThroughLiabilityLimitTo1M_0120_a6f47eAsync
-        await _ui.VerifyAsync(_locators.CTStraightThroughLiabilityLimitTo1M, _data.Resolve("Exists"), "");
-    }
-
-    // Business step: I complete save for Later/Return to Admin
-    public async Task CompleteSaveForLaterReturnToAdminAsync()
-    {
-        // CommonNavigationLinks_dba56bPage.CheckForSaveForLaterButton_0664_a6f47eAsync
-        await _ui.VerifyAsync(_locators.SaveForLater, _data.Resolve("Exists"), "");
-        // CommonNavigationLinks_dba56bPage.SaveForLater_0665_a6f47eAsync
-        await _ui.ClickAsync(_locators.SaveForLater);
-        await _ui.WaitAsync(_locators.SaveForLaterOK, "Exists");
-        await _ui.ClickAsync(_locators.SaveForLaterOK);
-        // CommonNavigationLinks_dba56bPage.CheckForReturnToAdminButton_0666_a6f47eAsync
-        await _ui.VerifyAsync(_locators.ReturnToAdmin, _data.Resolve("Exists"), "");
-        // CommonNavigationLinks_dba56bPage.ReturnToAdmin_0667_a6f47eAsync
-        await _ui.ClickAsync(_locators.ReturnToAdmin);
-        await _ui.WaitAsync(_locators.ReturnToAdmin, "Absent");
-    }
-
-    // Business step: I add a new Associated Client \- Business Owner Type \- Click Add Client
-    public async Task AddANewAssociatedClientBusinessOwnerTypeClickAddClientAsync5()
-    {
-        // ClientAddAssociatedClient_cb1bd9Page.AddANewAssociatedClientBusinessOwnerTypeClickAddClient_0048_767d1bAsync
-        await _ui.WaitAsync(_locators.AddClient, "Exists");
-        await _ui.PressAsync(_locators.AddClient, "PRE:TAB");
-        await _ui.PressAsync(_locators.AddClient, "Tab");
-        await _ui.ClickAsync(_locators.AddClient);
-        // ClientAddAssociatedClient_cb1bd9Page.CheckIfIndividualTypeExists_0049_767d1bAsync
-        await _ui.VerifyAsync(_locators.IndividualType, _data.Resolve("Absent"), "");
-    }
-
-    // Business step: I complete aJAX Error Check
-    public async Task CompleteAJAXErrorCheckAsync5()
-    {
-        // AJAXError_19aa70Page.AJAXErrorCheck_0050_767d1bAsync
-        await _ui.VerifyAsync(_locators.AJAXErrorCheck, _data.Resolve("Exists"), "");
-        // TBoxSetBuffer_e51da1Page.SetBufferForError_0051_767d1bAsync
-        _data.Set("AJAX Error", _data.Resolve("The scripts experienced an AJAX error with the following information: {B[AJAX]}"));
-        // TBoxEvaluationTool_b95b5cPage.ForceAFail_0052_767d1bAsync
-        _data.Set("ForceAFail", _data.Resolve("'FALSE' == 'TRUE'"));
-    }
-
-    // Business step: I add Commercial Auto Underlying LOB
-    public async Task AddCommercialAutoUnderlyingLOBAsync2()
-    {
-        // PolicyCovg_0dff37Page.SelectCommercialAutoUnderlyingLOB_0091_767d1bAsync
-        await _ui.ClickAsync(_locators.IncludeCommercialAuto);
-        // UMBNavigationLinks_77d89fPage.WaitForCommercialAutoTabToAppear_0092_767d1bAsync
-        await _ui.WaitAsync(_locators.CommercialAuto, "Visible");
-    }
-
-    // Business step: I add General Liability Underlying LOB
-    public async Task AddGeneralLiabilityUnderlyingLOBAsync2()
-    {
-        // PolicyCovg_0dff37Page.SelectGeneralLiabilityUnderlyingLOB_0093_767d1bAsync
-        await _ui.WaitAsync(_locators.PolicyCovgFF145, "Visible");
-        await _ui.ClickAsync(_locators.IncludeGeneralLiability);
-        // UMBNavigationLinks_77d89fPage.WaitForGeneralLiabilityTabToAppear_0094_767d1bAsync
-        await _ui.WaitAsync(_locators.GeneralLiab, "Visible");
-    }
-
-    // Business step: I add Businessowners Underlying LOB
-    public async Task AddBusinessownersUnderlyingLOBAsync2()
-    {
-        // PolicyCovg_0dff37Page.SelectGeneralLiabilityUnderlyingLOB_0095_767d1bAsync
-        await _ui.WaitAsync(_locators.PolicyCovgFF145, "Visible");
-        await _ui.ClickAsync(_locators.IncludeBusinessowners);
-        // UMBNavigationLinks_77d89fPage.WaitForBusinessownersTabToAppear_0096_767d1bAsync
-        await _ui.WaitAsync(_locators.Businessowners, "Visible");
-    }
-
-    // Business step: I add SFP \- 10 Liability Farm Underlying LOB
-    public async Task AddSFP10LiabilityFarmUnderlyingLOBAsync2()
-    {
-        // PolicyCovg_0dff37Page.SelectSFP10UnderlyingLOB_0097_767d1bAsync
-        await _ui.WaitAsync(_locators.PolicyCovgFF145, "Visible");
-        await _ui.ClickAsync(_locators.IncludeSFP10LiabilityFarm);
-        // UMBNavigationLinks_77d89fPage.WaitForSFP10LiabilityFarmTabToAppear_0098_767d1bAsync
-        await _ui.WaitAsync(_locators.SFP10LiabilityFarm, "Visible");
-    }
-
-    // Business step: I add Commercial Package Policy Liability Underlying LOB
-    public async Task AddCommercialPackagePolicyLiabilityUnderlyingLOBAsync2()
-    {
-        // PolicyCovg_0dff37Page.SelectCommercialPackagePolicyLiabilityUnderlyingLOB_0099_767d1bAsync
-        await _ui.WaitAsync(_locators.PolicyCovgFF145, "Visible");
-        await _ui.ClickAsync(_locators.IncludeCommercialPackagePolicyLiability);
-        // UMBNavigationLinks_77d89fPage.WaitForCommercialPackagePolicyLiabilityTabToAppear_0100_767d1bAsync
-        await _ui.WaitAsync(_locators.CPPLiability, "Visible");
-    }
-
-    // Business step: I add Employers Liability Underlying LOB
-    public async Task AddEmployersLiabilityUnderlyingLOBAsync2()
-    {
-        // PolicyCovg_0dff37Page.SelectEmployersLiabilityUnderlyingLOB_0101_767d1bAsync
-        await _ui.WaitAsync(_locators.PolicyCovgFF145, "Visible");
-        await _ui.ClickAsync(_locators.IncludeEmployersLiability);
-        // UMBNavigationLinks_77d89fPage.WaitForEmployersLiabilityTabToAppear_0102_767d1bAsync
-        await _ui.WaitAsync(_locators.EmployersLiab, "Visible");
-    }
-
-    // Business step: I sign out of the application
-    public async Task SignOutOfTheApplicationAsync9()
-    {
-        // Logout_e43d61Page.Logout_0363_767d1bAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0364_767d1bAsync
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0365_767d1bAsync
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0366_767d1bAsync
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0367_767d1bAsync
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0368_767d1bAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I add a new Associated Client \- Business Owner Type \- Click Add Client
-    public async Task AddANewAssociatedClientBusinessOwnerTypeClickAddClientAsync6()
-    {
-        // ClientAddAssociatedClient_cb1bd9Page.AddANewAssociatedClientBusinessOwnerTypeClickAddClient_0048_bb930cAsync
-        await _ui.WaitAsync(_locators.AddClient, "Exists");
-        await _ui.PressAsync(_locators.AddClient, "PRE:TAB");
-        await _ui.PressAsync(_locators.AddClient, "Tab");
-        await _ui.ClickAsync(_locators.AddClient);
-        // ClientAddAssociatedClient_cb1bd9Page.CheckIfIndividualTypeExists_0049_bb930cAsync
-        await _ui.VerifyAsync(_locators.IndividualType, _data.Resolve("Absent"), "");
-    }
-
-    // Business step: I complete aJAX Error Check
-    public async Task CompleteAJAXErrorCheckAsync6()
-    {
-        // AJAXError_19aa70Page.AJAXErrorCheck_0050_bb930cAsync
-        await _ui.VerifyAsync(_locators.AJAXErrorCheck, _data.Resolve("Exists"), "");
-        // TBoxSetBuffer_e51da1Page.SetBufferForError_0051_bb930cAsync
-        _data.Set("AJAX Error", _data.Resolve("The scripts experienced an AJAX error with the following information: {B[AJAX]}"));
-        // TBoxEvaluationTool_b95b5cPage.ForceAFail_0052_bb930cAsync
-        _data.Set("ForceAFail", _data.Resolve("'FALSE' == 'TRUE'"));
-    }
-
-    // Business step: I complete WC Specific Fields
-    public async Task CompleteWCSpecificFieldsAsync2()
-    {
-        // PolicyInfoWCSpecificFields_35da7aPage.PolicyInfoWCSpecificFields_0087_bb930cAsync
-        await _ui.FillAsync(_locators.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage, _data.Resolve("{{data:has_the_applicant_been_in_business_for_at_least_3_years_with_continuous_workers_compensation_coverage_123}}"));
-        await _ui.PressAsync(_locators.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage, "CLICK");
-        await _ui.PressAsync(_locators.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage, "Enter");
-        await _ui.PressAsync(_locators.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage, "Tab");
-    }
-
-    // Business step: I sign out of the application
-    public async Task SignOutOfTheApplicationAsync10()
-    {
-        // Logout_e43d61Page.Logout_0289_bb930cAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0290_bb930cAsync
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0291_bb930cAsync
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0292_bb930cAsync
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0293_bb930cAsync
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0294_bb930cAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I add a new Associated Client \- Business Owner Type \- Click Add Client
-    public async Task AddANewAssociatedClientBusinessOwnerTypeClickAddClientAsync7()
-    {
-        // ClientAddAssociatedClient_cb1bd9Page.AddANewAssociatedClientBusinessOwnerTypeClickAddClient_0048_a8e5f5Async
-        await _ui.WaitAsync(_locators.AddClient, "Exists");
-        await _ui.PressAsync(_locators.AddClient, "PRE:TAB");
-        await _ui.PressAsync(_locators.AddClient, "Tab");
-        await _ui.ClickAsync(_locators.AddClient);
-        // ClientAddAssociatedClient_cb1bd9Page.CheckIfIndividualTypeExists_0049_a8e5f5Async
-        await _ui.VerifyAsync(_locators.IndividualType, _data.Resolve("Absent"), "");
-    }
-
-    // Business step: I complete aJAX Error Check
-    public async Task CompleteAJAXErrorCheckAsync7()
-    {
-        // AJAXError_19aa70Page.AJAXErrorCheck_0050_a8e5f5Async
-        await _ui.VerifyAsync(_locators.AJAXErrorCheck, _data.Resolve("Exists"), "");
-        // TBoxSetBuffer_e51da1Page.SetBufferForError_0051_a8e5f5Async
-        _data.Set("AJAX Error", _data.Resolve("The scripts experienced an AJAX error with the following information: {B[AJAX]}"));
-        // TBoxEvaluationTool_b95b5cPage.ForceAFail_0052_a8e5f5Async
-        _data.Set("ForceAFail", _data.Resolve("'FALSE' == 'TRUE'"));
-    }
-
-    // Business step: I complete restart Edge Popup
-    public async Task CompleteRestartEdgePopupAsync6()
-    {
-        // RestartMicrosoftEdgeMessage_4c4f32Page.RestartMicrosoftEdgeMessageExists_0044_b3ff07Async
-        await _ui.VerifyAsync(_locators.RestartMicrosoftEdgeMessageOK, _data.Resolve("Exists"), "");
-        // RestartMicrosoftEdgeMessage_4c4f32Page.RestartMicrosoftEdgeMessageClickOK_0045_b3ff07Async
-        await _ui.ClickAsync(_locators.RestartMicrosoftEdgeMessageOK);
-    }
-
-    // Business step: I sign out of the application
-    public async Task SignOutOfTheApplicationAsync11()
-    {
-        // Logout_e43d61Page.Logout_0048_b3ff07Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0049_b3ff07Async
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0050_b3ff07Async
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0051_b3ff07Async
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0052_b3ff07Async
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0053_b3ff07Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I sign out of the application for logged in user
-    public async Task SignOutOfTheApplicationForLoggedInUserAsync5()
-    {
-        // Logout_e43d61Page.Logout_0130_b3ff07Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0131_b3ff07Async
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0132_b3ff07Async
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0133_b3ff07Async
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0134_b3ff07Async
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0135_b3ff07Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I complete restart Edge Popup
-    public async Task CompleteRestartEdgePopupAsync7()
-    {
-        // RestartMicrosoftEdgeMessage_4c4f32Page.RestartMicrosoftEdgeMessageExists_0045_c7d608Async
-        await _ui.VerifyAsync(_locators.RestartMicrosoftEdgeMessageOK, _data.Resolve("Exists"), "");
-        // RestartMicrosoftEdgeMessage_4c4f32Page.RestartMicrosoftEdgeMessageClickOK_0046_c7d608Async
-        await _ui.ClickAsync(_locators.RestartMicrosoftEdgeMessageOK);
-    }
-
-    // Business step: I sign out of the application
-    public async Task SignOutOfTheApplicationAsync12()
-    {
-        // Logout_e43d61Page.Logout_0049_c7d608Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0050_c7d608Async
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0051_c7d608Async
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0052_c7d608Async
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0053_c7d608Async
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0054_c7d608Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I sign out of the application for logged in user
-    public async Task SignOutOfTheApplicationForLoggedInUserAsync6()
-    {
-        // Logout_e43d61Page.Logout_0131_c7d608Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0132_c7d608Async
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0133_c7d608Async
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0134_c7d608Async
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0135_c7d608Async
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0136_c7d608Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I complete restart Edge Popup
-    public async Task CompleteRestartEdgePopupAsync8()
-    {
-        // RestartMicrosoftEdgeMessage_4c4f32Page.RestartMicrosoftEdgeMessageExists_0044_2a8772Async
-        await _ui.VerifyAsync(_locators.RestartMicrosoftEdgeMessageOK, _data.Resolve("Exists"), "");
-        // RestartMicrosoftEdgeMessage_4c4f32Page.RestartMicrosoftEdgeMessageClickOK_0045_2a8772Async
-        await _ui.ClickAsync(_locators.RestartMicrosoftEdgeMessageOK);
-    }
-
-    // Business step: I sign out of the application
-    public async Task SignOutOfTheApplicationAsync13()
-    {
-        // Logout_e43d61Page.Logout_0048_2a8772Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0049_2a8772Async
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0050_2a8772Async
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0051_2a8772Async
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0052_2a8772Async
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0053_2a8772Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I sign out of the application for logged in user
-    public async Task SignOutOfTheApplicationForLoggedInUserAsync7()
-    {
-        // Logout_e43d61Page.Logout_0130_2a8772Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0131_2a8772Async
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0132_2a8772Async
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0133_2a8772Async
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0134_2a8772Async
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0135_2a8772Async
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
-
-    // Business step: I add a new Associated Client \- Business Owner Type \- Click Add Client
-    public async Task AddANewAssociatedClientBusinessOwnerTypeClickAddClientAsync8()
-    {
-        // ClientAddAssociatedClient_cb1bd9Page.AddANewAssociatedClientBusinessOwnerTypeClickAddClient_0047_f2d6bdAsync
-        await _ui.WaitAsync(_locators.AddClient, "Exists");
-        await _ui.PressAsync(_locators.AddClient, "PRE:TAB");
-        await _ui.PressAsync(_locators.AddClient, "Tab");
-        await _ui.ClickAsync(_locators.AddClient);
-        // ClientAddAssociatedClient_cb1bd9Page.CheckIfIndividualTypeExists_0048_f2d6bdAsync
-        await _ui.VerifyAsync(_locators.IndividualType, _data.Resolve("Absent"), "");
-    }
-
-    // Business step: I complete aJAX Error Check
-    public async Task CompleteAJAXErrorCheckAsync8()
-    {
-        // AJAXError_19aa70Page.AJAXErrorCheck_0049_f2d6bdAsync
-        await _ui.VerifyAsync(_locators.AJAXErrorCheck, _data.Resolve("Exists"), "");
-        // TBoxSetBuffer_e51da1Page.SetBufferForError_0050_f2d6bdAsync
-        _data.Set("AJAX Error", _data.Resolve("The scripts experienced an AJAX error with the following information: {B[AJAX]}"));
-        // TBoxEvaluationTool_b95b5cPage.ForceAFail_0051_f2d6bdAsync
-        _data.Set("ForceAFail", _data.Resolve("'FALSE' == 'TRUE'"));
-    }
-
-    // Business step: I complete WC Specific Fields
-    public async Task CompleteWCSpecificFieldsAsync3()
-    {
-        // PolicyInfoWCSpecificFields_35da7aPage.PolicyInfoWCSpecificFields_0086_f2d6bdAsync
-        await _ui.FillAsync(_locators.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage, _data.Resolve("{{data:has_the_applicant_been_in_business_for_at_least_3_years_with_continuous_workers_compensation_coverage_118}}"));
-        await _ui.PressAsync(_locators.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage, "CLICK");
-        await _ui.PressAsync(_locators.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage, "Enter");
-        await _ui.PressAsync(_locators.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage, "Tab");
-    }
-
-    // Business step: I sign out of the application
-    public async Task SignOutOfTheApplicationAsync14()
-    {
-        // Logout_e43d61Page.Logout_0309_f2d6bdAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-        // TBoxWait_7ea9e1Page.SyncForLogOut_0310_f2d6bdAsync
-        await Task.Delay(1000);
-        // HttpErrorMsg_7f0d01Page.CheckForHttpErrorMsg_0311_f2d6bdAsync
-        await _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, _data.Resolve("Exists"), "");
-        // HttpErrorMsg_7f0d01Page.ClickOKOnHttpErrorMsg_0312_f2d6bdAsync
-        await _ui.ClickAsync(_locators.HttpErrorMsgOK);
-        // HttpErrorMsg_7f0d01Page.CheckHttpErrorMsgDoesNotExist_0313_f2d6bdAsync
-        await _ui.WaitAsync(_locators.HttpErrorMsgOK, "Absent");
-        // Logout_e43d61Page.Logout_0314_f2d6bdAsync
-        await _ui.ClickAsync(_locators.LoggedInUser);
-        await _ui.ClickAsync(_locators.Logout);
-    }
+    public Task VerifyAJAXErrorCheckAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.AJAXErrorCheck, expected, property, new ControlIntent("PolicyWorkflow", "AJAXErrorCheck"));
+
+    public Task WaitForAccountsReceivableHeadingAsync(string expected) =>
+        _ui.WaitAsync(_locators.AccountsReceivableHeading, expected, new ControlIntent("PolicyWorkflow", "AccountsReceivableHeading"));
+
+    public Task WaitForAddClientAsync(string expected) =>
+        _ui.WaitAsync(_locators.AddClient, expected, new ControlIntent("PolicyWorkflow", "AddClient"));
+
+    public Task PressAddClientAsync(string key) =>
+        _ui.PressAsync(_locators.AddClient, key, new ControlIntent("PolicyWorkflow", "AddClient"));
+
+    public Task ClickAddClientAsync() =>
+        _ui.ClickAsync(_locators.AddClient, new ControlIntent("PolicyWorkflow", "AddClient"));
+
+    public Task EnterAggregateLimitAsync(string value) =>
+        _ui.FillAsync(_locators.AggregateLimit, value, new ControlIntent("PolicyWorkflow", "AggregateLimit"));
+
+    public Task PressAggregateLimitAsync(string key) =>
+        _ui.PressAsync(_locators.AggregateLimit, key, new ControlIntent("PolicyWorkflow", "AggregateLimit"));
+
+    public Task WaitForBusinessownersAsync(string expected) =>
+        _ui.WaitAsync(_locators.Businessowners, expected, new ControlIntent("PolicyWorkflow", "Businessowners"));
+
+    public Task ClickCPDetailAsync() =>
+        _ui.ClickAsync(_locators.CPDetail, new ControlIntent("PolicyWorkflow", "CPDetail"));
+
+    public Task WaitForCPPLiabilityAsync(string expected) =>
+        _ui.WaitAsync(_locators.CPPLiability, expected, new ControlIntent("PolicyWorkflow", "CPPLiability"));
+
+    public Task VerifyCTStraightThroughLiabilityLimitTo1MAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.CTStraightThroughLiabilityLimitTo1M, expected, property, new ControlIntent("PolicyWorkflow", "CTStraightThroughLiabilityLimitTo1M"));
+
+    public Task WaitForCommercialAutoAsync(string expected) =>
+        _ui.WaitAsync(_locators.CommercialAuto, expected, new ControlIntent("PolicyWorkflow", "CommercialAuto"));
+
+    public Task EnterDedTypeAsync(string value) =>
+        _ui.FillAsync(_locators.DedType, value, new ControlIntent("PolicyWorkflow", "DedType"));
+
+    public Task PressDedTypeAsync(string key) =>
+        _ui.PressAsync(_locators.DedType, key, new ControlIntent("PolicyWorkflow", "DedType"));
+
+    public Task EnterDeductibleBasisAsync(string value) =>
+        _ui.FillAsync(_locators.DeductibleBasis, value, new ControlIntent("PolicyWorkflow", "DeductibleBasis"));
+
+    public Task PressDeductibleBasisAsync(string key) =>
+        _ui.PressAsync(_locators.DeductibleBasis, key, new ControlIntent("PolicyWorkflow", "DeductibleBasis"));
+
+    public Task WaitForDescriptionOfSpecifiedOperationAsync(string expected) =>
+        _ui.WaitAsync(_locators.DescriptionOfSpecifiedOperation, expected, new ControlIntent("PolicyWorkflow", "DescriptionOfSpecifiedOperation"));
+
+    public Task VerifyDescriptionOfSpecifiedOperationAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.DescriptionOfSpecifiedOperation, expected, property, new ControlIntent("PolicyWorkflow", "DescriptionOfSpecifiedOperation"));
+
+    public Task EnterDescriptionOfSpecifiedOperationAsync(string value) =>
+        _ui.FillAsync(_locators.DescriptionOfSpecifiedOperation, value, new ControlIntent("PolicyWorkflow", "DescriptionOfSpecifiedOperation"));
+
+    public Task PressDescriptionOfSpecifiedOperationAsync(string key) =>
+        _ui.PressAsync(_locators.DescriptionOfSpecifiedOperation, key, new ControlIntent("PolicyWorkflow", "DescriptionOfSpecifiedOperation"));
+
+    public Task EnterDoesAnyRiskGeneratePowerOtherThanPrivateWindmillsOrEmergencyBackupAsync(string value) =>
+        _ui.FillAsync(_locators.DoesAnyRiskGeneratePowerOtherThanPrivateWindmillsOrEmergencyBackup, value, new ControlIntent("PolicyWorkflow", "DoesAnyRiskGeneratePowerOtherThanPrivateWindmillsOrEmergencyBackup"));
+
+    public Task PressDoesAnyRiskGeneratePowerOtherThanPrivateWindmillsOrEmergencyBackupAsync(string key) =>
+        _ui.PressAsync(_locators.DoesAnyRiskGeneratePowerOtherThanPrivateWindmillsOrEmergencyBackup, key, new ControlIntent("PolicyWorkflow", "DoesAnyRiskGeneratePowerOtherThanPrivateWindmillsOrEmergencyBackup"));
+
+    public Task WaitForEmployersLiabAsync(string expected) =>
+        _ui.WaitAsync(_locators.EmployersLiab, expected, new ControlIntent("PolicyWorkflow", "EmployersLiab"));
+
+    public Task WaitForEndorsementHeadingAsync(string expected) =>
+        _ui.WaitAsync(_locators.EndorsementHeading, expected, new ControlIntent("PolicyWorkflow", "EndorsementHeading"));
+
+    public Task EnterFireDamageAsync(string value) =>
+        _ui.FillAsync(_locators.FireDamage, value, new ControlIntent("PolicyWorkflow", "FireDamage"));
+
+    public Task WaitForGeneralLiabAsync(string expected) =>
+        _ui.WaitAsync(_locators.GeneralLiab, expected, new ControlIntent("PolicyWorkflow", "GeneralLiab"));
+
+    public Task EnterHasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverageAsync(string value) =>
+        _ui.FillAsync(_locators.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage, value, new ControlIntent("PolicyWorkflow", "HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage"));
+
+    public Task PressHasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverageAsync(string key) =>
+        _ui.PressAsync(_locators.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage, key, new ControlIntent("PolicyWorkflow", "HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage"));
+
+    public Task WaitForHomeownerSLiabilityAsync(string expected) =>
+        _ui.WaitAsync(_locators.HomeownerSLiability, expected, new ControlIntent("PolicyWorkflow", "HomeownerSLiability"));
+
+    public Task WaitForHttpErrorMsgOKAsync(string expected) =>
+        _ui.WaitAsync(_locators.HttpErrorMsgOK, expected, new ControlIntent("PolicyWorkflow", "HttpErrorMsgOK"));
+
+    public Task ClickHttpErrorMsgOKAsync() =>
+        _ui.ClickAsync(_locators.HttpErrorMsgOK, new ControlIntent("PolicyWorkflow", "HttpErrorMsgOK"));
+
+    public Task EnterIFRAMEDuckCreekPolicyDescriptionOfOtherAsync(string value) =>
+        _ui.FillAsync(_locators.IFRAMEDuckCreekPolicyDescriptionOfOther, value, new ControlIntent("PolicyWorkflow", "IFRAMEDuckCreekPolicyDescriptionOfOther"));
+
+    public Task ClickIFRAMEDuckCreekPolicyOtherCheckBoxAsync() =>
+        _ui.ClickAsync(_locators.IFRAMEDuckCreekPolicyOtherCheckBox, new ControlIntent("PolicyWorkflow", "IFRAMEDuckCreekPolicyOtherCheckBox"));
+
+    public Task ClickIMDetailAsync() =>
+        _ui.ClickAsync(_locators.IMDetail, new ControlIntent("PolicyWorkflow", "IMDetail"));
+
+    public Task ClickIncludeBusinessownersAsync() =>
+        _ui.ClickAsync(_locators.IncludeBusinessowners, new ControlIntent("PolicyWorkflow", "IncludeBusinessowners"));
+
+    public Task ClickIncludeCommercialAutoAsync() =>
+        _ui.ClickAsync(_locators.IncludeCommercialAuto, new ControlIntent("PolicyWorkflow", "IncludeCommercialAuto"));
+
+    public Task ClickIncludeCommercialPackagePolicyLiabilityAsync() =>
+        _ui.ClickAsync(_locators.IncludeCommercialPackagePolicyLiability, new ControlIntent("PolicyWorkflow", "IncludeCommercialPackagePolicyLiability"));
+
+    public Task ClickIncludeEmployersLiabilityAsync() =>
+        _ui.ClickAsync(_locators.IncludeEmployersLiability, new ControlIntent("PolicyWorkflow", "IncludeEmployersLiability"));
+
+    public Task ClickIncludeGeneralLiabilityAsync() =>
+        _ui.ClickAsync(_locators.IncludeGeneralLiability, new ControlIntent("PolicyWorkflow", "IncludeGeneralLiability"));
+
+    public Task ClickIncludeHomeownerSLiabilityAsync() =>
+        _ui.ClickAsync(_locators.IncludeHomeownerSLiability, new ControlIntent("PolicyWorkflow", "IncludeHomeownerSLiability"));
+
+    public Task ClickIncludePersonalAutoLiabilityAsync() =>
+        _ui.ClickAsync(_locators.IncludePersonalAutoLiability, new ControlIntent("PolicyWorkflow", "IncludePersonalAutoLiability"));
+
+    public Task ClickIncludeRentalOwnerSLiabilityAsync() =>
+        _ui.ClickAsync(_locators.IncludeRentalOwnerSLiability, new ControlIntent("PolicyWorkflow", "IncludeRentalOwnerSLiability"));
+
+    public Task ClickIncludeSFP10LiabilityFarmAsync() =>
+        _ui.ClickAsync(_locators.IncludeSFP10LiabilityFarm, new ControlIntent("PolicyWorkflow", "IncludeSFP10LiabilityFarm"));
+
+    public Task ClickIncludeWatercraftLiabilityAsync() =>
+        _ui.ClickAsync(_locators.IncludeWatercraftLiability, new ControlIntent("PolicyWorkflow", "IncludeWatercraftLiability"));
+
+    public Task VerifyIndividualTypeAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.IndividualType, expected, property, new ControlIntent("PolicyWorkflow", "IndividualType"));
+
+    public Task EnterIsTheInsuredEngagedInAnySnowOrIceRemovalOperationsAsync(string value) =>
+        _ui.FillAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, value, new ControlIntent("PolicyWorkflow", "IsTheInsuredEngagedInAnySnowOrIceRemovalOperations"));
+
+    public Task PressIsTheInsuredEngagedInAnySnowOrIceRemovalOperationsAsync(string key) =>
+        _ui.PressAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, key, new ControlIntent("PolicyWorkflow", "IsTheInsuredEngagedInAnySnowOrIceRemovalOperations"));
+
+    public Task VerifyLoadingMessageAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.LoadingMessage, expected, property, new ControlIntent("PolicyWorkflow", "LoadingMessage"));
+
+    public Task ClickLoggedInUserAsync() =>
+        _ui.ClickAsync(_locators.LoggedInUser, new ControlIntent("PolicyWorkflow", "LoggedInUser"));
+
+    public Task ClickLogoutAsync() =>
+        _ui.ClickAsync(_locators.Logout, new ControlIntent("PolicyWorkflow", "Logout"));
+
+    public Task EnterMedicalAsync(string value) =>
+        _ui.FillAsync(_locators.Medical, value, new ControlIntent("PolicyWorkflow", "Medical"));
+
+    public Task PressOKAsync(string key) =>
+        _ui.PressAsync(_locators.OK, key, new ControlIntent("PolicyWorkflow", "OK"));
+
+    public Task ClickOKAsync() =>
+        _ui.ClickAsync(_locators.OK, new ControlIntent("PolicyWorkflow", "OK"));
+
+    public Task EnterOccurenceLimitAsync(string value) =>
+        _ui.FillAsync(_locators.OccurenceLimit, value, new ControlIntent("PolicyWorkflow", "OccurenceLimit"));
+
+    public Task PressOccurenceLimitAsync(string key) =>
+        _ui.PressAsync(_locators.OccurenceLimit, key, new ControlIntent("PolicyWorkflow", "OccurenceLimit"));
+
+    public Task EnterOfFullTimeEmployeesAsync(string value) =>
+        _ui.FillAsync(_locators.OfFullTimeEmployees, value, new ControlIntent("PolicyWorkflow", "OfFullTimeEmployees"));
+
+    public Task PressOfFullTimeEmployeesAsync(string key) =>
+        _ui.PressAsync(_locators.OfFullTimeEmployees, key, new ControlIntent("PolicyWorkflow", "OfFullTimeEmployees"));
+
+    public Task EnterOfPartTimeEmployeesAsync(string value) =>
+        _ui.FillAsync(_locators.OfPartTimeEmployees, value, new ControlIntent("PolicyWorkflow", "OfPartTimeEmployees"));
+
+    public Task PressOfPartTimeEmployeesAsync(string key) =>
+        _ui.PressAsync(_locators.OfPartTimeEmployees, key, new ControlIntent("PolicyWorkflow", "OfPartTimeEmployees"));
+
+    public Task EnterOfSeasonalTemporaryEmployeesAsync(string value) =>
+        _ui.FillAsync(_locators.OfSeasonalTemporaryEmployees, value, new ControlIntent("PolicyWorkflow", "OfSeasonalTemporaryEmployees"));
+
+    public Task PressOfSeasonalTemporaryEmployeesAsync(string key) =>
+        _ui.PressAsync(_locators.OfSeasonalTemporaryEmployees, key, new ControlIntent("PolicyWorkflow", "OfSeasonalTemporaryEmployees"));
+
+    public Task EnterPersAdvInjAsync(string value) =>
+        _ui.FillAsync(_locators.PersAdvInj, value, new ControlIntent("PolicyWorkflow", "PersAdvInj"));
+
+    public Task WaitForPersonalAutoAsync(string expected) =>
+        _ui.WaitAsync(_locators.PersonalAuto, expected, new ControlIntent("PolicyWorkflow", "PersonalAuto"));
+
+    public Task WaitForPolicyCovg6B651Async(string expected) =>
+        _ui.WaitAsync(_locators.PolicyCovg6B651, expected, new ControlIntent("PolicyWorkflow", "PolicyCovg6B651"));
+
+    public Task WaitForPolicyCovgFF145Async(string expected) =>
+        _ui.WaitAsync(_locators.PolicyCovgFF145, expected, new ControlIntent("PolicyWorkflow", "PolicyCovgFF145"));
+
+    public Task WaitForPolicyInfoHeaderAsync(string expected) =>
+        _ui.WaitAsync(_locators.PolicyInfoHeader, expected, new ControlIntent("PolicyWorkflow", "PolicyInfoHeader"));
+
+    public Task EnterPremOpDedAsync(string value) =>
+        _ui.FillAsync(_locators.PremOpDed, value, new ControlIntent("PolicyWorkflow", "PremOpDed"));
+
+    public Task PressPremOpDedAsync(string key) =>
+        _ui.PressAsync(_locators.PremOpDed, key, new ControlIntent("PolicyWorkflow", "PremOpDed"));
+
+    public Task EnterPremOpPDDedAsync(string value) =>
+        _ui.FillAsync(_locators.PremOpPDDed, value, new ControlIntent("PolicyWorkflow", "PremOpPDDed"));
+
+    public Task EnterProdBIDedAsync(string value) =>
+        _ui.FillAsync(_locators.ProdBIDed, value, new ControlIntent("PolicyWorkflow", "ProdBIDed"));
+
+    public Task PressProdBIDedAsync(string key) =>
+        _ui.PressAsync(_locators.ProdBIDed, key, new ControlIntent("PolicyWorkflow", "ProdBIDed"));
+
+    public Task EnterProdPDDedAsync(string value) =>
+        _ui.FillAsync(_locators.ProdPDDed, value, new ControlIntent("PolicyWorkflow", "ProdPDDed"));
+
+    public Task EnterProductsAggLimitAsync(string value) =>
+        _ui.FillAsync(_locators.ProductsAggLimit, value, new ControlIntent("PolicyWorkflow", "ProductsAggLimit"));
+
+    public Task VerifyPropertyOfOthersRatingGroupAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.PropertyOfOthersRatingGroup, expected, property, new ControlIntent("PolicyWorkflow", "PropertyOfOthersRatingGroup"));
+
+    public Task EnterPropertyOfOthersRatingGroupAsync(string value) =>
+        _ui.FillAsync(_locators.PropertyOfOthersRatingGroup, value, new ControlIntent("PolicyWorkflow", "PropertyOfOthersRatingGroup"));
+
+    public Task PressPropertyOfOthersRatingGroupAsync(string key) =>
+        _ui.PressAsync(_locators.PropertyOfOthersRatingGroup, key, new ControlIntent("PolicyWorkflow", "PropertyOfOthersRatingGroup"));
+
+    public Task ClickQuickSearchButtonAsync() =>
+        _ui.ClickAsync(_locators.QuickSearchButton, new ControlIntent("PolicyWorkflow", "QuickSearchButton"));
+
+    public Task WaitForRentalOwnersLiabilityAsync(string expected) =>
+        _ui.WaitAsync(_locators.RentalOwnersLiability, expected, new ControlIntent("PolicyWorkflow", "RentalOwnersLiability"));
+
+    public Task VerifyRestartMicrosoftEdgeMessageOKAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.RestartMicrosoftEdgeMessageOK, expected, property, new ControlIntent("PolicyWorkflow", "RestartMicrosoftEdgeMessageOK"));
+
+    public Task ClickRestartMicrosoftEdgeMessageOKAsync() =>
+        _ui.ClickAsync(_locators.RestartMicrosoftEdgeMessageOK, new ControlIntent("PolicyWorkflow", "RestartMicrosoftEdgeMessageOK"));
+
+    public Task WaitForReturnToAdminAsync(string expected) =>
+        _ui.WaitAsync(_locators.ReturnToAdmin, expected, new ControlIntent("PolicyWorkflow", "ReturnToAdmin"));
+
+    public Task VerifyReturnToAdminAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.ReturnToAdmin, expected, property, new ControlIntent("PolicyWorkflow", "ReturnToAdmin"));
+
+    public Task ClickReturnToAdminAsync() =>
+        _ui.ClickAsync(_locators.ReturnToAdmin, new ControlIntent("PolicyWorkflow", "ReturnToAdmin"));
+
+    public Task ClickReturnToCPPAsync() =>
+        _ui.ClickAsync(_locators.ReturnToCPP, new ControlIntent("PolicyWorkflow", "ReturnToCPP"));
+
+    public Task ClickRiskAccountsReceivableOKAsync() =>
+        _ui.ClickAsync(_locators.RiskAccountsReceivableOK, new ControlIntent("PolicyWorkflow", "RiskAccountsReceivableOK"));
+
+    public Task ClickRiskBaileesCustomersOKAsync() =>
+        _ui.ClickAsync(_locators.RiskBaileesCustomersOK, new ControlIntent("PolicyWorkflow", "RiskBaileesCustomersOK"));
+
+    public Task ClickRiskComputerSystemsOKAsync() =>
+        _ui.ClickAsync(_locators.RiskComputerSystemsOK, new ControlIntent("PolicyWorkflow", "RiskComputerSystemsOK"));
+
+    public Task WaitForSFP10LiabilityFarmAsync(string expected) =>
+        _ui.WaitAsync(_locators.SFP10LiabilityFarm, expected, new ControlIntent("PolicyWorkflow", "SFP10LiabilityFarm"));
+
+    public Task VerifySaveForLaterAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.SaveForLater, expected, property, new ControlIntent("PolicyWorkflow", "SaveForLater"));
+
+    public Task ClickSaveForLaterAsync() =>
+        _ui.ClickAsync(_locators.SaveForLater, new ControlIntent("PolicyWorkflow", "SaveForLater"));
+
+    public Task WaitForSaveForLaterOKAsync(string expected) =>
+        _ui.WaitAsync(_locators.SaveForLaterOK, expected, new ControlIntent("PolicyWorkflow", "SaveForLaterOK"));
+
+    public Task ClickSaveForLaterOKAsync() =>
+        _ui.ClickAsync(_locators.SaveForLaterOK, new ControlIntent("PolicyWorkflow", "SaveForLaterOK"));
+
+    public Task ClickSearchButtonAsync() =>
+        _ui.ClickAsync(_locators.SearchButton, new ControlIntent("PolicyWorkflow", "SearchButton"));
+
+    public Task EnterSearchMethodEGDescriptionPolicyAsync(string value) =>
+        _ui.FillAsync(_locators.SearchMethodEGDescriptionPolicy, value, new ControlIntent("PolicyWorkflow", "SearchMethodEGDescriptionPolicy"));
+
+    public Task PressSearchMethodEGDescriptionPolicyAsync(string key) =>
+        _ui.PressAsync(_locators.SearchMethodEGDescriptionPolicy, key, new ControlIntent("PolicyWorkflow", "SearchMethodEGDescriptionPolicy"));
+
+    public Task VerifySearchResult4E620Async(string expected, string property) =>
+        _ui.VerifyAsync(_locators.SearchResult4E620, expected, property, new ControlIntent("PolicyWorkflow", "SearchResult4E620"));
+
+    public Task EnterSearchResult4E620Async(string value) =>
+        _ui.FillAsync(_locators.SearchResult4E620, value, new ControlIntent("PolicyWorkflow", "SearchResult4E620"));
+
+    public Task PressSearchResult4E620Async(string key) =>
+        _ui.PressAsync(_locators.SearchResult4E620, key, new ControlIntent("PolicyWorkflow", "SearchResult4E620"));
+
+    public Task VerifySearchResultA1BFBAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.SearchResultA1BFB, expected, property, new ControlIntent("PolicyWorkflow", "SearchResultA1BFB"));
+
+    public Task EnterSearchResultA1BFBAsync(string value) =>
+        _ui.FillAsync(_locators.SearchResultA1BFB, value, new ControlIntent("PolicyWorkflow", "SearchResultA1BFB"));
+
+    public Task PressSearchResultA1BFBAsync(string key) =>
+        _ui.PressAsync(_locators.SearchResultA1BFB, key, new ControlIntent("PolicyWorkflow", "SearchResultA1BFB"));
+
+    public Task VerifySearchResultEAFB8Async(string expected, string property) =>
+        _ui.VerifyAsync(_locators.SearchResultEAFB8, expected, property, new ControlIntent("PolicyWorkflow", "SearchResultEAFB8"));
+
+    public Task EnterSearchResultEAFB8Async(string value) =>
+        _ui.FillAsync(_locators.SearchResultEAFB8, value, new ControlIntent("PolicyWorkflow", "SearchResultEAFB8"));
+
+    public Task PressSearchResultEAFB8Async(string key) =>
+        _ui.PressAsync(_locators.SearchResultEAFB8, key, new ControlIntent("PolicyWorkflow", "SearchResultEAFB8"));
+
+    public Task EnterSearchTextAsync(string value) =>
+        _ui.FillAsync(_locators.SearchText, value, new ControlIntent("PolicyWorkflow", "SearchText"));
+
+    public Task PressSearchTextAsync(string key) =>
+        _ui.PressAsync(_locators.SearchText, key, new ControlIntent("PolicyWorkflow", "SearchText"));
+
+    public Task EnterSearchValue79E46Async(string value) =>
+        _ui.FillAsync(_locators.SearchValue79E46, value, new ControlIntent("PolicyWorkflow", "SearchValue79E46"));
+
+    public Task PressSearchValue79E46Async(string key) =>
+        _ui.PressAsync(_locators.SearchValue79E46, key, new ControlIntent("PolicyWorkflow", "SearchValue79E46"));
+
+    public Task EnterSearchValue9FCD1Async(string value) =>
+        _ui.FillAsync(_locators.SearchValue9FCD1, value, new ControlIntent("PolicyWorkflow", "SearchValue9FCD1"));
+
+    public Task PressSearchValue9FCD1Async(string key) =>
+        _ui.PressAsync(_locators.SearchValue9FCD1, key, new ControlIntent("PolicyWorkflow", "SearchValue9FCD1"));
+
+    public Task EnterSearchValueCA6A6Async(string value) =>
+        _ui.FillAsync(_locators.SearchValueCA6A6, value, new ControlIntent("PolicyWorkflow", "SearchValueCA6A6"));
+
+    public Task PressSearchValueCA6A6Async(string key) =>
+        _ui.PressAsync(_locators.SearchValueCA6A6, key, new ControlIntent("PolicyWorkflow", "SearchValueCA6A6"));
+
+    public Task VerifyShowMeAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.ShowMe, expected, property, new ControlIntent("PolicyWorkflow", "ShowMe"));
+
+    public Task ClickShowMeAsync() =>
+        _ui.ClickAsync(_locators.ShowMe, new ControlIntent("PolicyWorkflow", "ShowMe"));
+
+    public Task SetSplitBIDedAsync(string value) =>
+        _ui.SmartSetAsync(_locators.SplitBIDed, value, new ControlIntent("PolicyWorkflow", "SplitBIDed"));
+
+    public Task PressSplitBIDedAsync(string key) =>
+        _ui.PressAsync(_locators.SplitBIDed, key, new ControlIntent("PolicyWorkflow", "SplitBIDed"));
+
+    public Task EnterSplitPDDedAsync(string value) =>
+        _ui.FillAsync(_locators.SplitPDDed, value, new ControlIntent("PolicyWorkflow", "SplitPDDed"));
+
+    public Task ClickStartAsync() =>
+        _ui.ClickAsync(_locators.Start, new ControlIntent("PolicyWorkflow", "Start"));
+
+    public Task VerifyTheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0Async(string expected, string property) =>
+        _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, expected, property, new ControlIntent("PolicyWorkflow", "TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0"));
+
+    public Task VerifyValueAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.Value, expected, property, new ControlIntent("PolicyWorkflow", "Value"));
+
+    public Task ClickValueAsync() =>
+        _ui.ClickAsync(_locators.Value, new ControlIntent("PolicyWorkflow", "Value"));
+
+    public Task WaitForViewPolicyAsync(string expected) =>
+        _ui.WaitAsync(_locators.ViewPolicy, expected, new ControlIntent("PolicyWorkflow", "ViewPolicy"));
+
+    public Task PressViewPolicyAsync(string key) =>
+        _ui.PressAsync(_locators.ViewPolicy, key, new ControlIntent("PolicyWorkflow", "ViewPolicy"));
+
+    public Task ClickViewPolicyAsync() =>
+        _ui.ClickAsync(_locators.ViewPolicy, new ControlIntent("PolicyWorkflow", "ViewPolicy"));
+
+    public Task WaitForWatercraftLiabilityAsync(string expected) =>
+        _ui.WaitAsync(_locators.WatercraftLiability, expected, new ControlIntent("PolicyWorkflow", "WatercraftLiability"));
+
+    public Task PauseAsync(int milliseconds) =>
+        Task.Delay(milliseconds);
 
 }

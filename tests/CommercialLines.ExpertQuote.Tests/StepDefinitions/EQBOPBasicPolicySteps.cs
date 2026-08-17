@@ -19,8 +19,16 @@ public sealed class EQBOPBasicPolicySteps
         data.GenerateRandom("LastName", "BASIC[A-Z]{4}");
         data.GenerateRandom("FirstName", "BOP[a-z]{3}");
 
-        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.EnterClientSearchInformationAsync3();
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForClientInfoAsync("Visible");
+        await page.WaitForNewExistingClientSearchAsync("Visible");
+        await page.EnterCustomerNameFirstAsync(data.Resolve("{{runtime:FirstName}}"));
+        await page.EnterCustomerNameLastAsync(data.Resolve("{{runtime:LastName}}"));
+        await page.EnterCustomerDateOfBirthAsync(data.Resolve("{{data:customer_dateofbirth_7}}"));
+        await page.ClickClientInfoSearchAsync();
+
     }
 
     [Given(@"^I create a new client$")]
@@ -28,8 +36,16 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I create a new client$")]
     public async Task CreateANewClientAsync()
     {
-        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CreateANewClientAsync3();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForExistingClientMatchAsync("Exists");
+        await page.ClickCreateNewClient1Async();
+        await page.PressAdditionalInterestsNextAsync("TAB");
+        data.Set("StateName", data.Resolve("{{data:statename}}"));
+
     }
 
     [Given(@"^I enter account details$")]
@@ -41,8 +57,30 @@ public sealed class EQBOPBasicPolicySteps
         data.GenerateRandom("OwnerPhone", "3[0-9]{9}");
         data.GenerateRandom("OwnerEmail", "test@[a-z]{4}\\\\.com");
 
-        var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.EnterAccountDetailsAsync3();
+        var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForAccountInformationHeaderAsync("Visible");
+        await page.PressOwnerMiddleNameAsync("ENTER");
+        await page.PressOwnerMiddleNameAsync("Tab");
+        await page.SelectMarriedAsync("");
+        await page.PressStreetAddressAsync("SHIFTTAB");
+        await page.PressStreetAddressAsync("ENTER");
+        await page.PressStreetAddressAsync("Tab");
+        await page.PressAddress2Async("TAB");
+        await page.PressCityAsync("ENTER");
+        await page.PressCityAsync("Tab");
+        await page.ClickStateDropdownAsync();
+        await page.SelectState0110EAsync(data.Resolve("{{runtime:StateName}}"));
+        await page.PressZipAsync("ENTER");
+        await page.PressZipAsync("Tab");
+        await page.WaitForMapAsync("Exists");
+        await page.WaitForSatelliteAsync("Exists");
+        await page.PressAdditionalInterestsNextAsync("SHIFTTAB");
+        await page.SelectHaveYouReceivedMailAtThisAddressForAtLeast90DaysYesAsync("");
+        await page.SelectIsTheAccountAddressAlsoWhereTheClientResidesYesAsync("");
+        await page.ClickAdditionalInterestsNextAsync();
+
     }
 
     [Given(@"^I start the policy proposal$")]
@@ -50,8 +88,29 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I start the policy proposal$")]
     public async Task StartThePolicyProposalAsync()
     {
-        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.StartThePolicyProposalAsync3();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForProposalDetailsHeaderAsync("Visible");
+        await page.SelectBusinessOwnersAsync("");
+        await page.PressSearchBusinessNameAsync("TAB");
+        await page.ClickIndividuallyOwnedDBAOrTAAsync();
+        await page.EnterIndividualDBAAsync(data.Resolve("{{data:individual_dba_35}}"));
+        await page.PressEffectiveDate78F67Async("ENTER");
+        await page.PressEffectiveDate78F67Async("Tab");
+        await page.EnterTrueAsync(data.Resolve("{{data:true_37}}"));
+        await page.SelectLessorsRiskNoAsync("");
+        await page.PressStateDropdownAsync("TAB");
+        await page.SelectStateAsync(data.Resolve("{{runtime:StateName}}"));
+        await page.PressAgentPCAsync("ENTER");
+        await page.PressAgentPCAsync("Tab");
+        data.Set("EffDate", await page.CaptureEffectiveDate78F67Async("InnerText"));
+        await page.ClickStateDropdownAsync();
+        await page.ClickStartQuoteAsync();
+        data.Set("LOB", data.Resolve("{{data:lob}}"));
+
     }
 
     [Given(@"^I enter and validate the insured social security number$")]
@@ -62,8 +121,27 @@ public sealed class EQBOPBasicPolicySteps
         var data = _scenario.Get<ScenarioData>();
         data.GenerateRandom("InsuredSSN", "025[0-9]{6}");
 
-        var page = new SocialSecurityPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.EnterAndValidateTheInsuredSocialSecurityNumberAsync3();
+        var page = new SocialSecurityPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForTheSSNCouldNotBeFoundPleaseEnterAnSSNAsync("Visible");
+        await page.WaitForSubmitAngularAsync("Visible");
+        await page.PressSubmitAngularAsync("TAB");
+        await page.ClickSubmitAngularAsync();
+        if (await page.IsNoPrefillMatchFoundPresentAsync())
+        {
+                    await page.VerifyNoPrefillMatchFoundAsync("Exists", "");
+        }
+        if (await page.IsContinuePresentAsync())
+        {
+                    await page.ClickContinueAsync();
+        }
+        data.Set("Screen", data.Resolve("{{data:screen}}"));
+        if (!await page.IsScreenHeadingPresentAsync())
+        {
+                    await page.VerifyScreenHeadingAsync("Absent", "");
+        }
+
     }
 
     [Given(@"^I navigate to the required policy screen$")]
@@ -71,8 +149,41 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen$")]
     public async Task NavigateToTheRequiredPolicyScreenAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.NavigateToTheRequiredPolicyScreenAsync3();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (!await page.IsScreen4475CPresentAsync())
+        {
+                    await page.ClickScreen4475CAsync();
+        }
+        if (data.Condition("'Review Required - Keep Going' == \"Yes\""))
+        {
+                    await page.ClickKeepGoingAsync();
+        }
+        data.Set("Screen", data.Resolve("{{data:screen}}"));
+        if (!await page.IsLoadingPresentAsync())
+        {
+                    await page.WaitForLoadingAsync("Absent");
+        }
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.WaitForScreenHeading9696CAsync("Exists");
+        }
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressSearchAddClassCodeAsync("TAB");
+        await page.WaitForLoadingAsync("Absent");
+        await page.WaitForFindAClassCodeAsync("Exists");
+        await page.EnterClassFilterAsync(data.Resolve("{{data:class_filter_64}}"));
+        await page.ClickClientInfoSearchAsync();
+        await page.WaitForOnAsync("Exists");
+        await page.PressOnAsync("TAB");
+        await page.WaitForYouHaveSelected1ClassCodesAsync("Exists");
+        await page.PressYouHaveSelected1ClassCodesAsync("TAB");
+        await page.ClickAddAsync();
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I complete industry Class Code Restrictions$")]
@@ -80,8 +191,19 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete industry Class Code Restrictions$")]
     public async Task CompleteIndustryClassCodeRestrictionsAsync()
     {
-        var page = new BusinessClassificationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteIndustryClassCodeRestrictionsAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BusinessClassificationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForIndustryClassCodeRestrictionsHeadingAsync("Exists");
+        await page.PressNoneOfTheAboveAsync("TAB");
+        data.Set("Screen", data.Resolve("{{data:screen_2}}"));
+        if (!await page.IsScreenHeadingPresentAsync())
+        {
+                    await page.VerifyScreenHeadingAsync("Absent", "");
+        }
+
     }
 
     [Given(@"^I navigate to the required policy screen for screen$")]
@@ -89,8 +211,29 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for screen$")]
     public async Task NavigateToTheRequiredPolicyScreenForScreenAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.NavigateToTheRequiredPolicyScreenForScreenAsync3();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (!await page.IsScreen4475CPresentAsync())
+        {
+                    await page.ClickScreen4475CAsync();
+        }
+        if (data.Condition("'Review Required - Keep Going' == \"Yes\""))
+        {
+                    await page.ClickKeepGoingAsync();
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_2}}"));
+        if (!await page.IsLoadingPresentAsync())
+        {
+                    await page.WaitForLoadingAsync("Absent");
+        }
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.WaitForScreenHeading9696CAsync("Exists");
+        }
+
     }
 
     [Given(@"^I enter Required Info$")]
@@ -98,8 +241,53 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I enter Required Info$")]
     public async Task EnterRequiredInfoAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.EnterRequiredInfoAsync2();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.PressExistingClientAsync("TAB");
+        await page.ClickNextBOPAsync();
+        await page.WaitForLoadingAsync("Absent");
+        await page.ClickIndividualSoleProprietorAsync();
+        await page.PressSaveAsync("TAB");
+        await page.ClickSaveAsync();
+        if (data.Condition("ReadOnly == NULL"))
+        {
+                    await page.ClickEQCommonPrimaryInsuredRequiredAsync();
+        }
+        await page.WaitForLoadingAsync("Absent");
+        if (data.Condition("ReadOnly == NULL"))
+        {
+                    await page.PressDescriptionOfOperationsAsync("ENTER");
+                    await page.PressDescriptionOfOperationsAsync("Tab");
+        }
+        if (data.Condition("ReadOnly == NULL"))
+        {
+                    await page.PressNumberOfFulltimeEmployeesAsync("ENTER");
+                    await page.PressNumberOfFulltimeEmployeesAsync("Tab");
+        }
+        if (data.Condition("ReadOnly == NULL"))
+        {
+                    await page.PressNumberOfPartTimeEmployeesAsync("ENTER");
+                    await page.PressNumberOfPartTimeEmployeesAsync("Tab");
+        }
+        if (data.Condition("ReadOnly == NULL"))
+        {
+                    await page.PressNumberOfSeasonalEmployeesAsync("ENTER");
+                    await page.PressNumberOfSeasonalEmployeesAsync("Tab");
+        }
+        if (data.Condition("ReadOnly == NULL"))
+        {
+                    await page.ClickSaveAsync();
+        }
+        if (data.Condition("ReadOnly == NULL"))
+        {
+                    await page.VerifyDescriptionOfOperationsAsync(data.Resolve("{{runtime:QuoteDescription}}"), "");
+        }
+        await page.WaitForLoadingAsync("Absent");
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I complete general UW Questions$")]
@@ -107,8 +295,14 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete general UW Questions$")]
     public async Task CompleteGeneralUWQuestionsAsync()
     {
-        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteGeneralUWQuestionsAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.PressNoneOfTheAboveCheckBoxAsync("TAB");
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I complete industry Class Code Questions$")]
@@ -116,8 +310,18 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete industry Class Code Questions$")]
     public async Task CompleteIndustryClassCodeQuestionsAsync()
     {
-        var page = new BusinessClassificationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteIndustryClassCodeQuestionsAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BusinessClassificationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.PressNoneOfTheAboveCheckboxAsync("TAB");
+        data.Set("Screen", data.Resolve("{{data:screen_3}}"));
+        if (!await page.IsScreenHeadingPresentAsync())
+        {
+                    await page.VerifyScreenHeadingAsync("Absent", "");
+        }
+
     }
 
     [Given(@"^I navigate to the required policy screen for navigate to screen$")]
@@ -125,8 +329,30 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for navigate to screen$")]
     public async Task NavigateToTheRequiredPolicyScreenForNavigateToScreenAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.NavigateToTheRequiredPolicyScreenForNavigateToScreenAsync2();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (!await page.IsScreen4475CPresentAsync())
+        {
+                    await page.ClickScreen4475CAsync();
+        }
+        if (data.Condition("'Review Required - Keep Going' == \"Yes\""))
+        {
+                    await page.ClickKeepGoingAsync();
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_3}}"));
+        if (!await page.IsLoadingPresentAsync())
+        {
+                    await page.WaitForLoadingAsync("Absent");
+        }
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.WaitForScreenHeading9696CAsync("Exists");
+        }
+        data.Set("InspectionContactIndex", data.Resolve("{{data:inspectioncontactindex}}"));
+
     }
 
     [Given(@"^I complete edit Client Roles$")]
@@ -134,8 +360,18 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete edit Client Roles$")]
     public async Task CompleteEditClientRolesAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteEditClientRolesAsync2();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.PressInspectionContactAsync("TAB");
+        data.Set("Screen", data.Resolve("{{data:screen_4}}"));
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.VerifyScreenHeading9696CAsync("Absent", "");
+        }
+
     }
 
     [Given(@"^I navigate to the required policy screen for navigate to correct screen$")]
@@ -143,8 +379,29 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for navigate to correct screen$")]
     public async Task NavigateToTheRequiredPolicyScreenForNavigateToCorrectScreenAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.NavigateToTheRequiredPolicyScreenForNavigateToCorrectScreenAsync2();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (!await page.IsScreen4475CPresentAsync())
+        {
+                    await page.ClickScreen4475CAsync();
+        }
+        if (data.Condition("'Review Required - Keep Going' == \"Yes\""))
+        {
+                    await page.ClickKeepGoingAsync();
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_4}}"));
+        if (!await page.IsLoadingPresentAsync())
+        {
+                    await page.WaitForLoadingAsync("Absent");
+        }
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.WaitForScreenHeading9696CAsync("Exists");
+        }
+
     }
 
     [Given(@"^I add/Edit a Narrative and Verify Timestamp$")]
@@ -152,8 +409,35 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I add/Edit a Narrative and Verify Timestamp$")]
     public async Task AddEditANarrativeAndVerifyTimestampAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddEditANarrativeAndVerifyTimestampAsync2();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForNarrativeScreenHeadingAsync("Exists");
+        await page.ClickAddNarrativeAsync();
+        await page.EnterDescriptionOfTheBusinessExposuresActivitiesAndExperienceAsync(data.Resolve("{{data:description_of_the_business_exposures_activities_and_experience_118}}"));
+        if (data.Condition("'Referred and Locked' != \"Yes\""))
+        {
+                    await page.ClickSaveAsync();
+        }
+        await page.WaitForUserDateAndTimestampAsync("Visible");
+        await page.VerifyUserDateAndTimestampAsync(data.Resolve("{{data:expected_user_date_and_timestamp_innertext_121}}"), "NotEqual:InnerText");
+        if (data.Condition("'Referred and Locked' == \"Yes\""))
+        {
+                    await page.VerifyLockedThisQuoteHasBeenSubmittedAndYouCanNoLongerMakeChangesToThisTextAsync("Exists", "");
+        }
+        await page.EnterDescriptionOfTheBusinessExposuresActivitiesAndExperienceAsync("");
+        data.Set("NameQuoteNum", await page.CaptureNameAndQuoteNum8EB77Async("InnerText"));
+        data.Set("Quote_Num", data.Resolve("{B[NameQuoteNum]}"));
+        data.Set("QuoteID", data.Resolve("{{runtime:Quote_Num}}"));
+        data.Set("Policy#", data.Resolve("{{data:policy}}"));
+        data.Set("Screen", data.Resolve("{{data:screen_5}}"));
+        if (!await page.IsScreenHeading69631PresentAsync())
+        {
+                    await page.VerifyScreenHeading69631Async("Absent", "");
+        }
+
     }
 
     [Given(@"^I navigate to the required policy screen for policy data entry$")]
@@ -161,8 +445,29 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for policy data entry$")]
     public async Task NavigateToTheRequiredPolicyScreenForPolicyDataEntryAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.NavigateToTheRequiredPolicyScreenForPolicyDataEntryAsync2();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (!await page.IsScreenDA408PresentAsync())
+        {
+                    await page.ClickScreenDA408Async();
+        }
+        if (data.Condition("'Review Required - Keep Going' == \"Yes\""))
+        {
+                    await page.ClickKeepGoingAsync();
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_5}}"));
+        if (!await page.IsLoadingPresentAsync())
+        {
+                    await page.WaitForLoadingAsync("Absent");
+        }
+        if (!await page.IsScreenHeading69631PresentAsync())
+        {
+                    await page.WaitForScreenHeading69631Async("Exists");
+        }
+
     }
 
     [Given(@"^I enter Required$")]
@@ -170,8 +475,26 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I enter Required$")]
     public async Task EnterRequiredAsync()
     {
-        var page = new LossHistoryPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.EnterRequiredAsync2();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new LossHistoryPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.SelectPriorPolicyNoAsync("");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressYearsInBusinessAsync("ENTER");
+        await page.PressYearsInBusinessAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.ClickN3YearsAsync();
+        await page.PressN3YearsAsync("TAB");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressPriorInsuranceLatestExpirationDateAsync("ENTER");
+        await page.PressPriorInsuranceLatestExpirationDateAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressPriorInsuranceLatestCarrierAsync("ENTER");
+        await page.PressPriorInsuranceLatestCarrierAsync("Tab");
+        data.Set("Type of Loss", data.Resolve("{{data:type_of_loss}}"));
+
     }
 
     [Given(@"^I add/Verify/Delete Claims$")]
@@ -179,8 +502,58 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I add/Verify/Delete Claims$")]
     public async Task AddVerifyDeleteClaimsAsync()
     {
-        var page = new LossHistoryPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddVerifyDeleteClaimsAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new LossHistoryPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickADDCLAIMAsync();
+        await page.PressDateOfOccurrenceAsync("CTRL+A");
+        await page.PressDateOfOccurrenceAsync("Enter");
+        await page.PressDateOfOccurrenceAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressPolicyStartAsync("CTRL+A");
+        await page.PressPolicyStartAsync("Enter");
+        await page.PressPolicyStartAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressPolicyExpireAsync("CTRL+A");
+        await page.PressPolicyExpireAsync("Enter");
+        await page.PressPolicyExpireAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressAmountPaidAsync("CTRL+A");
+        await page.PressAmountPaidAsync("Enter");
+        await page.PressAmountPaidAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressAmountReservedAsync("CTRL+A");
+        await page.PressAmountReservedAsync("Enter");
+        await page.PressAmountReservedAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressExpenseAmountAsync("CTRL+A");
+        await page.PressExpenseAmountAsync("Enter");
+        await page.PressExpenseAmountAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressTypeOfLossDropdownAsync("TAB");
+        await page.ClickTypeOfLossSelectionAsync();
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressDescriptionOfOccurrenceOrClaimAsync("ENTER");
+        await page.PressDescriptionOfOccurrenceOrClaimAsync("Tab");
+        await page.ClickOpenButtonAsync();
+        await page.ClickSaveAsync();
+        await page.VerifyClaimSummaryTableRowCellExplicitNameClaimDateAsync(data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_claim_date_165}}"), "");
+        await page.VerifyClaimSummaryTableRowCellExplicitNameAmountAsync(data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_amount_166}}"), "");
+        await page.VerifyClaimSummaryTableRowCellExplicitNameLineOfCoverageAsync(data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_line_of_coverage_167}}"), "");
+        await page.VerifyClaimSummaryTableRowCellExplicitNameTypeOfLossAsync(data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_type_of_loss_168}}"), "");
+        await page.VerifyClaimSummaryTableRowCellExplicitNameCATClaimAsync(data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_cat_claim_169}}"), "");
+        await page.VerifyClaimSummaryTableRowCellExplicitNameClaimDateAsync(data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_claim_date_170}}"), "");
+        await page.VerifyClaimSummaryTableRowCellExplicitNameAmountAsync("__BLANK__", "");
+        await page.VerifyClaimSummaryTableRowCellExplicitNameLineOfCoverageAsync(data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_line_of_coverage_172}}"), "");
+        await page.VerifyClaimSummaryTableRowCellExplicitNameTypeOfLossAsync(data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_type_of_loss_173}}"), "");
+        data.Set("Screen", data.Resolve("{{data:screen_6}}"));
+        if (!await page.IsScreenHeadingPresentAsync())
+        {
+                    await page.VerifyScreenHeadingAsync("Absent", "");
+        }
+
     }
 
     [Given(@"^I navigate to the required policy screen for subsequent screen 0143$")]
@@ -188,8 +561,32 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for subsequent screen 0143$")]
     public async Task NavigateToTheRequiredPolicyScreenForSubsequentScreen0143Async()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.NavigateToTheRequiredPolicyScreenForSubsequentScreen0143Async();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (!await page.IsScreen4475CPresentAsync())
+        {
+                    await page.ClickScreen4475CAsync();
+        }
+        if (data.Condition("'Review Required - Keep Going' == \"Yes\""))
+        {
+                    await page.ClickKeepGoingAsync();
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_6}}"));
+        if (!await page.IsLoadingPresentAsync())
+        {
+                    await page.WaitForLoadingAsync("Absent");
+        }
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.WaitForScreenHeading9696CAsync("Exists");
+        }
+        data.Set("Edit Location", data.Resolve("{{data:edit_location}}"));
+        data.Set("Territory", data.Resolve("{{data:territory}}"));
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I complete edit a Location$")]
@@ -197,8 +594,27 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete edit a Location$")]
     public async Task CompleteEditALocationAsync()
     {
-        var page = new LocationsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteEditALocationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new LocationsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickEditLocationButtonLatestAngularAsync();
+        await page.WaitForLoadingAsync("Absent");
+        await page.WaitForEditLocationHeadingAsync("Exists");
+        await page.WaitForLoadingAsync("Absent");
+        await page.EnterTerritoryAsync(data.Resolve("{{data:territory_188}}"));
+        await page.PressMilesFromFireDeptAsync("CTRL+A");
+        await page.PressMilesFromFireDeptAsync("Enter");
+        await page.PressMilesFromFireDeptAsync("Tab");
+        await page.EnterFeetFromHydrantAsync(data.Resolve("{{data:feetfromhydrant_190}}"));
+        await page.ClickSaveAsync();
+        await page.WaitForSaveAsync("Absent");
+        if (data.Condition("'Order Wildfire Risk Score' == \"Yes\""))
+        {
+                    await page.ClickOrderWildfireRiskScoreAsync();
+        }
+
     }
 
     [Given(@"^I add a Building Button$")]
@@ -206,8 +622,13 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I add a Building Button$")]
     public async Task AddABuildingButtonAsync()
     {
-        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddABuildingButtonAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickAddBuildingBPPAsync();
+
     }
 
     [Given(@"^I select Own or rent and Building SQ Footage Basic$")]
@@ -215,8 +636,28 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I select Own or rent and Building SQ Footage Basic$")]
     public async Task SelectOwnOrRentAndBuildingSQFootageBasicAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SelectOwnOrRentAndBuildingSQFootageBasicAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForSelectIfClientOwnsOrRentsTheBuildingAsync("Visible");
+        if (data.Condition("'Client Own or Rent' == \"OWN\""))
+        {
+                    await page.PressOwnButtonAsync("TAB");
+        }
+        await page.WaitForTotalBuildingSqFootageAsync("Visible");
+        await page.WaitForInsuredOccupancySqFtAngularAsync("Visible");
+        await page.PressInsuredOccupancySqFtAngularAsync("SHIFTTAB");
+        await page.PressTotalBuildingSqFootageAsync("ENTER");
+        await page.PressTotalBuildingSqFootageAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressInsuredOccupancySqFtAngularAsync("ENTER");
+        await page.PressInsuredOccupancySqFtAngularAsync("Tab");
+        await page.PressInsuredOccupancySqFtAngularAsync("TAB");
+        await page.WaitForLoadingAsync("Absent");
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I select Additional Coverages \\- Building, Functional Personal Property or Habitational$")]
@@ -224,8 +665,35 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I select Additional Coverages \\- Building, Functional Personal Property or Habitational$")]
     public async Task SelectAdditionalCoveragesBuildingFunctionalPersonalPropertyOrHabitationalAsync()
     {
-        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SelectAdditionalCoveragesBuildingFunctionalPersonalPropertyOrHabitationalAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForSelectIfClientOwnsOrRentsTheBuildingAsync("Visible");
+        if (data.Condition("'Select Building Coverage' == \"Building Coverage\""))
+        {
+                    await page.PressBuildingCoverageAngularAsync("TAB");
+        }
+        if (data.Condition("'Select Functional Personal Property' == \"Include Functional Personal Property\""))
+        {
+                    await page.PressFunctionalPersonalPropertyUncheckedAsync("ENTER");
+        }
+        if (data.Condition("'Select Building contains habitational occupancy' == \"Building contains habitational occupancies\""))
+        {
+                    await page.PressBuildingContainsHabitationalOccupanciesUncheckedAsync("ENTER");
+        }
+        if (data.Condition("'Select Functional Personal Property' == \"Include Functional Personal Property\""))
+        {
+                    await page.WaitForFunctionalPersonalPropertyCheckedAsync("Visible");
+        }
+        if (data.Condition("'Select Building contains habitational occupancy' == \"Building contains habitational occupancies\""))
+        {
+                    await page.WaitForBuildingContainsHabitationalOccupanciesCheckedAsync("Visible");
+        }
+        await page.WaitForLoadingAsync("Absent");
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I select Occupancy SQ Footage$")]
@@ -233,8 +701,19 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I select Occupancy SQ Footage$")]
     public async Task SelectOccupancySQFootageAsync()
     {
-        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SelectOccupancySQFootageAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.EnterInsuredOccupancySqFtAsync("");
+        await page.EnterInsuredOccupancySqFtAsync("");
+        await page.PressInsuredOccupancySqFtAngularAsync("TAB");
+        await page.PressInsuredOccupancySqFtAngularAsync("CTRL+A");
+        await page.PressInsuredOccupancySqFtAngularAsync("Enter");
+        await page.PressInsuredOccupancySqFtAngularAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I enter supplimental data\\- for class$")]
@@ -242,8 +721,35 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I enter supplimental data\\- for class$")]
     public async Task EnterSupplimentalDataForClassAsync()
     {
-        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.EnterSupplimentalDataForClassAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForClassCodesAsync("Exists");
+        await page.WaitForCheckBoxAngularAsync("Exists");
+        await page.PressCheckBoxAngularAsync("TAB");
+        await page.ClickCheckBoxAngularAsync();
+        await page.WaitForLoadingAsync("Absent");
+        await page.WaitForOccupancySQFTHeadingAsync("Exists");
+        await page.PressOccupancySqFtLimitAsync("ENTER");
+        await page.PressOccupancySqFtLimitAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.VerifyOccupancySqFootageTotalAsync(data.Resolve("{{data:expected_occupancy_sq_footage_total_value_227}}"), "Value");
+        await page.WaitForLoadingAsync("Absent");
+        await page.WaitForPersonalPropertyLimitCheckBoxAngularAsync("Exists");
+        await page.PressPersonalPropertyLimitCheckBoxAngularAsync("TAB");
+        await page.ClickPersonalPropertyLimitCheckBoxAngularAsync();
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressPersonalPropertyLimitAsync("ENTER");
+        await page.PressPersonalPropertyLimitAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressGrossSalesReceiptsAsync("ENTER");
+        await page.PressGrossSalesReceiptsAsync("Tab");
+        data.Set("BVS Group", data.Resolve("{{data:bvs_group}}"));
+        data.Set("BVS Result", data.Resolve("{{data:bvs_result}}"));
+        data.Set("Roof Type", data.Resolve("{{data:roof_type}}"));
+
     }
 
     [Given(@"^I select Cost Estimator \\& Calculate Valuations$")]
@@ -251,8 +757,36 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I select Cost Estimator \\& Calculate Valuations$")]
     public async Task SelectCostEstimatorCalculateValuationsAsync()
     {
-        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SelectCostEstimatorCalculateValuationsAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.PressCommercialButtonAsync("TAB");
+        await page.ClickCommercialButtonAsync();
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressBVSButtonAsync("TAB");
+        await page.ClickBVSButtonAsync();
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressFrameAsync("TAB");
+        await page.ClickFrameAsync();
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressBVSGroupComboboxAsync("TAB");
+        await page.ClickBVSGroupAsync();
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressBVSResultsComboboxAsync("TAB");
+        await page.ClickBVSResultAsync();
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressYearBuiltAsync("TAB");
+        await page.PressYearBuiltAsync("ENTER");
+        await page.PressYearBuiltAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressRoofTypeMainAsync("TAB");
+        await page.ClickRoofTypeSelectionAsync();
+        await page.PressGetValuationAsync("TAB");
+        await page.ClickGetValuationAsync();
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I select Building Detail Fields$")]
@@ -260,8 +794,72 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I select Building Detail Fields$")]
     public async Task SelectBuildingDetailFieldsAsync()
     {
-        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SelectBuildingDetailFieldsAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.PressNumberOfStoriesAsync("TAB");
+        await page.WaitForBuildingDetailsHeadingAsync("Exists");
+        if (data.Condition("'Actual Cash Value' != NULL"))
+        {
+                    await page.PressActualCashValueAsync("TAB");
+        }
+        if (data.Condition("'Actual Cash Value' != NULL"))
+        {
+                    await page.ClickActualCashValueAsync();
+        }
+        if (data.Condition("'Replacement Cost' != NULL"))
+        {
+                    await page.PressReplacementCostAsync("TAB");
+        }
+        if (data.Condition("'Replacement Cost' != NULL"))
+        {
+                    await page.ClickReplacementCostAsync();
+        }
+        await page.WaitForLoadingAsync("Absent");
+        await page.PauseAsync(1000);
+        await page.PressBuildingAsync("ENTER");
+        await page.PressBuildingAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressYearBuiltRenovatedAsync("CTRL+A");
+        await page.PressYearBuiltRenovatedAsync("DELETE");
+        await page.PressYearBuiltRenovatedAsync("ENTER");
+        await page.PressYearBuiltRenovatedAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressWiringYearAsync("CTRL+A");
+        await page.PressWiringYearAsync("DELETE");
+        await page.PressWiringYearAsync("ENTER");
+        await page.PressWiringYearAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressHeatingYearAsync("CTRL+A");
+        await page.PressHeatingYearAsync("DELETE");
+        await page.PressHeatingYearAsync("ENTER");
+        await page.PressHeatingYearAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressPlumbingYearAsync("CTRL+A");
+        await page.PressPlumbingYearAsync("DELETE");
+        await page.PressPlumbingYearAsync("ENTER");
+        await page.PressPlumbingYearAsync("Tab");
+        await page.VerifyEQBOPBuildingBuildingDetailsSelectBurglarAlarmAsync("Exists", "");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressRoofYearAsync("ENTER");
+        await page.PressRoofYearAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.SelectSprinklerYesAsync("");
+        await page.WaitForSprinklerYesAsync("Visible");
+        await page.WaitForLoadingAsync("Absent");
+        if (data.Condition("ANSUL != NULL"))
+        {
+                    await page.SelectAutomaticCommercialCookingExhaustAndExtinguishingANSULSystemYesAsync("");
+        }
+        await page.WaitForLoadingAsync("Absent");
+        await page.WaitForLoadingAsync("Absent");
+        await page.SelectIsAnyHeatSourceThermostaticallyControlledYesAsync("");
+        await page.WaitForLoadingAsync("Absent");
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I select Heating Sources$")]
@@ -269,8 +867,19 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I select Heating Sources$")]
     public async Task SelectHeatingSourcesAsync()
     {
-        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SelectHeatingSourcesAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.PressIsTheBuildingHeatedWithOneOfTheFollowingNoneOfTheAboveCheckboxAngularAsync("TAB");
+        await page.VerifyEQBOPBuildingBuildingDetailsSelectPelletStoveAsync("Exists", "");
+        await page.VerifyEQBOPBuildingBuildingDetailsSelectWoodFurnaceAsync("Exists", "");
+        await page.VerifyEQBOPBuildingBuildingDetailsSelectWoodStoveAsync("Exists", "");
+        await page.PressIsTheBuildingHeatedWithOneOfTheFollowingNoneOfTheAboveCheckboxAngularAsync("TAB");
+        await page.WaitForLoadingAsync("Absent");
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I complete extra Property Risk$")]
@@ -278,8 +887,16 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete extra Property Risk$")]
     public async Task CompleteExtraPropertyRiskAsync()
     {
-        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteExtraPropertyRiskAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.PressSelectAnyOfTheFollowingWhichApplyToThisBuildingNoneOfTheAboveCheckboxAngularAsync("TAB");
+        await page.WaitForLoadingAsync("Absent");
+        await page.VerifyEQBOPBuildingBuildingDetailsAnswerAnyExtraPropertyAdditionalQuestionsAsync("Exists", "");
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I answer Building Eligibility Questions$")]
@@ -287,8 +904,20 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I answer Building Eligibility Questions$")]
     public async Task AnswerBuildingEligibilityQuestionsAsync()
     {
-        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AnswerBuildingEligibilityQuestionsAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.PressBuildingEligibilityQuestionsNoneOfTheAboveCheckboxAngularAsync("TAB");
+        await page.ClickSaveAsync();
+        data.Set("WaitOnTime", data.Resolve("{{data:waitontime}}"));
+        data.Set("Screen", data.Resolve("{{data:screen_7}}"));
+        if (!await page.IsScreenHeadingPresentAsync())
+        {
+                    await page.VerifyScreenHeadingAsync("Absent", "");
+        }
+
     }
 
     [Given(@"^I navigate to the required policy screen for subsequent screen 0266$")]
@@ -296,8 +925,51 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for subsequent screen 0266$")]
     public async Task NavigateToTheRequiredPolicyScreenForSubsequentScreen0266Async()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.NavigateToTheRequiredPolicyScreenForSubsequentScreen0266Async();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (!await page.IsScreen4475CPresentAsync())
+        {
+                    await page.ClickScreen4475CAsync();
+        }
+        if (data.Condition("'Review Required - Keep Going' == \"Yes\""))
+        {
+                    await page.ClickKeepGoingAsync();
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_7}}"));
+        if (!await page.IsLoadingPresentAsync())
+        {
+                    await page.WaitForLoadingAsync("Absent");
+        }
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.WaitForScreenHeading9696CAsync("Exists");
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_8}}"));
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.VerifyScreenHeading9696CAsync("Absent", "");
+        }
+        if (!await page.IsScreen4475CPresentAsync())
+        {
+                    await page.ClickScreen4475CAsync();
+        }
+        if (data.Condition("'Review Required - Keep Going' == \"Yes\""))
+        {
+                    await page.ClickKeepGoingAsync();
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_8}}"));
+        if (!await page.IsLoadingPresentAsync())
+        {
+                    await page.WaitForLoadingAsync("Absent");
+        }
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.WaitForScreenHeading9696CAsync("Exists");
+        }
+
     }
 
     [Given(@"^I answer EPLI Questions$")]
@@ -305,8 +977,23 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I answer EPLI Questions$")]
     public async Task AnswerEPLIQuestionsAsync()
     {
-        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AnswerEPLIQuestionsAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.PressHaveThereBeenAnyEPLClaimsSuitsOrComplaintsOrAreThereAnyNowPendingAgainstTheInsuredOrAnyExecutiveOfficerOrOwnerAsync("ENTER");
+        await page.PressHaveThereBeenAnyEPLClaimsSuitsOrComplaintsOrAreThereAnyNowPendingAgainstTheInsuredOrAnyExecutiveOfficerOrOwnerAsync("END");
+        await page.PressHaveThereBeenAnyEPLClaimsSuitsOrComplaintsOrAreThereAnyNowPendingAgainstTheInsuredOrAnyExecutiveOfficerOrOwnerAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+        await page.PressDoesTheInsuredAndAnyExecutiveOfficerOrOwnerHaveAnyKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync("ENTER");
+        await page.PressDoesTheInsuredAndAnyExecutiveOfficerOrOwnerHaveAnyKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync("Tab");
+        data.Set("Screen", data.Resolve("{{data:screen_9}}"));
+        if (!await page.IsScreenHeadingPresentAsync())
+        {
+                    await page.VerifyScreenHeadingAsync("Absent", "");
+        }
+
     }
 
     [Given(@"^I navigate to the required policy screen for subsequent screen 0285$")]
@@ -314,8 +1001,29 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for subsequent screen 0285$")]
     public async Task NavigateToTheRequiredPolicyScreenForSubsequentScreen0285Async()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.NavigateToTheRequiredPolicyScreenForSubsequentScreen0285Async();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (!await page.IsScreen4475CPresentAsync())
+        {
+                    await page.ClickScreen4475CAsync();
+        }
+        if (data.Condition("'Review Required - Keep Going' == \"Yes\""))
+        {
+                    await page.ClickKeepGoingAsync();
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_9}}"));
+        if (!await page.IsLoadingPresentAsync())
+        {
+                    await page.WaitForLoadingAsync("Absent");
+        }
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.WaitForScreenHeading9696CAsync("Exists");
+        }
+
     }
 
     [Given(@"^I complete billing Account Setup$")]
@@ -323,8 +1031,32 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete billing Account Setup$")]
     public async Task CompleteBillingAccountSetupAsync()
     {
-        var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteBillingAccountSetupAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForBillingInformationHeadingAsync("Exists");
+        await page.ClickCreateNewBillingAccountAsync();
+        await page.WaitForLoadingAsync("Absent");
+        await page.WaitForBillingInformationHeadingAsync("Exists");
+        await page.ClickOTHERButtonAsync();
+        await page.PressFirstNameAsync("ENTER");
+        await page.PressFirstNameAsync("Tab");
+        await page.PressLastNameAsync("ENTER");
+        await page.PressLastNameAsync("Tab");
+        await page.PressBusinessNameAsync("ENTER");
+        await page.PressBusinessNameAsync("Tab");
+        await page.PressAddress1Async("ENTER");
+        await page.PressAddress1Async("Tab");
+        await page.PressCityAsync("ENTER");
+        await page.PressCityAsync("Tab");
+        await page.PressStateAsync("ENTER");
+        await page.PressStateAsync("Tab");
+        await page.PressZipCodeAsync("ENTER");
+        await page.PressZipCodeAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I complete future Payment Plan 1$")]
@@ -332,8 +1064,18 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete future Payment Plan 1$")]
     public async Task CompleteFuturePaymentPlan1Async()
     {
-        var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteFuturePaymentPlan1Async();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.PressDirectBillButtonAsync("TAB");
+        await page.PressN1PaymentButtonAsync("TAB");
+        await page.PauseAsync(1000);
+        await page.PressChoosePaymentDueDateAsync("ENTER");
+        await page.PressChoosePaymentDueDateAsync("Tab");
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I complete initial Payment$")]
@@ -341,8 +1083,53 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete initial Payment$")]
     public async Task CompleteInitialPaymentAsync()
     {
-        var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteInitialPaymentAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (data.Condition("'Payment Type' ==\"Check\""))
+        {
+                    await page.PressCheckButtonAsync("TAB");
+        }
+        if (data.Condition("'Payment Type' ==\"Credit Card\""))
+        {
+                    await page.PressCreditCardButtonAsync("TAB");
+        }
+        await page.WaitForLoadingAsync("Absent");
+        if (data.Condition("'Payment Type' == \"Check\""))
+        {
+                    await page.VerifyCheckNumberAsync("Absent", "");
+        }
+        if (data.Condition("'Payment Type' == \"Check\""))
+        {
+                    await page.PressCheckButtonAsync("TAB");
+        }
+        if (data.Condition("'Payment Type' == \"Check\""))
+        {
+                    await page.PressCreditCardButtonAsync("TAB");
+        }
+        if (data.Condition("'Payment Type' == \"Check\""))
+        {
+                    await page.WaitForLoadingAsync("Absent");
+        }
+        if (data.Condition("'Payment Type' == \"Check\""))
+        {
+                    await page.WaitForCheckNumberAsync("Exists");
+        }
+        if (data.Condition("'Payment Type' == \"Check\""))
+        {
+                    await page.PressCheckNumberAsync("ENTER");
+                    await page.PressCheckNumberAsync("Tab");
+        }
+        await page.WaitForLoadingAsync("Absent");
+        await page.ClickInitialPaymentFullBalanceAsync();
+        data.Set("Screen", data.Resolve("{{data:screen_10}}"));
+        if (!await page.IsScreenHeadingPresentAsync())
+        {
+                    await page.VerifyScreenHeadingAsync("Absent", "");
+        }
+
     }
 
     [Given(@"^I navigate to the required policy screen for subsequent screen 0310$")]
@@ -350,8 +1137,73 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for subsequent screen 0310$")]
     public async Task NavigateToTheRequiredPolicyScreenForSubsequentScreen0310Async()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.NavigateToTheRequiredPolicyScreenForSubsequentScreen0310Async();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (!await page.IsScreen4475CPresentAsync())
+        {
+                    await page.ClickScreen4475CAsync();
+        }
+        if (data.Condition("'Review Required - Keep Going' == \"Yes\""))
+        {
+                    await page.ClickKeepGoingAsync();
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_10}}"));
+        if (!await page.IsLoadingPresentAsync())
+        {
+                    await page.WaitForLoadingAsync("Absent");
+        }
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.WaitForScreenHeading9696CAsync("Exists");
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_9}}"));
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.VerifyScreenHeading9696CAsync("Absent", "");
+        }
+        if (!await page.IsScreen4475CPresentAsync())
+        {
+                    await page.ClickScreen4475CAsync();
+        }
+        if (data.Condition("'Review Required - Keep Going' == \"Yes\""))
+        {
+                    await page.ClickKeepGoingAsync();
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_9}}"));
+        if (!await page.IsLoadingPresentAsync())
+        {
+                    await page.WaitForLoadingAsync("Absent");
+        }
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.WaitForScreenHeading9696CAsync("Exists");
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_10}}"));
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.VerifyScreenHeading9696CAsync("Absent", "");
+        }
+        if (!await page.IsScreen4475CPresentAsync())
+        {
+                    await page.ClickScreen4475CAsync();
+        }
+        if (data.Condition("'Review Required - Keep Going' == \"Yes\""))
+        {
+                    await page.ClickKeepGoingAsync();
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_10}}"));
+        if (!await page.IsLoadingPresentAsync())
+        {
+                    await page.WaitForLoadingAsync("Absent");
+        }
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.WaitForScreenHeading9696CAsync("Exists");
+        }
+
     }
 
     [Given(@"^I complete insurance Score and premium Verification$")]
@@ -359,8 +1211,19 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete insurance Score and premium Verification$")]
     public async Task CompleteInsuranceScoreAndPremiumVerificationAsync()
     {
-        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteInsuranceScoreAndPremiumVerificationAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        data.Set("Premium", await page.CapturePremiumAsync("InnerText"));
+        await page.VerifyTABLERowCellExplicitName1Async(data.Resolve("{{data:expected_table_row_cell_explicitname_1_390}}"), "");
+        data.Set("Screen", data.Resolve("{{data:screen_11}}"));
+        if (!await page.IsScreenHeadingPresentAsync())
+        {
+                    await page.VerifyScreenHeadingAsync("Absent", "");
+        }
+
     }
 
     [Given(@"^I navigate to the required policy screen for subsequent screen 0336$")]
@@ -368,8 +1231,29 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for subsequent screen 0336$")]
     public async Task NavigateToTheRequiredPolicyScreenForSubsequentScreen0336Async()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.NavigateToTheRequiredPolicyScreenForSubsequentScreen0336Async();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (!await page.IsScreen4475CPresentAsync())
+        {
+                    await page.ClickScreen4475CAsync();
+        }
+        if (data.Condition("'Review Required - Keep Going' == \"Yes\""))
+        {
+                    await page.ClickKeepGoingAsync();
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_11}}"));
+        if (!await page.IsLoadingPresentAsync())
+        {
+                    await page.WaitForLoadingAsync("Absent");
+        }
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.WaitForScreenHeading9696CAsync("Exists");
+        }
+
     }
 
     [Given(@"^I open EQ in Browser$")]
@@ -377,8 +1261,17 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I open EQ in Browser$")]
     public async Task OpenEQInBrowserAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.OpenEQInBrowserAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
+        await page.NavigateAsync(data.Resolve("{{data:application_url_2}}"));
+        await page.WaitForBODYAsync("Exists");
+        await page.WaitForLoadingAsync("Absent");
+        await page.NoteAsync("Source operation requires environment-specific implementation.");
+
     }
 
     [Given(@"^I complete restart Edge Popup$")]
@@ -386,8 +1279,21 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete restart Edge Popup$")]
     public async Task CompleteRestartEdgePopupAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRestartEdgePopupAsync2();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsEChecklistEChecklistOKPresentAsync())
+        {
+                    await page.VerifyEChecklistEChecklistOKAsync("Exists", "");
+        }
+        if (await page.IsEChecklistEChecklistOKPresentAsync())
+        {
+                    await page.ClickEChecklistEChecklistOKAsync();
+        }
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I open EQ in Browser for logout$")]
@@ -395,8 +1301,24 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I open EQ in Browser for logout$")]
     public async Task OpenEQInBrowserForLogoutAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.OpenEQInBrowserForLogoutAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsLogoutPresentAsync())
+        {
+                    await page.VerifyLogoutAsync("Exists", "");
+        }
+        if (await page.IsLogoutPresentAsync())
+        {
+                    await page.ClickLogoutAsync();
+        }
+        if (await page.IsLogoutLogOutPresentAsync())
+        {
+                    await page.ClickLogoutLogOutAsync();
+        }
+
     }
 
     [Given(@"^I sign in to ExpertQuote$")]
@@ -404,8 +1326,17 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I sign in to ExpertQuote$")]
     public async Task SignInToExpertQuoteAsync()
     {
-        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SignInToExpertQuoteAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForUsernameAsync("Exists");
+        await _auth.SignInAsync("CL_EQ");
+        data.Set("GetHostname", data.Resolve("{{env:COMPUTERNAME}}"));
+        data.Set("AgentName", data.Resolve("{{runtime:GetHostname}}"));
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I search by QuoteNum$")]
@@ -413,8 +1344,17 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I search by QuoteNum$")]
     public async Task SearchByQuoteNumAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SearchByQuoteNumAsync2();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.EnterQuoteSearchInputAsync(data.Resolve("{B[Quote_Num]}"));
+        await page.PressQuoteSearchInputAsync("Tab");
+        await page.PressQuoteSearchInputAsync("Tab");
+        await page.ClickClientInfoSearchAsync();
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I search Results Table$")]
@@ -422,8 +1362,32 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I search Results Table$")]
     public async Task SearchResultsTableAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SearchResultsTableAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsResultsTABLEPresentAsync())
+        {
+                    await page.VerifyResultsTABLEAsync("Exists", "");
+        }
+        if (await page.IsResultsTABLERowCellExplicitNameNamePresentAsync())
+        {
+                    await page.VerifyResultsTABLERowCellExplicitNameNameAsync(data.Resolve("{STRINGTOUPPER[{B[LastName]}, {B[FirstName]}]}"), "");
+        }
+        if (await page.IsEditPresentAsync())
+        {
+                    await page.ClickEditAsync();
+        }
+        if (await page.IsNameAndQuoteNumCA893PresentAsync())
+        {
+                    await page.WaitForNameAndQuoteNumCA893Async("NotEqual");
+        }
+        if (await page.IsNameAndQuoteNumCA893PresentAsync())
+        {
+                    await page.VerifyNameAndQuoteNumCA893Async(data.Resolve("{B[NameQuoteNum]}|{B[Quote_Num]}|{B[Policy#]}"), "Regex:InnerText");
+        }
+
     }
 
     [Given(@"^I open a CLAS Browser and Search for EQ by Description$")]
@@ -431,8 +1395,28 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I open a CLAS Browser and Search for EQ by Description$")]
     public async Task OpenACLASBrowserAndSearchForEQByDescriptionAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.OpenACLASBrowserAndSearchForEQByDescriptionAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
+        await page.NavigateAsync(data.Resolve("{{data:application_url_3}}"));
+        await page.WaitForBODYABC33Async("Exists");
+        await page.NoteAsync("Source operation requires environment-specific implementation.");
+        if (await page.IsButtonPresentAsync())
+        {
+                    await page.VerifyButtonAsync("Exists", "");
+        }
+        if (await page.IsButtonPresentAsync())
+        {
+                    await page.ClickButtonAsync();
+        }
+        if (await page.IsUserNameE65A8PresentAsync())
+        {
+                    await page.VerifyUserNameE65A8Async("Absent", "");
+        }
+
     }
 
     [Given(@"^I sign out of the application$")]
@@ -440,8 +1424,44 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I sign out of the application$")]
     public async Task SignOutOfTheApplicationAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SignOutOfTheApplicationAsync2();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsLoggedInUser5A005PresentAsync())
+        {
+                    await page.ClickLoggedInUser5A005Async();
+        }
+        if (await page.IsLogoutPresentAsync())
+        {
+                    await page.ClickLogoutAsync();
+        }
+        if (data.Condition("if an existing CLAS session is still logged in"))
+        {
+                    await page.NoteAsync("Source operation requires environment-specific implementation.");
+        }
+        if (await page.IsTheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740PresentAsync())
+        {
+                    await page.VerifyTheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740Async("Exists", "");
+        }
+        if (await page.IsEChecklistEChecklistOKPresentAsync())
+        {
+                    await page.ClickEChecklistEChecklistOKAsync();
+        }
+        if (await page.IsEChecklistEChecklistOKPresentAsync())
+        {
+                    await page.WaitForEChecklistEChecklistOKAsync("Absent");
+        }
+        if (await page.IsLoggedInUser5A005PresentAsync())
+        {
+                    await page.ClickLoggedInUser5A005Async();
+        }
+        if (await page.IsLogoutPresentAsync())
+        {
+                    await page.ClickLogoutAsync();
+        }
+
     }
 
     [Given(@"^I open a CLAS Browser and Search for EQ by Description for cl dc$")]
@@ -449,8 +1469,18 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I open a CLAS Browser and Search for EQ by Description for cl dc$")]
     public async Task OpenACLASBrowserAndSearchForEQByDescriptionForClDcAsync()
     {
-        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.OpenACLASBrowserAndSearchForEQByDescriptionForClDcAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (data.Condition("if an existing CLAS session is still logged in"))
+        {
+                    await page.NavigateAsync(data.Resolve("{{data:application_url_3}}"));
+        }
+        await _auth.SignInAsync("CL_DC");
+        await page.WaitForLoginC45A2Async("Absent");
+
     }
 
     [Given(@"^I search by Desc in DC$")]
@@ -458,8 +1488,36 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I search by Desc in DC$")]
     public async Task SearchByDescInDCAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SearchByDescInDCAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.EnterSearchTextAsync(data.Resolve("{B[QuoteDescription]}"));
+        await page.PressSearchTextAsync("Tab");
+        await page.PressSearchTextAsync("Tab");
+        await page.PressSearchTextAsync("Tab");
+        await page.PressSearchTextAsync("Tab");
+        await page.ClickQuickSearchButtonAsync();
+        await page.PressSearchMethodEGDescriptionPolicyAsync("TAB");
+        await page.WaitForSearchButtonAsync("Equal");
+        await page.PressSearchButtonAsync("TAB");
+        await page.ClickSearchButtonAsync();
+        if (await page.IsLoadingMessageC7A0DPresentAsync())
+        {
+                    await page.VerifyLoadingMessageC7A0DAsync("Visible", "");
+        }
+        await page.WaitForLoadingAsync("Absent");
+        await page.WaitForViewPolicy56E09Async("Exists");
+        await page.PressViewPolicy56E09Async("TAB");
+        await page.PressSearchButtonAsync("TAB");
+        await page.ClickSearchButtonAsync();
+        if (await page.IsLoadingMessageC7A0DPresentAsync())
+        {
+                    await page.VerifyLoadingMessageC7A0DAsync("Visible", "");
+        }
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I open a CLAS Browser and Search for EQ by Description for view policy$")]
@@ -467,8 +1525,26 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I open a CLAS Browser and Search for EQ by Description for view policy$")]
     public async Task OpenACLASBrowserAndSearchForEQByDescriptionForViewPolicyAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.OpenACLASBrowserAndSearchForEQByDescriptionForViewPolicyAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForViewPolicy0AC0BAsync("Exists");
+        if (await page.IsLoadingMessage4DE37PresentAsync())
+        {
+                    await page.VerifyLoadingMessage4DE37Async("Visible", "");
+        }
+        await page.WaitForLoadingAsync("Absent");
+        await page.ClickViewPolicy0AC0BAsync();
+        if (await page.IsLoadingMessage4DE37PresentAsync())
+        {
+                    await page.VerifyLoadingMessage4DE37Async("Visible", "");
+        }
+        await page.WaitForLoadingAsync("Absent");
+        await page.WaitForViewPolicy0AC0BAsync("Absent");
+        await page.NoteAsync("Source operation requires environment-specific implementation.");
+
     }
 
     [Given(@"^I complete forms verification Retrieve QuoteID \\& SessionID by Browser Console$")]
@@ -476,8 +1552,32 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete forms verification Retrieve QuoteID \\& SessionID by Browser Console$")]
     public async Task CompleteFormsVerificationRetrieveQuoteIDSessionIDByBrowserConsoleAsync()
     {
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteFormsVerificationRetrieveQuoteIDSessionIDByBrowserConsoleAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
+        await page.PauseAsync(1000);
+        await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
+        await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
+        data.Set("ClipboardValue", "{\"Value\": \"{XB[QuoteID]}\"}");
+        data.Set("ClipboardValue", "{\"Value\": \"{XB[QuoteID]}\"}");
+        await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
+        data.Set("ClipboardValue", "{\"Value\": \"{XB[SessionId]}\"}");
+        data.Set("ClipboardValue", "{\"Value\": \"{XB[SessionId]}\"}");
+        data.Set("ServerAddress", data.Resolve("{{data:serveraddress}}"));
+        await page.EnterFormsAPIRequestB50D4Async(data.Resolve("{{runtime:SessionId}}"));
+        await page.EnterFormsAPIResponse3FBAFAsync(data.Resolve("{{data:forms_api_response_494}}"));
+        await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
+        await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
+        data.Set("PowershellArguments", data.Resolve("powershell.exe -ExecutionPolicy Bypass -NoProfile -File FormsCheckQA.ps1 -Path \"\\\\mis\\sys\\QLTY\\Test_Automation\\Tricentis_Tosca\\Forms_Check\\BOPSmart\\\" -FileName \"BOPSmart_BASIC\" -State  \"AL\" -QuoteID \"{B[QuoteID]}\""));
+        data.Set("ClipboardValue", "{\"Value\": \"SummaryResults\"}");
+        data.Set("SummaryResults", data.Resolve("{{data:summaryresults}}"));
+        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_2}}"));
+        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_3}}"));
+        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_4}}"));
+
     }
 
     [Given(@"^I complete save for Later/Return to Admin$")]
@@ -485,8 +1585,40 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete save for Later/Return to Admin$")]
     public async Task CompleteSaveForLaterReturnToAdminAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteSaveForLaterReturnToAdminAsync2();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsSaveForLaterPresentAsync())
+        {
+                    await page.VerifySaveForLaterAsync("Exists", "");
+        }
+        if (await page.IsSaveForLaterPresentAsync())
+        {
+                    await page.ClickSaveForLaterAsync();
+        }
+        if (await page.IsSaveForLaterOKPresentAsync())
+        {
+                    await page.WaitForSaveForLaterOKAsync("Exists");
+        }
+        if (await page.IsSaveForLaterOKPresentAsync())
+        {
+                    await page.ClickSaveForLaterOKAsync();
+        }
+        if (await page.IsReturnToAdminPresentAsync())
+        {
+                    await page.VerifyReturnToAdminAsync("Exists", "");
+        }
+        if (await page.IsReturnToAdminPresentAsync())
+        {
+                    await page.ClickReturnToAdminAsync();
+        }
+        if (await page.IsReturnToAdminPresentAsync())
+        {
+                    await page.WaitForReturnToAdminAsync("Absent");
+        }
+
     }
 
     [Given(@"^I open EQ in Browser for body$")]
@@ -494,8 +1626,17 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I open EQ in Browser for body$")]
     public async Task OpenEQInBrowserForBodyAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.OpenEQInBrowserForBodyAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
+        await page.NavigateAsync(data.Resolve("{{data:application_url_2}}"));
+        await page.WaitForBODYAsync("Exists");
+        await page.WaitForLoadingAsync("Absent");
+        await page.NoteAsync("Source operation requires environment-specific implementation.");
+
     }
 
     [Given(@"^I complete restart Edge Popup for ok$")]
@@ -503,8 +1644,21 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete restart Edge Popup for ok$")]
     public async Task CompleteRestartEdgePopupForOkAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRestartEdgePopupForOkAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsEChecklistEChecklistOKPresentAsync())
+        {
+                    await page.VerifyEChecklistEChecklistOKAsync("Exists", "");
+        }
+        if (await page.IsEChecklistEChecklistOKPresentAsync())
+        {
+                    await page.ClickEChecklistEChecklistOKAsync();
+        }
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I open EQ in Browser for open eq in browser$")]
@@ -512,8 +1666,24 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I open EQ in Browser for open eq in browser$")]
     public async Task OpenEQInBrowserForOpenEqInBrowserAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.OpenEQInBrowserForOpenEqInBrowserAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsLogoutPresentAsync())
+        {
+                    await page.VerifyLogoutAsync("Exists", "");
+        }
+        if (await page.IsLogoutPresentAsync())
+        {
+                    await page.ClickLogoutAsync();
+        }
+        if (await page.IsLogoutLogOutPresentAsync())
+        {
+                    await page.ClickLogoutLogOutAsync();
+        }
+
     }
 
     [Given(@"^I sign in to ExpertQuote for username$")]
@@ -521,8 +1691,17 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I sign in to ExpertQuote for username$")]
     public async Task SignInToExpertQuoteForUsernameAsync()
     {
-        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SignInToExpertQuoteForUsernameAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForUsernameAsync("Exists");
+        await _auth.SignInAsync("CL_EQ");
+        data.Set("GetHostname", data.Resolve("{{env:COMPUTERNAME}}"));
+        data.Set("AgentName", data.Resolve("{{runtime:GetHostname}}"));
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I search by QuoteNum for quotesearchinput$")]
@@ -530,8 +1709,17 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I search by QuoteNum for quotesearchinput$")]
     public async Task SearchByQuoteNumForQuotesearchinputAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SearchByQuoteNumForQuotesearchinputAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.EnterQuoteSearchInputAsync(data.Resolve("{B[Quote_Num]}"));
+        await page.PressQuoteSearchInputAsync("Tab");
+        await page.PressQuoteSearchInputAsync("Tab");
+        await page.ClickClientInfoSearchAsync();
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I search Results Table for results table$")]
@@ -539,8 +1727,37 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I search Results Table for results table$")]
     public async Task SearchResultsTableForResultsTableAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SearchResultsTableForResultsTableAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsResultsTABLEPresentAsync())
+        {
+                    await page.VerifyResultsTABLEAsync("Exists", "");
+        }
+        if (await page.IsResultsTABLERowCellExplicitNameNamePresentAsync())
+        {
+                    await page.VerifyResultsTABLERowCellExplicitNameNameAsync(data.Resolve("{STRINGTOUPPER[{B[LastName]}, {B[FirstName]}]}"), "");
+        }
+        if (await page.IsEditPresentAsync())
+        {
+                    await page.ClickEditAsync();
+        }
+        if (await page.IsNameAndQuoteNumCA893PresentAsync())
+        {
+                    await page.WaitForNameAndQuoteNumCA893Async("NotEqual");
+        }
+        if (await page.IsNameAndQuoteNumCA893PresentAsync())
+        {
+                    await page.VerifyNameAndQuoteNumCA893Async(data.Resolve("{B[NameQuoteNum]}|{B[Quote_Num]}|{B[Policy#]}"), "Regex:InnerText");
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_11}}"));
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.VerifyScreenHeading9696CAsync("Absent", "");
+        }
+
     }
 
     [Given(@"^I navigate to the required policy screen for subsequent screen 0502$")]
@@ -548,8 +1765,29 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for subsequent screen 0502$")]
     public async Task NavigateToTheRequiredPolicyScreenForSubsequentScreen0502Async()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.NavigateToTheRequiredPolicyScreenForSubsequentScreen0502Async();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (!await page.IsScreen4475CPresentAsync())
+        {
+                    await page.ClickScreen4475CAsync();
+        }
+        if (data.Condition("'Review Required - Keep Going' == \"Yes\""))
+        {
+                    await page.ClickKeepGoingAsync();
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_11}}"));
+        if (!await page.IsLoadingPresentAsync())
+        {
+                    await page.WaitForLoadingAsync("Absent");
+        }
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.WaitForScreenHeading9696CAsync("Exists");
+        }
+
     }
 
     [Given(@"^I complete checklist and Esign$")]
@@ -557,8 +1795,23 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete checklist and Esign$")]
     public async Task CompleteChecklistAndEsignAsync()
     {
-        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteChecklistAndEsignAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForSubmissionScreenHeadingAsync("Exists");
+        if (data.Condition("'Referral Needed' != NULL"))
+        {
+                    await page.VerifyNoReferralNeededVerificationAsync("Absent", "");
+        }
+        await page.ClickLaunchToChecklistButtonAsync();
+        if (data.Condition("'Referral Needed' == NULL"))
+        {
+                    await page.VerifyNoReferralNeededVerificationAsync("Exists", "");
+        }
+        data.Set("WaitOnTime", data.Resolve("{{data:waitontime_2}}"));
+
     }
 
     [Given(@"^I complete eChecklist \\- Building Photo1$")]
@@ -566,8 +1819,19 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete eChecklist \\- Building Photo1$")]
     public async Task CompleteEChecklistBuildingPhoto1Async()
     {
-        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteEChecklistBuildingPhoto1Async();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickBuildingPhoto1Async();
+        await page.WaitForBuildingPhoto1HeaderAsync("Exists");
+        await page.ClickExceptionAsync();
+        await page.EnterAddANoteAsync(data.Resolve("{{data:add_a_note_561}}"));
+        await page.ClickEChecklistEChecklistOKAsync();
+        await page.WaitForEChecklistEChecklistOKAsync("Absent");
+        await page.WaitForBuildingPhoto1HeaderAsync("Absent");
+
     }
 
     [Given(@"^I complete eChecklist \\- Building Photo2$")]
@@ -575,8 +1839,18 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete eChecklist \\- Building Photo2$")]
     public async Task CompleteEChecklistBuildingPhoto2Async()
     {
-        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteEChecklistBuildingPhoto2Async();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForBuildingPhoto2HeaderAsync("Exists");
+        await page.ClickExceptionAsync();
+        await page.EnterAddANoteAsync(data.Resolve("{{data:add_a_note_567}}"));
+        await page.ClickEChecklistEChecklistOKAsync();
+        await page.WaitForEChecklistEChecklistOKAsync("Absent");
+        await page.WaitForBuildingPhoto2Async("Absent");
+
     }
 
     [Given(@"^I complete eChecklist \\- Building Photo3$")]
@@ -584,8 +1858,18 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete eChecklist \\- Building Photo3$")]
     public async Task CompleteEChecklistBuildingPhoto3Async()
     {
-        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteEChecklistBuildingPhoto3Async();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForBuildingPhoto3HeaderAsync("Exists");
+        await page.ClickExceptionAsync();
+        await page.EnterAddANoteAsync(data.Resolve("{{data:add_a_note_573}}"));
+        await page.ClickEChecklistEChecklistOKAsync();
+        await page.WaitForEChecklistEChecklistOKAsync("Absent");
+        await page.WaitForBuildingPhoto3Async("Absent");
+
     }
 
     [Given(@"^I complete eChecklist \\- Building Photo4$")]
@@ -593,8 +1877,18 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete eChecklist \\- Building Photo4$")]
     public async Task CompleteEChecklistBuildingPhoto4Async()
     {
-        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteEChecklistBuildingPhoto4Async();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForBuildingPhoto4HeaderAsync("Exists");
+        await page.ClickExceptionAsync();
+        await page.EnterAddANoteAsync(data.Resolve("{{data:add_a_note_579}}"));
+        await page.ClickEChecklistEChecklistOKAsync();
+        await page.WaitForEChecklistEChecklistOKAsync("Absent");
+        await page.WaitForBuildingPhoto4Async("Absent");
+
     }
 
     [Given(@"^I complete eChecklist \\- Loss Runs \\- 3 Years$")]
@@ -602,8 +1896,20 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete eChecklist \\- Loss Runs \\- 3 Years$")]
     public async Task CompleteEChecklistLossRuns3YearsAsync()
     {
-        var page = new LossHistoryPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteEChecklistLossRuns3YearsAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new LossHistoryPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.EnterAllLinkAsync("");
+        await page.WaitForLossRunsHeaderAsync("Exists");
+        await page.ClickExceptionAsync();
+        await page.WaitForAddANoteAsync("Visible");
+        await page.PressAddANoteAsync("TAB");
+        await page.ClickEChecklistEChecklistOKAsync();
+        await page.WaitForEChecklistEChecklistOKAsync("Absent");
+        await page.WaitForLossRuns3YearsHeaderAsync("Absent");
+
     }
 
     [Given(@"^I select OK$")]
@@ -611,8 +1917,18 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I select OK$")]
     public async Task SelectOKAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SelectOKAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickOkToUpdateFromChecklistAsync();
+        data.Set("Screen", data.Resolve("{{data:screen_11}}"));
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.VerifyScreenHeading9696CAsync("Absent", "");
+        }
+
     }
 
     [Given(@"^I navigate to the required policy screen for refer to uw in eq$")]
@@ -620,8 +1936,31 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for refer to uw in eq$")]
     public async Task NavigateToTheRequiredPolicyScreenForReferToUwInEqAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.NavigateToTheRequiredPolicyScreenForReferToUwInEqAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (!await page.IsScreen4475CPresentAsync())
+        {
+                    await page.ClickScreen4475CAsync();
+        }
+        if (data.Condition("'Review Required - Keep Going' == \"Yes\""))
+        {
+                    await page.ClickKeepGoingAsync();
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_11}}"));
+        if (!await page.IsLoadingPresentAsync())
+        {
+                    await page.WaitForLoadingAsync("Absent");
+        }
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.WaitForScreenHeading9696CAsync("Exists");
+        }
+        await page.WaitForLoadingAsync("Absent");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I refer to UW$")]
@@ -629,8 +1968,15 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I refer to UW$")]
     public async Task ReferToUWAsync()
     {
-        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.ReferToUWAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.PressUnderwritingRulesAgentCommentsAsync("ENTER");
+        await page.PressUnderwritingRulesAgentCommentsAsync("Tab");
+        await page.ClickReferToUWAsync();
+
     }
 
     [Given(@"^I open a CLAS Browser and Search for EQ by Description for body$")]
@@ -638,8 +1984,28 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I open a CLAS Browser and Search for EQ by Description for body$")]
     public async Task OpenACLASBrowserAndSearchForEQByDescriptionForBodyAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.OpenACLASBrowserAndSearchForEQByDescriptionForBodyAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
+        await page.NavigateAsync(data.Resolve("{{data:application_url_3}}"));
+        await page.WaitForBODYABC33Async("Exists");
+        await page.NoteAsync("Source operation requires environment-specific implementation.");
+        if (await page.IsButtonPresentAsync())
+        {
+                    await page.VerifyButtonAsync("Exists", "");
+        }
+        if (await page.IsButtonPresentAsync())
+        {
+                    await page.ClickButtonAsync();
+        }
+        if (await page.IsUserNameE65A8PresentAsync())
+        {
+                    await page.VerifyUserNameE65A8Async("Absent", "");
+        }
+
     }
 
     [Given(@"^I sign out of the application for logged in user$")]
@@ -647,8 +2013,44 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I sign out of the application for logged in user$")]
     public async Task SignOutOfTheApplicationForLoggedInUserAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SignOutOfTheApplicationForLoggedInUserAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsLoggedInUser5A005PresentAsync())
+        {
+                    await page.ClickLoggedInUser5A005Async();
+        }
+        if (await page.IsLogoutPresentAsync())
+        {
+                    await page.ClickLogoutAsync();
+        }
+        if (data.Condition("if an existing CLAS session is still logged in"))
+        {
+                    await page.NoteAsync("Source operation requires environment-specific implementation.");
+        }
+        if (await page.IsTheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740PresentAsync())
+        {
+                    await page.VerifyTheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740Async("Exists", "");
+        }
+        if (await page.IsEChecklistEChecklistOKPresentAsync())
+        {
+                    await page.ClickEChecklistEChecklistOKAsync();
+        }
+        if (await page.IsEChecklistEChecklistOKPresentAsync())
+        {
+                    await page.WaitForEChecklistEChecklistOKAsync("Absent");
+        }
+        if (await page.IsLoggedInUser5A005PresentAsync())
+        {
+                    await page.ClickLoggedInUser5A005Async();
+        }
+        if (await page.IsLogoutPresentAsync())
+        {
+                    await page.ClickLogoutAsync();
+        }
+
     }
 
     [Given(@"^I open a CLAS Browser and Search for EQ by Description for open a clas browser and search for eq by description$")]
@@ -656,8 +2058,18 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I open a CLAS Browser and Search for EQ by Description for open a clas browser and search for eq by description$")]
     public async Task OpenACLASBrowserAndSearchForEQByDescriptionForOpenAClasBrowserAndSearchForEqByDescriptionAsync()
     {
-        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.OpenACLASBrowserAndSearchForEQByDescriptionForOpenAClasBrowserAndSearchForEqByDescriptionAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (data.Condition("if an existing CLAS session is still logged in"))
+        {
+                    await page.NavigateAsync(data.Resolve("{{data:application_url_3}}"));
+        }
+        await _auth.SignInAsync("CL_DC");
+        await page.WaitForLoginC45A2Async("Absent");
+
     }
 
     [Given(@"^I search by Desc in DC for search text$")]
@@ -665,8 +2077,36 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I search by Desc in DC for search text$")]
     public async Task SearchByDescInDCForSearchTextAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SearchByDescInDCForSearchTextAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.EnterSearchTextAsync(data.Resolve("{B[QuoteDescription]}"));
+        await page.PressSearchTextAsync("Tab");
+        await page.PressSearchTextAsync("Tab");
+        await page.PressSearchTextAsync("Tab");
+        await page.PressSearchTextAsync("Tab");
+        await page.ClickQuickSearchButtonAsync();
+        await page.PressSearchMethodEGDescriptionPolicyAsync("TAB");
+        await page.WaitForSearchButtonAsync("Equal");
+        await page.PressSearchButtonAsync("TAB");
+        await page.ClickSearchButtonAsync();
+        if (await page.IsLoadingMessageC7A0DPresentAsync())
+        {
+                    await page.VerifyLoadingMessageC7A0DAsync("Visible", "");
+        }
+        await page.WaitForLoadingAsync("Absent");
+        await page.WaitForViewPolicy56E09Async("Exists");
+        await page.PressViewPolicy56E09Async("TAB");
+        await page.PressSearchButtonAsync("TAB");
+        await page.ClickSearchButtonAsync();
+        if (await page.IsLoadingMessageC7A0DPresentAsync())
+        {
+                    await page.VerifyLoadingMessageC7A0DAsync("Visible", "");
+        }
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I open a CLAS Browser and Search for EQ by Description for verify view policy$")]
@@ -674,8 +2114,25 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I open a CLAS Browser and Search for EQ by Description for verify view policy$")]
     public async Task OpenACLASBrowserAndSearchForEQByDescriptionForVerifyViewPolicyAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.OpenACLASBrowserAndSearchForEQByDescriptionForVerifyViewPolicyAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForViewPolicy0AC0BAsync("Exists");
+        if (await page.IsLoadingMessage4DE37PresentAsync())
+        {
+                    await page.VerifyLoadingMessage4DE37Async("Visible", "");
+        }
+        await page.WaitForLoadingAsync("Absent");
+        await page.ClickViewPolicy0AC0BAsync();
+        if (await page.IsLoadingMessage4DE37PresentAsync())
+        {
+                    await page.VerifyLoadingMessage4DE37Async("Visible", "");
+        }
+        await page.WaitForLoadingAsync("Absent");
+        await page.WaitForViewPolicy0AC0BAsync("Absent");
+
     }
 
     [Given(@"^I navigate to Submission Screen$")]
@@ -683,8 +2140,38 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I navigate to Submission Screen$")]
     public async Task NavigateToSubmissionScreenAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.NavigateToSubmissionScreenAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForSubmission48772Async("Visible");
+        await page.ClickSubmission48772Async();
+        if (await page.IsSubmissionHeadingPresentAsync())
+        {
+                    await page.VerifySubmissionHeadingAsync("Absent", "");
+        }
+        if (await page.IsSubmission7E601PresentAsync())
+        {
+                    await page.PressSubmission7E601Async("TAB");
+        }
+        if (await page.IsSubmission7E601PresentAsync())
+        {
+                    await page.ClickSubmission7E601Async();
+        }
+        if (data.Condition("if determine if on submission page"))
+        {
+                    await page.PauseAsync(1000);
+        }
+        if (await page.IsSubmissionHeadingPresentAsync())
+        {
+                    await page.WaitForSubmissionHeadingAsync("Exists");
+        }
+        if (data.Condition("if determine if on submission page"))
+        {
+                    await page.PauseAsync(1000);
+        }
+
     }
 
     [Given(@"^I run Stoplight$")]
@@ -692,8 +2179,120 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I run Stoplight$")]
     public async Task RunStoplightAsync()
     {
-        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.RunStoplightAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsIsThisCoverageBoundPresentAsync())
+        {
+                    await page.VerifyIsThisCoverageBoundAsync("Exists", "");
+        }
+        if (await page.IsIsThisCoverageBoundPresentAsync())
+        {
+                    await page.VerifyIsThisCoverageBoundAsync(data.Resolve("{{data:expected_is_this_coverage_bound_661}}"), "");
+        }
+        if (await page.IsIsThisCoverageBoundPresentAsync())
+        {
+                    await page.PressIsThisCoverageBoundAsync("TAB");
+        }
+        await page.ClickCompleteApplicationAsync();
+        if (await page.IsClosePresentAsync())
+        {
+                    await page.VerifyCloseAsync("Absent", "");
+        }
+        if (data.Condition("during do (Wait for Stoplight to Run) [max=90]"))
+        {
+                    await page.PauseAsync(1000);
+        }
+        if (await page.IsStoplightWaitingWindowErrorPresentAsync())
+        {
+                    await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
+        }
+        data.Set("ErrorFlag", data.Resolve("{{data:errorflag}}"));
+        data.Set("ErrorFlag", data.Resolve("{{data:errorflag_2}}"));
+        data.Set("REPETITION", data.Resolve("{{data:repetition}}"));
+        if (await page.IsStoplightWaitingWindowFirstCloseButtonOnErrorPresentAsync())
+        {
+                    await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
+        }
+        if (data.Condition("during do (Wait for Stoplight to Run) [max=90]"))
+        {
+                    await page.PauseAsync(1000);
+        }
+        if (await page.IsCompleteApplicationPresentAsync())
+        {
+                    await page.ClickCompleteApplicationAsync();
+        }
+        if (data.Condition("during do (Wait for Stoplight to Run) [max=90]"))
+        {
+                    await page.PauseAsync(1000);
+        }
+        await page.ClickCloseAsync();
+        await page.WaitForStoplightWaitingWindowAsync("Absent");
+        if (await page.IsLoadingMessagePresentAsync())
+        {
+                    await page.VerifyLoadingMessageAsync("Visible", "");
+        }
+        await page.WaitForLoadingAsync("Absent");
+        await page.WaitForAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists");
+        await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists", "");
+        await page.PauseAsync(1000);
+        if (await page.IsLoadingMessagePresentAsync())
+        {
+                    await page.VerifyLoadingMessageAsync("Visible", "");
+        }
+        await page.WaitForLoadingAsync("Absent");
+        if (await page.IsAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsPresentAsync())
+        {
+                    await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists", "");
+        }
+        if (await page.IsCompleteApplicationPresentAsync())
+        {
+                    await page.ClickCompleteApplicationAsync();
+        }
+        if (await page.IsClosePresentAsync())
+        {
+                    await page.VerifyCloseAsync("Absent", "");
+        }
+        if (data.Condition("if stoplight error"))
+        {
+                    await page.PauseAsync(1000);
+        }
+        if (await page.IsStoplightWaitingWindowErrorPresentAsync())
+        {
+                    await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
+        }
+        if (await page.IsStoplightWaitingWindowFirstCloseButtonOnErrorPresentAsync())
+        {
+                    await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
+        }
+        if (data.Condition("if stoplight error"))
+        {
+                    await page.PauseAsync(1000);
+        }
+        if (await page.IsCompleteApplicationPresentAsync())
+        {
+                    await page.ClickCompleteApplicationAsync();
+        }
+        if (data.Condition("if stoplight error"))
+        {
+                    await page.PauseAsync(1000);
+        }
+        if (await page.IsClosePresentAsync())
+        {
+                    await page.ClickCloseAsync();
+        }
+        if (await page.IsStoplightWaitingWindowPresentAsync())
+        {
+                    await page.WaitForStoplightWaitingWindowAsync("Absent");
+        }
+        if (data.Condition("if stoplight error"))
+        {
+                    await page.PauseAsync(1000);
+        }
+        await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
+
     }
 
     [Given(@"^I refer Application/Policy$")]
@@ -701,8 +2300,46 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I refer Application/Policy$")]
     public async Task ReferApplicationPolicyAsync()
     {
-        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.ReferApplicationPolicyAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsReferRequestIssuancePresentAsync())
+        {
+                    await page.VerifyReferRequestIssuanceAsync("Absent", "");
+        }
+        if (await page.IsIsThisCoverageBoundPresentAsync())
+        {
+                    await page.VerifyIsThisCoverageBoundAsync("Exists", "");
+        }
+        if (await page.IsIsThisCoverageBoundPresentAsync())
+        {
+                    await page.VerifyIsThisCoverageBoundAsync(data.Resolve("{{data:expected_is_this_coverage_bound_value_698}}"), "Value");
+        }
+        if (await page.IsIsThisCoverageBoundPresentAsync())
+        {
+                    await page.PressIsThisCoverageBoundAsync("TAB");
+        }
+        if (data.Condition("'Refer Needed' == NULL"))
+        {
+                    await page.ClickReferRequestIssuanceAsync();
+        }
+        if (data.Condition("'Refer Needed' != NULL"))
+        {
+                    await page.ClickApproveAsync();
+        }
+        await page.WaitForIFRAMEDuckCreekPolicyIFRAMEOKAsync("Exists");
+        await page.ClickIFRAMEDuckCreekPolicyIFRAMEOKAsync();
+        if (await page.IsIFRAMEPresentAsync())
+        {
+                    await page.VerifyIFRAMEAsync("Exists", "");
+        }
+        if (data.Condition("while check for IFRAME"))
+        {
+                    await page.PauseAsync(1000);
+        }
+
     }
 
     [Given(@"^I complete alert Error Check$")]
@@ -710,8 +2347,36 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete alert Error Check$")]
     public async Task CompleteAlertErrorCheckAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteAlertErrorCheckAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsAlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbePresentAsync())
+        {
+                    await page.VerifyAlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbeAsync("Exists", "");
+        }
+        data.Set("Alert Error", data.Resolve("{{data:alert_error}}"));
+        if (data.Condition("while check for IFRAME"))
+        {
+                    data.Set("ForceAFail", data.Resolve("{\"Expression\": \"{B[Alert Error]} == 'TRUE'\"}"));
+        }
+        if (await page.IsIFRAMEPresentAsync())
+        {
+                    await page.VerifyIFRAMEAsync("Exists", "");
+        }
+        if (await page.IsIFRAMEDuckCreekPolicyAlertErrorMessagePresentAsync())
+        {
+                    await page.VerifyIFRAMEDuckCreekPolicyAlertErrorMessageAsync("Exists", "");
+        }
+        data.Set("Alert Error", data.Resolve("{{data:alert_error}}"));
+        if (data.Condition("while check for IFRAME"))
+        {
+                    data.Set("ForceAFail", data.Resolve("{\"Expression\": \"{B[Alert Error]} == 'TRUE'\"}"));
+        }
+        await page.PauseAsync(1000);
+        await page.WaitForTransactionTypeAsync("Exists");
+
     }
 
     [Given(@"^I refer Application/Policy for table row cell link$")]
@@ -719,8 +2384,14 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I refer Application/Policy for table row cell link$")]
     public async Task ReferApplicationPolicyForTableRowCellLinkAsync()
     {
-        var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.ReferApplicationPolicyForTableRowCellLinkAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyTableRowCellLinkAsync("Exists", "");
+        await page.WaitForBillingAsync("Exists");
+
     }
 
     [Given(@"^I complete save for Later/Return to Admin for save for later$")]
@@ -728,8 +2399,40 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete save for Later/Return to Admin for save for later$")]
     public async Task CompleteSaveForLaterReturnToAdminForSaveForLaterAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteSaveForLaterReturnToAdminForSaveForLaterAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsSaveForLaterPresentAsync())
+        {
+                    await page.VerifySaveForLaterAsync("Exists", "");
+        }
+        if (await page.IsSaveForLaterPresentAsync())
+        {
+                    await page.ClickSaveForLaterAsync();
+        }
+        if (await page.IsSaveForLaterOKPresentAsync())
+        {
+                    await page.WaitForSaveForLaterOKAsync("Exists");
+        }
+        if (await page.IsSaveForLaterOKPresentAsync())
+        {
+                    await page.ClickSaveForLaterOKAsync();
+        }
+        if (await page.IsReturnToAdminPresentAsync())
+        {
+                    await page.VerifyReturnToAdminAsync("Exists", "");
+        }
+        if (await page.IsReturnToAdminPresentAsync())
+        {
+                    await page.ClickReturnToAdminAsync();
+        }
+        if (await page.IsReturnToAdminPresentAsync())
+        {
+                    await page.WaitForReturnToAdminAsync("Absent");
+        }
+
     }
 
     [Given(@"^I complete retreive Policy Number After Referral$")]
@@ -737,8 +2440,22 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete retreive Policy Number After Referral$")]
     public async Task CompleteRetreivePolicyNumberAfterReferralAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRetreivePolicyNumberAfterReferralAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickViewPolicyDetails848D5Async();
+        if (await page.IsPolicyDetailsE7F69PresentAsync())
+        {
+                    await page.VerifyPolicyDetailsE7F69Async("Absent", "");
+        }
+        if (data.Condition("during loop to Check if Policy Details Exists [max=120]"))
+        {
+                    await page.PauseAsync(1000);
+        }
+        data.Set("Policy#", await page.CapturePolicyNumberAsync("InnerText"));
+
     }
 
     [Given(@"^I open EQ in Browser for open a browser$")]
@@ -746,8 +2463,17 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I open EQ in Browser for open a browser$")]
     public async Task OpenEQInBrowserForOpenABrowserAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.OpenEQInBrowserForOpenABrowserAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
+        await page.NavigateAsync(data.Resolve("{{data:application_url_2}}"));
+        await page.WaitForBODYAsync("Exists");
+        await page.WaitForLoadingAsync("Absent");
+        await page.NoteAsync("Source operation requires environment-specific implementation.");
+
     }
 
     [Given(@"^I complete restart Edge Popup for restart edge popup$")]
@@ -755,8 +2481,21 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete restart Edge Popup for restart edge popup$")]
     public async Task CompleteRestartEdgePopupForRestartEdgePopupAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRestartEdgePopupForRestartEdgePopupAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsEChecklistEChecklistOKPresentAsync())
+        {
+                    await page.VerifyEChecklistEChecklistOKAsync("Exists", "");
+        }
+        if (await page.IsEChecklistEChecklistOKPresentAsync())
+        {
+                    await page.ClickEChecklistEChecklistOKAsync();
+        }
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I open EQ in Browser for check if logout exists$")]
@@ -764,8 +2503,24 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I open EQ in Browser for check if logout exists$")]
     public async Task OpenEQInBrowserForCheckIfLogoutExistsAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.OpenEQInBrowserForCheckIfLogoutExistsAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsLogoutPresentAsync())
+        {
+                    await page.VerifyLogoutAsync("Exists", "");
+        }
+        if (await page.IsLogoutPresentAsync())
+        {
+                    await page.ClickLogoutAsync();
+        }
+        if (await page.IsLogoutLogOutPresentAsync())
+        {
+                    await page.ClickLogoutLogOutAsync();
+        }
+
     }
 
     [Given(@"^I sign in to ExpertQuote for login to eq sso$")]
@@ -773,8 +2528,17 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I sign in to ExpertQuote for login to eq sso$")]
     public async Task SignInToExpertQuoteForLoginToEqSsoAsync()
     {
-        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SignInToExpertQuoteForLoginToEqSsoAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForUsernameAsync("Exists");
+        await _auth.SignInAsync("CL_EQ");
+        data.Set("GetHostname", data.Resolve("{{env:COMPUTERNAME}}"));
+        data.Set("AgentName", data.Resolve("{{runtime:GetHostname}}"));
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I search by QuoteNum for search by quotenum$")]
@@ -782,8 +2546,22 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I search by QuoteNum for search by quotenum$")]
     public async Task SearchByQuoteNumForSearchByQuotenumAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SearchByQuoteNumForSearchByQuotenumAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.EnterQuoteSearchInputAsync(data.Resolve("{B[Quote_Num]}"));
+        await page.PressQuoteSearchInputAsync("Tab");
+        await page.PressQuoteSearchInputAsync("Tab");
+        await page.ClickClientInfoSearchAsync();
+        await page.WaitForLoadingAsync("Absent");
+        data.Set("Screen", data.Resolve("{{data:screen_11}}"));
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.VerifyScreenHeading9696CAsync("Absent", "");
+        }
+
     }
 
     [Given(@"^I navigate to the required policy screen for subsequent screen 0827$")]
@@ -791,8 +2569,30 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I navigate to the required policy screen for subsequent screen 0827$")]
     public async Task NavigateToTheRequiredPolicyScreenForSubsequentScreen0827Async()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.NavigateToTheRequiredPolicyScreenForSubsequentScreen0827Async();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (!await page.IsScreen4475CPresentAsync())
+        {
+                    await page.ClickScreen4475CAsync();
+        }
+        if (data.Condition("'Review Required - Keep Going' == \"Yes\""))
+        {
+                    await page.ClickKeepGoingAsync();
+        }
+        data.Set("Screen", data.Resolve("{{data:screen_11}}"));
+        if (!await page.IsLoadingPresentAsync())
+        {
+                    await page.WaitForLoadingAsync("Absent");
+        }
+        if (!await page.IsScreenHeading9696CPresentAsync())
+        {
+                    await page.WaitForScreenHeading9696CAsync("Exists");
+        }
+        await page.WaitForLoadingAsync("Absent");
+
     }
 
     [Given(@"^I transmit to DC$")]
@@ -800,8 +2600,19 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I transmit to DC$")]
     public async Task TransmitToDCAsync()
     {
-        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.TransmitToDCAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickTransmitAsync();
+        await page.WaitForLoadingAsync("Absent");
+        await page.VerifyTABLERowCellExplicitName1Async(data.Resolve("{{data:expected_table_row_cell_explicitname_1_767}}"), "");
+        await page.VerifyTABLERowCellExplicitName2Async(data.Resolve("{{data:expected_table_row_cell_explicitname_2_768}}"), "");
+        await page.VerifyTABLERowCellExplicitName4Async(data.Resolve("{{runtime:Policy#}}"), "");
+        await page.VerifyTABLERowCellExplicitName5Async(data.Resolve("{{runtime:Premium}}"), "");
+        await page.VerifyTABLERowCellExplicitName5Async(data.Resolve("{{data:expected_table_row_cell_explicitname_5_771}}"), "");
+
     }
 
     [Given(@"^I verify premium on DC$")]
@@ -809,8 +2620,14 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I verify premium on DC$")]
     public async Task VerifyPremiumOnDCAsync()
     {
-        var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.VerifyPremiumOnDCAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyDCTransactionTableRowCellExplicitNameNewPremiumAsync(data.Resolve("{{data:expected_dc_transaction_table_row_cell_explicitname_new_premium_772}}"), "");
+        await page.VerifyDCTransactionTableRowCellExplicitNameStatusAsync(data.Resolve("{{data:expected_dc_transaction_table_row_cell_explicitname_status_773}}"), "");
+
     }
 
     [Given(@"^I sign in to Duck Creek$")]
@@ -818,8 +2635,33 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I sign in to Duck Creek$")]
     public async Task SignInToDuckCreekAsync()
     {
-        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SignInToDuckCreekAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
+        if (data.Condition("during loop for the Login [max=30]"))
+        {
+                    data.Set("CheckTheLoopLogin", data.Resolve("{\"Expression\": \"{B[Loop Login]} = 0\"}"));
+        }
+        data.Set("Loop Login", data.Resolve("{{data:loop_login}}"));
+        data.Set("URL", data.Resolve("{{data:url}}"));
+        data.Set("UserName", data.Resolve("{{env:CL_DC_USERNAME}}"));
+        data.Set("Password", data.Resolve("{{env:CL_DC_PASSWORD}}"));
+        if (data.Condition("during loop for the Login [max=30]"))
+        {
+                    await page.NavigateAsync(data.Resolve("{{data:application_url_4}}"));
+        }
+        if (await page.IsBODYPresentAsync())
+        {
+                    await page.WaitForBODYAsync("Exists");
+        }
+        if (data.Condition("during loop for the Login [max=30]"))
+        {
+                    await page.NoteAsync("Source operation requires environment-specific implementation.");
+        }
+
     }
 
     [Given(@"^I complete restart Edge Popup for restart microsoft edge message exists$")]
@@ -827,8 +2669,20 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I complete restart Edge Popup for restart microsoft edge message exists$")]
     public async Task CompleteRestartEdgePopupForRestartMicrosoftEdgeMessageExistsAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRestartEdgePopupForRestartMicrosoftEdgeMessageExistsAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsEChecklistEChecklistOKPresentAsync())
+        {
+                    await page.VerifyEChecklistEChecklistOKAsync("Exists", "");
+        }
+        if (await page.IsEChecklistEChecklistOKPresentAsync())
+        {
+                    await page.ClickEChecklistEChecklistOKAsync();
+        }
+
     }
 
     [Given(@"^I sign in to Duck Creek for logged in user$")]
@@ -836,8 +2690,16 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I sign in to Duck Creek for logged in user$")]
     public async Task SignInToDuckCreekForLoggedInUserAsync()
     {
-        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SignInToDuckCreekForLoggedInUserAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsLoggedInUserPresentAsync())
+        {
+                    await page.VerifyLoggedInUserAsync("Exists", "");
+        }
+
     }
 
     [Given(@"^I sign out of the application for logout$")]
@@ -845,8 +2707,44 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I sign out of the application for logout$")]
     public async Task SignOutOfTheApplicationForLogoutAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SignOutOfTheApplicationForLogoutAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        if (await page.IsLoggedInUser6AD12PresentAsync())
+        {
+                    await page.ClickLoggedInUser6AD12Async();
+        }
+        if (await page.IsLogoutPresentAsync())
+        {
+                    await page.ClickLogoutAsync();
+        }
+        if (data.Condition("during loop for the Login [max=30]"))
+        {
+                    await page.NoteAsync("Source operation requires environment-specific implementation.");
+        }
+        if (await page.IsTheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus01C36BPresentAsync())
+        {
+                    await page.VerifyTheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus01C36BAsync("Exists", "");
+        }
+        if (await page.IsEChecklistEChecklistOKPresentAsync())
+        {
+                    await page.ClickEChecklistEChecklistOKAsync();
+        }
+        if (await page.IsEChecklistEChecklistOKPresentAsync())
+        {
+                    await page.WaitForEChecklistEChecklistOKAsync("Absent");
+        }
+        if (await page.IsLoggedInUser6AD12PresentAsync())
+        {
+                    await page.ClickLoggedInUser6AD12Async();
+        }
+        if (await page.IsLogoutPresentAsync())
+        {
+                    await page.ClickLogoutAsync();
+        }
+
     }
 
     [Given(@"^I sign in to Duck Creek for cl dc$")]
@@ -854,8 +2752,22 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I sign in to Duck Creek for cl dc$")]
     public async Task SignInToDuckCreekForClDcAsync()
     {
-        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.SignInToDuckCreekForClDcAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await _auth.SignInAsync("CL_DC");
+        if (await page.IsLogin07237PresentAsync())
+        {
+                    await page.WaitForLogin07237Async("Absent");
+        }
+        data.Set("Loop Login", data.Resolve("{{data:loop_login_2}}"));
+        data.Set("DocPath", "");
+        data.Set("GetHostname", data.Resolve("{{env:COMPUTERNAME}}"));
+        data.Set("AgentName", data.Resolve("{{runtime:GetHostname}}"));
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I perform Quick Search and Open Policy$")]
@@ -863,8 +2775,51 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I perform Quick Search and Open Policy$")]
     public async Task PerformQuickSearchAndOpenPolicyAsync()
     {
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.PerformQuickSearchAndOpenPolicyAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.EnterSearchTextAsync(data.Resolve("{B[Policy#]}"));
+        await page.PressSearchTextAsync("Tab");
+        await page.PressSearchTextAsync("Tab");
+        await page.ClickQuickSearchButtonAsync();
+        if (await page.IsLoadingMessagePresentAsync())
+        {
+                    await page.VerifyLoadingMessageAsync("Visible", "");
+        }
+        await page.WaitForLoadingAsync("Absent");
+        await page.PauseAsync(1000);
+        await page.WaitForN1ResultsFoundCurrentlyShowing11Async("Visible");
+        await page.WaitForViewPolicyAsync("Visible");
+        await page.ClickViewPolicyAsync();
+        if (await page.IsLoadingMessagePresentAsync())
+        {
+                    await page.VerifyLoadingMessageAsync("Visible", "");
+        }
+        await page.WaitForLoadingAsync("Absent");
+        await page.PauseAsync(1000);
+        if (await page.IsViewPolicyPresentAsync())
+        {
+                    await page.VerifyViewPolicyAsync("Visible", "");
+        }
+        if (data.Condition("while view Policy Exists [max=90]"))
+        {
+                    await page.PauseAsync(1000);
+        }
+        if (await page.IsViewPolicyPresentAsync())
+        {
+                    await page.VerifyViewPolicyAsync("Visible", "");
+        }
+        if (await page.IsViewPolicyPresentAsync())
+        {
+                    await page.ClickViewPolicyAsync();
+        }
+        if (data.Condition("while view Policy Exists [max=90]"))
+        {
+                    await page.PauseAsync(1000);
+        }
+
     }
 
     [Given(@"^I verify for Policy Packet$")]
@@ -872,8 +2827,28 @@ public sealed class EQBOPBasicPolicySteps
     [Then(@"^I verify for Policy Packet$")]
     public async Task VerifyForPolicyPacketAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.VerifyForPolicyPacketAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForTransACTAsync("Visible");
+        await page.ClickViewPolicyDetailsC87C2Async();
+        if (await page.IsPolicyDetailsABBA9PresentAsync())
+        {
+                    await page.VerifyPolicyDetailsABBA9Async("Absent", "");
+        }
+        if (data.Condition("during loop to Check if Policy Details Exists [max=120]"))
+        {
+                    await page.PauseAsync(1000);
+        }
+        await page.WaitForAttachmentsListGridRowCellExplicitName1Async("Visible");
+        await page.VerifyAttachmentsListGridRowCellExplicitName1Async(data.Resolve("{{data:expected_row_834}}"), "");
+        data.Set("NBPolicyFormPacket", await page.CaptureAttachmentsListGridRowCellExplicitName3Async("InnerText"));
+        await page.VerifyAttachmentsListGridRowCellExplicitName1Async(data.Resolve("{{data:expected_attachments_list_grid_row_cell_explicitname_1_836}}"), "");
+        await page.ClickViewPolicyAsync();
+        await page.WaitForTransactionTypeAsync("Visible");
+
     }
 
 }

@@ -14,7 +14,7 @@ public sealed class BillingLocators
     public ILocator CHECK => _page.GetByTestId("fields._PolicyPaymentInputDoc.initialPaymentData$paymentMethod.value-chip-wrapper");
 
     // Source modules: EQ||Billing | confidence=High score=127
-    public ILocator CheckNumber => _page.GetByRole(AriaRole.Textbox, new() { Name = "Txt_Check Number", Exact = true });
+    public ILocator CheckNumber => _page.Locator("[name=\"Txt_Check Number\"], [id=\"Txt_Check Number\"]").First;
 
     // Source modules: EQ||Billing | confidence=High score=130
     public ILocator CreateNewBillingAccount => _page.GetByTestId("fields._PolicyPaymentInputDoc._PolicyPaymentInputDoc$billingCenterAccount.value-new-account-chip-chip");
@@ -29,7 +29,7 @@ public sealed class BillingLocators
     public ILocator N1Payment => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$paymentPlan.value-chip-wrapper");
 
     // Source modules: EQ||Billing | confidence=High score=127
-    public ILocator PaymentDueDate => _page.GetByRole(AriaRole.Textbox, new() { Name = "Txt_PaymentDueDate", Exact = true });
+    public ILocator PaymentDueDate => _page.Locator("[name=\"Txt_PaymentDueDate\"], [id=\"Txt_PaymentDueDate\"]").First;
 
     // Source modules: EQ||Billing | confidence=High score=130
     public ILocator PrimaryAccountHolderName => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$payerID.value-*-payer-chip-wrapper");

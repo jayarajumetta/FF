@@ -22,8 +22,95 @@ public sealed class BAPExpandedSteps
         data.GenerateRandom("AuditTelephone_0048", "[0-9]{10}");
         data.GenerateRandom("InspectionTelephone_0048", "[0-9]{10}");
 
-        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.EnterIndividualClientInformationAsync7();
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_1}}"));
+        await page.WaitForUnderwritingInfoAsync("Exists");
+        await page.EnterInsuredTypeAsync(data.Resolve("{{data:insured_type_3}}"));
+        await page.PressInsuredTypeAsync("Enter");
+        await page.PressInsuredTypeAsync("Tab");
+        await page.PressInsuredTypeAsync("Tab");
+        await page.PressInsuredTypeAsync("Tab");
+        await page.ClickEntityTypeAsync();
+        await page.WaitForFirstName55A0BAsync("Visible");
+        await page.PressFirstName55A0BAsync("TAB");
+        await page.PressFirstName55A0BAsync("Tab");
+        await page.EnterFirstName55A0BAsync(data.Resolve("{{data:first_name_7}}"));
+        await page.PressFirstName55A0BAsync("CLICK");
+        await page.PressFirstName55A0BAsync("Tab");
+        await page.PressFirstName55A0BAsync("Tab");
+        await page.EnterMiddleNameAsync(data.Resolve("{{data:middle_name_8}}"));
+        await page.PressMiddleNameAsync("Tab");
+        await page.PressMiddleNameAsync("Tab");
+        await page.PressLastNameAsync("TAB");
+        await page.PressLastNameAsync("Tab");
+        await page.EnterDOBAsync("{DATE[][-40y][MM-dd-yyyy]}");
+        await page.PressDOBAsync("Tab");
+        await page.PressDOBAsync("Tab");
+        if (data.Condition("State!=\"CA\""))
+        {
+                    await page.EnterGender1DC4AAsync(data.Resolve("{{data:gender_11}}"));
+                    await page.PressGender1DC4AAsync("Tab");
+                    await page.PressGender1DC4AAsync("Tab");
+        }
+        await page.EnterEntityTypeAsync(data.Resolve("{{data:entity_type_13}}"));
+        await page.PressEntityTypeAsync("Enter");
+        await page.PressEntityTypeAsync("Tab");
+        await page.PressEntityTypeAsync("Tab");
+        await page.EnterAddress17A1FBAsync(data.Resolve("{{data:address1_15}}"));
+        await page.PressAddress17A1FBAsync("Tab");
+        await page.PressAddress17A1FBAsync("Tab");
+        await page.EnterZipCode26D22Async(data.Resolve("{{data:zipcode_16}}"));
+        await page.PressZipCode26D22Async("Tab");
+        await page.PressZipCode26D22Async("Tab");
+        await page.ClickClientSearchCA696Async();
+        await page.WaitForOKAsync("Exists");
+        await page.ClickOKAsync();
+        await page.WaitForOrderSSN68C87Async("Exists");
+        await page.ClickOrderSSN68C87Async();
+        await page.WaitForEnterSSN6B3FBAsync("Exists");
+        await page.PressEnterSSN6B3FBAsync("TAB");
+        await page.PressEnterSSN6B3FBAsync("Enter");
+        data.Set("SSN", await page.CaptureEnterSSN6B3FBAsync("InnerText"));
+        await page.ClickEnterSSN6B3FBAsync();
+        await page.PressEnterSSN6B3FBAsync("Doubleclick");
+        await page.PressEnterSSN6B3FBAsync("Tab");
+        await page.ClickVerify8CDBEAsync();
+        await page.WaitForVerify8CDBEAsync("Absent");
+        data.Set("Last4SSN", data.Resolve("{B[SSN]}"));
+        await page.WaitForSocialSecurityAsync("Equal");
+        await page.VerifySocialSecurityAsync(data.Resolve("XXX-XX-{B[Last4SSN]}"), "InnerText");
+        await page.WaitForPleaseVerifySSN3EAB9Async("Absent");
+        if (data.Condition("'Product (LOB)' != \"UMB\""))
+        {
+                    await page.EnterNameOfAuditContactAsync(data.Resolve("{{data:name_of_audit_contact_33}}"));
+                    await page.PressNameOfAuditContactAsync("Tab");
+                    await page.PressNameOfAuditContactAsync("CLICK");
+                    await page.PressNameOfAuditContactAsync("Tab");
+                    await page.PressNameOfAuditContactAsync("Tab");
+        }
+        if (data.Condition("'Product (LOB)' != \"UMB\""))
+        {
+        }
+        await page.EnterNameOfInspectionContactAsync(data.Resolve("{{data:name_of_inspection_contact_35}}"));
+        await page.PressNameOfInspectionContactAsync("Tab");
+        await page.PressNameOfInspectionContactAsync("CLICK");
+        await page.PressNameOfInspectionContactAsync("Tab");
+        await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_37}}"));
+        await page.PressInsuredEMailAddressAsync("Tab");
+        await page.PressInsuredEMailAddressAsync("CLICK");
+        await page.PressInsuredEMailAddressAsync("Tab");
+        await page.EnterWebsiteAddressAsync(data.Resolve("{{data:website_address_38}}"));
+        await page.PressWebsiteAddressAsync("Tab");
+        await page.PressAddress2Async("TAB");
+        await page.PressAddress2Async("Tab");
+        await page.VerifyZipCode26D22Async("[0-9]{5}-[0-9]{4}", "Regex:value");
+        data.Set("State", data.Resolve("{{data:state}}"));
+        data.Set("Product (LOB)", data.Resolve("{{data:product_lob}}"));
+        data.Set("Server", data.Resolve("{{data:server}}"));
+        data.Set("FormOnPolicyDocName", data.Resolve("{{data:formonpolicydocname}}"));
+
     }
 
     [Given(@"^I add Third Party Designee$")]
@@ -34,8 +121,27 @@ public sealed class BAPExpandedSteps
         var data = _scenario.Get<ScenarioData>();
         data.GenerateRandom("AdditionalOtherInterestInputLastName_0055", "^[a-z]{15}$");
 
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddThirdPartyDesigneeAsync();
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyClient070F4Async("Absent", "");
+        await page.ClickClient35F85Async();
+        await page.PauseAsync(1000);
+        await page.ClickThirdPartyDesigneeAsync();
+        await page.WaitForHeadingThirdPartyDesigneeAsync("Exists");
+        await page.ClickAddThirdPartyAsync();
+        await page.WaitForAdditionalOtherInterestInputFirstNameAsync("Exists");
+        await page.EnterAdditionalOtherInterestInputFirstNameAsync(data.Resolve("{{data:additionalotherinterestinput_firstname_52}}"));
+        await page.PressAdditionalOtherInterestInputFirstNameAsync("Tab");
+        await page.PressAdditionalOtherInterestInputFirstNameAsync("CLICK");
+        await page.WaitForAdditionalOtherInterestInputLastNameAsync("Exists");
+        await page.EnterAdditionalOtherInterestInputAddress1Async(data.Resolve("{{data:additionalotherinterestinput_address1_55}}"));
+        await page.PressAdditionalOtherInterestInputAddress1Async("Tab");
+        await page.EnterZipCodeBCEA0Async(data.Resolve("{{data:zip_code_56}}"));
+        await page.PressZipCodeBCEA0Async("Tab");
+        await page.ClickCommonOKAsync();
+        await page.WaitForClient070F4Async("Exists");
+
     }
 
     [Given(@"^I add Additional Named Insured$")]
@@ -47,8 +153,53 @@ public sealed class BAPExpandedSteps
         data.GenerateRandom("AdditionalInsuredLastName_0062", "^[a-z]{15}$");
         data.GenerateRandom("InsuredSSN", "025[0-9]{6}");
 
-        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddAdditionalNamedInsuredAsync();
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyClient070F4Async("Absent", "");
+        await page.ClickClient35F85Async();
+        await page.ClickAdditionalNamedInsuredAsync();
+        await page.WaitForAdditionalNamedInsuredHeadingAsync("Exists");
+        await page.ClickAddNamedInsuredIndividualAsync();
+        await page.WaitForAdditionalInsuredFirstNameAsync("Exists");
+        await page.EnterAdditionalInsuredFirstNameAsync(data.Resolve("{{data:additional_insured_first_name_65}}"));
+        await page.PressAdditionalInsuredFirstNameAsync("Tab");
+        await page.PressAdditionalInsuredFirstNameAsync("Tab");
+        await page.EnterAdditionalInsuredMiddleNameAsync(data.Resolve("{{data:additional_insured_middle_name_66}}"));
+        await page.PressAdditionalInsuredMiddleNameAsync("Tab");
+        await page.ClickDetail704E6Async();
+        await page.WaitForAddress1CB379Async("Exists");
+        await page.EnterAddress1CB379Async(data.Resolve("{{data:address_1_70}}"));
+        await page.PressAddress1CB379Async("Tab");
+        await page.PressAddress1CB379Async("Tab");
+        await page.PressAddress1CB379Async("Tab");
+        await page.EnterZipCodeD2A54Async(data.Resolve("{{data:zip_code_71}}"));
+        await page.PressZipCodeD2A54Async("Tab");
+        await page.PressZipCodeD2A54Async("Tab");
+        await page.EnterDateOfBirthEA1C4Async(data.Resolve("{{data:date_of_birth_72}}"));
+        await page.PressDateOfBirthEA1C4Async("CLICK");
+        await page.PressDateOfBirthEA1C4Async("Tab");
+        await page.ClickClientSearch2CB16Async();
+        await page.WaitForOKAsync("Exists");
+        await page.ClickOKAsync();
+        await page.ClickOrderSSN710BFAsync();
+        await page.WaitForSSNWasNotReturnedAsync("Exists");
+        await page.WaitForEnterSSNE3801Async("Exists");
+        await page.ClickEnterSSNE3801Async();
+        await page.PressEnterSSNE3801Async("Doubleclick");
+        await page.PressEnterSSNE3801Async("Tab");
+        await page.PressEnterSSNE3801Async("Tab");
+        await page.ClickVerify34721Async();
+        await page.WaitForVerify34721Async("Absent");
+        await page.WaitForPleaseVerifySSN8D55BAsync("Absent");
+        await page.ClickIndividualOKAsync();
+        await page.WaitForReturnToClientAsync("Exists");
+        await page.ClickReturnToClientAsync();
+        await page.WaitForClient070F4Async("Exists");
+        await page.EnterTitleAsync(data.Resolve("{{data:title_88}}"));
+        await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_89}}"));
+        await page.VerifyResultAsync(data.Resolve("{{data:expected_result_value_90}}"), "value");
+
     }
 
     [Given(@"^I complete required policy information$")]
@@ -56,8 +207,96 @@ public sealed class BAPExpandedSteps
     [Then(@"^I complete required policy information$")]
     public async Task CompleteRequiredPolicyInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredPolicyInformationAsync11();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickPolicyInfoAsync();
+        await page.WaitForPolicyInfoHeaderAsync("Exists");
+        await page.PauseAsync(1000);
+        await page.EnterEffectiveDate95094Async(data.Resolve("{{data:effectivedate_94}}"));
+        await page.PressEffectiveDate95094Async("Tab");
+        if (data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
+        {
+                    await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_95}}"));
+                    await page.PressYearsInBusinessAsync("Tab");
+        }
+        await page.PauseAsync(1000);
+        if (data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
+        {
+                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_97}}"));
+                    await page.PressPrimaryRatingStateAsync("Tab");
+        }
+        if (data.Condition("'Product (LOB)' != \"WC\""))
+        {
+                    await page.ClickPrimaryRatingStateAsync();
+        }
+        if (data.Condition("'Product (LOB)' != \"WC\""))
+        {
+                    await page.PressPrimaryRatingStateAsync("TAB");
+        }
+        if (data.Condition("'Product (LOB)' != \"WC\""))
+        {
+                    await page.PressPrimaryRatingStateAsync("TAB");
+        }
+        await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_101}}"));
+        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
+        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
+        data.Set("StateIsKansas", "Alabama==\"Kansas\"; Expression= 'Alabama'=='Kansas'");
+        if (data.Condition("'Product (LOB)' == \"BOP\" || 'Product (LOB)' == \"BAP\""))
+        {
+                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_103}}"));
+                    await page.PressPrimaryRatingStateAsync("Enter");
+                    await page.PressPrimaryRatingStateAsync("Tab");
+                    await page.PressPrimaryRatingStateAsync("Tab");
+        }
+        if (data.Condition("'Product (LOB)' == \"BOP\" || 'Product (LOB)' == \"UMB\" || 'Product (LOB)' == \"BAP\""))
+        {
+                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_104}}"));
+                    await page.PressPrimaryRatingStateAsync("Down");
+                    await page.PressPrimaryRatingStateAsync("Enter");
+                    await page.PressPrimaryRatingStateAsync("Tab");
+                    await page.PressPrimaryRatingStateAsync("Tab");
+        }
+        data.Set("StateIsVirginia", "Alabama==\"Virginia\"; Expression= 'Alabama'=='Virginia'");
+        if (data.Condition("'Product (LOB)' == \"BAP\""))
+        {
+                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_106}}"));
+                    await page.PressPrimaryRatingStateAsync("Tab");
+        }
+        if (data.Condition("'Product (LOB)' == \"BAP\""))
+        {
+                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_107}}"));
+                    await page.PressPrimaryRatingStateAsync("Down");
+                    await page.PressPrimaryRatingStateAsync("Enter");
+                    await page.PressPrimaryRatingStateAsync("Tab");
+                    await page.PressPrimaryRatingStateAsync("Tab");
+        }
+        await page.PauseAsync(1000);
+        if (data.Condition("'Product (LOB)' != \"WC\""))
+        {
+                    await page.WaitForPrimaryRatingStateAsync("Exists");
+        }
+        if (data.Condition("'Product (LOB)' != \"WC\""))
+        {
+                    await page.PressPrimaryRatingStateAsync("TAB");
+        }
+        await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_111}}"));
+        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("CLICK");
+        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Enter");
+        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
+        await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
+        await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
+        await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
+        await page.PauseAsync(1000);
+        await page.WaitForPolicyInfoHeaderAsync("Visible");
+        await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
+        await page.PressDescriptionOfSpecifiedOperationAsync("TAB");
+        await page.EnterDescriptionOfSpecifiedOperationAsync("AL BAP StraightThrough {NMONTH}.{NDAY}.{NYEAR} {Time}");
+        await page.PressDescriptionOfSpecifiedOperationAsync("Tab");
+        await page.VerifyDescriptionOfSpecifiedOperationAsync("{XB[QuoteDescription]}", "value");
+
     }
 
     [Given(@"^I complete Business Auto policy\\-specific fields$")]
@@ -65,8 +304,34 @@ public sealed class BAPExpandedSteps
     [Then(@"^I complete Business Auto policy\\-specific fields$")]
     public async Task CompleteBusinessAutoPolicySpecificFieldsAsync()
     {
-        var page = new DiscountsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteBusinessAutoPolicySpecificFieldsAsync3();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new DiscountsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyBAPSpecificFieldsOKAsync("Absent", "");
+        await page.EnterNAICSCodeSearchValueAsync(data.Resolve("{{data:naics_code_search_value_122}}"));
+        await page.PressNAICSCodeSearchValueAsync("CLICK");
+        await page.PressNAICSCodeSearchValueAsync("Tab");
+        await page.PressNAICSCodeSearchValueAsync("Tab");
+        await page.PauseAsync(1000);
+        await page.EnterNAICSCodeSearchResultsAsync(data.Resolve("{{data:naics_code_search_results_124}}"));
+        await page.PressNAICSCodeSearchResultsAsync("CLICK");
+        await page.PressNAICSCodeSearchResultsAsync("Tab");
+        await page.PressNAICSCodeSearchResultsAsync("Tab");
+        await page.PauseAsync(1000);
+        if (data.Condition("State != \"NY\""))
+        {
+                    await page.EnterAccountCreditAsync(data.Resolve("{{data:account_credit_126}}"));
+                    await page.PressAccountCreditAsync("Tab");
+                    await page.PressAccountCreditAsync("Tab");
+        }
+        await page.PauseAsync(1000);
+        await page.WaitForBAPSpecificFieldsOKAsync("Exists");
+        await page.ClickBAPSpecificFieldsOKAsync();
+        await page.WaitForBAPSpecificFieldsOKAsync("Absent");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I run insurance score$")]
@@ -74,8 +339,22 @@ public sealed class BAPExpandedSteps
     [Then(@"^I run insurance score$")]
     public async Task RunInsuranceScoreAsync()
     {
-        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.RunInsuranceScoreAsync5();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyTheInsuranceScoreServiceHasReturnedTheFollowingErrorCREDITVENDORUNREACHABLEPLEASEREPROCESSAsync("Exists", "");
+        data.Set("CheckIfItIsBAPVT", data.Resolve("'{B[Product (LOB)]}' = 'BAP' && '{B[State]}'= 'VT'"));
+        await page.ClickInsuranceScoreConsentAsync();
+        await page.WaitForAcceptAsync("Exists");
+        await page.ClickAcceptAsync();
+        await page.WaitForInsuranceScoreAsync("Exists");
+        await page.ClickInsuranceScoreAsync();
+        await page.VerifyReferenceNumberAsync(data.Resolve("{{data:expected_reference_number_innertext_139}}"), "InnerText");
+        await page.PauseAsync(1000);
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I complete underwriting information from the policy information screen$")]
@@ -83,8 +362,44 @@ public sealed class BAPExpandedSteps
     [Then(@"^I complete underwriting information from the policy information screen$")]
     public async Task CompleteUnderwritingInformationFromThePolicyInformationScreenAsync()
     {
-        var page = new PolicyInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteUnderwritingInformationFromThePolicyInformationScreenAsync2();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickEnterPriorLossInformationAsync();
+        await page.WaitForLossExperienceHeadingAsync("Exists");
+        await page.SetNoKnownLossesAsync(data.Resolve("{{data:no_known_losses_144}}"));
+        await page.PressNoKnownLossesAsync("Tab");
+        await page.VerifyNoKnownLossesAsync(data.Resolve("{{data:expected_no_known_losses_value_145}}"), "value");
+        await page.PauseAsync(1000);
+        await page.ClickInsuranceHistoryAsync();
+        await page.WaitForIsThereAPriorCarrierAsync("Exists");
+        await page.EnterIsThereAPriorCarrierAsync(data.Resolve("{{data:is_there_a_prior_carrier_149}}"));
+        await page.PressIsThereAPriorCarrierAsync("Enter");
+        await page.PressIsThereAPriorCarrierAsync("Tab");
+        await page.ClickIsThereAPriorCarrierAsync();
+        await page.PressIsThereAPriorCarrierAsync("CLICK");
+        await page.PressIsThereAPriorCarrierAsync("Tab");
+        await page.EnterCarrierAsync(data.Resolve("{{data:carrier_152}}"));
+        await page.PressCarrierAsync("Tab");
+        await page.EnterPolicyNumberAsync(data.Resolve("{{data:policy_number_153}}"));
+        await page.PressPolicyNumberAsync("Tab");
+        await page.EnterPolicyTypeAsync(data.Resolve("{{data:policy_type_154}}"));
+        await page.PressPolicyTypeAsync("Tab");
+        await page.EnterEffectiveDateAsync("{DATE[][-2y][MM'/'dd'/'yyyy]}");
+        await page.PressEffectiveDateAsync("Tab");
+        await page.EnterExpirationDateAsync("{DATE[][][MM'/'dd'/'yyyy]}");
+        await page.PressExpirationDateAsync("Tab");
+        await page.EnterModificationFactorAsync(data.Resolve("{{data:modificationfactor_157}}"));
+        await page.PressModificationFactorAsync("Tab");
+        await page.EnterTotalPremiumAsync(data.Resolve("{{data:total_premium_158}}"));
+        await page.PressTotalPremiumAsync("Tab");
+        await page.ClickOtherInsuranceHistoryOKAsync();
+        await page.WaitForDetailAsync("Exists");
+        await page.ClickReturnToQuoteAsync();
+        await page.WaitForClientAsync("Exists");
+
     }
 
     [Given(@"^I navigate to policy coverages$")]
@@ -92,8 +407,24 @@ public sealed class BAPExpandedSteps
     [Then(@"^I navigate to policy coverages$")]
     public async Task NavigateToPolicyCoveragesAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.NavigateToPolicyCoveragesAsync2();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForPolicyCovgerageAsync("Exists");
+        await page.ClickPolicyCovgerageAsync();
+        await page.WaitForPolicyCovg26786Async("Exists");
+        await page.EnterTrailerInterchangeCompDeductibleAsync(data.Resolve("{{data:trailer_interchange_comp_deductible_166}}"));
+        await page.PressTrailerInterchangeCompDeductibleAsync("Click");
+        await page.PressTrailerInterchangeCompDeductibleAsync("Enter");
+        await page.PressTrailerInterchangeCompDeductibleAsync("Tab");
+        await page.EnterTrailerInterchangeCollisionDeductibleAsync(data.Resolve("{{data:trailer_interchange_collision_deductible_167}}"));
+        await page.PressTrailerInterchangeCollisionDeductibleAsync("Click");
+        await page.PressTrailerInterchangeCollisionDeductibleAsync("Enter");
+        await page.PressTrailerInterchangeCollisionDeductibleAsync("Tab");
+        await page.WaitForPolicyCovg26786Async("Exists");
+
     }
 
     [Given(@"^I complete cT StraightThrough Liability Limit to 1M$")]
@@ -101,8 +432,13 @@ public sealed class BAPExpandedSteps
     [Then(@"^I complete cT StraightThrough Liability Limit to 1M$")]
     public async Task CompleteCTStraightThroughLiabilityLimitTo1MAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteCTStraightThroughLiabilityLimitTo1MAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyCTStraightThroughLiabilityLimitTo1MAsync("Exists", "");
+
     }
 
     [Given(@"^I add NonOwnership Liability$")]
@@ -110,8 +446,28 @@ public sealed class BAPExpandedSteps
     [Then(@"^I add NonOwnership Liability$")]
     public async Task AddNonOwnershipLiabilityAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddNonOwnershipLiabilityAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyPolicyCovg26786Async("Absent", "");
+        await page.ClickPolicyCovgerageAsync();
+        await page.EnterNonOwnedAutoAsync(data.Resolve("{{data:non_owned_auto_172}}"));
+        await page.PressNonOwnedAutoAsync("Click");
+        await page.PressNonOwnedAutoAsync("Tab");
+        await page.WaitForOfEmployeesAsync("Exists");
+        await page.EnterOfEmployeesAsync(data.Resolve("{{data:of_employees_174}}"));
+        await page.PressOfEmployeesAsync("Tab");
+        await page.PressOfEmployeesAsync("Tab");
+        await page.EnterOfPartnersAsync(data.Resolve("{{data:of_partners_175}}"));
+        await page.PressOfPartnersAsync("Tab");
+        await page.PressOfPartnersAsync("Tab");
+        await page.EnterExtendedEmployeeCoverageAsync(data.Resolve("{{data:extended_employee_coverage_176}}"));
+        await page.PressExtendedEmployeeCoverageAsync("Click");
+        await page.PressExtendedEmployeeCoverageAsync("Tab");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I add Business Interruption$")]
@@ -119,8 +475,42 @@ public sealed class BAPExpandedSteps
     [Then(@"^I add Business Interruption$")]
     public async Task AddBusinessInterruptionAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddBusinessInterruptionAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyPolicyCovg26786Async("Absent", "");
+        await page.ClickPolicyCovgerageAsync();
+        await page.EnterBusinessInterruptionEndorsementAsync(data.Resolve("{{data:business_interruption_endorsement_180}}"));
+        await page.PressBusinessInterruptionEndorsementAsync("Click");
+        await page.PressBusinessInterruptionEndorsementAsync("Tab");
+        await page.WaitForDetail4A746Async("Exists");
+        await page.ClickDetail4A746Async();
+        await page.WaitForBusinessInterruptionDetailAsync("Exists");
+        await page.PressDescriptionOfBusinessActivitesAsync("TAB");
+        await page.PressDescriptionOfBusinessActivitesAsync("Tab");
+        await page.ClickOptionACheckBoxAsync();
+        await page.WaitForOptionAScheduleButtonAsync("Exists");
+        await page.EnterDescriptionOfBusinessActivitesAsync(data.Resolve("{{data:description_of_business_activites_187}}"));
+        await page.PressDescriptionOfBusinessActivitesAsync("Tab");
+        await page.PressDescriptionOfBusinessActivitesAsync("Tab");
+        await page.ClickOptionAScheduleButtonAsync();
+        await page.WaitForOptionAAsync("Exists");
+        await page.ClickAddOptionAAsync();
+        await page.WaitForBusinessInterruptionLimitOfInsuranceAsync("Exists");
+        await page.EnterBusinessInterruptionLimitOfInsuranceAsync(data.Resolve("{{data:iframe_duck_creek_policy_business_interruption_limit_of_insurance_192}}"));
+        await page.PressBusinessInterruptionLimitOfInsuranceAsync("Tab");
+        await page.PressBusinessInterruptionDescriptionOfScheduledPropertyAsync("TAB");
+        await page.EnterBusinessInterruptionDescriptionOfScheduledPropertyAsync(data.Resolve("{{data:iframe_duck_creek_policy_business_interruption_description_of_scheduledproperty_194}}"));
+        await page.PressBusinessInterruptionDescriptionOfScheduledPropertyAsync("Tab");
+        await page.ClickOKAsync();
+        await page.PauseAsync(1000);
+        await page.VerifyIFRAME280B0Async("Exists", "");
+        await page.WaitForIFRAME280B0Async("Absent");
+        await page.ClickBusinessInterruptionOKAsync();
+        await page.WaitForPolicyCovg26786Async("Exists");
+
     }
 
     [Given(@"^I complete required location information$")]
@@ -128,8 +518,16 @@ public sealed class BAPExpandedSteps
     [Then(@"^I complete required location information$")]
     public async Task CompleteRequiredLocationInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredLocationInformationAsync3();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForLocationA1D91Async("Exists");
+        await page.ClickLocationA1D91Async();
+        await page.WaitForLocation82D95Async("Exists");
+        await page.VerifyZipCodeD2DBAAsync("[0-9]{5}-[0-9]{4}", "Regex:value");
+
     }
 
     [Given(@"^I add UM/UIM Coverage$")]
@@ -137,8 +535,41 @@ public sealed class BAPExpandedSteps
     [Then(@"^I add UM/UIM Coverage$")]
     public async Task AddUMUIMCoverageAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddUMUIMCoverageAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickStateDetails33183Async();
+        await page.WaitForStateDetailsDetailAsync("Exists");
+        await page.ClickStateDetailsDetailAsync();
+        await page.WaitForStateDetailsDetailAsync("Absent");
+        await page.WaitForUMUIMOKAsync("Visible");
+        await page.WaitForStateDetails72631Async("Exists");
+        if (data.Condition("'UM Type Default' != NULL"))
+        {
+                    await page.EnterUMTypeDefaultSelectionsAsync(data.Resolve("{{data:um_type_default_selections_211}}"));
+                    await page.PressUMTypeDefaultSelectionsAsync("CLICK");
+                    await page.PressUMTypeDefaultSelectionsAsync("RETURN");
+                    await page.PressUMTypeDefaultSelectionsAsync("Tab");
+                    await page.PressUMTypeDefaultSelectionsAsync("Tab");
+                    await page.PressUMTypeDefaultSelectionsAsync("Tab");
+        }
+        if (data.Condition("'UMBI Limit' != NULL AND 'UM Type Default' != \"UMBIPD CSL\""))
+        {
+                    await page.EnterUMBILimitAsync(data.Resolve("{{data:umbi_limit_212}}"));
+                    await page.PressUMBILimitAsync("CLICK");
+                    await page.PressUMBILimitAsync("Tab");
+                    await page.PressUMBILimitAsync("Tab");
+                    await page.PressUMBILimitAsync("Tab");
+        }
+        await page.WaitForStateDetails72631Async("Exists");
+        await page.VerifyUMUIMOKAsync("Exists", "");
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.PauseAsync(1000);
+        await page.ClickUMUIMOKAsync();
+        await page.WaitForStateDetailsDetailAsync("Exists");
+
     }
 
     [Given(@"^I add Policy Level Coverages$")]
@@ -146,8 +577,66 @@ public sealed class BAPExpandedSteps
     [Then(@"^I add Policy Level Coverages$")]
     public async Task AddPolicyLevelCoveragesAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddPolicyLevelCoveragesAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickStateDetails33183Async();
+        await page.WaitForStateDetailsDetailAsync("Exists");
+        await page.ClickStateDetailsDetailAsync();
+        await page.WaitForStateDetailsDetailAsync("Absent");
+        await page.WaitForUMUIMOKAsync("Visible");
+        await page.ClickHiredAutoLiabilityAsync();
+        await page.ClickPrimaryLiabilityIfAnyAsync();
+        await page.ClickExcessLiabilityIfAnyAsync();
+        await page.ClickEmployeeHiredAutosCheckBoxAsync();
+        await page.ClickVolunteerHiredAutosCheckBoxAsync();
+        await page.PauseAsync(1000);
+        await page.ClickDriveOtherCarAsync();
+        await page.ClickComprehensiveAsync();
+        await page.WaitForOTCDeductibleE0D59Async("Exists");
+        await page.ClickCollisionAsync();
+        await page.WaitForCollisionDeductible63D4CAsync("Exists");
+        await page.PressFirstName5059EAsync("TAB");
+        await page.EnterLastName5E149Async(data.Resolve("{{data:last_name_236}}"));
+        await page.PressLastName5E149Async("Tab");
+        await page.EnterFirstName5059EAsync(data.Resolve("{{data:first_name_237}}"));
+        await page.PressFirstName5059EAsync("Tab");
+        await page.PauseAsync(1000);
+        await page.ClickHiredAutoPhysicalDamageWithoutDriverAsync();
+        await page.EnterOTCDeductibleEF1DEAsync(data.Resolve("{{data:otc_deductible_240}}"));
+        await page.PressOTCDeductibleEF1DEAsync("Click");
+        await page.PressOTCDeductibleEF1DEAsync("Tab");
+        await page.ClickOTCIfAny4EFEEAsync();
+        await page.EnterCollisionDeductible9C100Async(data.Resolve("{{data:collision_deductible_242}}"));
+        await page.PressCollisionDeductible9C100Async("Tab");
+        await page.PressCollisionDeductible9C100Async("Tab");
+        await page.PressCollisionDeductible9C100Async("Tab");
+        await page.ClickCollisionIfAny7532DAsync();
+        await page.PauseAsync(1000);
+        await page.ClickHiredAutoPhysicalDamageWithDriverAsync();
+        await page.EnterOTCDeductible62C21Async(data.Resolve("{{data:otc_deductible_246}}"));
+        await page.PressOTCDeductible62C21Async("Click");
+        await page.PressOTCDeductible62C21Async("Tab");
+        await page.PressOTCDeductible62C21Async("Tab");
+        await page.ClickOTCIfAny6A58BAsync();
+        await page.EnterCollisionDeductibleAEEBBAsync(data.Resolve("{{data:collision_deductible_248}}"));
+        await page.PressCollisionDeductibleAEEBBAsync("CLICK");
+        await page.PressCollisionDeductibleAEEBBAsync("Enter");
+        await page.PressCollisionDeductibleAEEBBAsync("Tab");
+        await page.PressCollisionDeductibleAEEBBAsync("Tab");
+        await page.ClickCollisionIfAny8AEE8Async();
+        await page.EnterVehicleInformationAsync(data.Resolve("{{data:vehicle_information_250}}"));
+        await page.PressVehicleInformationAsync("Tab");
+        await page.PressVehicleInformationAsync("Tab");
+        await page.PauseAsync(1000);
+        await page.ClickUMUIMOKAsync();
+        await page.VerifyLoadingMessageAsync("Exists", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.PauseAsync(1000);
+        await page.WaitForStateDetailsDetailAsync("Visible");
+
     }
 
     [Given(@"^I add a Risk$")]
@@ -155,8 +644,617 @@ public sealed class BAPExpandedSteps
     [Then(@"^I add a Risk$")]
     public async Task AddARiskAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddARiskAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyRiskDDE70Async("Absent", "");
+        await page.WaitForRiskScheduleAsync("Exists");
+        await page.ClickRiskScheduleAsync();
+        await page.WaitForRiskDDE70Async("Exists");
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.WaitForShowAllLocationsAsync("Exists");
+        await page.EnterVehicleTypeAsync(data.Resolve("{{data:vehicle_type_264}}"));
+        await page.PressVehicleTypeAsync("Tab");
+        await page.WaitForVehicleTypeAsync("Exists");
+        await page.EnterVehicleTypeAsync(data.Resolve("{{data:vehicle_type_266}}"));
+        await page.PressVehicleTypeAsync("CLICK");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.VerifyVehicleTypeAsync(data.Resolve("{{data:expected_vehicle_type_value_267}}"), "value");
+        await page.ClickAddRiskAtThisLocationAsync();
+        await page.WaitForCommercialAutoRiskDetailAsync("Exists");
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.WaitForVINAsync("Visible");
+        }
+        if (data.Condition("Year != NULL"))
+        {
+                    await page.EnterYearAsync("");
+        }
+        if (data.Condition("Make != NULL"))
+        {
+                    await page.EnterMakeAsync("");
+        }
+        if (data.Condition("Model != NULL"))
+        {
+                    await page.EnterModelAsync("");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.PressVINAsync("TAB");
+                    await page.PressVINAsync("Tab");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.EnterVINAsync(data.Resolve("{{data:vin_275}}"));
+                    await page.PressVINAsync("Tab");
+                    await page.PressVINAsync("Tab");
+        }
+        data.Set("StateIsKY", data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.VerifyIsThisVehicleUsedInSnowPlowOperationsAsync("Exists", "");
+        }
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.EnterIsThisVehicleUsedInSnowPlowOperationsAsync(data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_278}}"));
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Click");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Enter");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
+        }
+        data.Set("StateIsNotUT", data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
+        if (data.Condition("GCW != NULL"))
+        {
+                    await page.EnterGCWAsync("");
+        }
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.EnterIsThisVehicleUsedInSnowPlowOperationsAsync("");
+        }
+        data.Set("StateIsNJ", data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
+        data.Set("VehicleTypeIsRegistrationPlates", "'\"\"Private Passenger\"\"' == 'Registration Plates'");
+        data.Set("VINIsMobileHomeContents", "'\"\"1G1AB08C0CA598143\"\"' == 'ContentsVIN1234'");
+        await page.VerifyCollisionCoverageAsync("Exists", "");
+        if (data.Condition("'Collision Coverage' == NULL"))
+        {
+                    await page.EnterCollisionCoverageAsync(data.Resolve("{{data:collision_coverage_286}}"));
+                    await page.PressCollisionCoverageAsync("Tab");
+                    await page.PressCollisionCoverageAsync("Tab");
+                    await page.PressCollisionCoverageAsync("Tab");
+        }
+        await page.ClickPhysicalDamageOKAsync();
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.PauseAsync(1000);
+        await page.VerifyRiskDDE70Async("Absent", "");
+        await page.WaitForRiskScheduleAsync("Exists");
+        await page.ClickRiskScheduleAsync();
+        await page.WaitForRiskDDE70Async("Exists");
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.WaitForShowAllLocationsAsync("Exists");
+        await page.EnterVehicleTypeAsync(data.Resolve("{{data:vehicle_type_298}}"));
+        await page.PressVehicleTypeAsync("Tab");
+        await page.WaitForVehicleTypeAsync("Exists");
+        await page.EnterVehicleTypeAsync(data.Resolve("{{data:vehicle_type_300}}"));
+        await page.PressVehicleTypeAsync("CLICK");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.VerifyVehicleTypeAsync(data.Resolve("{{data:expected_vehicle_type_value_301}}"), "value");
+        await page.ClickAddRiskAtThisLocationAsync();
+        await page.WaitForCommercialAutoRiskDetailAsync("Exists");
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.WaitForVINAsync("Visible");
+        }
+        if (data.Condition("Year != NULL"))
+        {
+                    await page.EnterYearAsync("");
+        }
+        if (data.Condition("Make != NULL"))
+        {
+                    await page.EnterMakeAsync("");
+        }
+        if (data.Condition("Model != NULL"))
+        {
+                    await page.EnterModelAsync("");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.PressVINAsync("TAB");
+                    await page.PressVINAsync("Tab");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.EnterVINAsync(data.Resolve("{{data:vin_309}}"));
+                    await page.PressVINAsync("Tab");
+                    await page.PressVINAsync("Tab");
+        }
+        data.Set("StateIsKY", data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.VerifyIsThisVehicleUsedInSnowPlowOperationsAsync("Exists", "");
+        }
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.EnterIsThisVehicleUsedInSnowPlowOperationsAsync(data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_312}}"));
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Click");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Enter");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
+        }
+        data.Set("StateIsNotUT", data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
+        if (data.Condition("GCW != NULL"))
+        {
+                    await page.EnterGCWAsync("");
+        }
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.EnterIsThisVehicleUsedInSnowPlowOperationsAsync(data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_315}}"));
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Click");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Enter");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
+        }
+        if (data.Condition("'OTC Causes of Loss' != NULL"))
+        {
+                    await page.EnterOTCCausesOfLossAsync(data.Resolve("{{data:otc_causes_of_loss_316}}"));
+                    await page.PressOTCCausesOfLossAsync("CLICK");
+                    await page.PressOTCCausesOfLossAsync("Tab");
+        }
+        data.Set("StateIsNJ", data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
+        data.Set("VehicleTypeIsRegistrationPlates", "'\"\"Truck\"\"' == 'Registration Plates'");
+        data.Set("VINIsMobileHomeContents", "'\"\"1FDBR10S8EU598143\"\"' == 'ContentsVIN1234'");
+        await page.VerifyCollisionCoverageAsync("Exists", "");
+        if (data.Condition("'Collision Coverage' == NULL"))
+        {
+                    await page.EnterCollisionCoverageAsync(data.Resolve("{{data:collision_coverage_321}}"));
+                    await page.PressCollisionCoverageAsync("Tab");
+                    await page.PressCollisionCoverageAsync("Tab");
+                    await page.PressCollisionCoverageAsync("Tab");
+        }
+        await page.ClickPhysicalDamageOKAsync();
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.PauseAsync(1000);
+        await page.VerifyRiskDDE70Async("Absent", "");
+        await page.WaitForRiskScheduleAsync("Exists");
+        await page.ClickRiskScheduleAsync();
+        await page.WaitForRiskDDE70Async("Exists");
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.WaitForShowAllLocationsAsync("Exists");
+        await page.EnterVehicleTypeAsync(data.Resolve("{{data:vehicle_type_333}}"));
+        await page.PressVehicleTypeAsync("Tab");
+        await page.WaitForVehicleTypeAsync("Exists");
+        await page.EnterVehicleTypeAsync(data.Resolve("{{data:vehicle_type_335}}"));
+        await page.PressVehicleTypeAsync("CLICK");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.VerifyVehicleTypeAsync(data.Resolve("{{data:expected_vehicle_type_value_336}}"), "value");
+        await page.ClickAddRiskAtThisLocationAsync();
+        await page.WaitForCommercialAutoRiskDetailAsync("Exists");
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.WaitForVINAsync("Visible");
+        }
+        if (data.Condition("Year != NULL"))
+        {
+                    await page.EnterYearAsync("");
+        }
+        if (data.Condition("Make != NULL"))
+        {
+                    await page.EnterMakeAsync("");
+        }
+        if (data.Condition("Model != NULL"))
+        {
+                    await page.EnterModelAsync("");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.PressVINAsync("TAB");
+                    await page.PressVINAsync("Tab");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.EnterVINAsync(data.Resolve("{{data:vin_344}}"));
+                    await page.PressVINAsync("Tab");
+                    await page.PressVINAsync("Tab");
+        }
+        data.Set("StateIsKY", data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.VerifyIsThisVehicleUsedInSnowPlowOperationsAsync("Exists", "");
+        }
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.EnterIsThisVehicleUsedInSnowPlowOperationsAsync(data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_347}}"));
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Click");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Enter");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
+        }
+        data.Set("StateIsNotUT", data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
+        if (data.Condition("GCW != NULL"))
+        {
+                    await page.EnterGCWAsync(data.Resolve("{{data:gcw_349}}"));
+                    await page.PressGCWAsync("Click");
+                    await page.PressGCWAsync("Enter");
+                    await page.PressGCWAsync("Tab");
+                    await page.PressGCWAsync("Tab");
+        }
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.EnterIsThisVehicleUsedInSnowPlowOperationsAsync("");
+        }
+        data.Set("StateIsNJ", data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
+        data.Set("VehicleTypeIsRegistrationPlates", "'\"\"Truck Tractor\"\"' == 'Registration Plates'");
+        data.Set("VINIsMobileHomeContents", "'\"\"JHBSG1HD7P2598143\"\"' == 'ContentsVIN1234'");
+        await page.VerifyCollisionCoverageAsync("Exists", "");
+        if (data.Condition("'Collision Coverage' == NULL"))
+        {
+                    await page.EnterCollisionCoverageAsync(data.Resolve("{{data:collision_coverage_355}}"));
+                    await page.PressCollisionCoverageAsync("Tab");
+                    await page.PressCollisionCoverageAsync("Tab");
+                    await page.PressCollisionCoverageAsync("Tab");
+        }
+        await page.ClickPhysicalDamageOKAsync();
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.PauseAsync(1000);
+        await page.VerifyRiskDDE70Async("Absent", "");
+        await page.WaitForRiskScheduleAsync("Exists");
+        await page.ClickRiskScheduleAsync();
+        await page.WaitForRiskDDE70Async("Exists");
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.WaitForShowAllLocationsAsync("Exists");
+        await page.EnterVehicleTypeAsync(data.Resolve("{{data:vehicle_type_367}}"));
+        await page.PressVehicleTypeAsync("Tab");
+        await page.WaitForVehicleTypeAsync("Exists");
+        await page.EnterVehicleTypeAsync(data.Resolve("{{data:vehicle_type_369}}"));
+        await page.PressVehicleTypeAsync("CLICK");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.VerifyVehicleTypeAsync(data.Resolve("{{data:expected_vehicle_type_value_370}}"), "value");
+        await page.ClickAddRiskAtThisLocationAsync();
+        await page.WaitForCommercialAutoRiskDetailAsync("Exists");
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.WaitForVINAsync("Visible");
+        }
+        if (data.Condition("Year != NULL"))
+        {
+                    await page.EnterYearAsync("");
+        }
+        if (data.Condition("Make != NULL"))
+        {
+                    await page.EnterMakeAsync("");
+        }
+        if (data.Condition("Model != NULL"))
+        {
+                    await page.EnterModelAsync("");
+        }
+        if (data.Condition("'Value Basis' != NULL"))
+        {
+                    await page.EnterValueBasisAsync(data.Resolve("{{data:value_basis_377}}"));
+                    await page.PressValueBasisAsync("Click");
+                    await page.PressValueBasisAsync("Tab");
+                    await page.PressValueBasisAsync("Tab");
+        }
+        if (data.Condition("'Original Cost New' != NULL"))
+        {
+                    await page.EnterOriginalCostNewAsync(data.Resolve("{{data:original_cost_new_378}}"));
+                    await page.PressOriginalCostNewAsync("CLICK");
+                    await page.PressOriginalCostNewAsync("Tab");
+                    await page.PressOriginalCostNewAsync("Tab");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.PressVINAsync("TAB");
+                    await page.PressVINAsync("Tab");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.EnterVINAsync(data.Resolve("{{data:vin_380}}"));
+                    await page.PressVINAsync("Tab");
+                    await page.PressVINAsync("Tab");
+        }
+        data.Set("StateIsKY", data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.VerifyIsThisVehicleUsedInSnowPlowOperationsAsync("Exists", "");
+        }
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.EnterIsThisVehicleUsedInSnowPlowOperationsAsync(data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_383}}"));
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Click");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Enter");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
+        }
+        data.Set("StateIsNotUT", data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
+        if (data.Condition("'Used as Showroom' != NULL"))
+        {
+                    await page.EnterUsedAsShowroomAsync(data.Resolve("{{data:used_as_showroom_385}}"));
+                    await page.PressUsedAsShowroomAsync("CLICK");
+                    await page.PressUsedAsShowroomAsync("Tab");
+        }
+        if (data.Condition("'Used as Showroom' != NULL"))
+        {
+                    await page.EnterUsedAsShowroomAsync(data.Resolve("{{data:used_as_showroom_386}}"));
+                    await page.PressUsedAsShowroomAsync("CLICK");
+                    await page.PressUsedAsShowroomAsync("Tab");
+        }
+        if (data.Condition("GCW != NULL"))
+        {
+                    await page.EnterGCWAsync("");
+        }
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.EnterIsThisVehicleUsedInSnowPlowOperationsAsync("");
+        }
+        if (data.Condition("'2nd Class Category' != NULL"))
+        {
+                    await page.EnterN2ndClassCategoryAsync(data.Resolve("{{data:2nd_class_category_389}}"));
+                    await page.PressN2ndClassCategoryAsync("Click");
+                    await page.PressN2ndClassCategoryAsync("Tab");
+        }
+        if (data.Condition("'2nd Class Code' != NULL"))
+        {
+                    await page.EnterN2ndClassCodeAsync(data.Resolve("{{data:2nd_class_code_390}}"));
+                    await page.PressN2ndClassCodeAsync("Click");
+                    await page.PressN2ndClassCodeAsync("Tab");
+                    await page.PressN2ndClassCodeAsync("Tab");
+        }
+        data.Set("StateIsNJ", data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
+        data.Set("VehicleTypeIsRegistrationPlates", "'\"\"Semitrailer\"\"' == 'Registration Plates'");
+        data.Set("VINIsMobileHomeContents", "'\"\"1C9402026X0112143\"\"' == 'ContentsVIN1234'");
+        await page.VerifyCollisionCoverageAsync("Exists", "");
+        if (data.Condition("'Collision Coverage' == NULL"))
+        {
+                    await page.EnterCollisionCoverageAsync(data.Resolve("{{data:collision_coverage_395}}"));
+                    await page.PressCollisionCoverageAsync("Tab");
+                    await page.PressCollisionCoverageAsync("Tab");
+                    await page.PressCollisionCoverageAsync("Tab");
+        }
+        await page.ClickPhysicalDamageOKAsync();
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.PauseAsync(1000);
+        await page.VerifyRiskDDE70Async("Absent", "");
+        await page.WaitForRiskScheduleAsync("Exists");
+        await page.ClickRiskScheduleAsync();
+        await page.WaitForRiskDDE70Async("Exists");
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.WaitForShowAllLocationsAsync("Exists");
+        await page.EnterVehicleTypeAsync(data.Resolve("{{data:vehicle_type_407}}"));
+        await page.PressVehicleTypeAsync("Tab");
+        await page.WaitForVehicleTypeAsync("Exists");
+        await page.EnterVehicleTypeAsync(data.Resolve("{{data:vehicle_type_409}}"));
+        await page.PressVehicleTypeAsync("CLICK");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.VerifyVehicleTypeAsync(data.Resolve("{{data:expected_vehicle_type_value_410}}"), "value");
+        await page.ClickAddRiskAtThisLocationAsync();
+        await page.WaitForCommercialAutoRiskDetailAsync("Exists");
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.WaitForVINAsync("Visible");
+        }
+        if (data.Condition("Year != NULL"))
+        {
+                    await page.EnterYearAsync(data.Resolve("{{data:year_414}}"));
+                    await page.PressYearAsync("Tab");
+                    await page.PressYearAsync("Tab");
+                    await page.PressYearAsync("Tab");
+        }
+        if (data.Condition("Make != NULL"))
+        {
+                    await page.EnterMakeAsync(data.Resolve("{{data:make_415}}"));
+                    await page.PressMakeAsync("Tab");
+                    await page.PressMakeAsync("Tab");
+                    await page.PressMakeAsync("Tab");
+        }
+        if (data.Condition("Model != NULL"))
+        {
+                    await page.EnterModelAsync(data.Resolve("{{data:model_416}}"));
+                    await page.PressModelAsync("Tab");
+                    await page.PressModelAsync("Tab");
+                    await page.PressModelAsync("Tab");
+        }
+        if (data.Condition("'Body Style' != NULL"))
+        {
+                    await page.EnterBodyStyleAsync(data.Resolve("{{data:body_style_417}}"));
+                    await page.PressBodyStyleAsync("Tab");
+                    await page.PressBodyStyleAsync("Tab");
+                    await page.PressBodyStyleAsync("Tab");
+        }
+        if (data.Condition("'Stated Amount' != NULL"))
+        {
+                    await page.EnterStatedAmountAsync(data.Resolve("{{data:stated_amount_418}}"));
+                    await page.PressStatedAmountAsync("Tab");
+                    await page.PressStatedAmountAsync("Tab");
+                    await page.PressStatedAmountAsync("Tab");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.PressVINAsync("TAB");
+                    await page.PressVINAsync("Tab");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.EnterVINAsync(data.Resolve("{{data:vin_420}}"));
+                    await page.PressVINAsync("Tab");
+                    await page.PressVINAsync("Tab");
+        }
+        data.Set("StateIsKY", data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.VerifyIsThisVehicleUsedInSnowPlowOperationsAsync("Exists", "");
+        }
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.EnterIsThisVehicleUsedInSnowPlowOperationsAsync(data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_423}}"));
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Click");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Enter");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
+        }
+        data.Set("StateIsNotUT", data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
+        if (data.Condition("'Engine Size' != NULL"))
+        {
+                    await page.EnterEngineSizeCcAsync(data.Resolve("{{data:engine_size_cc_425}}"));
+                    await page.PressEngineSizeCcAsync("Click");
+                    await page.PressEngineSizeCcAsync("Tab");
+                    await page.PressEngineSizeCcAsync("Tab");
+        }
+        if (data.Condition("'Engine Size' != NULL"))
+        {
+                    await page.EnterEngineSizeCcAsync(data.Resolve("{{data:engine_size_cc_426}}"));
+                    await page.PressEngineSizeCcAsync("Click");
+                    await page.PressEngineSizeCcAsync("Tab");
+                    await page.PressEngineSizeCcAsync("Tab");
+        }
+        if (data.Condition("GCW != NULL"))
+        {
+                    await page.EnterGCWAsync("");
+        }
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.EnterIsThisVehicleUsedInSnowPlowOperationsAsync("");
+        }
+        data.Set("StateIsNJ", data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
+        data.Set("VehicleTypeIsRegistrationPlates", "'\"\"Golf Carts/Low Speed Vehicles\"\"' == 'Registration Plates'");
+        data.Set("VINIsMobileHomeContents", "'\"\"5TSTE24338G020309\"\"' == 'ContentsVIN1234'");
+        await page.VerifyCollisionCoverageAsync("Exists", "");
+        if (data.Condition("'Collision Coverage' == NULL"))
+        {
+                    await page.EnterCollisionCoverageAsync(data.Resolve("{{data:collision_coverage_433}}"));
+                    await page.PressCollisionCoverageAsync("Tab");
+                    await page.PressCollisionCoverageAsync("Tab");
+                    await page.PressCollisionCoverageAsync("Tab");
+        }
+        await page.ClickPhysicalDamageOKAsync();
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.PauseAsync(1000);
+        await page.VerifyRiskDDE70Async("Absent", "");
+        await page.WaitForRiskScheduleAsync("Exists");
+        await page.ClickRiskScheduleAsync();
+        await page.WaitForRiskDDE70Async("Exists");
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.WaitForShowAllLocationsAsync("Exists");
+        await page.EnterVehicleTypeAsync(data.Resolve("{{data:vehicle_type_445}}"));
+        await page.PressVehicleTypeAsync("Tab");
+        await page.WaitForVehicleTypeAsync("Exists");
+        await page.EnterVehicleTypeAsync(data.Resolve("{{data:vehicle_type_447}}"));
+        await page.PressVehicleTypeAsync("CLICK");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.PressVehicleTypeAsync("Tab");
+        await page.VerifyVehicleTypeAsync(data.Resolve("{{data:expected_vehicle_type_value_448}}"), "value");
+        await page.ClickAddRiskAtThisLocationAsync();
+        await page.WaitForCommercialAutoRiskDetailAsync("Exists");
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.WaitForVINAsync("Visible");
+        }
+        if (data.Condition("Year != NULL"))
+        {
+                    await page.EnterYearAsync(data.Resolve("{{data:year_452}}"));
+                    await page.PressYearAsync("Tab");
+                    await page.PressYearAsync("Tab");
+                    await page.PressYearAsync("Tab");
+        }
+        if (data.Condition("Make != NULL"))
+        {
+                    await page.EnterMakeAsync(data.Resolve("{{data:make_453}}"));
+                    await page.PressMakeAsync("Tab");
+                    await page.PressMakeAsync("Tab");
+                    await page.PressMakeAsync("Tab");
+        }
+        if (data.Condition("Model != NULL"))
+        {
+                    await page.EnterModelAsync(data.Resolve("{{data:model_454}}"));
+                    await page.PressModelAsync("Tab");
+                    await page.PressModelAsync("Tab");
+                    await page.PressModelAsync("Tab");
+        }
+        if (data.Condition("'Body Style' != NULL"))
+        {
+                    await page.EnterBodyStyleAsync(data.Resolve("{{data:body_style_455}}"));
+                    await page.PressBodyStyleAsync("Tab");
+                    await page.PressBodyStyleAsync("Tab");
+                    await page.PressBodyStyleAsync("Tab");
+        }
+        if (data.Condition("'Stated Amount' != NULL"))
+        {
+                    await page.EnterStatedAmountAsync(data.Resolve("{{data:stated_amount_456}}"));
+                    await page.PressStatedAmountAsync("Tab");
+                    await page.PressStatedAmountAsync("Tab");
+                    await page.PressStatedAmountAsync("Tab");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.PressVINAsync("TAB");
+                    await page.PressVINAsync("Tab");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.EnterVINAsync(data.Resolve("{{data:vin_458}}"));
+                    await page.PressVINAsync("Tab");
+                    await page.PressVINAsync("Tab");
+        }
+        data.Set("StateIsKY", data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.VerifyIsThisVehicleUsedInSnowPlowOperationsAsync("Exists", "");
+        }
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.EnterIsThisVehicleUsedInSnowPlowOperationsAsync(data.Resolve("{{data:is_this_vehicle_used_in_snow_plow_operations_461}}"));
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Click");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Enter");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
+                    await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
+        }
+        data.Set("StateIsNotUT", data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
+        if (data.Condition("GCW != NULL"))
+        {
+                    await page.EnterGCWAsync("");
+        }
+        if (data.Condition("Snowplow != NULL"))
+        {
+                    await page.EnterIsThisVehicleUsedInSnowPlowOperationsAsync("");
+        }
+        data.Set("StateIsNJ", data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
+        data.Set("VehicleTypeIsRegistrationPlates", "'\"\"Mobile Home\"\"' == 'Registration Plates'");
+        data.Set("VINIsMobileHomeContents", "'\"\"MobileHomeVIN1234\"\"' == 'ContentsVIN1234'");
+        await page.VerifyCollisionCoverageAsync("Exists", "");
+        if (data.Condition("'Collision Coverage' == NULL"))
+        {
+                    await page.EnterCollisionCoverageAsync(data.Resolve("{{data:collision_coverage_469}}"));
+                    await page.PressCollisionCoverageAsync("Tab");
+                    await page.PressCollisionCoverageAsync("Tab");
+                    await page.PressCollisionCoverageAsync("Tab");
+        }
+        await page.ClickPhysicalDamageOKAsync();
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I add Risk Level Interest$")]
@@ -164,8 +1262,112 @@ public sealed class BAPExpandedSteps
     [Then(@"^I add Risk Level Interest$")]
     public async Task AddRiskLevelInterestAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddRiskLevelInterestAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickRiskScheduleAsync();
+        await page.WaitForRiskDDE70Async("Exists");
+        await page.VerifyTypeD972CAsync(data.Resolve("{{data:constraint_vehicle_schedule_1_type_476}}"), "InnerText");
+        await page.VerifyVehicleSchedule1VehAsync("{XB[VehicleNumber]}", "value");
+        await page.ClickDetail1664BAsync();
+        await page.WaitForCommercialAutoRiskDetailAsync("Exists");
+        await page.EnterHiredAutoExtAddlInsuredAsync(data.Resolve("{{data:hired_auto_ext_addl_insured_480}}"));
+        await page.PressHiredAutoExtAddlInsuredAsync("Tab");
+        await page.PressHiredAutoExtAddlInsuredAsync("Enter");
+        await page.PressHiredAutoExtAddlInsuredAsync("Tab");
+        await page.VerifyHiredAutoExtAddlInsuredAsync(data.Resolve("{{data:expected_hired_auto_ext_addl_insured_value_481}}"), "value");
+        await page.WaitForHiredAutoFormAsync("Exists");
+        await page.EnterHiredAutoFormAsync(data.Resolve("{{data:hired_auto_form_483}}"));
+        await page.PressHiredAutoFormAsync("CLICK");
+        await page.PressHiredAutoFormAsync("Enter");
+        await page.PressHiredAutoFormAsync("Tab");
+        await page.PressHiredAutoFormAsync("CLICK");
+        await page.PressHiredAutoFormAsync("Tab");
+        await page.WaitForHiredAutoFormAsync("NotEqual");
+        await page.WaitForHiredAutoOKAsync("Absent");
+        await page.ClickPhysicalDamageOKAsync();
+        await page.WaitForRiskDDE70Async("Exists");
+        await page.ClickRiskScheduleAsync();
+        await page.WaitForRiskDDE70Async("Exists");
+        await page.VerifyTypeD972CAsync(data.Resolve("{{data:constraint_vehicle_schedule_1_type_490}}"), "InnerText");
+        await page.VerifyVehicleSchedule1VehAsync("{XB[VehicleNumber]}", "value");
+        await page.ClickDetail1664BAsync();
+        await page.WaitForCommercialAutoRiskDetailAsync("Exists");
+        await page.EnterHiredAutoExtAddlInsuredAsync(data.Resolve("{{data:hired_auto_ext_addl_insured_494}}"));
+        await page.PressHiredAutoExtAddlInsuredAsync("Tab");
+        await page.PressHiredAutoExtAddlInsuredAsync("Enter");
+        await page.PressHiredAutoExtAddlInsuredAsync("Tab");
+        await page.VerifyHiredAutoExtAddlInsuredAsync(data.Resolve("{{data:expected_hired_auto_ext_addl_insured_value_495}}"), "value");
+        await page.WaitForHiredAutoFormAsync("Exists");
+        await page.EnterHiredAutoFormAsync(data.Resolve("{{data:hired_auto_form_497}}"));
+        await page.PressHiredAutoFormAsync("CLICK");
+        await page.PressHiredAutoFormAsync("Enter");
+        await page.PressHiredAutoFormAsync("Tab");
+        await page.PressHiredAutoFormAsync("CLICK");
+        await page.PressHiredAutoFormAsync("Tab");
+        await page.WaitForHiredAutoFormAsync("NotEqual");
+        await page.WaitForHiredAutoOKAsync("Absent");
+        await page.ClickPhysicalDamageOKAsync();
+        await page.WaitForRiskDDE70Async("Exists");
+        await page.ClickRiskScheduleAsync();
+        await page.WaitForRiskDDE70Async("Exists");
+        await page.VerifyTypeD972CAsync(data.Resolve("{{data:constraint_vehicle_schedule_1_type_504}}"), "InnerText");
+        await page.VerifyVehicleSchedule1VehAsync("{XB[VehicleNumber]}", "value");
+        await page.ClickDetail1664BAsync();
+        await page.WaitForCommercialAutoRiskDetailAsync("Exists");
+        await page.EnterHiredAutoExtAddlInsuredAsync(data.Resolve("{{data:hired_auto_ext_addl_insured_508}}"));
+        await page.PressHiredAutoExtAddlInsuredAsync("Tab");
+        await page.PressHiredAutoExtAddlInsuredAsync("Enter");
+        await page.PressHiredAutoExtAddlInsuredAsync("Tab");
+        await page.VerifyHiredAutoExtAddlInsuredAsync(data.Resolve("{{data:expected_hired_auto_ext_addl_insured_value_509}}"), "value");
+        await page.WaitForHiredAutoFormAsync("Exists");
+        await page.EnterHiredAutoFormAsync(data.Resolve("{{data:hired_auto_form_511}}"));
+        await page.PressHiredAutoFormAsync("CLICK");
+        await page.PressHiredAutoFormAsync("Enter");
+        await page.PressHiredAutoFormAsync("Tab");
+        await page.PressHiredAutoFormAsync("CLICK");
+        await page.PressHiredAutoFormAsync("Tab");
+        await page.WaitForHiredAutoFormAsync("NotEqual");
+        if (data.Condition("'First Name' != NULL"))
+        {
+                    await page.PressHiredAutoCA2001FirstNameAsync("TAB");
+        }
+        if (data.Condition("'Last Name' != NULL"))
+        {
+                    await page.EnterHiredAutoCA2001LastNameAsync(data.Resolve("{{data:hiredauto_ca2001_last_name_514}}"));
+                    await page.PressHiredAutoCA2001LastNameAsync("Tab");
+                    await page.PressHiredAutoCA2001LastNameAsync("Tab");
+        }
+        if (data.Condition("'Address 1' != NULL"))
+        {
+                    await page.PressHiredAutoCA2001Address1Async("TAB");
+        }
+        if (data.Condition("'Zip Code' != NULL"))
+        {
+                    await page.EnterHiredAutoCA2001ZipCodeAsync(data.Resolve("{{data:hiredauto_ca2001_zipcode_516}}"));
+                    await page.PressHiredAutoCA2001ZipCodeAsync("Tab");
+                    await page.PressHiredAutoCA2001ZipCodeAsync("Tab");
+        }
+        if (data.Condition("'First Name' != NULL"))
+        {
+                    await page.ClickHiredAutoOKAsync();
+        }
+        if (data.Condition("'First Name' != NULL"))
+        {
+                    await page.EnterHiredAutoCA2001FirstNameAsync(data.Resolve("{{data:hiredauto_ca2001_first_name_518}}"));
+                    await page.PressHiredAutoCA2001FirstNameAsync("Tab");
+        }
+        if (data.Condition("'Address 1' != NULL"))
+        {
+                    await page.EnterHiredAutoCA2001Address1Async(data.Resolve("{{data:hiredauto_ca2001_address1_519}}"));
+                    await page.PressHiredAutoCA2001Address1Async("Tab");
+        }
+        await page.WaitForHiredAutoOKAsync("Absent");
+        await page.ClickPhysicalDamageOKAsync();
+        await page.WaitForRiskDDE70Async("Exists");
+
     }
 
     [Given(@"^I verify Risk Level Coverages$")]
@@ -173,8 +1375,24 @@ public sealed class BAPExpandedSteps
     [Then(@"^I verify Risk Level Coverages$")]
     public async Task VerifyRiskLevelCoveragesAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.VerifyRiskLevelCoveragesAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyTypeD972CAsync(data.Resolve("{{data:constraint_vehicle_schedule_1_type_523}}"), "InnerText");
+        await page.VerifyVehicleSchedule1VehAsync("{XB[VehicleNumber]}", "value");
+        await page.ClickDetail1664BAsync();
+        await page.WaitForCommercialAutoRiskDetailAsync("Exists");
+        if (data.Condition("'Accept UM' != NULL"))
+        {
+                    await page.VerifyAcceptUMAsync(data.Resolve("{{data:expected_accept_um_innertext_527}}"), "InnerText");
+        }
+        await page.ClickPhysicalDamageOKAsync();
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I add Risk Level Coverages$")]
@@ -182,8 +1400,108 @@ public sealed class BAPExpandedSteps
     [Then(@"^I add Risk Level Coverages$")]
     public async Task AddRiskLevelCoveragesAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddRiskLevelCoveragesAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyTypeD972CAsync(data.Resolve("{{data:constraint_vehicle_schedule_1_type_532}}"), "InnerText");
+        await page.VerifyVehicleSchedule1VehAsync("{XB[VehicleNumber]}", "value");
+        await page.ClickDetail1664BAsync();
+        await page.WaitForCommercialAutoRiskDetailAsync("Exists");
+        if (data.Condition("'Loan/Lease Gap' != NULL"))
+        {
+                    await page.EnterLoanLeaseGapAsync(data.Resolve("{{data:loan_lease_gap_536}}"));
+                    await page.PressLoanLeaseGapAsync("Click");
+                    await page.PressLoanLeaseGapAsync("Enter");
+                    await page.PressLoanLeaseGapAsync("Tab");
+                    await page.PressLoanLeaseGapAsync("Tab");
+        }
+        if (data.Condition("'Tapes Coverage' != NULL"))
+        {
+                    await page.EnterTapesCoverageAsync(data.Resolve("{{data:tapes_coverage_537}}"));
+                    await page.PressTapesCoverageAsync("Tab");
+        }
+        if (data.Condition("'Audio Visual' != NULL"))
+        {
+                    await page.EnterAudioVisualAsync(data.Resolve("{{data:audio_visual_538}}"));
+                    await page.PressAudioVisualAsync("Tab");
+                    await page.PressAudioVisualAsync("Tab");
+        }
+        if (data.Condition("'Audio Visual' != NULL"))
+        {
+                    await page.EnterAVCostNewAsync(data.Resolve("{{data:av_cost_new_539}}"));
+                    await page.PressAVCostNewAsync("Tab");
+                    await page.PressAVCostNewAsync("Tab");
+                    await page.PressAVCostNewAsync("Tab");
+        }
+        if (data.Condition("Towing != NULL && 'Vehicle Type' == \"Private Passenger\""))
+        {
+                    await page.EnterTowingAsync("");
+        }
+        await page.WaitForPhysicalDamageOKAsync("Exists");
+        await page.ClickPhysicalDamageOKAsync();
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.PauseAsync(1000);
+        await page.WaitForRiskDDE70Async("Exists");
+        await page.VerifyTypeD972CAsync(data.Resolve("{{data:constraint_vehicle_schedule_1_type_547}}"), "InnerText");
+        await page.VerifyVehicleSchedule1VehAsync("{XB[VehicleNumber]}", "value");
+        await page.ClickDetail1664BAsync();
+        await page.WaitForCommercialAutoRiskDetailAsync("Exists");
+        if (data.Condition("'Loan/Lease Gap' != NULL"))
+        {
+                    await page.EnterLoanLeaseGapAsync(data.Resolve("{{data:loan_lease_gap_551}}"));
+                    await page.PressLoanLeaseGapAsync("Click");
+                    await page.PressLoanLeaseGapAsync("Enter");
+                    await page.PressLoanLeaseGapAsync("Tab");
+                    await page.PressLoanLeaseGapAsync("Tab");
+        }
+        if (data.Condition("'Tapes Coverage' != NULL"))
+        {
+                    await page.EnterTapesCoverageAsync(data.Resolve("{{data:tapes_coverage_552}}"));
+                    await page.PressTapesCoverageAsync("Tab");
+        }
+        if (data.Condition("'Audio Visual' != NULL"))
+        {
+                    await page.EnterAudioVisualAsync(data.Resolve("{{data:audio_visual_553}}"));
+                    await page.PressAudioVisualAsync("Tab");
+                    await page.PressAudioVisualAsync("Tab");
+        }
+        if (data.Condition("'Audio Visual' != NULL"))
+        {
+                    await page.EnterAVCostNewAsync(data.Resolve("{{data:av_cost_new_554}}"));
+                    await page.PressAVCostNewAsync("Tab");
+                    await page.PressAVCostNewAsync("Tab");
+                    await page.PressAVCostNewAsync("Tab");
+        }
+        await page.WaitForPhysicalDamageOKAsync("Exists");
+        await page.ClickPhysicalDamageOKAsync();
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.PauseAsync(1000);
+        await page.WaitForRiskDDE70Async("Exists");
+        await page.VerifyTypeD972CAsync(data.Resolve("{{data:constraint_vehicle_schedule_1_type_561}}"), "InnerText");
+        await page.VerifyVehicleSchedule1VehAsync("{XB[VehicleNumber]}", "value");
+        await page.ClickDetail1664BAsync();
+        await page.WaitForCommercialAutoRiskDetailAsync("Exists");
+        await page.EnterSeasonalProduceTrailersAsync(data.Resolve("{{data:seasonal_produce_trailers_565}}"));
+        await page.PressSeasonalProduceTrailersAsync("CLICK");
+        await page.PressSeasonalProduceTrailersAsync("Tab");
+        await page.WaitForCoverageBeginDateAsync("Exists");
+        await page.EnterCoverageEndDateAsync("{DATE[09-05-2026][+6M][MM-dd-yyyy]}");
+        await page.PressCoverageEndDateAsync("CLICK");
+        await page.PressCoverageEndDateAsync("Tab");
+        await page.EnterProduceCarriedAsync(data.Resolve("{{data:produce_carried_568}}"));
+        await page.PressProduceCarriedAsync("CLICK");
+        await page.PressProduceCarriedAsync("Tab");
+        await page.WaitForPhysicalDamageOKAsync("Exists");
+        await page.ClickPhysicalDamageOKAsync();
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.PauseAsync(1000);
+        await page.WaitForRiskDDE70Async("Exists");
+
     }
 
     [Given(@"^I complete driver information$")]
@@ -191,8 +1509,52 @@ public sealed class BAPExpandedSteps
     [Then(@"^I complete driver information$")]
     public async Task CompleteDriverInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteDriverInformationAsync2();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickDriverSchedule161DFAsync();
+        await page.WaitForDriverSchedule79DC6Async("Exists");
+        await page.ClickAddDriverAsync();
+        await page.WaitForDriverDetailAsync("Exists");
+        await page.EnterFirstName813D1Async(data.Resolve("{{data:iframe_duck_creek_policy_first_name_579}}"));
+        await page.PressFirstName813D1Async("Tab");
+        await page.PressFirstName813D1Async("Tab");
+        await page.PressFirstName813D1Async("Tab");
+        await page.EnterLastName34FF6Async(data.Resolve("{{data:iframe_duck_creek_policy_last_name_580}}"));
+        await page.PressLastName34FF6Async("Tab");
+        await page.PressLastName34FF6Async("Tab");
+        await page.PressLastName34FF6Async("Tab");
+        await page.EnterDateOfBirthAsync("{DATE[09-05-2026][-40y][MM-dd-yyyy]}");
+        await page.PressDateOfBirthAsync("Tab");
+        await page.PressDateOfBirthAsync("Tab");
+        await page.PressDateOfBirthAsync("Tab");
+        await page.EnterStateLicensedAsync(data.Resolve("{{data:iframe_duck_creek_policy_state_licensed_582}}"));
+        await page.PressStateLicensedAsync("Tab");
+        await page.PressStateLicensedAsync("Tab");
+        await page.PressStateLicensedAsync("Tab");
+        await page.VerifyDriversLicenseNumberAsync(data.Resolve("{{data:expected_iframe_duck_creek_policy_drivers_license_number_innertext_583}}"), "InnerText");
+        await page.EnterSexAsync(data.Resolve("{{data:iframe_duck_creek_policy_sex_584}}"));
+        await page.PressSexAsync("Tab");
+        await page.EnterMaritalStatusAsync(data.Resolve("{{data:iframe_duck_creek_policy_marital_status_585}}"));
+        await page.PressMaritalStatusAsync("Tab");
+        await page.PressMaritalStatusAsync("Tab");
+        await page.EnterYearLicensedAsync(data.Resolve("{{data:iframe_duck_creek_policy_year_licensed_586}}"));
+        await page.PressYearLicensedAsync("Tab");
+        await page.PressYearLicensedAsync("Tab");
+        await page.EnterDateOfHireAsync(data.Resolve("{{data:iframe_duck_creek_policy_date_of_hire_587}}"));
+        await page.PressDateOfHireAsync("Tab");
+        await page.PressDateOfHireAsync("Tab");
+        await page.EnterDoYouHaveACDLLicenseAsync(data.Resolve("{{data:iframe_duck_creek_policy_do_you_have_a_cdl_license_588}}"));
+        await page.PressDoYouHaveACDLLicenseAsync("Tab");
+        await page.ClickOKAsync();
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+        await page.WaitForIFRAME6D695Async("Absent");
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.WaitForLoadingMessageAsync("Absent");
+
     }
 
     [Given(@"^I verify Mandatory Endorsements$")]
@@ -200,8 +1562,24 @@ public sealed class BAPExpandedSteps
     [Then(@"^I verify Mandatory Endorsements$")]
     public async Task VerifyMandatoryEndorsementsAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.VerifyMandatoryEndorsementsAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickEndorsementsC27F0Async();
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.VerifyEndorsementScheduleRow1Async("__BLANK__", "InnerText");
+        if (data.Condition("'Endorsement Type' ==\"[CA2394] Silica or Silica-Related Dust Exclusion\""))
+        {
+                    await page.VerifyEndorsementScheduleRow1Async(data.Resolve("{{data:expected_endorsement_schedule_row_1_innertext_598}}"), "InnerText");
+        }
+        await page.VerifyEndorsementTableRow1Async("__BLANK__", "InnerText");
+        if (data.Condition("'Endorsement Type' ==\"[CA2394] Silica or Silica-Related Dust Exclusion\""))
+        {
+                    await page.VerifyEndorsementTableRow2Async(data.Resolve("{{data:expected_endorsement_table_row_2_innertext_600}}"), "InnerText");
+        }
+
     }
 
     [Given(@"^I add endorsement$")]
@@ -209,8 +1587,388 @@ public sealed class BAPExpandedSteps
     [Then(@"^I add endorsement$")]
     public async Task AddEndorsementAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddEndorsementAsync2();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyEndorsementsHeadingA3D50Async("Absent", "");
+        await page.ClickEndorsementsC27F0Async();
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.WaitForClickAddEndorsementAsync("Visible");
+        await page.ClickClickAddEndorsementAsync();
+        await page.WaitForEndorsementDetailAsync("Exists");
+        if (data.Condition("Year != NULL"))
+        {
+                    await page.EnterCA9940YearAsync("");
+        }
+        if (data.Condition("Make != NULL"))
+        {
+                    await page.EnterCA9940MakeAsync("");
+        }
+        if (data.Condition("Model != NULL"))
+        {
+                    await page.EnterCA9940ModelAsync("");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.EnterCA9940VINAsync("");
+        }
+        await page.WaitForOKAsync("Exists");
+        await page.WaitForEndorsementType624ADAsync("Exists");
+        await page.ClickEndorsementType624ADAsync();
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_614}}"));
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_615}}"));
+        await page.PressEndorsementType624ADAsync("Click");
+        await page.PressEndorsementType624ADAsync("Enter");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.ClickOKAsync();
+        await page.VerifyIFRAMEF0A48Async("Exists", "");
+        await page.WaitForIFRAMEF0A48Async("Absent");
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.VerifyEndorsementsHeadingA3D50Async("Absent", "");
+        await page.ClickEndorsementsC27F0Async();
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.WaitForClickAddEndorsementAsync("Visible");
+        await page.ClickClickAddEndorsementAsync();
+        await page.WaitForEndorsementDetailAsync("Exists");
+        if (data.Condition("Year != NULL"))
+        {
+                    await page.EnterCA9940YearAsync("");
+        }
+        if (data.Condition("Make != NULL"))
+        {
+                    await page.EnterCA9940MakeAsync("");
+        }
+        if (data.Condition("Model != NULL"))
+        {
+                    await page.EnterCA9940ModelAsync("");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.EnterCA9940VINAsync("");
+        }
+        await page.WaitForOKAsync("Exists");
+        await page.WaitForEndorsementType624ADAsync("Exists");
+        await page.ClickEndorsementType624ADAsync();
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_633}}"));
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_634}}"));
+        await page.PressEndorsementType624ADAsync("Click");
+        await page.PressEndorsementType624ADAsync("Enter");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.ClickOKAsync();
+        await page.VerifyIFRAMEF0A48Async("Exists", "");
+        await page.WaitForIFRAMEF0A48Async("Absent");
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.VerifyEndorsementsHeadingA3D50Async("Absent", "");
+        await page.ClickEndorsementsC27F0Async();
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.WaitForClickAddEndorsementAsync("Visible");
+        await page.ClickClickAddEndorsementAsync();
+        await page.WaitForEndorsementDetailAsync("Exists");
+        if (data.Condition("'Endorsement Type' == \"[CA2325] Leased Workers Coverage\""))
+        {
+                    await page.WaitForCA2325LeasedWorkersCoverageAsync("Exists");
+        }
+        if (data.Condition("Year != NULL"))
+        {
+                    await page.EnterCA9940YearAsync("");
+        }
+        if (data.Condition("Make != NULL"))
+        {
+                    await page.EnterCA9940MakeAsync("");
+        }
+        if (data.Condition("Model != NULL"))
+        {
+                    await page.EnterCA9940ModelAsync("");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.EnterCA9940VINAsync("");
+        }
+        await page.WaitForOKAsync("Exists");
+        await page.WaitForEndorsementType624ADAsync("Exists");
+        await page.ClickEndorsementType624ADAsync();
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_653}}"));
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_654}}"));
+        await page.PressEndorsementType624ADAsync("Click");
+        await page.PressEndorsementType624ADAsync("Enter");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.ClickOKAsync();
+        await page.VerifyIFRAMEF0A48Async("Exists", "");
+        await page.WaitForIFRAMEF0A48Async("Absent");
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.VerifyEndorsementsHeadingA3D50Async("Absent", "");
+        await page.ClickEndorsementsC27F0Async();
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.WaitForClickAddEndorsementAsync("Visible");
+        await page.ClickClickAddEndorsementAsync();
+        await page.WaitForEndorsementDetailAsync("Exists");
+        if (data.Condition("'Add Excluded Driver' != NULL"))
+        {
+                    await page.WaitForClickAddExcludedDriverAsync("Exists");
+        }
+        if (data.Condition("'Add Excluded Driver' != NULL"))
+        {
+                    await page.ClickClickAddExcludedDriverAsync();
+        }
+        if (data.Condition("'Driver Name' != NULL"))
+        {
+                    await page.EnterAddDriverNameAsync(data.Resolve("{{data:iframe_duck_creek_policy_add_driver_name_667}}"));
+                    await page.PressAddDriverNameAsync("Tab");
+                    await page.PressAddDriverNameAsync("Tab");
+        }
+        if (data.Condition("Year != NULL"))
+        {
+                    await page.EnterCA9940YearAsync("");
+        }
+        if (data.Condition("Make != NULL"))
+        {
+                    await page.EnterCA9940MakeAsync("");
+        }
+        if (data.Condition("Model != NULL"))
+        {
+                    await page.EnterCA9940ModelAsync("");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.EnterCA9940VINAsync("");
+        }
+        await page.WaitForOKAsync("Exists");
+        await page.WaitForEndorsementType624ADAsync("Exists");
+        await page.ClickEndorsementType624ADAsync();
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_675}}"));
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_676}}"));
+        await page.PressEndorsementType624ADAsync("Click");
+        await page.PressEndorsementType624ADAsync("Enter");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.ClickOKAsync();
+        await page.VerifyIFRAMEF0A48Async("Exists", "");
+        await page.WaitForIFRAMEF0A48Async("Absent");
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.VerifyEndorsementsHeadingA3D50Async("Absent", "");
+        await page.ClickEndorsementsC27F0Async();
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.WaitForClickAddEndorsementAsync("Visible");
+        await page.ClickClickAddEndorsementAsync();
+        await page.WaitForEndorsementDetailAsync("Exists");
+        if (data.Condition("Year != NULL"))
+        {
+                    await page.EnterCA9940YearAsync("");
+        }
+        if (data.Condition("Make != NULL"))
+        {
+                    await page.EnterCA9940MakeAsync("");
+        }
+        if (data.Condition("Model != NULL"))
+        {
+                    await page.EnterCA9940ModelAsync("");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.EnterCA9940VINAsync("");
+        }
+        if (data.Condition("'Commodities Transported' != NULL"))
+        {
+                    await page.EnterCA9948ClassesOfCommoditiesTransportedAsync(data.Resolve("{{data:iframe_duck_creek_policy_ca9948_classes_of_commodities_transported_691}}"));
+                    await page.PressCA9948ClassesOfCommoditiesTransportedAsync("Click");
+                    await page.PressCA9948ClassesOfCommoditiesTransportedAsync("Enter");
+                    await page.PressCA9948ClassesOfCommoditiesTransportedAsync("Tab");
+        }
+        await page.WaitForOKAsync("Exists");
+        await page.WaitForEndorsementType624ADAsync("Exists");
+        await page.ClickEndorsementType624ADAsync();
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_695}}"));
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_696}}"));
+        await page.PressEndorsementType624ADAsync("Click");
+        await page.PressEndorsementType624ADAsync("Enter");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.ClickOKAsync();
+        await page.VerifyIFRAMEF0A48Async("Exists", "");
+        await page.WaitForIFRAMEF0A48Async("Absent");
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.VerifyEndorsementsHeadingA3D50Async("Absent", "");
+        await page.ClickEndorsementsC27F0Async();
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.WaitForClickAddEndorsementAsync("Visible");
+        await page.ClickClickAddEndorsementAsync();
+        await page.WaitForEndorsementDetailAsync("Exists");
+        if (data.Condition("Year != NULL"))
+        {
+                    await page.EnterCA9940YearAsync("");
+        }
+        if (data.Condition("Make != NULL"))
+        {
+                    await page.EnterCA9940MakeAsync("");
+        }
+        if (data.Condition("Model != NULL"))
+        {
+                    await page.EnterCA9940ModelAsync("");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.EnterCA9940VINAsync("");
+        }
+        await page.WaitForOKAsync("Exists");
+        await page.WaitForEndorsementType624ADAsync("Exists");
+        await page.ClickEndorsementType624ADAsync();
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_714}}"));
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_715}}"));
+        await page.PressEndorsementType624ADAsync("Click");
+        await page.PressEndorsementType624ADAsync("Enter");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.ClickOKAsync();
+        await page.VerifyIFRAMEF0A48Async("Exists", "");
+        await page.WaitForIFRAMEF0A48Async("Absent");
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.VerifyEndorsementsHeadingA3D50Async("Absent", "");
+        await page.ClickEndorsementsC27F0Async();
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.WaitForClickAddEndorsementAsync("Visible");
+        await page.ClickClickAddEndorsementAsync();
+        await page.WaitForEndorsementDetailAsync("Exists");
+        if (data.Condition("Year != NULL"))
+        {
+                    await page.EnterCA9940YearAsync("");
+        }
+        if (data.Condition("Make != NULL"))
+        {
+                    await page.EnterCA9940MakeAsync("");
+        }
+        if (data.Condition("Model != NULL"))
+        {
+                    await page.EnterCA9940ModelAsync("");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.EnterCA9940VINAsync("");
+        }
+        if (data.Condition("'Endorsement Type' ==\"Trailer Interchange Coverage\""))
+        {
+                    await page.EnterTrailerInterchangeEnterDaysInsuredAsync(data.Resolve("{{data:iframe_duck_creek_policy_trailer_interchange_enter_days_insured_730}}"));
+                    await page.PressTrailerInterchangeEnterDaysInsuredAsync("Tab");
+                    await page.PressTrailerInterchangeEnterDaysInsuredAsync("Tab");
+        }
+        if (data.Condition("'Endorsement Type' ==\"Trailer Interchange Coverage\""))
+        {
+                    await page.EnterTrailerInterchangeEnterOfTrailersAsync(data.Resolve("{{data:iframe_duck_creek_policy_trailer_interchange_enter_of_trailers_731}}"));
+                    await page.PressTrailerInterchangeEnterOfTrailersAsync("Tab");
+                    await page.PressTrailerInterchangeEnterOfTrailersAsync("Tab");
+        }
+        await page.WaitForOKAsync("Exists");
+        await page.WaitForEndorsementType624ADAsync("Exists");
+        await page.ClickEndorsementType624ADAsync();
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_735}}"));
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_736}}"));
+        await page.PressEndorsementType624ADAsync("Click");
+        await page.PressEndorsementType624ADAsync("Enter");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.ClickOKAsync();
+        await page.VerifyIFRAMEF0A48Async("Exists", "");
+        await page.WaitForIFRAMEF0A48Async("Absent");
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.VerifyEndorsementsHeadingA3D50Async("Absent", "");
+        await page.ClickEndorsementsC27F0Async();
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.WaitForClickAddEndorsementAsync("Visible");
+        await page.ClickClickAddEndorsementAsync();
+        await page.WaitForEndorsementDetailAsync("Exists");
+        if (data.Condition("Year != NULL"))
+        {
+                    await page.EnterCA9940YearAsync(data.Resolve("{{data:iframe_duck_creek_policy_ca9940_year_747}}"));
+                    await page.PressCA9940YearAsync("Tab");
+                    await page.PressCA9940YearAsync("Tab");
+        }
+        if (data.Condition("Make != NULL"))
+        {
+                    await page.EnterCA9940MakeAsync(data.Resolve("{{data:iframe_duck_creek_policy_ca9940_make_748}}"));
+                    await page.PressCA9940MakeAsync("Tab");
+                    await page.PressCA9940MakeAsync("Tab");
+        }
+        if (data.Condition("Model != NULL"))
+        {
+                    await page.EnterCA9940ModelAsync(data.Resolve("{{data:iframe_duck_creek_policy_ca9940_model_749}}"));
+                    await page.PressCA9940ModelAsync("Tab");
+                    await page.PressCA9940ModelAsync("Tab");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.EnterCA9940VINAsync(data.Resolve("{{data:iframe_duck_creek_policy_ca_9940_vin_750}}"));
+                    await page.PressCA9940VINAsync("Tab");
+                    await page.PressCA9940VINAsync("Tab");
+        }
+        if (data.Condition("'Contract Provisions' != NULL"))
+        {
+                    await page.EnterCA9940ContractProvisionsAsync(data.Resolve("{{data:iframe_duck_creek_policy_ca9940_contract_provisions_751}}"));
+                    await page.PressCA9940ContractProvisionsAsync("CLICK");
+                    await page.PressCA9940ContractProvisionsAsync("Enter");
+                    await page.PressCA9940ContractProvisionsAsync("Tab");
+        }
+        await page.WaitForOKAsync("Exists");
+        await page.WaitForEndorsementType624ADAsync("Exists");
+        await page.ClickEndorsementType624ADAsync();
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_755}}"));
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_756}}"));
+        await page.PressEndorsementType624ADAsync("Click");
+        await page.PressEndorsementType624ADAsync("Enter");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.ClickOKAsync();
+        await page.VerifyIFRAMEF0A48Async("Exists", "");
+        await page.WaitForIFRAMEF0A48Async("Absent");
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.VerifyEndorsementsHeadingA3D50Async("Absent", "");
+        await page.ClickEndorsementsC27F0Async();
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+        await page.WaitForClickAddEndorsementAsync("Visible");
+        await page.ClickClickAddEndorsementAsync();
+        await page.WaitForEndorsementDetailAsync("Exists");
+        if (data.Condition("Year != NULL"))
+        {
+                    await page.EnterCA9940YearAsync("");
+        }
+        if (data.Condition("Make != NULL"))
+        {
+                    await page.EnterCA9940MakeAsync("");
+        }
+        if (data.Condition("Model != NULL"))
+        {
+                    await page.EnterCA9940ModelAsync("");
+        }
+        if (data.Condition("VIN != NULL"))
+        {
+                    await page.EnterCA9940VINAsync("");
+        }
+        await page.WaitForOKAsync("Exists");
+        await page.WaitForEndorsementType624ADAsync("Exists");
+        await page.ClickEndorsementType624ADAsync();
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_774}}"));
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.EnterEndorsementType624ADAsync(data.Resolve("{{data:endorsement_type_775}}"));
+        await page.PressEndorsementType624ADAsync("Click");
+        await page.PressEndorsementType624ADAsync("Enter");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.PressEndorsementType624ADAsync("Tab");
+        await page.ClickOKAsync();
+        await page.VerifyIFRAMEF0A48Async("Exists", "");
+        await page.WaitForIFRAMEF0A48Async("Absent");
+        await page.WaitForEndorsementsHeadingA3D50Async("Exists");
+
     }
 
     [Given(@"^I add Addl Interest$")]
@@ -218,8 +1976,178 @@ public sealed class BAPExpandedSteps
     [Then(@"^I add Addl Interest$")]
     public async Task AddAddlInterestAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddAddlInterestAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyAddlInterests15174Async("Absent", "");
+        await page.ClickAdditionalInterestsAsync();
+        await page.WaitForAddlInterests15174Async("Exists");
+        await page.ClickAddOtherInterestAsync();
+        await page.WaitForTypeOfInterestAsync("Exists");
+        await page.EnterTypeOfInterestAsync(data.Resolve("{{data:iframe_duck_creek_policy_type_of_interest_785}}"));
+        await page.PressTypeOfInterestAsync("CLICK");
+        await page.PressTypeOfInterestAsync("Enter");
+        await page.PressTypeOfInterestAsync("Tab");
+        await page.WaitForFirstName813D1Async("Exists");
+        if (data.Condition("'First Name' != NULL"))
+        {
+                    await page.PressFirstName813D1Async("TAB");
+                    await page.PressFirstName813D1Async("Tab");
+        }
+        if (data.Condition("'First Name' != NULL"))
+        {
+                    await page.EnterFirstName813D1Async(data.Resolve("{{data:iframe_duck_creek_policy_first_name_788}}"));
+                    await page.PressFirstName813D1Async("Tab");
+                    await page.PressFirstName813D1Async("Tab");
+        }
+        if (data.Condition("'Last Name' != NULL"))
+        {
+                    await page.EnterLastName34FF6Async(data.Resolve("{{data:iframe_duck_creek_policy_last_name_789}}"));
+                    await page.PressLastName34FF6Async("Tab");
+                    await page.PressLastName34FF6Async("Tab");
+                    await page.PressLastName34FF6Async("Tab");
+        }
+        if (data.Condition("Address != NULL"))
+        {
+                    await page.EnterAddress193FF8Async(data.Resolve("{{data:iframe_duck_creek_policy_address_1_790}}"));
+                    await page.PressAddress193FF8Async("Tab");
+                    await page.PressAddress193FF8Async("Tab");
+        }
+        if (data.Condition("ZIP != NULL"))
+        {
+                    await page.EnterZipCodeB286BAsync(data.Resolve("{{data:iframe_duck_creek_policy_zip_code_791}}"));
+                    await page.PressZipCodeB286BAsync("Tab");
+                    await page.PressZipCodeB286BAsync("Tab");
+        }
+        await page.WaitForState64A10Async("Visible");
+        await page.ClickOKAsync();
+        await page.WaitForAddlInterests15174Async("Exists");
+        await page.WaitForIFRAME59D4BAsync("Absent");
+        await page.VerifyAddlInterests15174Async("Absent", "");
+        await page.ClickAdditionalInterestsAsync();
+        await page.WaitForAddlInterests15174Async("Exists");
+        await page.ClickAddOtherInterestAsync();
+        await page.WaitForTypeOfInterestAsync("Exists");
+        await page.EnterTypeOfInterestAsync(data.Resolve("{{data:iframe_duck_creek_policy_type_of_interest_801}}"));
+        await page.PressTypeOfInterestAsync("CLICK");
+        await page.PressTypeOfInterestAsync("Enter");
+        await page.PressTypeOfInterestAsync("Tab");
+        await page.WaitForFirstName813D1Async("Exists");
+        if (data.Condition("'First Name' != NULL"))
+        {
+                    await page.PressFirstName813D1Async("TAB");
+                    await page.PressFirstName813D1Async("Tab");
+        }
+        if (data.Condition("'First Name' != NULL"))
+        {
+                    await page.EnterFirstName813D1Async(data.Resolve("{{data:iframe_duck_creek_policy_first_name_804}}"));
+                    await page.PressFirstName813D1Async("Tab");
+                    await page.PressFirstName813D1Async("Tab");
+        }
+        if (data.Condition("'Last Name' != NULL"))
+        {
+                    await page.EnterLastName34FF6Async(data.Resolve("{{data:iframe_duck_creek_policy_last_name_805}}"));
+                    await page.PressLastName34FF6Async("Tab");
+                    await page.PressLastName34FF6Async("Tab");
+                    await page.PressLastName34FF6Async("Tab");
+        }
+        if (data.Condition("Address != NULL"))
+        {
+                    await page.EnterAddress193FF8Async(data.Resolve("{{data:iframe_duck_creek_policy_address_1_806}}"));
+                    await page.PressAddress193FF8Async("Tab");
+                    await page.PressAddress193FF8Async("Tab");
+        }
+        if (data.Condition("ZIP != NULL"))
+        {
+                    await page.EnterZipCodeB286BAsync(data.Resolve("{{data:iframe_duck_creek_policy_zip_code_807}}"));
+                    await page.PressZipCodeB286BAsync("Tab");
+                    await page.PressZipCodeB286BAsync("Tab");
+        }
+        await page.WaitForState64A10Async("Visible");
+        if (data.Condition("'Vehicle Association' != NULL"))
+        {
+                    await page.ClickIFRAMEDuckCreekPolicyVehicleAssociationAsync();
+        }
+        if (data.Condition("'Vehicle Association' != NULL"))
+        {
+                    await page.ClickIFRAMEDuckCreekPolicyVehicleAssociationAsync();
+                    await page.PressIFRAMEDuckCreekPolicyVehicleAssociationAsync("DOUBLECLICK");
+                    await page.PressIFRAMEDuckCreekPolicyVehicleAssociationAsync("DOWN");
+                    await page.PressIFRAMEDuckCreekPolicyVehicleAssociationAsync("DOWN");
+                    await page.PressIFRAMEDuckCreekPolicyVehicleAssociationAsync("Enter");
+                    await page.PressIFRAMEDuckCreekPolicyVehicleAssociationAsync("Tab");
+        }
+        if (data.Condition("'Vehicle Association' != NULL"))
+        {
+                    await page.WaitForIFRAMEDuckCreekPolicyVehicleAssociationAsync("NotEqual");
+        }
+        await page.ClickOKAsync();
+        await page.WaitForAddlInterests15174Async("Exists");
+        await page.WaitForIFRAME59D4BAsync("Absent");
+        await page.VerifyAddlInterests15174Async("Absent", "");
+        await page.ClickAdditionalInterestsAsync();
+        await page.WaitForAddlInterests15174Async("Exists");
+        await page.ClickAddOtherInterestAsync();
+        await page.WaitForTypeOfInterestAsync("Exists");
+        await page.EnterTypeOfInterestAsync(data.Resolve("{{data:iframe_duck_creek_policy_type_of_interest_820}}"));
+        await page.PressTypeOfInterestAsync("CLICK");
+        await page.PressTypeOfInterestAsync("Enter");
+        await page.PressTypeOfInterestAsync("Tab");
+        await page.WaitForFirstName813D1Async("Exists");
+        if (data.Condition("'First Name' != NULL"))
+        {
+                    await page.PressFirstName813D1Async("TAB");
+                    await page.PressFirstName813D1Async("Tab");
+        }
+        if (data.Condition("'First Name' != NULL"))
+        {
+                    await page.EnterFirstName813D1Async(data.Resolve("{{data:iframe_duck_creek_policy_first_name_823}}"));
+                    await page.PressFirstName813D1Async("Tab");
+                    await page.PressFirstName813D1Async("Tab");
+        }
+        if (data.Condition("'Last Name' != NULL"))
+        {
+                    await page.EnterLastName34FF6Async(data.Resolve("{{data:iframe_duck_creek_policy_last_name_824}}"));
+                    await page.PressLastName34FF6Async("Tab");
+                    await page.PressLastName34FF6Async("Tab");
+                    await page.PressLastName34FF6Async("Tab");
+        }
+        if (data.Condition("Address != NULL"))
+        {
+                    await page.EnterAddress193FF8Async(data.Resolve("{{data:iframe_duck_creek_policy_address_1_825}}"));
+                    await page.PressAddress193FF8Async("Tab");
+                    await page.PressAddress193FF8Async("Tab");
+        }
+        if (data.Condition("ZIP != NULL"))
+        {
+                    await page.EnterZipCodeB286BAsync(data.Resolve("{{data:iframe_duck_creek_policy_zip_code_826}}"));
+                    await page.PressZipCodeB286BAsync("Tab");
+                    await page.PressZipCodeB286BAsync("Tab");
+        }
+        await page.WaitForState64A10Async("Visible");
+        if (data.Condition("'Vehicle Association' != NULL"))
+        {
+                    await page.ClickIFRAMEDuckCreekPolicyVehicleAssociationAsync();
+        }
+        if (data.Condition("'Vehicle Association' != NULL"))
+        {
+                    await page.ClickIFRAMEDuckCreekPolicyVehicleAssociationAsync();
+                    await page.PressIFRAMEDuckCreekPolicyVehicleAssociationAsync("DOUBLECLICK");
+                    await page.PressIFRAMEDuckCreekPolicyVehicleAssociationAsync("DOWN");
+                    await page.PressIFRAMEDuckCreekPolicyVehicleAssociationAsync("DOWN");
+                    await page.PressIFRAMEDuckCreekPolicyVehicleAssociationAsync("Enter");
+                    await page.PressIFRAMEDuckCreekPolicyVehicleAssociationAsync("Tab");
+        }
+        if (data.Condition("'Vehicle Association' != NULL"))
+        {
+                    await page.WaitForIFRAMEDuckCreekPolicyVehicleAssociationAsync("NotEqual");
+        }
+        await page.ClickOKAsync();
+        await page.WaitForAddlInterests15174Async("Exists");
+        await page.WaitForIFRAME59D4BAsync("Absent");
+
     }
 
     [Given(@"^I complete required underwriting question information$")]
@@ -227,8 +2155,43 @@ public sealed class BAPExpandedSteps
     [Then(@"^I complete required underwriting question information$")]
     public async Task CompleteRequiredUnderwritingQuestionInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredUnderwritingQuestionInformationAsync3();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickUWQuestions368CCAsync();
+        await page.WaitForUWQuestionsF3D9FAsync("Exists");
+        await page.ClickUpdateAnswersButtonAsync();
+        await page.PressUpdateAnswersButtonAsync("Tab");
+        await page.PressUpdateAnswersButtonAsync("Tab");
+        await page.EnterAreThereAnyCommercialVehiclesOwnedByTheApplicantNotInsuredOnThePolicyAsync(data.Resolve("{{data:are_there_any_commercial_vehicles_owned_by_the_applicant_not_insured_on_the_policy_837}}"));
+        await page.PressAreThereAnyCommercialVehiclesOwnedByTheApplicantNotInsuredOnThePolicyAsync("Tab");
+        await page.PressAreThereAnyCommercialVehiclesOwnedByTheApplicantNotInsuredOnThePolicyAsync("Tab");
+        await page.PressAreThereAnyCommercialVehiclesOwnedByTheApplicantNotInsuredOnThePolicyAsync("Tab");
+        await page.WaitForAreThereAnyCommercialVehiclesOwnedByTheApplicantNotInsuredOnThePolicyAsync("Equal");
+        await page.EnterAnyPersonalAutoPolicyListingNameInsuredAsync(data.Resolve("{{data:anypersonalautopolicylistingnameinsured_839}}"));
+        await page.PressAnyPersonalAutoPolicyListingNameInsuredAsync("Tab");
+        await page.PressAnyPersonalAutoPolicyListingNameInsuredAsync("Tab");
+        await page.PressAnyPersonalAutoPolicyListingNameInsuredAsync("Tab");
+        await page.EnterAnyVehicleCoveredRegisteredInNotPrimaryStateAsync(data.Resolve("{{data:anyvehiclecoveredregisteredinnotprimarystate_840}}"));
+        await page.PressAnyVehicleCoveredRegisteredInNotPrimaryStateAsync("Tab");
+        await page.PressAnyVehicleCoveredRegisteredInNotPrimaryStateAsync("Tab");
+        await page.PressAnyVehicleCoveredRegisteredInNotPrimaryStateAsync("Tab");
+        await page.EnterBorrowingHiringOrLeasingWithinYearAsync(data.Resolve("{{data:borrowinghiringorleasingwithinyear_841}}"));
+        await page.PressBorrowingHiringOrLeasingWithinYearAsync("Tab");
+        await page.PressBorrowingHiringOrLeasingWithinYearAsync("Tab");
+        await page.PressBorrowingHiringOrLeasingWithinYearAsync("Tab");
+        await page.PressBorrowingHiringOrLeasingWithinYearAsync("Tab");
+        await page.PressBorrowingHiringOrLeasingWithinYearAsync("Tab");
+        await page.WaitForBorrowingHiringOrLeasingWithinYearAsync("Equal");
+        await page.WaitForAnyVehicleCoveredRegisteredInNotPrimaryStateAsync("Equal");
+        await page.VerifyHasAnyApplicantBeenConvictedOfAFelonyOrBeenInvolvedInAnyIncidentsOrClaimsRelatingToSexualAbuseOrMolestationAllegationsDiscriminationArsonFraudBriberyOrNegligentHiringAsync("Exists", "");
+        await page.EnterHasAnyApplicantBeenConvictedOfAFelonyOrBeenInvolvedInAnyIncidentsOrClaimsRelatingToSexualAbuseOrMolestationAllegationsDiscriminationArsonFraudBriberyOrNegligentHiringAsync(data.Resolve("{{data:has_any_applicant_been_convicted_of_a_felony_or_been_involved_in_any_incidents_or_claims_relating_to_sexual_abuse_or_molestation_allegations_discrimination_arson_fraud_bribery_or_negligent_hiring_845}}"));
+        await page.PressHasAnyApplicantBeenConvictedOfAFelonyOrBeenInvolvedInAnyIncidentsOrClaimsRelatingToSexualAbuseOrMolestationAllegationsDiscriminationArsonFraudBriberyOrNegligentHiringAsync("Tab");
+        await page.PressHasAnyApplicantBeenConvictedOfAFelonyOrBeenInvolvedInAnyIncidentsOrClaimsRelatingToSexualAbuseOrMolestationAllegationsDiscriminationArsonFraudBriberyOrNegligentHiringAsync("Tab");
+        await page.PressHasAnyApplicantBeenConvictedOfAFelonyOrBeenInvolvedInAnyIncidentsOrClaimsRelatingToSexualAbuseOrMolestationAllegationsDiscriminationArsonFraudBriberyOrNegligentHiringAsync("Tab");
+
     }
 
     [Given(@"^I complete required billing information$")]
@@ -236,8 +2199,30 @@ public sealed class BAPExpandedSteps
     [Then(@"^I complete required billing information$")]
     public async Task CompleteRequiredBillingInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredBillingInformationAsync8();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickBilling6ED79Async();
+        await page.WaitForBillingD1518Async("Exists");
+        await page.EnterBillTypeAsync(data.Resolve("{{data:bill_type_848}}"));
+        await page.PressBillTypeAsync("Tab");
+        await page.PressBillTypeAsync("TAB");
+        await page.WaitForBillTypeAsync("Equal");
+        await page.EnterPayPlanAsync(data.Resolve("{{data:pay_plan_851}}"));
+        await page.PressPayPlanAsync("Tab");
+        await page.PressPayPlanAsync("TAB");
+        await page.WaitForPayPlanAsync("Equal");
+        await page.WaitForEasyPayAsync("Exists");
+        await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_855}}"));
+        await page.PressEasyPayAsync("CLICK");
+        await page.PressEasyPayAsync("Enter");
+        await page.PressEasyPayAsync("Tab");
+        await page.PressEasyPayAsync("Tab");
+        await page.PressEasyPayAsync("TAB");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I add notepad comment$")]
@@ -245,8 +2230,17 @@ public sealed class BAPExpandedSteps
     [Then(@"^I add notepad comment$")]
     public async Task AddNotepadCommentAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.AddNotepadCommentAsync7();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.ClickNotepadAsync();
+        await page.WaitForNotepadHeadingAsync("Exists");
+        await page.ClickAddNotesRemarksAsync();
+        await page.EnterTextBoxAsync(data.Resolve("Test {B[Product (LOB)]}"));
+        await page.ClickNotePadOKAsync();
+
     }
 
     [Given(@"^I complete required submission information$")]
@@ -254,8 +2248,28 @@ public sealed class BAPExpandedSteps
     [Then(@"^I complete required submission information$")]
     public async Task CompleteRequiredSubmissionInformationAsync()
     {
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteRequiredSubmissionInformationAsync7();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.WaitForSubmissionAsync("Visible");
+        await page.ClickSubmissionAsync();
+        await page.WaitForSubmissionHeadingAsync("Exists");
+        await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_866}}"));
+        await page.PressIsThisCoverageBoundAsync("Tab");
+        await page.PressIsThisCoverageBoundAsync("CLICK");
+        await page.PressIsThisCoverageBoundAsync("Tab");
+        await page.VerifyOrderAuditAsync("Exists", "");
+        await page.EnterOrderAuditAsync(data.Resolve("{{data:order_audit_868}}"));
+        await page.PressOrderAuditAsync("Tab");
+        await page.VerifySubmissionHeadingAsync("Absent", "");
+        await page.PressSubmissionAsync("TAB");
+        await page.ClickSubmissionAsync();
+        await page.PauseAsync(1000);
+        await page.WaitForSubmissionHeadingAsync("Exists");
+        await page.PauseAsync(1000);
+
     }
 
     [Given(@"^I run Stoplight$")]
@@ -263,8 +2277,51 @@ public sealed class BAPExpandedSteps
     [Then(@"^I run Stoplight$")]
     public async Task RunStoplightAsync()
     {
-        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.RunStoplightAsync7();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifyIsThisCoverageBoundAsync("Exists", "");
+        await page.VerifyIsThisCoverageBoundAsync(data.Resolve("{{data:expected_is_this_coverage_bound_value_876}}"), "Value");
+        await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_877}}"));
+        await page.PressIsThisCoverageBoundAsync("Tab");
+        await page.PressIsThisCoverageBoundAsync("Tab");
+        await page.ClickCompleteApplicationAsync();
+        await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
+        await page.PauseAsync(1000);
+        await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
+        data.Set("ErrorFlag", data.Resolve("{{data:errorflag}}"));
+        data.Set("ErrorFlag", data.Resolve("{{data:errorflag_2}}"));
+        data.Set("ErrorFlag", data.Resolve("{{data:errorflag_2}}"));
+        data.Set("REPETITION", data.Resolve("{{data:repetition}}"));
+        await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
+        await page.PauseAsync(1000);
+        await page.ClickCompleteApplicationAsync();
+        await page.PauseAsync(1000);
+        await page.ClickStoplightWaitingWindowCloseAsync();
+        await page.WaitForStoplightWaitingWindowAsync("Absent");
+        await page.PauseAsync(1000);
+        await page.VerifyLoadingMessageAsync("Visible", "");
+        await page.PauseAsync(1000);
+        await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists", "");
+        await page.ClickCompleteApplicationAsync();
+        await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
+        await page.PauseAsync(1000);
+        await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
+        await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
+        await page.PauseAsync(1000);
+        await page.ClickCompleteApplicationAsync();
+        await page.PauseAsync(1000);
+        await page.ClickStoplightWaitingWindowCloseAsync();
+        await page.WaitForStoplightWaitingWindowAsync("Absent");
+        await page.PauseAsync(1000);
+        await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
+        await page.EnterTitleAsync(data.Resolve("{{data:title_909}}"));
+        await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_910}}"));
+        await page.VerifyResultAsync("{XB[SessionId]}", "value");
+        data.Set("ServerAddress", data.Resolve("{{data:serveraddress}}"));
+
     }
 
     [Given(@"^I complete forms verification$")]
@@ -272,8 +2329,22 @@ public sealed class BAPExpandedSteps
     [Then(@"^I complete forms verification$")]
     public async Task CompleteFormsVerificationAsync()
     {
-        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteFormsVerificationAsync6();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.EnterSessionIDAsync(data.Resolve("{B[SessionId]}"));
+        await page.VerifyStatusCodeAsync(data.Resolve("{{data:expected_statuscode_value_914}}"), "value");
+        await page.PauseAsync(1000);
+        await page.PauseAsync(1000);
+        data.Set("PowershellArguments", data.Resolve("powershell.exe -ExecutionPolicy Bypass -NoProfile -File FormsCheckQA.ps1 -Path \"\\\\mis\\sys\\QLTY\\Test_Automation\\Tricentis_Tosca\\Forms_Check\\BAP\\\" -FileName \"BAP_StraightThrough\" -State  \"AL\" -QuoteID \"{B[QuoteID]}\""));
+        data.Set("SummaryResults", await page.CaptureValueAsync("InnerText"));
+        data.Set("SummaryResults", data.Resolve("{{data:summaryresults}}"));
+        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_2}}"));
+        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_3}}"));
+        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_4}}"));
+
     }
 
     [Given(@"^I complete save for Later/Return to Admin$")]
@@ -281,8 +2352,19 @@ public sealed class BAPExpandedSteps
     [Then(@"^I complete save for Later/Return to Admin$")]
     public async Task CompleteSaveForLaterReturnToAdminAsync()
     {
-        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
-        await page.CompleteSaveForLaterReturnToAdminAsync();
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Field-level orchestration derived from the canonical Tosca method sequence.
+        await page.VerifySaveForLaterAsync("Exists", "");
+        await page.ClickSaveForLaterAsync();
+        await page.WaitForSaveForLaterOKAsync("Exists");
+        await page.ClickSaveForLaterOKAsync();
+        await page.VerifyReturnToAdminAsync("Exists", "");
+        await page.ClickReturnToAdminAsync();
+        await page.WaitForReturnToAdminAsync("Absent");
+
     }
 
 }

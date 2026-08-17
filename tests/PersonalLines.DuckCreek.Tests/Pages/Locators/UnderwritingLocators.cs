@@ -46,7 +46,7 @@ public sealed class UnderwritingLocators
     public ILocator PreQualificationNext => _page.GetByRole(AriaRole.Button, new() { Name = "Btn_Next", Exact = true });
 
     // Source modules: EQ||New Quote | confidence=High score=127
-    public ILocator QuotePolicySearch => _page.GetByRole(AriaRole.Textbox, new() { Name = "Txt_Quote\\Policy Search", Exact = true });
+    public ILocator QuotePolicySearch => _page.Locator("[name=\"Txt_Quote\\\\Policy Search\"], [id=\"Txt_Quote\\\\Policy Search\"]").First;
 
     // Source modules: EQ | Underwriting Underwriting Next | confidence=Medium score=113
     public ILocator UnderwritingUnderwritingNextNext => _page.GetByRole(AriaRole.Button, new() { Name = "Next", Exact = true });

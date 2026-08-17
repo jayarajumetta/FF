@@ -58,7 +58,7 @@ public sealed class SubmissionLocators
     public ILocator PolicyNumber => _page.GetByLabel("Policy Number", new() { Exact = true });
 
     // Source modules: EQ||New Quote | confidence=High score=127
-    public ILocator QuotePolicySearch => _page.GetByRole(AriaRole.Textbox, new() { Name = "Txt_Quote\\Policy Search", Exact = true });
+    public ILocator QuotePolicySearch => _page.Locator("[name=\"Txt_Quote\\\\Policy Search\"], [id=\"Txt_Quote\\\\Policy Search\"]").First;
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name

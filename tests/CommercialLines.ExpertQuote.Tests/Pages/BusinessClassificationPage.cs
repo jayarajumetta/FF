@@ -1,50 +1,35 @@
 using InsuranceAutomation.Core;
+using Microsoft.Playwright;
 using InsuranceAutomation.CLEQ.Pages.Locators;
 
 namespace InsuranceAutomation.CLEQ.Pages;
 
 public sealed class BusinessClassificationPage
 {
+    private readonly BrowserSession _browser;
     private readonly BusinessClassificationLocators _locators;
-    private readonly ScenarioData _data;
     private readonly UiActions _ui;
 
-    public BusinessClassificationPage(BrowserSession browser, ScenarioData data, UiActions ui)
+    public BusinessClassificationPage(BrowserSession browser, UiActions ui)
     {
+        _browser = browser;
         _locators = new BusinessClassificationLocators(browser.Page);
-        _data = data;
         _ui = ui;
     }
 
-    // Business step: I complete industry Class Code Restrictions
-    public async Task CompleteIndustryClassCodeRestrictionsAsync()
-    {
-        // EQBOPPreQualificationIndustryClassCodeRestrictions_0c969cPage.BOPIndustryAnswerNonOfTheAbove_0062_d18a3eAsync
-        await _ui.WaitAsync(_locators.IndustryClassCodeRestrictionsHeading, "Exists");
-        await _ui.PressAsync(_locators.NoneOfTheAbove, "POST:TAB");
-        await _ui.PressAsync(_locators.NoneOfTheAbove, "Tab");
-        // EQCommonNavigateToScreen_b3fe17Page.BufferScreenName_0063_d18a3eAsync
-        _data.Set("Screen", _data.Resolve("{{data:screen_2}}"));
-        // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0064_d18a3eAsync
-        if (!await _ui.ExistsAsync(_locators.ScreenHeading))
-        {
-            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
-        }
-    }
+    public Task WaitForIndustryClassCodeRestrictionsHeadingAsync(string expected) =>
+        _ui.WaitAsync(_locators.IndustryClassCodeRestrictionsHeading, expected, new ControlIntent("BusinessClassification", "IndustryClassCodeRestrictionsHeading"));
 
-    // Business step: I complete industry Class Code Questions
-    public async Task CompleteIndustryClassCodeQuestionsAsync()
-    {
-        // EQBOPPrimaryInsuredDetailsIndustryClassCodeQuestions_a7d59cPage.EQBOPPrimaryInsuredDetailsIndustryClassCodeQuestions_0083_d18a3eAsync
-        await _ui.PressAsync(_locators.NoneOfTheAboveCheckbox, "POST:TAB");
-        await _ui.PressAsync(_locators.NoneOfTheAboveCheckbox, "Tab");
-        // EQCommonNavigateToScreen_b3fe17Page.BufferScreenName_0084_d18a3eAsync
-        _data.Set("Screen", _data.Resolve("{{data:screen_3}}"));
-        // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0085_d18a3eAsync
-        if (!await _ui.ExistsAsync(_locators.ScreenHeading))
-        {
-            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
-        }
-    }
+    public Task PressNoneOfTheAboveAsync(string key) =>
+        _ui.PressAsync(_locators.NoneOfTheAbove, key, new ControlIntent("BusinessClassification", "NoneOfTheAbove"));
+
+    public Task PressNoneOfTheAboveCheckboxAsync(string key) =>
+        _ui.PressAsync(_locators.NoneOfTheAboveCheckbox, key, new ControlIntent("BusinessClassification", "NoneOfTheAboveCheckbox"));
+
+    public Task VerifyScreenHeadingAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.ScreenHeading, expected, property, new ControlIntent("BusinessClassification", "ScreenHeading"));
+
+    public Task<bool> IsScreenHeadingPresentAsync() =>
+        _ui.ExistsAsync(_locators.ScreenHeading);
 
 }

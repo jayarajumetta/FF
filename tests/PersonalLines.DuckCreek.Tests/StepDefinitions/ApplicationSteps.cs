@@ -54,7 +54,7 @@ public sealed class ApplicationSteps
         if (ScenarioData.IsSynthetic(value))
         {
             throw new InvalidOperationException(
-                $"Credential '{key}' is not available. Set {environmentVariable} or provide it in TestData/ExternalDataOverrides.json.");
+        $"Credential '{key}' is not available. Set {environmentVariable} or provide it in TestData/ExternalDataOverrides.json.");
         }
 
         return value;

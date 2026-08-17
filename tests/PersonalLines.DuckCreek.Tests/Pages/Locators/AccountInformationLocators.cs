@@ -14,10 +14,10 @@ public sealed class AccountInformationLocators
     public ILocator AccountInformation => _page.GetByLabel("Lbl_Account Information", new() { Exact = true });
 
     // Source modules: EQ||Account Details | confidence=High score=127
-    public ILocator BestPhoneAccountOwner => _page.GetByRole(AriaRole.Textbox, new() { Name = "Txt_Best phone_Account Owner", Exact = true });
+    public ILocator BestPhoneAccountOwner => _page.Locator("[name=\"Txt_Best phone_Account Owner\"], [id=\"Txt_Best phone_Account Owner\"]").First;
 
     // Source modules: EQ||Account Details | confidence=Medium score=114
-    public ILocator DOB => _page.GetByRole(AriaRole.Textbox, new() { Name = "Txt_DOB", Exact = true });
+    public ILocator DOB => _page.Locator("[name=\"Txt_DOB\"], [id=\"Txt_DOB\"]").First;
 
     // Source modules: EQ||Account Details | confidence=High score=130
     public ILocator Divorced => _page.GetByTestId("owner.maritalStatus-chip-wrapper");
@@ -26,13 +26,13 @@ public sealed class AccountInformationLocators
     public ILocator DrpdwnState => _page.GetByLabel("Drpdwn_State", new() { Exact = true });
 
     // Source modules: EQ||Account Details | confidence=High score=127
-    public ILocator EmailAccountOwner => _page.GetByRole(AriaRole.Textbox, new() { Name = "Txt_Email_Account Owner", Exact = true });
+    public ILocator EmailAccountOwner => _page.Locator("[name=\"Txt_Email_Account Owner\"], [id=\"Txt_Email_Account Owner\"]").First;
 
     // Source modules: EQ||Account Details | confidence=Medium score=114
-    public ILocator EnterALocation => _page.GetByRole(AriaRole.Textbox, new() { Name = "Txt_Enter a location", Exact = true });
+    public ILocator EnterALocation => _page.Locator("[name=\"Txt_Enter a location\"], [id=\"Txt_Enter a location\"]").First;
 
     // Source modules: EQ||Account Details | confidence=High score=127
-    public ILocator FirstNameAccountOwner => _page.GetByRole(AriaRole.Textbox, new() { Name = "Txt_First Name_Account Owner", Exact = true });
+    public ILocator FirstNameAccountOwner => _page.Locator("[name=\"Txt_First Name_Account Owner\"], [id=\"Txt_First Name_Account Owner\"]").First;
 
     // Source modules: EQ||Account Details | confidence=Medium score=118
     public ILocator IsTheAccountAddressAlsoWhereTheClientResides => _page.GetByLabel("Is the account address also where the client resides?", new() { Exact = true });
@@ -44,13 +44,13 @@ public sealed class AccountInformationLocators
     public ILocator Married => _page.GetByTestId("owner.maritalStatus-chip-wrapper");
 
     // Source modules: EQ||Account Details | confidence=High score=127
-    public ILocator OwnerAddressCityNew => _page.GetByRole(AriaRole.Textbox, new() { Name = "Txt_owner.address.city_New", Exact = true });
+    public ILocator OwnerAddressCityNew => _page.Locator("[name=\"Txt_owner.address.city_New\"], [id=\"Txt_owner.address.city_New\"]").First;
 
     // Source modules: EQ||Account Details | confidence=High score=127
-    public ILocator OwnerAddressLine2 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Txt_owner.address.line2", Exact = true });
+    public ILocator OwnerAddressLine2 => _page.Locator("[name=\"Txt_owner.address.line2\"], [id=\"Txt_owner.address.line2\"]").First;
 
     // Source modules: EQ||Account Details | confidence=High score=127
-    public ILocator OwnerAddressZip => _page.GetByRole(AriaRole.Textbox, new() { Name = "Txt_owner.address.zip", Exact = true });
+    public ILocator OwnerAddressZip => _page.Locator("[name=\"Txt_owner.address.zip\"], [id=\"Txt_owner.address.zip\"]").First;
 
     // Source modules: EQ||Account Details | confidence=Medium score=83
     public ILocator Satellite => _page.GetByRole(AriaRole.Button, new() { Name = "Satellite", Exact = true });

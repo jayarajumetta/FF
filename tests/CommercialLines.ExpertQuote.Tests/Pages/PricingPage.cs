@@ -1,55 +1,35 @@
 using InsuranceAutomation.Core;
+using Microsoft.Playwright;
 using InsuranceAutomation.CLEQ.Pages.Locators;
 
 namespace InsuranceAutomation.CLEQ.Pages;
 
 public sealed class PricingPage
 {
+    private readonly BrowserSession _browser;
     private readonly PricingLocators _locators;
-    private readonly ScenarioData _data;
     private readonly UiActions _ui;
 
-    public PricingPage(BrowserSession browser, ScenarioData data, UiActions ui)
+    public PricingPage(BrowserSession browser, UiActions ui)
     {
+        _browser = browser;
         _locators = new PricingLocators(browser.Page);
-        _data = data;
         _ui = ui;
     }
 
-    // Business step: I verify premium
-    public async Task VerifyPremiumAsync()
-    {
-        // CLEQSFPPricingVerifyPremium_3cf057Page.EQSFPPricing_0227_503012Async
-        _data.Set("Total Premium", await _ui.CaptureAsync(_locators.TotalPremium, "InnerText"));
-        // EQCommonNavigateToScreen_b3fe17Page.BufferScreenName_0228_503012Async
-        _data.Set("Screen", _data.Resolve("{{data:screen_11}}"));
-        // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0229_503012Async
-        if (!await _ui.ExistsAsync(_locators.ScreenHeading))
-        {
-            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
-        }
-    }
+    public Task VerifyDCTransactionTableRowCellExplicitNameNewPremiumAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.DCTransactionTableRowCellExplicitNameNewPremium, expected, property, new ControlIntent("Pricing", "DCTransactionTableRowCellExplicitNameNewPremium"));
 
-    // Business step: I verify premium on DC
-    public async Task VerifyPremiumOnDCAsync()
-    {
-        // EQCommonTransactVerifyPremiumOnDC_8d817aPage.VerifyNewPremiumOnDuckCreek_0837_d18a3eAsync
-        await _ui.VerifyAsync(_locators.DCTransactionTableRowCellExplicitNameNewPremium, _data.Resolve("{{data:expected_dc_transaction_table_row_cell_explicitname_new_premium_772}}"), "");
-        await _ui.VerifyAsync(_locators.DCTransactionTableRowCellExplicitNameStatus, _data.Resolve("{{data:expected_dc_transaction_table_row_cell_explicitname_status_773}}"), "");
-    }
+    public Task VerifyDCTransactionTableRowCellExplicitNameStatusAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.DCTransactionTableRowCellExplicitNameStatus, expected, property, new ControlIntent("Pricing", "DCTransactionTableRowCellExplicitNameStatus"));
 
-    // Business step: I verify premium
-    public async Task VerifyPremiumAsync2()
-    {
-        // CLEQSFPPricingVerifyPremium_3cf057Page.EQSFPPricing_0279_08f3f1Async
-        _data.Set("Total Premium", await _ui.CaptureAsync(_locators.TotalPremium, "InnerText"));
-        // EQCommonNavigateToScreen_b3fe17Page.BufferScreenName_0280_08f3f1Async
-        _data.Set("Screen", _data.Resolve("{{data:screen_14}}"));
-        // EQCommonNavigateToScreen_b3fe17Page.CheckIfOnCorrectScreen_0281_08f3f1Async
-        if (!await _ui.ExistsAsync(_locators.ScreenHeading))
-        {
-            await _ui.VerifyAsync(_locators.ScreenHeading, _data.Resolve("Absent"), "");
-        }
-    }
+    public Task VerifyScreenHeadingAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.ScreenHeading, expected, property, new ControlIntent("Pricing", "ScreenHeading"));
+
+    public Task<bool> IsScreenHeadingPresentAsync() =>
+        _ui.ExistsAsync(_locators.ScreenHeading);
+
+    public Task<string> CaptureTotalPremiumAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.TotalPremium, property, new ControlIntent("Pricing", "TotalPremium"));
 
 }

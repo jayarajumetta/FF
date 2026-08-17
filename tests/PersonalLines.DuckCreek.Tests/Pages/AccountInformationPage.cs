@@ -1,382 +1,83 @@
 using InsuranceAutomation.Core;
+using Microsoft.Playwright;
 using InsuranceAutomation.PLDC.Pages.Locators;
 
 namespace InsuranceAutomation.PLDC.Pages;
 
 public sealed class AccountInformationPage
 {
+    private readonly BrowserSession _browser;
     private readonly AccountInformationLocators _locators;
-    private readonly ScenarioData _data;
     private readonly UiActions _ui;
 
-    public AccountInformationPage(BrowserSession browser, ScenarioData data, UiActions ui)
+    public AccountInformationPage(BrowserSession browser, UiActions ui)
     {
+        _browser = browser;
         _locators = new AccountInformationLocators(browser.Page);
-        _data = data;
         _ui = ui;
     }
 
-    // Business step: I enter account details
-    public async Task EnterAccountDetailsAsync()
-    {
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0015_d06ed6Async
-        await _ui.WaitAsync(_locators.AccountInformation, "Exists");
-        await _ui.VerifyAsync(_locators.FirstNameAccountOwner, _data.Resolve("Exists"), "");
-        await _ui.FillAsync(_locators.DOB, _data.Get("AL_ClientData.DOB"));
-        await _ui.FillAsync(_locators.BestPhoneAccountOwner, _data.Resolve("{{data:txt_best_phone_account_owner_18}}"));
-        await _ui.FillAsync(_locators.EmailAccountOwner, _data.Resolve("{{data:txt_email_account_owner_19}}"));
-        await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
-        if (_data.Condition("'Marital Status' == \"Single\""))
-        {
-            await _ui.ClickAsync(_locators.Single);
-        }
-        if (_data.Condition("'Marital Status' == \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' == \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
-        await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("Apartment"));
-        await _ui.FillAsync(_locators.OwnerAddressCityNew, _data.Get("AL_ClientData.City"));
-        await _ui.SelectAsync(_locators.DrpdwnState, _data.Resolve(""));
-        await _ui.SelectAsync(_locators.StateName, _data.Resolve(""));
-        await _ui.FillAsync(_locators.OwnerAddressZip, _data.Get("AL_ClientData.ZIP"));
-        await _ui.WaitAsync(_locators.Satellite, "Visible");
-        // EQAccountDetails_467358Page.AccountDetailsMoveDownTheScreen_0016_d06ed6Async
-        await _ui.PressAsync(_locators.AccountDetailsNext, "POST:SHIFTTAB");
-        await _ui.PressAsync(_locators.AccountDetailsNext, "SHIFTTAB");
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0017_d06ed6Async
-        await _ui.SelectAsync(_locators.YesAtLeast90Days, _data.Resolve(""));
-        await _ui.WaitAsync(_locators.IsTheAccountAddressAlsoWhereTheClientResides, "Exists");
-        await _ui.SelectAsync(_locators.YesClientResides, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.AccountDetailsNext);
-    }
+    public Task PressAccountDetailsNextAsync(string key) =>
+        _ui.PressAsync(_locators.AccountDetailsNext, key, new ControlIntent("AccountInformation", "AccountDetailsNext"));
 
-    // Business step: I enter account details
-    public async Task EnterAccountDetailsAsync2()
-    {
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0015_8f9ff6Async
-        await _ui.WaitAsync(_locators.AccountInformation, "Exists");
-        await _ui.VerifyAsync(_locators.FirstNameAccountOwner, _data.Resolve("Exists"), "");
-        await _ui.FillAsync(_locators.DOB, _data.Get("AL_ClientData.DOB"));
-        await _ui.FillAsync(_locators.BestPhoneAccountOwner, _data.Resolve("{{data:txt_best_phone_account_owner_18}}"));
-        await _ui.FillAsync(_locators.EmailAccountOwner, _data.Resolve("{{data:txt_email_account_owner_19}}"));
-        await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
-        if (_data.Condition("'Marital Status' == \"Single\""))
-        {
-            await _ui.ClickAsync(_locators.Single);
-        }
-        if (_data.Condition("'Marital Status' == \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' == \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
-        await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("AL_ClientData.Apartment"));
-        await _ui.FillAsync(_locators.OwnerAddressCityNew, _data.Get("AL_ClientData.City"));
-        await _ui.SelectAsync(_locators.DrpdwnState, _data.Resolve(""));
-        await _ui.SelectAsync(_locators.StateName, _data.Resolve(""));
-        await _ui.FillAsync(_locators.OwnerAddressZip, _data.Get("AL_ClientData.ZIP"));
-        await _ui.WaitAsync(_locators.Satellite, "Visible");
-        // EQAccountDetails_467358Page.AccountDetailsMoveDownTheScreen_0016_8f9ff6Async
-        await _ui.PressAsync(_locators.AccountDetailsNext, "POST:SHIFTTAB");
-        await _ui.PressAsync(_locators.AccountDetailsNext, "SHIFTTAB");
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0017_8f9ff6Async
-        await _ui.SelectAsync(_locators.YesAtLeast90Days, _data.Resolve(""));
-        await _ui.WaitAsync(_locators.IsTheAccountAddressAlsoWhereTheClientResides, "Exists");
-        await _ui.SelectAsync(_locators.YesClientResides, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.AccountDetailsNext);
-        // TBoxSetBuffer_e51da1Page.TBoxSetEffectiveDateBuffer_0018_8f9ff6Async
-        _data.Set("EffectiveDate", _data.Resolve("{Date[{DATE}][][MM/dd/yyyy]}"));
-    }
+    public Task ClickAccountDetailsNextAsync() =>
+        _ui.ClickAsync(_locators.AccountDetailsNext, new ControlIntent("AccountInformation", "AccountDetailsNext"));
 
-    // Business step: I enter account details
-    public async Task EnterAccountDetailsAsync3()
-    {
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0015_b91c7dAsync
-        await _ui.WaitAsync(_locators.AccountInformation, "Exists");
-        await _ui.VerifyAsync(_locators.FirstNameAccountOwner, _data.Resolve("Exists"), "");
-        await _ui.FillAsync(_locators.DOB, _data.Get("AL_ClientData.DOB"));
-        await _ui.FillAsync(_locators.BestPhoneAccountOwner, _data.Resolve("{{data:txt_best_phone_account_owner_18}}"));
-        await _ui.FillAsync(_locators.EmailAccountOwner, _data.Resolve("{{data:txt_email_account_owner_19}}"));
-        await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
-        if (_data.Condition("'Marital Status' == \"Single\""))
-        {
-            await _ui.ClickAsync(_locators.Single);
-        }
-        if (_data.Condition("'Marital Status' == \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' == \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
-        await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("Apartment"));
-        await _ui.FillAsync(_locators.OwnerAddressCityNew, _data.Get("AL_ClientData.City"));
-        await _ui.SelectAsync(_locators.DrpdwnState, _data.Resolve(""));
-        await _ui.SelectAsync(_locators.StateName, _data.Resolve(""));
-        await _ui.FillAsync(_locators.OwnerAddressZip, _data.Get("AL_ClientData.ZIP"));
-        await _ui.WaitAsync(_locators.Satellite, "Visible");
-        // EQAccountDetails_467358Page.AccountDetailsMoveDownTheScreen_0016_b91c7dAsync
-        await _ui.PressAsync(_locators.AccountDetailsNext, "POST:SHIFTTAB");
-        await _ui.PressAsync(_locators.AccountDetailsNext, "SHIFTTAB");
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0017_b91c7dAsync
-        await _ui.SelectAsync(_locators.YesAtLeast90Days, _data.Resolve(""));
-        await _ui.WaitAsync(_locators.IsTheAccountAddressAlsoWhereTheClientResides, "Exists");
-        await _ui.SelectAsync(_locators.YesClientResides, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.AccountDetailsNext);
-    }
+    public Task WaitForAccountInformationAsync(string expected) =>
+        _ui.WaitAsync(_locators.AccountInformation, expected, new ControlIntent("AccountInformation", "AccountInformation"));
 
-    // Business step: I enter account details
-    public async Task EnterAccountDetailsAsync4()
-    {
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0015_8f5301Async
-        await _ui.WaitAsync(_locators.AccountInformation, "Exists");
-        await _ui.VerifyAsync(_locators.FirstNameAccountOwner, _data.Resolve("Exists"), "");
-        await _ui.FillAsync(_locators.DOB, _data.Get("DOB"));
-        await _ui.FillAsync(_locators.BestPhoneAccountOwner, _data.Resolve("{{data:txt_best_phone_account_owner_18}}"));
-        await _ui.FillAsync(_locators.EmailAccountOwner, _data.Resolve("{{data:txt_email_account_owner_19}}"));
-        await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
-        if (_data.Condition("'Marital Status' == \"Single\""))
-        {
-            await _ui.ClickAsync(_locators.Single);
-        }
-        if (_data.Condition("'Marital Status' == \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' == \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
-        await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("AL_ClientData.Apartment"));
-        await _ui.FillAsync(_locators.OwnerAddressCityNew, _data.Get("AL_ClientData.City"));
-        await _ui.SelectAsync(_locators.DrpdwnState, _data.Resolve(""));
-        await _ui.SelectAsync(_locators.StateName, _data.Resolve(""));
-        await _ui.FillAsync(_locators.OwnerAddressZip, _data.Get("AL_ClientData.ZIP"));
-        await _ui.WaitAsync(_locators.Satellite, "Visible");
-        // EQAccountDetails_467358Page.AccountDetailsMoveDownTheScreen_0016_8f5301Async
-        await _ui.PressAsync(_locators.AccountDetailsNext, "POST:SHIFTTAB");
-        await _ui.PressAsync(_locators.AccountDetailsNext, "SHIFTTAB");
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0017_8f5301Async
-        await _ui.SelectAsync(_locators.YesAtLeast90Days, _data.Resolve(""));
-        await _ui.WaitAsync(_locators.IsTheAccountAddressAlsoWhereTheClientResides, "Exists");
-        await _ui.SelectAsync(_locators.YesClientResides, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.AccountDetailsNext);
-        // TBoxSetBuffer_e51da1Page.TBoxSetEffectiveDateBuffer_0018_8f5301Async
-        _data.Set("EffectiveDate", _data.Resolve("{Date[08.08.2024][][MM/dd/yyyy]}"));
-    }
+    public Task EnterBestPhoneAccountOwnerAsync(string value) =>
+        _ui.FillAsync(_locators.BestPhoneAccountOwner, value, new ControlIntent("AccountInformation", "BestPhoneAccountOwner"));
 
-    // Business step: I enter account details
-    public async Task EnterAccountDetailsAsync5()
-    {
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0015_e2e0d7Async
-        await _ui.WaitAsync(_locators.AccountInformation, "Exists");
-        await _ui.VerifyAsync(_locators.FirstNameAccountOwner, _data.Resolve("Exists"), "");
-        await _ui.FillAsync(_locators.DOB, _data.Get("AL_ClientData.DOB"));
-        await _ui.FillAsync(_locators.BestPhoneAccountOwner, _data.Resolve("{{data:txt_best_phone_account_owner_18}}"));
-        await _ui.FillAsync(_locators.EmailAccountOwner, _data.Resolve("{{data:txt_email_account_owner_19}}"));
-        await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
-        if (_data.Condition("'Marital Status' == \"Single\""))
-        {
-            await _ui.ClickAsync(_locators.Single);
-        }
-        if (_data.Condition("'Marital Status' == \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' == \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
-        await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("AL_ClientData.Apartment"));
-        await _ui.FillAsync(_locators.OwnerAddressCityNew, _data.Get("AL_ClientData.City"));
-        await _ui.SelectAsync(_locators.DrpdwnState, _data.Resolve(""));
-        await _ui.SelectAsync(_locators.StateName, _data.Resolve(""));
-        await _ui.FillAsync(_locators.OwnerAddressZip, _data.Get("AL_ClientData.ZIP"));
-        await _ui.WaitAsync(_locators.Satellite, "Visible");
-        // EQAccountDetails_467358Page.AccountDetailsMoveDownTheScreen_0016_e2e0d7Async
-        await _ui.PressAsync(_locators.AccountDetailsNext, "POST:SHIFTTAB");
-        await _ui.PressAsync(_locators.AccountDetailsNext, "SHIFTTAB");
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0017_e2e0d7Async
-        await _ui.SelectAsync(_locators.YesAtLeast90Days, _data.Resolve(""));
-        await _ui.WaitAsync(_locators.IsTheAccountAddressAlsoWhereTheClientResides, "Exists");
-        await _ui.SelectAsync(_locators.YesClientResides, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.AccountDetailsNext);
-        // TBoxSetBuffer_e51da1Page.TBoxSetEffectiveDateBuffer_0018_e2e0d7Async
-        _data.Set("EffectiveDate", _data.Resolve("{Date[{DATE}][][MM/dd/yyyy]}"));
-    }
+    public Task EnterDOBAsync(string value) =>
+        _ui.FillAsync(_locators.DOB, value, new ControlIntent("AccountInformation", "DOB"));
 
-    // Business step: I enter account details
-    public async Task EnterAccountDetailsAsync6()
-    {
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0015_bafd4aAsync
-        await _ui.WaitAsync(_locators.AccountInformation, "Exists");
-        await _ui.VerifyAsync(_locators.FirstNameAccountOwner, _data.Resolve("Exists"), "");
-        await _ui.FillAsync(_locators.DOB, _data.Get("AL_ClientData.DOB"));
-        await _ui.FillAsync(_locators.BestPhoneAccountOwner, _data.Resolve("{{data:txt_best_phone_account_owner_18}}"));
-        await _ui.FillAsync(_locators.EmailAccountOwner, _data.Resolve("{{data:txt_email_account_owner_19}}"));
-        await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
-        if (_data.Condition("'Marital Status' == \"Single\""))
-        {
-            await _ui.ClickAsync(_locators.Single);
-        }
-        if (_data.Condition("'Marital Status' == \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' == \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
-        await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("AL_ClientData.Apartment"));
-        await _ui.FillAsync(_locators.OwnerAddressCityNew, _data.Get("AL_ClientData.City"));
-        await _ui.SelectAsync(_locators.DrpdwnState, _data.Resolve(""));
-        await _ui.SelectAsync(_locators.StateName, _data.Resolve(""));
-        await _ui.FillAsync(_locators.OwnerAddressZip, _data.Get("AL_ClientData.ZIP"));
-        await _ui.WaitAsync(_locators.Satellite, "Visible");
-        // EQAccountDetails_467358Page.AccountDetailsMoveDownTheScreen_0016_bafd4aAsync
-        await _ui.PressAsync(_locators.AccountDetailsNext, "POST:SHIFTTAB");
-        await _ui.PressAsync(_locators.AccountDetailsNext, "SHIFTTAB");
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0017_bafd4aAsync
-        await _ui.SelectAsync(_locators.YesAtLeast90Days, _data.Resolve(""));
-        await _ui.WaitAsync(_locators.IsTheAccountAddressAlsoWhereTheClientResides, "Exists");
-        await _ui.SelectAsync(_locators.YesClientResides, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.AccountDetailsNext);
-        // TBoxSetBuffer_e51da1Page.TBoxSetEffectiveDateBuffer_0018_bafd4aAsync
-        _data.Set("EffectiveDate", _data.Resolve("{Date[08.08.2024][][MM/dd/yyyy]}"));
-    }
+    public Task ClickDivorcedAsync() =>
+        _ui.ClickAsync(_locators.Divorced, new ControlIntent("AccountInformation", "Divorced"));
 
-    // Business step: I enter account details
-    public async Task EnterAccountDetailsAsync7()
-    {
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0015_8f4c8fAsync
-        await _ui.WaitAsync(_locators.AccountInformation, "Exists");
-        await _ui.VerifyAsync(_locators.FirstNameAccountOwner, _data.Resolve("Exists"), "");
-        await _ui.FillAsync(_locators.DOB, _data.Get("AL_ClientData.DOB"));
-        await _ui.FillAsync(_locators.BestPhoneAccountOwner, _data.Resolve("{{data:txt_best_phone_account_owner_18}}"));
-        await _ui.FillAsync(_locators.EmailAccountOwner, _data.Resolve("{{data:txt_email_account_owner_19}}"));
-        await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
-        if (_data.Condition("'Marital Status' == \"Single\""))
-        {
-            await _ui.ClickAsync(_locators.Single);
-        }
-        if (_data.Condition("'Marital Status' == \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' == \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
-        await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("AL_ClientData.Apartment"));
-        await _ui.FillAsync(_locators.OwnerAddressCityNew, _data.Get("AL_ClientData.City"));
-        await _ui.SelectAsync(_locators.DrpdwnState, _data.Resolve(""));
-        await _ui.SelectAsync(_locators.StateName, _data.Resolve(""));
-        await _ui.FillAsync(_locators.OwnerAddressZip, _data.Get("AL_ClientData.ZIP"));
-        await _ui.WaitAsync(_locators.Satellite, "Visible");
-        // EQAccountDetails_467358Page.AccountDetailsMoveDownTheScreen_0016_8f4c8fAsync
-        await _ui.PressAsync(_locators.AccountDetailsNext, "POST:SHIFTTAB");
-        await _ui.PressAsync(_locators.AccountDetailsNext, "SHIFTTAB");
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0017_8f4c8fAsync
-        await _ui.SelectAsync(_locators.YesAtLeast90Days, _data.Resolve(""));
-        await _ui.WaitAsync(_locators.IsTheAccountAddressAlsoWhereTheClientResides, "Exists");
-        await _ui.SelectAsync(_locators.YesClientResides, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.AccountDetailsNext);
-        // TBoxSetBuffer_e51da1Page.TBoxSetEffectiveDateBuffer_0018_8f4c8fAsync
-        _data.Set("EffectiveDate", _data.Resolve("{Date[08.08.2025][][MM/dd/yyyy]}"));
-    }
+    public Task SelectDrpdwnStateAsync(string value) =>
+        _ui.SelectAsync(_locators.DrpdwnState, value, new ControlIntent("AccountInformation", "DrpdwnState"));
 
-    // Business step: I enter account details
-    public async Task EnterAccountDetailsAsync8()
-    {
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0015_10f911Async
-        await _ui.WaitAsync(_locators.AccountInformation, "Exists");
-        await _ui.VerifyAsync(_locators.FirstNameAccountOwner, _data.Resolve("Exists"), "");
-        await _ui.FillAsync(_locators.DOB, _data.Get("AL_ClientData.DOB"));
-        await _ui.FillAsync(_locators.BestPhoneAccountOwner, _data.Resolve("{{data:txt_best_phone_account_owner_18}}"));
-        await _ui.FillAsync(_locators.EmailAccountOwner, _data.Resolve("{{data:txt_email_account_owner_19}}"));
-        await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
-        if (_data.Condition("'Marital Status' == \"Single\""))
-        {
-            await _ui.ClickAsync(_locators.Single);
-        }
-        if (_data.Condition("'Marital Status' == \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' == \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
-        await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("AL_ClientData.Apartment"));
-        await _ui.FillAsync(_locators.OwnerAddressCityNew, _data.Get("AL_ClientData.City"));
-        await _ui.SelectAsync(_locators.DrpdwnState, _data.Resolve(""));
-        await _ui.SelectAsync(_locators.StateName, _data.Resolve(""));
-        await _ui.FillAsync(_locators.OwnerAddressZip, _data.Get("AL_ClientData.ZIP"));
-        await _ui.WaitAsync(_locators.Satellite, "Visible");
-        // EQAccountDetails_467358Page.AccountDetailsMoveDownTheScreen_0016_10f911Async
-        await _ui.PressAsync(_locators.AccountDetailsNext, "POST:SHIFTTAB");
-        await _ui.PressAsync(_locators.AccountDetailsNext, "SHIFTTAB");
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0017_10f911Async
-        await _ui.SelectAsync(_locators.YesAtLeast90Days, _data.Resolve(""));
-        await _ui.WaitAsync(_locators.IsTheAccountAddressAlsoWhereTheClientResides, "Exists");
-        await _ui.SelectAsync(_locators.YesClientResides, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.AccountDetailsNext);
-        // TBoxSetBuffer_e51da1Page.TBoxSetEffectiveDateBuffer_0018_10f911Async
-        _data.Set("EffectiveDate", _data.Resolve("{Date[{DATE}][][MM/dd/yyyy]}"));
-    }
+    public Task EnterEmailAccountOwnerAsync(string value) =>
+        _ui.FillAsync(_locators.EmailAccountOwner, value, new ControlIntent("AccountInformation", "EmailAccountOwner"));
 
-    // Business step: I enter account details
-    public async Task EnterAccountDetailsAsync9()
-    {
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0015_0dc866Async
-        await _ui.WaitAsync(_locators.AccountInformation, "Exists");
-        await _ui.VerifyAsync(_locators.FirstNameAccountOwner, _data.Resolve("Exists"), "");
-        await _ui.FillAsync(_locators.DOB, _data.Get("AL_ClientData.DOB"));
-        await _ui.FillAsync(_locators.BestPhoneAccountOwner, _data.Resolve("{{data:txt_best_phone_account_owner_18}}"));
-        await _ui.FillAsync(_locators.EmailAccountOwner, _data.Resolve("{{data:txt_email_account_owner_19}}"));
-        await _ui.WaitAsync(_locators.MaritalStatus, "Exists");
-        if (_data.Condition("'Marital Status' == \"Single\""))
-        {
-            await _ui.ClickAsync(_locators.Single);
-        }
-        if (_data.Condition("'Marital Status' == \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' == \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        await _ui.FillAsync(_locators.EnterALocation, _data.Get("AL_ClientData.Street Address"));
-        await _ui.FillAsync(_locators.OwnerAddressLine2, _data.Get("Apartment"));
-        await _ui.FillAsync(_locators.OwnerAddressCityNew, _data.Get("AL_ClientData.City"));
-        await _ui.SelectAsync(_locators.DrpdwnState, _data.Resolve(""));
-        await _ui.SelectAsync(_locators.StateName, _data.Resolve(""));
-        await _ui.FillAsync(_locators.OwnerAddressZip, _data.Get("AL_ClientData.ZIP"));
-        await _ui.WaitAsync(_locators.Satellite, "Visible");
-        // EQAccountDetails_467358Page.AccountDetailsMoveDownTheScreen_0016_0dc866Async
-        await _ui.PressAsync(_locators.AccountDetailsNext, "POST:SHIFTTAB");
-        await _ui.PressAsync(_locators.AccountDetailsNext, "SHIFTTAB");
-        // EQAccountDetails_467358Page.AccountDetailsEnterNewAccountInformation_0017_0dc866Async
-        await _ui.SelectAsync(_locators.YesAtLeast90Days, _data.Resolve(""));
-        await _ui.WaitAsync(_locators.IsTheAccountAddressAlsoWhereTheClientResides, "Exists");
-        await _ui.SelectAsync(_locators.YesClientResides, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.AccountDetailsNext);
-    }
+    public Task EnterEnterALocationAsync(string value) =>
+        _ui.FillAsync(_locators.EnterALocation, value, new ControlIntent("AccountInformation", "EnterALocation"));
+
+    public Task VerifyFirstNameAccountOwnerAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.FirstNameAccountOwner, expected, property, new ControlIntent("AccountInformation", "FirstNameAccountOwner"));
+
+    public Task WaitForIsTheAccountAddressAlsoWhereTheClientResidesAsync(string expected) =>
+        _ui.WaitAsync(_locators.IsTheAccountAddressAlsoWhereTheClientResides, expected, new ControlIntent("AccountInformation", "IsTheAccountAddressAlsoWhereTheClientResides"));
+
+    public Task WaitForMaritalStatusAsync(string expected) =>
+        _ui.WaitAsync(_locators.MaritalStatus, expected, new ControlIntent("AccountInformation", "MaritalStatus"));
+
+    public Task SelectMarriedAsync(string value) =>
+        _ui.SelectAsync(_locators.Married, value, new ControlIntent("AccountInformation", "Married"));
+
+    public Task EnterOwnerAddressCityNewAsync(string value) =>
+        _ui.FillAsync(_locators.OwnerAddressCityNew, value, new ControlIntent("AccountInformation", "OwnerAddressCityNew"));
+
+    public Task EnterOwnerAddressLine2Async(string value) =>
+        _ui.FillAsync(_locators.OwnerAddressLine2, value, new ControlIntent("AccountInformation", "OwnerAddressLine2"));
+
+    public Task EnterOwnerAddressZipAsync(string value) =>
+        _ui.FillAsync(_locators.OwnerAddressZip, value, new ControlIntent("AccountInformation", "OwnerAddressZip"));
+
+    public Task WaitForSatelliteAsync(string expected) =>
+        _ui.WaitAsync(_locators.Satellite, expected, new ControlIntent("AccountInformation", "Satellite"));
+
+    public Task ClickSingleAsync() =>
+        _ui.ClickAsync(_locators.Single, new ControlIntent("AccountInformation", "Single"));
+
+    public Task SelectStateNameAsync(string value) =>
+        _ui.SelectAsync(_locators.StateName, value, new ControlIntent("AccountInformation", "StateName"));
+
+    public Task SelectYesAtLeast90DaysAsync(string value) =>
+        _ui.SelectAsync(_locators.YesAtLeast90Days, value, new ControlIntent("AccountInformation", "YesAtLeast90Days"));
+
+    public Task SelectYesClientResidesAsync(string value) =>
+        _ui.SelectAsync(_locators.YesClientResides, value, new ControlIntent("AccountInformation", "YesClientResides"));
 
 }

@@ -122,13 +122,13 @@ public sealed class NavigationLocators
     public ILocator AdditionalInterests => _page.GetByRole(AriaRole.Link, new() { Name = "Additional Interests", Exact = true });
 
     // Source modules: Client|Third Party Designee|Common | confidence=High score=125
-    public ILocator AdditionalOtherInterestInputAddress1 => _page.GetByRole(AriaRole.Textbox, new() { Name = "AdditionalOtherInterestInput.Address1", Exact = true });
+    public ILocator AdditionalOtherInterestInputAddress1 => _page.Locator("[name=\"AdditionalOtherInterestInput.Address1\"], [id=\"AdditionalOtherInterestInput.Address1\"]").First;
 
     // Source modules: Client|Third Party Designee|Common | confidence=High score=125
-    public ILocator AdditionalOtherInterestInputFirstName => _page.GetByRole(AriaRole.Textbox, new() { Name = "AdditionalOtherInterestInput.FirstName", Exact = true });
+    public ILocator AdditionalOtherInterestInputFirstName => _page.Locator("[name=\"AdditionalOtherInterestInput.FirstName\"], [id=\"AdditionalOtherInterestInput.FirstName\"]").First;
 
     // Source modules: Client|Third Party Designee|Common | confidence=High score=95
-    public ILocator AdditionalOtherInterestInputLastName => _page.GetByRole(AriaRole.Textbox, new() { Name = "AdditionalOtherInterestInput.LastName", Exact = true });
+    public ILocator AdditionalOtherInterestInputLastName => _page.Locator("[name=\"AdditionalOtherInterestInput.LastName\"], [id=\"AdditionalOtherInterestInput.LastName\"]").First;
 
     // Source modules: Additional Interests Schedule | confidence=High score=127
     public ILocator AddlInterests15174 => _page.GetByLabel("Addl Interests", new() { Exact = true });

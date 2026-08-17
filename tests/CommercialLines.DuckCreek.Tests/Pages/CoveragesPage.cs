@@ -1,248 +1,167 @@
 using InsuranceAutomation.Core;
+using Microsoft.Playwright;
 using InsuranceAutomation.CLDC.Pages.Locators;
 
 namespace InsuranceAutomation.CLDC.Pages;
 
 public sealed class CoveragesPage
 {
+    private readonly BrowserSession _browser;
     private readonly CoveragesLocators _locators;
-    private readonly ScenarioData _data;
     private readonly UiActions _ui;
 
-    public CoveragesPage(BrowserSession browser, ScenarioData data, UiActions ui)
+    public CoveragesPage(BrowserSession browser, UiActions ui)
     {
+        _browser = browser;
         _locators = new CoveragesLocators(browser.Page);
-        _data = data;
         _ui = ui;
     }
 
-    // Business step: I verify and Fill out \[FG0055\] Employment Practices Liability Insurance Coverage Endorsement
-    public async Task VerifyAndFillOutFG0055EmploymentPracticesLiabilityInsuranceCoverageEndorsementAsync()
-    {
-        // FG0055EPLITable_4c4b09Page.FG0055EPLITable_0088_515771Async
-        await _ui.WaitAsync(_locators.FG0055TableRowFG0055, "Exists");
-        await _ui.VerifyAsync(_locators.FG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsement, _data.Resolve("Exists"), "");
-        await _ui.ClickAsync(_locators.Detail);
-        // FG0055FG0062FG0063FG0069FG0071FG0072FG0074FG0077FG0078EmploymentPracticesLiabilityInsuranceCoverageEndorsement_bb7080Page.FG0055EmploymentPracticesLiabilityInsuranceCoverageEndorsement_0089_515771Async
-        await _ui.FillAsync(_locators.LimitDeductible, _data.Resolve("{{data:limit_deductible_148}}"));
-        await _ui.PressAsync(_locators.LimitDeductible, "Tab");
-        await _ui.FillAsync(_locators.HasTheInsuredEverHadAClaimForEmploymentPractices, _data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_149}}"));
-        await _ui.PressAsync(_locators.HasTheInsuredEverHadAClaimForEmploymentPractices, "Tab");
-        await _ui.FillAsync(_locators.TheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaint, _data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_150}}"));
-        await _ui.PressAsync(_locators.TheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaint, "Tab");
-        await _ui.FillAsync(_locators.ThirdParty, _data.Resolve("{{data:third_party_151}}"));
-        await _ui.PressAsync(_locators.ThirdParty, "Tab");
-        await _ui.ClickAsync(_locators.FG0055FG0062FG0063FG0069FG0071FG0072FG0074FG0077FG0078EmploymentPracticesLiabilityInsuranceCoverageEndorsementOK);
-    }
+    public Task ClickAddCoverageFormAsync() =>
+        _ui.ClickAsync(_locators.AddCoverageForm, new ControlIntent("Coverages", "AddCoverageForm"));
 
-    // Business step: I complete \[CG3132\] Limited Fungi or Bacteria Coverage
-    public async Task CompleteCG3132LimitedFungiOrBacteriaCoverageAsync()
-    {
-        // GLNavigationLinks_6f2588Page.GLNavigationLinks_0093_d65717Async
-        await _ui.ClickAsync(_locators.Endorsements7572E);
-        // EndorsementsMain_a2a05aPage.EndorsementsMain_0094_d65717Async
-        await _ui.WaitAsync(_locators.Endorsements9626E, "Exists");
-        await _ui.ClickAsync(_locators.AddEndorsement);
-        // CG3132LimitedFungiOrBacteriaCoverage_262060Page.CG3132LimitedFungiOrBacteriaCoverage_0095_d65717Async
-        if (_data.Condition("'Endorsement Type' != NULL"))
-        {
-            await _ui.FillAsync(_locators.EndorsementType, _data.Resolve("{{data:endorsement_type_158}}"));
-            await _ui.PressAsync(_locators.EndorsementType, "Tab");
-            await _ui.PressAsync(_locators.EndorsementType, "Tab");
-        }
-        await _ui.ClickAsync(_locators.CG3132LimitedFungiOrBacteriaCoverageOK);
-    }
+    public Task ClickAddEndorsementAsync() =>
+        _ui.ClickAsync(_locators.AddEndorsement, new ControlIntent("Coverages", "AddEndorsement"));
 
-    // Business step: I select CPP Coverage \- GL
-    public async Task SelectCPPCoverageGLAsync()
-    {
-        // PolicyInfoCPPSpecificFields_d2689aPage.PolicyInfoCPPSpecificFieldsSelectIMCheckbox_0092_d344b2Async
-        if (_data.Condition("(State == \"MD\")||(State == \"NJ\")||(State == \"NY\")||(State == \"VT\")"))
-        {
-            await _ui.FillAsync(_locators.EstimatedPremium, _data.Resolve(""));
-        }
-        if (_data.Condition("'CPP LOB' == \"GL\""))
-        {
-            await _ui.ClickAsync(_locators.GL);
-        }
-    }
+    public Task EnterAwayFromPremisesDescAsync(string value) =>
+        _ui.FillAsync(_locators.AwayFromPremisesDesc, value, new ControlIntent("Coverages", "AwayFromPremisesDesc"));
 
-    // Business step: I select CPP Coverage \- CP
-    public async Task SelectCPPCoverageCPAsync()
-    {
-        // PolicyInfoCPPSpecificFields_d2689aPage.PolicyInfoCPPSpecificFieldsSelectCPCheckbox_0093_d344b2Async
-        if (_data.Condition("'CPP LOB' == \"CP\""))
-        {
-            await _ui.ClickAsync(_locators.CP);
-        }
-        // PolicyInfoRequiredAndOptionalFields_f7216aPage.DESCRIPTIONBUFFER_0094_d344b2Async
-        await _ui.WaitAsync(_locators.PolicyInfoHeader, "Visible");
-        await _ui.WaitAsync(_locators.DescriptionOfSpecifiedOperation, "Visible");
-        await _ui.PressAsync(_locators.DescriptionOfSpecifiedOperation, "PRE:TAB");
-        await _ui.PressAsync(_locators.DescriptionOfSpecifiedOperation, "Tab");
-        await _ui.FillAsync(_locators.DescriptionOfSpecifiedOperation, _data.Resolve("AZ CPP Basic {NMONTH}.{NDAY}.{NYEAR} {Time}"));
-        await _ui.PressAsync(_locators.DescriptionOfSpecifiedOperation, "Tab");
-        await _ui.VerifyAsync(_locators.DescriptionOfSpecifiedOperation, _data.Resolve("{XB[QuoteDescription]}"), "value");
-    }
+    public Task PressAwayFromPremisesDescAsync(string key) =>
+        _ui.PressAsync(_locators.AwayFromPremisesDesc, key, new ControlIntent("Coverages", "AwayFromPremisesDesc"));
 
-    // Business step: I select CPP Coverage \- GL
-    public async Task SelectCPPCoverageGLAsync2()
-    {
-        // PolicyInfoCPPSpecificFields_d2689aPage.PolicyInfoCPPSpecificFieldsSelectIMCheckbox_0096_aad19bAsync
-        if (_data.Condition("(State == \"MD\")||(State == \"NJ\")||(State == \"NY\")||(State == \"VT\")"))
-        {
-            await _ui.FillAsync(_locators.EstimatedPremium, _data.Resolve(""));
-        }
-        if (_data.Condition("'CPP LOB' == \"GL\""))
-        {
-            await _ui.ClickAsync(_locators.GL);
-        }
-    }
+    public Task EnterAwayFromPremisesLmtAsync(string value) =>
+        _ui.FillAsync(_locators.AwayFromPremisesLmt, value, new ControlIntent("Coverages", "AwayFromPremisesLmt"));
 
-    // Business step: I select CPP Coverage \- CP
-    public async Task SelectCPPCoverageCPAsync2()
-    {
-        // PolicyInfoCPPSpecificFields_d2689aPage.PolicyInfoCPPSpecificFieldsSelectCPCheckbox_0097_aad19bAsync
-        if (_data.Condition("'CPP LOB' == \"CP\""))
-        {
-            await _ui.ClickAsync(_locators.CP);
-        }
-    }
+    public Task PressAwayFromPremisesLmtAsync(string key) =>
+        _ui.PressAsync(_locators.AwayFromPremisesLmt, key, new ControlIntent("Coverages", "AwayFromPremisesLmt"));
 
-    // Business step: I select CPP Coverage \- IM
-    public async Task SelectCPPCoverageIMAsync()
-    {
-        // PolicyInfoCPPSpecificFields_d2689aPage.PolicyInfoCPPSpecificFieldsSelectIMCheckbox_0098_aad19bAsync
-        if (_data.Condition("'CPP LOB' == \"IM\""))
-        {
-            await _ui.ClickAsync(_locators.IM);
-        }
-    }
+    public Task ClickCG3132LimitedFungiOrBacteriaCoverageOKAsync() =>
+        _ui.ClickAsync(_locators.CG3132LimitedFungiOrBacteriaCoverageOK, new ControlIntent("Coverages", "CG3132LimitedFungiOrBacteriaCoverageOK"));
 
-    // Business step: I complete CP Fields for policy coverage
-    public async Task CompleteCPFieldsForPolicyCoverageAsync()
-    {
-        // PolicyCovg_0dff37Page.FillOutCPPolicyCovgFields_0104_aad19bAsync
-        await _ui.FillAsync(_locators.PolicyCoverage, _data.Resolve("{{data:policy_coverage_132}}"));
-        await _ui.PressAsync(_locators.PolicyCoverage, "Tab");
-        if (_data.Condition("'Property Extension Endorsements' != NULL"))
-        {
-            await _ui.FillAsync(_locators.PropertyExtensionEndorsements, _data.Resolve("{{data:property_extension_endorsements_133}}"));
-            await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "CLICK");
-            await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "Enter");
-            await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "Tab");
-        }
-        if (_data.Condition("'Utility Services' != NULL"))
-        {
-            await _ui.FillAsync(_locators.UtilityServices, _data.Resolve("{{data:utility_services_134}}"));
-            await _ui.PressAsync(_locators.UtilityServices, "Tab");
-        }
-        if (_data.Condition("Fungus != NULL"))
-        {
-            await _ui.FillAsync(_locators.Fungus, _data.Resolve("{{data:fungus_135}}"));
-            await _ui.PressAsync(_locators.Fungus, "Tab");
-        }
-    }
+    public Task ClickCPAsync() =>
+        _ui.ClickAsync(_locators.CP, new ControlIntent("Coverages", "CP"));
 
-    // Business step: I verify and Fill out \[FG0055\] Employment Practices Liability Insurance Coverage Endorsement
-    public async Task VerifyAndFillOutFG0055EmploymentPracticesLiabilityInsuranceCoverageEndorsementAsync2()
-    {
-        // FG0055EPLITable_4c4b09Page.FG0055EPLITable_0164_aad19bAsync
-        await _ui.WaitAsync(_locators.FG0055TableRowFG0055, "Exists");
-        await _ui.VerifyAsync(_locators.FG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsement, _data.Resolve("Exists"), "");
-        await _ui.ClickAsync(_locators.Detail);
-        // FG0055FG0062FG0063FG0069FG0071FG0072FG0074FG0077FG0078EmploymentPracticesLiabilityInsuranceCoverageEndorsement_bb7080Page.FG0055EmploymentPracticesLiabilityInsuranceCoverageEndorsement_0165_aad19bAsync
-        await _ui.FillAsync(_locators.LimitDeductible, _data.Resolve("{{data:limit_deductible_308}}"));
-        await _ui.PressAsync(_locators.LimitDeductible, "Tab");
-        await _ui.FillAsync(_locators.HasTheInsuredEverHadAClaimForEmploymentPractices, _data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_309}}"));
-        await _ui.PressAsync(_locators.HasTheInsuredEverHadAClaimForEmploymentPractices, "Tab");
-        await _ui.FillAsync(_locators.TheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaint, _data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_310}}"));
-        await _ui.PressAsync(_locators.TheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaint, "Tab");
-        await _ui.FillAsync(_locators.ThirdParty, _data.Resolve("{{data:third_party_311}}"));
-        await _ui.PressAsync(_locators.ThirdParty, "Tab");
-        await _ui.ClickAsync(_locators.FG0055FG0062FG0063FG0069FG0071FG0072FG0074FG0077FG0078EmploymentPracticesLiabilityInsuranceCoverageEndorsementOK);
-    }
+    public Task EnterCoinsuranceAsync(string value) =>
+        _ui.FillAsync(_locators.Coinsurance, value, new ControlIntent("Coverages", "Coinsurance"));
 
-    // Business step: I add Accounts Receivable Coverage
-    public async Task AddAccountsReceivableCoverageAsync()
-    {
-        // PolicyCovgMain_ddd7eePage.PolicyCovgMain_0189_aad19bAsync
-        await _ui.WaitAsync(_locators.PolicyCovgF9E58, "Exists");
-        await _ui.FillAsync(_locators.CoverageFormToBeAdded, _data.Resolve("{{data:coverage_form_to_be_added_356}}"));
-        await _ui.PressAsync(_locators.CoverageFormToBeAdded, "Tab");
-        await _ui.PressAsync(_locators.CoverageFormToBeAdded, "CLICK");
-        await _ui.PressAsync(_locators.CoverageFormToBeAdded, "Enter");
-        await _ui.PressAsync(_locators.CoverageFormToBeAdded, "Tab");
-        await _ui.ClickAsync(_locators.AddCoverageForm);
-        // PolicyCovgAccountsReceivable_0eadcePage.PolicyCovgAccountsReceivable_0190_aad19bAsync
-        await _ui.FillAsync(_locators.Description, _data.Resolve("{{data:description_358}}"));
-        await _ui.PressAsync(_locators.Description, "Tab");
-        await _ui.PressAsync(_locators.Description, "CLICK");
-        await _ui.PressAsync(_locators.Description, "Enter");
-        await _ui.FillAsync(_locators.Coinsurance, _data.Resolve("{{data:coinsurance_359}}"));
-        await _ui.PressAsync(_locators.Coinsurance, "Tab");
-        await _ui.PressAsync(_locators.Coinsurance, "CLICK");
-        await _ui.FillAsync(_locators.AwayFromPremisesLmt, _data.Resolve("{{data:away_from_premises_lmt_360}}"));
-        await _ui.PressAsync(_locators.AwayFromPremisesLmt, "Tab");
-        await _ui.PressAsync(_locators.AwayFromPremisesLmt, "CLICK");
-        await _ui.FillAsync(_locators.AwayFromPremisesDesc, _data.Resolve("{{data:away_from_premises_desc_361}}"));
-        await _ui.PressAsync(_locators.AwayFromPremisesDesc, "Tab");
-        await _ui.PressAsync(_locators.AwayFromPremisesDesc, "CLICK");
-        await _ui.ClickAsync(_locators.PolicyCovgAccountsReceivableOK);
-    }
+    public Task PressCoinsuranceAsync(string key) =>
+        _ui.PressAsync(_locators.Coinsurance, key, new ControlIntent("Coverages", "Coinsurance"));
 
-    // Business step: I complete CP Fields for policy coverage
-    public async Task CompleteCPFieldsForPolicyCoverageAsync2()
-    {
-        // PolicyCovg_0dff37Page.FillOutCPPolicyCovgFields_0103_677267Async
-        await _ui.FillAsync(_locators.PolicyCoverage, _data.Resolve("{{data:policy_coverage_148}}"));
-        await _ui.PressAsync(_locators.PolicyCoverage, "Tab");
-        if (_data.Condition("'Property Extension Endorsements' != NULL"))
-        {
-            await _ui.FillAsync(_locators.PropertyExtensionEndorsements, _data.Resolve("{{data:property_extension_endorsements_149}}"));
-            await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "CLICK");
-            await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "Enter");
-            await _ui.PressAsync(_locators.PropertyExtensionEndorsements, "Tab");
-        }
-        if (_data.Condition("'Utility Services' != NULL"))
-        {
-            await _ui.FillAsync(_locators.UtilityServices, _data.Resolve("{{data:utility_services_150}}"));
-            await _ui.PressAsync(_locators.UtilityServices, "Tab");
-        }
-        if (_data.Condition("Fungus != NULL"))
-        {
-            await _ui.FillAsync(_locators.Fungus, _data.Resolve(""));
-        }
-    }
+    public Task EnterCoverageFormToBeAddedAsync(string value) =>
+        _ui.FillAsync(_locators.CoverageFormToBeAdded, value, new ControlIntent("Coverages", "CoverageFormToBeAdded"));
 
-    // Business step: I add Accounts Receivable Coverage
-    public async Task AddAccountsReceivableCoverageAsync2()
-    {
-        // IMNavigationLinks_7abd8aPage.IMNavigationLinks_0099_a8e5f5Async
-        await _ui.ClickAsync(_locators.PolicyCovgED95C);
-        // PolicyCovgMain_ddd7eePage.PolicyCovgMain_0100_a8e5f5Async
-        await _ui.WaitAsync(_locators.PolicyCovgF9E58, "Exists");
-        await _ui.FillAsync(_locators.CoverageFormToBeAdded, _data.Resolve("{{data:coverage_form_to_be_added_134}}"));
-        await _ui.PressAsync(_locators.CoverageFormToBeAdded, "Tab");
-        await _ui.PressAsync(_locators.CoverageFormToBeAdded, "CLICK");
-        await _ui.PressAsync(_locators.CoverageFormToBeAdded, "Enter");
-        await _ui.PressAsync(_locators.CoverageFormToBeAdded, "Tab");
-        await _ui.ClickAsync(_locators.AddCoverageForm);
-        // PolicyCovgAccountsReceivable_0eadcePage.PolicyCovgAccountsReceivable_0101_a8e5f5Async
-        await _ui.FillAsync(_locators.Description, _data.Resolve("{{data:description_136}}"));
-        await _ui.PressAsync(_locators.Description, "Tab");
-        await _ui.PressAsync(_locators.Description, "CLICK");
-        await _ui.PressAsync(_locators.Description, "Enter");
-        await _ui.FillAsync(_locators.Coinsurance, _data.Resolve("{{data:coinsurance_137}}"));
-        await _ui.PressAsync(_locators.Coinsurance, "Tab");
-        await _ui.PressAsync(_locators.Coinsurance, "CLICK");
-        await _ui.FillAsync(_locators.AwayFromPremisesLmt, _data.Resolve("{{data:away_from_premises_lmt_138}}"));
-        await _ui.PressAsync(_locators.AwayFromPremisesLmt, "Tab");
-        await _ui.PressAsync(_locators.AwayFromPremisesLmt, "CLICK");
-        await _ui.FillAsync(_locators.AwayFromPremisesDesc, _data.Resolve("{{data:away_from_premises_desc_139}}"));
-        await _ui.PressAsync(_locators.AwayFromPremisesDesc, "Tab");
-        await _ui.PressAsync(_locators.AwayFromPremisesDesc, "CLICK");
-        await _ui.ClickAsync(_locators.PolicyCovgAccountsReceivableOK);
-    }
+    public Task PressCoverageFormToBeAddedAsync(string key) =>
+        _ui.PressAsync(_locators.CoverageFormToBeAdded, key, new ControlIntent("Coverages", "CoverageFormToBeAdded"));
+
+    public Task EnterDescriptionAsync(string value) =>
+        _ui.FillAsync(_locators.Description, value, new ControlIntent("Coverages", "Description"));
+
+    public Task PressDescriptionAsync(string key) =>
+        _ui.PressAsync(_locators.Description, key, new ControlIntent("Coverages", "Description"));
+
+    public Task WaitForDescriptionOfSpecifiedOperationAsync(string expected) =>
+        _ui.WaitAsync(_locators.DescriptionOfSpecifiedOperation, expected, new ControlIntent("Coverages", "DescriptionOfSpecifiedOperation"));
+
+    public Task VerifyDescriptionOfSpecifiedOperationAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.DescriptionOfSpecifiedOperation, expected, property, new ControlIntent("Coverages", "DescriptionOfSpecifiedOperation"));
+
+    public Task EnterDescriptionOfSpecifiedOperationAsync(string value) =>
+        _ui.FillAsync(_locators.DescriptionOfSpecifiedOperation, value, new ControlIntent("Coverages", "DescriptionOfSpecifiedOperation"));
+
+    public Task PressDescriptionOfSpecifiedOperationAsync(string key) =>
+        _ui.PressAsync(_locators.DescriptionOfSpecifiedOperation, key, new ControlIntent("Coverages", "DescriptionOfSpecifiedOperation"));
+
+    public Task ClickDetailAsync() =>
+        _ui.ClickAsync(_locators.Detail, new ControlIntent("Coverages", "Detail"));
+
+    public Task EnterEndorsementTypeAsync(string value) =>
+        _ui.FillAsync(_locators.EndorsementType, value, new ControlIntent("Coverages", "EndorsementType"));
+
+    public Task PressEndorsementTypeAsync(string key) =>
+        _ui.PressAsync(_locators.EndorsementType, key, new ControlIntent("Coverages", "EndorsementType"));
+
+    public Task ClickEndorsements7572EAsync() =>
+        _ui.ClickAsync(_locators.Endorsements7572E, new ControlIntent("Coverages", "Endorsements7572E"));
+
+    public Task WaitForEndorsements9626EAsync(string expected) =>
+        _ui.WaitAsync(_locators.Endorsements9626E, expected, new ControlIntent("Coverages", "Endorsements9626E"));
+
+    public Task EnterEstimatedPremiumAsync(string value) =>
+        _ui.FillAsync(_locators.EstimatedPremium, value, new ControlIntent("Coverages", "EstimatedPremium"));
+
+    public Task ClickFG0055FG0062FG0063FG0069FG0071FG0072FG0074FG0077FG0078EmploymentPracticesLiabilityInsuranceCoverageEndorsementOKAsync() =>
+        _ui.ClickAsync(_locators.FG0055FG0062FG0063FG0069FG0071FG0072FG0074FG0077FG0078EmploymentPracticesLiabilityInsuranceCoverageEndorsementOK, new ControlIntent("Coverages", "FG0055FG0062FG0063FG0069FG0071FG0072FG0074FG0077FG0078EmploymentPracticesLiabilityInsuranceCoverageEndorsementOK"));
+
+    public Task VerifyFG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.FG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsement, expected, property, new ControlIntent("Coverages", "FG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsement"));
+
+    public Task WaitForFG0055TableRowFG0055Async(string expected) =>
+        _ui.WaitAsync(_locators.FG0055TableRowFG0055, expected, new ControlIntent("Coverages", "FG0055TableRowFG0055"));
+
+    public Task EnterFungusAsync(string value) =>
+        _ui.FillAsync(_locators.Fungus, value, new ControlIntent("Coverages", "Fungus"));
+
+    public Task PressFungusAsync(string key) =>
+        _ui.PressAsync(_locators.Fungus, key, new ControlIntent("Coverages", "Fungus"));
+
+    public Task ClickGLAsync() =>
+        _ui.ClickAsync(_locators.GL, new ControlIntent("Coverages", "GL"));
+
+    public Task EnterHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(string value) =>
+        _ui.FillAsync(_locators.HasTheInsuredEverHadAClaimForEmploymentPractices, value, new ControlIntent("Coverages", "HasTheInsuredEverHadAClaimForEmploymentPractices"));
+
+    public Task PressHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(string key) =>
+        _ui.PressAsync(_locators.HasTheInsuredEverHadAClaimForEmploymentPractices, key, new ControlIntent("Coverages", "HasTheInsuredEverHadAClaimForEmploymentPractices"));
+
+    public Task ClickIMAsync() =>
+        _ui.ClickAsync(_locators.IM, new ControlIntent("Coverages", "IM"));
+
+    public Task EnterLimitDeductibleAsync(string value) =>
+        _ui.FillAsync(_locators.LimitDeductible, value, new ControlIntent("Coverages", "LimitDeductible"));
+
+    public Task PressLimitDeductibleAsync(string key) =>
+        _ui.PressAsync(_locators.LimitDeductible, key, new ControlIntent("Coverages", "LimitDeductible"));
+
+    public Task EnterPolicyCoverageAsync(string value) =>
+        _ui.FillAsync(_locators.PolicyCoverage, value, new ControlIntent("Coverages", "PolicyCoverage"));
+
+    public Task PressPolicyCoverageAsync(string key) =>
+        _ui.PressAsync(_locators.PolicyCoverage, key, new ControlIntent("Coverages", "PolicyCoverage"));
+
+    public Task ClickPolicyCovgAccountsReceivableOKAsync() =>
+        _ui.ClickAsync(_locators.PolicyCovgAccountsReceivableOK, new ControlIntent("Coverages", "PolicyCovgAccountsReceivableOK"));
+
+    public Task ClickPolicyCovgED95CAsync() =>
+        _ui.ClickAsync(_locators.PolicyCovgED95C, new ControlIntent("Coverages", "PolicyCovgED95C"));
+
+    public Task WaitForPolicyCovgF9E58Async(string expected) =>
+        _ui.WaitAsync(_locators.PolicyCovgF9E58, expected, new ControlIntent("Coverages", "PolicyCovgF9E58"));
+
+    public Task WaitForPolicyInfoHeaderAsync(string expected) =>
+        _ui.WaitAsync(_locators.PolicyInfoHeader, expected, new ControlIntent("Coverages", "PolicyInfoHeader"));
+
+    public Task EnterPropertyExtensionEndorsementsAsync(string value) =>
+        _ui.FillAsync(_locators.PropertyExtensionEndorsements, value, new ControlIntent("Coverages", "PropertyExtensionEndorsements"));
+
+    public Task PressPropertyExtensionEndorsementsAsync(string key) =>
+        _ui.PressAsync(_locators.PropertyExtensionEndorsements, key, new ControlIntent("Coverages", "PropertyExtensionEndorsements"));
+
+    public Task EnterTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(string value) =>
+        _ui.FillAsync(_locators.TheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaint, value, new ControlIntent("Coverages", "TheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaint"));
+
+    public Task PressTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(string key) =>
+        _ui.PressAsync(_locators.TheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaint, key, new ControlIntent("Coverages", "TheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaint"));
+
+    public Task EnterThirdPartyAsync(string value) =>
+        _ui.FillAsync(_locators.ThirdParty, value, new ControlIntent("Coverages", "ThirdParty"));
+
+    public Task PressThirdPartyAsync(string key) =>
+        _ui.PressAsync(_locators.ThirdParty, key, new ControlIntent("Coverages", "ThirdParty"));
+
+    public Task EnterUtilityServicesAsync(string value) =>
+        _ui.FillAsync(_locators.UtilityServices, value, new ControlIntent("Coverages", "UtilityServices"));
+
+    public Task PressUtilityServicesAsync(string key) =>
+        _ui.PressAsync(_locators.UtilityServices, key, new ControlIntent("Coverages", "UtilityServices"));
 
 }

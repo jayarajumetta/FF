@@ -44,7 +44,7 @@ public sealed class VehiclesLocators
     public ILocator AnnualMileage12A49 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Annual Mileage", Exact = true });
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=High score=127
-    public ILocator AnnualMileage51344 => _page.GetByRole(AriaRole.Textbox, new() { Name = "txt_annual_mileage", Exact = true });
+    public ILocator AnnualMileage51344 => _page.Locator("[name=\"txt_annual_mileage\"], [id=\"txt_annual_mileage\"]").First;
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=Medium score=83
     public ILocator AntiTheftYes => _page.GetByRole(AriaRole.Button, new() { Name = "Anti_theft_Yes", Exact = true });
@@ -104,7 +104,7 @@ public sealed class VehiclesLocators
     public ILocator CycleAccessoriesV4 => _page.GetByRole(AriaRole.Button, new() { Name = "Cycle Accessories_V4", Exact = true });
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=High score=97
-    public ILocator CycleNonDriverComboBox => _page.GetByRole(AriaRole.Combobox, new() { Name = "CycleNonDriver_ComboBox", Exact = true });
+    public ILocator CycleNonDriverComboBox => _page.Locator("[name=\"CycleNonDriver_ComboBox\"], [id=\"CycleNonDriver_ComboBox\"]").First;
 
     // Source modules: EQ || CyclePreFillSelection | confidence=Medium score=113
     public ILocator CyclePreFillSelectionNext => _page.GetByRole(AriaRole.Button, new() { Name = "Next", Exact = true });
@@ -220,7 +220,7 @@ public sealed class VehiclesLocators
     public ILocator N1Day => _page.GetByRole(AriaRole.Button, new() { Name = "1_Day", Exact = true });
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=High score=127
-    public ILocator NYFFCICTotalAnnualMiles => _page.GetByRole(AriaRole.Textbox, new() { Name = "NY_FFCIC_total_annual_miles", Exact = true });
+    public ILocator NYFFCICTotalAnnualMiles => _page.Locator("[name=\"NY_FFCIC_total_annual_miles\"], [id=\"NY_FFCIC_total_annual_miles\"]").First;
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=High score=130
     public ILocator NamedInsured => _page.GetByTestId("fields.line.driver.rows[0].driverInput$namedInsuredType.value-chip-wrapper");
@@ -262,7 +262,7 @@ public sealed class VehiclesLocators
     public ILocator NonDriverReason => _page.GetByLabel("Non-Driver Reason", new() { Exact = true });
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=High score=97
-    public ILocator NonWorkAnnualMiles => _page.GetByRole(AriaRole.Textbox, new() { Name = "Non_work_annual_miles", Exact = true });
+    public ILocator NonWorkAnnualMiles => _page.Locator("[name=\"Non_work_annual_miles\"], [id=\"Non_work_annual_miles\"]").First;
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=High score=100
     public ILocator NotANamedInsured => _page.GetByTestId("fields.line.driver.rows[0].driverInput$namedInsuredType.value-chip-wrapper");
@@ -271,7 +271,7 @@ public sealed class VehiclesLocators
     public ILocator NotPleasureUse => _page.GetByRole(AriaRole.Button, new() { Name = "Not Pleasure Use", Exact = true });
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=High score=127
-    public ILocator Odometer3843F => _page.GetByRole(AriaRole.Textbox, new() { Name = "txt_odometer", Exact = true });
+    public ILocator Odometer3843F => _page.Locator("[name=\"txt_odometer\"], [id=\"txt_odometer\"]").First;
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=High score=127
     public ILocator OdometerD648F => _page.GetByRole(AriaRole.Textbox, new() { Name = "Odometer", Exact = true });
@@ -329,10 +329,10 @@ public sealed class VehiclesLocators
     public ILocator PriorCarrierName => _page.GetByRole(AriaRole.Textbox, new() { Name = "Prior Carrier Name", Exact = true });
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=High score=127
-    public ILocator PurchaseDate736F4 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Purchase_date", Exact = true });
+    public ILocator PurchaseDate736F4 => _page.Locator("[name=\"Purchase_date\"], [id=\"Purchase_date\"]").First;
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=High score=127
-    public ILocator PurchaseDateBB8AF => _page.GetByRole(AriaRole.Textbox, new() { Name = "txt_purchase_date", Exact = true });
+    public ILocator PurchaseDateBB8AF => _page.Locator("[name=\"txt_purchase_date\"], [id=\"txt_purchase_date\"]").First;
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=High score=130
     public ILocator Related => _page.GetByTestId("fields.line.driver.rows[0].driverInput$operatorStatus.value-chip-wrapper");
@@ -427,7 +427,7 @@ public sealed class VehiclesLocators
     public ILocator TheftDeductibleV4 => _page.GetByRole(AriaRole.Button, new() { Name = "Theft Deductible_V4", Exact = true });
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=High score=127
-    public ILocator TotalAnnualMileage => _page.GetByRole(AriaRole.Textbox, new() { Name = "Total_annual_mileage", Exact = true });
+    public ILocator TotalAnnualMileage => _page.Locator("[name=\"Total_annual_mileage\"], [id=\"Total_annual_mileage\"]").First;
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=Medium score=113
     // Dynamically set by buffer UIMPD Coverage_V1 in RTB Auto | 10.3 EQ | Auto_AddlCov Vehicle Coverages
@@ -493,7 +493,7 @@ public sealed class VehiclesLocators
     public ILocator UseCAMoreOptions => _page.GetByRole(AriaRole.Button, new() { Name = "Use_CA_More_Options", Exact = true });
 
     // Source modules: EQ||Vehicle Auto Vin_1 | confidence=High score=127
-    public ILocator VIN06D01 => _page.GetByRole(AriaRole.Textbox, new() { Name = "txt_VIN", Exact = true });
+    public ILocator VIN06D01 => _page.Locator("[name=\"txt_VIN\"], [id=\"txt_VIN\"]").First;
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=High score=127
     public ILocator VIN0A17C => _page.GetByRole(AriaRole.Textbox, new() { Name = "VIN", Exact = true });
@@ -529,7 +529,7 @@ public sealed class VehiclesLocators
     public ILocator WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove => _page.GetByLabel("Was this client insured with American National immediately prior to the carrier listed above?", new() { Exact = true });
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=High score=97
-    public ILocator WorkMilesDay => _page.GetByRole(AriaRole.Textbox, new() { Name = "Work_miles_day", Exact = true });
+    public ILocator WorkMilesDay => _page.Locator("[name=\"Work_miles_day\"], [id=\"Work_miles_day\"]").First;
 
     // Source modules: EQ || 1st Cycle | confidence=Medium score=113
     public ILocator Yes => _page.GetByRole(AriaRole.Button, new() { Name = "Yes", Exact = true });

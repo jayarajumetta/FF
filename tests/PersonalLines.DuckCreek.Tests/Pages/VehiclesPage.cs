@@ -1,4601 +1,746 @@
 using InsuranceAutomation.Core;
+using Microsoft.Playwright;
 using InsuranceAutomation.PLDC.Pages.Locators;
 
 namespace InsuranceAutomation.PLDC.Pages;
 
 public sealed class VehiclesPage
 {
+    private readonly BrowserSession _browser;
     private readonly VehiclesLocators _locators;
-    private readonly ScenarioData _data;
     private readonly UiActions _ui;
 
-    public VehiclesPage(BrowserSession browser, ScenarioData data, UiActions ui)
+    public VehiclesPage(BrowserSession browser, UiActions ui)
     {
+        _browser = browser;
         _locators = new VehiclesLocators(browser.Page);
-        _data = data;
         _ui = ui;
     }
 
-    // Business step: I review the driver information summary
-    public async Task ReviewTheDriverInformationSummaryAsync()
-    {
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0053_8f9ff6Async
-        if (await _ui.ExistsAsync(_locators.Single))
-        {
-            await _ui.VerifyAsync(_locators.Single, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0054_8f9ff6Async
-        if (await _ui.ExistsAsync(_locators.MaritalStatusSingle))
-        {
-            await _ui.ClickAsync(_locators.MaritalStatusSingle);
-        }
-        if (_data.Condition("'Marital Status' != \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' != \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        if (_data.Condition("'Marital Status' == \"Single\""))
-        {
-            await _ui.ClickAsync(_locators.Single);
-        }
-        if (_data.Condition("'Marital Status' == \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' == \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        // EQDriverEducationLevel_5a720bPage.DriverEducationLevel_0055_8f9ff6Async
-        if (await _ui.ExistsAsync(_locators.HighSchoolDiplomaOrGED))
-        {
-            await _ui.VerifyAsync(_locators.HighSchoolDiplomaOrGED, _data.Resolve("True"), "Enabled");
-        }
-        // EQDriverEducationLevel_5a720bPage.DriverEducationLevel_0056_8f9ff6Async
-        if (await _ui.ExistsAsync(_locators.MDNJEducationLevelUnknown))
-        {
-            await _ui.ClickAsync(_locators.MDNJEducationLevelUnknown);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Unknown\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"HighSchool\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"HighSchool\""))
-        {
-            await _ui.ClickAsync(_locators.HighSchoolDiplomaOrGED);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Trade\""))
-        {
-            await _ui.ClickAsync(_locators.VocationalOrTradeSchoolDegree);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel != \"Unknown\" AND MD_NJ_EducationLevel != \"HighSchool\" AND MD_NJ_EducationLevel != \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel != \"Unknown\" AND MD_NJ_EducationLevel != \"HighSchool\" AND MD_NJ_EducationLevel != \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.MoreOptionsEdu, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"SomeCollege\""))
-        {
-            await _ui.WaitAsync(_locators.SomeCollege, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"SomeCollege\""))
-        {
-            await _ui.ClickAsync(_locators.SomeCollege);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"InCollege\""))
-        {
-            await _ui.WaitAsync(_locators.CurrentlyInCollege, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"InCollege\""))
-        {
-            await _ui.ClickAsync(_locators.CurrentlyInCollege);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"CollegeDegree\""))
-        {
-            await _ui.WaitAsync(_locators.CollegeDegreeGraduateWork, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"CollegeDegree\""))
-        {
-            await _ui.ClickAsync(_locators.CollegeDegreeGraduateWork);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.WaitAsync(_locators.GraduateDegreeJDMasters, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.ClickAsync(_locators.GraduateDegreeJDMasters);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.WaitAsync(_locators.PostGraduateDegreeMedicalDegreePhDEdDEtc, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.ClickAsync(_locators.PostGraduateDegreeMedicalDegreePhDEdDEtc);
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0057_8f9ff6Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Condition verify relationship spouse button exist; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.Spouse, _data.Resolve("Exists"), "");
-        }
-        await _ui.ClickAsync(_locators.AccountOwner);
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0058_8f9ff6Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Then Relationship for account owner exist; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.SelectAsync(_locators.RelationshipToAccountOwnerNULL, _data.Resolve("{{data:select_relationship_to_account_owner_null_122}}"));
-        }
-        if (_data.Condition("'Relationship to Account Owner' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.AccountOwner);
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0059_8f9ff6Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Condition Check if Relationship is account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.AccountOwnerReadOnly, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0060_8f9ff6Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Then Relationship is account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.AccountOwnerReadOnly, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0061_8f9ff6Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Else Make script fail due to Relationship other than account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.ClickAsync(_locators.AccountOwner);
-            await _ui.PressAsync(_locators.AccountOwner, "Click");
-            await _ui.PressAsync(_locators.AccountOwner, "scroll[2]");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatusCycle_0062_8f9ff6Async
-        if (_data.Condition("'Policy Type' == \"Cycle\""))
-        {
-            await _ui.WaitAsync(_locators.IsThisDriverANamedInsured, "Visible");
-        }
-        if (_data.Condition("'Named Insured?' == \"PrimaryNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.PrimaryNamedInsured);
-            await _ui.PressAsync(_locators.PrimaryNamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NamedInsured);
-            await _ui.PressAsync(_locators.NamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NotNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NotANamedInsured);
-            await _ui.PressAsync(_locators.NotANamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-            await _ui.PressAsync(_locators.Related, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-            await _ui.PressAsync(_locators.Related, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"NoCycleLicense\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"NoCycleLicense\""))
-        {
-            await _ui.SelectAsync(_locators.NoCycleLicense, _data.Resolve(""));
-        }
-        if (_data.Condition("'Operator Status' != \"Assigned\" AND 'Operator Status' != \"NoCycleLicense\" AND 'Operator Status' != \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Military\""))
-        {
-            await _ui.ClickAsync(_locators.Military);
-        }
-        if (_data.Condition("'Operator Status' == \"Missionary\""))
-        {
-            await _ui.ClickAsync(_locators.Missionary);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.SelectAsync(_locators.NonDriver, _data.Resolve(""));
-        }
-        if (_data.Condition("'Operator Status' == \"OtherIns\""))
-        {
-            await _ui.ClickAsync(_locators.OtherInsurance);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.WaitAsync(_locators.NonDriverReason, "Visible");
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"NeverLicensed\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_143}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Underage\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_144}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_145}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Surrendered\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_146}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"PermitDriver\" AND 'If NonDriver: Reason' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_147}}"));
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0063_8f9ff6Async
-        if (_data.Condition("'Policy Type' != \"Cycle\""))
-        {
-            await _ui.WaitAsync(_locators.IsThisDriverANamedInsured, "Visible");
-        }
-        if (_data.Condition("'Named Insured?' == \"PrimaryNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.PrimaryNamedInsured);
-            await _ui.PressAsync(_locators.PrimaryNamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NamedInsured);
-            await _ui.PressAsync(_locators.NamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NotNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NotANamedInsured);
-            await _ui.PressAsync(_locators.NotANamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.NonDriver);
-            await _ui.PressAsync(_locators.NonDriver, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-        }
-        if (_data.Condition("'Operator Status' == \"Military\""))
-        {
-            await _ui.ClickAsync(_locators.Military);
-        }
-        if (_data.Condition("'Operator Status' == \"Missionary\""))
-        {
-            await _ui.ClickAsync(_locators.Missionary);
-        }
-        if (_data.Condition("'Operator Status' == \"OtherIns\""))
-        {
-            await _ui.ClickAsync(_locators.OtherInsurance);
-        }
-        if (_data.Condition("'Operator Status' == \"Roomate\""))
-        {
-            await _ui.ClickAsync(_locators.Roommate);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.WaitAsync(_locators.NonDriverReason, "Visible");
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"NeverLicensed\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.NeverLicensed);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Underage\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.Underage);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.MedicalCondition);
-        }
-        if (_data.Condition("'If NonDriver: Reason' != \"NeverLicensed\" AND 'If NonDriver: Reason' != \"Underage\" AND 'If NonDriver: Reason' != \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.SelectAsync(_locators.MoreOptionsNonDriver, _data.Resolve(""));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Surrendered\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.Surrendered);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"PermitDriver\" AND 'If NonDriver: Reason' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.PermitDriver);
-        }
-        // EQDriverLicenseTime_01b659Page.LicenseInfo_0064_8f9ff6Async
-        if (_data.Condition("'State Licensed(XX)' != NULL"))
-        {
-            await _ui.FillAsync(_locators.LicenseState, _data.Get("AL_ClientData.State"));
-        }
-        if (_data.Condition("'Drivers License #' != NULL"))
-        {
-            await _ui.FillAsync(_locators.DriverSLicenseNumber, _data.Resolve("{{data:driver_s_license_number_169}}"));
-            await _ui.PressAsync(_locators.DriverSLicenseNumber, "CTRL+A");
-        }
-        if (_data.Condition("'Drivers License #' != NULL"))
-        {
-            await _ui.FillAsync(_locators.DriverSLicenseNumber, _data.Get("AL_ClientData.DL Number"));
-        }
-        await _ui.FillAsync(_locators.YrsLicensedCurrentState, _data.Resolve("{{data:yrs_licensed_current_state_171}}"));
-        await _ui.PressAsync(_locators.YrsLicensedCurrentState, "CTRL+A");
-        await _ui.FillAsync(_locators.YrsLicensedCurrentState, _data.Resolve("{{data:yrs_licensed_current_state_172}}"));
-        await _ui.FillAsync(_locators.MonthsLicensedCurrentState, _data.Resolve("{{data:months_licensed_current_state_173}}"));
-        await _ui.PressAsync(_locators.MonthsLicensedCurrentState, "CTRL+A");
-        await _ui.FillAsync(_locators.MonthsLicensedCurrentState, _data.Resolve("{{data:months_licensed_current_state_174}}"));
-        if (_data.Condition("'State' == \"TX\""))
-        {
-            await _ui.FillAsync(_locators.DaysOperatedUninsured, _data.Resolve("{{data:daysoperateduninsured_175}}"));
-        }
-        if (_data.Condition("'State' == \"CA\""))
-        {
-            await _ui.FillAsync(_locators.YrsLicensedAllStates, _data.Resolve("{{data:yrslicensed_all_states_176}}"));
-            await _ui.PressAsync(_locators.YrsLicensedAllStates, "CTRL+A");
-        }
-        if (_data.Condition("'State' == \"CA\""))
-        {
-            await _ui.FillAsync(_locators.YrsLicensedAllStates, _data.Resolve("{{data:yrslicensed_all_states_177}}"));
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.NoD053A);
-            await _ui.PressAsync(_locators.NoD053A, "Click");
-            await _ui.PressAsync(_locators.NoD053A, "Scroll[2]");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0065_8f9ff6Async
-        if (await _ui.ExistsAsync(_locators.WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove))
-        {
-            await _ui.VerifyAsync(_locators.WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0066_8f9ff6Async
-        if (await _ui.ExistsAsync(_locators.NoPreviouslyInsured))
-        {
-            await _ui.SelectAsync(_locators.NoPreviouslyInsured, _data.Resolve(""));
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0067_8f9ff6Async
-        if (await _ui.ExistsAsync(_locators.PriorCarrierName))
-        {
-            await _ui.VerifyAsync(_locators.PriorCarrierName, _data.Resolve("Exists"), "");
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0068_8f9ff6Async
-        if (await _ui.ExistsAsync(_locators.SaveAndContinue9CB7A))
-        {
-            await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0069_8f9ff6Async
-        if (await _ui.ExistsAsync(_locators.NoNeedWasNotLicensed))
-        {
-            await _ui.VerifyAsync(_locators.NoNeedWasNotLicensed, _data.Resolve("Visible"), "");
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0070_8f9ff6Async
-        if (await _ui.ExistsAsync(_locators.NoNeedWasNotLicensed))
-        {
-            await _ui.ClickAsync(_locators.NoNeedWasNotLicensed);
-            await _ui.PressAsync(_locators.NoNeedWasNotLicensed, "End");
-            await _ui.PressAsync(_locators.NoNeedWasNotLicensed, "Click");
-        }
-        await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        // EQPriorInsuranceInfo_a40db0Page.SaveContinue_0071_8f9ff6Async
-        if (await _ui.ExistsAsync(_locators.SaveAndContinue9CB7A))
-        {
-            await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        }
-        // EQExpiredLicensePopUp_ac02e7Page.EQExpiredLicensePopUp_0072_8f9ff6Async
-        if (await _ui.ExistsAsync(_locators.CONTINUED555D))
-        {
-            await _ui.WaitAsync(_locators.CONTINUED555D, "Exists");
-        }
-        // EQExpiredLicensePopUp_ac02e7Page.EQExpiredLicensePopUp_0073_8f9ff6Async
-        if (await _ui.ExistsAsync(_locators.CONTINUED555D))
-        {
-            await _ui.ClickAsync(_locators.CONTINUED555D);
-        }
-    }
+    public Task PressAccountOwnerAsync(string key) =>
+        _ui.PressAsync(_locators.AccountOwner, key, new ControlIntent("Vehicles", "AccountOwner"));
 
-    // Business step: I complete vehicle Summary 1st Cycle Summary
-    public async Task CompleteVehicleSummary1stCycleSummaryAsync()
-    {
-        // EQCyclePreFillSelection_50c48bPage.CycleSelection_0081_8f9ff6Async
-        if (await _ui.ExistsAsync(_locators.SelectVehicle))
-        {
-            await _ui.WaitAsync(_locators.SelectVehicle, "Visible");
-        }
-        // EQCyclePreFillSelection_50c48bPage.CycleSelection_0082_8f9ff6Async
-        if (await _ui.ExistsAsync(_locators.AdditionalVehicleSF5D93))
-        {
-            await _ui.ClickAsync(_locators.AdditionalVehicleSF5D93);
-        }
-        await _ui.ClickAsync(_locators.CyclePreFillSelectionNext);
-        // EQ1stCycle_d9650fPage.CycleSummary_0083_8f9ff6Async
-        await _ui.WaitAsync(_locators.VIN8EE56, "True");
-        await _ui.FillAsync(_locators.VIN8EE56, _data.Resolve("{{data:vin_201}}"));
-        await _ui.PressAsync(_locators.VIN8EE56, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN8EE56, "Tab");
-        await _ui.WaitAsync(_locators.PleaseSelectTheVehicleCD741, "Visible");
-        await _ui.ClickAsync(_locators.Cycle1C1864);
-        if (_data.Condition("'Primary Use' == \"Pleasure Use\""))
-        {
-            await _ui.ClickAsync(_locators.PleasureUse);
-        }
-        if (_data.Condition("'Primary Use' == \"Not Pleasure Use\""))
-        {
-            await _ui.SelectAsync(_locators.NotPleasureUse, _data.Resolve(""));
-        }
-        if (_data.Condition("'Primary Use' == \"Under Construction\""))
-        {
-            await _ui.ClickAsync(_locators.UnderConstruction);
-        }
-        if (_data.Condition("'Loan/Leased/Own' == \"Loan\""))
-        {
-            await _ui.ClickAsync(_locators.LoanED36C);
-        }
-        if (_data.Condition("'Loan/Leased/Own' == \"Leased\""))
-        {
-            await _ui.ClickAsync(_locators.Leased87268);
-        }
-        if (_data.Condition("'Loan/Leased/Own' == \"Own\""))
-        {
-            await _ui.ClickAsync(_locators.OwnD044E);
-        }
-        if (_data.Condition("State == \"OK\""))
-        {
-            await _ui.SelectAsync(_locators.NoRegisteredFedTribe, _data.Resolve(""));
-        }
-        await _ui.WaitAsync(_locators.DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications051FD, "Visible");
-        if (_data.Condition("'NonFactory Mods?' == \"Yes\""))
-        {
-            await _ui.SelectAsync(_locators.Yes, _data.Resolve(""));
-        }
-        if (_data.Condition("'NonFactory Mods?' == \"No\""))
-        {
-            await _ui.SelectAsync(_locators.NoD9E4D, _data.Resolve(""));
-        }
-        if (_data.Condition("'NonFactory Mods?' == \"Yes\""))
-        {
-            await _ui.WaitAsync(_locators.LblDescriptionOfMods, "Visible");
-        }
-        if (_data.Condition("'NonFactory Mods?' == \"Yes\""))
-        {
-            await _ui.FillAsync(_locators.DescriptionOfMods, _data.Resolve("{{data:description_of_mods_216}}"));
-        }
-        if (_data.Condition("'Primary Use' == \"Under Construction\""))
-        {
-            await _ui.FillAsync(_locators.CurrentValue, _data.Get("Current Value(UnderConstruction)"));
-        }
-        if (_data.Condition("State == \"NY\" OR State == \"NJ\" OR State == \"CA\""))
-        {
-            await _ui.FillAsync(_locators.AnnualMileage12A49, _data.Resolve("{{data:annual_mileage_218}}"));
-        }
-        await _ui.ClickAsync(_locators.SaveAndContinue8EF26);
-    }
+    public Task ClickAccountOwnerAsync() =>
+        _ui.ClickAsync(_locators.AccountOwner, new ControlIntent("Vehicles", "AccountOwner"));
 
-    // Business step: I complete vehicle Summary Add Cycle/Next
-    public async Task CompleteVehicleSummaryAddCycleNextAsync()
-    {
-        // EQAddCycleNext_1286f9Page.AddCycleNext_0084_8f9ff6Async
-        if (_data.Condition("'Additional Cycle?' == \"Yes\""))
-        {
-            await _ui.ClickAsync(_locators.AddAdditionalVehicle);
-        }
-        if (_data.Condition("'Additional Cycle?' == \"No\""))
-        {
-            await _ui.ClickAsync(_locators.AddCycleNextNext);
-        }
-    }
+    public Task VerifyAccountOwnerReadOnlyAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.AccountOwnerReadOnly, expected, property, new ControlIntent("Vehicles", "AccountOwnerReadOnly"));
 
-    // Business step: I complete vehicle Summary Vintage Cycle
-    public async Task CompleteVehicleSummaryVintageCycleAsync()
-    {
-        // EQVintageCycle_b2e4eePage.VintageCycle_0085_8f9ff6Async
-        await _ui.WaitAsync(_locators.CycleVIN, "True");
-        await _ui.FillAsync(_locators.CycleVIN, _data.Resolve("{{data:cycle_vin_223}}"));
-        await _ui.PressAsync(_locators.CycleVIN, "POST:TAB");
-        await _ui.PressAsync(_locators.CycleVIN, "Tab");
-        await _ui.WaitAsync(_locators.PleaseSelectTheVehicleBBB72, "Visible");
-        await _ui.ClickAsync(_locators.Cycle1734D7);
-        await _ui.WaitAsync(_locators.VehicleType, "Visible");
-        await _ui.ClickAsync(_locators.Vintage);
-        await _ui.WaitAsync(_locators.IsThisVehicleOwnedOrFinanced, "Visible");
-        if (_data.Condition("'Loan/Leased/Own' == \"Loan\""))
-        {
-            await _ui.ClickAsync(_locators.Loan49242);
-        }
-        if (_data.Condition("'Loan/Leased/Own' == \"Leased\""))
-        {
-            await _ui.ClickAsync(_locators.Leased26B32);
-        }
-        if (_data.Condition("'Loan/Leased/Own' == \"Own\""))
-        {
-            await _ui.ClickAsync(_locators.Own7C709);
-        }
-        await _ui.WaitAsync(_locators.DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications21ABD, "Visible");
-        await _ui.SelectAsync(_locators.No7C269, _data.Resolve(""));
-        await _ui.FillAsync(_locators.AgreedValueF302B, _data.Resolve("{{data:agreed_value_235}}"));
-        await _ui.FillAsync(_locators.AppraisalDateD909C, _data.Resolve("{{data:appraisal_date_236}}"));
-        await _ui.ClickAsync(_locators.SaveAndContinueBE6CD);
-        // EQOwnedPopup_4a587aPage.OwnedPopup_0086_8f9ff6Async
-        if (await _ui.ExistsAsync(_locators.LblOwnedPopup))
-        {
-            await _ui.VerifyAsync(_locators.LblOwnedPopup, _data.Resolve("Visible"), "");
-        }
-        // EQOwnedPopup_4a587aPage.OwnedPopup_0087_8f9ff6Async
-        if (await _ui.ExistsAsync(_locators.CONTINUEF07C7))
-        {
-            await _ui.ClickAsync(_locators.CONTINUEF07C7);
-        }
-    }
+    public Task ClickActiveDisablingDeviceAsync() =>
+        _ui.ClickAsync(_locators.ActiveDisablingDevice, new ControlIntent("Vehicles", "ActiveDisablingDevice"));
 
-    // Business step: I complete vehicle Summary Add Cycle/Next for add additional vehicle
-    public async Task CompleteVehicleSummaryAddCycleNextForAddAdditionalVehicleAsync()
-    {
-        // EQAddCycleNext_1286f9Page.AddCycleNext_0088_8f9ff6Async
-        if (_data.Condition("'Additional Cycle?' == \"Yes\""))
-        {
-            await _ui.ClickAsync(_locators.AddAdditionalVehicle);
-        }
-        if (_data.Condition("'Additional Cycle?' == \"No\""))
-        {
-            await _ui.ClickAsync(_locators.AddCycleNextNext);
-        }
-        // TBoxSetBuffer_e51da1Page.TBoxSetBuffer_0089_8f9ff6Async
-        _data.Set("Driver 1 Vehicle", _data.Resolve("{{data:driver_1_vehicle}}"));
-        _data.Set("Driver 1 Principal Occasional", _data.Resolve("{{data:driver_1_principal_occasional}}"));
-        _data.Set("Driver 2 Vehicle", _data.Get("Driver 2 Vehicle"));
-        _data.Set("Driver 2 Principal Occasional", _data.Get("Driver 2 Principal Occasional"));
-        _data.Set("Driver 3 Vehicle", _data.Get("Driver 3 Vehicle"));
-        _data.Set("Driver 3 Principal Occasional", _data.Get("Driver 3 Principal Occasional"));
-        _data.Set("Driver 4 Vehicle", _data.Get("Driver 4 Vehicle"));
-        _data.Set("Driver 4 Principal Occasional", _data.Get("Driver 4 Principal Occasional"));
-        _data.Set("Driver 5 Vehicle", _data.Get("Driver 5 Vehicle"));
-        _data.Set("Driver 5 Principal Occasional", _data.Get("Driver 5 Principal Occasional"));
-    }
+    public Task ClickAddAdditionalVehicleAsync() =>
+        _ui.ClickAsync(_locators.AddAdditionalVehicle, new ControlIntent("Vehicles", "AddAdditionalVehicle"));
 
-    // Business step: I complete auto AddlCov Vehicle Coverages
-    public async Task CompleteAutoAddlCovVehicleCoveragesAsync()
-    {
-        // EQVehicleCoveragesSection_2f4d8bPage.EQVehicleCoveragesSection_0140_8f9ff6Async
-        if (_data.Condition("'UMPD/UIMPD_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV1);
-        }
-        if (_data.Condition("'UMPD Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle1);
-            await _ui.PressAsync(_locators.UMPDCoverageVehicle1, "Click");
-            await _ui.PressAsync(_locators.UMPDCoverageVehicle1, "scroll[2]");
-        }
-        if (_data.Condition("'UMPD Coverage_V1' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV1);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV1);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV1, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV1, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV1);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V1' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV1);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV1, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV1, "Scroll[2]");
-        }
-        if (_data.Condition("'UMPD/UIMPD_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV2);
-        }
-        if (_data.Condition("'UMPD Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle2);
-        }
-        if (_data.Condition("'UMPD Coverage_V2' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV2);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV2);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV2, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV2, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV2);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV2);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV2, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV2, "scroll[2]");
-        }
-        if (_data.Condition("'Towing and Labor' != NULL"))
-        {
-            await _ui.SelectAsync(_locators.NoCoverageV1Towing, _data.Resolve(""));
-        }
-        if (_data.Condition("'UMPD/UIMPD_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV3);
-        }
-        if (_data.Condition("'UMPD Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle3);
-        }
-        if (_data.Condition("'UMPD Coverage_V3' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV3);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV3);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV3, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV3, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV3);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V3' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV3);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV3, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV3, "scroll[2]");
-        }
-        if (_data.Condition("'Cycle Accessories_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.CycleAccessoriesV3);
-        }
-        if (_data.Condition("'Original Parts_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.OriginalPartsV3);
-        }
-        if (_data.Condition("'UMPD/UIMPD_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV4);
-        }
-        if (_data.Condition("'UMPD Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle4);
-        }
-        if (_data.Condition("'UMPD Coverage_V4' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV4);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV4);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV4, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV4, "end");
-        }
-        if (_data.Condition("'Theft Deductible_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV4);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V4' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV4);
-        }
-        if (_data.Condition("'Cycle Accessories_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.CycleAccessoriesV4);
-        }
-        if (_data.Condition("'Original Parts_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.OriginalPartsV4);
-        }
-    }
+    public Task ClickAddCycleNextNextAsync() =>
+        _ui.ClickAsync(_locators.AddCycleNextNext, new ControlIntent("Vehicles", "AddCycleNextNext"));
 
-    // Business step: I review the driver information summary
-    public async Task ReviewTheDriverInformationSummaryAsync2()
-    {
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0053_8f5301Async
-        if (await _ui.ExistsAsync(_locators.Single))
-        {
-            await _ui.VerifyAsync(_locators.Single, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0054_8f5301Async
-        if (await _ui.ExistsAsync(_locators.MaritalStatusSingle))
-        {
-            await _ui.ClickAsync(_locators.MaritalStatusSingle);
-        }
-        if (_data.Condition("'Marital Status' != \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' != \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        if (_data.Condition("'Marital Status' == \"Single\""))
-        {
-            await _ui.ClickAsync(_locators.Single);
-        }
-        if (_data.Condition("'Marital Status' == \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' == \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        // EQDriverEducationLevel_5a720bPage.DriverEducationLevel_0055_8f5301Async
-        if (await _ui.ExistsAsync(_locators.HighSchoolDiplomaOrGED))
-        {
-            await _ui.VerifyAsync(_locators.HighSchoolDiplomaOrGED, _data.Resolve("True"), "Enabled");
-        }
-        // EQDriverEducationLevel_5a720bPage.DriverEducationLevel_0056_8f5301Async
-        if (await _ui.ExistsAsync(_locators.MDNJEducationLevelUnknown))
-        {
-            await _ui.ClickAsync(_locators.MDNJEducationLevelUnknown);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Unknown\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"HighSchool\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"HighSchool\""))
-        {
-            await _ui.ClickAsync(_locators.HighSchoolDiplomaOrGED);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Trade\""))
-        {
-            await _ui.ClickAsync(_locators.VocationalOrTradeSchoolDegree);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel != \"Unknown\" AND MD_NJ_EducationLevel != \"HighSchool\" AND MD_NJ_EducationLevel != \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel != \"Unknown\" AND MD_NJ_EducationLevel != \"HighSchool\" AND MD_NJ_EducationLevel != \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.MoreOptionsEdu, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"SomeCollege\""))
-        {
-            await _ui.WaitAsync(_locators.SomeCollege, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"SomeCollege\""))
-        {
-            await _ui.ClickAsync(_locators.SomeCollege);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"InCollege\""))
-        {
-            await _ui.WaitAsync(_locators.CurrentlyInCollege, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"InCollege\""))
-        {
-            await _ui.ClickAsync(_locators.CurrentlyInCollege);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"CollegeDegree\""))
-        {
-            await _ui.WaitAsync(_locators.CollegeDegreeGraduateWork, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"CollegeDegree\""))
-        {
-            await _ui.ClickAsync(_locators.CollegeDegreeGraduateWork);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.WaitAsync(_locators.GraduateDegreeJDMasters, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.ClickAsync(_locators.GraduateDegreeJDMasters);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.WaitAsync(_locators.PostGraduateDegreeMedicalDegreePhDEdDEtc, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.ClickAsync(_locators.PostGraduateDegreeMedicalDegreePhDEdDEtc);
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0057_8f5301Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Condition verify relationship spouse button exist; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.Spouse, _data.Resolve("Exists"), "");
-        }
-        await _ui.ClickAsync(_locators.AccountOwner);
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0058_8f5301Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Then Relationship for account owner exist; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.SelectAsync(_locators.RelationshipToAccountOwnerNULL, _data.Resolve("{{data:select_relationship_to_account_owner_null_122}}"));
-        }
-        if (_data.Condition("'Relationship to Account Owner' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.AccountOwner);
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0059_8f5301Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Condition Check if Relationship is account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.AccountOwnerReadOnly, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0060_8f5301Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Then Relationship is account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.AccountOwnerReadOnly, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0061_8f5301Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Else Make script fail due to Relationship other than account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.ClickAsync(_locators.AccountOwner);
-            await _ui.PressAsync(_locators.AccountOwner, "Click");
-            await _ui.PressAsync(_locators.AccountOwner, "scroll[2]");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatusCycle_0062_8f5301Async
-        if (_data.Condition("'Policy Type' == \"Cycle\""))
-        {
-            await _ui.WaitAsync(_locators.IsThisDriverANamedInsured, "Visible");
-        }
-        if (_data.Condition("'Named Insured?' == \"PrimaryNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.PrimaryNamedInsured);
-            await _ui.PressAsync(_locators.PrimaryNamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NamedInsured);
-            await _ui.PressAsync(_locators.NamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NotNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NotANamedInsured);
-            await _ui.PressAsync(_locators.NotANamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-            await _ui.PressAsync(_locators.Related, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-            await _ui.PressAsync(_locators.Related, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"NoCycleLicense\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"NoCycleLicense\""))
-        {
-            await _ui.SelectAsync(_locators.NoCycleLicense, _data.Resolve(""));
-        }
-        if (_data.Condition("'Operator Status' != \"Assigned\" AND 'Operator Status' != \"NoCycleLicense\" AND 'Operator Status' != \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Military\""))
-        {
-            await _ui.ClickAsync(_locators.Military);
-        }
-        if (_data.Condition("'Operator Status' == \"Missionary\""))
-        {
-            await _ui.ClickAsync(_locators.Missionary);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.SelectAsync(_locators.NonDriver, _data.Resolve(""));
-        }
-        if (_data.Condition("'Operator Status' == \"OtherIns\""))
-        {
-            await _ui.ClickAsync(_locators.OtherInsurance);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.WaitAsync(_locators.NonDriverReason, "Visible");
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"NeverLicensed\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_143}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Underage\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_144}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_145}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Surrendered\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_146}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"PermitDriver\" AND 'If NonDriver: Reason' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_147}}"));
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0063_8f5301Async
-        if (_data.Condition("'Policy Type' != \"Cycle\""))
-        {
-            await _ui.WaitAsync(_locators.IsThisDriverANamedInsured, "Visible");
-        }
-        if (_data.Condition("'Named Insured?' == \"PrimaryNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.PrimaryNamedInsured);
-            await _ui.PressAsync(_locators.PrimaryNamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NamedInsured);
-            await _ui.PressAsync(_locators.NamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NotNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NotANamedInsured);
-            await _ui.PressAsync(_locators.NotANamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.NonDriver);
-            await _ui.PressAsync(_locators.NonDriver, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-        }
-        if (_data.Condition("'Operator Status' == \"Military\""))
-        {
-            await _ui.ClickAsync(_locators.Military);
-        }
-        if (_data.Condition("'Operator Status' == \"Missionary\""))
-        {
-            await _ui.ClickAsync(_locators.Missionary);
-        }
-        if (_data.Condition("'Operator Status' == \"OtherIns\""))
-        {
-            await _ui.ClickAsync(_locators.OtherInsurance);
-        }
-        if (_data.Condition("'Operator Status' == \"Roomate\""))
-        {
-            await _ui.ClickAsync(_locators.Roommate);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.WaitAsync(_locators.NonDriverReason, "Visible");
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"NeverLicensed\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.NeverLicensed);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Underage\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.Underage);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.MedicalCondition);
-        }
-        if (_data.Condition("'If NonDriver: Reason' != \"NeverLicensed\" AND 'If NonDriver: Reason' != \"Underage\" AND 'If NonDriver: Reason' != \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.SelectAsync(_locators.MoreOptionsNonDriver, _data.Resolve(""));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Surrendered\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.Surrendered);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"PermitDriver\" AND 'If NonDriver: Reason' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.PermitDriver);
-        }
-        // EQDriverLicenseTime_01b659Page.LicenseInfo_0064_8f5301Async
-        if (_data.Condition("'State Licensed(XX)' != NULL"))
-        {
-            await _ui.FillAsync(_locators.LicenseState, _data.Get("State Licensed(XX)"));
-        }
-        if (_data.Condition("'Drivers License #' != NULL"))
-        {
-            await _ui.FillAsync(_locators.DriverSLicenseNumber, _data.Resolve("{{data:driver_s_license_number_169}}"));
-            await _ui.PressAsync(_locators.DriverSLicenseNumber, "CTRL+A");
-        }
-        if (_data.Condition("'Drivers License #' != NULL"))
-        {
-            await _ui.FillAsync(_locators.DriverSLicenseNumber, _data.Get("Drivers License #"));
-        }
-        await _ui.FillAsync(_locators.YrsLicensedCurrentState, _data.Resolve("{{data:yrs_licensed_current_state_171}}"));
-        await _ui.PressAsync(_locators.YrsLicensedCurrentState, "CTRL+A");
-        await _ui.FillAsync(_locators.YrsLicensedCurrentState, _data.Resolve("{{data:yrs_licensed_current_state_172}}"));
-        await _ui.FillAsync(_locators.MonthsLicensedCurrentState, _data.Resolve("{{data:months_licensed_current_state_173}}"));
-        await _ui.PressAsync(_locators.MonthsLicensedCurrentState, "CTRL+A");
-        await _ui.FillAsync(_locators.MonthsLicensedCurrentState, _data.Resolve("{{data:months_licensed_current_state_174}}"));
-        if (_data.Condition("'State' == \"TX\""))
-        {
-            await _ui.FillAsync(_locators.DaysOperatedUninsured, _data.Resolve("{{data:daysoperateduninsured_175}}"));
-        }
-        if (_data.Condition("'State' == \"CA\""))
-        {
-            await _ui.FillAsync(_locators.YrsLicensedAllStates, _data.Resolve("{{data:yrslicensed_all_states_176}}"));
-            await _ui.PressAsync(_locators.YrsLicensedAllStates, "CTRL+A");
-        }
-        if (_data.Condition("'State' == \"CA\""))
-        {
-            await _ui.FillAsync(_locators.YrsLicensedAllStates, _data.Resolve("{{data:yrslicensed_all_states_177}}"));
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.NoD053A);
-            await _ui.PressAsync(_locators.NoD053A, "Click");
-            await _ui.PressAsync(_locators.NoD053A, "Scroll[2]");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0065_8f5301Async
-        if (await _ui.ExistsAsync(_locators.WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove))
-        {
-            await _ui.VerifyAsync(_locators.WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0066_8f5301Async
-        if (await _ui.ExistsAsync(_locators.NoPreviouslyInsured))
-        {
-            await _ui.SelectAsync(_locators.NoPreviouslyInsured, _data.Resolve(""));
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0067_8f5301Async
-        if (await _ui.ExistsAsync(_locators.PriorCarrierName))
-        {
-            await _ui.VerifyAsync(_locators.PriorCarrierName, _data.Resolve("Exists"), "");
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0068_8f5301Async
-        if (await _ui.ExistsAsync(_locators.SaveAndContinue9CB7A))
-        {
-            await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0069_8f5301Async
-        if (await _ui.ExistsAsync(_locators.NoNeedWasNotLicensed))
-        {
-            await _ui.VerifyAsync(_locators.NoNeedWasNotLicensed, _data.Resolve("Visible"), "");
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0070_8f5301Async
-        if (await _ui.ExistsAsync(_locators.NoNeedWasNotLicensed))
-        {
-            await _ui.ClickAsync(_locators.NoNeedWasNotLicensed);
-            await _ui.PressAsync(_locators.NoNeedWasNotLicensed, "End");
-            await _ui.PressAsync(_locators.NoNeedWasNotLicensed, "Click");
-        }
-        await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        // EQPriorInsuranceInfo_a40db0Page.SaveContinue_0071_8f5301Async
-        if (await _ui.ExistsAsync(_locators.SaveAndContinue9CB7A))
-        {
-            await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        }
-        // EQExpiredLicensePopUp_ac02e7Page.EQExpiredLicensePopUp_0072_8f5301Async
-        if (await _ui.ExistsAsync(_locators.CONTINUED555D))
-        {
-            await _ui.WaitAsync(_locators.CONTINUED555D, "Exists");
-        }
-        // EQExpiredLicensePopUp_ac02e7Page.EQExpiredLicensePopUp_0073_8f5301Async
-        if (await _ui.ExistsAsync(_locators.CONTINUED555D))
-        {
-            await _ui.ClickAsync(_locators.CONTINUED555D);
-        }
-    }
+    public Task ClickAddVehicleAsync() =>
+        _ui.ClickAsync(_locators.AddVehicle, new ControlIntent("Vehicles", "AddVehicle"));
 
-    // Business step: I complete vehicle Summary Automobile Rate Filing
-    public async Task CompleteVehicleSummaryAutomobileRateFilingAsync()
-    {
-        // EQCAVerifiedMileage_306316Page.EQCAVerifiedMileage_0085_8f5301Async
-        await _ui.VerifyAsync(_locators.EQCAVerifiedMileage, _data.Resolve("Exists"), "");
-        // EQVehicleInformation_7d0869Page.EQVehicleInformation_0086_8f5301Async
-        if (await _ui.ExistsAsync(_locators.MOREOPTIONS))
-        {
-            await _ui.WaitAsync(_locators.MOREOPTIONS, "Visible");
-        }
-        // EQVehicleInformation_7d0869Page.EQVehicleInformation_0087_8f5301Async
-        if (await _ui.ExistsAsync(_locators.MOREOPTIONS))
-        {
-            await _ui.SelectAsync(_locators.MOREOPTIONS, _data.Resolve(""));
-        }
-        await _ui.ClickAsync(_locators.AdditionalVehicleS62C9A);
-        await _ui.ClickAsync(_locators.VehicleInformationNext);
-        // EQVehicleInformation_7d0869Page.EQVehicleInformation_0088_8f5301Async
-        if (await _ui.ExistsAsync(_locators.AdditionalVehicle))
-        {
-            await _ui.ClickAsync(_locators.AdditionalVehicle);
-        }
-        await _ui.ClickAsync(_locators.VehicleInformationNext);
-        // EQVehicleAutoVin1_fdc6bdPage.EQVehicleVin_0089_8f5301Async
-        await _ui.WaitAsync(_locators.VIN06D01, "True");
-        await _ui.ClickAsync(_locators.VIN06D01);
-        await _ui.FillAsync(_locators.VIN06D01, _data.Resolve("{{data:txt_vin_214}}"));
-        await _ui.PressAsync(_locators.VIN06D01, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN06D01, "Tab");
-        await _ui.ClickAsync(_locators.Vehicle1);
-        // EQVehicleSummaryAutoMotorHomeUse_e4fbccPage.EQVehicleSummaryAutoUse_0090_8f5301Async
-        if (_data.Condition("Loan != NULL"))
-        {
-            await _ui.ClickAsync(_locators.Loan4369D);
-        }
-        if (_data.Condition("Lease != NULL"))
-        {
-            await _ui.ClickAsync(_locators.Leased14EA4);
-        }
-        if (_data.Condition("Loan == NULL AND Lease == NULL"))
-        {
-            await _ui.ClickAsync(_locators.Own49EEC);
-        }
-        if (_data.Condition("State == \"OK\""))
-        {
-            await _ui.SelectAsync(_locators.NativeAmericanRegisterNO, _data.Resolve(""));
-        }
-        if (_data.Condition("AntiTheft != NULL AND State != \"AZ\" AND State != \"MD\" AND State != \"OH\" AND State != \"CA\" AND State != \"VA\" AND State != \"WI\" AND State != \"UT\""))
-        {
-            await _ui.SelectAsync(_locators.AntiTheftYes, _data.Resolve(""));
-        }
-        if (_data.Condition("AntiTheft != NULL AND State == \"IL\""))
-        {
-            await _ui.ClickAsync(_locators.ILCategory1);
-        }
-        if (_data.Condition("State == \"NJ\" AND AntiTheft != NULL"))
-        {
-            await _ui.ClickAsync(_locators.CategoryI);
-        }
-        if (_data.Condition("AntiTheft != NULL AND (State == \"NY\" OR State == \"VT\")"))
-        {
-            await _ui.ClickAsync(_locators.ActiveDisablingDevice);
-        }
-        if (_data.Condition("PickUp != NULL AND (State == \"NY\" OR State = \"VA\")"))
-        {
-            await _ui.SelectAsync(_locators.CamperShellNo, _data.Resolve(""));
-        }
-        if (_data.Condition("State == \"CA\""))
-        {
-            await _ui.ClickAsync(_locators.PleasureCANYFFCIC);
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.ClickAsync(_locators.N1Day);
-        }
-        if (_data.Condition("State == \"NY\" AND Company == \"FFCIC\""))
-        {
-            await _ui.FillAsync(_locators.NYFFCICTotalAnnualMiles, _data.Resolve("{{data:ny_ffcic_total_annual_miles_228}}"));
-            await _ui.PressAsync(_locators.NYFFCICTotalAnnualMiles, "CTRL+A");
-        }
-        if (_data.Condition("State == \"NY\" AND Company == \"FFCIC\""))
-        {
-            await _ui.FillAsync(_locators.NYFFCICTotalAnnualMiles, _data.Resolve("{{data:ny_ffcic_total_annual_miles_229}}"));
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.WorkMilesDay, _data.Resolve("{{data:work_miles_day_230}}"));
-            await _ui.PressAsync(_locators.WorkMilesDay, "CTRL+A");
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.WorkMilesDay, _data.Resolve("{{data:work_miles_day_231}}"));
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.NonWorkAnnualMiles, _data.Resolve("{{data:non_work_annual_miles_232}}"));
-            await _ui.PressAsync(_locators.NonWorkAnnualMiles, "CTRL+A");
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.NonWorkAnnualMiles, _data.Resolve("{{data:non_work_annual_miles_233}}"));
-        }
-        if (_data.Condition("'Farm/Use' != NULL AND State == \"CA\""))
-        {
-            await _ui.SelectAsync(_locators.UseCAMoreOptions, _data.Resolve(""));
-        }
-        if (_data.Condition("'Farm/Use' != NULL AND (State != \"NY\" and Company !=\"FFCIC\")"))
-        {
-            await _ui.SelectAsync(_locators.MoreOptionsFarmUse, _data.Resolve(""));
-        }
-        await _ui.FillAsync(_locators.PurchaseDateBB8AF, _data.Resolve("{{data:txt_purchase_date_236}}"));
-        await _ui.PressAsync(_locators.PurchaseDateBB8AF, "CTRL+A");
-        await _ui.FillAsync(_locators.PurchaseDateBB8AF, _data.Resolve("{{data:txt_purchase_date_237}}"));
-        await _ui.FillAsync(_locators.Odometer3843F, _data.Resolve("{{data:txt_odometer_238}}"));
-        await _ui.PressAsync(_locators.Odometer3843F, "CTRL+A");
-        await _ui.FillAsync(_locators.Odometer3843F, _data.Resolve("{{data:txt_odometer_239}}"));
-        await _ui.ClickAsync(_locators.SaveContinue2E7CD);
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0094_8f5301Async
-        await _ui.ClickAsync(_locators.AddVehicle);
-        // EQVehicleSummaryAutoAdditional_2aa54aPage.EQVehicleSummaryAutoAdditional_0095_8f5301Async
-        await _ui.WaitAsync(_locators.VIN0A17C, "True");
-        await _ui.FillAsync(_locators.VIN0A17C, _data.Resolve("{{data:vin_243}}"));
-        await _ui.PressAsync(_locators.VIN0A17C, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN0A17C, "Tab");
-        await _ui.ClickAsync(_locators.Veh1);
-        await _ui.ClickAsync(_locators.VehicleMoreOptions);
-        await _ui.PressAsync(_locators.VehicleMoreOptions, "Click");
-        await _ui.PressAsync(_locators.VehicleMoreOptions, "Scroll[1]");
-        await _ui.ClickAsync(_locators.CollectorCar);
-        await _ui.SelectAsync(_locators.CollectorCarTypeMoreOptions, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.Classic);
-        await _ui.PressAsync(_locators.Classic, "Click");
-        await _ui.PressAsync(_locators.Classic, "scroll[3]");
-        await _ui.FillAsync(_locators.AgreedValue8E288, _data.Resolve("{{data:agreed_value_250}}"));
-        await _ui.ClickAsync(_locators.OwnB8575);
-        await _ui.PressAsync(_locators.OwnB8575, "scroll[3]");
-        await _ui.PressAsync(_locators.OwnB8575, "Click");
-        await _ui.ClickAsync(_locators.Continue);
-        await _ui.ClickAsync(_locators.RestrictedUse);
-        await _ui.PressAsync(_locators.RestrictedUse, "scroll[2]");
-        await _ui.PressAsync(_locators.RestrictedUse, "Click");
-        await _ui.FillAsync(_locators.AppraisalDate8A115, _data.Resolve("{{data:appraisal_date_254}}"));
-        await _ui.PressAsync(_locators.AppraisalDate8A115, "CTRL+A");
-        await _ui.FillAsync(_locators.AppraisalDate8A115, _data.Resolve("{{data:appraisal_date_255}}"));
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_256}}"));
-        await _ui.PressAsync(_locators.TotalAnnualMileage, "CTRL+A");
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_257}}"));
-        await _ui.ClickAsync(_locators.SaveContinue86B78);
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0096_8f5301Async
-        await _ui.ClickAsync(_locators.AddVehicle);
-        // EQVehicleSummaryAutoAdditional_2aa54aPage.EQVehicleSummaryAutoAdditional_0097_8f5301Async
-        await _ui.WaitAsync(_locators.VIN0A17C, "True");
-        await _ui.FillAsync(_locators.VIN0A17C, _data.Get("VIN 3"));
-        await _ui.PressAsync(_locators.VIN0A17C, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN0A17C, "Tab");
-        await _ui.ClickAsync(_locators.Veh3);
-        await _ui.SelectAsync(_locators.VehicleMoreOptions, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.CollectorCar);
-        await _ui.PressAsync(_locators.CollectorCar, "Click");
-        await _ui.PressAsync(_locators.CollectorCar, "scroll[1]");
-        await _ui.ClickAsync(_locators.ModernClassic);
-        await _ui.PressAsync(_locators.ModernClassic, "Click");
-        await _ui.PressAsync(_locators.ModernClassic, "scroll[2]");
-        await _ui.FillAsync(_locators.AgreedValue8E288, _data.Get("Agreed Value Veh 3"));
-        await _ui.ClickAsync(_locators.OwnB8575);
-        await _ui.PressAsync(_locators.OwnB8575, "scroll[2]");
-        await _ui.PressAsync(_locators.OwnB8575, "Click");
-        await _ui.PressAsync(_locators.OwnB8575, "scroll[2]");
-        await _ui.ClickAsync(_locators.Continue);
-        await _ui.ClickAsync(_locators.RestrictedUse);
-        await _ui.PressAsync(_locators.RestrictedUse, "Click");
-        await _ui.PressAsync(_locators.RestrictedUse, "END");
-        await _ui.FillAsync(_locators.AppraisalDate8A115, _data.Resolve("{{data:appraisal_date_271}}"));
-        await _ui.PressAsync(_locators.AppraisalDate8A115, "CTRL+A");
-        await _ui.FillAsync(_locators.AppraisalDate8A115, _data.Resolve("{{data:appraisal_date_272}}"));
-        await _ui.FillAsync(_locators.OdometerD648F, _data.Resolve("{{data:odometer_273}}"));
-        await _ui.PressAsync(_locators.OdometerD648F, "CTRL+A");
-        await _ui.FillAsync(_locators.OdometerD648F, _data.Resolve("{{data:odometer_274}}"));
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_275}}"));
-        await _ui.PressAsync(_locators.TotalAnnualMileage, "CTRL+A");
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Get("Annual Mileage Veh 3"));
-        await _ui.ClickAsync(_locators.SaveContinue86B78);
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0098_8f5301Async
-        await _ui.ClickAsync(_locators.AddVehicle);
-        // EQVehicleSummaryAutoAdditional_2aa54aPage.EQVehicleSummaryAutoAdditional_0099_8f5301Async
-        await _ui.WaitAsync(_locators.VIN0A17C, "True");
-        await _ui.FillAsync(_locators.VIN0A17C, _data.Get("VIN 4"));
-        await _ui.PressAsync(_locators.VIN0A17C, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN0A17C, "Tab");
-        await _ui.ClickAsync(_locators.Veh1);
-        await _ui.ClickAsync(_locators.OwnB8575);
-        await _ui.PressAsync(_locators.OwnB8575, "Click");
-        await _ui.PressAsync(_locators.OwnB8575, "scroll[2]");
-        await _ui.ClickAsync(_locators.Continue);
-        await _ui.FillAsync(_locators.PurchaseDate736F4, _data.Resolve("{{data:purchase_date_285}}"));
-        await _ui.FillAsync(_locators.OdometerD648F, _data.Resolve("{{data:odometer_286}}"));
-        await _ui.PressAsync(_locators.OdometerD648F, "CTRL+A");
-        await _ui.FillAsync(_locators.OdometerD648F, _data.Resolve("{{data:odometer_287}}"));
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_288}}"));
-        await _ui.PressAsync(_locators.TotalAnnualMileage, "CTRL+A");
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Get("Annual Mileage Veh 4"));
-        await _ui.ClickAsync(_locators.SaveContinue86B78);
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0100_8f5301Async
-        await _ui.WaitAsync(_locators.PricingDetailsNext, "Exists");
-        await _ui.ClickAsync(_locators.PricingDetailsNext);
-        // TBoxSetBuffer_e51da1Page.TBoxSetBuffer_0101_8f5301Async
-        _data.Set("Driver 1 Vehicle", _data.Resolve("{{data:driver_1_vehicle}}"));
-        _data.Set("Driver 1 Principal Occasional", _data.Resolve("{{data:driver_1_principal_occasional}}"));
-        _data.Set("Driver 2 Vehicle", _data.Get("Driver 2 Vehicle"));
-        _data.Set("Driver 2 Principal Occasional", _data.Get("Driver 2 Principal Occasional"));
-        _data.Set("Driver 3 Vehicle", _data.Get("Driver 3 Vehicle"));
-        _data.Set("Driver 3 Principal Occasional", _data.Get("Driver 3 Principal Occasional"));
-        _data.Set("Driver 4 Vehicle", _data.Get("Driver 4 Vehicle"));
-        _data.Set("Driver 4 Principal Occasional", _data.Get("Driver 4 Principal Occasional"));
-        _data.Set("Driver 5 Vehicle", _data.Get("Driver 5 Vehicle"));
-        _data.Set("Driver 5 Principal Occasional", _data.Get("Driver 5 Principal Occasional"));
-    }
+    public Task WaitForAdditionalVehicleAsync(string expected) =>
+        _ui.WaitAsync(_locators.AdditionalVehicle, expected, new ControlIntent("Vehicles", "AdditionalVehicle"));
 
-    // Business step: I complete auto AddlCov Vehicle Coverages
-    public async Task CompleteAutoAddlCovVehicleCoveragesAsync2()
-    {
-        // EQVehicleCoveragesSection_2f4d8bPage.EQVehicleCoveragesSection_0152_8f5301Async
-        if (_data.Condition("'UMPD/UIMPD_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV1);
-        }
-        if (_data.Condition("'UMPD Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle1);
-            await _ui.PressAsync(_locators.UMPDCoverageVehicle1, "Click");
-            await _ui.PressAsync(_locators.UMPDCoverageVehicle1, "scroll[2]");
-        }
-        if (_data.Condition("'UMPD Coverage_V1' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV1);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV1);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV1, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV1, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV1);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V1' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV1);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV1, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV1, "Scroll[2]");
-        }
-        if (_data.Condition("'UMPD/UIMPD_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV2);
-        }
-        if (_data.Condition("'UMPD Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle2);
-        }
-        if (_data.Condition("'UMPD Coverage_V2' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV2);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV2);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV2, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV2, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV2);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV2);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV2, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV2, "scroll[2]");
-        }
-        if (_data.Condition("'Towing and Labor' != NULL"))
-        {
-            await _ui.SelectAsync(_locators.NoCoverageV1Towing, _data.Resolve(""));
-        }
-        if (_data.Condition("'UMPD/UIMPD_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV3);
-        }
-        if (_data.Condition("'UMPD Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle3);
-        }
-        if (_data.Condition("'UMPD Coverage_V3' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV3);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV3);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV3, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV3, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV3);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V3' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV3);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV3, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV3, "scroll[2]");
-        }
-        if (_data.Condition("'Cycle Accessories_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.CycleAccessoriesV3);
-        }
-        if (_data.Condition("'Original Parts_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.OriginalPartsV3);
-        }
-        if (_data.Condition("'UMPD/UIMPD_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV4);
-        }
-        if (_data.Condition("'UMPD Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle4);
-        }
-        if (_data.Condition("'UMPD Coverage_V4' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV4);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV4);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV4, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV4, "end");
-        }
-        if (_data.Condition("'Theft Deductible_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV4);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V4' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV4);
-        }
-        if (_data.Condition("'Cycle Accessories_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.CycleAccessoriesV4);
-        }
-        if (_data.Condition("'Original Parts_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.OriginalPartsV4);
-        }
-    }
+    public Task ClickAdditionalVehicleAsync() =>
+        _ui.ClickAsync(_locators.AdditionalVehicle, new ControlIntent("Vehicles", "AdditionalVehicle"));
 
-    // Business step: I review the driver information summary
-    public async Task ReviewTheDriverInformationSummaryAsync3()
-    {
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0053_e2e0d7Async
-        if (await _ui.ExistsAsync(_locators.Single))
-        {
-            await _ui.VerifyAsync(_locators.Single, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0054_e2e0d7Async
-        if (await _ui.ExistsAsync(_locators.MaritalStatusSingle))
-        {
-            await _ui.ClickAsync(_locators.MaritalStatusSingle);
-        }
-        if (_data.Condition("'Marital Status' != \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' != \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        if (_data.Condition("'Marital Status' == \"Single\""))
-        {
-            await _ui.ClickAsync(_locators.Single);
-        }
-        if (_data.Condition("'Marital Status' == \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' == \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        // EQDriverEducationLevel_5a720bPage.DriverEducationLevel_0055_e2e0d7Async
-        if (await _ui.ExistsAsync(_locators.HighSchoolDiplomaOrGED))
-        {
-            await _ui.VerifyAsync(_locators.HighSchoolDiplomaOrGED, _data.Resolve("True"), "Enabled");
-        }
-        // EQDriverEducationLevel_5a720bPage.DriverEducationLevel_0056_e2e0d7Async
-        if (await _ui.ExistsAsync(_locators.MDNJEducationLevelUnknown))
-        {
-            await _ui.ClickAsync(_locators.MDNJEducationLevelUnknown);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Unknown\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"HighSchool\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"HighSchool\""))
-        {
-            await _ui.ClickAsync(_locators.HighSchoolDiplomaOrGED);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Trade\""))
-        {
-            await _ui.ClickAsync(_locators.VocationalOrTradeSchoolDegree);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel != \"Unknown\" AND MD_NJ_EducationLevel != \"HighSchool\" AND MD_NJ_EducationLevel != \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel != \"Unknown\" AND MD_NJ_EducationLevel != \"HighSchool\" AND MD_NJ_EducationLevel != \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.MoreOptionsEdu, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"SomeCollege\""))
-        {
-            await _ui.WaitAsync(_locators.SomeCollege, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"SomeCollege\""))
-        {
-            await _ui.ClickAsync(_locators.SomeCollege);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"InCollege\""))
-        {
-            await _ui.WaitAsync(_locators.CurrentlyInCollege, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"InCollege\""))
-        {
-            await _ui.ClickAsync(_locators.CurrentlyInCollege);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"CollegeDegree\""))
-        {
-            await _ui.WaitAsync(_locators.CollegeDegreeGraduateWork, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"CollegeDegree\""))
-        {
-            await _ui.ClickAsync(_locators.CollegeDegreeGraduateWork);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.WaitAsync(_locators.GraduateDegreeJDMasters, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.ClickAsync(_locators.GraduateDegreeJDMasters);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.WaitAsync(_locators.PostGraduateDegreeMedicalDegreePhDEdDEtc, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.ClickAsync(_locators.PostGraduateDegreeMedicalDegreePhDEdDEtc);
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0057_e2e0d7Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Condition verify relationship spouse button exist; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.Spouse, _data.Resolve("Exists"), "");
-        }
-        await _ui.ClickAsync(_locators.AccountOwner);
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0058_e2e0d7Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Then Relationship for account owner exist; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.SelectAsync(_locators.RelationshipToAccountOwnerNULL, _data.Resolve("{{data:select_relationship_to_account_owner_null_122}}"));
-        }
-        if (_data.Condition("'Relationship to Account Owner' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.AccountOwner);
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0059_e2e0d7Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Condition Check if Relationship is account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.AccountOwnerReadOnly, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0060_e2e0d7Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Then Relationship is account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.AccountOwnerReadOnly, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0061_e2e0d7Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Else Make script fail due to Relationship other than account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.ClickAsync(_locators.AccountOwner);
-            await _ui.PressAsync(_locators.AccountOwner, "Click");
-            await _ui.PressAsync(_locators.AccountOwner, "scroll[2]");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatusCycle_0062_e2e0d7Async
-        if (_data.Condition("'Policy Type' == \"Cycle\""))
-        {
-            await _ui.WaitAsync(_locators.IsThisDriverANamedInsured, "Visible");
-        }
-        if (_data.Condition("'Named Insured?' == \"PrimaryNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.PrimaryNamedInsured);
-            await _ui.PressAsync(_locators.PrimaryNamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NamedInsured);
-            await _ui.PressAsync(_locators.NamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NotNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NotANamedInsured);
-            await _ui.PressAsync(_locators.NotANamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-            await _ui.PressAsync(_locators.Related, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-            await _ui.PressAsync(_locators.Related, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"NoCycleLicense\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"NoCycleLicense\""))
-        {
-            await _ui.SelectAsync(_locators.NoCycleLicense, _data.Resolve(""));
-        }
-        if (_data.Condition("'Operator Status' != \"Assigned\" AND 'Operator Status' != \"NoCycleLicense\" AND 'Operator Status' != \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Military\""))
-        {
-            await _ui.ClickAsync(_locators.Military);
-        }
-        if (_data.Condition("'Operator Status' == \"Missionary\""))
-        {
-            await _ui.ClickAsync(_locators.Missionary);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.SelectAsync(_locators.NonDriver, _data.Resolve(""));
-        }
-        if (_data.Condition("'Operator Status' == \"OtherIns\""))
-        {
-            await _ui.ClickAsync(_locators.OtherInsurance);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.WaitAsync(_locators.NonDriverReason, "Visible");
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"NeverLicensed\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_143}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Underage\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_144}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_145}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Surrendered\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_146}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"PermitDriver\" AND 'If NonDriver: Reason' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_147}}"));
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0063_e2e0d7Async
-        if (_data.Condition("'Policy Type' != \"Cycle\""))
-        {
-            await _ui.WaitAsync(_locators.IsThisDriverANamedInsured, "Visible");
-        }
-        if (_data.Condition("'Named Insured?' == \"PrimaryNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.PrimaryNamedInsured);
-            await _ui.PressAsync(_locators.PrimaryNamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NamedInsured);
-            await _ui.PressAsync(_locators.NamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NotNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NotANamedInsured);
-            await _ui.PressAsync(_locators.NotANamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.NonDriver);
-            await _ui.PressAsync(_locators.NonDriver, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-        }
-        if (_data.Condition("'Operator Status' == \"Military\""))
-        {
-            await _ui.ClickAsync(_locators.Military);
-        }
-        if (_data.Condition("'Operator Status' == \"Missionary\""))
-        {
-            await _ui.ClickAsync(_locators.Missionary);
-        }
-        if (_data.Condition("'Operator Status' == \"OtherIns\""))
-        {
-            await _ui.ClickAsync(_locators.OtherInsurance);
-        }
-        if (_data.Condition("'Operator Status' == \"Roomate\""))
-        {
-            await _ui.ClickAsync(_locators.Roommate);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.WaitAsync(_locators.NonDriverReason, "Visible");
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"NeverLicensed\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.NeverLicensed);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Underage\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.Underage);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.MedicalCondition);
-        }
-        if (_data.Condition("'If NonDriver: Reason' != \"NeverLicensed\" AND 'If NonDriver: Reason' != \"Underage\" AND 'If NonDriver: Reason' != \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.SelectAsync(_locators.MoreOptionsNonDriver, _data.Resolve(""));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Surrendered\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.Surrendered);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"PermitDriver\" AND 'If NonDriver: Reason' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.PermitDriver);
-        }
-        // EQDriverLicenseTime_01b659Page.LicenseInfo_0064_e2e0d7Async
-        if (_data.Condition("'State Licensed(XX)' != NULL"))
-        {
-            await _ui.FillAsync(_locators.LicenseState, _data.Get("AL_ClientData.State"));
-        }
-        if (_data.Condition("'Drivers License #' != NULL"))
-        {
-            await _ui.FillAsync(_locators.DriverSLicenseNumber, _data.Resolve("{{data:driver_s_license_number_169}}"));
-            await _ui.PressAsync(_locators.DriverSLicenseNumber, "CTRL+A");
-        }
-        if (_data.Condition("'Drivers License #' != NULL"))
-        {
-            await _ui.FillAsync(_locators.DriverSLicenseNumber, _data.Get("AL_ClientData.DL Number"));
-        }
-        await _ui.FillAsync(_locators.YrsLicensedCurrentState, _data.Resolve("{{data:yrs_licensed_current_state_171}}"));
-        await _ui.PressAsync(_locators.YrsLicensedCurrentState, "CTRL+A");
-        await _ui.FillAsync(_locators.YrsLicensedCurrentState, _data.Resolve("{{data:yrs_licensed_current_state_172}}"));
-        await _ui.FillAsync(_locators.MonthsLicensedCurrentState, _data.Resolve("{{data:months_licensed_current_state_173}}"));
-        await _ui.PressAsync(_locators.MonthsLicensedCurrentState, "CTRL+A");
-        await _ui.FillAsync(_locators.MonthsLicensedCurrentState, _data.Resolve("{{data:months_licensed_current_state_174}}"));
-        if (_data.Condition("'State' == \"TX\""))
-        {
-            await _ui.FillAsync(_locators.DaysOperatedUninsured, _data.Resolve("{{data:daysoperateduninsured_175}}"));
-        }
-        if (_data.Condition("'State' == \"CA\""))
-        {
-            await _ui.FillAsync(_locators.YrsLicensedAllStates, _data.Resolve("{{data:yrslicensed_all_states_176}}"));
-            await _ui.PressAsync(_locators.YrsLicensedAllStates, "CTRL+A");
-        }
-        if (_data.Condition("'State' == \"CA\""))
-        {
-            await _ui.FillAsync(_locators.YrsLicensedAllStates, _data.Resolve("{{data:yrslicensed_all_states_177}}"));
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.NoD053A);
-            await _ui.PressAsync(_locators.NoD053A, "Click");
-            await _ui.PressAsync(_locators.NoD053A, "Scroll[2]");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0065_e2e0d7Async
-        if (await _ui.ExistsAsync(_locators.WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove))
-        {
-            await _ui.VerifyAsync(_locators.WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0066_e2e0d7Async
-        if (await _ui.ExistsAsync(_locators.NoPreviouslyInsured))
-        {
-            await _ui.SelectAsync(_locators.NoPreviouslyInsured, _data.Resolve(""));
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0067_e2e0d7Async
-        if (await _ui.ExistsAsync(_locators.PriorCarrierName))
-        {
-            await _ui.VerifyAsync(_locators.PriorCarrierName, _data.Resolve("Exists"), "");
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0068_e2e0d7Async
-        if (await _ui.ExistsAsync(_locators.SaveAndContinue9CB7A))
-        {
-            await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0069_e2e0d7Async
-        if (await _ui.ExistsAsync(_locators.NoNeedWasNotLicensed))
-        {
-            await _ui.VerifyAsync(_locators.NoNeedWasNotLicensed, _data.Resolve("Visible"), "");
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0070_e2e0d7Async
-        if (await _ui.ExistsAsync(_locators.NoNeedWasNotLicensed))
-        {
-            await _ui.ClickAsync(_locators.NoNeedWasNotLicensed);
-            await _ui.PressAsync(_locators.NoNeedWasNotLicensed, "End");
-            await _ui.PressAsync(_locators.NoNeedWasNotLicensed, "Click");
-        }
-        await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        // EQPriorInsuranceInfo_a40db0Page.SaveContinue_0071_e2e0d7Async
-        if (await _ui.ExistsAsync(_locators.SaveAndContinue9CB7A))
-        {
-            await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        }
-        // EQExpiredLicensePopUp_ac02e7Page.EQExpiredLicensePopUp_0072_e2e0d7Async
-        if (await _ui.ExistsAsync(_locators.CONTINUED555D))
-        {
-            await _ui.WaitAsync(_locators.CONTINUED555D, "Exists");
-        }
-        // EQExpiredLicensePopUp_ac02e7Page.EQExpiredLicensePopUp_0073_e2e0d7Async
-        if (await _ui.ExistsAsync(_locators.CONTINUED555D))
-        {
-            await _ui.ClickAsync(_locators.CONTINUED555D);
-        }
-    }
+    public Task<bool> IsAdditionalVehiclePresentAsync() =>
+        _ui.ExistsAsync(_locators.AdditionalVehicle);
 
-    // Business step: I complete vehicle Summary Automobile Rate Filing Common Auto
-    public async Task CompleteVehicleSummaryAutomobileRateFilingCommonAutoAsync()
-    {
-        // EQVehicleInformation_7d0869Page.EQVehicleInformation_0085_e2e0d7Async
-        if (await _ui.ExistsAsync(_locators.AdditionalVehicle))
-        {
-            await _ui.WaitAsync(_locators.AdditionalVehicle, "Visible");
-        }
-        // EQVehicleInformation_7d0869Page.EQVehicleInformation_0086_e2e0d7Async
-        if (await _ui.ExistsAsync(_locators.AdditionalVehicle))
-        {
-            await _ui.ClickAsync(_locators.AdditionalVehicle);
-        }
-        await _ui.ClickAsync(_locators.VehicleInformationNext);
-        // EQVehicleAutoVin1_fdc6bdPage.EQVehicleVin_0087_e2e0d7Async
-        await _ui.WaitAsync(_locators.VIN06D01, "True");
-        await _ui.ClickAsync(_locators.VIN06D01);
-        await _ui.FillAsync(_locators.VIN06D01, _data.Resolve("{{data:txt_vin_210}}"));
-        await _ui.PressAsync(_locators.VIN06D01, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN06D01, "Tab");
-        await _ui.ClickAsync(_locators.Vehicle1);
-        // EQVehicleSummaryAutoMotorHomeUse_e4fbccPage.EQVehicleSummaryAutoUse_0088_e2e0d7Async
-        if (_data.Condition("Loan != NULL"))
-        {
-            await _ui.ClickAsync(_locators.Loan4369D);
-        }
-        if (_data.Condition("Lease != NULL"))
-        {
-            await _ui.ClickAsync(_locators.Leased14EA4);
-        }
-        if (_data.Condition("Loan == NULL AND Lease == NULL"))
-        {
-            await _ui.ClickAsync(_locators.Own49EEC);
-        }
-        if (_data.Condition("State == \"OK\""))
-        {
-            await _ui.SelectAsync(_locators.NativeAmericanRegisterNO, _data.Resolve(""));
-        }
-        if (_data.Condition("AntiTheft != NULL AND State != \"AZ\" AND State != \"MD\" AND State != \"OH\" AND State != \"CA\" AND State != \"VA\" AND State != \"WI\" AND State != \"UT\""))
-        {
-            await _ui.SelectAsync(_locators.AntiTheftYes, _data.Resolve(""));
-        }
-        if (_data.Condition("AntiTheft != NULL AND State == \"IL\""))
-        {
-            await _ui.ClickAsync(_locators.ILCategory1);
-        }
-        if (_data.Condition("State == \"NJ\" AND AntiTheft != NULL"))
-        {
-            await _ui.ClickAsync(_locators.CategoryI);
-        }
-        if (_data.Condition("AntiTheft != NULL AND (State == \"NY\" OR State == \"VT\")"))
-        {
-            await _ui.ClickAsync(_locators.ActiveDisablingDevice);
-        }
-        if (_data.Condition("PickUp != NULL AND (State == \"NY\" OR State = \"VA\")"))
-        {
-            await _ui.SelectAsync(_locators.CamperShellNo, _data.Resolve(""));
-        }
-        if (_data.Condition("State == \"CA\""))
-        {
-            await _ui.ClickAsync(_locators.PleasureCANYFFCIC);
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.ClickAsync(_locators.N1Day);
-        }
-        if (_data.Condition("State == \"NY\" AND Company == \"FFCIC\""))
-        {
-            await _ui.FillAsync(_locators.NYFFCICTotalAnnualMiles, _data.Resolve("{{data:ny_ffcic_total_annual_miles_224}}"));
-            await _ui.PressAsync(_locators.NYFFCICTotalAnnualMiles, "CTRL+A");
-        }
-        if (_data.Condition("State == \"NY\" AND Company == \"FFCIC\""))
-        {
-            await _ui.FillAsync(_locators.NYFFCICTotalAnnualMiles, _data.Resolve("{{data:ny_ffcic_total_annual_miles_225}}"));
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.WorkMilesDay, _data.Resolve("{{data:work_miles_day_226}}"));
-            await _ui.PressAsync(_locators.WorkMilesDay, "CTRL+A");
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.WorkMilesDay, _data.Resolve("{{data:work_miles_day_227}}"));
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.NonWorkAnnualMiles, _data.Resolve("{{data:non_work_annual_miles_228}}"));
-            await _ui.PressAsync(_locators.NonWorkAnnualMiles, "CTRL+A");
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.NonWorkAnnualMiles, _data.Resolve("{{data:non_work_annual_miles_229}}"));
-        }
-        if (_data.Condition("'Farm/Use' != NULL AND State == \"CA\""))
-        {
-            await _ui.SelectAsync(_locators.UseCAMoreOptions, _data.Resolve(""));
-        }
-        if (_data.Condition("'Farm/Use' != NULL AND (State != \"NY\" and Company !=\"FFCIC\")"))
-        {
-            await _ui.SelectAsync(_locators.MoreOptionsFarmUse, _data.Resolve(""));
-        }
-        await _ui.FillAsync(_locators.PurchaseDateBB8AF, _data.Resolve("{{data:txt_purchase_date_232}}"));
-        await _ui.PressAsync(_locators.PurchaseDateBB8AF, "CTRL+A");
-        await _ui.FillAsync(_locators.PurchaseDateBB8AF, _data.Resolve("{{data:txt_purchase_date_233}}"));
-        await _ui.FillAsync(_locators.Odometer3843F, _data.Resolve("{{data:txt_odometer_234}}"));
-        await _ui.PressAsync(_locators.Odometer3843F, "CTRL+A");
-        await _ui.FillAsync(_locators.Odometer3843F, _data.Resolve("{{data:txt_odometer_235}}"));
-        if (_data.Condition("State != \"KS\""))
-        {
-            await _ui.FillAsync(_locators.AnnualMileage51344, _data.Resolve("{{data:txt_annual_mileage_236}}"));
-            await _ui.PressAsync(_locators.AnnualMileage51344, "CTRL+A");
-        }
-        if (_data.Condition("State != \"KS\""))
-        {
-            await _ui.FillAsync(_locators.AnnualMileage51344, _data.Resolve("{{data:txt_annual_mileage_237}}"));
-        }
-        await _ui.ClickAsync(_locators.SaveContinue2E7CD);
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0092_e2e0d7Async
-        await _ui.ClickAsync(_locators.AddVehicle);
-        // EQVehicleSummaryAutoAdditional_2aa54aPage.EQVehicleSummaryAutoAdditional_0093_e2e0d7Async
-        await _ui.WaitAsync(_locators.VIN0A17C, "True");
-        await _ui.FillAsync(_locators.VIN0A17C, _data.Resolve("{{data:vin_241}}"));
-        await _ui.PressAsync(_locators.VIN0A17C, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN0A17C, "Tab");
-        await _ui.ClickAsync(_locators.Veh1);
-        await _ui.SelectAsync(_locators.VehicleMoreOptions, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.CollectorCar);
-        await _ui.SelectAsync(_locators.CollectorCarTypeMoreOptions, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.Classic);
-        await _ui.FillAsync(_locators.AgreedValue8E288, _data.Resolve("{{data:agreed_value_248}}"));
-        await _ui.ClickAsync(_locators.OwnB8575);
-        await _ui.ClickAsync(_locators.Continue);
-        if (_data.Condition("State != \"KS\""))
-        {
-            await _ui.ClickAsync(_locators.RestrictedUse);
-        }
-        await _ui.FillAsync(_locators.AppraisalDate8A115, _data.Resolve("{{data:appraisal_date_252}}"));
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_253}}"));
-        await _ui.PressAsync(_locators.TotalAnnualMileage, "CTRL+A");
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_254}}"));
-        await _ui.ClickAsync(_locators.SaveContinue86B78);
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0094_e2e0d7Async
-        await _ui.ClickAsync(_locators.AddVehicle);
-        // EQVehicleSummaryAutoAdditional_2aa54aPage.EQVehicleSummaryAutoAdditional_0095_e2e0d7Async
-        await _ui.WaitAsync(_locators.VIN0A17C, "True");
-        await _ui.FillAsync(_locators.VIN0A17C, _data.Resolve("{{data:vin_258}}"));
-        await _ui.PressAsync(_locators.VIN0A17C, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN0A17C, "Tab");
-        await _ui.ClickAsync(_locators.Veh3);
-        await _ui.SelectAsync(_locators.VehicleMoreOptions, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.CollectorCar);
-        await _ui.ClickAsync(_locators.ModernClassic);
-        await _ui.FillAsync(_locators.AgreedValue8E288, _data.Resolve("{{data:agreed_value_264}}"));
-        await _ui.ClickAsync(_locators.OwnB8575);
-        await _ui.ClickAsync(_locators.Continue);
-        if (_data.Condition("State != \"KS\""))
-        {
-            await _ui.ClickAsync(_locators.RestrictedUse);
-        }
-        await _ui.FillAsync(_locators.AppraisalDate8A115, _data.Resolve("{{data:appraisal_date_268}}"));
-        await _ui.FillAsync(_locators.OdometerD648F, _data.Resolve("{{data:odometer_269}}"));
-        await _ui.PressAsync(_locators.OdometerD648F, "CTRL+A");
-        await _ui.FillAsync(_locators.OdometerD648F, _data.Resolve("{{data:odometer_270}}"));
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_271}}"));
-        await _ui.PressAsync(_locators.TotalAnnualMileage, "CTRL+A");
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_272}}"));
-        await _ui.ClickAsync(_locators.SaveContinue86B78);
-        // EQCAVerifiedMileage_306316Page.EQCAVerifiedMileage_0096_e2e0d7Async
-        if (_data.Condition("State == \"CA\""))
-        {
-            await _ui.ClickAsync(_locators.OptOut);
-        }
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0097_e2e0d7Async
-        await _ui.ClickAsync(_locators.PricingDetailsNext);
-        // TBoxSetBuffer_e51da1Page.TBoxSetBuffer_0098_e2e0d7Async
-        _data.Set("Driver 1 Vehicle", _data.Resolve("{{data:driver_1_vehicle}}"));
-        _data.Set("Driver 1 Principal Occasional", _data.Resolve("{{data:driver_1_principal_occasional}}"));
-        _data.Set("Driver 2 Vehicle", _data.Get("Driver 2 Vehicle"));
-        _data.Set("Driver 2 Principal Occasional", _data.Get("Driver 2 Principal Occasional"));
-        _data.Set("Driver 3 Vehicle", _data.Get("Driver 3 Vehicle"));
-        _data.Set("Driver 3 Principal Occasional", _data.Get("Driver 3 Principal Occasional"));
-        _data.Set("Driver 4 Vehicle", _data.Get("Driver 4 Vehicle"));
-        _data.Set("Driver 4 Principal Occasional", _data.Get("Driver 4 Principal Occasional"));
-        _data.Set("Driver 5 Vehicle", _data.Get("Driver 5 Vehicle"));
-        _data.Set("Driver 5 Principal Occasional", _data.Get("Driver 5 Principal Occasional"));
-    }
+    public Task ClickAdditionalVehicleS62C9AAsync() =>
+        _ui.ClickAsync(_locators.AdditionalVehicleS62C9A, new ControlIntent("Vehicles", "AdditionalVehicleS62C9A"));
 
-    // Business step: I complete auto AddlCov Vehicle Coverages
-    public async Task CompleteAutoAddlCovVehicleCoveragesAsync3()
-    {
-        // EQVehicleCoveragesSection_2f4d8bPage.EQVehicleCoveragesSection_0149_e2e0d7Async
-        if (_data.Condition("'UMPD/UIMPD_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV1);
-        }
-        if (_data.Condition("'UMPD Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle1);
-            await _ui.PressAsync(_locators.UMPDCoverageVehicle1, "Click");
-            await _ui.PressAsync(_locators.UMPDCoverageVehicle1, "scroll[2]");
-        }
-        if (_data.Condition("'UMPD Coverage_V1' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV1);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV1);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV1, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV1, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV1);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V1' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV1);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV1, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV1, "Scroll[2]");
-        }
-        if (_data.Condition("'UMPD/UIMPD_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV2);
-        }
-        if (_data.Condition("'UMPD Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle2);
-        }
-        if (_data.Condition("'UMPD Coverage_V2' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV2);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV2);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV2, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV2, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV2);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV2);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV2, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV2, "scroll[2]");
-        }
-        if (_data.Condition("'Towing and Labor' != NULL"))
-        {
-            await _ui.SelectAsync(_locators.NoCoverageV1Towing, _data.Resolve(""));
-        }
-        if (_data.Condition("'UMPD/UIMPD_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV3);
-        }
-        if (_data.Condition("'UMPD Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle3);
-        }
-        if (_data.Condition("'UMPD Coverage_V3' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV3);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV3);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV3, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV3, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV3);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V3' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV3);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV3, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV3, "scroll[2]");
-        }
-        if (_data.Condition("'Cycle Accessories_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.CycleAccessoriesV3);
-        }
-        if (_data.Condition("'Original Parts_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.OriginalPartsV3);
-        }
-        if (_data.Condition("'UMPD/UIMPD_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV4);
-        }
-        if (_data.Condition("'UMPD Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle4);
-        }
-        if (_data.Condition("'UMPD Coverage_V4' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV4);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV4);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV4, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV4, "end");
-        }
-        if (_data.Condition("'Theft Deductible_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV4);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V4' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV4);
-        }
-        if (_data.Condition("'Cycle Accessories_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.CycleAccessoriesV4);
-        }
-        if (_data.Condition("'Original Parts_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.OriginalPartsV4);
-        }
-    }
+    public Task ClickAdditionalVehicleSF5D93Async() =>
+        _ui.ClickAsync(_locators.AdditionalVehicleSF5D93, new ControlIntent("Vehicles", "AdditionalVehicleSF5D93"));
 
-    // Business step: I review the driver information summary
-    public async Task ReviewTheDriverInformationSummaryAsync4()
-    {
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0053_bafd4aAsync
-        if (await _ui.ExistsAsync(_locators.Single))
-        {
-            await _ui.VerifyAsync(_locators.Single, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0054_bafd4aAsync
-        if (await _ui.ExistsAsync(_locators.MaritalStatusSingle))
-        {
-            await _ui.ClickAsync(_locators.MaritalStatusSingle);
-        }
-        if (_data.Condition("'Marital Status' != \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' != \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        if (_data.Condition("'Marital Status' == \"Single\""))
-        {
-            await _ui.ClickAsync(_locators.Single);
-        }
-        if (_data.Condition("'Marital Status' == \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' == \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        // EQDriverEducationLevel_5a720bPage.DriverEducationLevel_0055_bafd4aAsync
-        if (await _ui.ExistsAsync(_locators.HighSchoolDiplomaOrGED))
-        {
-            await _ui.VerifyAsync(_locators.HighSchoolDiplomaOrGED, _data.Resolve("True"), "Enabled");
-        }
-        // EQDriverEducationLevel_5a720bPage.DriverEducationLevel_0056_bafd4aAsync
-        if (await _ui.ExistsAsync(_locators.MDNJEducationLevelUnknown))
-        {
-            await _ui.ClickAsync(_locators.MDNJEducationLevelUnknown);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Unknown\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"HighSchool\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"HighSchool\""))
-        {
-            await _ui.ClickAsync(_locators.HighSchoolDiplomaOrGED);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Trade\""))
-        {
-            await _ui.ClickAsync(_locators.VocationalOrTradeSchoolDegree);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel != \"Unknown\" AND MD_NJ_EducationLevel != \"HighSchool\" AND MD_NJ_EducationLevel != \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel != \"Unknown\" AND MD_NJ_EducationLevel != \"HighSchool\" AND MD_NJ_EducationLevel != \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.MoreOptionsEdu, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"SomeCollege\""))
-        {
-            await _ui.WaitAsync(_locators.SomeCollege, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"SomeCollege\""))
-        {
-            await _ui.ClickAsync(_locators.SomeCollege);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"InCollege\""))
-        {
-            await _ui.WaitAsync(_locators.CurrentlyInCollege, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"InCollege\""))
-        {
-            await _ui.ClickAsync(_locators.CurrentlyInCollege);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"CollegeDegree\""))
-        {
-            await _ui.WaitAsync(_locators.CollegeDegreeGraduateWork, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"CollegeDegree\""))
-        {
-            await _ui.ClickAsync(_locators.CollegeDegreeGraduateWork);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.WaitAsync(_locators.GraduateDegreeJDMasters, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.ClickAsync(_locators.GraduateDegreeJDMasters);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.WaitAsync(_locators.PostGraduateDegreeMedicalDegreePhDEdDEtc, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.ClickAsync(_locators.PostGraduateDegreeMedicalDegreePhDEdDEtc);
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0057_bafd4aAsync
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Condition verify relationship spouse button exist; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.Spouse, _data.Resolve("Exists"), "");
-        }
-        await _ui.ClickAsync(_locators.AccountOwner);
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0058_bafd4aAsync
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Then Relationship for account owner exist; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.SelectAsync(_locators.RelationshipToAccountOwnerNULL, _data.Resolve("{{data:select_relationship_to_account_owner_null_122}}"));
-        }
-        if (_data.Condition("'Relationship to Account Owner' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.AccountOwner);
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0059_bafd4aAsync
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Condition Check if Relationship is account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.AccountOwnerReadOnly, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0060_bafd4aAsync
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Then Relationship is account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.AccountOwnerReadOnly, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0061_bafd4aAsync
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Else Make script fail due to Relationship other than account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.ClickAsync(_locators.AccountOwner);
-            await _ui.PressAsync(_locators.AccountOwner, "Click");
-            await _ui.PressAsync(_locators.AccountOwner, "scroll[2]");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatusCycle_0062_bafd4aAsync
-        if (_data.Condition("'Policy Type' == \"Cycle\""))
-        {
-            await _ui.WaitAsync(_locators.IsThisDriverANamedInsured, "Visible");
-        }
-        if (_data.Condition("'Named Insured?' == \"PrimaryNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.PrimaryNamedInsured);
-            await _ui.PressAsync(_locators.PrimaryNamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NamedInsured);
-            await _ui.PressAsync(_locators.NamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NotNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NotANamedInsured);
-            await _ui.PressAsync(_locators.NotANamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-            await _ui.PressAsync(_locators.Related, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-            await _ui.PressAsync(_locators.Related, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"NoCycleLicense\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"NoCycleLicense\""))
-        {
-            await _ui.SelectAsync(_locators.NoCycleLicense, _data.Resolve(""));
-        }
-        if (_data.Condition("'Operator Status' != \"Assigned\" AND 'Operator Status' != \"NoCycleLicense\" AND 'Operator Status' != \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Military\""))
-        {
-            await _ui.ClickAsync(_locators.Military);
-        }
-        if (_data.Condition("'Operator Status' == \"Missionary\""))
-        {
-            await _ui.ClickAsync(_locators.Missionary);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.SelectAsync(_locators.NonDriver, _data.Resolve(""));
-        }
-        if (_data.Condition("'Operator Status' == \"OtherIns\""))
-        {
-            await _ui.ClickAsync(_locators.OtherInsurance);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.WaitAsync(_locators.NonDriverReason, "Visible");
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"NeverLicensed\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_143}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Underage\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_144}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_145}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Surrendered\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_146}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"PermitDriver\" AND 'If NonDriver: Reason' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_147}}"));
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0063_bafd4aAsync
-        if (_data.Condition("'Policy Type' != \"Cycle\""))
-        {
-            await _ui.WaitAsync(_locators.IsThisDriverANamedInsured, "Visible");
-        }
-        if (_data.Condition("'Named Insured?' == \"PrimaryNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.PrimaryNamedInsured);
-            await _ui.PressAsync(_locators.PrimaryNamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NamedInsured);
-            await _ui.PressAsync(_locators.NamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NotNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NotANamedInsured);
-            await _ui.PressAsync(_locators.NotANamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.NonDriver);
-            await _ui.PressAsync(_locators.NonDriver, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-        }
-        if (_data.Condition("'Operator Status' == \"Military\""))
-        {
-            await _ui.ClickAsync(_locators.Military);
-        }
-        if (_data.Condition("'Operator Status' == \"Missionary\""))
-        {
-            await _ui.ClickAsync(_locators.Missionary);
-        }
-        if (_data.Condition("'Operator Status' == \"OtherIns\""))
-        {
-            await _ui.ClickAsync(_locators.OtherInsurance);
-        }
-        if (_data.Condition("'Operator Status' == \"Roomate\""))
-        {
-            await _ui.ClickAsync(_locators.Roommate);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.WaitAsync(_locators.NonDriverReason, "Visible");
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"NeverLicensed\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.NeverLicensed);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Underage\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.Underage);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.MedicalCondition);
-        }
-        if (_data.Condition("'If NonDriver: Reason' != \"NeverLicensed\" AND 'If NonDriver: Reason' != \"Underage\" AND 'If NonDriver: Reason' != \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.SelectAsync(_locators.MoreOptionsNonDriver, _data.Resolve(""));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Surrendered\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.Surrendered);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"PermitDriver\" AND 'If NonDriver: Reason' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.PermitDriver);
-        }
-        // EQDriverLicenseTime_01b659Page.LicenseInfo_0064_bafd4aAsync
-        if (_data.Condition("'State Licensed(XX)' != NULL"))
-        {
-            await _ui.FillAsync(_locators.LicenseState, _data.Get("AL_ClientData.State"));
-        }
-        if (_data.Condition("'Drivers License #' != NULL"))
-        {
-            await _ui.FillAsync(_locators.DriverSLicenseNumber, _data.Resolve("{{data:driver_s_license_number_169}}"));
-            await _ui.PressAsync(_locators.DriverSLicenseNumber, "CTRL+A");
-        }
-        if (_data.Condition("'Drivers License #' != NULL"))
-        {
-            await _ui.FillAsync(_locators.DriverSLicenseNumber, _data.Get("AL_ClientData.DL Number"));
-        }
-        await _ui.FillAsync(_locators.YrsLicensedCurrentState, _data.Resolve("{{data:yrs_licensed_current_state_171}}"));
-        await _ui.PressAsync(_locators.YrsLicensedCurrentState, "CTRL+A");
-        await _ui.FillAsync(_locators.YrsLicensedCurrentState, _data.Resolve("{{data:yrs_licensed_current_state_172}}"));
-        await _ui.FillAsync(_locators.MonthsLicensedCurrentState, _data.Resolve("{{data:months_licensed_current_state_173}}"));
-        await _ui.PressAsync(_locators.MonthsLicensedCurrentState, "CTRL+A");
-        await _ui.FillAsync(_locators.MonthsLicensedCurrentState, _data.Resolve("{{data:months_licensed_current_state_174}}"));
-        if (_data.Condition("'State' == \"TX\""))
-        {
-            await _ui.FillAsync(_locators.DaysOperatedUninsured, _data.Resolve("{{data:daysoperateduninsured_175}}"));
-        }
-        if (_data.Condition("'State' == \"CA\""))
-        {
-            await _ui.FillAsync(_locators.YrsLicensedAllStates, _data.Resolve("{{data:yrslicensed_all_states_176}}"));
-            await _ui.PressAsync(_locators.YrsLicensedAllStates, "CTRL+A");
-        }
-        if (_data.Condition("'State' == \"CA\""))
-        {
-            await _ui.FillAsync(_locators.YrsLicensedAllStates, _data.Resolve("{{data:yrslicensed_all_states_177}}"));
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.NoD053A);
-            await _ui.PressAsync(_locators.NoD053A, "Click");
-            await _ui.PressAsync(_locators.NoD053A, "Scroll[2]");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0065_bafd4aAsync
-        if (await _ui.ExistsAsync(_locators.WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove))
-        {
-            await _ui.VerifyAsync(_locators.WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0066_bafd4aAsync
-        if (await _ui.ExistsAsync(_locators.NoPreviouslyInsured))
-        {
-            await _ui.SelectAsync(_locators.NoPreviouslyInsured, _data.Resolve(""));
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0067_bafd4aAsync
-        if (await _ui.ExistsAsync(_locators.PriorCarrierName))
-        {
-            await _ui.VerifyAsync(_locators.PriorCarrierName, _data.Resolve("Exists"), "");
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0068_bafd4aAsync
-        if (await _ui.ExistsAsync(_locators.SaveAndContinue9CB7A))
-        {
-            await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0069_bafd4aAsync
-        if (await _ui.ExistsAsync(_locators.NoNeedWasNotLicensed))
-        {
-            await _ui.VerifyAsync(_locators.NoNeedWasNotLicensed, _data.Resolve("Visible"), "");
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0070_bafd4aAsync
-        if (await _ui.ExistsAsync(_locators.NoNeedWasNotLicensed))
-        {
-            await _ui.ClickAsync(_locators.NoNeedWasNotLicensed);
-            await _ui.PressAsync(_locators.NoNeedWasNotLicensed, "End");
-            await _ui.PressAsync(_locators.NoNeedWasNotLicensed, "Click");
-        }
-        await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        // EQPriorInsuranceInfo_a40db0Page.SaveContinue_0071_bafd4aAsync
-        if (await _ui.ExistsAsync(_locators.SaveAndContinue9CB7A))
-        {
-            await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        }
-        // EQExpiredLicensePopUp_ac02e7Page.EQExpiredLicensePopUp_0072_bafd4aAsync
-        if (await _ui.ExistsAsync(_locators.CONTINUED555D))
-        {
-            await _ui.WaitAsync(_locators.CONTINUED555D, "Exists");
-        }
-        // EQExpiredLicensePopUp_ac02e7Page.EQExpiredLicensePopUp_0073_bafd4aAsync
-        if (await _ui.ExistsAsync(_locators.CONTINUED555D))
-        {
-            await _ui.ClickAsync(_locators.CONTINUED555D);
-        }
-    }
+    public Task<bool> IsAdditionalVehicleSF5D93PresentAsync() =>
+        _ui.ExistsAsync(_locators.AdditionalVehicleSF5D93);
 
-    // Business step: I complete vehicle Summary Automobile Rate Filing Common Auto
-    public async Task CompleteVehicleSummaryAutomobileRateFilingCommonAutoAsync2()
-    {
-        // EQVehicleInformation_7d0869Page.EQVehicleInformation_0085_bafd4aAsync
-        if (await _ui.ExistsAsync(_locators.AdditionalVehicle))
-        {
-            await _ui.WaitAsync(_locators.AdditionalVehicle, "Visible");
-        }
-        // EQVehicleInformation_7d0869Page.EQVehicleInformation_0086_bafd4aAsync
-        if (await _ui.ExistsAsync(_locators.AdditionalVehicle))
-        {
-            await _ui.ClickAsync(_locators.AdditionalVehicle);
-        }
-        await _ui.ClickAsync(_locators.VehicleInformationNext);
-        // EQVehicleAutoVin1_fdc6bdPage.EQVehicleVin_0087_bafd4aAsync
-        await _ui.WaitAsync(_locators.VIN06D01, "True");
-        await _ui.ClickAsync(_locators.VIN06D01);
-        await _ui.FillAsync(_locators.VIN06D01, _data.Resolve("{{data:txt_vin_210}}"));
-        await _ui.PressAsync(_locators.VIN06D01, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN06D01, "Tab");
-        await _ui.ClickAsync(_locators.Vehicle1);
-        // EQVehicleSummaryAutoMotorHomeUse_e4fbccPage.EQVehicleSummaryAutoUse_0088_bafd4aAsync
-        if (_data.Condition("Loan != NULL"))
-        {
-            await _ui.ClickAsync(_locators.Loan4369D);
-        }
-        if (_data.Condition("Lease != NULL"))
-        {
-            await _ui.ClickAsync(_locators.Leased14EA4);
-        }
-        if (_data.Condition("Loan == NULL AND Lease == NULL"))
-        {
-            await _ui.ClickAsync(_locators.Own49EEC);
-        }
-        if (_data.Condition("State == \"OK\""))
-        {
-            await _ui.SelectAsync(_locators.NativeAmericanRegisterNO, _data.Resolve(""));
-        }
-        if (_data.Condition("AntiTheft != NULL AND State != \"AZ\" AND State != \"MD\" AND State != \"OH\" AND State != \"CA\" AND State != \"VA\" AND State != \"WI\" AND State != \"UT\""))
-        {
-            await _ui.SelectAsync(_locators.AntiTheftYes, _data.Resolve(""));
-        }
-        if (_data.Condition("AntiTheft != NULL AND State == \"IL\""))
-        {
-            await _ui.ClickAsync(_locators.ILCategory1);
-        }
-        if (_data.Condition("State == \"NJ\" AND AntiTheft != NULL"))
-        {
-            await _ui.ClickAsync(_locators.CategoryI);
-        }
-        if (_data.Condition("AntiTheft != NULL AND (State == \"NY\" OR State == \"VT\")"))
-        {
-            await _ui.ClickAsync(_locators.ActiveDisablingDevice);
-        }
-        if (_data.Condition("PickUp != NULL AND (State == \"NY\" OR State = \"VA\")"))
-        {
-            await _ui.SelectAsync(_locators.CamperShellNo, _data.Resolve(""));
-        }
-        if (_data.Condition("State == \"CA\""))
-        {
-            await _ui.ClickAsync(_locators.PleasureCANYFFCIC);
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.ClickAsync(_locators.N1Day);
-        }
-        if (_data.Condition("State == \"NY\" AND Company == \"FFCIC\""))
-        {
-            await _ui.FillAsync(_locators.NYFFCICTotalAnnualMiles, _data.Resolve("{{data:ny_ffcic_total_annual_miles_224}}"));
-            await _ui.PressAsync(_locators.NYFFCICTotalAnnualMiles, "CTRL+A");
-        }
-        if (_data.Condition("State == \"NY\" AND Company == \"FFCIC\""))
-        {
-            await _ui.FillAsync(_locators.NYFFCICTotalAnnualMiles, _data.Resolve("{{data:ny_ffcic_total_annual_miles_225}}"));
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.WorkMilesDay, _data.Resolve("{{data:work_miles_day_226}}"));
-            await _ui.PressAsync(_locators.WorkMilesDay, "CTRL+A");
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.WorkMilesDay, _data.Resolve("{{data:work_miles_day_227}}"));
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.NonWorkAnnualMiles, _data.Resolve("{{data:non_work_annual_miles_228}}"));
-            await _ui.PressAsync(_locators.NonWorkAnnualMiles, "CTRL+A");
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.NonWorkAnnualMiles, _data.Resolve("{{data:non_work_annual_miles_229}}"));
-        }
-        if (_data.Condition("'Farm/Use' != NULL AND State == \"CA\""))
-        {
-            await _ui.SelectAsync(_locators.UseCAMoreOptions, _data.Resolve(""));
-        }
-        if (_data.Condition("'Farm/Use' != NULL AND (State != \"NY\" and Company !=\"FFCIC\")"))
-        {
-            await _ui.SelectAsync(_locators.MoreOptionsFarmUse, _data.Resolve(""));
-        }
-        await _ui.FillAsync(_locators.PurchaseDateBB8AF, _data.Resolve("{{data:txt_purchase_date_232}}"));
-        await _ui.PressAsync(_locators.PurchaseDateBB8AF, "CTRL+A");
-        await _ui.FillAsync(_locators.PurchaseDateBB8AF, _data.Resolve("{{data:txt_purchase_date_233}}"));
-        await _ui.FillAsync(_locators.Odometer3843F, _data.Resolve("{{data:txt_odometer_234}}"));
-        await _ui.PressAsync(_locators.Odometer3843F, "CTRL+A");
-        await _ui.FillAsync(_locators.Odometer3843F, _data.Resolve("{{data:txt_odometer_235}}"));
-        if (_data.Condition("State != \"KS\""))
-        {
-            await _ui.FillAsync(_locators.AnnualMileage51344, _data.Resolve("{{data:txt_annual_mileage_236}}"));
-            await _ui.PressAsync(_locators.AnnualMileage51344, "CTRL+A");
-        }
-        if (_data.Condition("State != \"KS\""))
-        {
-            await _ui.FillAsync(_locators.AnnualMileage51344, _data.Resolve("{{data:txt_annual_mileage_237}}"));
-        }
-        await _ui.ClickAsync(_locators.SaveContinue2E7CD);
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0092_bafd4aAsync
-        await _ui.ClickAsync(_locators.AddVehicle);
-        // EQVehicleSummaryAutoAdditional_2aa54aPage.EQVehicleSummaryAutoAdditional_0093_bafd4aAsync
-        await _ui.WaitAsync(_locators.VIN0A17C, "True");
-        await _ui.FillAsync(_locators.VIN0A17C, _data.Resolve("{{data:vin_241}}"));
-        await _ui.PressAsync(_locators.VIN0A17C, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN0A17C, "Tab");
-        await _ui.ClickAsync(_locators.Veh1);
-        await _ui.SelectAsync(_locators.VehicleMoreOptions, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.CollectorCar);
-        await _ui.SelectAsync(_locators.CollectorCarTypeMoreOptions, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.Classic);
-        await _ui.FillAsync(_locators.AgreedValue8E288, _data.Resolve("{{data:agreed_value_248}}"));
-        await _ui.ClickAsync(_locators.OwnB8575);
-        await _ui.ClickAsync(_locators.Continue);
-        if (_data.Condition("State != \"KS\""))
-        {
-            await _ui.ClickAsync(_locators.RestrictedUse);
-        }
-        await _ui.FillAsync(_locators.AppraisalDate8A115, _data.Resolve("{{data:appraisal_date_252}}"));
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_253}}"));
-        await _ui.PressAsync(_locators.TotalAnnualMileage, "CTRL+A");
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_254}}"));
-        await _ui.ClickAsync(_locators.SaveContinue86B78);
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0094_bafd4aAsync
-        await _ui.ClickAsync(_locators.AddVehicle);
-        // EQVehicleSummaryAutoAdditional_2aa54aPage.EQVehicleSummaryAutoAdditional_0095_bafd4aAsync
-        await _ui.WaitAsync(_locators.VIN0A17C, "True");
-        await _ui.FillAsync(_locators.VIN0A17C, _data.Resolve("{{data:vin_258}}"));
-        await _ui.PressAsync(_locators.VIN0A17C, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN0A17C, "Tab");
-        await _ui.ClickAsync(_locators.Veh3);
-        await _ui.SelectAsync(_locators.VehicleMoreOptions, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.CollectorCar);
-        await _ui.ClickAsync(_locators.ModernClassic);
-        await _ui.FillAsync(_locators.AgreedValue8E288, _data.Resolve("{{data:agreed_value_264}}"));
-        await _ui.ClickAsync(_locators.OwnB8575);
-        await _ui.ClickAsync(_locators.Continue);
-        if (_data.Condition("State != \"KS\""))
-        {
-            await _ui.ClickAsync(_locators.RestrictedUse);
-        }
-        await _ui.FillAsync(_locators.AppraisalDate8A115, _data.Resolve("{{data:appraisal_date_268}}"));
-        await _ui.FillAsync(_locators.OdometerD648F, _data.Resolve("{{data:odometer_269}}"));
-        await _ui.PressAsync(_locators.OdometerD648F, "CTRL+A");
-        await _ui.FillAsync(_locators.OdometerD648F, _data.Resolve("{{data:odometer_270}}"));
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_271}}"));
-        await _ui.PressAsync(_locators.TotalAnnualMileage, "CTRL+A");
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_272}}"));
-        await _ui.ClickAsync(_locators.SaveContinue86B78);
-        // EQCAVerifiedMileage_306316Page.EQCAVerifiedMileage_0096_bafd4aAsync
-        if (_data.Condition("State == \"CA\""))
-        {
-            await _ui.ClickAsync(_locators.OptOut);
-        }
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0097_bafd4aAsync
-        await _ui.ClickAsync(_locators.PricingDetailsNext);
-        // TBoxSetBuffer_e51da1Page.TBoxSetBuffer_0098_bafd4aAsync
-        _data.Set("Driver 1 Vehicle", _data.Resolve("{{data:driver_1_vehicle}}"));
-        _data.Set("Driver 1 Principal Occasional", _data.Resolve("{{data:driver_1_principal_occasional}}"));
-        _data.Set("Driver 2 Vehicle", _data.Get("Driver 2 Vehicle"));
-        _data.Set("Driver 2 Principal Occasional", _data.Get("Driver 2 Principal Occasional"));
-        _data.Set("Driver 3 Vehicle", _data.Get("Driver 3 Vehicle"));
-        _data.Set("Driver 3 Principal Occasional", _data.Get("Driver 3 Principal Occasional"));
-        _data.Set("Driver 4 Vehicle", _data.Get("Driver 4 Vehicle"));
-        _data.Set("Driver 4 Principal Occasional", _data.Get("Driver 4 Principal Occasional"));
-        _data.Set("Driver 5 Vehicle", _data.Get("Driver 5 Vehicle"));
-        _data.Set("Driver 5 Principal Occasional", _data.Get("Driver 5 Principal Occasional"));
-    }
+    public Task EnterAgreedValue8E288Async(string value) =>
+        _ui.FillAsync(_locators.AgreedValue8E288, value, new ControlIntent("Vehicles", "AgreedValue8E288"));
 
-    // Business step: I complete auto AddlCov Vehicle Coverages
-    public async Task CompleteAutoAddlCovVehicleCoveragesAsync4()
-    {
-        // EQVehicleCoveragesSection_2f4d8bPage.EQVehicleCoveragesSection_0149_bafd4aAsync
-        if (_data.Condition("'UMPD/UIMPD_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV1);
-        }
-        if (_data.Condition("'UMPD Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle1);
-            await _ui.PressAsync(_locators.UMPDCoverageVehicle1, "Click");
-            await _ui.PressAsync(_locators.UMPDCoverageVehicle1, "scroll[2]");
-        }
-        if (_data.Condition("'UMPD Coverage_V1' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV1);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV1);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV1, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV1, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV1);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V1' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV1);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV1, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV1, "Scroll[2]");
-        }
-        if (_data.Condition("'UMPD/UIMPD_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV2);
-        }
-        if (_data.Condition("'UMPD Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle2);
-        }
-        if (_data.Condition("'UMPD Coverage_V2' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV2);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV2);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV2, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV2, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV2);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV2);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV2, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV2, "scroll[2]");
-        }
-        if (_data.Condition("'Towing and Labor' != NULL"))
-        {
-            await _ui.SelectAsync(_locators.NoCoverageV1Towing, _data.Resolve(""));
-        }
-        if (_data.Condition("'UMPD/UIMPD_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV3);
-        }
-        if (_data.Condition("'UMPD Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle3);
-        }
-        if (_data.Condition("'UMPD Coverage_V3' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV3);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV3);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV3, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV3, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV3);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V3' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV3);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV3, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV3, "scroll[2]");
-        }
-        if (_data.Condition("'Cycle Accessories_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.CycleAccessoriesV3);
-        }
-        if (_data.Condition("'Original Parts_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.OriginalPartsV3);
-        }
-        if (_data.Condition("'UMPD/UIMPD_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV4);
-        }
-        if (_data.Condition("'UMPD Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle4);
-        }
-        if (_data.Condition("'UMPD Coverage_V4' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV4);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV4);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV4, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV4, "end");
-        }
-        if (_data.Condition("'Theft Deductible_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV4);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V4' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV4);
-        }
-        if (_data.Condition("'Cycle Accessories_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.CycleAccessoriesV4);
-        }
-        if (_data.Condition("'Original Parts_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.OriginalPartsV4);
-        }
-    }
+    public Task EnterAgreedValueF302BAsync(string value) =>
+        _ui.FillAsync(_locators.AgreedValueF302B, value, new ControlIntent("Vehicles", "AgreedValueF302B"));
 
-    // Business step: I review the driver information summary
-    public async Task ReviewTheDriverInformationSummaryAsync5()
-    {
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0053_8f4c8fAsync
-        if (await _ui.ExistsAsync(_locators.Single))
-        {
-            await _ui.VerifyAsync(_locators.Single, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0054_8f4c8fAsync
-        if (await _ui.ExistsAsync(_locators.MaritalStatusSingle))
-        {
-            await _ui.ClickAsync(_locators.MaritalStatusSingle);
-        }
-        if (_data.Condition("'Marital Status' != \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' != \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        if (_data.Condition("'Marital Status' == \"Single\""))
-        {
-            await _ui.ClickAsync(_locators.Single);
-        }
-        if (_data.Condition("'Marital Status' == \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' == \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        // EQDriverEducationLevel_5a720bPage.DriverEducationLevel_0055_8f4c8fAsync
-        if (await _ui.ExistsAsync(_locators.HighSchoolDiplomaOrGED))
-        {
-            await _ui.VerifyAsync(_locators.HighSchoolDiplomaOrGED, _data.Resolve("True"), "Enabled");
-        }
-        // EQDriverEducationLevel_5a720bPage.DriverEducationLevel_0056_8f4c8fAsync
-        if (await _ui.ExistsAsync(_locators.MDNJEducationLevelUnknown))
-        {
-            await _ui.ClickAsync(_locators.MDNJEducationLevelUnknown);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Unknown\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"HighSchool\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"HighSchool\""))
-        {
-            await _ui.ClickAsync(_locators.HighSchoolDiplomaOrGED);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Trade\""))
-        {
-            await _ui.ClickAsync(_locators.VocationalOrTradeSchoolDegree);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel != \"Unknown\" AND MD_NJ_EducationLevel != \"HighSchool\" AND MD_NJ_EducationLevel != \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel != \"Unknown\" AND MD_NJ_EducationLevel != \"HighSchool\" AND MD_NJ_EducationLevel != \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.MoreOptionsEdu, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"SomeCollege\""))
-        {
-            await _ui.WaitAsync(_locators.SomeCollege, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"SomeCollege\""))
-        {
-            await _ui.ClickAsync(_locators.SomeCollege);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"InCollege\""))
-        {
-            await _ui.WaitAsync(_locators.CurrentlyInCollege, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"InCollege\""))
-        {
-            await _ui.ClickAsync(_locators.CurrentlyInCollege);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"CollegeDegree\""))
-        {
-            await _ui.WaitAsync(_locators.CollegeDegreeGraduateWork, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"CollegeDegree\""))
-        {
-            await _ui.ClickAsync(_locators.CollegeDegreeGraduateWork);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.WaitAsync(_locators.GraduateDegreeJDMasters, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.ClickAsync(_locators.GraduateDegreeJDMasters);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.WaitAsync(_locators.PostGraduateDegreeMedicalDegreePhDEdDEtc, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.ClickAsync(_locators.PostGraduateDegreeMedicalDegreePhDEdDEtc);
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0057_8f4c8fAsync
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Condition verify relationship spouse button exist; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.Spouse, _data.Resolve("Exists"), "");
-        }
-        await _ui.ClickAsync(_locators.AccountOwner);
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0058_8f4c8fAsync
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Then Relationship for account owner exist; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.SelectAsync(_locators.RelationshipToAccountOwnerNULL, _data.Resolve("{{data:select_relationship_to_account_owner_null_122}}"));
-        }
-        if (_data.Condition("'Relationship to Account Owner' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.AccountOwner);
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0059_8f4c8fAsync
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Condition Check if Relationship is account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.AccountOwnerReadOnly, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0060_8f4c8fAsync
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Then Relationship is account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.AccountOwnerReadOnly, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0061_8f4c8fAsync
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Else Make script fail due to Relationship other than account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.ClickAsync(_locators.AccountOwner);
-            await _ui.PressAsync(_locators.AccountOwner, "Click");
-            await _ui.PressAsync(_locators.AccountOwner, "scroll[2]");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatusCycle_0062_8f4c8fAsync
-        if (_data.Condition("'Policy Type' == \"Cycle\""))
-        {
-            await _ui.WaitAsync(_locators.IsThisDriverANamedInsured, "Visible");
-        }
-        if (_data.Condition("'Named Insured?' == \"PrimaryNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.PrimaryNamedInsured);
-            await _ui.PressAsync(_locators.PrimaryNamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NamedInsured);
-            await _ui.PressAsync(_locators.NamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NotNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NotANamedInsured);
-            await _ui.PressAsync(_locators.NotANamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-            await _ui.PressAsync(_locators.Related, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-            await _ui.PressAsync(_locators.Related, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"NoCycleLicense\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"NoCycleLicense\""))
-        {
-            await _ui.SelectAsync(_locators.NoCycleLicense, _data.Resolve(""));
-        }
-        if (_data.Condition("'Operator Status' != \"Assigned\" AND 'Operator Status' != \"NoCycleLicense\" AND 'Operator Status' != \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Military\""))
-        {
-            await _ui.ClickAsync(_locators.Military);
-        }
-        if (_data.Condition("'Operator Status' == \"Missionary\""))
-        {
-            await _ui.ClickAsync(_locators.Missionary);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.SelectAsync(_locators.NonDriver, _data.Resolve(""));
-        }
-        if (_data.Condition("'Operator Status' == \"OtherIns\""))
-        {
-            await _ui.ClickAsync(_locators.OtherInsurance);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.WaitAsync(_locators.NonDriverReason, "Visible");
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"NeverLicensed\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_143}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Underage\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_144}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_145}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Surrendered\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_146}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"PermitDriver\" AND 'If NonDriver: Reason' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_147}}"));
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0063_8f4c8fAsync
-        if (_data.Condition("'Policy Type' != \"Cycle\""))
-        {
-            await _ui.WaitAsync(_locators.IsThisDriverANamedInsured, "Visible");
-        }
-        if (_data.Condition("'Named Insured?' == \"PrimaryNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.PrimaryNamedInsured);
-            await _ui.PressAsync(_locators.PrimaryNamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NamedInsured);
-            await _ui.PressAsync(_locators.NamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NotNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NotANamedInsured);
-            await _ui.PressAsync(_locators.NotANamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.NonDriver);
-            await _ui.PressAsync(_locators.NonDriver, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-        }
-        if (_data.Condition("'Operator Status' == \"Military\""))
-        {
-            await _ui.ClickAsync(_locators.Military);
-        }
-        if (_data.Condition("'Operator Status' == \"Missionary\""))
-        {
-            await _ui.ClickAsync(_locators.Missionary);
-        }
-        if (_data.Condition("'Operator Status' == \"OtherIns\""))
-        {
-            await _ui.ClickAsync(_locators.OtherInsurance);
-        }
-        if (_data.Condition("'Operator Status' == \"Roomate\""))
-        {
-            await _ui.ClickAsync(_locators.Roommate);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.WaitAsync(_locators.NonDriverReason, "Visible");
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"NeverLicensed\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.NeverLicensed);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Underage\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.Underage);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.MedicalCondition);
-        }
-        if (_data.Condition("'If NonDriver: Reason' != \"NeverLicensed\" AND 'If NonDriver: Reason' != \"Underage\" AND 'If NonDriver: Reason' != \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.SelectAsync(_locators.MoreOptionsNonDriver, _data.Resolve(""));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Surrendered\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.Surrendered);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"PermitDriver\" AND 'If NonDriver: Reason' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.PermitDriver);
-        }
-        // EQDriverLicenseTime_01b659Page.LicenseInfo_0064_8f4c8fAsync
-        if (_data.Condition("'State Licensed(XX)' != NULL"))
-        {
-            await _ui.FillAsync(_locators.LicenseState, _data.Get("AL_ClientData.State"));
-        }
-        if (_data.Condition("'Drivers License #' != NULL"))
-        {
-            await _ui.FillAsync(_locators.DriverSLicenseNumber, _data.Resolve("{{data:driver_s_license_number_169}}"));
-            await _ui.PressAsync(_locators.DriverSLicenseNumber, "CTRL+A");
-        }
-        if (_data.Condition("'Drivers License #' != NULL"))
-        {
-            await _ui.FillAsync(_locators.DriverSLicenseNumber, _data.Get("AL_ClientData.DL Number"));
-        }
-        await _ui.FillAsync(_locators.YrsLicensedCurrentState, _data.Resolve("{{data:yrs_licensed_current_state_171}}"));
-        await _ui.PressAsync(_locators.YrsLicensedCurrentState, "CTRL+A");
-        await _ui.FillAsync(_locators.YrsLicensedCurrentState, _data.Resolve("{{data:yrs_licensed_current_state_172}}"));
-        await _ui.FillAsync(_locators.MonthsLicensedCurrentState, _data.Resolve("{{data:months_licensed_current_state_173}}"));
-        await _ui.PressAsync(_locators.MonthsLicensedCurrentState, "CTRL+A");
-        await _ui.FillAsync(_locators.MonthsLicensedCurrentState, _data.Resolve("{{data:months_licensed_current_state_174}}"));
-        if (_data.Condition("'State' == \"TX\""))
-        {
-            await _ui.FillAsync(_locators.DaysOperatedUninsured, _data.Resolve("{{data:daysoperateduninsured_175}}"));
-        }
-        if (_data.Condition("'State' == \"CA\""))
-        {
-            await _ui.FillAsync(_locators.YrsLicensedAllStates, _data.Resolve("{{data:yrslicensed_all_states_176}}"));
-            await _ui.PressAsync(_locators.YrsLicensedAllStates, "CTRL+A");
-        }
-        if (_data.Condition("'State' == \"CA\""))
-        {
-            await _ui.FillAsync(_locators.YrsLicensedAllStates, _data.Resolve("{{data:yrslicensed_all_states_177}}"));
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.NoD053A);
-            await _ui.PressAsync(_locators.NoD053A, "Click");
-            await _ui.PressAsync(_locators.NoD053A, "Scroll[2]");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0065_8f4c8fAsync
-        if (await _ui.ExistsAsync(_locators.WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove))
-        {
-            await _ui.VerifyAsync(_locators.WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0066_8f4c8fAsync
-        if (await _ui.ExistsAsync(_locators.NoPreviouslyInsured))
-        {
-            await _ui.SelectAsync(_locators.NoPreviouslyInsured, _data.Resolve(""));
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0067_8f4c8fAsync
-        if (await _ui.ExistsAsync(_locators.PriorCarrierName))
-        {
-            await _ui.VerifyAsync(_locators.PriorCarrierName, _data.Resolve("Exists"), "");
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0068_8f4c8fAsync
-        if (await _ui.ExistsAsync(_locators.SaveAndContinue9CB7A))
-        {
-            await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0069_8f4c8fAsync
-        if (await _ui.ExistsAsync(_locators.NoNeedWasNotLicensed))
-        {
-            await _ui.VerifyAsync(_locators.NoNeedWasNotLicensed, _data.Resolve("Visible"), "");
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0070_8f4c8fAsync
-        if (await _ui.ExistsAsync(_locators.NoNeedWasNotLicensed))
-        {
-            await _ui.ClickAsync(_locators.NoNeedWasNotLicensed);
-            await _ui.PressAsync(_locators.NoNeedWasNotLicensed, "End");
-            await _ui.PressAsync(_locators.NoNeedWasNotLicensed, "Click");
-        }
-        await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        // EQPriorInsuranceInfo_a40db0Page.SaveContinue_0071_8f4c8fAsync
-        if (await _ui.ExistsAsync(_locators.SaveAndContinue9CB7A))
-        {
-            await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        }
-        // EQExpiredLicensePopUp_ac02e7Page.EQExpiredLicensePopUp_0072_8f4c8fAsync
-        if (await _ui.ExistsAsync(_locators.CONTINUED555D))
-        {
-            await _ui.WaitAsync(_locators.CONTINUED555D, "Exists");
-        }
-        // EQExpiredLicensePopUp_ac02e7Page.EQExpiredLicensePopUp_0073_8f4c8fAsync
-        if (await _ui.ExistsAsync(_locators.CONTINUED555D))
-        {
-            await _ui.ClickAsync(_locators.CONTINUED555D);
-        }
-    }
+    public Task EnterAnnualMileage12A49Async(string value) =>
+        _ui.FillAsync(_locators.AnnualMileage12A49, value, new ControlIntent("Vehicles", "AnnualMileage12A49"));
 
-    // Business step: I complete vehicle Summary Automobile Rate Filing
-    public async Task CompleteVehicleSummaryAutomobileRateFilingAsync2()
-    {
-        // EQCAVerifiedMileage_306316Page.EQCAVerifiedMileage_0085_8f4c8fAsync
-        await _ui.VerifyAsync(_locators.EQCAVerifiedMileage, _data.Resolve("Exists"), "");
-        // EQVehicleInformation_7d0869Page.EQVehicleInformation_0086_8f4c8fAsync
-        if (await _ui.ExistsAsync(_locators.MOREOPTIONS))
-        {
-            await _ui.WaitAsync(_locators.MOREOPTIONS, "Visible");
-        }
-        // EQVehicleInformation_7d0869Page.EQVehicleInformation_0087_8f4c8fAsync
-        if (await _ui.ExistsAsync(_locators.MOREOPTIONS))
-        {
-            await _ui.SelectAsync(_locators.MOREOPTIONS, _data.Resolve(""));
-        }
-        await _ui.ClickAsync(_locators.AdditionalVehicleS62C9A);
-        await _ui.ClickAsync(_locators.VehicleInformationNext);
-        // EQVehicleInformation_7d0869Page.EQVehicleInformation_0088_8f4c8fAsync
-        if (await _ui.ExistsAsync(_locators.AdditionalVehicle))
-        {
-            await _ui.ClickAsync(_locators.AdditionalVehicle);
-        }
-        await _ui.ClickAsync(_locators.VehicleInformationNext);
-        // EQVehicleAutoVin1_fdc6bdPage.EQVehicleVin_0089_8f4c8fAsync
-        await _ui.WaitAsync(_locators.VIN06D01, "True");
-        await _ui.ClickAsync(_locators.VIN06D01);
-        await _ui.FillAsync(_locators.VIN06D01, _data.Resolve("{{data:txt_vin_214}}"));
-        await _ui.PressAsync(_locators.VIN06D01, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN06D01, "Tab");
-        await _ui.ClickAsync(_locators.Vehicle1);
-        // EQVehicleSummaryAutoMotorHomeUse_e4fbccPage.EQVehicleSummaryAutoUse_0090_8f4c8fAsync
-        if (_data.Condition("Loan != NULL"))
-        {
-            await _ui.ClickAsync(_locators.Loan4369D);
-        }
-        if (_data.Condition("Lease != NULL"))
-        {
-            await _ui.ClickAsync(_locators.Leased14EA4);
-        }
-        if (_data.Condition("Loan == NULL AND Lease == NULL"))
-        {
-            await _ui.ClickAsync(_locators.Own49EEC);
-        }
-        if (_data.Condition("State == \"OK\""))
-        {
-            await _ui.SelectAsync(_locators.NativeAmericanRegisterNO, _data.Resolve(""));
-        }
-        if (_data.Condition("AntiTheft != NULL AND State != \"AZ\" AND State != \"MD\" AND State != \"OH\" AND State != \"CA\" AND State != \"VA\" AND State != \"WI\" AND State != \"UT\""))
-        {
-            await _ui.SelectAsync(_locators.AntiTheftYes, _data.Resolve(""));
-        }
-        if (_data.Condition("AntiTheft != NULL AND State == \"IL\""))
-        {
-            await _ui.ClickAsync(_locators.ILCategory1);
-        }
-        if (_data.Condition("State == \"NJ\" AND AntiTheft != NULL"))
-        {
-            await _ui.ClickAsync(_locators.CategoryI);
-        }
-        if (_data.Condition("AntiTheft != NULL AND (State == \"NY\" OR State == \"VT\")"))
-        {
-            await _ui.ClickAsync(_locators.ActiveDisablingDevice);
-        }
-        if (_data.Condition("PickUp != NULL AND (State == \"NY\" OR State = \"VA\")"))
-        {
-            await _ui.SelectAsync(_locators.CamperShellNo, _data.Resolve(""));
-        }
-        if (_data.Condition("State == \"CA\""))
-        {
-            await _ui.ClickAsync(_locators.PleasureCANYFFCIC);
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.ClickAsync(_locators.N1Day);
-        }
-        if (_data.Condition("State == \"NY\" AND Company == \"FFCIC\""))
-        {
-            await _ui.FillAsync(_locators.NYFFCICTotalAnnualMiles, _data.Resolve("{{data:ny_ffcic_total_annual_miles_228}}"));
-            await _ui.PressAsync(_locators.NYFFCICTotalAnnualMiles, "CTRL+A");
-        }
-        if (_data.Condition("State == \"NY\" AND Company == \"FFCIC\""))
-        {
-            await _ui.FillAsync(_locators.NYFFCICTotalAnnualMiles, _data.Resolve("{{data:ny_ffcic_total_annual_miles_229}}"));
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.WorkMilesDay, _data.Resolve("{{data:work_miles_day_230}}"));
-            await _ui.PressAsync(_locators.WorkMilesDay, "CTRL+A");
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.WorkMilesDay, _data.Resolve("{{data:work_miles_day_231}}"));
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.NonWorkAnnualMiles, _data.Resolve("{{data:non_work_annual_miles_232}}"));
-            await _ui.PressAsync(_locators.NonWorkAnnualMiles, "CTRL+A");
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.NonWorkAnnualMiles, _data.Resolve("{{data:non_work_annual_miles_233}}"));
-        }
-        if (_data.Condition("'Farm/Use' != NULL AND State == \"CA\""))
-        {
-            await _ui.SelectAsync(_locators.UseCAMoreOptions, _data.Resolve(""));
-        }
-        if (_data.Condition("'Farm/Use' != NULL AND (State != \"NY\" and Company !=\"FFCIC\")"))
-        {
-            await _ui.SelectAsync(_locators.MoreOptionsFarmUse, _data.Resolve(""));
-        }
-        await _ui.FillAsync(_locators.PurchaseDateBB8AF, _data.Resolve("{{data:txt_purchase_date_236}}"));
-        await _ui.PressAsync(_locators.PurchaseDateBB8AF, "CTRL+A");
-        await _ui.FillAsync(_locators.PurchaseDateBB8AF, _data.Resolve("{{data:txt_purchase_date_237}}"));
-        await _ui.FillAsync(_locators.Odometer3843F, _data.Resolve("{{data:txt_odometer_238}}"));
-        await _ui.PressAsync(_locators.Odometer3843F, "CTRL+A");
-        await _ui.FillAsync(_locators.Odometer3843F, _data.Resolve("{{data:txt_odometer_239}}"));
-        await _ui.ClickAsync(_locators.SaveContinue2E7CD);
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0094_8f4c8fAsync
-        await _ui.ClickAsync(_locators.AddVehicle);
-        // EQVehicleSummaryAutoAdditional_2aa54aPage.EQVehicleSummaryAutoAdditional_0095_8f4c8fAsync
-        await _ui.WaitAsync(_locators.VIN0A17C, "True");
-        await _ui.FillAsync(_locators.VIN0A17C, _data.Resolve("{{data:vin_243}}"));
-        await _ui.PressAsync(_locators.VIN0A17C, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN0A17C, "Tab");
-        await _ui.ClickAsync(_locators.Veh1);
-        await _ui.ClickAsync(_locators.VehicleMoreOptions);
-        await _ui.PressAsync(_locators.VehicleMoreOptions, "Click");
-        await _ui.PressAsync(_locators.VehicleMoreOptions, "Scroll[1]");
-        await _ui.ClickAsync(_locators.CollectorCar);
-        await _ui.SelectAsync(_locators.CollectorCarTypeMoreOptions, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.Classic);
-        await _ui.PressAsync(_locators.Classic, "Click");
-        await _ui.PressAsync(_locators.Classic, "scroll[3]");
-        await _ui.FillAsync(_locators.AgreedValue8E288, _data.Resolve("{{data:agreed_value_250}}"));
-        await _ui.ClickAsync(_locators.OwnB8575);
-        await _ui.PressAsync(_locators.OwnB8575, "scroll[3]");
-        await _ui.PressAsync(_locators.OwnB8575, "Click");
-        await _ui.ClickAsync(_locators.Continue);
-        await _ui.ClickAsync(_locators.RestrictedUse);
-        await _ui.PressAsync(_locators.RestrictedUse, "scroll[2]");
-        await _ui.PressAsync(_locators.RestrictedUse, "Click");
-        await _ui.FillAsync(_locators.AppraisalDate8A115, _data.Resolve("{{data:appraisal_date_254}}"));
-        await _ui.PressAsync(_locators.AppraisalDate8A115, "CTRL+A");
-        await _ui.FillAsync(_locators.AppraisalDate8A115, _data.Resolve("{{data:appraisal_date_255}}"));
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_256}}"));
-        await _ui.PressAsync(_locators.TotalAnnualMileage, "CTRL+A");
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_257}}"));
-        await _ui.ClickAsync(_locators.SaveContinue86B78);
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0096_8f4c8fAsync
-        await _ui.ClickAsync(_locators.AddVehicle);
-        // EQVehicleSummaryAutoAdditional_2aa54aPage.EQVehicleSummaryAutoAdditional_0097_8f4c8fAsync
-        await _ui.WaitAsync(_locators.VIN0A17C, "True");
-        await _ui.FillAsync(_locators.VIN0A17C, _data.Resolve("{{data:vin_261}}"));
-        await _ui.PressAsync(_locators.VIN0A17C, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN0A17C, "Tab");
-        await _ui.ClickAsync(_locators.Veh3);
-        await _ui.SelectAsync(_locators.VehicleMoreOptions, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.CollectorCar);
-        await _ui.PressAsync(_locators.CollectorCar, "Click");
-        await _ui.PressAsync(_locators.CollectorCar, "scroll[1]");
-        await _ui.ClickAsync(_locators.ModernClassic);
-        await _ui.PressAsync(_locators.ModernClassic, "Click");
-        await _ui.PressAsync(_locators.ModernClassic, "scroll[2]");
-        await _ui.FillAsync(_locators.AgreedValue8E288, _data.Resolve("{{data:agreed_value_267}}"));
-        await _ui.ClickAsync(_locators.OwnB8575);
-        await _ui.PressAsync(_locators.OwnB8575, "scroll[2]");
-        await _ui.PressAsync(_locators.OwnB8575, "Click");
-        await _ui.PressAsync(_locators.OwnB8575, "scroll[2]");
-        await _ui.ClickAsync(_locators.Continue);
-        await _ui.ClickAsync(_locators.RestrictedUse);
-        await _ui.PressAsync(_locators.RestrictedUse, "Click");
-        await _ui.PressAsync(_locators.RestrictedUse, "END");
-        await _ui.FillAsync(_locators.AppraisalDate8A115, _data.Resolve("{{data:appraisal_date_271}}"));
-        await _ui.PressAsync(_locators.AppraisalDate8A115, "CTRL+A");
-        await _ui.FillAsync(_locators.AppraisalDate8A115, _data.Resolve("{{data:appraisal_date_272}}"));
-        await _ui.FillAsync(_locators.OdometerD648F, _data.Resolve("{{data:odometer_273}}"));
-        await _ui.PressAsync(_locators.OdometerD648F, "CTRL+A");
-        await _ui.FillAsync(_locators.OdometerD648F, _data.Resolve("{{data:odometer_274}}"));
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_275}}"));
-        await _ui.PressAsync(_locators.TotalAnnualMileage, "CTRL+A");
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_276}}"));
-        await _ui.ClickAsync(_locators.SaveContinue86B78);
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0098_8f4c8fAsync
-        await _ui.ClickAsync(_locators.AddVehicle);
-        // EQVehicleSummaryAutoAdditional_2aa54aPage.EQVehicleSummaryAutoAdditional_0099_8f4c8fAsync
-        await _ui.WaitAsync(_locators.VIN0A17C, "True");
-        await _ui.FillAsync(_locators.VIN0A17C, _data.Get("VIN 4"));
-        await _ui.PressAsync(_locators.VIN0A17C, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN0A17C, "Tab");
-        await _ui.ClickAsync(_locators.Veh1);
-        await _ui.ClickAsync(_locators.OwnB8575);
-        await _ui.PressAsync(_locators.OwnB8575, "Click");
-        await _ui.PressAsync(_locators.OwnB8575, "scroll[2]");
-        await _ui.ClickAsync(_locators.Continue);
-        await _ui.FillAsync(_locators.PurchaseDate736F4, _data.Resolve("{{data:purchase_date_285}}"));
-        await _ui.FillAsync(_locators.OdometerD648F, _data.Resolve("{{data:odometer_286}}"));
-        await _ui.PressAsync(_locators.OdometerD648F, "CTRL+A");
-        await _ui.FillAsync(_locators.OdometerD648F, _data.Resolve("{{data:odometer_287}}"));
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_288}}"));
-        await _ui.PressAsync(_locators.TotalAnnualMileage, "CTRL+A");
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Get("Annual Mileage Veh 4"));
-        await _ui.ClickAsync(_locators.SaveContinue86B78);
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0100_8f4c8fAsync
-        await _ui.WaitAsync(_locators.PricingDetailsNext, "Exists");
-        await _ui.ClickAsync(_locators.PricingDetailsNext);
-        // TBoxSetBuffer_e51da1Page.TBoxSetBuffer_0101_8f4c8fAsync
-        _data.Set("Driver 1 Vehicle", _data.Resolve("{{data:driver_1_vehicle}}"));
-        _data.Set("Driver 1 Principal Occasional", _data.Resolve("{{data:driver_1_principal_occasional}}"));
-        _data.Set("Driver 2 Vehicle", _data.Get("Driver 2 Vehicle"));
-        _data.Set("Driver 2 Principal Occasional", _data.Get("Driver 2 Principal Occasional"));
-        _data.Set("Driver 3 Vehicle", _data.Get("Driver 3 Vehicle"));
-        _data.Set("Driver 3 Principal Occasional", _data.Get("Driver 3 Principal Occasional"));
-        _data.Set("Driver 4 Vehicle", _data.Get("Driver 4 Vehicle"));
-        _data.Set("Driver 4 Principal Occasional", _data.Get("Driver 4 Principal Occasional"));
-        _data.Set("Driver 5 Vehicle", _data.Get("Driver 5 Vehicle"));
-        _data.Set("Driver 5 Principal Occasional", _data.Get("Driver 5 Principal Occasional"));
-    }
+    public Task EnterAnnualMileage51344Async(string value) =>
+        _ui.FillAsync(_locators.AnnualMileage51344, value, new ControlIntent("Vehicles", "AnnualMileage51344"));
 
-    // Business step: I complete auto AddlCov Vehicle Coverages
-    public async Task CompleteAutoAddlCovVehicleCoveragesAsync5()
-    {
-        // EQVehicleCoveragesSection_2f4d8bPage.EQVehicleCoveragesSection_0152_8f4c8fAsync
-        if (_data.Condition("'UMPD/UIMPD_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV1);
-        }
-        if (_data.Condition("'UMPD Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle1);
-            await _ui.PressAsync(_locators.UMPDCoverageVehicle1, "Click");
-            await _ui.PressAsync(_locators.UMPDCoverageVehicle1, "scroll[2]");
-        }
-        if (_data.Condition("'UMPD Coverage_V1' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV1);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV1);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV1, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV1, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV1);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V1' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV1);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV1, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV1, "Scroll[2]");
-        }
-        if (_data.Condition("'UMPD/UIMPD_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV2);
-        }
-        if (_data.Condition("'UMPD Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle2);
-        }
-        if (_data.Condition("'UMPD Coverage_V2' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV2);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV2);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV2, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV2, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV2);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV2);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV2, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV2, "scroll[2]");
-        }
-        if (_data.Condition("'Towing and Labor' != NULL"))
-        {
-            await _ui.SelectAsync(_locators.NoCoverageV1Towing, _data.Resolve(""));
-        }
-        if (_data.Condition("'UMPD/UIMPD_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV3);
-        }
-        if (_data.Condition("'UMPD Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle3);
-        }
-        if (_data.Condition("'UMPD Coverage_V3' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV3);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV3);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV3, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV3, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV3);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V3' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV3);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV3, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV3, "scroll[2]");
-        }
-        if (_data.Condition("'Cycle Accessories_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.CycleAccessoriesV3);
-        }
-        if (_data.Condition("'Original Parts_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.OriginalPartsV3);
-        }
-        if (_data.Condition("'UMPD/UIMPD_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV4);
-        }
-        if (_data.Condition("'UMPD Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle4);
-        }
-        if (_data.Condition("'UMPD Coverage_V4' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV4);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV4);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV4, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV4, "end");
-        }
-        if (_data.Condition("'Theft Deductible_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV4);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V4' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV4);
-        }
-        if (_data.Condition("'Cycle Accessories_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.CycleAccessoriesV4);
-        }
-        if (_data.Condition("'Original Parts_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.OriginalPartsV4);
-        }
-    }
+    public Task PressAnnualMileage51344Async(string key) =>
+        _ui.PressAsync(_locators.AnnualMileage51344, key, new ControlIntent("Vehicles", "AnnualMileage51344"));
 
-    // Business step: I review the driver information summary
-    public async Task ReviewTheDriverInformationSummaryAsync6()
-    {
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0053_10f911Async
-        if (await _ui.ExistsAsync(_locators.Single))
-        {
-            await _ui.VerifyAsync(_locators.Single, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0054_10f911Async
-        if (await _ui.ExistsAsync(_locators.MaritalStatusSingle))
-        {
-            await _ui.ClickAsync(_locators.MaritalStatusSingle);
-        }
-        if (_data.Condition("'Marital Status' != \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' != \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        if (_data.Condition("'Marital Status' == \"Single\""))
-        {
-            await _ui.ClickAsync(_locators.Single);
-        }
-        if (_data.Condition("'Marital Status' == \"Married\""))
-        {
-            await _ui.SelectAsync(_locators.Married, _data.Resolve(""));
-        }
-        if (_data.Condition("'Marital Status' == \"Divorced\""))
-        {
-            await _ui.ClickAsync(_locators.Divorced);
-        }
-        // EQDriverEducationLevel_5a720bPage.DriverEducationLevel_0055_10f911Async
-        if (await _ui.ExistsAsync(_locators.HighSchoolDiplomaOrGED))
-        {
-            await _ui.VerifyAsync(_locators.HighSchoolDiplomaOrGED, _data.Resolve("True"), "Enabled");
-        }
-        // EQDriverEducationLevel_5a720bPage.DriverEducationLevel_0056_10f911Async
-        if (await _ui.ExistsAsync(_locators.MDNJEducationLevelUnknown))
-        {
-            await _ui.ClickAsync(_locators.MDNJEducationLevelUnknown);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Unknown\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"HighSchool\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"HighSchool\""))
-        {
-            await _ui.ClickAsync(_locators.HighSchoolDiplomaOrGED);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"Trade\""))
-        {
-            await _ui.ClickAsync(_locators.VocationalOrTradeSchoolDegree);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel != \"Unknown\" AND MD_NJ_EducationLevel != \"HighSchool\" AND MD_NJ_EducationLevel != \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel != \"Unknown\" AND MD_NJ_EducationLevel != \"HighSchool\" AND MD_NJ_EducationLevel != \"Trade\""))
-        {
-            await _ui.SelectAsync(_locators.MoreOptionsEdu, _data.Resolve(""));
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"SomeCollege\""))
-        {
-            await _ui.WaitAsync(_locators.SomeCollege, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"SomeCollege\""))
-        {
-            await _ui.ClickAsync(_locators.SomeCollege);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"InCollege\""))
-        {
-            await _ui.WaitAsync(_locators.CurrentlyInCollege, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"InCollege\""))
-        {
-            await _ui.ClickAsync(_locators.CurrentlyInCollege);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"CollegeDegree\""))
-        {
-            await _ui.WaitAsync(_locators.CollegeDegreeGraduateWork, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"CollegeDegree\""))
-        {
-            await _ui.ClickAsync(_locators.CollegeDegreeGraduateWork);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.WaitAsync(_locators.GraduateDegreeJDMasters, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.ClickAsync(_locators.GraduateDegreeJDMasters);
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.WaitAsync(_locators.PostGraduateDegreeMedicalDegreePhDEdDEtc, "Visible");
-        }
-        if (_data.Condition("MD_NJ_EducationLevel == \"GradDegree\""))
-        {
-            await _ui.ClickAsync(_locators.PostGraduateDegreeMedicalDegreePhDEdDEtc);
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0057_10f911Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Condition verify relationship spouse button exist; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.Spouse, _data.Resolve("Exists"), "");
-        }
-        await _ui.ClickAsync(_locators.AccountOwner);
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0058_10f911Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Then Relationship for account owner exist; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.SelectAsync(_locators.RelationshipToAccountOwnerNULL, _data.Resolve("{{data:select_relationship_to_account_owner_null_122}}"));
-        }
-        if (_data.Condition("'Relationship to Account Owner' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.AccountOwner);
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0059_10f911Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Condition Check if Relationship is account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.AccountOwnerReadOnly, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0060_10f911Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Then Relationship is account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.VerifyAsync(_locators.AccountOwnerReadOnly, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0061_10f911Async
-        if (_data.Condition("If options for Relationship to Account Owner are enabled > Else Check if Relationship is read only > If Check if Relationship is account owner > Else Make script fail due to Relationship other than account owner; 'Policy Type' != \"Cycle\""))
-        {
-            await _ui.ClickAsync(_locators.AccountOwner);
-            await _ui.PressAsync(_locators.AccountOwner, "Click");
-            await _ui.PressAsync(_locators.AccountOwner, "scroll[2]");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatusCycle_0062_10f911Async
-        if (_data.Condition("'Policy Type' == \"Cycle\""))
-        {
-            await _ui.WaitAsync(_locators.IsThisDriverANamedInsured, "Visible");
-        }
-        if (_data.Condition("'Named Insured?' == \"PrimaryNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.PrimaryNamedInsured);
-            await _ui.PressAsync(_locators.PrimaryNamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NamedInsured);
-            await _ui.PressAsync(_locators.NamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NotNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NotANamedInsured);
-            await _ui.PressAsync(_locators.NotANamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-            await _ui.PressAsync(_locators.Related, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-            await _ui.PressAsync(_locators.Related, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"NoCycleLicense\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"NoCycleLicense\""))
-        {
-            await _ui.SelectAsync(_locators.NoCycleLicense, _data.Resolve(""));
-        }
-        if (_data.Condition("'Operator Status' != \"Assigned\" AND 'Operator Status' != \"NoCycleLicense\" AND 'Operator Status' != \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' == \"Military\""))
-        {
-            await _ui.ClickAsync(_locators.Military);
-        }
-        if (_data.Condition("'Operator Status' == \"Missionary\""))
-        {
-            await _ui.ClickAsync(_locators.Missionary);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.SelectAsync(_locators.NonDriver, _data.Resolve(""));
-        }
-        if (_data.Condition("'Operator Status' == \"OtherIns\""))
-        {
-            await _ui.ClickAsync(_locators.OtherInsurance);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.WaitAsync(_locators.NonDriverReason, "Visible");
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"NeverLicensed\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_143}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Underage\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_144}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_145}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Surrendered\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_146}}"));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"PermitDriver\" AND 'If NonDriver: Reason' == \"NonDriver\""))
-        {
-            await _ui.FillAsync(_locators.CycleNonDriverComboBox, _data.Resolve("{{data:cyclenondriver_combobox_147}}"));
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0063_10f911Async
-        if (_data.Condition("'Policy Type' != \"Cycle\""))
-        {
-            await _ui.WaitAsync(_locators.IsThisDriverANamedInsured, "Visible");
-        }
-        if (_data.Condition("'Named Insured?' == \"PrimaryNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.PrimaryNamedInsured);
-            await _ui.PressAsync(_locators.PrimaryNamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NamedInsured);
-            await _ui.PressAsync(_locators.NamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Named Insured?' == \"NotNamedIns\""))
-        {
-            await _ui.ClickAsync(_locators.NotANamedInsured);
-            await _ui.PressAsync(_locators.NotANamedInsured, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-            await _ui.PressAsync(_locators.Assigned, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.NonDriver);
-            await _ui.PressAsync(_locators.NonDriver, "scroll[2]");
-        }
-        if (_data.Condition("'Operator Status' != \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.Assigned);
-        }
-        if (_data.Condition("'Operator Status' == \"Related\""))
-        {
-            await _ui.ClickAsync(_locators.Related);
-        }
-        if (_data.Condition("'Operator Status' == \"Military\""))
-        {
-            await _ui.ClickAsync(_locators.Military);
-        }
-        if (_data.Condition("'Operator Status' == \"Missionary\""))
-        {
-            await _ui.ClickAsync(_locators.Missionary);
-        }
-        if (_data.Condition("'Operator Status' == \"OtherIns\""))
-        {
-            await _ui.ClickAsync(_locators.OtherInsurance);
-        }
-        if (_data.Condition("'Operator Status' == \"Roomate\""))
-        {
-            await _ui.ClickAsync(_locators.Roommate);
-        }
-        if (_data.Condition("'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.WaitAsync(_locators.NonDriverReason, "Visible");
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"NeverLicensed\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.NeverLicensed);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Underage\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.Underage);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.MedicalCondition);
-        }
-        if (_data.Condition("'If NonDriver: Reason' != \"NeverLicensed\" AND 'If NonDriver: Reason' != \"Underage\" AND 'If NonDriver: Reason' != \"MedCondition\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.SelectAsync(_locators.MoreOptionsNonDriver, _data.Resolve(""));
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"Surrendered\" AND 'Operator Status' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.Surrendered);
-        }
-        if (_data.Condition("'If NonDriver: Reason' == \"PermitDriver\" AND 'If NonDriver: Reason' == \"NonDriver\""))
-        {
-            await _ui.ClickAsync(_locators.PermitDriver);
-        }
-        // EQDriverLicenseTime_01b659Page.LicenseInfo_0064_10f911Async
-        if (_data.Condition("'State Licensed(XX)' != NULL"))
-        {
-            await _ui.FillAsync(_locators.LicenseState, _data.Get("AL_ClientData.State"));
-        }
-        if (_data.Condition("'Drivers License #' != NULL"))
-        {
-            await _ui.FillAsync(_locators.DriverSLicenseNumber, _data.Resolve("{{data:driver_s_license_number_169}}"));
-            await _ui.PressAsync(_locators.DriverSLicenseNumber, "CTRL+A");
-        }
-        if (_data.Condition("'Drivers License #' != NULL"))
-        {
-            await _ui.FillAsync(_locators.DriverSLicenseNumber, _data.Get("AL_ClientData.DL Number"));
-        }
-        await _ui.FillAsync(_locators.YrsLicensedCurrentState, _data.Resolve("{{data:yrs_licensed_current_state_171}}"));
-        await _ui.PressAsync(_locators.YrsLicensedCurrentState, "CTRL+A");
-        await _ui.FillAsync(_locators.YrsLicensedCurrentState, _data.Resolve("{{data:yrs_licensed_current_state_172}}"));
-        await _ui.FillAsync(_locators.MonthsLicensedCurrentState, _data.Resolve("{{data:months_licensed_current_state_173}}"));
-        await _ui.PressAsync(_locators.MonthsLicensedCurrentState, "CTRL+A");
-        await _ui.FillAsync(_locators.MonthsLicensedCurrentState, _data.Resolve("{{data:months_licensed_current_state_174}}"));
-        if (_data.Condition("'State' == \"TX\""))
-        {
-            await _ui.FillAsync(_locators.DaysOperatedUninsured, _data.Resolve("{{data:daysoperateduninsured_175}}"));
-        }
-        if (_data.Condition("'State' == \"CA\""))
-        {
-            await _ui.FillAsync(_locators.YrsLicensedAllStates, _data.Resolve("{{data:yrslicensed_all_states_176}}"));
-            await _ui.PressAsync(_locators.YrsLicensedAllStates, "CTRL+A");
-        }
-        if (_data.Condition("'State' == \"CA\""))
-        {
-            await _ui.FillAsync(_locators.YrsLicensedAllStates, _data.Resolve("{{data:yrslicensed_all_states_177}}"));
-        }
-        if (_data.Condition("'Operator Status' == \"Assigned\""))
-        {
-            await _ui.ClickAsync(_locators.NoD053A);
-            await _ui.PressAsync(_locators.NoD053A, "Click");
-            await _ui.PressAsync(_locators.NoD053A, "Scroll[2]");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0065_10f911Async
-        if (await _ui.ExistsAsync(_locators.WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove))
-        {
-            await _ui.VerifyAsync(_locators.WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove, _data.Resolve("Exists"), "");
-        }
-        // EQNamedInsOperatorStatus_36c72dPage.NamedInsOperatorStatus_0066_10f911Async
-        if (await _ui.ExistsAsync(_locators.NoPreviouslyInsured))
-        {
-            await _ui.SelectAsync(_locators.NoPreviouslyInsured, _data.Resolve(""));
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0067_10f911Async
-        if (await _ui.ExistsAsync(_locators.PriorCarrierName))
-        {
-            await _ui.VerifyAsync(_locators.PriorCarrierName, _data.Resolve("Exists"), "");
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0068_10f911Async
-        if (await _ui.ExistsAsync(_locators.SaveAndContinue9CB7A))
-        {
-            await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0069_10f911Async
-        if (await _ui.ExistsAsync(_locators.NoNeedWasNotLicensed))
-        {
-            await _ui.VerifyAsync(_locators.NoNeedWasNotLicensed, _data.Resolve("Visible"), "");
-        }
-        // EQPriorInsuranceInfo_a40db0Page.PriorInsuranceInfo_0070_10f911Async
-        if (await _ui.ExistsAsync(_locators.NoNeedWasNotLicensed))
-        {
-            await _ui.ClickAsync(_locators.NoNeedWasNotLicensed);
-            await _ui.PressAsync(_locators.NoNeedWasNotLicensed, "End");
-            await _ui.PressAsync(_locators.NoNeedWasNotLicensed, "Click");
-        }
-        await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        // EQPriorInsuranceInfo_a40db0Page.SaveContinue_0071_10f911Async
-        if (await _ui.ExistsAsync(_locators.SaveAndContinue9CB7A))
-        {
-            await _ui.ClickAsync(_locators.SaveAndContinue9CB7A);
-        }
-        // EQExpiredLicensePopUp_ac02e7Page.EQExpiredLicensePopUp_0072_10f911Async
-        if (await _ui.ExistsAsync(_locators.CONTINUED555D))
-        {
-            await _ui.WaitAsync(_locators.CONTINUED555D, "Exists");
-        }
-        // EQExpiredLicensePopUp_ac02e7Page.EQExpiredLicensePopUp_0073_10f911Async
-        if (await _ui.ExistsAsync(_locators.CONTINUED555D))
-        {
-            await _ui.ClickAsync(_locators.CONTINUED555D);
-        }
-    }
+    public Task SelectAntiTheftYesAsync(string value) =>
+        _ui.SelectAsync(_locators.AntiTheftYes, value, new ControlIntent("Vehicles", "AntiTheftYes"));
 
-    // Business step: I complete vehicle Summary Automobile Rate Filing
-    public async Task CompleteVehicleSummaryAutomobileRateFilingAsync3()
-    {
-        // EQCAVerifiedMileage_306316Page.EQCAVerifiedMileage_0085_10f911Async
-        await _ui.VerifyAsync(_locators.EQCAVerifiedMileage, _data.Resolve("Exists"), "");
-        // EQVehicleInformation_7d0869Page.EQVehicleInformation_0086_10f911Async
-        if (await _ui.ExistsAsync(_locators.MOREOPTIONS))
-        {
-            await _ui.WaitAsync(_locators.MOREOPTIONS, "Visible");
-        }
-        // EQVehicleInformation_7d0869Page.EQVehicleInformation_0087_10f911Async
-        if (await _ui.ExistsAsync(_locators.MOREOPTIONS))
-        {
-            await _ui.SelectAsync(_locators.MOREOPTIONS, _data.Resolve(""));
-        }
-        await _ui.ClickAsync(_locators.AdditionalVehicleS62C9A);
-        await _ui.ClickAsync(_locators.VehicleInformationNext);
-        // EQVehicleInformation_7d0869Page.EQVehicleInformation_0088_10f911Async
-        if (await _ui.ExistsAsync(_locators.AdditionalVehicle))
-        {
-            await _ui.ClickAsync(_locators.AdditionalVehicle);
-        }
-        await _ui.ClickAsync(_locators.VehicleInformationNext);
-        // EQVehicleAutoVin1_fdc6bdPage.EQVehicleVin_0089_10f911Async
-        await _ui.WaitAsync(_locators.VIN06D01, "True");
-        await _ui.ClickAsync(_locators.VIN06D01);
-        await _ui.FillAsync(_locators.VIN06D01, _data.Resolve("{{data:txt_vin_217}}"));
-        await _ui.PressAsync(_locators.VIN06D01, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN06D01, "Tab");
-        await _ui.ClickAsync(_locators.Vehicle1);
-        // EQVehicleSummaryAutoMotorHomeUse_e4fbccPage.EQVehicleSummaryAutoUse_0090_10f911Async
-        if (_data.Condition("Loan != NULL"))
-        {
-            await _ui.ClickAsync(_locators.Loan4369D);
-        }
-        if (_data.Condition("Lease != NULL"))
-        {
-            await _ui.ClickAsync(_locators.Leased14EA4);
-        }
-        if (_data.Condition("Loan == NULL AND Lease == NULL"))
-        {
-            await _ui.ClickAsync(_locators.Own49EEC);
-        }
-        if (_data.Condition("State == \"OK\""))
-        {
-            await _ui.SelectAsync(_locators.NativeAmericanRegisterNO, _data.Resolve(""));
-        }
-        if (_data.Condition("AntiTheft != NULL AND State != \"AZ\" AND State != \"MD\" AND State != \"OH\" AND State != \"CA\" AND State != \"VA\" AND State != \"WI\" AND State != \"UT\""))
-        {
-            await _ui.SelectAsync(_locators.AntiTheftYes, _data.Resolve(""));
-        }
-        if (_data.Condition("AntiTheft != NULL AND State == \"IL\""))
-        {
-            await _ui.ClickAsync(_locators.ILCategory1);
-        }
-        if (_data.Condition("State == \"NJ\" AND AntiTheft != NULL"))
-        {
-            await _ui.ClickAsync(_locators.CategoryI);
-        }
-        if (_data.Condition("AntiTheft != NULL AND (State == \"NY\" OR State == \"VT\")"))
-        {
-            await _ui.ClickAsync(_locators.ActiveDisablingDevice);
-        }
-        if (_data.Condition("PickUp != NULL AND (State == \"NY\" OR State = \"VA\")"))
-        {
-            await _ui.SelectAsync(_locators.CamperShellNo, _data.Resolve(""));
-        }
-        if (_data.Condition("State == \"CA\""))
-        {
-            await _ui.ClickAsync(_locators.PleasureCANYFFCIC);
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.ClickAsync(_locators.N1Day);
-        }
-        if (_data.Condition("State == \"NY\" AND Company == \"FFCIC\""))
-        {
-            await _ui.FillAsync(_locators.NYFFCICTotalAnnualMiles, _data.Resolve("{{data:ny_ffcic_total_annual_miles_231}}"));
-            await _ui.PressAsync(_locators.NYFFCICTotalAnnualMiles, "CTRL+A");
-        }
-        if (_data.Condition("State == \"NY\" AND Company == \"FFCIC\""))
-        {
-            await _ui.FillAsync(_locators.NYFFCICTotalAnnualMiles, _data.Resolve("{{data:ny_ffcic_total_annual_miles_232}}"));
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.WorkMilesDay, _data.Resolve("{{data:work_miles_day_233}}"));
-            await _ui.PressAsync(_locators.WorkMilesDay, "CTRL+A");
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.WorkMilesDay, _data.Resolve("{{data:work_miles_day_234}}"));
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.NonWorkAnnualMiles, _data.Resolve("{{data:non_work_annual_miles_235}}"));
-            await _ui.PressAsync(_locators.NonWorkAnnualMiles, "CTRL+A");
-        }
-        if (_data.Condition("State == \"KS\""))
-        {
-            await _ui.FillAsync(_locators.NonWorkAnnualMiles, _data.Resolve("{{data:non_work_annual_miles_236}}"));
-        }
-        if (_data.Condition("'Farm/Use' != NULL AND State == \"CA\""))
-        {
-            await _ui.SelectAsync(_locators.UseCAMoreOptions, _data.Resolve(""));
-        }
-        if (_data.Condition("'Farm/Use' != NULL AND (State != \"NY\" and Company !=\"FFCIC\")"))
-        {
-            await _ui.SelectAsync(_locators.MoreOptionsFarmUse, _data.Resolve(""));
-        }
-        await _ui.FillAsync(_locators.PurchaseDateBB8AF, _data.Resolve("{{data:txt_purchase_date_239}}"));
-        await _ui.PressAsync(_locators.PurchaseDateBB8AF, "CTRL+A");
-        await _ui.FillAsync(_locators.PurchaseDateBB8AF, _data.Resolve("{{data:txt_purchase_date_240}}"));
-        await _ui.FillAsync(_locators.Odometer3843F, _data.Resolve("{{data:txt_odometer_241}}"));
-        await _ui.PressAsync(_locators.Odometer3843F, "CTRL+A");
-        await _ui.FillAsync(_locators.Odometer3843F, _data.Resolve("{{data:txt_odometer_242}}"));
-        await _ui.ClickAsync(_locators.SaveContinue2E7CD);
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0094_10f911Async
-        await _ui.ClickAsync(_locators.AddVehicle);
-        // EQVehicleSummaryAutoAdditional_2aa54aPage.EQVehicleSummaryAutoAdditional_0095_10f911Async
-        await _ui.WaitAsync(_locators.VIN0A17C, "True");
-        await _ui.FillAsync(_locators.VIN0A17C, _data.Resolve("{{data:vin_246}}"));
-        await _ui.PressAsync(_locators.VIN0A17C, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN0A17C, "Tab");
-        await _ui.ClickAsync(_locators.Veh1);
-        await _ui.ClickAsync(_locators.VehicleMoreOptions);
-        await _ui.PressAsync(_locators.VehicleMoreOptions, "Click");
-        await _ui.PressAsync(_locators.VehicleMoreOptions, "Scroll[1]");
-        await _ui.ClickAsync(_locators.CollectorCar);
-        await _ui.SelectAsync(_locators.CollectorCarTypeMoreOptions, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.Classic);
-        await _ui.PressAsync(_locators.Classic, "Click");
-        await _ui.PressAsync(_locators.Classic, "scroll[3]");
-        await _ui.FillAsync(_locators.AgreedValue8E288, _data.Resolve("{{data:agreed_value_253}}"));
-        await _ui.ClickAsync(_locators.OwnB8575);
-        await _ui.PressAsync(_locators.OwnB8575, "scroll[3]");
-        await _ui.PressAsync(_locators.OwnB8575, "Click");
-        await _ui.ClickAsync(_locators.Continue);
-        await _ui.ClickAsync(_locators.RestrictedUse);
-        await _ui.PressAsync(_locators.RestrictedUse, "scroll[2]");
-        await _ui.PressAsync(_locators.RestrictedUse, "Click");
-        await _ui.FillAsync(_locators.AppraisalDate8A115, _data.Resolve("{{data:appraisal_date_257}}"));
-        await _ui.PressAsync(_locators.AppraisalDate8A115, "CTRL+A");
-        await _ui.FillAsync(_locators.AppraisalDate8A115, _data.Resolve("{{data:appraisal_date_258}}"));
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_259}}"));
-        await _ui.PressAsync(_locators.TotalAnnualMileage, "CTRL+A");
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_260}}"));
-        await _ui.ClickAsync(_locators.SaveContinue86B78);
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0096_10f911Async
-        await _ui.ClickAsync(_locators.AddVehicle);
-        // EQVehicleSummaryAutoAdditional_2aa54aPage.EQVehicleSummaryAutoAdditional_0097_10f911Async
-        await _ui.WaitAsync(_locators.VIN0A17C, "True");
-        await _ui.FillAsync(_locators.VIN0A17C, _data.Resolve("{{data:vin_264}}"));
-        await _ui.PressAsync(_locators.VIN0A17C, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN0A17C, "Tab");
-        await _ui.ClickAsync(_locators.Veh3);
-        await _ui.SelectAsync(_locators.VehicleMoreOptions, _data.Resolve(""));
-        await _ui.ClickAsync(_locators.CollectorCar);
-        await _ui.PressAsync(_locators.CollectorCar, "Click");
-        await _ui.PressAsync(_locators.CollectorCar, "scroll[1]");
-        await _ui.ClickAsync(_locators.ModernClassic);
-        await _ui.PressAsync(_locators.ModernClassic, "Click");
-        await _ui.PressAsync(_locators.ModernClassic, "scroll[2]");
-        await _ui.FillAsync(_locators.AgreedValue8E288, _data.Resolve("{{data:agreed_value_270}}"));
-        await _ui.ClickAsync(_locators.OwnB8575);
-        await _ui.PressAsync(_locators.OwnB8575, "scroll[2]");
-        await _ui.PressAsync(_locators.OwnB8575, "Click");
-        await _ui.PressAsync(_locators.OwnB8575, "scroll[2]");
-        await _ui.ClickAsync(_locators.Continue);
-        await _ui.ClickAsync(_locators.RestrictedUse);
-        await _ui.PressAsync(_locators.RestrictedUse, "Click");
-        await _ui.PressAsync(_locators.RestrictedUse, "END");
-        await _ui.FillAsync(_locators.AppraisalDate8A115, _data.Resolve("{{data:appraisal_date_274}}"));
-        await _ui.PressAsync(_locators.AppraisalDate8A115, "CTRL+A");
-        await _ui.FillAsync(_locators.AppraisalDate8A115, _data.Resolve("{{data:appraisal_date_275}}"));
-        await _ui.FillAsync(_locators.OdometerD648F, _data.Resolve("{{data:odometer_276}}"));
-        await _ui.PressAsync(_locators.OdometerD648F, "CTRL+A");
-        await _ui.FillAsync(_locators.OdometerD648F, _data.Resolve("{{data:odometer_277}}"));
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_278}}"));
-        await _ui.PressAsync(_locators.TotalAnnualMileage, "CTRL+A");
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_279}}"));
-        await _ui.ClickAsync(_locators.SaveContinue86B78);
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0098_10f911Async
-        await _ui.ClickAsync(_locators.AddVehicle);
-        // EQVehicleSummaryAutoAdditional_2aa54aPage.EQVehicleSummaryAutoAdditional_0099_10f911Async
-        await _ui.WaitAsync(_locators.VIN0A17C, "True");
-        await _ui.FillAsync(_locators.VIN0A17C, _data.Resolve("{{data:vin_283}}"));
-        await _ui.PressAsync(_locators.VIN0A17C, "POST:TAB");
-        await _ui.PressAsync(_locators.VIN0A17C, "Tab");
-        await _ui.ClickAsync(_locators.Veh1);
-        await _ui.ClickAsync(_locators.OwnB8575);
-        await _ui.PressAsync(_locators.OwnB8575, "Click");
-        await _ui.PressAsync(_locators.OwnB8575, "scroll[2]");
-        await _ui.ClickAsync(_locators.Continue);
-        await _ui.FillAsync(_locators.PurchaseDate736F4, _data.Resolve("{{data:purchase_date_288}}"));
-        await _ui.FillAsync(_locators.OdometerD648F, _data.Resolve("{{data:odometer_289}}"));
-        await _ui.PressAsync(_locators.OdometerD648F, "CTRL+A");
-        await _ui.FillAsync(_locators.OdometerD648F, _data.Resolve("{{data:odometer_290}}"));
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_291}}"));
-        await _ui.PressAsync(_locators.TotalAnnualMileage, "CTRL+A");
-        await _ui.FillAsync(_locators.TotalAnnualMileage, _data.Resolve("{{data:total_annual_mileage_292}}"));
-        await _ui.ClickAsync(_locators.SaveContinue86B78);
-        // EQVehicleSummaryNextAdd_a608b2Page.EQVehicleSummaryNextAdd_0100_10f911Async
-        await _ui.WaitAsync(_locators.PricingDetailsNext, "Exists");
-        await _ui.ClickAsync(_locators.PricingDetailsNext);
-        // TBoxSetBuffer_e51da1Page.TBoxSetBuffer_0101_10f911Async
-        _data.Set("Driver 1 Vehicle", _data.Resolve("{{data:driver_1_vehicle}}"));
-        _data.Set("Driver 1 Principal Occasional", _data.Resolve("{{data:driver_1_principal_occasional}}"));
-        _data.Set("Driver 2 Vehicle", _data.Get("Driver 2 Vehicle"));
-        _data.Set("Driver 2 Principal Occasional", _data.Get("Driver 2 Principal Occasional"));
-        _data.Set("Driver 3 Vehicle", _data.Get("Driver 3 Vehicle"));
-        _data.Set("Driver 3 Principal Occasional", _data.Get("Driver 3 Principal Occasional"));
-        _data.Set("Driver 4 Vehicle", _data.Get("Driver 4 Vehicle"));
-        _data.Set("Driver 4 Principal Occasional", _data.Get("Driver 4 Principal Occasional"));
-        _data.Set("Driver 5 Vehicle", _data.Get("Driver 5 Vehicle"));
-        _data.Set("Driver 5 Principal Occasional", _data.Get("Driver 5 Principal Occasional"));
-    }
+    public Task EnterAppraisalDate8A115Async(string value) =>
+        _ui.FillAsync(_locators.AppraisalDate8A115, value, new ControlIntent("Vehicles", "AppraisalDate8A115"));
 
-    // Business step: I complete auto AddlCov Vehicle Coverages
-    public async Task CompleteAutoAddlCovVehicleCoveragesAsync6()
-    {
-        // EQVehicleCoveragesSection_2f4d8bPage.EQVehicleCoveragesSection_0152_10f911Async
-        if (_data.Condition("'UMPD/UIMPD_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV1);
-        }
-        if (_data.Condition("'UMPD Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle1);
-            await _ui.PressAsync(_locators.UMPDCoverageVehicle1, "Click");
-            await _ui.PressAsync(_locators.UMPDCoverageVehicle1, "scroll[2]");
-        }
-        if (_data.Condition("'UMPD Coverage_V1' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV1);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV1);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV1, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV1, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V1' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV1);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V1' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV1);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV1, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV1, "Scroll[2]");
-        }
-        if (_data.Condition("'UMPD/UIMPD_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV2);
-        }
-        if (_data.Condition("'UMPD Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle2);
-        }
-        if (_data.Condition("'UMPD Coverage_V2' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV2);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV2);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV2, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV2, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV2);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V2' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV2);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV2, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV2, "scroll[2]");
-        }
-        if (_data.Condition("'Towing and Labor' != NULL"))
-        {
-            await _ui.SelectAsync(_locators.NoCoverageV1Towing, _data.Resolve(""));
-        }
-        if (_data.Condition("'UMPD/UIMPD_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV3);
-        }
-        if (_data.Condition("'UMPD Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle3);
-        }
-        if (_data.Condition("'UMPD Coverage_V3' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV3);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV3);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV3, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV3, "scroll[4]");
-        }
-        if (_data.Condition("'Theft Deductible_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV3);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V3' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV3);
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV3, "Click");
-            await _ui.PressAsync(_locators.RoadsideAssistanceCoverageV3, "scroll[2]");
-        }
-        if (_data.Condition("'Cycle Accessories_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.CycleAccessoriesV3);
-        }
-        if (_data.Condition("'Original Parts_V3' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.OriginalPartsV3);
-        }
-        if (_data.Condition("'UMPD/UIMPD_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDUIMPDV4);
-        }
-        if (_data.Condition("'UMPD Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UMPDCoverageVehicle4);
-        }
-        if (_data.Condition("'UMPD Coverage_V4' == \"MORE OPTIONS\""))
-        {
-            await _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, _data.Resolve(""));
-        }
-        if (_data.Condition("'UIMPD Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.UIMPDCoverageV4);
-        }
-        if (_data.Condition("'Rental Reimbursement Coverage_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.RentalReimbursementCoverageV4);
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV4, "Click");
-            await _ui.PressAsync(_locators.RentalReimbursementCoverageV4, "end");
-        }
-        if (_data.Condition("'Theft Deductible_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.TheftDeductibleV4);
-        }
-        if (_data.Condition("'Roadside Assistance Coverage_V4' != NULL AND NOT(State == \"NY\")"))
-        {
-            await _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV4);
-        }
-        if (_data.Condition("'Cycle Accessories_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.CycleAccessoriesV4);
-        }
-        if (_data.Condition("'Original Parts_V4' != NULL"))
-        {
-            await _ui.ClickAsync(_locators.OriginalPartsV4);
-        }
-    }
+    public Task PressAppraisalDate8A115Async(string key) =>
+        _ui.PressAsync(_locators.AppraisalDate8A115, key, new ControlIntent("Vehicles", "AppraisalDate8A115"));
+
+    public Task EnterAppraisalDateD909CAsync(string value) =>
+        _ui.FillAsync(_locators.AppraisalDateD909C, value, new ControlIntent("Vehicles", "AppraisalDateD909C"));
+
+    public Task PressAssignedAsync(string key) =>
+        _ui.PressAsync(_locators.Assigned, key, new ControlIntent("Vehicles", "Assigned"));
+
+    public Task ClickAssignedAsync() =>
+        _ui.ClickAsync(_locators.Assigned, new ControlIntent("Vehicles", "Assigned"));
+
+    public Task WaitForCONTINUED555DAsync(string expected) =>
+        _ui.WaitAsync(_locators.CONTINUED555D, expected, new ControlIntent("Vehicles", "CONTINUED555D"));
+
+    public Task ClickCONTINUED555DAsync() =>
+        _ui.ClickAsync(_locators.CONTINUED555D, new ControlIntent("Vehicles", "CONTINUED555D"));
+
+    public Task<bool> IsCONTINUED555DPresentAsync() =>
+        _ui.ExistsAsync(_locators.CONTINUED555D);
+
+    public Task ClickCONTINUEF07C7Async() =>
+        _ui.ClickAsync(_locators.CONTINUEF07C7, new ControlIntent("Vehicles", "CONTINUEF07C7"));
+
+    public Task<bool> IsCONTINUEF07C7PresentAsync() =>
+        _ui.ExistsAsync(_locators.CONTINUEF07C7);
+
+    public Task SelectCamperShellNoAsync(string value) =>
+        _ui.SelectAsync(_locators.CamperShellNo, value, new ControlIntent("Vehicles", "CamperShellNo"));
+
+    public Task ClickCategoryIAsync() =>
+        _ui.ClickAsync(_locators.CategoryI, new ControlIntent("Vehicles", "CategoryI"));
+
+    public Task PressClassicAsync(string key) =>
+        _ui.PressAsync(_locators.Classic, key, new ControlIntent("Vehicles", "Classic"));
+
+    public Task ClickClassicAsync() =>
+        _ui.ClickAsync(_locators.Classic, new ControlIntent("Vehicles", "Classic"));
+
+    public Task PressCollectorCarAsync(string key) =>
+        _ui.PressAsync(_locators.CollectorCar, key, new ControlIntent("Vehicles", "CollectorCar"));
+
+    public Task ClickCollectorCarAsync() =>
+        _ui.ClickAsync(_locators.CollectorCar, new ControlIntent("Vehicles", "CollectorCar"));
+
+    public Task SelectCollectorCarTypeMoreOptionsAsync(string value) =>
+        _ui.SelectAsync(_locators.CollectorCarTypeMoreOptions, value, new ControlIntent("Vehicles", "CollectorCarTypeMoreOptions"));
+
+    public Task WaitForCollegeDegreeGraduateWorkAsync(string expected) =>
+        _ui.WaitAsync(_locators.CollegeDegreeGraduateWork, expected, new ControlIntent("Vehicles", "CollegeDegreeGraduateWork"));
+
+    public Task ClickCollegeDegreeGraduateWorkAsync() =>
+        _ui.ClickAsync(_locators.CollegeDegreeGraduateWork, new ControlIntent("Vehicles", "CollegeDegreeGraduateWork"));
+
+    public Task ClickContinueAsync() =>
+        _ui.ClickAsync(_locators.Continue, new ControlIntent("Vehicles", "Continue"));
+
+    public Task EnterCurrentValueAsync(string value) =>
+        _ui.FillAsync(_locators.CurrentValue, value, new ControlIntent("Vehicles", "CurrentValue"));
+
+    public Task WaitForCurrentlyInCollegeAsync(string expected) =>
+        _ui.WaitAsync(_locators.CurrentlyInCollege, expected, new ControlIntent("Vehicles", "CurrentlyInCollege"));
+
+    public Task ClickCurrentlyInCollegeAsync() =>
+        _ui.ClickAsync(_locators.CurrentlyInCollege, new ControlIntent("Vehicles", "CurrentlyInCollege"));
+
+    public Task ClickCycle1734D7Async() =>
+        _ui.ClickAsync(_locators.Cycle1734D7, new ControlIntent("Vehicles", "Cycle1734D7"));
+
+    public Task ClickCycle1C1864Async() =>
+        _ui.ClickAsync(_locators.Cycle1C1864, new ControlIntent("Vehicles", "Cycle1C1864"));
+
+    public Task ClickCycleAccessoriesV3Async() =>
+        _ui.ClickAsync(_locators.CycleAccessoriesV3, new ControlIntent("Vehicles", "CycleAccessoriesV3"));
+
+    public Task ClickCycleAccessoriesV4Async() =>
+        _ui.ClickAsync(_locators.CycleAccessoriesV4, new ControlIntent("Vehicles", "CycleAccessoriesV4"));
+
+    public Task EnterCycleNonDriverComboBoxAsync(string value) =>
+        _ui.FillAsync(_locators.CycleNonDriverComboBox, value, new ControlIntent("Vehicles", "CycleNonDriverComboBox"));
+
+    public Task ClickCyclePreFillSelectionNextAsync() =>
+        _ui.ClickAsync(_locators.CyclePreFillSelectionNext, new ControlIntent("Vehicles", "CyclePreFillSelectionNext"));
+
+    public Task WaitForCycleVINAsync(string expected) =>
+        _ui.WaitAsync(_locators.CycleVIN, expected, new ControlIntent("Vehicles", "CycleVIN"));
+
+    public Task EnterCycleVINAsync(string value) =>
+        _ui.FillAsync(_locators.CycleVIN, value, new ControlIntent("Vehicles", "CycleVIN"));
+
+    public Task PressCycleVINAsync(string key) =>
+        _ui.PressAsync(_locators.CycleVIN, key, new ControlIntent("Vehicles", "CycleVIN"));
+
+    public Task EnterDaysOperatedUninsuredAsync(string value) =>
+        _ui.FillAsync(_locators.DaysOperatedUninsured, value, new ControlIntent("Vehicles", "DaysOperatedUninsured"));
+
+    public Task EnterDescriptionOfModsAsync(string value) =>
+        _ui.FillAsync(_locators.DescriptionOfMods, value, new ControlIntent("Vehicles", "DescriptionOfMods"));
+
+    public Task ClickDivorcedAsync() =>
+        _ui.ClickAsync(_locators.Divorced, new ControlIntent("Vehicles", "Divorced"));
+
+    public Task WaitForDoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications051FDAsync(string expected) =>
+        _ui.WaitAsync(_locators.DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications051FD, expected, new ControlIntent("Vehicles", "DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications051FD"));
+
+    public Task WaitForDoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications21ABDAsync(string expected) =>
+        _ui.WaitAsync(_locators.DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications21ABD, expected, new ControlIntent("Vehicles", "DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications21ABD"));
+
+    public Task EnterDriverSLicenseNumberAsync(string value) =>
+        _ui.FillAsync(_locators.DriverSLicenseNumber, value, new ControlIntent("Vehicles", "DriverSLicenseNumber"));
+
+    public Task PressDriverSLicenseNumberAsync(string key) =>
+        _ui.PressAsync(_locators.DriverSLicenseNumber, key, new ControlIntent("Vehicles", "DriverSLicenseNumber"));
+
+    public Task VerifyEQCAVerifiedMileageAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.EQCAVerifiedMileage, expected, property, new ControlIntent("Vehicles", "EQCAVerifiedMileage"));
+
+    public Task WaitForGraduateDegreeJDMastersAsync(string expected) =>
+        _ui.WaitAsync(_locators.GraduateDegreeJDMasters, expected, new ControlIntent("Vehicles", "GraduateDegreeJDMasters"));
+
+    public Task ClickGraduateDegreeJDMastersAsync() =>
+        _ui.ClickAsync(_locators.GraduateDegreeJDMasters, new ControlIntent("Vehicles", "GraduateDegreeJDMasters"));
+
+    public Task VerifyHighSchoolDiplomaOrGEDAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.HighSchoolDiplomaOrGED, expected, property, new ControlIntent("Vehicles", "HighSchoolDiplomaOrGED"));
+
+    public Task ClickHighSchoolDiplomaOrGEDAsync() =>
+        _ui.ClickAsync(_locators.HighSchoolDiplomaOrGED, new ControlIntent("Vehicles", "HighSchoolDiplomaOrGED"));
+
+    public Task<bool> IsHighSchoolDiplomaOrGEDPresentAsync() =>
+        _ui.ExistsAsync(_locators.HighSchoolDiplomaOrGED);
+
+    public Task ClickILCategory1Async() =>
+        _ui.ClickAsync(_locators.ILCategory1, new ControlIntent("Vehicles", "ILCategory1"));
+
+    public Task WaitForIsThisDriverANamedInsuredAsync(string expected) =>
+        _ui.WaitAsync(_locators.IsThisDriverANamedInsured, expected, new ControlIntent("Vehicles", "IsThisDriverANamedInsured"));
+
+    public Task WaitForIsThisVehicleOwnedOrFinancedAsync(string expected) =>
+        _ui.WaitAsync(_locators.IsThisVehicleOwnedOrFinanced, expected, new ControlIntent("Vehicles", "IsThisVehicleOwnedOrFinanced"));
+
+    public Task WaitForLblDescriptionOfModsAsync(string expected) =>
+        _ui.WaitAsync(_locators.LblDescriptionOfMods, expected, new ControlIntent("Vehicles", "LblDescriptionOfMods"));
+
+    public Task VerifyLblOwnedPopupAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.LblOwnedPopup, expected, property, new ControlIntent("Vehicles", "LblOwnedPopup"));
+
+    public Task<bool> IsLblOwnedPopupPresentAsync() =>
+        _ui.ExistsAsync(_locators.LblOwnedPopup);
+
+    public Task ClickLeased14EA4Async() =>
+        _ui.ClickAsync(_locators.Leased14EA4, new ControlIntent("Vehicles", "Leased14EA4"));
+
+    public Task ClickLeased26B32Async() =>
+        _ui.ClickAsync(_locators.Leased26B32, new ControlIntent("Vehicles", "Leased26B32"));
+
+    public Task ClickLeased87268Async() =>
+        _ui.ClickAsync(_locators.Leased87268, new ControlIntent("Vehicles", "Leased87268"));
+
+    public Task EnterLicenseStateAsync(string value) =>
+        _ui.FillAsync(_locators.LicenseState, value, new ControlIntent("Vehicles", "LicenseState"));
+
+    public Task ClickLoan4369DAsync() =>
+        _ui.ClickAsync(_locators.Loan4369D, new ControlIntent("Vehicles", "Loan4369D"));
+
+    public Task ClickLoan49242Async() =>
+        _ui.ClickAsync(_locators.Loan49242, new ControlIntent("Vehicles", "Loan49242"));
+
+    public Task ClickLoanED36CAsync() =>
+        _ui.ClickAsync(_locators.LoanED36C, new ControlIntent("Vehicles", "LoanED36C"));
+
+    public Task ClickMDNJEducationLevelUnknownAsync() =>
+        _ui.ClickAsync(_locators.MDNJEducationLevelUnknown, new ControlIntent("Vehicles", "MDNJEducationLevelUnknown"));
+
+    public Task<bool> IsMDNJEducationLevelUnknownPresentAsync() =>
+        _ui.ExistsAsync(_locators.MDNJEducationLevelUnknown);
+
+    public Task WaitForMOREOPTIONSAsync(string expected) =>
+        _ui.WaitAsync(_locators.MOREOPTIONS, expected, new ControlIntent("Vehicles", "MOREOPTIONS"));
+
+    public Task SelectMOREOPTIONSAsync(string value) =>
+        _ui.SelectAsync(_locators.MOREOPTIONS, value, new ControlIntent("Vehicles", "MOREOPTIONS"));
+
+    public Task<bool> IsMOREOPTIONSPresentAsync() =>
+        _ui.ExistsAsync(_locators.MOREOPTIONS);
+
+    public Task ClickMaritalStatusSingleAsync() =>
+        _ui.ClickAsync(_locators.MaritalStatusSingle, new ControlIntent("Vehicles", "MaritalStatusSingle"));
+
+    public Task<bool> IsMaritalStatusSinglePresentAsync() =>
+        _ui.ExistsAsync(_locators.MaritalStatusSingle);
+
+    public Task SelectMarriedAsync(string value) =>
+        _ui.SelectAsync(_locators.Married, value, new ControlIntent("Vehicles", "Married"));
+
+    public Task ClickMedicalConditionAsync() =>
+        _ui.ClickAsync(_locators.MedicalCondition, new ControlIntent("Vehicles", "MedicalCondition"));
+
+    public Task ClickMilitaryAsync() =>
+        _ui.ClickAsync(_locators.Military, new ControlIntent("Vehicles", "Military"));
+
+    public Task ClickMissionaryAsync() =>
+        _ui.ClickAsync(_locators.Missionary, new ControlIntent("Vehicles", "Missionary"));
+
+    public Task PressModernClassicAsync(string key) =>
+        _ui.PressAsync(_locators.ModernClassic, key, new ControlIntent("Vehicles", "ModernClassic"));
+
+    public Task ClickModernClassicAsync() =>
+        _ui.ClickAsync(_locators.ModernClassic, new ControlIntent("Vehicles", "ModernClassic"));
+
+    public Task EnterMonthsLicensedCurrentStateAsync(string value) =>
+        _ui.FillAsync(_locators.MonthsLicensedCurrentState, value, new ControlIntent("Vehicles", "MonthsLicensedCurrentState"));
+
+    public Task PressMonthsLicensedCurrentStateAsync(string key) =>
+        _ui.PressAsync(_locators.MonthsLicensedCurrentState, key, new ControlIntent("Vehicles", "MonthsLicensedCurrentState"));
+
+    public Task SelectMoreOptionsEduAsync(string value) =>
+        _ui.SelectAsync(_locators.MoreOptionsEdu, value, new ControlIntent("Vehicles", "MoreOptionsEdu"));
+
+    public Task SelectMoreOptionsFarmUseAsync(string value) =>
+        _ui.SelectAsync(_locators.MoreOptionsFarmUse, value, new ControlIntent("Vehicles", "MoreOptionsFarmUse"));
+
+    public Task SelectMoreOptionsNonDriverAsync(string value) =>
+        _ui.SelectAsync(_locators.MoreOptionsNonDriver, value, new ControlIntent("Vehicles", "MoreOptionsNonDriver"));
+
+    public Task ClickN1DayAsync() =>
+        _ui.ClickAsync(_locators.N1Day, new ControlIntent("Vehicles", "N1Day"));
+
+    public Task EnterNYFFCICTotalAnnualMilesAsync(string value) =>
+        _ui.FillAsync(_locators.NYFFCICTotalAnnualMiles, value, new ControlIntent("Vehicles", "NYFFCICTotalAnnualMiles"));
+
+    public Task PressNYFFCICTotalAnnualMilesAsync(string key) =>
+        _ui.PressAsync(_locators.NYFFCICTotalAnnualMiles, key, new ControlIntent("Vehicles", "NYFFCICTotalAnnualMiles"));
+
+    public Task PressNamedInsuredAsync(string key) =>
+        _ui.PressAsync(_locators.NamedInsured, key, new ControlIntent("Vehicles", "NamedInsured"));
+
+    public Task ClickNamedInsuredAsync() =>
+        _ui.ClickAsync(_locators.NamedInsured, new ControlIntent("Vehicles", "NamedInsured"));
+
+    public Task SelectNativeAmericanRegisterNOAsync(string value) =>
+        _ui.SelectAsync(_locators.NativeAmericanRegisterNO, value, new ControlIntent("Vehicles", "NativeAmericanRegisterNO"));
+
+    public Task ClickNeverLicensedAsync() =>
+        _ui.ClickAsync(_locators.NeverLicensed, new ControlIntent("Vehicles", "NeverLicensed"));
+
+    public Task SelectNo7C269Async(string value) =>
+        _ui.SelectAsync(_locators.No7C269, value, new ControlIntent("Vehicles", "No7C269"));
+
+    public Task SelectNoCoverageV1TowingAsync(string value) =>
+        _ui.SelectAsync(_locators.NoCoverageV1Towing, value, new ControlIntent("Vehicles", "NoCoverageV1Towing"));
+
+    public Task SelectNoCycleLicenseAsync(string value) =>
+        _ui.SelectAsync(_locators.NoCycleLicense, value, new ControlIntent("Vehicles", "NoCycleLicense"));
+
+    public Task PressNoD053AAsync(string key) =>
+        _ui.PressAsync(_locators.NoD053A, key, new ControlIntent("Vehicles", "NoD053A"));
+
+    public Task ClickNoD053AAsync() =>
+        _ui.ClickAsync(_locators.NoD053A, new ControlIntent("Vehicles", "NoD053A"));
+
+    public Task SelectNoD9E4DAsync(string value) =>
+        _ui.SelectAsync(_locators.NoD9E4D, value, new ControlIntent("Vehicles", "NoD9E4D"));
+
+    public Task VerifyNoNeedWasNotLicensedAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.NoNeedWasNotLicensed, expected, property, new ControlIntent("Vehicles", "NoNeedWasNotLicensed"));
+
+    public Task PressNoNeedWasNotLicensedAsync(string key) =>
+        _ui.PressAsync(_locators.NoNeedWasNotLicensed, key, new ControlIntent("Vehicles", "NoNeedWasNotLicensed"));
+
+    public Task ClickNoNeedWasNotLicensedAsync() =>
+        _ui.ClickAsync(_locators.NoNeedWasNotLicensed, new ControlIntent("Vehicles", "NoNeedWasNotLicensed"));
+
+    public Task<bool> IsNoNeedWasNotLicensedPresentAsync() =>
+        _ui.ExistsAsync(_locators.NoNeedWasNotLicensed);
+
+    public Task SelectNoPreviouslyInsuredAsync(string value) =>
+        _ui.SelectAsync(_locators.NoPreviouslyInsured, value, new ControlIntent("Vehicles", "NoPreviouslyInsured"));
+
+    public Task<bool> IsNoPreviouslyInsuredPresentAsync() =>
+        _ui.ExistsAsync(_locators.NoPreviouslyInsured);
+
+    public Task SelectNoRegisteredFedTribeAsync(string value) =>
+        _ui.SelectAsync(_locators.NoRegisteredFedTribe, value, new ControlIntent("Vehicles", "NoRegisteredFedTribe"));
+
+    public Task SelectNonDriverAsync(string value) =>
+        _ui.SelectAsync(_locators.NonDriver, value, new ControlIntent("Vehicles", "NonDriver"));
+
+    public Task PressNonDriverAsync(string key) =>
+        _ui.PressAsync(_locators.NonDriver, key, new ControlIntent("Vehicles", "NonDriver"));
+
+    public Task ClickNonDriverAsync() =>
+        _ui.ClickAsync(_locators.NonDriver, new ControlIntent("Vehicles", "NonDriver"));
+
+    public Task WaitForNonDriverReasonAsync(string expected) =>
+        _ui.WaitAsync(_locators.NonDriverReason, expected, new ControlIntent("Vehicles", "NonDriverReason"));
+
+    public Task EnterNonWorkAnnualMilesAsync(string value) =>
+        _ui.FillAsync(_locators.NonWorkAnnualMiles, value, new ControlIntent("Vehicles", "NonWorkAnnualMiles"));
+
+    public Task PressNonWorkAnnualMilesAsync(string key) =>
+        _ui.PressAsync(_locators.NonWorkAnnualMiles, key, new ControlIntent("Vehicles", "NonWorkAnnualMiles"));
+
+    public Task PressNotANamedInsuredAsync(string key) =>
+        _ui.PressAsync(_locators.NotANamedInsured, key, new ControlIntent("Vehicles", "NotANamedInsured"));
+
+    public Task ClickNotANamedInsuredAsync() =>
+        _ui.ClickAsync(_locators.NotANamedInsured, new ControlIntent("Vehicles", "NotANamedInsured"));
+
+    public Task SelectNotPleasureUseAsync(string value) =>
+        _ui.SelectAsync(_locators.NotPleasureUse, value, new ControlIntent("Vehicles", "NotPleasureUse"));
+
+    public Task EnterOdometer3843FAsync(string value) =>
+        _ui.FillAsync(_locators.Odometer3843F, value, new ControlIntent("Vehicles", "Odometer3843F"));
+
+    public Task PressOdometer3843FAsync(string key) =>
+        _ui.PressAsync(_locators.Odometer3843F, key, new ControlIntent("Vehicles", "Odometer3843F"));
+
+    public Task EnterOdometerD648FAsync(string value) =>
+        _ui.FillAsync(_locators.OdometerD648F, value, new ControlIntent("Vehicles", "OdometerD648F"));
+
+    public Task PressOdometerD648FAsync(string key) =>
+        _ui.PressAsync(_locators.OdometerD648F, key, new ControlIntent("Vehicles", "OdometerD648F"));
+
+    public Task ClickOptOutAsync() =>
+        _ui.ClickAsync(_locators.OptOut, new ControlIntent("Vehicles", "OptOut"));
+
+    public Task ClickOriginalPartsV3Async() =>
+        _ui.ClickAsync(_locators.OriginalPartsV3, new ControlIntent("Vehicles", "OriginalPartsV3"));
+
+    public Task ClickOriginalPartsV4Async() =>
+        _ui.ClickAsync(_locators.OriginalPartsV4, new ControlIntent("Vehicles", "OriginalPartsV4"));
+
+    public Task ClickOtherInsuranceAsync() =>
+        _ui.ClickAsync(_locators.OtherInsurance, new ControlIntent("Vehicles", "OtherInsurance"));
+
+    public Task ClickOwn49EECAsync() =>
+        _ui.ClickAsync(_locators.Own49EEC, new ControlIntent("Vehicles", "Own49EEC"));
+
+    public Task ClickOwn7C709Async() =>
+        _ui.ClickAsync(_locators.Own7C709, new ControlIntent("Vehicles", "Own7C709"));
+
+    public Task PressOwnB8575Async(string key) =>
+        _ui.PressAsync(_locators.OwnB8575, key, new ControlIntent("Vehicles", "OwnB8575"));
+
+    public Task ClickOwnB8575Async() =>
+        _ui.ClickAsync(_locators.OwnB8575, new ControlIntent("Vehicles", "OwnB8575"));
+
+    public Task ClickOwnD044EAsync() =>
+        _ui.ClickAsync(_locators.OwnD044E, new ControlIntent("Vehicles", "OwnD044E"));
+
+    public Task ClickPermitDriverAsync() =>
+        _ui.ClickAsync(_locators.PermitDriver, new ControlIntent("Vehicles", "PermitDriver"));
+
+    public Task WaitForPleaseSelectTheVehicleBBB72Async(string expected) =>
+        _ui.WaitAsync(_locators.PleaseSelectTheVehicleBBB72, expected, new ControlIntent("Vehicles", "PleaseSelectTheVehicleBBB72"));
+
+    public Task WaitForPleaseSelectTheVehicleCD741Async(string expected) =>
+        _ui.WaitAsync(_locators.PleaseSelectTheVehicleCD741, expected, new ControlIntent("Vehicles", "PleaseSelectTheVehicleCD741"));
+
+    public Task ClickPleasureCANYFFCICAsync() =>
+        _ui.ClickAsync(_locators.PleasureCANYFFCIC, new ControlIntent("Vehicles", "PleasureCANYFFCIC"));
+
+    public Task ClickPleasureUseAsync() =>
+        _ui.ClickAsync(_locators.PleasureUse, new ControlIntent("Vehicles", "PleasureUse"));
+
+    public Task WaitForPostGraduateDegreeMedicalDegreePhDEdDEtcAsync(string expected) =>
+        _ui.WaitAsync(_locators.PostGraduateDegreeMedicalDegreePhDEdDEtc, expected, new ControlIntent("Vehicles", "PostGraduateDegreeMedicalDegreePhDEdDEtc"));
+
+    public Task ClickPostGraduateDegreeMedicalDegreePhDEdDEtcAsync() =>
+        _ui.ClickAsync(_locators.PostGraduateDegreeMedicalDegreePhDEdDEtc, new ControlIntent("Vehicles", "PostGraduateDegreeMedicalDegreePhDEdDEtc"));
+
+    public Task WaitForPricingDetailsNextAsync(string expected) =>
+        _ui.WaitAsync(_locators.PricingDetailsNext, expected, new ControlIntent("Vehicles", "PricingDetailsNext"));
+
+    public Task ClickPricingDetailsNextAsync() =>
+        _ui.ClickAsync(_locators.PricingDetailsNext, new ControlIntent("Vehicles", "PricingDetailsNext"));
+
+    public Task PressPrimaryNamedInsuredAsync(string key) =>
+        _ui.PressAsync(_locators.PrimaryNamedInsured, key, new ControlIntent("Vehicles", "PrimaryNamedInsured"));
+
+    public Task ClickPrimaryNamedInsuredAsync() =>
+        _ui.ClickAsync(_locators.PrimaryNamedInsured, new ControlIntent("Vehicles", "PrimaryNamedInsured"));
+
+    public Task VerifyPriorCarrierNameAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.PriorCarrierName, expected, property, new ControlIntent("Vehicles", "PriorCarrierName"));
+
+    public Task<bool> IsPriorCarrierNamePresentAsync() =>
+        _ui.ExistsAsync(_locators.PriorCarrierName);
+
+    public Task EnterPurchaseDate736F4Async(string value) =>
+        _ui.FillAsync(_locators.PurchaseDate736F4, value, new ControlIntent("Vehicles", "PurchaseDate736F4"));
+
+    public Task EnterPurchaseDateBB8AFAsync(string value) =>
+        _ui.FillAsync(_locators.PurchaseDateBB8AF, value, new ControlIntent("Vehicles", "PurchaseDateBB8AF"));
+
+    public Task PressPurchaseDateBB8AFAsync(string key) =>
+        _ui.PressAsync(_locators.PurchaseDateBB8AF, key, new ControlIntent("Vehicles", "PurchaseDateBB8AF"));
+
+    public Task PressRelatedAsync(string key) =>
+        _ui.PressAsync(_locators.Related, key, new ControlIntent("Vehicles", "Related"));
+
+    public Task ClickRelatedAsync() =>
+        _ui.ClickAsync(_locators.Related, new ControlIntent("Vehicles", "Related"));
+
+    public Task SelectRelationshipToAccountOwnerNULLAsync(string value) =>
+        _ui.SelectAsync(_locators.RelationshipToAccountOwnerNULL, value, new ControlIntent("Vehicles", "RelationshipToAccountOwnerNULL"));
+
+    public Task PressRentalReimbursementCoverageV1Async(string key) =>
+        _ui.PressAsync(_locators.RentalReimbursementCoverageV1, key, new ControlIntent("Vehicles", "RentalReimbursementCoverageV1"));
+
+    public Task ClickRentalReimbursementCoverageV1Async() =>
+        _ui.ClickAsync(_locators.RentalReimbursementCoverageV1, new ControlIntent("Vehicles", "RentalReimbursementCoverageV1"));
+
+    public Task PressRentalReimbursementCoverageV2Async(string key) =>
+        _ui.PressAsync(_locators.RentalReimbursementCoverageV2, key, new ControlIntent("Vehicles", "RentalReimbursementCoverageV2"));
+
+    public Task ClickRentalReimbursementCoverageV2Async() =>
+        _ui.ClickAsync(_locators.RentalReimbursementCoverageV2, new ControlIntent("Vehicles", "RentalReimbursementCoverageV2"));
+
+    public Task PressRentalReimbursementCoverageV3Async(string key) =>
+        _ui.PressAsync(_locators.RentalReimbursementCoverageV3, key, new ControlIntent("Vehicles", "RentalReimbursementCoverageV3"));
+
+    public Task ClickRentalReimbursementCoverageV3Async() =>
+        _ui.ClickAsync(_locators.RentalReimbursementCoverageV3, new ControlIntent("Vehicles", "RentalReimbursementCoverageV3"));
+
+    public Task PressRentalReimbursementCoverageV4Async(string key) =>
+        _ui.PressAsync(_locators.RentalReimbursementCoverageV4, key, new ControlIntent("Vehicles", "RentalReimbursementCoverageV4"));
+
+    public Task ClickRentalReimbursementCoverageV4Async() =>
+        _ui.ClickAsync(_locators.RentalReimbursementCoverageV4, new ControlIntent("Vehicles", "RentalReimbursementCoverageV4"));
+
+    public Task PressRestrictedUseAsync(string key) =>
+        _ui.PressAsync(_locators.RestrictedUse, key, new ControlIntent("Vehicles", "RestrictedUse"));
+
+    public Task ClickRestrictedUseAsync() =>
+        _ui.ClickAsync(_locators.RestrictedUse, new ControlIntent("Vehicles", "RestrictedUse"));
+
+    public Task PressRoadsideAssistanceCoverageV1Async(string key) =>
+        _ui.PressAsync(_locators.RoadsideAssistanceCoverageV1, key, new ControlIntent("Vehicles", "RoadsideAssistanceCoverageV1"));
+
+    public Task ClickRoadsideAssistanceCoverageV1Async() =>
+        _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV1, new ControlIntent("Vehicles", "RoadsideAssistanceCoverageV1"));
+
+    public Task PressRoadsideAssistanceCoverageV2Async(string key) =>
+        _ui.PressAsync(_locators.RoadsideAssistanceCoverageV2, key, new ControlIntent("Vehicles", "RoadsideAssistanceCoverageV2"));
+
+    public Task ClickRoadsideAssistanceCoverageV2Async() =>
+        _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV2, new ControlIntent("Vehicles", "RoadsideAssistanceCoverageV2"));
+
+    public Task PressRoadsideAssistanceCoverageV3Async(string key) =>
+        _ui.PressAsync(_locators.RoadsideAssistanceCoverageV3, key, new ControlIntent("Vehicles", "RoadsideAssistanceCoverageV3"));
+
+    public Task ClickRoadsideAssistanceCoverageV3Async() =>
+        _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV3, new ControlIntent("Vehicles", "RoadsideAssistanceCoverageV3"));
+
+    public Task ClickRoadsideAssistanceCoverageV4Async() =>
+        _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV4, new ControlIntent("Vehicles", "RoadsideAssistanceCoverageV4"));
+
+    public Task ClickRoommateAsync() =>
+        _ui.ClickAsync(_locators.Roommate, new ControlIntent("Vehicles", "Roommate"));
+
+    public Task ClickSaveAndContinue8EF26Async() =>
+        _ui.ClickAsync(_locators.SaveAndContinue8EF26, new ControlIntent("Vehicles", "SaveAndContinue8EF26"));
+
+    public Task ClickSaveAndContinue9CB7AAsync() =>
+        _ui.ClickAsync(_locators.SaveAndContinue9CB7A, new ControlIntent("Vehicles", "SaveAndContinue9CB7A"));
+
+    public Task<bool> IsSaveAndContinue9CB7APresentAsync() =>
+        _ui.ExistsAsync(_locators.SaveAndContinue9CB7A);
+
+    public Task ClickSaveAndContinueBE6CDAsync() =>
+        _ui.ClickAsync(_locators.SaveAndContinueBE6CD, new ControlIntent("Vehicles", "SaveAndContinueBE6CD"));
+
+    public Task ClickSaveContinue2E7CDAsync() =>
+        _ui.ClickAsync(_locators.SaveContinue2E7CD, new ControlIntent("Vehicles", "SaveContinue2E7CD"));
+
+    public Task ClickSaveContinue86B78Async() =>
+        _ui.ClickAsync(_locators.SaveContinue86B78, new ControlIntent("Vehicles", "SaveContinue86B78"));
+
+    public Task WaitForSelectVehicleAsync(string expected) =>
+        _ui.WaitAsync(_locators.SelectVehicle, expected, new ControlIntent("Vehicles", "SelectVehicle"));
+
+    public Task<bool> IsSelectVehiclePresentAsync() =>
+        _ui.ExistsAsync(_locators.SelectVehicle);
+
+    public Task VerifySingleAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.Single, expected, property, new ControlIntent("Vehicles", "Single"));
+
+    public Task ClickSingleAsync() =>
+        _ui.ClickAsync(_locators.Single, new ControlIntent("Vehicles", "Single"));
+
+    public Task<bool> IsSinglePresentAsync() =>
+        _ui.ExistsAsync(_locators.Single);
+
+    public Task WaitForSomeCollegeAsync(string expected) =>
+        _ui.WaitAsync(_locators.SomeCollege, expected, new ControlIntent("Vehicles", "SomeCollege"));
+
+    public Task ClickSomeCollegeAsync() =>
+        _ui.ClickAsync(_locators.SomeCollege, new ControlIntent("Vehicles", "SomeCollege"));
+
+    public Task VerifySpouseAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.Spouse, expected, property, new ControlIntent("Vehicles", "Spouse"));
+
+    public Task ClickSurrenderedAsync() =>
+        _ui.ClickAsync(_locators.Surrendered, new ControlIntent("Vehicles", "Surrendered"));
+
+    public Task ClickTheftDeductibleV1Async() =>
+        _ui.ClickAsync(_locators.TheftDeductibleV1, new ControlIntent("Vehicles", "TheftDeductibleV1"));
+
+    public Task ClickTheftDeductibleV2Async() =>
+        _ui.ClickAsync(_locators.TheftDeductibleV2, new ControlIntent("Vehicles", "TheftDeductibleV2"));
+
+    public Task ClickTheftDeductibleV3Async() =>
+        _ui.ClickAsync(_locators.TheftDeductibleV3, new ControlIntent("Vehicles", "TheftDeductibleV3"));
+
+    public Task ClickTheftDeductibleV4Async() =>
+        _ui.ClickAsync(_locators.TheftDeductibleV4, new ControlIntent("Vehicles", "TheftDeductibleV4"));
+
+    public Task EnterTotalAnnualMileageAsync(string value) =>
+        _ui.FillAsync(_locators.TotalAnnualMileage, value, new ControlIntent("Vehicles", "TotalAnnualMileage"));
+
+    public Task PressTotalAnnualMileageAsync(string key) =>
+        _ui.PressAsync(_locators.TotalAnnualMileage, key, new ControlIntent("Vehicles", "TotalAnnualMileage"));
+
+    public Task ClickUIMPDCoverageV1Async() =>
+        _ui.ClickAsync(_locators.UIMPDCoverageV1, new ControlIntent("Vehicles", "UIMPDCoverageV1"));
+
+    public Task ClickUIMPDCoverageV2Async() =>
+        _ui.ClickAsync(_locators.UIMPDCoverageV2, new ControlIntent("Vehicles", "UIMPDCoverageV2"));
+
+    public Task ClickUIMPDCoverageV3Async() =>
+        _ui.ClickAsync(_locators.UIMPDCoverageV3, new ControlIntent("Vehicles", "UIMPDCoverageV3"));
+
+    public Task ClickUIMPDCoverageV4Async() =>
+        _ui.ClickAsync(_locators.UIMPDCoverageV4, new ControlIntent("Vehicles", "UIMPDCoverageV4"));
+
+    public Task PressUMPDCoverageVehicle1Async(string key) =>
+        _ui.PressAsync(_locators.UMPDCoverageVehicle1, key, new ControlIntent("Vehicles", "UMPDCoverageVehicle1"));
+
+    public Task ClickUMPDCoverageVehicle1Async() =>
+        _ui.ClickAsync(_locators.UMPDCoverageVehicle1, new ControlIntent("Vehicles", "UMPDCoverageVehicle1"));
+
+    public Task ClickUMPDCoverageVehicle2Async() =>
+        _ui.ClickAsync(_locators.UMPDCoverageVehicle2, new ControlIntent("Vehicles", "UMPDCoverageVehicle2"));
+
+    public Task ClickUMPDCoverageVehicle3Async() =>
+        _ui.ClickAsync(_locators.UMPDCoverageVehicle3, new ControlIntent("Vehicles", "UMPDCoverageVehicle3"));
+
+    public Task ClickUMPDCoverageVehicle4Async() =>
+        _ui.ClickAsync(_locators.UMPDCoverageVehicle4, new ControlIntent("Vehicles", "UMPDCoverageVehicle4"));
+
+    public Task SelectUMPDMoreOptionsCoveragesAsync(string value) =>
+        _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, value, new ControlIntent("Vehicles", "UMPDMoreOptionsCoverages"));
+
+    public Task ClickUMPDUIMPDV1Async() =>
+        _ui.ClickAsync(_locators.UMPDUIMPDV1, new ControlIntent("Vehicles", "UMPDUIMPDV1"));
+
+    public Task ClickUMPDUIMPDV2Async() =>
+        _ui.ClickAsync(_locators.UMPDUIMPDV2, new ControlIntent("Vehicles", "UMPDUIMPDV2"));
+
+    public Task ClickUMPDUIMPDV3Async() =>
+        _ui.ClickAsync(_locators.UMPDUIMPDV3, new ControlIntent("Vehicles", "UMPDUIMPDV3"));
+
+    public Task ClickUMPDUIMPDV4Async() =>
+        _ui.ClickAsync(_locators.UMPDUIMPDV4, new ControlIntent("Vehicles", "UMPDUIMPDV4"));
+
+    public Task ClickUnderConstructionAsync() =>
+        _ui.ClickAsync(_locators.UnderConstruction, new ControlIntent("Vehicles", "UnderConstruction"));
+
+    public Task ClickUnderageAsync() =>
+        _ui.ClickAsync(_locators.Underage, new ControlIntent("Vehicles", "Underage"));
+
+    public Task SelectUnknownNoHighSchoolDiplomaOrGEDAsync(string value) =>
+        _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, value, new ControlIntent("Vehicles", "UnknownNoHighSchoolDiplomaOrGED"));
+
+    public Task SelectUseCAMoreOptionsAsync(string value) =>
+        _ui.SelectAsync(_locators.UseCAMoreOptions, value, new ControlIntent("Vehicles", "UseCAMoreOptions"));
+
+    public Task WaitForVIN06D01Async(string expected) =>
+        _ui.WaitAsync(_locators.VIN06D01, expected, new ControlIntent("Vehicles", "VIN06D01"));
+
+    public Task EnterVIN06D01Async(string value) =>
+        _ui.FillAsync(_locators.VIN06D01, value, new ControlIntent("Vehicles", "VIN06D01"));
+
+    public Task PressVIN06D01Async(string key) =>
+        _ui.PressAsync(_locators.VIN06D01, key, new ControlIntent("Vehicles", "VIN06D01"));
+
+    public Task ClickVIN06D01Async() =>
+        _ui.ClickAsync(_locators.VIN06D01, new ControlIntent("Vehicles", "VIN06D01"));
+
+    public Task WaitForVIN0A17CAsync(string expected) =>
+        _ui.WaitAsync(_locators.VIN0A17C, expected, new ControlIntent("Vehicles", "VIN0A17C"));
+
+    public Task EnterVIN0A17CAsync(string value) =>
+        _ui.FillAsync(_locators.VIN0A17C, value, new ControlIntent("Vehicles", "VIN0A17C"));
+
+    public Task PressVIN0A17CAsync(string key) =>
+        _ui.PressAsync(_locators.VIN0A17C, key, new ControlIntent("Vehicles", "VIN0A17C"));
+
+    public Task WaitForVIN8EE56Async(string expected) =>
+        _ui.WaitAsync(_locators.VIN8EE56, expected, new ControlIntent("Vehicles", "VIN8EE56"));
+
+    public Task EnterVIN8EE56Async(string value) =>
+        _ui.FillAsync(_locators.VIN8EE56, value, new ControlIntent("Vehicles", "VIN8EE56"));
+
+    public Task PressVIN8EE56Async(string key) =>
+        _ui.PressAsync(_locators.VIN8EE56, key, new ControlIntent("Vehicles", "VIN8EE56"));
+
+    public Task ClickVeh1Async() =>
+        _ui.ClickAsync(_locators.Veh1, new ControlIntent("Vehicles", "Veh1"));
+
+    public Task ClickVeh3Async() =>
+        _ui.ClickAsync(_locators.Veh3, new ControlIntent("Vehicles", "Veh3"));
+
+    public Task ClickVehicle1Async() =>
+        _ui.ClickAsync(_locators.Vehicle1, new ControlIntent("Vehicles", "Vehicle1"));
+
+    public Task ClickVehicleInformationNextAsync() =>
+        _ui.ClickAsync(_locators.VehicleInformationNext, new ControlIntent("Vehicles", "VehicleInformationNext"));
+
+    public Task SelectVehicleMoreOptionsAsync(string value) =>
+        _ui.SelectAsync(_locators.VehicleMoreOptions, value, new ControlIntent("Vehicles", "VehicleMoreOptions"));
+
+    public Task PressVehicleMoreOptionsAsync(string key) =>
+        _ui.PressAsync(_locators.VehicleMoreOptions, key, new ControlIntent("Vehicles", "VehicleMoreOptions"));
+
+    public Task ClickVehicleMoreOptionsAsync() =>
+        _ui.ClickAsync(_locators.VehicleMoreOptions, new ControlIntent("Vehicles", "VehicleMoreOptions"));
+
+    public Task WaitForVehicleTypeAsync(string expected) =>
+        _ui.WaitAsync(_locators.VehicleType, expected, new ControlIntent("Vehicles", "VehicleType"));
+
+    public Task ClickVintageAsync() =>
+        _ui.ClickAsync(_locators.Vintage, new ControlIntent("Vehicles", "Vintage"));
+
+    public Task ClickVocationalOrTradeSchoolDegreeAsync() =>
+        _ui.ClickAsync(_locators.VocationalOrTradeSchoolDegree, new ControlIntent("Vehicles", "VocationalOrTradeSchoolDegree"));
+
+    public Task VerifyWasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAboveAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove, expected, property, new ControlIntent("Vehicles", "WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove"));
+
+    public Task<bool> IsWasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbovePresentAsync() =>
+        _ui.ExistsAsync(_locators.WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove);
+
+    public Task EnterWorkMilesDayAsync(string value) =>
+        _ui.FillAsync(_locators.WorkMilesDay, value, new ControlIntent("Vehicles", "WorkMilesDay"));
+
+    public Task PressWorkMilesDayAsync(string key) =>
+        _ui.PressAsync(_locators.WorkMilesDay, key, new ControlIntent("Vehicles", "WorkMilesDay"));
+
+    public Task SelectYesAsync(string value) =>
+        _ui.SelectAsync(_locators.Yes, value, new ControlIntent("Vehicles", "Yes"));
+
+    public Task EnterYrsLicensedAllStatesAsync(string value) =>
+        _ui.FillAsync(_locators.YrsLicensedAllStates, value, new ControlIntent("Vehicles", "YrsLicensedAllStates"));
+
+    public Task PressYrsLicensedAllStatesAsync(string key) =>
+        _ui.PressAsync(_locators.YrsLicensedAllStates, key, new ControlIntent("Vehicles", "YrsLicensedAllStates"));
+
+    public Task EnterYrsLicensedCurrentStateAsync(string value) =>
+        _ui.FillAsync(_locators.YrsLicensedCurrentState, value, new ControlIntent("Vehicles", "YrsLicensedCurrentState"));
+
+    public Task PressYrsLicensedCurrentStateAsync(string key) =>
+        _ui.PressAsync(_locators.YrsLicensedCurrentState, key, new ControlIntent("Vehicles", "YrsLicensedCurrentState"));
 
 }
