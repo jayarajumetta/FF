@@ -1,0 +1,477 @@
+{
+  "application": "CL_DC",
+  "pages": {
+    "ClientSearch": {
+      "sourceBusinessSteps": [
+        "I add Additional Named Insured",
+        "I complete the Associated Client Info",
+        "I enter business client information",
+        "I enter individual client information"
+      ],
+      "sourceModules": [
+        "Client Search Results",
+        "Client|Add Associated Client",
+        "Client|Additional Insured|Individual",
+        "Client|Additional Named Insured|Common",
+        "Client|Named Insured|Business",
+        "Client|Named Insured|Common",
+        "Client|Named Insured|Individual",
+        "Client|Other Insured Info",
+        "Common Navigation Links",
+        "Synthetic",
+        "Verify JavaScript Result"
+      ],
+      "locatorCount": 64
+    },
+    "PolicyWorkflow": {
+      "sourceBusinessSteps": [
+        "I add Businessowners Underlying LOB",
+        "I add Commercial Auto Underlying LOB",
+        "I add Commercial Package Policy Liability Underlying LOB",
+        "I add Employers Liability Underlying LOB",
+        "I add General Liability Underlying LOB",
+        "I add Homeowner's Liability Underlying LOB",
+        "I add Personal Auto Liability Underlying LOB",
+        "I add Rental Owner's Liability Underlying LOB",
+        "I add SFP \\- 10 Liability Farm Underlying LOB",
+        "I add Watercraft Liability Underlying LOB",
+        "I add a new Associated Client \\- Business Owner Type \\- Click Add Client",
+        "I complete CGL Fields",
+        "I complete CP Fields",
+        "I complete WC Specific Fields",
+        "I complete aJAX Error Check",
+        "I complete cT StraightThrough Liability Limit to 1M",
+        "I complete ensure Class has been entered for Accounts Receivable",
+        "I complete ensure Class has been entered for Bailees Customers",
+        "I complete ensure Class has been entered for Computer Systems",
+        "I complete ensure Property of Others Rating Group has been entered",
+        "I complete fill in CU2103 if it exists",
+        "I complete if search result Alert exists",
+        "I complete if search result Alert exists for duck creek policy",
+        "I complete if search result Alert exists for show me",
+        "I complete mask Error Recovery",
+        "I complete restart Edge Popup",
+        "I complete save for Later/Return to Admin",
+        "I return to CPP Navigation",
+        "I return to CPP Navigation for return to cpp",
+        "I return to CPP policy navigation",
+        "I search by Desc",
+        "I select CP Detail",
+        "I select IM Detail",
+        "I sign out of the application",
+        "I sign out of the application for logged in user"
+      ],
+      "sourceModules": [
+        "AJAX Error",
+        "Client|Add Associated Client",
+        "Common Navigation Links",
+        "Dashboard|QuickSearch",
+        "Dashboard|Search for Policies / Quotes",
+        "Duck Creek Policy",
+        "Endorsement - Main",
+        "Http Error Msg",
+        "Indicators and Errors",
+        "Logout",
+        "Policy Covg",
+        "Policy Covg|GL",
+        "Policy Info|CPP Specific Fields",
+        "Policy Info|Required and Optional Fields",
+        "Policy Info|WC Specific Fields",
+        "Property Add Class",
+        "Restart Microsoft Edge Message",
+        "Risk - Accounts Receivable",
+        "Risk - Bailees Customers",
+        "Risk - Computer Systems",
+        "Specific Underwriting Questions - Accounts Receivable",
+        "Synthetic",
+        "Taskbar|Start Button",
+        "UMB Navigation Links"
+      ],
+      "locatorCount": 83
+    },
+    "Navigation": {
+      "sourceBusinessSteps": [
+        "I add Accounts Receivable",
+        "I add Addl Interest",
+        "I add Addl Interest \\[CG2007\\] \\- Engineers",
+        "I add Addl Interest \\[CG2020\\] Add'l Insured\\-Charitable Institution",
+        "I add Addl Interest \\[CG2023\\] Add'l Insured\\-Executors",
+        "I add Addl Interest \\[CG2025\\] Add'l Insured\\-Executive Officers",
+        "I add Addl Interest \\[CG2034\\] Add'l Insured\\-Leased Equipment Automatic",
+        "I add Bailees Customers",
+        "I add Bailees Customers Coverage",
+        "I add Business Interruption",
+        "I add CM 66 01 Exclude Named Customer",
+        "I add Class",
+        "I add Class Codes",
+        "I add Computer Systems",
+        "I add Computer Systems for risk",
+        "I add Contractors Equipment",
+        "I add Designated Workplaces Exclusion",
+        "I add IF 00 02 Waterborne Equipment",
+        "I add Motor Truck Cargo",
+        "I add NonOwnership Liability",
+        "I add Partners, Officers And Others Exclusion",
+        "I add Policy Level Coverages",
+        "I add Risk Level Coverages",
+        "I add Risk Level Interest",
+        "I add Signs",
+        "I add Signs for risk",
+        "I add Sole Proprietors, Partners, Officers And Others Coverage",
+        "I add Third Party Designee",
+        "I add UM/UIM Coverage",
+        "I add \\[CG 2149\\] Total Pollution Exclusion Endorsement",
+        "I add \\[CG0435\\] Employee Benefits Liability Endorsement",
+        "I add \\[CG2142\\] Exclusion \\- Explosion, Collapse and Underground Property Damage Hazard \\(Specified Operations\\)",
+        "I add a Rating Group",
+        "I add a Risk",
+        "I add endorsement",
+        "I add notepad comment",
+        "I answer GL UW Questions OR \\& WA",
+        "I complete Accounts Receivable Questions",
+        "I complete Address 1",
+        "I complete Bailees Customers Questions",
+        "I complete CGL Fields",
+        "I complete CP Fields",
+        "I complete CP Fields for building",
+        "I complete CP Fields for location",
+        "I complete Computer Systems Questions",
+        "I complete Contractors Equipment Questions",
+        "I complete Motor Truck Cargo Questions \\(Owner\\)",
+        "I complete OCP Fields",
+        "I complete OCP Risk Fields",
+        "I complete Property UW Questions",
+        "I complete Signs Questions",
+        "I complete Structure Questions",
+        "I complete Underwring Questions from Client Screen",
+        "I complete Underwriting Info from Client Screen",
+        "I complete WC UW Questions",
+        "I complete \\[CG 20 31\\] Add'l Insured\\-Engineers, Architects OCP",
+        "I complete \\[CG 29 35\\] Add'l Insured\\-State or Political \\(Permits\\)",
+        "I complete \\[CG0424\\] Coverage for Injury to Leased Workers",
+        "I complete \\[CG2401\\] Non\\-Binding Arbitration",
+        "I complete \\[CG2812\\] Pesticide or Herbicide Applicator Coverage",
+        "I complete \\[FG0013\\] \\- Automatic Additional Insured \\- Specific",
+        "I complete coverage Information",
+        "I complete driver information",
+        "I complete endorsements",
+        "I complete rating Information",
+        "I complete required billing information",
+        "I complete required billing information for billing",
+        "I complete required commercial auto information",
+        "I complete required cpp information",
+        "I complete required employers liability information",
+        "I complete required endorsement information",
+        "I complete required general liability information",
+        "I complete required location information",
+        "I complete required motorcycle liability information",
+        "I complete required policy covg information",
+        "I complete required policy information",
+        "I complete required rental owners liability information",
+        "I complete required sfp 10 information",
+        "I complete required submission information",
+        "I complete required underwriting question information",
+        "I complete vehicle information",
+        "I navigate back to CPP Main",
+        "I navigate to Entity Schedule",
+        "I navigate to Policy Info and Verify Desc",
+        "I navigate to Pricing Screen",
+        "I navigate to Underwriting Info Screen",
+        "I navigate to Underwriting Info Screens",
+        "I navigate to policy coverages",
+        "I navigate to state details",
+        "I select GL Available Classiifcation",
+        "I select GL Detail",
+        "I verify Mandatory Endorsements",
+        "I verify Risk Level Coverages",
+        "I verify premium"
+      ],
+      "sourceModules": [
+        "Additional Interests Schedule",
+        "Addl Interests|Main",
+        "BAP Endorsement Schedule",
+        "BAP Endorsements",
+        "BAP Navigation Links",
+        "BOP Expanded Endorsements|Add Endorsement",
+        "Billing",
+        "Building - Detail",
+        "Building - Main",
+        "Businessowners",
+        "CGL|Add Class",
+        "CGL|Main Page",
+        "CP Navigation Links",
+        "CPP|Pricing",
+        "Client|Named Insured|Common",
+        "Client|Third Party Designee|Common",
+        "Commercial Auto",
+        "Common Navigation Links",
+        "Driver Detail",
+        "Driver Schedule",
+        "Endorsement - CM 66 01 Exclude Named Customer",
+        "Endorsement - IF 00 02 Waterborne Equipment",
+        "Endorsement - Main",
+        "Endorsements - Main Screen",
+        "Endorsements|Designated Workplaces Exclusion",
+        "Endorsements|Main",
+        "Endorsements|Partners, Officers And Others Exclusion",
+        "Endorsements|Sole Proprietors, Partners, Officers And Others Coverage",
+        "Endorsements|Waiton Add Endorsement Button",
+        "Entity Schedule|First Entity Info",
+        "Entity Schedule|Location Assignment",
+        "Entity Schedule|Main",
+        "GL Navigation Links",
+        "GL OCP|Risk",
+        "General Liability",
+        "General Liability Information",
+        "IM Navigation Links",
+        "Indicators and Errors",
+        "Location",
+        "NotePad",
+        "Policy Coverage|Business Interruption",
+        "Policy Coverage|Business Interruption|Option A Schedule",
+        "Policy Coverage|Limits",
+        "Policy Coverage|NonOwned",
+        "Policy Covg",
+        "Policy Covg - Bailees - Property Away from Your Premises",
+        "Policy Covg - Bailees Cutomers",
+        "Policy Covg - Computer Systems",
+        "Policy Covg - Contractors Equipment",
+        "Policy Covg - Main",
+        "Policy Covg - Motor Truck Cargo",
+        "Policy Covg - Signs",
+        "Policy Covg|GL",
+        "Policy Info|CPP Specific Fields",
+        "Policy Info|Required and Optional Fields",
+        "Pricing",
+        "Products/Completed Ops",
+        "Property - Main",
+        "Property Add Class",
+        "Property Enter Building RCT",
+        "Property UW Questions",
+        "Rating Groups",
+        "Risk - Accounts Receivable",
+        "Risk - Bailees Customers",
+        "Risk - Computer Systems",
+        "Risk - Main",
+        "Risk - Signs",
+        "Risk Aggregate",
+        "Risk Schedule|General Coverage",
+        "Risk Schedule|Hired Auto",
+        "Risk Schedule|Liability, UM, Medical & PIP",
+        "Risk Schedule|Physical Damage",
+        "Risk Schedule|Risk Specific",
+        "Risk Schedule|Vehicle Information",
+        "SFP - 10 Liability/Farm",
+        "Specific Underwriting Questions - Accounts Receivable",
+        "Specific Underwriting Questions - Bailees Customer",
+        "Specific Underwriting Questions - Computer Systems",
+        "Specific Underwriting Questions - Contractors Equipment",
+        "Specific Underwriting Questions - Motor Truck Cargo(Owners)",
+        "Specific Underwriting Questions - Signs",
+        "State Details|Drive Other Car",
+        "State Details|Experience Rated",
+        "State Details|Hired Auto Liability",
+        "State Details|Hired Auto PD Without Driver",
+        "State Details|Hired Auto Physical Damage With Driver",
+        "State Details|Main",
+        "State Details|UM/UIM",
+        "Submission|Required and Optional Fields",
+        "Synthetic",
+        "UMB Navigation Links",
+        "UW Questions - Umbrella",
+        "UW Questions - Workers Comp",
+        "Underwriting Info | General UW Questions",
+        "Underwriting Info | Loss Experience",
+        "Underwriting Info | Other Insurance History",
+        "Underwriting Questions",
+        "Verify JavaScript Result",
+        "WC Navigation Links",
+        "WC Schedule|Main Page",
+        "[CG 20 07] Add'l Insured-Engineers, Architects",
+        "[CG 20 20] Add'l Insured-Charitable Institution",
+        "[CG 20 34] Add'l Insured-Leased Equipment Automatic ",
+        "[CG 2149] Total Pollution Exclusion Endorsement",
+        "[CG 29 35] Add'l Insured-State or Political (Permits)",
+        "[CG0424] Coverage for Injury to Leased Workers",
+        "[CG0435] Employee Benefits Liability",
+        "[CG2142] Exclusion - Explosion, Collapse and Underground Property Damage Hazard (Specified Operations)",
+        "[CG2401] Non-Binding Arbitration",
+        "[CG2812] Pesticide or Herbicide Applicator Coverage",
+        "[CU0206] Utah Changes - Notice of Cancellation for Private Investigator Agencies",
+        "[FG 00 13] Automatic Additional Insured - Specific Relationship",
+        "[UC1101] Exclusion for Designated Activities or Services"
+      ],
+      "locatorCount": 682
+    },
+    "Vehicles": {
+      "sourceBusinessSteps": [
+        "I add Motorcycle Liability Underlying LOB",
+        "I add Recreational Vehicle Liability Underlying LOB",
+        "I complete required recreational vehicle information"
+      ],
+      "sourceModules": [
+        "Policy Covg",
+        "Recreational Vehicle Liability",
+        "UMB Navigation Links"
+      ],
+      "locatorCount": 13
+    },
+    "Forms": {
+      "sourceBusinessSteps": [
+        "I complete forms verification",
+        "I complete forms verification UMB",
+        "I complete required additional\\-interest information",
+        "I complete required businessowners information",
+        "I complete required homeowners liability information",
+        "I complete required personal auto liability information",
+        "I complete required watercraft liability information"
+      ],
+      "sourceModules": [
+        "Additional Interests Schedule",
+        "BAP Navigation Links",
+        "Businessowners",
+        "Commercial Auto",
+        "Indicators and Errors",
+        "Recreational Vehicle Liability",
+        "UMB Navigation Links"
+      ],
+      "locatorCount": 19
+    },
+    "Submission": {
+      "sourceBusinessSteps": [
+        "I run Stoplight"
+      ],
+      "sourceModules": [
+        "Indicators and Errors",
+        "Submission|Complete Application & Stoplight Functionality",
+        "Submission|Required and Optional Fields",
+        "Synthetic",
+        "Verify JavaScript Result"
+      ],
+      "locatorCount": 11
+    },
+    "Coverages": {
+      "sourceBusinessSteps": [
+        "I add Accounts Receivable Coverage",
+        "I complete CP Fields for policy coverage",
+        "I complete \\[CG3132\\] Limited Fungi or Bacteria Coverage",
+        "I select CPP Coverage \\- CP",
+        "I select CPP Coverage \\- GL",
+        "I select CPP Coverage \\- IM",
+        "I verify and Fill out \\[FG0055\\] Employment Practices Liability Insurance Coverage Endorsement"
+      ],
+      "sourceModules": [
+        "Endorsements|Main",
+        "GL Navigation Links",
+        "IM Navigation Links",
+        "Policy Covg",
+        "Policy Covg - Accounts Receivable",
+        "Policy Covg - Main",
+        "Policy Info|CPP Specific Fields",
+        "Policy Info|Required and Optional Fields",
+        "Synthetic",
+        "[CG3132] Limited Fungi or Bacteria Coverage",
+        "[FG0055, FG0062, FG0063, FG0069, FG0071, FG0072, FG0074, FG0077, FG0078] Employment Practices Liability Insurance Coverage Endorsement"
+      ],
+      "locatorCount": 32
+    },
+    "Pricing": {
+      "sourceBusinessSteps": [
+        "I complete Estimated premium",
+        "I verify premium",
+        "I verify values in premium fields"
+      ],
+      "sourceModules": [
+        "Policy Info|Required and Optional Fields",
+        "Pricing",
+        "Submission|Premiums",
+        "Verify JavaScript Result"
+      ],
+      "locatorCount": 9
+    },
+    "Login": {
+      "sourceBusinessSteps": [
+        "I sign in to Duck Creek",
+        "I sign in to Duck Creek for logged in user",
+        "I sign in to Duck Creek for username"
+      ],
+      "sourceModules": [
+        "Login",
+        "Logout",
+        "Synthetic"
+      ],
+      "locatorCount": 5
+    },
+    "Proposal": {
+      "sourceBusinessSteps": [
+        "I start a new quote"
+      ],
+      "sourceModules": [
+        "Common Navigation Links",
+        "Product Selection"
+      ],
+      "locatorCount": 4
+    },
+    "Underwriting": {
+      "sourceBusinessSteps": [
+        "I answer Commercial Property History Questions",
+        "I answer General Liability History Questions",
+        "I answer General UW Questions",
+        "I answer Other Insurance History Questions",
+        "I run insurance score"
+      ],
+      "sourceModules": [
+        "CPP|Client|Underwriting Info|Commercial General Liability History",
+        "CPP|Client|Underwriting Info|Commercial Property History",
+        "CPP|Client|Underwriting Info|Navigation",
+        "Policy Info|Insurance Score",
+        "Underwriting Info | General UW Questions",
+        "Underwriting Info | Other Insurance History"
+      ],
+      "locatorCount": 17
+    },
+    "Discounts": {
+      "sourceBusinessSteps": [
+        "I complete Business Auto policy\\-specific fields"
+      ],
+      "sourceModules": [
+        "Policy Info|BAP Specific Fields"
+      ],
+      "locatorCount": 4
+    },
+    "PolicyInformation": {
+      "sourceBusinessSteps": [
+        "I complete underwriting information from the policy information screen"
+      ],
+      "sourceModules": [
+        "Client|Named Insured|Common",
+        "Common Navigation Links",
+        "Policy Info|Required and Optional Fields",
+        "Underwriting Info | Loss Experience",
+        "Underwriting Info | Other Insurance History"
+      ],
+      "locatorCount": 16
+    },
+    "LossHistory": {
+      "sourceBusinessSteps": [
+        "I add Addl Interests"
+      ],
+      "sourceModules": [
+        "Addl Interests - Loss Payee",
+        "Addl Interests - Main",
+        "CP Navigation Links",
+        "Synthetic"
+      ],
+      "locatorCount": 20
+    },
+    "BusinessClassification": {
+      "sourceBusinessSteps": [
+        "I verify Class Codes on Policy are Valid"
+      ],
+      "sourceModules": [
+        "Pricing"
+      ],
+      "locatorCount": 1
+    }
+  }
+}

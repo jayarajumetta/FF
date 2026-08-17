@@ -1,0 +1,10 @@
+{
+  "version": "39.0.0",
+  "features": 32,
+  "businessSteps": 875,
+  "pageMethods": 4873,
+  "canonicalActions": 11650,
+  "locatorReview": 1165,
+  "staticIssues": [],
+  "dotnetCompilePerformed": false
+}

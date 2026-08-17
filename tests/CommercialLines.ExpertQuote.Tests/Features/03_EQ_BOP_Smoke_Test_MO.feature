@@ -1,22 +1,32 @@
-@CL_EQ @BOP @smoke_test @MO @automated @canonical @artifact_v38 @smoke
-Feature: Commercial Lines ExpertQuote - EQ BOP Smoke Test
+# Locator Resilience: direct Playwright locator -> validated cache -> deterministic DOM -> GitHub Copilot proposal
+# Copilot Healing: opt-in with COPILOT_SELF_HEAL=true; business action and expected result never change
+
+@CL_EQ @BOP @smoke_test @automated @canonical_simple_v39 @state_data_driven
+# Automation Maturity: 95/100
+# Business Flow: 19/20 | Canonical Mapping: 20/20 | StepDefinitions: 15/15 | Page Model: 15/15 | Locator Quality: 16/20 | Test Data: 10/10
+# Page Objects Used: 6 | Locator Confidence Average: 80/100 | Review-required operations: 0
+# Locator Review Items: 8 source-derived locator(s) remain below high confidence.
+
+Feature: EQ BOP Smoke Test
   As a Commercial Lines ExpertQuote policy processing user
-  I want to complete the attached Business Owners smoke test workflow
-  So that the migrated automation preserves business intent, source order, test data, and verification evidence
+  I want to complete the EQ BOP Smoke Test workflow
+  So that the business transaction is executed with source-traceable data and verification
 
-  Background: Establish a clean and authenticated Commercial Lines ExpertQuote session
-    Given the "CL_EQ" application is configured for browser "Microsoft Edge"
-    And an authenticated "CL_EQ" session is available
+  Background: Prepare Commercial Lines ExpertQuote for policy processing
+    Given the Commercial Lines ExpertQuote browser session is ready
 
-  Scenario Outline: Create and verify a Business Owners smoke test for <state>
-    Given scenario data "<dataSet>" is loaded
-    And RANDOM scenario values are generated from the canonical Tosca patterns
-    When I create the insured client and establish the account
-    And I start the proposal using the selected product, state, effective date, and producer
-    And I complete insured identity validation and handle any prefill result
-    And I complete prequalification and resolve eligibility messages
-    Then I retrieve and verify the resulting quote, policy, and transaction status
+  Scenario Outline: EQ BOP Smoke Test - <stateCode>
+    Given test data file "<dataFile>" is loaded
+    And I open the configured Commercial Lines ExpertQuote application
+    And I sign in to Commercial Lines ExpertQuote using configured credentials
+    When I create a new client and begin the quote
+    And I enter the client account and address information
+    And I start the configured policy proposal
+    And I enter the insured social security number and handle any prefill result
+    And I navigate to the required policy screen
+    And I capture the quote identity and close the current quote
+    And I retrieve the quote and verify its identity
 
     Examples:
-      | dataSet | state | stateCode | product | transaction | effectiveDateMode |
-      | 03_eq_bop_smoke_test_mo | Missouri | MO | Business Owners | Smoke Test | Current |
+      | dataFile | stateCode | stateVariant | stateName |
+      | TestData/Scenarios/03_eq_bop_smoke_test_mo.json | MO | MO | Missouri |

@@ -1,9 +1,0 @@
-{
-  "name": "CL_EQ Regression",
-  "filter": "TestCategory=CL_EQ&TestCategory=regression",
-  "features": [
-    "Commercial Lines ExpertQuote - EQ BOP Basic Policy",
-    "Commercial Lines ExpertQuote - EQ SFP Basic Policy",
-    "Commercial Lines ExpertQuote - EQ SFP Country Estate Policy"
-  ]
-}

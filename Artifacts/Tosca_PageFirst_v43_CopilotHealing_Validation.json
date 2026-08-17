@@ -1,0 +1,31 @@
+{
+  "version": "43.0.0",
+  "base": "v42 page-first standalone tests",
+  "features": 32,
+  "csharp_page_locator_files": 51,
+  "csharp_page_method_files": 54,
+  "node_page_locator_files": 51,
+  "node_page_method_files": 51,
+  "csharp_self_healing_files": 8,
+  "node_self_healing_files": 6,
+  "csharp_delimiter_issues": [],
+  "node_syntax_errors": 0,
+  "json_parse_errors": 0,
+  "healing_contract": {
+    "primary_playwright_first": true,
+    "cache_second": true,
+    "deterministic_dom_third": true,
+    "copilot_last": true,
+    "copilot_returns_locator_only": true,
+    "xpath_rejected": true,
+    "unique_visible_validation": true,
+    "actionability_validation": true,
+    "negative_exists_not_healed": true,
+    "browser_closed_not_healed": true,
+    "input_values_excluded_from_dom_context": true,
+    "runtime_source_mutation": false,
+    "audit_jsonl": true,
+    "run_cache": true
+  },
+  "compile_boundary": "dotnet SDK unavailable in generation environment; GitHub Copilot SDK API usage was aligned to current official .NET SDK documentation but Roslyn compilation was not executed."
+}

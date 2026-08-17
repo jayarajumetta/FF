@@ -1,0 +1,14 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InsuranceAutomation.Core", "src/InsuranceAutomation.Core/InsuranceAutomation.Core.csproj", "{98445B7E-61EE-62E6-A18D-3574CE58E020}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommercialLines.ExpertQuote.Tests", "tests/CommercialLines.ExpertQuote.Tests/CommercialLines.ExpertQuote.Tests.csproj", "{B575AA0A-6674-ACDC-67C9-F629253EFD46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommercialLines.DuckCreek.Tests", "tests/CommercialLines.DuckCreek.Tests/CommercialLines.DuckCreek.Tests.csproj", "{644CBB59-625F-2013-29ED-E9559C867A1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalLines.DuckCreek.Tests", "tests/PersonalLines.DuckCreek.Tests/PersonalLines.DuckCreek.Tests.csproj", "{91A0DCD8-09A9-6286-8791-46AA807605A3}"
+EndProject
+Global
+EndGlobal

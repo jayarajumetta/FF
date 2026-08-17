@@ -1,7 +1,0 @@
-{
-  "generatedAtUtc": "2026-08-14T10:56:20.624781+00:00",
-  "generationVersion": "38.0.0-artifact-canonical-hardened",
-  "dotnetAvailableAtGeneration": false,
-  "roslynCompilationPerformed": false,
-  "reason": "The generation container did not expose a .NET SDK. Static compiler and contract validation were performed; CI definitions run restore/build/test discovery independently."
-}

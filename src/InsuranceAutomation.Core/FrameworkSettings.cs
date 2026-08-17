@@ -1,0 +1,1 @@
+namespace InsuranceAutomation.Core; public sealed class FrameworkSettings { public bool Headless {get;set;}=true; public bool RecordVideo {get;set;}=true; public bool Trace {get;set;}=true; public int TimeoutMs {get;set;}=60000; public bool KillStaleBrowsers {get;set;}=true; public string Browser {get;set;}="chromium"; }

@@ -1,8 +1,3 @@
 {
-  "name": "CL_EQ Smoke",
-  "filter": "TestCategory=CL_EQ&TestCategory=smoke",
-  "features": [
-    "Commercial Lines ExpertQuote - EQ BOP Smoke Test",
-    "Commercial Lines ExpertQuote - EQ SFP Smoke Test"
-  ]
+  "filter": "TestCategory=smoke"
 }

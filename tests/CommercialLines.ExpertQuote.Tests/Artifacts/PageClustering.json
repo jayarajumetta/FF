@@ -1,0 +1,399 @@
+{
+  "application": "CL_EQ",
+  "pages": {
+    "ClientSearch": {
+      "sourceBusinessSteps": [
+        "I create a new client",
+        "I create a new client and begin the quote",
+        "I enter client search information"
+      ],
+      "sourceModules": [
+        "EQ|BOP|Additional Interests",
+        "EQ|Common|Client Info",
+        "EQ|Common|Create New Client",
+        "EQ|Common|Start New Quote"
+      ],
+      "locatorCount": 11
+    },
+    "AccountInformation": {
+      "sourceBusinessSteps": [
+        "I enter account details",
+        "I enter the client account and address information"
+      ],
+      "sourceModules": [
+        "EQ|BOP|Additional Interest Field Entry",
+        "EQ|BOP|Additional Interests",
+        "EQ|BOP|Billing",
+        "EQ|Common|Account Details - Account Info",
+        "Synthetic"
+      ],
+      "locatorCount": 17
+    },
+    "Proposal": {
+      "sourceBusinessSteps": [
+        "I start the configured policy proposal",
+        "I start the policy proposal"
+      ],
+      "sourceModules": [
+        "EQ|BOP|Billing",
+        "EQ|Common|Create Quote Landing Page",
+        "EQ|Common|Proposal Start",
+        "Synthetic"
+      ],
+      "locatorCount": 21
+    },
+    "SocialSecurity": {
+      "sourceBusinessSteps": [
+        "I enter and validate the insured social security number",
+        "I enter the insured social security number and handle any prefill result"
+      ],
+      "sourceModules": [
+        "EQ|Common|SSN",
+        "EQ|Common|eChecklist - eChecklist",
+        "Synthetic"
+      ],
+      "locatorCount": 6
+    },
+    "Navigation": {
+      "sourceBusinessSteps": [
+        "I complete equipment Breakdown and Implements Coverage",
+        "I complete mortgagee/Loss Payee Information",
+        "I complete retreive Policy Number After Referral",
+        "I navigate to Submission Screen",
+        "I navigate to the required policy screen",
+        "I navigate to the required policy screen for navigate to correct screen",
+        "I navigate to the required policy screen for navigate to screen",
+        "I navigate to the required policy screen for policy data entry",
+        "I navigate to the required policy screen for refer to uw in eq",
+        "I navigate to the required policy screen for screen",
+        "I navigate to the required policy screen for subsequent screen 0118",
+        "I navigate to the required policy screen for subsequent screen 0143",
+        "I navigate to the required policy screen for subsequent screen 0174",
+        "I navigate to the required policy screen for subsequent screen 0184",
+        "I navigate to the required policy screen for subsequent screen 0198",
+        "I navigate to the required policy screen for subsequent screen 0201",
+        "I navigate to the required policy screen for subsequent screen 0215",
+        "I navigate to the required policy screen for subsequent screen 0221",
+        "I navigate to the required policy screen for subsequent screen 0230",
+        "I navigate to the required policy screen for subsequent screen 0236",
+        "I navigate to the required policy screen for subsequent screen 0250",
+        "I navigate to the required policy screen for subsequent screen 0266",
+        "I navigate to the required policy screen for subsequent screen 0273",
+        "I navigate to the required policy screen for subsequent screen 0282",
+        "I navigate to the required policy screen for subsequent screen 0285",
+        "I navigate to the required policy screen for subsequent screen 0310",
+        "I navigate to the required policy screen for subsequent screen 0336",
+        "I navigate to the required policy screen for subsequent screen 0502",
+        "I navigate to the required policy screen for subsequent screen 0827",
+        "I open EQ in Browser",
+        "I open EQ in Browser for body",
+        "I open EQ in Browser for open a browser",
+        "I select Own or rent and Building SQ Footage Basic",
+        "I verify for Policy Packet"
+      ],
+      "sourceModules": [
+        "EQ |Common|Loading Indicator Wait",
+        "EQ|BOP|Building |Add Building|Own Rent & Sq Footage",
+        "EQ|BOP|PreQualification|Add a Class",
+        "EQ|Common|Client Info",
+        "EQ|Common|PreQualification|Add Class Codes|Search/Add Class Codes",
+        "EQ|Common|Review Required Pop-up",
+        "EQ|Common|Transact|Verify DC Premium",
+        "EQ|SFP|DIV V|Optional Liability Coverage|Workers' Compensation - Residence EmployeesExpertQuote",
+        "EQ|SFP|Equipment Breakdown",
+        "EQ|SFP|Mortgagee/Loss Payee",
+        "Synthetic"
+      ],
+      "locatorCount": 53
+    },
+    "PolicyInformation": {
+      "sourceBusinessSteps": [
+        "I complete policy Details \\(Optimized\\)"
+      ],
+      "sourceModules": [
+        "EQ |Common|Loading Indicator Wait",
+        "EQ|SFP|Policy Details (Optimized)",
+        "Synthetic"
+      ],
+      "locatorCount": 10
+    },
+    "PolicyWorkflow": {
+      "sourceBusinessSteps": [
+        "I add/Edit a Narrative and Verify Timestamp",
+        "I complete alert Error Check",
+        "I complete edit Client Roles",
+        "I complete nOT CE",
+        "I complete quote Identifying and Close Quote",
+        "I complete restart Edge Popup",
+        "I complete restart Edge Popup for ok",
+        "I complete restart Edge Popup for restart edge popup",
+        "I complete restart Edge Popup for restart microsoft edge message exists",
+        "I complete save for Later/Return to Admin",
+        "I complete save for Later/Return to Admin for save for later",
+        "I complete verifying Quote",
+        "I enter Required Info",
+        "I open EQ in Browser for check if logout exists",
+        "I open EQ in Browser for logout",
+        "I open EQ in Browser for open eq in browser",
+        "I open a CLAS Browser and Search for EQ by Description",
+        "I open a CLAS Browser and Search for EQ by Description 1",
+        "I open a CLAS Browser and Search for EQ by Description 1 for username",
+        "I open a CLAS Browser and Search for EQ by Description for body",
+        "I open a CLAS Browser and Search for EQ by Description for verify view policy",
+        "I open a CLAS Browser and Search for EQ by Description for view policy",
+        "I search Results Table",
+        "I search Results Table for results table",
+        "I search by Desc in DC",
+        "I search by Desc in DC for search text",
+        "I search by QuoteNum",
+        "I search by QuoteNum for quotesearchinput",
+        "I search by QuoteNum for search by quotenum",
+        "I select OK",
+        "I sign out of the application",
+        "I sign out of the application for logged in user",
+        "I sign out of the application for logout",
+        "I verify None of the Above"
+      ],
+      "sourceModules": [
+        "EQ |Common|Loading Indicator Wait",
+        "EQ|BOP|Client Details|Edit Client Roles",
+        "EQ|BOP|Primary Insured Details| General UW Questions",
+        "EQ|Common|Client Info",
+        "EQ|Common|Esignature|Click OK",
+        "EQ|Common|Logout of EQ",
+        "EQ|Common|Narrative",
+        "EQ|Common|PreQualification|General Eligibility Restrictions",
+        "EQ|Common|Primary Insured|Required",
+        "EQ|Common|Quote Identifying",
+        "EQ|Common|Search by QuoteNum",
+        "EQ|Common|Search for Policy",
+        "EQ|Common|eChecklist - eChecklist",
+        "EQ|SFP|CE|Coverages",
+        "EQ|SFP|DIV V|Optional Liability Coverage|Workers' Compensation - Residence EmployeesExpertQuote",
+        "EQ|SFP|Div V Liability",
+        "Synthetic"
+      ],
+      "locatorCount": 68
+    },
+    "LossHistory": {
+      "sourceBusinessSteps": [
+        "I add/Verify/Delete Claims",
+        "I complete eChecklist \\- Loss Runs \\- 3 Years",
+        "I enter Required"
+      ],
+      "sourceModules": [
+        "EQ |Common|Loading Indicator Wait",
+        "EQ|BOP|Claims/Prior Insurance|Add Claim",
+        "EQ|BOP|Pricing|CA & MA Risk Categories",
+        "EQ|Common|Prior Carrier-Claims|Required Info",
+        "EQ|Common|eChecklist - eChecklist",
+        "EQ|SFP|DIV V|Optional Liability Coverage|Workers' Compensation - Residence EmployeesExpertQuote",
+        "Synthetic"
+      ],
+      "locatorCount": 30
+    },
+    "Locations": {
+      "sourceBusinessSteps": [
+        "I add a Location",
+        "I complete edit a Location"
+      ],
+      "sourceModules": [
+        "EQ |Common|Loading Indicator Wait",
+        "EQ|BOP|Locations|Edit Location",
+        "EQ|SFP|DIV V|Optional Liability Coverage|Workers' Compensation - Residence EmployeesExpertQuote",
+        "EQ|SFP|Location",
+        "Synthetic"
+      ],
+      "locatorCount": 15
+    },
+    "Buildings": {
+      "sourceBusinessSteps": [
+        "I add Residence Covg",
+        "I add a Building Button",
+        "I add a Residence",
+        "I complete eChecklist \\- Building Photo1",
+        "I complete eChecklist \\- Building Photo2",
+        "I complete eChecklist \\- Building Photo3",
+        "I complete eChecklist \\- Building Photo4",
+        "I complete extra Property Risk",
+        "I enter supplimental data\\- for class",
+        "I select Additional Coverages \\- Building, Functional Personal Property or Habitational",
+        "I select Building Detail Fields",
+        "I select Cost Estimator \\& Calculate Valuations",
+        "I select Heating Sources",
+        "I select Occupancy SQ Footage"
+      ],
+      "sourceModules": [
+        "EQ |Common|Loading Indicator Wait",
+        "EQ|BOP|Add Building|Building Details",
+        "EQ|BOP|Add a Building Button",
+        "EQ|BOP|Building |Add Building|Own Rent & Sq Footage",
+        "EQ|BOP|Building|Add Building|Building, Functional, Habitational ",
+        "EQ|BOP|Building|Building Details|Additional Property Selections",
+        "EQ|BOP|Building|Building Details|Building Rating Basis",
+        "EQ|BOP|Building|Building Details|Heating Sources",
+        "EQ|BOP|Building|Building Details|Roof Year & Burglar Alarm",
+        "EQ|BOP|Building|Class|Enter supplemental data for selected Class Code(s)",
+        "EQ|BOP|Building|Cost Estimator",
+        "EQ|Common|eChecklist - eChecklist",
+        "EQ|SFP|DIV V|Optional Liability Coverage|Workers' Compensation - Residence EmployeesExpertQuote",
+        "EQ|SFP|Div I - Add Residence",
+        "EQ|SFP|Div I - Add Residence|Add Residence - Detail",
+        "EQ|SFP|Div I - Add Residence|Add Residence Covg",
+        "Synthetic"
+      ],
+      "locatorCount": 78
+    },
+    "Coverages": {
+      "sourceBusinessSteps": [
+        "I answer EPLI Questions",
+        "I complete policy\\-wide",
+        "I enter FPP",
+        "I refer Application/Policy"
+      ],
+      "sourceModules": [
+        "EQ |Common|Loading Indicator Wait",
+        "EQ|BOP|Additional Coverages|Answer EPLI Questions",
+        "EQ|BOP|Building|Class|Enter supplemental data for selected Class Code(s)",
+        "EQ|BOP|Building|Personal Property|Add Inventory",
+        "EQ|SFP|CE|Coverages",
+        "EQ|SFP|DIV 4|Scheduled Personal Property|Bicycles",
+        "EQ|SFP|DIV V|Optional Liability Coverage|Workers' Compensation - Residence EmployeesExpertQuote",
+        "EQ|SFP|Div I - Add Residence|Add Residence Covg",
+        "EQ|SFP|PolicyWide Coverage|CE",
+        "Synthetic"
+      ],
+      "locatorCount": 27
+    },
+    "Underwriting": {
+      "sourceBusinessSteps": [
+        "I answer Building Eligibility Questions",
+        "I complete general UW Questions",
+        "I complete insurance Score",
+        "I complete insurance Score and premium Verification"
+      ],
+      "sourceModules": [
+        "EQ |Common|Loading Indicator Wait",
+        "EQ|BOP|Building|Building Eligibility Questions",
+        "EQ|BOP|Pricing|Insurance Score and Premium",
+        "EQ|BOP|Primary Insured Details|General UW Questions",
+        "EQ|Common|eChecklist - eChecklist",
+        "EQ|SFP|DIV V|Optional Liability Coverage|Workers' Compensation - Residence EmployeesExpertQuote",
+        "EQ|SFP|Insurance Score",
+        "Synthetic"
+      ],
+      "locatorCount": 11
+    },
+    "Pricing": {
+      "sourceBusinessSteps": [
+        "I verify premium",
+        "I verify premium on DC"
+      ],
+      "sourceModules": [
+        "EQ|SFP|Pricing",
+        "Synthetic"
+      ],
+      "locatorCount": 4
+    },
+    "Login": {
+      "sourceBusinessSteps": [
+        "I open a CLAS Browser and Search for EQ by Description 1 for open a clas browser and search for eq by description 1",
+        "I open a CLAS Browser and Search for EQ by Description for cl dc",
+        "I open a CLAS Browser and Search for EQ by Description for open a clas browser and search for eq by description",
+        "I sign in to Duck Creek",
+        "I sign in to Duck Creek for cl dc",
+        "I sign in to Duck Creek for logged in user",
+        "I sign in to ExpertQuote",
+        "I sign in to ExpertQuote for login to eq sso",
+        "I sign in to ExpertQuote for username"
+      ],
+      "sourceModules": [
+        "EQ |Common|Loading Indicator Wait",
+        "Synthetic"
+      ],
+      "locatorCount": 14
+    },
+    "Forms": {
+      "sourceBusinessSteps": [
+        "I complete forms verification Retrieve QuoteID \\& SessionID by Browser Console",
+        "I complete forms verification for EQ in CLAS",
+        "I perform Quick Search and Open Policy"
+      ],
+      "sourceModules": [
+        "EQ |Common|Loading Indicator Wait",
+        "Synthetic"
+      ],
+      "locatorCount": 10
+    },
+    "BusinessClassification": {
+      "sourceBusinessSteps": [
+        "I complete industry Class Code Questions",
+        "I complete industry Class Code Restrictions"
+      ],
+      "sourceModules": [
+        "EQ|BOP|Prequalification|Industry Class Code Restrictions",
+        "EQ|BOP|Primary Insured Details| General UW Questions",
+        "Synthetic"
+      ],
+      "locatorCount": 4
+    },
+    "Billing": {
+      "sourceBusinessSteps": [
+        "I complete billing Account Setup",
+        "I complete future Payment Plan 1",
+        "I complete initial Payment",
+        "I refer Application/Policy for table row cell link"
+      ],
+      "sourceModules": [
+        "EQ |Common|Loading Indicator Wait",
+        "EQ|BOP|Billing",
+        "Synthetic"
+      ],
+      "locatorCount": 21
+    },
+    "Submission": {
+      "sourceBusinessSteps": [
+        "I complete checklist and Esign",
+        "I refer to UW",
+        "I run Stoplight",
+        "I transmit to DC"
+      ],
+      "sourceModules": [
+        "EQ |Common|Loading Indicator Wait",
+        "EQ|BOP|Submission|Main Page",
+        "EQ|Common|Form Check|UI - Forms List - BOP Smart",
+        "EQ|Common|Submission|Refer to UW",
+        "Synthetic"
+      ],
+      "locatorCount": 19
+    },
+    "QuoteSearch": {
+      "sourceBusinessSteps": [
+        "I capture the quote identity and close the current quote",
+        "I retrieve the quote and verify its identity"
+      ],
+      "sourceModules": [
+        "EQ |Common|Loading Indicator Wait",
+        "EQ|Common|Client Info",
+        "EQ|Common|Quote Identifying",
+        "EQ|Common|Review Required Pop-up",
+        "Synthetic"
+      ],
+      "locatorCount": 7
+    },
+    "Vehicles": {
+      "sourceBusinessSteps": [
+        "I add bicycle"
+      ],
+      "sourceModules": [
+        "EQ |Common|Loading Indicator Wait",
+        "EQ|BOP|Building|Personal Property|Add Inventory",
+        "EQ|Common|Client Info",
+        "EQ|SFP|DIV 4|Scheduled Personal Property|Bicycles",
+        "EQ|SFP|DIV V|Optional Liability Coverage|Workers' Compensation - Residence EmployeesExpertQuote",
+        "Synthetic"
+      ],
+      "locatorCount": 11
+    }
+  }
+}

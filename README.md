@@ -1,54 +1,35 @@
-# Tosca Canonical Artifact Automation Framework v38
+# Tosca Canonical Simple Framework v39
 
-This repository is a standalone **C# / Playwright / ReqnRoll / NUnit** modernization package generated only for the **32 attached eligible business flows**.
-
-It uses the explicit artifact architecture retained from the v29-v35 line:
+This release intentionally returns to the proven v29/v32 architecture:
 
 ```text
-Feature / Scenario Outline / Examples
-    -> feature-scoped StepDefinition in Feature order
-        -> typed Flow PageMethod
-            -> source-ordered CanonicalAction artifact
-                -> typed PageLocator key + application locator catalog
-                    -> Playwright
+Business Feature / Scenario Outline
+  -> explicit ReqnRoll StepDefinition
+     -> direct module PageMethod calls in source order
+        -> centralized app locator namespace
+           -> Playwright
 ```
 
-No catch-all ReqnRoll binding and no natural-language JSON plan interpreter is used.
+Hooks own browser lifecycle and evidence only. They do not execute business flow.
 
-## Scope
+Generated from the 32 attached eligible manual-flow artifacts and the v38 source-derived canonical mapping/locator evidence.
 
-| Application | Attached flows |
-|---|---:|
-| Commercial Lines Duck Creek | 18 |
-| Commercial Lines ExpertQuote | 5 |
-| Personal Lines Duck Creek | 9 |
-| **Total** | **32** |
+- Features: 32
+- Business Gherkin steps: 875
+- Direct module PageMethods: 4873
+- Canonical source actions preserved under those methods: 11650
+- Review-only locator fallbacks: 1165
 
-The package contains **11,650 source-ordered business/data actions**. Another **1,217 technical, session, resource, cleanup, and recovery actions** are separated from PageLocators and represented by Hooks/SystemAction evidence.
-
-## Data handling
-
-- Scenario Outline `Examples` hold business dimensions and dataset selection.
-- Fixed values are stored in scenario JSON files.
-- Random patterns are stored in scenario JSON and generated once into scenario-scoped runtime aliases before the first consuming PageMethod.
-- Buffers and captured values are isolated per scenario and also recorded in run evidence.
-- Unavailable TDM/reusable parameters are declared in `ExternalDataOverrides.json` with `SYNTHETIC_REPLACE_ME`; execution fails until approved values replace them.
-- Credentials are supplied only through environment variables.
-
-## Evidence and reporting
-
-Hooks capture manual-equivalent step logs, screenshots, DOM on failure, Playwright trace, video, runtime-data snapshots, and a self-contained HTML report. Optional SMTP summary email is configuration-driven and disabled by default.
+Test data lives in `TestData/Scenarios`. Random patterns generate once per scenario key. Protected/third-party values use `SYNTHETIC_REPLACE_ME` and fail until replaced.
 
 ## Run
-
-```bash
-./scripts/setup.sh
-./scripts/quality-gate.sh
-./scripts/run.sh all
+```powershell
+dotnet restore ToscaCanonicalSimple.sln
+dotnet build ToscaCanonicalSimple.sln
+dotnet test ToscaCanonicalSimple.sln
 ```
 
-PowerShell equivalents and Azure Pipelines/GitHub Actions definitions are included.
 
-## Validation boundary
+## v41 state-driven expansion
 
-Generation performs JSON/XML parsing, Feature/StepDefinition/PageMethod order reconciliation, canonical action contracts, duplicate signature/type audits, locator/system separation, C# lexical/delimiter checks, and ZIP CRC/SHA-256 validation. The generation container does not expose the .NET SDK, so Roslyn compilation and test discovery must run through the supplied CI gate before application execution.
+The 32 selected business flows are expanded from Tosca TestCaseTemplateInstance.Items into 1074 concrete source examples. Each example has a scenario JSON whose values are reconciled through stable DerivedFrom lineage. See `Artifacts/StateApplicabilityMatrix.json` and `Artifacts/CanonicalFieldCatalog.json`.

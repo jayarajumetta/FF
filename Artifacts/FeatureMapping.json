@@ -1,0 +1,258 @@
+[
+  {
+    "application": "CL_EQ",
+    "flow": "EQ_BOP_Basic_Policy",
+    "featureFile": "02_EQ_BOP_Basic_Policy_AL.feature",
+    "businessSteps": 95,
+    "sourceActions": 773,
+    "dataFile": "02_eq_bop_basic_policy_al.json"
+  },
+  {
+    "application": "CL_EQ",
+    "flow": "EQ_BOP_Smoke_Test",
+    "featureFile": "03_EQ_BOP_Smoke_Test_MO.feature",
+    "businessSteps": 7,
+    "sourceActions": 68,
+    "dataFile": "03_eq_bop_smoke_test_mo.json"
+  },
+  {
+    "application": "CL_EQ",
+    "flow": "EQ_SFP_Basic_Policy",
+    "featureFile": "05_EQ_SFP_Basic_Policy_AL.feature",
+    "businessSteps": 42,
+    "sourceActions": 405,
+    "dataFile": "05_eq_sfp_basic_policy_al.json"
+  },
+  {
+    "application": "CL_EQ",
+    "flow": "EQ_SFP_Country_Estate_Policy",
+    "featureFile": "06_EQ_SFP_Country_Estate_Policy_AL.feature",
+    "businessSteps": 36,
+    "sourceActions": 354,
+    "dataFile": "06_eq_sfp_country_estate_policy_al.json"
+  },
+  {
+    "application": "CL_EQ",
+    "flow": "EQ_SFP_Smoke_Test",
+    "featureFile": "04_EQ_SFP_Smoke_Test_MN.feature",
+    "businessSteps": 10,
+    "sourceActions": 78,
+    "dataFile": "04_eq_sfp_smoke_test_mn.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "BAP_Basic_Policy",
+    "featureFile": "001_BAP_Basic_Policy_AL.feature",
+    "businessSteps": 21,
+    "sourceActions": 297,
+    "dataFile": "001_bap_basic_policy_al.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "BAP_Expanded",
+    "featureFile": "002_BAP_Expanded_AL.feature",
+    "businessSteps": 29,
+    "sourceActions": 928,
+    "dataFile": "002_bap_expanded_al.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "BAP_Smoke_Test",
+    "featureFile": "012_BAP_Smoke_Test_AL.feature",
+    "businessSteps": 12,
+    "sourceActions": 144,
+    "dataFile": "012_bap_smoke_test_al.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "CPP_Basic_Policy",
+    "featureFile": "003_CPP_Basic_Policy_AZ.feature",
+    "businessSteps": 75,
+    "sourceActions": 713,
+    "dataFile": "003_cpp_basic_policy_az.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "CPP_Smoke_Test",
+    "featureFile": "017_CPP_Smoke_Test_AZ.feature",
+    "businessSteps": 12,
+    "sourceActions": 122,
+    "dataFile": "017_cpp_smoke_test_az.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "CP_Basic_Policy",
+    "featureFile": "004_CP_Basic_Policy_AZ.feature",
+    "businessSteps": 29,
+    "sourceActions": 388,
+    "dataFile": "004_cp_basic_policy_az.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "CP_Smoke_Test",
+    "featureFile": "013_CP_Smoke_Test_AZ.feature",
+    "businessSteps": 10,
+    "sourceActions": 119,
+    "dataFile": "013_cp_smoke_test_az.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "GL_Basic_Policy",
+    "featureFile": "005_GL_Basic_Policy_AZ.feature",
+    "businessSteps": 22,
+    "sourceActions": 281,
+    "dataFile": "005_gl_basic_policy_az.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "GL_OCP_Policy",
+    "featureFile": "006_GL_OCP_Policy_AZ.feature",
+    "businessSteps": 20,
+    "sourceActions": 281,
+    "dataFile": "006_gl_ocp_policy_az.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "GL_Smoke_Test",
+    "featureFile": "014_GL_Smoke_Test_AZ.feature",
+    "businessSteps": 10,
+    "sourceActions": 121,
+    "dataFile": "014_gl_smoke_test_az.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "IM_Basic_Policy",
+    "featureFile": "007_IM_Basic_Policy_AZ.feature",
+    "businessSteps": 32,
+    "sourceActions": 448,
+    "dataFile": "007_im_basic_policy_az.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "IM_Smoke_Test",
+    "featureFile": "015_IM_Smoke_Test_AZ.feature",
+    "businessSteps": 10,
+    "sourceActions": 119,
+    "dataFile": "015_im_smoke_test_az.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "UMB_Basic_Policy",
+    "featureFile": "008_UMB_Basic_Policy_AL.feature",
+    "businessSteps": 31,
+    "sourceActions": 318,
+    "dataFile": "008_umb_basic_policy_al.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "UMB_Expanded",
+    "featureFile": "009_UMB_Expanded_AL.feature",
+    "businessSteps": 42,
+    "sourceActions": 608,
+    "dataFile": "009_umb_expanded_al.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "UMB_Smoke_Test",
+    "featureFile": "018_UMB_Smoke_Test_AL.feature",
+    "businessSteps": 9,
+    "sourceActions": 119,
+    "dataFile": "018_umb_smoke_test_al.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "WC_Basic_Policy",
+    "featureFile": "010_WC_Basic_Policy_AL.feature",
+    "businessSteps": 26,
+    "sourceActions": 313,
+    "dataFile": "010_wc_basic_policy_al.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "WC_Expanded",
+    "featureFile": "011_WC_Expanded_AL.feature",
+    "businessSteps": 28,
+    "sourceActions": 349,
+    "dataFile": "011_wc_expanded_al.json"
+  },
+  {
+    "application": "CL_DC",
+    "flow": "WC_Smoke_Test",
+    "featureFile": "016_WC_Smoke_Test_AL.feature",
+    "businessSteps": 15,
+    "sourceActions": 152,
+    "dataFile": "016_wc_smoke_test_al.json"
+  },
+  {
+    "application": "PL_DC",
+    "flow": "Auto_Rate_Filings_Common_Policy_NB",
+    "featureFile": "183_Auto_Rate_Filings_Common_Policy_NB_AL.feature",
+    "businessSteps": 39,
+    "sourceActions": 654,
+    "dataFile": "183_auto_rate_filings_common_policy_nb_al.json"
+  },
+  {
+    "application": "PL_DC",
+    "flow": "Auto_Rate_Filings_Common_Policy_NB_Prior_Eff_Date",
+    "featureFile": "184_Auto_Rate_Filings_Common_Policy_NB_Prior_Eff_Date_AL.feature",
+    "businessSteps": 39,
+    "sourceActions": 654,
+    "dataFile": "184_auto_rate_filings_common_policy_nb_prior_eff_date_al.json"
+  },
+  {
+    "application": "PL_DC",
+    "flow": "Auto_Rate_Filings_Policy_1_NB",
+    "featureFile": "181_Auto_Rate_Filings_Policy_1_NB_AL.feature",
+    "businessSteps": 40,
+    "sourceActions": 674,
+    "dataFile": "181_auto_rate_filings_policy_1_nb_al.json"
+  },
+  {
+    "application": "PL_DC",
+    "flow": "Auto_Rate_Filings_Policy_3_NB_Prior_Eff_Date",
+    "featureFile": "182_Auto_Rate_Filings_Policy_3_NB_Prior_Eff_Date_AL.feature",
+    "businessSteps": 39,
+    "sourceActions": 672,
+    "dataFile": "182_auto_rate_filings_policy_3_nb_prior_eff_date_al.json"
+  },
+  {
+    "application": "PL_DC",
+    "flow": "Cycle_Rate_Filings_Policy_1_NB_1",
+    "featureFile": "185_Cycle_Rate_Filings_Policy_1_NB_1_AL.feature",
+    "businessSteps": 42,
+    "sourceActions": 618,
+    "dataFile": "185_cycle_rate_filings_policy_1_nb_1_al.json"
+  },
+  {
+    "application": "PL_DC",
+    "flow": "Cycle_Rate_Filings_Policy_3_NB_Prior_Eff_Date",
+    "featureFile": "186_Cycle_Rate_Filings_Policy_3_NB_Prior_Eff_Date_AL.feature",
+    "businessSteps": 35,
+    "sourceActions": 637,
+    "dataFile": "186_cycle_rate_filings_policy_3_nb_prior_eff_date_al.json"
+  },
+  {
+    "application": "PL_DC",
+    "flow": "Smoke_Test_Auto",
+    "featureFile": "211_Smoke_Test_Auto_AL.feature",
+    "businessSteps": 6,
+    "sourceActions": 81,
+    "dataFile": "211_smoke_test_auto_al.json"
+  },
+  {
+    "application": "PL_DC",
+    "flow": "Smoke_Test_Cycle",
+    "featureFile": "212_Smoke_Test_Cycle_AL.feature",
+    "businessSteps": 6,
+    "sourceActions": 81,
+    "dataFile": "212_smoke_test_cycle_al.json"
+  },
+  {
+    "application": "PL_DC",
+    "flow": "Smoke_Test_RV",
+    "featureFile": "215_Smoke_Test_RV_AL.feature",
+    "businessSteps": 6,
+    "sourceActions": 81,
+    "dataFile": "215_smoke_test_rv_al.json"
+  }
+]
