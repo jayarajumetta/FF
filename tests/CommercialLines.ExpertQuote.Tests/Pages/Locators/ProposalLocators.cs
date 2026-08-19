@@ -7,71 +7,115 @@ public sealed class ProposalLocators
     private readonly IPage _page;
     public ProposalLocators(IPage page) => _page = page;
 
-    // Source modules: EQ|Common|Proposal Start | confidence=High score=127
-    public ILocator AgentPC => _page.GetByRole(AriaRole.Textbox, new() { Name = "AgentPC", Exact = true });
+    // Product Selection Chips
+    public ILocator PersonalAutoChip => _page.Locator("[data-testid='proposal.product-chip-label']").Filter(new() { HasText = "Personal Auto" });
+    public ILocator MotorcycleChip => _page.Locator("[data-testid='proposal.product-chip-label']").Filter(new() { HasText = "Motorcycle" });
+    public ILocator RecreationalVehicleChip => _page.Locator("[data-testid='proposal.product-chip-label']").Filter(new() { HasText = "Recreational Vehicle" });
+    public ILocator HomeChip => _page.Locator("[data-testid='proposal.product-chip-label']").Filter(new() { HasText = "Home" });
+    public ILocator BusinessOwnersChip => _page.Locator("[data-testid='proposal.product-chip-label']").Filter(new() { HasText = "Business Owners" });
+    public ILocator SpecialFarmPackageChip => _page.Locator("[data-testid='proposal.product-chip-label']").Filter(new() { HasText = "Special Farm Package" });
 
-    // Source modules: EQ|Common|Proposal Start | confidence=High score=130
-    public ILocator BusinessOwners => _page.GetByTestId("proposal.product-chip-item-wrapper");
+    // Business Entity Search Section
+    public ILocator BusinessNameSearchField => _page.Locator("#business\\.search\\.businessName");
+    public ILocator SearchButton => _page.Locator("#button-locked-proposal-start-business-search-btn");
+    public ILocator IndividuallyOwnedDbaCheckbox => _page.Locator("[data-testid='business.isIndividualDba']").Locator("input[type='checkbox']");
+    public ILocator IndividuallyOwnedDbaLabel => _page.GetByText("Individually Owned, DBA, or T/A");
 
-    // Source modules: EQ|Common|Create Quote Landing Page | confidence=High score=127
-    public ILocator EffectiveDate6F16B => _page.GetByRole(AriaRole.Textbox, new() { Name = "Effective Date", Exact = true });
+    // DBA/T/A Name Field
+    public ILocator DbaOrTaNameField => _page.Locator("#business\\.individualDba");
 
-    // Source modules: EQ|Common|Proposal Start | confidence=High score=127
-    public ILocator EffectiveDate78F67 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Effective Date", Exact = true });
+    // Form Fields - Quote Details Section
+    public ILocator EffectiveDate => _page.Locator("#proposal\\.effectiveDate");
+    public ILocator PolicyTermDropdown => _page.Locator("[data-testid='proposal.term']");
+    public ILocator AgentPC => _page.Locator("#proposal\\.agentPC");
+    public ILocator AssociatePC => _page.Locator("#proposal\\.associatePC");
+    public ILocator RatingStateDropdown => _page.Locator("[data-testid='proposal.ratingState']");
 
-    // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
+    // Lessor's Risk Exposure Chips
+    public ILocator LessorsRiskYesChip => _page.Locator("[data-testid='proposal.LessorsRiskExposure-chip-wrapper']").Filter(new() { HasText = "Yes" });
+    public ILocator LessorsRiskNoChip => _page.Locator("[data-testid='proposal.LessorsRiskExposure-chip-wrapper']").Filter(new() { HasText = "No" });
+
+    // Risk Address Selection Radio Buttons
+    public ILocator AccountAddressRadio => _page.Locator("[data-testid='proposal.riskAddressSelection-0']");
+    public ILocator NewAddressRadio => _page.Locator("[data-testid='proposal.riskAddressSelection-1']");
+
+    // Action Buttons
+    public ILocator StartQuoteButton => _page.Locator("#startQuote");
+
+    // Additional Elements
+    public ILocator ProposalDetailsHeader => _page.GetByRole(AriaRole.Heading, new() { Name = "Proposal Details", Exact = true });
+    public ILocator InsuranceProductsHeader => _page.GetByRole(AriaRole.Heading, new() { Name = "Insurance Products", Exact = true });
+    public ILocator QuoteDetailsHeader => _page.GetByRole(AriaRole.Heading, new() { Name = "Quote Details", Exact = true });
+
+    /// <summary>
+    /// Gets a dropdown option by text for any mat-select dropdown
+    /// </summary>
+    /// <param name="optionText">The option text (e.g., "6 Month", "12 Month", "ALABAMA")</param>
+    public ILocator GetDropdownOption(string optionText) 
+        => _page.GetByRole(AriaRole.Option, new() { Name = optionText, Exact = true });
+
+    /// <summary>
+    /// Selects Policy Term from dropdown
+    /// </summary>
+    /// <param name="termText">The term text (e.g., "6 Month", "12 Month")</param>
+    public async Task SelectPolicyTermAsync(string termText)
+    {
+        await PolicyTermDropdown.ClickAsync();
+        await GetDropdownOption(termText).ClickAsync();
+    }
+
+    /// <summary>
+    /// Selects Rating State from dropdown
+    /// </summary>
+    /// <param name="stateText">The state text (e.g., "ALABAMA", "MISSOURI", "TEXAS")</param>
+    public async Task SelectRatingStateAsync(string stateText)
+    {
+        await RatingStateDropdown.ClickAsync();
+        await GetDropdownOption(stateText).ClickAsync();
+    }
+
+    /// <summary>
+    /// Selects Lessor's Risk Exposure option (Yes or No)
+    /// </summary>
+    /// <param name="answer">The answer: "Yes" or "No"</param>
+    public async Task SelectLessorsRiskExposureAsync(string answer)
+    {
+        var chipLocator = _page.Locator("[data-testid='proposal.LessorsRiskExposure-chip-wrapper']")
+            .Filter(new() { HasText = answer });
+        await chipLocator.ClickAsync();
+    }
+
+    /// <summary>
+    /// Selects a product chip by product name
+    /// </summary>
+    /// <param name="productName">The product name (e.g., "Personal Auto", "Business Owners")</param>
+    public async Task SelectProductChipAsync(string productName)
+    {
+        var chipLocator = _page.Locator("[data-testid='proposal.product-chip-label']").Filter(new() { HasText = productName });
+        await chipLocator.ClickAsync();
+    }
+
+    // Backward compatibility aliases for existing Page methods
+    public ILocator BusinessOwners => BusinessOwnersChip;
+    public ILocator EffectiveDate6F16B => EffectiveDate;
+    public ILocator EffectiveDate78F67 => EffectiveDate;
+    public ILocator PolicyTerm => PolicyTermDropdown;
+    public ILocator SpecialFarmPackage => SpecialFarmPackageChip;
+    public ILocator StartQuote => StartQuoteButton;
+    public ILocator State => RatingStateDropdown;
+    public ILocator StateDropdown => RatingStateDropdown;
+    public ILocator NewAccountAddress => AccountAddressRadio;
+    public ILocator IndividualDBA => DbaOrTaNameField;
+    public ILocator IndividuallyOwnedDBAOrTA => IndividuallyOwnedDbaCheckbox;
+    public ILocator LessorsRiskNo => LessorsRiskNoChip;
+    public ILocator SearchBusinessName => BusinessNameSearchField;
+
+    // Legacy locators that may not be in current HTML but kept for compatibility
     public ILocator Individual => _page.GetByText("Individual", new() { Exact = true });
-
-    // Source modules: EQ|Common|Proposal Start | confidence=High score=127
-    public ILocator IndividualDBA => _page.GetByRole(AriaRole.Textbox, new() { Name = "Individual DBA", Exact = true });
-
-    // Source modules: EQ|Common|Proposal Start | confidence=High score=127
-    public ILocator IndividuallyOwnedDBAOrTA => _page.GetByRole(AriaRole.Checkbox, new() { Name = "Individually Owned, DBA, or T/A", Exact = true });
-
-    // Source modules: EQ|Common|Proposal Start | confidence=High score=130
-    public ILocator LessorsRiskNo => _page.GetByTestId("proposal.LessorsRiskExposure-chip-wrapper");
-
-    // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator Missouri => _page.GetByText("Missouri", new() { Exact = true });
-
-    // Source modules: EQ|Common|Proposal Start | confidence=High score=96
-    public ILocator NewAccountAddress => _page.GetByRole(AriaRole.Radio, new() { Name = "newAccountAddress", Exact = true });
-
-    // Source modules:  | confidence=Medium score=78
     public ILocator No => _page.GetByLabel("No", new() { Exact = true });
-
-    // Source modules: EQ|Common|Proposal Start | confidence=High score=130
-    public ILocator PolicyTerm => _page.GetByTestId("proposal.term");
-
-    // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ProposalDetails => _page.GetByText("Proposal Details", new() { Exact = true });
-
-    // Source modules: EQ|Common|Proposal Start | confidence=Medium score=78
-    public ILocator ProposalDetailsHeader => _page.GetByLabel("Proposal Details Header", new() { Exact = true });
-
-    // Source modules: EQ|Common|Proposal Start | confidence=High score=127
-    public ILocator SearchBusinessName => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Business Name", Exact = true });
-
-    // Source modules: EQ|Common|Proposal Start | confidence=Medium score=113
     public ILocator SelectSFPCE => _page.GetByRole(AriaRole.Button, new() { Name = "Select -SFP CE", Exact = true });
-
-    // Source modules: EQ|Common|Proposal Start | confidence=High score=130
-    public ILocator SpecialFarmPackage => _page.GetByTestId("proposal.product-chip-label");
-
-    // Source modules: EQ|Common|Proposal Start | confidence=High score=127
-    public ILocator StartQuote => _page.GetByRole(AriaRole.Button, new() { Name = "Start Quote", Exact = true });
-
-    // Source modules: EQ|BOP|Billing | confidence=High score=127
-    public ILocator State => _page.GetByRole(AriaRole.Combobox, new() { Name = "State", Exact = true });
-
-    // Source modules: EQ|Common|Proposal Start | confidence=High score=127
-    public ILocator StateDropdown => _page.GetByLabel("State Dropdown", new() { Exact = true });
-
-    // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator True => _page.GetByText("True", new() { Exact = true });
 
 }

@@ -190,7 +190,7 @@ public sealed class ScenarioData
         if (value.StartsWith("NOT(", StringComparison.OrdinalIgnoreCase) && value.EndsWith(')')) return !EvaluateOr(value[4..^1]);
         if (value.StartsWith("NOT ", StringComparison.OrdinalIgnoreCase)) return !EvaluateAtom(value[4..]);
 
-        var m = Regex.Match(value, @"^['\"]?(.+?)['\"]?\s*(==|!=)\s*['\"]?(.*?)['\"]?$");
+        var m = Regex.Match(value, @"^['""](+?)['""]\s*(==|!=)\s*['""](.*?)['""$");
         if (!m.Success) throw new InvalidOperationException("No supported data comparison was found.");
         var key=m.Groups[1].Value.Trim().Trim('\'', '"');
         var op=m.Groups[2].Value; var expected=m.Groups[3].Value.Trim().Trim('\'', '"');

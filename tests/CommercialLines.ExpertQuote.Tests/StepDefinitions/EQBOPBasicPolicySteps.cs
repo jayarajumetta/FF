@@ -8,7 +8,9 @@ namespace InsuranceAutomation.CLEQ.StepDefinitions;
 public sealed class EQBOPBasicPolicySteps
 {
     private readonly ScenarioContext _scenario;
+    private readonly ApplicationLogin _auth;
     public EQBOPBasicPolicySteps(ScenarioContext scenario) => _scenario = scenario;
+    private ApplicationLogin Auth => _auth ?? new ApplicationLogin(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
 
     [Given(@"^I enter client search information$")]
     [When(@"^I enter client search information$")]
@@ -1219,7 +1221,7 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForUsernameAsync("Exists");
-        await _auth.SignInAsync("CL_EQ");
+        await Auth.SignInAsync("CL_EQ");
 
     }
 
@@ -1363,7 +1365,7 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.NavigateAsync(data.Resolve("{{data:application_url_3}}"));
         }
-        await _auth.SignInAsync("CL_DC");
+        await Auth.SignInAsync("CL_DC");
         await page.WaitForLoginC45A2Async("Absent");
 
     }
@@ -1565,7 +1567,7 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForUsernameAsync("Exists");
-        await _auth.SignInAsync("CL_EQ");
+        await Auth.SignInAsync("CL_EQ");
 
     }
 
@@ -1925,7 +1927,7 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.NavigateAsync(data.Resolve("{{data:application_url_3}}"));
         }
-        await _auth.SignInAsync("CL_DC");
+        await Auth.SignInAsync("CL_DC");
         await page.WaitForLoginC45A2Async("Absent");
 
     }
@@ -2390,7 +2392,7 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForUsernameAsync("Exists");
-        await _auth.SignInAsync("CL_EQ");
+        await Auth.SignInAsync("CL_EQ");
 
     }
 
@@ -2603,7 +2605,7 @@ public sealed class EQBOPBasicPolicySteps
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        await _auth.SignInAsync("CL_DC");
+        await Auth.SignInAsync("CL_DC");
         if (await page.IsLogin07237PresentAsync())
         {
                     await page.WaitForLogin07237Async("Absent");

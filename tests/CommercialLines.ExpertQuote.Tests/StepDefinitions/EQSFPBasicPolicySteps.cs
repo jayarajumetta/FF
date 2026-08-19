@@ -8,7 +8,9 @@ namespace InsuranceAutomation.CLEQ.StepDefinitions;
 public sealed class EQSFPBasicPolicySteps
 {
     private readonly ScenarioContext _scenario;
+    private readonly ApplicationLogin _auth;
     public EQSFPBasicPolicySteps(ScenarioContext scenario) => _scenario = scenario;
+    private ApplicationLogin Auth => _auth ?? new ApplicationLogin(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
 
     [Given(@"^I enter client search information$")]
     [When(@"^I enter client search information$")]
@@ -1160,7 +1162,7 @@ public sealed class EQSFPBasicPolicySteps
                     await page.NavigateAsync(data.Resolve("{{data:application_url_2}}"));
         }
         await page.WaitForUserNameAsync("Exists");
-        await _auth.SignInAsync("CL_DC");
+        await Auth.SignInAsync("CL_DC");
         await page.WaitForLogin0D21AAsync("Absent");
         await page.EnterSearchModeAsync(data.Resolve("{{data:search_mode_379}}"));
         await page.EnterSearchTextAsync(data.Resolve("{B[LastName]}, {B[FirstName]}"));

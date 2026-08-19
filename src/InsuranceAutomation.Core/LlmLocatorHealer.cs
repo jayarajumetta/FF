@@ -103,7 +103,7 @@ public sealed class LlmLocatorHealer
         var dom = await page.ContentAsync();
         dom = Regex.Replace(dom, @"<script\b[^>]*>[\s\S]*?</script>", "", RegexOptions.IgnoreCase);
         dom = Regex.Replace(dom, @"<style\b[^>]*>[\s\S]*?</style>", "", RegexOptions.IgnoreCase);
-        dom = Regex.Replace(dom, @"\svalue=(['\"]).*?\1", "", RegexOptions.IgnoreCase);
+        dom = Regex.Replace(dom, @"\svalue=(['""]).?\1", "", RegexOptions.IgnoreCase);
         dom = Regex.Replace(dom, @"<textarea\b([^>]*)>[\s\S]*?</textarea>", "<textarea$1></textarea>", RegexOptions.IgnoreCase);
         if (dom.Length > _config.SelfHeal.DomMaxChars) dom = dom[.._config.SelfHeal.DomMaxChars];
 
