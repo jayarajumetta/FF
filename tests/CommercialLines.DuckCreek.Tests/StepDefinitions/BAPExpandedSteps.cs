@@ -43,9 +43,10 @@ public sealed class BAPExpandedSteps
         await page.EnterMiddleNameAsync(data.Resolve("{{data:middle_name_8}}"));
         await page.PressMiddleNameAsync("Tab");
         await page.PressMiddleNameAsync("Tab");
+        await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0040}}"));
         await page.PressLastNameAsync("TAB");
         await page.PressLastNameAsync("Tab");
-        await page.EnterDOBAsync("{DATE[][-40y][MM-dd-yyyy]}");
+        await page.EnterDOBAsync(data.Resolve("{DATE[][-40y][MM-dd-yyyy]}"));
         await page.PressDOBAsync("Tab");
         await page.PressDOBAsync("Tab");
         if (data.Condition("State!=\"CA\""))
@@ -58,6 +59,8 @@ public sealed class BAPExpandedSteps
         await page.PressEntityTypeAsync("Enter");
         await page.PressEntityTypeAsync("Tab");
         await page.PressEntityTypeAsync("Tab");
+        // Source step 0041: RANDOM input for Primary Phone.
+        await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0041}}"));
         await page.EnterAddress17A1FBAsync(data.Resolve("{{data:address1_15}}"));
         await page.PressAddress17A1FBAsync("Tab");
         await page.PressAddress17A1FBAsync("Tab");
@@ -70,15 +73,15 @@ public sealed class BAPExpandedSteps
         await page.WaitForOrderSSN68C87Async("Exists");
         await page.ClickOrderSSN68C87Async();
         await page.WaitForEnterSSN6B3FBAsync("Exists");
+        await page.EnterEnterSSN6B3FBAsync(data.Resolve("{{runtime:InsuredSSN}}"));
+        data.Set("Last4SSN", data.Get("InsuredSSN").Length >= 4 ? data.Get("InsuredSSN")[^4..] : data.Get("InsuredSSN"));
         await page.PressEnterSSN6B3FBAsync("TAB");
         await page.PressEnterSSN6B3FBAsync("Enter");
-        data.Set("SSN", await page.CaptureEnterSSN6B3FBAsync("InnerText"));
         await page.ClickEnterSSN6B3FBAsync();
         await page.PressEnterSSN6B3FBAsync("Doubleclick");
         await page.PressEnterSSN6B3FBAsync("Tab");
         await page.ClickVerify8CDBEAsync();
         await page.WaitForVerify8CDBEAsync("Absent");
-        data.Set("Last4SSN", data.Resolve("{B[SSN]}"));
         await page.WaitForSocialSecurityAsync("Equal");
         await page.VerifySocialSecurityAsync(data.Resolve("XXX-XX-{B[Last4SSN]}"), "InnerText");
         await page.WaitForPleaseVerifySSN3EAB9Async("Absent");
@@ -90,13 +93,17 @@ public sealed class BAPExpandedSteps
                     await page.PressNameOfAuditContactAsync("Tab");
                     await page.PressNameOfAuditContactAsync("Tab");
         }
+        // Source step 0048: RANDOM input for Audit Telephone #.
         if (data.Condition("'Product (LOB)' != \"UMB\""))
         {
+            await page.EnterAuditTelephoneAsync(data.Resolve("{{runtime:AuditTelephone_0048}}"));
         }
         await page.EnterNameOfInspectionContactAsync(data.Resolve("{{data:name_of_inspection_contact_35}}"));
         await page.PressNameOfInspectionContactAsync("Tab");
         await page.PressNameOfInspectionContactAsync("CLICK");
         await page.PressNameOfInspectionContactAsync("Tab");
+        // Source step 0048: RANDOM input for Inspection Telephone #.
+        await page.EnterInspectionTelephoneAsync(data.Resolve("{{runtime:InspectionTelephone_0048}}"));
         await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_37}}"));
         await page.PressInsuredEMailAddressAsync("Tab");
         await page.PressInsuredEMailAddressAsync("CLICK");
@@ -108,8 +115,6 @@ public sealed class BAPExpandedSteps
         await page.VerifyZipCode26D22Async("[0-9]{5}-[0-9]{4}", "Regex:value");
         data.Set("State", data.Resolve("{{data:state}}"));
         data.Set("Product (LOB)", data.Resolve("{{data:product_lob}}"));
-        data.Set("Server", data.Resolve("{{data:server}}"));
-        data.Set("FormOnPolicyDocName", data.Resolve("{{data:formonpolicydocname}}"));
 
     }
 
@@ -135,6 +140,7 @@ public sealed class BAPExpandedSteps
         await page.PressAdditionalOtherInterestInputFirstNameAsync("Tab");
         await page.PressAdditionalOtherInterestInputFirstNameAsync("CLICK");
         await page.WaitForAdditionalOtherInterestInputLastNameAsync("Exists");
+        await page.EnterAdditionalOtherInterestInputLastNameAsync(data.Resolve("{{runtime:AdditionalOtherInterestInputLastName_0055}}"));
         await page.EnterAdditionalOtherInterestInputAddress1Async(data.Resolve("{{data:additionalotherinterestinput_address1_55}}"));
         await page.PressAdditionalOtherInterestInputAddress1Async("Tab");
         await page.EnterZipCodeBCEA0Async(data.Resolve("{{data:zip_code_56}}"));
@@ -162,6 +168,7 @@ public sealed class BAPExpandedSteps
         await page.WaitForAdditionalNamedInsuredHeadingAsync("Exists");
         await page.ClickAddNamedInsuredIndividualAsync();
         await page.WaitForAdditionalInsuredFirstNameAsync("Exists");
+        await page.EnterAdditionalInsuredFirstNameAsync(data.Resolve("{{runtime:AdditionalInsuredLastName_0062}}"));
         await page.EnterAdditionalInsuredFirstNameAsync(data.Resolve("{{data:additional_insured_first_name_65}}"));
         await page.PressAdditionalInsuredFirstNameAsync("Tab");
         await page.PressAdditionalInsuredFirstNameAsync("Tab");
@@ -184,6 +191,8 @@ public sealed class BAPExpandedSteps
         await page.ClickOKAsync();
         await page.ClickOrderSSN710BFAsync();
         await page.WaitForSSNWasNotReturnedAsync("Exists");
+        // Source step 0044: RANDOM input for Enter SSN.
+        await page.EnterEnterSSNFA186Async(data.Resolve("{{runtime:InsuredSSN}}"));
         await page.WaitForEnterSSNE3801Async("Exists");
         await page.ClickEnterSSNE3801Async();
         await page.PressEnterSSNE3801Async("Doubleclick");
@@ -243,7 +252,6 @@ public sealed class BAPExpandedSteps
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_101}}"));
         await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
         await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
-        data.Set("StateIsKansas", "Alabama==\"Kansas\"; Expression= 'Alabama'=='Kansas'");
         if (data.Condition("'Product (LOB)' == \"BOP\" || 'Product (LOB)' == \"BAP\""))
         {
                     await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_103}}"));
@@ -259,7 +267,6 @@ public sealed class BAPExpandedSteps
                     await page.PressPrimaryRatingStateAsync("Tab");
                     await page.PressPrimaryRatingStateAsync("Tab");
         }
-        data.Set("StateIsVirginia", "Alabama==\"Virginia\"; Expression= 'Alabama'=='Virginia'");
         if (data.Condition("'Product (LOB)' == \"BAP\""))
         {
                     await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_106}}"));
@@ -295,7 +302,7 @@ public sealed class BAPExpandedSteps
         await page.PressDescriptionOfSpecifiedOperationAsync("TAB");
         await page.EnterDescriptionOfSpecifiedOperationAsync("AL BAP StraightThrough {NMONTH}.{NDAY}.{NYEAR} {Time}");
         await page.PressDescriptionOfSpecifiedOperationAsync("Tab");
-        await page.VerifyDescriptionOfSpecifiedOperationAsync("{XB[QuoteDescription]}", "value");
+        data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
 
     }
 
@@ -345,7 +352,6 @@ public sealed class BAPExpandedSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.VerifyTheInsuranceScoreServiceHasReturnedTheFollowingErrorCREDITVENDORUNREACHABLEPLEASEREPROCESSAsync("Exists", "");
-        data.Set("CheckIfItIsBAPVT", data.Resolve("'{B[Product (LOB)]}' = 'BAP' && '{B[State]}'= 'VT'"));
         await page.ClickInsuranceScoreConsentAsync();
         await page.WaitForAcceptAsync("Exists");
         await page.ClickAcceptAsync();
@@ -387,9 +393,9 @@ public sealed class BAPExpandedSteps
         await page.PressPolicyNumberAsync("Tab");
         await page.EnterPolicyTypeAsync(data.Resolve("{{data:policy_type_154}}"));
         await page.PressPolicyTypeAsync("Tab");
-        await page.EnterEffectiveDateAsync("{DATE[][-2y][MM'/'dd'/'yyyy]}");
+        await page.EnterEffectiveDateAsync(data.Resolve("{DATE[][-2y][MM'/'dd'/'yyyy]}"));
         await page.PressEffectiveDateAsync("Tab");
-        await page.EnterExpirationDateAsync("{DATE[][][MM'/'dd'/'yyyy]}");
+        await page.EnterExpirationDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
         await page.PressExpirationDateAsync("Tab");
         await page.EnterModificationFactorAsync(data.Resolve("{{data:modificationfactor_157}}"));
         await page.PressModificationFactorAsync("Tab");
@@ -694,7 +700,6 @@ public sealed class BAPExpandedSteps
                     await page.PressVINAsync("Tab");
                     await page.PressVINAsync("Tab");
         }
-        data.Set("StateIsKY", data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
         if (data.Condition("Snowplow != NULL"))
         {
                     await page.VerifyIsThisVehicleUsedInSnowPlowOperationsAsync("Exists", "");
@@ -707,7 +712,6 @@ public sealed class BAPExpandedSteps
                     await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
                     await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
         }
-        data.Set("StateIsNotUT", data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
         if (data.Condition("GCW != NULL"))
         {
                     await page.EnterGCWAsync("");
@@ -716,9 +720,6 @@ public sealed class BAPExpandedSteps
         {
                     await page.EnterIsThisVehicleUsedInSnowPlowOperationsAsync("");
         }
-        data.Set("StateIsNJ", data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
-        data.Set("VehicleTypeIsRegistrationPlates", "'\"\"Private Passenger\"\"' == 'Registration Plates'");
-        data.Set("VINIsMobileHomeContents", "'\"\"1G1AB08C0CA598143\"\"' == 'ContentsVIN1234'");
         await page.VerifyCollisionCoverageAsync("Exists", "");
         if (data.Condition("'Collision Coverage' == NULL"))
         {
@@ -776,7 +777,6 @@ public sealed class BAPExpandedSteps
                     await page.PressVINAsync("Tab");
                     await page.PressVINAsync("Tab");
         }
-        data.Set("StateIsKY", data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
         if (data.Condition("Snowplow != NULL"))
         {
                     await page.VerifyIsThisVehicleUsedInSnowPlowOperationsAsync("Exists", "");
@@ -789,7 +789,6 @@ public sealed class BAPExpandedSteps
                     await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
                     await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
         }
-        data.Set("StateIsNotUT", data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
         if (data.Condition("GCW != NULL"))
         {
                     await page.EnterGCWAsync("");
@@ -808,9 +807,6 @@ public sealed class BAPExpandedSteps
                     await page.PressOTCCausesOfLossAsync("CLICK");
                     await page.PressOTCCausesOfLossAsync("Tab");
         }
-        data.Set("StateIsNJ", data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
-        data.Set("VehicleTypeIsRegistrationPlates", "'\"\"Truck\"\"' == 'Registration Plates'");
-        data.Set("VINIsMobileHomeContents", "'\"\"1FDBR10S8EU598143\"\"' == 'ContentsVIN1234'");
         await page.VerifyCollisionCoverageAsync("Exists", "");
         if (data.Condition("'Collision Coverage' == NULL"))
         {
@@ -868,7 +864,6 @@ public sealed class BAPExpandedSteps
                     await page.PressVINAsync("Tab");
                     await page.PressVINAsync("Tab");
         }
-        data.Set("StateIsKY", data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
         if (data.Condition("Snowplow != NULL"))
         {
                     await page.VerifyIsThisVehicleUsedInSnowPlowOperationsAsync("Exists", "");
@@ -881,7 +876,6 @@ public sealed class BAPExpandedSteps
                     await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
                     await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
         }
-        data.Set("StateIsNotUT", data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
         if (data.Condition("GCW != NULL"))
         {
                     await page.EnterGCWAsync(data.Resolve("{{data:gcw_349}}"));
@@ -894,9 +888,6 @@ public sealed class BAPExpandedSteps
         {
                     await page.EnterIsThisVehicleUsedInSnowPlowOperationsAsync("");
         }
-        data.Set("StateIsNJ", data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
-        data.Set("VehicleTypeIsRegistrationPlates", "'\"\"Truck Tractor\"\"' == 'Registration Plates'");
-        data.Set("VINIsMobileHomeContents", "'\"\"JHBSG1HD7P2598143\"\"' == 'ContentsVIN1234'");
         await page.VerifyCollisionCoverageAsync("Exists", "");
         if (data.Condition("'Collision Coverage' == NULL"))
         {
@@ -968,7 +959,6 @@ public sealed class BAPExpandedSteps
                     await page.PressVINAsync("Tab");
                     await page.PressVINAsync("Tab");
         }
-        data.Set("StateIsKY", data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
         if (data.Condition("Snowplow != NULL"))
         {
                     await page.VerifyIsThisVehicleUsedInSnowPlowOperationsAsync("Exists", "");
@@ -981,7 +971,6 @@ public sealed class BAPExpandedSteps
                     await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
                     await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
         }
-        data.Set("StateIsNotUT", data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
         if (data.Condition("'Used as Showroom' != NULL"))
         {
                     await page.EnterUsedAsShowroomAsync(data.Resolve("{{data:used_as_showroom_385}}"));
@@ -1015,9 +1004,6 @@ public sealed class BAPExpandedSteps
                     await page.PressN2ndClassCodeAsync("Tab");
                     await page.PressN2ndClassCodeAsync("Tab");
         }
-        data.Set("StateIsNJ", data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
-        data.Set("VehicleTypeIsRegistrationPlates", "'\"\"Semitrailer\"\"' == 'Registration Plates'");
-        data.Set("VINIsMobileHomeContents", "'\"\"1C9402026X0112143\"\"' == 'ContentsVIN1234'");
         await page.VerifyCollisionCoverageAsync("Exists", "");
         if (data.Condition("'Collision Coverage' == NULL"))
         {
@@ -1098,7 +1084,6 @@ public sealed class BAPExpandedSteps
                     await page.PressVINAsync("Tab");
                     await page.PressVINAsync("Tab");
         }
-        data.Set("StateIsKY", data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
         if (data.Condition("Snowplow != NULL"))
         {
                     await page.VerifyIsThisVehicleUsedInSnowPlowOperationsAsync("Exists", "");
@@ -1111,7 +1096,6 @@ public sealed class BAPExpandedSteps
                     await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
                     await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
         }
-        data.Set("StateIsNotUT", data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
         if (data.Condition("'Engine Size' != NULL"))
         {
                     await page.EnterEngineSizeCcAsync(data.Resolve("{{data:engine_size_cc_425}}"));
@@ -1134,9 +1118,6 @@ public sealed class BAPExpandedSteps
         {
                     await page.EnterIsThisVehicleUsedInSnowPlowOperationsAsync("");
         }
-        data.Set("StateIsNJ", data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
-        data.Set("VehicleTypeIsRegistrationPlates", "'\"\"Golf Carts/Low Speed Vehicles\"\"' == 'Registration Plates'");
-        data.Set("VINIsMobileHomeContents", "'\"\"5TSTE24338G020309\"\"' == 'ContentsVIN1234'");
         await page.VerifyCollisionCoverageAsync("Exists", "");
         if (data.Condition("'Collision Coverage' == NULL"))
         {
@@ -1217,7 +1198,6 @@ public sealed class BAPExpandedSteps
                     await page.PressVINAsync("Tab");
                     await page.PressVINAsync("Tab");
         }
-        data.Set("StateIsKY", data.Resolve("'\"\"{B[State]}\"\"' == 'KY'"));
         if (data.Condition("Snowplow != NULL"))
         {
                     await page.VerifyIsThisVehicleUsedInSnowPlowOperationsAsync("Exists", "");
@@ -1230,7 +1210,6 @@ public sealed class BAPExpandedSteps
                     await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
                     await page.PressIsThisVehicleUsedInSnowPlowOperationsAsync("Tab");
         }
-        data.Set("StateIsNotUT", data.Resolve("'\"\"{B[State]}\"\"' != 'UT'"));
         if (data.Condition("GCW != NULL"))
         {
                     await page.EnterGCWAsync("");
@@ -1239,9 +1218,6 @@ public sealed class BAPExpandedSteps
         {
                     await page.EnterIsThisVehicleUsedInSnowPlowOperationsAsync("");
         }
-        data.Set("StateIsNJ", data.Resolve("'\"\"{B[State]}\"\"' == 'NJ'"));
-        data.Set("VehicleTypeIsRegistrationPlates", "'\"\"Mobile Home\"\"' == 'Registration Plates'");
-        data.Set("VINIsMobileHomeContents", "'\"\"MobileHomeVIN1234\"\"' == 'ContentsVIN1234'");
         await page.VerifyCollisionCoverageAsync("Exists", "");
         if (data.Condition("'Collision Coverage' == NULL"))
         {
@@ -1270,7 +1246,6 @@ public sealed class BAPExpandedSteps
         await page.ClickRiskScheduleAsync();
         await page.WaitForRiskDDE70Async("Exists");
         await page.VerifyTypeD972CAsync(data.Resolve("{{data:constraint_vehicle_schedule_1_type_476}}"), "InnerText");
-        await page.VerifyVehicleSchedule1VehAsync("{XB[VehicleNumber]}", "value");
         await page.ClickDetail1664BAsync();
         await page.WaitForCommercialAutoRiskDetailAsync("Exists");
         await page.EnterHiredAutoExtAddlInsuredAsync(data.Resolve("{{data:hired_auto_ext_addl_insured_480}}"));
@@ -1292,7 +1267,6 @@ public sealed class BAPExpandedSteps
         await page.ClickRiskScheduleAsync();
         await page.WaitForRiskDDE70Async("Exists");
         await page.VerifyTypeD972CAsync(data.Resolve("{{data:constraint_vehicle_schedule_1_type_490}}"), "InnerText");
-        await page.VerifyVehicleSchedule1VehAsync("{XB[VehicleNumber]}", "value");
         await page.ClickDetail1664BAsync();
         await page.WaitForCommercialAutoRiskDetailAsync("Exists");
         await page.EnterHiredAutoExtAddlInsuredAsync(data.Resolve("{{data:hired_auto_ext_addl_insured_494}}"));
@@ -1314,7 +1288,6 @@ public sealed class BAPExpandedSteps
         await page.ClickRiskScheduleAsync();
         await page.WaitForRiskDDE70Async("Exists");
         await page.VerifyTypeD972CAsync(data.Resolve("{{data:constraint_vehicle_schedule_1_type_504}}"), "InnerText");
-        await page.VerifyVehicleSchedule1VehAsync("{XB[VehicleNumber]}", "value");
         await page.ClickDetail1664BAsync();
         await page.WaitForCommercialAutoRiskDetailAsync("Exists");
         await page.EnterHiredAutoExtAddlInsuredAsync(data.Resolve("{{data:hired_auto_ext_addl_insured_508}}"));
@@ -1381,7 +1354,6 @@ public sealed class BAPExpandedSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.VerifyTypeD972CAsync(data.Resolve("{{data:constraint_vehicle_schedule_1_type_523}}"), "InnerText");
-        await page.VerifyVehicleSchedule1VehAsync("{XB[VehicleNumber]}", "value");
         await page.ClickDetail1664BAsync();
         await page.WaitForCommercialAutoRiskDetailAsync("Exists");
         if (data.Condition("'Accept UM' != NULL"))
@@ -1406,7 +1378,6 @@ public sealed class BAPExpandedSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.VerifyTypeD972CAsync(data.Resolve("{{data:constraint_vehicle_schedule_1_type_532}}"), "InnerText");
-        await page.VerifyVehicleSchedule1VehAsync("{XB[VehicleNumber]}", "value");
         await page.ClickDetail1664BAsync();
         await page.WaitForCommercialAutoRiskDetailAsync("Exists");
         if (data.Condition("'Loan/Lease Gap' != NULL"))
@@ -1446,7 +1417,6 @@ public sealed class BAPExpandedSteps
         await page.PauseAsync(1000);
         await page.WaitForRiskDDE70Async("Exists");
         await page.VerifyTypeD972CAsync(data.Resolve("{{data:constraint_vehicle_schedule_1_type_547}}"), "InnerText");
-        await page.VerifyVehicleSchedule1VehAsync("{XB[VehicleNumber]}", "value");
         await page.ClickDetail1664BAsync();
         await page.WaitForCommercialAutoRiskDetailAsync("Exists");
         if (data.Condition("'Loan/Lease Gap' != NULL"))
@@ -1482,14 +1452,13 @@ public sealed class BAPExpandedSteps
         await page.PauseAsync(1000);
         await page.WaitForRiskDDE70Async("Exists");
         await page.VerifyTypeD972CAsync(data.Resolve("{{data:constraint_vehicle_schedule_1_type_561}}"), "InnerText");
-        await page.VerifyVehicleSchedule1VehAsync("{XB[VehicleNumber]}", "value");
         await page.ClickDetail1664BAsync();
         await page.WaitForCommercialAutoRiskDetailAsync("Exists");
         await page.EnterSeasonalProduceTrailersAsync(data.Resolve("{{data:seasonal_produce_trailers_565}}"));
         await page.PressSeasonalProduceTrailersAsync("CLICK");
         await page.PressSeasonalProduceTrailersAsync("Tab");
         await page.WaitForCoverageBeginDateAsync("Exists");
-        await page.EnterCoverageEndDateAsync("{DATE[09-05-2026][+6M][MM-dd-yyyy]}");
+        await page.EnterCoverageEndDateAsync(data.Resolve("{DATE[09-05-2026][+6M][MM-dd-yyyy]}"));
         await page.PressCoverageEndDateAsync("CLICK");
         await page.PressCoverageEndDateAsync("Tab");
         await page.EnterProduceCarriedAsync(data.Resolve("{{data:produce_carried_568}}"));
@@ -1526,7 +1495,7 @@ public sealed class BAPExpandedSteps
         await page.PressLastName34FF6Async("Tab");
         await page.PressLastName34FF6Async("Tab");
         await page.PressLastName34FF6Async("Tab");
-        await page.EnterDateOfBirthAsync("{DATE[09-05-2026][-40y][MM-dd-yyyy]}");
+        await page.EnterDateOfBirthAsync(data.Resolve("{DATE[09-05-2026][-40y][MM-dd-yyyy]}"));
         await page.PressDateOfBirthAsync("Tab");
         await page.PressDateOfBirthAsync("Tab");
         await page.PressDateOfBirthAsync("Tab");
@@ -2291,10 +2260,6 @@ public sealed class BAPExpandedSteps
         await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
         await page.PauseAsync(1000);
         await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
-        data.Set("ErrorFlag", data.Resolve("{{data:errorflag}}"));
-        data.Set("ErrorFlag", data.Resolve("{{data:errorflag_2}}"));
-        data.Set("ErrorFlag", data.Resolve("{{data:errorflag_2}}"));
-        data.Set("REPETITION", data.Resolve("{{data:repetition}}"));
         await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
         await page.PauseAsync(1000);
         await page.ClickCompleteApplicationAsync();
@@ -2319,8 +2284,7 @@ public sealed class BAPExpandedSteps
         await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
         await page.EnterTitleAsync(data.Resolve("{{data:title_909}}"));
         await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_910}}"));
-        await page.VerifyResultAsync("{XB[SessionId]}", "value");
-        data.Set("ServerAddress", data.Resolve("{{data:serveraddress}}"));
+        data.Set("SessionId", await page.CaptureResultAsync("value"));
 
     }
 
@@ -2338,12 +2302,6 @@ public sealed class BAPExpandedSteps
         await page.VerifyStatusCodeAsync(data.Resolve("{{data:expected_statuscode_value_914}}"), "value");
         await page.PauseAsync(1000);
         await page.PauseAsync(1000);
-        data.Set("PowershellArguments", data.Resolve("powershell.exe -ExecutionPolicy Bypass -NoProfile -File FormsCheckQA.ps1 -Path \"\\\\mis\\sys\\QLTY\\Test_Automation\\Tricentis_Tosca\\Forms_Check\\BAP\\\" -FileName \"BAP_StraightThrough\" -State  \"AL\" -QuoteID \"{B[QuoteID]}\""));
-        data.Set("SummaryResults", await page.CaptureValueAsync("InnerText"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults}}"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_2}}"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_3}}"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_4}}"));
 
     }
 

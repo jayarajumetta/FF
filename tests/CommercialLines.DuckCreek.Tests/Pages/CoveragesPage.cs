@@ -164,4 +164,8 @@ public sealed class CoveragesPage
     public Task PressUtilityServicesAsync(string key) =>
         _ui.PressAsync(_locators.UtilityServices, key, new ControlIntent("Coverages", "UtilityServices"));
 
+
+    public Task<string> CaptureDescriptionOfSpecifiedOperationAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.DescriptionOfSpecifiedOperation, property, new ControlIntent("Coverages", "DescriptionOfSpecifiedOperation"));
+
 }

@@ -187,11 +187,7 @@ public sealed class BuildingsPage
 
     public Task PressIsTheBuildingHeatedWithOneOfTheFollowingNoneOfTheAboveCheckboxAngularAsync(string key) =>
         _ui.PressAsync(_locators.IsTheBuildingHeatedWithOneOfTheFollowingNoneOfTheAboveCheckboxAngular, key, new ControlIntent("Buildings", "IsTheBuildingHeatedWithOneOfTheFollowingNoneOfTheAboveCheckboxAngular"));
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("Buildings", "Loading"));
-
-    public Task PressNumberOfStoriesAsync(string key) =>
+public Task PressNumberOfStoriesAsync(string key) =>
         _ui.PressAsync(_locators.NumberOfStories, key, new ControlIntent("Buildings", "NumberOfStories"));
 
     public Task WaitForOccupancySQFTHeadingAsync(string expected) =>

@@ -67,11 +67,7 @@ public sealed class LossHistoryPage
 
     public Task PressExpenseAmountAsync(string key) =>
         _ui.PressAsync(_locators.ExpenseAmount, key, new ControlIntent("LossHistory", "ExpenseAmount"));
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("LossHistory", "Loading"));
-
-    public Task WaitForLossRuns3YearsHeaderAsync(string expected) =>
+public Task WaitForLossRuns3YearsHeaderAsync(string expected) =>
         _ui.WaitAsync(_locators.LossRuns3YearsHeader, expected, new ControlIntent("LossHistory", "LossRuns3YearsHeader"));
 
     public Task WaitForLossRunsHeaderAsync(string expected) =>

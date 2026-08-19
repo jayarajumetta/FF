@@ -395,4 +395,8 @@ public sealed class PolicyWorkflowPage
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);
 
+
+    public Task<string> CaptureDescriptionOfSpecifiedOperationAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.DescriptionOfSpecifiedOperation, property, new ControlIntent("PolicyWorkflow", "DescriptionOfSpecifiedOperation"));
+
 }

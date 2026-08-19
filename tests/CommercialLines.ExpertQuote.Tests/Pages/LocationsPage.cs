@@ -25,11 +25,7 @@ public sealed class LocationsPage
 
     public Task EnterFeetFromHydrantAsync(string value) =>
         _ui.FillAsync(_locators.FeetFromHydrant, value, new ControlIntent("Locations", "FeetFromHydrant"));
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("Locations", "Loading"));
-
-    public Task<bool> IsLoadingPresentAsync() =>
+public Task<bool> IsLoadingPresentAsync() =>
         _ui.ExistsAsync(_locators.Loading);
 
     public Task WaitForLocationDescriptionAsync(string expected) =>

@@ -82,11 +82,7 @@ public sealed class CoveragesPage
 
     public Task PressLimitAsync(string key) =>
         _ui.PressAsync(_locators.Limit, key, new ControlIntent("Coverages", "Limit"));
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("Coverages", "Loading"));
-
-    public Task PressPremierAsync(string key) =>
+public Task PressPremierAsync(string key) =>
         _ui.PressAsync(_locators.Premier, key, new ControlIntent("Coverages", "Premier"));
 
     public Task PressPremierWithHorseAsync(string key) =>

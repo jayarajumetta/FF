@@ -219,4 +219,20 @@ public sealed class ClientSearchLocators
     // Source modules: Client|Additional Insured|Individual | confidence=High score=125
     public ILocator ZipCodeD2A54 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Zip code*", Exact = true });
 
+
+    /// <summary>Source: Client|Named Insured|Common | Field: Primary Phone | Description: </summary>
+    public ILocator PrimaryPhone => _page.Locator("[id=\"AccountInput.PrimaryPhone\"], [name=\"AccountInput.PrimaryPhone\"], [data-testid=\"AccountInput.PrimaryPhone\"], [data-duckcreekid=\"AccountInput.PrimaryPhone\"], [data-duck-creek-id=\"AccountInput.PrimaryPhone\"]").First;
+
+
+    /// <summary>Source: Client|Named Insured|Business | Field: FEIN | Description: </summary>
+    public ILocator FEIN => _page.Locator("[id=\"AccountInput.FEIN\"], [name=\"AccountInput.FEIN\"], [data-testid=\"AccountInput.FEIN\"], [data-duckcreekid=\"AccountInput.FEIN\"], [data-duck-creek-id=\"AccountInput.FEIN\"]").First;
+
+
+    /// <summary>Source: Client|Other Insured Info | Field: Audit Telephone # | Description: </summary>
+    public ILocator AuditTelephone => _page.Locator("[id=\"AccountInput.AuditContactPhone\"], [name=\"AccountInput.AuditContactPhone\"], [data-testid=\"AccountInput.AuditContactPhone\"], [data-duckcreekid=\"AccountInput.AuditContactPhone\"], [data-duck-creek-id=\"AccountInput.AuditContactPhone\"]").First;
+
+
+    /// <summary>Source: Client|Other Insured Info | Field: Inspection Telephone # | Description: </summary>
+    public ILocator InspectionTelephone => _page.Locator("[id=\"AccountInput.InspectionContactPhone\"], [name=\"AccountInput.InspectionContactPhone\"], [data-testid=\"AccountInput.InspectionContactPhone\"], [data-duckcreekid=\"AccountInput.InspectionContactPhone\"], [data-duck-creek-id=\"AccountInput.InspectionContactPhone\"]").First;
+
 }

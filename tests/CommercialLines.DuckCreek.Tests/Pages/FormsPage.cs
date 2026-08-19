@@ -118,5 +118,4 @@ public sealed class FormsPage
 
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);
-
 }

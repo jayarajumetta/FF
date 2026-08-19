@@ -28,11 +28,7 @@ public sealed class PolicyInformationPage
 
     public Task SelectIndustrialHempYesAsync(string value) =>
         _ui.SelectAsync(_locators.IndustrialHempYes, value, new ControlIntent("PolicyInformation", "IndustrialHempYes"));
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("PolicyInformation", "Loading"));
-
-    public Task ClickPrimaryFarmCategoryAsync() =>
+public Task ClickPrimaryFarmCategoryAsync() =>
         _ui.ClickAsync(_locators.PrimaryFarmCategory, new ControlIntent("PolicyInformation", "PrimaryFarmCategory"));
 
     public Task WaitForPrimaryFarmTypeAsync(string expected) =>

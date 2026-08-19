@@ -34,11 +34,7 @@ public sealed class UnderwritingPage
 
     public Task ClickInsuranceScoreConsentAsync() =>
         _ui.ClickAsync(_locators.InsuranceScoreConsent, new ControlIntent("Underwriting", "InsuranceScoreConsent"));
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("Underwriting", "Loading"));
-
-    public Task PressNoneOfTheAboveCheckBoxAsync(string key) =>
+public Task PressNoneOfTheAboveCheckBoxAsync(string key) =>
         _ui.PressAsync(_locators.NoneOfTheAboveCheckBox, key, new ControlIntent("Underwriting", "NoneOfTheAboveCheckBox"));
 
     public Task<string> CapturePremiumAsync(string property = "") =>
@@ -61,5 +57,6 @@ public sealed class UnderwritingPage
 
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);
+
 
 }

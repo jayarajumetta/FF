@@ -62,4 +62,8 @@ public sealed class SubmissionPage
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);
 
+
+    public Task<string> CaptureResultAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.Result, property, new ControlIntent("Submission", "Result"));
+
 }

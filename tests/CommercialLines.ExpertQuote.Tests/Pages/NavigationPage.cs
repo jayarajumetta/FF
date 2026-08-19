@@ -76,11 +76,7 @@ public sealed class NavigationPage
 
     public Task ClickKeepGoingAsync() =>
         _ui.ClickAsync(_locators.KeepGoing, new ControlIntent("Navigation", "KeepGoing"));
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("Navigation", "Loading"));
-
-    public Task<bool> IsLoadingPresentAsync() =>
+public Task<bool> IsLoadingPresentAsync() =>
         _ui.ExistsAsync(_locators.Loading);
 
     public Task WaitForLocationPrimaryLocationAsync(string expected) =>
@@ -253,5 +249,8 @@ public sealed class NavigationPage
 
     public Task NoteAsync(string note) =>
         _ui.ReviewRequiredAsync(note);
+
+
+    public Task<bool> IsKeepGoingPresentAsync() => _ui.ExistsAsync(_locators.KeepGoing);
 
 }

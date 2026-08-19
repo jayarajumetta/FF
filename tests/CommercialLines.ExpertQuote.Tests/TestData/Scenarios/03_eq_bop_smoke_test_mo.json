@@ -72,8 +72,8 @@
   },
   "application": {
     "url": "https://expertquote-qa.americannational.com/expertquote/",
-    "username": "YDH040",
-    "password": "Anico456"
+    "username": "SYNTHETIC_REPLACE_ME",
+    "password": "SYNTHETIC_REPLACE_ME"
   },
   "external": {},
   "_canonical": {
@@ -83,8 +83,8 @@
       "3a163df9-6660-c331-3322-43156a6875bb": "5000",
       "3a163d35-678f-3295-120a-61366c44ff2b": "25000",
       "3a163d35-678f-7119-67df-2a723283788a": "https://expertquote-qa.americannational.com/expertquote/",
-      "3a163d35-678f-2420-00d2-51ce1f65e4ab": "YDH040",
-      "3a163d35-678f-5c11-0959-503a27922ebf": "Anico456",
+      "3a163d35-678f-2420-00d2-51ce1f65e4ab": "SYNTHETIC_REPLACE_ME",
+      "3a163d35-678f-5c11-0959-503a27922ebf": "SYNTHETIC_REPLACE_ME",
       "3a163d35-678f-8eea-f731-a3723d794253": "{RANDOMREGEX[\"BOP [a-z]{3}\"]}",
       "3a163d35-678f-57d5-40a5-5c31166ccd11": "{RANDOMREGEX[\"Smoke[a-z]{4}\"]}",
       "3a163d35-678f-108f-d590-524a9e8cafaa": "{DATE[][-22y][MM/dd/yyyy]}",
@@ -159,7 +159,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "YDH040"
+        "value": "SYNTHETIC_REPLACE_ME"
       },
       {
         "order": 3.01,
@@ -171,7 +171,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "Anico456"
+        "value": "SYNTHETIC_REPLACE_ME"
       },
       {
         "order": 3.01,

@@ -95,4 +95,12 @@ public sealed class AccountInformationPage
     public Task PressZipAsync(string key) =>
         _ui.PressAsync(_locators.Zip, key, new ControlIntent("AccountInformation", "Zip"));
 
+
+    public Task EnterOwnerPhoneAsync(string value) =>
+        _ui.FillAsync(_locators.OwnerPhone, value, new ControlIntent("AccountInformation", "OwnerPhone"));
+
+
+    public Task EnterOwnerEmailAsync(string value) =>
+        _ui.FillAsync(_locators.OwnerEmail, value, new ControlIntent("AccountInformation", "OwnerEmail"));
+
 }

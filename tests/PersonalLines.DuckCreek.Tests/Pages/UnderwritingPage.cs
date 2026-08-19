@@ -83,4 +83,9 @@ public sealed class UnderwritingPage
     public Task SelectYes71588Async(string value) =>
         _ui.SelectAsync(_locators.Yes71588, value, new ControlIntent("Underwriting", "Yes71588"));
 
+
+    public Task<bool> IsAreAllCollectorVehiclesKeptInAFullyEnclosedAndLockedStructurePresentAsync() => _ui.ExistsAsync(_locators.AreAllCollectorVehiclesKeptInAFullyEnclosedAndLockedStructure);
+
+    public Task<bool> IsYes71588PresentAsync() => _ui.ExistsAsync(_locators.Yes71588);
+
 }

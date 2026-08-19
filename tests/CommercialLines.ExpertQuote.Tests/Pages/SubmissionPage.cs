@@ -52,11 +52,7 @@ public sealed class SubmissionPage
 
     public Task ClickLaunchToChecklistButtonAsync() =>
         _ui.ClickAsync(_locators.LaunchToChecklistButton, new ControlIntent("Submission", "LaunchToChecklistButton"));
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("Submission", "Loading"));
-
-    public Task VerifyLoadingMessageAsync(string expected, string property) =>
+public Task VerifyLoadingMessageAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.LoadingMessage, expected, property, new ControlIntent("Submission", "LoadingMessage"));
 
     public Task<bool> IsLoadingMessagePresentAsync() =>

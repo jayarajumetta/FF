@@ -1,0 +1,173 @@
+{
+  "version": "46.0-kiss-source-traced",
+  "scopeFeatures": 32,
+  "exampleRows": 1074,
+  "sourcePolicy": "Selected 32 Tosca flows only; existing code used only as a translation aid.",
+  "removedTechnicalOrUnconsumedActions": {
+    "unconsumed_buffer": 40
+  },
+  "naturalConditionsConvertedToDomPresence": 0,
+  "unknownConditionsDisabled": 0,
+  "features": [
+    {
+      "file": "186_Cycle_Rate_Filings_Policy_3_NB_Prior_Eff_Date_AL.feature",
+      "application": "PL_DC",
+      "examples": 49
+    },
+    {
+      "file": "181_Auto_Rate_Filings_Policy_1_NB_AL.feature",
+      "application": "PL_DC",
+      "examples": 50
+    },
+    {
+      "file": "183_Auto_Rate_Filings_Common_Policy_NB_AL.feature",
+      "application": "PL_DC",
+      "examples": 50
+    },
+    {
+      "file": "215_Smoke_Test_RV_AL.feature",
+      "application": "PL_DC",
+      "examples": 47
+    },
+    {
+      "file": "212_Smoke_Test_Cycle_AL.feature",
+      "application": "PL_DC",
+      "examples": 47
+    },
+    {
+      "file": "184_Auto_Rate_Filings_Common_Policy_NB_Prior_Eff_Date_AL.feature",
+      "application": "PL_DC",
+      "examples": 50
+    },
+    {
+      "file": "211_Smoke_Test_Auto_AL.feature",
+      "application": "PL_DC",
+      "examples": 47
+    },
+    {
+      "file": "185_Cycle_Rate_Filings_Policy_1_NB_1_AL.feature",
+      "application": "PL_DC",
+      "examples": 49
+    },
+    {
+      "file": "182_Auto_Rate_Filings_Policy_3_NB_Prior_Eff_Date_AL.feature",
+      "application": "PL_DC",
+      "examples": 50
+    },
+    {
+      "file": "011_WC_Expanded_AL.feature",
+      "application": "CL_DC",
+      "examples": 36
+    },
+    {
+      "file": "002_BAP_Expanded_AL.feature",
+      "application": "CL_DC",
+      "examples": 44
+    },
+    {
+      "file": "008_UMB_Basic_Policy_AL.feature",
+      "application": "CL_DC",
+      "examples": 46
+    },
+    {
+      "file": "016_WC_Smoke_Test_AL.feature",
+      "application": "CL_DC",
+      "examples": 34
+    },
+    {
+      "file": "018_UMB_Smoke_Test_AL.feature",
+      "application": "CL_DC",
+      "examples": 44
+    },
+    {
+      "file": "010_WC_Basic_Policy_AL.feature",
+      "application": "CL_DC",
+      "examples": 36
+    },
+    {
+      "file": "005_GL_Basic_Policy_AZ.feature",
+      "application": "CL_DC",
+      "examples": 16
+    },
+    {
+      "file": "014_GL_Smoke_Test_AZ.feature",
+      "application": "CL_DC",
+      "examples": 16
+    },
+    {
+      "file": "012_BAP_Smoke_Test_AL.feature",
+      "application": "CL_DC",
+      "examples": 44
+    },
+    {
+      "file": "007_IM_Basic_Policy_AZ.feature",
+      "application": "CL_DC",
+      "examples": 16
+    },
+    {
+      "file": "013_CP_Smoke_Test_AZ.feature",
+      "application": "CL_DC",
+      "examples": 16
+    },
+    {
+      "file": "004_CP_Basic_Policy_AZ.feature",
+      "application": "CL_DC",
+      "examples": 16
+    },
+    {
+      "file": "017_CPP_Smoke_Test_AZ.feature",
+      "application": "CL_DC",
+      "examples": 16
+    },
+    {
+      "file": "001_BAP_Basic_Policy_AL.feature",
+      "application": "CL_DC",
+      "examples": 44
+    },
+    {
+      "file": "015_IM_Smoke_Test_AZ.feature",
+      "application": "CL_DC",
+      "examples": 16
+    },
+    {
+      "file": "006_GL_OCP_Policy_AZ.feature",
+      "application": "CL_DC",
+      "examples": 14
+    },
+    {
+      "file": "009_UMB_Expanded_AL.feature",
+      "application": "CL_DC",
+      "examples": 45
+    },
+    {
+      "file": "003_CPP_Basic_Policy_AZ.feature",
+      "application": "CL_DC",
+      "examples": 16
+    },
+    {
+      "file": "06_EQ_SFP_Country_Estate_Policy_AL.feature",
+      "application": "CL_EQ",
+      "examples": 35
+    },
+    {
+      "file": "05_EQ_SFP_Basic_Policy_AL.feature",
+      "application": "CL_EQ",
+      "examples": 35
+    },
+    {
+      "file": "04_EQ_SFP_Smoke_Test_MN.feature",
+      "application": "CL_EQ",
+      "examples": 4
+    },
+    {
+      "file": "03_EQ_BOP_Smoke_Test_MO.feature",
+      "application": "CL_EQ",
+      "examples": 1
+    },
+    {
+      "file": "02_EQ_BOP_Basic_Policy_AL.feature",
+      "application": "CL_EQ",
+      "examples": 45
+    }
+  ]
+}

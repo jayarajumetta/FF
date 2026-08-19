@@ -130,8 +130,8 @@
   },
   "application": {
     "url": "https://expertquote-qa.americannational.com/expertquote/",
-    "username": "YDH040",
-    "password": "Anico456"
+    "username": "SYNTHETIC_REPLACE_ME",
+    "password": "SYNTHETIC_REPLACE_ME"
   },
   "external": {},
   "_canonical": {
@@ -142,8 +142,8 @@
       "3a15851b-44ba-316d-24af-92dee125183b": "60000",
       "3a15851b-8e4b-fa16-f752-37437851d8a7": "30000",
       "3a13ce49-1a93-5f91-f0ba-812b07c42fa3": "https://expertquote-qa.americannational.com/expertquote/",
-      "3a13ce49-1a93-2580-aff4-b6f13ba285d3": "YDH040",
-      "3a13ce49-1a93-8426-4041-433b6390c3f9": "Anico456",
+      "3a13ce49-1a93-2580-aff4-b6f13ba285d3": "SYNTHETIC_REPLACE_ME",
+      "3a13ce49-1a93-8426-4041-433b6390c3f9": "SYNTHETIC_REPLACE_ME",
       "3a13ce49-1a93-9a15-a1f4-f5e19bdb1e3c": "{RANDOMREGEX[\"BOP[a-z]{3}\"]}",
       "3a13ce49-1a93-95e1-b759-5a8924749c70": "{RANDOMREGEX[\"BASIC[A-Z]{4}\"]}",
       "3a13ce49-1a93-999c-9381-031f4407e214": "{DATE[][-22y][MM/dd/yyyy]}",
@@ -247,8 +247,8 @@
       "3a224a19-52fd-0825-1928-69c4803d1ac0": "5000",
       "3a224a19-52fd-df4d-09c8-e13d3396f65e": "25000",
       "3a2119f8-4139-ee29-c93b-4e491f54d286": "https://expertquote-qa.americannational.com/expertquote/",
-      "3a2119f8-4143-105f-fbb7-90b9ce172117": "YDH040",
-      "3a2119f8-4143-d696-a98b-8435a5655f56": "Anico456",
+      "3a2119f8-4143-105f-fbb7-90b9ce172117": "SYNTHETIC_REPLACE_ME",
+      "3a2119f8-4143-d696-a98b-8435a5655f56": "SYNTHETIC_REPLACE_ME",
       "3a19b419-bcef-d687-4d77-61c3676e7a7b": "https://clasq.anico.com/Express/",
       "3a19b419-bcef-2b86-564b-2af4fe658890": "ffqa009",
       "3a19b8cb-4624-bd88-a086-29e6f3dbbe44": "http://svqw-clas22:8080/express/",
@@ -266,8 +266,8 @@
       "3a22eecc-171b-d897-5a4f-1387ec3c4f9d": "\\\\mis\\sys\\QLTY\\Test_Automation\\Tricentis_Tosca\\Forms_Check\\BOPSmart\\",
       "3a22eecc-2341-ac70-48d9-6fb90fcba936": "BOPSmart_BASIC",
       "3a1a2e24-7394-7805-65e2-cd4b336b69a0": "https://expertquote-qa.americannational.com/expertquote/",
-      "3a1a2e24-7394-8ca7-35c9-4f428d9837dc": "YDH040",
-      "3a1a2e24-7394-ce14-8bf9-9d23d3bca9bd": "Anico456",
+      "3a1a2e24-7394-8ca7-35c9-4f428d9837dc": "SYNTHETIC_REPLACE_ME",
+      "3a1a2e24-7394-ce14-8bf9-9d23d3bca9bd": "SYNTHETIC_REPLACE_ME",
       "3a1b928c-07e7-5016-d1d4-193fb217ceec": "BOP",
       "3a1f644c-4891-20d3-7a9f-43185b35a9f8": "Yes",
       "3a1a2e37-aa06-9924-bff8-bd2e269b935d": "Submission",
@@ -288,12 +288,12 @@
       "3a2206ed-db28-919a-3e8f-27ddfce0c6be": "BOPSmart_BASIC",
       "3a2206ed-db28-7a9c-bf26-98c5901e8e43": "NY",
       "3a1e405e-0169-eeae-d45e-fc752d9d9b0e": "https://expertquote-qa.americannational.com/expertquote/",
-      "3a1e405e-0170-b157-1e17-5de4dbe38170": "YDH040",
-      "3a1e405e-0170-4e95-ae76-fc37de80e881": "Anico456",
+      "3a1e405e-0170-b157-1e17-5de4dbe38170": "SYNTHETIC_REPLACE_ME",
+      "3a1e405e-0170-4e95-ae76-fc37de80e881": "SYNTHETIC_REPLACE_ME",
       "3a20f0f1-61f5-ba0b-cf08-902df9f6cf26": "Primary Insured Details",
       "3a224a19-52e7-9844-9c91-a7d132ff5d3c": "https://expertquote-qa.americannational.com/expertquote/",
-      "3a224a19-52f8-df78-6659-d599d5afd881": "YDH040",
-      "3a224a19-52f9-b378-5664-1cd75b34b77c": "Anico456",
+      "3a224a19-52f8-df78-6659-d599d5afd881": "SYNTHETIC_REPLACE_ME",
+      "3a224a19-52f9-b378-5664-1cd75b34b77c": "SYNTHETIC_REPLACE_ME",
       "3a224a19-52fb-440d-c63d-a966f771a0fd": "{RANDOMREGEX[\"BOP [a-z]{3}\"]}",
       "3a224a19-52fb-817b-dbcf-78233916a317": "{RANDOMREGEX[\"Smoke[a-z]{4}\"]}",
       "3a224a19-52fc-e37f-a019-e813a8f419c7": "{DATE[][-22y][MM/dd/yyyy]}",
@@ -309,8 +309,8 @@
       "3a224a19-52fd-2e57-2ec8-7377453aa8f3": "PreQualification",
       "3a224a19-52fe-2d06-3b27-a359d2a5757f": "PreQualification",
       "3a1a2e34-0ee3-2c54-4eaa-6ff4e90058c3": "https://expertquote-qa.americannational.com/expertquote/",
-      "3a1a2e34-0ee3-9aa0-be86-9171fc8332db": "YDH040",
-      "3a1a2e34-0ee3-d9c4-8c09-48bf3d68462d": "Anico456"
+      "3a1a2e34-0ee3-9aa0-be86-9171fc8332db": "SYNTHETIC_REPLACE_ME",
+      "3a1a2e34-0ee3-d9c4-8c09-48bf3d68462d": "SYNTHETIC_REPLACE_ME"
     },
     "fields": [
       {
@@ -383,7 +383,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "YDH040"
+        "value": "SYNTHETIC_REPLACE_ME"
       },
       {
         "order": 4.01,
@@ -395,7 +395,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "Anico456"
+        "value": "SYNTHETIC_REPLACE_ME"
       },
       {
         "order": 4.01,
@@ -1643,7 +1643,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "YDH040"
+        "value": "SYNTHETIC_REPLACE_ME"
       },
       {
         "order": 10.01,
@@ -1655,7 +1655,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "Anico456"
+        "value": "SYNTHETIC_REPLACE_ME"
       },
       {
         "order": 10.01,
@@ -1871,7 +1871,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "YDH040"
+        "value": "SYNTHETIC_REPLACE_ME"
       },
       {
         "order": 10.01,
@@ -1883,7 +1883,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "Anico456"
+        "value": "SYNTHETIC_REPLACE_ME"
       },
       {
         "order": 10.01,
@@ -2135,7 +2135,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "YDH040"
+        "value": "SYNTHETIC_REPLACE_ME"
       },
       {
         "order": 10.01,
@@ -2147,7 +2147,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "Anico456"
+        "value": "SYNTHETIC_REPLACE_ME"
       },
       {
         "order": 10.01,
@@ -2183,7 +2183,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "YDH040"
+        "value": "SYNTHETIC_REPLACE_ME"
       },
       {
         "order": 10.01,
@@ -2195,7 +2195,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "Anico456"
+        "value": "SYNTHETIC_REPLACE_ME"
       },
       {
         "order": 10.01,
@@ -2387,7 +2387,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "YDH040"
+        "value": "SYNTHETIC_REPLACE_ME"
       },
       {
         "order": 10.01,
@@ -2399,7 +2399,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "Anico456"
+        "value": "SYNTHETIC_REPLACE_ME"
       }
     ]
   }

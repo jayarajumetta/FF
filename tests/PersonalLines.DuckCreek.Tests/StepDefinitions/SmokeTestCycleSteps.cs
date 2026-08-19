@@ -232,8 +232,6 @@ public sealed class SmokeTestCycleSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         data.Set("QuoteNumber2", await page.CaptureQNumAsync("Text"));
-        data.Set("QuoteNumber3", data.Resolve("{STRINGREPLACE[{B[QuoteNumber2]}][\"PERSONAL AUTO \"][\"\"]}"));
-        data.Set("QuoteNumber4", data.Resolve("{STRINGREPLACE[{B[QuoteNumber3]}][\"\\(\"][\"\"]}"));
         data.Set("QuoteNumber", data.Resolve("{STRINGREPLACE[{B[QuoteNumber4]}][\"\\)\"][\"\"]}"));
 
     }
@@ -251,11 +249,7 @@ public sealed class SmokeTestCycleSteps
         await page.ClickCloseTabAsync();
         await page.EnterQuoteSearchInputAsync(data.Resolve("{{runtime:QuoteNumber}}"));
         await page.ClickTabsSearchAsync();
-        data.Set("QuoteNumber6", await page.CaptureQNumAsync("Text"));
         await page.VerifyQNumAsync(data.Resolve("{{runtime:QuoteNumber2}}"), "");
-        data.Set("QuoteNumber7", data.Resolve("{STRINGREPLACE[{B[QuoteNumber6]}][\"PERSONAL AUTO \"][\"\"]}"));
-        data.Set("QuoteNumber8", data.Resolve("{STRINGREPLACE[{B[QuoteNumber7]}][\"\\(\"][\"\"]}"));
-        data.Set("QuoteNumber9", data.Resolve("{STRINGREPLACE[{B[QuoteNumber8]}][\"\\)\"][\"\"]}"));
 
     }
 

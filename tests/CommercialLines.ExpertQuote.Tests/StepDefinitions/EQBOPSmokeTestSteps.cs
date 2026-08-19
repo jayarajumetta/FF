@@ -49,6 +49,8 @@ public sealed class EQBOPSmokeTestSteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.VerifyAccountInformationAsync("Visible", "");
         await page.EnterOwnerMiddleNameAsync("");
+        await page.EnterOwnerPhoneAsync(data.Resolve("{{runtime:OwnerPhone}}"));
+        await page.EnterOwnerEmailAsync(data.Resolve("{{runtime:OwnerEmail}}"));
         await page.ClickMarriedAsync();
         await page.VerifyMapAsync("Exists", "");
         await page.VerifySatelliteAsync("Exists", "");
@@ -84,9 +86,7 @@ public sealed class EQBOPSmokeTestSteps
         await page.ClickNoAsync();
         await page.SelectMissouriAsync("");
         await page.EnterAgentPCAsync(data.Resolve("{{data:agentpc}}"));
-        data.Set("EffDate", await page.CaptureEffectiveDate6F16BAsync("Value"));
         await page.ClickStartQuoteAsync();
-        data.Set("LOB", data.Resolve("{{data:line_of_business}}"));
 
     }
 
@@ -101,7 +101,6 @@ public sealed class EQBOPSmokeTestSteps
         var page = new SocialSecurityPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        data.Set("WaitOnTime", data.Resolve("{{data:wait_on_time}}"));
         await page.VerifyTheSSNCouldNotBeFoundPleaseEnterAnSSNAsync("Visible", "");
         await page.EnterTheSSNCouldNotBeFoundPleaseEnterAnSSNAsync(data.Resolve("{{runtime:InsuredSSN}}"));
         await page.VerifyEChecklistEChecklistSubmitAsync("Visible", "");
@@ -123,14 +122,11 @@ public sealed class EQBOPSmokeTestSteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        data.Set("WaitOnTime", data.Resolve("{{data:wait_on_time_2}}"));
-        data.Set("Screen", data.Resolve("{{data:required_target_screen}}"));
         await page.EnterPreQualificationAsync(data.Resolve("{{data:prequalification_51}}"));
-        if (data.Condition("if the \"Review Required\" popup is displayed and the configured action is \"Keep Going\""))
+        if (await page.IsKeepGoingPresentAsync())
         {
                     await page.ClickKeepGoingAsync();
         }
-        await page.WaitForLoadingAsync("Absent");
         await page.VerifyPreQualificationAsync("Exists", "");
 
     }
@@ -146,8 +142,7 @@ public sealed class EQBOPSmokeTestSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         data.Set("Quote_NameNum", await page.CaptureNameAndQuoteAsync("InnerText"));
-        data.Set("Quote_Num", data.Resolve("{{runtime:Quote_NameNum}}"));
-        data.Set("Quote_Num", data.Resolve("{{runtime:QuoteID}}"));
+        data.Set("Quote_Num", data.Get("Quote_NameNum").Replace(data.Get("LastName"), string.Empty, StringComparison.OrdinalIgnoreCase).Trim());
         await page.ClickCloseQuoteAsync();
 
     }
@@ -162,17 +157,13 @@ public sealed class EQBOPSmokeTestSteps
         var page = new QuoteSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.WaitForLoadingAsync("Absent");
         await page.EnterQuoteSearchAsync(data.Resolve("{{runtime:Quote_Num}}"));
         await page.ClickClientInfoSearchAsync();
-        await page.WaitForLoadingAsync("Absent");
-        data.Set("Screen", data.Resolve("{{data:required_target_screen}}"));
         await page.EnterPreQualificationAsync(data.Resolve("{{data:prequalification_64}}"));
-        if (data.Condition("if the \"Review Required\" popup is displayed and the configured action is \"Keep Going\""))
+        if (await page.IsKeepGoingPresentAsync())
         {
                     await page.ClickKeepGoingAsync();
         }
-        await page.WaitForLoadingAsync("Absent");
         await page.VerifyPreQualificationAsync("Exists", "");
         await page.VerifyNameAndQuoteAsync(data.Resolve("{{runtime:Quote_NameNum}}"), "");
 

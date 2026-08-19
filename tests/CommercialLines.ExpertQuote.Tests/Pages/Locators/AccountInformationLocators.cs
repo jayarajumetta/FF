@@ -60,4 +60,12 @@ public sealed class AccountInformationLocators
     // Source modules: EQ|Common|Account Details - Account Info | confidence=High score=127
     public ILocator Zip => _page.GetByRole(AriaRole.Textbox, new() { Name = "Zip", Exact = true });
 
+
+    /// <summary>Source: EQ|Common|Account Details - Account Info | Field: Owner Phone | Description: </summary>
+    public ILocator OwnerPhone => _page.Locator("[id=\\\"owner.phone\\\"]").First;
+
+
+    /// <summary>Source: EQ|Common|Account Details - Account Info | Field: Owner Email | Description: </summary>
+    public ILocator OwnerEmail => _page.Locator("[id=\\\"owner.email\\\"]").First;
+
 }

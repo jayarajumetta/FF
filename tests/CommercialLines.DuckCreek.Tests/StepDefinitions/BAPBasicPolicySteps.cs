@@ -43,9 +43,12 @@ public sealed class BAPBasicPolicySteps
         await page.EnterMiddleNameAsync(data.Resolve("{{data:middle_name_8}}"));
         await page.PressMiddleNameAsync("Tab");
         await page.PressMiddleNameAsync("Tab");
+        await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0040}}"));
+        await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0040}}"));
+        await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0040}}"));
         await page.PressLastNameAsync("TAB");
         await page.PressLastNameAsync("Tab");
-        await page.EnterDOBAsync("{DATE[][-40y][MM-dd-yyyy]}");
+        await page.EnterDOBAsync(data.Resolve("{DATE[][-40y][MM-dd-yyyy]}"));
         await page.PressDOBAsync("Tab");
         await page.PressDOBAsync("Tab");
         if (data.Condition("State!=\"CA\""))
@@ -58,6 +61,8 @@ public sealed class BAPBasicPolicySteps
         await page.PressEntityTypeAsync("Enter");
         await page.PressEntityTypeAsync("Tab");
         await page.PressEntityTypeAsync("Tab");
+        // Source step 0041: RANDOM input for Primary Phone.
+        await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0041}}"));
         await page.EnterAddress17A1FBAsync(data.Resolve("{{data:address1_15}}"));
         await page.PressAddress17A1FBAsync("Tab");
         await page.PressAddress17A1FBAsync("Tab");
@@ -71,29 +76,32 @@ public sealed class BAPBasicPolicySteps
         await page.ClickOrderSSN68C87Async();
         await page.WaitForEnterSSN6B3FBAsync("Exists");
         await page.PressEnterSSN6B3FBAsync("TAB");
-        await page.PressEnterSSN6B3FBAsync("Enter");
-        data.Set("SSN", await page.CaptureEnterSSN6B3FBAsync("InnerText"));
+        await page.EnterEnterSSN6B3FBAsync(data.Resolve("{{runtime:InsuredSSN}}"));
+        data.Set("Last4SSN", data.Get("InsuredSSN").Length >= 4 ? data.Get("InsuredSSN")[^4..] : data.Get("InsuredSSN"));
+        await page.PressEnterSSN6B3FBAsync("Tab");
         await page.ClickEnterSSN6B3FBAsync();
         await page.PressEnterSSN6B3FBAsync("Doubleclick");
         await page.PressEnterSSN6B3FBAsync("Tab");
         await page.ClickVerify8CDBEAsync();
         await page.WaitForVerify8CDBEAsync("Absent");
-        data.Set("Last4SSN", data.Resolve("{B[SSN]}"));
         await page.WaitForSocialSecurityAsync("Equal");
         await page.VerifySocialSecurityAsync(data.Resolve("XXX-XX-{B[Last4SSN]}"), "InnerText");
         await page.WaitForPleaseVerifySSN3EAB9Async("Absent");
         if (data.Condition("'Product (LOB)' != \"UMB\""))
         {
                     await page.EnterNameOfAuditContactAsync(data.Resolve("{{data:name_of_audit_contact_33}}"));
+                    await page.EnterAuditTelephoneAsync(data.Resolve("{{runtime:AuditTelephone_0048}}"));
+                    await page.EnterAuditTelephoneAsync(data.Resolve("{{runtime:AuditTelephone_0048}}"));
+                    await page.EnterAuditTelephoneAsync(data.Resolve("{{runtime:AuditTelephone_0048}}"));
                     await page.PressNameOfAuditContactAsync("Tab");
                     await page.PressNameOfAuditContactAsync("CLICK");
                     await page.PressNameOfAuditContactAsync("Tab");
                     await page.PressNameOfAuditContactAsync("Tab");
         }
-        if (data.Condition("'Product (LOB)' != \"UMB\""))
-        {
-        }
         await page.EnterNameOfInspectionContactAsync(data.Resolve("{{data:name_of_inspection_contact_35}}"));
+        await page.EnterInspectionTelephoneAsync(data.Resolve("{{runtime:InspectionTelephone_0048}}"));
+        await page.EnterInspectionTelephoneAsync(data.Resolve("{{runtime:InspectionTelephone_0048}}"));
+        await page.EnterInspectionTelephoneAsync(data.Resolve("{{runtime:InspectionTelephone_0048}}"));
         await page.PressNameOfInspectionContactAsync("Tab");
         await page.PressNameOfInspectionContactAsync("CLICK");
         await page.PressNameOfInspectionContactAsync("Tab");
@@ -108,8 +116,6 @@ public sealed class BAPBasicPolicySteps
         await page.VerifyZipCode26D22Async("[0-9]{5}-[0-9]{4}", "Regex:value");
         data.Set("State", data.Resolve("{{data:state}}"));
         data.Set("Product (LOB)", data.Resolve("{{data:product_lob}}"));
-        data.Set("Server", data.Resolve("{{data:server}}"));
-        data.Set("FormOnPolicyDocName", data.Resolve("{{data:formonpolicydocname}}"));
         await page.EnterTitleAsync(data.Resolve("{{data:title_45}}"));
         await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_46}}"));
         await page.VerifyResultAsync(data.Resolve("{{data:expected_result_value_47}}"), "value");
@@ -157,7 +163,6 @@ public sealed class BAPBasicPolicySteps
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_58}}"));
         await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
         await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
-        data.Set("StateIsKansas", "Alabama==\"Kansas\"; Expression= 'Alabama'=='Kansas'");
         if (data.Condition("'Product (LOB)' == \"BOP\" || 'Product (LOB)' == \"BAP\""))
         {
                     await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_60}}"));
@@ -173,7 +178,6 @@ public sealed class BAPBasicPolicySteps
                     await page.PressPrimaryRatingStateAsync("Tab");
                     await page.PressPrimaryRatingStateAsync("Tab");
         }
-        data.Set("StateIsVirginia", "Alabama==\"Virginia\"; Expression= 'Alabama'=='Virginia'");
         if (data.Condition("'Product (LOB)' == \"BAP\""))
         {
                     await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_63}}"));
@@ -209,7 +213,7 @@ public sealed class BAPBasicPolicySteps
         await page.PressDescriptionOfSpecifiedOperationAsync("TAB");
         await page.EnterDescriptionOfSpecifiedOperationAsync("AL BAP Basic {NMONTH}.{NDAY}.{NYEAR} {Time}");
         await page.PressDescriptionOfSpecifiedOperationAsync("Tab");
-        await page.VerifyDescriptionOfSpecifiedOperationAsync("{XB[QuoteDescription]}", "value");
+        data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
 
     }
 
@@ -259,7 +263,6 @@ public sealed class BAPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.VerifyTheInsuranceScoreServiceHasReturnedTheFollowingErrorCREDITVENDORUNREACHABLEPLEASEREPROCESSAsync("Exists", "");
-        data.Set("CheckIfItIsBAPVT", data.Resolve("'{B[Product (LOB)]}' = 'BAP' && '{B[State]}'= 'VT'"));
         await page.ClickInsuranceScoreConsentAsync();
         await page.WaitForAcceptAsync("Exists");
         await page.ClickAcceptAsync();
@@ -301,9 +304,9 @@ public sealed class BAPBasicPolicySteps
         await page.PressPolicyNumberAsync("Tab");
         await page.EnterPolicyTypeAsync(data.Resolve("{{data:policy_type_111}}"));
         await page.PressPolicyTypeAsync("Tab");
-        await page.EnterEffectiveDateAsync("{DATE[][-2y][MM'/'dd'/'yyyy]}");
+        await page.EnterEffectiveDateAsync(data.Resolve("{DATE[][-2y][MM'/'dd'/'yyyy]}"));
         await page.PressEffectiveDateAsync("Tab");
-        await page.EnterExpirationDateAsync("{DATE[][][MM'/'dd'/'yyyy]}");
+        await page.EnterExpirationDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
         await page.PressExpirationDateAsync("Tab");
         await page.EnterModificationFactorAsync(data.Resolve("{{data:modificationfactor_114}}"));
         await page.PressModificationFactorAsync("Tab");
@@ -445,7 +448,7 @@ public sealed class BAPBasicPolicySteps
         await page.PressLastName34FF6Async("Tab");
         await page.PressLastName34FF6Async("Tab");
         await page.PressLastName34FF6Async("Tab");
-        await page.EnterDateOfBirthAsync("{DATE[09-05-2026][-40y][MM-dd-yyyy]}");
+        await page.EnterDateOfBirthAsync(data.Resolve("{DATE[09-05-2026][-40y][MM-dd-yyyy]}"));
         await page.PressDateOfBirthAsync("Tab");
         await page.PressDateOfBirthAsync("Tab");
         await page.PressDateOfBirthAsync("Tab");
@@ -715,10 +718,6 @@ public sealed class BAPBasicPolicySteps
         await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
         await page.PauseAsync(1000);
         await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
-        data.Set("ErrorFlag", data.Resolve("{{data:errorflag}}"));
-        data.Set("ErrorFlag", data.Resolve("{{data:errorflag_2}}"));
-        data.Set("ErrorFlag", data.Resolve("{{data:errorflag_2}}"));
-        data.Set("REPETITION", data.Resolve("{{data:repetition}}"));
         await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
         await page.PauseAsync(1000);
         await page.ClickCompleteApplicationAsync();
@@ -741,7 +740,6 @@ public sealed class BAPBasicPolicySteps
         await page.WaitForStoplightWaitingWindowAsync("Absent");
         await page.PauseAsync(1000);
         await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
-        data.Set("NBPrem", data.Resolve("{{data:nbprem}}"));
 
     }
 
@@ -761,8 +759,7 @@ public sealed class BAPBasicPolicySteps
         await page.VerifyPremiumChangeAsync(data.Resolve("{{data:expected_premium_change_value_283}}"), "value");
         await page.EnterTitleAsync(data.Resolve("{{data:title_285}}"));
         await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_286}}"));
-        await page.VerifyResultAsync("{XB[SessionId]}", "value");
-        data.Set("ServerAddress", data.Resolve("{{data:serveraddress}}"));
+        data.Set("SessionId", await page.CaptureResultAsync("value"));
 
     }
 
@@ -780,12 +777,6 @@ public sealed class BAPBasicPolicySteps
         await page.VerifyStatusCodeAsync(data.Resolve("{{data:expected_statuscode_value_290}}"), "value");
         await page.PauseAsync(1000);
         await page.PauseAsync(1000);
-        data.Set("PowershellArguments", data.Resolve("powershell.exe -ExecutionPolicy Bypass -NoProfile -File FormsCheckQA.ps1 -Path \"\\\\mis\\sys\\QLTY\\Test_Automation\\Tricentis_Tosca\\Forms_Check\\BAP\\\" -FileName \"BAP_BASIC\" -State  \"AL\" -QuoteID \"{B[QuoteID]}\""));
-        data.Set("SummaryResults", await page.CaptureValueAsync("InnerText"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults}}"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_2}}"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_3}}"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_4}}"));
 
     }
 

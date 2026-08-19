@@ -4,174 +4,81 @@ namespace InsuranceAutomation.Core;
 
 public sealed class UiActions
 {
-    private readonly BrowserSession _browser;
+    private readonly LlmLocatorHealer _healer;
     private readonly RunLogger _logger;
-    private readonly CopilotLocatorHealer _healer;
 
-    public UiActions(BrowserSession browser, RunLogger logger)
+    public UiActions(BrowserSession browser, FrameworkConfig config, RunLogger logger)
     {
-        _browser = browser;
         _logger = logger;
-        _healer = new CopilotLocatorHealer(browser, logger);
+        _healer = new LlmLocatorHealer(browser, config, logger);
     }
 
-    public Task ClickAsync(ILocator locator, ControlIntent intent) =>
-        ExecuteAsync(locator, intent, "click", item => item.ClickAsync());
+    public Task ClickAsync(ILocator locator) => ClickAsync(locator, new ControlIntent("Application", "Control"));
+    public Task FillAsync(ILocator locator, string value) => FillAsync(locator, value, new ControlIntent("Application", "Control"));
+    public Task ClickAsync(ILocator locator, ControlIntent intent) => ExecuteAsync(locator,intent,"click",x=>x.ClickAsync());
+    public Task FillAsync(ILocator locator,string value,ControlIntent intent) => ExecuteAsync(locator,intent,"fill",x=>x.FillAsync(value??string.Empty));
+    public Task PressAsync(ILocator locator,string key,ControlIntent intent) => ExecuteAsync(locator,intent,"press",x=>x.PressAsync(NormalizeKey(key)));
 
-    public Task FillAsync(ILocator locator, string value, ControlIntent intent) =>
-        ExecuteAsync(locator, intent, "fill", async item =>
-        {
-            await item.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
-            await item.FillAsync(value ?? string.Empty);
-        });
+    public Task SmartSetAsync(ILocator locator,string value,ControlIntent intent) => ExecuteAsync(locator,intent,"set",async x=>
+    {
+        var type=(await x.GetAttributeAsync("type")??"").ToLowerInvariant();
+        if(type is "checkbox" or "radio") { await x.SetCheckedAsync(!value.Equals("false",StringComparison.OrdinalIgnoreCase)&&!value.Equals("no",StringComparison.OrdinalIgnoreCase)); return; }
+        var tag=await x.EvaluateAsync<string>("e=>e.tagName.toLowerCase()");
+        if(tag=="select") { await x.SelectOptionAsync(new SelectOptionValue{Label=value}); return; }
+        await x.FillAsync(value??string.Empty);
+    });
 
-    public Task SmartSetAsync(ILocator locator, string value, ControlIntent intent) =>
-        ExecuteAsync(locator, intent, "set", async item =>
-        {
-            var type = (await item.GetAttributeAsync("type") ?? string.Empty).ToLowerInvariant();
-            if (type is "checkbox" or "radio")
-            {
-                var expected = !value.Equals("false", StringComparison.OrdinalIgnoreCase) &&
-                               !value.Equals("no", StringComparison.OrdinalIgnoreCase);
-                await item.SetCheckedAsync(expected);
-                return;
-            }
-
-            var tag = await item.EvaluateAsync<string>("element => element.tagName.toLowerCase()");
-            if (tag == "select")
-            {
-                await item.SelectOptionAsync(new SelectOptionValue { Label = value });
-                return;
-            }
-
-            await item.FillAsync(value ?? string.Empty);
-        });
-
-    public Task SelectAsync(ILocator locator, string value, ControlIntent intent) =>
-        ExecuteAsync(locator, intent, "select", async item =>
-        {
-            try
-            {
-                await item.SelectOptionAsync(new SelectOptionValue { Label = value });
-            }
-            catch (PlaywrightException)
-            {
-                await item.ClickAsync();
-                await _browser.Page.GetByRole(AriaRole.Option, new PageGetByRoleOptions
-                {
-                    Name = value,
-                    Exact = true
-                }).ClickAsync();
-            }
-        });
-
-    public Task PressAsync(ILocator locator, string key, ControlIntent intent) =>
-        ExecuteAsync(locator, intent, "press", item => item.PressAsync(NormalizeKey(key)));
+    public Task SelectAsync(ILocator locator,string value,ControlIntent intent) => ExecuteAsync(locator,intent,"select",async x=>
+    {
+        try { await x.SelectOptionAsync(new SelectOptionValue{Label=value}); }
+        catch(PlaywrightException) { await x.ClickAsync(); await x.PressAsync("Home"); await x.PressAsync("ArrowDown"); }
+    });
 
     public async Task<bool> ExistsAsync(ILocator locator)
     {
-        try { return await locator.CountAsync() > 0; }
-        catch { return false; }
+        try { return await locator.CountAsync()>0 && await locator.First.IsVisibleAsync(); } catch { return false; }
     }
 
-    public Task WaitAsync(ILocator locator, string expected, ControlIntent intent)
-    {
-        if (expected.Contains("Absent", StringComparison.OrdinalIgnoreCase) ||
-            expected.Contains("not", StringComparison.OrdinalIgnoreCase))
-        {
-            return locator.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Detached });
-        }
+    public Task WaitAsync(ILocator locator,string expected,ControlIntent intent) =>
+        expected.Contains("Absent",StringComparison.OrdinalIgnoreCase)
+            ? locator.WaitForAsync(new LocatorWaitForOptions{State=WaitForSelectorState.Detached})
+            : ExecuteAsync(locator,intent,"wait-visible",x=>x.WaitForAsync(new LocatorWaitForOptions{State=WaitForSelectorState.Visible}));
 
-        return ExecuteAsync(locator, intent, "wait-visible",
-            item => item.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible }));
-    }
-
-    public async Task VerifyAsync(ILocator locator, string expected, string property, ControlIntent intent)
+    public async Task VerifyAsync(ILocator locator,string expected,string property,ControlIntent intent)
     {
-        if (expected.Equals("Visible", StringComparison.OrdinalIgnoreCase) ||
-            expected.Equals("Exists", StringComparison.OrdinalIgnoreCase) ||
-            expected.Equals("True", StringComparison.OrdinalIgnoreCase))
+        if(expected.Equals("Visible",StringComparison.OrdinalIgnoreCase)||expected.Equals("Exists",StringComparison.OrdinalIgnoreCase)||expected.Equals("True",StringComparison.OrdinalIgnoreCase))
         {
-            await ExecuteAsync(locator, intent, "verify-visible", async item =>
-            {
-                if (await item.CountAsync() == 0) throw new TimeoutException("Expected control to exist.");
-                await item.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
-            });
+            await ExecuteAsync(locator,intent,"verify-visible",async x=>{ if(await x.CountAsync()==0) throw new TimeoutException("Expected control to exist."); await x.WaitForAsync(new(){State=WaitForSelectorState.Visible}); });
             return;
         }
-
-        var actual = await CaptureAsync(locator, property, intent);
-        if (!string.Equals(actual, expected, StringComparison.OrdinalIgnoreCase))
-        {
-            throw new InvalidOperationException($"Expected '{expected}' but found '{actual}'.");
-        }
+        var actual=await CaptureAsync(locator,property,intent);
+        if(!string.Equals(actual,expected,StringComparison.OrdinalIgnoreCase)) throw new InvalidOperationException($"Expected '{expected}' but found '{actual}'.");
     }
 
-    public Task<string> CaptureAsync(ILocator locator, string property, ControlIntent intent) =>
-        ExecuteAsync(locator, intent, "capture", async item =>
-        {
-            if (property.Contains("Value", StringComparison.OrdinalIgnoreCase))
-            {
-                try { return await item.InputValueAsync(); } catch { }
-            }
-
-            try { return (await item.InnerTextAsync()).Trim(); }
-            catch { return (await item.TextContentAsync() ?? string.Empty).Trim(); }
-        });
-
-    public Task ReviewRequiredAsync(string reason)
+    public Task<string> CaptureAsync(ILocator locator,string property,ControlIntent intent)=>ExecuteAsync(locator,intent,"capture",async x=>
     {
-        _logger.Warn($"SOURCE TRACE NOTE: {reason}");
-        return Task.CompletedTask;
-    }
+        if(property.Contains("Value",StringComparison.OrdinalIgnoreCase)) { try { return await x.InputValueAsync(); } catch { } }
+        try { return (await x.InnerTextAsync()).Trim(); } catch { return (await x.TextContentAsync()??"").Trim(); }
+    });
 
-    private async Task ExecuteAsync(ILocator locator, ControlIntent intent, string action, Func<ILocator, Task> operation)
+    public Task ReviewRequiredAsync(string reason) { _logger.Warn($"SOURCE TRACE NOTE: {reason}"); return Task.CompletedTask; }
+
+    private async Task ExecuteAsync(ILocator locator,ControlIntent intent,string action,Func<ILocator,Task> op)
     {
-        try
-        {
-            await operation(locator);
-        }
-        catch (Exception exception) when (IsLocatorFailure(exception))
-        {
-            _logger.Warn($"Locator action failed. Action={action}; Control={intent}; Locator={locator}; Error={exception.Message}");
-            var healed = await _healer.TryHealAsync(locator, intent, action, exception);
-            if (healed is null) throw;
-            await operation(healed);
-        }
+        try { await op(locator); }
+        catch(Exception ex) when(IsLocatorFailure(ex)) { var healed=await _healer.TryHealAsync(locator,intent,action,ex); if(healed is null) throw; await op(healed); }
     }
-
-    private async Task<T> ExecuteAsync<T>(ILocator locator, ControlIntent intent, string action, Func<ILocator, Task<T>> operation)
+    private async Task<T> ExecuteAsync<T>(ILocator locator,ControlIntent intent,string action,Func<ILocator,Task<T>> op)
     {
-        try
-        {
-            return await operation(locator);
-        }
-        catch (Exception exception) when (IsLocatorFailure(exception))
-        {
-            _logger.Warn($"Locator action failed. Action={action}; Control={intent}; Locator={locator}; Error={exception.Message}");
-            var healed = await _healer.TryHealAsync(locator, intent, action, exception);
-            if (healed is null) throw;
-            return await operation(healed);
-        }
+        try { return await op(locator); }
+        catch(Exception ex) when(IsLocatorFailure(ex)) { var healed=await _healer.TryHealAsync(locator,intent,action,ex); if(healed is null) throw; return await op(healed); }
     }
-
-    private static bool IsLocatorFailure(Exception exception)
+    private static bool IsLocatorFailure(Exception ex)
     {
-        if (exception is not PlaywrightException and not TimeoutException) return false;
-        var message = exception.Message.ToLowerInvariant();
-        if (message.Contains("target closed") || message.Contains("browser has been closed") ||
-            message.Contains("page closed") || message.Contains("context closed")) return false;
-
-        return exception is TimeoutException || message.Contains("timeout") || message.Contains("locator") ||
-               message.Contains("strict mode") || message.Contains("not visible") ||
-               message.Contains("not enabled") || message.Contains("not editable") ||
-               message.Contains("not attached");
+        if(ex is not PlaywrightException and not TimeoutException) return false;
+        var m=ex.Message.ToLowerInvariant();
+        if(m.Contains("target closed")||m.Contains("browser has been closed")||m.Contains("page closed")||m.Contains("context closed")) return false;
+        return ex is TimeoutException||m.Contains("timeout")||m.Contains("locator")||m.Contains("strict mode")||m.Contains("not visible")||m.Contains("not enabled")||m.Contains("not editable")||m.Contains("not attached");
     }
-
-    private static string NormalizeKey(string key) => key
-        .Replace("POST:", string.Empty, StringComparison.OrdinalIgnoreCase)
-        .Replace("PRE:", string.Empty, StringComparison.OrdinalIgnoreCase)
-        .Replace("{TAB}", "Tab", StringComparison.OrdinalIgnoreCase)
-        .Replace("{ENTER}", "Enter", StringComparison.OrdinalIgnoreCase)
-        .Replace("{ESC}", "Escape", StringComparison.OrdinalIgnoreCase);
+    private static string NormalizeKey(string key)=>key.Replace("POST:","",StringComparison.OrdinalIgnoreCase).Replace("PRE:","",StringComparison.OrdinalIgnoreCase).Replace("{TAB}","Tab",StringComparison.OrdinalIgnoreCase).Replace("{ENTER}","Enter",StringComparison.OrdinalIgnoreCase).Replace("{ESC}","Escape",StringComparison.OrdinalIgnoreCase);
 }

@@ -44,4 +44,8 @@ public sealed class PricingPage
     public Task EnterTitleAsync(string value) =>
         _ui.FillAsync(_locators.Title, value, new ControlIntent("Pricing", "Title"));
 
+
+    public Task<string> CaptureResultAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.Result, property, new ControlIntent("Pricing", "Result"));
+
 }

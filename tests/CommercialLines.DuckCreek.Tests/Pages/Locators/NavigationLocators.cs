@@ -2089,4 +2089,13 @@ public sealed class NavigationLocators
     // Source modules: Location | confidence=High score=125
     public ILocator ZipCodeD2DBA => _page.GetByRole(AriaRole.Textbox, new() { Name = "Zip Code", Exact = true });
 
+
+    public ILocator EntityInfoFrameEntityInfoWindowFax => _page.Locator("[id=\"AdditionalOtherInterestInput.Fax\"], [name=\"AdditionalOtherInterestInput.Fax\"], [data-testid=\"AdditionalOtherInterestInput.Fax\"], [data-duckcreekid=\"AdditionalOtherInterestInput.Fax\"]").First;
+
+
+    public ILocator EntityInfoFrameEntityInfoWindowBureauNumber => _page.Locator("[id=\"AdditionalOtherInterestInput.BureauNumber\"], [name=\"AdditionalOtherInterestInput.BureauNumber\"], [data-testid=\"AdditionalOtherInterestInput.BureauNumber\"], [data-duckcreekid=\"AdditionalOtherInterestInput.BureauNumber\"]").First;
+
+
+    public ILocator EntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefault => _page.Locator("[id=\"AdditionalOtherInterestInput.StateUnemploymentNumber\"], [name=\"AdditionalOtherInterestInput.StateUnemploymentNumber\"], [data-testid=\"AdditionalOtherInterestInput.StateUnemploymentNumber\"], [data-duckcreekid=\"AdditionalOtherInterestInput.StateUnemploymentNumber\"]").First;
+
 }

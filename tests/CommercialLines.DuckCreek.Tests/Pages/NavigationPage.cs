@@ -3544,5 +3544,27 @@ public sealed class NavigationPage
 
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);
+public Task<string> CaptureDescriptionOfSpecifiedOperationAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.DescriptionOfSpecifiedOperation, property, new ControlIntent("Navigation", "DescriptionOfSpecifiedOperation"));
+
+
+    public Task<string> CaptureVehicleSchedule1VehAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.VehicleSchedule1Veh, property, new ControlIntent("Navigation", "VehicleSchedule1Veh"));
+
+
+    public Task EnterAdditionalOtherInterestInputLastNameAsync(string value) =>
+        _ui.FillAsync(_locators.AdditionalOtherInterestInputLastName, value, new ControlIntent("Navigation", "AdditionalOtherInterestInputLastName"));
+
+
+    public Task EnterEntityInfoFrameEntityInfoWindowFaxAsync(string value) =>
+        _ui.FillAsync(_locators.EntityInfoFrameEntityInfoWindowFax, value, new ControlIntent("Navigation", "EntityInfoFrameEntityInfoWindowFax"));
+
+
+    public Task EnterEntityInfoFrameEntityInfoWindowBureauNumberAsync(string value) =>
+        _ui.FillAsync(_locators.EntityInfoFrameEntityInfoWindowBureauNumber, value, new ControlIntent("Navigation", "EntityInfoFrameEntityInfoWindowBureauNumber"));
+
+
+    public Task EnterEntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefaultAsync(string value) =>
+        _ui.FillAsync(_locators.EntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefault, value, new ControlIntent("Navigation", "EntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefault"));
 
 }

@@ -25,11 +25,7 @@ public sealed class QuoteSearchPage
 
     public Task ClickKeepGoingAsync() =>
         _ui.ClickAsync(_locators.KeepGoing, new ControlIntent("QuoteSearch", "KeepGoing"));
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("QuoteSearch", "Loading"));
-
-    public Task VerifyNameAndQuoteAsync(string expected, string property) =>
+public Task VerifyNameAndQuoteAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.NameAndQuote, expected, property, new ControlIntent("QuoteSearch", "NameAndQuote"));
 
     public Task<string> CaptureNameAndQuoteAsync(string property = "") =>
@@ -43,5 +39,8 @@ public sealed class QuoteSearchPage
 
     public Task EnterQuoteSearchAsync(string value) =>
         _ui.FillAsync(_locators.QuoteSearch, value, new ControlIntent("QuoteSearch", "QuoteSearch"));
+
+
+    public Task<bool> IsKeepGoingPresentAsync() => _ui.ExistsAsync(_locators.KeepGoing);
 
 }

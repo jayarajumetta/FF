@@ -3,11 +3,6 @@ param(
     [string]$Filter=''
 )
 $ErrorActionPreference = 'Stop'
-$env:COPILOT_SELF_HEAL = if ($env:COPILOT_SELF_HEAL) { $env:COPILOT_SELF_HEAL } else { 'true' }
-$env:BROWSER_CHANNEL = if ($env:BROWSER_CHANNEL) { $env:BROWSER_CHANNEL } else { 'msedge' }
-$env:HEADLESS = if ($env:HEADLESS) { $env:HEADLESS } else { 'false' }
-$env:TRACE_ENABLED = if ($env:TRACE_ENABLED) { $env:TRACE_ENABLED } else { 'true' }
-$env:VIDEO_ENABLED = if ($env:VIDEO_ENABLED) { $env:VIDEO_ENABLED } else { 'true' }
 
 $projects = @{
     'CLDC'='.\tests\CommercialLines.DuckCreek.Tests\CommercialLines.DuckCreek.Tests.csproj'

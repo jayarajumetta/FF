@@ -365,4 +365,32 @@ public sealed class ClientSearchPage
     public Task PressZipCodeD2A54Async(string key) =>
         _ui.PressAsync(_locators.ZipCodeD2A54, key, new ControlIntent("ClientSearch", "ZipCodeD2A54"));
 
+
+    public Task EnterLastNameAsync(string value) =>
+        _ui.FillAsync(_locators.LastName, value, new ControlIntent("ClientSearch", "LastName"));
+
+
+    public Task EnterEnterSSN6B3FBAsync(string value) =>
+        _ui.FillAsync(_locators.EnterSSN6B3FB, value, new ControlIntent("ClientSearch", "EnterSSN6B3FB"));
+
+
+    public Task EnterPrimaryPhoneAsync(string value) =>
+        _ui.FillAsync(_locators.PrimaryPhone, value, new ControlIntent("ClientSearch", "PrimaryPhone"));
+
+
+    public Task EnterFEINAsync(string value) =>
+        _ui.FillAsync(_locators.FEIN, value, new ControlIntent("ClientSearch", "FEIN"));
+
+
+    public Task EnterAuditTelephoneAsync(string value) =>
+        _ui.FillAsync(_locators.AuditTelephone, value, new ControlIntent("ClientSearch", "AuditTelephone"));
+
+
+    public Task EnterInspectionTelephoneAsync(string value) =>
+        _ui.FillAsync(_locators.InspectionTelephone, value, new ControlIntent("ClientSearch", "InspectionTelephone"));
+
+
+    public Task EnterFirstNameC5387Async(string value) =>
+        _ui.FillAsync(_locators.FirstNameC5387, value, new ControlIntent("ClientSearch", "FirstNameC5387"));
+
 }

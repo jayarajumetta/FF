@@ -64,11 +64,7 @@ public sealed class BillingPage
 
     public Task PressLastNameAsync(string key) =>
         _ui.PressAsync(_locators.LastName, key, new ControlIntent("Billing", "LastName"));
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("Billing", "Loading"));
-
-    public Task PressN1PaymentButtonAsync(string key) =>
+public Task PressN1PaymentButtonAsync(string key) =>
         _ui.PressAsync(_locators.N1PaymentButton, key, new ControlIntent("Billing", "N1PaymentButton"));
 
     public Task ClickOTHERButtonAsync() =>

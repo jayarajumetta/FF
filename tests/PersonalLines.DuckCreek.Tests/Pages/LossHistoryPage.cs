@@ -64,11 +64,7 @@ public sealed class LossHistoryPage
 
     public Task<bool> IsEditClaimPresentAsync() =>
         _ui.ExistsAsync(_locators.EditClaim);
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("LossHistory", "Loading"));
-
-    public Task WaitForUWCONTINUEAsync(string expected) =>
+public Task WaitForUWCONTINUEAsync(string expected) =>
         _ui.WaitAsync(_locators.UWCONTINUE, expected, new ControlIntent("LossHistory", "UWCONTINUE"));
 
     public Task VerifyUWCONTINUEAsync(string expected, string property) =>

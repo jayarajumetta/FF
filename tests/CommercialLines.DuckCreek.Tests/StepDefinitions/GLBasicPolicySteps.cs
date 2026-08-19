@@ -43,9 +43,10 @@ public sealed class GLBasicPolicySteps
         await page.EnterMiddleNameAsync(data.Resolve("{{data:middle_name_8}}"));
         await page.PressMiddleNameAsync("Tab");
         await page.PressMiddleNameAsync("Tab");
+        await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0040}}"));
         await page.PressLastNameAsync("TAB");
         await page.PressLastNameAsync("Tab");
-        await page.EnterDOBAsync("{DATE[][-40y][MM-dd-yyyy]}");
+        await page.EnterDOBAsync(data.Resolve("{DATE[][-40y][MM-dd-yyyy]}"));
         await page.PressDOBAsync("Tab");
         await page.PressDOBAsync("Tab");
         if (data.Condition("State!=\"CA\""))
@@ -58,6 +59,8 @@ public sealed class GLBasicPolicySteps
         await page.PressEntityTypeAsync("Enter");
         await page.PressEntityTypeAsync("Tab");
         await page.PressEntityTypeAsync("Tab");
+        // Source step 0041: RANDOM input for Primary Phone.
+        await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0041}}"));
         await page.EnterAddress17A1FBAsync(data.Resolve("{{data:address1_15}}"));
         await page.PressAddress17A1FBAsync("Tab");
         await page.PressAddress17A1FBAsync("Tab");
@@ -70,15 +73,15 @@ public sealed class GLBasicPolicySteps
         await page.WaitForOrderSSN68C87Async("Exists");
         await page.ClickOrderSSN68C87Async();
         await page.WaitForEnterSSN6B3FBAsync("Exists");
+        await page.EnterEnterSSN6B3FBAsync(data.Resolve("{{runtime:InsuredSSN}}"));
+        data.Set("Last4SSN", data.Get("InsuredSSN").Length >= 4 ? data.Get("InsuredSSN")[^4..] : data.Get("InsuredSSN"));
         await page.PressEnterSSN6B3FBAsync("TAB");
         await page.PressEnterSSN6B3FBAsync("Enter");
-        data.Set("SSN", await page.CaptureEnterSSN6B3FBAsync("InnerText"));
         await page.ClickEnterSSN6B3FBAsync();
         await page.PressEnterSSN6B3FBAsync("Doubleclick");
         await page.PressEnterSSN6B3FBAsync("Tab");
         await page.ClickVerify8CDBEAsync();
         await page.WaitForVerify8CDBEAsync("Absent");
-        data.Set("Last4SSN", data.Resolve("{B[SSN]}"));
         await page.WaitForSocialSecurityAsync("Equal");
         await page.VerifySocialSecurityAsync(data.Resolve("XXX-XX-{B[Last4SSN]}"), "InnerText");
         await page.WaitForPleaseVerifySSN3EAB9Async("Absent");
@@ -90,13 +93,17 @@ public sealed class GLBasicPolicySteps
                     await page.PressNameOfAuditContactAsync("Tab");
                     await page.PressNameOfAuditContactAsync("Tab");
         }
+        // Source step 0048: RANDOM input for Audit Telephone #.
         if (data.Condition("'Product (LOB)' != \"UMB\""))
         {
+            await page.EnterAuditTelephoneAsync(data.Resolve("{{runtime:AuditTelephone_0048}}"));
         }
         await page.EnterNameOfInspectionContactAsync(data.Resolve("{{data:name_of_inspection_contact_35}}"));
         await page.PressNameOfInspectionContactAsync("Tab");
         await page.PressNameOfInspectionContactAsync("CLICK");
         await page.PressNameOfInspectionContactAsync("Tab");
+        // Source step 0048: RANDOM input for Inspection Telephone #.
+        await page.EnterInspectionTelephoneAsync(data.Resolve("{{runtime:InspectionTelephone_0048}}"));
         await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_37}}"));
         await page.PressInsuredEMailAddressAsync("Tab");
         await page.PressInsuredEMailAddressAsync("CLICK");
@@ -108,8 +115,6 @@ public sealed class GLBasicPolicySteps
         await page.VerifyZipCode26D22Async("[0-9]{5}-[0-9]{4}", "Regex:value");
         data.Set("State", data.Resolve("{{data:state}}"));
         data.Set("Product (LOB)", data.Resolve("{{data:product_lob}}"));
-        data.Set("Server", data.Resolve("{{data:server}}"));
-        data.Set("FormOnPolicyDocName", data.Resolve("{{data:formonpolicydocname}}"));
 
     }
 
@@ -138,9 +143,9 @@ public sealed class GLBasicPolicySteps
         await page.PressPolicyNumberBA28EAsync("Tab");
         await page.EnterPolicyTypeAsync(data.Resolve("{{data:policy_type_54}}"));
         await page.PressPolicyTypeAsync("Tab");
-        await page.EnterEffectiveDateB557FAsync("{DATE[][-2y][MM'/'dd'/'yyyy]}");
+        await page.EnterEffectiveDateB557FAsync(data.Resolve("{DATE[][-2y][MM'/'dd'/'yyyy]}"));
         await page.PressEffectiveDateB557FAsync("Tab");
-        await page.EnterExpirationDate34EACAsync("{DATE[][][MM'/'dd'/'yyyy]}");
+        await page.EnterExpirationDate34EACAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
         await page.PressExpirationDate34EACAsync("Tab");
         await page.EnterModificationFactorAsync(data.Resolve("{{data:modificationfactor_57}}"));
         await page.PressModificationFactorAsync("Tab");
@@ -200,8 +205,6 @@ public sealed class GLBasicPolicySteps
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_78}}"));
         await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
         await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
-        data.Set("StateIsKansas", "Arizona==\"Kansas\"; Expression= 'Arizona'=='Kansas'");
-        data.Set("StateIsVirginia", "Arizona==\"Virginia\"; Expression= 'Arizona'=='Virginia'");
         if (data.Condition("'Product (LOB)' == \"GL\""))
         {
                     await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_81}}"));
@@ -237,7 +240,7 @@ public sealed class GLBasicPolicySteps
         await page.PressDescriptionOfSpecifiedOperationAsync("TAB");
         await page.EnterDescriptionOfSpecifiedOperationAsync("AZ GL Basic {NMONTH}.{NDAY}.{NYEAR} {Time}");
         await page.PressDescriptionOfSpecifiedOperationAsync("Tab");
-        await page.VerifyDescriptionOfSpecifiedOperationAsync("{XB[QuoteDescription]}", "value");
+        data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
 
     }
 
@@ -742,10 +745,6 @@ public sealed class GLBasicPolicySteps
         await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
         await page.PauseAsync(1000);
         await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
-        data.Set("ErrorFlag", data.Resolve("{{data:errorflag}}"));
-        data.Set("ErrorFlag", data.Resolve("{{data:errorflag_2}}"));
-        data.Set("ErrorFlag", data.Resolve("{{data:errorflag_2}}"));
-        data.Set("REPETITION", data.Resolve("{{data:repetition}}"));
         await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
         await page.PauseAsync(1000);
         await page.ClickCompleteApplicationAsync();
@@ -768,7 +767,6 @@ public sealed class GLBasicPolicySteps
         await page.WaitForStoplightWaitingWindowAsync("Absent");
         await page.PauseAsync(1000);
         await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
-        data.Set("NBPrem", data.Resolve("{{data:nbprem}}"));
 
     }
 
@@ -788,8 +786,7 @@ public sealed class GLBasicPolicySteps
         await page.VerifyPremiumChangeAsync(data.Resolve("{{data:expected_premium_change_value_259}}"), "value");
         await page.EnterTitleAsync(data.Resolve("{{data:title_261}}"));
         await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_262}}"));
-        await page.VerifyResultAsync("{XB[SessionId]}", "value");
-        data.Set("ServerAddress", data.Resolve("{{data:serveraddress}}"));
+        data.Set("SessionId", await page.CaptureResultAsync("value"));
 
     }
 
@@ -807,12 +804,6 @@ public sealed class GLBasicPolicySteps
         await page.VerifyStatusCodeAsync(data.Resolve("{{data:expected_statuscode_value_266}}"), "value");
         await page.PauseAsync(1000);
         await page.PauseAsync(1000);
-        data.Set("PowershellArguments", data.Resolve("powershell.exe -ExecutionPolicy Bypass -NoProfile -File FormsCheckQA.ps1 -Path \"\\\\mis\\sys\\QLTY\\Test_Automation\\Tricentis_Tosca\\Forms_Check\\GL\\\" -FileName \"GL_BASIC\" -State  \"AZ\" -QuoteID \"{B[QuoteID]}\""));
-        data.Set("SummaryResults", await page.CaptureValueAsync("InnerText"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults}}"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_2}}"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_3}}"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_4}}"));
 
     }
 

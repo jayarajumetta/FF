@@ -22,6 +22,8 @@ public sealed class WCExpandedSteps
         data.GenerateRandom("InspectionTelephone_0045", "[0-9]{10}");
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        // Source step 0044: RANDOM input for FEIN.
+        await page.EnterFEINAsync(data.Resolve("{{runtime:FEIN_0044}}"));
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForQuickQuoteAsync("Exists");
@@ -56,7 +58,9 @@ public sealed class WCExpandedSteps
         }
         if (data.Condition("'Address 1' != NULL"))
         {
-                    await page.EnterAddress17A1FBAsync(data.Resolve("{{data:address1_10}}"));
+                            // Source step 0041: RANDOM input for Primary Phone.
+        await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0041}}"));
+        await page.EnterAddress17A1FBAsync(data.Resolve("{{data:address1_10}}"));
                     await page.PressAddress17A1FBAsync("Tab");
                     await page.PressAddress17A1FBAsync("CLICK");
                     await page.PressAddress17A1FBAsync("Tab");
@@ -78,13 +82,17 @@ public sealed class WCExpandedSteps
                     await page.PressNameOfAuditContactAsync("CLICK");
                     await page.PressNameOfAuditContactAsync("Tab");
         }
+        // Source step 0045: RANDOM input for Audit Telephone #.
         if (data.Condition("'Product (LOB)' != \"UMB\""))
         {
+            await page.EnterAuditTelephoneAsync(data.Resolve("{{runtime:AuditTelephone_0045}}"));
         }
         await page.EnterNameOfInspectionContactAsync(data.Resolve("{{data:name_of_inspection_contact_17}}"));
         await page.PressNameOfInspectionContactAsync("Tab");
         await page.PressNameOfInspectionContactAsync("CLICK");
         await page.PressNameOfInspectionContactAsync("Tab");
+        // Source step 0045: RANDOM input for Inspection Telephone #.
+        await page.EnterInspectionTelephoneAsync(data.Resolve("{{runtime:InspectionTelephone_0045}}"));
         await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_19}}"));
         await page.PressInsuredEMailAddressAsync("Tab");
         await page.PressInsuredEMailAddressAsync("CLICK");
@@ -126,8 +134,6 @@ public sealed class WCExpandedSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.VerifyAJAXErrorCheckAsync("Exists", "");
-        data.Set("AJAX Error", data.Resolve("The scripts experienced an AJAX error with the following information: {B[AJAX]}"));
-        data.Set("ForceAFail", "'FALSE' == 'TRUE'");
 
     }
 
@@ -180,8 +186,12 @@ public sealed class WCExpandedSteps
         await page.PressIndividualTypeAsync("CLICK");
         await page.PressIndividualTypeAsync("Tab");
         await page.WaitForPleaseVerifySSNF738AAsync("Exists");
+        // Source step 0056: RANDOM input for MiddleName.
+        await page.EnterMiddleNameAsync(data.Resolve("{{runtime:MiddleName_0056}}"));
         await page.PressFirstNameC5387Async("TAB");
         await page.PressFirstNameC5387Async("Tab");
+        // Source step 0056: RANDOM input for LastName.
+        await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0056}}"));
         await page.EnterDateOfBirth338D7Async(data.Resolve("{{data:dateofbirth_47}}"));
         await page.PressDateOfBirth338D7Async("Tab");
         await page.EnterAddress1D319BAsync(data.Resolve("{{data:address1_48}}"));
@@ -203,6 +213,8 @@ public sealed class WCExpandedSteps
         await page.PressGender4973CAsync("Tab");
         await page.WaitForClientSearch41F28Async("Exists");
         await page.ClickClientSearch41F28Async();
+        // Source RANDOM FirstName entered after Client Search per Tosca source step.
+        await page.EnterFirstName55A0BAsync(data.Resolve("{{runtime:FirstName_0056}}"));
         await page.VerifySearchResultsDuckCreekPolicyFirstCheckboxAsync("Absent", "");
         await page.ClickOKAsync();
         await page.ClickOrderSSN5E031Async();
@@ -253,9 +265,9 @@ public sealed class WCExpandedSteps
         await page.PressPolicyNumberBA28EAsync("Tab");
         await page.EnterPolicyTypeAsync(data.Resolve("{{data:policy_type_84}}"));
         await page.PressPolicyTypeAsync("Tab");
-        await page.EnterEffectiveDateB557FAsync("{DATE[][-2y][MM'/'dd'/'yyyy]}");
+        await page.EnterEffectiveDateB557FAsync(data.Resolve("{DATE[][-2y][MM'/'dd'/'yyyy]}"));
         await page.PressEffectiveDateB557FAsync("Tab");
-        await page.EnterExpirationDate34EACAsync("{DATE[][][MM'/'dd'/'yyyy]}");
+        await page.EnterExpirationDate34EACAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
         await page.PressExpirationDate34EACAsync("Tab");
         await page.EnterModificationFactorAsync(data.Resolve("{{data:modificationfactor_87}}"));
         await page.PressModificationFactorAsync("Tab");
@@ -298,8 +310,6 @@ public sealed class WCExpandedSteps
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_104}}"));
         await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
         await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
-        data.Set("StateIsKansas", "Alabama==\"Kansas\"; Expression= 'Alabama'=='Kansas'");
-        data.Set("StateIsVirginia", "Alabama==\"Virginia\"; Expression= 'Alabama'=='Virginia'");
         await page.PauseAsync(1000);
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_108}}"));
         await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("CLICK");
@@ -314,7 +324,7 @@ public sealed class WCExpandedSteps
         await page.PressDescriptionOfSpecifiedOperationAsync("TAB");
         await page.EnterDescriptionOfSpecifiedOperationAsync("AL WC ST {NMONTH}.{NDAY}.{NYEAR} {Time}");
         await page.PressDescriptionOfSpecifiedOperationAsync("Tab");
-        await page.VerifyDescriptionOfSpecifiedOperationAsync("{XB[QuoteDescription]}", "value");
+        data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
 
     }
 
@@ -373,10 +383,6 @@ public sealed class WCExpandedSteps
         {
                     await page.EnterExperienceRatedAsync(data.Resolve("{{data:experience_rated_124}}"));
                     await page.PressExperienceRatedAsync("Tab");
-        }
-        if (data.Condition("('Default Experience Mod Type' != NULL)&&(State!=\"OK\")&&(State!=\"NY\")"))
-        {
-                    data.Set("ExpMod", await page.CaptureDefaultExperienceModAsync("InnerText"));
         }
         if (data.Condition("('Default Experience Mod Type' != NULL)&&(State!=\"OK\")&&(State!=\"NY\")"))
         {
@@ -598,6 +604,9 @@ public sealed class WCExpandedSteps
         await page.WaitForEntityScheduleE6C9FAsync("Exists");
         await page.ClickDetail238D5Async();
         await page.WaitForInsuredTypeAsync("Exists");
+        await page.EnterEntityInfoFrameEntityInfoWindowFaxAsync(data.Resolve("{{runtime:EntityInfoFrameEntityInfoWindowFax_0113}}"));
+        await page.EnterEntityInfoFrameEntityInfoWindowBureauNumberAsync(data.Resolve("{{runtime:EntityInfoFrameEntityInfoWindowBureauNumber_0113}}"));
+        await page.EnterEntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefaultAsync(data.Resolve("{{runtime:EntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefault_0113}}"));
         await page.EnterEMailAsync(data.Resolve("{{data:entity_info_frame_entity_info_window_e_mail_186}}"));
         await page.ClickOKAsync();
         await page.WaitForEntityInfoFrameAsync("Absent");
@@ -964,10 +973,6 @@ public sealed class WCExpandedSteps
         await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
         await page.PauseAsync(1000);
         await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
-        data.Set("ErrorFlag", data.Resolve("{{data:errorflag}}"));
-        data.Set("ErrorFlag", data.Resolve("{{data:errorflag_2}}"));
-        data.Set("ErrorFlag", data.Resolve("{{data:errorflag_2}}"));
-        data.Set("REPETITION", data.Resolve("{{data:repetition}}"));
         await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
         await page.PauseAsync(1000);
         await page.ClickCompleteApplicationAsync();
@@ -990,7 +995,6 @@ public sealed class WCExpandedSteps
         await page.WaitForStoplightWaitingWindowAsync("Absent");
         await page.PauseAsync(1000);
         await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
-        data.Set("NBPrem", data.Resolve("{{data:nbprem}}"));
 
     }
 
@@ -1010,8 +1014,7 @@ public sealed class WCExpandedSteps
         await page.VerifyPremiumChangeAsync(data.Resolve("{{data:expected_premium_change_value_327}}"), "value");
         await page.EnterTitleAsync(data.Resolve("{{data:title_329}}"));
         await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_330}}"));
-        await page.VerifyResultAsync("{XB[SessionId]}", "value");
-        data.Set("ServerAddress", data.Resolve("{{data:serveraddress}}"));
+        data.Set("SessionId", await page.CaptureResultAsync("value"));
 
     }
 
@@ -1029,12 +1032,6 @@ public sealed class WCExpandedSteps
         await page.VerifyStatusCodeAsync(data.Resolve("{{data:expected_statuscode_value_334}}"), "value");
         await page.PauseAsync(1000);
         await page.PauseAsync(1000);
-        data.Set("PowershellArguments", data.Resolve("powershell.exe -ExecutionPolicy Bypass -NoProfile -File FormsCheckQA.ps1 -Path \"\\\\mis\\sys\\QLTY\\Test_Automation\\Tricentis_Tosca\\Forms_Check\\WC\\\" -FileName \"WC_StraightThrough\" -State  \"AL\" -QuoteID \"{B[QuoteID]}\""));
-        data.Set("SummaryResults", await page.CaptureValueAsync("InnerText"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults}}"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_2}}"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_3}}"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_4}}"));
 
     }
 

@@ -97,11 +97,10 @@ public sealed class DriversPage
 
     public Task<bool> IsIneligibleQuotePresentAsync() =>
         _ui.ExistsAsync(_locators.IneligibleQuote);
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("Drivers", "Loading"));
-
-    public Task ClickMultipleDriverAssignmentNextAsync() =>
+public Task ClickMultipleDriverAssignmentNextAsync() =>
         _ui.ClickAsync(_locators.MultipleDriverAssignmentNext, new ControlIntent("Drivers", "MultipleDriverAssignmentNext"));
+
+
+    public Task<bool> IsCONTINUEPresentAsync() => _ui.ExistsAsync(_locators.CONTINUE);
 
 }

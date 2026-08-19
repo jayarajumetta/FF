@@ -28,11 +28,7 @@ public sealed class FormsPage
 
     public Task EnterFormsAPIResponse53891Async(string value) =>
         _ui.FillAsync(_locators.FormsAPIResponse53891, value, new ControlIntent("Forms", "FormsAPIResponse53891"));
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("Forms", "Loading"));
-
-    public Task VerifyLoadingMessageAsync(string expected, string property) =>
+public Task VerifyLoadingMessageAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.LoadingMessage, expected, property, new ControlIntent("Forms", "LoadingMessage"));
 
     public Task<bool> IsLoadingMessagePresentAsync() =>
@@ -67,5 +63,10 @@ public sealed class FormsPage
 
     public Task NoteAsync(string note) =>
         _ui.ReviewRequiredAsync(note);
+
+
+    public Task<bool> IsFormsAPIRequest01660PresentAsync() => _ui.ExistsAsync(_locators.FormsAPIRequest01660);
+
+    public Task<bool> IsFormsAPIResponse53891PresentAsync() => _ui.ExistsAsync(_locators.FormsAPIResponse53891);
 
 }

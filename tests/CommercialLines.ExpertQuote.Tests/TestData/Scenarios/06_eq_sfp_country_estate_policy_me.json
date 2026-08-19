@@ -103,8 +103,8 @@
   },
   "application": {
     "url": "https://expertquote-qa.americannational.com/expertquote/",
-    "username": "YDH040",
-    "password": "Anico456"
+    "username": "SYNTHETIC_REPLACE_ME",
+    "password": "SYNTHETIC_REPLACE_ME"
   },
   "external": {},
   "_canonical": {
@@ -112,8 +112,8 @@
     "sourceValues": {
       "3a1cd1ec-85bc-0f13-6d17-088a7d566f2a": "30000",
       "3a1cd1ec-85bc-f5ed-cc95-448d58d4d9db": "https://expertquote-qa.americannational.com/expertquote/",
-      "3a1cd1ec-85bc-fe79-1494-1af9761a9040": "YDH040",
-      "3a1cd1ec-85bc-9344-db8b-ee25f289409c": "Anico456",
+      "3a1cd1ec-85bc-fe79-1494-1af9761a9040": "SYNTHETIC_REPLACE_ME",
+      "3a1cd1ec-85bc-9344-db8b-ee25f289409c": "SYNTHETIC_REPLACE_ME",
       "3a1cd1ec-85bc-bc16-ff1c-b2566c26c897": "{RANDOMREGEX[\"SFP[A-Z]{3}\"]}",
       "3a1cd1ec-85bc-0cd5-287d-f90c3b5f0486": "{RANDOMREGEX[\"CE-[A-Z]{4}\"]}",
       "3a1cd1ec-85bc-0426-2ce3-d7e150f480cb": "{DATE[][-22y][MM/dd/yyyy]}",
@@ -177,8 +177,8 @@
       "3a1cd1ec-85c8-a67d-bcc9-bcb8c39160ed": "SFP_CE",
       "3a1cd1ec-85c8-3247-9ca6-04db516b6f89": "\\\\mis\\sys\\QLTY\\Test_Automation\\Tricentis_Tosca\\Forms_Check\\SFP\\",
       "3a1cd1ec-85c8-1f9e-4af6-2aa103bcb605": "https://expertquote-qa.americannational.com/expertquote/",
-      "3a1cd1ec-85c8-7551-486e-2a3d1d39985b": "YDH040",
-      "3a1cd1ec-85c8-a3c6-6a39-d494e93b8089": "Anico456",
+      "3a1cd1ec-85c8-7551-486e-2a3d1d39985b": "SYNTHETIC_REPLACE_ME",
+      "3a1cd1ec-85c8-a3c6-6a39-d494e93b8089": "SYNTHETIC_REPLACE_ME",
       "3a1cd1ec-85c8-8468-fe6c-4dd5dbe30542": "Submission",
       "3a1cd1ec-85c8-67f9-e2ae-1f085b4eb2cd": "SFP",
       "3a1cd1ec-85c8-6bbc-3738-b4e21377ad13": "SFP"
@@ -218,7 +218,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "YDH040"
+        "value": "SYNTHETIC_REPLACE_ME"
       },
       {
         "order": 1.01,
@@ -230,7 +230,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "Anico456"
+        "value": "SYNTHETIC_REPLACE_ME"
       },
       {
         "order": 1.01,
@@ -998,7 +998,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "YDH040"
+        "value": "SYNTHETIC_REPLACE_ME"
       },
       {
         "order": 3.01,
@@ -1010,7 +1010,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "Anico456"
+        "value": "SYNTHETIC_REPLACE_ME"
       },
       {
         "order": 3.01,

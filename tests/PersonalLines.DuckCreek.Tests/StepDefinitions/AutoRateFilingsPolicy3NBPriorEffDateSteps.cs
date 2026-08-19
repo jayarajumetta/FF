@@ -227,8 +227,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        data.Set("QuoteNum", await page.CaptureQuoteNumberAsync("InnerText"));
-        data.Set("QNum", data.Resolve("{STRINGREPLACE[{B[QuoteNum]}][\"PERSONAL AUTO \\(\"][\"\"]}"));
         data.Set("QuoteNumber", data.Resolve("{STRINGREPLACE[{B[QNum]}][\"\\)\"][\"\"]}"));
 
     }
@@ -261,7 +259,8 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        if (data.Condition("If > Then"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: If > Then
+        if (false)
         {
                     await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
         }
@@ -346,7 +345,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         await page.ClickExistingClient1Async();
         await page.ClickDriverInformationNextAsync();
         await page.PressDriverInformationNextAsync("Click");
-        data.Set("MT National Guard", data.Get("MT National Guard"));
 
     }
 
@@ -769,7 +767,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         }
         if (await page.IsPrefilledDriversPresentAsync())
         {
-                    data.Set("NumberOfDrivers", await page.CapturePrefilledDriversAsync("ResultCount"));
         }
         if (await page.IsMATFORMFIELDPresentAsync())
         {
@@ -789,13 +786,7 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
                     await page.ClickSaveAndContinueAsync();
         }
         data.Set("Farm/Use", data.Get("Farm/Use"));
-        data.Set("PickUp", data.Get("PickUp"));
         await page.EnterStateAsync(data.Get("AL_ClientData.State"));
-        data.Set("Company", data.Resolve("{{data:company}}"));
-        data.Set("Loan", data.Get("Loan"));
-        data.Set("Lease", data.Get("Lease"));
-        data.Set("AntiTheft", data.Get("AntiTheft"));
-        data.Set("Business/Use", data.Get("Business/Use"));
 
     }
 
@@ -1087,16 +1078,15 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         var page = new DriversPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        if (data.Condition("EQ || Driver Assignment Continue > Condition"))
+        if (await page.IsCONTINUEPresentAsync())
         {
                     await page.WaitForCONTINUEAsync("Exists");
         }
         await page.VerifyCONTINUEAsync("Exists", "");
-        if (data.Condition("EQ || Driver Assignment Continue > Then"))
+        if (await page.IsCONTINUEPresentAsync())
         {
                     await page.ClickCONTINUEAsync();
         }
-        await page.WaitForLoadingAsync("Exists");
 
     }
 
@@ -1119,7 +1109,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         {
                     await page.ClickUWCONTINUEAsync();
         }
-        data.Set("ClaimCount", data.Resolve("{{data:claimcount}}"));
 
     }
 
@@ -1141,9 +1130,9 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         {
                     await page.ClickEditClaimAsync();
         }
-        if (data.Condition("While Edits Needed [max=30] > Loop"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: While Edits Needed [max=30] > Loop
+        if (false)
         {
-                    data.Set("ClaimCount", data.Resolve("{MATH[{B[ClaimCount]}+1]}"));
         }
         if (await page.IsClaimDriverNotInHouseholdPresentAsync())
         {
@@ -1172,7 +1161,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
                     await page.ClickCONTINUEDoesnTApplyAsync();
         }
         await page.ClickClaimsViolationNEWNextAsync();
-        await page.WaitForLoadingAsync("Exists");
 
     }
 
@@ -1201,7 +1189,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         {
                     await page.ClickN1500030000Async();
         }
-        await page.WaitForLoadingAsync("Exists");
         data.Set("Commercial Auto", data.Get("Commercial Auto"));
         data.Set("Special Farm Package", data.Resolve("{{data:special_farm_package}}"));
         data.Set("Safe Cycle Discount", data.Get("Safe Cycle Discount"));
@@ -1242,32 +1229,8 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         }
         if (await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Exists");
         }
-        data.Set("PolicyCovOption", data.Resolve("{{data:policycovoption}}"));
-        data.Set("V1_CompCollOnly", data.Get("V1_CompCollOnly"));
-        data.Set("V1_CompDed", data.Resolve("{{data:v1_compded}}"));
-        data.Set("V1_CompDedMoreOpt", data.Get("V1_CompDedMoreOpt"));
-        data.Set("V1_CollDed", data.Resolve("{{data:v1_collded}}"));
-        data.Set("V1_CollDedMoreOpt", data.Get("V1_CollDedMoreOpt"));
-        data.Set("V2_CompCollOnly", data.Get("V2_CompCollOnly"));
-        data.Set("V2_CompDed", data.Resolve("{{data:v2_compded}}"));
-        data.Set("V2_CompDedMoreOpt", data.Get("V2_CompDedMoreOpt"));
-        data.Set("V2_CollDed", data.Resolve("{{data:v2_collded}}"));
-        data.Set("V2_CollDedMoreOpt", data.Get("V2_CollDedMoreOpt"));
-        data.Set("V3_CompCollOnly", data.Get("V3_CompCollOnly"));
-        data.Set("V3_CompDed", data.Resolve("{{data:v3_compded}}"));
-        data.Set("V3_CompDedMoreOpt", data.Get("V3_CollDedMoreOpt"));
-        data.Set("V3_CollDed", data.Resolve("{{data:v3_collded}}"));
-        data.Set("V3_CollDedMoreOpt", data.Get("V3_CollDedMoreOpt"));
-        data.Set("V4_CompCollOnly", data.Get("V4_CompCollOnly"));
-        data.Set("V4_CompDed", data.Resolve("{{data:v4_compded}}"));
-        data.Set("V4_CompDedMoreOpt", data.Get("V4_CompDedMoreOpt"));
-        data.Set("V4_CollDed", data.Resolve("{{data:v4_collded}}"));
-        data.Set("V4_CollDedMoreOpt", data.Get("V4_CollDedMoreOpt"));
-        data.Set("CovOptUninsured", data.Get("CovOptUninsured"));
         data.Set("Supplemental UM/UIM Opt In", data.Get("Supplemental UM/UIM Opt In"));
-        data.Set("Supplemental UM/UIM Cov", data.Get("Supplemental UM/UIM Cov"));
 
     }
 
@@ -1329,7 +1292,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         {
                     await page.ClickSaveAndContinueAsync();
         }
-        await page.WaitForLoadingAsync("Exists");
         await page.PressOption3Async("scroll[5]");
         if (data.Condition("V1_CompCollOnly == \"Yes\""))
         {
@@ -1482,8 +1444,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         await page.ClickCoveragesNewNextAsync();
         data.Set("Tort Option", data.Get("Tort Option"));
         data.Set("Income Loss Coverage", data.Get("Income Loss Coverage"));
-        data.Set("UMPD", data.Get("UMPD"));
-        data.Set("UIMPD", data.Get("UIMPD"));
         data.Set("AD&D Coverage", data.Resolve("{{data:ad_d_coverage}}"));
         data.Set("Inc Liab Claims Fam Mem", data.Get("Inc Liab Claims Fam Mem"));
         data.Set("Extraordinary Medical Benefit", data.Get("Extraordinary Medical Benefit"));
@@ -1593,7 +1553,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         data.Set("Extra PIP Option", data.Get("Extra PIP Option"));
         data.Set("Auto Health Insurer", data.Get("Auto Health Insurer"));
         data.Set("Medical Expense Elimination", data.Get("Medical Expense Elimination"));
-        data.Set("Work Loss Benefits", data.Get("Work Loss Benefits"));
         data.Set("Broadened PIP", data.Get("Broadened PIP"));
         data.Set("Additional Death Benefit", data.Get("Additional Death Benefit"));
         data.Set("Waiver of Income Loss", data.Get("Waiver of Income Loss"));
@@ -1660,36 +1619,28 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         }
         data.Set("UMPD/UIMPD_V1", data.Get("UMPD/UIMPD_V1"));
         data.Set("UMPD Coverage_V1", data.Get("UMPD Coverage_V1"));
-        data.Set("UMPD More Options Coverages_V1", data.Get("UMPD More Options Coverages_V1"));
         data.Set("UIMPD Coverage_V1", data.Get("UIMPD Coverage_V1"));
         data.Set("Rental Reimbursement Coverage_V1", data.Get("Rental Reimbursement Coverage_V1"));
         data.Set("Theft Deductible_V1", data.Get("Theft Deductible_V1"));
         data.Set("Roadside Assistance Coverage_V1", data.Resolve("{{data:roadside_assistance_coverage_v1}}"));
         data.Set("UMPD/UIMPD_V2", data.Get("UMPD/UIMPD_V2"));
         data.Set("UMPD Coverage_V2", data.Get("UMPD Coverage_V2"));
-        data.Set("UMPD More Options Coverages_V2", data.Get("UMPD More Options Coverages_V2"));
         data.Set("UIMPD Coverage_V2", data.Get("UIMPD Coverage_V2"));
         data.Set("Rental Reimbursement Coverage_V2", data.Get("Rental Reimbursement Coverage_V2"));
         data.Set("Theft Deductible_V2", data.Get("Theft Deductible_V2"));
         data.Set("Roadside Assistance Coverage_V2", data.Resolve("{{data:roadside_assistance_coverage_v2}}"));
         data.Set("UMPD/UIMPD_V3", data.Get("UMPD/UIMPD_V3"));
         data.Set("UMPD Coverage_V3", data.Get("UMPD Coverage_V3"));
-        data.Set("UMPD More Options Coverages_V3", data.Get("UMPD More Options Coverages_V3"));
         data.Set("UIMPD Coverage_V3", data.Get("UIMPD Coverage_V3"));
         data.Set("Rental Reimbursement Coverage_V3", data.Get("Rental Reimbursement Coverage_V3"));
         data.Set("Theft Deductible_V3", data.Get("Theft Deductible_V3"));
         data.Set("Roadside Assistance Coverage_V3", data.Resolve("{{data:roadside_assistance_coverage_v3}}"));
         data.Set("UMPD/UIMPD_V4", data.Get("UMPD/UIMPD_V4"));
         data.Set("UMPD Coverage_V4", data.Get("UMPD Coverage_V4"));
-        data.Set("UMPD More Options Coverages_V4", data.Get("UMPD More Options Coverages_V4"));
         data.Set("UIMPD Coverage_V4", data.Get("UIMPD Coverage_V4"));
         data.Set("Rental Reimbursement Coverage_V4", data.Get("Rental Reimbursement Coverage_V4"));
         data.Set("Theft Deductible_V4", data.Get("Theft Deductible_V4"));
         data.Set("Roadside Assistance Coverage_V4", data.Get("Roadside Assistance Coverage_V4"));
-        data.Set("Cycle Accessories_V1", data.Get("Cycle Accessories_V1"));
-        data.Set("Original Parts_V1", data.Get("Original Parts_V1"));
-        data.Set("Cycle Accessories_V2", data.Get("Cycle Accessories_V2"));
-        data.Set("Original Parts_V2", data.Get("Original Parts_V2"));
         data.Set("Cycle Accessories_V3", data.Get("Cycle Accessories_V3"));
         data.Set("Original Parts_V3", data.Get("Original Parts_V3"));
         data.Set("Cycle Accessories_V4", data.Get("Cycle Accessories_V4"));
@@ -1884,7 +1835,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForHeaderPricingDetailsAsync("Exists");
         await page.ClickPricingDetailsNewNextAsync();
-        await page.WaitForLoadingAsync("Exists");
 
     }
 
@@ -1903,11 +1853,11 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         await page.ClickNo77DAEAsync();
         await page.PressNo77DAEAsync("Click");
         await page.PressNo77DAEAsync("end");
-        if (data.Condition("EQ | Underwriting Collector And Vintage Information > Condition"))
+        if (await page.IsAreAllCollectorVehiclesKeptInAFullyEnclosedAndLockedStructurePresentAsync())
         {
                     await page.WaitForAreAllCollectorVehiclesKeptInAFullyEnclosedAndLockedStructureAsync("Visible");
         }
-        if (data.Condition("EQ | Underwriting Collector And Vintage Information > Then"))
+        if (await page.IsYes71588PresentAsync())
         {
                     await page.SelectYes71588Async("");
         }
@@ -1989,7 +1939,8 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        if (data.Condition("If Correction Needed > Then go to Express to bypass L9"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: If Correction Needed > Then go to Express to bypass L9
+        if (false)
         {
                     await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
         }
@@ -2135,7 +2086,8 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        if (data.Condition("If Referral Button > Then"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: If Referral Button > Then
+        if (false)
         {
                     await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
         }
@@ -2224,7 +2176,6 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickChecklist1Async();
-        data.Set("AgentList count", await page.CaptureDIVAgentDocumentsCountAsync("InnerText"));
         await page.ClickAutoCycleRVApplicationAsync();
         await page.ClickDIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorerAsync();
         await page.EnterCaptionAsync(data.Resolve("{{data:caption_644}}"));
@@ -2294,15 +2245,7 @@ public sealed class AutoRateFilingsPolicy3NBPriorEffDateSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForPolicyNumberAsync("Exists");
-        data.Set("Policy Number", await page.CapturePolicyNumberAsync("InnerText"));
         await page.EnterTransmitConfirmationAsync(data.Resolve("{{data:transmit_confirmation_669}}"));
-        data.Set("TestDataCreateProvideNewItem", data.Get("TestData - Create & provide new item"));
-        data.Set("TDM_ExistingOrNewTDSType", data.Resolve("{{data:tdm_existingornewtdstype}}"));
-        data.Set("TDM_DataStructurePolicyNumber", data.Resolve("{{runtime:Policy Number}}"));
-        data.Set("TDM_DataStructureEffectiveDate", data.Resolve("{{runtime:EffectiveDate}}"));
-        data.Set("TDM_DataStructureDateTime", "{DATE} {TIME}");
-        data.Set("TDM_DataStructureTestCase", data.Resolve("{{runtime:TCName}}"));
-        data.Set("TDM_DataStructureState", data.Resolve("{{runtime:State}}"));
 
     }
 

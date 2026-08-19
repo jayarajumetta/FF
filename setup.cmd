@@ -1,2 +1,2 @@
 @echo off
-powershell -ExecutionPolicy Bypass -File "%~dp0scripts\setup.ps1" -InstallChromium %*
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\setup.ps1"

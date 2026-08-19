@@ -21,6 +21,8 @@ public sealed class UMBBasicPolicySteps
         data.GenerateRandom("InspectionTelephone_0045", "[0-9]{10}");
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        // Source step 0044: RANDOM input for FEIN.
+        await page.EnterFEINAsync(data.Resolve("{{runtime:FEIN_0044}}"));
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForQuickQuoteAsync("Exists");
@@ -36,6 +38,8 @@ public sealed class UMBBasicPolicySteps
         await page.PressBusinessNameAsync("Tab");
         await page.EnterEntityTypeAsync(data.Resolve("{{data:entity_type_8}}"));
         await page.PressEntityTypeAsync("Tab");
+        // Source step 0041: RANDOM input for Primary Phone.
+        await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0041}}"));
         await page.PressAddress17A1FBAsync("TAB");
         await page.EnterZipCode26D22Async(data.Resolve("{{data:zipcode_11}}"));
         await page.PressZipCode26D22Async("Tab");
@@ -51,6 +55,8 @@ public sealed class UMBBasicPolicySteps
         await page.PressNameOfInspectionContactAsync("CLICK");
         await page.PressNameOfInspectionContactAsync("CLICK");
         await page.PressNameOfInspectionContactAsync("Tab");
+        // Source step 0045: RANDOM input for Inspection Telephone #.
+        await page.EnterInspectionTelephoneAsync(data.Resolve("{{runtime:InspectionTelephone_0045}}"));
         await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_18}}"));
         await page.PressInsuredEMailAddressAsync("Tab");
         await page.PressInsuredEMailAddressAsync("CLICK");
@@ -62,8 +68,6 @@ public sealed class UMBBasicPolicySteps
         await page.VerifyZipCode26D22Async("[0-9]{5}-[0-9]{4}", "Regex:value");
         data.Set("State", data.Resolve("{{data:state}}"));
         data.Set("Product (LOB)", data.Resolve("{{data:product_lob}}"));
-        data.Set("FormOnPolicyDocName", data.Resolve("{{data:formonpolicydocname}}"));
-        data.Set("Server", data.Resolve("{{data:server}}"));
 
     }
 
@@ -95,8 +99,6 @@ public sealed class UMBBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.VerifyAJAXErrorCheckAsync("Exists", "");
-        data.Set("AJAX Error", data.Resolve("The scripts experienced an AJAX error with the following information: {B[AJAX]}"));
-        data.Set("ForceAFail", "'FALSE' == 'TRUE'");
 
     }
 
@@ -149,8 +151,12 @@ public sealed class UMBBasicPolicySteps
         await page.PressIndividualTypeAsync("CLICK");
         await page.PressIndividualTypeAsync("Tab");
         await page.WaitForPleaseVerifySSNF738AAsync("Exists");
+        // Source step 0057: RANDOM input for MiddleName.
+        await page.EnterMiddleNameAsync(data.Resolve("{{runtime:MiddleName_0057}}"));
         await page.PressFirstNameC5387Async("TAB");
         await page.PressFirstNameC5387Async("Tab");
+        // Source step 0057: RANDOM input for LastName.
+        await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0057}}"));
         await page.EnterDateOfBirth338D7Async(data.Resolve("{{data:dateofbirth_50}}"));
         await page.PressDateOfBirth338D7Async("Tab");
         await page.EnterAddress1D319BAsync(data.Resolve("{{data:address1_51}}"));
@@ -169,6 +175,8 @@ public sealed class UMBBasicPolicySteps
         await page.PressZipCodeA088EAsync("Tab");
         await page.PressZipCodeA088EAsync("Tab");
         await page.EnterGender4973CAsync(data.Resolve("{{data:gender_55}}"));
+        // Source step 0057: RANDOM input for FirstName.
+        await page.EnterFirstNameC5387Async(data.Resolve("{{runtime:FirstName_0057}}"));
         await page.PressGender4973CAsync("Tab");
         await page.WaitForClientSearch41F28Async("Exists");
         await page.ClickClientSearch41F28Async();
@@ -223,9 +231,9 @@ public sealed class UMBBasicPolicySteps
         await page.PressPolicyNumberBA28EAsync("Tab");
         await page.EnterPolicyTypeAsync(data.Resolve("{{data:policy_type_88}}"));
         await page.PressPolicyTypeAsync("Tab");
-        await page.EnterEffectiveDateB557FAsync("{DATE[][-2y][MM'/'dd'/'yyyy]}");
+        await page.EnterEffectiveDateB557FAsync(data.Resolve("{DATE[][-2y][MM'/'dd'/'yyyy]}"));
         await page.PressEffectiveDateB557FAsync("Tab");
-        await page.EnterExpirationDate34EACAsync("{DATE[][][MM'/'dd'/'yyyy]}");
+        await page.EnterExpirationDate34EACAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
         await page.PressExpirationDate34EACAsync("Tab");
         await page.EnterModificationFactorAsync(data.Resolve("{{data:modificationfactor_91}}"));
         await page.PressModificationFactorAsync("Tab");
@@ -285,7 +293,6 @@ public sealed class UMBBasicPolicySteps
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_112}}"));
         await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
         await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
-        data.Set("StateIsKansas", "Alabama==\"Kansas\"; Expression= 'Alabama'=='Kansas'");
         if (data.Condition("'Product (LOB)' == \"UMB\""))
         {
                     await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_114}}"));
@@ -299,7 +306,6 @@ public sealed class UMBBasicPolicySteps
                     await page.PressPrimaryRatingStateAsync("Tab");
                     await page.PressPrimaryRatingStateAsync("Tab");
         }
-        data.Set("StateIsVirginia", "Alabama==\"Virginia\"; Expression= 'Alabama'=='Virginia'");
         if (data.Condition("'Product (LOB)' == \"UMB\""))
         {
                     await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_117}}"));
@@ -335,7 +341,7 @@ public sealed class UMBBasicPolicySteps
         await page.PressDescriptionOfSpecifiedOperationAsync("TAB");
         await page.EnterDescriptionOfSpecifiedOperationAsync("AL UMB Basic {NMONTH}.{NDAY}.{NYEAR} {Time}");
         await page.PressDescriptionOfSpecifiedOperationAsync("Tab");
-        await page.VerifyDescriptionOfSpecifiedOperationAsync("{XB[QuoteDescription]}", "value");
+        data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
 
     }
 
@@ -526,13 +532,13 @@ public sealed class UMBBasicPolicySteps
         await page.PressPolicyNumberFDF5CAsync("Tab");
         if (data.Condition("'GL Policy Number' == \"GLPOL#\""))
         {
-                    await page.EnterEffectiveDateB3600Async("{DATE[][][MM'/'dd'/'yyyy]}");
+                    await page.EnterEffectiveDateB3600Async(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
                     await page.PressEffectiveDateB3600Async("Tab");
         }
         await page.WaitForEffectiveDateB3600Async("NotEqual");
         if (data.Condition("'GL Policy Number' == \"GLPOL#\""))
         {
-                    await page.EnterExpirationDateB437CAsync("{DATE[][+1y][MM'/'dd'/'yyyy]}");
+                    await page.EnterExpirationDateB437CAsync(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
                     await page.PressExpirationDateB437CAsync("Tab");
         }
         if (data.Condition("'GL Policy Number' == \"GLPOL#\""))
@@ -625,13 +631,13 @@ public sealed class UMBBasicPolicySteps
         await page.PressPolicyNumber6566FAsync("Tab");
         if (data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
         {
-                    await page.EnterEffectiveDate6CF3DAsync("{DATE[][][MM'/'dd'/'yyyy]}");
+                    await page.EnterEffectiveDate6CF3DAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
                     await page.PressEffectiveDate6CF3DAsync("Tab");
         }
         await page.WaitForEffectiveDate6CF3DAsync("NotEqual");
         if (data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
         {
-                    await page.EnterExpirationDate82561Async("{DATE[][+1y][MM'/'dd'/'yyyy]}");
+                    await page.EnterExpirationDate82561Async(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
                     await page.PressExpirationDate82561Async("Tab");
         }
         if (data.Condition("'CPP Policy Number' ==\"CPPPOL#\""))
@@ -666,10 +672,10 @@ public sealed class UMBBasicPolicySteps
         await page.EnterPolicyNumber78B85Async(data.Resolve("{{data:policy_number_210}}"));
         await page.PressPolicyNumber78B85Async("Tab");
         await page.PressPolicyNumber78B85Async("Tab");
-        await page.EnterEffectiveDate0E335Async("{DATE[][][MM'/'dd'/'yyyy]}");
+        await page.EnterEffectiveDate0E335Async(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
         await page.PressEffectiveDate0E335Async("Tab");
         await page.WaitForEffectiveDate0E335Async("NotEqual");
-        await page.EnterExpirationDate664A1Async("{DATE[][+1y][MM'/'dd'/'yyyy]}");
+        await page.EnterExpirationDate664A1Async(data.Resolve("{DATE[][+1y][MM'/'dd'/'yyyy]}"));
         await page.PressExpirationDate664A1Async("Tab");
         await page.EnterLiabilityLimit56E57Async(data.Resolve("{{data:liability_limit_214}}"));
         await page.PressLiabilityLimit56E57Async("CLICK");
@@ -831,10 +837,6 @@ public sealed class UMBBasicPolicySteps
         await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
         await page.PauseAsync(1000);
         await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
-        data.Set("ErrorFlag", data.Resolve("{{data:errorflag}}"));
-        data.Set("ErrorFlag", data.Resolve("{{data:errorflag_2}}"));
-        data.Set("ErrorFlag", data.Resolve("{{data:errorflag_2}}"));
-        data.Set("REPETITION", data.Resolve("{{data:repetition}}"));
         await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
         await page.PauseAsync(1000);
         await page.ClickCompleteApplicationAsync();
@@ -857,7 +859,6 @@ public sealed class UMBBasicPolicySteps
         await page.WaitForStoplightWaitingWindowAsync("Absent");
         await page.PauseAsync(1000);
         await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
-        data.Set("NBPrem", data.Resolve("{{data:nbprem}}"));
 
     }
 
@@ -877,8 +878,7 @@ public sealed class UMBBasicPolicySteps
         await page.VerifyPremiumChangeAsync(data.Resolve("{{data:expected_premium_change_value_295}}"), "value");
         await page.EnterTitleAsync(data.Resolve("{{data:title_297}}"));
         await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_298}}"));
-        await page.VerifyResultAsync("{XB[SessionId]}", "value");
-        data.Set("ServerAddress", data.Resolve("{{data:serveraddress}}"));
+        data.Set("SessionId", await page.CaptureResultAsync("value"));
 
     }
 
@@ -896,11 +896,6 @@ public sealed class UMBBasicPolicySteps
         await page.VerifyStatusCodeAsync(data.Resolve("{{data:expected_statuscode_value_302}}"), "value");
         await page.PauseAsync(1000);
         await page.PauseAsync(1000);
-        data.Set("PowershellArguments", data.Resolve("powershell.exe -ExecutionPolicy Bypass -File FormsCheckQA_UMB_variant.ps1  -Path \"\\\\mis\\sys\\QLTY\\Test_Automation\\Tricentis_Tosca\\Forms_Check\\SUMB\\\"  -FileName \"SUMB_BASIC\" -State  \"AL\" -QuoteID \"{B[QuoteID]}\""));
-        data.Set("SummaryResults", await page.CaptureValueAsync("InnerText"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults}}"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_2}}"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_3}}"));
         await page.VerifyLoadingMessageAsync("Visible", "");
         await page.PauseAsync(1000);
 

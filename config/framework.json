@@ -1,0 +1,45 @@
+{
+  "browser": {
+    "channel": "msedge",
+    "fallbackBrowser": "chromium",
+    "headless": false,
+    "ignoreHttpsErrors": true,
+    "viewportWidth": 1440,
+    "viewportHeight": 900,
+    "actionTimeoutMs": 30000,
+    "navigationTimeoutMs": 60000,
+    "trace": true,
+    "video": true,
+    "har": true,
+    "screenshotOnFailure": true,
+    "screenshotEachStep": false
+  },
+  "selfHeal": {
+    "enabled": true,
+    "provider": "openai-compatible",
+    "endpoint": "https://api.openai.com/v1/chat/completions",
+    "model": "gpt-4.1-mini",
+    "apiKeyEnvironmentVariable": "TEST_LLM_API_KEY",
+    "includeScreenshot": true,
+    "maxPreviousSteps": 3,
+    "domMaxChars": 50000,
+    "candidateLimit": 400,
+    "requestTimeoutSeconds": 45,
+    "minimumConfidence": 0.70,
+    "cacheFile": "Artifacts/SelfHealing/locator-cache.json",
+    "auditFile": "Artifacts/SelfHealing/healing-audit.jsonl",
+    "cacheContextLimit": 20
+  },
+  "reporting": {
+    "artifactRoot": "Artifacts",
+    "htmlReport": true,
+    "includeResolvedData": true,
+    "includeConsoleErrors": true,
+    "includeNetworkErrors": true,
+    "createEvidenceBundle": true
+  },
+  "execution": {
+    "strictUnknownConditions": true,
+    "externalDataFile": "TestData/ExternalDataOverrides.json"
+  }
+}

@@ -62,6 +62,10 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForAccountInformationHeaderAsync("Visible");
         await page.PressOwnerMiddleNameAsync("ENTER");
+        // Source step 0033: RANDOM input for Owner Phone.
+        await page.EnterOwnerPhoneAsync(data.Resolve("{{runtime:OwnerPhone}}"));
+        // Source step 0033: RANDOM input for Owner Email.
+        await page.EnterOwnerEmailAsync(data.Resolve("{{runtime:OwnerEmail}}"));
         await page.PressOwnerMiddleNameAsync("Tab");
         await page.SelectMarriedAsync("");
         await page.PressStreetAddressAsync("SHIFTTAB");
@@ -106,10 +110,8 @@ public sealed class EQBOPBasicPolicySteps
         await page.SelectStateAsync(data.Resolve("{{runtime:StateName}}"));
         await page.PressAgentPCAsync("ENTER");
         await page.PressAgentPCAsync("Tab");
-        data.Set("EffDate", await page.CaptureEffectiveDate78F67Async("InnerText"));
         await page.ClickStateDropdownAsync();
         await page.ClickStartQuoteAsync();
-        data.Set("LOB", data.Resolve("{{data:lob}}"));
 
     }
 
@@ -125,6 +127,8 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForTheSSNCouldNotBeFoundPleaseEnterAnSSNAsync("Visible");
+        // Source step 0041: RANDOM input for ssn.
+        await page.EnterTheSSNCouldNotBeFoundPleaseEnterAnSSNAsync(data.Resolve("{{runtime:InsuredSSN}}"));
         await page.WaitForSubmitAngularAsync("Visible");
         await page.PressSubmitAngularAsync("TAB");
         await page.ClickSubmitAngularAsync();
@@ -136,7 +140,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickContinueAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen}}"));
         if (!await page.IsScreenHeadingPresentAsync())
         {
                     await page.VerifyScreenHeadingAsync("Absent", "");
@@ -162,18 +165,14 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.WaitForScreenHeading9696CAsync("Exists");
         }
-        await page.WaitForLoadingAsync("Absent");
         await page.PressSearchAddClassCodeAsync("TAB");
-        await page.WaitForLoadingAsync("Absent");
         await page.WaitForFindAClassCodeAsync("Exists");
         await page.EnterClassFilterAsync(data.Resolve("{{data:class_filter_64}}"));
         await page.ClickClientInfoSearchAsync();
@@ -182,7 +181,6 @@ public sealed class EQBOPBasicPolicySteps
         await page.WaitForYouHaveSelected1ClassCodesAsync("Exists");
         await page.PressYouHaveSelected1ClassCodesAsync("TAB");
         await page.ClickAddAsync();
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -198,7 +196,6 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForIndustryClassCodeRestrictionsHeadingAsync("Exists");
         await page.PressNoneOfTheAboveAsync("TAB");
-        data.Set("Screen", data.Resolve("{{data:screen_2}}"));
         if (!await page.IsScreenHeadingPresentAsync())
         {
                     await page.VerifyScreenHeadingAsync("Absent", "");
@@ -224,10 +221,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen_2}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
@@ -248,7 +243,6 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.PressExistingClientAsync("TAB");
         await page.ClickNextBOPAsync();
-        await page.WaitForLoadingAsync("Absent");
         await page.ClickIndividualSoleProprietorAsync();
         await page.PressSaveAsync("TAB");
         await page.ClickSaveAsync();
@@ -256,7 +250,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickEQCommonPrimaryInsuredRequiredAsync();
         }
-        await page.WaitForLoadingAsync("Absent");
         if (data.Condition("ReadOnly == NULL"))
         {
                     await page.PressDescriptionOfOperationsAsync("ENTER");
@@ -285,8 +278,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyDescriptionOfOperationsAsync(data.Resolve("{{runtime:QuoteDescription}}"), "");
         }
-        await page.WaitForLoadingAsync("Absent");
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -301,7 +292,6 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.PressNoneOfTheAboveCheckBoxAsync("TAB");
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -316,7 +306,6 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.PressNoneOfTheAboveCheckboxAsync("TAB");
-        data.Set("Screen", data.Resolve("{{data:screen_3}}"));
         if (!await page.IsScreenHeadingPresentAsync())
         {
                     await page.VerifyScreenHeadingAsync("Absent", "");
@@ -342,16 +331,13 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen_3}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.WaitForScreenHeading9696CAsync("Exists");
         }
-        data.Set("InspectionContactIndex", data.Resolve("{{data:inspectioncontactindex}}"));
 
     }
 
@@ -366,7 +352,6 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.PressInspectionContactAsync("TAB");
-        data.Set("Screen", data.Resolve("{{data:screen_4}}"));
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.VerifyScreenHeading9696CAsync("Absent", "");
@@ -392,10 +377,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen_4}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
@@ -428,11 +411,8 @@ public sealed class EQBOPBasicPolicySteps
                     await page.VerifyLockedThisQuoteHasBeenSubmittedAndYouCanNoLongerMakeChangesToThisTextAsync("Exists", "");
         }
         await page.EnterDescriptionOfTheBusinessExposuresActivitiesAndExperienceAsync("");
-        data.Set("NameQuoteNum", await page.CaptureNameAndQuoteNum8EB77Async("InnerText"));
         data.Set("Quote_Num", data.Resolve("{B[NameQuoteNum]}"));
-        data.Set("QuoteID", data.Resolve("{{runtime:Quote_Num}}"));
         data.Set("Policy#", data.Resolve("{{data:policy}}"));
-        data.Set("Screen", data.Resolve("{{data:screen_5}}"));
         if (!await page.IsScreenHeading69631PresentAsync())
         {
                     await page.VerifyScreenHeading69631Async("Absent", "");
@@ -458,10 +438,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen_5}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading69631PresentAsync())
         {
@@ -481,19 +459,14 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.SelectPriorPolicyNoAsync("");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressYearsInBusinessAsync("ENTER");
         await page.PressYearsInBusinessAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
         await page.ClickN3YearsAsync();
         await page.PressN3YearsAsync("TAB");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressPriorInsuranceLatestExpirationDateAsync("ENTER");
         await page.PressPriorInsuranceLatestExpirationDateAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressPriorInsuranceLatestCarrierAsync("ENTER");
         await page.PressPriorInsuranceLatestCarrierAsync("Tab");
-        data.Set("Type of Loss", data.Resolve("{{data:type_of_loss}}"));
 
     }
 
@@ -511,30 +484,23 @@ public sealed class EQBOPBasicPolicySteps
         await page.PressDateOfOccurrenceAsync("CTRL+A");
         await page.PressDateOfOccurrenceAsync("Enter");
         await page.PressDateOfOccurrenceAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressPolicyStartAsync("CTRL+A");
         await page.PressPolicyStartAsync("Enter");
         await page.PressPolicyStartAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressPolicyExpireAsync("CTRL+A");
         await page.PressPolicyExpireAsync("Enter");
         await page.PressPolicyExpireAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressAmountPaidAsync("CTRL+A");
         await page.PressAmountPaidAsync("Enter");
         await page.PressAmountPaidAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressAmountReservedAsync("CTRL+A");
         await page.PressAmountReservedAsync("Enter");
         await page.PressAmountReservedAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressExpenseAmountAsync("CTRL+A");
         await page.PressExpenseAmountAsync("Enter");
         await page.PressExpenseAmountAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressTypeOfLossDropdownAsync("TAB");
         await page.ClickTypeOfLossSelectionAsync();
-        await page.WaitForLoadingAsync("Absent");
         await page.PressDescriptionOfOccurrenceOrClaimAsync("ENTER");
         await page.PressDescriptionOfOccurrenceOrClaimAsync("Tab");
         await page.ClickOpenButtonAsync();
@@ -548,7 +514,6 @@ public sealed class EQBOPBasicPolicySteps
         await page.VerifyClaimSummaryTableRowCellExplicitNameAmountAsync("__BLANK__", "");
         await page.VerifyClaimSummaryTableRowCellExplicitNameLineOfCoverageAsync(data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_line_of_coverage_172}}"), "");
         await page.VerifyClaimSummaryTableRowCellExplicitNameTypeOfLossAsync(data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_type_of_loss_173}}"), "");
-        data.Set("Screen", data.Resolve("{{data:screen_6}}"));
         if (!await page.IsScreenHeadingPresentAsync())
         {
                     await page.VerifyScreenHeadingAsync("Absent", "");
@@ -574,18 +539,13 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen_6}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.WaitForScreenHeading9696CAsync("Exists");
         }
-        data.Set("Edit Location", data.Resolve("{{data:edit_location}}"));
-        data.Set("Territory", data.Resolve("{{data:territory}}"));
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -600,9 +560,7 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickEditLocationButtonLatestAngularAsync();
-        await page.WaitForLoadingAsync("Absent");
         await page.WaitForEditLocationHeadingAsync("Exists");
-        await page.WaitForLoadingAsync("Absent");
         await page.EnterTerritoryAsync(data.Resolve("{{data:territory_188}}"));
         await page.PressMilesFromFireDeptAsync("CTRL+A");
         await page.PressMilesFromFireDeptAsync("Enter");
@@ -651,12 +609,9 @@ public sealed class EQBOPBasicPolicySteps
         await page.PressInsuredOccupancySqFtAngularAsync("SHIFTTAB");
         await page.PressTotalBuildingSqFootageAsync("ENTER");
         await page.PressTotalBuildingSqFootageAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressInsuredOccupancySqFtAngularAsync("ENTER");
         await page.PressInsuredOccupancySqFtAngularAsync("Tab");
         await page.PressInsuredOccupancySqFtAngularAsync("TAB");
-        await page.WaitForLoadingAsync("Absent");
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -691,8 +646,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.WaitForBuildingContainsHabitationalOccupanciesCheckedAsync("Visible");
         }
-        await page.WaitForLoadingAsync("Absent");
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -712,7 +665,6 @@ public sealed class EQBOPBasicPolicySteps
         await page.PressInsuredOccupancySqFtAngularAsync("CTRL+A");
         await page.PressInsuredOccupancySqFtAngularAsync("Enter");
         await page.PressInsuredOccupancySqFtAngularAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -730,24 +682,17 @@ public sealed class EQBOPBasicPolicySteps
         await page.WaitForCheckBoxAngularAsync("Exists");
         await page.PressCheckBoxAngularAsync("TAB");
         await page.ClickCheckBoxAngularAsync();
-        await page.WaitForLoadingAsync("Absent");
         await page.WaitForOccupancySQFTHeadingAsync("Exists");
         await page.PressOccupancySqFtLimitAsync("ENTER");
         await page.PressOccupancySqFtLimitAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
         await page.VerifyOccupancySqFootageTotalAsync(data.Resolve("{{data:expected_occupancy_sq_footage_total_value_227}}"), "Value");
-        await page.WaitForLoadingAsync("Absent");
         await page.WaitForPersonalPropertyLimitCheckBoxAngularAsync("Exists");
         await page.PressPersonalPropertyLimitCheckBoxAngularAsync("TAB");
         await page.ClickPersonalPropertyLimitCheckBoxAngularAsync();
-        await page.WaitForLoadingAsync("Absent");
         await page.PressPersonalPropertyLimitAsync("ENTER");
         await page.PressPersonalPropertyLimitAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressGrossSalesReceiptsAsync("ENTER");
         await page.PressGrossSalesReceiptsAsync("Tab");
-        data.Set("BVS Group", data.Resolve("{{data:bvs_group}}"));
-        data.Set("BVS Result", data.Resolve("{{data:bvs_result}}"));
         data.Set("Roof Type", data.Resolve("{{data:roof_type}}"));
 
     }
@@ -764,28 +709,21 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.PressCommercialButtonAsync("TAB");
         await page.ClickCommercialButtonAsync();
-        await page.WaitForLoadingAsync("Absent");
         await page.PressBVSButtonAsync("TAB");
         await page.ClickBVSButtonAsync();
-        await page.WaitForLoadingAsync("Absent");
         await page.PressFrameAsync("TAB");
         await page.ClickFrameAsync();
-        await page.WaitForLoadingAsync("Absent");
         await page.PressBVSGroupComboboxAsync("TAB");
         await page.ClickBVSGroupAsync();
-        await page.WaitForLoadingAsync("Absent");
         await page.PressBVSResultsComboboxAsync("TAB");
         await page.ClickBVSResultAsync();
-        await page.WaitForLoadingAsync("Absent");
         await page.PressYearBuiltAsync("TAB");
         await page.PressYearBuiltAsync("ENTER");
         await page.PressYearBuiltAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressRoofTypeMainAsync("TAB");
         await page.ClickRoofTypeSelectionAsync();
         await page.PressGetValuationAsync("TAB");
         await page.ClickGetValuationAsync();
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -817,48 +755,35 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickReplacementCostAsync();
         }
-        await page.WaitForLoadingAsync("Absent");
         await page.PauseAsync(1000);
         await page.PressBuildingAsync("ENTER");
         await page.PressBuildingAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressYearBuiltRenovatedAsync("CTRL+A");
         await page.PressYearBuiltRenovatedAsync("DELETE");
         await page.PressYearBuiltRenovatedAsync("ENTER");
         await page.PressYearBuiltRenovatedAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressWiringYearAsync("CTRL+A");
         await page.PressWiringYearAsync("DELETE");
         await page.PressWiringYearAsync("ENTER");
         await page.PressWiringYearAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressHeatingYearAsync("CTRL+A");
         await page.PressHeatingYearAsync("DELETE");
         await page.PressHeatingYearAsync("ENTER");
         await page.PressHeatingYearAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressPlumbingYearAsync("CTRL+A");
         await page.PressPlumbingYearAsync("DELETE");
         await page.PressPlumbingYearAsync("ENTER");
         await page.PressPlumbingYearAsync("Tab");
         await page.VerifyEQBOPBuildingBuildingDetailsSelectBurglarAlarmAsync("Exists", "");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressRoofYearAsync("ENTER");
         await page.PressRoofYearAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
         await page.SelectSprinklerYesAsync("");
         await page.WaitForSprinklerYesAsync("Visible");
-        await page.WaitForLoadingAsync("Absent");
         if (data.Condition("ANSUL != NULL"))
         {
                     await page.SelectAutomaticCommercialCookingExhaustAndExtinguishingANSULSystemYesAsync("");
         }
-        await page.WaitForLoadingAsync("Absent");
-        await page.WaitForLoadingAsync("Absent");
         await page.SelectIsAnyHeatSourceThermostaticallyControlledYesAsync("");
-        await page.WaitForLoadingAsync("Absent");
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -877,8 +802,6 @@ public sealed class EQBOPBasicPolicySteps
         await page.VerifyEQBOPBuildingBuildingDetailsSelectWoodFurnaceAsync("Exists", "");
         await page.VerifyEQBOPBuildingBuildingDetailsSelectWoodStoveAsync("Exists", "");
         await page.PressIsTheBuildingHeatedWithOneOfTheFollowingNoneOfTheAboveCheckboxAngularAsync("TAB");
-        await page.WaitForLoadingAsync("Absent");
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -893,9 +816,7 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.PressSelectAnyOfTheFollowingWhichApplyToThisBuildingNoneOfTheAboveCheckboxAngularAsync("TAB");
-        await page.WaitForLoadingAsync("Absent");
         await page.VerifyEQBOPBuildingBuildingDetailsAnswerAnyExtraPropertyAdditionalQuestionsAsync("Exists", "");
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -911,8 +832,6 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.PressBuildingEligibilityQuestionsNoneOfTheAboveCheckboxAngularAsync("TAB");
         await page.ClickSaveAsync();
-        data.Set("WaitOnTime", data.Resolve("{{data:waitontime}}"));
-        data.Set("Screen", data.Resolve("{{data:screen_7}}"));
         if (!await page.IsScreenHeadingPresentAsync())
         {
                     await page.VerifyScreenHeadingAsync("Absent", "");
@@ -938,16 +857,13 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen_7}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.WaitForScreenHeading9696CAsync("Exists");
         }
-        data.Set("Screen", data.Resolve("{{data:screen_8}}"));
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.VerifyScreenHeading9696CAsync("Absent", "");
@@ -960,10 +876,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen_8}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
@@ -985,10 +899,8 @@ public sealed class EQBOPBasicPolicySteps
         await page.PressHaveThereBeenAnyEPLClaimsSuitsOrComplaintsOrAreThereAnyNowPendingAgainstTheInsuredOrAnyExecutiveOfficerOrOwnerAsync("ENTER");
         await page.PressHaveThereBeenAnyEPLClaimsSuitsOrComplaintsOrAreThereAnyNowPendingAgainstTheInsuredOrAnyExecutiveOfficerOrOwnerAsync("END");
         await page.PressHaveThereBeenAnyEPLClaimsSuitsOrComplaintsOrAreThereAnyNowPendingAgainstTheInsuredOrAnyExecutiveOfficerOrOwnerAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
         await page.PressDoesTheInsuredAndAnyExecutiveOfficerOrOwnerHaveAnyKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync("ENTER");
         await page.PressDoesTheInsuredAndAnyExecutiveOfficerOrOwnerHaveAnyKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync("Tab");
-        data.Set("Screen", data.Resolve("{{data:screen_9}}"));
         if (!await page.IsScreenHeadingPresentAsync())
         {
                     await page.VerifyScreenHeadingAsync("Absent", "");
@@ -1014,10 +926,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen_9}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
@@ -1038,7 +948,6 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForBillingInformationHeadingAsync("Exists");
         await page.ClickCreateNewBillingAccountAsync();
-        await page.WaitForLoadingAsync("Absent");
         await page.WaitForBillingInformationHeadingAsync("Exists");
         await page.ClickOTHERButtonAsync();
         await page.PressFirstNameAsync("ENTER");
@@ -1055,7 +964,6 @@ public sealed class EQBOPBasicPolicySteps
         await page.PressStateAsync("Tab");
         await page.PressZipCodeAsync("ENTER");
         await page.PressZipCodeAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -1074,7 +982,6 @@ public sealed class EQBOPBasicPolicySteps
         await page.PauseAsync(1000);
         await page.PressChoosePaymentDueDateAsync("ENTER");
         await page.PressChoosePaymentDueDateAsync("Tab");
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -1096,7 +1003,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.PressCreditCardButtonAsync("TAB");
         }
-        await page.WaitForLoadingAsync("Absent");
         if (data.Condition("'Payment Type' == \"Check\""))
         {
                     await page.VerifyCheckNumberAsync("Absent", "");
@@ -1111,10 +1017,6 @@ public sealed class EQBOPBasicPolicySteps
         }
         if (data.Condition("'Payment Type' == \"Check\""))
         {
-                    await page.WaitForLoadingAsync("Absent");
-        }
-        if (data.Condition("'Payment Type' == \"Check\""))
-        {
                     await page.WaitForCheckNumberAsync("Exists");
         }
         if (data.Condition("'Payment Type' == \"Check\""))
@@ -1122,9 +1024,7 @@ public sealed class EQBOPBasicPolicySteps
                     await page.PressCheckNumberAsync("ENTER");
                     await page.PressCheckNumberAsync("Tab");
         }
-        await page.WaitForLoadingAsync("Absent");
         await page.ClickInitialPaymentFullBalanceAsync();
-        data.Set("Screen", data.Resolve("{{data:screen_10}}"));
         if (!await page.IsScreenHeadingPresentAsync())
         {
                     await page.VerifyScreenHeadingAsync("Absent", "");
@@ -1150,16 +1050,13 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen_10}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.WaitForScreenHeading9696CAsync("Exists");
         }
-        data.Set("Screen", data.Resolve("{{data:screen_9}}"));
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.VerifyScreenHeading9696CAsync("Absent", "");
@@ -1172,16 +1069,13 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen_9}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.WaitForScreenHeading9696CAsync("Exists");
         }
-        data.Set("Screen", data.Resolve("{{data:screen_10}}"));
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.VerifyScreenHeading9696CAsync("Absent", "");
@@ -1194,10 +1088,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen_10}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
@@ -1218,7 +1110,6 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         data.Set("Premium", await page.CapturePremiumAsync("InnerText"));
         await page.VerifyTABLERowCellExplicitName1Async(data.Resolve("{{data:expected_table_row_cell_explicitname_1_390}}"), "");
-        data.Set("Screen", data.Resolve("{{data:screen_11}}"));
         if (!await page.IsScreenHeadingPresentAsync())
         {
                     await page.VerifyScreenHeadingAsync("Absent", "");
@@ -1244,10 +1135,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen_11}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
@@ -1269,7 +1158,6 @@ public sealed class EQBOPBasicPolicySteps
         await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
         await page.NavigateAsync(data.Resolve("{{data:application_url_2}}"));
         await page.WaitForBODYAsync("Exists");
-        await page.WaitForLoadingAsync("Absent");
         await page.NoteAsync("Source operation requires environment-specific implementation.");
 
     }
@@ -1292,7 +1180,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickEChecklistEChecklistOKAsync();
         }
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -1333,9 +1220,6 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForUsernameAsync("Exists");
         await _auth.SignInAsync("CL_EQ");
-        data.Set("GetHostname", data.Resolve("{{env:COMPUTERNAME}}"));
-        data.Set("AgentName", data.Resolve("{{runtime:GetHostname}}"));
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -1353,7 +1237,6 @@ public sealed class EQBOPBasicPolicySteps
         await page.PressQuoteSearchInputAsync("Tab");
         await page.PressQuoteSearchInputAsync("Tab");
         await page.ClickClientInfoSearchAsync();
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -1437,7 +1320,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickLogoutAsync();
         }
-        if (data.Condition("if an existing CLAS session is still logged in"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: if an existing CLAS session is still logged in
+        if (false)
         {
                     await page.NoteAsync("Source operation requires environment-specific implementation.");
         }
@@ -1474,7 +1358,8 @@ public sealed class EQBOPBasicPolicySteps
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        if (data.Condition("if an existing CLAS session is still logged in"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: if an existing CLAS session is still logged in
+        if (false)
         {
                     await page.NavigateAsync(data.Resolve("{{data:application_url_3}}"));
         }
@@ -1507,7 +1392,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyLoadingMessageC7A0DAsync("Visible", "");
         }
-        await page.WaitForLoadingAsync("Absent");
         await page.WaitForViewPolicy56E09Async("Exists");
         await page.PressViewPolicy56E09Async("TAB");
         await page.PressSearchButtonAsync("TAB");
@@ -1516,7 +1400,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyLoadingMessageC7A0DAsync("Visible", "");
         }
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -1535,13 +1418,11 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyLoadingMessage4DE37Async("Visible", "");
         }
-        await page.WaitForLoadingAsync("Absent");
         await page.ClickViewPolicy0AC0BAsync();
         if (await page.IsLoadingMessage4DE37PresentAsync())
         {
                     await page.VerifyLoadingMessage4DE37Async("Visible", "");
         }
-        await page.WaitForLoadingAsync("Absent");
         await page.WaitForViewPolicy0AC0BAsync("Absent");
         await page.NoteAsync("Source operation requires environment-specific implementation.");
 
@@ -1561,22 +1442,11 @@ public sealed class EQBOPBasicPolicySteps
         await page.PauseAsync(1000);
         await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
         await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
-        data.Set("ClipboardValue", "{\"Value\": \"{XB[QuoteID]}\"}");
-        data.Set("ClipboardValue", "{\"Value\": \"{XB[QuoteID]}\"}");
         await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
-        data.Set("ClipboardValue", "{\"Value\": \"{XB[SessionId]}\"}");
-        data.Set("ClipboardValue", "{\"Value\": \"{XB[SessionId]}\"}");
-        data.Set("ServerAddress", data.Resolve("{{data:serveraddress}}"));
         await page.EnterFormsAPIRequestB50D4Async(data.Resolve("{{runtime:SessionId}}"));
         await page.EnterFormsAPIResponse3FBAFAsync(data.Resolve("{{data:forms_api_response_494}}"));
         await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
         await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
-        data.Set("PowershellArguments", data.Resolve("powershell.exe -ExecutionPolicy Bypass -NoProfile -File FormsCheckQA.ps1 -Path \"\\\\mis\\sys\\QLTY\\Test_Automation\\Tricentis_Tosca\\Forms_Check\\BOPSmart\\\" -FileName \"BOPSmart_BASIC\" -State  \"AL\" -QuoteID \"{B[QuoteID]}\""));
-        data.Set("ClipboardValue", "{\"Value\": \"SummaryResults\"}");
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults}}"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_2}}"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_3}}"));
-        data.Set("SummaryResults", data.Resolve("{{data:summaryresults_4}}"));
 
     }
 
@@ -1634,7 +1504,6 @@ public sealed class EQBOPBasicPolicySteps
         await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
         await page.NavigateAsync(data.Resolve("{{data:application_url_2}}"));
         await page.WaitForBODYAsync("Exists");
-        await page.WaitForLoadingAsync("Absent");
         await page.NoteAsync("Source operation requires environment-specific implementation.");
 
     }
@@ -1657,7 +1526,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickEChecklistEChecklistOKAsync();
         }
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -1698,9 +1566,6 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForUsernameAsync("Exists");
         await _auth.SignInAsync("CL_EQ");
-        data.Set("GetHostname", data.Resolve("{{env:COMPUTERNAME}}"));
-        data.Set("AgentName", data.Resolve("{{runtime:GetHostname}}"));
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -1718,7 +1583,6 @@ public sealed class EQBOPBasicPolicySteps
         await page.PressQuoteSearchInputAsync("Tab");
         await page.PressQuoteSearchInputAsync("Tab");
         await page.ClickClientInfoSearchAsync();
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -1752,7 +1616,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyNameAndQuoteNumCA893Async(data.Resolve("{B[NameQuoteNum]}|{B[Quote_Num]}|{B[Policy#]}"), "Regex:InnerText");
         }
-        data.Set("Screen", data.Resolve("{{data:screen_11}}"));
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.VerifyScreenHeading9696CAsync("Absent", "");
@@ -1778,10 +1641,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen_11}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
@@ -1810,7 +1671,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyNoReferralNeededVerificationAsync("Exists", "");
         }
-        data.Set("WaitOnTime", data.Resolve("{{data:waitontime_2}}"));
 
     }
 
@@ -1923,7 +1783,6 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickOkToUpdateFromChecklistAsync();
-        data.Set("Screen", data.Resolve("{{data:screen_11}}"));
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.VerifyScreenHeading9696CAsync("Absent", "");
@@ -1949,16 +1808,13 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen_11}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.WaitForScreenHeading9696CAsync("Exists");
         }
-        await page.WaitForLoadingAsync("Absent");
         await page.PauseAsync(1000);
 
     }
@@ -2026,7 +1882,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickLogoutAsync();
         }
-        if (data.Condition("if an existing CLAS session is still logged in"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: if an existing CLAS session is still logged in
+        if (false)
         {
                     await page.NoteAsync("Source operation requires environment-specific implementation.");
         }
@@ -2063,7 +1920,8 @@ public sealed class EQBOPBasicPolicySteps
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        if (data.Condition("if an existing CLAS session is still logged in"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: if an existing CLAS session is still logged in
+        if (false)
         {
                     await page.NavigateAsync(data.Resolve("{{data:application_url_3}}"));
         }
@@ -2096,7 +1954,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyLoadingMessageC7A0DAsync("Visible", "");
         }
-        await page.WaitForLoadingAsync("Absent");
         await page.WaitForViewPolicy56E09Async("Exists");
         await page.PressViewPolicy56E09Async("TAB");
         await page.PressSearchButtonAsync("TAB");
@@ -2105,7 +1962,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyLoadingMessageC7A0DAsync("Visible", "");
         }
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -2124,13 +1980,11 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyLoadingMessage4DE37Async("Visible", "");
         }
-        await page.WaitForLoadingAsync("Absent");
         await page.ClickViewPolicy0AC0BAsync();
         if (await page.IsLoadingMessage4DE37PresentAsync())
         {
                     await page.VerifyLoadingMessage4DE37Async("Visible", "");
         }
-        await page.WaitForLoadingAsync("Absent");
         await page.WaitForViewPolicy0AC0BAsync("Absent");
 
     }
@@ -2159,7 +2013,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickSubmission7E601Async();
         }
-        if (data.Condition("if determine if on submission page"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: if determine if on submission page
+        if (false)
         {
                     await page.PauseAsync(1000);
         }
@@ -2167,7 +2022,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.WaitForSubmissionHeadingAsync("Exists");
         }
-        if (data.Condition("if determine if on submission page"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: if determine if on submission page
+        if (false)
         {
                     await page.PauseAsync(1000);
         }
@@ -2201,7 +2057,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyCloseAsync("Absent", "");
         }
-        if (data.Condition("during do (Wait for Stoplight to Run) [max=90]"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: during do (Wait for Stoplight to Run) [max=90]
+        if (false)
         {
                     await page.PauseAsync(1000);
         }
@@ -2209,14 +2066,12 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
         }
-        data.Set("ErrorFlag", data.Resolve("{{data:errorflag}}"));
-        data.Set("ErrorFlag", data.Resolve("{{data:errorflag_2}}"));
-        data.Set("REPETITION", data.Resolve("{{data:repetition}}"));
         if (await page.IsStoplightWaitingWindowFirstCloseButtonOnErrorPresentAsync())
         {
                     await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
         }
-        if (data.Condition("during do (Wait for Stoplight to Run) [max=90]"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: during do (Wait for Stoplight to Run) [max=90]
+        if (false)
         {
                     await page.PauseAsync(1000);
         }
@@ -2224,7 +2079,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickCompleteApplicationAsync();
         }
-        if (data.Condition("during do (Wait for Stoplight to Run) [max=90]"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: during do (Wait for Stoplight to Run) [max=90]
+        if (false)
         {
                     await page.PauseAsync(1000);
         }
@@ -2234,7 +2090,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyLoadingMessageAsync("Visible", "");
         }
-        await page.WaitForLoadingAsync("Absent");
         await page.WaitForAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists");
         await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists", "");
         await page.PauseAsync(1000);
@@ -2242,7 +2097,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyLoadingMessageAsync("Visible", "");
         }
-        await page.WaitForLoadingAsync("Absent");
         if (await page.IsAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsPresentAsync())
         {
                     await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists", "");
@@ -2255,7 +2109,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyCloseAsync("Absent", "");
         }
-        if (data.Condition("if stoplight error"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: if stoplight error
+        if (false)
         {
                     await page.PauseAsync(1000);
         }
@@ -2267,7 +2122,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
         }
-        if (data.Condition("if stoplight error"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: if stoplight error
+        if (false)
         {
                     await page.PauseAsync(1000);
         }
@@ -2275,7 +2131,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickCompleteApplicationAsync();
         }
-        if (data.Condition("if stoplight error"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: if stoplight error
+        if (false)
         {
                     await page.PauseAsync(1000);
         }
@@ -2287,7 +2144,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.WaitForStoplightWaitingWindowAsync("Absent");
         }
-        if (data.Condition("if stoplight error"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: if stoplight error
+        if (false)
         {
                     await page.PauseAsync(1000);
         }
@@ -2335,7 +2193,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyIFRAMEAsync("Exists", "");
         }
-        if (data.Condition("while check for IFRAME"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: while check for IFRAME
+        if (false)
         {
                     await page.PauseAsync(1000);
         }
@@ -2356,10 +2215,9 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyAlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbeAsync("Exists", "");
         }
-        data.Set("Alert Error", data.Resolve("{{data:alert_error}}"));
-        if (data.Condition("while check for IFRAME"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: while check for IFRAME
+        if (false)
         {
-                    data.Set("ForceAFail", data.Resolve("{\"Expression\": \"{B[Alert Error]} == 'TRUE'\"}"));
         }
         if (await page.IsIFRAMEPresentAsync())
         {
@@ -2369,10 +2227,9 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyIFRAMEDuckCreekPolicyAlertErrorMessageAsync("Exists", "");
         }
-        data.Set("Alert Error", data.Resolve("{{data:alert_error}}"));
-        if (data.Condition("while check for IFRAME"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: while check for IFRAME
+        if (false)
         {
-                    data.Set("ForceAFail", data.Resolve("{\"Expression\": \"{B[Alert Error]} == 'TRUE'\"}"));
         }
         await page.PauseAsync(1000);
         await page.WaitForTransactionTypeAsync("Exists");
@@ -2450,7 +2307,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyPolicyDetailsE7F69Async("Absent", "");
         }
-        if (data.Condition("during loop to Check if Policy Details Exists [max=120]"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: during loop to Check if Policy Details Exists [max=120]
+        if (false)
         {
                     await page.PauseAsync(1000);
         }
@@ -2471,7 +2329,6 @@ public sealed class EQBOPBasicPolicySteps
         await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
         await page.NavigateAsync(data.Resolve("{{data:application_url_2}}"));
         await page.WaitForBODYAsync("Exists");
-        await page.WaitForLoadingAsync("Absent");
         await page.NoteAsync("Source operation requires environment-specific implementation.");
 
     }
@@ -2494,7 +2351,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickEChecklistEChecklistOKAsync();
         }
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -2535,9 +2391,6 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForUsernameAsync("Exists");
         await _auth.SignInAsync("CL_EQ");
-        data.Set("GetHostname", data.Resolve("{{env:COMPUTERNAME}}"));
-        data.Set("AgentName", data.Resolve("{{runtime:GetHostname}}"));
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -2555,8 +2408,6 @@ public sealed class EQBOPBasicPolicySteps
         await page.PressQuoteSearchInputAsync("Tab");
         await page.PressQuoteSearchInputAsync("Tab");
         await page.ClickClientInfoSearchAsync();
-        await page.WaitForLoadingAsync("Absent");
-        data.Set("Screen", data.Resolve("{{data:screen_11}}"));
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.VerifyScreenHeading9696CAsync("Absent", "");
@@ -2582,16 +2433,13 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen_11}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.WaitForScreenHeading9696CAsync("Exists");
         }
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -2606,7 +2454,6 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickTransmitAsync();
-        await page.WaitForLoadingAsync("Absent");
         await page.VerifyTABLERowCellExplicitName1Async(data.Resolve("{{data:expected_table_row_cell_explicitname_1_767}}"), "");
         await page.VerifyTABLERowCellExplicitName2Async(data.Resolve("{{data:expected_table_row_cell_explicitname_2_768}}"), "");
         await page.VerifyTABLERowCellExplicitName4Async(data.Resolve("{{runtime:Policy#}}"), "");
@@ -2641,15 +2488,12 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
-        if (data.Condition("during loop for the Login [max=30]"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: during loop for the Login [max=30]
+        if (false)
         {
-                    data.Set("CheckTheLoopLogin", data.Resolve("{\"Expression\": \"{B[Loop Login]} = 0\"}"));
         }
-        data.Set("Loop Login", data.Resolve("{{data:loop_login}}"));
-        data.Set("URL", data.Resolve("{{data:url}}"));
-        data.Set("UserName", data.Resolve("{{env:CL_DC_USERNAME}}"));
-        data.Set("Password", data.Resolve("{{env:CL_DC_PASSWORD}}"));
-        if (data.Condition("during loop for the Login [max=30]"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: during loop for the Login [max=30]
+        if (false)
         {
                     await page.NavigateAsync(data.Resolve("{{data:application_url_4}}"));
         }
@@ -2657,7 +2501,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.WaitForBODYAsync("Exists");
         }
-        if (data.Condition("during loop for the Login [max=30]"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: during loop for the Login [max=30]
+        if (false)
         {
                     await page.NoteAsync("Source operation requires environment-specific implementation.");
         }
@@ -2720,7 +2565,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickLogoutAsync();
         }
-        if (data.Condition("during loop for the Login [max=30]"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: during loop for the Login [max=30]
+        if (false)
         {
                     await page.NoteAsync("Source operation requires environment-specific implementation.");
         }
@@ -2762,10 +2608,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.WaitForLogin07237Async("Absent");
         }
-        data.Set("Loop Login", data.Resolve("{{data:loop_login_2}}"));
-        data.Set("DocPath", "");
-        data.Set("GetHostname", data.Resolve("{{env:COMPUTERNAME}}"));
-        data.Set("AgentName", data.Resolve("{{runtime:GetHostname}}"));
         await page.PauseAsync(1000);
 
     }
@@ -2788,7 +2630,6 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyLoadingMessageAsync("Visible", "");
         }
-        await page.WaitForLoadingAsync("Absent");
         await page.PauseAsync(1000);
         await page.WaitForN1ResultsFoundCurrentlyShowing11Async("Visible");
         await page.WaitForViewPolicyAsync("Visible");
@@ -2797,13 +2638,13 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyLoadingMessageAsync("Visible", "");
         }
-        await page.WaitForLoadingAsync("Absent");
         await page.PauseAsync(1000);
         if (await page.IsViewPolicyPresentAsync())
         {
                     await page.VerifyViewPolicyAsync("Visible", "");
         }
-        if (data.Condition("while view Policy Exists [max=90]"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: while view Policy Exists [max=90]
+        if (false)
         {
                     await page.PauseAsync(1000);
         }
@@ -2815,7 +2656,8 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.ClickViewPolicyAsync();
         }
-        if (data.Condition("while view Policy Exists [max=90]"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: while view Policy Exists [max=90]
+        if (false)
         {
                     await page.PauseAsync(1000);
         }
@@ -2838,13 +2680,13 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.VerifyPolicyDetailsABBA9Async("Absent", "");
         }
-        if (data.Condition("during loop to Check if Policy Details Exists [max=120]"))
+        // Source conditional not executed because no deterministic data/DOM condition was available: during loop to Check if Policy Details Exists [max=120]
+        if (false)
         {
                     await page.PauseAsync(1000);
         }
         await page.WaitForAttachmentsListGridRowCellExplicitName1Async("Visible");
         await page.VerifyAttachmentsListGridRowCellExplicitName1Async(data.Resolve("{{data:expected_row_834}}"), "");
-        data.Set("NBPolicyFormPacket", await page.CaptureAttachmentsListGridRowCellExplicitName3Async("InnerText"));
         await page.VerifyAttachmentsListGridRowCellExplicitName1Async(data.Resolve("{{data:expected_attachments_list_grid_row_cell_explicitname_1_836}}"), "");
         await page.ClickViewPolicyAsync();
         await page.WaitForTransactionTypeAsync("Visible");

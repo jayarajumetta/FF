@@ -21,11 +21,6 @@ public sealed class BAPSmokeTestSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
-        data.Set("CheckTheLoopLogin", data.Resolve("{B[Loop Login]} = 0"));
-        data.Set("Loop Login", data.Resolve("{{data:loop_login}}"));
-        data.Set("URL", data.Resolve("{{data:url}}"));
-        data.Set("UserName", data.Resolve("{{env:CL_DC_USERNAME}}"));
-        data.Set("Password", data.Resolve("{{env:CL_DC_PASSWORD}}"));
         await page.NavigateAsync(data.Resolve("{{data:application_url_2}}"));
         await page.WaitForBODYAsync("Exists");
         await page.PauseAsync(1000);
@@ -97,10 +92,6 @@ public sealed class BAPSmokeTestSteps
         await page.EnterPasswordAsync(data.Resolve("{{env:CL_DC_PASSWORD}}"));
         await page.ClickLoginAsync();
         await page.WaitForLoginAsync("Absent");
-        data.Set("Loop Login", data.Resolve("{{data:loop_login_2}}"));
-        data.Set("DocPath", "");
-        data.Set("GetHostname", "\"\"\"${COMPUTERNAME}\"\"\"");
-        data.Set("AgentName", data.Resolve("{B[GetHostname]}"));
 
     }
 
@@ -117,7 +108,6 @@ public sealed class BAPSmokeTestSteps
         await page.ClickNewQuoteAsync();
         await page.EnterEffectiveDateAsync(data.Resolve("{{data:effective_date_43}}"));
         await page.PressEffectiveDateAsync("Tab");
-        data.Set("NBEffDate", await page.CaptureEffectiveDateAsync("InnerText"));
         if (data.Condition("'Product:*' != \"Carrier_SpecialFarmPackage  Pages   US   (4.0.0.0)\""))
         {
                     await page.EnterProductAsync(data.Resolve("{{data:product_45}}"));
@@ -128,7 +118,6 @@ public sealed class BAPSmokeTestSteps
         await page.WaitForStartAsync("Visible");
         await page.ClickStartAsync();
         await page.ClickStartAsync();
-        data.Set("NBEffDate", data.Resolve("{{data:nbeffdate}}"));
 
     }
 
@@ -165,9 +154,10 @@ public sealed class BAPSmokeTestSteps
         await page.EnterMiddleNameAsync(data.Resolve("{{data:middle_name_57}}"));
         await page.PressMiddleNameAsync("Tab");
         await page.PressMiddleNameAsync("Tab");
+        await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0067}}"));
         await page.PressLastNameAsync("TAB");
         await page.PressLastNameAsync("Tab");
-        await page.EnterDOBAsync("{DATE[][-40y][MM-dd-yyyy]}");
+        await page.EnterDOBAsync(data.Resolve("{DATE[][-40y][MM-dd-yyyy]}"));
         await page.PressDOBAsync("Tab");
         await page.PressDOBAsync("Tab");
         if (data.Condition("State!=\"CA\""))
@@ -180,6 +170,8 @@ public sealed class BAPSmokeTestSteps
         await page.PressEntityTypeAsync("Enter");
         await page.PressEntityTypeAsync("Tab");
         await page.PressEntityTypeAsync("Tab");
+        // Source step 0068: RANDOM input for Primary Phone.
+        await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0068}}"));
         await page.EnterAddress17A1FBAsync(data.Resolve("{{data:address1_64}}"));
         await page.PressAddress17A1FBAsync("Tab");
         await page.PressAddress17A1FBAsync("Tab");
@@ -192,15 +184,15 @@ public sealed class BAPSmokeTestSteps
         await page.WaitForOrderSSN68C87Async("Exists");
         await page.ClickOrderSSN68C87Async();
         await page.WaitForEnterSSN6B3FBAsync("Exists");
+        await page.EnterEnterSSN6B3FBAsync(data.Resolve("{{runtime:InsuredSSN}}"));
+        data.Set("Last4SSN", data.Get("InsuredSSN").Length >= 4 ? data.Get("InsuredSSN")[^4..] : data.Get("InsuredSSN"));
         await page.PressEnterSSN6B3FBAsync("TAB");
         await page.PressEnterSSN6B3FBAsync("Enter");
-        data.Set("SSN", await page.CaptureEnterSSN6B3FBAsync("InnerText"));
         await page.ClickEnterSSN6B3FBAsync();
         await page.PressEnterSSN6B3FBAsync("Doubleclick");
         await page.PressEnterSSN6B3FBAsync("Tab");
         await page.ClickVerify8CDBEAsync();
         await page.WaitForVerify8CDBEAsync("Absent");
-        data.Set("Last4SSN", data.Resolve("{B[SSN]}"));
         await page.WaitForSocialSecurityAsync("Equal");
         await page.VerifySocialSecurityAsync(data.Resolve("XXX-XX-{B[Last4SSN]}"), "InnerText");
         await page.WaitForPleaseVerifySSN3EAB9Async("Absent");
@@ -212,13 +204,17 @@ public sealed class BAPSmokeTestSteps
                     await page.PressNameOfAuditContactAsync("Tab");
                     await page.PressNameOfAuditContactAsync("Tab");
         }
+        // Source step 0075: RANDOM input for Audit Telephone #.
         if (data.Condition("'Product (LOB)' != \"UMB\""))
         {
+            await page.EnterAuditTelephoneAsync(data.Resolve("{{runtime:AuditTelephone_0075}}"));
         }
         await page.EnterNameOfInspectionContactAsync(data.Resolve("{{data:name_of_inspection_contact_84}}"));
         await page.PressNameOfInspectionContactAsync("Tab");
         await page.PressNameOfInspectionContactAsync("CLICK");
         await page.PressNameOfInspectionContactAsync("Tab");
+        // Source step 0075: RANDOM input for Inspection Telephone #.
+        await page.EnterInspectionTelephoneAsync(data.Resolve("{{runtime:InspectionTelephone_0075}}"));
         await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_86}}"));
         await page.PressInsuredEMailAddressAsync("Tab");
         await page.PressInsuredEMailAddressAsync("CLICK");
@@ -230,8 +226,6 @@ public sealed class BAPSmokeTestSteps
         await page.VerifyZipCode26D22Async("[0-9]{5}-[0-9]{4}", "Regex:value");
         data.Set("State", data.Resolve("{{data:state}}"));
         data.Set("Product (LOB)", data.Resolve("{{data:product_lob}}"));
-        data.Set("Server", data.Resolve("{{data:server}}"));
-        data.Set("FormOnPolicyDocName", "");
         await page.EnterTitleAsync(data.Resolve("{{data:title_94}}"));
         await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_95}}"));
         await page.VerifyResultAsync(data.Resolve("{{data:expected_result_value_96}}"), "value");
@@ -279,7 +273,6 @@ public sealed class BAPSmokeTestSteps
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_107}}"));
         await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
         await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
-        data.Set("StateIsKansas", "Alabama==\"Kansas\"; Expression= 'Alabama'=='Kansas'");
         if (data.Condition("'Product (LOB)' == \"BOP\" || 'Product (LOB)' == \"BAP\""))
         {
                     await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_109}}"));
@@ -295,7 +288,6 @@ public sealed class BAPSmokeTestSteps
                     await page.PressPrimaryRatingStateAsync("Tab");
                     await page.PressPrimaryRatingStateAsync("Tab");
         }
-        data.Set("StateIsVirginia", "Alabama==\"Virginia\"; Expression= 'Alabama'=='Virginia'");
         if (data.Condition("'Product (LOB)' == \"BAP\""))
         {
                     await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_112}}"));
@@ -331,7 +323,7 @@ public sealed class BAPSmokeTestSteps
         await page.PressDescriptionOfSpecifiedOperationAsync("TAB");
         await page.EnterDescriptionOfSpecifiedOperationAsync("AL BAP Basic {NMONTH}.{NDAY}.{NYEAR} {Time}");
         await page.PressDescriptionOfSpecifiedOperationAsync("Tab");
-        await page.VerifyDescriptionOfSpecifiedOperationAsync("{XB[QuoteDescription]}", "value");
+        data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
         await page.PauseAsync(1000);
 
     }
@@ -347,7 +339,6 @@ public sealed class BAPSmokeTestSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.VerifyTheInsuranceScoreServiceHasReturnedTheFollowingErrorCREDITVENDORUNREACHABLEPLEASEREPROCESSAsync("Exists", "");
-        data.Set("CheckIfItIsBAPVT", data.Resolve("'{B[Product (LOB)]}' = 'BAP' && '{B[State]}'= 'VT'"));
         await page.ClickInsuranceScoreConsentAsync();
         await page.WaitForAcceptAsync("Exists");
         await page.ClickAcceptAsync();

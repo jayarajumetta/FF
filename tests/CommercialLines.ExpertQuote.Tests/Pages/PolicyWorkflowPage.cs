@@ -115,11 +115,7 @@ public sealed class PolicyWorkflowPage
 
     public Task PressLivestockSmallAsync(string key) =>
         _ui.PressAsync(_locators.LivestockSmall, key, new ControlIntent("PolicyWorkflow", "LivestockSmall"));
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("PolicyWorkflow", "Loading"));
-
-    public Task VerifyLoadingMessage4DE37Async(string expected, string property) =>
+public Task VerifyLoadingMessage4DE37Async(string expected, string property) =>
         _ui.VerifyAsync(_locators.LoadingMessage4DE37, expected, property, new ControlIntent("PolicyWorkflow", "LoadingMessage4DE37"));
 
     public Task<bool> IsLoadingMessage4DE37PresentAsync() =>

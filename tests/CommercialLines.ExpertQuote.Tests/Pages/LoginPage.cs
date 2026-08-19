@@ -25,11 +25,7 @@ public sealed class LoginPage
 
     public Task EnterGetSessionIDBufferAsync(string value) =>
         _ui.FillAsync(_locators.GetSessionIDBuffer, value, new ControlIntent("Login", "GetSessionIDBuffer"));
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("Login", "Loading"));
-
-    public Task VerifyLoadingMessageAsync(string expected, string property) =>
+public Task VerifyLoadingMessageAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.LoadingMessage, expected, property, new ControlIntent("Login", "LoadingMessage"));
 
     public Task<bool> IsLoadingMessagePresentAsync() =>

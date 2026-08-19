@@ -144,8 +144,8 @@
   "random": {},
   "application": {
     "url": "https://expertquote-qa.americannational.com/expertquote/#/quote",
-    "username": "YDF999",
-    "password": "Anico456"
+    "username": "SYNTHETIC_REPLACE_ME",
+    "password": "SYNTHETIC_REPLACE_ME"
   },
   "external": {
     "WI_ClientData.Street Address": "SYNTHETIC_REPLACE_ME",
@@ -173,7 +173,7 @@
       "3a1af7a5-7058-c94f-abd7-f58a7fd5660c": "True",
       "3a1af7a5-7058-40f4-21f4-8e4c0f2143e0": "Transmit",
       "3a1af7a5-7058-7ad0-d25c-2e26c38551a0": "X",
-      "3a1af7a5-7058-4680-17ee-ef092fd619f0": " “Policy Number:”",
+      "3a1af7a5-7058-4680-17ee-ef092fd619f0": " \u201cPolicy Number:\u201d",
       "3a1dae4c-2d2d-f0e2-9a6b-5535e553cffa": "Policy Number",
       "3a2114fe-2d9b-68af-ed27-c1730c244db9": "08.08.2025",
       "3a1af7a5-7058-f9c6-83c5-b1554dff7706": "Auto_PolicyData_RateFilings_PriorEffDate",
@@ -408,7 +408,7 @@
         "actionMode": "101",
         "actionProperty": "InnerText ",
         "condition": "",
-        "value": " “Policy Number:”"
+        "value": " \u201cPolicy Number:\u201d"
       },
       {
         "order": 13,

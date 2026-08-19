@@ -25,11 +25,7 @@ public sealed class DiscountsPage
 
     public Task ClickDiscountNEWNextAsync() =>
         _ui.ClickAsync(_locators.DiscountNEWNext, new ControlIntent("Discounts", "DiscountNEWNext"));
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("Discounts", "Loading"));
-
-    public Task VerifyLoadingAsync(string expected, string property) =>
+public Task VerifyLoadingAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.Loading, expected, property, new ControlIntent("Discounts", "Loading"));
 
     public Task<bool> IsLoadingPresentAsync() =>

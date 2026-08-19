@@ -40,11 +40,7 @@ public sealed class NavigationPage
 
     public Task ClickEDITCOVERAGEOpt3Async() =>
         _ui.ClickAsync(_locators.EDITCOVERAGEOpt3, new ControlIntent("Navigation", "EDITCOVERAGEOpt3"));
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("Navigation", "Loading"));
-
-    public Task SetOption1Async(string value) =>
+public Task SetOption1Async(string value) =>
         _ui.SmartSetAsync(_locators.Option1, value, new ControlIntent("Navigation", "Option1"));
 
     public Task SetOption2Async(string value) =>
@@ -199,5 +195,4 @@ public sealed class NavigationPage
 
     public Task ClickVehicleSummaryAsync() =>
         _ui.ClickAsync(_locators.VehicleSummary, new ControlIntent("Navigation", "VehicleSummary"));
-
 }

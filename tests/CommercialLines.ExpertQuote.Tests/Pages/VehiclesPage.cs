@@ -31,11 +31,7 @@ public sealed class VehiclesPage
 
     public Task PressLimitAsync(string key) =>
         _ui.PressAsync(_locators.Limit, key, new ControlIntent("Vehicles", "Limit"));
-
-    public Task WaitForLoadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.Loading, expected, new ControlIntent("Vehicles", "Loading"));
-
-    public Task ClickSaveAsync() =>
+public Task ClickSaveAsync() =>
         _ui.ClickAsync(_locators.Save, new ControlIntent("Vehicles", "Save"));
 
     public Task WaitForScheduledPersonalPropertyHeaderAsync(string expected) =>

@@ -1,12 +1,8 @@
-# Runtime: Background opens one browser session; Feature data flows through StepDefinitions to PageMethods
-# Locator self-heal: enabled by default on locator/actionability failures
-
-
-@PL_DC @CYCLE @new_business_with_prior_effective_date @automated @canonical_simple_v44 @state_data_driven
-# Automation Maturity: 94/100
-# Business Flow: 19/20 | Canonical Mapping: 20/20 | StepDefinitions: 15/15 | Page Model: 14/15 | Locator Quality: 16/20 | Test Data: 10/10
-# Page Objects Used: 16 | Locator Confidence Average: 80/100 | Review-required operations: 0
-# Locator Review Items: 44 source-derived locator(s) remain below high confidence.
+# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 49
+# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
+# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 49
+# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
+@PL_DC @CYCLE @new_business_with_prior_effective_date
 
 Feature: Cycle Rate Filings Policy 3 NB Prior Eff Date
   As a Personal Lines Duck Creek policy processing user

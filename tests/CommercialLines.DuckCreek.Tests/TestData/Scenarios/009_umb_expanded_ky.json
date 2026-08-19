@@ -122,10 +122,10 @@
     "wait_iframe_duck_creek_policy_endorsement_heading_innertext_307": "[CU2114] Amendment of Liquor Liability Exclusion - Exception for Scheduled Premises or Activities",
     "iframe_duck_creek_policy_description_of_premises_or_activities_308": "Test Premises",
     "expected_select_endorsement_value_322": "(select)",
-    "select_endorsement_323": "[CU2173] Exclusion – Unmanned Aircraft (Coverage B Only)",
-    "wait_iframe_duck_creek_policy_endorsement_heading_innertext_325": "[CU2173] Exclusion – Unmanned Aircraft (Coverage B Only)",
-    "select_endorsement_327": "[CU2173] Exclusion – Unmanned Aircraft (Coverage B Only)",
-    "wait_iframe_duck_creek_policy_endorsement_heading_innertext_329": "[CU2173] Exclusion – Unmanned Aircraft (Coverage B Only)",
+    "select_endorsement_323": "[CU2173] Exclusion \u2013 Unmanned Aircraft (Coverage B Only)",
+    "wait_iframe_duck_creek_policy_endorsement_heading_innertext_325": "[CU2173] Exclusion \u2013 Unmanned Aircraft (Coverage B Only)",
+    "select_endorsement_327": "[CU2173] Exclusion \u2013 Unmanned Aircraft (Coverage B Only)",
+    "wait_iframe_duck_creek_policy_endorsement_heading_innertext_329": "[CU2173] Exclusion \u2013 Unmanned Aircraft (Coverage B Only)",
     "expected_select_endorsement_value_338": "(select)",
     "select_endorsement_339": "[CU2216] Underground Resources and Equipment Coverage",
     "wait_iframe_duck_creek_policy_endorsement_heading_innertext_341": "[CU2216] Underground Resources and Equipment Coverage",
@@ -144,10 +144,10 @@
     "select_endorsement_387": "[UC0272] Waiver of Subrogation",
     "wait_iframe_duck_creek_policy_endorsement_heading_innertext_389": "[UC0272] Waiver of Subrogation",
     "expected_select_endorsement_value_398": "(select)",
-    "select_endorsement_399": "[UC0274] Amendment of Other Insurance Condition – Primary and Non-contributory",
-    "wait_iframe_duck_creek_policy_endorsement_heading_innertext_401": "[UC0274] Amendment of Other Insurance Condition – Primary and Non-contributory",
-    "select_endorsement_403": "[UC0274] Amendment of Other Insurance Condition – Primary and Non-contributory",
-    "wait_iframe_duck_creek_policy_endorsement_heading_innertext_405": "[UC0274] Amendment of Other Insurance Condition – Primary and Non-contributory",
+    "select_endorsement_399": "[UC0274] Amendment of Other Insurance Condition \u2013 Primary and Non-contributory",
+    "wait_iframe_duck_creek_policy_endorsement_heading_innertext_401": "[UC0274] Amendment of Other Insurance Condition \u2013 Primary and Non-contributory",
+    "select_endorsement_403": "[UC0274] Amendment of Other Insurance Condition \u2013 Primary and Non-contributory",
+    "wait_iframe_duck_creek_policy_endorsement_heading_innertext_405": "[UC0274] Amendment of Other Insurance Condition \u2013 Primary and Non-contributory",
     "expected_select_endorsement_value_414": "(select)",
     "select_endorsement_415": "[UC1100] Exclusion - All Hazards in Connection with Designated Farm Location",
     "wait_iframe_duck_creek_policy_endorsement_heading_innertext_417": "[UC1100] Exclusion - All Hazards in Connection with Designated Farm Location",
@@ -239,9 +239,9 @@
   },
   "application": {
     "url": "https://clasq.anico.com/Express/",
-    "username": "AG0U388",
+    "username": "SYNTHETIC_REPLACE_ME",
     "password": "SYNTHETIC_REPLACE_ME",
-    "_passwordNote": "Synthetic placeholder: replace with approved test credential before execution."
+    "_passwordNote": "SYNTHETIC_REPLACE_ME"
   },
   "external": {},
   "_canonical": {
@@ -360,13 +360,13 @@
       "3a13d49c-13c7-7d84-25de-5f59954e28d7": "[CU2114] Amendment of Liquor Liability Exclusion - Exception for Scheduled Premises or Activities",
       "3a13d49c-13c7-bad7-92f5-f7b099a3818a": "Test Premises",
       "3a13d49c-13c7-093d-9f99-6a65b851d53a": "[CU2120] Exclusion - Year 2000 Computer-Related and other Electronic Problems - With Exception for Bodily Injury on your Premises",
-      "3a13d49c-13c7-f8c4-9add-32b2b5e39359": "[CU2173] Exclusion – Unmanned Aircraft (Coverage B Only)",
+      "3a13d49c-13c7-f8c4-9add-32b2b5e39359": "[CU2173] Exclusion \u2013 Unmanned Aircraft (Coverage B Only)",
       "3a13d49c-13c7-019b-1829-0017072cfa1c": "[CU2216] Underground Resources and Equipment Coverage",
       "3a13d49c-13c7-ebb1-7a34-4f65b335a531": "50000",
       "3a13d49c-13c7-d263-87c8-6143cfecdc5c": "[UC0201] Auto Owner And/Or Operator Exclusion",
       "3a13d49c-13c7-6a28-ce5f-86fa8a67bb7e": "Michael Scott",
       "3a13d49c-13c7-f1a5-7c43-330f3c2cd4ef": "[UC0272] Waiver of Subrogation",
-      "3a13d49c-13c7-ad15-d706-64b2d2238212": "[UC0274] Amendment of Other Insurance Condition – Primary and Non-contributory",
+      "3a13d49c-13c7-ad15-d706-64b2d2238212": "[UC0274] Amendment of Other Insurance Condition \u2013 Primary and Non-contributory",
       "3a13d49c-13c7-2eb4-ed69-3f4d19890db0": "Test Location",
       "3a13d49c-13c7-d175-261d-7b05b8f5a46f": "[UC1100] Exclusion - All Hazards in Connection with Designated Farm Location",
       "3a13d49c-13c7-9233-afd0-859cdc006b12": "Test Activities",
@@ -1762,7 +1762,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "[CU2173] Exclusion – Unmanned Aircraft (Coverage B Only)"
+        "value": "[CU2173] Exclusion \u2013 Unmanned Aircraft (Coverage B Only)"
       },
       {
         "order": 44.01,
@@ -1834,7 +1834,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "[UC0274] Amendment of Other Insurance Condition – Primary and Non-contributory"
+        "value": "[UC0274] Amendment of Other Insurance Condition \u2013 Primary and Non-contributory"
       },
       {
         "order": 44.01,

@@ -58,6 +58,10 @@ public sealed class EQSFPSmokeTestSteps
         data.GenerateRandom("OwnerEmail", "test@[a-z]{4}\\\\.com");
 
         var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        // Source step 0033: RANDOM input for Owner Phone.
+        await page.EnterOwnerPhoneAsync(data.Resolve("{{runtime:OwnerPhone}}"));
+        // Source step 0033: RANDOM input for Owner Email.
+        await page.EnterOwnerEmailAsync(data.Resolve("{{runtime:OwnerEmail}}"));
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForAccountInformationHeaderAsync("Visible");
@@ -105,11 +109,8 @@ public sealed class EQSFPSmokeTestSteps
         await page.SelectStateAsync(data.Resolve("{{runtime:StateName}}"));
         await page.PressAgentPCAsync("ENTER");
         await page.PressAgentPCAsync("Tab");
-        data.Set("EffDate", await page.CaptureEffectiveDate78F67Async("InnerText"));
         await page.ClickStateDropdownAsync();
         await page.ClickStartQuoteAsync();
-        data.Set("LOB", data.Resolve("{{data:lob}}"));
-        data.Set("WaitOnTime", data.Resolve("{{data:waitontime}}"));
 
     }
 
@@ -125,6 +126,8 @@ public sealed class EQSFPSmokeTestSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForTheSSNCouldNotBeFoundPleaseEnterAnSSNAsync("Visible");
+        // Source step 0042: RANDOM input for ssn.
+        await page.EnterTheSSNCouldNotBeFoundPleaseEnterAnSSNAsync(data.Resolve("{{runtime:InsuredSSN}}"));
         await page.WaitForSubmitAngularAsync("Visible");
         await page.PressSubmitAngularAsync("TAB");
         await page.ClickSubmitAngularAsync();
@@ -136,8 +139,6 @@ public sealed class EQSFPSmokeTestSteps
         {
                     await page.ClickContinueAsync();
         }
-        data.Set("WaitOnTime", data.Resolve("{{data:waitontime_2}}"));
-        data.Set("Screen", data.Resolve("{{data:screen}}"));
         if (!await page.IsScreenHeadingPresentAsync())
         {
                     await page.VerifyScreenHeadingAsync("Absent", "");
@@ -163,11 +164,8 @@ public sealed class EQSFPSmokeTestSteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen}}"));
-        data.Set("Screen", data.Resolve("{{data:screen_2}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
@@ -188,9 +186,7 @@ public sealed class EQSFPSmokeTestSteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         data.Set("Quote_NameNum", await page.CaptureNameAndQuoteAsync("InnerText"));
         data.Set("Quote_Num", data.Resolve("{STRINGREPLACE[{B[Quote_NameNum]}][{B[LastName]}][]}"));
-        data.Set("QuoteID", data.Resolve("{{runtime:Quote_Num}}"));
         await page.ClickCloseQuoteAsync();
-        await page.WaitForLoadingAsync("Absent");
 
     }
 
@@ -208,8 +204,6 @@ public sealed class EQSFPSmokeTestSteps
         await page.PressQuoteSearchInputAsync("Tab");
         await page.PressQuoteSearchInputAsync("Tab");
         await page.ClickClientInfoSearchAsync();
-        await page.WaitForLoadingAsync("Absent");
-        data.Set("Screen", data.Resolve("{{data:screen}}"));
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.VerifyScreenHeading9696CAsync("Absent", "");
@@ -235,11 +229,8 @@ public sealed class EQSFPSmokeTestSteps
         {
                     await page.ClickKeepGoingAsync();
         }
-        data.Set("Screen", data.Resolve("{{data:screen}}"));
-        data.Set("Screen", data.Resolve("{{data:screen_2}}"));
         if (!await page.IsLoadingPresentAsync())
         {
-                    await page.WaitForLoadingAsync("Absent");
         }
         if (!await page.IsScreenHeading9696CPresentAsync())
         {

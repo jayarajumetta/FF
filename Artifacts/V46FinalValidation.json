@@ -1,0 +1,35 @@
+{
+  "version": "46.1-final-kiss-source-traced",
+  "status": "PASS",
+  "scope": {
+    "features": 32,
+    "sourceDerivedExampleRows": 1074,
+    "applications": 3
+  },
+  "contracts": {
+    "referenceErrors": 0,
+    "unconsumedRandomProducers": 0,
+    "technicalFeatureSteps": 0,
+    "jsonErrors": 0,
+    "projectXmlErrors": 0,
+    "knownCredentialLeakFiles": 0,
+    "stepDefinitionRandomGenerators": 137
+  },
+  "coreChecks": {
+    "scenarioDataConfigConstructor": true,
+    "unquoteDefined": true,
+    "resolveDateDefined": true,
+    "simpleFillOverload": true,
+    "simpleClickOverload": true,
+    "externalBusinessKeyResolution": true,
+    "llmDomScreenshot": true,
+    "selfHealEnabled": true,
+    "strictUnknownConditions": true
+  },
+  "errors": [],
+  "buildEnvironment": {
+    "dotnetAvailable": false,
+    "actualDotnetBuildPerformed": false,
+    "reason": "The generation container does not expose a .NET SDK and direct binary download is unavailable; setup/build scripts are included for the client/CI compiler gate."
+  }
+}

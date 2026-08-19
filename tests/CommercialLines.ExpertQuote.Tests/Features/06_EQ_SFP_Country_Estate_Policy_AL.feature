@@ -1,12 +1,8 @@
-# Runtime: Background opens one browser session; Feature data flows through StepDefinitions to PageMethods
-# Locator self-heal: enabled by default on locator/actionability failures
-
-
-@CL_EQ @SFP @country_estate_new_business_policy @automated @canonical_simple_v44 @state_data_driven
-# Automation Maturity: 84/100
-# Business Flow: 19/20 | Canonical Mapping: 10/20 | StepDefinitions: 15/15 | Page Model: 14/15 | Locator Quality: 16/20 | Test Data: 10/10
-# Page Objects Used: 15 | Locator Confidence Average: 78/100 | Review-required operations: 6
-# Locator Review Items: 31 source-derived locator(s) remain below high confidence.
+# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 35
+# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
+# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 35
+# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
+@CL_EQ @SFP @country_estate_new_business_policy
 
 Feature: EQ SFP Country Estate Policy
   As a Commercial Lines ExpertQuote policy processing user

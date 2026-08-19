@@ -10,6 +10,10 @@ public sealed class ScenarioData
     private readonly Dictionary<string, string> _external = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _randomPatterns = new(StringComparer.OrdinalIgnoreCase);
 
+    private readonly FrameworkConfig _config;
+
+    public ScenarioData(FrameworkConfig config) => _config = config;
+
     public string CurrentFile { get; private set; } = string.Empty;
     public bool IsLoaded => !string.IsNullOrWhiteSpace(CurrentFile);
 
@@ -42,7 +46,24 @@ public sealed class ScenarioData
         if (File.Exists(externalFile))
         {
             using var externalDocument = JsonDocument.Parse(File.ReadAllText(externalFile));
-            Flatten(externalDocument.RootElement, string.Empty, _external);
+            var externalRoot = externalDocument.RootElement;
+            Flatten(externalRoot, string.Empty, _external);
+
+            // ExternalDataOverrides.json uses { "values": { "Business Key": { "value": "..." } } }.
+            // Make the business key directly resolvable without exposing the file structure to tests.
+            if (externalRoot.TryGetProperty("values", out var values) && values.ValueKind == JsonValueKind.Object)
+            {
+                foreach (var property in values.EnumerateObject())
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Object &&
+                        property.Value.TryGetProperty("value", out var valueElement))
+                    {
+                        _external[property.Name] = valueElement.ValueKind == JsonValueKind.String
+                            ? valueElement.GetString() ?? string.Empty
+                            : valueElement.ToString();
+                    }
+                }
+            }
         }
     }
 
@@ -109,31 +130,128 @@ public sealed class ScenarioData
                 ? Environment.GetEnvironmentVariable(match.Groups[2].Value) ?? string.Empty
                 : Get(match.Groups[2].Value));
 
+        // Resolve Tosca buffers/reusable parameters before evaluating source functions.
         resolved = Regex.Replace(resolved, @"\{B\[([^\]]+)\]\}", match => Get(match.Groups[1].Value));
         resolved = Regex.Replace(resolved, @"\{PL\[([^\]]+)\]\}", match => Get(match.Groups[1].Value));
+
+        // Canonical source functions that are business data, not browser actions.
+        for (var pass = 0; pass < 5; pass++)
+        {
+            var before = resolved;
+            resolved = Regex.Replace(resolved, @"\{STRINGREPLACE\[([^\]]*)\]\[([^\]]*)\]\[([^\]]*)\]\}", match =>
+            {
+                var input = Unquote(match.Groups[1].Value);
+                var oldValue = Unquote(match.Groups[2].Value).Replace("\\)", ")", StringComparison.Ordinal);
+                var newValue = Unquote(match.Groups[3].Value);
+                return input.Replace(oldValue, newValue, StringComparison.Ordinal);
+            }, RegexOptions.IgnoreCase);
+            resolved = Regex.Replace(resolved, @"\{STRINGTOUPPER\[([^\]]*)\]\}",
+                match => Unquote(match.Groups[1].Value).ToUpperInvariant(), RegexOptions.IgnoreCase);
+            resolved = Regex.Replace(resolved, @"\{DATE\[([^\]]*)\]\[([^\]]*)\]\[([^\]]*)\]\}",
+                match => ResolveDate(match.Groups[1].Value, match.Groups[2].Value, match.Groups[3].Value), RegexOptions.IgnoreCase);
+            if (resolved == before) break;
+        }
+
         return resolved;
     }
 
     public bool Condition(string expression)
     {
         if (string.IsNullOrWhiteSpace(expression)) return true;
-
         var normalized = expression.Trim();
-        var comparison = Regex.Match(normalized, @"^['""]?(.+?)['""]?\s*(==|!=)\s*['""]?(.*?)['""]?$");
-        if (!comparison.Success)
+
+        // Generated control-flow labels sometimes carry the real comparison after ';'.
+        if (normalized.Contains(';')) normalized = normalized[(normalized.LastIndexOf(';') + 1)..].Trim();
+        normalized = normalized.Replace("||", " OR ", StringComparison.Ordinal).Replace("&&", " AND ", StringComparison.Ordinal);
+
+        try { return EvaluateOr(normalized); }
+        catch when (!_config.Execution.StrictUnknownConditions) { return false; }
+        catch (Exception ex) { throw new InvalidOperationException($"Unsupported source condition '{expression}'. It was not executed silently. {ex.Message}", ex); }
+    }
+
+    private bool EvaluateOr(string expression)
+    {
+        var parts = SplitTopLevel(expression, " OR ");
+        if (parts.Count > 1) return parts.Any(EvaluateAnd);
+        return EvaluateAnd(expression);
+    }
+
+    private bool EvaluateAnd(string expression)
+    {
+        var parts = SplitTopLevel(expression, " AND ");
+        if (parts.Count > 1) return parts.All(EvaluateAtom);
+        return EvaluateAtom(expression);
+    }
+
+    private bool EvaluateAtom(string expression)
+    {
+        var value = expression.Trim();
+        while (value.StartsWith('(') && value.EndsWith(')') && Balanced(value[1..^1])) value = value[1..^1].Trim();
+        if (value.StartsWith("NOT(", StringComparison.OrdinalIgnoreCase) && value.EndsWith(')')) return !EvaluateOr(value[4..^1]);
+        if (value.StartsWith("NOT ", StringComparison.OrdinalIgnoreCase)) return !EvaluateAtom(value[4..]);
+
+        var m = Regex.Match(value, @"^['\"]?(.+?)['\"]?\s*(==|!=)\s*['\"]?(.*?)['\"]?$");
+        if (!m.Success) throw new InvalidOperationException("No supported data comparison was found.");
+        var key=m.Groups[1].Value.Trim().Trim('\'', '"');
+        var op=m.Groups[2].Value; var expected=m.Groups[3].Value.Trim().Trim('\'', '"');
+        if(expected.Equals("NULL",StringComparison.OrdinalIgnoreCase)) expected=string.Empty;
+        var actual=Get(key); var equal=string.Equals(actual,expected,StringComparison.OrdinalIgnoreCase);
+        return op=="==" ? equal : !equal;
+    }
+
+    private static List<string> SplitTopLevel(string expression,string separator)
+    {
+        var result=new List<string>(); var depth=0; var quote='\0'; var start=0;
+        for(var i=0;i<=expression.Length-separator.Length;i++)
         {
-            // Tosca control-flow labels that are not data comparisons are retained as source trace but should not crash the run.
-            return true;
+            var c=expression[i];
+            if((c=='\''||c=='"')) { if(quote=='\0') quote=c; else if(quote==c) quote='\0'; }
+            if(quote!='\0') continue;
+            if(c=='(') depth++; else if(c==')') depth--;
+            if(depth==0 && expression.AsSpan(i,separator.Length).Equals(separator,StringComparison.OrdinalIgnoreCase))
+            { result.Add(expression[start..i].Trim()); start=i+separator.Length; i=start-1; }
         }
+        if(start==0) return new List<string>{expression};
+        result.Add(expression[start..].Trim()); return result;
+    }
 
-        var key = comparison.Groups[1].Value.Trim();
-        var op = comparison.Groups[2].Value;
-        var expected = comparison.Groups[3].Value.Trim();
-        if (expected.Equals("NULL", StringComparison.OrdinalIgnoreCase)) expected = string.Empty;
+    private static bool Balanced(string expression)
+    {
+        var d=0; foreach(var c in expression){ if(c=='(') d++; else if(c==')'&&--d<0) return false; } return d==0;
+    }
 
-        var actual = Get(key);
-        var equals = string.Equals(actual, expected, StringComparison.OrdinalIgnoreCase);
-        return op == "==" ? equals : !equals;
+
+    private static string Unquote(string value)
+    {
+        var text = (value ?? string.Empty).Trim();
+        if (text.Length >= 2 && ((text[0] == '\"' && text[^1] == '\"') || (text[0] == '\'' && text[^1] == '\'')))
+            return text[1..^1];
+        return text;
+    }
+
+    private static string ResolveDate(string baseValue, string offset, string format)
+    {
+        var date = DateTime.Today;
+        var baseText = Unquote(baseValue);
+        if (!string.IsNullOrWhiteSpace(baseText) && DateTime.TryParse(baseText, out var parsed)) date = parsed;
+        var delta = Unquote(offset).Trim();
+        var match = Regex.Match(delta, @"^([+-]?\d+)\s*([dmy])$", RegexOptions.IgnoreCase);
+        if (match.Success)
+        {
+            var amount = int.Parse(match.Groups[1].Value);
+            date = match.Groups[2].Value.ToLowerInvariant() switch
+            {
+                "d" => date.AddDays(amount),
+                "m" => date.AddMonths(amount),
+                "y" => date.AddYears(amount),
+                _ => date
+            };
+        }
+        var dotnetFormat = Unquote(format)
+            .Replace("MM", "MM", StringComparison.Ordinal)
+            .Replace("dd", "dd", StringComparison.Ordinal)
+            .Replace("yyyy", "yyyy", StringComparison.Ordinal);
+        return date.ToString(string.IsNullOrWhiteSpace(dotnetFormat) ? "MM-dd-yyyy" : dotnetFormat);
     }
 
     public IReadOnlyDictionary<string, string> Snapshot()
