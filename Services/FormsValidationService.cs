@@ -57,6 +57,14 @@ namespace PnCTestAutomation.Services
         /// </summary>
         public List<ExpectedFormEntry> LoadExpectedFormsForLob(string lob, string state, string testCase = "BASIC")
         {
+            // Reject any value that contains path separators or other traversal characters
+            if (!Regex.IsMatch(lob ?? "", @"^[A-Za-z0-9_]{1,20}$"))
+                throw new ArgumentException($"Invalid LOB value: '{lob}'");
+            if (!Regex.IsMatch(state ?? "", @"^[A-Za-z]{2,3}$"))
+                throw new ArgumentException($"Invalid state value: '{state}'");
+            if (!Regex.IsMatch(testCase ?? "BASIC", @"^[A-Za-z0-9_]{1,20}$"))
+                throw new ArgumentException($"Invalid testCase value: '{testCase}'");
+
             var basePath = Path.Combine(AppContext.BaseDirectory, "Resources", "ExpectedForms", lob);
 
             // 1. Test-case-specific CSV: {LOB}_{testCase}.csv (e.g. SFP_BASIC.csv) — highest priority,
@@ -101,8 +109,9 @@ namespace PnCTestAutomation.Services
         /// </summary>
         public List<ExpectedFormEntry> LoadFromCsv(string csvPath, string stateColumn, string[] typeFilter = null)
         {
+            var resolvedCsv = SafeResolvePath(csvPath);
             var entries = new List<ExpectedFormEntry>();
-            using var reader = new StreamReader(csvPath);
+            using var reader = new StreamReader(resolvedCsv);
 
             var header = reader.ReadLine();
             if (header == null) return entries;
@@ -172,7 +181,7 @@ namespace PnCTestAutomation.Services
 
         private List<ExpectedFormEntry> LoadFromJson(string jsonPath)
         {
-            var json = File.ReadAllText(jsonPath);
+            var json = File.ReadAllText(SafeResolvePath(jsonPath));
             var entries = JsonSerializer.Deserialize<List<ExpectedFormEntry>>(json,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
                 ?? new List<ExpectedFormEntry>();
@@ -196,7 +205,7 @@ namespace PnCTestAutomation.Services
                 _ => "BASIC"
             };
 
-            var json = File.ReadAllText(jsonPath);
+            var json = File.ReadAllText(SafeResolvePath(jsonPath));
             using var doc = JsonDocument.Parse(json, new JsonDocumentOptions
             {
                 CommentHandling = JsonCommentHandling.Skip
@@ -262,6 +271,16 @@ namespace PnCTestAutomation.Services
         /// Maps a test case name to its single-letter Type code in the CSV.
         /// Convention: BASIC→B, CE→C. Extensible for future test cases.
         /// </summary>
+        private static string SafeResolvePath(string path)
+        {
+            var resolved = Path.GetFullPath(path);
+            var allowedBase = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "Resources"));
+            if (!resolved.StartsWith(allowedBase + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException(
+                    $"Path '{resolved}' is outside the permitted Resources directory.");
+            return resolved;
+        }
+
         private static string GetTypeCodeForTestCase(string testCase)
         {
             return testCase?.ToUpperInvariant() switch
