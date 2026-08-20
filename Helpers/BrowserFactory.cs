@@ -15,7 +15,6 @@ namespace PnCTestAutomation.Helpers
             "--disable-extensions",
             "--disable-dev-shm-usage",
             "--no-sandbox",
-            "--disable-background-networking",
             "--disable-default-apps"
         ];
 

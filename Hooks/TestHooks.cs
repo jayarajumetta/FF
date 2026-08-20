@@ -80,7 +80,10 @@ namespace PnCTestAutomation.Hooks
             var configPath = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
             if (File.Exists(configPath))
             {
-                var config = new ConfigurationBuilder().AddJsonFile(configPath).Build();
+                var config = new ConfigurationBuilder()
+                    .AddJsonFile(configPath)
+                    .AddEnvironmentVariables()
+                    .Build();
                 var rescueEnabled = string.Equals(
                     config["LocatorRescue:Enabled"], "true", StringComparison.OrdinalIgnoreCase);
                 var rescueAutoHeal = string.Equals(

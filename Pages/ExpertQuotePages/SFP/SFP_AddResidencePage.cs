@@ -102,6 +102,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             {
                 await FrameSelect.ClickAsync();
                 await _page.GetByRole(AriaRole.Listbox).Last.GetByRole(AriaRole.Option, new() { Name = contextData.ResidenceRateType }).First.ClickAsync();
+                await WaitForSpinnerAsync(); // RateType change triggers recalculation; subsequent dropdowns fail if we don't wait
             }
 
             if (!string.IsNullOrEmpty(contextData.ResidenceConditionRating))

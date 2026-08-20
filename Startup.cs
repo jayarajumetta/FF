@@ -32,6 +32,7 @@ namespace PnCTestAutomation
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile(configPath)
                 .AddJsonFile(Path.Combine(AppContext.BaseDirectory, $"appsettings.{env}.json"), optional: true)
+                .AddEnvironmentVariables()
                 .Build();
 
             services.AddSingleton<IConfiguration>(configuration);

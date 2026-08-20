@@ -192,9 +192,7 @@ namespace PnCTestAutomation.Services
             Directory.CreateDirectory(outputDirectory);
             var mdPath = Path.GetFullPath(Path.Combine(outputDirectory, $"FormsValidationSummary_{summary.LOB}_{summary.State}.md"));
             File.WriteAllText(mdPath, md.ToString(), Encoding.UTF8);
-
-            // ADO reads this from stdout and pins the Markdown to the pipeline run summary tab.
-            Console.WriteLine($"##vso[task.uploadsummary]{mdPath}");
+            // ##vso[task.uploadsummary] is emitted once per shard by the pipeline collect step, not per state.
         }
 
         /// <summary>

@@ -301,6 +301,10 @@ stages:
         # Do NOT exit on first-run failure — the retry step below will re-run failures
         $firstRunExit = $LASTEXITCODE
         Write-Host "First run exit code: $firstRunExit"
+        if ($firstRunExit -ne 0 -and !(Test-Path "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx")) {
+          Write-Error "dotnet test failed before producing a TRX result."
+          exit $firstRunExit
+        }
         exit 0
       displayName: "Run Shard $(SHARD_NUMBER)"
       condition: succeeded()
@@ -350,6 +354,8 @@ stages:
 
         & dotnet test $testDll `
             --filter "$nameFilter" `
+            --settings "$(Build.SourcesDirectory)/ci.runsettings" `
+            --blame-hang --blame-hang-timeout 5min `
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
 
@@ -363,7 +369,10 @@ stages:
         TEST_ENVIRONMENT: "qa"
         CI: "true"
         PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+        PLAYWRIGHT_HEADLESS: "true"
+        BROWSER_TYPE: "chromium"
         DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
+        DataPool__AutoStart: "false"
 
     # ✅ DEBUG: verify trx files exist
     - powershell: |
@@ -401,16 +410,6 @@ stages:
       displayName: "Collect Screenshots & Traces"
       condition: always()
 
-    - task: PublishTestResults@2
-      displayName: "Publish Test Results"
-      condition: always()
-      inputs:
-        testResultsFormat: VSTest
-        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/*.trx"
-        mergeTestResults: true
-        failTaskOnFailedTests: true
-        testRunTitle: "SFP Smoke — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
-
     - task: PublishPipelineArtifact@1
       displayName: "Publish Shard Artifacts"
       condition: always()
@@ -446,11 +445,61 @@ stages:
                     Write-Host "Collected TRX: $($_.Name)"
                 }
             }
+
+            # Build one consolidated Markdown summary for the pipeline Summary tab.
+            # Each state writes its own .md; we merge them into a single card here.
+            $mdFiles = Get-ChildItem -Path $sourceBase -Recurse -Filter "FormsValidationSummary_*.md" | Sort-Object Name
+            if ($mdFiles.Count -gt 0) {
+                $out = [System.Text.StringBuilder]::new()
+                $null = $out.AppendLine("# Forms Validation — SFP Basic Policy — Shard $(SHARD_NUMBER)")
+                $null = $out.AppendLine()
+                $null = $out.AppendLine("| State | Forms Checked | Pass | Fail | Info | Result |")
+                $null = $out.AppendLine("|---|---:|---:|---:|---:|---|")
+                foreach ($f in $mdFiles) {
+                    # Pull the single data row from each state's results table (line after the |---|...| separator)
+                    $lines = Get-Content $f.FullName
+                    $sepIdx = ($lines | Select-String -Pattern '\|---' | Select-Object -First 1 -ExpandProperty LineNumber)
+                    if ($sepIdx -and $sepIdx -lt $lines.Count) {
+                        $null = $out.AppendLine($lines[$sepIdx])  # 0-based: sepIdx is already the next line
+                    }
+                }
+                $mdFiles | ForEach-Object {
+                    $attentionLines = Get-Content $_.FullName | Select-String -Pattern '\| C\d+' | ForEach-Object { $_.Line }
+                    if ($attentionLines) { $attentionLines | ForEach-Object { $null = $out.AppendLine($_) } }
+                }
+                $summaryPath = "$(Build.ArtifactStagingDirectory)/FormsValidationSummary_Shard$(SHARD_NUMBER).md"
+                $out.ToString() | Out-File -FilePath $summaryPath -Encoding UTF8
+                Write-Host "##vso[task.uploadsummary]$summaryPath"
+                Write-Host "Forms summary pinned to pipeline Summary tab: $summaryPath"
+            } else {
+                Write-Host "No per-state summary .md files found — Summary tab card skipped."
+            }
         } else {
             Write-Host "TestResults directory not found — skipping forms report collection."
         }
       displayName: "Collect Forms Validation Reports"
       condition: always()
+
+    - task: PublishTestResults@2
+      displayName: "Publish Playwright Test Results"
+      condition: always()
+      inputs:
+        testResultsFormat: VSTest
+        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/Shard_*_Results.trx"
+        mergeTestResults: true
+        failTaskOnFailedTests: true
+        testRunTitle: "SFP Smoke — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
+
+    # Forms results are informational — failures here must not fail the shard job
+    - task: PublishTestResults@2
+      displayName: "Publish Forms Validation Results (Informational)"
+      condition: always()
+      inputs:
+        testResultsFormat: VSTest
+        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/FormsValidation_*.trx"
+        mergeTestResults: false
+        failTaskOnFailedTests: false
+        testRunTitle: "Forms Validation — SFP Smoke — Shard $(SHARD_NUMBER)"
 
     - task: PublishPipelineArtifact@1
       displayName: "Publish Forms Reports"
@@ -569,6 +618,10 @@ stages:
 
         $firstRunExit = $LASTEXITCODE
         Write-Host "First run exit code: $firstRunExit"
+        if ($firstRunExit -ne 0 -and !(Test-Path "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx")) {
+          Write-Error "dotnet test failed before producing a TRX result."
+          exit $firstRunExit
+        }
         exit 0
       displayName: "Run CE Shard $(SHARD_NUMBER)"
       condition: succeeded()
@@ -613,6 +666,8 @@ stages:
 
         & dotnet test $testDll `
             --filter "$nameFilter" `
+          --settings "$(Build.SourcesDirectory)/ci.runsettings" `
+          --blame-hang --blame-hang-timeout 5min `
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
 
@@ -625,7 +680,10 @@ stages:
         TEST_ENVIRONMENT: "qa"
         CI: "true"
         PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+        PLAYWRIGHT_HEADLESS: "true"
+        BROWSER_TYPE: "chromium"
         DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
+        DataPool__AutoStart: "false"
 
     - powershell: |
         Write-Host "==== CE TEST RESULTS CONTENT ===="
@@ -656,16 +714,6 @@ stages:
         }
       displayName: "Collect Screenshots & Traces"
       condition: always()
-
-    - task: PublishTestResults@2
-      displayName: "Publish Test Results"
-      condition: always()
-      inputs:
-        testResultsFormat: VSTest
-        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/*.trx"
-        mergeTestResults: true
-        failTaskOnFailedTests: true
-        testRunTitle: "SFP CE — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
 
     - task: PublishPipelineArtifact@1
       displayName: "Publish Shard Artifacts"
@@ -699,11 +747,59 @@ stages:
                     Write-Host "Collected TRX: $($_.Name)"
                 }
             }
+
+            # Build one consolidated Markdown summary for the pipeline Summary tab.
+            $mdFiles = Get-ChildItem -Path $sourceBase -Recurse -Filter "FormsValidationSummary_*.md" | Sort-Object Name
+            if ($mdFiles.Count -gt 0) {
+                $out = [System.Text.StringBuilder]::new()
+                $null = $out.AppendLine("# Forms Validation — SFP Country Estate — Shard $(SHARD_NUMBER)")
+                $null = $out.AppendLine()
+                $null = $out.AppendLine("| State | Forms Checked | Pass | Fail | Info | Result |")
+                $null = $out.AppendLine("|---|---:|---:|---:|---:|---|")
+                foreach ($f in $mdFiles) {
+                    $lines = Get-Content $f.FullName
+                    $sepIdx = ($lines | Select-String -Pattern '\|---' | Select-Object -First 1 -ExpandProperty LineNumber)
+                    if ($sepIdx -and $sepIdx -lt $lines.Count) {
+                        $null = $out.AppendLine($lines[$sepIdx])
+                    }
+                }
+                $mdFiles | ForEach-Object {
+                    $attentionLines = Get-Content $_.FullName | Select-String -Pattern '\| C\d+' | ForEach-Object { $_.Line }
+                    if ($attentionLines) { $attentionLines | ForEach-Object { $null = $out.AppendLine($_) } }
+                }
+                $summaryPath = "$(Build.ArtifactStagingDirectory)/FormsValidationSummary_CE_Shard$(SHARD_NUMBER).md"
+                $out.ToString() | Out-File -FilePath $summaryPath -Encoding UTF8
+                Write-Host "##vso[task.uploadsummary]$summaryPath"
+                Write-Host "Forms summary pinned to pipeline Summary tab: $summaryPath"
+            } else {
+                Write-Host "No per-state summary .md files found — Summary tab card skipped."
+            }
         } else {
             Write-Host "TestResults directory not found — skipping forms report collection."
         }
       displayName: "Collect Forms Validation Reports"
       condition: always()
+
+    - task: PublishTestResults@2
+      displayName: "Publish Playwright Test Results"
+      condition: always()
+      inputs:
+        testResultsFormat: VSTest
+        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/Shard_*_Results.trx"
+        mergeTestResults: true
+        failTaskOnFailedTests: true
+        testRunTitle: "SFP CE — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
+
+    # Forms results are informational — failures here must not fail the shard job
+    - task: PublishTestResults@2
+      displayName: "Publish Forms Validation Results (Informational)"
+      condition: always()
+      inputs:
+        testResultsFormat: VSTest
+        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/FormsValidation_*.trx"
+        mergeTestResults: false
+        failTaskOnFailedTests: false
+        testRunTitle: "Forms Validation — SFP CE — Shard $(SHARD_NUMBER)"
 
     - task: PublishPipelineArtifact@1
       displayName: "Publish Forms Reports"
