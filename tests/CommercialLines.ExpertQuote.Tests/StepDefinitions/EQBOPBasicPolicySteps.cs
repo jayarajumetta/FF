@@ -8,7 +8,9 @@ namespace InsuranceAutomation.CLEQ.StepDefinitions;
 public sealed class EQBOPBasicPolicySteps
 {
     private readonly ScenarioContext _scenario;
+    private readonly ApplicationLogin _auth;
     public EQBOPBasicPolicySteps(ScenarioContext scenario) => _scenario = scenario;
+    private ApplicationLogin Auth => _auth ?? new ApplicationLogin(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
 
     [Given(@"^I enter client search information$")]
     [When(@"^I enter client search information$")]
@@ -615,9 +617,9 @@ public sealed class EQBOPBasicPolicySteps
 
     }
 
-    [Given(@"^I select Additional Coverages \\- Building, Functional Personal Property or Habitational$")]
-    [When(@"^I select Additional Coverages \\- Building, Functional Personal Property or Habitational$")]
-    [Then(@"^I select Additional Coverages \\- Building, Functional Personal Property or Habitational$")]
+    [Given(@"^I select Additional Coverages \- Building, Functional Personal Property or Habitational$")]
+    [When(@"^I select Additional Coverages \- Building, Functional Personal Property or Habitational$")]
+    [Then(@"^I select Additional Coverages \- Building, Functional Personal Property or Habitational$")]
     public async Task SelectAdditionalCoveragesBuildingFunctionalPersonalPropertyOrHabitationalAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -668,9 +670,9 @@ public sealed class EQBOPBasicPolicySteps
 
     }
 
-    [Given(@"^I enter supplimental data\\- for class$")]
-    [When(@"^I enter supplimental data\\- for class$")]
-    [Then(@"^I enter supplimental data\\- for class$")]
+    [Given(@"^I enter supplimental data\- for class$")]
+    [When(@"^I enter supplimental data\- for class$")]
+    [Then(@"^I enter supplimental data\- for class$")]
     public async Task EnterSupplimentalDataForClassAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -697,9 +699,9 @@ public sealed class EQBOPBasicPolicySteps
 
     }
 
-    [Given(@"^I select Cost Estimator \\& Calculate Valuations$")]
-    [When(@"^I select Cost Estimator \\& Calculate Valuations$")]
-    [Then(@"^I select Cost Estimator \\& Calculate Valuations$")]
+    [Given(@"^I select Cost Estimator \& Calculate Valuations$")]
+    [When(@"^I select Cost Estimator \& Calculate Valuations$")]
+    [Then(@"^I select Cost Estimator \& Calculate Valuations$")]
     public async Task SelectCostEstimatorCalculateValuationsAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -1219,7 +1221,7 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForUsernameAsync("Exists");
-        await _auth.SignInAsync("CL_EQ");
+        await Auth.SignInAsync("CL_EQ");
 
     }
 
@@ -1363,7 +1365,7 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.NavigateAsync(data.Resolve("{{data:application_url_3}}"));
         }
-        await _auth.SignInAsync("CL_DC");
+        await Auth.SignInAsync("CL_DC");
         await page.WaitForLoginC45A2Async("Absent");
 
     }
@@ -1428,9 +1430,9 @@ public sealed class EQBOPBasicPolicySteps
 
     }
 
-    [Given(@"^I complete forms verification Retrieve QuoteID \\& SessionID by Browser Console$")]
-    [When(@"^I complete forms verification Retrieve QuoteID \\& SessionID by Browser Console$")]
-    [Then(@"^I complete forms verification Retrieve QuoteID \\& SessionID by Browser Console$")]
+    [Given(@"^I complete forms verification Retrieve QuoteID \& SessionID by Browser Console$")]
+    [When(@"^I complete forms verification Retrieve QuoteID \& SessionID by Browser Console$")]
+    [Then(@"^I complete forms verification Retrieve QuoteID \& SessionID by Browser Console$")]
     public async Task CompleteFormsVerificationRetrieveQuoteIDSessionIDByBrowserConsoleAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -1565,7 +1567,7 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForUsernameAsync("Exists");
-        await _auth.SignInAsync("CL_EQ");
+        await Auth.SignInAsync("CL_EQ");
 
     }
 
@@ -1674,9 +1676,9 @@ public sealed class EQBOPBasicPolicySteps
 
     }
 
-    [Given(@"^I complete eChecklist \\- Building Photo1$")]
-    [When(@"^I complete eChecklist \\- Building Photo1$")]
-    [Then(@"^I complete eChecklist \\- Building Photo1$")]
+    [Given(@"^I complete eChecklist \- Building Photo1$")]
+    [When(@"^I complete eChecklist \- Building Photo1$")]
+    [Then(@"^I complete eChecklist \- Building Photo1$")]
     public async Task CompleteEChecklistBuildingPhoto1Async()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -1694,9 +1696,9 @@ public sealed class EQBOPBasicPolicySteps
 
     }
 
-    [Given(@"^I complete eChecklist \\- Building Photo2$")]
-    [When(@"^I complete eChecklist \\- Building Photo2$")]
-    [Then(@"^I complete eChecklist \\- Building Photo2$")]
+    [Given(@"^I complete eChecklist \- Building Photo2$")]
+    [When(@"^I complete eChecklist \- Building Photo2$")]
+    [Then(@"^I complete eChecklist \- Building Photo2$")]
     public async Task CompleteEChecklistBuildingPhoto2Async()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -1713,9 +1715,9 @@ public sealed class EQBOPBasicPolicySteps
 
     }
 
-    [Given(@"^I complete eChecklist \\- Building Photo3$")]
-    [When(@"^I complete eChecklist \\- Building Photo3$")]
-    [Then(@"^I complete eChecklist \\- Building Photo3$")]
+    [Given(@"^I complete eChecklist \- Building Photo3$")]
+    [When(@"^I complete eChecklist \- Building Photo3$")]
+    [Then(@"^I complete eChecklist \- Building Photo3$")]
     public async Task CompleteEChecklistBuildingPhoto3Async()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -1732,9 +1734,9 @@ public sealed class EQBOPBasicPolicySteps
 
     }
 
-    [Given(@"^I complete eChecklist \\- Building Photo4$")]
-    [When(@"^I complete eChecklist \\- Building Photo4$")]
-    [Then(@"^I complete eChecklist \\- Building Photo4$")]
+    [Given(@"^I complete eChecklist \- Building Photo4$")]
+    [When(@"^I complete eChecklist \- Building Photo4$")]
+    [Then(@"^I complete eChecklist \- Building Photo4$")]
     public async Task CompleteEChecklistBuildingPhoto4Async()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -1751,9 +1753,9 @@ public sealed class EQBOPBasicPolicySteps
 
     }
 
-    [Given(@"^I complete eChecklist \\- Loss Runs \\- 3 Years$")]
-    [When(@"^I complete eChecklist \\- Loss Runs \\- 3 Years$")]
-    [Then(@"^I complete eChecklist \\- Loss Runs \\- 3 Years$")]
+    [Given(@"^I complete eChecklist \- Loss Runs \- 3 Years$")]
+    [When(@"^I complete eChecklist \- Loss Runs \- 3 Years$")]
+    [Then(@"^I complete eChecklist \- Loss Runs \- 3 Years$")]
     public async Task CompleteEChecklistLossRuns3YearsAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -1925,7 +1927,7 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.NavigateAsync(data.Resolve("{{data:application_url_3}}"));
         }
-        await _auth.SignInAsync("CL_DC");
+        await Auth.SignInAsync("CL_DC");
         await page.WaitForLoginC45A2Async("Absent");
 
     }
@@ -2390,7 +2392,7 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForUsernameAsync("Exists");
-        await _auth.SignInAsync("CL_EQ");
+        await Auth.SignInAsync("CL_EQ");
 
     }
 
@@ -2603,7 +2605,7 @@ public sealed class EQBOPBasicPolicySteps
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        await _auth.SignInAsync("CL_DC");
+        await Auth.SignInAsync("CL_DC");
         if (await page.IsLogin07237PresentAsync())
         {
                     await page.WaitForLogin07237Async("Absent");

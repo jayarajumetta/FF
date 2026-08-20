@@ -1,0 +1,52 @@
+{
+  "release": "v50-test-result-evidence",
+  "status": "PASS",
+  "sourceOrder": {
+    "features": 32,
+    "status": "PASS"
+  },
+  "testFramework": "NUnit 4 + NUnit3TestAdapter + ReqnRoll",
+  "evidenceAttachment": {
+    "testScoped": true,
+    "defaultMode": "all",
+    "nunitAddTestAttachment": true,
+    "visualStudioAdapterPath": true,
+    "azureDevOpsNativeNUnitXml": true,
+    "publishTestResultsV2": true,
+    "artifactTypes": [
+      "execution log",
+      "HTML report",
+      "screenshots",
+      "HTML DOM",
+      "DOM/control metadata",
+      "Playwright trace",
+      "HAR",
+      "video",
+      "self-heal evidence",
+      "evidence bundle",
+      "SHA-256 manifest",
+      "attachment result"
+    ]
+  },
+  "hooks": [
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Hooks/TestHooks.cs",
+      "browserCloseBeforePublish": true
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/Hooks/TestHooks.cs",
+      "browserCloseBeforePublish": true
+    },
+    {
+      "file": "tests/PersonalLines.DuckCreek.Tests/Hooks/TestHooks.cs",
+      "browserCloseBeforePublish": true
+    }
+  ],
+  "jsonFilesValidated": 1124,
+  "csharpFilesLexicallyValidated": 160,
+  "dotnetBuild": {
+    "performed": false,
+    "reason": "dotnet executable is not installed in this generation environment; CI/Visual Studio remains the compiler/runtime gate."
+  },
+  "errors": []
+}

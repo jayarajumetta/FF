@@ -217,9 +217,9 @@ public sealed class BAPBasicPolicySteps
 
     }
 
-    [Given(@"^I complete Business Auto policy\\-specific fields$")]
-    [When(@"^I complete Business Auto policy\\-specific fields$")]
-    [Then(@"^I complete Business Auto policy\\-specific fields$")]
+    [Given(@"^I complete Business Auto policy\-specific fields$")]
+    [When(@"^I complete Business Auto policy\-specific fields$")]
+    [Then(@"^I complete Business Auto policy\-specific fields$")]
     public async Task CompleteBusinessAutoPolicySpecificFieldsAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -544,9 +544,9 @@ public sealed class BAPBasicPolicySteps
 
     }
 
-    [Given(@"^I complete required additional\\-interest information$")]
-    [When(@"^I complete required additional\\-interest information$")]
-    [Then(@"^I complete required additional\\-interest information$")]
+    [Given(@"^I complete required additional\-interest information$")]
+    [When(@"^I complete required additional\-interest information$")]
+    [Then(@"^I complete required additional\-interest information$")]
     public async Task CompleteRequiredAdditionalInterestInformationAsync()
     {
         var data = _scenario.Get<ScenarioData>();

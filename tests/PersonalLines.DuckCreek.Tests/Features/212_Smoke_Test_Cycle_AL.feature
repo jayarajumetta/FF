@@ -1,7 +1,5 @@
 # Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 47
 # Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
-# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 47
-# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
 @PL_DC @CYCLE @smoke_test
 
 Feature: Smoke Test Cycle

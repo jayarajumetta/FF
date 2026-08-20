@@ -350,9 +350,9 @@ public sealed class BAPSmokeTestSteps
 
     }
 
-    [Given(@"^I complete Business Auto policy\\-specific fields$")]
-    [When(@"^I complete Business Auto policy\\-specific fields$")]
-    [Then(@"^I complete Business Auto policy\\-specific fields$")]
+    [Given(@"^I complete Business Auto policy\-specific fields$")]
+    [When(@"^I complete Business Auto policy\-specific fields$")]
+    [Then(@"^I complete Business Auto policy\-specific fields$")]
     public async Task CompleteBusinessAutoPolicySpecificFieldsAsync()
     {
         var data = _scenario.Get<ScenarioData>();

@@ -190,7 +190,7 @@ public sealed class BuildingsLocators
     public ILocator RateType1 => _page.GetByTestId("fields.building.rows[0].buildingInput$rateType.value-chip-wrapper");
 
     // Source modules: EQ|BOP|Building|Building Details|Building Rating Basis | confidence=High score=100
-    public ILocator ReplacementCost => _page.GetByTestId("fields.data.account.building.rows[0].risk.rows[0].riskInput$ratingBasisBuilding.value-chip-wrapper");
+    public ILocator ReplacementCost => ActualCashValue; // semantic alias; locator defined once
 
     // Source modules: EQ|SFP|Div I - Add Residence|Add Residence - Detail | confidence=High score=127
     public ILocator ResidenceCoverage => _page.GetByRole(AriaRole.Checkbox, new() { Name = "Residence Coverage", Exact = true });

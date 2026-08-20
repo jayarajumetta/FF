@@ -1,4 +1,5 @@
 using InsuranceAutomation.Core;
+using InsuranceAutomation.NUnit;
 using Reqnroll;
 
 namespace InsuranceAutomation.PLDC.Hooks;
@@ -27,7 +28,7 @@ public sealed class TestHooks
         var artifactDirectory = Path.Combine(
             config.Reporting.ArtifactRoot,
             Safe(_feature.FeatureInfo.Title),
-            scenarioName + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+            scenarioName + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss_fff") + "_" + Guid.NewGuid().ToString("N")[..8]);
 
         Directory.CreateDirectory(artifactDirectory);
         var logger = new RunLogger(artifactDirectory);
@@ -95,16 +96,36 @@ public sealed class TestHooks
         var logger = _scenario.Get<RunLogger>();
         var config = _scenario.Get<FrameworkConfig>();
         var report = _scenario.Get<ScenarioReport>();
+        var artifactDirectory = _scenario.Get<string>();
 
         try
         {
+            // Browser context must close before evidence is attached so Playwright finalizes
+            // trace.zip, HAR and video files for this exact test.
             await browser.CloseAsync(logger);
+
             if (config.Reporting.HtmlReport)
                 report.Write(_feature.FeatureInfo.Title, _scenario.ScenarioInfo.Title, logger.LogPath, browser.TracePath, browser.VideoPath, browser.HarPath, null);
 
             var bundle = browser.CreateEvidenceBundle(logger);
             if (config.Reporting.HtmlReport)
                 report.Write(_feature.FeatureInfo.Title, _scenario.ScenarioInfo.Title, logger.LogPath, browser.TracePath, browser.VideoPath, browser.HarPath, bundle);
+
+            logger.Flush();
+
+            // Add every scenario-owned artifact to the current NUnit result before ReqnRoll
+            // returns control to the test adapter. NUnit3TestAdapter can surface these in
+            // Visual Studio/vstest; Azure DevOps PublishTestResults@2 uploads them per test.
+            var published = NUnitEvidencePublisher.Publish(
+                artifactDirectory,
+                config,
+                _feature.FeatureInfo.Title,
+                _scenario.ScenarioInfo.Title,
+                _scenario.TestError);
+
+            logger.Info($"TEST EVIDENCE ATTACHMENTS: enabled={published.Enabled}; attached={published.AttachedCount}; skipped={published.SkippedCount}; failures={published.Failures.Count}");
+            foreach (var failure in published.Failures) logger.Warn($"ATTACHMENT FAILURE: {failure}");
+            logger.Flush();
         }
         finally
         {

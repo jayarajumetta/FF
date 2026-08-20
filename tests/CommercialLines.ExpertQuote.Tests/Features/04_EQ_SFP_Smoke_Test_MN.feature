@@ -1,7 +1,5 @@
 # Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 4
 # Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
-# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 4
-# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
 @CL_EQ @SFP @smoke_test
 
 Feature: EQ SFP Smoke Test

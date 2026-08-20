@@ -40,8 +40,10 @@ public sealed class ApplicationSteps
     {
         var data = _scenario.Get<ScenarioData>();
         var page = new ApplicationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        var username = ResolveCredential(data, "username", "CL_EQ_USERNAME");
-        var password = ResolveCredential(data, "password", "CL_EQ_PASSWORD");
+        //var username = ResolveCredential(data, "username", "CL_EQ_USERNAME");
+        //var password = ResolveCredential(data, "password", "CL_EQ_PASSWORD");
+        var username = "YDH040";
+        var password = "Anico456";
         return page.SignInAsync(username, password);
     }
 

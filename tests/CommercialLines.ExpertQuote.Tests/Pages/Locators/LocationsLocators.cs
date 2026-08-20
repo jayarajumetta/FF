@@ -52,9 +52,9 @@ public sealed class LocationsLocators
     public ILocator WindHail1 => _page.GetByTestId("fields.data.account.location3.rows[0].locationInput$windHailDeductible.value-chip-wrapper");
 
     // Source modules: EQ|SFP|Location | confidence=High score=100
-    public ILocator WindHail2 => _page.GetByTestId("fields.data.account.location3.rows[0].locationInput$windHailDeductible.value-chip-wrapper");
+    public ILocator WindHail2 => WindHail1; // semantic alias; locator defined once
 
     // Source modules: EQ|SFP|Location | confidence=High score=100
-    public ILocator WindHail5 => _page.GetByTestId("fields.data.account.location3.rows[0].locationInput$windHailDeductible.value-chip-wrapper");
+    public ILocator WindHail5 => WindHail1; // semantic alias; locator defined once
 
 }

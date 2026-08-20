@@ -36,7 +36,7 @@ public sealed class BillingLocators
     public ILocator CreateNewBillingAccount => _page.GetByTestId("fields._PolicyPaymentInputDoc._PolicyPaymentInputDoc$billingCenterAccount.value-new-account-chip-chip");
 
     // Source modules: EQ|BOP|Billing | confidence=High score=100
-    public ILocator CreditCardButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.initialPaymentData$paymentMethod.value-chip-wrapper");
+    public ILocator CreditCardButton => CheckButton; // semantic alias; locator defined once
 
     // Source modules: EQ|BOP|Billing | confidence=High score=130
     public ILocator DirectBillButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$paymentMethod.value-chip-wrapper");

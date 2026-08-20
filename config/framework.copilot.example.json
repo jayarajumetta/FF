@@ -1,0 +1,14 @@
+{
+  "selfHeal": {
+    "enabled": true,
+    "provider": "github-copilot",
+    "copilotExecutable": "copilot",
+    "includeScreenshot": true
+  },
+  "reporting": {
+    "attachEvidenceToTestResult": true,
+    "attachmentMode": "all",
+    "maxSingleAttachmentBytes": 536870912,
+    "maxAttachmentCount": 5000
+  }
+}

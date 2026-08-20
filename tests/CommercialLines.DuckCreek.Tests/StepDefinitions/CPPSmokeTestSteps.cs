@@ -293,9 +293,9 @@ public sealed class CPPSmokeTestSteps
 
     }
 
-    [Given(@"^I select CPP Coverage \\- GL$")]
-    [When(@"^I select CPP Coverage \\- GL$")]
-    [Then(@"^I select CPP Coverage \\- GL$")]
+    [Given(@"^I select CPP Coverage \- GL$")]
+    [When(@"^I select CPP Coverage \- GL$")]
+    [Then(@"^I select CPP Coverage \- GL$")]
     public async Task SelectCPPCoverageGLAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -314,9 +314,9 @@ public sealed class CPPSmokeTestSteps
 
     }
 
-    [Given(@"^I select CPP Coverage \\- CP$")]
-    [When(@"^I select CPP Coverage \\- CP$")]
-    [Then(@"^I select CPP Coverage \\- CP$")]
+    [Given(@"^I select CPP Coverage \- CP$")]
+    [When(@"^I select CPP Coverage \- CP$")]
+    [Then(@"^I select CPP Coverage \- CP$")]
     public async Task SelectCPPCoverageCPAsync()
     {
         var data = _scenario.Get<ScenarioData>();

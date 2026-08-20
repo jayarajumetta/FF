@@ -394,9 +394,9 @@ public sealed class GLOCPPolicySteps
 
     }
 
-    [Given(@"^I complete \\[CG0424\\] Coverage for Injury to Leased Workers$")]
-    [When(@"^I complete \\[CG0424\\] Coverage for Injury to Leased Workers$")]
-    [Then(@"^I complete \\[CG0424\\] Coverage for Injury to Leased Workers$")]
+    [Given(@"^I complete \[CG0424\] Coverage for Injury to Leased Workers$")]
+    [When(@"^I complete \[CG0424\] Coverage for Injury to Leased Workers$")]
+    [Then(@"^I complete \[CG0424\] Coverage for Injury to Leased Workers$")]
     public async Task CompleteCG0424CoverageForInjuryToLeasedWorkersAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -420,9 +420,9 @@ public sealed class GLOCPPolicySteps
 
     }
 
-    [Given(@"^I complete \\[CG2401\\] Non\\-Binding Arbitration$")]
-    [When(@"^I complete \\[CG2401\\] Non\\-Binding Arbitration$")]
-    [Then(@"^I complete \\[CG2401\\] Non\\-Binding Arbitration$")]
+    [Given(@"^I complete \[CG2401\] Non\-Binding Arbitration$")]
+    [When(@"^I complete \[CG2401\] Non\-Binding Arbitration$")]
+    [Then(@"^I complete \[CG2401\] Non\-Binding Arbitration$")]
     public async Task CompleteCG2401NonBindingArbitrationAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -443,9 +443,9 @@ public sealed class GLOCPPolicySteps
 
     }
 
-    [Given(@"^I complete \\[CG2812\\] Pesticide or Herbicide Applicator Coverage$")]
-    [When(@"^I complete \\[CG2812\\] Pesticide or Herbicide Applicator Coverage$")]
-    [Then(@"^I complete \\[CG2812\\] Pesticide or Herbicide Applicator Coverage$")]
+    [Given(@"^I complete \[CG2812\] Pesticide or Herbicide Applicator Coverage$")]
+    [When(@"^I complete \[CG2812\] Pesticide or Herbicide Applicator Coverage$")]
+    [Then(@"^I complete \[CG2812\] Pesticide or Herbicide Applicator Coverage$")]
     public async Task CompleteCG2812PesticideOrHerbicideApplicatorCoverageAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -469,9 +469,9 @@ public sealed class GLOCPPolicySteps
 
     }
 
-    [Given(@"^I complete \\[CG3132\\] Limited Fungi or Bacteria Coverage$")]
-    [When(@"^I complete \\[CG3132\\] Limited Fungi or Bacteria Coverage$")]
-    [Then(@"^I complete \\[CG3132\\] Limited Fungi or Bacteria Coverage$")]
+    [Given(@"^I complete \[CG3132\] Limited Fungi or Bacteria Coverage$")]
+    [When(@"^I complete \[CG3132\] Limited Fungi or Bacteria Coverage$")]
+    [Then(@"^I complete \[CG3132\] Limited Fungi or Bacteria Coverage$")]
     public async Task CompleteCG3132LimitedFungiOrBacteriaCoverageAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -492,9 +492,9 @@ public sealed class GLOCPPolicySteps
 
     }
 
-    [Given(@"^I complete \\[CG 20 31\\] Add'l Insured\\-Engineers, Architects OCP$")]
-    [When(@"^I complete \\[CG 20 31\\] Add'l Insured\\-Engineers, Architects OCP$")]
-    [Then(@"^I complete \\[CG 20 31\\] Add'l Insured\\-Engineers, Architects OCP$")]
+    [Given(@"^I complete \[CG 20 31\] Add'l Insured\-Engineers, Architects OCP$")]
+    [When(@"^I complete \[CG 20 31\] Add'l Insured\-Engineers, Architects OCP$")]
+    [Then(@"^I complete \[CG 20 31\] Add'l Insured\-Engineers, Architects OCP$")]
     public async Task CompleteCG2031AddLInsuredEngineersArchitectsOCPAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -512,9 +512,9 @@ public sealed class GLOCPPolicySteps
 
     }
 
-    [Given(@"^I complete \\[CG 29 35\\] Add'l Insured\\-State or Political \\(Permits\\)$")]
-    [When(@"^I complete \\[CG 29 35\\] Add'l Insured\\-State or Political \\(Permits\\)$")]
-    [Then(@"^I complete \\[CG 29 35\\] Add'l Insured\\-State or Political \\(Permits\\)$")]
+    [Given(@"^I complete \[CG 29 35\] Add'l Insured\-State or Political \(Permits\)$")]
+    [When(@"^I complete \[CG 29 35\] Add'l Insured\-State or Political \(Permits\)$")]
+    [Then(@"^I complete \[CG 29 35\] Add'l Insured\-State or Political \(Permits\)$")]
     public async Task CompleteCG2935AddLInsuredStateOrPoliticalPermitsAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -541,9 +541,9 @@ public sealed class GLOCPPolicySteps
 
     }
 
-    [Given(@"^I complete \\[FG0013\\] \\- Automatic Additional Insured \\- Specific$")]
-    [When(@"^I complete \\[FG0013\\] \\- Automatic Additional Insured \\- Specific$")]
-    [Then(@"^I complete \\[FG0013\\] \\- Automatic Additional Insured \\- Specific$")]
+    [Given(@"^I complete \[FG0013\] \- Automatic Additional Insured \- Specific$")]
+    [When(@"^I complete \[FG0013\] \- Automatic Additional Insured \- Specific$")]
+    [Then(@"^I complete \[FG0013\] \- Automatic Additional Insured \- Specific$")]
     public async Task CompleteFG0013AutomaticAdditionalInsuredSpecificAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -573,9 +573,9 @@ public sealed class GLOCPPolicySteps
 
     }
 
-    [Given(@"^I answer GL UW Questions OR \\& WA$")]
-    [When(@"^I answer GL UW Questions OR \\& WA$")]
-    [Then(@"^I answer GL UW Questions OR \\& WA$")]
+    [Given(@"^I answer GL UW Questions OR \& WA$")]
+    [When(@"^I answer GL UW Questions OR \& WA$")]
+    [Then(@"^I answer GL UW Questions OR \& WA$")]
     public async Task AnswerGLUWQuestionsORWAAsync()
     {
         var data = _scenario.Get<ScenarioData>();

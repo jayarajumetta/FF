@@ -132,7 +132,7 @@ public sealed class PolicyWorkflowLocators
     public ILocator Medical => _page.GetByRole(AriaRole.Textbox, new() { Name = "Medical", Exact = true });
 
     // Source modules:  | confidence=High score=125
-    public ILocator OK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator OK => HttpErrorMsgOK; // semantic alias; locator defined once
 
     // Source modules: Policy Covg|GL | confidence=High score=95
     public ILocator OccurenceLimit => _page.GetByRole(AriaRole.Textbox, new() { Name = "Occurence Limit", Exact = true });
@@ -156,7 +156,7 @@ public sealed class PolicyWorkflowLocators
     public ILocator PolicyCovg6B651 => _page.GetByLabel("Policy Covg", new() { Exact = true });
 
     // Source modules: Policy Covg | confidence=High score=127
-    public ILocator PolicyCovgFF145 => _page.GetByLabel("Policy Covg", new() { Exact = true });
+    public ILocator PolicyCovgFF145 => PolicyCovg6B651; // semantic alias; locator defined once
 
     // Source modules: Policy Info|Required and Optional Fields | confidence=High score=97
     public ILocator PolicyInfoHeader => _page.GetByLabel("Policy Info Header", new() { Exact = true });
@@ -186,7 +186,7 @@ public sealed class PolicyWorkflowLocators
     public ILocator RentalOwnersLiability => _page.GetByRole(AriaRole.Link, new() { Name = "Rental Owners Liability", Exact = true });
 
     // Source modules: Restart Microsoft Edge Message | confidence=Medium score=116
-    public ILocator RestartMicrosoftEdgeMessageOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator RestartMicrosoftEdgeMessageOK => HttpErrorMsgOK; // semantic alias; locator defined once
 
     // Source modules: Common Navigation Links | confidence=Medium score=113
     public ILocator ReturnToAdmin => _page.GetByRole(AriaRole.Link, new() { Name = "Return To Admin", Exact = true });
@@ -195,13 +195,13 @@ public sealed class PolicyWorkflowLocators
     public ILocator ReturnToCPP => _page.GetByRole(AriaRole.Button, new() { Name = "Return To CPP", Exact = true });
 
     // Source modules: Risk - Accounts Receivable | confidence=High score=125
-    public ILocator RiskAccountsReceivableOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator RiskAccountsReceivableOK => HttpErrorMsgOK; // semantic alias; locator defined once
 
     // Source modules: Risk - Bailees Customers | confidence=High score=125
-    public ILocator RiskBaileesCustomersOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator RiskBaileesCustomersOK => HttpErrorMsgOK; // semantic alias; locator defined once
 
     // Source modules: Risk - Computer Systems | confidence=High score=125
-    public ILocator RiskComputerSystemsOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator RiskComputerSystemsOK => HttpErrorMsgOK; // semantic alias; locator defined once
 
     // Source modules: UMB Navigation Links | confidence=Medium score=113
     public ILocator SFP10LiabilityFarm => _page.GetByRole(AriaRole.Link, new() { Name = "SFP - 10 Liability/Farm", Exact = true });
@@ -222,10 +222,10 @@ public sealed class PolicyWorkflowLocators
     public ILocator SearchResult4E620 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Result", Exact = true });
 
     // Source modules: Risk - Bailees Customers | confidence=High score=125
-    public ILocator SearchResultA1BFB => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Result", Exact = true });
+    public ILocator SearchResultA1BFB => SearchResult4E620; // semantic alias; locator defined once
 
     // Source modules: Risk - Accounts Receivable | confidence=High score=125
-    public ILocator SearchResultEAFB8 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Result", Exact = true });
+    public ILocator SearchResultEAFB8 => SearchResult4E620; // semantic alias; locator defined once
 
     // Source modules: Dashboard|QuickSearch | confidence=High score=127
     public ILocator SearchText => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Text", Exact = true });
@@ -234,10 +234,10 @@ public sealed class PolicyWorkflowLocators
     public ILocator SearchValue79E46 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Value", Exact = true });
 
     // Source modules: Risk - Computer Systems | confidence=High score=125
-    public ILocator SearchValue9FCD1 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Value", Exact = true });
+    public ILocator SearchValue9FCD1 => SearchValue79E46; // semantic alias; locator defined once
 
     // Source modules: Risk - Bailees Customers | confidence=High score=125
-    public ILocator SearchValueCA6A6 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Value", Exact = true });
+    public ILocator SearchValueCA6A6 => SearchValue79E46; // semantic alias; locator defined once
 
     // Source modules: Duck Creek Policy | confidence=Medium score=113
     public ILocator ShowMe => _page.GetByRole(AriaRole.Link, new() { Name = "Show me", Exact = true });

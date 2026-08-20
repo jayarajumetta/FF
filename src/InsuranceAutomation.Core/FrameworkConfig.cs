@@ -25,14 +25,23 @@ public sealed class FrameworkConfig
             throw new InvalidOperationException($"Browser timeouts must be positive. Config: {path}");
         if (string.IsNullOrWhiteSpace(Browser.Channel) && string.IsNullOrWhiteSpace(Browser.FallbackBrowser))
             throw new InvalidOperationException($"Configure browser.channel or browser.fallbackBrowser. Config: {path}");
+        if (!Reporting.AttachmentMode.Equals("all", StringComparison.OrdinalIgnoreCase) &&
+            !Reporting.AttachmentMode.Equals("key", StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException($"reporting.attachmentMode must be 'all' or 'key'. Config: {path}");
+        if (Reporting.MaxSingleAttachmentBytes <= 0 || Reporting.MaxAttachmentCount <= 0)
+            throw new InvalidOperationException($"Reporting attachment limits must be positive. Config: {path}");
+
         if (SelfHeal.Enabled)
         {
-            if (string.IsNullOrWhiteSpace(SelfHeal.Endpoint))
-                throw new InvalidOperationException($"selfHeal.endpoint is required when self-heal is enabled. Config: {path}");
-            if (string.IsNullOrWhiteSpace(SelfHeal.Model))
-                throw new InvalidOperationException($"selfHeal.model is required when self-heal is enabled. Config: {path}");
-            if (string.IsNullOrWhiteSpace(SelfHeal.ApiKeyEnvironmentVariable))
-                throw new InvalidOperationException($"selfHeal.apiKeyEnvironmentVariable is required. Config: {path}");
+            if (string.IsNullOrWhiteSpace(SelfHeal.Provider)) throw new InvalidOperationException($"selfHeal.provider is required. Config: {path}");
+            if (SelfHeal.Provider.Equals("openai-compatible",StringComparison.OrdinalIgnoreCase))
+            {
+                if (string.IsNullOrWhiteSpace(SelfHeal.Endpoint)) throw new InvalidOperationException($"selfHeal.endpoint is required for openai-compatible healing. Config: {path}");
+                if (string.IsNullOrWhiteSpace(SelfHeal.Model)) throw new InvalidOperationException($"selfHeal.model is required for openai-compatible healing. Config: {path}");
+                if (string.IsNullOrWhiteSpace(SelfHeal.ApiKeyEnvironmentVariable)) throw new InvalidOperationException($"selfHeal.apiKeyEnvironmentVariable is required. Config: {path}");
+            }
+            else if (!SelfHeal.Provider.Equals("github-copilot",StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException($"Unsupported selfHeal.provider '{SelfHeal.Provider}'. Use openai-compatible or github-copilot. Config: {path}");
         }
     }
 
@@ -93,6 +102,10 @@ public sealed class SelfHealOptions
     public string CacheFile { get; init; } = "Artifacts/SelfHealing/locator-cache.json";
     public string AuditFile { get; init; } = "Artifacts/SelfHealing/healing-audit.jsonl";
     public int CacheContextLimit { get; init; } = 20;
+    public string CopilotExecutable { get; init; } = "copilot";
+    public string DomEvidenceDirectory { get; init; } = "Artifacts/DOM";
+    public string LocatorCatalogFile { get; init; } = "Artifacts/ToscaLocatorPropertyCatalog.json";
+    public bool CaptureDomAfterActions { get; init; } = true;
 }
 
 public sealed class ReportingOptions
@@ -103,6 +116,14 @@ public sealed class ReportingOptions
     public bool IncludeConsoleErrors { get; init; } = true;
     public bool IncludeNetworkErrors { get; init; } = true;
     public bool CreateEvidenceBundle { get; init; } = true;
+
+    // NUnit/Visual Studio/Azure DevOps test-result evidence integration.
+    // "all" attaches every scenario-owned file; "key" attaches the report/log,
+    // screenshots, trace, HAR, videos, evidence manifest and bundle only.
+    public bool AttachEvidenceToTestResult { get; init; } = true;
+    public string AttachmentMode { get; init; } = "all";
+    public long MaxSingleAttachmentBytes { get; init; } = 536870912; // 512 MiB guardrail
+    public int MaxAttachmentCount { get; init; } = 5000;
 }
 
 public sealed class ExecutionOptions

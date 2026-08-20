@@ -17,7 +17,7 @@ public sealed class PolicyInformationLocators
     public ILocator IndustrialHempNo => _page.GetByTestId("fields.account.policyInput$industrialHemp.value-chip-wrapper");
 
     // Source modules: EQ|SFP|Policy Details (Optimized) | confidence=High score=100
-    public ILocator IndustrialHempYes => _page.GetByTestId("fields.account.policyInput$industrialHemp.value-chip-wrapper");
+    public ILocator IndustrialHempYes => IndustrialHempNo; // semantic alias; locator defined once
 
     // Source modules: EQ |Common|Loading Indicator Wait | confidence=Medium score=78
     public ILocator Loading => _page.GetByLabel("Loading ...", new() { Exact = true });

@@ -1,0 +1,79 @@
+{
+  "release": "v50-final-source-ordered-locator-mature-test-evidence",
+  "generatedAt": "2026-08-20T06:19:20.045032+00:00",
+  "scope": {
+    "features": 32,
+    "exampleRows": 1074,
+    "applications": [
+      "Commercial Lines ExpertQuote",
+      "Commercial Lines Duck Creek",
+      "Personal Lines Duck Creek"
+    ]
+  },
+  "validationStatus": "PASS",
+  "preservedArchitecture": {
+    "toscaTemplatePriority": true,
+    "exactScenarioSequence": true,
+    "recursiveReusableBlocks": true,
+    "stepDefinitionBusinessOrder": true,
+    "locatorMaturity": true,
+    "componentAwareActions": true,
+    "selfHealingProviders": [
+      "openai-compatible",
+      "github-copilot"
+    ],
+    "persistentDomMemory": true
+  },
+  "testResultEvidence": {
+    "framework": "NUnit 4 + NUnit3TestAdapter + ReqnRoll",
+    "testScopedArtifactDirectory": true,
+    "parallelCollisionSafeDirectoryIdentity": true,
+    "attachApi": "NUnit.Framework.TestContext.AddTestAttachment",
+    "defaultAttachmentMode": "all",
+    "browserClosedBeforeAttachment": true,
+    "visualStudioTestExplorerIntegration": true,
+    "azureDevOps": {
+      "nativeNUnit3Xml": true,
+      "testOutputXml": true,
+      "publishTestResultsTask": "PublishTestResults@2",
+      "publishRunAttachments": true,
+      "perTestAttachments": true
+    },
+    "evidence": [
+      "execution.log",
+      "report.html",
+      "screenshots",
+      "scenario HTML DOM",
+      "DOM/control/locator metadata",
+      "trace.zip",
+      "network.har.zip",
+      "videos",
+      "self-heal evidence",
+      "evidence-bundle.zip",
+      "test-evidence-manifest.json",
+      "nunit-attachment-result.json"
+    ]
+  },
+  "gates": {
+    "sourceOrder": "PASS",
+    "featuresExact": 32,
+    "stepDefinitionOrder": "PASS",
+    "clDcCompleteness": "PASS",
+    "evidenceAttachment": "PASS",
+    "samePageDuplicateTestIds": 0,
+    "dotnetBuild": "NOT PERFORMED - dotnet executable absent in generation environment"
+  },
+  "changesFromV49": [
+    "Added shared InsuranceAutomation.NUnit integration library.",
+    "Attaches every scenario-owned evidence file to the current NUnit test result by default.",
+    "Closes Playwright context before attachment publication so trace/HAR/video are finalized.",
+    "Copies exact per-action DOM HTML/control observations into the scenario-owned evidence directory.",
+    "Copies current merged page DOM/control/locator-history snapshots into each scenario for immutable evidence.",
+    "Writes scenario-local self-healing event history.",
+    "Adds SHA-256 evidence manifest and NUnit attachment-result manifest per test.",
+    "Uses unique timestamp+GUID scenario artifact paths to prevent parallel-example collisions.",
+    "Adds native NUnit3 TestOutputXml generation and Azure DevOps PublishTestResults@2 per-test attachment publishing.",
+    "Keeps raw Artifacts as a secondary Azure Pipeline artifact for bulk forensic retention.",
+    "Attachment publication failures are non-destructive to the business-test outcome."
+  ]
+}

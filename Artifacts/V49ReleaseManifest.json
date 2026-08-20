@@ -1,0 +1,42 @@
+{
+  "release": "v49-final-source-ordered-locator-mature",
+  "status": "PASS",
+  "scope": {
+    "features": 32,
+    "examples": 1074,
+    "applications": [
+      "Commercial Lines ExpertQuote",
+      "Commercial Lines Duck Creek",
+      "Personal Lines Duck Creek"
+    ]
+  },
+  "gates": {
+    "1_compilationFixedBaselineOverlay": "PASS",
+    "2_exact32FeatureSequences": "PASS",
+    "3_stepDefinitionBusinessOrder": "PASS",
+    "4_clDcReusableCompleteness": "PASS",
+    "5_pageScopedSourceLocatorMaturity": "PASS",
+    "6_componentAwareActions": "PASS",
+    "7_semanticDeduplication": "PASS",
+    "8_healingProviderInterface": "PASS",
+    "9_persistentPageHealingCache": "PASS",
+    "10_mergedDomAndLocatorHistory": "PASS",
+    "11_featureStepPageLocatorDataContracts": "PASS",
+    "12_packageCrcSha256": "PASS"
+  },
+  "corrections": {
+    "stepDefinitionFilesWithRegexFixes": 23,
+    "overEscapedRegexCharactersCorrected": 405
+  },
+  "build": {
+    "dotnetAvailable": false,
+    "freshDotnetBuildPerformed": false,
+    "reason": "dotnet executable absent in generation environment"
+  },
+  "primaryValidationFiles": [
+    "Artifacts/V49SourceOrderContract.json",
+    "Artifacts/V49LocatorMaturityAudit.json",
+    "Artifacts/V49FinalValidation.json",
+    "Artifacts/CompilationBaselineOverlay.json"
+  ]
+}

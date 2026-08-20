@@ -386,9 +386,9 @@ public sealed class GLBasicPolicySteps
 
     }
 
-    [Given(@"^I add \\[CG0435\\] Employee Benefits Liability Endorsement$")]
-    [When(@"^I add \\[CG0435\\] Employee Benefits Liability Endorsement$")]
-    [Then(@"^I add \\[CG0435\\] Employee Benefits Liability Endorsement$")]
+    [Given(@"^I add \[CG0435\] Employee Benefits Liability Endorsement$")]
+    [When(@"^I add \[CG0435\] Employee Benefits Liability Endorsement$")]
+    [Then(@"^I add \[CG0435\] Employee Benefits Liability Endorsement$")]
     public async Task AddCG0435EmployeeBenefitsLiabilityEndorsementAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -410,9 +410,9 @@ public sealed class GLBasicPolicySteps
 
     }
 
-    [Given(@"^I add \\[CG2142\\] Exclusion \\- Explosion, Collapse and Underground Property Damage Hazard \\(Specified Operations\\)$")]
-    [When(@"^I add \\[CG2142\\] Exclusion \\- Explosion, Collapse and Underground Property Damage Hazard \\(Specified Operations\\)$")]
-    [Then(@"^I add \\[CG2142\\] Exclusion \\- Explosion, Collapse and Underground Property Damage Hazard \\(Specified Operations\\)$")]
+    [Given(@"^I add \[CG2142\] Exclusion \- Explosion, Collapse and Underground Property Damage Hazard \(Specified Operations\)$")]
+    [When(@"^I add \[CG2142\] Exclusion \- Explosion, Collapse and Underground Property Damage Hazard \(Specified Operations\)$")]
+    [Then(@"^I add \[CG2142\] Exclusion \- Explosion, Collapse and Underground Property Damage Hazard \(Specified Operations\)$")]
     public async Task AddCG2142ExclusionExplosionCollapseAndUndergroundPropertyDamageHazardSpecifiedOperationsAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -443,9 +443,9 @@ public sealed class GLBasicPolicySteps
 
     }
 
-    [Given(@"^I add \\[CG 2149\\] Total Pollution Exclusion Endorsement$")]
-    [When(@"^I add \\[CG 2149\\] Total Pollution Exclusion Endorsement$")]
-    [Then(@"^I add \\[CG 2149\\] Total Pollution Exclusion Endorsement$")]
+    [Given(@"^I add \[CG 2149\] Total Pollution Exclusion Endorsement$")]
+    [When(@"^I add \[CG 2149\] Total Pollution Exclusion Endorsement$")]
+    [Then(@"^I add \[CG 2149\] Total Pollution Exclusion Endorsement$")]
     public async Task AddCG2149TotalPollutionExclusionEndorsementAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -465,9 +465,9 @@ public sealed class GLBasicPolicySteps
 
     }
 
-    [Given(@"^I verify and Fill out \\[FG0055\\] Employment Practices Liability Insurance Coverage Endorsement$")]
-    [When(@"^I verify and Fill out \\[FG0055\\] Employment Practices Liability Insurance Coverage Endorsement$")]
-    [Then(@"^I verify and Fill out \\[FG0055\\] Employment Practices Liability Insurance Coverage Endorsement$")]
+    [Given(@"^I verify and Fill out \[FG0055\] Employment Practices Liability Insurance Coverage Endorsement$")]
+    [When(@"^I verify and Fill out \[FG0055\] Employment Practices Liability Insurance Coverage Endorsement$")]
+    [Then(@"^I verify and Fill out \[FG0055\] Employment Practices Liability Insurance Coverage Endorsement$")]
     public async Task VerifyAndFillOutFG0055EmploymentPracticesLiabilityInsuranceCoverageEndorsementAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -490,9 +490,9 @@ public sealed class GLBasicPolicySteps
 
     }
 
-    [Given(@"^I add Addl Interest \\[CG2007\\] \\- Engineers$")]
-    [When(@"^I add Addl Interest \\[CG2007\\] \\- Engineers$")]
-    [Then(@"^I add Addl Interest \\[CG2007\\] \\- Engineers$")]
+    [Given(@"^I add Addl Interest \[CG2007\] \- Engineers$")]
+    [When(@"^I add Addl Interest \[CG2007\] \- Engineers$")]
+    [Then(@"^I add Addl Interest \[CG2007\] \- Engineers$")]
     public async Task AddAddlInterestCG2007EngineersAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -521,9 +521,9 @@ public sealed class GLBasicPolicySteps
 
     }
 
-    [Given(@"^I add Addl Interest \\[CG2020\\] Add'l Insured\\-Charitable Institution$")]
-    [When(@"^I add Addl Interest \\[CG2020\\] Add'l Insured\\-Charitable Institution$")]
-    [Then(@"^I add Addl Interest \\[CG2020\\] Add'l Insured\\-Charitable Institution$")]
+    [Given(@"^I add Addl Interest \[CG2020\] Add'l Insured\-Charitable Institution$")]
+    [When(@"^I add Addl Interest \[CG2020\] Add'l Insured\-Charitable Institution$")]
+    [Then(@"^I add Addl Interest \[CG2020\] Add'l Insured\-Charitable Institution$")]
     public async Task AddAddlInterestCG2020AddLInsuredCharitableInstitutionAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -550,9 +550,9 @@ public sealed class GLBasicPolicySteps
 
     }
 
-    [Given(@"^I add Addl Interest \\[CG2023\\] Add'l Insured\\-Executors$")]
-    [When(@"^I add Addl Interest \\[CG2023\\] Add'l Insured\\-Executors$")]
-    [Then(@"^I add Addl Interest \\[CG2023\\] Add'l Insured\\-Executors$")]
+    [Given(@"^I add Addl Interest \[CG2023\] Add'l Insured\-Executors$")]
+    [When(@"^I add Addl Interest \[CG2023\] Add'l Insured\-Executors$")]
+    [Then(@"^I add Addl Interest \[CG2023\] Add'l Insured\-Executors$")]
     public async Task AddAddlInterestCG2023AddLInsuredExecutorsAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -572,9 +572,9 @@ public sealed class GLBasicPolicySteps
 
     }
 
-    [Given(@"^I add Addl Interest \\[CG2025\\] Add'l Insured\\-Executive Officers$")]
-    [When(@"^I add Addl Interest \\[CG2025\\] Add'l Insured\\-Executive Officers$")]
-    [Then(@"^I add Addl Interest \\[CG2025\\] Add'l Insured\\-Executive Officers$")]
+    [Given(@"^I add Addl Interest \[CG2025\] Add'l Insured\-Executive Officers$")]
+    [When(@"^I add Addl Interest \[CG2025\] Add'l Insured\-Executive Officers$")]
+    [Then(@"^I add Addl Interest \[CG2025\] Add'l Insured\-Executive Officers$")]
     public async Task AddAddlInterestCG2025AddLInsuredExecutiveOfficersAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -594,9 +594,9 @@ public sealed class GLBasicPolicySteps
 
     }
 
-    [Given(@"^I add Addl Interest \\[CG2034\\] Add'l Insured\\-Leased Equipment Automatic$")]
-    [When(@"^I add Addl Interest \\[CG2034\\] Add'l Insured\\-Leased Equipment Automatic$")]
-    [Then(@"^I add Addl Interest \\[CG2034\\] Add'l Insured\\-Leased Equipment Automatic$")]
+    [Given(@"^I add Addl Interest \[CG2034\] Add'l Insured\-Leased Equipment Automatic$")]
+    [When(@"^I add Addl Interest \[CG2034\] Add'l Insured\-Leased Equipment Automatic$")]
+    [Then(@"^I add Addl Interest \[CG2034\] Add'l Insured\-Leased Equipment Automatic$")]
     public async Task AddAddlInterestCG2034AddLInsuredLeasedEquipmentAutomaticAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -640,9 +640,9 @@ public sealed class GLBasicPolicySteps
 
     }
 
-    [Given(@"^I answer GL UW Questions OR \\& WA$")]
-    [When(@"^I answer GL UW Questions OR \\& WA$")]
-    [Then(@"^I answer GL UW Questions OR \\& WA$")]
+    [Given(@"^I answer GL UW Questions OR \& WA$")]
+    [When(@"^I answer GL UW Questions OR \& WA$")]
+    [Then(@"^I answer GL UW Questions OR \& WA$")]
     public async Task AnswerGLUWQuestionsORWAAsync()
     {
         var data = _scenario.Get<ScenarioData>();

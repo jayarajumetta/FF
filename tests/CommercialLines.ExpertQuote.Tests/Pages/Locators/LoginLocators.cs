@@ -32,11 +32,11 @@ public sealed class LoginLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator Login0D21A => _page.GetByText("Login", new() { Exact = true });
+    public ILocator Login0D21A => Login07237; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator LoginC45A2 => _page.GetByText("Login", new() { Exact = true });
+    public ILocator LoginC45A2 => Login07237; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name

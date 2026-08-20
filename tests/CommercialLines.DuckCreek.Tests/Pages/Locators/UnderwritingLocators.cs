@@ -40,7 +40,7 @@ public sealed class UnderwritingLocators
     public ILocator IsThereAPriorCarrier5D30E => _page.GetByRole(AriaRole.Textbox, new() { Name = "Is there a Prior Carrier?", Exact = true });
 
     // Source modules: CPP|Client|Underwriting Info|Commercial General Liability History | confidence=High score=125
-    public ILocator IsThereAPriorCarrierA9EB5 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Is there a Prior Carrier?", Exact = true });
+    public ILocator IsThereAPriorCarrierA9EB5 => IsThereAPriorCarrier5D30E; // semantic alias; locator defined once
 
     // Source modules: Underwriting Info | Other Insurance History | confidence=Medium score=113
     public ILocator IsThereAPriorCarrierEFB4F => _page.GetByRole(AriaRole.Textbox, new() { Name = "Is there a Prior Carrier?*", Exact = true });

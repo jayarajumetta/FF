@@ -747,9 +747,9 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
 
     }
 
-    [Given(@"^I review household\\-driver prefill results$")]
-    [When(@"^I review household\\-driver prefill results$")]
-    [Then(@"^I review household\\-driver prefill results$")]
+    [Given(@"^I review household\-driver prefill results$")]
+    [When(@"^I review household\-driver prefill results$")]
+    [Then(@"^I review household\-driver prefill results$")]
     public async Task ReviewHouseholdDriverPrefillResultsAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -1871,9 +1871,9 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
 
     }
 
-    [Given(@"^I configure direct\\-pay billing$")]
-    [When(@"^I configure direct\\-pay billing$")]
-    [Then(@"^I configure direct\\-pay billing$")]
+    [Given(@"^I configure direct\-pay billing$")]
+    [When(@"^I configure direct\-pay billing$")]
+    [Then(@"^I configure direct\-pay billing$")]
     public async Task ConfigureDirectPayBillingAsync()
     {
         var data = _scenario.Get<ScenarioData>();

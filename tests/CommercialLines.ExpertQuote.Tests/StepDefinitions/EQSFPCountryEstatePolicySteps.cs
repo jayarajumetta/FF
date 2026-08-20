@@ -8,7 +8,9 @@ namespace InsuranceAutomation.CLEQ.StepDefinitions;
 public sealed class EQSFPCountryEstatePolicySteps
 {
     private readonly ScenarioContext _scenario;
+    private readonly ApplicationLogin _auth;
     public EQSFPCountryEstatePolicySteps(ScenarioContext scenario) => _scenario = scenario;
+    private ApplicationLogin Auth => _auth ?? new ApplicationLogin(_scenario.Get<BrowserSession>(), _scenario.Get<ScenarioData>(), _scenario.Get<UiActions>());
 
     [Given(@"^I enter client search information$")]
     [When(@"^I enter client search information$")]
@@ -176,9 +178,9 @@ public sealed class EQSFPCountryEstatePolicySteps
 
     }
 
-    [Given(@"^I complete policy Details \\(Optimized\\)$")]
-    [When(@"^I complete policy Details \\(Optimized\\)$")]
-    [Then(@"^I complete policy Details \\(Optimized\\)$")]
+    [Given(@"^I complete policy Details \(Optimized\)$")]
+    [When(@"^I complete policy Details \(Optimized\)$")]
+    [Then(@"^I complete policy Details \(Optimized\)$")]
     public async Task CompletePolicyDetailsOptimizedAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -656,9 +658,9 @@ public sealed class EQSFPCountryEstatePolicySteps
 
     }
 
-    [Given(@"^I complete policy\\-wide$")]
-    [When(@"^I complete policy\\-wide$")]
-    [Then(@"^I complete policy\\-wide$")]
+    [Given(@"^I complete policy\-wide$")]
+    [When(@"^I complete policy\-wide$")]
+    [Then(@"^I complete policy\-wide$")]
     public async Task CompletePolicyWideAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -1017,7 +1019,7 @@ public sealed class EQSFPCountryEstatePolicySteps
                     await page.NavigateAsync(data.Resolve("{{data:application_url_2}}"));
         }
         await page.WaitForUserNameAsync("Exists");
-        await _auth.SignInAsync("CL_DC");
+        await Auth.SignInAsync("CL_DC");
         await page.WaitForLogin0D21AAsync("Absent");
         await page.EnterSearchModeAsync(data.Resolve("{{data:search_mode_331}}"));
         await page.EnterSearchTextAsync(data.Resolve("{B[LastName]}, {B[FirstName]}"));

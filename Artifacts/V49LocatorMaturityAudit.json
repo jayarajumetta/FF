@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "locatorFiles": 51,
+  "sourceCatalogEntries": 29791,
+  "sourcePropertyCounts": {
+    "Tag": 19285,
+    "Name": 10381,
+    "DuckCreekId": 5346,
+    "Id": 3220,
+    "RelativeId": 2265,
+    "attributes_data-testid": 906,
+    "ClassName": 717,
+    "ConstraintIndex": 645,
+    "XPath": 358
+  },
+  "generatedGetByTestIdCalls": 171,
+  "samePageDuplicateDataTestIdFiles": [],
+  "firstSelectors": 37,
+  "lastSelectors": 2,
+  "nthSelectors": 0,
+  "policy": [
+    "page/section context first",
+    "source-backed id/name/duckcreekid/data-testid",
+    "role/type and business description",
+    "relative/parent evidence when available",
+    "ConstraintIndex/occurrence only when source-backed",
+    "no arbitrary First/Nth for component option collisions"
+  ],
+  "runtimeSourceCatalog": "Artifacts/ToscaLocatorPropertyCatalog.json",
+  "runtimeEvidenceStore": "src/InsuranceAutomation.Core/ToscaLocatorEvidenceStore.cs"
+}

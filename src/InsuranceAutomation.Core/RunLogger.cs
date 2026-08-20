@@ -17,6 +17,7 @@ public sealed class RunLogger : IDisposable
     public void Info(string message) => Write("INFO", message);
     public void Warn(string message) => Write("WARN", message);
     public void Error(string message) => Write("ERROR", message);
+    public void Flush() { lock (_gate) _writer.Flush(); }
 
     private void Write(string level, string message)
     {

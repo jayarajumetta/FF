@@ -20,16 +20,16 @@ public sealed class ClientSearchLocators
     public ILocator CreateNewClient => _page.GetByTestId("customer.selected-new-chip");
 
     // Source modules: EQ|Common|Create New Client | confidence=High score=130
-    public ILocator CreateNewClient1 => _page.GetByTestId("customer.selected-new-chip");
+    public ILocator CreateNewClient1 => CreateNewClient; // semantic alias; locator defined once
 
     // Source modules: EQ|Common|Client Info | confidence=High score=127
-    public ILocator CustomerDateOfBirth => _page.Locator("[name=\"customer.dateOfBirth\"], [id=\"customer.dateOfBirth\"]").First;
+    public ILocator CustomerDateOfBirth => _page.Locator("#customer\.dateOfBirth");
 
     // Source modules: EQ|Common|Client Info | confidence=High score=127
-    public ILocator CustomerNameFirst => _page.Locator("[name=\"customer.name.first\"], [id=\"customer.name.first\"]").First;
+    public ILocator CustomerNameFirst => _page.Locator("#customer\.name\.first");
 
     // Source modules: EQ|Common|Client Info | confidence=High score=127
-    public ILocator CustomerNameLast => _page.Locator("[name=\"customer.name.last\"], [id=\"customer.name.last\"]").First;
+    public ILocator CustomerNameLast => _page.Locator("#customer\.name\.last");
 
     // Source modules: EQ|Common|Create New Client | confidence=Medium score=108
     public ILocator ExistingClientMatch => _page.GetByLabel("Existing Client Match", new() { Exact = true });

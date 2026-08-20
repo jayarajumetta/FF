@@ -1,7 +1,5 @@
 # Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 45
 # Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
-# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 45
-# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
 @CL_DC @UMB @expanded_new_business
 
 Feature: UMB Expanded

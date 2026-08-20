@@ -13,7 +13,7 @@ public sealed class FormsLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator FormsAPIRequestB50D4 => _page.GetByText("Forms API Request", new() { Exact = true });
+    public ILocator FormsAPIRequestB50D4 => FormsAPIRequest01660; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -21,7 +21,7 @@ public sealed class FormsLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator FormsAPIResponse53891 => _page.GetByText("Forms API Response", new() { Exact = true });
+    public ILocator FormsAPIResponse53891 => FormsAPIResponse3FBAF; // semantic alias; locator defined once
 
     // Source modules: EQ |Common|Loading Indicator Wait | confidence=Medium score=78
     public ILocator Loading => _page.GetByLabel("Loading ...", new() { Exact = true });

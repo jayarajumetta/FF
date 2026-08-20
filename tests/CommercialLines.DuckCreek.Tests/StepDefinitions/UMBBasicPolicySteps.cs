@@ -71,9 +71,9 @@ public sealed class UMBBasicPolicySteps
 
     }
 
-    [Given(@"^I add a new Associated Client \\- Business Owner Type \\- Click Add Client$")]
-    [When(@"^I add a new Associated Client \\- Business Owner Type \\- Click Add Client$")]
-    [Then(@"^I add a new Associated Client \\- Business Owner Type \\- Click Add Client$")]
+    [Given(@"^I add a new Associated Client \- Business Owner Type \- Click Add Client$")]
+    [When(@"^I add a new Associated Client \- Business Owner Type \- Click Add Client$")]
+    [Then(@"^I add a new Associated Client \- Business Owner Type \- Click Add Client$")]
     public async Task AddANewAssociatedClientBusinessOwnerTypeClickAddClientAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -421,9 +421,9 @@ public sealed class UMBBasicPolicySteps
 
     }
 
-    [Given(@"^I add SFP \\- 10 Liability Farm Underlying LOB$")]
-    [When(@"^I add SFP \\- 10 Liability Farm Underlying LOB$")]
-    [Then(@"^I add SFP \\- 10 Liability Farm Underlying LOB$")]
+    [Given(@"^I add SFP \- 10 Liability Farm Underlying LOB$")]
+    [When(@"^I add SFP \- 10 Liability Farm Underlying LOB$")]
+    [Then(@"^I add SFP \- 10 Liability Farm Underlying LOB$")]
     public async Task AddSFP10LiabilityFarmUnderlyingLOBAsync()
     {
         var data = _scenario.Get<ScenarioData>();

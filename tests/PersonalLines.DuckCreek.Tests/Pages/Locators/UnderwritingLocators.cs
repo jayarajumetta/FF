@@ -49,10 +49,10 @@ public sealed class UnderwritingLocators
     public ILocator QuotePolicySearch => _page.Locator("[name=\"Txt_Quote\\\\Policy Search\"], [id=\"Txt_Quote\\\\Policy Search\"]").First;
 
     // Source modules: EQ | Underwriting Underwriting Next | confidence=Medium score=113
-    public ILocator UnderwritingUnderwritingNextNext => _page.GetByRole(AriaRole.Button, new() { Name = "Next", Exact = true });
+    public ILocator UnderwritingUnderwritingNextNext => CycleUnderwritingNext; // semantic alias; locator defined once
 
     // Source modules: EQ | Underwriting Eligibility Restrictions | confidence=High score=130
-    public ILocator Yes707BB => _page.GetByTestId("fields.data.policy.underwritingQuestionsPolicy$felonyConviction.value-chip-wrapper");
+    public ILocator Yes707BB => No77DAE; // semantic alias; locator defined once
 
     // Source modules: EQ | Underwriting Collector And Vintage Information | confidence=High score=130
     public ILocator Yes71588 => _page.GetByTestId("fields.data.policy.underwritingQuestionsPolicy$vehiclesKeptEnclosed.value-chip-wrapper");

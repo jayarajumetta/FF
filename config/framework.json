@@ -25,10 +25,13 @@
     "domMaxChars": 50000,
     "candidateLimit": 400,
     "requestTimeoutSeconds": 45,
-    "minimumConfidence": 0.70,
+    "minimumConfidence": 0.7,
     "cacheFile": "Artifacts/SelfHealing/locator-cache.json",
     "auditFile": "Artifacts/SelfHealing/healing-audit.jsonl",
-    "cacheContextLimit": 20
+    "cacheContextLimit": 20,
+    "copilotExecutable": "copilot",
+    "domEvidenceDirectory": "Artifacts/DOM",
+    "captureDomAfterActions": true
   },
   "reporting": {
     "artifactRoot": "Artifacts",
@@ -36,7 +39,11 @@
     "includeResolvedData": true,
     "includeConsoleErrors": true,
     "includeNetworkErrors": true,
-    "createEvidenceBundle": true
+    "createEvidenceBundle": true,
+    "attachEvidenceToTestResult": true,
+    "attachmentMode": "all",
+    "maxSingleAttachmentBytes": 536870912,
+    "maxAttachmentCount": 5000
   },
   "execution": {
     "strictUnknownConditions": true,

@@ -29,7 +29,7 @@ public sealed class ClientSearchLocators
     public ILocator Address1CB379 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Address 1*", Exact = true });
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
-    public ILocator Address1D319B => _page.GetByRole(AriaRole.Textbox, new() { Name = "Address1", Exact = true });
+    public ILocator Address1D319B => Address17A1FB; // semantic alias; locator defined once
 
     // Source modules: Client|Named Insured|Common | confidence=High score=125
     public ILocator Address2 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Address2", Exact = true });
@@ -51,14 +51,14 @@ public sealed class ClientSearchLocators
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
     // Cardinality has been set on this field to allow the addition of a "WaitOn" action.
-    public ILocator ClientSearch41F28 => _page.GetByRole(AriaRole.Button, new() { Name = "Client Search", Exact = true });
+    public ILocator ClientSearch41F28 => ClientSearch2CB16; // semantic alias; locator defined once
 
     // Source modules: Client|Named Insured|Individual | confidence=High score=125
-    public ILocator ClientSearchCA696 => _page.GetByRole(AriaRole.Button, new() { Name = "Client Search", Exact = true });
+    public ILocator ClientSearchCA696 => ClientSearch2CB16; // semantic alias; locator defined once
 
     // Source modules: Client Search Results | confidence=High score=125
     // Cardinality has been set on this field to allow the addition of a "WaitOn" action.
-    public ILocator ClientSearchFDC36 => _page.GetByRole(AriaRole.Button, new() { Name = "Client Search", Exact = true });
+    public ILocator ClientSearchFDC36 => ClientSearch2CB16; // semantic alias; locator defined once
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
     public ILocator Complete => _page.GetByRole(AriaRole.Button, new() { Name = "Complete", Exact = true });
@@ -87,7 +87,7 @@ public sealed class ClientSearchLocators
     public ILocator EnterSSNE3801 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Enter SSN*", Exact = true });
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
-    public ILocator EnterSSNFA186 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Enter SSN*", Exact = true });
+    public ILocator EnterSSNFA186 => EnterSSNE3801; // semantic alias; locator defined once
 
     // Source modules: Client|Named Insured|Common | confidence=High score=125
     public ILocator EntityType => _page.GetByRole(AriaRole.Textbox, new() { Name = "Entity Type", Exact = true });
@@ -104,7 +104,7 @@ public sealed class ClientSearchLocators
     public ILocator Gender1DC4A => _page.GetByRole(AriaRole.Textbox, new() { Name = "Gender", Exact = true });
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
-    public ILocator Gender4973C => _page.GetByRole(AriaRole.Textbox, new() { Name = "Gender", Exact = true });
+    public ILocator Gender4973C => Gender1DC4A; // semantic alias; locator defined once
 
     // Source modules: Client|Additional Insured|Individual | confidence=High score=125
     public ILocator IndividualOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
@@ -137,17 +137,17 @@ public sealed class ClientSearchLocators
     public ILocator NameOfInspectionContact => _page.GetByRole(AriaRole.Textbox, new() { Name = "Name of Inspection contact", Exact = true });
 
     // Source modules:  | confidence=High score=125
-    public ILocator OK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator OK => IndividualOK; // semantic alias; locator defined once
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
     public ILocator OrderSSN5E031 => _page.GetByRole(AriaRole.Button, new() { Name = "Order SSN", Exact = true });
 
     // Source modules: Client|Named Insured|Individual | confidence=High score=125
     // Only applicable to individual
-    public ILocator OrderSSN68C87 => _page.GetByRole(AriaRole.Button, new() { Name = "Order SSN", Exact = true });
+    public ILocator OrderSSN68C87 => OrderSSN5E031; // semantic alias; locator defined once
 
     // Source modules: Client|Additional Insured|Individual | confidence=High score=125
-    public ILocator OrderSSN710BF => _page.GetByRole(AriaRole.Button, new() { Name = "Order SSN", Exact = true });
+    public ILocator OrderSSN710BF => OrderSSN5E031; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -155,11 +155,11 @@ public sealed class ClientSearchLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator PleaseVerifySSN8D55B => _page.GetByText("Please verify SSN*", new() { Exact = true });
+    public ILocator PleaseVerifySSN8D55B => PleaseVerifySSN3EAB9; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator PleaseVerifySSNF738A => _page.GetByText("Please verify SSN*", new() { Exact = true });
+    public ILocator PleaseVerifySSNF738A => PleaseVerifySSN3EAB9; // semantic alias; locator defined once
 
     // Source modules: Client|Named Insured|Common | confidence=Medium score=113
     public ILocator QuickQuote => _page.GetByRole(AriaRole.Checkbox, new() { Name = "Quick Quote", Exact = true });
@@ -197,11 +197,11 @@ public sealed class ClientSearchLocators
     public ILocator Verify34721 => _page.GetByRole(AriaRole.Button, new() { Name = "Verify", Exact = true });
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
-    public ILocator Verify7A388 => _page.GetByRole(AriaRole.Button, new() { Name = "Verify", Exact = true });
+    public ILocator Verify7A388 => Verify34721; // semantic alias; locator defined once
 
     // Source modules: Client|Named Insured|Individual | confidence=High score=125
     // Only applicable to individual
-    public ILocator Verify8CDBE => _page.GetByRole(AriaRole.Button, new() { Name = "Verify", Exact = true });
+    public ILocator Verify8CDBE => Verify34721; // semantic alias; locator defined once
 
     // Source modules: Client|Other Insured Info | confidence=High score=125
     public ILocator WebsiteAddress => _page.GetByRole(AriaRole.Textbox, new() { Name = "Website Address", Exact = true });
@@ -214,7 +214,7 @@ public sealed class ClientSearchLocators
     public ILocator ZipCode26D22 => _page.GetByRole(AriaRole.Textbox, new() { Name = "ZipCode", Exact = true });
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
-    public ILocator ZipCodeA088E => _page.GetByRole(AriaRole.Textbox, new() { Name = "ZipCode", Exact = true });
+    public ILocator ZipCodeA088E => ZipCode26D22; // semantic alias; locator defined once
 
     // Source modules: Client|Additional Insured|Individual | confidence=High score=125
     public ILocator ZipCodeD2A54 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Zip code*", Exact = true });

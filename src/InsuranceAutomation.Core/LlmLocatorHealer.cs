@@ -1,5 +1,3 @@
-using System.Net.Http.Headers;
-using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.Playwright;
@@ -11,7 +9,8 @@ public sealed class LlmLocatorHealer
     private readonly BrowserSession _browser;
     private readonly FrameworkConfig _config;
     private readonly RunLogger _logger;
-    private readonly HttpClient _http = new();
+    private readonly ILocatorHealingProvider _provider;
+    private readonly ToscaLocatorEvidenceStore _toscaEvidence;
     private readonly Dictionary<string, LocatorProposal> _cache;
     private readonly List<HealingEvent> _sessionHistory = [];
     private readonly string _cachePath;
@@ -23,7 +22,8 @@ public sealed class LlmLocatorHealer
         _browser = browser;
         _config = config;
         _logger = logger;
-        _http.Timeout = TimeSpan.FromSeconds(Math.Max(5, _config.SelfHeal.RequestTimeoutSeconds));
+        _provider = LocatorHealingProviderFactory.Create(config);
+        _toscaEvidence = new ToscaLocatorEvidenceStore(config);
         _cachePath = ResolvePath(_config.SelfHeal.CacheFile);
         _auditPath = ResolvePath(_config.SelfHeal.AuditFile);
         _cache = LoadCache(_cachePath);
@@ -53,22 +53,22 @@ public sealed class LlmLocatorHealer
             return deterministic;
         }
 
-        var apiKey = _config.GetLlmApiKey();
-        if (string.IsNullOrWhiteSpace(apiKey))
+        if (!_provider.IsAvailable(out var providerReason))
         {
-            _logger.Warn($"SELF-HEAL skipped LLM because environment variable '{_config.SelfHeal.ApiKeyEnvironmentVariable}' is not set.");
+            _logger.Warn($"SELF-HEAL skipped provider '{_provider.Name}': {providerReason}");
             return null;
         }
 
         try
         {
             var evidence = await CollectEvidenceAsync();
-            var prompt = BuildPrompt(failedLocator, control, action, failure, evidence.Candidates, evidence.Dom, evidence.Title);
-            var response = await AskLlmAsync(apiKey, prompt, evidence.Screenshot);
+            var prompt = BuildPrompt(failedLocator, control, action, failure, evidence.Candidates, evidence.Dom, evidence.Title, _toscaEvidence.Render(control));
+            var evidenceDirectory = Path.Combine(_browser.ArtifactDirectory, "self-heal");
+            var response = await _provider.ProposeAsync(new LocatorHealingProviderRequest(prompt, evidence.Screenshot, evidenceDirectory));
             var proposal = ParseProposal(response);
             if (proposal is null)
             {
-                RecordHistory(key, control, action, null, "llm", "rejected", "LLM response did not satisfy locator JSON/confidence constraints.");
+                RecordHistory(key, control, action, null, _provider.Name, "rejected", "Provider response did not satisfy locator JSON/confidence constraints.");
                 return null;
             }
 
@@ -76,7 +76,7 @@ public sealed class LlmLocatorHealer
             if (!await IsUsableAsync(locator, action))
             {
                 _logger.Warn($"SELF-HEAL rejected LLM locator because it was not unique/visible/actionable. Strategy={proposal.Strategy}; Value={proposal.Value}");
-                RecordHistory(key, control, action, proposal, "llm", "rejected", "Proposed locator failed live uniqueness/visibility/actionability validation.");
+                RecordHistory(key, control, action, proposal, _provider.Name, "rejected", "Proposed locator failed live uniqueness/visibility/actionability validation.");
                 return null;
             }
 
@@ -85,14 +85,14 @@ public sealed class LlmLocatorHealer
                 _cache[key] = proposal;
                 SaveCache(_cachePath, _cache);
             }
-            RecordHistory(key, control, action, proposal, "llm", "accepted", proposal.Reason);
+            RecordHistory(key, control, action, proposal, _provider.Name, "accepted", proposal.Reason);
             _logger.Info($"SELF-HEAL accepted locator. Control={control}; Action={action}; Strategy={proposal.Strategy}; Value={proposal.Value}; Confidence={proposal.Confidence:F2}");
             return locator;
         }
         catch (Exception ex)
         {
             _logger.Warn($"SELF-HEAL LLM request failed: {ex.Message}");
-            RecordHistory(key, control, action, null, "llm", "error", ex.Message);
+            RecordHistory(key, control, action, null, _provider.Name, "error", ex.Message);
             return null;
         }
     }
@@ -103,7 +103,7 @@ public sealed class LlmLocatorHealer
         var dom = await page.ContentAsync();
         dom = Regex.Replace(dom, @"<script\b[^>]*>[\s\S]*?</script>", "", RegexOptions.IgnoreCase);
         dom = Regex.Replace(dom, @"<style\b[^>]*>[\s\S]*?</style>", "", RegexOptions.IgnoreCase);
-        dom = Regex.Replace(dom, @"\svalue=(['\"]).*?\1", "", RegexOptions.IgnoreCase);
+        dom = Regex.Replace(dom, @"\svalue=(['""]).?\1", "", RegexOptions.IgnoreCase);
         dom = Regex.Replace(dom, @"<textarea\b([^>]*)>[\s\S]*?</textarea>", "<textarea$1></textarea>", RegexOptions.IgnoreCase);
         if (dom.Length > _config.SelfHeal.DomMaxChars) dom = dom[.._config.SelfHeal.DomMaxChars];
 
@@ -127,7 +127,7 @@ public sealed class LlmLocatorHealer
         return (dom, candidates, screenshot, title);
     }
 
-    private string BuildPrompt(ILocator failedLocator, ControlIntent control, string action, Exception failure, string candidates, string dom, string title)
+    private string BuildPrompt(ILocator failedLocator, ControlIntent control, string action, Exception failure, string candidates, string dom, string title, string toscaEvidence)
     {
         var state = ExecutionIntent.Current;
         var previous = state.PreviousSteps.Count == 0 ? "<none>" : string.Join(" -> ", state.PreviousSteps);
@@ -137,8 +137,9 @@ public sealed class LlmLocatorHealer
 You are a locator recovery component for a Playwright insurance test. Recover ONLY the failed control locator.
 Do not alter the business flow, action, test data, expected result, state, scenario, or current step.
 Return exactly one JSON object and no markdown.
-Allowed strategies: testid, role, label, placeholder, name, id, text, css. Never use XPath or JavaScript.
-Prefer stable source/application attributes: data-testid / DuckCreekId / stable id / name, then role+accessible name, label, placeholder, exact text, concise CSS.
+Allowed strategies: testid, duckcreekid, role, label, placeholder, name, id, text, css. Never use XPath or JavaScript.
+If the candidate is duplicated, use anchorStrategy/anchorValue and/or pick=first|last|nth with an evidence-supported index. Never choose an index arbitrarily.
+Prefer stable source/application attributes: DuckCreekId / stable id / name / data-testid, then role+accessible name, label, placeholder, exact text, concise CSS.
 For Duck Creek screens, strongly prefer stable Duck Creek/application IDs, data-testid, id, or name when present.
 For Commercial ExpertQuote, prefer source HTML name/id/data-testid/role/label evidence from the current DOM.
 
@@ -161,6 +162,9 @@ Previously validated locator cache for this page (may include prior runs):
 Previous locator-healing outcomes in this scenario/page:
 {{sessionContext}}
 
+Source Tosca ModuleAttribute locator evidence for this control (ordered by semantic match and property strength):
+{{toscaEvidence}}
+
 Visible interactive DOM candidates:
 {{candidates}}
 
@@ -170,39 +174,8 @@ Sanitized current HTML DOM:
 Use the attached screenshot when present to disambiguate visually.
 The proposed locator must identify exactly the control required by the CURRENT business step. Do not merely reuse a previous cached locator unless the DOM evidence confirms it is the same intended control.
 JSON schema:
-{"strategy":"name","value":"customer.name.first","role":"textbox","exact":true,"confidence":0.95,"reason":"brief source-grounded reason"}
+{"strategy":"name","value":"customer.name.first","role":"textbox","exact":true,"pick":"unique","index":0,"anchorStrategy":"","anchorValue":"","confidence":0.95,"reason":"brief source-grounded reason"}
 """;
-    }
-
-    private async Task<string> AskLlmAsync(string apiKey, string prompt, byte[] screenshot)
-    {
-        object content;
-        if (_config.SelfHeal.IncludeScreenshot && screenshot.Length > 0)
-        {
-            content = new object[]
-            {
-                new { type = "text", text = prompt },
-                new { type = "image_url", image_url = new { url = "data:image/png;base64," + Convert.ToBase64String(screenshot) } }
-            };
-        }
-        else content = prompt;
-
-        var body = new
-        {
-            model = _config.SelfHeal.Model,
-            temperature = 0,
-            messages = new[] { new { role = "user", content } }
-        };
-        using var request = new HttpRequestMessage(HttpMethod.Post, _config.SelfHeal.Endpoint);
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-        request.Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
-        using var response = await _http.SendAsync(request);
-        var json = await response.Content.ReadAsStringAsync();
-        if (!response.IsSuccessStatusCode) throw new InvalidOperationException($"LLM HTTP {(int)response.StatusCode}: {json}");
-        using var doc = JsonDocument.Parse(json);
-        var choices = doc.RootElement.GetProperty("choices");
-        if (choices.GetArrayLength() == 0) return string.Empty;
-        return choices[0].GetProperty("message").GetProperty("content").GetString() ?? string.Empty;
     }
 
     private LocatorProposal? ParseProposal(string response)
@@ -226,13 +199,16 @@ JSON schema:
         var raw = control.Control;
         var friendly = Regex.Replace(raw, "([a-z0-9])([A-Z])", "$1 $2").Trim();
         var candidates = new List<ILocator>();
+        // First try source-derived Tosca ModuleAttribute alternatives. ConstraintIndex is
+        // honored only when it exists in the source catalog; no arbitrary First/Nth is invented.
+        candidates.AddRange(_toscaEvidence.BuildDeterministicCandidates(page, control));
         if (raw.Contains('.') || raw.Contains('_'))
         {
-            candidates.Add(page.Locator($"[name=\"{EscapeAttribute(raw)}\"]").First);
-            candidates.Add(page.Locator($"[id=\"{EscapeAttribute(raw)}\"]").First);
+            candidates.Add(page.Locator($"[name=\"{EscapeAttribute(raw)}\"]"));
+            candidates.Add(page.Locator($"[id=\"{EscapeAttribute(raw)}\"]"));
         }
         candidates.Add(page.GetByTestId(raw));
-        candidates.Add(page.Locator($"[duckcreekid=\"{EscapeAttribute(raw)}\"], [data-duckcreekid=\"{EscapeAttribute(raw)}\"]").First);
+        candidates.Add(page.Locator($"[duckcreekid=\"{EscapeAttribute(raw)}\"], [data-duckcreekid=\"{EscapeAttribute(raw)}\"]"));
         candidates.Add(page.GetByLabel(friendly, new PageGetByLabelOptions { Exact = true }));
         candidates.Add(page.GetByLabel(friendly, new PageGetByLabelOptions { Exact = false }));
         candidates.Add(page.GetByPlaceholder(friendly, new PageGetByPlaceholderOptions { Exact = false }));
@@ -242,19 +218,8 @@ JSON schema:
 
     private ILocator CreateLocator(LocatorProposal p)
     {
-        var page = _browser.Page;
-        return p.Strategy.ToLowerInvariant() switch
-        {
-            "testid" => page.GetByTestId(p.Value),
-            "label" => page.GetByLabel(p.Value, new PageGetByLabelOptions { Exact = p.Exact }),
-            "placeholder" => page.GetByPlaceholder(p.Value, new PageGetByPlaceholderOptions { Exact = p.Exact }),
-            "name" => page.Locator($"[name=\"{EscapeAttribute(p.Value)}\"]").First,
-            "id" => page.Locator($"[id=\"{EscapeAttribute(p.Value)}\"]").First,
-            "text" => page.GetByText(p.Value, new PageGetByTextOptions { Exact = p.Exact }),
-            "role" => page.GetByRole(ParseRole(p.Role), new PageGetByRoleOptions { Name = p.Value, Exact = p.Exact }),
-            "css" => page.Locator(p.Value).First,
-            _ => throw new InvalidOperationException($"Unsupported healed locator strategy: {p.Strategy}")
-        };
+        var pick=p.Pick.ToLowerInvariant() switch { "first"=>LocatorPick.First, "last"=>LocatorPick.Last, "nth"=>LocatorPick.Nth, _=>LocatorPick.Unique };
+        return LocatorResolution.Build(_browser.Page,new LocatorSpec(p.Strategy,p.Value,p.Role,p.AnchorStrategy,p.AnchorValue,pick,p.Index,p.Exact));
     }
 
     private async Task<bool> IsUsableAsync(ILocator locator, string action)
@@ -295,8 +260,18 @@ JSON schema:
         _sessionHistory.Add(item);
         try
         {
+            var json = JsonSerializer.Serialize(item) + Environment.NewLine;
             Directory.CreateDirectory(Path.GetDirectoryName(_auditPath)!);
-            File.AppendAllText(_auditPath, JsonSerializer.Serialize(item) + Environment.NewLine);
+            File.AppendAllText(_auditPath, json);
+
+            // Keep an immutable scenario-owned copy so a healed test carries its own evidence
+            // into NUnit/Visual Studio/Azure DevOps rather than depending on a global audit file.
+            if (!string.IsNullOrWhiteSpace(_browser.ArtifactDirectory))
+            {
+                var scenarioHealDirectory = Path.Combine(_browser.ArtifactDirectory, "self-heal");
+                Directory.CreateDirectory(scenarioHealDirectory);
+                File.AppendAllText(Path.Combine(scenarioHealDirectory, "healing-events.jsonl"), json);
+            }
         }
         catch (Exception ex) { _logger.Warn($"Unable to write self-heal audit: {ex.Message}"); }
     }
@@ -338,6 +313,6 @@ JSON schema:
     };
 
     private static string EscapeAttribute(string value) => value.Replace("\\", "\\\\").Replace("\"", "\\\"");
-    private sealed record LocatorProposal(string Strategy, string Value, string Role, bool Exact, double Confidence, string Reason);
+    private sealed record LocatorProposal(string Strategy, string Value, string Role, bool Exact, double Confidence, string Reason, string Pick = "unique", int Index = 0, string AnchorStrategy = "", string AnchorValue = "");
     private sealed record HealingEvent(DateTimeOffset Timestamp, string Key, string Page, string Control, string Action, string Provider, string Outcome, string Strategy, string Value, double Confidence, string Reason);
 }

@@ -23,7 +23,7 @@ public sealed class PolicyWorkflowLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator BODYABC33 => _page.GetByText("BODY", new() { Exact = true });
+    public ILocator BODYABC33 => BODY4F40D; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -90,7 +90,7 @@ public sealed class PolicyWorkflowLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator LoadingMessageC7A0D => _page.GetByText("Loading Message", new() { Exact = true });
+    public ILocator LoadingMessageC7A0D => LoadingMessage4DE37; // semantic alias; locator defined once
 
     // Source modules: EQ|Common|Narrative | confidence=Medium score=78
     public ILocator LockedThisQuoteHasBeenSubmittedAndYouCanNoLongerMakeChangesToThisText => _page.GetByLabel("Locked This quote has been submitted and you can no longer make changes to this text.", new() { Exact = true });
@@ -101,11 +101,11 @@ public sealed class PolicyWorkflowLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator LoggedInUser6AD12 => _page.GetByText("Logged In User", new() { Exact = true });
+    public ILocator LoggedInUser6AD12 => LoggedInUser5A005; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator LoggedInUser8A0DD => _page.GetByText("Logged In User", new() { Exact = true });
+    public ILocator LoggedInUser8A0DD => LoggedInUser5A005; // semantic alias; locator defined once
 
     // Source modules: EQ|Common|Logout of EQ | confidence=Medium score=83
     public ILocator Logout => _page.GetByRole(AriaRole.Button, new() { Name = "logout", Exact = true });
@@ -122,7 +122,7 @@ public sealed class PolicyWorkflowLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator NameAndQuoteNumCA893 => _page.GetByText("Name and Quote Num", new() { Exact = true });
+    public ILocator NameAndQuoteNumCA893 => NameAndQuoteNum8EB77; // semantic alias; locator defined once
 
     // Source modules: EQ|Common|Narrative | confidence=Medium score=78
     public ILocator NarrativeScreenHeading => _page.GetByLabel("Narrative Screen Heading", new() { Exact = true });
@@ -190,11 +190,11 @@ public sealed class PolicyWorkflowLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator ScreenHeading9696C => _page.GetByText("Screen Heading", new() { Exact = true });
+    public ILocator ScreenHeading9696C => ScreenHeading69631; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator ScreenHeadingDCABF => _page.GetByText("Screen Heading", new() { Exact = true });
+    public ILocator ScreenHeadingDCABF => ScreenHeading69631; // semantic alias; locator defined once
 
     // Source modules: EQ|Common|Search for Policy | confidence=Medium score=113
     public ILocator SearchButton => _page.GetByRole(AriaRole.Button, new() { Name = "Search Button", Exact = true });
@@ -213,11 +213,11 @@ public sealed class PolicyWorkflowLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740 => _page.GetByText("The browser was unable to communicate with the server. HTTP Status Error - , HTTP Status - 0", new() { Exact = true });
+    public ILocator TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740 => TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus01C36B; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0B8256 => _page.GetByText("The browser was unable to communicate with the server. HTTP Status Error - , HTTP Status - 0", new() { Exact = true });
+    public ILocator TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0B8256 => TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus01C36B; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -239,7 +239,7 @@ public sealed class PolicyWorkflowLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator UserNameE65A8 => _page.GetByText("UserName", new() { Exact = true });
+    public ILocator UserNameE65A8 => UserNameE0ACD; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -247,6 +247,6 @@ public sealed class PolicyWorkflowLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator ViewPolicy56E09 => _page.GetByText("View Policy", new() { Exact = true });
+    public ILocator ViewPolicy56E09 => ViewPolicy0AC0B; // semantic alias; locator defined once
 
 }

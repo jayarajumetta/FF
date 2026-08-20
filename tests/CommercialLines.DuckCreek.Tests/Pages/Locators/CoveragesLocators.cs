@@ -54,7 +54,7 @@ public sealed class CoveragesLocators
     public ILocator EstimatedPremium => _page.GetByRole(AriaRole.Textbox, new() { Name = "Estimated Premium*", Exact = true });
 
     // Source modules: [FG0055, FG0062, FG0063, FG0069, FG0071, FG0072, FG0074, FG0077, FG0078] Employment Practices Liability Insurance Coverage Endorsement | confidence=High score=125
-    public ILocator FG0055FG0062FG0063FG0069FG0071FG0072FG0074FG0077FG0078EmploymentPracticesLiabilityInsuranceCoverageEndorsementOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator FG0055FG0062FG0063FG0069FG0071FG0072FG0074FG0077FG0078EmploymentPracticesLiabilityInsuranceCoverageEndorsementOK => CG3132LimitedFungiOrBacteriaCoverageOK; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -85,7 +85,7 @@ public sealed class CoveragesLocators
     public ILocator PolicyCoverage => _page.GetByRole(AriaRole.Textbox, new() { Name = "Policy Coverage", Exact = true });
 
     // Source modules: Policy Covg - Accounts Receivable | confidence=High score=125
-    public ILocator PolicyCovgAccountsReceivableOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator PolicyCovgAccountsReceivableOK => CG3132LimitedFungiOrBacteriaCoverageOK; // semantic alias; locator defined once
 
     // Source modules: IM Navigation Links | confidence=Medium score=113
     public ILocator PolicyCovgED95C => _page.GetByRole(AriaRole.Link, new() { Name = "Policy Covg", Exact = true });

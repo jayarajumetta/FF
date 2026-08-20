@@ -1,6 +1,8 @@
 param(
     [ValidateSet('ALL','CLDC','CLEQ','PLDC')][string]$Project='ALL',
-    [string]$Filter=''
+    [string]$Filter='',
+    [string]$Configuration='Debug',
+    [string]$ResultsDirectory='TestResults'
 )
 $ErrorActionPreference = 'Stop'
 
@@ -11,9 +13,13 @@ $projects = @{
 }
 Push-Location (Split-Path $PSScriptRoot -Parent)
 try {
-    $targets = if ($Project -eq 'ALL') { $projects.Values } else { @($projects[$Project]) }
+    New-Item -ItemType Directory -Force -Path $ResultsDirectory | Out-Null
+    $nunitXmlDirectory = Join-Path (Resolve-Path $ResultsDirectory).Path 'NUnit'
+    New-Item -ItemType Directory -Force -Path $nunitXmlDirectory | Out-Null
+    $targets = if ($Project -eq 'ALL') { $projects.GetEnumerator() } else { @([pscustomobject]@{ Key=$Project; Value=$projects[$Project] }) }
     foreach ($target in $targets) {
-        $args = @('test',$target,'-c','Debug','--logger','console;verbosity=normal')
+        $resultFile = "$($target.Key).trx"
+        $args = @('test',$target.Value,'-c',$Configuration,'--results-directory',$ResultsDirectory,'--logger',"trx;LogFileName=$resultFile",'--logger','console;verbosity=normal','--',"NUnit.TestOutputXml=$nunitXmlDirectory")
         if ($Filter) { $args += @('--filter',$Filter) }
         & dotnet @args
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

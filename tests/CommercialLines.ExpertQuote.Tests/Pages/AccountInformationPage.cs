@@ -71,8 +71,11 @@ public sealed class AccountInformationPage
     public Task VerifySatelliteAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.Satellite, expected, property, new ControlIntent("AccountInformation", "Satellite"));
 
+    public Task SelectStateAsync(string value) =>
+        _ui.ClickAsync(_locators.GetStateOption(value), new ControlIntent("AccountInformation", "StateOption"));
+
     public Task SelectState0110EAsync(string value) =>
-        _ui.SelectAsync(_locators.State0110E, value, new ControlIntent("AccountInformation", "State0110E"));
+    _ui.SelectAsync(_locators.State0110E, value, new ControlIntent("AccountInformation", "State0110E"));
 
     public Task EnterStateAE19AAsync(string value) =>
         _ui.FillAsync(_locators.StateAE19A, value, new ControlIntent("AccountInformation", "StateAE19A"));
@@ -80,14 +83,12 @@ public sealed class AccountInformationPage
     public Task ClickStateDropdownAsync() =>
         _ui.ClickAsync(_locators.StateDropdown, new ControlIntent("AccountInformation", "StateDropdown"));
 
+
     public Task EnterStreetAddressAsync(string value) =>
         _ui.FillAsync(_locators.StreetAddress, value, new ControlIntent("AccountInformation", "StreetAddress"));
 
     public Task PressStreetAddressAsync(string key) =>
         _ui.PressAsync(_locators.StreetAddress, key, new ControlIntent("AccountInformation", "StreetAddress"));
-
-    public Task ClickYesAsync() =>
-        _ui.ClickAsync(_locators.Yes, new ControlIntent("AccountInformation", "Yes"));
 
     public Task EnterZipAsync(string value) =>
         _ui.FillAsync(_locators.Zip, value, new ControlIntent("AccountInformation", "Zip"));

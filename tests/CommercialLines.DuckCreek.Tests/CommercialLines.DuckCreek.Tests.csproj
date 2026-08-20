@@ -14,6 +14,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/InsuranceAutomation.Core/InsuranceAutomation.Core.csproj" />
+    <ProjectReference Include="../../src/InsuranceAutomation.NUnit/InsuranceAutomation.NUnit.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="TestData/**/*.json" CopyToOutputDirectory="PreserveNewest" />

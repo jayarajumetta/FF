@@ -41,7 +41,7 @@ public sealed class AccountInformationLocators
     public ILocator MaritalStatus => _page.GetByLabel("Lbl_Marital Status:", new() { Exact = true });
 
     // Source modules: EQ||Account Details | confidence=High score=130
-    public ILocator Married => _page.GetByTestId("owner.maritalStatus-chip-wrapper");
+    public ILocator Married => Divorced; // semantic alias; locator defined once
 
     // Source modules: EQ||Account Details | confidence=High score=127
     public ILocator OwnerAddressCityNew => _page.Locator("[name=\"Txt_owner.address.city_New\"], [id=\"Txt_owner.address.city_New\"]").First;
@@ -56,7 +56,7 @@ public sealed class AccountInformationLocators
     public ILocator Satellite => _page.GetByRole(AriaRole.Button, new() { Name = "Satellite", Exact = true });
 
     // Source modules: EQ||Account Details | confidence=High score=130
-    public ILocator Single => _page.GetByTestId("owner.maritalStatus-chip-wrapper");
+    public ILocator Single => Divorced; // semantic alias; locator defined once
 
     // Source modules: EQ||Account Details | confidence=Review score=97
     public ILocator StateName => _page.GetByLabel("State Name", new() { Exact = true });

@@ -38,7 +38,7 @@ public sealed class NavigationLocators
     public ILocator AddClassCode => _page.GetByRole(AriaRole.Button, new() { Name = "Add Class Code", Exact = true });
 
     // Source modules: Property Add Class | confidence=High score=125
-    public ILocator AddClassDCD8F => _page.GetByRole(AriaRole.Button, new() { Name = "Add Class", Exact = true });
+    public ILocator AddClassDCD8F => AddClassB04B6; // semantic alias; locator defined once
 
     // Source modules: CGL|Add Class | confidence=High score=125
     public ILocator AddClassOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
@@ -56,28 +56,28 @@ public sealed class NavigationLocators
     public ILocator AddEndorsement04BD0 => _page.GetByRole(AriaRole.Button, new() { Name = "Add Endorsement", Exact = true });
 
     // Source modules: BOP Expanded Endorsements|Add Endorsement | confidence=High score=125
-    public ILocator AddEndorsement34EE3 => _page.GetByRole(AriaRole.Button, new() { Name = "Add Endorsement", Exact = true });
+    public ILocator AddEndorsement34EE3 => AddEndorsement04BD0; // semantic alias; locator defined once
 
     // Source modules: Endorsements|Sole Proprietors, Partners, Officers And Others Coverage | confidence=High score=125
-    public ILocator AddEndorsement44E6A => _page.GetByRole(AriaRole.Button, new() { Name = "Add Endorsement", Exact = true });
+    public ILocator AddEndorsement44E6A => AddEndorsement04BD0; // semantic alias; locator defined once
 
     // Source modules: Endorsement - Main | confidence=High score=125
-    public ILocator AddEndorsement48A9E => _page.GetByRole(AriaRole.Button, new() { Name = "Add Endorsement", Exact = true });
+    public ILocator AddEndorsement48A9E => AddEndorsement04BD0; // semantic alias; locator defined once
 
     // Source modules: Endorsements|Designated Workplaces Exclusion | confidence=High score=125
-    public ILocator AddEndorsement9E5F4 => _page.GetByRole(AriaRole.Button, new() { Name = "Add Endorsement", Exact = true });
+    public ILocator AddEndorsement9E5F4 => AddEndorsement04BD0; // semantic alias; locator defined once
 
     // Source modules: Endorsements|Main | confidence=High score=125
-    public ILocator AddEndorsementA9973 => _page.GetByRole(AriaRole.Button, new() { Name = "Add Endorsement", Exact = true });
+    public ILocator AddEndorsementA9973 => AddEndorsement04BD0; // semantic alias; locator defined once
 
     // Source modules: Endorsements|Waiton Add Endorsement Button | confidence=High score=125
-    public ILocator AddEndorsementB6452 => _page.GetByRole(AriaRole.Button, new() { Name = "Add Endorsement", Exact = true });
+    public ILocator AddEndorsementB6452 => AddEndorsement04BD0; // semantic alias; locator defined once
 
     // Source modules: Endorsements|Partners, Officers And Others Exclusion | confidence=High score=125
-    public ILocator AddEndorsementCE8DD => _page.GetByRole(AriaRole.Button, new() { Name = "Add Endorsement", Exact = true });
+    public ILocator AddEndorsementCE8DD => AddEndorsement04BD0; // semantic alias; locator defined once
 
     // Source modules: [UC1101] Exclusion for Designated Activities or Services | confidence=High score=125
-    public ILocator AddEndorsementD15B0 => _page.GetByRole(AriaRole.Button, new() { Name = "Add Endorsement", Exact = true });
+    public ILocator AddEndorsementD15B0 => AddEndorsement04BD0; // semantic alias; locator defined once
 
     // Source modules: Endorsements|Partners, Officers And Others Exclusion | confidence=High score=95
     public ILocator AddExcludedOfficerInformation => _page.GetByRole(AriaRole.Button, new() { Name = "Add Excluded Officer Information", Exact = true });
@@ -134,7 +134,7 @@ public sealed class NavigationLocators
     public ILocator AddlInterests15174 => _page.GetByLabel("Addl Interests", new() { Exact = true });
 
     // Source modules: Addl Interests|Main | confidence=High score=127
-    public ILocator AddlInterestsA10A4 => _page.GetByLabel("Addl Interests", new() { Exact = true });
+    public ILocator AddlInterestsA10A4 => AddlInterests15174; // semantic alias; locator defined once
 
     // Source modules: GL Navigation Links | confidence=Medium score=113
     public ILocator AddlInterestsE39FC => _page.GetByRole(AriaRole.Link, new() { Name = "Addl Interests", Exact = true });
@@ -149,7 +149,7 @@ public sealed class NavigationLocators
     public ILocator Address19B8B5 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Address 1", Exact = true });
 
     // Source modules: GL OCP|Risk | confidence=High score=125
-    public ILocator Address1BE797 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Address 1", Exact = true });
+    public ILocator Address1BE797 => Address19B8B5; // semantic alias; locator defined once
 
     // Source modules: Location | confidence=High score=125
     public ILocator Address1C0AF1 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Address1", Exact = true });
@@ -249,7 +249,7 @@ public sealed class NavigationLocators
     public ILocator Building87910 => _page.GetByRole(AriaRole.Link, new() { Name = "Building", Exact = true });
 
     // Source modules: Building - Detail | confidence=High score=125
-    public ILocator BuildingDetailOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator BuildingDetailOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Property Add Class | confidence=High score=125
     public ILocator BuildingLimit => _page.GetByRole(AriaRole.Textbox, new() { Name = "Building Limit", Exact = true });
@@ -270,7 +270,7 @@ public sealed class NavigationLocators
     public ILocator BusinessInterruptionLimitOfInsurance => _page.GetByRole(AriaRole.Textbox, new() { Name = "Business Interruption Limit Of Insurance", Exact = true });
 
     // Source modules: Policy Coverage|Business Interruption | confidence=High score=125
-    public ILocator BusinessInterruptionOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator BusinessInterruptionOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules:  | confidence=High score=95
     public ILocator CA2325LeasedWorkersCoverage => _page.GetByLabel("[CA2325] Leased Workers Coverage", new() { Exact = true });
@@ -294,31 +294,31 @@ public sealed class NavigationLocators
     public ILocator CA9948ClassesOfCommoditiesTransported => _page.GetByRole(AriaRole.Textbox, new() { Name = "CA9948 - Classes Of Commodities Transported", Exact = true });
 
     // Source modules: [CG0424] Coverage for Injury to Leased Workers | confidence=High score=125
-    public ILocator CG0424CoverageForInjuryToLeasedWorkersOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator CG0424CoverageForInjuryToLeasedWorkersOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: [CG0435] Employee Benefits Liability | confidence=High score=125
-    public ILocator CG0435EmployeeBenefitsLiabilityOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator CG0435EmployeeBenefitsLiabilityOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: [CG 20 07] Add'l Insured-Engineers, Architects | confidence=High score=125
-    public ILocator CG2007AddLInsuredEngineersArchitectsOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator CG2007AddLInsuredEngineersArchitectsOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: [CG 20 20] Add'l Insured-Charitable Institution | confidence=High score=125
-    public ILocator CG2020AddLInsuredCharitableInstitutionOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator CG2020AddLInsuredCharitableInstitutionOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: [CG2142] Exclusion - Explosion, Collapse and Underground Property Damage Hazard (Specified Operations) | confidence=High score=125
-    public ILocator CG2142ExclusionExplosionCollapseAndUndergroundPropertyDamageHazardSpecifiedOperationsOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator CG2142ExclusionExplosionCollapseAndUndergroundPropertyDamageHazardSpecifiedOperationsOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: [CG 2149] Total Pollution Exclusion Endorsement | confidence=High score=125
-    public ILocator CG2149TotalPollutionExclusionEndorsementOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator CG2149TotalPollutionExclusionEndorsementOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: [CG2401] Non-Binding Arbitration | confidence=High score=125
-    public ILocator CG2401NonBindingArbitrationOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator CG2401NonBindingArbitrationOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: [CG2812] Pesticide or Herbicide Applicator Coverage | confidence=High score=125
-    public ILocator CG2812PesticideOrHerbicideApplicatorCoverageOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator CG2812PesticideOrHerbicideApplicatorCoverageOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: [CG 29 35] Add'l Insured-State or Political (Permits) | confidence=High score=125
-    public ILocator CG2935AddLInsuredStateOrPoliticalPermitsOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator CG2935AddLInsuredStateOrPoliticalPermitsOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: GL Navigation Links | confidence=Medium score=113
     public ILocator CGL08901 => _page.GetByRole(AriaRole.Link, new() { Name = "CGL", Exact = true });
@@ -377,10 +377,10 @@ public sealed class NavigationLocators
     public ILocator Coinsurance01AB1 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Coinsurance", Exact = true });
 
     // Source modules: Rating Groups | confidence=High score=125
-    public ILocator Coinsurance6348B => _page.GetByRole(AriaRole.Textbox, new() { Name = "Coinsurance", Exact = true });
+    public ILocator Coinsurance6348B => Coinsurance01AB1; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Contractors Equipment | confidence=High score=125
-    public ILocator CoinsuranceC9726 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Coinsurance", Exact = true });
+    public ILocator CoinsuranceC9726 => Coinsurance01AB1; // semantic alias; locator defined once
 
     // Source modules: State Details|Drive Other Car | confidence=High score=124
     public ILocator Collision => _page.GetByRole(AriaRole.Checkbox, new() { Name = "Collision", Exact = true });
@@ -395,13 +395,13 @@ public sealed class NavigationLocators
     public ILocator CollisionDeductible9C100 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Collision Deductible*", Exact = true });
 
     // Source modules: State Details|Hired Auto Physical Damage With Driver | confidence=High score=125
-    public ILocator CollisionDeductibleAEEBB => _page.GetByRole(AriaRole.Textbox, new() { Name = "Collision Deductible*", Exact = true });
+    public ILocator CollisionDeductibleAEEBB => CollisionDeductible9C100; // semantic alias; locator defined once
 
     // Source modules: State Details|Hired Auto PD Without Driver | confidence=High score=124
     public ILocator CollisionIfAny7532D => _page.GetByRole(AriaRole.Checkbox, new() { Name = "Collision If Any", Exact = true });
 
     // Source modules: State Details|Hired Auto Physical Damage With Driver | confidence=High score=124
-    public ILocator CollisionIfAny8AEE8 => _page.GetByRole(AriaRole.Checkbox, new() { Name = "Collision If Any", Exact = true });
+    public ILocator CollisionIfAny8AEE8 => CollisionIfAny7532D; // semantic alias; locator defined once
 
     // Source modules: UMB Navigation Links | confidence=Medium score=113
     public ILocator CommercialAuto => _page.GetByRole(AriaRole.Link, new() { Name = "Commercial Auto", Exact = true });
@@ -416,7 +416,7 @@ public sealed class NavigationLocators
     public ILocator CommonNavigationLinksNext => _page.GetByRole(AriaRole.Link, new() { Name = "Next", Exact = true });
 
     // Source modules: Client|Third Party Designee|Common | confidence=High score=125
-    public ILocator CommonOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator CommonOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: State Details|Main | confidence=High score=95
     public ILocator CompanyName => _page.GetByRole(AriaRole.Textbox, new() { Name = "Company Name*", Exact = true });
@@ -434,13 +434,13 @@ public sealed class NavigationLocators
     public ILocator Construction39800 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Construction", Exact = true });
 
     // Source modules: Risk - Bailees Customers | confidence=High score=125
-    public ILocator ConstructionCD2DE => _page.GetByRole(AriaRole.Textbox, new() { Name = "Construction", Exact = true });
+    public ILocator ConstructionCD2DE => Construction39800; // semantic alias; locator defined once
 
     // Source modules: Risk - Computer Systems | confidence=High score=125
     public ILocator ConstructionCode => _page.GetByRole(AriaRole.Textbox, new() { Name = "Construction Code", Exact = true });
 
     // Source modules: Risk - Accounts Receivable | confidence=High score=125
-    public ILocator ConstructionFB8D9 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Construction", Exact = true });
+    public ILocator ConstructionFB8D9 => Construction39800; // semantic alias; locator defined once
 
     // Source modules: Specific Underwriting Questions - Contractors Equipment | confidence=High score=97
     public ILocator ContractorsEquipmentHeading => _page.GetByLabel("Contractors Equipment Heading", new() { Exact = true });
@@ -461,22 +461,22 @@ public sealed class NavigationLocators
     public ILocator CoverageFormA7F96 => _page.GetByLabel("Coverage Form", new() { Exact = true });
 
     // Source modules: Risk - Main | confidence=High score=125
-    public ILocator CoverageFormCFDD1 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Coverage Form", Exact = true });
+    public ILocator CoverageFormCFDD1 => CoverageForm3B382; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Computer Systems | confidence=High score=95
     public ILocator CoverageFormDisplay2ECD4 => _page.GetByLabel("Coverage Form Display", new() { Exact = true });
 
     // Source modules: Policy Covg - Bailees Cutomers | confidence=High score=95
-    public ILocator CoverageFormDisplay6F446 => _page.GetByLabel("Coverage Form Display", new() { Exact = true });
+    public ILocator CoverageFormDisplay6F446 => CoverageFormDisplay2ECD4; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Motor Truck Cargo | confidence=High score=95
-    public ILocator CoverageFormDisplayB69C2 => _page.GetByLabel("Coverage Form Display", new() { Exact = true });
+    public ILocator CoverageFormDisplayB69C2 => CoverageFormDisplay2ECD4; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Signs | confidence=High score=95
-    public ILocator CoverageFormDisplayC10BA => _page.GetByLabel("Coverage Form Display", new() { Exact = true });
+    public ILocator CoverageFormDisplayC10BA => CoverageFormDisplay2ECD4; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Contractors Equipment | confidence=High score=95
-    public ILocator CoverageFormDisplayD1A9B => _page.GetByLabel("Coverage Form Display", new() { Exact = true });
+    public ILocator CoverageFormDisplayD1A9B => CoverageFormDisplay2ECD4; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Main | confidence=High score=125
     public ILocator CoverageFormToBeAdded => _page.GetByRole(AriaRole.Textbox, new() { Name = "Coverage Form To Be Added", Exact = true });
@@ -518,41 +518,41 @@ public sealed class NavigationLocators
     public ILocator Deductible01AB9 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Deductible", Exact = true });
 
     // Source modules: Endorsement - IF 00 02 Waterborne Equipment | confidence=High score=125
-    public ILocator Deductible0CC0A => _page.GetByRole(AriaRole.Textbox, new() { Name = "Deductible", Exact = true });
+    public ILocator Deductible0CC0A => Deductible01AB9; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Motor Truck Cargo | confidence=High score=125
-    public ILocator Deductible320C9 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Deductible", Exact = true });
+    public ILocator Deductible320C9 => Deductible01AB9; // semantic alias; locator defined once
 
     // Source modules: Risk - Bailees Customers | confidence=High score=125
-    public ILocator Deductible59155 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Deductible", Exact = true });
+    public ILocator Deductible59155 => Deductible01AB9; // semantic alias; locator defined once
 
     // Source modules: Building - Detail | confidence=High score=125
-    public ILocator Deductible592D9 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Deductible", Exact = true });
+    public ILocator Deductible592D9 => Deductible01AB9; // semantic alias; locator defined once
 
     // Source modules: State Details|Main | confidence=High score=125
     // IA Only
-    public ILocator Deductible5F45D => _page.GetByRole(AriaRole.Textbox, new() { Name = "Deductible", Exact = true });
+    public ILocator Deductible5F45D => Deductible01AB9; // semantic alias; locator defined once
 
     // Source modules: Policy Covg|GL | confidence=High score=95
     public ILocator DeductibleBasis => _page.GetByRole(AriaRole.Textbox, new() { Name = "Deductible Basis", Exact = true });
 
     // Source modules: Policy Covg - Contractors Equipment | confidence=High score=125
-    public ILocator DeductibleC227C => _page.GetByRole(AriaRole.Textbox, new() { Name = "Deductible", Exact = true });
+    public ILocator DeductibleC227C => Deductible01AB9; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Computer Systems | confidence=High score=125
-    public ILocator DeductibleC91E9 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Deductible", Exact = true });
+    public ILocator DeductibleC91E9 => Deductible01AB9; // semantic alias; locator defined once
 
     // Source modules: Building - Detail | confidence=High score=95
     public ILocator DeductibleIncreasedTheft99E5F => _page.GetByRole(AriaRole.Textbox, new() { Name = "Deductible Increased Theft", Exact = true });
 
     // Source modules: Rating Groups | confidence=High score=95
-    public ILocator DeductibleIncreasedTheftF76DB => _page.GetByRole(AriaRole.Textbox, new() { Name = "Deductible Increased Theft", Exact = true });
+    public ILocator DeductibleIncreasedTheftF76DB => DeductibleIncreasedTheft99E5F; // semantic alias; locator defined once
 
     // Source modules: Building - Detail | confidence=High score=95
     public ILocator DeductibleWindHail911AF => _page.GetByRole(AriaRole.Textbox, new() { Name = "Deductible Wind Hail", Exact = true });
 
     // Source modules: Rating Groups | confidence=High score=95
-    public ILocator DeductibleWindHailAB1C3 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Deductible Wind Hail", Exact = true });
+    public ILocator DeductibleWindHailAB1C3 => DeductibleWindHail911AF; // semantic alias; locator defined once
 
     // Source modules: Policy Covg | confidence=High score=95
     public ILocator DefaultExpModType => _page.GetByRole(AriaRole.Textbox, new() { Name = "Default Exp Mod Type", Exact = true });
@@ -567,19 +567,19 @@ public sealed class NavigationLocators
     public ILocator Description03789 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Description*", Exact = true });
 
     // Source modules: Policy Covg - Bailees Cutomers | confidence=High score=125
-    public ILocator Description43F2D => _page.GetByRole(AriaRole.Textbox, new() { Name = "Description*", Exact = true });
+    public ILocator Description43F2D => Description03789; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Computer Systems | confidence=High score=125
-    public ILocator Description58EC2 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Description*", Exact = true });
+    public ILocator Description58EC2 => Description03789; // semantic alias; locator defined once
 
     // Source modules: Rating Groups | confidence=High score=125
     public ILocator Description8A08D => _page.GetByRole(AriaRole.Textbox, new() { Name = "Description", Exact = true });
 
     // Source modules: Policy Covg - Signs | confidence=High score=125
-    public ILocator DescriptionBE47E => _page.GetByRole(AriaRole.Textbox, new() { Name = "Description*", Exact = true });
+    public ILocator DescriptionBE47E => Description03789; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Motor Truck Cargo | confidence=High score=125
-    public ILocator DescriptionF8E60 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Description*", Exact = true });
+    public ILocator DescriptionF8E60 => Description03789; // semantic alias; locator defined once
 
     // Source modules: Policy Coverage|Business Interruption | confidence=High score=125
     public ILocator DescriptionOfBusinessActivites => _page.GetByRole(AriaRole.Textbox, new() { Name = "Description Of Business Activites*", Exact = true });
@@ -594,28 +594,28 @@ public sealed class NavigationLocators
     public ILocator DescriptionOfSpecifiedOperation => _page.GetByRole(AriaRole.Textbox, new() { Name = "Description of Specified Operation", Exact = true });
 
     // Source modules: Endorsements|Designated Workplaces Exclusion | confidence=High score=125
-    public ILocator DesignatedWorkplacesExclusionOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator DesignatedWorkplacesExclusionOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Underwriting Info | Other Insurance History | confidence=High score=125
     public ILocator Detail0F8C6 => _page.GetByRole(AriaRole.Button, new() { Name = "Detail", Exact = true });
 
     // Source modules: Building - Main | confidence=High score=125
-    public ILocator Detail10932 => _page.GetByRole(AriaRole.Button, new() { Name = "Detail", Exact = true });
+    public ILocator Detail10932 => Detail0F8C6; // semantic alias; locator defined once
 
     // Source modules: Risk Aggregate | confidence=High score=125
-    public ILocator Detail1664B => _page.GetByRole(AriaRole.Button, new() { Name = "Detail", Exact = true });
+    public ILocator Detail1664B => Detail0F8C6; // semantic alias; locator defined once
 
     // Source modules: Entity Schedule|First Entity Info | confidence=High score=125
-    public ILocator Detail238D5 => _page.GetByRole(AriaRole.Button, new() { Name = "Detail", Exact = true });
+    public ILocator Detail238D5 => Detail0F8C6; // semantic alias; locator defined once
 
     // Source modules: Location | confidence=High score=125
-    public ILocator Detail33F0D => _page.GetByRole(AriaRole.Button, new() { Name = "Detail", Exact = true });
+    public ILocator Detail33F0D => Detail0F8C6; // semantic alias; locator defined once
 
     // Source modules: Policy Coverage|Business Interruption | confidence=High score=125
-    public ILocator Detail4A746 => _page.GetByRole(AriaRole.Button, new() { Name = "Detail", Exact = true });
+    public ILocator Detail4A746 => Detail0F8C6; // semantic alias; locator defined once
 
     // Source modules: Property Enter Building RCT | confidence=High score=125
-    public ILocator Detail7F662 => _page.GetByRole(AriaRole.Button, new() { Name = "Detail", Exact = true });
+    public ILocator Detail7F662 => Detail0F8C6; // semantic alias; locator defined once
 
     // Source modules:  | confidence=High score=95
     public ILocator DoYouHaveACDLLicense => _page.GetByRole(AriaRole.Textbox, new() { Name = "Do you have a CDL license?*", Exact = true });
@@ -672,19 +672,19 @@ public sealed class NavigationLocators
     public ILocator EffectiveDate0E335 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Effective Date", Exact = true });
 
     // Source modules: Commercial Auto | confidence=High score=125
-    public ILocator EffectiveDate68A1B => _page.GetByRole(AriaRole.Textbox, new() { Name = "Effective Date", Exact = true });
+    public ILocator EffectiveDate68A1B => EffectiveDate0E335; // semantic alias; locator defined once
 
     // Source modules: Businessowners | confidence=High score=125
-    public ILocator EffectiveDate6CF3D => _page.GetByRole(AriaRole.Textbox, new() { Name = "Effective Date", Exact = true });
+    public ILocator EffectiveDate6CF3D => EffectiveDate0E335; // semantic alias; locator defined once
 
     // Source modules: Policy Info|Required and Optional Fields | confidence=High score=125
     public ILocator EffectiveDate95094 => _page.GetByRole(AriaRole.Textbox, new() { Name = "EffectiveDate", Exact = true });
 
     // Source modules: General Liability | confidence=High score=125
-    public ILocator EffectiveDateB3600 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Effective Date", Exact = true });
+    public ILocator EffectiveDateB3600 => EffectiveDate0E335; // semantic alias; locator defined once
 
     // Source modules: Underwriting Info | Other Insurance History | confidence=Medium score=113
-    public ILocator EffectiveDateB557F => _page.GetByRole(AriaRole.Textbox, new() { Name = "Effective Date", Exact = true });
+    public ILocator EffectiveDateB557F => EffectiveDate0E335; // semantic alias; locator defined once
 
     // Source modules: Building - Detail | confidence=High score=95
     public ILocator EligibleForEnhancedWindRatingProgram => _page.GetByRole(AriaRole.Textbox, new() { Name = "Eligible For Enhanced Wind Rating Program", Exact = true });
@@ -699,7 +699,7 @@ public sealed class NavigationLocators
     public ILocator Endorsement => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsement", Exact = true });
 
     // Source modules: Endorsement - CM 66 01 Exclude Named Customer | confidence=High score=125
-    public ILocator EndorsementCM6601ExcludeNamedCustomerOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator EndorsementCM6601ExcludeNamedCustomerOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules:  | confidence=High score=97
     public ILocator EndorsementDetail => _page.GetByLabel("Endorsement Detail", new() { Exact = true });
@@ -708,7 +708,7 @@ public sealed class NavigationLocators
     public ILocator EndorsementHeading => _page.GetByLabel("Endorsement Heading", new() { Exact = true });
 
     // Source modules: Endorsement - IF 00 02 Waterborne Equipment | confidence=High score=125
-    public ILocator EndorsementIF0002WaterborneEquipmentOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator EndorsementIF0002WaterborneEquipmentOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -726,31 +726,31 @@ public sealed class NavigationLocators
     public ILocator EndorsementType3503E => _page.GetByRole(AriaRole.Textbox, new() { Name = "Endorsement Type", Exact = true });
 
     // Source modules: BAP Endorsements | confidence=High score=125
-    public ILocator EndorsementType624AD => _page.GetByRole(AriaRole.Textbox, new() { Name = "Endorsement Type", Exact = true });
+    public ILocator EndorsementType624AD => EndorsementType3503E; // semantic alias; locator defined once
 
     // Source modules: Endorsements|Designated Workplaces Exclusion | confidence=High score=125
-    public ILocator EndorsementType8DB33 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Endorsement Type", Exact = true });
+    public ILocator EndorsementType8DB33 => EndorsementType3503E; // semantic alias; locator defined once
 
     // Source modules: [CG0435] Employee Benefits Liability | confidence=High score=125
-    public ILocator EndorsementTypeA2928 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Endorsement Type", Exact = true });
+    public ILocator EndorsementTypeA2928 => EndorsementType3503E; // semantic alias; locator defined once
 
     // Source modules: Endorsements|Sole Proprietors, Partners, Officers And Others Coverage | confidence=High score=125
-    public ILocator EndorsementTypeAEC4F => _page.GetByRole(AriaRole.Textbox, new() { Name = "Endorsement Type", Exact = true });
+    public ILocator EndorsementTypeAEC4F => EndorsementType3503E; // semantic alias; locator defined once
 
     // Source modules: [CG2142] Exclusion - Explosion, Collapse and Underground Property Damage Hazard (Specified Operations) | confidence=High score=125
-    public ILocator EndorsementTypeB210C => _page.GetByRole(AriaRole.Textbox, new() { Name = "Endorsement Type", Exact = true });
+    public ILocator EndorsementTypeB210C => EndorsementType3503E; // semantic alias; locator defined once
 
     // Source modules: [CG2812] Pesticide or Herbicide Applicator Coverage | confidence=High score=125
-    public ILocator EndorsementTypeC75E4 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Endorsement Type", Exact = true });
+    public ILocator EndorsementTypeC75E4 => EndorsementType3503E; // semantic alias; locator defined once
 
     // Source modules: [CG0424] Coverage for Injury to Leased Workers | confidence=High score=125
-    public ILocator EndorsementTypeCE99F => _page.GetByRole(AriaRole.Textbox, new() { Name = "Endorsement Type", Exact = true });
+    public ILocator EndorsementTypeCE99F => EndorsementType3503E; // semantic alias; locator defined once
 
     // Source modules: [CG 2149] Total Pollution Exclusion Endorsement | confidence=High score=125
-    public ILocator EndorsementTypeD83A4 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Endorsement Type", Exact = true });
+    public ILocator EndorsementTypeD83A4 => EndorsementType3503E; // semantic alias; locator defined once
 
     // Source modules: Endorsements|Partners, Officers And Others Exclusion | confidence=High score=125
-    public ILocator EndorsementTypeF8D4A => _page.GetByRole(AriaRole.Textbox, new() { Name = "Endorsement Type", Exact = true });
+    public ILocator EndorsementTypeF8D4A => EndorsementType3503E; // semantic alias; locator defined once
 
     // Source modules: GL Navigation Links | confidence=Medium score=113
     public ILocator Endorsements7572E => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsements", Exact = true });
@@ -759,19 +759,19 @@ public sealed class NavigationLocators
     public ILocator Endorsements9626E => _page.GetByLabel("Endorsements", new() { Exact = true });
 
     // Source modules: UMB Navigation Links | confidence=Medium score=113
-    public ILocator Endorsements9D4A5 => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsements", Exact = true });
+    public ILocator Endorsements9D4A5 => Endorsements7572E; // semantic alias; locator defined once
 
     // Source modules: WC Navigation Links | confidence=Medium score=113
-    public ILocator EndorsementsB76E9 => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsements", Exact = true });
+    public ILocator EndorsementsB76E9 => Endorsements7572E; // semantic alias; locator defined once
 
     // Source modules: BAP Navigation Links | confidence=Medium score=113
-    public ILocator EndorsementsC27F0 => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsements", Exact = true });
+    public ILocator EndorsementsC27F0 => Endorsements7572E; // semantic alias; locator defined once
 
     // Source modules: Endorsements - Main Screen | confidence=High score=127
     public ILocator EndorsementsHeading8FD33 => _page.GetByLabel("Endorsements Heading", new() { Exact = true });
 
     // Source modules: BAP Endorsement Schedule | confidence=High score=127
-    public ILocator EndorsementsHeadingA3D50 => _page.GetByLabel("Endorsements Heading", new() { Exact = true });
+    public ILocator EndorsementsHeadingA3D50 => EndorsementsHeading8FD33; // semantic alias; locator defined once
 
     // Source modules: Risk Schedule|General Coverage | confidence=High score=95
     // Only Applicable to Golf Carts
@@ -821,13 +821,13 @@ public sealed class NavigationLocators
     public ILocator ExpirationDate34EAC => _page.GetByRole(AriaRole.Textbox, new() { Name = "Expiration Date", Exact = true });
 
     // Source modules: SFP - 10 Liability/Farm | confidence=High score=125
-    public ILocator ExpirationDate664A1 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Expiration Date", Exact = true });
+    public ILocator ExpirationDate664A1 => ExpirationDate34EAC; // semantic alias; locator defined once
 
     // Source modules: Businessowners | confidence=High score=125
-    public ILocator ExpirationDate82561 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Expiration Date", Exact = true });
+    public ILocator ExpirationDate82561 => ExpirationDate34EAC; // semantic alias; locator defined once
 
     // Source modules: General Liability | confidence=High score=125
-    public ILocator ExpirationDateB437C => _page.GetByRole(AriaRole.Textbox, new() { Name = "Expiration Date", Exact = true });
+    public ILocator ExpirationDateB437C => ExpirationDate34EAC; // semantic alias; locator defined once
 
     // Source modules: CGL|Main Page | confidence=High score=125
     public ILocator Exposure => _page.GetByRole(AriaRole.Textbox, new() { Name = "Exposure", Exact = true });
@@ -839,7 +839,7 @@ public sealed class NavigationLocators
     public ILocator ExtraExpense => _page.GetByRole(AriaRole.Textbox, new() { Name = "Extra Expense", Exact = true });
 
     // Source modules: [FG 00 13] Automatic Additional Insured - Specific Relationship | confidence=High score=125
-    public ILocator FG0013AutomaticAdditionalInsuredSpecificRelationshipOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator FG0013AutomaticAdditionalInsuredSpecificRelationshipOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Location | confidence=High score=125
     public ILocator FeetFromHydrant => _page.GetByRole(AriaRole.Textbox, new() { Name = "Feet From Hydrant", Exact = true });
@@ -873,7 +873,7 @@ public sealed class NavigationLocators
     public ILocator GeneralLiabilityInformation => _page.GetByLabel("General Liability Information", new() { Exact = true });
 
     // Source modules: General Liability Information | confidence=High score=125
-    public ILocator GeneralLiabilityInformationOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator GeneralLiabilityInformationOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Underwriting Info | General UW Questions | confidence=High score=127
     public ILocator GeneralUWQuestions => _page.GetByLabel("General UW Questions", new() { Exact = true });
@@ -915,7 +915,7 @@ public sealed class NavigationLocators
     public ILocator HiredAutoLiability => _page.GetByRole(AriaRole.Checkbox, new() { Name = "Hired Auto Liability", Exact = true });
 
     // Source modules: Risk Schedule|Hired Auto | confidence=High score=125
-    public ILocator HiredAutoOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator HiredAutoOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: State Details|Hired Auto Physical Damage With Driver | confidence=High score=124
     public ILocator HiredAutoPhysicalDamageWithDriver => _page.GetByRole(AriaRole.Checkbox, new() { Name = "Hired Auto Physical Damage With Driver", Exact = true });
@@ -933,10 +933,10 @@ public sealed class NavigationLocators
     public ILocator IFRAME280B0 => _page.GetByLabel("IFRAME", new() { Exact = true });
 
     // Source modules: Additional Interests Schedule | confidence=Review score=97
-    public ILocator IFRAME59D4B => _page.GetByLabel("IFRAME", new() { Exact = true });
+    public ILocator IFRAME59D4B => IFRAME280B0; // semantic alias; locator defined once
 
     // Source modules: Driver Detail | confidence=Review score=97
-    public ILocator IFRAME6D695 => _page.GetByLabel("IFRAME", new() { Exact = true });
+    public ILocator IFRAME6D695 => IFRAME280B0; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -963,7 +963,7 @@ public sealed class NavigationLocators
     public ILocator IFRAMEDuckCreekPolicyVehicleAssociation => _page.GetByText("Vehicle Association*", new() { Exact = true });
 
     // Source modules: BAP Endorsements | confidence=Review score=97
-    public ILocator IFRAMEF0A48 => _page.GetByLabel("IFRAME", new() { Exact = true });
+    public ILocator IFRAMEF0A48 => IFRAME280B0; // semantic alias; locator defined once
 
     // Source modules: Specific Underwriting Questions - Contractors Equipment | confidence=High score=124
     public ILocator IfYesDescribe => _page.GetByRole(AriaRole.Textbox, new() { Name = "If Yes, describe", Exact = true });
@@ -975,7 +975,7 @@ public sealed class NavigationLocators
     public ILocator ImportPolicyDataButton89922 => _page.GetByRole(AriaRole.Button, new() { Name = "Import Policy Data Button", Exact = true });
 
     // Source modules: Businessowners | confidence=High score=95
-    public ILocator ImportPolicyDataButtonEF44C => _page.GetByRole(AriaRole.Button, new() { Name = "Import Policy Data Button", Exact = true });
+    public ILocator ImportPolicyDataButtonEF44C => ImportPolicyDataButton89922; // semantic alias; locator defined once
 
     // Source modules: Property - Main | confidence=High score=95
     public ILocator IncreasedPollutantCleanup => _page.GetByRole(AriaRole.Textbox, new() { Name = "Increased Pollutant Cleanup", Exact = true });
@@ -1038,16 +1038,16 @@ public sealed class NavigationLocators
     public ILocator LiabilityLimit1AE2B => _page.GetByRole(AriaRole.Textbox, new() { Name = "Liability Limit*", Exact = true });
 
     // Source modules: SFP - 10 Liability/Farm | confidence=High score=125
-    public ILocator LiabilityLimit56E57 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Liability Limit*", Exact = true });
+    public ILocator LiabilityLimit56E57 => LiabilityLimit1AE2B; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Bailees - Property Away from Your Premises | confidence=High score=125
     public ILocator Limit46632 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Limit", Exact = true });
 
     // Source modules: Endorsement - IF 00 02 Waterborne Equipment | confidence=High score=125
-    public ILocator Limit887C5 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Limit", Exact = true });
+    public ILocator Limit887C5 => Limit46632; // semantic alias; locator defined once
 
     // Source modules: Risk - Bailees Customers | confidence=High score=125
-    public ILocator LimitE32DC => _page.GetByRole(AriaRole.Textbox, new() { Name = "Limit", Exact = true });
+    public ILocator LimitE32DC => Limit46632; // semantic alias; locator defined once
 
     // Source modules: Risk - Signs | confidence=High score=125
     public ILocator LimitOfInsurance => _page.GetByRole(AriaRole.Textbox, new() { Name = "Limit of Insurance", Exact = true });
@@ -1072,23 +1072,23 @@ public sealed class NavigationLocators
     public ILocator Location8DEE2 => _page.GetByRole(AriaRole.Link, new() { Name = "Location", Exact = true });
 
     // Source modules: BAP Navigation Links | confidence=Medium score=113
-    public ILocator LocationA1D91 => _page.GetByRole(AriaRole.Link, new() { Name = "Location", Exact = true });
+    public ILocator LocationA1D91 => Location8DEE2; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
     public ILocator LocationAssignment => _page.GetByText("Location Assignment", new() { Exact = true });
 
     // Source modules: CP Navigation Links | confidence=Medium score=113
-    public ILocator LocationB7B1D => _page.GetByRole(AriaRole.Link, new() { Name = "Location", Exact = true });
+    public ILocator LocationB7B1D => Location8DEE2; // semantic alias; locator defined once
 
     // Source modules: UMB Navigation Links | confidence=Medium score=113
-    public ILocator LocationE16BC => _page.GetByRole(AriaRole.Link, new() { Name = "Location", Exact = true });
+    public ILocator LocationE16BC => Location8DEE2; // semantic alias; locator defined once
 
     // Source modules:  | confidence=High score=95
     public ILocator LocationID => _page.GetByRole(AriaRole.Textbox, new() { Name = "LocationID", Exact = true });
 
     // Source modules: Location | confidence=High score=125
-    public ILocator LocationOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator LocationOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: GL OCP|Risk | confidence=High score=125
     public ILocator LocationOfCoveredOperations => _page.GetByRole(AriaRole.Textbox, new() { Name = "Location Of Covered Operations", Exact = true });
@@ -1100,7 +1100,7 @@ public sealed class NavigationLocators
     public ILocator LossExperienceHeading => _page.GetByLabel("Loss Experience Heading", new() { Exact = true });
 
     // Source modules: CGL|Main Page | confidence=High score=125
-    public ILocator MainPageOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator MainPageOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Risk Schedule|Vehicle Information | confidence=High score=125
     public ILocator Make => _page.GetByRole(AriaRole.Textbox, new() { Name = "Make*", Exact = true });
@@ -1245,7 +1245,7 @@ public sealed class NavigationLocators
     public ILocator NonOwnedAuto => _page.GetByRole(AriaRole.Textbox, new() { Name = "Non Owned Auto", Exact = true });
 
     // Source modules: NotePad | confidence=High score=125
-    public ILocator NotePadOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator NotePadOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Common Navigation Links | confidence=Medium score=113
     public ILocator Notepad => _page.GetByRole(AriaRole.Link, new() { Name = "Notepad", Exact = true });
@@ -1269,7 +1269,7 @@ public sealed class NavigationLocators
     public ILocator OCP => _page.GetByRole(AriaRole.Link, new() { Name = "OCP", Exact = true });
 
     // Source modules:  | confidence=High score=125
-    public ILocator OK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator OK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules:  | confidence=High score=95
     public ILocator OKClassCode => _page.GetByRole(AriaRole.Button, new() { Name = "OK-Class Code", Exact = true });
@@ -1294,13 +1294,13 @@ public sealed class NavigationLocators
     public ILocator OTCDeductibleE0D59 => _page.GetByRole(AriaRole.Textbox, new() { Name = "OTC Deductible", Exact = true });
 
     // Source modules: State Details|Hired Auto PD Without Driver | confidence=High score=125
-    public ILocator OTCDeductibleEF1DE => _page.GetByRole(AriaRole.Textbox, new() { Name = "OTC Deductible*", Exact = true });
+    public ILocator OTCDeductibleEF1DE => OTCDeductible62C21; // semantic alias; locator defined once
 
     // Source modules: State Details|Hired Auto PD Without Driver | confidence=High score=124
     public ILocator OTCIfAny4EFEE => _page.GetByRole(AriaRole.Checkbox, new() { Name = "OTC If Any", Exact = true });
 
     // Source modules: State Details|Hired Auto Physical Damage With Driver | confidence=High score=124
-    public ILocator OTCIfAny6A58B => _page.GetByRole(AriaRole.Checkbox, new() { Name = "OTC If Any", Exact = true });
+    public ILocator OTCIfAny6A58B => OTCIfAny4EFEE; // semantic alias; locator defined once
 
     // Source modules: Property Add Class | confidence=High score=125
     public ILocator OccupancyType => _page.GetByRole(AriaRole.Textbox, new() { Name = "Occupancy Type", Exact = true });
@@ -1348,19 +1348,19 @@ public sealed class NavigationLocators
     public ILocator OriginalCostNew => _page.GetByRole(AriaRole.Textbox, new() { Name = "Original Cost New*", Exact = true });
 
     // Source modules: Underwriting Info | Other Insurance History | confidence=High score=125
-    public ILocator OtherInsuranceHistoryOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator OtherInsuranceHistoryOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Endorsements|Sole Proprietors, Partners, Officers And Others Coverage | confidence=High score=95
     public ILocator Others9E098 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Others*", Exact = true });
 
     // Source modules: Endorsements|Partners, Officers And Others Exclusion | confidence=High score=95
-    public ILocator OthersB1A1B => _page.GetByRole(AriaRole.Textbox, new() { Name = "Others*", Exact = true });
+    public ILocator OthersB1A1B => Others9E098; // semantic alias; locator defined once
 
     // Source modules: Endorsements|Sole Proprietors, Partners, Officers And Others Coverage | confidence=High score=95
     public ILocator Partners => _page.GetByRole(AriaRole.Textbox, new() { Name = "Partners*", Exact = true });
 
     // Source modules: Endorsements|Partners, Officers And Others Exclusion | confidence=High score=125
-    public ILocator PartnersOfficersAndOthersExclusionOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator PartnersOfficersAndOthersExclusionOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Billing | confidence=High score=125
     public ILocator PayPlan => _page.GetByRole(AriaRole.Textbox, new() { Name = "Pay Plan", Exact = true });
@@ -1384,7 +1384,7 @@ public sealed class NavigationLocators
     public ILocator PersonalPropertyRatingGroup => _page.GetByRole(AriaRole.Textbox, new() { Name = "Personal Property Rating Group", Exact = true });
 
     // Source modules: Risk Schedule|Physical Damage | confidence=High score=125
-    public ILocator PhysicalDamageOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator PhysicalDamageOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Property - Main | confidence=High score=95
     public ILocator PierOrWharf => _page.GetByRole(AriaRole.Textbox, new() { Name = "Pier Or Wharf", Exact = true });
@@ -1408,46 +1408,46 @@ public sealed class NavigationLocators
     public ILocator PolicyCovg35BE4 => _page.GetByRole(AriaRole.Link, new() { Name = "Policy Covg", Exact = true });
 
     // Source modules: GL Navigation Links | confidence=Medium score=113
-    public ILocator PolicyCovg50C98 => _page.GetByRole(AriaRole.Link, new() { Name = "Policy Covg", Exact = true });
+    public ILocator PolicyCovg50C98 => PolicyCovg35BE4; // semantic alias; locator defined once
 
     // Source modules: Policy Covg|GL | confidence=High score=127
-    public ILocator PolicyCovg6B651 => _page.GetByLabel("Policy Covg", new() { Exact = true });
+    public ILocator PolicyCovg6B651 => PolicyCovg26786; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Bailees Cutomers | confidence=High score=125
-    public ILocator PolicyCovgBaileesCutomersOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator PolicyCovgBaileesCutomersOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Bailees - Property Away from Your Premises | confidence=High score=125
-    public ILocator PolicyCovgBaileesPropertyAwayFromYourPremisesOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator PolicyCovgBaileesPropertyAwayFromYourPremisesOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Computer Systems | confidence=High score=125
-    public ILocator PolicyCovgComputerSystemsOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator PolicyCovgComputerSystemsOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Contractors Equipment | confidence=High score=125
-    public ILocator PolicyCovgContractorsEquipmentOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator PolicyCovgContractorsEquipmentOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: CP Navigation Links | confidence=Medium score=113
-    public ILocator PolicyCovgD0419 => _page.GetByRole(AriaRole.Link, new() { Name = "Policy Covg", Exact = true });
+    public ILocator PolicyCovgD0419 => PolicyCovg35BE4; // semantic alias; locator defined once
 
     // Source modules: WC Navigation Links | confidence=Medium score=113
-    public ILocator PolicyCovgD3CEF => _page.GetByRole(AriaRole.Link, new() { Name = "Policy Covg", Exact = true });
+    public ILocator PolicyCovgD3CEF => PolicyCovg35BE4; // semantic alias; locator defined once
 
     // Source modules: IM Navigation Links | confidence=Medium score=113
-    public ILocator PolicyCovgED95C => _page.GetByRole(AriaRole.Link, new() { Name = "Policy Covg", Exact = true });
+    public ILocator PolicyCovgED95C => PolicyCovg35BE4; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Main | confidence=High score=127
-    public ILocator PolicyCovgF9E58 => _page.GetByLabel("Policy Covg", new() { Exact = true });
+    public ILocator PolicyCovgF9E58 => PolicyCovg26786; // semantic alias; locator defined once
 
     // Source modules: Policy Covg | confidence=High score=127
-    public ILocator PolicyCovgFF145 => _page.GetByLabel("Policy Covg", new() { Exact = true });
+    public ILocator PolicyCovgFF145 => PolicyCovg26786; // semantic alias; locator defined once
 
     // Source modules: Policy Covg | confidence=High score=97
     public ILocator PolicyCovgHeader => _page.GetByLabel("Policy Covg Header", new() { Exact = true });
 
     // Source modules: Policy Covg - Motor Truck Cargo | confidence=High score=125
-    public ILocator PolicyCovgMotorTruckCargoOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator PolicyCovgMotorTruckCargoOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Signs | confidence=High score=125
-    public ILocator PolicyCovgSignsOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator PolicyCovgSignsOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: BAP Navigation Links | confidence=Medium score=113
     public ILocator PolicyCovgerage => _page.GetByRole(AriaRole.Link, new() { Name = "Policy Covgerage", Exact = true });
@@ -1465,16 +1465,16 @@ public sealed class NavigationLocators
     public ILocator PolicyNumber461C7 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Policy Number", Exact = true });
 
     // Source modules: Businessowners | confidence=High score=125
-    public ILocator PolicyNumber6566F => _page.GetByRole(AriaRole.Textbox, new() { Name = "Policy Number", Exact = true });
+    public ILocator PolicyNumber6566F => PolicyNumber461C7; // semantic alias; locator defined once
 
     // Source modules: SFP - 10 Liability/Farm | confidence=High score=125
-    public ILocator PolicyNumber78B85 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Policy Number", Exact = true });
+    public ILocator PolicyNumber78B85 => PolicyNumber461C7; // semantic alias; locator defined once
 
     // Source modules: Underwriting Info | Other Insurance History | confidence=Medium score=113
-    public ILocator PolicyNumberBA28E => _page.GetByRole(AriaRole.Textbox, new() { Name = "Policy Number", Exact = true });
+    public ILocator PolicyNumberBA28E => PolicyNumber461C7; // semantic alias; locator defined once
 
     // Source modules: General Liability | confidence=High score=125
-    public ILocator PolicyNumberFDF5C => _page.GetByRole(AriaRole.Textbox, new() { Name = "Policy Number", Exact = true });
+    public ILocator PolicyNumberFDF5C => PolicyNumber461C7; // semantic alias; locator defined once
 
     // Source modules: Underwriting Info | Other Insurance History | confidence=Medium score=113
     public ILocator PolicyType => _page.GetByRole(AriaRole.Textbox, new() { Name = "Policy Type", Exact = true });
@@ -1498,10 +1498,10 @@ public sealed class NavigationLocators
     public ILocator Pricing900C9 => _page.GetByRole(AriaRole.Link, new() { Name = "Pricing", Exact = true });
 
     // Source modules: UMB Navigation Links | confidence=Medium score=113
-    public ILocator PricingB84E6 => _page.GetByRole(AriaRole.Link, new() { Name = "Pricing", Exact = true });
+    public ILocator PricingB84E6 => Pricing900C9; // semantic alias; locator defined once
 
     // Source modules: WC Navigation Links | confidence=Medium score=113
-    public ILocator PricingDCBD4 => _page.GetByRole(AriaRole.Link, new() { Name = "Pricing", Exact = true });
+    public ILocator PricingDCBD4 => Pricing900C9; // semantic alias; locator defined once
 
     // Source modules: Pricing | confidence=High score=125
     public ILocator PricingDetail => _page.GetByRole(AriaRole.Button, new() { Name = "Pricing Detail", Exact = true });
@@ -1510,7 +1510,7 @@ public sealed class NavigationLocators
     public ILocator PricingDetailOK => _page.GetByRole(AriaRole.Button, new() { Name = "Pricing Detail - OK", Exact = true });
 
     // Source modules: BAP Navigation Links | confidence=Medium score=113
-    public ILocator PricingF3185 => _page.GetByRole(AriaRole.Link, new() { Name = "Pricing", Exact = true });
+    public ILocator PricingF3185 => Pricing900C9; // semantic alias; locator defined once
 
     // Source modules: Pricing | confidence=High score=97
     public ILocator PricingHeading => _page.GetByLabel("Pricing Heading", new() { Exact = true });
@@ -1551,25 +1551,25 @@ public sealed class NavigationLocators
     public ILocator ProductsCompletedOpsButton => _page.GetByRole(AriaRole.Link, new() { Name = "Products/Completed Ops Button", Exact = true });
 
     // Source modules: Products/Completed Ops | confidence=High score=125
-    public ILocator ProductsCompletedOpsOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator ProductsCompletedOpsOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: CP Navigation Links | confidence=Medium score=113
     public ILocator Property => _page.GetByRole(AriaRole.Link, new() { Name = "Property", Exact = true });
 
     // Source modules: Property Add Class | confidence=High score=125
-    public ILocator PropertyAddClassOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator PropertyAddClassOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Bailees Cutomers | confidence=High score=125
     public ILocator PropertyAwayFromYourPremisesSchedule => _page.GetByRole(AriaRole.Button, new() { Name = "Property Away From Your Premises Schedule", Exact = true });
 
     // Source modules: Property Enter Building RCT | confidence=High score=125
-    public ILocator PropertyEnterBuildingRCTOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator PropertyEnterBuildingRCTOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Computer Systems | confidence=High score=125
     public ILocator PropertyInTransit6E905 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Property In Transit", Exact = true });
 
     // Source modules: Policy Covg - Bailees Cutomers | confidence=High score=125
-    public ILocator PropertyInTransit710FF => _page.GetByRole(AriaRole.Textbox, new() { Name = "Property In Transit", Exact = true });
+    public ILocator PropertyInTransit710FF => PropertyInTransit6E905; // semantic alias; locator defined once
 
     // Source modules: Property Add Class | confidence=High score=125
     public ILocator PropertyOfOthersLimit => _page.GetByRole(AriaRole.Textbox, new() { Name = "Property of Others Limit", Exact = true });
@@ -1622,16 +1622,16 @@ public sealed class NavigationLocators
     public ILocator Risk873E7 => _page.GetByLabel("Risk", new() { Exact = true });
 
     // Source modules: Risk - Accounts Receivable | confidence=High score=125
-    public ILocator RiskAccountsReceivableOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator RiskAccountsReceivableOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Risk - Bailees Customers | confidence=High score=125
-    public ILocator RiskBaileesCustomersOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator RiskBaileesCustomersOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Risk - Computer Systems | confidence=High score=125
-    public ILocator RiskComputerSystemsOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator RiskComputerSystemsOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Risk Aggregate | confidence=High score=127
-    public ILocator RiskDDE70 => _page.GetByLabel("Risk", new() { Exact = true });
+    public ILocator RiskDDE70 => Risk873E7; // semantic alias; locator defined once
 
     // Source modules: GL OCP|Risk | confidence=High score=97
     public ILocator RiskHeading => _page.GetByLabel("Risk Heading", new() { Exact = true });
@@ -1640,7 +1640,7 @@ public sealed class NavigationLocators
     public ILocator RiskSchedule => _page.GetByRole(AriaRole.Link, new() { Name = "Risk Schedule", Exact = true });
 
     // Source modules: Risk - Signs | confidence=High score=125
-    public ILocator RiskSignsOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator RiskSignsOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Rating Groups | confidence=High score=95
     public ILocator RiskType => _page.GetByRole(AriaRole.Textbox, new() { Name = "Risk Type", Exact = true });
@@ -1664,16 +1664,16 @@ public sealed class NavigationLocators
     public ILocator SearchResult4E620 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Result", Exact = true });
 
     // Source modules: Risk - Bailees Customers | confidence=High score=125
-    public ILocator SearchResultA1BFB => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Result", Exact = true });
+    public ILocator SearchResultA1BFB => SearchResult4E620; // semantic alias; locator defined once
 
     // Source modules: Risk - Accounts Receivable | confidence=High score=125
-    public ILocator SearchResultEAFB8 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Result", Exact = true });
+    public ILocator SearchResultEAFB8 => SearchResult4E620; // semantic alias; locator defined once
 
     // Source modules: CGL|Add Class | confidence=High score=125
     public ILocator SearchResults5209C => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Results", Exact = true });
 
     // Source modules: Property Add Class | confidence=High score=125
-    public ILocator SearchResultsD0AA8 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Results", Exact = true });
+    public ILocator SearchResultsD0AA8 => SearchResults5209C; // semantic alias; locator defined once
 
     // Source modules:  | confidence=High score=125
     public ILocator SearchValue53135 => _page.GetByRole(AriaRole.Textbox, new() { Name = "SearchValue", Exact = true });
@@ -1682,13 +1682,13 @@ public sealed class NavigationLocators
     public ILocator SearchValue54F3C => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Value", Exact = true });
 
     // Source modules: Risk - Accounts Receivable | confidence=High score=125
-    public ILocator SearchValue79E46 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Value", Exact = true });
+    public ILocator SearchValue79E46 => SearchValue54F3C; // semantic alias; locator defined once
 
     // Source modules: Risk - Computer Systems | confidence=High score=125
-    public ILocator SearchValue9FCD1 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Value", Exact = true });
+    public ILocator SearchValue9FCD1 => SearchValue54F3C; // semantic alias; locator defined once
 
     // Source modules: Risk - Bailees Customers | confidence=High score=125
-    public ILocator SearchValueCA6A6 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Value", Exact = true });
+    public ILocator SearchValueCA6A6 => SearchValue54F3C; // semantic alias; locator defined once
 
     // Source modules: Risk Schedule|General Coverage | confidence=High score=125
     public ILocator SeasonalProduceTrailers => _page.GetByRole(AriaRole.Textbox, new() { Name = "Seasonal Produce Trailers", Exact = true });
@@ -1706,7 +1706,7 @@ public sealed class NavigationLocators
     public ILocator SelectEndorsement0EAB0 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Select Endorsement:", Exact = true });
 
     // Source modules: [UC1101] Exclusion for Designated Activities or Services | confidence=High score=125
-    public ILocator SelectEndorsement63E0E => _page.GetByRole(AriaRole.Textbox, new() { Name = "Select Endorsement:", Exact = true });
+    public ILocator SelectEndorsement63E0E => SelectEndorsement0EAB0; // semantic alias; locator defined once
 
     // Source modules:  | confidence=High score=95
     public ILocator SelectNAICSCode => _page.GetByRole(AriaRole.Button, new() { Name = "Select NAICS Code", Exact = true });
@@ -1736,28 +1736,28 @@ public sealed class NavigationLocators
     public ILocator SoleProprietors => _page.GetByRole(AriaRole.Textbox, new() { Name = "Sole Proprietors*", Exact = true });
 
     // Source modules: Endorsements|Sole Proprietors, Partners, Officers And Others Coverage | confidence=High score=125
-    public ILocator SoleProprietorsPartnersOfficersAndOthersCoverageOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator SoleProprietorsPartnersOfficersAndOthersCoverageOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: IM Navigation Links | confidence=Medium score=113
     public ILocator SpecificUnderwritingQuestions => _page.GetByRole(AriaRole.Link, new() { Name = "Specific Underwriting Questions", Exact = true });
 
     // Source modules: Specific Underwriting Questions - Accounts Receivable | confidence=High score=125
-    public ILocator SpecificUnderwritingQuestionsAccountsReceivableOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator SpecificUnderwritingQuestionsAccountsReceivableOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Specific Underwriting Questions - Bailees Customer | confidence=High score=125
-    public ILocator SpecificUnderwritingQuestionsBaileesCustomerOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator SpecificUnderwritingQuestionsBaileesCustomerOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Specific Underwriting Questions - Computer Systems | confidence=High score=125
-    public ILocator SpecificUnderwritingQuestionsComputerSystemsOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator SpecificUnderwritingQuestionsComputerSystemsOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Specific Underwriting Questions - Contractors Equipment | confidence=High score=125
-    public ILocator SpecificUnderwritingQuestionsContractorsEquipmentOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator SpecificUnderwritingQuestionsContractorsEquipmentOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Specific Underwriting Questions - Motor Truck Cargo(Owners) | confidence=High score=125
-    public ILocator SpecificUnderwritingQuestionsMotorTruckCargoOwnersOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator SpecificUnderwritingQuestionsMotorTruckCargoOwnersOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Specific Underwriting Questions - Signs | confidence=High score=125
-    public ILocator SpecificUnderwritingQuestionsSignsOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator SpecificUnderwritingQuestionsSignsOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -1786,7 +1786,7 @@ public sealed class NavigationLocators
     public ILocator StateDetails72631 => _page.GetByLabel("State Details", new() { Exact = true });
 
     // Source modules: WC Navigation Links | confidence=Medium score=113
-    public ILocator StateDetailsB407B => _page.GetByRole(AriaRole.Link, new() { Name = "State Details", Exact = true });
+    public ILocator StateDetailsB407B => StateDetails33183; // semantic alias; locator defined once
 
     // Source modules: BAP Navigation Links | confidence=High score=127
     public ILocator StateDetailsDetail => _page.GetByRole(AriaRole.Link, new() { Name = "State Details - Detail", Exact = true });
@@ -1845,10 +1845,10 @@ public sealed class NavigationLocators
     public ILocator TotalSubjectPremium19B44 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Total Subject Premium*", Exact = true });
 
     // Source modules: SFP - 10 Liability/Farm | confidence=High score=125
-    public ILocator TotalSubjectPremiumAF452 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Total Subject Premium*", Exact = true });
+    public ILocator TotalSubjectPremiumAF452 => TotalSubjectPremium19B44; // semantic alias; locator defined once
 
     // Source modules: Businessowners | confidence=High score=125
-    public ILocator TotalSubjectPremiumE8AF0 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Total Subject Premium*", Exact = true });
+    public ILocator TotalSubjectPremiumE8AF0 => TotalSubjectPremium19B44; // semantic alias; locator defined once
 
     // Source modules: Risk Schedule|Physical Damage | confidence=High score=95
     public ILocator Towing => _page.GetByRole(AriaRole.Textbox, new() { Name = "Towing", Exact = true });
@@ -1872,22 +1872,22 @@ public sealed class NavigationLocators
     public ILocator Type715D6 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Type", Exact = true });
 
     // Source modules: GL OCP|Risk | confidence=High score=124
-    public ILocator Type885AA => _page.GetByRole(AriaRole.Combobox, new() { Name = "Type", Exact = true });
+    public ILocator Type885AA => Type56F72; // semantic alias; locator defined once
 
     // Source modules: [CG 20 20] Add'l Insured-Charitable Institution | confidence=High score=125
-    public ILocator TypeA75B5 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Type", Exact = true });
+    public ILocator TypeA75B5 => Type715D6; // semantic alias; locator defined once
 
     // Source modules: Risk - Signs | confidence=High score=125
-    public ILocator TypeB082D => _page.GetByRole(AriaRole.Textbox, new() { Name = "Type", Exact = true });
+    public ILocator TypeB082D => Type715D6; // semantic alias; locator defined once
 
     // Source modules: [CG 29 35] Add'l Insured-State or Political (Permits) | confidence=High score=125
-    public ILocator TypeCDE3B => _page.GetByRole(AriaRole.Textbox, new() { Name = "Type", Exact = true });
+    public ILocator TypeCDE3B => Type715D6; // semantic alias; locator defined once
 
     // Source modules: [CG 20 07] Add'l Insured-Engineers, Architects | confidence=High score=125
-    public ILocator TypeD0639 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Type", Exact = true });
+    public ILocator TypeD0639 => Type715D6; // semantic alias; locator defined once
 
     // Source modules:  | confidence=High score=125
-    public ILocator TypeD972C => _page.GetByRole(AriaRole.Textbox, new() { Name = "Type", Exact = true });
+    public ILocator TypeD972C => Type715D6; // semantic alias; locator defined once
 
     // Source modules: Policy Covg - Contractors Equipment | confidence=High score=125
     public ILocator TypeOfContractor => _page.GetByRole(AriaRole.Textbox, new() { Name = "Type Of Contractor", Exact = true });
@@ -1909,7 +1909,7 @@ public sealed class NavigationLocators
     public ILocator UMTypeDefaultSelections => _page.GetByRole(AriaRole.Textbox, new() { Name = "UM Type Default Selections", Exact = true });
 
     // Source modules: State Details|UM/UIM | confidence=High score=125
-    public ILocator UMUIMOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    public ILocator UMUIMOK => AddClassOK; // semantic alias; locator defined once
 
     // Source modules: BAP Navigation Links | confidence=Medium score=113
     public ILocator UWQuestions368CC => _page.GetByRole(AriaRole.Link, new() { Name = "UW Questions", Exact = true });
@@ -1945,31 +1945,31 @@ public sealed class NavigationLocators
     public ILocator UpdateAnswers3DA0B => _page.GetByRole(AriaRole.Button, new() { Name = "Update Answers", Exact = true });
 
     // Source modules: Specific Underwriting Questions - Computer Systems | confidence=High score=125
-    public ILocator UpdateAnswers3DDA2 => _page.GetByRole(AriaRole.Button, new() { Name = "Update Answers", Exact = true });
+    public ILocator UpdateAnswers3DDA2 => UpdateAnswers3DA0B; // semantic alias; locator defined once
 
     // Source modules: Products/Completed Ops | confidence=High score=125
-    public ILocator UpdateAnswers69564 => _page.GetByRole(AriaRole.Button, new() { Name = "Update Answers", Exact = true });
+    public ILocator UpdateAnswers69564 => UpdateAnswers3DA0B; // semantic alias; locator defined once
 
     // Source modules: UW Questions - Workers Comp | confidence=High score=125
-    public ILocator UpdateAnswers6FF76 => _page.GetByRole(AriaRole.Button, new() { Name = "Update Answers", Exact = true });
+    public ILocator UpdateAnswers6FF76 => UpdateAnswers3DA0B; // semantic alias; locator defined once
 
     // Source modules: Property UW Questions | confidence=High score=125
-    public ILocator UpdateAnswers99D68 => _page.GetByRole(AriaRole.Button, new() { Name = "Update Answers", Exact = true });
+    public ILocator UpdateAnswers99D68 => UpdateAnswers3DA0B; // semantic alias; locator defined once
 
     // Source modules: Underwriting Info | General UW Questions | confidence=Medium score=113
     public ILocator UpdateAnswers9CB86 => _page.GetByRole(AriaRole.Link, new() { Name = "Update Answers", Exact = true });
 
     // Source modules: UW Questions - Umbrella | confidence=High score=125
-    public ILocator UpdateAnswersB41BE => _page.GetByRole(AriaRole.Button, new() { Name = "Update Answers", Exact = true });
+    public ILocator UpdateAnswersB41BE => UpdateAnswers3DA0B; // semantic alias; locator defined once
 
     // Source modules: Underwriting Questions | confidence=High score=125
     public ILocator UpdateAnswersButton => _page.GetByRole(AriaRole.Button, new() { Name = "Update Answers Button", Exact = true });
 
     // Source modules: Specific Underwriting Questions - Accounts Receivable | confidence=High score=125
-    public ILocator UpdateAnswersD8A16 => _page.GetByRole(AriaRole.Button, new() { Name = "Update Answers", Exact = true });
+    public ILocator UpdateAnswersD8A16 => UpdateAnswers3DA0B; // semantic alias; locator defined once
 
     // Source modules: General Liability Information | confidence=High score=125
-    public ILocator UpdateAnswersFB765 => _page.GetByRole(AriaRole.Button, new() { Name = "Update Answers", Exact = true });
+    public ILocator UpdateAnswersFB765 => UpdateAnswers3DA0B; // semantic alias; locator defined once
 
     // Source modules: Risk Schedule|General Coverage | confidence=High score=95
     public ILocator UsedAsShowroom => _page.GetByRole(AriaRole.Textbox, new() { Name = "Used As Showroom", Exact = true });
@@ -2081,13 +2081,13 @@ public sealed class NavigationLocators
     public ILocator ZipCodeBCEA0 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Zip Code*", Exact = true });
 
     // Source modules: [CG 29 35] Add'l Insured-State or Political (Permits) | confidence=High score=125
-    public ILocator ZipCodeC048F => _page.GetByRole(AriaRole.Textbox, new() { Name = "Zip Code", Exact = true });
+    public ILocator ZipCodeC048F => ZipCodeB286B; // semantic alias; locator defined once
 
     // Source modules: GL OCP|Risk | confidence=High score=125
-    public ILocator ZipCodeC7591 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Zip Code", Exact = true });
+    public ILocator ZipCodeC7591 => ZipCodeB286B; // semantic alias; locator defined once
 
     // Source modules: Location | confidence=High score=125
-    public ILocator ZipCodeD2DBA => _page.GetByRole(AriaRole.Textbox, new() { Name = "Zip Code", Exact = true });
+    public ILocator ZipCodeD2DBA => ZipCodeB286B; // semantic alias; locator defined once
 
 
     public ILocator EntityInfoFrameEntityInfoWindowFax => _page.Locator("[id=\"AdditionalOtherInterestInput.Fax\"], [name=\"AdditionalOtherInterestInput.Fax\"], [data-testid=\"AdditionalOtherInterestInput.Fax\"], [data-duckcreekid=\"AdditionalOtherInterestInput.Fax\"]").First;

@@ -38,7 +38,7 @@ public sealed class VehiclesLocators
     public ILocator AgreedValue8E288 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Agreed Value", Exact = true });
 
     // Source modules: EQ || Vintage Cycle | confidence=High score=127
-    public ILocator AgreedValueF302B => _page.GetByRole(AriaRole.Textbox, new() { Name = "Agreed Value", Exact = true });
+    public ILocator AgreedValueF302B => AgreedValue8E288; // semantic alias; locator defined once
 
     // Source modules: EQ || 1st Cycle | confidence=High score=97
     public ILocator AnnualMileage12A49 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Annual Mileage", Exact = true });
@@ -53,7 +53,7 @@ public sealed class VehiclesLocators
     public ILocator AppraisalDate8A115 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Appraisal Date", Exact = true });
 
     // Source modules: EQ || Vintage Cycle | confidence=High score=127
-    public ILocator AppraisalDateD909C => _page.GetByRole(AriaRole.Textbox, new() { Name = "Appraisal Date", Exact = true });
+    public ILocator AppraisalDateD909C => AppraisalDate8A115; // semantic alias; locator defined once
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=High score=130
     public ILocator Assigned => _page.GetByTestId("fields.line.driver.rows[0].driverInput$operatorStatus.value-chip-wrapper");
@@ -62,7 +62,7 @@ public sealed class VehiclesLocators
     public ILocator CONTINUED555D => _page.GetByRole(AriaRole.Link, new() { Name = "CONTINUE", Exact = true });
 
     // Source modules: EQ || Owned Popup | confidence=Medium score=113
-    public ILocator CONTINUEF07C7 => _page.GetByRole(AriaRole.Link, new() { Name = "CONTINUE", Exact = true });
+    public ILocator CONTINUEF07C7 => CONTINUED555D; // semantic alias; locator defined once
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=Medium score=83
     public ILocator CamperShellNo => _page.GetByRole(AriaRole.Button, new() { Name = "Camper_Shell_No", Exact = true });
@@ -95,7 +95,7 @@ public sealed class VehiclesLocators
     public ILocator Cycle1734D7 => _page.GetByRole(AriaRole.Button, new() { Name = "Cycle_1", Exact = true });
 
     // Source modules: EQ || 1st Cycle | confidence=Medium score=113
-    public ILocator Cycle1C1864 => _page.GetByRole(AriaRole.Button, new() { Name = "Cycle_1", Exact = true });
+    public ILocator Cycle1C1864 => Cycle1734D7; // semantic alias; locator defined once
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=High score=127
     public ILocator CycleAccessoriesV3 => _page.GetByRole(AriaRole.Button, new() { Name = "Cycle Accessories_V3", Exact = true });
@@ -107,7 +107,7 @@ public sealed class VehiclesLocators
     public ILocator CycleNonDriverComboBox => _page.Locator("[name=\"CycleNonDriver_ComboBox\"], [id=\"CycleNonDriver_ComboBox\"]").First;
 
     // Source modules: EQ || CyclePreFillSelection | confidence=Medium score=113
-    public ILocator CyclePreFillSelectionNext => _page.GetByRole(AriaRole.Button, new() { Name = "Next", Exact = true });
+    public ILocator CyclePreFillSelectionNext => AddCycleNextNext; // semantic alias; locator defined once
 
     // Source modules: EQ || Vintage Cycle | confidence=High score=127
     public ILocator CycleVIN => _page.GetByRole(AriaRole.Textbox, new() { Name = "Cycle VIN", Exact = true });
@@ -125,7 +125,7 @@ public sealed class VehiclesLocators
     public ILocator DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications051FD => _page.GetByLabel("Does this vehicle have any Non-Factory Additions, Alterations, or Modifications?", new() { Exact = true });
 
     // Source modules: EQ || Vintage Cycle | confidence=Medium score=78
-    public ILocator DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications21ABD => _page.GetByLabel("Does this vehicle have any Non-Factory Additions, Alterations, or Modifications?", new() { Exact = true });
+    public ILocator DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications21ABD => DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications051FD; // semantic alias; locator defined once
 
     // Source modules: EQ || DriverLicense_Time | confidence=Medium score=83
     public ILocator DriverSLicenseNumber => _page.GetByRole(AriaRole.Textbox, new() { Name = "Driver's License Number", Exact = true });
@@ -164,19 +164,19 @@ public sealed class VehiclesLocators
     public ILocator Leased26B32 => _page.GetByRole(AriaRole.Button, new() { Name = "Leased", Exact = true });
 
     // Source modules: EQ || 1st Cycle | confidence=Medium score=113
-    public ILocator Leased87268 => _page.GetByRole(AriaRole.Button, new() { Name = "Leased", Exact = true });
+    public ILocator Leased87268 => Leased26B32; // semantic alias; locator defined once
 
     // Source modules: EQ || DriverLicense_Time | confidence=Medium score=83
     public ILocator LicenseState => _page.GetByRole(AriaRole.Combobox, new() { Name = "License State", Exact = true });
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=High score=130
-    public ILocator Loan4369D => _page.GetByTestId("fields.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-chip-wrapper");
+    public ILocator Loan4369D => Leased14EA4; // semantic alias; locator defined once
 
     // Source modules: EQ || Vintage Cycle | confidence=Medium score=113
     public ILocator Loan49242 => _page.GetByRole(AriaRole.Button, new() { Name = "Loan", Exact = true });
 
     // Source modules: EQ || 1st Cycle | confidence=Medium score=113
-    public ILocator LoanED36C => _page.GetByRole(AriaRole.Button, new() { Name = "Loan", Exact = true });
+    public ILocator LoanED36C => Loan49242; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -244,7 +244,7 @@ public sealed class VehiclesLocators
     public ILocator NoD053A => _page.GetByTestId("fields.line.driver.rows[0].driverInputUnderwriting$sR22Indicator.value-chip-wrapper");
 
     // Source modules: EQ || 1st Cycle | confidence=Medium score=113
-    public ILocator NoD9E4D => _page.GetByRole(AriaRole.Button, new() { Name = "No", Exact = true });
+    public ILocator NoD9E4D => No7C269; // semantic alias; locator defined once
 
     // Source modules: EQ || Prior Insurance Info | confidence=High score=130
     public ILocator NoNeedWasNotLicensed => _page.GetByTestId("fields.line.driver.rows[0].insuranceHistoryManualInput$reasonForNoPriorInsurance.value-chip-wrapper");
@@ -256,7 +256,7 @@ public sealed class VehiclesLocators
     public ILocator NoRegisteredFedTribe => _page.GetByRole(AriaRole.Button, new() { Name = "No_RegisteredFedTribe", Exact = true });
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=High score=100
-    public ILocator NonDriver => _page.GetByTestId("fields.line.driver.rows[0].driverInput$operatorStatus.value-chip-wrapper");
+    public ILocator NonDriver => Assigned; // semantic alias; locator defined once
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=78
     public ILocator NonDriverReason => _page.GetByLabel("Non-Driver Reason", new() { Exact = true });
@@ -265,7 +265,7 @@ public sealed class VehiclesLocators
     public ILocator NonWorkAnnualMiles => _page.Locator("[name=\"Non_work_annual_miles\"], [id=\"Non_work_annual_miles\"]").First;
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=High score=100
-    public ILocator NotANamedInsured => _page.GetByTestId("fields.line.driver.rows[0].driverInput$namedInsuredType.value-chip-wrapper");
+    public ILocator NotANamedInsured => NamedInsured; // semantic alias; locator defined once
 
     // Source modules: EQ || 1st Cycle | confidence=Medium score=83
     public ILocator NotPleasureUse => _page.GetByRole(AriaRole.Button, new() { Name = "Not Pleasure Use", Exact = true });
@@ -290,7 +290,7 @@ public sealed class VehiclesLocators
     public ILocator OtherInsurance => _page.GetByLabel("Other Insurance", new() { Exact = true });
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=High score=130
-    public ILocator Own49EEC => _page.GetByTestId("fields.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-chip-wrapper");
+    public ILocator Own49EEC => Leased14EA4; // semantic alias; locator defined once
 
     // Source modules: EQ || Vintage Cycle | confidence=Medium score=113
     public ILocator Own7C709 => _page.GetByRole(AriaRole.Button, new() { Name = "Own", Exact = true });
@@ -299,7 +299,7 @@ public sealed class VehiclesLocators
     public ILocator OwnB8575 => _page.GetByTestId("fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-chip-wrapper");
 
     // Source modules: EQ || 1st Cycle | confidence=Medium score=113
-    public ILocator OwnD044E => _page.GetByRole(AriaRole.Button, new() { Name = "Own", Exact = true });
+    public ILocator OwnD044E => Own7C709; // semantic alias; locator defined once
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=113
     public ILocator PermitDriver => _page.GetByRole(AriaRole.Button, new() { Name = "Permit Driver", Exact = true });
@@ -308,7 +308,7 @@ public sealed class VehiclesLocators
     public ILocator PleaseSelectTheVehicleBBB72 => _page.GetByLabel("Please select the vehicle", new() { Exact = true });
 
     // Source modules: EQ || 1st Cycle | confidence=Medium score=78
-    public ILocator PleaseSelectTheVehicleCD741 => _page.GetByLabel("Please select the vehicle", new() { Exact = true });
+    public ILocator PleaseSelectTheVehicleCD741 => PleaseSelectTheVehicleBBB72; // semantic alias; locator defined once
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=High score=130
     public ILocator PleasureCANYFFCIC => _page.GetByTestId("fields.line.risk.rows[0].vehicleInput$usage.value-chip-wrapper");
@@ -323,7 +323,7 @@ public sealed class VehiclesLocators
     public ILocator PricingDetailsNext => _page.GetByRole(AriaRole.Button, new() { Name = "Btn_Next", Exact = true });
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=High score=130
-    public ILocator PrimaryNamedInsured => _page.GetByTestId("fields.line.driver.rows[0].driverInput$namedInsuredType.value-chip-wrapper");
+    public ILocator PrimaryNamedInsured => NamedInsured; // semantic alias; locator defined once
 
     // Source modules: EQ || Prior Insurance Info | confidence=Medium score=83
     public ILocator PriorCarrierName => _page.GetByRole(AriaRole.Textbox, new() { Name = "Prior Carrier Name", Exact = true });
@@ -335,7 +335,7 @@ public sealed class VehiclesLocators
     public ILocator PurchaseDateBB8AF => _page.Locator("[name=\"txt_purchase_date\"], [id=\"txt_purchase_date\"]").First;
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=High score=130
-    public ILocator Related => _page.GetByTestId("fields.line.driver.rows[0].driverInput$operatorStatus.value-chip-wrapper");
+    public ILocator Related => Assigned; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -383,10 +383,10 @@ public sealed class VehiclesLocators
     public ILocator SaveAndContinue8EF26 => _page.GetByRole(AriaRole.Button, new() { Name = "Save and Continue", Exact = true });
 
     // Source modules: EQ || Prior Insurance Info | confidence=Medium score=113
-    public ILocator SaveAndContinue9CB7A => _page.GetByRole(AriaRole.Button, new() { Name = "Save and Continue", Exact = true });
+    public ILocator SaveAndContinue9CB7A => SaveAndContinue8EF26; // semantic alias; locator defined once
 
     // Source modules: EQ || Vintage Cycle | confidence=Medium score=113
-    public ILocator SaveAndContinueBE6CD => _page.GetByRole(AriaRole.Button, new() { Name = "Save and Continue", Exact = true });
+    public ILocator SaveAndContinueBE6CD => SaveAndContinue8EF26; // semantic alias; locator defined once
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=Medium score=113
     public ILocator SaveContinue2E7CD => _page.GetByRole(AriaRole.Button, new() { Name = "btnSave_Continue", Exact = true });
@@ -405,7 +405,7 @@ public sealed class VehiclesLocators
     public ILocator SomeCollege => _page.GetByRole(AriaRole.Button, new() { Name = "Some College", Exact = true });
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=High score=130
-    public ILocator Spouse => _page.GetByTestId("fields.line.driver.rows[0].driverInput$relationToAccountOwner.value-chip-wrapper");
+    public ILocator Spouse => AccountOwner; // semantic alias; locator defined once
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=113
     public ILocator Surrendered => _page.GetByRole(AriaRole.Button, new() { Name = "Surrendered", Exact = true });
@@ -499,19 +499,19 @@ public sealed class VehiclesLocators
     public ILocator VIN0A17C => _page.GetByRole(AriaRole.Textbox, new() { Name = "VIN", Exact = true });
 
     // Source modules: EQ || 1st Cycle | confidence=High score=127
-    public ILocator VIN8EE56 => _page.GetByRole(AriaRole.Textbox, new() { Name = "VIN", Exact = true });
+    public ILocator VIN8EE56 => VIN0A17C; // semantic alias; locator defined once
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=High score=130
     public ILocator Veh1 => _page.GetByTestId("fields.data.policy.line.risk.rows[0].vehicleInput$vINSelect.value-chip-wrapper");
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=High score=130
-    public ILocator Veh3 => _page.GetByTestId("fields.data.policy.line.risk.rows[0].vehicleInput$vINSelect.value-chip-wrapper");
+    public ILocator Veh3 => Veh1; // semantic alias; locator defined once
 
     // Source modules: EQ||Vehicle Auto Vin_1 | confidence=High score=130
     public ILocator Vehicle1 => _page.GetByTestId("fields.line.risk.rows[0].vehicleInput$vINSelect.value-vin-select-\"*\"-chip-chip");
 
     // Source modules: EQ||Vehicle Information | confidence=Medium score=113
-    public ILocator VehicleInformationNext => _page.GetByRole(AriaRole.Button, new() { Name = "Btn_Next", Exact = true });
+    public ILocator VehicleInformationNext => PricingDetailsNext; // semantic alias; locator defined once
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=High score=130
     public ILocator VehicleMoreOptions => _page.GetByTestId("fields.data.policy.line.risk.rows[0].vehicleInput$vehicleType.value-menu-trigger");

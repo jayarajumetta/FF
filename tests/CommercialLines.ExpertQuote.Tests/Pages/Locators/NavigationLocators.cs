@@ -86,7 +86,7 @@ public sealed class NavigationLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator PolicyDetailsE7F69 => _page.GetByText("Policy Details", new() { Exact = true });
+    public ILocator PolicyDetailsE7F69 => PolicyDetailsABBA9; // semantic alias; locator defined once
 
     // Source modules: EQ|Common|Transact|Verify DC Premium | confidence=High score=97
     public ILocator PolicyNumber => _page.GetByLabel("Policy Number", new() { Exact = true });
@@ -95,7 +95,7 @@ public sealed class NavigationLocators
     public ILocator PowerGreaterThan250kwNo => _page.GetByTestId("fields.line.covEquipmentBreakdownPowerGeneration.covEquipmentBreakdownInput$powerGeneration.value-chip-wrapper");
 
     // Source modules: EQ|SFP|Equipment Breakdown | confidence=High score=130
-    public ILocator PowerGreaterThan250kwYes => _page.GetByTestId("fields.line.covEquipmentBreakdownPowerGeneration.covEquipmentBreakdownInput$powerGeneration.value-chip-wrapper");
+    public ILocator PowerGreaterThan250kwYes => PowerGreaterThan250kwNo; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -113,11 +113,11 @@ public sealed class NavigationLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator Screen4475C => _page.GetByText("Screen", new() { Exact = true });
+    public ILocator Screen4475C => Screen25E91; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator ScreenDA408 => _page.GetByText("Screen", new() { Exact = true });
+    public ILocator ScreenDA408 => Screen25E91; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -125,11 +125,11 @@ public sealed class NavigationLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator ScreenHeading9696C => _page.GetByText("Screen Heading", new() { Exact = true });
+    public ILocator ScreenHeading9696C => ScreenHeading69631; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator ScreenHeadingDCABF => _page.GetByText("Screen Heading", new() { Exact = true });
+    public ILocator ScreenHeadingDCABF => ScreenHeading69631; // semantic alias; locator defined once
 
     // Source modules: EQ|BOP|PreQualification|Add a Class | confidence=Medium score=113
     public ILocator SearchAddClassCode => _page.GetByRole(AriaRole.Button, new() { Name = "Search/Add Class Code", Exact = true });
@@ -149,7 +149,7 @@ public sealed class NavigationLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator Submission7E601 => _page.GetByText("Submission", new() { Exact = true });
+    public ILocator Submission7E601 => Submission48772; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -183,7 +183,7 @@ public sealed class NavigationLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator ViewPolicyDetailsC87C2 => _page.GetByText("View Policy Details", new() { Exact = true });
+    public ILocator ViewPolicyDetailsC87C2 => ViewPolicyDetails848D5; // semantic alias; locator defined once
 
     // Source modules: EQ|Common|PreQualification|Add Class Codes|Search/Add Class Codes | confidence=Medium score=108
     public ILocator YouHaveSelected1ClassCodes => _page.GetByLabel("You have selected 1 Class Codes", new() { Exact = true });

@@ -1,0 +1,22 @@
+{
+  "version": "48.0",
+  "features": 32,
+  "exampleRows": 1074,
+  "pageMethodReferenceErrors": 0,
+  "jsonErrors": 0,
+  "duplicateLocatorDefinitions": 0,
+  "locatorFiles": 51,
+  "sourceLocatorPropertyCatalog": 29791,
+  "materialDropdownHandling": "SelectOption + mat-select/role=combobox -> option click",
+  "selfHealProviders": [
+    "openai-compatible",
+    "github-copilot"
+  ],
+  "domEvidenceAfterActions": true,
+  "compilationFixOverlay": "FF-bop_desc",
+  "pageLocatorReferenceErrors": 0,
+  "scenarioOutlines": 32,
+  "technicalToscaBusinessSteps": 0,
+  "qualityGate": "PASS",
+  "actualDotnetBuildInThisEnvironment": "NOT AVAILABLE - dotnet executable absent"
+}

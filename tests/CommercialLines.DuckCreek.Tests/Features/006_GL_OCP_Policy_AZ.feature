@@ -1,7 +1,5 @@
 # Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 14
 # Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
-# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 14
-# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
 @CL_DC @owners_and_contractors_protective_new_business
 
 Feature: GL OCP Policy

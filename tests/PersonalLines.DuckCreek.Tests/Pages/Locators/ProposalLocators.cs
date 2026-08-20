@@ -39,7 +39,7 @@ public sealed class ProposalLocators
     public ILocator PROCEED => _page.GetByRole(AriaRole.Button, new() { Name = "Lnk_PROCEED", Exact = true });
 
     // Source modules: EQ || Proposal Details/Start | confidence=High score=130
-    public ILocator PersonalAuto => _page.GetByTestId("proposal.product-chip-label");
+    public ILocator PersonalAuto => Motorcycle; // semantic alias; locator defined once
 
     // Source modules: EQ||Proposal Start Proceed & SSN | confidence=High score=127
     public ILocator ProposalStartProceedSSNSUBMIT => _page.GetByRole(AriaRole.Button, new() { Name = "Lnk_SUBMIT", Exact = true });
@@ -52,7 +52,7 @@ public sealed class ProposalLocators
     public ILocator QuoteNumber => _page.GetByText("Quote Number", new() { Exact = true });
 
     // Source modules: EQ || Proposal Details/Start | confidence=High score=130
-    public ILocator RecreationalVehicle => _page.GetByTestId("proposal.product-chip-label");
+    public ILocator RecreationalVehicle => Motorcycle; // semantic alias; locator defined once
 
     // Source modules: EQ||Proposal Start Proceed & SSN | confidence=High score=127
     public ILocator SSN => _page.Locator("[name=\"Txt_SSN\"], [id=\"Txt_SSN\"]").First;

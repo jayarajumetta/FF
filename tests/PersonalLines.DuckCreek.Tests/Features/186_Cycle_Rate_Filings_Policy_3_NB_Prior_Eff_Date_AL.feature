@@ -1,7 +1,5 @@
 # Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 49
 # Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
-# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 49
-# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
 @PL_DC @CYCLE @new_business_with_prior_effective_date
 
 Feature: Cycle Rate Filings Policy 3 NB Prior Eff Date

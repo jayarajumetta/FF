@@ -1,7 +1,5 @@
 # Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 49
 # Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
-# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 49
-# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
 @PL_DC @CYCLE @rate_filing_new_business
 
 Feature: Cycle Rate Filings Policy 1 NB 1

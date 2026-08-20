@@ -83,9 +83,9 @@ public sealed class IMBasicPolicySteps
 
     }
 
-    [Given(@"^I add a new Associated Client \\- Business Owner Type \\- Click Add Client$")]
-    [When(@"^I add a new Associated Client \\- Business Owner Type \\- Click Add Client$")]
-    [Then(@"^I add a new Associated Client \\- Business Owner Type \\- Click Add Client$")]
+    [Given(@"^I add a new Associated Client \- Business Owner Type \- Click Add Client$")]
+    [When(@"^I add a new Associated Client \- Business Owner Type \- Click Add Client$")]
+    [Then(@"^I add a new Associated Client \- Business Owner Type \- Click Add Client$")]
     public async Task AddANewAssociatedClientBusinessOwnerTypeClickAddClientAsync()
     {
         var data = _scenario.Get<ScenarioData>();
@@ -1111,9 +1111,9 @@ public sealed class IMBasicPolicySteps
 
     }
 
-    [Given(@"^I complete Motor Truck Cargo Questions \\(Owner\\)$")]
-    [When(@"^I complete Motor Truck Cargo Questions \\(Owner\\)$")]
-    [Then(@"^I complete Motor Truck Cargo Questions \\(Owner\\)$")]
+    [Given(@"^I complete Motor Truck Cargo Questions \(Owner\)$")]
+    [When(@"^I complete Motor Truck Cargo Questions \(Owner\)$")]
+    [Then(@"^I complete Motor Truck Cargo Questions \(Owner\)$")]
     public async Task CompleteMotorTruckCargoQuestionsOwnerAsync()
     {
         var data = _scenario.Get<ScenarioData>();
