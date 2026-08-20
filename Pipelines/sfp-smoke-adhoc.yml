@@ -447,30 +447,17 @@ stages:
             }
 
             # Build one consolidated Markdown summary for the pipeline Summary tab.
-            # Each state writes its own .md; we merge them into a single card here.
+            # Each state writes its own .md; we just concatenate them under one shard header.
             $mdFiles = Get-ChildItem -Path $sourceBase -Recurse -Filter "FormsValidationSummary_*.md" | Sort-Object Name
             if ($mdFiles.Count -gt 0) {
-                $out = [System.Text.StringBuilder]::new()
-                $null = $out.AppendLine("# Forms Validation — SFP Basic Policy — Shard $(SHARD_NUMBER)")
-                $null = $out.AppendLine()
-                $null = $out.AppendLine("| State | Forms Checked | Pass | Fail | Info | Result |")
-                $null = $out.AppendLine("|---|---:|---:|---:|---:|---|")
-                foreach ($f in $mdFiles) {
-                    # Pull the single data row from each state's results table (line after the |---|...| separator)
-                    $lines = Get-Content $f.FullName
-                    $sepIdx = ($lines | Select-String -Pattern '\|---' | Select-Object -First 1 -ExpandProperty LineNumber)
-                    if ($sepIdx -and $sepIdx -lt $lines.Count) {
-                        $null = $out.AppendLine($lines[$sepIdx])  # 0-based: sepIdx is already the next line
-                    }
-                }
-                $mdFiles | ForEach-Object {
-                    $attentionLines = Get-Content $_.FullName | Select-String -Pattern '\| C\d+' | ForEach-Object { $_.Line }
-                    if ($attentionLines) { $attentionLines | ForEach-Object { $null = $out.AppendLine($_) } }
-                }
                 $summaryPath = "$(Build.ArtifactStagingDirectory)/FormsValidationSummary_Shard$(SHARD_NUMBER).md"
-                $out.ToString() | Out-File -FilePath $summaryPath -Encoding UTF8
+                "# Forms Validation — SFP Basic Policy — Shard $(SHARD_NUMBER)" | Out-File $summaryPath -Encoding UTF8
+                "" | Out-File $summaryPath -Append
+                foreach ($f in $mdFiles) {
+                    Get-Content $f.FullName | Out-File $summaryPath -Append
+                    "" | Out-File $summaryPath -Append
+                }
                 Write-Host "##vso[task.uploadsummary]$summaryPath"
-                Write-Host "Forms summary pinned to pipeline Summary tab: $summaryPath"
             } else {
                 Write-Host "No per-state summary .md files found — Summary tab card skipped."
             }
@@ -751,26 +738,14 @@ stages:
             # Build one consolidated Markdown summary for the pipeline Summary tab.
             $mdFiles = Get-ChildItem -Path $sourceBase -Recurse -Filter "FormsValidationSummary_*.md" | Sort-Object Name
             if ($mdFiles.Count -gt 0) {
-                $out = [System.Text.StringBuilder]::new()
-                $null = $out.AppendLine("# Forms Validation — SFP Country Estate — Shard $(SHARD_NUMBER)")
-                $null = $out.AppendLine()
-                $null = $out.AppendLine("| State | Forms Checked | Pass | Fail | Info | Result |")
-                $null = $out.AppendLine("|---|---:|---:|---:|---:|---|")
-                foreach ($f in $mdFiles) {
-                    $lines = Get-Content $f.FullName
-                    $sepIdx = ($lines | Select-String -Pattern '\|---' | Select-Object -First 1 -ExpandProperty LineNumber)
-                    if ($sepIdx -and $sepIdx -lt $lines.Count) {
-                        $null = $out.AppendLine($lines[$sepIdx])
-                    }
-                }
-                $mdFiles | ForEach-Object {
-                    $attentionLines = Get-Content $_.FullName | Select-String -Pattern '\| C\d+' | ForEach-Object { $_.Line }
-                    if ($attentionLines) { $attentionLines | ForEach-Object { $null = $out.AppendLine($_) } }
-                }
                 $summaryPath = "$(Build.ArtifactStagingDirectory)/FormsValidationSummary_CE_Shard$(SHARD_NUMBER).md"
-                $out.ToString() | Out-File -FilePath $summaryPath -Encoding UTF8
+                "# Forms Validation — SFP Country Estate — Shard $(SHARD_NUMBER)" | Out-File $summaryPath -Encoding UTF8
+                "" | Out-File $summaryPath -Append
+                foreach ($f in $mdFiles) {
+                    Get-Content $f.FullName | Out-File $summaryPath -Append
+                    "" | Out-File $summaryPath -Append
+                }
                 Write-Host "##vso[task.uploadsummary]$summaryPath"
-                Write-Host "Forms summary pinned to pipeline Summary tab: $summaryPath"
             } else {
                 Write-Host "No per-state summary .md files found — Summary tab card skipped."
             }
