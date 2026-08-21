@@ -47,6 +47,12 @@ public sealed class AccountInformationPage
     public Task SelectIsTheAccountAddressAlsoWhereTheClientResidesYesAsync(string value) =>
         _ui.SelectAsync(_locators.IsTheAccountAddressAlsoWhereTheClientResidesYes, value, new ControlIntent("AccountInformation", "IsTheAccountAddressAlsoWhereTheClientResidesYes"));
 
+    public Task SelectHaveYouReceivedMailAtThisAddressForAtLeast90DaysYesAsync() =>
+    _ui.ClickAsync(_locators.HaveYouReceivedMailAtThisAddressForAtLeast90DaysYes, new ControlIntent("AccountInformation", "HaveYouReceivedMailAtThisAddressForAtLeast90DaysYes"));
+
+    public Task SelectIsTheAccountAddressAlsoWhereTheClientResidesYesAsync() =>
+        _ui.ClickAsync(_locators.IsTheAccountAddressAlsoWhereTheClientResidesYes, new ControlIntent("AccountInformation", "IsTheAccountAddressAlsoWhereTheClientResidesYes"));
+
     public Task WaitForMapAsync(string expected) =>
         _ui.WaitAsync(_locators.Map, expected, new ControlIntent("AccountInformation", "Map"));
 

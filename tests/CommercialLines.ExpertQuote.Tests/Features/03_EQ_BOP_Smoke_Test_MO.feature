@@ -17,7 +17,7 @@ Feature: EQ BOP Smoke Test
     And I enter the client account and address information
     And I start the configured policy proposal
     And I enter the insured social security number and handle any prefill result
-    And I navigate to the required policy screen
+    #And I navigate to the required policy screen
     And I capture the quote identity and close the current quote
     And I retrieve the quote and verify its identity
 

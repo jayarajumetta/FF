@@ -23,13 +23,13 @@ public sealed class ClientSearchLocators
     public ILocator CreateNewClient1 => CreateNewClient; // semantic alias; locator defined once
 
     // Source modules: EQ|Common|Client Info | confidence=High score=127
-    public ILocator CustomerDateOfBirth => _page.Locator("#customer\.dateOfBirth");
+    public ILocator CustomerDateOfBirth => _page.Locator(@"#customer.dateOfBirth");
 
     // Source modules: EQ|Common|Client Info | confidence=High score=127
-    public ILocator CustomerNameFirst => _page.Locator("#customer\.name\.first");
+    public ILocator CustomerNameFirst => _page.Locator(@"#customer.name.first");
 
     // Source modules: EQ|Common|Client Info | confidence=High score=127
-    public ILocator CustomerNameLast => _page.Locator("#customer\.name\.last");
+    public ILocator CustomerNameLast => _page.Locator(@"#customer.name.last");
 
     // Source modules: EQ|Common|Create New Client | confidence=Medium score=108
     public ILocator ExistingClientMatch => _page.GetByLabel("Existing Client Match", new() { Exact = true });

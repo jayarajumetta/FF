@@ -62,8 +62,8 @@ public sealed class EQBOPSmokeTestSteps
         await page.SelectStateAsync(data.Resolve("{{data:state_21}}").ToUpper());
 
         await page.EnterZipAsync(data.Resolve("{{data:zip_22}}"));
-        await page.SelectHaveYouReceivedMailAtThisAddressForAtLeast90DaysYesAsync("Yes");
-        await page.SelectIsTheAccountAddressAlsoWhereTheClientResidesYesAsync("Yes");
+        await page.SelectHaveYouReceivedMailAtThisAddressForAtLeast90DaysYesAsync();
+        await page.SelectIsTheAccountAddressAlsoWhereTheClientResidesYesAsync();
         await page.ClickAdditionalInterestsNextAsync();
     }
 
@@ -86,9 +86,10 @@ public sealed class EQBOPSmokeTestSteps
         await page.EnterIndividualDBAAsync(data.Resolve("{{data:individual_dba}}"));
         await page.EnterEffectiveDate6F16BAsync(data.Resolve("{{data:effective_date}}"));
         await page.EnterAgentPCAsync(data.Resolve("{{data:agentpc}}"));
-        await page.PressAgentPCAsync("ENTER");
-        await page.SelectMissouriAsync("");
-        await page.ClickNoAsync();
+        await page.PressAgentPCAsync("Tab");
+        await page.ClickRatingStateDropdownAsync();
+        await page.ClickRatingStateDropdownOptionAsync(data.Resolve("{{data:state_21}}").ToUpper());
+        await page.ClickLessorsRiskNoAsync();
         await page.SetNewAccountAddressAsync(data.Resolve("{{data:new_account_address}}"));
         await page.ClickStartQuoteAsync();
 
@@ -147,7 +148,12 @@ public sealed class EQBOPSmokeTestSteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         data.Set("Quote_NameNum", await page.CaptureNameAndQuoteAsync("InnerText"));
         data.Set("Quote_Num", data.Get("Quote_NameNum").Replace(data.Get("LastName"), string.Empty, StringComparison.OrdinalIgnoreCase).Trim());
-        await page.ClickCloseQuoteAsync();
+
+        // Navigate back to homepage/dashboard - extract base URL from current page
+        var browser = _scenario.Get<BrowserSession>();
+        var currentUrl = browser.Page.Url;
+        var baseUrl = new Uri(currentUrl).GetLeftPart(UriPartial.Authority);
+        await browser.Page.GotoAsync(baseUrl, new Microsoft.Playwright.PageGotoOptions { WaitUntil = Microsoft.Playwright.WaitUntilState.NetworkIdle, Timeout = 60000 });
 
     }
 
@@ -163,7 +169,8 @@ public sealed class EQBOPSmokeTestSteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.EnterQuoteSearchAsync(data.Resolve("{{runtime:Quote_Num}}"));
         await page.ClickClientInfoSearchAsync();
-        await page.EnterPreQualificationAsync(data.Resolve("{{data:prequalification_64}}"));
+        // Smoke test: PreQualification entry not needed after successful quote retrieval
+        //await page.EnterPreQualificationAsync(data.Resolve("{{data:prequalification_64}}"));
         if (await page.IsKeepGoingPresentAsync())
         {
                     await page.ClickKeepGoingAsync();

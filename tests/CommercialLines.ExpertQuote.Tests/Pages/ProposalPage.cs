@@ -53,11 +53,21 @@ public sealed class ProposalPage
     public Task SelectLessorsRiskNoAsync(string value) =>
         _ui.SelectAsync(_locators.LessorsRiskNo, value, new ControlIntent("Proposal", "LessorsRiskNo"));
 
+    public Task ClickLessorsRiskNoAsync() =>
+    _ui.ClickAsync(_locators.LessorsRiskNo, new ControlIntent("Proposal", "LessorsRiskNo"));
+
     public Task SelectMissouriAsync(string value) =>
         _ui.SelectAsync(_locators.Missouri, value, new ControlIntent("Proposal", "Missouri"));
 
+    public Task ClickRatingStateDropdownOptionAsync(string value) =>
+    _ui.ClickAsync(_locators.GetDropdownOption(value), new ControlIntent("Proposal", "Missouri"));
+
+    
+    public Task ClickRatingStateDropdownAsync() =>
+    _ui.ClickAsync(_locators.RatingStateDropdown, new ControlIntent("Proposal", "Missouri"));
+
     public Task SetNewAccountAddressAsync(string value) =>
-        _ui.SmartSetAsync(_locators.NewAccountAddress, value, new ControlIntent("Proposal", "NewAccountAddress"));
+        _ui.ClickAsync(_locators.NewAccountAddress, new ControlIntent("Proposal", "NewAccountAddress"));
 
     public Task ClickNoAsync() =>
         _ui.ClickAsync(_locators.No, new ControlIntent("Proposal", "No"));

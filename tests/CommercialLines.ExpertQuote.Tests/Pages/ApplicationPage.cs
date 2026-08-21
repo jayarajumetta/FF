@@ -32,5 +32,12 @@ public sealed class ApplicationPage
         await _ui.FillAsync(Username, username);
         await _ui.FillAsync(Password, password);
         await _ui.ClickAsync(SignIn);
+
+        // Wait for navigation to complete after sign-in
+        await _browser.Page.WaitForLoadStateAsync(LoadState.NetworkIdle, new PageWaitForLoadStateOptions { Timeout = 60000 });
+
+        // Wait for the dashboard to be ready by checking for the New Quote button
+        var newQuoteButton = _browser.Page.GetByRole(AriaRole.Button, new() { Name = "New Quote", Exact = true });
+        await newQuoteButton.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 30000 });
     }
 }

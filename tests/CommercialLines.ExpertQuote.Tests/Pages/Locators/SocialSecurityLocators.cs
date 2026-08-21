@@ -11,7 +11,7 @@ public sealed class SocialSecurityLocators
     public ILocator Continue => _page.GetByRole(AriaRole.Button, new() { Name = "Continue", Exact = true });
 
     // Source modules: EQ|Common|eChecklist - eChecklist | confidence=High score=127
-    public ILocator EChecklistEChecklistSubmit => _page.GetByRole(AriaRole.Button, new() { Name = "Submit", Exact = true });
+    public ILocator EChecklistEChecklistSubmit => _page.GetByTestId("btnConfirmYes");
 
     // Source modules: EQ|Common|SSN | confidence=Medium score=78
     public ILocator NoPrefillMatchFound => _page.GetByLabel("No Prefill Match Found", new() { Exact = true });

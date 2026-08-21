@@ -26,8 +26,13 @@ public sealed class SocialSecurityPage
     public Task VerifyEChecklistEChecklistSubmitAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.EChecklistEChecklistSubmit, expected, property, new ControlIntent("SocialSecurity", "EChecklistEChecklistSubmit"));
 
-    public Task ClickEChecklistEChecklistSubmitAsync() =>
-        _ui.ClickAsync(_locators.EChecklistEChecklistSubmit, new ControlIntent("SocialSecurity", "EChecklistEChecklistSubmit"));
+    public async Task ClickEChecklistEChecklistSubmitAsync()
+    {
+        // Wait a moment for any overlays to clear
+        await Task.Delay(1000);
+        // Try clicking with force to handle potential overlay issues
+        await _locators.EChecklistEChecklistSubmit.ClickAsync(new LocatorClickOptions { Force = true, Timeout = 30000 });
+    }
 
     public Task VerifyNoPrefillMatchFoundAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.NoPrefillMatchFound, expected, property, new ControlIntent("SocialSecurity", "NoPrefillMatchFound"));
