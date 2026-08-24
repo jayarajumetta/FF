@@ -14,6 +14,8 @@ public sealed class BrowserSession : IAsyncDisposable
     private IBrowserContext? _context;
     private IPage? _page;
     private string _artifactDirectory = string.Empty;
+    private string _consoleLogPath = string.Empty;
+    private string _networkLogPath = string.Empty;
 
     public BrowserSession(FrameworkConfig config) => _config = config;
 
@@ -29,6 +31,10 @@ public sealed class BrowserSession : IAsyncDisposable
     {
         _artifactDirectory = artifactDirectory;
         Directory.CreateDirectory(_artifactDirectory);
+        _consoleLogPath = Path.Combine(_artifactDirectory, "console.log");
+        _networkLogPath = Path.Combine(_artifactDirectory, "network.log");
+        File.WriteAllText(_consoleLogPath, string.Empty);
+        File.WriteAllText(_networkLogPath, string.Empty);
     }
 
     public async Task OpenAsync(RunLogger logger)
@@ -138,7 +144,8 @@ public sealed class BrowserSession : IAsyncDisposable
     {
         page.Console += (_, message) =>
         {
-            var line = $"BROWSER {message.Type}: {message.Text}";
+            var line = $"{DateTimeOffset.Now:O} BROWSER {message.Type}: {message.Text}";
+            AppendEvidenceLine(_consoleLogPath, line);
             logger.Info(line);
             if (_config.Reporting.IncludeConsoleErrors && (message.Type.Equals("error", StringComparison.OrdinalIgnoreCase) || message.Type.Equals("warning", StringComparison.OrdinalIgnoreCase)))
             {
@@ -147,23 +154,39 @@ public sealed class BrowserSession : IAsyncDisposable
         };
         page.PageError += (_, error) =>
         {
-            var line = $"PAGE ERROR: {error}";
+            var line = $"{DateTimeOffset.Now:O} PAGE ERROR: {error}";
+            AppendEvidenceLine(_consoleLogPath, line);
             logger.Error(line);
             if (_config.Reporting.IncludeConsoleErrors) lock (_evidenceGate) _stepConsoleErrors.Add(line);
         };
+        page.Request += (_, request) =>
+        {
+            AppendEvidenceLine(_networkLogPath, $"{DateTimeOffset.Now:O} REQUEST {request.Method} {request.Url}");
+        };
         page.RequestFailed += (_, request) =>
         {
-            var line = $"REQUEST FAILED: {request.Method} {request.Url} :: {request.Failure}";
+            var line = $"{DateTimeOffset.Now:O} REQUEST FAILED: {request.Method} {request.Url} :: {request.Failure}";
+            AppendEvidenceLine(_networkLogPath, line);
             logger.Error(line);
             if (_config.Reporting.IncludeNetworkErrors) lock (_evidenceGate) _stepNetworkErrors.Add(line);
         };
         page.Response += (_, response) =>
         {
+            var line = $"{DateTimeOffset.Now:O} RESPONSE {response.Status}: {response.Request.Method} {response.Url}";
+            AppendEvidenceLine(_networkLogPath, line);
             if (response.Status < 400) return;
-            var line = $"HTTP {response.Status}: {response.Request.Method} {response.Url}";
             logger.Warn(line);
             if (_config.Reporting.IncludeNetworkErrors) lock (_evidenceGate) _stepNetworkErrors.Add(line);
         };
+    }
+
+    private void AppendEvidenceLine(string path, string line)
+    {
+        if (string.IsNullOrWhiteSpace(path)) return;
+        lock (_evidenceGate)
+        {
+            try { File.AppendAllText(path, line + Environment.NewLine); } catch { }
+        }
     }
 
     private async Task<IBrowser> LaunchAsync(RunLogger logger)

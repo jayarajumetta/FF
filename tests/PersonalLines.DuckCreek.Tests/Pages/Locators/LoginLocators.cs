@@ -20,7 +20,7 @@ public sealed class LoginLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator BypassLevel9BRulesComments => _page.GetByText("Bypass Level 9B Rules Comments", new() { Exact = true });
+    public ILocator BypassLevel9BRulesComments => _page.Locator("[id='tf_27']");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -72,11 +72,11 @@ public sealed class LoginLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator TxtLoginID1 => _page.GetByText("Txt_Login ID_1", new() { Exact = true });
+    public ILocator TxtLoginID1 => _page.Locator("[id='username']");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator TxtSearchText => _page.GetByText("Txt_Search Text", new() { Exact = true });
+    public ILocator TxtSearchText => _page.Locator("[id='tf_0']");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name

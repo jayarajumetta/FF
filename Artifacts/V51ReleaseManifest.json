@@ -1,0 +1,52 @@
+{
+  "release": "v51-final-ff-bop2-source-ordered-component-aware-ado-two-pipeline",
+  "baseline": "User-corrected FF-bop2.zip",
+  "scope": {
+    "features": 32,
+    "examples": 1074,
+    "applications": [
+      "Commercial Lines ExpertQuote",
+      "Commercial Lines Duck Creek",
+      "Personal Lines Duck Creek"
+    ]
+  },
+  "validation": "PASS",
+  "contracts": {
+    "featureSourceOrder": "32/32 exact",
+    "stepDefinitionOrder": "PASS",
+    "clDcCompleteness": "PASS",
+    "postActionDomCapture": false,
+    "componentAwareUiActions": true,
+    "perTestNUnitAttachments": true
+  },
+  "azureDevOps": {
+    "buildPipeline": ".azuredevops/build-test-artifact.yml",
+    "executionPipeline": ".azuredevops/execute-test-artifact.yml",
+    "executionStages": [
+      "AllCases",
+      "SingleTestPlanCase",
+      "TestSuite"
+    ],
+    "singleCaseMode": "temporary one-case static Test Plan suite + validated single automated point + always cleanup",
+    "executionRebuilds": false,
+    "vstestPublishesRunAttachments": true,
+    "rawEvidencePipelineArtifacts": true
+  },
+  "evidence": [
+    "final screenshot",
+    "Playwright video",
+    "trace.zip",
+    "HAR",
+    "console log",
+    "network log",
+    "page errors",
+    "HTML report",
+    "healing evidence",
+    "evidence bundle",
+    "SHA-256 manifest"
+  ],
+  "generationEnvironment": {
+    "dotnetBuildExecuted": false,
+    "reason": "dotnet executable unavailable; build-test-artifact.yml is the compiler gate."
+  }
+}

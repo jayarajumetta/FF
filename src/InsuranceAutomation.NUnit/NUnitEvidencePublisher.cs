@@ -165,7 +165,7 @@ public static class NUnitEvidencePublisher
     {
         var name = Path.GetFileName(path).ToLowerInvariant();
         var normalized = path.Replace('\\', '/').ToLowerInvariant();
-        return name is "report.html" or "execution.log" or "trace.zip" or "network.har.zip" or "evidence-bundle.zip" or "test-evidence-manifest.json"
+        return name is "report.html" or "execution.log" or "console.log" or "network.log" or "trace.zip" or "network.har.zip" or "evidence-bundle.zip" or "test-evidence-manifest.json"
             || normalized.Contains("/screenshots/") || normalized.Contains("/video/")
             || normalized.Contains("/self-heal/");
     }
@@ -176,7 +176,9 @@ public static class NUnitEvidencePublisher
         var normalized = path.Replace('\\', '/').ToLowerInvariant();
         if (name == "report.html") return 0;
         if (name == "execution.log") return 1;
-        if (normalized.Contains("/screenshots/")) return 2;
+        if (name == "console.log") return 2;
+        if (name == "network.log") return 3;
+        if (normalized.Contains("/screenshots/")) return 4;
         if (normalized.Contains("/dom/") && path.EndsWith(".html", StringComparison.OrdinalIgnoreCase)) return 3;
         if (name == "trace.zip") return 4;
         if (name == "network.har.zip") return 5;
@@ -193,6 +195,8 @@ public static class NUnitEvidencePublisher
         var rel = Path.GetRelativePath(root, path).Replace('\\', '/').ToLowerInvariant();
         if (name == "report.html") return "html-report";
         if (name == "execution.log") return "execution-log";
+        if (name == "console.log") return "browser-console-log";
+        if (name == "network.log") return "network-call-log";
         if (rel.StartsWith("screenshots/")) return "screenshot";
         if (rel.StartsWith("dom/") && name.EndsWith(".html")) return "html-dom";
         if (rel.StartsWith("dom/")) return "dom-metadata";
@@ -212,6 +216,8 @@ public static class NUnitEvidencePublisher
         {
             "html-report" => "Scenario HTML execution report",
             "execution-log" => "Scenario execution log",
+            "browser-console-log" => "Browser console and page-error log",
+            "network-call-log" => "Browser request/response/failure log",
             "screenshot" => $"Playwright screenshot: {rel}",
             "html-dom" => $"Scenario-owned HTML DOM evidence: {rel}",
             "dom-metadata" => $"Scenario DOM/control/locator evidence: {rel}",

@@ -1,0 +1,443 @@
+{
+  "release": "v49-source-ordered-locator-mature",
+  "sourceReference": {
+    "name": "Tosca_Manual_Test_Cases_32.html",
+    "sha256": "6770d07bd0e05baa169ab139f392715d9a59a4cd9f7200c60056f8f936c25a18"
+  },
+  "featuresExpected": 32,
+  "featuresCompared": 32,
+  "exactFeatureSequences": 32,
+  "featureSequenceGate": "PASS",
+  "stepDefinitionBindingMissing": [],
+  "stepDefinitionBindingAmbiguous": [],
+  "stepDefinitionDeclarationOrder": [
+    {
+      "feature": "EQ BOP Basic Policy",
+      "resolvedFeatureScopedSteps": 95,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "EQ BOP Smoke Test",
+      "resolvedFeatureScopedSteps": 7,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "EQ SFP Basic Policy",
+      "resolvedFeatureScopedSteps": 42,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "EQ SFP Country Estate Policy",
+      "resolvedFeatureScopedSteps": 36,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "EQ SFP Smoke Test",
+      "resolvedFeatureScopedSteps": 10,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "BAP Basic Policy",
+      "resolvedFeatureScopedSteps": 21,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "BAP Expanded",
+      "resolvedFeatureScopedSteps": 29,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "BAP Smoke Test",
+      "resolvedFeatureScopedSteps": 12,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "CPP Basic Policy",
+      "resolvedFeatureScopedSteps": 75,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "CPP Smoke Test",
+      "resolvedFeatureScopedSteps": 12,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "CP Basic Policy",
+      "resolvedFeatureScopedSteps": 29,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "CP Smoke Test",
+      "resolvedFeatureScopedSteps": 10,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "GL Basic Policy",
+      "resolvedFeatureScopedSteps": 22,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "GL OCP Policy",
+      "resolvedFeatureScopedSteps": 20,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "GL Smoke Test",
+      "resolvedFeatureScopedSteps": 10,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "IM Basic Policy",
+      "resolvedFeatureScopedSteps": 32,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "IM Smoke Test",
+      "resolvedFeatureScopedSteps": 10,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "UMB Basic Policy",
+      "resolvedFeatureScopedSteps": 31,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "UMB Expanded",
+      "resolvedFeatureScopedSteps": 42,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "UMB Smoke Test",
+      "resolvedFeatureScopedSteps": 9,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "WC Basic Policy",
+      "resolvedFeatureScopedSteps": 26,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "WC Expanded",
+      "resolvedFeatureScopedSteps": 28,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "WC Smoke Test",
+      "resolvedFeatureScopedSteps": 15,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "Auto Rate Filings Common Policy NB",
+      "resolvedFeatureScopedSteps": 39,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "Auto Rate Filings Common Policy NB Prior Eff Date",
+      "resolvedFeatureScopedSteps": 39,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "Auto Rate Filings Policy 1 NB",
+      "resolvedFeatureScopedSteps": 40,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "Auto Rate Filings Policy 3 NB Prior Eff Date",
+      "resolvedFeatureScopedSteps": 39,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "Cycle Rate Filings Policy 1 NB 1",
+      "resolvedFeatureScopedSteps": 42,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "Cycle Rate Filings Policy 3 NB Prior Eff Date",
+      "resolvedFeatureScopedSteps": 35,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "Smoke Test Auto",
+      "resolvedFeatureScopedSteps": 6,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "Smoke Test Cycle",
+      "resolvedFeatureScopedSteps": 6,
+      "declarationOrderMatchesFeatureOrder": true
+    },
+    {
+      "feature": "Smoke Test RV",
+      "resolvedFeatureScopedSteps": 6,
+      "declarationOrderMatchesFeatureOrder": true
+    }
+  ],
+  "stepDefinitionOrderGate": "PASS",
+  "clDcMissingBusinessSteps": [],
+  "clDcCompletenessGate": "PASS",
+  "locatorAudit": {
+    "locatorFiles": 51,
+    "getByTestIdCalls": 166,
+    "samePageDuplicateTestIds": [],
+    "samePageTestIdGate": "PASS"
+  },
+  "features": [
+    {
+      "feature": "EQ BOP Basic Policy",
+      "featureFile": "tests/CommercialLines.ExpertQuote.Tests/Features/02_EQ_BOP_Basic_Policy_AL.feature",
+      "sourceSteps": 97,
+      "generatedSteps": 97,
+      "sourceBusinessActions": 532,
+      "exactSequence": true
+    },
+    {
+      "feature": "EQ BOP Smoke Test",
+      "featureFile": "tests/CommercialLines.ExpertQuote.Tests/Features/03_EQ_BOP_Smoke_Test_MO.feature",
+      "sourceSteps": 9,
+      "generatedSteps": 9,
+      "sourceBusinessActions": 55,
+      "exactSequence": true
+    },
+    {
+      "feature": "EQ SFP Basic Policy",
+      "featureFile": "tests/CommercialLines.ExpertQuote.Tests/Features/05_EQ_SFP_Basic_Policy_AL.feature",
+      "sourceSteps": 44,
+      "generatedSteps": 44,
+      "sourceBusinessActions": 280,
+      "exactSequence": true
+    },
+    {
+      "feature": "EQ SFP Country Estate Policy",
+      "featureFile": "tests/CommercialLines.ExpertQuote.Tests/Features/06_EQ_SFP_Country_Estate_Policy_AL.feature",
+      "sourceSteps": 38,
+      "generatedSteps": 38,
+      "sourceBusinessActions": 250,
+      "exactSequence": true
+    },
+    {
+      "feature": "EQ SFP Smoke Test",
+      "featureFile": "tests/CommercialLines.ExpertQuote.Tests/Features/04_EQ_SFP_Smoke_Test_MN.feature",
+      "sourceSteps": 12,
+      "generatedSteps": 12,
+      "sourceBusinessActions": 55,
+      "exactSequence": true
+    },
+    {
+      "feature": "BAP Basic Policy",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/001_BAP_Basic_Policy_AL.feature",
+      "sourceSteps": 23,
+      "generatedSteps": 23,
+      "sourceBusinessActions": 230,
+      "exactSequence": true
+    },
+    {
+      "feature": "BAP Expanded",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/002_BAP_Expanded_AL.feature",
+      "sourceSteps": 31,
+      "generatedSteps": 31,
+      "sourceBusinessActions": 780,
+      "exactSequence": true
+    },
+    {
+      "feature": "BAP Smoke Test",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/012_BAP_Smoke_Test_AL.feature",
+      "sourceSteps": 14,
+      "generatedSteps": 14,
+      "sourceBusinessActions": 101,
+      "exactSequence": true
+    },
+    {
+      "feature": "CPP Basic Policy",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/003_CPP_Basic_Policy_AZ.feature",
+      "sourceSteps": 77,
+      "generatedSteps": 77,
+      "sourceBusinessActions": 625,
+      "exactSequence": true
+    },
+    {
+      "feature": "CPP Smoke Test",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/017_CPP_Smoke_Test_AZ.feature",
+      "sourceSteps": 14,
+      "generatedSteps": 14,
+      "sourceBusinessActions": 87,
+      "exactSequence": true
+    },
+    {
+      "feature": "CP Basic Policy",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/004_CP_Basic_Policy_AZ.feature",
+      "sourceSteps": 31,
+      "generatedSteps": 31,
+      "sourceBusinessActions": 304,
+      "exactSequence": true
+    },
+    {
+      "feature": "CP Smoke Test",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/013_CP_Smoke_Test_AZ.feature",
+      "sourceSteps": 12,
+      "generatedSteps": 12,
+      "sourceBusinessActions": 84,
+      "exactSequence": true
+    },
+    {
+      "feature": "GL Basic Policy",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/005_GL_Basic_Policy_AZ.feature",
+      "sourceSteps": 24,
+      "generatedSteps": 24,
+      "sourceBusinessActions": 227,
+      "exactSequence": true
+    },
+    {
+      "feature": "GL OCP Policy",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/006_GL_OCP_Policy_AZ.feature",
+      "sourceSteps": 22,
+      "generatedSteps": 22,
+      "sourceBusinessActions": 227,
+      "exactSequence": true
+    },
+    {
+      "feature": "GL Smoke Test",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/014_GL_Smoke_Test_AZ.feature",
+      "sourceSteps": 12,
+      "generatedSteps": 12,
+      "sourceBusinessActions": 85,
+      "exactSequence": true
+    },
+    {
+      "feature": "IM Basic Policy",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/007_IM_Basic_Policy_AZ.feature",
+      "sourceSteps": 34,
+      "generatedSteps": 34,
+      "sourceBusinessActions": 374,
+      "exactSequence": true
+    },
+    {
+      "feature": "IM Smoke Test",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/015_IM_Smoke_Test_AZ.feature",
+      "sourceSteps": 12,
+      "generatedSteps": 12,
+      "sourceBusinessActions": 84,
+      "exactSequence": true
+    },
+    {
+      "feature": "UMB Basic Policy",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/008_UMB_Basic_Policy_AL.feature",
+      "sourceSteps": 33,
+      "generatedSteps": 33,
+      "sourceBusinessActions": 249,
+      "exactSequence": true
+    },
+    {
+      "feature": "UMB Expanded",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/009_UMB_Expanded_AL.feature",
+      "sourceSteps": 44,
+      "generatedSteps": 44,
+      "sourceBusinessActions": 506,
+      "exactSequence": true
+    },
+    {
+      "feature": "UMB Smoke Test",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/018_UMB_Smoke_Test_AL.feature",
+      "sourceSteps": 11,
+      "generatedSteps": 11,
+      "sourceBusinessActions": 83,
+      "exactSequence": true
+    },
+    {
+      "feature": "WC Basic Policy",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/010_WC_Basic_Policy_AL.feature",
+      "sourceSteps": 28,
+      "generatedSteps": 28,
+      "sourceBusinessActions": 246,
+      "exactSequence": true
+    },
+    {
+      "feature": "WC Expanded",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/011_WC_Expanded_AL.feature",
+      "sourceSteps": 30,
+      "generatedSteps": 30,
+      "sourceBusinessActions": 286,
+      "exactSequence": true
+    },
+    {
+      "feature": "WC Smoke Test",
+      "featureFile": "tests/CommercialLines.DuckCreek.Tests/Features/016_WC_Smoke_Test_AL.feature",
+      "sourceSteps": 17,
+      "generatedSteps": 17,
+      "sourceBusinessActions": 114,
+      "exactSequence": true
+    },
+    {
+      "feature": "Auto Rate Filings Common Policy NB",
+      "featureFile": "tests/PersonalLines.DuckCreek.Tests/Features/183_Auto_Rate_Filings_Common_Policy_NB_AL.feature",
+      "sourceSteps": 41,
+      "generatedSteps": 41,
+      "sourceBusinessActions": 569,
+      "exactSequence": true
+    },
+    {
+      "feature": "Auto Rate Filings Common Policy NB Prior Eff Date",
+      "featureFile": "tests/PersonalLines.DuckCreek.Tests/Features/184_Auto_Rate_Filings_Common_Policy_NB_Prior_Eff_Date_AL.feature",
+      "sourceSteps": 41,
+      "generatedSteps": 41,
+      "sourceBusinessActions": 569,
+      "exactSequence": true
+    },
+    {
+      "feature": "Auto Rate Filings Policy 1 NB",
+      "featureFile": "tests/PersonalLines.DuckCreek.Tests/Features/181_Auto_Rate_Filings_Policy_1_NB_AL.feature",
+      "sourceSteps": 42,
+      "generatedSteps": 42,
+      "sourceBusinessActions": 600,
+      "exactSequence": true
+    },
+    {
+      "feature": "Auto Rate Filings Policy 3 NB Prior Eff Date",
+      "featureFile": "tests/PersonalLines.DuckCreek.Tests/Features/182_Auto_Rate_Filings_Policy_3_NB_Prior_Eff_Date_AL.feature",
+      "sourceSteps": 41,
+      "generatedSteps": 41,
+      "sourceBusinessActions": 598,
+      "exactSequence": true
+    },
+    {
+      "feature": "Cycle Rate Filings Policy 1 NB 1",
+      "featureFile": "tests/PersonalLines.DuckCreek.Tests/Features/185_Cycle_Rate_Filings_Policy_1_NB_1_AL.feature",
+      "sourceSteps": 44,
+      "generatedSteps": 44,
+      "sourceBusinessActions": 534,
+      "exactSequence": true
+    },
+    {
+      "feature": "Cycle Rate Filings Policy 3 NB Prior Eff Date",
+      "featureFile": "tests/PersonalLines.DuckCreek.Tests/Features/186_Cycle_Rate_Filings_Policy_3_NB_Prior_Eff_Date_AL.feature",
+      "sourceSteps": 37,
+      "generatedSteps": 37,
+      "sourceBusinessActions": 564,
+      "exactSequence": true
+    },
+    {
+      "feature": "Smoke Test Auto",
+      "featureFile": "tests/PersonalLines.DuckCreek.Tests/Features/211_Smoke_Test_Auto_AL.feature",
+      "sourceSteps": 8,
+      "generatedSteps": 8,
+      "sourceBusinessActions": 68,
+      "exactSequence": true
+    },
+    {
+      "feature": "Smoke Test Cycle",
+      "featureFile": "tests/PersonalLines.DuckCreek.Tests/Features/212_Smoke_Test_Cycle_AL.feature",
+      "sourceSteps": 8,
+      "generatedSteps": 8,
+      "sourceBusinessActions": 68,
+      "exactSequence": true
+    },
+    {
+      "feature": "Smoke Test RV",
+      "featureFile": "tests/PersonalLines.DuckCreek.Tests/Features/215_Smoke_Test_RV_AL.feature",
+      "sourceSteps": 8,
+      "generatedSteps": 8,
+      "sourceBusinessActions": 68,
+      "exactSequence": true
+    }
+  ],
+  "overallGate": "PASS"
+}

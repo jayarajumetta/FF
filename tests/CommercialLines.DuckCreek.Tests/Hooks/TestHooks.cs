@@ -35,8 +35,8 @@ public sealed class TestHooks
         var browser = new BrowserSession(config);
         browser.SetArtifactDirectory(artifactDirectory);
         var data = new ScenarioData(config);
-        var ui = new UiActions(browser, config, logger);
         var report = new ScenarioReport(artifactDirectory);
+        var ui = new UiActions(browser, config, logger, report, "CommercialLines.DuckCreek");
 
         _scenario.Set(config);
         _scenario.Set(artifactDirectory);
@@ -90,48 +90,16 @@ public sealed class TestHooks
     }
 
     [AfterScenario(Order = 100)]
-    public async Task FinishScenarioAsync()
-    {
-        var browser = _scenario.Get<BrowserSession>();
-        var logger = _scenario.Get<RunLogger>();
-        var config = _scenario.Get<FrameworkConfig>();
-        var report = _scenario.Get<ScenarioReport>();
-        var artifactDirectory = _scenario.Get<string>();
-
-        try
-        {
-            // Browser context must close before evidence is attached so Playwright finalizes
-            // trace.zip, HAR and video files for this exact test.
-            await browser.CloseAsync(logger);
-
-            if (config.Reporting.HtmlReport)
-                report.Write(_feature.FeatureInfo.Title, _scenario.ScenarioInfo.Title, logger.LogPath, browser.TracePath, browser.VideoPath, browser.HarPath, null);
-
-            var bundle = browser.CreateEvidenceBundle(logger);
-            if (config.Reporting.HtmlReport)
-                report.Write(_feature.FeatureInfo.Title, _scenario.ScenarioInfo.Title, logger.LogPath, browser.TracePath, browser.VideoPath, browser.HarPath, bundle);
-
-            logger.Flush();
-
-            // Add every scenario-owned artifact to the current NUnit result before ReqnRoll
-            // returns control to the test adapter. NUnit3TestAdapter can surface these in
-            // Visual Studio/vstest; Azure DevOps PublishTestResults@2 uploads them per test.
-            var published = NUnitEvidencePublisher.Publish(
-                artifactDirectory,
-                config,
-                _feature.FeatureInfo.Title,
-                _scenario.ScenarioInfo.Title,
-                _scenario.TestError);
-
-            logger.Info($"TEST EVIDENCE ATTACHMENTS: enabled={published.Enabled}; attached={published.AttachedCount}; skipped={published.SkippedCount}; failures={published.Failures.Count}");
-            foreach (var failure in published.Failures) logger.Warn($"ATTACHMENT FAILURE: {failure}");
-            logger.Flush();
-        }
-        finally
-        {
-            logger.Dispose();
-        }
-    }
+    public Task FinishScenarioAsync() =>
+        NUnitScenarioEvidenceFinalizer.FinishAsync(
+            _scenario.Get<BrowserSession>(),
+            _scenario.Get<RunLogger>(),
+            _scenario.Get<FrameworkConfig>(),
+            _scenario.Get<ScenarioReport>(),
+            _scenario.Get<string>(),
+            _feature.FeatureInfo.Title,
+            _scenario.ScenarioInfo.Title,
+            _scenario.TestError);
 
     private static string Safe(string value) =>
         string.Concat(value.Select(c => char.IsLetterOrDigit(c) ? c : '_')).Trim('_');

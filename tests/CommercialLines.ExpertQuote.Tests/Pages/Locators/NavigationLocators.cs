@@ -99,7 +99,7 @@ public sealed class NavigationLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator PreQualification => _page.GetByText("PreQualification", new() { Exact = true });
+    public ILocator PreQualification => _page.GetByRole(AriaRole.Heading, new() { NameRegex = new System.Text.RegularExpressions.Regex("^PreQualification", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
 
     // Source modules: EQ|SFP|Mortgagee/Loss Payee | confidence=High score=127
     public ILocator Residence => _page.GetByRole(AriaRole.Combobox, new() { Name = "Residence", Exact = true });
@@ -187,5 +187,15 @@ public sealed class NavigationLocators
 
     // Source modules: EQ|Common|PreQualification|Add Class Codes|Search/Add Class Codes | confidence=Medium score=108
     public ILocator YouHaveSelected1ClassCodes => _page.GetByLabel("You have selected 1 Class Codes", new() { Exact = true });
+
+    // Source EQ|Common|Navigation: Nav Link = DIV InnerText {B[Screen]}, Screen Heading = H1 {B[Screen]}*.
+    public ILocator GetNavigationLink(string screen) =>
+        _page.GetByText(screen, new() { Exact = true });
+
+    public ILocator GetScreenHeading(string screen) =>
+        _page.GetByRole(AriaRole.Heading, new()
+        {
+            NameRegex = new System.Text.RegularExpressions.Regex("^" + System.Text.RegularExpressions.Regex.Escape(screen), System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+        });
 
 }

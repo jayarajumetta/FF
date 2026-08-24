@@ -40,7 +40,7 @@ public sealed class FormsLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator SearchText => _page.GetByText("Search Text", new() { Exact = true });
+    public ILocator SearchText => _page.Locator("[id='quickSearchTextId-inputEl']");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name

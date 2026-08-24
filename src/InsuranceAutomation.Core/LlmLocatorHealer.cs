@@ -17,13 +17,13 @@ public sealed class LlmLocatorHealer
     private readonly string _auditPath;
     private readonly object _cacheGate = new();
 
-    public LlmLocatorHealer(BrowserSession browser, FrameworkConfig config, RunLogger logger)
+    public LlmLocatorHealer(BrowserSession browser, FrameworkConfig config, RunLogger logger, string applicationName = "")
     {
         _browser = browser;
         _config = config;
         _logger = logger;
         _provider = LocatorHealingProviderFactory.Create(config);
-        _toscaEvidence = new ToscaLocatorEvidenceStore(config);
+        _toscaEvidence = new ToscaLocatorEvidenceStore(config, applicationName);
         _cachePath = ResolvePath(_config.SelfHeal.CacheFile);
         _auditPath = ResolvePath(_config.SelfHeal.AuditFile);
         _cache = LoadCache(_cachePath);
@@ -44,13 +44,6 @@ public sealed class LlmLocatorHealer
                 return cachedLocator;
             }
             RecordHistory(key, control, action, cached, "cache", "stale", "Cached locator no longer unique/visible/actionable.");
-        }
-
-        var deterministic = await TryDeterministicAsync(control, action);
-        if (deterministic is not null)
-        {
-            _logger.Info($"SELF-HEAL deterministic recovery succeeded. Control={control}; Action={action}");
-            return deterministic;
         }
 
         if (!_provider.IsAvailable(out var providerReason))
@@ -191,29 +184,6 @@ JSON schema:
             return p;
         }
         catch { return null; }
-    }
-
-    private async Task<ILocator?> TryDeterministicAsync(ControlIntent control, string action)
-    {
-        var page = _browser.Page;
-        var raw = control.Control;
-        var friendly = Regex.Replace(raw, "([a-z0-9])([A-Z])", "$1 $2").Trim();
-        var candidates = new List<ILocator>();
-        // First try source-derived Tosca ModuleAttribute alternatives. ConstraintIndex is
-        // honored only when it exists in the source catalog; no arbitrary First/Nth is invented.
-        candidates.AddRange(_toscaEvidence.BuildDeterministicCandidates(page, control));
-        if (raw.Contains('.') || raw.Contains('_'))
-        {
-            candidates.Add(page.Locator($"[name=\"{EscapeAttribute(raw)}\"]"));
-            candidates.Add(page.Locator($"[id=\"{EscapeAttribute(raw)}\"]"));
-        }
-        candidates.Add(page.GetByTestId(raw));
-        candidates.Add(page.Locator($"[duckcreekid=\"{EscapeAttribute(raw)}\"], [data-duckcreekid=\"{EscapeAttribute(raw)}\"]"));
-        candidates.Add(page.GetByLabel(friendly, new PageGetByLabelOptions { Exact = true }));
-        candidates.Add(page.GetByLabel(friendly, new PageGetByLabelOptions { Exact = false }));
-        candidates.Add(page.GetByPlaceholder(friendly, new PageGetByPlaceholderOptions { Exact = false }));
-        foreach (var candidate in candidates) if (await IsUsableAsync(candidate, action)) return candidate;
-        return null;
     }
 
     private ILocator CreateLocator(LocatorProposal p)

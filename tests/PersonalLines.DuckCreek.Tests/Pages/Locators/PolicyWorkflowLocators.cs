@@ -63,11 +63,11 @@ public sealed class PolicyWorkflowLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator TxtFirst => _page.GetByText("Txt_First", new() { Exact = true });
+    public ILocator TxtFirst => _page.Locator("[id='customer.name.first']");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator TxtLast => _page.GetByText("Txt_Last", new() { Exact = true });
+    public ILocator TxtLast => _page.Locator("[id='customer.name.last']");
 
     // Source modules: EQ || Personal Injury Protection Section (New) | confidence=Medium score=113
     // Dynamically set by buffer Waiver of Income Loss in RTB Auto | 10.2 EQ | Auto_AddlCov PIP

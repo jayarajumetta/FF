@@ -13,9 +13,12 @@ public sealed class ToscaLocatorEvidenceStore
 {
     private readonly IReadOnlyList<ToscaLocatorEvidence> _entries;
 
-    public ToscaLocatorEvidenceStore(FrameworkConfig config)
+    public ToscaLocatorEvidenceStore(FrameworkConfig config, string applicationName = "")
     {
-        _entries = Load(ResolvePath(config.SelfHeal.LocatorCatalogFile));
+        var loaded = Load(ResolvePath(config.SelfHeal.LocatorCatalogFile));
+        _entries = string.IsNullOrWhiteSpace(applicationName)
+            ? loaded
+            : loaded.Where(x => MatchesApplication(x.SourceFile, applicationName)).ToArray();
     }
 
     public IReadOnlyList<ToscaLocatorEvidence> Find(ControlIntent control, int limit = 12)
@@ -95,6 +98,17 @@ public sealed class ToscaLocatorEvidenceStore
             return JsonSerializer.Deserialize<List<ToscaLocatorEvidence>>(File.ReadAllText(path), new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? [];
         }
         catch { return Array.Empty<ToscaLocatorEvidence>(); }
+    }
+
+    private static bool MatchesApplication(string sourceFile, string applicationName)
+    {
+        if (applicationName.Equals("CommercialLines.ExpertQuote", StringComparison.OrdinalIgnoreCase))
+            return sourceFile.StartsWith("CL_EQ", StringComparison.OrdinalIgnoreCase) || sourceFile.Contains("CL-EQ Total", StringComparison.OrdinalIgnoreCase);
+        if (applicationName.Equals("CommercialLines.DuckCreek", StringComparison.OrdinalIgnoreCase))
+            return sourceFile.StartsWith("CL-DC", StringComparison.OrdinalIgnoreCase);
+        if (applicationName.Equals("PersonalLines.DuckCreek", StringComparison.OrdinalIgnoreCase))
+            return sourceFile.StartsWith("PL_DC", StringComparison.OrdinalIgnoreCase);
+        return true;
     }
 
     private static string ResolvePath(string path)

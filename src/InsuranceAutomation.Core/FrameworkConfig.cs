@@ -6,6 +6,7 @@ public sealed class FrameworkConfig
 {
     public BrowserOptions Browser { get; init; } = new();
     public SelfHealOptions SelfHeal { get; init; } = new();
+    public LocatorFallbackOptions LocatorFallback { get; init; } = new();
     public ReportingOptions Reporting { get; init; } = new();
     public ExecutionOptions Execution { get; init; } = new();
 
@@ -30,6 +31,16 @@ public sealed class FrameworkConfig
             throw new InvalidOperationException($"reporting.attachmentMode must be 'all' or 'key'. Config: {path}");
         if (Reporting.MaxSingleAttachmentBytes <= 0 || Reporting.MaxAttachmentCount <= 0)
             throw new InvalidOperationException($"Reporting attachment limits must be positive. Config: {path}");
+
+        if (LocatorFallback.Enabled)
+        {
+            if (string.IsNullOrWhiteSpace(LocatorFallback.CatalogDirectory))
+                throw new InvalidOperationException($"locatorFallback.catalogDirectory is required. Config: {path}");
+            if (LocatorFallback.MaxCandidatesPerFailure <= 0)
+                throw new InvalidOperationException($"locatorFallback.maxCandidatesPerFailure must be positive. Config: {path}");
+            if (LocatorFallback.MinimumCandidateConfidence is < 0 or > 1)
+                throw new InvalidOperationException($"locatorFallback.minimumCandidateConfidence must be between 0 and 1. Config: {path}");
+        }
 
         if (SelfHeal.Enabled)
         {
@@ -84,6 +95,19 @@ public sealed class BrowserOptions
     public bool Har { get; init; } = true;
     public bool ScreenshotOnFailure { get; init; } = true;
     public bool ScreenshotEachStep { get; init; }
+    public bool ScreenshotAtScenarioEnd { get; init; } = true;
+}
+
+
+public sealed class LocatorFallbackOptions
+{
+    public bool Enabled { get; init; } = true;
+    public string CatalogDirectory { get; init; } = "Artifacts/LocatorFallbackCatalogs";
+    public int MaxCandidatesPerFailure { get; init; } = 40;
+    public double MinimumCandidateConfidence { get; init; } = 0.60;
+    public bool AllowSourceXPath { get; init; } = true;
+    public bool PreferPreviouslySuccessfulCandidate { get; init; } = true;
+    public bool LogEveryAttempt { get; init; } = true;
 }
 
 public sealed class SelfHealOptions
@@ -104,8 +128,8 @@ public sealed class SelfHealOptions
     public int CacheContextLimit { get; init; } = 20;
     public string CopilotExecutable { get; init; } = "copilot";
     public string DomEvidenceDirectory { get; init; } = "Artifacts/DOM";
-    public string LocatorCatalogFile { get; init; } = "Artifacts/ToscaLocatorPropertyCatalog.json";
-    public bool CaptureDomAfterActions { get; init; } = true;
+    public string LocatorCatalogFile { get; init; } = "Artifacts/ToscaLocatorPropertyCatalog.v52.json";
+    public bool CaptureDomAfterActions { get; init; } = false;
 }
 
 public sealed class ReportingOptions

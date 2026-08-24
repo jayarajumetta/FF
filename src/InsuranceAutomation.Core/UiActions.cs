@@ -5,16 +5,19 @@ namespace InsuranceAutomation.Core;
 public sealed class UiActions
 {
     private readonly LlmLocatorHealer _healer;
+    private readonly DeterministicLocatorFallbackResolver _fallback;
     private readonly RunLogger _logger;
     private readonly BrowserSession _browser;
-    private readonly DomEvidenceCollector _domEvidence;
 
     public UiActions(BrowserSession browser, FrameworkConfig config, RunLogger logger)
+        : this(browser, config, logger, null, "Unknown") { }
+
+    public UiActions(BrowserSession browser, FrameworkConfig config, RunLogger logger, ScenarioReport? report, string applicationName)
     {
         _browser = browser;
         _logger = logger;
-        _healer = new LlmLocatorHealer(browser, config, logger);
-        _domEvidence = new DomEvidenceCollector(browser, config, logger);
+        _fallback = new DeterministicLocatorFallbackResolver(browser, config, logger, report, applicationName);
+        _healer = new LlmLocatorHealer(browser, config, logger, applicationName);
     }
 
     public Task ClickAsync(ILocator locator) => ClickAsync(locator, new ControlIntent("Application", "Control"));
@@ -54,15 +57,39 @@ public sealed class UiActions
                 return;
         }
 
+        var tag = (await x.EvaluateAsync<string>("e=>e.tagName.toLowerCase()")).ToLowerInvariant();
         var type = (await x.GetAttributeAsync("type") ?? "").ToLowerInvariant();
+        var role = (await x.GetAttributeAsync("role") ?? "").ToLowerInvariant();
         if (type == "radio")
         {
             await x.SetCheckedAsync(ParseBoolean(value, defaultValue: true));
             return;
         }
-        await x.FillAsync(value ?? string.Empty);
+
+        var editable = tag is "input" or "textarea" || role == "textbox" ||
+                       string.Equals(await x.GetAttributeAsync("contenteditable"), "true", StringComparison.OrdinalIgnoreCase);
+        if (editable)
+        {
+            await x.FillAsync(value ?? string.Empty);
+            return;
+        }
+
+        if (tag is "button" or "a" or "div" or "span" || role is "button" or "radio" or "option")
+        {
+            await SelectResolvedClickableAsync(x, value, intent);
+            return;
+        }
+
+        throw new PlaywrightException($"Semantic set mismatch for {intent.Page}.{intent.Control}: tag={tag}, type={type}, role={role}. A non-editable control will not be filled.");
     });
 
+    /// <summary>
+    /// Source/component-aware Select semantics.
+    /// SelectOptionAsync is intentionally reserved for a real HTML &lt;select&gt;.
+    /// Angular Material uses trigger-click + role=option/mat-option. Already-resolved
+    /// chips, Yes/No containers, buttons and links are clicked directly rather than
+    /// being misclassified as dropdowns.
+    /// </summary>
     public Task SelectAsync(ILocator locator, string value, ControlIntent intent) => ExecuteAsync(locator, intent, "select", async x =>
     {
         var component = await DetectComponentAsync(x);
@@ -70,6 +97,9 @@ public sealed class UiActions
         {
             case ComponentKind.NativeSelect:
                 await x.SelectOptionAsync(new SelectOptionValue { Label = value });
+                return;
+            case ComponentKind.MaterialSelect:
+                await SelectMaterialOptionAsync(x, value, intent);
                 return;
             case ComponentKind.Autocomplete:
                 await SetAutocompleteAsync(x, value, intent);
@@ -79,13 +109,13 @@ public sealed class UiActions
                 await SelectRadioOrChipAsync(x, value, intent);
                 return;
             case ComponentKind.Checkbox:
-                await SetCheckboxAsync(x, ParseBoolean(value));
+                await SetCheckboxAsync(x, ParseBoolean(value, defaultValue: true));
                 return;
             case ComponentKind.DatePicker:
                 await SetDateAsync(x, value);
                 return;
             default:
-                await SelectMaterialOptionAsync(x, value, intent);
+                await SelectResolvedClickableAsync(x, value, intent);
                 return;
         }
     });
@@ -126,6 +156,48 @@ public sealed class UiActions
         if (await option.CountAsync() == 0) option = page.Locator("mat-option").Filter(new() { HasText = value });
         if (await option.CountAsync() == 0) option = page.Locator("[role=option]").Filter(new() { HasText = value });
         await ClickSingleVisibleAsync(option, $"dropdown option '{value}'", intent);
+    }
+
+    private static async Task SelectResolvedClickableAsync(ILocator control, string value, ControlIntent intent)
+    {
+        var tag = (await control.EvaluateAsync<string>("e=>e.tagName.toLowerCase()")).ToLowerInvariant();
+        var type = (await control.GetAttributeAsync("type") ?? "").ToLowerInvariant();
+        var role = (await control.GetAttributeAsync("role") ?? "").ToLowerInvariant();
+
+        if (tag == "input" && type == "radio")
+        {
+            await control.SetCheckedAsync(ParseBoolean(value, defaultValue: true));
+            return;
+        }
+
+        if (tag == "input" && type == "checkbox")
+        {
+            await control.SetCheckedAsync(ParseBoolean(value, defaultValue: true));
+            return;
+        }
+
+        var clickable = tag is "button" or "a" or "div" or "span" or "mat-option" or "mat-chip" or "mat-chip-option" or "mat-radio-button"
+                        || role is "button" or "radio" or "option" or "tab";
+        if (!clickable)
+            throw new PlaywrightException($"Semantic select mismatch for {intent.Page}.{intent.Control}: resolved control is tag={tag}, type={type}, role={role}; it is not a native select, Material select, autocomplete, radio/chip/checkbox, or clickable option.");
+
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            var text = string.Empty;
+            try { text = (await control.InnerTextAsync()).Trim(); } catch { }
+            var boolLike = value.Equals("yes", StringComparison.OrdinalIgnoreCase) ||
+                           value.Equals("no", StringComparison.OrdinalIgnoreCase) ||
+                           value.Equals("true", StringComparison.OrdinalIgnoreCase) ||
+                           value.Equals("false", StringComparison.OrdinalIgnoreCase);
+            if (!boolLike && !string.IsNullOrWhiteSpace(text) &&
+                !text.Contains(value, StringComparison.OrdinalIgnoreCase) &&
+                !value.Contains(text, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new PlaywrightException($"Resolved clickable text '{text}' does not match requested selection '{value}' for {intent.Page}.{intent.Control}. Refusing to guess a dropdown.");
+            }
+        }
+
+        await control.ClickAsync();
     }
 
     private async Task SetAutocompleteAsync(ILocator control, string value, ControlIntent intent)
@@ -285,11 +357,18 @@ public sealed class UiActions
         try { await operation(locator); }
         catch (Exception ex) when (IsLocatorFailure(ex))
         {
+            // Deterministic Tosca candidates are the first recovery layer. They execute ONLY the
+            // failed Page action; a successful fallback never replays the business step/scenario.
+            if (await _fallback.TryExecuteAsync(intent, action, operation, ex)) return;
+
+            // LLM/Copilot healing is deliberately last, after every mature source-derived fallback
+            // candidate has been live-validated and exhausted.
             var healed = await _healer.TryHealAsync(locator, intent, action, ex);
             if (healed is null) throw;
-            await operation(healed); // retry only the failed action, never the business step/scenario
+            await operation(healed);
         }
-        finally { await _domEvidence.CaptureAsync(intent, action); }
+        // Intentionally no post-action DOM extraction/consolidation.
+        // Failure-time DOM + screenshot evidence remains available to the final healing layer.
     }
 
     private async Task<T> ExecuteAsync<T>(ILocator locator, ControlIntent intent, string action, Func<ILocator, Task<T>> operation)
@@ -297,11 +376,15 @@ public sealed class UiActions
         try { return await operation(locator); }
         catch (Exception ex) when (IsLocatorFailure(ex))
         {
+            var fallback = await _fallback.TryExecuteAsync(intent, action, operation, ex);
+            if (fallback.Success) return fallback.Value!;
+
             var healed = await _healer.TryHealAsync(locator, intent, action, ex);
             if (healed is null) throw;
-            return await operation(healed); // retry only the failed action
+            return await operation(healed);
         }
-        finally { await _domEvidence.CaptureAsync(intent, action); }
+        // Intentionally no post-action DOM extraction/consolidation.
+        // Failure-time DOM + screenshot evidence remains available to the final healing layer.
     }
 
     private static bool IsLocatorFailure(Exception ex)

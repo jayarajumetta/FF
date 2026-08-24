@@ -124,8 +124,13 @@ public Task<bool> IsLoadingPresentAsync() =>
     public Task VerifyPreQualificationAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.PreQualification, expected, property, new ControlIntent("Navigation", "PreQualification"));
 
-    public Task EnterPreQualificationAsync(string value) =>
-        _ui.FillAsync(_locators.PreQualification, value, new ControlIntent("Navigation", "PreQualification"));
+    public Task NavigateToScreenAsync(string screen) =>
+        _ui.ClickAsync(_locators.GetNavigationLink(screen), new ControlIntent("Navigation", $"NavLink:{screen}"));
+
+    public Task VerifyScreenAsync(string screen) =>
+        _ui.VerifyAsync(_locators.GetScreenHeading(screen), "Visible", "", new ControlIntent("Navigation", $"ScreenHeading:{screen}"));
+
+    public Task EnterPreQualificationAsync(string value) => NavigateToScreenAsync(value);
 
     public Task EnterResidenceAsync(string value) =>
         _ui.FillAsync(_locators.Residence, value, new ControlIntent("Navigation", "Residence"));

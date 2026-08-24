@@ -15,24 +15,34 @@ for p in root.glob('tests/*/*.csproj'):
     if '../../src/InsuranceAutomation.NUnit/InsuranceAutomation.NUnit.csproj' not in text:
         errors.append(f'NUnit evidence project reference missing: {p.relative_to(root)}')
 
-# Hooks: exact timing contract
+# Hooks: exact timing contract. v51 centralizes finalization in one shared helper.
 hook_results=[]
+finalizer=root/'src/InsuranceAutomation.NUnit/NUnitScenarioEvidenceFinalizer.cs'
+ft=finalizer.read_text(encoding='utf-8') if finalizer.exists() else ''
+finalizer_ok=True
+for token in ['CaptureScreenshotAsync("scenario-final.png")','await browser.CloseAsync(logger)','browser.TracePath','browser.VideoPath','browser.HarPath','CreateEvidenceBundle','logger.Flush()','NUnitEvidencePublisher.Publish(','logger.Dispose()']:
+    if token not in ft:
+        errors.append(f'Finalizer missing {token}')
+        finalizer_ok=False
+close=ft.find('await browser.CloseAsync(logger)')
+publish=ft.find('NUnitEvidencePublisher.Publish(')
+if close<0 or publish<close:
+    errors.append('Shared finalizer does not close browser before publishing attachments')
+    finalizer_ok=False
+
 for p in root.glob('tests/*/Hooks/TestHooks.cs'):
     text=p.read_text(encoding='utf-8')
-    close=text.find('await browser.CloseAsync(logger)')
-    publish=text.find('NUnitEvidencePublisher.Publish(')
-    dispose=text.find('logger.Dispose()')
-    ok=close>=0 and publish>close and dispose>publish
-    if not ok: errors.append(f'Incorrect evidence finalization order: {p.relative_to(root)}')
-    for token in ['browser.TracePath','browser.VideoPath','browser.HarPath','CreateEvidenceBundle','logger.Flush()','Guid.NewGuid().ToString("N")[..8]']:
-        if token not in text: errors.append(f'Hook missing {token}: {p.relative_to(root)}')
-    hook_results.append({'file':str(p.relative_to(root)),'browserCloseBeforePublish':ok})
+    ok='NUnitScenarioEvidenceFinalizer.FinishAsync(' in text and finalizer_ok
+    if not ok: errors.append(f'Hook does not use validated shared evidence finalizer: {p.relative_to(root)}')
+    if 'Guid.NewGuid().ToString("N")[..8]' not in text:
+        errors.append(f'Hook missing parallel-safe artifact identity: {p.relative_to(root)}')
+    hook_results.append({'file':str(p.relative_to(root)),'browserCloseBeforePublish':ok,'sharedFinalizer':True})
 if len(hook_results)!=3: errors.append(f'Expected 3 application hooks, got {len(hook_results)}')
 
 # Publisher capabilities
 pt=publisher.read_text(encoding='utf-8') if publisher.exists() else ''
 for token in ['TestContext.AddTestAttachment','SearchOption.AllDirectories','test-evidence-manifest.json','nunit-attachment-result.json',
-              'SHA256.HashData','evidence-bundle.zip','network.har.zip','trace.zip','/screenshots/','/video/','/dom/','/self-heal/',
+              'SHA256.HashData','evidence-bundle.zip','network.har.zip','trace.zip','console.log','network.log','/screenshots/','/video/','/self-heal/',
               'Evidence transport must never replace the actual business-test outcome']:
     if token not in pt: errors.append(f'Publisher capability missing: {token}')
 
@@ -133,7 +143,7 @@ report={
   'evidenceAttachment':{
     'testScoped':True,'defaultMode':'all','nunitAddTestAttachment':True,'visualStudioAdapterPath':True,
     'azureDevOpsNativeNUnitXml':True,'publishTestResultsV2':True,
-    'artifactTypes':['execution log','HTML report','screenshots','HTML DOM','DOM/control metadata','Playwright trace','HAR','video','self-heal evidence','evidence bundle','SHA-256 manifest','attachment result']
+    'artifactTypes':['execution log','HTML report','screenshots','browser console log','network call log','Playwright trace','HAR','video','self-heal evidence','evidence bundle','SHA-256 manifest','attachment result']
   },
   'hooks':hook_results,
   'jsonFilesValidated':json_count,

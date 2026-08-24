@@ -216,7 +216,7 @@ public sealed class PolicyWorkflowLocators
     public ILocator SearchButton => _page.GetByRole(AriaRole.Button, new() { Name = "Search Button", Exact = true });
 
     // Source modules: Dashboard|Search for Policies / Quotes | confidence=High score=127
-    public ILocator SearchMethodEGDescriptionPolicy => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Method (e.g. Description/Policy#)", Exact = true });
+    public ILocator SearchMethodEGDescriptionPolicy => _page.Locator("[id='_keynameAdvSearch1-inputEl']");
 
     // Source modules: Risk - Computer Systems | confidence=High score=125
     public ILocator SearchResult4E620 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Result", Exact = true });
@@ -228,7 +228,7 @@ public sealed class PolicyWorkflowLocators
     public ILocator SearchResultEAFB8 => SearchResult4E620; // semantic alias; locator defined once
 
     // Source modules: Dashboard|QuickSearch | confidence=High score=127
-    public ILocator SearchText => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Text", Exact = true });
+    public ILocator SearchText => _page.Locator("[id='quickSearchTextId-inputEl']");
 
     // Source modules: Risk - Accounts Receivable | confidence=High score=125
     public ILocator SearchValue79E46 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Value", Exact = true });

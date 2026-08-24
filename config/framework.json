@@ -12,7 +12,8 @@
     "video": true,
     "har": true,
     "screenshotOnFailure": true,
-    "screenshotEachStep": false
+    "screenshotEachStep": false,
+    "screenshotAtScenarioEnd": true
   },
   "selfHeal": {
     "enabled": true,
@@ -31,7 +32,8 @@
     "cacheContextLimit": 20,
     "copilotExecutable": "copilot",
     "domEvidenceDirectory": "Artifacts/DOM",
-    "captureDomAfterActions": true
+    "captureDomAfterActions": false,
+    "locatorCatalogFile": "Artifacts/ToscaLocatorPropertyCatalog.v52.json"
   },
   "reporting": {
     "artifactRoot": "Artifacts",
@@ -48,5 +50,14 @@
   "execution": {
     "strictUnknownConditions": true,
     "externalDataFile": "TestData/ExternalDataOverrides.json"
+  },
+  "locatorFallback": {
+    "enabled": true,
+    "catalogDirectory": "Artifacts/LocatorFallbackCatalogs",
+    "maxCandidatesPerFailure": 40,
+    "minimumCandidateConfidence": 0.6,
+    "allowSourceXPath": true,
+    "preferPreviouslySuccessfulCandidate": true,
+    "logEveryAttempt": true
   }
 }

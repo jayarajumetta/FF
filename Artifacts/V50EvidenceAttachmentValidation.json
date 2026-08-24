@@ -1,6 +1,6 @@
 {
   "release": "v50-test-result-evidence",
-  "status": "PASS",
+  "status": "FAIL",
   "sourceOrder": {
     "features": 32,
     "status": "PASS"
@@ -17,8 +17,8 @@
       "execution log",
       "HTML report",
       "screenshots",
-      "HTML DOM",
-      "DOM/control metadata",
+      "browser console log",
+      "network call log",
       "Playwright trace",
       "HAR",
       "video",
@@ -30,23 +30,33 @@
   },
   "hooks": [
     {
-      "file": "tests/CommercialLines.ExpertQuote.Tests/Hooks/TestHooks.cs",
-      "browserCloseBeforePublish": true
-    },
-    {
       "file": "tests/CommercialLines.DuckCreek.Tests/Hooks/TestHooks.cs",
-      "browserCloseBeforePublish": true
+      "browserCloseBeforePublish": true,
+      "sharedFinalizer": true
     },
     {
       "file": "tests/PersonalLines.DuckCreek.Tests/Hooks/TestHooks.cs",
-      "browserCloseBeforePublish": true
+      "browserCloseBeforePublish": true,
+      "sharedFinalizer": true
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Hooks/TestHooks.cs",
+      "browserCloseBeforePublish": true,
+      "sharedFinalizer": true
     }
   ],
-  "jsonFilesValidated": 1124,
-  "csharpFilesLexicallyValidated": 160,
+  "jsonFilesValidated": 1135,
+  "csharpFilesLexicallyValidated": 163,
   "dotnetBuild": {
     "performed": false,
     "reason": "dotnet executable is not installed in this generation environment; CI/Visual Studio remains the compiler/runtime gate."
   },
-  "errors": []
+  "errors": [
+    "ADO pipeline missing: NUnit.TestOutputXml",
+    "ADO pipeline missing: PublishTestResults@2",
+    "ADO pipeline missing: testResultsFormat: NUnit",
+    "ADO pipeline missing: publishRunAttachments: true",
+    "ADO pipeline missing: condition: always()",
+    "ADO pipeline missing: PublishPipelineArtifact@1"
+  ]
 }

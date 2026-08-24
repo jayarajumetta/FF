@@ -5,7 +5,7 @@
     "features": 32,
     "exampleRows": 1074,
     "locatorFiles": 51,
-    "getByTestIdCalls": 171
+    "getByTestIdCalls": 166
   },
   "sourceOrder": {
     "exactFeatures": 32,
@@ -30,7 +30,7 @@
   ],
   "persistentDomMemory": true,
   "samePageDuplicateTestIds": 0,
-  "jsonFilesValidated": 1120,
+  "jsonFilesValidated": 1126,
   "dotnetBuild": {
     "performed": false,
     "reason": "dotnet executable is not installed in this generation environment; scripts/setup and CI remain the compiler gate."

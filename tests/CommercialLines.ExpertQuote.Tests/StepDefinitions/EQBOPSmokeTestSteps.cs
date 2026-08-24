@@ -16,23 +16,22 @@ public sealed class EQBOPSmokeTestSteps
     public async Task CreateANewClientAndBeginTheQuoteAsync()
     {
         var data = _scenario.Get<ScenarioData>();
-        data.GenerateRandom("FirstName", "BOP [a-z]{3}");
-        data.GenerateRandom("LastName", "Smoke[a-z]{4}");
+        data.GenerateRandom("FirstName"); // exact pattern comes from scenario JSON/Tosca lineage
+        data.GenerateRandom("LastName");
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // TC-02 / Feature step 3: exact business order from expanded Tosca source.
         await page.VerifyNewQuoteAsync("Visible", "");
         await page.ClickNewQuoteAsync();
-        //await page.VerifyClientInfoAsync("Visible", "");
+        await page.VerifyClientInfoAsync("Visible", "");
         await page.EnterCustomerNameFirstAsync(data.Resolve("{{runtime:FirstName}}"));
         await page.EnterCustomerNameLastAsync(data.Resolve("{{runtime:LastName}}"));
         await page.EnterCustomerDateOfBirthAsync(data.Resolve("{{data:customer_dateofbirth}}"));
         await page.ClickClientInfoSearchAsync();
-        //await page.VerifyExistingClientMatchAsync("Exists", "");
+        await page.VerifyExistingClientMatchAsync("Visible", "");
         await page.ClickCreateNewClientAsync();
         await page.ClickAdditionalInterestsNextAsync();
-
     }
 
     [Given(@"^I enter the client account and address information$")]
@@ -41,30 +40,28 @@ public sealed class EQBOPSmokeTestSteps
     public async Task EnterTheClientAccountAndAddressInformationAsync()
     {
         var data = _scenario.Get<ScenarioData>();
-        data.GenerateRandom("OwnerPhone", "3[0-9]{9}");
-        data.GenerateRandom("OwnerEmail", "test@[a-z]{4}.com");
+        data.GenerateRandom("OwnerPhone");
+        data.GenerateRandom("OwnerEmail");
 
         var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        //await page.VerifyAccountInformationAsync("Visible", "");
+        // TC-02 / Feature step 4: exact detailed action order.
+        await page.VerifyAccountInformationAsync("Visible", "");
         await page.EnterOwnerMiddleNameAsync("");
         await page.EnterOwnerPhoneAsync(data.Resolve("{{runtime:OwnerPhone}}"));
         await page.EnterOwnerEmailAsync(data.Resolve("{{runtime:OwnerEmail}}"));
         await page.ClickMarriedAsync();
-        //await page.VerifyMapAsync("Exists", "");
-        //await page.VerifySatelliteAsync("Exists", "");
+        await page.VerifyMapAsync("Visible", "");
+        await page.VerifySatelliteAsync("Visible", "");
+        await page.SelectHaveYouReceivedMailAtThisAddressForAtLeast90DaysYesAsync();
+        await page.SelectIsTheAccountAddressAlsoWhereTheClientResidesYesAsync();
+        await page.ClickAdditionalInterestsNextAsync();
 
         await page.EnterStreetAddressAsync(data.Resolve("{{data:street_address_18}}"));
         await page.EnterAddress2Async("");
         await page.EnterCityAsync(data.Resolve("{{data:city_20}}"));
-        await page.ClickStateDropdownAsync();
-        await page.SelectStateAsync(data.Resolve("{{data:state_21}}").ToUpper());
-
+        await page.SelectStateAsync(data.Resolve("{{data:state_21}}").ToUpperInvariant());
         await page.EnterZipAsync(data.Resolve("{{data:zip_22}}"));
-        await page.SelectHaveYouReceivedMailAtThisAddressForAtLeast90DaysYesAsync("Yes");
-        await page.SelectIsTheAccountAddressAlsoWhereTheClientResidesYesAsync("Yes");
-        await page.ClickAdditionalInterestsNextAsync();
     }
 
     [Given(@"^I start the configured policy proposal$")]
@@ -73,25 +70,31 @@ public sealed class EQBOPSmokeTestSteps
     public async Task StartTheConfiguredPolicyProposalAsync()
     {
         var data = _scenario.Get<ScenarioData>();
-
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        //await page.VerifyProposalDetailsAsync("Visible", "");
+        // TC-02 / Feature step 5. BusinessType is a reusable parameter/condition,
+        // not a textbox. MAT-SELECT state selection is delegated to UiActions.
+        await page.VerifyProposalDetailsAsync("Visible", "");
         await page.ClickBusinessOwnersAsync();
 
-        //await page.EnterIndividualAsync(data.Resolve("{{data:individual_31}}"));
-        //await page.PressSearchBusinessNameAsync("ENTER");
-        await page.ClickIndividuallyOwnedDBAOrTAAsync();
+        var businessType = data.Resolve("{{data:individual_31}}");
+        await page.EnterIndividualAsync(businessType); // records source parameter intent only
+        if (businessType.Equals("Individual", StringComparison.OrdinalIgnoreCase))
+            await page.ClickIndividuallyOwnedDBAOrTAAsync();
+
         await page.EnterIndividualDBAAsync(data.Resolve("{{data:individual_dba}}"));
         await page.EnterEffectiveDate6F16BAsync(data.Resolve("{{data:effective_date}}"));
-        await page.EnterAgentPCAsync(data.Resolve("{{data:agentpc}}"));
-        await page.PressAgentPCAsync("ENTER");
-        await page.SelectMissouriAsync("");
-        await page.ClickNoAsync();
         await page.SetNewAccountAddressAsync(data.Resolve("{{data:new_account_address}}"));
-        await page.ClickStartQuoteAsync();
+        await page.ClickLessorsRiskNoAsync();
+        await page.SelectStateAsync(data.Resolve("{{data:state_21}}").ToUpperInvariant());
+        await page.EnterAgentPCAsync(data.Resolve("{{data:agentpc}}"));
 
+        // Source AgentPC steering confirms autocomplete by tabbing out twice.
+        await page.PressAgentPCAsync("Tab");
+        await page.PressAgentPCAsync("Tab");
+
+        data.Set("EffDate", await page.CaptureEffectiveDate6F16BAsync("Value"));
+        await page.ClickStartQuoteAsync();
     }
 
     [Given(@"^I enter the insured social security number and handle any prefill result$")]
@@ -100,20 +103,17 @@ public sealed class EQBOPSmokeTestSteps
     public async Task EnterTheInsuredSocialSecurityNumberAndHandleAnyPrefillResultAsync()
     {
         var data = _scenario.Get<ScenarioData>();
-        data.GenerateRandom("InsuredSSN", "025[0-9]{6}");
+        data.GenerateRandom("InsuredSSN");
 
         var page = new SocialSecurityPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        //await page.VerifyTheSSNCouldNotBeFoundPleaseEnterAnSSNAsync("Visible", "");
-        await page.EnterTheSSNCouldNotBeFoundPleaseEnterAnSSNAsync(data.Resolve("{{runtime:InsuredSSN}}"));
-        //await page.VerifyEChecklistEChecklistSubmitAsync("Visible", "");
-        await page.ClickEChecklistEChecklistSubmitAsync();
+        // TC-02 / Feature step 6.
+        await page.VerifySsnNotFoundMessageAsync();
+        await page.EnterSsnAsync(data.Resolve("{{runtime:InsuredSSN}}"));
+        await page.VerifySubmitAsync();
+        await page.ClickSubmitAsync();
         if (await page.IsContinuePresentAsync())
-        {
-                    await page.ClickContinueAsync();
-        }
-
+            await page.ClickContinueAsync();
     }
 
     [Given(@"^I navigate to the required policy screen$")]
@@ -122,17 +122,15 @@ public sealed class EQBOPSmokeTestSteps
     public async Task NavigateToTheRequiredPolicyScreenAsync()
     {
         var data = _scenario.Get<ScenarioData>();
-
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        var screen = data.Resolve("{{data:prequalification_51}}");
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.EnterPreQualificationAsync(data.Resolve("{{data:prequalification_51}}"));
+        // Tosca EQ|Common|Navigation: Nav Link is DIV InnerText={B[Screen]} (click);
+        // Screen Heading is H1 {B[Screen]}*. It is not a FillAsync action.
+        await page.NavigateToScreenAsync(screen);
         if (await page.IsKeepGoingPresentAsync())
-        {
-                    await page.ClickKeepGoingAsync();
-        }
-        //await page.VerifyPreQualificationAsync("Exists", "");
-
+            await page.ClickKeepGoingAsync();
+        await page.VerifyScreenAsync(screen);
     }
 
     [Given(@"^I capture the quote identity and close the current quote$")]
@@ -141,14 +139,16 @@ public sealed class EQBOPSmokeTestSteps
     public async Task CaptureTheQuoteIdentityAndCloseTheCurrentQuoteAsync()
     {
         var data = _scenario.Get<ScenarioData>();
-
         var page = new QuoteSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Source captures Name and Quote -> Quote_NameNum, then sets Quote_Num with
+        // STRINGREPLACE(Quote_NameNum, LastName, "") before selecting Close Quote.
         data.Set("Quote_NameNum", await page.CaptureNameAndQuoteAsync("InnerText"));
-        data.Set("Quote_Num", data.Get("Quote_NameNum").Replace(data.Get("LastName"), string.Empty, StringComparison.OrdinalIgnoreCase).Trim());
-        await page.ClickCloseQuoteAsync();
+        data.Set("Quote_Num", data.Get("Quote_NameNum")
+            .Replace(data.Get("LastName"), string.Empty, StringComparison.OrdinalIgnoreCase)
+            .Trim());
 
+        await page.ClickCloseQuoteAsync();
     }
 
     [Given(@"^I retrieve the quote and verify its identity$")]
@@ -157,20 +157,17 @@ public sealed class EQBOPSmokeTestSteps
     public async Task RetrieveTheQuoteAndVerifyItsIdentityAsync()
     {
         var data = _scenario.Get<ScenarioData>();
-
         var page = new QuoteSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // TC-02 / Feature step 9.
         await page.EnterQuoteSearchAsync(data.Resolve("{{runtime:Quote_Num}}"));
-        await page.ClickClientInfoSearchAsync();
-        await page.EnterPreQualificationAsync(data.Resolve("{{data:prequalification_64}}"));
+        await page.ClickQuoteSearchAsync();
+
+        var screen = data.Resolve("{{data:prequalification_64}}");
+        await page.NavigateToScreenAsync(screen);
         if (await page.IsKeepGoingPresentAsync())
-        {
-                    await page.ClickKeepGoingAsync();
-        }
-        //await page.VerifyPreQualificationAsync("Exists", "");
-        //await page.VerifyNameAndQuoteAsync(data.Resolve("{{runtime:Quote_NameNum}}"), "");
-
+            await page.ClickKeepGoingAsync();
+        await page.VerifyScreenAsync(screen);
+        await page.VerifyNameAndQuoteAsync(data.Resolve("{{runtime:Quote_NameNum}}"), "InnerText");
     }
-
 }

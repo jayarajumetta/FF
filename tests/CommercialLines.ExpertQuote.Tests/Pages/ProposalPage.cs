@@ -42,7 +42,7 @@ public sealed class ProposalPage
         _ui.CaptureAsync(_locators.EffectiveDate78F67, property, new ControlIntent("Proposal", "EffectiveDate78F67"));
 
     public Task EnterIndividualAsync(string value) =>
-        _ui.FillAsync(_locators.Individual, value, new ControlIntent("Proposal", "Individual"));
+        _ui.ReviewRequiredAsync($"BusinessType source parameter = '{value}'. This is orchestration data, not an editable control.");
 
     public Task EnterIndividualDBAAsync(string value) =>
         _ui.FillAsync(_locators.IndividualDBA, value, new ControlIntent("Proposal", "IndividualDBA"));
@@ -53,8 +53,18 @@ public sealed class ProposalPage
     public Task SelectLessorsRiskNoAsync(string value) =>
         _ui.SelectAsync(_locators.LessorsRiskNo, value, new ControlIntent("Proposal", "LessorsRiskNo"));
 
+    public Task ClickLessorsRiskNoAsync() =>
+    _ui.ClickAsync(_locators.LessorsRiskNo, new ControlIntent("Proposal", "LessorsRiskNo"));
+
     public Task SelectMissouriAsync(string value) =>
         _ui.SelectAsync(_locators.Missouri, value, new ControlIntent("Proposal", "Missouri"));
+
+    public Task ClickRatingStateDropdownOptionAsync(string value) =>
+    _ui.ClickAsync(_locators.GetDropdownOption(value), new ControlIntent("Proposal", "Missouri"));
+
+    
+    public Task ClickRatingStateDropdownAsync() =>
+    _ui.ClickAsync(_locators.RatingStateDropdown, new ControlIntent("Proposal", "Missouri"));
 
     public Task SetNewAccountAddressAsync(string value) =>
         _ui.SmartSetAsync(_locators.NewAccountAddress, value, new ControlIntent("Proposal", "NewAccountAddress"));
@@ -87,7 +97,7 @@ public sealed class ProposalPage
         _ui.ClickAsync(_locators.StartQuote, new ControlIntent("Proposal", "StartQuote"));
 
     public Task SelectStateAsync(string value) =>
-        _ui.SelectAsync(_locators.State, value, new ControlIntent("Proposal", "State"));
+        _ui.SelectAsync(_locators.RatingStateDropdown, value, new ControlIntent("Proposal", "RatingState"));
 
     public Task PressStateDropdownAsync(string key) =>
         _ui.PressAsync(_locators.StateDropdown, key, new ControlIntent("Proposal", "StateDropdown"));
@@ -96,6 +106,6 @@ public sealed class ProposalPage
         _ui.ClickAsync(_locators.StateDropdown, new ControlIntent("Proposal", "StateDropdown"));
 
     public Task EnterTrueAsync(string value) =>
-        _ui.FillAsync(_locators.True, value, new ControlIntent("Proposal", "True"));
+        _ui.SmartSetAsync(_locators.NewAccountAddress, value, new ControlIntent("Proposal", "NewAccountAddress"));
 
 }

@@ -5,12 +5,22 @@
     "endpoint": "https://api.openai.com/v1/chat/completions",
     "model": "gpt-4.1-mini",
     "apiKeyEnvironmentVariable": "TEST_LLM_API_KEY",
-    "includeScreenshot": true
+    "includeScreenshot": true,
+    "locatorCatalogFile": "Artifacts/ToscaLocatorPropertyCatalog.v52.json"
   },
   "reporting": {
     "attachEvidenceToTestResult": true,
     "attachmentMode": "all",
     "maxSingleAttachmentBytes": 536870912,
     "maxAttachmentCount": 5000
+  },
+  "locatorFallback": {
+    "enabled": true,
+    "catalogDirectory": "Artifacts/LocatorFallbackCatalogs",
+    "maxCandidatesPerFailure": 40,
+    "minimumCandidateConfidence": 0.6,
+    "allowSourceXPath": true,
+    "preferPreviouslySuccessfulCandidate": true,
+    "logEveryAttempt": true
   }
 }

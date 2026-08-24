@@ -1,11 +1,22 @@
-# Tosca → Playwright C# / ReqnRoll Migration Factory v50
+# Tosca → Playwright C# / ReqnRoll Migration Factory v52
 
-**Current release:** v50 adds complete per-test NUnit/Visual Studio/Azure DevOps evidence attachments on top of the v49 source-ordered locator-mature architecture. See `README_V50.md`.
+**Current release: v52 — source-ordered, component-aware, deterministic Tosca locator fallback, per-test evidence, split Azure DevOps pipelines.**
 
-> **v47:** See `README_V47.md` for HAR, step evidence, evidence bundle and persistent AI locator-healing details.
+Start with **`README_V52.md`** for setup, stack, architecture, execution, locator-fallback behavior and contribution rules.
 
-# Tosca C# Standalone v46.1
+Key architecture:
 
-Start with **README_FINAL.md**.
+`Feature → Scenario Outline/Examples → StepDefinition → Page method → primary Page locator → UiActions → deterministic Tosca fallback (failure only) → LLM/Copilot healing (last resort)`
 
-This repository is the KISS, source-traced C# Playwright/ReqnRoll standalone package for the selected 32 Tosca business flows and their source-derived state/carrier applicability.
+The selected automation scope remains **32 Tosca-derived business Features / 1,074 source-applicable examples** across Commercial Lines ExpertQuote, Commercial Lines Duck Creek and Personal Lines Duck Creek.
+
+Important references:
+
+- `README_V52.md`
+- `docs/LOCATOR-FALLBACK-ARCHITECTURE.md`
+- `docs/AZURE-DEVOPS-PIPELINES.md`
+- `docs/TEST-EVIDENCE-ATTACHMENTS.md`
+- `Artifacts/LocatorFallbackCatalogs/LocatorFallbackCoverage.json`
+- `Artifacts/V52FinalValidation.json`
+
+Historical release notes remain in `README_V45.md` through `README_V51.md`.

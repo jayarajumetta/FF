@@ -47,6 +47,12 @@ public sealed class AccountInformationPage
     public Task SelectIsTheAccountAddressAlsoWhereTheClientResidesYesAsync(string value) =>
         _ui.SelectAsync(_locators.IsTheAccountAddressAlsoWhereTheClientResidesYes, value, new ControlIntent("AccountInformation", "IsTheAccountAddressAlsoWhereTheClientResidesYes"));
 
+    public Task SelectHaveYouReceivedMailAtThisAddressForAtLeast90DaysYesAsync() =>
+    _ui.ClickAsync(_locators.HaveYouReceivedMailAtThisAddressForAtLeast90DaysYes, new ControlIntent("AccountInformation", "HaveYouReceivedMailAtThisAddressForAtLeast90DaysYes"));
+
+    public Task SelectIsTheAccountAddressAlsoWhereTheClientResidesYesAsync() =>
+        _ui.ClickAsync(_locators.IsTheAccountAddressAlsoWhereTheClientResidesYes, new ControlIntent("AccountInformation", "IsTheAccountAddressAlsoWhereTheClientResidesYes"));
+
     public Task WaitForMapAsync(string expected) =>
         _ui.WaitAsync(_locators.Map, expected, new ControlIntent("AccountInformation", "Map"));
 
@@ -72,7 +78,7 @@ public sealed class AccountInformationPage
         _ui.VerifyAsync(_locators.Satellite, expected, property, new ControlIntent("AccountInformation", "Satellite"));
 
     public Task SelectStateAsync(string value) =>
-        _ui.ClickAsync(_locators.GetStateOption(value), new ControlIntent("AccountInformation", "StateOption"));
+        _ui.SelectAsync(_locators.StateDropdown, value, new ControlIntent("AccountInformation", "StateDropdown"));
 
     public Task SelectState0110EAsync(string value) =>
     _ui.SelectAsync(_locators.State0110E, value, new ControlIntent("AccountInformation", "State0110E"));
