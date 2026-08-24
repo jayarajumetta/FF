@@ -8,6 +8,7 @@ public sealed class FrameworkConfig
     public SelfHealOptions SelfHeal { get; init; } = new();
     public LocatorFallbackOptions LocatorFallback { get; init; } = new();
     public ReportingOptions Reporting { get; init; } = new();
+    public WaitOptions Waits { get; init; } = new();
     public ExecutionOptions Execution { get; init; } = new();
 
     public static FrameworkConfig Load()
@@ -24,6 +25,8 @@ public sealed class FrameworkConfig
     {
         if (Browser.ActionTimeoutMs <= 0 || Browser.NavigationTimeoutMs <= 0)
             throw new InvalidOperationException($"Browser timeouts must be positive. Config: {path}");
+        if (Waits.PageReadyTimeoutMs <= 0 || Waits.ElementReadyTimeoutMs <= 0 || Waits.VerifyTimeoutMs <= 0 || Waits.FallbackCandidateTimeoutMs <= 0)
+            throw new InvalidOperationException($"Framework wait timeouts must be positive. Config: {path}");
         if (string.IsNullOrWhiteSpace(Browser.Channel) && string.IsNullOrWhiteSpace(Browser.FallbackBrowser))
             throw new InvalidOperationException($"Configure browser.channel or browser.fallbackBrowser. Config: {path}");
         if (!Reporting.AttachmentMode.Equals("all", StringComparison.OrdinalIgnoreCase) &&
@@ -132,6 +135,17 @@ public sealed class SelfHealOptions
     public bool CaptureDomAfterActions { get; init; } = false;
 }
 
+public sealed class WaitOptions
+{
+    // Core synchronization defaults. Page methods should rely on UiActions rather than scatter sleeps.
+    public int PageReadyTimeoutMs { get; init; } = 30000;
+    public int ElementReadyTimeoutMs { get; init; } = 20000;
+    public int VerifyTimeoutMs { get; init; } = 20000;
+    public int FallbackCandidateTimeoutMs { get; init; } = 4000;
+    public int PollIntervalMs { get; init; } = 250;
+    public bool WaitForDomContentLoadedBeforeActions { get; init; } = true;
+}
+
 public sealed class ReportingOptions
 {
     public string ArtifactRoot { get; init; } = "Artifacts";
@@ -153,5 +167,8 @@ public sealed class ReportingOptions
 public sealed class ExecutionOptions
 {
     public bool StrictUnknownConditions { get; init; } = true;
+    // Tosca verification failures are accumulated after mature waits/fallback/healing and fail at scenario end,
+    // allowing later steps and all requested evidence to complete. Fatal browser/action failures still fail immediately.
+    public bool DeferVerificationFailures { get; init; } = true;
     public string ExternalDataFile { get; init; } = "TestData/ExternalDataOverrides.json";
 }

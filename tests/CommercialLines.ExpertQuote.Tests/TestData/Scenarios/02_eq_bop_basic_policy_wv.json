@@ -9,7 +9,9 @@
     "representativeIteration": "WV",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "WV",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "West Virginia",
@@ -4972,5 +4974,19 @@
         "value": "{B[Charge]}"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLEQ",
+    "sourceFile": "CL_EQ_TestCases_Staging_Area_Pre_Production.tsu",
+    "testCaseName": "EQ | BOP | Basic Policy",
+    "testCaseGuid": "3a13ce49-1a93-bd06-d9dd-90d58a69befe",
+    "templateInstanceName": "TemplateInstance of EQ | BOP | Basic Policy",
+    "templateInstanceGuid": "3a13fc94-0dc1-0050-9138-a5a6360e2177",
+    "concreteTestCaseName": "WV",
+    "concreteTestCaseGuid": "3a19388d-0bd5-aaf3-5338-bae5449893cc",
+    "derivedFrom": [
+      "3a193315-2ff4-a346-575a-df79cf7d0954"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

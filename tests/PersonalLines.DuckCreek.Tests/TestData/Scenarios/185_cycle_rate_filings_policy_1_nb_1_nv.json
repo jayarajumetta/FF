@@ -9,7 +9,9 @@
     "representativeIteration": "NV",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "NV",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Nevada",
@@ -1387,5 +1389,19 @@
         "value": "X"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "PLDC",
+    "sourceFile": "PL_DC_TestCases_Production.tsu",
+    "testCaseName": "Cycle Rate Filings Policy 1 NB_1",
+    "testCaseGuid": "3a1c989c-d1ff-2b58-f9cd-8d51350bf2de",
+    "templateInstanceName": "TemplateInstance of Cycle Rate Filings Policy 1 NB_1",
+    "templateInstanceGuid": "3a1cb892-7371-8cc8-60aa-3733b2690ab0",
+    "concreteTestCaseName": "NV",
+    "concreteTestCaseGuid": "3a1cb892-80d4-1b15-ad58-a77433e4febf",
+    "derivedFrom": [
+      "3a1c9802-c731-e0ff-ae8d-ac4d3c54b4e5"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

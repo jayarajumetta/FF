@@ -9,7 +9,9 @@
     "representativeIteration": "KS",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "KS",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Kansas",
@@ -1103,5 +1105,19 @@
         "value": "SFP"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLEQ",
+    "sourceFile": "CL_EQ_TestCases_Staging_Area_Pre_Production.tsu",
+    "testCaseName": "EQ | SFP | Basic Policy",
+    "testCaseGuid": "3a13ce49-1a8e-d822-14cf-7d9182268313",
+    "templateInstanceName": "TemplateInstance of EQ | SFP | Basic Policy",
+    "templateInstanceGuid": "3a13ce49-1a8e-aa72-b25a-6fb70e4f44ed",
+    "concreteTestCaseName": "KS",
+    "concreteTestCaseGuid": "3a1ea191-eeaf-7649-4a9f-86b5ac07cf39",
+    "derivedFrom": [
+      "3a1ea190-727f-d187-deaa-24edd3312da9"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

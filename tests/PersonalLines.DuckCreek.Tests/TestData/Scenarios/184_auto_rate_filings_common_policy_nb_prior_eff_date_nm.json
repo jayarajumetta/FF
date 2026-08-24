@@ -9,7 +9,9 @@
     "representativeIteration": "NM",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "NM",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "New Mexico",
@@ -1457,5 +1459,19 @@
         "value": "X"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "PLDC",
+    "sourceFile": "PL_DC_TestCases_Production.tsu",
+    "testCaseName": "Auto Rate Filings Common Policy NB_Prior Eff Date",
+    "testCaseGuid": "3a1cfb32-e498-f392-0540-f331d66e92ad",
+    "templateInstanceName": "TemplateInstance of Auto Rate Filings Common Policy NB_Prior Eff Date",
+    "templateInstanceGuid": "3a1cfb57-6c23-8e13-a300-264d346f00e7",
+    "concreteTestCaseName": "NM",
+    "concreteTestCaseGuid": "3a1cfb57-7c08-661f-5298-50cf713ab60f",
+    "derivedFrom": [
+      "3a1cfb4f-94c7-0186-f822-4f045ad952b8"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

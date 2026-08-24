@@ -56,39 +56,38 @@ public sealed class EQSFPBasicPolicySteps
     public async Task EnterAccountDetailsAsync()
     {
         var data = _scenario.Get<ScenarioData>();
-        data.GenerateRandom("OwnerPhone", "3[0-9]{9}");
-        data.GenerateRandom("OwnerEmail", "test@[a-z]{4}\\\\.com");
+        data.GenerateRandom("OwnerPhone");
+        data.GenerateRandom("OwnerEmail");
 
         var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // v54 RAW TOSCA ORDER. Source: EQ|Common|Account Details - Account Info.
+        // XTestStep/XTestStepValue order is authoritative; manual CSV/workbooks are not inputs.
         await page.WaitForAccountInformationHeaderAsync("Visible");
-        await page.PressOwnerMiddleNameAsync("ENTER");
-        // Source step 0033: RANDOM input for Owner Phone.
+        await page.EnterOwnerMiddleNameAsync("");
         await page.EnterOwnerPhoneAsync(data.Resolve("{{runtime:OwnerPhone}}"));
-        // Source step 0033: RANDOM input for Owner Email.
         await page.EnterOwnerEmailAsync(data.Resolve("{{runtime:OwnerEmail}}"));
-        await page.PressOwnerMiddleNameAsync("Tab");
-        await page.SelectMarriedAsync("");
-        await page.PressStreetAddressAsync("SHIFTTAB");
-        await page.PressStreetAddressAsync("ENTER");
-        await page.PressStreetAddressAsync("Tab");
-        await page.PressAddress2Async("ENTER");
-        await page.PressAddress2Async("Tab");
-        await page.PressCityAsync("ENTER");
-        await page.PressCityAsync("Tab");
-        await page.ClickStateDropdownAsync();
-        await page.SelectState0110EAsync(data.Resolve("{{runtime:StateName}}"));
-        await page.PressZipAsync("ENTER");
-        await page.PressZipAsync("Tab");
-        await page.WaitForMapAsync("Exists");
-        await page.WaitForSatelliteAsync("Exists");
-        await page.PressAdditionalInterestsNextAsync("SHIFTTAB");
-        await page.SelectHaveYouReceivedMailAtThisAddressForAtLeast90DaysYesAsync("");
-        await page.SelectIsTheAccountAddressAlsoWhereTheClientResidesYesAsync("");
-        await page.ClickAdditionalInterestsNextAsync();
+        await page.ClickMarriedAsync();
 
+        await page.EnterStreetAddressAsync(data.GetCanonicalFieldRequired("Address 1"));
+        await page.EnterAddress2Async(data.GetCanonicalField("Address 2"));
+        await page.EnterCityAsync(data.GetCanonicalFieldRequired("City"));
+        await page.SelectStateAsync(data.GetCanonicalFieldRequired("State Name"));
+        await page.EnterZipAsync(data.GetCanonicalFieldRequired("Zip"));
+
+        var county = data.GetCanonicalField("County");
+        if (!string.IsNullOrWhiteSpace(county))
+            await page.EnterCountyAsync(county);
+
+        // Map/Satellite are generated only after address steering in raw Tosca.
+        await page.VerifyMapAsync("Visible", "");
+        await page.VerifySatelliteAsync("Visible", "");
+
+        await page.SelectHaveYouReceivedMailAtThisAddressForAtLeast90DaysYesAsync();
+        await page.SelectIsTheAccountAddressAlsoWhereTheClientResidesYesAsync();
+        await page.ClickAdditionalInterestsNextAsync();
     }
+
 
     [Given(@"^I start the policy proposal$")]
     [When(@"^I start the policy proposal$")]

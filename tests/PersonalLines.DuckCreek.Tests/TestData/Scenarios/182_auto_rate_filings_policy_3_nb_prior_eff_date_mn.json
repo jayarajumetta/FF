@@ -9,7 +9,9 @@
     "representativeIteration": "MN",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "MN",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Minnesota",
@@ -173,7 +175,7 @@
       "3a1af7a5-7058-c94f-abd7-f58a7fd5660c": "True",
       "3a1af7a5-7058-40f4-21f4-8e4c0f2143e0": "Transmit",
       "3a1af7a5-7058-7ad0-d25c-2e26c38551a0": "X",
-      "3a1af7a5-7058-4680-17ee-ef092fd619f0": " \u201cPolicy Number:\u201d",
+      "3a1af7a5-7058-4680-17ee-ef092fd619f0": " “Policy Number:”",
       "3a1dae4c-2d2d-f0e2-9a6b-5535e553cffa": "Policy Number",
       "3a2114fe-2d9b-68af-ed27-c1730c244db9": "08.08.2025",
       "3a1af7a5-7058-f9c6-83c5-b1554dff7706": "Auto_PolicyData_RateFilings_PriorEffDate",
@@ -411,7 +413,7 @@
         "actionMode": "101",
         "actionProperty": "InnerText ",
         "condition": "",
-        "value": " \u201cPolicy Number:\u201d"
+        "value": " “Policy Number:”"
       },
       {
         "order": 13,
@@ -1530,5 +1532,19 @@
         "value": "X"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "PLDC",
+    "sourceFile": "PL_DC_TestCases_Production.tsu",
+    "testCaseName": "Auto Rate Filings Policy 3 NB_Prior Eff Date",
+    "testCaseGuid": "3a1af7a5-7048-751a-8056-f162c1e1ec8c",
+    "templateInstanceName": "TemplateInstance of Auto Rate Filings Policy 3 NB_Prior Eff Date",
+    "templateInstanceGuid": "3a211526-0928-fa88-b515-214aa12102af",
+    "concreteTestCaseName": "MN",
+    "concreteTestCaseGuid": "3a211526-14a1-1744-33f7-7a6bdbb9f410",
+    "derivedFrom": [
+      "3a1cfb4f-94bf-4449-750a-6163df9cc721"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

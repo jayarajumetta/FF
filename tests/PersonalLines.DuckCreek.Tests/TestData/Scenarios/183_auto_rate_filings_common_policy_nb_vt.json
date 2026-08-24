@@ -9,7 +9,9 @@
     "representativeIteration": "VT",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "VT",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Vermont",
@@ -165,7 +167,7 @@
       "3a1cfb32-8bf3-b9ee-7860-06a94e871234": "True",
       "3a1cfb32-8bf3-0c3f-8be4-4417ca739100": "Transmit",
       "3a1cfb32-8bf3-f62e-bcb0-f1e0bf4e49c5": "X",
-      "3a1cfb32-8bf3-af02-759f-9ce7cca648ca": "\u201cPolicy Number:\u201d",
+      "3a1cfb32-8bf3-af02-759f-9ce7cca648ca": "“Policy Number:”",
       "3a1dae4d-eb19-3bcb-c29c-7f5943298f2b": "Policy Number",
       "3a1cfb32-8bf3-00ea-3d4c-15213cf2d155": "Auto_PolicyData_RateFilings_CommonAuto",
       "3a1cfb32-8bf3-01ae-e1dc-fe7e801c140a": "{NULL}",
@@ -396,7 +398,7 @@
         "actionMode": "101",
         "actionProperty": "InnerText",
         "condition": "",
-        "value": "\u201cPolicy Number:\u201d"
+        "value": "“Policy Number:”"
       },
       {
         "order": 13,
@@ -1431,5 +1433,19 @@
         "value": "X"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "PLDC",
+    "sourceFile": "PL_DC_TestCases_Production.tsu",
+    "testCaseName": "Auto Rate Filings Common Policy NB",
+    "testCaseGuid": "3a1cfb32-8be3-f64b-68d0-e62e12763325",
+    "templateInstanceName": "TemplateInstance of Auto Rate Filings Common Policy NB",
+    "templateInstanceGuid": "3a1cfb4e-91a0-b1a9-9c65-6dcae43a9465",
+    "concreteTestCaseName": "VT",
+    "concreteTestCaseGuid": "3a1cfb4e-a6a0-75b1-f98b-b1f5a9765fca",
+    "derivedFrom": [
+      "3a1cfb34-7246-fc17-e468-3f5fe343306a"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

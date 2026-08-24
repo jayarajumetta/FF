@@ -9,7 +9,9 @@
     "representativeIteration": "WY",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "WY",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Wyoming",
@@ -2324,5 +2326,19 @@
         "value": "SYNTHETIC_REPLACE_ME"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLEQ",
+    "sourceFile": "CL_EQ_TestCases_Staging_Area_Pre_Production.tsu",
+    "testCaseName": "EQ | BOP | Basic Policy",
+    "testCaseGuid": "3a13ce49-1a93-bd06-d9dd-90d58a69befe",
+    "templateInstanceName": "TemplateInstance of EQ | BOP | Basic Policy",
+    "templateInstanceGuid": "3a13fc94-0dc1-0050-9138-a5a6360e2177",
+    "concreteTestCaseName": "WY",
+    "concreteTestCaseGuid": "3a1abf49-7817-057e-185e-ec667f21d601",
+    "derivedFrom": [
+      "3a1abec1-1b95-3e30-8a20-993011465dc0"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

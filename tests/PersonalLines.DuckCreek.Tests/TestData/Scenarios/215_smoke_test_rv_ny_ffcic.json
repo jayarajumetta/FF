@@ -9,7 +9,9 @@
     "representativeIteration": "NY FFCIC",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "NY FFCIC",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "New York",
@@ -642,5 +644,19 @@
         "value": "{TDS[NY_ClientData.SSN]}"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "PLDC",
+    "sourceFile": "PL_DC_TestCases_Production.tsu",
+    "testCaseName": "Smoke Test RV",
+    "testCaseGuid": "3a19e1e5-1a5f-8f96-ac2f-d6315621bf61",
+    "templateInstanceName": "TemplateInstance of Smoke Test RV",
+    "templateInstanceGuid": "3a19e1e5-1a5f-e885-d120-d00d7842ac2f",
+    "concreteTestCaseName": "NY FFCIC",
+    "concreteTestCaseGuid": "3a19e1e5-1ad2-704f-2af2-7483c37e254c",
+    "derivedFrom": [
+      "3a19dd55-d218-262f-a84a-f498fe7b5e18"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

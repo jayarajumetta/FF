@@ -1,7 +1,21 @@
-# Current final release — v52
+# Current final release — v54
 
-Use **`README_V52.md`** as the authoritative guide.
+Use **`README_V54.md`** as the authoritative guide.
 
-v52 preserves the FF-bop2 corrected primary locators and the exact 32-flow Tosca business-order contract, then adds per-application deterministic Tosca backup locator catalogs with >95% canonical-control coverage for every application. On a primary locator/actionability failure, `UiActions` loops ranked source-derived alternatives, validates uniqueness/visibility/action compatibility, retries only the same failed action, records every attempt in the execution log and HTML report, and continues only after the operation itself succeeds. LLM/Copilot healing remains a final fallback after deterministic source evidence is exhausted.
+v54 regenerates and cross-validates the selected automation estate from the **raw Tosca exports for each application**. Manual conversion CSV/XLSX/HTML files are deliberately excluded as ordering/generation sources.
 
-The release also retains component-aware native/Material/dropdown/chip/radio/checkbox/date/grid/dialog/tab handling, source-backed test/random data, NUnit per-test screenshot/video/trace/HAR/log evidence, and the split Azure DevOps build-artifact and three-stage execution pipelines.
+Release gates currently validate:
+
+- 32 selected Features;
+- 1,074 raw TemplateInstance-derived examples, all matched back to Tosca concrete TestCases;
+- clean CL|DC authentication semantics without leaked reusable-login internals;
+- corrected raw EQ account/address ordering;
+- default page/element/verification waits;
+- deterministic Tosca fallback before AI healing;
+- >95% canonical fallback maturity for every application;
+- deferred non-fatal Tosca verifications with final scenario failure after evidence publication;
+- NUnit WorkDirectory-based Visual Studio attachments;
+- screenshot, HTML, execution log, console/network logs, trace, HAR and video evidence;
+- build-only and execute-only ADO pipelines, with three execution stages.
+
+The generation environment does not contain the .NET SDK, so compilation is deliberately enforced by Visual Studio or the included Azure DevOps build pipeline before an executable artifact is published.

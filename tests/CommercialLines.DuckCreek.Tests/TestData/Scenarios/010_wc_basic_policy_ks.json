@@ -9,7 +9,9 @@
     "representativeIteration": "KS",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "KS",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Kansas",
@@ -2135,5 +2137,19 @@
         "value": "{CLICK}Testing Laboratories [541380]"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "WC | Basic Policy",
+    "testCaseGuid": "3a13d49c-13c7-c2b8-e149-4ccb4d88f5bf",
+    "templateInstanceName": "TemplateInstance of WC | Basic Policy",
+    "templateInstanceGuid": "3a13d49c-155c-bf23-f114-1b567e9f0f90",
+    "concreteTestCaseName": "KS",
+    "concreteTestCaseGuid": "3a1482a4-948f-0669-7cf7-fd2288abd7a6",
+    "derivedFrom": [
+      "3a148292-98ce-a7ba-b899-4cc80725db7e"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

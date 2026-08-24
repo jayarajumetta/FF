@@ -1,5 +1,8 @@
-# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 44
-# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
+# v54 RAW TOSCA SOURCE: CL-DC TestCases Staging Area.tsu
+# Raw TestCase: BAP | Expanded [3a13d49c-13a9-26d9-f4de-3ad62a85f800]
+# Raw TemplateInstance: TemplateInstance of BAP | Expanded [3a13d49c-13e5-771f-8293-5d7d7017b5a4]
+# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
+
 @CL_DC @BAP @expanded_new_business
 
 Feature: BAP Expanded

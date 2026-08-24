@@ -8,15 +8,24 @@ public sealed class UiActions
     private readonly DeterministicLocatorFallbackResolver _fallback;
     private readonly RunLogger _logger;
     private readonly BrowserSession _browser;
+    private readonly FrameworkConfig _config;
+    private readonly ScenarioReport? _report;
+    private readonly DeferredVerificationCollector? _verificationFailures;
 
     public UiActions(BrowserSession browser, FrameworkConfig config, RunLogger logger)
-        : this(browser, config, logger, null, "Unknown") { }
+        : this(browser, config, logger, null, "Unknown", null, null) { }
 
     public UiActions(BrowserSession browser, FrameworkConfig config, RunLogger logger, ScenarioReport? report, string applicationName)
+        : this(browser, config, logger, report, applicationName, null, null) { }
+
+    public UiActions(BrowserSession browser, FrameworkConfig config, RunLogger logger, ScenarioReport? report, string applicationName, DeferredVerificationCollector? verificationFailures, ILocatorFallbackProvider? fallbackProvider = null)
     {
         _browser = browser;
         _logger = logger;
-        _fallback = new DeterministicLocatorFallbackResolver(browser, config, logger, report, applicationName);
+        _config = config;
+        _report = report;
+        _verificationFailures = verificationFailures;
+        _fallback = new DeterministicLocatorFallbackResolver(browser, config, logger, report, applicationName, fallbackProvider);
         _healer = new LlmLocatorHealer(browser, config, logger, applicationName);
     }
 
@@ -315,25 +324,101 @@ public sealed class UiActions
         catch { return false; }
     }
 
-    public Task WaitAsync(ILocator locator, string expected, ControlIntent intent) =>
-        expected.Contains("Absent", StringComparison.OrdinalIgnoreCase)
-            ? locator.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Detached })
-            : ExecuteAsync(locator, intent, "wait-visible", x => x.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible }));
-
-    public async Task VerifyAsync(ILocator locator, string expected, string property, ControlIntent intent)
+    public async Task WaitAsync(ILocator locator, string expected, ControlIntent intent)
     {
-        if (expected.Equals("Visible", StringComparison.OrdinalIgnoreCase) || expected.Equals("Exists", StringComparison.OrdinalIgnoreCase) || expected.Equals("True", StringComparison.OrdinalIgnoreCase))
+        await WaitForPageReadyBestEffortAsync();
+        if (expected.Contains("Absent", StringComparison.OrdinalIgnoreCase) ||
+            expected.Contains("Hidden", StringComparison.OrdinalIgnoreCase))
         {
-            await ExecuteAsync(locator, intent, "verify-visible", async x =>
+            await locator.WaitForAsync(new LocatorWaitForOptions
             {
-                if (await x.CountAsync() == 0) throw new TimeoutException("Expected control to exist.");
-                await x.WaitForAsync(new() { State = WaitForSelectorState.Visible });
+                State = expected.Contains("Absent", StringComparison.OrdinalIgnoreCase)
+                    ? WaitForSelectorState.Detached
+                    : WaitForSelectorState.Hidden,
+                Timeout = _config.Waits.VerifyTimeoutMs
             });
             return;
         }
-        var actual = await CaptureAsync(locator, property, intent);
-        if (!string.Equals(actual, expected, StringComparison.OrdinalIgnoreCase))
-            throw new InvalidOperationException($"Expected '{expected}' but found '{actual}'.");
+
+        await ExecuteAsync(locator, intent, "wait-visible", x => x.WaitForAsync(new LocatorWaitForOptions
+        {
+            State = WaitForSelectorState.Visible,
+            Timeout = _config.Waits.ElementReadyTimeoutMs
+        }));
+    }
+
+    public async Task VerifyAsync(ILocator locator, string expected, string property, ControlIntent intent)
+    {
+        try
+        {
+            await WaitForPageReadyBestEffortAsync();
+            var normalized = (expected ?? string.Empty).Trim();
+            if (normalized.Equals("Visible", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Equals("Exists", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Equals("True", StringComparison.OrdinalIgnoreCase))
+            {
+                await ExecuteAsync(locator, intent, "verify-visible", x => x.WaitForAsync(new LocatorWaitForOptions
+                {
+                    State = WaitForSelectorState.Visible,
+                    Timeout = _config.Waits.VerifyTimeoutMs
+                }));
+                return;
+            }
+
+            if (normalized.Equals("Absent", StringComparison.OrdinalIgnoreCase) || normalized.Equals("Hidden", StringComparison.OrdinalIgnoreCase))
+            {
+                await locator.WaitForAsync(new LocatorWaitForOptions
+                {
+                    State = normalized.Equals("Absent", StringComparison.OrdinalIgnoreCase) ? WaitForSelectorState.Detached : WaitForSelectorState.Hidden,
+                    Timeout = _config.Waits.VerifyTimeoutMs
+                });
+                return;
+            }
+
+            if (normalized.Equals("Enabled", StringComparison.OrdinalIgnoreCase))
+            {
+                await ExecuteAsync(locator, intent, "verify-enabled", async x =>
+                {
+                    await x.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = _config.Waits.VerifyTimeoutMs });
+                    if (!await x.IsEnabledAsync()) throw new InvalidOperationException("Expected control to be enabled.");
+                });
+                return;
+            }
+
+            var actual = await CaptureAsync(locator, property, intent);
+            if (normalized.StartsWith("Regex:", StringComparison.OrdinalIgnoreCase))
+            {
+                var pattern = normalized[6..];
+                if (!System.Text.RegularExpressions.Regex.IsMatch(actual, pattern))
+                    throw new InvalidOperationException($"Expected value to match regex '{pattern}' but found '{actual}'.");
+                return;
+            }
+            if (normalized.StartsWith("NotEqual:", StringComparison.OrdinalIgnoreCase))
+            {
+                var notExpected = normalized[9..];
+                if (string.Equals(actual, notExpected, StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidOperationException($"Expected value to differ from '{notExpected}', but it was equal.");
+                return;
+            }
+            if (!string.Equals(actual, normalized, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException($"Expected '{normalized}' but found '{actual}'.");
+        }
+        catch (Exception ex) when (ShouldDeferVerification(ex))
+        {
+            string? screenshot = null;
+            try
+            {
+                if (_browser.IsStarted && _config.Browser.ScreenshotOnFailure)
+                    screenshot = await _browser.CaptureScreenshotAsync($"verify_{Safe(intent.Page)}_{Safe(intent.Control)}_{DateTime.Now:HHmmssfff}.png");
+            }
+            catch { }
+
+            var failure = new DeferredVerificationFailure(
+                DateTimeOffset.Now, ExecutionIntent.Current.Step, intent.Page, intent.Control, property, expected, ex.Message, screenshot);
+            _verificationFailures!.Add(failure);
+            _report?.RecordDeferredVerification(failure);
+            _logger.Error($"DEFERRED VERIFY FAILURE: Step={failure.BusinessStep}; Control={intent}; Expected={expected}; Property={property}; {ex.Message}. Scenario continues; final outcome will fail after evidence publication.");
+        }
     }
 
     public Task<string> CaptureAsync(ILocator locator, string property, ControlIntent intent) => ExecuteAsync(locator, intent, "capture", async x =>
@@ -354,7 +439,11 @@ public sealed class UiActions
 
     private async Task ExecuteAsync(ILocator locator, ControlIntent intent, string action, Func<ILocator, Task> operation)
     {
-        try { await operation(locator); }
+        try
+        {
+            await PrepareForActionAsync(locator, action);
+            await operation(locator);
+        }
         catch (Exception ex) when (IsLocatorFailure(ex))
         {
             // Deterministic Tosca candidates are the first recovery layer. They execute ONLY the
@@ -373,7 +462,11 @@ public sealed class UiActions
 
     private async Task<T> ExecuteAsync<T>(ILocator locator, ControlIntent intent, string action, Func<ILocator, Task<T>> operation)
     {
-        try { return await operation(locator); }
+        try
+        {
+            await PrepareForActionAsync(locator, action);
+            return await operation(locator);
+        }
         catch (Exception ex) when (IsLocatorFailure(ex))
         {
             var fallback = await _fallback.TryExecuteAsync(intent, action, operation, ex);
@@ -386,6 +479,49 @@ public sealed class UiActions
         // Intentionally no post-action DOM extraction/consolidation.
         // Failure-time DOM + screenshot evidence remains available to the final healing layer.
     }
+
+    private async Task PrepareForActionAsync(ILocator locator, string action)
+    {
+        await WaitForPageReadyBestEffortAsync();
+        if (action is "wait-absent") return;
+        // Playwright actions auto-wait too, but this explicit framework wait ensures a late-rendering
+        // Duck Creek/Angular control does not jump directly into fallback merely because it was not
+        // attached at the first instant the Page method was invoked.
+        var timeout = action.StartsWith("verify", StringComparison.OrdinalIgnoreCase)
+            ? _config.Waits.VerifyTimeoutMs
+            : _config.Waits.ElementReadyTimeoutMs;
+        await locator.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeout });
+    }
+
+    private async Task WaitForPageReadyBestEffortAsync()
+    {
+        if (!_config.Waits.WaitForDomContentLoadedBeforeActions || !_browser.IsStarted) return;
+        try
+        {
+            await _browser.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded, new PageWaitForLoadStateOptions
+            {
+                Timeout = _config.Waits.PageReadyTimeoutMs
+            });
+        }
+        catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
+        {
+            // SPA applications can keep navigation/network activity alive. DOMContentLoaded is a readiness
+            // hint, not a business assertion; the element-level wait below remains authoritative.
+            _logger.Warn($"PAGE READY WAIT CONTINUING: DOMContentLoaded did not settle within {_config.Waits.PageReadyTimeoutMs}ms: {ex.Message}");
+        }
+    }
+
+    private bool ShouldDeferVerification(Exception ex)
+    {
+        if (!_config.Execution.DeferVerificationFailures || _verificationFailures is null) return false;
+        if (ex.Message.Contains("target closed", StringComparison.OrdinalIgnoreCase) ||
+            ex.Message.Contains("browser has been closed", StringComparison.OrdinalIgnoreCase) ||
+            ex.Message.Contains("context closed", StringComparison.OrdinalIgnoreCase) ||
+            ex.Message.Contains("page closed", StringComparison.OrdinalIgnoreCase)) return false;
+        return ex is PlaywrightException or TimeoutException or InvalidOperationException;
+    }
+
+    private static string Safe(string value) => string.Concat((value ?? string.Empty).Select(c => char.IsLetterOrDigit(c) ? c : '_')).Trim('_');
 
     private static bool IsLocatorFailure(Exception ex)
     {

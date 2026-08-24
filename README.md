@@ -1,22 +1,26 @@
-# Tosca → Playwright C# / ReqnRoll Migration Factory v52
+# Tosca → Playwright C# / ReqnRoll Migration Factory v54
 
-**Current release: v52 — source-ordered, component-aware, deterministic Tosca locator fallback, per-test evidence, split Azure DevOps pipelines.**
+**Current release: v54 — RAW TOSCA source-of-truth, clean business Features, component-aware Playwright actions, deterministic fallback locators, mature waits, deferred verification, per-test evidence, and split Azure DevOps pipelines.**
 
-Start with **`README_V52.md`** for setup, stack, architecture, execution, locator-fallback behavior and contribution rules.
+Start with **`README_V54.md`**.
 
-Key architecture:
+The only generation/order authority for v54 is the raw Tosca `.tsu` object graph:
 
-`Feature → Scenario Outline/Examples → StepDefinition → Page method → primary Page locator → UiActions → deterministic Tosca fallback (failure only) → LLM/Copilot healing (last resort)`
+`Template/TemplateInstance → concrete TestCase → recursive reusable blocks → XTestStep order → XTestStepValue order → ModuleAttribute/XParam`
 
-The selected automation scope remains **32 Tosca-derived business Features / 1,074 source-applicable examples** across Commercial Lines ExpertQuote, Commercial Lines Duck Creek and Personal Lines Duck Creek.
+Manual CSV/XLSX/HTML artifacts are **not** generation inputs.
 
-Important references:
+Scope: **32 Features / 1,074 raw concrete examples** across Commercial Lines ExpertQuote, Commercial Lines Duck Creek and Personal Lines Duck Creek.
 
-- `README_V52.md`
+Key references:
+
+- `README_V54.md`
+- `docs/RAW-TOSCA-SOURCE-ARCHITECTURE.md`
 - `docs/LOCATOR-FALLBACK-ARCHITECTURE.md`
-- `docs/AZURE-DEVOPS-PIPELINES.md`
 - `docs/TEST-EVIDENCE-ATTACHMENTS.md`
+- `docs/AZURE-DEVOPS-PIPELINES.md`
+- `Artifacts/V54RawToscaContract.json`
+- `Artifacts/V54FinalValidation.json`
 - `Artifacts/LocatorFallbackCatalogs/LocatorFallbackCoverage.json`
-- `Artifacts/V52FinalValidation.json`
 
-Historical release notes remain in `README_V45.md` through `README_V51.md`.
+Historical release notes remain available as `README_V45.md` through `README_V52.md`.

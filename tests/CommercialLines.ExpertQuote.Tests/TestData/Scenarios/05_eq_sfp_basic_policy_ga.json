@@ -9,7 +9,9 @@
     "representativeIteration": "GA",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "GA",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Georgia",
@@ -1116,5 +1118,19 @@
         "value": "SFP"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLEQ",
+    "sourceFile": "CL_EQ_TestCases_Staging_Area_Pre_Production.tsu",
+    "testCaseName": "EQ | SFP | Basic Policy",
+    "testCaseGuid": "3a13ce49-1a8e-d822-14cf-7d9182268313",
+    "templateInstanceName": "TemplateInstance of EQ | SFP | Basic Policy",
+    "templateInstanceGuid": "3a13ce49-1a8e-aa72-b25a-6fb70e4f44ed",
+    "concreteTestCaseName": "GA",
+    "concreteTestCaseGuid": "3a226df0-6234-30dd-74e3-d9f4e994fc79",
+    "derivedFrom": [
+      "3a226dc7-9aa9-630b-80a7-b6929c7aecd8"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

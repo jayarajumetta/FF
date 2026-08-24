@@ -102,6 +102,12 @@ public sealed class AccountInformationPage
     public Task PressZipAsync(string key) =>
         _ui.PressAsync(_locators.Zip, key, new ControlIntent("AccountInformation", "Zip"));
 
+    public Task EnterCountyAsync(string value) =>
+        _ui.FillAsync(_locators.County, value, new ControlIntent("AccountInformation", "County"));
+
+    public Task PressCountyAsync(string key) =>
+        _ui.PressAsync(_locators.County, key, new ControlIntent("AccountInformation", "County"));
+
 
     public Task EnterOwnerPhoneAsync(string value) =>
         _ui.FillAsync(_locators.OwnerPhone, value, new ControlIntent("AccountInformation", "OwnerPhone"));

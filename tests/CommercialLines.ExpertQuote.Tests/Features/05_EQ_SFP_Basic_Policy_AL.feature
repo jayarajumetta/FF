@@ -1,5 +1,8 @@
-# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 35
-# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
+# v54 RAW TOSCA SOURCE: CL_EQ_TestCases_Staging_Area_Pre_Production.tsu
+# Raw TestCase: EQ | SFP | Basic Policy [3a13ce49-1a8e-d822-14cf-7d9182268313]
+# Raw TemplateInstance: TemplateInstance of EQ | SFP | Basic Policy [3a13ce49-1a8e-aa72-b25a-6fb70e4f44ed]
+# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
+
 @CL_EQ @SFP @basic_new_business_policy
 
 Feature: EQ SFP Basic Policy

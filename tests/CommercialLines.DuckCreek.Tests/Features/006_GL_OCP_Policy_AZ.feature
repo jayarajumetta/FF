@@ -1,5 +1,8 @@
-# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 14
-# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
+# v54 RAW TOSCA SOURCE: CL-DC TestCases Staging Area.tsu
+# Raw TestCase: GL | OCP Policy [3a13d49c-13c7-cfb5-c5b4-fe5c45179a59]
+# Raw TemplateInstance: TemplateInstance of GL | OCP Policy [3a13d49c-163d-e8a6-c6fe-454108a7b5fa]
+# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
+
 @CL_DC @owners_and_contractors_protective_new_business
 
 Feature: GL OCP Policy

@@ -9,7 +9,9 @@
     "representativeIteration": "NV",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "NV",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Nevada",
@@ -2465,5 +2467,19 @@
         "value": "{CLICK}Testing Laboratories [541380]"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "WC |Expanded",
+    "testCaseGuid": "3a13d49c-13c7-283c-5cba-90899c07e629",
+    "templateInstanceName": "TemplateInstance of WC | StraightThrough",
+    "templateInstanceGuid": "3a13d49c-1589-9fd2-b3a8-3e7c1e7753ed",
+    "concreteTestCaseName": "NV",
+    "concreteTestCaseGuid": "3a13d49c-1598-cd79-9c1e-90572c2a4961",
+    "derivedFrom": [
+      "3a13d49c-16e2-920c-a8d7-cf3c4653d18d"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

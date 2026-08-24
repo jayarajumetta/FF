@@ -9,7 +9,9 @@
     "representativeIteration": "TN ANG",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "TN ANG",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Tennessee",
@@ -1418,5 +1420,19 @@
         "value": "X"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "PLDC",
+    "sourceFile": "PL_DC_TestCases_Production.tsu",
+    "testCaseName": "Auto Rate Filings Common Policy NB_Prior Eff Date",
+    "testCaseGuid": "3a1cfb32-e498-f392-0540-f331d66e92ad",
+    "templateInstanceName": "TemplateInstance of Auto Rate Filings Common Policy NB_Prior Eff Date",
+    "templateInstanceGuid": "3a1cfb57-6c23-8e13-a300-264d346f00e7",
+    "concreteTestCaseName": "TN ANG",
+    "concreteTestCaseGuid": "3a1cfb57-7f1b-b48f-7f96-0de3a6a0a84d",
+    "derivedFrom": [
+      "3a1cfb4f-94cb-afc7-82fe-6490fcdec05c"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

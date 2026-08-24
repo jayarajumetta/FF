@@ -9,7 +9,9 @@
     "representativeIteration": "CO",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "CO",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Colorado",
@@ -655,5 +657,19 @@
         "value": "{TDS[CO_ClientData.SSN]}"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "PLDC",
+    "sourceFile": "PL_DC_TestCases_Production.tsu",
+    "testCaseName": "Smoke Test Auto",
+    "testCaseGuid": "3a19e1e5-186d-5de8-a540-8d813c79d87a",
+    "templateInstanceName": "TemplateInstance of Smoke Test Auto",
+    "templateInstanceGuid": "3a19e1e5-1883-50cb-3387-566457f64a84",
+    "concreteTestCaseName": "CO",
+    "concreteTestCaseGuid": "3a19e1e5-18a5-4020-2f80-ceaf349df255",
+    "derivedFrom": [
+      "3a17f30b-3881-bf89-4862-305472ffaa8b"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

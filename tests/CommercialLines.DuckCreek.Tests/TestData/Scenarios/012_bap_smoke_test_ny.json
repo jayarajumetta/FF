@@ -9,7 +9,9 @@
     "representativeIteration": "NY",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "NY",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "New York",
@@ -104,5 +106,19 @@
     "mappedBaseValues": 0,
     "sourceValues": {},
     "fields": []
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "BAP | Smoke Test",
+    "testCaseGuid": "3a161404-2203-4f89-f692-5cc0b3208c5b",
+    "templateInstanceName": "TemplateInstance of BAP | Smoke Test",
+    "templateInstanceGuid": "3a161484-de73-eda2-ebb8-fe8d8709019c",
+    "concreteTestCaseName": "NY",
+    "concreteTestCaseGuid": "3a161484-eb1b-960d-5e68-557c026ac7a8",
+    "derivedFrom": [
+      "3a161477-b5d8-e212-1876-f5cd3e177fb7"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

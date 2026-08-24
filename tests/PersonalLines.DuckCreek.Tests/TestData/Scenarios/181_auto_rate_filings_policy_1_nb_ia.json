@@ -9,7 +9,9 @@
     "representativeIteration": "IA",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "IA",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Iowa",
@@ -178,7 +180,7 @@
       "3a1af6d7-9234-e0f7-febf-4f8c6b63fce4": "True",
       "3a1af6d7-9234-c8e0-6ed6-6a8b7f7c87f8": "Transmit",
       "3a1af6d7-9234-962d-9aa3-1af1f48c9898": "X",
-      "3a1af6d7-9234-374b-9f8c-adc66ea4881b": " \u201cPolicy Number:\u201d",
+      "3a1af6d7-9234-374b-9f8c-adc66ea4881b": " “Policy Number:”",
       "3a1dae4b-3355-53fb-d402-681be6d90253": "Policy Number",
       "3a1af6d7-9234-df97-cb64-dbe933101571": "Auto_PolicyData_RateFilings_Policy1",
       "3a1af6d7-9234-b6f6-1ca9-adf6f60df654": "{NULL}",
@@ -416,7 +418,7 @@
         "actionMode": "101",
         "actionProperty": "InnerText ",
         "condition": "",
-        "value": " \u201cPolicy Number:\u201d"
+        "value": " “Policy Number:”"
       },
       {
         "order": 13,
@@ -1535,5 +1537,19 @@
         "value": "X"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "PLDC",
+    "sourceFile": "PL_DC_TestCases_Production.tsu",
+    "testCaseName": "Auto Rate Filings Policy 1 NB",
+    "testCaseGuid": "3a1af6d7-9234-c7aa-ecf0-b2b87e9328dd",
+    "templateInstanceName": "TemplateInstance of Auto Rate Filings Policy 1 NB",
+    "templateInstanceGuid": "3a1c8ebc-4430-6477-a5be-9b3986bac40c",
+    "concreteTestCaseName": "IA",
+    "concreteTestCaseGuid": "3a1c8ebc-4fbb-8186-4e72-cbca240aa7fb",
+    "derivedFrom": [
+      "3a1af6de-204d-b653-db4e-10b1312a5f50"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

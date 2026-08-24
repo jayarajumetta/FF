@@ -33,6 +33,7 @@ public sealed class ScenarioReport
     private readonly List<StepResult> _steps = [];
     private readonly List<LocatorFallbackTrace> _allFallbacks = [];
     private readonly List<LocatorFallbackTrace> _currentFallbacks = [];
+    private readonly List<DeferredVerificationFailure> _deferredVerifications = [];
     private readonly string _artifactDirectory;
     private DateTime _currentStart;
     private string _currentStep = string.Empty;
@@ -51,6 +52,8 @@ public sealed class ScenarioReport
         _currentFallbacks.Add(trace);
         _allFallbacks.Add(trace);
     }
+
+    public void RecordDeferredVerification(DeferredVerificationFailure failure) => _deferredVerifications.Add(failure);
 
     public void EndStep(bool passed, string? error, IReadOnlyDictionary<string, string> data, string? screenshot, StepEvidence evidence)
     {
@@ -80,6 +83,7 @@ public sealed class ScenarioReport
         }
 
         var fallbackTable = RenderFallbackTable();
+        var deferredTable = RenderDeferredVerificationTable();
         var html = $$"""
         <!doctype html>
         <html><head><meta charset="utf-8"><title>{{Encode(scenario)}}</title>
@@ -94,6 +98,7 @@ public sealed class ScenarioReport
         <div class="artifacts"><a href='{{Rel(logPath)}}'>execution log</a>{{Link("trace", tracePath)}}{{Link("video", videoPath)}}{{Link("HAR", harPath)}}{{Link("evidence bundle", bundlePath)}}</div>
         <h2>Execution steps</h2><table><thead><tr><th>Business step</th><th>Status</th><th>Duration</th><th>Resolved data</th><th>Locator recovery</th><th>Console/Page errors</th><th>Network errors</th><th>Test error</th><th>Evidence</th></tr></thead><tbody>{{rows}}</tbody></table>
         {{fallbackTable}}
+        {{deferredTable}}
         </body></html>
         """;
         File.WriteAllText(file, html);
@@ -124,6 +129,21 @@ public sealed class ScenarioReport
             rows.Append($"<tr><td>{Encode(x.BusinessStep)}</td><td>{Encode(x.Page)}.{Encode(x.Control)}</td><td>{Encode(x.Action)}</td><td>{x.Attempt}</td><td>{candidate}</td><td>{x.MatchCount}</td><td class='{cls}'>{Encode(x.Outcome)}</td><td>{x.Confidence:F3}</td><td>{Encode(x.SourceModule)}<br/><span class='small'>{Encode(x.SourceField)} / {Encode(x.SourceProperty)}<br/>{Encode(x.SourceFile)}</span></td><td>{Encode(x.Reason)}</td></tr>");
         }
         return $"<h2>Locator fallback trace</h2><p class='small'>Deterministic Tosca candidates are attempted only after the Page Object primary locator fails. The test continues only when one candidate is unique/visible/action-compatible and the same failed action succeeds.</p><table><thead><tr><th>Business step</th><th>Page.Control</th><th>Action</th><th>#</th><th>Candidate</th><th>Matches</th><th>Outcome</th><th>Confidence</th><th>Tosca source</th><th>Reason</th></tr></thead><tbody>{rows}</tbody></table>";
+    }
+
+
+    private string RenderDeferredVerificationTable()
+    {
+        if (_deferredVerifications.Count == 0)
+            return "<h2>Deferred verification results</h2><p class='fallback-none'>No deferred verification failures were recorded.</p>";
+
+        var rows = new StringBuilder();
+        foreach (var x in _deferredVerifications)
+        {
+            var screenshot = string.IsNullOrWhiteSpace(x.Screenshot) ? string.Empty : $"<a href='{Rel(x.Screenshot)}'>screenshot</a>";
+            rows.Append($"<tr class='fail'><td>{Encode(x.BusinessStep)}</td><td>{Encode(x.Page)}.{Encode(x.Control)}</td><td>{Encode(x.Property)}</td><td>{Encode(x.Expected)}</td><td>{Encode(x.Error)}</td><td>{screenshot}</td></tr>");
+        }
+        return $"<h2>Deferred verification results</h2><p class='small'>These assertions exhausted the configured wait, primary locator, deterministic Tosca fallback and optional healing. Execution continued only to collect later business/evidence context; NUnit fails the scenario after evidence publication.</p><table><thead><tr><th>Business step</th><th>Page.Control</th><th>Property</th><th>Expected</th><th>Error</th><th>Evidence</th></tr></thead><tbody>{rows}</tbody></table>";
     }
 
     private string Link(string label, string? path) => string.IsNullOrWhiteSpace(path) ? string.Empty : $"<a href='{Rel(path)}'>{label}</a>";

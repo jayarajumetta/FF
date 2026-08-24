@@ -9,7 +9,9 @@
     "representativeIteration": "WY",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "WY",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Wyoming",
@@ -1391,5 +1393,19 @@
         "value": "X"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "PLDC",
+    "sourceFile": "PL_DC_TestCases_Production.tsu",
+    "testCaseName": "Cycle Rate Filings Policy 3 NB_Prior Eff Date",
+    "testCaseGuid": "3a1c989c-f4a9-52e3-379f-634d00326823",
+    "templateInstanceName": "TemplateInstance of Cycle Rate Filings Policy 3 NB_Prior Eff Date",
+    "templateInstanceGuid": "3a1c990c-aa91-64b3-ca3d-868ca7d15010",
+    "concreteTestCaseName": "WY",
+    "concreteTestCaseGuid": "3a1c990c-bb41-0460-5f04-5169d0c86c93",
+    "derivedFrom": [
+      "3a1c9802-c76a-51b8-af2e-94b4a452a431"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

@@ -9,6 +9,7 @@ public sealed class ScenarioData
     private readonly Dictionary<string, string> _runtime = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _external = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _randomPatterns = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, string> _canonicalFields = new(StringComparer.OrdinalIgnoreCase);
 
     private readonly FrameworkConfig _config;
 
@@ -23,6 +24,7 @@ public sealed class ScenarioData
         _runtime.Clear();
         _external.Clear();
         _randomPatterns.Clear();
+        _canonicalFields.Clear();
 
         CurrentFile = scenarioFile;
         using var document = JsonDocument.Parse(File.ReadAllText(scenarioFile));
@@ -39,6 +41,29 @@ public sealed class ScenarioData
                 if (property.Value.TryGetProperty("pattern", out var pattern))
                 {
                     _randomPatterns[property.Name] = pattern.GetString() ?? string.Empty;
+                }
+            }
+        }
+
+        // v54: _canonical.fields is generated from raw Tosca reusable-parameter/XTestStepValue
+        // lineage. It is never used as an independent source of truth: the v54 raw-source
+        // gate verifies every derivedFrom GUID against the original application export.
+        if (root.TryGetProperty("_canonical", out var canonical) && canonical.ValueKind == JsonValueKind.Object &&
+            canonical.TryGetProperty("fields", out var fields) && fields.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var field in fields.EnumerateArray())
+            {
+                if (!field.TryGetProperty("field", out var fieldNameElement)) continue;
+                var fieldName = fieldNameElement.GetString() ?? string.Empty;
+                if (string.IsNullOrWhiteSpace(fieldName)) continue;
+                var value = field.TryGetProperty("value", out var valueElement)
+                    ? valueElement.ValueKind == JsonValueKind.String ? valueElement.GetString() ?? string.Empty : valueElement.ToString()
+                    : string.Empty;
+                _canonicalFields[fieldName] = value;
+                if (field.TryGetProperty("businessName", out var businessNameElement))
+                {
+                    var businessName = businessNameElement.GetString() ?? string.Empty;
+                    if (!string.IsNullOrWhiteSpace(businessName)) _canonicalFields[businessName] = value;
                 }
             }
         }
@@ -65,6 +90,20 @@ public sealed class ScenarioData
                 }
             }
         }
+    }
+
+    public string GetCanonicalField(string fieldName, string fallback = "")
+    {
+        if (_canonicalFields.TryGetValue(fieldName, out var value)) return Resolve(value);
+        return fallback;
+    }
+
+    public string GetCanonicalFieldRequired(string fieldName)
+    {
+        var value = GetCanonicalField(fieldName);
+        if (string.IsNullOrWhiteSpace(value) || IsSynthetic(value))
+            throw new InvalidOperationException($"Raw-Tosca canonical field '{fieldName}' is missing for scenario {CurrentFile}.");
+        return value;
     }
 
     public string GetRequired(string key)
@@ -190,7 +229,7 @@ public sealed class ScenarioData
         if (value.StartsWith("NOT(", StringComparison.OrdinalIgnoreCase) && value.EndsWith(')')) return !EvaluateOr(value[4..^1]);
         if (value.StartsWith("NOT ", StringComparison.OrdinalIgnoreCase)) return !EvaluateAtom(value[4..]);
 
-        var m = Regex.Match(value, @"^['""](+?)['""]\s*(==|!=)\s*['""](.*?)['""$");
+        var m = Regex.Match(value, @"^['""](.+?)['""]\s*(==|!=)\s*['""](.*?)['""]$");
         if (!m.Success) throw new InvalidOperationException("No supported data comparison was found.");
         var key=m.Groups[1].Value.Trim().Trim('\'', '"');
         var op=m.Groups[2].Value; var expected=m.Groups[3].Value.Trim().Trim('\'', '"');

@@ -1,5 +1,8 @@
-# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 16
-# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
+# v54 RAW TOSCA SOURCE: CL-DC TestCases Staging Area.tsu
+# Raw TestCase: IM | Smoke Test [3a161ef0-af6b-e85c-4ae2-5d3b4a38dd02]
+# Raw TemplateInstance: TemplateInstance of IM | Smoke Test [3a161ef7-4574-c33c-8d31-d623bacb61f0]
+# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
+
 @CL_DC @smoke_test
 
 Feature: IM Smoke Test
@@ -13,11 +16,6 @@ Feature: IM Smoke Test
     Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
     And I open the configured Commercial Lines Duck Creek application
     And I sign in to Commercial Lines Duck Creek using configured credentials
-    When I sign in to Duck Creek
-    And I complete restart Edge Popup
-    Then I sign in to Duck Creek for logged in user
-    And I sign out of the application
-    And I sign in to Duck Creek for username
     And I start a new quote
     And I enter individual client information
     And I complete required policy information

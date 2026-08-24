@@ -9,7 +9,9 @@
     "representativeIteration": "SD ANG",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "SD ANG",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "South Dakota",
@@ -642,5 +644,19 @@
         "value": "{TDS[SD_ClientData.SSN]}"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "PLDC",
+    "sourceFile": "PL_DC_TestCases_Production.tsu",
+    "testCaseName": "Smoke Test RV",
+    "testCaseGuid": "3a19e1e5-1a5f-8f96-ac2f-d6315621bf61",
+    "templateInstanceName": "TemplateInstance of Smoke Test RV",
+    "templateInstanceGuid": "3a19e1e5-1a5f-e885-d120-d00d7842ac2f",
+    "concreteTestCaseName": "SD ANG",
+    "concreteTestCaseGuid": "3a19e1e5-1af5-272a-0991-2be773990de8",
+    "derivedFrom": [
+      "3a19dd55-d218-0162-d388-142cda867a34"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

@@ -9,7 +9,9 @@
     "representativeIteration": "AL",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "AL",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Alabama",
@@ -2202,5 +2204,19 @@
         "value": "X"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "UMB | Smoke Test",
+    "testCaseGuid": "3a1633f1-3427-07b7-fbda-d657d3e017d9",
+    "templateInstanceName": "TemplateInstance of UMB | Smoke Test",
+    "templateInstanceGuid": "3a1633fd-780d-fa4f-2e67-66f22b7e5f54",
+    "concreteTestCaseName": "AL",
+    "concreteTestCaseGuid": "3a1633fd-8b56-a188-a041-fd629131639b",
+    "derivedFrom": [
+      "3a1633f5-d862-a974-9902-5d8f1d0576b5"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

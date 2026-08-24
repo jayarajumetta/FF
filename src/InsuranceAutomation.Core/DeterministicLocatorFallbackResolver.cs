@@ -17,21 +17,22 @@ public sealed class DeterministicLocatorFallbackResolver
     private readonly RunLogger _logger;
     private readonly ScenarioReport? _report;
     private readonly string _applicationName;
-    private readonly LocatorFallbackCatalogStore _catalog;
+    private readonly ILocatorFallbackProvider _catalog;
 
     public DeterministicLocatorFallbackResolver(
         BrowserSession browser,
         FrameworkConfig config,
         RunLogger logger,
         ScenarioReport? report,
-        string applicationName)
+        string applicationName,
+        ILocatorFallbackProvider? provider = null)
     {
         _browser = browser;
         _config = config;
         _logger = logger;
         _report = report;
         _applicationName = applicationName;
-        _catalog = new LocatorFallbackCatalogStore(config, applicationName);
+        _catalog = provider ?? new LocatorFallbackCatalogStore(config, applicationName);
     }
 
     public async Task<bool> TryExecuteAsync(
@@ -167,6 +168,21 @@ public sealed class DeterministicLocatorFallbackResolver
     {
         try
         {
+            // A Tosca backup may be correct but not attached yet while a SPA section is rendering.
+            // Give each candidate a short bounded readiness window before classifying it as no-match.
+            try
+            {
+                await locator.WaitForAsync(new LocatorWaitForOptions
+                {
+                    State = WaitForSelectorState.Visible,
+                    Timeout = _config.Waits.FallbackCandidateTimeoutMs
+                });
+            }
+            catch (Exception waitEx) when (waitEx is PlaywrightException or TimeoutException)
+            {
+                // Count/probe below records the final deterministic outcome; this wait itself is not a failure.
+            }
+
             var count = await locator.CountAsync();
             if (count == 0) return new CandidateProbe(false, 0, "no-match", "Locator matched zero controls.");
             if (count != 1) return new CandidateProbe(false, count, "non-unique", $"Locator matched {count} controls; fallback refuses an arbitrary choice.");

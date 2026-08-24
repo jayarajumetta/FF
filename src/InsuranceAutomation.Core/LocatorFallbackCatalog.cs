@@ -81,7 +81,13 @@ public sealed record LocatorFallbackApplicationCatalog
     public IReadOnlyList<LocatorFallbackControlEntry> Controls { get; init; } = Array.Empty<LocatorFallbackControlEntry>();
 }
 
-public sealed class LocatorFallbackCatalogStore
+public interface ILocatorFallbackProvider
+{
+    LocatorFallbackControlEntry? Find(ControlIntent intent);
+    LocatorFallbackApplicationCatalog Metadata { get; }
+}
+
+public sealed class LocatorFallbackCatalogStore : ILocatorFallbackProvider
 {
     private static readonly ConcurrentDictionary<string, CatalogIndex> Cache = new(StringComparer.OrdinalIgnoreCase);
     private readonly CatalogIndex _index;

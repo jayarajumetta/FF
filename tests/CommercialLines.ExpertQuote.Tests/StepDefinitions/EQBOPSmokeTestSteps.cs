@@ -45,24 +45,33 @@ public sealed class EQBOPSmokeTestSteps
 
         var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // TC-02 / Feature step 4: exact detailed action order.
-        await page.VerifyAccountInformationAsync("Visible", "");
+        // v54 RAW TOSCA ORDER. Source: EQ|Common|Account Details - Account Info.
+        // XTestStep/XTestStepValue order is authoritative; manual CSV/workbooks are not inputs.
+        await page.WaitForAccountInformationHeaderAsync("Visible");
         await page.EnterOwnerMiddleNameAsync("");
         await page.EnterOwnerPhoneAsync(data.Resolve("{{runtime:OwnerPhone}}"));
         await page.EnterOwnerEmailAsync(data.Resolve("{{runtime:OwnerEmail}}"));
         await page.ClickMarriedAsync();
+
+        await page.EnterStreetAddressAsync(data.GetCanonicalFieldRequired("Address 1"));
+        await page.EnterAddress2Async(data.GetCanonicalField("Address 2"));
+        await page.EnterCityAsync(data.GetCanonicalFieldRequired("City"));
+        await page.SelectStateAsync(data.GetCanonicalFieldRequired("State Name"));
+        await page.EnterZipAsync(data.GetCanonicalFieldRequired("Zip"));
+
+        var county = data.GetCanonicalField("County");
+        if (!string.IsNullOrWhiteSpace(county))
+            await page.EnterCountyAsync(county);
+
+        // Map/Satellite are generated only after address steering in raw Tosca.
         await page.VerifyMapAsync("Visible", "");
         await page.VerifySatelliteAsync("Visible", "");
+
         await page.SelectHaveYouReceivedMailAtThisAddressForAtLeast90DaysYesAsync();
         await page.SelectIsTheAccountAddressAlsoWhereTheClientResidesYesAsync();
         await page.ClickAdditionalInterestsNextAsync();
-
-        await page.EnterStreetAddressAsync(data.Resolve("{{data:street_address_18}}"));
-        await page.EnterAddress2Async("");
-        await page.EnterCityAsync(data.Resolve("{{data:city_20}}"));
-        await page.SelectStateAsync(data.Resolve("{{data:state_21}}").ToUpperInvariant());
-        await page.EnterZipAsync(data.Resolve("{{data:zip_22}}"));
     }
+
 
     [Given(@"^I start the configured policy proposal$")]
     [When(@"^I start the configured policy proposal$")]

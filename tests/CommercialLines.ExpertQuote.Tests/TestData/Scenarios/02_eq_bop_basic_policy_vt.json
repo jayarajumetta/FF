@@ -9,7 +9,9 @@
     "representativeIteration": "VT",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "VT",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Vermont",
@@ -2298,5 +2300,19 @@
         "value": "SYNTHETIC_REPLACE_ME"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLEQ",
+    "sourceFile": "CL_EQ_TestCases_Staging_Area_Pre_Production.tsu",
+    "testCaseName": "EQ | BOP | Basic Policy",
+    "testCaseGuid": "3a13ce49-1a93-bd06-d9dd-90d58a69befe",
+    "templateInstanceName": "TemplateInstance of EQ | BOP | Basic Policy",
+    "templateInstanceGuid": "3a13fc94-0dc1-0050-9138-a5a6360e2177",
+    "concreteTestCaseName": "VT",
+    "concreteTestCaseGuid": "3a1b07c6-a696-da36-dda0-1ddb72e04de6",
+    "derivedFrom": [
+      "3a1b074f-985d-0e1a-ee6d-d17677f25066"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

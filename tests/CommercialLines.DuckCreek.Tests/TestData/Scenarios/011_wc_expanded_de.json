@@ -9,7 +9,9 @@
     "representativeIteration": "DE",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "DE",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Delaware",
@@ -2517,5 +2519,19 @@
         "value": "{CLICK}Testing Laboratories [541380]"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "WC |Expanded",
+    "testCaseGuid": "3a13d49c-13c7-283c-5cba-90899c07e629",
+    "templateInstanceName": "TemplateInstance of WC | StraightThrough",
+    "templateInstanceGuid": "3a13d49c-1589-9fd2-b3a8-3e7c1e7753ed",
+    "concreteTestCaseName": "DE",
+    "concreteTestCaseGuid": "3a13d49c-1589-ea7d-5305-f2b424f44a37",
+    "derivedFrom": [
+      "3a13d49c-16e2-7584-83d9-1eb2223f2efb"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

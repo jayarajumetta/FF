@@ -9,7 +9,9 @@
     "representativeIteration": "WV",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "WV",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "West Virginia",
@@ -1673,5 +1675,19 @@
         "value": "X"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "UMB | Basic Policy",
+    "testCaseGuid": "3a13d49c-13c7-50ce-c6e7-788ed5b058a6",
+    "templateInstanceName": "Template Instance - UMB | Basic Policy",
+    "templateInstanceGuid": "3a13d49c-14f3-ccbc-f0a9-c23bd4f5c214",
+    "concreteTestCaseName": "WV",
+    "concreteTestCaseGuid": "3a13d49c-1520-9675-0c37-d2d20482e951",
+    "derivedFrom": [
+      "3a13d49c-1697-b09a-975a-1de88076e8b0"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

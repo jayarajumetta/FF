@@ -1,6 +1,7 @@
 using InsuranceAutomation.Core;
 using InsuranceAutomation.NUnit;
 using Reqnroll;
+using InsuranceAutomation.CLEQ.Pages.FallbackLocators;
 
 namespace InsuranceAutomation.CLEQ.Hooks;
 
@@ -36,7 +37,9 @@ public sealed class TestHooks
         browser.SetArtifactDirectory(artifactDirectory);
         var data = new ScenarioData(config);
         var report = new ScenarioReport(artifactDirectory);
-        var ui = new UiActions(browser, config, logger, report, "CommercialLines.ExpertQuote");
+        var verificationFailures = new DeferredVerificationCollector();
+        var fallbackProvider = new CommercialLinesExpertQuoteFallbackLocatorProvider(config);
+        var ui = new UiActions(browser, config, logger, report, "CommercialLines.ExpertQuote", verificationFailures, fallbackProvider);
 
         _scenario.Set(config);
         _scenario.Set(artifactDirectory);
@@ -45,6 +48,8 @@ public sealed class TestHooks
         _scenario.Set(data);
         _scenario.Set(ui);
         _scenario.Set(report);
+        _scenario.Set(verificationFailures);
+        NUnitEvidencePublisher.RegisterStartMarker(_feature.FeatureInfo.Title, _scenario.ScenarioInfo.Title);
     }
 
     [BeforeStep]
@@ -59,6 +64,7 @@ public sealed class TestHooks
             config.SelfHeal.MaxPreviousSteps);
 
         _scenario.Get<BrowserSession>().BeginStepEvidence();
+        _scenario.Set(_scenario.Get<DeferredVerificationCollector>().Failures.Count, "DeferredVerificationCountAtStepStart");
         _scenario.Get<RunLogger>().Info($"START STEP: {step}");
         _scenario.Get<ScenarioReport>().StartStep(step);
     }
@@ -71,7 +77,10 @@ public sealed class TestHooks
         var data = _scenario.Get<ScenarioData>();
         var report = _scenario.Get<ScenarioReport>();
         var browser = _scenario.Get<BrowserSession>();
-        var failed = _scenario.TestError is not null;
+        var verificationFailures = _scenario.Get<DeferredVerificationCollector>();
+        var beforeDeferred = _scenario.ContainsKey("DeferredVerificationCountAtStepStart") ? _scenario.Get<int>("DeferredVerificationCountAtStepStart") : 0;
+        var deferredInStep = verificationFailures.Failures.Count > beforeDeferred;
+        var failed = _scenario.TestError is not null || deferredInStep;
         string? screenshot = null;
 
         if (browser.IsStarted && ((failed && config.Browser.ScreenshotOnFailure) || config.Browser.ScreenshotEachStep))
@@ -80,13 +89,16 @@ public sealed class TestHooks
                 $"{DateTime.Now:HHmmssfff}_{Safe(_scenario.StepContext.StepInfo.Text)}.png");
         }
 
-        if (failed)
+        if (_scenario.TestError is not null)
             logger.Error($"FAILED STEP: {_scenario.StepContext.StepInfo.Text} :: {_scenario.TestError}");
+        else if (deferredInStep)
+            logger.Warn($"STEP COMPLETED WITH DEFERRED VERIFICATION: {_scenario.StepContext.StepInfo.Text}");
         else
             logger.Info($"PASSED STEP: {_scenario.StepContext.StepInfo.Text}");
 
         var evidence = browser.EndStepEvidence();
-        report.EndStep(!failed, _scenario.TestError?.Message, data.Snapshot(), screenshot, evidence);
+        var stepError = _scenario.TestError?.Message ?? (deferredInStep ? "Verification failed after wait/fallback/healing; deferred until scenario end." : null);
+        report.EndStep(!failed, stepError, data.Snapshot(), screenshot, evidence);
     }
 
     [AfterScenario(Order = 100)]
@@ -96,6 +108,7 @@ public sealed class TestHooks
             _scenario.Get<RunLogger>(),
             _scenario.Get<FrameworkConfig>(),
             _scenario.Get<ScenarioReport>(),
+            _scenario.Get<DeferredVerificationCollector>(),
             _scenario.Get<string>(),
             _feature.FeatureInfo.Title,
             _scenario.ScenarioInfo.Title,

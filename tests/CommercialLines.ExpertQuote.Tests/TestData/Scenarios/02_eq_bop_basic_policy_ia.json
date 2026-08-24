@@ -9,7 +9,9 @@
     "representativeIteration": "IA",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "IA",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Iowa",
@@ -2298,5 +2300,19 @@
         "value": "SYNTHETIC_REPLACE_ME"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLEQ",
+    "sourceFile": "CL_EQ_TestCases_Staging_Area_Pre_Production.tsu",
+    "testCaseName": "EQ | BOP | Basic Policy",
+    "testCaseGuid": "3a13ce49-1a93-bd06-d9dd-90d58a69befe",
+    "templateInstanceName": "TemplateInstance of EQ | BOP | Basic Policy",
+    "templateInstanceGuid": "3a13fc94-0dc1-0050-9138-a5a6360e2177",
+    "concreteTestCaseName": "IA",
+    "concreteTestCaseGuid": "3a17ef07-ea01-b214-56c5-e62e4de96713",
+    "derivedFrom": [
+      "3a17eeec-5374-6fe8-cfa4-149161762b2d"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

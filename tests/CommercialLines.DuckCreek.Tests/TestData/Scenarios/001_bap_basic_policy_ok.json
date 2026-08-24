@@ -9,7 +9,9 @@
     "representativeIteration": "OK",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "OK",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Oklahoma",
@@ -770,5 +772,19 @@
         "value": "svqw-clas21:8080"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "BAP | Basic Policy",
+    "testCaseGuid": "3a13d49c-139a-0e4a-c9f4-27a35cbc7d64",
+    "templateInstanceName": "TemplateInstance of BAP | Basic Policy",
+    "templateInstanceGuid": "3a13d49c-13d6-7e7f-7b93-3ba066eb3fb3",
+    "concreteTestCaseName": "OK",
+    "concreteTestCaseGuid": "3a13d49c-13d6-5d45-5716-0b946dea27a3",
+    "derivedFrom": [
+      "3a13d49c-1688-293f-e630-858f9ebc0669"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

@@ -1,0 +1,21 @@
+{
+  "release": "v54-raw-tosca-mature",
+  "status": "PASS",
+  "rawSourceTruth": "PASS",
+  "features": 32,
+  "examples": 1074,
+  "rawExamplesMatched": 1074,
+  "fallbackOverall": 0.987477,
+  "typedFallbackFiles": 54,
+  "scenarioDataFiles": 1074,
+  "csharpFiles": 218,
+  "jsonFiles": 1141,
+  "visualStudioEvidenceStaging": true,
+  "defaultWaits": true,
+  "deferredVerifications": true,
+  "manualGenerationInputs": false,
+  "dotnetBuildPerformed": false,
+  "dotnetBuildReason": "dotnet/csc/msbuild unavailable in generation environment; Azure build pipeline/Visual Studio is the compiler gate.",
+  "warnings": [],
+  "errors": []
+}

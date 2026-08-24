@@ -9,7 +9,9 @@
     "representativeIteration": "MO",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "MO",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Missouri",
@@ -342,5 +344,19 @@
         "value": "PreQualification"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLEQ",
+    "sourceFile": "CL_EQ_TestCases_Staging_Area_Pre_Production.tsu",
+    "testCaseName": "EQ | BOP | Smoke Test",
+    "testCaseGuid": "3a163d25-dcdf-7c4f-c0a2-79df52437a89",
+    "templateInstanceName": "TemplateInstance of EQ | BOP | Smoke Test",
+    "templateInstanceGuid": "3a163d2d-30aa-c91c-0285-8fbc328d080f",
+    "concreteTestCaseName": "MO",
+    "concreteTestCaseGuid": "3a163d2d-3e98-9796-24e0-2370a83b096e",
+    "derivedFrom": [
+      "3a163d2b-11d2-2f81-859a-420fc7908c90"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

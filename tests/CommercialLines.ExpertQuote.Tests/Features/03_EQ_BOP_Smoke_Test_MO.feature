@@ -1,5 +1,8 @@
-# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 1
-# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
+# v54 RAW TOSCA SOURCE: CL_EQ_TestCases_Staging_Area_Pre_Production.tsu
+# Raw TestCase: EQ | BOP | Smoke Test [3a163d25-dcdf-7c4f-c0a2-79df52437a89]
+# Raw TemplateInstance: TemplateInstance of EQ | BOP | Smoke Test [3a163d2d-30aa-c91c-0285-8fbc328d080f]
+# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
+
 @CL_EQ @BOP @smoke_test
 
 Feature: EQ BOP Smoke Test

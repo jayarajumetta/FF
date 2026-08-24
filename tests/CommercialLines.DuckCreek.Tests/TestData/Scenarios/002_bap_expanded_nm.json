@@ -9,7 +9,9 @@
     "representativeIteration": "NM",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "NM",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "New Mexico",
@@ -2645,5 +2647,19 @@
         "value": "Yes"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "BAP | Expanded",
+    "testCaseGuid": "3a13d49c-13a9-26d9-f4de-3ad62a85f800",
+    "templateInstanceName": "TemplateInstance of BAP | Expanded",
+    "templateInstanceGuid": "3a13d49c-13e5-771f-8293-5d7d7017b5a4",
+    "concreteTestCaseName": "NM",
+    "concreteTestCaseGuid": "3a13d49c-1412-e26a-3052-92f4d6a94c08",
+    "derivedFrom": [
+      "3a13d49c-1697-9109-9856-af28b2c6be12"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

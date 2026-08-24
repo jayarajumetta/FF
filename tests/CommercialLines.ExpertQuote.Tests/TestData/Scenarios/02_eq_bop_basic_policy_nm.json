@@ -9,7 +9,9 @@
     "representativeIteration": "NM",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "NM",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "New Mexico",
@@ -2285,5 +2287,19 @@
         "value": "SYNTHETIC_REPLACE_ME"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLEQ",
+    "sourceFile": "CL_EQ_TestCases_Staging_Area_Pre_Production.tsu",
+    "testCaseName": "EQ | BOP | Basic Policy",
+    "testCaseGuid": "3a13ce49-1a93-bd06-d9dd-90d58a69befe",
+    "templateInstanceName": "TemplateInstance of EQ | BOP | Basic Policy",
+    "templateInstanceGuid": "3a13fc94-0dc1-0050-9138-a5a6360e2177",
+    "concreteTestCaseName": "NM",
+    "concreteTestCaseGuid": "3a1a6836-e2c9-9ff5-ee86-0e998dc4a51b",
+    "derivedFrom": [
+      "3a1a671d-09d0-589a-49fc-d7548286b066"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

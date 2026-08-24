@@ -9,7 +9,9 @@
     "representativeIteration": "VA",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "VA",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Virginia",
@@ -1431,5 +1433,19 @@
         "value": "X"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "PLDC",
+    "sourceFile": "PL_DC_TestCases_Production.tsu",
+    "testCaseName": "Auto Rate Filings Common Policy NB_Prior Eff Date",
+    "testCaseGuid": "3a1cfb32-e498-f392-0540-f331d66e92ad",
+    "templateInstanceName": "TemplateInstance of Auto Rate Filings Common Policy NB_Prior Eff Date",
+    "templateInstanceGuid": "3a1cfb57-6c23-8e13-a300-264d346f00e7",
+    "concreteTestCaseName": "VA",
+    "concreteTestCaseGuid": "3a1cfb57-8066-fa58-1d6b-b950f3db456f",
+    "derivedFrom": [
+      "3a1cfb4f-94cb-d134-c28f-4d16c063402b"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

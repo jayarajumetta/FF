@@ -9,7 +9,9 @@
     "representativeIteration": "NE",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "NE",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Nebraska",
@@ -361,5 +363,19 @@
         "value": "Pre-Qualification"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLEQ",
+    "sourceFile": "CL_EQ_TestCases_Staging_Area_Pre_Production.tsu",
+    "testCaseName": "EQ | SFP | Smoke Test",
+    "testCaseGuid": "3a1ca7a5-0348-bdaf-8bca-a654d2a838ca",
+    "templateInstanceName": "TemplateInstance of EQ | SFP | Smoke Test",
+    "templateInstanceGuid": "3a1ca8ae-f7bb-551a-299c-07a66d24d293",
+    "concreteTestCaseName": "NE",
+    "concreteTestCaseGuid": "3a1ca8af-0388-4cd2-955a-ebc9e33b775e",
+    "derivedFrom": [
+      "3a1ca7a6-18f7-c505-eafc-40f907d38688"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

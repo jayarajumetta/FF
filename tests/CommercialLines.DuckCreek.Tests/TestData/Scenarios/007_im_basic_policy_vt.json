@@ -9,7 +9,9 @@
     "representativeIteration": "VT",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "VT",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Vermont",
@@ -1822,5 +1824,19 @@
         "value": "X"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "IM | Basic Policy",
+    "testCaseGuid": "3a13d49c-13b8-60b8-829c-8dec15ae9020",
+    "templateInstanceName": "TemplateInstance of IM | Basic Policy",
+    "templateInstanceGuid": "3a13d49c-14b7-6f2e-9922-d4972fa51152",
+    "concreteTestCaseName": "VT",
+    "concreteTestCaseGuid": "3a13d49c-14c6-7b1e-eb54-87f0b8e8f7fc",
+    "derivedFrom": [
+      "3a13d49c-16d3-785a-ecce-3de4c12c9c1d"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

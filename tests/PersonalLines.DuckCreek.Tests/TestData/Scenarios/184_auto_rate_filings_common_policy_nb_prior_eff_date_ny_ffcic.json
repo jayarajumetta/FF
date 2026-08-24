@@ -9,7 +9,9 @@
     "representativeIteration": "NY FFCIC",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "NY FFCIC",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "New York",
@@ -1483,5 +1485,19 @@
         "value": "X"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "PLDC",
+    "sourceFile": "PL_DC_TestCases_Production.tsu",
+    "testCaseName": "Auto Rate Filings Common Policy NB_Prior Eff Date",
+    "testCaseGuid": "3a1cfb32-e498-f392-0540-f331d66e92ad",
+    "templateInstanceName": "TemplateInstance of Auto Rate Filings Common Policy NB_Prior Eff Date",
+    "templateInstanceGuid": "3a1cfb57-6c23-8e13-a300-264d346f00e7",
+    "concreteTestCaseName": "NY FFCIC",
+    "concreteTestCaseGuid": "3a1cfb57-7c98-91fd-6639-c2dc2f9e2b3b",
+    "derivedFrom": [
+      "3a1cfb4f-94c7-0d91-4598-c0a1020d6997"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

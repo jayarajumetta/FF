@@ -9,7 +9,9 @@
     "representativeIteration": "VT",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "VT",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Vermont",
@@ -1391,5 +1393,19 @@
         "value": "X"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "PLDC",
+    "sourceFile": "PL_DC_TestCases_Production.tsu",
+    "testCaseName": "Cycle Rate Filings Policy 3 NB_Prior Eff Date",
+    "testCaseGuid": "3a1c989c-f4a9-52e3-379f-634d00326823",
+    "templateInstanceName": "TemplateInstance of Cycle Rate Filings Policy 3 NB_Prior Eff Date",
+    "templateInstanceGuid": "3a1c990c-aa91-64b3-ca3d-868ca7d15010",
+    "concreteTestCaseName": "VT",
+    "concreteTestCaseGuid": "3a1c990c-bae3-d2c7-1ee5-d1d0dc5d8601",
+    "derivedFrom": [
+      "3a1c9802-c75f-cadf-edf3-828d99128a67"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

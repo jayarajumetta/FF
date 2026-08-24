@@ -103,6 +103,11 @@ public sealed class BrowserSession : IAsyncDisposable
 
     public async Task CloseAsync(RunLogger logger)
     {
+        if (_context is null && _browser is null && _playwright is null) return;
+
+        IVideo? video = null;
+        try { video = _page?.Video; } catch { }
+
         if (_context is not null && _config.Browser.Trace)
         {
             TracePath = Path.Combine(_artifactDirectory, "trace.zip");
@@ -110,8 +115,21 @@ public sealed class BrowserSession : IAsyncDisposable
             catch (Exception ex) { logger.Warn($"Unable to stop trace: {ex.Message}"); }
         }
 
-        try { if (_page?.Video is not null) VideoPath = await _page.Video.PathAsync(); } catch { }
-        try { if (_context is not null) await _context.CloseAsync(); } catch (Exception ex) { logger.Warn($"Unable to close browser context cleanly: {ex.Message}"); }
+        // HAR and video are finalized when the context closes. Resolve Video.PathAsync only after close;
+        // resolving it before close can leave Visual Studio with no completed video attachment.
+        try { if (_context is not null) await _context.CloseAsync(); }
+        catch (Exception ex) { logger.Warn($"Unable to close browser context cleanly: {ex.Message}"); }
+
+        try
+        {
+            if (video is not null)
+            {
+                VideoPath = await video.PathAsync();
+                logger.Info($"Playwright video finalized: {VideoPath}");
+            }
+        }
+        catch (Exception ex) { logger.Warn($"Unable to resolve finalized Playwright video path: {ex.Message}"); }
+
         try { if (_browser is not null) await _browser.CloseAsync(); } catch { }
         _playwright?.Dispose();
         _page = null; _context = null; _browser = null; _playwright = null;

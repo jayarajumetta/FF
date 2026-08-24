@@ -9,7 +9,9 @@
     "representativeIteration": "SC",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "SC",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "South Carolina",
@@ -1116,5 +1118,19 @@
         "value": "SFP"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLEQ",
+    "sourceFile": "CL_EQ_TestCases_Staging_Area_Pre_Production.tsu",
+    "testCaseName": "EQ | SFP | Basic Policy",
+    "testCaseGuid": "3a13ce49-1a8e-d822-14cf-7d9182268313",
+    "templateInstanceName": "TemplateInstance of EQ | SFP | Basic Policy",
+    "templateInstanceGuid": "3a13ce49-1a8e-aa72-b25a-6fb70e4f44ed",
+    "concreteTestCaseName": "SC",
+    "concreteTestCaseGuid": "3a1f310c-2b4f-00ad-8a4d-622286a378eb",
+    "derivedFrom": [
+      "3a1f30ff-379f-3c10-7e9a-75f95b45c3d2"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

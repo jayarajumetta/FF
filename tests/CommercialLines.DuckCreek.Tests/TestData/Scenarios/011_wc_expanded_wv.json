@@ -9,7 +9,9 @@
     "representativeIteration": "WV",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "WV",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "West Virginia",
@@ -2348,5 +2350,19 @@
         "value": "{CLICK}Testing Laboratories [541380]"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "WC |Expanded",
+    "testCaseGuid": "3a13d49c-13c7-283c-5cba-90899c07e629",
+    "templateInstanceName": "TemplateInstance of WC | StraightThrough",
+    "templateInstanceGuid": "3a13d49c-1589-9fd2-b3a8-3e7c1e7753ed",
+    "concreteTestCaseName": "WV",
+    "concreteTestCaseGuid": "3a13d49c-15a7-7422-1dc0-94e76037ed39",
+    "derivedFrom": [
+      "3a13d49c-16e2-4a77-0e51-9e145a86dd31"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

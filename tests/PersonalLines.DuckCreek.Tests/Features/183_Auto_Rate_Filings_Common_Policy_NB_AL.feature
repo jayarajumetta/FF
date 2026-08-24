@@ -1,5 +1,8 @@
-# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 50
-# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
+# v54 RAW TOSCA SOURCE: PL_DC_TestCases_Production.tsu
+# Raw TestCase: Auto Rate Filings Common Policy NB [3a1cfb32-8be3-f64b-68d0-e62e12763325]
+# Raw TemplateInstance: TemplateInstance of Auto Rate Filings Common Policy NB [3a1cfb4e-91a0-b1a9-9c65-6dcae43a9465]
+# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
+
 @PL_DC @AUTO @rate_filing_new_business
 
 Feature: Auto Rate Filings Common Policy NB

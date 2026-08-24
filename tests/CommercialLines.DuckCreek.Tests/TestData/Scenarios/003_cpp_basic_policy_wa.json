@@ -9,7 +9,9 @@
     "representativeIteration": "WA",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "WA",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Washington",
@@ -3265,5 +3267,19 @@
         "value": "X"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "CPP | Basic Policy",
+    "testCaseGuid": "3a13d49c-13c7-0bc0-5578-87f8534d0b4e",
+    "templateInstanceName": "TemplateInstance of CPP | Basic Policy",
+    "templateInstanceGuid": "3a13d49c-162e-40bd-d4e1-566863c9bc15",
+    "concreteTestCaseName": "WA",
+    "concreteTestCaseGuid": "3a13d49c-163d-e543-e0aa-8888afcbb811",
+    "derivedFrom": [
+      "3a13d49c-16e2-74fd-0adc-a0d7860e5433"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

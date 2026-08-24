@@ -4,5 +4,6 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ReqnrollUseIntermediateOutputPathForCodeBehind>true</ReqnrollUseIntermediateOutputPathForCodeBehind>
+      <RunSettingsFilePath>$(MSBuildThisFileDirectory)Tosca.runsettings</RunSettingsFilePath>
   </PropertyGroup>
 </Project>

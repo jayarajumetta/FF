@@ -9,7 +9,9 @@
     "representativeIteration": "WY",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "WY",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Wyoming",
@@ -104,5 +106,19 @@
     "mappedBaseValues": 0,
     "sourceValues": {},
     "fields": []
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "BAP | Smoke Test",
+    "testCaseGuid": "3a161404-2203-4f89-f692-5cc0b3208c5b",
+    "templateInstanceName": "TemplateInstance of BAP | Smoke Test",
+    "templateInstanceGuid": "3a161484-de73-eda2-ebb8-fe8d8709019c",
+    "concreteTestCaseName": "WY",
+    "concreteTestCaseGuid": "3a161484-eb57-d658-d9d8-263d43a54ba6",
+    "derivedFrom": [
+      "3a161477-b5d8-e158-3586-2da602ec5b73"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

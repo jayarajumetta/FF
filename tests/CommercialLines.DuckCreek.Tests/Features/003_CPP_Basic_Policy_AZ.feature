@@ -1,5 +1,8 @@
-# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 16
-# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
+# v54 RAW TOSCA SOURCE: CL-DC TestCases Staging Area.tsu
+# Raw TestCase: CPP | Basic Policy [3a13d49c-13c7-0bc0-5578-87f8534d0b4e]
+# Raw TemplateInstance: TemplateInstance of CPP | Basic Policy [3a13d49c-162e-40bd-d4e1-566863c9bc15]
+# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
+
 @CL_DC @CPP @basic_new_business_policy
 
 Feature: CPP Basic Policy
@@ -35,6 +38,7 @@ Feature: CPP Basic Policy
     And I add Addl Interests
     And I complete Property UW Questions
     And I return to CPP Navigation
+    And I switch to UW Director for OR and WA when required
     And I select GL Detail
     And I complete CGL Fields
     And I add Class

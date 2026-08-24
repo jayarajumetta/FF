@@ -1,5 +1,8 @@
-# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 45
-# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
+# v54 RAW TOSCA SOURCE: CL-DC TestCases Staging Area.tsu
+# Raw TestCase: UMB | Expanded [3a13d49c-13c7-3bff-d00e-42f857fa5d04]
+# Raw TemplateInstance: TemplateInstance of UMB | Expanded [3a13d49c-1520-cac7-8256-494f1064f9ff]
+# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
+
 @CL_DC @UMB @expanded_new_business
 
 Feature: UMB Expanded

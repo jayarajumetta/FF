@@ -30,12 +30,12 @@
   },
   "hooks": [
     {
-      "file": "tests/CommercialLines.DuckCreek.Tests/Hooks/TestHooks.cs",
+      "file": "tests/PersonalLines.DuckCreek.Tests/Hooks/TestHooks.cs",
       "browserCloseBeforePublish": true,
       "sharedFinalizer": true
     },
     {
-      "file": "tests/PersonalLines.DuckCreek.Tests/Hooks/TestHooks.cs",
+      "file": "tests/CommercialLines.DuckCreek.Tests/Hooks/TestHooks.cs",
       "browserCloseBeforePublish": true,
       "sharedFinalizer": true
     },
@@ -45,13 +45,14 @@
       "sharedFinalizer": true
     }
   ],
-  "jsonFilesValidated": 1135,
-  "csharpFilesLexicallyValidated": 163,
+  "jsonFilesValidated": 1137,
+  "csharpFilesLexicallyValidated": 164,
   "dotnetBuild": {
     "performed": false,
     "reason": "dotnet executable is not installed in this generation environment; CI/Visual Studio remains the compiler/runtime gate."
   },
   "errors": [
+    "Publisher capability missing: Evidence transport must never replace the actual business-test outcome",
     "ADO pipeline missing: NUnit.TestOutputXml",
     "ADO pipeline missing: PublishTestResults@2",
     "ADO pipeline missing: testResultsFormat: NUnit",

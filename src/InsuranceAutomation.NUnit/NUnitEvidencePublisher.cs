@@ -7,13 +7,36 @@ namespace InsuranceAutomation.NUnit;
 
 /// <summary>
 /// Publishes scenario-owned Playwright evidence into the current NUnit test result.
-/// NUnit3TestAdapter then exposes the attachments to Visual Studio Test Explorer/vstest,
-/// and Azure DevOps PublishTestResults@2 can upload those test-result attachments.
-/// Attachment failures are evidence/reporting failures and never replace the business test outcome.
+/// Evidence is first staged under NUnit's WorkDirectory so Visual Studio Test Explorer/vstest
+/// receives stable, runner-owned files rather than transient repository-relative paths.
 /// </summary>
 public static class NUnitEvidencePublisher
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
+
+    /// <summary>
+    /// Registers a tiny attachment before browser execution. This proves the adapter attachment path
+    /// is active even when browser startup or an early step terminates before AfterScenario.
+    /// </summary>
+    public static string? RegisterStartMarker(string feature, string scenario)
+    {
+        try
+        {
+            var stage = CreateStageDirectory(feature, scenario, createUnique: true);
+            var path = Path.Combine(stage, "test-evidence-start.txt");
+            File.WriteAllText(path,
+                $"Feature: {feature}{Environment.NewLine}Scenario: {scenario}{Environment.NewLine}Started: {DateTimeOffset.Now:O}{Environment.NewLine}" +
+                $"NUnit WorkDirectory: {SafeTestContext(() => TestContext.CurrentContext.WorkDirectory)}{Environment.NewLine}");
+            TestContext.AddTestAttachment(path, "Scenario evidence registration marker");
+            TestContext.Progress.WriteLine($"NUnit evidence marker attached: {path}");
+            return stage;
+        }
+        catch (Exception ex)
+        {
+            try { TestContext.Progress.WriteLine($"NUnit evidence start-marker failed: {ex}"); } catch { }
+            return null;
+        }
+    }
 
     public static EvidencePublishResult Publish(
         string artifactDirectory,
@@ -31,7 +54,6 @@ public static class NUnitEvidencePublisher
         }
         catch (Exception ex)
         {
-            // Evidence transport must never replace the actual business-test outcome.
             try { TestContext.Progress.WriteLine($"NUnit evidence publication failed: {ex}"); } catch { }
             return new EvidencePublishResult(true, 0, 0, [], [$"publisher::{ex.GetType().Name}: {ex.Message}"], null);
         }
@@ -47,13 +69,14 @@ public static class NUnitEvidencePublisher
         var root = Path.GetFullPath(artifactDirectory);
         Directory.CreateDirectory(root);
 
+        var sourceResultPath = Path.Combine(root, "nunit-attachment-result.json");
         var manifestPath = Path.Combine(root, "test-evidence-manifest.json");
-        var resultPath = Path.Combine(root, "nunit-attachment-result.json");
-        var manifest = BuildManifest(root, feature, scenario, scenarioError, resultPath);
+        var manifest = BuildManifest(root, feature, scenario, scenarioError, sourceResultPath);
         File.WriteAllText(manifestPath, JsonSerializer.Serialize(manifest, JsonOptions));
 
+        var stageRoot = CreateStageDirectory(feature, scenario, createUnique: true);
         var allFiles = Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories)
-            .Where(path => !SamePath(path, resultPath))
+            .Where(path => !SamePath(path, sourceResultPath))
             .Select(Path.GetFullPath)
             .OrderBy(AttachmentPriority)
             .ThenBy(path => Path.GetRelativePath(root, path), StringComparer.OrdinalIgnoreCase)
@@ -66,29 +89,33 @@ public static class NUnitEvidencePublisher
         var skipped = new List<string>();
         var failures = new List<string>();
 
-        foreach (var file in allFiles.Take(config.Reporting.MaxAttachmentCount))
+        foreach (var sourceFile in allFiles.Take(config.Reporting.MaxAttachmentCount))
         {
+            var relative = Path.GetRelativePath(root, sourceFile);
             try
             {
-                var info = new FileInfo(file);
+                var info = new FileInfo(sourceFile);
                 if (!info.Exists)
                 {
-                    skipped.Add($"missing::{Path.GetRelativePath(root, file)}");
+                    skipped.Add($"missing::{relative}");
                     continue;
                 }
                 if (info.Length > config.Reporting.MaxSingleAttachmentBytes)
                 {
-                    skipped.Add($"oversize::{Path.GetRelativePath(root, file)}::{info.Length}");
+                    skipped.Add($"oversize::{relative}::{info.Length}");
                     continue;
                 }
 
-                TestContext.AddTestAttachment(file, Describe(root, file));
-                attached.Add(Path.GetRelativePath(root, file));
+                var stagedFile = Path.Combine(stageRoot, relative);
+                Directory.CreateDirectory(Path.GetDirectoryName(stagedFile)!);
+                File.Copy(sourceFile, stagedFile, true);
+                TestContext.AddTestAttachment(stagedFile, Describe(root, sourceFile));
+                attached.Add(relative);
             }
             catch (Exception ex)
             {
-                failures.Add($"{Path.GetRelativePath(root, file)} :: {ex.GetType().Name}: {ex.Message}");
-                try { TestContext.Progress.WriteLine($"Evidence attachment failed: {file} :: {ex.Message}"); } catch { }
+                failures.Add($"{relative} :: {ex.GetType().Name}: {ex.Message}");
+                try { TestContext.Progress.WriteLine($"Evidence attachment failed: {sourceFile} :: {ex.Message}"); } catch { }
             }
         }
 
@@ -102,10 +129,13 @@ public static class NUnitEvidencePublisher
             {
                 id = SafeTestContext(() => TestContext.CurrentContext.Test.ID),
                 name = SafeTestContext(() => TestContext.CurrentContext.Test.Name),
-                fullName = SafeTestContext(() => TestContext.CurrentContext.Test.FullName)
+                fullName = SafeTestContext(() => TestContext.CurrentContext.Test.FullName),
+                workDirectory = SafeTestContext(() => TestContext.CurrentContext.WorkDirectory)
             },
             feature,
             scenario,
+            sourceArtifactRoot = root,
+            stagedEvidenceRoot = stageRoot,
             mode = config.Reporting.AttachmentMode,
             attachedCount = attached.Count,
             skippedCount = skipped.Count,
@@ -114,20 +144,41 @@ public static class NUnitEvidencePublisher
             skipped,
             failures
         };
-        File.WriteAllText(resultPath, JsonSerializer.Serialize(result, JsonOptions));
 
-        // Attach the publisher's own result last so the test result proves exactly what was attempted.
+        File.WriteAllText(sourceResultPath, JsonSerializer.Serialize(result, JsonOptions));
+        var stagedResultPath = Path.Combine(stageRoot, "nunit-attachment-result.json");
+        File.WriteAllText(stagedResultPath, JsonSerializer.Serialize(result, JsonOptions));
+
         try
         {
-            TestContext.AddTestAttachment(resultPath, "NUnit test-evidence attachment result");
-            attached.Add(Path.GetRelativePath(root, resultPath));
+            TestContext.AddTestAttachment(stagedResultPath, "NUnit test-evidence attachment result");
+            attached.Add("nunit-attachment-result.json");
         }
         catch (Exception ex)
         {
             failures.Add($"nunit-attachment-result.json :: {ex.GetType().Name}: {ex.Message}");
         }
 
-        return new EvidencePublishResult(true, attached.Count, skipped.Count, attached, failures, resultPath);
+        try
+        {
+            TestContext.Progress.WriteLine($"NUnit test evidence staged under: {stageRoot}");
+            TestContext.Progress.WriteLine($"NUnit attachments registered: {attached.Count}; skipped: {skipped.Count}; failures: {failures.Count}");
+        }
+        catch { }
+
+        return new EvidencePublishResult(true, attached.Count, skipped.Count, attached, failures, stagedResultPath);
+    }
+
+    private static string CreateStageDirectory(string feature, string scenario, bool createUnique)
+    {
+        var work = SafeTestContext(() => TestContext.CurrentContext.WorkDirectory);
+        if (string.IsNullOrWhiteSpace(work)) work = AppContext.BaseDirectory;
+        var testId = SafeTestContext(() => TestContext.CurrentContext.Test.ID);
+        var suffix = createUnique ? $"_{DateTime.Now:yyyyMMdd_HHmmss_fff}_{Guid.NewGuid():N}" : string.Empty;
+        var folder = $"{Safe(feature)}__{Safe(scenario)}__{Safe(testId)}{suffix}";
+        var path = Path.Combine(work, "TestEvidence", folder);
+        Directory.CreateDirectory(path);
+        return path;
     }
 
     private static object BuildManifest(string root, string feature, string scenario, Exception? scenarioError, string resultPath)
@@ -179,13 +230,12 @@ public static class NUnitEvidencePublisher
         if (name == "console.log") return 2;
         if (name == "network.log") return 3;
         if (normalized.Contains("/screenshots/")) return 4;
-        if (normalized.Contains("/dom/") && path.EndsWith(".html", StringComparison.OrdinalIgnoreCase)) return 3;
-        if (name == "trace.zip") return 4;
-        if (name == "network.har.zip") return 5;
-        if (normalized.Contains("/video/")) return 6;
-        if (normalized.Contains("/self-heal/")) return 7;
-        if (name == "evidence-bundle.zip") return 8;
-        if (name == "test-evidence-manifest.json") return 9;
+        if (name == "trace.zip") return 5;
+        if (name == "network.har.zip") return 6;
+        if (normalized.Contains("/video/")) return 7;
+        if (normalized.Contains("/self-heal/")) return 8;
+        if (name == "evidence-bundle.zip") return 9;
+        if (name == "test-evidence-manifest.json") return 10;
         return 20;
     }
 
@@ -198,8 +248,6 @@ public static class NUnitEvidencePublisher
         if (name == "console.log") return "browser-console-log";
         if (name == "network.log") return "network-call-log";
         if (rel.StartsWith("screenshots/")) return "screenshot";
-        if (rel.StartsWith("dom/") && name.EndsWith(".html")) return "html-dom";
-        if (rel.StartsWith("dom/")) return "dom-metadata";
         if (name == "trace.zip") return "playwright-trace";
         if (name == "network.har.zip") return "har";
         if (rel.StartsWith("video/")) return "video";
@@ -219,8 +267,6 @@ public static class NUnitEvidencePublisher
             "browser-console-log" => "Browser console and page-error log",
             "network-call-log" => "Browser request/response/failure log",
             "screenshot" => $"Playwright screenshot: {rel}",
-            "html-dom" => $"Scenario-owned HTML DOM evidence: {rel}",
-            "dom-metadata" => $"Scenario DOM/control/locator evidence: {rel}",
             "playwright-trace" => "Playwright trace archive",
             "har" => "Playwright HAR network archive",
             "video" => $"Playwright video: {rel}",
@@ -238,6 +284,9 @@ public static class NUnitEvidencePublisher
 
     private static bool SamePath(string a, string b) =>
         Path.GetFullPath(a).Equals(Path.GetFullPath(b), StringComparison.OrdinalIgnoreCase);
+
+    private static string Safe(string value) =>
+        string.Concat((value ?? string.Empty).Select(c => char.IsLetterOrDigit(c) || c is '-' or '_' ? c : '_')).Trim('_');
 
     private static string SafeTestContext(Func<string> read)
     {

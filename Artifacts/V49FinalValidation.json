@@ -1,6 +1,6 @@
 {
   "release": "v49-source-ordered-locator-mature",
-  "status": "PASS",
+  "status": "FAIL",
   "scope": {
     "features": 32,
     "exampleRows": 1074,
@@ -30,10 +30,13 @@
   ],
   "persistentDomMemory": true,
   "samePageDuplicateTestIds": 0,
-  "jsonFilesValidated": 1126,
+  "jsonFilesValidated": 1137,
   "dotnetBuild": {
     "performed": false,
     "reason": "dotnet executable is not installed in this generation environment; scripts/setup and CI remain the compiler gate."
   },
-  "errors": []
+  "errors": [
+    "UiActions missing capability token: retry only the failed action",
+    "LocatorResolution missing \"placeholder\"=>"
+  ]
 }

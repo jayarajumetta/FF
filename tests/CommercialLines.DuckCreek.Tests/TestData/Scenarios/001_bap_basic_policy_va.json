@@ -9,7 +9,9 @@
     "representativeIteration": "VA",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "VA",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Virginia",
@@ -796,5 +798,19 @@
         "value": "svqw-clas21:8080"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "BAP | Basic Policy",
+    "testCaseGuid": "3a13d49c-139a-0e4a-c9f4-27a35cbc7d64",
+    "templateInstanceName": "TemplateInstance of BAP | Basic Policy",
+    "templateInstanceGuid": "3a13d49c-13d6-7e7f-7b93-3ba066eb3fb3",
+    "concreteTestCaseName": "VA",
+    "concreteTestCaseGuid": "3a13d49c-13e5-a43a-895c-e0241cbbc4ee",
+    "derivedFrom": [
+      "3a13d49c-1688-3521-1f4b-702c3b129240"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

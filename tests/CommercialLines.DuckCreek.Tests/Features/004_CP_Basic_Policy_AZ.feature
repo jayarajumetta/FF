@@ -1,5 +1,8 @@
-# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 16
-# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
+# v54 RAW TOSCA SOURCE: CL-DC TestCases Staging Area.tsu
+# Raw TestCase: CP | Basic Policy [3a13d49c-13a9-3e2f-fc83-be557aa0cad7]
+# Raw TemplateInstance: TemplateInstance of CP | Basic Policy [3a13d49c-14a8-73e4-ff7f-7e75df38a573]
+# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
+
 @CL_DC @basic_new_business_policy
 
 Feature: CP Basic Policy
@@ -32,11 +35,7 @@ Feature: CP Basic Policy
     And I complete required billing information for billing
     And I add notepad comment
     And I complete Property UW Questions
-    And I sign in to Duck Creek
-    And I complete restart Edge Popup
-    Then I sign in to Duck Creek for logged in user
-    And I sign out of the application
-    And I sign in to Duck Creek for username
+    And I refresh the authenticated Duck Creek session
     And I search by Desc
     And I complete required submission information
     And I run Stoplight

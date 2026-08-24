@@ -1,5 +1,8 @@
-# Source scope: selected Tosca flow only; applicable TemplateInstance/TestSheet iterations = 16
-# Framework: KISS business Feature -> StepDefinition -> Page method -> direct Playwright locator
+# v54 RAW TOSCA SOURCE: CL-DC TestCases Staging Area.tsu
+# Raw TestCase: GL | Basic Policy [3a13d49c-13a9-4505-dee3-8a4be8c77ed3]
+# Raw TemplateInstance: TemplateInstance of GL | Basic Policy [3a13d49c-14b7-0621-c12d-a90497641da6]
+# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
+
 @CL_DC @basic_new_business_policy
 
 Feature: GL Basic Policy
@@ -28,9 +31,11 @@ Feature: GL Basic Policy
     And I add Addl Interest [CG2025] Add'l Insured-Executive Officers
     And I add Addl Interest [CG2034] Add'l Insured-Leased Equipment Automatic
     And I add notepad comment
+    And I switch to UW Director for OR and WA when required
     And I answer GL UW Questions OR & WA
     And I complete required billing information
     And I complete required submission information
+    And I switch back to Agent for OR and WA when required
     And I run Stoplight
     And I verify values in premium fields
     And I complete forms verification

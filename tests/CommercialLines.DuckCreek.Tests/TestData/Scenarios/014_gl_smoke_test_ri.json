@@ -9,7 +9,9 @@
     "representativeIteration": "RI",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "RI",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Rhode Island",
@@ -98,5 +100,19 @@
     "mappedBaseValues": 0,
     "sourceValues": {},
     "fields": []
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "GL | Smoke Test",
+    "testCaseGuid": "3a161ed5-3580-cbf2-2c46-edfacbc4cd73",
+    "templateInstanceName": "TemplateInstance of GL | Smoke Test",
+    "templateInstanceGuid": "3a161ee0-b94a-fc24-a176-4e86c4ebc53d",
+    "concreteTestCaseName": "RI",
+    "concreteTestCaseGuid": "3a161ee0-c8fb-1de0-9b3e-492c48c9fbe5",
+    "derivedFrom": [
+      "3a161ed2-72d3-5c2b-4be6-66c7c20b3c2a"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

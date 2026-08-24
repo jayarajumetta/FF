@@ -1,11 +1,11 @@
 {
   "release": "v52-deterministic-tosca-locator-fallback",
-  "status": "PASS",
+  "status": "FAIL",
   "scope": {
     "features": 32,
     "exampleRows": 1074,
-    "csharpFiles": 163,
-    "jsonFiles": 1139
+    "csharpFiles": 164,
+    "jsonFiles": 1137
   },
   "sourceOrder": {
     "featuresCompared": 32,
@@ -103,5 +103,10 @@
     "reason": "dotnet/csc/msbuild executables are unavailable; build pipeline/target VDI is the compiler/runtime gate."
   },
   "warnings": [],
-  "errors": []
+  "errors": [
+    "CommercialLines.ExpertQuote.Tests does not scope fallback catalog to application",
+    "CommercialLines.DuckCreek.Tests does not scope fallback catalog to application",
+    "PersonalLines.DuckCreek.Tests does not scope fallback catalog to application",
+    "LLM evidence does not use enriched v52 catalog"
+  ]
 }

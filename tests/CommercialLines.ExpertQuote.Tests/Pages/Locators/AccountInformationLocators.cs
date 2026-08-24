@@ -36,6 +36,8 @@ public sealed class AccountInformationLocators
     public ILocator StateAE19A => StateDropdown;
 
     public ILocator Zip => _page.Locator("[id='owner.address.zip']");
+    // Raw Tosca: EQ|Common|Account Details - Account Info > County (TextBox)
+    public ILocator County => _page.Locator("[id='owner.address.county']");
     public ILocator Yes => HaveYouReceivedMailAtThisAddressForAtLeast90DaysYes;
 
     public ILocator GetStateOption(string stateText) =>

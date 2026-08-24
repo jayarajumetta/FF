@@ -9,7 +9,9 @@
     "representativeIteration": "UT ANP",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "UT ANP",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Utah",
@@ -1431,5 +1433,19 @@
         "value": "X"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "PLDC",
+    "sourceFile": "PL_DC_TestCases_Production.tsu",
+    "testCaseName": "Auto Rate Filings Common Policy NB_Prior Eff Date",
+    "testCaseGuid": "3a1cfb32-e498-f392-0540-f331d66e92ad",
+    "templateInstanceName": "TemplateInstance of Auto Rate Filings Common Policy NB_Prior Eff Date",
+    "templateInstanceGuid": "3a1cfb57-6c23-8e13-a300-264d346f00e7",
+    "concreteTestCaseName": "UT ANP",
+    "concreteTestCaseGuid": "3a1cfb57-8027-106a-d7b9-6fb683bd7f01",
+    "derivedFrom": [
+      "3a1cfb4f-94cb-616e-c31f-67093af09d0d"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

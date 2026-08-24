@@ -5,7 +5,8 @@ from pathlib import Path
 from collections import defaultdict, Counter
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / 'Artifacts' / 'ToscaLocatorPropertyCatalog.v52.json'
+SOURCE = ROOT / 'Artifacts' / 'ToscaLocatorPropertyCatalog.v54.raw.json'
+if not SOURCE.exists(): SOURCE = ROOT / 'Artifacts' / 'ToscaLocatorPropertyCatalog.v52.json'
 if not SOURCE.exists(): SOURCE = ROOT / 'Artifacts' / 'ToscaLocatorPropertyCatalog.json'
 OUT_DIR = ROOT / 'Artifacts' / 'LocatorFallbackCatalogs'
 
@@ -400,7 +401,9 @@ def parse_control_intent_aliases(project: str) -> list[tuple[str,str,str]]:
     return list(dict.fromkeys(out))
 
 def build_application(application: str, cfg: dict, all_source: list[dict]) -> dict:
-    entries=[e for e in all_source if any((e.get('sourceFile') or '').startswith(p) for p in cfg['source_prefixes'])]
+    # Raw Tosca modules are shared across application packs; use the full raw evidence union.
+    # Candidate scoring still requires Page.Control/module/technical-property agreement and live validation.
+    entries=list(all_source)
     idx=EvidenceIndex(entries)
     project_dir=ROOT/'tests'/cfg['project']/'Pages'/'Locators'
     controls=[]; aliases=0
@@ -460,7 +463,7 @@ def build_application(application: str, cfg: dict, all_source: list[dict]) -> di
     with1=sum(bool(c['candidates']) for c in canonical); with2=sum(len(c['candidates'])>=2 for c in canonical)
     all_with1=sum(bool(c['candidates']) for c in controls)
     return {
-        'version':'52.0','application':application,'sourceCatalogEntries':len(entries),
+        'version':'54.0','application':application,'sourceCatalogEntries':len(entries),
         'pageLocatorProperties':len(controls),'aliases':aliases,'canonicalControls':len(canonical),
         'canonicalControlsWithFallback':with1,'canonicalControlsWithTwoOrMoreFallbacks':with2,
         'canonicalFallbackCoverage':round(with1/max(1,len(canonical)),6),
@@ -473,7 +476,7 @@ def build_application(application: str, cfg: dict, all_source: list[dict]) -> di
 def main():
     all_source=json.loads(SOURCE.read_text(encoding='utf-8'))
     OUT_DIR.mkdir(parents=True,exist_ok=True)
-    summary={'version':'52.0','sourceLocatorPropertyRows':len(all_source),'applications':{},'candidateStrategyCounts':{},'sourcePropertyCounts':{}}
+    summary={'version':'54.0','sourceLocatorPropertyRows':len(all_source),'applications':{},'candidateStrategyCounts':{},'sourcePropertyCounts':{}}
     strat=Counter(); props=Counter()
     for app,cfg in APPLICATIONS.items():
         result=build_application(app,cfg,all_source)

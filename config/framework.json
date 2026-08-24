@@ -33,7 +33,7 @@
     "copilotExecutable": "copilot",
     "domEvidenceDirectory": "Artifacts/DOM",
     "captureDomAfterActions": false,
-    "locatorCatalogFile": "Artifacts/ToscaLocatorPropertyCatalog.v52.json"
+    "locatorCatalogFile": "Artifacts/ToscaLocatorPropertyCatalog.v54.raw.json"
   },
   "reporting": {
     "artifactRoot": "Artifacts",
@@ -49,7 +49,8 @@
   },
   "execution": {
     "strictUnknownConditions": true,
-    "externalDataFile": "TestData/ExternalDataOverrides.json"
+    "externalDataFile": "TestData/ExternalDataOverrides.json",
+    "deferVerificationFailures": true
   },
   "locatorFallback": {
     "enabled": true,
@@ -59,5 +60,13 @@
     "allowSourceXPath": true,
     "preferPreviouslySuccessfulCandidate": true,
     "logEveryAttempt": true
+  },
+  "waits": {
+    "pageReadyTimeoutMs": 30000,
+    "elementReadyTimeoutMs": 20000,
+    "verifyTimeoutMs": 20000,
+    "fallbackCandidateTimeoutMs": 4000,
+    "pollIntervalMs": 250,
+    "waitForDomContentLoadedBeforeActions": true
   }
 }

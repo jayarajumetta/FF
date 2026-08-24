@@ -9,7 +9,9 @@
     "representativeIteration": "IL",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "IL",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Illinois",
@@ -2135,5 +2137,19 @@
         "value": "{CLICK}Testing Laboratories [541380]"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "WC | Basic Policy",
+    "testCaseGuid": "3a13d49c-13c7-c2b8-e149-4ccb4d88f5bf",
+    "templateInstanceName": "TemplateInstance of WC | Basic Policy",
+    "templateInstanceGuid": "3a13d49c-155c-bf23-f114-1b567e9f0f90",
+    "concreteTestCaseName": "IL",
+    "concreteTestCaseGuid": "3a13d49c-156b-b7d2-159c-635a8e920c33",
+    "derivedFrom": [
+      "3a13d49c-1688-d85a-bed3-e4788d4365a6"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

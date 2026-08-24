@@ -9,7 +9,9 @@
     "representativeIteration": "KY",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "KY",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Kentucky",
@@ -1470,5 +1472,19 @@
         "value": "X"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "PLDC",
+    "sourceFile": "PL_DC_TestCases_Production.tsu",
+    "testCaseName": "Auto Rate Filings Common Policy NB_Prior Eff Date",
+    "testCaseGuid": "3a1cfb32-e498-f392-0540-f331d66e92ad",
+    "templateInstanceName": "TemplateInstance of Auto Rate Filings Common Policy NB_Prior Eff Date",
+    "templateInstanceGuid": "3a1cfb57-6c23-8e13-a300-264d346f00e7",
+    "concreteTestCaseName": "KY",
+    "concreteTestCaseGuid": "3a1cfb57-78e6-0437-5c69-c67d0c382fe8",
+    "derivedFrom": [
+      "3a1cfb4f-94be-983c-db44-90b7f5a99667"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

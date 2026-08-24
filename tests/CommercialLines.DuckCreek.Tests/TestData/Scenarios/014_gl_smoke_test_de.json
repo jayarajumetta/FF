@@ -9,7 +9,9 @@
     "representativeIteration": "DE",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "DE",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Delaware",
@@ -98,5 +100,19 @@
     "mappedBaseValues": 0,
     "sourceValues": {},
     "fields": []
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "GL | Smoke Test",
+    "testCaseGuid": "3a161ed5-3580-cbf2-2c46-edfacbc4cd73",
+    "templateInstanceName": "TemplateInstance of GL | Smoke Test",
+    "templateInstanceGuid": "3a161ee0-b94a-fc24-a176-4e86c4ebc53d",
+    "concreteTestCaseName": "DE",
+    "concreteTestCaseGuid": "3a161ee0-c8ec-5ca3-0952-09d2869eb124",
+    "derivedFrom": [
+      "3a161ed2-72c4-d093-b24d-8ca99afff096"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }

@@ -9,7 +9,9 @@
     "representativeIteration": "DE",
     "note": "Only the attached representative flow is generated.",
     "sourceConcreteTestCase": "DE",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom"
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
   },
   "dimensions": {
     "state": "Delaware",
@@ -1091,5 +1093,19 @@
         "value": "svqw-clas21:8080"
       }
     ]
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "GL | OCP Policy",
+    "testCaseGuid": "3a13d49c-13c7-cfb5-c5b4-fe5c45179a59",
+    "templateInstanceName": "TemplateInstance of GL | OCP Policy",
+    "templateInstanceGuid": "3a13d49c-163d-e8a6-c6fe-454108a7b5fa",
+    "concreteTestCaseName": "DE",
+    "concreteTestCaseGuid": "3a13d49c-164c-7785-c93c-2ac5af69217b",
+    "derivedFrom": [
+      "3a13d49c-16e2-8744-3b46-8124da51a530"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
   }
 }
