@@ -9,6 +9,14 @@ namespace PnCTestAutomation.Helpers
     public class BrowserFactory
     {
         private static readonly string[] FullscreenArgs = ["--start-fullscreen"];
+        private static readonly string[] CiArgs = [
+            "--start-fullscreen",
+            "--disable-gpu",
+            "--disable-extensions",
+            "--disable-dev-shm-usage",
+            "--no-sandbox",
+            "--disable-default-apps"
+        ];
 
         // Reqnroll's [ScenarioDependencies] builds a fresh ServiceProvider for every scenario,
         // so a "singleton" BrowserFactory is really one instance per scenario. Creating
@@ -56,16 +64,19 @@ namespace PnCTestAutomation.Helpers
                 headless = ParseTruthy(env);
             }
 
+            var isCi = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI"));
+            var launchArgs = isCi ? CiArgs : FullscreenArgs;
+
             var normalizedBrowser = NormalizeBrowserType(browserType);
 
             return normalizedBrowser switch
             {
-                "edge" => await LaunchChromiumWithChannelFallbackAsync(playwright, "msedge", headless),
-                "chrome" => await LaunchChromiumWithChannelFallbackAsync(playwright, "chrome", headless),
+                "edge" => await LaunchChromiumWithChannelFallbackAsync(playwright, "msedge", headless, launchArgs),
+                "chrome" => await LaunchChromiumWithChannelFallbackAsync(playwright, "chrome", headless, launchArgs),
                 "chromium" => await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
                 {
                     Headless = headless,
-                    Args = FullscreenArgs
+                    Args = launchArgs
                 }),
                 "firefox" => await playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions
                 {
@@ -80,7 +91,7 @@ namespace PnCTestAutomation.Helpers
         }
 
         private static async Task<IBrowser> LaunchChromiumWithChannelFallbackAsync(
-            IPlaywright playwright, string channel, bool headless)
+            IPlaywright playwright, string channel, bool headless, string[] args)
         {
             try
             {
@@ -88,7 +99,7 @@ namespace PnCTestAutomation.Helpers
                 {
                     Headless = headless,
                     Channel = channel,
-                    Args = FullscreenArgs
+                    Args = args
                 });
             }
             catch (PlaywrightException)
@@ -97,7 +108,7 @@ namespace PnCTestAutomation.Helpers
                 return await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
                 {
                     Headless = headless,
-                    Args = FullscreenArgs
+                    Args = args
                 });
             }
         }
