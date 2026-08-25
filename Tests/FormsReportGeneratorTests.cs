@@ -38,5 +38,36 @@ namespace PnCTestAutomation.Tests
                     Directory.Delete(outputDirectory, recursive: true);
             }
         }
+
+        [Test]
+        public void WritePipelineSummary_DoesNotUseSummaryDataInFileName()
+        {
+            var outputDirectory = Path.Combine(
+                Path.GetTempPath(),
+                $"FormsReportGeneratorTests_{Guid.NewGuid():N}");
+            var summary = new FormsValidationSummary
+            {
+                LOB = @"..\Outside",
+                State = @"..\Secret",
+                Timestamp = DateTime.UtcNow
+            };
+
+            try
+            {
+                FormsReportGenerator.WritePipelineSummary(summary, outputDirectory);
+
+                var summaryPath = Directory
+                    .GetFiles(outputDirectory, "FormsValidationSummary_*.md")
+                    .Single();
+                Assert.That(Path.GetDirectoryName(summaryPath), Is.EqualTo(outputDirectory));
+                Assert.That(Path.GetFileName(summaryPath), Does.Not.Contain("Outside"));
+                Assert.That(Path.GetFileName(summaryPath), Does.Not.Contain("Secret"));
+            }
+            finally
+            {
+                if (Directory.Exists(outputDirectory))
+                    Directory.Delete(outputDirectory, recursive: true);
+            }
+        }
     }
 }
