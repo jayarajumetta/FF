@@ -249,7 +249,9 @@ namespace PnCTestAutomation.Services
 </TestRun>";
 
             Directory.CreateDirectory(outputDirectory);
-            var trxPath = Path.GetFullPath(Path.Combine(outputDirectory, $"FormsValidation_{summary.LOB}_{summary.State}.trx"));
+            // Keep stored baseline data out of the filesystem path. The descriptive
+            // LOB/state values remain in the TRX content for Azure DevOps reporting.
+            var trxPath = Path.GetFullPath(Path.Combine(outputDirectory, $"FormsValidation_{testId}.trx"));
             File.WriteAllText(trxPath, trx, Encoding.UTF8);
             Console.WriteLine($"[FormsValidation] TRX written: {trxPath}");
         }
