@@ -8,13 +8,15 @@ public sealed class NavigationLocators
     public NavigationLocators(IPage page) => _page = page;
 
     // Source modules: EQ||Tabs | confidence=Medium score=112
-    public ILocator CloseTab => _page.GetByLabel("Btn_Close_tab", new() { Exact = true });
+    // v56 raw Tosca primary: EQ||Tabs | Txt_quoteSearchInput | Id+Name
+    public ILocator CloseTab => _page.Locator("input[id=\"quoteSearchInput\"][name=\"quoteSearchInput\"]");
 
     // Source modules: Coverages (New) | confidence=Medium score=113
     public ILocator CoveragesNewNext => _page.GetByRole(AriaRole.Button, new() { Name = "Next", Exact = true });
 
     // Source modules: EQ|| Add Additional Driver 1 | confidence=High score=97
-    public ILocator Driver1 => _page.GetByLabel("Driver_1", new() { Exact = true });
+    // v56 raw Tosca primary: EQ|| Add Additional Driver 1 | Driver_1 | Id
+    public ILocator Driver1 => _page.Locator("[id=\"Driver_Headless.FullName-0-layout\"]");
 
     // Source modules: EQ | Side Menu | confidence=Medium score=108
     public ILocator DriverInformation => _page.GetByLabel("Driver Information", new() { Exact = true });
@@ -41,7 +43,9 @@ public sealed class NavigationLocators
     public ILocator Option3 => _page.GetByTestId("temp.coverageOption2Selected");
 
     // Source modules: EQ||Tabs | confidence=Review score=97
-    public ILocator QNum => _page.GetByLabel("Lbl_QNum", new() { Exact = true });
+    // v56 raw Tosca primary: EQ||Tabs | Txt_quoteSearchInput | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as CloseTab
+    public ILocator QNum => CloseTab;
 
     // Source modules: EQ||Tabs | confidence=High score=127
     public ILocator QuoteSearchInput => _page.Locator("[name=\"Txt_quoteSearchInput\"], [id=\"Txt_quoteSearchInput\"]").First;
@@ -50,7 +54,8 @@ public sealed class NavigationLocators
     public ILocator SaveAndContinue => _page.GetByRole(AriaRole.Button, new() { Name = "Save and Continue", Exact = true });
 
     // Source modules: EQ || Proposal Details/Start | confidence=High score=97
-    public ILocator State => _page.GetByRole(AriaRole.Combobox, new() { Name = "State", Exact = true });
+    // v56 raw Tosca primary: EQ || Proposal Details/Start | State | Id
+    public ILocator State => _page.Locator("[id=\"proposal.ratingState\"]");
 
     // Source modules: Edit Coverage Option (New) | confidence=Medium score=113
     public ILocator SupplementalUMUIMCov => _page.GetByRole(AriaRole.Button, new() { Name = "Supplemental UM/UIM Cov", Exact = true });
@@ -59,7 +64,9 @@ public sealed class NavigationLocators
     public ILocator SupplementalUMUIMOptIn => _page.GetByRole(AriaRole.Button, new() { Name = "Supplemental UM/UIM Opt In", Exact = true });
 
     // Source modules: EQ||Tabs | confidence=Medium score=113
-    public ILocator TabsSearch => _page.GetByRole(AriaRole.Button, new() { Name = "Btn_Search", Exact = true });
+    // v56 raw Tosca primary: EQ||Tabs | Txt_quoteSearchInput | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as CloseTab
+    public ILocator TabsSearch => CloseTab;
 
     // Source modules: Edit Coverage Option (New) | confidence=Medium score=113
     public ILocator UMCoverage => _page.GetByRole(AriaRole.Button, new() { Name = "UM Coverage", Exact = true });
@@ -83,7 +90,8 @@ public sealed class NavigationLocators
     public ILocator V1ComprehensiveAndCollisionOnly => _page.GetByRole(AriaRole.Button, new() { Name = "V1_ Comprehensive And Collision Only", Exact = true });
 
     // Source modules: Coverages (New) | confidence=Review score=97
-    public ILocator V1ComprehensiveDeductible => _page.GetByLabel("V1_Comprehensive Deductible", new() { Exact = true });
+    // v56 raw Tosca primary: Coverages (New) | Option 1 | Id+attributes_data-testid
+    public ILocator V1ComprehensiveDeductible => _page.Locator("input[id=\"temp.coverageOption0Selected-checkbox\"][data-testid=\"temp.coverageOption0Selected\"]");
 
     // Source modules: Coverages (New) | confidence=High score=100
     public ILocator V1ComprehensiveOnly => _page.GetByTestId("fields.data.policy.line.risk.rows[0].vehicleInput$comprehensiveOnly.value");
@@ -107,7 +115,9 @@ public sealed class NavigationLocators
     public ILocator V2ComprehensiveAndCollisionOnly => _page.GetByRole(AriaRole.Button, new() { Name = "V2_Comprehensive And Collision Only", Exact = true });
 
     // Source modules: Coverages (New) | confidence=Medium score=108
-    public ILocator V2ComprehensiveDeductible => _page.GetByLabel("V2_Comprehensive Deductible", new() { Exact = true });
+    // v56 raw Tosca primary: Coverages (New) | Option 1 | Id+attributes_data-testid
+    // v56 semantic alias: same physical raw-Tosca control as V1ComprehensiveDeductible
+    public ILocator V2ComprehensiveDeductible => V1ComprehensiveDeductible;
 
     // Source modules: Coverages (New) | confidence=High score=100
     public ILocator V2ComprehensiveOnly => _page.GetByTestId("fields.data.policy.line.risk.rows[1].vehicleInput$comprehensiveOnly.value");
@@ -131,7 +141,9 @@ public sealed class NavigationLocators
     public ILocator V3ComprehensiveAndCollisionOnly => _page.GetByRole(AriaRole.Button, new() { Name = "V3_Comprehensive And Collision Only", Exact = true });
 
     // Source modules: Coverages (New) | confidence=Medium score=108
-    public ILocator V3ComprehensiveDeductible => _page.GetByLabel("V3_Comprehensive Deductible", new() { Exact = true });
+    // v56 raw Tosca primary: Coverages (New) | Option 1 | Id+attributes_data-testid
+    // v56 semantic alias: same physical raw-Tosca control as V1ComprehensiveDeductible
+    public ILocator V3ComprehensiveDeductible => V1ComprehensiveDeductible;
 
     // Source modules: Coverages (New) | confidence=High score=100
     public ILocator V3ComprehensiveOnly => _page.GetByTestId("fields.data.policy.line.risk.rows[2].vehicleInput$comprehensiveOnly.value");
@@ -155,7 +167,9 @@ public sealed class NavigationLocators
     public ILocator V4ComprehensiveAndCollisionOnly => _page.GetByRole(AriaRole.Button, new() { Name = "V4_Comprehensive And Collision Only", Exact = true });
 
     // Source modules: Coverages (New) | confidence=Medium score=108
-    public ILocator V4ComprehensiveDeductible => _page.GetByLabel("V4_Comprehensive Deductible", new() { Exact = true });
+    // v56 raw Tosca primary: Coverages (New) | Option 1 | Id+attributes_data-testid
+    // v56 semantic alias: same physical raw-Tosca control as V1ComprehensiveDeductible
+    public ILocator V4ComprehensiveDeductible => V1ComprehensiveDeductible;
 
     // Source modules: Coverages (New) | confidence=High score=100
     public ILocator V4ComprehensiveOnly => _page.GetByTestId("fields.data.policy.line.risk.rows[3].vehicleInput$comprehensiveOnly.value");

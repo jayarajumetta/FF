@@ -20,7 +20,8 @@ public sealed class LoginLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator LoadingMessage => _page.GetByText("Loading Message", new() { Exact = true });
+    // v56 raw Tosca primary: Indicators and Errors | Loading Message | Id
+    public ILocator LoadingMessage => _page.Locator("[id=\"loadingMessage\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -28,7 +29,8 @@ public sealed class LoginLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator Login07237 => _page.GetByText("Login", new() { Exact = true });
+    // v56 raw Tosca primary: Login | Login | DuckCreekId
+    public ILocator Login07237 => _page.Locator("[duckcreekid=\"Login\"], [data-duckcreekid=\"Login\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -40,7 +42,8 @@ public sealed class LoginLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator QuickSearchButton => _page.GetByText("QuickSearch Button", new() { Exact = true });
+    // v56 raw Tosca primary: Dashboard|QuickSearch | QuickSearch Button | Id
+    public ILocator QuickSearchButton => _page.Locator("[id=\"id_quickSearch\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -52,14 +55,18 @@ public sealed class LoginLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator UserName => _page.GetByText("UserName", new() { Exact = true });
+    // v56 raw Tosca primary: Login | Username | Id+Name
+    public ILocator UserName => _page.Locator("input[id=\"username\"][name=\"pf.username\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator Username => _page.GetByText("Username", new() { Exact = true });
+    // v56 raw Tosca primary: Login | Username | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as UserName
+    public ILocator Username => UserName;
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator ViewPolicy => _page.GetByText("View Policy", new() { Exact = true });
+    // v56 raw Tosca primary: TransACT | View Policy  (*) | Id
+    public ILocator ViewPolicy => _page.Locator("[id=\"returnToActiveSessionA\"]");
 
 }

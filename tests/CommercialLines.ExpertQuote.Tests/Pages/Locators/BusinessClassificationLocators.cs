@@ -9,10 +9,12 @@ public sealed class BusinessClassificationLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator IndustryClassCodeRestrictionsHeading => _page.GetByText("Industry / Class Code Restrictions Heading", new() { Exact = true });
+    // v56 raw Tosca primary: EQ|BOP|Prequalification|Industry Class Code Restrictions | Industry / Class Code Restrictions Heading | Id
+    public ILocator IndustryClassCodeRestrictionsHeading => _page.Locator("[id=\"UnderwritingQuestions.Constant_IndustryClassCodeRestrictions-0-layout\"]");
 
     // Source modules: EQ|BOP|Prequalification|Industry Class Code Restrictions | confidence=High score=127
-    public ILocator NoneOfTheAbove => _page.GetByRole(AriaRole.Checkbox, new() { Name = "None of the Above", Exact = true });
+    // v56 raw Tosca primary: EQ|BOP|Prequalification|Industry Class Code Restrictions | None of the Above | Id
+    public ILocator NoneOfTheAbove => _page.Locator("[id=\"fields.data.underwritingQuestions.underwritingQuestions$noneOfTheAboveIndustryClassCodeRestrictions.value-checkbox\"]");
 
     // Source modules: EQ|BOP|Primary Insured Details| General UW Questions | confidence=High score=130
     public ILocator NoneOfTheAboveCheckbox => _page.GetByTestId("fields.underwritingQuestionsGeneralUWQuestions.generalInformationNewInput$noneOfTheAboveGeneralUWQuestions.value");

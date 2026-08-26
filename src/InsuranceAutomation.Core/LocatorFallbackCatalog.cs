@@ -19,6 +19,10 @@ public sealed record LocatorFallbackCandidate
     public string HasText { get; init; } = "";
     public string AnchorStrategy { get; init; } = "";
     public string AnchorValue { get; init; } = "";
+    public string FrameStrategy { get; init; } = "";
+    public string FrameValue { get; init; } = "";
+    public string FrameField { get; init; } = "";
+    public string FrameSourceProperty { get; init; } = "";
     public string ExpectedTag { get; init; } = "";
     public string BusinessType { get; init; } = "";
     public string SourceFile { get; init; } = "";
@@ -49,12 +53,14 @@ public sealed record LocatorFallbackCandidate
             Exact,
             SourceModule,
             SourceField,
-            string.IsNullOrWhiteSpace(HasText) ? null : HasText);
+            string.IsNullOrWhiteSpace(HasText) ? null : HasText,
+            string.IsNullOrWhiteSpace(FrameStrategy) ? null : FrameStrategy,
+            string.IsNullOrWhiteSpace(FrameValue) ? null : FrameValue);
     }
 
     public string Signature => string.Join("|", new[]
     {
-        Strategy, Value, Role, AnchorStrategy, AnchorValue, Pick, Index.ToString(), Exact.ToString(), HasText
+        Strategy, Value, Role, AnchorStrategy, AnchorValue, FrameStrategy, FrameValue, Pick, Index.ToString(), Exact.ToString(), HasText
     }).ToLowerInvariant();
 }
 

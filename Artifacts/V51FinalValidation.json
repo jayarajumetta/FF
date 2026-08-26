@@ -4,14 +4,14 @@
   "scope": {
     "features": 32,
     "exampleRows": 1074,
-    "csharpFiles": 163,
-    "jsonFiles": 1135,
+    "csharpFiles": 221,
+    "jsonFiles": 1102,
     "scopedStepDefinitionFiles": 32
   },
   "sourceOrder": {
     "featuresCompared": 32,
     "exactFeatureSequences": 32,
-    "overallGate": "PASS"
+    "overallGate": "FAIL"
   },
   "componentSemantics": {
     "nativeSelectOnlySelectOptionCalls": 2,
@@ -42,6 +42,9 @@
   },
   "warnings": [],
   "errors": [
-    "UiActions missing retry only the failed action"
+    "Artifacts/V51SourceOrderContract.json missing",
+    "UiActions missing retry only the failed action",
+    "NUnit evidence publisher missing TestContext.AddTestAttachment",
+    "Build pipeline missing v51_release_gate.py"
   ]
 }

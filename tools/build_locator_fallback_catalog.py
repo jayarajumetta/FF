@@ -345,6 +345,13 @@ def build_candidates(e: dict, match_score: int, page: str, control: str) -> list
         t=tag.lower() if re.fullmatch(r'[A-Za-z][A-Za-z0-9-]*',tag or '') else '*'
         esc=cls.replace('\\','\\\\').replace('"','\\"')
         add('css',f'{t}[class="{esc}"]',0.82,'ClassName','Exact Tosca ClassName + tag; accepted only when unique/actionable.')
+    # Duck Creek model binding is often more stable than generated DOM ids. Use fieldref only as source-authored technical evidence.
+    for fk in ('fieldref','FieldRef','attributes_fieldref','data-fieldref'):
+        fv=str(p.get(fk,'')).strip()
+        if fv and len(fv)<=240:
+            esc=fv.replace('\\','\\\\').replace('\"','\\\"')
+            add('css',f'[fieldref=\"{esc}\"], [data-fieldref=\"{esc}\"]',0.985,fk,'Raw Tosca Duck Creek fieldref/model-binding evidence.')
+            break
     # Source XPath is last deterministic resort. It is never synthesized.
     xp=str(p.get('XPath','')).strip().strip('"')
     if xp:
@@ -401,9 +408,9 @@ def parse_control_intent_aliases(project: str) -> list[tuple[str,str,str]]:
     return list(dict.fromkeys(out))
 
 def build_application(application: str, cfg: dict, all_source: list[dict]) -> dict:
-    # Raw Tosca modules are shared across application packs; use the full raw evidence union.
-    # Candidate scoring still requires Page.Control/module/technical-property agreement and live validation.
-    entries=list(all_source)
+    # v56: strict application isolation. A fallback for one application must never be derived from another application's Tosca pack.
+    prefixes=tuple(x.lower() for x in cfg.get('source_prefixes',()))
+    entries=[e for e in all_source if str(e.get('sourceFile','')).lower().startswith(prefixes)]
     idx=EvidenceIndex(entries)
     project_dir=ROOT/'tests'/cfg['project']/'Pages'/'Locators'
     controls=[]; aliases=0

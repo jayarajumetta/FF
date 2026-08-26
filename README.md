@@ -24,3 +24,6 @@ Key references:
 - `Artifacts/LocatorFallbackCatalogs/LocatorFallbackCoverage.json`
 
 Historical release notes remain available as `README_V45.md` through `README_V52.md`.
+
+
+> **Current consolidated release documentation:** `README_V56.md`

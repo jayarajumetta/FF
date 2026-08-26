@@ -127,11 +127,11 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    await page.PressAgentCodeAsync("TAB");
+                    // v56 suppressed redundant Tosca keyboard steering: AgentCode TAB
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    await page.PressStateAsync("TAB");
+                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets State
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
@@ -140,7 +140,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
         await page.SelectStateNameAsync("");
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    await page.PressWritingCompanyAsync("TAB");
+                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets WritingCompany
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
@@ -303,7 +303,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
                     await page.SetBypassLevel9BRulesAsync(data.Resolve("{{data:bypass_level_9b_rules_83}}"));
         }
         await page.EnterBypassLevel9BRulesCommentsAsync(data.Resolve("{{data:bypass_level_9b_rules_comments_84}}"));
-        await page.PressBypassLevel9BRulesCommentsAsync("Click");
+        // v56 suppressed redundant Tosca keyboard steering: BypassLevel9BRulesComments Click
         await page.ClickHomeAsync();
 
     }
@@ -809,7 +809,6 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
         await page.ClickCyclePreFillSelectionNextAsync();
         await page.WaitForVIN8EE56Async("True");
         await page.EnterVIN8EE56Async(data.Resolve("{{data:vin_201}}"));
-        await page.PressVIN8EE56Async("TAB");
         await page.WaitForPleaseSelectTheVehicleCD741Async("Visible");
         await page.ClickCycle1C1864Async();
         if (data.Condition("'Primary Use' == \"Pleasure Use\""))
@@ -902,7 +901,6 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForCycleVINAsync("True");
         await page.EnterCycleVINAsync(data.Resolve("{{data:cycle_vin_223}}"));
-        await page.PressCycleVINAsync("TAB");
         await page.WaitForPleaseSelectTheVehicleBBB72Async("Visible");
         await page.ClickCycle1734D7Async();
         await page.WaitForVehicleTypeAsync("Visible");
@@ -1960,7 +1958,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
                     await page.WaitForTxtUnderwritingNotesAsync("True");
         }
         await page.EnterTxtUnderwritingNotesAsync(data.Resolve("{{data:txt_underwriting_notes_546}}"));
-        await page.PressTxtUnderwritingNotesAsync("Click");
+        // v56 suppressed redundant Tosca keyboard steering: TxtUnderwritingNotes Click
         await page.WaitForBtnApproveAsync("Visible");
         await page.ClickBtnApproveAsync();
         await page.ClickLnkHomeAsync();
@@ -2083,7 +2081,6 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
         }
         await page.ClickBypassLevel9Comments1Async();
         await page.EnterBypassLevel9Comments1Async(data.Resolve("{{data:bypass_level_9_comments_1_573}}"));
-        await page.PressBypassLevel9Comments1Async("TAB");
         await page.ClickLnkHomeAsync();
         if (await page.IsChkBoxBypassLevel9RulesPresentAsync())
         {
@@ -2095,7 +2092,6 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
         }
         await page.ClickBypassLevel9Comments1Async();
         await page.EnterBypassLevel9Comments1Async(data.Resolve("{{data:bypass_level_9_comments_1_579}}"));
-        await page.PressBypassLevel9Comments1Async("TAB");
         await page.ClickLnkHomeAsync();
 
     }

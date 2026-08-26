@@ -8,7 +8,7 @@ OUT=ROOT/'Artifacts'/'ToscaLocatorPropertyCatalog.v54.raw.json'
 REPORT=ROOT/'Artifacts'/'V54RawLocatorCatalog.json'
 RELEVANT={
  'Id','Name','Tag','DuckCreekId','attributes_data-testid','attributes_id','ClassName','ConstraintIndex','XPath','RelativeId',
- 'InnerText','Label','AssociatedLabel','Title','Placeholder','aria-label','Role','type','href','AutomationId','data-automation-id'
+ 'InnerText','Label','AssociatedLabel','fieldref','FieldRef','attributes_fieldref','data-fieldref','Title','Placeholder','aria-label','Role','type','href','AutomationId','data-automation-id'
 }
 
 def parse_self_healing(raw:str)->dict[str,str]:

@@ -28,7 +28,8 @@ public sealed class FormsLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator LoadingMessage => _page.GetByText("Loading Message", new() { Exact = true });
+    // v56 raw Tosca primary: Indicators and Errors | Loading Message | Id
+    public ILocator LoadingMessage => _page.Locator("[id=\"loadingMessage\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -36,7 +37,8 @@ public sealed class FormsLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator QuickSearchButton => _page.GetByText("QuickSearch Button", new() { Exact = true });
+    // v56 raw Tosca primary: Dashboard|QuickSearch | QuickSearch Button | Id
+    public ILocator QuickSearchButton => _page.Locator("[id=\"id_quickSearch\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -44,6 +46,7 @@ public sealed class FormsLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator ViewPolicy => _page.GetByText("View Policy", new() { Exact = true });
+    // v56 raw Tosca primary: TransACT | View Policy  (*) | Id
+    public ILocator ViewPolicy => _page.Locator("[id=\"returnToActiveSessionA\"]");
 
 }

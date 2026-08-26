@@ -8,15 +8,19 @@ public sealed class DiscountsLocators
     public DiscountsLocators(IPage page) => _page = page;
 
     // Source modules: Policy Info|BAP Specific Fields | confidence=High score=95
-    public ILocator AccountCredit => _page.GetByRole(AriaRole.Textbox, new() { Name = "Account Credit", Exact = true });
+    // v56 raw Tosca primary: Policy Info|BAP Specific Fields | Account Credit | DuckCreekId
+    public ILocator AccountCredit => _page.Locator("[duckcreekid=\"PolicyInput.AccountCredit\"], [data-duckcreekid=\"PolicyInput.AccountCredit\"]");
 
     // Source modules: Policy Info|BAP Specific Fields | confidence=High score=125
-    public ILocator BAPSpecificFieldsOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    // v56 raw Tosca primary: Policy Info|BAP Specific Fields | OK | DuckCreekId | frame=iframe
+    public ILocator BAPSpecificFieldsOK => _page.FrameLocator("iframe").Locator("[duckcreekid=\"OK\"], [data-duckcreekid=\"OK\"]");
 
     // Source modules: Policy Info|BAP Specific Fields | confidence=High score=125
-    public ILocator NAICSCodeSearchResults => _page.GetByRole(AriaRole.Textbox, new() { Name = "NAICS Code Search Results*", Exact = true });
+    // v56 raw Tosca primary: Policy Info|BAP Specific Fields | NAICS Code Search Results* | DuckCreekId
+    public ILocator NAICSCodeSearchResults => _page.Locator("[duckcreekid=\"PolicyInput.NAICSCodeDesc\"], [data-duckcreekid=\"PolicyInput.NAICSCodeDesc\"]");
 
     // Source modules: Policy Info|BAP Specific Fields | confidence=High score=125
-    public ILocator NAICSCodeSearchValue => _page.GetByRole(AriaRole.Textbox, new() { Name = "NAICS Code Search Value*", Exact = true });
+    // v56 raw Tosca primary: Policy Info|BAP Specific Fields | NAICS Code Search Value* | DuckCreekId | frame=iframe
+    public ILocator NAICSCodeSearchValue => _page.FrameLocator("iframe").Locator("[duckcreekid=\"PolicyOutputNonShredded.NAICSCodeSearchValue\"], [data-duckcreekid=\"PolicyOutputNonShredded.NAICSCodeSearchValue\"]");
 
 }

@@ -99,8 +99,6 @@ public sealed class EQBOPSmokeTestSteps
         await page.EnterAgentPCAsync(data.Resolve("{{data:agentpc}}"));
 
         // Source AgentPC steering confirms autocomplete by tabbing out twice.
-        await page.PressAgentPCAsync("Tab");
-        await page.PressAgentPCAsync("Tab");
 
         data.Set("EffDate", await page.CaptureEffectiveDate6F16BAsync("Value"));
         await page.ClickStartQuoteAsync();

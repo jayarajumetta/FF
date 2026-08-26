@@ -25,6 +25,8 @@ public sealed record LocatorFallbackTrace(
     string SourceModule,
     string SourceField,
     string SourceProperty,
+    string FrameStrategy,
+    string FrameValue,
     string Reason,
     string PrimaryFailure);
 
@@ -125,10 +127,11 @@ public sealed class ScenarioReport
             var candidate = string.IsNullOrWhiteSpace(x.Strategy)
                 ? "&lt;none&gt;"
                 : $"<span class='mono'>{Encode(x.Strategy)}: {Encode(x.Value)}</span>" +
-                  (string.IsNullOrWhiteSpace(x.HasText) ? "" : $"<br/><span class='small'>HasText={Encode(x.HasText)}</span>");
+                  (string.IsNullOrWhiteSpace(x.HasText) ? "" : $"<br/><span class='small'>HasText={Encode(x.HasText)}</span>") +
+                  (string.IsNullOrWhiteSpace(x.FrameValue) ? "" : $"<br/><span class='small'>Frame={Encode(x.FrameStrategy)}:{Encode(x.FrameValue)}</span>");
             rows.Append($"<tr><td>{Encode(x.BusinessStep)}</td><td>{Encode(x.Page)}.{Encode(x.Control)}</td><td>{Encode(x.Action)}</td><td>{x.Attempt}</td><td>{candidate}</td><td>{x.MatchCount}</td><td class='{cls}'>{Encode(x.Outcome)}</td><td>{x.Confidence:F3}</td><td>{Encode(x.SourceModule)}<br/><span class='small'>{Encode(x.SourceField)} / {Encode(x.SourceProperty)}<br/>{Encode(x.SourceFile)}</span></td><td>{Encode(x.Reason)}</td></tr>");
         }
-        return $"<h2>Locator fallback trace</h2><p class='small'>Deterministic Tosca candidates are attempted only after the Page Object primary locator fails. The test continues only when one candidate is unique/visible/action-compatible and the same failed action succeeds.</p><table><thead><tr><th>Business step</th><th>Page.Control</th><th>Action</th><th>#</th><th>Candidate</th><th>Matches</th><th>Outcome</th><th>Confidence</th><th>Tosca source</th><th>Reason</th></tr></thead><tbody>{rows}</tbody></table>";
+        return $"<h2>Locator fallback trace</h2><p class='small'>Frame-scoped controls preserve raw Tosca HtmlFrame ancestry. Deterministic Tosca candidates are attempted only after the Page Object primary locator fails. The test continues only when one candidate is unique/visible/action-compatible and the same failed action succeeds.</p><table><thead><tr><th>Business step</th><th>Page.Control</th><th>Action</th><th>#</th><th>Candidate</th><th>Matches</th><th>Outcome</th><th>Confidence</th><th>Tosca source</th><th>Reason</th></tr></thead><tbody>{rows}</tbody></table>";
     }
 
 

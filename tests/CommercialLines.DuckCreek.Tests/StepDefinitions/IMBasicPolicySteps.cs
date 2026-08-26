@@ -30,31 +30,20 @@ public sealed class IMBasicPolicySteps
         await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_2}}"));
         await page.WaitForUnderwritingInfoAsync("Exists");
         await page.EnterInsuredTypeAsync(data.Resolve("{{data:insured_type_4}}"));
-        await page.PressInsuredTypeAsync("Enter");
-        await page.PressInsuredTypeAsync("Tab");
-        await page.PressInsuredTypeAsync("Tab");
         await page.ClickEntityTypeAsync();
         await page.WaitForBusinessNameAsync("Visible");
         await page.EnterBusinessNameAsync(data.Resolve("{{data:business_name_7}}"));
-        await page.PressBusinessNameAsync("Tab");
         await page.EnterEntityTypeAsync(data.Resolve("{{data:entity_type_8}}"));
-        await page.PressEntityTypeAsync("Tab");
         // Source step 0041: RANDOM input for Primary Phone.
         await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0041}}"));
-        await page.PressAddress17A1FBAsync("TAB");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Address17A1FB
         await page.EnterZipCode26D22Async(data.Resolve("{{data:zipcode_11}}"));
-        await page.PressZipCode26D22Async("Tab");
-        await page.PressZipCode26D22Async("Tab");
         await page.EnterAddress17A1FBAsync(data.Resolve("{{data:address1_12}}"));
-        await page.PressAddress17A1FBAsync("Tab");
         await page.VerifyYearsInBusinessAsync("Exists", "");
         await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_14}}"));
-        await page.PressYearsInBusinessAsync("Tab");
         if (data.Condition("'Product (LOB)' != \"UMB\""))
         {
                     await page.EnterNameOfAuditContactAsync(data.Resolve("{{data:name_of_audit_contact_16}}"));
-                    await page.PressNameOfAuditContactAsync("Tab");
-                    await page.PressNameOfAuditContactAsync("Tab");
         }
         // Source step 0045: RANDOM input for Audit Telephone #.
         if (data.Condition("'Product (LOB)' != \"UMB\""))
@@ -62,21 +51,16 @@ public sealed class IMBasicPolicySteps
             await page.EnterAuditTelephoneAsync(data.Resolve("{{runtime:AuditTelephone_0045}}"));
         }
         await page.EnterNameOfInspectionContactAsync(data.Resolve("{{data:name_of_inspection_contact_18}}"));
-        await page.PressNameOfInspectionContactAsync("Tab");
-        await page.PressNameOfInspectionContactAsync("Tab");
-        await page.PressNameOfInspectionContactAsync("CLICK");
-        await page.PressNameOfInspectionContactAsync("CLICK");
-        await page.PressNameOfInspectionContactAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: NameOfInspectionContact CLICK
+        // v56 suppressed redundant Tosca keyboard steering: NameOfInspectionContact CLICK
+        // v56 suppressed redundant Tosca keyboard steering: NameOfInspectionContact Tab
         // Source step 0045: RANDOM input for Inspection Telephone #.
         await page.EnterInspectionTelephoneAsync(data.Resolve("{{runtime:InspectionTelephone_0045}}"));
         await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_20}}"));
-        await page.PressInsuredEMailAddressAsync("Tab");
-        await page.PressInsuredEMailAddressAsync("CLICK");
-        await page.PressInsuredEMailAddressAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: InsuredEMailAddress CLICK
+        // v56 suppressed redundant Tosca keyboard steering: InsuredEMailAddress Tab
         await page.EnterWebsiteAddressAsync(data.Resolve("{{data:website_address_21}}"));
-        await page.PressWebsiteAddressAsync("Tab");
-        await page.PressAddress2Async("TAB");
-        await page.PressAddress2Async("Tab");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Address2
         await page.VerifyZipCode26D22Async("[0-9]{5}-[0-9]{4}", "Regex:value");
         data.Set("State", data.Resolve("{{data:state}}"));
         data.Set("Product (LOB)", data.Resolve("{{data:product_lob}}"));
@@ -94,7 +78,7 @@ public sealed class IMBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForAddClientAsync("Exists");
-        await page.PressAddClientAsync("TAB");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets AddClient
         await page.ClickAddClientAsync();
         await page.VerifyIndividualTypeAsync("Absent", "");
 
@@ -127,20 +111,14 @@ public sealed class IMBasicPolicySteps
         await page.ClickBilling6ED79Async();
         await page.WaitForBillingD1518Async("Exists");
         await page.EnterBillTypeAsync(data.Resolve("{{data:bill_type_37}}"));
-        await page.PressBillTypeAsync("Tab");
-        await page.PressBillTypeAsync("TAB");
         await page.WaitForBillTypeAsync("Equal");
         await page.EnterPayPlanAsync(data.Resolve("{{data:pay_plan_40}}"));
-        await page.PressPayPlanAsync("Tab");
-        await page.PressPayPlanAsync("TAB");
         await page.WaitForPayPlanAsync("Equal");
         await page.WaitForEasyPayAsync("Exists");
         await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_44}}"));
-        await page.PressEasyPayAsync("CLICK");
-        await page.PressEasyPayAsync("Enter");
-        await page.PressEasyPayAsync("Tab");
-        await page.PressEasyPayAsync("Tab");
-        await page.PressEasyPayAsync("TAB");
+        // v56 suppressed redundant Tosca keyboard steering: EasyPay CLICK
+        // v56 suppressed redundant Tosca keyboard steering: EasyPay Enter
+        // v56 suppressed redundant Tosca keyboard steering: EasyPay Tab
         await page.PauseAsync(1000);
 
     }
@@ -159,35 +137,20 @@ public sealed class IMBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.EnterIndividualTypeAsync(data.Resolve("{{data:individualtype_47}}"));
-        await page.PressIndividualTypeAsync("Tab");
-        await page.PressIndividualTypeAsync("CLICK");
-        await page.PressIndividualTypeAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: IndividualType CLICK
+        // v56 suppressed redundant Tosca keyboard steering: IndividualType Tab
         await page.WaitForPleaseVerifySSNF738AAsync("Exists");
         // Source step 0057: RANDOM input for MiddleName.
         await page.EnterMiddleNameAsync(data.Resolve("{{runtime:MiddleName_0057}}"));
-        await page.PressFirstNameC5387Async("TAB");
-        await page.PressFirstNameC5387Async("Tab");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets FirstNameC5387
         // Source step 0057: RANDOM input for LastName.
         await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0057}}"));
         await page.EnterDateOfBirth338D7Async(data.Resolve("{{data:dateofbirth_52}}"));
-        await page.PressDateOfBirth338D7Async("Tab");
         await page.EnterAddress1D319BAsync(data.Resolve("{{data:address1_53}}"));
-        await page.PressAddress1D319BAsync("Tab");
-        await page.PressAddress1D319BAsync("Tab");
         await page.EnterCityAsync(data.Resolve("{{data:city_54}}"));
-        await page.PressCityAsync("Tab");
-        await page.PressCityAsync("Tab");
-        await page.PressCityAsync("Tab");
         await page.EnterStateAsync(data.Resolve("{{data:state_55}}"));
-        await page.PressStateAsync("Tab");
-        await page.PressStateAsync("Tab");
-        await page.PressStateAsync("Tab");
         await page.EnterZipCodeA088EAsync(data.Resolve("{{data:zipcode_56}}"));
-        await page.PressZipCodeA088EAsync("Tab");
-        await page.PressZipCodeA088EAsync("Tab");
-        await page.PressZipCodeA088EAsync("Tab");
         await page.EnterGender4973CAsync(data.Resolve("{{data:gender_57}}"));
-        await page.PressGender4973CAsync("Tab");
         await page.WaitForClientSearch41F28Async("Exists");
         await page.ClickClientSearch41F28Async();
         // Source RANDOM FirstName entered after Client Search per Tosca source step.
@@ -195,11 +158,9 @@ public sealed class IMBasicPolicySteps
         await page.VerifySearchResultsDuckCreekPolicyFirstCheckboxAsync("Absent", "");
         await page.ClickOKAsync();
         await page.ClickOrderSSN5E031Async();
-        await page.PressEnterSSNFA186Async("TAB");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets EnterSSNFA186
         await page.PressEnterSSNFA186Async("Enter");
         await page.EnterEnterSSNFA186Async(data.Resolve("{{data:enter_ssn_65}}"));
-        await page.PressEnterSSNFA186Async("Tab");
-        await page.PressEnterSSNFA186Async("Tab");
         await page.ClickEnterSSNFA186Async();
         await page.VerifyVerify7A388Async("Absent", "");
         await page.ClickCompleteAsync();
@@ -235,7 +196,6 @@ public sealed class IMBasicPolicySteps
         await page.ClickUpdateAnswers9CB86Async();
         await page.ClickInsuranceHistoryAsync();
         await page.EnterIsThereAPriorCarrierAsync(data.Resolve("{{data:is_there_a_prior_carrier_87}}"));
-        await page.PressIsThereAPriorCarrierAsync("Tab");
         await page.ClickLossExperienceAsync();
         await page.WaitForLossExperienceHeadingAsync("Exists");
         await page.ClickNoKnownLossesAsync();
@@ -260,17 +220,14 @@ public sealed class IMBasicPolicySteps
         await page.WaitForPolicyInfoHeaderAsync("Exists");
         await page.PauseAsync(1000);
         await page.EnterEffectiveDate95094Async(data.Resolve("{{data:effectivedate_98}}"));
-        await page.PressEffectiveDate95094Async("Tab");
         if (data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
         {
                     await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_99}}"));
-                    await page.PressYearsInBusinessAsync("Tab");
         }
         await page.PauseAsync(1000);
         if (data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
                     await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_101}}"));
-                    await page.PressPrimaryRatingStateAsync("Tab");
         }
         if (data.Condition("'Product (LOB)' != \"WC\""))
         {
@@ -278,15 +235,13 @@ public sealed class IMBasicPolicySteps
         }
         if (data.Condition("'Product (LOB)' != \"WC\""))
         {
-                    await page.PressPrimaryRatingStateAsync("TAB");
+                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets PrimaryRatingState
         }
         if (data.Condition("'Product (LOB)' != \"WC\""))
         {
-                    await page.PressPrimaryRatingStateAsync("TAB");
+                    // v56 suppressed duplicate keyboard steering: PrimaryRatingState TAB
         }
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_105}}"));
-        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
-        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
         await page.PauseAsync(1000);
         if (data.Condition("'Product (LOB)' != \"WC\""))
         {
@@ -294,21 +249,20 @@ public sealed class IMBasicPolicySteps
         }
         if (data.Condition("'Product (LOB)' != \"WC\""))
         {
-                    await page.PressPrimaryRatingStateAsync("TAB");
+                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets PrimaryRatingState
         }
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_111}}"));
-        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("CLICK");
-        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Enter");
-        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days CLICK
+        // v56 suppressed redundant Tosca keyboard steering: WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days Enter
+        // v56 suppressed redundant Tosca keyboard steering: WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days Tab
         await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
         await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
         await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
         await page.PauseAsync(1000);
         await page.WaitForPolicyInfoHeaderAsync("Visible");
         await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
-        await page.PressDescriptionOfSpecifiedOperationAsync("TAB");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets DescriptionOfSpecifiedOperation
         await page.EnterDescriptionOfSpecifiedOperationAsync("AZ IM Basic {NMONTH}.{NDAY}.{NYEAR} {Time}");
-        await page.PressDescriptionOfSpecifiedOperationAsync("Tab");
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
         await page.PauseAsync(1000);
 
@@ -349,24 +303,19 @@ public sealed class IMBasicPolicySteps
         await page.ClickPolicyCovgED95CAsync();
         await page.WaitForPolicyCovgF9E58Async("Exists");
         await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_134}}"));
-        await page.PressCoverageFormToBeAddedAsync("Tab");
-        await page.PressCoverageFormToBeAddedAsync("CLICK");
-        await page.PressCoverageFormToBeAddedAsync("Enter");
-        await page.PressCoverageFormToBeAddedAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded CLICK
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded Enter
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded Tab
         await page.ClickAddCoverageFormAsync();
         await page.EnterDescriptionAsync(data.Resolve("{{data:description_136}}"));
-        await page.PressDescriptionAsync("Tab");
-        await page.PressDescriptionAsync("CLICK");
-        await page.PressDescriptionAsync("Enter");
+        // v56 suppressed redundant Tosca keyboard steering: Description CLICK
+        // v56 suppressed redundant Tosca keyboard steering: Description Enter
         await page.EnterCoinsuranceAsync(data.Resolve("{{data:coinsurance_137}}"));
-        await page.PressCoinsuranceAsync("Tab");
-        await page.PressCoinsuranceAsync("CLICK");
+        // v56 suppressed redundant Tosca keyboard steering: Coinsurance CLICK
         await page.EnterAwayFromPremisesLmtAsync(data.Resolve("{{data:away_from_premises_lmt_138}}"));
-        await page.PressAwayFromPremisesLmtAsync("Tab");
-        await page.PressAwayFromPremisesLmtAsync("CLICK");
+        // v56 suppressed redundant Tosca keyboard steering: AwayFromPremisesLmt CLICK
         await page.EnterAwayFromPremisesDescAsync(data.Resolve("{{data:away_from_premises_desc_139}}"));
-        await page.PressAwayFromPremisesDescAsync("Tab");
-        await page.PressAwayFromPremisesDescAsync("CLICK");
+        // v56 suppressed redundant Tosca keyboard steering: AwayFromPremisesDesc CLICK
         await page.ClickPolicyCovgAccountsReceivableOKAsync();
 
     }
@@ -384,28 +333,23 @@ public sealed class IMBasicPolicySteps
         await page.ClickPolicyCovgED95CAsync();
         await page.WaitForPolicyCovgF9E58Async("Exists");
         await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_143}}"));
-        await page.PressCoverageFormToBeAddedAsync("Tab");
-        await page.PressCoverageFormToBeAddedAsync("CLICK");
-        await page.PressCoverageFormToBeAddedAsync("Enter");
-        await page.PressCoverageFormToBeAddedAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded CLICK
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded Enter
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded Tab
         await page.ClickAddCoverageFormAsync();
         await page.WaitForCoverageFormDisplay6F446Async("Exists");
-        await page.PressDescription43F2DAsync("TAB");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Description43F2D
         await page.EnterDescription43F2DAsync(data.Resolve("{{data:description_147}}"));
-        await page.PressDescription43F2DAsync("CLICK");
-        await page.PressDescription43F2DAsync("Enter");
-        await page.PressDescription43F2DAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: Description43F2D CLICK
+        // v56 suppressed redundant Tosca keyboard steering: Description43F2D Enter
+        // v56 suppressed redundant Tosca keyboard steering: Description43F2D Tab
         await page.EnterPropertyInTransit710FFAsync(data.Resolve("{{data:property_in_transit_148}}"));
-        await page.PressPropertyInTransit710FFAsync("Tab");
-        await page.PressPropertyInTransit710FFAsync("Tab");
         await page.ClickPropertyAwayFromYourPremisesScheduleAsync();
         await page.ClickAddPremisesAsync();
         await page.EnterAddressStreetCityStateZipAsync(data.Resolve("{{data:address_street_city_state_zip_151}}"));
-        await page.PressAddressStreetCityStateZipAsync("CLICK");
-        await page.PressAddressStreetCityStateZipAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: AddressStreetCityStateZip CLICK
+        // v56 suppressed redundant Tosca keyboard steering: AddressStreetCityStateZip Tab
         await page.EnterLimit46632Async(data.Resolve("{{data:limit_152}}"));
-        await page.PressLimit46632Async("Tab");
-        await page.PressLimit46632Async("Tab");
         await page.ClickPolicyCovgBaileesPropertyAwayFromYourPremisesOKAsync();
         await page.WaitForCoverageFormDisplay6F446Async("Exists");
         await page.ClickPolicyCovgBaileesCutomersOKAsync();
@@ -425,57 +369,45 @@ public sealed class IMBasicPolicySteps
         await page.ClickPolicyCovgED95CAsync();
         await page.WaitForPolicyCovgF9E58Async("Exists");
         await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_158}}"));
-        await page.PressCoverageFormToBeAddedAsync("Tab");
-        await page.PressCoverageFormToBeAddedAsync("CLICK");
-        await page.PressCoverageFormToBeAddedAsync("Enter");
-        await page.PressCoverageFormToBeAddedAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded CLICK
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded Enter
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded Tab
         await page.ClickAddCoverageFormAsync();
         await page.WaitForCoverageFormDisplayD1A9BAsync("Exists");
-        await page.PressDescription03789Async("TAB");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Description03789
         await page.EnterDescription03789Async(data.Resolve("{{data:description_162}}"));
-        await page.PressDescription03789Async("Tab");
-        await page.PressDescription03789Async("CLICK");
-        await page.PressDescription03789Async("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: Description03789 CLICK
+        // v56 suppressed redundant Tosca keyboard steering: Description03789 Tab
         await page.EnterCoinsuranceC9726Async(data.Resolve("{{data:coinsurance_163}}"));
-        await page.PressCoinsuranceC9726Async("Tab");
-        await page.PressCoinsuranceC9726Async("CLICK");
-        await page.PressCoinsuranceC9726Async("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: CoinsuranceC9726 CLICK
+        // v56 suppressed redundant Tosca keyboard steering: CoinsuranceC9726 Tab
         await page.EnterDeductibleC227CAsync(data.Resolve("{{data:deductible_164}}"));
-        await page.PressDeductibleC227CAsync("Tab");
-        await page.PressDeductibleC227CAsync("CLICK");
-        await page.PressDeductibleC227CAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: DeductibleC227C CLICK
+        // v56 suppressed redundant Tosca keyboard steering: DeductibleC227C Tab
         await page.EnterBoomDeductibleAsync(data.Resolve("{{data:boom_deductible_165}}"));
-        await page.PressBoomDeductibleAsync("Tab");
-        await page.PressBoomDeductibleAsync("CLICK");
-        await page.PressBoomDeductibleAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: BoomDeductible CLICK
+        // v56 suppressed redundant Tosca keyboard steering: BoomDeductible Tab
         await page.EnterTypeOfContractorAsync(data.Resolve("{{data:type_of_contractor_166}}"));
-        await page.PressTypeOfContractorAsync("Tab");
-        await page.PressTypeOfContractorAsync("CLICK");
-        await page.PressTypeOfContractorAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: TypeOfContractor CLICK
+        // v56 suppressed redundant Tosca keyboard steering: TypeOfContractor Tab
         await page.EnterScheduledCoverageAsync(data.Resolve("{{data:scheduled_coverage_167}}"));
-        await page.PressScheduledCoverageAsync("Tab");
-        await page.PressScheduledCoverageAsync("CLICK");
-        await page.PressScheduledCoverageAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: ScheduledCoverage CLICK
+        // v56 suppressed redundant Tosca keyboard steering: ScheduledCoverage Tab
         await page.EnterRentedEquipmentExpenseAsync(data.Resolve("{{data:rented_equipment_expense_168}}"));
-        await page.PressRentedEquipmentExpenseAsync("Tab");
-        await page.PressRentedEquipmentExpenseAsync("CLICK");
-        await page.PressRentedEquipmentExpenseAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: RentedEquipmentExpense CLICK
+        // v56 suppressed redundant Tosca keyboard steering: RentedEquipmentExpense Tab
         await page.EnterToolsAndClothingBelongingToYourEmployeesAsync(data.Resolve("{{data:tools_and_clothing_belonging_to_your_employees_169}}"));
-        await page.PressToolsAndClothingBelongingToYourEmployeesAsync("Tab");
-        await page.PressToolsAndClothingBelongingToYourEmployeesAsync("CLICK");
-        await page.PressToolsAndClothingBelongingToYourEmployeesAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: ToolsAndClothingBelongingToYourEmployees CLICK
+        // v56 suppressed redundant Tosca keyboard steering: ToolsAndClothingBelongingToYourEmployees Tab
         await page.EnterMiscItemsBlanketCoverageAsync(data.Resolve("{{data:misc_items_blanket_coverage_170}}"));
-        await page.PressMiscItemsBlanketCoverageAsync("Tab");
-        await page.PressMiscItemsBlanketCoverageAsync("CLICK");
-        await page.PressMiscItemsBlanketCoverageAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: MiscItemsBlanketCoverage CLICK
+        // v56 suppressed redundant Tosca keyboard steering: MiscItemsBlanketCoverage Tab
         await page.EnterRentalReimbursementAsync(data.Resolve("{{data:rental_reimbursement_171}}"));
-        await page.PressRentalReimbursementAsync("Tab");
-        await page.PressRentalReimbursementAsync("CLICK");
-        await page.PressRentalReimbursementAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: RentalReimbursement CLICK
+        // v56 suppressed redundant Tosca keyboard steering: RentalReimbursement Tab
         await page.EnterHiredEquipmentAsync(data.Resolve("{{data:hired_equipment_172}}"));
-        await page.PressHiredEquipmentAsync("Tab");
-        await page.PressHiredEquipmentAsync("CLICK");
-        await page.PressHiredEquipmentAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: HiredEquipment CLICK
+        // v56 suppressed redundant Tosca keyboard steering: HiredEquipment Tab
         await page.ClickPolicyCovgContractorsEquipmentOKAsync();
 
     }
@@ -493,38 +425,23 @@ public sealed class IMBasicPolicySteps
         await page.ClickPolicyCovgED95CAsync();
         await page.WaitForPolicyCovgF9E58Async("Exists");
         await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_176}}"));
-        await page.PressCoverageFormToBeAddedAsync("Tab");
-        await page.PressCoverageFormToBeAddedAsync("CLICK");
-        await page.PressCoverageFormToBeAddedAsync("Enter");
-        await page.PressCoverageFormToBeAddedAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded CLICK
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded Enter
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded Tab
         await page.ClickAddCoverageFormAsync();
         await page.WaitForCoverageFormDisplay2ECD4Async("Exists");
-        await page.PressDescription58EC2Async("TAB");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Description58EC2
         await page.EnterDescription58EC2Async(data.Resolve("{{data:description_180}}"));
-        await page.PressDescription58EC2Async("CLICK");
-        await page.PressDescription58EC2Async("Enter");
-        await page.PressDescription58EC2Async("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: Description58EC2 CLICK
+        // v56 suppressed redundant Tosca keyboard steering: Description58EC2 Enter
+        // v56 suppressed redundant Tosca keyboard steering: Description58EC2 Tab
         await page.EnterDeductibleC91E9Async(data.Resolve("{{data:deductible_181}}"));
-        await page.PressDeductibleC91E9Async("Tab");
-        await page.PressDeductibleC91E9Async("Tab");
         await page.EnterCoinsurance01AB1Async(data.Resolve("{{data:coinsurance_182}}"));
-        await page.PressCoinsurance01AB1Async("Tab");
-        await page.PressCoinsurance01AB1Async("Tab");
         await page.EnterPropertyInTransit6E905Async(data.Resolve("{{data:property_in_transit_183}}"));
-        await page.PressPropertyInTransit6E905Async("Tab");
-        await page.PressPropertyInTransit6E905Async("Tab");
         await page.EnterUnnamedPremisesAsync(data.Resolve("{{data:unnamed_premises_184}}"));
-        await page.PressUnnamedPremisesAsync("Tab");
-        await page.PressUnnamedPremisesAsync("Tab");
         await page.EnterPersonalPortableComputersAsync(data.Resolve("{{data:personal_portable_computers_185}}"));
-        await page.PressPersonalPortableComputersAsync("Tab");
-        await page.PressPersonalPortableComputersAsync("Tab");
         await page.EnterExtraExpenseAsync(data.Resolve("{{data:extra_expense_186}}"));
-        await page.PressExtraExpenseAsync("Tab");
-        await page.PressExtraExpenseAsync("Tab");
         await page.EnterVirusHarmfulCodeOrSimilarInstructionAsync(data.Resolve("{{data:virus_harmful_code_or_similar_instruction_187}}"));
-        await page.PressVirusHarmfulCodeOrSimilarInstructionAsync("Tab");
-        await page.PressVirusHarmfulCodeOrSimilarInstructionAsync("Tab");
         await page.ClickPolicyCovgComputerSystemsOKAsync();
 
     }
@@ -542,40 +459,23 @@ public sealed class IMBasicPolicySteps
         await page.ClickPolicyCovgED95CAsync();
         await page.WaitForPolicyCovgF9E58Async("Exists");
         await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_191}}"));
-        await page.PressCoverageFormToBeAddedAsync("Tab");
-        await page.PressCoverageFormToBeAddedAsync("CLICK");
-        await page.PressCoverageFormToBeAddedAsync("Enter");
-        await page.PressCoverageFormToBeAddedAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded CLICK
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded Enter
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded Tab
         await page.ClickAddCoverageFormAsync();
         await page.WaitForCoverageFormDisplayB69C2Async("Exists");
-        await page.PressDescriptionF8E60Async("TAB");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets DescriptionF8E60
         await page.EnterDescriptionF8E60Async(data.Resolve("{{data:description_195}}"));
-        await page.PressDescriptionF8E60Async("Tab");
-        await page.PressDescriptionF8E60Async("CLICK");
-        await page.PressDescriptionF8E60Async("Enter");
-        await page.PressDescriptionF8E60Async("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: DescriptionF8E60 CLICK
+        // v56 suppressed redundant Tosca keyboard steering: DescriptionF8E60 Enter
+        // v56 suppressed redundant Tosca keyboard steering: DescriptionF8E60 Tab
         await page.EnterCoverageTypeAsync(data.Resolve("{{data:coverage_type_196}}"));
-        await page.PressCoverageTypeAsync("Tab");
-        await page.PressCoverageTypeAsync("Tab");
-        await page.PressCoverageTypeAsync("Tab");
         await page.EnterCoveredPropertyConsistingPrincipallyOfAsync(data.Resolve("{{data:covered_property_consisting_principally_of_197}}"));
-        await page.PressCoveredPropertyConsistingPrincipallyOfAsync("Tab");
-        await page.PressCoveredPropertyConsistingPrincipallyOfAsync("Tab");
         await page.EnterDeductible320C9Async(data.Resolve("{{data:deductible_198}}"));
-        await page.PressDeductible320C9Async("Tab");
-        await page.PressDeductible320C9Async("Tab");
         await page.EnterPerVehicleLimitAsync(data.Resolve("{{data:per_vehicle_limit_199}}"));
-        await page.PressPerVehicleLimitAsync("Tab");
-        await page.PressPerVehicleLimitAsync("Tab");
         await page.EnterGroupClassAsync(data.Resolve("{{data:group_class_200}}"));
-        await page.PressGroupClassAsync("Tab");
-        await page.PressGroupClassAsync("Tab");
         await page.EnterNumberOfVehiclesAsync(data.Resolve("{{data:number_of_vehicles_201}}"));
-        await page.PressNumberOfVehiclesAsync("Tab");
-        await page.PressNumberOfVehiclesAsync("Tab");
         await page.EnterUnnamedTerminalsLimitAsync(data.Resolve("{{data:unnamed_terminals_limit_202}}"));
-        await page.PressUnnamedTerminalsLimitAsync("Tab");
-        await page.PressUnnamedTerminalsLimitAsync("Tab");
         await page.ClickPolicyCovgMotorTruckCargoOKAsync();
 
     }
@@ -593,22 +493,18 @@ public sealed class IMBasicPolicySteps
         await page.ClickPolicyCovgED95CAsync();
         await page.WaitForPolicyCovgF9E58Async("Exists");
         await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_206}}"));
-        await page.PressCoverageFormToBeAddedAsync("Tab");
-        await page.PressCoverageFormToBeAddedAsync("CLICK");
-        await page.PressCoverageFormToBeAddedAsync("Enter");
-        await page.PressCoverageFormToBeAddedAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded CLICK
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded Enter
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormToBeAdded Tab
         await page.ClickAddCoverageFormAsync();
         await page.WaitForCoverageFormDisplayC10BAAsync("Exists");
-        await page.PressDescriptionBE47EAsync("TAB");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets DescriptionBE47E
         await page.EnterDescriptionBE47EAsync(data.Resolve("{{data:description_210}}"));
-        await page.PressDescriptionBE47EAsync("Tab");
-        await page.PressDescriptionBE47EAsync("CLICK");
-        await page.PressDescriptionBE47EAsync("Enter");
-        await page.PressDescriptionBE47EAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: DescriptionBE47E CLICK
+        // v56 suppressed redundant Tosca keyboard steering: DescriptionBE47E Enter
+        // v56 suppressed redundant Tosca keyboard steering: DescriptionBE47E Tab
         await page.VerifyCoverageFormA7F96Async("Exists", "");
         await page.EnterN5DeductibleAsync(data.Resolve("{{data:5_deductible_212}}"));
-        await page.PressN5DeductibleAsync("Tab");
-        await page.PressN5DeductibleAsync("Tab");
         await page.ClickPolicyCovgSignsOKAsync();
         await page.PauseAsync(1000);
 
@@ -627,37 +523,30 @@ public sealed class IMBasicPolicySteps
         await page.ClickRisk5D6FAAsync();
         await page.WaitForRisk873E7Async("Exists");
         await page.EnterCoverageFormCFDD1Async(data.Resolve("{{data:coverage_form_217}}"));
-        await page.PressCoverageFormCFDD1Async("Tab");
-        await page.PressCoverageFormCFDD1Async("CLICK");
-        await page.PressCoverageFormCFDD1Async("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormCFDD1 CLICK
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormCFDD1 Tab
         await page.ClickAddAsync();
         await page.WaitForAccountsReceivableHeadingAsync("Exists");
-        await page.PressSearchValue79E46Async("TAB");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets SearchValue79E46
         await page.EnterSearchValue79E46Async(data.Resolve("{{data:search_value_221}}"));
-        await page.PressSearchValue79E46Async("Tab");
-        await page.PressSearchValue79E46Async("CLICK");
-        await page.PressSearchValue79E46Async("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: SearchValue79E46 CLICK
+        // v56 suppressed redundant Tosca keyboard steering: SearchValue79E46 Tab
         await page.EnterSearchResultEAFB8Async(data.Resolve("{{data:search_result_222}}"));
-        await page.PressSearchResultEAFB8Async("Tab");
-        await page.PressSearchResultEAFB8Async("CLICK");
-        await page.PressSearchResultEAFB8Async("Enter");
-        await page.PressSearchResultEAFB8Async("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: SearchResultEAFB8 CLICK
+        // v56 suppressed redundant Tosca keyboard steering: SearchResultEAFB8 Enter
+        // v56 suppressed redundant Tosca keyboard steering: SearchResultEAFB8 Tab
         await page.EnterConstructionFB8D9Async(data.Resolve("{{data:construction_223}}"));
-        await page.PressConstructionFB8D9Async("Tab");
-        await page.PressConstructionFB8D9Async("CLICK");
-        await page.PressConstructionFB8D9Async("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: ConstructionFB8D9 CLICK
+        // v56 suppressed redundant Tosca keyboard steering: ConstructionFB8D9 Tab
         await page.EnterPremisesTypeAsync(data.Resolve("{{data:premises_type_224}}"));
-        await page.PressPremisesTypeAsync("Tab");
-        await page.PressPremisesTypeAsync("CLICK");
-        await page.PressPremisesTypeAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: PremisesType CLICK
+        // v56 suppressed redundant Tosca keyboard steering: PremisesType Tab
         await page.EnterDuplicatedRecordsAsync(data.Resolve("{{data:duplicated_records_225}}"));
-        await page.PressDuplicatedRecordsAsync("Tab");
-        await page.PressDuplicatedRecordsAsync("CLICK");
-        await page.PressDuplicatedRecordsAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: DuplicatedRecords CLICK
+        // v56 suppressed redundant Tosca keyboard steering: DuplicatedRecords Tab
         await page.EnterClassificationOfRiskAsync(data.Resolve("{{data:classification_of_risk_226}}"));
-        await page.PressClassificationOfRiskAsync("Tab");
-        await page.PressClassificationOfRiskAsync("CLICK");
-        await page.PressClassificationOfRiskAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: ClassificationOfRisk CLICK
+        // v56 suppressed redundant Tosca keyboard steering: ClassificationOfRisk Tab
         await page.ClickRiskAccountsReceivableOKAsync();
 
     }
@@ -675,61 +564,48 @@ public sealed class IMBasicPolicySteps
         await page.ClickRisk5D6FAAsync();
         await page.WaitForRisk873E7Async("Exists");
         await page.EnterCoverageFormCFDD1Async(data.Resolve("{{data:coverage_form_230}}"));
-        await page.PressCoverageFormCFDD1Async("Tab");
-        await page.PressCoverageFormCFDD1Async("CLICK");
-        await page.PressCoverageFormCFDD1Async("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormCFDD1 CLICK
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormCFDD1 Tab
         await page.ClickAddAsync();
         await page.WaitForBaileesCustomersHeadingAsync("Exists");
         await page.EnterDeductible59155Async(data.Resolve("{{data:deductible_233}}"));
-        await page.PressDeductible59155Async("Tab");
-        await page.PressDeductible59155Async("CLICK");
-        await page.PressDeductible59155Async("Tab");
-        await page.PressSearchValueCA6A6Async("TAB");
+        // v56 suppressed redundant Tosca keyboard steering: Deductible59155 CLICK
+        // v56 suppressed redundant Tosca keyboard steering: Deductible59155 Tab
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets SearchValueCA6A6
         await page.EnterSearchValueCA6A6Async(data.Resolve("{{data:search_value_235}}"));
-        await page.PressSearchValueCA6A6Async("CLICK");
-        await page.PressSearchValueCA6A6Async("Tab");
-        await page.PressSearchValueCA6A6Async("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: SearchValueCA6A6 CLICK
+        // v56 suppressed redundant Tosca keyboard steering: SearchValueCA6A6 Tab
         await page.EnterSearchResultA1BFBAsync(data.Resolve("{{data:search_result_236}}"));
-        await page.PressSearchResultA1BFBAsync("Tab");
-        await page.PressSearchResultA1BFBAsync("CLICK");
-        await page.PressSearchResultA1BFBAsync("Enter");
-        await page.PressSearchResultA1BFBAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: SearchResultA1BFB CLICK
+        // v56 suppressed redundant Tosca keyboard steering: SearchResultA1BFB Enter
+        // v56 suppressed redundant Tosca keyboard steering: SearchResultA1BFB Tab
         await page.EnterConstructionCD2DEAsync(data.Resolve("{{data:construction_237}}"));
-        await page.PressConstructionCD2DEAsync("Tab");
-        await page.PressConstructionCD2DEAsync("CLICK");
-        await page.PressConstructionCD2DEAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: ConstructionCD2DE CLICK
+        // v56 suppressed redundant Tosca keyboard steering: ConstructionCD2DE Tab
         await page.EnterAnnualGrossReceiptsAsync(data.Resolve("{{data:annual_gross_receipts_238}}"));
-        await page.PressAnnualGrossReceiptsAsync("Tab");
-        await page.PressAnnualGrossReceiptsAsync("CLICK");
-        await page.PressAnnualGrossReceiptsAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: AnnualGrossReceipts CLICK
+        // v56 suppressed redundant Tosca keyboard steering: AnnualGrossReceipts Tab
         await page.EnterAverageNumberOfDaysServiceAsync(data.Resolve("{{data:average_number_of_days_service_239}}"));
-        await page.PressAverageNumberOfDaysServiceAsync("Tab");
-        await page.PressAverageNumberOfDaysServiceAsync("CLICK");
-        await page.PressAverageNumberOfDaysServiceAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: AverageNumberOfDaysService CLICK
+        // v56 suppressed redundant Tosca keyboard steering: AverageNumberOfDaysService Tab
         await page.EnterAverageNumberOfWorkingDaysAsync(data.Resolve("{{data:average_number_of_working_days_240}}"));
-        await page.PressAverageNumberOfWorkingDaysAsync("Tab");
-        await page.PressAverageNumberOfWorkingDaysAsync("CLICK");
-        await page.PressAverageNumberOfWorkingDaysAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: AverageNumberOfWorkingDays CLICK
+        // v56 suppressed redundant Tosca keyboard steering: AverageNumberOfWorkingDays Tab
         await page.EnterAverageServiceChargeAsync(data.Resolve("{{data:average_service_charge_241}}"));
-        await page.PressAverageServiceChargeAsync("Tab");
-        await page.PressAverageServiceChargeAsync("CLICK");
-        await page.PressAverageServiceChargeAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: AverageServiceCharge CLICK
+        // v56 suppressed redundant Tosca keyboard steering: AverageServiceCharge Tab
         await page.EnterAverageValuePerOrderAsync(data.Resolve("{{data:average_value_per_order_242}}"));
-        await page.PressAverageValuePerOrderAsync("Tab");
-        await page.PressAverageValuePerOrderAsync("CLICK");
-        await page.PressAverageValuePerOrderAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: AverageValuePerOrder CLICK
+        // v56 suppressed redundant Tosca keyboard steering: AverageValuePerOrder Tab
         await page.EnterLimitE32DCAsync(data.Resolve("{{data:limit_243}}"));
-        await page.PressLimitE32DCAsync("Tab");
-        await page.PressLimitE32DCAsync("CLICK");
-        await page.PressLimitE32DCAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: LimitE32DC CLICK
+        // v56 suppressed redundant Tosca keyboard steering: LimitE32DC Tab
         await page.EnterEarthquakeAsync(data.Resolve("{{data:earthquake_244}}"));
-        await page.PressEarthquakeAsync("Tab");
-        await page.PressEarthquakeAsync("CLICK");
-        await page.PressEarthquakeAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: Earthquake CLICK
+        // v56 suppressed redundant Tosca keyboard steering: Earthquake Tab
         await page.EnterStorageLimitAsync(data.Resolve("{{data:storage_limit_245}}"));
-        await page.PressStorageLimitAsync("Tab");
-        await page.PressStorageLimitAsync("CLICK");
-        await page.PressStorageLimitAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: StorageLimit CLICK
+        // v56 suppressed redundant Tosca keyboard steering: StorageLimit Tab
         await page.ClickRiskBaileesCustomersOKAsync();
 
     }
@@ -747,34 +623,26 @@ public sealed class IMBasicPolicySteps
         await page.ClickRisk5D6FAAsync();
         await page.WaitForRisk873E7Async("Exists");
         await page.EnterCoverageFormCFDD1Async(data.Resolve("{{data:coverage_form_249}}"));
-        await page.PressCoverageFormCFDD1Async("Tab");
-        await page.PressCoverageFormCFDD1Async("CLICK");
-        await page.PressCoverageFormCFDD1Async("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormCFDD1 CLICK
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormCFDD1 Tab
         await page.ClickAddAsync();
         await page.EnterComputerEquipmentAsync(data.Resolve("{{data:computer_equipment_251}}"));
-        await page.PressComputerEquipmentAsync("Tab");
-        await page.PressComputerEquipmentAsync("CLICK");
-        await page.PressComputerEquipmentAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: ComputerEquipment CLICK
+        // v56 suppressed redundant Tosca keyboard steering: ComputerEquipment Tab
         await page.EnterDataAndMediaAsync(data.Resolve("{{data:data_and_media_252}}"));
-        await page.PressDataAndMediaAsync("Tab");
-        await page.PressDataAndMediaAsync("CLICK");
-        await page.PressDataAndMediaAsync("Tab");
-        await page.PressSearchValue9FCD1Async("TAB");
+        // v56 suppressed redundant Tosca keyboard steering: DataAndMedia CLICK
+        // v56 suppressed redundant Tosca keyboard steering: DataAndMedia Tab
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets SearchValue9FCD1
         await page.EnterSearchValue9FCD1Async(data.Resolve("{{data:search_value_254}}"));
-        await page.PressSearchValue9FCD1Async("CLICK");
-        await page.PressSearchValue9FCD1Async("Tab");
-        await page.PressSearchValue9FCD1Async("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: SearchValue9FCD1 CLICK
+        // v56 suppressed redundant Tosca keyboard steering: SearchValue9FCD1 Tab
         await page.EnterSearchResult4E620Async(data.Resolve("{{data:search_result_255}}"));
-        await page.PressSearchResult4E620Async("Tab");
-        await page.PressSearchResult4E620Async("Click");
-        await page.PressSearchResult4E620Async("Enter");
-        await page.PressSearchResult4E620Async("Tab");
-        await page.PressSearchResult4E620Async("Tab");
-        await page.PressSearchResult4E620Async("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: SearchResult4E620 Click
+        // v56 suppressed redundant Tosca keyboard steering: SearchResult4E620 Enter
+        // v56 suppressed redundant Tosca keyboard steering: SearchResult4E620 Tab
         await page.EnterConstructionCodeAsync(data.Resolve("{{data:construction_code_256}}"));
-        await page.PressConstructionCodeAsync("Tab");
-        await page.PressConstructionCodeAsync("CLICK");
-        await page.PressConstructionCodeAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: ConstructionCode CLICK
+        // v56 suppressed redundant Tosca keyboard steering: ConstructionCode Tab
         await page.ClickRiskComputerSystemsOKAsync();
 
     }
@@ -792,27 +660,22 @@ public sealed class IMBasicPolicySteps
         await page.ClickRisk5D6FAAsync();
         await page.WaitForRisk873E7Async("Exists");
         await page.EnterCoverageFormCFDD1Async(data.Resolve("{{data:coverage_form_260}}"));
-        await page.PressCoverageFormCFDD1Async("Tab");
-        await page.PressCoverageFormCFDD1Async("CLICK");
-        await page.PressCoverageFormCFDD1Async("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormCFDD1 CLICK
+        // v56 suppressed redundant Tosca keyboard steering: CoverageFormCFDD1 Tab
         await page.ClickAddAsync();
         await page.WaitForSignsHeadingAsync("Exists");
         await page.EnterLimitOfInsuranceAsync(data.Resolve("{{data:limit_of_insurance_263}}"));
-        await page.PressLimitOfInsuranceAsync("Tab");
-        await page.PressLimitOfInsuranceAsync("CLICK");
-        await page.PressLimitOfInsuranceAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: LimitOfInsurance CLICK
+        // v56 suppressed redundant Tosca keyboard steering: LimitOfInsurance Tab
         await page.EnterSignLocationAsync(data.Resolve("{{data:sign_location_264}}"));
-        await page.PressSignLocationAsync("Tab");
-        await page.PressSignLocationAsync("CLICK");
-        await page.PressSignLocationAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: SignLocation CLICK
+        // v56 suppressed redundant Tosca keyboard steering: SignLocation Tab
         await page.EnterTypeB082DAsync(data.Resolve("{{data:type_265}}"));
-        await page.PressTypeB082DAsync("Tab");
-        await page.PressTypeB082DAsync("CLICK");
-        await page.PressTypeB082DAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: TypeB082D CLICK
+        // v56 suppressed redundant Tosca keyboard steering: TypeB082D Tab
         await page.EnterLetteringAsync(data.Resolve("{{data:lettering_266}}"));
-        await page.PressLetteringAsync("Tab");
-        await page.PressLetteringAsync("CLICK");
-        await page.PressLetteringAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: Lettering CLICK
+        // v56 suppressed redundant Tosca keyboard steering: Lettering Tab
         await page.ClickRiskSignsOKAsync();
 
     }
@@ -831,16 +694,16 @@ public sealed class IMBasicPolicySteps
         await page.WaitForEndorsementHeadingAsync("Exists");
         await page.ClickAddEndorsement48A9EAsync();
         await page.EnterType715D6Async(data.Resolve("{{data:type_271}}"));
-        await page.PressType715D6Async("CLICK");
-        await page.PressType715D6Async("Tab");
-        await page.PressNamesAsync("TAB");
+        // v56 suppressed redundant Tosca keyboard steering: Type715D6 CLICK
+        // v56 suppressed redundant Tosca keyboard steering: Type715D6 Tab
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Names
         await page.EnterNamesAsync(data.Resolve("{{data:names_273}}"));
-        await page.PressNamesAsync("CLICK");
-        await page.PressNamesAsync("Tab");
-        await page.PressAddressAsync("TAB");
+        // v56 suppressed redundant Tosca keyboard steering: Names CLICK
+        // v56 suppressed redundant Tosca keyboard steering: Names Tab
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Address
         await page.EnterAddressAsync(data.Resolve("{{data:address_275}}"));
-        await page.PressAddressAsync("CLICK");
-        await page.PressAddressAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: Address CLICK
+        // v56 suppressed redundant Tosca keyboard steering: Address Tab
         await page.ClickEndorsementCM6601ExcludeNamedCustomerOKAsync();
 
     }
@@ -859,12 +722,8 @@ public sealed class IMBasicPolicySteps
         await page.WaitForEndorsementHeadingAsync("Exists");
         await page.ClickAddEndorsement48A9EAsync();
         await page.EnterType715D6Async(data.Resolve("{{data:type_280}}"));
-        await page.PressType715D6Async("Tab");
-        await page.PressType715D6Async("Tab");
         await page.EnterLimit887C5Async(data.Resolve("{{data:limit_281}}"));
-        await page.PressLimit887C5Async("Tab");
         await page.EnterDeductible0CC0AAsync(data.Resolve("{{data:deductible_282}}"));
-        await page.PressDeductible0CC0AAsync("Tab");
         await page.ClickEndorsementIF0002WaterborneEquipmentOKAsync();
 
     }
@@ -884,14 +743,12 @@ public sealed class IMBasicPolicySteps
         await page.WaitForAccountsReceivableHeadingAsync("Exists");
         await page.ClickUpdateAnswersD8A16Async();
         await page.EnterWhatIsTheConstructionOfThePremisesWhereTheReceivablesAreStoredAsync(data.Resolve("{{data:what_is_the_construction_of_the_premises_where_the_receivables_are_stored_288}}"));
-        await page.PressWhatIsTheConstructionOfThePremisesWhereTheReceivablesAreStoredAsync("Tab");
-        await page.PressWhatIsTheConstructionOfThePremisesWhereTheReceivablesAreStoredAsync("CLICK");
-        await page.PressWhatIsTheConstructionOfThePremisesWhereTheReceivablesAreStoredAsync("Tab");
-        await page.PressWhatSafeguardsAreInPlaceForReceivablesToProtectAgainstDamageOrTheftAsync("TAB");
+        // v56 suppressed redundant Tosca keyboard steering: WhatIsTheConstructionOfThePremisesWhereTheReceivablesAreStored CLICK
+        // v56 suppressed redundant Tosca keyboard steering: WhatIsTheConstructionOfThePremisesWhereTheReceivablesAreStored Tab
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets WhatSafeguardsAreInPlaceForReceivablesToProtectAgainstDamageOrTheft
         await page.EnterWhatSafeguardsAreInPlaceForReceivablesToProtectAgainstDamageOrTheftAsync(data.Resolve("{{data:what_safeguards_are_in_place_for_receivables_to_protect_against_damage_or_theft_290}}"));
-        await page.PressWhatSafeguardsAreInPlaceForReceivablesToProtectAgainstDamageOrTheftAsync("Tab");
-        await page.PressWhatSafeguardsAreInPlaceForReceivablesToProtectAgainstDamageOrTheftAsync("CLICK");
-        await page.PressWhatSafeguardsAreInPlaceForReceivablesToProtectAgainstDamageOrTheftAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: WhatSafeguardsAreInPlaceForReceivablesToProtectAgainstDamageOrTheft CLICK
+        // v56 suppressed redundant Tosca keyboard steering: WhatSafeguardsAreInPlaceForReceivablesToProtectAgainstDamageOrTheft Tab
         await page.ClickSpecificUnderwritingQuestionsAccountsReceivableOKAsync();
 
     }
@@ -910,97 +767,72 @@ public sealed class IMBasicPolicySteps
         await page.ClickBaileesCustomerUWQuestionsAsync();
         await page.WaitForBaileesCustomerHeadingAsync("Exists");
         await page.EnterDryCleaningAsync(data.Resolve("{{data:dry_cleaning_295}}"));
-        await page.PressDryCleaningAsync("Tab");
-        await page.PressDryCleaningAsync("CLICK");
-        await page.PressDryCleaningAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: DryCleaning CLICK
+        // v56 suppressed redundant Tosca keyboard steering: DryCleaning Tab
         await page.EnterLaundryAsync(data.Resolve("{{data:laundry_296}}"));
-        await page.PressLaundryAsync("Tab");
-        await page.PressLaundryAsync("CLICK");
-        await page.PressLaundryAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: Laundry CLICK
+        // v56 suppressed redundant Tosca keyboard steering: Laundry Tab
         await page.EnterN2IndicateTheAgeTypeOfConstructionAndProtectionClassOfThePremisesAsync(data.Resolve("{{data:2_indicate_the_age_type_of_construction_and_protection_class_of_the_premises_297}}"));
-        await page.PressN2IndicateTheAgeTypeOfConstructionAndProtectionClassOfThePremisesAsync("Tab");
-        await page.PressN2IndicateTheAgeTypeOfConstructionAndProtectionClassOfThePremisesAsync("CLICK");
-        await page.PressN2IndicateTheAgeTypeOfConstructionAndProtectionClassOfThePremisesAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N2IndicateTheAgeTypeOfConstructionAndProtectionClassOfThePremises CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N2IndicateTheAgeTypeOfConstructionAndProtectionClassOfThePremises Tab
         await page.EnterN3WhatIsThePercentageOfAnnualGrossReceiptsDerivedFromServiceOrRepairAsync(data.Resolve("{{data:3_what_is_the_percentage_of_annual_gross_receipts_derived_from_service_or_repair_298}}"));
-        await page.PressN3WhatIsThePercentageOfAnnualGrossReceiptsDerivedFromServiceOrRepairAsync("Tab");
-        await page.PressN3WhatIsThePercentageOfAnnualGrossReceiptsDerivedFromServiceOrRepairAsync("Tab");
-        await page.PressN3WhatIsThePercentageOfAnnualGrossReceiptsDerivedFromServiceOrRepairAsync("CLICK");
-        await page.PressN3WhatIsThePercentageOfAnnualGrossReceiptsDerivedFromServiceOrRepairAsync("CLICK");
-        await page.PressN3WhatIsThePercentageOfAnnualGrossReceiptsDerivedFromServiceOrRepairAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N3WhatIsThePercentageOfAnnualGrossReceiptsDerivedFromServiceOrRepair CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N3WhatIsThePercentageOfAnnualGrossReceiptsDerivedFromServiceOrRepair CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N3WhatIsThePercentageOfAnnualGrossReceiptsDerivedFromServiceOrRepair Tab
         await page.EnterN4WhatMethodDoYouUseForKeepingRecordsOfPropertyInYourCareAndHowOftenAreTheRecordsUpdatedAsync(data.Resolve("{{data:4_what_method_do_you_use_for_keeping_records_of_property_in_your_care_and_how_often_are_the_records_updated_299}}"));
-        await page.PressN4WhatMethodDoYouUseForKeepingRecordsOfPropertyInYourCareAndHowOftenAreTheRecordsUpdatedAsync("Tab");
-        await page.PressN4WhatMethodDoYouUseForKeepingRecordsOfPropertyInYourCareAndHowOftenAreTheRecordsUpdatedAsync("CLICK");
-        await page.PressN4WhatMethodDoYouUseForKeepingRecordsOfPropertyInYourCareAndHowOftenAreTheRecordsUpdatedAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N4WhatMethodDoYouUseForKeepingRecordsOfPropertyInYourCareAndHowOftenAreTheRecordsUpdated CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N4WhatMethodDoYouUseForKeepingRecordsOfPropertyInYourCareAndHowOftenAreTheRecordsUpdated Tab
         await page.EnterN5AreRecognizedApprovedCentralStationBurglarAlarmsInstalledAndMaintainedAsync(data.Resolve("{{data:5_are_recognized_approved_central_station_burglar_alarms_installed_and_maintained_300}}"));
-        await page.PressN5AreRecognizedApprovedCentralStationBurglarAlarmsInstalledAndMaintainedAsync("Tab");
-        await page.PressN5AreRecognizedApprovedCentralStationBurglarAlarmsInstalledAndMaintainedAsync("CLICK");
-        await page.PressN5AreRecognizedApprovedCentralStationBurglarAlarmsInstalledAndMaintainedAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N5AreRecognizedApprovedCentralStationBurglarAlarmsInstalledAndMaintained CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N5AreRecognizedApprovedCentralStationBurglarAlarmsInstalledAndMaintained Tab
         await page.EnterN6AreAllStorageAreasLockedAtAllTimesWhenUnoccupiedAsync(data.Resolve("{{data:6_are_all_storage_areas_locked_at_all_times_when_unoccupied_301}}"));
-        await page.PressN6AreAllStorageAreasLockedAtAllTimesWhenUnoccupiedAsync("Tab");
-        await page.PressN6AreAllStorageAreasLockedAtAllTimesWhenUnoccupiedAsync("CLICK");
-        await page.PressN6AreAllStorageAreasLockedAtAllTimesWhenUnoccupiedAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N6AreAllStorageAreasLockedAtAllTimesWhenUnoccupied CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N6AreAllStorageAreasLockedAtAllTimesWhenUnoccupied Tab
         await page.EnterN7AreThereAnyHazardousOrFlammableMaterialsUsedOrStoredOnThePremisesAsync(data.Resolve("{{data:7_are_there_any_hazardous_or_flammable_materials_used_or_stored_on_the_premises_302}}"));
-        await page.PressN7AreThereAnyHazardousOrFlammableMaterialsUsedOrStoredOnThePremisesAsync("Tab");
-        await page.PressN7AreThereAnyHazardousOrFlammableMaterialsUsedOrStoredOnThePremisesAsync("CLICK");
-        await page.PressN7AreThereAnyHazardousOrFlammableMaterialsUsedOrStoredOnThePremisesAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N7AreThereAnyHazardousOrFlammableMaterialsUsedOrStoredOnThePremises CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N7AreThereAnyHazardousOrFlammableMaterialsUsedOrStoredOnThePremises Tab
         await page.EnterAWhatIsThePublicProtectionClassRatingAsync(data.Resolve("{{data:a_what_is_the_public_protection_class_rating_303}}"));
-        await page.PressAWhatIsThePublicProtectionClassRatingAsync("Tab");
-        await page.PressAWhatIsThePublicProtectionClassRatingAsync("Tab");
-        await page.PressAWhatIsThePublicProtectionClassRatingAsync("CLICK");
-        await page.PressAWhatIsThePublicProtectionClassRatingAsync("CLICK");
-        await page.PressAWhatIsThePublicProtectionClassRatingAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: AWhatIsThePublicProtectionClassRating CLICK
+        // v56 suppressed redundant Tosca keyboard steering: AWhatIsThePublicProtectionClassRating CLICK
+        // v56 suppressed redundant Tosca keyboard steering: AWhatIsThePublicProtectionClassRating Tab
         await page.EnterBAreThereAnyPrivateProtectionImprovementsAsync(data.Resolve("{{data:b_are_there_any_private_protection_improvements_304}}"));
-        await page.PressBAreThereAnyPrivateProtectionImprovementsAsync("Tab");
-        await page.PressBAreThereAnyPrivateProtectionImprovementsAsync("CLICK");
-        await page.PressBAreThereAnyPrivateProtectionImprovementsAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: BAreThereAnyPrivateProtectionImprovements CLICK
+        // v56 suppressed redundant Tosca keyboard steering: BAreThereAnyPrivateProtectionImprovements Tab
         await page.EnterCWhatIsTheDistanceInFeetToTheNearestHydrantAsync(data.Resolve("{{data:c_what_is_the_distance_in_feet_to_the_nearest_hydrant_305}}"));
-        await page.PressCWhatIsTheDistanceInFeetToTheNearestHydrantAsync("Tab");
-        await page.PressCWhatIsTheDistanceInFeetToTheNearestHydrantAsync("CLICK");
-        await page.PressCWhatIsTheDistanceInFeetToTheNearestHydrantAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: CWhatIsTheDistanceInFeetToTheNearestHydrant CLICK
+        // v56 suppressed redundant Tosca keyboard steering: CWhatIsTheDistanceInFeetToTheNearestHydrant Tab
         await page.EnterDWhatIsTheDistanceInMilesToTheNearestRespondingFireDepartmentAsync(data.Resolve("{{data:d_what_is_the_distance_in_miles_to_the_nearest_responding_fire_department_306}}"));
-        await page.PressDWhatIsTheDistanceInMilesToTheNearestRespondingFireDepartmentAsync("Tab");
-        await page.PressDWhatIsTheDistanceInMilesToTheNearestRespondingFireDepartmentAsync("CLICK");
-        await page.PressDWhatIsTheDistanceInMilesToTheNearestRespondingFireDepartmentAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: DWhatIsTheDistanceInMilesToTheNearestRespondingFireDepartment CLICK
+        // v56 suppressed redundant Tosca keyboard steering: DWhatIsTheDistanceInMilesToTheNearestRespondingFireDepartment Tab
         await page.EnterEAreNoSmokingRulesPostedAndEnforcedAsync(data.Resolve("{{data:e_are_no_smoking_rules_posted_and_enforced_307}}"));
-        await page.PressEAreNoSmokingRulesPostedAndEnforcedAsync("Tab");
-        await page.PressEAreNoSmokingRulesPostedAndEnforcedAsync("CLICK");
-        await page.PressEAreNoSmokingRulesPostedAndEnforcedAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: EAreNoSmokingRulesPostedAndEnforced CLICK
+        // v56 suppressed redundant Tosca keyboard steering: EAreNoSmokingRulesPostedAndEnforced Tab
         await page.EnterN9AreThePremisesOrAnyPortionOfThePremisesEquippedWithASprinklerSystemAsync(data.Resolve("{{data:9_are_the_premises_or_any_portion_of_the_premises_equipped_with_a_sprinkler_system_308}}"));
-        await page.PressN9AreThePremisesOrAnyPortionOfThePremisesEquippedWithASprinklerSystemAsync("Tab");
-        await page.PressN9AreThePremisesOrAnyPortionOfThePremisesEquippedWithASprinklerSystemAsync("CLICK");
-        await page.PressN9AreThePremisesOrAnyPortionOfThePremisesEquippedWithASprinklerSystemAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N9AreThePremisesOrAnyPortionOfThePremisesEquippedWithASprinklerSystem CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N9AreThePremisesOrAnyPortionOfThePremisesEquippedWithASprinklerSystem Tab
         await page.EnterN10AreThePremisesEquippedWithARecognizedApprovedCentralStationFireAlarmFireExtinguishersOrSmokeAlarmsAsync(data.Resolve("{{data:10_are_the_premises_equipped_with_a_recognized_approved_central_station_fire_alarm_fire_extinguishers_or_smoke_alarms_309}}"));
-        await page.PressN10AreThePremisesEquippedWithARecognizedApprovedCentralStationFireAlarmFireExtinguishersOrSmokeAlarmsAsync("Tab");
-        await page.PressN10AreThePremisesEquippedWithARecognizedApprovedCentralStationFireAlarmFireExtinguishersOrSmokeAlarmsAsync("CLICK");
-        await page.PressN10AreThePremisesEquippedWithARecognizedApprovedCentralStationFireAlarmFireExtinguishersOrSmokeAlarmsAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N10AreThePremisesEquippedWithARecognizedApprovedCentralStationFireAlarmFireExtinguishersOrSmokeAlarms CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N10AreThePremisesEquippedWithARecognizedApprovedCentralStationFireAlarmFireExtinguishersOrSmokeAlarms Tab
         await page.EnterN11WhatIsTheProcedureForTransportingPropertyIncludeTheTransitMethodsUsedAndTheProtectionClassProvidedWhileInTransitAsync(data.Resolve("{{data:11_what_is_the_procedure_for_transporting_property_include_the_transit_methods_used_and_the_protection_class_provided_while_in_transit_310}}"));
-        await page.PressN11WhatIsTheProcedureForTransportingPropertyIncludeTheTransitMethodsUsedAndTheProtectionClassProvidedWhileInTransitAsync("Tab");
-        await page.PressN11WhatIsTheProcedureForTransportingPropertyIncludeTheTransitMethodsUsedAndTheProtectionClassProvidedWhileInTransitAsync("CLICK");
-        await page.PressN11WhatIsTheProcedureForTransportingPropertyIncludeTheTransitMethodsUsedAndTheProtectionClassProvidedWhileInTransitAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N11WhatIsTheProcedureForTransportingPropertyIncludeTheTransitMethodsUsedAndTheProtectionClassProvidedWhileInTransit CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N11WhatIsTheProcedureForTransportingPropertyIncludeTheTransitMethodsUsedAndTheProtectionClassProvidedWhileInTransit Tab
         await page.EnterN12AreDriversMVRsReviewedOnARegularBasisAndMaintainedAsync(data.Resolve("{{data:12_are_drivers_mvrs_reviewed_on_a_regular_basis_and_maintained_311}}"));
-        await page.PressN12AreDriversMVRsReviewedOnARegularBasisAndMaintainedAsync("Tab");
-        await page.PressN12AreDriversMVRsReviewedOnARegularBasisAndMaintainedAsync("CLICK");
-        await page.PressN12AreDriversMVRsReviewedOnARegularBasisAndMaintainedAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N12AreDriversMVRsReviewedOnARegularBasisAndMaintained CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N12AreDriversMVRsReviewedOnARegularBasisAndMaintained Tab
         await page.EnterN13WhatTypesOfVehiclesDoYouOperateAndWhatProtectiveDevicesAreOnEachVehicleAsync(data.Resolve("{{data:13_what_types_of_vehicles_do_you_operate_and_what_protective_devices_are_on_each_vehicle_312}}"));
-        await page.PressN13WhatTypesOfVehiclesDoYouOperateAndWhatProtectiveDevicesAreOnEachVehicleAsync("Tab");
-        await page.PressN13WhatTypesOfVehiclesDoYouOperateAndWhatProtectiveDevicesAreOnEachVehicleAsync("Tab");
-        await page.PressN13WhatTypesOfVehiclesDoYouOperateAndWhatProtectiveDevicesAreOnEachVehicleAsync("CLICK");
-        await page.PressN13WhatTypesOfVehiclesDoYouOperateAndWhatProtectiveDevicesAreOnEachVehicleAsync("CLICK");
-        await page.PressN13WhatTypesOfVehiclesDoYouOperateAndWhatProtectiveDevicesAreOnEachVehicleAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N13WhatTypesOfVehiclesDoYouOperateAndWhatProtectiveDevicesAreOnEachVehicle CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N13WhatTypesOfVehiclesDoYouOperateAndWhatProtectiveDevicesAreOnEachVehicle CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N13WhatTypesOfVehiclesDoYouOperateAndWhatProtectiveDevicesAreOnEachVehicle Tab
         await page.EnterN14WhatIsYourProcedureForProtectingSmallItemsFromBreakageOrDisappearanceWhileInStorageAsync(data.Resolve("{{data:14_what_is_your_procedure_for_protecting_small_items_from_breakage_or_disappearance_while_in_storage_313}}"));
-        await page.PressN14WhatIsYourProcedureForProtectingSmallItemsFromBreakageOrDisappearanceWhileInStorageAsync("Tab");
-        await page.PressN14WhatIsYourProcedureForProtectingSmallItemsFromBreakageOrDisappearanceWhileInStorageAsync("CLICK");
-        await page.PressN14WhatIsYourProcedureForProtectingSmallItemsFromBreakageOrDisappearanceWhileInStorageAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N14WhatIsYourProcedureForProtectingSmallItemsFromBreakageOrDisappearanceWhileInStorage CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N14WhatIsYourProcedureForProtectingSmallItemsFromBreakageOrDisappearanceWhileInStorage Tab
         await page.EnterN15WhatMeasuresDoesTheInsuredTakeToProtectCustomerSPropertyAgainstTheftAsync(data.Resolve("{{data:15_what_measures_does_the_insured_take_to_protect_customer_s_property_against_theft_314}}"));
-        await page.PressN15WhatMeasuresDoesTheInsuredTakeToProtectCustomerSPropertyAgainstTheftAsync("Tab");
-        await page.PressN15WhatMeasuresDoesTheInsuredTakeToProtectCustomerSPropertyAgainstTheftAsync("Tab");
-        await page.PressN15WhatMeasuresDoesTheInsuredTakeToProtectCustomerSPropertyAgainstTheftAsync("CLICK");
-        await page.PressN15WhatMeasuresDoesTheInsuredTakeToProtectCustomerSPropertyAgainstTheftAsync("CLICK");
-        await page.PressN15WhatMeasuresDoesTheInsuredTakeToProtectCustomerSPropertyAgainstTheftAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N15WhatMeasuresDoesTheInsuredTakeToProtectCustomerSPropertyAgainstTheft CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N15WhatMeasuresDoesTheInsuredTakeToProtectCustomerSPropertyAgainstTheft CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N15WhatMeasuresDoesTheInsuredTakeToProtectCustomerSPropertyAgainstTheft Tab
         await page.EnterN16DoesTheRiskUseReleaseFormsAsync(data.Resolve("{{data:16_does_the_risk_use_release_forms_315}}"));
-        await page.PressN16DoesTheRiskUseReleaseFormsAsync("Tab");
-        await page.PressN16DoesTheRiskUseReleaseFormsAsync("CLICK");
-        await page.PressN16DoesTheRiskUseReleaseFormsAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N16DoesTheRiskUseReleaseForms CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N16DoesTheRiskUseReleaseForms Tab
         await page.ClickSpecificUnderwritingQuestionsBaileesCustomerOKAsync();
 
     }
@@ -1018,69 +850,53 @@ public sealed class IMBasicPolicySteps
         await page.ClickSpecificUnderwritingQuestionsAsync();
         await page.ClickComputerSystemsUWQuestionsAsync();
         await page.ClickUpdateAnswers3DDA2Async();
-        await page.PressUpdateAnswers3DDA2Async("Tab");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets UpdateAnswers3DDA2
         await page.PressUpdateAnswers3DDA2Async("Click");
         await page.EnterWhatIsTheProcedureForTransportingTheComputerEquipmentAsync(data.Resolve("{{data:what_is_the_procedure_for_transporting_the_computer_equipment_320}}"));
-        await page.PressWhatIsTheProcedureForTransportingTheComputerEquipmentAsync("Tab");
-        await page.PressWhatIsTheProcedureForTransportingTheComputerEquipmentAsync("CLICK");
-        await page.PressWhatIsTheProcedureForTransportingTheComputerEquipmentAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: WhatIsTheProcedureForTransportingTheComputerEquipment CLICK
+        // v56 suppressed redundant Tosca keyboard steering: WhatIsTheProcedureForTransportingTheComputerEquipment Tab
         await page.EnterIndicateTheBuildingSAgeTypeOfConstructionAndProtectionClassAndOtherTenantsInTheBuildingSWhereTheComputerEquipmentIsLocatedAsync(data.Resolve("{{data:indicate_the_building_s_age_type_of_construction_and_protection_class_and_other_tenants_in_the_building_s_where_the_computer_equipment_is_located_321}}"));
-        await page.PressIndicateTheBuildingSAgeTypeOfConstructionAndProtectionClassAndOtherTenantsInTheBuildingSWhereTheComputerEquipmentIsLocatedAsync("Tab");
-        await page.PressIndicateTheBuildingSAgeTypeOfConstructionAndProtectionClassAndOtherTenantsInTheBuildingSWhereTheComputerEquipmentIsLocatedAsync("CLICK");
-        await page.PressIndicateTheBuildingSAgeTypeOfConstructionAndProtectionClassAndOtherTenantsInTheBuildingSWhereTheComputerEquipmentIsLocatedAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: IndicateTheBuildingSAgeTypeOfConstructionAndProtectionClassAndOtherTenantsInTheBuildingSWhereTheComputerEquipmentIsLocated CLICK
+        // v56 suppressed redundant Tosca keyboard steering: IndicateTheBuildingSAgeTypeOfConstructionAndProtectionClassAndOtherTenantsInTheBuildingSWhereTheComputerEquipmentIsLocated Tab
         await page.EnterWhatAreTheProceduresAndMethodsForKeepingTheEDPAreasSecuredAsync(data.Resolve("{{data:what_are_the_procedures_and_methods_for_keeping_the_edp_areas_secured_322}}"));
-        await page.PressWhatAreTheProceduresAndMethodsForKeepingTheEDPAreasSecuredAsync("Tab");
-        await page.PressWhatAreTheProceduresAndMethodsForKeepingTheEDPAreasSecuredAsync("Tab");
-        await page.PressWhatAreTheProceduresAndMethodsForKeepingTheEDPAreasSecuredAsync("CLICK");
-        await page.PressWhatAreTheProceduresAndMethodsForKeepingTheEDPAreasSecuredAsync("CLICK");
-        await page.PressWhatAreTheProceduresAndMethodsForKeepingTheEDPAreasSecuredAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: WhatAreTheProceduresAndMethodsForKeepingTheEDPAreasSecured CLICK
+        // v56 suppressed redundant Tosca keyboard steering: WhatAreTheProceduresAndMethodsForKeepingTheEDPAreasSecured CLICK
+        // v56 suppressed redundant Tosca keyboard steering: WhatAreTheProceduresAndMethodsForKeepingTheEDPAreasSecured Tab
         await page.EnterWhatAreTheProceduresAndScheduleForBackingUpTheMediaAndDataAndTheirStorageAsync(data.Resolve("{{data:what_are_the_procedures_and_schedule_for_backing_up_the_media_and_data_and_their_storage_323}}"));
-        await page.PressWhatAreTheProceduresAndScheduleForBackingUpTheMediaAndDataAndTheirStorageAsync("Tab");
-        await page.PressWhatAreTheProceduresAndScheduleForBackingUpTheMediaAndDataAndTheirStorageAsync("CLICK");
-        await page.PressWhatAreTheProceduresAndScheduleForBackingUpTheMediaAndDataAndTheirStorageAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: WhatAreTheProceduresAndScheduleForBackingUpTheMediaAndDataAndTheirStorage CLICK
+        // v56 suppressed redundant Tosca keyboard steering: WhatAreTheProceduresAndScheduleForBackingUpTheMediaAndDataAndTheirStorage Tab
         await page.EnterProvideInformationRegardingAntivirusMethodsAndCopyrightProtectionOfDataAndMediaAsync(data.Resolve("{{data:provide_information_regarding_antivirus_methods_and_copyright_protection_of_data_and_media_324}}"));
-        await page.PressProvideInformationRegardingAntivirusMethodsAndCopyrightProtectionOfDataAndMediaAsync("Tab");
-        await page.PressProvideInformationRegardingAntivirusMethodsAndCopyrightProtectionOfDataAndMediaAsync("Tab");
-        await page.PressProvideInformationRegardingAntivirusMethodsAndCopyrightProtectionOfDataAndMediaAsync("CLICK");
-        await page.PressProvideInformationRegardingAntivirusMethodsAndCopyrightProtectionOfDataAndMediaAsync("CLICK");
-        await page.PressProvideInformationRegardingAntivirusMethodsAndCopyrightProtectionOfDataAndMediaAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: ProvideInformationRegardingAntivirusMethodsAndCopyrightProtectionOfDataAndMedia CLICK
+        // v56 suppressed redundant Tosca keyboard steering: ProvideInformationRegardingAntivirusMethodsAndCopyrightProtectionOfDataAndMedia CLICK
+        // v56 suppressed redundant Tosca keyboard steering: ProvideInformationRegardingAntivirusMethodsAndCopyrightProtectionOfDataAndMedia Tab
         await page.EnterWhatIsThePublicProtectionClassRatingAsync(data.Resolve("{{data:what_is_the_public_protection_class_rating_325}}"));
-        await page.PressWhatIsThePublicProtectionClassRatingAsync("Tab");
-        await page.PressWhatIsThePublicProtectionClassRatingAsync("Tab");
-        await page.PressWhatIsThePublicProtectionClassRatingAsync("CLICK");
-        await page.PressWhatIsThePublicProtectionClassRatingAsync("CLICK");
-        await page.PressWhatIsThePublicProtectionClassRatingAsync("CLICK");
-        await page.PressWhatIsThePublicProtectionClassRatingAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: WhatIsThePublicProtectionClassRating CLICK
+        // v56 suppressed redundant Tosca keyboard steering: WhatIsThePublicProtectionClassRating CLICK
+        // v56 suppressed redundant Tosca keyboard steering: WhatIsThePublicProtectionClassRating CLICK
+        // v56 suppressed redundant Tosca keyboard steering: WhatIsThePublicProtectionClassRating Tab
         await page.EnterWhatIsTheDistanceInFeetToTheNearestFireHydrantAsync(data.Resolve("{{data:what_is_the_distance_in_feet_to_the_nearest_fire_hydrant_326}}"));
-        await page.PressWhatIsTheDistanceInFeetToTheNearestFireHydrantAsync("Tab");
-        await page.PressWhatIsTheDistanceInFeetToTheNearestFireHydrantAsync("CLICK");
-        await page.PressWhatIsTheDistanceInFeetToTheNearestFireHydrantAsync("CLICK");
-        await page.PressWhatIsTheDistanceInFeetToTheNearestFireHydrantAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: WhatIsTheDistanceInFeetToTheNearestFireHydrant CLICK
+        // v56 suppressed redundant Tosca keyboard steering: WhatIsTheDistanceInFeetToTheNearestFireHydrant CLICK
+        // v56 suppressed redundant Tosca keyboard steering: WhatIsTheDistanceInFeetToTheNearestFireHydrant Tab
         await page.EnterWhatIsTheDistanceInMilesToTheNearestRespondingFireDepartmentAsync(data.Resolve("{{data:what_is_the_distance_in_miles_to_the_nearest_responding_fire_department_327}}"));
-        await page.PressWhatIsTheDistanceInMilesToTheNearestRespondingFireDepartmentAsync("Tab");
-        await page.PressWhatIsTheDistanceInMilesToTheNearestRespondingFireDepartmentAsync("CLICK");
-        await page.PressWhatIsTheDistanceInMilesToTheNearestRespondingFireDepartmentAsync("CLICK");
-        await page.PressWhatIsTheDistanceInMilesToTheNearestRespondingFireDepartmentAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: WhatIsTheDistanceInMilesToTheNearestRespondingFireDepartment CLICK
+        // v56 suppressed redundant Tosca keyboard steering: WhatIsTheDistanceInMilesToTheNearestRespondingFireDepartment CLICK
+        // v56 suppressed redundant Tosca keyboard steering: WhatIsTheDistanceInMilesToTheNearestRespondingFireDepartment Tab
         await page.EnterUninterruptiblePowerSourceAsync(data.Resolve("{{data:uninterruptible_power_source_328}}"));
-        await page.PressUninterruptiblePowerSourceAsync("Tab");
-        await page.PressUninterruptiblePowerSourceAsync("CLICK");
-        await page.PressUninterruptiblePowerSourceAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: UninterruptiblePowerSource CLICK
+        // v56 suppressed redundant Tosca keyboard steering: UninterruptiblePowerSource Tab
         await page.EnterLineConditionerAsync(data.Resolve("{{data:line_conditioner_329}}"));
-        await page.PressLineConditionerAsync("Tab");
-        await page.PressLineConditionerAsync("CLICK");
-        await page.PressLineConditionerAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: LineConditioner CLICK
+        // v56 suppressed redundant Tosca keyboard steering: LineConditioner Tab
         await page.EnterPowerSuppressorVoltageRegulatorAsync(data.Resolve("{{data:power_suppressor_voltage_regulator_330}}"));
-        await page.PressPowerSuppressorVoltageRegulatorAsync("Tab");
-        await page.PressPowerSuppressorVoltageRegulatorAsync("CLICK");
-        await page.PressPowerSuppressorVoltageRegulatorAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: PowerSuppressorVoltageRegulator CLICK
+        // v56 suppressed redundant Tosca keyboard steering: PowerSuppressorVoltageRegulator Tab
         await page.EnterDedicatedLineAsync(data.Resolve("{{data:dedicated_line_331}}"));
-        await page.PressDedicatedLineAsync("Tab");
-        await page.PressDedicatedLineAsync("CLICK");
-        await page.PressDedicatedLineAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: DedicatedLine CLICK
+        // v56 suppressed redundant Tosca keyboard steering: DedicatedLine Tab
         await page.EnterHowOftenIsDataBackedUpAsync(data.Resolve("{{data:how_often_is_data_backed_up_332}}"));
-        await page.PressHowOftenIsDataBackedUpAsync("Tab");
-        await page.PressHowOftenIsDataBackedUpAsync("CLICK");
-        await page.PressHowOftenIsDataBackedUpAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: HowOftenIsDataBackedUp CLICK
+        // v56 suppressed redundant Tosca keyboard steering: HowOftenIsDataBackedUp Tab
         await page.ClickSpecificUnderwritingQuestionsComputerSystemsOKAsync();
 
     }
@@ -1100,13 +916,11 @@ public sealed class IMBasicPolicySteps
         await page.WaitForContractorsEquipmentHeadingAsync("Exists");
         await page.ClickUpdateAnswers3DA0BAsync();
         await page.EnterEstimatedHighestValueAsync(data.Resolve("{{data:estimated_highest_value_338}}"));
-        await page.PressEstimatedHighestValueAsync("Tab");
-        await page.PressEstimatedHighestValueAsync("CLICK");
-        await page.PressEstimatedHighestValueAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: EstimatedHighestValue CLICK
+        // v56 suppressed redundant Tosca keyboard steering: EstimatedHighestValue Tab
         await page.EnterIfYesDescribeAsync(data.Resolve("{{data:if_yes_describe_339}}"));
-        await page.PressIfYesDescribeAsync("Tab");
-        await page.PressIfYesDescribeAsync("CLICK");
-        await page.PressIfYesDescribeAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: IfYesDescribe CLICK
+        // v56 suppressed redundant Tosca keyboard steering: IfYesDescribe Tab
         await page.ClickSpecificUnderwritingQuestionsContractorsEquipmentOKAsync();
 
     }
@@ -1125,66 +939,50 @@ public sealed class IMBasicPolicySteps
         await page.ClickMotorTruckCargoUWQuestionsAsync();
         await page.WaitForMotorTruckCargoHeadingAsync("Exists");
         await page.EnterWhichFormAreYouCompletingAsync(data.Resolve("{{data:which_form_are_you_completing_344}}"));
-        await page.PressWhichFormAreYouCompletingAsync("Tab");
-        await page.PressN1WhatAreTheDistancesTheShipmentsWillTravelAndTheTimeRequiredToCompleteTheShipmentAsync("TAB");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets N1WhatAreTheDistancesTheShipmentsWillTravelAndTheTimeRequiredToCompleteTheShipment
         await page.EnterN1WhatAreTheDistancesTheShipmentsWillTravelAndTheTimeRequiredToCompleteTheShipmentAsync(data.Resolve("{{data:1_what_are_the_distances_the_shipments_will_travel_and_the_time_required_to_complete_the_shipment_346}}"));
-        await page.PressN1WhatAreTheDistancesTheShipmentsWillTravelAndTheTimeRequiredToCompleteTheShipmentAsync("Tab");
-        await page.PressN1WhatAreTheDistancesTheShipmentsWillTravelAndTheTimeRequiredToCompleteTheShipmentAsync("Tab");
-        await page.PressN1WhatAreTheDistancesTheShipmentsWillTravelAndTheTimeRequiredToCompleteTheShipmentAsync("CLICK");
-        await page.PressN1WhatAreTheDistancesTheShipmentsWillTravelAndTheTimeRequiredToCompleteTheShipmentAsync("CLICK");
-        await page.PressN1WhatAreTheDistancesTheShipmentsWillTravelAndTheTimeRequiredToCompleteTheShipmentAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N1WhatAreTheDistancesTheShipmentsWillTravelAndTheTimeRequiredToCompleteTheShipment CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N1WhatAreTheDistancesTheShipmentsWillTravelAndTheTimeRequiredToCompleteTheShipment CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N1WhatAreTheDistancesTheShipmentsWillTravelAndTheTimeRequiredToCompleteTheShipment Tab
         await page.EnterN2WhatAreTheTypesAndAgesOfTheVehiclesTrailersUsedToTransportYourCommoditiesAsync(data.Resolve("{{data:2_what_are_the_types_and_ages_of_the_vehicles_trailers_used_to_transport_your_commodities_347}}"));
-        await page.PressN2WhatAreTheTypesAndAgesOfTheVehiclesTrailersUsedToTransportYourCommoditiesAsync("Tab");
-        await page.PressN2WhatAreTheTypesAndAgesOfTheVehiclesTrailersUsedToTransportYourCommoditiesAsync("CLICK");
-        await page.PressN2WhatAreTheTypesAndAgesOfTheVehiclesTrailersUsedToTransportYourCommoditiesAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N2WhatAreTheTypesAndAgesOfTheVehiclesTrailersUsedToTransportYourCommodities CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N2WhatAreTheTypesAndAgesOfTheVehiclesTrailersUsedToTransportYourCommodities Tab
         await page.EnterN3DoesTheApplicantHaulForOthersAsync(data.Resolve("{{data:3_does_the_applicant_haul_for_others_348}}"));
-        await page.PressN3DoesTheApplicantHaulForOthersAsync("Tab");
-        await page.PressN3DoesTheApplicantHaulForOthersAsync("CLICK");
-        await page.PressN3DoesTheApplicantHaulForOthersAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N3DoesTheApplicantHaulForOthers CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N3DoesTheApplicantHaulForOthers Tab
         await page.EnterN4WhatProtectiveDevicesAreInstalledOnEachVehicleOrTrailerAsync(data.Resolve("{{data:4_what_protective_devices_are_installed_on_each_vehicle_or_trailer_349}}"));
-        await page.PressN4WhatProtectiveDevicesAreInstalledOnEachVehicleOrTrailerAsync("Tab");
-        await page.PressN4WhatProtectiveDevicesAreInstalledOnEachVehicleOrTrailerAsync("CLICK");
-        await page.PressN4WhatProtectiveDevicesAreInstalledOnEachVehicleOrTrailerAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N4WhatProtectiveDevicesAreInstalledOnEachVehicleOrTrailer CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N4WhatProtectiveDevicesAreInstalledOnEachVehicleOrTrailer Tab
         await page.EnterN5DoAnyVehiclesHaveSpecialEquipmentMountedOrAttachedAsync(data.Resolve("{{data:5_do_any_vehicles_have_special_equipment_mounted_or_attached_350}}"));
-        await page.PressN5DoAnyVehiclesHaveSpecialEquipmentMountedOrAttachedAsync("Tab");
-        await page.PressN5DoAnyVehiclesHaveSpecialEquipmentMountedOrAttachedAsync("CLICK");
-        await page.PressN5DoAnyVehiclesHaveSpecialEquipmentMountedOrAttachedAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N5DoAnyVehiclesHaveSpecialEquipmentMountedOrAttached CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N5DoAnyVehiclesHaveSpecialEquipmentMountedOrAttached Tab
         await page.EnterN6DoesTheApplicantPullDoubleOrTripleTrailersAsync(data.Resolve("{{data:6_does_the_applicant_pull_double_or_triple_trailers_351}}"));
-        await page.PressN6DoesTheApplicantPullDoubleOrTripleTrailersAsync("Tab");
-        await page.PressN6DoesTheApplicantPullDoubleOrTripleTrailersAsync("CLICK");
-        await page.PressN6DoesTheApplicantPullDoubleOrTripleTrailersAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N6DoesTheApplicantPullDoubleOrTripleTrailers CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N6DoesTheApplicantPullDoubleOrTripleTrailers Tab
         await page.EnterN7DoesTheApplicantLeaveTheTruckWindowsDoorsAndCompartmentsClosedAndLockedWhenUnattendedAsync(data.Resolve("{{data:7_does_the_applicant_leave_the_truck_windows_doors_and_compartments_closed_and_locked_when_unattended_352}}"));
-        await page.PressN7DoesTheApplicantLeaveTheTruckWindowsDoorsAndCompartmentsClosedAndLockedWhenUnattendedAsync("Tab");
-        await page.PressN7DoesTheApplicantLeaveTheTruckWindowsDoorsAndCompartmentsClosedAndLockedWhenUnattendedAsync("CLICK");
-        await page.PressN7DoesTheApplicantLeaveTheTruckWindowsDoorsAndCompartmentsClosedAndLockedWhenUnattendedAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N7DoesTheApplicantLeaveTheTruckWindowsDoorsAndCompartmentsClosedAndLockedWhenUnattended CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N7DoesTheApplicantLeaveTheTruckWindowsDoorsAndCompartmentsClosedAndLockedWhenUnattended Tab
         await page.EnterN8DoYouProvideScheduledMaintenanceForTheVehiclesAndTrailersYouOperateAsync(data.Resolve("{{data:8_do_you_provide_scheduled_maintenance_for_the_vehicles_and_trailers_you_operate_353}}"));
-        await page.PressN8DoYouProvideScheduledMaintenanceForTheVehiclesAndTrailersYouOperateAsync("Tab");
-        await page.PressN8DoYouProvideScheduledMaintenanceForTheVehiclesAndTrailersYouOperateAsync("CLICK");
-        await page.PressN8DoYouProvideScheduledMaintenanceForTheVehiclesAndTrailersYouOperateAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N8DoYouProvideScheduledMaintenanceForTheVehiclesAndTrailersYouOperate CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N8DoYouProvideScheduledMaintenanceForTheVehiclesAndTrailersYouOperate Tab
         await page.EnterN9AreTheEmployeesThatPackLoadAndUnloadTrainedInProperHandlingOfTheCommoditiesAsync(data.Resolve("{{data:9_are_the_employees_that_pack_load_and_unload_trained_in_proper_handling_of_the_commodities_354}}"));
-        await page.PressN9AreTheEmployeesThatPackLoadAndUnloadTrainedInProperHandlingOfTheCommoditiesAsync("Tab");
-        await page.PressN9AreTheEmployeesThatPackLoadAndUnloadTrainedInProperHandlingOfTheCommoditiesAsync("CLICK");
-        await page.PressN9AreTheEmployeesThatPackLoadAndUnloadTrainedInProperHandlingOfTheCommoditiesAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N9AreTheEmployeesThatPackLoadAndUnloadTrainedInProperHandlingOfTheCommodities CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N9AreTheEmployeesThatPackLoadAndUnloadTrainedInProperHandlingOfTheCommodities Tab
         await page.EnterN10HowAreTheGoodsBeingTransportedProtectedFromDamageAndTheftAsync(data.Resolve("{{data:10_how_are_the_goods_being_transported_protected_from_damage_and_theft_355}}"));
-        await page.PressN10HowAreTheGoodsBeingTransportedProtectedFromDamageAndTheftAsync("Tab");
-        await page.PressN10HowAreTheGoodsBeingTransportedProtectedFromDamageAndTheftAsync("CLICK");
-        await page.PressN10HowAreTheGoodsBeingTransportedProtectedFromDamageAndTheftAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N10HowAreTheGoodsBeingTransportedProtectedFromDamageAndTheft CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N10HowAreTheGoodsBeingTransportedProtectedFromDamageAndTheft Tab
         await page.EnterN11AreDriversMVRsAndTripLogsMaintainedAsync(data.Resolve("{{data:11_are_drivers_mvrs_and_trip_logs_maintained_356}}"));
-        await page.PressN11AreDriversMVRsAndTripLogsMaintainedAsync("Tab");
-        await page.PressN11AreDriversMVRsAndTripLogsMaintainedAsync("CLICK");
-        await page.PressN11AreDriversMVRsAndTripLogsMaintainedAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N11AreDriversMVRsAndTripLogsMaintained CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N11AreDriversMVRsAndTripLogsMaintained Tab
         await page.EnterN12HowOftenAreTheseLogsReviewedOrUpdatedAsync(data.Resolve("{{data:12_how_often_are_these_logs_reviewed_or_updated_357}}"));
-        await page.PressN12HowOftenAreTheseLogsReviewedOrUpdatedAsync("Tab");
-        await page.PressN12HowOftenAreTheseLogsReviewedOrUpdatedAsync("CLICK");
-        await page.PressN12HowOftenAreTheseLogsReviewedOrUpdatedAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N12HowOftenAreTheseLogsReviewedOrUpdated CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N12HowOftenAreTheseLogsReviewedOrUpdated Tab
         await page.EnterN13LiveAnimalInTransitCoverageAsync(data.Resolve("{{data:13_live_animal_in_transit_coverage_358}}"));
-        await page.PressN13LiveAnimalInTransitCoverageAsync("Tab");
-        await page.PressN13LiveAnimalInTransitCoverageAsync("CLICK");
-        await page.PressN13LiveAnimalInTransitCoverageAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N13LiveAnimalInTransitCoverage CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N13LiveAnimalInTransitCoverage Tab
         await page.EnterN14LegalLiabilityCoverageAsync(data.Resolve("{{data:14_legal_liability_coverage_359}}"));
-        await page.PressN14LegalLiabilityCoverageAsync("Tab");
-        await page.PressN14LegalLiabilityCoverageAsync("CLICK");
-        await page.PressN14LegalLiabilityCoverageAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: N14LegalLiabilityCoverage CLICK
+        // v56 suppressed redundant Tosca keyboard steering: N14LegalLiabilityCoverage Tab
         await page.ClickSpecificUnderwritingQuestionsMotorTruckCargoOwnersOKAsync();
 
     }
@@ -1203,14 +1001,8 @@ public sealed class IMBasicPolicySteps
         await page.ClickSignsUWQuestionsAsync();
         await page.WaitForSignsHeadingAsync("Exists");
         await page.EnterAreAnySignsOffPremisesOrNotAttachedToBuildingAsync(data.Resolve("{{data:are_any_signs_off_premises_or_not_attached_to_building_364}}"));
-        await page.PressAreAnySignsOffPremisesOrNotAttachedToBuildingAsync("Tab");
-        await page.PressAreAnySignsOffPremisesOrNotAttachedToBuildingAsync("Tab");
         await page.EnterDoesTheApplicantWishToCoverAnySignsInsideTheirPremisesAsync(data.Resolve("{{data:does_the_applicant_wish_to_cover_any_signs_inside_their_premises_365}}"));
-        await page.PressDoesTheApplicantWishToCoverAnySignsInsideTheirPremisesAsync("Tab");
-        await page.PressDoesTheApplicantWishToCoverAnySignsInsideTheirPremisesAsync("Tab");
         await page.EnterWhatIsTheConstructionOfEachSignAsync(data.Resolve("{{data:what_is_the_construction_of_each_sign_366}}"));
-        await page.PressWhatIsTheConstructionOfEachSignAsync("Tab");
-        await page.PressWhatIsTheConstructionOfEachSignAsync("Tab");
         await page.ClickSpecificUnderwritingQuestionsSignsOKAsync();
 
     }
@@ -1228,20 +1020,14 @@ public sealed class IMBasicPolicySteps
         await page.ClickBilling6ED79Async();
         await page.WaitForBillingD1518Async("Exists");
         await page.EnterBillTypeAsync(data.Resolve("{{data:bill_type_370}}"));
-        await page.PressBillTypeAsync("Tab");
-        await page.PressBillTypeAsync("TAB");
         await page.WaitForBillTypeAsync("Equal");
         await page.EnterPayPlanAsync(data.Resolve("{{data:pay_plan_373}}"));
-        await page.PressPayPlanAsync("Tab");
-        await page.PressPayPlanAsync("TAB");
         await page.WaitForPayPlanAsync("Equal");
         await page.WaitForEasyPayAsync("Exists");
         await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_377}}"));
-        await page.PressEasyPayAsync("CLICK");
-        await page.PressEasyPayAsync("Enter");
-        await page.PressEasyPayAsync("Tab");
-        await page.PressEasyPayAsync("Tab");
-        await page.PressEasyPayAsync("TAB");
+        // v56 suppressed redundant Tosca keyboard steering: EasyPay CLICK
+        // v56 suppressed redundant Tosca keyboard steering: EasyPay Enter
+        // v56 suppressed redundant Tosca keyboard steering: EasyPay Tab
         await page.PauseAsync(1000);
 
     }
@@ -1278,14 +1064,12 @@ public sealed class IMBasicPolicySteps
         await page.ClickSubmissionAsync();
         await page.WaitForSubmissionHeadingAsync("Exists");
         await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_388}}"));
-        await page.PressIsThisCoverageBoundAsync("Tab");
-        await page.PressIsThisCoverageBoundAsync("CLICK");
-        await page.PressIsThisCoverageBoundAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: IsThisCoverageBound CLICK
+        // v56 suppressed redundant Tosca keyboard steering: IsThisCoverageBound Tab
         await page.VerifyOrderAuditAsync("Exists", "");
         await page.EnterOrderAuditAsync(data.Resolve("{{data:order_audit_390}}"));
-        await page.PressOrderAuditAsync("Tab");
         await page.VerifySubmissionHeadingAsync("Absent", "");
-        await page.PressSubmissionAsync("TAB");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Submission
         await page.ClickSubmissionAsync();
         await page.PauseAsync(1000);
         await page.WaitForSubmissionHeadingAsync("Exists");
@@ -1306,8 +1090,6 @@ public sealed class IMBasicPolicySteps
         await page.VerifyIsThisCoverageBoundAsync("Exists", "");
         await page.VerifyIsThisCoverageBoundAsync(data.Resolve("{{data:expected_is_this_coverage_bound_value_398}}"), "Value");
         await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_399}}"));
-        await page.PressIsThisCoverageBoundAsync("Tab");
-        await page.PressIsThisCoverageBoundAsync("Tab");
         await page.ClickCompleteApplicationAsync();
         await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
         await page.PauseAsync(1000);

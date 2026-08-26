@@ -8,64 +8,87 @@ public sealed class LossHistoryLocators
     public LossHistoryLocators(IPage page) => _page = page;
 
     // Source modules: Addl Interests - Main | confidence=High score=125
-    public ILocator AddAddlInterest => _page.GetByRole(AriaRole.Button, new() { Name = "Add Addl Interest", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Main | Add Addl Interest | DuckCreekId
+    public ILocator AddAddlInterest => _page.Locator("[duckcreekid=\"Add Addl Interest\"], [data-duckcreekid=\"Add Addl Interest\"]");
 
     // Source modules: CP Navigation Links | confidence=Medium score=113
-    public ILocator AddlInterests => _page.GetByRole(AriaRole.Link, new() { Name = "Addl Interests", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Main | Addl Interests | Id
+    public ILocator AddlInterests => _page.Locator("[id=\"pageTitle\"]");
 
     // Source modules: Addl Interests - Loss Payee | confidence=High score=95
-    public ILocator AddlInterestsMainOK => _page.GetByRole(AriaRole.Button, new() { Name = "Addl Interests Main - OK", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Loss Payee | Addl Interests Main - OK | DuckCreekId
+    public ILocator AddlInterestsMainOK => _page.Locator("[duckcreekid=\"OK\"], [data-duckcreekid=\"OK\"]");
 
     // Source modules: Addl Interests - Loss Payee | confidence=High score=125
-    public ILocator Address1 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Address 1*", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Loss Payee | Address 1* | DuckCreekId | frame=iframe
+    public ILocator Address1 => _page.FrameLocator("iframe").Locator("[duckcreekid=\"AdditionalOtherInterestInput.Address1\"], [data-duckcreekid=\"AdditionalOtherInterestInput.Address1\"]");
 
     // Source modules: Addl Interests - Loss Payee | confidence=High score=125
-    public ILocator AssignLocations => _page.GetByRole(AriaRole.Button, new() { Name = "Assign Locations...", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Loss Payee | Assign Locations... | DuckCreekId
+    public ILocator AssignLocations => _page.Locator("[duckcreekid=\"Assign Locations...\"], [data-duckcreekid=\"Assign Locations...\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
     public ILocator AssignmentScheduleFor => _page.GetByText("Assignment Schedule for:", new() { Exact = true });
 
     // Source modules: Addl Interests - Loss Payee | confidence=High score=125
-    public ILocator AssignmentScheduleForOK => _page.GetByRole(AriaRole.Button, new() { Name = "Assignment Schedule for - OK", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Loss Payee | Assignment Schedule for - OK | DuckCreekId
+    // v56 semantic alias: same physical raw-Tosca control as AddlInterestsMainOK
+    public ILocator AssignmentScheduleForOK => AddlInterestsMainOK;
 
     // Source modules: Addl Interests - Loss Payee | confidence=High score=125
-    public ILocator DescriptionOfProperty => _page.GetByRole(AriaRole.Textbox, new() { Name = "Description Of Property*", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Loss Payee | Description Of Property* | DuckCreekId
+    public ILocator DescriptionOfProperty => _page.Locator("[duckcreekid=\"AdditionalOtherInterestInput.PropertyDescription\"], [data-duckcreekid=\"AdditionalOtherInterestInput.PropertyDescription\"]");
 
     // Source modules: Addl Interests - Loss Payee | confidence=High score=125
-    public ILocator FirstName => _page.GetByRole(AriaRole.Textbox, new() { Name = "First Name*", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Loss Payee | First Name* | DuckCreekId | frame=iframe
+    public ILocator FirstName => _page.FrameLocator("iframe").Locator("[duckcreekid=\"AdditionalOtherInterestInput.FirstName\"], [data-duckcreekid=\"AdditionalOtherInterestInput.FirstName\"]");
 
     // Source modules: Addl Interests - Loss Payee | confidence=High score=125
-    public ILocator InsuredType => _page.GetByRole(AriaRole.Textbox, new() { Name = "Insured Type*", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Loss Payee | Insured Type* | DuckCreekId | frame=iframe
+    public ILocator InsuredType => _page.FrameLocator("iframe").Locator("[duckcreekid=\"AdditionalOtherInterestInput.InsuredType\"], [data-duckcreekid=\"AdditionalOtherInterestInput.InsuredType\"]");
 
     // Source modules: Addl Interests - Loss Payee | confidence=High score=125
-    public ILocator LastName => _page.GetByRole(AriaRole.Textbox, new() { Name = "Last Name*", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Loss Payee | Last Name* | DuckCreekId | frame=iframe
+    public ILocator LastName => _page.FrameLocator("iframe").Locator("[duckcreekid=\"AdditionalOtherInterestInput.LastName\"], [data-duckcreekid=\"AdditionalOtherInterestInput.LastName\"]");
 
     // Source modules: Addl Interests - Loss Payee | confidence=High score=125
-    public ILocator LoanNumber => _page.GetByRole(AriaRole.Textbox, new() { Name = "Loan Number", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Loss Payee | Loan Number | DuckCreekId
+    public ILocator LoanNumber => _page.Locator("[duckcreekid=\"AdditionalOtherInterestInput.LoanNumber\"], [data-duckcreekid=\"AdditionalOtherInterestInput.LoanNumber\"]");
 
     // Source modules: Addl Interests - Loss Payee | confidence=High score=125
-    public ILocator MI => _page.GetByRole(AriaRole.Textbox, new() { Name = "MI", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Loss Payee | MI | DuckCreekId
+    public ILocator MI => _page.Locator("[duckcreekid=\"AdditionalOtherInterestInput.MiddleInitial\"], [data-duckcreekid=\"AdditionalOtherInterestInput.MiddleInitial\"]");
 
     // Source modules: Addl Interests - Loss Payee | confidence=High score=125
-    public ILocator NewAssignment => _page.GetByRole(AriaRole.Button, new() { Name = "New Assignment...", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Loss Payee | New Assignment... | DuckCreekId
+    public ILocator NewAssignment => _page.Locator("[duckcreekid=\"New Assignment...\"], [data-duckcreekid=\"New Assignment...\"]");
 
     // Source modules: Addl Interests - Loss Payee | confidence=High score=125
-    public ILocator OtherInterestPremisesDetailOK => _page.GetByRole(AriaRole.Button, new() { Name = "Other Interest Premises Detail - OK", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Loss Payee | Other Interest Premises Detail - OK | DuckCreekId
+    // v56 semantic alias: same physical raw-Tosca control as AddlInterestsMainOK
+    public ILocator OtherInterestPremisesDetailOK => AddlInterestsMainOK;
 
     // Source modules: Addl Interests - Loss Payee | confidence=High score=97
-    public ILocator OtherInterestPremisesSchedule => _page.GetByLabel("Other Interest Premises Schedule", new() { Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Loss Payee | Other Interest Premises Schedule | Id
+    // v56 semantic alias: same physical raw-Tosca control as AddlInterests
+    public ILocator OtherInterestPremisesSchedule => AddlInterests;
 
     // Source modules: Addl Interests - Loss Payee | confidence=High score=125
-    public ILocator OtherInterestPremisesScheduleOK => _page.GetByRole(AriaRole.Button, new() { Name = "Other Interest Premises Schedule - OK", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Loss Payee | Other Interest Premises Schedule - OK | DuckCreekId
+    // v56 semantic alias: same physical raw-Tosca control as AddlInterestsMainOK
+    public ILocator OtherInterestPremisesScheduleOK => AddlInterestsMainOK;
 
     // Source modules: Addl Interests - Loss Payee | confidence=High score=125
-    public ILocator ProvisionsApplicable => _page.GetByRole(AriaRole.Textbox, new() { Name = "Provisions Applicable*", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Loss Payee | Provisions Applicable* | DuckCreekId
+    public ILocator ProvisionsApplicable => _page.Locator("[duckcreekid=\"AdditionalOtherInterestInput.ProvisionsApplicable\"], [data-duckcreekid=\"AdditionalOtherInterestInput.ProvisionsApplicable\"]");
 
     // Source modules: Addl Interests - Loss Payee | confidence=High score=125
-    public ILocator Type => _page.GetByRole(AriaRole.Textbox, new() { Name = "Type", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Loss Payee | Type | DuckCreekId | frame=iframe
+    public ILocator Type => _page.FrameLocator("iframe").Locator("[duckcreekid=\"AdditionalOtherInterestInput.Type\"], [data-duckcreekid=\"AdditionalOtherInterestInput.Type\"]");
 
     // Source modules: Addl Interests - Loss Payee | confidence=High score=125
-    public ILocator ZipCode => _page.GetByRole(AriaRole.Textbox, new() { Name = "Zip Code*", Exact = true });
+    // v56 raw Tosca primary: Addl Interests - Loss Payee | Zip Code* | DuckCreekId | frame=iframe
+    public ILocator ZipCode => _page.FrameLocator("iframe").Locator("[duckcreekid=\"AdditionalOtherInterestInput.ZipCode\"], [data-duckcreekid=\"AdditionalOtherInterestInput.ZipCode\"]");
 
 }

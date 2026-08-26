@@ -15,6 +15,7 @@ public sealed class PricingLocators
     public ILocator Loading => _page.GetByLabel("Loading ...", new() { Exact = true });
 
     // Source modules: EQ || Pricing Details (New) | confidence=Medium score=113
-    public ILocator PricingDetailsNewNext => _page.GetByRole(AriaRole.Button, new() { Name = "Next", Exact = true });
+    // v56 raw Tosca primary: EQ || Pricing Details (New) | add | Id
+    public ILocator PricingDetailsNewNext => _page.Locator("[id=\"mat-tab-content-0-1\"]");
 
 }

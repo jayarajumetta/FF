@@ -20,6 +20,7 @@ public sealed class PricingLocators
     public ILocator ScreenHeading => _page.GetByText("Screen Heading", new() { Exact = true });
 
     // Source modules: EQ|SFP|Pricing | confidence=High score=97
-    public ILocator TotalPremium => _page.GetByLabel("Total Premium", new() { Exact = true });
+    // v56 raw Tosca primary: EQ|SFP|Pricing | Total Premium | Id
+    public ILocator TotalPremium => _page.Locator("[id=\"LineCoverages.EQPricingSummaryFullPremiumTotalPremiumSumm-0-layout\"]");
 
 }

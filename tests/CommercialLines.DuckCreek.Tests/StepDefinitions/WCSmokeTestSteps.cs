@@ -88,7 +88,6 @@ public sealed class WCSmokeTestSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.EnterUserNameAsync(data.Resolve("{{env:CL_DC_USERNAME}}"));
-        await page.PressUserNameAsync("Tab");
         await page.EnterPasswordAsync(data.Resolve("{{env:CL_DC_PASSWORD}}"));
         await page.ClickLoginAsync();
         await page.WaitForLoginAsync("Absent");
@@ -107,13 +106,12 @@ public sealed class WCSmokeTestSteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickNewQuoteAsync();
         await page.EnterEffectiveDateAsync(data.Resolve("{{data:effective_date_43}}"));
-        await page.PressEffectiveDateAsync("Tab");
         if (data.Condition("'Product:*' != \"Carrier_SpecialFarmPackage  Pages   US   (4.0.0.0)\""))
         {
                     await page.EnterProductAsync(data.Resolve("{{data:product_45}}"));
-                    await page.PressProductAsync("CLICK");
-                    await page.PressProductAsync("Enter");
-                    await page.PressProductAsync("Tab");
+                    // v56 suppressed redundant Tosca keyboard steering: Product CLICK
+                    // v56 suppressed redundant Tosca keyboard steering: Product Enter
+                    // v56 suppressed redundant Tosca keyboard steering: Product Tab
         }
         await page.WaitForStartAsync("Visible");
         await page.ClickStartAsync();
@@ -141,31 +139,20 @@ public sealed class WCSmokeTestSteps
         await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_51}}"));
         await page.WaitForUnderwritingInfoAsync("Exists");
         await page.EnterInsuredTypeAsync(data.Resolve("{{data:insured_type_53}}"));
-        await page.PressInsuredTypeAsync("Enter");
-        await page.PressInsuredTypeAsync("Tab");
-        await page.PressInsuredTypeAsync("Tab");
         await page.ClickEntityTypeAsync();
         await page.WaitForBusinessNameAsync("Visible");
         await page.EnterBusinessNameAsync(data.Resolve("{{data:business_name_56}}"));
-        await page.PressBusinessNameAsync("Tab");
         await page.EnterEntityTypeAsync(data.Resolve("{{data:entity_type_57}}"));
-        await page.PressEntityTypeAsync("Tab");
         // Source step 0082: RANDOM input for Primary Phone.
         await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0082}}"));
-        await page.PressAddress17A1FBAsync("TAB");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Address17A1FB
         await page.EnterZipCode26D22Async(data.Resolve("{{data:zipcode_60}}"));
-        await page.PressZipCode26D22Async("Tab");
-        await page.PressZipCode26D22Async("Tab");
         await page.EnterAddress17A1FBAsync(data.Resolve("{{data:address1_61}}"));
-        await page.PressAddress17A1FBAsync("Tab");
         await page.VerifyYearsInBusinessAsync("Exists", "");
         await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_63}}"));
-        await page.PressYearsInBusinessAsync("Tab");
         if (data.Condition("'Product (LOB)' != \"UMB\""))
         {
                     await page.EnterNameOfAuditContactAsync(data.Resolve("{{data:name_of_audit_contact_65}}"));
-                    await page.PressNameOfAuditContactAsync("Tab");
-                    await page.PressNameOfAuditContactAsync("Tab");
         }
         // Source step 0086: RANDOM input for Audit Telephone #.
         if (data.Condition("'Product (LOB)' != \"UMB\""))
@@ -173,21 +160,16 @@ public sealed class WCSmokeTestSteps
             await page.EnterAuditTelephoneAsync(data.Resolve("{{runtime:AuditTelephone_0086}}"));
         }
         await page.EnterNameOfInspectionContactAsync(data.Resolve("{{data:name_of_inspection_contact_67}}"));
-        await page.PressNameOfInspectionContactAsync("Tab");
-        await page.PressNameOfInspectionContactAsync("Tab");
-        await page.PressNameOfInspectionContactAsync("CLICK");
-        await page.PressNameOfInspectionContactAsync("CLICK");
-        await page.PressNameOfInspectionContactAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: NameOfInspectionContact CLICK
+        // v56 suppressed redundant Tosca keyboard steering: NameOfInspectionContact CLICK
+        // v56 suppressed redundant Tosca keyboard steering: NameOfInspectionContact Tab
         // Source step 0086: RANDOM input for Inspection Telephone #.
         await page.EnterInspectionTelephoneAsync(data.Resolve("{{runtime:InspectionTelephone_0086}}"));
         await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_69}}"));
-        await page.PressInsuredEMailAddressAsync("Tab");
-        await page.PressInsuredEMailAddressAsync("CLICK");
-        await page.PressInsuredEMailAddressAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: InsuredEMailAddress CLICK
+        // v56 suppressed redundant Tosca keyboard steering: InsuredEMailAddress Tab
         await page.EnterWebsiteAddressAsync(data.Resolve("{{data:website_address_70}}"));
-        await page.PressWebsiteAddressAsync("Tab");
-        await page.PressAddress2Async("TAB");
-        await page.PressAddress2Async("Tab");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Address2
         await page.VerifyZipCode26D22Async("[0-9]{5}-[0-9]{4}", "Regex:value");
         data.Set("State", data.Resolve("{{data:state}}"));
         data.Set("Product (LOB)", data.Resolve("{{data:product_lob}}"));
@@ -205,7 +187,7 @@ public sealed class WCSmokeTestSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForAddClientAsync("Exists");
-        await page.PressAddClientAsync("TAB");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets AddClient
         await page.ClickAddClientAsync();
         await page.VerifyIndividualTypeAsync("Absent", "");
 
@@ -238,20 +220,14 @@ public sealed class WCSmokeTestSteps
         await page.ClickBilling6ED79Async();
         await page.WaitForBillingD1518Async("Exists");
         await page.EnterBillTypeAsync(data.Resolve("{{data:bill_type_86}}"));
-        await page.PressBillTypeAsync("Tab");
-        await page.PressBillTypeAsync("TAB");
         await page.WaitForBillTypeAsync("Equal");
         await page.EnterPayPlanAsync(data.Resolve("{{data:pay_plan_89}}"));
-        await page.PressPayPlanAsync("Tab");
-        await page.PressPayPlanAsync("TAB");
         await page.WaitForPayPlanAsync("Equal");
         await page.WaitForEasyPayAsync("Exists");
         await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_93}}"));
-        await page.PressEasyPayAsync("CLICK");
-        await page.PressEasyPayAsync("Enter");
-        await page.PressEasyPayAsync("Tab");
-        await page.PressEasyPayAsync("Tab");
-        await page.PressEasyPayAsync("TAB");
+        // v56 suppressed redundant Tosca keyboard steering: EasyPay CLICK
+        // v56 suppressed redundant Tosca keyboard steering: EasyPay Enter
+        // v56 suppressed redundant Tosca keyboard steering: EasyPay Tab
         await page.PauseAsync(1000);
 
     }
@@ -270,35 +246,20 @@ public sealed class WCSmokeTestSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.EnterIndividualTypeAsync(data.Resolve("{{data:individualtype_96}}"));
-        await page.PressIndividualTypeAsync("Tab");
-        await page.PressIndividualTypeAsync("CLICK");
-        await page.PressIndividualTypeAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: IndividualType CLICK
+        // v56 suppressed redundant Tosca keyboard steering: IndividualType Tab
         await page.WaitForPleaseVerifySSNF738AAsync("Exists");
         // Source step 0098: RANDOM input for MiddleName.
         await page.EnterMiddleNameAsync(data.Resolve("{{runtime:MiddleName_0098}}"));
-        await page.PressFirstNameC5387Async("TAB");
-        await page.PressFirstNameC5387Async("Tab");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets FirstNameC5387
         // Source step 0098: RANDOM input for LastName.
         await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0098}}"));
         await page.EnterDateOfBirth338D7Async(data.Resolve("{{data:dateofbirth_101}}"));
-        await page.PressDateOfBirth338D7Async("Tab");
         await page.EnterAddress1D319BAsync(data.Resolve("{{data:address1_102}}"));
-        await page.PressAddress1D319BAsync("Tab");
-        await page.PressAddress1D319BAsync("Tab");
         await page.EnterCityAsync(data.Resolve("{{data:city_103}}"));
-        await page.PressCityAsync("Tab");
-        await page.PressCityAsync("Tab");
-        await page.PressCityAsync("Tab");
         await page.EnterStateAsync(data.Resolve("{{data:state_104}}"));
-        await page.PressStateAsync("Tab");
-        await page.PressStateAsync("Tab");
-        await page.PressStateAsync("Tab");
         await page.EnterZipCodeA088EAsync(data.Resolve("{{data:zipcode_105}}"));
-        await page.PressZipCodeA088EAsync("Tab");
-        await page.PressZipCodeA088EAsync("Tab");
-        await page.PressZipCodeA088EAsync("Tab");
         await page.EnterGender4973CAsync(data.Resolve("{{data:gender_106}}"));
-        await page.PressGender4973CAsync("Tab");
         await page.WaitForClientSearch41F28Async("Exists");
         await page.ClickClientSearch41F28Async();
         // Source RANDOM FirstName entered after Client Search per Tosca source step.
@@ -306,11 +267,9 @@ public sealed class WCSmokeTestSteps
         await page.VerifySearchResultsDuckCreekPolicyFirstCheckboxAsync("Absent", "");
         await page.ClickOKAsync();
         await page.ClickOrderSSN5E031Async();
-        await page.PressEnterSSNFA186Async("TAB");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets EnterSSNFA186
         await page.PressEnterSSNFA186Async("Enter");
         await page.EnterEnterSSNFA186Async(data.Resolve("{{data:enter_ssn_114}}"));
-        await page.PressEnterSSNFA186Async("Tab");
-        await page.PressEnterSSNFA186Async("Tab");
         await page.ClickEnterSSNFA186Async();
         await page.VerifyVerify7A388Async("Absent", "");
         await page.ClickCompleteAsync();
@@ -348,21 +307,17 @@ public sealed class WCSmokeTestSteps
         await page.WaitForPolicyInfoHeaderAsync("Exists");
         await page.PauseAsync(1000);
         await page.EnterEffectiveDate95094Async(data.Resolve("{{data:effectivedate_138}}"));
-        await page.PressEffectiveDate95094Async("Tab");
         await page.PauseAsync(1000);
         if (data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
         {
                     await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_140}}"));
-                    await page.PressPrimaryRatingStateAsync("Tab");
         }
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_141}}"));
-        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
-        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
         await page.PauseAsync(1000);
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_145}}"));
-        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("CLICK");
-        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Enter");
-        await page.PressWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days CLICK
+        // v56 suppressed redundant Tosca keyboard steering: WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days Enter
+        // v56 suppressed redundant Tosca keyboard steering: WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days Tab
         await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
         await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
         await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
@@ -381,14 +336,13 @@ public sealed class WCSmokeTestSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.EnterHasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverageAsync(data.Resolve("{{data:has_the_applicant_been_in_business_for_at_least_3_years_with_continuous_workers_compensation_coverage_150}}"));
-        await page.PressHasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverageAsync("CLICK");
-        await page.PressHasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverageAsync("Enter");
-        await page.PressHasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverageAsync("Tab");
+        // v56 suppressed redundant Tosca keyboard steering: HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage CLICK
+        // v56 suppressed redundant Tosca keyboard steering: HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage Enter
+        // v56 suppressed redundant Tosca keyboard steering: HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage Tab
         await page.WaitForPolicyInfoHeaderAsync("Visible");
         await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
-        await page.PressDescriptionOfSpecifiedOperationAsync("TAB");
+        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets DescriptionOfSpecifiedOperation
         await page.EnterDescriptionOfSpecifiedOperationAsync("AL WC Basic {NMONTH}.{NDAY}.{NYEAR} {Time}");
-        await page.PressDescriptionOfSpecifiedOperationAsync("Tab");
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
 
     }

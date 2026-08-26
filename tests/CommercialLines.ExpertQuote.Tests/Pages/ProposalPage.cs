@@ -105,7 +105,7 @@ public sealed class ProposalPage
     public Task ClickStateDropdownAsync() =>
         _ui.ClickAsync(_locators.StateDropdown, new ControlIntent("Proposal", "StateDropdown"));
 
-    public Task EnterTrueAsync(string value) =>
-        _ui.SmartSetAsync(_locators.NewAccountAddress, value, new ControlIntent("Proposal", "NewAccountAddress"));
+    // Semantic alias retained for source-step compatibility; one physical Page method owns the control.
+    public Task EnterTrueAsync(string value) => SetNewAccountAddressAsync(value);
 
 }

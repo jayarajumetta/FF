@@ -11,11 +11,13 @@ public sealed class PolicyWorkflowLocators
     public ILocator AddLiabilityYes => _page.GetByTestId("fields.policy.line.lineCoverages$isBaseLiability.value-chip-wrapper");
 
     // Source modules: EQ|Common|Narrative | confidence=Medium score=113
-    public ILocator AddNarrative => _page.GetByRole(AriaRole.Button, new() { Name = "Add Narrative", Exact = true });
+    // v56 raw Tosca primary: EQ|Common|Narrative | Description of the business exposures, activities and experience | Id+Name
+    public ILocator AddNarrative => _page.Locator("textarea[id=\"\\\"fields.data.notes.rows[0].notesInput$remarks.value\\\"\"][name=\"\\\"fields.data.notes.rows[0].notesInput$remarks.value\\\"\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe => _page.GetByText("Alert Error Message Box: policy number exists for this quote numbe", new() { Exact = true });
+    // v56 raw Tosca primary:  | Quote | DuckCreekId | frame=iframe
+    public ILocator AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Quote\"], [data-duckcreekid=\"Quote\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -30,20 +32,27 @@ public sealed class PolicyWorkflowLocators
     public ILocator Button => _page.GetByText("Button", new() { Exact = true });
 
     // Source modules: EQ|Common|Client Info | confidence=Medium score=113
-    public ILocator ClientInfoSearch => _page.GetByRole(AriaRole.Button, new() { Name = "Search", Exact = true });
+    // v56 raw Tosca primary: EQ|Common|Client Info | customer.name.first | Id+Name
+    public ILocator ClientInfoSearch => _page.Locator("input[id=\"customer.name.first\"][name=\"customer.name.first\"]");
 
     // Source modules: EQ|Common|Quote Identifying | confidence=Medium score=108
-    public ILocator CloseQuote => _page.GetByLabel("Close Quote", new() { Exact = true });
+    // v56 raw Tosca primary:  | Quote | DuckCreekId | frame=iframe
+    // v56 semantic alias: same physical raw-Tosca control as AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe
+    public ILocator CloseQuote => AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe;
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator DescriptionOfOperations => _page.GetByText("Description Of Operations", new() { Exact = true });
+    // v56 raw Tosca primary: EQ|Common|Primary Insured|General Info | Description Of Operations | Id+Name
+    public ILocator DescriptionOfOperations => _page.Locator("input[id=\"fields.data.account.policyOutput$descriptionOfOperations.value\"][name=\"fields.data.account.policyOutput$descriptionOfOperations.value\"]");
 
     // Source modules: EQ|Common|Narrative | confidence=High score=127
-    public ILocator DescriptionOfTheBusinessExposuresActivitiesAndExperience => _page.GetByRole(AriaRole.Textbox, new() { Name = "Description of the business exposures, activities and experience", Exact = true });
+    // v56 raw Tosca primary: EQ|Common|Narrative | Description of the business exposures, activities and experience | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as AddNarrative
+    public ILocator DescriptionOfTheBusinessExposuresActivitiesAndExperience => AddNarrative;
 
     // Source modules: EQ|Common|eChecklist - eChecklist | confidence=High score=127
-    public ILocator EChecklistEChecklistOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    // v56 raw Tosca primary: EQ|Common|eChecklist - eChecklist | OK | Id
+    public ILocator EChecklistEChecklistOK => _page.Locator("[id=\"exception-note-confirm\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -67,33 +76,41 @@ public sealed class PolicyWorkflowLocators
     public ILocator IndividualSoleProprietor => _page.GetByTestId("fields.data.account.accountInput$entityType.value-chip-wrapper");
 
     // Source modules: EQ|BOP|Client Details|Edit Client Roles | confidence=High score=127
-    public ILocator InspectionContact => _page.GetByRole(AriaRole.Checkbox, new() { Name = "Inspection Contact", Exact = true });
+    // v56 raw Tosca primary: EQ|BOP|Client Details|Edit Client Roles | Inspection Contact | Id+Name
+    public ILocator InspectionContact => _page.Locator("input[id=\"fields.primaryInsured.accountInput$isInspectionContact.value-checkbox\"][name=\"fields.primaryInsured.accountInput$isInspectionContact.value\"]");
 
     // Source modules: EQ|SFP|CE|Coverages | confidence=High score=127
-    public ILocator LiabilityLimit => _page.GetByRole(AriaRole.Combobox, new() { Name = "Liability Limit", Exact = true });
+    // v56 raw Tosca primary: EQ|SFP|CE|Coverages | Liability Limit | Id
+    public ILocator LiabilityLimit => _page.Locator("[id=\"fields.line.liability_D5.liabilityLimit_2.value\"]");
 
     // Source modules: EQ|SFP|Div V Liability | confidence=High score=127
-    public ILocator LivestockHorses => _page.GetByRole(AriaRole.Textbox, new() { Name = "livestockHorses", Exact = true });
+    // v56 raw Tosca primary: EQ|SFP|Div V Liability | livestockHorses | Id+Name
+    public ILocator LivestockHorses => _page.Locator("input[id=\"fields.policy.line.liability.liabilityInput$livestockHorses.value\"][name=\"fields.policy.line.liability.liabilityInput$livestockHorses.value\"]");
 
     // Source modules: EQ|SFP|Div V Liability | confidence=High score=127
-    public ILocator LivestockLarge => _page.GetByRole(AriaRole.Textbox, new() { Name = "livestockLarge", Exact = true });
+    // v56 raw Tosca primary: EQ|SFP|Div V Liability | livestockLarge | Id+Name
+    public ILocator LivestockLarge => _page.Locator("input[id=\"fields.policy.line.liability.liabilityInput$livestockLarge.value\"][name=\"fields.policy.line.liability.liabilityInput$livestockLarge.value\"]");
 
     // Source modules: EQ|SFP|Div V Liability | confidence=High score=127
-    public ILocator LivestockSmall => _page.GetByRole(AriaRole.Textbox, new() { Name = "livestockSmall", Exact = true });
+    // v56 raw Tosca primary: EQ|SFP|Div V Liability | livestockSmall | Id+Name
+    public ILocator LivestockSmall => _page.Locator("input[id=\"fields.policy.line.liability.liabilityInput$livestockSmall.value\"][name=\"fields.policy.line.liability.liabilityInput$livestockSmall.value\"]");
 
     // Source modules: EQ |Common|Loading Indicator Wait | confidence=Medium score=78
     public ILocator Loading => _page.GetByLabel("Loading ...", new() { Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator LoadingMessage4DE37 => _page.GetByText("Loading Message", new() { Exact = true });
+    // v56 raw Tosca primary: Indicators and Errors | Loading Message | Id
+    public ILocator LoadingMessage4DE37 => _page.Locator("[id=\"loadingMessage\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
     public ILocator LoadingMessageC7A0D => LoadingMessage4DE37; // semantic alias; locator defined once
 
     // Source modules: EQ|Common|Narrative | confidence=Medium score=78
-    public ILocator LockedThisQuoteHasBeenSubmittedAndYouCanNoLongerMakeChangesToThisText => _page.GetByLabel("Locked This quote has been submitted and you can no longer make changes to this text.", new() { Exact = true });
+    // v56 raw Tosca primary: EQ|Common|Narrative | Description of the business exposures, activities and experience | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as AddNarrative
+    public ILocator LockedThisQuoteHasBeenSubmittedAndYouCanNoLongerMakeChangesToThisText => AddNarrative;
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -108,24 +125,33 @@ public sealed class PolicyWorkflowLocators
     public ILocator LoggedInUser8A0DD => LoggedInUser5A005; // semantic alias; locator defined once
 
     // Source modules: EQ|Common|Logout of EQ | confidence=Medium score=83
-    public ILocator Logout => _page.GetByRole(AriaRole.Button, new() { Name = "logout", Exact = true });
+    // v56 raw Tosca primary:  | Logout | Id
+    public ILocator Logout => _page.Locator("[id=\"id_LogOut\"]");
 
     // Source modules: EQ|Common|Logout of EQ | confidence=Medium score=83
-    public ILocator LogoutLogOut => _page.GetByRole(AriaRole.Button, new() { Name = "logout Log Out", Exact = true });
+    // v56 raw Tosca primary:  | Logout | Id
+    // v56 semantic alias: same physical raw-Tosca control as Logout
+    public ILocator LogoutLogOut => Logout;
 
     // Source modules: EQ|Common|Quote Identifying | confidence=Review score=97
-    public ILocator NameAndQuote => _page.GetByLabel("Name and Quote", new() { Exact = true });
+    // v56 raw Tosca primary:  | Quote | DuckCreekId | frame=iframe
+    // v56 semantic alias: same physical raw-Tosca control as AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe
+    public ILocator NameAndQuote => AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe;
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator NameAndQuoteNum8EB77 => _page.GetByText("Name and Quote Num", new() { Exact = true });
+    // v56 raw Tosca primary:  | Quote | DuckCreekId | frame=iframe
+    // v56 semantic alias: same physical raw-Tosca control as AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe
+    public ILocator NameAndQuoteNum8EB77 => AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe;
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
     public ILocator NameAndQuoteNumCA893 => NameAndQuoteNum8EB77; // semantic alias; locator defined once
 
     // Source modules: EQ|Common|Narrative | confidence=Medium score=78
-    public ILocator NarrativeScreenHeading => _page.GetByLabel("Narrative Screen Heading", new() { Exact = true });
+    // v56 raw Tosca primary: EQ|Common|Narrative | Description of the business exposures, activities and experience | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as AddNarrative
+    public ILocator NarrativeScreenHeading => AddNarrative;
 
     // Source modules: EQ|Common|Primary Insured|Required | confidence=High score=130
     public ILocator NextBOP => _page.GetByTestId("cl-bop-primary-insured-selection-next-btn");
@@ -138,28 +164,34 @@ public sealed class PolicyWorkflowLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator NumberOfFulltimeEmployees => _page.GetByText("Number Of Fulltime Employees", new() { Exact = true });
+    // v56 raw Tosca primary: EQ|Common|Primary Insured|General Info | Number Of Fulltime Employees | Id+Name
+    public ILocator NumberOfFulltimeEmployees => _page.Locator("input[id=\"fields.data.account.lineInputNonShredded$numberOfEmployees.value\"][name=\"fields.data.account.lineInputNonShredded$numberOfEmployees.value\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator NumberOfPartTimeEmployees => _page.GetByText("Number Of PartTime Employees", new() { Exact = true });
+    // v56 raw Tosca primary: EQ|Common|Primary Insured|General Info | Number Of PartTime Employees | Id+Name
+    public ILocator NumberOfPartTimeEmployees => _page.Locator("input[id=\"fields.data.account.lineInputNonShredded$numberOfPartTimeEmployees.value\"][name=\"fields.data.account.lineInputNonShredded$numberOfPartTimeEmployees.value\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator NumberOfSeasonalEmployees => _page.GetByText("Number Of Seasonal Employees", new() { Exact = true });
+    // v56 raw Tosca primary: EQ|Common|Primary Insured|General Info | Number Of Seasonal Employees | Id+Name
+    public ILocator NumberOfSeasonalEmployees => _page.Locator("input[id=\"fields.data.account.lineInputNonShredded$numberOfSeasonalEmployees.value\"][name=\"fields.data.account.lineInputNonShredded$numberOfSeasonalEmployees.value\"]");
 
     // Source modules: EQ|Common|Esignature|Click OK | confidence=Medium score=113
     public ILocator OkToUpdateFromChecklist => _page.GetByRole(AriaRole.Button, new() { Name = "Ok To Update from Checklist", Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator QuickSearchButton => _page.GetByText("QuickSearch Button", new() { Exact = true });
+    // v56 raw Tosca primary: Dashboard|QuickSearch | QuickSearch Button | Id
+    public ILocator QuickSearchButton => _page.Locator("[id=\"id_quickSearch\"]");
 
     // Source modules: EQ|Common|Search by QuoteNum | confidence=High score=127
-    public ILocator QuoteSearchInput => _page.GetByRole(AriaRole.Textbox, new() { Name = "quoteSearchInput", Exact = true });
+    // v56 raw Tosca primary: EQ|Common|Search by QuoteNum | quoteSearchInput | Id+Name
+    public ILocator QuoteSearchInput => _page.Locator("input[id=\"quoteSearchInput\"][name=\"quoteSearchInput\"]");
 
     // Source modules: EQ|Common|PreQualification|General Eligibility Restrictions | confidence=Medium score=78
-    public ILocator ResponseRequiredToContinue => _page.GetByLabel("Response required to continue", new() { Exact = true });
+    // v56 raw Tosca primary: EQ|Common|PreQualification|General Eligibility Restrictions | Unchecked - None Of The Above | Id
+    public ILocator ResponseRequiredToContinue => _page.Locator("[id=\"fields.data.underwritingQuestions.preQualification.preQualificationInput$eqNoneOfTheAbove.value-checkbox\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -174,7 +206,8 @@ public sealed class PolicyWorkflowLocators
     public ILocator ReturnToAdmin => _page.GetByText("Return To Admin", new() { Exact = true });
 
     // Source modules: EQ|SFP|DIV V|Optional Liability Coverage|Workers' Compensation - Residence EmployeesExpertQuote | confidence=High score=130
-    public ILocator Save => _page.GetByTestId("fields.line.save");
+    // v56 raw Tosca primary:  | Save | DuckCreekId | frame=iframe
+    public ILocator Save => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Save\"], [data-duckcreekid=\"Save\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -197,11 +230,13 @@ public sealed class PolicyWorkflowLocators
     public ILocator ScreenHeadingDCABF => ScreenHeading69631; // semantic alias; locator defined once
 
     // Source modules: EQ|Common|Search for Policy | confidence=Medium score=113
-    public ILocator SearchButton => _page.GetByRole(AriaRole.Button, new() { Name = "Search Button", Exact = true });
+    // v56 raw Tosca primary: Dashboard|Search for Policies / Quotes | Search Button | DuckCreekId
+    public ILocator SearchButton => _page.Locator("[duckcreekid=\"Search\"], [data-duckcreekid=\"Search\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator SearchMethodEGDescriptionPolicy => _page.GetByText("Search Method (e.g. Description/Policy#)", new() { Exact = true });
+    // v56 raw Tosca primary: Dashboard|Search for Policies / Quotes | Search Method (e.g. Description/Policy#) | Id
+    public ILocator SearchMethodEGDescriptionPolicy => _page.Locator("[id=\"_keynameAdvSearch1-inputEl\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -221,13 +256,17 @@ public sealed class PolicyWorkflowLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator TransactionType => _page.GetByText("Transaction Type", new() { Exact = true });
+    // v56 raw Tosca primary: TransACT | Transaction Type | Id+Name+DuckCreekId
+    public ILocator TransactionType => _page.Locator("input[id=\"f_tB2C8F4EC9E3041B7B52430914E990D15D2_2_1-inputEl\"][name=\"f_tB2C8F4EC9E3041B7B52430914E990D15D2_2_1-inputEl\"][duckcreekid=\"TransACTInput.TransactionTypeList\"]");
 
     // Source modules: EQ|Common|PreQualification|General Eligibility Restrictions | confidence=High score=97
-    public ILocator UncheckedNoneOfTheAbove => _page.GetByRole(AriaRole.Checkbox, new() { Name = "Unchecked - None Of The Above", Exact = true });
+    // v56 raw Tosca primary: EQ|Common|PreQualification|General Eligibility Restrictions | Unchecked - None Of The Above | Id
+    // v56 semantic alias: same physical raw-Tosca control as ResponseRequiredToContinue
+    public ILocator UncheckedNoneOfTheAbove => ResponseRequiredToContinue;
 
     // Source modules: EQ|SFP|Div V Liability | confidence=High score=127
-    public ILocator UnlistedAcreage => _page.GetByRole(AriaRole.Textbox, new() { Name = "unlistedAcreage", Exact = true });
+    // v56 raw Tosca primary: EQ|SFP|Div V Liability | unlistedAcreage | Id+Name
+    public ILocator UnlistedAcreage => _page.Locator("input[id=\"fields.policy.line.liability.lineInput$unlistedAcreage.value\"][name=\"fields.policy.line.liability.lineInput$unlistedAcreage.value\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -235,7 +274,8 @@ public sealed class PolicyWorkflowLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator UserNameE0ACD => _page.GetByText("UserName", new() { Exact = true });
+    // v56 raw Tosca primary: Login | Username | Id+Name
+    public ILocator UserNameE0ACD => _page.Locator("input[id=\"username\"][name=\"pf.username\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -243,7 +283,8 @@ public sealed class PolicyWorkflowLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator ViewPolicy0AC0B => _page.GetByText("View Policy", new() { Exact = true });
+    // v56 raw Tosca primary: TransACT | View Policy  (*) | Id
+    public ILocator ViewPolicy0AC0B => _page.Locator("[id=\"returnToActiveSessionA\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name

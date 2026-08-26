@@ -127,11 +127,11 @@ public sealed class AutoRateFilingsPolicy1NBSteps
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    await page.PressAgentCodeAsync("TAB");
+                    // v56 suppressed redundant Tosca keyboard steering: AgentCode TAB
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    await page.PressStateAsync("TAB");
+                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets State
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
@@ -140,7 +140,7 @@ public sealed class AutoRateFilingsPolicy1NBSteps
         await page.SelectStateNameAsync("");
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    await page.PressWritingCompanyAsync("TAB");
+                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets WritingCompany
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
@@ -303,7 +303,7 @@ public sealed class AutoRateFilingsPolicy1NBSteps
                     await page.SetBypassLevel9BRulesAsync(data.Resolve("{{data:bypass_level_9b_rules_83}}"));
         }
         await page.EnterBypassLevel9BRulesCommentsAsync(data.Resolve("{{data:bypass_level_9b_rules_comments_84}}"));
-        await page.PressBypassLevel9BRulesCommentsAsync("Click");
+        // v56 suppressed redundant Tosca keyboard steering: BypassLevel9BRulesComments Click
         await page.ClickHomeAsync();
 
     }
@@ -834,7 +834,6 @@ public sealed class AutoRateFilingsPolicy1NBSteps
         await page.WaitForVIN06D01Async("True");
         await page.ClickVIN06D01Async();
         await page.EnterVIN06D01Async(data.Resolve("{{data:txt_vin_217}}"));
-        await page.PressVIN06D01Async("TAB");
         await page.ClickVehicle1Async();
         if (data.Condition("Loan != NULL"))
         {
@@ -925,7 +924,6 @@ public sealed class AutoRateFilingsPolicy1NBSteps
         await page.ClickAddVehicleAsync();
         await page.WaitForVIN0A17CAsync("True");
         await page.EnterVIN0A17CAsync(data.Resolve("{{data:vin_246}}"));
-        await page.PressVIN0A17CAsync("TAB");
         await page.ClickVeh1Async();
         await page.ClickVehicleMoreOptionsAsync();
         await page.PressVehicleMoreOptionsAsync("Click");
@@ -953,7 +951,6 @@ public sealed class AutoRateFilingsPolicy1NBSteps
         await page.ClickAddVehicleAsync();
         await page.WaitForVIN0A17CAsync("True");
         await page.EnterVIN0A17CAsync(data.Resolve("{{data:vin_264}}"));
-        await page.PressVIN0A17CAsync("TAB");
         await page.ClickVeh3Async();
         await page.SelectVehicleMoreOptionsAsync("");
         await page.ClickCollectorCarAsync();
@@ -984,7 +981,6 @@ public sealed class AutoRateFilingsPolicy1NBSteps
         await page.ClickAddVehicleAsync();
         await page.WaitForVIN0A17CAsync("True");
         await page.EnterVIN0A17CAsync(data.Resolve("{{data:vin_283}}"));
-        await page.PressVIN0A17CAsync("TAB");
         await page.ClickVeh1Async();
         await page.ClickOwnB8575Async();
         await page.PressOwnB8575Async("Click");
@@ -2015,7 +2011,6 @@ public sealed class AutoRateFilingsPolicy1NBSteps
         }
         await page.ClickBypassLevel9Comments1Async();
         await page.EnterBypassLevel9Comments1Async(data.Resolve("{{data:bypass_level_9_comments_1_601}}"));
-        await page.PressBypassLevel9Comments1Async("TAB");
         await page.ClickLnkHomeAsync();
         if (await page.IsChkBoxBypassLevel9RulesPresentAsync())
         {
@@ -2027,7 +2022,6 @@ public sealed class AutoRateFilingsPolicy1NBSteps
         }
         await page.ClickBypassLevel9Comments1Async();
         await page.EnterBypassLevel9Comments1Async(data.Resolve("{{data:bypass_level_9_comments_1_607}}"));
-        await page.PressBypassLevel9Comments1Async("TAB");
         await page.ClickLnkHomeAsync();
 
     }
@@ -2149,7 +2143,7 @@ public sealed class AutoRateFilingsPolicy1NBSteps
                     await page.WaitForTxtUnderwritingNotesAsync("True");
         }
         await page.EnterTxtUnderwritingNotesAsync(data.Resolve("{{data:txt_underwriting_notes_634}}"));
-        await page.PressTxtUnderwritingNotesAsync("Click");
+        // v56 suppressed redundant Tosca keyboard steering: TxtUnderwritingNotes Click
         await page.WaitForBtnApproveAsync("Visible");
         await page.ClickBtnApproveAsync();
         await page.ClickLnkHomeAsync();

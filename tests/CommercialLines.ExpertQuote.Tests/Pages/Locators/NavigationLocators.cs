@@ -8,13 +8,16 @@ public sealed class NavigationLocators
     public NavigationLocators(IPage page) => _page = page;
 
     // Source modules: EQ|SFP|Mortgagee/Loss Payee | confidence=Medium score=113
-    public ILocator ADDADDITIONALINTEREST => _page.GetByRole(AriaRole.Button, new() { Name = "+ ADD ADDITIONAL INTEREST", Exact = true });
+    // v56 raw Tosca primary: EQ|SFP|Mortgagee/Loss Payee | Mortgage CheckBox | Id+Name
+    public ILocator ADDADDITIONALINTEREST => _page.Locator("input[id=\"additionalInsuredSelected.0-checkbox\"][name=\"additionalInsuredSelected.0\"]");
 
     // Source modules: EQ|SFP|Mortgagee/Loss Payee | confidence=High score=127
-    public ILocator AccountNumber => _page.GetByRole(AriaRole.Textbox, new() { Name = "Account Number", Exact = true });
+    // v56 raw Tosca primary: EQ|SFP|Mortgagee/Loss Payee | Account Number | Id+Name
+    public ILocator AccountNumber => _page.Locator("input[id=\"fields.additionalOtherInterest.additionalOtherInterestInput$accountNumber.value\"][name=\"fields.additionalOtherInterest.additionalOtherInterestInput$accountNumber.value\"]");
 
     // Source modules: EQ|Common|PreQualification|Add Class Codes|Search/Add Class Codes | confidence=High score=127
-    public ILocator Add => _page.GetByRole(AriaRole.Button, new() { Name = "Add", Exact = true });
+    // v56 raw Tosca primary: EQ|Common|PreQualification|Add Class Codes|Search/Add Class Codes | Add | Id
+    public ILocator Add => _page.Locator("[id=\"fields.data.addClass\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -29,10 +32,12 @@ public sealed class NavigationLocators
     public ILocator BODY => _page.GetByText("BODY", new() { Exact = true });
 
     // Source modules: EQ|Common|PreQualification|Add Class Codes|Search/Add Class Codes | confidence=High score=127
-    public ILocator ClassFilter => _page.GetByRole(AriaRole.Textbox, new() { Name = "Class Filter", Exact = true });
+    // v56 raw Tosca primary: EQ|Common|PreQualification|Add Class Codes|Search/Add Class Codes | Class Filter | Id+Name
+    public ILocator ClassFilter => _page.Locator("input[id=\"temp.filter\"][name=\"temp.filter\"]");
 
     // Source modules: EQ|Common|Client Info | confidence=Medium score=113
-    public ILocator ClientInfoSearch => _page.GetByRole(AriaRole.Button, new() { Name = "Search", Exact = true });
+    // v56 raw Tosca primary: EQ|Common|Client Info | customer.name.first | Id+Name
+    public ILocator ClientInfoSearch => _page.Locator("input[id=\"customer.name.first\"][name=\"customer.name.first\"]");
 
     // Source modules: EQ|SFP|Equipment Breakdown | confidence=High score=130
     public ILocator CombinedDeductible => _page.GetByTestId("fields.line.covEquipmentBreakdown.covEquipmentBreakdownInput$combinedDed.value");
@@ -41,7 +46,8 @@ public sealed class NavigationLocators
     public ILocator CopyOfDecNo => _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$proofOfCoverageRequired.value-chip-wrapper");
 
     // Source modules: EQ|SFP|Mortgagee/Loss Payee | confidence=High score=127
-    public ILocator DescriptionOfInterest => _page.GetByRole(AriaRole.Textbox, new() { Name = "Description Of Interest", Exact = true });
+    // v56 raw Tosca primary: EQ|SFP|Mortgagee/Loss Payee | Description Of Interest | Id+Name
+    public ILocator DescriptionOfInterest => _page.Locator("input[id=\"fields.additionalOtherInterest.additionalOtherInterestInput$descriptionOfInterest.value\"][name=\"fields.additionalOtherInterest.additionalOtherInterestInput$descriptionOfInterest.value\"]");
 
     // Source modules: EQ|SFP|Mortgagee/Loss Payee | confidence=High score=130
     public ILocator EscrowBilledYes => _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$mortgageeResponsibleForEscrow.value-chip-wrapper");
@@ -50,7 +56,9 @@ public sealed class NavigationLocators
     public ILocator FarmImplementsNo => _page.GetByTestId("fields.line.covEquipmentBreakdownContent.covEquipmentBreakdownInput$farmImplement.value-chip-wrapper");
 
     // Source modules: EQ|Common|PreQualification|Add Class Codes|Search/Add Class Codes | confidence=Medium score=78
-    public ILocator FindAClassCode => _page.GetByLabel("Find a Class Code", new() { Exact = true });
+    // v56 raw Tosca primary: EQ|Common|PreQualification|Add Class Codes|Search/Add Class Codes | Class Filter | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as ClassFilter
+    public ILocator FindAClassCode => ClassFilter;
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -60,7 +68,8 @@ public sealed class NavigationLocators
     public ILocator GreaterThan25000No => _page.GetByTestId("fields.line.covEquipmentBreakdownPowerGeneration.covEquipmentBreakdownInput$lossGreaterThan24KEver.value-chip-wrapper");
 
     // Source modules: EQ|BOP|Building |Add Building|Own Rent & Sq Footage | confidence=Medium score=113
-    public ILocator InsuredOccupancySqFtAngular => _page.GetByRole(AriaRole.Textbox, new() { Name = "Insured Occupancy Sq Ft - Angular***", Exact = true });
+    // v56 raw Tosca primary: EQ|BOP|Building |Add Building|Own Rent & Sq Footage | Insured Occupancy Sq Ft | Id+Name
+    public ILocator InsuredOccupancySqFtAngular => _page.Locator("input[id=\"\\\"fields.data.account.building.rows[0].buildingInput$insuredOccupancySqFt.value\\\"\"][name=\"\\\"fields.data.account.building.rows[0].buildingInput$insuredOccupancySqFt.value\\\"\"]");
 
     // Source modules: EQ|Common|Review Required Pop-up | confidence=High score=100
     public ILocator KeepGoing => _page.GetByTestId("btnConfirmYes");
@@ -69,27 +78,31 @@ public sealed class NavigationLocators
     public ILocator Loading => _page.GetByLabel("Loading ...", new() { Exact = true });
 
     // Source modules: EQ|SFP|Mortgagee/Loss Payee | confidence=High score=127
-    public ILocator LocationPrimaryLocation => _page.GetByRole(AriaRole.Combobox, new() { Name = "Location (Primary Location)", Exact = true });
+    // v56 raw Tosca primary: EQ|SFP|Mortgagee/Loss Payee | Location (Primary Location) | Id
+    public ILocator LocationPrimaryLocation => _page.Locator("[id=\"fields.additionalOtherInterest.additionalOtherInterestInput$locationID.value\"]");
 
     // Source modules: EQ|SFP|Mortgagee/Loss Payee | confidence=High score=130
     public ILocator MortgageeSecuredParty => _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$type.value-chip-wrapper");
 
     // Source modules: EQ|Common|PreQualification|Add Class Codes|Search/Add Class Codes | confidence=High score=127
-    public ILocator On => _page.GetByRole(AriaRole.Checkbox, new() { Name = "on", Exact = true });
+    // v56 raw Tosca primary: EQ|Common|PreQualification|Add Class Codes|Search/Add Class Codes | on | Id
+    public ILocator On => _page.Locator("[id=\"\"fields._OccupancyClassSearch.occupancyClassCode.rows[12].occupancyClassCodeInput$addToPolicy.value-checkbox\"\"]");
 
     // Source modules: EQ|BOP|Building |Add Building|Own Rent & Sq Footage | confidence=High score=100
     public ILocator OwnButton => _page.GetByTestId("fields.data.account.building.rows[0].buildingInput$buildingOccupiedEQ.value-chip-wrapper");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator PolicyDetailsABBA9 => _page.GetByText("Policy Details", new() { Exact = true });
+    // v56 raw Tosca primary: TransACT|Policy Details (Attachments) | Policy Details | Id
+    public ILocator PolicyDetailsABBA9 => _page.Locator("[id=\"pageTitle\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
     public ILocator PolicyDetailsE7F69 => PolicyDetailsABBA9; // semantic alias; locator defined once
 
     // Source modules: EQ|Common|Transact|Verify DC Premium | confidence=High score=97
-    public ILocator PolicyNumber => _page.GetByLabel("Policy Number", new() { Exact = true });
+    // v56 raw Tosca primary: EQ|Common|Transact|Verify DC Premium | Policy Number | Id
+    public ILocator PolicyNumber => _page.Locator("[id=\"activeAccountReferenceId\"]");
 
     // Source modules: EQ|SFP|Equipment Breakdown | confidence=High score=130
     public ILocator PowerGreaterThan250kwNo => _page.GetByTestId("fields.line.covEquipmentBreakdownPowerGeneration.covEquipmentBreakdownInput$powerGeneration.value-chip-wrapper");
@@ -102,10 +115,12 @@ public sealed class NavigationLocators
     public ILocator PreQualification => _page.GetByRole(AriaRole.Heading, new() { NameRegex = new System.Text.RegularExpressions.Regex("^PreQualification", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
 
     // Source modules: EQ|SFP|Mortgagee/Loss Payee | confidence=High score=127
-    public ILocator Residence => _page.GetByRole(AriaRole.Combobox, new() { Name = "Residence", Exact = true });
+    // v56 raw Tosca primary: EQ|SFP|Mortgagee/Loss Payee | Residence | Id
+    public ILocator Residence => _page.Locator("[id=\"fields.additionalOtherInterest.additionalOtherInterestInput$buildingID.value\"]");
 
     // Source modules: EQ|SFP|DIV V|Optional Liability Coverage|Workers' Compensation - Residence EmployeesExpertQuote | confidence=High score=130
-    public ILocator Save => _page.GetByTestId("fields.line.save");
+    // v56 raw Tosca primary:  | Save | DuckCreekId | frame=iframe
+    public ILocator Save => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Save\"], [data-duckcreekid=\"Save\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -132,16 +147,20 @@ public sealed class NavigationLocators
     public ILocator ScreenHeadingDCABF => ScreenHeading69631; // semantic alias; locator defined once
 
     // Source modules: EQ|BOP|PreQualification|Add a Class | confidence=Medium score=113
-    public ILocator SearchAddClassCode => _page.GetByRole(AriaRole.Button, new() { Name = "Search/Add Class Code", Exact = true });
+    // v56 raw Tosca primary: EQ|Common|PreQualification|Add Class Codes | Search/Add Class Code | Id
+    public ILocator SearchAddClassCode => _page.Locator("[id=\"fields.data.classCodeSearchButton\"]");
 
     // Source modules: EQ|SFP|Mortgagee/Loss Payee | confidence=High score=127
-    public ILocator SearchName => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search Name", Exact = true });
+    // v56 raw Tosca primary: EQ|SFP|Mortgagee/Loss Payee | Search Name | Id+Name
+    public ILocator SearchName => _page.Locator("input[id=\"temp.searchName\"][name=\"temp.searchName\"]");
 
     // Source modules: EQ|SFP|Mortgagee/Loss Payee | confidence=High score=127
-    public ILocator SearchZipCode => _page.GetByRole(AriaRole.Textbox, new() { Name = "Search ZipCode", Exact = true });
+    // v56 raw Tosca primary: EQ|SFP|Mortgagee/Loss Payee | Search ZipCode | Id+Name
+    public ILocator SearchZipCode => _page.Locator("input[id=\"temp.searchZipCode\"][name=\"temp.searchZipCode\"]");
 
     // Source modules: EQ|BOP|Building |Add Building|Own Rent & Sq Footage | confidence=Medium score=78
-    public ILocator SelectIfClientOwnsOrRentsTheBuilding => _page.GetByLabel("Select if client owns or rents the building", new() { Exact = true });
+    // v56 raw Tosca primary: EQ|BOP|Building |Add Building|Own Rent & Sq Footage | Total Building Sq. Footage | Id+Name
+    public ILocator SelectIfClientOwnsOrRentsTheBuilding => _page.Locator("input[id=\"\\\"fields.data.account.building.rows[0].buildingInput$squareFtEq.value\\\"\"][name=\"\\\"fields.data.account.building.rows[0].buildingInput$squareFtEq.value\\\"\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -153,18 +172,24 @@ public sealed class NavigationLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator SubmissionHeading => _page.GetByText("Submission Heading", new() { Exact = true });
+    // v56 raw Tosca primary: Submission|Required and Optional Fields | Submission Heading | Id
+    public ILocator SubmissionHeading => _page.Locator("[id=\"pageTop\"]");
 
     // Source modules: EQ|BOP|Building |Add Building|Own Rent & Sq Footage | confidence=High score=127
-    public ILocator TotalBuildingSqFootage => _page.GetByRole(AriaRole.Textbox, new() { Name = "Total Building Sq. Footage", Exact = true });
+    // v56 raw Tosca primary: EQ|BOP|Building |Add Building|Own Rent & Sq Footage | Total Building Sq. Footage | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as SelectIfClientOwnsOrRentsTheBuilding
+    public ILocator TotalBuildingSqFootage => SelectIfClientOwnsOrRentsTheBuilding;
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator TransACT => _page.GetByText("TransACT", new() { Exact = true });
+    // v56 raw Tosca primary: TransACT | TransACT | Id
+    // v56 semantic alias: same physical raw-Tosca control as PolicyDetailsABBA9
+    public ILocator TransACT => PolicyDetailsABBA9;
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator TransactionType => _page.GetByText("Transaction Type", new() { Exact = true });
+    // v56 raw Tosca primary: TransACT | Transaction Type | Id+Name+DuckCreekId
+    public ILocator TransactionType => _page.Locator("input[id=\"f_tB2C8F4EC9E3041B7B52430914E990D15D2_2_1-inputEl\"][name=\"f_tB2C8F4EC9E3041B7B52430914E990D15D2_2_1-inputEl\"][duckcreekid=\"TransACTInput.TransactionTypeList\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -175,18 +200,22 @@ public sealed class NavigationLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator ViewPolicy => _page.GetByText("View Policy (*)", new() { Exact = true });
+    // v56 raw Tosca primary: TransACT | View Policy  (*) | Id
+    public ILocator ViewPolicy => _page.Locator("[id=\"returnToActiveSessionA\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator ViewPolicyDetails848D5 => _page.GetByText("View Policy Details", new() { Exact = true });
+    // v56 raw Tosca primary:  | Detail | DuckCreekId | frame=iframe
+    public ILocator ViewPolicyDetails848D5 => _page.FrameLocator("iframe").Locator("[duckcreekid=\"NewTransactionReason.NewTransactionReasonDescription\"], [data-duckcreekid=\"NewTransactionReason.NewTransactionReasonDescription\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
     public ILocator ViewPolicyDetailsC87C2 => ViewPolicyDetails848D5; // semantic alias; locator defined once
 
     // Source modules: EQ|Common|PreQualification|Add Class Codes|Search/Add Class Codes | confidence=Medium score=108
-    public ILocator YouHaveSelected1ClassCodes => _page.GetByLabel("You have selected 1 Class Codes", new() { Exact = true });
+    // v56 raw Tosca primary: EQ|Common|PreQualification|Add Class Codes|Search/Add Class Codes | Class Filter | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as ClassFilter
+    public ILocator YouHaveSelected1ClassCodes => ClassFilter;
 
     // Source EQ|Common|Navigation: Nav Link = DIV InnerText {B[Screen]}, Screen Heading = H1 {B[Screen]}*.
     public ILocator GetNavigationLink(string screen) =>

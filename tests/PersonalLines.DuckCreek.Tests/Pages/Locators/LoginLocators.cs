@@ -8,7 +8,8 @@ public sealed class LoginLocators
     public LoginLocators(IPage page) => _page = page;
 
     // Source modules: EQH||Add/Edit Additional Interest-First Mortgagee | confidence=Medium score=113
-    public ILocator AddEditAdditionalInterestFirstMortgageeSearch => _page.GetByRole(AriaRole.Button, new() { Name = "Btn_Search", Exact = true });
+    // v56 raw Tosca primary: EQH||Add/Edit Additional Interest-First Mortgagee | Txt_MortgageSearch_Mortgage Name | Id+Name
+    public ILocator AddEditAdditionalInterestFirstMortgageeSearch => _page.Locator("input[id=\"temp.searchName\"][name=\"temp.searchName\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -16,7 +17,8 @@ public sealed class LoginLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator BypassLevel9BRules => _page.GetByText("Bypass Level 9B Rules", new() { Exact = true });
+    // v56 raw Tosca primary: EU||Applicant | Bypass Level 9B Rules | Id
+    public ILocator BypassLevel9BRules => _page.Locator("[id=\"checkbox_3\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -44,7 +46,8 @@ public sealed class LoginLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator LnkLOGIN => _page.GetByText("Lnk_LOGIN", new() { Exact = true });
+    // v56 raw Tosca primary: EU||Login | Lnk_LOGIN | Id
+    public ILocator LnkLOGIN => _page.Locator("[id=\"signInBtn\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -64,11 +67,13 @@ public sealed class LoginLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator Password => _page.GetByText("Password", new() { Exact = true });
+    // v56 raw Tosca primary: EU||Login | Password | Id+Name
+    public ILocator Password => _page.Locator("input[id=\"password\"][name=\"pf.pass\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator PolicyQuote => _page.GetByText("Policy/Quote#", new() { Exact = true });
+    // v56 raw Tosca primary:  | Policy # | Id
+    public ILocator PolicyQuote => _page.Locator("[id=\"undefined\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -80,7 +85,8 @@ public sealed class LoginLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator TxtSearchType => _page.GetByText("Txt_Search Type", new() { Exact = true });
+    // v56 raw Tosca primary: EU||Home | Txt_Search Type | Id
+    public ILocator TxtSearchType => _page.Locator("[id=\"cb_0\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name

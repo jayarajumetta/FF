@@ -6,8 +6,8 @@
     "ignoreHttpsErrors": true,
     "viewportWidth": 1440,
     "viewportHeight": 900,
-    "actionTimeoutMs": 30000,
-    "navigationTimeoutMs": 60000,
+    "actionTimeoutMs": 15000,
+    "navigationTimeoutMs": 30000,
     "trace": true,
     "video": true,
     "har": true,
@@ -62,10 +62,10 @@
     "logEveryAttempt": true
   },
   "waits": {
-    "pageReadyTimeoutMs": 30000,
-    "elementReadyTimeoutMs": 20000,
-    "verifyTimeoutMs": 20000,
-    "fallbackCandidateTimeoutMs": 4000,
+    "pageReadyTimeoutMs": 15000,
+    "elementReadyTimeoutMs": 15000,
+    "verifyTimeoutMs": 15000,
+    "fallbackCandidateTimeoutMs": 2500,
     "pollIntervalMs": 250,
     "waitForDomContentLoadedBeforeActions": true
   }

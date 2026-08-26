@@ -91,8 +91,8 @@ public sealed class BrowserOptions
     public bool IgnoreHttpsErrors { get; init; } = true;
     public int ViewportWidth { get; init; } = 1440;
     public int ViewportHeight { get; init; } = 900;
-    public int ActionTimeoutMs { get; init; } = 30000;
-    public int NavigationTimeoutMs { get; init; } = 60000;
+    public int ActionTimeoutMs { get; init; } = 15000;
+    public int NavigationTimeoutMs { get; init; } = 30000;
     public bool Trace { get; init; } = true;
     public bool Video { get; init; } = true;
     public bool Har { get; init; } = true;
@@ -138,10 +138,10 @@ public sealed class SelfHealOptions
 public sealed class WaitOptions
 {
     // Core synchronization defaults. Page methods should rely on UiActions rather than scatter sleeps.
-    public int PageReadyTimeoutMs { get; init; } = 30000;
-    public int ElementReadyTimeoutMs { get; init; } = 20000;
-    public int VerifyTimeoutMs { get; init; } = 20000;
-    public int FallbackCandidateTimeoutMs { get; init; } = 4000;
+    public int PageReadyTimeoutMs { get; init; } = 15000;
+    public int ElementReadyTimeoutMs { get; init; } = 15000;
+    public int VerifyTimeoutMs { get; init; } = 15000;
+    public int FallbackCandidateTimeoutMs { get; init; } = 2500;
     public int PollIntervalMs { get; init; } = 250;
     public bool WaitForDomContentLoadedBeforeActions { get; init; } = true;
 }

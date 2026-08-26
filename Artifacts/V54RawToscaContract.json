@@ -8,7 +8,7 @@
   "rawConcreteExamplesMatched": 1074,
   "rawSources": {
     "CLEQ": {
-      "folder": "/mnt/data/v54_build/raw_cleq/CL_EQ",
+      "folder": "/mnt/data/v56/raw/CL_EQ/CL_EQ",
       "files": [
         {
           "name": "CL_EQ_TestCases_Staging_Area_Pre_Production.tsu",
@@ -34,7 +34,7 @@
       "unionEntities": 88063
     },
     "CLDC": {
-      "folder": "/mnt/data/v54_build/raw_cldc/CL-DC",
+      "folder": "/mnt/data/v56/raw/CL-DC/CL-DC",
       "files": [
         {
           "name": "CL-DC TestCases Staging Area.tsu",
@@ -55,7 +55,7 @@
       "unionEntities": 283951
     },
     "PLDC": {
-      "folder": "/mnt/data/v54_build/raw_pldc/PL_DC",
+      "folder": "/mnt/data/v56/raw/PL_DC/PL_DC",
       "files": [
         {
           "name": "PL_DC_TestCases_Production.tsu",

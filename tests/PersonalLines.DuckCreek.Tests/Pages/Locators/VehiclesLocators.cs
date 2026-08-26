@@ -11,7 +11,8 @@ public sealed class VehiclesLocators
     public ILocator AccountOwner => _page.GetByTestId("fields.line.driver.rows[0].driverInput$relationToAccountOwner.value-chip-wrapper");
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=78
-    public ILocator AccountOwnerReadOnly => _page.GetByLabel("Account Owner_Read Only", new() { Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Male | Id
+    public ILocator AccountOwnerReadOnly => _page.Locator("[id=\"\"fields.line.driver.rows[0].driverInput$gender.value-0\"\"]");
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=Medium score=113
     public ILocator ActiveDisablingDevice => _page.GetByRole(AriaRole.Button, new() { Name = "ActiveDisablingDevice", Exact = true });
@@ -20,7 +21,8 @@ public sealed class VehiclesLocators
     public ILocator AddAdditionalVehicle => _page.GetByRole(AriaRole.Button, new() { Name = "Add Additional Vehicle", Exact = true });
 
     // Source modules: EQ || Add Cycle/Next | confidence=Medium score=113
-    public ILocator AddCycleNextNext => _page.GetByRole(AriaRole.Button, new() { Name = "Next", Exact = true });
+    // v56 raw Tosca primary: EQ||Discount(NEW) | Next | Id
+    public ILocator AddCycleNextNext => _page.Locator("[id=\"fields.data.next\"]");
 
     // Source modules: EQ||Vehicle Summary Next/Add  | confidence=High score=130
     public ILocator AddVehicle => _page.GetByTestId("fields.policy.line.add_Vehicle");
@@ -29,19 +31,24 @@ public sealed class VehiclesLocators
     public ILocator AdditionalVehicle => _page.GetByTestId("_vehicleChips-chip-wrapper");
 
     // Source modules: EQ||Vehicle Information | confidence=Medium score=108
-    public ILocator AdditionalVehicleS62C9A => _page.GetByLabel("Additional Vehicle(s)", new() { Exact = true });
+    // v56 raw Tosca primary: EQ||Vehicle Information | Additional Vehicle(s) | Id
+    public ILocator AdditionalVehicleS62C9A => _page.Locator("[id=\"unlistedVehicle\"]");
 
     // Source modules: EQ || CyclePreFillSelection | confidence=Medium score=113
-    public ILocator AdditionalVehicleSF5D93 => _page.GetByRole(AriaRole.Button, new() { Name = "AdditionalVehicle(s)", Exact = true });
+    // v56 raw Tosca primary: EQ||Vehicle Information | Additional Vehicle(s) | Id
+    // v56 semantic alias: same physical raw-Tosca control as AdditionalVehicleS62C9A
+    public ILocator AdditionalVehicleSF5D93 => AdditionalVehicleS62C9A;
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=High score=127
-    public ILocator AgreedValue8E288 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Agreed Value", Exact = true });
+    // v56 raw Tosca primary: EQ||Vehicle Summary Auto Additional | Agreed Value | Id+Name
+    public ILocator AgreedValue8E288 => _page.Locator("input[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$agreedValue.value\\\"\"][name=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$agreedValue.value\\\"\"]");
 
     // Source modules: EQ || Vintage Cycle | confidence=High score=127
     public ILocator AgreedValueF302B => AgreedValue8E288; // semantic alias; locator defined once
 
     // Source modules: EQ || 1st Cycle | confidence=High score=97
-    public ILocator AnnualMileage12A49 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Annual Mileage", Exact = true });
+    // v56 raw Tosca primary: EQ || 1st Cycle | Annual Mileage | Id+Name
+    public ILocator AnnualMileage12A49 => _page.Locator("input[id=\"\\\"fields.line.risk.rows[0].vehicleInput$annualMileage.value\\\"\"][name=\"\\\"fields.line.risk.rows[0].vehicleInput$annualMileage.value\\\"\"]");
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=High score=127
     public ILocator AnnualMileage51344 => _page.Locator("[name=\"txt_annual_mileage\"], [id=\"txt_annual_mileage\"]").First;
@@ -50,7 +57,8 @@ public sealed class VehiclesLocators
     public ILocator AntiTheftYes => _page.GetByRole(AriaRole.Button, new() { Name = "Anti_theft_Yes", Exact = true });
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=High score=127
-    public ILocator AppraisalDate8A115 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Appraisal Date", Exact = true });
+    // v56 raw Tosca primary: EQ||Vehicle Summary Auto Additional | Appraisal Date | Id+Name
+    public ILocator AppraisalDate8A115 => _page.Locator("input[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$appraisalDate.value\\\"\"][name=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$appraisalDate.value\\\"\"]");
 
     // Source modules: EQ || Vintage Cycle | confidence=High score=127
     public ILocator AppraisalDateD909C => AppraisalDate8A115; // semantic alias; locator defined once
@@ -59,7 +67,8 @@ public sealed class VehiclesLocators
     public ILocator Assigned => _page.GetByTestId("fields.line.driver.rows[0].driverInput$operatorStatus.value-chip-wrapper");
 
     // Source modules: EQ || Expired License Pop Up | confidence=Medium score=113
-    public ILocator CONTINUED555D => _page.GetByRole(AriaRole.Link, new() { Name = "CONTINUE", Exact = true });
+    // v56 raw Tosca primary: EQ||Vehicle Summary Auto Additional | Continue | Id
+    public ILocator CONTINUED555D => _page.Locator("[id=\"btnConfirmYes\"]");
 
     // Source modules: EQ || Owned Popup | confidence=Medium score=113
     public ILocator CONTINUEF07C7 => CONTINUED555D; // semantic alias; locator defined once
@@ -71,10 +80,12 @@ public sealed class VehiclesLocators
     public ILocator CategoryI => _page.GetByRole(AriaRole.Button, new() { Name = "CategoryI", Exact = true });
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=Medium score=108
-    public ILocator Classic => _page.GetByLabel("Classic", new() { Exact = true });
+    // v56 raw Tosca primary: EQ||Vehicle Summary Auto Additional | Modern Classic | Id+attributes_data-testid
+    public ILocator Classic => _page.Locator("div[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$collectorCarType.value-0\\\"\"][data-testid=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$collectorCarType.value-chip-wrapper\\\"\"]");
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=Medium score=108
-    public ILocator CollectorCar => _page.GetByLabel("CollectorCar", new() { Exact = true });
+    // v56 raw Tosca primary: EQ||Vehicle Summary Auto Additional | Automobile | Id+attributes_data-testid
+    public ILocator CollectorCar => _page.Locator("div[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$vehicleType.value-0\\\"\"][data-testid=\"\\\"fields.line.risk.rows[0].vehicleInput$vehicleType.value-chip-wrapper\\\"\"]");
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=High score=130
     public ILocator CollectorCarTypeMoreOptions => _page.GetByTestId("fields.data.policy.line.risk.rows[0].vehicleInput$collectorCarType.value-menu-trigger");
@@ -83,25 +94,32 @@ public sealed class VehiclesLocators
     public ILocator CollegeDegreeGraduateWork => _page.GetByRole(AriaRole.Button, new() { Name = "College Degree/Graduate Work", Exact = true });
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=High score=127
-    public ILocator Continue => _page.GetByRole(AriaRole.Button, new() { Name = "Continue", Exact = true });
+    // v56 raw Tosca primary: EQ||Vehicle Summary Auto Additional | Continue | Id
+    // v56 semantic alias: same physical raw-Tosca control as CONTINUED555D
+    public ILocator Continue => CONTINUED555D;
 
     // Source modules: EQ || 1st Cycle | confidence=High score=97
-    public ILocator CurrentValue => _page.GetByRole(AriaRole.Textbox, new() { Name = "Current Value", Exact = true });
+    // v56 raw Tosca primary: EQ || 1st Cycle | Current Value | Id+Name
+    public ILocator CurrentValue => _page.Locator("input[id=\"\\\"fields.line.risk.rows[0].vehicleInput$currentValue.value\\\"\"][name=\"\\\"fields.line.risk.rows[0].vehicleInput$currentValue.value\\\"\"]");
 
     // Source modules: EQ || DriverEducationLevel | confidence=Medium score=83
     public ILocator CurrentlyInCollege => _page.GetByRole(AriaRole.Button, new() { Name = "Currently in College", Exact = true });
 
     // Source modules: EQ || Vintage Cycle | confidence=Medium score=113
-    public ILocator Cycle1734D7 => _page.GetByRole(AriaRole.Button, new() { Name = "Cycle_1", Exact = true });
+    // v56 raw Tosca primary: EQ || Vintage Cycle | Cycle VIN | Id+Name
+    public ILocator Cycle1734D7 => _page.Locator("input[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$vIN.value\\\"\"][name=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$vIN.value\\\"\"]");
 
     // Source modules: EQ || 1st Cycle | confidence=Medium score=113
     public ILocator Cycle1C1864 => Cycle1734D7; // semantic alias; locator defined once
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=High score=127
-    public ILocator CycleAccessoriesV3 => _page.GetByRole(AriaRole.Button, new() { Name = "Cycle Accessories_V3", Exact = true });
+    // v56 raw Tosca primary: EQ || Vehicle Coverages Section | Cycle Accessories_V3 | Id
+    public ILocator CycleAccessoriesV3 => _page.Locator("[id=\"\"fields.policy.line.risk.rows[1].end_IncreasedLimitsForAccessories$end_IncreasedLimitsForAccessories_Select.value-0\"\"]");
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=High score=127
-    public ILocator CycleAccessoriesV4 => _page.GetByRole(AriaRole.Button, new() { Name = "Cycle Accessories_V4", Exact = true });
+    // v56 raw Tosca primary: EQ || Vehicle Coverages Section | Cycle Accessories_V4 | Id
+    // v56 semantic alias: same physical raw-Tosca control as CycleAccessoriesV3
+    public ILocator CycleAccessoriesV4 => CycleAccessoriesV3;
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=High score=97
     public ILocator CycleNonDriverComboBox => _page.Locator("[name=\"CycleNonDriver_ComboBox\"], [id=\"CycleNonDriver_ComboBox\"]").First;
@@ -110,25 +128,33 @@ public sealed class VehiclesLocators
     public ILocator CyclePreFillSelectionNext => AddCycleNextNext; // semantic alias; locator defined once
 
     // Source modules: EQ || Vintage Cycle | confidence=High score=127
-    public ILocator CycleVIN => _page.GetByRole(AriaRole.Textbox, new() { Name = "Cycle VIN", Exact = true });
+    // v56 raw Tosca primary: EQ || Vintage Cycle | Cycle VIN | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as Cycle1734D7
+    public ILocator CycleVIN => Cycle1734D7;
 
     // Source modules: EQ || DriverLicense_Time | confidence=Medium score=83
-    public ILocator DaysOperatedUninsured => _page.GetByRole(AriaRole.Textbox, new() { Name = "DaysOperatedUninsured", Exact = true });
+    // v56 raw Tosca primary: EQ || DriverLicense_Time | Months Licensed Current State | Id+Name
+    public ILocator DaysOperatedUninsured => _page.Locator("input[id=\"\\\"fields.line.driver.rows[0].driverInput$monthsLicensedCurrentState.value\\\"\"][name=\"\\\"fields.line.driver.rows[0].driverInput$monthsLicensedCurrentState.value\\\"\"]");
 
     // Source modules: EQ || 1st Cycle | confidence=High score=97
-    public ILocator DescriptionOfMods => _page.GetByRole(AriaRole.Textbox, new() { Name = "Description of Mods", Exact = true });
+    // v56 raw Tosca primary: EQ || 1st Cycle | Description of Mods | Id+Name
+    public ILocator DescriptionOfMods => _page.Locator("input[id=\"\\\"fields.line.risk.rows[0].vehicleInput$describeAdditionAlterationOrModification.value\\\"\"][name=\"\\\"fields.line.risk.rows[0].vehicleInput$describeAdditionAlterationOrModification.value\\\"\"]");
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=113
-    public ILocator Divorced => _page.GetByRole(AriaRole.Button, new() { Name = "Divorced", Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Divorced | Id
+    public ILocator Divorced => _page.Locator("[id=\"\"fields.line.driver.rows[0].driverInput$maritalStatus.value-2\"\"]");
 
     // Source modules: EQ || 1st Cycle | confidence=Medium score=78
-    public ILocator DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications051FD => _page.GetByLabel("Does this vehicle have any Non-Factory Additions, Alterations, or Modifications?", new() { Exact = true });
+    // v56 raw Tosca primary: EQ || 1st Cycle | Agreed Value | Id+Name
+    public ILocator DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications051FD => _page.Locator("input[id=\"\\\"fields.line.risk.rows[0].vehicleInput$agreedValue.value\\\"\"][name=\"\\\"fields.line.risk.rows[0].vehicleInput$agreedValue.value\\\"\"]");
 
     // Source modules: EQ || Vintage Cycle | confidence=Medium score=78
     public ILocator DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications21ABD => DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications051FD; // semantic alias; locator defined once
 
     // Source modules: EQ || DriverLicense_Time | confidence=Medium score=83
-    public ILocator DriverSLicenseNumber => _page.GetByRole(AriaRole.Textbox, new() { Name = "Driver's License Number", Exact = true });
+    // v56 raw Tosca primary: EQ || DriverLicense_Time | Months Licensed Current State | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as DaysOperatedUninsured
+    public ILocator DriverSLicenseNumber => DaysOperatedUninsured;
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -144,10 +170,14 @@ public sealed class VehiclesLocators
     public ILocator ILCategory1 => _page.GetByRole(AriaRole.Button, new() { Name = "IL_Category_1", Exact = true });
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=78
-    public ILocator IsThisDriverANamedInsured => _page.GetByLabel("Is this driver a named insured?", new() { Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Male | Id
+    // v56 semantic alias: same physical raw-Tosca control as AccountOwnerReadOnly
+    public ILocator IsThisDriverANamedInsured => AccountOwnerReadOnly;
 
     // Source modules: EQ || Vintage Cycle | confidence=Medium score=78
-    public ILocator IsThisVehicleOwnedOrFinanced => _page.GetByLabel("Is this vehicle owned or financed?", new() { Exact = true });
+    // v56 raw Tosca primary: EQ || Vintage Cycle | Cycle VIN | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as Cycle1734D7
+    public ILocator IsThisVehicleOwnedOrFinanced => Cycle1734D7;
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -161,19 +191,23 @@ public sealed class VehiclesLocators
     public ILocator Leased14EA4 => _page.GetByTestId("fields.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-chip-wrapper");
 
     // Source modules: EQ || Vintage Cycle | confidence=Medium score=113
-    public ILocator Leased26B32 => _page.GetByRole(AriaRole.Button, new() { Name = "Leased", Exact = true });
+    // v56 raw Tosca primary: EQ||Vehicle Summary Auto Additional | Leased | Id+attributes_data-testid
+    public ILocator Leased26B32 => _page.Locator("div[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-1\\\"\"][data-testid=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-chip-wrapper\\\"\"]");
 
     // Source modules: EQ || 1st Cycle | confidence=Medium score=113
     public ILocator Leased87268 => Leased26B32; // semantic alias; locator defined once
 
     // Source modules: EQ || DriverLicense_Time | confidence=Medium score=83
-    public ILocator LicenseState => _page.GetByRole(AriaRole.Combobox, new() { Name = "License State", Exact = true });
+    // v56 raw Tosca primary: EQ || DriverLicense_Time | Months Licensed Current State | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as DaysOperatedUninsured
+    public ILocator LicenseState => DaysOperatedUninsured;
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=High score=130
     public ILocator Loan4369D => Leased14EA4; // semantic alias; locator defined once
 
     // Source modules: EQ || Vintage Cycle | confidence=Medium score=113
-    public ILocator Loan49242 => _page.GetByRole(AriaRole.Button, new() { Name = "Loan", Exact = true });
+    // v56 raw Tosca primary: EQ||Vehicle Summary Auto Additional | Loan | Id+attributes_data-testid
+    public ILocator Loan49242 => _page.Locator("div[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-0\\\"\"][data-testid=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-chip-wrapper\\\"\"]");
 
     // Source modules: EQ || 1st Cycle | confidence=Medium score=113
     public ILocator LoanED36C => Loan49242; // semantic alias; locator defined once
@@ -190,22 +224,31 @@ public sealed class VehiclesLocators
     public ILocator MaritalStatusSingle => _page.GetByText("'Marital Status' != \"Single", new() { Exact = true });
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=83
-    public ILocator Married => _page.GetByRole(AriaRole.Button, new() { Name = "Married", Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Married | Id
+    public ILocator Married => _page.Locator("[id=\"\"fields.line.driver.rows[0].driverInput$maritalStatus.value-1\"\"]");
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=113
-    public ILocator MedicalCondition => _page.GetByRole(AriaRole.Button, new() { Name = "Medical Condition", Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Male | Id
+    // v56 semantic alias: same physical raw-Tosca control as AccountOwnerReadOnly
+    public ILocator MedicalCondition => AccountOwnerReadOnly;
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=108
-    public ILocator Military => _page.GetByLabel("Military", new() { Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Male | Id
+    // v56 semantic alias: same physical raw-Tosca control as AccountOwnerReadOnly
+    public ILocator Military => AccountOwnerReadOnly;
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=108
-    public ILocator Missionary => _page.GetByLabel("Missionary", new() { Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Male | Id
+    // v56 semantic alias: same physical raw-Tosca control as AccountOwnerReadOnly
+    public ILocator Missionary => AccountOwnerReadOnly;
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=High score=130
     public ILocator ModernClassic => _page.GetByTestId("fields.data.policy.line.risk.rows[0].vehicleInput$collectorCarType.value-chip-wrapper");
 
     // Source modules: EQ || DriverLicense_Time | confidence=High score=127
-    public ILocator MonthsLicensedCurrentState => _page.GetByRole(AriaRole.Textbox, new() { Name = "Months Licensed Current State", Exact = true });
+    // v56 raw Tosca primary: EQ || DriverLicense_Time | Months Licensed Current State | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as DaysOperatedUninsured
+    public ILocator MonthsLicensedCurrentState => DaysOperatedUninsured;
 
     // Source modules: EQ || DriverEducationLevel | confidence=Medium score=83
     public ILocator MoreOptionsEdu => _page.GetByRole(AriaRole.Button, new() { Name = "More Options Edu", Exact = true });
@@ -214,7 +257,9 @@ public sealed class VehiclesLocators
     public ILocator MoreOptionsFarmUse => _page.GetByRole(AriaRole.Button, new() { Name = "More_Options_Farm_Use", Exact = true });
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=83
-    public ILocator MoreOptionsNonDriver => _page.GetByRole(AriaRole.Button, new() { Name = "More Options_NonDriver", Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Male | Id
+    // v56 semantic alias: same physical raw-Tosca control as AccountOwnerReadOnly
+    public ILocator MoreOptionsNonDriver => AccountOwnerReadOnly;
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=Medium score=113
     public ILocator N1Day => _page.GetByRole(AriaRole.Button, new() { Name = "1_Day", Exact = true });
@@ -229,16 +274,22 @@ public sealed class VehiclesLocators
     public ILocator NativeAmericanRegisterNO => _page.GetByRole(AriaRole.Button, new() { Name = "Native_American_Register_NO", Exact = true });
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=113
-    public ILocator NeverLicensed => _page.GetByRole(AriaRole.Button, new() { Name = "Never Licensed", Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Male | Id
+    // v56 semantic alias: same physical raw-Tosca control as AccountOwnerReadOnly
+    public ILocator NeverLicensed => AccountOwnerReadOnly;
 
     // Source modules: EQ || Vintage Cycle | confidence=Medium score=113
-    public ILocator No7C269 => _page.GetByRole(AriaRole.Button, new() { Name = "No", Exact = true });
+    // v56 raw Tosca primary: EQ || Cycle Underwriting | No | Id
+    public ILocator No7C269 => _page.Locator("[id=\"fields.data.policy.underwritingQuestionsPolicy$felonyConviction.value-1\"]");
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=Medium score=83
-    public ILocator NoCoverageV1Towing => _page.GetByRole(AriaRole.Button, new() { Name = "No Coverage_V1_Towing", Exact = true });
+    // v56 raw Tosca primary: EQ || Vehicle Coverages Section | Original Parts_V1 | Id
+    public ILocator NoCoverageV1Towing => _page.Locator("[id=\"\"fields.policy.line.risk.rows[0].end_OriginalParts$end_OriginalParts_Select.value-0\"\"]");
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=83
-    public ILocator NoCycleLicense => _page.GetByRole(AriaRole.Button, new() { Name = "No Cycle License", Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Male | Id
+    // v56 semantic alias: same physical raw-Tosca control as AccountOwnerReadOnly
+    public ILocator NoCycleLicense => AccountOwnerReadOnly;
 
     // Source modules: EQ || DriverLicense_Time | confidence=High score=130
     public ILocator NoD053A => _page.GetByTestId("fields.line.driver.rows[0].driverInputUnderwriting$sR22Indicator.value-chip-wrapper");
@@ -259,7 +310,9 @@ public sealed class VehiclesLocators
     public ILocator NonDriver => Assigned; // semantic alias; locator defined once
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=78
-    public ILocator NonDriverReason => _page.GetByLabel("Non-Driver Reason", new() { Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Male | Id
+    // v56 semantic alias: same physical raw-Tosca control as AccountOwnerReadOnly
+    public ILocator NonDriverReason => AccountOwnerReadOnly;
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=High score=97
     public ILocator NonWorkAnnualMiles => _page.Locator("[name=\"Non_work_annual_miles\"], [id=\"Non_work_annual_miles\"]").First;
@@ -274,26 +327,35 @@ public sealed class VehiclesLocators
     public ILocator Odometer3843F => _page.Locator("[name=\"txt_odometer\"], [id=\"txt_odometer\"]").First;
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=High score=127
-    public ILocator OdometerD648F => _page.GetByRole(AriaRole.Textbox, new() { Name = "Odometer", Exact = true });
+    // v56 raw Tosca primary: EQ||Vehicle Summary Auto Additional | Odometer | Id+Name
+    public ILocator OdometerD648F => _page.Locator("input[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$odometer.value\\\"\"][name=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$odometer.value\\\"\"]");
 
     // Source modules: EQ || CA Verified Mileage | confidence=Medium score=113
     // Dynamically set by buffer CA Verified Mileage in RTB Auto | 05 EQ | Vehicle Summary Next
-    public ILocator OptOut => _page.GetByRole(AriaRole.Button, new() { Name = "Opt Out", Exact = true });
+    // v56 raw Tosca primary: EQ || CA Verified Mileage | Opt Out | Id
+    public ILocator OptOut => _page.Locator("[id=\"fields.policy.lineVerifiedMileage.riskFactor_VerifiedMileageOptIn$value.value-1\"]");
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=High score=127
-    public ILocator OriginalPartsV3 => _page.GetByRole(AriaRole.Button, new() { Name = "Original Parts_V3", Exact = true });
+    // v56 raw Tosca primary: EQ || Vehicle Coverages Section | Original Parts_V3 | Id
+    // v56 semantic alias: same physical raw-Tosca control as NoCoverageV1Towing
+    public ILocator OriginalPartsV3 => NoCoverageV1Towing;
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=High score=127
-    public ILocator OriginalPartsV4 => _page.GetByRole(AriaRole.Button, new() { Name = "Original Parts_V4", Exact = true });
+    // v56 raw Tosca primary: EQ || Vehicle Coverages Section | Original Parts_V4 | Id
+    // v56 semantic alias: same physical raw-Tosca control as NoCoverageV1Towing
+    public ILocator OriginalPartsV4 => NoCoverageV1Towing;
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=108
-    public ILocator OtherInsurance => _page.GetByLabel("Other Insurance", new() { Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Male | Id
+    // v56 semantic alias: same physical raw-Tosca control as AccountOwnerReadOnly
+    public ILocator OtherInsurance => AccountOwnerReadOnly;
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=High score=130
     public ILocator Own49EEC => Leased14EA4; // semantic alias; locator defined once
 
     // Source modules: EQ || Vintage Cycle | confidence=Medium score=113
-    public ILocator Own7C709 => _page.GetByRole(AriaRole.Button, new() { Name = "Own", Exact = true });
+    // v56 raw Tosca primary: EQ||Vehicle Summary Auto Additional | Own | Id+attributes_data-testid
+    public ILocator Own7C709 => _page.Locator("div[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-2\\\"\"][data-testid=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-chip-wrapper\\\"\"]");
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=High score=130
     public ILocator OwnB8575 => _page.GetByTestId("fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-chip-wrapper");
@@ -302,10 +364,14 @@ public sealed class VehiclesLocators
     public ILocator OwnD044E => Own7C709; // semantic alias; locator defined once
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=113
-    public ILocator PermitDriver => _page.GetByRole(AriaRole.Button, new() { Name = "Permit Driver", Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Male | Id
+    // v56 semantic alias: same physical raw-Tosca control as AccountOwnerReadOnly
+    public ILocator PermitDriver => AccountOwnerReadOnly;
 
     // Source modules: EQ || Vintage Cycle | confidence=Medium score=78
-    public ILocator PleaseSelectTheVehicleBBB72 => _page.GetByLabel("Please select the vehicle", new() { Exact = true });
+    // v56 raw Tosca primary: EQ || Vintage Cycle | Cycle VIN | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as Cycle1734D7
+    public ILocator PleaseSelectTheVehicleBBB72 => Cycle1734D7;
 
     // Source modules: EQ || 1st Cycle | confidence=Medium score=78
     public ILocator PleaseSelectTheVehicleCD741 => PleaseSelectTheVehicleBBB72; // semantic alias; locator defined once
@@ -320,13 +386,15 @@ public sealed class VehiclesLocators
     public ILocator PostGraduateDegreeMedicalDegreePhDEdDEtc => _page.GetByRole(AriaRole.Button, new() { Name = "Post Graduate Degree (Medical Degree, Ph.D., Ed.D, etc.)", Exact = true });
 
     // Source modules: EQ||Pricing Details | confidence=Medium score=114
-    public ILocator PricingDetailsNext => _page.GetByRole(AriaRole.Button, new() { Name = "Btn_Next", Exact = true });
+    // v56 raw Tosca primary: EQ||Pricing Details | Lbl_Residence Summary | Id
+    public ILocator PricingDetailsNext => _page.Locator("[id=\"Policy_Headless.Constant_ResidenceSummary-0-layout\"]");
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=High score=130
     public ILocator PrimaryNamedInsured => NamedInsured; // semantic alias; locator defined once
 
     // Source modules: EQ || Prior Insurance Info | confidence=Medium score=83
-    public ILocator PriorCarrierName => _page.GetByRole(AriaRole.Textbox, new() { Name = "Prior Carrier Name", Exact = true });
+    // v56 raw Tosca primary: EQ || Prior Insurance Info | Time with prior carrier | Id
+    public ILocator PriorCarrierName => _page.Locator("[id=\"Driver_Headless.Constant_TimeWithPriorCarrier-0-layout\"]");
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=High score=127
     public ILocator PurchaseDate736F4 => _page.Locator("[name=\"Purchase_date\"], [id=\"Purchase_date\"]").First;
@@ -377,7 +445,9 @@ public sealed class VehiclesLocators
     public ILocator RoadsideAssistanceCoverageV4 => _page.GetByTestId("fields.policy.line.risk.rows[3].covRoadsideAssistanceInput$limit.value-chip-wrapper");
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=108
-    public ILocator Roommate => _page.GetByLabel("Roommate", new() { Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Male | Id
+    // v56 semantic alias: same physical raw-Tosca control as AccountOwnerReadOnly
+    public ILocator Roommate => AccountOwnerReadOnly;
 
     // Source modules: EQ || 1st Cycle | confidence=Medium score=113
     public ILocator SaveAndContinue8EF26 => _page.GetByRole(AriaRole.Button, new() { Name = "Save and Continue", Exact = true });
@@ -389,17 +459,21 @@ public sealed class VehiclesLocators
     public ILocator SaveAndContinueBE6CD => SaveAndContinue8EF26; // semantic alias; locator defined once
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=Medium score=113
-    public ILocator SaveContinue2E7CD => _page.GetByRole(AriaRole.Button, new() { Name = "btnSave_Continue", Exact = true });
+    // v56 raw Tosca primary: EQ||Vehicle Summary Auto Additional | Save_Continue | Id
+    public ILocator SaveContinue2E7CD => _page.Locator("[id=\"fields.data.policy.line.risk.vehicle_Detail_Done\"]");
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=Medium score=113
-    public ILocator SaveContinue86B78 => _page.GetByRole(AriaRole.Button, new() { Name = "Save_Continue", Exact = true });
+    // v56 raw Tosca primary: EQ||Vehicle Summary Auto Additional | Save_Continue | Id
+    // v56 semantic alias: same physical raw-Tosca control as SaveContinue2E7CD
+    public ILocator SaveContinue86B78 => SaveContinue2E7CD;
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
     public ILocator SelectVehicle => _page.GetByText("Select Vehicle", new() { Exact = true });
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=113
-    public ILocator Single => _page.GetByRole(AriaRole.Button, new() { Name = "Single", Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Single | Id
+    public ILocator Single => _page.Locator("[id=\"\"fields.line.driver.rows[0].driverInput$maritalStatus.value-0\"\"]");
 
     // Source modules: EQ || DriverEducationLevel | confidence=Medium score=113
     public ILocator SomeCollege => _page.GetByRole(AriaRole.Button, new() { Name = "Some College", Exact = true });
@@ -408,42 +482,60 @@ public sealed class VehiclesLocators
     public ILocator Spouse => AccountOwner; // semantic alias; locator defined once
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=113
-    public ILocator Surrendered => _page.GetByRole(AriaRole.Button, new() { Name = "Surrendered", Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Male | Id
+    // v56 semantic alias: same physical raw-Tosca control as AccountOwnerReadOnly
+    public ILocator Surrendered => AccountOwnerReadOnly;
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=Medium score=113
     // Dynamically set by buffer Theft Deductible_V1 in RTB Auto | 10.3 EQ | Auto_AddlCov Vehicle Coverages
-    public ILocator TheftDeductibleV1 => _page.GetByRole(AriaRole.Button, new() { Name = "Theft Deductible_V1", Exact = true });
+    // v56 raw Tosca primary: EQ || Vehicle Coverages Section | Original Parts_V1 | Id
+    // v56 semantic alias: same physical raw-Tosca control as NoCoverageV1Towing
+    public ILocator TheftDeductibleV1 => NoCoverageV1Towing;
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=Medium score=113
     // Dynamically set by buffer Theft Deductible_V2 in RTB Auto | 10.3 EQ | Auto_AddlCov Vehicle Coverages
-    public ILocator TheftDeductibleV2 => _page.GetByRole(AriaRole.Button, new() { Name = "Theft Deductible_V2", Exact = true });
+    // v56 raw Tosca primary: EQ || Vehicle Coverages Section | Original Parts_V1 | Id
+    // v56 semantic alias: same physical raw-Tosca control as NoCoverageV1Towing
+    public ILocator TheftDeductibleV2 => NoCoverageV1Towing;
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=Medium score=113
     // Dynamically set by buffer Theft Deductible_V1 in RTB Auto | 10.3 EQ | Auto_AddlCov Vehicle Coverages
-    public ILocator TheftDeductibleV3 => _page.GetByRole(AriaRole.Button, new() { Name = "Theft Deductible_V3", Exact = true });
+    // v56 raw Tosca primary: EQ || Vehicle Coverages Section | Original Parts_V1 | Id
+    // v56 semantic alias: same physical raw-Tosca control as NoCoverageV1Towing
+    public ILocator TheftDeductibleV3 => NoCoverageV1Towing;
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=Medium score=113
     // Dynamically set by buffer Theft Deductible_V1 in RTB Auto | 10.3 EQ | Auto_AddlCov Vehicle Coverages
-    public ILocator TheftDeductibleV4 => _page.GetByRole(AriaRole.Button, new() { Name = "Theft Deductible_V4", Exact = true });
+    // v56 raw Tosca primary: EQ || Vehicle Coverages Section | Original Parts_V1 | Id
+    // v56 semantic alias: same physical raw-Tosca control as NoCoverageV1Towing
+    public ILocator TheftDeductibleV4 => NoCoverageV1Towing;
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=High score=127
     public ILocator TotalAnnualMileage => _page.Locator("[name=\"Total_annual_mileage\"], [id=\"Total_annual_mileage\"]").First;
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=Medium score=113
     // Dynamically set by buffer UIMPD Coverage_V1 in RTB Auto | 10.3 EQ | Auto_AddlCov Vehicle Coverages
-    public ILocator UIMPDCoverageV1 => _page.GetByRole(AriaRole.Button, new() { Name = "UIMPD Coverage_V1", Exact = true });
+    // v56 raw Tosca primary: EQ || Vehicle Coverages Section | Original Parts_V1 | Id
+    // v56 semantic alias: same physical raw-Tosca control as NoCoverageV1Towing
+    public ILocator UIMPDCoverageV1 => NoCoverageV1Towing;
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=Medium score=113
     // Dynamically set by buffer UIMPD Coverage_V2 in RTB Auto | 10.3 EQ | Auto_AddlCov Vehicle Coverages
-    public ILocator UIMPDCoverageV2 => _page.GetByRole(AriaRole.Button, new() { Name = "UIMPD Coverage_V2", Exact = true });
+    // v56 raw Tosca primary: EQ || Vehicle Coverages Section | Original Parts_V1 | Id
+    // v56 semantic alias: same physical raw-Tosca control as NoCoverageV1Towing
+    public ILocator UIMPDCoverageV2 => NoCoverageV1Towing;
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=Medium score=113
     // Dynamically set by buffer UIMPD Coverage_V1 in RTB Auto | 10.3 EQ | Auto_AddlCov Vehicle Coverages
-    public ILocator UIMPDCoverageV3 => _page.GetByRole(AriaRole.Button, new() { Name = "UIMPD Coverage_V3", Exact = true });
+    // v56 raw Tosca primary: EQ || Vehicle Coverages Section | Original Parts_V1 | Id
+    // v56 semantic alias: same physical raw-Tosca control as NoCoverageV1Towing
+    public ILocator UIMPDCoverageV3 => NoCoverageV1Towing;
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=Medium score=113
     // Dynamically set by buffer UIMPD Coverage_V1 in RTB Auto | 10.3 EQ | Auto_AddlCov Vehicle Coverages
-    public ILocator UIMPDCoverageV4 => _page.GetByRole(AriaRole.Button, new() { Name = "UIMPD Coverage_V4", Exact = true });
+    // v56 raw Tosca primary: EQ || Vehicle Coverages Section | Original Parts_V1 | Id
+    // v56 semantic alias: same physical raw-Tosca control as NoCoverageV1Towing
+    public ILocator UIMPDCoverageV4 => NoCoverageV1Towing;
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=High score=100
     // Dynamically set by buffer UMPD Coverage_V1 in RTB Auto | 10.3 EQ | Auto_AddlCov Vehicle Coverages
@@ -466,25 +558,35 @@ public sealed class VehiclesLocators
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=Medium score=113
     // Dynamically set by buffer UMPD/UIMPD_V1 in RTB Auto | 10.3 EQ | Auto_AddlCov Vehicle Coverages
-    public ILocator UMPDUIMPDV1 => _page.GetByRole(AriaRole.Button, new() { Name = "UMPD/UIMPD_V1", Exact = true });
+    // v56 raw Tosca primary: EQ || Vehicle Coverages Section | Original Parts_V1 | Id
+    // v56 semantic alias: same physical raw-Tosca control as NoCoverageV1Towing
+    public ILocator UMPDUIMPDV1 => NoCoverageV1Towing;
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=Medium score=113
     // Dynamically set by buffer UMPD/UIMPD_V2 in RTB Auto | 10.3 EQ | Auto_AddlCov Vehicle Coverages
-    public ILocator UMPDUIMPDV2 => _page.GetByRole(AriaRole.Button, new() { Name = "UMPD/UIMPD_V2", Exact = true });
+    // v56 raw Tosca primary: EQ || Vehicle Coverages Section | Original Parts_V1 | Id
+    // v56 semantic alias: same physical raw-Tosca control as NoCoverageV1Towing
+    public ILocator UMPDUIMPDV2 => NoCoverageV1Towing;
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=Medium score=113
     // Dynamically set by buffer UMPD/UIMPD_V1 in RTB Auto | 10.3 EQ | Auto_AddlCov Vehicle Coverages
-    public ILocator UMPDUIMPDV3 => _page.GetByRole(AriaRole.Button, new() { Name = "UMPD/UIMPD_V3", Exact = true });
+    // v56 raw Tosca primary: EQ || Vehicle Coverages Section | Original Parts_V1 | Id
+    // v56 semantic alias: same physical raw-Tosca control as NoCoverageV1Towing
+    public ILocator UMPDUIMPDV3 => NoCoverageV1Towing;
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=Medium score=113
     // Dynamically set by buffer UMPD/UIMPD_V1 in RTB Auto | 10.3 EQ | Auto_AddlCov Vehicle Coverages
-    public ILocator UMPDUIMPDV4 => _page.GetByRole(AriaRole.Button, new() { Name = "UMPD/UIMPD_V4", Exact = true });
+    // v56 raw Tosca primary: EQ || Vehicle Coverages Section | Original Parts_V1 | Id
+    // v56 semantic alias: same physical raw-Tosca control as NoCoverageV1Towing
+    public ILocator UMPDUIMPDV4 => NoCoverageV1Towing;
 
     // Source modules: EQ || 1st Cycle | confidence=Medium score=113
     public ILocator UnderConstruction => _page.GetByRole(AriaRole.Button, new() { Name = "Under Construction", Exact = true });
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=113
-    public ILocator Underage => _page.GetByRole(AriaRole.Button, new() { Name = "Underage", Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Male | Id
+    // v56 semantic alias: same physical raw-Tosca control as AccountOwnerReadOnly
+    public ILocator Underage => AccountOwnerReadOnly;
 
     // Source modules: EQ || DriverEducationLevel | confidence=Medium score=83
     public ILocator UnknownNoHighSchoolDiplomaOrGED => _page.GetByRole(AriaRole.Button, new() { Name = "Unknown/No High School Diploma or GED", Exact = true });
@@ -496,7 +598,9 @@ public sealed class VehiclesLocators
     public ILocator VIN06D01 => _page.Locator("[name=\"txt_VIN\"], [id=\"txt_VIN\"]").First;
 
     // Source modules: EQ||Vehicle Summary Auto Additional | confidence=High score=127
-    public ILocator VIN0A17C => _page.GetByRole(AriaRole.Textbox, new() { Name = "VIN", Exact = true });
+    // v56 raw Tosca primary: EQ||Vehicle Summary Auto Additional | VIN | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as Cycle1734D7
+    public ILocator VIN0A17C => Cycle1734D7;
 
     // Source modules: EQ || 1st Cycle | confidence=High score=127
     public ILocator VIN8EE56 => VIN0A17C; // semantic alias; locator defined once
@@ -517,27 +621,37 @@ public sealed class VehiclesLocators
     public ILocator VehicleMoreOptions => _page.GetByTestId("fields.data.policy.line.risk.rows[0].vehicleInput$vehicleType.value-menu-trigger");
 
     // Source modules: EQ || Vintage Cycle | confidence=Medium score=78
-    public ILocator VehicleType => _page.GetByLabel("Vehicle Type", new() { Exact = true });
+    // v56 raw Tosca primary: EQ || Vintage Cycle | Cycle VIN | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as Cycle1734D7
+    public ILocator VehicleType => Cycle1734D7;
 
     // Source modules: EQ || Vintage Cycle | confidence=Medium score=113
-    public ILocator Vintage => _page.GetByRole(AriaRole.Button, new() { Name = "Vintage", Exact = true });
+    // v56 raw Tosca primary: EQ || Vintage Cycle | Cycle VIN | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as Cycle1734D7
+    public ILocator Vintage => Cycle1734D7;
 
     // Source modules: EQ || DriverEducationLevel | confidence=Medium score=113
     public ILocator VocationalOrTradeSchoolDegree => _page.GetByRole(AriaRole.Button, new() { Name = "Vocational or Trade School Degree", Exact = true });
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=78
-    public ILocator WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove => _page.GetByLabel("Was this client insured with American National immediately prior to the carrier listed above?", new() { Exact = true });
+    // v56 raw Tosca primary: EQ || NamedIns_Operator Status | Male | Id
+    // v56 semantic alias: same physical raw-Tosca control as AccountOwnerReadOnly
+    public ILocator WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove => AccountOwnerReadOnly;
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=High score=97
     public ILocator WorkMilesDay => _page.Locator("[name=\"Work_miles_day\"], [id=\"Work_miles_day\"]").First;
 
     // Source modules: EQ || 1st Cycle | confidence=Medium score=113
-    public ILocator Yes => _page.GetByRole(AriaRole.Button, new() { Name = "Yes", Exact = true });
+    // v56 raw Tosca primary: EQ || Cycle Underwriting | Yes | Id
+    public ILocator Yes => _page.Locator("[id=\"fields.data.policy.underwritingQuestionsPolicy$felonyConviction.value-0\"]");
 
     // Source modules: EQ || DriverLicense_Time | confidence=Medium score=83
-    public ILocator YrsLicensedAllStates => _page.GetByRole(AriaRole.Textbox, new() { Name = "YrsLicensed All States", Exact = true });
+    // v56 raw Tosca primary: EQ || DriverLicense_Time | Months Licensed Current State | Id+Name
+    // v56 semantic alias: same physical raw-Tosca control as DaysOperatedUninsured
+    public ILocator YrsLicensedAllStates => DaysOperatedUninsured;
 
     // Source modules: EQ || DriverLicense_Time | confidence=High score=127
-    public ILocator YrsLicensedCurrentState => _page.GetByRole(AriaRole.Textbox, new() { Name = "Yrs Licensed Current State", Exact = true });
+    // v56 raw Tosca primary: EQ || DriverLicense_Time | Yrs Licensed Current State | Id+Name
+    public ILocator YrsLicensedCurrentState => _page.Locator("input[id=\"\\\"fields.line.driver.rows[0].driverInput$yearsLicensedCurrentState.value\\\"\"][name=\"\\\"fields.line.driver.rows[0].driverInput$yearsLicensedCurrentState.value\\\"\"]");
 
 }

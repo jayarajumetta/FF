@@ -13,37 +13,52 @@ public sealed class CoveragesLocators
 
     // Source modules: EQ || Other Policy Coverages Section (New) | confidence=Medium score=113
     // Dynamically set by buffer Driver_1
-    public ILocator ADDDriver1 => _page.GetByRole(AriaRole.Button, new() { Name = "AD&D_Driver1", Exact = true });
+    // v56 raw Tosca primary: EQ || Other Policy Coverages Section (New) | Loss Of Income_Driver1 | Id+attributes_data-testid
+    public ILocator ADDDriver1 => _page.Locator("button[id=\"\\\"fields.policy.line.driverIncomeLoss.rows[0].driverInput$incomeLossOperator.value\\\"\"][data-testid=\"\\\"fields.policy.line.driverIncomeLoss.rows[0].driverInput$incomeLossOperator.value\\\"\"]");
 
     // Source modules: EQ || Other Policy Coverages Section (New) | confidence=Medium score=113
     // Dynamically set by buffer Driver_2
-    public ILocator ADDDriver2 => _page.GetByRole(AriaRole.Button, new() { Name = "AD&D_Driver2", Exact = true });
+    // v56 raw Tosca primary: EQ || Other Policy Coverages Section (New) | Loss Of Income_Driver1 | Id+attributes_data-testid
+    // v56 semantic alias: same physical raw-Tosca control as ADDDriver1
+    public ILocator ADDDriver2 => ADDDriver1;
 
     // Source modules: EQ || Other Policy Coverages Section (New) | confidence=Medium score=113
     // Dynamically set by buffer Driver_3
-    public ILocator ADDDriver3 => _page.GetByRole(AriaRole.Button, new() { Name = "AD&D_Driver3", Exact = true });
+    // v56 raw Tosca primary: EQ || Other Policy Coverages Section (New) | Loss Of Income_Driver1 | Id+attributes_data-testid
+    // v56 semantic alias: same physical raw-Tosca control as ADDDriver1
+    public ILocator ADDDriver3 => ADDDriver1;
 
     // Source modules: EQ || Other Policy Coverages Section (New) | confidence=Medium score=113
     // Dynamically set by buffer Driver_4
-    public ILocator ADDDriver4 => _page.GetByRole(AriaRole.Button, new() { Name = "AD&D_Driver4", Exact = true });
+    // v56 raw Tosca primary: EQ || Other Policy Coverages Section (New) | Loss Of Income_Driver1 | Id+attributes_data-testid
+    // v56 semantic alias: same physical raw-Tosca control as ADDDriver1
+    public ILocator ADDDriver4 => ADDDriver1;
 
     // Source modules: EQ || Other Policy Coverages Section (New) | confidence=Medium score=113
     // Dynamically set by buffer Driver_5
-    public ILocator ADDDriver5 => _page.GetByRole(AriaRole.Button, new() { Name = "AD&D_Driver5", Exact = true });
+    // v56 raw Tosca primary: EQ || Other Policy Coverages Section (New) | Loss Of Income_Driver1 | Id+attributes_data-testid
+    // v56 semantic alias: same physical raw-Tosca control as ADDDriver1
+    public ILocator ADDDriver5 => ADDDriver1;
 
     // Source modules: EQ || Additional Coverages Next (New) | confidence=Medium score=113
-    public ILocator AdditionalCoveragesNextNewNext => _page.GetByRole(AriaRole.Button, new() { Name = "Next", Exact = true });
+    // v56 raw Tosca primary: EQ || Other Policy Coverages Section (New) | Next | Id
+    public ILocator AdditionalCoveragesNextNewNext => _page.Locator("[id=\"fields.policy.next\"]");
 
     // Source modules: EQ || Other Policy Coverages Section (New) | confidence=Medium score=113
     // Dynamically set by buffer Extraordinary Medical Benefit in RTB Auto | 10.1 EQ | Auto_AddlCov Policy Coverages
-    public ILocator ExtraordinaryMedicalBenefit => _page.GetByRole(AriaRole.Button, new() { Name = "Extraordinary Medical Benefit", Exact = true });
+    // v56 raw Tosca primary: EQ || Other Policy Coverages Section (New) | Loss Of Income_Driver1 | Id+attributes_data-testid
+    // v56 semantic alias: same physical raw-Tosca control as ADDDriver1
+    public ILocator ExtraordinaryMedicalBenefit => ADDDriver1;
 
     // Source modules: EQ || Other Policy Coverages Section (New) | confidence=Medium score=78
-    public ILocator H1AdditionalCoverages => _page.GetByLabel("H1_Additional Coverages", new() { Exact = true });
+    // v56 raw Tosca primary: EQ || Other Policy Coverages Section (New) | UMPD | Id+attributes_data-testid
+    public ILocator H1AdditionalCoverages => _page.Locator("div[id=\"fields.policy.line.uninsuredMotoristsPDInput$limit.value-2\"][data-testid=\"fields.policy.line.uninsuredMotoristsPDInput$limit.value-chip-wrapper\"]");
 
     // Source modules: EQ || Other Policy Coverages Section (New) | confidence=Medium score=113
     // Dynamically set by buffer Inc Liab Claims Fam Mem in RTB Auto | 10.1 EQ | Auto_AddlCov Policy Coverages
-    public ILocator IncLiabilityClaimsOfFamilyMembers => _page.GetByRole(AriaRole.Button, new() { Name = "Inc Liability Claims of Family Members", Exact = true });
+    // v56 raw Tosca primary: EQ || Other Policy Coverages Section (New) | Loss Of Income_Driver1 | Id+attributes_data-testid
+    // v56 semantic alias: same physical raw-Tosca control as ADDDriver1
+    public ILocator IncLiabilityClaimsOfFamilyMembers => ADDDriver1;
 
     // Source modules: EQ || Other Policy Coverages Section (New) | confidence=High score=130
     // Dynamically set by buffer Income Loss Coverage in RTB Auto | 10.1 EQ | Auto_AddlCov Policy Coverages
@@ -75,17 +90,22 @@ public sealed class CoveragesLocators
 
     // Source modules: EQ || Other Policy Coverages Section (New) | confidence=Medium score=113
     // Dynamically set by buffer Driver_1
-    public ILocator TotalDisabilityCoverageDriver1 => _page.GetByRole(AriaRole.Button, new() { Name = "Total Disability Coverage_Driver1", Exact = true });
+    // v56 raw Tosca primary: EQ || Other Policy Coverages Section (New) | Loss Of Income_Driver1 | Id+attributes_data-testid
+    // v56 semantic alias: same physical raw-Tosca control as ADDDriver1
+    public ILocator TotalDisabilityCoverageDriver1 => ADDDriver1;
 
     // Source modules: EQ || Other Policy Coverages Section (New) | confidence=Medium score=113
     // Dynamically set by buffer UIMPD in RTB Auto | 10.1 EQ | Auto_AddlCov Policy Coverages
-    public ILocator UIMPD => _page.GetByRole(AriaRole.Button, new() { Name = "UIMPD", Exact = true });
+    // v56 raw Tosca primary: EQ || Other Policy Coverages Section (New) | UIMPD | Id
+    public ILocator UIMPD => _page.Locator("[id=\"fields.policy.line.uninsuredMotoristsPDInput$deductible.value-0\"]");
 
     // Source modules: EQ || Other Policy Coverages Section (New) | confidence=High score=130
     // Dynamically set by buffer UMPD in RTB Auto | 10.1 EQ | Auto_AddlCov Policy Coverages
     public ILocator UMPD => _page.GetByTestId("fields.policy.line.uninsuredMotoristsPDInput$limit.value-chip-wrapper");
 
     // Source modules: EQ || Other Policy Coverages Section (New) | confidence=Medium score=83
-    public ILocator WorkLossNo => _page.GetByRole(AriaRole.Button, new() { Name = "Work_Loss_No", Exact = true });
+    // v56 raw Tosca primary: EQ || Other Policy Coverages Section (New) | Loss Of Income_Driver1 | Id+attributes_data-testid
+    // v56 semantic alias: same physical raw-Tosca control as ADDDriver1
+    public ILocator WorkLossNo => ADDDriver1;
 
 }

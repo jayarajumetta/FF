@@ -15,7 +15,8 @@ public sealed class ClientSearchLocators
     public ILocator CustomerNameFirst => _page.Locator("[id='customer.name.first']");
     public ILocator CustomerNameLast => _page.Locator("[id='customer.name.last']");
     public ILocator CustomerDateOfBirth => _page.Locator("[id='customer.dateOfBirth']");
-    public ILocator ClientInfoSearch => _page.GetByRole(AriaRole.Button, new() { Name = "Search", Exact = true });
+    // v56 raw Tosca primary: Submission, select Policy Forms | Search | DuckCreekId
+    public ILocator ClientInfoSearch => _page.Locator("[duckcreekid=\"Search\"], [data-duckcreekid=\"Search\"]");
 
     // EQ|Common|Create New Client
     public ILocator ExistingClientMatch => _page.GetByRole(AriaRole.Heading, new() { Name = "Existing Client Match", Exact = true });

@@ -15,12 +15,12 @@ public sealed class LoginLocators
     public ILocator LoggedInUser => _page.GetByLabel("Logged In User", new() { Exact = true });
 
     // Source modules: Login | confidence=High score=125
-    public ILocator Login => _page.GetByRole(AriaRole.Button, new() { Name = "Login", Exact = true });
+    public ILocator Login => Page.Locator("[data-duckcreekid='Login']");
 
     // Source modules: Login | confidence=High score=127
-    public ILocator Password => _page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true });
+    public ILocator Password => Page.Locator("[id='password-inputEl']");
 
     // Source modules: Login | confidence=High score=127
-    public ILocator UserName => _page.GetByRole(AriaRole.Textbox, new() { Name = "UserName", Exact = true });
+    public ILocator UserName => Page.Locator("[id='username-inputEl']");
 
 }

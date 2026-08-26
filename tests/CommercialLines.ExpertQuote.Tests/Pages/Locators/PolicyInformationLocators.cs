@@ -26,7 +26,8 @@ public sealed class PolicyInformationLocators
     public ILocator PrimaryFarmCategory => _page.GetByTestId("fields.account.policyInput$farmTypeCategory.value-chip-wrapper");
 
     // Source modules: EQ|SFP|Policy Details (Optimized) | confidence=Medium score=108
-    public ILocator PrimaryFarmType => _page.GetByLabel("Primary Farm Type", new() { Exact = true });
+    // v56 raw Tosca primary: EQ|SFP|Policy Details (Optimized) | Gross Farm Income | Id+Name+attributes_data-testid
+    public ILocator PrimaryFarmType => _page.Locator("input[id=\"fields.account.policyInput$grossFarmIncome.value\"][name=\"fields.account.policyInput$grossFarmIncome.value\"][data-testid=\"fields.account.policyInput$grossFarmIncome.value\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -36,6 +37,7 @@ public sealed class PolicyInformationLocators
     public ILocator SecondaryFarmCategory => _page.GetByTestId("fields.account.policyInput$farmTypeSecondaryCategory.value-chip-wrapper");
 
     // Source modules: EQ|SFP|Policy Details (Optimized) | confidence=Medium score=108
-    public ILocator SecondaryFarmType => _page.GetByLabel("Secondary Farm Type", new() { Exact = true });
+    // v56 raw Tosca primary: Policy Info|Required and Optional Fields | Secondary Farm Type | DuckCreekId
+    public ILocator SecondaryFarmType => _page.Locator("[duckcreekid=\"PolicyInput.FarmTypeSecondary\"], [data-duckcreekid=\"PolicyInput.FarmTypeSecondary\"]");
 
 }

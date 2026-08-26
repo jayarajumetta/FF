@@ -8,7 +8,8 @@ public sealed class ProposalLocators
     public ProposalLocators(IPage page) => _page = page;
 
     // Source modules: Product Selection | confidence=High score=125
-    public ILocator EffectiveDate => _page.GetByRole(AriaRole.Textbox, new() { Name = "Effective Date:*", Exact = true });
+    // v56 raw Tosca primary: Employers Liability | Effective Date | DuckCreekId | frame=iframe
+    public ILocator EffectiveDate => _page.FrameLocator("iframe").Locator("[duckcreekid=\"UmbrellaEmployersLiabilityInput.EffectiveDate\"], [data-duckcreekid=\"UmbrellaEmployersLiabilityInput.EffectiveDate\"]");
 
     // Source modules: Common Navigation Links | confidence=Medium score=113
     public ILocator NewQuote => _page.GetByRole(AriaRole.Link, new() { Name = "New Quote", Exact = true });

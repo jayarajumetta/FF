@@ -8,10 +8,13 @@ public sealed class SubmissionLocators
     public SubmissionLocators(IPage page) => _page = page;
 
     // Source modules: Submission|Complete Application & Stoplight Functionality | confidence=Review score=97
-    public ILocator AllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabs => _page.GetByLabel("All required fields have not been completed. Please complete highlighted tabs.", new() { Exact = true });
+    // v56 raw Tosca primary:  | Complete | DuckCreekId | frame=iframe
+    public ILocator AllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabs => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Complete\"], [data-duckcreekid=\"Complete\"]");
 
     // Source modules: Submission|Complete Application & Stoplight Functionality | confidence=High score=125
-    public ILocator CompleteApplication => _page.GetByRole(AriaRole.Button, new() { Name = "Complete Application", Exact = true });
+    // v56 raw Tosca primary:  | Complete | DuckCreekId | frame=iframe
+    // v56 semantic alias: same physical raw-Tosca control as AllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabs
+    public ILocator CompleteApplication => AllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabs;
 
     // Source modules: Submission|Required and Optional Fields | confidence=Medium score=113
     public ILocator IsThisCoverageBound => _page.GetByRole(AriaRole.Textbox, new() { Name = "Is this coverage bound?*", Exact = true });

@@ -11,6 +11,7 @@ public sealed class UiActions
     private readonly FrameworkConfig _config;
     private readonly ScenarioReport? _report;
     private readonly DeferredVerificationCollector? _verificationFailures;
+    private readonly HashSet<string> _semanticallyCommittedControls = new(StringComparer.OrdinalIgnoreCase);
 
     public UiActions(BrowserSession browser, FrameworkConfig config, RunLogger logger)
         : this(browser, config, logger, null, "Unknown", null, null) { }
@@ -32,8 +33,24 @@ public sealed class UiActions
     public Task ClickAsync(ILocator locator) => ClickAsync(locator, new ControlIntent("Application", "Control"));
     public Task FillAsync(ILocator locator, string value) => FillAsync(locator, value, new ControlIntent("Application", "Control"));
     public Task ClickAsync(ILocator locator, ControlIntent intent) => ExecuteAsync(locator, intent, "click", x => ClickSemanticAsync(x));
-    public Task FillAsync(ILocator locator, string value, ControlIntent intent) => ExecuteAsync(locator, intent, "fill", x => x.FillAsync(value ?? string.Empty));
-    public Task PressAsync(ILocator locator, string key, ControlIntent intent) => ExecuteAsync(locator, intent, "press", x => x.PressAsync(NormalizeKey(key)));
+    public async Task FillAsync(ILocator locator, string value, ControlIntent intent)
+    {
+        await ExecuteAsync(locator, intent, "fill", x => ComponentAwareControlActions.SelectOrFillAsync(_browser.Page, x, value ?? string.Empty, _config.Browser.ActionTimeoutMs));
+        _semanticallyCommittedControls.Add(IntentKey(intent));
+    }
+    public async Task PressAsync(ILocator locator, string key, ControlIntent intent)
+    {
+        var normalized = NormalizeKey(key).Trim();
+        if (normalized.Equals("CLICK", StringComparison.OrdinalIgnoreCase)) { await ClickAsync(locator, intent); return; }
+        if (normalized.Equals("DOUBLECLICK", StringComparison.OrdinalIgnoreCase) || normalized.Equals("Doubleclick", StringComparison.OrdinalIgnoreCase))
+        { await ExecuteAsync(locator, intent, "double-click", x => x.DblClickAsync()); return; }
+        if ((normalized.Equals("Tab", StringComparison.OrdinalIgnoreCase) || normalized.Equals("Enter", StringComparison.OrdinalIgnoreCase)) && _semanticallyCommittedControls.Contains(IntentKey(intent)))
+        {
+            _logger.Info($"KEYBOARD STEERING SUPPRESSED: {intent} key={normalized}; semantic set/fill already committed the control.");
+            return;
+        }
+        await ExecuteAsync(locator, intent, "press", x => x.PressAsync(normalized));
+    }
 
     /// <summary>
     /// Component-aware Tosca Set semantics. Native select, Angular Material/MDC,
@@ -160,10 +177,12 @@ public sealed class UiActions
     private async Task SelectMaterialOptionAsync(ILocator trigger, string value, ControlIntent intent)
     {
         await trigger.ClickAsync();
-        var page = _browser.Page;
-        var option = page.GetByRole(AriaRole.Option, new() { Name = value, Exact = true });
-        if (await option.CountAsync() == 0) option = page.Locator("mat-option").Filter(new() { HasText = value });
-        if (await option.CountAsync() == 0) option = page.Locator("[role=option]").Filter(new() { HasText = value });
+        var frame = FrameExecutionContext.Current;
+        ILocator option = frame is null
+            ? _browser.Page.GetByRole(AriaRole.Option, new() { Name = value, Exact = true })
+            : frame.GetByRole(AriaRole.Option, new() { Name = value, Exact = true });
+        if (await option.CountAsync() == 0) option = (frame is null ? _browser.Page.Locator("mat-option") : frame.Locator("mat-option")).Filter(new() { HasTextRegex = new System.Text.RegularExpressions.Regex($@"^\s*{System.Text.RegularExpressions.Regex.Escape(value)}\s*$", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
+        if (await option.CountAsync() == 0) option = (frame is null ? _browser.Page.Locator("[role=option]") : frame.Locator("[role=option]")).Filter(new() { HasTextRegex = new System.Text.RegularExpressions.Regex($@"^\s*{System.Text.RegularExpressions.Regex.Escape(value)}\s*$", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
         await ClickSingleVisibleAsync(option, $"dropdown option '{value}'", intent);
     }
 
@@ -214,9 +233,11 @@ public sealed class UiActions
         var tag = (await control.EvaluateAsync<string>("e=>e.tagName.toLowerCase()")).ToLowerInvariant();
         var input = tag == "input" || tag == "textarea" ? control : control.Locator("input,textarea").First;
         await input.FillAsync(value ?? string.Empty);
-        var page = _browser.Page;
-        var option = page.GetByRole(AriaRole.Option, new() { Name = value, Exact = true });
-        if (await option.CountAsync() == 0) option = page.Locator("mat-option,[role=option]").Filter(new() { HasText = value });
+        var frame = FrameExecutionContext.Current;
+        ILocator option = frame is null
+            ? _browser.Page.GetByRole(AriaRole.Option, new() { Name = value, Exact = true })
+            : frame.GetByRole(AriaRole.Option, new() { Name = value, Exact = true });
+        if (await option.CountAsync() == 0) option = (frame is null ? _browser.Page.Locator("mat-option,[role=option]") : frame.Locator("mat-option,[role=option]")).Filter(new() { HasTextRegex = new System.Text.RegularExpressions.Regex($@"^\s*{System.Text.RegularExpressions.Regex.Escape(value)}\s*$", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
         await ClickSingleVisibleAsync(option, $"autocomplete option '{value}'", intent);
     }
 
@@ -252,7 +273,7 @@ public sealed class UiActions
     {
         var option = control.GetByRole(AriaRole.Radio, new() { Name = value, Exact = true });
         if (await option.CountAsync() == 0) option = control.GetByRole(AriaRole.Option, new() { Name = value, Exact = true });
-        if (await option.CountAsync() == 0) option = control.Locator("mat-radio-button,mat-chip-option,mat-chip,[role=radio],[role=option]").Filter(new() { HasText = value });
+        if (await option.CountAsync() == 0) option = control.Locator("mat-radio-button,mat-chip-option,mat-chip,[role=radio],[role=option]").Filter(new() { HasTextRegex = new System.Text.RegularExpressions.Regex($@"^\s*{System.Text.RegularExpressions.Regex.Escape(value)}\s*$", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
         await ClickSingleVisibleAsync(option, $"radio/chip option '{value}'", intent);
     }
 
@@ -441,7 +462,8 @@ public sealed class UiActions
     {
         try
         {
-            await PrepareForActionAsync(locator, action);
+            await PrepareForActionAsync(locator, intent, action);
+            using var frameScope = FrameExecutionContext.Push(_fallback.PreferredFrame(intent));
             await operation(locator);
         }
         catch (Exception ex) when (IsLocatorFailure(ex))
@@ -464,7 +486,8 @@ public sealed class UiActions
     {
         try
         {
-            await PrepareForActionAsync(locator, action);
+            await PrepareForActionAsync(locator, intent, action);
+            using var frameScope = FrameExecutionContext.Push(_fallback.PreferredFrame(intent));
             return await operation(locator);
         }
         catch (Exception ex) when (IsLocatorFailure(ex))
@@ -480,7 +503,7 @@ public sealed class UiActions
         // Failure-time DOM + screenshot evidence remains available to the final healing layer.
     }
 
-    private async Task PrepareForActionAsync(ILocator locator, string action)
+    private async Task PrepareForActionAsync(ILocator locator, ControlIntent intent, string action)
     {
         await WaitForPageReadyBestEffortAsync();
         if (action is "wait-absent") return;
@@ -490,6 +513,9 @@ public sealed class UiActions
         var timeout = action.StartsWith("verify", StringComparison.OrdinalIgnoreCase)
             ? _config.Waits.VerifyTimeoutMs
             : _config.Waits.ElementReadyTimeoutMs;
+        // Raw Tosca explicitly says this control is nested below an HtmlFrame. Do not burn the
+        // full top-document timeout before allowing the frame-scoped deterministic locator to run.
+        if (_fallback.HasFrameCandidates(intent)) timeout = Math.Min(timeout, _config.Waits.FallbackCandidateTimeoutMs);
         await locator.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeout });
     }
 
@@ -538,6 +564,8 @@ public sealed class UiActions
         if (value.Equals("false", StringComparison.OrdinalIgnoreCase) || value.Equals("no", StringComparison.OrdinalIgnoreCase) || value.Equals("unchecked", StringComparison.OrdinalIgnoreCase) || value == "0") return false;
         return defaultValue;
     }
+
+    private static string IntentKey(ControlIntent intent) => $"{intent.Page}|{intent.Control}";
 
     private static string NormalizeKey(string key) => key
         .Replace("POST:", "", StringComparison.OrdinalIgnoreCase)

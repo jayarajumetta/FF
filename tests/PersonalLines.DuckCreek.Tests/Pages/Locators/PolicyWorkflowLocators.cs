@@ -8,7 +8,8 @@ public sealed class PolicyWorkflowLocators
     public PolicyWorkflowLocators(IPage page) => _page = page;
 
     // Source modules: EQH||Add/Edit Additional Interest-First Mortgagee | confidence=Medium score=113
-    public ILocator AddEditAdditionalInterestFirstMortgageeSearch => _page.GetByRole(AriaRole.Button, new() { Name = "Btn_Search", Exact = true });
+    // v56 raw Tosca primary: EQH||Add/Edit Additional Interest-First Mortgagee | Txt_MortgageSearch_Mortgage Name | Id+Name
+    public ILocator AddEditAdditionalInterestFirstMortgageeSearch => _page.Locator("input[id=\"temp.searchName\"][name=\"temp.searchName\"]");
 
     // Source modules: EQ || Personal Injury Protection Section (New) | confidence=Medium score=113
     // Dynamically set by buffer Additional Death Benefit in RTB Auto | 10.2 EQ | Auto_AddlCov PIP
@@ -59,7 +60,8 @@ public sealed class PolicyWorkflowLocators
     public ILocator PIPStacking => _page.GetByRole(AriaRole.Button, new() { Name = "PIP Stacking", Exact = true });
 
     // Source modules: EQ||Pricing Details | confidence=Medium score=114
-    public ILocator PricingDetailsNext => _page.GetByRole(AriaRole.Button, new() { Name = "Btn_Next", Exact = true });
+    // v56 raw Tosca primary: EQ||Pricing Details | Lbl_Residence Summary | Id
+    public ILocator PricingDetailsNext => _page.Locator("[id=\"Policy_Headless.Constant_ResidenceSummary-0-layout\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name

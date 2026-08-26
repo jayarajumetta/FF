@@ -8,7 +8,8 @@ public sealed class BillingLocators
     public BillingLocators(IPage page) => _page = page;
 
     // Source modules: EQ||Billing | confidence=Medium score=113
-    public ILocator BillingNEXT => _page.GetByRole(AriaRole.Button, new() { Name = "Btn_Billing_NEXT", Exact = true });
+    // v56 raw Tosca primary: EQ||Billing | Btn_OTHER_1 | Id
+    public ILocator BillingNEXT => _page.Locator("[id=\"fields._PolicyPaymentInputDoc.subsequentPaymentData$payerID.value-1\"]");
 
     // Source modules: EQ||Billing | confidence=High score=130
     public ILocator CHECK => _page.GetByTestId("fields._PolicyPaymentInputDoc.initialPaymentData$paymentMethod.value-chip-wrapper");
@@ -23,7 +24,8 @@ public sealed class BillingLocators
     public ILocator DirectBill => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$paymentMethod.value-chip-wrapper");
 
     // Source modules: EQ||Billing | confidence=Medium score=84
-    public ILocator HdrBilling => _page.GetByLabel("H1", new() { Exact = true });
+    // v56 raw Tosca primary: EQ||Billing | Min | Id+Name
+    public ILocator HdrBilling => _page.Locator("input[id=\"fields._PolicyPaymentInputDoc.initialPaymentData$amountSelection.value-0-input\"][name=\"mat-radio-group-5\"]");
 
     // Source modules: EQ||Billing | confidence=High score=130
     public ILocator N1Payment => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$paymentPlan.value-chip-wrapper");
@@ -35,6 +37,7 @@ public sealed class BillingLocators
     public ILocator PrimaryAccountHolderName => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$payerID.value-*-payer-chip-wrapper");
 
     // Source modules: EQ||Billing | confidence=High score=127
-    public ILocator RdBtnFullBalance => _page.GetByRole(AriaRole.Radio, new() { Name = "Rd Btn_Full Balance", Exact = true });
+    // v56 raw Tosca primary: EQ||Billing | Rd Btn_Full Balance | Id+Name
+    public ILocator RdBtnFullBalance => _page.Locator("input[id=\"fields._PolicyPaymentInputDoc.initialPaymentData$amountSelection.value-1-input\"][name=\"mat-radio-group-5\"]");
 
 }

@@ -27,7 +27,7 @@ public static class NUnitEvidencePublisher
             File.WriteAllText(path,
                 $"Feature: {feature}{Environment.NewLine}Scenario: {scenario}{Environment.NewLine}Started: {DateTimeOffset.Now:O}{Environment.NewLine}" +
                 $"NUnit WorkDirectory: {SafeTestContext(() => TestContext.CurrentContext.WorkDirectory)}{Environment.NewLine}");
-            TestContext.AddTestAttachment(path, "Scenario evidence registration marker");
+            InsuranceAutomation.NUnit.NUnitEvidenceAttachment.AddTestAttachment(path, "Scenario evidence registration marker");
             TestContext.Progress.WriteLine($"NUnit evidence marker attached: {path}");
             return stage;
         }
@@ -109,7 +109,7 @@ public static class NUnitEvidencePublisher
                 var stagedFile = Path.Combine(stageRoot, relative);
                 Directory.CreateDirectory(Path.GetDirectoryName(stagedFile)!);
                 File.Copy(sourceFile, stagedFile, true);
-                TestContext.AddTestAttachment(stagedFile, Describe(root, sourceFile));
+                InsuranceAutomation.NUnit.NUnitEvidenceAttachment.AddTestAttachment(stagedFile, Describe(root, sourceFile));
                 attached.Add(relative);
             }
             catch (Exception ex)
@@ -151,7 +151,7 @@ public static class NUnitEvidencePublisher
 
         try
         {
-            TestContext.AddTestAttachment(stagedResultPath, "NUnit test-evidence attachment result");
+            InsuranceAutomation.NUnit.NUnitEvidenceAttachment.AddTestAttachment(stagedResultPath, "NUnit test-evidence attachment result");
             attached.Add("nunit-attachment-result.json");
         }
         catch (Exception ex)

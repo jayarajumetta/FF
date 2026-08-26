@@ -19,7 +19,8 @@ public sealed class SocialSecurityLocators
 
     public ILocator NoPrefillMatchFound =>
         _page.GetByRole(AriaRole.Heading, new() { Name = "No Prefill Match Found", Exact = true });
-    public ILocator Continue => _page.GetByRole(AriaRole.Button, new() { Name = "Continue", Exact = true });
+    // v56 raw Tosca primary: Building|Add Class | Continue | DuckCreekId
+    public ILocator Continue => _page.Locator("[duckcreekid=\"Continue\"], [data-duckcreekid=\"Continue\"]");
 
     // Compatibility aliases
     public ILocator TheSSNCouldNotBeFoundPleaseEnterAnSSN => SsnInput;

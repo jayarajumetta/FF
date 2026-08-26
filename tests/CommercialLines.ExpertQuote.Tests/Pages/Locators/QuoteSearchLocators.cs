@@ -10,7 +10,8 @@ public sealed class QuoteSearchLocators
 
     // Source: EQ|Common|Search by QuoteNum.
     public ILocator QuoteSearchInput => _page.Locator("[id='quoteSearchInput']");
-    public ILocator QuoteSearchButton => _page.GetByRole(AriaRole.Button, new() { Name = "Search", Exact = true });
+    // v56 raw Tosca primary: Submission, select Policy Forms | Search | DuckCreekId
+    public ILocator QuoteSearchButton => _page.Locator("[duckcreekid=\"Search\"], [data-duckcreekid=\"Search\"]");
 
     // Source: EQ|Common|Quote Identifying.
     // Name and Quote = SPAN.ng-star-inserted in the current Angular Material tab/header.

@@ -25,7 +25,8 @@ public sealed class SocialSecurityLocators
     public ILocator SaveAndContinue => _page.GetByRole(AriaRole.Button, new() { Name = "Save and Continue", Exact = true });
 
     // Source modules: EQ || Proposal Details/Start | confidence=High score=97
-    public ILocator State => _page.GetByRole(AriaRole.Combobox, new() { Name = "State", Exact = true });
+    // v56 raw Tosca primary: EQ || Proposal Details/Start | State | Id
+    public ILocator State => _page.Locator("[id=\"proposal.ratingState\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name

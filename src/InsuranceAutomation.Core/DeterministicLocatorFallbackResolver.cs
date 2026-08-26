@@ -35,6 +35,25 @@ public sealed class DeterministicLocatorFallbackResolver
         _catalog = provider ?? new LocatorFallbackCatalogStore(config, applicationName);
     }
 
+    public bool HasFrameCandidates(ControlIntent intent)
+    {
+        var entry = _catalog.Find(intent);
+        var candidate = entry?.Candidates.Where(c => c.Confidence >= _config.LocatorFallback.MinimumCandidateConfidence)
+            .OrderByDescending(c => c.MatchScore).ThenByDescending(c => c.Confidence).FirstOrDefault();
+        return candidate is not null && !string.IsNullOrWhiteSpace(candidate.FrameValue);
+    }
+
+    public IFrameLocator? PreferredFrame(ControlIntent intent)
+    {
+        var entry = _catalog.Find(intent);
+        var candidate = entry?.Candidates
+            .Where(c => c.Confidence >= _config.LocatorFallback.MinimumCandidateConfidence)
+            .OrderByDescending(c => c.MatchScore).ThenByDescending(c => c.Confidence).FirstOrDefault();
+        return candidate is null || string.IsNullOrWhiteSpace(candidate.FrameValue)
+            ? null
+            : LocatorResolution.BuildFrame(_browser.Page, candidate.FrameStrategy, candidate.FrameValue);
+    }
+
     public async Task<bool> TryExecuteAsync(
         ControlIntent intent,
         string action,
@@ -57,7 +76,9 @@ public sealed class DeterministicLocatorFallbackResolver
         foreach (var candidate in candidates)
         {
             attempt++;
-            var locator = LocatorResolution.Build(_browser.Page, candidate.ToLocatorSpec());
+            var spec = candidate.ToLocatorSpec();
+            var locator = LocatorResolution.Build(_browser.Page, spec);
+            var frame = LocatorResolution.FrameFor(_browser.Page, spec);
             var probe = await ProbeAsync(locator, candidate, action);
             if (!probe.Usable)
             {
@@ -67,6 +88,7 @@ public sealed class DeterministicLocatorFallbackResolver
 
             try
             {
+                using var frameScope = FrameExecutionContext.Push(frame);
                 await operation(locator);
                 var key = CacheKey(intent, action);
                 if (_config.LocatorFallback.PreferPreviouslySuccessfulCandidate)
@@ -114,7 +136,9 @@ public sealed class DeterministicLocatorFallbackResolver
         foreach (var candidate in candidates)
         {
             attempt++;
-            var locator = LocatorResolution.Build(_browser.Page, candidate.ToLocatorSpec());
+            var spec = candidate.ToLocatorSpec();
+            var locator = LocatorResolution.Build(_browser.Page, spec);
+            var frame = LocatorResolution.FrameFor(_browser.Page, spec);
             var probe = await ProbeAsync(locator, candidate, action);
             if (!probe.Usable)
             {
@@ -124,6 +148,7 @@ public sealed class DeterministicLocatorFallbackResolver
 
             try
             {
+                using var frameScope = FrameExecutionContext.Push(frame);
                 var value = await operation(locator);
                 if (_config.LocatorFallback.PreferPreviouslySuccessfulCandidate)
                     SuccessfulCandidateCache[CacheKey(intent, action)] = candidate;
@@ -243,6 +268,8 @@ public sealed class DeterministicLocatorFallbackResolver
             candidate?.SourceModule ?? "",
             candidate?.SourceField ?? "",
             candidate?.SourceProperty ?? "",
+            candidate?.FrameStrategy ?? "",
+            candidate?.FrameValue ?? "",
             reason,
             primaryFailure);
 

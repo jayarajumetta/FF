@@ -8,7 +8,8 @@ public sealed class SubmissionLocators
     public SubmissionLocators(IPage page) => _page = page;
 
     // Source modules: EQ||ECheckList | confidence=Medium score=113
-    public ILocator AutoCycleRVApplication => _page.GetByRole(AriaRole.Link, new() { Name = "Lnk_Auto/Cycle/RV Application", Exact = true });
+    // v56 raw Tosca primary: EQ||ECheckList | Agent-Attention-Required | Id
+    public ILocator AutoCycleRVApplication => _page.Locator("[id=\"Agent-Attention-Required\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -31,14 +32,17 @@ public sealed class SubmissionLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator CorrectionNeededStep1 => _page.GetByText("Correction Needed Step 1", new() { Exact = true });
+    // v56 raw Tosca primary: EQ||Submission (NEW) | Correction Needed Step 1 | Id
+    public ILocator CorrectionNeededStep1 => _page.Locator("[id=\"undefined\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
     public ILocator DIVAgentDocumentsCount => _page.GetByText("DIV_Agent Documents Count", new() { Exact = true });
 
     // Source modules: EQ||ECheckList | confidence=Medium score=114
-    public ILocator DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer => _page.GetByLabel("Drag and Drop files here to upload (or click here to open a file explorer)", new() { Exact = true });
+    // v56 raw Tosca primary: EQ||ECheckList | Agent-Attention-Required | Id
+    // v56 semantic alias: same physical raw-Tosca control as AutoCycleRVApplication
+    public ILocator DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer => AutoCycleRVApplication;
 
     // Source modules: EQ||Auto Tabs | confidence=Medium score=108
     public ILocator DIVSubmission => _page.GetByLabel("DIV_Submission", new() { Exact = true });
@@ -52,10 +56,12 @@ public sealed class SubmissionLocators
     public ILocator FilePath => _page.GetByText("FilePath", new() { Exact = true });
 
     // Source modules: EQ||New Quote | confidence=Medium score=113
-    public ILocator NewQuoteSearch => _page.GetByRole(AriaRole.Button, new() { Name = "Btn_Search", Exact = true });
+    // v56 raw Tosca primary: EQ||New Quote | Txt_Quote\Policy Search | Id+Name
+    public ILocator NewQuoteSearch => _page.Locator("input[id=\"quoteSearchInput\"][name=\"quoteSearchInput\"]");
 
     // Source modules: EQ || Transmit Confirmation | confidence=High score=97
-    public ILocator PolicyNumber => _page.GetByLabel("Policy Number", new() { Exact = true });
+    // v56 raw Tosca primary: EQ || Transmit Confirmation | Policy Number | Id
+    public ILocator PolicyNumber => _page.Locator("[id=\"PolicyOutput.PolicyNumber-0-layout\"]");
 
     // Source modules: EQ||New Quote | confidence=High score=127
     public ILocator QuotePolicySearch => _page.Locator("[name=\"Txt_Quote\\\\Policy Search\"], [id=\"Txt_Quote\\\\Policy Search\"]").First;

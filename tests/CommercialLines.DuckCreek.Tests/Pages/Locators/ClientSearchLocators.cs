@@ -8,46 +8,60 @@ public sealed class ClientSearchLocators
     public ClientSearchLocators(IPage page) => _page = page;
 
     // Source modules: Client|Additional Insured|Individual | confidence=High score=125
-    public ILocator AddNamedInsuredIndividual => _page.GetByRole(AriaRole.Button, new() { Name = "Add Named Insured - Individual", Exact = true });
+    // v56 raw Tosca primary: Client|Additional Insured|Individual | Add Named Insured - Individual | DuckCreekId
+    public ILocator AddNamedInsuredIndividual => _page.Locator("[duckcreekid=\"Add Named Insured - Individual\"], [data-duckcreekid=\"Add Named Insured - Individual\"]");
 
     // Source modules: Client|Additional Insured|Individual | confidence=High score=125
-    public ILocator AdditionalInsuredFirstName => _page.GetByRole(AriaRole.Textbox, new() { Name = "Additional Insured First Name", Exact = true });
+    // v56 raw Tosca primary: Client|Additional Insured|Individual | Additional Insured First Name | DuckCreekId
+    public ILocator AdditionalInsuredFirstName => _page.Locator("[duckcreekid=\"AdditionalNamedInsuredInput.FirstName\"], [data-duckcreekid=\"AdditionalNamedInsuredInput.FirstName\"]");
 
     // Source modules: Client|Additional Insured|Individual | confidence=High score=125
-    public ILocator AdditionalInsuredMiddleName => _page.GetByRole(AriaRole.Textbox, new() { Name = "Additional Insured Middle Name", Exact = true });
+    // v56 raw Tosca primary: Client|Additional Insured|Individual | Additional Insured Middle Name | DuckCreekId
+    public ILocator AdditionalInsuredMiddleName => _page.Locator("[duckcreekid=\"AdditionalNamedInsuredInput.MiddleName\"], [data-duckcreekid=\"AdditionalNamedInsuredInput.MiddleName\"]");
 
     // Source modules: Common Navigation Links | confidence=Medium score=113
-    public ILocator AdditionalNamedInsured => _page.GetByRole(AriaRole.Link, new() { Name = "Additional Named Insured", Exact = true });
+    // v56 raw Tosca primary: Client|Additional Named Insured|Common | Additional Named Insured | DuckCreekId
+    public ILocator AdditionalNamedInsured => _page.Locator("[duckcreekid=\"Additional Named Insured\"], [data-duckcreekid=\"Additional Named Insured\"]");
 
     // Source modules: Client|Additional Named Insured|Common | confidence=High score=97
-    public ILocator AdditionalNamedInsuredHeading => _page.GetByLabel("Additional Named Insured Heading", new() { Exact = true });
+    // v56 raw Tosca primary: Client|Additional Named Insured|Common | Additional Named Insured Heading | Id
+    public ILocator AdditionalNamedInsuredHeading => _page.Locator("[id=\"pageTop\"]");
 
     // Source modules: Client|Named Insured|Common | confidence=High score=125
-    public ILocator Address17A1FB => _page.GetByRole(AriaRole.Textbox, new() { Name = "Address1", Exact = true });
+    // v56 raw Tosca primary: Endorsement - CM 66 01 Exclude Named Customer | Address | Id+Name+DuckCreekId
+    public ILocator Address17A1FB => _page.Locator("input[id=\"f_CCE14981F38894A679A407BA735B5959BD3_3_1-inputEl\"][name=\"string_D3|\"][duckcreekid=\"CovEndorsmentIteratorNonShreddedInput.Address\"]");
 
     // Source modules: Client|Additional Insured|Individual | confidence=High score=125
-    public ILocator Address1CB379 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Address 1*", Exact = true });
+    // v56 raw Tosca primary: Client|Additional Insured|Individual | Address 1* | DuckCreekId | frame=iframe
+    public ILocator Address1CB379 => _page.FrameLocator("iframe").Locator("[duckcreekid=\"IndividualNamedInsuredInput.Address1\"], [data-duckcreekid=\"IndividualNamedInsuredInput.Address1\"]");
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
     public ILocator Address1D319B => Address17A1FB; // semantic alias; locator defined once
 
     // Source modules: Client|Named Insured|Common | confidence=High score=125
-    public ILocator Address2 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Address2", Exact = true });
+    // v56 raw Tosca primary:  | Address 2 | DuckCreekId | frame=iframe
+    public ILocator Address2 => _page.FrameLocator("iframe").Locator("[duckcreekid=\"AdditionalOtherInterestInput.Address2\"], [data-duckcreekid=\"AdditionalOtherInterestInput.Address2\"]");
 
     // Source modules: Client|Named Insured|Business | confidence=High score=125
-    public ILocator BusinessName => _page.GetByRole(AriaRole.Textbox, new() { Name = "Business Name", Exact = true });
+    // v56 raw Tosca primary: Client|Additional Named Insured|Business | BusinessName | DuckCreekId
+    public ILocator BusinessName => _page.Locator("[duckcreekid=\"AdditionalNamedInsuredInput.BusinessName\"], [data-duckcreekid=\"AdditionalNamedInsuredInput.BusinessName\"]");
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
-    public ILocator City => _page.GetByRole(AriaRole.Textbox, new() { Name = "City", Exact = true });
+    // v56 raw Tosca primary:  | City | DuckCreekId | frame=iframe
+    public ILocator City => _page.FrameLocator("iframe").Locator("[duckcreekid=\"AdditionalOtherInterestAssociatedClientInput.City\"], [data-duckcreekid=\"AdditionalOtherInterestAssociatedClientInput.City\"]");
 
     // Source modules: Client|Named Insured|Common | confidence=High score=127
-    public ILocator Client070F4 => _page.GetByLabel("Client", new() { Exact = true });
+    // v56 raw Tosca primary:  | Add Client | DuckCreekId | frame=iframe
+    public ILocator Client070F4 => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Add Client\"], [data-duckcreekid=\"Add Client\"]");
 
     // Source modules: Common Navigation Links | confidence=Medium score=113
-    public ILocator Client35F85 => _page.GetByRole(AriaRole.Link, new() { Name = "Client", Exact = true });
+    // v56 raw Tosca primary:  | Add Client | DuckCreekId | frame=iframe
+    // v56 semantic alias: same physical raw-Tosca control as Client070F4
+    public ILocator Client35F85 => Client070F4;
 
     // Source modules: Client|Additional Named Insured|Common | confidence=High score=125
-    public ILocator ClientSearch2CB16 => _page.GetByRole(AriaRole.Button, new() { Name = "Client Search", Exact = true });
+    // v56 raw Tosca primary: Client|Additional Named Insured|Common | Client Search | DuckCreekId | frame=iframe
+    public ILocator ClientSearch2CB16 => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Client Search\"], [data-duckcreekid=\"Client Search\"]");
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
     // Cardinality has been set on this field to allow the addition of a "WaitOn" action.
@@ -61,62 +75,79 @@ public sealed class ClientSearchLocators
     public ILocator ClientSearchFDC36 => ClientSearch2CB16; // semantic alias; locator defined once
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
-    public ILocator Complete => _page.GetByRole(AriaRole.Button, new() { Name = "Complete", Exact = true });
+    // v56 raw Tosca primary:  | Complete | DuckCreekId | frame=iframe
+    public ILocator Complete => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Complete\"], [data-duckcreekid=\"Complete\"]");
 
     // Source modules: Client|Named Insured|Individual | confidence=High score=125
     // Only applicable to individual
     public ILocator DOB => _page.GetByRole(AriaRole.Textbox, new() { Name = "DOB", Exact = true });
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
-    public ILocator DateOfBirth338D7 => _page.GetByRole(AriaRole.Textbox, new() { Name = "DateOfBirth", Exact = true });
+    // v56 raw Tosca primary:  | Date Of Birth* | Id+Name+DuckCreekId | frame=iframe
+    public ILocator DateOfBirth338D7 => _page.FrameLocator("iframe").Locator("input[id=\"f_c174FBAF5A7CF4DFEA3CDA0B3A89411D010CF_1_1-inputEl\"][name=\"date_10CF|mm-dd-yyyy\"][duckcreekid=\"DriverUnderwritingInformationInput.DateOfBirth\"]");
 
     // Source modules: Client|Additional Insured|Individual | confidence=High score=125
-    public ILocator DateOfBirthEA1C4 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Date Of Birth*", Exact = true });
+    // v56 raw Tosca primary: Client|Additional Insured|Individual | Date Of Birth* | DuckCreekId | frame=iframe
+    public ILocator DateOfBirthEA1C4 => _page.FrameLocator("iframe").Locator("[duckcreekid=\"IndividualNamedInsuredInput.DateOfBirth\"], [data-duckcreekid=\"IndividualNamedInsuredInput.DateOfBirth\"]");
 
     // Source modules: Client|Add Associated Client | confidence=Medium score=113
-    public ILocator Detail6D228 => _page.GetByRole(AriaRole.Link, new() { Name = "Detail", Exact = true });
+    // v56 raw Tosca primary:  | Detail | DuckCreekId | frame=iframe
+    public ILocator Detail6D228 => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Detail\"], [data-duckcreekid=\"Detail\"]");
 
     // Source modules: Client|Additional Insured|Individual | confidence=High score=125
-    public ILocator Detail704E6 => _page.GetByRole(AriaRole.Button, new() { Name = "Detail", Exact = true });
+    // v56 raw Tosca primary: Client|Additional Insured|Individual | Detail | DuckCreekId | frame=iframe
+    // v56 semantic alias: same physical raw-Tosca control as Detail6D228
+    public ILocator Detail704E6 => Detail6D228;
 
     // Source modules: Client|Named Insured|Individual | confidence=High score=125
     // Only applicable to individual
-    public ILocator EnterSSN6B3FB => _page.GetByRole(AriaRole.Textbox, new() { Name = "Enter SSN", Exact = true });
+    // v56 raw Tosca primary:  | Enter SSN* | DuckCreekId | frame=iframe
+    public ILocator EnterSSN6B3FB => _page.FrameLocator("iframe").Locator("[duckcreekid=\"AdditionalOtherInterestAssociatedClientSSNRetrievalInput.SSNInput\"], [data-duckcreekid=\"AdditionalOtherInterestAssociatedClientSSNRetrievalInput.SSNInput\"]");
 
     // Source modules: Client|Additional Insured|Individual | confidence=High score=125
-    public ILocator EnterSSNE3801 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Enter SSN*", Exact = true });
+    // v56 raw Tosca primary: Client|Additional Insured|Individual | Enter SSN* | DuckCreekId | frame=iframe
+    public ILocator EnterSSNE3801 => _page.FrameLocator("iframe").Locator("[duckcreekid=\"IndividualNamedInsuredSSNRetrievalInput.SSNInput\"], [data-duckcreekid=\"IndividualNamedInsuredSSNRetrievalInput.SSNInput\"]");
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
     public ILocator EnterSSNFA186 => EnterSSNE3801; // semantic alias; locator defined once
 
     // Source modules: Client|Named Insured|Common | confidence=High score=125
-    public ILocator EntityType => _page.GetByRole(AriaRole.Textbox, new() { Name = "Entity Type", Exact = true });
+    // v56 raw Tosca primary: Insurance Designee | Entity Type | DuckCreekId
+    public ILocator EntityType => _page.Locator("[duckcreekid=\"SFPInsuranceScoreDesigneeInput.EntityType\"], [data-duckcreekid=\"SFPInsuranceScoreDesigneeInput.EntityType\"]");
 
     // Source modules: Client|Named Insured|Individual | confidence=High score=125
     // Only applicable to individual
-    public ILocator FirstName55A0B => _page.GetByRole(AriaRole.Textbox, new() { Name = "First Name", Exact = true });
+    // v56 raw Tosca primary:  | First Name* | Id+Name+DuckCreekId | frame=iframe
+    public ILocator FirstName55A0B => _page.FrameLocator("iframe").Locator("input[id=\"f_c174FBAF5A7CF4DFEA3CDA0B3A89411D010C8_1_1-inputEl\"][name=\"string_10C8|\"][duckcreekid=\"DriverUnderwritingInformationInput.Name\"]");
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
-    public ILocator FirstNameC5387 => _page.GetByRole(AriaRole.Textbox, new() { Name = "FirstName", Exact = true });
+    // v56 raw Tosca primary:  | First Name* | Id+Name+DuckCreekId | frame=iframe
+    // v56 semantic alias: same physical raw-Tosca control as FirstName55A0B
+    public ILocator FirstNameC5387 => FirstName55A0B;
 
     // Source modules: Client|Named Insured|Individual | confidence=High score=125
     // Only applicable to individual
-    public ILocator Gender1DC4A => _page.GetByRole(AriaRole.Textbox, new() { Name = "Gender", Exact = true });
+    // v56 raw Tosca primary:  | Gender | DuckCreekId | frame=iframe
+    public ILocator Gender1DC4A => _page.FrameLocator("iframe").Locator("[duckcreekid=\"AdditionalOtherInterestAssociatedClientInput.Gender\"], [data-duckcreekid=\"AdditionalOtherInterestAssociatedClientInput.Gender\"]");
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
     public ILocator Gender4973C => Gender1DC4A; // semantic alias; locator defined once
 
     // Source modules: Client|Additional Insured|Individual | confidence=High score=125
-    public ILocator IndividualOK => _page.GetByRole(AriaRole.Button, new() { Name = "OK", Exact = true });
+    // v56 raw Tosca primary: Client|Additional Insured|Individual | OK | DuckCreekId | frame=iframe
+    public ILocator IndividualOK => _page.FrameLocator("iframe").Locator("[duckcreekid=\"OK\"], [data-duckcreekid=\"OK\"]");
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
-    public ILocator IndividualType => _page.GetByRole(AriaRole.Textbox, new() { Name = "IndividualType", Exact = true });
+    // v56 raw Tosca primary:  | IndividualType | DuckCreekId | frame=iframe
+    public ILocator IndividualType => _page.FrameLocator("iframe").Locator("[duckcreekid=\"AdditionalOtherInterestAssociatedClientInput.IndividualType\"], [data-duckcreekid=\"AdditionalOtherInterestAssociatedClientInput.IndividualType\"]");
 
     // Source modules: Client|Other Insured Info | confidence=High score=125
-    public ILocator InsuredEMailAddress => _page.GetByRole(AriaRole.Textbox, new() { Name = "Insured E-mail Address*", Exact = true });
+    // v56 raw Tosca primary:  | E-Mail | DuckCreekId | frame=iframe
+    public ILocator InsuredEMailAddress => _page.FrameLocator("iframe").Locator("[duckcreekid=\"AdditionalOtherInterestInput.Email\"], [data-duckcreekid=\"AdditionalOtherInterestInput.Email\"]");
 
     // Source modules: Client|Named Insured|Common | confidence=High score=125
-    public ILocator InsuredType => _page.GetByRole(AriaRole.Textbox, new() { Name = "Insured Type", Exact = true });
+    // v56 raw Tosca primary:  | Insured Type* | DuckCreekId | frame=iframe
+    public ILocator InsuredType => _page.FrameLocator("iframe").Locator("[duckcreekid=\"AdditionalOtherInterestInput.InsuredType\"], [data-duckcreekid=\"AdditionalOtherInterestInput.InsuredType\"]");
 
     // Source modules: Verify JavaScript Result | confidence=Review score=97
     // The JavaScript code to execute. Use a return statement in the code to specify the return value.
@@ -124,11 +155,13 @@ public sealed class ClientSearchLocators
 
     // Source modules: Client|Named Insured|Individual | confidence=High score=125
     // Only applicable to individual
-    public ILocator LastName => _page.GetByRole(AriaRole.Textbox, new() { Name = "Last Name", Exact = true });
+    // v56 raw Tosca primary:  | Last Name* | Id+Name+DuckCreekId | frame=iframe
+    public ILocator LastName => _page.FrameLocator("iframe").Locator("input[id=\"f_c174FBAF5A7CF4DFEA3CDA0B3A89411D010CA_1_1-inputEl\"][name=\"string_10CA|\"][duckcreekid=\"DriverUnderwritingInformationInput.LastName\"]");
 
     // Source modules: Client|Named Insured|Individual | confidence=High score=125
     // Only applicable to individual
-    public ILocator MiddleName => _page.GetByRole(AriaRole.Textbox, new() { Name = "Middle Name", Exact = true });
+    // v56 raw Tosca primary:  | MiddleName | DuckCreekId | frame=iframe
+    public ILocator MiddleName => _page.FrameLocator("iframe").Locator("[duckcreekid=\"AdditionalOtherInterestAssociatedClientInput.MiddleName\"], [data-duckcreekid=\"AdditionalOtherInterestAssociatedClientInput.MiddleName\"]");
 
     // Source modules: Client|Other Insured Info | confidence=High score=95
     public ILocator NameOfAuditContact => _page.GetByRole(AriaRole.Textbox, new() { Name = "Name of Audit contact", Exact = true });
@@ -140,7 +173,8 @@ public sealed class ClientSearchLocators
     public ILocator OK => IndividualOK; // semantic alias; locator defined once
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
-    public ILocator OrderSSN5E031 => _page.GetByRole(AriaRole.Button, new() { Name = "Order SSN", Exact = true });
+    // v56 raw Tosca primary:  | Order SSN | DuckCreekId | frame=iframe
+    public ILocator OrderSSN5E031 => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Order SSN\"], [data-duckcreekid=\"Order SSN\"]");
 
     // Source modules: Client|Named Insured|Individual | confidence=High score=125
     // Only applicable to individual
@@ -151,7 +185,8 @@ public sealed class ClientSearchLocators
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
-    public ILocator PleaseVerifySSN3EAB9 => _page.GetByText("Please verify SSN*", new() { Exact = true });
+    // v56 raw Tosca primary:  | Verify | DuckCreekId | frame=iframe
+    public ILocator PleaseVerifySSN3EAB9 => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Verify\"], [data-duckcreekid=\"Verify\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -169,7 +204,8 @@ public sealed class ClientSearchLocators
     public ILocator Result => _page.GetByLabel("Result", new() { Exact = true });
 
     // Source modules: Client|Additional Named Insured|Common | confidence=High score=125
-    public ILocator ReturnToClient => _page.GetByRole(AriaRole.Button, new() { Name = "Return to Client", Exact = true });
+    // v56 raw Tosca primary: Client|Additional Named Insured|Common | Return to Client | DuckCreekId
+    public ILocator ReturnToClient => _page.Locator("[duckcreekid=\"Return to Client\"], [data-duckcreekid=\"Return to Client\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
     // Fallback derived from source control name
@@ -184,7 +220,8 @@ public sealed class ClientSearchLocators
     public ILocator SocialSecurity => _page.GetByLabel("Social Security #", new() { Exact = true });
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
-    public ILocator State => _page.GetByRole(AriaRole.Textbox, new() { Name = "State", Exact = true });
+    // v56 raw Tosca primary:  | State | DuckCreekId | frame=iframe
+    public ILocator State => _page.FrameLocator("iframe").Locator("[duckcreekid=\"AdditionalOtherInterestAssociatedClientInput.State\"], [data-duckcreekid=\"AdditionalOtherInterestAssociatedClientInput.State\"]");
 
     // Source modules: Verify JavaScript Result | confidence=Review score=97
     // Defines the caption of the browser window that is searched for.
@@ -194,7 +231,9 @@ public sealed class ClientSearchLocators
     public ILocator UnderwritingInfo => _page.GetByRole(AriaRole.Link, new() { Name = "Underwriting Info", Exact = true });
 
     // Source modules: Client|Additional Insured|Individual | confidence=High score=125
-    public ILocator Verify34721 => _page.GetByRole(AriaRole.Button, new() { Name = "Verify", Exact = true });
+    // v56 raw Tosca primary: Client|Additional Insured|Individual | Verify | DuckCreekId | frame=iframe
+    // v56 semantic alias: same physical raw-Tosca control as PleaseVerifySSN3EAB9
+    public ILocator Verify34721 => PleaseVerifySSN3EAB9;
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
     public ILocator Verify7A388 => Verify34721; // semantic alias; locator defined once
@@ -211,13 +250,15 @@ public sealed class ClientSearchLocators
     public ILocator YearsInBusiness => _page.GetByRole(AriaRole.Textbox, new() { Name = "Years In Business", Exact = true });
 
     // Source modules: Client|Named Insured|Common | confidence=High score=125
-    public ILocator ZipCode26D22 => _page.GetByRole(AriaRole.Textbox, new() { Name = "ZipCode", Exact = true });
+    // v56 raw Tosca primary:  | Zip Code | DuckCreekId | frame=iframe
+    public ILocator ZipCode26D22 => _page.FrameLocator("iframe").Locator("[duckcreekid=\"AdditionalOtherInterestInput.ZipCode\"], [data-duckcreekid=\"AdditionalOtherInterestInput.ZipCode\"]");
 
     // Source modules: Client|Add Associated Client | confidence=High score=125
     public ILocator ZipCodeA088E => ZipCode26D22; // semantic alias; locator defined once
 
     // Source modules: Client|Additional Insured|Individual | confidence=High score=125
-    public ILocator ZipCodeD2A54 => _page.GetByRole(AriaRole.Textbox, new() { Name = "Zip code*", Exact = true });
+    // v56 raw Tosca primary: Client|Additional Insured|Individual | Zip code* | DuckCreekId | frame=iframe
+    public ILocator ZipCodeD2A54 => _page.FrameLocator("iframe").Locator("[duckcreekid=\"IndividualNamedInsuredInput.ZipCode\"], [data-duckcreekid=\"IndividualNamedInsuredInput.ZipCode\"]");
 
 
     /// <summary>Source: Client|Named Insured|Common | Field: Primary Phone | Description: </summary>
@@ -225,7 +266,8 @@ public sealed class ClientSearchLocators
 
 
     /// <summary>Source: Client|Named Insured|Business | Field: FEIN | Description: </summary>
-    public ILocator FEIN => _page.Locator("[id=\"AccountInput.FEIN\"], [name=\"AccountInput.FEIN\"], [data-testid=\"AccountInput.FEIN\"], [data-duckcreekid=\"AccountInput.FEIN\"], [data-duck-creek-id=\"AccountInput.FEIN\"]").First;
+    // v56 raw Tosca primary:  | FEIN* | DuckCreekId | frame=iframe
+    public ILocator FEIN => _page.FrameLocator("iframe").Locator("[duckcreekid=\"AdditionalOtherInterestInput.FEIN\"], [data-duckcreekid=\"AdditionalOtherInterestInput.FEIN\"]");
 
 
     /// <summary>Source: Client|Other Insured Info | Field: Audit Telephone # | Description: </summary>

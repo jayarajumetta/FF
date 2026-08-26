@@ -125,11 +125,11 @@ public sealed class SmokeTestRVSteps
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    await page.PressAgentCodeAsync("TAB");
+                    // v56 suppressed redundant Tosca keyboard steering: AgentCode TAB
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    await page.PressStateAsync("TAB");
+                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets State
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
@@ -141,11 +141,11 @@ public sealed class SmokeTestRVSteps
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    await page.PressStateAsync("TAB");
+                    // v56 suppressed redundant Tosca keyboard steering: State TAB
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    await page.PressWritingCompanyAsync("TAB");
+                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets WritingCompany
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
@@ -157,7 +157,7 @@ public sealed class SmokeTestRVSteps
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    await page.PressWritingCompanyAsync("TAB");
+                    // v56 suppressed redundant Tosca keyboard steering: WritingCompany TAB
         }
         await page.WaitForSameAsMailingAddressAsync("True");
         await page.ClickSameAsMailingAddressAsync();
