@@ -1,42 +1,47 @@
-# v58 Source Audit
+# Source and raw-evidence audit
 
-Generated: 2026-08-26T21:41:02.478343+00:00
+## Materials available
 
-## Local source inputs
+The implementation used the technical context exposed by the three shared ChatGPT conversations supplied with the request. The first shared conversation exposed the v56 artifact name and raw-source filenames, plus concrete failure examples and prior generated snippets. The second exposed broader Tosca parser and framework architecture. The third did not expose additional converter implementation content through the public share renderer.
 
-| Purpose | File | Size | SHA-256 |
-|---|---|---:|---|
-| v57 baseline | `FF-bop-complete-e2e-v57.zip` | 188.9 KiB | `ce1434f26ebfe1f6febdd3c34dd9acb477418c911337bdb6579b5c0f1e4fa560` |
-| CL-DC export | `CL-DC.zip` | 22.8 MiB | `5cc5e272d407c6dc610a9e865e30c9720be11d2cfc9818b8e059122c42d648a7` |
-| PL-DC export | `PL_DC.zip` | 67.2 MiB | `25b53ee846099fe8bc186d9151f73f5bad2cddb26c928be65926b58f43b4c658` |
-| CL_EQ export | `CL_EQ.zip` | 21.1 MiB | `e11d5389cda086d65394a72b21dd6220984cd4821fc6a48d453117fb876218c8` |
+Known filenames recovered from the shared history include:
 
-The v57 archive was used as the filesystem baseline. v58 source, tests, reports and scripts were added non-destructively.
+- `FF-bop-complete-e2e-v56.zip`
+- `FF-bop2.tsu`
+- `Original_Raw_TestCases.xml`
+- `Raw.txt`
+- `bop_test_locators.ts`
+- `bop_test_locators_FINAL.ts`
+- `cl-dc-logins.xlsx`
+- `cl-dc-logins_irs.xlsx`
+- `Tosca Playwright Conversion Consolidated Special Cases.xlsx`
 
-## Shared-thread context
+## Binary-attachment boundary
 
-The three supplied ChatGPT share URLs were requested during the build. Their public responses did not reliably expose the complete transcript or downloadable attachments in this execution environment. Consequently, no unseen message or attachment was treated as verified evidence. Requirements were taken from the current conversation, the supplied v57 package, and the three attached export archives.
+No file was present in the current conversation file store, Library, `/mnt/data`, or the mounted share directories. The public share renderer returned conversation text and artifact names but did not return a usable attachment ID or download URL for the v56 ZIP or latest TSU. Therefore:
 
-## Export validation
+- no claim is made that the packaged source is a byte-level patch of that ZIP;
+- no claim is made that every locator was executed against the actual PLDC/CLDC applications;
+- v57 is supplied as a complete tested overlay and generator/runtime replacement;
+- `scripts/apply-v57-to-v56.mjs` is included to install it over the real unpacked v56 tree without unsafe bulk rewrites;
+- `scripts/audit-tsu.mjs` is included to generate a deterministic evidence report when the raw TSU is locally available.
 
-Structural gate: **REVIEW REQUIRED**
+## Raw evidence carried into v57
 
-| Export | Entities | Test cases | Ordered actions | Controls | Unique locators | FieldRef locators | Audit errors | Audit warnings |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| CL-DC | 189861 | 1950 | 0 | 12823 | 3185 | 0 | 0 | 0 |
-| PL-DC | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| CL-EQ | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+The shared history contained these concrete raw/generated mismatches:
 
-Critical findings:
-- CL-DC: no actions reconstructed
-- PL-DC: mapping metrics missing
-- CL-EQ: no entities reconstructed
+| Control / behavior | Raw or contextual evidence | v56 issue | v57 treatment |
+|---|---|---|---|
+| `txtCribCircumference` | TextBox, exact ID `txtCribCircumference`, `INPUT`, occurrence `2` | generated form-control selector or incorrect high `.nth()` | exact ID candidate with raw occurrence `2`; FieldRef first when present |
+| `cmbState` | ComboBox, ID `cmbState`, `MAT-SELECT`, occurrence `2`, custom scoped XPath, option elements `MAT-OPTION` | treated like an input/native select; fixed delay; automatic Tab | Material trigger + exact option path; keyboard fallback; no automatic Tab |
+| CLDC login | Tosca control represented as Link; request requires exact ID | role-only mismatch between link and rendered button | FieldRef then exact ID, followed by link and button role alternatives |
+| Repeated LOB conditions | same LOB condition controls different ordered actions | equal conditions flattened or merged | one independent ordered `if` per action |
+| Repeated state conditions | same state condition controls different ordered actions | equal conditions flattened or merged | same independent-branch rule |
+| Data conditions | values resolved from Tosca test data/buffers | raw expression injected or simplified | parsed AST and explicit data resolution |
+| Duplicate locators | same executable locator emitted more than once | duplicate constants and drift | locator registry deduplication with alias manifest |
+| `data.set` placement | request requires footer placement | writes scattered through output | safe writes captured then emitted at footer; reads prevent unsafe movement |
+| iframe recovery | locator can be inside unknown nested iframe | main frame or single expected frame only | expected hint, full deterministic frame loop, then per-frame DOM fallback |
 
-Validation includes archive integrity, nested payload decoding, GUID graph creation, inheritance, testcase/action ordering, locator deduplication, condition/data ordering, generated artifact coverage, TypeScript build, Node syntax checks, automated unit/integration tests and npm package dry-run.
+## Standards boundary
 
-## Boundaries
-
-- No live Duck Creek environment, URL, credentials or authenticated browser session was supplied.
-- Structural FieldRef/ID/label/role evidence was cross-checked against Tosca exports; live DOM uniqueness and business completion still require execution in the target environment.
-- The direct-DOM fallback is intentionally last. It is logged and never replaces Playwright's normal actionability path by default.
-- Unresolved UI evidence is reported and configured to fail explicitly; the converter does not fabricate a broad selector.
+Normal Playwright locators and actions remain the primary path. The DOM path is intentionally last because direct DOM actions bypass Playwright actionability checks. Fallback use is included in the returned trace and diagnostics so it cannot remain invisible.
