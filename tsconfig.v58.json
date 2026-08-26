@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "lib": [
+      "ES2020",
+      "DOM"
+    ],
+    "rootDir": "src/v58/final",
+    "outDir": "dist/v58",
+    "declaration": true,
+    "sourceMap": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "noEmitOnError": true
+  },
+  "include": [
+    "src/v58/final/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "generated-v58",
+    "validation-exports"
+  ]
+}

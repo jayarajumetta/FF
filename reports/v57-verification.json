@@ -1,0 +1,72 @@
+{
+  "version": "57.0.0",
+  "generatedAt": "2026-08-26T19:42:57.376Z",
+  "checks": {
+    "requiredFilesPresent": true,
+    "noFixedWaitForTimeoutInSource": true,
+    "noRuntimeAutomaticTab": true,
+    "noTopPageKeyboardFallback": true,
+    "frameEvaluateFallbackPresent": true,
+    "strictAmbiguityGuardPresent": true,
+    "repeatedConditionsRemainIndependent": true,
+    "generatedTabRemoved": true,
+    "safeDataSetAtFooter": true
+  },
+  "passed": true,
+  "sourceFiles": [
+    "src/compat/v56-adapter.ts",
+    "src/contracts/playwright.ts",
+    "src/converter/action-normalizer.ts",
+    "src/converter/condition.ts",
+    "src/converter/data-footer.ts",
+    "src/converter/generator.ts",
+    "src/converter/model.ts",
+    "src/converter/value.ts",
+    "src/index.ts",
+    "src/locator/candidate-builder.ts",
+    "src/locator/create-locator.ts",
+    "src/locator/escape.ts",
+    "src/locator/model.ts",
+    "src/locator/registry.ts",
+    "src/runtime/diagnostics.ts",
+    "src/runtime/dom-fallback.ts",
+    "src/runtime/frame-search.ts",
+    "src/runtime/resilient-actions.ts",
+    "src/runtime/resolver.ts",
+    "src/tosca/raw-evidence.ts",
+    "src/tosca/scenario-builder.ts",
+    "src/tosca/tsu-reader.ts"
+  ],
+  "generatedScenarioAudit": [
+    {
+      "actionId": "one",
+      "decision": "kept",
+      "rule": "preserve-raw-order",
+      "detail": "Action retained in stable raw order; repeated LOB/state/data conditions are not collapsed."
+    },
+    {
+      "actionId": "two",
+      "decision": "kept",
+      "rule": "preserve-raw-order",
+      "detail": "Action retained in stable raw order; repeated LOB/state/data conditions are not collapsed."
+    },
+    {
+      "actionId": "tab",
+      "decision": "removed",
+      "rule": "generated-tab",
+      "detail": "Removed converter-inserted Tab. Raw/explicit Tab actions remain intact."
+    },
+    {
+      "actionId": "footer",
+      "decision": "kept",
+      "rule": "preserve-raw-order",
+      "detail": "Action retained in stable raw order; repeated LOB/state/data conditions are not collapsed."
+    },
+    {
+      "actionId": "footer",
+      "decision": "deferred",
+      "rule": "safe-data-footer",
+      "detail": "Moved data.set(\"RESULT\") to the footer; no later action reads the key."
+    }
+  ]
+}

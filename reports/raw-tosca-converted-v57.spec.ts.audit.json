@@ -1,0 +1,259 @@
+{
+  "source": "/mnt/data/FF-bop-complete-e2e-v57/examples/raw-tosca-excerpt.xml",
+  "warnings": [],
+  "rawEvidence": {
+    "locators": [
+      {
+        "sourceFile": "/mnt/data/FF-bop-complete-e2e-v57/examples/raw-tosca-excerpt.xml",
+        "entityGuid": "pldc-state-guid",
+        "controlName": "cmbState",
+        "fieldRef": "PLDC.Site.State",
+        "id": "cmbState",
+        "tag": "MAT-SELECT",
+        "controlType": "ComboBox",
+        "occurrence": 2,
+        "customXPath": "//site-location//mat-select[@id='cmbState']",
+        "rawProperties": {
+          "Surrogate": "pldc-state-guid",
+          "Name": "cmbState",
+          "ControlType": "ComboBox",
+          "Id": "cmbState",
+          "FieldRef": "PLDC.Site.State",
+          "Tag": "MAT-SELECT",
+          "Occurrence": "2",
+          "CustomXPath": "//site-location//mat-select[@id='cmbState']"
+        }
+      },
+      {
+        "sourceFile": "/mnt/data/FF-bop-complete-e2e-v57/examples/raw-tosca-excerpt.xml",
+        "entityGuid": "pldc-circumference-guid",
+        "controlName": "txtCribCircumference",
+        "fieldRef": "PLDC.Crib.Circumference",
+        "id": "txtCribCircumference",
+        "tag": "INPUT",
+        "controlType": "TextBox",
+        "occurrence": 2,
+        "rawProperties": {
+          "Surrogate": "pldc-circumference-guid",
+          "Name": "txtCribCircumference",
+          "ControlType": "TextBox",
+          "Id": "txtCribCircumference",
+          "FieldRef": "PLDC.Crib.Circumference",
+          "Tag": "INPUT",
+          "Occurrence": "2"
+        }
+      },
+      {
+        "sourceFile": "/mnt/data/FF-bop-complete-e2e-v57/examples/raw-tosca-excerpt.xml",
+        "entityGuid": "cldc-login-guid",
+        "controlName": "Login",
+        "fieldRef": "CLDC.Login.Submit",
+        "id": "cl.dc.login.submit",
+        "controlType": "Link",
+        "rawProperties": {
+          "Surrogate": "cldc-login-guid",
+          "Name": "Login",
+          "ControlType": "Link",
+          "Id": "cl.dc.login.submit",
+          "FieldRef": "CLDC.Login.Submit",
+          "Role": "link",
+          "Label": "Login"
+        }
+      }
+    ],
+    "actions": [
+      {
+        "sourceFile": "/mnt/data/FF-bop-complete-e2e-v57/examples/raw-tosca-excerpt.xml",
+        "entityGuid": "state-empty-guid",
+        "controlName": "cmbState",
+        "actionMode": "Select",
+        "order": 10,
+        "properties": {
+          "Surrogate": "state-empty-guid",
+          "Name": "cmbState",
+          "ActionMode": "Select",
+          "Value": "",
+          "Order": "10"
+        }
+      },
+      {
+        "sourceFile": "/mnt/data/FF-bop-complete-e2e-v57/examples/raw-tosca-excerpt.xml",
+        "entityGuid": "state-input-guid",
+        "controlName": "cmbState",
+        "actionMode": "Input",
+        "value": "{STATE}",
+        "condition": "{LOB} == \"PLDC\"",
+        "order": 11,
+        "properties": {
+          "Surrogate": "state-input-guid",
+          "Name": "cmbState",
+          "ActionMode": "Input",
+          "Value": "{STATE}",
+          "Condition": "{LOB} == \"PLDC\"",
+          "Order": "11"
+        }
+      }
+    ]
+  },
+  "normalizedScenario": {
+    "name": "Raw Tosca cross-check",
+    "app": "PLDC",
+    "actions": [
+      {
+        "id": "state-empty-guid",
+        "order": 10,
+        "kind": "select",
+        "target": {
+          "key": "cmbState",
+          "app": "PLDC",
+          "controlType": "ComboBox",
+          "fieldRef": "PLDC.Site.State",
+          "id": "cmbState",
+          "xpath": "//site-location//mat-select[@id='cmbState']",
+          "occurrence": 2,
+          "raw": [
+            {
+              "sourceFile": "/mnt/data/FF-bop-complete-e2e-v57/examples/raw-tosca-excerpt.xml",
+              "entityGuid": "pldc-state-guid",
+              "controlName": "cmbState",
+              "fieldRef": "PLDC.Site.State",
+              "id": "cmbState",
+              "tag": "MAT-SELECT",
+              "controlType": "ComboBox",
+              "occurrence": 2,
+              "customXPath": "//site-location//mat-select[@id='cmbState']",
+              "rawProperties": {
+                "Surrogate": "pldc-state-guid",
+                "Name": "cmbState",
+                "ControlType": "ComboBox",
+                "Id": "cmbState",
+                "FieldRef": "PLDC.Site.State",
+                "Tag": "MAT-SELECT",
+                "Occurrence": "2",
+                "CustomXPath": "//site-location//mat-select[@id='cmbState']"
+              }
+            }
+          ]
+        },
+        "value": {
+          "kind": "literal",
+          "value": ""
+        },
+        "origin": "raw",
+        "metadata": {
+          "actionMode": "Select",
+          "sourceFile": "/mnt/data/FF-bop-complete-e2e-v57/examples/raw-tosca-excerpt.xml",
+          "sourceGuid": "state-empty-guid",
+          "rawOrder": 10
+        }
+      },
+      {
+        "id": "state-input-guid",
+        "order": 11,
+        "kind": "select",
+        "target": {
+          "key": "cmbState",
+          "app": "PLDC",
+          "controlType": "ComboBox",
+          "fieldRef": "PLDC.Site.State",
+          "id": "cmbState",
+          "xpath": "//site-location//mat-select[@id='cmbState']",
+          "occurrence": 2,
+          "raw": [
+            {
+              "sourceFile": "/mnt/data/FF-bop-complete-e2e-v57/examples/raw-tosca-excerpt.xml",
+              "entityGuid": "pldc-state-guid",
+              "controlName": "cmbState",
+              "fieldRef": "PLDC.Site.State",
+              "id": "cmbState",
+              "tag": "MAT-SELECT",
+              "controlType": "ComboBox",
+              "occurrence": 2,
+              "customXPath": "//site-location//mat-select[@id='cmbState']",
+              "rawProperties": {
+                "Surrogate": "pldc-state-guid",
+                "Name": "cmbState",
+                "ControlType": "ComboBox",
+                "Id": "cmbState",
+                "FieldRef": "PLDC.Site.State",
+                "Tag": "MAT-SELECT",
+                "Occurrence": "2",
+                "CustomXPath": "//site-location//mat-select[@id='cmbState']"
+              }
+            }
+          ]
+        },
+        "value": {
+          "kind": "data",
+          "key": "STATE"
+        },
+        "condition": "{LOB} == \"PLDC\"",
+        "origin": "raw",
+        "metadata": {
+          "actionMode": "Input",
+          "sourceFile": "/mnt/data/FF-bop-complete-e2e-v57/examples/raw-tosca-excerpt.xml",
+          "sourceGuid": "state-input-guid",
+          "rawOrder": 11
+        }
+      }
+    ],
+    "sourceFiles": [
+      "/mnt/data/FF-bop-complete-e2e-v57/examples/raw-tosca-excerpt.xml"
+    ]
+  },
+  "locatorManifest": [
+    {
+      "name": "cmbState",
+      "spec": {
+        "key": "cmbState",
+        "app": "PLDC",
+        "controlType": "ComboBox",
+        "fieldRef": "PLDC.Site.State",
+        "id": "cmbState",
+        "xpath": "//site-location//mat-select[@id='cmbState']",
+        "occurrence": 2,
+        "raw": [
+          {
+            "sourceFile": "/mnt/data/FF-bop-complete-e2e-v57/examples/raw-tosca-excerpt.xml",
+            "entityGuid": "pldc-state-guid",
+            "controlName": "cmbState",
+            "fieldRef": "PLDC.Site.State",
+            "id": "cmbState",
+            "tag": "MAT-SELECT",
+            "controlType": "ComboBox",
+            "occurrence": 2,
+            "customXPath": "//site-location//mat-select[@id='cmbState']",
+            "rawProperties": {
+              "Surrogate": "pldc-state-guid",
+              "Name": "cmbState",
+              "ControlType": "ComboBox",
+              "Id": "cmbState",
+              "FieldRef": "PLDC.Site.State",
+              "Tag": "MAT-SELECT",
+              "Occurrence": "2",
+              "CustomXPath": "//site-location//mat-select[@id='cmbState']"
+            }
+          }
+        ]
+      },
+      "keys": [
+        "cmbState"
+      ],
+      "identity": "{\"app\":\"PLDC\",\"controlType\":\"ComboBox\",\"fieldRef\":\"PLDC.Site.State\",\"id\":\"cmbState\",\"occurrence\":2,\"xpath\":\"//site-location//mat-select[@id='cmbState']\"}"
+    }
+  ],
+  "decisions": [
+    {
+      "actionId": "state-empty-guid",
+      "decision": "kept",
+      "rule": "preserve-raw-order",
+      "detail": "Action retained in stable raw order; repeated LOB/state/data conditions are not collapsed."
+    },
+    {
+      "actionId": "state-input-guid",
+      "decision": "kept",
+      "rule": "preserve-raw-order",
+      "detail": "Action retained in stable raw order; repeated LOB/state/data conditions are not collapsed."
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "version": "58.0.0",
+  "generatedAt": "2026-08-26T21:41:24.065173+00:00",
+  "passed": false,
+  "note": "Packaged with validation blockers; inspect reports/RELEASE-BLOCKERS.json and reports/v58-verification.json."
+}

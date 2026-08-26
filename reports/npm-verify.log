@@ -1,0 +1,196 @@
+
+> ff-bop-complete-e2e-v57@57.0.0 verify
+> npm test && node scripts/verify-package.mjs
+
+
+> ff-bop-complete-e2e-v57@57.0.0 test
+> npm run build && node --test tests/*.test.mjs
+
+
+> ff-bop-complete-e2e-v57@57.0.0 build
+> tsc -p tsconfig.json
+
+TAP version 13
+# Subtest: condition parser handles LOB, state, data predicates, and parentheses
+ok 1 - condition parser handles LOB, state, data predicates, and parentheses
+  ---
+  duration_ms: 1.780611
+  type: 'test'
+  ...
+# Subtest: normalizer removes generated Tab, blank dropdown priming, and safe generated duplicate click only
+ok 2 - normalizer removes generated Tab, blank dropdown priming, and safe generated duplicate click only
+  ---
+  duration_ms: 1.242599
+  type: 'test'
+  ...
+# Subtest: data footer defers only writes not read later
+ok 3 - data footer defers only writes not read later
+  ---
+  duration_ms: 0.442969
+  type: 'test'
+  ...
+# Subtest: generator preserves repeated identical LOB/state conditions as independent if blocks
+ok 4 - generator preserves repeated identical LOB/state conditions as independent if blocks
+  ---
+  duration_ms: 1.272694
+  type: 'test'
+  ...
+# Subtest: locator registry deduplicates executable locator definitions
+ok 5 - locator registry deduplicates executable locator definitions
+  ---
+  duration_ms: 0.226683
+  type: 'test'
+  ...
+# Subtest: native select uses selectOption without Tab
+ok 6 - native select uses selectOption without Tab
+  ---
+  duration_ms: 2.912043
+  type: 'test'
+  ...
+# Subtest: Angular Material select clicks exact role option and does not press Tab
+ok 7 - Angular Material select clicks exact role option and does not press Tab
+  ---
+  duration_ms: 0.691115
+  type: 'test'
+  ...
+# Subtest: input-backed combobox fills then clicks option
+ok 8 - input-backed combobox fills then clicks option
+  ---
+  duration_ms: 0.381857
+  type: 'test'
+  ...
+# Subtest: v56 installer is non-destructive and writes a migration scan report
+ok 9 - v56 installer is non-destructive and writes a migration scan report
+  ---
+  duration_ms: 62.472868
+  type: 'test'
+  ...
+# Subtest: PLDC/CLDC FieldRef is first and dotted IDs use exact attribute CSS
+ok 10 - PLDC/CLDC FieldRef is first and dotted IDs use exact attribute CSS
+  ---
+  duration_ms: 1.72677
+  type: 'test'
+  ...
+# Subtest: raw Tosca occurrence selects nth(occurrence - 1)
+ok 11 - raw Tosca occurrence selects nth(occurrence - 1)
+  ---
+  duration_ms: 0.967212
+  type: 'test'
+  ...
+# Subtest: ambiguous high-priority selector falls through to unique semantic locator
+ok 12 - ambiguous high-priority selector falls through to unique semantic locator
+  ---
+  duration_ms: 0.33117
+  type: 'test'
+  ...
+# Subtest: nested iframe is searched deterministically when main frame has no match
+ok 13 - nested iframe is searched deterministically when main frame has no match
+  ---
+  duration_ms: 0.293304
+  type: 'test'
+  ...
+# Subtest: failed interaction continues into another frame/candidate
+ok 14 - failed interaction continues into another frame/candidate
+  ---
+  duration_ms: 1.140323
+  type: 'test'
+  ...
+# Subtest: final DOM fallback executes inside a nested frame
+ok 15 - final DOM fallback executes inside a nested frame
+  ---
+  duration_ms: 1.063017
+  type: 'test'
+  ...
+# Subtest: TSU reader expands outer gzip and nested H4sI XML evidence
+ok 16 - TSU reader expands outer gzip and nested H4sI XML evidence
+  ---
+  duration_ms: 8.852982
+  type: 'test'
+  ...
+# Subtest: raw evidence maps to ordered scenario actions without collapsing conditions
+ok 17 - raw evidence maps to ordered scenario actions without collapsing conditions
+  ---
+  duration_ms: 1.188847
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 156.483838
+{
+  "version": "57.0.0",
+  "generatedAt": "2026-08-26T19:42:57.376Z",
+  "checks": {
+    "requiredFilesPresent": true,
+    "noFixedWaitForTimeoutInSource": true,
+    "noRuntimeAutomaticTab": true,
+    "noTopPageKeyboardFallback": true,
+    "frameEvaluateFallbackPresent": true,
+    "strictAmbiguityGuardPresent": true,
+    "repeatedConditionsRemainIndependent": true,
+    "generatedTabRemoved": true,
+    "safeDataSetAtFooter": true
+  },
+  "passed": true,
+  "sourceFiles": [
+    "src/compat/v56-adapter.ts",
+    "src/contracts/playwright.ts",
+    "src/converter/action-normalizer.ts",
+    "src/converter/condition.ts",
+    "src/converter/data-footer.ts",
+    "src/converter/generator.ts",
+    "src/converter/model.ts",
+    "src/converter/value.ts",
+    "src/index.ts",
+    "src/locator/candidate-builder.ts",
+    "src/locator/create-locator.ts",
+    "src/locator/escape.ts",
+    "src/locator/model.ts",
+    "src/locator/registry.ts",
+    "src/runtime/diagnostics.ts",
+    "src/runtime/dom-fallback.ts",
+    "src/runtime/frame-search.ts",
+    "src/runtime/resilient-actions.ts",
+    "src/runtime/resolver.ts",
+    "src/tosca/raw-evidence.ts",
+    "src/tosca/scenario-builder.ts",
+    "src/tosca/tsu-reader.ts"
+  ],
+  "generatedScenarioAudit": [
+    {
+      "actionId": "one",
+      "decision": "kept",
+      "rule": "preserve-raw-order",
+      "detail": "Action retained in stable raw order; repeated LOB/state/data conditions are not collapsed."
+    },
+    {
+      "actionId": "two",
+      "decision": "kept",
+      "rule": "preserve-raw-order",
+      "detail": "Action retained in stable raw order; repeated LOB/state/data conditions are not collapsed."
+    },
+    {
+      "actionId": "tab",
+      "decision": "removed",
+      "rule": "generated-tab",
+      "detail": "Removed converter-inserted Tab. Raw/explicit Tab actions remain intact."
+    },
+    {
+      "actionId": "footer",
+      "decision": "kept",
+      "rule": "preserve-raw-order",
+      "detail": "Action retained in stable raw order; repeated LOB/state/data conditions are not collapsed."
+    },
+    {
+      "actionId": "footer",
+      "decision": "deferred",
+      "rule": "safe-data-footer",
+      "detail": "Moved data.set(\"RESULT\") to the footer; no later action reads the key."
+    }
+  ]
+}

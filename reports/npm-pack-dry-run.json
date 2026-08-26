@@ -1,0 +1,666 @@
+[
+  {
+    "id": "ff-bop-complete-e2e-v57@57.0.0",
+    "name": "ff-bop-complete-e2e-v57",
+    "version": "57.0.0",
+    "size": 106000,
+    "unpackedSize": 496522,
+    "shasum": "b6aaaa398cb7ef8d74638278e5b70412503af894",
+    "integrity": "sha512-v+tC5VQcJJhhSxOLYXbTM+CCoHRPcpqlCHlpJP37knstFBc8Q2gNwKJwoBsiXF9XiCmh4Vh/yHETRDgIhrCutA==",
+    "filename": "ff-bop-complete-e2e-v57-57.0.0.tgz",
+    "files": [
+      {
+        "path": "CHANGELOG-v57.md",
+        "size": 2742,
+        "mode": 420
+      },
+      {
+        "path": "README.md",
+        "size": 8847,
+        "mode": 420
+      },
+      {
+        "path": "SOURCE-AUDIT.md",
+        "size": 3809,
+        "mode": 420
+      },
+      {
+        "path": "dist/examples/generated-v57.spec.d.ts",
+        "size": 59,
+        "mode": 420
+      },
+      {
+        "path": "dist/examples/generated-v57.spec.d.ts.map",
+        "size": 138,
+        "mode": 420
+      },
+      {
+        "path": "dist/examples/generated-v57.spec.js",
+        "size": 3322,
+        "mode": 420
+      },
+      {
+        "path": "dist/examples/generated-v57.spec.js.map",
+        "size": 2807,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/compat/v56-adapter.d.ts",
+        "size": 1611,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/compat/v56-adapter.d.ts.map",
+        "size": 1320,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/compat/v56-adapter.js",
+        "size": 3869,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/compat/v56-adapter.js.map",
+        "size": 5243,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/contracts/playwright.d.ts",
+        "size": 2740,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/contracts/playwright.d.ts.map",
+        "size": 3373,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/contracts/playwright.js",
+        "size": 491,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/contracts/playwright.js.map",
+        "size": 303,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/action-normalizer.d.ts",
+        "size": 398,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/action-normalizer.d.ts.map",
+        "size": 274,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/action-normalizer.js",
+        "size": 4757,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/action-normalizer.js.map",
+        "size": 4378,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/condition.d.ts",
+        "size": 1755,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/condition.d.ts.map",
+        "size": 1861,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/condition.js",
+        "size": 20343,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/condition.js.map",
+        "size": 21095,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/data-footer.d.ts",
+        "size": 676,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/data-footer.d.ts.map",
+        "size": 509,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/data-footer.js",
+        "size": 2551,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/data-footer.js.map",
+        "size": 2255,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/generator.d.ts",
+        "size": 894,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/generator.d.ts.map",
+        "size": 707,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/generator.js",
+        "size": 7520,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/generator.js.map",
+        "size": 7174,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/model.d.ts",
+        "size": 1728,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/model.d.ts.map",
+        "size": 1916,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/model.js",
+        "size": 44,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/model.js.map",
+        "size": 118,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/value.d.ts",
+        "size": 463,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/value.d.ts.map",
+        "size": 462,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/value.js",
+        "size": 2290,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/converter/value.js.map",
+        "size": 2270,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/index.d.ts",
+        "size": 918,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/index.d.ts.map",
+        "size": 588,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/index.js",
+        "size": 916,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/index.js.map",
+        "size": 586,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/candidate-builder.d.ts",
+        "size": 265,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/candidate-builder.d.ts.map",
+        "size": 313,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/candidate-builder.js",
+        "size": 10610,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/candidate-builder.js.map",
+        "size": 11408,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/create-locator.d.ts",
+        "size": 287,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/create-locator.d.ts.map",
+        "size": 324,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/create-locator.js",
+        "size": 2171,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/create-locator.js.map",
+        "size": 2283,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/escape.d.ts",
+        "size": 409,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/escape.d.ts.map",
+        "size": 372,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/escape.js",
+        "size": 1230,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/escape.js.map",
+        "size": 1408,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/model.d.ts",
+        "size": 3099,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/model.d.ts.map",
+        "size": 2853,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/model.js",
+        "size": 216,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/model.js.map",
+        "size": 243,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/registry.d.ts",
+        "size": 528,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/registry.d.ts.map",
+        "size": 580,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/registry.js",
+        "size": 3225,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/locator/registry.js.map",
+        "size": 4080,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/diagnostics.d.ts",
+        "size": 1351,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/diagnostics.d.ts.map",
+        "size": 1310,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/diagnostics.js",
+        "size": 1036,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/diagnostics.js.map",
+        "size": 1209,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/dom-fallback.d.ts",
+        "size": 991,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/dom-fallback.d.ts.map",
+        "size": 854,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/dom-fallback.js",
+        "size": 20169,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/dom-fallback.js.map",
+        "size": 14687,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/frame-search.d.ts",
+        "size": 623,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/frame-search.d.ts.map",
+        "size": 524,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/frame-search.js",
+        "size": 3438,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/frame-search.js.map",
+        "size": 3911,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/resilient-actions.d.ts",
+        "size": 1737,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/resilient-actions.d.ts.map",
+        "size": 1434,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/resilient-actions.js",
+        "size": 14870,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/resilient-actions.js.map",
+        "size": 13997,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/resolver.d.ts",
+        "size": 1717,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/resolver.d.ts.map",
+        "size": 1481,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/resolver.js",
+        "size": 8040,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/runtime/resolver.js.map",
+        "size": 6391,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/tosca/raw-evidence.d.ts",
+        "size": 858,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/tosca/raw-evidence.d.ts.map",
+        "size": 898,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/tosca/raw-evidence.js",
+        "size": 11289,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/tosca/raw-evidence.js.map",
+        "size": 12641,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/tosca/scenario-builder.d.ts",
+        "size": 632,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/tosca/scenario-builder.d.ts.map",
+        "size": 639,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/tosca/scenario-builder.js",
+        "size": 6350,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/tosca/scenario-builder.js.map",
+        "size": 7192,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/tosca/tsu-reader.d.ts",
+        "size": 775,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/tosca/tsu-reader.d.ts.map",
+        "size": 810,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/tosca/tsu-reader.js",
+        "size": 5646,
+        "mode": 420
+      },
+      {
+        "path": "dist/src/tosca/tsu-reader.js.map",
+        "size": 6226,
+        "mode": 420
+      },
+      {
+        "path": "docs/ARCHITECTURE.md",
+        "size": 2132,
+        "mode": 420
+      },
+      {
+        "path": "docs/LOCATOR-DECISION-TREE.md",
+        "size": 1253,
+        "mode": 420
+      },
+      {
+        "path": "docs/PLAYWRIGHT-STANDARDS.md",
+        "size": 737,
+        "mode": 420
+      },
+      {
+        "path": "docs/V56-INTEGRATION.md",
+        "size": 1276,
+        "mode": 420
+      },
+      {
+        "path": "examples/generated-v57.spec.ts",
+        "size": 3113,
+        "mode": 420
+      },
+      {
+        "path": "examples/normalized-scenario.json",
+        "size": 2846,
+        "mode": 420
+      },
+      {
+        "path": "examples/raw-tosca-excerpt.xml",
+        "size": 1867,
+        "mode": 420
+      },
+      {
+        "path": "package.json",
+        "size": 1283,
+        "mode": 420
+      },
+      {
+        "path": "scripts/apply-v57-to-v56.mjs",
+        "size": 4636,
+        "mode": 493
+      },
+      {
+        "path": "scripts/audit-tsu.mjs",
+        "size": 1223,
+        "mode": 493
+      },
+      {
+        "path": "scripts/convert-tsu-to-playwright.mjs",
+        "size": 1516,
+        "mode": 493
+      },
+      {
+        "path": "scripts/generate-v57.mjs",
+        "size": 1150,
+        "mode": 493
+      },
+      {
+        "path": "scripts/verify-package.mjs",
+        "size": 3537,
+        "mode": 493
+      },
+      {
+        "path": "src/compat/v56-adapter.ts",
+        "size": 4632,
+        "mode": 420
+      },
+      {
+        "path": "src/contracts/playwright.ts",
+        "size": 2801,
+        "mode": 420
+      },
+      {
+        "path": "src/converter/action-normalizer.ts",
+        "size": 4860,
+        "mode": 420
+      },
+      {
+        "path": "src/converter/condition.ts",
+        "size": 19575,
+        "mode": 420
+      },
+      {
+        "path": "src/converter/data-footer.ts",
+        "size": 2766,
+        "mode": 420
+      },
+      {
+        "path": "src/converter/generator.ts",
+        "size": 7994,
+        "mode": 420
+      },
+      {
+        "path": "src/converter/model.ts",
+        "size": 1628,
+        "mode": 420
+      },
+      {
+        "path": "src/converter/value.ts",
+        "size": 2280,
+        "mode": 420
+      },
+      {
+        "path": "src/index.ts",
+        "size": 883,
+        "mode": 420
+      },
+      {
+        "path": "src/locator/candidate-builder.ts",
+        "size": 11029,
+        "mode": 420
+      },
+      {
+        "path": "src/locator/create-locator.ts",
+        "size": 2141,
+        "mode": 420
+      },
+      {
+        "path": "src/locator/escape.ts",
+        "size": 1180,
+        "mode": 420
+      },
+      {
+        "path": "src/locator/model.ts",
+        "size": 3049,
+        "mode": 420
+      },
+      {
+        "path": "src/locator/registry.ts",
+        "size": 3382,
+        "mode": 420
+      },
+      {
+        "path": "src/runtime/diagnostics.ts",
+        "size": 1953,
+        "mode": 420
+      },
+      {
+        "path": "src/runtime/dom-fallback.ts",
+        "size": 17814,
+        "mode": 420
+      },
+      {
+        "path": "src/runtime/frame-search.ts",
+        "size": 3602,
+        "mode": 420
+      },
+      {
+        "path": "src/runtime/resilient-actions.ts",
+        "size": 16012,
+        "mode": 420
+      },
+      {
+        "path": "src/runtime/resolver.ts",
+        "size": 7859,
+        "mode": 420
+      },
+      {
+        "path": "src/tosca/raw-evidence.ts",
+        "size": 11897,
+        "mode": 420
+      },
+      {
+        "path": "src/tosca/scenario-builder.ts",
+        "size": 6792,
+        "mode": 420
+      },
+      {
+        "path": "src/tosca/tsu-reader.ts",
+        "size": 6074,
+        "mode": 420
+      }
+    ],
+    "entryCount": 130,
+    "bundled": []
+  }
+]

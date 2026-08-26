@@ -1,0 +1,41 @@
+<Root>
+  <!-- Evidence pattern reconstructed from the shared raw Tosca discussion. -->
+  <XModuleAttribute Surrogate="pldc-state-guid">
+    <Property Name="Name" Value="cmbState" />
+    <Property Name="ControlType" Value="ComboBox" />
+    <Property Name="Id" Value="cmbState" />
+    <Property Name="FieldRef" Value="PLDC.Site.State" />
+    <Property Name="Tag" Value="MAT-SELECT" />
+    <Property Name="Occurrence" Value="2" />
+    <Property Name="CustomXPath" Value="//site-location//mat-select[@id='cmbState']" />
+  </XModuleAttribute>
+  <XModuleAttribute Surrogate="pldc-circumference-guid">
+    <Property Name="Name" Value="txtCribCircumference" />
+    <Property Name="ControlType" Value="TextBox" />
+    <Property Name="Id" Value="txtCribCircumference" />
+    <Property Name="FieldRef" Value="PLDC.Crib.Circumference" />
+    <Property Name="Tag" Value="INPUT" />
+    <Property Name="Occurrence" Value="2" />
+  </XModuleAttribute>
+  <XModuleAttribute Surrogate="cldc-login-guid">
+    <Property Name="Name" Value="Login" />
+    <Property Name="ControlType" Value="Link" />
+    <Property Name="Id" Value="cl.dc.login.submit" />
+    <Property Name="FieldRef" Value="CLDC.Login.Submit" />
+    <Property Name="Role" Value="link" />
+    <Property Name="Label" Value="Login" />
+  </XModuleAttribute>
+  <XTestStepValue Surrogate="state-empty-guid">
+    <Property Name="Name" Value="cmbState" />
+    <Property Name="ActionMode" Value="Select" />
+    <Property Name="Value" Value="" />
+    <Property Name="Order" Value="10" />
+  </XTestStepValue>
+  <XTestStepValue Surrogate="state-input-guid">
+    <Property Name="Name" Value="cmbState" />
+    <Property Name="ActionMode" Value="Input" />
+    <Property Name="Value" Value="{STATE}" />
+    <Property Name="Condition" Value="{LOB} == &quot;PLDC&quot;" />
+    <Property Name="Order" Value="11" />
+  </XTestStepValue>
+</Root>

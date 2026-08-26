@@ -1,0 +1,128 @@
+{
+  "audit": [
+    {
+      "actionId": "state-empty-select",
+      "decision": "kept",
+      "rule": "preserve-raw-order",
+      "detail": "Action retained in stable raw order; repeated LOB/state/data conditions are not collapsed."
+    },
+    {
+      "actionId": "state-real-select",
+      "decision": "kept",
+      "rule": "preserve-raw-order",
+      "detail": "Action retained in stable raw order; repeated LOB/state/data conditions are not collapsed."
+    },
+    {
+      "actionId": "circumference-fill",
+      "decision": "kept",
+      "rule": "preserve-raw-order",
+      "detail": "Action retained in stable raw order; repeated LOB/state/data conditions are not collapsed."
+    },
+    {
+      "actionId": "cldc-login",
+      "decision": "kept",
+      "rule": "preserve-raw-order",
+      "detail": "Action retained in stable raw order; repeated LOB/state/data conditions are not collapsed."
+    },
+    {
+      "actionId": "generated-tab",
+      "decision": "removed",
+      "rule": "generated-tab",
+      "detail": "Removed converter-inserted Tab. Raw/explicit Tab actions remain intact."
+    },
+    {
+      "actionId": "result-buffer",
+      "decision": "kept",
+      "rule": "preserve-raw-order",
+      "detail": "Action retained in stable raw order; repeated LOB/state/data conditions are not collapsed."
+    },
+    {
+      "actionId": "result-buffer",
+      "decision": "deferred",
+      "rule": "safe-data-footer",
+      "detail": "Moved data.set(\"MIGRATION_RESULT\") to the footer; no later action reads the key."
+    }
+  ],
+  "locatorManifest": [
+    {
+      "name": "cldcLogin",
+      "spec": {
+        "key": "cldcLogin",
+        "app": "CLDC",
+        "controlType": "Link",
+        "fieldRef": "CLDC.Login.Submit",
+        "id": "cl.dc.login.submit",
+        "text": "Login",
+        "role": {
+          "role": "link",
+          "name": "Login",
+          "exact": true
+        },
+        "roleAlternates": [
+          {
+            "role": "button",
+            "name": "Login",
+            "exact": true
+          }
+        ]
+      },
+      "keys": [
+        "cldcLogin"
+      ],
+      "identity": "{\"app\":\"CLDC\",\"controlType\":\"Link\",\"fieldRef\":\"CLDC.Login.Submit\",\"id\":\"cl.dc.login.submit\",\"role\":{\"exact\":true,\"name\":\"Login\",\"role\":\"link\"},\"roleAlternates\":[{\"exact\":true,\"name\":\"Login\",\"role\":\"button\"}],\"text\":\"Login\"}"
+    },
+    {
+      "name": "cribCircumference",
+      "spec": {
+        "key": "cribCircumference",
+        "app": "PLDC",
+        "controlType": "TextBox",
+        "fieldRef": "PLDC.Crib.Circumference",
+        "id": "txtCribCircumference",
+        "occurrence": 2
+      },
+      "keys": [
+        "cribCircumference"
+      ],
+      "identity": "{\"app\":\"PLDC\",\"controlType\":\"TextBox\",\"fieldRef\":\"PLDC.Crib.Circumference\",\"id\":\"txtCribCircumference\",\"occurrence\":2}"
+    },
+    {
+      "name": "siteState",
+      "spec": {
+        "key": "siteState",
+        "app": "PLDC",
+        "controlType": "ComboBox",
+        "fieldRef": "PLDC.Site.State",
+        "id": "cmbState",
+        "occurrence": 2,
+        "role": {
+          "role": "combobox",
+          "name": "State",
+          "exact": true
+        },
+        "xpath": "//site-location//mat-select[@id='cmbState']"
+      },
+      "keys": [
+        "siteState"
+      ],
+      "identity": "{\"app\":\"PLDC\",\"controlType\":\"ComboBox\",\"fieldRef\":\"PLDC.Site.State\",\"id\":\"cmbState\",\"occurrence\":2,\"role\":{\"exact\":true,\"name\":\"State\",\"role\":\"combobox\"},\"xpath\":\"//site-location//mat-select[@id='cmbState']\"}"
+    }
+  ],
+  "deferredDataSets": [
+    {
+      "action": {
+        "id": "result-buffer",
+        "order": 15,
+        "kind": "dataSet",
+        "origin": "raw",
+        "dataKey": "MIGRATION_RESULT",
+        "value": {
+          "kind": "literal",
+          "value": "completed"
+        }
+      },
+      "captureName": "__v57_deferred_MIGRATION_RESULT_4",
+      "originalIndex": 4
+    }
+  ]
+}
