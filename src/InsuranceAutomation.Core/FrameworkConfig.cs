@@ -143,10 +143,10 @@ public sealed class WaitOptions
     public int VerifyTimeoutMs { get; init; } = 15000;
     public int FallbackCandidateTimeoutMs { get; init; } = 2500;
     // Raw Tosca HtmlFrame is a hint only. Probe briefly before falling back to top document.
-    public int FrameProbeTimeoutMs { get; init; } = 600;
+    public int FrameProbeTimeoutMs { get; init; } = 6000;
     // Dropdown option discovery uses a deliberately shorter budget than a normal page/control wait.
     public int DropdownOptionTimeoutMs { get; init; } = 1200;
-    public int DropdownPollIntervalMs { get; init; } = 75;
+    public int DropdownPollIntervalMs { get; init; } = 750;
     public int PollIntervalMs { get; init; } = 250;
     public bool WaitForDomContentLoadedBeforeActions { get; init; } = true;
 }

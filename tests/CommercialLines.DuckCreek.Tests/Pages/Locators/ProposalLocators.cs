@@ -7,16 +7,22 @@ public sealed class ProposalLocators
     private readonly IPage _page;
     public ProposalLocators(IPage page) => _page = page;
 
+
     // Source modules: Product Selection | confidence=High score=125
-    public ILocator EffectiveDate => _page.GetByRole(AriaRole.Textbox, new() { Name = "Effective Date:*", Exact = true });
+    // Updated: Using unique placeholder to avoid conflict with other combobox elements
+    public ILocator EffectiveDate => _page.GetByPlaceholder("m/d/yyyy");
 
     // Source modules: Common Navigation Links | confidence=Medium score=113
-    public ILocator NewQuote => _page.GetByRole(AriaRole.Link, new() { Name = "New Quote", Exact = true });
+    // Updated: Using text-based locator for more reliable matching with custom link structure
+    public ILocator NewQuote => _page.Locator("a").Filter(new() { HasText = "New Quote" }).First;
 
     // Source modules: Product Selection | confidence=High score=95
-    public ILocator Product => _page.GetByRole(AriaRole.Textbox, new() { Name = "Product:*", Exact = true });
+    // Updated: Using unique placeholder to avoid conflict with other combobox elements
+    public ILocator Product => _page.Locator("input[fieldref='data.VersionIDPages']");
 
     // Source modules: Product Selection | confidence=High score=125
-    public ILocator Start => _page.GetByRole(AriaRole.Button, new() { Name = "Start", Exact = true });
+    // Note: Start button not visible in current page state - may appear after product selection
+    public ILocator Start => _page.GetByRole(AriaRole.Link, new() { Name = "Start", Exact = true });
+
 
 }

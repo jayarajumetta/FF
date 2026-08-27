@@ -36,13 +36,18 @@ public sealed class ApplicationSteps
     }
 
     [Given("I sign in to Commercial Lines Duck Creek using configured credentials")]
-    public Task SignInAsync()
+    public async Task SignInAsync()
     {
         var data = _scenario.Get<ScenarioData>();
-        var page = new ApplicationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        //var page = new ApplicationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
         var username = ResolveCredential(data, "username", "CL_DC_USERNAME");
         var password = ResolveCredential(data, "password", "CL_DC_PASSWORD");
-        return page.SignInAsync(username, password);
+        await page.EnterUserNameAsync(username);
+        await page.EnterPasswordAsync(password);
+        await page.ClickLoginAsync();
+        //return page.SignInAsync(username, password);
     }
 
 
