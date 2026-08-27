@@ -133,9 +133,14 @@ public sealed class ClientSearchPage
 
     public Task ClickDetail704E6Async() =>
         _ui.ClickAsync(_locators.Detail704E6, new ControlIntent("ClientSearch", "Detail704E6"));
+    public Task PauseAsync(int milliseconds) =>
+        Task.Delay(milliseconds);
 
-    public Task WaitForEnterSSN6B3FBAsync(string expected) =>
-        _ui.WaitAsync(_locators.EnterSSN6B3FB, expected, new ControlIntent("ClientSearch", "EnterSSN6B3FB"));
+    public async Task WaitForEnterSSN6B3FBAsync(string expected)
+    {
+        await PauseAsync(3000);
+        await _ui.WaitAsync(_locators.EnterSSN6B3FB, expected, new ControlIntent("ClientSearch", "EnterSSN6B3FB"));
+    }
 
     public Task PressEnterSSN6B3FBAsync(string key) =>
         _ui.PressAsync(_locators.EnterSSN6B3FB, key, new ControlIntent("ClientSearch", "EnterSSN6B3FB"));
@@ -167,8 +172,11 @@ public sealed class ClientSearchPage
     public Task ClickEnterSSNFA186Async() =>
         _ui.ClickAsync(_locators.EnterSSN6B3FB, new ControlIntent("ClientSearch", "EnterSSNFA186"));
 
-    public Task EnterEntityTypeAsync(string value) =>
-        _ui.FillAsync(_locators.EntityType, value, new ControlIntent("ClientSearch", "EntityType"));
+    public async Task EnterEntityTypeAsync(string value)
+    {
+        await PauseAsync(3000);
+        await _ui.FillAsync(_locators.EntityType, value, new ControlIntent("ClientSearch", "EntityType"));
+    }
 
     public Task PressEntityTypeAsync(string key) =>
         _ui.PressAsync(_locators.EntityType, key, new ControlIntent("ClientSearch", "EntityType"));

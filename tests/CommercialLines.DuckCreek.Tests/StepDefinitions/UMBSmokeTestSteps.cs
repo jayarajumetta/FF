@@ -19,7 +19,6 @@ public sealed class UMBSmokeTestSteps
 
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
         await page.NavigateAsync(data.Resolve("{{data:application_url_2}}"));
         await page.WaitForBODYAsync("Exists");
@@ -36,7 +35,6 @@ public sealed class UMBSmokeTestSteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.VerifyRestartMicrosoftEdgeMessageOKAsync("Exists", "");
         await page.ClickRestartMicrosoftEdgeMessageOKAsync();
 
@@ -51,7 +49,6 @@ public sealed class UMBSmokeTestSteps
 
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.VerifyLoggedInUserAsync("Exists", "");
 
     }
@@ -65,7 +62,6 @@ public sealed class UMBSmokeTestSteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickLoggedInUserAsync();
         await page.ClickLogoutAsync();
         await page.PauseAsync(1000);
@@ -86,7 +82,6 @@ public sealed class UMBSmokeTestSteps
 
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.EnterUserNameAsync(data.Resolve("{{env:CL_DC_USERNAME}}"));
         await page.EnterPasswordAsync(data.Resolve("{{env:CL_DC_PASSWORD}}"));
         await page.ClickLoginAsync();
@@ -103,15 +98,11 @@ public sealed class UMBSmokeTestSteps
 
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickNewQuoteAsync();
         await page.EnterEffectiveDateAsync(data.Resolve("{{data:effective_date_43}}"));
         if (data.Condition("'Product:*' != \"Carrier_SpecialFarmPackage  Pages   US   (4.0.0.0)\""))
         {
                     await page.EnterProductAsync(data.Resolve("{{data:product_45}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: Product CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: Product Enter
-                    // v56 suppressed redundant Tosca keyboard steering: Product Tab
         }
         await page.WaitForStartAsync("Visible");
         await page.ClickStartAsync();
@@ -156,22 +147,14 @@ public sealed class UMBSmokeTestSteps
         await page.WaitForEnterSSN6B3FBAsync("Exists");
         await page.EnterEnterSSN6B3FBAsync(data.Resolve("{{runtime:InsuredSSN}}"));
         data.Set("Last4SSN", data.Get("InsuredSSN").Length >= 4 ? data.Get("InsuredSSN")[^4..] : data.Get("InsuredSSN"));
-        //await page.ClickEnterSSN6B3FBAsync();
-        //await page.PressEnterSSN6B3FBAsync("Doubleclick");
         await page.ClickVerify8CDBEAsync();
-        //await page.WaitForVerify8CDBEAsync("Absent");
         await page.WaitForSocialSecurityAsync("Equal");
         await page.VerifySocialSecurityAsync(data.Resolve("XXX-XX-{B[Last4SSN]}"), "InnerText");
-        //await page.WaitForPleaseVerifySSN3EAB9Async("Absent");
         await page.EnterNameOfInspectionContactAsync(data.Resolve("{{data:name_of_inspection_contact_82}}"));
         await page.EnterInspectionTelephoneAsync(data.Resolve("{{runtime:InspectionTelephone_0075}}"));
         await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_84}}"));
         await page.EnterWebsiteAddressAsync(data.Resolve("{{data:website_address_85}}"));
         await page.VerifyZipCode26D22Async("[0-9]{5}-[0-9]{4}", "Regex:value");
-        //await page.EnterTitleAsync(data.Resolve("{{data:title_92}}"));
-        //await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_93}}"));
-        //await page.VerifyResultAsync(data.Resolve("{{data:expected_result_value_94}}"), "value");
-
     }
 
     [Given(@"^I complete required policy information$")]
@@ -182,61 +165,25 @@ public sealed class UMBSmokeTestSteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickPolicyInfoAsync();
-        //await page.WaitForPolicyInfoHeaderAsync("Exists");
         await page.PauseAsync(1000);
         await page.EnterEffectiveDate95094Async(data.Resolve("{{data:effectivedate_98}}"));
-        if (data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
-        {
-                    await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_99}}"));
-        }
-        await page.PauseAsync(1000);
-        if (data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
-        {
-                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_101}}"));
-        }
-        if (data.Condition("'Product (LOB)' != \"WC\""))
-        {
-                    await page.ClickPrimaryRatingStateAsync();
-        }
+
+        await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_107}}"));
+        await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_99}}"));
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_105}}"));
-        if (data.Condition("'Product (LOB)' == \"UMB\""))
-        {
-                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_107}}"));
-        }
-        if (data.Condition("'Product (LOB)' == \"BOP\" || 'Product (LOB)' == \"UMB\" || 'Product (LOB)' == \"BAP\""))
-        {
-                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_108}}"));
-                    await page.PressPrimaryRatingStateAsync("Down");
-                    // v56 suppressed redundant Tosca keyboard steering: PrimaryRatingState Enter
-                    // v56 suppressed redundant Tosca keyboard steering: PrimaryRatingState Tab
-        }
-        if (data.Condition("'Product (LOB)' == \"UMB\""))
-        {
-                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_110}}"));
-        }
-        if (data.Condition("'Product (LOB)' == \"UMB\""))
-        {
-                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_111}}"));
-                    await page.PressPrimaryRatingStateAsync("Down");
-                    // v56 suppressed redundant Tosca keyboard steering: PrimaryRatingState Enter
-                    // v56 suppressed redundant Tosca keyboard steering: PrimaryRatingState Tab
-        }
-        await page.PauseAsync(1000);
-        if (data.Condition("'Product (LOB)' != \"WC\""))
-        {
-                    await page.WaitForPrimaryRatingStateAsync("Exists");
-        }
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_115}}"));
         await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
         await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
         await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
-        await page.PauseAsync(1000);
-        await page.WaitForPolicyInfoHeaderAsync("Visible");
         await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
-        await page.EnterDescriptionOfSpecifiedOperationAsync("AL UMB Basic {NMONTH}.{NDAY}.{NYEAR} {Time}");
+
+        var state = data.Get("State");
+        var lob = data.Get("Product (LOB)");
+        var descriptionType = "Smoke"; 
+        var description = DescriptionFormatter.BuildDescription(state, lob, descriptionType);
+
+        await page.EnterDescriptionOfSpecifiedOperationAsync(description);
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
     }
 
@@ -258,7 +205,6 @@ public sealed class UMBSmokeTestSteps
         await page.WaitForHttpErrorMsgOKAsync("Absent");
         await page.ClickLoggedInUserAsync();
         await page.ClickLogoutAsync();
-
     }
 
 }

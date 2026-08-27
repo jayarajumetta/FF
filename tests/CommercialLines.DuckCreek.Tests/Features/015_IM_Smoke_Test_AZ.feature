@@ -20,7 +20,6 @@ Scenario Outline: IM Smoke Test - <stateCode>
 	And I enter individual client information
 	And I complete required policy information
 	And I navigate to Policy Info and Verify Desc
-	And I sign out of the application for logged in user
 
 Examples:
 	| dataFile                                     | stateCode | stateVariant | stateName     | externalDataFile                    |
