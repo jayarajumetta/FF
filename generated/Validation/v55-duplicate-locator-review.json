@@ -1,0 +1,254 @@
+[
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/ClientSearchLocators.cs",
+    "selector": "Client",
+    "properties": [
+      "Client070F4",
+      "Client35F85"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/ClientSearchLocators.cs",
+    "selector": "Detail",
+    "properties": [
+      "Detail6D228",
+      "Detail704E6"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/UnderwritingLocators.cs",
+    "selector": "Commercial General Liability History",
+    "properties": [
+      "CommercialGeneralLiabilityHistoryC65BF",
+      "CommercialGeneralLiabilityHistoryE02F8"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/UnderwritingLocators.cs",
+    "selector": "Commercial Property History",
+    "properties": [
+      "CommercialPropertyHistory76D22",
+      "CommercialPropertyHistoryE6A7F"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/UnderwritingLocators.cs",
+    "selector": "General UW Questions",
+    "properties": [
+      "GeneralUWQuestions55852",
+      "GeneralUWQuestionsBFB08"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/UnderwritingLocators.cs",
+    "selector": "Other Insurance History",
+    "properties": [
+      "OtherInsuranceHistory416B1",
+      "OtherInsuranceHistory5AFD8"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/CoveragesLocators.cs",
+    "selector": "Endorsements",
+    "properties": [
+      "Endorsements7572E",
+      "Endorsements9626E"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/CoveragesLocators.cs",
+    "selector": "Policy Covg",
+    "properties": [
+      "PolicyCovgED95C",
+      "PolicyCovgF9E58"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "Addl Interests",
+    "properties": [
+      "AddlInterests15174",
+      "AddlInterestsE39FC"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "Billing",
+    "properties": [
+      "Billing6ED79",
+      "BillingD1518"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "Building",
+    "properties": [
+      "Building8205F",
+      "Building87910"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "CGL",
+    "properties": [
+      "CGL08901",
+      "CGLBA8E8"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "Client",
+    "properties": [
+      "Client070F4",
+      "Client35F85"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "Coverage Form",
+    "properties": [
+      "CoverageForm3B382",
+      "CoverageFormA7F96"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "Driver Schedule",
+    "properties": [
+      "DriverSchedule161DF",
+      "DriverSchedule79DC6"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "Endorsements",
+    "properties": [
+      "Endorsements7572E",
+      "Endorsements9626E"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "Entity Schedule",
+    "properties": [
+      "EntityScheduleE6C9F",
+      "EntityScheduleEA671"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "Location",
+    "properties": [
+      "Location82D95",
+      "Location8DEE2"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "Policy Covg",
+    "properties": [
+      "PolicyCovg26786",
+      "PolicyCovg35BE4"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "Property UW Questions",
+    "properties": [
+      "PropertyUWQuestions790F2",
+      "PropertyUWQuestions8452C"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "Rating Groups",
+    "properties": [
+      "RatingGroups46191",
+      "RatingGroups46DD2"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "Risk",
+    "properties": [
+      "Risk5D6FA",
+      "Risk873E7"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "State",
+    "properties": [
+      "State16B92",
+      "State64A10"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "State Details",
+    "properties": [
+      "StateDetails33183",
+      "StateDetails72631"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "Type",
+    "properties": [
+      "Type56F72",
+      "Type715D6"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "UW Questions",
+    "properties": [
+      "UWQuestions368CC",
+      "UWQuestionsF3D9F"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "UW Questions - Umbrella",
+    "properties": [
+      "UWQuestionsUmbrella9F47E",
+      "UWQuestionsUmbrellaFF014"
+    ]
+  },
+  {
+    "app": "CommercialLines.DuckCreek",
+    "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+    "selector": "Update Answers",
+    "properties": [
+      "UpdateAnswers3DA0B",
+      "UpdateAnswers9CB86"
+    ]
+  }
+]

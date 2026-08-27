@@ -1,0 +1,96 @@
+{
+  "version": "57.0",
+  "removedCount": 15,
+  "removed": [
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/BAPBasicPolicySteps.cs",
+      "line": 249,
+      "action": "await page.PressIsThereAPriorCarrierAsync(\"CLICK\");",
+      "reason": "equivalent Click already immediately performed"
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/BAPExpandedSteps.cs",
+      "line": 330,
+      "action": "await page.PressIsThereAPriorCarrierAsync(\"CLICK\");",
+      "reason": "equivalent Click already immediately performed"
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/UMBExpandedSteps.cs",
+      "line": 1204,
+      "action": "await page.PressOKAsync(\"CLICK\");",
+      "reason": "equivalent Click already immediately performed"
+    },
+    {
+      "file": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/AutoRateFilingsCommonPolicyNBPriorEffDateSteps.cs",
+      "line": 214,
+      "action": "await page.PressChkBoxCheckBoxNoneOfTheAboveAsync(\"CLICK\");",
+      "reason": "equivalent Click already immediately performed"
+    },
+    {
+      "file": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/AutoRateFilingsCommonPolicyNBPriorEffDateSteps.cs",
+      "line": 216,
+      "action": "await page.PressPreQualificationNextAsync(\"CLICK\");",
+      "reason": "equivalent Click already immediately performed"
+    },
+    {
+      "file": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/AutoRateFilingsCommonPolicyNBSteps.cs",
+      "line": 214,
+      "action": "await page.PressChkBoxCheckBoxNoneOfTheAboveAsync(\"CLICK\");",
+      "reason": "equivalent Click already immediately performed"
+    },
+    {
+      "file": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/AutoRateFilingsCommonPolicyNBSteps.cs",
+      "line": 216,
+      "action": "await page.PressPreQualificationNextAsync(\"CLICK\");",
+      "reason": "equivalent Click already immediately performed"
+    },
+    {
+      "file": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/AutoRateFilingsPolicy1NBSteps.cs",
+      "line": 214,
+      "action": "await page.PressChkBoxCheckBoxNoneOfTheAboveAsync(\"CLICK\");",
+      "reason": "equivalent Click already immediately performed"
+    },
+    {
+      "file": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/AutoRateFilingsPolicy1NBSteps.cs",
+      "line": 216,
+      "action": "await page.PressPreQualificationNextAsync(\"CLICK\");",
+      "reason": "equivalent Click already immediately performed"
+    },
+    {
+      "file": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/AutoRateFilingsPolicy3NBPriorEffDateSteps.cs",
+      "line": 214,
+      "action": "await page.PressChkBoxCheckBoxNoneOfTheAboveAsync(\"CLICK\");",
+      "reason": "equivalent Click already immediately performed"
+    },
+    {
+      "file": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/AutoRateFilingsPolicy3NBPriorEffDateSteps.cs",
+      "line": 216,
+      "action": "await page.PressPreQualificationNextAsync(\"CLICK\");",
+      "reason": "equivalent Click already immediately performed"
+    },
+    {
+      "file": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/CycleRateFilingsPolicy1NB1Steps.cs",
+      "line": 214,
+      "action": "await page.PressChkBoxCheckBoxNoneOfTheAboveAsync(\"CLICK\");",
+      "reason": "equivalent Click already immediately performed"
+    },
+    {
+      "file": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/CycleRateFilingsPolicy1NB1Steps.cs",
+      "line": 216,
+      "action": "await page.PressPreQualificationNextAsync(\"CLICK\");",
+      "reason": "equivalent Click already immediately performed"
+    },
+    {
+      "file": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/CycleRateFilingsPolicy3NBPriorEffDateSteps.cs",
+      "line": 214,
+      "action": "await page.PressChkBoxCheckBoxNoneOfTheAboveAsync(\"CLICK\");",
+      "reason": "equivalent Click already immediately performed"
+    },
+    {
+      "file": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/CycleRateFilingsPolicy3NBPriorEffDateSteps.cs",
+      "line": 216,
+      "action": "await page.PressPreQualificationNextAsync(\"CLICK\");",
+      "reason": "equivalent Click already immediately performed"
+    }
+  ]
+}

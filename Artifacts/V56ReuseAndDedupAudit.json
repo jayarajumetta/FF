@@ -1,0 +1,17 @@
+{
+  "locatorFiles": 51,
+  "technicalAliases": 500,
+  "duplicateLiveTechnicalExpressions": [],
+  "pageMethodDuplicateSignatures": [
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/ProposalPage.cs",
+      "first": "SetNewAccountAddress",
+      "second": "EnterTrue"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/SocialSecurityPage.cs",
+      "first": "ClickEChecklistEChecklistSubmit",
+      "second": "ClickSubmitAngular"
+    }
+  ]
+}

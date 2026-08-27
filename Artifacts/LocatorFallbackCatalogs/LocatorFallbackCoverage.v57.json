@@ -1,0 +1,42 @@
+{
+  "release": "v57",
+  "applications": {
+    "CommercialLines.ExpertQuote": {
+      "removedRawDuckCreekId": 0,
+      "uniqueFieldrefCandidates": 2,
+      "associatedLabelCandidates": 194,
+      "tagSemanticRoleFixes": 46,
+      "uniqueRawFieldrefValues": 23,
+      "allRawFieldrefValues": 24
+    },
+    "CommercialLines.DuckCreek": {
+      "removedRawDuckCreekId": 4238,
+      "uniqueFieldrefCandidates": 244,
+      "associatedLabelCandidates": 7,
+      "tagSemanticRoleFixes": 576,
+      "uniqueRawFieldrefValues": 178,
+      "allRawFieldrefValues": 184
+    },
+    "PersonalLines.DuckCreek": {
+      "removedRawDuckCreekId": 0,
+      "uniqueFieldrefCandidates": 0,
+      "associatedLabelCandidates": 120,
+      "tagSemanticRoleFixes": 0,
+      "uniqueRawFieldrefValues": 0,
+      "allRawFieldrefValues": 0
+    }
+  },
+  "strategyCounts": {
+    "css": 13007,
+    "role": 7192,
+    "name": 6027,
+    "id": 5735,
+    "text": 3998,
+    "testid": 3254,
+    "label": 1904,
+    "associatedlabel": 321,
+    "fieldref": 246,
+    "duckcreekid": 74,
+    "xpath": 64
+  }
+}
