@@ -1,6 +1,7 @@
+using InsuranceAutomation.CLDC.Pages.Locators;
 using InsuranceAutomation.Core;
 using Microsoft.Playwright;
-using InsuranceAutomation.CLDC.Pages.Locators;
+using static InsuranceAutomation.Core.ExecutionIntent;
 
 namespace InsuranceAutomation.CLDC.Pages;
 

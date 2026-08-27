@@ -9,7 +9,7 @@ namespace InsuranceAutomation.Core;
 /// </summary>
 public static class ComponentAwareControlActions
 {
-    private const string RenderedOptionSelector = "[role=option],mat-option,.mat-mdc-option,.x-boundlist-item,li[role=option],.dropdown-item:not(.disabled)";
+    private const string RenderedOptionSelector = "[role=option]:not(input):not([role=combobox]),mat-option:not(.mat-option-disabled),.mat-mdc-option:not(.mat-mdc-option-disabled),.mat-option,.mat-mdc-option,.x-boundlist-item,li[role=option],.dropdown-item:not(.disabled)";
 
     public static async Task SelectOrFillAsync(
         IPage page,
@@ -42,21 +42,58 @@ public static class ComponentAwareControlActions
         var componentLike = IsDropdownLike(meta);
         if (componentLike)
         {
-            // Editable autocomplete values should be entered before probing options; read-only/select triggers are clicked first.
-            if ((meta.Tag is "input" or "textarea") && !meta.ReadOnly)
-                await control.FillAsync(value, new() { Timeout = timeoutMs });
-            else
-                await control.ClickAsync(new() { Timeout = timeoutMs });
+            // For mat-select or similar components, click to open dropdown first, then type to filter
+            var isMatSelect = meta.Cls.Contains("mat-select") || meta.Cls.Contains("mdc-select");
 
+            if (isMatSelect && !meta.ReadOnly)
+            {
+                // Click to open mat-select dropdown
+                await control.ClickAsync(new() { Timeout = timeoutMs });
+                // Wait for dropdown to open and be ready
+                await Task.Delay(250);
+
+                // Try to wait for mat-options to appear before typing
+                try
+                {
+                    var matOptions = page.Locator("mat-option, .mat-mdc-option");
+                    await matOptions.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 1000 });
+                }
+                catch { /* Options may not be visible yet, continue */ }
+
+                // Type to filter options (mat-select supports keyboard search)
+                await page.Keyboard.TypeAsync(value, new() { Delay = 50 });
+                // Give mat-options time to render/filter after typing - increased for Angular rendering
+                await Task.Delay(400);
+            }
+            else if ((meta.Tag is "input" or "textarea") && !meta.ReadOnly)
+            {
+                // Editable autocomplete: fill value to trigger filtering
+                await control.FillAsync(value, new() { Timeout = timeoutMs });
+            }
+            else
+            {
+                // Read-only/select triggers: click to open
+                await control.ClickAsync(new() { Timeout = timeoutMs });
+            }
+
+            // Try to select from rendered options with improved partial matching
             if (await TryChooseRenderedOptionAsync(page, meta, value, optionTimeoutMs, optionPollIntervalMs)) return;
 
+            // Fallback: Try Tab key to accept highlighted/focused option
+            if (await TryCommitWithTabAsync(page, meta, value))
+            {
+                await page.Keyboard.PressAsync("Tab");
+                return;
+            }
+
+            // Fallback: Try Enter to commit if applicable
             if (await CanCommitWithEnterAsync(page, control, meta, value))
             {
                 await control.PressAsync("Enter");
                 return;
             }
 
-            throw new PlaywrightException($"No exact or unambiguous partial rendered option matched '{value}', and Enter was not a safe selection/commit operation.");
+            throw new PlaywrightException($"No exact or unambiguous partial rendered option matched '{value}', and neither Tab nor Enter was a safe selection/commit operation.");
         }
 
         await control.FillAsync(value, new() { Timeout = timeoutMs });
@@ -122,29 +159,71 @@ public static class ComponentAwareControlActions
 
     private static async Task<bool> TryChooseRenderedOptionAsync(IPage page, ControlMeta meta, string requested, int timeoutMs, int pollIntervalMs)
     {
+        // Ensure minimum timeout to allow at least one attempt
+        timeoutMs = Math.Max(500, timeoutMs);
+        pollIntervalMs = Math.Max(25, pollIntervalMs);
+
         var started = Environment.TickCount64;
-        while (Environment.TickCount64 - started <= timeoutMs)
+        var attempts = 0;
+        var lastCount = 0;
+
+        // Use do-while to ensure at least one execution
+        do
         {
-            var candidates = Options(page, meta);
-            // One browser round-trip replaces N IsVisible/InnerText calls. This is the main v57 dropdown latency improvement.
-            var visible = await candidates.EvaluateAllAsync<OptionSnapshot[]>(@"els => els.map((el,index) => {
-                const style = getComputedStyle(el);
-                const r = el.getBoundingClientRect();
-                return { index, text: (el.innerText || el.textContent || '').replace(/\s+/g,' ').trim(),
-                         visible: !!(r.width || r.height || el.getClientRects().length) && style.visibility !== 'hidden' && style.display !== 'none' };
-            }).filter(x => x.visible)") ?? Array.Empty<OptionSnapshot>();
-            if (visible.Length > 0)
+            attempts++;
+            try
             {
-                var match = ChooseOptionIndex(visible.Select(x => x.Text).ToArray(), requested);
-                if (match.Index >= 0)
+                var candidates = Options(page, meta);
+                var count = await candidates.CountAsync();
+                lastCount = count;
+
+                // If no candidates found at all, wait and retry (unless timeout exceeded)
+                if (count == 0)
                 {
-                    await candidates.Nth(visible[match.Index].Index).ClickAsync(new() { Timeout = Math.Max(500, timeoutMs) });
-                    return true;
+                    if (Environment.TickCount64 - started >= timeoutMs) break;
+                    await Task.Delay(pollIntervalMs);
+                    continue;
+                }
+
+                // One browser round-trip replaces N IsVisible/InnerText calls. This is the main v57 dropdown latency improvement.
+                var visible = await candidates.EvaluateAllAsync<OptionSnapshot[]>(@"els => els.map((el,index) => {
+                    const style = getComputedStyle(el);
+                    const r = el.getBoundingClientRect();
+                    // Filter out input and combobox elements from option list
+                    const tag = (el.tagName || '').toLowerCase();
+                    const role = el.getAttribute('role') || '';
+                    if (tag === 'input' || role === 'combobox') return null;
+
+                    return { index, text: (el.innerText || el.textContent || '').replace(/\s+/g,' ').trim(),
+                             visible: !!(r.width || r.height || el.getClientRects().length) && style.visibility !== 'hidden' && style.display !== 'none' };
+                }).filter(x => x !== null && x.visible)") ?? Array.Empty<OptionSnapshot>();
+
+                if (visible.Length > 0)
+                {
+                    var match = ChooseOptionIndex(visible.Select(x => x.Text).ToArray(), requested);
+                    if (match.Index >= 0)
+                    {
+                        var targetOption = candidates.Nth(visible[match.Index].Index);
+                        // Ensure the option is still visible before clicking
+                        await targetOption.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = Math.Min(500, timeoutMs) });
+                        await targetOption.ClickAsync(new() { Timeout = Math.Max(500, timeoutMs) });
+                        return true;
+                    }
                 }
             }
+            catch (Exception)
+            {
+                // If evaluation fails (e.g., options not yet rendered), continue polling
+                // Only break if we've exceeded timeout
+                if (Environment.TickCount64 - started >= timeoutMs) break;
+            }
+
+            // Check timeout before delaying
             if (Environment.TickCount64 - started >= timeoutMs) break;
-            await Task.Delay(Math.Max(25, pollIntervalMs));
-        }
+            await Task.Delay(pollIntervalMs);
+
+        } while (Environment.TickCount64 - started < timeoutMs || attempts == 1); // Ensure at least one attempt
+
         return false;
     }
 
@@ -176,11 +255,28 @@ public static class ComponentAwareControlActions
 
     private static int PartialScore(string requested, string candidate)
     {
+        // Exact match (handled earlier, but included for completeness)
+        if (string.Equals(requested, candidate, StringComparison.OrdinalIgnoreCase)) return 10000 + requested.Length;
+
+        // Best: Candidate starts with requested (e.g., "Cal" matches "California")
         if (candidate.StartsWith(requested, StringComparison.OrdinalIgnoreCase)) return 9000 + requested.Length;
+
+        // Requested starts with candidate (e.g., "California" typed, "Cal" option)
         if (requested.StartsWith(candidate, StringComparison.OrdinalIgnoreCase)) return 8500 + candidate.Length;
-        if (candidate.Contains(requested, StringComparison.OrdinalIgnoreCase)) return 8000 + requested.Length;
+
+        // IndexOf match: Candidate contains requested at any position (e.g., "New" matches "New York")
+        var indexInCandidate = candidate.IndexOf(requested, StringComparison.OrdinalIgnoreCase);
+        if (indexInCandidate >= 0)
+        {
+            // Prefer matches at the beginning, but accept any indexOf match
+            var positionBonus = Math.Max(0, 100 - indexInCandidate);
+            return 8000 + requested.Length + positionBonus;
+        }
+
+        // Requested contains candidate substring
         if (requested.Contains(candidate, StringComparison.OrdinalIgnoreCase)) return 7500 + candidate.Length;
 
+        // Token-based fuzzy matching for multi-word scenarios
         var requestTokens = Tokens(requested);
         var candidateTokens = Tokens(candidate);
         if (requestTokens.Count == 0 || candidateTokens.Count == 0) return 0;
@@ -194,6 +290,54 @@ public static class ComponentAwareControlActions
         Regex.Split(Normalize(value), @"[^A-Za-z0-9]+")
             .Where(x => x.Length > 1)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+    private static async Task<bool> TryCommitWithTabAsync(IPage page, ControlMeta meta, string requested)
+    {
+        // Tab is useful for mat-select and similar components where an option is focused but not clicked
+        if (!(meta.Role is "combobox" or "listbox" || meta.Popup is "listbox" or "menu" || meta.Cls.Contains("mat-select") || meta.Cls.Contains("mdc-select") || !string.IsNullOrWhiteSpace(meta.AriaAutocomplete)))
+            return false;
+
+        var options = Options(page, meta);
+        var count = await options.CountAsync();
+        if (count == 0) return false;
+
+        // Check if there's a focused/highlighted mat-option (EXCLUDE input and combobox elements)
+        var activeRoot = CurrentScope(page);
+        // Only look for mat-option elements that are highlighted/active, not input or combobox
+        var active = string.IsNullOrWhiteSpace(meta.PopupTargetId)
+            ? activeRoot.Locator("mat-option[aria-selected=true]:not(input):not([role=combobox]),mat-option.mat-mdc-option-active:not(input),mat-option.mat-option-active:not(input),.mat-mdc-option[aria-selected=true]:not(input),.mat-mdc-option-active:not(input),[role=option][aria-selected=true]:not(input):not([role=combobox])")
+            : activeRoot.Locator(PrefixSelectorsById(meta.PopupTargetId, "mat-option[aria-selected=true],mat-option.mat-mdc-option-active,mat-option.mat-option-active,.mat-mdc-option[aria-selected=true],.mat-mdc-option-active,[role=option][aria-selected=true]"));
+
+        var activeCount = await active.CountAsync();
+        if (activeCount >= 1)
+        {
+            try
+            {
+                // Filter to only get visible mat-option elements, not input/combobox
+                for (var i = 0; i < activeCount; i++)
+                {
+                    var candidate = active.Nth(i);
+                    var tagName = await candidate.EvaluateAsync<string>("el => el.tagName.toLowerCase()");
+
+                    // Skip if it's an input or has combobox role
+                    if (tagName == "input") continue;
+
+                    var role = await candidate.GetAttributeAsync("role");
+                    if (role == "combobox") continue;
+
+                    if (await candidate.IsVisibleAsync())
+                    {
+                        var text = Normalize(await candidate.InnerTextAsync());
+                        // Accept Tab if the focused mat-option is a partial match (indexOf check)
+                        if (PartialScore(Normalize(requested), text) > 0)
+                            return true;
+                    }
+                }
+            }
+            catch { return false; }
+        }
+        return false;
+    }
 
     private static async Task<bool> CanCommitWithEnterAsync(IPage page, ILocator control, ControlMeta meta, string requested)
     {
@@ -221,8 +365,23 @@ public static class ComponentAwareControlActions
         return false;
     }
 
-    private static ILocator Options(IPage page, ControlMeta meta) =>
-        CurrentScope(page).Locator(string.IsNullOrWhiteSpace(meta.PopupTargetId) ? RenderedOptionSelector : PrefixSelectorsById(meta.PopupTargetId, RenderedOptionSelector));
+    private static ILocator Options(IPage page, ControlMeta meta)
+    {
+        var scope = CurrentScope(page);
+
+        // For mat-select, try to use panel-specific selector if available
+        if (meta.Cls.Contains("mat-select") || meta.Cls.Contains("mdc-select"))
+        {
+            // Try to find mat-options in the overlay panel first (Angular Material specific)
+            var matPanelOptions = scope.Locator(".mat-select-panel mat-option, .mat-mdc-select-panel mat-option, .mat-select-panel .mat-mdc-option, .mat-mdc-select-panel .mat-mdc-option, .cdk-overlay-pane mat-option, .cdk-overlay-pane .mat-mdc-option");
+            return matPanelOptions;
+        }
+
+        // Default: use the standard selector with optional ID prefix
+        return string.IsNullOrWhiteSpace(meta.PopupTargetId) 
+            ? scope.Locator(RenderedOptionSelector) 
+            : scope.Locator(PrefixSelectorsById(meta.PopupTargetId, RenderedOptionSelector));
+    }
 
     private static string PrefixSelectorsById(string id, string selectors)
     {

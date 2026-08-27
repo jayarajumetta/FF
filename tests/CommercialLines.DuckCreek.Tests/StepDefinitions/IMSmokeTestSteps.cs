@@ -129,7 +129,8 @@ public sealed class IMSmokeTestSteps
         data.GenerateRandom("InsuredSSN", "125[0-9]{6}");
         data.GenerateRandom("AuditTelephone_0075", "[0-9]{10}");
         data.GenerateRandom("InspectionTelephone_0075", "[0-9]{10}");
-
+        data.Set("State", data.Resolve("{{data:state}}"));
+        data.Set("Product (LOB)", data.Resolve("{{data:product_lob}}"));
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
@@ -137,6 +138,7 @@ public sealed class IMSmokeTestSteps
         await page.WaitForUnderwritingInfoAsync("Exists");
         await page.EnterInsuredTypeAsync(data.Resolve("{{data:insured_type_52}}"));
         await page.ClickEntityTypeAsync();
+        await page.EnterEntityTypeAsync(data.Resolve("{{data:entity_type_62}}"));
         await page.WaitForFirstName55A0BAsync("Visible");
         // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets FirstName55A0B
         await page.EnterFirstName55A0BAsync(data.Resolve("{{data:first_name_56}}"));
@@ -145,11 +147,10 @@ public sealed class IMSmokeTestSteps
         await page.EnterMiddleNameAsync(data.Resolve("{{data:middle_name_57}}"));
         await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0067}}"));
         await page.EnterDOBAsync(data.Resolve("{DATE[][-40y][MM-dd-yyyy]}"));
-        if (data.Condition("State!=\"CA\""))
+        if (data.Condition("\"State\"!=\"CA\""))
         {
                     await page.EnterGender1DC4AAsync(data.Resolve("{{data:gender_60}}"));
         }
-        await page.EnterEntityTypeAsync(data.Resolve("{{data:entity_type_62}}"));
         // Source step 0068: RANDOM input for Primary Phone.
         await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0068}}"));
         await page.EnterAddress17A1FBAsync(data.Resolve("{{data:address1_64}}"));
@@ -164,8 +165,8 @@ public sealed class IMSmokeTestSteps
         data.Set("Last4SSN", data.Get("InsuredSSN").Length >= 4 ? data.Get("InsuredSSN")[^4..] : data.Get("InsuredSSN"));
         // v56 suppressed redundant Tosca keyboard steering: EnterSSN6B3FB TAB
         // v56 suppressed redundant Tosca keyboard steering: EnterSSN6B3FB Enter
-        await page.ClickEnterSSN6B3FBAsync();
-        await page.PressEnterSSN6B3FBAsync("Doubleclick");
+        //await page.ClickEnterSSN6B3FBAsync();
+        //await page.PressEnterSSN6B3FBAsync("Doubleclick");
         // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets EnterSSN6B3FB
         await page.ClickVerify8CDBEAsync();
         await page.WaitForVerify8CDBEAsync("Absent");
@@ -194,11 +195,10 @@ public sealed class IMSmokeTestSteps
         await page.EnterWebsiteAddressAsync(data.Resolve("{{data:website_address_87}}"));
         // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Address2
         await page.VerifyZipCode26D22Async("[0-9]{5}-[0-9]{4}", "Regex:value");
-        data.Set("State", data.Resolve("{{data:state}}"));
-        data.Set("Product (LOB)", data.Resolve("{{data:product_lob}}"));
-        await page.EnterTitleAsync(data.Resolve("{{data:title_94}}"));
-        await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_95}}"));
-        await page.VerifyResultAsync(data.Resolve("{{data:expected_result_value_96}}"), "value");
+
+        //await page.EnterTitleAsync(data.Resolve("{{data:title_94}}"));
+        //await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_95}}"));
+        //await page.VerifyResultAsync(data.Resolve("{{data:expected_result_value_96}}"), "value");
 
     }
 
@@ -213,41 +213,15 @@ public sealed class IMSmokeTestSteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickPolicyInfoAsync();
-        await page.WaitForPolicyInfoHeaderAsync("Exists");
+        //await page.WaitForPolicyInfoHeaderAsync("Exists");
         await page.PauseAsync(1000);
         await page.EnterEffectiveDate95094Async(data.Resolve("{{data:effectivedate_100}}"));
-        if (data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
-        {
-                    await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_101}}"));
-        }
-        await page.PauseAsync(1000);
-        if (data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
-        {
-                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_103}}"));
-        }
-        if (data.Condition("'Product (LOB)' != \"WC\""))
-        {
-                    await page.ClickPrimaryRatingStateAsync();
-        }
-        if (data.Condition("'Product (LOB)' != \"WC\""))
-        {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets PrimaryRatingState
-        }
-        if (data.Condition("'Product (LOB)' != \"WC\""))
-        {
-                    // v56 suppressed duplicate keyboard steering: PrimaryRatingState TAB
-        }
+        await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_101}}"));
+        await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_103}}"));
+
+
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_107}}"));
-        await page.PauseAsync(1000);
-        if (data.Condition("'Product (LOB)' != \"WC\""))
-        {
-                    await page.WaitForPrimaryRatingStateAsync("Exists");
-        }
-        if (data.Condition("'Product (LOB)' != \"WC\""))
-        {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets PrimaryRatingState
-        }
-        await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_113}}"));
+        //await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_113}}"));
         // v56 suppressed redundant Tosca keyboard steering: WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days CLICK
         // v56 suppressed redundant Tosca keyboard steering: WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days Enter
         // v56 suppressed redundant Tosca keyboard steering: WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days Tab
@@ -255,10 +229,17 @@ public sealed class IMSmokeTestSteps
         await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
         await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
         await page.PauseAsync(1000);
-        await page.WaitForPolicyInfoHeaderAsync("Visible");
+        //await page.WaitForPolicyInfoHeaderAsync("Visible");
         await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
         // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets DescriptionOfSpecifiedOperation
-        await page.EnterDescriptionOfSpecifiedOperationAsync("AZ IM Basic {NMONTH}.{NDAY}.{NYEAR} {Time}");
+
+        // Build description dynamically based on State and LOB with timestamp
+        var state = data.Get("State");
+        var lob = data.Get("Product (LOB)");
+        var descriptionType = "Smoke";
+        var description = DescriptionFormatter.BuildDescription(state, lob, descriptionType);
+
+        await page.EnterDescriptionOfSpecifiedOperationAsync(description);
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
 
     }

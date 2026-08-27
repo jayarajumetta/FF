@@ -57,10 +57,10 @@ public sealed class ClientSearchPage
         _ui.PressAsync(_locators.Address1CB379, key, new ControlIntent("ClientSearch", "Address1CB379"));
 
     public Task EnterAddress1D319BAsync(string value) =>
-        _ui.FillAsync(_locators.Address1D319B, value, new ControlIntent("ClientSearch", "Address1D319B"));
+        _ui.FillAsync(_locators.Address1CB379, value, new ControlIntent("ClientSearch", "Address1D319B"));
 
     public Task PressAddress1D319BAsync(string key) =>
-        _ui.PressAsync(_locators.Address1D319B, key, new ControlIntent("ClientSearch", "Address1D319B"));
+        _ui.PressAsync(_locators.Address1CB379, key, new ControlIntent("ClientSearch", "Address1D319B"));
 
     public Task PressAddress2Async(string key) =>
         _ui.PressAsync(_locators.Address2, key, new ControlIntent("ClientSearch", "Address2"));
@@ -133,9 +133,14 @@ public sealed class ClientSearchPage
 
     public Task ClickDetail704E6Async() =>
         _ui.ClickAsync(_locators.Detail704E6, new ControlIntent("ClientSearch", "Detail704E6"));
+    public Task PauseAsync(int milliseconds) =>
+        Task.Delay(milliseconds);
 
-    public Task WaitForEnterSSN6B3FBAsync(string expected) =>
-        _ui.WaitAsync(_locators.EnterSSN6B3FB, expected, new ControlIntent("ClientSearch", "EnterSSN6B3FB"));
+    public async Task WaitForEnterSSN6B3FBAsync(string expected)
+    {
+        await PauseAsync(3000);
+        await _ui.WaitAsync(_locators.EnterSSN6B3FB, expected, new ControlIntent("ClientSearch", "EnterSSN6B3FB"));
+    }
 
     public Task PressEnterSSN6B3FBAsync(string key) =>
         _ui.PressAsync(_locators.EnterSSN6B3FB, key, new ControlIntent("ClientSearch", "EnterSSN6B3FB"));
@@ -147,28 +152,31 @@ public sealed class ClientSearchPage
         _ui.CaptureAsync(_locators.EnterSSN6B3FB, property, new ControlIntent("ClientSearch", "EnterSSN6B3FB"));
 
     public Task WaitForEnterSSNE3801Async(string expected) =>
-        _ui.WaitAsync(_locators.EnterSSNE3801, expected, new ControlIntent("ClientSearch", "EnterSSNE3801"));
+        _ui.WaitAsync(_locators.EnterSSN6B3FB, expected, new ControlIntent("ClientSearch", "EnterSSNE3801"));
 
     public Task PressEnterSSNE3801Async(string key) =>
-        _ui.PressAsync(_locators.EnterSSNE3801, key, new ControlIntent("ClientSearch", "EnterSSNE3801"));
+        _ui.PressAsync(_locators.EnterSSN6B3FB, key, new ControlIntent("ClientSearch", "EnterSSNE3801"));
 
     public Task ClickEnterSSNE3801Async() =>
-        _ui.ClickAsync(_locators.EnterSSNE3801, new ControlIntent("ClientSearch", "EnterSSNE3801"));
+        _ui.ClickAsync(_locators.EnterSSN6B3FB, new ControlIntent("ClientSearch", "EnterSSNE3801"));
 
     public Task WaitForEnterSSNFA186Async(string expected) =>
-        _ui.WaitAsync(_locators.EnterSSNFA186, expected, new ControlIntent("ClientSearch", "EnterSSNFA186"));
+        _ui.WaitAsync(_locators.EnterSSN6B3FB, expected, new ControlIntent("ClientSearch", "EnterSSNFA186"));
 
     public Task EnterEnterSSNFA186Async(string value) =>
-        _ui.FillAsync(_locators.EnterSSNFA186, value, new ControlIntent("ClientSearch", "EnterSSNFA186"));
+        _ui.FillAsync(_locators.EnterSSN6B3FB, value, new ControlIntent("ClientSearch", "EnterSSNFA186"));
 
     public Task PressEnterSSNFA186Async(string key) =>
-        _ui.PressAsync(_locators.EnterSSNFA186, key, new ControlIntent("ClientSearch", "EnterSSNFA186"));
+        _ui.PressAsync(_locators.EnterSSN6B3FB, key, new ControlIntent("ClientSearch", "EnterSSNFA186"));
 
     public Task ClickEnterSSNFA186Async() =>
-        _ui.ClickAsync(_locators.EnterSSNFA186, new ControlIntent("ClientSearch", "EnterSSNFA186"));
+        _ui.ClickAsync(_locators.EnterSSN6B3FB, new ControlIntent("ClientSearch", "EnterSSNFA186"));
 
-    public Task EnterEntityTypeAsync(string value) =>
-        _ui.FillAsync(_locators.EntityType, value, new ControlIntent("ClientSearch", "EntityType"));
+    public async Task EnterEntityTypeAsync(string value)
+    {
+        await PauseAsync(3000);
+        await _ui.FillAsync(_locators.EntityType, value, new ControlIntent("ClientSearch", "EntityType"));
+    }
 
     public Task PressEntityTypeAsync(string key) =>
         _ui.PressAsync(_locators.EntityType, key, new ControlIntent("ClientSearch", "EntityType"));
@@ -195,10 +203,10 @@ public sealed class ClientSearchPage
         _ui.PressAsync(_locators.Gender1DC4A, key, new ControlIntent("ClientSearch", "Gender1DC4A"));
 
     public Task EnterGender4973CAsync(string value) =>
-        _ui.FillAsync(_locators.Gender4973C, value, new ControlIntent("ClientSearch", "Gender4973C"));
+        _ui.FillAsync(_locators.Gender1DC4A, value, new ControlIntent("ClientSearch", "Gender4973C"));
 
     public Task PressGender4973CAsync(string key) =>
-        _ui.PressAsync(_locators.Gender4973C, key, new ControlIntent("ClientSearch", "Gender4973C"));
+        _ui.PressAsync(_locators.Gender1DC4A, key, new ControlIntent("ClientSearch", "Gender4973C"));
 
     public Task ClickIndividualOKAsync() =>
         _ui.ClickAsync(_locators.IndividualOK, new ControlIntent("ClientSearch", "IndividualOK"));
@@ -252,31 +260,31 @@ public sealed class ClientSearchPage
         _ui.ClickAsync(_locators.NameOfInspectionContact, new ControlIntent("ClientSearch", "NameOfInspectionContact"));
 
     public Task WaitForOKAsync(string expected) =>
-        _ui.WaitAsync(_locators.OK, expected, new ControlIntent("ClientSearch", "OK"));
+        _ui.WaitAsync(_locators.IndividualOK, expected, new ControlIntent("ClientSearch", "OK"));
 
     public Task ClickOKAsync() =>
-        _ui.ClickAsync(_locators.OK, new ControlIntent("ClientSearch", "OK"));
+        _ui.ClickAsync(_locators.IndividualOK, new ControlIntent("ClientSearch", "OK"));
 
     public Task ClickOrderSSN5E031Async() =>
         _ui.ClickAsync(_locators.OrderSSN5E031, new ControlIntent("ClientSearch", "OrderSSN5E031"));
 
     public Task WaitForOrderSSN68C87Async(string expected) =>
-        _ui.WaitAsync(_locators.OrderSSN68C87, expected, new ControlIntent("ClientSearch", "OrderSSN68C87"));
+        _ui.WaitAsync(_locators.OrderSSN5E031, expected, new ControlIntent("ClientSearch", "OrderSSN68C87"));
 
     public Task ClickOrderSSN68C87Async() =>
-        _ui.ClickAsync(_locators.OrderSSN68C87, new ControlIntent("ClientSearch", "OrderSSN68C87"));
+        _ui.ClickAsync(_locators.OrderSSN5E031, new ControlIntent("ClientSearch", "OrderSSN68C87"));
 
     public Task ClickOrderSSN710BFAsync() =>
-        _ui.ClickAsync(_locators.OrderSSN710BF, new ControlIntent("ClientSearch", "OrderSSN710BF"));
+        _ui.ClickAsync(_locators.OrderSSN5E031, new ControlIntent("ClientSearch", "OrderSSN710BF"));
 
     public Task WaitForPleaseVerifySSN3EAB9Async(string expected) =>
         _ui.WaitAsync(_locators.PleaseVerifySSN3EAB9, expected, new ControlIntent("ClientSearch", "PleaseVerifySSN3EAB9"));
 
     public Task WaitForPleaseVerifySSN8D55BAsync(string expected) =>
-        _ui.WaitAsync(_locators.PleaseVerifySSN8D55B, expected, new ControlIntent("ClientSearch", "PleaseVerifySSN8D55B"));
+        _ui.WaitAsync(_locators.PleaseVerifySSN3EAB9, expected, new ControlIntent("ClientSearch", "PleaseVerifySSN8D55B"));
 
     public Task WaitForPleaseVerifySSNF738AAsync(string expected) =>
-        _ui.WaitAsync(_locators.PleaseVerifySSNF738A, expected, new ControlIntent("ClientSearch", "PleaseVerifySSNF738A"));
+        _ui.WaitAsync(_locators.PleaseVerifySSN3EAB9, expected, new ControlIntent("ClientSearch", "PleaseVerifySSNF738A"));
 
     public Task WaitForQuickQuoteAsync(string expected) =>
         _ui.WaitAsync(_locators.QuickQuote, expected, new ControlIntent("ClientSearch", "QuickQuote"));
@@ -303,7 +311,7 @@ public sealed class ClientSearchPage
         _ui.WaitAsync(_locators.SocialSecurity, expected, new ControlIntent("ClientSearch", "SocialSecurity"));
 
     public Task VerifySocialSecurityAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.SocialSecurity, expected, property, new ControlIntent("ClientSearch", "SocialSecurity"));
+        _ui.VerifyAsync(_locators.VerifySocialSecurity, expected, property, new ControlIntent("ClientSearch", "SocialSecurity"));
 
     public Task EnterStateAsync(string value) =>
         _ui.FillAsync(_locators.State, value, new ControlIntent("ClientSearch", "State"));
@@ -324,16 +332,16 @@ public sealed class ClientSearchPage
         _ui.ClickAsync(_locators.Verify34721, new ControlIntent("ClientSearch", "Verify34721"));
 
     public Task VerifyVerify7A388Async(string expected, string property) =>
-        _ui.VerifyAsync(_locators.Verify7A388, expected, property, new ControlIntent("ClientSearch", "Verify7A388"));
+        _ui.VerifyAsync(_locators.Verify34721, expected, property, new ControlIntent("ClientSearch", "Verify7A388"));
 
     public Task ClickVerify7A388Async() =>
-        _ui.ClickAsync(_locators.Verify7A388, new ControlIntent("ClientSearch", "Verify7A388"));
+        _ui.ClickAsync(_locators.Verify34721, new ControlIntent("ClientSearch", "Verify7A388"));
 
     public Task WaitForVerify8CDBEAsync(string expected) =>
-        _ui.WaitAsync(_locators.Verify8CDBE, expected, new ControlIntent("ClientSearch", "Verify8CDBE"));
+        _ui.WaitAsync(_locators.Verify34721, expected, new ControlIntent("ClientSearch", "Verify8CDBE"));
 
     public Task ClickVerify8CDBEAsync() =>
-        _ui.ClickAsync(_locators.Verify8CDBE, new ControlIntent("ClientSearch", "Verify8CDBE"));
+        _ui.ClickAsync(_locators.Verify34721, new ControlIntent("ClientSearch", "Verify8CDBE"));
 
     public Task EnterWebsiteAddressAsync(string value) =>
         _ui.FillAsync(_locators.WebsiteAddress, value, new ControlIntent("ClientSearch", "WebsiteAddress"));
@@ -360,10 +368,10 @@ public sealed class ClientSearchPage
         _ui.PressAsync(_locators.ZipCode26D22, key, new ControlIntent("ClientSearch", "ZipCode26D22"));
 
     public Task EnterZipCodeA088EAsync(string value) =>
-        _ui.FillAsync(_locators.ZipCodeA088E, value, new ControlIntent("ClientSearch", "ZipCodeA088E"));
+        _ui.FillAsync(_locators.ZipCode26D22, value, new ControlIntent("ClientSearch", "ZipCodeA088E"));
 
     public Task PressZipCodeA088EAsync(string key) =>
-        _ui.PressAsync(_locators.ZipCodeA088E, key, new ControlIntent("ClientSearch", "ZipCodeA088E"));
+        _ui.PressAsync(_locators.ZipCode26D22, key, new ControlIntent("ClientSearch", "ZipCodeA088E"));
 
     public Task EnterZipCodeD2A54Async(string value) =>
         _ui.FillAsync(_locators.ZipCodeD2A54, value, new ControlIntent("ClientSearch", "ZipCodeD2A54"));

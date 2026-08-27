@@ -284,7 +284,14 @@ public sealed class UMBExpandedSteps
         await page.WaitForPolicyInfoHeaderAsync("Visible");
         await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
         // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets DescriptionOfSpecifiedOperation
-        await page.EnterDescriptionOfSpecifiedOperationAsync("AL UMB StraightThrough {NMONTH}.{NDAY}.{NYEAR} {Time}");
+
+        // Build description dynamically based on State and LOB with timestamp
+        var state = data.Get("State");
+        var lob = data.Get("Product (LOB)");
+        var descriptionType = "StraightThrough";
+        var description = DescriptionFormatter.BuildDescription(state, lob, descriptionType);
+
+        await page.EnterDescriptionOfSpecifiedOperationAsync(description);
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
 
     }

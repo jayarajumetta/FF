@@ -376,14 +376,26 @@ public sealed class UiActions
                 return;
             }
 
-            var actual = await CaptureAsync(locator, property, intent);
+            // Check if property indicates regex matching (e.g., "Regex:value", "Regex:innerText")
+            var isRegexMatch = property.StartsWith("Regex:", StringComparison.OrdinalIgnoreCase);
+            var actualProperty = isRegexMatch ? property[6..] : property;
+
+            var actual = await CaptureAsync(locator, actualProperty, intent);
+
+            // Check if expected value has Regex: prefix (alternative format)
             if (normalized.StartsWith("Regex:", StringComparison.OrdinalIgnoreCase))
             {
-                var pattern = normalized[6..];
-                if (!System.Text.RegularExpressions.Regex.IsMatch(actual, pattern))
-                    throw new InvalidOperationException($"Expected value to match regex '{pattern}' but found '{actual}'.");
+                isRegexMatch = true;
+                normalized = normalized[6..];
+            }
+
+            if (isRegexMatch)
+            {
+                if (!System.Text.RegularExpressions.Regex.IsMatch(actual, normalized))
+                    throw new InvalidOperationException($"Expected value to match regex '{normalized}' but found '{actual}'.");
                 return;
             }
+
             if (normalized.StartsWith("NotEqual:", StringComparison.OrdinalIgnoreCase))
             {
                 var notExpected = normalized[9..];
@@ -391,8 +403,13 @@ public sealed class UiActions
                     throw new InvalidOperationException($"Expected value to differ from '{notExpected}', but it was equal.");
                 return;
             }
+
+            // Final comparison: expected value should match actual value
             if (!string.Equals(actual, normalized, StringComparison.OrdinalIgnoreCase))
+            {
                 throw new InvalidOperationException($"Expected '{normalized}' but found '{actual}'.");
+            }
+            // Success: values match, verification passes
         }
         catch (Exception ex) when (ShouldDeferVerification(ex))
         {
@@ -416,7 +433,14 @@ public sealed class UiActions
     {
         if (property.Contains("Value", StringComparison.OrdinalIgnoreCase))
         {
-            try { return await x.InputValueAsync(); } catch { }
+            try 
+            { 
+                return await x.InputValueAsync(); 
+            } 
+            catch 
+            { 
+                // Fall through to text content capture if InputValue fails
+            }
         }
         try { return (await x.InnerTextAsync()).Trim(); }
         catch { return (await x.TextContentAsync() ?? "").Trim(); }
