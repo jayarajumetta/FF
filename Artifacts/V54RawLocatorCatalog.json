@@ -1,0 +1,64 @@
+{
+  "version": "54.0",
+  "sourcePolicy": "RAW_TOSCA_ONLY",
+  "rawFiles": 11,
+  "locatorPropertyRows": 11785,
+  "sources": {
+    "CL_EQ_Modules_Production.tsu": {
+      "xModuleAttributes": 1350,
+      "uniqueAdded": 1350,
+      "sha256": "a9c677a54e2154333121c914610b7cf43fbec6b651aa6560ec377a2cc561eb7a"
+    },
+    "CL_EQ_TestCaseDesign_Staging_Area_Pre_Production.tsu": {
+      "xModuleAttributes": 0,
+      "uniqueAdded": 0,
+      "sha256": "b380e2f4d12ca0b73303774052bce488550b8d38b799600e8c5682f653d08052"
+    },
+    "CL_EQ_TestCases_Staging_Area_Pre_Production.tsu": {
+      "xModuleAttributes": 3893,
+      "uniqueAdded": 2995,
+      "sha256": "96c0cbf860e337a364088dd7923414fe1e7cb29d890b0a9489195c0fded3a9eb"
+    },
+    "CL_EQ_reusable_steps_Production.tsu": {
+      "xModuleAttributes": 3700,
+      "uniqueAdded": 0,
+      "sha256": "8cb6b78ef538808635403e58cc0a5f584ba499a1268c3b2ff7072a0594ccc215"
+    },
+    "CL-DC Modules Production.tsu": {
+      "xModuleAttributes": 3291,
+      "uniqueAdded": 2667,
+      "sha256": "228e937d486255d2728f4c3fdeaa76102b95c45edf55a86a540f1fb1d5052eca"
+    },
+    "CL-DC TestCaseDesign Staging Area.tsu": {
+      "xModuleAttributes": 0,
+      "uniqueAdded": 0,
+      "sha256": "db4331db5a8493bc37e96f8bafc28c98fd2ea0b82b93a5ca825a6fbd9de4168e"
+    },
+    "CL-DC TestCases Staging Area.tsu": {
+      "xModuleAttributes": 5871,
+      "uniqueAdded": 398,
+      "sha256": "24df87671d8b2ffe417ffe6e3437c76d88922a39469b00efc7841b2c682b1b7d"
+    },
+    "PL_DC_Library.tsu": {
+      "xModuleAttributes": 3738,
+      "uniqueAdded": 1616,
+      "sha256": "652e82ed252f73acdb4bab01681f755034d40ebc5d43ffd865069898ba05cc6e"
+    },
+    "PL_DC_Modules_Production.tsu": {
+      "xModuleAttributes": 4061,
+      "uniqueAdded": 2722,
+      "sha256": "ca2b08787b1424bd25f9de80b03d75d7dbbc586d98d8101e2be504fa594ee25d"
+    },
+    "PL_DC_TestCaseDesign_Production.tsu": {
+      "xModuleAttributes": 0,
+      "uniqueAdded": 0,
+      "sha256": "ec12ea509aa8d4d00a4b5ae76b8bbd9273fbdefb51c4e76916f1827a056bff96"
+    },
+    "PL_DC_TestCases_Production.tsu": {
+      "xModuleAttributes": 5598,
+      "uniqueAdded": 37,
+      "sha256": "06ee791a70568164ccfbaeb5fdd0cbe5098949fe5de7ecb84cfce51e72426e73"
+    }
+  },
+  "output": "Artifacts/ToscaLocatorPropertyCatalog.v54.raw.json"
+}

@@ -1,0 +1,1190 @@
+{
+  "files": {
+    "LossHistoryLocators.cs": 20,
+    "PricingLocators.cs": 9,
+    "PolicyInformationLocators.cs": 16,
+    "LoginLocators.cs": 5,
+    "PolicyWorkflowLocators.cs": 83,
+    "DiscountsLocators.cs": 4,
+    "FormsLocators.cs": 19,
+    "UnderwritingLocators.cs": 17,
+    "ProposalLocators.cs": 4,
+    "ClientSearchLocators.cs": 68,
+    "BusinessClassificationLocators.cs": 1,
+    "SubmissionLocators.cs": 11,
+    "NavigationLocators.cs": 685,
+    "VehiclesLocators.cs": 13,
+    "CoveragesLocators.cs": 32
+  },
+  "promoted": {
+    "role-link": 187,
+    "retained-semantic": 253,
+    "id": 229,
+    "associatedlabel-fallback": 49,
+    "associatedlabel-no-duckcreek": 8,
+    "fieldref": 51,
+    "associatedlabel-from-v55": 7,
+    "canonical-alias": 8,
+    "name": 20
+  },
+  "resolvedRawIdentity": 756,
+  "ambiguousOrMissing": [
+    {
+      "file": "LossHistoryLocators.cs",
+      "control": "AssignmentScheduleFor",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PricingLocators.cs",
+      "control": "EstimatedPremium",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PricingLocators.cs",
+      "control": "FullTermPremium",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PricingLocators.cs",
+      "control": "JavaScript",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PricingLocators.cs",
+      "control": "Premium",
+      "reason": "ambiguous-identity"
+    },
+    {
+      "file": "PricingLocators.cs",
+      "control": "PremiumChange",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PricingLocators.cs",
+      "control": "PremiumWritten",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PricingLocators.cs",
+      "control": "PriorPremium",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PricingLocators.cs",
+      "control": "Result",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PricingLocators.cs",
+      "control": "Title",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyInformationLocators.cs",
+      "control": "Carrier",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyInformationLocators.cs",
+      "control": "EffectiveDate",
+      "reason": "identity-miss"
+    },
+    {
+      "file": "PolicyInformationLocators.cs",
+      "control": "EnterPriorLossInformation",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyInformationLocators.cs",
+      "control": "ExpirationDate",
+      "reason": "identity-miss"
+    },
+    {
+      "file": "PolicyInformationLocators.cs",
+      "control": "InsuranceHistory",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyInformationLocators.cs",
+      "control": "IsThereAPriorCarrier",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyInformationLocators.cs",
+      "control": "LossExperienceHeading",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyInformationLocators.cs",
+      "control": "NoKnownLosses",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyInformationLocators.cs",
+      "control": "OtherInsuranceHistoryOK",
+      "reason": "ambiguous-identity"
+    },
+    {
+      "file": "PolicyInformationLocators.cs",
+      "control": "PolicyType",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyInformationLocators.cs",
+      "control": "ReturnToQuote",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyInformationLocators.cs",
+      "control": "TotalPremium",
+      "reason": "module-miss"
+    },
+    {
+      "file": "LoginLocators.cs",
+      "control": "BODY",
+      "reason": "module-miss"
+    },
+    {
+      "file": "LoginLocators.cs",
+      "control": "LoggedInUser",
+      "reason": "module-miss"
+    },
+    {
+      "file": "LoginLocators.cs",
+      "control": "Login",
+      "reason": "module-miss"
+    },
+    {
+      "file": "LoginLocators.cs",
+      "control": "Password",
+      "reason": "module-miss"
+    },
+    {
+      "file": "LoginLocators.cs",
+      "control": "UserName",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "AJAXErrorCheck",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "CTStraightThroughLiabilityLimitTo1M",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "DescriptionOfSpecifiedOperation",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "HttpErrorMsgOK",
+      "reason": "ambiguous-identity"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "IFRAMEDuckCreekPolicyDescriptionOfOther",
+      "reason": "identity-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "IFRAMEDuckCreekPolicyOtherCheckBox",
+      "reason": "identity-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "LoadingMessage",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "LoggedInUser",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "Logout",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "OK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "PolicyCovgFF145",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "PolicyInfoHeader",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "QuickSearchButton",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "RestartMicrosoftEdgeMessageOK",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "ReturnToAdmin",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "ReturnToCPP",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "SaveForLaterOK",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "SearchButton",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "SearchMethodEGDescriptionPolicy",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "SearchText",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "SplitBIDed",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "SplitPDDed",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "Start",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0",
+      "reason": "module-miss"
+    },
+    {
+      "file": "PolicyWorkflowLocators.cs",
+      "control": "ViewPolicy",
+      "reason": "module-miss"
+    },
+    {
+      "file": "FormsLocators.cs",
+      "control": "LoadingMessage",
+      "reason": "module-miss"
+    },
+    {
+      "file": "FormsLocators.cs",
+      "control": "SessionID",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "FormsLocators.cs",
+      "control": "StatusCode",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "UnderwritingLocators.cs",
+      "control": "Accept",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "UnderwritingLocators.cs",
+      "control": "GeneralUWQuestions55852",
+      "reason": "module-miss"
+    },
+    {
+      "file": "UnderwritingLocators.cs",
+      "control": "InsuranceScore",
+      "reason": "module-miss"
+    },
+    {
+      "file": "UnderwritingLocators.cs",
+      "control": "InsuranceScoreConsent",
+      "reason": "identity-miss"
+    },
+    {
+      "file": "UnderwritingLocators.cs",
+      "control": "IsThereAPriorCarrierEFB4F",
+      "reason": "module-miss"
+    },
+    {
+      "file": "UnderwritingLocators.cs",
+      "control": "OtherInsuranceHistory416B1",
+      "reason": "module-miss"
+    },
+    {
+      "file": "UnderwritingLocators.cs",
+      "control": "ReferenceNumber",
+      "reason": "module-miss"
+    },
+    {
+      "file": "UnderwritingLocators.cs",
+      "control": "TheInsuranceScoreServiceHasReturnedTheFollowingErrorCREDITVENDORUNREACHABLEPLEASEREPROCESS",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ProposalLocators.cs",
+      "control": "EffectiveDate",
+      "reason": "identity-miss"
+    },
+    {
+      "file": "ProposalLocators.cs",
+      "control": "NewQuote",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ProposalLocators.cs",
+      "control": "Product",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ProposalLocators.cs",
+      "control": "Start",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "AdditionalNamedInsured",
+      "reason": "identity-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "Address1D319B",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "Address2",
+      "reason": "ambiguous-identity"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "BusinessName",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "City",
+      "reason": "ambiguous-identity"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "ClientSearch41F28",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "ClientSearchCA696",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "ClientSearchFDC36",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "DOB",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "EnterSSNFA186",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "Gender4973C",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "InsuredEMailAddress",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "JavaScript",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "NameOfAuditContact",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "NameOfInspectionContact",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "OK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "OrderSSN68C87",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "PleaseVerifySSN3EAB9",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "PleaseVerifySSN8D55B",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "PleaseVerifySSNF738A",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "QuickQuote",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "Result",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "SSNWasNotReturned",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "SearchResultsDuckCreekPolicyFirstCheckbox",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "SocialSecurity",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "State",
+      "reason": "ambiguous-identity"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "Title",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "UnderwritingInfo",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "Verify7A388",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "Verify8CDBE",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "WebsiteAddress",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "YearsInBusiness",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "ZipCodeA088E",
+      "reason": "module-miss"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "PrimaryPhone",
+      "reason": "no-raw-identity"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "AuditTelephone",
+      "reason": "no-raw-identity"
+    },
+    {
+      "file": "ClientSearchLocators.cs",
+      "control": "InspectionTelephone",
+      "reason": "no-raw-identity"
+    },
+    {
+      "file": "SubmissionLocators.cs",
+      "control": "AllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabs",
+      "reason": "module-miss"
+    },
+    {
+      "file": "SubmissionLocators.cs",
+      "control": "CompleteApplication",
+      "reason": "module-miss"
+    },
+    {
+      "file": "SubmissionLocators.cs",
+      "control": "IsThisCoverageBound",
+      "reason": "module-miss"
+    },
+    {
+      "file": "SubmissionLocators.cs",
+      "control": "JavaScript",
+      "reason": "module-miss"
+    },
+    {
+      "file": "SubmissionLocators.cs",
+      "control": "LoadingMessage",
+      "reason": "module-miss"
+    },
+    {
+      "file": "SubmissionLocators.cs",
+      "control": "Result",
+      "reason": "module-miss"
+    },
+    {
+      "file": "SubmissionLocators.cs",
+      "control": "StoplightWaitingWindow",
+      "reason": "module-miss"
+    },
+    {
+      "file": "SubmissionLocators.cs",
+      "control": "StoplightWaitingWindowClose",
+      "reason": "module-miss"
+    },
+    {
+      "file": "SubmissionLocators.cs",
+      "control": "StoplightWaitingWindowError",
+      "reason": "module-miss"
+    },
+    {
+      "file": "SubmissionLocators.cs",
+      "control": "StoplightWaitingWindowFirstCloseButtonOnError",
+      "reason": "module-miss"
+    },
+    {
+      "file": "SubmissionLocators.cs",
+      "control": "Title",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "AddNotesRemarks",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "AddPriorCarrier",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "Address1C0AF1",
+      "reason": "ambiguous-identity"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "BaileesCustomersHeading",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "BillType",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "Billing6ED79",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "BillingD1518",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "BusinessInterruptionOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "CG0424CoverageForInjuryToLeasedWorkersOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "CG0435EmployeeBenefitsLiabilityOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "CG2007AddLInsuredEngineersArchitectsOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "CG2020AddLInsuredCharitableInstitutionOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "CG2149TotalPollutionExclusionEndorsementOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "CG2401NonBindingArbitrationOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "CG2812PesticideOrHerbicideApplicatorCoverageOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "CG2935AddLInsuredStateOrPoliticalPermitsOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "CallISO",
+      "reason": "ambiguous-identity"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "Carrier",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "ClassCodeFrame",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "ClassCodeFrameClassCodeWindow",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "CommonNavigationLinksNext",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "DescriptionOfSpecifiedOperation",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "Detail33F0D",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "EMail",
+      "reason": "ambiguous-identity"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "EasyPay",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "EffectiveDate95094",
+      "reason": "identity-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "EffectiveDateB557F",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "EndorsementCM6601ExcludeNamedCustomerOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "EndorsementIF0002WaterborneEquipmentOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "EndorsementScheduleRow1",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "EndorsementTableRow1",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "EndorsementTableRow2",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "EntityInfoFrame",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "ExpirationDate34EAC",
+      "reason": "identity-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "FG0013AutomaticAdditionalInsuredSpecificRelationshipOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "GeneralUWQuestions",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "IFRAMEDuckCreekPolicyAddressEsOrDescriptionSOfDesignatedFarmLocationS",
+      "reason": "identity-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "IFRAMEDuckCreekPolicyAddressEsOrDescriptionSOfDesignatedPremises",
+      "reason": "identity-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "IFRAMEDuckCreekPolicyDescriptionOfPremisesOrActivities",
+      "reason": "identity-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "IFRAMEDuckCreekPolicyExcludedDriver",
+      "reason": "identity-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "IFRAMEDuckCreekPolicyNameSOrDescriptionSOfDesignatedAnimalS",
+      "reason": "identity-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "IFRAMEDuckCreekPolicyVehicleAssociation",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "InsuranceHistory",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "IsThereAPriorCarrier",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "IsThisCoverageBound",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "IsThisPolicyBeingFullyCancelled",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "JavaScript",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "LoadingMessage",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "Location82D95",
+      "reason": "ambiguous-identity"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "LocationAssignment",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "LocationOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "LossExperience",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "LossExperienceHeading",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "MeritRating",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "NoKnownLosses",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "NotePadOK",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "Notepad",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "NotepadHeading",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "OK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "OrderAudit",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "OtherInsuranceHistoryOK",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "PartnersOfficersAndOthersExclusionOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "PayPlan",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "PolicyCovgBaileesPropertyAwayFromYourPremisesOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "PolicyCovgContractorsEquipmentOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "PolicyCovgFF145",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "PolicyInfo",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "PolicyInfoHeader",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "PolicyNumberBA28E",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "PolicyType",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "Premium",
+      "reason": "ambiguous-identity"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "Pricing900C9",
+      "reason": "identity-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "PricingHeading",
+      "reason": "ambiguous-identity"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "PrimaryRatingState",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "PriorAmericanNationalPolicy",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "ProductsCompletedOpsOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "PropertyAddClassOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "Result",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "ReturnToQuote",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "SoleProprietorsPartnersOfficersAndOthersCoverageOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "SpecificUnderwritingQuestionsAccountsReceivableOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "SpecificUnderwritingQuestionsBaileesCustomerOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "SpecificUnderwritingQuestionsComputerSystemsOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "SpecificUnderwritingQuestionsContractorsEquipmentOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "SpecificUnderwritingQuestionsMotorTruckCargoOwnersOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "SpecificUnderwritingQuestionsSignsOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "SplitBIDed",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "SplitPDDed",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "StoplightMessageTotalSubjectPremium",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "Submission",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "SubmissionHeading",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "TextBox",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "ThirdPartyDesignee",
+      "reason": "identity-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "Title",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "TotalPremium",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "TypeD972C",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "UnderwritingInfo",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "VehicleSchedule1Veh",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "WaitonPricingHeadingAndFillOutRequiredFields",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "WhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNational",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "YearsInBusiness",
+      "reason": "module-miss"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "ZipCodeB286B",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "ZipCodeD2DBA",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "EntityInfoFrameEntityInfoWindowFax",
+      "reason": "no-raw-identity"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "EntityInfoFrameEntityInfoWindowBureauNumber",
+      "reason": "no-raw-identity"
+    },
+    {
+      "file": "NavigationLocators.cs",
+      "control": "EntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefault",
+      "reason": "no-raw-identity"
+    },
+    {
+      "file": "VehiclesLocators.cs",
+      "control": "PolicyCovg",
+      "reason": "ambiguous-identity"
+    },
+    {
+      "file": "CoveragesLocators.cs",
+      "control": "CP",
+      "reason": "module-miss"
+    },
+    {
+      "file": "CoveragesLocators.cs",
+      "control": "DescriptionOfSpecifiedOperation",
+      "reason": "module-miss"
+    },
+    {
+      "file": "CoveragesLocators.cs",
+      "control": "FG0055FG0062FG0063FG0069FG0071FG0072FG0074FG0077FG0078EmploymentPracticesLiabilityInsuranceCoverageEndorsementOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "CoveragesLocators.cs",
+      "control": "FG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsement",
+      "reason": "module-miss"
+    },
+    {
+      "file": "CoveragesLocators.cs",
+      "control": "FG0055TableRowFG0055",
+      "reason": "module-miss"
+    },
+    {
+      "file": "CoveragesLocators.cs",
+      "control": "GL",
+      "reason": "module-miss"
+    },
+    {
+      "file": "CoveragesLocators.cs",
+      "control": "IM",
+      "reason": "module-miss"
+    },
+    {
+      "file": "CoveragesLocators.cs",
+      "control": "PolicyCovgAccountsReceivableOK",
+      "reason": "inference-ambiguous"
+    },
+    {
+      "file": "CoveragesLocators.cs",
+      "control": "PolicyInfoHeader",
+      "reason": "module-miss"
+    }
+  ],
+  "canonicalAliases": 8,
+  "dealiasedDifferentPhysical": 135
+}

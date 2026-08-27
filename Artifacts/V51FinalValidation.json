@@ -1,0 +1,50 @@
+{
+  "release": "v51-ff-bop2-source-ordered-component-aware-ado-split-pipelines",
+  "status": "FAIL",
+  "scope": {
+    "features": 32,
+    "exampleRows": 1074,
+    "csharpFiles": 221,
+    "jsonFiles": 1102,
+    "scopedStepDefinitionFiles": 32
+  },
+  "sourceOrder": {
+    "featuresCompared": 32,
+    "exactFeatureSequences": 32,
+    "overallGate": "FAIL"
+  },
+  "componentSemantics": {
+    "nativeSelectOnlySelectOptionCalls": 2,
+    "postActionDomCapture": false
+  },
+  "evidence": {
+    "nunitPerTestAttachments": true,
+    "playwrightVideo": true,
+    "trace": true,
+    "har": true,
+    "consoleAndNetworkLogs": true,
+    "optionalVSTestMediaRecorder": true
+  },
+  "azureDevOps": {
+    "buildPipeline": ".azuredevops/build-test-artifact.yml",
+    "executionPipeline": ".azuredevops/execute-test-artifact.yml",
+    "executionStages": [
+      "AllCases",
+      "SingleTestPlanCase",
+      "TestSuite"
+    ],
+    "singleCaseStrategy": "temporary one-case static Test Plan suite with always cleanup",
+    "executionRebuildsCode": false
+  },
+  "dotnetBuildInGenerationEnvironment": {
+    "performed": false,
+    "reason": "dotnet executable unavailable in this container; Azure build pipeline is the compiler gate."
+  },
+  "warnings": [],
+  "errors": [
+    "Artifacts/V51SourceOrderContract.json missing",
+    "UiActions missing retry only the failed action",
+    "NUnit evidence publisher missing TestContext.AddTestAttachment",
+    "Build pipeline missing v51_release_gate.py"
+  ]
+}

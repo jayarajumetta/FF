@@ -1,0 +1,97 @@
+{
+  "version": "57.0",
+  "rule": "Remove only exact repeated state actions when no condition/if/else/business statement occurs between them. PauseAsync and NoteAsync are intentionally excluded.",
+  "removedCount": 18,
+  "removed": [
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/BAPBasicPolicySteps.cs",
+      "line": 39,
+      "action": "await page.EnterLastNameAsync(data.Resolve(\"{{runtime:LastName_0040}}\"));"
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/BAPBasicPolicySteps.cs",
+      "line": 40,
+      "action": "await page.EnterLastNameAsync(data.Resolve(\"{{runtime:LastName_0040}}\"));"
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/BAPBasicPolicySteps.cs",
+      "line": 73,
+      "action": "await page.EnterAuditTelephoneAsync(data.Resolve(\"{{runtime:AuditTelephone_0048}}\"));"
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/BAPBasicPolicySteps.cs",
+      "line": 74,
+      "action": "await page.EnterAuditTelephoneAsync(data.Resolve(\"{{runtime:AuditTelephone_0048}}\"));"
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/BAPBasicPolicySteps.cs",
+      "line": 81,
+      "action": "await page.EnterInspectionTelephoneAsync(data.Resolve(\"{{runtime:InspectionTelephone_0048}}\"));"
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/BAPBasicPolicySteps.cs",
+      "line": 82,
+      "action": "await page.EnterInspectionTelephoneAsync(data.Resolve(\"{{runtime:InspectionTelephone_0048}}\"));"
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/BAPSmokeTestSteps.cs",
+      "line": 118,
+      "action": "await page.ClickStartAsync();"
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/CPBasicPolicySteps.cs",
+      "line": 334,
+      "action": "await page.ClickStartAsync();"
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/CPPBasicPolicySteps.cs",
+      "line": 372,
+      "action": "await page.ClickStartAsync();"
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/CPPSmokeTestSteps.cs",
+      "line": 118,
+      "action": "await page.ClickStartAsync();"
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/CPSmokeTestSteps.cs",
+      "line": 118,
+      "action": "await page.ClickStartAsync();"
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/GLSmokeTestSteps.cs",
+      "line": 118,
+      "action": "await page.ClickStartAsync();"
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/IMSmokeTestSteps.cs",
+      "line": 118,
+      "action": "await page.ClickStartAsync();"
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/UMBSmokeTestSteps.cs",
+      "line": 118,
+      "action": "await page.ClickStartAsync();"
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/WCSmokeTestSteps.cs",
+      "line": 118,
+      "action": "await page.ClickStartAsync();"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/StepDefinitions/EQBOPBasicPolicySteps.cs",
+      "line": 664,
+      "action": "await page.EnterInsuredOccupancySqFtAsync(\"\");"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/StepDefinitions/EQSFPBasicPolicySteps.cs",
+      "line": 960,
+      "action": "await page.PressDescriptionOfInterestAsync(\"ENTER\");"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/StepDefinitions/EQSFPCountryEstatePolicySteps.cs",
+      "line": 814,
+      "action": "await page.PressDescriptionOfInterestAsync(\"ENTER\");"
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+# v54 RAW TOSCA SOURCE: PL_DC_TestCases_Production.tsu
+# Raw TestCase: Auto Rate Filings Common Policy NB [3a1cfb32-8be3-f64b-68d0-e62e12763325]
+# Raw TemplateInstance: TemplateInstance of Auto Rate Filings Common Policy NB [3a1cfb4e-91a0-b1a9-9c65-6dcae43a9465]
+# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
+
+@PL_DC @AUTO @rate_filing_new_business
+
+Feature: Auto Rate Filings Common Policy NB
+  As a Personal Lines Duck Creek policy processing user
+  I want to complete the Auto Rate Filings Common Policy NB workflow
+  So that the business transaction is executed with source-traceable data and verification
+
+  Background: Prepare Personal Lines Duck Creek for policy processing
+    Given I open a browser session
+  Scenario Outline: Auto Rate Filings Common Policy NB - <stateCode> <stateVariant>
+    Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
+    And I open the configured Personal Lines Duck Creek application
+    And I sign in to Personal Lines Duck Creek using configured credentials
+    When I start New Quote
+    And I select or create the policy client
+    And I enter account details
+    And I start the policy proposal
+    And I complete prequalification
+    And I capture the proposal number
+    And I complete driver information
+    And I open the configured policy application
+    And I approve Level 9B
+    And I complete driver information for txt quote policy search
+    And I complete driver information for existing client 1
+    And I review the driver information summary
+    And I review household-driver prefill results
+    And I complete vehicle Summary Automobile Rate Filing Common Auto
+    And I complete driver Assignment
+    And I complete multiple Driver Assignment
+    And I complete claims/Violations
+    And I complete editClaimsViolations
+    And I complete discount 1
+    And I complete coverages
+    And I complete auto AddlCov policy coveragess
+    And I complete auto AddlCov PIP
+    And I complete auto AddlCov Vehicle Coverages
+    And I complete auto AddlCov Next
+    And I complete pricing and verify the premium
+    And I complete underwriting Page Auto
+    And I complete additional Interest Page
+    And I configure direct-pay billing
+    And I complete the Level 9 underwriting bypass
+    And I open the configured policy application for openurl
+    And I approve the underwriting referral in Express
+    And I complete the Level 9 underwriting bypass for txt quote policy search
+    And I complete submission underwriting comments and review
+    And I open the configured policy application for 15 submission
+    And I complete the Express underwriting review
+    And I recall the quote in ExpertQuote
+    And I complete the submission checklist
+    And I transmit the policy
+    And I verify policy transmission confirmation
+
+    Examples:
+      | dataFile | stateCode | stateVariant | stateName | externalDataFile |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_al.json | AL | AL | Alabama | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_ar.json | AR | AR | Arkansas | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_az_ang.json | AZ | AZ ANG | Arizona | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_az_anp.json | AZ | AZ ANP | Arizona | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_ca.json | CA | CA | California | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_co.json | CO | CO | Colorado | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_ct.json | CT | CT | Connecticut | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_de.json | DE | DE | Delaware | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_ga.json | GA | GA | Georgia | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_ia.json | IA | IA | Iowa | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_id.json | ID | ID | Idaho | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_il.json | IL | IL | Illinois | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_in.json | IN | IN | Indiana | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_ks.json | KS | KS | Kansas | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_ky.json | KY | KY | Kentucky | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_md.json | MD | MD | Maryland | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_me.json | ME | ME | Maine | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_mn.json | MN | MN | Minnesota | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_mo.json | MO | MO | Missouri | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_ms.json | MS | MS | Mississippi | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_mt.json | MT | MT | Montana | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_nd.json | ND | ND | North Dakota | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_ne.json | NE | NE | Nebraska | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_nh.json | NH | NH | New Hampshire | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_nj.json | NJ | NJ | New Jersey | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_nm.json | NM | NM | New Mexico | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_nv.json | NV | NV | Nevada | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_ny_ffcic.json | NY | NY FFCIC | New York | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_ny_uffic.json | NY | NY UFFIC | New York | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_oh_ang.json | OH | OH ANG | Ohio | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_oh_anp.json | OH | OH ANP | Ohio | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_ok_ang.json | OK | OK ANG | Oklahoma | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_ok_anp.json | OK | OK ANP | Oklahoma | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_or.json | OR | OR | Oregon | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_pa.json | PA | PA | Pennsylvania | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_ri.json | RI | RI | Rhode Island | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_sc.json | SC | SC | South Carolina | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_sd_ang.json | SD | SD ANG | South Dakota | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_sd_anp.json | SD | SD ANP | South Dakota | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_tn_ang.json | TN | TN ANG | Tennessee | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_tn_anp.json | TN | TN ANP | Tennessee | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_tx.json | TX | TX | Texas | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_ut_ang.json | UT | UT ANG | Utah | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_ut_anp.json | UT | UT ANP | Utah | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_va.json | VA | VA | Virginia | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_vt.json | VT | VT | Vermont | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_wa.json | WA | WA | Washington | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_wi.json | WI | WI | Wisconsin | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_wv.json | WV | WV | West Virginia | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/183_auto_rate_filings_common_policy_nb_wy.json | WY | WY | Wyoming | TestData/ExternalDataOverrides.json |

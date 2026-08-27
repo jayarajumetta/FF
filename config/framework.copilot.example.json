@@ -1,0 +1,24 @@
+{
+  "selfHeal": {
+    "enabled": true,
+    "provider": "github-copilot",
+    "copilotExecutable": "copilot",
+    "includeScreenshot": true,
+    "locatorCatalogFile": "Artifacts/ToscaLocatorPropertyCatalog.v52.json"
+  },
+  "reporting": {
+    "attachEvidenceToTestResult": true,
+    "attachmentMode": "all",
+    "maxSingleAttachmentBytes": 536870912,
+    "maxAttachmentCount": 5000
+  },
+  "locatorFallback": {
+    "enabled": true,
+    "catalogDirectory": "Artifacts/LocatorFallbackCatalogs",
+    "maxCandidatesPerFailure": 40,
+    "minimumCandidateConfidence": 0.6,
+    "allowSourceXPath": true,
+    "preferPreviouslySuccessfulCandidate": true,
+    "logEveryAttempt": true
+  }
+}

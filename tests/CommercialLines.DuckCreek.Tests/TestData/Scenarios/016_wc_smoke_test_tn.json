@@ -1,0 +1,137 @@
+{
+  "_meta": {
+    "schemaVersion": "3.0-state-lineage",
+    "sourceFile": "016_WC_Smoke_Test_AL.feature",
+    "sourceSha256": "8c0b71179baabd2a868d9bf8636a5214300e0419c783ac40270055dfee49ceba",
+    "sourceRevision": "55452",
+    "application": "CL_DC",
+    "feature": "Commercial Lines Duck Creek - WC Smoke Test",
+    "representativeIteration": "TN",
+    "note": "Only the attached representative flow is generated.",
+    "sourceConcreteTestCase": "TN",
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
+  },
+  "dimensions": {
+    "state": "Tennessee",
+    "stateCode": "TN",
+    "product": "Workers Compensation",
+    "productCode": "WC",
+    "transaction": "Smoke Test",
+    "effectiveDateMode": "Current",
+    "stateVariant": "TN"
+  },
+  "values": {
+    "application_url": "https://connect.anico.com/Pages/default.aspx",
+    "loop_login": "0",
+    "url": "https://clasq.anico.com/Express/",
+    "application_url_2": "https://clasq.anico.com/Express/",
+    "loop_login_2": "1",
+    "effective_date_43": "12-01-2025",
+    "product_45": "Carrier  WorkersCompensation  Pages   US   (9.8.0.0)",
+    "nbeffdate": "12-01-2025",
+    "quick_quote_51": "False",
+    "insured_type_53": "Business",
+    "business_name_56": "AL WC Testing, Inc.",
+    "entity_type_57": "Corporation",
+    "zipcode_60": "35661",
+    "address1_61": "1918 Avalon Ave",
+    "years_in_business_63": "6",
+    "name_of_audit_contact_65": "Auditor Doe",
+    "name_of_inspection_contact_67": "Inspector Smith",
+    "insured_e_mail_address_69": "insured@emailaddress.com",
+    "website_address_70": "https://www.InsuredSite.com",
+    "state": "TN",
+    "product_lob": "WC",
+    "server": "svqw-clas21:8080",
+    "bill_type_86": "Direct",
+    "wait_bill_type_value_88": "Direct",
+    "pay_plan_89": "4",
+    "wait_pay_plan_value_91": "4",
+    "easy_pay_93": "No",
+    "individualtype_96": "Business Owner",
+    "dateofbirth_101": "01-01-1985",
+    "address1_102": "344 Rt 9w",
+    "city_103": "Glenmont",
+    "state_104": "New York",
+    "zipcode_105": "12077",
+    "gender_106": "Male",
+    "enter_ssn_114": "736849971",
+    "title_132": "*",
+    "javascript_133": "return 1+2",
+    "expected_result_value_134": "3",
+    "effectivedate_138": "12-01-2025",
+    "primaryratingstate_140": "Alabama",
+    "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_141": "No",
+    "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_145": "No",
+    "has_the_applicant_been_in_business_for_at_least_3_years_with_continuous_workers_compensation_coverage_150": "Yes",
+    "statecode": "TN",
+    "statename": "Tennessee",
+    "state_name": "Tennessee",
+    "state_variant": "TN"
+  },
+  "random": {
+    "PrimaryPhone_0082": {
+      "pattern": "[0-9]{10}",
+      "sourceSentence": "I enter a RANDOM value matching \"10 random digits/characters from source expression {RND[10]}{TAB}{TAB}{TAB}\" in \"Primary Phone\"",
+      "sourceStep": "0082"
+    },
+    "FEIN_0085": {
+      "pattern": "486[0-9]{6}",
+      "sourceSentence": "I enter a RANDOM value matching \"6 random digits/characters from source expression 486{RND[6]}{TAB}\" in \"FEIN\"",
+      "sourceStep": "0085"
+    },
+    "AuditTelephone_0086": {
+      "pattern": "[0-9]{10}",
+      "sourceSentence": "if field condition \"'Product (LOB)' != \\\"UMB\\\"\" is satisfied, I enter a RANDOM value matching \"10 random digits/characters from source expression {RND[10]}{TAB}\" in \"Audit Telephone #\"",
+      "sourceStep": "0086"
+    },
+    "InspectionTelephone_0086": {
+      "pattern": "[0-9]{10}",
+      "sourceSentence": "I enter a RANDOM value matching \"10 random digits/characters from source expression {RND[10]}{TAB}\" in \"Inspection Telephone #\"",
+      "sourceStep": "0086"
+    },
+    "MiddleName_0098": {
+      "pattern": "^[a-z]{1}$",
+      "sourceSentence": "I enter a RANDOM value matching \"^[a-z]{1}$\" in \"MiddleName\"",
+      "sourceStep": "0098"
+    },
+    "LastName_0098": {
+      "pattern": "^[a-z]{7}$",
+      "sourceSentence": "I enter a RANDOM value matching \"^[a-z]{7}$\" in \"LastName\"",
+      "sourceStep": "0098"
+    },
+    "FirstName_0098": {
+      "pattern": "^[a-z]{4}$",
+      "sourceSentence": "I enter a RANDOM value matching \"^[a-z]{4}$\" in \"FirstName\"",
+      "sourceStep": "0098"
+    }
+  },
+  "application": {
+    "url": "https://clasq.anico.com/Express/",
+    "username": "SYNTHETIC_REPLACE_ME",
+    "password": "SYNTHETIC_REPLACE_ME",
+    "_passwordNote": "SYNTHETIC_REPLACE_ME"
+  },
+  "external": {},
+  "_canonical": {
+    "mappedBaseValues": 0,
+    "sourceValues": {},
+    "fields": []
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "WC | Smoke Test",
+    "testCaseGuid": "3a161f5c-3d24-fe0a-93aa-e4ede5fe1b61",
+    "templateInstanceName": "TemplateInstance of WC | Smoke Test",
+    "templateInstanceGuid": "3a161f74-113c-29a9-50fe-0526adda9495",
+    "concreteTestCaseName": "TN",
+    "concreteTestCaseGuid": "3a161f74-2196-cc94-3d28-9a29e375846f",
+    "derivedFrom": [
+      "3a161f61-158f-935c-50e0-6833ab64017e"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
+  }
+}

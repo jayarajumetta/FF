@@ -1,0 +1,114 @@
+{
+  "_meta": {
+    "schemaVersion": "3.0-state-lineage",
+    "sourceFile": "018_UMB_Smoke_Test_AL.feature",
+    "sourceSha256": "125e63a82bbb325046bf84cc476f1e5f1d3d270a025b0c12f46aaad2d70e08f1",
+    "sourceRevision": "55452",
+    "application": "CL_DC",
+    "feature": "Commercial Lines Duck Creek - UMB Smoke Test",
+    "representativeIteration": "CO",
+    "note": "Only the attached representative flow is generated.",
+    "sourceConcreteTestCase": "CO",
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
+  },
+  "dimensions": {
+    "state": "Colorado",
+    "stateCode": "CO",
+    "product": "Commercial Umbrella",
+    "productCode": "UMB",
+    "transaction": "Smoke Test",
+    "effectiveDateMode": "Current",
+    "stateVariant": "CO"
+  },
+  "values": {
+    "application_url": "https://connect.anico.com/Pages/default.aspx",
+    "loop_login": "0",
+    "url": "https://clasq.anico.com/Express/",
+    "application_url_2": "https://clasq.anico.com/Express/",
+    "loop_login_2": "1",
+    "effective_date_43": "12-01-2025",
+    "product_45": "Carrier  CommercialUmbrella  Pages   US   (9.2.0.0)",
+    "nbeffdate": "12-01-2025",
+    "quick_quote_50": "False",
+    "insured_type_52": "Individual/Person",
+    "first_name_56": "John",
+    "middle_name_57": "AL",
+    "gender_60": "Male",
+    "entity_type_62": "Individual/Sole Proprietor",
+    "address1_64": "1918 Avalon Ave",
+    "zipcode_65": "35661",
+    "wait_social_security_innertext_79": "XXX-XX-*",
+    "name_of_inspection_contact_82": "Inspector Smith",
+    "insured_e_mail_address_84": "insured@emailaddress.com",
+    "website_address_85": "https://www.InsuredSite.com",
+    "state": "CO",
+    "product_lob": "UMB",
+    "server": "svqw-clas21:8080",
+    "title_92": "*",
+    "javascript_93": "return 1+2",
+    "expected_result_value_94": "3",
+    "effectivedate_98": "12-01-2025",
+    "years_in_business_99": "6",
+    "primaryratingstate_101": "Alabama",
+    "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_105": "No",
+    "primaryratingstate_107": "(select)",
+    "primaryratingstate_108": "Alabama",
+    "primaryratingstate_110": "(select)",
+    "primaryratingstate_111": "Alabama",
+    "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_115": "No",
+    "statecode": "CO",
+    "statename": "Colorado",
+    "state_name": "Colorado",
+    "state_variant": "CO"
+  },
+  "random": {
+    "LastName_0067": {
+      "pattern": "^[a-z]{4}$",
+      "sourceSentence": "I enter a RANDOM value matching \"^[a-z]{4}$\" in \"Last Name\"",
+      "sourceStep": "0067"
+    },
+    "PrimaryPhone_0068": {
+      "pattern": "[0-9]{10}",
+      "sourceSentence": "I enter a RANDOM value matching \"10 random digits/characters from source expression {RND[10]}{TAB}{TAB}{TAB}{TAB}\" in \"Primary Phone\"",
+      "sourceStep": "0068"
+    },
+    "InsuredSSN": {
+      "pattern": "125[0-9]{6}",
+      "sourceSentence": "I enter a RANDOM value matching \"6 random digits/characters from source expression 125{RND[6]}{TAB}\" in \"Enter SSN\"",
+      "sourceStep": "0071"
+    },
+    "InspectionTelephone_0075": {
+      "pattern": "[0-9]{10}",
+      "sourceSentence": "I enter a RANDOM value matching \"10 random digits/characters from source expression {RND[10]}{TAB}\" in \"Inspection Telephone #\"",
+      "sourceStep": "0075"
+    }
+  },
+  "application": {
+    "url": "https://clasq.anico.com/Express/",
+    "username": "SYNTHETIC_REPLACE_ME",
+    "password": "SYNTHETIC_REPLACE_ME",
+    "_passwordNote": "SYNTHETIC_REPLACE_ME"
+  },
+  "external": {},
+  "_canonical": {
+    "mappedBaseValues": 0,
+    "sourceValues": {},
+    "fields": []
+  },
+  "_rawTosca": {
+    "application": "CLDC",
+    "sourceFile": "CL-DC TestCases Staging Area.tsu",
+    "testCaseName": "UMB | Smoke Test",
+    "testCaseGuid": "3a1633f1-3427-07b7-fbda-d657d3e017d9",
+    "templateInstanceName": "TemplateInstance of UMB | Smoke Test",
+    "templateInstanceGuid": "3a1633fd-780d-fa4f-2e67-66f22b7e5f54",
+    "concreteTestCaseName": "CO",
+    "concreteTestCaseGuid": "3a1633fd-9286-f159-7ba1-329ad89d5f6c",
+    "derivedFrom": [
+      "3a1633f5-d862-1126-d66e-0e2e06a60de6"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
+  }
+}

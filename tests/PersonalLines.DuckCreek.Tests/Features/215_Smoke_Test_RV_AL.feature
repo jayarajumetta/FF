@@ -1,0 +1,74 @@
+# v54 RAW TOSCA SOURCE: PL_DC_TestCases_Production.tsu
+# Raw TestCase: Smoke Test RV [3a19e1e5-1a5f-8f96-ac2f-d6315621bf61]
+# Raw TemplateInstance: TemplateInstance of Smoke Test RV [3a19e1e5-1a5f-e885-d120-d00d7842ac2f]
+# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
+
+@PL_DC @smoke_test
+
+Feature: Smoke Test RV
+  As a Personal Lines Duck Creek policy processing user
+  I want to complete the Smoke Test RV workflow
+  So that the business transaction is executed with source-traceable data and verification
+
+  Background: Prepare Personal Lines Duck Creek for policy processing
+    Given I open a browser session
+  Scenario Outline: Smoke Test RV - <stateCode> <stateVariant>
+    Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
+    And I open the configured Personal Lines Duck Creek application
+    And I sign in to Personal Lines Duck Creek using configured credentials
+    When I start New Quote
+    And I select or create the policy client
+    And I enter account details
+    And I start the policy proposal
+    And I capture the proposal number
+    And I complete tabs
+
+    Examples:
+      | dataFile | stateCode | stateVariant | stateName | externalDataFile |
+      | TestData/Scenarios/215_smoke_test_rv_al.json | AL | AL | Alabama | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_ar.json | AR | AR | Arkansas | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_az_ang.json | AZ | AZ ANG | Arizona | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_az_anp.json | AZ | AZ ANP | Arizona | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_ca.json | CA | CA | California | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_co.json | CO | CO | Colorado | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_ct.json | CT | CT | Connecticut | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_de.json | DE | DE | Delaware | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_ia.json | IA | IA | Iowa | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_id.json | ID | ID | Idaho | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_il.json | IL | IL | Illinois | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_in.json | IN | IN | Indiana | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_ks.json | KS | KS | Kansas | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_ky.json | KY | KY | Kentucky | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_me.json | ME | ME | Maine | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_md.json | MD | MD | Maryland | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_mn.json | MN | MN | Minnesota | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_mo.json | MO | MO | Missouri | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_ms.json | MS | MS | Mississippi | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_mt.json | MT | MT | Montana | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_nd.json | ND | ND | North Dakota | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_ne.json | NE | NE | Nebraska | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_nh.json | NH | NH | New Hampshire | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_nj.json | NJ | NJ | New Jersey | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_nm.json | NM | NM | New Mexico | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_ny_ffcic.json | NY | NY FFCIC | New York | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_ny_uffic.json | NY | NY UFFIC | New York | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_oh_ang.json | OH | OH ANG | Ohio | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_oh_anp.json | OH | OH ANP | Ohio | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_ok_ang.json | OK | OK ANG | Oklahoma | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_ok_anp.json | OK | OK ANP | Oklahoma | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_or.json | OR | OR | Oregon | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_pa.json | PA | PA | Pennsylvania | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_ri.json | RI | RI | Rhode Island | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_sc.json | SC | SC | South Carolina | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_sd_ang.json | SD | SD ANG | South Dakota | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_sd_anp.json | SD | SD ANP | South Dakota | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_tn_ang.json | TN | TN ANG | Tennessee | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_tn_anp.json | TN | TN ANP | Tennessee | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_tx.json | TX | TX | Texas | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_ut_ang.json | UT | UT ANG | Utah | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_ut_anp.json | UT | UT ANP | Utah | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_va.json | VA | VA | Virginia | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_vt.json | VT | VT | Vermont | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_wi.json | WI | WI | Wisconsin | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_wv.json | WV | WV | West Virginia | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/215_smoke_test_rv_wy.json | WY | WY | Wyoming | TestData/ExternalDataOverrides.json |
