@@ -1,0 +1,135 @@
+{
+  "release": "v57",
+  "purpose": "Exact v56 feature-file baseline. v57 must not alter Gherkin source/order while hardening runtime contracts.",
+  "files": {
+    "tests/CommercialLines.DuckCreek.Tests/Features/001_BAP_Basic_Policy_AL.feature": {
+      "v56Sha256": "a1fc11b49b14b3b5f5445dac5c23da790b7f129f78ea3111b2b182c51511bdad",
+      "bytes": 7168
+    },
+    "tests/CommercialLines.DuckCreek.Tests/Features/002_BAP_Expanded_AL.feature": {
+      "v56Sha256": "3ad2ad888fb0c6ddc2e4e9300bada2fd9b8a26f62735e37ee2dcfeb580ded098",
+      "bytes": 7235
+    },
+    "tests/CommercialLines.DuckCreek.Tests/Features/003_CPP_Basic_Policy_AZ.feature": {
+      "v56Sha256": "fb119660be041cd4be73daeb75fada03e7511947e990461778420629b562bca3",
+      "bytes": 6545
+    },
+    "tests/CommercialLines.DuckCreek.Tests/Features/004_CP_Basic_Policy_AZ.feature": {
+      "v56Sha256": "02f31b47b243137cab6888c11115bab3b3265e94dec1431690d78f8db6b14c08",
+      "bytes": 4006
+    },
+    "tests/CommercialLines.DuckCreek.Tests/Features/005_GL_Basic_Policy_AZ.feature": {
+      "v56Sha256": "15942959ddb1f03acec6ab3e256652553cd4790df861e8dd9b0681f84ecfaa03",
+      "bytes": 4261
+    },
+    "tests/CommercialLines.DuckCreek.Tests/Features/006_GL_OCP_Policy_AZ.feature": {
+      "v56Sha256": "2ef9bfbd18f9a2047d7c2285d22699562d702c68bb2b4580f5e5a75a2bf8df91",
+      "bytes": 3698
+    },
+    "tests/CommercialLines.DuckCreek.Tests/Features/007_IM_Basic_Policy_AZ.feature": {
+      "v56Sha256": "4e764731343e04d70771fbe4e9f477e0fc4b2e8a81a3f3f1559de9df166d7d80",
+      "bytes": 4301
+    },
+    "tests/CommercialLines.DuckCreek.Tests/Features/008_UMB_Basic_Policy_AL.feature": {
+      "v56Sha256": "6c7ab70ff33933957c3a435bc87279723c7666be797c14c33e5799ba4d2fccf7",
+      "bytes": 8029
+    },
+    "tests/CommercialLines.DuckCreek.Tests/Features/009_UMB_Expanded_AL.feature": {
+      "v56Sha256": "115aa10685d7356b1daa243d7cca17d87b48284b12f55d64f4e7059e834e778b",
+      "bytes": 8336
+    },
+    "tests/CommercialLines.DuckCreek.Tests/Features/010_WC_Basic_Policy_AL.feature": {
+      "v56Sha256": "1009237bb0fd32182a87f1c6ac951a474d3a7168452b7f93740017d8d6952036",
+      "bytes": 6330
+    },
+    "tests/CommercialLines.DuckCreek.Tests/Features/011_WC_Expanded_AL.feature": {
+      "v56Sha256": "c2819e3dc3ddf9147e933961ae9c3cf5aae009332ed6d05f986c1763772f9243",
+      "bytes": 6314
+    },
+    "tests/CommercialLines.DuckCreek.Tests/Features/012_BAP_Smoke_Test_AL.feature": {
+      "v56Sha256": "a13503d96c634ea8373c659f05b0754d2e9ca03f3284e815222744205aaad5c7",
+      "bytes": 6451
+    },
+    "tests/CommercialLines.DuckCreek.Tests/Features/013_CP_Smoke_Test_AZ.feature": {
+      "v56Sha256": "e84f2898e098382444ace2c9b4618c9a25e15c872682993d0bba3c088c6fa4c5",
+      "bytes": 3126
+    },
+    "tests/CommercialLines.DuckCreek.Tests/Features/014_GL_Smoke_Test_AZ.feature": {
+      "v56Sha256": "7bda4231b0c4a67fa59f433f6ec6dc6d19b7fe2fedc176c86ff36ac34a33881b",
+      "bytes": 3126
+    },
+    "tests/CommercialLines.DuckCreek.Tests/Features/015_IM_Smoke_Test_AZ.feature": {
+      "v56Sha256": "3a9aa13894e2eedf162eee146af0afad4094012b7de9e0057f5f91414e81bf53",
+      "bytes": 3126
+    },
+    "tests/CommercialLines.DuckCreek.Tests/Features/016_WC_Smoke_Test_AL.feature": {
+      "v56Sha256": "58e808117a39d4fbde68998d1845833d4393415ee7af712b8dadee16e1a29b6c",
+      "bytes": 5425
+    },
+    "tests/CommercialLines.DuckCreek.Tests/Features/017_CPP_Smoke_Test_AZ.feature": {
+      "v56Sha256": "b787d337fabad630cde2c61096c6e3889aa71d6c2ff4c0a3733bdd3e3d11f646",
+      "bytes": 3222
+    },
+    "tests/CommercialLines.DuckCreek.Tests/Features/018_UMB_Smoke_Test_AL.feature": {
+      "v56Sha256": "52e721ca44aa92ebc9958869c6318b823c875d06d58580d4e04b6775b13293e8",
+      "bytes": 6315
+    },
+    "tests/CommercialLines.ExpertQuote.Tests/Features/02_EQ_BOP_Basic_Policy_AL.feature": {
+      "v56Sha256": "a4de59a8d5407aa575b0dffcf065e0901e88940fca5c22976da5db8007aa9c02",
+      "bytes": 11281
+    },
+    "tests/CommercialLines.ExpertQuote.Tests/Features/03_EQ_BOP_Smoke_Test_MO.feature": {
+      "v56Sha256": "7b19c1d9d15c45bed72458e69c1c4967f2f08e52e1f106162a3147c333867c60",
+      "bytes": 1621
+    },
+    "tests/CommercialLines.ExpertQuote.Tests/Features/04_EQ_SFP_Smoke_Test_MN.feature": {
+      "v56Sha256": "299c60b4c7e5d058b1d6995702167f75935115bc48e00552cd709fd95f6dc3f5",
+      "bytes": 2005
+    },
+    "tests/CommercialLines.ExpertQuote.Tests/Features/05_EQ_SFP_Basic_Policy_AL.feature": {
+      "v56Sha256": "8c33e89bd9861c63734789c3ea5930530b5659f02ce18e8ebb9461d8c554a4f0",
+      "bytes": 7540
+    },
+    "tests/CommercialLines.ExpertQuote.Tests/Features/06_EQ_SFP_Country_Estate_Policy_AL.feature": {
+      "v56Sha256": "5905515a76aa3dd9efffed8c48add3a0f8d7b33bc959b4719f551fd5cf9c6e79",
+      "bytes": 7541
+    },
+    "tests/PersonalLines.DuckCreek.Tests/Features/181_Auto_Rate_Filings_Policy_1_NB_AL.feature": {
+      "v56Sha256": "4ac0ac40edc016e9014d1fdc00b9b2acb91b7d6ac4db4c16edc08b126ebea5bf",
+      "bytes": 9599
+    },
+    "tests/PersonalLines.DuckCreek.Tests/Features/182_Auto_Rate_Filings_Policy_3_NB_Prior_Eff_Date_AL.feature": {
+      "v56Sha256": "0b2e8a4742dd6fa1b56caa5e716a737fa5b633ed283f5e9b91d7a8d2a972639e",
+      "bytes": 10392
+    },
+    "tests/PersonalLines.DuckCreek.Tests/Features/183_Auto_Rate_Filings_Common_Policy_NB_AL.feature": {
+      "v56Sha256": "c9a26e909730a3dd7ce5db77eb914103e8107383b11ab2c4991da90f3fb1de53",
+      "bytes": 9840
+    },
+    "tests/PersonalLines.DuckCreek.Tests/Features/184_Auto_Rate_Filings_Common_Policy_NB_Prior_Eff_Date_AL.feature": {
+      "v56Sha256": "5b730bd32aeee0d92bf5d85ed51efee30aa4afda5fa9a9783bfb5d337af299c7",
+      "bytes": 10679
+    },
+    "tests/PersonalLines.DuckCreek.Tests/Features/185_Cycle_Rate_Filings_Policy_1_NB_1_AL.feature": {
+      "v56Sha256": "410bab7a6e857d745c576134f06be9aacee55bd62b205a27c4da78eb42cae156",
+      "bytes": 9764
+    },
+    "tests/PersonalLines.DuckCreek.Tests/Features/186_Cycle_Rate_Filings_Policy_3_NB_Prior_Eff_Date_AL.feature": {
+      "v56Sha256": "87a42994d8f092d3fc9389b90a6192d8d647b3a2d4b7a9538de7e9c94d488bcd",
+      "bytes": 10049
+    },
+    "tests/PersonalLines.DuckCreek.Tests/Features/211_Smoke_Test_Auto_AL.feature": {
+      "v56Sha256": "22498f607ee160412a000ac3512111856e107fde7e446d652dd6bb2905d7ad99",
+      "bytes": 6854
+    },
+    "tests/PersonalLines.DuckCreek.Tests/Features/212_Smoke_Test_Cycle_AL.feature": {
+      "v56Sha256": "42c68d8d996bd30e475b607384d513c6daebf4d7f43d0c73f98d838d55ac2cab",
+      "bytes": 6907
+    },
+    "tests/PersonalLines.DuckCreek.Tests/Features/215_Smoke_Test_RV_AL.feature": {
+      "v56Sha256": "a8d3f12596f8b574d0d8ff52a5330b80c761c4f8d23783f49bb87992e2f07ea8",
+      "bytes": 6744
+    }
+  },
+  "featureFiles": 32
+}

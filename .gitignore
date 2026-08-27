@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+**/Logs/*
+**/TestResults/
+.env
+.DS_Store
+ .vs/*
+  .vs/

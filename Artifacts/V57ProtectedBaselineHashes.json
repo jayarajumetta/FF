@@ -1,0 +1,10 @@
+{
+  "version": "57.0",
+  "purpose": "Files intentionally protected from v57 application-specific locator promotion.",
+  "files": {
+    "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/LoginLocators.cs": {
+      "v56Sha256": "3288acf36310d38993ed7a29bdfda2dd68a3274c14cf1f3b2f1aaf6e04480fd4",
+      "bytes": 3412
+    }
+  }
+}

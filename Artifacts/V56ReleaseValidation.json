@@ -1,0 +1,32 @@
+{
+  "release": "v56-frame-aware-raw-tosca",
+  "status": "PASS",
+  "rawSourceTruth": "RAW_TOSCA_ONLY",
+  "features": 32,
+  "examples": 1074,
+  "rawConcreteExamplesMatched": 1074,
+  "frameScopedRawControls": {
+    "CommercialLines.ExpertQuote": 32,
+    "CommercialLines.DuckCreek": 499
+  },
+  "frameAwareFallbackCandidates": {
+    "CommercialLines.DuckCreek": 3346,
+    "CommercialLines.ExpertQuote": 169,
+    "PersonalLines.DuckCreek": 0
+  },
+  "liveTabSteering": 0,
+  "applicationFallbackIsolation": true,
+  "waits": {
+    "pageReadyTimeoutMs": 15000,
+    "elementReadyTimeoutMs": 15000,
+    "verifyTimeoutMs": 15000,
+    "fallbackCandidateTimeoutMs": 2500,
+    "pollIntervalMs": 250,
+    "waitForDomContentLoadedBeforeActions": true
+  },
+  "csharpFiles": 221,
+  "errors": [],
+  "warnings": [],
+  "dotnetBuildPerformed": false,
+  "dotnetBuildReason": "dotnet/csc/msbuild unavailable in generation environment; Azure/Visual Studio remains compiler/runtime gate."
+}

@@ -1,0 +1,75 @@
+{
+  "browser": {
+    "channel": "msedge",
+    "fallbackBrowser": "chromium",
+    "headless": false,
+    "ignoreHttpsErrors": true,
+    "viewportWidth": 1440,
+    "viewportHeight": 900,
+    "actionTimeoutMs": 15000,
+    "navigationTimeoutMs": 30000,
+    "trace": true,
+    "video": true,
+    "har": false,
+    "screenshotOnFailure": true,
+    "screenshotEachStep": false,
+    "screenshotAtScenarioEnd": true
+  },
+  "selfHeal": {
+    "enabled": true,
+    "provider": "openai-compatible",
+    "endpoint": "https://api.openai.com/v1/chat/completions",
+    "model": "gpt-4.1-mini",
+    "apiKeyEnvironmentVariable": "TEST_LLM_API_KEY",
+    "includeScreenshot": true,
+    "maxPreviousSteps": 3,
+    "domMaxChars": 50000,
+    "candidateLimit": 400,
+    "requestTimeoutSeconds": 45,
+    "minimumConfidence": 0.7,
+    "cacheFile": "Artifacts/SelfHealing/locator-cache.json",
+    "auditFile": "Artifacts/SelfHealing/healing-audit.jsonl",
+    "cacheContextLimit": 20,
+    "copilotExecutable": "copilot",
+    "domEvidenceDirectory": "Artifacts/DOM",
+    "captureDomAfterActions": false,
+    "locatorCatalogFile": "Artifacts/ToscaLocatorPropertyCatalog.v54.raw.json"
+  },
+  "reporting": {
+    "artifactRoot": "Artifacts",
+    "htmlReport": true,
+    "includeResolvedData": true,
+    "includeConsoleErrors": false,
+    "includeNetworkErrors": false,
+    "createEvidenceBundle": true,
+    "attachEvidenceToTestResult": true,
+    "attachmentMode": "all",
+    "maxSingleAttachmentBytes": 536870912,
+    "maxAttachmentCount": 5000
+  },
+  "execution": {
+    "strictUnknownConditions": true,
+    "externalDataFile": "TestData/ExternalDataOverrides.json",
+    "deferVerificationFailures": true
+  },
+  "locatorFallback": {
+    "enabled": true,
+    "catalogDirectory": "Artifacts/LocatorFallbackCatalogs",
+    "maxCandidatesPerFailure": 40,
+    "minimumCandidateConfidence": 0.6,
+    "allowSourceXPath": true,
+    "preferPreviouslySuccessfulCandidate": true,
+    "logEveryAttempt": true
+  },
+  "waits": {
+    "pageReadyTimeoutMs": 15000,
+    "elementReadyTimeoutMs": 15000,
+    "verifyTimeoutMs": 15000,
+    "fallbackCandidateTimeoutMs": 2500,
+    "pollIntervalMs": 250,
+    "waitForDomContentLoadedBeforeActions": true,
+    "frameProbeTimeoutMs": 600,
+    "dropdownOptionTimeoutMs": 1200,
+    "dropdownPollIntervalMs": 75
+  }
+}
