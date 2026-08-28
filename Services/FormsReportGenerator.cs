@@ -190,7 +190,11 @@ namespace PnCTestAutomation.Services
             }
 
             Directory.CreateDirectory(outputDirectory);
-            var mdPath = Path.GetFullPath(Path.Combine(outputDirectory, $"FormsValidationSummary_{summary.LOB}_{summary.State}.md"));
+            // Keep stored baseline data out of the filesystem path. The descriptive
+            // LOB/state values remain in the Markdown content and pipeline summary.
+            var mdPath = Path.GetFullPath(Path.Combine(
+                outputDirectory,
+                $"FormsValidationSummary_{Guid.NewGuid():N}.md"));
             File.WriteAllText(mdPath, md.ToString(), Encoding.UTF8);
             // ##vso[task.uploadsummary] is emitted once per shard by the pipeline collect step, not per state.
         }
@@ -249,7 +253,9 @@ namespace PnCTestAutomation.Services
 </TestRun>";
 
             Directory.CreateDirectory(outputDirectory);
-            var trxPath = Path.GetFullPath(Path.Combine(outputDirectory, $"FormsValidation_{summary.LOB}_{summary.State}.trx"));
+            // Keep stored baseline data out of the filesystem path. The descriptive
+            // LOB/state values remain in the TRX content for Azure DevOps reporting.
+            var trxPath = Path.GetFullPath(Path.Combine(outputDirectory, $"FormsValidation_{testId}.trx"));
             File.WriteAllText(trxPath, trx, Encoding.UTF8);
             Console.WriteLine($"[FormsValidation] TRX written: {trxPath}");
         }
