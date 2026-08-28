@@ -294,7 +294,6 @@ stages:
         & dotnet test $testDll `
             --filter "$filter" `
             --settings "$(Build.SourcesDirectory)/ci.runsettings" `
-            --blame-hang --blame-hang-timeout 5min `
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Results.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
 
@@ -355,7 +354,6 @@ stages:
         & dotnet test $testDll `
             --filter "$nameFilter" `
             --settings "$(Build.SourcesDirectory)/ci.runsettings" `
-            --blame-hang --blame-hang-timeout 5min `
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
 
@@ -599,7 +597,6 @@ stages:
         & dotnet test $testDll `
             --filter "$filter" `
             --settings "$(Build.SourcesDirectory)/ci.runsettings" `
-            --blame-hang --blame-hang-timeout 5min `
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Results.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
 
@@ -654,7 +651,6 @@ stages:
         & dotnet test $testDll `
             --filter "$nameFilter" `
           --settings "$(Build.SourcesDirectory)/ci.runsettings" `
-          --blame-hang --blame-hang-timeout 5min `
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
 
