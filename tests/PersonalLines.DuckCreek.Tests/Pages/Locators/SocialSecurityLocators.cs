@@ -11,14 +11,12 @@ public sealed class SocialSecurityLocators
     public ILocator DriverInformation => _page.GetByLabel("Driver Information", new() { Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator MATFORMFIELD => _page.GetByText("MAT-FORM-FIELD", new() { Exact = true });
 
     // Source modules: EQ || Prefil Household Drivers | confidence=Medium score=113
     public ILocator NeverResidedInTheHouseholdAndDoesnTRegularlyUseOrHaveAccessToPolicyVehicleS => _page.GetByRole(AriaRole.Listitem, new() { Name = "Never resided in the household and doesn't regularly use or have access to policy vehicle(s)", Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator PrefilledDrivers => _page.GetByText("PrefilledDrivers", new() { Exact = true });
 
     // Source modules: EQ || Prefil Household Drivers | confidence=Medium score=113
@@ -29,7 +27,6 @@ public sealed class SocialSecurityLocators
     public ILocator State => _page.Locator("[id=\"proposal.ratingState\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator UnselectedClientSuggestions => _page.GetByText("Unselected Client Suggestions", new() { Exact = true });
 
 }

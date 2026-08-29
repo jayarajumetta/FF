@@ -1,0 +1,24 @@
+{
+  "version": "v61",
+  "status": "PASS",
+  "checks": {
+    "quality_gate_exit": 0,
+    "source_flow_gate_exit": 0,
+    "fallback_locator_directories": 0,
+    "fallback_catalog_directory_exists": false,
+    "fallback_core_refs": 0,
+    "self_heal_refs": 0,
+    "cldc_regex_login_refs": 0,
+    "hardcoded_quote_description_calls": 0,
+    "frame_hint_controls": 114,
+    "build_pipeline_exists": true,
+    "release_pipeline_exists": true,
+    "email_script_exists": true,
+    "smoke_data_files": 8
+  },
+  "quality_gate_output": "{\n  \"errors\": [],\n  \"featureCount\": 32\n}",
+  "source_flow_output": "v61 source-flow gate: smoke files=7 errors=0",
+  "limitations": [
+    ".NET SDK is not installed in this packaging environment; dotnet restore/build and live Duck Creek execution were not run here. ADO pipeline syntax and SMTP execution require the target Azure DevOps project/agent/secure variables."
+  ]
+}

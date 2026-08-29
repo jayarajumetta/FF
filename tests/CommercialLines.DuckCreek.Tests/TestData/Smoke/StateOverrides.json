@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "1.0",
+  "sourceTruth": "RAW_TOSCA_CONSOLIDATED",
+  "description": "Only non-state value exceptions from the modal CLDC smoke profile are stored here. State identity comes from the Scenario Outline.",
+  "overrides": {
+    "BAP": {
+      "AL": {
+        "values": {
+          "primaryratingstate_109": "Alabama",
+          "primaryratingstate_112": "Alabama"
+        }
+      }
+    },
+    "GL": {
+      "AZ": {
+        "values": {
+          "primaryratingstate_110": "Arizona"
+        }
+      }
+    },
+    "WC": {
+      "AL": {
+        "values": {
+          "individualtype_96": "True",
+          "address1_102": "1918 Avalon Ave",
+          "state_104": "AL",
+          "zipcode_105": "35661"
+        }
+      }
+    },
+    "UMB": {
+      "AL": {
+        "values": {
+          "primaryratingstate_107": "Alabama",
+          "primaryratingstate_110": "Alabama"
+        }
+      }
+    }
+  }
+}

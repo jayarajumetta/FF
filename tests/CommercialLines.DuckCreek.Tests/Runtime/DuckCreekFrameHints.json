@@ -1,0 +1,686 @@
+{
+  "ClientSearch|AdditionalInsuredIndividualAddress": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|AddClient": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|ClientSearch": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|Complete": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|AddAssociatedClientDateOfBirth": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|AdditionalInsuredIndividualDateOfBirth": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|AddAssociatedClientDetail": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|AdditionalInsuredIndividualDetail": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|NamedInsuredIndividualEnterSSN": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|AddAssociatedClientEnterSSN": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|FirstName": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|Gender": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|OK": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|IndividualType": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|InsuredType": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|LastName": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|MiddleName": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|OrderSSN": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|Verify": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|NamedInsuredZipCode": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|AdditionalInsuredIndividualZipCode": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "ClientSearch|FEIN": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Coverages|PolicyCovgAccountsReceivableOK": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Coverages|Detail": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Discounts|BAPSpecificFieldsOK": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Discounts|NAICSCodeSearchValue": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Forms|EffectiveDate": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Forms|Value": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "LossHistory|LossAddress": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "LossHistory|FirstName": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "LossHistory|InsuredType": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "LossHistory|LastName": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "LossHistory|Type": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "LossHistory|ZipCode": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|OK": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|AddDriverName": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|AddOptionA": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|CG2935AddLInsuredStateOrPoliticalPermitsAddress": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|GLOCPRiskAddress": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|AssignLocation": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|BusinessInterruptionDescriptionOfScheduledProperty": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|OptionA": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|BusinessInterruptionLimitOfInsurance": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|CA9940ContractProvisions": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|CA9940Make": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|CA9940Model": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|CA9940VIN": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|CA9940Year": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|CA9948ClassesOfCommoditiesTransported": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|City": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|ClickAddExcludedDriver": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|AddClient": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|DateOfBirth": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|DateOfHire": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|UnderwritingInfoOtherInsuranceHistoryDetail": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|LocationDetail": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|DoYouHaveACDLLicense": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|DriversLicenseNumber": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|CommercialAutoEffectiveDate": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|BusinessownersEffectiveDate": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|EndorsementHeading": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|StateDetailsDriveOtherCarFirstName": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|FirstName": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|InsuredType": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|LastName": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|StateDetailsDriveOtherCarLastName": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|LocationID": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|MaritalStatus": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|NAICSCodeSearchValue": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|NameSOrDescriptionSAndDateSOfDesignatedActivitiesOrServices": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|NumberOfFullTimeEmployees": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|NumberOfPartTimeEmployees": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|OKClassCode": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|OKDetails": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|OKFirst": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|OKSecond": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|RiskComputerSystemsOK": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|SearchValue": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|PropertyAddClassSearchValue": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|RiskAccountsReceivableSearchValue": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|RiskComputerSystemsSearchValue": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|RiskBaileesCustomersSearchValue": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|SelectAppropriateCode": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|SelectClassCode": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|SelectNAICSCode": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|Sex": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|PolicyHolderState": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|EndorsementsDesignatedWorkplacesExclusionState": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|StateLicensed": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|TotalPayrollEstimated": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|TrailerInterchangeEnterDaysInsured": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|TrailerInterchangeEnterOfTrailers": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|FG0013AutomaticAdditionalInsuredSpecificRelationshipType": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|EndorsementMainType": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|GLOCPRiskType": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|CG2007AddLInsuredEngineersArchitectsType": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|RiskSignsType": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|TypeOfInterest": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|WaiverOfSubrogationExposure": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|YearLicensed": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|LocationZipCode": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|ThirdPartyDesigneeZipCode": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Navigation|GLOCPRiskZipCode": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "PolicyInformation|Client": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "PolicyInformation|Detail": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "PolicyWorkflow|AddClient": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "PolicyWorkflow|EndorsementHeading": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "PolicyWorkflow|IndividualType": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "PolicyWorkflow|RiskComputerSystemsOK": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "PolicyWorkflow|RiskAccountsReceivableSearchValue": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "PolicyWorkflow|RiskComputerSystemsSearchValue": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "PolicyWorkflow|RiskBaileesCustomersSearchValue": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "PolicyWorkflow|Value": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ],
+  "Vehicles|EffectiveDate": [
+    {
+      "strategy": "css",
+      "value": "iframe"
+    }
+  ]
+}

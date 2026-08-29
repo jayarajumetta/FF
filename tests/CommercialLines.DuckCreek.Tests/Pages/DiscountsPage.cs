@@ -47,4 +47,13 @@ public sealed class DiscountsPage
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);
 
+
+    public Task EnterAccountCreditSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.AccountCredit, value, new ControlIntent("Discounts", "AccountCredit"), delayMs);
+
+    public Task EnterNAICSCodeSearchResultsSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.NAICSCodeSearchResults, value, new ControlIntent("Discounts", "NAICSCodeSearchResults"), delayMs);
+
+    public Task EnterNAICSCodeSearchValueSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.NAICSCodeSearchValue, value, new ControlIntent("Discounts", "NAICSCodeSearchValue"), delayMs);
 }

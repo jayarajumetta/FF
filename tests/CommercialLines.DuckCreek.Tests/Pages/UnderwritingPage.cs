@@ -23,23 +23,20 @@ public sealed class UnderwritingPage
     public Task ClickAcceptAsync() =>
         _ui.ClickAsync(_locators.Accept, new ControlIntent("Underwriting", "Accept"));
 
-    public Task WaitForCommercialGeneralLiabilityHistoryC65BFAsync(string expected) =>
-        _ui.WaitAsync(_locators.CommercialGeneralLiabilityHistoryC65BF, expected, new ControlIntent("Underwriting", "CommercialGeneralLiabilityHistoryC65BF"));
+    public Task WaitForUnderwritingInfoCommercialPropertyHistoryCommercialGeneralLiabilityHistoryAsync(string expected) =>
+        _ui.WaitAsync(_locators.UnderwritingInfoCommercialPropertyHistoryCommercialGeneralLiabilityHistory, expected, new ControlIntent("Underwriting", "UnderwritingInfoCommercialPropertyHistoryCommercialGeneralLiabilityHistory"));
 
-    public Task ClickCommercialGeneralLiabilityHistoryE02F8Async() =>
-        _ui.ClickAsync(_locators.CommercialGeneralLiabilityHistoryE02F8, new ControlIntent("Underwriting", "CommercialGeneralLiabilityHistoryE02F8"));
+    public Task ClickUnderwritingInfoNavigationCommercialGeneralLiabilityHistoryAsync() =>
+        _ui.ClickAsync(_locators.UnderwritingInfoNavigationCommercialGeneralLiabilityHistory, new ControlIntent("Underwriting", "UnderwritingInfoNavigationCommercialGeneralLiabilityHistory"));
 
-    public Task WaitForCommercialPropertyHistory76D22Async(string expected) =>
-        _ui.WaitAsync(_locators.CommercialPropertyHistory76D22, expected, new ControlIntent("Underwriting", "CommercialPropertyHistory76D22"));
+    public Task ClickCommercialPropertyHistoryAsync() =>
+        _ui.ClickAsync(_locators.CommercialPropertyHistory, new ControlIntent("Underwriting", "CommercialPropertyHistory"));
 
-    public Task ClickCommercialPropertyHistoryE6A7FAsync() =>
-        _ui.ClickAsync(_locators.CommercialPropertyHistoryE6A7F, new ControlIntent("Underwriting", "CommercialPropertyHistoryE6A7F"));
+    public Task WaitForUnderwritingInfoGeneralUWQuestionsGeneralUWQuestionsAsync(string expected) =>
+        _ui.WaitAsync(_locators.UnderwritingInfoGeneralUWQuestionsGeneralUWQuestions, expected, new ControlIntent("Underwriting", "UnderwritingInfoGeneralUWQuestionsGeneralUWQuestions"));
 
-    public Task WaitForGeneralUWQuestions55852Async(string expected) =>
-        _ui.WaitAsync(_locators.GeneralUWQuestions55852, expected, new ControlIntent("Underwriting", "GeneralUWQuestions55852"));
-
-    public Task ClickGeneralUWQuestionsBFB08Async() =>
-        _ui.ClickAsync(_locators.GeneralUWQuestionsBFB08, new ControlIntent("Underwriting", "GeneralUWQuestionsBFB08"));
+    public Task ClickUnderwritingInfoNavigationGeneralUWQuestionsAsync() =>
+        _ui.ClickAsync(_locators.UnderwritingInfoNavigationGeneralUWQuestions, new ControlIntent("Underwriting", "UnderwritingInfoNavigationGeneralUWQuestions"));
 
     public Task WaitForInsuranceScoreAsync(string expected) =>
         _ui.WaitAsync(_locators.InsuranceScore, expected, new ControlIntent("Underwriting", "InsuranceScore"));
@@ -50,29 +47,29 @@ public sealed class UnderwritingPage
     public Task ClickInsuranceScoreConsentAsync() =>
         _ui.ClickAsync(_locators.InsuranceScoreConsent, new ControlIntent("Underwriting", "InsuranceScoreConsent"));
 
-    public Task EnterIsThereAPriorCarrier5D30EAsync(string value) =>
-        _ui.FillAsync(_locators.IsThereAPriorCarrier5D30E, value, new ControlIntent("Underwriting", "IsThereAPriorCarrier5D30E"));
+    public Task EnterUnderwritingInfoCommercialPropertyHistoryIsThereAPriorCarrierAsync(string value) =>
+        _ui.FillAsync(_locators.UnderwritingInfoCommercialPropertyHistoryIsThereAPriorCarrier, value, new ControlIntent("Underwriting", "UnderwritingInfoCommercialPropertyHistoryIsThereAPriorCarrier"));
 
-    public Task PressIsThereAPriorCarrier5D30EAsync(string key) =>
-        _ui.PressAsync(_locators.IsThereAPriorCarrier5D30E, key, new ControlIntent("Underwriting", "IsThereAPriorCarrier5D30E"));
+    public Task PressUnderwritingInfoCommercialPropertyHistoryIsThereAPriorCarrierAsync(string key) =>
+        _ui.PressAsync(_locators.UnderwritingInfoCommercialPropertyHistoryIsThereAPriorCarrier, key, new ControlIntent("Underwriting", "UnderwritingInfoCommercialPropertyHistoryIsThereAPriorCarrier"));
 
-    public Task EnterIsThereAPriorCarrierA9EB5Async(string value) =>
-        _ui.FillAsync(_locators.IsThereAPriorCarrierA9EB5, value, new ControlIntent("Underwriting", "IsThereAPriorCarrierA9EB5"));
+    public Task EnterUnderwritingInfoCommercialGeneralLiabilityHistoryIsThereAPriorCarrierAsync(string value) =>
+        _ui.FillAsync(_locators.UnderwritingInfoCommercialGeneralLiabilityHistoryIsThereAPriorCarrier, value, new ControlIntent("Underwriting", "UnderwritingInfoCommercialGeneralLiabilityHistoryIsThereAPriorCarrier"));
 
-    public Task PressIsThereAPriorCarrierA9EB5Async(string key) =>
-        _ui.PressAsync(_locators.IsThereAPriorCarrierA9EB5, key, new ControlIntent("Underwriting", "IsThereAPriorCarrierA9EB5"));
+    public Task PressUnderwritingInfoCommercialGeneralLiabilityHistoryIsThereAPriorCarrierAsync(string key) =>
+        _ui.PressAsync(_locators.UnderwritingInfoCommercialGeneralLiabilityHistoryIsThereAPriorCarrier, key, new ControlIntent("Underwriting", "UnderwritingInfoCommercialGeneralLiabilityHistoryIsThereAPriorCarrier"));
 
-    public Task EnterIsThereAPriorCarrierEFB4FAsync(string value) =>
-        _ui.FillAsync(_locators.IsThereAPriorCarrierEFB4F, value, new ControlIntent("Underwriting", "IsThereAPriorCarrierEFB4F"));
+    public Task EnterUnderwritingInfoOtherInsuranceHistoryIsThereAPriorCarrierAsync(string value) =>
+        _ui.FillAsync(_locators.UnderwritingInfoOtherInsuranceHistoryIsThereAPriorCarrier, value, new ControlIntent("Underwriting", "UnderwritingInfoOtherInsuranceHistoryIsThereAPriorCarrier"));
 
-    public Task PressIsThereAPriorCarrierEFB4FAsync(string key) =>
-        _ui.PressAsync(_locators.IsThereAPriorCarrierEFB4F, key, new ControlIntent("Underwriting", "IsThereAPriorCarrierEFB4F"));
+    public Task PressUnderwritingInfoOtherInsuranceHistoryIsThereAPriorCarrierAsync(string key) =>
+        _ui.PressAsync(_locators.UnderwritingInfoOtherInsuranceHistoryIsThereAPriorCarrier, key, new ControlIntent("Underwriting", "UnderwritingInfoOtherInsuranceHistoryIsThereAPriorCarrier"));
 
-    public Task WaitForOtherInsuranceHistory416B1Async(string expected) =>
-        _ui.WaitAsync(_locators.OtherInsuranceHistory416B1, expected, new ControlIntent("Underwriting", "OtherInsuranceHistory416B1"));
+    public Task WaitForUnderwritingInfoOtherInsuranceHistoryOtherInsuranceHistoryAsync(string expected) =>
+        _ui.WaitAsync(_locators.UnderwritingInfoOtherInsuranceHistoryOtherInsuranceHistory, expected, new ControlIntent("Underwriting", "UnderwritingInfoOtherInsuranceHistoryOtherInsuranceHistory"));
 
-    public Task ClickOtherInsuranceHistory5AFD8Async() =>
-        _ui.ClickAsync(_locators.OtherInsuranceHistory5AFD8, new ControlIntent("Underwriting", "OtherInsuranceHistory5AFD8"));
+    public Task ClickUnderwritingInfoNavigationOtherInsuranceHistoryAsync() =>
+        _ui.ClickAsync(_locators.UnderwritingInfoNavigationOtherInsuranceHistory, new ControlIntent("Underwriting", "UnderwritingInfoNavigationOtherInsuranceHistory"));
 
     public Task VerifyReferenceNumberAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.ReferenceNumber, expected, property, new ControlIntent("Underwriting", "ReferenceNumber"));
@@ -87,4 +84,12 @@ public sealed class UnderwritingPage
         Task.Delay(milliseconds);
 
 
+    public Task EnterUnderwritingInfoCommercialPropertyHistoryIsThereAPriorCarrierSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.UnderwritingInfoCommercialPropertyHistoryIsThereAPriorCarrier, value, new ControlIntent("Underwriting", "UnderwritingInfoCommercialPropertyHistoryIsThereAPriorCarrier"), delayMs);
+
+    public Task EnterUnderwritingInfoCommercialGeneralLiabilityHistoryIsThereAPriorCarrierSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.UnderwritingInfoCommercialGeneralLiabilityHistoryIsThereAPriorCarrier, value, new ControlIntent("Underwriting", "UnderwritingInfoCommercialGeneralLiabilityHistoryIsThereAPriorCarrier"), delayMs);
+
+    public Task EnterUnderwritingInfoOtherInsuranceHistoryIsThereAPriorCarrierSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.UnderwritingInfoOtherInsuranceHistoryIsThereAPriorCarrier, value, new ControlIntent("Underwriting", "UnderwritingInfoOtherInsuranceHistoryIsThereAPriorCarrier"), delayMs);
 }

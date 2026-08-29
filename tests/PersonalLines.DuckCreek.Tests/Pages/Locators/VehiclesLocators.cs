@@ -157,7 +157,6 @@ public sealed class VehiclesLocators
     public ILocator DriverSLicenseNumber => DaysOperatedUninsured;
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator EQCAVerifiedMileage => _page.GetByText("EQ || CA Verified Mileage", new() { Exact = true });
 
     // Source modules: EQ || DriverEducationLevel | confidence=Medium score=113
@@ -180,11 +179,9 @@ public sealed class VehiclesLocators
     public ILocator IsThisVehicleOwnedOrFinanced => Cycle1734D7;
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator LblDescriptionOfMods => _page.GetByText("Lbl_Description of Mods", new() { Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator LblOwnedPopup => _page.GetByText("Lbl_Owned Popup", new() { Exact = true });
 
     // Source modules: EQ||Vehicle Summary Auto/Motor Home Use | confidence=High score=130
@@ -213,14 +210,12 @@ public sealed class VehiclesLocators
     public ILocator LoanED36C => Loan49242; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator MDNJEducationLevelUnknown => _page.GetByText("MD_NJ_EducationLevel == \"Unknown", new() { Exact = true });
 
     // Source modules: EQ||Vehicle Information | confidence=High score=100
     public ILocator MOREOPTIONS => _page.GetByTestId("_vehicleChips-menu-trigger");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator MaritalStatusSingle => _page.GetByText("'Marital Status' != \"Single", new() { Exact = true });
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=83
@@ -406,7 +401,6 @@ public sealed class VehiclesLocators
     public ILocator Related => Assigned; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator RelationshipToAccountOwnerNULL => _page.GetByText("'Relationship to Account Owner' != NULL", new() { Exact = true });
 
     // Source modules:  EQ || Vehicle Coverages Section | confidence=High score=100
@@ -468,7 +462,6 @@ public sealed class VehiclesLocators
     public ILocator SaveContinue86B78 => SaveContinue2E7CD;
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator SelectVehicle => _page.GetByText("Select Vehicle", new() { Exact = true });
 
     // Source modules: EQ || NamedIns_Operator Status | confidence=Medium score=113

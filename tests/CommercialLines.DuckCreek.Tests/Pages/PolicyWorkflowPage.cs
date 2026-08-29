@@ -104,11 +104,11 @@ public sealed class PolicyWorkflowPage
     public Task WaitForHomeownerSLiabilityAsync(string expected) =>
         _ui.WaitAsync(_locators.HomeownerSLiability, expected, new ControlIntent("PolicyWorkflow", "HomeownerSLiability"));
 
-    public Task WaitForHttpErrorMsgOKAsync(string expected) =>
-        _ui.WaitAsync(_locators.HttpErrorMsgOK, expected, new ControlIntent("PolicyWorkflow", "HttpErrorMsgOK"));
+    public Task WaitForOKAsync(string expected) =>
+        _ui.WaitAsync(_locators.OK, expected, new ControlIntent("PolicyWorkflow", "OK"));
 
-    public Task ClickHttpErrorMsgOKAsync() =>
-        _ui.ClickAsync(_locators.HttpErrorMsgOK, new ControlIntent("PolicyWorkflow", "HttpErrorMsgOK"));
+    public Task ClickOKAsync() =>
+        _ui.ClickAsync(_locators.OK, new ControlIntent("PolicyWorkflow", "OK"));
 
     public Task EnterIFRAMEDuckCreekPolicyDescriptionOfOtherAsync(string value) =>
         _ui.FillAsync(_locators.IFRAMEDuckCreekPolicyDescriptionOfOther, value, new ControlIntent("PolicyWorkflow", "IFRAMEDuckCreekPolicyDescriptionOfOther"));
@@ -173,9 +173,6 @@ public sealed class PolicyWorkflowPage
     public Task PressOKAsync(string key) =>
         _ui.PressAsync(_locators.OK, key, new ControlIntent("PolicyWorkflow", "OK"));
 
-    public Task ClickOKAsync() =>
-        _ui.ClickAsync(_locators.OK, new ControlIntent("PolicyWorkflow", "OK"));
-
     public Task EnterOccurenceLimitAsync(string value) =>
         _ui.FillAsync(_locators.OccurenceLimit, value, new ControlIntent("PolicyWorkflow", "OccurenceLimit"));
 
@@ -206,11 +203,11 @@ public sealed class PolicyWorkflowPage
     public Task WaitForPersonalAutoAsync(string expected) =>
         _ui.WaitAsync(_locators.PersonalAuto, expected, new ControlIntent("PolicyWorkflow", "PersonalAuto"));
 
-    public Task WaitForPolicyCovg6B651Async(string expected) =>
-        _ui.WaitAsync(_locators.PolicyCovg6B651, expected, new ControlIntent("PolicyWorkflow", "PolicyCovg6B651"));
+    public Task WaitForPolicyCovgGLPolicyCovgAsync(string expected) =>
+        _ui.WaitAsync(_locators.PolicyCovgGLPolicyCovg, expected, new ControlIntent("PolicyWorkflow", "PolicyCovgGLPolicyCovg"));
 
-    public Task WaitForPolicyCovgFF145Async(string expected) =>
-        _ui.WaitAsync(_locators.PolicyCovgFF145, expected, new ControlIntent("PolicyWorkflow", "PolicyCovgFF145"));
+    public Task WaitForPolicyCovgAsync(string expected) =>
+        _ui.WaitAsync(_locators.PolicyCovg, expected, new ControlIntent("PolicyWorkflow", "PolicyCovg"));
 
     public Task WaitForPolicyInfoHeaderAsync(string expected) =>
         _ui.WaitAsync(_locators.PolicyInfoHeader, expected, new ControlIntent("PolicyWorkflow", "PolicyInfoHeader"));
@@ -251,11 +248,8 @@ public sealed class PolicyWorkflowPage
     public Task WaitForRentalOwnersLiabilityAsync(string expected) =>
         _ui.WaitAsync(_locators.RentalOwnersLiability, expected, new ControlIntent("PolicyWorkflow", "RentalOwnersLiability"));
 
-    public Task VerifyRestartMicrosoftEdgeMessageOKAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.RestartMicrosoftEdgeMessageOK, expected, property, new ControlIntent("PolicyWorkflow", "RestartMicrosoftEdgeMessageOK"));
-
-    public Task ClickRestartMicrosoftEdgeMessageOKAsync() =>
-        _ui.ClickAsync(_locators.RestartMicrosoftEdgeMessageOK, new ControlIntent("PolicyWorkflow", "RestartMicrosoftEdgeMessageOK"));
+    public Task VerifyOKAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.OK, expected, property, new ControlIntent("PolicyWorkflow", "OK"));
 
     public Task WaitForReturnToAdminAsync(string expected) =>
         _ui.WaitAsync(_locators.ReturnToAdmin, expected, new ControlIntent("PolicyWorkflow", "ReturnToAdmin"));
@@ -302,32 +296,32 @@ public sealed class PolicyWorkflowPage
     public Task PressSearchMethodEGDescriptionPolicyAsync(string key) =>
         _ui.PressAsync(_locators.SearchMethodEGDescriptionPolicy, key, new ControlIntent("PolicyWorkflow", "SearchMethodEGDescriptionPolicy"));
 
-    public Task VerifySearchResult4E620Async(string expected, string property) =>
-        _ui.VerifyAsync(_locators.SearchResult4E620, expected, property, new ControlIntent("PolicyWorkflow", "SearchResult4E620"));
+    public Task VerifyRiskComputerSystemsSearchResultAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.RiskComputerSystemsSearchResult, expected, property, new ControlIntent("PolicyWorkflow", "RiskComputerSystemsSearchResult"));
 
-    public Task EnterSearchResult4E620Async(string value) =>
-        _ui.FillAsync(_locators.SearchResult4E620, value, new ControlIntent("PolicyWorkflow", "SearchResult4E620"));
+    public Task EnterRiskComputerSystemsSearchResultAsync(string value) =>
+        _ui.FillAsync(_locators.RiskComputerSystemsSearchResult, value, new ControlIntent("PolicyWorkflow", "RiskComputerSystemsSearchResult"));
 
-    public Task PressSearchResult4E620Async(string key) =>
-        _ui.PressAsync(_locators.SearchResult4E620, key, new ControlIntent("PolicyWorkflow", "SearchResult4E620"));
+    public Task PressRiskComputerSystemsSearchResultAsync(string key) =>
+        _ui.PressAsync(_locators.RiskComputerSystemsSearchResult, key, new ControlIntent("PolicyWorkflow", "RiskComputerSystemsSearchResult"));
 
-    public Task VerifySearchResultA1BFBAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.SearchResultA1BFB, expected, property, new ControlIntent("PolicyWorkflow", "SearchResultA1BFB"));
+    public Task VerifyRiskBaileesCustomersSearchResultAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.RiskBaileesCustomersSearchResult, expected, property, new ControlIntent("PolicyWorkflow", "RiskBaileesCustomersSearchResult"));
 
-    public Task EnterSearchResultA1BFBAsync(string value) =>
-        _ui.FillAsync(_locators.SearchResultA1BFB, value, new ControlIntent("PolicyWorkflow", "SearchResultA1BFB"));
+    public Task EnterRiskBaileesCustomersSearchResultAsync(string value) =>
+        _ui.FillAsync(_locators.RiskBaileesCustomersSearchResult, value, new ControlIntent("PolicyWorkflow", "RiskBaileesCustomersSearchResult"));
 
-    public Task PressSearchResultA1BFBAsync(string key) =>
-        _ui.PressAsync(_locators.SearchResultA1BFB, key, new ControlIntent("PolicyWorkflow", "SearchResultA1BFB"));
+    public Task PressRiskBaileesCustomersSearchResultAsync(string key) =>
+        _ui.PressAsync(_locators.RiskBaileesCustomersSearchResult, key, new ControlIntent("PolicyWorkflow", "RiskBaileesCustomersSearchResult"));
 
-    public Task VerifySearchResultEAFB8Async(string expected, string property) =>
-        _ui.VerifyAsync(_locators.SearchResultEAFB8, expected, property, new ControlIntent("PolicyWorkflow", "SearchResultEAFB8"));
+    public Task VerifyRiskAccountsReceivableSearchResultAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.RiskAccountsReceivableSearchResult, expected, property, new ControlIntent("PolicyWorkflow", "RiskAccountsReceivableSearchResult"));
 
-    public Task EnterSearchResultEAFB8Async(string value) =>
-        _ui.FillAsync(_locators.SearchResultEAFB8, value, new ControlIntent("PolicyWorkflow", "SearchResultEAFB8"));
+    public Task EnterRiskAccountsReceivableSearchResultAsync(string value) =>
+        _ui.FillAsync(_locators.RiskAccountsReceivableSearchResult, value, new ControlIntent("PolicyWorkflow", "RiskAccountsReceivableSearchResult"));
 
-    public Task PressSearchResultEAFB8Async(string key) =>
-        _ui.PressAsync(_locators.SearchResultEAFB8, key, new ControlIntent("PolicyWorkflow", "SearchResultEAFB8"));
+    public Task PressRiskAccountsReceivableSearchResultAsync(string key) =>
+        _ui.PressAsync(_locators.RiskAccountsReceivableSearchResult, key, new ControlIntent("PolicyWorkflow", "RiskAccountsReceivableSearchResult"));
 
     public Task EnterSearchTextAsync(string value) =>
         _ui.FillAsync(_locators.SearchText, value, new ControlIntent("PolicyWorkflow", "SearchText"));
@@ -335,23 +329,23 @@ public sealed class PolicyWorkflowPage
     public Task PressSearchTextAsync(string key) =>
         _ui.PressAsync(_locators.SearchText, key, new ControlIntent("PolicyWorkflow", "SearchText"));
 
-    public Task EnterSearchValue79E46Async(string value) =>
-        _ui.FillAsync(_locators.SearchValue79E46, value, new ControlIntent("PolicyWorkflow", "SearchValue79E46"));
+    public Task EnterRiskAccountsReceivableSearchValueAsync(string value) =>
+        _ui.FillAsync(_locators.RiskAccountsReceivableSearchValue, value, new ControlIntent("PolicyWorkflow", "RiskAccountsReceivableSearchValue"));
 
-    public Task PressSearchValue79E46Async(string key) =>
-        _ui.PressAsync(_locators.SearchValue79E46, key, new ControlIntent("PolicyWorkflow", "SearchValue79E46"));
+    public Task PressRiskAccountsReceivableSearchValueAsync(string key) =>
+        _ui.PressAsync(_locators.RiskAccountsReceivableSearchValue, key, new ControlIntent("PolicyWorkflow", "RiskAccountsReceivableSearchValue"));
 
-    public Task EnterSearchValue9FCD1Async(string value) =>
-        _ui.FillAsync(_locators.SearchValue9FCD1, value, new ControlIntent("PolicyWorkflow", "SearchValue9FCD1"));
+    public Task EnterRiskComputerSystemsSearchValueAsync(string value) =>
+        _ui.FillAsync(_locators.RiskComputerSystemsSearchValue, value, new ControlIntent("PolicyWorkflow", "RiskComputerSystemsSearchValue"));
 
-    public Task PressSearchValue9FCD1Async(string key) =>
-        _ui.PressAsync(_locators.SearchValue9FCD1, key, new ControlIntent("PolicyWorkflow", "SearchValue9FCD1"));
+    public Task PressRiskComputerSystemsSearchValueAsync(string key) =>
+        _ui.PressAsync(_locators.RiskComputerSystemsSearchValue, key, new ControlIntent("PolicyWorkflow", "RiskComputerSystemsSearchValue"));
 
-    public Task EnterSearchValueCA6A6Async(string value) =>
-        _ui.FillAsync(_locators.SearchValueCA6A6, value, new ControlIntent("PolicyWorkflow", "SearchValueCA6A6"));
+    public Task EnterRiskBaileesCustomersSearchValueAsync(string value) =>
+        _ui.FillAsync(_locators.RiskBaileesCustomersSearchValue, value, new ControlIntent("PolicyWorkflow", "RiskBaileesCustomersSearchValue"));
 
-    public Task PressSearchValueCA6A6Async(string key) =>
-        _ui.PressAsync(_locators.SearchValueCA6A6, key, new ControlIntent("PolicyWorkflow", "SearchValueCA6A6"));
+    public Task PressRiskBaileesCustomersSearchValueAsync(string key) =>
+        _ui.PressAsync(_locators.RiskBaileesCustomersSearchValue, key, new ControlIntent("PolicyWorkflow", "RiskBaileesCustomersSearchValue"));
 
     public Task VerifyShowMeAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.ShowMe, expected, property, new ControlIntent("PolicyWorkflow", "ShowMe"));
@@ -371,8 +365,8 @@ public sealed class PolicyWorkflowPage
     public Task ClickStartAsync() =>
         _ui.ClickAsync(_locators.Start, new ControlIntent("PolicyWorkflow", "Start"));
 
-    public Task VerifyTheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0Async(string expected, string property) =>
-        _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0, expected, property, new ControlIntent("PolicyWorkflow", "TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0"));
+    public Task VerifyBrowserCommunicationHTTPStatusZeroAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.BrowserCommunicationHTTPStatusZero, expected, property, new ControlIntent("PolicyWorkflow", "BrowserCommunicationHTTPStatusZero"));
 
     public Task VerifyValueAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.Value, expected, property, new ControlIntent("PolicyWorkflow", "Value"));
@@ -395,8 +389,97 @@ public sealed class PolicyWorkflowPage
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);
 
-
     public Task<string> CaptureDescriptionOfSpecifiedOperationAsync(string property = "") =>
         _ui.CaptureAsync(_locators.DescriptionOfSpecifiedOperation, property, new ControlIntent("PolicyWorkflow", "DescriptionOfSpecifiedOperation"));
 
+
+    public Task EnterAggregateLimitSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.AggregateLimit, value, new ControlIntent("PolicyWorkflow", "AggregateLimit"), delayMs);
+
+    public Task EnterDedTypeSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.DedType, value, new ControlIntent("PolicyWorkflow", "DedType"), delayMs);
+
+    public Task EnterDeductibleBasisSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.DeductibleBasis, value, new ControlIntent("PolicyWorkflow", "DeductibleBasis"), delayMs);
+
+    public Task EnterDescriptionOfSpecifiedOperationSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.DescriptionOfSpecifiedOperation, value, new ControlIntent("PolicyWorkflow", "DescriptionOfSpecifiedOperation"), delayMs);
+
+    public Task EnterDoesAnyRiskGeneratePowerOtherThanPrivateWindmillsOrEmergencyBackupSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.DoesAnyRiskGeneratePowerOtherThanPrivateWindmillsOrEmergencyBackup, value, new ControlIntent("PolicyWorkflow", "DoesAnyRiskGeneratePowerOtherThanPrivateWindmillsOrEmergencyBackup"), delayMs);
+
+    public Task EnterFireDamageSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.FireDamage, value, new ControlIntent("PolicyWorkflow", "FireDamage"), delayMs);
+
+    public Task EnterHasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverageSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage, value, new ControlIntent("PolicyWorkflow", "HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage"), delayMs);
+
+    public Task EnterIFRAMEDuckCreekPolicyDescriptionOfOtherSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.IFRAMEDuckCreekPolicyDescriptionOfOther, value, new ControlIntent("PolicyWorkflow", "IFRAMEDuckCreekPolicyDescriptionOfOther"), delayMs);
+
+    public Task EnterIsTheInsuredEngagedInAnySnowOrIceRemovalOperationsSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations, value, new ControlIntent("PolicyWorkflow", "IsTheInsuredEngagedInAnySnowOrIceRemovalOperations"), delayMs);
+
+    public Task EnterMedicalSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.Medical, value, new ControlIntent("PolicyWorkflow", "Medical"), delayMs);
+
+    public Task EnterOccurenceLimitSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.OccurenceLimit, value, new ControlIntent("PolicyWorkflow", "OccurenceLimit"), delayMs);
+
+    public Task EnterOfFullTimeEmployeesSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.OfFullTimeEmployees, value, new ControlIntent("PolicyWorkflow", "OfFullTimeEmployees"), delayMs);
+
+    public Task EnterOfPartTimeEmployeesSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.OfPartTimeEmployees, value, new ControlIntent("PolicyWorkflow", "OfPartTimeEmployees"), delayMs);
+
+    public Task EnterOfSeasonalTemporaryEmployeesSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.OfSeasonalTemporaryEmployees, value, new ControlIntent("PolicyWorkflow", "OfSeasonalTemporaryEmployees"), delayMs);
+
+    public Task EnterPersAdvInjSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.PersAdvInj, value, new ControlIntent("PolicyWorkflow", "PersAdvInj"), delayMs);
+
+    public Task EnterPremOpDedSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.PremOpDed, value, new ControlIntent("PolicyWorkflow", "PremOpDed"), delayMs);
+
+    public Task EnterPremOpPDDedSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.PremOpPDDed, value, new ControlIntent("PolicyWorkflow", "PremOpPDDed"), delayMs);
+
+    public Task EnterProdBIDedSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.ProdBIDed, value, new ControlIntent("PolicyWorkflow", "ProdBIDed"), delayMs);
+
+    public Task EnterProdPDDedSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.ProdPDDed, value, new ControlIntent("PolicyWorkflow", "ProdPDDed"), delayMs);
+
+    public Task EnterProductsAggLimitSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.ProductsAggLimit, value, new ControlIntent("PolicyWorkflow", "ProductsAggLimit"), delayMs);
+
+    public Task EnterPropertyOfOthersRatingGroupSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.PropertyOfOthersRatingGroup, value, new ControlIntent("PolicyWorkflow", "PropertyOfOthersRatingGroup"), delayMs);
+
+    public Task EnterSearchMethodEGDescriptionPolicySequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.SearchMethodEGDescriptionPolicy, value, new ControlIntent("PolicyWorkflow", "SearchMethodEGDescriptionPolicy"), delayMs);
+
+    public Task EnterRiskComputerSystemsSearchResultSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.RiskComputerSystemsSearchResult, value, new ControlIntent("PolicyWorkflow", "RiskComputerSystemsSearchResult"), delayMs);
+
+    public Task EnterRiskBaileesCustomersSearchResultSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.RiskBaileesCustomersSearchResult, value, new ControlIntent("PolicyWorkflow", "RiskBaileesCustomersSearchResult"), delayMs);
+
+    public Task EnterRiskAccountsReceivableSearchResultSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.RiskAccountsReceivableSearchResult, value, new ControlIntent("PolicyWorkflow", "RiskAccountsReceivableSearchResult"), delayMs);
+
+    public Task EnterSearchTextSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.SearchText, value, new ControlIntent("PolicyWorkflow", "SearchText"), delayMs);
+
+    public Task EnterRiskAccountsReceivableSearchValueSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.RiskAccountsReceivableSearchValue, value, new ControlIntent("PolicyWorkflow", "RiskAccountsReceivableSearchValue"), delayMs);
+
+    public Task EnterRiskComputerSystemsSearchValueSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.RiskComputerSystemsSearchValue, value, new ControlIntent("PolicyWorkflow", "RiskComputerSystemsSearchValue"), delayMs);
+
+    public Task EnterRiskBaileesCustomersSearchValueSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.RiskBaileesCustomersSearchValue, value, new ControlIntent("PolicyWorkflow", "RiskBaileesCustomersSearchValue"), delayMs);
+
+    public Task EnterSplitPDDedSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.SplitPDDed, value, new ControlIntent("PolicyWorkflow", "SplitPDDed"), delayMs);
 }

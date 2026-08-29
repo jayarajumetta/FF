@@ -12,7 +12,6 @@ public sealed class LocationsLocators
     public ILocator EditLocationButtonLatestAngular => _page.Locator("[id=\"\"fields.data.accountDetail.locationDetail.rows[0].editLocation\"\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator EditLocationHeading => _page.GetByText("Edit Location Heading", new() { Exact = true });
 
     // Source modules: EQ|SFP|Location | confidence=High score=127
@@ -37,12 +36,10 @@ public sealed class LocationsLocators
     public ILocator MilesFromFD => _page.Locator("input[id=\"\\\"fields.data.account.location.rows[0].locationInput$milesFromFireDepartment.value\\\"\"][name=\"\\\"fields.data.account.location.rows[0].locationInput$milesFromFireDepartment.value\\\"\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     // v56 raw Tosca primary: Territory and FD | Miles From Fire Dept | Id+Name
     public ILocator MilesFromFireDept => _page.Locator("input[id=\"fields.data.account.location.locationBusinessOwnersInput$milesFromFireDepartment.value\"][name=\"fields.data.account.location.locationBusinessOwnersInput$milesFromFireDepartment.value\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator OrderWildfireRiskScore => _page.GetByText("Order Wildfire Risk Score", new() { Exact = true });
 
     // Source modules: EQ|SFP|DIV V|Optional Liability Coverage|Workers' Compensation - Residence EmployeesExpertQuote | confidence=High score=130
@@ -50,7 +47,6 @@ public sealed class LocationsLocators
     public ILocator Save => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Save\"], [data-duckcreekid=\"Save\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     // v56 raw Tosca primary: EQ|BOP|Locations|Add/Edit Location | Territory | Id+attributes_data-testid
     public ILocator Territory => _page.Locator("mat-select[id=\"fields.data.account.location.locationBusinessOwnersInput$territory.value\"][data-testid=\"fields.data.account.location.locationBusinessOwnersInput$territory.value\"]");
 

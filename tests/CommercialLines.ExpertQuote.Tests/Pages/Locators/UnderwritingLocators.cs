@@ -41,11 +41,9 @@ public sealed class UnderwritingLocators
     public ILocator Save => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Save\"], [data-duckcreekid=\"Save\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ScreenHeading => _page.GetByText("Screen Heading", new() { Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator TABLERowCellExplicitName1 => _page.GetByText("(ExplicitName=$1)", new() { Exact = true });
 
 }

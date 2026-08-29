@@ -5,8 +5,6 @@ namespace InsuranceAutomation.Core;
 public sealed class FrameworkConfig
 {
     public BrowserOptions Browser { get; init; } = new();
-    public SelfHealOptions SelfHeal { get; init; } = new();
-    public LocatorFallbackOptions LocatorFallback { get; init; } = new();
     public ReportingOptions Reporting { get; init; } = new();
     public WaitOptions Waits { get; init; } = new();
     public ExecutionOptions Execution { get; init; } = new();
@@ -25,7 +23,9 @@ public sealed class FrameworkConfig
     {
         if (Browser.ActionTimeoutMs <= 0 || Browser.NavigationTimeoutMs <= 0)
             throw new InvalidOperationException($"Browser timeouts must be positive. Config: {path}");
-        if (Waits.PageReadyTimeoutMs <= 0 || Waits.ElementReadyTimeoutMs <= 0 || Waits.VerifyTimeoutMs <= 0 || Waits.FallbackCandidateTimeoutMs <= 0 || Waits.FrameProbeTimeoutMs <= 0 || Waits.DropdownOptionTimeoutMs <= 0 || Waits.DropdownPollIntervalMs <= 0)
+        if (Browser.HighlightDurationMs < 0)
+            throw new InvalidOperationException($"browser.highlightDurationMs cannot be negative. Config: {path}");
+        if (Waits.PageReadyTimeoutMs <= 0 || Waits.ElementReadyTimeoutMs <= 0 || Waits.VerifyTimeoutMs <= 0 || Waits.FrameProbeTimeoutMs <= 0 || Waits.DropdownOptionTimeoutMs <= 0 || Waits.DropdownPollIntervalMs <= 0)
             throw new InvalidOperationException($"Framework wait timeouts must be positive. Config: {path}");
         if (string.IsNullOrWhiteSpace(Browser.Channel) && string.IsNullOrWhiteSpace(Browser.FallbackBrowser))
             throw new InvalidOperationException($"Configure browser.channel or browser.fallbackBrowser. Config: {path}");
@@ -35,34 +35,10 @@ public sealed class FrameworkConfig
         if (Reporting.MaxSingleAttachmentBytes <= 0 || Reporting.MaxAttachmentCount <= 0)
             throw new InvalidOperationException($"Reporting attachment limits must be positive. Config: {path}");
 
-        if (LocatorFallback.Enabled)
-        {
-            if (string.IsNullOrWhiteSpace(LocatorFallback.CatalogDirectory))
-                throw new InvalidOperationException($"locatorFallback.catalogDirectory is required. Config: {path}");
-            if (LocatorFallback.MaxCandidatesPerFailure <= 0)
-                throw new InvalidOperationException($"locatorFallback.maxCandidatesPerFailure must be positive. Config: {path}");
-            if (LocatorFallback.MinimumCandidateConfidence is < 0 or > 1)
-                throw new InvalidOperationException($"locatorFallback.minimumCandidateConfidence must be between 0 and 1. Config: {path}");
-        }
 
-        if (SelfHeal.Enabled)
-        {
-            if (string.IsNullOrWhiteSpace(SelfHeal.Provider)) throw new InvalidOperationException($"selfHeal.provider is required. Config: {path}");
-            if (SelfHeal.Provider.Equals("openai-compatible",StringComparison.OrdinalIgnoreCase))
-            {
-                if (string.IsNullOrWhiteSpace(SelfHeal.Endpoint)) throw new InvalidOperationException($"selfHeal.endpoint is required for openai-compatible healing. Config: {path}");
-                if (string.IsNullOrWhiteSpace(SelfHeal.Model)) throw new InvalidOperationException($"selfHeal.model is required for openai-compatible healing. Config: {path}");
-                if (string.IsNullOrWhiteSpace(SelfHeal.ApiKeyEnvironmentVariable)) throw new InvalidOperationException($"selfHeal.apiKeyEnvironmentVariable is required. Config: {path}");
-            }
-            else if (!SelfHeal.Provider.Equals("github-copilot",StringComparison.OrdinalIgnoreCase))
-                throw new InvalidOperationException($"Unsupported selfHeal.provider '{SelfHeal.Provider}'. Use openai-compatible or github-copilot. Config: {path}");
-        }
+
     }
 
-    public string? GetLlmApiKey() =>
-        string.IsNullOrWhiteSpace(SelfHeal.ApiKeyEnvironmentVariable)
-            ? null
-            : Environment.GetEnvironmentVariable(SelfHeal.ApiKeyEnvironmentVariable);
 
     private static string FindConfigFile()
     {
@@ -89,6 +65,7 @@ public sealed class BrowserOptions
     public string FallbackBrowser { get; init; } = "chromium";
     public bool Headless { get; init; }
     public bool IgnoreHttpsErrors { get; init; } = true;
+    public bool Maximize { get; init; } = true;
     public int ViewportWidth { get; init; } = 1440;
     public int ViewportHeight { get; init; } = 900;
     public int ActionTimeoutMs { get; init; } = 15000;
@@ -99,41 +76,10 @@ public sealed class BrowserOptions
     public bool ScreenshotOnFailure { get; init; } = true;
     public bool ScreenshotEachStep { get; init; }
     public bool ScreenshotAtScenarioEnd { get; init; } = true;
+    public bool HighlightInteractions { get; init; } = true;
+    public int HighlightDurationMs { get; init; } = 120;
 }
 
-
-public sealed class LocatorFallbackOptions
-{
-    public bool Enabled { get; init; } = true;
-    public string CatalogDirectory { get; init; } = "Artifacts/LocatorFallbackCatalogs";
-    public int MaxCandidatesPerFailure { get; init; } = 40;
-    public double MinimumCandidateConfidence { get; init; } = 0.60;
-    public bool AllowSourceXPath { get; init; } = true;
-    public bool PreferPreviouslySuccessfulCandidate { get; init; } = true;
-    public bool LogEveryAttempt { get; init; } = true;
-}
-
-public sealed class SelfHealOptions
-{
-    public bool Enabled { get; init; } = true;
-    public string Provider { get; init; } = "openai-compatible";
-    public string Endpoint { get; init; } = "";
-    public string Model { get; init; } = "";
-    public string ApiKeyEnvironmentVariable { get; init; } = "TEST_LLM_API_KEY";
-    public bool IncludeScreenshot { get; init; } = true;
-    public int MaxPreviousSteps { get; init; } = 3;
-    public int DomMaxChars { get; init; } = 50000;
-    public int CandidateLimit { get; init; } = 400;
-    public int RequestTimeoutSeconds { get; init; } = 45;
-    public double MinimumConfidence { get; init; } = 0.70;
-    public string CacheFile { get; init; } = "Artifacts/SelfHealing/locator-cache.json";
-    public string AuditFile { get; init; } = "Artifacts/SelfHealing/healing-audit.jsonl";
-    public int CacheContextLimit { get; init; } = 20;
-    public string CopilotExecutable { get; init; } = "copilot";
-    public string DomEvidenceDirectory { get; init; } = "Artifacts/DOM";
-    public string LocatorCatalogFile { get; init; } = "Artifacts/ToscaLocatorPropertyCatalog.v52.json";
-    public bool CaptureDomAfterActions { get; init; } = false;
-}
 
 public sealed class WaitOptions
 {
@@ -141,7 +87,6 @@ public sealed class WaitOptions
     public int PageReadyTimeoutMs { get; init; } = 15000;
     public int ElementReadyTimeoutMs { get; init; } = 15000;
     public int VerifyTimeoutMs { get; init; } = 15000;
-    public int FallbackCandidateTimeoutMs { get; init; } = 2500;
     // Raw Tosca HtmlFrame is a hint only. Probe briefly before falling back to top document.
     public int FrameProbeTimeoutMs { get; init; } = 600;
     // Dropdown option discovery uses a deliberately shorter budget than a normal page/control wait.
@@ -153,6 +98,10 @@ public sealed class WaitOptions
 
 public sealed class ReportingOptions
 {
+    public bool CollectConsole { get; init; } = true;
+    public bool CollectNetwork { get; init; } = true;
+    public EvidenceAttachmentPolicy Passed { get; init; } = EvidenceAttachmentPolicy.PassedDefaults();
+    public EvidenceAttachmentPolicy Failed { get; init; } = EvidenceAttachmentPolicy.FailedDefaults();
     public string ArtifactRoot { get; init; } = "Artifacts";
     public bool HtmlReport { get; init; } = true;
     public bool IncludeResolvedData { get; init; } = true;
@@ -169,10 +118,25 @@ public sealed class ReportingOptions
     public int MaxAttachmentCount { get; init; } = 5000;
 }
 
+public sealed class EvidenceAttachmentPolicy
+{
+    public bool Screenshot { get; init; } = true;
+    public bool ExecutionLog { get; init; } = true;
+    public bool HtmlReport { get; init; } = true;
+    public bool Video { get; init; } = true;
+    public bool Trace { get; init; } = true;
+    public bool Har { get; init; } = false;
+    public bool Console { get; init; } = true;
+    public bool Network { get; init; } = true;
+    public bool Bundle { get; init; } = false;
+    public static EvidenceAttachmentPolicy PassedDefaults() => new() { Har = false, Bundle = false };
+    public static EvidenceAttachmentPolicy FailedDefaults() => new() { Har = true, Bundle = true };
+}
+
 public sealed class ExecutionOptions
 {
     public bool StrictUnknownConditions { get; init; } = true;
-    // Tosca verification failures are accumulated after mature waits/fallback/healing and fail at scenario end,
+    // Tosca verification failures are accumulated after mature waits and canonical locator resolution and fail at scenario end,
     // allowing later steps and all requested evidence to complete. Fatal browser/action failures still fail immediately.
     public bool DeferVerificationFailures { get; init; } = true;
     public string ExternalDataFile { get; init; } = "TestData/ExternalDataOverrides.json";

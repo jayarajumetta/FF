@@ -20,7 +20,6 @@ public sealed class ProposalLocators
     public ILocator CREATENEWACCOUNT => _page.Locator("[id=\"btnConfirmNo\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ClientAlreadyExists => _page.GetByText("Client Already Exists", new() { Exact = true });
 
     // Source modules: EQ || Proposal Details/Start | confidence=High score=97
@@ -61,7 +60,6 @@ public sealed class ProposalLocators
     public ILocator QNum => NewQuote;
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator QuoteNumber => _page.GetByText("Quote Number", new() { Exact = true });
 
     // Source modules: EQ || Proposal Details/Start | confidence=High score=130
@@ -83,7 +81,6 @@ public sealed class ProposalLocators
     public ILocator State => _page.Locator("[id=\"proposal.ratingState\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator StateMONTANA => _page.GetByText("State == \"MONTANA", new() { Exact = true });
 
     // Source modules: EQ || Proposal Details/Start | confidence=Review score=97

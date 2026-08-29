@@ -41,29 +41,23 @@ public sealed class ClientSearchPage
     public Task WaitForAdditionalNamedInsuredHeadingAsync(string expected) =>
         _ui.WaitAsync(_locators.AdditionalNamedInsuredHeading, expected, new ControlIntent("ClientSearch", "AdditionalNamedInsuredHeading"));
 
-    public Task EnterAddress17A1FBAsync(string value) =>
-        _ui.FillAsync(_locators.Address17A1FB, value, new ControlIntent("ClientSearch", "Address17A1FB"));
+    public Task EnterAddressAsync(string value) =>
+        _ui.FillAsync(_locators.Address, value, new ControlIntent("ClientSearch", "Address"));
 
-    public Task PressAddress17A1FBAsync(string key) =>
-        _ui.PressAsync(_locators.Address17A1FB, key, new ControlIntent("ClientSearch", "Address17A1FB"));
+    public Task PressAddressAsync(string key) =>
+        _ui.PressAsync(_locators.Address, key, new ControlIntent("ClientSearch", "Address"));
 
-    public Task WaitForAddress1CB379Async(string expected) =>
-        _ui.WaitAsync(_locators.Address1CB379, expected, new ControlIntent("ClientSearch", "Address1CB379"));
+    public Task WaitForAdditionalInsuredIndividualAddressAsync(string expected) =>
+        _ui.WaitAsync(_locators.AdditionalInsuredIndividualAddress, expected, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualAddress"));
 
-    public Task EnterAddress1CB379Async(string value) =>
-        _ui.FillAsync(_locators.Address1CB379, value, new ControlIntent("ClientSearch", "Address1CB379"));
+    public Task EnterAdditionalInsuredIndividualAddressAsync(string value) =>
+        _ui.FillAsync(_locators.AdditionalInsuredIndividualAddress, value, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualAddress"));
 
-    public Task PressAddress1CB379Async(string key) =>
-        _ui.PressAsync(_locators.Address1CB379, key, new ControlIntent("ClientSearch", "Address1CB379"));
+    public Task PressAdditionalInsuredIndividualAddressAsync(string key) =>
+        _ui.PressAsync(_locators.AdditionalInsuredIndividualAddress, key, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualAddress"));
 
-    public Task EnterAddress1D319BAsync(string value) =>
-        _ui.FillAsync(_locators.Address1D319B, value, new ControlIntent("ClientSearch", "Address1D319B"));
-
-    public Task PressAddress1D319BAsync(string key) =>
-        _ui.PressAsync(_locators.Address1D319B, key, new ControlIntent("ClientSearch", "Address1D319B"));
-
-    public Task PressAddress2Async(string key) =>
-        _ui.PressAsync(_locators.Address2, key, new ControlIntent("ClientSearch", "Address2"));
+    public Task PressAddressLineTwoAsync(string key) =>
+        _ui.PressAsync(_locators.AddressLineTwo, key, new ControlIntent("ClientSearch", "AddressLineTwo"));
 
     public Task WaitForBusinessNameAsync(string expected) =>
         _ui.WaitAsync(_locators.BusinessName, expected, new ControlIntent("ClientSearch", "BusinessName"));
@@ -80,32 +74,20 @@ public sealed class ClientSearchPage
     public Task PressCityAsync(string key) =>
         _ui.PressAsync(_locators.City, key, new ControlIntent("ClientSearch", "City"));
 
-    public Task WaitForClient070F4Async(string expected) =>
-        _ui.WaitAsync(_locators.Client070F4, expected, new ControlIntent("ClientSearch", "Client070F4"));
+    public Task WaitForAddClientAsync(string expected) =>
+        _ui.WaitAsync(_locators.AddClient, expected, new ControlIntent("ClientSearch", "AddClient"));
 
-    public Task VerifyClient070F4Async(string expected, string property) =>
-        _ui.VerifyAsync(_locators.Client070F4, expected, property, new ControlIntent("ClientSearch", "Client070F4"));
+    public Task VerifyAddClientAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.AddClient, expected, property, new ControlIntent("ClientSearch", "AddClient"));
 
-    public Task ClickClient35F85Async() =>
-        _ui.ClickAsync(_locators.Client35F85, new ControlIntent("ClientSearch", "Client35F85"));
+    public Task ClickAddClientAsync() =>
+        _ui.ClickAsync(_locators.AddClient, new ControlIntent("ClientSearch", "AddClient"));
 
-    public Task ClickClientSearch2CB16Async() =>
-        _ui.ClickAsync(_locators.ClientSearch2CB16, new ControlIntent("ClientSearch", "ClientSearch2CB16"));
+    public Task ClickClientSearchAsync() =>
+        _ui.ClickAsync(_locators.ClientSearch, new ControlIntent("ClientSearch", "ClientSearch"));
 
-    public Task WaitForClientSearch41F28Async(string expected) =>
-        _ui.WaitAsync(_locators.ClientSearch41F28, expected, new ControlIntent("ClientSearch", "ClientSearch41F28"));
-
-    public Task ClickClientSearch41F28Async() =>
-        _ui.ClickAsync(_locators.ClientSearch41F28, new ControlIntent("ClientSearch", "ClientSearch41F28"));
-
-    public Task ClickClientSearchCA696Async() =>
-        _ui.ClickAsync(_locators.ClientSearchCA696, new ControlIntent("ClientSearch", "ClientSearchCA696"));
-
-    public Task WaitForClientSearchFDC36Async(string expected) =>
-        _ui.WaitAsync(_locators.ClientSearchFDC36, expected, new ControlIntent("ClientSearch", "ClientSearchFDC36"));
-
-    public Task ClickClientSearchFDC36Async() =>
-        _ui.ClickAsync(_locators.ClientSearchFDC36, new ControlIntent("ClientSearch", "ClientSearchFDC36"));
+    public Task WaitForClientSearchAsync(string expected) =>
+        _ui.WaitAsync(_locators.ClientSearch, expected, new ControlIntent("ClientSearch", "ClientSearch"));
 
     public Task ClickCompleteAsync() =>
         _ui.ClickAsync(_locators.Complete, new ControlIntent("ClientSearch", "Complete"));
@@ -116,56 +98,47 @@ public sealed class ClientSearchPage
     public Task PressDOBAsync(string key) =>
         _ui.PressAsync(_locators.DOB, key, new ControlIntent("ClientSearch", "DOB"));
 
-    public Task EnterDateOfBirth338D7Async(string value) =>
-        _ui.FillAsync(_locators.DateOfBirth338D7, value, new ControlIntent("ClientSearch", "DateOfBirth338D7"));
+    public Task EnterAddAssociatedClientDateOfBirthAsync(string value) =>
+        _ui.FillAsync(_locators.AddAssociatedClientDateOfBirth, value, new ControlIntent("ClientSearch", "AddAssociatedClientDateOfBirth"));
 
-    public Task PressDateOfBirth338D7Async(string key) =>
-        _ui.PressAsync(_locators.DateOfBirth338D7, key, new ControlIntent("ClientSearch", "DateOfBirth338D7"));
+    public Task PressAddAssociatedClientDateOfBirthAsync(string key) =>
+        _ui.PressAsync(_locators.AddAssociatedClientDateOfBirth, key, new ControlIntent("ClientSearch", "AddAssociatedClientDateOfBirth"));
 
-    public Task EnterDateOfBirthEA1C4Async(string value) =>
-        _ui.FillAsync(_locators.DateOfBirthEA1C4, value, new ControlIntent("ClientSearch", "DateOfBirthEA1C4"));
+    public Task EnterAdditionalInsuredIndividualDateOfBirthAsync(string value) =>
+        _ui.FillAsync(_locators.AdditionalInsuredIndividualDateOfBirth, value, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualDateOfBirth"));
 
-    public Task PressDateOfBirthEA1C4Async(string key) =>
-        _ui.PressAsync(_locators.DateOfBirthEA1C4, key, new ControlIntent("ClientSearch", "DateOfBirthEA1C4"));
+    public Task PressAdditionalInsuredIndividualDateOfBirthAsync(string key) =>
+        _ui.PressAsync(_locators.AdditionalInsuredIndividualDateOfBirth, key, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualDateOfBirth"));
 
-    public Task ClickDetail6D228Async() =>
-        _ui.ClickAsync(_locators.Detail6D228, new ControlIntent("ClientSearch", "Detail6D228"));
+    public Task ClickAddAssociatedClientDetailAsync() =>
+        _ui.ClickAsync(_locators.AddAssociatedClientDetail, new ControlIntent("ClientSearch", "AddAssociatedClientDetail"));
 
-    public Task ClickDetail704E6Async() =>
-        _ui.ClickAsync(_locators.Detail704E6, new ControlIntent("ClientSearch", "Detail704E6"));
+    public Task ClickAdditionalInsuredIndividualDetailAsync() =>
+        _ui.ClickAsync(_locators.AdditionalInsuredIndividualDetail, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualDetail"));
 
-    public Task WaitForEnterSSN6B3FBAsync(string expected) =>
-        _ui.WaitAsync(_locators.EnterSSN6B3FB, expected, new ControlIntent("ClientSearch", "EnterSSN6B3FB"));
+    public Task WaitForNamedInsuredIndividualEnterSSNAsync(string expected) =>
+        _ui.WaitAsync(_locators.NamedInsuredIndividualEnterSSN, expected, new ControlIntent("ClientSearch", "NamedInsuredIndividualEnterSSN"));
 
-    public Task PressEnterSSN6B3FBAsync(string key) =>
-        _ui.PressAsync(_locators.EnterSSN6B3FB, key, new ControlIntent("ClientSearch", "EnterSSN6B3FB"));
+    public Task PressNamedInsuredIndividualEnterSSNAsync(string key) =>
+        _ui.PressAsync(_locators.NamedInsuredIndividualEnterSSN, key, new ControlIntent("ClientSearch", "NamedInsuredIndividualEnterSSN"));
 
-    public Task ClickEnterSSN6B3FBAsync() =>
-        _ui.ClickAsync(_locators.EnterSSN6B3FB, new ControlIntent("ClientSearch", "EnterSSN6B3FB"));
+    public Task ClickNamedInsuredIndividualEnterSSNAsync() =>
+        _ui.ClickAsync(_locators.NamedInsuredIndividualEnterSSN, new ControlIntent("ClientSearch", "NamedInsuredIndividualEnterSSN"));
 
-    public Task<string> CaptureEnterSSN6B3FBAsync(string property = "") =>
-        _ui.CaptureAsync(_locators.EnterSSN6B3FB, property, new ControlIntent("ClientSearch", "EnterSSN6B3FB"));
+    public Task<string> CaptureNamedInsuredIndividualEnterSSNAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.NamedInsuredIndividualEnterSSN, property, new ControlIntent("ClientSearch", "NamedInsuredIndividualEnterSSN"));
 
-    public Task WaitForEnterSSNE3801Async(string expected) =>
-        _ui.WaitAsync(_locators.EnterSSNE3801, expected, new ControlIntent("ClientSearch", "EnterSSNE3801"));
+    public Task WaitForAddAssociatedClientEnterSSNAsync(string expected) =>
+        _ui.WaitAsync(_locators.AddAssociatedClientEnterSSN, expected, new ControlIntent("ClientSearch", "AddAssociatedClientEnterSSN"));
 
-    public Task PressEnterSSNE3801Async(string key) =>
-        _ui.PressAsync(_locators.EnterSSNE3801, key, new ControlIntent("ClientSearch", "EnterSSNE3801"));
+    public Task PressAddAssociatedClientEnterSSNAsync(string key) =>
+        _ui.PressAsync(_locators.AddAssociatedClientEnterSSN, key, new ControlIntent("ClientSearch", "AddAssociatedClientEnterSSN"));
 
-    public Task ClickEnterSSNE3801Async() =>
-        _ui.ClickAsync(_locators.EnterSSNE3801, new ControlIntent("ClientSearch", "EnterSSNE3801"));
+    public Task ClickAddAssociatedClientEnterSSNAsync() =>
+        _ui.ClickAsync(_locators.AddAssociatedClientEnterSSN, new ControlIntent("ClientSearch", "AddAssociatedClientEnterSSN"));
 
-    public Task WaitForEnterSSNFA186Async(string expected) =>
-        _ui.WaitAsync(_locators.EnterSSNFA186, expected, new ControlIntent("ClientSearch", "EnterSSNFA186"));
-
-    public Task EnterEnterSSNFA186Async(string value) =>
-        _ui.FillAsync(_locators.EnterSSNFA186, value, new ControlIntent("ClientSearch", "EnterSSNFA186"));
-
-    public Task PressEnterSSNFA186Async(string key) =>
-        _ui.PressAsync(_locators.EnterSSNFA186, key, new ControlIntent("ClientSearch", "EnterSSNFA186"));
-
-    public Task ClickEnterSSNFA186Async() =>
-        _ui.ClickAsync(_locators.EnterSSNFA186, new ControlIntent("ClientSearch", "EnterSSNFA186"));
+    public Task EnterAddAssociatedClientEnterSSNAsync(string value) =>
+        _ui.FillAsync(_locators.AddAssociatedClientEnterSSN, value, new ControlIntent("ClientSearch", "AddAssociatedClientEnterSSN"));
 
     public Task EnterEntityTypeAsync(string value) =>
         _ui.FillAsync(_locators.EntityType, value, new ControlIntent("ClientSearch", "EntityType"));
@@ -173,35 +146,23 @@ public sealed class ClientSearchPage
     public Task PressEntityTypeAsync(string key) =>
         _ui.PressAsync(_locators.EntityType, key, new ControlIntent("ClientSearch", "EntityType"));
 
-    public Task ClickEntityTypeAsync() =>
-        _ui.ClickAsync(_locators.EntityType, new ControlIntent("ClientSearch", "EntityType"));
+    public Task WaitForFirstNameAsync(string expected) =>
+        _ui.WaitAsync(_locators.FirstName, expected, new ControlIntent("ClientSearch", "FirstName"));
 
-    public Task WaitForFirstName55A0BAsync(string expected) =>
-        _ui.WaitAsync(_locators.FirstName55A0B, expected, new ControlIntent("ClientSearch", "FirstName55A0B"));
+    public Task EnterFirstNameAsync(string value) =>
+        _ui.FillAsync(_locators.FirstName, value, new ControlIntent("ClientSearch", "FirstName"));
 
-    public Task EnterFirstName55A0BAsync(string value) =>
-        _ui.FillAsync(_locators.FirstName55A0B, value, new ControlIntent("ClientSearch", "FirstName55A0B"));
+    public Task PressFirstNameAsync(string key) =>
+        _ui.PressAsync(_locators.FirstName, key, new ControlIntent("ClientSearch", "FirstName"));
 
-    public Task PressFirstName55A0BAsync(string key) =>
-        _ui.PressAsync(_locators.FirstName55A0B, key, new ControlIntent("ClientSearch", "FirstName55A0B"));
+    public Task EnterGenderAsync(string value) =>
+        _ui.FillAsync(_locators.Gender, value, new ControlIntent("ClientSearch", "Gender"));
 
-    public Task PressFirstNameC5387Async(string key) =>
-        _ui.PressAsync(_locators.FirstNameC5387, key, new ControlIntent("ClientSearch", "FirstNameC5387"));
+    public Task PressGenderAsync(string key) =>
+        _ui.PressAsync(_locators.Gender, key, new ControlIntent("ClientSearch", "Gender"));
 
-    public Task EnterGender1DC4AAsync(string value) =>
-        _ui.FillAsync(_locators.Gender1DC4A, value, new ControlIntent("ClientSearch", "Gender1DC4A"));
-
-    public Task PressGender1DC4AAsync(string key) =>
-        _ui.PressAsync(_locators.Gender1DC4A, key, new ControlIntent("ClientSearch", "Gender1DC4A"));
-
-    public Task EnterGender4973CAsync(string value) =>
-        _ui.FillAsync(_locators.Gender4973C, value, new ControlIntent("ClientSearch", "Gender4973C"));
-
-    public Task PressGender4973CAsync(string key) =>
-        _ui.PressAsync(_locators.Gender4973C, key, new ControlIntent("ClientSearch", "Gender4973C"));
-
-    public Task ClickIndividualOKAsync() =>
-        _ui.ClickAsync(_locators.IndividualOK, new ControlIntent("ClientSearch", "IndividualOK"));
+    public Task ClickOKAsync() =>
+        _ui.ClickAsync(_locators.OK, new ControlIntent("ClientSearch", "OK"));
 
     public Task EnterIndividualTypeAsync(string value) =>
         _ui.FillAsync(_locators.IndividualType, value, new ControlIntent("ClientSearch", "IndividualType"));
@@ -254,29 +215,14 @@ public sealed class ClientSearchPage
     public Task WaitForOKAsync(string expected) =>
         _ui.WaitAsync(_locators.OK, expected, new ControlIntent("ClientSearch", "OK"));
 
-    public Task ClickOKAsync() =>
-        _ui.ClickAsync(_locators.OK, new ControlIntent("ClientSearch", "OK"));
+    public Task ClickOrderSSNAsync() =>
+        _ui.ClickAsync(_locators.OrderSSN, new ControlIntent("ClientSearch", "OrderSSN"));
 
-    public Task ClickOrderSSN5E031Async() =>
-        _ui.ClickAsync(_locators.OrderSSN5E031, new ControlIntent("ClientSearch", "OrderSSN5E031"));
+    public Task WaitForOrderSSNAsync(string expected) =>
+        _ui.WaitAsync(_locators.OrderSSN, expected, new ControlIntent("ClientSearch", "OrderSSN"));
 
-    public Task WaitForOrderSSN68C87Async(string expected) =>
-        _ui.WaitAsync(_locators.OrderSSN68C87, expected, new ControlIntent("ClientSearch", "OrderSSN68C87"));
-
-    public Task ClickOrderSSN68C87Async() =>
-        _ui.ClickAsync(_locators.OrderSSN68C87, new ControlIntent("ClientSearch", "OrderSSN68C87"));
-
-    public Task ClickOrderSSN710BFAsync() =>
-        _ui.ClickAsync(_locators.OrderSSN710BF, new ControlIntent("ClientSearch", "OrderSSN710BF"));
-
-    public Task WaitForPleaseVerifySSN3EAB9Async(string expected) =>
-        _ui.WaitAsync(_locators.PleaseVerifySSN3EAB9, expected, new ControlIntent("ClientSearch", "PleaseVerifySSN3EAB9"));
-
-    public Task WaitForPleaseVerifySSN8D55BAsync(string expected) =>
-        _ui.WaitAsync(_locators.PleaseVerifySSN8D55B, expected, new ControlIntent("ClientSearch", "PleaseVerifySSN8D55B"));
-
-    public Task WaitForPleaseVerifySSNF738AAsync(string expected) =>
-        _ui.WaitAsync(_locators.PleaseVerifySSNF738A, expected, new ControlIntent("ClientSearch", "PleaseVerifySSNF738A"));
+    public Task WaitForPleaseVerifySSNAsync(string expected) =>
+        _ui.WaitAsync(_locators.PleaseVerifySSN, expected, new ControlIntent("ClientSearch", "PleaseVerifySSN"));
 
     public Task WaitForQuickQuoteAsync(string expected) =>
         _ui.WaitAsync(_locators.QuickQuote, expected, new ControlIntent("ClientSearch", "QuickQuote"));
@@ -317,23 +263,14 @@ public sealed class ClientSearchPage
     public Task WaitForUnderwritingInfoAsync(string expected) =>
         _ui.WaitAsync(_locators.UnderwritingInfo, expected, new ControlIntent("ClientSearch", "UnderwritingInfo"));
 
-    public Task WaitForVerify34721Async(string expected) =>
-        _ui.WaitAsync(_locators.Verify34721, expected, new ControlIntent("ClientSearch", "Verify34721"));
+    public Task WaitForVerifyAsync(string expected) =>
+        _ui.WaitAsync(_locators.Verify, expected, new ControlIntent("ClientSearch", "Verify"));
 
-    public Task ClickVerify34721Async() =>
-        _ui.ClickAsync(_locators.Verify34721, new ControlIntent("ClientSearch", "Verify34721"));
+    public Task ClickVerifyAsync() =>
+        _ui.ClickAsync(_locators.Verify, new ControlIntent("ClientSearch", "Verify"));
 
-    public Task VerifyVerify7A388Async(string expected, string property) =>
-        _ui.VerifyAsync(_locators.Verify7A388, expected, property, new ControlIntent("ClientSearch", "Verify7A388"));
-
-    public Task ClickVerify7A388Async() =>
-        _ui.ClickAsync(_locators.Verify7A388, new ControlIntent("ClientSearch", "Verify7A388"));
-
-    public Task WaitForVerify8CDBEAsync(string expected) =>
-        _ui.WaitAsync(_locators.Verify8CDBE, expected, new ControlIntent("ClientSearch", "Verify8CDBE"));
-
-    public Task ClickVerify8CDBEAsync() =>
-        _ui.ClickAsync(_locators.Verify8CDBE, new ControlIntent("ClientSearch", "Verify8CDBE"));
+    public Task VerifyVerifyAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.Verify, expected, property, new ControlIntent("ClientSearch", "Verify"));
 
     public Task EnterWebsiteAddressAsync(string value) =>
         _ui.FillAsync(_locators.WebsiteAddress, value, new ControlIntent("ClientSearch", "WebsiteAddress"));
@@ -350,53 +287,141 @@ public sealed class ClientSearchPage
     public Task PressYearsInBusinessAsync(string key) =>
         _ui.PressAsync(_locators.YearsInBusiness, key, new ControlIntent("ClientSearch", "YearsInBusiness"));
 
-    public Task VerifyZipCode26D22Async(string expected, string property) =>
-        _ui.VerifyAsync(_locators.ZipCode26D22, expected, property, new ControlIntent("ClientSearch", "ZipCode26D22"));
+    public Task VerifyNamedInsuredZipCodeAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.NamedInsuredZipCode, expected, property, new ControlIntent("ClientSearch", "NamedInsuredZipCode"));
 
-    public Task EnterZipCode26D22Async(string value) =>
-        _ui.FillAsync(_locators.ZipCode26D22, value, new ControlIntent("ClientSearch", "ZipCode26D22"));
+    public Task EnterNamedInsuredZipCodeAsync(string value) =>
+        _ui.FillAsync(_locators.NamedInsuredZipCode, value, new ControlIntent("ClientSearch", "NamedInsuredZipCode"));
 
-    public Task PressZipCode26D22Async(string key) =>
-        _ui.PressAsync(_locators.ZipCode26D22, key, new ControlIntent("ClientSearch", "ZipCode26D22"));
+    public Task PressNamedInsuredZipCodeAsync(string key) =>
+        _ui.PressAsync(_locators.NamedInsuredZipCode, key, new ControlIntent("ClientSearch", "NamedInsuredZipCode"));
 
-    public Task EnterZipCodeA088EAsync(string value) =>
-        _ui.FillAsync(_locators.ZipCodeA088E, value, new ControlIntent("ClientSearch", "ZipCodeA088E"));
+    public Task EnterAdditionalInsuredIndividualZipCodeAsync(string value) =>
+        _ui.FillAsync(_locators.AdditionalInsuredIndividualZipCode, value, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualZipCode"));
 
-    public Task PressZipCodeA088EAsync(string key) =>
-        _ui.PressAsync(_locators.ZipCodeA088E, key, new ControlIntent("ClientSearch", "ZipCodeA088E"));
-
-    public Task EnterZipCodeD2A54Async(string value) =>
-        _ui.FillAsync(_locators.ZipCodeD2A54, value, new ControlIntent("ClientSearch", "ZipCodeD2A54"));
-
-    public Task PressZipCodeD2A54Async(string key) =>
-        _ui.PressAsync(_locators.ZipCodeD2A54, key, new ControlIntent("ClientSearch", "ZipCodeD2A54"));
-
+    public Task PressAdditionalInsuredIndividualZipCodeAsync(string key) =>
+        _ui.PressAsync(_locators.AdditionalInsuredIndividualZipCode, key, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualZipCode"));
 
     public Task EnterLastNameAsync(string value) =>
         _ui.FillAsync(_locators.LastName, value, new ControlIntent("ClientSearch", "LastName"));
 
-
-    public Task EnterEnterSSN6B3FBAsync(string value) =>
-        _ui.FillAsync(_locators.EnterSSN6B3FB, value, new ControlIntent("ClientSearch", "EnterSSN6B3FB"));
-
+    public Task EnterNamedInsuredIndividualEnterSSNAsync(string value) =>
+        _ui.FillAsync(_locators.NamedInsuredIndividualEnterSSN, value, new ControlIntent("ClientSearch", "NamedInsuredIndividualEnterSSN"));
 
     public Task EnterPrimaryPhoneAsync(string value) =>
         _ui.FillAsync(_locators.PrimaryPhone, value, new ControlIntent("ClientSearch", "PrimaryPhone"));
 
-
     public Task EnterFEINAsync(string value) =>
         _ui.FillAsync(_locators.FEIN, value, new ControlIntent("ClientSearch", "FEIN"));
 
-
     public Task EnterAuditTelephoneAsync(string value) =>
         _ui.FillAsync(_locators.AuditTelephone, value, new ControlIntent("ClientSearch", "AuditTelephone"));
-
 
     public Task EnterInspectionTelephoneAsync(string value) =>
         _ui.FillAsync(_locators.InspectionTelephone, value, new ControlIntent("ClientSearch", "InspectionTelephone"));
 
 
-    public Task EnterFirstNameC5387Async(string value) =>
-        _ui.FillAsync(_locators.FirstNameC5387, value, new ControlIntent("ClientSearch", "FirstNameC5387"));
+    public Task EnterAdditionalInsuredFirstNameSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.AdditionalInsuredFirstName, value, new ControlIntent("ClientSearch", "AdditionalInsuredFirstName"), delayMs);
+
+    public Task EnterAdditionalInsuredMiddleNameSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.AdditionalInsuredMiddleName, value, new ControlIntent("ClientSearch", "AdditionalInsuredMiddleName"), delayMs);
+
+    public Task EnterAddressSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.Address, value, new ControlIntent("ClientSearch", "Address"), delayMs);
+
+    public Task EnterAdditionalInsuredIndividualAddressSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.AdditionalInsuredIndividualAddress, value, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualAddress"), delayMs);
+
+    public Task EnterBusinessNameSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.BusinessName, value, new ControlIntent("ClientSearch", "BusinessName"), delayMs);
+
+    public Task EnterCitySequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.City, value, new ControlIntent("ClientSearch", "City"), delayMs);
+
+    public Task EnterDOBSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.DOB, value, new ControlIntent("ClientSearch", "DOB"), delayMs);
+
+    public Task EnterAddAssociatedClientDateOfBirthSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.AddAssociatedClientDateOfBirth, value, new ControlIntent("ClientSearch", "AddAssociatedClientDateOfBirth"), delayMs);
+
+    public Task EnterAdditionalInsuredIndividualDateOfBirthSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.AdditionalInsuredIndividualDateOfBirth, value, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualDateOfBirth"), delayMs);
+
+    public Task EnterAddAssociatedClientEnterSSNSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.AddAssociatedClientEnterSSN, value, new ControlIntent("ClientSearch", "AddAssociatedClientEnterSSN"), delayMs);
+
+    public Task EnterEntityTypeSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.EntityType, value, new ControlIntent("ClientSearch", "EntityType"), delayMs);
+
+    public Task EnterFirstNameSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.FirstName, value, new ControlIntent("ClientSearch", "FirstName"), delayMs);
+
+    public Task EnterGenderSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.Gender, value, new ControlIntent("ClientSearch", "Gender"), delayMs);
+
+    public Task EnterIndividualTypeSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.IndividualType, value, new ControlIntent("ClientSearch", "IndividualType"), delayMs);
+
+    public Task EnterInsuredEMailAddressSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.InsuredEMailAddress, value, new ControlIntent("ClientSearch", "InsuredEMailAddress"), delayMs);
+
+    public Task EnterInsuredTypeSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.InsuredType, value, new ControlIntent("ClientSearch", "InsuredType"), delayMs);
+
+    public Task EnterJavaScriptSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.JavaScript, value, new ControlIntent("ClientSearch", "JavaScript"), delayMs);
+
+    public Task EnterMiddleNameSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.MiddleName, value, new ControlIntent("ClientSearch", "MiddleName"), delayMs);
+
+    public Task EnterNameOfAuditContactSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.NameOfAuditContact, value, new ControlIntent("ClientSearch", "NameOfAuditContact"), delayMs);
+
+    public Task EnterNameOfInspectionContactSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.NameOfInspectionContact, value, new ControlIntent("ClientSearch", "NameOfInspectionContact"), delayMs);
+
+    public Task EnterStateSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.State, value, new ControlIntent("ClientSearch", "State"), delayMs);
+
+    public Task EnterTitleSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.Title, value, new ControlIntent("ClientSearch", "Title"), delayMs);
+
+    public Task EnterWebsiteAddressSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.WebsiteAddress, value, new ControlIntent("ClientSearch", "WebsiteAddress"), delayMs);
+
+    public Task EnterYearsInBusinessSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.YearsInBusiness, value, new ControlIntent("ClientSearch", "YearsInBusiness"), delayMs);
+
+    public Task EnterNamedInsuredZipCodeSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.NamedInsuredZipCode, value, new ControlIntent("ClientSearch", "NamedInsuredZipCode"), delayMs);
+
+    public Task EnterAdditionalInsuredIndividualZipCodeSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.AdditionalInsuredIndividualZipCode, value, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualZipCode"), delayMs);
+
+    public Task EnterLastNameSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.LastName, value, new ControlIntent("ClientSearch", "LastName"), delayMs);
+
+    public Task EnterNamedInsuredIndividualEnterSSNSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.NamedInsuredIndividualEnterSSN, value, new ControlIntent("ClientSearch", "NamedInsuredIndividualEnterSSN"), delayMs);
+
+    public Task EnterPrimaryPhoneSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.PrimaryPhone, value, new ControlIntent("ClientSearch", "PrimaryPhone"), delayMs);
+
+    public Task EnterFEINSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.FEIN, value, new ControlIntent("ClientSearch", "FEIN"), delayMs);
+
+    public Task EnterAuditTelephoneSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.AuditTelephone, value, new ControlIntent("ClientSearch", "AuditTelephone"), delayMs);
+
+    public Task EnterInspectionTelephoneSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.InspectionTelephone, value, new ControlIntent("ClientSearch", "InspectionTelephone"), delayMs);
+
+    public async Task EnterInsuredAndEntityTypeAsync(string insuredType, string entityType)
+    {
+        await _ui.FillAsync(_locators.InsuredType, insuredType, new ControlIntent("ClientSearch", "InsuredType"));
+        await _ui.WaitReadyBestEffortAsync(_locators.EntityType, new ControlIntent("ClientSearch", "EntityType"), 2500);
+        await _ui.FillAsync(_locators.EntityType, entityType, new ControlIntent("ClientSearch", "EntityType"));
+    }
 
 }

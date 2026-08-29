@@ -1,7 +1,6 @@
 using InsuranceAutomation.Core;
 using InsuranceAutomation.NUnit;
 using Reqnroll;
-using InsuranceAutomation.PLDC.Pages.FallbackLocators;
 
 namespace InsuranceAutomation.PLDC.Hooks;
 
@@ -32,14 +31,14 @@ public sealed class TestHooks
             scenarioName + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss_fff") + "_" + Guid.NewGuid().ToString("N")[..8]);
 
         Directory.CreateDirectory(artifactDirectory);
+        var testEvidenceContext = NUnitTestEvidenceContext.Capture(_feature.FeatureInfo.Title, _scenario.ScenarioInfo.Title);
         var logger = new RunLogger(artifactDirectory);
         var browser = new BrowserSession(config);
         browser.SetArtifactDirectory(artifactDirectory);
         var data = new ScenarioData(config);
         var report = new ScenarioReport(artifactDirectory);
         var verificationFailures = new DeferredVerificationCollector();
-        var fallbackProvider = new PersonalLinesDuckCreekFallbackLocatorProvider(config);
-        var ui = new UiActions(browser, config, logger, report, "PersonalLines.DuckCreek", verificationFailures, fallbackProvider);
+        var ui = new UiActions(browser, config, logger, report, "PersonalLines.DuckCreek", verificationFailures);
 
         _scenario.Set(config);
         _scenario.Set(artifactDirectory);
@@ -49,6 +48,7 @@ public sealed class TestHooks
         _scenario.Set(ui);
         _scenario.Set(report);
         _scenario.Set(verificationFailures);
+        _scenario.Set(testEvidenceContext);
 
     }
 
@@ -61,7 +61,7 @@ public sealed class TestHooks
             _feature.FeatureInfo.Title,
             _scenario.ScenarioInfo.Title,
             step,
-            config.SelfHeal.MaxPreviousSteps);
+            3);
 
         _scenario.Get<BrowserSession>().BeginStepEvidence();
         _scenario.Set(_scenario.Get<DeferredVerificationCollector>().Failures.Count, "DeferredVerificationCountAtStepStart");
@@ -83,7 +83,7 @@ public sealed class TestHooks
         var failed = _scenario.TestError is not null || deferredInStep;
         string? screenshot = null;
 
-        if (browser.IsStarted && ((failed && config.Browser.ScreenshotOnFailure) || config.Browser.ScreenshotEachStep))
+        if (browser.IsStarted && (failed || config.Browser.ScreenshotEachStep))
         {
             screenshot = await browser.CaptureScreenshotAsync(
                 $"{DateTime.Now:HHmmssfff}_{Safe(_scenario.StepContext.StepInfo.Text)}.png");
@@ -112,7 +112,8 @@ public sealed class TestHooks
             _scenario.Get<string>(),
             _feature.FeatureInfo.Title,
             _scenario.ScenarioInfo.Title,
-            _scenario.TestError);
+            _scenario.TestError,
+            _scenario.Get<NUnitTestEvidenceContext>());
 
     private static string Safe(string value) =>
         string.Concat(value.Select(c => char.IsLetterOrDigit(c) ? c : '_')).Trim('_');

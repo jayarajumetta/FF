@@ -24,70 +24,43 @@ public sealed class GLBasicPolicySteps
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_1}}"));
         await page.WaitForUnderwritingInfoAsync("Exists");
         await page.EnterInsuredTypeAsync(data.Resolve("{{data:insured_type_3}}"));
-        await page.ClickEntityTypeAsync();
-        await page.WaitForFirstName55A0BAsync("Visible");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets FirstName55A0B
-        await page.EnterFirstName55A0BAsync(data.Resolve("{{data:first_name_7}}"));
-        // v56 suppressed redundant Tosca keyboard steering: FirstName55A0B CLICK
-        // v56 suppressed redundant Tosca keyboard steering: FirstName55A0B Tab
+        await page.EnterEntityTypeAsync(data.Resolve("{{data:entity_type_13}}"));
+        await page.WaitForFirstNameAsync("Visible");
+        await page.EnterFirstNameAsync(data.Resolve("{{data:first_name_7}}"));
         await page.EnterMiddleNameAsync(data.Resolve("{{data:middle_name_8}}"));
         await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0040}}"));
         await page.EnterDOBAsync(data.Resolve("{DATE[][-40y][MM-dd-yyyy]}"));
         if (data.Condition("State!=\"CA\""))
         {
-                    await page.EnterGender1DC4AAsync(data.Resolve("{{data:gender_11}}"));
+            await page.EnterGenderAsync(data.Resolve("{{data:gender_11}}"));
         }
-        await page.EnterEntityTypeAsync(data.Resolve("{{data:entity_type_13}}"));
-        // Source step 0041: RANDOM input for Primary Phone.
         await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0041}}"));
-        await page.EnterAddress17A1FBAsync(data.Resolve("{{data:address1_15}}"));
-        await page.EnterZipCode26D22Async(data.Resolve("{{data:zipcode_16}}"));
-        await page.ClickClientSearchCA696Async();
+        await page.EnterAddressAsync(data.Resolve("{{data:address1_15}}"));
+        await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:zipcode_16}}"));
+        await page.ClickClientSearchAsync();
         await page.WaitForOKAsync("Exists");
         await page.ClickOKAsync();
-        await page.WaitForOrderSSN68C87Async("Exists");
-        await page.ClickOrderSSN68C87Async();
-        await page.WaitForEnterSSN6B3FBAsync("Exists");
-        await page.EnterEnterSSN6B3FBAsync(data.Resolve("{{runtime:InsuredSSN}}"));
+        await page.WaitForOrderSSNAsync("Exists");
+        await page.ClickOrderSSNAsync();
+        await page.WaitForNamedInsuredIndividualEnterSSNAsync("Exists");
+        await page.EnterNamedInsuredIndividualEnterSSNAsync(data.Resolve("{{runtime:InsuredSSN}}"));
         data.Set("Last4SSN", data.Get("InsuredSSN").Length >= 4 ? data.Get("InsuredSSN")[^4..] : data.Get("InsuredSSN"));
-        // v56 suppressed redundant Tosca keyboard steering: EnterSSN6B3FB TAB
-        // v56 suppressed redundant Tosca keyboard steering: EnterSSN6B3FB Enter
-        await page.ClickEnterSSN6B3FBAsync();
-        await page.PressEnterSSN6B3FBAsync("Doubleclick");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets EnterSSN6B3FB
-        await page.ClickVerify8CDBEAsync();
-        await page.WaitForVerify8CDBEAsync("Absent");
+        await page.PressNamedInsuredIndividualEnterSSNAsync("Doubleclick");
+        await page.ClickVerifyAsync();
+        await page.WaitForVerifyAsync("Absent");
         await page.WaitForSocialSecurityAsync("Equal");
         await page.VerifySocialSecurityAsync(data.Resolve("XXX-XX-{B[Last4SSN]}"), "InnerText");
-        await page.WaitForPleaseVerifySSN3EAB9Async("Absent");
-        if (data.Condition("'Product (LOB)' != \"UMB\""))
-        {
-                    await page.EnterNameOfAuditContactAsync(data.Resolve("{{data:name_of_audit_contact_33}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: NameOfAuditContact CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: NameOfAuditContact Tab
-        }
-        // Source step 0048: RANDOM input for Audit Telephone #.
-        if (data.Condition("'Product (LOB)' != \"UMB\""))
-        {
-            await page.EnterAuditTelephoneAsync(data.Resolve("{{runtime:AuditTelephone_0048}}"));
-        }
+        await page.WaitForPleaseVerifySSNAsync("Absent");
+        await page.EnterNameOfAuditContactAsync(data.Resolve("{{data:name_of_audit_contact_33}}"));
+        await page.EnterAuditTelephoneAsync(data.Resolve("{{runtime:AuditTelephone_0048}}"));
         await page.EnterNameOfInspectionContactAsync(data.Resolve("{{data:name_of_inspection_contact_35}}"));
-        // v56 suppressed redundant Tosca keyboard steering: NameOfInspectionContact CLICK
-        // v56 suppressed redundant Tosca keyboard steering: NameOfInspectionContact Tab
-        // Source step 0048: RANDOM input for Inspection Telephone #.
         await page.EnterInspectionTelephoneAsync(data.Resolve("{{runtime:InspectionTelephone_0048}}"));
         await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_37}}"));
-        // v56 suppressed redundant Tosca keyboard steering: InsuredEMailAddress CLICK
-        // v56 suppressed redundant Tosca keyboard steering: InsuredEMailAddress Tab
         await page.EnterWebsiteAddressAsync(data.Resolve("{{data:website_address_38}}"));
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Address2
-        await page.VerifyZipCode26D22Async("[0-9]{5}-[0-9]{4}", "Regex:value");
-        data.Set("State", data.Resolve("{{data:state}}"));
-        data.Set("Product (LOB)", data.Resolve("{{data:product_lob}}"));
+        await page.VerifyNamedInsuredZipCodeAsync("[0-9]{5}-[0-9]{4}", "Regex:value");
 
     }
 
@@ -100,23 +73,22 @@ public sealed class GLBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickUnderwritingInfoAsync();
         await page.WaitForGeneralUWQuestionsAsync("Exists");
-        await page.ClickUpdateAnswers9CB86Async();
+        await page.ClickPropertyUWQuestionsUpdateAnswersAsync();
         await page.ClickInsuranceHistoryAsync();
         await page.WaitForIsThereAPriorCarrierAsync("Exists");
         await page.EnterIsThereAPriorCarrierAsync(data.Resolve("{{data:is_there_a_prior_carrier_50}}"));
         await page.WaitForCarrierAsync("Exists");
         await page.EnterCarrierAsync(data.Resolve("{{data:carrier_52}}"));
-        await page.EnterPolicyNumberBA28EAsync(data.Resolve("{{data:policy_number_53}}"));
+        await page.EnterGeneralLiabilityPolicyNumberAsync(data.Resolve("{{data:policy_number_53}}"));
         await page.EnterPolicyTypeAsync(data.Resolve("{{data:policy_type_54}}"));
-        await page.EnterEffectiveDateB557FAsync(data.Resolve("{DATE[][-2y][MM'/'dd'/'yyyy]}"));
-        await page.EnterExpirationDate34EACAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+        await page.EnterCommercialAutoEffectiveDateAsync(data.Resolve("{DATE[][-2y][MM'/'dd'/'yyyy]}"));
+        await page.EnterGeneralLiabilityExpirationDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
         await page.EnterModificationFactorAsync(data.Resolve("{{data:modificationfactor_57}}"));
         await page.EnterTotalPremiumAsync(data.Resolve("{{data:total_premium_58}}"));
-        await page.ClickOtherInsuranceHistoryOKAsync();
-        await page.WaitForDetail0F8C6Async("Exists");
+        await page.ClickOKAsync();
+        await page.WaitForUnderwritingInfoOtherInsuranceHistoryDetailAsync("Exists");
         await page.ClickLossExperienceAsync();
         await page.WaitForNoKnownLossesAsync("Exists");
         await page.SetNoKnownLossesAsync(data.Resolve("{{data:no_known_losses_63}}"));
@@ -136,65 +108,27 @@ public sealed class GLBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickPolicyInfoAsync();
         await page.WaitForPolicyInfoHeaderAsync("Exists");
         await page.PauseAsync(1000);
-        await page.EnterEffectiveDate95094Async(data.Resolve("{{data:effectivedate_71}}"));
-        if (data.Condition("'Product (LOB)' == \"BOP\"||'Product (LOB)' == \"UMB\"||'Product (LOB)' == \"BAP\"||'Product (LOB)' == \"CPP\"||'Product (LOB)' == \"CP\"||'Product (LOB)' == \"CR\"||'Product (LOB)' == \"IM\"||'Product (LOB)'==\"GL\""))
-        {
-                    await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_72}}"));
-        }
+        await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateAsync(data.Resolve("{{data:effectivedate_71}}"));
+        await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_72}}"));
         await page.PauseAsync(1000);
-        if (data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
-        {
-                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_74}}"));
-        }
-        if (data.Condition("'Product (LOB)' != \"WC\""))
-        {
-                    await page.ClickPrimaryRatingStateAsync();
-        }
-        if (data.Condition("'Product (LOB)' != \"WC\""))
-        {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets PrimaryRatingState
-        }
-        if (data.Condition("'Product (LOB)' != \"WC\""))
-        {
-                    // v56 suppressed duplicate keyboard steering: PrimaryRatingState TAB
-        }
+        await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_74}}"));
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_78}}"));
-        if (data.Condition("'Product (LOB)' == \"GL\""))
-        {
-                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_81}}"));
-        }
-        if (data.Condition("'Product (LOB)' == \"GL\""))
-        {
-                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_82}}"));
-                    await page.PressPrimaryRatingStateAsync("Down");
-                    // v56 suppressed redundant Tosca keyboard steering: PrimaryRatingState Enter
-                    // v56 suppressed redundant Tosca keyboard steering: PrimaryRatingState Tab
-        }
+        await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_81}}"));
+        await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_82}}"));
+        await page.PressPrimaryRatingStateAsync("Down");
         await page.PauseAsync(1000);
-        if (data.Condition("'Product (LOB)' != \"WC\""))
-        {
-                    await page.WaitForPrimaryRatingStateAsync("Exists");
-        }
-        if (data.Condition("'Product (LOB)' != \"WC\""))
-        {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets PrimaryRatingState
-        }
+        await page.WaitForPrimaryRatingStateAsync("Exists");
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_86}}"));
-        // v56 suppressed redundant Tosca keyboard steering: WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days CLICK
-        // v56 suppressed redundant Tosca keyboard steering: WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days Enter
-        // v56 suppressed redundant Tosca keyboard steering: WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days Tab
         await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
         await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
         await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
         await page.PauseAsync(1000);
         await page.WaitForPolicyInfoHeaderAsync("Visible");
         await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets DescriptionOfSpecifiedOperation
-        await page.EnterDescriptionOfSpecifiedOperationAsync("AZ GL Basic {NMONTH}.{NDAY}.{NYEAR} {Time}");
+        await page.EnterDescriptionOfSpecifiedOperationAsync(data.BuildQuoteDescription());
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
 
     }
@@ -208,102 +142,87 @@ public sealed class GLBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickPolicyCovg50C98Async();
-        await page.WaitForPolicyCovg6B651Async("Exists");
+        await page.ClickPolicyCovgerageAsync();
+        await page.WaitForPolicyCovgGLPolicyCovgAsync("Exists");
         if (data.Condition("'Coverage Form' != NULL"))
         {
-                    await page.EnterCoverageForm3B382Async(data.Resolve("{{data:coverage_form_98}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: CoverageForm3B382 CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: CoverageForm3B382 Enter
-                    // v56 suppressed redundant Tosca keyboard steering: CoverageForm3B382 Tab
+            await page.EnterPolicyCovgGLCoverageFormAsync(data.Resolve("{{data:coverage_form_98}}"));
         }
         if (data.Condition("'Occurence Limit' != NULL"))
         {
-                    await page.EnterOccurenceLimitAsync(data.Resolve("{{data:occurence_limit_99}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: OccurenceLimit CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: OccurenceLimit Enter
-                    // v56 suppressed redundant Tosca keyboard steering: OccurenceLimit Tab
+            await page.EnterOccurenceLimitAsync(data.Resolve("{{data:occurence_limit_99}}"));
         }
         if (data.Condition("'Aggregate Limit' != NULL"))
         {
-                    await page.EnterAggregateLimitAsync(data.Resolve("{{data:aggregate_limit_100}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: AggregateLimit CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: AggregateLimit Enter
-                    // v56 suppressed redundant Tosca keyboard steering: AggregateLimit Tab
+            await page.EnterAggregateLimitAsync(data.Resolve("{{data:aggregate_limit_100}}"));
         }
         if (data.Condition("'Coverage Form' != \"OCP\""))
         {
-                    await page.EnterProductsAggLimitAsync(data.Resolve("{{data:products_agg_limit_101}}"));
+            await page.EnterProductsAggLimitAsync(data.Resolve("{{data:products_agg_limit_101}}"));
         }
         if (data.Condition("'Coverage Form' != \"OCP\""))
         {
-                    await page.EnterDedTypeAsync(data.Resolve("{{data:ded_type_102}}"));
+            await page.EnterDedTypeAsync(data.Resolve("{{data:ded_type_102}}"));
         }
         if (data.Condition("'Coverage Form' != \"OCP\""))
         {
-                    await page.EnterDeductibleBasisAsync(data.Resolve("{{data:deductible_basis_103}}"));
+            await page.EnterDeductibleBasisAsync(data.Resolve("{{data:deductible_basis_103}}"));
         }
         if (data.Condition("'Coverage Form' != \"OCP\""))
         {
-                    await page.EnterPremOpDedAsync(data.Resolve("{{data:premop_ded_104}}"));
+            await page.EnterPremOpDedAsync(data.Resolve("{{data:premop_ded_104}}"));
         }
         if (data.Condition("'Coverage Form' != \"OCP\""))
         {
-                    await page.EnterPremOpPDDedAsync("");
+            await page.EnterPremOpPDDedAsync("");
         }
         if (data.Condition("'Coverage Form' != \"OCP\""))
         {
-                    await page.SetSplitBIDedAsync(data.Resolve("{{data:split_bi_ded_106}}"));
+            await page.SetSplitBIDedAsync(data.Resolve("{{data:split_bi_ded_106}}"));
         }
         if (data.Condition("'Coverage Form' != \"OCP\""))
         {
-                    await page.EnterSplitPDDedAsync("");
+            await page.EnterSplitPDDedAsync("");
         }
         if (data.Condition("'Coverage Form' != \"OCP\""))
         {
-                    await page.EnterProdBIDedAsync(data.Resolve("{{data:prod_bi_ded_108}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: ProdBIDed CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: ProdBIDed Tab
+            await page.EnterProdBIDedAsync(data.Resolve("{{data:prod_bi_ded_108}}"));
         }
         if (data.Condition("'Coverage Form' != \"OCP\""))
         {
-                    await page.EnterProdPDDedAsync("");
+            await page.EnterProdPDDedAsync("");
         }
         if (data.Condition("'Coverage Form' != \"OCP\""))
         {
-                    await page.EnterFireDamageAsync(data.Resolve("{{data:fire_damage_110}}"));
+            await page.EnterFireDamageAsync(data.Resolve("{{data:fire_damage_110}}"));
         }
         if (data.Condition("'Coverage Form' != \"OCP\""))
         {
-                    await page.EnterMedicalAsync(data.Resolve("{{data:medical_111}}"));
+            await page.EnterMedicalAsync(data.Resolve("{{data:medical_111}}"));
         }
         if (data.Condition("'Coverage Form' != \"OCP\""))
         {
-                    await page.EnterPersAdvInjAsync(data.Resolve("{{data:pers_adv_inj_112}}"));
+            await page.EnterPersAdvInjAsync(data.Resolve("{{data:pers_adv_inj_112}}"));
         }
         if (data.Condition("'Coverage Form' != \"OCP\""))
         {
-                    await page.EnterIsTheInsuredEngagedInAnySnowOrIceRemovalOperationsAsync(data.Resolve("{{data:is_the_insured_engaged_in_any_snow_or_ice_removal_operations_113}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: IsTheInsuredEngagedInAnySnowOrIceRemovalOperations CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: IsTheInsuredEngagedInAnySnowOrIceRemovalOperations Enter
-                    // v56 suppressed redundant Tosca keyboard steering: IsTheInsuredEngagedInAnySnowOrIceRemovalOperations Tab
+            await page.EnterIsTheInsuredEngagedInAnySnowOrIceRemovalOperationsAsync(data.Resolve("{{data:is_the_insured_engaged_in_any_snow_or_ice_removal_operations_113}}"));
         }
         if (data.Condition("(State==\"NY\")||(State == \"NJ\")||(State == \"WV\")||(State == \"MA\")||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\")||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
         {
-                    await page.EnterOfFullTimeEmployeesAsync(data.Resolve("{{data:of_full_time_employees_114}}"));
+            await page.EnterOfFullTimeEmployeesAsync(data.Resolve("{{data:of_full_time_employees_114}}"));
         }
         if (data.Condition("(State==\"NY\")||(State == \"NJ\")||(State == \"WV\")||(State == \"MA\") ||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\")||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
         {
-                    await page.EnterOfPartTimeEmployeesAsync(data.Resolve("{{data:of_part_time_employees_115}}"));
+            await page.EnterOfPartTimeEmployeesAsync(data.Resolve("{{data:of_part_time_employees_115}}"));
         }
         if (data.Condition("(State==\"NY\")||(State == \"NJ\")||(State == \"WV\")||(State == \"MA\")||(State == \"CT\")||(State == \"ME\")||(State == \"NH\")||(State == \"OR\") ||(State == \"AZ\")||(State == \"PA\")||(State == \"MD\")||(State == \"DE\")||(State == \"RI\")||(State == \"VA\")||(State == \"VT\")&& 'Coverage Form' != \"OCP\""))
         {
-                    await page.EnterOfSeasonalTemporaryEmployeesAsync(data.Resolve("{{data:of_seasonal_temporary_employees_116}}"));
+            await page.EnterOfSeasonalTemporaryEmployeesAsync(data.Resolve("{{data:of_seasonal_temporary_employees_116}}"));
         }
         if (data.Condition("'Coverage Form' != NULL"))
         {
-                    await page.WaitForCoverageForm3B382Async("Equal");
+            await page.WaitForPolicyCovgGLCoverageFormAsync("Equal");
         }
 
     }
@@ -317,14 +236,13 @@ public sealed class GLBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickCGL08901Async();
-        await page.WaitForCGLBA8E8Async("Exists");
-        await page.ClickAddClassB04B6Async();
-        await page.EnterSearchResults5209CAsync(data.Resolve("{{data:search_results_121}}"));
-        await page.ClickAddClassOKAsync();
+        await page.ClickCGLAsync();
+        await page.WaitForSignsHeadingAsync("Exists");
+        await page.ClickAddClassAsync();
+        await page.EnterSearchResultsAsync(data.Resolve("{{data:search_results_121}}"));
+        await page.ClickOKAsync();
         await page.EnterExposureAsync(data.Resolve("{{data:exposure_123}}"));
-        await page.ClickMainPageOKAsync();
+        await page.ClickOKAsync();
 
     }
 
@@ -337,16 +255,15 @@ public sealed class GLBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
         {
-                    await page.ClickEndorsements7572EAsync();
+            await page.ClickGLNavigationLinksEndorsementsAsync();
         }
-        await page.WaitForEndorsements9626EAsync("Exists");
-        await page.ClickAddEndorsementA9973Async();
-        await page.EnterEndorsementTypeA2928Async(data.Resolve("{{data:endorsement_type_128}}"));
+        await page.WaitForEndorsementsAsync("Exists");
+        await page.ClickEndorsementsAddEndorsementAsync();
+        await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_128}}"));
         await page.EnterNumberOfEmployeesAsync(data.Resolve("{{data:number_of_employees_129}}"));
-        await page.ClickCG0435EmployeeBenefitsLiabilityOKAsync();
+        await page.ClickOKAsync();
 
     }
 
@@ -359,21 +276,20 @@ public sealed class GLBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
         {
-                    await page.ClickEndorsements7572EAsync();
+            await page.ClickGLNavigationLinksEndorsementsAsync();
         }
-        await page.WaitForEndorsements9626EAsync("Exists");
-        await page.ClickAddEndorsementA9973Async();
-        await page.EnterEndorsementTypeB210CAsync(data.Resolve("{{data:endorsement_type_134}}"));
+        await page.WaitForEndorsementsAsync("Exists");
+        await page.ClickEndorsementsAddEndorsementAsync();
+        await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_134}}"));
         await page.SetExcludeExplosionHazardAsync(data.Resolve("{{data:exclude_explosion_hazard_135}}"));
         await page.SetExcludeCollapseHazardAsync(data.Resolve("{{data:exclude_collapse_hazard_136}}"));
         await page.SetExcludeUndergroundPropertyDamageHazardAsync(data.Resolve("{{data:exclude_underground_property_damage_hazard_137}}"));
         await page.EnterDescriptionOfOperationSAsync(data.Resolve("{{data:description_of_operation_s_138}}"));
         if (data.Condition("State != \"VA\""))
         {
-                    await page.ClickCG2142ExclusionExplosionCollapseAndUndergroundPropertyDamageHazardSpecifiedOperationsOKAsync();
+            await page.ClickExcludeUndergroundPropertyDamageHazardAsync();
         }
 
     }
@@ -387,15 +303,14 @@ public sealed class GLBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
         {
-                    await page.ClickEndorsements7572EAsync();
+            await page.ClickGLNavigationLinksEndorsementsAsync();
         }
-        await page.WaitForEndorsements9626EAsync("Exists");
-        await page.ClickAddEndorsementA9973Async();
-        await page.EnterEndorsementTypeD83A4Async(data.Resolve("{{data:endorsement_type_143}}"));
-        await page.ClickCG2149TotalPollutionExclusionEndorsementOKAsync();
+        await page.WaitForEndorsementsAsync("Exists");
+        await page.ClickEndorsementsAddEndorsementAsync();
+        await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_143}}"));
+        await page.ClickOKAsync();
 
     }
 
@@ -408,15 +323,14 @@ public sealed class GLBasicPolicySteps
 
         var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.WaitForFG0055TableRowFG0055Async("Exists");
+        await page.WaitForFGFormTableRowAsync("Exists");
         await page.VerifyFG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementAsync("Exists", "");
         await page.ClickDetailAsync();
         await page.EnterLimitDeductibleAsync(data.Resolve("{{data:limit_deductible_148}}"));
         await page.EnterHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_149}}"));
         await page.EnterTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_150}}"));
         await page.EnterThirdPartyAsync(data.Resolve("{{data:third_party_151}}"));
-        await page.ClickFG0055FG0062FG0063FG0069FG0071FG0072FG0074FG0077FG0078EmploymentPracticesLiabilityInsuranceCoverageEndorsementOKAsync();
+        await page.ClickPolicyCovgAccountsReceivableOKAsync();
 
     }
 
@@ -429,22 +343,21 @@ public sealed class GLBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickAddlInterestsE39FCAsync();
-        await page.WaitForAddlInterestsA10A4Async("Exists");
+        await page.ClickGLNavigationLinksAddlInterestsAsync();
+        await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickAddAddlInterestAsync();
         if (data.Condition("Type != NULL"))
         {
-                    await page.WaitForTypeD0639Async("Exists");
+            await page.WaitForCG2007AddLInsuredEngineersArchitectsTypeAsync("Exists");
         }
-        await page.ClickCG2007AddLInsuredEngineersArchitectsOKAsync();
+        await page.ClickOKAsync();
         if (data.Condition("Type != NULL"))
         {
-                    await page.ClickTypeD0639Async();
+            await page.ClickCG2007AddLInsuredEngineersArchitectsTypeAsync();
         }
         if (data.Condition("Type != NULL"))
         {
-                    await page.EnterTypeD0639Async(data.Resolve("{{data:type_159}}"));
+            await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_159}}"));
         }
 
     }
@@ -458,21 +371,18 @@ public sealed class GLBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickAddlInterestsE39FCAsync();
-        await page.WaitForAddlInterestsA10A4Async("Exists");
+        await page.ClickGLNavigationLinksAddlInterestsAsync();
+        await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickAddAddlInterestAsync();
         if (data.Condition("Type != NULL"))
         {
-                    await page.EnterTypeA75B5Async(data.Resolve("{{data:type_163}}"));
+            await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_163}}"));
         }
         if (data.Condition("'Type of License' != NULL"))
         {
-                    await page.EnterTypeOfLicenseAsync(data.Resolve("{{data:type_of_license_164}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: TypeOfLicense CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: TypeOfLicense Tab
+            await page.EnterTypeOfLicenseAsync(data.Resolve("{{data:type_of_license_164}}"));
         }
-        await page.ClickCG2020AddLInsuredCharitableInstitutionOKAsync();
+        await page.ClickOKAsync();
 
     }
 
@@ -485,13 +395,12 @@ public sealed class GLBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickAddlInterestsE39FCAsync();
-        await page.WaitForAddlInterestsA10A4Async("Exists");
+        await page.ClickGLNavigationLinksAddlInterestsAsync();
+        await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickAddAddlInterestAsync();
         if (data.Condition("Type != NULL"))
         {
-                    await page.EnterTypeD972CAsync(data.Resolve("{{data:type_169}}"));
+            await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_169}}"));
         }
         await page.ClickOKAsync();
 
@@ -506,13 +415,12 @@ public sealed class GLBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickAddlInterestsE39FCAsync();
-        await page.WaitForAddlInterestsA10A4Async("Exists");
+        await page.ClickGLNavigationLinksAddlInterestsAsync();
+        await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickAddAddlInterestAsync();
         if (data.Condition("Type != NULL"))
         {
-                    await page.EnterTypeD972CAsync(data.Resolve("{{data:type_174}}"));
+            await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_174}}"));
         }
         await page.ClickOKAsync();
 
@@ -527,19 +435,16 @@ public sealed class GLBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickAddlInterestsE39FCAsync();
-        await page.WaitForAddlInterestsA10A4Async("Exists");
+        await page.ClickGLNavigationLinksAddlInterestsAsync();
+        await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickAddAddlInterestAsync();
         if (data.Condition("Type != NULL"))
         {
-                    await page.EnterTypeD972CAsync(data.Resolve("{{data:type_179}}"));
+            await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_179}}"));
         }
         if (data.Condition("'Type of Equipment' != NULL"))
         {
-                    await page.EnterTypeOfEquipmentAsync(data.Resolve("{{data:type_of_equipment_180}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: TypeOfEquipment CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: TypeOfEquipment Tab
+            await page.EnterTypeOfEquipmentAsync(data.Resolve("{{data:type_of_equipment_180}}"));
         }
         await page.ClickOKAsync();
 
@@ -554,12 +459,11 @@ public sealed class GLBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickNotepadAsync();
         await page.WaitForNotepadHeadingAsync("Exists");
         await page.ClickAddNotesRemarksAsync();
         await page.EnterTextBoxAsync(data.Resolve("Test {B[Product (LOB)]}"));
-        await page.ClickNotePadOKAsync();
+        await page.ClickOKAsync();
 
     }
 
@@ -572,18 +476,17 @@ public sealed class GLBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickGLUWQuestionsAsync();
         await page.WaitForGeneralLiabilityInformationAsync("Exists");
-        await page.ClickUpdateAnswersFB765Async();
+        await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
         await page.EnterDescribeAllHoldHarmlessAgreementsAndPleaseProvideACopyAsync(data.Resolve("{{data:describe_all_hold_harmless_agreements_and_please_provide_a_copy_190}}"));
-        await page.ClickGeneralLiabilityInformationOKAsync();
+        await page.ClickGeneralLiabilityInformationAsync();
         await page.ClickGLUWQuestionsAsync();
         await page.WaitForGeneralLiabilityInformationAsync("Exists");
         await page.ClickProductsCompletedOpsButtonAsync();
-        await page.WaitForProductsCompletedOpsAsync("Exists");
-        await page.ClickUpdateAnswers69564Async();
-        await page.ClickProductsCompletedOpsOKAsync();
+        await page.WaitForSignsHeadingAsync("Exists");
+        await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
+        await page.ClickOKAsync();
 
     }
 
@@ -596,18 +499,14 @@ public sealed class GLBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickBilling6ED79Async();
-        await page.WaitForBillingD1518Async("Exists");
+        await page.ClickNavigationBillingAsync();
+        await page.WaitForBillingAsync("Exists");
         await page.EnterBillTypeAsync(data.Resolve("{{data:bill_type_200}}"));
         await page.WaitForBillTypeAsync("Equal");
         await page.EnterPayPlanAsync(data.Resolve("{{data:pay_plan_203}}"));
         await page.WaitForPayPlanAsync("Equal");
         await page.WaitForEasyPayAsync("Exists");
         await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_207}}"));
-        // v56 suppressed redundant Tosca keyboard steering: EasyPay CLICK
-        // v56 suppressed redundant Tosca keyboard steering: EasyPay Enter
-        // v56 suppressed redundant Tosca keyboard steering: EasyPay Tab
         await page.PauseAsync(1000);
 
     }
@@ -621,17 +520,13 @@ public sealed class GLBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForSubmissionAsync("Visible");
         await page.ClickSubmissionAsync();
         await page.WaitForSubmissionHeadingAsync("Exists");
         await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_213}}"));
-        // v56 suppressed redundant Tosca keyboard steering: IsThisCoverageBound CLICK
-        // v56 suppressed redundant Tosca keyboard steering: IsThisCoverageBound Tab
         await page.VerifyOrderAuditAsync("Exists", "");
         await page.EnterOrderAuditAsync(data.Resolve("{{data:order_audit_215}}"));
         await page.VerifySubmissionHeadingAsync("Absent", "");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Submission
         await page.ClickSubmissionAsync();
         await page.PauseAsync(1000);
         await page.WaitForSubmissionHeadingAsync("Exists");
@@ -648,7 +543,6 @@ public sealed class GLBasicPolicySteps
 
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.VerifyIsThisCoverageBoundAsync("Exists", "");
         await page.VerifyIsThisCoverageBoundAsync(data.Resolve("{{data:expected_is_this_coverage_bound_value_223}}"), "Value");
         await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_224}}"));
@@ -690,7 +584,6 @@ public sealed class GLBasicPolicySteps
 
         var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.VerifyFullTermPremiumAsync(data.Resolve("{{data:expected_full_term_premium_value_256}}"), "value");
         await page.VerifyPremiumWrittenAsync(data.Resolve("{{data:expected_premium_written_value_257}}"), "value");
         await page.VerifyPriorPremiumAsync(data.Resolve("{{data:expected_prior_premium_value_258}}"), "value");
@@ -710,7 +603,6 @@ public sealed class GLBasicPolicySteps
 
         var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.EnterSessionIDAsync(data.Resolve("{B[SessionId]}"));
         await page.VerifyStatusCodeAsync(data.Resolve("{{data:expected_statuscode_value_266}}"), "value");
         await page.PauseAsync(1000);
@@ -727,13 +619,12 @@ public sealed class GLBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickLoggedInUserAsync();
         await page.ClickLogoutAsync();
         await page.PauseAsync(1000);
-        await page.VerifyTheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0Async("Exists", "");
-        await page.ClickHttpErrorMsgOKAsync();
-        await page.WaitForHttpErrorMsgOKAsync("Absent");
+        await page.VerifyBrowserCommunicationHTTPStatusZeroAsync("Exists", "");
+        await page.ClickOKAsync();
+        await page.WaitForOKAsync("Absent");
         await page.ClickLoggedInUserAsync();
         await page.ClickLogoutAsync();
 

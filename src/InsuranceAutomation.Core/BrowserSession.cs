@@ -44,19 +44,16 @@ public sealed class BrowserSession : IAsyncDisposable
 
         var videoDirectory = Path.Combine(_artifactDirectory, "video");
         if (_config.Browser.Video) Directory.CreateDirectory(videoDirectory);
-        // v57: HAR execution is intentionally disabled while the implementation/config switch remains available.
-        // To re-enable later, replace this constant with `_config.Browser.Har` after the project approves collection.
-        const bool harCollectionEnabledV57 = false;
-        HarPath = harCollectionEnabledV57 ? Path.Combine(_artifactDirectory, "network.har.zip") : null;
+        HarPath = _config.Browser.Har ? Path.Combine(_artifactDirectory, "network.har.zip") : null;
 
         _context = await _browser.NewContextAsync(new BrowserNewContextOptions
         {
             IgnoreHTTPSErrors = _config.Browser.IgnoreHttpsErrors,
-            ViewportSize = new ViewportSize { Width = _config.Browser.ViewportWidth, Height = _config.Browser.ViewportHeight },
+            ViewportSize = _config.Browser.Maximize ? ViewportSize.NoViewport : new ViewportSize { Width = _config.Browser.ViewportWidth, Height = _config.Browser.ViewportHeight },
             RecordVideoDir = _config.Browser.Video ? videoDirectory : null,
             RecordHarPath = HarPath,
-            RecordHarMode = harCollectionEnabledV57 ? HarMode.Full : null,
-            RecordHarContent = harCollectionEnabledV57 ? HarContentPolicy.Attach : null
+            RecordHarMode = _config.Browser.Har ? HarMode.Full : null,
+            RecordHarContent = _config.Browser.Har ? HarContentPolicy.Attach : null
         });
         _context.SetDefaultTimeout(_config.Browser.ActionTimeoutMs);
         _context.SetDefaultNavigationTimeout(_config.Browser.NavigationTimeoutMs);
@@ -67,10 +64,8 @@ public sealed class BrowserSession : IAsyncDisposable
         }
 
         _page = await _context.NewPageAsync();
-        // v57: browser console + request/response collection intentionally disabled.
-        // Implementation remains in WireEvidence(...) for controlled re-enablement in a later version.
-        // WireEvidence(logger, _page);
-        logger.Info($"Browser session opened. Channel={_config.Browser.Channel}; Headless={_config.Browser.Headless}; HAR=false (v57 disabled); ConsoleNetworkCollection=false (v57 disabled)");
+        if (_config.Reporting.CollectConsole || _config.Reporting.CollectNetwork) WireEvidence(logger, _page);
+        logger.Info($"Browser session opened. Channel={_config.Browser.Channel}; Headless={_config.Browser.Headless}; HAR={_config.Browser.Har}; Console={_config.Reporting.CollectConsole}; Network={_config.Reporting.CollectNetwork}");
     }
 
     public void BeginStepEvidence()
@@ -195,7 +190,7 @@ public sealed class BrowserSession : IAsyncDisposable
             var line = $"{DateTimeOffset.Now:O} BROWSER {message.Type}: {message.Text}";
             AppendEvidenceLine(_consoleLogPath, line);
             logger.Info(line);
-            if (_config.Reporting.IncludeConsoleErrors && (message.Type.Equals("error", StringComparison.OrdinalIgnoreCase) || message.Type.Equals("warning", StringComparison.OrdinalIgnoreCase)))
+            if (_config.Reporting.CollectConsole && (message.Type.Equals("error", StringComparison.OrdinalIgnoreCase) || message.Type.Equals("warning", StringComparison.OrdinalIgnoreCase)))
             {
                 lock (_evidenceGate) _stepConsoleErrors.Add(line);
             }
@@ -205,7 +200,7 @@ public sealed class BrowserSession : IAsyncDisposable
             var line = $"{DateTimeOffset.Now:O} PAGE ERROR: {error}";
             AppendEvidenceLine(_consoleLogPath, line);
             logger.Error(line);
-            if (_config.Reporting.IncludeConsoleErrors) lock (_evidenceGate) _stepConsoleErrors.Add(line);
+            if (_config.Reporting.CollectConsole) lock (_evidenceGate) _stepConsoleErrors.Add(line);
         };
         page.Request += (_, request) =>
         {
@@ -216,7 +211,7 @@ public sealed class BrowserSession : IAsyncDisposable
             var line = $"{DateTimeOffset.Now:O} REQUEST FAILED: {request.Method} {request.Url} :: {request.Failure}";
             AppendEvidenceLine(_networkLogPath, line);
             logger.Error(line);
-            if (_config.Reporting.IncludeNetworkErrors) lock (_evidenceGate) _stepNetworkErrors.Add(line);
+            if (_config.Reporting.CollectNetwork) lock (_evidenceGate) _stepNetworkErrors.Add(line);
         };
         page.Response += (_, response) =>
         {
@@ -224,7 +219,7 @@ public sealed class BrowserSession : IAsyncDisposable
             AppendEvidenceLine(_networkLogPath, line);
             if (response.Status < 400) return;
             logger.Warn(line);
-            if (_config.Reporting.IncludeNetworkErrors) lock (_evidenceGate) _stepNetworkErrors.Add(line);
+            if (_config.Reporting.CollectNetwork) lock (_evidenceGate) _stepNetworkErrors.Add(line);
         };
     }
 
@@ -239,7 +234,7 @@ public sealed class BrowserSession : IAsyncDisposable
 
     private async Task<IBrowser> LaunchAsync(RunLogger logger)
     {
-        var options = new BrowserTypeLaunchOptions { Headless = _config.Browser.Headless };
+        var options = new BrowserTypeLaunchOptions { Headless = _config.Browser.Headless, Args = _config.Browser.Maximize && !_config.Browser.Headless ? new[] { "--start-maximized" } : null };
         if (!string.IsNullOrWhiteSpace(_config.Browser.Channel)) options.Channel = _config.Browser.Channel;
         try { return await _playwright!.Chromium.LaunchAsync(options); }
         catch (PlaywrightException ex) when (!string.IsNullOrWhiteSpace(_config.Browser.FallbackBrowser))

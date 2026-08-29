@@ -12,7 +12,6 @@ public sealed class BillingLocators
     public ILocator Address1 => _page.Locator("input[id=\"fields._PolicyPaymentInputDoc.subsequentPayorDataAddress$address1.value\"][name=\"fields._PolicyPaymentInputDoc.subsequentPayorDataAddress$address1.value\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     // v56 raw Tosca primary: Billing | Billing | Id
     public ILocator Billing => _page.Locator("[id=\"pageTitle\"]");
 
@@ -70,7 +69,6 @@ public sealed class BillingLocators
     public ILocator OTHERButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$payerID.value-OTHER-payer-chip-chip");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ScreenHeading => _page.GetByText("Screen Heading", new() { Exact = true });
 
     // Source modules: EQ|BOP|Billing | confidence=High score=127
@@ -78,7 +76,6 @@ public sealed class BillingLocators
     public ILocator State => _page.Locator("[id=\"_temp.fields._PolicyPaymentInputDoc.subsequentPayorDataAddress$state.value\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator TableRowCellLink => _page.GetByText("Link", new() { Exact = true });
 
     // Source modules: EQ|BOP|Billing | confidence=High score=127

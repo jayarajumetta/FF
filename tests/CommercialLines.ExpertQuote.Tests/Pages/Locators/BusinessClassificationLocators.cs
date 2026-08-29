@@ -8,7 +8,6 @@ public sealed class BusinessClassificationLocators
     public BusinessClassificationLocators(IPage page) => _page = page;
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     // v56 raw Tosca primary: EQ|BOP|Prequalification|Industry Class Code Restrictions | Industry / Class Code Restrictions Heading | Id
     public ILocator IndustryClassCodeRestrictionsHeading => _page.Locator("[id=\"UnderwritingQuestions.Constant_IndustryClassCodeRestrictions-0-layout\"]");
 
@@ -20,7 +19,6 @@ public sealed class BusinessClassificationLocators
     public ILocator NoneOfTheAboveCheckbox => _page.GetByTestId("fields.underwritingQuestionsGeneralUWQuestions.generalInformationNewInput$noneOfTheAboveGeneralUWQuestions.value");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ScreenHeading => _page.GetByText("Screen Heading", new() { Exact = true });
 
 }

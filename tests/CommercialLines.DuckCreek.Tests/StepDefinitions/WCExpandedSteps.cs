@@ -22,76 +22,41 @@ public sealed class WCExpandedSteps
         data.GenerateRandom("InspectionTelephone_0045", "[0-9]{10}");
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        // Source step 0044: RANDOM input for FEIN.
         await page.EnterFEINAsync(data.Resolve("{{runtime:FEIN_0044}}"));
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForQuickQuoteAsync("Exists");
         await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_2}}"));
         await page.WaitForUnderwritingInfoAsync("Exists");
         if (data.Condition("'Insured Type' != NULL"))
         {
-                    await page.EnterInsuredTypeAsync(data.Resolve("{{data:insured_type_4}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: InsuredType CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: InsuredType Tab
-        }
-        if (data.Condition("'Insured Type' != NULL"))
-        {
-                    await page.ClickEntityTypeAsync();
+            await page.EnterInsuredTypeAsync(data.Resolve("{{data:insured_type_4}}"));
         }
         await page.WaitForBusinessNameAsync("Visible");
         if (data.Condition("'Business Name' != NULL"))
         {
-                    await page.EnterBusinessNameAsync(data.Resolve("{{data:business_name_7}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: BusinessName CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: BusinessName Tab
+            await page.EnterBusinessNameAsync(data.Resolve("{{data:business_name_7}}"));
         }
         if (data.Condition("'Legal Nature' != NULL"))
         {
-                    await page.EnterEntityTypeAsync(data.Resolve("{{data:entity_type_8}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: EntityType CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: EntityType Tab
+            await page.EnterEntityTypeAsync(data.Resolve("{{data:entity_type_8}}"));
         }
         if (data.Condition("'Address 1' != NULL"))
         {
-                            // Source step 0041: RANDOM input for Primary Phone.
-        await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0041}}"));
-        await page.EnterAddress17A1FBAsync(data.Resolve("{{data:address1_10}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: Address17A1FB CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: Address17A1FB Tab
+            await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0041}}"));
+            await page.EnterAddressAsync(data.Resolve("{{data:address1_10}}"));
         }
         if (data.Condition("ZipCode != NULL"))
         {
-                    await page.EnterZipCode26D22Async(data.Resolve("{{data:zipcode_11}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: ZipCode26D22 CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: ZipCode26D22 Tab
+            await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:zipcode_11}}"));
         }
         await page.VerifyYearsInBusinessAsync("Exists", "");
         await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_13}}"));
-        if (data.Condition("'Product (LOB)' != \"UMB\""))
-        {
-                    await page.EnterNameOfAuditContactAsync(data.Resolve("{{data:name_of_audit_contact_15}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: NameOfAuditContact CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: NameOfAuditContact Tab
-        }
-        // Source step 0045: RANDOM input for Audit Telephone #.
-        if (data.Condition("'Product (LOB)' != \"UMB\""))
-        {
-            await page.EnterAuditTelephoneAsync(data.Resolve("{{runtime:AuditTelephone_0045}}"));
-        }
+        await page.EnterNameOfAuditContactAsync(data.Resolve("{{data:name_of_audit_contact_15}}"));
+        await page.EnterAuditTelephoneAsync(data.Resolve("{{runtime:AuditTelephone_0045}}"));
         await page.EnterNameOfInspectionContactAsync(data.Resolve("{{data:name_of_inspection_contact_17}}"));
-        // v56 suppressed redundant Tosca keyboard steering: NameOfInspectionContact CLICK
-        // v56 suppressed redundant Tosca keyboard steering: NameOfInspectionContact Tab
-        // Source step 0045: RANDOM input for Inspection Telephone #.
         await page.EnterInspectionTelephoneAsync(data.Resolve("{{runtime:InspectionTelephone_0045}}"));
         await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_19}}"));
-        // v56 suppressed redundant Tosca keyboard steering: InsuredEMailAddress CLICK
-        // v56 suppressed redundant Tosca keyboard steering: InsuredEMailAddress Tab
         await page.EnterWebsiteAddressAsync(data.Resolve("{{data:website_address_20}}"));
-        // v56 suppressed redundant Tosca keyboard steering: WebsiteAddress CLICK
-        // v56 suppressed redundant Tosca keyboard steering: WebsiteAddress Tab
-        data.Set("State", data.Resolve("{{data:state}}"));
-        data.Set("Product (LOB)", data.Resolve("{{data:product_lob}}"));
 
     }
 
@@ -104,9 +69,7 @@ public sealed class WCExpandedSteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForAddClientAsync("Exists");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets AddClient
         await page.ClickAddClientAsync();
         await page.VerifyIndividualTypeAsync("Absent", "");
 
@@ -121,7 +84,6 @@ public sealed class WCExpandedSteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.VerifyAJAXErrorCheckAsync("Exists", "");
 
     }
@@ -135,18 +97,14 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickBilling6ED79Async();
-        await page.WaitForBillingD1518Async("Exists");
+        await page.ClickNavigationBillingAsync();
+        await page.WaitForBillingAsync("Exists");
         await page.EnterBillTypeAsync(data.Resolve("{{data:bill_type_32}}"));
         await page.WaitForBillTypeAsync("Equal");
         await page.EnterPayPlanAsync(data.Resolve("{{data:pay_plan_35}}"));
         await page.WaitForPayPlanAsync("Equal");
         await page.WaitForEasyPayAsync("Exists");
         await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_39}}"));
-        // v56 suppressed redundant Tosca keyboard steering: EasyPay CLICK
-        // v56 suppressed redundant Tosca keyboard steering: EasyPay Enter
-        // v56 suppressed redundant Tosca keyboard steering: EasyPay Tab
         await page.PauseAsync(1000);
 
     }
@@ -163,49 +121,40 @@ public sealed class WCExpandedSteps
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.EnterIndividualTypeAsync(data.Resolve("{{data:individualtype_42}}"));
-        // v56 suppressed redundant Tosca keyboard steering: IndividualType CLICK
-        // v56 suppressed redundant Tosca keyboard steering: IndividualType Tab
-        await page.WaitForPleaseVerifySSNF738AAsync("Exists");
-        // Source step 0056: RANDOM input for MiddleName.
+        await page.WaitForPleaseVerifySSNAsync("Exists");
         await page.EnterMiddleNameAsync(data.Resolve("{{runtime:MiddleName_0056}}"));
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets FirstNameC5387
-        // Source step 0056: RANDOM input for LastName.
         await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0056}}"));
-        await page.EnterDateOfBirth338D7Async(data.Resolve("{{data:dateofbirth_47}}"));
-        await page.EnterAddress1D319BAsync(data.Resolve("{{data:address1_48}}"));
+        await page.EnterAddAssociatedClientDateOfBirthAsync(data.Resolve("{{data:dateofbirth_47}}"));
+        await page.EnterAddressAsync(data.Resolve("{{data:address1_48}}"));
         await page.EnterCityAsync(data.Resolve("{{data:city_49}}"));
         await page.EnterStateAsync(data.Resolve("{{data:state_50}}"));
-        await page.EnterZipCodeA088EAsync(data.Resolve("{{data:zipcode_51}}"));
-        await page.EnterGender4973CAsync(data.Resolve("{{data:gender_52}}"));
-        await page.WaitForClientSearch41F28Async("Exists");
-        await page.ClickClientSearch41F28Async();
-        // Source RANDOM FirstName entered after Client Search per Tosca source step.
-        await page.EnterFirstName55A0BAsync(data.Resolve("{{runtime:FirstName_0056}}"));
+        await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:zipcode_51}}"));
+        await page.EnterGenderAsync(data.Resolve("{{data:gender_52}}"));
+        await page.WaitForClientSearchAsync("Exists");
+        await page.ClickClientSearchAsync();
+        await page.EnterFirstNameAsync(data.Resolve("{{runtime:FirstName_0056}}"));
         await page.VerifySearchResultsDuckCreekPolicyFirstCheckboxAsync("Absent", "");
         await page.ClickOKAsync();
-        await page.ClickOrderSSN5E031Async();
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets EnterSSNFA186
-        await page.PressEnterSSNFA186Async("Enter");
-        await page.EnterEnterSSNFA186Async(data.Resolve("{{data:enter_ssn_60}}"));
-        await page.ClickEnterSSNFA186Async();
-        await page.VerifyVerify7A388Async("Absent", "");
+        await page.ClickOrderSSNAsync();
+        await page.PressAddAssociatedClientEnterSSNAsync("Enter");
+        await page.EnterAddAssociatedClientEnterSSNAsync(data.Resolve("{{data:enter_ssn_60}}"));
+        await page.VerifyVerifyAsync("Absent", "");
         await page.ClickCompleteAsync();
-        await page.ClickDetail6D228Async();
-        await page.WaitForEnterSSNFA186Async("Exists");
-        await page.ClickVerify7A388Async();
-        await page.WaitForPleaseVerifySSNF738AAsync("Absent");
+        await page.ClickAddAssociatedClientDetailAsync();
+        await page.WaitForAddAssociatedClientEnterSSNAsync("Exists");
+        await page.ClickVerifyAsync();
+        await page.WaitForPleaseVerifySSNAsync("Absent");
         await page.ClickCompleteAsync();
-        await page.WaitForEnterSSNFA186Async("Exists");
-        await page.ClickVerify7A388Async();
-        await page.WaitForPleaseVerifySSNF738AAsync("Absent");
+        await page.WaitForAddAssociatedClientEnterSSNAsync("Exists");
+        await page.ClickVerifyAsync();
+        await page.WaitForPleaseVerifySSNAsync("Absent");
         await page.ClickCompleteAsync();
-        await page.WaitForClientSearchFDC36Async("Exists");
-        await page.ClickClientSearchFDC36Async();
+        await page.WaitForClientSearchAsync("Exists");
+        await page.ClickClientSearchAsync();
         await page.WaitForOKAsync("Exists");
         await page.ClickOKAsync();
-        await page.WaitForClientSearchFDC36Async("Absent");
+        await page.WaitForClientSearchAsync("Absent");
 
     }
 
@@ -218,20 +167,19 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickUnderwritingInfoAsync();
         await page.WaitForIsThereAPriorCarrierAsync("Exists");
         await page.EnterIsThereAPriorCarrierAsync(data.Resolve("{{data:is_there_a_prior_carrier_80}}"));
         await page.WaitForCarrierAsync("Exists");
         await page.EnterCarrierAsync(data.Resolve("{{data:carrier_82}}"));
-        await page.EnterPolicyNumberBA28EAsync(data.Resolve("{{data:policy_number_83}}"));
+        await page.EnterGeneralLiabilityPolicyNumberAsync(data.Resolve("{{data:policy_number_83}}"));
         await page.EnterPolicyTypeAsync(data.Resolve("{{data:policy_type_84}}"));
-        await page.EnterEffectiveDateB557FAsync(data.Resolve("{DATE[][-2y][MM'/'dd'/'yyyy]}"));
-        await page.EnterExpirationDate34EACAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+        await page.EnterCommercialAutoEffectiveDateAsync(data.Resolve("{DATE[][-2y][MM'/'dd'/'yyyy]}"));
+        await page.EnterGeneralLiabilityExpirationDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
         await page.EnterModificationFactorAsync(data.Resolve("{{data:modificationfactor_87}}"));
         await page.EnterTotalPremiumAsync(data.Resolve("{{data:total_premium_88}}"));
-        await page.ClickOtherInsuranceHistoryOKAsync();
-        await page.WaitForDetail0F8C6Async("Exists");
+        await page.ClickOKAsync();
+        await page.WaitForUnderwritingInfoOtherInsuranceHistoryDetailAsync("Exists");
         await page.ClickLossExperienceAsync();
         await page.WaitForNoKnownLossesAsync("Exists");
         await page.SetNoKnownLossesAsync(data.Resolve("{{data:no_known_losses_93}}"));
@@ -251,30 +199,22 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickPolicyInfoAsync();
         await page.WaitForPolicyInfoHeaderAsync("Exists");
         await page.PauseAsync(1000);
-        await page.EnterEffectiveDate95094Async(data.Resolve("{{data:effectivedate_101}}"));
+        await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateAsync(data.Resolve("{{data:effectivedate_101}}"));
         await page.PauseAsync(1000);
-        if (data.Condition("NOT(('Product (LOB)' == \"WC\")||('Product (LOB)' == \"BOP\" && 'PrimaryRatingState'==\"Kansas\"))"))
-        {
-                    await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_103}}"));
-        }
+        await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_103}}"));
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_104}}"));
         await page.PauseAsync(1000);
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_108}}"));
-        // v56 suppressed redundant Tosca keyboard steering: WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days CLICK
-        // v56 suppressed redundant Tosca keyboard steering: WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days Enter
-        // v56 suppressed redundant Tosca keyboard steering: WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days Tab
         await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
         await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
         await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
         await page.PauseAsync(1000);
         await page.WaitForPolicyInfoHeaderAsync("Visible");
         await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets DescriptionOfSpecifiedOperation
-        await page.EnterDescriptionOfSpecifiedOperationAsync("AL WC ST {NMONTH}.{NDAY}.{NYEAR} {Time}");
+        await page.EnterDescriptionOfSpecifiedOperationAsync(data.BuildQuoteDescription());
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
 
     }
@@ -288,11 +228,7 @@ public sealed class WCExpandedSteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.EnterHasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverageAsync(data.Resolve("{{data:has_the_applicant_been_in_business_for_at_least_3_years_with_continuous_workers_compensation_coverage_118}}"));
-        // v56 suppressed redundant Tosca keyboard steering: HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage CLICK
-        // v56 suppressed redundant Tosca keyboard steering: HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage Enter
-        // v56 suppressed redundant Tosca keyboard steering: HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage Tab
 
     }
 
@@ -305,10 +241,9 @@ public sealed class WCExpandedSteps
 
         var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         if (data.Condition("'Estimated Premium' == NULL"))
         {
-                    await page.VerifyEstimatedPremiumAsync("Absent", "");
+            await page.VerifyEstimatedPremiumAsync("Absent", "");
         }
 
     }
@@ -322,21 +257,20 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickPolicyCovgD3CEFAsync();
-        await page.WaitForPolicyCovgHeaderAsync("Exists");
+        await page.ClickPolicyCovgerageAsync();
+        await page.WaitForSignsHeadingAsync("Exists");
         await page.WaitForPrimaryLocationStateAsync("Exists");
         if (data.Condition("'Primary Rating State' != NULL"))
         {
-                    await page.VerifyPrimaryLocationStateAsync("(?i)^Alabama$", "Regex:value");
+            await page.VerifyPrimaryLocationStateAsync("(?i)^Alabama$", "Regex:value");
         }
         if (data.Condition("('Experience Rated' != NULL)&&(State!=\"OK\")"))
         {
-                    await page.EnterExperienceRatedAsync(data.Resolve("{{data:experience_rated_124}}"));
+            await page.EnterExperienceRatedAsync(data.Resolve("{{data:experience_rated_124}}"));
         }
         if (data.Condition("('Default Experience Mod Type' != NULL)&&(State!=\"OK\")&&(State!=\"NY\")"))
         {
-                    await page.EnterDefaultExpModTypeAsync(data.Resolve("{{data:default_exp_mod_type_126}}"));
+            await page.EnterDefaultExpModTypeAsync(data.Resolve("{{data:default_exp_mod_type_126}}"));
         }
 
     }
@@ -350,11 +284,10 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickLocation8DEE2Async();
-        await page.WaitForAddress1C0AF1Async("Exists");
-        await page.VerifyZipCodeD2DBAAsync("[0-9]{5}-[0-9]{4}", "Regex:value");
-        await page.ClickLocationOKAsync();
+        await page.ClickWCNavigationLinksLocationAsync();
+        await page.WaitForLocationAddressAsync("Exists");
+        await page.VerifyLocationZipCodeAsync("[0-9]{5}-[0-9]{4}", "Regex:value");
+        await page.ClickOKAsync();
 
     }
 
@@ -367,46 +300,43 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickStateDetailsB407BAsync();
+        await page.ClickStateDetailsAsync();
         await page.WaitForIntrastateRiskIDAsync("Exists");
         if (data.Condition("'Waiver of Subrogation' != NULL"))
         {
-                    await page.EnterWaiverOfSubrogationAsync(data.Resolve("{{data:waiver_of_subrogation_133}}"));
+            await page.EnterWaiverOfSubrogationAsync(data.Resolve("{{data:waiver_of_subrogation_133}}"));
         }
         if (data.Condition("'Small Deductible' != NULL"))
         {
-                    await page.EnterSmallDeductibleAsync(data.Resolve("{{data:small_deductible_134}}"));
+            await page.EnterSmallDeductibleAsync(data.Resolve("{{data:small_deductible_134}}"));
         }
         if (data.Condition("'Company Name' != NULL"))
         {
-                    await page.EnterCompanyNameAsync(data.Resolve("{{data:company_name_135}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: CompanyName CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: CompanyName Tab
+            await page.EnterCompanyNameAsync(data.Resolve("{{data:company_name_135}}"));
         }
         if (data.Condition("('Merit Rating' != NULL)&&(State!=\"NY\")"))
         {
-                    await page.EnterMeritRatingAsync("");
+            await page.EnterMeritRatingAsync("");
         }
         if (data.Condition("Deductible != NULL"))
         {
-                    await page.EnterDeductible5F45DAsync("");
+            await page.EnterRatingGroupsDeductibleAsync("");
         }
         if (data.Condition("Deductible != NULL"))
         {
-                    await page.EnterDeductible5F45DAsync("");
+            await page.EnterRatingGroupsDeductibleAsync("");
         }
         if (data.Condition("'Experience Rating Options' != NULL"))
         {
-                    await page.EnterExperienceRatingOptionsAsync(data.Resolve("{{data:experience_rating_options_139}}"));
+            await page.EnterExperienceRatingOptionsAsync(data.Resolve("{{data:experience_rating_options_139}}"));
         }
         if (data.Condition("'Experience Mod Type' != NULL"))
         {
-                    await page.EnterExperienceModTypeAsync(data.Resolve("{{data:experience_mod_type_140}}"));
+            await page.EnterExperienceModTypeAsync(data.Resolve("{{data:experience_mod_type_140}}"));
         }
         if (data.Condition("'Pending Rate Change' != NULL"))
         {
-                    await page.VerifyPendingRateChangeAsync(data.Resolve("{{data:expected_pending_rate_change_value_141}}"), "value");
+            await page.VerifyPendingRateChangeAsync(data.Resolve("{{data:expected_pending_rate_change_value_141}}"), "value");
         }
 
     }
@@ -420,92 +350,65 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickWCScheduleAsync();
         await page.WaitForAddClassCodeAsync("Exists");
         await page.ClickAddClassCodeAsync();
         await page.EnterClassCodeFrameClassCodeWindowAsync("");
         await page.VerifyOKClassCodeAsync("Absent", "");
-        await page.WaitForSearchValue53135Async("Exists");
+        await page.WaitForSearchValueAsync("Exists");
         if (data.Condition("'Class Code 1' != NULL"))
         {
-                    await page.EnterSearchValue53135Async(data.Resolve("{{data:class_code_frame_class_code_window_searchvalue_148}}"));
+            await page.EnterSearchValueAsync(data.Resolve("{{data:class_code_frame_class_code_window_searchvalue_148}}"));
         }
         if (data.Condition("'Class Code 1' != NULL"))
         {
-                    await page.EnterSelectClassCodeAsync(data.Resolve("{{data:class_code_frame_class_code_window_select_class_code_150}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: SelectClassCode CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: SelectClassCode Enter
-                    // v56 suppressed redundant Tosca keyboard steering: SelectClassCode Tab
-                    // v56 suppressed redundant Tosca keyboard steering: SelectClassCode CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: SelectClassCode Tab
+            await page.EnterSelectClassCodeAsync(data.Resolve("{{data:class_code_frame_class_code_window_select_class_code_150}}"));
         }
-        // v56 suppressed redundant Tosca keyboard steering: SelectClassCode TAB
         await page.PauseAsync(1000);
         if (data.Condition("'Class Code 1' != NULL"))
         {
-                    await page.VerifySelectClassCodeAsync(data.Resolve("{{data:expected_class_code_frame_class_code_window_select_class_code_value_153}}"), "value");
+            await page.VerifySelectClassCodeAsync(data.Resolve("{{data:expected_class_code_frame_class_code_window_select_class_code_value_153}}"), "value");
         }
         await page.WaitForOKClassCodeAsync("Exists");
         await page.ClickOKClassCodeAsync();
         if (data.Condition("State != \"MD\""))
         {
-                    await page.EnterTotalPayrollEstimatedAsync(data.Resolve("{{data:class_code_frame_class_code_window_total_payroll_estimated_156}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: TotalPayrollEstimated CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: TotalPayrollEstimated Tab
+            await page.EnterTotalPayrollEstimatedAsync(data.Resolve("{{data:class_code_frame_class_code_window_total_payroll_estimated_156}}"));
         }
         if (data.Condition("'Waiver of Subrogation Exposure' != NULL"))
         {
-                    await page.EnterWaiverOfSubrogationExposureAsync(data.Resolve("{{data:class_code_frame_class_code_window_waiver_of_subrogation_exposure_157}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: WaiverOfSubrogationExposure CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: WaiverOfSubrogationExposure Tab
+            await page.EnterWaiverOfSubrogationExposureAsync(data.Resolve("{{data:class_code_frame_class_code_window_waiver_of_subrogation_exposure_157}}"));
         }
         await page.EnterNumberOfPartTimeEmployeesAsync(data.Resolve("{{data:class_code_frame_class_code_window_number_of_part_time_employees_158}}"));
-        // v56 suppressed redundant Tosca keyboard steering: NumberOfPartTimeEmployees CLICK
-        // v56 suppressed redundant Tosca keyboard steering: NumberOfPartTimeEmployees Tab
         await page.EnterNumberOfFullTimeEmployeesAsync(data.Resolve("{{data:class_code_frame_class_code_window_number_of_full_time_employees_159}}"));
-        // v56 suppressed redundant Tosca keyboard steering: NumberOfFullTimeEmployees CLICK
-        // v56 suppressed redundant Tosca keyboard steering: NumberOfFullTimeEmployees Tab
         await page.ClickOKDetailsAsync();
         await page.WaitForClassCodeFrameAsync("Absent");
         await page.WaitForAddClassCodeAsync("Exists");
         await page.ClickAddClassCodeAsync();
         await page.VerifyOKClassCodeAsync("Absent", "");
-        await page.WaitForSearchValue53135Async("Exists");
+        await page.WaitForSearchValueAsync("Exists");
         if (data.Condition("'Class Code 2' != NULL"))
         {
-                    await page.EnterSearchValue53135Async(data.Resolve("{{data:class_code_frame_class_code_window_searchvalue_166}}"));
+            await page.EnterSearchValueAsync(data.Resolve("{{data:class_code_frame_class_code_window_searchvalue_166}}"));
         }
         if (data.Condition("'Class Code 2' != NULL"))
         {
-                    await page.EnterSelectClassCodeAsync(data.Resolve("{{data:class_code_frame_class_code_window_select_class_code_168}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: SelectClassCode CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: SelectClassCode Enter
-                    // v56 suppressed redundant Tosca keyboard steering: SelectClassCode Tab
-                    // v56 suppressed redundant Tosca keyboard steering: SelectClassCode CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: SelectClassCode Tab
+            await page.EnterSelectClassCodeAsync(data.Resolve("{{data:class_code_frame_class_code_window_select_class_code_168}}"));
         }
-        // v56 suppressed redundant Tosca keyboard steering: SelectClassCode TAB
         await page.PauseAsync(1000);
         if (data.Condition("'Class Code 2' != NULL"))
         {
-                    await page.VerifySelectClassCodeAsync(data.Resolve("{{data:expected_class_code_frame_class_code_window_select_class_code_value_171}}"), "value");
+            await page.VerifySelectClassCodeAsync(data.Resolve("{{data:expected_class_code_frame_class_code_window_select_class_code_value_171}}"), "value");
         }
         await page.WaitForOKClassCodeAsync("Exists");
         await page.ClickOKClassCodeAsync();
         await page.EnterTotalPayrollEstimatedAsync(data.Resolve("{{data:class_code_frame_class_code_window_total_payroll_estimated_174}}"));
-        // v56 suppressed redundant Tosca keyboard steering: TotalPayrollEstimated CLICK
-        // v56 suppressed redundant Tosca keyboard steering: TotalPayrollEstimated Tab
         if (data.Condition("'Waiver of Subrogation Exposure' != NULL"))
         {
-                    await page.EnterWaiverOfSubrogationExposureAsync(data.Resolve("{{data:class_code_frame_class_code_window_waiver_of_subrogation_exposure_175}}"));
+            await page.EnterWaiverOfSubrogationExposureAsync(data.Resolve("{{data:class_code_frame_class_code_window_waiver_of_subrogation_exposure_175}}"));
         }
         await page.EnterNumberOfPartTimeEmployeesAsync(data.Resolve("{{data:class_code_frame_class_code_window_number_of_part_time_employees_176}}"));
-        // v56 suppressed redundant Tosca keyboard steering: NumberOfPartTimeEmployees CLICK
-        // v56 suppressed redundant Tosca keyboard steering: NumberOfPartTimeEmployees Tab
         await page.EnterNumberOfFullTimeEmployeesAsync(data.Resolve("{{data:class_code_frame_class_code_window_number_of_full_time_employees_177}}"));
-        // v56 suppressed redundant Tosca keyboard steering: NumberOfFullTimeEmployees CLICK
-        // v56 suppressed redundant Tosca keyboard steering: NumberOfFullTimeEmployees Tab
         await page.ClickOKDetailsAsync();
         await page.WaitForClassCodeFrameAsync("Absent");
         await page.EnterClassCodeFrameClassCodeWindowAsync("");
@@ -524,10 +427,9 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickEntityScheduleEA671Async();
-        await page.WaitForEntityScheduleE6C9FAsync("Exists");
-        await page.ClickDetail238D5Async();
+        await page.ClickEntityScheduleAsync();
+        await page.WaitForSignsHeadingAsync("Exists");
+        await page.ClickLocationDetailAsync();
         await page.WaitForInsuredTypeAsync("Exists");
         await page.EnterEntityInfoFrameEntityInfoWindowFaxAsync(data.Resolve("{{runtime:EntityInfoFrameEntityInfoWindowFax_0113}}"));
         await page.EnterEntityInfoFrameEntityInfoWindowBureauNumberAsync(data.Resolve("{{runtime:EntityInfoFrameEntityInfoWindowBureauNumber_0113}}"));
@@ -541,34 +443,19 @@ public sealed class WCExpandedSteps
         await page.ClickAssignLocationAsync();
         await page.WaitForLocationIDAsync("Exists");
         await page.EnterLocationIDAsync(data.Resolve("{{data:location_assignment_entity_location_locationid_196}}"));
-        await page.ClickLocationIDAsync();
         await page.EnterLocationIDAsync(data.Resolve("{{data:location_assignment_entity_location_locationid_198}}"));
         await page.VerifyLocationIDAsync(data.Resolve("{{data:expected_location_assignment_entity_location_locationid_value_199}}"), "Value");
         await page.ClickSelectNAICSCodeAsync();
         await page.WaitForNAICSCodeSearchValueAsync("Exists");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets NAICSCodeSearchValue
         await page.EnterNAICSCodeSearchValueAsync(data.Resolve("{{data:location_assignment_entity_location_naicscodesearchvalue_203}}"));
-        // v56 suppressed redundant Tosca keyboard steering: NAICSCodeSearchValue CLICK
-        // v56 suppressed redundant Tosca keyboard steering: NAICSCodeSearchValue Tab
-        await page.ClickNAICSCodeSearchValueAsync();
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets SelectAppropriateCode
         await page.EnterSelectAppropriateCodeAsync(data.Resolve("{{data:location_assignment_entity_location_select_appropriate_code_206}}"));
-        // v56 suppressed redundant Tosca keyboard steering: SelectAppropriateCode CLICK
-        // v56 suppressed redundant Tosca keyboard steering: SelectAppropriateCode Tab
-        // v56 suppressed redundant Tosca keyboard steering: SelectAppropriateCode Click
-        // v56 suppressed redundant Tosca keyboard steering: SelectAppropriateCode Tab
         await page.VerifySelectAppropriateCodeAsync(data.Resolve("{{data:expected_location_assignment_entity_location_select_appropriate_code_value_207}}"), "value");
         await page.WaitForLocationAssignmentAsync("Absent");
         await page.EnterSelectAppropriateCodeAsync(data.Resolve("{{data:location_assignment_entity_location_select_appropriate_code_209}}"));
-        // v56 suppressed redundant Tosca keyboard steering: SelectAppropriateCode CLICK
-        // v56 suppressed redundant Tosca keyboard steering: SelectAppropriateCode Tab
-        // v56 suppressed redundant Tosca keyboard steering: SelectAppropriateCode Click
-        // v56 suppressed redundant Tosca keyboard steering: SelectAppropriateCode Tab
         await page.VerifySelectAppropriateCodeAsync(data.Resolve("{{data:expected_location_assignment_entity_location_select_appropriate_code_value_210}}"), "value");
         await page.WaitForLocationAssignmentAsync("Absent");
         await page.VerifySelectAppropriateCodeAsync(data.Resolve("{{data:expected_location_assignment_entity_location_select_appropriate_code_value_212}}"), "value");
         await page.ClickOKFirstAsync();
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets OKFirst
         await page.WaitForOKSecondAsync("Absent");
         await page.ClickOKAsync();
         await page.WaitForLocationAssignmentAsync("Absent");
@@ -584,15 +471,12 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickEndorsementsB76E9Async();
+        await page.ClickWCNavigationLinksEndorsementsAsync();
         if (data.Condition("State == \"NY\""))
         {
-                    await page.EnterAreThereAnyOfficersThatShouldBeExcludedAsync(data.Resolve("{{data:are_there_any_officers_that_should_be_excluded_218}}"));
-                    // v56 suppressed redundant Tosca keyboard steering: AreThereAnyOfficersThatShouldBeExcluded CLICK
-                    // v56 suppressed redundant Tosca keyboard steering: AreThereAnyOfficersThatShouldBeExcluded Tab
+            await page.EnterAreThereAnyOfficersThatShouldBeExcludedAsync(data.Resolve("{{data:are_there_any_officers_that_should_be_excluded_218}}"));
         }
-        await page.WaitForAddEndorsementB6452Async("Exists");
+        await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
 
     }
 
@@ -605,21 +489,20 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickEndorsementsB76E9Async();
-        await page.WaitForAddEndorsement9E5F4Async("Exists");
-        await page.ClickAddEndorsement9E5F4Async();
+        await page.ClickWCNavigationLinksEndorsementsAsync();
+        await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
+        await page.ClickEndorsementMainAddEndorsementAsync();
         if (data.Condition("'Endorsement Type' != NULL"))
         {
-                    await page.EnterEndorsementType8DB33Async(data.Resolve("{{data:endorsement_type_223}}"));
+            await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_223}}"));
         }
         if (data.Condition("City != NULL"))
         {
-                    await page.EnterCityAsync(data.Resolve("{{data:city_224}}"));
+            await page.EnterCityAsync(data.Resolve("{{data:city_224}}"));
         }
         if (data.Condition("State != NULL"))
         {
-                    await page.EnterState89468Async(data.Resolve("{{data:state_225}}"));
+            await page.EnterEndorsementsDesignatedWorkplacesExclusionStateAsync(data.Resolve("{{data:state_225}}"));
         }
         await page.ClickDesignatedWorkplacesExclusionOKAsync();
 
@@ -634,35 +517,34 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickEndorsementsB76E9Async();
-        await page.WaitForAddEndorsementCE8DDAsync("Exists");
+        await page.ClickWCNavigationLinksEndorsementsAsync();
+        await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
         if (data.Condition("'Endorsement Type' != NULL"))
         {
-                    await page.EnterEndorsementTypeF8D4AAsync(data.Resolve("{{data:endorsement_type_229}}"));
+            await page.EnterEndorsementsPartnersOfficersAndOthersExclusionEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_229}}"));
         }
         if (data.Condition("(State!=\"MO\")&&(State!=\"ID\")"))
         {
-                    await page.ClickAddExcludedOfficerInformationAsync();
+            await page.ClickAddExcludedOfficerInformationAsync();
         }
         if (data.Condition("(Officers != NULL)&&(State!=\"MO\")&&(State!=\"ID\")"))
         {
-                    await page.EnterOfficersAsync(data.Resolve("{{data:officers_231}}"));
+            await page.EnterOfficersAsync(data.Resolve("{{data:officers_231}}"));
         }
         if (data.Condition("('Position Held' != NULL)&&(State!=\"MO\")&&(State!=\"ID\")"))
         {
-                    await page.EnterOfficersPositionHeldAsync(data.Resolve("{{data:officers_position_held_232}}"));
+            await page.EnterOfficersPositionHeldAsync(data.Resolve("{{data:officers_position_held_232}}"));
         }
         if (data.Condition("(State != \"IA\")&&(State != \"IN\")&&(State!=\"MA\")&&(State!=\"ID\")&&(State!=\"MS\")&&(State!=\"KY\")&&(State!=\"SC\")&&(State!=\"MT\")&&(State!=\"KS\")&&(State!=\"ME\")"))
         {
-                    await page.ClickAddExcludedOthersInformationAsync();
+            await page.ClickAddExcludedOthersInformationAsync();
         }
         if (data.Condition("(State != \"IA\")&&(State != \"IN\")&&(State!=\"MA\")&&(State!=\"ID\")&&(State!=\"MS\")&&(State!=\"KY\")&&(State!=\"SC\")&&(State!=\"MT\")&&(State!=\"KS\")&&(State!=\"ME\")"))
         {
-                    await page.EnterOthersB1A1BAsync(data.Resolve("{{data:others_234}}"));
+            await page.EnterOthersAsync(data.Resolve("{{data:others_234}}"));
         }
-        await page.ClickPartnersOfficersAndOthersExclusionOKAsync();
-        await page.ClickAddEndorsementCE8DDAsync();
+        await page.ClickOKAsync();
+        await page.ClickEndorsementMainAddEndorsementAsync();
 
     }
 
@@ -675,33 +557,32 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickEndorsementsB76E9Async();
-        await page.WaitForAddEndorsement44E6AAsync("Exists");
-        await page.ClickAddEndorsement44E6AAsync();
+        await page.ClickWCNavigationLinksEndorsementsAsync();
+        await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
+        await page.ClickEndorsementMainAddEndorsementAsync();
         if (data.Condition("'Endorsement Type' != NULL"))
         {
-                    await page.EnterEndorsementTypeAEC4FAsync(data.Resolve("{{data:endorsement_type_240}}"));
+            await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_240}}"));
         }
         await page.ClickAddSoleProprietorInformationAsync();
         if (data.Condition("'Sole Proprietors' != NULL"))
         {
-                    await page.EnterSoleProprietorsAsync(data.Resolve("{{data:sole_proprietors_242}}"));
+            await page.EnterSoleProprietorsAsync(data.Resolve("{{data:sole_proprietors_242}}"));
         }
         await page.ClickAddPartnerInformationAsync();
         if (data.Condition("Partners != NULL"))
         {
-                    await page.EnterPartnersAsync(data.Resolve("{{data:partners_244}}"));
+            await page.EnterPartnersAsync(data.Resolve("{{data:partners_244}}"));
         }
         if (data.Condition("(State!=\"CO\")&&(State!=\"DE\")&&(State!=\"IA\")&&(State!=\"MN\")&&(State!=\"MO\")&&(State!=\"NH\")&&(State!=\"SD\")&&(State!=\"AL\")"))
         {
-                    await page.ClickAddOthersInformationAsync();
+            await page.ClickAddOthersInformationAsync();
         }
         if (data.Condition("(State!=\"CO\")&&(State!=\"DE\")&&(State!=\"IA\")&&(State!=\"MN\")&&(State!=\"MO\")&&(State!=\"NH\")&&(State!=\"SD\")&&(State!=\"AL\")"))
         {
-                    await page.EnterOthers9E098Async(data.Resolve("{{data:others_246}}"));
+            await page.EnterOthersAsync(data.Resolve("{{data:others_246}}"));
         }
-        await page.ClickSoleProprietorsPartnersOfficersAndOthersCoverageOKAsync();
+        await page.ClickOKAsync();
 
     }
 
@@ -714,17 +595,11 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickUWQuestionsWorkersCompAsync();
-        await page.WaitForUpdateAnswers6FF76Async("Exists");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets UpdateAnswers6FF76
-        await page.ClickUpdateAnswers6FF76Async();
+        await page.WaitForUWQuestionsUmbrellaUpdateAnswersAsync("Exists");
+        await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
         await page.WaitForArePhysicalsRequiredAfterOffersOfEmploymentAreMadeAsync("NotEqual");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets ListAllPoliciesWithAmericanNational
         await page.EnterListAllPoliciesWithAmericanNationalAsync(data.Resolve("{{data:list_all_policies_with_american_national_254}}"));
-        // v56 suppressed redundant Tosca keyboard steering: ListAllPoliciesWithAmericanNational CLICK
-        // v56 suppressed redundant Tosca keyboard steering: ListAllPoliciesWithAmericanNational CLICK
-        // v56 suppressed redundant Tosca keyboard steering: ListAllPoliciesWithAmericanNational Tab
 
     }
 
@@ -737,8 +612,7 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickPricingDCBD4Async();
+        await page.ClickPricingAsync();
         await page.WaitForPricingDetailAsync("Exists");
         await page.ClickPricingDetailAsync();
         await page.ClickPricingDetailOKAsync();
@@ -755,7 +629,6 @@ public sealed class WCExpandedSteps
 
         var page = new BusinessClassificationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.VerifyInvalidClassCodeMessageAsync("Absent", "");
 
     }
@@ -769,18 +642,14 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        await page.ClickBilling6ED79Async();
-        await page.WaitForBillingD1518Async("Exists");
+        await page.ClickNavigationBillingAsync();
+        await page.WaitForBillingAsync("Exists");
         await page.EnterBillTypeAsync(data.Resolve("{{data:bill_type_263}}"));
         await page.WaitForBillTypeAsync("Equal");
         await page.EnterPayPlanAsync(data.Resolve("{{data:pay_plan_266}}"));
         await page.WaitForPayPlanAsync("Equal");
         await page.WaitForEasyPayAsync("Exists");
         await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_270}}"));
-        // v56 suppressed redundant Tosca keyboard steering: EasyPay CLICK
-        // v56 suppressed redundant Tosca keyboard steering: EasyPay Enter
-        // v56 suppressed redundant Tosca keyboard steering: EasyPay Tab
         await page.PauseAsync(1000);
 
     }
@@ -794,12 +663,11 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickNotepadAsync();
         await page.WaitForNotepadHeadingAsync("Exists");
         await page.ClickAddNotesRemarksAsync();
         await page.EnterTextBoxAsync(data.Resolve("Test {B[Product (LOB)]}"));
-        await page.ClickNotePadOKAsync();
+        await page.ClickOKAsync();
 
     }
 
@@ -812,17 +680,13 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForSubmissionAsync("Visible");
         await page.ClickSubmissionAsync();
         await page.WaitForSubmissionHeadingAsync("Exists");
         await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_281}}"));
-        // v56 suppressed redundant Tosca keyboard steering: IsThisCoverageBound CLICK
-        // v56 suppressed redundant Tosca keyboard steering: IsThisCoverageBound Tab
         await page.VerifyOrderAuditAsync("Exists", "");
         await page.EnterOrderAuditAsync(data.Resolve("{{data:order_audit_283}}"));
         await page.VerifySubmissionHeadingAsync("Absent", "");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Submission
         await page.ClickSubmissionAsync();
         await page.PauseAsync(1000);
         await page.WaitForSubmissionHeadingAsync("Exists");
@@ -839,7 +703,6 @@ public sealed class WCExpandedSteps
 
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.VerifyIsThisCoverageBoundAsync("Exists", "");
         await page.VerifyIsThisCoverageBoundAsync(data.Resolve("{{data:expected_is_this_coverage_bound_value_291}}"), "Value");
         await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_292}}"));
@@ -881,7 +744,6 @@ public sealed class WCExpandedSteps
 
         var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.VerifyFullTermPremiumAsync(data.Resolve("{{data:expected_full_term_premium_value_324}}"), "value");
         await page.VerifyPremiumWrittenAsync(data.Resolve("{{data:expected_premium_written_value_325}}"), "value");
         await page.VerifyPriorPremiumAsync(data.Resolve("{{data:expected_prior_premium_value_326}}"), "value");
@@ -901,7 +763,6 @@ public sealed class WCExpandedSteps
 
         var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.EnterSessionIDAsync(data.Resolve("{B[SessionId]}"));
         await page.VerifyStatusCodeAsync(data.Resolve("{{data:expected_statuscode_value_334}}"), "value");
         await page.PauseAsync(1000);
@@ -918,13 +779,12 @@ public sealed class WCExpandedSteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickLoggedInUserAsync();
         await page.ClickLogoutAsync();
         await page.PauseAsync(1000);
-        await page.VerifyTheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0Async("Exists", "");
-        await page.ClickHttpErrorMsgOKAsync();
-        await page.WaitForHttpErrorMsgOKAsync("Absent");
+        await page.VerifyBrowserCommunicationHTTPStatusZeroAsync("Exists", "");
+        await page.ClickOKAsync();
+        await page.WaitForOKAsync("Absent");
         await page.ClickLoggedInUserAsync();
         await page.ClickLogoutAsync();
 

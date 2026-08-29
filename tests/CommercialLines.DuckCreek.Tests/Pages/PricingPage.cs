@@ -44,8 +44,13 @@ public sealed class PricingPage
     public Task EnterTitleAsync(string value) =>
         _ui.FillAsync(_locators.Title, value, new ControlIntent("Pricing", "Title"));
 
-
     public Task<string> CaptureResultAsync(string property = "") =>
         _ui.CaptureAsync(_locators.Result, property, new ControlIntent("Pricing", "Result"));
 
+
+    public Task EnterJavaScriptSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.JavaScript, value, new ControlIntent("Pricing", "JavaScript"), delayMs);
+
+    public Task EnterTitleSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.Title, value, new ControlIntent("Pricing", "Title"), delayMs);
 }

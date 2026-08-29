@@ -27,6 +27,19 @@ public sealed class ApplicationSteps
         _scenario.Get<RunLogger>().Info($"Loaded scenario data: {scenarioPath}");
     }
 
+
+    [Given("CLDC smoke data {string} for state {string} named {string} are loaded")]
+    public void LoadSmokeScenarioData(string productCode, string stateCode, string stateName)
+    {
+        var normalizedProduct = (productCode ?? string.Empty).Trim().ToUpperInvariant();
+        var basePath = ResolvePath($"TestData/Smoke/{normalizedProduct}.json");
+        var overridePath = ResolvePath("TestData/Smoke/StateOverrides.json");
+        var externalPath = ResolvePath("TestData/ExternalDataOverrides.json");
+        var data = _scenario.Get<ScenarioData>();
+        data.LoadSmoke(basePath, stateCode, stateName, overridePath, externalPath);
+        _scenario.Get<RunLogger>().Info($"Loaded consolidated CLDC smoke data: Product={normalizedProduct}; State={stateCode}; Base={basePath}; Overrides={overridePath}");
+    }
+
     [Given("I open the configured Commercial Lines Duck Creek application")]
     public Task OpenApplicationAsync()
     {
@@ -39,12 +52,11 @@ public sealed class ApplicationSteps
     public Task SignInAsync()
     {
         var data = _scenario.Get<ScenarioData>();
-        var page = new ApplicationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
         var username = ResolveCredential(data, "username", "CL_DC_USERNAME");
         var password = ResolveCredential(data, "password", "CL_DC_PASSWORD");
-        return page.SignInAsync(username, password);
+        return SignInWithLoginPageAsync(page, username, password);
     }
-
 
     [When("I refresh the authenticated Duck Creek session")]
     public Task RefreshAuthenticatedSessionAsync() => AuthenticateAsync("agent", conditionalWineryState: false);
@@ -61,8 +73,8 @@ public sealed class ApplicationSteps
         var logger = _scenario.Get<RunLogger>();
         var stateCode = data.Get("stateCode", data.Get("stateVariant", data.Get("state"))).Trim();
         if (conditionalWineryState &&
-            !stateCode.Equals("OR", StringComparison.OrdinalIgnoreCase) &&
-            !stateCode.Equals("WA", StringComparison.OrdinalIgnoreCase))
+        !stateCode.Equals("OR", StringComparison.OrdinalIgnoreCase) &&
+        !stateCode.Equals("WA", StringComparison.OrdinalIgnoreCase))
         {
             logger.Info($"Raw Tosca conditional authentication skipped for state '{stateCode}'. Role={role}.");
             return;
@@ -70,7 +82,7 @@ public sealed class ApplicationSteps
 
         var url = data.Get("url", data.Get("application_url"));
         if (string.IsNullOrWhiteSpace(url))
-            throw new InvalidOperationException("Duck Creek authentication URL is not available in raw-Tosca scenario data.");
+        throw new InvalidOperationException("Duck Creek authentication URL is not available in raw-Tosca scenario data.");
 
         string username;
         string password;
@@ -79,8 +91,8 @@ public sealed class ApplicationSteps
             username = Environment.GetEnvironmentVariable("CL_DC_UW_DIRECTOR_USERNAME") ?? string.Empty;
             password = Environment.GetEnvironmentVariable("CL_DC_UW_DIRECTOR_PASSWORD") ?? string.Empty;
             if (ScenarioData.IsSynthetic(username) || ScenarioData.IsSynthetic(password))
-                throw new InvalidOperationException(
-                    "Raw Tosca requires a UW Director role transition for OR/WA. Set CL_DC_UW_DIRECTOR_USERNAME and CL_DC_UW_DIRECTOR_PASSWORD.");
+            throw new InvalidOperationException(
+            "Raw Tosca requires a UW Director role transition for OR/WA. Set CL_DC_UW_DIRECTOR_USERNAME and CL_DC_UW_DIRECTOR_PASSWORD.");
         }
         else
         {
@@ -89,9 +101,18 @@ public sealed class ApplicationSteps
         }
 
         logger.Info($"Executing raw-Tosca authentication transition. Role={role}; State={stateCode}; Url={url}");
-        var page = new ApplicationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
         await page.NavigateAsync(url);
-        await page.SignInAsync(username, password);
+        await SignInWithLoginPageAsync(page, username, password);
+    }
+
+
+    private static async Task SignInWithLoginPageAsync(LoginPage page, string username, string password)
+    {
+        await page.EnterUserNameAsync(username);
+        await page.EnterPasswordAsync(password);
+        await page.ClickLoginAsync();
+        await page.WaitForLoginAsync("Absent");
     }
 
     private static string ResolveCredential(ScenarioData data, string key, string environmentVariable)
@@ -103,7 +124,7 @@ public sealed class ApplicationSteps
         if (ScenarioData.IsSynthetic(value))
         {
             throw new InvalidOperationException(
-        $"Credential '{key}' is not available. Set {environmentVariable} or provide it in TestData/ExternalDataOverrides.json.");
+            $"Credential '{key}' is not available. Set {environmentVariable} or provide it in TestData/ExternalDataOverrides.json.");
         }
 
         return value;

@@ -56,7 +56,6 @@ public sealed class DiscountsLocators
     public ILocator SpecialFarmPackage => CommercialAuto;
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator StateMD => _page.GetByText("State == \"MD", new() { Exact = true });
 
 }

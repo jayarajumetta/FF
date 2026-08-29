@@ -13,7 +13,7 @@ Feature: IM Smoke Test
   Background: Prepare Commercial Lines Duck Creek for policy processing
     Given I open a browser session
   Scenario Outline: IM Smoke Test - <stateCode>
-    Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
+    Given CLDC smoke data "IM" for state "<stateCode>" named "<stateName>" are loaded
     And I open the configured Commercial Lines Duck Creek application
     And I sign in to Commercial Lines Duck Creek using configured credentials
     And I start a new quote
@@ -23,20 +23,20 @@ Feature: IM Smoke Test
     And I sign out of the application for logged in user
 
     Examples:
-      | dataFile | stateCode | stateVariant | stateName | externalDataFile |
-      | TestData/Scenarios/015_im_smoke_test_az.json | AZ | AZ | Arizona | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/015_im_smoke_test_ct.json | CT | CT | Connecticut | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/015_im_smoke_test_de.json | DE | DE | Delaware | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/015_im_smoke_test_ma.json | MA | MA | Massachusetts | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/015_im_smoke_test_md.json | MD | MD | Maryland | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/015_im_smoke_test_me.json | ME | ME | Maine | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/015_im_smoke_test_nh.json | NH | NH | New Hampshire | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/015_im_smoke_test_nj.json | NJ | NJ | New Jersey | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/015_im_smoke_test_ny.json | NY | NY | New York | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/015_im_smoke_test_or.json | OR | OR | Oregon | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/015_im_smoke_test_pa.json | PA | PA | Pennsylvania | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/015_im_smoke_test_ri.json | RI | RI | Rhode Island | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/015_im_smoke_test_va.json | VA | VA | Virginia | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/015_im_smoke_test_vt.json | VT | VT | Vermont | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/015_im_smoke_test_wa.json | WA | WA | Washington | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/015_im_smoke_test_wv.json | WV | WV | West Virginia | TestData/ExternalDataOverrides.json |
+      | stateCode | stateName |
+      | AZ | Arizona |
+      | CT | Connecticut |
+      | DE | Delaware |
+      | MA | Massachusetts |
+      | MD | Maryland |
+      | ME | Maine |
+      | NH | New Hampshire |
+      | NJ | New Jersey |
+      | NY | New York |
+      | OR | Oregon |
+      | PA | Pennsylvania |
+      | RI | Rhode Island |
+      | VA | Virginia |
+      | VT | Vermont |
+      | WA | Washington |
+      | WV | West Virginia |

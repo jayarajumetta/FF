@@ -20,15 +20,12 @@ public sealed class NavigationLocators
     public ILocator Add => _page.Locator("[id=\"fields.data.addClass\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator AttachmentsListGridRowCellExplicitName1 => _page.GetByText("(ExplicitName=$1)", new() { Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator AttachmentsListGridRowCellExplicitName3 => _page.GetByText("(ExplicitName=$3)", new() { Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator BODY => _page.GetByText("BODY", new() { Exact = true });
 
     // Source modules: EQ|Common|PreQualification|Add Class Codes|Search/Add Class Codes | confidence=High score=127
@@ -61,7 +58,6 @@ public sealed class NavigationLocators
     public ILocator FindAClassCode => ClassFilter;
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator GeneralEligibilityRestrictionsSynching => _page.GetByText("General Eligibility Restrictions - Synching", new() { Exact = true });
 
     // Source modules: EQ|SFP|Equipment Breakdown | confidence=High score=130
@@ -92,12 +88,10 @@ public sealed class NavigationLocators
     public ILocator OwnButton => _page.GetByTestId("fields.data.account.building.rows[0].buildingInput$buildingOccupiedEQ.value-chip-wrapper");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     // v56 raw Tosca primary: TransACT|Policy Details (Attachments) | Policy Details | Id
     public ILocator PolicyDetailsABBA9 => _page.Locator("[id=\"pageTitle\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator PolicyDetailsE7F69 => PolicyDetailsABBA9; // semantic alias; locator defined once
 
     // Source modules: EQ|Common|Transact|Verify DC Premium | confidence=High score=97
@@ -111,7 +105,6 @@ public sealed class NavigationLocators
     public ILocator PowerGreaterThan250kwYes => PowerGreaterThan250kwNo; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator PreQualification => _page.GetByRole(AriaRole.Heading, new() { NameRegex = new System.Text.RegularExpressions.Regex("^PreQualification", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
 
     // Source modules: EQ|SFP|Mortgagee/Loss Payee | confidence=High score=127
@@ -123,27 +116,21 @@ public sealed class NavigationLocators
     public ILocator Save => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Save\"], [data-duckcreekid=\"Save\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator Screen25E91 => _page.GetByText("Screen", new() { Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator Screen4475C => Screen25E91; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ScreenDA408 => Screen25E91; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ScreenHeading69631 => _page.GetByText("Screen Heading", new() { Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ScreenHeading9696C => ScreenHeading69631; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ScreenHeadingDCABF => ScreenHeading69631; // semantic alias; locator defined once
 
     // Source modules: EQ|BOP|PreQualification|Add a Class | confidence=Medium score=113
@@ -163,15 +150,12 @@ public sealed class NavigationLocators
     public ILocator SelectIfClientOwnsOrRentsTheBuilding => _page.Locator("input[id=\"\\\"fields.data.account.building.rows[0].buildingInput$squareFtEq.value\\\"\"][name=\"\\\"fields.data.account.building.rows[0].buildingInput$squareFtEq.value\\\"\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator Submission48772 => _page.GetByText("Submission", new() { Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator Submission7E601 => Submission48772; // semantic alias; locator defined once
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     // v56 raw Tosca primary: Submission|Required and Optional Fields | Submission Heading | Id
     public ILocator SubmissionHeading => _page.Locator("[id=\"pageTop\"]");
 
@@ -181,35 +165,29 @@ public sealed class NavigationLocators
     public ILocator TotalBuildingSqFootage => SelectIfClientOwnsOrRentsTheBuilding;
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     // v56 raw Tosca primary: TransACT | TransACT | Id
     // v56 semantic alias: same physical raw-Tosca control as PolicyDetailsABBA9
     public ILocator TransACT => PolicyDetailsABBA9;
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     // v56 raw Tosca primary: TransACT | Transaction Type | Id+Name+DuckCreekId
     public ILocator TransactionType => _page.Locator("input[id=\"f_tB2C8F4EC9E3041B7B52430914E990D15D2_2_1-inputEl\"][name=\"f_tB2C8F4EC9E3041B7B52430914E990D15D2_2_1-inputEl\"][duckcreekid=\"TransACTInput.TransactionTypeList\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator True => _page.GetByText("True", new() { Exact = true });
 
     // Source modules: EQ|SFP|Equipment Breakdown | confidence=High score=130
     public ILocator TwoOrMoreLossesNo => _page.GetByTestId("fields.line.covEquipmentBreakdownPowerGeneration.covEquipmentBreakdownInput$twoOrMoreLossIn24Month.value-chip-wrapper");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     // v56 raw Tosca primary: TransACT | View Policy  (*) | Id
     public ILocator ViewPolicy => _page.Locator("[id=\"returnToActiveSessionA\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     // v56 raw Tosca primary:  | Detail | DuckCreekId | frame=iframe
     public ILocator ViewPolicyDetails848D5 => _page.FrameLocator("iframe").Locator("[duckcreekid=\"NewTransactionReason.NewTransactionReasonDescription\"], [data-duckcreekid=\"NewTransactionReason.NewTransactionReasonDescription\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ViewPolicyDetailsC87C2 => ViewPolicyDetails848D5; // semantic alias; locator defined once
 
     // Source modules: EQ|Common|PreQualification|Add Class Codes|Search/Add Class Codes | confidence=Medium score=108

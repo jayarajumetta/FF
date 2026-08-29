@@ -28,23 +28,18 @@ public sealed class LossHistoryLocators
     public ILocator AmountReserved => _page.Locator("input[id=\"\\\"fields.underwritingLossExperience.rows[0].addLoss.rows[0].addLossInput$amountReserved.value\\\"\"][name=\"\\\"fields.underwritingLossExperience.rows[0].addLoss.rows[0].addLossInput$amountReserved.value\\\"\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ClaimSummaryTableRowCellExplicitNameAmount => _page.GetByText("(ExplicitName=Amount)", new() { Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ClaimSummaryTableRowCellExplicitNameCATClaim => _page.GetByText("(ExplicitName=CAT Claim)", new() { Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ClaimSummaryTableRowCellExplicitNameClaimDate => _page.GetByText("(ExplicitName=Claim Date)", new() { Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ClaimSummaryTableRowCellExplicitNameLineOfCoverage => _page.GetByText("(ExplicitName=Line of Coverage)", new() { Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ClaimSummaryTableRowCellExplicitNameTypeOfLoss => _page.GetByText("(ExplicitName=Type of Loss)", new() { Exact = true });
 
     // Source modules: EQ|BOP|Claims/Prior Insurance|Add Claim | confidence=High score=127
@@ -110,7 +105,6 @@ public sealed class LossHistoryLocators
     public ILocator Save => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Save\"], [data-duckcreekid=\"Save\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ScreenHeading => _page.GetByText("Screen Heading", new() { Exact = true });
 
     // Source modules: EQ|BOP|Claims/Prior Insurance|Add Claim | confidence=High score=127

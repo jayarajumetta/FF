@@ -19,7 +19,6 @@ public sealed class UnderwritingLocators
     public ILocator CycleUnderwritingNext => _page.Locator("[id=\"fields.pageAction.next\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator EQCommonLoadingIndicatorWait => _page.GetByText("EQ |Common|Loading Indicator Wait", new() { Exact = true });
 
     // Source modules: EQ || Cycle Underwriting | confidence=Medium score=78
@@ -27,7 +26,6 @@ public sealed class UnderwritingLocators
     public ILocator HaveYouOrAnyHouseholdMemberEverBeenConvictedOfAFelony => _page.Locator("[id=\"fields.data.policy.underwritingQuestionsPolicy$vintageVehGaragedInDiffLocation.value-0\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator HeaderUnderwriting => _page.GetByText("Header Underwriting", new() { Exact = true });
 
     // Source modules: EQ || Cycle Underwriting | confidence=Medium score=78

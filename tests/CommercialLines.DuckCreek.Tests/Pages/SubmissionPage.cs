@@ -62,8 +62,16 @@ public sealed class SubmissionPage
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);
 
-
     public Task<string> CaptureResultAsync(string property = "") =>
         _ui.CaptureAsync(_locators.Result, property, new ControlIntent("Submission", "Result"));
 
+
+    public Task EnterIsThisCoverageBoundSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.IsThisCoverageBound, value, new ControlIntent("Submission", "IsThisCoverageBound"), delayMs);
+
+    public Task EnterJavaScriptSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.JavaScript, value, new ControlIntent("Submission", "JavaScript"), delayMs);
+
+    public Task EnterTitleSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.Title, value, new ControlIntent("Submission", "Title"), delayMs);
 }

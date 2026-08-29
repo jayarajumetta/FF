@@ -1,0 +1,20 @@
+{
+  "gate": "tools/deep_quality_gate.py",
+  "status": "LEGACY_PARSER_LIMITATION",
+  "countsObserved": {
+    "features": 32,
+    "examples": 1074,
+    "stepDefRandomCalls": 137,
+    "csharpFiles": 226
+  },
+  "reportedItems": [
+    "CommercialLines.ExpertQuote NavigationLocators.GetNavigationLink/GetScreenHeading",
+    "CommercialLines.ExpertQuote QuoteSearchLocators.GetNavigationLink/GetScreenHeading",
+    "CommercialLines.ExpertQuote ProposalLocators.GetDropdownOption"
+  ],
+  "assessment": "The legacy deep gate recognizes ILocator properties but not parameterized public ILocator helper methods. The reported EQ helper methods exist in the locator classes and the affected EQ page files are byte-identical to the v57 baseline. They are not v58 regressions.",
+  "v58AuthoritativeStaticGates": [
+    "tools/v58_release_gate.py",
+    "tools/quality_gate.py"
+  ]
+}

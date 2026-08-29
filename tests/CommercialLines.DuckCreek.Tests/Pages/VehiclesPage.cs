@@ -83,4 +83,25 @@ public sealed class VehiclesPage
     public Task PressTotalSubjectPremiumAsync(string key) =>
         _ui.PressAsync(_locators.TotalSubjectPremium, key, new ControlIntent("Vehicles", "TotalSubjectPremium"));
 
+
+    public Task EnterCarrierNameSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.CarrierName, value, new ControlIntent("Vehicles", "CarrierName"), delayMs);
+
+    public Task EnterEffectiveDateSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.EffectiveDate, value, new ControlIntent("Vehicles", "EffectiveDate"), delayMs);
+
+    public Task EnterExpirationDateSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.ExpirationDate, value, new ControlIntent("Vehicles", "ExpirationDate"), delayMs);
+
+    public Task EnterLiabilityLimitSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.LiabilityLimit, value, new ControlIntent("Vehicles", "LiabilityLimit"), delayMs);
+
+    public Task EnterPDLimitSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.PDLimit, value, new ControlIntent("Vehicles", "PDLimit"), delayMs);
+
+    public Task EnterPolicyNumberSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.PolicyNumber, value, new ControlIntent("Vehicles", "PolicyNumber"), delayMs);
+
+    public Task EnterTotalSubjectPremiumSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.TotalSubjectPremium, value, new ControlIntent("Vehicles", "TotalSubjectPremium"), delayMs);
 }

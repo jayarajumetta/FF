@@ -28,7 +28,6 @@ public sealed class PolicyWorkflowLocators
     public ILocator BroadenedPIP => _page.GetByRole(AriaRole.Button, new() { Name = "Broadened PIP", Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator BtnCreateNewClient => _page.GetByText("Btn_Create New Client", new() { Exact = true });
 
     // Source modules: EQ || Personal Injury Protection Section (New) | confidence=High score=100
@@ -40,7 +39,6 @@ public sealed class PolicyWorkflowLocators
     public ILocator HouseholdMembersAge65OrReceivingPension => _page.GetByRole(AriaRole.Button, new() { Name = "Household members age 65 or receiving pension", Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator LblClientInfo => _page.GetByText("Lbl_Client Info", new() { Exact = true });
 
     // Source modules: EQ || Personal Injury Protection Section (New) | confidence=Medium score=113
@@ -64,11 +62,9 @@ public sealed class PolicyWorkflowLocators
     public ILocator PricingDetailsNext => _page.Locator("[id=\"Policy_Headless.Constant_ResidenceSummary-0-layout\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator TxtFirst => _page.Locator("[id='customer.name.first']");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator TxtLast => _page.Locator("[id='customer.name.last']");
 
     // Source modules: EQ || Personal Injury Protection Section (New) | confidence=Medium score=113

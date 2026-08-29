@@ -4,14 +4,13 @@ namespace InsuranceAutomation.Core;
 
 public sealed class UiActions
 {
-    private readonly LlmLocatorHealer _healer;
-    private readonly DeterministicLocatorFallbackResolver _fallback;
     private readonly RunLogger _logger;
     private readonly BrowserSession _browser;
     private readonly FrameworkConfig _config;
     private readonly ScenarioReport? _report;
     private readonly DeferredVerificationCollector? _verificationFailures;
     private readonly HashSet<string> _semanticallyCommittedControls = new(StringComparer.OrdinalIgnoreCase);
+    private readonly IRuntimeLocatorResolver? _runtimeLocatorResolver;
 
     public UiActions(BrowserSession browser, FrameworkConfig config, RunLogger logger)
         : this(browser, config, logger, null, "Unknown", null, null) { }
@@ -19,15 +18,20 @@ public sealed class UiActions
     public UiActions(BrowserSession browser, FrameworkConfig config, RunLogger logger, ScenarioReport? report, string applicationName)
         : this(browser, config, logger, report, applicationName, null, null) { }
 
-    public UiActions(BrowserSession browser, FrameworkConfig config, RunLogger logger, ScenarioReport? report, string applicationName, DeferredVerificationCollector? verificationFailures, ILocatorFallbackProvider? fallbackProvider = null)
+    public UiActions(BrowserSession browser, FrameworkConfig config, RunLogger logger, ScenarioReport? report, string applicationName, DeferredVerificationCollector? verificationFailures, IRuntimeLocatorResolver? runtimeLocatorResolver = null)
     {
         _browser = browser;
         _logger = logger;
         _config = config;
         _report = report;
         _verificationFailures = verificationFailures;
-        _fallback = new DeterministicLocatorFallbackResolver(browser, config, logger, report, applicationName, fallbackProvider);
-        _healer = new LlmLocatorHealer(browser, config, logger, applicationName);
+        _runtimeLocatorResolver = runtimeLocatorResolver;
+    }
+
+    public async Task WaitReadyBestEffortAsync(ILocator locator, ControlIntent intent, int timeoutMs)
+    {
+        try { await locator.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = timeoutMs }); }
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException) { _logger.Warn($"DEPENDENT CONTROL WAIT CONTINUING: {intent}; {ex.Message}"); }
     }
 
     public Task ClickAsync(ILocator locator) => ClickAsync(locator, new ControlIntent("Application", "Control"));
@@ -40,6 +44,17 @@ public sealed class UiActions
             _config.Waits.DropdownOptionTimeoutMs, _config.Waits.DropdownPollIntervalMs));
         _semanticallyCommittedControls.Add(IntentKey(intent));
     }
+
+    public async Task PressSequentiallyAsync(ILocator locator, string value, ControlIntent intent, int delayMs = 20)
+    {
+        await ExecuteAsync(locator, intent, "press-sequentially", async x =>
+        {
+            await x.ClickAsync();
+            try { await x.FillAsync(string.Empty); } catch { }
+            await x.PressSequentiallyAsync(value ?? string.Empty, new LocatorPressSequentiallyOptions { Delay = Math.Max(0, delayMs) });
+        });
+    }
+
     public async Task PressAsync(ILocator locator, string key, ControlIntent intent)
     {
         var normalized = NormalizeKey(key).Trim();
@@ -431,59 +446,63 @@ public sealed class UiActions
     private async Task ExecuteAsync(ILocator locator, ControlIntent intent, string action, Func<ILocator, Task> operation)
     {
         await WaitForPageReadyBestEffortAsync();
-        if (await _fallback.TryExecuteFrameHintFirstAsync(intent, action, operation)) return;
         try
         {
             await PrepareForActionAsync(locator, intent, action);
+            var resolved = _runtimeLocatorResolver is null ? locator : await _runtimeLocatorResolver.ResolveAsync(_browser.Page, locator, intent, action) ?? locator;
+            if (!ReferenceEquals(resolved, locator)) await PrepareForActionAsync(resolved, intent, action);
             using var frameScope = FrameExecutionContext.Push(null);
-            await operation(locator);
-            _fallback.RecordDocumentSuccess(intent);
+            await ExecuteWithHighlightAsync(resolved, action, operation);
         }
-        catch (Exception ex) when (IsLocatorFailure(ex))
-        {
-            if (await _fallback.TryExecuteAsync(intent, action, operation, ex)) return;
-            var healed = await _healer.TryHealAsync(locator, intent, action, ex);
-            if (healed is null) throw;
-            await operation(healed);
-        }
+        catch (Exception) { throw; }
     }
 
     private async Task<T> ExecuteAsync<T>(ILocator locator, ControlIntent intent, string action, Func<ILocator, Task<T>> operation)
     {
         await WaitForPageReadyBestEffortAsync();
-        var frameFast = await _fallback.TryExecuteFrameHintFirstAsync(intent, action, operation);
-        if (frameFast.Success) return frameFast.Value!;
         try
         {
             await PrepareForActionAsync(locator, intent, action);
+            var resolved = _runtimeLocatorResolver is null ? locator : await _runtimeLocatorResolver.ResolveAsync(_browser.Page, locator, intent, action) ?? locator;
+            if (!ReferenceEquals(resolved, locator)) await PrepareForActionAsync(resolved, intent, action);
             using var frameScope = FrameExecutionContext.Push(null);
-            var value = await operation(locator);
-            _fallback.RecordDocumentSuccess(intent);
-            return value;
+            return await ExecuteWithHighlightAsync(resolved, action, operation);
         }
-        catch (Exception ex) when (IsLocatorFailure(ex))
-        {
-            var fallback = await _fallback.TryExecuteAsync(intent, action, operation, ex);
-            if (fallback.Success) return fallback.Value!;
-            var healed = await _healer.TryHealAsync(locator, intent, action, ex);
-            if (healed is null) throw;
-            return await operation(healed);
-        }
+        catch (Exception) { throw; }
     }
+
+    private async Task ExecuteWithHighlightAsync(ILocator locator, string action, Func<ILocator, Task> operation)
+    {
+        if (ShouldHighlight(action))
+            await InteractionHighlighter.PulseAsync(locator, _config.Browser.HighlightDurationMs);
+        await operation(locator);
+    }
+
+    private async Task<T> ExecuteWithHighlightAsync<T>(ILocator locator, string action, Func<ILocator, Task<T>> operation)
+    {
+        if (ShouldHighlight(action))
+            await InteractionHighlighter.PulseAsync(locator, _config.Browser.HighlightDurationMs);
+        return await operation(locator);
+    }
+
+    private bool ShouldHighlight(string action) =>
+        _config.Browser.HighlightInteractions && action is "click" or "double-click" or "fill" or "set" or "select" or "press" or "press-sequentially" or "activate-tab" or "dialog-action" or "expansion-panel" or "grid-cell";
 
     private async Task PrepareForActionAsync(ILocator locator, ControlIntent intent, string action)
     {
         if (action is "wait-absent") return;
-        // Playwright actions auto-wait too, but this explicit framework wait ensures a late-rendering
-        // Duck Creek/Angular control does not jump directly into fallback merely because it was not
-        // attached at the first instant the Page method was invoked.
+        // Best-effort readiness only. A timeout is diagnostic; the actual Playwright action decides the result.
         var timeout = action.StartsWith("verify", StringComparison.OrdinalIgnoreCase)
             ? _config.Waits.VerifyTimeoutMs
             : _config.Waits.ElementReadyTimeoutMs;
-        // Raw Tosca explicitly says this control is nested below an HtmlFrame. Do not burn the
-        // full top-document timeout before allowing the frame-scoped deterministic locator to run.
-        if (_fallback.HasFrameCandidates(intent)) timeout = Math.Min(timeout, _config.Waits.FrameProbeTimeoutMs);
-        await locator.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeout });
+        try
+        {
+            await locator.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeout });
+        }
+        catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
+        {
+            _logger.Warn($"CONTROL READY WAIT CONTINUING: {intent}; Action={action}; visible wait did not settle within {timeout}ms: {ex.Message}");
+        }
     }
 
     private async Task WaitForPageReadyBestEffortAsync()

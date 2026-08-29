@@ -2,13 +2,16 @@ using Microsoft.Playwright;
 
 namespace InsuranceAutomation.CLDC.Pages.Locators;
 
-/// <summary>
-/// v57 canonical locator registry keyed by raw Tosca ModuleAttribute GUID.
-/// A physical Tosca control that appears in more than one generated Page repository is defined here once only.
-/// </summary>
 internal static class CanonicalDuckCreekLocatorFactory
 {
-    public static ILocator ByModuleAttributeGuid(IPage page, string guid) => guid.ToLowerInvariant() switch
+    public static ILocator ByModuleAttributeGuid(IPage page, string guid)
+    {
+        var fieldref = DuckCreekFieldrefLocatorCatalog.TryByModuleAttributeGuid(page, guid);
+        if (fieldref is not null) return fieldref;
+        return LegacyByModuleAttributeGuid(page, guid);
+    }
+
+    private static ILocator LegacyByModuleAttributeGuid(IPage page, string guid) => guid.ToLowerInvariant() switch
     {
         "3a13d49c-1679-21d3-307d-9ac2d420ffb8" => page.GetByRole(AriaRole.Link, new() { Name = "Add Client", Exact = true }), //  | Add Client
         "3a13d49c-1679-a316-96ce-ca532c48906e" => page.GetByRole(AriaRole.Textbox, new() { Name = "IndividualType", Exact = true }), //  | IndividualType

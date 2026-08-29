@@ -34,7 +34,6 @@ public sealed class VehiclesLocators
     public ILocator ScheduledPersonalPropertyHeader => _page.Locator("input[id=\"\\\"fields.page.covCatEntry.rows[1].covCatEntryInput$selected.value-input\\\"\"][name=\"\\\"fields.page.covCatEntry.rows[1].covCatEntryInput$selected.value\\\"\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ScreenHeading => _page.GetByText("Screen Heading", new() { Exact = true });
 
     // Source modules: EQ|SFP|DIV 4|Scheduled Personal Property|Bicycles | confidence=High score=127
@@ -42,7 +41,6 @@ public sealed class VehiclesLocators
     public ILocator SearchByNameOrCode => _page.Locator("input[id=\"temp.filter\"][name=\"temp.filter\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator True => _page.GetByText("True", new() { Exact = true });
 
     // Source modules: EQ|SFP|DIV 4|Scheduled Personal Property|Bicycles | confidence=High score=127

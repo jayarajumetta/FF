@@ -68,6 +68,8 @@ public sealed class ScenarioData
             }
         }
 
+        PrimeScenarioAliases();
+
         if (File.Exists(externalFile))
         {
             using var externalDocument = JsonDocument.Parse(File.ReadAllText(externalFile));
@@ -90,6 +92,55 @@ public sealed class ScenarioData
                 }
             }
         }
+    }
+
+
+    public void LoadSmoke(string baseFile, string stateCode, string stateName, string stateOverridesFile, string externalFile)
+    {
+        Load(baseFile, externalFile);
+
+        var normalizedState = (stateCode ?? string.Empty).Trim().ToUpperInvariant();
+        var normalizedName = (stateName ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(normalizedState))
+            throw new InvalidOperationException("CLDC smoke stateCode is required.");
+
+        _runtime["State"] = normalizedState;
+        _runtime["state"] = normalizedState;
+        _runtime["stateCode"] = normalizedState;
+        _runtime["statecode"] = normalizedState;
+        _runtime["stateVariant"] = normalizedState;
+        _runtime["state_variant"] = normalizedState;
+        _runtime["StateName"] = normalizedName;
+        _runtime["stateName"] = normalizedName;
+        _runtime["statename"] = normalizedName;
+        _runtime["state_name"] = normalizedName;
+
+        if (!File.Exists(stateOverridesFile)) return;
+        using var overrideDocument = JsonDocument.Parse(File.ReadAllText(stateOverridesFile));
+        var overrideRoot = overrideDocument.RootElement;
+        if (!overrideRoot.TryGetProperty("overrides", out var allOverrides) || allOverrides.ValueKind != JsonValueKind.Object) return;
+
+        var product = Get("productCode", Get("product_lob")).Trim();
+        if (string.IsNullOrWhiteSpace(product) || !allOverrides.TryGetProperty(product, out var productOverrides) || productOverrides.ValueKind != JsonValueKind.Object) return;
+        if (!productOverrides.TryGetProperty(normalizedState, out var stateOverride) || stateOverride.ValueKind != JsonValueKind.Object) return;
+        if (!stateOverride.TryGetProperty("values", out var values) || values.ValueKind != JsonValueKind.Object) return;
+
+        foreach (var property in values.EnumerateObject())
+        {
+            _runtime[property.Name] = property.Value.ValueKind == JsonValueKind.String
+                ? property.Value.GetString() ?? string.Empty
+                : property.Value.ToString();
+        }
+    }
+
+    private void PrimeScenarioAliases()
+    {
+        if (_static.TryGetValue("product_lob", out var lob) && !string.IsNullOrWhiteSpace(lob))
+            _runtime["Product (LOB)"] = lob;
+        if (_static.TryGetValue("state", out var state) && !string.IsNullOrWhiteSpace(state))
+            _runtime["State"] = state;
+        if (_static.TryGetValue("primaryratingstate", out var ratingState) && !string.IsNullOrWhiteSpace(ratingState))
+            _runtime["PrimaryRatingState"] = ratingState;
     }
 
     public string GetCanonicalField(string fieldName, string fallback = "")
@@ -128,6 +179,7 @@ public sealed class ScenarioData
         }
 
         if (_static.TryGetValue(key, out var staticValue)) return staticValue;
+        if (_canonicalFields.TryGetValue(key, out var canonicalValue)) return canonicalValue;
         return fallback;
     }
 
@@ -157,6 +209,16 @@ public sealed class ScenarioData
 
     // Compatibility alias. Page objects should not call this in v44; random data is created in StepDefinitions.
     public string Random(string key, string pattern) => GenerateRandom(key, pattern);
+
+    public string BuildQuoteDescription(string? flow = null)
+    {
+        var state = Get("stateCode", Get("state", "NA")).Trim().ToUpperInvariant();
+        var lob = Get("product_lob", Get("Product (LOB)", "CLDC")).Trim().ToUpperInvariant();
+        var random = GenerateRandom("QuoteDescriptionRandom", "^[A-Z0-9]{4}$").ToUpperInvariant();
+        var suffix = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+        var flowPart = string.IsNullOrWhiteSpace(flow) ? string.Empty : "_" + string.Concat(flow.Where(char.IsLetterOrDigit)).ToUpperInvariant();
+        return $"{state}_{lob}_{random}_{suffix}{flowPart}";
+    }
 
     public string Resolve(string expression)
     {
@@ -229,10 +291,11 @@ public sealed class ScenarioData
         if (value.StartsWith("NOT(", StringComparison.OrdinalIgnoreCase) && value.EndsWith(')')) return !EvaluateOr(value[4..^1]);
         if (value.StartsWith("NOT ", StringComparison.OrdinalIgnoreCase)) return !EvaluateAtom(value[4..]);
 
-        var m = Regex.Match(value, @"^['""](.+?)['""]\s*(==|!=)\s*['""](.*?)['""]$");
+        var m = Regex.Match(value, @"^(?:['""](.+?)['""]|([A-Za-z0-9 _().:*#/-]+?))\s*(==|!=)\s*(?:['""](.*?)['""]|NULL)$", RegexOptions.IgnoreCase);
         if (!m.Success) throw new InvalidOperationException("No supported data comparison was found.");
-        var key=m.Groups[1].Value.Trim().Trim('\'', '"');
-        var op=m.Groups[2].Value; var expected=m.Groups[3].Value.Trim().Trim('\'', '"');
+        var key = (m.Groups[1].Success ? m.Groups[1].Value : m.Groups[2].Value).Trim().Trim('\'', '"');
+        var op = m.Groups[3].Value;
+        var expected = m.Groups[4].Success ? m.Groups[4].Value.Trim().Trim('\'', '"') : string.Empty;
         if(expected.Equals("NULL",StringComparison.OrdinalIgnoreCase)) expected=string.Empty;
         var actual=Get(key); var equal=string.Equals(actual,expected,StringComparison.OrdinalIgnoreCase);
         return op=="==" ? equal : !equal;

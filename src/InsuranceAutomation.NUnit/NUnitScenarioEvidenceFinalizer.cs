@@ -19,7 +19,8 @@ public static class NUnitScenarioEvidenceFinalizer
         string artifactDirectory,
         string feature,
         string scenario,
-        Exception? scenarioError)
+        Exception? scenarioError,
+        NUnitTestEvidenceContext? testEvidenceContext = null)
     {
         string? deferredSummary = null;
         try
@@ -57,7 +58,8 @@ public static class NUnitScenarioEvidenceFinalizer
                 config,
                 feature,
                 scenario,
-                effectiveError);
+                effectiveError,
+                testEvidenceContext);
 
             logger.Info($"TEST EVIDENCE ATTACHMENTS: enabled={published.Enabled}; attached={published.AttachedCount}; skipped={published.SkippedCount}; failures={published.Failures.Count}");
             foreach (var failure in published.Failures) logger.Warn($"ATTACHMENT FAILURE: {failure}");

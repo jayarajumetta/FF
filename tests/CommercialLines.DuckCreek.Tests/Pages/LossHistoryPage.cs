@@ -26,11 +26,11 @@ public sealed class LossHistoryPage
     public Task ClickAddlInterestsMainOKAsync() =>
         _ui.ClickAsync(_locators.AddlInterestsMainOK, new ControlIntent("LossHistory", "AddlInterestsMainOK"));
 
-    public Task EnterAddress1Async(string value) =>
-        _ui.FillAsync(_locators.Address1, value, new ControlIntent("LossHistory", "Address1"));
+    public Task EnterLossAddressAsync(string value) =>
+        _ui.FillAsync(_locators.LossAddress, value, new ControlIntent("LossHistory", "LossAddress"));
 
-    public Task PressAddress1Async(string key) =>
-        _ui.PressAsync(_locators.Address1, key, new ControlIntent("LossHistory", "Address1"));
+    public Task PressLossAddressAsync(string key) =>
+        _ui.PressAsync(_locators.LossAddress, key, new ControlIntent("LossHistory", "LossAddress"));
 
     public Task ClickAssignLocationsAsync() =>
         _ui.ClickAsync(_locators.AssignLocations, new ControlIntent("LossHistory", "AssignLocations"));
@@ -110,4 +110,34 @@ public sealed class LossHistoryPage
     public Task PressZipCodeAsync(string key) =>
         _ui.PressAsync(_locators.ZipCode, key, new ControlIntent("LossHistory", "ZipCode"));
 
+
+    public Task EnterLossAddressSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.LossAddress, value, new ControlIntent("LossHistory", "LossAddress"), delayMs);
+
+    public Task EnterDescriptionOfPropertySequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.DescriptionOfProperty, value, new ControlIntent("LossHistory", "DescriptionOfProperty"), delayMs);
+
+    public Task EnterFirstNameSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.FirstName, value, new ControlIntent("LossHistory", "FirstName"), delayMs);
+
+    public Task EnterInsuredTypeSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.InsuredType, value, new ControlIntent("LossHistory", "InsuredType"), delayMs);
+
+    public Task EnterLastNameSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.LastName, value, new ControlIntent("LossHistory", "LastName"), delayMs);
+
+    public Task EnterLoanNumberSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.LoanNumber, value, new ControlIntent("LossHistory", "LoanNumber"), delayMs);
+
+    public Task EnterMISequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.MI, value, new ControlIntent("LossHistory", "MI"), delayMs);
+
+    public Task EnterProvisionsApplicableSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.ProvisionsApplicable, value, new ControlIntent("LossHistory", "ProvisionsApplicable"), delayMs);
+
+    public Task EnterTypeSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.Type, value, new ControlIntent("LossHistory", "Type"), delayMs);
+
+    public Task EnterZipCodeSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.ZipCode, value, new ControlIntent("LossHistory", "ZipCode"), delayMs);
 }

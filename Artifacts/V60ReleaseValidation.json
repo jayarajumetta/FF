@@ -1,0 +1,113 @@
+{
+  "release": "v60-cldc-smoke-layered-data",
+  "base": "v59 DuckCreek Fieldref DOM Contract",
+  "status": "PASS",
+  "metrics": {
+    "v59FullSmokeJsonFiles": 186,
+    "v60SmokeRuntimeFiles": 8,
+    "smokeVariants": 186,
+    "valueComparisons": 7586,
+    "valueMismatches": 0,
+    "runtimeDataReductionPercent": 97.47,
+    "stateOverrideEntries": 4,
+    "featureCount": 32,
+    "exampleCount": 1074,
+    "addedFiles": 18,
+    "removedFiles": 186,
+    "modifiedFiles": 10
+  },
+  "checks": {
+    "stateMatricesIdentical": true,
+    "stateMatrixByLob": {
+      "BAP": {
+        "v59": 44,
+        "v60": 44,
+        "identical": true
+      },
+      "CP": {
+        "v59": 16,
+        "v60": 16,
+        "identical": true
+      },
+      "GL": {
+        "v59": 16,
+        "v60": 16,
+        "identical": true
+      },
+      "IM": {
+        "v59": 16,
+        "v60": 16,
+        "identical": true
+      },
+      "WC": {
+        "v59": 34,
+        "v60": 34,
+        "identical": true
+      },
+      "CPP": {
+        "v59": 16,
+        "v60": 16,
+        "identical": true
+      },
+      "UMB": {
+        "v59": 44,
+        "v60": 44,
+        "identical": true
+      }
+    },
+    "smokeBusinessStepsIdentical": {
+      "BAP": true,
+      "CP": true,
+      "GL": true,
+      "IM": true,
+      "WC": true,
+      "CPP": true,
+      "UMB": true
+    },
+    "effectiveSmokeValuesExact": true,
+    "nonSmokeScenarioDataByteIdentical": true,
+    "v59LocatorAndRuntimeContractsProtected": true,
+    "qualityGate": "PASS",
+    "v60SmokeDataGate": "PASS",
+    "dotnetBuild": "NOT_RUN_SDK_UNAVAILABLE"
+  },
+  "errors": [],
+  "changedFiles": {
+    "added": [
+      "Artifacts/V60SmokeDataConsolidation.json",
+      "Artifacts/V60SmokeSourceLineage/BAP.json",
+      "Artifacts/V60SmokeSourceLineage/CP.json",
+      "Artifacts/V60SmokeSourceLineage/CPP.json",
+      "Artifacts/V60SmokeSourceLineage/GL.json",
+      "Artifacts/V60SmokeSourceLineage/IM.json",
+      "Artifacts/V60SmokeSourceLineage/UMB.json",
+      "Artifacts/V60SmokeSourceLineage/WC.json",
+      "README_V60.md",
+      "tests/CommercialLines.DuckCreek.Tests/TestData/Smoke/BAP.json",
+      "tests/CommercialLines.DuckCreek.Tests/TestData/Smoke/CP.json",
+      "tests/CommercialLines.DuckCreek.Tests/TestData/Smoke/CPP.json",
+      "tests/CommercialLines.DuckCreek.Tests/TestData/Smoke/GL.json",
+      "tests/CommercialLines.DuckCreek.Tests/TestData/Smoke/IM.json",
+      "tests/CommercialLines.DuckCreek.Tests/TestData/Smoke/StateOverrides.json",
+      "tests/CommercialLines.DuckCreek.Tests/TestData/Smoke/UMB.json",
+      "tests/CommercialLines.DuckCreek.Tests/TestData/Smoke/WC.json",
+      "tools/v60_smoke_data_gate.py"
+    ],
+    "removedCount": 186,
+    "modified": [
+      "Artifacts/V58ReleaseValidation.json",
+      "src/InsuranceAutomation.Core/ScenarioData.cs",
+      "tests/CommercialLines.DuckCreek.Tests/Features/012_BAP_Smoke_Test_AL.feature",
+      "tests/CommercialLines.DuckCreek.Tests/Features/013_CP_Smoke_Test_AZ.feature",
+      "tests/CommercialLines.DuckCreek.Tests/Features/014_GL_Smoke_Test_AZ.feature",
+      "tests/CommercialLines.DuckCreek.Tests/Features/015_IM_Smoke_Test_AZ.feature",
+      "tests/CommercialLines.DuckCreek.Tests/Features/016_WC_Smoke_Test_AL.feature",
+      "tests/CommercialLines.DuckCreek.Tests/Features/017_CPP_Smoke_Test_AZ.feature",
+      "tests/CommercialLines.DuckCreek.Tests/Features/018_UMB_Smoke_Test_AL.feature",
+      "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/ApplicationSteps.cs"
+    ]
+  },
+  "limitations": [
+    ".NET SDK is not installed in this packaging environment; clean .NET 8 build and live CLDC smoke execution remain required."
+  ]
+}

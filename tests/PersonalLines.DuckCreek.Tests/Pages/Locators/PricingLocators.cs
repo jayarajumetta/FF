@@ -8,7 +8,6 @@ public sealed class PricingLocators
     public PricingLocators(IPage page) => _page = page;
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator HeaderPricingDetails => _page.GetByText("Header Pricing Details", new() { Exact = true });
 
     // Source modules: EQ |Common|Loading Indicator Wait | confidence=Medium score=78

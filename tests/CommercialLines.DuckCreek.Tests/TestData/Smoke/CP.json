@@ -1,0 +1,122 @@
+{
+  "_meta": {
+    "schemaVersion": "4.0-smoke-layered",
+    "sourceFile": "013_CP_Smoke_Test_AZ.feature",
+    "sourceSha256": "734b1a6b1db74161ec3e3e8224f949e75f2c0e8fb8e71848cac92f87b9a9871a",
+    "sourceRevision": "55452",
+    "application": "CL_DC",
+    "feature": "Commercial Lines Duck Creek - CP Smoke Test",
+    "representativeIteration": "CONSOLIDATED",
+    "note": "V60 consolidated smoke base. Common values are modal raw-Tosca values across the supported state matrix; state identity and rare state exceptions are applied at load time.",
+    "sourceConcreteTestCase": "State supplied by Scenario Outline",
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false,
+    "v60RepresentativeSource": "013_cp_smoke_test_az.json",
+    "v60RepresentativeSourceSha256": "35ed7cf94224515578c998ed70e267bcece54533cff9128c1eadf703b1fd9fe4",
+    "sourceLineageArtifact": "Artifacts/V60SmokeSourceLineage/CP.json"
+  },
+  "dimensions": {
+    "state": "Runtime State",
+    "stateCode": "RUNTIME",
+    "product": "Commercial Property",
+    "productCode": "CP",
+    "transaction": "Smoke Test",
+    "effectiveDateMode": "Current",
+    "stateVariant": "RUNTIME"
+  },
+  "values": {
+    "address1_64": "4201 N. 24th St",
+    "application_url": "https://connect.anico.com/Pages/default.aspx",
+    "application_url_2": "https://clasq.anico.com/Express/",
+    "effective_date_43": "07/25/2026",
+    "effectivedate_100": "07/25/2026",
+    "entity_type_62": "Individual/Sole Proprietor",
+    "expected_result_value_96": "3",
+    "first_name_56": "John",
+    "gender_60": "Male",
+    "insured_e_mail_address_86": "insured@emailaddress.com",
+    "insured_type_52": "Individual/Person",
+    "javascript_95": "return 1+2",
+    "loop_login": "0",
+    "loop_login_2": "1",
+    "middle_name_57": "AZ",
+    "name_of_audit_contact_82": "Auditor Doe",
+    "name_of_inspection_contact_84": "Inspector Smith",
+    "nbeffdate": "07/25/2026",
+    "primaryratingstate_103": "Arizona",
+    "product_45": "Carrier PropertyPages US (4.0.0.0)",
+    "product_lob": "CP",
+    "quick_quote_50": "False",
+    "server": "svqw-clas21:8080",
+    "title_94": "*",
+    "url": "https://clasq.anico.com/Express/",
+    "wait_social_security_innertext_79": "XXX-XX-*",
+    "website_address_87": "https://www.InsuredSite.com",
+    "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_107": "No",
+    "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_113": "No",
+    "years_in_business_101": "6",
+    "zipcode_65": "85016",
+    "state": "{{runtime:State}}",
+    "statecode": "{{runtime:State}}",
+    "state_variant": "{{runtime:State}}",
+    "statename": "{{runtime:StateName}}",
+    "state_name": "{{runtime:StateName}}"
+  },
+  "random": {
+    "LastName_0067": {
+      "pattern": "^[a-z]{4}$",
+      "sourceSentence": "I enter a RANDOM value matching \"^[a-z]{4}$\" in \"Last Name\"",
+      "sourceStep": "0067"
+    },
+    "PrimaryPhone_0068": {
+      "pattern": "[0-9]{10}",
+      "sourceSentence": "I enter a RANDOM value matching \"10 random digits/characters from source expression {RND[10]}{TAB}{TAB}{TAB}{TAB}\" in \"Primary Phone\"",
+      "sourceStep": "0068"
+    },
+    "InsuredSSN": {
+      "pattern": "125[0-9]{6}",
+      "sourceSentence": "I enter a RANDOM value matching \"6 random digits/characters from source expression 125{RND[6]}{TAB}\" in \"Enter SSN\"",
+      "sourceStep": "0071"
+    },
+    "AuditTelephone_0075": {
+      "pattern": "[0-9]{10}",
+      "sourceSentence": "if field condition \"'Product (LOB)' != \\\"UMB\\\"\" is satisfied, I enter a RANDOM value matching \"10 random digits/characters from source expression {RND[10]}{TAB}\" in \"Audit Telephone #\"",
+      "sourceStep": "0075"
+    },
+    "InspectionTelephone_0075": {
+      "pattern": "[0-9]{10}",
+      "sourceSentence": "I enter a RANDOM value matching \"10 random digits/characters from source expression {RND[10]}{TAB}\" in \"Inspection Telephone #\"",
+      "sourceStep": "0075"
+    }
+  },
+  "application": {
+    "url": "https://clasq.anico.com/Express/",
+    "username": "SYNTHETIC_REPLACE_ME",
+    "password": "SYNTHETIC_REPLACE_ME",
+    "_passwordNote": "SYNTHETIC_REPLACE_ME"
+  },
+  "smokeData": {
+    "productCode": "CP",
+    "supportedStates": [
+      "AZ",
+      "CT",
+      "DE",
+      "MA",
+      "MD",
+      "ME",
+      "NH",
+      "NJ",
+      "NY",
+      "OR",
+      "PA",
+      "RI",
+      "VA",
+      "VT",
+      "WA",
+      "WV"
+    ],
+    "sourceFiles": 16,
+    "loading": "base + Scenario Outline state + TestData/Smoke/StateOverrides.json"
+  }
+}

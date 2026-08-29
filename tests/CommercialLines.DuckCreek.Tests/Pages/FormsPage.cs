@@ -118,4 +118,25 @@ public sealed class FormsPage
 
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);
+
+    public Task EnterEffectiveDateSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.EffectiveDate, value, new ControlIntent("Forms", "EffectiveDate"), delayMs);
+
+    public Task EnterExpirationDateSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.ExpirationDate, value, new ControlIntent("Forms", "ExpirationDate"), delayMs);
+
+    public Task EnterLiabilityLimitSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.LiabilityLimit, value, new ControlIntent("Forms", "LiabilityLimit"), delayMs);
+
+    public Task EnterPDLimitSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.PDLimit, value, new ControlIntent("Forms", "PDLimit"), delayMs);
+
+    public Task EnterPolicyNumberSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.PolicyNumber, value, new ControlIntent("Forms", "PolicyNumber"), delayMs);
+
+    public Task EnterSessionIDSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.SessionID, value, new ControlIntent("Forms", "SessionID"), delayMs);
+
+    public Task EnterTotalSubjectPremiumSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.TotalSubjectPremium, value, new ControlIntent("Forms", "TotalSubjectPremium"), delayMs);
 }

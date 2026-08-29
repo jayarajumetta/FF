@@ -1,0 +1,52 @@
+{
+  "controls": {
+    "ClientSearch": {
+      "AdditionalInsuredIndividualAddress1": "AdditionalInsuredIndividualAddress",
+      "AddAssociatedClientAddress1": "AddAssociatedClientAddress",
+      "Address2": "AddressLineTwo"
+    },
+    "LossHistory": {
+      "Address1": "LossAddress"
+    },
+    "Navigation": {
+      "AdditionalOtherInterestInputAddress1": "AdditionalOtherInterestAddress",
+      "CG2935AddLInsuredStateOrPoliticalPermitsAddress1": "CG2935AddLInsuredStateOrPoliticalPermitsAddress",
+      "GLOCPRiskAddress1": "GLOCPRiskAddress",
+      "LocationAddress1": "LocationAddress",
+      "EndorsementScheduleRow1": "FirstEndorsementScheduleRow",
+      "EndorsementTableRow1": "FirstEndorsementTableRow",
+      "EndorsementTableRow2": "SecondEndorsementTableRow",
+      "HiredAutoCA2001Address1": "HiredAutoCA2001Address"
+    },
+    "PolicyWorkflow": {
+      "TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0": "BrowserCommunicationHTTPStatusZero"
+    },
+    "Coverages": {
+      "FG0055TableRowFG0055": "FGFormTableRow"
+    }
+  },
+  "methods": {
+    "WaitForAdditionalInsuredIndividualAddress1Async": "WaitForAdditionalInsuredIndividualAddressAsync",
+    "EnterAdditionalInsuredIndividualAddress1Async": "EnterAdditionalInsuredIndividualAddressAsync",
+    "PressAdditionalInsuredIndividualAddress1Async": "PressAdditionalInsuredIndividualAddressAsync",
+    "EnterAddAssociatedClientAddress1Async": "EnterAddAssociatedClientAddressAsync",
+    "PressAddAssociatedClientAddress1Async": "PressAddAssociatedClientAddressAsync",
+    "PressAddress2Async": "PressAddressLineTwoAsync",
+    "EnterAddress1Async": "EnterLossAddressAsync",
+    "PressAddress1Async": "PressLossAddressAsync",
+    "EnterAdditionalOtherInterestInputAddress1Async": "EnterAdditionalOtherInterestAddressAsync",
+    "PressAdditionalOtherInterestInputAddress1Async": "PressAdditionalOtherInterestAddressAsync",
+    "EnterCG2935AddLInsuredStateOrPoliticalPermitsAddress1Async": "EnterCG2935AddLInsuredStateOrPoliticalPermitsAddressAsync",
+    "PressCG2935AddLInsuredStateOrPoliticalPermitsAddress1Async": "PressCG2935AddLInsuredStateOrPoliticalPermitsAddressAsync",
+    "EnterGLOCPRiskAddress1Async": "EnterGLOCPRiskAddressAsync",
+    "PressGLOCPRiskAddress1Async": "PressGLOCPRiskAddressAsync",
+    "WaitForLocationAddress1Async": "WaitForLocationAddressAsync",
+    "VerifyEndorsementScheduleRow1Async": "VerifyFirstEndorsementScheduleRowAsync",
+    "VerifyEndorsementTableRow1Async": "VerifyFirstEndorsementTableRowAsync",
+    "VerifyEndorsementTableRow2Async": "VerifySecondEndorsementTableRowAsync",
+    "EnterHiredAutoCA2001Address1Async": "EnterHiredAutoCA2001AddressAsync",
+    "PressHiredAutoCA2001Address1Async": "PressHiredAutoCA2001AddressAsync",
+    "VerifyTheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0Async": "VerifyBrowserCommunicationHTTPStatusZeroAsync",
+    "WaitForFG0055TableRowFG0055Async": "WaitForFGFormTableRowAsync"
+  }
+}

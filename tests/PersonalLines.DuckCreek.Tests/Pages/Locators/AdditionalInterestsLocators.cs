@@ -12,7 +12,6 @@ public sealed class AdditionalInterestsLocators
     public ILocator AdditionalInterestNext => _page.Locator("[id=\"fields.data.next\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator EQCommonLoadingIndicatorWait => _page.GetByText("EQ |Common|Loading Indicator Wait", new() { Exact = true });
 
 }

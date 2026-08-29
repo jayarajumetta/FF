@@ -30,7 +30,6 @@ public sealed class PolicyInformationLocators
     public ILocator PrimaryFarmType => _page.Locator("input[id=\"fields.account.policyInput$grossFarmIncome.value\"][name=\"fields.account.policyInput$grossFarmIncome.value\"][data-testid=\"fields.account.policyInput$grossFarmIncome.value\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ScreenHeading => _page.GetByText("Screen Heading", new() { Exact = true });
 
     // Source modules: EQ|SFP|Policy Details (Optimized) | confidence=High score=130

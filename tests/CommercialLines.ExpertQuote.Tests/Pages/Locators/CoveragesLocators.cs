@@ -11,7 +11,6 @@ public sealed class CoveragesLocators
     public ILocator AddCoverage => _page.GetByTestId("*ddBicycles*");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator Approve => _page.GetByText("Approve", new() { Exact = true });
 
     // Source modules: EQ|SFP|CE|Coverages | confidence=High score=127
@@ -53,15 +52,12 @@ public sealed class CoveragesLocators
     public ILocator HaveThereBeenAnyEPLClaimsSuitsOrComplaintsOrAreThereAnyNowPendingAgainstTheInsuredOrAnyExecutiveOfficerOrOwner => _page.Locator("[id=\"fields.line.endLineEmploymentRelatedPracticesLiability.endLineEmploymentRelatedPracticesLiabilityInput$ePLPriorClaim.value\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator IFRAME => _page.GetByText("IFRAME", new() { Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator IFRAMEDuckCreekPolicyIFRAMEOK => _page.GetByText("IFRAME - OK", new() { Exact = true });
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator IsThisCoverageBound => _page.GetByText("Is this coverage bound?*", new() { Exact = true });
 
     // Source modules: EQ|SFP|CE|Coverages | confidence=High score=127
@@ -86,7 +82,6 @@ public sealed class CoveragesLocators
     public ILocator PremierWithHorse => BlanketFPP;
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ReferRequestIssuance => _page.GetByText("Refer/Request Issuance", new() { Exact = true });
 
     // Source modules: EQ|SFP|DIV V|Optional Liability Coverage|Workers' Compensation - Residence EmployeesExpertQuote | confidence=High score=130
@@ -94,7 +89,6 @@ public sealed class CoveragesLocators
     public ILocator Save => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Save\"], [data-duckcreekid=\"Save\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ScreenHeading => _page.GetByText("Screen Heading", new() { Exact = true });
 
     // Source modules: EQ|SFP|DIV 4|Scheduled Personal Property|Bicycles | confidence=High score=127

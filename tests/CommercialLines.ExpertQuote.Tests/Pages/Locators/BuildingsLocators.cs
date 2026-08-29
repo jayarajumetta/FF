@@ -133,30 +133,25 @@ public sealed class BuildingsLocators
     public ILocator EChecklistEChecklistOK => _page.Locator("[id=\"exception-note-confirm\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     // v56 raw Tosca primary:  | Detail | DuckCreekId | frame=iframe
     public ILocator EQBOPBuildingBuildingDetailsAnswerAnyExtraPropertyAdditionalQuestions => _page.FrameLocator("iframe").Locator("[duckcreekid=\"NewTransactionReason.NewTransactionReasonDescription\"], [data-duckcreekid=\"NewTransactionReason.NewTransactionReasonDescription\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     // v56 raw Tosca primary:  | Detail | DuckCreekId | frame=iframe
     // v56 semantic alias: same physical raw-Tosca control as EQBOPBuildingBuildingDetailsAnswerAnyExtraPropertyAdditionalQuestions
     public ILocator EQBOPBuildingBuildingDetailsSelectBurglarAlarm => EQBOPBuildingBuildingDetailsAnswerAnyExtraPropertyAdditionalQuestions;
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     // v56 raw Tosca primary:  | Detail | DuckCreekId | frame=iframe
     // v56 semantic alias: same physical raw-Tosca control as EQBOPBuildingBuildingDetailsAnswerAnyExtraPropertyAdditionalQuestions
     public ILocator EQBOPBuildingBuildingDetailsSelectPelletStove => EQBOPBuildingBuildingDetailsAnswerAnyExtraPropertyAdditionalQuestions;
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     // v56 raw Tosca primary:  | Detail | DuckCreekId | frame=iframe
     // v56 semantic alias: same physical raw-Tosca control as EQBOPBuildingBuildingDetailsAnswerAnyExtraPropertyAdditionalQuestions
     public ILocator EQBOPBuildingBuildingDetailsSelectWoodFurnace => EQBOPBuildingBuildingDetailsAnswerAnyExtraPropertyAdditionalQuestions;
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     // v56 raw Tosca primary:  | Detail | DuckCreekId | frame=iframe
     // v56 semantic alias: same physical raw-Tosca control as EQBOPBuildingBuildingDetailsAnswerAnyExtraPropertyAdditionalQuestions
     public ILocator EQBOPBuildingBuildingDetailsSelectWoodStove => EQBOPBuildingBuildingDetailsAnswerAnyExtraPropertyAdditionalQuestions;
@@ -282,7 +277,6 @@ public sealed class BuildingsLocators
     public ILocator Save => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Save\"], [data-duckcreekid=\"Save\"]");
 
     // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator ScreenHeading => _page.GetByText("Screen Heading", new() { Exact = true });
 
     // Source modules: EQ|SFP|Div I - Add Residence|Add Residence - Detail | confidence=High score=130
