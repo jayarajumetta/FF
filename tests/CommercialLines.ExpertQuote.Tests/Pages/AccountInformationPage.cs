@@ -78,16 +78,16 @@ public sealed class AccountInformationPage
         _ui.VerifyAsync(_locators.Satellite, expected, property, new ControlIntent("AccountInformation", "Satellite"));
 
     public Task SelectStateAsync(string value) =>
-        _ui.SelectAsync(_locators.RatingStateDropdown, value, new ControlIntent("AccountInformation", "StateDropdown"));
+        _ui.SelectAsync(_locators.StateDropdown, value, new ControlIntent("AccountInformation", "StateDropdown"));
 
     public Task SelectState0110EAsync(string value) =>
-    _ui.SelectAsync(_locators.RatingStateDropdown, value, new ControlIntent("AccountInformation", "State0110E"));
+    _ui.SelectAsync(_locators.StateDropdown, value, new ControlIntent("AccountInformation", "State0110E"));
 
     public Task EnterStateAE19AAsync(string value) =>
-        _ui.FillAsync(_locators.RatingStateDropdown, value, new ControlIntent("AccountInformation", "StateAE19A"));
+        _ui.FillAsync(_locators.StateDropdown, value, new ControlIntent("AccountInformation", "StateAE19A"));
 
     public Task ClickStateDropdownAsync() =>
-        _ui.ClickAsync(_locators.RatingStateDropdown, new ControlIntent("AccountInformation", "StateDropdown"));
+        _ui.ClickAsync(_locators.StateDropdown, new ControlIntent("AccountInformation", "StateDropdown"));
 
 
     public Task EnterStreetAddressAsync(string value) =>

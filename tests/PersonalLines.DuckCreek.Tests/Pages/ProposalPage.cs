@@ -90,7 +90,7 @@ public sealed class ProposalPage
         _ui.ClickAsync(_locators.CONFIRM, new ControlIntent("Proposal", "ProposalStartProceedSSNSUBMIT"));
 
     public Task<string> CaptureQNumAsync(string property = "") =>
-        _ui.CaptureAsync(_locators.CloseTab, property, new ControlIntent("Proposal", "QNum"));
+        _ui.CaptureAsync(_locators.NewQuote, property, new ControlIntent("Proposal", "QNum"));
 
     public Task<string> CaptureQuoteNumberAsync(string property = "") =>
         _ui.CaptureAsync(_locators.QuoteNumber, property, new ControlIntent("Proposal", "QuoteNumber"));
@@ -141,7 +141,7 @@ public sealed class ProposalPage
         _ui.ExistsAsync(_locators.StateMONTANA);
 
     public Task SelectStateNameAsync(string value) =>
-        _ui.SelectAsync(_locators.AccountDetailsNext, value, new ControlIntent("Proposal", "StateName"));
+        _ui.SelectAsync(_locators.State, value, new ControlIntent("Proposal", "StateName"));
 
     public Task WaitForUSEEXISTINGACCOUNTAsync(string expected) =>
         _ui.WaitAsync(_locators.CONFIRM, expected, new ControlIntent("Proposal", "USEEXISTINGACCOUNT"));

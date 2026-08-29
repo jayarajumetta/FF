@@ -133,13 +133,42 @@ for app in APPS:
     duplicate_files = [v for v in file_hashes.values() if len(v) > 1]
     if duplicate_files:
         error(f"{app}: byte-identical locator files {duplicate_files}")
-    refs: list[str] = []
-    for p in (app_root / "Pages").glob("*Page.cs"):
-        refs += re.findall(r"_locators\.(\w+)", p.read_text(encoding="utf-8", errors="ignore"))
-    missing = sorted(set(refs) - defined - factory_methods)
-    if missing:
-        error(f"{app}: Page references missing locator members {missing[:20]}")
-    locator_summary[app] = {"properties": prop_count, "expressions": expr_count, "missingReferences": len(missing)}
+    # Resolve every Page locator field against its declared locator class. Do not use an app-wide
+    # union: that can hide compile errors when a member exists in a different locator class.
+    locator_classes: dict[str, set[str]] = {}
+    for locator_file in locator_dir.glob("*.cs"):
+        locator_text = locator_file.read_text(encoding="utf-8", errors="ignore")
+        class_match = re.search(r"public\s+sealed\s+class\s+(\w+Locators)", locator_text)
+        if not class_match:
+            continue
+        members = set(re.findall(r"public\s+ILocator\s+(\w+)\s*(?:=>|\{|\()", locator_text))
+        locator_classes[class_match.group(1)] = members
+
+    missing_occurrences: list[str] = []
+    for page_file in (app_root / "Pages").glob("*Page.cs"):
+        page_text = page_file.read_text(encoding="utf-8", errors="ignore")
+        fields = {
+            variable: class_name
+            for class_name, variable in re.findall(
+                r"private\s+readonly\s+(\w+Locators)\s+(\w+)\s*;", page_text
+            )
+        }
+        for variable, class_name in fields.items():
+            members = locator_classes.get(class_name)
+            if members is None:
+                error(f"{app}/{page_file.name}: locator class {class_name} was not found")
+                continue
+            refs = re.findall(rf"{re.escape(variable)}\.(\w+)", page_text)
+            for ref in refs:
+                if ref not in members:
+                    missing_occurrences.append(f"{page_file.name}:{variable}.{ref}->{class_name}")
+    if missing_occurrences:
+        error(f"{app}: Page references missing locator members {missing_occurrences[:20]}")
+    locator_summary[app] = {
+        "properties": prop_count,
+        "expressions": expr_count,
+        "missingReferences": len(missing_occurrences),
+    }
 STATS["locators"] = locator_summary
 
 # CLDC technical locator contract

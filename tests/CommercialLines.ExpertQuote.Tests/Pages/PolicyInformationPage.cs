@@ -38,10 +38,10 @@ public Task ClickPrimaryFarmCategoryAsync() =>
         _ui.ClickAsync(_locators.PrimaryFarmType, new ControlIntent("PolicyInformation", "PrimaryFarmType"));
 
     public Task VerifyScreenHeadingAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.NoPrefillMatchFound, expected, property, new ControlIntent("PolicyInformation", "ScreenHeading"));
+        _ui.VerifyAsync(_locators.ScreenHeading, expected, property, new ControlIntent("PolicyInformation", "ScreenHeading"));
 
     public Task<bool> IsScreenHeadingPresentAsync() =>
-        _ui.ExistsAsync(_locators.NoPrefillMatchFound);
+        _ui.ExistsAsync(_locators.ScreenHeading);
 
     public Task WaitForSecondaryFarmCategoryAsync(string expected) =>
         _ui.WaitAsync(_locators.SecondaryFarmCategory, expected, new ControlIntent("PolicyInformation", "SecondaryFarmCategory"));

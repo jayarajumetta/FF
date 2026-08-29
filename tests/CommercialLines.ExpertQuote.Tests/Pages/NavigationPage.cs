@@ -10,6 +10,7 @@ public sealed class NavigationPage
     private readonly IPage _page;
     private readonly NavigationLocators _locators;
     private readonly UiActions _ui;
+    private readonly QuoteSearchLocators _quoteSearchLocators;
 
     public NavigationPage(BrowserSession browser, UiActions ui)
     {
@@ -17,6 +18,7 @@ public sealed class NavigationPage
         _page = browser.Page;
         _locators = new NavigationLocators(browser.Page);
         _ui = ui;
+        _quoteSearchLocators = new QuoteSearchLocators(browser.Page);
     }
 
     public Task ClickADDADDITIONALINTERESTAsync() =>
@@ -44,7 +46,7 @@ public sealed class NavigationPage
         _ui.FillAsync(_locators.ClassFilter, value, new ControlIntent("Navigation", "ClassFilter"));
 
     public Task ClickClientInfoSearchAsync() =>
-        _ui.ClickAsync(_locators.QuoteSearchButton, new ControlIntent("Navigation", "ClientInfoSearch"));
+        _ui.ClickAsync(_quoteSearchLocators.QuoteSearchButton, new ControlIntent("Navigation", "ClientInfoSearch"));
 
     public Task PressCombinedDeductibleAsync(string key) =>
         _ui.PressAsync(_locators.CombinedDeductible, key, new ControlIntent("Navigation", "CombinedDeductible"));
@@ -71,10 +73,10 @@ public sealed class NavigationPage
         _ui.ClickAsync(_locators.GreaterThan25000No, new ControlIntent("Navigation", "GreaterThan25000No"));
 
     public Task WaitForInsuredOccupancySqFtAngularAsync(string expected) =>
-        _ui.WaitAsync(_locators.InsuredOccupancySqFt, expected, new ControlIntent("Navigation", "InsuredOccupancySqFtAngular"));
+        _ui.WaitAsync(_locators.InsuredOccupancySqFtAngular, expected, new ControlIntent("Navigation", "InsuredOccupancySqFtAngular"));
 
     public Task PressInsuredOccupancySqFtAngularAsync(string key) =>
-        _ui.PressAsync(_locators.InsuredOccupancySqFt, key, new ControlIntent("Navigation", "InsuredOccupancySqFtAngular"));
+        _ui.PressAsync(_locators.InsuredOccupancySqFtAngular, key, new ControlIntent("Navigation", "InsuredOccupancySqFtAngular"));
 
     public Task ClickKeepGoingAsync() =>
         _ui.ClickAsync(_locators.KeepGoing, new ControlIntent("Navigation", "KeepGoing"));
@@ -228,7 +230,7 @@ public Task<bool> IsLoadingPresentAsync() =>
         _ui.WaitAsync(_locators.TransactionType, expected, new ControlIntent("Navigation", "TransactionType"));
 
     public Task EnterTrueAsync(string value) =>
-        _ui.FillAsync(_locators.AccountAddressRadio, value, new ControlIntent("Navigation", "True"));
+        _ui.ClickAsync(_locators.ADDADDITIONALINTEREST, new ControlIntent("Navigation", "MortgageSearchResult"));
 
     public Task PressTwoOrMoreLossesNoAsync(string key) =>
         _ui.PressAsync(_locators.TwoOrMoreLossesNo, key, new ControlIntent("Navigation", "TwoOrMoreLossesNo"));

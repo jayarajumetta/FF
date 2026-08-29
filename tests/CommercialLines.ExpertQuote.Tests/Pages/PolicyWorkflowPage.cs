@@ -50,7 +50,7 @@ public sealed class PolicyWorkflowPage
         _ui.ExistsAsync(_locators.Button);
 
     public Task ClickClientInfoSearchAsync() =>
-        _ui.ClickAsync(_locators.QuoteSearchButton, new ControlIntent("PolicyWorkflow", "ClientInfoSearch"));
+        _ui.ClickAsync(_locators.SearchButton, new ControlIntent("PolicyWorkflow", "ClientInfoSearch"));
 
     public Task ClickCloseQuoteAsync() =>
         _ui.ClickAsync(_locators.AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe, new ControlIntent("PolicyWorkflow", "CloseQuote"));

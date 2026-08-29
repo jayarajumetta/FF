@@ -101,10 +101,10 @@ public Task PressPremierAsync(string key) =>
         _ui.ClickAsync(_locators.Save, new ControlIntent("Coverages", "Save"));
 
     public Task VerifyScreenHeadingAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.NoPrefillMatchFound, expected, property, new ControlIntent("Coverages", "ScreenHeading"));
+        _ui.VerifyAsync(_locators.ScreenHeading, expected, property, new ControlIntent("Coverages", "ScreenHeading"));
 
     public Task<bool> IsScreenHeadingPresentAsync() =>
-        _ui.ExistsAsync(_locators.NoPrefillMatchFound);
+        _ui.ExistsAsync(_locators.ScreenHeading);
 
     public Task PressSearchByNameOrCodeAsync(string key) =>
         _ui.PressAsync(_locators.SearchByNameOrCode, key, new ControlIntent("Coverages", "SearchByNameOrCode"));

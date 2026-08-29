@@ -80,7 +80,7 @@ public sealed class PolicyWorkflowPage
         _ui.ClickAsync(_locators.WaiverOfIncomeLoss, new ControlIntent("PolicyWorkflow", "WaiverOfIncomeLoss"));
 
     public Task SelectWorkLossNoAsync(string value) =>
-        _ui.SelectAsync(_locators.ADDDriver1, value, new ControlIntent("PolicyWorkflow", "WorkLossNo"));
+        _ui.SelectAsync(_locators.WorkLossNo, value, new ControlIntent("PolicyWorkflow", "WorkLossNo"));
 
     public Task NavigateAsync(string url) =>
         _page.GotoAsync(url, new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });

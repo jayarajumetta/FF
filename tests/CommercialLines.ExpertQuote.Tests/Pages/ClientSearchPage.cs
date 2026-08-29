@@ -30,7 +30,7 @@ public sealed class ClientSearchPage
         _ui.VerifyAsync(_locators.ClientInfo, expected, property, new ControlIntent("ClientSearch", "ClientInfo"));
 
     public Task ClickClientInfoSearchAsync() =>
-        _ui.ClickAsync(_locators.QuoteSearchButton, new ControlIntent("ClientSearch", "ClientInfoSearch"));
+        _ui.ClickAsync(_locators.ClientInfoSearch, new ControlIntent("ClientSearch", "ClientInfoSearch"));
 
     public Task ClickCreateNewClientAsync() =>
         _ui.ClickAsync(_locators.CreateNewClient, new ControlIntent("ClientSearch", "CreateNewClient"));
