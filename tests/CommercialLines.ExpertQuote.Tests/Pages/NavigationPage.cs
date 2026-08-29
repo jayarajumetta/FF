@@ -44,7 +44,7 @@ public sealed class NavigationPage
         _ui.FillAsync(_locators.ClassFilter, value, new ControlIntent("Navigation", "ClassFilter"));
 
     public Task ClickClientInfoSearchAsync() =>
-        _ui.ClickAsync(_locators.ClientInfoSearch, new ControlIntent("Navigation", "ClientInfoSearch"));
+        _ui.ClickAsync(_locators.QuoteSearchButton, new ControlIntent("Navigation", "ClientInfoSearch"));
 
     public Task PressCombinedDeductibleAsync(string key) =>
         _ui.PressAsync(_locators.CombinedDeductible, key, new ControlIntent("Navigation", "CombinedDeductible"));
@@ -62,7 +62,7 @@ public sealed class NavigationPage
         _ui.ClickAsync(_locators.FarmImplementsNo, new ControlIntent("Navigation", "FarmImplementsNo"));
 
     public Task WaitForFindAClassCodeAsync(string expected) =>
-        _ui.WaitAsync(_locators.FindAClassCode, expected, new ControlIntent("Navigation", "FindAClassCode"));
+        _ui.WaitAsync(_locators.ClassFilter, expected, new ControlIntent("Navigation", "FindAClassCode"));
 
     public Task VerifyGeneralEligibilityRestrictionsSynchingAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.GeneralEligibilityRestrictionsSynching, expected, property, new ControlIntent("Navigation", "GeneralEligibilityRestrictionsSynching"));
@@ -71,10 +71,10 @@ public sealed class NavigationPage
         _ui.ClickAsync(_locators.GreaterThan25000No, new ControlIntent("Navigation", "GreaterThan25000No"));
 
     public Task WaitForInsuredOccupancySqFtAngularAsync(string expected) =>
-        _ui.WaitAsync(_locators.InsuredOccupancySqFtAngular, expected, new ControlIntent("Navigation", "InsuredOccupancySqFtAngular"));
+        _ui.WaitAsync(_locators.InsuredOccupancySqFt, expected, new ControlIntent("Navigation", "InsuredOccupancySqFtAngular"));
 
     public Task PressInsuredOccupancySqFtAngularAsync(string key) =>
-        _ui.PressAsync(_locators.InsuredOccupancySqFtAngular, key, new ControlIntent("Navigation", "InsuredOccupancySqFtAngular"));
+        _ui.PressAsync(_locators.InsuredOccupancySqFt, key, new ControlIntent("Navigation", "InsuredOccupancySqFtAngular"));
 
     public Task ClickKeepGoingAsync() =>
         _ui.ClickAsync(_locators.KeepGoing, new ControlIntent("Navigation", "KeepGoing"));
@@ -109,10 +109,10 @@ public Task<bool> IsLoadingPresentAsync() =>
         _ui.ExistsAsync(_locators.PolicyDetailsABBA9);
 
     public Task VerifyPolicyDetailsE7F69Async(string expected, string property) =>
-        _ui.VerifyAsync(_locators.PolicyDetailsE7F69, expected, property, new ControlIntent("Navigation", "PolicyDetailsE7F69"));
+        _ui.VerifyAsync(_locators.PolicyDetailsABBA9, expected, property, new ControlIntent("Navigation", "PolicyDetailsE7F69"));
 
     public Task<bool> IsPolicyDetailsE7F69PresentAsync() =>
-        _ui.ExistsAsync(_locators.PolicyDetailsE7F69);
+        _ui.ExistsAsync(_locators.PolicyDetailsABBA9);
 
     public Task<string> CapturePolicyNumberAsync(string property = "") =>
         _ui.CaptureAsync(_locators.PolicyNumber, property, new ControlIntent("Navigation", "PolicyNumber"));
@@ -121,7 +121,7 @@ public Task<bool> IsLoadingPresentAsync() =>
         _ui.PressAsync(_locators.PowerGreaterThan250kwNo, key, new ControlIntent("Navigation", "PowerGreaterThan250kwNo"));
 
     public Task PressPowerGreaterThan250kwYesAsync(string key) =>
-        _ui.PressAsync(_locators.PowerGreaterThan250kwYes, key, new ControlIntent("Navigation", "PowerGreaterThan250kwYes"));
+        _ui.PressAsync(_locators.PowerGreaterThan250kwNo, key, new ControlIntent("Navigation", "PowerGreaterThan250kwYes"));
 
     public Task VerifyPreQualificationAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.PreQualification, expected, property, new ControlIntent("Navigation", "PreQualification"));
@@ -147,16 +147,16 @@ public Task<bool> IsLoadingPresentAsync() =>
         _ui.ExistsAsync(_locators.Screen25E91);
 
     public Task ClickScreen4475CAsync() =>
-        _ui.ClickAsync(_locators.Screen4475C, new ControlIntent("Navigation", "Screen4475C"));
+        _ui.ClickAsync(_locators.Screen25E91, new ControlIntent("Navigation", "Screen4475C"));
 
     public Task<bool> IsScreen4475CPresentAsync() =>
-        _ui.ExistsAsync(_locators.Screen4475C);
+        _ui.ExistsAsync(_locators.Screen25E91);
 
     public Task ClickScreenDA408Async() =>
-        _ui.ClickAsync(_locators.ScreenDA408, new ControlIntent("Navigation", "ScreenDA408"));
+        _ui.ClickAsync(_locators.Screen25E91, new ControlIntent("Navigation", "ScreenDA408"));
 
     public Task<bool> IsScreenDA408PresentAsync() =>
-        _ui.ExistsAsync(_locators.ScreenDA408);
+        _ui.ExistsAsync(_locators.Screen25E91);
 
     public Task WaitForScreenHeading69631Async(string expected) =>
         _ui.WaitAsync(_locators.ScreenHeading69631, expected, new ControlIntent("Navigation", "ScreenHeading69631"));
@@ -165,19 +165,19 @@ public Task<bool> IsLoadingPresentAsync() =>
         _ui.ExistsAsync(_locators.ScreenHeading69631);
 
     public Task WaitForScreenHeading9696CAsync(string expected) =>
-        _ui.WaitAsync(_locators.ScreenHeading9696C, expected, new ControlIntent("Navigation", "ScreenHeading9696C"));
+        _ui.WaitAsync(_locators.ScreenHeading69631, expected, new ControlIntent("Navigation", "ScreenHeading9696C"));
 
     public Task VerifyScreenHeading9696CAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.ScreenHeading9696C, expected, property, new ControlIntent("Navigation", "ScreenHeading9696C"));
+        _ui.VerifyAsync(_locators.ScreenHeading69631, expected, property, new ControlIntent("Navigation", "ScreenHeading9696C"));
 
     public Task<bool> IsScreenHeading9696CPresentAsync() =>
-        _ui.ExistsAsync(_locators.ScreenHeading9696C);
+        _ui.ExistsAsync(_locators.ScreenHeading69631);
 
     public Task WaitForScreenHeadingDCABFAsync(string expected) =>
-        _ui.WaitAsync(_locators.ScreenHeadingDCABF, expected, new ControlIntent("Navigation", "ScreenHeadingDCABF"));
+        _ui.WaitAsync(_locators.ScreenHeading69631, expected, new ControlIntent("Navigation", "ScreenHeadingDCABF"));
 
     public Task<bool> IsScreenHeadingDCABFPresentAsync() =>
-        _ui.ExistsAsync(_locators.ScreenHeadingDCABF);
+        _ui.ExistsAsync(_locators.ScreenHeading69631);
 
     public Task PressSearchAddClassCodeAsync(string key) =>
         _ui.PressAsync(_locators.SearchAddClassCode, key, new ControlIntent("Navigation", "SearchAddClassCode"));
@@ -198,13 +198,13 @@ public Task<bool> IsLoadingPresentAsync() =>
         _ui.ClickAsync(_locators.Submission48772, new ControlIntent("Navigation", "Submission48772"));
 
     public Task PressSubmission7E601Async(string key) =>
-        _ui.PressAsync(_locators.Submission7E601, key, new ControlIntent("Navigation", "Submission7E601"));
+        _ui.PressAsync(_locators.Submission48772, key, new ControlIntent("Navigation", "Submission7E601"));
 
     public Task ClickSubmission7E601Async() =>
-        _ui.ClickAsync(_locators.Submission7E601, new ControlIntent("Navigation", "Submission7E601"));
+        _ui.ClickAsync(_locators.Submission48772, new ControlIntent("Navigation", "Submission7E601"));
 
     public Task<bool> IsSubmission7E601PresentAsync() =>
-        _ui.ExistsAsync(_locators.Submission7E601);
+        _ui.ExistsAsync(_locators.Submission48772);
 
     public Task WaitForSubmissionHeadingAsync(string expected) =>
         _ui.WaitAsync(_locators.SubmissionHeading, expected, new ControlIntent("Navigation", "SubmissionHeading"));
@@ -216,19 +216,19 @@ public Task<bool> IsLoadingPresentAsync() =>
         _ui.ExistsAsync(_locators.SubmissionHeading);
 
     public Task WaitForTotalBuildingSqFootageAsync(string expected) =>
-        _ui.WaitAsync(_locators.TotalBuildingSqFootage, expected, new ControlIntent("Navigation", "TotalBuildingSqFootage"));
+        _ui.WaitAsync(_locators.SelectIfClientOwnsOrRentsTheBuilding, expected, new ControlIntent("Navigation", "TotalBuildingSqFootage"));
 
     public Task PressTotalBuildingSqFootageAsync(string key) =>
-        _ui.PressAsync(_locators.TotalBuildingSqFootage, key, new ControlIntent("Navigation", "TotalBuildingSqFootage"));
+        _ui.PressAsync(_locators.SelectIfClientOwnsOrRentsTheBuilding, key, new ControlIntent("Navigation", "TotalBuildingSqFootage"));
 
     public Task WaitForTransACTAsync(string expected) =>
-        _ui.WaitAsync(_locators.TransACT, expected, new ControlIntent("Navigation", "TransACT"));
+        _ui.WaitAsync(_locators.PolicyDetailsABBA9, expected, new ControlIntent("Navigation", "TransACT"));
 
     public Task WaitForTransactionTypeAsync(string expected) =>
         _ui.WaitAsync(_locators.TransactionType, expected, new ControlIntent("Navigation", "TransactionType"));
 
     public Task EnterTrueAsync(string value) =>
-        _ui.FillAsync(_locators.True, value, new ControlIntent("Navigation", "True"));
+        _ui.FillAsync(_locators.AccountAddressRadio, value, new ControlIntent("Navigation", "True"));
 
     public Task PressTwoOrMoreLossesNoAsync(string key) =>
         _ui.PressAsync(_locators.TwoOrMoreLossesNo, key, new ControlIntent("Navigation", "TwoOrMoreLossesNo"));
@@ -240,13 +240,13 @@ public Task<bool> IsLoadingPresentAsync() =>
         _ui.ClickAsync(_locators.ViewPolicyDetails848D5, new ControlIntent("Navigation", "ViewPolicyDetails848D5"));
 
     public Task ClickViewPolicyDetailsC87C2Async() =>
-        _ui.ClickAsync(_locators.ViewPolicyDetailsC87C2, new ControlIntent("Navigation", "ViewPolicyDetailsC87C2"));
+        _ui.ClickAsync(_locators.ViewPolicyDetails848D5, new ControlIntent("Navigation", "ViewPolicyDetailsC87C2"));
 
     public Task WaitForYouHaveSelected1ClassCodesAsync(string expected) =>
-        _ui.WaitAsync(_locators.YouHaveSelected1ClassCodes, expected, new ControlIntent("Navigation", "YouHaveSelected1ClassCodes"));
+        _ui.WaitAsync(_locators.ClassFilter, expected, new ControlIntent("Navigation", "YouHaveSelected1ClassCodes"));
 
     public Task PressYouHaveSelected1ClassCodesAsync(string key) =>
-        _ui.PressAsync(_locators.YouHaveSelected1ClassCodes, key, new ControlIntent("Navigation", "YouHaveSelected1ClassCodes"));
+        _ui.PressAsync(_locators.ClassFilter, key, new ControlIntent("Navigation", "YouHaveSelected1ClassCodes"));
 
     public Task NavigateAsync(string url) =>
         _page.GotoAsync(url, new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });

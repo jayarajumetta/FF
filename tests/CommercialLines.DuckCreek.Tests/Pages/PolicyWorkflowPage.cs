@@ -21,7 +21,7 @@ public sealed class PolicyWorkflowPage
         _ui.VerifyAsync(_locators.AJAXErrorCheck, expected, property, new ControlIntent("PolicyWorkflow", "AJAXErrorCheck"));
 
     public Task WaitForAccountsReceivableHeadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.AccountsReceivableHeading, expected, new ControlIntent("PolicyWorkflow", "AccountsReceivableHeading"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("PolicyWorkflow", "AccountsReceivableHeading"));
 
     public Task WaitForAddClientAsync(string expected) =>
         _ui.WaitAsync(_locators.AddClient, expected, new ControlIntent("PolicyWorkflow", "AddClient"));
@@ -39,13 +39,13 @@ public sealed class PolicyWorkflowPage
         _ui.PressAsync(_locators.AggregateLimit, key, new ControlIntent("PolicyWorkflow", "AggregateLimit"));
 
     public Task WaitForBusinessownersAsync(string expected) =>
-        _ui.WaitAsync(_locators.Businessowners, expected, new ControlIntent("PolicyWorkflow", "Businessowners"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("PolicyWorkflow", "Businessowners"));
 
     public Task ClickCPDetailAsync() =>
-        _ui.ClickAsync(_locators.CPDetail, new ControlIntent("PolicyWorkflow", "CPDetail"));
+        _ui.ClickAsync(_locators.Detail, new ControlIntent("PolicyWorkflow", "CPDetail"));
 
     public Task WaitForCPPLiabilityAsync(string expected) =>
-        _ui.WaitAsync(_locators.CPPLiability, expected, new ControlIntent("PolicyWorkflow", "CPPLiability"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("PolicyWorkflow", "CPPLiability"));
 
     public Task VerifyCTStraightThroughLiabilityLimitTo1MAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.CTStraightThroughLiabilityLimitTo1M, expected, property, new ControlIntent("PolicyWorkflow", "CTStraightThroughLiabilityLimitTo1M"));
@@ -87,7 +87,7 @@ public sealed class PolicyWorkflowPage
         _ui.WaitAsync(_locators.EmployersLiab, expected, new ControlIntent("PolicyWorkflow", "EmployersLiab"));
 
     public Task WaitForEndorsementHeadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.EndorsementHeading, expected, new ControlIntent("PolicyWorkflow", "EndorsementHeading"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("PolicyWorkflow", "EndorsementHeading"));
 
     public Task EnterFireDamageAsync(string value) =>
         _ui.FillAsync(_locators.FireDamage, value, new ControlIntent("PolicyWorkflow", "FireDamage"));
@@ -102,7 +102,7 @@ public sealed class PolicyWorkflowPage
         _ui.PressAsync(_locators.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage, key, new ControlIntent("PolicyWorkflow", "HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage"));
 
     public Task WaitForHomeownerSLiabilityAsync(string expected) =>
-        _ui.WaitAsync(_locators.HomeownerSLiability, expected, new ControlIntent("PolicyWorkflow", "HomeownerSLiability"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("PolicyWorkflow", "HomeownerSLiability"));
 
     public Task WaitForOKAsync(string expected) =>
         _ui.WaitAsync(_locators.OK, expected, new ControlIntent("PolicyWorkflow", "OK"));
@@ -117,7 +117,7 @@ public sealed class PolicyWorkflowPage
         _ui.ClickAsync(_locators.IFRAMEDuckCreekPolicyOtherCheckBox, new ControlIntent("PolicyWorkflow", "IFRAMEDuckCreekPolicyOtherCheckBox"));
 
     public Task ClickIMDetailAsync() =>
-        _ui.ClickAsync(_locators.IMDetail, new ControlIntent("PolicyWorkflow", "IMDetail"));
+        _ui.ClickAsync(_locators.Detail, new ControlIntent("PolicyWorkflow", "IMDetail"));
 
     public Task ClickIncludeBusinessownersAsync() =>
         _ui.ClickAsync(_locators.IncludeBusinessowners, new ControlIntent("PolicyWorkflow", "IncludeBusinessowners"));
@@ -204,13 +204,13 @@ public sealed class PolicyWorkflowPage
         _ui.WaitAsync(_locators.PersonalAuto, expected, new ControlIntent("PolicyWorkflow", "PersonalAuto"));
 
     public Task WaitForPolicyCovgGLPolicyCovgAsync(string expected) =>
-        _ui.WaitAsync(_locators.PolicyCovgGLPolicyCovg, expected, new ControlIntent("PolicyWorkflow", "PolicyCovgGLPolicyCovg"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("PolicyWorkflow", "PolicyCovgGLPolicyCovg"));
 
     public Task WaitForPolicyCovgAsync(string expected) =>
         _ui.WaitAsync(_locators.PolicyCovg, expected, new ControlIntent("PolicyWorkflow", "PolicyCovg"));
 
     public Task WaitForPolicyInfoHeaderAsync(string expected) =>
-        _ui.WaitAsync(_locators.PolicyInfoHeader, expected, new ControlIntent("PolicyWorkflow", "PolicyInfoHeader"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("PolicyWorkflow", "PolicyInfoHeader"));
 
     public Task EnterPremOpDedAsync(string value) =>
         _ui.FillAsync(_locators.PremOpDed, value, new ControlIntent("PolicyWorkflow", "PremOpDed"));
@@ -246,7 +246,7 @@ public sealed class PolicyWorkflowPage
         _ui.ClickAsync(_locators.QuickSearchButton, new ControlIntent("PolicyWorkflow", "QuickSearchButton"));
 
     public Task WaitForRentalOwnersLiabilityAsync(string expected) =>
-        _ui.WaitAsync(_locators.RentalOwnersLiability, expected, new ControlIntent("PolicyWorkflow", "RentalOwnersLiability"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("PolicyWorkflow", "RentalOwnersLiability"));
 
     public Task VerifyOKAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.OK, expected, property, new ControlIntent("PolicyWorkflow", "OK"));
@@ -264,16 +264,16 @@ public sealed class PolicyWorkflowPage
         _ui.ClickAsync(_locators.ReturnToCPP, new ControlIntent("PolicyWorkflow", "ReturnToCPP"));
 
     public Task ClickRiskAccountsReceivableOKAsync() =>
-        _ui.ClickAsync(_locators.RiskAccountsReceivableOK, new ControlIntent("PolicyWorkflow", "RiskAccountsReceivableOK"));
+        _ui.ClickAsync(_locators.OK, new ControlIntent("PolicyWorkflow", "RiskAccountsReceivableOK"));
 
     public Task ClickRiskBaileesCustomersOKAsync() =>
-        _ui.ClickAsync(_locators.RiskBaileesCustomersOK, new ControlIntent("PolicyWorkflow", "RiskBaileesCustomersOK"));
+        _ui.ClickAsync(_locators.OK, new ControlIntent("PolicyWorkflow", "RiskBaileesCustomersOK"));
 
     public Task ClickRiskComputerSystemsOKAsync() =>
-        _ui.ClickAsync(_locators.RiskComputerSystemsOK, new ControlIntent("PolicyWorkflow", "RiskComputerSystemsOK"));
+        _ui.ClickAsync(_locators.OK, new ControlIntent("PolicyWorkflow", "RiskComputerSystemsOK"));
 
     public Task WaitForSFP10LiabilityFarmAsync(string expected) =>
-        _ui.WaitAsync(_locators.SFP10LiabilityFarm, expected, new ControlIntent("PolicyWorkflow", "SFP10LiabilityFarm"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("PolicyWorkflow", "SFP10LiabilityFarm"));
 
     public Task VerifySaveForLaterAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.SaveForLater, expected, property, new ControlIntent("PolicyWorkflow", "SaveForLater"));
@@ -384,7 +384,7 @@ public sealed class PolicyWorkflowPage
         _ui.ClickAsync(_locators.ViewPolicy, new ControlIntent("PolicyWorkflow", "ViewPolicy"));
 
     public Task WaitForWatercraftLiabilityAsync(string expected) =>
-        _ui.WaitAsync(_locators.WatercraftLiability, expected, new ControlIntent("PolicyWorkflow", "WatercraftLiability"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("PolicyWorkflow", "WatercraftLiability"));
 
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);

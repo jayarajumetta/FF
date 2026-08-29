@@ -7,35 +7,35 @@ public sealed class PolicyInformationLocators
     private readonly IPage _page;
     public PolicyInformationLocators(IPage page) => _page = page;
 
-    public ILocator Carrier => _page.GetByRole(AriaRole.Textbox, new() { Name = "Carrier", Exact = true });
+    public ILocator Carrier => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Carrier");
 
-    public ILocator Client => CanonicalDuckCreekLocatorFactory.ByModuleAttributeGuid(_page, "3a13d49c-1679-21d3-307d-9ac2d420ffb8");
+    public ILocator Client => _page.Locator("a[fieldref=\"Add Client\"]");
 
-    public ILocator Detail => CanonicalDuckCreekLocatorFactory.ByModuleAttributeGuid(_page, "3a13d49c-1700-371e-c808-c1dcd0cae17d");
+    public ILocator Detail => _page.Locator("[id=\"dctGridLink\"]");
 
-    public ILocator EffectiveDate => _page.GetByRole(AriaRole.Textbox, new() { Name = "Effective Date", Exact = true });
+    public ILocator EffectiveDate => _page.Locator("input[fieldref=\\"PolicyInput.EffectiveDate\\"]");
 
-    public ILocator EnterPriorLossInformation => _page.GetByRole(AriaRole.Button, new() { Name = "Enter Prior Loss Information", Exact = true });
+    public ILocator EnterPriorLossInformation => _page.GetByRole(AriaRole.Link, new() { Name = "Enter Prior Loss Information", Exact = true });
 
-    public ILocator ExpirationDate => _page.GetByRole(AriaRole.Textbox, new() { Name = "Expiration Date", Exact = true });
+    public ILocator ExpirationDate => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Expiration Date");
 
     public ILocator InsuranceHistory => _page.GetByRole(AriaRole.Link, new() { Name = "Insurance History", Exact = true });
 
-    public ILocator IsThereAPriorCarrier => _page.GetByRole(AriaRole.Textbox, new() { Name = "Is there a Prior Carrier?*", Exact = true });
+    public ILocator IsThereAPriorCarrier => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Is there a Prior Carrier?*");
 
-    public ILocator LossExperienceHeading => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Loss Experience Heading");
+    public ILocator LossExperienceHeading => _page.Locator("[id=\"pageTitle\"]");
 
-    public ILocator ModificationFactor => CanonicalDuckCreekLocatorFactory.ByModuleAttributeGuid(_page, "3a13d49c-1697-4099-cdcb-b51261d5962d");
+    public ILocator ModificationFactor => _page.Locator("input[fieldref=\"LineInput.ModificationFactor\"]");
 
     public ILocator NoKnownLosses => _page.GetByRole(AriaRole.Checkbox, new() { Name = "No known losses", Exact = true });
 
     public ILocator OtherInsuranceHistoryOK => _page.GetByRole(AriaRole.Link, new() { Name = "OK", Exact = true });
 
-    public ILocator PolicyNumber => CanonicalDuckCreekLocatorFactory.ByModuleAttributeGuid(_page, "3a13d49c-171e-17ac-180b-20fce969d8b7");
+    public ILocator PolicyNumber => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Policy Number");
 
-    public ILocator PolicyType => _page.GetByRole(AriaRole.Textbox, new() { Name = "Policy Type", Exact = true });
+    public ILocator PolicyType => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Policy Type");
 
     public ILocator ReturnToQuote => _page.GetByRole(AriaRole.Link, new() { Name = "Return to Quote", Exact = true });
 
-    public ILocator TotalPremium => _page.GetByRole(AriaRole.Textbox, new() { Name = "Total Premium", Exact = true });
+    public ILocator TotalPremium => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Total Premium");
 }

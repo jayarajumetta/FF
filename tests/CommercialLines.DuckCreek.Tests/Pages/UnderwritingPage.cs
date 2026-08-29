@@ -24,13 +24,13 @@ public sealed class UnderwritingPage
         _ui.ClickAsync(_locators.Accept, new ControlIntent("Underwriting", "Accept"));
 
     public Task WaitForUnderwritingInfoCommercialPropertyHistoryCommercialGeneralLiabilityHistoryAsync(string expected) =>
-        _ui.WaitAsync(_locators.UnderwritingInfoCommercialPropertyHistoryCommercialGeneralLiabilityHistory, expected, new ControlIntent("Underwriting", "UnderwritingInfoCommercialPropertyHistoryCommercialGeneralLiabilityHistory"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Underwriting", "UnderwritingInfoCommercialPropertyHistoryCommercialGeneralLiabilityHistory"));
 
     public Task ClickUnderwritingInfoNavigationCommercialGeneralLiabilityHistoryAsync() =>
-        _ui.ClickAsync(_locators.UnderwritingInfoNavigationCommercialGeneralLiabilityHistory, new ControlIntent("Underwriting", "UnderwritingInfoNavigationCommercialGeneralLiabilityHistory"));
+        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Underwriting", "UnderwritingInfoNavigationCommercialGeneralLiabilityHistory"));
 
     public Task ClickCommercialPropertyHistoryAsync() =>
-        _ui.ClickAsync(_locators.CommercialPropertyHistory, new ControlIntent("Underwriting", "CommercialPropertyHistory"));
+        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Underwriting", "CommercialPropertyHistory"));
 
     public Task WaitForUnderwritingInfoGeneralUWQuestionsGeneralUWQuestionsAsync(string expected) =>
         _ui.WaitAsync(_locators.UnderwritingInfoGeneralUWQuestionsGeneralUWQuestions, expected, new ControlIntent("Underwriting", "UnderwritingInfoGeneralUWQuestionsGeneralUWQuestions"));
@@ -66,10 +66,10 @@ public sealed class UnderwritingPage
         _ui.PressAsync(_locators.UnderwritingInfoOtherInsuranceHistoryIsThereAPriorCarrier, key, new ControlIntent("Underwriting", "UnderwritingInfoOtherInsuranceHistoryIsThereAPriorCarrier"));
 
     public Task WaitForUnderwritingInfoOtherInsuranceHistoryOtherInsuranceHistoryAsync(string expected) =>
-        _ui.WaitAsync(_locators.UnderwritingInfoOtherInsuranceHistoryOtherInsuranceHistory, expected, new ControlIntent("Underwriting", "UnderwritingInfoOtherInsuranceHistoryOtherInsuranceHistory"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Underwriting", "UnderwritingInfoOtherInsuranceHistoryOtherInsuranceHistory"));
 
     public Task ClickUnderwritingInfoNavigationOtherInsuranceHistoryAsync() =>
-        _ui.ClickAsync(_locators.UnderwritingInfoNavigationOtherInsuranceHistory, new ControlIntent("Underwriting", "UnderwritingInfoNavigationOtherInsuranceHistory"));
+        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Underwriting", "UnderwritingInfoNavigationOtherInsuranceHistory"));
 
     public Task VerifyReferenceNumberAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.ReferenceNumber, expected, property, new ControlIntent("Underwriting", "ReferenceNumber"));

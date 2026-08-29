@@ -38,7 +38,7 @@ public sealed class PolicyWorkflowPage
         _ui.WaitAsync(_locators.BODY4F40D, expected, new ControlIntent("PolicyWorkflow", "BODY4F40D"));
 
     public Task WaitForBODYABC33Async(string expected) =>
-        _ui.WaitAsync(_locators.BODYABC33, expected, new ControlIntent("PolicyWorkflow", "BODYABC33"));
+        _ui.WaitAsync(_locators.BODY4F40D, expected, new ControlIntent("PolicyWorkflow", "BODYABC33"));
 
     public Task VerifyButtonAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.Button, expected, property, new ControlIntent("PolicyWorkflow", "Button"));
@@ -50,10 +50,10 @@ public sealed class PolicyWorkflowPage
         _ui.ExistsAsync(_locators.Button);
 
     public Task ClickClientInfoSearchAsync() =>
-        _ui.ClickAsync(_locators.ClientInfoSearch, new ControlIntent("PolicyWorkflow", "ClientInfoSearch"));
+        _ui.ClickAsync(_locators.QuoteSearchButton, new ControlIntent("PolicyWorkflow", "ClientInfoSearch"));
 
     public Task ClickCloseQuoteAsync() =>
-        _ui.ClickAsync(_locators.CloseQuote, new ControlIntent("PolicyWorkflow", "CloseQuote"));
+        _ui.ClickAsync(_locators.AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe, new ControlIntent("PolicyWorkflow", "CloseQuote"));
 
     public Task VerifyDescriptionOfOperationsAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.DescriptionOfOperations, expected, property, new ControlIntent("PolicyWorkflow", "DescriptionOfOperations"));
@@ -62,7 +62,7 @@ public sealed class PolicyWorkflowPage
         _ui.PressAsync(_locators.DescriptionOfOperations, key, new ControlIntent("PolicyWorkflow", "DescriptionOfOperations"));
 
     public Task EnterDescriptionOfTheBusinessExposuresActivitiesAndExperienceAsync(string value) =>
-        _ui.FillAsync(_locators.DescriptionOfTheBusinessExposuresActivitiesAndExperience, value, new ControlIntent("PolicyWorkflow", "DescriptionOfTheBusinessExposuresActivitiesAndExperience"));
+        _ui.FillAsync(_locators.AddNarrative, value, new ControlIntent("PolicyWorkflow", "DescriptionOfTheBusinessExposuresActivitiesAndExperience"));
 
     public Task WaitForEChecklistEChecklistOKAsync(string expected) =>
         _ui.WaitAsync(_locators.EChecklistEChecklistOK, expected, new ControlIntent("PolicyWorkflow", "EChecklistEChecklistOK"));
@@ -124,13 +124,13 @@ public Task VerifyLoadingMessage4DE37Async(string expected, string property) =>
         _ui.ExistsAsync(_locators.LoadingMessage4DE37);
 
     public Task VerifyLoadingMessageC7A0DAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.LoadingMessageC7A0D, expected, property, new ControlIntent("PolicyWorkflow", "LoadingMessageC7A0D"));
+        _ui.VerifyAsync(_locators.LoadingMessage4DE37, expected, property, new ControlIntent("PolicyWorkflow", "LoadingMessageC7A0D"));
 
     public Task<bool> IsLoadingMessageC7A0DPresentAsync() =>
-        _ui.ExistsAsync(_locators.LoadingMessageC7A0D);
+        _ui.ExistsAsync(_locators.LoadingMessage4DE37);
 
     public Task VerifyLockedThisQuoteHasBeenSubmittedAndYouCanNoLongerMakeChangesToThisTextAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.LockedThisQuoteHasBeenSubmittedAndYouCanNoLongerMakeChangesToThisText, expected, property, new ControlIntent("PolicyWorkflow", "LockedThisQuoteHasBeenSubmittedAndYouCanNoLongerMakeChangesToThisText"));
+        _ui.VerifyAsync(_locators.AddNarrative, expected, property, new ControlIntent("PolicyWorkflow", "LockedThisQuoteHasBeenSubmittedAndYouCanNoLongerMakeChangesToThisText"));
 
     public Task ClickLoggedInUser5A005Async() =>
         _ui.ClickAsync(_locators.LoggedInUser5A005, new ControlIntent("PolicyWorkflow", "LoggedInUser5A005"));
@@ -139,16 +139,16 @@ public Task VerifyLoadingMessage4DE37Async(string expected, string property) =>
         _ui.ExistsAsync(_locators.LoggedInUser5A005);
 
     public Task ClickLoggedInUser6AD12Async() =>
-        _ui.ClickAsync(_locators.LoggedInUser6AD12, new ControlIntent("PolicyWorkflow", "LoggedInUser6AD12"));
+        _ui.ClickAsync(_locators.LoggedInUser5A005, new ControlIntent("PolicyWorkflow", "LoggedInUser6AD12"));
 
     public Task<bool> IsLoggedInUser6AD12PresentAsync() =>
-        _ui.ExistsAsync(_locators.LoggedInUser6AD12);
+        _ui.ExistsAsync(_locators.LoggedInUser5A005);
 
     public Task ClickLoggedInUser8A0DDAsync() =>
-        _ui.ClickAsync(_locators.LoggedInUser8A0DD, new ControlIntent("PolicyWorkflow", "LoggedInUser8A0DD"));
+        _ui.ClickAsync(_locators.LoggedInUser5A005, new ControlIntent("PolicyWorkflow", "LoggedInUser8A0DD"));
 
     public Task<bool> IsLoggedInUser8A0DDPresentAsync() =>
-        _ui.ExistsAsync(_locators.LoggedInUser8A0DD);
+        _ui.ExistsAsync(_locators.LoggedInUser5A005);
 
     public Task VerifyLogoutAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.Logout, expected, property, new ControlIntent("PolicyWorkflow", "Logout"));
@@ -160,31 +160,31 @@ public Task VerifyLoadingMessage4DE37Async(string expected, string property) =>
         _ui.ExistsAsync(_locators.Logout);
 
     public Task ClickLogoutLogOutAsync() =>
-        _ui.ClickAsync(_locators.LogoutLogOut, new ControlIntent("PolicyWorkflow", "LogoutLogOut"));
+        _ui.ClickAsync(_locators.Logout, new ControlIntent("PolicyWorkflow", "LogoutLogOut"));
 
     public Task<bool> IsLogoutLogOutPresentAsync() =>
-        _ui.ExistsAsync(_locators.LogoutLogOut);
+        _ui.ExistsAsync(_locators.Logout);
 
     public Task VerifyNameAndQuoteAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.NameAndQuote, expected, property, new ControlIntent("PolicyWorkflow", "NameAndQuote"));
+        _ui.VerifyAsync(_locators.AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe, expected, property, new ControlIntent("PolicyWorkflow", "NameAndQuote"));
 
     public Task<string> CaptureNameAndQuoteAsync(string property = "") =>
-        _ui.CaptureAsync(_locators.NameAndQuote, property, new ControlIntent("PolicyWorkflow", "NameAndQuote"));
+        _ui.CaptureAsync(_locators.AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe, property, new ControlIntent("PolicyWorkflow", "NameAndQuote"));
 
     public Task<string> CaptureNameAndQuoteNum8EB77Async(string property = "") =>
-        _ui.CaptureAsync(_locators.NameAndQuoteNum8EB77, property, new ControlIntent("PolicyWorkflow", "NameAndQuoteNum8EB77"));
+        _ui.CaptureAsync(_locators.AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe, property, new ControlIntent("PolicyWorkflow", "NameAndQuoteNum8EB77"));
 
     public Task WaitForNameAndQuoteNumCA893Async(string expected) =>
-        _ui.WaitAsync(_locators.NameAndQuoteNumCA893, expected, new ControlIntent("PolicyWorkflow", "NameAndQuoteNumCA893"));
+        _ui.WaitAsync(_locators.AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe, expected, new ControlIntent("PolicyWorkflow", "NameAndQuoteNumCA893"));
 
     public Task VerifyNameAndQuoteNumCA893Async(string expected, string property) =>
-        _ui.VerifyAsync(_locators.NameAndQuoteNumCA893, expected, property, new ControlIntent("PolicyWorkflow", "NameAndQuoteNumCA893"));
+        _ui.VerifyAsync(_locators.AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe, expected, property, new ControlIntent("PolicyWorkflow", "NameAndQuoteNumCA893"));
 
     public Task<bool> IsNameAndQuoteNumCA893PresentAsync() =>
-        _ui.ExistsAsync(_locators.NameAndQuoteNumCA893);
+        _ui.ExistsAsync(_locators.AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe);
 
     public Task WaitForNarrativeScreenHeadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.NarrativeScreenHeading, expected, new ControlIntent("PolicyWorkflow", "NarrativeScreenHeading"));
+        _ui.WaitAsync(_locators.AddNarrative, expected, new ControlIntent("PolicyWorkflow", "NarrativeScreenHeading"));
 
     public Task ClickNextBOPAsync() =>
         _ui.ClickAsync(_locators.NextBOP, new ControlIntent("PolicyWorkflow", "NextBOP"));
@@ -277,16 +277,16 @@ public Task VerifyLoadingMessage4DE37Async(string expected, string property) =>
         _ui.ExistsAsync(_locators.ScreenHeading69631);
 
     public Task VerifyScreenHeading9696CAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.ScreenHeading9696C, expected, property, new ControlIntent("PolicyWorkflow", "ScreenHeading9696C"));
+        _ui.VerifyAsync(_locators.ScreenHeading69631, expected, property, new ControlIntent("PolicyWorkflow", "ScreenHeading9696C"));
 
     public Task<bool> IsScreenHeading9696CPresentAsync() =>
-        _ui.ExistsAsync(_locators.ScreenHeading9696C);
+        _ui.ExistsAsync(_locators.ScreenHeading69631);
 
     public Task VerifyScreenHeadingDCABFAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.ScreenHeadingDCABF, expected, property, new ControlIntent("PolicyWorkflow", "ScreenHeadingDCABF"));
+        _ui.VerifyAsync(_locators.ScreenHeading69631, expected, property, new ControlIntent("PolicyWorkflow", "ScreenHeadingDCABF"));
 
     public Task<bool> IsScreenHeadingDCABFPresentAsync() =>
-        _ui.ExistsAsync(_locators.ScreenHeadingDCABF);
+        _ui.ExistsAsync(_locators.ScreenHeading69631);
 
     public Task WaitForSearchButtonAsync(string expected) =>
         _ui.WaitAsync(_locators.SearchButton, expected, new ControlIntent("PolicyWorkflow", "SearchButton"));
@@ -313,28 +313,28 @@ public Task VerifyLoadingMessage4DE37Async(string expected, string property) =>
         _ui.ExistsAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus01C36B);
 
     public Task VerifyTheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740Async(string expected, string property) =>
-        _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740, expected, property, new ControlIntent("PolicyWorkflow", "TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740"));
+        _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus01C36B, expected, property, new ControlIntent("PolicyWorkflow", "TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740"));
 
     public Task<bool> IsTheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740PresentAsync() =>
-        _ui.ExistsAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus06F740);
+        _ui.ExistsAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus01C36B);
 
     public Task VerifyTheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0B8256Async(string expected, string property) =>
-        _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0B8256, expected, property, new ControlIntent("PolicyWorkflow", "TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0B8256"));
+        _ui.VerifyAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus01C36B, expected, property, new ControlIntent("PolicyWorkflow", "TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0B8256"));
 
     public Task<bool> IsTheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0B8256PresentAsync() =>
-        _ui.ExistsAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus0B8256);
+        _ui.ExistsAsync(_locators.TheBrowserWasUnableToCommunicateWithTheServerHTTPStatusErrorHTTPStatus01C36B);
 
     public Task WaitForTransactionTypeAsync(string expected) =>
         _ui.WaitAsync(_locators.TransactionType, expected, new ControlIntent("PolicyWorkflow", "TransactionType"));
 
     public Task VerifyUncheckedNoneOfTheAboveAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.UncheckedNoneOfTheAbove, expected, property, new ControlIntent("PolicyWorkflow", "UncheckedNoneOfTheAbove"));
+        _ui.VerifyAsync(_locators.ResponseRequiredToContinue, expected, property, new ControlIntent("PolicyWorkflow", "UncheckedNoneOfTheAbove"));
 
     public Task PressUncheckedNoneOfTheAboveAsync(string key) =>
-        _ui.PressAsync(_locators.UncheckedNoneOfTheAbove, key, new ControlIntent("PolicyWorkflow", "UncheckedNoneOfTheAbove"));
+        _ui.PressAsync(_locators.ResponseRequiredToContinue, key, new ControlIntent("PolicyWorkflow", "UncheckedNoneOfTheAbove"));
 
     public Task<bool> IsUncheckedNoneOfTheAbovePresentAsync() =>
-        _ui.ExistsAsync(_locators.UncheckedNoneOfTheAbove);
+        _ui.ExistsAsync(_locators.ResponseRequiredToContinue);
 
     public Task PressUnlistedAcreageAsync(string key) =>
         _ui.PressAsync(_locators.UnlistedAcreage, key, new ControlIntent("PolicyWorkflow", "UnlistedAcreage"));
@@ -352,10 +352,10 @@ public Task VerifyLoadingMessage4DE37Async(string expected, string property) =>
         _ui.ExistsAsync(_locators.UserNameE0ACD);
 
     public Task VerifyUserNameE65A8Async(string expected, string property) =>
-        _ui.VerifyAsync(_locators.UserNameE65A8, expected, property, new ControlIntent("PolicyWorkflow", "UserNameE65A8"));
+        _ui.VerifyAsync(_locators.UserNameE0ACD, expected, property, new ControlIntent("PolicyWorkflow", "UserNameE65A8"));
 
     public Task<bool> IsUserNameE65A8PresentAsync() =>
-        _ui.ExistsAsync(_locators.UserNameE65A8);
+        _ui.ExistsAsync(_locators.UserNameE0ACD);
 
     public Task WaitForViewPolicy0AC0BAsync(string expected) =>
         _ui.WaitAsync(_locators.ViewPolicy0AC0B, expected, new ControlIntent("PolicyWorkflow", "ViewPolicy0AC0B"));
@@ -364,10 +364,10 @@ public Task VerifyLoadingMessage4DE37Async(string expected, string property) =>
         _ui.ClickAsync(_locators.ViewPolicy0AC0B, new ControlIntent("PolicyWorkflow", "ViewPolicy0AC0B"));
 
     public Task WaitForViewPolicy56E09Async(string expected) =>
-        _ui.WaitAsync(_locators.ViewPolicy56E09, expected, new ControlIntent("PolicyWorkflow", "ViewPolicy56E09"));
+        _ui.WaitAsync(_locators.ViewPolicy0AC0B, expected, new ControlIntent("PolicyWorkflow", "ViewPolicy56E09"));
 
     public Task PressViewPolicy56E09Async(string key) =>
-        _ui.PressAsync(_locators.ViewPolicy56E09, key, new ControlIntent("PolicyWorkflow", "ViewPolicy56E09"));
+        _ui.PressAsync(_locators.ViewPolicy0AC0B, key, new ControlIntent("PolicyWorkflow", "ViewPolicy56E09"));
 
     public Task NavigateAsync(string url) =>
         _page.GotoAsync(url, new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });

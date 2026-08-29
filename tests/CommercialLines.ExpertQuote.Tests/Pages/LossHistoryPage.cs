@@ -51,7 +51,7 @@ public sealed class LossHistoryPage
         _ui.VerifyAsync(_locators.ClaimSummaryTableRowCellExplicitNameTypeOfLoss, expected, property, new ControlIntent("LossHistory", "ClaimSummaryTableRowCellExplicitNameTypeOfLoss"));
 
     public Task PressDateOfOccurrenceAsync(string key) =>
-        _ui.PressAsync(_locators.DateOfOccurrence, key, new ControlIntent("LossHistory", "DateOfOccurrence"));
+        _ui.PressAsync(_locators.ADDCLAIM, key, new ControlIntent("LossHistory", "DateOfOccurrence"));
 
     public Task PressDescriptionOfOccurrenceOrClaimAsync(string key) =>
         _ui.PressAsync(_locators.DescriptionOfOccurrenceOrClaim, key, new ControlIntent("LossHistory", "DescriptionOfOccurrenceOrClaim"));
@@ -71,7 +71,7 @@ public Task WaitForLossRuns3YearsHeaderAsync(string expected) =>
         _ui.WaitAsync(_locators.LossRuns3YearsHeader, expected, new ControlIntent("LossHistory", "LossRuns3YearsHeader"));
 
     public Task WaitForLossRunsHeaderAsync(string expected) =>
-        _ui.WaitAsync(_locators.LossRunsHeader, expected, new ControlIntent("LossHistory", "LossRunsHeader"));
+        _ui.WaitAsync(_locators.LossRuns3YearsHeader, expected, new ControlIntent("LossHistory", "LossRunsHeader"));
 
     public Task PressN3YearsAsync(string key) =>
         _ui.PressAsync(_locators.N3Years, key, new ControlIntent("LossHistory", "N3Years"));
@@ -104,16 +104,16 @@ public Task WaitForLossRuns3YearsHeaderAsync(string expected) =>
         _ui.ClickAsync(_locators.Save, new ControlIntent("LossHistory", "Save"));
 
     public Task VerifyScreenHeadingAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.ScreenHeading, expected, property, new ControlIntent("LossHistory", "ScreenHeading"));
+        _ui.VerifyAsync(_locators.NoPrefillMatchFound, expected, property, new ControlIntent("LossHistory", "ScreenHeading"));
 
     public Task<bool> IsScreenHeadingPresentAsync() =>
-        _ui.ExistsAsync(_locators.ScreenHeading);
+        _ui.ExistsAsync(_locators.NoPrefillMatchFound);
 
     public Task PressTypeOfLossDropdownAsync(string key) =>
         _ui.PressAsync(_locators.TypeOfLossDropdown, key, new ControlIntent("LossHistory", "TypeOfLossDropdown"));
 
     public Task ClickTypeOfLossSelectionAsync() =>
-        _ui.ClickAsync(_locators.TypeOfLossSelection, new ControlIntent("LossHistory", "TypeOfLossSelection"));
+        _ui.ClickAsync(_locators.ADDCLAIM, new ControlIntent("LossHistory", "TypeOfLossSelection"));
 
     public Task PressYearsInBusinessAsync(string key) =>
         _ui.PressAsync(_locators.YearsInBusiness, key, new ControlIntent("LossHistory", "YearsInBusiness"));

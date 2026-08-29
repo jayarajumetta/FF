@@ -51,7 +51,7 @@ public sealed class BillingPage
         _ui.ClickAsync(_locators.CreateNewBillingAccount, new ControlIntent("Billing", "CreateNewBillingAccount"));
 
     public Task PressCreditCardButtonAsync(string key) =>
-        _ui.PressAsync(_locators.CreditCardButton, key, new ControlIntent("Billing", "CreditCardButton"));
+        _ui.PressAsync(_locators.CheckButton, key, new ControlIntent("Billing", "CreditCardButton"));
 
     public Task PressDirectBillButtonAsync(string key) =>
         _ui.PressAsync(_locators.DirectBillButton, key, new ControlIntent("Billing", "DirectBillButton"));
@@ -71,13 +71,13 @@ public Task PressN1PaymentButtonAsync(string key) =>
         _ui.ClickAsync(_locators.OTHERButton, new ControlIntent("Billing", "OTHERButton"));
 
     public Task VerifyScreenHeadingAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.ScreenHeading, expected, property, new ControlIntent("Billing", "ScreenHeading"));
+        _ui.VerifyAsync(_locators.NoPrefillMatchFound, expected, property, new ControlIntent("Billing", "ScreenHeading"));
 
     public Task<bool> IsScreenHeadingPresentAsync() =>
-        _ui.ExistsAsync(_locators.ScreenHeading);
+        _ui.ExistsAsync(_locators.NoPrefillMatchFound);
 
     public Task PressStateAsync(string key) =>
-        _ui.PressAsync(_locators.State, key, new ControlIntent("Billing", "State"));
+        _ui.PressAsync(_locators.RatingStateDropdown, key, new ControlIntent("Billing", "State"));
 
     public Task VerifyTableRowCellLinkAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.TableRowCellLink, expected, property, new ControlIntent("Billing", "TableRowCellLink"));

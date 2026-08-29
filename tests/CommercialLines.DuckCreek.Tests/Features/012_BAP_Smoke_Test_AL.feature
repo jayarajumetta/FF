@@ -1,8 +1,3 @@
-# v54 RAW TOSCA SOURCE: CL-DC TestCases Staging Area.tsu
-# Raw TestCase: BAP | Smoke Test [3a161404-2203-4f89-f692-5cc0b3208c5b]
-# Raw TemplateInstance: TemplateInstance of BAP | Smoke Test [3a161484-de73-eda2-ebb8-fe8d8709019c]
-# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
-
 @CL_DC @BAP @smoke_test
 
 Feature: BAP Smoke Test

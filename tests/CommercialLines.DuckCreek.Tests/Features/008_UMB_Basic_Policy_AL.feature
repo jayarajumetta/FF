@@ -1,8 +1,3 @@
-# v54 RAW TOSCA SOURCE: CL-DC TestCases Staging Area.tsu
-# Raw TestCase: UMB | Basic Policy [3a13d49c-13c7-50ce-c6e7-788ed5b058a6]
-# Raw TemplateInstance: Template Instance - UMB | Basic Policy [3a13d49c-14f3-ccbc-f0a9-c23bd4f5c214]
-# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
-
 @CL_DC @UMB @basic_new_business_policy
 
 Feature: UMB Basic Policy

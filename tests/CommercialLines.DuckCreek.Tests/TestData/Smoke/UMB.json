@@ -1,21 +1,4 @@
 {
-  "_meta": {
-    "schemaVersion": "4.0-smoke-layered",
-    "sourceFile": "018_UMB_Smoke_Test_AL.feature",
-    "sourceSha256": "46db558045d3fbe5a2327e027dffb6e17406bfb58cd55ca133e3a75dcce0c06f",
-    "sourceRevision": "55452",
-    "application": "CL_DC",
-    "feature": "Commercial Lines Duck Creek - UMB Smoke Test",
-    "representativeIteration": "CONSOLIDATED",
-    "note": "V60 consolidated smoke base. Common values are modal raw-Tosca values across the supported state matrix; state identity and rare state exceptions are applied at load time.",
-    "sourceConcreteTestCase": "State supplied by Scenario Outline",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
-    "sourceTruth": "RAW_TOSCA",
-    "manualArtifactsUsed": false,
-    "v60RepresentativeSource": "018_umb_smoke_test_al.json",
-    "v60RepresentativeSourceSha256": "aa1c390937601a1cf836fe15c2a0bc240502887933b6be34537a1a263ceae857",
-    "sourceLineageArtifact": "Artifacts/V60SmokeSourceLineage/UMB.json"
-  },
   "dimensions": {
     "state": "Runtime State",
     "stateCode": "RUNTIME",

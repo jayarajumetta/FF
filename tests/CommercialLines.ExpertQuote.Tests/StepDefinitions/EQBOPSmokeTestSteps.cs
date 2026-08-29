@@ -45,7 +45,6 @@ public sealed class EQBOPSmokeTestSteps
 
         var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // v54 RAW TOSCA ORDER. Source: EQ|Common|Account Details - Account Info.
         // XTestStep/XTestStepValue order is authoritative; manual CSV/workbooks are not inputs.
         await page.WaitForAccountInformationHeaderAsync("Visible");
         await page.EnterOwnerMiddleNameAsync("");

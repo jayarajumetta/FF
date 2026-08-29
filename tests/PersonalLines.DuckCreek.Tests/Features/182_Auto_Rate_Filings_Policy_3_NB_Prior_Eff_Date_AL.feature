@@ -1,8 +1,3 @@
-# v54 RAW TOSCA SOURCE: PL_DC_TestCases_Production.tsu
-# Raw TestCase: Auto Rate Filings Policy 3 NB_Prior Eff Date [3a1af7a5-7048-751a-8056-f162c1e1ec8c]
-# Raw TemplateInstance: TemplateInstance of Auto Rate Filings Policy 3 NB_Prior Eff Date [3a211526-0928-fa88-b515-214aa12102af]
-# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
-
 @PL_DC @AUTO @new_business_with_prior_effective_date
 
 Feature: Auto Rate Filings Policy 3 NB Prior Eff Date

@@ -114,7 +114,7 @@ public sealed class ClientSearchPage
         _ui.ClickAsync(_locators.AddAssociatedClientDetail, new ControlIntent("ClientSearch", "AddAssociatedClientDetail"));
 
     public Task ClickAdditionalInsuredIndividualDetailAsync() =>
-        _ui.ClickAsync(_locators.AdditionalInsuredIndividualDetail, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualDetail"));
+        _ui.ClickAsync(_locators.AddAssociatedClientDetail, new ControlIntent("ClientSearch", "AdditionalInsuredIndividualDetail"));
 
     public Task WaitForNamedInsuredIndividualEnterSSNAsync(string expected) =>
         _ui.WaitAsync(_locators.NamedInsuredIndividualEnterSSN, expected, new ControlIntent("ClientSearch", "NamedInsuredIndividualEnterSSN"));

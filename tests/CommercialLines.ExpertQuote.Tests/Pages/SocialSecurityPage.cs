@@ -42,8 +42,8 @@ public sealed class SocialSecurityPage
 
     public Task ClickEChecklistEChecklistSubmitAsync() => ClickSubmitAsync();
     public Task VerifyScreenHeadingAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.ScreenHeading, expected, property, new ControlIntent("SocialSecurity", "ScreenHeading"));
-    public Task<bool> IsScreenHeadingPresentAsync() => _ui.ExistsAsync(_locators.ScreenHeading);
+        _ui.VerifyAsync(_locators.NoPrefillMatchFound, expected, property, new ControlIntent("SocialSecurity", "ScreenHeading"));
+    public Task<bool> IsScreenHeadingPresentAsync() => _ui.ExistsAsync(_locators.NoPrefillMatchFound);
     public Task WaitForSubmitAngularAsync(string expected) =>
         _ui.WaitAsync(_locators.SubmitAngular, expected, new ControlIntent("SocialSecurity", "Submit"));
     public Task PressSubmitAngularAsync(string key) =>

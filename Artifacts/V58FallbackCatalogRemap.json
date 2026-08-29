@@ -1,8 +1,0 @@
-{
-  "version": "v58",
-  "controlsBefore": 987,
-  "controlsAfter": 834,
-  "renamedOrMerged": 153,
-  "controlsWithFallback": 654,
-  "controlsWithTwoOrMoreFallbacks": 293
-}

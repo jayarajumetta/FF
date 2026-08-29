@@ -97,7 +97,7 @@ public sealed class TestHooks
             logger.Info($"PASSED STEP: {_scenario.StepContext.StepInfo.Text}");
 
         var evidence = browser.EndStepEvidence();
-        var stepError = _scenario.TestError?.Message ?? (deferredInStep ? "Verification failed after wait/fallback/healing; deferred until scenario end." : null);
+        var stepError = _scenario.TestError?.Message ?? (deferredInStep ? "Verification failed after readiness wait and resolved-control interaction; deferred until scenario end." : null);
         report.EndStep(!failed, stepError, data.Snapshot(), screenshot, evidence);
     }
 

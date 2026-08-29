@@ -9,7 +9,6 @@ public sealed class AccountInformationLocators
 
     // Source: EQ|Common|Account Details - Account Info
     public ILocator AccountInformation => _page.GetByRole(AriaRole.Heading, new() { Name = "Account Information", Exact = true });
-    public ILocator AccountInformationHeader => AccountInformation;
 
     public ILocator OwnerMiddleName => _page.Locator("[id='owner.name.middle']");
     public ILocator OwnerPhone => _page.Locator("[id='owner.phone']");
@@ -32,13 +31,11 @@ public sealed class AccountInformationLocators
 
     // Tosca source: Tag=MAT-SELECT, Id=owner.address.state.
     public ILocator StateDropdown => _page.Locator("[id='owner.address.state']");
-    public ILocator State0110E => StateDropdown;
-    public ILocator StateAE19A => StateDropdown;
+
 
     public ILocator Zip => _page.Locator("[id='owner.address.zip']");
     // Raw Tosca: EQ|Common|Account Details - Account Info > County (TextBox)
     public ILocator County => _page.Locator("[id='owner.address.county']");
-    public ILocator Yes => HaveYouReceivedMailAtThisAddressForAtLeast90DaysYes;
 
     public ILocator GetStateOption(string stateText) =>
         _page.GetByRole(AriaRole.Option, new() { Name = stateText, Exact = true });

@@ -1,8 +1,3 @@
-# v54 RAW TOSCA SOURCE: CL-DC TestCases Staging Area.tsu
-# Raw TestCase: CPP | Smoke Test [3a1632ff-e6d4-3a98-9b8b-bbb72ecbcd7e]
-# Raw TemplateInstance: TemplateInstance of CPP | Smoke Test [3a163307-6c7b-6097-1b44-d576452e1f66]
-# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
-
 @CL_DC @CPP @smoke_test
 
 Feature: CPP Smoke Test

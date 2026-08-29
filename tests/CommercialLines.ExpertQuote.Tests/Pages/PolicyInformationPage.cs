@@ -27,7 +27,7 @@ public sealed class PolicyInformationPage
         _ui.SelectAsync(_locators.IndustrialHempNo, value, new ControlIntent("PolicyInformation", "IndustrialHempNo"));
 
     public Task SelectIndustrialHempYesAsync(string value) =>
-        _ui.SelectAsync(_locators.IndustrialHempYes, value, new ControlIntent("PolicyInformation", "IndustrialHempYes"));
+        _ui.SelectAsync(_locators.IndustrialHempNo, value, new ControlIntent("PolicyInformation", "IndustrialHempYes"));
 public Task ClickPrimaryFarmCategoryAsync() =>
         _ui.ClickAsync(_locators.PrimaryFarmCategory, new ControlIntent("PolicyInformation", "PrimaryFarmCategory"));
 
@@ -38,10 +38,10 @@ public Task ClickPrimaryFarmCategoryAsync() =>
         _ui.ClickAsync(_locators.PrimaryFarmType, new ControlIntent("PolicyInformation", "PrimaryFarmType"));
 
     public Task VerifyScreenHeadingAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.ScreenHeading, expected, property, new ControlIntent("PolicyInformation", "ScreenHeading"));
+        _ui.VerifyAsync(_locators.NoPrefillMatchFound, expected, property, new ControlIntent("PolicyInformation", "ScreenHeading"));
 
     public Task<bool> IsScreenHeadingPresentAsync() =>
-        _ui.ExistsAsync(_locators.ScreenHeading);
+        _ui.ExistsAsync(_locators.NoPrefillMatchFound);
 
     public Task WaitForSecondaryFarmCategoryAsync(string expected) =>
         _ui.WaitAsync(_locators.SecondaryFarmCategory, expected, new ControlIntent("PolicyInformation", "SecondaryFarmCategory"));

@@ -1,9 +1,6 @@
 using Microsoft.Playwright;
-
 namespace InsuranceAutomation.Core;
-
 public enum LocatorPick { Unique, First, Last, Nth }
-
 public sealed record LocatorSpec(
     string Strategy,
     string Value,
@@ -18,9 +15,8 @@ public sealed record LocatorSpec(
     string? HasText = null,
     string? FrameStrategy = null,
     string? FrameValue = null);
-
 /// <summary>
-/// v57 locator construction. FrameValue is source evidence/hint only; Build(IPage, ...) always targets the
+/// Locator construction keeps frame metadata as a scope hint; Build(IPage, ...) always targets the
 /// top document. The deterministic resolver decides whether to use BuildInFrame after it has briefly proved
 /// that the hinted frame is present. This avoids hard-wiring a stale Tosca HtmlFrame classification.
 /// </summary>
@@ -33,7 +29,6 @@ public static class LocatorResolution
             : Raw(Raw(page, spec.AnchorStrategy!, spec.AnchorValue ?? string.Empty, null, true), spec.Strategy, spec.Value, spec.Role, spec.Exact);
         return Finish(locator, spec);
     }
-
     public static ILocator BuildInFrame(IPage page, LocatorSpec spec)
     {
         if (string.IsNullOrWhiteSpace(spec.FrameValue))
@@ -44,13 +39,10 @@ public static class LocatorResolution
             : Raw(Raw(frame, spec.AnchorStrategy!, spec.AnchorValue ?? string.Empty, null, true), spec.Strategy, spec.Value, spec.Role, spec.Exact);
         return Finish(locator, spec);
     }
-
     public static IFrameLocator? FrameFor(IPage page, LocatorSpec spec) =>
         string.IsNullOrWhiteSpace(spec.FrameValue) ? null : BuildFrame(page, spec.FrameStrategy ?? "css", spec.FrameValue!);
-
     public static IFrameLocator BuildFrame(IPage page, string strategy, string value) =>
         page.FrameLocator(FrameSelector(strategy, value));
-
     public static string FrameSelector(string strategy, string value) => strategy.ToLowerInvariant() switch
     {
         "id" => $"iframe[id=\"{Esc(value)}\"],frame[id=\"{Esc(value)}\"]",
@@ -58,7 +50,6 @@ public static class LocatorResolution
         "css" => value,
         _ => value
     };
-
     private static ILocator Finish(ILocator locator, LocatorSpec spec)
     {
         if (!string.IsNullOrWhiteSpace(spec.HasText))
@@ -71,7 +62,6 @@ public static class LocatorResolution
             _ => locator
         };
     }
-
     private static ILocator Raw(IPage p, string strategy, string value, string? role, bool exact) => strategy.ToLowerInvariant() switch
     {
         "fieldref" => p.Locator($"[fieldref=\"{Esc(value)}\"], [data-fieldref=\"{Esc(value)}\"]"),
@@ -90,7 +80,6 @@ public static class LocatorResolution
         "css" => p.Locator(value),
         _ => p.Locator(value)
     };
-
     private static ILocator Raw(IFrameLocator p, string strategy, string value, string? role, bool exact) => strategy.ToLowerInvariant() switch
     {
         "fieldref" => p.Locator($"[fieldref=\"{Esc(value)}\"], [data-fieldref=\"{Esc(value)}\"]"),
@@ -109,7 +98,6 @@ public static class LocatorResolution
         "css" => p.Locator(value),
         _ => p.Locator(value)
     };
-
     private static ILocator Raw(ILocator p, string strategy, string value, string? role, bool exact) => strategy.ToLowerInvariant() switch
     {
         "fieldref" => p.Locator($"[fieldref=\"{Esc(value)}\"], [data-fieldref=\"{Esc(value)}\"]"),
@@ -128,11 +116,8 @@ public static class LocatorResolution
         "css" => p.Locator(value),
         _ => p.Locator(value)
     };
-
     public static ILocator ByAssociatedLabel(IPage page, string label) => page.Locator(AssociatedLabelXPath(label));
-
     public static ILocator ByAssociatedLabel(IFrameLocator frame, string label) => frame.Locator(AssociatedLabelXPath(label));
-
     private static string AssociatedLabelXPath(string label)
     {
         var q = XPathLiteral(label.Trim());
@@ -141,7 +126,6 @@ public static class LocatorResolution
                " | //label[normalize-space(string(.))=" + q + "]//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1]" +
                " | //label[normalize-space(string(.))=" + q + "]/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])";
     }
-
     private static string XPathLiteral(string value)
     {
         if (!value.Contains('\'')) return $"'{value}'";
@@ -149,7 +133,6 @@ public static class LocatorResolution
         var parts = value.Split('\'');
         return "concat(" + string.Join(", \"'\", ", parts.Select(x => $"'{x}'")) + ")";
     }
-
     private static AriaRole Role(string? role) => (role ?? "").ToLowerInvariant() switch
     {
         "button" => AriaRole.Button,
@@ -165,13 +148,11 @@ public static class LocatorResolution
         "switch" => AriaRole.Switch,
         _ => AriaRole.Generic
     };
-
     private static string NormalizeXPath(string value)
     {
         var v = (value ?? "").Trim();
         if (v.Length >= 2 && v[0] == '"' && v[^1] == '"') v = v[1..^1];
         return v;
     }
-
     private static string Esc(string value) => value.Replace("\\", "\\\\").Replace("\"", "\\\"");
 }

@@ -48,10 +48,10 @@ public sealed class ProposalPage
         _ui.FillAsync(_locators.CountyComboBox, value, new ControlIntent("Proposal", "CountyComboBox"));
 
     public Task WaitForCountyYesAsync(string expected) =>
-        _ui.WaitAsync(_locators.CountyYes, expected, new ControlIntent("Proposal", "CountyYes"));
+        _ui.WaitAsync(_locators.CONFIRM, expected, new ControlIntent("Proposal", "CountyYes"));
 
     public Task SelectCountyYesAsync(string value) =>
-        _ui.SelectAsync(_locators.CountyYes, value, new ControlIntent("Proposal", "CountyYes"));
+        _ui.SelectAsync(_locators.CONFIRM, value, new ControlIntent("Proposal", "CountyYes"));
 
     public Task EnterEffectiveDateAsync(string value) =>
         _ui.FillAsync(_locators.EffectiveDate, value, new ControlIntent("Proposal", "EffectiveDate"));
@@ -72,31 +72,31 @@ public sealed class ProposalPage
         _ui.ClickAsync(_locators.NewQuote, new ControlIntent("Proposal", "NewQuote"));
 
     public Task VerifyPROCEEDAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.PROCEED, expected, property, new ControlIntent("Proposal", "PROCEED"));
+        _ui.VerifyAsync(_locators.CONFIRM, expected, property, new ControlIntent("Proposal", "PROCEED"));
 
     public Task ClickPROCEEDAsync() =>
-        _ui.ClickAsync(_locators.PROCEED, new ControlIntent("Proposal", "PROCEED"));
+        _ui.ClickAsync(_locators.CONFIRM, new ControlIntent("Proposal", "PROCEED"));
 
     public Task<bool> IsPROCEEDPresentAsync() =>
-        _ui.ExistsAsync(_locators.PROCEED);
+        _ui.ExistsAsync(_locators.CONFIRM);
 
     public Task ClickPersonalAutoAsync() =>
-        _ui.ClickAsync(_locators.PersonalAuto, new ControlIntent("Proposal", "PersonalAuto"));
+        _ui.ClickAsync(_locators.Motorcycle, new ControlIntent("Proposal", "PersonalAuto"));
 
     public Task VerifyProposalStartProceedSSNSUBMITAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.ProposalStartProceedSSNSUBMIT, expected, property, new ControlIntent("Proposal", "ProposalStartProceedSSNSUBMIT"));
+        _ui.VerifyAsync(_locators.CONFIRM, expected, property, new ControlIntent("Proposal", "ProposalStartProceedSSNSUBMIT"));
 
     public Task ClickProposalStartProceedSSNSUBMITAsync() =>
-        _ui.ClickAsync(_locators.ProposalStartProceedSSNSUBMIT, new ControlIntent("Proposal", "ProposalStartProceedSSNSUBMIT"));
+        _ui.ClickAsync(_locators.CONFIRM, new ControlIntent("Proposal", "ProposalStartProceedSSNSUBMIT"));
 
     public Task<string> CaptureQNumAsync(string property = "") =>
-        _ui.CaptureAsync(_locators.QNum, property, new ControlIntent("Proposal", "QNum"));
+        _ui.CaptureAsync(_locators.CloseTab, property, new ControlIntent("Proposal", "QNum"));
 
     public Task<string> CaptureQuoteNumberAsync(string property = "") =>
         _ui.CaptureAsync(_locators.QuoteNumber, property, new ControlIntent("Proposal", "QuoteNumber"));
 
     public Task ClickRecreationalVehicleAsync() =>
-        _ui.ClickAsync(_locators.RecreationalVehicle, new ControlIntent("Proposal", "RecreationalVehicle"));
+        _ui.ClickAsync(_locators.Motorcycle, new ControlIntent("Proposal", "RecreationalVehicle"));
 
     public Task WaitForSSNAsync(string expected) =>
         _ui.WaitAsync(_locators.SSN, expected, new ControlIntent("Proposal", "SSN"));
@@ -141,16 +141,16 @@ public sealed class ProposalPage
         _ui.ExistsAsync(_locators.StateMONTANA);
 
     public Task SelectStateNameAsync(string value) =>
-        _ui.SelectAsync(_locators.StateName, value, new ControlIntent("Proposal", "StateName"));
+        _ui.SelectAsync(_locators.AccountDetailsNext, value, new ControlIntent("Proposal", "StateName"));
 
     public Task WaitForUSEEXISTINGACCOUNTAsync(string expected) =>
-        _ui.WaitAsync(_locators.USEEXISTINGACCOUNT, expected, new ControlIntent("Proposal", "USEEXISTINGACCOUNT"));
+        _ui.WaitAsync(_locators.CONFIRM, expected, new ControlIntent("Proposal", "USEEXISTINGACCOUNT"));
 
     public Task ClickUSEEXISTINGACCOUNTAsync() =>
-        _ui.ClickAsync(_locators.USEEXISTINGACCOUNT, new ControlIntent("Proposal", "USEEXISTINGACCOUNT"));
+        _ui.ClickAsync(_locators.CONFIRM, new ControlIntent("Proposal", "USEEXISTINGACCOUNT"));
 
     public Task<bool> IsUSEEXISTINGACCOUNTPresentAsync() =>
-        _ui.ExistsAsync(_locators.USEEXISTINGACCOUNT);
+        _ui.ExistsAsync(_locators.CONFIRM);
 
     public Task EnterWritingCompanyAsync(string value) =>
         _ui.FillAsync(_locators.WritingCompany, value, new ControlIntent("Proposal", "WritingCompany"));

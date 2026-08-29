@@ -1,8 +1,3 @@
-# v54 RAW TOSCA SOURCE: CL_EQ_TestCases_Staging_Area_Pre_Production.tsu
-# Raw TestCase: EQ | BOP | Basic Policy [3a13ce49-1a93-bd06-d9dd-90d58a69befe]
-# Raw TemplateInstance: TemplateInstance of EQ | BOP | Basic Policy [3a13fc94-0dc1-0050-9138-a5a6360e2177]
-# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
-
 @CL_EQ @BOP @basic_new_business_policy
 
 Feature: EQ BOP Basic Policy

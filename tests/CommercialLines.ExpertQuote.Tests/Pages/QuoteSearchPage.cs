@@ -23,7 +23,7 @@ public sealed class QuoteSearchPage
     public Task ClickClientInfoSearchAsync() => ClickQuoteSearchAsync();
 
     public Task ClickCloseQuoteAsync() =>
-        _ui.ClickAsync(_locators.CloseQuote, new ControlIntent("QuoteSearch", "CloseQuote"));
+        _ui.ClickAsync(_locators.AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe, new ControlIntent("QuoteSearch", "CloseQuote"));
 
     public Task ClickKeepGoingAsync() =>
         _ui.ClickAsync(_locators.KeepGoing, new ControlIntent("QuoteSearch", "KeepGoing"));
@@ -31,10 +31,10 @@ public sealed class QuoteSearchPage
     public Task<bool> IsKeepGoingPresentAsync() => _ui.ExistsAsync(_locators.KeepGoing);
 
     public Task<string> CaptureNameAndQuoteAsync(string property = "") =>
-        _ui.CaptureAsync(_locators.NameAndQuote, property, new ControlIntent("QuoteSearch", "NameAndQuote"));
+        _ui.CaptureAsync(_locators.AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe, property, new ControlIntent("QuoteSearch", "NameAndQuote"));
 
     public Task VerifyNameAndQuoteAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.NameAndQuote, expected, property, new ControlIntent("QuoteSearch", "NameAndQuote"));
+        _ui.VerifyAsync(_locators.AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe, expected, property, new ControlIntent("QuoteSearch", "NameAndQuote"));
 
     public Task NavigateToScreenAsync(string screen) =>
         _ui.ClickAsync(_locators.GetNavigationLink(screen), new ControlIntent("Navigation", $"NavLink:{screen}"));

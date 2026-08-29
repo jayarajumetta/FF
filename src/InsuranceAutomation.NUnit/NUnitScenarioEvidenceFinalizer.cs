@@ -5,7 +5,7 @@ namespace InsuranceAutomation.NUnit;
 
 /// <summary>
 /// One reusable scenario-finalization path for all ReqnRoll/NUnit test projects.
-/// Playwright trace/video are finalized before attachments are registered; HAR collection is intentionally disabled in v57. Deferred Tosca
+/// Playwright trace/video/HAR are finalized before attachments are registered. Deferred verification
 /// verification failures are converted to the final NUnit assertion only after evidence publication.
 /// </summary>
 public static class NUnitScenarioEvidenceFinalizer
@@ -31,7 +31,7 @@ public static class NUnitScenarioEvidenceFinalizer
                 catch (Exception ex) { logger.Warn($"Unable to capture final scenario screenshot: {ex.Message}"); }
             }
 
-            // Closing the context finalizes video; trace is stopped inside CloseAsync. HAR collection is disabled in v57.
+            // Closing the context finalizes video, trace and HAR before evidence is staged.
             await browser.CloseAsync(logger);
 
             if (verificationFailures.HasFailures)

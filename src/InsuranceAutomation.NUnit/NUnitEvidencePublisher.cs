@@ -222,7 +222,7 @@ public static class NUnitEvidencePublisher
         var name = Path.GetFileName(path).ToLowerInvariant();
         var normalized = path.Replace('\\', '/').ToLowerInvariant();
         return name is "report.html" or "execution.log" or "console.log" or "network.log" or "trace.zip" or "network.har.zip" or "evidence-bundle.zip" or "test-evidence-manifest.json" or "runtime-locators.jsonl"
-            || normalized.Contains("/screenshots/") || normalized.Contains("/video/") || normalized.Contains("/self-heal/");
+            || normalized.Contains("/screenshots/") || normalized.Contains("/video/");
     }
 
     private static int AttachmentPriority(string path)
@@ -237,7 +237,6 @@ public static class NUnitEvidencePublisher
         if (normalized.Contains("/video/")) return 5;
         if (name == "evidence-bundle.zip") return 6;
         if (name == "test-evidence-manifest.json") return 7;
-        if (normalized.Contains("/self-heal/")) return 8;
         return 20;
     }
 
@@ -254,7 +253,6 @@ public static class NUnitEvidencePublisher
         if (name == "trace.zip") return "playwright-trace";
         if (name == "network.har.zip") return "har";
         if (rel.StartsWith("video/")) return "video";
-        if (rel.StartsWith("self-heal/")) return "self-heal";
         if (name == "evidence-bundle.zip") return "evidence-bundle";
         return "artifact";
     }
@@ -274,7 +272,6 @@ public static class NUnitEvidencePublisher
             "playwright-trace" => "Playwright trace archive",
             "har" => "Playwright HAR network archive",
             "video" => $"Playwright video: {rel}",
-            "self-heal" => $"Locator healing evidence: {rel}",
             "evidence-bundle" => "Complete scenario evidence bundle",
             _ => $"Scenario artifact: {rel}"
         };

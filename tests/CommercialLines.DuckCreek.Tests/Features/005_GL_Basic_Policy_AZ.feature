@@ -1,8 +1,3 @@
-# v54 RAW TOSCA SOURCE: CL-DC TestCases Staging Area.tsu
-# Raw TestCase: GL | Basic Policy [3a13d49c-13a9-4505-dee3-8a4be8c77ed3]
-# Raw TemplateInstance: TemplateInstance of GL | Basic Policy [3a13d49c-14b7-0621-c12d-a90497641da6]
-# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
-
 @CL_DC @basic_new_business_policy
 
 Feature: GL Basic Policy

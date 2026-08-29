@@ -47,10 +47,10 @@ public Task PressNoneOfTheAboveCheckBoxAsync(string key) =>
         _ui.ClickAsync(_locators.Save, new ControlIntent("Underwriting", "Save"));
 
     public Task VerifyScreenHeadingAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.ScreenHeading, expected, property, new ControlIntent("Underwriting", "ScreenHeading"));
+        _ui.VerifyAsync(_locators.NoPrefillMatchFound, expected, property, new ControlIntent("Underwriting", "ScreenHeading"));
 
     public Task<bool> IsScreenHeadingPresentAsync() =>
-        _ui.ExistsAsync(_locators.ScreenHeading);
+        _ui.ExistsAsync(_locators.NoPrefillMatchFound);
 
     public Task VerifyTABLERowCellExplicitName1Async(string expected, string property) =>
         _ui.VerifyAsync(_locators.TABLERowCellExplicitName1, expected, property, new ControlIntent("Underwriting", "TABLERowCellExplicitName1"));

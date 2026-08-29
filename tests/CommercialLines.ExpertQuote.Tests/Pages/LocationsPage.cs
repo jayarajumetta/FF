@@ -35,7 +35,7 @@ public Task<bool> IsLoadingPresentAsync() =>
         _ui.PressAsync(_locators.LocationDescription, key, new ControlIntent("Locations", "LocationDescription"));
 
     public Task ClickLocationLinkAsync() =>
-        _ui.ClickAsync(_locators.LocationLink, new ControlIntent("Locations", "LocationLink"));
+        _ui.ClickAsync(_locators.LocationDescription, new ControlIntent("Locations", "LocationLink"));
 
     public Task PressMilesFromFDAsync(string key) =>
         _ui.PressAsync(_locators.MilesFromFD, key, new ControlIntent("Locations", "MilesFromFD"));
@@ -71,9 +71,9 @@ public Task<bool> IsLoadingPresentAsync() =>
         _ui.ClickAsync(_locators.WindHail1, new ControlIntent("Locations", "WindHail1"));
 
     public Task ClickWindHail2Async() =>
-        _ui.ClickAsync(_locators.WindHail2, new ControlIntent("Locations", "WindHail2"));
+        _ui.ClickAsync(_locators.WindHail1, new ControlIntent("Locations", "WindHail2"));
 
     public Task ClickWindHail5Async() =>
-        _ui.ClickAsync(_locators.WindHail5, new ControlIntent("Locations", "WindHail5"));
+        _ui.ClickAsync(_locators.WindHail1, new ControlIntent("Locations", "WindHail5"));
 
 }

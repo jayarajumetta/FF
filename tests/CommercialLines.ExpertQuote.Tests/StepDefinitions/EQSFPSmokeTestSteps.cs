@@ -43,7 +43,6 @@ public sealed class EQSFPSmokeTestSteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForExistingClientMatchAsync("Exists");
         await page.ClickCreateNewClient1Async();
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets AdditionalInterestsNext
         data.Set("StateName", data.Resolve("{{data:statename}}"));
 
     }
@@ -59,7 +58,6 @@ public sealed class EQSFPSmokeTestSteps
 
         var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // v54 RAW TOSCA ORDER. Source: EQ|Common|Account Details - Account Info.
         // XTestStep/XTestStepValue order is authoritative; manual CSV/workbooks are not inputs.
         await page.WaitForAccountInformationHeaderAsync("Visible");
         await page.EnterOwnerMiddleNameAsync("");
@@ -100,14 +98,10 @@ public sealed class EQSFPSmokeTestSteps
         await page.WaitForProposalDetailsHeaderAsync("Visible");
         await page.SelectSpecialFarmPackageAsync("");
         await page.PressEffectiveDate78F67Async("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets EffectiveDate78F67
         await page.EnterTrueAsync(data.Resolve("{{data:true_34}}"));
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets PolicyTerm
         await page.EnterPolicyTermAsync(data.Resolve("{{data:policyterm_36}}"));
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets StateDropdown
         await page.SelectStateAsync(data.Resolve("{{runtime:StateName}}"));
         await page.PressAgentPCAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets AgentPC
         await page.ClickStateDropdownAsync();
         await page.ClickStartQuoteAsync();
 
@@ -128,7 +122,6 @@ public sealed class EQSFPSmokeTestSteps
         // Source step 0042: RANDOM input for ssn.
         await page.EnterTheSSNCouldNotBeFoundPleaseEnterAnSSNAsync(data.Resolve("{{runtime:InsuredSSN}}"));
         await page.WaitForSubmitAngularAsync("Visible");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets SubmitAngular
         await page.ClickSubmitAngularAsync();
         if (await page.IsNoPrefillMatchFoundPresentAsync())
         {

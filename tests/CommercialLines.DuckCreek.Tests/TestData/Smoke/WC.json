@@ -1,21 +1,4 @@
 {
-  "_meta": {
-    "schemaVersion": "4.0-smoke-layered",
-    "sourceFile": "016_WC_Smoke_Test_AL.feature",
-    "sourceSha256": "4e598142e6745e255ceecc3a167ffe48295dde64df2ff6242626d9d83c791c5a",
-    "sourceRevision": "55452",
-    "application": "CL_DC",
-    "feature": "Commercial Lines Duck Creek - WC Smoke Test",
-    "representativeIteration": "CONSOLIDATED",
-    "note": "V60 consolidated smoke base. Common values are modal raw-Tosca values across the supported state matrix; state identity and rare state exceptions are applied at load time.",
-    "sourceConcreteTestCase": "State supplied by Scenario Outline",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
-    "sourceTruth": "RAW_TOSCA",
-    "manualArtifactsUsed": false,
-    "v60RepresentativeSource": "016_wc_smoke_test_al.json",
-    "v60RepresentativeSourceSha256": "d0782ba8b0705afcebc66012d4b0f46bddfbafcfb5885778b9dc61c62b5ab0eb",
-    "sourceLineageArtifact": "Artifacts/V60SmokeSourceLineage/WC.json"
-  },
   "dimensions": {
     "state": "Runtime State",
     "stateCode": "RUNTIME",

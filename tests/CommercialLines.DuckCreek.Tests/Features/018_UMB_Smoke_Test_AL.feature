@@ -1,8 +1,3 @@
-# v54 RAW TOSCA SOURCE: CL-DC TestCases Staging Area.tsu
-# Raw TestCase: UMB | Smoke Test [3a1633f1-3427-07b7-fbda-d657d3e017d9]
-# Raw TemplateInstance: TemplateInstance of UMB | Smoke Test [3a1633fd-780d-fa4f-2e67-66f22b7e5f54]
-# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
-
 @CL_DC @UMB @smoke_test
 
 Feature: UMB Smoke Test
@@ -19,6 +14,7 @@ Feature: UMB Smoke Test
     And I start a new quote
     And I enter individual client information
     And I complete required policy information
+    And I navigate to Policy Info and Verify Desc
     And I sign out of the application for logged in user
 
     Examples:

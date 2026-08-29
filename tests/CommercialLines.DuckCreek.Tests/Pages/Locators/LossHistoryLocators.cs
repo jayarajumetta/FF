@@ -7,43 +7,39 @@ public sealed class LossHistoryLocators
     private readonly IPage _page;
     public LossHistoryLocators(IPage page) => _page = page;
 
-    public ILocator AddAddlInterest => _page.GetByRole(AriaRole.Link, new() { Name = "Add Addl Interest", Exact = true });
+    public ILocator AddAddlInterest => _page.Locator("a[fieldref=\"Add Addl Interest\"]");
 
-    public ILocator AddlInterests => _page.GetByRole(AriaRole.Link, new() { Name = "Addl Interests", Exact = true });
+    public ILocator PageTitle => _page.Locator("[id=\"pageTitle\"]");
 
-    public ILocator AddlInterestsMainOK => _page.GetByRole(AriaRole.Link, new() { Name = "Addl Interests Main - OK", Exact = true });
+    public ILocator OK => _page.Locator("a[fieldref=\"OK\"]");
 
-    public ILocator LossAddress => _page.GetByRole(AriaRole.Textbox, new() { Name = "Address 1*", Exact = true });
+    public ILocator LossAddress => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Address 1*");
 
     public ILocator AssignLocations => _page.GetByRole(AriaRole.Link, new() { Name = "Assign Locations...", Exact = true });
 
     public ILocator AssignmentScheduleFor => _page.GetByText("Assignment Schedule for:", new() { Exact = true });
 
-    public ILocator AssignmentScheduleForOK => _page.GetByRole(AriaRole.Link, new() { Name = "Assignment Schedule for - OK", Exact = true });
 
-    public ILocator DescriptionOfProperty => _page.GetByRole(AriaRole.Textbox, new() { Name = "Description Of Property*", Exact = true });
+    public ILocator DescriptionOfProperty => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Description Of Property*");
 
-    public ILocator FirstName => _page.GetByRole(AriaRole.Textbox, new() { Name = "First Name*", Exact = true });
+    public ILocator FirstName => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "First Name*");
 
-    public ILocator InsuredType => _page.GetByRole(AriaRole.Textbox, new() { Name = "Insured Type*", Exact = true });
+    public ILocator InsuredType => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Insured Type*");
 
-    public ILocator LastName => _page.GetByRole(AriaRole.Textbox, new() { Name = "Last Name*", Exact = true });
+    public ILocator LastName => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Last Name*");
 
-    public ILocator LoanNumber => _page.GetByRole(AriaRole.Textbox, new() { Name = "Loan Number", Exact = true });
+    public ILocator LoanNumber => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.LoanNumber\"]");
 
-    public ILocator MI => _page.GetByRole(AriaRole.Textbox, new() { Name = "MI", Exact = true });
+    public ILocator MI => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.MiddleInitial\"]");
 
-    public ILocator NewAssignment => _page.GetByRole(AriaRole.Link, new() { Name = "New Assignment...", Exact = true });
+    public ILocator NewAssignment => _page.Locator("a[fieldref=\"New Assignment...\"]");
 
-    public ILocator OtherInterestPremisesDetailOK => _page.GetByRole(AriaRole.Link, new() { Name = "Other Interest Premises Detail - OK", Exact = true });
 
-    public ILocator OtherInterestPremisesSchedule => _page.Locator("[id=\"pageTitle\"]");
 
-    public ILocator OtherInterestPremisesScheduleOK => _page.GetByRole(AriaRole.Link, new() { Name = "Other Interest Premises Schedule - OK", Exact = true });
 
-    public ILocator ProvisionsApplicable => _page.GetByRole(AriaRole.Textbox, new() { Name = "Provisions Applicable*", Exact = true });
+    public ILocator ProvisionsApplicable => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.ProvisionsApplicable\"]");
 
-    public ILocator Type => _page.GetByRole(AriaRole.Textbox, new() { Name = "Type", Exact = true });
+    public ILocator Type => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Type");
 
-    public ILocator ZipCode => _page.GetByRole(AriaRole.Textbox, new() { Name = "Zip Code*", Exact = true });
+    public ILocator ZipCode => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Zip Code*");
 }

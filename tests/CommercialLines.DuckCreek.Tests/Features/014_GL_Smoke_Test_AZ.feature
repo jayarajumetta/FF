@@ -1,8 +1,3 @@
-# v54 RAW TOSCA SOURCE: CL-DC TestCases Staging Area.tsu
-# Raw TestCase: GL | Smoke Test [3a161ed5-3580-cbf2-2c46-edfacbc4cd73]
-# Raw TemplateInstance: TemplateInstance of GL | Smoke Test [3a161ee0-b94a-fc24-a176-4e86c4ebc53d]
-# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
-
 @CL_DC @smoke_test
 
 Feature: GL Smoke Test

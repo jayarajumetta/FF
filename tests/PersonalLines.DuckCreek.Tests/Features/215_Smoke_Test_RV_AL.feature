@@ -1,8 +1,3 @@
-# v54 RAW TOSCA SOURCE: PL_DC_TestCases_Production.tsu
-# Raw TestCase: Smoke Test RV [3a19e1e5-1a5f-8f96-ac2f-d6315621bf61]
-# Raw TemplateInstance: TemplateInstance of Smoke Test RV [3a19e1e5-1a5f-e885-d120-d00d7842ac2f]
-# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
-
 @PL_DC @smoke_test
 
 Feature: Smoke Test RV

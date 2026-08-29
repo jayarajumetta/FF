@@ -196,6 +196,18 @@ public sealed class UMBSmokeTestSteps
 
     }
 
+
+    [Given(@"^I navigate to Policy Info and Verify Desc$")]
+    [When(@"^I navigate to Policy Info and Verify Desc$")]
+    [Then(@"^I navigate to Policy Info and Verify Desc$")]
+    public async Task NavigateToPolicyInfoAndVerifyDescAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        await page.ClickPolicyInfoAsync();
+        await page.VerifyDescriptionOfSpecifiedOperationAsync(data.Resolve("{B[QuoteDescription]}"), "value");
+    }
+
     [Given(@"^I sign out of the application for logged in user$")]
     [When(@"^I sign out of the application for logged in user$")]
     [Then(@"^I sign out of the application for logged in user$")]

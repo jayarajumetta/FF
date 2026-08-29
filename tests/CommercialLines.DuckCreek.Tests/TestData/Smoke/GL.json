@@ -1,21 +1,4 @@
 {
-  "_meta": {
-    "schemaVersion": "4.0-smoke-layered",
-    "sourceFile": "014_GL_Smoke_Test_AZ.feature",
-    "sourceSha256": "46b97be02275515760992a3cd177eb0aa55d2cc37386b0b2af656b41b752d0c8",
-    "sourceRevision": "55452",
-    "application": "CL_DC",
-    "feature": "Commercial Lines Duck Creek - GL Smoke Test",
-    "representativeIteration": "CONSOLIDATED",
-    "note": "V60 consolidated smoke base. Common values are modal raw-Tosca values across the supported state matrix; state identity and rare state exceptions are applied at load time.",
-    "sourceConcreteTestCase": "State supplied by Scenario Outline",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
-    "sourceTruth": "RAW_TOSCA",
-    "manualArtifactsUsed": false,
-    "v60RepresentativeSource": "014_gl_smoke_test_az.json",
-    "v60RepresentativeSourceSha256": "16ca65ab534cf8cd6afe7ef22817ffcffcc8e5c7e73df2b211db7f8827f133ee",
-    "sourceLineageArtifact": "Artifacts/V60SmokeSourceLineage/GL.json"
-  },
   "dimensions": {
     "state": "Runtime State",
     "stateCode": "RUNTIME",

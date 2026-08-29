@@ -9,17 +9,17 @@ public sealed class SubmissionLocators
 
     public ILocator AllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabs => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "All required fields have not been completed. Please complete highlighted tabs.");
 
-    public ILocator CompleteApplication => _page.GetByRole(AriaRole.Button, new() { Name = "Complete Application", Exact = true });
+    public ILocator CompleteApplication => _page.Locator("a[fieldref=\"Complete Application\"]");
 
-    public ILocator IsThisCoverageBound => _page.GetByRole(AriaRole.Textbox, new() { Name = "Is this coverage bound?*", Exact = true });
+    public ILocator IsThisCoverageBound => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Is this coverage bound?*");
 
     public ILocator JavaScript => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "JavaScript");
 
-    public ILocator LoadingMessage => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Loading Message");
+    public ILocator LoadingMessage => _page.Locator("[id=\"loadingMessage\"]");
 
     public ILocator Result => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Result");
 
-    public ILocator StoplightWaitingWindow => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "stoplightWaitingWindow");
+    public ILocator StoplightWaitingWindow => _page.Locator("[id=\"stoplightWaitingWindow\"]");
 
     public ILocator StoplightWaitingWindowClose => _page.GetByText("Close", new() { Exact = true });
 

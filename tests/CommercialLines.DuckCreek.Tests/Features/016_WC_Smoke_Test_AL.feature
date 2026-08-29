@@ -1,8 +1,3 @@
-# v54 RAW TOSCA SOURCE: CL-DC TestCases Staging Area.tsu
-# Raw TestCase: WC | Smoke Test [3a161f5c-3d24-fe0a-93aa-e4ede5fe1b61]
-# Raw TemplateInstance: TemplateInstance of WC | Smoke Test [3a161f74-113c-29a9-50fe-0526adda9495]
-# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
-
 @CL_DC @smoke_test
 
 Feature: WC Smoke Test

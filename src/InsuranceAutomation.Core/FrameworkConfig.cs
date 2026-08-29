@@ -72,7 +72,7 @@ public sealed class BrowserOptions
     public int NavigationTimeoutMs { get; init; } = 30000;
     public bool Trace { get; init; } = true;
     public bool Video { get; init; } = true;
-    public bool Har { get; init; } = false; // v57: HAR implementation retained but execution disabled by default.
+    public bool Har { get; init; } = true;
     public bool ScreenshotOnFailure { get; init; } = true;
     public bool ScreenshotEachStep { get; init; }
     public bool ScreenshotAtScenarioEnd { get; init; } = true;
@@ -105,8 +105,8 @@ public sealed class ReportingOptions
     public string ArtifactRoot { get; init; } = "Artifacts";
     public bool HtmlReport { get; init; } = true;
     public bool IncludeResolvedData { get; init; } = true;
-    public bool IncludeConsoleErrors { get; init; } = false; // v57: browser console collection disabled; implementation retained.
-    public bool IncludeNetworkErrors { get; init; } = false; // v57: request/response collection disabled; implementation retained.
+    public bool IncludeConsoleErrors { get; init; } = true;
+    public bool IncludeNetworkErrors { get; init; } = true;
     public bool CreateEvidenceBundle { get; init; } = true;
 
     // NUnit/Visual Studio/Azure DevOps test-result evidence integration.

@@ -81,10 +81,10 @@ public sealed class CoveragesPage
         _ui.PressAsync(_locators.EndorsementType, key, new ControlIntent("Coverages", "EndorsementType"));
 
     public Task ClickGLNavigationLinksEndorsementsAsync() =>
-        _ui.ClickAsync(_locators.GLNavigationLinksEndorsements, new ControlIntent("Coverages", "GLNavigationLinksEndorsements"));
+        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Coverages", "GLNavigationLinksEndorsements"));
 
     public Task WaitForEndorsementsAsync(string expected) =>
-        _ui.WaitAsync(_locators.Endorsements, expected, new ControlIntent("Coverages", "Endorsements"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Coverages", "Endorsements"));
 
     public Task EnterEstimatedPremiumAsync(string value) =>
         _ui.FillAsync(_locators.EstimatedPremium, value, new ControlIntent("Coverages", "EstimatedPremium"));
@@ -120,19 +120,19 @@ public sealed class CoveragesPage
         _ui.PressAsync(_locators.LimitDeductible, key, new ControlIntent("Coverages", "LimitDeductible"));
 
     public Task EnterPolicyCoverageAsync(string value) =>
-        _ui.FillAsync(_locators.PolicyCoverage, value, new ControlIntent("Coverages", "PolicyCoverage"));
+        _ui.FillAsync(_locators.PageTitle, value, new ControlIntent("Coverages", "PolicyCoverage"));
 
     public Task PressPolicyCoverageAsync(string key) =>
-        _ui.PressAsync(_locators.PolicyCoverage, key, new ControlIntent("Coverages", "PolicyCoverage"));
+        _ui.PressAsync(_locators.PageTitle, key, new ControlIntent("Coverages", "PolicyCoverage"));
 
     public Task ClickIMNavigationLinksPolicyCovgAsync() =>
         _ui.ClickAsync(_locators.IMNavigationLinksPolicyCovg, new ControlIntent("Coverages", "IMNavigationLinksPolicyCovg"));
 
     public Task WaitForPolicyCovgMainPolicyCovgAsync(string expected) =>
-        _ui.WaitAsync(_locators.PolicyCovgMainPolicyCovg, expected, new ControlIntent("Coverages", "PolicyCovgMainPolicyCovg"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Coverages", "PolicyCovgMainPolicyCovg"));
 
     public Task WaitForPolicyInfoHeaderAsync(string expected) =>
-        _ui.WaitAsync(_locators.PolicyInfoHeader, expected, new ControlIntent("Coverages", "PolicyInfoHeader"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Coverages", "PolicyInfoHeader"));
 
     public Task EnterPropertyExtensionEndorsementsAsync(string value) =>
         _ui.FillAsync(_locators.PropertyExtensionEndorsements, value, new ControlIntent("Coverages", "PropertyExtensionEndorsements"));
@@ -196,7 +196,7 @@ public sealed class CoveragesPage
         _ui.PressSequentiallyAsync(_locators.LimitDeductible, value, new ControlIntent("Coverages", "LimitDeductible"), delayMs);
 
     public Task EnterPolicyCoverageSequentiallyAsync(string value, int delayMs = 20) =>
-        _ui.PressSequentiallyAsync(_locators.PolicyCoverage, value, new ControlIntent("Coverages", "PolicyCoverage"), delayMs);
+        _ui.PressSequentiallyAsync(_locators.PageTitle, value, new ControlIntent("Coverages", "PolicyCoverage"), delayMs);
 
     public Task EnterPropertyExtensionEndorsementsSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.PropertyExtensionEndorsements, value, new ControlIntent("Coverages", "PropertyExtensionEndorsements"), delayMs);

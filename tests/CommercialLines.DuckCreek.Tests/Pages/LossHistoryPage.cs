@@ -21,10 +21,10 @@ public sealed class LossHistoryPage
         _ui.ClickAsync(_locators.AddAddlInterest, new ControlIntent("LossHistory", "AddAddlInterest"));
 
     public Task ClickAddlInterestsAsync() =>
-        _ui.ClickAsync(_locators.AddlInterests, new ControlIntent("LossHistory", "AddlInterests"));
+        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("LossHistory", "AddlInterests"));
 
     public Task ClickAddlInterestsMainOKAsync() =>
-        _ui.ClickAsync(_locators.AddlInterestsMainOK, new ControlIntent("LossHistory", "AddlInterestsMainOK"));
+        _ui.ClickAsync(_locators.OK, new ControlIntent("LossHistory", "AddlInterestsMainOK"));
 
     public Task EnterLossAddressAsync(string value) =>
         _ui.FillAsync(_locators.LossAddress, value, new ControlIntent("LossHistory", "LossAddress"));
@@ -39,7 +39,7 @@ public sealed class LossHistoryPage
         _ui.WaitAsync(_locators.AssignmentScheduleFor, expected, new ControlIntent("LossHistory", "AssignmentScheduleFor"));
 
     public Task ClickAssignmentScheduleForOKAsync() =>
-        _ui.ClickAsync(_locators.AssignmentScheduleForOK, new ControlIntent("LossHistory", "AssignmentScheduleForOK"));
+        _ui.ClickAsync(_locators.OK, new ControlIntent("LossHistory", "AssignmentScheduleForOK"));
 
     public Task EnterDescriptionOfPropertyAsync(string value) =>
         _ui.FillAsync(_locators.DescriptionOfProperty, value, new ControlIntent("LossHistory", "DescriptionOfProperty"));
@@ -84,13 +84,13 @@ public sealed class LossHistoryPage
         _ui.ClickAsync(_locators.NewAssignment, new ControlIntent("LossHistory", "NewAssignment"));
 
     public Task ClickOtherInterestPremisesDetailOKAsync() =>
-        _ui.ClickAsync(_locators.OtherInterestPremisesDetailOK, new ControlIntent("LossHistory", "OtherInterestPremisesDetailOK"));
+        _ui.ClickAsync(_locators.OK, new ControlIntent("LossHistory", "OtherInterestPremisesDetailOK"));
 
     public Task WaitForOtherInterestPremisesScheduleAsync(string expected) =>
-        _ui.WaitAsync(_locators.OtherInterestPremisesSchedule, expected, new ControlIntent("LossHistory", "OtherInterestPremisesSchedule"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("LossHistory", "OtherInterestPremisesSchedule"));
 
     public Task ClickOtherInterestPremisesScheduleOKAsync() =>
-        _ui.ClickAsync(_locators.OtherInterestPremisesScheduleOK, new ControlIntent("LossHistory", "OtherInterestPremisesScheduleOK"));
+        _ui.ClickAsync(_locators.OK, new ControlIntent("LossHistory", "OtherInterestPremisesScheduleOK"));
 
     public Task EnterProvisionsApplicableAsync(string value) =>
         _ui.FillAsync(_locators.ProvisionsApplicable, value, new ControlIntent("LossHistory", "ProvisionsApplicable"));

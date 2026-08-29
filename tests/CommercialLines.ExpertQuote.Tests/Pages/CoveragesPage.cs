@@ -39,10 +39,10 @@ public sealed class CoveragesPage
         _ui.PressAsync(_locators.CheckBox, key, new ControlIntent("Coverages", "CheckBox"));
 
     public Task PressChoiceAsync(string key) =>
-        _ui.PressAsync(_locators.Choice, key, new ControlIntent("Coverages", "Choice"));
+        _ui.PressAsync(_locators.BlanketFPP, key, new ControlIntent("Coverages", "Choice"));
 
     public Task PressChoiceWithHorseAsync(string key) =>
-        _ui.PressAsync(_locators.ChoiceWithHorse, key, new ControlIntent("Coverages", "ChoiceWithHorse"));
+        _ui.PressAsync(_locators.BlanketFPP, key, new ControlIntent("Coverages", "ChoiceWithHorse"));
 
     public Task EnterDeductibleAsync(string value) =>
         _ui.FillAsync(_locators.Deductible, value, new ControlIntent("Coverages", "Deductible"));
@@ -83,10 +83,10 @@ public sealed class CoveragesPage
     public Task PressLimitAsync(string key) =>
         _ui.PressAsync(_locators.Limit, key, new ControlIntent("Coverages", "Limit"));
 public Task PressPremierAsync(string key) =>
-        _ui.PressAsync(_locators.Premier, key, new ControlIntent("Coverages", "Premier"));
+        _ui.PressAsync(_locators.BlanketFPP, key, new ControlIntent("Coverages", "Premier"));
 
     public Task PressPremierWithHorseAsync(string key) =>
-        _ui.PressAsync(_locators.PremierWithHorse, key, new ControlIntent("Coverages", "PremierWithHorse"));
+        _ui.PressAsync(_locators.BlanketFPP, key, new ControlIntent("Coverages", "PremierWithHorse"));
 
     public Task VerifyReferRequestIssuanceAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.ReferRequestIssuance, expected, property, new ControlIntent("Coverages", "ReferRequestIssuance"));
@@ -101,10 +101,10 @@ public Task PressPremierAsync(string key) =>
         _ui.ClickAsync(_locators.Save, new ControlIntent("Coverages", "Save"));
 
     public Task VerifyScreenHeadingAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.ScreenHeading, expected, property, new ControlIntent("Coverages", "ScreenHeading"));
+        _ui.VerifyAsync(_locators.NoPrefillMatchFound, expected, property, new ControlIntent("Coverages", "ScreenHeading"));
 
     public Task<bool> IsScreenHeadingPresentAsync() =>
-        _ui.ExistsAsync(_locators.ScreenHeading);
+        _ui.ExistsAsync(_locators.NoPrefillMatchFound);
 
     public Task PressSearchByNameOrCodeAsync(string key) =>
         _ui.PressAsync(_locators.SearchByNameOrCode, key, new ControlIntent("Coverages", "SearchByNameOrCode"));
@@ -113,7 +113,7 @@ public Task PressPremierAsync(string key) =>
         _ui.PressAsync(_locators.Select, key, new ControlIntent("Coverages", "Select"));
 
     public Task PressSelectWithHorseAsync(string key) =>
-        _ui.PressAsync(_locators.SelectWithHorse, key, new ControlIntent("Coverages", "SelectWithHorse"));
+        _ui.PressAsync(_locators.BlanketFPP, key, new ControlIntent("Coverages", "SelectWithHorse"));
 
     public Task EnterUnscheduledStructuresAsync(string value) =>
         _ui.FillAsync(_locators.UnscheduledStructures, value, new ControlIntent("Coverages", "UnscheduledStructures"));

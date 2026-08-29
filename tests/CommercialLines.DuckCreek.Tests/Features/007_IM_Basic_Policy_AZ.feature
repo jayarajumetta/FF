@@ -1,8 +1,3 @@
-# v54 RAW TOSCA SOURCE: CL-DC TestCases Staging Area.tsu
-# Raw TestCase: IM | Basic Policy [3a13d49c-13b8-60b8-829c-8dec15ae9020]
-# Raw TemplateInstance: TemplateInstance of IM | Basic Policy [3a13d49c-14b7-6f2e-9922-d4972fa51152]
-# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
-
 @CL_DC @basic_new_business_policy
 
 Feature: IM Basic Policy

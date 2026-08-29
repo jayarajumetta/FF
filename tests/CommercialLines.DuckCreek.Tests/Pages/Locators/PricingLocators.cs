@@ -7,7 +7,7 @@ public sealed class PricingLocators
     private readonly IPage _page;
     public PricingLocators(IPage page) => _page = page;
 
-    public ILocator EstimatedPremium => _page.GetByRole(AriaRole.Textbox, new() { Name = "Estimated Premium*", Exact = true });
+    public ILocator EstimatedPremium => _page.Locator("input[fieldref=\"PolicyInput.EstimatedPremium\"]");
 
     public ILocator FullTermPremium => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Full Term Premium");
 

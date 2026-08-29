@@ -24,7 +24,7 @@ public sealed class VehiclesPage
         _ui.SelectAsync(_locators.AddCoverage, value, new ControlIntent("Vehicles", "AddCoverage"));
 
     public Task ClickClientInfoSearchAsync() =>
-        _ui.ClickAsync(_locators.ClientInfoSearch, new ControlIntent("Vehicles", "ClientInfoSearch"));
+        _ui.ClickAsync(_locators.QuoteSearchButton, new ControlIntent("Vehicles", "ClientInfoSearch"));
 
     public Task PressDescriptionAsync(string key) =>
         _ui.PressAsync(_locators.Description, key, new ControlIntent("Vehicles", "Description"));
@@ -38,16 +38,16 @@ public Task ClickSaveAsync() =>
         _ui.WaitAsync(_locators.ScheduledPersonalPropertyHeader, expected, new ControlIntent("Vehicles", "ScheduledPersonalPropertyHeader"));
 
     public Task VerifyScreenHeadingAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.ScreenHeading, expected, property, new ControlIntent("Vehicles", "ScreenHeading"));
+        _ui.VerifyAsync(_locators.NoPrefillMatchFound, expected, property, new ControlIntent("Vehicles", "ScreenHeading"));
 
     public Task<bool> IsScreenHeadingPresentAsync() =>
-        _ui.ExistsAsync(_locators.ScreenHeading);
+        _ui.ExistsAsync(_locators.NoPrefillMatchFound);
 
     public Task PressSearchByNameOrCodeAsync(string key) =>
         _ui.PressAsync(_locators.SearchByNameOrCode, key, new ControlIntent("Vehicles", "SearchByNameOrCode"));
 
     public Task EnterTrueAsync(string value) =>
-        _ui.FillAsync(_locators.True, value, new ControlIntent("Vehicles", "True"));
+        _ui.FillAsync(_locators.AccountAddressRadio, value, new ControlIntent("Vehicles", "True"));
 
     public Task PressYearOfLastAppraisalAsync(string key) =>
         _ui.PressAsync(_locators.YearOfLastAppraisal, key, new ControlIntent("Vehicles", "YearOfLastAppraisal"));

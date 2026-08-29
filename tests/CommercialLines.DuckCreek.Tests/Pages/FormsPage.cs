@@ -18,19 +18,19 @@ public sealed class FormsPage
     }
 
     public Task WaitForAdditionalInterestsAsync(string expected) =>
-        _ui.WaitAsync(_locators.AdditionalInterests, expected, new ControlIntent("Forms", "AdditionalInterests"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Forms", "AdditionalInterests"));
 
     public Task ClickAdditionalInterestsAsync() =>
-        _ui.ClickAsync(_locators.AdditionalInterests, new ControlIntent("Forms", "AdditionalInterests"));
+        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Forms", "AdditionalInterests"));
 
     public Task WaitForAddlInterestsAsync(string expected) =>
         _ui.WaitAsync(_locators.AddlInterests, expected, new ControlIntent("Forms", "AddlInterests"));
 
     public Task ClickBusinessownersAsync() =>
-        _ui.ClickAsync(_locators.Businessowners, new ControlIntent("Forms", "Businessowners"));
+        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Forms", "Businessowners"));
 
     public Task WaitForBusinessownersHeadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.BusinessownersHeading, expected, new ControlIntent("Forms", "BusinessownersHeading"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Forms", "BusinessownersHeading"));
 
     public Task WaitForEffectiveDateAsync(string expected) =>
         _ui.WaitAsync(_locators.EffectiveDate, expected, new ControlIntent("Forms", "EffectiveDate"));
@@ -51,13 +51,13 @@ public sealed class FormsPage
         _ui.PressAsync(_locators.ExpirationDate, key, new ControlIntent("Forms", "ExpirationDate"));
 
     public Task WaitForHomeownerSLiabilityAsync(string expected) =>
-        _ui.WaitAsync(_locators.HomeownerSLiability, expected, new ControlIntent("Forms", "HomeownerSLiability"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Forms", "HomeownerSLiability"));
 
     public Task PressHomeownerSLiabilityAsync(string key) =>
-        _ui.PressAsync(_locators.HomeownerSLiability, key, new ControlIntent("Forms", "HomeownerSLiability"));
+        _ui.PressAsync(_locators.PageTitle, key, new ControlIntent("Forms", "HomeownerSLiability"));
 
     public Task ClickHomeownerSLiabilityAsync() =>
-        _ui.ClickAsync(_locators.HomeownerSLiability, new ControlIntent("Forms", "HomeownerSLiability"));
+        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Forms", "HomeownerSLiability"));
 
     public Task ClickImportPolicyDataButtonAsync() =>
         _ui.ClickAsync(_locators.ImportPolicyDataButton, new ControlIntent("Forms", "ImportPolicyDataButton"));
@@ -108,13 +108,13 @@ public sealed class FormsPage
         _ui.CaptureAsync(_locators.Value, property, new ControlIntent("Forms", "Value"));
 
     public Task WaitForWatercraftLiabilityAsync(string expected) =>
-        _ui.WaitAsync(_locators.WatercraftLiability, expected, new ControlIntent("Forms", "WatercraftLiability"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Forms", "WatercraftLiability"));
 
     public Task PressWatercraftLiabilityAsync(string key) =>
-        _ui.PressAsync(_locators.WatercraftLiability, key, new ControlIntent("Forms", "WatercraftLiability"));
+        _ui.PressAsync(_locators.PageTitle, key, new ControlIntent("Forms", "WatercraftLiability"));
 
     public Task ClickWatercraftLiabilityAsync() =>
-        _ui.ClickAsync(_locators.WatercraftLiability, new ControlIntent("Forms", "WatercraftLiability"));
+        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Forms", "WatercraftLiability"));
 
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);

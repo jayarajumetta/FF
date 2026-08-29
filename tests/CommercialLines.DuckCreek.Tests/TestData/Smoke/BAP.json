@@ -1,21 +1,4 @@
 {
-  "_meta": {
-    "schemaVersion": "4.0-smoke-layered",
-    "sourceFile": "012_BAP_Smoke_Test_AL.feature",
-    "sourceSha256": "800a7e0d09cc8ff90d98d24c69ac961c32aa8bbc7db14ec5e0a9bc27677f60ab",
-    "sourceRevision": "55452",
-    "application": "CL_DC",
-    "feature": "Commercial Lines Duck Creek - BAP Smoke Test",
-    "representativeIteration": "CONSOLIDATED",
-    "note": "V60 consolidated smoke base. Common values are modal raw-Tosca values across the supported state matrix; state identity and rare state exceptions are applied at load time.",
-    "sourceConcreteTestCase": "State supplied by Scenario Outline",
-    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
-    "sourceTruth": "RAW_TOSCA",
-    "manualArtifactsUsed": false,
-    "v60RepresentativeSource": "012_bap_smoke_test_al.json",
-    "v60RepresentativeSourceSha256": "9761561662619948b6e3870354cdf59bfb3b9e55a58e948beb5e521951a6147b",
-    "sourceLineageArtifact": "Artifacts/V60SmokeSourceLineage/BAP.json"
-  },
   "dimensions": {
     "state": "Runtime State",
     "stateCode": "RUNTIME",

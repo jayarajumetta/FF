@@ -24,10 +24,10 @@ public sealed class PricingPage
         _ui.VerifyAsync(_locators.DCTransactionTableRowCellExplicitNameStatus, expected, property, new ControlIntent("Pricing", "DCTransactionTableRowCellExplicitNameStatus"));
 
     public Task VerifyScreenHeadingAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.ScreenHeading, expected, property, new ControlIntent("Pricing", "ScreenHeading"));
+        _ui.VerifyAsync(_locators.NoPrefillMatchFound, expected, property, new ControlIntent("Pricing", "ScreenHeading"));
 
     public Task<bool> IsScreenHeadingPresentAsync() =>
-        _ui.ExistsAsync(_locators.ScreenHeading);
+        _ui.ExistsAsync(_locators.NoPrefillMatchFound);
 
     public Task<string> CaptureTotalPremiumAsync(string property = "") =>
         _ui.CaptureAsync(_locators.TotalPremium, property, new ControlIntent("Pricing", "TotalPremium"));

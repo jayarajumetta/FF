@@ -27,9 +27,9 @@ public sealed class BusinessClassificationPage
         _ui.PressAsync(_locators.NoneOfTheAboveCheckbox, key, new ControlIntent("BusinessClassification", "NoneOfTheAboveCheckbox"));
 
     public Task VerifyScreenHeadingAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.ScreenHeading, expected, property, new ControlIntent("BusinessClassification", "ScreenHeading"));
+        _ui.VerifyAsync(_locators.NoPrefillMatchFound, expected, property, new ControlIntent("BusinessClassification", "ScreenHeading"));
 
     public Task<bool> IsScreenHeadingPresentAsync() =>
-        _ui.ExistsAsync(_locators.ScreenHeading);
+        _ui.ExistsAsync(_locators.NoPrefillMatchFound);
 
 }

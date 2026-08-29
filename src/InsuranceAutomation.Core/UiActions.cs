@@ -86,7 +86,7 @@ public sealed class UiActions
     }
 
     /// <summary>
-    /// Component-aware Tosca Set semantics. Dropdowns/autocomplete share the v57 exact -> partial -> controlled Enter kernel.
+    /// Component-aware set semantics for dropdowns, autocomplete, toggles and editable controls.
     /// </summary>
     public async Task SmartSetAsync(ILocator locator, string value, ControlIntent intent)
     {
@@ -391,17 +391,27 @@ public sealed class UiActions
                 return;
             }
 
-            var actual = await CaptureAsync(locator, property, intent);
-            if (normalized.StartsWith("Regex:", StringComparison.OrdinalIgnoreCase))
+            var propertySpec = (property ?? string.Empty).Trim();
+            var regexMode = propertySpec.StartsWith("Regex:", StringComparison.OrdinalIgnoreCase) ||
+                            normalized.StartsWith("Regex:", StringComparison.OrdinalIgnoreCase);
+            var notEqualMode = propertySpec.StartsWith("NotEqual:", StringComparison.OrdinalIgnoreCase) ||
+                               normalized.StartsWith("NotEqual:", StringComparison.OrdinalIgnoreCase);
+
+            var captureProperty = propertySpec;
+            if (captureProperty.StartsWith("Regex:", StringComparison.OrdinalIgnoreCase)) captureProperty = captureProperty[6..].Trim();
+            if (captureProperty.StartsWith("NotEqual:", StringComparison.OrdinalIgnoreCase)) captureProperty = captureProperty[9..].Trim();
+
+            var actual = await CaptureAsync(locator, captureProperty, intent);
+            if (regexMode)
             {
-                var pattern = normalized[6..];
+                var pattern = normalized.StartsWith("Regex:", StringComparison.OrdinalIgnoreCase) ? normalized[6..] : normalized;
                 if (!System.Text.RegularExpressions.Regex.IsMatch(actual, pattern))
                     throw new InvalidOperationException($"Expected value to match regex '{pattern}' but found '{actual}'.");
                 return;
             }
-            if (normalized.StartsWith("NotEqual:", StringComparison.OrdinalIgnoreCase))
+            if (notEqualMode)
             {
-                var notExpected = normalized[9..];
+                var notExpected = normalized.StartsWith("NotEqual:", StringComparison.OrdinalIgnoreCase) ? normalized[9..] : normalized;
                 if (string.Equals(actual, notExpected, StringComparison.OrdinalIgnoreCase))
                     throw new InvalidOperationException($"Expected value to differ from '{notExpected}', but it was equal.");
                 return;

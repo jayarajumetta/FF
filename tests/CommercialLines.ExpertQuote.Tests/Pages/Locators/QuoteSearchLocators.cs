@@ -10,7 +10,6 @@ public sealed class QuoteSearchLocators
 
     // Source: EQ|Common|Search by QuoteNum.
     public ILocator QuoteSearchInput => _page.Locator("[id='quoteSearchInput']");
-    // v56 raw Tosca primary: Submission, select Policy Forms | Search | DuckCreekId
     public ILocator QuoteSearchButton => _page.Locator("[duckcreekid=\"Search\"], [data-duckcreekid=\"Search\"]");
 
     // Source: EQ|Common|Quote Identifying.
@@ -30,8 +29,6 @@ public sealed class QuoteSearchLocators
         _page.GetByRole(AriaRole.Heading, new() { NameRegex = new Regex("^" + Regex.Escape(screen), RegexOptions.IgnoreCase) });
 
     // Compatibility aliases for generated APIs.
-    public ILocator ClientInfoSearch => QuoteSearchButton;
     public ILocator PreQualification => GetScreenHeading("PreQualification");
-    public ILocator QuoteSearch => QuoteSearchInput;
     public ILocator Loading => _page.GetByText("Loading ...", new() { Exact = true });
 }
