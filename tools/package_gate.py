@@ -182,10 +182,11 @@ proposal = (cldc_loc / "ProposalLocators.cs").read_text(encoding="utf-8")
 for selector in [
     'input[fieldref=\\"PolicyInput.EffectiveDate\\"]',
     'input[fieldref=\\"data.VersionIDPages\\"]',
-    'a[fieldref=\\"Start\\"]',
 ]:
     if selector not in proposal:
         error(f"CLDC Proposal missing technical selector {selector}")
+if 'GetByRole(AriaRole.Link, new() { Name = "Start", Exact = true })' not in proposal:
+    error("CLDC Proposal Start must use raw Tag=A link semantics, not inferred fieldref")
 
 # Dropdown and verification contracts
 component_actions = (ROOT / "src" / "InsuranceAutomation.Core" / "ComponentAwareControlActions.cs").read_text(encoding="utf-8")
@@ -308,6 +309,22 @@ for forbidden in ["Artifacts", "generated", "docs"]:
 versioned_readmes = list(ROOT.glob("README_V*.md")) + list(ROOT.glob("README_FINAL.md"))
 if versioned_readmes:
     error(f"Client package contains historical README files: {[p.name for p in versioned_readmes]}")
+
+# V65 Duck Creek DOM evidence contract
+if re.search(r'\ba\[fieldref=', cldc_text):
+    error("CLDC action/link locator still infers fieldref from DuckCreekId")
+if re.search(r'\bdiv\[fieldref=', cldc_text):
+    error("CLDC display DIV locator still infers fieldref from DuckCreekId")
+for match in re.finditer(r'(?:input|textarea|select)\[fieldref=\\"([^\"]+)\\"', cldc_text):
+    if "." not in match.group(1):
+        error(f"CLDC input fieldref is not a technical data-binding identifier: {match.group(1)}")
+if re.search(r'\[id=\\"f_[^\"]+-inputEl\\"\]|\[id=\\"ext-element-\d+\\"\]', cldc_text):
+    error("CLDC generated ExtJS/runtime id remains as a technical locator")
+login = (cldc_loc / "LoginLocators.cs").read_text(encoding="utf-8")
+if 'GetByRole(AriaRole.Link, new() { Name = "Login", Exact = true })' not in login:
+    error("CLDC Login must use raw Tag=A link semantics")
+if 'username-inputEl' not in login or 'password-inputEl' not in login:
+    error("CLDC login username/password stable raw HTML ids are missing")
 
 result = {"status": "PASS" if not ERRORS else "FAIL", "errors": ERRORS, "stats": STATS}
 print(json.dumps(result, indent=2))

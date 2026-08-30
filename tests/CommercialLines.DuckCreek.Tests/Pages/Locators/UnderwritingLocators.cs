@@ -7,7 +7,7 @@ public sealed class UnderwritingLocators
     private readonly IPage _page;
     public UnderwritingLocators(IPage page) => _page = page;
 
-    public ILocator Accept => _page.Locator("a[fieldref=\"Accept\"]");
+    public ILocator Accept => _page.GetByRole(AriaRole.Link, new() { Name = "Accept", Exact = true });
 
     public ILocator PageTitle => _page.Locator("[id=\"pageTitle\"]");
 
@@ -17,13 +17,13 @@ public sealed class UnderwritingLocators
 
     public ILocator UnderwritingInfoNavigationGeneralUWQuestions => _page.GetByRole(AriaRole.Link, new() { Name = "General UW Questions", Exact = true });
 
-    public ILocator InsuranceScore => _page.Locator("a[fieldref=\"Insurance Score\"]");
+    public ILocator InsuranceScore => _page.GetByRole(AriaRole.Link, new() { Name = "Insurance Score", Exact = true });
 
-    public ILocator InsuranceScoreConsent => _page.Locator("a[fieldref=\"Insurance Score Consent\"]");
+    public ILocator InsuranceScoreConsent => _page.GetByRole(AriaRole.Link, new() { Name = "Insurance Score Consent", Exact = true });
 
-    public ILocator UnderwritingInfoCommercialPropertyHistoryIsThereAPriorCarrier => _page.Locator("[id=\"f_p5C3FE0A9E9C647DDBBABE0147EF317DB7_1_1-inputEl\"]");
+    public ILocator UnderwritingInfoCommercialPropertyHistoryIsThereAPriorCarrier => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Underwriting Info Commercial Property History Is There APrior Carrier");
 
-    public ILocator UnderwritingInfoCommercialGeneralLiabilityHistoryIsThereAPriorCarrier => _page.Locator("[id=\"f_p5C3FE0A9E9C647DDBBABE0147EF317DB6_1_1-inputEl\"]");
+    public ILocator UnderwritingInfoCommercialGeneralLiabilityHistoryIsThereAPriorCarrier => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Underwriting Info Commercial General Liability History Is There APrior Carrier");
 
     public ILocator UnderwritingInfoOtherInsuranceHistoryIsThereAPriorCarrier => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Is there a Prior Carrier?*");
 
@@ -31,7 +31,7 @@ public sealed class UnderwritingLocators
 
     public ILocator ReferenceNumber => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Reference Number");
 
-    public ILocator TheInsuranceScoreServiceHasReturnedTheFollowingErrorCREDITVENDORUNREACHABLEPLEASEREPROCESS => _page.Locator("div[fieldref=\"The insurance score service has returned the following error: CREDIT VENDOR UNREACHABLE - PLEASE REPROCESS\"]");
+    public ILocator TheInsuranceScoreServiceHasReturnedTheFollowingErrorCREDITVENDORUNREACHABLEPLEASEREPROCESS => _page.GetByText("The insurance score service has returned the following error: CREDIT VENDOR UNREACHABLE - PLEASE REPROCESS", new() { Exact = true });
 
-    public ILocator UpdateAnswers => _page.Locator("a[fieldref=\"Update Answers\"]");
+    public ILocator UpdateAnswers => _page.GetByRole(AriaRole.Link, new() { Name = "Update Answers", Exact = true });
 }

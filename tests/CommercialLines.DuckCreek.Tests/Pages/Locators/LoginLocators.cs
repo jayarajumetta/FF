@@ -11,7 +11,7 @@ public sealed class LoginLocators
 
     public ILocator LoggedInUser => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Logged In User");
 
-    public ILocator Login => _page.Locator("a[fieldref=\"Login\"]");
+    public ILocator Login => _page.GetByRole(AriaRole.Link, new() { Name = "Login", Exact = true });
 
     public ILocator Password => _page.Locator("[id=\"password-inputEl\"]");
 

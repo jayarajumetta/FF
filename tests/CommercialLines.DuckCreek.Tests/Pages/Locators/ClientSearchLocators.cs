@@ -7,13 +7,13 @@ public sealed class ClientSearchLocators
     private readonly IPage _page;
     public ClientSearchLocators(IPage page) => _page = page;
 
-    public ILocator AddNamedInsuredIndividual => _page.Locator("a[fieldref=\"Add Named Insured - Individual\"]");
+    public ILocator AddNamedInsuredIndividual => _page.GetByRole(AriaRole.Link, new() { Name = "Add Named Insured - Individual", Exact = true });
 
     public ILocator AdditionalInsuredFirstName => _page.Locator("input[fieldref=\"AdditionalNamedInsuredInput.FirstName\"]");
 
     public ILocator AdditionalInsuredMiddleName => _page.Locator("input[fieldref=\"AdditionalNamedInsuredInput.MiddleName\"]");
 
-    public ILocator AdditionalNamedInsured => _page.Locator("a[fieldref=\"Additional Named Insured\"]");
+    public ILocator AdditionalNamedInsured => _page.GetByRole(AriaRole.Link, new() { Name = "Additional Named Insured", Exact = true });
 
     public ILocator AdditionalNamedInsuredHeading => _page.Locator("[id=\"pageTop\"]");
 
@@ -27,15 +27,15 @@ public sealed class ClientSearchLocators
 
     public ILocator City => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "City");
 
-    public ILocator AddClient => _page.Locator("a[fieldref=\"Add Client\"]");
+    public ILocator AddClient => _page.GetByRole(AriaRole.Link, new() { Name = "Add Client", Exact = true });
 
-    public ILocator ClientSearch => _page.Locator("a[fieldref=\"Client Search\"]");
+    public ILocator ClientSearch => _page.GetByRole(AriaRole.Link, new() { Name = "Client Search", Exact = true });
 
-    public ILocator Complete => _page.Locator("a[fieldref=\"Complete\"]");
+    public ILocator Complete => _page.GetByRole(AriaRole.Link, new() { Name = "Complete", Exact = true });
 
     public ILocator DOB => _page.Locator("input[fieldref=\"AccountInput.DateOfBirth\"]");
 
-    public ILocator AddAssociatedClientDateOfBirth => _page.Locator("[id=\"f_c174FBAF5A7CF4DFEA3CDA0B3A89411D010CF_1_1-inputEl\"]");
+    public ILocator AddAssociatedClientDateOfBirth => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Add Associated Client Date Of Birth");
 
     public ILocator AdditionalInsuredIndividualDateOfBirth => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Date Of Birth*");
 
@@ -70,7 +70,7 @@ public sealed class ClientSearchLocators
 
     public ILocator NameOfInspectionContact => _page.Locator("input[fieldref=\"AccountInput.InspectionContact\"]");
 
-    public ILocator OrderSSN => _page.Locator("a[fieldref=\"Order SSN\"]");
+    public ILocator OrderSSN => _page.GetByRole(AriaRole.Link, new() { Name = "Order SSN", Exact = true });
 
     public ILocator PleaseVerifySSN => _page.GetByText("Please verify SSN*", new() { Exact = true });
 
@@ -78,13 +78,13 @@ public sealed class ClientSearchLocators
 
     public ILocator Result => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Result");
 
-    public ILocator ReturnToClient => _page.Locator("a[fieldref=\"Return to Client\"]");
+    public ILocator ReturnToClient => _page.GetByRole(AriaRole.Link, new() { Name = "Return to Client", Exact = true });
 
     public ILocator SSNWasNotReturned => _page.GetByText("SSN was not returned*", new() { Exact = true });
 
     public ILocator SearchResultsDuckCreekPolicyFirstCheckbox => _page.GetByText("First Checkbox", new() { Exact = true });
 
-    public ILocator SocialSecurity => _page.Locator("div[fieldref=\"Social Security #\"]");
+    public ILocator SocialSecurity => _page.GetByText("Social Security #", new() { Exact = true });
 
     public ILocator State => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "State");
 
@@ -92,7 +92,7 @@ public sealed class ClientSearchLocators
 
     public ILocator UnderwritingInfo => _page.GetByRole(AriaRole.Link, new() { Name = "Underwriting Info", Exact = true });
 
-    public ILocator Verify => _page.Locator("a[fieldref=\"Verify\"]");
+    public ILocator Verify => _page.GetByRole(AriaRole.Link, new() { Name = "Verify", Exact = true });
 
     public ILocator WebsiteAddress => _page.Locator("input[fieldref=\"AccountInput.WebsiteAddress\"]");
 

@@ -114,11 +114,9 @@ public sealed class DuckCreekRuntimeLocatorResolver : IRuntimeLocatorResolver
 
     private static IEnumerable<LocatorRecipe> Candidates(ElementIdentity identity)
     {
-        if (!string.IsNullOrWhiteSpace(identity.Fieldref) && !string.IsNullOrWhiteSpace(identity.Tag))
+        var fieldrefTag = identity.Tag is "input" or "textarea" or "select";
+        if (fieldrefTag && !string.IsNullOrWhiteSpace(identity.Fieldref))
             yield return new LocatorRecipe("tag+fieldref", $"{identity.Tag}[fieldref=\"{Css(identity.Fieldref)}\"]", null, null, null);
-
-        if (!string.IsNullOrWhiteSpace(identity.Fieldref))
-            yield return new LocatorRecipe("fieldref", $"[fieldref=\"{Css(identity.Fieldref)}\"]", null, null, null);
 
         if (!string.IsNullOrWhiteSpace(identity.AncestorFieldref) && !string.IsNullOrWhiteSpace(identity.Id))
             yield return new LocatorRecipe("fieldref+id", $"[fieldref=\"{Css(identity.AncestorFieldref)}\"] [id=\"{Css(identity.Id)}\"],[data-fieldref=\"{Css(identity.AncestorFieldref)}\"] [id=\"{Css(identity.Id)}\"]", null, null, null);

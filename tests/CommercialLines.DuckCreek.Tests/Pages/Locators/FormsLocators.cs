@@ -20,7 +20,7 @@ public sealed class FormsLocators
     public ILocator ExpirationDate => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Expiration Date");
 
 
-    public ILocator ImportPolicyDataButton => _page.Locator("a[fieldref=\"Import Policy Data\"]");
+    public ILocator ImportPolicyDataButton => _page.GetByRole(AriaRole.Link, new() { Name = "Import Policy Data", Exact = true });
 
     public ILocator LiabilityLimit => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Liability Limit*");
 

@@ -7,11 +7,11 @@ public sealed class LossHistoryLocators
     private readonly IPage _page;
     public LossHistoryLocators(IPage page) => _page = page;
 
-    public ILocator AddAddlInterest => _page.Locator("a[fieldref=\"Add Addl Interest\"]");
+    public ILocator AddAddlInterest => _page.GetByRole(AriaRole.Link, new() { Name = "Add Addl Interest", Exact = true });
 
     public ILocator PageTitle => _page.Locator("[id=\"pageTitle\"]");
 
-    public ILocator OK => _page.Locator("a[fieldref=\"OK\"]");
+    public ILocator OK => _page.GetByRole(AriaRole.Link, new() { Name = "OK", Exact = true });
 
     public ILocator LossAddress => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Address 1*");
 
@@ -32,7 +32,7 @@ public sealed class LossHistoryLocators
 
     public ILocator MI => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.MiddleInitial\"]");
 
-    public ILocator NewAssignment => _page.Locator("a[fieldref=\"New Assignment...\"]");
+    public ILocator NewAssignment => _page.GetByRole(AriaRole.Link, new() { Name = "New Assignment...", Exact = true });
 
 
 

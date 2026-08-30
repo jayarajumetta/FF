@@ -206,6 +206,12 @@ Playwright context closure occurs before evidence publication so video, trace an
 
 Headed Chromium/Edge execution starts maximized when `browser.maximize` is enabled. A new browser context is created per scenario and is closed after the scenario. Trace/video/HAR finalization happens during scenario cleanup.
 
+### Duck Creek locator contract
+
+CL|DC locators distinguish data controls from action/display controls. For rendered `INPUT` controls whose raw Tosca DuckCreekId is a data-binding identifier (for example `AccountInput.*`, `PolicyInput.*`, `data.*`), use `input[fieldref="..."]`. Do not infer fieldref for links, buttons or display DIVs merely because Tosca contains DuckCreekId.
+
+For raw `Tag=A`, use Playwright link semantics with the exact source-backed accessible text. Login is therefore `GetByRole(Link, Name="Login")`; Start, Next, OK, Add Client and similar actions follow the same rule unless a stable raw HTML id/name is proven. Stable raw HTML ids such as `username-inputEl` and `password-inputEl` are used directly. ExtJS generated ids such as `f_<hash>...-inputEl` and `ext-element-<number>` are not treated as stable technical locators. When a stable raw name exists it is preferred over a generated id. Text inputs without a proven technical selector resolve the label to the associated actual control rather than using role+label text blindly.
+
 ## Azure DevOps
 
 Pipeline files:

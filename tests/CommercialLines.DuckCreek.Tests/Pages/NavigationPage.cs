@@ -1182,10 +1182,10 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.FireDamage, key, new ControlIntent("Navigation", "FireDamage"));
 
     public Task EnterStateDetailsDriveOtherCarFirstNameAsync(string value) =>
-        _ui.FillAsync(_locators.StateDetailsDriveOtherCarFirstName, value, new ControlIntent("Navigation", "StateDetailsDriveOtherCarFirstName"));
+        _ui.FillAsync(_locators.FirstName, value, new ControlIntent("Navigation", "StateDetailsDriveOtherCarFirstName"));
 
     public Task PressStateDetailsDriveOtherCarFirstNameAsync(string key) =>
-        _ui.PressAsync(_locators.StateDetailsDriveOtherCarFirstName, key, new ControlIntent("Navigation", "StateDetailsDriveOtherCarFirstName"));
+        _ui.PressAsync(_locators.FirstName, key, new ControlIntent("Navigation", "StateDetailsDriveOtherCarFirstName"));
 
     public Task WaitForFirstNameAsync(string expected) =>
         _ui.WaitAsync(_locators.FirstName, expected, new ControlIntent("Navigation", "FirstName"));
@@ -1467,10 +1467,10 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.LastName, key, new ControlIntent("Navigation", "LastName"));
 
     public Task EnterStateDetailsDriveOtherCarLastNameAsync(string value) =>
-        _ui.FillAsync(_locators.StateDetailsDriveOtherCarLastName, value, new ControlIntent("Navigation", "StateDetailsDriveOtherCarLastName"));
+        _ui.FillAsync(_locators.LastName, value, new ControlIntent("Navigation", "StateDetailsDriveOtherCarLastName"));
 
     public Task PressStateDetailsDriveOtherCarLastNameAsync(string key) =>
-        _ui.PressAsync(_locators.StateDetailsDriveOtherCarLastName, key, new ControlIntent("Navigation", "StateDetailsDriveOtherCarLastName"));
+        _ui.PressAsync(_locators.LastName, key, new ControlIntent("Navigation", "StateDetailsDriveOtherCarLastName"));
 
     public Task EnterLaundryAsync(string value) =>
         _ui.FillAsync(_locators.Laundry, value, new ControlIntent("Navigation", "Laundry"));
@@ -1905,25 +1905,25 @@ public sealed class NavigationPage
         _ui.WaitAsync(_locators.OK, expected, new ControlIntent("Navigation", "OK"));
 
     public Task WaitForOKClassCodeAsync(string expected) =>
-        _ui.WaitAsync(_locators.OKControl, expected, new ControlIntent("Navigation", "OKClassCode"));
+        _ui.WaitAsync(_locators.OK, expected, new ControlIntent("Navigation", "OKClassCode"));
 
     public Task VerifyOKClassCodeAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.OKControl, expected, property, new ControlIntent("Navigation", "OKClassCode"));
+        _ui.VerifyAsync(_locators.OK, expected, property, new ControlIntent("Navigation", "OKClassCode"));
 
     public Task ClickOKClassCodeAsync() =>
-        _ui.ClickAsync(_locators.OKControl, new ControlIntent("Navigation", "OKClassCode"));
+        _ui.ClickAsync(_locators.OK, new ControlIntent("Navigation", "OKClassCode"));
 
     public Task ClickOKDetailsAsync() =>
-        _ui.ClickAsync(_locators.OKControl, new ControlIntent("Navigation", "OKDetails"));
+        _ui.ClickAsync(_locators.OK, new ControlIntent("Navigation", "OKDetails"));
 
     public Task PressOKFirstAsync(string key) =>
-        _ui.PressAsync(_locators.OKControl, key, new ControlIntent("Navigation", "OKFirst"));
+        _ui.PressAsync(_locators.OK, key, new ControlIntent("Navigation", "OKFirst"));
 
     public Task ClickOKFirstAsync() =>
-        _ui.ClickAsync(_locators.OKControl, new ControlIntent("Navigation", "OKFirst"));
+        _ui.ClickAsync(_locators.OK, new ControlIntent("Navigation", "OKFirst"));
 
     public Task WaitForOKSecondAsync(string expected) =>
-        _ui.WaitAsync(_locators.OKControl, expected, new ControlIntent("Navigation", "OKSecond"));
+        _ui.WaitAsync(_locators.OK, expected, new ControlIntent("Navigation", "OKSecond"));
 
     public Task EnterOTCCausesOfLossAsync(string value) =>
         _ui.FillAsync(_locators.OTCCausesOfLoss, value, new ControlIntent("Navigation", "OTCCausesOfLoss"));
@@ -2205,7 +2205,7 @@ public sealed class NavigationPage
         _ui.ClickAsync(_locators.PricingDetail, new ControlIntent("Navigation", "PricingDetail"));
 
     public Task ClickPricingDetailOKAsync() =>
-        _ui.ClickAsync(_locators.OKControl, new ControlIntent("Navigation", "PricingDetailOK"));
+        _ui.ClickAsync(_locators.OK, new ControlIntent("Navigation", "PricingDetailOK"));
 
     public Task WaitForPricingAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "Pricing"));
@@ -3468,7 +3468,7 @@ public Task<string> CaptureDescriptionOfSpecifiedOperationAsync(string property 
         _ui.PressSequentiallyAsync(_locators.FireDamage, value, new ControlIntent("Navigation", "FireDamage"), delayMs);
 
     public Task EnterStateDetailsDriveOtherCarFirstNameSequentiallyAsync(string value, int delayMs = 20) =>
-        _ui.PressSequentiallyAsync(_locators.StateDetailsDriveOtherCarFirstName, value, new ControlIntent("Navigation", "StateDetailsDriveOtherCarFirstName"), delayMs);
+        _ui.PressSequentiallyAsync(_locators.FirstName, value, new ControlIntent("Navigation", "StateDetailsDriveOtherCarFirstName"), delayMs);
 
     public Task EnterFirstNameSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.FirstName, value, new ControlIntent("Navigation", "FirstName"), delayMs);
@@ -3561,7 +3561,7 @@ public Task<string> CaptureDescriptionOfSpecifiedOperationAsync(string property 
         _ui.PressSequentiallyAsync(_locators.LastName, value, new ControlIntent("Navigation", "LastName"), delayMs);
 
     public Task EnterStateDetailsDriveOtherCarLastNameSequentiallyAsync(string value, int delayMs = 20) =>
-        _ui.PressSequentiallyAsync(_locators.StateDetailsDriveOtherCarLastName, value, new ControlIntent("Navigation", "StateDetailsDriveOtherCarLastName"), delayMs);
+        _ui.PressSequentiallyAsync(_locators.LastName, value, new ControlIntent("Navigation", "StateDetailsDriveOtherCarLastName"), delayMs);
 
     public Task EnterLaundrySequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.Laundry, value, new ControlIntent("Navigation", "Laundry"), delayMs);

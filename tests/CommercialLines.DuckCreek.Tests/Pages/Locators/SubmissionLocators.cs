@@ -9,7 +9,7 @@ public sealed class SubmissionLocators
 
     public ILocator AllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabs => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "All required fields have not been completed. Please complete highlighted tabs.");
 
-    public ILocator CompleteApplication => _page.Locator("a[fieldref=\"Complete Application\"]");
+    public ILocator CompleteApplication => _page.GetByRole(AriaRole.Link, new() { Name = "Complete Application", Exact = true });
 
     public ILocator IsThisCoverageBound => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Is this coverage bound?*");
 

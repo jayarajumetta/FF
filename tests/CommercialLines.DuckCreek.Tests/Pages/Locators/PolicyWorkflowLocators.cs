@@ -11,12 +11,12 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator PageTitle => _page.Locator("[id=\"pageTitle\"]");
 
-    public ILocator AddClient => _page.Locator("a[fieldref=\"Add Client\"]");
+    public ILocator AddClient => _page.GetByRole(AriaRole.Link, new() { Name = "Add Client", Exact = true });
 
     public ILocator AggregateLimit => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Aggregate Limit");
 
 
-    public ILocator Detail => _page.Locator("a[fieldref=\"Detail\"]");
+    public ILocator Detail => _page.GetByRole(AriaRole.Link, new() { Name = "Detail", Exact = true });
 
 
     public ILocator CTStraightThroughLiabilityLimitTo1M => _page.GetByText("CT StraightThrough Liability Limit to 1M", new() { Exact = true });
@@ -113,33 +113,33 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator ReturnToAdmin => _page.GetByRole(AriaRole.Link, new() { Name = "Return To Admin", Exact = true });
 
-    public ILocator ReturnToCPP => _page.Locator("a[fieldref=\"Return To CPP\"]");
+    public ILocator ReturnToCPP => _page.GetByRole(AriaRole.Link, new() { Name = "Return To CPP", Exact = true });
 
 
 
 
 
-    public ILocator SaveForLater => _page.Locator("a[fieldref=\"Save for Later\"]");
+    public ILocator SaveForLater => _page.GetByRole(AriaRole.Link, new() { Name = "Save for Later", Exact = true });
 
     public ILocator SaveForLaterOK => _page.GetByRole(AriaRole.Link, new() { Name = "Save for Later - OK", Exact = true });
 
-    public ILocator SearchButton => _page.Locator("a[fieldref=\"Search\"]");
+    public ILocator SearchButton => _page.GetByRole(AriaRole.Link, new() { Name = "Search", Exact = true });
 
     public ILocator SearchMethodEGDescriptionPolicy => _page.Locator("[id='_keynameAdvSearch1-inputEl']");
 
-    public ILocator RiskComputerSystemsSearchResult => _page.Locator("[id=\"f_c7EF1BABFA5C74E4E875A7BF40793DEB111_1_1-inputEl\"]");
+    public ILocator RiskComputerSystemsSearchResult => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Risk Computer Systems Search Result");
 
-    public ILocator RiskBaileesCustomersSearchResult => _page.Locator("[id=\"f_c1130867FA0E9485FBAA81AF58751740889_1_1-inputEl\"]");
+    public ILocator RiskBaileesCustomersSearchResult => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Risk Bailees Customers Search Result");
 
-    public ILocator RiskAccountsReceivableSearchResult => _page.Locator("[id=\"f_rFE68631942E64B1BA3A954F11A424A13A_1_1-inputEl\"]");
+    public ILocator RiskAccountsReceivableSearchResult => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Risk Accounts Receivable Search Result");
 
     public ILocator SearchText => _page.Locator("[id='quickSearchTextId-inputEl']");
 
-    public ILocator RiskAccountsReceivableSearchValue => _page.Locator("[id=\"f_rFE68631942E64B1BA3A954F11A424A139_1_1-inputEl\"]");
+    public ILocator RiskAccountsReceivableSearchValue => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Risk Accounts Receivable Search Value");
 
-    public ILocator RiskComputerSystemsSearchValue => _page.Locator("[id=\"f_c7EF1BABFA5C74E4E875A7BF40793DEB110_1_1-inputEl\"]");
+    public ILocator RiskComputerSystemsSearchValue => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Risk Computer Systems Search Value");
 
-    public ILocator RiskBaileesCustomersSearchValue => _page.Locator("[id=\"f_c1130867FA0E9485FBAA81AF58751740887_1_1-inputEl\"]");
+    public ILocator RiskBaileesCustomersSearchValue => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Risk Bailees Customers Search Value");
 
     public ILocator ShowMe => _page.GetByRole(AriaRole.Link, new() { Name = "Show me", Exact = true });
 
@@ -147,7 +147,7 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator SplitPDDed => _page.Locator("input[fieldref=\"LineInput.SeparateProductsPDDeductible\"]");
 
-    public ILocator Start => _page.Locator("a[fieldref=\"Start\"]");
+    public ILocator Start => _page.GetByRole(AriaRole.Link, new() { Name = "Start", Exact = true });
 
     public ILocator BrowserCommunicationHTTPStatusZero => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "The browser was unable to communicate with the server. HTTP Status Error - , HTTP Status - 0");
 

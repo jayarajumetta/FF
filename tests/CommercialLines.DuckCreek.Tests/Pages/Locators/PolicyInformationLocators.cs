@@ -9,7 +9,7 @@ public sealed class PolicyInformationLocators
 
     public ILocator Carrier => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Carrier");
 
-    public ILocator Client => _page.Locator("a[fieldref=\"Add Client\"]");
+    public ILocator Client => _page.GetByRole(AriaRole.Link, new() { Name = "Add Client", Exact = true });
 
     public ILocator Detail => _page.Locator("[id=\"dctGridLink\"]");
 
