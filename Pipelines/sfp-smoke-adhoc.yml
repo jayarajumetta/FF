@@ -245,9 +245,7 @@ stages:
         key: 'playwright | "$(Agent.OS)" | $(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.deps.json'
         restoreKeys: |
           playwright | "$(Agent.OS)"
-        path: "$(PLAYWRIGHT_BROWSERS_PATH)"
-      env:
-        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+        path: "$(Agent.ToolsDirectory)/playwright-browsers"
 
     - powershell: |
         $playwrightBrowsersPath = "$(Agent.ToolsDirectory)/playwright-browsers"
@@ -550,9 +548,7 @@ stages:
         key: 'playwright | "$(Agent.OS)" | $(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.deps.json'
         restoreKeys: |
           playwright | "$(Agent.OS)"
-        path: "$(PLAYWRIGHT_BROWSERS_PATH)"
-      env:
-        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+        path: "$(Agent.ToolsDirectory)/playwright-browsers"
 
     - powershell: |
         $playwrightBrowsersPath = "$(Agent.ToolsDirectory)/playwright-browsers"
