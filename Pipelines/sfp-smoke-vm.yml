@@ -210,6 +210,7 @@ stages:
 
         & dotnet test $testDll `
             --filter "$filter" `
+            --settings "$(Build.SourcesDirectory)/ci.runsettings" `
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Results.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
 
