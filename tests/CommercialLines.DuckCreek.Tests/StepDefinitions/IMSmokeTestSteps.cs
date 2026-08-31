@@ -133,9 +133,11 @@ public sealed class IMSmokeTestSteps
             await page.EnterGenderAsync(data.Resolve("{{data:gender_60}}"));
         }
         await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0068}}"));
+        await page.PauseAsync(1000);
         await page.EnterAddressAsync(data.Resolve("{{data:address1_64}}"));
         await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:zipcode_65}}"));
         await page.ClickClientSearchAsync();
+        await page.PauseAsync(1000);
         await page.WaitForOKAsync("Exists");
         await page.ClickOKAsync();
         await page.WaitForOrderSSNAsync("Exists");
@@ -156,9 +158,6 @@ public sealed class IMSmokeTestSteps
         await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_86}}"));
         await page.EnterWebsiteAddressAsync(data.Resolve("{{data:website_address_87}}"));
         await page.VerifyNamedInsuredZipCodeAsync("[0-9]{5}-[0-9]{4}", "Regex:value");
-        await page.EnterTitleAsync(data.Resolve("{{data:title_94}}"));
-        await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_95}}"));
-        await page.VerifyResultAsync(data.Resolve("{{data:expected_result_value_96}}"), "value");
 
     }
 

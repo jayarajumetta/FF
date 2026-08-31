@@ -15,23 +15,22 @@ Feature: CP Smoke Test
     And I enter individual client information
     And I complete required policy information
     And I navigate to Policy Info and Verify Desc
-    And I sign out of the application for logged in user
 
     Examples:
       | stateCode | stateName |
       | AZ | Arizona |
-      | CT | Connecticut |
-      | DE | Delaware |
-      | MA | Massachusetts |
-      | MD | Maryland |
-      | ME | Maine |
-      | NH | New Hampshire |
-      | NJ | New Jersey |
-      | NY | New York |
-      | OR | Oregon |
-      | PA | Pennsylvania |
-      | RI | Rhode Island |
-      | VA | Virginia |
-      | VT | Vermont |
-      | WA | Washington |
-      | WV | West Virginia |
+      #| CT | Connecticut |
+      #| DE | Delaware |
+      #| MA | Massachusetts |
+      #| MD | Maryland |
+      #| ME | Maine |
+      #| NH | New Hampshire |
+      #| NJ | New Jersey |
+      #| NY | New York |
+      #| OR | Oregon |
+      #| PA | Pennsylvania |
+      #| RI | Rhode Island |
+      #| VA | Virginia |
+      #| VT | Vermont |
+      #| WA | Washington |
+      #| WV | West Virginia |

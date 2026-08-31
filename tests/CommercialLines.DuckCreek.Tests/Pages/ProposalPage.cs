@@ -31,7 +31,8 @@ public sealed class ProposalPage
 
     public Task EnterProductAsync(string value) =>
         _ui.FillAsync(_locators.Product, value, new ControlIntent("Proposal", "Product"));
-
+    public Task EnterProducerAsync(string value) =>
+        _ui.FillAsync(_locators.Producer, value, new ControlIntent("Proposal", "Producer"));
     public Task PressProductAsync(string key) =>
         _ui.PressAsync(_locators.Product, key, new ControlIntent("Proposal", "Product"));
 

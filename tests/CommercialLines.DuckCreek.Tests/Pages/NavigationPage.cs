@@ -2142,7 +2142,7 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.PolicyHolderName, key, new ControlIntent("Navigation", "PolicyHolderName"));
 
     public Task ClickPolicyInfoAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "PolicyInfo"));
+        _ui.ClickAsync(_locators.PolicyInfo, new ControlIntent("Navigation", "PolicyInfo"));
 
     public Task WaitForPolicyInfoHeaderAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "PolicyInfoHeader"));

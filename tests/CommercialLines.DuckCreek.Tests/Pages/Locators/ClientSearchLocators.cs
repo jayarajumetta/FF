@@ -85,6 +85,7 @@ public sealed class ClientSearchLocators
     public ILocator SearchResultsDuckCreekPolicyFirstCheckbox => _page.GetByText("First Checkbox", new() { Exact = true });
 
     public ILocator SocialSecurity => _page.GetByText("Social Security #", new() { Exact = true });
+    public ILocator VerifySocialSecurity => _page.Locator("div[fieldref=\"AccountSSNRetrievalOuput.SSNDisplay\"]");
 
     public ILocator State => _page.Locator("input[fieldref=\"AssociatedClientInput.State\"]");
 

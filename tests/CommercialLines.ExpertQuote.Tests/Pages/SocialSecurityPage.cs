@@ -24,7 +24,7 @@ public sealed class SocialSecurityPage
         _ui.VerifyAsync(_locators.SubmitAngular, "Visible", "", new ControlIntent("SocialSecurity", "Submit"));
 
     public Task ClickSubmitAsync() =>
-        _ui.DomClickAsync(_locators.SubmitAngular, new ControlIntent("SocialSecurity", "Submit"));
+        _ui.ClickAsync(_locators.SubmitAngular, new ControlIntent("SocialSecurity", "Submit"));
 
     public Task ClickContinueAsync() =>
         _ui.ClickAsync(_locators.Continue, new ControlIntent("SocialSecurity", "Continue"));

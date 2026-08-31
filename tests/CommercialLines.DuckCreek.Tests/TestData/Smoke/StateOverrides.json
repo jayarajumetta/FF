@@ -21,9 +21,9 @@
     "WC": {
       "AL": {
         "values": {
-          "individualtype_96": "True",
+          "individualtype_96": "Business Owner",
           "address1_102": "1918 Avalon Ave",
-          "state_104": "AL",
+          "state_104": "Alabama",
           "zipcode_105": "35661"
         }
       }

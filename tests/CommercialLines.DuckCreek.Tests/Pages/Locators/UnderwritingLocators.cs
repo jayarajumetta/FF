@@ -29,7 +29,7 @@ public sealed class UnderwritingLocators
 
 
 
-    public ILocator ReferenceNumber => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Reference Number']/@for] | //label[normalize-space(string(.))='Reference Number']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Reference Number']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
+    public ILocator ReferenceNumber => _page.Locator("[fieldref='TierPricingOutputNonShredded.ScoreReferenceNumber']");
 
     public ILocator TheInsuranceScoreServiceHasReturnedTheFollowingErrorCREDITVENDORUNREACHABLEPLEASEREPROCESS => _page.GetByText("The insurance score service has returned the following error: CREDIT VENDOR UNREACHABLE - PLEASE REPROCESS", new() { Exact = true });
 

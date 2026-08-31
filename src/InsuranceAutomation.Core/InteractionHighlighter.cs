@@ -11,7 +11,7 @@ public static class InteractionHighlighter
         var applied = false;
         try
         {
-            await locator.EvaluateAsync("""(el, token) => {
+            await locator.EvaluateAsync(@"(el, token) => {
                 const key = `qairaHighlight${token}`;
                 el[key] = {
                     outline: el.style.outline,
@@ -23,7 +23,7 @@ public static class InteractionHighlighter
                 el.style.outline = '3px solid #ff8a00';
                 el.style.outlineOffset = '2px';
                 el.style.boxShadow = '0 0 0 4px rgba(255,138,0,.20)';
-            }""", token);
+            }", token);
             applied = true;
             await Task.Delay(durationMs);
         }
@@ -32,10 +32,11 @@ public static class InteractionHighlighter
         }
         finally
         {
-            if (!applied) return;
-            try
+            if (applied)
             {
-                await locator.EvaluateAsync("""(el, token) => {
+                try
+                {
+                    await locator.EvaluateAsync(@"(el, token) => {
                     const key = `qairaHighlight${token}`;
                     const state = el[key];
                     if (!state) return;
@@ -44,10 +45,11 @@ public static class InteractionHighlighter
                     el.style.boxShadow = state.boxShadow || '';
                     el.style.transition = state.transition || '';
                     delete el[key];
-                }""", token);
-            }
-            catch
-            {
+                }", token);
+                }
+                catch
+                {
+                }
             }
         }
     }

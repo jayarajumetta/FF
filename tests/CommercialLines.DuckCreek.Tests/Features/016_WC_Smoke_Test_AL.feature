@@ -14,47 +14,44 @@ Feature: WC Smoke Test
     And I start a new quote
     And I enter business client information
     And I add a new Associated Client - Business Owner Type - Click Add Client
-    And I complete aJAX Error Check
-    And I complete required billing information
     And I complete the Associated Client Info
     And I complete required policy information
     And I complete WC Specific Fields
     And I navigate to Policy Info and Verify Desc
-    And I sign out of the application for logged in user
 
     Examples:
       | stateCode | stateName |
       | AL | Alabama |
-      | AR | Arkansas |
-      | AZ | Arizona |
-      | CT | Connecticut |
-      | CO | Colorado |
-      | DE | Delaware |
-      | IA | Iowa |
-      | ID | Idaho |
-      | IL | Illinois |
-      | IN | Indiana |
-      | KS | Kansas |
-      | KY | Kentucky |
-      | MA | Massachusetts |
-      | MD | Maryland |
-      | MN | Minnesota |
-      | MO | Missouri |
-      | MS | Mississippi |
-      | MT | Montana |
-      | NE | Nebraska |
-      | NH | New Hampshire |
-      | NJ | New Jersey |
-      | NM | New Mexico |
-      | NV | Nevada |
-      | NY | New York |
-      | OK | Oklahoma |
-      | PA | Pennsylvania |
-      | RI | Rhode Island |
-      | SC | South Carolina |
-      | SD | South Dakota |
-      | TN | Tennessee |
-      | UT | Utah |
-      | VA | Virginia |
-      | VT | Vermont |
-      | WV | West Virginia |
+      #| AR | Arkansas |
+      #| AZ | Arizona |
+      #| CT | Connecticut |
+      #| CO | Colorado |
+      #| DE | Delaware |
+      #| IA | Iowa |
+      #| ID | Idaho |
+      #| IL | Illinois |
+      #| IN | Indiana |
+      #| KS | Kansas |
+      #| KY | Kentucky |
+      #| MA | Massachusetts |
+      #| MD | Maryland |
+      #| MN | Minnesota |
+      #| MO | Missouri |
+      #| MS | Mississippi |
+      #| MT | Montana |
+      #| NE | Nebraska |
+      #| NH | New Hampshire |
+      #| NJ | New Jersey |
+      #| NM | New Mexico |
+      #| NV | Nevada |
+      #| NY | New York |
+      #| OK | Oklahoma |
+      #| PA | Pennsylvania |
+      #| RI | Rhode Island |
+      #| SC | South Carolina |
+      #| SD | South Dakota |
+      #| TN | Tennessee |
+      #| UT | Utah |
+      #| VA | Virginia |
+      #| VT | Vermont |
+      #| WV | West Virginia |

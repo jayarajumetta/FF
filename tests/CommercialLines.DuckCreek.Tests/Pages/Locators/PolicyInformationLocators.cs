@@ -13,7 +13,7 @@ public sealed class PolicyInformationLocators
 
     public ILocator Detail => _page.Locator("[id=\"dctGridLink\"]");
 
-    public ILocator EffectiveDate => _page.Locator("input[fieldref=\\"PolicyInput.EffectiveDate\\"]");
+    public ILocator EffectiveDate => _page.Locator(@"input[fieldref=""PolicyInput.EffectiveDate""]");
 
     public ILocator EnterPriorLossInformation => _page.GetByRole(AriaRole.Link, new() { Name = "Enter Prior Loss Information", Exact = true });
 

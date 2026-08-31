@@ -12,6 +12,7 @@ public sealed class ProposalLocators
     public ILocator NewQuote => _page.GetByRole(AriaRole.Link, new() { Name = "New Quote", Exact = true });
 
     public ILocator Product => _page.Locator("input[fieldref=\"data.VersionIDPages\"]");
+    public ILocator Producer => _page.Locator("input[fieldref='data.Producer']");
 
     public ILocator Start => _page.GetByRole(AriaRole.Link, new() { Name = "Start", Exact = true });
 }

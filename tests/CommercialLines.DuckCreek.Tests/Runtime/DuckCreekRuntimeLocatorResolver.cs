@@ -40,13 +40,13 @@ public sealed class DuckCreekRuntimeLocatorResolver : IRuntimeLocatorResolver
         ElementIdentity identity;
         try
         {
-            identity = await target.EvaluateAsync<ElementIdentity>("""el => {
+            identity = await target.EvaluateAsync<ElementIdentity>(@"el => {
                 const norm = value => (value || '').replace(/\s+/g, ' ').trim();
                 const directFieldref = el.getAttribute('fieldref') || '';
                 let label = '';
                 if (el.labels && el.labels.length) label = norm(Array.from(el.labels).map(x => x.innerText || x.textContent || '').join(' '));
                 if (!label && el.id) {
-                    const candidate = document.querySelector(`label[for="${CSS.escape(el.id)}"]`);
+                    const candidate = document.querySelector(`label[for=""${CSS.escape(el.id)}""]`);
                     if (candidate) label = norm(candidate.innerText || candidate.textContent || '');
                 }
                 return {
@@ -61,7 +61,7 @@ public sealed class DuckCreekRuntimeLocatorResolver : IRuntimeLocatorResolver
                     Label: label,
                     Text: norm(el.innerText || el.textContent || '')
                 };
-            }""") ?? new ElementIdentity();
+            }") ?? new ElementIdentity();
         }
         catch
         {
@@ -91,12 +91,12 @@ public sealed class DuckCreekRuntimeLocatorResolver : IRuntimeLocatorResolver
 
         try
         {
-            var visible = await seed.EvaluateAllAsync<int[]>("""els => els.map((el, index) => {
+            var visible = await seed.EvaluateAllAsync<int[]>(@"els => els.map((el, index) => {
                 const style = getComputedStyle(el);
                 const rect = el.getBoundingClientRect();
                 const isVisible = !!(rect.width || rect.height || el.getClientRects().length) && style.visibility !== 'hidden' && style.display !== 'none';
                 return isVisible ? index : -1;
-            }).filter(index => index >= 0)""") ?? Array.Empty<int>();
+            }).filter(index => index >= 0)") ?? Array.Empty<int>();
             return visible.Length == 1 ? seed.Nth(visible[0]) : null;
         }
         catch

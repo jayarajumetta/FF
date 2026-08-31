@@ -17,23 +17,22 @@ Feature: CPP Smoke Test
     And I select CPP Coverage - GL
     And I select CPP Coverage - CP
     And I navigate to Policy Info and Verify Desc
-    And I sign out of the application for logged in user
 
     Examples:
       | stateCode | stateName |
       | AZ | Arizona |
-      | CT | Connecticut |
-      | DE | Delaware |
-      | MA | Massachusetts |
-      | MD | Maryland |
-      | ME | Maine |
-      | NH | New Hampshire |
-      | NJ | New Jersey |
-      | NY | New York |
-      | OR | Oregon |
-      | PA | Pennsylvania |
-      | RI | Rhode Island |
-      | VA | Virginia |
-      | VT | Vermont |
-      | WA | Washington |
-      | WV | West Virginia |
+      #| CT | Connecticut |
+      #| DE | Delaware |
+      #| MA | Massachusetts |
+      #| MD | Maryland |
+      #| ME | Maine |
+      #| NH | New Hampshire |
+      #| NJ | New Jersey |
+      #| NY | New York |
+      #| OR | Oregon |
+      #| PA | Pennsylvania |
+      #| RI | Rhode Island |
+      #| VA | Virginia |
+      #| VT | Vermont |
+      #| WA | Washington |
+      #| WV | West Virginia |

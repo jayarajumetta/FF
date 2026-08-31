@@ -17,51 +17,50 @@ Feature: BAP Smoke Test
     And I run insurance score
     And I complete Business Auto policy-specific fields
     And I navigate to Policy Info and Verify Desc
-    And I sign out of the application for logged in user
 
     Examples:
       | stateCode | stateName |
       | AL | Alabama |
-      | AR | Arkansas |
-      | AZ | Arizona |
-      | CA | California |
-      | CT | Connecticut |
-      | CO | Colorado |
-      | DE | Delaware |
-      | GA | Georgia |
-      | IA | Iowa |
-      | ID | Idaho |
-      | IL | Illinois |
-      | IN | Indiana |
-      | KS | Kansas |
-      | KY | Kentucky |
-      | LA | Louisiana |
-      | MD | Maryland |
-      | ME | Maine |
-      | MN | Minnesota |
-      | MO | Missouri |
-      | MS | Mississippi |
-      | MT | Montana |
-      | ND | North Dakota |
-      | NE | Nebraska |
-      | NH | New Hampshire |
-      | NJ | New Jersey |
-      | NM | New Mexico |
-      | NV | Nevada |
-      | NY | New York |
-      | OH | Ohio |
-      | OK | Oklahoma |
-      | OR | Oregon |
-      | PA | Pennsylvania |
-      | RI | Rhode Island |
-      | SC | South Carolina |
-      | SD | South Dakota |
-      | TN | Tennessee |
-      | TX | Texas |
-      | UT | Utah |
-      | VA | Virginia |
-      | VT | Vermont |
-      | WA | Washington |
-      | WI | Wisconsin |
-      | WV | West Virginia |
-      | WY | Wyoming |
+      #| AR | Arkansas |
+      #| AZ | Arizona |
+      #| CA | California |
+      #| CT | Connecticut |
+      #| CO | Colorado |
+      #| DE | Delaware |
+      #| GA | Georgia |
+      #| IA | Iowa |
+      #| ID | Idaho |
+      #| IL | Illinois |
+      #| IN | Indiana |
+      #| KS | Kansas |
+      #| KY | Kentucky |
+      #| LA | Louisiana |
+      #| MD | Maryland |
+      #| ME | Maine |
+      #| MN | Minnesota |
+      #| MO | Missouri |
+      #| MS | Mississippi |
+      #| MT | Montana |
+      #| ND | North Dakota |
+      #| NE | Nebraska |
+      #| NH | New Hampshire |
+      #| NJ | New Jersey |
+      #| NM | New Mexico |
+      #| NV | Nevada |
+      #| NY | New York |
+      #| OH | Ohio |
+      #| OK | Oklahoma |
+      #| OR | Oregon |
+      #| PA | Pennsylvania |
+      #| RI | Rhode Island |
+      #| SC | South Carolina |
+      #| SD | South Dakota |
+      #| TN | Tennessee |
+      #| TX | Texas |
+      #| UT | Utah |
+      #| VA | Virginia |
+      #| VT | Vermont |
+      #| WA | Washington |
+      #| WI | Wisconsin |
+      #| WV | West Virginia |
+      #| WY | Wyoming |

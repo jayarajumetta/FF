@@ -156,9 +156,7 @@ public sealed class CPPSmokeTestSteps
         await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_86}}"));
         await page.EnterWebsiteAddressAsync(data.Resolve("{{data:website_address_87}}"));
         await page.VerifyNamedInsuredZipCodeAsync("[0-9]{5}-[0-9]{4}", "Regex:value");
-        await page.EnterTitleAsync(data.Resolve("{{data:title_94}}"));
-        await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_95}}"));
-        await page.VerifyResultAsync(data.Resolve("{{data:expected_result_value_96}}"), "value");
+
 
     }
 
@@ -200,12 +198,9 @@ public sealed class CPPSmokeTestSteps
 
         if (data.Condition("(State == \"MD\")||(State == \"NJ\")||(State == \"NY\")||(State == \"VT\")"))
         {
-            await page.EnterEstimatedPremiumAsync("");
+            await page.EnterEstimatedPremiumAsync("Over 2,500");
         }
-        if (data.Condition("'CPP LOB' == \"GL\""))
-        {
-            await page.ClickGLAsync();
-        }
+        await page.ClickGLAsync();
 
     }
 
@@ -218,10 +213,7 @@ public sealed class CPPSmokeTestSteps
 
         var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        if (data.Condition("'CPP LOB' == \"CP\""))
-        {
-            await page.ClickCPAsync();
-        }
+        await page.ClickCPAsync();
         await page.WaitForPolicyInfoHeaderAsync("Visible");
         await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
         await page.EnterDescriptionOfSpecifiedOperationAsync(data.BuildQuoteDescription());

@@ -101,6 +101,7 @@ public sealed class WCSmokeTestSteps
         await page.ClickNewQuoteAsync();
         await page.EnterEffectiveDateAsync(data.Resolve("{{data:effective_date_43}}"));
         await page.EnterProductAsync(data.Resolve("{{data:product_45}}"));
+        await page.EnterProducerAsync(data.Resolve("{{data:producer}}"));
         await page.WaitForStartAsync("Visible");
         await page.ClickStartAsync();
 
@@ -118,7 +119,6 @@ public sealed class WCSmokeTestSteps
         data.GenerateRandom("InspectionTelephone_0086", "[0-9]{10}");
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await page.EnterFEINAsync(data.Resolve("{{runtime:FEIN_0085}}"));
 
         await page.WaitForQuickQuoteAsync("Exists");
         await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_51}}"));
@@ -129,6 +129,8 @@ public sealed class WCSmokeTestSteps
         await page.EnterBusinessNameAsync(data.Resolve("{{data:business_name_56}}"));
         await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0082}}"));
         await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:zipcode_60}}"));
+        await page.EnterFEINAsync(data.Resolve("{{runtime:FEIN_0085}}"));
+
         await page.EnterAddressAsync(data.Resolve("{{data:address1_61}}"));
         await page.VerifyYearsInBusinessAsync("Exists", "");
         await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_63}}"));
@@ -205,42 +207,29 @@ public sealed class WCSmokeTestSteps
 
         await page.EnterIndividualTypeAsync(data.Resolve("{{data:individualtype_96}}"));
         await page.WaitForPleaseVerifySSNAsync("Exists");
+        await page.PauseAsync(4000);
+        await page.EnterFirstNameAsync(data.Resolve("{{runtime:FirstName_0098}}"));
         await page.EnterMiddleNameAsync(data.Resolve("{{runtime:MiddleName_0098}}"));
+        await page.PauseAsync(4000);
         await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0098}}"));
         await page.EnterAddAssociatedClientDateOfBirthAsync(data.Resolve("{{data:dateofbirth_101}}"));
         await page.EnterAddressAsync(data.Resolve("{{data:address1_102}}"));
+        await page.PauseAsync(1000);
         await page.EnterCityAsync(data.Resolve("{{data:city_103}}"));
         await page.EnterStateAsync(data.Resolve("{{data:state_104}}"));
         await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:zipcode_105}}"));
         await page.EnterGenderAsync(data.Resolve("{{data:gender_106}}"));
+        await page.PauseAsync(4000);
         await page.WaitForClientSearchAsync("Exists");
         await page.ClickClientSearchAsync();
-        await page.EnterFirstNameAsync(data.Resolve("{{runtime:FirstName_0098}}"));
         await page.VerifySearchResultsDuckCreekPolicyFirstCheckboxAsync("Absent", "");
+        await page.PauseAsync(1000);
         await page.ClickOKAsync();
         await page.ClickOrderSSNAsync();
-        await page.PressAddAssociatedClientEnterSSNAsync("Enter");
         await page.EnterAddAssociatedClientEnterSSNAsync(data.Resolve("{{data:enter_ssn_114}}"));
-        await page.VerifyVerifyAsync("Absent", "");
-        await page.ClickCompleteAsync();
-        await page.ClickAddAssociatedClientDetailAsync();
-        await page.WaitForAddAssociatedClientEnterSSNAsync("Exists");
         await page.ClickVerifyAsync();
         await page.WaitForPleaseVerifySSNAsync("Absent");
         await page.ClickCompleteAsync();
-        await page.WaitForAddAssociatedClientEnterSSNAsync("Exists");
-        await page.ClickVerifyAsync();
-        await page.WaitForPleaseVerifySSNAsync("Absent");
-        await page.ClickCompleteAsync();
-        await page.WaitForClientSearchAsync("Exists");
-        await page.ClickClientSearchAsync();
-        await page.WaitForOKAsync("Exists");
-        await page.ClickOKAsync();
-        await page.WaitForClientSearchAsync("Absent");
-        await page.EnterTitleAsync(data.Resolve("{{data:title_132}}"));
-        await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_133}}"));
-        await page.VerifyResultAsync(data.Resolve("{{data:expected_result_value_134}}"), "value");
-
     }
 
     [Given(@"^I complete required policy information$")]

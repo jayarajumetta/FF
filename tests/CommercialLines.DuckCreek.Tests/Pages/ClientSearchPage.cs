@@ -215,6 +215,9 @@ public sealed class ClientSearchPage
     public Task WaitForOKAsync(string expected) =>
         _ui.WaitAsync(_locators.OK, expected, new ControlIntent("ClientSearch", "OK"));
 
+    public Task PauseAsync(int milliseconds) =>
+    Task.Delay(milliseconds);
+
     public Task ClickOrderSSNAsync() =>
         _ui.ClickAsync(_locators.OrderSSN, new ControlIntent("ClientSearch", "OrderSSN"));
 
@@ -246,10 +249,10 @@ public sealed class ClientSearchPage
         _ui.VerifyAsync(_locators.SearchResultsDuckCreekPolicyFirstCheckbox, expected, property, new ControlIntent("ClientSearch", "SearchResultsDuckCreekPolicyFirstCheckbox"));
 
     public Task WaitForSocialSecurityAsync(string expected) =>
-        _ui.WaitAsync(_locators.SocialSecurity, expected, new ControlIntent("ClientSearch", "SocialSecurity"));
+        _ui.WaitAsync(_locators.VerifySocialSecurity, expected, new ControlIntent("ClientSearch", "SocialSecurity"));
 
     public Task VerifySocialSecurityAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.SocialSecurity, expected, property, new ControlIntent("ClientSearch", "SocialSecurity"));
+        _ui.VerifyAsync(_locators.VerifySocialSecurity, expected, property, new ControlIntent("ClientSearch", "SocialSecurity"));
 
     public Task EnterStateAsync(string value) =>
         _ui.FillAsync(_locators.State, value, new ControlIntent("ClientSearch", "State"));

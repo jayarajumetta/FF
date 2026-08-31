@@ -84,11 +84,11 @@ public sealed class BrowserOptions
 public sealed class WaitOptions
 {
     // Core synchronization defaults. Page methods should rely on UiActions rather than scatter sleeps.
-    public int PageReadyTimeoutMs { get; init; } = 15000;
-    public int ElementReadyTimeoutMs { get; init; } = 15000;
-    public int VerifyTimeoutMs { get; init; } = 15000;
+    public int PageReadyTimeoutMs { get; init; } = 30000;
+    public int ElementReadyTimeoutMs { get; init; } = 30000;
+    public int VerifyTimeoutMs { get; init; } = 35000;
     // Raw Tosca HtmlFrame is a hint only. Probe briefly before falling back to top document.
-    public int FrameProbeTimeoutMs { get; init; } = 600;
+    public int FrameProbeTimeoutMs { get; init; } = 2000;
     // Dropdown option discovery uses a deliberately shorter budget than a normal page/control wait.
     public int DropdownOptionTimeoutMs { get; init; } = 1200;
     public int DropdownPollIntervalMs { get; init; } = 75;

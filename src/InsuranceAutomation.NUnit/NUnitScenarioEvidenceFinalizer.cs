@@ -52,6 +52,7 @@ public static class NUnitScenarioEvidenceFinalizer
                 report.Write(feature, scenario, logger.LogPath, browser.TracePath, browser.VideoPath, browser.HarPath, bundle);
 
             logger.Flush();
+            logger.Dispose();
 
             var published = NUnitEvidencePublisher.Publish(
                 artifactDirectory,
@@ -61,13 +62,13 @@ public static class NUnitScenarioEvidenceFinalizer
                 effectiveError,
                 testEvidenceContext);
 
-            logger.Info($"TEST EVIDENCE ATTACHMENTS: enabled={published.Enabled}; attached={published.AttachedCount}; skipped={published.SkippedCount}; failures={published.Failures.Count}");
-            foreach (var failure in published.Failures) logger.Warn($"ATTACHMENT FAILURE: {failure}");
-            logger.Flush();
+            TestContext.Progress.WriteLine($"TEST EVIDENCE ATTACHMENTS: enabled={published.Enabled}; attached={published.AttachedCount}; skipped={published.SkippedCount}; failures={published.Failures.Count}");
+            foreach (var failure in published.Failures) TestContext.Progress.WriteLine($"ATTACHMENT FAILURE: {failure}");
         }
-        finally
+        catch (Exception ex)
         {
-            logger.Dispose();
+            try { logger.Dispose(); } catch { }
+            throw;
         }
 
         // Do not replace an existing business/action exception. ReqnRoll/NUnit already owns it.

@@ -28,6 +28,8 @@ public sealed class NavigationLocators
     public ILocator AcceptUM => _page.GetByText("Accept UM", new() { Exact = true });
 
     public ILocator PageTitle => _page.Locator("[id=\"pageTitle\"]");
+    public ILocator PolicyInfo => _page.GetByRole(AriaRole.Link, new() { Name = "Policy Info", Exact = true });
+
 
     public ILocator AccountsReceivableUWQuestions => _page.GetByText("Accounts Receivable UW Questions", new() { Exact = true });
 
@@ -365,7 +367,7 @@ public sealed class NavigationLocators
     public ILocator BusinessownersEffectiveDate => _page.Locator("input[fieldref=\"UmbrellaBusinessOwnersInput.EffectiveDate\"]");
 
 
-    public ILocator PolicyInfoRequiredAndOptionalFieldsEffectiveDate => _page.Locator("input[fieldref=\\"PolicyInput.EffectiveDate\\"]");
+    public ILocator PolicyInfoRequiredAndOptionalFieldsEffectiveDate => _page.Locator(@"input[fieldref=""PolicyInput.EffectiveDate""]");
 
     public ILocator EligibleForEnhancedWindRatingProgram => _page.Locator("input[fieldref=\"BuildingInput.EligibleForEnhancedWindRatingProgram\"]");
 
