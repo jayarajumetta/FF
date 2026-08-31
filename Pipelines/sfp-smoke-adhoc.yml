@@ -470,7 +470,7 @@ stages:
       condition: always()
       inputs:
         testResultsFormat: VSTest
-        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/Shard_*_Results.trx"
+        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/Shard_*_Retry.trx"
         mergeTestResults: true
         failTaskOnFailedTests: true
         testRunTitle: "SFP Smoke — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
@@ -756,7 +756,7 @@ stages:
       condition: always()
       inputs:
         testResultsFormat: VSTest
-        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/Shard_*_Results.trx"
+        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/Shard_*_Retry.trx"
         mergeTestResults: true
         failTaskOnFailedTests: true
         testRunTitle: "SFP CE — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
