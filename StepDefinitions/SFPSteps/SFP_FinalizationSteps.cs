@@ -123,28 +123,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 }
             }
 
-            // Click Insurance Score Consent if present, then Accept/Decline.
-            var consentVisible = false;
-            try
-            {
-                await insuranceScorePage.InsuranceScoreConsentButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
-                consentVisible = true;
-            }
-            catch (TimeoutException)
-            {
-                Console.WriteLine("[InsuranceScore] Consent button not present for this state - skipping consent/accept flow");
-            }
-
-            if (consentVisible)
-            {
-                await insuranceScorePage.InsuranceScoreConsentButton.ClickAsync();
-                await insuranceScorePage.WaitForSpinnerAsync();
-
-                if (_contextData.InsuranceScoreConsent?.ToLower() == "accept")
-                    await insuranceScorePage.AcceptButton.ClickAsync();
-                else
-                    await insuranceScorePage.DeclineButton.ClickAsync();
-            }
+            await insuranceScorePage.ApplyConsentDecisionAsync(
+                _contextData.InsuranceScoreConsent);
 
             await insuranceScorePage.ClickNextAsync();
         }

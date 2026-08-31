@@ -306,7 +306,6 @@ namespace PnCTestAutomation.Pages
 
         public async Task HandleSSNPopupsAsync(ScenarioContextData contextData)
         {
-            // Wait up to 15s for the SSN popup — it can appear well after ClickStartQuoteAsync
             var popupVisible = false;
             try
             {
@@ -315,13 +314,17 @@ namespace PnCTestAutomation.Pages
             }
             catch (TimeoutException)
             {
-                // SSN popup didn't appear - continue
-            }
-
-            if (!popupVisible)
-            {
                 await WaitForSpinnerAsync();
-                return;
+                popupVisible = await SSNPopup.CountAsync() > 0 && await SSNPopup.IsVisibleAsync();
+
+                if (!popupVisible && await StartQuoteButton.IsHiddenAsync())
+                    return;
+
+                if (!popupVisible)
+                {
+                    throw new InvalidOperationException(
+                        $"Start Quote produced neither an SSN dialog nor a page transition. URL='{_page.Url}'.");
+                }
             }
 
             string ssnToUse = !string.IsNullOrWhiteSpace(contextData.SSN)
@@ -351,39 +354,41 @@ namespace PnCTestAutomation.Pages
                 var dialogText = string.Empty;
                 var dialog = _page.Locator("mat-dialog-container").First;
                 if (await dialog.CountAsync() > 0)
-                {
-                    try
-                    {
-                        dialogText = (await dialog.InnerTextAsync()).Replace("\r", " ").Replace("\n", " ").Trim();
-                    }
-                    catch
-                    {
-                        // Keep default empty text if dialog extraction fails.
-                    }
-                }
+                    dialogText = (await dialog.InnerTextAsync()).Replace("\r", " ").Replace("\n", " ").Trim();
 
                 throw new InvalidOperationException(
                     $"SSN submit did not close the SSN popup. URL='{_page.Url}'. Dialog='{dialogText}'.");
             }
 
-            // Check for confirm dialog (same btnConfirmYes) — allow up to 10s.
             try
             {
                 await DialogSubmitButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
-                Console.WriteLine($"[SSN] Confirm dialog appeared, clicking Submit");
-                await DialogSubmitButton.DispatchEventAsync("click");
-
-                // Wait for the confirm dialog to close before proceeding
-                await DialogSubmitButton.WaitForAsync(new() { State = WaitForSelectorState.Hidden, Timeout = 15000 });
-                Console.WriteLine($"[SSN] Confirm dialog closed");
-                await Task.Delay(500);
             }
             catch (TimeoutException)
             {
-                Console.WriteLine($"[SSN] No confirm dialog appeared - continuing");
+                await WaitForSpinnerAsync();
+
+                if (await DialogSubmitButton.CountAsync() == 0 || !await DialogSubmitButton.IsVisibleAsync())
+                {
+                    if (await SSNPopup.CountAsync() > 0 && await SSNPopup.IsVisibleAsync())
+                        throw new InvalidOperationException($"SSN popup reappeared after submission. URL='{_page.Url}'.");
+
+                    if (await StartQuoteButton.IsVisibleAsync())
+                    {
+                        throw new InvalidOperationException(
+                            $"SSN submission produced neither a confirmation dialog nor a page transition. URL='{_page.Url}'.");
+                    }
+
+                    Console.WriteLine("[SSN] No confirm dialog appeared; quote creation continued.");
+                    return;
+                }
             }
 
-            // Wait for DuckCreek's full page navigation after SSN submission to settle
+            Console.WriteLine($"[SSN] Confirm dialog appeared, clicking Submit");
+            await DialogSubmitButton.DispatchEventAsync("click");
+            await DialogSubmitButton.WaitForAsync(new() { State = WaitForSelectorState.Hidden, Timeout = 15000 });
+            Console.WriteLine($"[SSN] Confirm dialog closed");
+
             await _page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             await WaitForSpinnerAsync();
 

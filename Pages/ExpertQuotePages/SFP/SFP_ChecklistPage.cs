@@ -31,10 +31,6 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         public ILocator MainNoteTextarea => _page.Locator("textarea.js-note");
         public ILocator AddNoteButton => _page.Locator("button.js-add-note");
 
-        /// <summary>Submit button to finalise and close the checklist popup.</summary>
-        public ILocator SubmitButton =>
-            _page.GetByRole(AriaRole.Button, new() { Name = "Submit" });
-
         #endregion
 
         #region Actions
@@ -60,8 +56,30 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 
             // Handle SSO redirect - wait for SSO flow to complete if we're on an SSO page
             await WaitForSsoRedirectAsync(checklistPage, timeoutMs: 60000);
+            await ThrowIfChecklistApplicationErrorAsync(checklistPage);
 
             return checklistPage;
+        }
+
+        private static async Task ThrowIfChecklistApplicationErrorAsync(IPage page)
+        {
+            if (!page.Url.Contains("/EChecklist/Error/", StringComparison.OrdinalIgnoreCase))
+                return;
+
+            var bodyText = (await page.Locator("body").InnerTextAsync())
+                .Replace("\r", " ")
+                .Replace("\n", " ")
+                .Trim();
+
+            while (bodyText.Contains("  ", StringComparison.Ordinal))
+                bodyText = bodyText.Replace("  ", " ");
+
+            if (bodyText.Length > 600)
+                bodyText = bodyText[..600] + "...";
+
+            throw new PlaywrightException(
+                "EChecklist returned an application error after SSO completed. " +
+                $"URL: {page.Url}. Response: {bodyText}");
         }
 
         /// <summary>
@@ -130,6 +148,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             // Ensure we're not on an SSO page before starting — SSO may have been triggered
             // by the previous step's reload or by session expiry mid-flow.
             await WaitForSsoRedirectAsync(_page, timeoutMs: 60000);
+            await ThrowIfChecklistApplicationErrorAsync(_page);
             await _page.WaitForLoadStateAsync(LoadState.Load, new() { Timeout = 30000 });
 
             // 1. Click the item row in the accordion.
@@ -145,6 +164,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                 // SSO may have occurred during the wait — handle redirect and retry once.
                 Console.WriteLine($"[Checklist] Item '{itemName}' not visible — handling possible SSO redirect and retrying.");
                 await WaitForSsoRedirectAsync(_page, timeoutMs: 60000);
+                await ThrowIfChecklistApplicationErrorAsync(_page);
                 await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
                 try
                 {
@@ -204,6 +224,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             // Use a generous timeout — the checklist server can be slow after saving a note.
             await _page.ReloadAsync(new PageReloadOptions { Timeout = 60000 });
             await WaitForSsoRedirectAsync(_page, timeoutMs: 60000);
+            await ThrowIfChecklistApplicationErrorAsync(_page);
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
         }
 
