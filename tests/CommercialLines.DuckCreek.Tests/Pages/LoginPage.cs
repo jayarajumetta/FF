@@ -46,4 +46,10 @@ public sealed class LoginPage
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);
 
+
+    public Task EnterPasswordSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.Password, value, new ControlIntent("Login", "Password"), delayMs);
+
+    public Task EnterUserNameSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.UserName, value, new ControlIntent("Login", "UserName"), delayMs);
 }

@@ -1,8 +1,3 @@
-# v54 RAW TOSCA SOURCE: PL_DC_TestCases_Production.tsu
-# Raw TestCase: Smoke Test Auto [3a19e1e5-186d-5de8-a540-8d813c79d87a]
-# Raw TemplateInstance: TemplateInstance of Smoke Test Auto [3a19e1e5-1883-50cb-3387-566457f64a84]
-# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
-
 @PL_DC @AUTO @smoke_test
 
 Feature: Smoke Test Auto

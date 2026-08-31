@@ -1,8 +1,3 @@
-# v54 RAW TOSCA SOURCE: PL_DC_TestCases_Production.tsu
-# Raw TestCase: Cycle Rate Filings Policy 3 NB_Prior Eff Date [3a1c989c-f4a9-52e3-379f-634d00326823]
-# Raw TemplateInstance: TemplateInstance of Cycle Rate Filings Policy 3 NB_Prior Eff Date [3a1c990c-aa91-64b3-ca3d-868ca7d15010]
-# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
-
 @PL_DC @CYCLE @new_business_with_prior_effective_date
 
 Feature: Cycle Rate Filings Policy 3 NB Prior Eff Date

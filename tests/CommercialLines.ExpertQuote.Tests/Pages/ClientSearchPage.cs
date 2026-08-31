@@ -36,7 +36,7 @@ public sealed class ClientSearchPage
         _ui.ClickAsync(_locators.CreateNewClient, new ControlIntent("ClientSearch", "CreateNewClient"));
 
     public Task ClickCreateNewClient1Async() =>
-        _ui.ClickAsync(_locators.CreateNewClient1, new ControlIntent("ClientSearch", "CreateNewClient1"));
+        _ui.ClickAsync(_locators.CreateNewClient, new ControlIntent("ClientSearch", "CreateNewClient1"));
 
     public Task EnterCustomerDateOfBirthAsync(string value) =>
         _ui.FillAsync(_locators.CustomerDateOfBirth, value, new ControlIntent("ClientSearch", "CustomerDateOfBirth"));

@@ -7,57 +7,35 @@ public sealed class PolicyInformationLocators
     private readonly IPage _page;
     public PolicyInformationLocators(IPage page) => _page = page;
 
-    // Source modules: Underwriting Info | Other Insurance History | confidence=Medium score=113
-    public ILocator Carrier => _page.GetByRole(AriaRole.Textbox, new() { Name = "Carrier", Exact = true });
+    public ILocator Carrier => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Carrier']/@for] | //label[normalize-space(string(.))='Carrier']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Carrier']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    // Source modules: Client|Named Insured|Common | confidence=High score=127
-    // v57 raw Tosca:  | Add Client | guid=3a13d49c-1679-21d3-307d-9ac2d420ffb8 | strategy=role-link
-    public ILocator Client => CanonicalDuckCreekLocatorFactory.ByModuleAttributeGuid(_page, "3a13d49c-1679-21d3-307d-9ac2d420ffb8");
+    public ILocator Client => _page.GetByRole(AriaRole.Link, new() { Name = "Add Client", Exact = true });
 
-    // Source modules: Underwriting Info | Other Insurance History | confidence=High score=125
-    // v57 raw Tosca:  | Detail | guid=3a13d49c-1700-371e-c808-c1dcd0cae17d | strategy=role-link
-    public ILocator Detail => CanonicalDuckCreekLocatorFactory.ByModuleAttributeGuid(_page, "3a13d49c-1700-371e-c808-c1dcd0cae17d");
+    public ILocator Detail => _page.Locator("[id=\"dctGridLink\"]");
 
-    // Source modules: Underwriting Info | Other Insurance History | confidence=Medium score=113
-    public ILocator EffectiveDate => _page.GetByRole(AriaRole.Textbox, new() { Name = "Effective Date", Exact = true });
+    public ILocator EffectiveDate => _page.Locator(@"input[fieldref=""PolicyInput.EffectiveDate""]");
 
-    // Source modules: Policy Info|Required and Optional Fields | confidence=Medium score=113
-    // Applies only to BOP/BAP Tiering states
-    public ILocator EnterPriorLossInformation => _page.GetByRole(AriaRole.Button, new() { Name = "Enter Prior Loss Information", Exact = true });
+    public ILocator EnterPriorLossInformation => _page.GetByRole(AriaRole.Link, new() { Name = "Enter Prior Loss Information", Exact = true });
 
-    // Source modules: Underwriting Info | Other Insurance History | confidence=Medium score=113
-    public ILocator ExpirationDate => _page.GetByRole(AriaRole.Textbox, new() { Name = "Expiration Date", Exact = true });
+    public ILocator ExpirationDate => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Expiration Date']/@for] | //label[normalize-space(string(.))='Expiration Date']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Expiration Date']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    // Source modules: Underwriting Info | Other Insurance History | confidence=Medium score=113
     public ILocator InsuranceHistory => _page.GetByRole(AriaRole.Link, new() { Name = "Insurance History", Exact = true });
 
-    // Source modules: Underwriting Info | Other Insurance History | confidence=Medium score=113
-    public ILocator IsThereAPriorCarrier => _page.GetByRole(AriaRole.Textbox, new() { Name = "Is there a Prior Carrier?*", Exact = true });
+    public ILocator IsThereAPriorCarrier => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Is there a Prior Carrier?*']/@for] | //label[normalize-space(string(.))='Is there a Prior Carrier?*']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Is there a Prior Carrier?*']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    // Source modules: Underwriting Info | Loss Experience | confidence=High score=97
-    public ILocator LossExperienceHeading => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Loss Experience Heading");
+    public ILocator LossExperienceHeading => _page.Locator("[id=\"pageTitle\"]");
 
-    // Source modules: Underwriting Info | Other Insurance History | confidence=Medium score=113
-    // v57 raw Tosca: Pricing | Modification Factor | guid=3a13d49c-1697-4099-cdcb-b51261d5962d | strategy=retained-semantic
-    public ILocator ModificationFactor => CanonicalDuckCreekLocatorFactory.ByModuleAttributeGuid(_page, "3a13d49c-1697-4099-cdcb-b51261d5962d");
+    public ILocator ModificationFactor => _page.Locator("input[fieldref=\"LineInput.ModificationFactor\"]");
 
-    // Source modules: Underwriting Info | Loss Experience | confidence=Medium score=113
     public ILocator NoKnownLosses => _page.GetByRole(AriaRole.Checkbox, new() { Name = "No known losses", Exact = true });
 
-    // Source modules: Underwriting Info | Other Insurance History | confidence=High score=125
     public ILocator OtherInsuranceHistoryOK => _page.GetByRole(AriaRole.Link, new() { Name = "OK", Exact = true });
 
-    // Source modules: Underwriting Info | Other Insurance History | confidence=Medium score=113
-    // v57 raw Tosca: Commercial Auto | Policy Number | guid=3a13d49c-171e-17ac-180b-20fce969d8b7 | strategy=retained-semantic
-    public ILocator PolicyNumber => CanonicalDuckCreekLocatorFactory.ByModuleAttributeGuid(_page, "3a13d49c-171e-17ac-180b-20fce969d8b7");
+    public ILocator PolicyNumber => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Policy Number']/@for] | //label[normalize-space(string(.))='Policy Number']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Policy Number']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    // Source modules: Underwriting Info | Other Insurance History | confidence=Medium score=113
-    public ILocator PolicyType => _page.GetByRole(AriaRole.Textbox, new() { Name = "Policy Type", Exact = true });
+    public ILocator PolicyType => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Policy Type']/@for] | //label[normalize-space(string(.))='Policy Type']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Policy Type']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    // Source modules: Common Navigation Links | confidence=Medium score=113
     public ILocator ReturnToQuote => _page.GetByRole(AriaRole.Link, new() { Name = "Return to Quote", Exact = true });
 
-    // Source modules: Underwriting Info | Other Insurance History | confidence=Medium score=113
-    public ILocator TotalPremium => _page.GetByRole(AriaRole.Textbox, new() { Name = "Total Premium", Exact = true });
-
+    public ILocator TotalPremium => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Total Premium']/@for] | //label[normalize-space(string(.))='Total Premium']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Total Premium']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 }

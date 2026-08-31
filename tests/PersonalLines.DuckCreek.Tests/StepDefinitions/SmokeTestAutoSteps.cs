@@ -125,11 +125,9 @@ public sealed class SmokeTestAutoSteps
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    // v56 suppressed redundant Tosca keyboard steering: AgentCode TAB
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets State
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
@@ -141,11 +139,9 @@ public sealed class SmokeTestAutoSteps
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    // v56 suppressed redundant Tosca keyboard steering: State TAB
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets WritingCompany
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
@@ -157,7 +153,6 @@ public sealed class SmokeTestAutoSteps
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    // v56 suppressed redundant Tosca keyboard steering: WritingCompany TAB
         }
         await page.WaitForSameAsMailingAddressAsync("True");
         await page.ClickSameAsMailingAddressAsync();

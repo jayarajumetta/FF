@@ -51,16 +51,16 @@ public sealed class VehiclesPage
         _ui.ClickAsync(_locators.AdditionalVehicleS62C9A, new ControlIntent("Vehicles", "AdditionalVehicleS62C9A"));
 
     public Task ClickAdditionalVehicleSF5D93Async() =>
-        _ui.ClickAsync(_locators.AdditionalVehicleSF5D93, new ControlIntent("Vehicles", "AdditionalVehicleSF5D93"));
+        _ui.ClickAsync(_locators.AdditionalVehicleS62C9A, new ControlIntent("Vehicles", "AdditionalVehicleSF5D93"));
 
     public Task<bool> IsAdditionalVehicleSF5D93PresentAsync() =>
-        _ui.ExistsAsync(_locators.AdditionalVehicleSF5D93);
+        _ui.ExistsAsync(_locators.AdditionalVehicleS62C9A);
 
     public Task EnterAgreedValue8E288Async(string value) =>
         _ui.FillAsync(_locators.AgreedValue8E288, value, new ControlIntent("Vehicles", "AgreedValue8E288"));
 
     public Task EnterAgreedValueF302BAsync(string value) =>
-        _ui.FillAsync(_locators.AgreedValueF302B, value, new ControlIntent("Vehicles", "AgreedValueF302B"));
+        _ui.FillAsync(_locators.AgreedValue8E288, value, new ControlIntent("Vehicles", "AgreedValueF302B"));
 
     public Task EnterAnnualMileage12A49Async(string value) =>
         _ui.FillAsync(_locators.AnnualMileage12A49, value, new ControlIntent("Vehicles", "AnnualMileage12A49"));
@@ -81,7 +81,7 @@ public sealed class VehiclesPage
         _ui.PressAsync(_locators.AppraisalDate8A115, key, new ControlIntent("Vehicles", "AppraisalDate8A115"));
 
     public Task EnterAppraisalDateD909CAsync(string value) =>
-        _ui.FillAsync(_locators.AppraisalDateD909C, value, new ControlIntent("Vehicles", "AppraisalDateD909C"));
+        _ui.FillAsync(_locators.AppraisalDate8A115, value, new ControlIntent("Vehicles", "AppraisalDateD909C"));
 
     public Task PressAssignedAsync(string key) =>
         _ui.PressAsync(_locators.Assigned, key, new ControlIntent("Vehicles", "Assigned"));
@@ -99,10 +99,10 @@ public sealed class VehiclesPage
         _ui.ExistsAsync(_locators.CONTINUED555D);
 
     public Task ClickCONTINUEF07C7Async() =>
-        _ui.ClickAsync(_locators.CONTINUEF07C7, new ControlIntent("Vehicles", "CONTINUEF07C7"));
+        _ui.ClickAsync(_locators.CONTINUED555D, new ControlIntent("Vehicles", "CONTINUEF07C7"));
 
     public Task<bool> IsCONTINUEF07C7PresentAsync() =>
-        _ui.ExistsAsync(_locators.CONTINUEF07C7);
+        _ui.ExistsAsync(_locators.CONTINUED555D);
 
     public Task SelectCamperShellNoAsync(string value) =>
         _ui.SelectAsync(_locators.CamperShellNo, value, new ControlIntent("Vehicles", "CamperShellNo"));
@@ -132,7 +132,7 @@ public sealed class VehiclesPage
         _ui.ClickAsync(_locators.CollegeDegreeGraduateWork, new ControlIntent("Vehicles", "CollegeDegreeGraduateWork"));
 
     public Task ClickContinueAsync() =>
-        _ui.ClickAsync(_locators.Continue, new ControlIntent("Vehicles", "Continue"));
+        _ui.ClickAsync(_locators.CONTINUED555D, new ControlIntent("Vehicles", "Continue"));
 
     public Task EnterCurrentValueAsync(string value) =>
         _ui.FillAsync(_locators.CurrentValue, value, new ControlIntent("Vehicles", "CurrentValue"));
@@ -147,28 +147,28 @@ public sealed class VehiclesPage
         _ui.ClickAsync(_locators.Cycle1734D7, new ControlIntent("Vehicles", "Cycle1734D7"));
 
     public Task ClickCycle1C1864Async() =>
-        _ui.ClickAsync(_locators.Cycle1C1864, new ControlIntent("Vehicles", "Cycle1C1864"));
+        _ui.ClickAsync(_locators.Cycle1734D7, new ControlIntent("Vehicles", "Cycle1C1864"));
 
     public Task ClickCycleAccessoriesV3Async() =>
         _ui.ClickAsync(_locators.CycleAccessoriesV3, new ControlIntent("Vehicles", "CycleAccessoriesV3"));
 
     public Task ClickCycleAccessoriesV4Async() =>
-        _ui.ClickAsync(_locators.CycleAccessoriesV4, new ControlIntent("Vehicles", "CycleAccessoriesV4"));
+        _ui.ClickAsync(_locators.CycleAccessoriesV3, new ControlIntent("Vehicles", "CycleAccessoriesV4"));
 
     public Task EnterCycleNonDriverComboBoxAsync(string value) =>
         _ui.FillAsync(_locators.CycleNonDriverComboBox, value, new ControlIntent("Vehicles", "CycleNonDriverComboBox"));
 
     public Task ClickCyclePreFillSelectionNextAsync() =>
-        _ui.ClickAsync(_locators.CyclePreFillSelectionNext, new ControlIntent("Vehicles", "CyclePreFillSelectionNext"));
+        _ui.ClickAsync(_locators.AddCycleNextNext, new ControlIntent("Vehicles", "CyclePreFillSelectionNext"));
 
     public Task WaitForCycleVINAsync(string expected) =>
-        _ui.WaitAsync(_locators.CycleVIN, expected, new ControlIntent("Vehicles", "CycleVIN"));
+        _ui.WaitAsync(_locators.Cycle1734D7, expected, new ControlIntent("Vehicles", "CycleVIN"));
 
     public Task EnterCycleVINAsync(string value) =>
-        _ui.FillAsync(_locators.CycleVIN, value, new ControlIntent("Vehicles", "CycleVIN"));
+        _ui.FillAsync(_locators.Cycle1734D7, value, new ControlIntent("Vehicles", "CycleVIN"));
 
     public Task PressCycleVINAsync(string key) =>
-        _ui.PressAsync(_locators.CycleVIN, key, new ControlIntent("Vehicles", "CycleVIN"));
+        _ui.PressAsync(_locators.Cycle1734D7, key, new ControlIntent("Vehicles", "CycleVIN"));
 
     public Task EnterDaysOperatedUninsuredAsync(string value) =>
         _ui.FillAsync(_locators.DaysOperatedUninsured, value, new ControlIntent("Vehicles", "DaysOperatedUninsured"));
@@ -183,13 +183,13 @@ public sealed class VehiclesPage
         _ui.WaitAsync(_locators.DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications051FD, expected, new ControlIntent("Vehicles", "DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications051FD"));
 
     public Task WaitForDoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications21ABDAsync(string expected) =>
-        _ui.WaitAsync(_locators.DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications21ABD, expected, new ControlIntent("Vehicles", "DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications21ABD"));
+        _ui.WaitAsync(_locators.DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications051FD, expected, new ControlIntent("Vehicles", "DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications21ABD"));
 
     public Task EnterDriverSLicenseNumberAsync(string value) =>
-        _ui.FillAsync(_locators.DriverSLicenseNumber, value, new ControlIntent("Vehicles", "DriverSLicenseNumber"));
+        _ui.FillAsync(_locators.DaysOperatedUninsured, value, new ControlIntent("Vehicles", "DriverSLicenseNumber"));
 
     public Task PressDriverSLicenseNumberAsync(string key) =>
-        _ui.PressAsync(_locators.DriverSLicenseNumber, key, new ControlIntent("Vehicles", "DriverSLicenseNumber"));
+        _ui.PressAsync(_locators.DaysOperatedUninsured, key, new ControlIntent("Vehicles", "DriverSLicenseNumber"));
 
     public Task VerifyEQCAVerifiedMileageAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.EQCAVerifiedMileage, expected, property, new ControlIntent("Vehicles", "EQCAVerifiedMileage"));
@@ -213,10 +213,10 @@ public sealed class VehiclesPage
         _ui.ClickAsync(_locators.ILCategory1, new ControlIntent("Vehicles", "ILCategory1"));
 
     public Task WaitForIsThisDriverANamedInsuredAsync(string expected) =>
-        _ui.WaitAsync(_locators.IsThisDriverANamedInsured, expected, new ControlIntent("Vehicles", "IsThisDriverANamedInsured"));
+        _ui.WaitAsync(_locators.AccountOwnerReadOnly, expected, new ControlIntent("Vehicles", "IsThisDriverANamedInsured"));
 
     public Task WaitForIsThisVehicleOwnedOrFinancedAsync(string expected) =>
-        _ui.WaitAsync(_locators.IsThisVehicleOwnedOrFinanced, expected, new ControlIntent("Vehicles", "IsThisVehicleOwnedOrFinanced"));
+        _ui.WaitAsync(_locators.Cycle1734D7, expected, new ControlIntent("Vehicles", "IsThisVehicleOwnedOrFinanced"));
 
     public Task WaitForLblDescriptionOfModsAsync(string expected) =>
         _ui.WaitAsync(_locators.LblDescriptionOfMods, expected, new ControlIntent("Vehicles", "LblDescriptionOfMods"));
@@ -234,19 +234,19 @@ public sealed class VehiclesPage
         _ui.ClickAsync(_locators.Leased26B32, new ControlIntent("Vehicles", "Leased26B32"));
 
     public Task ClickLeased87268Async() =>
-        _ui.ClickAsync(_locators.Leased87268, new ControlIntent("Vehicles", "Leased87268"));
+        _ui.ClickAsync(_locators.Leased26B32, new ControlIntent("Vehicles", "Leased87268"));
 
     public Task EnterLicenseStateAsync(string value) =>
-        _ui.FillAsync(_locators.LicenseState, value, new ControlIntent("Vehicles", "LicenseState"));
+        _ui.FillAsync(_locators.DaysOperatedUninsured, value, new ControlIntent("Vehicles", "LicenseState"));
 
     public Task ClickLoan4369DAsync() =>
-        _ui.ClickAsync(_locators.Loan4369D, new ControlIntent("Vehicles", "Loan4369D"));
+        _ui.ClickAsync(_locators.Leased14EA4, new ControlIntent("Vehicles", "Loan4369D"));
 
     public Task ClickLoan49242Async() =>
         _ui.ClickAsync(_locators.Loan49242, new ControlIntent("Vehicles", "Loan49242"));
 
     public Task ClickLoanED36CAsync() =>
-        _ui.ClickAsync(_locators.LoanED36C, new ControlIntent("Vehicles", "LoanED36C"));
+        _ui.ClickAsync(_locators.Loan49242, new ControlIntent("Vehicles", "LoanED36C"));
 
     public Task ClickMDNJEducationLevelUnknownAsync() =>
         _ui.ClickAsync(_locators.MDNJEducationLevelUnknown, new ControlIntent("Vehicles", "MDNJEducationLevelUnknown"));
@@ -270,16 +270,16 @@ public sealed class VehiclesPage
         _ui.ExistsAsync(_locators.MaritalStatusSingle);
 
     public Task SelectMarriedAsync(string value) =>
-        _ui.SelectAsync(_locators.Married, value, new ControlIntent("Vehicles", "Married"));
+        _ui.SelectAsync(_locators.Divorced, value, new ControlIntent("Vehicles", "Married"));
 
     public Task ClickMedicalConditionAsync() =>
-        _ui.ClickAsync(_locators.MedicalCondition, new ControlIntent("Vehicles", "MedicalCondition"));
+        _ui.ClickAsync(_locators.AccountOwnerReadOnly, new ControlIntent("Vehicles", "MedicalCondition"));
 
     public Task ClickMilitaryAsync() =>
-        _ui.ClickAsync(_locators.Military, new ControlIntent("Vehicles", "Military"));
+        _ui.ClickAsync(_locators.AccountOwnerReadOnly, new ControlIntent("Vehicles", "Military"));
 
     public Task ClickMissionaryAsync() =>
-        _ui.ClickAsync(_locators.Missionary, new ControlIntent("Vehicles", "Missionary"));
+        _ui.ClickAsync(_locators.AccountOwnerReadOnly, new ControlIntent("Vehicles", "Missionary"));
 
     public Task PressModernClassicAsync(string key) =>
         _ui.PressAsync(_locators.ModernClassic, key, new ControlIntent("Vehicles", "ModernClassic"));
@@ -288,10 +288,10 @@ public sealed class VehiclesPage
         _ui.ClickAsync(_locators.ModernClassic, new ControlIntent("Vehicles", "ModernClassic"));
 
     public Task EnterMonthsLicensedCurrentStateAsync(string value) =>
-        _ui.FillAsync(_locators.MonthsLicensedCurrentState, value, new ControlIntent("Vehicles", "MonthsLicensedCurrentState"));
+        _ui.FillAsync(_locators.DaysOperatedUninsured, value, new ControlIntent("Vehicles", "MonthsLicensedCurrentState"));
 
     public Task PressMonthsLicensedCurrentStateAsync(string key) =>
-        _ui.PressAsync(_locators.MonthsLicensedCurrentState, key, new ControlIntent("Vehicles", "MonthsLicensedCurrentState"));
+        _ui.PressAsync(_locators.DaysOperatedUninsured, key, new ControlIntent("Vehicles", "MonthsLicensedCurrentState"));
 
     public Task SelectMoreOptionsEduAsync(string value) =>
         _ui.SelectAsync(_locators.MoreOptionsEdu, value, new ControlIntent("Vehicles", "MoreOptionsEdu"));
@@ -300,7 +300,7 @@ public sealed class VehiclesPage
         _ui.SelectAsync(_locators.MoreOptionsFarmUse, value, new ControlIntent("Vehicles", "MoreOptionsFarmUse"));
 
     public Task SelectMoreOptionsNonDriverAsync(string value) =>
-        _ui.SelectAsync(_locators.MoreOptionsNonDriver, value, new ControlIntent("Vehicles", "MoreOptionsNonDriver"));
+        _ui.SelectAsync(_locators.AccountOwnerReadOnly, value, new ControlIntent("Vehicles", "MoreOptionsNonDriver"));
 
     public Task ClickN1DayAsync() =>
         _ui.ClickAsync(_locators.N1Day, new ControlIntent("Vehicles", "N1Day"));
@@ -321,7 +321,7 @@ public sealed class VehiclesPage
         _ui.SelectAsync(_locators.NativeAmericanRegisterNO, value, new ControlIntent("Vehicles", "NativeAmericanRegisterNO"));
 
     public Task ClickNeverLicensedAsync() =>
-        _ui.ClickAsync(_locators.NeverLicensed, new ControlIntent("Vehicles", "NeverLicensed"));
+        _ui.ClickAsync(_locators.AccountOwnerReadOnly, new ControlIntent("Vehicles", "NeverLicensed"));
 
     public Task SelectNo7C269Async(string value) =>
         _ui.SelectAsync(_locators.No7C269, value, new ControlIntent("Vehicles", "No7C269"));
@@ -330,7 +330,7 @@ public sealed class VehiclesPage
         _ui.SelectAsync(_locators.NoCoverageV1Towing, value, new ControlIntent("Vehicles", "NoCoverageV1Towing"));
 
     public Task SelectNoCycleLicenseAsync(string value) =>
-        _ui.SelectAsync(_locators.NoCycleLicense, value, new ControlIntent("Vehicles", "NoCycleLicense"));
+        _ui.SelectAsync(_locators.AccountOwnerReadOnly, value, new ControlIntent("Vehicles", "NoCycleLicense"));
 
     public Task PressNoD053AAsync(string key) =>
         _ui.PressAsync(_locators.NoD053A, key, new ControlIntent("Vehicles", "NoD053A"));
@@ -339,7 +339,7 @@ public sealed class VehiclesPage
         _ui.ClickAsync(_locators.NoD053A, new ControlIntent("Vehicles", "NoD053A"));
 
     public Task SelectNoD9E4DAsync(string value) =>
-        _ui.SelectAsync(_locators.NoD9E4D, value, new ControlIntent("Vehicles", "NoD9E4D"));
+        _ui.SelectAsync(_locators.No7C269, value, new ControlIntent("Vehicles", "NoD9E4D"));
 
     public Task VerifyNoNeedWasNotLicensedAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.NoNeedWasNotLicensed, expected, property, new ControlIntent("Vehicles", "NoNeedWasNotLicensed"));
@@ -363,16 +363,16 @@ public sealed class VehiclesPage
         _ui.SelectAsync(_locators.NoRegisteredFedTribe, value, new ControlIntent("Vehicles", "NoRegisteredFedTribe"));
 
     public Task SelectNonDriverAsync(string value) =>
-        _ui.SelectAsync(_locators.NonDriver, value, new ControlIntent("Vehicles", "NonDriver"));
+        _ui.SelectAsync(_locators.Assigned, value, new ControlIntent("Vehicles", "NonDriver"));
 
     public Task PressNonDriverAsync(string key) =>
-        _ui.PressAsync(_locators.NonDriver, key, new ControlIntent("Vehicles", "NonDriver"));
+        _ui.PressAsync(_locators.Assigned, key, new ControlIntent("Vehicles", "NonDriver"));
 
     public Task ClickNonDriverAsync() =>
-        _ui.ClickAsync(_locators.NonDriver, new ControlIntent("Vehicles", "NonDriver"));
+        _ui.ClickAsync(_locators.Assigned, new ControlIntent("Vehicles", "NonDriver"));
 
     public Task WaitForNonDriverReasonAsync(string expected) =>
-        _ui.WaitAsync(_locators.NonDriverReason, expected, new ControlIntent("Vehicles", "NonDriverReason"));
+        _ui.WaitAsync(_locators.AccountOwnerReadOnly, expected, new ControlIntent("Vehicles", "NonDriverReason"));
 
     public Task EnterNonWorkAnnualMilesAsync(string value) =>
         _ui.FillAsync(_locators.NonWorkAnnualMiles, value, new ControlIntent("Vehicles", "NonWorkAnnualMiles"));
@@ -381,10 +381,10 @@ public sealed class VehiclesPage
         _ui.PressAsync(_locators.NonWorkAnnualMiles, key, new ControlIntent("Vehicles", "NonWorkAnnualMiles"));
 
     public Task PressNotANamedInsuredAsync(string key) =>
-        _ui.PressAsync(_locators.NotANamedInsured, key, new ControlIntent("Vehicles", "NotANamedInsured"));
+        _ui.PressAsync(_locators.NamedInsured, key, new ControlIntent("Vehicles", "NotANamedInsured"));
 
     public Task ClickNotANamedInsuredAsync() =>
-        _ui.ClickAsync(_locators.NotANamedInsured, new ControlIntent("Vehicles", "NotANamedInsured"));
+        _ui.ClickAsync(_locators.NamedInsured, new ControlIntent("Vehicles", "NotANamedInsured"));
 
     public Task SelectNotPleasureUseAsync(string value) =>
         _ui.SelectAsync(_locators.NotPleasureUse, value, new ControlIntent("Vehicles", "NotPleasureUse"));
@@ -405,16 +405,16 @@ public sealed class VehiclesPage
         _ui.ClickAsync(_locators.OptOut, new ControlIntent("Vehicles", "OptOut"));
 
     public Task ClickOriginalPartsV3Async() =>
-        _ui.ClickAsync(_locators.OriginalPartsV3, new ControlIntent("Vehicles", "OriginalPartsV3"));
+        _ui.ClickAsync(_locators.NoCoverageV1Towing, new ControlIntent("Vehicles", "OriginalPartsV3"));
 
     public Task ClickOriginalPartsV4Async() =>
-        _ui.ClickAsync(_locators.OriginalPartsV4, new ControlIntent("Vehicles", "OriginalPartsV4"));
+        _ui.ClickAsync(_locators.NoCoverageV1Towing, new ControlIntent("Vehicles", "OriginalPartsV4"));
 
     public Task ClickOtherInsuranceAsync() =>
-        _ui.ClickAsync(_locators.OtherInsurance, new ControlIntent("Vehicles", "OtherInsurance"));
+        _ui.ClickAsync(_locators.AccountOwnerReadOnly, new ControlIntent("Vehicles", "OtherInsurance"));
 
     public Task ClickOwn49EECAsync() =>
-        _ui.ClickAsync(_locators.Own49EEC, new ControlIntent("Vehicles", "Own49EEC"));
+        _ui.ClickAsync(_locators.Leased14EA4, new ControlIntent("Vehicles", "Own49EEC"));
 
     public Task ClickOwn7C709Async() =>
         _ui.ClickAsync(_locators.Own7C709, new ControlIntent("Vehicles", "Own7C709"));
@@ -426,16 +426,16 @@ public sealed class VehiclesPage
         _ui.ClickAsync(_locators.OwnB8575, new ControlIntent("Vehicles", "OwnB8575"));
 
     public Task ClickOwnD044EAsync() =>
-        _ui.ClickAsync(_locators.OwnD044E, new ControlIntent("Vehicles", "OwnD044E"));
+        _ui.ClickAsync(_locators.Own7C709, new ControlIntent("Vehicles", "OwnD044E"));
 
     public Task ClickPermitDriverAsync() =>
-        _ui.ClickAsync(_locators.PermitDriver, new ControlIntent("Vehicles", "PermitDriver"));
+        _ui.ClickAsync(_locators.AccountOwnerReadOnly, new ControlIntent("Vehicles", "PermitDriver"));
 
     public Task WaitForPleaseSelectTheVehicleBBB72Async(string expected) =>
-        _ui.WaitAsync(_locators.PleaseSelectTheVehicleBBB72, expected, new ControlIntent("Vehicles", "PleaseSelectTheVehicleBBB72"));
+        _ui.WaitAsync(_locators.Cycle1734D7, expected, new ControlIntent("Vehicles", "PleaseSelectTheVehicleBBB72"));
 
     public Task WaitForPleaseSelectTheVehicleCD741Async(string expected) =>
-        _ui.WaitAsync(_locators.PleaseSelectTheVehicleCD741, expected, new ControlIntent("Vehicles", "PleaseSelectTheVehicleCD741"));
+        _ui.WaitAsync(_locators.Cycle1734D7, expected, new ControlIntent("Vehicles", "PleaseSelectTheVehicleCD741"));
 
     public Task ClickPleasureCANYFFCICAsync() =>
         _ui.ClickAsync(_locators.PleasureCANYFFCIC, new ControlIntent("Vehicles", "PleasureCANYFFCIC"));
@@ -456,10 +456,10 @@ public sealed class VehiclesPage
         _ui.ClickAsync(_locators.PricingDetailsNext, new ControlIntent("Vehicles", "PricingDetailsNext"));
 
     public Task PressPrimaryNamedInsuredAsync(string key) =>
-        _ui.PressAsync(_locators.PrimaryNamedInsured, key, new ControlIntent("Vehicles", "PrimaryNamedInsured"));
+        _ui.PressAsync(_locators.NamedInsured, key, new ControlIntent("Vehicles", "PrimaryNamedInsured"));
 
     public Task ClickPrimaryNamedInsuredAsync() =>
-        _ui.ClickAsync(_locators.PrimaryNamedInsured, new ControlIntent("Vehicles", "PrimaryNamedInsured"));
+        _ui.ClickAsync(_locators.NamedInsured, new ControlIntent("Vehicles", "PrimaryNamedInsured"));
 
     public Task VerifyPriorCarrierNameAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.PriorCarrierName, expected, property, new ControlIntent("Vehicles", "PriorCarrierName"));
@@ -477,10 +477,10 @@ public sealed class VehiclesPage
         _ui.PressAsync(_locators.PurchaseDateBB8AF, key, new ControlIntent("Vehicles", "PurchaseDateBB8AF"));
 
     public Task PressRelatedAsync(string key) =>
-        _ui.PressAsync(_locators.Related, key, new ControlIntent("Vehicles", "Related"));
+        _ui.PressAsync(_locators.Assigned, key, new ControlIntent("Vehicles", "Related"));
 
     public Task ClickRelatedAsync() =>
-        _ui.ClickAsync(_locators.Related, new ControlIntent("Vehicles", "Related"));
+        _ui.ClickAsync(_locators.Assigned, new ControlIntent("Vehicles", "Related"));
 
     public Task SelectRelationshipToAccountOwnerNULLAsync(string value) =>
         _ui.SelectAsync(_locators.RelationshipToAccountOwnerNULL, value, new ControlIntent("Vehicles", "RelationshipToAccountOwnerNULL"));
@@ -537,25 +537,25 @@ public sealed class VehiclesPage
         _ui.ClickAsync(_locators.RoadsideAssistanceCoverageV4, new ControlIntent("Vehicles", "RoadsideAssistanceCoverageV4"));
 
     public Task ClickRoommateAsync() =>
-        _ui.ClickAsync(_locators.Roommate, new ControlIntent("Vehicles", "Roommate"));
+        _ui.ClickAsync(_locators.AccountOwnerReadOnly, new ControlIntent("Vehicles", "Roommate"));
 
     public Task ClickSaveAndContinue8EF26Async() =>
         _ui.ClickAsync(_locators.SaveAndContinue8EF26, new ControlIntent("Vehicles", "SaveAndContinue8EF26"));
 
     public Task ClickSaveAndContinue9CB7AAsync() =>
-        _ui.ClickAsync(_locators.SaveAndContinue9CB7A, new ControlIntent("Vehicles", "SaveAndContinue9CB7A"));
+        _ui.ClickAsync(_locators.SaveAndContinue8EF26, new ControlIntent("Vehicles", "SaveAndContinue9CB7A"));
 
     public Task<bool> IsSaveAndContinue9CB7APresentAsync() =>
-        _ui.ExistsAsync(_locators.SaveAndContinue9CB7A);
+        _ui.ExistsAsync(_locators.SaveAndContinue8EF26);
 
     public Task ClickSaveAndContinueBE6CDAsync() =>
-        _ui.ClickAsync(_locators.SaveAndContinueBE6CD, new ControlIntent("Vehicles", "SaveAndContinueBE6CD"));
+        _ui.ClickAsync(_locators.SaveAndContinue8EF26, new ControlIntent("Vehicles", "SaveAndContinueBE6CD"));
 
     public Task ClickSaveContinue2E7CDAsync() =>
         _ui.ClickAsync(_locators.SaveContinue2E7CD, new ControlIntent("Vehicles", "SaveContinue2E7CD"));
 
     public Task ClickSaveContinue86B78Async() =>
-        _ui.ClickAsync(_locators.SaveContinue86B78, new ControlIntent("Vehicles", "SaveContinue86B78"));
+        _ui.ClickAsync(_locators.SaveContinue2E7CD, new ControlIntent("Vehicles", "SaveContinue86B78"));
 
     public Task WaitForSelectVehicleAsync(string expected) =>
         _ui.WaitAsync(_locators.SelectVehicle, expected, new ControlIntent("Vehicles", "SelectVehicle"));
@@ -564,13 +564,13 @@ public sealed class VehiclesPage
         _ui.ExistsAsync(_locators.SelectVehicle);
 
     public Task VerifySingleAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.Single, expected, property, new ControlIntent("Vehicles", "Single"));
+        _ui.VerifyAsync(_locators.Divorced, expected, property, new ControlIntent("Vehicles", "Single"));
 
     public Task ClickSingleAsync() =>
-        _ui.ClickAsync(_locators.Single, new ControlIntent("Vehicles", "Single"));
+        _ui.ClickAsync(_locators.Divorced, new ControlIntent("Vehicles", "Single"));
 
     public Task<bool> IsSinglePresentAsync() =>
-        _ui.ExistsAsync(_locators.Single);
+        _ui.ExistsAsync(_locators.Divorced);
 
     public Task WaitForSomeCollegeAsync(string expected) =>
         _ui.WaitAsync(_locators.SomeCollege, expected, new ControlIntent("Vehicles", "SomeCollege"));
@@ -579,22 +579,22 @@ public sealed class VehiclesPage
         _ui.ClickAsync(_locators.SomeCollege, new ControlIntent("Vehicles", "SomeCollege"));
 
     public Task VerifySpouseAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.Spouse, expected, property, new ControlIntent("Vehicles", "Spouse"));
+        _ui.VerifyAsync(_locators.AccountOwner, expected, property, new ControlIntent("Vehicles", "Spouse"));
 
     public Task ClickSurrenderedAsync() =>
-        _ui.ClickAsync(_locators.Surrendered, new ControlIntent("Vehicles", "Surrendered"));
+        _ui.ClickAsync(_locators.AccountOwnerReadOnly, new ControlIntent("Vehicles", "Surrendered"));
 
     public Task ClickTheftDeductibleV1Async() =>
-        _ui.ClickAsync(_locators.TheftDeductibleV1, new ControlIntent("Vehicles", "TheftDeductibleV1"));
+        _ui.ClickAsync(_locators.NoCoverageV1Towing, new ControlIntent("Vehicles", "TheftDeductibleV1"));
 
     public Task ClickTheftDeductibleV2Async() =>
-        _ui.ClickAsync(_locators.TheftDeductibleV2, new ControlIntent("Vehicles", "TheftDeductibleV2"));
+        _ui.ClickAsync(_locators.NoCoverageV1Towing, new ControlIntent("Vehicles", "TheftDeductibleV2"));
 
     public Task ClickTheftDeductibleV3Async() =>
-        _ui.ClickAsync(_locators.TheftDeductibleV3, new ControlIntent("Vehicles", "TheftDeductibleV3"));
+        _ui.ClickAsync(_locators.NoCoverageV1Towing, new ControlIntent("Vehicles", "TheftDeductibleV3"));
 
     public Task ClickTheftDeductibleV4Async() =>
-        _ui.ClickAsync(_locators.TheftDeductibleV4, new ControlIntent("Vehicles", "TheftDeductibleV4"));
+        _ui.ClickAsync(_locators.NoCoverageV1Towing, new ControlIntent("Vehicles", "TheftDeductibleV4"));
 
     public Task EnterTotalAnnualMileageAsync(string value) =>
         _ui.FillAsync(_locators.TotalAnnualMileage, value, new ControlIntent("Vehicles", "TotalAnnualMileage"));
@@ -603,16 +603,16 @@ public sealed class VehiclesPage
         _ui.PressAsync(_locators.TotalAnnualMileage, key, new ControlIntent("Vehicles", "TotalAnnualMileage"));
 
     public Task ClickUIMPDCoverageV1Async() =>
-        _ui.ClickAsync(_locators.UIMPDCoverageV1, new ControlIntent("Vehicles", "UIMPDCoverageV1"));
+        _ui.ClickAsync(_locators.NoCoverageV1Towing, new ControlIntent("Vehicles", "UIMPDCoverageV1"));
 
     public Task ClickUIMPDCoverageV2Async() =>
-        _ui.ClickAsync(_locators.UIMPDCoverageV2, new ControlIntent("Vehicles", "UIMPDCoverageV2"));
+        _ui.ClickAsync(_locators.NoCoverageV1Towing, new ControlIntent("Vehicles", "UIMPDCoverageV2"));
 
     public Task ClickUIMPDCoverageV3Async() =>
-        _ui.ClickAsync(_locators.UIMPDCoverageV3, new ControlIntent("Vehicles", "UIMPDCoverageV3"));
+        _ui.ClickAsync(_locators.NoCoverageV1Towing, new ControlIntent("Vehicles", "UIMPDCoverageV3"));
 
     public Task ClickUIMPDCoverageV4Async() =>
-        _ui.ClickAsync(_locators.UIMPDCoverageV4, new ControlIntent("Vehicles", "UIMPDCoverageV4"));
+        _ui.ClickAsync(_locators.NoCoverageV1Towing, new ControlIntent("Vehicles", "UIMPDCoverageV4"));
 
     public Task PressUMPDCoverageVehicle1Async(string key) =>
         _ui.PressAsync(_locators.UMPDCoverageVehicle1, key, new ControlIntent("Vehicles", "UMPDCoverageVehicle1"));
@@ -633,22 +633,22 @@ public sealed class VehiclesPage
         _ui.SelectAsync(_locators.UMPDMoreOptionsCoverages, value, new ControlIntent("Vehicles", "UMPDMoreOptionsCoverages"));
 
     public Task ClickUMPDUIMPDV1Async() =>
-        _ui.ClickAsync(_locators.UMPDUIMPDV1, new ControlIntent("Vehicles", "UMPDUIMPDV1"));
+        _ui.ClickAsync(_locators.NoCoverageV1Towing, new ControlIntent("Vehicles", "UMPDUIMPDV1"));
 
     public Task ClickUMPDUIMPDV2Async() =>
-        _ui.ClickAsync(_locators.UMPDUIMPDV2, new ControlIntent("Vehicles", "UMPDUIMPDV2"));
+        _ui.ClickAsync(_locators.NoCoverageV1Towing, new ControlIntent("Vehicles", "UMPDUIMPDV2"));
 
     public Task ClickUMPDUIMPDV3Async() =>
-        _ui.ClickAsync(_locators.UMPDUIMPDV3, new ControlIntent("Vehicles", "UMPDUIMPDV3"));
+        _ui.ClickAsync(_locators.NoCoverageV1Towing, new ControlIntent("Vehicles", "UMPDUIMPDV3"));
 
     public Task ClickUMPDUIMPDV4Async() =>
-        _ui.ClickAsync(_locators.UMPDUIMPDV4, new ControlIntent("Vehicles", "UMPDUIMPDV4"));
+        _ui.ClickAsync(_locators.NoCoverageV1Towing, new ControlIntent("Vehicles", "UMPDUIMPDV4"));
 
     public Task ClickUnderConstructionAsync() =>
         _ui.ClickAsync(_locators.UnderConstruction, new ControlIntent("Vehicles", "UnderConstruction"));
 
     public Task ClickUnderageAsync() =>
-        _ui.ClickAsync(_locators.Underage, new ControlIntent("Vehicles", "Underage"));
+        _ui.ClickAsync(_locators.AccountOwnerReadOnly, new ControlIntent("Vehicles", "Underage"));
 
     public Task SelectUnknownNoHighSchoolDiplomaOrGEDAsync(string value) =>
         _ui.SelectAsync(_locators.UnknownNoHighSchoolDiplomaOrGED, value, new ControlIntent("Vehicles", "UnknownNoHighSchoolDiplomaOrGED"));
@@ -669,34 +669,34 @@ public sealed class VehiclesPage
         _ui.ClickAsync(_locators.VIN06D01, new ControlIntent("Vehicles", "VIN06D01"));
 
     public Task WaitForVIN0A17CAsync(string expected) =>
-        _ui.WaitAsync(_locators.VIN0A17C, expected, new ControlIntent("Vehicles", "VIN0A17C"));
+        _ui.WaitAsync(_locators.Cycle1734D7, expected, new ControlIntent("Vehicles", "VIN0A17C"));
 
     public Task EnterVIN0A17CAsync(string value) =>
-        _ui.FillAsync(_locators.VIN0A17C, value, new ControlIntent("Vehicles", "VIN0A17C"));
+        _ui.FillAsync(_locators.Cycle1734D7, value, new ControlIntent("Vehicles", "VIN0A17C"));
 
     public Task PressVIN0A17CAsync(string key) =>
-        _ui.PressAsync(_locators.VIN0A17C, key, new ControlIntent("Vehicles", "VIN0A17C"));
+        _ui.PressAsync(_locators.Cycle1734D7, key, new ControlIntent("Vehicles", "VIN0A17C"));
 
     public Task WaitForVIN8EE56Async(string expected) =>
-        _ui.WaitAsync(_locators.VIN8EE56, expected, new ControlIntent("Vehicles", "VIN8EE56"));
+        _ui.WaitAsync(_locators.Cycle1734D7, expected, new ControlIntent("Vehicles", "VIN8EE56"));
 
     public Task EnterVIN8EE56Async(string value) =>
-        _ui.FillAsync(_locators.VIN8EE56, value, new ControlIntent("Vehicles", "VIN8EE56"));
+        _ui.FillAsync(_locators.Cycle1734D7, value, new ControlIntent("Vehicles", "VIN8EE56"));
 
     public Task PressVIN8EE56Async(string key) =>
-        _ui.PressAsync(_locators.VIN8EE56, key, new ControlIntent("Vehicles", "VIN8EE56"));
+        _ui.PressAsync(_locators.Cycle1734D7, key, new ControlIntent("Vehicles", "VIN8EE56"));
 
     public Task ClickVeh1Async() =>
         _ui.ClickAsync(_locators.Veh1, new ControlIntent("Vehicles", "Veh1"));
 
     public Task ClickVeh3Async() =>
-        _ui.ClickAsync(_locators.Veh3, new ControlIntent("Vehicles", "Veh3"));
+        _ui.ClickAsync(_locators.Veh1, new ControlIntent("Vehicles", "Veh3"));
 
     public Task ClickVehicle1Async() =>
         _ui.ClickAsync(_locators.Vehicle1, new ControlIntent("Vehicles", "Vehicle1"));
 
     public Task ClickVehicleInformationNextAsync() =>
-        _ui.ClickAsync(_locators.VehicleInformationNext, new ControlIntent("Vehicles", "VehicleInformationNext"));
+        _ui.ClickAsync(_locators.PricingDetailsNext, new ControlIntent("Vehicles", "VehicleInformationNext"));
 
     public Task SelectVehicleMoreOptionsAsync(string value) =>
         _ui.SelectAsync(_locators.VehicleMoreOptions, value, new ControlIntent("Vehicles", "VehicleMoreOptions"));
@@ -708,19 +708,19 @@ public sealed class VehiclesPage
         _ui.ClickAsync(_locators.VehicleMoreOptions, new ControlIntent("Vehicles", "VehicleMoreOptions"));
 
     public Task WaitForVehicleTypeAsync(string expected) =>
-        _ui.WaitAsync(_locators.VehicleType, expected, new ControlIntent("Vehicles", "VehicleType"));
+        _ui.WaitAsync(_locators.Cycle1734D7, expected, new ControlIntent("Vehicles", "VehicleType"));
 
     public Task ClickVintageAsync() =>
-        _ui.ClickAsync(_locators.Vintage, new ControlIntent("Vehicles", "Vintage"));
+        _ui.ClickAsync(_locators.Cycle1734D7, new ControlIntent("Vehicles", "Vintage"));
 
     public Task ClickVocationalOrTradeSchoolDegreeAsync() =>
         _ui.ClickAsync(_locators.VocationalOrTradeSchoolDegree, new ControlIntent("Vehicles", "VocationalOrTradeSchoolDegree"));
 
     public Task VerifyWasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAboveAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove, expected, property, new ControlIntent("Vehicles", "WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove"));
+        _ui.VerifyAsync(_locators.AccountOwnerReadOnly, expected, property, new ControlIntent("Vehicles", "WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove"));
 
     public Task<bool> IsWasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbovePresentAsync() =>
-        _ui.ExistsAsync(_locators.WasThisClientInsuredWithAmericanNationalImmediatelyPriorToTheCarrierListedAbove);
+        _ui.ExistsAsync(_locators.AccountOwnerReadOnly);
 
     public Task EnterWorkMilesDayAsync(string value) =>
         _ui.FillAsync(_locators.WorkMilesDay, value, new ControlIntent("Vehicles", "WorkMilesDay"));
@@ -732,10 +732,10 @@ public sealed class VehiclesPage
         _ui.SelectAsync(_locators.Yes, value, new ControlIntent("Vehicles", "Yes"));
 
     public Task EnterYrsLicensedAllStatesAsync(string value) =>
-        _ui.FillAsync(_locators.YrsLicensedAllStates, value, new ControlIntent("Vehicles", "YrsLicensedAllStates"));
+        _ui.FillAsync(_locators.DaysOperatedUninsured, value, new ControlIntent("Vehicles", "YrsLicensedAllStates"));
 
     public Task PressYrsLicensedAllStatesAsync(string key) =>
-        _ui.PressAsync(_locators.YrsLicensedAllStates, key, new ControlIntent("Vehicles", "YrsLicensedAllStates"));
+        _ui.PressAsync(_locators.DaysOperatedUninsured, key, new ControlIntent("Vehicles", "YrsLicensedAllStates"));
 
     public Task EnterYrsLicensedCurrentStateAsync(string value) =>
         _ui.FillAsync(_locators.YrsLicensedCurrentState, value, new ControlIntent("Vehicles", "YrsLicensedCurrentState"));

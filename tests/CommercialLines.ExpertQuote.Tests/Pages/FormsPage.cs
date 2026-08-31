@@ -21,13 +21,13 @@ public sealed class FormsPage
         _ui.FillAsync(_locators.FormsAPIRequest01660, value, new ControlIntent("Forms", "FormsAPIRequest01660"));
 
     public Task EnterFormsAPIRequestB50D4Async(string value) =>
-        _ui.FillAsync(_locators.FormsAPIRequestB50D4, value, new ControlIntent("Forms", "FormsAPIRequestB50D4"));
+        _ui.FillAsync(_locators.FormsAPIRequest01660, value, new ControlIntent("Forms", "FormsAPIRequestB50D4"));
 
     public Task EnterFormsAPIResponse3FBAFAsync(string value) =>
         _ui.FillAsync(_locators.FormsAPIResponse3FBAF, value, new ControlIntent("Forms", "FormsAPIResponse3FBAF"));
 
     public Task EnterFormsAPIResponse53891Async(string value) =>
-        _ui.FillAsync(_locators.FormsAPIResponse53891, value, new ControlIntent("Forms", "FormsAPIResponse53891"));
+        _ui.FillAsync(_locators.FormsAPIResponse3FBAF, value, new ControlIntent("Forms", "FormsAPIResponse53891"));
 public Task VerifyLoadingMessageAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.LoadingMessage, expected, property, new ControlIntent("Forms", "LoadingMessage"));
 
@@ -67,6 +67,6 @@ public Task VerifyLoadingMessageAsync(string expected, string property) =>
 
     public Task<bool> IsFormsAPIRequest01660PresentAsync() => _ui.ExistsAsync(_locators.FormsAPIRequest01660);
 
-    public Task<bool> IsFormsAPIResponse53891PresentAsync() => _ui.ExistsAsync(_locators.FormsAPIResponse53891);
+    public Task<bool> IsFormsAPIResponse53891PresentAsync() => _ui.ExistsAsync(_locators.FormsAPIResponse3FBAF);
 
 }

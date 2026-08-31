@@ -84,19 +84,19 @@ public sealed class DriversPage
         _ui.ClickAsync(_locators.Driver5Vehicle, new ControlIntent("Drivers", "Driver5Vehicle"));
 
     public Task PressDriverInformationNextAsync(string key) =>
-        _ui.PressAsync(_locators.DriverInformationNext, key, new ControlIntent("Drivers", "DriverInformationNext"));
+        _ui.PressAsync(_locators.CLOSEQUOTE, key, new ControlIntent("Drivers", "DriverInformationNext"));
 
     public Task ClickDriverInformationNextAsync() =>
-        _ui.ClickAsync(_locators.DriverInformationNext, new ControlIntent("Drivers", "DriverInformationNext"));
+        _ui.ClickAsync(_locators.CLOSEQUOTE, new ControlIntent("Drivers", "DriverInformationNext"));
 
     public Task ClickExistingClient1Async() =>
         _ui.ClickAsync(_locators.ExistingClient1, new ControlIntent("Drivers", "ExistingClient1"));
 
     public Task VerifyIneligibleQuoteAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.IneligibleQuote, expected, property, new ControlIntent("Drivers", "IneligibleQuote"));
+        _ui.VerifyAsync(_locators.CLOSEQUOTE, expected, property, new ControlIntent("Drivers", "IneligibleQuote"));
 
     public Task<bool> IsIneligibleQuotePresentAsync() =>
-        _ui.ExistsAsync(_locators.IneligibleQuote);
+        _ui.ExistsAsync(_locators.CLOSEQUOTE);
 public Task ClickMultipleDriverAssignmentNextAsync() =>
         _ui.ClickAsync(_locators.MultipleDriverAssignmentNext, new ControlIntent("Drivers", "MultipleDriverAssignmentNext"));
 

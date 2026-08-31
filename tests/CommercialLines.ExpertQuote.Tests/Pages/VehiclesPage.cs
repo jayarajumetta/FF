@@ -9,12 +9,14 @@ public sealed class VehiclesPage
     private readonly BrowserSession _browser;
     private readonly VehiclesLocators _locators;
     private readonly UiActions _ui;
+    private readonly QuoteSearchLocators _quoteSearchLocators;
 
     public VehiclesPage(BrowserSession browser, UiActions ui)
     {
         _browser = browser;
         _locators = new VehiclesLocators(browser.Page);
         _ui = ui;
+        _quoteSearchLocators = new QuoteSearchLocators(browser.Page);
     }
 
     public Task WaitForAddCoverageAsync(string expected) =>
@@ -24,7 +26,7 @@ public sealed class VehiclesPage
         _ui.SelectAsync(_locators.AddCoverage, value, new ControlIntent("Vehicles", "AddCoverage"));
 
     public Task ClickClientInfoSearchAsync() =>
-        _ui.ClickAsync(_locators.ClientInfoSearch, new ControlIntent("Vehicles", "ClientInfoSearch"));
+        _ui.ClickAsync(_quoteSearchLocators.QuoteSearchButton, new ControlIntent("Vehicles", "ClientInfoSearch"));
 
     public Task PressDescriptionAsync(string key) =>
         _ui.PressAsync(_locators.Description, key, new ControlIntent("Vehicles", "Description"));
@@ -47,7 +49,7 @@ public Task ClickSaveAsync() =>
         _ui.PressAsync(_locators.SearchByNameOrCode, key, new ControlIntent("Vehicles", "SearchByNameOrCode"));
 
     public Task EnterTrueAsync(string value) =>
-        _ui.FillAsync(_locators.True, value, new ControlIntent("Vehicles", "True"));
+        _ui.ClickAsync(_locators.ScheduledPersonalPropertyHeader, new ControlIntent("Vehicles", "ScheduledPersonalPropertyCheckbox"));
 
     public Task PressYearOfLastAppraisalAsync(string key) =>
         _ui.PressAsync(_locators.YearOfLastAppraisal, key, new ControlIntent("Vehicles", "YearOfLastAppraisal"));

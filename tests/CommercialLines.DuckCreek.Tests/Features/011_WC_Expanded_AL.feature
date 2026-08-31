@@ -1,8 +1,3 @@
-# v54 RAW TOSCA SOURCE: CL-DC TestCases Staging Area.tsu
-# Raw TestCase: WC |Expanded [3a13d49c-13c7-283c-5cba-90899c07e629]
-# Raw TemplateInstance: TemplateInstance of WC | StraightThrough [3a13d49c-1589-9fd2-b3a8-3e7c1e7753ed]
-# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
-
 @CL_DC @expanded_new_business
 
 Feature: WC Expanded

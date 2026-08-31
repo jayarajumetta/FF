@@ -7,35 +7,21 @@ public sealed class PricingLocators
     private readonly IPage _page;
     public PricingLocators(IPage page) => _page = page;
 
-    // Source modules: Policy Info|Required and Optional Fields | confidence=High score=95
-    // CPP, CP, CR, IM, GL(NY, VT, MD, NJ) and WC(NY)
-    public ILocator EstimatedPremium => _page.GetByRole(AriaRole.Textbox, new() { Name = "Estimated Premium*", Exact = true });
+    public ILocator EstimatedPremium => _page.Locator("input[fieldref=\"PolicyInput.EstimatedPremium\"]");
 
-    // Source modules: Submission|Premiums | confidence=Review score=97
-    public ILocator FullTermPremium => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Full Term Premium");
+    public ILocator FullTermPremium => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Full Term Premium']/@for] | //label[normalize-space(string(.))='Full Term Premium']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Full Term Premium']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    // Source modules: Verify JavaScript Result | confidence=Review score=97
-    // The JavaScript code to execute. Use a return statement in the code to specify the return value.
-    public ILocator JavaScript => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "JavaScript");
+    public ILocator JavaScript => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='JavaScript']/@for] | //label[normalize-space(string(.))='JavaScript']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='JavaScript']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    // Source modules: Pricing | confidence=High score=125
-    public ILocator Premium => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Premium");
+    public ILocator Premium => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Premium']/@for] | //label[normalize-space(string(.))='Premium']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Premium']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    // Source modules: Submission|Premiums | confidence=Review score=97
-    public ILocator PremiumChange => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Premium Change");
+    public ILocator PremiumChange => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Premium Change']/@for] | //label[normalize-space(string(.))='Premium Change']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Premium Change']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    // Source modules: Submission|Premiums | confidence=Review score=97
-    public ILocator PremiumWritten => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Premium Written");
+    public ILocator PremiumWritten => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Premium Written']/@for] | //label[normalize-space(string(.))='Premium Written']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Premium Written']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    // Source modules: Submission|Premiums | confidence=Review score=97
-    public ILocator PriorPremium => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Prior Premium");
+    public ILocator PriorPremium => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Prior Premium']/@for] | //label[normalize-space(string(.))='Prior Premium']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Prior Premium']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    // Source modules: Verify JavaScript Result | confidence=Review score=97
-    // The string result to verify
-    public ILocator Result => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Result");
+    public ILocator Result => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Result']/@for] | //label[normalize-space(string(.))='Result']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Result']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    // Source modules: Verify JavaScript Result | confidence=Review score=97
-    // Defines the caption of the browser window that is searched for.
-    public ILocator Title => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Title");
-
+    public ILocator Title => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Title']/@for] | //label[normalize-space(string(.))='Title']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Title']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 }

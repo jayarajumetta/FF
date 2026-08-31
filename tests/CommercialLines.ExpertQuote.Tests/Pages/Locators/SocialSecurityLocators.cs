@@ -15,14 +15,10 @@ public sealed class SocialSecurityLocators
 
     // Tosca source: Tag=BUTTON, Id=btnConfirmYes. This is an HTML id, not data-testid.
     public ILocator SubmitAngular => _page.Locator("[id='btnConfirmYes']");
-    public ILocator EChecklistEChecklistSubmit => SubmitAngular;
 
     public ILocator NoPrefillMatchFound =>
         _page.GetByRole(AriaRole.Heading, new() { Name = "No Prefill Match Found", Exact = true });
-    // v56 raw Tosca primary: Building|Add Class | Continue | DuckCreekId
     public ILocator Continue => _page.Locator("[duckcreekid=\"Continue\"], [data-duckcreekid=\"Continue\"]");
 
     // Compatibility aliases
-    public ILocator TheSSNCouldNotBeFoundPleaseEnterAnSSN => SsnInput;
-    public ILocator ScreenHeading => NoPrefillMatchFound;
 }

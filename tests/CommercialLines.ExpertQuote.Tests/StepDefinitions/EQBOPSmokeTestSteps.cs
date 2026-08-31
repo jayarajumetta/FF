@@ -45,7 +45,6 @@ public sealed class EQBOPSmokeTestSteps
 
         var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // v54 RAW TOSCA ORDER. Source: EQ|Common|Account Details - Account Info.
         // XTestStep/XTestStepValue order is authoritative; manual CSV/workbooks are not inputs.
         await page.WaitForAccountInformationHeaderAsync("Visible");
         await page.EnterOwnerMiddleNameAsync("");
@@ -59,9 +58,9 @@ public sealed class EQBOPSmokeTestSteps
         await page.SelectStateAsync(data.GetCanonicalFieldRequired("State Name"));
         await page.EnterZipAsync(data.GetCanonicalFieldRequired("Zip"));
 
-        //var county = data.GetCanonicalField("County");
-        //if (!string.IsNullOrWhiteSpace(county))
-        //    await page.EnterCountyAsync(county);
+        var county = data.GetCanonicalField("County");
+        if (!string.IsNullOrWhiteSpace(county))
+            await page.EnterCountyAsync(county);
 
         // Map/Satellite are generated only after address steering in raw Tosca.
         await page.VerifyMapAsync("Visible", "");

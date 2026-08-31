@@ -32,13 +32,13 @@ public Task VerifyLoadingAsync(string expected, string property) =>
         _ui.ExistsAsync(_locators.Loading);
 
     public Task VerifyMultiCarDiscountAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.MultiCarDiscount, expected, property, new ControlIntent("Discounts", "MultiCarDiscount"));
+        _ui.VerifyAsync(_locators.CommercialAuto, expected, property, new ControlIntent("Discounts", "MultiCarDiscount"));
 
     public Task ClickN1500030000Async() =>
         _ui.ClickAsync(_locators.N1500030000, new ControlIntent("Discounts", "N1500030000"));
 
     public Task SelectNoDefensiveDriverDiscountAsync(string value) =>
-        _ui.SelectAsync(_locators.NoDefensiveDriverDiscount, value, new ControlIntent("Discounts", "NoDefensiveDriverDiscount"));
+        _ui.SelectAsync(_locators.CommercialAuto, value, new ControlIntent("Discounts", "NoDefensiveDriverDiscount"));
 
     public Task SetOnAsync(string value) =>
         _ui.SmartSetAsync(_locators.On, value, new ControlIntent("Discounts", "On"));
@@ -59,7 +59,7 @@ public Task VerifyLoadingAsync(string expected, string property) =>
         _ui.FillAsync(_locators.SafeCycleDiscountDate, value, new ControlIntent("Discounts", "SafeCycleDiscountDate"));
 
     public Task VerifySpecialFarmPackageAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.SpecialFarmPackage, expected, property, new ControlIntent("Discounts", "SpecialFarmPackage"));
+        _ui.VerifyAsync(_locators.CommercialAuto, expected, property, new ControlIntent("Discounts", "SpecialFarmPackage"));
 
     public Task ClickStateMDAsync() =>
         _ui.ClickAsync(_locators.StateMD, new ControlIntent("Discounts", "StateMD"));

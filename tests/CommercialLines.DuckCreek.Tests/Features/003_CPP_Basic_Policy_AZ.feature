@@ -1,8 +1,3 @@
-# v54 RAW TOSCA SOURCE: CL-DC TestCases Staging Area.tsu
-# Raw TestCase: CPP | Basic Policy [3a13d49c-13c7-0bc0-5578-87f8534d0b4e]
-# Raw TemplateInstance: TemplateInstance of CPP | Basic Policy [3a13d49c-162e-40bd-d4e1-566863c9bc15]
-# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
-
 @CL_DC @CPP @basic_new_business_policy
 
 Feature: CPP Basic Policy

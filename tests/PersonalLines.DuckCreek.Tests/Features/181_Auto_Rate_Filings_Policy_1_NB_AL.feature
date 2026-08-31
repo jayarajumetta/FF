@@ -1,8 +1,3 @@
-# v54 RAW TOSCA SOURCE: PL_DC_TestCases_Production.tsu
-# Raw TestCase: Auto Rate Filings Policy 1 NB [3a1af6d7-9234-c7aa-ecf0-b2b87e9328dd]
-# Raw TemplateInstance: TemplateInstance of Auto Rate Filings Policy 1 NB [3a1c8ebc-4430-6477-a5be-9b3986bac40c]
-# Source truth: raw .tsu object graph only; manual CSV/XLSX/HTML are NOT generation or ordering inputs.
-
 @PL_DC @AUTO @rate_filing_new_business
 
 Feature: Auto Rate Filings Policy 1 NB

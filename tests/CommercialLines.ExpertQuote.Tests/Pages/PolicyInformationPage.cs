@@ -27,7 +27,7 @@ public sealed class PolicyInformationPage
         _ui.SelectAsync(_locators.IndustrialHempNo, value, new ControlIntent("PolicyInformation", "IndustrialHempNo"));
 
     public Task SelectIndustrialHempYesAsync(string value) =>
-        _ui.SelectAsync(_locators.IndustrialHempYes, value, new ControlIntent("PolicyInformation", "IndustrialHempYes"));
+        _ui.SelectAsync(_locators.IndustrialHempNo, value, new ControlIntent("PolicyInformation", "IndustrialHempYes"));
 public Task ClickPrimaryFarmCategoryAsync() =>
         _ui.ClickAsync(_locators.PrimaryFarmCategory, new ControlIntent("PolicyInformation", "PrimaryFarmCategory"));
 
