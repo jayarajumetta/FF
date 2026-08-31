@@ -233,10 +233,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
             // Select liability limit if provided
             if (!string.IsNullOrEmpty(_contextData.LiabilityLimit))
-            {
-                await liabilityPage.LimitSelect.ClickAsync();
-                await _context.Page.GetByRole(AriaRole.Option, new() { Name = _contextData.LiabilityLimit }).ClickAsync();
-            }
+                await liabilityPage.SelectLimitAsync(_contextData.LiabilityLimit);
 
             // Some states (e.g. NH) require filling the Workers' Compensation - Residence Employees
             // optional coverage before proceeding. The page shows "Required Info Missing" and surfaces

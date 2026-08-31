@@ -16,23 +16,70 @@ namespace PnCTestAutomation.Pages
         public ILocator UnlistedAcreageInput => _page.GetByTestId("fields.policy.line.liability.lineInput$unlistedAcreage.value");
         public ILocator LimitSelect => _page.GetByTestId("fields.policy.line.liability.liabilityInput$limit.value");
 
-        // Limit Dropdown Options
-        public ILocator LimitOption(int index) => _page.GetByTestId($"fields.policy.line.liability.liabilityInput$limit.value-{index}");
-        public ILocator Limit100K_100K => LimitOption(0);   // $100,000/$100,000
-        public ILocator Limit100K_200K => LimitOption(1);   // $100,000/$200,000
-        public ILocator Limit100K_300K => LimitOption(2);   // $100,000/$300,000
-        public ILocator Limit200K_200K => LimitOption(3);   // $200,000/$200,000
-        public ILocator Limit200K_500K => LimitOption(4);   // $200,000/$500,000
-        public ILocator Limit200K_600K => LimitOption(5);   // $200,000/$600,000
-        public ILocator Limit300K_300K => LimitOption(6);   // $300,000/$300,000
-        public ILocator Limit300K_600K => LimitOption(7);   // $300,000/$600,000
-        public ILocator Limit300K_1M => LimitOption(8);     // $300,000/$1,000,000
-        public ILocator Limit500K_500K => LimitOption(9);   // $500,000/$500,000
-        public ILocator Limit500K_1M => LimitOption(10);    // $500,000/$1,000,000
-        public ILocator Limit500K_1_5M => LimitOption(11);  // $500,000/$1,500,000
-        public ILocator Limit1M_1M => LimitOption(12);      // $1,000,000/$1,000,000
-        public ILocator Limit1M_2M => LimitOption(13);      // $1,000,000/$2,000,000
-        public ILocator Limit1M_3M => LimitOption(14);      // $1,000,000/$3,000,000
+        public async Task SelectLimitAsync(string limit)
+        {
+            var expected = limit?.Trim();
+            if (string.IsNullOrEmpty(expected))
+                throw new ArgumentException("A liability limit is required.", nameof(limit));
+
+            await LimitSelect.WaitForAsync(new()
+            {
+                State = WaitForSelectorState.Visible,
+                Timeout = 10000
+            });
+
+            var option = _page.GetByRole(
+                AriaRole.Option,
+                new() { Name = expected, Exact = true });
+
+            for (var attempt = 1; attempt <= 2; attempt++)
+            {
+                await LimitSelect.ClickAsync();
+
+                try
+                {
+                    await option.WaitForAsync(new()
+                    {
+                        State = WaitForSelectorState.Visible,
+                        Timeout = 2000
+                    });
+                }
+                catch (TimeoutException)
+                {
+                    var isExpanded = await LimitSelect.GetAttributeAsync("aria-expanded");
+                    if (attempt == 1 && !string.Equals(isExpanded, "true", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Console.WriteLine(
+                            "[Liability] Limit dropdown did not open; retrying once after the pending field update.");
+                        await Task.Delay(100);
+                        continue;
+                    }
+
+                    break;
+                }
+
+                await option.ClickAsync(new() { Timeout = 3000 });
+                await WaitForSpinnerAsync();
+
+                var selectedText = (await LimitSelect.InnerTextAsync()).Trim();
+                if (selectedText.Contains(expected, StringComparison.Ordinal))
+                    return;
+
+                throw new PlaywrightException(
+                    $"Liability limit selection returned without displaying '{expected}'. Current value: '{selectedText}'.");
+            }
+
+            var expanded = await LimitSelect.GetAttributeAsync("aria-expanded") ?? "<missing>";
+            var availableOptions = await _page
+                .GetByRole(AriaRole.Option)
+                .Filter(new() { Visible = true })
+                .AllTextContentsAsync();
+
+            throw new PlaywrightException(
+                $"Liability limit dropdown did not expose option '{expected}' after two state-checked clicks. " +
+                $"aria-expanded={expanded}; visible options=" +
+                $"{(availableOptions.Count == 0 ? "<none>" : string.Join(" | ", availableOptions))}.");
+        }
 
         // Search/Filter
         public ILocator FilterInput => _page.GetByTestId("temp.filter");

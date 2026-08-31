@@ -266,6 +266,7 @@ Feature: SFP Basic Policy
       | Arkansas       | AR        | 3998 Harrison St              |          111 | Batesville    | 72503 | Independence |
       | Arizona        | AZ        | 4201 N 24th St                |          111 | Phoenix       | 85016 | Maricopa     |
       | Colorado       | CO        | 231 Main St                   |          111 | Fort Morgan   | 80701 | Morgan       |
+      | Connecticut    | CT        | 605 New England Rd            |          111 | Guilford      | 06437 | New Haven    |
       | Delaware       | DE        | 424 Delaware St               |          111 | New Castle    | 19720 | New Castle   |
       | Georgia        | GA        | 3715 Northside Pkwy           |          111 | Atlanta       | 30327 | Fulton       |
       | Idaho          | ID        | 1221 W Ironwood Dr            |          111 | Coeur D Alene | 83814 | Kootenai     |
@@ -292,6 +293,7 @@ Feature: SFP Basic Policy
       | Nebraska       | NE        | 1517 Broadway                 |          111 | Scottsbluff   | 69361 | Scotts Bluff |
       | Nevada         | NV        | 340 N 11th St                 |          111 | Las Vegas     | 89101 | Clark        |
       | New Hampshire  | NH        | 67 Comstock Road              |          111 | Alstead       | 03602 | Cheshire     |
+      | New Jersey     | NJ        | 344 Rt 9w                     |          111 | Bloomsbury    | 08804 | Hunterdon    |
       | New Mexico     | NM        | 901 West 13th St              |          111 | Clovis        | 88101 | Curry        |
       | North Dakota   | ND        | 600 S 2nd St                  |          111 | Bismarck      | 58504 | Burleigh     |
       | Oklahoma       | OK        | 436255 E 330 Rd               |          111 | Big Cabin     | 74332 | Craig        |
@@ -305,6 +307,7 @@ Feature: SFP Basic Policy
     Examples:
       | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
       | Oregon         | OR        | 661 SW 26TH ST                |          111 | Corvallis     | 97331 | Benton       |
+      | Rhode Island   | RI        | 160 Pine St                   |          111 | Providence    | 02903 | Providence   |
       | South Carolina | SC        | 3009 Augusta Hwy              |          111 | Allendale     | 29810 | Allendale    |
       | South Dakota   | SD        | 700 Governors Dr              |          111 | Pierre        | 57501 | Hughes       |
       | Tennessee      | TN        | 207 N Boone St                |          111 | Johnson City  | 37604 | Washington   |

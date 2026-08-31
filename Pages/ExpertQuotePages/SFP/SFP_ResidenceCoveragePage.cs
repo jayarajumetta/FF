@@ -1,5 +1,6 @@
 ﻿using Microsoft.Playwright;
 using PnCTestAutomation.Helpers;
+using System;
 using System.Threading.Tasks;
 
 namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
@@ -95,8 +96,9 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 
             if (!string.IsNullOrEmpty(contextData.ResidenceThermostatQuestion))
             {
-                var isYes = contextData.ResidenceThermostatQuestion.ToLower() is "yes" or "true";
-                await GetThermostatButton(isYes ? "Yes" : "No").ClickAsync();
+                var isYes = contextData.ResidenceThermostatQuestion.Equals("yes", StringComparison.OrdinalIgnoreCase) ||
+                            contextData.ResidenceThermostatQuestion.Equals("true", StringComparison.OrdinalIgnoreCase);
+                await SelectThermostatAsync(isYes ? "Yes" : "No");
             }
 
             // ActualCashValue selects the settlement/replacement cost option from a dropdown
@@ -119,6 +121,42 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 
             // Step 3: Click Get Valuation button to trigger RCT calculation
             await ClickGetValuationButtonAsync();
+        }
+
+        private async Task SelectThermostatAsync(string answer)
+        {
+            var button = GetThermostatButton(answer);
+            var selectedState = button.Locator(".chip-wrapper-selected");
+
+            for (var attempt = 1; attempt <= 2; attempt++)
+            {
+                await button.ClickAsync();
+
+                try
+                {
+                    await selectedState.WaitForAsync(new()
+                    {
+                        State = WaitForSelectorState.Visible,
+                        Timeout = 1500
+                    });
+                    return;
+                }
+                catch (TimeoutException)
+                {
+                    if (attempt == 1)
+                    {
+                        Console.WriteLine(
+                            "[ResidenceCoverage] Thermostat selection did not register; retrying once after the pending field update.");
+                        continue;
+                    }
+
+                    break;
+                }
+            }
+
+            var chipClass = await button.Locator("[class*='chip-wrapper']").First.GetAttributeAsync("class");
+            throw new PlaywrightException(
+                $"Thermostat answer '{answer}' did not remain selected after two clicks. Chip class='{chipClass ?? "<missing>"}'.");
         }
 
         /// <summary>

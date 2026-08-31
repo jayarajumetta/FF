@@ -214,8 +214,8 @@ stages:
         # Catch-all: any @SFP @Smoke test not already assigned to a numbered shard
         ShardMisc:
           SHARD_NUMBER: "misc"
-          SHARD_FILTER_FULL: "TestCategory=SFP&TestCategory=Smoke&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3"
-          SHARD_FILTER_DEBUG: "TestCategory=SFP&TestCategory=Smoke&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3"
+          SHARD_FILTER_FULL: "TestCategory=SFP&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3"
+          SHARD_FILTER_DEBUG: "TestCategory=SFP&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3"
 
     steps:
 
@@ -369,6 +369,27 @@ stages:
         BROWSER_TYPE: "chromium"
         DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
         DataPool__AutoStart: "false"
+
+    # ✅ ENSURE RETRY TRX EXISTS
+    # When all tests pass the retry step exits early without calling dotnet test,
+    # so Shard_N_Retry.trx is never written. PublishTestResults@2 would find 0 files
+    # and report Total=0 to ADO. This step promotes Results.trx -> Retry.trx so the
+    # publish task always has a file to ingest, regardless of first-run outcome.
+    - powershell: |
+        $resultsTrx = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
+        $retryTrx   = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Retry.trx"
+        if ((Test-Path $resultsTrx) -and !(Test-Path $retryTrx)) {
+            Copy-Item $resultsTrx $retryTrx
+            Write-Host "All tests passed on first run — promoted Results.trx → Retry.trx for publishing"
+        } elseif (Test-Path $retryTrx) {
+            Write-Host "Retry.trx already exists — retry ran, using retry results"
+        } else {
+            Write-Warning "Neither Results.trx nor Retry.trx found — test execution may have failed entirely"
+        }
+      displayName: "Ensure Retry TRX Exists — Shard $(SHARD_NUMBER)"
+      condition: always()
+      env:
+        SHARD_NUMBER: $(SHARD_NUMBER)
 
     # ✅ DEBUG: verify trx files exist
     - powershell: |
@@ -663,6 +684,23 @@ stages:
         BROWSER_TYPE: "chromium"
         DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
         DataPool__AutoStart: "false"
+
+    # ✅ ENSURE RETRY TRX EXISTS
+    - powershell: |
+        $resultsTrx = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
+        $retryTrx   = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Retry.trx"
+        if ((Test-Path $resultsTrx) -and !(Test-Path $retryTrx)) {
+            Copy-Item $resultsTrx $retryTrx
+            Write-Host "All tests passed on first run — promoted Results.trx → Retry.trx for publishing"
+        } elseif (Test-Path $retryTrx) {
+            Write-Host "Retry.trx already exists — retry ran, using retry results"
+        } else {
+            Write-Warning "Neither Results.trx nor Retry.trx found — test execution may have failed entirely"
+        }
+      displayName: "Ensure Retry TRX Exists — Shard $(SHARD_NUMBER)"
+      condition: always()
+      env:
+        SHARD_NUMBER: $(SHARD_NUMBER)
 
     - powershell: |
         Write-Host "==== CE TEST RESULTS CONTENT ===="
