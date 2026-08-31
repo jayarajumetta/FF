@@ -7,27 +7,27 @@ public sealed class VehiclesLocators
     private readonly IPage _page;
     public VehiclesLocators(IPage page) => _page = page;
 
-    public ILocator CarrierName => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Carrier Name");
+    public ILocator CarrierName => _page.Locator("input[fieldref=\"UmbrellaRecreationalVehicleLiabilityInput.CarrierName\"]");
 
-    public ILocator EffectiveDate => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Effective Date");
+    public ILocator EffectiveDate => _page.Locator("input[fieldref=\"UmbrellaRecreationalVehicleLiabilityInput.EffectiveDate\"]");
 
-    public ILocator ExpirationDate => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Expiration Date");
+    public ILocator ExpirationDate => _page.Locator("input[fieldref=\"UmbrellaRecreationalVehicleLiabilityInput.ExpirationDate\"]");
 
-    public ILocator IncludeMotorcycleLiability => _page.Locator("[fieldref=\"LineUmbrellaMotorcycleLiability.IncludeMotorcycleLiability\"], [data-fieldref=\"LineUmbrellaMotorcycleLiability.IncludeMotorcycleLiability\"]");
+    public ILocator IncludeMotorcycleLiability => _page.Locator("input[fieldref=\"LineUmbrellaMotorcycleLiability.IncludeMotorcycleLiability\"]");
 
-    public ILocator IncludeRecreationalVehicleLiability => _page.Locator("[fieldref=\"LineUmbrellaRecreationalVehicleLiability.IncludeRecreationalVehicleLiability\"], [data-fieldref=\"LineUmbrellaRecreationalVehicleLiability.IncludeRecreationalVehicleLiability\"]");
+    public ILocator IncludeRecreationalVehicleLiability => _page.Locator("input[fieldref=\"LineUmbrellaRecreationalVehicleLiability.IncludeRecreationalVehicleLiability\"]");
 
-    public ILocator LiabilityLimit => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Liability Limit*");
+    public ILocator LiabilityLimit => _page.Locator("input[fieldref=\"UmbrellaRecreationalVehicleLiabilityInput.LiabilityLimit\"]");
 
     public ILocator PageTitle => _page.Locator("[id=\"pageTitle\"]");
 
-    public ILocator PDLimit => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "PD Limit*");
+    public ILocator PDLimit => _page.Locator("input[fieldref=\"UmbrellaRecreationalVehicleLiabilityInput.PDLimit\"]");
 
-    public ILocator PolicyCovg => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Policy Covg");
+    public ILocator PolicyCovg => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Policy Covg']/@for] | //label[normalize-space(string(.))='Policy Covg']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Policy Covg']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    public ILocator PolicyNumber => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Policy Number");
+    public ILocator PolicyNumber => _page.Locator("input[fieldref=\"UmbrellaRecreationalVehicleLiabilityInput.PolicyNumber\"]");
 
 
 
-    public ILocator TotalSubjectPremium => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Total Subject Premium*");
+    public ILocator TotalSubjectPremium => _page.Locator("input[fieldref=\"UmbrellaRecreationalVehicleLiabilityInput.TotalSubjectPremium\"]");
 }

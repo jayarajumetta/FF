@@ -13,5 +13,5 @@ public sealed class DiscountsLocators
 
     public ILocator NAICSCodeSearchResults => _page.Locator("input[fieldref=\"PolicyInput.NAICSCodeDesc\"]");
 
-    public ILocator NAICSCodeSearchValue => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "NAICS Code Search Value*");
+    public ILocator NAICSCodeSearchValue => _page.Locator("input[fieldref=\"PolicyOutputNonShredded.NAICSCodeSearchValue\"]");
 }

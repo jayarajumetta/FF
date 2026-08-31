@@ -120,10 +120,10 @@ public sealed class CoveragesPage
         _ui.PressAsync(_locators.LimitDeductible, key, new ControlIntent("Coverages", "LimitDeductible"));
 
     public Task EnterPolicyCoverageAsync(string value) =>
-        _ui.FillAsync(_locators.PageTitle, value, new ControlIntent("Coverages", "PolicyCoverage"));
+        _ui.FillAsync(_locators.PolicyCoverage, value, new ControlIntent("Coverages", "PolicyCoverage"));
 
     public Task PressPolicyCoverageAsync(string key) =>
-        _ui.PressAsync(_locators.PageTitle, key, new ControlIntent("Coverages", "PolicyCoverage"));
+        _ui.PressAsync(_locators.PolicyCoverage, key, new ControlIntent("Coverages", "PolicyCoverage"));
 
     public Task ClickIMNavigationLinksPolicyCovgAsync() =>
         _ui.ClickAsync(_locators.IMNavigationLinksPolicyCovg, new ControlIntent("Coverages", "IMNavigationLinksPolicyCovg"));
@@ -196,7 +196,7 @@ public sealed class CoveragesPage
         _ui.PressSequentiallyAsync(_locators.LimitDeductible, value, new ControlIntent("Coverages", "LimitDeductible"), delayMs);
 
     public Task EnterPolicyCoverageSequentiallyAsync(string value, int delayMs = 20) =>
-        _ui.PressSequentiallyAsync(_locators.PageTitle, value, new ControlIntent("Coverages", "PolicyCoverage"), delayMs);
+        _ui.PressSequentiallyAsync(_locators.PolicyCoverage, value, new ControlIntent("Coverages", "PolicyCoverage"), delayMs);
 
     public Task EnterPropertyExtensionEndorsementsSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.PropertyExtensionEndorsements, value, new ControlIntent("Coverages", "PropertyExtensionEndorsements"), delayMs);

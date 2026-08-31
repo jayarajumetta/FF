@@ -42,13 +42,7 @@ public sealed class DuckCreekRuntimeLocatorResolver : IRuntimeLocatorResolver
         {
             identity = await target.EvaluateAsync<ElementIdentity>("""el => {
                 const norm = value => (value || '').replace(/\s+/g, ' ').trim();
-                const directFieldref = el.getAttribute('fieldref') || el.getAttribute('data-fieldref') || '';
-                let ancestorFieldref = '';
-                let parent = el.parentElement;
-                for (let depth = 0; parent && depth < 7; depth++, parent = parent.parentElement) {
-                    const value = parent.getAttribute('fieldref') || parent.getAttribute('data-fieldref') || '';
-                    if (value) { ancestorFieldref = value; break; }
-                }
+                const directFieldref = el.getAttribute('fieldref') || '';
                 let label = '';
                 if (el.labels && el.labels.length) label = norm(Array.from(el.labels).map(x => x.innerText || x.textContent || '').join(' '));
                 if (!label && el.id) {
@@ -60,7 +54,6 @@ public sealed class DuckCreekRuntimeLocatorResolver : IRuntimeLocatorResolver
                     Type: (el.getAttribute('type') || '').toLowerCase(),
                     Role: (el.getAttribute('role') || '').toLowerCase(),
                     Fieldref: directFieldref,
-                    AncestorFieldref: ancestorFieldref,
                     Id: el.id || '',
                     Name: el.getAttribute('name') || '',
                     TestId: el.getAttribute('data-testid') || el.getAttribute('data-test-id') || el.getAttribute('data-test') || '',
@@ -118,14 +111,6 @@ public sealed class DuckCreekRuntimeLocatorResolver : IRuntimeLocatorResolver
         if (fieldrefTag && !string.IsNullOrWhiteSpace(identity.Fieldref))
             yield return new LocatorRecipe("tag+fieldref", $"{identity.Tag}[fieldref=\"{Css(identity.Fieldref)}\"]", null, null, null);
 
-        if (!string.IsNullOrWhiteSpace(identity.AncestorFieldref) && !string.IsNullOrWhiteSpace(identity.Id))
-            yield return new LocatorRecipe("fieldref+id", $"[fieldref=\"{Css(identity.AncestorFieldref)}\"] [id=\"{Css(identity.Id)}\"],[data-fieldref=\"{Css(identity.AncestorFieldref)}\"] [id=\"{Css(identity.Id)}\"]", null, null, null);
-
-        if (!string.IsNullOrWhiteSpace(identity.AncestorFieldref) && !string.IsNullOrWhiteSpace(identity.Name) && !string.IsNullOrWhiteSpace(identity.Tag))
-            yield return new LocatorRecipe("fieldref+name", $"[fieldref=\"{Css(identity.AncestorFieldref)}\"] {identity.Tag}[name=\"{Css(identity.Name)}\"],[data-fieldref=\"{Css(identity.AncestorFieldref)}\"] {identity.Tag}[name=\"{Css(identity.Name)}\"]", null, null, null);
-
-        if (!string.IsNullOrWhiteSpace(identity.AncestorFieldref) && !string.IsNullOrWhiteSpace(identity.Tag))
-            yield return new LocatorRecipe("fieldref+tag", $"[fieldref=\"{Css(identity.AncestorFieldref)}\"] {identity.Tag},[data-fieldref=\"{Css(identity.AncestorFieldref)}\"] {identity.Tag}", null, null, null);
 
         if (!string.IsNullOrWhiteSpace(identity.Id))
             yield return new LocatorRecipe("id", $"[id=\"{Css(identity.Id)}\"]", null, null, null);
@@ -186,11 +171,28 @@ public sealed class DuckCreekRuntimeLocatorResolver : IRuntimeLocatorResolver
 
     private static string Css(string value) => value.Replace("\\", "\\\\", StringComparison.Ordinal).Replace("\"", "\\\"", StringComparison.Ordinal);
 
+    private static string AssociatedLabelXPath(string label)
+    {
+        var q = XPathLiteral(label.Trim());
+        return "xpath=(//*[@id = //label[normalize-space(string(.))=" + q + "]/@for]" +
+               " | //label[normalize-space(string(.))=" + q + "]//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1]" +
+               " | //label[normalize-space(string(.))=" + q + "]/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])";
+    }
+
+    private static string XPathLiteral(string value)
+    {
+        if (!value.Contains('\'')) return $"'{value}'";
+        if (!value.Contains('"')) return $"\"{value}\"";
+        var parts = value.Split('\'');
+        return "concat(" + string.Join(", \"'\", ", parts.Select(x => $"'{x}'")) + ")";
+    }
+
+
     private sealed record LocatorRecipe(string Strategy, string Selector, AriaRole? Role, string? Text, string? Label)
     {
         public ILocator Build(IPage page)
         {
-            if (!string.IsNullOrWhiteSpace(Label)) return LocatorResolution.ByAssociatedLabel(page, Label);
+            if (!string.IsNullOrWhiteSpace(Label)) return page.Locator(AssociatedLabelXPath(Label));
             if (Role is not null) return page.GetByRole(Role.Value, new() { Name = Text ?? string.Empty, Exact = true });
             return page.Locator(Selector);
         }
@@ -202,7 +204,6 @@ public sealed class DuckCreekRuntimeLocatorResolver : IRuntimeLocatorResolver
         public string Type { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
         public string Fieldref { get; set; } = string.Empty;
-        public string AncestorFieldref { get; set; } = string.Empty;
         public string Id { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string TestId { get; set; } = string.Empty;

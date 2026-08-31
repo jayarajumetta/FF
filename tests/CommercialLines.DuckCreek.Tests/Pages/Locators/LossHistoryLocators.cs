@@ -13,20 +13,20 @@ public sealed class LossHistoryLocators
 
     public ILocator OK => _page.GetByRole(AriaRole.Link, new() { Name = "OK", Exact = true });
 
-    public ILocator LossAddress => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Address 1*");
+    public ILocator LossAddress => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.Address1\"]");
 
     public ILocator AssignLocations => _page.GetByRole(AriaRole.Link, new() { Name = "Assign Locations...", Exact = true });
 
     public ILocator AssignmentScheduleFor => _page.GetByText("Assignment Schedule for:", new() { Exact = true });
 
 
-    public ILocator DescriptionOfProperty => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Description Of Property*");
+    public ILocator DescriptionOfProperty => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.PropertyDescription\"]");
 
-    public ILocator FirstName => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "First Name*");
+    public ILocator FirstName => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.FirstName\"]");
 
-    public ILocator InsuredType => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Insured Type*");
+    public ILocator InsuredType => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.InsuredType\"]");
 
-    public ILocator LastName => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Last Name*");
+    public ILocator LastName => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.LastName\"]");
 
     public ILocator LoanNumber => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.LoanNumber\"]");
 
@@ -39,7 +39,7 @@ public sealed class LossHistoryLocators
 
     public ILocator ProvisionsApplicable => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.ProvisionsApplicable\"]");
 
-    public ILocator Type => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Type");
+    public ILocator Type => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.Type\"]");
 
-    public ILocator ZipCode => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Zip Code*");
+    public ILocator ZipCode => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.ZipCode\"]");
 }

@@ -326,6 +326,68 @@ if 'GetByRole(AriaRole.Link, new() { Name = "Login", Exact = true })' not in log
 if 'username-inputEl' not in login or 'password-inputEl' not in login:
     error("CLDC login username/password stable raw HTML ids are missing")
 
+# V66 CLDC direct input/checkbox fieldref contract
+cldc_project_text = "\n".join(
+    p.read_text(encoding="utf-8", errors="ignore")
+    for p in (ROOT / "tests" / "CommercialLines.DuckCreek.Tests").rglob("*.cs")
+)
+if "InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel" in cldc_project_text:
+    error("CLDC still delegates control construction to LocatorResolution.ByAssociatedLabel")
+if "data-fieldref" in cldc_project_text:
+    error("CLDC still contains unsupported data-fieldref alternatives")
+if re.search(r'Locator\("\[fieldref=', cldc_text):
+    error("CLDC generic fieldref selector remains without an actual element tag")
+client_search = (cldc_loc / "ClientSearchLocators.cs").read_text(encoding="utf-8")
+required_client_fieldrefs = {
+    "NamedInsuredIndividualEnterSSN": "AccountSSNRetrievalInput.SSNInput",
+    "AddAssociatedClientEnterSSN": "AssociatedClientSSNRetrievalInput.SSNInput",
+    "QuickQuote": "PolicyOutputNonShredded.QuoteQuick",
+}
+for control, fieldref in required_client_fieldrefs.items():
+    expected = f'public ILocator {control} => _page.Locator("input[fieldref=\\"{fieldref}\\"]")'
+    if expected not in client_search:
+        error(f"CLDC ClientSearch {control} is not a direct input fieldref locator")
+role_checkbox_names = re.findall(
+    r'public\s+ILocator\s+(\w+)\s*=>\s*_page\.GetByRole\(AriaRole\.Checkbox',
+    cldc_text,
+)
+if role_checkbox_names != ["NoKnownLosses", "NoKnownLosses"]:
+    error(f"Unexpected CLDC role checkbox locators remain: {role_checkbox_names}")
+coverages = (cldc_loc / "CoveragesLocators.cs").read_text(encoding="utf-8")
+if 'public ILocator PolicyCoverage => _page.Locator("input[fieldref=\\"PropertyPolicyInput.PolicyCoverage\\"]")' not in coverages:
+    error("CLDC Coverages.PolicyCoverage is not mapped to PropertyPolicyInput.PolicyCoverage")
+navigation = (cldc_loc / "NavigationLocators.cs").read_text(encoding="utf-8")
+required_navigation_fieldrefs = [
+    "RiskDriveOtherCarIteratorInput.FirstName",
+    "RiskDriveOtherCarIteratorInput.LastName",
+    "UmbrellaCommercialAutoInput.EffectiveDate",
+    "UmbrellaGeneralLiabilityInput.ExpirationDate",
+    "UmbrellaCommercialAutoInput.PolicyNumber",
+    "UmbrellaGeneralLiabilityInput.PolicyNumber",
+    "UmbrellaGeneralLiabilityInputPremiums.TotalSubjectPremium",
+    "UmbrellaSFP10LiabilityInput.LiabilityLimit",
+]
+for fieldref in required_navigation_fieldrefs:
+    if f'input[fieldref=\\"{fieldref}\\"]' not in navigation:
+        error(f"CLDC Navigation missing context-specific input fieldref {fieldref}")
+for fieldref in [
+    "AssociatedClientInput.FirstName",
+    "AssociatedClientInput.MiddleName",
+    "AssociatedClientInput.LastName",
+    "AssociatedClientInput.Address1",
+    "AssociatedClientInput.ZipCode",
+    "AssociatedClientInput.Gender",
+]:
+    if f'input[fieldref=\\"{fieldref}\\"]' not in client_search:
+        error(f"CLDC ClientSearch multi-context fieldref missing {fieldref}")
+
+STATS["cldcFieldrefLocators"] = {
+    "directInput": len(re.findall(r'input\[fieldref=\\"', cldc_text)),
+    "directTextarea": len(re.findall(r'textarea\[fieldref=\\"', cldc_text)),
+    "fieldrefLabelRelationships": len(re.findall(r'public\s+ILocator\s+\w+\s*=>\s*_page\.Locator\("xpath=.*?@fieldref=', cldc_text)),
+    "roleCheckboxesWithoutRawFieldref": len(role_checkbox_names),
+}
+
 result = {"status": "PASS" if not ERRORS else "FAIL", "errors": ERRORS, "stats": STATS}
 print(json.dumps(result, indent=2))
 sys.exit(1 if ERRORS else 0)

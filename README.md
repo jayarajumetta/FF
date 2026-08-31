@@ -110,15 +110,19 @@ Feature files remain business-readable. Step definitions own workflow and runtim
 
 ## CLDC locators
 
-For Duck Creek controls where a source DuckCreekId is available and the rendered DOM exposes it as `fieldref`, the primary selector is the actual element tag plus fieldref, for example:
+CLDC locator classes use direct Playwright locators. They do not call a shared associated-label locator helper.
+
+For Duck Creek data controls, raw Tosca `Tag=INPUT`, `TEXTAREA` or `SELECT` plus a literal technical DuckCreekId is mapped to the rendered DOM `fieldref`:
 
 ```csharp
 _page.Locator("input[fieldref=\"PolicyInput.EffectiveDate\"]")
-_page.Locator("input[fieldref=\"data.VersionIDPages\"]")
-_page.Locator("a[fieldref=\"Start\"]")
+_page.Locator("input[fieldref=\"AccountSSNRetrievalInput.SSNInput\"]")
+_page.Locator("input[fieldref=\"PolicyOutputNonShredded.QuoteQuick\"]")
 ```
 
-When a fieldref is not available, locators use stable raw HTML ID/name, supported test identifiers, actual link/button semantics, or label-to-associated-control resolution.
+This rule includes checkbox controls because Duck Creek renders them as `input` elements. `NoKnownLosses` remains an exact checkbox-role locator because the supplied raw Tosca record contains `Tag=INPUT` but no DuckCreekId, fieldref, id or name. Generic action text is not converted to fieldref. Raw `Tag=A` controls use exact link semantics, such as Login, Start, Next and OK. Stable raw HTML `id` or `name` is used only when it is source-backed and not a generated ExtJS identifier.
+
+When the same technical fieldref is repeated for multiple controls on one rendered module, the direct locator combines fieldref with the exact source label relationship. It does not select an arbitrary occurrence. Controls on mutually exclusive pages that share the same technical fieldref reuse one locator property.
 
 Raw frame information is treated only as a scope hint. Runtime resolution briefly probes a known frame and, when it is not present, resolves the same control in the top document. Successful scope is cached for the Page/Control during the scenario.
 
@@ -205,12 +209,6 @@ Playwright context closure occurs before evidence publication so video, trace an
 ## Browser lifecycle
 
 Headed Chromium/Edge execution starts maximized when `browser.maximize` is enabled. A new browser context is created per scenario and is closed after the scenario. Trace/video/HAR finalization happens during scenario cleanup.
-
-### Duck Creek locator contract
-
-CL|DC locators distinguish data controls from action/display controls. For rendered `INPUT` controls whose raw Tosca DuckCreekId is a data-binding identifier (for example `AccountInput.*`, `PolicyInput.*`, `data.*`), use `input[fieldref="..."]`. Do not infer fieldref for links, buttons or display DIVs merely because Tosca contains DuckCreekId.
-
-For raw `Tag=A`, use Playwright link semantics with the exact source-backed accessible text. Login is therefore `GetByRole(Link, Name="Login")`; Start, Next, OK, Add Client and similar actions follow the same rule unless a stable raw HTML id/name is proven. Stable raw HTML ids such as `username-inputEl` and `password-inputEl` are used directly. ExtJS generated ids such as `f_<hash>...-inputEl` and `ext-element-<number>` are not treated as stable technical locators. When a stable raw name exists it is preferred over a generated id. Text inputs without a proven technical selector resolve the label to the associated actual control rather than using role+label text blindly.
 
 ## Azure DevOps
 

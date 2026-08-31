@@ -13,31 +13,31 @@ public sealed class FormsLocators
 
 
 
-    public ILocator EffectiveDate => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Effective Date");
+    public ILocator EffectiveDate => _page.Locator("input[fieldref=\"UmbrellaBusinessOwnersInput.EffectiveDate\"]");
 
-    public ILocator EmployerSLiabilityCheckBox => _page.Locator("[fieldref=\"UmbrellaBusinessOwnersInput.EmployersLiability\"], [data-fieldref=\"UmbrellaBusinessOwnersInput.EmployersLiability\"]");
+    public ILocator EmployerSLiabilityCheckBox => _page.Locator("input[fieldref=\"UmbrellaBusinessOwnersInput.EmployersLiability\"]");
 
-    public ILocator ExpirationDate => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Expiration Date");
+    public ILocator ExpirationDate => _page.Locator("input[fieldref=\"UmbrellaBusinessOwnersInput.ExpirationDate\"]");
 
 
     public ILocator ImportPolicyDataButton => _page.GetByRole(AriaRole.Link, new() { Name = "Import Policy Data", Exact = true });
 
-    public ILocator LiabilityLimit => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Liability Limit*");
+    public ILocator LiabilityLimit => _page.Locator("input[fieldref=\"UmbrellaCommercialAutoInput.LiabilityLimit\"]");
 
     public ILocator LoadingMessage => _page.Locator("[id=\"loadingMessage\"]");
 
-    public ILocator PDLimit => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "PD Limit*");
+    public ILocator PDLimit => _page.Locator("input[fieldref=\"UmbrellaRecreationalVehicleLiabilityInput.PDLimit\"]");
 
     public ILocator PersonalAuto => _page.GetByRole(AriaRole.Link, new() { Name = "Personal Auto", Exact = true });
 
-    public ILocator PolicyNumber => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Policy Number");
+    public ILocator PolicyNumber => _page.Locator("input[fieldref=\"UmbrellaBusinessOwnersInput.PolicyNumber\"]");
 
-    public ILocator SessionID => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "sessionID");
+    public ILocator SessionID => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='sessionID']/@for] | //label[normalize-space(string(.))='sessionID']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='sessionID']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    public ILocator StatusCode => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "StatusCode");
+    public ILocator StatusCode => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='StatusCode']/@for] | //label[normalize-space(string(.))='StatusCode']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='StatusCode']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    public ILocator TotalSubjectPremium => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Total Subject Premium*");
+    public ILocator TotalSubjectPremium => _page.Locator("input[fieldref=\"UmbrellaBusinessOwnersInputPremiums.TotalSubjectPremium\"]");
 
-    public ILocator Value => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "SearchValue");
+    public ILocator Value => _page.Locator("input[fieldref=\"NCCISearchInputNonShredded.SearchValue\"]");
 
 }

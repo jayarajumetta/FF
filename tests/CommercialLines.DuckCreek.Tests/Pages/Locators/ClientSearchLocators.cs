@@ -17,15 +17,15 @@ public sealed class ClientSearchLocators
 
     public ILocator AdditionalNamedInsuredHeading => _page.Locator("[id=\"pageTop\"]");
 
-    public ILocator Address => _page.Locator("input[fieldref=\"AccountInput.Address1\"]");
+    public ILocator Address => _page.Locator("input[fieldref=\"AccountInput.Address1\"]:visible, input[fieldref=\"AssociatedClientInput.Address1\"]:visible");
 
-    public ILocator AdditionalInsuredIndividualAddress => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Address 1*");
+    public ILocator AdditionalInsuredIndividualAddress => _page.Locator("input[fieldref=\"IndividualNamedInsuredInput.Address1\"]");
 
     public ILocator AddressLineTwo => _page.Locator("input[fieldref=\"AccountInput.Address2\"]");
 
-    public ILocator BusinessName => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Business Name");
+    public ILocator BusinessName => _page.Locator("input[fieldref=\"AccountInput.BusinessName\"]");
 
-    public ILocator City => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "City");
+    public ILocator City => _page.Locator("input[fieldref=\"AssociatedClientInput.City\"]");
 
     public ILocator AddClient => _page.GetByRole(AriaRole.Link, new() { Name = "Add Client", Exact = true });
 
@@ -35,36 +35,36 @@ public sealed class ClientSearchLocators
 
     public ILocator DOB => _page.Locator("input[fieldref=\"AccountInput.DateOfBirth\"]");
 
-    public ILocator AddAssociatedClientDateOfBirth => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Add Associated Client Date Of Birth");
+    public ILocator AddAssociatedClientDateOfBirth => _page.Locator("input[fieldref=\"AssociatedClientInput.DateOfBirth\"]");
 
-    public ILocator AdditionalInsuredIndividualDateOfBirth => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Date Of Birth*");
+    public ILocator AdditionalInsuredIndividualDateOfBirth => _page.Locator("input[fieldref=\"IndividualNamedInsuredInput.DateOfBirth\"]");
 
     public ILocator AddAssociatedClientDetail => _page.Locator("[id=\"dctGridLink\"]");
 
 
-    public ILocator NamedInsuredIndividualEnterSSN => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Enter SSN");
+    public ILocator NamedInsuredIndividualEnterSSN => _page.Locator("input[fieldref=\"AccountSSNRetrievalInput.SSNInput\"]");
 
-    public ILocator AddAssociatedClientEnterSSN => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Enter SSN*");
+    public ILocator AddAssociatedClientEnterSSN => _page.Locator("input[fieldref=\"AssociatedClientSSNRetrievalInput.SSNInput\"]");
 
     public ILocator EntityType => _page.Locator("input[fieldref=\"AccountInput.EntityType\"]");
 
-    public ILocator FirstName => _page.Locator("input[fieldref=\"AccountInput.NameFirst\"]");
+    public ILocator FirstName => _page.Locator("input[fieldref=\"AccountInput.NameFirst\"]:visible, input[fieldref=\"AssociatedClientInput.FirstName\"]:visible");
 
-    public ILocator Gender => _page.Locator("input[fieldref=\"AccountInput.Gender\"]");
+    public ILocator Gender => _page.Locator("input[fieldref=\"AccountInput.Gender\"]:visible, input[fieldref=\"AssociatedClientInput.Gender\"]:visible");
 
     public ILocator OK => _page.GetByRole(AriaRole.Link, new() { Name = "OK", Exact = true });
 
-    public ILocator IndividualType => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "IndividualType");
+    public ILocator IndividualType => _page.Locator("input[fieldref=\"AssociatedClientInput.IndividualType\"]");
 
     public ILocator InsuredEMailAddress => _page.Locator("input[fieldref=\"AccountInput.Email\"]");
 
     public ILocator InsuredType => _page.Locator("input[fieldref=\"AccountInput.InsuredType\"]");
 
-    public ILocator JavaScript => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "JavaScript");
+    public ILocator JavaScript => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='JavaScript']/@for] | //label[normalize-space(string(.))='JavaScript']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='JavaScript']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    public ILocator LastName => _page.Locator("input[fieldref=\"AccountInput.NameLast\"]");
+    public ILocator LastName => _page.Locator("input[fieldref=\"AccountInput.NameLast\"]:visible, input[fieldref=\"AssociatedClientInput.LastName\"]:visible");
 
-    public ILocator MiddleName => _page.Locator("input[fieldref=\"AccountInput.NameMI\"]");
+    public ILocator MiddleName => _page.Locator("input[fieldref=\"AccountInput.NameMI\"]:visible, input[fieldref=\"AssociatedClientInput.MiddleName\"]:visible");
 
     public ILocator NameOfAuditContact => _page.Locator("input[fieldref=\"AccountInput.AuditContact\"]");
 
@@ -74,9 +74,9 @@ public sealed class ClientSearchLocators
 
     public ILocator PleaseVerifySSN => _page.GetByText("Please verify SSN*", new() { Exact = true });
 
-    public ILocator QuickQuote => _page.GetByRole(AriaRole.Checkbox, new() { Name = "Quick Quote", Exact = true });
+    public ILocator QuickQuote => _page.Locator("input[fieldref=\"PolicyOutputNonShredded.QuoteQuick\"]");
 
-    public ILocator Result => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Result");
+    public ILocator Result => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Result']/@for] | //label[normalize-space(string(.))='Result']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Result']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
     public ILocator ReturnToClient => _page.GetByRole(AriaRole.Link, new() { Name = "Return to Client", Exact = true });
 
@@ -86,9 +86,9 @@ public sealed class ClientSearchLocators
 
     public ILocator SocialSecurity => _page.GetByText("Social Security #", new() { Exact = true });
 
-    public ILocator State => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "State");
+    public ILocator State => _page.Locator("input[fieldref=\"AssociatedClientInput.State\"]");
 
-    public ILocator Title => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Title");
+    public ILocator Title => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Title']/@for] | //label[normalize-space(string(.))='Title']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Title']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
     public ILocator UnderwritingInfo => _page.GetByRole(AriaRole.Link, new() { Name = "Underwriting Info", Exact = true });
 
@@ -98,13 +98,13 @@ public sealed class ClientSearchLocators
 
     public ILocator YearsInBusiness => _page.Locator("input[fieldref=\"AccountInput.YearsInBusiness\"]");
 
-    public ILocator NamedInsuredZipCode => _page.Locator("input[fieldref=\"AccountInput.ZipCode\"]");
+    public ILocator NamedInsuredZipCode => _page.Locator("input[fieldref=\"AccountInput.ZipCode\"]:visible, input[fieldref=\"AssociatedClientInput.ZipCode\"]:visible");
 
-    public ILocator AdditionalInsuredIndividualZipCode => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Zip code*");
+    public ILocator AdditionalInsuredIndividualZipCode => _page.Locator("input[fieldref=\"IndividualNamedInsuredInput.ZipCode\"]");
 
     public ILocator PrimaryPhone => _page.Locator("input[fieldref=\"AccountInput.PrimaryPhone\"]");
 
-    public ILocator FEIN => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "FEIN*");
+    public ILocator FEIN => _page.Locator("input[fieldref=\"AccountInput.FEIN\"]");
 
     public ILocator AuditTelephone => _page.Locator("input[fieldref=\"AccountInput.AuditContactPhone\"]");
 
