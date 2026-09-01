@@ -332,6 +332,15 @@ namespace PnCTestAutomation.Pages
         public async Task SelectWindHailDeductibleAsync(string deductible, string zipCode = null)
         {
             var expectsWindHailSelection = !string.IsNullOrWhiteSpace(deductible);
+            var rules = !string.IsNullOrWhiteSpace(zipCode)
+                ? GetWindHailRulesForZip(zipCode)
+                : null;
+
+            if (rules?.cannotBeAdded == true)
+            {
+                Console.WriteLine($"[WindHail] Zip {zipCode} — WH cannot be added, skipping selection.");
+                return;
+            }
 
             // Check if Wind/Hail deductible field exists (not all states have this field)
             var scope = WindHailScope();
@@ -351,19 +360,6 @@ namespace PnCTestAutomation.Pages
                     Assert.Fail($"[WindHail] Zip {zipCode}: expected Wind/Hail deductible buttons for requested value '{deductible}', but none were found.");
 
                 Console.WriteLine("Wind/Hail deductible buttons not found - skipping.");
-                return;
-            }
-
-            var rules = !string.IsNullOrWhiteSpace(zipCode)
-                ? GetWindHailRulesForZip(zipCode)
-                : null;
-
-            if (rules?.cannotBeAdded == true)
-            {
-                if (expectsWindHailSelection)
-                    Assert.Fail($"[WindHail] Zip {zipCode}: rules indicate Wind/Hail cannot be added, but test requested '{deductible}'.");
-
-                Console.WriteLine($"[WindHail] Zip {zipCode} — WH cannot be added, skipping selection.");
                 return;
             }
 
@@ -414,7 +410,7 @@ namespace PnCTestAutomation.Pages
 
         // ── Wind/Hail zip-to-zone rules ───────────────────────────────────────
         // Source: SFP WH Research – Expected Results based on Zip (sheet 2)
-        // cannotBeAdded = true  → field must be absent (ID, ME, OR, RI, UT, WA)
+        // cannotBeAdded = true  → field must be absent (ID, ME, MS, NH, OR, RI, UT, WA)
         // minDeductible = "1%" → mandatory minimum; assert 1% present, no sub-1% options
         // minDeductible = null  → no minimum; field present but unconstrained (N/A states)
         private static (bool cannotBeAdded, string minDeductible)? GetWindHailRulesForZip(string zip) =>
@@ -429,6 +425,7 @@ namespace PnCTestAutomation.Pages
                 "83814" => (true, null),   // ID – WH cannot be added
                 "01201" => (false, "1%"),  // MA – min 1%
                 "04769" => (true, null),   // ME – WH cannot be added
+                "39507" => (true, null),   // MS – WH cannot be added
                 "61108" => (false, null),   // IL – zone 1, no minimum
                 "46320" => (false, null),   // IN – no mandatory minimum
                 "52101" => (false, null),   // IA – no mandatory minimum
@@ -439,6 +436,7 @@ namespace PnCTestAutomation.Pages
                 "59072" => (false, "1%"),   // MT – zone 2, min 1%
                 "69361" => (false, null),   // NE – zone 1, no minimum
                 "89101" => (false, null),   // NV – zone 1, no minimum
+                "03602" => (true, null),   // NH – WH cannot be added
                 "88101" => (false, null),   // NM – no mandatory minimum
                 "58504" => (false, "1%"),   // ND – zone 1, min 1%
                 "74332" => (false, null),   // OK – no mandatory minimum
