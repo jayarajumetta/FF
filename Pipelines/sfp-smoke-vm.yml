@@ -277,9 +277,9 @@ stages:
         $nameFilter = ($failedMethods | ForEach-Object {
             $escaped = $_.Replace("'", "").Replace('"', '')
             if ($env:SHARD_NUMBER -match '^\d+$') {
-                "(FullyQualifiedName~\"$escaped\"&TestCategory=Shard$($env:SHARD_NUMBER))"
+                "(FullyQualifiedName~$escaped&TestCategory=Shard$($env:SHARD_NUMBER))"
             } else {
-                "FullyQualifiedName~\"$escaped\""
+                "FullyQualifiedName~$escaped"
             }
         }) -join "|"
 

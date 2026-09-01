@@ -363,9 +363,9 @@ stages:
         $nameFilter = ($failedMethods | ForEach-Object {
             $escaped = $_.Replace("'", "").Replace('"', '')
             if ($env:SHARD_NUMBER -match '^\d+$') {
-                "(FullyQualifiedName~\"$escaped\"&TestCategory=Shard$($env:SHARD_NUMBER))"
+                "(FullyQualifiedName~$escaped&TestCategory=Shard$($env:SHARD_NUMBER))"
             } else {
-                "FullyQualifiedName~\"$escaped\""
+                "FullyQualifiedName~$escaped"
             }
         }) -join "|"
 
@@ -759,9 +759,9 @@ stages:
         $nameFilter = ($failedMethods | ForEach-Object {
             $escaped = $_.Replace("'", "").Replace('"', '')
             if ($env:SHARD_NUMBER -match '^\d+$') {
-                "(FullyQualifiedName~\"$escaped\"&TestCategory=Shard$($env:SHARD_NUMBER))"
+                "(FullyQualifiedName~$escaped&TestCategory=Shard$($env:SHARD_NUMBER))"
             } else {
-                "FullyQualifiedName~\"$escaped\""
+                "FullyQualifiedName~$escaped"
             }
         }) -join "|"
 
@@ -972,3 +972,4 @@ stages:
       inputs:
         targetPath: "$(Build.ArtifactStagingDirectory)/FormsReports"
         artifact: "Forms_Reports_CE_Shard_$(SHARD_NUMBER)"
+
