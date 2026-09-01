@@ -337,17 +337,45 @@ stages:
             exit 0
         }
 
-        $failedNames = $failed | ForEach-Object { $_.Node.testName } | Select-Object -Unique
-        Write-Host "Retrying $($failedNames.Count) failed test(s):"
-        $failedNames | ForEach-Object { Write-Host "  - $_" }
+        $failedFqns = @()
+        foreach ($result in $failed) {
+            $testId = $result.Node.testId
+            $testMethod = Select-Xml -Xml $trx -XPath "//t:UnitTest[@id='$testId']/t:TestMethod" -Namespace $ns
+            if ($testMethod -and $testMethod.Node.className -and $testMethod.Node.name) {
+                $failedFqns += "$($testMethod.Node.className).$($testMethod.Node.name)"
+            } elseif ($result.Node.testName) {
+                $failedFqns += $result.Node.testName
+            }
+        }
+        $failedFqns = $failedFqns | Select-Object -Unique
 
-        # Build a NUnit filter from failed test names
-        $nameFilter = ($failedNames | ForEach-Object {
+        Write-Host "Failed tests extracted:"
+        $failedFqns | ForEach-Object { Write-Host "  - $_" }
+
+        # Normalize parameterized names to method-level FQNs for a valid VSTest filter
+        $failedMethods = ($failedFqns | ForEach-Object {
+            if ($_ -match '^([^\(]+)') { $matches[1] } else { $_ }
+        }) | Select-Object -Unique
+
+        Write-Host "Retry methods extracted:"
+        $failedMethods | ForEach-Object { Write-Host "  - $_" }
+
+        $nameFilter = ($failedMethods | ForEach-Object {
             $escaped = $_.Replace("'", "").Replace('"', '')
-            "FullyQualifiedName~$escaped"
+            if ($env:SHARD_NUMBER -match '^\d+$') {
+                "(FullyQualifiedName~$escaped&TestCategory=Shard$($env:SHARD_NUMBER))"
+            } else {
+                "FullyQualifiedName~$escaped"
+            }
         }) -join "|"
 
+        Write-Host "Generated filter:"
+        Write-Host $nameFilter
+
         $testDll = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.dll"
+        $retryCommand = "dotnet test $testDll --filter `"$nameFilter`" --settings `"$(Build.SourcesDirectory)/ci.runsettings`" --logger `"trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx`" --results-directory `"$(Build.ArtifactStagingDirectory)/TestResults`""
+        Write-Host "Retry command:"
+        Write-Host $retryCommand
 
         & dotnet test $testDll `
             --filter "$nameFilter" `
@@ -355,7 +383,13 @@ stages:
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
 
-        # Always exit 0 — test pass/fail is gated by PublishTestResults below
+        $retryExitCode = $LASTEXITCODE
+        Write-Host "Retry exit code: $retryExitCode"
+        if ($retryExitCode -ne 0) {
+            Write-Error "Retry failed for shard $($env:SHARD_NUMBER). Filter: $nameFilter"
+            exit $retryExitCode
+        }
+
         exit 0
       displayName: "Retry Failed Tests — Shard $(SHARD_NUMBER)"
       condition: always()
@@ -484,14 +518,59 @@ stages:
       displayName: "Collect Forms Validation Reports"
       condition: always()
 
+    - powershell: |
+        $files = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/TestResults" -Filter "Shard_*_Results.trx" -File -ErrorAction SilentlyContinue
+        if (-not $files) {
+            Write-Error "No Results TRX files found in $(Build.ArtifactStagingDirectory)/TestResults"
+            exit 1
+        }
+
+        $total = 0
+        $executed = 0
+        $passed = 0
+        $failed = 0
+
+        foreach ($file in $files) {
+            [xml]$trx = Get-Content $file.FullName
+            $nsmgr = New-Object System.Xml.XmlNamespaceManager($trx.NameTable)
+            $nsmgr.AddNamespace("t", "http://microsoft.com/schemas/VisualStudio/TeamTest/2010")
+            $counters = $trx.SelectSingleNode("//t:ResultSummary/t:Counters", $nsmgr)
+            if ($null -eq $counters) {
+                Write-Error "Counters node not found in $($file.Name)"
+                exit 1
+            }
+
+            $total += [int]$counters.total
+            $executed += [int]$counters.executed
+            $passed += [int]$counters.passed
+            $failed += [int]$counters.failed
+        }
+
+        Write-Host "TRX Summary"
+        Write-Host "------------"
+        Write-Host "Total: $total"
+        Write-Host "Executed: $executed"
+        Write-Host "Passed: $passed"
+        Write-Host "Failed: $failed"
+
+        if ($total -eq 0 -or $executed -eq 0) {
+            Write-Error "TRX validation failed. Total=$total, Executed=$executed"
+            exit 1
+        }
+      displayName: "Validate Playwright Results TRX"
+      condition: always()
+
     - task: PublishTestResults@2
       displayName: "Publish Playwright Test Results"
       condition: always()
       inputs:
         testResultsFormat: VSTest
-        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/Shard_*_Retry.trx"
+        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/Shard_*_Results.trx"
+        searchFolder: "$(Build.ArtifactStagingDirectory)/TestResults"
         mergeTestResults: true
         failTaskOnFailedTests: true
+        failTaskOnMissingResultsFile: true
+        failTaskOnFailureToPublishResults: true
         testRunTitle: "SFP Smoke — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
 
     # Forms results are informational — failures here must not fail the shard job
@@ -654,22 +733,58 @@ stages:
             exit 0
         }
 
-        $failedNames = $failed | ForEach-Object { $_.Node.testName } | Select-Object -Unique
-        Write-Host "Retrying $($failedNames.Count) failed test(s):"
-        $failedNames | ForEach-Object { Write-Host "  - $_" }
+        $failedFqns = @()
+        foreach ($result in $failed) {
+            $testId = $result.Node.testId
+            $testMethod = Select-Xml -Xml $trx -XPath "//t:UnitTest[@id='$testId']/t:TestMethod" -Namespace $ns
+            if ($testMethod -and $testMethod.Node.className -and $testMethod.Node.name) {
+                $failedFqns += "$($testMethod.Node.className).$($testMethod.Node.name)"
+            } elseif ($result.Node.testName) {
+                $failedFqns += $result.Node.testName
+            }
+        }
+        $failedFqns = $failedFqns | Select-Object -Unique
 
-        $nameFilter = ($failedNames | ForEach-Object {
+        Write-Host "Failed tests extracted:"
+        $failedFqns | ForEach-Object { Write-Host "  - $_" }
+
+        # Normalize parameterized names to method-level FQNs for a valid VSTest filter
+        $failedMethods = ($failedFqns | ForEach-Object {
+            if ($_ -match '^([^\(]+)') { $matches[1] } else { $_ }
+        }) | Select-Object -Unique
+
+        Write-Host "Retry methods extracted:"
+        $failedMethods | ForEach-Object { Write-Host "  - $_" }
+
+        $nameFilter = ($failedMethods | ForEach-Object {
             $escaped = $_.Replace("'", "").Replace('"', '')
-            "FullyQualifiedName~$escaped"
+            if ($env:SHARD_NUMBER -match '^\d+$') {
+                "(FullyQualifiedName~$escaped&TestCategory=Shard$($env:SHARD_NUMBER))"
+            } else {
+                "FullyQualifiedName~$escaped"
+            }
         }) -join "|"
 
+        Write-Host "Generated filter:"
+        Write-Host $nameFilter
+
         $testDll = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.dll"
+        $retryCommand = "dotnet test $testDll --filter `"$nameFilter`" --settings `"$(Build.SourcesDirectory)/ci.runsettings`" --logger `"trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx`" --results-directory `"$(Build.ArtifactStagingDirectory)/TestResults`""
+        Write-Host "Retry command:"
+        Write-Host $retryCommand
 
         & dotnet test $testDll `
             --filter "$nameFilter" `
-          --settings "$(Build.SourcesDirectory)/ci.runsettings" `
+            --settings "$(Build.SourcesDirectory)/ci.runsettings" `
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
+
+        $retryExitCode = $LASTEXITCODE
+        Write-Host "Retry exit code: $retryExitCode"
+        if ($retryExitCode -ne 0) {
+            Write-Error "Retry failed for shard $($env:SHARD_NUMBER). Filter: $nameFilter"
+            exit $retryExitCode
+        }
 
         exit 0
       displayName: "Retry Failed Tests — Shard $(SHARD_NUMBER)"
@@ -785,14 +900,59 @@ stages:
       displayName: "Collect Forms Validation Reports"
       condition: always()
 
+    - powershell: |
+        $files = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/TestResults" -Filter "Shard_*_Results.trx" -File -ErrorAction SilentlyContinue
+        if (-not $files) {
+            Write-Error "No Results TRX files found in $(Build.ArtifactStagingDirectory)/TestResults"
+            exit 1
+        }
+
+        $total = 0
+        $executed = 0
+        $passed = 0
+        $failed = 0
+
+        foreach ($file in $files) {
+            [xml]$trx = Get-Content $file.FullName
+            $nsmgr = New-Object System.Xml.XmlNamespaceManager($trx.NameTable)
+            $nsmgr.AddNamespace("t", "http://microsoft.com/schemas/VisualStudio/TeamTest/2010")
+            $counters = $trx.SelectSingleNode("//t:ResultSummary/t:Counters", $nsmgr)
+            if ($null -eq $counters) {
+                Write-Error "Counters node not found in $($file.Name)"
+                exit 1
+            }
+
+            $total += [int]$counters.total
+            $executed += [int]$counters.executed
+            $passed += [int]$counters.passed
+            $failed += [int]$counters.failed
+        }
+
+        Write-Host "TRX Summary"
+        Write-Host "------------"
+        Write-Host "Total: $total"
+        Write-Host "Executed: $executed"
+        Write-Host "Passed: $passed"
+        Write-Host "Failed: $failed"
+
+        if ($total -eq 0 -or $executed -eq 0) {
+            Write-Error "TRX validation failed. Total=$total, Executed=$executed"
+            exit 1
+        }
+      displayName: "Validate Playwright Results TRX"
+      condition: always()
+
     - task: PublishTestResults@2
       displayName: "Publish Playwright Test Results"
       condition: always()
       inputs:
         testResultsFormat: VSTest
-        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/Shard_*_Retry.trx"
+        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/Shard_*_Results.trx"
+        searchFolder: "$(Build.ArtifactStagingDirectory)/TestResults"
         mergeTestResults: true
         failTaskOnFailedTests: true
+        failTaskOnMissingResultsFile: true
+        failTaskOnFailureToPublishResults: true
         testRunTitle: "SFP CE — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
 
     # Forms results are informational — failures here must not fail the shard job
@@ -812,3 +972,4 @@ stages:
       inputs:
         targetPath: "$(Build.ArtifactStagingDirectory)/FormsReports"
         artifact: "Forms_Reports_CE_Shard_$(SHARD_NUMBER)"
+
