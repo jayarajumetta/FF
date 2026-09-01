@@ -1,0 +1,188 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "warnings": [],
+  "stats": {
+    "featureCount": 32,
+    "jsonCount": 1037,
+    "csharpFiles": 163,
+    "reqnrollBindings": 2644,
+    "featureExamples": {
+      "001_BAP_Basic_Policy_AL.feature": {
+        "activeRows": 44,
+        "commentedRows": 0
+      },
+      "002_BAP_Expanded_AL.feature": {
+        "activeRows": 44,
+        "commentedRows": 0
+      },
+      "003_CPP_Basic_Policy_AZ.feature": {
+        "activeRows": 16,
+        "commentedRows": 0
+      },
+      "004_CP_Basic_Policy_AZ.feature": {
+        "activeRows": 16,
+        "commentedRows": 0
+      },
+      "005_GL_Basic_Policy_AZ.feature": {
+        "activeRows": 16,
+        "commentedRows": 0
+      },
+      "006_GL_OCP_Policy_AZ.feature": {
+        "activeRows": 14,
+        "commentedRows": 0
+      },
+      "007_IM_Basic_Policy_AZ.feature": {
+        "activeRows": 16,
+        "commentedRows": 0
+      },
+      "008_UMB_Basic_Policy_AL.feature": {
+        "activeRows": 46,
+        "commentedRows": 0
+      },
+      "009_UMB_Expanded_AL.feature": {
+        "activeRows": 45,
+        "commentedRows": 0
+      },
+      "010_WC_Basic_Policy_AL.feature": {
+        "activeRows": 36,
+        "commentedRows": 0
+      },
+      "011_WC_Expanded_AL.feature": {
+        "activeRows": 36,
+        "commentedRows": 0
+      },
+      "012_BAP_Smoke_Test_AL.feature": {
+        "activeRows": 1,
+        "commentedRows": 43
+      },
+      "013_CP_Smoke_Test_AZ.feature": {
+        "activeRows": 1,
+        "commentedRows": 15
+      },
+      "014_GL_Smoke_Test_AZ.feature": {
+        "activeRows": 1,
+        "commentedRows": 15
+      },
+      "015_IM_Smoke_Test_AZ.feature": {
+        "activeRows": 1,
+        "commentedRows": 15
+      },
+      "016_WC_Smoke_Test_AL.feature": {
+        "activeRows": 1,
+        "commentedRows": 33
+      },
+      "017_CPP_Smoke_Test_AZ.feature": {
+        "activeRows": 1,
+        "commentedRows": 15
+      },
+      "018_UMB_Smoke_Test_AL.feature": {
+        "activeRows": 1,
+        "commentedRows": 43
+      },
+      "02_EQ_BOP_Basic_Policy_AL.feature": {
+        "activeRows": 45,
+        "commentedRows": 0
+      },
+      "03_EQ_BOP_Smoke_Test_MO.feature": {
+        "activeRows": 45,
+        "commentedRows": 0
+      },
+      "04_EQ_SFP_Smoke_Test_MN.feature": {
+        "activeRows": 35,
+        "commentedRows": 0
+      },
+      "05_EQ_SFP_Basic_Policy_AL.feature": {
+        "activeRows": 35,
+        "commentedRows": 0
+      },
+      "06_EQ_SFP_Country_Estate_Policy_AL.feature": {
+        "activeRows": 35,
+        "commentedRows": 0
+      },
+      "181_Auto_Rate_Filings_Policy_1_NB_AL.feature": {
+        "activeRows": 50,
+        "commentedRows": 0
+      },
+      "182_Auto_Rate_Filings_Policy_3_NB_Prior_Eff_Date_AL.feature": {
+        "activeRows": 50,
+        "commentedRows": 0
+      },
+      "183_Auto_Rate_Filings_Common_Policy_NB_AL.feature": {
+        "activeRows": 50,
+        "commentedRows": 0
+      },
+      "184_Auto_Rate_Filings_Common_Policy_NB_Prior_Eff_Date_AL.feature": {
+        "activeRows": 50,
+        "commentedRows": 0
+      },
+      "185_Cycle_Rate_Filings_Policy_1_NB_1_AL.feature": {
+        "activeRows": 49,
+        "commentedRows": 0
+      },
+      "186_Cycle_Rate_Filings_Policy_3_NB_Prior_Eff_Date_AL.feature": {
+        "activeRows": 49,
+        "commentedRows": 0
+      },
+      "211_Smoke_Test_Auto_AL.feature": {
+        "activeRows": 47,
+        "commentedRows": 0
+      },
+      "212_Smoke_Test_Cycle_AL.feature": {
+        "activeRows": 1,
+        "commentedRows": 46
+      },
+      "215_Smoke_Test_RV_AL.feature": {
+        "activeRows": 47,
+        "commentedRows": 0
+      }
+    },
+    "featureStepsResolved": 959,
+    "cldcSmoke": {
+      "features": 7,
+      "activeExamples": 7,
+      "commentedExamples": 179,
+      "availableVariants": 186
+    },
+    "eqSmoke": {
+      "BOP": 45,
+      "SFP": 35
+    },
+    "layeredTestData": {
+      "CommercialLines.DuckCreek.Tests": {
+        "scenarioRecords": 329,
+        "reconstructedExactly": 329
+      },
+      "CommercialLines.ExpertQuote.Tests": {
+        "scenarioRecords": 195,
+        "reconstructedExactly": 195
+      },
+      "PersonalLines.DuckCreek.Tests": {
+        "scenarioRecords": 439,
+        "reconstructedExactly": 439
+      }
+    },
+    "protectedFiles": {
+      "expected": 18,
+      "verified": 18
+    },
+    "locators": {
+      "CommercialLines.DuckCreek.Tests": {
+        "members": 734,
+        "missingPageReferences": 0
+      },
+      "CommercialLines.ExpertQuote.Tests": {
+        "members": 370,
+        "missingPageReferences": 0
+      },
+      "PersonalLines.DuckCreek.Tests": {
+        "members": 313,
+        "missingPageReferences": 0
+      }
+    }
+  },
+  "limitations": [
+    "This static gate does not replace dotnet restore/build/test.",
+    "Live CLDC/CLEQ/PLDC DOM execution requires the customer environment and credentials."
+  ]
+}

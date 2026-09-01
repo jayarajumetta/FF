@@ -1,0 +1,113 @@
+{
+  "status": "PASS",
+  "entries": [
+    {
+      "path": "tests/CommercialLines.DuckCreek.Tests/Features/012_BAP_Smoke_Test_AL.feature",
+      "expectedSha256": "94caa5a9401c00d17d4e27b5b9a4948e7045a97fb7d5194173aff3e10e3ba8c2",
+      "actualSha256": "94caa5a9401c00d17d4e27b5b9a4948e7045a97fb7d5194173aff3e10e3ba8c2",
+      "status": "PASS"
+    },
+    {
+      "path": "tests/CommercialLines.DuckCreek.Tests/Features/013_CP_Smoke_Test_AZ.feature",
+      "expectedSha256": "61737ec949d290c9e292b42175041698901256e6f8f2a79a2aff9c4ec90f0d18",
+      "actualSha256": "61737ec949d290c9e292b42175041698901256e6f8f2a79a2aff9c4ec90f0d18",
+      "status": "PASS"
+    },
+    {
+      "path": "tests/CommercialLines.DuckCreek.Tests/Features/014_GL_Smoke_Test_AZ.feature",
+      "expectedSha256": "fcc121416bf6506772963b017bd5cca47ac0467824d533a1c1b3a95f847c6ddc",
+      "actualSha256": "fcc121416bf6506772963b017bd5cca47ac0467824d533a1c1b3a95f847c6ddc",
+      "status": "PASS"
+    },
+    {
+      "path": "tests/CommercialLines.DuckCreek.Tests/Features/015_IM_Smoke_Test_AZ.feature",
+      "expectedSha256": "f25befe83828fe031e2eac4ae8e487efb4f8a000bcf4a09ec1cd93d004a60bf4",
+      "actualSha256": "f25befe83828fe031e2eac4ae8e487efb4f8a000bcf4a09ec1cd93d004a60bf4",
+      "status": "PASS"
+    },
+    {
+      "path": "tests/CommercialLines.DuckCreek.Tests/Features/016_WC_Smoke_Test_AL.feature",
+      "expectedSha256": "d0ac2347cd78df41c56633a6ed77520c830073c3e0b016a8c7dd50971a294ef0",
+      "actualSha256": "d0ac2347cd78df41c56633a6ed77520c830073c3e0b016a8c7dd50971a294ef0",
+      "status": "PASS"
+    },
+    {
+      "path": "tests/CommercialLines.DuckCreek.Tests/Features/017_CPP_Smoke_Test_AZ.feature",
+      "expectedSha256": "d03b14b37b53fb143e510fa5ddad8ce4cdd6a3f36374f0ab34cca494f4b87861",
+      "actualSha256": "d03b14b37b53fb143e510fa5ddad8ce4cdd6a3f36374f0ab34cca494f4b87861",
+      "status": "PASS"
+    },
+    {
+      "path": "tests/CommercialLines.DuckCreek.Tests/Features/018_UMB_Smoke_Test_AL.feature",
+      "expectedSha256": "c1387b7a15e34f85da8797a6f10fb30b47718619bc4b82b1c47531c700582864",
+      "actualSha256": "c1387b7a15e34f85da8797a6f10fb30b47718619bc4b82b1c47531c700582864",
+      "status": "PASS"
+    },
+    {
+      "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/BAPSmokeTestSteps.cs",
+      "expectedSha256": "92f725faa56e31da152076d7c3e9ce6d00b469fa6b37452deb925edc0d05aed0",
+      "actualSha256": "92f725faa56e31da152076d7c3e9ce6d00b469fa6b37452deb925edc0d05aed0",
+      "status": "PASS"
+    },
+    {
+      "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/CPPSmokeTestSteps.cs",
+      "expectedSha256": "297b8f3e61c2141b3a64147c2489aa3806c4814ca2241f8b82e458edf2c43824",
+      "actualSha256": "297b8f3e61c2141b3a64147c2489aa3806c4814ca2241f8b82e458edf2c43824",
+      "status": "PASS"
+    },
+    {
+      "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/CPSmokeTestSteps.cs",
+      "expectedSha256": "d4db6e5f07a2b74991c2f5f19c985ce434f64a7c0228df5c9bc911080ac632ed",
+      "actualSha256": "d4db6e5f07a2b74991c2f5f19c985ce434f64a7c0228df5c9bc911080ac632ed",
+      "status": "PASS"
+    },
+    {
+      "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/GLSmokeTestSteps.cs",
+      "expectedSha256": "639cba5724a78722466767867d27edf808eeec5dd3ef3d06a1b548fb5cc12c27",
+      "actualSha256": "639cba5724a78722466767867d27edf808eeec5dd3ef3d06a1b548fb5cc12c27",
+      "status": "PASS"
+    },
+    {
+      "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/IMSmokeTestSteps.cs",
+      "expectedSha256": "26ee9784608c235a7ec5d3903477846ec2eaca9fa8fc32f71ab40a293f8dc7c4",
+      "actualSha256": "26ee9784608c235a7ec5d3903477846ec2eaca9fa8fc32f71ab40a293f8dc7c4",
+      "status": "PASS"
+    },
+    {
+      "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/UMBSmokeTestSteps.cs",
+      "expectedSha256": "a48586f442ebce210576f6d8dba25a7f5186bcd580daa07a5a5b3db1ea7db346",
+      "actualSha256": "a48586f442ebce210576f6d8dba25a7f5186bcd580daa07a5a5b3db1ea7db346",
+      "status": "PASS"
+    },
+    {
+      "path": "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/WCSmokeTestSteps.cs",
+      "expectedSha256": "0a191d72ac56e178c9345983f17192a0e2b62fc5fdc62d030d0a00b7b978c5d4",
+      "actualSha256": "0a191d72ac56e178c9345983f17192a0e2b62fc5fdc62d030d0a00b7b978c5d4",
+      "status": "PASS"
+    },
+    {
+      "path": "src/InsuranceAutomation.NUnit/NUnitEvidenceAttachment.cs",
+      "expectedSha256": "41bcc68d2dbb6798ecbd7f0d11de1b554776472677580f5cd4dfdc011e417067",
+      "actualSha256": "41bcc68d2dbb6798ecbd7f0d11de1b554776472677580f5cd4dfdc011e417067",
+      "status": "PASS"
+    },
+    {
+      "path": "src/InsuranceAutomation.NUnit/NUnitEvidencePublisher.cs",
+      "expectedSha256": "9474092326756e1256ba441b1e18f8e919e844ec5dbd74add6f53e985ecca32f",
+      "actualSha256": "9474092326756e1256ba441b1e18f8e919e844ec5dbd74add6f53e985ecca32f",
+      "status": "PASS"
+    },
+    {
+      "path": "src/InsuranceAutomation.NUnit/NUnitScenarioEvidenceFinalizer.cs",
+      "expectedSha256": "4c9a95a27ece1cd4e3923a86ad35bfc319977ff4437e2376135a6ac87f51c75e",
+      "actualSha256": "4c9a95a27ece1cd4e3923a86ad35bfc319977ff4437e2376135a6ac87f51c75e",
+      "status": "PASS"
+    },
+    {
+      "path": "src/InsuranceAutomation.NUnit/NUnitTestEvidenceContext.cs",
+      "expectedSha256": "0da33939568be2c010177702e8c35539aad7e8a68019bb2e4c70545312503cba",
+      "actualSha256": "0da33939568be2c010177702e8c35539aad7e8a68019bb2e4c70545312503cba",
+      "status": "PASS"
+    }
+  ]
+}

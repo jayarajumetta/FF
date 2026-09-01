@@ -11,7 +11,7 @@ public sealed class CoveragesLocators
     public ILocator ADDCoverage => _page.GetByTestId("fields.policy.*ccidentalDeathInput$limit.value-chip-wrapper");
 
     // Dynamically set by buffer Driver_1
-    public ILocator ADDDriver1 => _page.Locator("button[id=\"\\\"fields.policy.line.driverIncomeLoss.rows[0].driverInput$incomeLossOperator.value\\\"\"][data-testid=\"\\\"fields.policy.line.driverIncomeLoss.rows[0].driverInput$incomeLossOperator.value\\\"\"]");
+    public ILocator ADDDriver1 => _page.Locator("button[id=\"fields.policy.line.driverIncomeLoss.rows[0].driverInput$incomeLossOperator.value\"][data-testid=\"fields.policy.line.driverIncomeLoss.rows[0].driverInput$incomeLossOperator.value\"]");
 
     // Dynamically set by buffer Driver_2
 

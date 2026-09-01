@@ -10,7 +10,7 @@ public sealed class QuoteSearchLocators
 
     // Source: EQ|Common|Search by QuoteNum.
     public ILocator QuoteSearchInput => _page.Locator("[id='quoteSearchInput']");
-    public ILocator QuoteSearchButton => _page.Locator("[duckcreekid=\"Search\"], [data-duckcreekid=\"Search\"]");
+    public ILocator QuoteSearchButton => _page.Locator("button:has-text(\"Search\"), a:has-text(\"Search\")").First;
 
     // Source: EQ|Common|Quote Identifying.
     // Name and Quote = SPAN.ng-star-inserted in the current Angular Material tab/header.

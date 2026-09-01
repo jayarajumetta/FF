@@ -1,0 +1,20 @@
+{
+  "tests/CommercialLines.DuckCreek.Tests/Features/012_BAP_Smoke_Test_AL.feature": "94caa5a9401c00d17d4e27b5b9a4948e7045a97fb7d5194173aff3e10e3ba8c2",
+  "tests/CommercialLines.DuckCreek.Tests/Features/013_CP_Smoke_Test_AZ.feature": "61737ec949d290c9e292b42175041698901256e6f8f2a79a2aff9c4ec90f0d18",
+  "tests/CommercialLines.DuckCreek.Tests/Features/014_GL_Smoke_Test_AZ.feature": "fcc121416bf6506772963b017bd5cca47ac0467824d533a1c1b3a95f847c6ddc",
+  "tests/CommercialLines.DuckCreek.Tests/Features/015_IM_Smoke_Test_AZ.feature": "f25befe83828fe031e2eac4ae8e487efb4f8a000bcf4a09ec1cd93d004a60bf4",
+  "tests/CommercialLines.DuckCreek.Tests/Features/016_WC_Smoke_Test_AL.feature": "d0ac2347cd78df41c56633a6ed77520c830073c3e0b016a8c7dd50971a294ef0",
+  "tests/CommercialLines.DuckCreek.Tests/Features/017_CPP_Smoke_Test_AZ.feature": "d03b14b37b53fb143e510fa5ddad8ce4cdd6a3f36374f0ab34cca494f4b87861",
+  "tests/CommercialLines.DuckCreek.Tests/Features/018_UMB_Smoke_Test_AL.feature": "c1387b7a15e34f85da8797a6f10fb30b47718619bc4b82b1c47531c700582864",
+  "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/BAPSmokeTestSteps.cs": "92f725faa56e31da152076d7c3e9ce6d00b469fa6b37452deb925edc0d05aed0",
+  "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/CPPSmokeTestSteps.cs": "297b8f3e61c2141b3a64147c2489aa3806c4814ca2241f8b82e458edf2c43824",
+  "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/CPSmokeTestSteps.cs": "d4db6e5f07a2b74991c2f5f19c985ce434f64a7c0228df5c9bc911080ac632ed",
+  "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/GLSmokeTestSteps.cs": "639cba5724a78722466767867d27edf808eeec5dd3ef3d06a1b548fb5cc12c27",
+  "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/IMSmokeTestSteps.cs": "26ee9784608c235a7ec5d3903477846ec2eaca9fa8fc32f71ab40a293f8dc7c4",
+  "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/UMBSmokeTestSteps.cs": "a48586f442ebce210576f6d8dba25a7f5186bcd580daa07a5a5b3db1ea7db346",
+  "tests/CommercialLines.DuckCreek.Tests/StepDefinitions/WCSmokeTestSteps.cs": "0a191d72ac56e178c9345983f17192a0e2b62fc5fdc62d030d0a00b7b978c5d4",
+  "src/InsuranceAutomation.NUnit/NUnitEvidenceAttachment.cs": "41bcc68d2dbb6798ecbd7f0d11de1b554776472677580f5cd4dfdc011e417067",
+  "src/InsuranceAutomation.NUnit/NUnitEvidencePublisher.cs": "9474092326756e1256ba441b1e18f8e919e844ec5dbd74add6f53e985ecca32f",
+  "src/InsuranceAutomation.NUnit/NUnitScenarioEvidenceFinalizer.cs": "4c9a95a27ece1cd4e3923a86ad35bfc319977ff4437e2376135a6ac87f51c75e",
+  "src/InsuranceAutomation.NUnit/NUnitTestEvidenceContext.cs": "0da33939568be2c010177702e8c35539aad7e8a68019bb2e4c70545312503cba"
+}

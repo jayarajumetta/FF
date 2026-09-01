@@ -7,7 +7,7 @@ public sealed class LossHistoryLocators
     private readonly IPage _page;
     public LossHistoryLocators(IPage page) => _page = page;
 
-    public ILocator CONTINUEDoesnTApply => _page.Locator("[id=\"\"fields.violations.violation.rows[0].violationInput$internalCode.value\"\"]");
+    public ILocator CONTINUEDoesnTApply => _page.Locator("[id=\"fields.violations.violation.rows[0].violationInput$internalCode.value\"]");
 
     public ILocator ClaimDriverNotInHousehold => _page.GetByTestId("fields.losses.loss.rows[0].lossInput$driverID.value-chip-wrapper");
 

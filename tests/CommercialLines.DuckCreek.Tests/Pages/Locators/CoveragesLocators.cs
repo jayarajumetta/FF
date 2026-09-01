@@ -17,7 +17,6 @@ public sealed class CoveragesLocators
 
     public ILocator PolicyCovgAccountsReceivableOK => _page.GetByRole(AriaRole.Link, new() { Name = "OK", Exact = true });
 
-    //public ILocator CP => _page.GetByText("CP", new() { Exact = true });
     public ILocator CP => _page.Locator("input[type='checkbox'][fieldref='LineInput.Selected'][name='boolean_2F6_1']");
     public ILocator Coinsurance => _page.Locator("input[fieldref=\"AccountsReceivableInput.Coinsurance\"]");
 
@@ -44,7 +43,6 @@ public sealed class CoveragesLocators
     public ILocator Fungus => _page.Locator("input[fieldref=\"CovFungusInput.Indicator\"]");
     public ILocator GL => _page.Locator("input[type='checkbox'][fieldref='LineInput.Selected'][name='boolean_2F6']");
 
-    //public ILocator GL => _page.GetByText("GL", new() { Exact = true });
 
     public ILocator HasTheInsuredEverHadAClaimForEmploymentPractices => _page.Locator("input[fieldref=\"CovEndorsementsInput.EPLIClaim\"]");
 

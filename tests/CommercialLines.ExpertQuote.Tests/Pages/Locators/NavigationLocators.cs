@@ -38,7 +38,7 @@ public sealed class NavigationLocators
 
     public ILocator GreaterThan25000No => _page.GetByTestId("fields.line.covEquipmentBreakdownPowerGeneration.covEquipmentBreakdownInput$lossGreaterThan24KEver.value-chip-wrapper");
 
-    public ILocator InsuredOccupancySqFtAngular => _page.Locator("input[id=\"\\\"fields.data.account.building.rows[0].buildingInput$insuredOccupancySqFt.value\\\"\"][name=\"\\\"fields.data.account.building.rows[0].buildingInput$insuredOccupancySqFt.value\\\"\"]");
+    public ILocator InsuredOccupancySqFtAngular => _page.Locator("input[id=\"fields.data.account.building.rows[0].buildingInput$insuredOccupancySqFt.value\"][name=\"fields.data.account.building.rows[0].buildingInput$insuredOccupancySqFt.value\"]");
 
     public ILocator KeepGoing => _page.GetByTestId("btnConfirmYes");
 
@@ -48,7 +48,7 @@ public sealed class NavigationLocators
 
     public ILocator MortgageeSecuredParty => _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$type.value-chip-wrapper");
 
-    public ILocator On => _page.Locator("[id=\"\"fields._OccupancyClassSearch.occupancyClassCode.rows[12].occupancyClassCodeInput$addToPolicy.value-checkbox\"\"]");
+    public ILocator On => _page.Locator("[id=\"fields._OccupancyClassSearch.occupancyClassCode.rows[12].occupancyClassCodeInput$addToPolicy.value-checkbox\"]");
 
     public ILocator OwnButton => _page.GetByTestId("fields.data.account.building.rows[0].buildingInput$buildingOccupiedEQ.value-chip-wrapper");
 
@@ -64,7 +64,7 @@ public sealed class NavigationLocators
 
     public ILocator Residence => _page.Locator("[id=\"fields.additionalOtherInterest.additionalOtherInterestInput$buildingID.value\"]");
 
-    public ILocator Save => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Save\"], [data-duckcreekid=\"Save\"]");
+    public ILocator Save => _page.Locator("button[id=\"fields.data.save\"], button[id=\"fields.data.saveLocation\"], button[data-testid=\"fields.line.save\"], button:has-text(\"Save\"), a:has-text(\"Save\")").First;
 
     public ILocator Screen25E91 => _page.GetByText("Screen", new() { Exact = true });
 
@@ -80,7 +80,7 @@ public sealed class NavigationLocators
 
     public ILocator SearchZipCode => _page.Locator("input[id=\"temp.searchZipCode\"][name=\"temp.searchZipCode\"]");
 
-    public ILocator SelectIfClientOwnsOrRentsTheBuilding => _page.Locator("input[id=\"\\\"fields.data.account.building.rows[0].buildingInput$squareFtEq.value\\\"\"][name=\"\\\"fields.data.account.building.rows[0].buildingInput$squareFtEq.value\\\"\"]");
+    public ILocator SelectIfClientOwnsOrRentsTheBuilding => _page.Locator("input[id=\"fields.data.account.building.rows[0].buildingInput$squareFtEq.value\"][name=\"fields.data.account.building.rows[0].buildingInput$squareFtEq.value\"]");
 
     public ILocator Submission48772 => _page.GetByText("Submission", new() { Exact = true });
 
@@ -89,7 +89,7 @@ public sealed class NavigationLocators
 
 
 
-    public ILocator TransactionType => _page.Locator("input[id=\"f_tB2C8F4EC9E3041B7B52430914E990D15D2_2_1-inputEl\"][name=\"f_tB2C8F4EC9E3041B7B52430914E990D15D2_2_1-inputEl\"][duckcreekid=\"TransACTInput.TransactionTypeList\"]");
+    public ILocator TransactionType => _page.GetByRole(AriaRole.Textbox, new() { Name = "Transaction Type", Exact = true }).First;
 
     public ILocator True => _page.GetByText("True", new() { Exact = true });
 
@@ -97,7 +97,7 @@ public sealed class NavigationLocators
 
     public ILocator ViewPolicy => _page.Locator("[id=\"returnToActiveSessionA\"]");
 
-    public ILocator ViewPolicyDetails848D5 => _page.FrameLocator("iframe").Locator("[duckcreekid=\"NewTransactionReason.NewTransactionReasonDescription\"], [data-duckcreekid=\"NewTransactionReason.NewTransactionReasonDescription\"]");
+    public ILocator ViewPolicyDetails848D5 => _page.GetByRole(AriaRole.Link, new() { Name = "View Policy Details", Exact = true }).First;
 
 
 

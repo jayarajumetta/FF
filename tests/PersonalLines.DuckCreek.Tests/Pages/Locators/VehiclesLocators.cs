@@ -9,7 +9,7 @@ public sealed class VehiclesLocators
 
     public ILocator AccountOwner => _page.GetByTestId("fields.line.driver.rows[0].driverInput$relationToAccountOwner.value-chip-wrapper");
 
-    public ILocator AccountOwnerReadOnly => _page.Locator("[id=\"\"fields.line.driver.rows[0].driverInput$gender.value-0\"\"]");
+    public ILocator AccountOwnerReadOnly => _page.Locator("[id=\"fields.line.driver.rows[0].driverInput$gender.value-0\"]");
 
     public ILocator ActiveDisablingDevice => _page.GetByRole(AriaRole.Button, new() { Name = "ActiveDisablingDevice", Exact = true });
 
@@ -24,16 +24,16 @@ public sealed class VehiclesLocators
     public ILocator AdditionalVehicleS62C9A => _page.Locator("[id=\"unlistedVehicle\"]");
 
 
-    public ILocator AgreedValue8E288 => _page.Locator("input[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$agreedValue.value\\\"\"][name=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$agreedValue.value\\\"\"]");
+    public ILocator AgreedValue8E288 => _page.Locator("input[id=\"fields.data.policy.line.risk.rows[0].vehicleInput$agreedValue.value\"][name=\"fields.data.policy.line.risk.rows[0].vehicleInput$agreedValue.value\"]");
 
 
-    public ILocator AnnualMileage12A49 => _page.Locator("input[id=\"\\\"fields.line.risk.rows[0].vehicleInput$annualMileage.value\\\"\"][name=\"\\\"fields.line.risk.rows[0].vehicleInput$annualMileage.value\\\"\"]");
+    public ILocator AnnualMileage12A49 => _page.Locator("input[id=\"fields.line.risk.rows[0].vehicleInput$annualMileage.value\"][name=\"fields.line.risk.rows[0].vehicleInput$annualMileage.value\"]");
 
     public ILocator AnnualMileage51344 => _page.Locator("[name=\"txt_annual_mileage\"], [id=\"txt_annual_mileage\"]").First;
 
     public ILocator AntiTheftYes => _page.GetByRole(AriaRole.Button, new() { Name = "Anti_theft_Yes", Exact = true });
 
-    public ILocator AppraisalDate8A115 => _page.Locator("input[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$appraisalDate.value\\\"\"][name=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$appraisalDate.value\\\"\"]");
+    public ILocator AppraisalDate8A115 => _page.Locator("input[id=\"fields.data.policy.line.risk.rows[0].vehicleInput$appraisalDate.value\"][name=\"fields.data.policy.line.risk.rows[0].vehicleInput$appraisalDate.value\"]");
 
 
     public ILocator Assigned => _page.GetByTestId("fields.line.driver.rows[0].driverInput$operatorStatus.value-chip-wrapper");
@@ -45,36 +45,36 @@ public sealed class VehiclesLocators
 
     public ILocator CategoryI => _page.GetByRole(AriaRole.Button, new() { Name = "CategoryI", Exact = true });
 
-    public ILocator Classic => _page.Locator("div[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$collectorCarType.value-0\\\"\"][data-testid=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$collectorCarType.value-chip-wrapper\\\"\"]");
+    public ILocator Classic => _page.Locator("div[id=\"fields.data.policy.line.risk.rows[0].vehicleInput$collectorCarType.value-0\"][data-testid=\"fields.data.policy.line.risk.rows[0].vehicleInput$collectorCarType.value-chip-wrapper\"]");
 
-    public ILocator CollectorCar => _page.Locator("div[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$vehicleType.value-0\\\"\"][data-testid=\"\\\"fields.line.risk.rows[0].vehicleInput$vehicleType.value-chip-wrapper\\\"\"]");
+    public ILocator CollectorCar => _page.Locator("div[id=\"fields.data.policy.line.risk.rows[0].vehicleInput$vehicleType.value-0\"][data-testid=\"fields.line.risk.rows[0].vehicleInput$vehicleType.value-chip-wrapper\"]");
 
     public ILocator CollectorCarTypeMoreOptions => _page.GetByTestId("fields.data.policy.line.risk.rows[0].vehicleInput$collectorCarType.value-menu-trigger");
 
     public ILocator CollegeDegreeGraduateWork => _page.GetByRole(AriaRole.Button, new() { Name = "College Degree/Graduate Work", Exact = true });
 
 
-    public ILocator CurrentValue => _page.Locator("input[id=\"\\\"fields.line.risk.rows[0].vehicleInput$currentValue.value\\\"\"][name=\"\\\"fields.line.risk.rows[0].vehicleInput$currentValue.value\\\"\"]");
+    public ILocator CurrentValue => _page.Locator("input[id=\"fields.line.risk.rows[0].vehicleInput$currentValue.value\"][name=\"fields.line.risk.rows[0].vehicleInput$currentValue.value\"]");
 
     public ILocator CurrentlyInCollege => _page.GetByRole(AriaRole.Button, new() { Name = "Currently in College", Exact = true });
 
-    public ILocator Cycle1734D7 => _page.Locator("input[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$vIN.value\\\"\"][name=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$vIN.value\\\"\"]");
+    public ILocator Cycle1734D7 => _page.Locator("input[id=\"fields.data.policy.line.risk.rows[0].vehicleInput$vIN.value\"][name=\"fields.data.policy.line.risk.rows[0].vehicleInput$vIN.value\"]");
 
 
-    public ILocator CycleAccessoriesV3 => _page.Locator("[id=\"\"fields.policy.line.risk.rows[1].end_IncreasedLimitsForAccessories$end_IncreasedLimitsForAccessories_Select.value-0\"\"]");
+    public ILocator CycleAccessoriesV3 => _page.Locator("[id=\"fields.policy.line.risk.rows[1].end_IncreasedLimitsForAccessories$end_IncreasedLimitsForAccessories_Select.value-0\"]");
 
 
     public ILocator CycleNonDriverComboBox => _page.Locator("[name=\"CycleNonDriver_ComboBox\"], [id=\"CycleNonDriver_ComboBox\"]").First;
 
 
 
-    public ILocator DaysOperatedUninsured => _page.Locator("input[id=\"\\\"fields.line.driver.rows[0].driverInput$monthsLicensedCurrentState.value\\\"\"][name=\"\\\"fields.line.driver.rows[0].driverInput$monthsLicensedCurrentState.value\\\"\"]");
+    public ILocator DaysOperatedUninsured => _page.Locator("input[id=\"fields.line.driver.rows[0].driverInput$monthsLicensedCurrentState.value\"][name=\"fields.line.driver.rows[0].driverInput$monthsLicensedCurrentState.value\"]");
 
-    public ILocator DescriptionOfMods => _page.Locator("input[id=\"\\\"fields.line.risk.rows[0].vehicleInput$describeAdditionAlterationOrModification.value\\\"\"][name=\"\\\"fields.line.risk.rows[0].vehicleInput$describeAdditionAlterationOrModification.value\\\"\"]");
+    public ILocator DescriptionOfMods => _page.Locator("input[id=\"fields.line.risk.rows[0].vehicleInput$describeAdditionAlterationOrModification.value\"][name=\"fields.line.risk.rows[0].vehicleInput$describeAdditionAlterationOrModification.value\"]");
 
-    public ILocator Divorced => _page.Locator("[id=\"\"fields.line.driver.rows[0].driverInput$maritalStatus.value-2\"\"]");
+    public ILocator Divorced => _page.Locator("[id=\"fields.line.driver.rows[0].driverInput$maritalStatus.value-2\"]");
 
-    public ILocator DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications051FD => _page.Locator("input[id=\"\\\"fields.line.risk.rows[0].vehicleInput$agreedValue.value\\\"\"][name=\"\\\"fields.line.risk.rows[0].vehicleInput$agreedValue.value\\\"\"]");
+    public ILocator DoesThisVehicleHaveAnyNonFactoryAdditionsAlterationsOrModifications051FD => _page.Locator("input[id=\"fields.line.risk.rows[0].vehicleInput$agreedValue.value\"][name=\"fields.line.risk.rows[0].vehicleInput$agreedValue.value\"]");
 
 
 
@@ -94,12 +94,12 @@ public sealed class VehiclesLocators
 
     public ILocator Leased14EA4 => _page.GetByTestId("fields.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-chip-wrapper");
 
-    public ILocator Leased26B32 => _page.Locator("div[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-1\\\"\"][data-testid=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-chip-wrapper\\\"\"]");
+    public ILocator Leased26B32 => _page.Locator("div[id=\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-1\"][data-testid=\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-chip-wrapper\"]");
 
 
 
 
-    public ILocator Loan49242 => _page.Locator("div[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-0\\\"\"][data-testid=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-chip-wrapper\\\"\"]");
+    public ILocator Loan49242 => _page.Locator("div[id=\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-0\"][data-testid=\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-chip-wrapper\"]");
 
 
     public ILocator MDNJEducationLevelUnknown => _page.GetByText("MD_NJ_EducationLevel == \"Unknown", new() { Exact = true });
@@ -108,7 +108,7 @@ public sealed class VehiclesLocators
 
     public ILocator MaritalStatusSingle => _page.GetByText("'Marital Status' != \"Single", new() { Exact = true });
 
-    public ILocator Married => _page.Locator("[id=\"\"fields.line.driver.rows[0].driverInput$maritalStatus.value-1\"\"]");
+    public ILocator Married => _page.Locator("[id=\"fields.line.driver.rows[0].driverInput$maritalStatus.value-1\"]");
 
 
 
@@ -132,7 +132,7 @@ public sealed class VehiclesLocators
 
     public ILocator No7C269 => _page.Locator("[id=\"fields.data.policy.underwritingQuestionsPolicy$felonyConviction.value-1\"]");
 
-    public ILocator NoCoverageV1Towing => _page.Locator("[id=\"\"fields.policy.line.risk.rows[0].end_OriginalParts$end_OriginalParts_Select.value-0\"\"]");
+    public ILocator NoCoverageV1Towing => _page.Locator("[id=\"fields.policy.line.risk.rows[0].end_OriginalParts$end_OriginalParts_Select.value-0\"]");
 
 
     public ILocator NoD053A => _page.GetByTestId("fields.line.driver.rows[0].driverInputUnderwriting$sR22Indicator.value-chip-wrapper");
@@ -153,7 +153,7 @@ public sealed class VehiclesLocators
 
     public ILocator Odometer3843F => _page.Locator("[name=\"txt_odometer\"], [id=\"txt_odometer\"]").First;
 
-    public ILocator OdometerD648F => _page.Locator("input[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$odometer.value\\\"\"][name=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$odometer.value\\\"\"]");
+    public ILocator OdometerD648F => _page.Locator("input[id=\"fields.data.policy.line.risk.rows[0].vehicleInput$odometer.value\"][name=\"fields.data.policy.line.risk.rows[0].vehicleInput$odometer.value\"]");
 
     // Dynamically set by buffer CA Verified Mileage in RTB Auto | 05 EQ | Vehicle Summary Next
     public ILocator OptOut => _page.Locator("[id=\"fields.policy.lineVerifiedMileage.riskFactor_VerifiedMileageOptIn$value.value-1\"]");
@@ -162,7 +162,7 @@ public sealed class VehiclesLocators
 
 
 
-    public ILocator Own7C709 => _page.Locator("div[id=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-2\\\"\"][data-testid=\"\\\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-chip-wrapper\\\"\"]");
+    public ILocator Own7C709 => _page.Locator("div[id=\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-2\"][data-testid=\"fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-chip-wrapper\"]");
 
     public ILocator OwnB8575 => _page.GetByTestId("fields.data.policy.line.risk.rows[0].vehicleInput$isVehicleOwnedOrFinanced.value-chip-wrapper");
 
@@ -224,7 +224,7 @@ public sealed class VehiclesLocators
 
     public ILocator SelectVehicle => _page.GetByText("Select Vehicle", new() { Exact = true });
 
-    public ILocator Single => _page.Locator("[id=\"\"fields.line.driver.rows[0].driverInput$maritalStatus.value-0\"\"]");
+    public ILocator Single => _page.Locator("[id=\"fields.line.driver.rows[0].driverInput$maritalStatus.value-0\"]");
 
     public ILocator SomeCollege => _page.GetByRole(AriaRole.Button, new() { Name = "Some College", Exact = true });
 
@@ -299,6 +299,6 @@ public sealed class VehiclesLocators
     public ILocator Yes => _page.Locator("[id=\"fields.data.policy.underwritingQuestionsPolicy$felonyConviction.value-0\"]");
 
 
-    public ILocator YrsLicensedCurrentState => _page.Locator("input[id=\"\\\"fields.line.driver.rows[0].driverInput$yearsLicensedCurrentState.value\\\"\"][name=\"\\\"fields.line.driver.rows[0].driverInput$yearsLicensedCurrentState.value\\\"\"]");
+    public ILocator YrsLicensedCurrentState => _page.Locator("input[id=\"fields.line.driver.rows[0].driverInput$yearsLicensedCurrentState.value\"][name=\"fields.line.driver.rows[0].driverInput$yearsLicensedCurrentState.value\"]");
 
 }

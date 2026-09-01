@@ -1,0 +1,167 @@
+{
+  "changes": [
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/PolicyWorkflowLocators.cs",
+      "reason": "Removed accidental literal quote characters from generated Angular id/name/data-testid selectors.",
+      "beforeSha256": "86a8c6b8e79b5b129b8dc25beb41107d3dc1c138581581238c3b7b77d4e891ff",
+      "afterSha256": "db66d1d8f0ae87e21c5b23b7a55b9bd51ec03582083e7d6cdc755f701141f087"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/LossHistoryLocators.cs",
+      "reason": "Removed accidental literal quote characters from generated Angular id/name/data-testid selectors.",
+      "beforeSha256": "f288f24a717e5647e28541bf76a23d7ddb27b8cfbeb21e74788728f5c814d7cf",
+      "afterSha256": "317c82d1cc2e242c9f03904cea0c43edf136a636b14389d8b177922d5e01fe34"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/VehiclesLocators.cs",
+      "reason": "Removed accidental literal quote characters from generated Angular id/name/data-testid selectors.",
+      "beforeSha256": "40b40882f4e80c7ff06f4f2c75dbb2190ca60fbb1d6fd2943672878615386a61",
+      "afterSha256": "d26e1f4fdc2ce7ab8e0f53695a3d32815e6701d6569ba400701457d47c72970d"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/BuildingsLocators.cs",
+      "reason": "Removed accidental literal quote characters from generated Angular id/name/data-testid selectors.",
+      "beforeSha256": "64b1ee4e51f2d52ec966c9b891a5eb8c00e1bf0391369a617e3be621527f4436",
+      "afterSha256": "dea07d0c628b1c1d2091bfcb2e1c403f3c9e2db604fe9f7798ef19047f060ce5"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/SubmissionLocators.cs",
+      "reason": "Removed accidental literal quote characters from generated Angular id/name/data-testid selectors.",
+      "beforeSha256": "265f9c8d1e78e7dde60611546c39dc892789801d4aca922fb3d6a4a3a6fddd3d",
+      "afterSha256": "06947d7b6b6f3625007ccd9383a2f61c4c6a063ebeb28f47e2e032576f6d109b"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/LocationsLocators.cs",
+      "reason": "Removed accidental literal quote characters from generated Angular id/name/data-testid selectors.",
+      "beforeSha256": "df01100fd48335f5acbd00e669f27ac0e283473fef51a14f7394757d83199ce2",
+      "afterSha256": "43b60ca44727ead6764c4ef538b2d580d4227883bee7fc29189e1e06db979fa1"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/CoveragesLocators.cs",
+      "reason": "Removed accidental literal quote characters from generated Angular id/name/data-testid selectors.",
+      "beforeSha256": "4292442934418c06a680893c3743de7c26a695ad3a9813cd4d376b597be3cc14",
+      "afterSha256": "b04f2f85269518c6acee8fe45dd6fd5b37e298c9c54ff3940b69a576e1050a44"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/NavigationLocators.cs",
+      "reason": "Removed accidental literal quote characters from generated Angular id/name/data-testid selectors.",
+      "beforeSha256": "ecdfb7ce152f1852a5b2a6eb8b7c1809e86efb9cd868a82ac1809af30a8d99ca",
+      "afterSha256": "cb32aadff5f3327963e5f6cb11800bf5f2050296f9bddd80b126174c6a9a01ad"
+    },
+    {
+      "file": "tests/PersonalLines.DuckCreek.Tests/Pages/Locators/LossHistoryLocators.cs",
+      "reason": "Removed accidental literal quote characters from generated Angular id/name/data-testid selectors.",
+      "beforeSha256": "92df4858e871be1f4a17c1226e61b863969a6464cca81d2d7baafd65e8e06bfe",
+      "afterSha256": "e54a1c7ac233dbb5e7d0276708423b51892ef8a634fa1df3411000a74a863ea7"
+    },
+    {
+      "file": "tests/PersonalLines.DuckCreek.Tests/Pages/Locators/VehiclesLocators.cs",
+      "reason": "Removed accidental literal quote characters from generated Angular id/name/data-testid selectors.",
+      "beforeSha256": "8f55649a8c957e98a0fca66a3359c522f50d4fe0ca5cda37f084a81f78385287",
+      "afterSha256": "d192a16d0752011491246873b0093a99db660900ad041f3b7867a61f3ba9a894"
+    },
+    {
+      "file": "tests/PersonalLines.DuckCreek.Tests/Pages/Locators/DiscountsLocators.cs",
+      "reason": "Removed accidental literal quote characters from generated Angular id/name/data-testid selectors.",
+      "beforeSha256": "5f7ca618149c5f41fb7b2bbd50a3dc65fbbfd928f834c197627be46ff94ff47e",
+      "afterSha256": "09d3b861527a084cfd12be1310b5139c4e9fe4ff9de98de48adacbbc8deda320"
+    },
+    {
+      "file": "tests/PersonalLines.DuckCreek.Tests/Pages/Locators/CoveragesLocators.cs",
+      "reason": "Removed accidental literal quote characters from generated Angular id/name/data-testid selectors.",
+      "beforeSha256": "f93308bbaa197b4174fbf440ae05971ae0b78555ee71f2edb6f5e1016af0bca9",
+      "afterSha256": "8ff166f8d567fc5fa8c394ac6bb53b5438f5fb2994841bf847a9a6f3faf4d171"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/BuildingsLocators.cs",
+      "reason": "Replaced EQ DuckCreekId assumptions with Tosca-evidenced Angular/stable id, test-id, role, label or exact text contracts.",
+      "beforeSha256": "dea07d0c628b1c1d2091bfcb2e1c403f3c9e2db604fe9f7798ef19047f060ce5",
+      "afterSha256": "c2287fe0dd09913856d53c56dbb52f82aa642b8f8599eea3ebbed3d94136b650"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/ClientSearchLocators.cs",
+      "reason": "Replaced EQ DuckCreekId assumptions with Tosca-evidenced Angular/stable id, test-id, role, label or exact text contracts.",
+      "beforeSha256": "f7c61218f9a05c74301f85d2a829bab128886fb6edd19bfa83420867b6dd9b8f",
+      "afterSha256": "507db028cf62d9cc2e2715d9b58fa3fa66e1562faf85a7c1477ca27c80498a31"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/CoveragesLocators.cs",
+      "reason": "Replaced EQ DuckCreekId assumptions with Tosca-evidenced Angular/stable id, test-id, role, label or exact text contracts.",
+      "beforeSha256": "b04f2f85269518c6acee8fe45dd6fd5b37e298c9c54ff3940b69a576e1050a44",
+      "afterSha256": "be0d88a710387e15931910e4b575193f23656915d55b14ed0c3707d11c21be05"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/LocationsLocators.cs",
+      "reason": "Replaced EQ DuckCreekId assumptions with Tosca-evidenced Angular/stable id, test-id, role, label or exact text contracts.",
+      "beforeSha256": "43b60ca44727ead6764c4ef538b2d580d4227883bee7fc29189e1e06db979fa1",
+      "afterSha256": "40e95882c1eee646bbf4368979b1503fac8ce2f1b6986dfed4f3e83af7bf3941"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/LoginLocators.cs",
+      "reason": "Replaced EQ DuckCreekId assumptions with Tosca-evidenced Angular/stable id, test-id, role, label or exact text contracts.",
+      "beforeSha256": "f1dae002f574dc61241c08289716a9ac17f9be2398bf4656bd21b4b51a205ee9",
+      "afterSha256": "26aa16e338207c04b813a10ead0c4a65ccbb6fcd1e34d261d57a5e113ce989de"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/LossHistoryLocators.cs",
+      "reason": "Replaced EQ DuckCreekId assumptions with Tosca-evidenced Angular/stable id, test-id, role, label or exact text contracts.",
+      "beforeSha256": "317c82d1cc2e242c9f03904cea0c43edf136a636b14389d8b177922d5e01fe34",
+      "afterSha256": "47d059617badedbc83062f79dbd05c22346abd3e12fe4f1c6f2ae688fd8e4526"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/NavigationLocators.cs",
+      "reason": "Replaced EQ DuckCreekId assumptions with Tosca-evidenced Angular/stable id, test-id, role, label or exact text contracts.",
+      "beforeSha256": "cb32aadff5f3327963e5f6cb11800bf5f2050296f9bddd80b126174c6a9a01ad",
+      "afterSha256": "dd405938ad83514f22f12247f8b246d87fa2bfc5fdb23226d8a08f2fa76ae7e0"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/PolicyInformationLocators.cs",
+      "reason": "Replaced EQ DuckCreekId assumptions with Tosca-evidenced Angular/stable id, test-id, role, label or exact text contracts.",
+      "beforeSha256": "a7996453b451525589f30db38dbc711e5aaff1730f3f8a4b14e2c154752bb7e7",
+      "afterSha256": "6ab9a877c166c4118c49cf96fadcde576ebee1ee0c04b68f2ff8f6f7a1048818"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/PolicyWorkflowLocators.cs",
+      "reason": "Replaced EQ DuckCreekId assumptions with Tosca-evidenced Angular/stable id, test-id, role, label or exact text contracts.",
+      "beforeSha256": "db66d1d8f0ae87e21c5b23b7a55b9bd51ec03582083e7d6cdc755f701141f087",
+      "afterSha256": "9c30e1b06ad57bbb1da211c96ff2c6302806fece35347387eae67861c515ffaa"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/QuoteSearchLocators.cs",
+      "reason": "Replaced EQ DuckCreekId assumptions with Tosca-evidenced Angular/stable id, test-id, role, label or exact text contracts.",
+      "beforeSha256": "548d98e3aa652c8d0e37ffd292be9b00d5dbd5daa042ef2763dad1e25742e76b",
+      "afterSha256": "7f0c0c3bcd05be1a2c73a456ed316bfa859e392a8f0337acc411cf81cde55ab2"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/SocialSecurityLocators.cs",
+      "reason": "Replaced EQ DuckCreekId assumptions with Tosca-evidenced Angular/stable id, test-id, role, label or exact text contracts.",
+      "beforeSha256": "65303b0a4715202190f6c3c897bf196d31713fd896686d9a09ae90ad33d7e235",
+      "afterSha256": "b30aff8db43c41816cdb35c856c8b5963269c7800211ae9d07b5b68805b9f067"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/SubmissionLocators.cs",
+      "reason": "Replaced EQ DuckCreekId assumptions with Tosca-evidenced Angular/stable id, test-id, role, label or exact text contracts.",
+      "beforeSha256": "06947d7b6b6f3625007ccd9383a2f61c4c6a063ebeb28f47e2e032576f6d109b",
+      "afterSha256": "9398bce9391108e4169de9dea19e8598f0049ad4ebfcff52497d9d1ba2d516af"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/UnderwritingLocators.cs",
+      "reason": "Replaced EQ DuckCreekId assumptions with Tosca-evidenced Angular/stable id, test-id, role, label or exact text contracts.",
+      "beforeSha256": "8f56915c5a3d4a02880fdd34adab55c6abce715672d04a46812396975e410a2c",
+      "afterSha256": "2407c498b2afdf9abf886a723620d3286375590ef6228be9b90286f3a9f349ea"
+    },
+    {
+      "file": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/VehiclesLocators.cs",
+      "reason": "Replaced EQ DuckCreekId assumptions with Tosca-evidenced Angular/stable id, test-id, role, label or exact text contracts.",
+      "beforeSha256": "d26e1f4fdc2ce7ab8e0f53695a3d32815e6701d6569ba400701457d47c72970d",
+      "afterSha256": "660e45dca8abb504c79e576b519323c647f02949412458256383854793bc97f8"
+    },
+    {
+      "file": "tests/CommercialLines.DuckCreek.Tests/Pages/Locators/CoveragesLocators.cs",
+      "reason": "Removed obsolete commented duplicate CP/GL property declarations; active input checkbox fieldref locators retained.",
+      "beforeSha256": "f115353db516e54a29d80ba5139f9487ed3bf2abeca274f1b428c7001c4ad7b7",
+      "afterSha256": "f2e6fbec6893cdd018c500bc9e1e1aa04c882388ae3128c8f514ae481205516f"
+    }
+  ],
+  "count": 27
+}

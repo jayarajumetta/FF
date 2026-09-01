@@ -1,0 +1,249 @@
+{
+  "generatedAtUtc": "2026-09-01T11:43:51.687986+00:00",
+  "format": "RFC 7396 JSON Merge Patch",
+  "applications": {
+    "CommercialLines.DuckCreek.Tests": {
+      "entries": 329,
+      "flows": [
+        {
+          "feature": "001_BAP_Basic_Policy_AL.feature",
+          "flow": "001_BAP_Basic_Policy_AL",
+          "records": 44,
+          "base": "001_bap_basic_policy_al.json",
+          "originalBytes": 1428500,
+          "patchBytes": 715036,
+          "patchToOriginalRatio": 0.5006
+        },
+        {
+          "feature": "002_BAP_Expanded_AL.feature",
+          "flow": "002_BAP_Expanded_AL",
+          "records": 44,
+          "base": "002_bap_expanded_al.json",
+          "originalBytes": 4000336,
+          "patchBytes": 2089960,
+          "patchToOriginalRatio": 0.5224
+        },
+        {
+          "feature": "003_CPP_Basic_Policy_AZ.feature",
+          "flow": "003_CPP_Basic_Policy_AZ",
+          "records": 16,
+          "base": "003_cpp_basic_policy_az.json",
+          "originalBytes": 1904446,
+          "patchBytes": 959910,
+          "patchToOriginalRatio": 0.504
+        },
+        {
+          "feature": "004_CP_Basic_Policy_AZ.feature",
+          "flow": "004_CP_Basic_Policy_AZ",
+          "records": 16,
+          "base": "004_cp_basic_policy_az.json",
+          "originalBytes": 1127977,
+          "patchBytes": 591832,
+          "patchToOriginalRatio": 0.5247
+        },
+        {
+          "feature": "005_GL_Basic_Policy_AZ.feature",
+          "flow": "005_GL_Basic_Policy_AZ",
+          "records": 16,
+          "base": "005_gl_basic_policy_az.json",
+          "originalBytes": 652209,
+          "patchBytes": 332035,
+          "patchToOriginalRatio": 0.5091
+        },
+        {
+          "feature": "006_GL_OCP_Policy_AZ.feature",
+          "flow": "006_GL_OCP_Policy_AZ",
+          "records": 14,
+          "base": "006_gl_ocp_policy_az.json",
+          "originalBytes": 577381,
+          "patchBytes": 287606,
+          "patchToOriginalRatio": 0.4981
+        },
+        {
+          "feature": "007_IM_Basic_Policy_AZ.feature",
+          "flow": "007_IM_Basic_Policy_AZ",
+          "records": 16,
+          "base": "007_im_basic_policy_az.json",
+          "originalBytes": 1059006,
+          "patchBytes": 490579,
+          "patchToOriginalRatio": 0.4632
+        },
+        {
+          "feature": "008_UMB_Basic_Policy_AL.feature",
+          "flow": "008_UMB_Basic_Policy_AL",
+          "records": 46,
+          "base": "008_umb_basic_policy_al.json",
+          "originalBytes": 2702451,
+          "patchBytes": 1493654,
+          "patchToOriginalRatio": 0.5527
+        },
+        {
+          "feature": "009_UMB_Expanded_AL.feature",
+          "flow": "009_UMB_Expanded_AL",
+          "records": 45,
+          "base": "009_umb_expanded_al.json",
+          "originalBytes": 3649226,
+          "patchBytes": 1851578,
+          "patchToOriginalRatio": 0.5074
+        },
+        {
+          "feature": "010_WC_Basic_Policy_AL.feature",
+          "flow": "010_WC_Basic_Policy_AL",
+          "records": 36,
+          "base": "010_wc_basic_policy_al.json",
+          "originalBytes": 2695333,
+          "patchBytes": 1439551,
+          "patchToOriginalRatio": 0.5341
+        },
+        {
+          "feature": "011_WC_Expanded_AL.feature",
+          "flow": "011_WC_Expanded_AL",
+          "records": 36,
+          "base": "011_wc_expanded_al.json",
+          "originalBytes": 3143545,
+          "patchBytes": 1707635,
+          "patchToOriginalRatio": 0.5432
+        }
+      ],
+      "semanticReconstruction": "PASS"
+    },
+    "CommercialLines.ExpertQuote.Tests": {
+      "entries": 195,
+      "flows": [
+        {
+          "feature": "02_EQ_BOP_Basic_Policy_AL.feature",
+          "flow": "02_EQ_BOP_Basic_Policy_AL",
+          "records": 45,
+          "base": "02_eq_bop_basic_policy_al.json",
+          "originalBytes": 4059728,
+          "patchBytes": 2366673,
+          "patchToOriginalRatio": 0.583
+        },
+        {
+          "feature": "03_EQ_BOP_Smoke_Test_MO.feature",
+          "flow": "03_EQ_BOP_Smoke_Test_MO",
+          "records": 45,
+          "base": "03_eq_bop_smoke_test_al.json",
+          "originalBytes": 635107,
+          "patchBytes": 300150,
+          "patchToOriginalRatio": 0.4726
+        },
+        {
+          "feature": "04_EQ_SFP_Smoke_Test_MN.feature",
+          "flow": "04_EQ_SFP_Smoke_Test_MN",
+          "records": 35,
+          "base": "04_eq_sfp_smoke_test_al.json",
+          "originalBytes": 499218,
+          "patchBytes": 236518,
+          "patchToOriginalRatio": 0.4738
+        },
+        {
+          "feature": "05_EQ_SFP_Basic_Policy_AL.feature",
+          "flow": "05_EQ_SFP_Basic_Policy_AL",
+          "records": 35,
+          "base": "05_eq_sfp_basic_policy_al.json",
+          "originalBytes": 1444829,
+          "patchBytes": 781783,
+          "patchToOriginalRatio": 0.5411
+        },
+        {
+          "feature": "06_EQ_SFP_Country_Estate_Policy_AL.feature",
+          "flow": "06_EQ_SFP_Country_Estate_Policy_AL",
+          "records": 35,
+          "base": "06_eq_sfp_country_estate_policy_al.json",
+          "originalBytes": 1376830,
+          "patchBytes": 740246,
+          "patchToOriginalRatio": 0.5376
+        }
+      ],
+      "semanticReconstruction": "PASS"
+    },
+    "PersonalLines.DuckCreek.Tests": {
+      "entries": 439,
+      "flows": [
+        {
+          "feature": "181_Auto_Rate_Filings_Policy_1_NB_AL.feature",
+          "flow": "181_Auto_Rate_Filings_Policy_1_NB_AL",
+          "records": 50,
+          "base": "181_auto_rate_filings_policy_1_nb_al.json",
+          "originalBytes": 2724688,
+          "patchBytes": 1548974,
+          "patchToOriginalRatio": 0.5685
+        },
+        {
+          "feature": "182_Auto_Rate_Filings_Policy_3_NB_Prior_Eff_Date_AL.feature",
+          "flow": "182_Auto_Rate_Filings_Policy_3_NB_Prior_Eff_Date_AL",
+          "records": 50,
+          "base": "182_auto_rate_filings_policy_3_nb_prior_eff_date_al.json",
+          "originalBytes": 2691338,
+          "patchBytes": 1525392,
+          "patchToOriginalRatio": 0.5668
+        },
+        {
+          "feature": "183_Auto_Rate_Filings_Common_Policy_NB_AL.feature",
+          "flow": "183_Auto_Rate_Filings_Common_Policy_NB_AL",
+          "records": 50,
+          "base": "183_auto_rate_filings_common_policy_nb_al.json",
+          "originalBytes": 2627297,
+          "patchBytes": 1500006,
+          "patchToOriginalRatio": 0.5709
+        },
+        {
+          "feature": "184_Auto_Rate_Filings_Common_Policy_NB_Prior_Eff_Date_AL.feature",
+          "flow": "184_Auto_Rate_Filings_Common_Policy_NB_Prior_Eff_Date_AL",
+          "records": 50,
+          "base": "184_auto_rate_filings_common_policy_nb_prior_eff_date_al.json",
+          "originalBytes": 2571144,
+          "patchBytes": 1457636,
+          "patchToOriginalRatio": 0.5669
+        },
+        {
+          "feature": "185_Cycle_Rate_Filings_Policy_1_NB_1_AL.feature",
+          "flow": "185_Cycle_Rate_Filings_Policy_1_NB_1_AL",
+          "records": 49,
+          "base": "185_cycle_rate_filings_policy_1_nb_1_al.json",
+          "originalBytes": 2467681,
+          "patchBytes": 1433812,
+          "patchToOriginalRatio": 0.581
+        },
+        {
+          "feature": "186_Cycle_Rate_Filings_Policy_3_NB_Prior_Eff_Date_AL.feature",
+          "flow": "186_Cycle_Rate_Filings_Policy_3_NB_Prior_Eff_Date_AL",
+          "records": 49,
+          "base": "186_cycle_rate_filings_policy_3_nb_prior_eff_date_al.json",
+          "originalBytes": 2449828,
+          "patchBytes": 1396969,
+          "patchToOriginalRatio": 0.5702
+        },
+        {
+          "feature": "211_Smoke_Test_Auto_AL.feature",
+          "flow": "211_Smoke_Test_Auto_AL",
+          "records": 47,
+          "base": "211_smoke_test_auto_al.json",
+          "originalBytes": 1152848,
+          "patchBytes": 701609,
+          "patchToOriginalRatio": 0.6086
+        },
+        {
+          "feature": "212_Smoke_Test_Cycle_AL.feature",
+          "flow": "212_Smoke_Test_Cycle_AL",
+          "records": 47,
+          "base": "212_smoke_test_cycle_al.json",
+          "originalBytes": 1127503,
+          "patchBytes": 701642,
+          "patchToOriginalRatio": 0.6223
+        },
+        {
+          "feature": "215_Smoke_Test_RV_AL.feature",
+          "flow": "215_Smoke_Test_RV_AL",
+          "records": 47,
+          "base": "215_smoke_test_rv_al.json",
+          "originalBytes": 1128643,
+          "patchBytes": 688177,
+          "patchToOriginalRatio": 0.6097
+        }
+      ],
+      "semanticReconstruction": "PASS"
+    }
+  }
+}

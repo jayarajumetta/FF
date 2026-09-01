@@ -1,0 +1,820 @@
+{
+  "generatedAtUtc": "2026-09-01T11:43:15.278159+00:00",
+  "principle": "No invented state data. Existing direct smoke records are retained; missing smoke examples are derived from the smoke workflow template plus the corresponding raw-Tosca Basic Policy state record.",
+  "flows": {
+    "BOP": {
+      "states": 45,
+      "direct": 1,
+      "derived": 44,
+      "entries": [
+        {
+          "stateCode": "AL",
+          "stateVariant": "AL",
+          "stateName": "Alabama",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_al.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_al.json",
+          "sha256": "aaa2c159bf975e27533eb1707159a3e218de7138bbb8ec2c44034650d3490bba"
+        },
+        {
+          "stateCode": "AR",
+          "stateVariant": "AR",
+          "stateName": "Arkansas",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_ar.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_ar.json",
+          "sha256": "0cc7ac1a7087965dd1d188af744c1e67c2185afe1c2575075648a36081b92d60"
+        },
+        {
+          "stateCode": "AZ",
+          "stateVariant": "AZ",
+          "stateName": "Arizona",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_az.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_az.json",
+          "sha256": "4665874ecfbf72d8987b7a78ef269e69e5130e5a5acb539542971e57395e44b4"
+        },
+        {
+          "stateCode": "CA",
+          "stateVariant": "CA",
+          "stateName": "California",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_ca.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_ca.json",
+          "sha256": "97e8c5b9b56de5c79d484bbf7b8a9cd8b16d75f63816ca511d07d5f47187f7ae"
+        },
+        {
+          "stateCode": "CO",
+          "stateVariant": "CO",
+          "stateName": "Colorado",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_co.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_co.json",
+          "sha256": "b99274e4fbac88d0bd7962e76d94b1f88c4cfee02d624918d70e95611ca0a852"
+        },
+        {
+          "stateCode": "CT",
+          "stateVariant": "CT",
+          "stateName": "Connecticut",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_ct.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_ct.json",
+          "sha256": "fe25fefe21f07df8ec0caf84685cdee30df4f5077865069cbd0c063e57529068"
+        },
+        {
+          "stateCode": "DE",
+          "stateVariant": "DE",
+          "stateName": "Delaware",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_de.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_de.json",
+          "sha256": "cd649d41dd4057edc1a2e10afe5e6dcf7539945f3a3339ca61e487d5e8401091"
+        },
+        {
+          "stateCode": "GA",
+          "stateVariant": "GA",
+          "stateName": "Georgia",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_ga.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_ga.json",
+          "sha256": "bb9668adc556a95b202dccdf2ec92224c177bab7e8bf3963a8b0030df0e4cbd2"
+        },
+        {
+          "stateCode": "IA",
+          "stateVariant": "IA",
+          "stateName": "Iowa",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_ia.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_ia.json",
+          "sha256": "25ee03ba5083864717e16ca13fa9209c2bdbcee722e266f16aa8a8fb98a5a291"
+        },
+        {
+          "stateCode": "ID",
+          "stateVariant": "ID",
+          "stateName": "Idaho",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_id.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_id.json",
+          "sha256": "7d99649b72b876b7d39ab9dce714a7e5d10056f217fc70fccd5e23075abdc937"
+        },
+        {
+          "stateCode": "IL",
+          "stateVariant": "IL",
+          "stateName": "Illinois",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_il.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_il.json",
+          "sha256": "37fe10d542212aa66c66346581ad74e8aaba0071a5f066f4b51bde295c026f51"
+        },
+        {
+          "stateCode": "IN",
+          "stateVariant": "IN",
+          "stateName": "Indiana",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_in.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_in.json",
+          "sha256": "85bc6d60f7e1669dfec7f2646fe74f6533dde5fdff47fd975981cbb4f919e7ef"
+        },
+        {
+          "stateCode": "KS",
+          "stateVariant": "KS",
+          "stateName": "Kansas",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_ks.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_ks.json",
+          "sha256": "342f94f5807cc280fedc67db646e5b6ec35be50a89c5d8a279765e20515787f0"
+        },
+        {
+          "stateCode": "KY",
+          "stateVariant": "KY",
+          "stateName": "Kentucky",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_ky.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_ky.json",
+          "sha256": "ee6008eecd5fa0237aa3354b6d25b876510fb8a798488579137a63e7b1307afa"
+        },
+        {
+          "stateCode": "LA",
+          "stateVariant": "LA",
+          "stateName": "Louisiana",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_la.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_la.json",
+          "sha256": "c767f1a35460855d770daeaccebb6fd56c1b7c7d79caedb064dd1b77e098b7d2"
+        },
+        {
+          "stateCode": "MA",
+          "stateVariant": "MA",
+          "stateName": "Massachusetts",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_ma.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_ma.json",
+          "sha256": "9e360536e4e8b2a230577a66bb8b246c42a6531fafb4ff953bc39e3d63009dba"
+        },
+        {
+          "stateCode": "MD",
+          "stateVariant": "MD",
+          "stateName": "Maryland",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_md.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_md.json",
+          "sha256": "e60729447e555382ec8d955f7f2366aec2c84ec22ada78fb236379e90b43b6ef"
+        },
+        {
+          "stateCode": "ME",
+          "stateVariant": "ME",
+          "stateName": "Maine",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_me.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_me.json",
+          "sha256": "496d56277c1df0c098f18522b0d5d3b411ac4c62b3d5c956cf8b10e0eddd3123"
+        },
+        {
+          "stateCode": "MN",
+          "stateVariant": "MN",
+          "stateName": "Minnesota",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_mn.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_mn.json",
+          "sha256": "599933d43a73cd71f06ef1ecafa4a4379fc43614f27890d297db617a5eb45dc5"
+        },
+        {
+          "stateCode": "MO",
+          "stateVariant": "MO",
+          "stateName": "Missouri",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_mo.json",
+          "sourceType": "DIRECT_SMOKE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_mo.json",
+          "sha256": "8d46ed52ee18e4e22c45d5041ba08c19804f47601af2fd7227798e41eca99031"
+        },
+        {
+          "stateCode": "MS",
+          "stateVariant": "MS",
+          "stateName": "Mississippi",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_ms.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_ms.json",
+          "sha256": "acc6ae5637625cd487b27c386f37176dde653d003e264bcfa9a6328793dacc45"
+        },
+        {
+          "stateCode": "MT",
+          "stateVariant": "MT",
+          "stateName": "Montana",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_mt.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_mt.json",
+          "sha256": "88e25fda110739921b42d493da6e06e48689959f593f0614c11027e1e5a414b9"
+        },
+        {
+          "stateCode": "ND",
+          "stateVariant": "ND",
+          "stateName": "North Dakota",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_nd.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_nd.json",
+          "sha256": "3c4dcf01b646acc7179b8ec2a4f14cbd1f7f754af424b91473de50d0942317ed"
+        },
+        {
+          "stateCode": "NE",
+          "stateVariant": "NE",
+          "stateName": "Nebraska",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_ne.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_ne.json",
+          "sha256": "c1457443dc805be126a1ce2d764555c33a569edc0812aae900b0775912d4226d"
+        },
+        {
+          "stateCode": "NH",
+          "stateVariant": "NH",
+          "stateName": "New Hampshire",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_nh.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_nh.json",
+          "sha256": "54b9d73b25cfa21bf786c493229fef3ab9d47366718c67ed85ab92e5d49a29fc"
+        },
+        {
+          "stateCode": "NJ",
+          "stateVariant": "NJ",
+          "stateName": "New Jersey",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_nj.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_nj.json",
+          "sha256": "3fa16424cc36dd633cf9b3447fa9d37b41f08781bed14c8089d80e4b71a2f94d"
+        },
+        {
+          "stateCode": "NM",
+          "stateVariant": "NM",
+          "stateName": "New Mexico",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_nm.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_nm.json",
+          "sha256": "3f402c40dbfc9ad58f1103a69b701e0a04ea0532c2d1548d519644458a5afd0f"
+        },
+        {
+          "stateCode": "NV",
+          "stateVariant": "NV",
+          "stateName": "Nevada",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_nv.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_nv.json",
+          "sha256": "fd5f0810d08a209b1b2abd8b4b56d9b8238c2a7683fb9f582dc9613faf7ca047"
+        },
+        {
+          "stateCode": "NY",
+          "stateVariant": "NY",
+          "stateName": "New York",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_ny.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_ny.json",
+          "sha256": "1c61b9f7b268672c487e7b2a6dcec0570b3b8798d48010fb57a14f8f938fc39a"
+        },
+        {
+          "stateCode": "OH",
+          "stateVariant": "OH",
+          "stateName": "Ohio",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_oh.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_oh.json",
+          "sha256": "22866ec8df39a321d47cbfe130e4fc8a1c555b5e9a5080af75203ba6a3027cf1"
+        },
+        {
+          "stateCode": "OK",
+          "stateVariant": "OK",
+          "stateName": "Oklahoma",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_ok.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_ok.json",
+          "sha256": "90bf81531ac3244678ffa237b92383d5c2e95019333947033eaf6cda63abef47"
+        },
+        {
+          "stateCode": "OR",
+          "stateVariant": "OR",
+          "stateName": "Oregon",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_or.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_or.json",
+          "sha256": "a96d50e2cc9562c5233302334a63986437abf70cc2836f67bfa22ae6cc16f448"
+        },
+        {
+          "stateCode": "PA",
+          "stateVariant": "PA",
+          "stateName": "Pennsylvania",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_pa.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_pa.json",
+          "sha256": "da38c8395af2302d76db70e263f943567c4c6735874c4f4b78760925b312be5b"
+        },
+        {
+          "stateCode": "RI",
+          "stateVariant": "RI",
+          "stateName": "Rhode Island",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_ri.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_ri.json",
+          "sha256": "d3db405231ab82db1a2c9f80eba687556719aecc880bb19b7dcba16d53db5579"
+        },
+        {
+          "stateCode": "SC",
+          "stateVariant": "SC",
+          "stateName": "South Carolina",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_sc.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_sc.json",
+          "sha256": "15a599fdc5cc82dc7f20ae7576e09fd2f91efbae74ad667d584700a17018bc9b"
+        },
+        {
+          "stateCode": "SD",
+          "stateVariant": "SD",
+          "stateName": "South Dakota",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_sd.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_sd.json",
+          "sha256": "dd6a049f6b235d2e0db7af2ecce3f07166f4927f60be4406288c42bcd52dd646"
+        },
+        {
+          "stateCode": "TN",
+          "stateVariant": "TN",
+          "stateName": "Tennessee",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_tn.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_tn.json",
+          "sha256": "df74910ed8fbd9240180eecee4fce6ac528dce1aa56afe5435e6f3624f30cd40"
+        },
+        {
+          "stateCode": "TX",
+          "stateVariant": "TX",
+          "stateName": "Texas",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_tx.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_tx.json",
+          "sha256": "274a04746fc2de55b250caf06509535f69e8755ac24e08aa6c653b0892df835e"
+        },
+        {
+          "stateCode": "UT",
+          "stateVariant": "UT",
+          "stateName": "Utah",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_ut.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_ut.json",
+          "sha256": "e3129b8be13255705b8086142ed282888180e516e936f936f8c93d52cfe3050f"
+        },
+        {
+          "stateCode": "VA",
+          "stateVariant": "VA",
+          "stateName": "Virginia",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_va.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_va.json",
+          "sha256": "f85ac08de795085f03221bf7858890b9b9bb212731a46026fef4e63b87d0cbdb"
+        },
+        {
+          "stateCode": "VT",
+          "stateVariant": "VT",
+          "stateName": "Vermont",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_vt.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_vt.json",
+          "sha256": "73a6d68f977557e49ed802ea60d2408aa01b30840a2c0ca0b294444400b9d8ee"
+        },
+        {
+          "stateCode": "WA",
+          "stateVariant": "WA",
+          "stateName": "Washington",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_wa.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_wa.json",
+          "sha256": "e92eb03a25475199888c8e28c7075426ccca60fe6de2f18856764b25d2e758e9"
+        },
+        {
+          "stateCode": "WI",
+          "stateVariant": "WI",
+          "stateName": "Wisconsin",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_wi.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_wi.json",
+          "sha256": "7315a811b940e9268843c33b69cf7e5c73d0d1a90a873ea241536139562cadaa"
+        },
+        {
+          "stateCode": "WV",
+          "stateVariant": "WV",
+          "stateName": "West Virginia",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_wv.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_wv.json",
+          "sha256": "9bb982b9c57bec36f995680c3c25867f23518867192a31c2c6edb869c497520a"
+        },
+        {
+          "stateCode": "WY",
+          "stateVariant": "WY",
+          "stateName": "Wyoming",
+          "dataFile": "TestData/Scenarios/03_eq_bop_smoke_test_wy.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "03_eq_bop_smoke_test_mo.json",
+          "stateDonor": "02_eq_bop_basic_policy_wy.json",
+          "sha256": "f30159ea63025f7ca7e5e21d1ba21e237c44f26890888566754692224ef28632"
+        }
+      ]
+    },
+    "SFP": {
+      "states": 35,
+      "direct": 4,
+      "derived": 31,
+      "entries": [
+        {
+          "stateCode": "AL",
+          "stateVariant": "AL",
+          "stateName": "Alabama",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_al.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_al.json",
+          "sha256": "b31fe7204516e3c855e11da0fb936d2cc80daef72166734a1f50d1059fe348af"
+        },
+        {
+          "stateCode": "AR",
+          "stateVariant": "AR",
+          "stateName": "Arkansas",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_ar.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_ar.json",
+          "sha256": "a05f9cf90bf749213015e5625cf7dbf359c30b21cdb10a5c85a9da40ab48ab11"
+        },
+        {
+          "stateCode": "AZ",
+          "stateVariant": "AZ",
+          "stateName": "Arizona",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_az.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_az.json",
+          "sha256": "ef824aa2a6e78c967f44cfcf3b971005d571d82786b4924fb776de0587898c90"
+        },
+        {
+          "stateCode": "CO",
+          "stateVariant": "CO",
+          "stateName": "Colorado",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_co.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_co.json",
+          "sha256": "a16d43350e5e67fd3652088b648decdf347ec1ff7914c6a75205bfaab1e574e8"
+        },
+        {
+          "stateCode": "DE",
+          "stateVariant": "DE",
+          "stateName": "Delaware",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_de.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_de.json",
+          "sha256": "9602bdf41a15499adf85904593e06ecd4aa8c837d30be9dc9a65a74f9a9a5443"
+        },
+        {
+          "stateCode": "GA",
+          "stateVariant": "GA",
+          "stateName": "Georgia",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_ga.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_ga.json",
+          "sha256": "e46ee5c4d9c27cce9a31036f265f2c52ac19fb01c55900fe4529e9db9f03b8f2"
+        },
+        {
+          "stateCode": "IA",
+          "stateVariant": "IA",
+          "stateName": "Iowa",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_ia.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_ia.json",
+          "sha256": "943835bfb935e92ce273ff0c9ac136ca005fdff25349d36e633aea96ffe0eb09"
+        },
+        {
+          "stateCode": "ID",
+          "stateVariant": "ID",
+          "stateName": "Idaho",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_id.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_id.json",
+          "sha256": "6a73f84091bac17cbdfd98b568b6cb082d40b5c01e76a29b7215ed58cb80a2a1"
+        },
+        {
+          "stateCode": "IL",
+          "stateVariant": "IL",
+          "stateName": "Illinois",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_il.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_il.json",
+          "sha256": "fcfafc0ec832bd8cfe538d616c9f287e5a2841cd2de9f76dccc4e4ce20df733c"
+        },
+        {
+          "stateCode": "IN",
+          "stateVariant": "IN",
+          "stateName": "Indiana",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_in.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_in.json",
+          "sha256": "bea9ab5fb02c373b59ec4a8f55b8b151911b8273ad16e7517a6cce706f0953be"
+        },
+        {
+          "stateCode": "KS",
+          "stateVariant": "KS",
+          "stateName": "Kansas",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_ks.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_ks.json",
+          "sha256": "e93e75c8394d5c5513a2d222d289008b32f07acb079bd2cd45bb6a7b278daeca"
+        },
+        {
+          "stateCode": "KY",
+          "stateVariant": "KY",
+          "stateName": "Kentucky",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_ky.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_ky.json",
+          "sha256": "3177dce1b233b0664f063be76d0eb3a98f2b389395e6834afd404a0e02db4adf"
+        },
+        {
+          "stateCode": "LA",
+          "stateVariant": "LA",
+          "stateName": "Louisiana",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_la.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_la.json",
+          "sha256": "abe0c506a8fe11508180bcac6addaff971851970fe3019f0d9c4aafa1235df78"
+        },
+        {
+          "stateCode": "MA",
+          "stateVariant": "MA",
+          "stateName": "Massachusetts",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_ma.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_ma.json",
+          "sha256": "a0944247ec8bb2fbbfa0ea68ca0468d867ecadd58989cf464334ec2725448fbf"
+        },
+        {
+          "stateCode": "ME",
+          "stateVariant": "ME",
+          "stateName": "Maine",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_me.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_me.json",
+          "sha256": "b50b07c605b55d375242c67c33a0b23b4bc3072ca7956dc7701d3f87a2329a80"
+        },
+        {
+          "stateCode": "MN",
+          "stateVariant": "MN",
+          "stateName": "Minnesota",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_mn.json",
+          "sourceType": "DIRECT_SMOKE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_mn.json",
+          "sha256": "c48ac82796c12f63118b218024e5681f5c4b3572d813c0087ca5862be8ea11fd"
+        },
+        {
+          "stateCode": "MO",
+          "stateVariant": "MO",
+          "stateName": "Missouri",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_mo.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_mo.json",
+          "sha256": "c8b832a045f142403784b492ddfe5f584cee079a4ac6969abbf21f4ecd87bf40"
+        },
+        {
+          "stateCode": "MS",
+          "stateVariant": "MS",
+          "stateName": "Mississippi",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_ms.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_ms.json",
+          "sha256": "516045915446d04726bf5f7d464d1d38626f2af60cb89d3e8dfb9a395b4ba4d7"
+        },
+        {
+          "stateCode": "MT",
+          "stateVariant": "MT",
+          "stateName": "Montana",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_mt.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_mt.json",
+          "sha256": "d96cebbb8cbbbba60f37643a01bc406599283371dd97158a58bf6207319d5a85"
+        },
+        {
+          "stateCode": "ND",
+          "stateVariant": "ND",
+          "stateName": "North Dakota",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_nd.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_nd.json",
+          "sha256": "5446eac62832985c1ee77f8c37ea2d231b828b8366a879b8a573ee1013455181"
+        },
+        {
+          "stateCode": "NE",
+          "stateVariant": "NE",
+          "stateName": "Nebraska",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_ne.json",
+          "sourceType": "DIRECT_SMOKE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_ne.json",
+          "sha256": "8fadba9184f94312a09218c4a8c9ed753fd9c2c953b15ff12da518f085b8d900"
+        },
+        {
+          "stateCode": "NH",
+          "stateVariant": "NH",
+          "stateName": "New Hampshire",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_nh.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_nh.json",
+          "sha256": "4096f1ea5dcdf9c30944ea1da85d4e49aea617196ef9fe42721bff2380391e80"
+        },
+        {
+          "stateCode": "NM",
+          "stateVariant": "NM",
+          "stateName": "New Mexico",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_nm.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_nm.json",
+          "sha256": "20eef6cc93b65294d92b9b0af989fbc0583e213ae9977a4155058904754cbf63"
+        },
+        {
+          "stateCode": "NV",
+          "stateVariant": "NV",
+          "stateName": "Nevada",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_nv.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_nv.json",
+          "sha256": "d6c6b3b1aeea28aa2dba8f4aa815c393ecf5d44e3583e006ed43256c34673118"
+        },
+        {
+          "stateCode": "OH",
+          "stateVariant": "OH",
+          "stateName": "Ohio",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_oh.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_oh.json",
+          "sha256": "589520206b852c50d11b85c0bae383a4bade25c7d2cffc33ac7fe147652b90a9"
+        },
+        {
+          "stateCode": "OK",
+          "stateVariant": "OK",
+          "stateName": "Oklahoma",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_ok.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_ok.json",
+          "sha256": "e110b54f6aab02cb8ca7f0db855012a72c9eb3823a140b06987c8c39e331e706"
+        },
+        {
+          "stateCode": "OR",
+          "stateVariant": "OR",
+          "stateName": "Oregon",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_or.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_or.json",
+          "sha256": "171a588bca5879881e3da00f0fcd6a1720f3dd74313fd6ebd27585bcd0f9c9de"
+        },
+        {
+          "stateCode": "SC",
+          "stateVariant": "SC",
+          "stateName": "South Carolina",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_sc.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_sc.json",
+          "sha256": "1bc0348f51778acecbd80225a82cb722071c68f74132750c71154e8d64c766d9"
+        },
+        {
+          "stateCode": "SD",
+          "stateVariant": "SD",
+          "stateName": "South Dakota",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_sd.json",
+          "sourceType": "DIRECT_SMOKE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_sd.json",
+          "sha256": "dd5aa7dbb79c437d4f0688004670dcc7bd916b2874ed504e344a62b4983a7eb4"
+        },
+        {
+          "stateCode": "TN",
+          "stateVariant": "TN",
+          "stateName": "Tennessee",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_tn.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_tn.json",
+          "sha256": "7287f25bd44de8897b014efceec865d0bc25e98c26594f355bf797807f98f166"
+        },
+        {
+          "stateCode": "TX",
+          "stateVariant": "TX",
+          "stateName": "Texas",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_tx.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_tx.json",
+          "sha256": "79bd423f0088ed2220c0775edd3f181e94a75c13d05a9fb14e91e53416615c8c"
+        },
+        {
+          "stateCode": "UT",
+          "stateVariant": "UT",
+          "stateName": "Utah",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_ut.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_ut.json",
+          "sha256": "c3038d484c4752fe6aba1a6c089aa1770bcdbc9b3bbdb796fe4f06a8bf9c5d58"
+        },
+        {
+          "stateCode": "WA",
+          "stateVariant": "WA",
+          "stateName": "Washington",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_wa.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_wa.json",
+          "sha256": "89ca6704592bb5f495e704374302b91097b1d2d1916f6dec53ce880f1bd423d6"
+        },
+        {
+          "stateCode": "WI",
+          "stateVariant": "WI",
+          "stateName": "Wisconsin",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_wi.json",
+          "sourceType": "DIRECT_SMOKE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_wi.json",
+          "sha256": "908363e2df2e12f713eb88e63be27deda370c12fc722e8467cb8704cae5fc625"
+        },
+        {
+          "stateCode": "WY",
+          "stateVariant": "WY",
+          "stateName": "Wyoming",
+          "dataFile": "TestData/Scenarios/04_eq_sfp_smoke_test_wy.json",
+          "sourceType": "DERIVED_SMOKE_PLUS_BASIC_STATE_TOSCA",
+          "smokeTemplate": "04_eq_sfp_smoke_test_mn.json",
+          "stateDonor": "05_eq_sfp_basic_policy_wy.json",
+          "sha256": "52b294542fefe6125baf281f526421c7382f078880e87c5aad26a9c7aabe0452"
+        }
+      ]
+    }
+  }
+}

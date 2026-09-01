@@ -18,7 +18,7 @@ public sealed class SocialSecurityLocators
 
     public ILocator NoPrefillMatchFound =>
         _page.GetByRole(AriaRole.Heading, new() { Name = "No Prefill Match Found", Exact = true });
-    public ILocator Continue => _page.Locator("[duckcreekid=\"Continue\"], [data-duckcreekid=\"Continue\"]");
+    public ILocator Continue => _page.Locator("button:has-text(\"Continue\"), a:has-text(\"Continue\")").First;
 
     // Compatibility aliases
 }
