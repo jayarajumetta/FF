@@ -414,7 +414,7 @@ namespace PnCTestAutomation.Pages
 
         // ── Wind/Hail zip-to-zone rules ───────────────────────────────────────
         // Source: SFP WH Research – Expected Results based on Zip (sheet 2)
-        // cannotBeAdded = true  → field must be absent (ID, OR, UT, WA)
+        // cannotBeAdded = true  → field must be absent (ID, ME, OR, RI, UT, WA)
         // minDeductible = "1%" → mandatory minimum; assert 1% present, no sub-1% options
         // minDeductible = null  → no minimum; field present but unconstrained (N/A states)
         private static (bool cannotBeAdded, string minDeductible)? GetWindHailRulesForZip(string zip) =>
@@ -443,6 +443,7 @@ namespace PnCTestAutomation.Pages
                 "58504" => (false, "1%"),   // ND – zone 1, min 1%
                 "74332" => (false, null),   // OK – no mandatory minimum
                 "97331" => (true, null),   // OR – WH cannot be added
+                "02903" => (true, null),   // RI – WH cannot be added
                 "29810" => (false, null),   // SC – zone 2, no minimum
                 "57501" => (false, "1%"),   // SD – zone 3, min 1%
                 "37604" => (false, null),   // TN – zone 1, no minimum
