@@ -337,12 +337,23 @@ stages:
             exit 0
         }
 
-        $failedNames = $failed | ForEach-Object { $_.Node.testName } | Select-Object -Unique
-        Write-Host "Failed tests:"
-        $failedNames | ForEach-Object { Write-Host "  - $_" }
+        $failedFqns = @()
+        foreach ($result in $failed) {
+            $testId = $result.Node.testId
+            $testMethod = Select-Xml -Xml $trx -XPath "//t:UnitTest[@id='$testId']/t:TestMethod" -Namespace $ns
+            if ($testMethod -and $testMethod.Node.className -and $testMethod.Node.name) {
+                $failedFqns += "$($testMethod.Node.className).$($testMethod.Node.name)"
+            } elseif ($result.Node.testName) {
+                $failedFqns += $result.Node.testName
+            }
+        }
+        $failedFqns = $failedFqns | Select-Object -Unique
 
-        # Build a NUnit filter from failed test names
-        $nameFilter = ($failedNames | ForEach-Object {
+        Write-Host "Failed tests extracted:"
+        $failedFqns | ForEach-Object { Write-Host "  - $_" }
+
+        # Build a VSTest filter from failed test FQNs
+        $nameFilter = ($failedFqns | ForEach-Object {
             $escaped = $_.Replace("'", "").Replace('"', '')
             "FullyQualifiedName~$escaped"
         }) -join "|"
@@ -711,11 +722,22 @@ stages:
             exit 0
         }
 
-        $failedNames = $failed | ForEach-Object { $_.Node.testName } | Select-Object -Unique
-        Write-Host "Failed tests:"
-        $failedNames | ForEach-Object { Write-Host "  - $_" }
+        $failedFqns = @()
+        foreach ($result in $failed) {
+            $testId = $result.Node.testId
+            $testMethod = Select-Xml -Xml $trx -XPath "//t:UnitTest[@id='$testId']/t:TestMethod" -Namespace $ns
+            if ($testMethod -and $testMethod.Node.className -and $testMethod.Node.name) {
+                $failedFqns += "$($testMethod.Node.className).$($testMethod.Node.name)"
+            } elseif ($result.Node.testName) {
+                $failedFqns += $result.Node.testName
+            }
+        }
+        $failedFqns = $failedFqns | Select-Object -Unique
 
-        $nameFilter = ($failedNames | ForEach-Object {
+        Write-Host "Failed tests extracted:"
+        $failedFqns | ForEach-Object { Write-Host "  - $_" }
+
+        $nameFilter = ($failedFqns | ForEach-Object {
             $escaped = $_.Replace("'", "").Replace('"', '')
             "FullyQualifiedName~$escaped"
         }) -join "|"
