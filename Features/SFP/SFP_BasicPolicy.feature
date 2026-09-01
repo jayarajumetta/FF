@@ -257,62 +257,62 @@ Feature: SFP Basic Policy
 
     @Shard1 @Debug
     Examples:
-      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
-      | Alabama        | AL        | 1918 Avalon Ave               |          111 | Muscle Shoals | 35661 | Colbert      |
+      | State   | StateAbbv | Address         | AddressLine2 | City          | Zip   | County  |
+      | Alabama | AL        | 1918 Avalon Ave |          111 | Muscle Shoals | 35661 | Colbert |
 
     @Shard1
     Examples:
-      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
-      | Arkansas       | AR        | 3998 Harrison St              |          111 | Batesville    | 72503 | Independence |
-      | Arizona        | AZ        | 4201 N 24th St                |          111 | Phoenix       | 85016 | Maricopa     |
-      | Colorado       | CO        | 231 Main St                   |          111 | Fort Morgan   | 80701 | Morgan       |
-      | Connecticut    | CT        | 605 New England Rd            |          111 | Guilford      | 06437 | New Haven    |
-      | Delaware       | DE        | 424 Delaware St               |          111 | New Castle    | 19720 | New Castle   |
-      | Georgia        | GA        | 3715 Northside Pkwy           |          111 | Atlanta       | 30327 | Fulton       |
-      | Idaho          | ID        | 1221 W Ironwood Dr            |          111 | Coeur D Alene | 83814 | Kootenai     |
-      | Illinois       | IL        | 2576 Charles St               |          111 | Rockford      | 61108 | Winnebago    |
-      | Indiana        | IN        | 5518 Calumet Ave              |          111 | Hammond       | 46320 | Lake         |
-      | Iowa           | IA        | 808 River St                  |          111 | Decorah       | 52101 | Winneshiek   |
-      | Kansas         | KS        | 9400 State Ave                |          111 | Kansas City   | 66112 | Wyandotte    |
-      | Kentucky       | KY        | 1002 Medical Dr               |          111 | Mayfield      | 42066 | Graves       |
-      | Louisiana      | LA        | 218 Meadow Dr                 |          111 | Oakdale       | 71463 | Allen        |
+      | State       | StateAbbv | Address             | AddressLine2 | City          | Zip   | County       |
+      | Arkansas    | AR        | 3998 Harrison St    |          111 | Batesville    | 72503 | Independence |
+      | Arizona     | AZ        | 4201 N 24th St      |          111 | Phoenix       | 85016 | Maricopa     |
+      | Colorado    | CO        | 231 Main St         |          111 | Fort Morgan   | 80701 | Morgan       |
+      | Connecticut | CT        | 391 Old Post Road   |          111 | Tolland       | 06084 | Tolland      |
+      | Delaware    | DE        | 424 Delaware St     |          111 | New Castle    | 19720 | New Castle   |
+      | Georgia     | GA        | 3715 Northside Pkwy |          111 | Atlanta       | 30327 | Fulton       |
+      | Idaho       | ID        | 1221 W Ironwood Dr  |          111 | Coeur D Alene | 83814 | Kootenai     |
+      | Illinois    | IL        | 2576 Charles St     |          111 | Rockford      | 61108 | Winnebago    |
+      | Indiana     | IN        | 5518 Calumet Ave    |          111 | Hammond       | 46320 | Lake         |
+      | Iowa        | IA        | 808 River St        |          111 | Decorah       | 52101 | Winneshiek   |
+      | Kansas      | KS        | 9400 State Ave      |          111 | Kansas City   | 66112 | Wyandotte    |
+      | Kentucky    | KY        | 1002 Medical Dr     |          111 | Mayfield      | 42066 | Graves       |
+      | Louisiana   | LA        | 218 Meadow Dr       |          111 | Oakdale       | 71463 | Allen        |
 
     @Shard2 @Debug
     Examples:
-      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
-      | Mississippi    | MS        | 4105 Washington Ave           |          111 | Gulfport      | 39507 | Harrison     |
+      | State       | StateAbbv | Address             | AddressLine2 | City     | Zip   | County   |
+      | Mississippi | MS        | 4105 Washington Ave |          111 | Gulfport | 39507 | Harrison |
 
     @Shard2
     Examples:
-      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
-      | Missouri       | MO        | 1895 S Forrest Heights Avenue |          111 | Springfield   | 65809 | Greene       |
-      | Massachusetts  | MA        | 66 Wendell Ave                |          111 | Pittsfield    | 01201 | Berkshire    |
-      | Maine          | ME        | 33 Davis St                   |          111 | Presque Isle  | 04769 | Aroostook    |
-      | Minnesota      | MN        | 115 S Main ST                 |          111 | Warren        | 56762 | Marshall     |
-      | Montana        | MT        | 1202 3rd St W                 |           11 | Roundup       | 59072 | Musselshell  |
-      | Nebraska       | NE        | 1517 Broadway                 |          111 | Scottsbluff   | 69361 | Scotts Bluff |
-      | Nevada         | NV        | 340 N 11th St                 |          111 | Las Vegas     | 89101 | Clark        |
-      | New Hampshire  | NH        | 67 Comstock Road              |          111 | Alstead       | 03602 | Cheshire     |
-      | New Jersey     | NJ        | 344 Rt 9w                     |          111 | Bloomsbury    | 08804 | Hunterdon    |
-      | New Mexico     | NM        | 901 West 13th St              |          111 | Clovis        | 88101 | Curry        |
-      | North Dakota   | ND        | 600 S 2nd St                  |          111 | Bismarck      | 58504 | Burleigh     |
-      | Oklahoma       | OK        | 436255 E 330 Rd               |          111 | Big Cabin     | 74332 | Craig        |
+      | State         | StateAbbv | Address                       | AddressLine2 | City         | Zip   | County       |
+      | Missouri      | MO        | 1895 S Forrest Heights Avenue |          111 | Springfield  | 65809 | Greene       |
+      | Massachusetts | MA        | 66 Wendell Ave                |          111 | Pittsfield   | 01201 | Berkshire    |
+      | Maine         | ME        | 33 Davis St                   |          111 | Presque Isle | 04769 | Aroostook    |
+      | Minnesota     | MN        | 115 S Main ST                 |          111 | Warren       | 56762 | Marshall     |
+      | Montana       | MT        | 1202 3rd St W                 |           11 | Roundup      | 59072 | Musselshell  |
+      | Nebraska      | NE        | 1517 Broadway                 |          111 | Scottsbluff  | 69361 | Scotts Bluff |
+      | Nevada        | NV        | 340 N 11th St                 |          111 | Las Vegas    | 89101 | Clark        |
+      | New Hampshire | NH        | 67 Comstock Road              |          111 | Alstead      | 03602 | Cheshire     |
+      | New Jersey    | NJ        | 27 West St                    |          111 | Bloomsbury   | 08804 | Hunterdon    |
+      | New Mexico    | NM        | 901 West 13th St              |          111 | Clovis       | 88101 | Curry        |
+      | North Dakota  | ND        | 600 S 2nd St                  |          111 | Bismarck     | 58504 | Burleigh     |
+      | Oklahoma      | OK        | 436255 E 330 Rd               |          111 | Big Cabin    | 74332 | Craig        |
 
     @Shard3 @Debug
     Examples:
-      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
-      | Ohio           | OH        | 1566 Northeast Ave            |          111 | Tallmadge     | 44278 | Summit       |
+      | State | StateAbbv | Address            | AddressLine2 | City      | Zip   | County |
+      | Ohio  | OH        | 1566 Northeast Ave |          111 | Tallmadge | 44278 | Summit |
 
     @Shard3
     Examples:
-      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
-      | Oregon         | OR        | 661 SW 26TH ST                |          111 | Corvallis     | 97331 | Benton       |
-      | Rhode Island   | RI        | 160 Pine St                   |          111 | Providence    | 02903 | Providence   |
-      | South Carolina | SC        | 3009 Augusta Hwy              |          111 | Allendale     | 29810 | Allendale    |
-      | South Dakota   | SD        | 700 Governors Dr              |          111 | Pierre        | 57501 | Hughes       |
-      | Tennessee      | TN        | 207 N Boone St                |          111 | Johnson City  | 37604 | Washington   |
-      | Texas          | TX        | 118 Broadway                  |          111 | San Antonio   | 78205 | Bexar        |
-      | Utah           | UT        | 170 N Main                    |          111 | Logan         | 84321 | Cache        |
-      | Washington     | WA        | 834 Sheridan St               |          111 | Port Townsend | 98368 | Jefferson    |
-      | Wisconsin      | WI        | 3601 Memorial Dr              |          111 | Madison       | 53704 | Dane         |
-      | Wyoming        | WY        | 100 E B St                    |          111 | Casper        | 82601 | Natrona      |
+      | State          | StateAbbv | Address          | AddressLine2 | City          | Zip   | County     |
+      | Oregon         | OR        | 661 SW 26TH ST   |          111 | Corvallis     | 97331 | Benton     |
+      | Rhode Island   | RI        | 160 Pine St      |          111 | Providence    | 02903 | Providence |
+      | South Carolina | SC        | 3009 Augusta Hwy |          111 | Allendale     | 29810 | Allendale  |
+      | South Dakota   | SD        | 700 Governors Dr |          111 | Pierre        | 57501 | Hughes     |
+      | Tennessee      | TN        | 207 N Boone St   |          111 | Johnson City  | 37604 | Washington |
+      | Texas          | TX        | 118 Broadway     |          111 | San Antonio   | 78205 | Bexar      |
+      | Utah           | UT        | 170 N Main       |          111 | Logan         | 84321 | Cache      |
+      | Washington     | WA        | 834 Sheridan St  |          111 | Port Townsend | 98368 | Jefferson  |
+      | Wisconsin      | WI        | 3601 Memorial Dr |          111 | Madison       | 53704 | Dane       |
+      | Wyoming        | WY        | 100 E B St       |          111 | Casper        | 82601 | Natrona    |
