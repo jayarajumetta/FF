@@ -58,7 +58,9 @@ namespace PnCTestAutomation.Pages
                     break;
                 }
 
-                await option.ClickAsync(new() { Timeout = 3000 });
+                // Native click avoids Playwright rejecting visible Material overlay options
+                // whose bounding box is reported outside the viewport.
+                await option.EvaluateAsync("element => element.click()");
                 await WaitForSpinnerAsync();
 
                 var selectedText = (await LimitSelect.InnerTextAsync()).Trim();
