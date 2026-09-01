@@ -352,10 +352,21 @@ stages:
         Write-Host "Failed tests extracted:"
         $failedFqns | ForEach-Object { Write-Host "  - $_" }
 
-        # Build a VSTest filter from failed test FQNs
-        $nameFilter = ($failedFqns | ForEach-Object {
+        # Normalize parameterized names to method-level FQNs for a valid VSTest filter
+        $failedMethods = ($failedFqns | ForEach-Object {
+            if ($_ -match '^([^\(]+)') { $matches[1] } else { $_ }
+        }) | Select-Object -Unique
+
+        Write-Host "Retry methods extracted:"
+        $failedMethods | ForEach-Object { Write-Host "  - $_" }
+
+        $nameFilter = ($failedMethods | ForEach-Object {
             $escaped = $_.Replace("'", "").Replace('"', '')
-            "FullyQualifiedName~$escaped"
+            if ($env:SHARD_NUMBER -match '^\d+$') {
+                "(FullyQualifiedName~\"$escaped\"&TestCategory=Shard$($env:SHARD_NUMBER))"
+            } else {
+                "FullyQualifiedName~\"$escaped\""
+            }
         }) -join "|"
 
         Write-Host "Generated filter:"
@@ -737,9 +748,21 @@ stages:
         Write-Host "Failed tests extracted:"
         $failedFqns | ForEach-Object { Write-Host "  - $_" }
 
-        $nameFilter = ($failedFqns | ForEach-Object {
+        # Normalize parameterized names to method-level FQNs for a valid VSTest filter
+        $failedMethods = ($failedFqns | ForEach-Object {
+            if ($_ -match '^([^\(]+)') { $matches[1] } else { $_ }
+        }) | Select-Object -Unique
+
+        Write-Host "Retry methods extracted:"
+        $failedMethods | ForEach-Object { Write-Host "  - $_" }
+
+        $nameFilter = ($failedMethods | ForEach-Object {
             $escaped = $_.Replace("'", "").Replace('"', '')
-            "FullyQualifiedName~$escaped"
+            if ($env:SHARD_NUMBER -match '^\d+$') {
+                "(FullyQualifiedName~\"$escaped\"&TestCategory=Shard$($env:SHARD_NUMBER))"
+            } else {
+                "FullyQualifiedName~\"$escaped\""
+            }
         }) -join "|"
 
         Write-Host "Generated filter:"
