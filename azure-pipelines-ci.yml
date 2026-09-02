@@ -1,0 +1,63 @@
+name: $(Date:yyyyMMdd).$(Rev:r)
+trigger:
+  branches:
+    include: [main, master]
+pr:
+  branches:
+    include: [main, master]
+
+pool:
+  vmImage: windows-latest
+
+variables:
+  BuildConfiguration: Release
+  ArtifactName: testpackage
+
+steps:
+- checkout: self
+  clean: true
+
+- task: UseDotNet@2
+  displayName: Install .NET 8 SDK
+  inputs:
+    packageType: sdk
+    version: 8.0.x
+
+- task: UsePythonVersion@0
+  displayName: Install Python
+  inputs:
+    versionSpec: 3.x
+
+- powershell: |
+    dotnet restore .\ToscaCanonicalSimple.sln
+    if ($LASTEXITCODE -ne 0) { throw 'dotnet restore failed' }
+    dotnet build .\ToscaCanonicalSimple.sln -c $(BuildConfiguration) --no-restore
+    if ($LASTEXITCODE -ne 0) { throw 'dotnet build failed' }
+  displayName: Restore and build solution
+
+- powershell: |
+    $playwright = Get-ChildItem . -Recurse -Filter playwright.ps1 -File |
+      Where-Object { $_.FullName -match '\\bin\\Release\\net8\.0\\' } |
+      Select-Object -First 1
+    if (-not $playwright) { throw 'playwright.ps1 was not produced by the build' }
+    & $playwright.FullName install chromium
+    if ($LASTEXITCODE -ne 0) { throw 'Playwright browser installation failed' }
+  displayName: Validate Playwright browser installation
+
+- powershell: |
+    python .\tools\package_gate.py
+    if ($LASTEXITCODE -ne 0) { throw 'Client package quality gate failed' }
+  displayName: Run framework quality gate
+
+- powershell: |
+    $dest = '$(Build.ArtifactStagingDirectory)\testpackage'
+    New-Item -ItemType Directory -Force -Path $dest | Out-Null
+    robocopy '$(Build.SourcesDirectory)' $dest /E /R:2 /W:1 /XD .git .vs .idea TestResults Artifacts obj
+    if ($LASTEXITCODE -ge 8) { throw "robocopy failed with exit code $LASTEXITCODE" }
+  displayName: Assemble executable test artifact
+
+- task: PublishPipelineArtifact@1
+  displayName: Publish executable test artifact
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)\testpackage'
+    artifact: '$(ArtifactName)'
