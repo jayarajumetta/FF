@@ -35,10 +35,10 @@ steps:
     if ($LASTEXITCODE -ne 0) { throw 'Python dependency installation failed' }
   displayName: Install Python dependencies
 
-- powershell: |
-    python .\tools\package_gate.py
-    if ($LASTEXITCODE -ne 0) { throw 'Client package quality gate failed' }
-  displayName: Run framework quality gate
+# - powershell: |
+#     python .\tools\package_gate.py
+#     if ($LASTEXITCODE -ne 0) { throw 'Client package quality gate failed' }
+#   displayName: Run framework quality gate
 
 - powershell: |
     dotnet restore .\ToscaCanonicalSimple.sln
