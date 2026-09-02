@@ -88,12 +88,36 @@ steps:
   displayName: Validate Playwright browser installation
 
 - powershell: |
+    $ErrorActionPreference = 'Stop'
     $dest = '$(Build.ArtifactStagingDirectory)\testpackage'
     New-Item -ItemType Directory -Force -Path $dest | Out-Null
     robocopy '$(Build.SourcesDirectory)' $dest /E /R:2 /W:1 /XD .git .vs .idea TestResults Artifacts obj __pycache__
     $robocopyExitCode = $LASTEXITCODE
     if ($robocopyExitCode -ge 8) { throw "robocopy failed with exit code $robocopyExitCode" }
     Write-Host "robocopy completed with exit code $robocopyExitCode"
+
+    $required = @(
+      '.azuredevops\scripts\Initialize-TestRuntime.ps1',
+      '.azuredevops\scripts\New-AdoSingleCaseSuite.ps1',
+      '.azuredevops\scripts\Remove-AdoTemporarySuite.ps1',
+      'azure-pipelines-cd.yml',
+      'Tosca.runsettings'
+    )
+    foreach ($relative in $required) {
+      $path = Join-Path $dest $relative
+      if (-not (Test-Path -LiteralPath $path)) {
+        throw "Run-ready artifact is missing required file: $relative"
+      }
+    }
+
+    $zipPath = '$(Build.ArtifactStagingDirectory)\testpackage-runready.zip'
+    if (Test-Path -LiteralPath $zipPath) { Remove-Item -LiteralPath $zipPath -Force }
+    Compress-Archive -Path (Join-Path $dest '*') -DestinationPath $zipPath -CompressionLevel Optimal
+    if (-not (Test-Path -LiteralPath $zipPath)) {
+      throw 'Failed to produce run-ready zip package.'
+    }
+    Copy-Item -LiteralPath $zipPath -Destination (Join-Path $dest 'testpackage-runready.zip') -Force
+
     $global:LASTEXITCODE = 0
   displayName: Assemble executable test artifact
 

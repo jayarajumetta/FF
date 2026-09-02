@@ -64,6 +64,16 @@ stages:
         artifactName: '$(ArtifactName)'
         targetPath: '$(ArtifactRoot)'
       displayName: Download test artifact
+    - powershell: |
+        $zipPath = "$(ArtifactRoot)\testpackage-runready.zip"
+        if (Test-Path -LiteralPath $zipPath) {
+          Expand-Archive -LiteralPath $zipPath -DestinationPath "$(ArtifactRoot)" -Force
+          Write-Host "Extracted run-ready zip: $zipPath"
+        }
+        else {
+          Write-Host 'Run-ready zip not found; using downloaded folder content as-is.'
+        }
+      displayName: Ensure run-ready artifact is extracted
     - powershell: '& "$(ArtifactRoot)\.azuredevops\scripts\Initialize-TestRuntime.ps1" -ArtifactRoot "$(ArtifactRoot)" -EvidenceRoot "$(Pipeline.Workspace)\evidence\SingleCase" -Headless $${{ parameters.headless }}'
       displayName: Prepare test runtime
     - powershell: '& "$(ArtifactRoot)\.azuredevops\scripts\New-AdoSingleCaseSuite.ps1" -PlanId ${{ parameters.testPlanId }} -ParentSuiteId ${{ parameters.singleCaseParentSuiteId }} -TestCaseId ${{ parameters.singleTestCaseId }} -ConfigurationId ${{ parameters.testConfigurationId }}'
@@ -125,6 +135,16 @@ stages:
         artifactName: '$(ArtifactName)'
         targetPath: '$(ArtifactRoot)'
       displayName: Download test artifact
+    - powershell: |
+        $zipPath = "$(ArtifactRoot)\testpackage-runready.zip"
+        if (Test-Path -LiteralPath $zipPath) {
+          Expand-Archive -LiteralPath $zipPath -DestinationPath "$(ArtifactRoot)" -Force
+          Write-Host "Extracted run-ready zip: $zipPath"
+        }
+        else {
+          Write-Host 'Run-ready zip not found; using downloaded folder content as-is.'
+        }
+      displayName: Ensure run-ready artifact is extracted
     - powershell: '& "$(ArtifactRoot)\.azuredevops\scripts\Initialize-TestRuntime.ps1" -ArtifactRoot "$(ArtifactRoot)" -EvidenceRoot "$(Pipeline.Workspace)\evidence\Suite" -Headless $${{ parameters.headless }}'
       displayName: Prepare test runtime
     - task: VSTest@3
@@ -177,6 +197,16 @@ stages:
         artifactName: '$(ArtifactName)'
         targetPath: '$(ArtifactRoot)'
       displayName: Download test artifact
+    - powershell: |
+        $zipPath = "$(ArtifactRoot)\testpackage-runready.zip"
+        if (Test-Path -LiteralPath $zipPath) {
+          Expand-Archive -LiteralPath $zipPath -DestinationPath "$(ArtifactRoot)" -Force
+          Write-Host "Extracted run-ready zip: $zipPath"
+        }
+        else {
+          Write-Host 'Run-ready zip not found; using downloaded folder content as-is.'
+        }
+      displayName: Ensure run-ready artifact is extracted
     - powershell: '& "$(ArtifactRoot)\.azuredevops\scripts\Initialize-TestRuntime.ps1" -ArtifactRoot "$(ArtifactRoot)" -EvidenceRoot "$(Pipeline.Workspace)\evidence\Dll" -Headless $${{ parameters.headless }}'
       displayName: Prepare test runtime
     - task: VSTest@3
@@ -233,6 +263,16 @@ stages:
         artifactName: '$(ArtifactName)'
         targetPath: '$(ArtifactRoot)'
       displayName: Download reporting source and scripts
+    - powershell: |
+        $zipPath = "$(ArtifactRoot)\testpackage-runready.zip"
+        if (Test-Path -LiteralPath $zipPath) {
+          Expand-Archive -LiteralPath $zipPath -DestinationPath "$(ArtifactRoot)" -Force
+          Write-Host "Extracted run-ready zip: $zipPath"
+        }
+        else {
+          Write-Host 'Run-ready zip not found; using downloaded folder content as-is.'
+        }
+      displayName: Ensure run-ready artifact is extracted
     - task: DownloadPipelineArtifact@2
       inputs:
         buildType: current
