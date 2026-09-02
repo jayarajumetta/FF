@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text;
+using System.Text.Json;
 
 namespace InsuranceAutomation.Core;
 
@@ -8,6 +9,7 @@ public sealed class ScenarioReport
     private readonly List<StepResult> _steps = [];
     private readonly List<DeferredVerificationFailure> _deferredVerifications = [];
     private readonly string _artifactDirectory;
+    private readonly DateTimeOffset _scenarioStartUtc = DateTimeOffset.UtcNow;
     private DateTime _currentStart;
     private string _currentStep = string.Empty;
 
@@ -66,6 +68,52 @@ public sealed class ScenarioReport
         </body></html>
         """;
         File.WriteAllText(file, html);
+
+        var scenarioPassed = _steps.All(step => step.Passed) && _deferredVerifications.Count == 0;
+        var result = new
+        {
+            schemaVersion = "1.0",
+            feature,
+            scenario,
+            status = scenarioPassed ? "PASS" : "FAIL",
+            startedAtUtc = _scenarioStartUtc,
+            completedAtUtc = DateTimeOffset.UtcNow,
+            durationMilliseconds = Math.Round(_steps.Sum(step => step.Duration.TotalMilliseconds), 3),
+            steps = _steps.Select((step, index) => new
+            {
+                order = index + 1,
+                text = step.Step,
+                status = step.Passed ? "PASS" : "FAIL",
+                durationMilliseconds = Math.Round(step.Duration.TotalMilliseconds, 3),
+                data = step.Data,
+                error = step.Error,
+                consoleErrors = step.ConsoleErrors,
+                networkErrors = step.NetworkErrors,
+                screenshot = string.IsNullOrWhiteSpace(step.Screenshot) ? string.Empty : Rel(step.Screenshot)
+            }),
+            deferredVerifications = _deferredVerifications.Select(item => new
+            {
+                businessStep = item.BusinessStep,
+                page = item.Page,
+                control = item.Control,
+                property = item.Property,
+                expected = item.Expected,
+                error = item.Error,
+                screenshot = string.IsNullOrWhiteSpace(item.Screenshot) ? string.Empty : Rel(item.Screenshot)
+            }),
+            artifacts = new
+            {
+                report = "report.html",
+                log = Rel(logPath),
+                trace = string.IsNullOrWhiteSpace(tracePath) ? string.Empty : Rel(tracePath),
+                video = string.IsNullOrWhiteSpace(videoPath) ? string.Empty : Rel(videoPath),
+                har = string.IsNullOrWhiteSpace(harPath) ? string.Empty : Rel(harPath),
+                evidenceBundle = string.IsNullOrWhiteSpace(bundlePath) ? string.Empty : Rel(bundlePath)
+            }
+        };
+        File.WriteAllText(
+            Path.Combine(_artifactDirectory, "scenario-result.json"),
+            JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true }));
     }
 
     private string RenderDeferredVerificationTable()

@@ -13,7 +13,7 @@ public sealed class UnderwritingLocators
 
     public ILocator EntityType => _page.Locator("[id=\"fields.data.sFPInsuranceScoreDesigneeInput$entityType.value\"]");
 
-    public ILocator InsuranceScoreConsent => _page.Locator("[duckcreekid=\"Insurance Score Consent\"], [data-duckcreekid=\"Insurance Score Consent\"]");
+    public ILocator InsuranceScoreConsent => _page.Locator("button:has-text(\"Insurance Score Consent\"), a:has-text(\"Insurance Score Consent\")").First;
 
     public ILocator Loading => _page.GetByLabel("Loading ...", new() { Exact = true });
 
@@ -23,7 +23,7 @@ public sealed class UnderwritingLocators
 
     public ILocator PrimaryInsured => _page.GetByTestId("fields.data.sFPInsuranceScoreDesigneeInput$headlessSelectionOption.value-chip-wrapper");
 
-    public ILocator Save => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Save\"], [data-duckcreekid=\"Save\"]");
+    public ILocator Save => _page.Locator("button[id=\"fields.data.save\"], button[data-testid=\"fields.line.save\"], button:has-text(\"Save\"), a:has-text(\"Save\")").First;
 
     public ILocator ScreenHeading => _page.GetByText("Screen Heading", new() { Exact = true });
 

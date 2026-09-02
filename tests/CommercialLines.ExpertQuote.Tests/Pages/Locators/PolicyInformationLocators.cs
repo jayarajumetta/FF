@@ -24,6 +24,6 @@ public sealed class PolicyInformationLocators
 
     public ILocator SecondaryFarmCategory => _page.GetByTestId("fields.account.policyInput$farmTypeSecondaryCategory.value-chip-wrapper");
 
-    public ILocator SecondaryFarmType => _page.Locator("[duckcreekid=\"PolicyInput.FarmTypeSecondary\"], [data-duckcreekid=\"PolicyInput.FarmTypeSecondary\"]");
+    public ILocator SecondaryFarmType => _page.GetByRole(AriaRole.Textbox, new() { Name = "Secondary Farm Type", Exact = true }).First;
 
 }

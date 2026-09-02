@@ -170,7 +170,7 @@ CLDC quote descriptions are generated at runtime in the following form:
 STATE_LOB_RANDOM4_yyyyMMdd_HHmmss
 ```
 
-The value entered into Duck Creek is captured from the UI and stored in scenario runtime data. Every CLDC smoke flow navigates back to Policy Info and validates the captured description before sign-out.
+The value entered into Duck Creek is captured from the UI and stored in scenario runtime data. Every protected CLDC Smoke flow navigates back to Policy Info and validates the captured description. The uploaded Smoke feature and step-definition files remain byte-for-byte unchanged in this revision, including temporarily commented Examples rows.
 
 ## Verification operators
 
@@ -260,7 +260,7 @@ SMTP_USER
 SMTP_PASSWORD
 ```
 
-Failed cases appear before passed cases. Failed report detail is embedded in the email body, failed screenshots are resized/compressed and embedded as JPEG data, the combined HTML email report is attached, and failed scenario HTML reports are attached separately. Long passed-case lists are clipped in the email body while complete results remain in Azure DevOps.
+Each scenario writes `scenario-result.json` beside its individual HTML report. The final release stage combines all available scenario results into Robot Framework-inspired `report.html`, `log.html`, `output.xml` and `summary.json`, publishes them as `consolidated-test-report`, and sends the same report set through SMTP when the secure SMTP variables are configured.
 
 ## Repository quality gate
 
@@ -270,4 +270,30 @@ Before committing or packaging changes, run:
 python .\tools\package_gate.py
 ```
 
-The gate checks feature/test-data references, state dimensions, JSON validity, C# structural balance, locator duplication, Page-to-Locator references, CLDC fieldref contracts, dropdown/verification contracts, smoke description validation, hardcoded credentials and client-package cleanliness.
+The gate checks JSON/YAML/project syntax, C# structural balance, all active feature-step bindings, feature/test-data references, exact layered-data reconstruction, EQ Smoke state lineage, Page-to-Locator references, ExpertQuote locator restrictions, protected CLDC Smoke/NUnit checksums, report generation and package cleanliness. A real `dotnet restore`, `dotnet build` and `dotnet test` remains authoritative and is performed by the Azure build/execution pipelines.
+
+
+## Layered scenario test data
+
+All application suites retain the original `TestData/Scenarios/*.json` files as Tosca lineage. Runtime loading now also supports:
+
+```text
+TestData/Layered/manifest.json
+TestData/Layered/<flow>/Base.json
+TestData/Layered/<flow>/StateOverrides.json
+```
+
+`ScenarioData` reconstructs the requested scenario using JSON Merge Patch semantics. The package gate compares every reconstruction with its original scenario JSON before the package is accepted. This provides the same base-plus-state-override maintenance approach across CLDC Basic/Extended/Miscellaneous, ExpertQuote and PLDC without discarding the source records.
+
+## ExpertQuote state coverage and locators
+
+ExpertQuote BOP Smoke contains 45 active state examples. ExpertQuote SFP Smoke contains the 35 states supported by the supplied SFP Basic records. Existing Smoke records are retained; missing state-specific Smoke records are generated only from the supplied Smoke workflow template plus the corresponding raw-Tosca Basic Policy state record. The full donor and checksum lineage is stored in `Artifacts/Validation/eq-smoke-state-lineage.json`.
+
+ExpertQuote locator classes do not use Duck Creek `fieldref`, `duckcreekid` or `data-duckcreekid` selectors. They use source-backed Angular/stable contracts such as `data-testid`, stable `id`/`name`, ARIA role and exact action text. PLDC retains its own project/page classes while using the same Angular-style selector format where the supplied PLDC/EQ flow exposes those controls.
+
+Root Azure entry points are also included for easier pipeline selection:
+
+```text
+azure-pipelines-ci.yml
+azure-pipelines-cd.yml
+```

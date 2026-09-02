@@ -13,15 +13,15 @@ public sealed class CoveragesLocators
 
     public ILocator BlanketFPP => _page.Locator("input[id=\"fields.line.covCountryEstateBlanketFPP_D3.blanketFPP_2.value\"][name=\"fields.line.covCountryEstateBlanketFPP_D3.blanketFPP_2.value\"]");
 
-    public ILocator CECoverage => _page.Locator("input[id=\"\\\"fields.data.policy.policyWideCovCat.policyWideCovCatEntry.rows[0].policyWideCovCatEntryInput$selected.value-checkbox\\\"\"][name=\"\\\"fields.data.policy.policyWideCovCat.policyWideCovCatEntry.rows[0].policyWideCovCatEntryInput$selected.value\\\"\"]");
+    public ILocator CECoverage => _page.Locator("input[id=\"fields.data.policy.policyWideCovCat.policyWideCovCatEntry.rows[0].policyWideCovCatEntryInput$selected.value-checkbox\"][name=\"fields.data.policy.policyWideCovCat.policyWideCovCatEntry.rows[0].policyWideCovCatEntryInput$selected.value\"]");
 
     public ILocator CheckBox => _page.Locator("input[id=\"_temp.classCodeSelected.0-input\"][name=\"_temp.classCodeSelected.0\"]");
 
 
 
-    public ILocator Deductible => _page.Locator("[id=\"\"fields.risk.rows[0].residenceCoverage.rows[0].coverageInput$deductible.value\"\"]");
+    public ILocator Deductible => _page.Locator("[id=\"fields.risk.rows[0].residenceCoverage.rows[0].coverageInput$deductible.value\"]");
 
-    public ILocator Description => _page.Locator("input[id=\"\\\"fields.risk.rows[0].businessPersonalPropertyInventorySheet.businessPersonalPropertyInventorySheetScheduled.rows[0].businessPersonalPropertyInventorySheetScheduledInput$description.value\\\"\"][name=\"\\\"fields.risk.rows[0].businessPersonalPropertyInventorySheet.businessPersonalPropertyInventorySheetScheduled.rows[0].businessPersonalPropertyInventorySheetScheduledInput$description.value\\\"\"]");
+    public ILocator Description => _page.Locator("input[id=\"fields.risk.rows[0].businessPersonalPropertyInventorySheet.businessPersonalPropertyInventorySheetScheduled.rows[0].businessPersonalPropertyInventorySheetScheduledInput$description.value\"][name=\"fields.risk.rows[0].businessPersonalPropertyInventorySheet.businessPersonalPropertyInventorySheetScheduled.rows[0].businessPersonalPropertyInventorySheetScheduledInput$description.value\"]");
 
     public ILocator DoesTheInsuredAndAnyExecutiveOfficerOrOwnerHaveAnyKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaint => _page.Locator("[id=\"fields.line.endLineEmploymentRelatedPracticesLiability.endLineEmploymentRelatedPracticesLiabilityInput$ePLPriorKnowledge.value\"]");
 
@@ -35,7 +35,7 @@ public sealed class CoveragesLocators
 
     public ILocator LiabilityLimit => _page.Locator("[id=\"fields.line.liability_D5.liabilityLimit_2.value\"]");
 
-    public ILocator Limit => _page.Locator("input[id=\"\\\"fields.covEndorsements.rows[0].covEndorsementsInput$limit.value\\\"\"][name=\"\\\"fields.covEndorsements.rows[0].covEndorsementsInput$limit.value\\\"\"]");
+    public ILocator Limit => _page.Locator("input[id=\"fields.covEndorsements.rows[0].covEndorsementsInput$limit.value\"][name=\"fields.covEndorsements.rows[0].covEndorsementsInput$limit.value\"]");
 
     public ILocator Loading => _page.GetByLabel("Loading ...", new() { Exact = true });
 
@@ -43,13 +43,13 @@ public sealed class CoveragesLocators
 
     public ILocator ReferRequestIssuance => _page.GetByText("Refer/Request Issuance", new() { Exact = true });
 
-    public ILocator Save => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Save\"], [data-duckcreekid=\"Save\"]");
+    public ILocator Save => _page.Locator("button[id=\"fields.data.save\"], button[data-testid=\"fields.line.save\"], button:has-text(\"Save\"), a:has-text(\"Save\")").First;
 
     public ILocator ScreenHeading => _page.GetByText("Screen Heading", new() { Exact = true });
 
     public ILocator SearchByNameOrCode => _page.Locator("input[id=\"temp.filter\"][name=\"temp.filter\"]");
 
-    public ILocator Select => _page.Locator("[duckcreekid=\"Select\"], [data-duckcreekid=\"Select\"]");
+    public ILocator Select => _page.GetByRole(AriaRole.Radio, new() { Name = "Select", Exact = true }).First;
 
 
     public ILocator UnscheduledStructures => _page.Locator("[id=\"fields.line.covCountryEstate_D2.unschedStructures_3.value\"]");
