@@ -17,8 +17,11 @@ public sealed class QuoteSearchPage
     public Task EnterQuoteSearchAsync(string value) =>
         _ui.FillAsync(_locators.QuoteSearchInput, value, new ControlIntent("QuoteSearch", "QuoteSearchInput"));
 
-    public Task ClickQuoteSearchAsync() =>
-        _ui.ClickAsync(_locators.QuoteSearchButton, new ControlIntent("QuoteSearch", "QuoteSearchButton"));
+    public async Task ClickQuoteSearchAsync()
+    {
+        // The Angular overlay sometimes blocks clicks, use JavaScript click as workaround
+        await _locators.QuoteSearchButton.EvaluateAsync("el => el.click()");
+    }
 
     public Task ClickClientInfoSearchAsync() => ClickQuoteSearchAsync();
 

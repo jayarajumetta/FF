@@ -53,6 +53,9 @@ public sealed class ClientSearchPage
     public Task VerifyExistingClientMatchAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.ExistingClientMatch, expected, property, new ControlIntent("ClientSearch", "ExistingClientMatch"));
 
+    public Task<bool> IsExistingClientMatchPresentAsync() =>
+        _ui.ExistsAsync(_locators.ExistingClientMatch);
+
     public Task WaitForNewExistingClientSearchAsync(string expected) =>
         _ui.WaitAsync(_locators.NewExistingClientSearch, expected, new ControlIntent("ClientSearch", "NewExistingClientSearch"));
 

@@ -18,7 +18,7 @@ public sealed class ClientSearchLocators
     public ILocator ClientInfoSearch => _page.Locator("button:has-text(\"Search\"), a:has-text(\"Search\")").First;
 
     // EQ|Common|Create New Client
-    public ILocator ExistingClientMatch => _page.GetByRole(AriaRole.Heading, new() { Name = "Existing Client Match", Exact = true });
+    public ILocator ExistingClientMatch => _page.Locator("h1:has-text('Existing Client Match'), h2:has-text('Existing Client Match'), [data-testid='existing-client-match'], text=Existing Client Match").First;
     public ILocator CreateNewClient => _page.GetByTestId("customer.selected-new-chip");
     public ILocator AdditionalInterestsNext => _page.GetByRole(AriaRole.Button, new() { Name = "Next", Exact = true });
 

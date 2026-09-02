@@ -103,7 +103,7 @@ public sealed class NavigationLocators
 
     // Source EQ|Common|Navigation: Nav Link = DIV InnerText {B[Screen]}, Screen Heading = H1 {B[Screen]}*.
     public ILocator GetNavigationLink(string screen) =>
-        _page.GetByText(screen, new() { Exact = true });
+        _page.GetByTestId($"{screen}-nav");
 
     public ILocator GetScreenHeading(string screen) =>
         _page.GetByRole(AriaRole.Heading, new()

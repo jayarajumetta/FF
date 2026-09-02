@@ -23,8 +23,11 @@ public sealed class SocialSecurityPage
     public Task VerifySubmitAsync() =>
         _ui.VerifyAsync(_locators.SubmitAngular, "Visible", "", new ControlIntent("SocialSecurity", "Submit"));
 
-    public Task ClickSubmitAsync() =>
-        _ui.ClickAsync(_locators.SubmitAngular, new ControlIntent("SocialSecurity", "Submit"));
+    public async Task ClickSubmitAsync()
+    {
+        // The Angular overlay sometimes blocks clicks, use JavaScript click as workaround
+        await _locators.SubmitAngular.EvaluateAsync("el => el.click()");
+    }
 
     public Task ClickContinueAsync() =>
         _ui.ClickAsync(_locators.Continue, new ControlIntent("SocialSecurity", "Continue"));

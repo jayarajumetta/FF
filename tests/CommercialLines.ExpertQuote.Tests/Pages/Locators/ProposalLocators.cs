@@ -12,17 +12,17 @@ public sealed class ProposalLocators
 
     // Product ModuleAttribute is a DIV with data-testid=proposal.product-chip-item-wrapper.
     public ILocator BusinessOwnersChip =>
-        _page.Locator("[data-testid='proposal.product-chip-item-wrapper']").Filter(new() { HasText = "Business Owners" });
+        _page.Locator("[data-testid='proposal.product-chip-item-wrapper'].chip-item-wrapper, [data-testid='proposal.product-chip-item-wrapper'] > .chip-wrapper").Filter(new() { HasText = "Business Owners" }).First;
     public ILocator SpecialFarmPackageChip =>
-        _page.Locator("[data-testid='proposal.product-chip-item-wrapper']").Filter(new() { HasText = "Special Farm Package" });
+        _page.Locator("[data-testid='proposal.product-chip-item-wrapper'].chip-item-wrapper, [data-testid='proposal.product-chip-item-wrapper'] > .chip-wrapper").Filter(new() { HasText = "Special Farm Package" }).First;
     public ILocator PersonalAutoChip =>
-        _page.Locator("[data-testid='proposal.product-chip-item-wrapper']").Filter(new() { HasText = "Personal Auto" });
+        _page.Locator("[data-testid='proposal.product-chip-item-wrapper'].chip-item-wrapper, [data-testid='proposal.product-chip-item-wrapper'] > .chip-wrapper").Filter(new() { HasText = "Personal Auto" }).First;
     public ILocator MotorcycleChip =>
-        _page.Locator("[data-testid='proposal.product-chip-item-wrapper']").Filter(new() { HasText = "Motorcycle" });
+        _page.Locator("[data-testid='proposal.product-chip-item-wrapper'].chip-item-wrapper, [data-testid='proposal.product-chip-item-wrapper'] > .chip-wrapper").Filter(new() { HasText = "Motorcycle" }).First;
     public ILocator RecreationalVehicleChip =>
-        _page.Locator("[data-testid='proposal.product-chip-item-wrapper']").Filter(new() { HasText = "Recreational Vehicle" });
+        _page.Locator("[data-testid='proposal.product-chip-item-wrapper'].chip-item-wrapper, [data-testid='proposal.product-chip-item-wrapper'] > .chip-wrapper").Filter(new() { HasText = "Recreational Vehicle" }).First;
     public ILocator HomeChip =>
-        _page.Locator("[data-testid='proposal.product-chip-item-wrapper']").Filter(new() { HasText = "Home" });
+        _page.Locator("[data-testid='proposal.product-chip-item-wrapper'].chip-item-wrapper, [data-testid='proposal.product-chip-item-wrapper'] > .chip-wrapper").Filter(new() { HasText = "Home" }).First;
 
     public ILocator BusinessNameSearchField => _page.Locator("[id='business.search.businessName']");
     public ILocator IndividuallyOwnedDbaCheckbox => _page.Locator("[id='business.isIndividualDba-checkbox']");
@@ -37,7 +37,7 @@ public sealed class ProposalLocators
 
     // Source is a clickable DIV chip wrapper, not <select>.
     public ILocator LessorsRiskNoChip =>
-        _page.Locator("[data-testid='proposal.LessorsRiskExposure-chip-wrapper']").Filter(new() { HasText = "LessorsRiskNoChip" });
+        _page.Locator("[data-testid='proposal.LessorsRiskExposure-chip-wrapper']").Filter(new() { HasText = "No" });
 
     // Source ModuleAttribute: input radio Id=proposal.riskAddressSelection-0-input.
     public ILocator AccountAddressRadio => _page.Locator("[id='proposal.riskAddressSelection-0-input']");
