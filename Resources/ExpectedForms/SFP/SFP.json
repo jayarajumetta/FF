@@ -7,8 +7,8 @@
   //   BASIC — forms for SFP Basic Policy only
   //   CE    — forms for Country Estate only
   //
-  // STATES (35) — copy the line below to replace "all" then remove states that no longer apply
-  //   ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MN", "MO", "MS", "MT", "NE", "NH", "NM", "NV", "ND", "OH", "OK", "OR", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"]
+  // STATES (36) — copy the line below to replace "all" then remove states that no longer apply
+  //   ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MN", "MO", "MS", "MT", "NE", "NH", "NM", "NV", "ND", "OH", "OK", "OR", "RI", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"]
   // ═══════════════════════════════════════════════════════════════════════
 
   // ─────────────────────────────────────────────────────────────────────
@@ -60,8 +60,8 @@
     "X38980118": ["SC"],
     "X40670125": ["MN"],
     "X40781208": ["KY"],
-    "X42960309": "all",
-    "X43061125": "all",
+    "X42960309": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MN", "MO", "MS", "MT", "NE", "NH", "NM", "NV", "ND", "OH", "OK", "OR", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
+    "X43061125": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MN", "MO", "MS", "MT", "NE", "NH", "NM", "NV", "ND", "OH", "OK", "OR", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
     "X43500110": ["ID"],
     "X46040212": ["CO", "MN"],
     "X49291225": ["SC"],
@@ -81,40 +81,44 @@
     "X54611025": ["KY"],
     "SF05360396": ["ME"],
     "SF06040416": ["ME"],
-    "SF06101098": ["DE", "ME"]
+    "SF06101098": ["DE", "ME", "RI"]
   },
 
   // ─────────────────────────────────────────────────────────────────────
   // BASIC — Basic Policy only
   // ─────────────────────────────────────────────────────────────────────
   "BASIC": {
-    "FI99020121": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MN", "MO", "MS", "MT", "ND", "NE", "NM", "NV", "OH", "OK", "OR", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
-    "NM3421025": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MN", "MO", "MS", "MT", "ND", "NE", "NM", "NV", "OH", "OK", "OR", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
+    "FI99020121": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MN", "MO", "MS", "MT", "ND", "NE", "NM", "NV", "OH", "OK", "OR", "RI", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
+    "NM3421025": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MN", "MO", "MS", "MT", "ND", "NE", "NM", "NV", "OH", "OK", "OR", "RI", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
     "SF00010120": "all",
     "SF00020120": "all",
-    "SF00030120": "all",
+    "SF00030120": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MN", "MO", "MS", "MT", "NE", "NH", "NM", "NV", "ND", "OH", "OK", "OR", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
+    "SF00030426": ["RI"],
     "SF01010120": "all",
     "SF01020125": ["NE"],
-    "SF01021112": ["AL", "AR", "AZ", "CO", "DE", "GA", "ID", "IL", "KS", "KY", "MA", "ME", "MS", "MT", "NH", "NV", "ND", "OH", "OK", "OR", "SC", "SD", "TN", "UT", "WI", "WY"],
+    "SF01021112": ["AL", "AR", "AZ", "CO", "DE", "GA", "ID", "IL", "KS", "KY", "MA", "ME", "MS", "MT", "NH", "NV", "ND", "OH", "OK", "OR", "RI", "SC", "SD", "TN", "UT", "WI", "WY"],
     "SF01021225": ["TX"],
-    "SF01251225": ["TX"],
+    "SF01251225": ["RI", "TX"],
     "SF01340914": ["MN"],
     "SF01711025": ["LA"],
     "SF03010120": "all",
     "SF03050801": ["AL", "AR", "AZ", "CO", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MN", "MO", "MS", "MT", "NE", "NH", "NM", "NV", "ND", "OH", "OK", "OR", "SC", "SD", "TN", "UT", "WA", "WI", "WY"],
     "SF03051225": ["TX"],
     "SF04010120": "all",
-    "SF05010120": "all",
-    "SF05490120": ["AL", "AR", "AZ", "CO", "DE", "IA", "ID", "IL", "IN", "KS", "KY", "MA", "ME", "MO", "MS", "MT", "NE", "NH", "NM", "NV", "ND", "OH", "OK", "OR", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
-    "SF06171112": ["AL", "AZ", "CO", "DE", "IA", "ID", "IL", "IN", "KS", "KY", "MA", "ME", "MO", "MS", "MT", "NE", "NH", "NM", "NV", "ND", "OH", "OK", "OR", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
+    "SF05010120": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MN", "MO", "MS", "MT", "NE", "NH", "NM", "NV", "ND", "OH", "OK", "OR", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
+    "SF05010426": ["RI"],
+    "SF05490120": ["AL", "AR", "AZ", "CO", "DE", "IA", "ID", "IL", "IN", "KS", "KY", "MA", "ME", "MO", "MS", "MT", "NE", "NH", "NM", "NV", "ND", "OH", "OK", "OR", "RI", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
+    "SF05540210": ["RI"],
+    "SF06171112": ["AL", "AZ", "CO", "DE", "IA", "ID", "IL", "IN", "KS", "KY", "MA", "ME", "MO", "MS", "MT", "NE", "NH", "NM", "NV", "ND", "OH", "OK", "OR", "RI", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
     "SF06200510": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "IL", "IN", "KS", "KY", "MA", "MN", "MO", "MS", "MT", "NE", "NM", "NV", "ND", "OH", "OK", "SC", "SD", "TN", "TX", "WI", "WY"],
     "SF06271225": ["TX"],
+    "SF07080626": ["RI"],
     "SF07401225": ["TX"],
     "SF15020810": "all",
     "SF16601225": ["WA"],
-    "SF26370322": ["AZ", "CO", "DE", "IA", "ID", "IN", "KY", "ME", "MN", "MT", "NE", "NH", "NM", "NV", "OH", "OK", "OR", "SC", "TN"],
-    "SF26590320": ["AL", "AR", "AZ", "CO", "DE", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MN", "MO", "MS", "MT", "NE", "NH", "NM", "NV", "ND", "OH", "OK", "OR", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
-    "SF26620221": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MN", "MO", "MS", "MT", "NE", "NH", "NM", "NV", "OH", "OK", "OR", "SC", "TN", "TX", "UT", "WI", "WY"],
+    "SF26370322": ["AZ", "CO", "DE", "IA", "ID", "IN", "KY", "ME", "MN", "MT", "NE", "NH", "NM", "NV", "OH", "OK", "OR", "RI", "SC", "TN"],
+    "SF26590320": ["AL", "AR", "AZ", "CO", "DE", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MN", "MO", "MS", "MT", "NE", "NH", "NM", "NV", "ND", "OH", "OK", "OR", "RI", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
+    "SF26620221": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MN", "MO", "MS", "MT", "NE", "NH", "NM", "NV", "OH", "OK", "OR", "RI", "SC", "TN", "TX", "UT", "WI", "WY"],
     "SF26660522": ["AR"],
     "SF26700522": ["WI"],
     "SF26720722": ["LA"],
@@ -123,19 +127,20 @@
     "SF26850823": ["WY"],
     "SF26960124": ["ND"],
     "SF36100424": ["IL"],
-    "SF36161024": ["AL", "AR", "AZ", "CO", "DE", "ID", "IL", "IN", "KS", "KY", "ME", "MN", "MO", "MS", "MT", "NE", "NV", "ND", "OH", "OK", "OR", "SC", "SD", "TN", "UT", "WA", "WI"],
-    "SM1703E": "all",
+    "SF36161024": ["AL", "AR", "AZ", "CO", "DE", "ID", "IL", "IN", "KS", "KY", "ME", "MN", "MO", "MS", "MT", "NE", "NV", "ND", "OH", "OK", "OR", "RI", "SC", "SD", "TN", "UT", "WA", "WI"],
+    "SM1703E": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MN", "MO", "MS", "MT", "NE", "NH", "NM", "NV", "ND", "OH", "OK", "OR", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
     "T5913": ["AR", "KY"],
-    "X32940120": ["AL", "AR", "AZ", "CO", "ID", "IL", "KS", "KY", "LA", "NE", "NV", "ND", "OR", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
+    "X32940120": ["AL", "AR", "AZ", "CO", "ID", "IL", "KS", "KY", "LA", "NE", "NV", "ND", "OR", "RI", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
     "X35690422": ["AL", "AR", "AZ", "CO", "IL", "IN", "KS", "KY", "MN", "NE", "NV", "ND", "SC", "SD", "TN", "TX", "WI", "WY"],
     "X45900120": ["AL", "AR", "AZ", "CO", "ID", "IL", "LA", "MN", "NE", "NV", "ND", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
     "X49930725": ["MT"],
+    "X50900626": ["RI"],
     "X51181225": ["AL"],
-    "X51360120": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MN", "MO", "MS", "MT", "NE", "NM", "NV", "ND", "OH", "OK", "OR", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
-    "X51370120": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MN", "MO", "MS", "MT", "NE", "NM", "NV", "ND", "OH", "OK", "OR", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
-    "X51820618": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MN", "MO", "MS", "MT", "ND", "NE", "NM", "NV", "OH", "OK", "OR", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
-    "X52780125": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MN", "MO", "MS", "MT", "NE", "NM", "NV", "ND", "OH", "OK", "OR", "SC", "TN", "TX", "UT", "WA", "WI", "WY"],
-    "SF03050195": ["DE", "MA", "ME", "NH"],
+    "X51360120": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MN", "MO", "MS", "MT", "NE", "NM", "NV", "ND", "OH", "OK", "OR", "RI", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
+    "X51370120": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MN", "MO", "MS", "MT", "NE", "NM", "NV", "ND", "OH", "OK", "OR", "RI", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
+    "X51820618": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MN", "MO", "MS", "MT", "ND", "NE", "NM", "NV", "OH", "OK", "OR", "RI", "SC", "SD", "TN", "TX", "UT", "WA", "WI", "WY"],
+    "X52780125": ["AL", "AR", "AZ", "CO", "DE", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MN", "MO", "MS", "MT", "NE", "NM", "NV", "ND", "OH", "OK", "OR", "RI", "SC", "TN", "TX", "UT", "WA", "WI", "WY"],
+    "SF03050195": ["DE", "MA", "ME", "NH", "RI"],
     "SF26490123": ["GA"]
   },
 

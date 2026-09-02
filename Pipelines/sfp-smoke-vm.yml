@@ -214,9 +214,21 @@ stages:
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Results.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
 
-        # Do NOT exit on first-run failure — the retry step below will re-run failures
         $firstRunExit = $LASTEXITCODE
         Write-Host "First run exit code: $firstRunExit"
+        $trxPath = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
+        if ($firstRunExit -ne 0 -and !(Test-Path $trxPath)) {
+          Write-Error "dotnet test failed before producing a TRX result."
+          exit $firstRunExit
+        }
+        if (Test-Path $trxPath) {
+          [xml]$trx = Get-Content $trxPath
+          $executed = [int]$trx.TestRun.ResultSummary.Counters.executed
+          if ($executed -eq 0) {
+            Write-Error "The shard filter executed no tests."
+            exit 1
+          }
+        }
         exit 0
       displayName: "Run Shard $(SHARD_NUMBER)"
       condition: always()
@@ -231,89 +243,6 @@ stages:
         SHARD_FILTER_SMOKE: $(SHARD_FILTER_SMOKE)
         DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
 
-    # ✅ RETRY FAILED TESTS
-    # Parses the TRX from the first run and re-runs only failed tests once.
-    # This catches transient 500 errors, SSO blips, and network timeouts without
-    # re-running the entire shard.
-    - powershell: |
-        $trxPath = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
-
-        if (!(Test-Path $trxPath)) {
-            Write-Host "No TRX found — skipping retry step."
-            exit 0
-        }
-
-        [xml]$trx = Get-Content $trxPath
-        $ns = @{ t = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010" }
-        $failed = Select-Xml -Xml $trx -XPath "//t:UnitTestResult[@outcome='Failed']" -Namespace $ns
-
-        if (-not $failed) {
-            Write-Host "No failures in first run — retry step skipped."
-            exit 0
-        }
-
-        $failedFqns = @()
-        foreach ($result in $failed) {
-            $testId = $result.Node.testId
-            $testMethod = Select-Xml -Xml $trx -XPath "//t:UnitTest[@id='$testId']/t:TestMethod" -Namespace $ns
-            if ($testMethod -and $testMethod.Node.className -and $testMethod.Node.name) {
-                $failedFqns += "$($testMethod.Node.className).$($testMethod.Node.name)"
-            } elseif ($result.Node.testName) {
-                $failedFqns += $result.Node.testName
-            }
-        }
-        $failedFqns = $failedFqns | Select-Object -Unique
-        Write-Host "Failed tests extracted:"
-        $failedFqns | ForEach-Object { Write-Host "  - $_" }
-
-        # Normalize parameterized names to method-level FQNs for a valid VSTest filter
-        $failedMethods = ($failedFqns | ForEach-Object {
-            if ($_ -match '^([^\(]+)') { $matches[1] } else { $_ }
-        }) | Select-Object -Unique
-
-        Write-Host "Retry methods extracted:"
-        $failedMethods | ForEach-Object { Write-Host "  - $_" }
-
-        $nameFilter = ($failedMethods | ForEach-Object {
-            $escaped = $_.Replace("'", "").Replace('"', '')
-            if ($env:SHARD_NUMBER -match '^\d+$') {
-                "(FullyQualifiedName~$escaped&TestCategory=Shard$($env:SHARD_NUMBER))"
-            } else {
-                "FullyQualifiedName~$escaped"
-            }
-        }) -join "|"
-
-        Write-Host "Generated filter:"
-        Write-Host $nameFilter
-
-        $testDll = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.dll"
-        $retryCommand = "dotnet test $testDll --filter `"$nameFilter`" --logger `"trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx`" --results-directory `"$(Build.ArtifactStagingDirectory)/TestResults`""
-        Write-Host "Retry command:"
-        Write-Host $retryCommand
-
-        & dotnet test $testDll `
-            --filter "$nameFilter" `
-            --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx" `
-            --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
-
-        $retryExitCode = $LASTEXITCODE
-        Write-Host "Retry exit code: $retryExitCode"
-        if ($retryExitCode -ne 0) {
-            Write-Error "Retry failed for shard $($env:SHARD_NUMBER). Filter: $nameFilter"
-            exit $retryExitCode
-        }
-
-        exit 0
-      displayName: "Retry Failed Tests — Shard $(SHARD_NUMBER)"
-      condition: always()
-      env:
-        Playwright__Headless: "true"
-        Playwright__BrowserType: "chromium"
-        TEST_ENVIRONMENT: "qa"
-        CI: "true"
-        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
-        DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
-
     # ✅ DEBUG: verify trx files exist
     - powershell: |
         Write-Host "==== TEST RESULTS CONTENT ===="
@@ -326,9 +255,12 @@ stages:
       condition: always()
       inputs:
         testResultsFormat: VSTest
-        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/*.trx"
+        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/Shard_*_Results.trx"
+        searchFolder: "$(Build.ArtifactStagingDirectory)/TestResults"
         mergeTestResults: true
         failTaskOnFailedTests: true
+        failTaskOnMissingResultsFile: true
+        failTaskOnFailureToPublishResults: true
         testRunTitle: "SFP Smoke — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
 
     - task: PublishPipelineArtifact@1

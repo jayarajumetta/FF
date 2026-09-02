@@ -6,7 +6,6 @@ using PnCTestAutomation.Pages.ExpertQuotePages;
 using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 using Reqnroll;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace PnCTestAutomation.StepDefinitions.SFPSteps
@@ -35,15 +34,12 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             await locationPage.EnterLocationInformationAsync();
             await locationPage.OrderWildfireRiskScoreIfAvailableAsync();
 
-            // Wind/Hail deductible is not available in ID, ME, MS, NH, OR, UT, WA
-            // Don't expect a value for these states - validation will confirm field is absent
-            var statesWithoutWindHail = new[] { "Idaho", "Maine", "Mississippi", "New Hampshire", "Oregon", "Utah", "Washington" };
-            var windHailDeductible = statesWithoutWindHail.Contains(_contextData.State)
-                ? null
-                : _contextData.WindHailDeductible;
-
-            await locationPage.VerifyWindHailDeductibleOptionsAsync(_contextData.ZipCode, windHailDeductible);
-            await locationPage.SelectWindHailDeductibleAsync(windHailDeductible, _contextData.ZipCode);
+            await locationPage.VerifyWindHailDeductibleOptionsAsync(
+                _contextData.ZipCode,
+                _contextData.WindHailDeductible);
+            await locationPage.SelectWindHailDeductibleAsync(
+                _contextData.WindHailDeductible,
+                _contextData.ZipCode);
             await locationPage.ClickSaveAsync();
         }
 
