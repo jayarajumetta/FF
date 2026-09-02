@@ -1,10 +1,10 @@
 name: $(Date:yyyyMMdd).$(Rev:r)
 trigger:
   branches:
-    include: [main,sgs/develop, master]
+    include: [main,sgs/develop]
 pr:
   branches:
-    include: [main,sgs/develop, master]
+    include: [main,sgs/develop]
 
 pool:
   vmImage: windows-latest
