@@ -214,8 +214,8 @@ stages:
         # Catch-all: any @SFP @Smoke test not already assigned to a numbered shard
         ShardMisc:
           SHARD_NUMBER: "misc"
-          SHARD_FILTER_FULL: "TestCategory=SFP&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3"
-          SHARD_FILTER_DEBUG: "TestCategory=SFP&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3"
+          SHARD_FILTER_FULL: "TestCategory=SFP&TestCategory=Smoke&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6"
+          SHARD_FILTER_DEBUG: "TestCategory=SFP&TestCategory=Smoke&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6"
 
     steps:
 
