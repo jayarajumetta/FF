@@ -27,7 +27,7 @@ public sealed class CoveragesLocators
 
     public ILocator DescriptionOfSpecifiedOperation => _page.Locator("input[fieldref=\"PolicyOutput.DescriptionOfOperations\"]");
 
-    public ILocator Detail => _page.Locator("[id=\"dctGridLink\"]");
+    public ILocator Detail => _page.Locator("//tr[td[contains(normalize-space(.),'FG0055')] and td[contains(normalize-space(.),'Employment Practices Liability Insurance Coverage Endorsement')]]//a[normalize-space()='Detail']");
 
     public ILocator EndorsementType => _page.Locator("input[fieldref=\"CovEndorsementsInput.Type\"]");
 
@@ -46,11 +46,11 @@ public sealed class CoveragesLocators
 
     //public ILocator GL => _page.GetByText("GL", new() { Exact = true });
 
-    public ILocator HasTheInsuredEverHadAClaimForEmploymentPractices => _page.Locator("input[fieldref=\"CovEndorsementsInput.EPLIClaim\"]");
+    public ILocator HasTheInsuredEverHadAClaimForEmploymentPractices => _page.Locator("input[fieldref='CovEndorsementsInput.EPLIClaim']");
 
     public ILocator IM => _page.GetByText("IM", new() { Exact = true });
 
-    public ILocator LimitDeductible => _page.Locator("input[fieldref=\"CovEndorsementsInput.EPLILimitDeductible\"]");
+    public ILocator LimitDeductible => _page.Locator("input[fieldref='CovEndorsementsInput.EPLILimitDeductible']");
 
 
     public ILocator IMNavigationLinksPolicyCovg => _page.GetByRole(AriaRole.Link, new() { Name = "Policy Covg", Exact = true });
@@ -59,9 +59,9 @@ public sealed class CoveragesLocators
 
     public ILocator PropertyExtensionEndorsements => _page.Locator("input[fieldref=\"CovExtensionEndorsementsInput.PropertyExtensionEndorsements\"]");
 
-    public ILocator TheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaint => _page.Locator("input[fieldref=\"CovEndorsementsInput.EPLIClaimInfo\"]");
+    public ILocator TheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaint => _page.Locator("input[fieldref='CovEndorsementsInput.EPLIClaimInfo']");
 
-    public ILocator ThirdParty => _page.Locator("input[fieldref=\"CovEndorsementsInput.EPLIThirdParty\"]");
+    public ILocator ThirdParty => _page.Locator("input[fieldref='CovEndorsementsInput.EPLIThirdParty']");
 
     public ILocator UtilityServices => _page.Locator("input[fieldref=\"CovUtilityServicesInput.Indicator\"]");
 }

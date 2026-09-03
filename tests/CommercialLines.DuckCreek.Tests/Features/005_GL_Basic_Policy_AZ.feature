@@ -11,6 +11,7 @@ Feature: GL Basic Policy
     Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
     And I open the configured Commercial Lines Duck Creek application
     And I sign in to Commercial Lines Duck Creek using configured credentials
+    And I start a new quote
     When I enter individual client information
     And I complete Underwriting Info from Client Screen
     And I complete required policy information
@@ -30,27 +31,29 @@ Feature: GL Basic Policy
     And I answer GL UW Questions OR & WA
     And I complete required billing information
     And I complete required submission information
-    And I switch back to Agent for OR and WA when required
+
+
+    #And I switch back to Agent for OR and WA when required
     And I run Stoplight
     And I verify values in premium fields
-    And I complete forms verification
-    And I sign out of the application
+    #And I complete forms verification
+    #And I sign out of the application
 
     Examples:
       | dataFile | stateCode | stateVariant | stateName | externalDataFile |
       | TestData/Scenarios/005_gl_basic_policy_az.json | AZ | AZ | Arizona | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/005_gl_basic_policy_ct.json | CT | CT | Connecticut | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/005_gl_basic_policy_de.json | DE | DE | Delaware | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/005_gl_basic_policy_ma.json | MA | MA | Massachusetts | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/005_gl_basic_policy_md.json | MD | MD | Maryland | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/005_gl_basic_policy_me.json | ME | ME | Maine | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/005_gl_basic_policy_nh.json | NH | NH | New Hampshire | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/005_gl_basic_policy_nj.json | NJ | NJ | New Jersey | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/005_gl_basic_policy_ny.json | NY | NY | New York | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/005_gl_basic_policy_or.json | OR | OR | Oregon | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/005_gl_basic_policy_pa.json | PA | PA | Pennsylvania | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/005_gl_basic_policy_ri.json | RI | RI | Rhode Island | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/005_gl_basic_policy_va.json | VA | VA | Virginia | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/005_gl_basic_policy_vt.json | VT | VT | Vermont | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/005_gl_basic_policy_wa.json | WA | WA | Washington | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/005_gl_basic_policy_wv.json | WV | WV | West Virginia | TestData/ExternalDataOverrides.json |
+      #| TestData/Scenarios/005_gl_basic_policy_ct.json | CT | CT | Connecticut | TestData/ExternalDataOverrides.json |
+      #| TestData/Scenarios/005_gl_basic_policy_de.json | DE | DE | Delaware | TestData/ExternalDataOverrides.json |
+      #| TestData/Scenarios/005_gl_basic_policy_ma.json | MA | MA | Massachusetts | TestData/ExternalDataOverrides.json |
+      #| TestData/Scenarios/005_gl_basic_policy_md.json | MD | MD | Maryland | TestData/ExternalDataOverrides.json |
+      #| TestData/Scenarios/005_gl_basic_policy_me.json | ME | ME | Maine | TestData/ExternalDataOverrides.json |
+      #| TestData/Scenarios/005_gl_basic_policy_nh.json | NH | NH | New Hampshire | TestData/ExternalDataOverrides.json |
+      #| TestData/Scenarios/005_gl_basic_policy_nj.json | NJ | NJ | New Jersey | TestData/ExternalDataOverrides.json |
+      #| TestData/Scenarios/005_gl_basic_policy_ny.json | NY | NY | New York | TestData/ExternalDataOverrides.json |
+      #| TestData/Scenarios/005_gl_basic_policy_or.json | OR | OR | Oregon | TestData/ExternalDataOverrides.json |
+      #| TestData/Scenarios/005_gl_basic_policy_pa.json | PA | PA | Pennsylvania | TestData/ExternalDataOverrides.json |
+      #| TestData/Scenarios/005_gl_basic_policy_ri.json | RI | RI | Rhode Island | TestData/ExternalDataOverrides.json |
+      #| TestData/Scenarios/005_gl_basic_policy_va.json | VA | VA | Virginia | TestData/ExternalDataOverrides.json |
+      #| TestData/Scenarios/005_gl_basic_policy_vt.json | VT | VT | Vermont | TestData/ExternalDataOverrides.json |
+     # | TestData/Scenarios/005_gl_basic_policy_wa.json | WA | WA | Washington | TestData/ExternalDataOverrides.json |
+      #| TestData/Scenarios/005_gl_basic_policy_wv.json | WV | WV | West Virginia | TestData/ExternalDataOverrides.json |

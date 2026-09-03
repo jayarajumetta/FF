@@ -150,7 +150,7 @@ public sealed class NavigationPage
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "SignsHeading"));
 
     public Task ClickGLNavigationLinksAddlInterestsAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "GLNavigationLinksAddlInterests"));
+        _ui.ClickAsync(_locators.AddInterests, new ControlIntent("Navigation", "GLNavigationLinksAddlInterests"));
 
     public Task EnterAddressAsync(string value) =>
         _ui.FillAsync(_locators.Address, value, new ControlIntent("Navigation", "Address"));
@@ -312,10 +312,10 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.BillType, key, new ControlIntent("Navigation", "BillType"));
 
     public Task ClickNavigationBillingAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "NavigationBilling"));
+        _ui.ClickAsync(_locators.Billing, new ControlIntent("Navigation", "NavigationBilling"));
 
     public Task WaitForBillingAsync(string expected) =>
-        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "Billing"));
+        _ui.WaitAsync(_locators.Billing, expected, new ControlIntent("Navigation", "Billing"));
 
     public Task EnterBodyStyleAsync(string value) =>
         _ui.FillAsync(_locators.BodyStyle, value, new ControlIntent("Navigation", "BodyStyle"));
@@ -420,7 +420,7 @@ public sealed class NavigationPage
         _ui.ClickAsync(_locators.ExcludeUndergroundPropertyDamageHazard, new ControlIntent("Navigation", "ExcludeUndergroundPropertyDamageHazard"));
 
     public Task ClickCGLAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "CGL"));
+        _ui.ClickAsync(_locators.CGL, new ControlIntent("Navigation", "CGL"));
 
     public Task EnterCGLLimitsAsync(string value) =>
         _ui.FillAsync(_locators.CGLLimits, value, new ControlIntent("Navigation", "CGLLimits"));
@@ -1044,7 +1044,7 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.CoverageEndorsementType, key, new ControlIntent("Navigation", "EndorsementsPartnersOfficersAndOthersExclusionEndorsementType"));
 
     public Task ClickGLNavigationLinksEndorsementsAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "GLNavigationLinksEndorsements"));
+        _ui.ClickAsync(_locators.Endorsements, new ControlIntent("Navigation", "GLNavigationLinksEndorsements"));
 
     public Task WaitForEndorsementsAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "Endorsements"));
@@ -1221,7 +1221,7 @@ public sealed class NavigationPage
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "GeneralLiabilityInformation"));
 
     public Task ClickGeneralLiabilityInformationAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "GeneralLiabilityInformation"));
+        _ui.ClickAsync(_locators.ProductsOrCompletedOps, new ControlIntent("Navigation", "GeneralLiabilityInformation"));
 
     public Task WaitForGeneralUWQuestionsAsync(string expected) =>
         _ui.WaitAsync(_locators.GeneralUWQuestions, expected, new ControlIntent("Navigation", "GeneralUWQuestions"));
@@ -1578,7 +1578,7 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.LocationOfCoveredOperations, key, new ControlIntent("Navigation", "LocationOfCoveredOperations"));
 
     public Task ClickLossExperienceAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "LossExperience"));
+        _ui.ClickAsync(_locators.LossExperience, new ControlIntent("Navigation", "LossExperience"));
 
     public Task WaitForLossExperienceHeadingAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "LossExperienceHeading"));
@@ -1869,10 +1869,10 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.NonOwnedAuto, key, new ControlIntent("Navigation", "NonOwnedAuto"));
 
     public Task ClickNotepadAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "Notepad"));
+        _ui.ClickAsync(_locators.Notepad, new ControlIntent("Navigation", "Notepad"));
 
     public Task WaitForNotepadHeadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "NotepadHeading"));
+        _ui.WaitAsync(_locators.Notepad, expected, new ControlIntent("Navigation", "NotepadHeading"));
 
     public Task EnterNumberOfEmployeesAsync(string value) =>
         _ui.FillAsync(_locators.NumberOfEmployees, value, new ControlIntent("Navigation", "NumberOfEmployees"));
@@ -2121,7 +2121,7 @@ public sealed class NavigationPage
         _ui.ClickAsync(_locators.PolicyCovgerage, new ControlIntent("Navigation", "PolicyCovgerage"));
 
     public Task WaitForPolicyCovgGLPolicyCovgAsync(string expected) =>
-        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "PolicyCovgGLPolicyCovg"));
+        _ui.WaitAsync(_locators.PolicyCovgerage, expected, new ControlIntent("Navigation", "PolicyCovgGLPolicyCovg"));
 
     public Task ClickIMNavigationLinksPolicyCovgAsync() =>
         _ui.ClickAsync(_locators.PolicyCovgerage, new ControlIntent("Navigation", "IMNavigationLinksPolicyCovg"));
@@ -2607,7 +2607,11 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.PageTop, key, new ControlIntent("Navigation", "Submission"));
 
     public Task ClickSubmissionAsync() =>
-        _ui.ClickAsync(_locators.PageTop, new ControlIntent("Navigation", "Submission"));
+        _ui.ClickAsync(_locators.Submission, new ControlIntent("Navigation", "Submission"));
+
+
+    public Task ClickCompleteApplicationAsync() =>
+        _ui.ClickAsync(_locators.completeApplication, new ControlIntent("Navigation", "Complete Application"));
 
     public Task WaitForSubmissionHeadingAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTop, expected, new ControlIntent("Navigation", "SubmissionHeading"));

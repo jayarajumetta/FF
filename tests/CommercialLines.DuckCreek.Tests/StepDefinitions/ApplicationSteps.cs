@@ -62,10 +62,19 @@ public sealed class ApplicationSteps
     public Task RefreshAuthenticatedSessionAsync() => AuthenticateAsync("agent", conditionalWineryState: false);
 
     [When("I switch to UW Director for OR and WA when required")]
-    public Task SwitchToUwDirectorAsync() => AuthenticateAsync("uw-director", conditionalWineryState: true);
+    public Task SwitchToUwDirectorAsync() =>
+        
+        AuthenticateAsync("uw-director", conditionalWineryState: true);
+
+
 
     [When("I switch back to Agent for OR and WA when required")]
     public Task SwitchBackToAgentAsync() => AuthenticateAsync("agent", conditionalWineryState: true);
+
+
+
+
+
 
     private async Task AuthenticateAsync(string role, bool conditionalWineryState)
     {
