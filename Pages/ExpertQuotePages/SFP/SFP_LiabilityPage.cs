@@ -150,9 +150,8 @@ namespace PnCTestAutomation.Pages
 
         // Workers' Compensation - Residence Employees optional coverage (NH and similar states).
         // Clicking this button navigates to a dedicated full Edit Coverage page (not a popup).
-        // Use button element + HasText because EDIT COVERAGE may be CSS-uppercased in the DOM.
         public ILocator WorkersCompEditCoverageButton =>
-            _page.Locator("button").Filter(new() { HasText = "Edit Coverage" });
+            _page.GetByTestId("fields.policy_Optional.wCResidenceEmployees.addEditWCResidenceEmployees");
 
         // Fields on the Edit Coverage: Workers' Compensation full page.
         // These inputs are the only four inputs on that page and appear in a fixed order.
@@ -169,6 +168,28 @@ namespace PnCTestAutomation.Pages
         public ILocator WorkersCompSaveButton =>
             _page.Locator("button").Filter(new() { HasText = "Save" });
 
+        private async Task<bool> IsWorkersCompEditorVisibleAsync()
+        {
+            try
+            {
+                await WorkersCompEditCoverageButton.WaitForAsync(new()
+                {
+                    State = WaitForSelectorState.Hidden,
+                    Timeout = 3000
+                });
+                await WorkersCompSaveButton.WaitForAsync(new()
+                {
+                    State = WaitForSelectorState.Visible,
+                    Timeout = 3000
+                });
+                return true;
+            }
+            catch (TimeoutException)
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// Clicks Edit Coverage for Workers' Compensation - Residence Employees (navigates to a full
         /// edit page), fills servant counts, then clicks Save to return to the Liability page.
@@ -183,6 +204,16 @@ namespace PnCTestAutomation.Pages
             await WorkersCompEditCoverageButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
             await WorkersCompEditCoverageButton.ClickAsync();
             await WaitForSpinnerAsync();
+
+            if (!await IsWorkersCompEditorVisibleAsync())
+            {
+                Console.WriteLine("[WorkersComp] Trusted click did not open the editor; retrying with DOM click.");
+                await WorkersCompEditCoverageButton.EvaluateAsync("element => element.click()");
+                await WaitForSpinnerAsync();
+            }
+
+            if (!await IsWorkersCompEditorVisibleAsync())
+                throw new PlaywrightException("Workers' Compensation Edit Coverage action did not open its editor.");
 
             // Fill all four servant count fields on the dedicated Edit Coverage page
             await WorkersCompFullTimeInInput.FillAsync(fullTimeIn);
