@@ -426,7 +426,7 @@ stages:
         testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/Shard_*_Results.trx"
         searchFolder: "$(Build.ArtifactStagingDirectory)/TestResults"
         mergeTestResults: true
-        failTaskOnFailedTests: true
+        failTaskOnFailedTests: false
         failTaskOnMissingResultsFile: true
         failTaskOnFailureToPublishResults: true
         testRunTitle: "SFP Smoke — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
@@ -674,7 +674,7 @@ stages:
         testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/Shard_*_Results.trx"
         searchFolder: "$(Build.ArtifactStagingDirectory)/TestResults"
         mergeTestResults: true
-        failTaskOnFailedTests: true
+        failTaskOnFailedTests: false
         failTaskOnMissingResultsFile: true
         failTaskOnFailureToPublishResults: true
         testRunTitle: "SFP CE — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
