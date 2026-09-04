@@ -608,6 +608,69 @@ stages:
       displayName: "Validate Playwright Results TRX"
       condition: always()
 
+    - powershell: |
+        $resultsTrx = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
+        $retryTrx = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Retry.trx"
+        $trxPath = if (Test-Path $retryTrx) { $retryTrx } elseif (Test-Path $resultsTrx) { $resultsTrx } else { $null }
+
+        if (-not $trxPath) {
+            Write-Warning "No shard TRX found for timing summary."
+            exit 0
+        }
+
+        [xml]$trx = Get-Content $trxPath
+        $nsmgr = New-Object System.Xml.XmlNamespaceManager($trx.NameTable)
+        $nsmgr.AddNamespace("t", "http://microsoft.com/schemas/VisualStudio/TeamTest/2010")
+        $results = $trx.SelectNodes("//t:UnitTestResult", $nsmgr)
+
+        if ($null -eq $results -or $results.Count -eq 0) {
+            Write-Warning "No UnitTestResult nodes found in $trxPath"
+            exit 0
+        }
+
+        $rows = foreach ($r in $results) {
+            $duration = [TimeSpan]::Zero
+            $raw = $r.GetAttribute("duration")
+            if (-not [string]::IsNullOrWhiteSpace($raw)) {
+                try { $duration = [TimeSpan]::Parse($raw) } catch { }
+            }
+            if ($duration -eq [TimeSpan]::Zero) {
+                $start = $r.GetAttribute("startTime")
+                $end = $r.GetAttribute("endTime")
+                if ($start -and $end) {
+                    try { $duration = ([DateTime]$end - [DateTime]$start) } catch { }
+                }
+            }
+            [PSCustomObject]@{
+                TestName = $r.GetAttribute("testName")
+                Outcome = $r.GetAttribute("outcome")
+                Seconds = [math]::Round($duration.TotalSeconds, 2)
+            }
+        }
+
+        $top = $rows | Sort-Object Seconds -Descending | Select-Object -First 15
+        $totalSeconds = [math]::Round((($rows | Measure-Object -Property Seconds -Sum).Sum), 2)
+        $avgSeconds = if ($rows.Count -gt 0) { [math]::Round($totalSeconds / $rows.Count, 2) } else { 0 }
+
+        $summaryPath = "$(Build.ArtifactStagingDirectory)/TimingSummary_Shard$($env:SHARD_NUMBER).md"
+        "# Timing Summary — $($env:SHARD_SUITE_LABEL) — Shard $($env:SHARD_NUMBER)" | Out-File $summaryPath -Encoding UTF8
+        "" | Out-File $summaryPath -Append
+        "- Source TRX: $(Split-Path $trxPath -Leaf)" | Out-File $summaryPath -Append
+        "- Tests in TRX: $($rows.Count)" | Out-File $summaryPath -Append
+        "- Total duration (sum): $totalSeconds sec" | Out-File $summaryPath -Append
+        "- Average duration: $avgSeconds sec" | Out-File $summaryPath -Append
+        "" | Out-File $summaryPath -Append
+        "## Top 15 slowest tests" | Out-File $summaryPath -Append
+        "| Duration (s) | Outcome | Test |" | Out-File $summaryPath -Append
+        "|---:|:---:|---|" | Out-File $summaryPath -Append
+        foreach ($item in $top) {
+            "| $($item.Seconds) | $($item.Outcome) | $($item.TestName) |" | Out-File $summaryPath -Append
+        }
+
+        Write-Host "##vso[task.uploadsummary]$summaryPath"
+      displayName: "Publish Per-Shard Timing Summary"
+      condition: always()
+
     - task: PublishTestResults@2
       displayName: "Publish Playwright Test Results"
       condition: always()
