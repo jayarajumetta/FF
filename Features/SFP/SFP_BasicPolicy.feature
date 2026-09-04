@@ -266,7 +266,6 @@ Feature: SFP Basic Policy
       | Arkansas    | AR        | 3998 Harrison St    |          111 | Batesville    | 72503 | Independence |
       | Arizona     | AZ        | 4201 N 24th St      |          111 | Phoenix       | 85016 | Maricopa     |
       | Colorado    | CO        | 231 Main St         |          111 | Fort Morgan   | 80701 | Morgan       |
-      | Connecticut | CT        | 391 Old Post Road   |          111 | Tolland       | 06084 | Tolland      |
       | Delaware    | DE        | 424 Delaware St     |          111 | New Castle    | 19720 | New Castle   |
       | Georgia     | GA        | 3715 Northside Pkwy |          111 | Atlanta       | 30327 | Fulton       |
       | Idaho       | ID        | 1221 W Ironwood Dr  |          111 | Coeur D Alene | 83814 | Kootenai     |
@@ -276,6 +275,11 @@ Feature: SFP Basic Policy
       | Kansas      | KS        | 9400 State Ave      |          111 | Kansas City   | 66112 | Wyandotte    |
       | Kentucky    | KY        | 1002 Medical Dr     |          111 | Mayfield      | 42066 | Graves       |
       | Louisiana   | LA        | 218 Meadow Dr       |          111 | Oakdale       | 71463 | Allen        |
+
+    @Shard1 @Connecticut
+    Examples:
+      | State       | StateAbbv | Address           | AddressLine2 | City    | Zip   | County  |
+      | Connecticut | CT        | 391 Old Post Road |          111 | Tolland | 06084 | Tolland |
 
     @Shard2 @Debug
     Examples:
@@ -293,10 +297,14 @@ Feature: SFP Basic Policy
       | Nebraska      | NE        | 1517 Broadway                 |          111 | Scottsbluff  | 69361 | Scotts Bluff |
       | Nevada        | NV        | 340 N 11th St                 |          111 | Las Vegas    | 89101 | Clark        |
       | New Hampshire | NH        | 67 Comstock Road              |          111 | Alstead      | 03602 | Cheshire     |
-      | New Jersey    | NJ        | 27 West St                    |          111 | Bloomsbury   | 08804 | Hunterdon    |
       | New Mexico    | NM        | 901 West 13th St              |          111 | Clovis       | 88101 | Curry        |
       | North Dakota  | ND        | 600 S 2nd St                  |          111 | Bismarck     | 58504 | Burleigh     |
       | Oklahoma      | OK        | 436255 E 330 Rd               |          111 | Big Cabin    | 74332 | Craig        |
+
+    @Shard2 @NewJersey
+    Examples:
+      | State      | StateAbbv | Address    | AddressLine2 | City       | Zip   | County   |
+      | New Jersey | NJ        | 27 West St |          111 | Bloomsbury | 08804 | Hunterdon |
 
     @Shard3 @Debug
     Examples:
@@ -307,7 +315,6 @@ Feature: SFP Basic Policy
     Examples:
       | State          | StateAbbv | Address          | AddressLine2 | City          | Zip   | County     |
       | Oregon         | OR        | 661 SW 26TH ST   |          111 | Corvallis     | 97331 | Benton     |
-      | Rhode Island   | RI        | 160 Pine St      |          111 | Providence    | 02903 | Providence |
       | South Carolina | SC        | 3009 Augusta Hwy |          111 | Allendale     | 29810 | Allendale  |
       | South Dakota   | SD        | 700 Governors Dr |          111 | Pierre        | 57501 | Hughes     |
       | Tennessee      | TN        | 207 N Boone St   |          111 | Johnson City  | 37604 | Washington |
@@ -316,3 +323,8 @@ Feature: SFP Basic Policy
       | Washington     | WA        | 834 Sheridan St  |          111 | Port Townsend | 98368 | Jefferson  |
       | Wisconsin      | WI        | 3601 Memorial Dr |          111 | Madison       | 53704 | Dane       |
       | Wyoming        | WY        | 100 E B St       |          111 | Casper        | 82601 | Natrona    |
+
+    @Shard3 @RhodeIsland
+    Examples:
+      | State        | StateAbbv | Address     | AddressLine2 | City       | Zip   | County     |
+      | Rhode Island | RI        | 160 Pine St |          111 | Providence | 02903 | Providence |
