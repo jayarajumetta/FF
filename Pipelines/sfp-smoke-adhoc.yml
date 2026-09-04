@@ -383,21 +383,39 @@ stages:
         $failedFqns | ForEach-Object { Write-Host "  - $_" }
 
         # Normalize parameterized names to method-level FQNs for a valid VSTest filter
-        $failedMethods = ($failedFqns | ForEach-Object {
+        $failedMethodsRaw = ($failedFqns | ForEach-Object {
             if ($_ -match '^([^\(]+)') { $matches[1] } else { $_ }
-        }) | Select-Object -Unique
+        }) | ForEach-Object { $_.Trim() } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique
+
+        $failedMethods = @($failedMethodsRaw | Where-Object { $_ -match '\.' })
+        $invalidMethods = @($failedMethodsRaw | Where-Object { $_ -notmatch '\.' })
 
         Write-Host "Retry methods extracted:"
-        $failedMethods | ForEach-Object { Write-Host "  - $_" }
+        $failedMethodsRaw | ForEach-Object { Write-Host "  - $_" }
+
+        if ($invalidMethods.Count -gt 0) {
+            Write-Warning "Skipping non-FQN retry entries:"
+            $invalidMethods | ForEach-Object { Write-Warning "  - $_" }
+        }
+
+        if ($failedMethods.Count -eq 0) {
+            Write-Warning "No valid fully-qualified test names were extracted from TRX; skipping retry."
+            exit 0
+        }
 
         $nameFilter = ($failedMethods | ForEach-Object {
             $escaped = $_.Replace("'", "").Replace('"', '')
             if ($env:SHARD_NUMBER -match '^\d+$') {
-                "(FullyQualifiedName~\"$escaped\"&TestCategory=Shard$($env:SHARD_NUMBER))"
+                "(FullyQualifiedName~`"$escaped`"&TestCategory=Shard$($env:SHARD_NUMBER))"
             } else {
-                "FullyQualifiedName~\"$escaped\""
+                "FullyQualifiedName~`"$escaped`""
             }
         }) -join "|"
+
+        if ([string]::IsNullOrWhiteSpace($nameFilter)) {
+            Write-Warning "Generated retry filter is empty after normalization; skipping retry."
+            exit 0
+        }
 
         Write-Host "Generated filter:"
         Write-Host $nameFilter
@@ -771,9 +789,9 @@ stages:
         $nameFilter = ($failedMethods | ForEach-Object {
             $escaped = $_.Replace("'", "").Replace('"', '')
             if ($env:SHARD_NUMBER -match '^\d+$') {
-                "(FullyQualifiedName~\"$escaped\"&TestCategory=Shard$($env:SHARD_NUMBER))"
+                "(FullyQualifiedName~`"$escaped`"&TestCategory=Shard$($env:SHARD_NUMBER))"
             } else {
-                "FullyQualifiedName~\"$escaped\""
+                "FullyQualifiedName~`"$escaped`""
             }
         }) -join "|"
 
