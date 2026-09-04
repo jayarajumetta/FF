@@ -54,6 +54,7 @@ pool:
 variables:
   DOTNET_VERSION: "8.x"
   BUILD_CONFIGURATION: "Release"
+  NUGET_PACKAGES: "$(Pipeline.Workspace)/.nuget/packages"
 
 # ── Stage 0: DataPool Service Setup (one-time, opt-in) ──────────────────────────
 stages:
@@ -141,8 +142,18 @@ stages:
         packageType: sdk
         version: $(DOTNET_VERSION)
 
+    - task: Cache@2
+      displayName: "Cache NuGet packages"
+      inputs:
+        key: 'nuget | "$(Agent.OS)" | TestAutomation.csproj'
+        restoreKeys: |
+          nuget | "$(Agent.OS)"
+        path: "$(NUGET_PACKAGES)"
+
     - script: dotnet restore TestAutomation.csproj
       displayName: "Restore NuGet packages"
+      env:
+        NUGET_PACKAGES: $(NUGET_PACKAGES)
 
     - script: dotnet build TestAutomation.csproj --configuration $(BUILD_CONFIGURATION) --no-restore
       displayName: "Build project"
@@ -185,9 +196,9 @@ stages:
 
 # ── Stage 2: Test ─────────────────────────────────────────────────────────────
 - stage: Test
-  displayName: "Test (3 Parallel Shards)"
+  displayName: "Test (Unified Matrix Shards)"
   dependsOn: Build
-  condition: ne('${{ parameters.suiteToRun }}', 'CE Only')
+  condition: succeeded()
 
   jobs:
   - job: TestShard
@@ -197,25 +208,60 @@ stages:
     strategy:
       maxParallel: 2  # 3 agents share 1 machine — cap to 2 browsers to avoid CPU saturation
       matrix:
-        # debugModeBasic=true → runs only @Debug-tagged rows (1 per shard, ~3 tests total)
-        # debugModeBasic=false → runs the full shard (default)
-        Shard1:
-          SHARD_NUMBER: "1"
-          SHARD_FILTER_FULL: "TestCategory=Shard1"
-          SHARD_FILTER_DEBUG: "TestCategory=Shard1&TestCategory=Debug"
-        Shard2:
-          SHARD_NUMBER: "2"
-          SHARD_FILTER_FULL: "TestCategory=Shard2"
-          SHARD_FILTER_DEBUG: "TestCategory=Shard2&TestCategory=Debug"
-        Shard3:
-          SHARD_NUMBER: "3"
-          SHARD_FILTER_FULL: "TestCategory=Shard3"
-          SHARD_FILTER_DEBUG: "TestCategory=Shard3&TestCategory=Debug"
-        # Catch-all: any @SFP @Smoke test not already assigned to a numbered shard
-        ShardMisc:
-          SHARD_NUMBER: "misc"
-          SHARD_FILTER_FULL: "TestCategory=SFP&TestCategory=Smoke&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6"
-          SHARD_FILTER_DEBUG: "TestCategory=SFP&TestCategory=Smoke&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6"
+        ${{ if ne(parameters.suiteToRun, 'CE Only') }}:
+          # BasicPolicy shards
+          Shard1:
+            SHARD_NUMBER: "1"
+            SHARD_SUITE: "BasicPolicy"
+            SHARD_SUITE_LABEL: "SFP Basic Policy"
+            SHARD_FILTER_FULL: "TestCategory=Shard1"
+            SHARD_FILTER_DEBUG: "TestCategory=Shard1&TestCategory=Debug"
+            DEBUG_MODE: ${{ parameters.debugModeBasic }}
+          Shard2:
+            SHARD_NUMBER: "2"
+            SHARD_SUITE: "BasicPolicy"
+            SHARD_SUITE_LABEL: "SFP Basic Policy"
+            SHARD_FILTER_FULL: "TestCategory=Shard2"
+            SHARD_FILTER_DEBUG: "TestCategory=Shard2&TestCategory=Debug"
+            DEBUG_MODE: ${{ parameters.debugModeBasic }}
+          Shard3:
+            SHARD_NUMBER: "3"
+            SHARD_SUITE: "BasicPolicy"
+            SHARD_SUITE_LABEL: "SFP Basic Policy"
+            SHARD_FILTER_FULL: "TestCategory=Shard3"
+            SHARD_FILTER_DEBUG: "TestCategory=Shard3&TestCategory=Debug"
+            DEBUG_MODE: ${{ parameters.debugModeBasic }}
+          # Catch-all: any @SFP @Smoke test not already assigned to a numbered shard
+          ShardMisc:
+            SHARD_NUMBER: "misc"
+            SHARD_SUITE: "BasicPolicy"
+            SHARD_SUITE_LABEL: "SFP Basic Policy"
+            SHARD_FILTER_FULL: "TestCategory=SFP&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6"
+            SHARD_FILTER_DEBUG: "TestCategory=SFP&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6"
+            DEBUG_MODE: ${{ parameters.debugModeBasic }}
+        ${{ if ne(parameters.suiteToRun, 'BasicPolicy Only') }}:
+          # CE shards
+          Shard4:
+            SHARD_NUMBER: "4"
+            SHARD_SUITE: "CE"
+            SHARD_SUITE_LABEL: "SFP Country Estate"
+            SHARD_FILTER_FULL: "TestCategory=Shard4"
+            SHARD_FILTER_DEBUG: "TestCategory=Shard4&TestCategory=Debug"
+            DEBUG_MODE: ${{ parameters.debugModeCE }}
+          Shard5:
+            SHARD_NUMBER: "5"
+            SHARD_SUITE: "CE"
+            SHARD_SUITE_LABEL: "SFP Country Estate"
+            SHARD_FILTER_FULL: "TestCategory=Shard5"
+            SHARD_FILTER_DEBUG: "TestCategory=Shard5&TestCategory=Debug"
+            DEBUG_MODE: ${{ parameters.debugModeCE }}
+          Shard6:
+            SHARD_NUMBER: "6"
+            SHARD_SUITE: "CE"
+            SHARD_SUITE_LABEL: "SFP Country Estate"
+            SHARD_FILTER_FULL: "TestCategory=Shard6"
+            SHARD_FILTER_DEBUG: "TestCategory=Shard6&TestCategory=Debug"
+            DEBUG_MODE: ${{ parameters.debugModeCE }}
 
     steps:
 
@@ -247,24 +293,6 @@ stages:
           playwright | "$(Agent.OS)"
         path: "$(Agent.ToolsDirectory)/playwright-browsers"
 
-    - powershell: |
-        $playwrightBrowsersPath = "$(Agent.ToolsDirectory)/playwright-browsers"
-        $env:PLAYWRIGHT_BROWSERS_PATH = $playwrightBrowsersPath
-
-        $playwright = Get-ChildItem `
-            -Path "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0" `
-            -Filter playwright.ps1 | Select-Object -First 1
-
-        if ($playwright) {
-            Write-Host "Installing Playwright via $($playwright.FullName)"
-            & powershell -File $playwright.FullName install chromium --with-deps
-        } else {
-            Write-Warning "playwright.ps1 not found — assuming pre-installed"
-        }
-      displayName: "Ensure Playwright Chromium"
-      env:
-        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
-
     # ✅ Create results folder
     - powershell: |
         New-Item -ItemType Directory -Force -Path "$(Build.ArtifactStagingDirectory)/TestResults" | Out-Null
@@ -295,21 +323,12 @@ stages:
             --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Results.trx" `
             --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
 
-        # PublishTestResults reports test failures; fail here only when no TRX was produced.
+        # Do NOT exit on first-run failure — the retry step below will re-run failures
         $firstRunExit = $LASTEXITCODE
         Write-Host "First run exit code: $firstRunExit"
-        $trxPath = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
-        if ($firstRunExit -ne 0 -and !(Test-Path $trxPath)) {
+        if ($firstRunExit -ne 0 -and !(Test-Path "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx")) {
           Write-Error "dotnet test failed before producing a TRX result."
           exit $firstRunExit
-        }
-        if (Test-Path $trxPath) {
-          [xml]$trx = Get-Content $trxPath
-          $executed = [int]$trx.TestRun.ResultSummary.Counters.executed
-          if ($executed -eq 0) {
-            Write-Error "The shard filter executed no tests."
-            exit 1
-          }
         }
         exit 0
       displayName: "Run Shard $(SHARD_NUMBER)"
@@ -320,10 +339,121 @@ stages:
         TEST_ENVIRONMENT: "qa"
         CI: "true"
         PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
-        DEBUG_MODE: ${{ parameters.debugModeBasic }}
+        DEBUG_MODE: $(DEBUG_MODE)
         SHARD_FILTER_FULL: $(SHARD_FILTER_FULL)
         SHARD_FILTER_DEBUG: $(SHARD_FILTER_DEBUG)
+        SHARD_SUITE: $(SHARD_SUITE)
+        SHARD_SUITE_LABEL: $(SHARD_SUITE_LABEL)
         DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
+
+    # ✅ RETRY FAILED TESTS
+    # Parses the TRX from the first run and re-runs only failed tests once.
+    # This catches transient 500 errors, SSO blips, and network timeouts without
+    # re-running the entire shard.
+    - powershell: |
+        $trxPath = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
+
+        if (!(Test-Path $trxPath)) {
+            Write-Host "No TRX found — skipping retry step."
+            exit 0
+        }
+
+        [xml]$trx = Get-Content $trxPath
+        $ns = @{ t = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010" }
+        $failed = Select-Xml -Xml $trx -XPath "//t:UnitTestResult[@outcome='Failed']" -Namespace $ns
+
+        if (-not $failed) {
+            Write-Host "No failures in first run — retry step skipped."
+            exit 0
+        }
+
+        $failedFqns = @()
+        foreach ($result in $failed) {
+            $testId = $result.Node.testId
+            $testMethod = Select-Xml -Xml $trx -XPath "//t:UnitTest[@id='$testId']/t:TestMethod" -Namespace $ns
+            if ($testMethod -and $testMethod.Node.className -and $testMethod.Node.name) {
+                $failedFqns += "$($testMethod.Node.className).$($testMethod.Node.name)"
+            } elseif ($result.Node.testName) {
+                $failedFqns += $result.Node.testName
+            }
+        }
+        $failedFqns = $failedFqns | Select-Object -Unique
+
+        Write-Host "Failed tests extracted:"
+        $failedFqns | ForEach-Object { Write-Host "  - $_" }
+
+        # Normalize parameterized names to method-level FQNs for a valid VSTest filter
+        $failedMethods = ($failedFqns | ForEach-Object {
+            if ($_ -match '^([^\(]+)') { $matches[1] } else { $_ }
+        }) | Select-Object -Unique
+
+        Write-Host "Retry methods extracted:"
+        $failedMethods | ForEach-Object { Write-Host "  - $_" }
+
+        $nameFilter = ($failedMethods | ForEach-Object {
+            $escaped = $_.Replace("'", "").Replace('"', '')
+            if ($env:SHARD_NUMBER -match '^\d+$') {
+                "(FullyQualifiedName~\"$escaped\"&TestCategory=Shard$($env:SHARD_NUMBER))"
+            } else {
+                "FullyQualifiedName~\"$escaped\""
+            }
+        }) -join "|"
+
+        Write-Host "Generated filter:"
+        Write-Host $nameFilter
+
+        $testDll = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.dll"
+        $retryCommand = "dotnet test $testDll --filter `"$nameFilter`" --settings `"$(Build.SourcesDirectory)/ci.runsettings`" --logger `"trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx`" --results-directory `"$(Build.ArtifactStagingDirectory)/TestResults`""
+        Write-Host "Retry command:"
+        Write-Host $retryCommand
+
+        & dotnet test $testDll `
+            --filter "$nameFilter" `
+            --settings "$(Build.SourcesDirectory)/ci.runsettings" `
+            --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx" `
+            --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
+
+        $retryExitCode = $LASTEXITCODE
+        Write-Host "Retry exit code: $retryExitCode"
+        if ($retryExitCode -ne 0) {
+            Write-Error "Retry failed for shard $($env:SHARD_NUMBER). Filter: $nameFilter"
+            exit $retryExitCode
+        }
+
+        exit 0
+      displayName: "Retry Failed Tests — Shard $(SHARD_NUMBER)"
+      condition: always()
+      env:
+        Playwright__Headless: "true"
+        Playwright__BrowserType: "chromium"
+        TEST_ENVIRONMENT: "qa"
+        CI: "true"
+        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+        PLAYWRIGHT_HEADLESS: "true"
+        BROWSER_TYPE: "chromium"
+        DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
+        DataPool__AutoStart: "false"
+
+    # ✅ ENSURE RETRY TRX EXISTS
+    # When all tests pass the retry step exits early without calling dotnet test,
+    # so Shard_N_Retry.trx is never written. PublishTestResults@2 would find 0 files
+    # and report Total=0 to ADO. This step promotes Results.trx -> Retry.trx so the
+    # publish task always has a file to ingest, regardless of first-run outcome.
+    - powershell: |
+        $resultsTrx = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
+        $retryTrx   = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Retry.trx"
+        if ((Test-Path $resultsTrx) -and !(Test-Path $retryTrx)) {
+            Copy-Item $resultsTrx $retryTrx
+            Write-Host "All tests passed on first run — promoted Results.trx → Retry.trx for publishing"
+        } elseif (Test-Path $retryTrx) {
+            Write-Host "Retry.trx already exists — retry ran, using retry results"
+        } else {
+            Write-Warning "Neither Results.trx nor Retry.trx found — test execution may have failed entirely"
+        }
+      displayName: "Ensure Retry TRX Exists — Shard $(SHARD_NUMBER)"
+      condition: always()
+      env:
+        SHARD_NUMBER: $(SHARD_NUMBER)
 
     # ✅ DEBUG: verify trx files exist
     - powershell: |
@@ -359,11 +489,11 @@ stages:
             Write-Host "TestResults source directory not found — skipping screenshot collection."
         }
       displayName: "Collect Screenshots & Traces"
-      condition: always()
+      condition: failed()
 
     - task: PublishPipelineArtifact@1
       displayName: "Publish Shard Artifacts"
-      condition: always()
+      condition: failed()
       inputs:
         targetPath: "$(Build.ArtifactStagingDirectory)/TestResults"
         artifact: "SFP_Smoke_Shard_$(SHARD_NUMBER)"
@@ -402,7 +532,7 @@ stages:
             $mdFiles = Get-ChildItem -Path $sourceBase -Recurse -Filter "FormsValidationSummary_*.md" | Sort-Object Name
             if ($mdFiles.Count -gt 0) {
                 $summaryPath = "$(Build.ArtifactStagingDirectory)/FormsValidationSummary_Shard$(SHARD_NUMBER).md"
-                "# Forms Validation — SFP Basic Policy — Shard $(SHARD_NUMBER)" | Out-File $summaryPath -Encoding UTF8
+                "# Forms Validation — $(SHARD_SUITE_LABEL) — Shard $(SHARD_NUMBER)" | Out-File $summaryPath -Encoding UTF8
                 "" | Out-File $summaryPath -Append
                 foreach ($f in $mdFiles) {
                     Get-Content $f.FullName | Out-File $summaryPath -Append
@@ -416,6 +546,48 @@ stages:
             Write-Host "TestResults directory not found — skipping forms report collection."
         }
       displayName: "Collect Forms Validation Reports"
+      condition: failed()
+
+    - powershell: |
+        $files = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/TestResults" -Filter "Shard_*_Results.trx" -File -ErrorAction SilentlyContinue
+        if (-not $files) {
+            Write-Error "No Results TRX files found in $(Build.ArtifactStagingDirectory)/TestResults"
+            exit 1
+        }
+
+        $total = 0
+        $executed = 0
+        $passed = 0
+        $failed = 0
+
+        foreach ($file in $files) {
+            [xml]$trx = Get-Content $file.FullName
+            $nsmgr = New-Object System.Xml.XmlNamespaceManager($trx.NameTable)
+            $nsmgr.AddNamespace("t", "http://microsoft.com/schemas/VisualStudio/TeamTest/2010")
+            $counters = $trx.SelectSingleNode("//t:ResultSummary/t:Counters", $nsmgr)
+            if ($null -eq $counters) {
+                Write-Error "Counters node not found in $($file.Name)"
+                exit 1
+            }
+
+            $total += [int]$counters.total
+            $executed += [int]$counters.executed
+            $passed += [int]$counters.passed
+            $failed += [int]$counters.failed
+        }
+
+        Write-Host "TRX Summary"
+        Write-Host "------------"
+        Write-Host "Total: $total"
+        Write-Host "Executed: $executed"
+        Write-Host "Passed: $passed"
+        Write-Host "Failed: $failed"
+
+        if ($total -eq 0 -or $executed -eq 0) {
+            Write-Error "TRX validation failed. Total=$total, Executed=$executed"
+            exit 1
+        }
+      displayName: "Validate Playwright Results TRX"
       condition: always()
 
     - task: PublishTestResults@2
@@ -426,25 +598,25 @@ stages:
         testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/Shard_*_Results.trx"
         searchFolder: "$(Build.ArtifactStagingDirectory)/TestResults"
         mergeTestResults: true
-        failTaskOnFailedTests: false
+        failTaskOnFailedTests: true
         failTaskOnMissingResultsFile: true
         failTaskOnFailureToPublishResults: true
-        testRunTitle: "SFP Smoke — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
+        testRunTitle: "SFP $(SHARD_SUITE) — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
 
     # Forms results are informational — failures here must not fail the shard job
     - task: PublishTestResults@2
       displayName: "Publish Forms Validation Results (Informational)"
-      condition: always()
+      condition: failed()
       inputs:
         testResultsFormat: VSTest
         testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/FormsValidation_*.trx"
         mergeTestResults: false
         failTaskOnFailedTests: false
-        testRunTitle: "Forms Validation — SFP Smoke — Shard $(SHARD_NUMBER)"
+        testRunTitle: "Forms Validation — $(SHARD_SUITE_LABEL) — Shard $(SHARD_NUMBER)"
 
     - task: PublishPipelineArtifact@1
       displayName: "Publish Forms Reports"
-      condition: always()
+      condition: failed()
       inputs:
         targetPath: "$(Build.ArtifactStagingDirectory)/FormsReports"
         artifact: "Forms_Reports_Shard_$(SHARD_NUMBER)"
@@ -453,9 +625,9 @@ stages:
 # Runs after BasicPolicy (Stage 2) regardless of pass/fail.
 # Reuses the same BuildOutput artifact — no second build needed.
 - stage: CE_Test
-  displayName: "CE Test (3 Parallel Shards)"
+  displayName: "CE Test (Deprecated - Unified in Stage 2)"
   dependsOn: Test
-  condition: and(in(dependencies.Test.result, 'Succeeded', 'SucceededWithIssues', 'Failed', 'Skipped'), ne('${{ parameters.suiteToRun }}', 'BasicPolicy Only'))
+  condition: false
 
   jobs:
   - job: CETestShard
@@ -509,24 +681,6 @@ stages:
         path: "$(Agent.ToolsDirectory)/playwright-browsers"
 
     - powershell: |
-        $playwrightBrowsersPath = "$(Agent.ToolsDirectory)/playwright-browsers"
-        $env:PLAYWRIGHT_BROWSERS_PATH = $playwrightBrowsersPath
-
-        $playwright = Get-ChildItem `
-            -Path "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0" `
-            -Filter playwright.ps1 | Select-Object -First 1
-
-        if ($playwright) {
-            Write-Host "Installing Playwright via $($playwright.FullName)"
-            & powershell -File $playwright.FullName install chromium --with-deps
-        } else {
-            Write-Warning "playwright.ps1 not found — assuming pre-installed"
-        }
-      displayName: "Ensure Playwright Chromium"
-      env:
-        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
-
-    - powershell: |
         New-Item -ItemType Directory -Force -Path "$(Build.ArtifactStagingDirectory)/TestResults" | Out-Null
       displayName: "Create TestResults Directory"
       condition: always()
@@ -556,18 +710,9 @@ stages:
 
         $firstRunExit = $LASTEXITCODE
         Write-Host "First run exit code: $firstRunExit"
-        $trxPath = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
-        if ($firstRunExit -ne 0 -and !(Test-Path $trxPath)) {
+        if ($firstRunExit -ne 0 -and !(Test-Path "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx")) {
           Write-Error "dotnet test failed before producing a TRX result."
           exit $firstRunExit
-        }
-        if (Test-Path $trxPath) {
-          [xml]$trx = Get-Content $trxPath
-          $executed = [int]$trx.TestRun.ResultSummary.Counters.executed
-          if ($executed -eq 0) {
-            Write-Error "The shard filter executed no tests."
-            exit 1
-          }
         }
         exit 0
       displayName: "Run CE Shard $(SHARD_NUMBER)"
@@ -582,6 +727,107 @@ stages:
         SHARD_FILTER_FULL: $(SHARD_FILTER_FULL)
         SHARD_FILTER_DEBUG: $(SHARD_FILTER_DEBUG)
         DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
+
+    - powershell: |
+        $trxPath = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
+
+        if (!(Test-Path $trxPath)) {
+            Write-Host "No TRX found — skipping retry step."
+            exit 0
+        }
+
+        [xml]$trx = Get-Content $trxPath
+        $ns = @{ t = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010" }
+        $failed = Select-Xml -Xml $trx -XPath "//t:UnitTestResult[@outcome='Failed']" -Namespace $ns
+
+        if (-not $failed) {
+            Write-Host "No failures in first run — retry step skipped."
+            exit 0
+        }
+
+        $failedFqns = @()
+        foreach ($result in $failed) {
+            $testId = $result.Node.testId
+            $testMethod = Select-Xml -Xml $trx -XPath "//t:UnitTest[@id='$testId']/t:TestMethod" -Namespace $ns
+            if ($testMethod -and $testMethod.Node.className -and $testMethod.Node.name) {
+                $failedFqns += "$($testMethod.Node.className).$($testMethod.Node.name)"
+            } elseif ($result.Node.testName) {
+                $failedFqns += $result.Node.testName
+            }
+        }
+        $failedFqns = $failedFqns | Select-Object -Unique
+
+        Write-Host "Failed tests extracted:"
+        $failedFqns | ForEach-Object { Write-Host "  - $_" }
+
+        # Normalize parameterized names to method-level FQNs for a valid VSTest filter
+        $failedMethods = ($failedFqns | ForEach-Object {
+            if ($_ -match '^([^\(]+)') { $matches[1] } else { $_ }
+        }) | Select-Object -Unique
+
+        Write-Host "Retry methods extracted:"
+        $failedMethods | ForEach-Object { Write-Host "  - $_" }
+
+        $nameFilter = ($failedMethods | ForEach-Object {
+            $escaped = $_.Replace("'", "").Replace('"', '')
+            if ($env:SHARD_NUMBER -match '^\d+$') {
+                "(FullyQualifiedName~\"$escaped\"&TestCategory=Shard$($env:SHARD_NUMBER))"
+            } else {
+                "FullyQualifiedName~\"$escaped\""
+            }
+        }) -join "|"
+
+        Write-Host "Generated filter:"
+        Write-Host $nameFilter
+
+        $testDll = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.dll"
+        $retryCommand = "dotnet test $testDll --filter `"$nameFilter`" --settings `"$(Build.SourcesDirectory)/ci.runsettings`" --logger `"trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx`" --results-directory `"$(Build.ArtifactStagingDirectory)/TestResults`""
+        Write-Host "Retry command:"
+        Write-Host $retryCommand
+
+        & dotnet test $testDll `
+            --filter "$nameFilter" `
+            --settings "$(Build.SourcesDirectory)/ci.runsettings" `
+            --logger "trx;LogFileName=Shard_$($env:SHARD_NUMBER)_Retry.trx" `
+            --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
+
+        $retryExitCode = $LASTEXITCODE
+        Write-Host "Retry exit code: $retryExitCode"
+        if ($retryExitCode -ne 0) {
+            Write-Error "Retry failed for shard $($env:SHARD_NUMBER). Filter: $nameFilter"
+            exit $retryExitCode
+        }
+
+        exit 0
+      displayName: "Retry Failed Tests — Shard $(SHARD_NUMBER)"
+      condition: always()
+      env:
+        Playwright__Headless: "true"
+        Playwright__BrowserType: "chromium"
+        TEST_ENVIRONMENT: "qa"
+        CI: "true"
+        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+        PLAYWRIGHT_HEADLESS: "true"
+        BROWSER_TYPE: "chromium"
+        DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
+        DataPool__AutoStart: "false"
+
+    # ✅ ENSURE RETRY TRX EXISTS
+    - powershell: |
+        $resultsTrx = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
+        $retryTrx   = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Retry.trx"
+        if ((Test-Path $resultsTrx) -and !(Test-Path $retryTrx)) {
+            Copy-Item $resultsTrx $retryTrx
+            Write-Host "All tests passed on first run — promoted Results.trx → Retry.trx for publishing"
+        } elseif (Test-Path $retryTrx) {
+            Write-Host "Retry.trx already exists — retry ran, using retry results"
+        } else {
+            Write-Warning "Neither Results.trx nor Retry.trx found — test execution may have failed entirely"
+        }
+      displayName: "Ensure Retry TRX Exists — Shard $(SHARD_NUMBER)"
+      condition: always()
+      env:
+        SHARD_NUMBER: $(SHARD_NUMBER)
 
     - powershell: |
         Write-Host "==== CE TEST RESULTS CONTENT ===="
@@ -666,6 +912,48 @@ stages:
       displayName: "Collect Forms Validation Reports"
       condition: always()
 
+    - powershell: |
+        $files = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/TestResults" -Filter "Shard_*_Results.trx" -File -ErrorAction SilentlyContinue
+        if (-not $files) {
+            Write-Error "No Results TRX files found in $(Build.ArtifactStagingDirectory)/TestResults"
+            exit 1
+        }
+
+        $total = 0
+        $executed = 0
+        $passed = 0
+        $failed = 0
+
+        foreach ($file in $files) {
+            [xml]$trx = Get-Content $file.FullName
+            $nsmgr = New-Object System.Xml.XmlNamespaceManager($trx.NameTable)
+            $nsmgr.AddNamespace("t", "http://microsoft.com/schemas/VisualStudio/TeamTest/2010")
+            $counters = $trx.SelectSingleNode("//t:ResultSummary/t:Counters", $nsmgr)
+            if ($null -eq $counters) {
+                Write-Error "Counters node not found in $($file.Name)"
+                exit 1
+            }
+
+            $total += [int]$counters.total
+            $executed += [int]$counters.executed
+            $passed += [int]$counters.passed
+            $failed += [int]$counters.failed
+        }
+
+        Write-Host "TRX Summary"
+        Write-Host "------------"
+        Write-Host "Total: $total"
+        Write-Host "Executed: $executed"
+        Write-Host "Passed: $passed"
+        Write-Host "Failed: $failed"
+
+        if ($total -eq 0 -or $executed -eq 0) {
+            Write-Error "TRX validation failed. Total=$total, Executed=$executed"
+            exit 1
+        }
+      displayName: "Validate Playwright Results TRX"
+      condition: always()
+
     - task: PublishTestResults@2
       displayName: "Publish Playwright Test Results"
       condition: always()
@@ -674,7 +962,7 @@ stages:
         testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/Shard_*_Results.trx"
         searchFolder: "$(Build.ArtifactStagingDirectory)/TestResults"
         mergeTestResults: true
-        failTaskOnFailedTests: false
+        failTaskOnFailedTests: true
         failTaskOnMissingResultsFile: true
         failTaskOnFailureToPublishResults: true
         testRunTitle: "SFP CE — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"

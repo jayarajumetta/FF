@@ -38,6 +38,7 @@ pool:
 variables:
   DOTNET_VERSION: "8.x"
   BUILD_CONFIGURATION: "Release"
+  NUGET_PACKAGES: "$(Pipeline.Workspace)/.nuget/packages"
 
 # ── Stage 1: Build ─────────────────────────────────────────────────────────────
 stages:
@@ -59,8 +60,18 @@ stages:
         packageType: sdk
         version: $(DOTNET_VERSION)
 
+    - task: Cache@2
+      displayName: "Cache NuGet packages"
+      inputs:
+        key: 'nuget | "$(Agent.OS)" | TestAutomation.csproj'
+        restoreKeys: |
+          nuget | "$(Agent.OS)"
+        path: "$(NUGET_PACKAGES)"
+
     - script: dotnet restore TestAutomation.csproj
       displayName: "Restore NuGet packages"
+      env:
+        NUGET_PACKAGES: $(NUGET_PACKAGES)
 
     - script: dotnet build TestAutomation.csproj --configuration $(BUILD_CONFIGURATION) --no-restore
       displayName: "Build project"
@@ -163,24 +174,6 @@ stages:
           playwright | "$(Agent.OS)"
         path: "$(Agent.ToolsDirectory)/playwright-browsers"
 
-    - powershell: |
-        $playwrightBrowsersPath = "$(Agent.ToolsDirectory)/playwright-browsers"
-        $env:PLAYWRIGHT_BROWSERS_PATH = $playwrightBrowsersPath
-
-        $playwright = Get-ChildItem `
-            -Path "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0" `
-            -Filter playwright.ps1 | Select-Object -First 1
-
-        if ($playwright) {
-            Write-Host "Installing Playwright via $($playwright.FullName)"
-            & powershell -File $playwright.FullName install chromium --with-deps
-        } else {
-            Write-Warning "playwright.ps1 not found — assuming pre-installed"
-        }
-      displayName: "Ensure Playwright Chromium"
-      env:
-        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
-
     # ✅ Create results folder
     - powershell: |
         New-Item -ItemType Directory -Force -Path "$(Build.ArtifactStagingDirectory)/TestResults" | Out-Null
@@ -265,7 +258,7 @@ stages:
 
     - task: PublishPipelineArtifact@1
       displayName: "Publish Shard Artifacts"
-      condition: always()
+      condition: failed()
       inputs:
         targetPath: "$(Build.ArtifactStagingDirectory)/TestResults"
         artifact: "SFP_Smoke_Shard_$(SHARD_NUMBER)"
@@ -296,11 +289,11 @@ stages:
             Write-Host "TestResults directory not found — skipping forms report collection."
         }
       displayName: "Collect Forms Validation Reports"
-      condition: always()
+      condition: failed()
 
     - task: PublishPipelineArtifact@1
       displayName: "Publish Forms Reports"
-      condition: always()
+      condition: failed()
       inputs:
         targetPath: "$(Build.ArtifactStagingDirectory)/FormsReports"
         artifact: "Forms_Reports_Shard_$(SHARD_NUMBER)"

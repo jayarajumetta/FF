@@ -16,30 +16,73 @@ variables:
     value: "QA"
   - name: DOTNET_VERSION
     value: "8.x"
+  - name: NUGET_PACKAGES
+    value: "$(Pipeline.Workspace)/.nuget/packages"
 
 stages:
-  - stage: FormsCheck
-    displayName: "DuckCreek Forms Validation"
+  - stage: Build
+    displayName: "Build Once"
     jobs:
-      - job: SFP_FormsCheck
-        displayName: "SFP Forms Check"
+      - job: Build
+        displayName: "Restore and Build"
         steps:
+          - checkout: self
+
           - task: UseDotNet@2
             displayName: "Install .NET SDK"
             inputs:
               packageType: sdk
               version: $(DOTNET_VERSION)
 
+          - task: Cache@2
+            displayName: "Cache NuGet packages"
+            inputs:
+              key: 'nuget | "$(Agent.OS)" | TestAutomation.csproj'
+              restoreKeys: |
+                nuget | "$(Agent.OS)"
+              path: "$(NUGET_PACKAGES)"
+
           - script: dotnet restore TestAutomation.csproj
             displayName: "Restore NuGet packages"
+            env:
+              NUGET_PACKAGES: $(NUGET_PACKAGES)
 
           - script: dotnet build TestAutomation.csproj --configuration Release --no-restore
             displayName: "Build project"
 
+          - task: PublishPipelineArtifact@1
+            displayName: "Publish Build Output"
+            inputs:
+              targetPath: "$(Build.SourcesDirectory)/bin/Release/net8.0"
+              artifact: "BuildOutput"
+
+  - stage: FormsCheck
+    displayName: "DuckCreek Forms Validation"
+    dependsOn: Build
+    jobs:
+      - job: SFP_FormsCheck
+        displayName: "SFP Forms Check"
+        steps:
+          - checkout: self
+
+          - task: UseDotNet@2
+            displayName: "Install .NET SDK"
+            inputs:
+              packageType: sdk
+              version: $(DOTNET_VERSION)
+
+          - task: DownloadPipelineArtifact@2
+            displayName: "Download Build Output"
+            inputs:
+              artifact: "BuildOutput"
+              targetPath: "$(Build.SourcesDirectory)/bin/Release/net8.0"
+
+          - powershell: |
+              New-Item -ItemType Directory -Force -Path "$(Build.ArtifactStagingDirectory)/TestResults" | Out-Null
+            displayName: "Create TestResults Directory"
+
           - script: |
-              dotnet test TestAutomation.csproj ^
-                --configuration Release ^
-                --no-build ^
+              dotnet test $(Build.SourcesDirectory)/bin/Release/net8.0/TestAutomation.dll ^
                 --filter "Category=Forms&Category=SFP" ^
                 --logger "trx;LogFileName=SFP_FormsResults.trx" ^
                 --results-directory $(Build.ArtifactStagingDirectory)/TestResults
@@ -65,22 +108,26 @@ stages:
       - job: CE_FormsCheck
         displayName: "Country Estate Forms Check"
         steps:
+          - checkout: self
+
           - task: UseDotNet@2
             displayName: "Install .NET SDK"
             inputs:
               packageType: sdk
               version: $(DOTNET_VERSION)
 
-          - script: dotnet restore TestAutomation.csproj
-            displayName: "Restore NuGet packages"
+          - task: DownloadPipelineArtifact@2
+            displayName: "Download Build Output"
+            inputs:
+              artifact: "BuildOutput"
+              targetPath: "$(Build.SourcesDirectory)/bin/Release/net8.0"
 
-          - script: dotnet build TestAutomation.csproj --configuration Release --no-restore
-            displayName: "Build project"
+          - powershell: |
+              New-Item -ItemType Directory -Force -Path "$(Build.ArtifactStagingDirectory)/TestResults" | Out-Null
+            displayName: "Create TestResults Directory"
 
           - script: |
-              dotnet test TestAutomation.csproj ^
-                --configuration Release ^
-                --no-build ^
+              dotnet test $(Build.SourcesDirectory)/bin/Release/net8.0/TestAutomation.dll ^
                 --filter "Category=Forms&Category=CE" ^
                 --logger "trx;LogFileName=CE_FormsResults.trx" ^
                 --results-directory $(Build.ArtifactStagingDirectory)/TestResults
