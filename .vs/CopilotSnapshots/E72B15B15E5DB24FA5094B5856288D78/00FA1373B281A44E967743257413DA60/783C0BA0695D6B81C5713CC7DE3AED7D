@@ -1,0 +1,49 @@
+﻿using InsuranceAutomation.Core;
+using InsuranceAutomation.CLEQ.Pages.Locators;
+
+namespace InsuranceAutomation.CLEQ.Pages;
+
+public sealed class QuoteSearchPage
+{
+    private readonly QuoteSearchLocators _locators;
+    private readonly UiActions _ui;
+
+    public QuoteSearchPage(BrowserSession browser, UiActions ui)
+    {
+        _locators = new QuoteSearchLocators(browser.Page);
+        _ui = ui;
+    }
+
+    public Task EnterQuoteSearchAsync(string value) =>
+        _ui.FillAsync(_locators.QuoteSearchInput, value, new ControlIntent("QuoteSearch", "QuoteSearchInput"));
+
+    public Task ClickQuoteSearchAsync() =>
+        _ui.ClickAsync(_locators.QuoteSearchButton, new ControlIntent("QuoteSearch", "QuoteSearchButton"));
+
+    public Task ClickClientInfoSearchAsync() => ClickQuoteSearchAsync();
+
+    public Task ClickCloseQuoteAsync() =>
+        _ui.ClickAsync(_locators.CloseQuote, new ControlIntent("QuoteSearch", "CloseQuote"));
+
+    public Task ClickKeepGoingAsync() =>
+        _ui.ClickAsync(_locators.KeepGoing, new ControlIntent("QuoteSearch", "KeepGoing"));
+
+    public Task<bool> IsKeepGoingPresentAsync() => _ui.ExistsAsync(_locators.KeepGoing);
+
+    public Task<string> CaptureNameAndQuoteAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.NameAndQuote, property, new ControlIntent("QuoteSearch", "NameAndQuote"));
+
+    public Task VerifyNameAndQuoteAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.NameAndQuote, expected, property, new ControlIntent("QuoteSearch", "NameAndQuote"));
+
+    public Task NavigateToScreenAsync(string screen) =>
+        _ui.ClickAsync(_locators.GetNavigationLink(screen), new ControlIntent("Navigation", $"NavLink:{screen}"));
+
+    public Task VerifyScreenAsync(string screen) =>
+        _ui.VerifyAsync(_locators.GetScreenHeading(screen), "Visible", "", new ControlIntent("Navigation", $"ScreenHeading:{screen}"));
+
+    // Compatibility: the Tosca "Enter Screen" reusable parameter means click the matching navigation DIV.
+    public Task EnterPreQualificationAsync(string value) => NavigateToScreenAsync(value);
+    public Task VerifyPreQualificationAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.GetScreenHeading("PreQualification"), expected, property, new ControlIntent("Navigation", "PreQualificationHeading"));
+}

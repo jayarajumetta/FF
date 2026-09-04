@@ -1,0 +1,189 @@
+﻿using InsuranceAutomation.Core;
+using Reqnroll;
+using InsuranceAutomation.CLEQ.Pages;
+
+namespace InsuranceAutomation.CLEQ.StepDefinitions;
+
+[Binding, Scope(Feature = "EQ BOP Smoke Test")]
+public sealed class EQBOPSmokeTestSteps
+{
+    private readonly ScenarioContext _scenario;
+    public EQBOPSmokeTestSteps(ScenarioContext scenario) => _scenario = scenario;
+
+    [Given(@"^I create a new client and begin the quote$")]
+    [When(@"^I create a new client and begin the quote$")]
+    [Then(@"^I create a new client and begin the quote$")]
+    public async Task CreateANewClientAndBeginTheQuoteAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("FirstName"); // exact pattern comes from scenario JSON/Tosca lineage
+        data.GenerateRandom("LastName");
+
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // TC-02 / Feature step 3: exact business order from expanded Tosca source.
+        await page.VerifyNewQuoteAsync("Visible", "");
+        await page.ClickNewQuoteAsync();
+        await page.VerifyClientInfoAsync("Visible", "");
+        await page.EnterCustomerNameFirstAsync(data.Resolve("{{runtime:FirstName}}"));
+        await page.EnterCustomerNameLastAsync(data.Resolve("{{runtime:LastName}}"));
+        await page.EnterCustomerDateOfBirthAsync(data.Resolve("{{data:customer_dateofbirth}}"));
+        await page.ClickClientInfoSearchAsync();
+        await page.VerifyExistingClientMatchAsync("Visible", "");
+        await page.ClickCreateNewClientAsync();
+        await page.ClickAdditionalInterestsNextAsync();
+    }
+
+    [Given(@"^I enter the client account and address information$")]
+    [When(@"^I enter the client account and address information$")]
+    [Then(@"^I enter the client account and address information$")]
+    public async Task EnterTheClientAccountAndAddressInformationAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("OwnerPhone");
+        data.GenerateRandom("OwnerEmail");
+
+        var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // XTestStep/XTestStepValue order is authoritative; manual CSV/workbooks are not inputs.
+        await page.WaitForAccountInformationHeaderAsync("Visible");
+        await page.EnterOwnerMiddleNameAsync("");
+        await page.EnterOwnerPhoneAsync(data.Resolve("{{runtime:OwnerPhone}}"));
+        await page.EnterOwnerEmailAsync(data.Resolve("{{runtime:OwnerEmail}}"));
+        await page.ClickMarriedAsync();
+
+        await page.EnterStreetAddressAsync(data.GetCanonicalFieldRequired("Address 1"));
+        await page.EnterAddress2Async(data.GetCanonicalField("Address 2"));
+        await page.EnterCityAsync(data.GetCanonicalFieldRequired("City"));
+        await page.SelectStateAsync(data.GetCanonicalFieldRequired("State Name"));
+        await page.EnterZipAsync(data.GetCanonicalFieldRequired("Zip"));
+
+        //var county = data.GetCanonicalField("County");
+        //if (!string.IsNullOrWhiteSpace(county))
+        //    await page.EnterCountyAsync(county);
+
+        // Map/Satellite are generated only after address steering in raw Tosca.
+        await page.VerifyMapAsync("Visible", "");
+        await page.VerifySatelliteAsync("Visible", "");
+
+        await page.SelectHaveYouReceivedMailAtThisAddressForAtLeast90DaysYesAsync();
+        await page.SelectIsTheAccountAddressAlsoWhereTheClientResidesYesAsync();
+        await page.ClickAdditionalInterestsNextAsync();
+    }
+
+
+    [Given(@"^I start the configured policy proposal$")]
+    [When(@"^I start the configured policy proposal$")]
+    [Then(@"^I start the configured policy proposal$")]
+    public async Task StartTheConfiguredPolicyProposalAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // TC-02 / Feature step 5. BusinessType is a reusable parameter/condition,
+        // not a textbox. MAT-SELECT state selection is delegated to UiActions.
+        await page.VerifyProposalDetailsAsync("Visible", "");
+        await page.ClickBusinessOwnersAsync();
+
+        var businessType = data.Resolve("{{data:individual_31}}");
+        await page.EnterIndividualAsync(businessType); // records source parameter intent only
+        if (businessType.Equals("Individual", StringComparison.OrdinalIgnoreCase))
+            await page.ClickIndividuallyOwnedDBAOrTAAsync();
+
+        await page.EnterIndividualDBAAsync(data.Resolve("{{data:individual_dba}}"));
+        await page.EnterEffectiveDate6F16BAsync(data.Resolve("{{data:effective_date}}"));
+        await page.SetNewAccountAddressAsync(data.Resolve("{{data:new_account_address}}"));
+        await page.ClickLessorsRiskNoAsync();
+        await page.SelectStateAsync(data.Resolve("{{data:state_21}}").ToUpperInvariant());
+        await page.EnterAgentPCAsync(data.Resolve("{{data:agentpc}}"));
+
+        // Source AgentPC steering confirms autocomplete by tabbing out twice.
+
+        data.Set("EffDate", await page.CaptureEffectiveDate6F16BAsync("Value"));
+        await page.ClickStartQuoteAsync();
+    }
+
+    [Given(@"^I enter the insured social security number and handle any prefill result$")]
+    [When(@"^I enter the insured social security number and handle any prefill result$")]
+    [Then(@"^I enter the insured social security number and handle any prefill result$")]
+    public async Task EnterTheInsuredSocialSecurityNumberAndHandleAnyPrefillResultAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("InsuredSSN");
+
+        var page = new SocialSecurityPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // TC-02 / Feature step 6.
+        await page.VerifySsnNotFoundMessageAsync();
+        await page.EnterSsnAsync(data.Resolve("{{runtime:InsuredSSN}}"));
+        await page.VerifySubmitAsync();
+        await page.ClickSubmitAsync();
+        if (await page.IsContinuePresentAsync())
+            await page.ClickContinueAsync();
+    }
+
+    [Given(@"^I navigate to the required policy screen$")]
+    [When(@"^I navigate to the required policy screen$")]
+    [Then(@"^I navigate to the required policy screen$")]
+    public async Task NavigateToTheRequiredPolicyScreenAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        var screen = data.Resolve("{{data:prequalification_51}}");
+
+        // Tosca EQ|Common|Navigation: Nav Link is DIV InnerText={B[Screen]} (click);
+        // Screen Heading is H1 {B[Screen]}*. It is not a FillAsync action.
+        await page.NavigateToScreenAsync(screen);
+        if (await page.IsKeepGoingPresentAsync())
+            await page.ClickKeepGoingAsync();
+        await page.VerifyScreenAsync(screen);
+    }
+
+    [Given(@"^I capture the quote identity and close the current quote$")]
+    [When(@"^I capture the quote identity and close the current quote$")]
+    [Then(@"^I capture the quote identity and close the current quote$")]
+    public async Task CaptureTheQuoteIdentityAndCloseTheCurrentQuoteAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+        var page = new QuoteSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // Source captures Name and Quote -> Quote_NameNum, then sets Quote_Num with
+        // STRINGREPLACE(Quote_NameNum, LastName, "") before selecting Close Quote.
+        data.Set("Quote_NameNum", await page.CaptureNameAndQuoteAsync("InnerText"));
+        data.Set("Quote_Num", data.Get("Quote_NameNum")
+            .Replace(data.Get("LastName"), string.Empty, StringComparison.OrdinalIgnoreCase)
+            .Trim());
+
+        await page.ClickCloseQuoteAsync();
+    }
+
+    [Given(@"^I retrieve the quote and verify its identity$")]
+    [When(@"^I retrieve the quote and verify its identity$")]
+    [Then(@"^I retrieve the quote and verify its identity$")]
+    public async Task RetrieveTheQuoteAndVerifyItsIdentityAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+        var page = new QuoteSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        // TC-02 / Feature step 9.
+        await page.EnterQuoteSearchAsync(data.Resolve("{{runtime:Quote_Num}}"));
+        await page.ClickQuoteSearchAsync();
+
+        var screen = data.Resolve("{{data:prequalification_64}}");
+
+        // Only navigate if we're not already on the target screen
+        var ui = _scenario.Get<UiActions>();
+        var screenHeadingLocator = new QuoteSearchLocators(_scenario.Get<BrowserSession>().Page).GetScreenHeading(screen);
+        var isAlreadyOnScreen = await ui.ExistsAsync(screenHeadingLocator);
+
+        if (!isAlreadyOnScreen)
+        {
+            await page.NavigateToScreenAsync(screen);
+            if (await page.IsKeepGoingPresentAsync())
+                await page.ClickKeepGoingAsync();
+        }
+
+        await page.VerifyScreenAsync(screen);
+        await page.VerifyNameAndQuoteAsync(data.Resolve("{{runtime:Quote_NameNum}}"), "InnerText");
+    }
+}

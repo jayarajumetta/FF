@@ -1,0 +1,494 @@
+Given I open a browser session
+2026-09-02 14:42:09.914 [INFO] START STEP: I open a browser session
+2026-09-02 14:42:17.072 [INFO] Browser session opened. Channel=msedge; Headless=False; HAR=True; Console=True; Network=True
+-> done: ApplicationSteps.OpenBrowserSessionAsync() (7.2s)
+2026-09-02 14:42:17.106 [INFO] PASSED STEP: I open a browser session
+Given test data "TestData/Scenarios/03_eq_bop_smoke_test_al.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+2026-09-02 14:42:17.155 [INFO] START STEP: test data "TestData/Scenarios/03_eq_bop_smoke_test_al.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+2026-09-02 14:42:17.477 [INFO] Loaded scenario data: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestData\Scenarios\03_eq_bop_smoke_test_al.json
+-> done: ApplicationSteps.LoadScenarioData("TestData/Scenario...", "TestData/External...") (0.3s)
+2026-09-02 14:42:17.479 [INFO] PASSED STEP: test data "TestData/Scenarios/03_eq_bop_smoke_test_al.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+And I open the configured Commercial Lines ExpertQuote application
+2026-09-02 14:42:17.481 [INFO] START STEP: I open the configured Commercial Lines ExpertQuote application
+2026-09-02 14:42:18.577 [INFO] 2026-09-02T14:42:18.5425284+05:30 BROWSER verbose: [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://www.chromium.org/developers/design-documents/create-amazing-password-forms) %o
+-> done: ApplicationSteps.OpenApplicationAsync() (1.1s)
+2026-09-02 14:42:18.603 [INFO] PASSED STEP: I open the configured Commercial Lines ExpertQuote application
+And I sign in to Commercial Lines ExpertQuote using configured credentials
+2026-09-02 14:42:18.609 [INFO] START STEP: I sign in to Commercial Lines ExpertQuote using configured credentials
+2026-09-02 14:42:21.699 [INFO] 2026-09-02T14:42:21.6977562+05:30 BROWSER error: The source list for the Content Security Policy directive 'child-src' contains an invalid source: 'vmware-view://'. It will be ignored.
+2026-09-02 14:42:21.988 [INFO] 2026-09-02T14:42:21.9804855+05:30 BROWSER error: Failed to load resource: the server responded with a status of 404 (Not Found)
+2026-09-02 14:42:22.713 [INFO] 2026-09-02T14:42:22.7094664+05:30 BROWSER warning: Google Maps JavaScript API has been loaded directly without loading=async. This can result in suboptimal performance. For best-practice loading patterns please see https://goo.gle/js-api-loading
+2026-09-02 14:42:22.892 [INFO] 2026-09-02T14:42:22.8896881+05:30 BROWSER warning: NG0912: Component ID generation collision detected. Components '_FormRendererComponent' and '_FormRendererComponent' with selector 'anico-form' generated the same component ID. To fix this, you can change the selector of one of those components or add an extra host attribute to force a different ID. Find more at https://v20.angular.dev/errors/NG0912
+2026-09-02 14:42:22.897 [INFO] 2026-09-02T14:42:22.8935406+05:30 BROWSER warning: NG0912: Component ID generation collision detected. Components '_FormDebuggerComponent' and '_FormDebuggerComponent' with selector 'anico-form-debugger' generated the same component ID. To fix this, you can change the selector of one of those components or add an extra host attribute to force a different ID. Find more at https://v20.angular.dev/errors/NG0912
+2026-09-02 14:42:23.060 [INFO] 2026-09-02T14:42:23.0227203+05:30 BROWSER warning: NG0912: Component ID generation collision detected. Components '_JsonEditorComponent' and '_JsonEditorComponent' with selector 'anico-json-editor' generated the same component ID. To fix this, you can change the selector of one of those components or add an extra host attribute to force a different ID. Find more at https://v20.angular.dev/errors/NG0912
+2026-09-02 14:42:23.081 [INFO] 2026-09-02T14:42:23.0645906+05:30 BROWSER log: state undefined
+2026-09-02 14:42:23.084 [INFO] 2026-09-02T14:42:23.0830655+05:30 BROWSER log: action {type: @ngrx/store/init}
+2026-09-02 14:42:23.103 [INFO] 2026-09-02T14:42:23.1013939+05:30 BROWSER log: state {}
+2026-09-02 14:42:23.107 [INFO] 2026-09-02T14:42:23.1042735+05:30 BROWSER log: action {type: @ngrx/store/update-reducers, features: Array(1)}
+2026-09-02 14:42:23.109 [INFO] 2026-09-02T14:42:23.1087060+05:30 BROWSER log: state {}
+2026-09-02 14:42:23.131 [INFO] 2026-09-02T14:42:23.1205052+05:30 BROWSER log: action {type: @ngrx/store-devtools/recompute}
+2026-09-02 14:42:23.138 [INFO] 2026-09-02T14:42:23.1327200+05:30 BROWSER log: state {router: undefined, authModule: Object}
+2026-09-02 14:42:23.140 [INFO] 2026-09-02T14:42:23.1397234+05:30 BROWSER log: action {type: @ngrx/store-devtools/recompute}
+2026-09-02 14:42:23.143 [INFO] 2026-09-02T14:42:23.1409151+05:30 BROWSER log: state {router: undefined, authModule: Object}
+2026-09-02 14:42:23.146 [INFO] 2026-09-02T14:42:23.1448533+05:30 BROWSER log: action {type: @ngrx/effects/init}
+2026-09-02 14:42:23.148 [INFO] 2026-09-02T14:42:23.1468131+05:30 BROWSER log: state {router: undefined, authModule: Object}
+2026-09-02 14:42:23.152 [INFO] 2026-09-02T14:42:23.1521396+05:30 BROWSER log: action {type: @ngrx/router-store/request, payload: Object}
+2026-09-02 14:42:23.160 [INFO] 2026-09-02T14:42:23.1534443+05:30 BROWSER log: Angular is running in development mode.
+2026-09-02 14:42:23.288 [INFO] 2026-09-02T14:42:23.2873242+05:30 BROWSER warning: NG0912: Component ID generation collision detected. Components '__MatBadgeStyleLoader' and '_ClientInfoFactoryComponent' with selector 'ng-component' generated the same component ID. To fix this, you can change the selector of one of those components or add an extra host attribute to force a different ID. Find more at https://v20.angular.dev/errors/NG0912
+2026-09-02 14:42:23.291 [INFO] 2026-09-02T14:42:23.2908049+05:30 BROWSER log: state {router: undefined, authModule: Object}
+2026-09-02 14:42:23.295 [INFO] 2026-09-02T14:42:23.2940870+05:30 BROWSER log: action {type: @ngrx/router-store/navigation, payload: Object}
+2026-09-02 14:42:23.299 [INFO] 2026-09-02T14:42:23.2977128+05:30 BROWSER log: state {router: Object, authModule: Object}
+2026-09-02 14:42:23.301 [INFO] 2026-09-02T14:42:23.3003258+05:30 BROWSER log: action {type: @ngrx/router-store/navigated, payload: Object}
+2026-09-02 14:42:23.304 [INFO] 2026-09-02T14:42:23.3025495+05:30 BROWSER log: Initializing dynamic form item registries _FormItemRegistry
+2026-09-02 14:42:23.305 [INFO] 2026-09-02T14:42:23.3046324+05:30 BROWSER log: Adding form item handler: app
+2026-09-02 14:42:23.306 [INFO] 2026-09-02T14:42:23.3062973+05:30 BROWSER log: Adding form item handler: button
+2026-09-02 14:42:23.307 [INFO] 2026-09-02T14:42:23.3071154+05:30 BROWSER log: Adding form item handler: card
+2026-09-02 14:42:23.309 [INFO] 2026-09-02T14:42:23.3084952+05:30 BROWSER log: Adding form item handler: checkbox
+2026-09-02 14:42:23.309 [INFO] 2026-09-02T14:42:23.3091439+05:30 BROWSER log: Adding form item handler: columnLayout
+2026-09-02 14:42:23.319 [INFO] 2026-09-02T14:42:23.3105669+05:30 BROWSER log: Adding form item handler: custom
+2026-09-02 14:42:23.331 [INFO] 2026-09-02T14:42:23.3208230+05:30 BROWSER log: Adding form item handler: customInput
+2026-09-02 14:42:23.366 [INFO] 2026-09-02T14:42:23.3319592+05:30 BROWSER log: Adding form item handler: date
+2026-09-02 14:42:23.385 [INFO] 2026-09-02T14:42:23.3725040+05:30 BROWSER log: Adding form item handler: file
+2026-09-02 14:42:23.406 [INFO] 2026-09-02T14:42:23.3971037+05:30 BROWSER log: Adding form item handler: group
+2026-09-02 14:42:23.424 [INFO] 2026-09-02T14:42:23.4113804+05:30 BROWSER log: Adding form item handler: list
+2026-09-02 14:42:23.436 [INFO] 2026-09-02T14:42:23.4266848+05:30 BROWSER log: Adding form item handler: loop
+2026-09-02 14:42:23.444 [INFO] 2026-09-02T14:42:23.4371940+05:30 BROWSER log: Adding form item handler: modal
+2026-09-02 14:42:23.448 [INFO] 2026-09-02T14:42:23.4468033+05:30 BROWSER log: Adding form item handler: number
+2026-09-02 14:42:23.450 [INFO] 2026-09-02T14:42:23.4496431+05:30 BROWSER log: Adding form item handler: page
+2026-09-02 14:42:23.451 [INFO] 2026-09-02T14:42:23.4505895+05:30 BROWSER log: Adding form item handler: radioGroup
+2026-09-02 14:42:23.453 [INFO] 2026-09-02T14:42:23.4527587+05:30 BROWSER log: Adding form item handler: select
+2026-09-02 14:42:23.457 [INFO] 2026-09-02T14:42:23.4561034+05:30 BROWSER log: Adding form item handler: tab
+2026-09-02 14:42:23.458 [INFO] 2026-09-02T14:42:23.4576604+05:30 BROWSER log: Adding form item handler: tabs
+2026-09-02 14:42:23.463 [INFO] 2026-09-02T14:42:23.4601025+05:30 BROWSER log: Adding form item handler: tabList
+2026-09-02 14:42:23.464 [INFO] 2026-09-02T14:42:23.4635288+05:30 BROWSER log: Adding form item handler: tableLayout
+2026-09-02 14:42:23.467 [INFO] 2026-09-02T14:42:23.4660885+05:30 BROWSER log: Adding form item handler: text
+2026-09-02 14:42:23.469 [INFO] 2026-09-02T14:42:23.4677972+05:30 BROWSER log: Adding form item handler: textarea
+2026-09-02 14:42:23.473 [INFO] 2026-09-02T14:42:23.4700118+05:30 BROWSER log: Adding form item handler: textBlock
+2026-09-02 14:42:23.476 [INFO] 2026-09-02T14:42:23.4751917+05:30 BROWSER log: Adding form item handler: typeahead
+2026-09-02 14:42:23.480 [INFO] 2026-09-02T14:42:23.4779387+05:30 BROWSER log: Adding form item handler: gmaps-automcomplete
+2026-09-02 14:42:23.482 [INFO] 2026-09-02T14:42:23.4804620+05:30 BROWSER log: Adding form item handler: gmaps-directions
+2026-09-02 14:42:23.493 [INFO] 2026-09-02T14:42:23.4888202+05:30 BROWSER log: Adding form item handler: gmaps-mapview
+2026-09-02 14:42:23.528 [INFO] 2026-09-02T14:42:23.4933429+05:30 BROWSER log: Adding form item handler: regularChips
+2026-09-02 14:42:23.532 [INFO] 2026-09-02T14:42:23.5297797+05:30 BROWSER log: Adding form item handler: iconChips
+2026-09-02 14:42:23.558 [INFO] 2026-09-02T14:42:23.5484885+05:30 BROWSER log: Adding form item handler: largeChips
+2026-09-02 14:42:23.559 [INFO] 2026-09-02T14:42:23.5584522+05:30 BROWSER log: Adding form item handler: table
+2026-09-02 14:42:23.561 [INFO] 2026-09-02T14:42:23.5594922+05:30 BROWSER log: Adding component type: button
+2026-09-02 14:42:23.564 [INFO] 2026-09-02T14:42:23.5626667+05:30 BROWSER log: Adding component type: icon
+2026-09-02 14:42:23.567 [INFO] 2026-09-02T14:42:23.5647767+05:30 BROWSER log: Adding component type: card
+2026-09-02 14:42:23.570 [INFO] 2026-09-02T14:42:23.5678620+05:30 BROWSER log: Adding component type: checkbox
+2026-09-02 14:42:23.571 [INFO] 2026-09-02T14:42:23.5710091+05:30 BROWSER log: Adding component type: regularChips
+2026-09-02 14:42:23.574 [INFO] 2026-09-02T14:42:23.5730579+05:30 BROWSER log: Adding component type: largeChips
+2026-09-02 14:42:23.575 [INFO] 2026-09-02T14:42:23.5749248+05:30 BROWSER log: Adding component type: iconChips
+2026-09-02 14:42:23.576 [INFO] 2026-09-02T14:42:23.5760427+05:30 BROWSER log: Adding component type: columnLayout
+2026-09-02 14:42:23.586 [INFO] 2026-09-02T14:42:23.5854886+05:30 BROWSER log: Adding component type: date
+2026-09-02 14:42:23.589 [INFO] 2026-09-02T14:42:23.5881191+05:30 BROWSER log: Adding component type: file
+2026-09-02 14:42:23.590 [INFO] 2026-09-02T14:42:23.5898100+05:30 BROWSER log: Adding component type: group
+2026-09-02 14:42:23.602 [INFO] 2026-09-02T14:42:23.5923463+05:30 BROWSER log: Adding component type: list
+2026-09-02 14:42:23.607 [INFO] 2026-09-02T14:42:23.6031452+05:30 BROWSER log: Adding component type: modal
+2026-09-02 14:42:23.610 [INFO] 2026-09-02T14:42:23.6095215+05:30 BROWSER log: Adding component type: number
+2026-09-02 14:42:23.630 [INFO] 2026-09-02T14:42:23.6124696+05:30 BROWSER log: Adding component type: page
+2026-09-02 14:42:23.642 [INFO] 2026-09-02T14:42:23.6313859+05:30 BROWSER log: Adding component type: radioGroup
+2026-09-02 14:42:23.658 [INFO] 2026-09-02T14:42:23.6463571+05:30 BROWSER log: Adding component type: select
+2026-09-02 14:42:23.660 [INFO] 2026-09-02T14:42:23.6589739+05:30 BROWSER log: Adding component type: tableLayout
+2026-09-02 14:42:23.670 [INFO] 2026-09-02T14:42:23.6603238+05:30 BROWSER log: Adding component type: tabs
+2026-09-02 14:42:23.673 [INFO] 2026-09-02T14:42:23.6716544+05:30 BROWSER log: Adding component type: tabList
+2026-09-02 14:42:23.687 [INFO] 2026-09-02T14:42:23.6840839+05:30 BROWSER log: Adding component type: textarea
+2026-09-02 14:42:23.706 [INFO] 2026-09-02T14:42:23.6989339+05:30 BROWSER log: Adding component type: textBlock
+2026-09-02 14:42:23.719 [INFO] 2026-09-02T14:42:23.7130020+05:30 BROWSER log: Adding component type: text
+2026-09-02 14:42:23.732 [INFO] 2026-09-02T14:42:23.7198570+05:30 BROWSER log: Adding component type: typeahead
+2026-09-02 14:42:23.735 [INFO] 2026-09-02T14:42:23.7336129+05:30 BROWSER log: Adding component type: gmaps-automcomplete
+2026-09-02 14:42:23.748 [INFO] 2026-09-02T14:42:23.7405129+05:30 BROWSER log: Adding component type: gmaps-directions
+2026-09-02 14:42:23.751 [INFO] 2026-09-02T14:42:23.7492458+05:30 BROWSER log: Adding component type: gmaps-mapview
+2026-09-02 14:42:23.755 [INFO] 2026-09-02T14:42:23.7538036+05:30 BROWSER log: Adding component type: table
+2026-09-02 14:42:23.861 [INFO] 2026-09-02T14:42:23.8495798+05:30 BROWSER log: ActionResult:  {type: page, pageId: quoteHome, page: Object, event: QuoteHomeEvent}
+2026-09-02 14:42:23.880 [INFO] 2026-09-02T14:42:23.8628661+05:30 BROWSER log: PageChangeEvent:  PageChangeStartEvent
+2026-09-02 14:42:23.890 [INFO] 2026-09-02T14:42:23.8860864+05:30 BROWSER log: PageChangeEvent:  PageChangeEndEvent
+2026-09-02 14:42:24.447 [INFO] 2026-09-02T14:42:24.4463411+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormGroupHandler2, type: manualUpdate, id: accountInfoPage} ; Updates:  [Array(25)]
+2026-09-02 14:42:24.490 [INFO] 2026-09-02T14:42:24.4896864+05:30 BROWSER log: Ran 3 update(s) for:  {source: FormGroupHandler2, type: manualUpdate, id: undefined} ; Updates:  [Array(16), Array(5)]
+2026-09-02 14:42:24.492 [INFO] 2026-09-02T14:42:24.4914968+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: primary, config: Object}
+2026-09-02 14:42:24.500 [INFO] 2026-09-02T14:42:24.4982513+05:30 BROWSER log: *** 2 AaButtonPrimaryComponent initialized with config: {label: New Quote, uniqueId: new-quote-button, size: medium, onClick: , disabled: false}
+2026-09-02 14:42:24.506 [INFO] 2026-09-02T14:42:24.5006166+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: primary, config: Object}
+2026-09-02 14:42:24.508 [INFO] 2026-09-02T14:42:24.5072909+05:30 BROWSER log: *** 2 AaButtonPrimaryComponent initialized with config: {label: Search, uniqueId: quoteSearchButton, size: medium, onClick: , disabled: true}
+2026-09-02 14:42:24.512 [INFO] 2026-09-02T14:42:24.5118440+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.516 [INFO] 2026-09-02T14:42:24.5159038+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.518 [INFO] 2026-09-02T14:42:24.5171532+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.519 [INFO] 2026-09-02T14:42:24.5185993+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.520 [INFO] 2026-09-02T14:42:24.5199632+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.521 [INFO] 2026-09-02T14:42:24.5211228+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.523 [INFO] 2026-09-02T14:42:24.5223899+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.524 [INFO] 2026-09-02T14:42:24.5236104+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.527 [INFO] 2026-09-02T14:42:24.5249108+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.528 [INFO] 2026-09-02T14:42:24.5281623+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.530 [INFO] 2026-09-02T14:42:24.5300049+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.531 [INFO] 2026-09-02T14:42:24.5312283+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.533 [INFO] 2026-09-02T14:42:24.5323072+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.533 [INFO] 2026-09-02T14:42:24.5333165+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.537 [INFO] 2026-09-02T14:42:24.5349086+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.539 [INFO] 2026-09-02T14:42:24.5382934+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.540 [INFO] 2026-09-02T14:42:24.5397267+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.541 [INFO] 2026-09-02T14:42:24.5407413+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.543 [INFO] 2026-09-02T14:42:24.5425451+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.546 [INFO] 2026-09-02T14:42:24.5448905+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.548 [INFO] 2026-09-02T14:42:24.5477124+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.549 [INFO] 2026-09-02T14:42:24.5489804+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.551 [INFO] 2026-09-02T14:42:24.5507379+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.552 [INFO] 2026-09-02T14:42:24.5519326+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.553 [INFO] 2026-09-02T14:42:24.5529865+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.554 [INFO] 2026-09-02T14:42:24.5539438+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.555 [INFO] 2026-09-02T14:42:24.5550113+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.557 [INFO] 2026-09-02T14:42:24.5566501+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.558 [INFO] 2026-09-02T14:42:24.5578107+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.569 [INFO] 2026-09-02T14:42:24.5588892+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.571 [INFO] 2026-09-02T14:42:24.5696754+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.580 [INFO] 2026-09-02T14:42:24.5757535+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.581 [INFO] 2026-09-02T14:42:24.5811232+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.584 [INFO] 2026-09-02T14:42:24.5841967+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.586 [INFO] 2026-09-02T14:42:24.5859184+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.589 [INFO] 2026-09-02T14:42:24.5874770+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.591 [INFO] 2026-09-02T14:42:24.5903044+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.597 [INFO] 2026-09-02T14:42:24.5932921+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.598 [INFO] 2026-09-02T14:42:24.5976032+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.602 [INFO] 2026-09-02T14:42:24.6015096+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:24.640 [INFO] 2026-09-02T14:42:24.6388182+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: proposal.riskAddressSelection, value: undefined} ; Updates:  []
+2026-09-02 14:42:24.643 [INFO] 2026-09-02T14:42:24.6425260+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormGroupHandler2, type: manualUpdate, id: reload-group-5} ; Updates:  [Array(41)]
+2026-09-02 14:42:24.743 [INFO] 2026-09-02T14:42:24.7418472+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormGroupHandler2, type: manualUpdate, id: undefined} ; Updates:  []
+2026-09-02 14:42:24.750 [WARN] 2026-09-02T14:42:24.7472642+05:30 RESPONSE 404: POST https://expertquote-qa.americannational.com/expertquote/api/apmi/referrals
+2026-09-02 14:42:24.752 [INFO] 2026-09-02T14:42:24.7509509+05:30 BROWSER error: Failed to load resource: the server responded with a status of 404 (Not Found)
+2026-09-02 14:42:24.755 [INFO] 2026-09-02T14:42:24.7531256+05:30 BROWSER log: Error caught in AccessTokenInterceptor:  HttpErrorResponse
+2026-09-02 14:42:24.767 [INFO] 2026-09-02T14:42:24.7584310+05:30 BROWSER error: ERROR HttpErrorResponse
+-> done: ApplicationSteps.SignInAsync() (7.1s)
+2026-09-02 14:42:25.680 [INFO] PASSED STEP: I sign in to Commercial Lines ExpertQuote using configured credentials
+When I create a new client and begin the quote
+2026-09-02 14:42:25.690 [INFO] START STEP: I create a new client and begin the quote
+2026-09-02 14:42:26.686 [INFO] 2026-09-02T14:42:26.6816925+05:30 BROWSER log: [ButtonComponent] onClick called for "unknown-button" {clickCount: 1, timestamp: 2026-09-02T09:12:26.678Z, buttonId: unknown-button, allCounters: Object}
+2026-09-02 14:42:26.725 [INFO] 2026-09-02T14:42:26.6882684+05:30 BROWSER log: PageChangeEvent:  PageChangeStartEvent
+2026-09-02 14:42:26.730 [INFO] 2026-09-02T14:42:26.7258728+05:30 BROWSER log: PageChangeEvent:  PageChangeEndEvent
+2026-09-02 14:42:26.764 [INFO] 2026-09-02T14:42:26.7465802+05:30 BROWSER log: ActionResult:  {type: page, pageId: clientInfoPage, page: Object, moduleRef: _ClientInfoService, event: NewQuoteEvent}
+2026-09-02 14:42:26.773 [INFO] 2026-09-02T14:42:26.7653157+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: primary, config: Object}
+2026-09-02 14:42:26.781 [INFO] 2026-09-02T14:42:26.7774030+05:30 BROWSER log: *** 2 AaButtonPrimaryComponent initialized with config: {label: Search, uniqueId: clientSearch, size: medium, onClick: , disabled: true}
+2026-09-02 14:42:26.821 [INFO] 2026-09-02T14:42:26.7886767+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: primary, config: Object}
+2026-09-02 14:42:26.824 [INFO] 2026-09-02T14:42:26.8219578+05:30 BROWSER log: *** 2 AaButtonPrimaryComponent initialized with config: {label: Next, uniqueId: next, size: medium, onClick: , disabled: true}
+2026-09-02 14:42:26.972 [INFO] 2026-09-02T14:42:26.9524609+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormItemHandler2, type: button, id: undefined} ; Updates:  []
+2026-09-02 14:42:27.760 [INFO] 2026-09-02T14:42:27.7398460+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: valueChanged, id: customer.name.first, value: BOP zxg} ; Updates:  []
+2026-09-02 14:42:28.268 [INFO] 2026-09-02T14:42:28.2671223+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormInputHandler2, type: valueChanged, id: customer.name.last, value: Smokegwrq} ; Updates:  [Array(1)]
+2026-09-02 14:42:29.114 [INFO] 2026-09-02T14:42:29.1126053+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: valueChanged, id: customer.dateOfBirth, value: Moment} ; Updates:  []
+2026-09-02 14:42:29.495 [INFO] 2026-09-02T14:42:29.4944441+05:30 BROWSER log: [ButtonComponent] onClick called for "clientSearch" {clickCount: 1, timestamp: 2026-09-02T09:12:29.492Z, buttonId: clientSearch, allCounters: Object}
+2026-09-02 14:42:29.500 [INFO] 2026-09-02T14:42:29.4963508+05:30 BROWSER log: PageChangeEvent:  PageChangeStartEvent
+2026-09-02 14:42:29.678 [INFO] 2026-09-02T14:42:29.6768018+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormItemHandler2, type: button, id: clientSearch} ; Updates:  []
+2026-09-02 14:42:29.838 [INFO] 2026-09-02T14:42:29.8358600+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: proposal.term, value: undefined} ; Updates:  []
+2026-09-02 14:42:30.075 [INFO] 2026-09-02T14:42:30.0747156+05:30 BROWSER log: PageChangeEvent:  PageChangeEndEvent
+2026-09-02 14:42:30.106 [INFO] 2026-09-02T14:42:30.1045939+05:30 BROWSER log: ActionResult:  {type: dynamicResult, moduleRef: _ClientInfoService, event: ClientSearchEvent}
+2026-09-02 14:42:30.238 [INFO] 2026-09-02T14:42:30.2374922+05:30 BROWSER log: [CiAccountInfoAccountSelectionBuilderService] Account selection changed: undefined
+2026-09-02 14:42:30.262 [INFO] 2026-09-02T14:42:30.2554402+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormGroupHandler2, type: manualUpdate, id: clientInfoPage} ; Updates:  [Array(2)]
+2026-09-02 14:42:30.265 [INFO] 2026-09-02T14:42:30.2638117+05:30 BROWSER debug: [DFLargeChipsComponent] Configuration (Simplified Options Pattern): {id: customer.selected, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(12), otherOptions: undefined}
+2026-09-02 14:42:30.481 [INFO] 2026-09-02T14:42:30.4803433+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: customer.selected, value: undefined} ; Updates:  []
+2026-09-02 14:42:31.144 [INFO] 2026-09-02T14:42:31.1424348+05:30 BROWSER log: [CiAccountInfoAccountSelectionBuilderService] Account selection changed: new
+2026-09-02 14:42:31.171 [INFO] 2026-09-02T14:42:31.1674987+05:30 BROWSER log: [CiAccountInfoAccountSelectionBuilderService] Account selection changed: new
+2026-09-02 14:42:31.180 [INFO] 2026-09-02T14:42:31.1783485+05:30 BROWSER debug: [DFLargeChipsComponent] Configuration (Simplified Options Pattern): {id: customer.selected, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(12), otherOptions: undefined}
+2026-09-02 14:42:31.190 [INFO] 2026-09-02T14:42:31.1896042+05:30 BROWSER warning: NG0956: The configured tracking expression (track by identity) caused re-creation of the entire collection of size 12. This is an expensive operation requiring destruction and subsequent creation of DOM nodes, directives, components etc. Please review the "track expression" and make sure that it uniquely identifies items in a collection. Find more at https://v20.angular.dev/errors/NG0956
+2026-09-02 14:42:31.303 [INFO] 2026-09-02T14:42:31.3023141+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: customer.selected, value: new} ; Updates:  [Array(1)]
+2026-09-02 14:42:31.455 [INFO] 2026-09-02T14:42:31.4541076+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: owner.account.selected, value: new} ; Updates:  []
+2026-09-02 14:42:31.671 [INFO] 2026-09-02T14:42:31.6667524+05:30 BROWSER log: [ButtonComponent] onClick called for "next" {clickCount: 1, timestamp: 2026-09-02T09:12:31.664Z, buttonId: next, allCounters: Object}
+2026-09-02 14:42:31.674 [INFO] 2026-09-02T14:42:31.6724870+05:30 BROWSER log: PageChangeEvent:  PageChangeStartEvent
+2026-09-02 14:42:31.689 [INFO] 2026-09-02T14:42:31.6750483+05:30 BROWSER log: PageChangeEvent:  PageChangeEndEvent
+2026-09-02 14:42:31.700 [INFO] 2026-09-02T14:42:31.6955776+05:30 BROWSER log: ActionResult:  {type: page, pageId: accountInfoPage, page: Object, moduleRef: _ClientInfoService, event: NextButtonClickedPageEvent}
+2026-09-02 14:42:31.717 [INFO] 2026-09-02T14:42:31.7172125+05:30 BROWSER debug: [DFRegularChipsComponent] Configuration (Simplified Options Pattern): {id: owner.maritalStatus, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(5), otherOptions: undefined}
+2026-09-02 14:42:31.771 [INFO] 2026-09-02T14:42:31.7649920+05:30 BROWSER warning: As of March 1st, 2025, google.maps.places.Autocomplete is not available to new customers. Please use google.maps.places.PlaceAutocompleteElement instead. At this time, google.maps.places.Autocomplete is not scheduled to be discontinued, but google.maps.places.PlaceAutocompleteElement is recommended over google.maps.places.Autocomplete. While google.maps.places.Autocomplete will continue to receive bug fixes for any major regressions, existing bugs in google.maps.places.Autocomplete will not be addressed. At least 12 months notice will be given before support is discontinued. Please see https://developers.google.com/maps/legacy for additional details and https://developers.google.com/maps/documentation/javascript/places-migration-overview for the migration guide.
+2026-09-02 14:42:31.796 [INFO] 2026-09-02T14:42:31.7958659+05:30 BROWSER debug: [DFRegularChipsComponent] Configuration (Simplified Options Pattern): {id: owner.address.resided90days, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(2), otherOptions: undefined}
+2026-09-02 14:42:31.812 [INFO] 2026-09-02T14:42:31.8101426+05:30 BROWSER debug: [DFRegularChipsComponent] Configuration (Simplified Options Pattern): {id: owner.address.useAsResidence, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(2), otherOptions: undefined}
+2026-09-02 14:42:31.827 [INFO] 2026-09-02T14:42:31.8261346+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: primary, config: Object}
+2026-09-02 14:42:31.833 [INFO] 2026-09-02T14:42:31.8321728+05:30 BROWSER log: *** 2 AaButtonPrimaryComponent initialized with config: {label: Next, uniqueId: next, size: medium, onClick: , disabled: false}
+2026-09-02 14:42:32.027 [INFO] 2026-09-02T14:42:32.0202084+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormItemHandler2, type: button, id: next} ; Updates:  []
+-> done: EQBOPSmokeTestSteps.CreateANewClientAndBeginTheQuoteAsync() (6.5s)
+2026-09-02 14:42:32.207 [INFO] PASSED STEP: I create a new client and begin the quote
+And I enter the client account and address information
+2026-09-02 14:42:32.209 [INFO] START STEP: I enter the client account and address information
+2026-09-02 14:42:33.476 [INFO] 2026-09-02T14:42:33.4751257+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: valueChanged, id: owner.phone, value: 3554051184} ; Updates:  []
+2026-09-02 14:42:34.047 [INFO] 2026-09-02T14:42:34.0461782+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: valueChanged, id: owner.email, value: test@ioqw.com} ; Updates:  []
+2026-09-02 14:42:34.501 [INFO] 2026-09-02T14:42:34.4995148+05:30 BROWSER debug: [DFRegularChipsComponent] Configuration (Simplified Options Pattern): {id: owner.maritalStatus, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(5), otherOptions: undefined}
+2026-09-02 14:42:34.506 [INFO] 2026-09-02T14:42:34.5037755+05:30 BROWSER warning: NG0956: The configured tracking expression (track by identity) caused re-creation of the entire collection of size 4. This is an expensive operation requiring destruction and subsequent creation of DOM nodes, directives, components etc. Please review the "track expression" and make sure that it uniquely identifies items in a collection. Find more at https://v20.angular.dev/errors/NG0956
+2026-09-02 14:42:34.684 [INFO] 2026-09-02T14:42:34.6778592+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: regularChips, id: owner.maritalStatus} ; Updates:  []
+2026-09-02 14:42:35.195 [INFO] 2026-09-02T14:42:35.1937402+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: owner.address.line1, value: 1918 Avalon Ave} ; Updates:  []
+2026-09-02 14:42:36.159 [INFO] 2026-09-02T14:42:36.1574124+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: owner.address.city, value: Muscle Shoals} ; Updates:  []
+2026-09-02 14:42:37.186 [INFO] 2026-09-02T14:42:37.1806369+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: owner.address.state, value: AL} ; Updates:  []
+2026-09-02 14:42:37.674 [INFO] 2026-09-02T14:42:37.6720647+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: owner.address.zip, value: 35661} ; Updates:  [Array(2)]
+2026-09-02 14:42:38.070 [INFO] 2026-09-02T14:42:38.0670915+05:30 BROWSER debug: [DFRegularChipsComponent] Configuration (Simplified Options Pattern): {id: owner.address.resided90days, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(2), otherOptions: undefined}
+2026-09-02 14:42:38.073 [INFO] 2026-09-02T14:42:38.0720871+05:30 BROWSER warning: NG0956: The configured tracking expression (track by identity) caused re-creation of the entire collection of size 2. This is an expensive operation requiring destruction and subsequent creation of DOM nodes, directives, components etc. Please review the "track expression" and make sure that it uniquely identifies items in a collection. Find more at https://v20.angular.dev/errors/NG0956
+2026-09-02 14:42:38.225 [INFO] 2026-09-02T14:42:38.2232277+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: regularChips, id: owner.address.resided90days} ; Updates:  []
+2026-09-02 14:42:38.438 [INFO] 2026-09-02T14:42:38.4347808+05:30 BROWSER debug: [DFRegularChipsComponent] Configuration (Simplified Options Pattern): {id: owner.address.useAsResidence, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(2), otherOptions: undefined}
+2026-09-02 14:42:38.456 [INFO] 2026-09-02T14:42:38.4422687+05:30 BROWSER warning: NG0956: The configured tracking expression (track by identity) caused re-creation of the entire collection of size 2. This is an expensive operation requiring destruction and subsequent creation of DOM nodes, directives, components etc. Please review the "track expression" and make sure that it uniquely identifies items in a collection. Find more at https://v20.angular.dev/errors/NG0956
+2026-09-02 14:42:38.590 [INFO] 2026-09-02T14:42:38.5898671+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: regularChips, id: owner.address.useAsResidence} ; Updates:  []
+2026-09-02 14:42:43.593 [INFO] 2026-09-02T14:42:43.5926749+05:30 BROWSER log: [ButtonComponent] onClick called for "next" {clickCount: 2, timestamp: 2026-09-02T09:12:42.793Z, buttonId: next, allCounters: Object}
+2026-09-02 14:42:43.596 [INFO] 2026-09-02T14:42:43.5937564+05:30 BROWSER log: PageChangeEvent:  PageChangeStartEvent
+2026-09-02 14:42:44.121 [INFO] 2026-09-02T14:42:44.1189936+05:30 BROWSER log: PageChangeEvent:  PageChangeEndEvent
+2026-09-02 14:42:44.213 [INFO] 2026-09-02T14:42:44.2127371+05:30 BROWSER log: ActionResult:  {type: page, pageId: proposalStart, page: Object, moduleRef: _ClientInfoService, event: NextButtonClickedPageEvent}
+2026-09-02 14:42:44.217 [INFO] 2026-09-02T14:42:44.2164580+05:30 BROWSER debug: [DFIconChipsComponent] Configuration (Simplified Options Pattern): {id: proposal.product, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(6), otherOptions: undefined}
+2026-09-02 14:42:44.270 [INFO] 2026-09-02T14:42:44.2696672+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: primary, config: Object}
+2026-09-02 14:42:44.271 [INFO] 2026-09-02T14:42:44.2709705+05:30 BROWSER log: *** 2 AaButtonPrimaryComponent initialized with config: {label: Start Quote, uniqueId: startQuote, size: medium, onClick: , disabled: false}
+2026-09-02 14:42:44.347 [INFO] 2026-09-02T14:42:44.3436599+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormItemHandler2, type: button, id: next} ; Updates:  []
+-> done: EQBOPSmokeTestSteps.EnterTheClientAccountAndAddressInformationAsync() (12.4s)
+2026-09-02 14:42:44.646 [INFO] PASSED STEP: I enter the client account and address information
+And I start the configured policy proposal
+2026-09-02 14:42:44.647 [INFO] START STEP: I start the configured policy proposal
+2026-09-02 14:42:45.371 [INFO] 2026-09-02T14:42:45.3699608+05:30 BROWSER debug: [DFIconChipsComponent] Configuration (Simplified Options Pattern): {id: proposal.product, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(6), otherOptions: undefined}
+2026-09-02 14:42:45.375 [INFO] 2026-09-02T14:42:45.3736911+05:30 BROWSER warning: NG0956: The configured tracking expression (track by identity) caused re-creation of the entire collection of size 6. This is an expensive operation requiring destruction and subsequent creation of DOM nodes, directives, components etc. Please review the "track expression" and make sure that it uniquely identifies items in a collection. Find more at https://v20.angular.dev/errors/NG0956
+2026-09-02 14:42:45.773 [INFO] 2026-09-02T14:42:45.7486441+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: proposal.product, value: Carrier_BusinessOwners_Pages_US_4_3_0_0} ; Updates:  [Array(10)]
+2026-09-02 14:42:45.794 [INFO] 2026-09-02T14:42:45.7810170+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: primary, config: Object}
+2026-09-02 14:42:45.812 [INFO] 2026-09-02T14:42:45.8044566+05:30 BROWSER log: *** 2 AaButtonPrimaryComponent initialized with config: {label: Search, uniqueId: proposal-start-business-search-btn, size: medium, onClick: , disabled: true}
+2026-09-02 14:42:45.841 [INFO] 2026-09-02T14:42:45.8353057+05:30 BROWSER startGroup: [DFCheckbox] business.isIndividualDba
+2026-09-02 14:42:45.843 [INFO] 2026-09-02T14:42:45.8419624+05:30 BROWSER log: Display type: checkbox
+2026-09-02 14:42:45.861 [INFO] 2026-09-02T14:42:45.8504918+05:30 BROWSER log: EQ Config: {id: business.isIndividualDba, label: Individually Owned, DBA, or T/A, grid: Object, onValueChange: , type: checkbox}
+2026-09-02 14:42:45.866 [INFO] 2026-09-02T14:42:45.8612599+05:30 BROWSER log: Template config: {merge: true, horizontal: true, labelWidth: 3, controlWidth: 9, controlClass: btn-toggle}
+2026-09-02 14:42:45.870 [INFO] 2026-09-02T14:42:45.8681219+05:30 BROWSER log: True/False values: {trueValue: true, falseValue: false}
+2026-09-02 14:42:45.875 [INFO] 2026-09-02T14:42:45.8708896+05:30 BROWSER log: Form item state: {id: business.isIndividualDba, value: undefined, disabled: undefined, hidden: false}
+2026-09-02 14:42:45.879 [INFO] 2026-09-02T14:42:45.8767498+05:30 BROWSER endGroup: console.groupEnd
+2026-09-02 14:42:45.883 [INFO] 2026-09-02T14:42:45.8802188+05:30 BROWSER debug: [DFRegularChipsComponent] Configuration (Simplified Options Pattern): {id: proposal.LessorsRiskExposure, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(2), otherOptions: undefined}
+2026-09-02 14:42:45.965 [INFO] 2026-09-02T14:42:45.9529156+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: proposal.term, value: 12} ; Updates:  []
+2026-09-02 14:42:46.192 [WARN] SOURCE TRACE NOTE: BusinessType source parameter = 'Individual'. This is orchestration data, not an editable control.
+2026-09-02 14:42:46.903 [INFO] 2026-09-02T14:42:46.8995424+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: business.isIndividualDba, value: true} ; Updates:  [Array(3)]
+2026-09-02 14:42:47.051 [INFO] 2026-09-02T14:42:47.0506736+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: business.individualDba, value: undefined} ; Updates:  []
+2026-09-02 14:42:47.465 [INFO] 2026-09-02T14:42:47.4449407+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: business.individualDba, value: Tester Automation} ; Updates:  []
+2026-09-02 14:42:47.598 [INFO] 2026-09-02T14:42:47.5969984+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: business.individualDba, value: TESTER AUTOMATION} ; Updates:  []
+2026-09-02 14:42:48.066 [INFO] 2026-09-02T14:42:48.0650025+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: valueChanged, id: proposal.effectiveDate, value: Moment} ; Updates:  []
+2026-09-02 14:42:48.819 [INFO] 2026-09-02T14:42:48.8184594+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: proposal.riskAddressSelection, value: newAccountAddress} ; Updates:  []
+2026-09-02 14:42:49.212 [INFO] 2026-09-02T14:42:49.2104327+05:30 BROWSER debug: [DFRegularChipsComponent] Configuration (Simplified Options Pattern): {id: proposal.LessorsRiskExposure, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(2), otherOptions: undefined}
+2026-09-02 14:42:49.252 [INFO] 2026-09-02T14:42:49.2348594+05:30 BROWSER warning: NG0956: The configured tracking expression (track by identity) caused re-creation of the entire collection of size 2. This is an expensive operation requiring destruction and subsequent creation of DOM nodes, directives, components etc. Please review the "track expression" and make sure that it uniquely identifies items in a collection. Find more at https://v20.angular.dev/errors/NG0956
+2026-09-02 14:42:49.376 [INFO] 2026-09-02T14:42:49.3760472+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: regularChips, id: proposal.LessorsRiskExposure} ; Updates:  []
+2026-09-02 14:42:50.333 [INFO] 2026-09-02T14:42:50.3307816+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: proposal.ratingState, value: AL} ; Updates:  []
+2026-09-02 14:42:50.498 [INFO] 2026-09-02T14:42:50.4973242+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: manualUpdate, id: proposal.ratingState} ; Updates:  []
+2026-09-02 14:42:50.924 [INFO] 2026-09-02T14:42:50.9224271+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: valueChanged, id: proposal.agentPC, value: D2102} ; Updates:  []
+2026-09-02 14:42:52.697 [INFO] 2026-09-02T14:42:52.6809916+05:30 BROWSER log: [ButtonComponent] onClick called for "startQuote" {clickCount: 1, timestamp: 2026-09-02T09:12:52.660Z, buttonId: startQuote, allCounters: Object}
+2026-09-02 14:42:52.729 [INFO] 2026-09-02T14:42:52.7143309+05:30 BROWSER log: PageChangeEvent:  PageChangeStartEvent
+-> done: EQBOPSmokeTestSteps.StartTheConfiguredPolicyProposalAsync() (8.2s)
+2026-09-02 14:42:52.868 [INFO] PASSED STEP: I start the configured policy proposal
+And I enter the insured social security number and handle any prefill result
+2026-09-02 14:42:52.870 [INFO] START STEP: I enter the insured social security number and handle any prefill result
+2026-09-02 14:42:53.014 [INFO] 2026-09-02T14:42:53.0126235+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormInputHandler2, type: manualUpdate, id: proposal.agentPC} ; Updates:  [Array(1)]
+2026-09-02 14:42:53.156 [INFO] 2026-09-02T14:42:53.1548305+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: owner.address.county, value: COLBERT} ; Updates:  []
+2026-09-02 14:42:53.636 [INFO] 2026-09-02T14:42:53.6328023+05:30 BROWSER log: PageChangeEvent:  PageChangeShowPromptEvent
+2026-09-02 14:42:53.850 [INFO] 2026-09-02T14:42:53.8490702+05:30 BROWSER log: Ran 3 update(s) for:  {source: FormGroupHandler2, type: initialUpdate} ; Updates:  [Array(4), Array(1)]
+2026-09-02 14:42:53.853 [INFO] 2026-09-02T14:42:53.8520440+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:42:53.901 [INFO] 2026-09-02T14:42:53.9003901+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: modal, config: Object}
+2026-09-02 14:42:54.062 [INFO] 2026-09-02T14:42:54.0613753+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: modal, config: Object}
+2026-09-02 14:42:54.909 [INFO] 2026-09-02T14:42:54.9077085+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormInputHandler2, type: valueChanged, id: ssn, value: 025332543} ; Updates:  [Array(1)]
+2026-09-02 14:42:55.071 [INFO] 2026-09-02T14:42:55.0533591+05:30 BROWSER log: [ButtonComponent] onClick called for "unknown-button" {clickCount: 2, timestamp: 2026-09-02T09:12:55.051Z, buttonId: unknown-button, allCounters: Object}
+2026-09-02 14:42:55.174 [INFO] 2026-09-02T14:42:55.1718304+05:30 BROWSER log: PageChangeEvent:  PageChangeHidePromptEvent
+-> done: EQBOPSmokeTestSteps.EnterTheInsuredSocialSecurityNumberAndHandleAnyPrefillResultAsync() (2.3s)
+2026-09-02 14:42:55.217 [INFO] PASSED STEP: I enter the insured social security number and handle any prefill result
+And I navigate to the required policy screen
+2026-09-02 14:42:55.218 [INFO] START STEP: I navigate to the required policy screen
+2026-09-02 14:42:55.234 [INFO] 2026-09-02T14:42:55.2327201+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormItemHandler2, type: button, id: undefined} ; Updates:  []
+2026-09-02 14:42:55.287 [INFO] 2026-09-02T14:42:55.2870934+05:30 BROWSER log: PageChangeEvent:  PageNotificationChangeEvent
+2026-09-02 14:42:55.519 [INFO] 2026-09-02T14:42:55.5168390+05:30 BROWSER log: CIF Account Id:  1005197762
+2026-09-02 14:42:55.534 [INFO] 2026-09-02T14:42:55.5334333+05:30 BROWSER log: PageChangeEvent:  PageNotificationChangeEvent
+2026-09-02 14:42:55.868 [INFO] 2026-09-02T14:42:55.8663558+05:30 BROWSER log: PageChangeEvent:  PageNotificationChangeEvent
+2026-09-02 14:42:56.174 [INFO] 2026-09-02T14:42:56.1730961+05:30 BROWSER log: PageChangeEvent:  PageNotificationChangeEvent
+2026-09-02 14:42:56.426 [INFO] 2026-09-02T14:42:56.3655680+05:30 BROWSER log: ------> PRODUCT SELECTED Carrier_BusinessOwners_Pages_US_4_3_0_0
+2026-09-02 14:42:56.440 [INFO] 2026-09-02T14:42:56.4353153+05:30 BROWSER log: ActionResult:  {type: wait, moduleRef: _ClientInfoService, event: PrepareStartQuoteEvent}
+2026-09-02 14:42:56.454 [INFO] 2026-09-02T14:42:56.4433115+05:30 BROWSER log: PageChangeEvent:  PageChangeStartEvent
+2026-09-02 14:42:56.720 [INFO] 2026-09-02T14:42:56.7127497+05:30 BROWSER warning: NG0912: Component ID generation collision detected. Components '__MatBadgeStyleLoader' and '_ClBopFactoryComponent' with selector 'ng-component' generated the same component ID. To fix this, you can change the selector of one of those components or add an extra host attribute to force a different ID. Find more at https://v20.angular.dev/errors/NG0912
+2026-09-02 14:42:56.724 [INFO] 2026-09-02T14:42:56.7214197+05:30 BROWSER log: Product Id Loaded ProductLoadedEvent
+2026-09-02 14:42:56.775 [INFO] 2026-09-02T14:42:56.7665514+05:30 BROWSER log: PageChangeEvent:  PageNotificationChangeEvent
+2026-09-02 14:42:56.777 [INFO] 2026-09-02T14:42:56.7757122+05:30 BROWSER log: PageChangeEvent:  PageStatusChangeEvent
+2026-09-02 14:42:56.788 [INFO] 2026-09-02T14:42:56.7778265+05:30 BROWSER startGroupCollapsed: Starting BOP Quote
+2026-09-02 14:42:57.849 [INFO] 2026-09-02T14:42:57.8487365+05:30 BROWSER log: Duck Creek Request: Type:  POST URL:  /v2/policies?product=Carrier_BusinessOwners_Pages_US_4_3_0_0&agencyID=76 Headers:  [Object, Object, Object] Body:  {}
+2026-09-02 14:42:58.572 [INFO] 2026-09-02T14:42:58.5712018+05:30 BROWSER log: Duck Creek Response: _HttpResponse
+2026-09-02 14:42:58.586 [INFO] 2026-09-02T14:42:58.5855266+05:30 BROWSER log: Duck Creek Request: Type:  GET URL:  /v2/policies/Px5mEw5sKU-hhOTMwOTE4cFk7HP_HA/modelCollections/Headless/viewModels/CreateQuote_Landing?command=goto&historyId=3347196 Headers:  [Object, Object, Object, Object, Object] Body:  undefined
+2026-09-02 14:42:59.281 [INFO] 2026-09-02T14:42:59.2803189+05:30 BROWSER log: Duck Creek Response: _HttpResponse
+2026-09-02 14:42:59.303 [INFO] 2026-09-02T14:42:59.2823653+05:30 BROWSER log: Quote Number:  02059498 ; Policy ID:  930918 ; Policy Number:  
+2026-09-02 14:42:59.333 [INFO] 2026-09-02T14:42:59.3327643+05:30 BROWSER startGroup: Duck Creek Action:  CreateQuote_Landing
+2026-09-02 14:42:59.335 [INFO] 2026-09-02T14:42:59.3344817+05:30 BROWSER log: Duck Creek Action {name: CreateQuote_Landing, id: CreateQuote_Landing_Headless_CreateQuote_Landing, description: Go to Page, caption: Create Quote_ Landing, contentType: application/json} Index 0 Method {index: 0, type: PUT, modelCollection: Headless, viewModel: CreateQuote_Landing, uri: https://clasq-liberty-hosts.dnanico1.aniconet.com:…/viewModels/CreateQuote_Landing?historyId=3347196}
+2026-09-02 14:42:59.369 [INFO] 2026-09-02T14:42:59.3682862+05:30 BROWSER log: Duck Creek Request: Type:  PUT URL:  /v2/policies/VKb8x2qjOkGAuOTMwOTE4A_04WRWrQ/modelCollections/Headless/viewModels/CreateQuote_Landing?historyId=3347196 Headers:  [Object, Object, Object, Object, Object] Body:  {name: CreateQuote_Landing, title: Create Quote Landing, startingPage: 0, show: true, readOnly: false}
+2026-09-02 14:42:59.767 [INFO] 2026-09-02T14:42:59.7409984+05:30 BROWSER log: Duck Creek Response: _HttpResponse
+2026-09-02 14:42:59.774 [INFO] 2026-09-02T14:42:59.7704220+05:30 BROWSER log: Duck Creek Action {name: CreateQuote_Landing, id: CreateQuote_Landing_Headless_CreateQuote_Landing, description: Go to Page, caption: Create Quote_ Landing, contentType: application/json} Index 1 Method {index: 1, type: GET, modelCollection: Headless, viewModel: CreateQuote_Landing, uri: https://clasq-liberty-hosts.dnanico1.aniconet.com:…/viewModels/CreateQuote_Landing?historyId=3347196}
+2026-09-02 14:42:59.849 [INFO] 2026-09-02T14:42:59.8300416+05:30 BROWSER log: Duck Creek Request: Type:  GET URL:  /v2/policies/JmJ2zFbf_ECJwOTMwOTE4V6F3A9Y-w/modelCollections/Headless/viewModels/CreateQuote_Landing?historyId=3347196 Headers:  [Object, Object, Object, Object, Object] Body:  undefined
+2026-09-02 14:43:01.626 [INFO] 2026-09-02T14:43:01.6044449+05:30 BROWSER log: Duck Creek Response: _HttpResponse
+2026-09-02 14:43:01.656 [INFO] 2026-09-02T14:43:01.6269776+05:30 BROWSER startGroup: Duck Creek Action:  CreateQuote_Integrations
+2026-09-02 14:43:01.698 [INFO] 2026-09-02T14:43:01.6623404+05:30 BROWSER log: Duck Creek Action {name: CreateQuote_Integrations, id: CreateQuote_Landing_D, description: , caption: CreateQuote_Integrations, contentType: application/json} Index 0 Method {index: 0, type: PUT, modelCollection: Headless, viewModel: CreateQuote_Landing, uri: https://clasq-liberty-hosts.dnanico1.aniconet.com:…/viewModels/CreateQuote_Landing?historyId=3347196}
+2026-09-02 14:43:01.736 [INFO] 2026-09-02T14:43:01.7018076+05:30 BROWSER log: Duck Creek Request: Type:  PUT URL:  /v2/policies/vZ-AuTW0E0qLrOTMwOTE4JVyk4nbjg/modelCollections/Headless/viewModels/CreateQuote_Landing?historyId=3347196 Headers:  [Object, Object, Object, Object, Object] Body:  {name: CreateQuote_Landing, title: Create Quote Landing, startingPage: 0, show: true, readOnly: false}
+2026-09-02 14:43:01.905 [INFO] 2026-09-02T14:43:01.8719835+05:30 BROWSER endGroup: console.groupEnd
+2026-09-02 14:43:01.936 [INFO] 2026-09-02T14:43:01.9356590+05:30 BROWSER log: Duck Creek Response: _HttpResponse
+2026-09-02 14:43:01.964 [INFO] 2026-09-02T14:43:01.9626357+05:30 BROWSER log: Duck Creek Action {name: CreateQuote_Integrations, id: CreateQuote_Landing_D, description: , caption: CreateQuote_Integrations, contentType: application/json} Index 1 Method {index: 1, type: GET, modelCollection: Headless, viewModel: CreateQuote_Landing, uri: https://clasq-liberty-hosts.dnanico1.aniconet.com:…Integration.RunCIFIntegrationEQ&historyId=3347196}
+2026-09-02 14:43:01.968 [INFO] 2026-09-02T14:43:01.9658461+05:30 BROWSER log: Duck Creek Request: Type:  GET URL:  /v2/policies/anSv_R3vj0mymOTMwOTE4N5u9ZPOfg/modelCollections/Headless/viewModels/CreateQuote_Landing?command=custom&preCommand=AccountCIFIntegration.RunCIFIntegrationEQ&historyId=3347196 Headers:  [Object, Object, Object, Object, Object] Body:  undefined
+2026-09-02 14:43:02.710 [INFO] 2026-09-02T14:43:02.6853391+05:30 BROWSER log: Duck Creek Response: _HttpResponse
+2026-09-02 14:43:02.721 [INFO] 2026-09-02T14:43:02.7110555+05:30 BROWSER startGroup: Duck Creek Action:  PreQualification
+2026-09-02 14:43:02.777 [INFO] 2026-09-02T14:43:02.7345948+05:30 BROWSER log: Duck Creek Action {name: PreQualification, id: CreateQuote_Landing_Headless_PreQualification, description: Go to Page, caption: PreQualification, contentType: application/json} Index 0 Method {index: 0, type: PUT, modelCollection: Headless, viewModel: CreateQuote_Landing, uri: https://clasq-liberty-hosts.dnanico1.aniconet.com:…/viewModels/CreateQuote_Landing?historyId=3347196}
+2026-09-02 14:43:02.792 [INFO] 2026-09-02T14:43:02.7791194+05:30 BROWSER log: Duck Creek Request: Type:  PUT URL:  /v2/policies/7A2NHjbHjUGPXOTMwOTE4bvbbvZ4Hg/modelCollections/Headless/viewModels/CreateQuote_Landing?historyId=3347196 Headers:  [Object, Object, Object, Object, Object] Body:  {name: CreateQuote_Landing, title: Create Quote Landing, startingPage: 0, show: true, readOnly: false}
+2026-09-02 14:43:02.872 [INFO] 2026-09-02T14:43:02.8585754+05:30 BROWSER endGroup: console.groupEnd
+2026-09-02 14:43:02.883 [INFO] 2026-09-02T14:43:02.8774114+05:30 BROWSER log: Duck Creek Response: _HttpResponse
+2026-09-02 14:43:02.890 [INFO] 2026-09-02T14:43:02.8868273+05:30 BROWSER log: Duck Creek Action {name: PreQualification, id: CreateQuote_Landing_Headless_PreQualification, description: Go to Page, caption: PreQualification, contentType: application/json} Index 1 Method {index: 1, type: GET, modelCollection: Headless, viewModel: PreQualification, uri: https://clasq-liberty-hosts.dnanico1.aniconet.com:…ess/viewModels/PreQualification?historyId=3347196}
+2026-09-02 14:43:02.923 [INFO] 2026-09-02T14:43:02.8969600+05:30 BROWSER log: Duck Creek Request: Type:  GET URL:  /v2/policies/cljzsck9NkWXoOTMwOTE4nA36Fd48Q/modelCollections/Headless/viewModels/PreQualification?historyId=3347196 Headers:  [Object, Object, Object, Object, Object] Body:  undefined
+2026-09-02 14:43:03.484 [INFO] 2026-09-02T14:43:03.4777840+05:30 BROWSER log: Duck Creek Response: _HttpResponse
+2026-09-02 14:43:03.606 [INFO] 2026-09-02T14:43:03.5998478+05:30 BROWSER log: PageChangeEvent:  PageNotificationChangeEvent
+2026-09-02 14:43:03.669 [INFO] 2026-09-02T14:43:03.6602893+05:30 BROWSER endGroup: console.groupEnd
+2026-09-02 14:43:03.677 [INFO] 2026-09-02T14:43:03.6700258+05:30 BROWSER log: Ending BOP StartQuoteAction
+2026-09-02 14:43:03.696 [INFO] 2026-09-02T14:43:03.6780613+05:30 BROWSER endGroup: console.groupEnd
+2026-09-02 14:43:04.564 [INFO] 2026-09-02T14:43:04.5054381+05:30 BROWSER log: Duck Creek Response Body:  {name: PreQualification, title: PreQualification, startingPage: 0, show: true, readOnly: false}
+2026-09-02 14:43:04.573 [INFO] 2026-09-02T14:43:04.5707625+05:30 BROWSER log: Base Form Metadata DuckCreekV2FormMetadata
+2026-09-02 14:43:04.586 [INFO] 2026-09-02T14:43:04.5854725+05:30 BROWSER log: Processed Form Metadata DuckCreekV2FormMetadata
+2026-09-02 14:43:04.588 [INFO] 2026-09-02T14:43:04.5871167+05:30 BROWSER log: Expert Quote Form Defintion {title: PreQualification, headerItems: undefined, disabled: undefined, children: Array(2), type: page}
+2026-09-02 14:43:04.621 [INFO] 2026-09-02T14:43:04.6196788+05:30 BROWSER log: Ran 5 update(s) for:  undefined ; Updates:  [Array(42), Array(8), Array(3), Array(1)]
+2026-09-02 14:43:04.671 [INFO] 2026-09-02T14:43:04.6336892+05:30 BROWSER log: PageChangeEvent:  PageChangeEndEvent
+2026-09-02 14:43:04.673 [INFO] 2026-09-02T14:43:04.6719283+05:30 BROWSER log: ActionResult:  {type: page, pageId: PreQualification, page: Object, moduleRef: _ClBopService, event: StartQuoteEvent}
+2026-09-02 14:43:04.681 [INFO] 2026-09-02T14:43:04.6798679+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: outline, config: Object}
+2026-09-02 14:43:04.686 [INFO] 2026-09-02T14:43:04.6847780+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: primary, config: Object}
+2026-09-02 14:43:04.689 [INFO] 2026-09-02T14:43:04.6883206+05:30 BROWSER log: *** 2 AaButtonPrimaryComponent initialized with config: {onClick: , label: Next: Primary Insured Details, size: medium, uniqueId: fields.data-Next.next, disabled: false}
+2026-09-02 14:43:04.789 [INFO] 2026-09-02T14:43:04.7772809+05:30 BROWSER log: [CiAccountInfoAccountSelectionBuilderService] Account selection changed: {id: 9990008100896, mergedId: 9990008100896, hasPolicies: false, carrierSource: null, carrierNeed: null}
+2026-09-02 14:43:04.791 [INFO] 2026-09-02T14:43:04.7900900+05:30 BROWSER log: Ran 2 update(s) for:  undefined ; Updates:  [Array(31)]
+2026-09-02 14:43:04.795 [INFO] 2026-09-02T14:43:04.7944517+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormGroupHandler2, type: initialUpdate} ; Updates:  []
+2026-09-02 14:43:04.891 [INFO] 2026-09-02T14:43:04.8894304+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: proposal.riskAddress.county, value: COLBERT} ; Updates:  []
+2026-09-02 14:43:05.376 [INFO] 2026-09-02T14:43:05.3726843+05:30 BROWSER log: PageChangeEvent:  PageChangeStartEvent
+2026-09-02 14:43:05.385 [INFO] 2026-09-02T14:43:05.3788567+05:30 BROWSER startGroup: Duck Creek Action:  PreQualification
+2026-09-02 14:43:05.401 [INFO] 2026-09-02T14:43:05.4006180+05:30 BROWSER log: Duck Creek Action {name: PreQualification, id: PreQualification_Headless_PreQualification, description: Go to Page, caption: PreQualification, contentType: application/json} Index 0 Method {index: 0, type: PUT, modelCollection: Headless, viewModel: PreQualification, uri: https://clasq-liberty-hosts.dnanico1.aniconet.com:…ess/viewModels/PreQualification?historyId=3347196}
+2026-09-02 14:43:05.408 [INFO] 2026-09-02T14:43:05.4069879+05:30 BROWSER log: Duck Creek Request: Type:  PUT URL:  /v2/policies/OwqsveDQt0ilqOTMwOTE4qBx-3mqkg/modelCollections/Headless/viewModels/PreQualification?historyId=3347196 Headers:  [Object, Object, Object, Object, Object] Body:  {name: PreQualification, title: PreQualification, startingPage: 0, show: true, readOnly: false}
+-> done: EQBOPSmokeTestSteps.NavigateToTheRequiredPolicyScreenAsync() (10.5s)
+2026-09-02 14:43:05.733 [INFO] PASSED STEP: I navigate to the required policy screen
+And I capture the quote identity and close the current quote
+2026-09-02 14:43:05.734 [INFO] START STEP: I capture the quote identity and close the current quote
+2026-09-02 14:43:06.946 [INFO] 2026-09-02T14:43:06.9447558+05:30 BROWSER log: Duck Creek Response: _HttpResponse
+2026-09-02 14:43:06.949 [INFO] 2026-09-02T14:43:06.9485989+05:30 BROWSER log: Duck Creek Action {name: PreQualification, id: PreQualification_Headless_PreQualification, description: Go to Page, caption: PreQualification, contentType: application/json} Index 1 Method {index: 1, type: GET, modelCollection: , viewModel: , uri: https://clasq-liberty-hosts.dnanico1.aniconet.com:…_Headless_ViewModels_US_4_0_0_0&historyId=3347196}
+2026-09-02 14:43:06.967 [INFO] 2026-09-02T14:43:06.9513377+05:30 BROWSER log: Duck Creek Request: Type:  GET URL:  /v1/policies/8A3L5PIYXU-hGOTMwOTE4m_z1yxtvg/preEvents/HeadlessWorkflow.PreEvent?Product=BusinessOwners_Common_Headless_ViewModels_US_4_0_0_0&historyId=3347196 Headers:  [Object, Object, Object, Object, Object] Body:  undefined
+2026-09-02 14:43:07.465 [INFO] 2026-09-02T14:43:07.4600589+05:30 BROWSER log: Duck Creek Response: _HttpResponse
+2026-09-02 14:43:07.468 [INFO] 2026-09-02T14:43:07.4666821+05:30 BROWSER log: Duck Creek Action {name: PreQualification, id: PreQualification_Headless_PreQualification, description: Go to Page, caption: PreQualification, contentType: application/json} Index 2 Method {index: 1, type: GET, modelCollection: Headless, viewModel: PreQualification, uri: https://clasq-liberty-hosts.dnanico1.aniconet.com:…ess/viewModels/PreQualification?historyId=3347196}
+2026-09-02 14:43:07.477 [INFO] 2026-09-02T14:43:07.4738714+05:30 BROWSER log: Duck Creek Request: Type:  GET URL:  /v2/policies/gdO3xD5UL0CtmOTMwOTE4ttDziyFXA/modelCollections/Headless/viewModels/PreQualification?historyId=3347196 Headers:  [Object, Object, Object, Object, Object] Body:  undefined
+2026-09-02 14:43:08.203 [INFO] 2026-09-02T14:43:08.2000622+05:30 BROWSER log: Duck Creek Response: _HttpResponse
+2026-09-02 14:43:08.205 [INFO] 2026-09-02T14:43:08.2044778+05:30 BROWSER log: Duck Creek Response Body:  {name: PreQualification, title: PreQualification, startingPage: 0, show: true, readOnly: false}
+2026-09-02 14:43:08.218 [INFO] 2026-09-02T14:43:08.2117125+05:30 BROWSER log: Base Form Metadata DuckCreekV2FormMetadata
+2026-09-02 14:43:08.234 [INFO] 2026-09-02T14:43:08.2231533+05:30 BROWSER log: Processed Form Metadata DuckCreekV2FormMetadata
+2026-09-02 14:43:08.242 [INFO] 2026-09-02T14:43:08.2350552+05:30 BROWSER log: Expert Quote Form Defintion {title: PreQualification, headerItems: undefined, disabled: undefined, children: Array(2), type: page}
+2026-09-02 14:43:08.243 [INFO] 2026-09-02T14:43:08.2428983+05:30 BROWSER log: Ran 5 update(s) for:  undefined ; Updates:  [Array(42), Array(8), Array(3), Array(1)]
+2026-09-02 14:43:08.245 [INFO] 2026-09-02T14:43:08.2440824+05:30 BROWSER log: PageChangeEvent:  PageChangeEndEvent
+2026-09-02 14:43:08.295 [INFO] 2026-09-02T14:43:08.2856981+05:30 BROWSER log: ActionResult:  {type: page, pageId: PreQualification, page: Object, moduleRef: _ClBopService, event: DuckCreekV2PageEvent}
+2026-09-02 14:43:08.297 [INFO] 2026-09-02T14:43:08.2954035+05:30 BROWSER endGroup: console.groupEnd
+2026-09-02 14:43:08.318 [INFO] 2026-09-02T14:43:08.3151121+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: outline, config: Object}
+2026-09-02 14:43:08.322 [INFO] 2026-09-02T14:43:08.3207396+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: primary, config: Object}
+2026-09-02 14:43:08.368 [INFO] 2026-09-02T14:43:08.3278673+05:30 BROWSER log: *** 2 AaButtonPrimaryComponent initialized with config: {onClick: , label: Next: Primary Insured Details, size: medium, uniqueId: fields.data-Next.next, disabled: false}
+2026-09-02 14:43:08.379 [INFO] 2026-09-02T14:43:08.3735053+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormGroupHandler2, type: initialUpdate} ; Updates:  []
+2026-09-02 14:43:15.392 [INFO] 2026-09-02T14:43:15.3512952+05:30 BROWSER log: ActionResult:  {type: page, pageId: quoteHome, page: Object, event: QuoteHomeEvent}
+2026-09-02 14:43:15.444 [INFO] 2026-09-02T14:43:15.3946995+05:30 BROWSER log: onDestroy:  PageChangeEventBus
+2026-09-02 14:43:15.480 [INFO] 2026-09-02T14:43:15.4461556+05:30 BROWSER log: onDestroy:  ProductsSelectedEventBusService
+2026-09-02 14:43:15.526 [INFO] 2026-09-02T14:43:15.4826549+05:30 BROWSER log: onDestroy:  QuoteViewerEventBusService
+2026-09-02 14:43:15.552 [INFO] 2026-09-02T14:43:15.5303589+05:30 BROWSER log: onDestroy:  QuoteViewerFactoryComponent
+2026-09-02 14:43:15.591 [INFO] 2026-09-02T14:43:15.5574527+05:30 BROWSER log: onDestroy:  ClientInfoHandlerFactory
+2026-09-02 14:43:15.839 [INFO] 2026-09-02T14:43:15.6027411+05:30 BROWSER log: onDestroy:  ClientInfoNavBuilderService
+2026-09-02 14:43:15.849 [INFO] 2026-09-02T14:43:15.8414742+05:30 BROWSER log: onDestroy:  ProductHandlerFactory
+2026-09-02 14:43:15.856 [INFO] 2026-09-02T14:43:15.8541228+05:30 BROWSER log: onDestroy:  ClBopNavBuilderService
+2026-09-02 14:43:15.868 [INFO] 2026-09-02T14:43:15.8577227+05:30 BROWSER log: PageChangeEvent:  PageChangeStartEvent
+2026-09-02 14:43:15.980 [INFO] 2026-09-02T14:43:15.8807608+05:30 BROWSER log: PageChangeEvent:  PageChangeEndEvent
+2026-09-02 14:43:16.040 [INFO] 2026-09-02T14:43:16.0178599+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormGroupHandler2, type: manualUpdate, id: accountInfoPage} ; Updates:  [Array(25)]
+2026-09-02 14:43:16.170 [INFO] 2026-09-02T14:43:16.1656499+05:30 BROWSER log: Ran 3 update(s) for:  {source: FormGroupHandler2, type: manualUpdate, id: undefined} ; Updates:  [Array(16), Array(5)]
+2026-09-02 14:43:16.172 [INFO] 2026-09-02T14:43:16.1711729+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: primary, config: Object}
+2026-09-02 14:43:16.177 [INFO] 2026-09-02T14:43:16.1739039+05:30 BROWSER log: *** 2 AaButtonPrimaryComponent initialized with config: {label: New Quote, uniqueId: new-quote-button, size: medium, onClick: , disabled: false}
+2026-09-02 14:43:16.179 [INFO] 2026-09-02T14:43:16.1777590+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: primary, config: Object}
+2026-09-02 14:43:16.184 [INFO] 2026-09-02T14:43:16.1814348+05:30 BROWSER log: *** 2 AaButtonPrimaryComponent initialized with config: {label: Search, uniqueId: quoteSearchButton, size: medium, onClick: , disabled: true}
+2026-09-02 14:43:16.191 [INFO] 2026-09-02T14:43:16.1878036+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.196 [INFO] 2026-09-02T14:43:16.1942618+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.200 [INFO] 2026-09-02T14:43:16.1988225+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.205 [INFO] 2026-09-02T14:43:16.2035968+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.208 [INFO] 2026-09-02T14:43:16.2075883+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.210 [INFO] 2026-09-02T14:43:16.2091259+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.217 [INFO] 2026-09-02T14:43:16.2112993+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.223 [INFO] 2026-09-02T14:43:16.2187607+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.229 [INFO] 2026-09-02T14:43:16.2244309+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.234 [INFO] 2026-09-02T14:43:16.2315064+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.236 [INFO] 2026-09-02T14:43:16.2355108+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.245 [INFO] 2026-09-02T14:43:16.2404066+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.251 [INFO] 2026-09-02T14:43:16.2459033+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.256 [INFO] 2026-09-02T14:43:16.2530184+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.258 [INFO] 2026-09-02T14:43:16.2565266+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.261 [INFO] 2026-09-02T14:43:16.2591962+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.263 [INFO] 2026-09-02T14:43:16.2620048+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.266 [INFO] 2026-09-02T14:43:16.2642010+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.268 [INFO] 2026-09-02T14:43:16.2664257+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.269 [INFO] 2026-09-02T14:43:16.2684848+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.272 [INFO] 2026-09-02T14:43:16.2712228+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.284 [INFO] 2026-09-02T14:43:16.2729686+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.287 [INFO] 2026-09-02T14:43:16.2868565+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.292 [INFO] 2026-09-02T14:43:16.2910586+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.295 [INFO] 2026-09-02T14:43:16.2933663+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.298 [INFO] 2026-09-02T14:43:16.2969438+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.308 [INFO] 2026-09-02T14:43:16.2992996+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.314 [INFO] 2026-09-02T14:43:16.3091898+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.318 [INFO] 2026-09-02T14:43:16.3143878+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.322 [INFO] 2026-09-02T14:43:16.3187757+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.325 [INFO] 2026-09-02T14:43:16.3235400+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.327 [INFO] 2026-09-02T14:43:16.3253839+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.329 [INFO] 2026-09-02T14:43:16.3280536+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.333 [INFO] 2026-09-02T14:43:16.3322451+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.338 [INFO] 2026-09-02T14:43:16.3336085+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.339 [INFO] 2026-09-02T14:43:16.3389936+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.341 [INFO] 2026-09-02T14:43:16.3407002+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.343 [INFO] 2026-09-02T14:43:16.3422773+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.348 [INFO] 2026-09-02T14:43:16.3459594+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.351 [INFO] 2026-09-02T14:43:16.3496943+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: icon-action, config: Object}
+2026-09-02 14:43:16.480 [INFO] 2026-09-02T14:43:16.4780880+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: proposal.riskAddressSelection, value: undefined} ; Updates:  []
+2026-09-02 14:43:16.498 [INFO] 2026-09-02T14:43:16.4834660+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormGroupHandler2, type: manualUpdate, id: reload-group-12} ; Updates:  [Array(41)]
+2026-09-02 14:43:16.575 [INFO] 2026-09-02T14:43:16.5707126+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormGroupHandler2, type: manualUpdate, id: undefined} ; Updates:  []
+-> done: EQBOPSmokeTestSteps.CaptureTheQuoteIdentityAndCloseTheCurrentQuoteAsync() (11.0s)
+2026-09-02 14:43:16.716 [INFO] PASSED STEP: I capture the quote identity and close the current quote
+And I retrieve the quote and verify its identity
+2026-09-02 14:43:16.718 [INFO] START STEP: I retrieve the quote and verify its identity
+2026-09-02 14:43:16.842 [WARN] 2026-09-02T14:43:16.8410004+05:30 RESPONSE 404: POST https://expertquote-qa.americannational.com/expertquote/api/apmi/referrals
+2026-09-02 14:43:16.860 [INFO] 2026-09-02T14:43:16.8589386+05:30 BROWSER error: Failed to load resource: the server responded with a status of 404 (Not Found)
+2026-09-02 14:43:16.922 [INFO] 2026-09-02T14:43:16.9211414+05:30 BROWSER log: Error caught in AccessTokenInterceptor:  HttpErrorResponse
+2026-09-02 14:43:17.019 [INFO] 2026-09-02T14:43:17.0174353+05:30 BROWSER error: ERROR HttpErrorResponse
+2026-09-02 14:43:18.744 [INFO] 2026-09-02T14:43:18.7284922+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: quoteSearchInput, value: 02059498} ; Updates:  [Array(1)]
+2026-09-02 14:43:18.876 [INFO] 2026-09-02T14:43:18.8735572+05:30 BROWSER log: [ButtonComponent] onClick called for "unknown-button" {clickCount: 3, timestamp: 2026-09-02T09:13:18.872Z, buttonId: unknown-button, allCounters: Object}
+2026-09-02 14:43:18.911 [INFO] 2026-09-02T14:43:18.8772345+05:30 BROWSER log: PageChangeEvent:  PageChangeStartEvent
+2026-09-02 14:43:18.916 [INFO] 2026-09-02T14:43:18.9115323+05:30 BROWSER log: PageChangeEvent:  PageStatusChangeEvent
+2026-09-02 14:43:18.977 [INFO] 2026-09-02T14:43:18.9756128+05:30 BROWSER log: PageChangeEvent:  PageNotificationChangeEvent
+2026-09-02 14:43:19.215 [INFO] 2026-09-02T14:43:19.2118596+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormItemHandler2, type: button, id: undefined} ; Updates:  []
+2026-09-02 14:43:20.548 [INFO] 2026-09-02T14:43:20.5453564+05:30 BROWSER log: Product Id Loaded ProductLoadedEvent
+2026-09-02 14:43:20.557 [INFO] 2026-09-02T14:43:20.5568857+05:30 BROWSER log: Duck Creek Request: Type:  GET URL:  /v2/policies/930918/modelCollections/Headless/viewModels/CreateQuote_Landing Headers:  [Object, Object, Object] Body:  undefined
+2026-09-02 14:43:22.343 [INFO] 2026-09-02T14:43:22.3418530+05:30 BROWSER log: Duck Creek Response: _HttpResponse
+2026-09-02 14:43:22.851 [INFO] 2026-09-02T14:43:22.8499031+05:30 BROWSER startGroup: Duck Creek Action:  PreQualification
+2026-09-02 14:43:22.853 [INFO] 2026-09-02T14:43:22.8525549+05:30 BROWSER log: Duck Creek Action {name: PreQualification, id: CreateQuote_Landing_Headless_PreQualification, description: Go to Page, caption: PreQualification, contentType: application/json} Index 0 Method {index: 0, type: PUT, modelCollection: Headless, viewModel: CreateQuote_Landing, uri: https://clasq-liberty-hosts.dnanico1.aniconet.com:…/viewModels/CreateQuote_Landing?historyId=3347196}
+2026-09-02 14:43:22.864 [INFO] 2026-09-02T14:43:22.8631634+05:30 BROWSER log: Duck Creek Request: Type:  PUT URL:  /v2/policies/AW4rnUi5U0OfLOTMwOTE4FSTfGmFAA/modelCollections/Headless/viewModels/CreateQuote_Landing?historyId=3347196 Headers:  [Object, Object, Object, Object, Object] Body:  {name: CreateQuote_Landing, title: Create Quote Landing, startingPage: 0, show: true, readOnly: false}
+2026-09-02 14:43:23.023 [INFO] 2026-09-02T14:43:23.0131807+05:30 BROWSER log: Duck Creek Response: _HttpResponse
+2026-09-02 14:43:23.033 [INFO] 2026-09-02T14:43:23.0265989+05:30 BROWSER log: Duck Creek Action {name: PreQualification, id: CreateQuote_Landing_Headless_PreQualification, description: Go to Page, caption: PreQualification, contentType: application/json} Index 1 Method {index: 1, type: GET, modelCollection: Headless, viewModel: PreQualification, uri: https://clasq-liberty-hosts.dnanico1.aniconet.com:…ess/viewModels/PreQualification?historyId=3347196}
+2026-09-02 14:43:23.045 [INFO] 2026-09-02T14:43:23.0428828+05:30 BROWSER log: Duck Creek Request: Type:  GET URL:  /v2/policies/mleH9lKUQUWYrOTMwOTE4nWfqK0cJw/modelCollections/Headless/viewModels/PreQualification?historyId=3347196 Headers:  [Object, Object, Object, Object, Object] Body:  undefined
+2026-09-02 14:43:23.312 [INFO] 2026-09-02T14:43:23.2966461+05:30 BROWSER log: Duck Creek Response: _HttpResponse
+2026-09-02 14:43:23.351 [INFO] 2026-09-02T14:43:23.3245989+05:30 BROWSER endGroup: console.groupEnd
+2026-09-02 14:43:23.705 [INFO] 2026-09-02T14:43:23.7044149+05:30 BROWSER log: Ran 2 update(s) for:  undefined ; Updates:  [Array(12)]
+2026-09-02 14:43:23.869 [INFO] 2026-09-02T14:43:23.8657195+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: proposal.ratingState, value: AL} ; Updates:  []
+2026-09-02 14:43:24.015 [INFO] 2026-09-02T14:43:24.0144795+05:30 BROWSER log: PageChangeEvent:  PageNotificationChangeEvent
+2026-09-02 14:43:24.029 [INFO] 2026-09-02T14:43:24.0290805+05:30 BROWSER log: Duck Creek Response Body:  {name: PreQualification, title: PreQualification, startingPage: 0, show: true, readOnly: false}
+2026-09-02 14:43:24.032 [INFO] 2026-09-02T14:43:24.0319339+05:30 BROWSER log: Base Form Metadata DuckCreekV2FormMetadata
+2026-09-02 14:43:24.046 [INFO] 2026-09-02T14:43:24.0436854+05:30 BROWSER log: Processed Form Metadata DuckCreekV2FormMetadata
+2026-09-02 14:43:24.183 [INFO] 2026-09-02T14:43:24.1827576+05:30 BROWSER log: Expert Quote Form Defintion {title: PreQualification, headerItems: undefined, disabled: undefined, children: Array(2), type: page}
+2026-09-02 14:43:24.192 [INFO] 2026-09-02T14:43:24.1911202+05:30 BROWSER log: Ran 5 update(s) for:  undefined ; Updates:  [Array(43), Array(8), Array(3), Array(1)]
+2026-09-02 14:43:24.198 [INFO] 2026-09-02T14:43:24.1979663+05:30 BROWSER log: PageChangeEvent:  PageChangeEndEvent
+2026-09-02 14:43:24.206 [INFO] 2026-09-02T14:43:24.2051039+05:30 BROWSER log: ActionResult:  {type: page, pageId: PreQualification, page: Object, moduleRef: _ClBopService, event: LoadQuoteEvent}
+2026-09-02 14:43:24.208 [INFO] 2026-09-02T14:43:24.2064963+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: outline, config: Object}
+2026-09-02 14:43:24.214 [INFO] 2026-09-02T14:43:24.2131164+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: primary, config: Object}
+2026-09-02 14:43:24.216 [INFO] 2026-09-02T14:43:24.2152416+05:30 BROWSER log: *** 2 AaButtonPrimaryComponent initialized with config: {onClick: , label: Next: Primary Insured Details, size: medium, uniqueId: fields.data-Next.next, disabled: false}
+2026-09-02 14:43:24.226 [INFO] 2026-09-02T14:43:24.2258015+05:30 BROWSER log: Ran 2 update(s) for:  undefined ; Updates:  [Array(32)]
+2026-09-02 14:43:24.227 [INFO] 2026-09-02T14:43:24.2269006+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormGroupHandler2, type: initialUpdate} ; Updates:  []
+2026-09-02 14:43:24.253 [INFO] 2026-09-02T14:43:24.2527229+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: proposal.riskAddress.county, value: COLBERT} ; Updates:  []
+2026-09-02 14:43:24.610 [INFO] 2026-09-02T14:43:24.6021052+05:30 BROWSER log: PageChangeEvent:  PageChangeStartEvent
+2026-09-02 14:43:24.621 [INFO] 2026-09-02T14:43:24.6118045+05:30 BROWSER startGroup: Duck Creek Action:  PreQualification
+2026-09-02 14:43:24.635 [INFO] 2026-09-02T14:43:24.6335617+05:30 BROWSER log: Duck Creek Action {name: PreQualification, id: PreQualification_Headless_PreQualification, description: Go to Page, caption: PreQualification, contentType: application/json} Index 0 Method {index: 0, type: PUT, modelCollection: Headless, viewModel: PreQualification, uri: https://clasq-liberty-hosts.dnanico1.aniconet.com:…ess/viewModels/PreQualification?historyId=3347196}
+2026-09-02 14:43:24.637 [INFO] 2026-09-02T14:43:24.6360998+05:30 BROWSER log: Duck Creek Request: Type:  PUT URL:  /v2/policies/CztpIiqwyUuMIOTMwOTE4XpVZzzReg/modelCollections/Headless/viewModels/PreQualification?historyId=3347196 Headers:  [Object, Object, Object, Object, Object] Body:  {name: PreQualification, title: PreQualification, startingPage: 0, show: true, readOnly: false}
+2026-09-02 14:43:24.895 [INFO] 2026-09-02T14:43:24.8840207+05:30 BROWSER log: Duck Creek Response: _HttpResponse
+2026-09-02 14:43:24.922 [INFO] 2026-09-02T14:43:24.9003913+05:30 BROWSER log: Duck Creek Action {name: PreQualification, id: PreQualification_Headless_PreQualification, description: Go to Page, caption: PreQualification, contentType: application/json} Index 1 Method {index: 1, type: GET, modelCollection: , viewModel: , uri: https://clasq-liberty-hosts.dnanico1.aniconet.com:…_Headless_ViewModels_US_4_0_0_0&historyId=3347196}
+2026-09-02 14:43:24.936 [INFO] 2026-09-02T14:43:24.9330882+05:30 BROWSER log: Duck Creek Request: Type:  GET URL:  /v1/policies/7CnxwdS6REa_uOTMwOTE4ezCeqOiSg/preEvents/HeadlessWorkflow.PreEvent?Product=BusinessOwners_Common_Headless_ViewModels_US_4_0_0_0&historyId=3347196 Headers:  [Object, Object, Object, Object, Object] Body:  undefined
+-> done: EQBOPSmokeTestSteps.RetrieveTheQuoteAndVerifyItsIdentityAsync() (8.5s)
+2026-09-02 14:43:25.203 [INFO] PASSED STEP: I retrieve the quote and verify its identity
+2026-09-02 14:43:25.308 [INFO] 2026-09-02T14:43:25.3060802+05:30 BROWSER log: Duck Creek Response: _HttpResponse
+2026-09-02 14:43:25.313 [INFO] 2026-09-02T14:43:25.3119139+05:30 BROWSER log: Duck Creek Action {name: PreQualification, id: PreQualification_Headless_PreQualification, description: Go to Page, caption: PreQualification, contentType: application/json} Index 2 Method {index: 1, type: GET, modelCollection: Headless, viewModel: PreQualification, uri: https://clasq-liberty-hosts.dnanico1.aniconet.com:…ess/viewModels/PreQualification?historyId=3347196}
+2026-09-02 14:43:25.356 [INFO] 2026-09-02T14:43:25.3502668+05:30 BROWSER log: Duck Creek Request: Type:  GET URL:  /v2/policies/y2Yyruu1WUm-POTMwOTE4CEDMusl4A/modelCollections/Headless/viewModels/PreQualification?historyId=3347196 Headers:  [Object, Object, Object, Object, Object] Body:  undefined
+2026-09-02 14:43:25.544 [INFO] 2026-09-02T14:43:25.5434744+05:30 BROWSER log: Duck Creek Response: _HttpResponse
+2026-09-02 14:43:25.578 [INFO] 2026-09-02T14:43:25.5764296+05:30 BROWSER log: Duck Creek Response Body:  {name: PreQualification, title: PreQualification, startingPage: 0, show: true, readOnly: false}
+2026-09-02 14:43:25.580 [INFO] 2026-09-02T14:43:25.5789189+05:30 BROWSER log: Base Form Metadata DuckCreekV2FormMetadata
+2026-09-02 14:43:25.581 [INFO] 2026-09-02T14:43:25.5802988+05:30 BROWSER log: Processed Form Metadata DuckCreekV2FormMetadata
+2026-09-02 14:43:25.583 [INFO] 2026-09-02T14:43:25.5820231+05:30 BROWSER log: Expert Quote Form Defintion {title: PreQualification, headerItems: undefined, disabled: undefined, children: Array(2), type: page}
+2026-09-02 14:43:25.585 [INFO] 2026-09-02T14:43:25.5842721+05:30 BROWSER log: Ran 5 update(s) for:  undefined ; Updates:  [Array(43), Array(8), Array(3), Array(1)]
+2026-09-02 14:43:25.588 [INFO] 2026-09-02T14:43:25.5860916+05:30 BROWSER log: PageChangeEvent:  PageChangeEndEvent
+2026-09-02 14:43:25.601 [INFO] 2026-09-02T14:43:25.5891480+05:30 BROWSER log: ActionResult:  {type: page, pageId: PreQualification, page: Object, moduleRef: _ClBopService, event: DuckCreekV2PageEvent}
+2026-09-02 14:43:25.607 [INFO] 2026-09-02T14:43:25.6016431+05:30 BROWSER endGroup: console.groupEnd
+2026-09-02 14:43:25.618 [INFO] 2026-09-02T14:43:25.6078373+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: outline, config: Object}
+2026-09-02 14:43:25.619 [INFO] 2026-09-02T14:43:25.6186497+05:30 BROWSER log: AaButtonsComponent initialized with config: {type: primary, config: Object}
+2026-09-02 14:43:25.621 [INFO] 2026-09-02T14:43:25.6203068+05:30 BROWSER log: *** 2 AaButtonPrimaryComponent initialized with config: {onClick: , label: Next: Primary Insured Details, size: medium, uniqueId: fields.data-Next.next, disabled: false}
+2026-09-02 14:43:25.694 [INFO] 2026-09-02T14:43:25.6930313+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormGroupHandler2, type: initialUpdate} ; Updates:  []
+2026-09-02 14:43:31.891 [INFO] Playwright video finalized: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\Artifacts\EQ_BOP_Smoke_Test\EQ_BOP_Smoke_Test____stateCode_20260902_144209_858_634a7c83\video\page@e663e8accd39c26756fcde2238aabe81.webm
+2026-09-02 14:43:33.135 [WARN] Unable to create evidence bundle: The process cannot access the file 'C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\Artifacts\EQ_BOP_Smoke_Test\EQ_BOP_Smoke_Test____stateCode_20260902_144209_858_634a7c83\execution.log' because it is being used by another process.

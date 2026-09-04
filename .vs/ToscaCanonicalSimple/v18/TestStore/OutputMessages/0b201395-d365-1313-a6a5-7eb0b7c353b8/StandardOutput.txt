@@ -1,0 +1,44 @@
+Given I open a browser session
+2026-08-31 16:33:43.631 [INFO] START STEP: I open a browser session
+2026-08-31 16:33:49.592 [INFO] Browser session opened. Channel=msedge; Headless=False; HAR=True; Console=True; Network=True
+-> done: ApplicationSteps.OpenBrowserSessionAsync() (6.0s)
+2026-08-31 16:33:49.791 [INFO] PASSED STEP: I open a browser session
+Given CLDC smoke data "UMB" for state "AL" named "Alabama" are loaded
+2026-08-31 16:33:50.707 [INFO] START STEP: CLDC smoke data "UMB" for state "AL" named "Alabama" are loaded
+2026-08-31 16:33:50.795 [INFO] Loaded consolidated CLDC smoke data: Product=UMB; State=AL; Base=C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestData\Smoke\UMB.json; Overrides=C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestData\Smoke\StateOverrides.json
+-> done: ApplicationSteps.LoadSmokeScenarioData("UMB", "AL", "Alabama") (0.0s)
+2026-08-31 16:33:50.801 [INFO] PASSED STEP: CLDC smoke data "UMB" for state "AL" named "Alabama" are loaded
+And I open the configured Commercial Lines Duck Creek application
+2026-08-31 16:33:50.815 [INFO] START STEP: I open the configured Commercial Lines Duck Creek application
+2026-08-31 16:33:53.400 [ERROR] 2026-08-31T16:33:53.3977534+05:30 REQUEST FAILED: GET https://clasq.anico.com/Express/ :: net::ERR_CONNECTION_REFUSED
+-> error: net::ERR_CONNECTION_REFUSED at https://clasq.anico.com/Express/
+Call log:
+  - navigating to "https://clasq.anico.com/Express/", waiting until "domcontentloaded" (2.6s)
+2026-08-31 16:33:53.711 [ERROR] FAILED STEP: I open the configured Commercial Lines Duck Creek application :: Microsoft.Playwright.PlaywrightException: net::ERR_CONNECTION_REFUSED at https://clasq.anico.com/Express/
+Call log:
+  - navigating to "https://clasq.anico.com/Express/", waiting until "domcontentloaded"
+   at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls) in /_/src/Playwright/Transport/Connection.cs:line 222
+   at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title) in /_/src/Playwright/Transport/Connection.cs:line 528
+   at Microsoft.Playwright.Core.Frame.GotoAsync(String url, FrameGotoOptions options) in /_/src/Playwright/Core/Frame.cs:line 815
+   at Reqnroll.Bindings.AsyncMethodHelper.ConvertTaskOfT(Task task, Boolean getValue)
+   at Reqnroll.Bindings.BindingDelegateInvoker.InvokeDelegateAsync(Delegate bindingDelegate, Object[] invokeArgs, ExecutionContextHolder executionContext)
+   at Reqnroll.Bindings.BindingInvoker.InvokeBindingAsync(IBinding binding, IContextManager contextManager, Object[] arguments, ITestTracer testTracer, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>b__7>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>g__HandleStepExecutionExceptions|0>d.MoveNext()
+And I sign in to Commercial Lines Duck Creek using configured credentials
+-> skipped because of previous errors
+And I start a new quote
+-> skipped because of previous errors
+And I enter individual client information
+-> skipped because of previous errors
+And I complete required policy information
+-> skipped because of previous errors
+And I navigate to Policy Info and Verify Desc
+-> skipped because of previous errors
+2026-08-31 16:34:07.281 [ERROR] 2026-08-31T16:34:07.2783529+05:30 REQUEST FAILED: GET https://clasq.anico.com/Express/ :: net::ERR_CONNECTION_REFUSED
+2026-08-31 16:34:07.286 [ERROR] 2026-08-31T16:34:07.2854883+05:30 REQUEST FAILED: GET https://clasq.anico.com/Express/ :: net::ERR_CONNECTION_REFUSED
+2026-08-31 16:34:09.985 [INFO] Playwright video finalized: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestResults\NUnitWork\Artifacts\UMB_Smoke_Test\UMB_Smoke_Test____stateCode_20260831_163343_517_4f832f54\video\page@9d85e6e378c2430155144f75fe971c10.webm
+2026-08-31 16:34:10.555 [WARN] Unable to create evidence bundle: The process cannot access the file 'C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestResults\NUnitWork\Artifacts\UMB_Smoke_Test\UMB_Smoke_Test____stateCode_20260831_163343_517_4f832f54\execution.log' because it is being used by another process.

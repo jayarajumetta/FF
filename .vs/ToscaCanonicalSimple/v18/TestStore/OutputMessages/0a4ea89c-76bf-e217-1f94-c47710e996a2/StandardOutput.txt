@@ -1,0 +1,70 @@
+Given I open a browser session
+2026-08-30 04:51:02.799 [INFO] START STEP: I open a browser session
+2026-08-30 04:51:12.653 [INFO] Browser session opened. Channel=msedge; Headless=False; HAR=True; Console=True; Network=True
+-> done: ApplicationSteps.OpenBrowserSessionAsync() (9.9s)
+2026-08-30 04:51:12.759 [INFO] PASSED STEP: I open a browser session
+Given CLDC smoke data "UMB" for state "AL" named "Alabama" are loaded
+2026-08-30 04:51:12.815 [INFO] START STEP: CLDC smoke data "UMB" for state "AL" named "Alabama" are loaded
+2026-08-30 04:51:12.975 [INFO] Loaded consolidated CLDC smoke data: Product=UMB; State=AL; Base=C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestData\Smoke\UMB.json; Overrides=C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestData\Smoke\StateOverrides.json
+-> done: ApplicationSteps.LoadSmokeScenarioData("UMB", "AL", "Alabama") (0.3s)
+2026-08-30 04:51:13.149 [INFO] PASSED STEP: CLDC smoke data "UMB" for state "AL" named "Alabama" are loaded
+And I open the configured Commercial Lines Duck Creek application
+2026-08-30 04:51:13.151 [INFO] START STEP: I open the configured Commercial Lines Duck Creek application
+2026-08-30 04:51:14.517 [ERROR] 2026-08-30T04:51:14.5068923+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+-> done: ApplicationSteps.OpenApplicationAsync() (1.5s)
+2026-08-30 04:51:14.689 [INFO] PASSED STEP: I open the configured Commercial Lines Duck Creek application
+And I sign in to Commercial Lines Duck Creek using configured credentials
+2026-08-30 04:51:14.691 [INFO] START STEP: I sign in to Commercial Lines Duck Creek using configured credentials
+2026-08-30 04:51:15.905 [INFO] RUNTIME LOCATOR: Login.UserName => id
+2026-08-30 04:51:16.711 [INFO] RUNTIME LOCATOR: Login.Password => id
+2026-08-30 04:51:32.490 [WARN] CONTROL READY WAIT CONTINUING: Login.Login; Action=click; visible wait did not settle within 15000ms: Timeout 15000ms exceeded.
+Call log:
+  - waiting for Locator("a[fieldref=\"Login\"]") to be visible
+2026-08-30 04:51:47.531 [WARN] ELEMENT ATTACH WAIT CONTINUING: Timeout 15000ms exceeded.
+Call log:
+  - waiting for Locator("a[fieldref=\"Login\"]")
+-> error: Timeout 15000ms exceeded.
+Call log:
+  - waiting for Locator("a[fieldref=\"Login\"]") (62.9s)
+2026-08-30 04:52:17.826 [ERROR] FAILED STEP: I sign in to Commercial Lines Duck Creek using configured credentials :: System.TimeoutException: Timeout 15000ms exceeded.
+Call log:
+  - waiting for Locator("a[fieldref=\"Login\"]")
+   at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls) in /_/src/Playwright/Transport/Connection.cs:line 222
+   at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title) in /_/src/Playwright/Transport/Connection.cs:line 512
+   at Microsoft.Playwright.Core.Locator.<>c__DisplayClass80_0`1.<<WithElementAsync>b__0>d.MoveNext() in /_/src/Playwright/Core/Locator.cs:line 439
+--- End of stack trace from previous location ---
+   at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title) in /_/src/Playwright/Transport/Connection.cs:line 528
+   at InsuranceAutomation.Core.UiActions.ClickSemanticAsync(ILocator control) in C:\Users\CT7858\wokdir\FF\src\InsuranceAutomation.Core\UiActions.cs:line 318
+   at InsuranceAutomation.Core.UiActions.ExecuteWithHighlightAsync(ILocator locator, String action, Func`2 operation) in C:\Users\CT7858\wokdir\FF\src\InsuranceAutomation.Core\UiActions.cs:line 488
+   at InsuranceAutomation.Core.UiActions.ExecuteAsync(ILocator locator, ControlIntent intent, String action, Func`2 operation) in C:\Users\CT7858\wokdir\FF\src\InsuranceAutomation.Core\UiActions.cs:line 465
+   at InsuranceAutomation.CLDC.StepDefinitions.ApplicationSteps.SignInWithLoginPageAsync(LoginPage page, String username, String password) in C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\StepDefinitions\ApplicationSteps.cs:line 114
+   at Reqnroll.Bindings.AsyncMethodHelper.ConvertTaskOfT(Task task, Boolean getValue)
+   at Reqnroll.Bindings.BindingDelegateInvoker.InvokeDelegateAsync(Delegate bindingDelegate, Object[] invokeArgs, ExecutionContextHolder executionContext)
+   at Reqnroll.Bindings.BindingInvoker.InvokeBindingAsync(IBinding binding, IContextManager contextManager, Object[] arguments, ITestTracer testTracer, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>b__7>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>g__HandleStepExecutionExceptions|0>d.MoveNext()
+And I start a new quote
+-> skipped because of previous errors
+And I enter individual client information
+-> skipped because of previous errors
+And I complete required policy information
+-> skipped because of previous errors
+And I navigate to Policy Info and Verify Desc
+-> skipped because of previous errors
+And I sign out of the application for logged in user
+-> skipped because of previous errors
+2026-08-30 04:52:30.210 [ERROR] 2026-08-30T04:52:30.1245481+05:30 PAGE ERROR: TypeError: Cannot read properties of null (reading 'unload')
+    at F.unsubscribe (https://clasq.anico.com/Express/$Culture=en-US/skins/DCTBase/Core/scripts/ext-all.js:19:251153)
+    at F.removeListener (https://clasq.anico.com/Express/$Culture=en-US/skins/DCTBase/Core/scripts/ext-all.js:19:146359)
+    at F.fire (https://clasq.anico.com/Express/$Culture=en-US/skins/DCTBase/Core/scripts/ext-all.js:19:147607)
+    at F.fire (https://clasq.anico.com/Express/$Culture=en-US/skins/DCTBase/Core/scripts/dct-base.js:986:24)
+    at F.doDirectEvent (https://clasq.anico.com/Express/$Culture=en-US/skins/DCTBase/Core/scripts/ext-all.js:19:253229)
+    at F.onDirectEvent (https://clasq.anico.com/Express/$Culture=en-US/skins/DCTBase/Core/scripts/ext-all.js:19:252852)
+    at t (https://clasq.anico.com/Express/$Culture=en-US/skins/DCTBase/Core/scripts/ext-all.js:19:61008)
+2026-08-30 04:52:30.217 [INFO] Playwright video finalized: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestResults\NUnitWork\Artifacts\UMB_Smoke_Test\UMB_Smoke_Test____stateCode_20260830_045102_727_12c99693\video\page@12a23f041d123be80214ce7beaa1410f.webm
+2026-08-30 04:52:30.739 [WARN] Unable to create evidence bundle: The process cannot access the file 'C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestResults\NUnitWork\Artifacts\UMB_Smoke_Test\UMB_Smoke_Test____stateCode_20260830_045102_727_12c99693\execution.log' because it is being used by another process.
+2026-08-30 04:52:30.764 [INFO] TEST EVIDENCE ATTACHMENTS: enabled=True; attached=0; skipped=0; failures=1
+2026-08-30 04:52:30.765 [WARN] ATTACHMENT FAILURE: publisher::IOException: The process cannot access the file 'C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestResults\NUnitWork\Artifacts\UMB_Smoke_Test\UMB_Smoke_Test____stateCode_20260830_045102_727_12c99693\execution.log' because it is being used by another process.

@@ -1,0 +1,62 @@
+Given I open a browser session
+2026-08-30 05:40:33.513 [INFO] START STEP: I open a browser session
+2026-08-30 05:40:40.579 [INFO] Browser session opened. Channel=msedge; Headless=False; HAR=True; Console=True; Network=True
+-> done: ApplicationSteps.OpenBrowserSessionAsync() (7.1s)
+2026-08-30 05:40:40.810 [INFO] PASSED STEP: I open a browser session
+Given CLDC smoke data "UMB" for state "AL" named "Alabama" are loaded
+2026-08-30 05:40:41.945 [INFO] START STEP: CLDC smoke data "UMB" for state "AL" named "Alabama" are loaded
+2026-08-30 05:40:42.078 [INFO] Loaded consolidated CLDC smoke data: Product=UMB; State=AL; Base=C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestData\Smoke\UMB.json; Overrides=C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestData\Smoke\StateOverrides.json
+-> done: ApplicationSteps.LoadSmokeScenarioData("UMB", "AL", "Alabama") (0.1s)
+2026-08-30 05:40:42.079 [INFO] PASSED STEP: CLDC smoke data "UMB" for state "AL" named "Alabama" are loaded
+And I open the configured Commercial Lines Duck Creek application
+2026-08-30 05:40:42.087 [INFO] START STEP: I open the configured Commercial Lines Duck Creek application
+2026-08-30 05:40:46.027 [ERROR] 2026-08-30T05:40:46.0237222+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+-> done: ApplicationSteps.OpenApplicationAsync() (4.2s)
+2026-08-30 05:40:46.311 [INFO] PASSED STEP: I open the configured Commercial Lines Duck Creek application
+And I sign in to Commercial Lines Duck Creek using configured credentials
+2026-08-30 05:40:46.318 [INFO] START STEP: I sign in to Commercial Lines Duck Creek using configured credentials
+2026-08-30 05:40:47.517 [INFO] RUNTIME LOCATOR: Login.UserName => id
+2026-08-30 05:40:48.351 [INFO] RUNTIME LOCATOR: Login.Password => id
+2026-08-30 05:41:03.812 [WARN] CONTROL READY WAIT CONTINUING: Login.Login; Action=click; visible wait did not settle within 15000ms: Timeout 15000ms exceeded.
+Call log:
+  - waiting for Locator("a[fieldref=\"Login\"]") to be visible
+2026-08-30 05:41:18.828 [WARN] ELEMENT ATTACH WAIT CONTINUING: Timeout 15000ms exceeded.
+Call log:
+  - waiting for Locator("a[fieldref=\"Login\"]")
+-> error: Timeout 15000ms exceeded.
+Call log:
+  - waiting for Locator("a[fieldref=\"Login\"]") (62.6s)
+2026-08-30 05:41:49.142 [ERROR] FAILED STEP: I sign in to Commercial Lines Duck Creek using configured credentials :: System.TimeoutException: Timeout 15000ms exceeded.
+Call log:
+  - waiting for Locator("a[fieldref=\"Login\"]")
+   at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls) in /_/src/Playwright/Transport/Connection.cs:line 222
+   at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title) in /_/src/Playwright/Transport/Connection.cs:line 512
+   at Microsoft.Playwright.Core.Locator.<>c__DisplayClass80_0`1.<<WithElementAsync>b__0>d.MoveNext() in /_/src/Playwright/Core/Locator.cs:line 439
+--- End of stack trace from previous location ---
+   at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title) in /_/src/Playwright/Transport/Connection.cs:line 528
+   at InsuranceAutomation.Core.UiActions.ClickSemanticAsync(ILocator control) in C:\Users\CT7858\wokdir\FF\src\InsuranceAutomation.Core\UiActions.cs:line 318
+   at InsuranceAutomation.Core.UiActions.ExecuteWithHighlightAsync(ILocator locator, String action, Func`2 operation) in C:\Users\CT7858\wokdir\FF\src\InsuranceAutomation.Core\UiActions.cs:line 488
+   at InsuranceAutomation.Core.UiActions.ExecuteAsync(ILocator locator, ControlIntent intent, String action, Func`2 operation) in C:\Users\CT7858\wokdir\FF\src\InsuranceAutomation.Core\UiActions.cs:line 465
+   at InsuranceAutomation.CLDC.StepDefinitions.ApplicationSteps.SignInWithLoginPageAsync(LoginPage page, String username, String password) in C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\StepDefinitions\ApplicationSteps.cs:line 114
+   at Reqnroll.Bindings.AsyncMethodHelper.ConvertTaskOfT(Task task, Boolean getValue)
+   at Reqnroll.Bindings.BindingDelegateInvoker.InvokeDelegateAsync(Delegate bindingDelegate, Object[] invokeArgs, ExecutionContextHolder executionContext)
+   at Reqnroll.Bindings.BindingInvoker.InvokeBindingAsync(IBinding binding, IContextManager contextManager, Object[] arguments, ITestTracer testTracer, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>b__7>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>g__HandleStepExecutionExceptions|0>d.MoveNext()
+And I start a new quote
+-> skipped because of previous errors
+And I enter individual client information
+-> skipped because of previous errors
+And I complete required policy information
+-> skipped because of previous errors
+And I navigate to Policy Info and Verify Desc
+-> skipped because of previous errors
+And I sign out of the application for logged in user
+-> skipped because of previous errors
+2026-08-30 05:41:59.503 [INFO] Playwright video finalized: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestResults\NUnitWork\Artifacts\UMB_Smoke_Test\UMB_Smoke_Test____stateCode_20260830_054033_475_043873a2\video\page@1254a2ea46edef11abceb6a82c009b64.webm
+2026-08-30 05:42:00.124 [WARN] Unable to create evidence bundle: The process cannot access the file 'C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestResults\NUnitWork\Artifacts\UMB_Smoke_Test\UMB_Smoke_Test____stateCode_20260830_054033_475_043873a2\execution.log' because it is being used by another process.
+2026-08-30 05:42:00.171 [INFO] TEST EVIDENCE ATTACHMENTS: enabled=True; attached=0; skipped=0; failures=1
+2026-08-30 05:42:00.171 [WARN] ATTACHMENT FAILURE: publisher::IOException: The process cannot access the file 'C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestResults\NUnitWork\Artifacts\UMB_Smoke_Test\UMB_Smoke_Test____stateCode_20260830_054033_475_043873a2\execution.log' because it is being used by another process.

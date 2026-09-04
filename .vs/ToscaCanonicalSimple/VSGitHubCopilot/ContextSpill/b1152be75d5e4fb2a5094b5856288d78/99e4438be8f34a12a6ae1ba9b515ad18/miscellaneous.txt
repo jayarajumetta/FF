@@ -1,0 +1,112 @@
+﻿Test run completed. Ran 1 test(s). 0 Passed, 1 Failed 
+EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) Failed | Error: System.TimeoutException : Timeout 15000ms exceeded.
+Call log:
+  - waiting for GetByTestId("PreQualification-nav")
+Data:
+  playwright.errorDetails: <null>
+  playwright.log: System.String[] | StackTrace:    at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls) in /_/src/Playwright/Transport/Connection.cs:line 222
+   at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title)
+   at Microsoft.Playwright.Core.Locator.<>c__DisplayClass80_0`1.<<WithElementAsync>b__0>d.MoveNext() in /_/src/Playwright/Core/Locator.cs:line 439
+--- End of stack trace from previous location ---
+   at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title)
+   at InsuranceAutomation.Core.UiActions.ClickSemanticAsync(ILocator control) in C:\Users\CT7858\wokdir\FF\src\InsuranceAutomation.Core\UiActions.cs:line 318
+   at InsuranceAutomation.Core.UiActions.ExecuteWithHighlightAsync(ILocator locator, String action, Func`2 operation) in C:\Users\CT7858\wokdir\FF\src\InsuranceAutomation.Core\UiActions.cs:line 488
+   at InsuranceAutomation.Core.UiActions.ExecuteAsync(ILocator locator, ControlIntent intent, String action, Func`2 operation) in C:\Users\CT7858\wokdir\FF\src\InsuranceAutomation.Core\UiActions.cs:line 465
+   at InsuranceAutomation.CLEQ.StepDefinitions.EQBOPSmokeTestSteps.RetrieveTheQuoteAndVerifyItsIdentityAsync() in C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\StepDefinitions\EQBOPSmokeTestSteps.cs:line 173
+   at Reqnroll.Bindings.AsyncMethodHelper.ConvertTaskOfT(Task task, Boolean getValue)
+   at Reqnroll.Bindings.BindingDelegateInvoker.InvokeDelegateAsync(Delegate bindingDelegate, Object[] invokeArgs, ExecutionContextHolder executionContext)
+   at Reqnroll.Bindings.BindingInvoker.InvokeBindingAsync(IBinding binding, IContextManager contextManager, Object[] arguments, ITestTracer testTracer, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>b__7>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>g__HandleStepExecutionExceptions|0>d.MoveNext()
+   at Reqnroll.Infrastructure.TestExecutionEngine.OnAfterLastStepAsync()
+   at Reqnroll.TestRunner.CollectScenarioErrorsAsync()
+   at CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.ScenarioCleanupAsync()
+   at CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode(String dataFile, String stateCode, String stateVariant, String stateName, String externalDataFile, String __pickleIndex, String[] exampleTags) in C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\Features\03_EQ_BOP_Smoke_Test_MO.feature:line 20
+   at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.BlockUntilCompleted()
+   at NUnit.Framework.Internal.MessagePumpStrategy.NoMessagePumpStrategy.WaitForCompletion(AwaitAdapter awaiter)
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.BeforeAndAfterTestCommand.<>c__DisplayClass1_0.<Execute>b__0()
+   at NUnit.Framework.Internal.Commands.DelegatingTestCommand.RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Action action)
+1)    at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls) in /_/src/Playwright/Transport/Connection.cs:line 222
+   at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title)
+   at Microsoft.Playwright.Core.Locator.<>c__DisplayClass80_0`1.<<WithElementAsync>b__0>d.MoveNext() in /_/src/Playwright/Core/Locator.cs:line 439
+--- End of stack trace from previous location ---
+   at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title)
+   at InsuranceAutomation.Core.UiActions.ClickSemanticAsync(ILocator control) in C:\Users\CT7858\wokdir\FF\src\InsuranceAutomation.Core\UiActions.cs:line 318
+   at InsuranceAutomation.Core.UiActions.ExecuteWithHighlightAsync(ILocator locator, String action, Func`2 operation) in C:\Users\CT7858\wokdir\FF\src\InsuranceAutomation.Core\UiActions.cs:line 488
+   at InsuranceAutomation.Core.UiActions.ExecuteAsync(ILocator locator, ControlIntent intent, String action, Func`2 operation) in C:\Users\CT7858\wokdir\FF\src\InsuranceAutomation.Core\UiActions.cs:line 465
+   at InsuranceAutomation.CLEQ.StepDefinitions.EQBOPSmokeTestSteps.RetrieveTheQuoteAndVerifyItsIdentityAsync() in C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\StepDefinitions\EQBOPSmokeTestSteps.cs:line 173
+   at Reqnroll.Bindings.AsyncMethodHelper.ConvertTaskOfT(Task task, Boolean getValue)
+   at Reqnroll.Bindings.BindingDelegateInvoker.InvokeDelegateAsync(Delegate bindingDelegate, Object[] invokeArgs, ExecutionContextHolder executionContext)
+   at Reqnroll.Bindings.BindingInvoker.InvokeBindingAsync(IBinding binding, IContextManager contextManager, Object[] arguments, ITestTracer testTracer, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>b__7>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>g__HandleStepExecutionExceptions|0>d.MoveNext()
+   at Reqnroll.Infrastructure.TestExecutionEngine.OnAfterLastStepAsync()
+   at Reqnroll.TestRunner.CollectScenarioErrorsAsync()
+   at CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.ScenarioCleanupAsync()
+   at CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode(String dataFile, String stateCode, String stateVariant, String stateName, String externalDataFile, String __pickleIndex, String[] exampleTags) in C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\Features\03_EQ_BOP_Smoke_Test_MO.feature:line 20
+   at NUnit.Framework.Internal.TaskAwaitAdapter.GenericAdapter`1.BlockUntilCompleted()
+   at NUnit.Framework.Internal.MessagePumpStrategy.NoMessagePumpStrategy.WaitForCompletion(AwaitAdapter awaiter)
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await[TResult](TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.AsyncToSyncAdapter.Await(TestExecutionContext context, Func`1 invoke)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExecutionContext context)
+   at NUnit.Framework.Internal.Commands.BeforeAndAfterTestCommand.<>c__DisplayClass1_0.<Execute>b__0()
+   at NUnit.Framework.Internal.Commands.DelegatingTestCommand.RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Action action)
+
+
+Test Output:
+[Informational] Building Test Projects
+[Informational] Using automatically detected runsettings file(s). To learn more visit https://aka.ms/vs-runsettings.
+[Informational] Starting test discovery for requested test run
+[Informational] Using automatically detected runsettings file(s). To learn more visit https://aka.ms/vs-runsettings.
+[Informational] ========== Starting test discovery ==========
+[Informational] NUnit Adapter 6.0.0.0: Test discovery starting
+[Informational] NUnit Adapter 6.0.0.0: Test discovery complete
+[Informational] ========== Test discovery finished: 151 Tests found in 2.1 sec ==========
+[Informational] Using automatically detected runsettings file(s). To learn more visit https://aka.ms/vs-runsettings.
+[Informational] ========== Starting test run ==========
+[Informational] NUnit Adapter 6.0.0.0: Test execution started
+[Informational] Running selected tests in C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\CommercialLines.ExpertQuote.Tests.dll
+[Informational]    NUnit3TestExecutor discovered 1 of 1 NUnit test cases using Current Discovery mode, Non-Explicit run
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: report.html :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\report.html
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: execution.log :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\execution.log
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: screenshots\214527367_I_create_a_new_client_and_begin_the_quote.png :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\screenshots\214527367_I_create_a_new_client_and_begin_the_quote.png
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: screenshots\214635970_I_enter_the_client_account_and_address_information.png :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\screenshots\214635970_I_enter_the_client_account_and_address_information.png
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: screenshots\214758614_I_retrieve_the_quote_and_verify_its_identity.png :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\screenshots\214758614_I_retrieve_the_quote_and_verify_its_identity.png
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: screenshots\scenario-final.png :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\screenshots\scenario-final.png
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: screenshots\verify_AccountInformation_Map_214603295.png :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\screenshots\verify_AccountInformation_Map_214603295.png
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: screenshots\verify_AccountInformation_Satellite_214633643.png :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\screenshots\verify_AccountInformation_Satellite_214633643.png
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: screenshots\verify_ClientSearch_ExistingClientMatch_214525520.png :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\screenshots\verify_ClientSearch_ExistingClientMatch_214525520.png
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: trace.zip :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\trace.zip
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: video\page@7041da2338580b2e32d09856dd1f358c.webm :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\video\page@7041da2338580b2e32d09856dd1f358c.webm
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: evidence-bundle.zip :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\evidence-bundle.zip
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: test-evidence-manifest.json :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\test-evidence-manifest.json
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: console.log :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\console.log
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: network.har.zip :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\network.har.zip
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: network.log :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\network.log
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: scenario-result.json :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\scenario-result.json
+[Informational] NUnit test evidence for 'CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null)' staged under: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode
+[Informational] NUnit attachments registered: 18; skipped: 0; failures: 0
+[Informational] TEST EVIDENCE ATTACHMENTS: enabled=True; attached=18; skipped=0; failures=0
+[Informational] Given I open a browser session
+2026-09-01 21:44:29.384 [INFO] START STEP: I open a browser session
+2026-09-01 21:44:34.899 [INFO] Browser session opened. Channel=msedge; Headless=False; HAR=True; Console=True; Network=True
+-> done: ApplicationSteps.OpenBrowserSessionAsync() (5.5s)
+2026-09-01 21:44:34.921 [INFO] PASSED STEP: I open a browser session
+Given test data "TestData/Scenarios/03_eq_bop_smoke_test_al.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+2026-09-01 21:44:34.961 [INFO] START STEP: test data "TestData/Scenarios/03_eq_bop_smoke_test_al.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+2026-09-01 21:44:35.101 [INFO] Loaded scenario data: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestData\Scenarios\03_eq_bop_smoke_test_al.json
+-> done: ApplicationSteps.LoadScenarioData("TestData/Scenario...", "TestData/External...") (0.1s)
+2026-09-01 21:44:35.105 [INFO] PASSED STEP: test data "...
+[Informational] NUnit Adapter 6.0.0.0: Test execution complete
+[Informational] ========== Test run finished: 1 Tests (0 Passed, 1 Failed, 0 Skipped) run in 3.6 min ==========

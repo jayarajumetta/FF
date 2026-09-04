@@ -1,0 +1,57 @@
+Given I open a browser session
+2026-08-30 23:13:38.654 [INFO] START STEP: I open a browser session
+2026-08-30 23:13:43.612 [INFO] Browser session opened. Channel=msedge; Headless=False; HAR=True; Console=True; Network=True
+-> done: ApplicationSteps.OpenBrowserSessionAsync() (5.0s)
+2026-08-30 23:13:43.731 [INFO] PASSED STEP: I open a browser session
+Given CLDC smoke data "UMB" for state "AL" named "Alabama" are loaded
+2026-08-30 23:13:43.778 [INFO] START STEP: CLDC smoke data "UMB" for state "AL" named "Alabama" are loaded
+2026-08-30 23:13:43.807 [INFO] Loaded consolidated CLDC smoke data: Product=UMB; State=AL; Base=C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestData\Smoke\UMB.json; Overrides=C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestData\Smoke\StateOverrides.json
+-> done: ApplicationSteps.LoadSmokeScenarioData("UMB", "AL", "Alabama") (0.0s)
+2026-08-30 23:13:43.816 [INFO] PASSED STEP: CLDC smoke data "UMB" for state "AL" named "Alabama" are loaded
+And I open the configured Commercial Lines Duck Creek application
+2026-08-30 23:13:43.822 [INFO] START STEP: I open the configured Commercial Lines Duck Creek application
+2026-08-30 23:13:44.952 [ERROR] 2026-08-30T23:13:44.9492317+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+-> done: ApplicationSteps.OpenApplicationAsync() (1.4s)
+2026-08-30 23:13:45.197 [INFO] PASSED STEP: I open the configured Commercial Lines Duck Creek application
+And I sign in to Commercial Lines Duck Creek using configured credentials
+2026-08-30 23:13:45.198 [INFO] START STEP: I sign in to Commercial Lines Duck Creek using configured credentials
+2026-08-30 23:13:46.257 [INFO] RUNTIME LOCATOR: Login.UserName => id
+2026-08-30 23:13:46.997 [INFO] RUNTIME LOCATOR: Login.Password => id
+2026-08-30 23:13:47.680 [INFO] RUNTIME LOCATOR: Login.Login => name
+2026-08-30 23:14:02.160 [ERROR] 2026-08-30T23:14:02.1589704+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?type=js3&sn=v_4_srv_11_sn_8F2A4549EA9EC2DFAD65BDA37A94DB22_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&svrid=11&flavor=post&vi=OAHNABITSFOUGNCKPWDATHPBWBMRQWAB-0&modifiedSince=1787035876796&bp=3&app=1286464dd003b906&crc=982588816&en=c2dndj2n&end=1 :: net::ERR_ABORTED
+2026-08-30 23:14:03.094 [ERROR] 2026-08-30T23:14:03.0930965+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+-> error: Timeout 15000ms exceeded.
+Call log:
+  - waiting for GetByRole(AriaRole.Link, new() { Name = "Login", Exact = true }) to be detached
+    26 × locator resolved to visible <a class="" onblur="" onfocus="" name="home" data-onclick="" href="javascript:;" onmouseout="window.status='';" onmousemove="window.status='';" onclick="DCT.Submit.submitAction('login');">…</a>
+    - waiting for" https://clasq.anico.com/Express/default.aspx?_windowGuid=95ec229b-40d3-4e4e-add0-13316f49c101&resumeState=c69e1faa-0df8-4418-b2ec-3c8fa5492ecc" navigation to finish...
+    - navigated to "https://clasq.anico.com/Express/default.aspx?_windowGuid=95ec229b-40d3-4e4e-add0-13316f49c101&resumeState=c69e1faa-0df8-4418-b2ec-3c8fa5492ecc" (18.2s)
+2026-08-30 23:14:04.070 [ERROR] FAILED STEP: I sign in to Commercial Lines Duck Creek using configured credentials :: System.TimeoutException: Timeout 15000ms exceeded.
+Call log:
+  - waiting for GetByRole(AriaRole.Link, new() { Name = "Login", Exact = true }) to be detached
+    26 × locator resolved to visible <a class="" onblur="" onfocus="" name="home" data-onclick="" href="javascript:;" onmouseout="window.status='';" onmousemove="window.status='';" onclick="DCT.Submit.submitAction('login');">…</a>
+    - waiting for" https://clasq.anico.com/Express/default.aspx?_windowGuid=95ec229b-40d3-4e4e-add0-13316f49c101&resumeState=c69e1faa-0df8-4418-b2ec-3c8fa5492ecc" navigation to finish...
+    - navigated to "https://clasq.anico.com/Express/default.aspx?_windowGuid=95ec229b-40d3-4e4e-add0-13316f49c101&resumeState=c69e1faa-0df8-4418-b2ec-3c8fa5492ecc"
+   at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls) in /_/src/Playwright/Transport/Connection.cs:line 222
+   at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title) in /_/src/Playwright/Transport/Connection.cs:line 528
+   at InsuranceAutomation.Core.UiActions.WaitAsync(ILocator locator, String expected, ControlIntent intent) in C:\Users\CT7858\wokdir\FF\src\InsuranceAutomation.Core\UiActions.cs:line 339
+   at InsuranceAutomation.CLDC.StepDefinitions.ApplicationSteps.SignInWithLoginPageAsync(LoginPage page, String username, String password) in C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\StepDefinitions\ApplicationSteps.cs:line 115
+   at Reqnroll.Bindings.AsyncMethodHelper.ConvertTaskOfT(Task task, Boolean getValue)
+   at Reqnroll.Bindings.BindingDelegateInvoker.InvokeDelegateAsync(Delegate bindingDelegate, Object[] invokeArgs, ExecutionContextHolder executionContext)
+   at Reqnroll.Bindings.BindingInvoker.InvokeBindingAsync(IBinding binding, IContextManager contextManager, Object[] arguments, ITestTracer testTracer, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>b__7>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>g__HandleStepExecutionExceptions|0>d.MoveNext()
+And I start a new quote
+-> skipped because of previous errors
+And I enter individual client information
+-> skipped because of previous errors
+And I complete required policy information
+-> skipped because of previous errors
+And I navigate to Policy Info and Verify Desc
+-> skipped because of previous errors
+And I sign out of the application for logged in user
+-> skipped because of previous errors
+2026-08-30 23:14:06.724 [INFO] Playwright video finalized: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestResults\NUnitWork\Artifacts\UMB_Smoke_Test\UMB_Smoke_Test____stateCode_20260830_231338_611_bebc287d\video\page@ad09682a86d2188aa6b5f6dc3e4e12f9.webm

@@ -1,0 +1,41 @@
+﻿Test run completed. Ran 1 test(s). 1 Passed, 0 Failed 
+EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) Passed
+
+Test Output:
+[Informational] Building Test Projects
+[Informational] Using automatically detected runsettings file(s). To learn more visit https://aka.ms/vs-runsettings.
+[Informational] Starting test discovery for requested test run
+[Informational] Using automatically detected runsettings file(s). To learn more visit https://aka.ms/vs-runsettings.
+[Informational] ========== Starting test discovery ==========
+[Informational] NUnit Adapter 6.0.0.0: Test discovery starting
+[Informational] NUnit Adapter 6.0.0.0: Test discovery complete
+[Informational] ========== Test discovery finished: 151 Tests found in 2.2 sec ==========
+[Informational] Using automatically detected runsettings file(s). To learn more visit https://aka.ms/vs-runsettings.
+[Informational] ========== Starting test run ==========
+[Informational] NUnit Adapter 6.0.0.0: Test execution started
+[Informational] Running selected tests in C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\CommercialLines.ExpertQuote.Tests.dll
+[Informational]    NUnit3TestExecutor discovered 1 of 1 NUnit test cases using Current Discovery mode, Non-Explicit run
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: report.html :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\report.html
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: execution.log :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\execution.log
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: screenshots\scenario-final.png :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\screenshots\scenario-final.png
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: trace.zip :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\trace.zip
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: video\page@e663e8accd39c26756fcde2238aabe81.webm :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\video\page@e663e8accd39c26756fcde2238aabe81.webm
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: test-evidence-manifest.json :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\test-evidence-manifest.json
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: console.log :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\console.log
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: network.log :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\network.log
+[Informational] [TEST EVIDENCE] CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null) :: scenario-result.json :: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode\scenario-result.json
+[Informational] NUnit test evidence for 'CommercialLines.ExpertQuote.Tests.Features.EQBOPSmokeTestFeature.EQBOPSmokeTest_StateCode("TestData/Scenarios/03_eq_bop_smoke_test_al.json","AL","AL","Alabama","TestData/ExternalDataOverrides.json","0",null)' staged under: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestResults\NUnitWork\TestResults\TestEvidence\0-1049__EQ_BOP_Smoke_Test__EQ_BOP_Smoke_Test_-__stateCode
+[Informational] NUnit attachments registered: 10; skipped: 0; failures: 0
+[Informational] TEST EVIDENCE ATTACHMENTS: enabled=True; attached=10; skipped=0; failures=0
+[Informational] Given I open a browser session
+2026-09-02 14:42:09.914 [INFO] START STEP: I open a browser session
+2026-09-02 14:42:17.072 [INFO] Browser session opened. Channel=msedge; Headless=False; HAR=True; Console=True; Network=True
+-> done: ApplicationSteps.OpenBrowserSessionAsync() (7.2s)
+2026-09-02 14:42:17.106 [INFO] PASSED STEP: I open a browser session
+Given test data "TestData/Scenarios/03_eq_bop_smoke_test_al.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+2026-09-02 14:42:17.155 [INFO] START STEP: test data "TestData/Scenarios/03_eq_bop_smoke_test_al.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+2026-09-02 14:42:17.477 [INFO] Loaded scenario data: C:\Users\CT7858\wokdir\FF\tests\CommercialLines.ExpertQuote.Tests\bin\Debug\net8.0\TestData\Scenarios\03_eq_bop_smoke_test_al.json
+-> done: ApplicationSteps.LoadScenarioData("TestData/Scenario...", "TestData/External...") (0.3s)
+2026-09-02 14:42:17.479 [INFO] PASSED STEP: test data "...
+[Informational] NUnit Adapter 6.0.0.0: Test execution complete
+[Informational] ========== Test run finished: 1 Tests (1 Passed, 0 Failed, 0 Skipped) run in 1.4 min ==========

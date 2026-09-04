@@ -1,0 +1,114 @@
+﻿using InsuranceAutomation.Core;
+using NUnit.Framework;
+
+namespace InsuranceAutomation.NUnit;
+
+/// <summary>
+/// One reusable scenario-finalization path for all ReqnRoll/NUnit test projects.
+/// Playwright trace/video/HAR are finalized before attachments are registered. Deferred verification
+/// verification failures are converted to the final NUnit assertion only after evidence publication.
+/// </summary>
+public static class NUnitScenarioEvidenceFinalizer
+{
+    public static async Task FinishAsync(
+        BrowserSession browser,
+        RunLogger logger,
+        FrameworkConfig config,
+        ScenarioReport report,
+        DeferredVerificationCollector verificationFailures,
+        string artifactDirectory,
+        string feature,
+        string scenario,
+        Exception? scenarioError,
+        NUnitTestEvidenceContext? testEvidenceContext = null)
+    {
+        string? deferredSummary = null;
+        try
+        {
+            if (browser.IsStarted && config.Browser.ScreenshotAtScenarioEnd)
+            {
+                try { await browser.CaptureScreenshotAsync("scenario-final.png"); }
+                catch (Exception ex) { logger.Warn($"Unable to capture final scenario screenshot: {ex.Message}"); }
+            }
+
+            // Closing the context finalizes video, trace and HAR before evidence is staged.
+            await browser.CloseAsync(logger);
+
+            if (verificationFailures.HasFailures)
+            {
+                deferredSummary = verificationFailures.BuildSummary();
+                logger.Error($"DEFERRED VERIFICATION SUMMARY ({verificationFailures.Failures.Count}):{Environment.NewLine}{deferredSummary}");
+            }
+
+            var effectiveError = scenarioError;
+            if (effectiveError is null && verificationFailures.HasFailures)
+                effectiveError = new AssertionException($"{verificationFailures.Failures.Count} deferred verification failure(s). {deferredSummary}");
+
+            if (config.Reporting.HtmlReport)
+                report.Write(feature, scenario, logger.LogPath, browser.TracePath, browser.VideoPath, browser.HarPath, null);
+
+            logger.Flush();
+
+            // CRITICAL: Dispose logger BEFORE creating bundle & publishing
+            // This releases execution.log file lock so it can be included in the bundle
+            logger.Dispose();
+
+            // Create evidence bundle AFTER logger is disposed so execution.log can be included
+            var bundle = browser.CreateEvidenceBundle(TestContext.Progress);
+            if (config.Reporting.HtmlReport)
+                report.Write(feature, scenario, logger.LogPath, browser.TracePath, browser.VideoPath, browser.HarPath, bundle);
+
+            var published = NUnitEvidencePublisher.Publish(
+                artifactDirectory,
+                config,
+                feature,
+                scenario,
+                effectiveError,
+                testEvidenceContext);
+
+            // Log attachment results to TestContext since logger is now disposed
+            try
+            {
+                TestContext.Progress.WriteLine($"TEST EVIDENCE ATTACHMENTS: enabled={published.Enabled}; attached={published.AttachedCount}; skipped={published.SkippedCount}; failures={published.Failures.Count}");
+                foreach (var failure in published.Failures)
+                {
+                    TestContext.Progress.WriteLine($"ATTACHMENT FAILURE: {failure}");
+                }
+            }
+            catch { }
+
+            // Additional console output for immediate visibility
+            TestContext.Progress.WriteLine("========================================");
+            TestContext.Progress.WriteLine($"TEST EVIDENCE SUMMARY FOR: {feature} - {scenario}");
+            TestContext.Progress.WriteLine($"  Artifact Directory: {artifactDirectory}");
+            TestContext.Progress.WriteLine($"  Attachments Enabled: {published.Enabled}");
+            TestContext.Progress.WriteLine($"  Files Attached: {published.AttachedCount}");
+            TestContext.Progress.WriteLine($"  Files Skipped: {published.SkippedCount}");
+            TestContext.Progress.WriteLine($"  Attachment Failures: {published.Failures.Count}");
+            if (published.Failures.Count > 0)
+            {
+                TestContext.Progress.WriteLine("  Failed Attachments:");
+                foreach (var failure in published.Failures.Take(10))
+                {
+                    TestContext.Progress.WriteLine($"    - {failure}");
+                }
+            }
+            TestContext.Progress.WriteLine("========================================");
+        }
+        catch (Exception ex)
+        {
+            // If anything fails during finalization, ensure logger is disposed
+            try
+            {
+                logger.Dispose();
+            }
+            catch { }
+            throw;
+        }
+
+        // Do not replace an existing business/action exception. ReqnRoll/NUnit already owns it.
+        // Only convert collected soft verification failures when there was no earlier fatal test error.
+        if (scenarioError is null && !string.IsNullOrWhiteSpace(deferredSummary))
+            Assert.Fail($"Deferred verification failures:{Environment.NewLine}{deferredSummary}");
+    }
+}

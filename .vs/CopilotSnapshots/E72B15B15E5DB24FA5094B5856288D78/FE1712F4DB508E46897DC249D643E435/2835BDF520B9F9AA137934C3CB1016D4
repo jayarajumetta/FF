@@ -1,0 +1,214 @@
+﻿using System.Collections.Concurrent;
+using System.Text.Json;
+using InsuranceAutomation.Core;
+using Microsoft.Playwright;
+
+namespace InsuranceAutomation.CLDC.Runtime;
+
+public sealed class DuckCreekRuntimeLocatorResolver : IRuntimeLocatorResolver
+{
+    private readonly ConcurrentDictionary<string, LocatorRecipe> _cache = new(StringComparer.OrdinalIgnoreCase);
+    private readonly string _evidencePath;
+    private readonly RunLogger _logger;
+    private readonly object _writeGate = new();
+    private DuckCreekFrameScopeResolver? _frameResolver;
+    private readonly BrowserSession? _browser;
+    private readonly FrameworkConfig? _config;
+
+    public DuckCreekRuntimeLocatorResolver(string artifactDirectory, RunLogger logger, BrowserSession? browser = null, FrameworkConfig? config = null)
+    {
+        _logger = logger; _browser = browser; _config = config;
+        _evidencePath = Path.Combine(artifactDirectory, "runtime-locators.jsonl");
+    }
+
+    public async Task<ILocator?> ResolveAsync(IPage page, ILocator seed, ControlIntent intent, string action)
+    {
+        var key = $"{intent.Page}|{intent.Control}";
+        if (_cache.TryGetValue(key, out var cached))
+        {
+            var cachedLocator = cached.Build(page);
+            if (await IsUniqueVisibleAsync(cachedLocator)) return cachedLocator;
+            _cache.TryRemove(key, out _);
+        }
+
+        if (_frameResolver is null && _browser is not null && _config is not null && _browser.IsStarted)
+            _frameResolver = new DuckCreekFrameScopeResolver(page, _config, _logger);
+        var scoped = _frameResolver is null ? new ResolvedScope(seed, null) : await _frameResolver.ResolveAsync(seed, intent);
+        var target = await ResolveSingleSeedAsync(scoped.Locator);
+        if (target is null) return null;
+
+        ElementIdentity identity;
+        try
+        {
+            identity = await target.EvaluateAsync<ElementIdentity>("""el => {
+                const norm = value => (value || '').replace(/\s+/g, ' ').trim();
+                const directFieldref = el.getAttribute('fieldref') || '';
+                let label = '';
+                if (el.labels && el.labels.length) label = norm(Array.from(el.labels).map(x => x.innerText || x.textContent || '').join(' '));
+                if (!label && el.id) {
+                    const candidate = document.querySelector(`label[for="${CSS.escape(el.id)}"]`);
+                    if (candidate) label = norm(candidate.innerText || candidate.textContent || '');
+                }
+                return {
+                    Tag: (el.tagName || '').toLowerCase(),
+                    Type: (el.getAttribute('type') || '').toLowerCase(),
+                    Role: (el.getAttribute('role') || '').toLowerCase(),
+                    Fieldref: directFieldref,
+                    Id: el.id || '',
+                    Name: el.getAttribute('name') || '',
+                    TestId: el.getAttribute('data-testid') || el.getAttribute('data-test-id') || el.getAttribute('data-test') || '',
+                    AriaLabel: el.getAttribute('aria-label') || '',
+                    Label: label,
+                    Text: norm(el.innerText || el.textContent || '')
+                };
+            }""") ?? new ElementIdentity();
+        }
+        catch
+        {
+            return null;
+        }
+
+        foreach (var recipe in Candidates(identity))
+        {
+            var locator = recipe.Build(page);
+            if (!await IsUniqueVisibleAsync(locator)) continue;
+            _cache[key] = recipe;
+            Record(intent, action, identity, recipe);
+            return locator;
+        }
+
+        Record(intent, action, identity, new LocatorRecipe("seed", string.Empty, null, null, null));
+        return target;
+    }
+
+    private static async Task<ILocator?> ResolveSingleSeedAsync(ILocator seed)
+    {
+        int count;
+        try { count = await seed.CountAsync(); }
+        catch { return null; }
+        if (count == 1) return seed;
+        if (count <= 0) return null;
+
+        try
+        {
+            var visible = await seed.EvaluateAllAsync<int[]>("""els => els.map((el, index) => {
+                const style = getComputedStyle(el);
+                const rect = el.getBoundingClientRect();
+                const isVisible = !!(rect.width || rect.height || el.getClientRects().length) && style.visibility !== 'hidden' && style.display !== 'none';
+                return isVisible ? index : -1;
+            }).filter(index => index >= 0)""") ?? Array.Empty<int>();
+            return visible.Length == 1 ? seed.Nth(visible[0]) : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static IEnumerable<LocatorRecipe> Candidates(ElementIdentity identity)
+    {
+        var fieldrefTag = identity.Tag is "input" or "textarea" or "select";
+        if (fieldrefTag && !string.IsNullOrWhiteSpace(identity.Fieldref))
+            yield return new LocatorRecipe("tag+fieldref", $"{identity.Tag}[fieldref=\"{Css(identity.Fieldref)}\"]", null, null, null);
+
+
+        if (!string.IsNullOrWhiteSpace(identity.Id))
+            yield return new LocatorRecipe("id", $"[id=\"{Css(identity.Id)}\"]", null, null, null);
+
+        if (!string.IsNullOrWhiteSpace(identity.Name) && !string.IsNullOrWhiteSpace(identity.Tag))
+            yield return new LocatorRecipe("name", $"{identity.Tag}[name=\"{Css(identity.Name)}\"]", null, null, null);
+
+        if (!string.IsNullOrWhiteSpace(identity.TestId))
+            yield return new LocatorRecipe("test-id", $"[data-testid=\"{Css(identity.TestId)}\"],[data-test-id=\"{Css(identity.TestId)}\"],[data-test=\"{Css(identity.TestId)}\"]", null, null, null);
+
+        if (!string.IsNullOrWhiteSpace(identity.Label))
+            yield return new LocatorRecipe("label-associated-control", string.Empty, null, null, identity.Label);
+
+        if (!string.IsNullOrWhiteSpace(identity.AriaLabel))
+            yield return new LocatorRecipe("aria-label", $"[aria-label=\"{Css(identity.AriaLabel)}\"]", null, null, null);
+
+        if (identity.Tag == "a" && !string.IsNullOrWhiteSpace(identity.Text))
+            yield return new LocatorRecipe("link-text", string.Empty, AriaRole.Link, identity.Text, null);
+
+        if (identity.Tag == "button" && !string.IsNullOrWhiteSpace(identity.Text))
+            yield return new LocatorRecipe("button-text", string.Empty, AriaRole.Button, identity.Text, null);
+    }
+
+    private static async Task<bool> IsUniqueVisibleAsync(ILocator locator)
+    {
+        try
+        {
+            return await locator.CountAsync() == 1 && await locator.IsVisibleAsync();
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private void Record(ControlIntent intent, string action, ElementIdentity identity, LocatorRecipe recipe)
+    {
+        var record = new
+        {
+            at = DateTimeOffset.Now,
+            page = intent.Page,
+            control = intent.Control,
+            action,
+            discovered = identity,
+            selectedStrategy = recipe.Strategy,
+            selectedSelector = recipe.Selector,
+            selectedRole = recipe.Role?.ToString(),
+            selectedText = recipe.Text
+        };
+        var line = JsonSerializer.Serialize(record);
+        lock (_writeGate)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(_evidencePath)!);
+            File.AppendAllText(_evidencePath, line + Environment.NewLine);
+        }
+        _logger.Info($"RUNTIME LOCATOR: {intent} => {recipe.Strategy}" + (string.IsNullOrWhiteSpace(identity.Fieldref) ? string.Empty : $" fieldref={identity.Fieldref}"));
+    }
+
+    private static string Css(string value) => value.Replace("\\", "\\\\", StringComparison.Ordinal).Replace("\"", "\\\"", StringComparison.Ordinal);
+
+    private static string AssociatedLabelXPath(string label)
+    {
+        var q = XPathLiteral(label.Trim());
+        return "xpath=(//*[@id = //label[normalize-space(string(.))=" + q + "]/@for]" +
+               " | //label[normalize-space(string(.))=" + q + "]//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1]" +
+               " | //label[normalize-space(string(.))=" + q + "]/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])";
+    }
+
+    private static string XPathLiteral(string value)
+    {
+        if (!value.Contains('\'')) return $"'{value}'";
+        if (!value.Contains('"')) return $"\"{value}\"";
+        var parts = value.Split('\'');
+        return "concat(" + string.Join(", \"'\", ", parts.Select(x => $"'{x}'")) + ")";
+    }
+
+
+    private sealed record LocatorRecipe(string Strategy, string Selector, AriaRole? Role, string? Text, string? Label)
+    {
+        public ILocator Build(IPage page)
+        {
+            if (!string.IsNullOrWhiteSpace(Label)) return page.Locator(AssociatedLabelXPath(Label));
+            if (Role is not null) return page.GetByRole(Role.Value, new() { Name = Text ?? string.Empty, Exact = true });
+            return page.Locator(Selector);
+        }
+    }
+
+    private sealed class ElementIdentity
+    {
+        public string Tag { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
+        public string Fieldref { get; set; } = string.Empty;
+        public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string TestId { get; set; } = string.Empty;
+        public string AriaLabel { get; set; } = string.Empty;
+        public string Label { get; set; } = string.Empty;
+        public string Text { get; set; } = string.Empty;
+    }
+}

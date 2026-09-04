@@ -1,0 +1,114 @@
+﻿using Microsoft.Playwright;
+
+namespace InsuranceAutomation.CLEQ.Pages.Locators;
+
+public sealed class NavigationLocators
+{
+    private readonly IPage _page;
+    public NavigationLocators(IPage page) => _page = page;
+
+    public ILocator ADDADDITIONALINTEREST => _page.Locator("input[id=\"additionalInsuredSelected.0-checkbox\"][name=\"additionalInsuredSelected.0\"]");
+
+    public ILocator AccountNumber => _page.Locator("input[id=\"fields.additionalOtherInterest.additionalOtherInterestInput$accountNumber.value\"][name=\"fields.additionalOtherInterest.additionalOtherInterestInput$accountNumber.value\"]");
+
+    public ILocator Add => _page.Locator("[id=\"fields.data.addClass\"]");
+
+    public ILocator AttachmentsListGridRowCellExplicitName1 => _page.GetByText("(ExplicitName=$1)", new() { Exact = true });
+
+    public ILocator AttachmentsListGridRowCellExplicitName3 => _page.GetByText("(ExplicitName=$3)", new() { Exact = true });
+
+    public ILocator BODY => _page.GetByText("BODY", new() { Exact = true });
+
+    public ILocator ClassFilter => _page.Locator("input[id=\"temp.filter\"][name=\"temp.filter\"]");
+
+    public ILocator ClientInfoSearch => _page.Locator("input[id=\"customer.name.first\"][name=\"customer.name.first\"]");
+
+    public ILocator CombinedDeductible => _page.GetByTestId("fields.line.covEquipmentBreakdown.covEquipmentBreakdownInput$combinedDed.value");
+
+    public ILocator CopyOfDecNo => _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$proofOfCoverageRequired.value-chip-wrapper");
+
+    public ILocator DescriptionOfInterest => _page.Locator("input[id=\"fields.additionalOtherInterest.additionalOtherInterestInput$descriptionOfInterest.value\"][name=\"fields.additionalOtherInterest.additionalOtherInterestInput$descriptionOfInterest.value\"]");
+
+    public ILocator EscrowBilledYes => _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$mortgageeResponsibleForEscrow.value-chip-wrapper");
+
+    public ILocator FarmImplementsNo => _page.GetByTestId("fields.line.covEquipmentBreakdownContent.covEquipmentBreakdownInput$farmImplement.value-chip-wrapper");
+
+
+    public ILocator GeneralEligibilityRestrictionsSynching => _page.GetByText("General Eligibility Restrictions - Synching", new() { Exact = true });
+
+    public ILocator GreaterThan25000No => _page.GetByTestId("fields.line.covEquipmentBreakdownPowerGeneration.covEquipmentBreakdownInput$lossGreaterThan24KEver.value-chip-wrapper");
+
+    public ILocator InsuredOccupancySqFtAngular => _page.Locator("input[id=\"fields.data.account.building.rows[0].buildingInput$insuredOccupancySqFt.value\"][name=\"fields.data.account.building.rows[0].buildingInput$insuredOccupancySqFt.value\"]");
+
+    public ILocator KeepGoing => _page.GetByTestId("btnConfirmYes");
+
+    public ILocator Loading => _page.GetByLabel("Loading ...", new() { Exact = true });
+
+    public ILocator LocationPrimaryLocation => _page.Locator("[id=\"fields.additionalOtherInterest.additionalOtherInterestInput$locationID.value\"]");
+
+    public ILocator MortgageeSecuredParty => _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$type.value-chip-wrapper");
+
+    public ILocator On => _page.Locator("[id=\"fields._OccupancyClassSearch.occupancyClassCode.rows[12].occupancyClassCodeInput$addToPolicy.value-checkbox\"]");
+
+    public ILocator OwnButton => _page.GetByTestId("fields.data.account.building.rows[0].buildingInput$buildingOccupiedEQ.value-chip-wrapper");
+
+    public ILocator PolicyDetailsABBA9 => _page.Locator("[id=\"pageTitle\"]");
+
+
+    public ILocator PolicyNumber => _page.Locator("[id=\"activeAccountReferenceId\"]");
+
+    public ILocator PowerGreaterThan250kwNo => _page.GetByTestId("fields.line.covEquipmentBreakdownPowerGeneration.covEquipmentBreakdownInput$powerGeneration.value-chip-wrapper");
+
+
+    public ILocator PreQualification => _page.GetByRole(AriaRole.Heading, new() { NameRegex = new System.Text.RegularExpressions.Regex("^PreQualification", System.Text.RegularExpressions.RegexOptions.IgnoreCase) });
+
+    public ILocator Residence => _page.Locator("[id=\"fields.additionalOtherInterest.additionalOtherInterestInput$buildingID.value\"]");
+
+    public ILocator Save => _page.Locator("button[id=\"fields.data.save\"], button[id=\"fields.data.saveLocation\"], button[data-testid=\"fields.line.save\"], button:has-text(\"Save\"), a:has-text(\"Save\")").First;
+
+    public ILocator Screen25E91 => _page.GetByText("Screen", new() { Exact = true });
+
+
+
+    public ILocator ScreenHeading69631 => _page.GetByText("Screen Heading", new() { Exact = true });
+
+
+
+    public ILocator SearchAddClassCode => _page.Locator("[id=\"fields.data.classCodeSearchButton\"]");
+
+    public ILocator SearchName => _page.Locator("input[id=\"temp.searchName\"][name=\"temp.searchName\"]");
+
+    public ILocator SearchZipCode => _page.Locator("input[id=\"temp.searchZipCode\"][name=\"temp.searchZipCode\"]");
+
+    public ILocator SelectIfClientOwnsOrRentsTheBuilding => _page.Locator("input[id=\"fields.data.account.building.rows[0].buildingInput$squareFtEq.value\"][name=\"fields.data.account.building.rows[0].buildingInput$squareFtEq.value\"]");
+
+    public ILocator Submission48772 => _page.GetByText("Submission", new() { Exact = true });
+
+
+    public ILocator SubmissionHeading => _page.Locator("[id=\"pageTop\"]");
+
+
+
+    public ILocator TransactionType => _page.GetByRole(AriaRole.Textbox, new() { Name = "Transaction Type", Exact = true }).First;
+
+    public ILocator True => _page.GetByText("True", new() { Exact = true });
+
+    public ILocator TwoOrMoreLossesNo => _page.GetByTestId("fields.line.covEquipmentBreakdownPowerGeneration.covEquipmentBreakdownInput$twoOrMoreLossIn24Month.value-chip-wrapper");
+
+    public ILocator ViewPolicy => _page.Locator("[id=\"returnToActiveSessionA\"]");
+
+    public ILocator ViewPolicyDetails848D5 => _page.GetByRole(AriaRole.Link, new() { Name = "View Policy Details", Exact = true }).First;
+
+
+
+    // Source EQ|Common|Navigation: Nav Link = DIV InnerText {B[Screen]}, Screen Heading = H1 {B[Screen]}*.
+    public ILocator GetNavigationLink(string screen) =>
+        _page.GetByText(screen, new() { Exact = true });
+
+    public ILocator GetScreenHeading(string screen) =>
+        _page.GetByRole(AriaRole.Heading, new()
+        {
+            NameRegex = new System.Text.RegularExpressions.Regex("^" + System.Text.RegularExpressions.Regex.Escape(screen), System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+        });
+
+}
