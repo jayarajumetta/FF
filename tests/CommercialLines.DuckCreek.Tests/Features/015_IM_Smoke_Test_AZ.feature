@@ -1,4 +1,4 @@
-@CLDC @smoke_test @IM @IM_smoke
+@CLDC @CLDC_smoke_test @smoke_test @IM @IM_smoke
 
 Feature: IM Smoke Test
   As a Commercial Lines Duck Creek policy processing user

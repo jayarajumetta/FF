@@ -1,4 +1,4 @@
-@CLDC @smoke_test @BAP @BAP_smoke
+@CLDC @CLDC_smoke_test @smoke_test @BAP @BAP_smoke
 
 Feature: BAP Smoke Test
   As a Commercial Lines Duck Creek policy processing user

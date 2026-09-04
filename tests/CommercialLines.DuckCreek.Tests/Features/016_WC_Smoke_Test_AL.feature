@@ -1,4 +1,4 @@
-@CLDC @smoke_test @WC @WC_smoke
+@CLDC @CLDC_smoke_test @smoke_test @WC @WC_smoke
 
 Feature: WC Smoke Test
   As a Commercial Lines Duck Creek policy processing user
