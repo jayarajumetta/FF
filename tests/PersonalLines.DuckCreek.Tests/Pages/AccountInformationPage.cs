@@ -66,13 +66,19 @@ public sealed class AccountInformationPage
         _ui.FillAsync(_locators.OwnerAddressZip, value, new ControlIntent("AccountInformation", "OwnerAddressZip"));
 
     public Task WaitForSatelliteAsync(string expected) =>
-        _ui.WaitAsync(_locators.AccountInformation, expected, new ControlIntent("AccountInformation", "Satellite"));
+        _ui.WaitAsync(_locators.Satellite, expected, new ControlIntent("AccountInformation", "Satellite"));
 
     public Task ClickSingleAsync() =>
-        _ui.ClickAsync(_locators.Divorced, new ControlIntent("AccountInformation", "Single"));
+        _ui.ClickAsync(_locators.Single, new ControlIntent("AccountInformation", "Single"));
 
     public Task SelectStateNameAsync(string value) =>
         _ui.SelectAsync(_locators.AccountDetailsNext, value, new ControlIntent("AccountInformation", "StateName"));
+
+    public Task SelectStateAsync(string value) =>
+        _ui.SelectAsync(_locators.StateDropdown, value, new ControlIntent("AccountInformation", "StateDropdown"));
+
+    public Task EnterStateAsync(string value) =>
+    _ui.FillAsync(_locators.StateDropdown, value, new ControlIntent("Proposal", "State"));
 
     public Task SelectYesAtLeast90DaysAsync(string value) =>
         _ui.SelectAsync(_locators.YesAtLeast90Days, value, new ControlIntent("AccountInformation", "YesAtLeast90Days"));

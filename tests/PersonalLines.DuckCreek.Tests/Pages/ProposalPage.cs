@@ -1,6 +1,7 @@
 using InsuranceAutomation.Core;
-using Microsoft.Playwright;
 using InsuranceAutomation.PLDC.Pages.Locators;
+using Microsoft.Playwright;
+using System.Globalization;
 
 namespace InsuranceAutomation.PLDC.Pages;
 
@@ -19,18 +20,20 @@ public sealed class ProposalPage
 
     public Task EnterAgentCodeAsync(string value) =>
         _ui.FillAsync(_locators.AgentCode, value, new ControlIntent("Proposal", "AgentCode"));
+    public Task ClickAgentCodeAsync() =>
+        _ui.ClickAsync(_locators.WritingCompany, new ControlIntent("Proposal", "WritingCompany"));
 
     public Task PressAgentCodeAsync(string key) =>
         _ui.PressAsync(_locators.AgentCode, key, new ControlIntent("Proposal", "AgentCode"));
 
     public Task VerifyCONFIRMAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.CONFIRM, expected, property, new ControlIntent("Proposal", "CONFIRM"));
+        _ui.VerifyAsync(_locators.ConfirmBtn, expected, property, new ControlIntent("Proposal", "CONFIRM"));
 
     public Task ClickCONFIRMAsync() =>
-        _ui.ClickAsync(_locators.CONFIRM, new ControlIntent("Proposal", "CONFIRM"));
+        _locators.ConfirmBtn.EvaluateAsync("el => el.click()");
 
     public Task<bool> IsCONFIRMPresentAsync() =>
-        _ui.ExistsAsync(_locators.CONFIRM);
+        _ui.ExistsAsync(_locators.ConfirmBtn);
 
     public Task ClickCREATENEWACCOUNTAsync() =>
         _ui.ClickAsync(_locators.CREATENEWACCOUNT, new ControlIntent("Proposal", "CREATENEWACCOUNT"));
@@ -81,22 +84,31 @@ public sealed class ProposalPage
         _ui.ExistsAsync(_locators.CONFIRM);
 
     public Task ClickPersonalAutoAsync() =>
-        _ui.ClickAsync(_locators.Motorcycle, new ControlIntent("Proposal", "PersonalAuto"));
+        _ui.ClickAsync(_locators.PersonalAuto, new ControlIntent("Proposal", "PersonalAuto"));
 
     public Task VerifyProposalStartProceedSSNSUBMITAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.CONFIRM, expected, property, new ControlIntent("Proposal", "ProposalStartProceedSSNSUBMIT"));
 
-    public Task ClickProposalStartProceedSSNSUBMITAsync() =>
-        _ui.ClickAsync(_locators.CONFIRM, new ControlIntent("Proposal", "ProposalStartProceedSSNSUBMIT"));
+    //public Task ClickProposalStartProceedSSNSUBMITAsync() =>
+    //    _ui.ClickAsync(_locators.SubmitAngular, new ControlIntent("Proposal", "ProposalStartProceedSSNSUBMIT"));
+
+    public async Task ClickProposalStartProceedSSNSUBMITAsync()
+    {
+        // The Angular overlay sometimes blocks clicks, use JavaScript click as workaround
+        await _locators.SubmitAngular.EvaluateAsync("el => el.click()");
+    }
+
+    public string GetTomorrowEffectiveDate() =>
+        DateTime.Today.AddDays(1).ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
 
     public Task<string> CaptureQNumAsync(string property = "") =>
-        _ui.CaptureAsync(_locators.NewQuote, property, new ControlIntent("Proposal", "QNum"));
+            _ui.CaptureAsync(_locators.NameAndQuote, property, new ControlIntent("Proposal", "QNum"));
 
     public Task<string> CaptureQuoteNumberAsync(string property = "") =>
         _ui.CaptureAsync(_locators.QuoteNumber, property, new ControlIntent("Proposal", "QuoteNumber"));
 
     public Task ClickRecreationalVehicleAsync() =>
-        _ui.ClickAsync(_locators.Motorcycle, new ControlIntent("Proposal", "RecreationalVehicle"));
+        _ui.ClickAsync(_locators.RecreationalVehicleChip, new ControlIntent("Proposal", "RecreationalVehicle"));
 
     public Task WaitForSSNAsync(string expected) =>
         _ui.WaitAsync(_locators.SSN, expected, new ControlIntent("Proposal", "SSN"));
@@ -105,7 +117,7 @@ public sealed class ProposalPage
         _ui.VerifyAsync(_locators.SSN, expected, property, new ControlIntent("Proposal", "SSN"));
 
     public Task EnterSSNAsync(string value) =>
-        _ui.FillAsync(_locators.SSN, value, new ControlIntent("Proposal", "SSN"));
+        _ui.FillAsync(_locators.SsnInput, value, new ControlIntent("Proposal", "SSN"));
 
     public Task<bool> IsSSNPresentAsync() =>
         _ui.ExistsAsync(_locators.SSN);
@@ -129,7 +141,9 @@ public sealed class ProposalPage
         _ui.FillAsync(_locators.State, value, new ControlIntent("Proposal", "State"));
 
     public Task SelectStateAsync(string value) =>
-        _ui.SelectAsync(_locators.State, value, new ControlIntent("Proposal", "State"));
+
+    _ui.SelectAsync(_locators.State, value, new ControlIntent("Proposal", "State"));
+
 
     public Task PressStateAsync(string key) =>
         _ui.PressAsync(_locators.State, key, new ControlIntent("Proposal", "State"));
