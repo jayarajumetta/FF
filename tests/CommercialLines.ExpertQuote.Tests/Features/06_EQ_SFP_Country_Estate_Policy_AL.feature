@@ -49,39 +49,40 @@ Feature: EQ SFP Country Estate Policy
     And I complete save for Later/Return to Admin
 
     Examples:
-      | dataFile | stateCode | stateVariant | stateName | externalDataFile |
-      | TestData/Scenarios/06_eq_sfp_country_estate_policy_al.json | AL | AL | Alabama | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_ar.json | AR | AR | Arkansas | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_az.json | AZ | AZ | Arizona | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_co.json | CO | CO | Colorado | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_de.json | DE | DE | Delaware | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_ga.json | GA | GA | Georgia | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_ia.json | IA | IA | Iowa | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_id.json | ID | ID | Idaho | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_il.json | IL | IL | Illinois | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_in.json | IN | IN | Indiana | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_ks.json | KS | KS | Kansas | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_ky.json | KY | KY | Kentucky | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_la.json | LA | LA | Louisiana | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_ma.json | MA | MA | Massachusetts | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_me.json | ME | ME | Maine | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_mn.json | MN | MN | Minnesota | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_mo.json | MO | MO | Missouri | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_ms.json | MS | MS | Mississippi | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_mt.json | MT | MT | Montana | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_nd.json | ND | ND | North Dakota | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_ne.json | NE | NE | Nebraska | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_nh.json | NH | NH | New Hampshire | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_nm.json | NM | NM | New Mexico | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_nv.json | NV | NV | Nevada | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_oh.json | OH | OH | Ohio | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_ok.json | OK | OK | Oklahoma | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_or.json | OR | OR | Oregon | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_sc.json | SC | SC | South Carolina | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_sd.json | SD | SD | South Dakota | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_tn.json | TN | TN | Tennessee | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_tx.json | TX | TX | Texas | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_ut.json | UT | UT | Utah | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_wa.json | WA | WA | Washington | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_wi.json | WI | WI | Wisconsin | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/06_eq_sfp_country_estate_policy_wy.json | WY | WY | Wyoming | TestData/ExternalDataOverrides.json |
+      | stateCode | dataFile                                                   | stateVariant | stateName      | externalDataFile                    |
+      | AL        | TestData/Scenarios/06_eq_sfp_country_estate_policy_al.json | AL           | Alabama        | TestData/ExternalDataOverrides.json |
+      #| AR        | TestData/Scenarios/06_eq_sfp_country_estate_policy_ar.json | AR           | Arkansas       | TestData/ExternalDataOverrides.json |
+      #| AZ        | TestData/Scenarios/06_eq_sfp_country_estate_policy_az.json | AZ           | Arizona        | TestData/ExternalDataOverrides.json |
+      #| CO        | TestData/Scenarios/06_eq_sfp_country_estate_policy_co.json | CO           | Colorado       | TestData/ExternalDataOverrides.json |
+      #| DE        | TestData/Scenarios/06_eq_sfp_country_estate_policy_de.json | DE           | Delaware       | TestData/ExternalDataOverrides.json |
+      #| GA        | TestData/Scenarios/06_eq_sfp_country_estate_policy_ga.json | GA           | Georgia        | TestData/ExternalDataOverrides.json |
+      #| IA        | TestData/Scenarios/06_eq_sfp_country_estate_policy_ia.json | IA           | Iowa           | TestData/ExternalDataOverrides.json |
+      #| ID        | TestData/Scenarios/06_eq_sfp_country_estate_policy_id.json | ID           | Idaho          | TestData/ExternalDataOverrides.json |
+      #| IL        | TestData/Scenarios/06_eq_sfp_country_estate_policy_il.json | IL           | Illinois       | TestData/ExternalDataOverrides.json |
+      #| IN        | TestData/Scenarios/06_eq_sfp_country_estate_policy_in.json | IN           | Indiana        | TestData/ExternalDataOverrides.json |
+      #| KS        | TestData/Scenarios/06_eq_sfp_country_estate_policy_ks.json | KS           | Kansas         | TestData/ExternalDataOverrides.json |
+      #| KY        | TestData/Scenarios/06_eq_sfp_country_estate_policy_ky.json | KY           | Kentucky       | TestData/ExternalDataOverrides.json |
+      #| LA        | TestData/Scenarios/06_eq_sfp_country_estate_policy_la.json | LA           | Louisiana      | TestData/ExternalDataOverrides.json |
+      #| MA        | TestData/Scenarios/06_eq_sfp_country_estate_policy_ma.json | MA           | Massachusetts  | TestData/ExternalDataOverrides.json |
+      #| ME        | TestData/Scenarios/06_eq_sfp_country_estate_policy_me.json | ME           | Maine          | TestData/ExternalDataOverrides.json |
+      #| MN        | TestData/Scenarios/06_eq_sfp_country_estate_policy_mn.json | MN           | Minnesota      | TestData/ExternalDataOverrides.json |
+      #| MO        | TestData/Scenarios/06_eq_sfp_country_estate_policy_mo.json | MO           | Missouri       | TestData/ExternalDataOverrides.json |
+      #| MS        | TestData/Scenarios/06_eq_sfp_country_estate_policy_ms.json | MS           | Mississippi    | TestData/ExternalDataOverrides.json |
+      #| MT        | TestData/Scenarios/06_eq_sfp_country_estate_policy_mt.json | MT           | Montana        | TestData/ExternalDataOverrides.json |
+      #| ND        | TestData/Scenarios/06_eq_sfp_country_estate_policy_nd.json | ND           | North Dakota   | TestData/ExternalDataOverrides.json |
+      #| NE        | TestData/Scenarios/06_eq_sfp_country_estate_policy_ne.json | NE           | Nebraska       | TestData/ExternalDataOverrides.json |
+      #| NH        | TestData/Scenarios/06_eq_sfp_country_estate_policy_nh.json | NH           | New Hampshire  | TestData/ExternalDataOverrides.json |
+      #| NM        | TestData/Scenarios/06_eq_sfp_country_estate_policy_nm.json | NM           | New Mexico     | TestData/ExternalDataOverrides.json |
+      #| NV        | TestData/Scenarios/06_eq_sfp_country_estate_policy_nv.json | NV           | Nevada         | TestData/ExternalDataOverrides.json |
+      #| OH        | TestData/Scenarios/06_eq_sfp_country_estate_policy_oh.json | OH           | Ohio           | TestData/ExternalDataOverrides.json |
+      #| OK        | TestData/Scenarios/06_eq_sfp_country_estate_policy_ok.json | OK           | Oklahoma       | TestData/ExternalDataOverrides.json |
+      #| OR        | TestData/Scenarios/06_eq_sfp_country_estate_policy_or.json | OR           | Oregon         | TestData/ExternalDataOverrides.json |
+      #| SC        | TestData/Scenarios/06_eq_sfp_country_estate_policy_sc.json | SC           | South Carolina | TestData/ExternalDataOverrides.json |
+      #| SD        | TestData/Scenarios/06_eq_sfp_country_estate_policy_sd.json | SD           | South Dakota   | TestData/ExternalDataOverrides.json |
+      #| TN        | TestData/Scenarios/06_eq_sfp_country_estate_policy_tn.json | TN           | Tennessee      | TestData/ExternalDataOverrides.json |
+      #| TX        | TestData/Scenarios/06_eq_sfp_country_estate_policy_tx.json | TX           | Texas          | TestData/ExternalDataOverrides.json |
+      #| UT        | TestData/Scenarios/06_eq_sfp_country_estate_policy_ut.json | UT           | Utah           | TestData/ExternalDataOverrides.json |
+      #| WA        | TestData/Scenarios/06_eq_sfp_country_estate_policy_wa.json | WA           | Washington     | TestData/ExternalDataOverrides.json |
+      #| WI        | TestData/Scenarios/06_eq_sfp_country_estate_policy_wi.json | WI           | Wisconsin      | TestData/ExternalDataOverrides.json |
+      #| WY        | TestData/Scenarios/06_eq_sfp_country_estate_policy_wy.json | WY           | Wyoming        | TestData/ExternalDataOverrides.json |
+

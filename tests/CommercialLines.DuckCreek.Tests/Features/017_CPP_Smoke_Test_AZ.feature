@@ -19,20 +19,20 @@ Feature: CPP Smoke Test
     And I navigate to Policy Info and Verify Desc
 
     Examples:
-      | dataFile | stateCode | stateVariant | stateName | externalDataFile |
-      | TestData/Scenarios/017_cpp_smoke_test_az.json | AZ | AZ | Arizona | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/017_cpp_smoke_test_ct.json | CT | CT | Connecticut | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/017_cpp_smoke_test_de.json | DE | DE | Delaware | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/017_cpp_smoke_test_ma.json | MA | MA | Massachusetts | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/017_cpp_smoke_test_md.json | MD | MD | Maryland | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/017_cpp_smoke_test_me.json | ME | ME | Maine | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/017_cpp_smoke_test_nh.json | NH | NH | New Hampshire | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/017_cpp_smoke_test_nj.json | NJ | NJ | New Jersey | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/017_cpp_smoke_test_ny.json | NY | NY | New York | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/017_cpp_smoke_test_or.json | OR | OR | Oregon | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/017_cpp_smoke_test_pa.json | PA | PA | Pennsylvania | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/017_cpp_smoke_test_ri.json | RI | RI | Rhode Island | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/017_cpp_smoke_test_va.json | VA | VA | Virginia | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/017_cpp_smoke_test_vt.json | VT | VT | Vermont | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/017_cpp_smoke_test_wa.json | WA | WA | Washington | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/017_cpp_smoke_test_wv.json | WV | WV | West Virginia | TestData/ExternalDataOverrides.json |
+      | stateCode | dataFile                                      | stateVariant | stateName     | externalDataFile                    |
+      | AZ        | TestData/Scenarios/017_cpp_smoke_test_az.json | AZ           | Arizona       | TestData/ExternalDataOverrides.json |
+      | CT        | TestData/Scenarios/017_cpp_smoke_test_ct.json | CT           | Connecticut   | TestData/ExternalDataOverrides.json |
+      | DE        | TestData/Scenarios/017_cpp_smoke_test_de.json | DE           | Delaware      | TestData/ExternalDataOverrides.json |
+      | MA        | TestData/Scenarios/017_cpp_smoke_test_ma.json | MA           | Massachusetts | TestData/ExternalDataOverrides.json |
+      | MD        | TestData/Scenarios/017_cpp_smoke_test_md.json | MD           | Maryland      | TestData/ExternalDataOverrides.json |
+      | ME        | TestData/Scenarios/017_cpp_smoke_test_me.json | ME           | Maine         | TestData/ExternalDataOverrides.json |
+      | NH        | TestData/Scenarios/017_cpp_smoke_test_nh.json | NH           | New Hampshire | TestData/ExternalDataOverrides.json |
+      | NJ        | TestData/Scenarios/017_cpp_smoke_test_nj.json | NJ           | New Jersey    | TestData/ExternalDataOverrides.json |
+      | NY        | TestData/Scenarios/017_cpp_smoke_test_ny.json | NY           | New York      | TestData/ExternalDataOverrides.json |
+      | OR        | TestData/Scenarios/017_cpp_smoke_test_or.json | OR           | Oregon        | TestData/ExternalDataOverrides.json |
+      | PA        | TestData/Scenarios/017_cpp_smoke_test_pa.json | PA           | Pennsylvania  | TestData/ExternalDataOverrides.json |
+      | RI        | TestData/Scenarios/017_cpp_smoke_test_ri.json | RI           | Rhode Island  | TestData/ExternalDataOverrides.json |
+      | VA        | TestData/Scenarios/017_cpp_smoke_test_va.json | VA           | Virginia      | TestData/ExternalDataOverrides.json |
+      | VT        | TestData/Scenarios/017_cpp_smoke_test_vt.json | VT           | Vermont       | TestData/ExternalDataOverrides.json |
+      | WA        | TestData/Scenarios/017_cpp_smoke_test_wa.json | WA           | Washington    | TestData/ExternalDataOverrides.json |
+      | WV        | TestData/Scenarios/017_cpp_smoke_test_wv.json | WV           | West Virginia | TestData/ExternalDataOverrides.json |

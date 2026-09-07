@@ -2,9 +2,11 @@
 <RunSettings>
   <RunConfiguration>
     <ResultsDirectory>TestResults</ResultsDirectory>
+    <MaxCpuCount>2</MaxCpuCount>
   </RunConfiguration>
   <NUnit>
     <WorkDirectory>TestResults\NUnitWork</WorkDirectory>
-    <UseParentFQNForParametrizedTests>true</UseParentFQNForParametrizedTests>
+    <NumberOfTestWorkers>2</NumberOfTestWorkers>
+    <UseParentFQNForParametrizedTests>false</UseParentFQNForParametrizedTests>
   </NUnit>
 </RunSettings>

@@ -6,4 +6,10 @@
     <ReqnrollUseIntermediateOutputPathForCodeBehind>true</ReqnrollUseIntermediateOutputPathForCodeBehind>
       <RunSettingsFilePath>$(MSBuildThisFileDirectory)Tosca.runsettings</RunSettingsFilePath>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)reqnroll.json" Link="reqnroll.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup Condition="$([System.String]::Copy('$(MSBuildProjectName)').EndsWith('.Tests'))">
+    <Compile Include="$(MSBuildThisFileDirectory)Parallelization.cs" Link="Parallelization.cs" />
+  </ItemGroup>
 </Project>
