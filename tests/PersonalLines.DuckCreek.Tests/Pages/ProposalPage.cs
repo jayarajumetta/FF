@@ -18,6 +18,9 @@ public sealed class ProposalPage
         _ui = ui;
     }
 
+    public Task PauseAsync(int milliseconds) =>
+    Task.Delay(milliseconds);
+
     public Task EnterAgentCodeAsync(string value) =>
         _ui.FillAsync(_locators.AgentCode, value, new ControlIntent("Proposal", "AgentCode"));
     public Task ClickAgentCodeAsync() =>
@@ -33,7 +36,7 @@ public sealed class ProposalPage
         _locators.ConfirmBtn.EvaluateAsync("el => el.click()");
 
     public Task<bool> IsCONFIRMPresentAsync() =>
-        _ui.ExistsAsync(_locators.ConfirmBtn);
+        _ui.ExistsAsync(_locators.ConfirmSSN);
 
     public Task ClickCREATENEWACCOUNTAsync() =>
         _ui.ClickAsync(_locators.CREATENEWACCOUNT, new ControlIntent("Proposal", "CREATENEWACCOUNT"));
@@ -101,6 +104,9 @@ public sealed class ProposalPage
     public string GetTomorrowEffectiveDate() =>
         DateTime.Today.AddDays(1).ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
 
+    public Task WaitForCaptureQuoteNumberAsync(string expected) =>
+        _ui.WaitAsync(_locators.NameAndQuote, expected, new ControlIntent("Proposal", "QuoteNumber"));
+
     public Task<string> CaptureQNumAsync(string property = "") =>
             _ui.CaptureAsync(_locators.NameAndQuote, property, new ControlIntent("Proposal", "QNum"));
 
@@ -161,10 +167,11 @@ public sealed class ProposalPage
         _ui.WaitAsync(_locators.CONFIRM, expected, new ControlIntent("Proposal", "USEEXISTINGACCOUNT"));
 
     public Task ClickUSEEXISTINGACCOUNTAsync() =>
-        _ui.ClickAsync(_locators.CONFIRM, new ControlIntent("Proposal", "USEEXISTINGACCOUNT"));
+         _locators.SubmitAngular.EvaluateAsync("el => el.click()");
+    //_ui.ClickAsync(_locators.CONFIRM, new ControlIntent("Proposal", "USEEXISTINGACCOUNT"));
 
     public Task<bool> IsUSEEXISTINGACCOUNTPresentAsync() =>
-        _ui.ExistsAsync(_locators.CONFIRM);
+        _ui.ExistsAsync(_locators.ClientExists);
 
     public Task EnterWritingCompanyAsync(string value) =>
         _ui.FillAsync(_locators.WritingCompany, value, new ControlIntent("Proposal", "WritingCompany"));

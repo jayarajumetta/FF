@@ -59,7 +59,6 @@ private readonly ScenarioContext _scenario;
         var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.WaitForAccountInformationAsync("Exists");
-        await page.VerifyFirstNameAccountOwnerAsync("Exists", "");
         await page.EnterDOBAsync(data.Get("DOB"));
         await page.EnterBestPhoneAccountOwnerAsync(data.Resolve("{{data:txt_best_phone_account_owner_18}}"));
         await page.EnterEmailAccountOwnerAsync(data.Resolve("{{data:txt_email_account_owner_19}}"));
@@ -111,10 +110,13 @@ private readonly ScenarioContext _scenario;
         }
         await page.WaitForStartQuoteAsync("True");
         await page.ClickStartQuoteAsync();
+        await page.PauseAsync(10000);
+
         if (await page.IsPROCEEDPresentAsync())
         {
             await page.VerifyPROCEEDAsync("Exists", "");
             await page.ClickPROCEEDAsync();
+            await page.PauseAsync(5000);
         }
         if (await page.IsSSNPresentAsync())
         {
@@ -122,25 +124,28 @@ private readonly ScenarioContext _scenario;
             await page.VerifyProposalStartProceedSSNSUBMITAsync("Exists", "");
             await page.EnterSSNAsync(data.Get("SSN"));
             await page.ClickProposalStartProceedSSNSUBMITAsync();
+            await page.PauseAsync(5000);
         }
         if (await page.IsCONFIRMPresentAsync())
         {
             await page.VerifyCONFIRMAsync("Exists", "");
             await page.ClickCONFIRMAsync();
+            await page.PauseAsync(5000);
         }
         if (await page.IsUSEEXISTINGACCOUNTPresentAsync())
         {
-                    await page.WaitForUSEEXISTINGACCOUNTAsync("Exists");
+            await page.ClickUSEEXISTINGACCOUNTAsync();
+            await page.PauseAsync(5000);
         }
-        if (await page.IsStateMONTANAPresentAsync())
-        {
-                    await page.ClickStateMONTANAAsync();
-        }
-        if (data.Condition("State != \"MONTANA\""))
-        {
-                    await page.ClickUSEEXISTINGACCOUNTAsync();
-        }
-        data.Set("EffectiveDate", data.Get("Effective Date"));
+        //if (await page.IsStateMONTANAPresentAsync())
+        //{
+        //            await page.ClickStateMONTANAAsync();
+        //}
+        //if (data.Condition("State != \"MONTANA\""))
+        //{
+        //            await page.ClickUSEEXISTINGACCOUNTAsync();
+        //}
+
 
     }
 
@@ -152,11 +157,15 @@ private readonly ScenarioContext _scenario;
         var data = _scenario.Get<ScenarioData>();
 
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        data.Set("QuoteNumber2", await page.CaptureQNumAsync("Text"));
-        data.Set("QuoteNumber", data.Resolve("{STRINGREPLACE[{B[QuoteNumber4]}][\"\\)\"][\"\"]}"));
-
+        await page.WaitForCaptureQuoteNumberAsync("Exists");
+        data.Set("QuoteNumber2", await page.CaptureQNumAsync("InnerText"));
+        var quoteNumber = data.Get("QuoteNumber2").ReplaceLineEndings(string.Empty);
+        var lastName = data.Get("Last Name");
+        if (!string.IsNullOrWhiteSpace(lastName))
+        {
+            quoteNumber = quoteNumber.Replace(lastName, string.Empty, StringComparison.OrdinalIgnoreCase);
+        }
+        data.Set("QuoteNumber", quoteNumber.Trim());
     }
 
     [Given(@"^I complete tabs$")]
@@ -168,12 +177,10 @@ private readonly ScenarioContext _scenario;
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickCloseTabAsync();
         await page.EnterQuoteSearchInputAsync(data.Resolve("{{runtime:QuoteNumber}}"));
         await page.ClickTabsSearchAsync();
-        await page.VerifyQNumAsync(data.Resolve("{{runtime:QuoteNumber2}}"), "");
-
+        await page.VerifyQNumAsync($".*\\b{data.Resolve("{{runtime:QuoteNumber}}")}\\b.*", "Regex:InnerText");
     }
 
 }

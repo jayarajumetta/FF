@@ -12,7 +12,11 @@ public sealed class ProposalLocators
 
     public ILocator CONFIRM => _page.GetByText("Proceed");
 
+    public ILocator ClientExists => _page.GetByText(new Regex(@"Client Already Exists", RegexOptions.IgnoreCase));
+
     public ILocator ConfirmBtn => _page.Locator("[id='btnConfirmYes']");
+
+    public ILocator ConfirmSSN => _page.GetByText(new Regex(@"Confirm the Client's SSN#", RegexOptions.IgnoreCase));
 
     public ILocator SubmitAngular => _page.Locator("[id='btnConfirmYes']");
 
@@ -26,7 +30,7 @@ public sealed class ProposalLocators
 
     public ILocator EffectiveDate => _page.Locator("input[id='proposal.effectiveDate']");
 
-    public ILocator Motorcycle => _page.GetByTestId("proposal.product-chip-label");
+    public ILocator Motorcycle => _page.Locator("[data-testid='proposal.product-chip-item-wrapper'].chip-item-wrapper, [data-testid='proposal.product-chip-item-wrapper'] > .chip-wrapper").Filter(new() { HasText = "Motorcycle" }).First;
 
     public ILocator NewQuote => _page.GetByRole(AriaRole.Button, new() { Name = "New Quote", Exact = true });
     public ILocator NameAndQuote => _page.Locator(".mdc-tab.mdc-tab--active .mdc-tab__text-label > span, mat-tab-header [role='tab'][aria-selected='true'] .mdc-tab__text-label > span").First;

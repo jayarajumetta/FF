@@ -18,7 +18,7 @@ public sealed class NavigationPage
     }
 
     public Task ClickCloseTabAsync() =>
-        _ui.ClickAsync(_locators.CloseTab, new ControlIntent("Navigation", "CloseTab"));
+        _ui.ClickAsync(_locators.CloseQuote, new ControlIntent("Navigation", "CloseTab"));
 
     public Task PressCoveragesNewNextAsync(string key) =>
         _ui.PressAsync(_locators.CoveragesNewNext, key, new ControlIntent("Navigation", "CoveragesNewNext"));
@@ -40,8 +40,8 @@ public sealed class NavigationPage
 
     public Task ClickEDITCOVERAGEOpt3Async() =>
         _ui.ClickAsync(_locators.EDITCOVERAGEOpt3, new ControlIntent("Navigation", "EDITCOVERAGEOpt3"));
-public Task SetOption1Async(string value) =>
-        _ui.SmartSetAsync(_locators.Option1, value, new ControlIntent("Navigation", "Option1"));
+    public Task SetOption1Async(string value) =>
+            _ui.SmartSetAsync(_locators.Option1, value, new ControlIntent("Navigation", "Option1"));
 
     public Task SetOption2Async(string value) =>
         _ui.SmartSetAsync(_locators.Option2, value, new ControlIntent("Navigation", "Option2"));
@@ -53,10 +53,10 @@ public Task SetOption1Async(string value) =>
         _ui.PressAsync(_locators.Option3, key, new ControlIntent("Navigation", "Option3"));
 
     public Task VerifyQNumAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.CloseTab, expected, property, new ControlIntent("Navigation", "QNum"));
+        _ui.VerifyAsync(_locators.NameAndQuote, expected, property, new ControlIntent("Navigation", "QNum"));
 
     public Task<string> CaptureQNumAsync(string property = "") =>
-        _ui.CaptureAsync(_locators.CloseTab, property, new ControlIntent("Navigation", "QNum"));
+        _ui.CaptureAsync(_locators.CloseQuote, property, new ControlIntent("Navigation", "QNum"));
 
     public Task EnterQuoteSearchInputAsync(string value) =>
         _ui.FillAsync(_locators.QuoteSearchInput, value, new ControlIntent("Navigation", "QuoteSearchInput"));
@@ -77,7 +77,7 @@ public Task SetOption1Async(string value) =>
         _ui.ClickAsync(_locators.SupplementalUMUIMOptIn, new ControlIntent("Navigation", "SupplementalUMUIMOptIn"));
 
     public Task ClickTabsSearchAsync() =>
-        _ui.ClickAsync(_locators.CloseTab, new ControlIntent("Navigation", "TabsSearch"));
+        _ui.ClickAsync(_locators.QuoteSearchButton, new ControlIntent("Navigation", "TabsSearch"));
 
     public Task WaitForUMCoverageAsync(string expected) =>
         _ui.WaitAsync(_locators.UMCoverage, expected, new ControlIntent("Navigation", "UMCoverage"));
