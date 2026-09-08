@@ -58,6 +58,14 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def sha256_normalized_text(path: Path) -> str:
+    text = path.read_text(encoding="utf-8")
+    if text.startswith("\ufeff"):
+        text = text[1:]
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
 def csharp_balance(text: str) -> tuple[int, int, int]:
     """Balance {}, (), [] while ignoring ordinary/verbatim strings, chars and comments."""
     braces = parens = brackets = 0
@@ -299,8 +307,8 @@ def active_codes(feature_name: str) -> list[str]:
         return []
     return [row.get("stateCode", "") for row in parse_feature(path)["rows"]]
 
-bop_codes = active_codes("03_EQ_BOP_Smoke_Test_MO.feature")
-sfp_codes = active_codes("04_EQ_SFP_Smoke_Test_MN.feature")
+bop_codes = active_codes("03_EQ_BOP_Smoke_Test.feature")
+sfp_codes = active_codes("04_EQ_SFP_Smoke_Test.feature")
 STATS["eqSmoke"] = {"BOP": len(bop_codes), "SFP": len(sfp_codes)}
 if len(bop_codes) != 45 or len(set(bop_codes)) != 45:
     fail(f"EQ BOP Smoke must contain 45 unique active state examples; found {len(bop_codes)}/{len(set(bop_codes))}")
@@ -321,7 +329,7 @@ else:
             data_path = ROOT / "tests" / "CommercialLines.ExpertQuote.Tests" / entry.get("dataFile", "")
             if not data_path.exists():
                 fail(f"EQ {flow} lineage data file missing: {entry.get('dataFile')}")
-            elif sha256(data_path) != entry.get("sha256"):
+            elif sha256_normalized_text(data_path) != entry.get("sha256"):
                 fail(f"EQ {flow} lineage checksum mismatch: {entry.get('dataFile')}")
             donor = entry.get("stateDonor", "")
             if donor and not (data_path.parent / donor).exists():
@@ -366,7 +374,7 @@ for app in APPS:
         if merged != original:
             fail(f"{app}: layered reconstruction differs from {source.name}")
             continue
-        if entry.get("sourceSha256") != sha256(source):
+        if entry.get("sourceSha256") != sha256_normalized_text(source):
             fail(f"{app}: source checksum mismatch in layered manifest for {source.name}")
             continue
         reconstructed += 1

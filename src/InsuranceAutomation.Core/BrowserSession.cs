@@ -5,6 +5,7 @@ public sealed class BrowserSession : IAsyncDisposable
 {
     private readonly FrameworkConfig _config;
     private readonly object _evidenceGate = new();
+    private readonly SemaphoreSlim _screenshotGate = new(1, 1);
     private readonly List<string> _stepConsoleErrors = [];
     private readonly List<string> _stepNetworkErrors = [];
     private IPlaywright? _playwright;
@@ -22,6 +23,7 @@ public sealed class BrowserSession : IAsyncDisposable
     public string? VideoPath { get; private set; }
     public string? HarPath { get; private set; }
     public string? EvidenceBundlePath { get; private set; }
+    public string? ScreenshotPath { get; private set; }
     public void SetArtifactDirectory(string artifactDirectory)
     {
         _artifactDirectory = artifactDirectory;
@@ -73,16 +75,23 @@ public sealed class BrowserSession : IAsyncDisposable
     }
     public async Task<string?> CaptureScreenshotAsync(string fileName)
     {
-        if (_page is null) return null;
-        var path = Path.Combine(_artifactDirectory, "screenshots", Safe(fileName));
-        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-        await _page.ScreenshotAsync(new PageScreenshotOptions { Path = path, FullPage = true });
-        return path;
+        await _screenshotGate.WaitAsync();
+        try
+        {
+            if (ScreenshotPath is not null) return ScreenshotPath;
+            if (_page is null) return null;
+            var path = Path.Combine(_artifactDirectory, "screenshots", "scenario.png");
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            await _page.ScreenshotAsync(new PageScreenshotOptions { Path = path, FullPage = true });
+            ScreenshotPath = path;
+            return path;
+        }
+        finally { _screenshotGate.Release(); }
     }
     public async Task<byte[]> CaptureScreenshotBytesAsync()
     {
-        if (_page is null) return Array.Empty<byte>();
-        return await _page.ScreenshotAsync(new PageScreenshotOptions { FullPage = true });
+        var path = await CaptureScreenshotAsync("scenario.png");
+        return path is null ? Array.Empty<byte>() : await File.ReadAllBytesAsync(path);
     }
     public async Task CloseAsync(RunLogger logger)
     {

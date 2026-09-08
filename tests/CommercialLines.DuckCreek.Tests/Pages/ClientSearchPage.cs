@@ -216,7 +216,7 @@ public sealed class ClientSearchPage
         _ui.WaitAsync(_locators.OK, expected, new ControlIntent("ClientSearch", "OK"));
 
     public Task PauseAsync(int milliseconds) =>
-    Task.Delay(milliseconds);
+        Task.Delay(milliseconds);
 
     public Task ClickOrderSSNAsync() =>
         _ui.ClickAsync(_locators.OrderSSN, new ControlIntent("ClientSearch", "OrderSSN"));

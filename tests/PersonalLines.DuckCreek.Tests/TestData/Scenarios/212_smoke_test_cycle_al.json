@@ -36,7 +36,30 @@
     "state": "AL",
     "statecode": "AL",
     "state_name": "Alabama",
-    "state_variant": "AL"
+    "state_variant": "AL",
+    "AL_ClientData.First Name": "EMETERIO",
+    "AL_ClientData.Last Name": "BANDEROWICZ",
+    "AL_ClientData.DOB": "12/15/1955",
+    "AL_ClientData.Street Address": "308 22ND ST E",
+    "AL_ClientData.City": "TUSCALOOSA",
+    "AL_ClientData.ZIP": "35401",
+    "AL_ClientData.SSN": "666652971",
+    "First Name": "EMETERIO",
+    "Middle Name": "J",
+    "Last Name": "BANDEROWICZ",
+    "Suffix": "19",
+    "DOB": "12/15/1955",
+    "SSN": "666652971",
+    "Gender": "M",
+    "DL State": "AL",
+    "DL Number": "6834621",
+    "Street Address": "308 22ND ST E",
+    "Apartment": "19",
+    "City": "TUSCALOOSA",
+    "ZIP": "35401",
+    "State Abbreviation": "AL",
+    "State Licensed(XX)": "AL",
+    "Drivers License #": "6834621"
   },
   "random": {},
   "application": {
@@ -45,13 +68,13 @@
     "password": "SYNTHETIC_REPLACE_ME"
   },
   "external": {
-    "AL_ClientData.First Name": "SYNTHETIC_REPLACE_ME",
-    "AL_ClientData.Last Name": "SYNTHETIC_REPLACE_ME",
-    "AL_ClientData.DOB": "SYNTHETIC_REPLACE_ME",
-    "AL_ClientData.Street Address": "SYNTHETIC_REPLACE_ME",
-    "AL_ClientData.City": "SYNTHETIC_REPLACE_ME",
-    "AL_ClientData.ZIP": "SYNTHETIC_REPLACE_ME",
-    "AL_ClientData.SSN": "SYNTHETIC_REPLACE_ME"
+    "AL_ClientData.First Name": "EMETERIO",
+    "AL_ClientData.Last Name": "BANDEROWICZ",
+    "AL_ClientData.DOB": "12/15/1955",
+    "AL_ClientData.Street Address": "308 22ND ST E",
+    "AL_ClientData.City": "TUSCALOOSA",
+    "AL_ClientData.ZIP": "35401",
+    "AL_ClientData.SSN": "666652971"
   },
   "_canonical": {
     "mappedBaseValues": 3,

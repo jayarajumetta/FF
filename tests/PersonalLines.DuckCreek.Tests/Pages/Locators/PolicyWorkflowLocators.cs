@@ -7,7 +7,7 @@ public sealed class PolicyWorkflowLocators
     private readonly IPage _page;
     public PolicyWorkflowLocators(IPage page) => _page = page;
 
-    public ILocator AddEditAdditionalInterestFirstMortgageeSearch => _page.Locator("input[id=\"temp.searchName\"][name=\"temp.searchName\"]");
+    public ILocator AddEditAdditionalInterestFirstMortgageeSearch => _page.Locator("button:has-text(\"Search\"), a:has-text(\"Search\")").First;
 
     // Dynamically set by buffer Additional Death Benefit in RTB Auto | 10.2 EQ | Auto_AddlCov PIP
     public ILocator AdditionalDeathBenefit => _page.GetByRole(AriaRole.Button, new() { Name = "Additional Death Benefit", Exact = true });
@@ -21,7 +21,7 @@ public sealed class PolicyWorkflowLocators
     // Dynamically set by buffer Broadened PIP in RTB Auto | 10.2 EQ | Auto_AddlCov PIP
     public ILocator BroadenedPIP => _page.GetByRole(AriaRole.Button, new() { Name = "Broadened PIP", Exact = true });
 
-    public ILocator BtnCreateNewClient => _page.GetByText("Btn_Create New Client", new() { Exact = true });
+    public ILocator BtnCreateNewClient => _page.GetByTestId("customer.selected-new-chip");
 
     // Dynamically set by buffer Extra PIP Option in RTB Auto | 10.2 EQ | Auto_AddlCov PIP
     public ILocator ExtraPIPOption => _page.GetByTestId("fields.policy.line.pIPInput$extraPIPOption.value-chip-wrapper");
@@ -29,7 +29,7 @@ public sealed class PolicyWorkflowLocators
     // Dynamically set by buffer All HH Members 65 or Pension in RTB Auto | 10.2 EQ | Auto_AddlCov PIP
     public ILocator HouseholdMembersAge65OrReceivingPension => _page.GetByRole(AriaRole.Button, new() { Name = "Household members age 65 or receiving pension", Exact = true });
 
-    public ILocator LblClientInfo => _page.GetByText("Lbl_Client Info", new() { Exact = true });
+    public ILocator LblClientInfo => _page.GetByText("Client Info", new() { Exact = true });
 
     // Dynamically set by buffer Medical Expense Elimination in RTB Auto | 10.2 EQ | Auto_AddlCov PIP
     public ILocator MedicalExpenseElimination => _page.GetByRole(AriaRole.Button, new() { Name = "Medical Expense Elimination", Exact = true });
@@ -43,7 +43,7 @@ public sealed class PolicyWorkflowLocators
     // Dynamically set by buffer PIP Stacking in RTB Auto | 10.2 EQ | Auto_AddlCov PIP
     public ILocator PIPStacking => _page.GetByRole(AriaRole.Button, new() { Name = "PIP Stacking", Exact = true });
 
-    public ILocator PricingDetailsNext => _page.Locator("[id=\"Policy_Headless.Constant_ResidenceSummary-0-layout\"]");
+    public ILocator PricingDetailsNext => _page.GetByRole(AriaRole.Button, new() { Name = "Next", Exact = true });
 
     public ILocator TxtFirst => _page.Locator("[id='customer.name.first']");
 

@@ -1,5 +1,11 @@
 # Test Evidence Diagnostic Script
 # Run this after a test execution to verify evidence collection and attachments
+param([string]$ResultsDirectory = '')
+$ErrorActionPreference = 'Stop'
+$repositoryRoot = Split-Path $PSScriptRoot -Parent
+. (Join-Path $PSScriptRoot 'TestOutput.ps1')
+$output = Get-TestOutputConfiguration $repositoryRoot $ResultsDirectory
+$artifactRoot = $output.ArtifactRoot
 
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "TEST EVIDENCE DIAGNOSTIC TOOL" -ForegroundColor Cyan
@@ -7,9 +13,9 @@ Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
 # Check Artifacts directory
-Write-Host "1. Checking Artifacts directory..." -ForegroundColor Yellow
-if (Test-Path "Artifacts") {
-	$scenarios = Get-ChildItem -Path "Artifacts" -Recurse -Directory | Where-Object { $_.Parent.Name -ne "Artifacts" }
+Write-Host "1. Checking evidence directory: $artifactRoot" -ForegroundColor Yellow
+if (Test-Path -LiteralPath $artifactRoot) {
+	$scenarios = Get-ChildItem -LiteralPath $artifactRoot -Recurse -File -Filter 'execution.log' | ForEach-Object { $_.Directory }
 	Write-Host "   Found $($scenarios.Count) scenario artifact directories" -ForegroundColor Green
 
 	foreach ($scenario in $scenarios | Select-Object -First 5) {
@@ -29,15 +35,15 @@ if (Test-Path "Artifacts") {
 		Write-Host "     Trace: $($traces.Count)" -ForegroundColor $(if ($traces.Count -gt 0) { "Green" } else { "Red" })
 	}
 } else {
-	Write-Host "   Artifacts directory not found!" -ForegroundColor Red
+	Write-Host "   Evidence directory not found: $artifactRoot" -ForegroundColor Red
 }
 
 Write-Host ""
 
 # Check TestResults directory
-Write-Host "2. Checking TestResults/TestEvidence directory..." -ForegroundColor Yellow
-if (Test-Path "TestResults/TestEvidence") {
-	$testEvidence = Get-ChildItem -Path "TestResults/TestEvidence" -Directory
+Write-Host "2. Checking scenario evidence under $artifactRoot..." -ForegroundColor Yellow
+if (Test-Path -LiteralPath $artifactRoot) {
+	$testEvidence = Get-ChildItem -LiteralPath $artifactRoot -Recurse -File -Filter 'nunit-attachment-result.json' | ForEach-Object { $_.Directory }
 	Write-Host "   Found $($testEvidence.Count) test evidence staging directories" -ForegroundColor Green
 
 	foreach ($evidence in $testEvidence | Select-Object -First 5) {
@@ -62,7 +68,7 @@ if (Test-Path "TestResults/TestEvidence") {
 		}
 	}
 } else {
-	Write-Host "   TestResults/TestEvidence directory not found!" -ForegroundColor Red
+	Write-Host "   Scenario evidence directory not found: $artifactRoot" -ForegroundColor Red
 	Write-Host "   This means NUnit evidence publisher did not run or failed to create staging directories." -ForegroundColor Yellow
 }
 
@@ -73,11 +79,11 @@ Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "DIAGNOSTIC SUMMARY" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 
-if (Test-Path "Artifacts") {
-	$totalScreenshots = (Get-ChildItem -Path "Artifacts" -Filter "*.png" -Recurse -ErrorAction SilentlyContinue).Count
-	$totalVideos = (Get-ChildItem -Path "Artifacts" -Filter "*.webm" -Recurse -ErrorAction SilentlyContinue).Count
-	$totalLogs = (Get-ChildItem -Path "Artifacts" -Filter "*.log" -Recurse -ErrorAction SilentlyContinue).Count
-	$totalReports = (Get-ChildItem -Path "Artifacts" -Filter "report.html" -Recurse -ErrorAction SilentlyContinue).Count
+if (Test-Path -LiteralPath $artifactRoot) {
+	$totalScreenshots = (Get-ChildItem -LiteralPath $artifactRoot -Filter "*.png" -Recurse -ErrorAction SilentlyContinue).Count
+	$totalVideos = (Get-ChildItem -LiteralPath $artifactRoot -Filter "*.webm" -Recurse -ErrorAction SilentlyContinue).Count
+	$totalLogs = (Get-ChildItem -LiteralPath $artifactRoot -Filter "*.log" -Recurse -ErrorAction SilentlyContinue).Count
+	$totalReports = (Get-ChildItem -LiteralPath $artifactRoot -Filter "report.html" -Recurse -ErrorAction SilentlyContinue).Count
 
 	Write-Host "Total Screenshots Collected: $totalScreenshots" -ForegroundColor $(if ($totalScreenshots -gt 0) { "Green" } else { "Red" })
 	Write-Host "Total Videos Collected: $totalVideos" -ForegroundColor $(if ($totalVideos -gt 0) { "Green" } else { "Red" })
@@ -90,5 +96,5 @@ Write-Host "Next Steps:" -ForegroundColor Yellow
 Write-Host "1. Run a test and check the test output for [EVIDENCE PUBLISHER], [EVIDENCE VALIDATION], and [TEST EVIDENCE SUMMARY] messages" -ForegroundColor White
 Write-Host "2. Look for [TEST EVIDENCE ATTACHED] or [ATTACHMENT FAILED] messages for each file" -ForegroundColor White
 Write-Host "3. In Visual Studio Test Explorer, right-click a test > View Test Log to see attachments" -ForegroundColor White
-Write-Host "4. Check the Artifacts directory manually to verify files are being created" -ForegroundColor White
+Write-Host "4. Check $artifactRoot manually to verify files are being created" -ForegroundColor White
 Write-Host ""

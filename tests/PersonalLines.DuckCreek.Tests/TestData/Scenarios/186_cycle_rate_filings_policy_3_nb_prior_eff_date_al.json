@@ -132,7 +132,27 @@
     "state": "AL",
     "statecode": "AL",
     "state_name": "Alabama",
-    "state_variant": "AL"
+    "state_variant": "AL",
+    "AL_ClientData.Street Address": "2006 SUMMERVILLE RD",
+    "AL_ClientData.City": "PHENIX CITY",
+    "AL_ClientData.ZIP": "36867",
+    "AL_ClientData.Apartment": "19",
+    "First Name": "CORY",
+    "Middle Name": "19",
+    "Last Name": "STUART",
+    "Suffix": "19",
+    "DOB": "1/2/1989",
+    "SSN": "888001128",
+    "Gender": "M",
+    "DL State": "AL",
+    "DL Number": "4363018",
+    "Street Address": "2006 SUMMERVILLE RD",
+    "Apartment": "19",
+    "City": "PHENIX CITY",
+    "ZIP": "36867",
+    "State Abbreviation": "AL",
+    "State Licensed(XX)": "AL",
+    "Drivers License #": "4363018"
   },
   "random": {},
   "application": {
@@ -141,10 +161,10 @@
     "password": "SYNTHETIC_REPLACE_ME"
   },
   "external": {
-    "AL_ClientData.Street Address": "SYNTHETIC_REPLACE_ME",
-    "AL_ClientData.City": "SYNTHETIC_REPLACE_ME",
-    "AL_ClientData.ZIP": "SYNTHETIC_REPLACE_ME",
-    "AL_ClientData.Apartment": "SYNTHETIC_REPLACE_ME"
+    "AL_ClientData.Street Address": "2006 SUMMERVILLE RD",
+    "AL_ClientData.City": "PHENIX CITY",
+    "AL_ClientData.ZIP": "36867",
+    "AL_ClientData.Apartment": "19"
   },
   "_canonical": {
     "mappedBaseValues": 23,

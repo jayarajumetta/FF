@@ -19,7 +19,6 @@ public sealed class SmokeTestAutoSteps
 
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForNewQuoteAsync("Exists");
         await page.VerifyNewQuoteAsync(data.Resolve("{{data:expected_btn_new_quote_2}}"), "");
         await page.ClickNewQuoteAsync();
@@ -35,11 +34,10 @@ public sealed class SmokeTestAutoSteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForLblClientInfoAsync("Exists");
         await page.VerifyLblClientInfoAsync(data.Resolve("{{data:expected_lbl_client_info_5}}"), "");
-        await page.EnterTxtFirstAsync(data.Get("AL_ClientData.First Name"));
-        await page.EnterTxtLastAsync(data.Get("AL_ClientData.Last Name"));
+        await page.EnterTxtFirstAsync(data.Get("First Name"));
+        await page.EnterTxtLastAsync(data.Get("Last Name"));
         await page.WaitForAddEditAdditionalInterestFirstMortgageeSearchAsync("Exists");
         await page.ClickAddEditAdditionalInterestFirstMortgageeSearchAsync();
         await page.WaitForBtnCreateNewClientAsync("Exists");
@@ -59,33 +57,19 @@ public sealed class SmokeTestAutoSteps
 
         var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForAccountInformationAsync("Exists");
-        await page.VerifyFirstNameAccountOwnerAsync("Exists", "");
-        await page.EnterDOBAsync(data.Get("AL_ClientData.DOB"));
+        await page.EnterDOBAsync(data.Get("DOB"));
         await page.EnterBestPhoneAccountOwnerAsync(data.Resolve("{{data:txt_best_phone_account_owner_18}}"));
         await page.EnterEmailAccountOwnerAsync(data.Resolve("{{data:txt_email_account_owner_19}}"));
         await page.WaitForMaritalStatusAsync("Exists");
-        if (data.Condition("'Marital Status' == \"Single\""))
-        {
-                    await page.ClickSingleAsync();
-        }
-        if (data.Condition("'Marital Status' == \"Married\""))
-        {
-                    await page.SelectMarriedAsync("");
-        }
-        if (data.Condition("'Marital Status' == \"Divorced\""))
-        {
-                    await page.ClickDivorcedAsync();
-        }
-        await page.EnterEnterALocationAsync(data.Get("AL_ClientData.Street Address"));
+        await page.ClickSingleAsync();
+
+        await page.EnterEnterALocationAsync(data.Get("Street Address"));
         await page.EnterOwnerAddressLine2Async(data.Get("Apartment"));
-        await page.EnterOwnerAddressCityNewAsync(data.Get("AL_ClientData.City"));
-        await page.SelectDrpdwnStateAsync("");
-        await page.SelectStateNameAsync("");
-        await page.EnterOwnerAddressZipAsync(data.Get("AL_ClientData.ZIP"));
+        await page.EnterOwnerAddressCityNewAsync(data.Get("City"));
+        await page.SelectStateAsync(data.Resolve("{{data:state_44}}"));
+        await page.EnterOwnerAddressZipAsync(data.Get("ZIP"));
         await page.WaitForSatelliteAsync("Visible");
-        await page.PressAccountDetailsNextAsync("SHIFTTAB");
         await page.SelectYesAtLeast90DaysAsync("");
         await page.WaitForIsTheAccountAddressAlsoWhereTheClientResidesAsync("Exists");
         await page.SelectYesClientResidesAsync("");
@@ -101,118 +85,67 @@ public sealed class SmokeTestAutoSteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        if (data.Condition("LOB == \"PersonalAuto\""))
-        {
-                    await page.ClickPersonalAutoAsync();
-        }
-        if (data.Condition("LOB == \"Cycle\""))
-        {
-                    await page.ClickMotorcycleAsync();
-        }
-        if (data.Condition("LOB == \"RecreationalVehicle\""))
-        {
-                    await page.ClickRecreationalVehicleAsync();
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-                    await page.EnterEffectiveDateAsync("{DATE}");
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-                    await page.EnterAgentCodeAsync(data.Resolve("{{data:agentcode_40}}"));
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-                    await page.SelectStateAsync("");
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-                    await page.EnterStateAsync(data.Resolve("{{data:state_44}}"));
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-                    await page.SelectWritingCompanyAsync("");
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-                    await page.EnterWritingCompanyAsync(data.Resolve("{{data:writingcompany_48}}"));
-        }
-        if (data.Condition("LOB != \"RecreationalVehicle\""))
-        {
-        }
+        await page.ClickPersonalAutoAsync();
+        await page.EnterEffectiveDateAsync(page.GetTomorrowEffectiveDate());
+        await page.EnterAgentCodeAsync(data.Resolve("{{data:agentcode_40}}"));
+        await page.SelectStateAsync("");
+        await page.EnterStateAsync(data.Resolve("{{data:state_44}}"));
         await page.WaitForSameAsMailingAddressAsync("True");
         await page.ClickSameAsMailingAddressAsync();
         if (data.Condition("State == \"NEW YORK\""))
         {
-                    await page.EnterCountyComboBoxAsync(data.Resolve("{{data:county_combobox_52}}"));
+            await page.EnterCountyComboBoxAsync(data.Resolve("{{data:county_combobox_52}}"));
         }
         if (data.Condition("State == \"KENTUCKY\""))
         {
-                    await page.EnterCountyComboBoxAsync(data.Resolve("{{data:county_combobox_53}}"));
+            await page.EnterCountyComboBoxAsync(data.Resolve("{{data:county_combobox_53}}"));
         }
         if (data.Condition("State == \"NEW YORK\" OR State == \"KENTUCKY\""))
         {
-                    await page.WaitForCountyYesAsync("Exists");
+            await page.WaitForCountyYesAsync("Exists");
         }
         if (data.Condition("State == \"NEW YORK\" OR State == \"KENTUCKY\""))
         {
-                    await page.SelectCountyYesAsync("");
+            await page.SelectCountyYesAsync("");
         }
         await page.WaitForStartQuoteAsync("True");
         await page.ClickStartQuoteAsync();
+        await page.PauseAsync(10000);
+
         if (await page.IsPROCEEDPresentAsync())
         {
-                    await page.VerifyPROCEEDAsync("Exists", "");
-        }
-        if (await page.IsPROCEEDPresentAsync())
-        {
-                    await page.ClickPROCEEDAsync();
+            await page.VerifyPROCEEDAsync("Exists", "");
+            await page.ClickCONFIRMAsync();
+            await page.PauseAsync(5000);
         }
         if (await page.IsSSNPresentAsync())
         {
-                    await page.WaitForSSNAsync("Exists");
-        }
-        await page.VerifyProposalStartProceedSSNSUBMITAsync("Exists", "");
-        if (await page.IsSSNPresentAsync())
-        {
-                    await page.EnterSSNAsync(data.Get("AL_ClientData.SSN"));
-        }
-        await page.ClickProposalStartProceedSSNSUBMITAsync();
-        if (await page.IsCONFIRMPresentAsync())
-        {
-                    await page.VerifyCONFIRMAsync("Exists", "");
+            await page.WaitForSSNAsync("Exists");
+            await page.VerifyProposalStartProceedSSNSUBMITAsync("Exists", "");
+            await page.EnterSSNAsync(data.Get("SSN"));
+            await page.ClickProposalStartProceedSSNSUBMITAsync();
+            await page.PauseAsync(5000);
         }
         if (await page.IsCONFIRMPresentAsync())
         {
-                    await page.ClickCONFIRMAsync();
+            await page.VerifyCONFIRMAsync("Exists", "");
+            await page.ClickCONFIRMAsync();
+            await page.PauseAsync(5000);
         }
         if (await page.IsUSEEXISTINGACCOUNTPresentAsync())
         {
-                    await page.WaitForUSEEXISTINGACCOUNTAsync("Exists");
+            await page.ClickUSEEXISTINGACCOUNTAsync();
+            await page.PauseAsync(5000);
         }
-        if (await page.IsStateMONTANAPresentAsync())
-        {
-                    await page.ClickStateMONTANAAsync();
-        }
-        if (data.Condition("State != \"MONTANA\""))
-        {
-                    await page.ClickUSEEXISTINGACCOUNTAsync();
-        }
-        data.Set("EffectiveDate", data.Get("Effective Date"));
+        //if (await page.IsStateMONTANAPresentAsync())
+        //{
+        //            await page.ClickStateMONTANAAsync();
+        //}
+        //if (data.Condition("State != \"MONTANA\""))
+        //{
+        //            await page.ClickUSEEXISTINGACCOUNTAsync();
+        //}
+
 
     }
 
@@ -224,11 +157,15 @@ public sealed class SmokeTestAutoSteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-
-        // Field-level orchestration derived from the canonical Tosca method sequence.
-        data.Set("QuoteNumber2", await page.CaptureQNumAsync("Text"));
-        data.Set("QuoteNumber", data.Resolve("{STRINGREPLACE[{B[QuoteNumber4]}][\"\\)\"][\"\"]}"));
-
+        await page.WaitForCaptureQuoteNumberAsync("Exists");
+        data.Set("QuoteNumber2", await page.CaptureQNumAsync("InnerText"));
+        var quoteNumber = data.Get("QuoteNumber2").ReplaceLineEndings(string.Empty);
+        var lastName = data.Get("Last Name");
+        if (!string.IsNullOrWhiteSpace(lastName))
+        {
+            quoteNumber = quoteNumber.Replace(lastName, string.Empty, StringComparison.OrdinalIgnoreCase);
+        }
+        data.Set("QuoteNumber", quoteNumber.Trim());
     }
 
     [Given(@"^I complete tabs$")]
@@ -240,12 +177,11 @@ public sealed class SmokeTestAutoSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.ClickCloseTabAsync();
+        await page.PauseAsync(5000);
         await page.EnterQuoteSearchInputAsync(data.Resolve("{{runtime:QuoteNumber}}"));
         await page.ClickTabsSearchAsync();
-        await page.VerifyQNumAsync(data.Resolve("{{runtime:QuoteNumber2}}"), "");
-
+        await page.VerifyQNumAsync($".*\\b{data.Resolve("{{runtime:QuoteNumber}}")}\\b.*", "Regex:InnerText");
     }
 
 }

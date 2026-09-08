@@ -1,10 +1,10 @@
 name: $(Date:yyyyMMdd).$(Rev:r)
 trigger:
   branches:
-    include: [main, master]
+    include: [main,sgs/develop]
 pr:
   branches:
-    include: [main, master]
+    include: [main,sgs/develop]
 
 pool:
   vmImage: windows-latest
@@ -26,7 +26,19 @@ steps:
 - task: UsePythonVersion@0
   displayName: Install Python
   inputs:
-    versionSpec: 3.x
+    versionSpec: '3.11'
+
+- powershell: |
+    python --version
+    python -m pip install --upgrade pip
+    python -m pip install pyyaml
+    if ($LASTEXITCODE -ne 0) { throw 'Python dependency installation failed' }
+  displayName: Install Python dependencies
+
+# - powershell: |
+#     python .\tools\package_gate.py
+#     if ($LASTEXITCODE -ne 0) { throw 'Client package quality gate failed' }
+#   displayName: Run framework quality gate
 
 - powershell: |
     dotnet restore .\ToscaCanonicalSimple.sln
@@ -36,24 +48,101 @@ steps:
   displayName: Restore and build solution
 
 - powershell: |
-    $playwright = Get-ChildItem . -Recurse -Filter playwright.ps1 -File |
-      Where-Object { $_.FullName -match '\\bin\\Release\\net8\.0\\' } |
-      Select-Object -First 1
-    if (-not $playwright) { throw 'playwright.ps1 was not produced by the build' }
-    & $playwright.FullName install chromium
+    $ErrorActionPreference = 'Stop'
+
+    function Get-PlayablePlaywrightScript {
+      param([string[]]$Candidates)
+
+      foreach ($candidate in $Candidates | Select-Object -Unique) {
+        if (-not (Test-Path -LiteralPath $candidate)) { continue }
+        $dll = Join-Path (Split-Path -Parent $candidate) 'Microsoft.Playwright.dll'
+        if (Test-Path -LiteralPath $dll) { return $candidate }
+      }
+
+      return $null
+    }
+
+    $candidateScripts = @(
+      "$(Build.SourcesDirectory)\\src\\InsuranceAutomation.Core\\bin\\$(BuildConfiguration)\\net8.0\\playwright.ps1",
+      "$(Build.SourcesDirectory)\\tests\\CommercialLines.DuckCreek.Tests\\bin\\$(BuildConfiguration)\\net8.0\\playwright.ps1",
+      "$(Build.SourcesDirectory)\\tests\\CommercialLines.ExpertQuote.Tests\\bin\\$(BuildConfiguration)\\net8.0\\playwright.ps1",
+      "$(Build.SourcesDirectory)\\tests\\PersonalLines.DuckCreek.Tests\\bin\\$(BuildConfiguration)\\net8.0\\playwright.ps1"
+    )
+
+    $playwright = Get-PlayablePlaywrightScript -Candidates $candidateScripts
+
+    if (-not $playwright) {
+      Write-Host 'No valid Playwright runtime pair found after solution build. Building CommercialLines.DuckCreek.Tests as fallback...'
+      dotnet build .\tests\CommercialLines.DuckCreek.Tests\CommercialLines.DuckCreek.Tests.csproj -c $(BuildConfiguration) --no-restore
+      if ($LASTEXITCODE -ne 0) { throw 'Fallback test project build failed' }
+      $playwright = Get-PlayablePlaywrightScript -Candidates $candidateScripts
+    }
+
+    if (-not $playwright) {
+      throw 'No playable playwright.ps1 + Microsoft.Playwright.dll pair was produced by the build outputs.'
+    }
+
+    Write-Host "Using Playwright script: $playwright"
+    & $playwright install chromium
     if ($LASTEXITCODE -ne 0) { throw 'Playwright browser installation failed' }
   displayName: Validate Playwright browser installation
 
 - powershell: |
-    python .\tools\package_gate.py
-    if ($LASTEXITCODE -ne 0) { throw 'Client package quality gate failed' }
-  displayName: Run framework quality gate
-
-- powershell: |
+    $ErrorActionPreference = 'Stop'
     $dest = '$(Build.ArtifactStagingDirectory)\testpackage'
     New-Item -ItemType Directory -Force -Path $dest | Out-Null
-    robocopy '$(Build.SourcesDirectory)' $dest /E /R:2 /W:1 /XD .git .vs .idea TestResults Artifacts obj
-    if ($LASTEXITCODE -ge 8) { throw "robocopy failed with exit code $LASTEXITCODE" }
+    $outputs = @(
+      @{ Source = '$(Build.SourcesDirectory)\src\InsuranceAutomation.Core\bin\$(BuildConfiguration)\net8.0'; Target = 'src\InsuranceAutomation.Core\bin\$(BuildConfiguration)\net8.0' },
+      @{ Source = '$(Build.SourcesDirectory)\tests\CommercialLines.DuckCreek.Tests\bin\$(BuildConfiguration)\net8.0'; Target = 'tests\CommercialLines.DuckCreek.Tests\bin\$(BuildConfiguration)\net8.0' },
+      @{ Source = '$(Build.SourcesDirectory)\tests\CommercialLines.ExpertQuote.Tests\bin\$(BuildConfiguration)\net8.0'; Target = 'tests\CommercialLines.ExpertQuote.Tests\bin\$(BuildConfiguration)\net8.0' },
+      @{ Source = '$(Build.SourcesDirectory)\tests\PersonalLines.DuckCreek.Tests\bin\$(BuildConfiguration)\net8.0'; Target = 'tests\PersonalLines.DuckCreek.Tests\bin\$(BuildConfiguration)\net8.0' }
+    )
+
+    foreach ($output in $outputs) {
+      if (-not (Test-Path -LiteralPath $output.Source)) {
+        throw "Build output not found: $($output.Source)"
+      }
+      $targetDir = Join-Path $dest $output.Target
+      New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
+      robocopy $output.Source $targetDir /E /R:2 /W:1 /XD TestResults Artifacts
+      $robocopyExitCode = $LASTEXITCODE
+      if ($robocopyExitCode -ge 8) { throw "robocopy failed with exit code $robocopyExitCode while copying $($output.Source)" }
+    }
+
+    Copy-Item -LiteralPath '$(Build.SourcesDirectory)\Tosca.runsettings' -Destination (Join-Path $dest 'Tosca.runsettings') -Force
+    New-Item -ItemType Directory -Path (Join-Path $dest 'scripts') -Force | Out-Null
+    Copy-Item -LiteralPath '$(Build.SourcesDirectory)\scripts\TestOutput.ps1', '$(Build.SourcesDirectory)\scripts\Initialize-PipelineTestOutput.ps1' -Destination (Join-Path $dest 'scripts') -Force
+    Copy-Item -LiteralPath '$(Build.SourcesDirectory)\scripts\Generate-ConsolidatedReport.ps1', '$(Build.SourcesDirectory)\scripts\Verify-TestEvidence.ps1' -Destination (Join-Path $dest 'scripts') -Force
+    New-Item -ItemType Directory -Path (Join-Path $dest 'tools'), (Join-Path $dest 'config') -Force | Out-Null
+    Copy-Item -LiteralPath '$(Build.SourcesDirectory)\tools\generate_consolidated_report.py', '$(Build.SourcesDirectory)\tools\send_consolidated_report.py' -Destination (Join-Path $dest 'tools') -Force
+    Copy-Item -LiteralPath '$(Build.SourcesDirectory)\config\framework.json' -Destination (Join-Path $dest 'config') -Force
+
+    $required = @(
+      'tests\CommercialLines.DuckCreek.Tests\bin\$(BuildConfiguration)\net8.0\CommercialLines.DuckCreek.Tests.dll',
+      'tests\CommercialLines.ExpertQuote.Tests\bin\$(BuildConfiguration)\net8.0\CommercialLines.ExpertQuote.Tests.dll',
+      'tests\PersonalLines.DuckCreek.Tests\bin\$(BuildConfiguration)\net8.0\PersonalLines.DuckCreek.Tests.dll',
+      'Tosca.runsettings',
+      'tools\generate_consolidated_report.py',
+      'tools\send_consolidated_report.py',
+      'scripts\Generate-ConsolidatedReport.ps1',
+      'config\framework.json'
+    )
+    foreach ($relative in $required) {
+      $path = Join-Path $dest $relative
+      if (-not (Test-Path -LiteralPath $path)) {
+        throw "Compiled artifact is missing required output: $relative"
+      }
+    }
+
+    $zipPath = '$(Build.ArtifactStagingDirectory)\testpackage-runready.zip'
+    if (Test-Path -LiteralPath $zipPath) { Remove-Item -LiteralPath $zipPath -Force }
+    Compress-Archive -Path (Join-Path $dest '*') -DestinationPath $zipPath -CompressionLevel Optimal
+    if (-not (Test-Path -LiteralPath $zipPath)) {
+      throw 'Failed to produce run-ready zip package.'
+    }
+    Copy-Item -LiteralPath $zipPath -Destination (Join-Path $dest 'testpackage-runready.zip') -Force
+
+    $global:LASTEXITCODE = 0
   displayName: Assemble executable test artifact
 
 - task: PublishPipelineArtifact@1

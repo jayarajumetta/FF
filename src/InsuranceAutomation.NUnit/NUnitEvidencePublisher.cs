@@ -41,7 +41,7 @@ public static class NUnitEvidencePublisher
     {
         var root = Path.GetFullPath(artifactDirectory);
         Directory.CreateDirectory(root);
-        var identity = testEvidenceContext ?? NUnitTestEvidenceContext.Capture(feature, scenario);
+        var identity = testEvidenceContext ?? NUnitTestEvidenceContext.Capture(feature, scenario, root);
         var stageRoot = Path.GetFullPath(identity.ResultDirectory);
         Directory.CreateDirectory(stageRoot);
 

@@ -19,6 +19,7 @@
     "maximize": true
   },
   "reporting": {
+    "resultsRoot": "TestResults",
     "artifactRoot": "Artifacts",
     "htmlReport": true,
     "includeResolvedData": true,

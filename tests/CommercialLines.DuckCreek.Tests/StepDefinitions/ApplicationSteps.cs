@@ -28,18 +28,6 @@ public sealed class ApplicationSteps
     }
 
 
-    [Given("CLDC smoke data {string} for state {string} named {string} are loaded")]
-    public void LoadSmokeScenarioData(string productCode, string stateCode, string stateName)
-    {
-        var normalizedProduct = (productCode ?? string.Empty).Trim().ToUpperInvariant();
-        var basePath = ResolvePath($"TestData/Smoke/{normalizedProduct}.json");
-        var overridePath = ResolvePath("TestData/Smoke/StateOverrides.json");
-        var externalPath = ResolvePath("TestData/ExternalDataOverrides.json");
-        var data = _scenario.Get<ScenarioData>();
-        data.LoadSmoke(basePath, stateCode, stateName, overridePath, externalPath);
-        _scenario.Get<RunLogger>().Info($"Loaded consolidated CLDC smoke data: Product={normalizedProduct}; State={stateCode}; Base={basePath}; Overrides={overridePath}");
-    }
-
     [Given("I open the configured Commercial Lines Duck Creek application")]
     public Task OpenApplicationAsync()
     {

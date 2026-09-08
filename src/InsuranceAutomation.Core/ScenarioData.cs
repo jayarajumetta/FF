@@ -152,38 +152,6 @@ public sealed class ScenarioData
         }
         return result;
     }
-    public void LoadSmoke(string baseFile, string stateCode, string stateName, string stateOverridesFile, string externalFile)
-    {
-        Load(baseFile, externalFile);
-        var normalizedState = (stateCode ?? string.Empty).Trim().ToUpperInvariant();
-        var normalizedName = (stateName ?? string.Empty).Trim();
-        if (string.IsNullOrWhiteSpace(normalizedState))
-            throw new InvalidOperationException("CLDC smoke stateCode is required.");
-        _runtime["State"] = normalizedState;
-        _runtime["state"] = normalizedState;
-        _runtime["stateCode"] = normalizedState;
-        _runtime["statecode"] = normalizedState;
-        _runtime["stateVariant"] = normalizedState;
-        _runtime["state_variant"] = normalizedState;
-        _runtime["StateName"] = normalizedName;
-        _runtime["stateName"] = normalizedName;
-        _runtime["statename"] = normalizedName;
-        _runtime["state_name"] = normalizedName;
-        if (!File.Exists(stateOverridesFile)) return;
-        using var overrideDocument = JsonDocument.Parse(File.ReadAllText(stateOverridesFile));
-        var overrideRoot = overrideDocument.RootElement;
-        if (!overrideRoot.TryGetProperty("overrides", out var allOverrides) || allOverrides.ValueKind != JsonValueKind.Object) return;
-        var product = Get("productCode", Get("product_lob")).Trim();
-        if (string.IsNullOrWhiteSpace(product) || !allOverrides.TryGetProperty(product, out var productOverrides) || productOverrides.ValueKind != JsonValueKind.Object) return;
-        if (!productOverrides.TryGetProperty(normalizedState, out var stateOverride) || stateOverride.ValueKind != JsonValueKind.Object) return;
-        if (!stateOverride.TryGetProperty("values", out var values) || values.ValueKind != JsonValueKind.Object) return;
-        foreach (var property in values.EnumerateObject())
-        {
-            _runtime[property.Name] = property.Value.ValueKind == JsonValueKind.String
-                ? property.Value.GetString() ?? string.Empty
-                : property.Value.ToString();
-        }
-    }
     private void PrimeScenarioAliases()
     {
         if (_static.TryGetValue("product_lob", out var lob) && !string.IsNullOrWhiteSpace(lob))

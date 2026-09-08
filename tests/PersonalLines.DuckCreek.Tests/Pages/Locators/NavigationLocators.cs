@@ -7,7 +7,9 @@ public sealed class NavigationLocators
     private readonly IPage _page;
     public NavigationLocators(IPage page) => _page = page;
 
-    public ILocator CloseTab => _page.Locator("input[id=\"quoteSearchInput\"][name=\"quoteSearchInput\"]");
+    public ILocator CloseQuote => _page.Locator("mat-icon").Filter(new() { HasText = "clear" });
+
+    public ILocator NameAndQuote => _page.Locator(".mdc-tab.mdc-tab--active .mdc-tab__text-label > span, mat-tab-header [role='tab'][aria-selected='true'] .mdc-tab__text-label > span").First;
 
     public ILocator CoveragesNewNext => _page.GetByRole(AriaRole.Button, new() { Name = "Next", Exact = true });
 
@@ -30,7 +32,11 @@ public sealed class NavigationLocators
     public ILocator Option3 => _page.GetByTestId("temp.coverageOption2Selected");
 
 
-    public ILocator QuoteSearchInput => _page.Locator("[name=\"Txt_quoteSearchInput\"], [id=\"Txt_quoteSearchInput\"]").First;
+
+
+    public ILocator QuoteSearchInput => _page.Locator("[id='quoteSearchInput']");
+
+    public ILocator QuoteSearchButton => _page.Locator("button[id='quoteSearchButton'], button[data-testid='quoteSearchButton']");
 
     public ILocator SaveAndContinue => _page.GetByRole(AriaRole.Button, new() { Name = "Save and Continue", Exact = true });
 
