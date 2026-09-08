@@ -1,4 +1,4 @@
-@CL_EQ @BOP @smoke_test
+@CL_EQ @BOP @smoke_test @BOP_Smoke_Test @CLEQ_smoke_test
 
 Feature: EQ BOP Smoke Test
   As a Commercial Lines ExpertQuote policy processing user
