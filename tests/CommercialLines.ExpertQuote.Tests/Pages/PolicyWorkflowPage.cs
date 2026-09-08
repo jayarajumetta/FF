@@ -11,6 +11,8 @@ public sealed class PolicyWorkflowPage
     private readonly PolicyWorkflowLocators _locators;
     private readonly UiActions _ui;
 
+    public PolicyWorkflowLocators Locators => _locators;
+
     public PolicyWorkflowPage(BrowserSession browser, UiActions ui)
     {
         _browser = browser;
@@ -61,8 +63,11 @@ public sealed class PolicyWorkflowPage
     public Task PressDescriptionOfOperationsAsync(string key) =>
         _ui.PressAsync(_locators.DescriptionOfOperations, key, new ControlIntent("PolicyWorkflow", "DescriptionOfOperations"));
 
+    public Task EnterDescriptionOfOperationsAsync(string value) =>
+        _ui.FillAsync(_locators.DescriptionOfOperations, value, new ControlIntent("PolicyWorkflow", "DescriptionOfOperations"));
+
     public Task EnterDescriptionOfTheBusinessExposuresActivitiesAndExperienceAsync(string value) =>
-        _ui.FillAsync(_locators.AddNarrative, value, new ControlIntent("PolicyWorkflow", "DescriptionOfTheBusinessExposuresActivitiesAndExperience"));
+        _ui.FillAsync(_locators.DescriptionOfTheBusinessExposuresActivitiesAndExperience, value, new ControlIntent("PolicyWorkflow", "DescriptionOfTheBusinessExposuresActivitiesAndExperience"));
 
     public Task WaitForEChecklistEChecklistOKAsync(string expected) =>
         _ui.WaitAsync(_locators.EChecklistEChecklistOK, expected, new ControlIntent("PolicyWorkflow", "EChecklistEChecklistOK"));
@@ -198,11 +203,20 @@ public Task VerifyLoadingMessage4DE37Async(string expected, string property) =>
     public Task PressNumberOfFulltimeEmployeesAsync(string key) =>
         _ui.PressAsync(_locators.NumberOfFulltimeEmployees, key, new ControlIntent("PolicyWorkflow", "NumberOfFulltimeEmployees"));
 
+    public Task EnterNumberOfFulltimeEmployeesAsync(string value) =>
+        _ui.FillAsync(_locators.NumberOfFulltimeEmployees, value, new ControlIntent("PolicyWorkflow", "NumberOfFulltimeEmployees"));
+
     public Task PressNumberOfPartTimeEmployeesAsync(string key) =>
         _ui.PressAsync(_locators.NumberOfPartTimeEmployees, key, new ControlIntent("PolicyWorkflow", "NumberOfPartTimeEmployees"));
 
+    public Task EnterNumberOfPartTimeEmployeesAsync(string value) =>
+        _ui.FillAsync(_locators.NumberOfPartTimeEmployees, value, new ControlIntent("PolicyWorkflow", "NumberOfPartTimeEmployees"));
+
     public Task PressNumberOfSeasonalEmployeesAsync(string key) =>
         _ui.PressAsync(_locators.NumberOfSeasonalEmployees, key, new ControlIntent("PolicyWorkflow", "NumberOfSeasonalEmployees"));
+
+    public Task EnterNumberOfSeasonalEmployeesAsync(string value) =>
+        _ui.FillAsync(_locators.NumberOfSeasonalEmployees, value, new ControlIntent("PolicyWorkflow", "NumberOfSeasonalEmployees"));
 
     public Task ClickOkToUpdateFromChecklistAsync() =>
         _ui.ClickAsync(_locators.OkToUpdateFromChecklist, new ControlIntent("PolicyWorkflow", "OkToUpdateFromChecklist"));
@@ -368,6 +382,15 @@ public Task VerifyLoadingMessage4DE37Async(string expected, string property) =>
 
     public Task PressViewPolicy56E09Async(string key) =>
         _ui.PressAsync(_locators.ViewPolicy0AC0B, key, new ControlIntent("PolicyWorkflow", "ViewPolicy56E09"));
+
+    public Task ClickExposuresInsuredAN90DaysNoAsync() =>
+        _ui.ClickAsync(_locators.ExposuresInsuredAN90DaysNo, new ControlIntent("PolicyWorkflow", "ExposuresInsuredAN90DaysNo"));
+
+    public Task EnterYearsInBusinessAsync(string value) =>
+        _ui.FillAsync(_locators.YearsInBusiness, value, new ControlIntent("PolicyWorkflow", "YearsInBusiness"));
+
+    public Task ClickYearsMaintainedContinuousInsuranceCoverage3PlusAsync() =>
+        _ui.ClickAsync(_locators.YearsMaintainedContinuousInsuranceCoverage3Plus, new ControlIntent("PolicyWorkflow", "YearsMaintainedContinuousInsuranceCoverage3Plus"));
 
     public Task NavigateAsync(string url) =>
         _page.GotoAsync(url, new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });

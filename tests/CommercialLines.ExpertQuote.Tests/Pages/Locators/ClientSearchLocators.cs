@@ -20,7 +20,13 @@ public sealed class ClientSearchLocators
     // EQ|Common|Create New Client
     public ILocator ExistingClientMatch => _page.Locator("h1:has-text('Existing Client Match'), h2:has-text('Existing Client Match'), [data-testid='existing-client-match'], text=Existing Client Match").First;
     public ILocator CreateNewClient => _page.GetByTestId("customer.selected-new-chip");
+
+    // Dynamic per-client suggestion chip: data-testid="temp.clientSuggestions-cif-client-{id}-chip"
+    public ILocator ExistingClientSuggestion => _page.Locator("[data-testid^='temp.clientSuggestions-cif-client-'][data-testid$='-chip']").First;
     public ILocator AdditionalInterestsNext => _page.GetByRole(AriaRole.Button, new() { Name = "Next", Exact = true });
+
+    // Primary Insured Selection screen "Next" button (label data-testid: cl-bop-primary-insured-selection-next-btn-button-label)
+    public ILocator PrimaryInsuredSelectionNext => _page.Locator("button:has([data-testid='cl-bop-primary-insured-selection-next-btn-button-label'])");
 
     // Kept only for legacy generated page APIs.
     public ILocator NewExistingClientSearch => _page.GetByText("New/Existing Client Search", new() { Exact = true });

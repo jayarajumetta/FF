@@ -23,11 +23,13 @@ public sealed class CoveragesLocators
 
     public ILocator Description => _page.Locator("input[id=\"fields.risk.rows[0].businessPersonalPropertyInventorySheet.businessPersonalPropertyInventorySheetScheduled.rows[0].businessPersonalPropertyInventorySheetScheduledInput$description.value\"][name=\"fields.risk.rows[0].businessPersonalPropertyInventorySheet.businessPersonalPropertyInventorySheetScheduled.rows[0].businessPersonalPropertyInventorySheetScheduledInput$description.value\"]");
 
-    public ILocator DoesTheInsuredAndAnyExecutiveOfficerOrOwnerHaveAnyKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaint => _page.Locator("[id=\"fields.line.endLineEmploymentRelatedPracticesLiability.endLineEmploymentRelatedPracticesLiabilityInput$ePLPriorKnowledge.value\"]");
+    public ILocator DoesTheInsuredAndAnyExecutiveOfficerOrOwnerHaveAnyKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaint => _page.Locator("mat-select[role=\"combobox\"][id=\"fields.line.endLineEmploymentRelatedPracticesLiability.endLineEmploymentRelatedPracticesLiabilityInput$ePLPriorKnowledge.value\"][data-testid=\"fields.line.endLineEmploymentRelatedPracticesLiability.endLineEmploymentRelatedPracticesLiabilityInput$ePLPriorKnowledge.value\"]:visible").First;
 
-    public ILocator HaveThereBeenAnyEPLClaimsSuitsOrComplaintsOrAreThereAnyNowPendingAgainstTheInsuredOrAnyExecutiveOfficerOrOwner => _page.Locator("[id=\"fields.line.endLineEmploymentRelatedPracticesLiability.endLineEmploymentRelatedPracticesLiabilityInput$ePLPriorClaim.value\"]");
+    public ILocator HaveThereBeenAnyEPLClaimsSuitsOrComplaintsOrAreThereAnyNowPendingAgainstTheInsuredOrAnyExecutiveOfficerOrOwner => _page.Locator("mat-select[role=\"combobox\"][id=\"fields.line.endLineEmploymentRelatedPracticesLiability.endLineEmploymentRelatedPracticesLiabilityInput$ePLPriorClaim.value\"][data-testid=\"fields.line.endLineEmploymentRelatedPracticesLiability.endLineEmploymentRelatedPracticesLiabilityInput$ePLPriorClaim.value\"]:visible").First;
 
     public ILocator IFRAME => _page.GetByText("IFRAME", new() { Exact = true });
+
+    public ILocator NextAdditionalInterests => _page.Locator("[data-testid=\"fields.data-Next.next-button-label\"]").Filter(new LocatorFilterOptions { HasText = "Next: Additional Interests" }).First;
 
     public ILocator IFRAMEDuckCreekPolicyIFRAMEOK => _page.GetByText("IFRAME - OK", new() { Exact = true });
 

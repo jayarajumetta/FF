@@ -21,6 +21,11 @@ public static class ComponentAwareControlActions
         value ??= string.Empty;
         try { await control.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = timeoutMs }); }
         catch (Exception ex) when (ex is PlaywrightException or TimeoutException) { }
+        // Angular mat-select controls are frequently rendered aria-disabled="true" for a brief period
+        // while the edit panel finishes initializing/binding (e.g. waiting on a parent field or async
+        // lookup); Playwright's actionability check treats that as "not enabled" and can spin for the
+        // full timeout. Waiting here for the disabled state to clear avoids that opaque 15s stall.
+        await WaitForControlEnabledAsync(control, timeoutMs);
         var meta = await ReadMetaAsync(control);
         if (meta.Tag == "select")
         {
@@ -37,13 +42,34 @@ public static class ComponentAwareControlActions
         var componentLike = IsDropdownLike(meta);
         if (componentLike)
         {
-            // Editable autocomplete values should be entered before probing options; read-only/select triggers are clicked first.
-            if ((meta.Tag is "input" or "textarea") && !meta.ReadOnly)
-                await control.FillAsync(value, new() { Timeout = timeoutMs });
-            else
-                await control.ClickAsync(new() { Timeout = timeoutMs });
-            if (await TryChooseRenderedOptionAsync(page, meta, value, optionTimeoutMs, optionPollIntervalMs)) return;
-            if (await CanCommitWithEnterAsync(page, control, meta, value))
+            // A prior mat-select/CDK overlay panel can still be closing (backdrop fade-out) when the next
+            // control is clicked; that stray overlay intercepts the click so the intended panel never opens.
+            // Waiting for any lingering overlay/backdrop to fully detach first makes each open deterministic.
+            await WaitForStaleOverlaysToDetachAsync(page, timeoutMs);
+            var opened = false;
+            ControlMeta openedMeta = meta;
+            for (var attempt = 0; attempt < 2 && !opened; attempt++)
+            {
+                // Editable autocomplete values should be entered before probing options; read-only/select triggers are clicked first.
+                if ((meta.Tag is "input" or "textarea") && !meta.ReadOnly)
+                    await control.FillAsync(value, new() { Timeout = timeoutMs });
+                else
+                    await control.ClickAsync(new() { Timeout = timeoutMs });
+                // Angular Material only sets aria-controls/aria-owns on the trigger once its panel is open,
+                // so the popup scope must be re-read after the click; otherwise the option search falls back
+                // to an unscoped page-wide query and can collide with another still-open/overlapping panel.
+                openedMeta = await ReadMetaAsync(control);
+                if (string.IsNullOrWhiteSpace(openedMeta.PopupTargetId)) openedMeta = meta;
+                opened = await HasVisibleOptionsAsync(page, openedMeta, optionTimeoutMs, optionPollIntervalMs);
+                if (!opened && attempt == 0)
+                {
+                    // The click may have landed on a stale overlay/backdrop instead of opening this control's
+                    // panel. Close any such overlay and retry once before giving up.
+                    await CloseStrayOverlayAsync(page);
+                }
+            }
+            if (await TryChooseRenderedOptionAsync(page, openedMeta, value, optionTimeoutMs, optionPollIntervalMs)) return;
+            if (await CanCommitWithEnterAsync(page, control, openedMeta, value))
             {
                 await control.PressAsync("Enter");
                 return;
@@ -124,14 +150,97 @@ public static class ComponentAwareControlActions
                 var match = ChooseOptionIndex(visible.Select(x => x.Text).ToArray(), requested);
                 if (match.Index >= 0)
                 {
-                    await candidates.Nth(visible[match.Index].Index).ClickAsync(new() { Timeout = Math.Max(500, timeoutMs) });
-                    return true;
+                    var option = candidates.Nth(visible[match.Index].Index);
+                    // Bound every fallback attempt so an interception/overlay/detachment issue fails fast and
+                    // lets the outer polling loop re-query fresh options instead of hanging on Playwright's
+                    // default actionability timeout (which previously surfaced as a raw 15s TimeoutException).
+                    var fallbackTimeoutMs = Math.Min(2000, Math.Max(500, timeoutMs));
+                    try
+                    {
+                        await option.ClickAsync(new() { Timeout = fallbackTimeoutMs });
+                        return true;
+                    }
+                    catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+                    {
+                        // Some rendered options (e.g. Material tooltip-triggering mat-option rows) can report
+                        // visible/enabled/stable yet still fail a real pointer click due to overlay interception.
+                        // Fall back to a forced click, then a DOM click, both bounded to a short timeout.
+                    }
+                    try
+                    {
+                        await option.ClickAsync(new() { Timeout = fallbackTimeoutMs, Force = true });
+                        return true;
+                    }
+                    catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+                    {
+                    }
+                    try
+                    {
+                        await option.EvaluateAsync("el => el.click()", null, new() { Timeout = fallbackTimeoutMs });
+                        return true;
+                    }
+                    catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+                    {
+                        // The option may have detached (e.g. the panel closed from a stray backdrop click).
+                        // Fall through to the outer loop so it re-queries fresh rendered options instead of
+                        // surfacing an opaque 15s timeout from this single stale element.
+                    }
                 }
             }
             if (Environment.TickCount64 - started >= timeoutMs) break;
             await Task.Delay(Math.Max(25, pollIntervalMs));
         }
         return false;
+    }
+    private const string OverlaySelector = ".cdk-overlay-pane,.cdk-overlay-backdrop,.mat-mdc-select-panel";
+    private static async Task WaitForControlEnabledAsync(ILocator control, int timeoutMs)
+    {
+        var deadline = Environment.TickCount64 + Math.Max(250, timeoutMs);
+        while (Environment.TickCount64 < deadline)
+        {
+            try
+            {
+                var disabled = await control.EvaluateAsync<bool>(@"el => {
+                    const ariaDisabled = (el.getAttribute('aria-disabled') || '').toLowerCase() === 'true';
+                    return ariaDisabled || !!el.disabled;
+                }");
+                if (!disabled) return;
+            }
+            catch (Exception ex) when (ex is PlaywrightException or TimeoutException) { return; }
+            await Task.Delay(100);
+        }
+    }
+    private static async Task WaitForStaleOverlaysToDetachAsync(IPage page, int timeoutMs)
+    {
+        var deadline = Environment.TickCount64 + Math.Min(2000, Math.Max(250, timeoutMs));
+        var overlays = CurrentScope(page).Locator(OverlaySelector);
+        while (Environment.TickCount64 < deadline)
+        {
+            var count = await overlays.CountAsync();
+            if (count == 0) return;
+            await Task.Delay(50);
+        }
+    }
+    private static async Task<bool> HasVisibleOptionsAsync(IPage page, ControlMeta meta, int timeoutMs, int pollIntervalMs)
+    {
+        var started = Environment.TickCount64;
+        var candidates = Options(page, meta);
+        while (Environment.TickCount64 - started <= timeoutMs)
+        {
+            var visible = await candidates.EvaluateAllAsync<int>(@"els => els.filter(el => {
+                const style = getComputedStyle(el);
+                const r = el.getBoundingClientRect();
+                return (r.width || r.height || el.getClientRects().length) && style.visibility !== 'hidden' && style.display !== 'none';
+            }).length");
+            if (visible > 0) return true;
+            await Task.Delay(Math.Max(25, pollIntervalMs));
+        }
+        return false;
+    }
+    private static async Task CloseStrayOverlayAsync(IPage page)
+    {
+        try { await page.Keyboard.PressAsync("Escape"); } catch (Exception ex) when (ex is PlaywrightException or TimeoutException) { }
+        await WaitForStaleOverlaysToDetachAsync(page, 1000);
     }
     private static OptionMatch ChooseOptionIndex(IReadOnlyList<string> optionTexts, string requested)
     {

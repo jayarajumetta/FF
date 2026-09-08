@@ -4,3 +4,4 @@
 **/TestResults/
 .env
 .DS_Store
+.vs/

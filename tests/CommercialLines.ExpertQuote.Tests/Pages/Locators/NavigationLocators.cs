@@ -11,7 +11,9 @@ public sealed class NavigationLocators
 
     public ILocator AccountNumber => _page.Locator("input[id=\"fields.additionalOtherInterest.additionalOtherInterestInput$accountNumber.value\"][name=\"fields.additionalOtherInterest.additionalOtherInterestInput$accountNumber.value\"]");
 
-    public ILocator Add => _page.Locator("[id=\"fields.data.addClass\"]");
+    public ILocator Add => _page.Locator("mat-dialog-content:has-text('Find a Class Code') button[data-testid='fields.data.addClass']:visible").First;
+   
+    public ILocator FindClassCodeDialog => _page.Locator("mat-dialog-content:has-text('Find a Class Code')").First;
 
     public ILocator AttachmentsListGridRowCellExplicitName1 => _page.GetByText("(ExplicitName=$1)", new() { Exact = true });
 
@@ -19,7 +21,11 @@ public sealed class NavigationLocators
 
     public ILocator BODY => _page.GetByText("BODY", new() { Exact = true });
 
+    public ILocator ChecklistOpenedOK => _page.Locator("button#btnOk[data-testid=\"btnOk\"]");
+
     public ILocator ClassFilter => _page.Locator("input[id=\"temp.filter\"][name=\"temp.filter\"]");
+
+    public ILocator ClassFilterSearchButton => _page.Locator("button[data-testid='temp.filter--search']");
 
     public ILocator ClientInfoSearch => _page.Locator("input[id=\"customer.name.first\"][name=\"customer.name.first\"]");
 
@@ -48,9 +54,13 @@ public sealed class NavigationLocators
 
     public ILocator MortgageeSecuredParty => _page.GetByTestId("fields.additionalOtherInterest.additionalOtherInterestInput$type.value-chip-wrapper");
 
-    public ILocator On => _page.Locator("[id=\"fields._OccupancyClassSearch.occupancyClassCode.rows[12].occupancyClassCodeInput$addToPolicy.value-checkbox\"]");
+    // Class row checkbox (Search/Add Class Code results)
+    public ILocator AddToPolicyCheckbox => _page.Locator("input[type='checkbox'][data-testid*='occupancyClassCodeInput$addToPolicy.value']:visible").First;
 
-    public ILocator OwnButton => _page.GetByTestId("fields.data.account.building.rows[0].buildingInput$buildingOccupiedEQ.value-chip-wrapper");
+    // Backward-compatible alias
+    public ILocator On => AddToPolicyCheckbox;
+
+    public ILocator OwnButton => _page.GetByTestId("fields.data.account.building.rows[0].buildingInput$buildingOccupiedEQ.value-chip-wrapper").Filter(new() { HasText = "Own" });
 
     public ILocator PolicyDetailsABBA9 => _page.Locator("[id=\"pageTitle\"]");
 
@@ -64,6 +74,8 @@ public sealed class NavigationLocators
 
     public ILocator Residence => _page.Locator("[id=\"fields.additionalOtherInterest.additionalOtherInterestInput$buildingID.value\"]");
 
+    public ILocator NextClaimsPriorInsurance => _page.Locator("button[data-testid='fields.data-Next.next']");
+
     public ILocator Save => _page.Locator("button[id=\"fields.data.save\"], button[id=\"fields.data.saveLocation\"], button[data-testid=\"fields.line.save\"], button:has-text(\"Save\"), a:has-text(\"Save\")").First;
 
     public ILocator Screen25E91 => _page.GetByText("Screen", new() { Exact = true });
@@ -74,7 +86,21 @@ public sealed class NavigationLocators
 
 
 
-    public ILocator SearchAddClassCode => _page.Locator("[id=\"fields.data.classCodeSearchButton\"]");
+    public ILocator SearchAddClassCode => _page.Locator("button[id='fields.data.classCodeSearchButton'], button[data-testid='fields.data.classCodeSearchButton']");
+
+    public ILocator NextPrimaryInsuredDetails => _page.GetByRole(AriaRole.Button, new() { Name = "Next: Primary Insured Details", Exact = true });
+
+    public ILocator NextClientDetails => _page.GetByTestId("fields.data-Next.next");
+
+    public ILocator NextNarrativeFromClaims => _page.Locator("button[data-testid='fields.data.next']").Filter(new() { HasText = "Next: Narrative" });
+
+    public ILocator InspectionContactCheckBox => _page.Locator("label.checkbox-label", new() { HasText = "Inspection Contact" });
+
+    public ILocator NextLocationsBuildings => _page.GetByTestId("LocationsBuildings-nav");
+
+    public ILocator NextPricing => _page.Locator("[data-testid=\"fields.data-Next.next-button-label\"]").Filter(new LocatorFilterOptions { HasText = "Next: Pricing" }).First;
+
+    public ILocator NextBilling => _page.Locator("[data-testid=\"fields.data.next-button-label\"]").Filter(new LocatorFilterOptions { HasText = "Next: Billing" }).First;
 
     public ILocator SearchName => _page.Locator("input[id=\"temp.searchName\"][name=\"temp.searchName\"]");
 
@@ -101,6 +127,10 @@ public sealed class NavigationLocators
 
 
 
+    public ILocator SaveBuilding => _page.Locator("button[id=\"fields.data.saveBuilding\"], [data-testid=\"fields.data.saveBuilding-button-label\"]").Filter(new LocatorFilterOptions { HasText = "Save" }).First;
+
+    public ILocator LaunchToChecklist => _page.Locator("[data-testid=\"fields.data.checklist-button-label\"]").Filter(new LocatorFilterOptions { HasText = "Launch to Checklist" }).First;
+
     // Source EQ|Common|Navigation: Nav Link = DIV InnerText {B[Screen]}, Screen Heading = H1 {B[Screen]}*.
     public ILocator GetNavigationLink(string screen) =>
         _page.GetByTestId($"{screen}-nav");
@@ -108,7 +138,9 @@ public sealed class NavigationLocators
     public ILocator GetScreenHeading(string screen) =>
         _page.GetByRole(AriaRole.Heading, new()
         {
-            NameRegex = new System.Text.RegularExpressions.Regex("^" + System.Text.RegularExpressions.Regex.Escape(screen), System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+            NameRegex = new System.Text.RegularExpressions.Regex(
+                "^" + System.Text.RegularExpressions.Regex.Replace(System.Text.RegularExpressions.Regex.Escape(screen), @"(?<=[a-z])(?=[A-Z])", @"\s*"),
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase)
         });
 
 }

@@ -9,7 +9,11 @@ public sealed class UnderwritingLocators
 
     public ILocator Accept => _page.Locator("[id=\"accept-checklist-item\"]");
 
-    public ILocator BuildingEligibilityQuestionsNoneOfTheAboveCheckboxAngular => _page.GetByTestId("fields.data.account.buildingEligibility.rows[0].buildingInput$noneOfTheAboveUWQuestions.value");
+    public ILocator AgentComments => _page.Locator("input[id=\"fields.data.policy - Step 2 Underwriting Rules.uWRulesReview.uWRuleReviewLevel8.rows[0].uWRuleReview$agentComments.value\"][data-testid=\"fields.data.policy - Step 2 Underwriting Rules.uWRulesReview.uWRuleReviewLevel8.rows[0].uWRuleReview$agentComments.value\"]");
+
+    public ILocator AgentComments2 => _page.Locator("input[id=\"fields.data.policy - Step 2 Underwriting Rules.uWRulesReview.uWRuleReviewLevel8.rows[1].uWRuleReview$agentComments.value\"][data-testid=\"fields.data.policy - Step 2 Underwriting Rules.uWRulesReview.uWRuleReviewLevel8.rows[1].uWRuleReview$agentComments.value\"]");
+
+    public ILocator BuildingEligibilityQuestionsNoneOfTheAboveCheckboxAngular => _page.Locator("input[id=\"fields.data.account.buildingEligibility.rows[0].buildingInput$noneOfTheAboveUWQuestions.value-checkbox\"]");
 
     public ILocator EntityType => _page.Locator("[id=\"fields.data.sFPInsuranceScoreDesigneeInput$entityType.value\"]");
 
@@ -20,6 +24,10 @@ public sealed class UnderwritingLocators
     public ILocator NoneOfTheAboveCheckBox => _page.Locator("[id=\"fields.underwritingQuestionsGeneralUWQuestions.generalInformationNewInput$noneOfTheAboveGeneralUWQuestions.value-checkbox\"]");
 
     public ILocator Premium => _page.Locator("[id=\"LineOutput.PremiumSummaryPremium124-0-layout\"]");
+
+    public ILocator ReferToUW => _page.Locator("button#fields\\.data\\.refer[data-testid=\"fields.data.refer\"]");
+
+    public ILocator KeepGoingConfirm => _page.Locator("button#btnConfirmYes[data-testid=\"btnConfirmYes\"]").Filter(new LocatorFilterOptions { HasText = "Keep Going" });
 
     public ILocator PrimaryInsured => _page.GetByTestId("fields.data.sFPInsuranceScoreDesigneeInput$headlessSelectionOption.value-chip-wrapper");
 
