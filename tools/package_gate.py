@@ -307,8 +307,8 @@ def active_codes(feature_name: str) -> list[str]:
         return []
     return [row.get("stateCode", "") for row in parse_feature(path)["rows"]]
 
-bop_codes = active_codes("03_EQ_BOP_Smoke_Test_MO.feature")
-sfp_codes = active_codes("04_EQ_SFP_Smoke_Test_MN.feature")
+bop_codes = active_codes("03_EQ_BOP_Smoke_Test.feature")
+sfp_codes = active_codes("04_EQ_SFP_Smoke_Test.feature")
 STATS["eqSmoke"] = {"BOP": len(bop_codes), "SFP": len(sfp_codes)}
 if len(bop_codes) != 45 or len(set(bop_codes)) != 45:
     fail(f"EQ BOP Smoke must contain 45 unique active state examples; found {len(bop_codes)}/{len(set(bop_codes))}")

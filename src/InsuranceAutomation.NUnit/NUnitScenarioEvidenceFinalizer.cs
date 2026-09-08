@@ -25,13 +25,15 @@ public static class NUnitScenarioEvidenceFinalizer
         string? deferredSummary = null;
         try
         {
-            if (browser.IsStarted && config.Browser.ScreenshotAtScenarioEnd)
+            if (browser.IsStarted && (config.Browser.ScreenshotAtScenarioEnd ||
+                (config.Browser.ScreenshotOnFailure && (scenarioError is not null || verificationFailures.HasFailures))))
             {
                 try { await browser.CaptureScreenshotAsync("scenario-final.png"); }
                 catch (Exception ex) { logger.Warn($"Unable to capture final scenario screenshot: {ex.Message}"); }
             }
 
             // Closing the context finalizes video, trace and HAR before evidence is staged.
+            report.ScreenshotPath = browser.ScreenshotPath;
             await browser.CloseAsync(logger);
 
             if (verificationFailures.HasFailures)

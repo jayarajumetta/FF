@@ -110,12 +110,22 @@ steps:
     }
 
     Copy-Item -LiteralPath '$(Build.SourcesDirectory)\Tosca.runsettings' -Destination (Join-Path $dest 'Tosca.runsettings') -Force
+    New-Item -ItemType Directory -Path (Join-Path $dest 'scripts') -Force | Out-Null
+    Copy-Item -LiteralPath '$(Build.SourcesDirectory)\scripts\TestOutput.ps1', '$(Build.SourcesDirectory)\scripts\Initialize-PipelineTestOutput.ps1' -Destination (Join-Path $dest 'scripts') -Force
+    Copy-Item -LiteralPath '$(Build.SourcesDirectory)\scripts\Generate-ConsolidatedReport.ps1', '$(Build.SourcesDirectory)\scripts\Verify-TestEvidence.ps1' -Destination (Join-Path $dest 'scripts') -Force
+    New-Item -ItemType Directory -Path (Join-Path $dest 'tools'), (Join-Path $dest 'config') -Force | Out-Null
+    Copy-Item -LiteralPath '$(Build.SourcesDirectory)\tools\generate_consolidated_report.py', '$(Build.SourcesDirectory)\tools\send_consolidated_report.py' -Destination (Join-Path $dest 'tools') -Force
+    Copy-Item -LiteralPath '$(Build.SourcesDirectory)\config\framework.json' -Destination (Join-Path $dest 'config') -Force
 
     $required = @(
       'tests\CommercialLines.DuckCreek.Tests\bin\$(BuildConfiguration)\net8.0\CommercialLines.DuckCreek.Tests.dll',
       'tests\CommercialLines.ExpertQuote.Tests\bin\$(BuildConfiguration)\net8.0\CommercialLines.ExpertQuote.Tests.dll',
       'tests\PersonalLines.DuckCreek.Tests\bin\$(BuildConfiguration)\net8.0\PersonalLines.DuckCreek.Tests.dll',
-      'Tosca.runsettings'
+      'Tosca.runsettings',
+      'tools\generate_consolidated_report.py',
+      'tools\send_consolidated_report.py',
+      'scripts\Generate-ConsolidatedReport.ps1',
+      'config\framework.json'
     )
     foreach ($relative in $required) {
       $path = Join-Path $dest $relative

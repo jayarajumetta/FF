@@ -115,7 +115,7 @@ public sealed class SmokeTestAutoSteps
         if (await page.IsPROCEEDPresentAsync())
         {
             await page.VerifyPROCEEDAsync("Exists", "");
-            await page.ClickPROCEEDAsync();
+            await page.ClickCONFIRMAsync();
             await page.PauseAsync(5000);
         }
         if (await page.IsSSNPresentAsync())
@@ -178,10 +178,10 @@ public sealed class SmokeTestAutoSteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickCloseTabAsync();
+        await page.PauseAsync(5000);
         await page.EnterQuoteSearchInputAsync(data.Resolve("{{runtime:QuoteNumber}}"));
         await page.ClickTabsSearchAsync();
         await page.VerifyQNumAsync($".*\\b{data.Resolve("{{runtime:QuoteNumber}}")}\\b.*", "Regex:InnerText");
     }
 
 }
-

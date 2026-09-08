@@ -12,6 +12,7 @@ public sealed class ScenarioReport
     private readonly DateTimeOffset _scenarioStartUtc = DateTimeOffset.UtcNow;
     private DateTime _currentStart;
     private string _currentStep = string.Empty;
+    public string? ScreenshotPath { get; set; }
 
     public ScenarioReport(string artifactDirectory) => _artifactDirectory = artifactDirectory;
 
@@ -62,7 +63,7 @@ public sealed class ScenarioReport
         details summary{cursor:pointer}.mono{font-family:Consolas,Menlo,monospace;font-size:11px}
         </style></head>
         <body><h1>{{Encode(feature)}}</h1><div class="meta">Scenario: {{Encode(scenario)}}</div>
-        <div class="artifacts"><a href='{{Rel(logPath)}}'>execution log</a>{{Link("trace", tracePath)}}{{Link("video", videoPath)}}{{Link("HAR", harPath)}}{{Link("evidence bundle", bundlePath)}}</div>
+        <div class="artifacts"><a href='{{Rel(logPath)}}'>execution log</a>{{Link("screenshot", ScreenshotPath)}}{{Link("trace", tracePath)}}{{Link("video", videoPath)}}{{Link("HAR", harPath)}}{{Link("evidence bundle", bundlePath)}}</div>
         <h2>Execution steps</h2><table><thead><tr><th>Business step</th><th>Status</th><th>Duration</th><th>Resolved data</th><th>Console/Page errors</th><th>Network errors</th><th>Test error</th><th>Evidence</th></tr></thead><tbody>{{rows}}</tbody></table>
         {{deferredTable}}
         </body></html>
@@ -104,6 +105,7 @@ public sealed class ScenarioReport
             artifacts = new
             {
                 report = "report.html",
+                screenshot = string.IsNullOrWhiteSpace(ScreenshotPath) ? string.Empty : Rel(ScreenshotPath),
                 log = Rel(logPath),
                 trace = string.IsNullOrWhiteSpace(tracePath) ? string.Empty : Rel(tracePath),
                 video = string.IsNullOrWhiteSpace(videoPath) ? string.Empty : Rel(videoPath),

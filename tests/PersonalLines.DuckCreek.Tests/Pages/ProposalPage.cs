@@ -19,7 +19,7 @@ public sealed class ProposalPage
     }
 
     public Task PauseAsync(int milliseconds) =>
-    Task.Delay(milliseconds);
+        Task.Delay(milliseconds);
 
     public Task EnterAgentCodeAsync(string value) =>
         _ui.FillAsync(_locators.AgentCode, value, new ControlIntent("Proposal", "AgentCode"));
@@ -84,7 +84,7 @@ public sealed class ProposalPage
         _ui.ClickAsync(_locators.CONFIRM, new ControlIntent("Proposal", "PROCEED"));
 
     public Task<bool> IsPROCEEDPresentAsync() =>
-        _ui.ExistsAsync(_locators.CONFIRM);
+        _ui.ExistsAsync(_locators.PotentialInvalidAddress);
 
     public Task ClickPersonalAutoAsync() =>
         _ui.ClickAsync(_locators.PersonalAuto, new ControlIntent("Proposal", "PersonalAuto"));

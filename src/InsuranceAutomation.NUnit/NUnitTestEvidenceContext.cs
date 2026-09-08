@@ -9,7 +9,7 @@ public sealed record NUnitTestEvidenceContext(
     string WorkDirectory,
     string ResultDirectory)
 {
-    public static NUnitTestEvidenceContext Capture(string feature, string scenario)
+    public static NUnitTestEvidenceContext Capture(string feature, string scenario, string artifactDirectory)
     {
         var id = Read(() => TestContext.CurrentContext.Test.ID);
         var name = Read(() => TestContext.CurrentContext.Test.Name);
@@ -17,9 +17,7 @@ public sealed record NUnitTestEvidenceContext(
         var work = Read(() => TestContext.CurrentContext.WorkDirectory);
         if (string.IsNullOrWhiteSpace(work)) work = Read(() => TestContext.CurrentContext.TestDirectory);
         if (string.IsNullOrWhiteSpace(work)) work = AppContext.BaseDirectory;
-        var identity = string.IsNullOrWhiteSpace(id) ? Safe(fullName) : Safe(id);
-        if (string.IsNullOrWhiteSpace(identity)) identity = Guid.NewGuid().ToString("N");
-        var resultDirectory = Path.Combine(work, "TestResults", "TestEvidence", $"{identity}__{Safe(feature)}__{Safe(scenario)}");
+        var resultDirectory = Path.GetFullPath(artifactDirectory);
         Directory.CreateDirectory(resultDirectory);
         return new NUnitTestEvidenceContext(id, name, fullName, work, resultDirectory);
     }

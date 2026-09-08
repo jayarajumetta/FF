@@ -16,6 +16,8 @@ public sealed class FrameworkConfig
         var config = JsonSerializer.Deserialize<FrameworkConfig>(File.ReadAllText(path), options)
                      ?? throw new InvalidOperationException($"Unable to parse framework configuration: {path}");
         config.Validate(path);
+        config.Reporting.ResultsRoot = TestOutputPaths.ResolveResultsRoot(TestOutputPaths.FindRoot(path), config.Reporting.ResultsRoot);
+        config.Reporting.ArtifactRoot = TestOutputPaths.ResolveArtifactRoot(config.Reporting.ResultsRoot, config.Reporting.ArtifactRoot);
         return config;
     }
 
@@ -102,7 +104,8 @@ public sealed class ReportingOptions
     public bool CollectNetwork { get; init; } = true;
     public EvidenceAttachmentPolicy Passed { get; init; } = EvidenceAttachmentPolicy.PassedDefaults();
     public EvidenceAttachmentPolicy Failed { get; init; } = EvidenceAttachmentPolicy.FailedDefaults();
-    public string ArtifactRoot { get; init; } = "Artifacts";
+    public string ResultsRoot { get; set; } = "TestResults";
+    public string ArtifactRoot { get; set; } = "Artifacts";
     public bool HtmlReport { get; init; } = true;
     public bool IncludeResolvedData { get; init; } = true;
     public bool IncludeConsoleErrors { get; init; } = true;

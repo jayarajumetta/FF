@@ -43,6 +43,7 @@ pool:
 variables:
   ArtifactName: testpackage
   ArtifactRoot: '$(Pipeline.Workspace)\testpackage'
+  ResultsDirectory: 'TestResults'
 
 stages:
 - stage: SingleTestPlanCase
@@ -76,7 +77,6 @@ stages:
       displayName: Ensure run-ready artifact is extracted
     - powershell: |
         $ErrorActionPreference = 'Stop'
-        New-Item -ItemType Directory -Force -Path "$(Pipeline.Workspace)\evidence\SingleCase" | Out-Null
 
         $configFiles = Get-ChildItem "$(ArtifactRoot)\tests" -Recurse -File -Filter framework.json |
           Where-Object { $_.FullName -match '\\bin\\Release\\net8.0\\config\\framework.json$' }
@@ -97,7 +97,7 @@ stages:
 
         $runsettings = Join-Path "$(ArtifactRoot)" 'Tosca.runsettings'
         if (-not (Test-Path -LiteralPath $runsettings)) { throw 'Tosca.runsettings is missing from compiled artifact.' }
-        Write-Host "##vso[task.setvariable variable=VSTEST_RUNSETTINGS]$runsettings"
+        & "$(ArtifactRoot)\scripts\Initialize-PipelineTestOutput.ps1" -ArtifactRoot "$(ArtifactRoot)" -ResultsDirectory "$(ResultsDirectory)\SingleCase"
       displayName: Prepare test runtime
     - powershell: |
         $ErrorActionPreference = 'Stop'
@@ -131,7 +131,7 @@ stages:
         testConfiguration: '${{ parameters.testConfigurationId }}'
         searchFolder: '$(ArtifactRoot)'
         runSettingsFile: '$(VSTEST_RUNSETTINGS)'
-        resultsFolder: '$(Agent.TempDirectory)\TestResults\SingleCase'
+        resultsFolder: '$(ArtifactRoot)\$(ResultsDirectory)\SingleCase\Runner'
         publishRunAttachments: true
       env:
         CL_DC_USERNAME: $(CL_DC_USERNAME)
@@ -165,13 +165,13 @@ stages:
       condition: always()
       inputs:
         testResultsFormat: VSTest
-        testResultsFiles: '$(Agent.TempDirectory)\TestResults\SingleCase\**\*.trx'
+        testResultsFiles: '$(ArtifactRoot)\$(ResultsDirectory)\SingleCase\Runner\**\*.trx'
         publishRunAttachments: true
         testRunTitle: 'Single Test Plan Case $(Build.BuildNumber)'
     - task: PublishPipelineArtifact@1
       condition: always()
       inputs:
-        targetPath: '$(Pipeline.Workspace)\evidence\SingleCase'
+        targetPath: '$(ArtifactRoot)\$(ResultsDirectory)\SingleCase'
         artifact: 'evidence-single-case'
 
 - stage: TestPlanSuite
@@ -205,7 +205,6 @@ stages:
       displayName: Ensure run-ready artifact is extracted
     - powershell: |
         $ErrorActionPreference = 'Stop'
-        New-Item -ItemType Directory -Force -Path "$(Pipeline.Workspace)\evidence\Suite" | Out-Null
 
         $configFiles = Get-ChildItem "$(ArtifactRoot)\tests" -Recurse -File -Filter framework.json |
           Where-Object { $_.FullName -match '\\bin\\Release\\net8.0\\config\\framework.json$' }
@@ -225,7 +224,7 @@ stages:
 
         $runsettings = Join-Path "$(ArtifactRoot)" 'Tosca.runsettings'
         if (-not (Test-Path -LiteralPath $runsettings)) { throw 'Tosca.runsettings is missing from compiled artifact.' }
-        Write-Host "##vso[task.setvariable variable=VSTEST_RUNSETTINGS]$runsettings"
+        & "$(ArtifactRoot)\scripts\Initialize-PipelineTestOutput.ps1" -ArtifactRoot "$(ArtifactRoot)" -ResultsDirectory "$(ResultsDirectory)\Suite"
       displayName: Prepare test runtime
     - task: VSTest@3
       inputs:
@@ -235,7 +234,7 @@ stages:
         testConfiguration: '${{ parameters.testConfigurationId }}'
         searchFolder: '$(ArtifactRoot)'
         runSettingsFile: '$(VSTEST_RUNSETTINGS)'
-        resultsFolder: '$(Agent.TempDirectory)\TestResults\Suite'
+        resultsFolder: '$(ArtifactRoot)\$(ResultsDirectory)\Suite\Runner'
         publishRunAttachments: true
       env:
         CL_DC_USERNAME: $(CL_DC_USERNAME)
@@ -249,13 +248,13 @@ stages:
       condition: always()
       inputs:
         testResultsFormat: VSTest
-        testResultsFiles: '$(Agent.TempDirectory)\TestResults\Suite\**\*.trx'
+        testResultsFiles: '$(ArtifactRoot)\$(ResultsDirectory)\Suite\Runner\**\*.trx'
         publishRunAttachments: true
         testRunTitle: 'Test Plan Suite $(Build.BuildNumber)'
     - task: PublishPipelineArtifact@1
       condition: always()
       inputs:
-        targetPath: '$(Pipeline.Workspace)\evidence\Suite'
+        targetPath: '$(ArtifactRoot)\$(ResultsDirectory)\Suite'
         artifact: 'evidence-suite'
 
 - stage: TestDllOrTags
@@ -289,7 +288,6 @@ stages:
       displayName: Ensure run-ready artifact is extracted
     - powershell: |
         $ErrorActionPreference = 'Stop'
-        New-Item -ItemType Directory -Force -Path "$(Pipeline.Workspace)\evidence\Dll" | Out-Null
 
         $configFiles = Get-ChildItem "$(ArtifactRoot)\tests" -Recurse -File -Filter framework.json |
           Where-Object { $_.FullName -match '\\bin\\Release\\net8.0\\config\\framework.json$' }
@@ -309,7 +307,7 @@ stages:
 
         $runsettings = Join-Path "$(ArtifactRoot)" 'Tosca.runsettings'
         if (-not (Test-Path -LiteralPath $runsettings)) { throw 'Tosca.runsettings is missing from compiled artifact.' }
-        Write-Host "##vso[task.setvariable variable=VSTEST_RUNSETTINGS]$runsettings"
+        & "$(ArtifactRoot)\scripts\Initialize-PipelineTestOutput.ps1" -ArtifactRoot "$(ArtifactRoot)" -ResultsDirectory "$(ResultsDirectory)\Dll"
       displayName: Prepare test runtime
     - task: VSTest@3
       inputs:
@@ -319,7 +317,7 @@ stages:
           !**\*TestAdapter.dll
           !**\obj\**
         searchFolder: '$(ArtifactRoot)'
-        resultsFolder: '$(Agent.TempDirectory)\TestResults\Dll'
+        resultsFolder: '$(ArtifactRoot)\$(ResultsDirectory)\Dll\Runner'
         testFiltercriteria: '${{ parameters.testFilter }}'
         runSettingsFile: '$(VSTEST_RUNSETTINGS)'
         publishRunAttachments: true
@@ -335,13 +333,13 @@ stages:
       condition: always()
       inputs:
         testResultsFormat: VSTest
-        testResultsFiles: '$(Agent.TempDirectory)\TestResults\Dll\**\*.trx'
+        testResultsFiles: '$(ArtifactRoot)\$(ResultsDirectory)\Dll\Runner\**\*.trx'
         publishRunAttachments: true
         testRunTitle: 'DLL / Tags $(Build.BuildNumber)'
     - task: PublishPipelineArtifact@1
       condition: always()
       inputs:
-        targetPath: '$(Pipeline.Workspace)\evidence\Dll'
+        targetPath: '$(ArtifactRoot)\$(ResultsDirectory)\Dll'
         artifact: 'evidence-dll'
 
 - stage: ConsolidatedReportAndEmail
@@ -378,11 +376,11 @@ stages:
     - task: DownloadPipelineArtifact@2
       inputs:
         buildType: current
-        targetPath: '$(Pipeline.Workspace)\all-evidence'
+        targetPath: '$(ArtifactRoot)\$(ResultsDirectory)\DownloadedEvidence'
       continueOnError: true
       displayName: Download all execution evidence artifacts
     - powershell: |
-        $output = '$(Pipeline.Workspace)\consolidated-report'
+        $output = '$(ArtifactRoot)\$(ResultsDirectory)\ConsolidatedReport'
         New-Item -ItemType Directory -Force -Path $output | Out-Null
         $reportScript = "$(ArtifactRoot)\tools\generate_consolidated_report.py"
         if (-not (Test-Path -LiteralPath $reportScript)) {
@@ -391,7 +389,7 @@ stages:
           exit 0
         }
         python $reportScript `
-          --evidence-root "$(Pipeline.Workspace)\all-evidence" `
+          --evidence-root "$(ArtifactRoot)\$(ResultsDirectory)\DownloadedEvidence" `
           --source-root "$(ArtifactRoot)" `
           --output-dir "$output"
         if ($LASTEXITCODE -ne 0) { throw 'Consolidated report generation failed' }
@@ -399,7 +397,7 @@ stages:
     - task: PublishPipelineArtifact@1
       condition: always()
       inputs:
-        targetPath: '$(Pipeline.Workspace)\consolidated-report'
+        targetPath: '$(ArtifactRoot)\$(ResultsDirectory)\ConsolidatedReport'
         artifact: 'consolidated-test-report'
       displayName: Publish consolidated report
     - powershell: |
@@ -415,7 +413,7 @@ stages:
           exit 0
         }
         python $mailScript `
-          --report-dir "$(Pipeline.Workspace)\consolidated-report" `
+          --report-dir "$(ArtifactRoot)\$(ResultsDirectory)\ConsolidatedReport" `
           --subject "Insurance automation $(Build.BuildNumber)"
         if ($LASTEXITCODE -ne 0) { throw 'SMTP delivery failed' }
       env:

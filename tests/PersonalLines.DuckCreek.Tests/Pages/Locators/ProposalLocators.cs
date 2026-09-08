@@ -13,6 +13,8 @@ public sealed class ProposalLocators
     public ILocator CONFIRM => _page.GetByText("Proceed");
 
     public ILocator ClientExists => _page.GetByText(new Regex(@"Client Already Exists", RegexOptions.IgnoreCase));
+    public ILocator PotentialInvalidAddress => _page.GetByText("Potential Invalid Address");
+
 
     public ILocator ConfirmBtn => _page.Locator("[id='btnConfirmYes']");
 

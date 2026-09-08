@@ -27,11 +27,12 @@ public sealed class TestHooks
         var scenarioName = Safe(_scenario.ScenarioInfo.Title);
         var artifactDirectory = Path.Combine(
             config.Reporting.ArtifactRoot,
+            typeof(TestHooks).Assembly.GetName().Name!,
             Safe(_feature.FeatureInfo.Title),
             scenarioName + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss_fff") + "_" + Guid.NewGuid().ToString("N")[..8]);
 
         Directory.CreateDirectory(artifactDirectory);
-        var testEvidenceContext = NUnitTestEvidenceContext.Capture(_feature.FeatureInfo.Title, _scenario.ScenarioInfo.Title);
+        var testEvidenceContext = NUnitTestEvidenceContext.Capture(_feature.FeatureInfo.Title, _scenario.ScenarioInfo.Title, artifactDirectory);
         var logger = new RunLogger(artifactDirectory);
         var browser = new BrowserSession(config);
         browser.SetArtifactDirectory(artifactDirectory);
@@ -83,10 +84,10 @@ public sealed class TestHooks
         var failed = _scenario.TestError is not null || deferredInStep;
         string? screenshot = null;
 
-        if (browser.IsStarted && (failed || config.Browser.ScreenshotEachStep))
+        if (browser.IsStarted && failed && config.Browser.ScreenshotOnFailure)
         {
-            screenshot = await browser.CaptureScreenshotAsync(
-                $"{DateTime.Now:HHmmssfff}_{Safe(_scenario.StepContext.StepInfo.Text)}.png");
+            try { screenshot = await browser.CaptureScreenshotAsync("scenario.png"); }
+            catch (Exception ex) { logger.Warn($"Unable to capture failure screenshot: {ex.Message}"); }
         }
 
         if (_scenario.TestError is not null)

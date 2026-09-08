@@ -25,7 +25,8 @@ public sealed class NavigationPage
 
     public Task ClickCoveragesNewNextAsync() =>
         _ui.ClickAsync(_locators.CoveragesNewNext, new ControlIntent("Navigation", "CoveragesNewNext"));
-
+    public Task PauseAsync(int milliseconds) =>
+        Task.Delay(milliseconds);
     public Task<string> CaptureDriver1Async(string property = "") =>
         _ui.CaptureAsync(_locators.Driver1, property, new ControlIntent("Navigation", "Driver1"));
 
