@@ -1,0 +1,125 @@
+Given I open a browser session
+2026-09-08 12:54:43.074 [INFO] START STEP: I open a browser session
+2026-09-08 12:54:49.910 [INFO] Browser session opened. Channel=msedge; Headless=False; HAR=True; Console=True; Network=True
+-> done: ApplicationSteps.OpenBrowserSessionAsync() (6.8s)
+2026-09-08 12:54:49.927 [INFO] PASSED STEP: I open a browser session
+Given test data "TestData/Scenarios/016_wc_smoke_test_va.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+2026-09-08 12:54:49.942 [INFO] START STEP: test data "TestData/Scenarios/016_wc_smoke_test_va.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+2026-09-08 12:54:49.964 [INFO] Loaded scenario data: C:\Users\CT7857\Documents\cldcsmoke\PnC_DC_TestAutomation\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestData\Scenarios\016_wc_smoke_test_va.json
+-> done: ApplicationSteps.LoadScenarioData("TestData/Scenario...", "TestData/External...") (0.0s)
+2026-09-08 12:54:49.966 [INFO] PASSED STEP: test data "TestData/Scenarios/016_wc_smoke_test_va.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+And I open the configured Commercial Lines Duck Creek application
+2026-09-08 12:54:49.968 [INFO] START STEP: I open the configured Commercial Lines Duck Creek application
+2026-09-08 12:54:51.449 [ERROR] 2026-09-08T12:54:51.4386219+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+-> done: ApplicationSteps.OpenApplicationAsync() (1.6s)
+2026-09-08 12:54:51.604 [INFO] PASSED STEP: I open the configured Commercial Lines Duck Creek application
+And I sign in to Commercial Lines Duck Creek using configured credentials
+2026-09-08 12:54:51.605 [INFO] START STEP: I sign in to Commercial Lines Duck Creek using configured credentials
+2026-09-08 12:54:52.652 [INFO] RUNTIME LOCATOR: Login.UserName => id
+2026-09-08 12:54:53.286 [INFO] RUNTIME LOCATOR: Login.Password => id
+2026-09-08 12:54:53.939 [INFO] RUNTIME LOCATOR: Login.Login => name
+2026-09-08 12:54:57.526 [ERROR] 2026-09-08T12:54:57.4764071+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?type=js3&sn=v_4_srv_20_sn_14BDA646316C93574A3084D45E1F0F62_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&svrid=20&flavor=post&vi=CILNFFWVDUJRWLTOAGGRBEOTMFGAPOHP-0&modifiedSince=1787035876796&bp=3&app=1286464dd003b906&crc=1204280373&en=c2dndj2n&end=1 :: net::ERR_ABORTED
+-> done: ApplicationSteps.SignInAsync() (6.2s)
+2026-09-08 12:54:57.809 [INFO] PASSED STEP: I sign in to Commercial Lines Duck Creek using configured credentials
+And I start a new quote
+2026-09-08 12:54:57.814 [INFO] START STEP: I start a new quote
+2026-09-08 12:54:58.549 [ERROR] 2026-09-08T12:54:58.5475988+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+2026-09-08 12:54:59.054 [INFO] RUNTIME LOCATOR: Proposal.NewQuote => id
+2026-09-08 12:55:00.602 [INFO] RUNTIME LOCATOR: Proposal.EffectiveDate => tag+fieldref fieldref=PolicyInput.EffectiveDate
+2026-09-08 12:55:02.754 [INFO] RUNTIME LOCATOR: Proposal.Product => tag+fieldref fieldref=data.VersionIDPages
+2026-09-08 12:55:04.658 [INFO] RUNTIME LOCATOR: Proposal.Producer => tag+fieldref fieldref=data.Producer
+2026-09-08 12:55:06.419 [INFO] RUNTIME LOCATOR: Proposal.Start => link-text
+-> done: WCSmokeTestSteps.StartANewQuoteAsync() (9.1s)
+2026-09-08 12:55:06.933 [INFO] PASSED STEP: I start a new quote
+And I enter business client information
+2026-09-08 12:55:06.935 [INFO] START STEP: I enter business client information
+2026-09-08 12:55:08.096 [WARN] CONTROL READY WAIT CONTINUING: ClientSearch.QuickQuote; Action=wait-visible; visible wait did not settle within 15000ms: Error: strict mode violation: Locator("input[fieldref=\"PolicyOutputNonShredded.QuoteQuick\"]") resolved to 2 elements:
+    1) <input value="1" type="checkbox" hidefocus="true" checked="checked" name="boolean_40F" data-ref="inputEl" autocomplete="off" aria-hidden="false" aria-invalid="false" aria-disabled="false" class="x-form-cb-input" fieldref="PolicyOutputNonShredded.QuoteQuick" objectref="pE8FA2552D7A8482B8FA0E0A9657E1C02" id="f_pE8FA2552D7A8482B8FA0E0A9657E1C0240F_3_1-inputEl" data-componentid="f_pE8FA2552D7A8482B8FA0E0A9657E1C0240F_3_1" aria-describedby="f_pE8FA2552D7A8482B8FA0E0A9657E1C0240F_3_1-ariaStatusEl"/> aka GetByRole(AriaRole.Checkbox)
+    2) <input hidden="" value="1" role="checkbox" hidefocus="true" autocomplete="off" name="~boolean_40F" data-ref="hiddenCheckBoxEl" fieldref="PolicyOutputNonShredded.QuoteQuick" objectref="pE8FA2552D7A8482B8FA0E0A9657E1C02" data-cmpid="f_pE8FA2552D7A8482B8FA0E0A9657E1C0240F_3_1" id="f_pE8FA2552D7A8482B8FA0E0A9657E1C0240F_3_1-hiddenCheckBoxEl"/> aka Locator("input[name=\"~boolean_40F\"]")
+
+Call log:
+  - waiting for Locator("input[fieldref=\"PolicyOutputNonShredded.QuoteQuick\"]") to be visible
+2026-09-08 12:55:08.169 [WARN] ELEMENT ATTACH WAIT CONTINUING: Error: strict mode violation: Locator("input[fieldref=\"PolicyOutputNonShredded.QuoteQuick\"]") resolved to 2 elements:
+    1) <input value="1" type="checkbox" hidefocus="true" checked="checked" name="boolean_40F" data-ref="inputEl" autocomplete="off" aria-hidden="false" aria-invalid="false" aria-disabled="false" class="x-form-cb-input" fieldref="PolicyOutputNonShredded.QuoteQuick" objectref="pE8FA2552D7A8482B8FA0E0A9657E1C02" id="f_pE8FA2552D7A8482B8FA0E0A9657E1C0240F_3_1-inputEl" data-componentid="f_pE8FA2552D7A8482B8FA0E0A9657E1C0240F_3_1" aria-describedby="f_pE8FA2552D7A8482B8FA0E0A9657E1C0240F_3_1-ariaStatusEl"/> aka GetByRole(AriaRole.Checkbox)
+    2) <input hidden="" value="1" role="checkbox" hidefocus="true" autocomplete="off" name="~boolean_40F" data-ref="hiddenCheckBoxEl" fieldref="PolicyOutputNonShredded.QuoteQuick" objectref="pE8FA2552D7A8482B8FA0E0A9657E1C02" data-cmpid="f_pE8FA2552D7A8482B8FA0E0A9657E1C0240F_3_1" id="f_pE8FA2552D7A8482B8FA0E0A9657E1C0240F_3_1-hiddenCheckBoxEl"/> aka Locator("input[name=\"~boolean_40F\"]")
+
+Call log:
+  - waiting for Locator("input[fieldref=\"PolicyOutputNonShredded.QuoteQuick\"]")
+2026-09-08 12:55:08.324 [INFO] RUNTIME LOCATOR: ClientSearch.QuickQuote => id fieldref=PolicyOutputNonShredded.QuoteQuick
+2026-09-08 12:55:08.395 [WARN] CONTROL READY WAIT CONTINUING: ClientSearch.QuickQuote; Action=set; visible wait did not settle within 15000ms: Error: strict mode violation: Locator("input[fieldref=\"PolicyOutputNonShredded.QuoteQuick\"]") resolved to 2 elements:
+    1) <input value="1" type="checkbox" hidefocus="true" checked="checked" name="boolean_40F" data-ref="inputEl" autocomplete="off" aria-hidden="false" aria-invalid="false" aria-disabled="false" class="x-form-cb-input" fieldref="PolicyOutputNonShredded.QuoteQuick" objectref="pE8FA2552D7A8482B8FA0E0A9657E1C02" id="f_pE8FA2552D7A8482B8FA0E0A9657E1C0240F_3_1-inputEl" data-componentid="f_pE8FA2552D7A8482B8FA0E0A9657E1C0240F_3_1" aria-describedby="f_pE8FA2552D7A8482B8FA0E0A9657E1C0240F_3_1-ariaStatusEl"/> aka GetByRole(AriaRole.Checkbox)
+    2) <input hidden="" value="1" role="checkbox" hidefocus="true" autocomplete="off" name="~boolean_40F" data-ref="hiddenCheckBoxEl" fieldref="PolicyOutputNonShredded.QuoteQuick" objectref="pE8FA2552D7A8482B8FA0E0A9657E1C02" data-cmpid="f_pE8FA2552D7A8482B8FA0E0A9657E1C0240F_3_1" id="f_pE8FA2552D7A8482B8FA0E0A9657E1C0240F_3_1-hiddenCheckBoxEl"/> aka Locator("input[name=\"~boolean_40F\"]")
+
+Call log:
+  - waiting for Locator("input[fieldref=\"PolicyOutputNonShredded.QuoteQuick\"]") to be visible
+2026-09-08 12:55:10.276 [INFO] RUNTIME LOCATOR: ClientSearch.UnderwritingInfo => link-text
+2026-09-08 12:55:11.117 [INFO] RUNTIME LOCATOR: ClientSearch.InsuredType => tag+fieldref fieldref=AccountInput.InsuredType
+2026-09-08 12:55:13.660 [INFO] RUNTIME LOCATOR: ClientSearch.EntityType => tag+fieldref fieldref=AccountInput.EntityType
+2026-09-08 12:55:15.909 [INFO] RUNTIME LOCATOR: ClientSearch.BusinessName => tag+fieldref fieldref=AccountInput.BusinessName
+2026-09-08 12:55:17.367 [INFO] RUNTIME LOCATOR: ClientSearch.PrimaryPhone => tag+fieldref fieldref=AccountInput.PrimaryPhone
+2026-09-08 12:55:18.957 [INFO] RUNTIME LOCATOR: ClientSearch.NamedInsuredZipCode => tag+fieldref fieldref=AccountInput.ZipCode
+2026-09-08 12:55:20.529 [INFO] RUNTIME LOCATOR: ClientSearch.FEIN => tag+fieldref fieldref=AccountInput.FEIN
+2026-09-08 12:55:21.594 [INFO] RUNTIME LOCATOR: ClientSearch.Address => tag+fieldref fieldref=AccountInput.Address1
+2026-09-08 12:55:22.364 [INFO] RUNTIME LOCATOR: ClientSearch.YearsInBusiness => tag+fieldref fieldref=AccountInput.YearsInBusiness
+2026-09-08 12:55:24.340 [INFO] RUNTIME LOCATOR: ClientSearch.NameOfAuditContact => tag+fieldref fieldref=AccountInput.AuditContact
+2026-09-08 12:55:25.104 [INFO] RUNTIME LOCATOR: ClientSearch.AuditTelephone => tag+fieldref fieldref=AccountInput.AuditContactPhone
+2026-09-08 12:55:25.865 [INFO] RUNTIME LOCATOR: ClientSearch.NameOfInspectionContact => tag+fieldref fieldref=AccountInput.InspectionContact
+2026-09-08 12:55:26.658 [INFO] RUNTIME LOCATOR: ClientSearch.InspectionTelephone => tag+fieldref fieldref=AccountInput.InspectionContactPhone
+2026-09-08 12:55:27.402 [INFO] RUNTIME LOCATOR: ClientSearch.InsuredEMailAddress => tag+fieldref fieldref=AccountInput.Email
+2026-09-08 12:55:28.199 [INFO] RUNTIME LOCATOR: ClientSearch.WebsiteAddress => tag+fieldref fieldref=AccountInput.WebsiteAddress
+-> done: WCSmokeTestSteps.EnterBusinessClientInformationAsync() (22.1s)
+2026-09-08 12:55:29.031 [INFO] PASSED STEP: I enter business client information
+And I add a new Associated Client - Business Owner Type - Click Add Client
+2026-09-08 12:55:29.032 [INFO] START STEP: I add a new Associated Client - Business Owner Type - Click Add Client
+2026-09-08 12:55:29.833 [INFO] RUNTIME LOCATOR: PolicyWorkflow.AddClient => link-text
+-> done: WCSmokeTestSteps.AddANewAssociatedClientBusinessOwnerTypeClickAddClientAsync() (1.5s)
+2026-09-08 12:55:30.570 [INFO] PASSED STEP: I add a new Associated Client - Business Owner Type - Click Add Client
+And I complete the Associated Client Info
+2026-09-08 12:55:30.571 [INFO] START STEP: I complete the Associated Client Info
+2026-09-08 12:55:32.058 [INFO] RUNTIME LOCATOR: ClientSearch.IndividualType => tag+fieldref fieldref=AssociatedClientInput.IndividualType
+2026-09-08 12:55:34.347 [INFO] RUNTIME LOCATOR: ClientSearch.PleaseVerifySSN => id
+2026-09-08 12:55:39.198 [INFO] RUNTIME LOCATOR: ClientSearch.FirstName => tag+fieldref fieldref=AssociatedClientInput.FirstName
+2026-09-08 12:55:41.220 [INFO] RUNTIME LOCATOR: ClientSearch.MiddleName => tag+fieldref fieldref=AssociatedClientInput.MiddleName
+2026-09-08 12:55:46.525 [INFO] RUNTIME LOCATOR: ClientSearch.LastName => tag+fieldref fieldref=AssociatedClientInput.LastName
+2026-09-08 12:55:47.768 [INFO] RUNTIME LOCATOR: ClientSearch.AddAssociatedClientDateOfBirth => tag+fieldref fieldref=AssociatedClientInput.DateOfBirth
+2026-09-08 12:55:49.845 [INFO] RUNTIME LOCATOR: ClientSearch.Address => tag+fieldref fieldref=AssociatedClientInput.Address1
+2026-09-08 12:55:51.543 [INFO] RUNTIME LOCATOR: ClientSearch.City => tag+fieldref fieldref=AssociatedClientInput.City
+2026-09-08 12:55:52.698 [INFO] RUNTIME LOCATOR: ClientSearch.State => tag+fieldref fieldref=AssociatedClientInput.State
+2026-09-08 12:55:55.083 [INFO] RUNTIME LOCATOR: ClientSearch.NamedInsuredZipCode => tag+fieldref fieldref=AssociatedClientInput.ZipCode
+2026-09-08 12:55:56.878 [INFO] RUNTIME LOCATOR: ClientSearch.Gender => tag+fieldref fieldref=AssociatedClientInput.Gender
+2026-09-08 12:56:03.988 [INFO] RUNTIME LOCATOR: ClientSearch.ClientSearch => link-text
+2026-09-08 12:56:06.230 [ERROR] 2026-09-08T12:56:06.2302074+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+2026-09-08 12:56:21.247 [WARN] CONTROL READY WAIT CONTINUING: ClientSearch.OK; Action=click; visible wait did not settle within 15000ms: Timeout 15000ms exceeded.
+Call log:
+  - waiting for GetByRole(AriaRole.Link, new() { Name = "OK", Exact = true }) to be visible
+2026-09-08 12:56:21.351 [INFO] FRAME SCOPE: ClientSearch|OK resolved in hinted frame css:iframe
+2026-09-08 12:56:21.444 [INFO] RUNTIME LOCATOR: ClientSearch.OK => seed
+2026-09-08 12:56:22.557 [ERROR] 2026-09-08T12:56:22.5574052+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?type=js3&sn=v_4_srv_20_sn_14BDA646316C93574A3084D45E1F0F62_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&svrid=20&flavor=post&vi=CILNFFWVDUJRWLTOAGGRBEOTMFGAPOHP-0&modifiedSince=1787035876796&bp=3&app=1286464dd003b906&crc=340641296&en=c2dndj2n&end=1 :: net::ERR_ABORTED
+2026-09-08 12:56:22.805 [INFO] RUNTIME LOCATOR: ClientSearch.OrderSSN => link-text
+2026-09-08 12:56:25.046 [INFO] RUNTIME LOCATOR: ClientSearch.AddAssociatedClientEnterSSN => tag+fieldref fieldref=AssociatedClientSSNRetrievalInput.SSNInput
+2026-09-08 12:56:26.675 [INFO] RUNTIME LOCATOR: ClientSearch.Verify => link-text
+2026-09-08 12:56:28.288 [INFO] RUNTIME LOCATOR: ClientSearch.Complete => link-text
+-> done: WCSmokeTestSteps.CompleteTheAssociatedClientInfoAsync() (58.1s)
+2026-09-08 12:56:28.698 [INFO] PASSED STEP: I complete the Associated Client Info
+And I complete required policy information
+2026-09-08 12:56:28.700 [INFO] START STEP: I complete required policy information
+2026-09-08 12:56:29.853 [INFO] RUNTIME LOCATOR: Navigation.PolicyInfo => link-text
+2026-09-08 12:56:30.556 [INFO] RUNTIME LOCATOR: Navigation.PolicyInfoHeader => id
+2026-09-08 12:56:31.829 [INFO] RUNTIME LOCATOR: Navigation.PolicyInfoRequiredAndOptionalFieldsEffectiveDate => tag+fieldref fieldref=PolicyInput.EffectiveDate
+2026-09-08 12:56:34.699 [INFO] RUNTIME LOCATOR: Navigation.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days => tag+fieldref fieldref=PolicyInput.ExposuresInsuredAN90Days
+-> done: WCSmokeTestSteps.CompleteRequiredPolicyInformationAsync() (11.8s)
+2026-09-08 12:56:40.484 [INFO] PASSED STEP: I complete required policy information
+And I complete WC Specific Fields
+2026-09-08 12:56:40.486 [INFO] START STEP: I complete WC Specific Fields
+2026-09-08 12:56:40.721 [INFO] RUNTIME LOCATOR: PolicyWorkflow.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage => tag+fieldref fieldref=PolicyInput.ContinuousWCCoverageForAtLeast3Years
+2026-09-08 12:56:43.293 [INFO] RUNTIME LOCATOR: PolicyWorkflow.PolicyInfoHeader => id
+2026-09-08 12:56:43.464 [INFO] RUNTIME LOCATOR: PolicyWorkflow.DescriptionOfSpecifiedOperation => tag+fieldref fieldref=PolicyOutput.DescriptionOfOperations
+-> done: WCSmokeTestSteps.CompleteWCSpecificFieldsAsync() (4.1s)
+2026-09-08 12:56:44.540 [INFO] PASSED STEP: I complete WC Specific Fields
+And I navigate to Policy Info and Verify Desc
+2026-09-08 12:56:44.541 [INFO] START STEP: I navigate to Policy Info and Verify Desc
+2026-09-08 12:56:46.157 [INFO] RUNTIME LOCATOR: Navigation.DescriptionOfSpecifiedOperation => tag+fieldref fieldref=PolicyOutput.DescriptionOfOperations
+-> done: WCSmokeTestSteps.NavigateToPolicyInfoAndVerifyDescAsync() (1.7s)
+2026-09-08 12:56:46.200 [INFO] PASSED STEP: I navigate to Policy Info and Verify Desc
+2026-09-08 12:56:51.088 [INFO] Playwright video finalized: C:\Users\CT7857\Documents\cldcsmoke\PnC_DC_TestAutomation\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestResults\NUnitWork\Artifacts\WC_Smoke_Test\WC_Smoke_Test____stateCode_20260908_125443_006_33ec32b4\video\page@8428829ca398f50e70009c1795c447ef.webm
+2026-09-08 12:56:52.003 [WARN] Unable to create evidence bundle: The process cannot access the file 'C:\Users\CT7857\Documents\cldcsmoke\PnC_DC_TestAutomation\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestResults\NUnitWork\Artifacts\WC_Smoke_Test\WC_Smoke_Test____stateCode_20260908_125443_006_33ec32b4\execution.log' because it is being used by another process.
