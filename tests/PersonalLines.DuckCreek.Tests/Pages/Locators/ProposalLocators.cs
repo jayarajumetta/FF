@@ -27,10 +27,11 @@ public sealed class ProposalLocators
 
     public ILocator ClientAlreadyExists => _page.GetByText("Client Already Exists", new() { Exact = true });
 
-    public ILocator CountyComboBox => _page.Locator("[name=\"County_ComboBox\"], [id=\"County_ComboBox\"]").First;
-
+    public ILocator CountyComboBox => _page.Locator("[id='owner.address.county']");
 
     public ILocator EffectiveDate => _page.Locator("input[id='proposal.effectiveDate']");
+
+    public ILocator countyYesAsync => _page.Locator("//*[@id='ci-risk-address-county-yes-btn']");
 
     public ILocator Motorcycle => _page.Locator("[data-testid='proposal.product-chip-item-wrapper'].chip-item-wrapper, [data-testid='proposal.product-chip-item-wrapper'] > .chip-wrapper").Filter(new() { HasText = "Motorcycle" }).First;
 
@@ -60,8 +61,6 @@ public sealed class ProposalLocators
 
     public ILocator StateMONTANA => _page.GetByText("State == \"MONTANA", new() { Exact = true });
 
-
-
-    public ILocator WritingCompany => _page.Locator("div[id='mat-select-value-4']");
+    public ILocator WritingCompany => _page.Locator("mat-select#proposal.writingCompany, [data-testid='proposal.writingCompany']").First;
 
 }
