@@ -44,6 +44,6 @@ public sealed class SubmissionLocators
 
     public ILocator TransmitConfirmationHeading => _page.GetByRole(AriaRole.Heading, new() { Name = "Transmit Confirmation", Exact = true });
 
-    public ILocator TransactionStatus => _page.Locator("[id='Transaction_UI.Status-0-layout'] span.readonly-value-no-label");
+    public ILocator TransactionStatus => _page.Locator("[id='Transactions_UI.Status-0-layout'] span.readonly-value-no-label");
 
 }
