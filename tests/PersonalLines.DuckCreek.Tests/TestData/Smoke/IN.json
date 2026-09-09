@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "IN",
+    "name": "Indiana",
+    "variant": "IN"
+  },
+  "values": {
+    "state": "IN",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "DEBORAH",
+    "Last Name": "AL",
+    "DOB": "8/23/1989",
+    "SSN": "888008718",
+    "Street Address": "19 CIRCLE DR",
+    "Apartment": "19",
+    "City": "RICHMOND",
+    "ZIP": "47374",
+    "State Abbreviation": "IN"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "INDIANA",
+        "state_44": "INDIANA"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "INDIANA",
+        "state_44": "INDIANA"
+      }
+    }
+  }
+}

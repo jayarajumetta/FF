@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "IA",
+    "name": "Iowa",
+    "variant": "IA"
+  },
+  "values": {
+    "state": "IA",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "DAVID",
+    "Last Name": "ATHARI",
+    "DOB": "4/8/1967",
+    "SSN": "666442248",
+    "Street Address": "3201 SKYLINE DR",
+    "Apartment": "19",
+    "City": "DES MOINES",
+    "ZIP": "50310",
+    "State Abbreviation": "IA"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "IOWA",
+        "state_44": "IOWA"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "IOWA",
+        "state_44": "IOWA"
+      }
+    }
+  }
+}

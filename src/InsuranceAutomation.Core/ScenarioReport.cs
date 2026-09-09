@@ -129,7 +129,7 @@ public sealed class ScenarioReport
             var screenshot = string.IsNullOrWhiteSpace(x.Screenshot) ? string.Empty : $"<a href='{Rel(x.Screenshot)}'>screenshot</a>";
             rows.Append($"<tr class='fail'><td>{Encode(x.BusinessStep)}</td><td>{Encode(x.Page)}.{Encode(x.Control)}</td><td>{Encode(x.Property)}</td><td>{Encode(x.Expected)}</td><td>{Encode(x.Error)}</td><td>{screenshot}</td></tr>");
         }
-        return $"<h2>Deferred verification results</h2><p class='small'>These assertions exhausted the configured wait, canonical locator, frame/document resolution. Execution continued only to collect later business/evidence context; NUnit fails the scenario after evidence publication.</p><table><thead><tr><th>Business step</th><th>Page.Control</th><th>Property</th><th>Expected</th><th>Error</th><th>Evidence</th></tr></thead><tbody>{rows}</tbody></table>";
+        return $"<h2>Deferred verification results</h2><p class='small'>These assertions exhausted the configured wait, configured locator, frame/document resolution. Execution continued only to collect later business/evidence context; NUnit fails the scenario after evidence publication.</p><table><thead><tr><th>Business step</th><th>Page.Control</th><th>Property</th><th>Expected</th><th>Error</th><th>Evidence</th></tr></thead><tbody>{rows}</tbody></table>";
     }
 
     private string Link(string label, string? path) => string.IsNullOrWhiteSpace(path) ? string.Empty : $"<a href='{Rel(path)}'>{label}</a>";

@@ -17,12 +17,12 @@ public sealed class EQBOPSmokeTestSteps
     public async Task CreateANewClientAndBeginTheQuoteAsync()
     {
         var data = _scenario.Get<ScenarioData>();
-        data.GenerateRandom("FirstName"); // exact pattern comes from scenario JSON/Tosca lineage
+        data.GenerateRandom("FirstName");
         data.GenerateRandom("LastName");
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // TC-02 / Feature step 3: exact business order from expanded Tosca source.
+        // Execute the validated client creation sequence in business order.
         await page.VerifyNewQuoteAsync("Visible", "");
         await page.ClickNewQuoteAsync();
         await page.VerifyClientInfoAsync("Visible", "");
@@ -50,24 +50,24 @@ public sealed class EQBOPSmokeTestSteps
 
         var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // XTestStep/XTestStepValue order is authoritative; manual CSV/workbooks are not inputs.
+        // The validated executable business sequence is authoritative.
         await page.WaitForAccountInformationHeaderAsync("Visible");
         await page.EnterOwnerMiddleNameAsync("");
         await page.EnterOwnerPhoneAsync(data.Resolve("{{runtime:OwnerPhone}}"));
         await page.EnterOwnerEmailAsync(data.Resolve("{{runtime:OwnerEmail}}"));
         await page.ClickMarriedAsync();
 
-        await page.EnterStreetAddressAsync(data.GetCanonicalFieldRequired("Address 1"));
-        await page.EnterAddress2Async(data.GetCanonicalField("Address 2"));
-        await page.EnterCityAsync(data.GetCanonicalFieldRequired("City"));
-        await page.SelectStateAsync(data.GetCanonicalFieldRequired("State Name"));
-        await page.EnterZipAsync(data.GetCanonicalFieldRequired("Zip"));
+        await page.EnterStreetAddressAsync(data.GetRequired("client.addressLine1"));
+        await page.EnterAddress2Async(data.Get("client.addressLine2"));
+        await page.EnterCityAsync(data.GetRequired("client.city"));
+        await page.SelectStateAsync(data.GetRequired("client.stateName"));
+        await page.EnterZipAsync(data.GetRequired("client.postalCode"));
 
-        //var county = data.GetCanonicalField("County");
+        //var county = data.Get("client.county");
         //if (!string.IsNullOrWhiteSpace(county))
         //    await page.EnterCountyAsync(county);
 
-        // Map/Satellite are generated only after address steering in raw Tosca.
+        // Map and satellite controls are checked after address steering.
         if (await page.IsMapPresentAsync())
             await page.VerifyMapAsync("Visible", "");
         if (await page.IsSatellitePresentAsync())
@@ -138,8 +138,7 @@ public sealed class EQBOPSmokeTestSteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
         var screen = data.Resolve("{{data:prequalification_51}}");
 
-        // Tosca EQ|Common|Navigation: Nav Link is DIV InnerText={B[Screen]} (click);
-        // Screen Heading is H1 {B[Screen]}*. It is not a FillAsync action.
+        // Navigate by the requested screen link and verify the resulting screen heading.
         await page.NavigateToScreenAsync(screen);
         if (await page.IsKeepGoingPresentAsync())
             await page.ClickKeepGoingAsync();

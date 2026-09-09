@@ -14,7 +14,7 @@ public sealed class AccountInformationLocators
     public ILocator OwnerPhone => _page.Locator("[id='owner.phone']");
     public ILocator OwnerEmail => _page.Locator("[id='owner.email']");
 
-    // Tosca ModuleAttributes are clickable DIV chip wrappers, not native selects.
+    // These controls are clickable chip wrappers, not native selects.
     public ILocator Married => _page.Locator("[data-testid='owner.maritalStatus-chip-wrapper']").Filter(new() { HasText = "Married" });
     public ILocator HaveYouReceivedMailAtThisAddressForAtLeast90DaysYes =>
         _page.Locator("[data-testid='owner.address.resided90days-chip-wrapper']").Filter(new() { HasText = "Yes" });
@@ -29,12 +29,12 @@ public sealed class AccountInformationLocators
     public ILocator Address2 => _page.Locator("[id='owner.address.line2']");
     public ILocator City => _page.Locator("[id='owner.address.city']");
 
-    // Tosca source: Tag=MAT-SELECT, Id=owner.address.state.
+    // Stable Angular material-select id for owner address state.
     public ILocator StateDropdown => _page.Locator("[id='owner.address.state']");
 
 
     public ILocator Zip => _page.Locator("[id='owner.address.zip']");
-    // Raw Tosca: EQ|Common|Account Details - Account Info > County (TextBox)
+    // source: EQ|Common|Account Details - Account Info > County (TextBox)
     public ILocator County => _page.Locator("[id='owner.address.county']");
 
     public ILocator GetStateOption(string stateText) =>

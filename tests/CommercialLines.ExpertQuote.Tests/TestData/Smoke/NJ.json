@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "NJ",
+    "name": "New Jersey",
+    "variant": "NJ"
+  },
+  "values": {
+    "state": "NJ",
+    "product": "Business Owners",
+    "transaction": "Smoke Test",
+    "customer_dateofbirth": "08/13/2004",
+    "state_21": "New Jersey",
+    "individual_31": "Individual",
+    "individual_dba": "Tester Automation",
+    "effective_date": "03-01-2025",
+    "new_account_address": "True",
+    "agentpc": "D2102",
+    "prequalification_51": "PreQualification",
+    "prequalification_64": "PreQualification",
+    "client.addressLine1": "200 Campgaw Road",
+    "client.postalCode": "07430",
+    "client.city": "Mahwah",
+    "client.stateName": "New Jersey",
+    "client.county": "Bergen",
+    "client.addressLine2": ""
+  },
+  "random": {
+    "FirstName": {
+      "pattern": "BOP [a-z]{3}"
+    },
+    "LastName": {
+      "pattern": "Smoke[a-z]{4}"
+    },
+    "OwnerPhone": {
+      "pattern": "3[0-9]{9}"
+    },
+    "OwnerEmail": {
+      "pattern": "test@[a-z]{4}.com"
+    },
+    "InsuredSSN": {
+      "pattern": "025[0-9]{6}"
+    }
+  },
+  "flows": {
+    "EQ BOP Smoke Test": {}
+  }
+}

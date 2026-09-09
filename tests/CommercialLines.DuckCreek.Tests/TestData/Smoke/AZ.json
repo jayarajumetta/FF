@@ -1,0 +1,327 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "AZ",
+    "name": "Arizona",
+    "variant": "AZ"
+  },
+  "values": {
+    "state": "AZ",
+    "transaction": "Smoke Test",
+    "application_url": "https://connect.anico.com/Pages/default.aspx",
+    "application_url_2": "https://clasq.anico.com/Express/"
+  },
+  "flows": {
+    "BAP Smoke Test": {
+      "values": {
+        "product": "Business Auto",
+        "effective_date_43": "12-01-2025",
+        "product_45": "Carrier  CommercialAuto  Pages   US   (9.23.0.0)",
+        "quick_quote_50": "False",
+        "insured_type_52": "Individual/Person",
+        "first_name_56": "John",
+        "middle_name_57": "AL",
+        "gender_60": "Male",
+        "entity_type_62": "Individual/Sole Proprietor",
+        "address1_64": "1015 N 2nd Ave",
+        "zipcode_65": "85003",
+        "name_of_audit_contact_82": "Auditor Doe",
+        "name_of_inspection_contact_84": "Inspector Smith",
+        "insured_e_mail_address_86": "insured@emailaddress.com",
+        "website_address_87": "https://www.InsuredSite.com",
+        "product_lob": "BAP",
+        "effectivedate_100": "12-01-2025",
+        "years_in_business_101": "6",
+        "primaryratingstate_103": "Arizona",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_107": "No",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_117": "No",
+        "expected_reference_number_innertext_135": "",
+        "naics_code_search_value_139": "CONSTRUCTION SAND AND GRAVEL MINING [212321]",
+        "naics_code_search_results_141": "Construction Sand and Gravel Mining [212321]",
+        "account_credit_143": "No"
+      },
+      "random": {
+        "LastName_0067": {
+          "pattern": "^[a-z]{4}$"
+        },
+        "PrimaryPhone_0068": {
+          "pattern": "[0-9]{10}"
+        },
+        "InsuredSSN": {
+          "pattern": "125[0-9]{6}"
+        },
+        "AuditTelephone_0075": {
+          "pattern": "[0-9]{10}"
+        },
+        "InspectionTelephone_0075": {
+          "pattern": "[0-9]{10}"
+        }
+      }
+    },
+    "CP Smoke Test": {
+      "values": {
+        "product": "Commercial Property",
+        "effective_date_43": "07/25/2026",
+        "product_45": "Carrier PropertyPages US (4.0.0.0)",
+        "quick_quote_50": "False",
+        "insured_type_52": "Individual/Person",
+        "first_name_56": "John",
+        "middle_name_57": "AZ",
+        "gender_60": "Male",
+        "entity_type_62": "Individual/Sole Proprietor",
+        "address1_64": "4201 N. 24th St",
+        "zipcode_65": "85016",
+        "name_of_audit_contact_82": "Auditor Doe",
+        "name_of_inspection_contact_84": "Inspector Smith",
+        "insured_e_mail_address_86": "insured@emailaddress.com",
+        "website_address_87": "https://www.InsuredSite.com",
+        "product_lob": "CP",
+        "effectivedate_100": "07/25/2026",
+        "years_in_business_101": "6",
+        "primaryratingstate_103": "Arizona",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_107": "No",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_113": "No"
+      },
+      "random": {
+        "LastName_0067": {
+          "pattern": "^[a-z]{4}$"
+        },
+        "PrimaryPhone_0068": {
+          "pattern": "[0-9]{10}"
+        },
+        "InsuredSSN": {
+          "pattern": "125[0-9]{6}"
+        },
+        "AuditTelephone_0075": {
+          "pattern": "[0-9]{10}"
+        },
+        "InspectionTelephone_0075": {
+          "pattern": "[0-9]{10}"
+        }
+      }
+    },
+    "CPP Smoke Test": {
+      "values": {
+        "product": "Commercial Package",
+        "effective_date_43": "07/25/2026",
+        "product_45": "Carrier  CommercialLines  Pages   US   (4.0.0.0)",
+        "quick_quote_50": "False",
+        "insured_type_52": "Individual/Person",
+        "first_name_56": "John",
+        "middle_name_57": "AZ",
+        "gender_60": "Male",
+        "entity_type_62": "Individual/Sole Proprietor",
+        "address1_64": "4201 N. 24th St",
+        "zipcode_65": "85016",
+        "name_of_audit_contact_82": "Auditor Doe",
+        "name_of_inspection_contact_84": "Inspector Smith",
+        "insured_e_mail_address_86": "insured@emailaddress.com",
+        "website_address_87": "https://www.InsuredSite.com",
+        "product_lob": "CPP",
+        "effectivedate_100": "07/25/2026",
+        "years_in_business_101": "6",
+        "primaryratingstate_103": "Arizona",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_107": "No",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_113": "No"
+      },
+      "random": {
+        "LastName_0067": {
+          "pattern": "^[a-z]{4}$"
+        },
+        "PrimaryPhone_0068": {
+          "pattern": "[0-9]{10}"
+        },
+        "InsuredSSN": {
+          "pattern": "125[0-9]{6}"
+        },
+        "AuditTelephone_0075": {
+          "pattern": "[0-9]{10}"
+        },
+        "InspectionTelephone_0075": {
+          "pattern": "[0-9]{10}"
+        }
+      }
+    },
+    "GL Smoke Test": {
+      "values": {
+        "product": "General Liability",
+        "effective_date_43": "07/25/2026",
+        "product_45": "Carrier  GeneralLiability  Pages   US   (4.0.0.0)",
+        "quick_quote_50": "False",
+        "insured_type_52": "Individual/Person",
+        "first_name_56": "John",
+        "middle_name_57": "AZ",
+        "gender_60": "Male",
+        "entity_type_62": "Individual/Sole Proprietor",
+        "address1_64": "4201 N. 24th St",
+        "zipcode_65": "85016",
+        "name_of_audit_contact_82": "Auditor Doe",
+        "name_of_inspection_contact_84": "Inspector Smith",
+        "insured_e_mail_address_86": "insured@emailaddress.com",
+        "website_address_87": "https://www.InsuredSite.com",
+        "product_lob": "GL",
+        "effectivedate_100": "07/25/2026",
+        "years_in_business_101": "6",
+        "primaryratingstate_103": "Arizona",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_107": "No",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_115": "No"
+      },
+      "random": {
+        "LastName_0068": {
+          "pattern": "^[a-z]{4}$"
+        },
+        "PrimaryPhone_0069": {
+          "pattern": "[0-9]{10}"
+        },
+        "InsuredSSN": {
+          "pattern": "125[0-9]{6}"
+        },
+        "AuditTelephone_0076": {
+          "pattern": "[0-9]{10}"
+        },
+        "InspectionTelephone_0076": {
+          "pattern": "[0-9]{10}"
+        }
+      }
+    },
+    "IM Smoke Test": {
+      "values": {
+        "product": "Inland Marine",
+        "effective_date_43": "07/25/2026",
+        "product_45": "Carrier  InlandMarine  Pages   US   (4.0.0.0)",
+        "quick_quote_50": "False",
+        "insured_type_52": "Individual/Person",
+        "first_name_56": "John",
+        "middle_name_57": "AZ",
+        "gender_60": "Male",
+        "entity_type_62": "Individual/Sole Proprietor",
+        "address1_64": "4201 N. 24th St",
+        "zipcode_65": "85016",
+        "name_of_audit_contact_82": "Auditor Doe",
+        "name_of_inspection_contact_84": "Inspector Smith",
+        "insured_e_mail_address_86": "insured@emailaddress.com",
+        "website_address_87": "https://www.InsuredSite.com",
+        "product_lob": "IM",
+        "effectivedate_100": "07/25/2026",
+        "years_in_business_101": "6",
+        "primaryratingstate_103": "Arizona",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_107": "No",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_113": "No"
+      },
+      "random": {
+        "LastName_0067": {
+          "pattern": "^[a-z]{4}$"
+        },
+        "PrimaryPhone_0068": {
+          "pattern": "[0-9]{10}"
+        },
+        "InsuredSSN": {
+          "pattern": "125[0-9]{6}"
+        },
+        "AuditTelephone_0075": {
+          "pattern": "[0-9]{10}"
+        },
+        "InspectionTelephone_0075": {
+          "pattern": "[0-9]{10}"
+        }
+      }
+    },
+    "UMB Smoke Test": {
+      "values": {
+        "product": "Commercial Umbrella",
+        "effective_date_43": "12-01-2025",
+        "product_45": "Carrier  CommercialUmbrella  Pages   US   (9.2.0.0)",
+        "quick_quote_50": "False",
+        "insured_type_52": "Individual/Person",
+        "first_name_56": "John",
+        "middle_name_57": "AL",
+        "gender_60": "Male",
+        "entity_type_62": "Individual/Sole Proprietor",
+        "address1_64": "4201 N. 24th St",
+        "zipcode_65": "85016",
+        "name_of_inspection_contact_82": "Inspector Smith",
+        "insured_e_mail_address_84": "insured@emailaddress.com",
+        "website_address_85": "https://www.InsuredSite.com",
+        "product_lob": "UMB",
+        "effectivedate_98": "12-01-2025",
+        "years_in_business_99": "6",
+        "primaryratingstate_101": "Arizona",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_105": "No",
+        "primaryratingstate_107": "Arizona",
+        "primaryratingstate_108": "Arizona",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_115": "No"
+      },
+      "random": {
+        "LastName_0067": {
+          "pattern": "^[a-z]{4}$"
+        },
+        "PrimaryPhone_0068": {
+          "pattern": "[0-9]{10}"
+        },
+        "InsuredSSN": {
+          "pattern": "125[0-9]{6}"
+        },
+        "InspectionTelephone_0075": {
+          "pattern": "[0-9]{10}"
+        }
+      }
+    },
+    "WC Smoke Test": {
+      "values": {
+        "product": "Workers Compensation",
+        "effective_date_43": "12-01-2025",
+        "product_45": "Carrier  WorkersCompensation  Pages   US   (9.8.0.0)",
+        "quick_quote_51": "False",
+        "insured_type_53": "Business",
+        "business_name_56": "AL WC Testing, Inc.",
+        "entity_type_57": "Corporation",
+        "zipcode_60": "85016",
+        "address1_61": "4201 N. 24th St",
+        "years_in_business_63": "6",
+        "name_of_audit_contact_65": "Auditor Doe",
+        "name_of_inspection_contact_67": "Inspector Smith",
+        "insured_e_mail_address_69": "insured@emailaddress.com",
+        "website_address_70": "https://www.InsuredSite.com",
+        "product_lob": "WC",
+        "bill_type_86": "Direct",
+        "pay_plan_89": "4",
+        "easy_pay_93": "No",
+        "individualtype_96": "Business Owner",
+        "dateofbirth_101": "01-01-1985",
+        "address1_102": "4201 N. 24th St",
+        "city_103": "Glenmont",
+        "state_104": "New York",
+        "zipcode_105": "85016",
+        "gender_106": "Male",
+        "enter_ssn_114": "736849971",
+        "effectivedate_138": "12-01-2025",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_141": "No",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_145": "No",
+        "has_the_applicant_been_in_business_for_at_least_3_years_with_continuous_workers_compensation_coverage_150": "Yes"
+      },
+      "random": {
+        "PrimaryPhone_0082": {
+          "pattern": "[0-9]{10}"
+        },
+        "FEIN_0085": {
+          "pattern": "486[0-9]{6}"
+        },
+        "AuditTelephone_0086": {
+          "pattern": "[0-9]{10}"
+        },
+        "InspectionTelephone_0086": {
+          "pattern": "[0-9]{10}"
+        },
+        "MiddleName_0098": {
+          "pattern": "^[a-z]{1}$"
+        },
+        "LastName_0098": {
+          "pattern": "^[a-z]{7}$"
+        },
+        "FirstName_0098": {
+          "pattern": "^[a-z]{4}$"
+        }
+      }
+    }
+  }
+}

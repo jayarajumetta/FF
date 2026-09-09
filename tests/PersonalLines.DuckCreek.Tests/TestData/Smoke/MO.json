@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "MO",
+    "name": "Missouri",
+    "variant": "MO"
+  },
+  "values": {
+    "state": "MO",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "STEVEN",
+    "Last Name": "AUTREY",
+    "DOB": "12/4/1945",
+    "SSN": "666134340",
+    "Street Address": "2655 W FM 164 AP",
+    "Apartment": "19",
+    "City": "SPRINGFIELD",
+    "ZIP": "65807",
+    "State Abbreviation": "MO"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "MISSOURI",
+        "state_44": "MISSOURI"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "MISSOURI",
+        "state_44": "MISSOURI"
+      }
+    }
+  }
+}

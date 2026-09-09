@@ -8,10 +8,12 @@ namespace InsuranceAutomation.CLEQ.StepDefinitions;
 public sealed class ApplicationSteps
 {
     private readonly ScenarioContext _scenario;
+    private readonly FeatureContext _feature;
 
-    public ApplicationSteps(ScenarioContext scenario)
+    public ApplicationSteps(ScenarioContext scenario, FeatureContext feature)
     {
         _scenario = scenario;
+        _feature = feature;
     }
 
     [Given("I open a browser session")]
@@ -23,7 +25,7 @@ public sealed class ApplicationSteps
     {
         var scenarioPath = ResolvePath(scenarioDataFile);
         var externalPath = ResolvePath(externalDataFile);
-        _scenario.Get<ScenarioData>().Load(scenarioPath, externalPath);
+        _scenario.Get<ScenarioData>().Load(scenarioPath, externalPath, _feature.FeatureInfo.Title);
         _scenario.Get<RunLogger>().Info($"Loaded scenario data: {scenarioPath}");
     }
 

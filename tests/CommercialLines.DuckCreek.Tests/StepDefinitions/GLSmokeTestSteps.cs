@@ -160,9 +160,6 @@ public sealed class GLSmokeTestSteps
         await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_86}}"));
         await page.EnterWebsiteAddressAsync(data.Resolve("{{data:website_address_87}}"));
         await page.VerifyNamedInsuredZipCodeAsync("[0-9]{5}-[0-9]{4}", "Regex:value");
-        //await page.EnterTitleAsync(data.Resolve("{{data:title_94}}"));
-        //await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_95}}"));
-        //await page.VerifyResultAsync(data.Resolve("{{data:expected_result_value_96}}"), "value");
 
     }
 
@@ -183,8 +180,6 @@ public sealed class GLSmokeTestSteps
         await page.PauseAsync(1000);
         await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_103}}"));
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_107}}"));
-        //await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_110}}"));
-        //await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_111}}"));
         //await page.PressPrimaryRatingStateAsync("Down");
         //await page.PauseAsync(1000);
         //await page.WaitForPrimaryRatingStateAsync("Exists");

@@ -3,7 +3,7 @@
 Feature: Auto Rate Filings Policy 3 NB Prior Eff Date
   As a Personal Lines Duck Creek policy processing user
   I want to complete the Auto Rate Filings Policy 3 NB Prior Eff Date workflow
-  So that the business transaction is executed with source-traceable data and verification
+  So that the business transaction is executed with maintainable test data and verification
 
   Background: Prepare Personal Lines Duck Creek for policy processing
     Given I open a browser session
@@ -53,54 +53,54 @@ Feature: Auto Rate Filings Policy 3 NB Prior Eff Date
 
     Examples:
       | stateCode | dataFile                                                                          | stateVariant | stateName      | externalDataFile                    |
-      | AL        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_al.json       | AL           | Alabama        | TestData/ExternalDataOverrides.json |
-      | AR        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_ar.json       | AR           | Arkansas       | TestData/ExternalDataOverrides.json |
-      | AZ        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_az_ang.json   | AZ ANG       | Arizona        | TestData/ExternalDataOverrides.json |
-      | AZ        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_az_anp.json   | AZ ANP       | Arizona        | TestData/ExternalDataOverrides.json |
-      | CA        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_ca.json       | CA           | California     | TestData/ExternalDataOverrides.json |
-      | CO        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_co.json       | CO           | Colorado       | TestData/ExternalDataOverrides.json |
-      | CT        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_ct.json       | CT           | Connecticut    | TestData/ExternalDataOverrides.json |
-      | DE        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_de.json       | DE           | Delaware       | TestData/ExternalDataOverrides.json |
-      | GA        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_ga.json       | GA           | Georgia        | TestData/ExternalDataOverrides.json |
-      | IA        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_ia.json       | IA           | Iowa           | TestData/ExternalDataOverrides.json |
-      | ID        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_id.json       | ID           | Idaho          | TestData/ExternalDataOverrides.json |
-      | IL        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_il.json       | IL           | Illinois       | TestData/ExternalDataOverrides.json |
-      | IN        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_in.json       | IN           | Indiana        | TestData/ExternalDataOverrides.json |
-      | KS        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_ks.json       | KS           | Kansas         | TestData/ExternalDataOverrides.json |
-      | KY        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_ky.json       | KY           | Kentucky       | TestData/ExternalDataOverrides.json |
-      | MD        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_md.json       | MD           | Maryland       | TestData/ExternalDataOverrides.json |
-      | ME        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_me.json       | ME           | Maine          | TestData/ExternalDataOverrides.json |
-      | MN        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_mn.json       | MN           | Minnesota      | TestData/ExternalDataOverrides.json |
-      | MO        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_mo.json       | MO           | Missouri       | TestData/ExternalDataOverrides.json |
-      | MS        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_ms.json       | MS           | Mississippi    | TestData/ExternalDataOverrides.json |
-      | MT        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_mt.json       | MT           | Montana        | TestData/ExternalDataOverrides.json |
-      | ND        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_nd.json       | ND           | North Dakota   | TestData/ExternalDataOverrides.json |
-      | NE        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_ne.json       | NE           | Nebraska       | TestData/ExternalDataOverrides.json |
-      | NH        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_nh.json       | NH           | New Hampshire  | TestData/ExternalDataOverrides.json |
-      | NJ        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_nj.json       | NJ           | New Jersey     | TestData/ExternalDataOverrides.json |
-      | NM        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_nm.json       | NM           | New Mexico     | TestData/ExternalDataOverrides.json |
-      | NV        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_nv.json       | NV           | Nevada         | TestData/ExternalDataOverrides.json |
-      | NY        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_ny_ffcic.json | NY FFCIC     | New York       | TestData/ExternalDataOverrides.json |
-      | NY        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_ny_uffic.json | NY UFFIC     | New York       | TestData/ExternalDataOverrides.json |
-      | OH        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_oh_ang.json   | OH ANG       | Ohio           | TestData/ExternalDataOverrides.json |
-      | OH        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_oh_anp.json   | OH ANP       | Ohio           | TestData/ExternalDataOverrides.json |
-      | OK        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_ok_ang.json   | OK ANG       | Oklahoma       | TestData/ExternalDataOverrides.json |
-      | OK        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_ok_anp.json   | OK ANP       | Oklahoma       | TestData/ExternalDataOverrides.json |
-      | OR        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_or.json       | OR           | Oregon         | TestData/ExternalDataOverrides.json |
-      | PA        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_pa.json       | PA           | Pennsylvania   | TestData/ExternalDataOverrides.json |
-      | RI        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_ri.json       | RI           | Rhode Island   | TestData/ExternalDataOverrides.json |
-      | SC        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_sc.json       | SC           | South Carolina | TestData/ExternalDataOverrides.json |
-      | SD        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_sd_ang.json   | SD ANG       | South Dakota   | TestData/ExternalDataOverrides.json |
-      | SD        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_sd_anp.json   | SD ANP       | South Dakota   | TestData/ExternalDataOverrides.json |
-      | TN        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_tn_ang.json   | TN ANG       | Tennessee      | TestData/ExternalDataOverrides.json |
-      | TN        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_tn_anp.json   | TN ANP       | Tennessee      | TestData/ExternalDataOverrides.json |
-      | TX        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_tx.json       | TX           | Texas          | TestData/ExternalDataOverrides.json |
-      | UT        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_ut_ang.json   | UT ANG       | Utah           | TestData/ExternalDataOverrides.json |
-      | UT        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_ut_anp.json   | UT ANP       | Utah           | TestData/ExternalDataOverrides.json |
-      | VA        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_va.json       | VA           | Virginia       | TestData/ExternalDataOverrides.json |
-      | VT        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_vt.json       | VT           | Vermont        | TestData/ExternalDataOverrides.json |
-      | WA        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_wa.json       | WA           | Washington     | TestData/ExternalDataOverrides.json |
-      | WI        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_wi.json       | WI           | Wisconsin      | TestData/ExternalDataOverrides.json |
-      | WV        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_wv.json       | WV           | West Virginia  | TestData/ExternalDataOverrides.json |
-      | WY        | TestData/Scenarios/182_auto_rate_filings_policy_3_nb_prior_eff_date_wy.json       | WY           | Wyoming        | TestData/ExternalDataOverrides.json |
+      | AL        | TestData/Basic/AL.json       | AL           | Alabama        | TestData/ExternalDataOverrides.json |
+      | AR        | TestData/Basic/AR.json       | AR           | Arkansas       | TestData/ExternalDataOverrides.json |
+      | AZ        | TestData/Basic/AZ_ANG.json   | AZ ANG       | Arizona        | TestData/ExternalDataOverrides.json |
+      | AZ        | TestData/Basic/AZ_ANP.json   | AZ ANP       | Arizona        | TestData/ExternalDataOverrides.json |
+      | CA        | TestData/Basic/CA.json       | CA           | California     | TestData/ExternalDataOverrides.json |
+      | CO        | TestData/Basic/CO.json       | CO           | Colorado       | TestData/ExternalDataOverrides.json |
+      | CT        | TestData/Basic/CT.json       | CT           | Connecticut    | TestData/ExternalDataOverrides.json |
+      | DE        | TestData/Basic/DE.json       | DE           | Delaware       | TestData/ExternalDataOverrides.json |
+      | GA        | TestData/Basic/GA.json       | GA           | Georgia        | TestData/ExternalDataOverrides.json |
+      | IA        | TestData/Basic/IA.json       | IA           | Iowa           | TestData/ExternalDataOverrides.json |
+      | ID        | TestData/Basic/ID.json       | ID           | Idaho          | TestData/ExternalDataOverrides.json |
+      | IL        | TestData/Basic/IL.json       | IL           | Illinois       | TestData/ExternalDataOverrides.json |
+      | IN        | TestData/Basic/IN.json       | IN           | Indiana        | TestData/ExternalDataOverrides.json |
+      | KS        | TestData/Basic/KS.json       | KS           | Kansas         | TestData/ExternalDataOverrides.json |
+      | KY        | TestData/Basic/KY.json       | KY           | Kentucky       | TestData/ExternalDataOverrides.json |
+      | MD        | TestData/Basic/MD.json       | MD           | Maryland       | TestData/ExternalDataOverrides.json |
+      | ME        | TestData/Basic/ME.json       | ME           | Maine          | TestData/ExternalDataOverrides.json |
+      | MN        | TestData/Basic/MN.json       | MN           | Minnesota      | TestData/ExternalDataOverrides.json |
+      | MO        | TestData/Basic/MO.json       | MO           | Missouri       | TestData/ExternalDataOverrides.json |
+      | MS        | TestData/Basic/MS.json       | MS           | Mississippi    | TestData/ExternalDataOverrides.json |
+      | MT        | TestData/Basic/MT.json       | MT           | Montana        | TestData/ExternalDataOverrides.json |
+      | ND        | TestData/Basic/ND.json       | ND           | North Dakota   | TestData/ExternalDataOverrides.json |
+      | NE        | TestData/Basic/NE.json       | NE           | Nebraska       | TestData/ExternalDataOverrides.json |
+      | NH        | TestData/Basic/NH.json       | NH           | New Hampshire  | TestData/ExternalDataOverrides.json |
+      | NJ        | TestData/Basic/NJ.json       | NJ           | New Jersey     | TestData/ExternalDataOverrides.json |
+      | NM        | TestData/Basic/NM.json       | NM           | New Mexico     | TestData/ExternalDataOverrides.json |
+      | NV        | TestData/Basic/NV.json       | NV           | Nevada         | TestData/ExternalDataOverrides.json |
+      | NY        | TestData/Basic/NY_FFCIC.json | NY FFCIC     | New York       | TestData/ExternalDataOverrides.json |
+      | NY        | TestData/Basic/NY_UFFIC.json | NY UFFIC     | New York       | TestData/ExternalDataOverrides.json |
+      | OH        | TestData/Basic/OH_ANG.json   | OH ANG       | Ohio           | TestData/ExternalDataOverrides.json |
+      | OH        | TestData/Basic/OH_ANP.json   | OH ANP       | Ohio           | TestData/ExternalDataOverrides.json |
+      | OK        | TestData/Basic/OK_ANG.json   | OK ANG       | Oklahoma       | TestData/ExternalDataOverrides.json |
+      | OK        | TestData/Basic/OK_ANP.json   | OK ANP       | Oklahoma       | TestData/ExternalDataOverrides.json |
+      | OR        | TestData/Basic/OR.json       | OR           | Oregon         | TestData/ExternalDataOverrides.json |
+      | PA        | TestData/Basic/PA.json       | PA           | Pennsylvania   | TestData/ExternalDataOverrides.json |
+      | RI        | TestData/Basic/RI.json       | RI           | Rhode Island   | TestData/ExternalDataOverrides.json |
+      | SC        | TestData/Basic/SC.json       | SC           | South Carolina | TestData/ExternalDataOverrides.json |
+      | SD        | TestData/Basic/SD_ANG.json   | SD ANG       | South Dakota   | TestData/ExternalDataOverrides.json |
+      | SD        | TestData/Basic/SD_ANP.json   | SD ANP       | South Dakota   | TestData/ExternalDataOverrides.json |
+      | TN        | TestData/Basic/TN_ANG.json   | TN ANG       | Tennessee      | TestData/ExternalDataOverrides.json |
+      | TN        | TestData/Basic/TN_ANP.json   | TN ANP       | Tennessee      | TestData/ExternalDataOverrides.json |
+      | TX        | TestData/Basic/TX.json       | TX           | Texas          | TestData/ExternalDataOverrides.json |
+      | UT        | TestData/Basic/UT_ANG.json   | UT ANG       | Utah           | TestData/ExternalDataOverrides.json |
+      | UT        | TestData/Basic/UT_ANP.json   | UT ANP       | Utah           | TestData/ExternalDataOverrides.json |
+      | VA        | TestData/Basic/VA.json       | VA           | Virginia       | TestData/ExternalDataOverrides.json |
+      | VT        | TestData/Basic/VT.json       | VT           | Vermont        | TestData/ExternalDataOverrides.json |
+      | WA        | TestData/Basic/WA.json       | WA           | Washington     | TestData/ExternalDataOverrides.json |
+      | WI        | TestData/Basic/WI.json       | WI           | Wisconsin      | TestData/ExternalDataOverrides.json |
+      | WV        | TestData/Basic/WV.json       | WV           | West Virginia  | TestData/ExternalDataOverrides.json |
+      | WY        | TestData/Basic/WY.json       | WY           | Wyoming        | TestData/ExternalDataOverrides.json |
 

@@ -19,7 +19,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForNewQuoteAsync("Exists");
         await page.VerifyNewQuoteAsync(data.Resolve("{{data:expected_btn_new_quote_2}}"), "");
         await page.ClickNewQuoteAsync();
@@ -35,7 +35,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForLblClientInfoAsync("Exists");
         await page.VerifyLblClientInfoAsync(data.Resolve("{{data:expected_lbl_client_info_5}}"), "");
         await page.EnterTxtFirstAsync(data.Get("AL_ClientData.First Name"));
@@ -59,7 +59,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForAccountInformationAsync("Exists");
         await page.VerifyFirstNameAccountOwnerAsync("Exists", "");
         await page.EnterDOBAsync(data.Get("AL_ClientData.DOB"));
@@ -103,7 +103,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.PressEffectiveDateAsync("Scroll[-2]");
         if (data.Condition("LOB == \"PersonalAuto\""))
         {
@@ -206,7 +206,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.ClickChkBoxCheckBoxNoneOfTheAboveAsync();
         await page.ClickPreQualificationNextAsync();
 
@@ -221,7 +221,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         data.Set("QuoteNumber", data.Resolve("{STRINGREPLACE[{B[QNum]}][\"\\)\"][\"\"]}"));
 
     }
@@ -235,7 +235,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new DriversPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsIneligibleQuotePresentAsync())
         {
                     await page.VerifyIneligibleQuoteAsync("Visible", "");
@@ -253,7 +253,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         // Source conditional not executed because no deterministic data/DOM condition was available: If > Then
         if (false)
         {
@@ -271,7 +271,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsLblLoginIDPresentAsync())
         {
                     await page.VerifyLblLoginIDAsync("Visible", "");
@@ -311,7 +311,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsQuotePolicySearchPresentAsync())
         {
                     await page.EnterQuotePolicySearchAsync(data.Resolve("{{data:txt_quote_policy_search_87}}"));
@@ -335,7 +335,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new DriversPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.ClickExistingClient1Async();
         await page.ClickDriverInformationNextAsync();
         await page.PressDriverInformationNextAsync("Click");
@@ -351,7 +351,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsSinglePresentAsync())
         {
                     await page.VerifySingleAsync("Exists", "");
@@ -750,7 +750,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new SocialSecurityPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (data.Condition("'Additional Drivers?' == \"Yes\""))
         {
                     await page.ClickDriverInformationAsync();
@@ -791,7 +791,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsSelectVehiclePresentAsync())
         {
                     await page.WaitForSelectVehicleAsync("Visible");
@@ -871,7 +871,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (data.Condition("'Additional Cycle?' == \"Yes\""))
         {
                     await page.ClickAddAdditionalVehicleAsync();
@@ -892,7 +892,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForCycleVINAsync("True");
         await page.EnterCycleVINAsync(data.Resolve("{{data:cycle_vin_223}}"));
         await page.WaitForPleaseSelectTheVehicleBBB72Async("Visible");
@@ -937,7 +937,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (data.Condition("'Additional Cycle?' == \"Yes\""))
         {
                     await page.ClickAddAdditionalVehicleAsync();
@@ -968,7 +968,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new DriversPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (data.Condition("'Driver 1 Vehicle' != NULL"))
         {
                     await page.ClickDriver1VehicleAsync();
@@ -1038,7 +1038,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new DriversPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsCONTINUEPresentAsync())
         {
                     await page.WaitForCONTINUEAsync("Exists");
@@ -1060,7 +1060,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new LossHistoryPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsUWCONTINUEPresentAsync())
         {
                     await page.WaitForUWCONTINUEAsync("Exists");
@@ -1082,7 +1082,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new LossHistoryPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsEditClaimPresentAsync())
         {
                     await page.WaitForEditClaimAsync("Exists");
@@ -1134,7 +1134,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new DiscountsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (data.Condition("State == \"MD\" OR State == \"NJ\""))
         {
                     await page.ClickResidentiaProperty1Async();
@@ -1204,7 +1204,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (data.Condition("PolicyCovOption == \"OPTION 1\""))
         {
                     await page.SetOption1Async(data.Resolve("{{data:option_1_331}}"));
@@ -1420,7 +1420,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForH1AdditionalCoveragesAsync("Exists");
         if (data.Condition("'Tort Option' != NULL"))
         {
@@ -1529,7 +1529,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (data.Condition("'All HH Members 65 or Pension' != NULL"))
         {
                     await page.ClickHouseholdMembersAge65OrReceivingPensionAsync();
@@ -1618,7 +1618,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new VehiclesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (data.Condition("'UMPD/UIMPD_V1' != NULL"))
         {
                     await page.ClickUMPDUIMPDV1Async();
@@ -1779,7 +1779,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.ClickAdditionalCoveragesNextNewNextAsync();
 
     }
@@ -1793,7 +1793,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForHeaderPricingDetailsAsync("Exists");
         await page.ClickPricingDetailsNewNextAsync();
 
@@ -1808,7 +1808,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForHaveYouOrAnyHouseholdMemberEverBeenConvictedOfAFelonyAsync("Exists");
         await page.SelectNo43938Async("");
         await page.WaitForIsAnyVintageCycleGaragedInADifferentLocationAsync("Exists");
@@ -1826,7 +1826,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new AdditionalInterestsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.ClickAdditionalInterestNextAsync();
         await page.VerifyEQCommonLoadingIndicatorWaitAsync("Exists", "");
 
@@ -1841,7 +1841,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForHdrBillingAsync("Visible");
         await page.ClickCreateNewBillingAccountAsync();
         await page.ClickPrimaryAccountHolderNameAsync();
@@ -1868,7 +1868,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForSubmission1Async("Exists");
         if (await page.IsCommentsPresentAsync())
         {
@@ -1903,7 +1903,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         // Source conditional not executed because no deterministic data/DOM condition was available: If Referral Button > Then
         if (false)
         {
@@ -1921,7 +1921,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsLblLoginIDPresentAsync())
         {
                     await page.VerifyLblLoginIDAsync("Visible", "");
@@ -1967,7 +1967,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsQuotePolicySearchPresentAsync())
         {
                     await page.EnterQuotePolicySearchAsync(data.Resolve("{{data:txt_quote_policy_search_551}}"));
@@ -1991,7 +1991,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsCorrectionNeededStep1PresentAsync())
         {
                     await page.VerifyCorrectionNeededStep1Async("Exists", "");
@@ -2012,7 +2012,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         // Source conditional not executed because no deterministic data/DOM condition was available: If Correction Needed > Then go to Express to bypass L9
         if (false)
         {
@@ -2030,7 +2030,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsLblLoginIDPresentAsync())
         {
                     await page.VerifyLblLoginIDAsync("Visible", "");
@@ -2098,7 +2098,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsQuotePolicySearchPresentAsync())
         {
                     await page.EnterQuotePolicySearchAsync(data.Resolve("{{data:txt_quote_policy_search_583}}"));
@@ -2122,7 +2122,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.ClickChecklist1Async();
         await page.ClickAutoCycleRVApplicationAsync();
         await page.ClickDIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorerAsync();
@@ -2176,7 +2176,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForTransmitAsync("Exists");
         await page.ClickTransmitAsync();
 
@@ -2191,7 +2191,7 @@ public sealed class CycleRateFilingsPolicy1NB1Steps
 
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.EnterTransmitConfirmationAsync("{DATE}");
 
     }

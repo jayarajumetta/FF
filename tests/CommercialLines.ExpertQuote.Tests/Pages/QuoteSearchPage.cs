@@ -45,7 +45,7 @@ public sealed class QuoteSearchPage
     public Task VerifyScreenAsync(string screen) =>
         _ui.VerifyAsync(_locators.GetScreenHeading(screen), "Visible", "", new ControlIntent("Navigation", $"ScreenHeading:{screen}"));
 
-    // Compatibility: the Tosca "Enter Screen" reusable parameter means click the matching navigation DIV.
+    // Compatibility: the "Enter Screen" parameter means click the matching navigation element.
     public Task EnterPreQualificationAsync(string value) => NavigateToScreenAsync(value);
     public Task VerifyPreQualificationAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.GetScreenHeading("PreQualification"), expected, property, new ControlIntent("Navigation", "PreQualificationHeading"));

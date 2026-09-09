@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "OR",
+    "name": "Oregon",
+    "variant": "OR"
+  },
+  "values": {
+    "state": "OR",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "DEBORAH",
+    "Last Name": "BLACKBURN",
+    "DOB": "1/1/1940",
+    "SSN": "666327720",
+    "Street Address": "307 SW ADAMS ST",
+    "Apartment": "19",
+    "City": "MCMINNVILLE",
+    "ZIP": "97128",
+    "State Abbreviation": "OR"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "OREGON",
+        "state_44": "OREGON"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "OREGON",
+        "state_44": "OREGON"
+      }
+    }
+  }
+}

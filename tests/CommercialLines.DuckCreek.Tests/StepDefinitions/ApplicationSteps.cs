@@ -8,10 +8,12 @@ namespace InsuranceAutomation.CLDC.StepDefinitions;
 public sealed class ApplicationSteps
 {
     private readonly ScenarioContext _scenario;
+    private readonly FeatureContext _feature;
 
-    public ApplicationSteps(ScenarioContext scenario)
+    public ApplicationSteps(ScenarioContext scenario, FeatureContext feature)
     {
         _scenario = scenario;
+        _feature = feature;
     }
 
     [Given("I open a browser session")]
@@ -23,7 +25,7 @@ public sealed class ApplicationSteps
     {
         var scenarioPath = ResolvePath(scenarioDataFile);
         var externalPath = ResolvePath(externalDataFile);
-        _scenario.Get<ScenarioData>().Load(scenarioPath, externalPath);
+        _scenario.Get<ScenarioData>().Load(scenarioPath, externalPath, _feature.FeatureInfo.Title);
         _scenario.Get<RunLogger>().Info($"Loaded scenario data: {scenarioPath}");
     }
 
@@ -64,13 +66,13 @@ public sealed class ApplicationSteps
         !stateCode.Equals("OR", StringComparison.OrdinalIgnoreCase) &&
         !stateCode.Equals("WA", StringComparison.OrdinalIgnoreCase))
         {
-            logger.Info($"Raw Tosca conditional authentication skipped for state '{stateCode}'. Role={role}.");
+            logger.Info($"Conditional authentication skipped for state '{stateCode}'. Role={role}.");
             return;
         }
 
         var url = data.Get("url", data.Get("application_url"));
         if (string.IsNullOrWhiteSpace(url))
-        throw new InvalidOperationException("Duck Creek authentication URL is not available in raw-Tosca scenario data.");
+        throw new InvalidOperationException("Duck Creek authentication URL is not available in the configured application data.");
 
         string username;
         string password;
@@ -80,7 +82,7 @@ public sealed class ApplicationSteps
             password = Environment.GetEnvironmentVariable("CL_DC_UW_DIRECTOR_PASSWORD") ?? string.Empty;
             if (ScenarioData.IsSynthetic(username) || ScenarioData.IsSynthetic(password))
             throw new InvalidOperationException(
-            "Raw Tosca requires a UW Director role transition for OR/WA. Set CL_DC_UW_DIRECTOR_USERNAME and CL_DC_UW_DIRECTOR_PASSWORD.");
+            "A UW Director role transition is required for OR/WA. Set CL_DC_UW_DIRECTOR_USERNAME and CL_DC_UW_DIRECTOR_PASSWORD.");
         }
         else
         {
@@ -88,7 +90,7 @@ public sealed class ApplicationSteps
             password = ResolveCredential(data, "password", "CL_DC_PASSWORD");
         }
 
-        logger.Info($"Executing raw-Tosca authentication transition. Role={role}; State={stateCode}; Url={url}");
+        logger.Info($"Executing authentication transition. Role={role}; State={stateCode}; Url={url}");
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
         await page.NavigateAsync(url);
         await SignInWithLoginPageAsync(page, username, password);

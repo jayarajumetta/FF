@@ -3,7 +3,7 @@ using Microsoft.Playwright;
 
 namespace InsuranceAutomation.Core;
 
-/// <summary>Async-local frame scope used only while executing a raw-Tosca frame-scoped locator.</summary>
+/// <summary>Async-local frame scope used only while executing a configured frame-scoped locator.</summary>
 public static class FrameExecutionContext
 {
     private static readonly AsyncLocal<IFrameLocator?> CurrentValue = new();

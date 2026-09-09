@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "ME",
+    "name": "Maine",
+    "variant": "ME"
+  },
+  "values": {
+    "state": "ME",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "A",
+    "Last Name": "BELT",
+    "DOB": "8/4/1955",
+    "SSN": "666062376",
+    "Street Address": "PO BOX 734",
+    "Apartment": "17",
+    "City": "HOULTON",
+    "ZIP": "04730",
+    "State Abbreviation": "ME"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "MAINE",
+        "state_44": "MAINE"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "MAINE",
+        "state_44": "MAINE"
+      }
+    }
+  }
+}

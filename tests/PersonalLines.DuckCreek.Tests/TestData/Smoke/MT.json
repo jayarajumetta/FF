@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "MT",
+    "name": "Montana",
+    "variant": "MT"
+  },
+  "values": {
+    "state": "MT",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "BENJAMIN",
+    "Last Name": "BROWN",
+    "DOB": "1/1/1959",
+    "SSN": "666102015",
+    "Street Address": "3330 W HOLLYHOCK DR",
+    "Apartment": "19",
+    "City": "BELGRADE",
+    "ZIP": "59714",
+    "State Abbreviation": "MT"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "MONTANA",
+        "state_44": "MONTANA"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "MONTANA",
+        "state_44": "MONTANA"
+      }
+    }
+  }
+}

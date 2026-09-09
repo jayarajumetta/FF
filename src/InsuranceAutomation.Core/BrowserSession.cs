@@ -31,6 +31,15 @@ public sealed class BrowserSession : IAsyncDisposable
         _consoleLogPath = Path.Combine(_artifactDirectory, "console.log");
         _networkLogPath = Path.Combine(_artifactDirectory, "network.log");
     }
+    public void ApplyStepTimeout(int? timeoutMs)
+    {
+        var actionTimeout = Math.Max(1, timeoutMs ?? _config.Browser.ActionTimeoutMs);
+        var navigationTimeout = Math.Max(1, timeoutMs ?? _config.Browser.NavigationTimeoutMs);
+        _context?.SetDefaultTimeout(actionTimeout);
+        _context?.SetDefaultNavigationTimeout(navigationTimeout);
+        _page?.SetDefaultTimeout(actionTimeout);
+        _page?.SetDefaultNavigationTimeout(navigationTimeout);
+    }
     public async Task OpenAsync(RunLogger logger)
     {
         if (IsStarted) return;
@@ -48,8 +57,8 @@ public sealed class BrowserSession : IAsyncDisposable
             RecordHarMode = _config.Browser.Har ? HarMode.Full : null,
             RecordHarContent = _config.Browser.Har ? HarContentPolicy.Attach : null
         });
-        _context.SetDefaultTimeout(_config.Browser.ActionTimeoutMs);
-        _context.SetDefaultNavigationTimeout(_config.Browser.NavigationTimeoutMs);
+        _context.SetDefaultTimeout(StepTimeoutContext.Resolve(_config.Browser.ActionTimeoutMs));
+        _context.SetDefaultNavigationTimeout(StepTimeoutContext.Resolve(_config.Browser.NavigationTimeoutMs));
         if (_config.Browser.Trace)
         {
             await _context.Tracing.StartAsync(new TracingStartOptions { Screenshots = true, Snapshots = true, Sources = true });

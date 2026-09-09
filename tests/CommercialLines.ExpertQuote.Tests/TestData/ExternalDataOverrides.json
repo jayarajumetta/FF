@@ -1,4 +1,8 @@
 {
-  "_instructions": "Replace every SYNTHETIC_REPLACE_ME value with approved test data. Runtime fails by default while a synthetic value is still present.",
-  "values": {}
+  "_instructions": "Only application URL and credentials may be overridden here. Business test data belongs in the direct state files; runtime captures and random values are managed by the framework.",
+  "application": {
+    "url": "https://expertquote-qa.americannational.com/expertquote/",
+    "username": "SYNTHETIC_REPLACE_ME",
+    "password": "SYNTHETIC_REPLACE_ME"
+  }
 }

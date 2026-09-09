@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "KY",
+    "name": "Kentucky",
+    "variant": "KY"
+  },
+  "values": {
+    "state": "KY",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "ARTHUR",
+    "Last Name": "CLINK",
+    "DOB": "4/26/1950",
+    "SSN": "666106101",
+    "Street Address": "13007 SETTLERS POINT TRL",
+    "Apartment": "19",
+    "City": "GOSHEN",
+    "ZIP": "40026",
+    "State Abbreviation": "KY"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "KENTUCKY",
+        "state_44": "KENTUCKY"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "KENTUCKY",
+        "state_44": "KENTUCKY"
+      }
+    }
+  }
+}

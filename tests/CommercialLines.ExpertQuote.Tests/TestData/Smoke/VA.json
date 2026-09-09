@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "VA",
+    "name": "Virginia",
+    "variant": "VA"
+  },
+  "values": {
+    "state": "VA",
+    "product": "Business Owners",
+    "transaction": "Smoke Test",
+    "customer_dateofbirth": "08/13/2004",
+    "state_21": "Virginia",
+    "individual_31": "Individual",
+    "individual_dba": "Tester Automation",
+    "effective_date": "03-01-2025",
+    "new_account_address": "True",
+    "agentpc": "D2102",
+    "prequalification_51": "PreQualification",
+    "prequalification_64": "PreQualification",
+    "client.addressLine1": "15235 Whitehead Rd",
+    "client.postalCode": "23828",
+    "client.city": "Branchville",
+    "client.stateName": "Virginia",
+    "client.county": "Southampton",
+    "client.addressLine2": ""
+  },
+  "random": {
+    "FirstName": {
+      "pattern": "BOP [a-z]{3}"
+    },
+    "LastName": {
+      "pattern": "Smoke[a-z]{4}"
+    },
+    "OwnerPhone": {
+      "pattern": "3[0-9]{9}"
+    },
+    "OwnerEmail": {
+      "pattern": "test@[a-z]{4}.com"
+    },
+    "InsuredSSN": {
+      "pattern": "025[0-9]{6}"
+    }
+  },
+  "flows": {
+    "EQ BOP Smoke Test": {}
+  }
+}

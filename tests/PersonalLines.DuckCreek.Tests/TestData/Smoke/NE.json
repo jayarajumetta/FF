@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "NE",
+    "name": "Nebraska",
+    "variant": "NE"
+  },
+  "values": {
+    "state": "NE",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "CALVIN",
+    "Last Name": "BARGER",
+    "DOB": "7/16/1986",
+    "SSN": "888016840",
+    "Street Address": "1955 HIGHWAY 16",
+    "Apartment": "19",
+    "City": "BANCROFT",
+    "ZIP": "68004",
+    "State Abbreviation": "NE"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "NEBRASKA",
+        "state_44": "NEBRASKA"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "NEBRASKA",
+        "state_44": "NEBRASKA"
+      }
+    }
+  }
+}

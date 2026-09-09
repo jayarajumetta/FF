@@ -1,0 +1,169 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "OR",
+    "name": "Oregon",
+    "variant": "OR"
+  },
+  "values": {
+    "state": "OR",
+    "customer_dateofbirth_7": "08/13/2004",
+    "policy": "Test1111",
+    "application_url": "https://connect.anico.com/Pages/default.aspx",
+    "client.addressLine1": "661 SW 26TH ST",
+    "client.postalCode": "97331",
+    "client.stateName": "Oregon",
+    "client.county": "Benton"
+  },
+  "random": {
+    "OwnerPhone": {
+      "pattern": "3[0-9]{9}"
+    },
+    "OwnerEmail": {
+      "pattern": "test@[a-z]{4}\\.com"
+    },
+    "InsuredSSN": {
+      "pattern": "025[0-9]{6}"
+    }
+  },
+  "flows": {
+    "EQ BOP Basic Policy": {
+      "values": {
+        "product": "Business Owners",
+        "transaction": "Basic New Business Policy",
+        "individual_dba_35": "Tester Automation",
+        "true_37": "newAccountAddress",
+        "screen": "PreQualification",
+        "class_filter_64": "59325",
+        "description_of_the_business_exposures_activities_and_experience_118": "Test Narrative 1",
+        "expected_user_date_and_timestamp_innertext_121": "Null",
+        "type_of_loss": "PROP",
+        "expected_claim_summary_table_row_cell_explicitname_claim_date_165": "Claim Date",
+        "expected_claim_summary_table_row_cell_explicitname_amount_166": "Amount",
+        "expected_claim_summary_table_row_cell_explicitname_line_of_coverage_167": "Line of Coverage",
+        "expected_claim_summary_table_row_cell_explicitname_type_of_loss_168": "Type of Loss",
+        "expected_claim_summary_table_row_cell_explicitname_cat_claim_169": "CAT Claim",
+        "expected_claim_summary_table_row_cell_explicitname_claim_date_170": "01/02/2026",
+        "expected_claim_summary_table_row_cell_explicitname_line_of_coverage_172": "BOP",
+        "expected_claim_summary_table_row_cell_explicitname_type_of_loss_173": "PROP",
+        "territory": "001",
+        "territory_188": "001",
+        "feetfromhydrant_190": "101 - 250",
+        "expected_occupancy_sq_footage_total_value_227": "2500",
+        "roof_type": "Aluminum- Shingle",
+        "expected_table_row_cell_explicitname_1_390": "$1,305.00",
+        "application_url_2": "https://expertquote-qa.americannational.com/expertquote/",
+        "application_url_3": "http://svqw-clas21:8080/express/",
+        "forms_api_response_494": "StatusCode",
+        "add_a_note_561": "Test",
+        "add_a_note_567": "Test",
+        "add_a_note_573": "Test",
+        "add_a_note_579": "Test",
+        "expected_is_this_coverage_bound_661": "Value",
+        "expected_is_this_coverage_bound_value_698": "(select)",
+        "expected_table_row_cell_explicitname_1_767": "Transmitted",
+        "expected_table_row_cell_explicitname_2_768": "BusinessOwners",
+        "expected_table_row_cell_explicitname_5_771": "$1,305.00",
+        "expected_dc_transaction_table_row_cell_explicitname_new_premium_772": "$2,084.00",
+        "expected_dc_transaction_table_row_cell_explicitname_status_773": "Committed",
+        "application_url_4": "http://svqw-clas22:8080/express/default.aspx",
+        "expected_row_834": "NewPolicy*",
+        "expected_attachments_list_grid_row_cell_explicitname_1_836": "NewPolicy*",
+        "client.city": "Corvallis"
+      },
+      "random": {
+        "LastName": {
+          "pattern": "BASIC[A-Z]{4}"
+        },
+        "FirstName": {
+          "pattern": "BOP[a-z]{3}"
+        }
+      }
+    },
+    "EQ SFP Basic Policy": {
+      "values": {
+        "product": "Special Farm Package",
+        "transaction": "Basic New Business Policy",
+        "true_34": "newAccountAddress",
+        "policyterm_36": "12 months",
+        "screen": "Policy Details",
+        "primaryfarmcategory": "ANIMALS",
+        "primaryfarmtype": "Beef",
+        "secondaryfarmcategory": "CROPS",
+        "secondaryfarmtype": "Blueberry",
+        "gross_farm_income_75": "1250",
+        "description_of_the_business_exposures_activities_and_experience_129": "Test Narrative 1",
+        "expected_user_date_and_timestamp_innertext_132": "Null",
+        "feet_from_hydrant_160": "101-250",
+        "total_farming_acreage_162": "\"\"",
+        "roof_type_1_188": "Asphalt",
+        "roof_impact_1_189": "UL 2",
+        "expected_residence_coverage_203": "True",
+        "perils_207": "3",
+        "actual_cash_value_210": "Replacement Cost",
+        "deductible_231": "$1,000",
+        "true_260": "CheckBox",
+        "liability_limit_279": "$100,000/$100,000",
+        "entity_type_296": "Primary  Insured",
+        "true_319": "Mortgage CheckBox",
+        "residence_322": "Residence #1",
+        "application_url_2": "http://svqw-clas21:8080/express/",
+        "search_mode_379": "Client Name",
+        "forms_api_response_401": "StatusCode",
+        "client.city": "Mahopac",
+        "client.addressLine2": "111"
+      },
+      "random": {
+        "LastName": {
+          "pattern": "FETT[A-Z]{4}"
+        },
+        "FirstName": {
+          "pattern": "SFP[A-Z]{3}"
+        }
+      }
+    },
+    "EQ SFP Country Estate Policy": {
+      "values": {
+        "product": "Special Farm Package",
+        "transaction": "Country Estate New Business Policy",
+        "true_35": "newAccountAddress",
+        "policyterm_37": "12 months",
+        "screen": "Policy Details",
+        "primaryfarmcategory": "CROPS",
+        "primaryfarmtype": "Berry",
+        "gross_farm_income_76": "500",
+        "description_of_the_business_exposures_activities_and_experience_130": "Test Narrative 1",
+        "expected_user_date_and_timestamp_innertext_133": "Null",
+        "feet_from_hydrant_161": "101-250",
+        "total_farming_acreage_163": "\"\"",
+        "roof_type_1_189": "Asphalt",
+        "roof_impact_1_190": "UL 2",
+        "expected_residence_coverage_203": "True",
+        "actual_cash_value_209": "Expanded Replacement Cost",
+        "water_damage_234": "$5,000",
+        "unscheduled_structures_235": "$5,000",
+        "blanket_fpp_236": "\"\"",
+        "liability_limit_239": "$500,000/$1,000,000",
+        "entity_type_248": "Primary  Insured",
+        "true_271": "Mortgage CheckBox",
+        "residence_274": "Residence #1",
+        "application_url_2": "http://svqw-clas21:8080/express/",
+        "search_mode_331": "Client Name",
+        "get_session_id_buffer_342": "Title",
+        "get_session_id_buffer_343": "JavaScript",
+        "forms_api_response_348": "StatusCode",
+        "forms_api_response_349": "Content-Length",
+        "client.city": "Mahopac",
+        "client.addressLine2": "111"
+      },
+      "random": {
+        "LastName": {
+          "pattern": "CE-[A-Z]{4}"
+        },
+        "FirstName": {
+          "pattern": "SFP[A-Z]{3}"
+        }
+      }
+    }
+  }
+}

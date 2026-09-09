@@ -3,7 +3,7 @@
 Feature: BAP Expanded
   As a Commercial Lines Duck Creek policy processing user
   I want to complete the BAP Expanded workflow
-  So that the business transaction is executed with source-traceable data and verification
+  So that the business transaction is executed with maintainable test data and verification
 
   Background: Prepare Commercial Lines Duck Creek for policy processing
     Given I open a browser session
@@ -43,48 +43,48 @@ Feature: BAP Expanded
 
     Examples:
       | stateCode | dataFile                                    | stateVariant | stateName      | externalDataFile                    |
-      | AL        | TestData/Scenarios/002_bap_expanded_al.json | AL           | Alabama        | TestData/ExternalDataOverrides.json |
-      | AR        | TestData/Scenarios/002_bap_expanded_ar.json | AR           | Arkansas       | TestData/ExternalDataOverrides.json |
-      | AZ        | TestData/Scenarios/002_bap_expanded_az.json | AZ           | Arizona        | TestData/ExternalDataOverrides.json |
-      | CA        | TestData/Scenarios/002_bap_expanded_ca.json | CA           | California     | TestData/ExternalDataOverrides.json |
-      | CT        | TestData/Scenarios/002_bap_expanded_ct.json | CT           | Connecticut    | TestData/ExternalDataOverrides.json |
-      | CO        | TestData/Scenarios/002_bap_expanded_co.json | CO           | Colorado       | TestData/ExternalDataOverrides.json |
-      | DE        | TestData/Scenarios/002_bap_expanded_de.json | DE           | Delaware       | TestData/ExternalDataOverrides.json |
-      | GA        | TestData/Scenarios/002_bap_expanded_ga.json | GA           | Georgia        | TestData/ExternalDataOverrides.json |
-      | IA        | TestData/Scenarios/002_bap_expanded_ia.json | IA           | Iowa           | TestData/ExternalDataOverrides.json |
-      | ID        | TestData/Scenarios/002_bap_expanded_id.json | ID           | Idaho          | TestData/ExternalDataOverrides.json |
-      | IL        | TestData/Scenarios/002_bap_expanded_il.json | IL           | Illinois       | TestData/ExternalDataOverrides.json |
-      | IN        | TestData/Scenarios/002_bap_expanded_in.json | IN           | Indiana        | TestData/ExternalDataOverrides.json |
-      | KS        | TestData/Scenarios/002_bap_expanded_ks.json | KS           | Kansas         | TestData/ExternalDataOverrides.json |
-      | KY        | TestData/Scenarios/002_bap_expanded_ky.json | KY           | Kentucky       | TestData/ExternalDataOverrides.json |
-      | LA        | TestData/Scenarios/002_bap_expanded_la.json | LA           | Louisiana      | TestData/ExternalDataOverrides.json |
-      | MD        | TestData/Scenarios/002_bap_expanded_md.json | MD           | Maryland       | TestData/ExternalDataOverrides.json |
-      | ME        | TestData/Scenarios/002_bap_expanded_me.json | ME           | Maine          | TestData/ExternalDataOverrides.json |
-      | MN        | TestData/Scenarios/002_bap_expanded_mn.json | MN           | Minnesota      | TestData/ExternalDataOverrides.json |
-      | MO        | TestData/Scenarios/002_bap_expanded_mo.json | MO           | Missouri       | TestData/ExternalDataOverrides.json |
-      | MS        | TestData/Scenarios/002_bap_expanded_ms.json | MS           | Mississippi    | TestData/ExternalDataOverrides.json |
-      | MT        | TestData/Scenarios/002_bap_expanded_mt.json | MT           | Montana        | TestData/ExternalDataOverrides.json |
-      | ND        | TestData/Scenarios/002_bap_expanded_nd.json | ND           | North Dakota   | TestData/ExternalDataOverrides.json |
-      | NE        | TestData/Scenarios/002_bap_expanded_ne.json | NE           | Nebraska       | TestData/ExternalDataOverrides.json |
-      | NH        | TestData/Scenarios/002_bap_expanded_nh.json | NH           | New Hampshire  | TestData/ExternalDataOverrides.json |
-      | NJ        | TestData/Scenarios/002_bap_expanded_nj.json | NJ           | New Jersey     | TestData/ExternalDataOverrides.json |
-      | NM        | TestData/Scenarios/002_bap_expanded_nm.json | NM           | New Mexico     | TestData/ExternalDataOverrides.json |
-      | NV        | TestData/Scenarios/002_bap_expanded_nv.json | NV           | Nevada         | TestData/ExternalDataOverrides.json |
-      | NY        | TestData/Scenarios/002_bap_expanded_ny.json | NY           | New York       | TestData/ExternalDataOverrides.json |
-      | OH        | TestData/Scenarios/002_bap_expanded_oh.json | OH           | Ohio           | TestData/ExternalDataOverrides.json |
-      | OK        | TestData/Scenarios/002_bap_expanded_ok.json | OK           | Oklahoma       | TestData/ExternalDataOverrides.json |
-      | OR        | TestData/Scenarios/002_bap_expanded_or.json | OR           | Oregon         | TestData/ExternalDataOverrides.json |
-      | PA        | TestData/Scenarios/002_bap_expanded_pa.json | PA           | Pennsylvania   | TestData/ExternalDataOverrides.json |
-      | RI        | TestData/Scenarios/002_bap_expanded_ri.json | RI           | Rhode Island   | TestData/ExternalDataOverrides.json |
-      | SC        | TestData/Scenarios/002_bap_expanded_sc.json | SC           | South Carolina | TestData/ExternalDataOverrides.json |
-      | SD        | TestData/Scenarios/002_bap_expanded_sd.json | SD           | South Dakota   | TestData/ExternalDataOverrides.json |
-      | TN        | TestData/Scenarios/002_bap_expanded_tn.json | TN           | Tennessee      | TestData/ExternalDataOverrides.json |
-      | TX        | TestData/Scenarios/002_bap_expanded_tx.json | TX           | Texas          | TestData/ExternalDataOverrides.json |
-      | UT        | TestData/Scenarios/002_bap_expanded_ut.json | UT           | Utah           | TestData/ExternalDataOverrides.json |
-      | VA        | TestData/Scenarios/002_bap_expanded_va.json | VA           | Virginia       | TestData/ExternalDataOverrides.json |
-      | VT        | TestData/Scenarios/002_bap_expanded_vt.json | VT           | Vermont        | TestData/ExternalDataOverrides.json |
-      | WA        | TestData/Scenarios/002_bap_expanded_wa.json | WA           | Washington     | TestData/ExternalDataOverrides.json |
-      | WI        | TestData/Scenarios/002_bap_expanded_wi.json | WI           | Wisconsin      | TestData/ExternalDataOverrides.json |
-      | WV        | TestData/Scenarios/002_bap_expanded_wv.json | WV           | West Virginia  | TestData/ExternalDataOverrides.json |
-      | WY        | TestData/Scenarios/002_bap_expanded_wy.json | WY           | Wyoming        | TestData/ExternalDataOverrides.json |
+      | AL        | TestData/Extended/AL.json | AL           | Alabama        | TestData/ExternalDataOverrides.json |
+      | AR        | TestData/Extended/AR.json | AR           | Arkansas       | TestData/ExternalDataOverrides.json |
+      | AZ        | TestData/Extended/AZ.json | AZ           | Arizona        | TestData/ExternalDataOverrides.json |
+      | CA        | TestData/Extended/CA.json | CA           | California     | TestData/ExternalDataOverrides.json |
+      | CT        | TestData/Extended/CT.json | CT           | Connecticut    | TestData/ExternalDataOverrides.json |
+      | CO        | TestData/Extended/CO.json | CO           | Colorado       | TestData/ExternalDataOverrides.json |
+      | DE        | TestData/Extended/DE.json | DE           | Delaware       | TestData/ExternalDataOverrides.json |
+      | GA        | TestData/Extended/GA.json | GA           | Georgia        | TestData/ExternalDataOverrides.json |
+      | IA        | TestData/Extended/IA.json | IA           | Iowa           | TestData/ExternalDataOverrides.json |
+      | ID        | TestData/Extended/ID.json | ID           | Idaho          | TestData/ExternalDataOverrides.json |
+      | IL        | TestData/Extended/IL.json | IL           | Illinois       | TestData/ExternalDataOverrides.json |
+      | IN        | TestData/Extended/IN.json | IN           | Indiana        | TestData/ExternalDataOverrides.json |
+      | KS        | TestData/Extended/KS.json | KS           | Kansas         | TestData/ExternalDataOverrides.json |
+      | KY        | TestData/Extended/KY.json | KY           | Kentucky       | TestData/ExternalDataOverrides.json |
+      | LA        | TestData/Extended/LA.json | LA           | Louisiana      | TestData/ExternalDataOverrides.json |
+      | MD        | TestData/Extended/MD.json | MD           | Maryland       | TestData/ExternalDataOverrides.json |
+      | ME        | TestData/Extended/ME.json | ME           | Maine          | TestData/ExternalDataOverrides.json |
+      | MN        | TestData/Extended/MN.json | MN           | Minnesota      | TestData/ExternalDataOverrides.json |
+      | MO        | TestData/Extended/MO.json | MO           | Missouri       | TestData/ExternalDataOverrides.json |
+      | MS        | TestData/Extended/MS.json | MS           | Mississippi    | TestData/ExternalDataOverrides.json |
+      | MT        | TestData/Extended/MT.json | MT           | Montana        | TestData/ExternalDataOverrides.json |
+      | ND        | TestData/Extended/ND.json | ND           | North Dakota   | TestData/ExternalDataOverrides.json |
+      | NE        | TestData/Extended/NE.json | NE           | Nebraska       | TestData/ExternalDataOverrides.json |
+      | NH        | TestData/Extended/NH.json | NH           | New Hampshire  | TestData/ExternalDataOverrides.json |
+      | NJ        | TestData/Extended/NJ.json | NJ           | New Jersey     | TestData/ExternalDataOverrides.json |
+      | NM        | TestData/Extended/NM.json | NM           | New Mexico     | TestData/ExternalDataOverrides.json |
+      | NV        | TestData/Extended/NV.json | NV           | Nevada         | TestData/ExternalDataOverrides.json |
+      | NY        | TestData/Extended/NY.json | NY           | New York       | TestData/ExternalDataOverrides.json |
+      | OH        | TestData/Extended/OH.json | OH           | Ohio           | TestData/ExternalDataOverrides.json |
+      | OK        | TestData/Extended/OK.json | OK           | Oklahoma       | TestData/ExternalDataOverrides.json |
+      | OR        | TestData/Extended/OR.json | OR           | Oregon         | TestData/ExternalDataOverrides.json |
+      | PA        | TestData/Extended/PA.json | PA           | Pennsylvania   | TestData/ExternalDataOverrides.json |
+      | RI        | TestData/Extended/RI.json | RI           | Rhode Island   | TestData/ExternalDataOverrides.json |
+      | SC        | TestData/Extended/SC.json | SC           | South Carolina | TestData/ExternalDataOverrides.json |
+      | SD        | TestData/Extended/SD.json | SD           | South Dakota   | TestData/ExternalDataOverrides.json |
+      | TN        | TestData/Extended/TN.json | TN           | Tennessee      | TestData/ExternalDataOverrides.json |
+      | TX        | TestData/Extended/TX.json | TX           | Texas          | TestData/ExternalDataOverrides.json |
+      | UT        | TestData/Extended/UT.json | UT           | Utah           | TestData/ExternalDataOverrides.json |
+      | VA        | TestData/Extended/VA.json | VA           | Virginia       | TestData/ExternalDataOverrides.json |
+      | VT        | TestData/Extended/VT.json | VT           | Vermont        | TestData/ExternalDataOverrides.json |
+      | WA        | TestData/Extended/WA.json | WA           | Washington     | TestData/ExternalDataOverrides.json |
+      | WI        | TestData/Extended/WI.json | WI           | Wisconsin      | TestData/ExternalDataOverrides.json |
+      | WV        | TestData/Extended/WV.json | WV           | West Virginia  | TestData/ExternalDataOverrides.json |
+      | WY        | TestData/Extended/WY.json | WY           | Wyoming        | TestData/ExternalDataOverrides.json |
 

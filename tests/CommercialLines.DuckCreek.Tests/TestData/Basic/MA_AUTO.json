@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "MA",
+    "name": "Massachusetts",
+    "variant": "MA Auto"
+  },
+  "values": {
+    "state": "MA",
+    "product": "Commercial Umbrella",
+    "transaction": "Basic New Business Policy",
+    "quick_quote_2": "False",
+    "insured_type_4": "Business",
+    "business_name_7": "MA UMB Testing, Inc.",
+    "entity_type_8": "Corporation",
+    "zipcode_11": "01201",
+    "address1_12": "66 Wendell Ave",
+    "years_in_business_14": "6",
+    "name_of_inspection_contact_16": "Inspector Smith",
+    "insured_e_mail_address_18": "insured@emailaddress.com",
+    "website_address_19": "https://www.InsuredSite.com",
+    "product_lob": "UMB",
+    "bill_type_35": "Direct",
+    "pay_plan_38": "4",
+    "easy_pay_42": "No",
+    "individualtype_45": "True",
+    "dateofbirth_50": "01-01-1985",
+    "address1_51": "66 Wendell Ave",
+    "city_52": "Glenmont",
+    "state_53": "MA",
+    "zipcode_54": "01201",
+    "gender_55": "Male",
+    "enter_ssn_63": "{TAB}",
+    "is_there_a_prior_carrier_83": "True",
+    "carrier_86": "Insure Us, Inc",
+    "policy_number_87": "P-0123456789{TAB}",
+    "policy_type_88": "Commercial Package{TAB}",
+    "modificationfactor_91": "1.1",
+    "total_premium_92": "1,250{TAB}",
+    "no_known_losses_97": "True",
+    "title_99": "*",
+    "javascript_100": "return 1+2",
+    "expected_result_value_101": "3",
+    "effectivedate_105": "09-05-2026",
+    "years_in_business_106": "6",
+    "primaryratingstate_108": "Massachusetts",
+    "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_112": "No",
+    "primaryratingstate_114": "Massachusetts",
+    "primaryratingstate_115": "Massachusetts",
+    "primaryratingstate_117": "Massachusetts",
+    "primaryratingstate_118": "Massachusetts",
+    "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_122": "No",
+    "expected_umbrella_limit_value_134": "$1,000,000",
+    "expected_excluded_liability_confidential_information_value_135": "CU2186",
+    "expected_products_completed_operations_aggregate_limit_value_136": "Umbrella Policy Limit",
+    "policy_number_163": "2001C7910",
+    "policy_number_173": "2001L7201",
+    "cgl_limits_177": "$1,000,000/$2,000,000",
+    "total_subject_premium_178": "800",
+    "policy_number_183": "BOPPOL#",
+    "policy_number_192": "2001W9605",
+    "policy_number_200": "CPPPOL#",
+    "liability_limit_204": "$2,000,000/$2,000,000",
+    "total_subject_premium_205": "900",
+    "policy_number_210": "SPFPOL#",
+    "liability_limit_214": "$300,000/$1,000,000",
+    "total_subject_premium_215": "1500",
+    "please_provide_website_address_es_225": "UW.Test.Com",
+    "expected_premium_value_228": "*$0.00",
+    "bill_type_231": "Direct",
+    "pay_plan_234": "4",
+    "easy_pay_238": "No",
+    "is_this_coverage_bound_249": "Yes",
+    "order_audit_251": "No",
+    "expected_is_this_coverage_bound_value_259": "(select)",
+    "is_this_coverage_bound_260": "Yes",
+    "expected_full_term_premium_value_292": "$0.00",
+    "expected_premium_written_value_293": "0.00",
+    "expected_prior_premium_value_294": "0.00",
+    "expected_premium_change_value_295": "0.00",
+    "title_297": "*",
+    "javascript_298": "return  DCT.sessionID;",
+    "expected_statuscode_value_302": "200 OK"
+  },
+  "random": {
+    "PrimaryPhone_0041": {
+      "pattern": "[0-9]{10}"
+    },
+    "FEIN_0044": {
+      "pattern": "486[0-9]{6}"
+    },
+    "InspectionTelephone_0045": {
+      "pattern": "[0-9]{10}"
+    },
+    "MiddleName_0057": {
+      "pattern": "^[a-z]{1}$"
+    },
+    "LastName_0057": {
+      "pattern": "^[a-z]{7}$"
+    },
+    "FirstName_0057": {
+      "pattern": "^[a-z]{4}$"
+    }
+  },
+  "flows": {
+    "UMB Basic Policy": {}
+  }
+}

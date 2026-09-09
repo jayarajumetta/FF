@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "CT",
+    "name": "Connecticut",
+    "variant": "CT"
+  },
+  "values": {
+    "state": "CT",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "ANNA",
+    "Last Name": "ANDREA",
+    "DOB": "11/15/1978",
+    "SSN": "666674451",
+    "Street Address": "54 GARNET LN",
+    "Apartment": "19",
+    "City": "SOUTH WINDSOR",
+    "ZIP": "06074",
+    "State Abbreviation": "CT"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "CONNECTICUT",
+        "state_44": "CONNECTICUT"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "CONNECTICUT",
+        "state_44": "CONNECTICUT"
+      }
+    }
+  }
+}

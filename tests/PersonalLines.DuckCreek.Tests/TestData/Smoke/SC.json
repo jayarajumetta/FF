@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "SC",
+    "name": "South Carolina",
+    "variant": "SC"
+  },
+  "values": {
+    "state": "SC",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "JOHN",
+    "Last Name": "BRANSON",
+    "DOB": "23178",
+    "SSN": "888023223",
+    "Street Address": "1529 LAUREL ST",
+    "Apartment": "17",
+    "City": "COLUMBIA",
+    "ZIP": "29201",
+    "State Abbreviation": "SC"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "SOUTH CAROLINA",
+        "state_44": "SOUTH CAROLINA"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "SOUTH CAROLINA",
+        "state_44": "SOUTH CAROLINA"
+      }
+    }
+  }
+}

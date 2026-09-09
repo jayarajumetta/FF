@@ -89,7 +89,7 @@ public sealed class WaitOptions
     public int PageReadyTimeoutMs { get; init; } = 30000;
     public int ElementReadyTimeoutMs { get; init; } = 30000;
     public int VerifyTimeoutMs { get; init; } = 35000;
-    // Raw Tosca HtmlFrame is a hint only. Probe briefly before falling back to top document.
+    // A configured frame is a hint only. Probe before falling back to the top document.
     public int FrameProbeTimeoutMs { get; init; } = 2000;
     // Dropdown option discovery uses a deliberately shorter budget than a normal page/control wait.
     public int DropdownOptionTimeoutMs { get; init; } = 1200;
@@ -139,7 +139,7 @@ public sealed class EvidenceAttachmentPolicy
 public sealed class ExecutionOptions
 {
     public bool StrictUnknownConditions { get; init; } = true;
-    // Tosca verification failures are accumulated after mature waits and canonical locator resolution and fail at scenario end,
+    // Verification failures are accumulated after configured waits and locator resolution and fail at scenario end,
     // allowing later steps and all requested evidence to complete. Fatal browser/action failures still fail immediately.
     public bool DeferVerificationFailures { get; init; } = true;
     public string ExternalDataFile { get; init; } = "TestData/ExternalDataOverrides.json";

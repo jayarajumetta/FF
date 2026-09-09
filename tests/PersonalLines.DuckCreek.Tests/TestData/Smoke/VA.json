@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "VA",
+    "name": "Virginia",
+    "variant": "VA"
+  },
+  "values": {
+    "state": "VA",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "BOBBY",
+    "Last Name": "AKERS",
+    "DOB": "3/8/1939",
+    "SSN": "666050901",
+    "Street Address": "1955 LIMB TREE LN",
+    "Apartment": "17",
+    "City": "VIENNA",
+    "ZIP": "22182",
+    "State Abbreviation": "VA"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "VIRGINIA",
+        "state_44": "VIRGINIA"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "VIRGINIA",
+        "state_44": "VIRGINIA"
+      }
+    }
+  }
+}

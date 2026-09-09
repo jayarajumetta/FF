@@ -37,10 +37,10 @@ public sealed class DuckCreekFrameScopeResolver
                 foreach (var hint in hints)
                 {
                     var frameHost = _page.Locator(FrameSelector(hint));
-                    if (!await IsPresentAsync(frameHost, _config.Waits.FrameProbeTimeoutMs)) continue;
+                    if (!await IsPresentAsync(frameHost, StepTimeoutContext.Resolve(_config.Waits.FrameProbeTimeoutMs))) continue;
                     var frame = _page.FrameLocator(FrameSelector(hint));
                     var candidate = frame.Locator(selector);
-                    if (!await IsPresentAsync(candidate, _config.Waits.FrameProbeTimeoutMs)) continue;
+                    if (!await IsPresentAsync(candidate, StepTimeoutContext.Resolve(_config.Waits.FrameProbeTimeoutMs))) continue;
                     _cache[key] = new ScopeChoice(true, hint, selector);
                     _logger.Info($"FRAME SCOPE: {key} resolved in hinted frame {hint.Strategy}:{hint.Value}");
                     return new ResolvedScope(candidate, frame);
@@ -48,7 +48,7 @@ public sealed class DuckCreekFrameScopeResolver
             }
         }
 
-        await BestEffortPresentAsync(documentLocator, _config.Waits.ElementReadyTimeoutMs);
+        await BestEffortPresentAsync(documentLocator, StepTimeoutContext.Resolve(_config.Waits.ElementReadyTimeoutMs));
         _cache[key] = new ScopeChoice(false, null, string.Empty);
         return new ResolvedScope(documentLocator, null);
     }

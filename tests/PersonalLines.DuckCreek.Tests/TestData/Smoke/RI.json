@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "RI",
+    "name": "Rhode Island",
+    "variant": "RI"
+  },
+  "values": {
+    "state": "RI",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "BRAIN",
+    "Last Name": "ALBERT",
+    "DOB": "5/16/1961",
+    "SSN": "666266550",
+    "Street Address": "66 WARD AVE",
+    "Apartment": "19",
+    "City": "WESTERLY",
+    "ZIP": "02891",
+    "State Abbreviation": "RI"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "RHODE ISLAND",
+        "state_44": "RHODE ISLAND"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "RHODE ISLAND",
+        "state_44": "RHODE ISLAND"
+      }
+    }
+  }
+}

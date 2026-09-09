@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "OK",
+    "name": "Oklahoma",
+    "variant": "OK ANP"
+  },
+  "values": {
+    "state": "OK",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "FREDERICK",
+    "Last Name": "ATCITY",
+    "DOB": "4/3/1954",
+    "SSN": "666710811",
+    "Street Address": "2453 NW 41ST ST",
+    "Apartment": "19",
+    "City": "OKLAHOMA CITY",
+    "ZIP": "73112",
+    "State Abbreviation": "OK"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "OKLAHOMA",
+        "state_44": "OKLAHOMA"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "OKLAHOMA",
+        "state_44": "OKLAHOMA"
+      }
+    }
+  }
+}

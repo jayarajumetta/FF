@@ -3,7 +3,7 @@
 Feature: GL OCP Policy
   As a Commercial Lines Duck Creek policy processing user
   I want to complete the GL OCP Policy workflow
-  So that the business transaction is executed with source-traceable data and verification
+  So that the business transaction is executed with maintainable test data and verification
 
   Background: Prepare Commercial Lines Duck Creek for policy processing
     Given I open a browser session
@@ -34,18 +34,18 @@ Feature: GL OCP Policy
 
     Examples:
       | stateCode | dataFile                                     | stateVariant | stateName     | externalDataFile                    |
-      | AZ        | TestData/Scenarios/006_gl_ocp_policy_az.json | AZ           | Arizona       | TestData/ExternalDataOverrides.json |
-      | CT        | TestData/Scenarios/006_gl_ocp_policy_ct.json | CT           | Connecticut   | TestData/ExternalDataOverrides.json |
-      | DE        | TestData/Scenarios/006_gl_ocp_policy_de.json | DE           | Delaware      | TestData/ExternalDataOverrides.json |
-      | MA        | TestData/Scenarios/006_gl_ocp_policy_ma.json | MA           | Massachusetts | TestData/ExternalDataOverrides.json |
-      | MD        | TestData/Scenarios/006_gl_ocp_policy_md.json | MD           | Maryland      | TestData/ExternalDataOverrides.json |
-      | ME        | TestData/Scenarios/006_gl_ocp_policy_me.json | ME           | Maine         | TestData/ExternalDataOverrides.json |
-      | NH        | TestData/Scenarios/006_gl_ocp_policy_nh.json | NH           | New Hampshire | TestData/ExternalDataOverrides.json |
-      | NJ        | TestData/Scenarios/006_gl_ocp_policy_nj.json | NJ           | New Jersey    | TestData/ExternalDataOverrides.json |
-      | NY        | TestData/Scenarios/006_gl_ocp_policy_ny.json | NY           | New York      | TestData/ExternalDataOverrides.json |
-      | PA        | TestData/Scenarios/006_gl_ocp_policy_pa.json | PA           | Pennsylvania  | TestData/ExternalDataOverrides.json |
-      | RI        | TestData/Scenarios/006_gl_ocp_policy_ri.json | RI           | Rhode Island  | TestData/ExternalDataOverrides.json |
-      | VA        | TestData/Scenarios/006_gl_ocp_policy_va.json | VA           | Virginia      | TestData/ExternalDataOverrides.json |
-      | VT        | TestData/Scenarios/006_gl_ocp_policy_vt.json | VT           | Vermont       | TestData/ExternalDataOverrides.json |
-      | WV        | TestData/Scenarios/006_gl_ocp_policy_wv.json | WV           | West Virginia | TestData/ExternalDataOverrides.json |
+      | AZ        | TestData/Basic/AZ.json | AZ           | Arizona       | TestData/ExternalDataOverrides.json |
+      | CT        | TestData/Basic/CT.json | CT           | Connecticut   | TestData/ExternalDataOverrides.json |
+      | DE        | TestData/Basic/DE.json | DE           | Delaware      | TestData/ExternalDataOverrides.json |
+      | MA        | TestData/Basic/MA.json | MA           | Massachusetts | TestData/ExternalDataOverrides.json |
+      | MD        | TestData/Basic/MD.json | MD           | Maryland      | TestData/ExternalDataOverrides.json |
+      | ME        | TestData/Basic/ME.json | ME           | Maine         | TestData/ExternalDataOverrides.json |
+      | NH        | TestData/Basic/NH.json | NH           | New Hampshire | TestData/ExternalDataOverrides.json |
+      | NJ        | TestData/Basic/NJ.json | NJ           | New Jersey    | TestData/ExternalDataOverrides.json |
+      | NY        | TestData/Basic/NY.json | NY           | New York      | TestData/ExternalDataOverrides.json |
+      | PA        | TestData/Basic/PA.json | PA           | Pennsylvania  | TestData/ExternalDataOverrides.json |
+      | RI        | TestData/Basic/RI.json | RI           | Rhode Island  | TestData/ExternalDataOverrides.json |
+      | VA        | TestData/Basic/VA.json | VA           | Virginia      | TestData/ExternalDataOverrides.json |
+      | VT        | TestData/Basic/VT.json | VT           | Vermont       | TestData/ExternalDataOverrides.json |
+      | WV        | TestData/Basic/WV.json | WV           | West Virginia | TestData/ExternalDataOverrides.json |
 

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "SD",
+    "name": "South Dakota",
+    "variant": "SD ANG"
+  },
+  "values": {
+    "state": "SD",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "DENNIS",
+    "Last Name": "BOURNE",
+    "DOB": "2/28/1957",
+    "SSN": "888023775",
+    "Street Address": "27965 459TH AVE",
+    "Apartment": "17",
+    "City": "HURLEY",
+    "ZIP": "57036",
+    "State Abbreviation": "SD"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "SOUTH DAKOTA",
+        "state_44": "SOUTH DAKOTA"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "SOUTH DAKOTA",
+        "state_44": "SOUTH DAKOTA"
+      }
+    }
+  }
+}

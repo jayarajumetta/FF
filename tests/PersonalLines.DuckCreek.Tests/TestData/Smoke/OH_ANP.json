@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "OH",
+    "name": "Ohio",
+    "variant": "OH ANP"
+  },
+  "values": {
+    "state": "OH",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "AARON",
+    "Last Name": "BILDSTEIN",
+    "DOB": "5/9/1971",
+    "SSN": "666406848",
+    "Street Address": "10402 OVIATT LN",
+    "Apartment": "17",
+    "City": "TWINSBURG",
+    "ZIP": "44087",
+    "State Abbreviation": "OH"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "OHIO",
+        "state_44": "OHIO"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "OHIO",
+        "state_44": "OHIO"
+      }
+    }
+  }
+}

@@ -59,49 +59,73 @@ public sealed class TestHooks
     public void BeforeStep()
     {
         var step = _scenario.StepContext.StepInfo.Text;
-        var config = _scenario.Get<FrameworkConfig>();
+        var data = _scenario.Get<ScenarioData>();
+        var logger = _scenario.Get<RunLogger>();
+        var browser = _scenario.Get<BrowserSession>();
+        var timeoutMs = data.IsLoaded ? data.GetStepTimeoutMs(step) : null;
+
+        if (_scenario.ContainsKey("StepTimeoutScope"))
+            _scenario.Get<IDisposable>("StepTimeoutScope").Dispose();
+        var timeoutScope = StepTimeoutContext.Push(timeoutMs);
+        _scenario.Set(timeoutScope, "StepTimeoutScope");
+        browser.ApplyStepTimeout(timeoutMs);
+
         ExecutionIntent.StartStep(
             _feature.FeatureInfo.Title,
             _scenario.ScenarioInfo.Title,
             step,
             3);
 
-        _scenario.Get<BrowserSession>().BeginStepEvidence();
+        browser.BeginStepEvidence();
         _scenario.Set(_scenario.Get<DeferredVerificationCollector>().Failures.Count, "DeferredVerificationCountAtStepStart");
-        _scenario.Get<RunLogger>().Info($"START STEP: {step}");
+        logger.Info(timeoutMs.HasValue
+            ? $"START STEP: {step} [timeout override: {timeoutMs.Value}ms]"
+            : $"START STEP: {step}");
         _scenario.Get<ScenarioReport>().StartStep(step);
     }
 
     [AfterStep]
     public async Task AfterStepAsync()
     {
-        var config = _scenario.Get<FrameworkConfig>();
-        var logger = _scenario.Get<RunLogger>();
-        var data = _scenario.Get<ScenarioData>();
-        var report = _scenario.Get<ScenarioReport>();
         var browser = _scenario.Get<BrowserSession>();
-        var verificationFailures = _scenario.Get<DeferredVerificationCollector>();
-        var beforeDeferred = _scenario.ContainsKey("DeferredVerificationCountAtStepStart") ? _scenario.Get<int>("DeferredVerificationCountAtStepStart") : 0;
-        var deferredInStep = verificationFailures.Failures.Count > beforeDeferred;
-        var failed = _scenario.TestError is not null || deferredInStep;
-        string? screenshot = null;
-
-        if (browser.IsStarted && failed && config.Browser.ScreenshotOnFailure)
+        try
         {
-            try { screenshot = await browser.CaptureScreenshotAsync("scenario.png"); }
-            catch (Exception ex) { logger.Warn($"Unable to capture failure screenshot: {ex.Message}"); }
+            var config = _scenario.Get<FrameworkConfig>();
+            var logger = _scenario.Get<RunLogger>();
+            var data = _scenario.Get<ScenarioData>();
+            var report = _scenario.Get<ScenarioReport>();
+            var verificationFailures = _scenario.Get<DeferredVerificationCollector>();
+            var beforeDeferred = _scenario.ContainsKey("DeferredVerificationCountAtStepStart")
+                ? _scenario.Get<int>("DeferredVerificationCountAtStepStart")
+                : 0;
+            var deferredInStep = verificationFailures.Failures.Count > beforeDeferred;
+            var failed = _scenario.TestError is not null || deferredInStep;
+            string? screenshot = null;
+
+            if (browser.IsStarted && failed && config.Browser.ScreenshotOnFailure)
+            {
+                try { screenshot = await browser.CaptureScreenshotAsync("scenario.png"); }
+                catch (Exception ex) { logger.Warn($"Unable to capture failure screenshot: {ex.Message}"); }
+            }
+
+            if (_scenario.TestError is not null)
+                logger.Error($"FAILED STEP: {_scenario.StepContext.StepInfo.Text} :: {_scenario.TestError}");
+            else if (deferredInStep)
+                logger.Warn($"STEP COMPLETED WITH DEFERRED VERIFICATION: {_scenario.StepContext.StepInfo.Text}");
+            else
+                logger.Info($"PASSED STEP: {_scenario.StepContext.StepInfo.Text}");
+
+            var evidence = browser.EndStepEvidence();
+            var stepError = _scenario.TestError?.Message ??
+                            (deferredInStep ? "Verification failed after readiness wait and resolved-control interaction; deferred until scenario end." : null);
+            report.EndStep(!failed, stepError, data.Snapshot(), screenshot, evidence);
         }
-
-        if (_scenario.TestError is not null)
-            logger.Error($"FAILED STEP: {_scenario.StepContext.StepInfo.Text} :: {_scenario.TestError}");
-        else if (deferredInStep)
-            logger.Warn($"STEP COMPLETED WITH DEFERRED VERIFICATION: {_scenario.StepContext.StepInfo.Text}");
-        else
-            logger.Info($"PASSED STEP: {_scenario.StepContext.StepInfo.Text}");
-
-        var evidence = browser.EndStepEvidence();
-        var stepError = _scenario.TestError?.Message ?? (deferredInStep ? "Verification failed after canonical locator/readiness wait; deferred until scenario end." : null);
-        report.EndStep(!failed, stepError, data.Snapshot(), screenshot, evidence);
+        finally
+        {
+            browser.ApplyStepTimeout(null);
+            if (_scenario.ContainsKey("StepTimeoutScope"))
+                _scenario.Get<IDisposable>("StepTimeoutScope").Dispose();
+        }
     }
 
     [AfterScenario(Order = 100)]

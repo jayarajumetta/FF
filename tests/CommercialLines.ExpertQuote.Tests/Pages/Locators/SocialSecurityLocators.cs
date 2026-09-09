@@ -13,7 +13,7 @@ public sealed class SocialSecurityLocators
         _page.GetByText(new Regex(@"No SSN# Found|SSN.*could not be found", RegexOptions.IgnoreCase));
     public ILocator SsnInput => _page.Locator("[id='ssn']");
 
-    // Tosca source: Tag=BUTTON, Id=btnConfirmYes. This is an HTML id, not data-testid.
+    // Stable application button id; this is an HTML id, not data-testid.
     public ILocator SubmitAngular => _page.Locator("[id='btnConfirmYes']");
 
     public ILocator NoPrefillMatchFound =>

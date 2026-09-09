@@ -18,7 +18,7 @@ public sealed record LocatorSpec(
 /// <summary>
 /// Locator construction keeps frame metadata as a scope hint; Build(IPage, ...) always targets the
 /// top document. The deterministic resolver decides whether to use BuildInFrame after it has briefly proved
-/// that the hinted frame is present. This avoids hard-wiring a stale Tosca HtmlFrame classification.
+/// that the hinted frame is present. This avoids hard-wiring a stale frame classification.
 /// </summary>
 public static class LocatorResolution
 {
@@ -32,7 +32,7 @@ public static class LocatorResolution
     public static ILocator BuildInFrame(IPage page, LocatorSpec spec)
     {
         if (string.IsNullOrWhiteSpace(spec.FrameValue))
-            throw new InvalidOperationException("Frame-scoped locator requested without raw Tosca frame evidence.");
+            throw new InvalidOperationException("Frame-scoped locator requested without configured frame evidence.");
         var frame = BuildFrame(page, spec.FrameStrategy ?? "css", spec.FrameValue!);
         var locator = string.IsNullOrWhiteSpace(spec.AnchorStrategy)
             ? Raw(frame, spec.Strategy, spec.Value, spec.Role, spec.Exact)

@@ -11,6 +11,11 @@ public sealed class UiActions
     private readonly DeferredVerificationCollector? _verificationFailures;
     private readonly HashSet<string> _semanticallyCommittedControls = new(StringComparer.OrdinalIgnoreCase);
     private readonly IRuntimeLocatorResolver? _runtimeLocatorResolver;
+    private int ActionTimeoutMs => StepTimeoutContext.Resolve(_config.Browser.ActionTimeoutMs);
+    private int PageReadyTimeoutMs => StepTimeoutContext.Resolve(_config.Waits.PageReadyTimeoutMs);
+    private int ElementReadyTimeoutMs => StepTimeoutContext.Resolve(_config.Waits.ElementReadyTimeoutMs);
+    private int VerifyTimeoutMs => StepTimeoutContext.Resolve(_config.Waits.VerifyTimeoutMs);
+    private int DropdownOptionTimeoutMs => StepTimeoutContext.Resolve(_config.Waits.DropdownOptionTimeoutMs);
 
     public UiActions(BrowserSession browser, FrameworkConfig config, RunLogger logger)
         : this(browser, config, logger, null, "Unknown", null, null) { }
@@ -30,7 +35,8 @@ public sealed class UiActions
 
     public async Task WaitReadyBestEffortAsync(ILocator locator, ControlIntent intent, int timeoutMs)
     {
-        try { await locator.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = timeoutMs }); }
+        var effectiveTimeout = StepTimeoutContext.Resolve(timeoutMs);
+        try { await locator.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = effectiveTimeout }); }
         catch (Exception ex) when (ex is PlaywrightException or TimeoutException) { _logger.Warn($"DEPENDENT CONTROL WAIT CONTINUING: {intent}; {ex.Message}"); }
     }
 
@@ -40,8 +46,8 @@ public sealed class UiActions
     public async Task FillAsync(ILocator locator, string value, ControlIntent intent)
     {
         await ExecuteAsync(locator, intent, "fill", x => ComponentAwareControlActions.SelectOrFillAsync(
-            _browser.Page, x, value ?? string.Empty, _config.Browser.ActionTimeoutMs,
-            _config.Waits.DropdownOptionTimeoutMs, _config.Waits.DropdownPollIntervalMs));
+            _browser.Page, x, value ?? string.Empty, ActionTimeoutMs,
+            DropdownOptionTimeoutMs, _config.Waits.DropdownPollIntervalMs));
         _semanticallyCommittedControls.Add(IntentKey(intent));
     }
 
@@ -58,7 +64,7 @@ public sealed class UiActions
     public async Task PressAsync(ILocator locator, string key, ControlIntent intent)
     {
         var normalized = NormalizeKey(key).Trim();
-        // Tosca CLICK is an interaction intent, never a keyboard key.
+        // CLICK is an interaction intent, never a keyboard key.
         if (normalized.Equals("CLICK", StringComparison.OrdinalIgnoreCase)) { await ClickAsync(locator, intent); return; }
         if (normalized.Equals("DOUBLECLICK", StringComparison.OrdinalIgnoreCase))
         { await ExecuteAsync(locator, intent, "double-click", x => x.DblClickAsync()); return; }
@@ -99,7 +105,7 @@ public sealed class UiActions
                 case ComponentKind.MaterialSelect:
                 case ComponentKind.Autocomplete:
                     await ComponentAwareControlActions.SelectOrFillAsync(_browser.Page, x, value ?? string.Empty,
-                        _config.Browser.ActionTimeoutMs, _config.Waits.DropdownOptionTimeoutMs, _config.Waits.DropdownPollIntervalMs);
+                        ActionTimeoutMs, DropdownOptionTimeoutMs, _config.Waits.DropdownPollIntervalMs);
                     return;
                 case ComponentKind.RadioGroup:
                 case ComponentKind.ChipGroup:
@@ -125,7 +131,7 @@ public sealed class UiActions
     }
 
     /// <summary>
-    /// Source/component-aware Select semantics. Native and rendered dropdowns use one bounded deterministic algorithm.
+    /// Component-aware select semantics. Native and rendered dropdowns use one bounded deterministic algorithm.
     /// </summary>
     public async Task SelectAsync(ILocator locator, string value, ControlIntent intent)
     {
@@ -138,7 +144,7 @@ public sealed class UiActions
                 case ComponentKind.MaterialSelect:
                 case ComponentKind.Autocomplete:
                     await ComponentAwareControlActions.SelectOrFillAsync(_browser.Page, x, value ?? string.Empty,
-                        _config.Browser.ActionTimeoutMs, _config.Waits.DropdownOptionTimeoutMs, _config.Waits.DropdownPollIntervalMs);
+                        ActionTimeoutMs, DropdownOptionTimeoutMs, _config.Waits.DropdownPollIntervalMs);
                     return;
                 case ComponentKind.RadioGroup:
                 case ComponentKind.ChipGroup:
@@ -287,7 +293,7 @@ public sealed class UiActions
             await visible.ClickAsync();
             return;
         }
-        throw new PlaywrightException($"Strict component collision: {count} matches ({visibleCount} visible) for {description} at {intent.Page}.{intent.Control}. Add page/section or Tosca occurrence evidence; no arbitrary First/Nth selection is allowed.");
+        throw new PlaywrightException($"Strict component collision: {count} matches ({visibleCount} visible) for {description} at {intent.Page}.{intent.Control}. Add page/section or locator occurrence evidence; no arbitrary First/Nth selection is allowed.");
     }
 
     private static async Task<ComponentKind> DetectComponentAsync(ILocator control)
@@ -341,7 +347,7 @@ public sealed class UiActions
                 State = expected.Contains("Absent", StringComparison.OrdinalIgnoreCase)
                     ? WaitForSelectorState.Detached
                     : WaitForSelectorState.Hidden,
-                Timeout = _config.Waits.VerifyTimeoutMs
+                Timeout = VerifyTimeoutMs
             });
             return;
         }
@@ -349,7 +355,7 @@ public sealed class UiActions
         await ExecuteAsync(locator, intent, "wait-visible", x => x.WaitForAsync(new LocatorWaitForOptions
         {
             State = WaitForSelectorState.Visible,
-            Timeout = _config.Waits.ElementReadyTimeoutMs
+            Timeout = ElementReadyTimeoutMs
         }));
     }
 
@@ -366,7 +372,7 @@ public sealed class UiActions
                 await ExecuteAsync(locator, intent, "verify-visible", x => x.WaitForAsync(new LocatorWaitForOptions
                 {
                     State = WaitForSelectorState.Visible,
-                    Timeout = _config.Waits.VerifyTimeoutMs
+                    Timeout = VerifyTimeoutMs
                 }));
                 return;
             }
@@ -376,7 +382,7 @@ public sealed class UiActions
                 await locator.WaitForAsync(new LocatorWaitForOptions
                 {
                     State = normalized.Equals("Absent", StringComparison.OrdinalIgnoreCase) ? WaitForSelectorState.Detached : WaitForSelectorState.Hidden,
-                    Timeout = _config.Waits.VerifyTimeoutMs
+                    Timeout = VerifyTimeoutMs
                 });
                 return;
             }
@@ -385,7 +391,7 @@ public sealed class UiActions
             {
                 await ExecuteAsync(locator, intent, "verify-enabled", async x =>
                 {
-                    await x.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = _config.Waits.VerifyTimeoutMs });
+                    await x.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = VerifyTimeoutMs });
                     if (!await x.IsEnabledAsync()) throw new InvalidOperationException("Expected control to be enabled.");
                 });
                 return;
@@ -449,7 +455,7 @@ public sealed class UiActions
 
     public Task ReviewRequiredAsync(string reason)
     {
-        _logger.Warn($"SOURCE TRACE NOTE: {reason}");
+        _logger.Warn($"EXECUTION NOTE: {reason}");
         return Task.CompletedTask;
     }
 
@@ -503,8 +509,8 @@ public sealed class UiActions
         if (action is "wait-absent") return;
         // Best-effort readiness only. A timeout is diagnostic; the actual Playwright action decides the result.
         var timeout = action.StartsWith("verify", StringComparison.OrdinalIgnoreCase)
-            ? _config.Waits.VerifyTimeoutMs
-            : _config.Waits.ElementReadyTimeoutMs;
+            ? VerifyTimeoutMs
+            : ElementReadyTimeoutMs;
         try
         {
             await locator.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = timeout });
@@ -522,14 +528,14 @@ public sealed class UiActions
         {
             await _browser.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded, new PageWaitForLoadStateOptions
             {
-                Timeout = _config.Waits.PageReadyTimeoutMs
+                Timeout = PageReadyTimeoutMs
             });
         }
         catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
         {
             // SPA applications can keep navigation/network activity alive. DOMContentLoaded is a readiness
             // hint, not a business assertion; the element-level wait below remains authoritative.
-            _logger.Warn($"PAGE READY WAIT CONTINUING: DOMContentLoaded did not settle within {_config.Waits.PageReadyTimeoutMs}ms: {ex.Message}");
+            _logger.Warn($"PAGE READY WAIT CONTINUING: DOMContentLoaded did not settle within {PageReadyTimeoutMs}ms: {ex.Message}");
         }
     }
 

@@ -10,12 +10,12 @@ The solution uses .NET 8, Microsoft Playwright, ReqnRoll and NUnit.
 
 ## Prerequisites
 
-- Windows 10/11 or Windows Server build agent
+- Windows 10/11 or a Windows Server build agent
 - .NET 8 SDK
 - PowerShell 7+ recommended
 - Microsoft Edge or Playwright Chromium
-- Python 3.x only for the repository quality gate
-- Azure DevOps Test Plans access when using Test Plan execution
+- Python 3.x for the repository quality gate and consolidated HTML report
+- Azure DevOps Test Plans access when Test Plan execution is required
 
 ## Local setup
 
@@ -25,23 +25,21 @@ From the repository root:
 .\setup.cmd
 ```
 
-The setup script restores NuGet packages, builds the solution and installs Playwright Chromium.
-
-Configure runtime settings in:
+The setup script restores NuGet packages, builds the solution and installs Playwright Chromium. Runtime settings are read from:
 
 ```text
 config/framework.json
 ```
 
-For a different config file, set:
+To use another framework configuration:
 
 ```powershell
 $env:TEST_FRAMEWORK_CONFIG = "C:\path\framework.json"
 ```
 
-## Credentials
+## Credentials and environment overrides
 
-Do not store credentials in source control. Configure them as environment variables or secure CI/CD variables:
+Do not store real credentials in source control. Configure them as secure environment or pipeline variables:
 
 ```powershell
 $env:CL_DC_USERNAME = ""
@@ -59,7 +57,19 @@ $env:CL_DC_UW_DIRECTOR_USERNAME = ""
 $env:CL_DC_UW_DIRECTOR_PASSWORD = ""
 ```
 
-`credentials.example.ps1` contains an empty template.
+Each application has one `TestData/ExternalDataOverrides.json`. It is intentionally restricted to:
+
+```json
+{
+  "application": {
+    "url": "https://approved-test-environment/",
+    "username": "SYNTHETIC_REPLACE_ME",
+    "password": "SYNTHETIC_REPLACE_ME"
+  }
+}
+```
+
+Business inputs, state data, LOB data and expected values are not accepted in the external override file. They belong in the direct state files described below. `credentials.example.ps1` contains an empty local template.
 
 ## Running tests
 
@@ -85,7 +95,7 @@ Run by ReqnRoll/NUnit tag:
 .\run.cmd -Project CLDC -Filter "TestCategory=smoke_test&TestCategory=UMB"
 ```
 
-Run directly with `dotnet test` when required:
+Direct `dotnet test` execution is also supported:
 
 ```powershell
 dotnet test .\tests\CommercialLines.DuckCreek.Tests\CommercialLines.DuckCreek.Tests.csproj -c Debug --filter "TestCategory=smoke_test"
@@ -93,9 +103,9 @@ dotnet test .\tests\CommercialLines.DuckCreek.Tests\CommercialLines.DuckCreek.Te
 
 TRX and NUnit output are written under `TestResults` by the supplied run script.
 
-## Test structure
+## Project structure
 
-Each application follows the same separation:
+Each application uses the same separation:
 
 ```text
 Features/
@@ -106,63 +116,103 @@ Hooks/
 TestData/
 ```
 
-Feature files remain business-readable. Step definitions own workflow and runtime data decisions. Page classes expose reusable business interactions. Locator classes contain only control identity. Common browser, action, data and reporting behavior is implemented in `src/InsuranceAutomation.Core`.
+Feature files remain business-readable. Step definitions own workflow and runtime-data decisions. Page classes expose reusable business interactions. Locator classes contain control identity. Common browser, interaction, data, evidence and reporting behaviour is implemented under `src/InsuranceAutomation.Core`.
 
-## CLDC locators
+## Direct shared-state test data
 
-CLDC locator classes use direct Playwright locators. They do not call a shared associated-label locator helper.
-
-For Duck Creek data controls, raw Tosca `Tag=INPUT`, `TEXTAREA` or `SELECT` plus a literal technical DuckCreekId is mapped to the rendered DOM `fieldref`:
-
-```csharp
-_page.Locator("input[fieldref=\"PolicyInput.EffectiveDate\"]")
-_page.Locator("input[fieldref=\"AccountSSNRetrievalInput.SSNInput\"]")
-_page.Locator("input[fieldref=\"PolicyOutputNonShredded.QuoteQuick\"]")
-```
-
-This rule includes checkbox controls because Duck Creek renders them as `input` elements. `NoKnownLosses` remains an exact checkbox-role locator because the supplied raw Tosca record contains `Tag=INPUT` but no DuckCreekId, fieldref, id or name. Generic action text is not converted to fieldref. Raw `Tag=A` controls use exact link semantics, such as Login, Start, Next and OK. Stable raw HTML `id` or `name` is used only when it is source-backed and not a generated ExtJS identifier.
-
-When the same technical fieldref is repeated for multiple controls on one rendered module, the direct locator combines fieldref with the exact source label relationship. It does not select an arbitrary occurrence. Controls on mutually exclusive pages that share the same technical fieldref reuse one locator property.
-
-Raw frame information is treated only as a scope hint. Runtime resolution briefly probes a known frame and, when it is not present, resolves the same control in the top document. Successful scope is cached for the Page/Control during the scenario.
-
-## Dropdowns and comboboxes
-
-Dropdown interaction is centralized in `ComponentAwareControlActions`:
-
-1. exact visible option match;
-2. unique controlled partial match;
-3. controlled Enter commit for an editable combobox when the requested value is actually present in the input;
-4. read-only controls may use Enter only when a single active option is related to the requested value.
-
-Native `<select>` controls never guess an arbitrary option. Tab is not used to walk dropdown values.
-
-## Readiness and interaction highlighting
-
-Before an action, the framework performs a bounded best-effort visibility wait. A readiness timeout is logged but is not itself the business assertion; the subsequent Playwright action determines whether the step succeeds.
-
-Interactive controls are highlighted briefly before the action. The original element styling is restored automatically after the configured highlight duration.
-
-## CLDC smoke test data
-
-CLDC smoke tests use one base file per LOB plus one state override file:
+The previous layered merge model, state override manifests and one-file-per-LOB/per-state scenario files have been removed. Every application now uses one direct file for each **test category and state variant**:
 
 ```text
-TestData/Smoke/BAP.json
-TestData/Smoke/CP.json
-TestData/Smoke/GL.json
-TestData/Smoke/IM.json
-TestData/Smoke/WC.json
-TestData/Smoke/CPP.json
-TestData/Smoke/UMB.json
-TestData/Smoke/StateOverrides.json
+TestData/Smoke/AL.json
+TestData/Basic/AL.json
+TestData/Extended/AL.json
 ```
 
-State identity comes from the Scenario Outline. Only values that genuinely differ from the LOB base are placed in `StateOverrides.json`.
+The sharing rule is deterministic:
 
-Other flows use their referenced `TestData/Scenarios/*.json` files. External/environment-specific values are read from `TestData/ExternalDataOverrides.json` and secure environment variables.
+- every Smoke LOB for the same application and state references the same `Smoke/<state>.json`;
+- every Basic LOB references the separate but shared `Basic/<state>.json`;
+- Extended/Expanded flows reference `Extended/<state>.json`;
+- a state variant such as `MA_AUTO` or `UT_ANP` has its own direct file because it is a distinct executable variant.
 
-## Runtime description value
+A direct state file contains shared values once and only genuinely flow-specific values beneath the feature name:
+
+```json
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "AL",
+    "name": "Alabama",
+    "variant": "AL"
+  },
+  "values": {
+    "state": "AL",
+    "transaction": "Smoke Test"
+  },
+  "random": {
+    "SharedReference": {
+      "pattern": "^[A-Z0-9]{6}$"
+    }
+  },
+  "flows": {
+    "BAP Smoke Test": {
+      "values": {
+        "product_lob": "BAP"
+      },
+      "random": {
+        "InsuredSSN": {
+          "pattern": "125[0-9]{6}"
+        }
+      }
+    },
+    "UMB Smoke Test": {
+      "values": {
+        "product_lob": "UMB"
+      }
+    }
+  }
+}
+```
+
+`ScenarioData` selects the flow using the current ReqnRoll feature title. There is no merge manifest and no hidden state patch. Common and flow sections are checked for duplicate keys by the package gate.
+
+### Data precedence
+
+The effective value order is deliberately small and visible:
+
+1. values captured or generated during the current scenario;
+2. approved external `url`, `username` and `password` values;
+3. the selected feature-flow values in the direct state file;
+4. the shared values in that state file;
+5. `state.code`, `state.name` and `state.variant` as defaults when an equivalent business value is not already present.
+
+Runtime captures use `SetRuntime`/`Set`. Random values are generated once per scenario and then retained in runtime data. The framework continues to resolve existing `{B[...]}`, `{PL[...]}` and `{{runtime:...}}` expressions so the working feature and page flows are not broken while names are gradually made more business-readable.
+
+## Optional per-business-step timeout
+
+Each application has one:
+
+```text
+TestData/StepTimeouts.json
+```
+
+Leave `features` empty to use the standard framework timeouts. To increase or reduce the timeout for one business step, add the exact feature title and exact Gherkin step text without the `Given`, `When`, `Then` or `And` keyword:
+
+```json
+{
+  "features": {
+    "BAP Smoke Test": {
+      "I complete Business Auto policy-specific fields": "90s"
+    }
+  }
+}
+```
+
+Accepted values are positive milliseconds, `45s` or `2m`. `*` may be used in a step expression, and feature `*` may be used for a cross-feature default.
+
+The hook establishes the timeout before the step starts. The value flows through asynchronous step definitions, page methods, UI actions, Playwright page/context defaults and CLDC frame/control waits. Defaults are restored in `AfterStep`, including when a step fails. Existing `PauseAsync` calls remain fixed, deliberate stabilisation delays; the step timeout controls how long actions and readiness checks may wait and does not silently multiply those pauses.
+
+## Runtime quote descriptions
 
 CLDC quote descriptions are generated at runtime in the following form:
 
@@ -170,11 +220,41 @@ CLDC quote descriptions are generated at runtime in the following form:
 STATE_LOB_RANDOM4_yyyyMMdd_HHmmss
 ```
 
-The value entered into Duck Creek is captured from the UI and stored in scenario runtime data. Every protected CLDC Smoke flow navigates back to Policy Info and validates the captured description. The uploaded Smoke feature and step-definition files remain byte-for-byte unchanged in this revision, including temporarily commented Examples rows.
+The entered value can be captured from the UI and reused through scenario runtime data for later validation.
+
+## Locator and interaction policy
+
+CLDC locator classes use direct Playwright locators. Stable Duck Creek data controls use rendered DOM `fieldref` selectors where the application exposes a reliable technical field identity:
+
+```csharp
+_page.Locator("input[fieldref=\"PolicyInput.EffectiveDate\"]")
+_page.Locator("input[fieldref=\"AccountSSNRetrievalInput.SSNInput\"]")
+```
+
+Links and buttons use stable semantic identity where appropriate. Generated framework IDs are avoided. When a technical identifier is repeated in the same rendered module, the locator also uses a stable section/label relationship rather than selecting an arbitrary occurrence.
+
+Frame information is treated as a scope hint. Runtime resolution probes the configured frame and falls back to the top document when the control is not present there. The successful scope is cached for the Page/Control during the scenario.
+
+ExpertQuote locator classes do not use Duck Creek `fieldref`, `duckcreekid` or `data-duckcreekid` selectors. They use Angular and stable browser contracts such as `data-testid`, stable `id`/`name`, ARIA role and exact action text. PLDC retains its own project/page classes while using the same Angular-style selector format where its ExpertQuote execution flow exposes those controls.
+
+### Dropdowns and comboboxes
+
+Dropdown interaction is centralized in `ComponentAwareControlActions`:
+
+1. exact visible option match;
+2. unique controlled partial match;
+3. controlled Enter commit for an editable combobox when the requested value is present;
+4. read-only controls may use Enter only when a single active option is related to the requested value.
+
+Native `<select>` controls do not guess an arbitrary option. Tab is not used to walk dropdown values.
+
+### Readiness and highlighting
+
+Before an action, the framework performs a bounded visibility/readiness wait. A readiness timeout is diagnostic; the subsequent Playwright action remains authoritative. Interactive controls are highlighted briefly before the action and their original styling is restored automatically.
 
 ## Verification operators
 
-Verification supports ordinary equality plus generated operator prefixes in the property specification:
+Verification supports ordinary equality and these property prefixes:
 
 ```text
 Regex:value
@@ -183,73 +263,51 @@ NotEqual:Value
 NotEqual:InnerText
 ```
 
-For example, a ZIP validation using `Regex:value` applies the supplied regular expression to the actual input value rather than comparing the pattern as plain text.
+For example, `Regex:value` applies the supplied expression to the actual input value rather than comparing the pattern as plain text.
 
-## Evidence and reports
+## Evidence and consolidated reporting
 
-Evidence settings are in `config/framework.json`.
+Evidence settings are in `config/framework.json`. Depending on policy, the framework can collect:
 
-The framework can collect:
-
-- failed/passed screenshots according to policy;
+- failed/passed screenshots;
 - execution log;
-- HTML scenario report;
-- Playwright video;
-- Playwright trace;
-- HAR;
+- individual HTML scenario report;
+- Playwright video, trace and HAR;
 - browser console/page errors;
 - request/response/request-failure log;
-- runtime locator evidence where applicable;
+- runtime locator evidence;
 - evidence bundle.
 
-`reporting.passed` and `reporting.failed` independently control what is attached for passed and failed cases. Failure screenshots are always captured when the browser is available.
+Each scenario writes `scenario-result.json` beside its evidence. `tools/generate_consolidated_report.py` recursively combines all scenario-result files into:
 
-Playwright context closure occurs before evidence publication so video, trace and HAR are finalized. Evidence is copied into the NUnit test-result evidence directory, checked for readability and registered using `TestContext.AddTestAttachment`.
+```text
+report.html
+log.html
+output.xml
+summary.json
+```
 
-## Browser lifecycle
-
-Headed Chromium/Edge execution starts maximized when `browser.maximize` is enabled. A new browser context is created per scenario and is closed after the scenario. Trace/video/HAR finalization happens during scenario cleanup.
+The consolidated HTML includes feature/scenario/step hierarchy, resolved bindings, test data, failure details, embedded failure screenshots and embedded execution logs. Binary artifacts remain linked to avoid excessively large report files.
 
 ## Azure DevOps
 
-Pipeline files:
+Canonical pipeline files:
 
 ```text
 .azuredevops/build.yml
 .azuredevops/release.yml
 ```
 
-Both pipelines use run names in the form:
+Root aliases are also supplied:
 
 ```text
-yyyyMMdd.increment
+azure-pipelines-ci.yml
+azure-pipelines-cd.yml
 ```
 
-### Build pipeline
+The build pipeline installs .NET 8 and Python, restores/builds the solution, validates Playwright installation, runs `tools/package_gate.py` and publishes the compiled test package. The release pipeline supports selected Test Plan case execution, suite execution and compiled DLL/tag/filter execution. It publishes TRX plus raw evidence and generates the consolidated report.
 
-The build pipeline:
-
-1. installs .NET 8 and Python;
-2. restores and builds the solution;
-3. validates the Playwright browser installation;
-4. runs `tools/package_gate.py`;
-5. publishes the executable `testpackage` pipeline artifact.
-
-### Release/execution pipeline
-
-The release pipeline downloads the compiled `testpackage` artifact and can independently execute:
-
-- one selected Azure DevOps Test Plan case;
-- one complete Test Plan suite;
-- compiled test DLLs with an optional VSTest tag/filter expression.
-
-The appropriate boolean parameters select which execution stages run. Test Plan IDs, suite IDs, configuration IDs and optional filter are pipeline parameters.
-
-Every execution stage publishes TRX results with run attachments and also publishes the raw evidence directory as a pipeline artifact.
-
-### Email report
-
-The final email stage downloads available evidence artifacts and sends an HTML summary using secure SMTP variables:
+SMTP delivery uses secure variables:
 
 ```text
 SMTP_HOST
@@ -260,40 +318,25 @@ SMTP_USER
 SMTP_PASSWORD
 ```
 
-Each scenario writes `scenario-result.json` beside its individual HTML report. The final release stage combines all available scenario results into Robot Framework-inspired `report.html`, `log.html`, `output.xml` and `summary.json`, publishes them as `consolidated-test-report`, and sends the same report set through SMTP when the secure SMTP variables are configured.
-
 ## Repository quality gate
 
-Before committing or packaging changes, run:
+Run before committing or packaging:
 
 ```powershell
 python .\tools\package_gate.py
 ```
 
-The gate checks JSON/YAML/project syntax, C# structural balance, all active feature-step bindings, feature/test-data references, exact layered-data reconstruction, EQ Smoke state lineage, Page-to-Locator references, ExpertQuote locator restrictions, protected CLDC Smoke/NUnit checksums, report generation and package cleanliness. A real `dotnet restore`, `dotnet build` and `dotnet test` remains authoritative and is performed by the Azure build/execution pipelines.
+The gate checks:
 
+- JSON, YAML and project XML syntax;
+- C# structural balance;
+- all feature-step bindings;
+- direct-state references and shared-file ownership;
+- absence of layered/scenario override artifacts and historical metadata;
+- external override restrictions;
+- timeout configuration and propagation contracts;
+- page-to-locator member references;
+- Python report generation;
+- package cleanliness.
 
-## Layered scenario test data
-
-All application suites retain the original `TestData/Scenarios/*.json` files as Tosca lineage. Runtime loading now also supports:
-
-```text
-TestData/Layered/manifest.json
-TestData/Layered/<flow>/Base.json
-TestData/Layered/<flow>/StateOverrides.json
-```
-
-`ScenarioData` reconstructs the requested scenario using JSON Merge Patch semantics. The package gate compares every reconstruction with its original scenario JSON before the package is accepted. This provides the same base-plus-state-override maintenance approach across CLDC Basic/Extended/Miscellaneous, ExpertQuote and PLDC without discarding the source records.
-
-## ExpertQuote state coverage and locators
-
-ExpertQuote BOP Smoke contains 45 active state examples. ExpertQuote SFP Smoke contains the 35 states supported by the supplied SFP Basic records. Existing Smoke records are retained; missing state-specific Smoke records are generated only from the supplied Smoke workflow template plus the corresponding raw-Tosca Basic Policy state record. The full donor and checksum lineage is stored in `Artifacts/Validation/eq-smoke-state-lineage.json`.
-
-ExpertQuote locator classes do not use Duck Creek `fieldref`, `duckcreekid` or `data-duckcreekid` selectors. They use source-backed Angular/stable contracts such as `data-testid`, stable `id`/`name`, ARIA role and exact action text. PLDC retains its own project/page classes while using the same Angular-style selector format where the supplied PLDC/EQ flow exposes those controls.
-
-Root Azure entry points are also included for easier pipeline selection:
-
-```text
-azure-pipelines-ci.yml
-azure-pipelines-cd.yml
-```
+A real `dotnet restore`, `dotnet build`, `dotnet test` and live browser execution remain authoritative and are performed on a workstation or Azure DevOps agent with .NET 8 and access to the customer applications.

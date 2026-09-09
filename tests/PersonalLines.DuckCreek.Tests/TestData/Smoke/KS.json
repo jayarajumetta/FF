@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "KS",
+    "name": "Kansas",
+    "variant": "KS"
+  },
+  "values": {
+    "state": "KS",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "A",
+    "Last Name": "BROCE",
+    "DOB": "4/15/1951",
+    "SSN": "666188427",
+    "Street Address": "13935 126TH RD",
+    "Apartment": "19",
+    "City": "HOYT",
+    "ZIP": "66440",
+    "State Abbreviation": "KS"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "KANSAS",
+        "state_44": "KANSAS"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "KANSAS",
+        "state_44": "KANSAS"
+      }
+    }
+  }
+}

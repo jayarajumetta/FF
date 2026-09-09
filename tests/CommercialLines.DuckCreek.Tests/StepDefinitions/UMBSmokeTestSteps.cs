@@ -177,8 +177,6 @@ public sealed class UMBSmokeTestSteps
         //await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_107}}"));
         //await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_108}}"));
         //await page.PressPrimaryRatingStateAsync("Down");
-        //await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_110}}"));
-        //await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_111}}"));
         //await page.PressPrimaryRatingStateAsync("Down");
         //await page.PauseAsync(1000);
         //await page.WaitForPrimaryRatingStateAsync("Exists");

@@ -35,11 +35,11 @@ public sealed class ApplicationPage
         await _ui.FillAsync(Password, password);
         await _ui.ClickAsync(SignIn);
 
-        // Wait for navigation to complete after sign-in
-        await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new PageWaitForLoadStateOptions { Timeout = 60000 });
+        // Keep the login wait authoritative while allowing an optional business-step timeout override.
+        await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new PageWaitForLoadStateOptions { Timeout = StepTimeoutContext.Resolve(60000) });
 
-        // Wait for the dashboard to be ready by checking for the New Quote button
+        // Confirm that the first post-login business action is available.
         var newQuoteButton = _page.GetByRole(AriaRole.Button, new() { Name = "New Quote", Exact = true });
-        await newQuoteButton.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 30000 });
+        await newQuoteButton.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = StepTimeoutContext.Resolve(30000) });
     }
 }

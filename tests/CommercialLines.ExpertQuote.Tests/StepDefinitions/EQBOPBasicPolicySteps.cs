@@ -23,7 +23,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForClientInfoAsync("Visible");
         await page.WaitForNewExistingClientSearchAsync("Visible");
         await page.EnterCustomerNameFirstAsync(data.Resolve("{{runtime:FirstName}}"));
@@ -42,7 +42,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForExistingClientMatchAsync("Exists");
         await page.ClickCreateNewClient1Async();
         data.Set("StateName", data.Resolve("{{data:statename}}"));
@@ -60,24 +60,24 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // XTestStep/XTestStepValue order is authoritative; manual CSV/workbooks are not inputs.
+        // The validated executable business sequence is authoritative.
         await page.WaitForAccountInformationHeaderAsync("Visible");
         await page.EnterOwnerMiddleNameAsync("");
         await page.EnterOwnerPhoneAsync(data.Resolve("{{runtime:OwnerPhone}}"));
         await page.EnterOwnerEmailAsync(data.Resolve("{{runtime:OwnerEmail}}"));
         await page.ClickMarriedAsync();
 
-        await page.EnterStreetAddressAsync(data.GetCanonicalFieldRequired("Address 1"));
-        await page.EnterAddress2Async(data.GetCanonicalField("Address 2"));
-        await page.EnterCityAsync(data.GetCanonicalFieldRequired("City"));
-        await page.SelectStateAsync(data.GetCanonicalFieldRequired("State Name"));
-        await page.EnterZipAsync(data.GetCanonicalFieldRequired("Zip"));
+        await page.EnterStreetAddressAsync(data.GetRequired("client.addressLine1"));
+        await page.EnterAddress2Async(data.Get("client.addressLine2"));
+        await page.EnterCityAsync(data.GetRequired("client.city"));
+        await page.SelectStateAsync(data.GetRequired("client.stateName"));
+        await page.EnterZipAsync(data.GetRequired("client.postalCode"));
 
-        var county = data.GetCanonicalField("County");
+        var county = data.Get("client.county");
         if (!string.IsNullOrWhiteSpace(county))
             await page.EnterCountyAsync(county);
 
-        // Map/Satellite are generated only after address steering in raw Tosca.
+        // Map and satellite controls are checked after address steering.
         await page.VerifyMapAsync("Visible", "");
         await page.VerifySatelliteAsync("Visible", "");
 
@@ -96,7 +96,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForProposalDetailsHeaderAsync("Visible");
         await page.SelectBusinessOwnersAsync("");
         await page.ClickIndividuallyOwnedDBAOrTAAsync();
@@ -121,9 +121,9 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new SocialSecurityPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForTheSSNCouldNotBeFoundPleaseEnterAnSSNAsync("Visible");
-        // Source step 0041: RANDOM input for ssn.
+        // Generate the SSN once for this scenario and reuse it.
         await page.EnterTheSSNCouldNotBeFoundPleaseEnterAnSSNAsync(data.Resolve("{{runtime:InsuredSSN}}"));
         await page.WaitForSubmitAngularAsync("Visible");
         await page.ClickSubmitAngularAsync();
@@ -151,7 +151,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (!await page.IsScreen4475CPresentAsync())
         {
                     await page.ClickScreen4475CAsync();
@@ -185,7 +185,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BusinessClassificationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForIndustryClassCodeRestrictionsHeadingAsync("Exists");
         if (!await page.IsScreenHeadingPresentAsync())
         {
@@ -203,7 +203,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (!await page.IsScreen4475CPresentAsync())
         {
                     await page.ClickScreen4475CAsync();
@@ -231,7 +231,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.ClickNextBOPAsync();
         await page.ClickIndividualSoleProprietorAsync();
         await page.ClickSaveAsync();
@@ -275,7 +275,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
 
     }
 
@@ -288,7 +288,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BusinessClassificationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (!await page.IsScreenHeadingPresentAsync())
         {
                     await page.VerifyScreenHeadingAsync("Absent", "");
@@ -305,7 +305,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (!await page.IsScreen4475CPresentAsync())
         {
                     await page.ClickScreen4475CAsync();
@@ -333,7 +333,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.VerifyScreenHeading9696CAsync("Absent", "");
@@ -350,7 +350,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (!await page.IsScreen4475CPresentAsync())
         {
                     await page.ClickScreen4475CAsync();
@@ -378,7 +378,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForNarrativeScreenHeadingAsync("Exists");
         await page.ClickAddNarrativeAsync();
         await page.EnterDescriptionOfTheBusinessExposuresActivitiesAndExperienceAsync(data.Resolve("{{data:description_of_the_business_exposures_activities_and_experience_118}}"));
@@ -411,7 +411,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (!await page.IsScreenDA408PresentAsync())
         {
                     await page.ClickScreenDA408Async();
@@ -439,7 +439,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new LossHistoryPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.SelectPriorPolicyNoAsync("");
         await page.PressYearsInBusinessAsync("ENTER");
         await page.ClickN3YearsAsync();
@@ -457,7 +457,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new LossHistoryPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.ClickADDCLAIMAsync();
         await page.PressDateOfOccurrenceAsync("CTRL+A");
         await page.PressDateOfOccurrenceAsync("Enter");
@@ -500,7 +500,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (!await page.IsScreen4475CPresentAsync())
         {
                     await page.ClickScreen4475CAsync();
@@ -528,7 +528,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new LocationsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.ClickEditLocationButtonLatestAngularAsync();
         await page.WaitForEditLocationHeadingAsync("Exists");
         await page.EnterTerritoryAsync(data.Resolve("{{data:territory_188}}"));
@@ -553,7 +553,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.ClickAddBuildingBPPAsync();
 
     }
@@ -567,7 +567,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForSelectIfClientOwnsOrRentsTheBuildingAsync("Visible");
         if (data.Condition("'Client Own or Rent' == \"OWN\""))
         {
@@ -589,7 +589,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForSelectIfClientOwnsOrRentsTheBuildingAsync("Visible");
         if (data.Condition("'Select Building Coverage' == \"Building Coverage\""))
         {
@@ -622,7 +622,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.EnterInsuredOccupancySqFtAsync("");
         await page.PressInsuredOccupancySqFtAngularAsync("CTRL+A");
         await page.PressInsuredOccupancySqFtAngularAsync("Enter");
@@ -638,7 +638,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForClassCodesAsync("Exists");
         await page.WaitForCheckBoxAngularAsync("Exists");
         await page.ClickCheckBoxAngularAsync();
@@ -662,7 +662,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.ClickCommercialButtonAsync();
         await page.ClickBVSButtonAsync();
         await page.ClickFrameAsync();
@@ -683,7 +683,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForBuildingDetailsHeadingAsync("Exists");
         if (data.Condition("'Actual Cash Value' != NULL"))
         {
@@ -734,7 +734,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.VerifyEQBOPBuildingBuildingDetailsSelectPelletStoveAsync("Exists", "");
         await page.VerifyEQBOPBuildingBuildingDetailsSelectWoodFurnaceAsync("Exists", "");
         await page.VerifyEQBOPBuildingBuildingDetailsSelectWoodStoveAsync("Exists", "");
@@ -750,7 +750,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.VerifyEQBOPBuildingBuildingDetailsAnswerAnyExtraPropertyAdditionalQuestionsAsync("Exists", "");
 
     }
@@ -764,7 +764,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.ClickSaveAsync();
         if (!await page.IsScreenHeadingPresentAsync())
         {
@@ -782,7 +782,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (!await page.IsScreen4475CPresentAsync())
         {
                     await page.ClickScreen4475CAsync();
@@ -829,7 +829,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.PressHaveThereBeenAnyEPLClaimsSuitsOrComplaintsOrAreThereAnyNowPendingAgainstTheInsuredOrAnyExecutiveOfficerOrOwnerAsync("ENTER");
         await page.PressHaveThereBeenAnyEPLClaimsSuitsOrComplaintsOrAreThereAnyNowPendingAgainstTheInsuredOrAnyExecutiveOfficerOrOwnerAsync("END");
         await page.PressDoesTheInsuredAndAnyExecutiveOfficerOrOwnerHaveAnyKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync("ENTER");
@@ -849,7 +849,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (!await page.IsScreen4475CPresentAsync())
         {
                     await page.ClickScreen4475CAsync();
@@ -877,7 +877,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForBillingInformationHeadingAsync("Exists");
         await page.ClickCreateNewBillingAccountAsync();
         await page.WaitForBillingInformationHeadingAsync("Exists");
@@ -901,7 +901,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.PauseAsync(1000);
         await page.PressChoosePaymentDueDateAsync("ENTER");
 
@@ -916,7 +916,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (data.Condition("'Payment Type' ==\"Check\""))
         {
         }
@@ -958,7 +958,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (!await page.IsScreen4475CPresentAsync())
         {
                     await page.ClickScreen4475CAsync();
@@ -1024,7 +1024,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         data.Set("Premium", await page.CapturePremiumAsync("InnerText"));
         await page.VerifyTABLERowCellExplicitName1Async(data.Resolve("{{data:expected_table_row_cell_explicitname_1_390}}"), "");
         if (!await page.IsScreenHeadingPresentAsync())
@@ -1043,7 +1043,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (!await page.IsScreen4475CPresentAsync())
         {
                     await page.ClickScreen4475CAsync();
@@ -1071,7 +1071,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
         await page.NavigateAsync(data.Resolve("{{data:application_url_2}}"));
         await page.WaitForBODYAsync("Exists");
@@ -1088,7 +1088,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsEChecklistEChecklistOKPresentAsync())
         {
                     await page.VerifyEChecklistEChecklistOKAsync("Exists", "");
@@ -1109,7 +1109,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsLogoutPresentAsync())
         {
                     await page.VerifyLogoutAsync("Exists", "");
@@ -1134,7 +1134,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForUsernameAsync("Exists");
         await Auth.SignInAsync("CL_EQ");
 
@@ -1149,7 +1149,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.EnterQuoteSearchInputAsync(data.Resolve("{B[Quote_Num]}"));
         await page.ClickClientInfoSearchAsync();
 
@@ -1164,7 +1164,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsResultsTABLEPresentAsync())
         {
                     await page.VerifyResultsTABLEAsync("Exists", "");
@@ -1197,7 +1197,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
         await page.NavigateAsync(data.Resolve("{{data:application_url_3}}"));
         await page.WaitForBODYABC33Async("Exists");
@@ -1226,7 +1226,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsLoggedInUser5A005PresentAsync())
         {
                     await page.ClickLoggedInUser5A005Async();
@@ -1272,7 +1272,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         // Source conditional not executed because no deterministic data/DOM condition was available: if an existing CLAS session is still logged in
         if (false)
         {
@@ -1292,7 +1292,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.EnterSearchTextAsync(data.Resolve("{B[QuoteDescription]}"));
         await page.ClickQuickSearchButtonAsync();
         await page.WaitForSearchButtonAsync("Equal");
@@ -1319,7 +1319,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForViewPolicy0AC0BAsync("Exists");
         if (await page.IsLoadingMessage4DE37PresentAsync())
         {
@@ -1344,7 +1344,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
         await page.PauseAsync(1000);
         await page.NoteAsync("Browser-console/forms verification requires environment-specific implementation.");
@@ -1366,7 +1366,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsSaveForLaterPresentAsync())
         {
                     await page.VerifySaveForLaterAsync("Exists", "");
@@ -1407,7 +1407,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
         await page.NavigateAsync(data.Resolve("{{data:application_url_2}}"));
         await page.WaitForBODYAsync("Exists");
@@ -1424,7 +1424,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsEChecklistEChecklistOKPresentAsync())
         {
                     await page.VerifyEChecklistEChecklistOKAsync("Exists", "");
@@ -1445,7 +1445,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsLogoutPresentAsync())
         {
                     await page.VerifyLogoutAsync("Exists", "");
@@ -1470,7 +1470,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForUsernameAsync("Exists");
         await Auth.SignInAsync("CL_EQ");
 
@@ -1485,7 +1485,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.EnterQuoteSearchInputAsync(data.Resolve("{B[Quote_Num]}"));
         await page.ClickClientInfoSearchAsync();
 
@@ -1500,7 +1500,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsResultsTABLEPresentAsync())
         {
                     await page.VerifyResultsTABLEAsync("Exists", "");
@@ -1537,7 +1537,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (!await page.IsScreen4475CPresentAsync())
         {
                     await page.ClickScreen4475CAsync();
@@ -1565,7 +1565,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForSubmissionScreenHeadingAsync("Exists");
         if (data.Condition("'Referral Needed' != NULL"))
         {
@@ -1588,7 +1588,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.ClickBuildingPhoto1Async();
         await page.WaitForBuildingPhoto1HeaderAsync("Exists");
         await page.ClickExceptionAsync();
@@ -1608,7 +1608,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForBuildingPhoto2HeaderAsync("Exists");
         await page.ClickExceptionAsync();
         await page.EnterAddANoteAsync(data.Resolve("{{data:add_a_note_567}}"));
@@ -1627,7 +1627,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForBuildingPhoto3HeaderAsync("Exists");
         await page.ClickExceptionAsync();
         await page.EnterAddANoteAsync(data.Resolve("{{data:add_a_note_573}}"));
@@ -1646,7 +1646,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForBuildingPhoto4HeaderAsync("Exists");
         await page.ClickExceptionAsync();
         await page.EnterAddANoteAsync(data.Resolve("{{data:add_a_note_579}}"));
@@ -1665,7 +1665,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new LossHistoryPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.EnterAllLinkAsync("");
         await page.WaitForLossRunsHeaderAsync("Exists");
         await page.ClickExceptionAsync();
@@ -1685,7 +1685,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.ClickOkToUpdateFromChecklistAsync();
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
@@ -1703,7 +1703,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (!await page.IsScreen4475CPresentAsync())
         {
                     await page.ClickScreen4475CAsync();
@@ -1732,7 +1732,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.PressUnderwritingRulesAgentCommentsAsync("ENTER");
         await page.ClickReferToUWAsync();
 
@@ -1747,7 +1747,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
         await page.NavigateAsync(data.Resolve("{{data:application_url_3}}"));
         await page.WaitForBODYABC33Async("Exists");
@@ -1776,7 +1776,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsLoggedInUser5A005PresentAsync())
         {
                     await page.ClickLoggedInUser5A005Async();
@@ -1822,7 +1822,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         // Source conditional not executed because no deterministic data/DOM condition was available: if an existing CLAS session is still logged in
         if (false)
         {
@@ -1842,7 +1842,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.EnterSearchTextAsync(data.Resolve("{B[QuoteDescription]}"));
         await page.ClickQuickSearchButtonAsync();
         await page.WaitForSearchButtonAsync("Equal");
@@ -1869,7 +1869,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForViewPolicy0AC0BAsync("Exists");
         if (await page.IsLoadingMessage4DE37PresentAsync())
         {
@@ -1893,7 +1893,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForSubmission48772Async("Visible");
         await page.ClickSubmission48772Async();
         if (await page.IsSubmissionHeadingPresentAsync())
@@ -1933,7 +1933,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsIsThisCoverageBoundPresentAsync())
         {
                     await page.VerifyIsThisCoverageBoundAsync("Exists", "");
@@ -2055,7 +2055,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsReferRequestIssuancePresentAsync())
         {
                     await page.VerifyReferRequestIssuanceAsync("Absent", "");
@@ -2102,7 +2102,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsAlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbePresentAsync())
         {
                     await page.VerifyAlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbeAsync("Exists", "");
@@ -2137,7 +2137,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.VerifyTableRowCellLinkAsync("Exists", "");
         await page.WaitForBillingAsync("Exists");
 
@@ -2152,7 +2152,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsSaveForLaterPresentAsync())
         {
                     await page.VerifySaveForLaterAsync("Exists", "");
@@ -2193,7 +2193,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.ClickViewPolicyDetails848D5Async();
         if (await page.IsPolicyDetailsE7F69PresentAsync())
         {
@@ -2217,7 +2217,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
         await page.NavigateAsync(data.Resolve("{{data:application_url_2}}"));
         await page.WaitForBODYAsync("Exists");
@@ -2234,7 +2234,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsEChecklistEChecklistOKPresentAsync())
         {
                     await page.VerifyEChecklistEChecklistOKAsync("Exists", "");
@@ -2255,7 +2255,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsLogoutPresentAsync())
         {
                     await page.VerifyLogoutAsync("Exists", "");
@@ -2280,7 +2280,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForUsernameAsync("Exists");
         await Auth.SignInAsync("CL_EQ");
 
@@ -2295,7 +2295,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.EnterQuoteSearchInputAsync(data.Resolve("{B[Quote_Num]}"));
         await page.ClickClientInfoSearchAsync();
         if (!await page.IsScreenHeading9696CPresentAsync())
@@ -2314,7 +2314,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (!await page.IsScreen4475CPresentAsync())
         {
                     await page.ClickScreen4475CAsync();
@@ -2342,7 +2342,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.ClickTransmitAsync();
         await page.VerifyTABLERowCellExplicitName1Async(data.Resolve("{{data:expected_table_row_cell_explicitname_1_767}}"), "");
         await page.VerifyTABLERowCellExplicitName2Async(data.Resolve("{{data:expected_table_row_cell_explicitname_2_768}}"), "");
@@ -2361,7 +2361,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.VerifyDCTransactionTableRowCellExplicitNameNewPremiumAsync(data.Resolve("{{data:expected_dc_transaction_table_row_cell_explicitname_new_premium_772}}"), "");
         await page.VerifyDCTransactionTableRowCellExplicitNameStatusAsync(data.Resolve("{{data:expected_dc_transaction_table_row_cell_explicitname_status_773}}"), "");
 
@@ -2376,7 +2376,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.NavigateAsync(data.Resolve("{{data:application_url}}"));
         // Source conditional not executed because no deterministic data/DOM condition was available: during loop for the Login [max=30]
         if (false)
@@ -2408,7 +2408,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsEChecklistEChecklistOKPresentAsync())
         {
                     await page.VerifyEChecklistEChecklistOKAsync("Exists", "");
@@ -2429,7 +2429,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsLoggedInUserPresentAsync())
         {
                     await page.VerifyLoggedInUserAsync("Exists", "");
@@ -2446,7 +2446,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         if (await page.IsLoggedInUser6AD12PresentAsync())
         {
                     await page.ClickLoggedInUser6AD12Async();
@@ -2492,7 +2492,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new LoginPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await Auth.SignInAsync("CL_DC");
         if (await page.IsLogin07237PresentAsync())
         {
@@ -2511,7 +2511,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.EnterSearchTextAsync(data.Resolve("{B[Policy#]}"));
         await page.ClickQuickSearchButtonAsync();
         if (await page.IsLoadingMessagePresentAsync())
@@ -2561,7 +2561,7 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // Field-level orchestration derived from the canonical Tosca method sequence.
+        // Field-level orchestration follows the validated business sequence.
         await page.WaitForTransACTAsync("Visible");
         await page.ClickViewPolicyDetailsC87C2Async();
         if (await page.IsPolicyDetailsABBA9PresentAsync())

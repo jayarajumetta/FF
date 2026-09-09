@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "WV",
+    "name": "West Virginia",
+    "variant": "WV"
+  },
+  "values": {
+    "state": "WV",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "MARK",
+    "Last Name": "BARANOSKI",
+    "DOB": "11/8/1972",
+    "SSN": "666246639",
+    "Street Address": "605 E INWOOD DR",
+    "Apartment": "19",
+    "City": "HUNTINGTON",
+    "ZIP": "25701",
+    "State Abbreviation": "WV"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "WEST VIRGINIA",
+        "state_44": "WEST VIRGINIA"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "WEST VIRGINIA",
+        "state_44": "WEST VIRGINIA"
+      }
+    }
+  }
+}

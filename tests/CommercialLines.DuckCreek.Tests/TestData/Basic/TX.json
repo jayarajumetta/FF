@@ -1,0 +1,207 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "TX",
+    "name": "Texas",
+    "variant": "TX"
+  },
+  "values": {
+    "state": "TX",
+    "transaction": "Basic New Business Policy"
+  },
+  "random": {
+    "PrimaryPhone_0041": {
+      "pattern": "[0-9]{10}"
+    }
+  },
+  "flows": {
+    "BAP Basic Policy": {
+      "values": {
+        "product": "Business Auto",
+        "quick_quote_1": "False",
+        "insured_type_3": "Individual/Person",
+        "first_name_7": "John",
+        "middle_name_8": "TX",
+        "gender_11": "Male",
+        "entity_type_13": "Individual/Sole Proprietor",
+        "address1_15": "118 Broadway",
+        "zipcode_16": "78205",
+        "name_of_audit_contact_33": "Auditor Doe",
+        "name_of_inspection_contact_35": "Inspector Smith",
+        "insured_e_mail_address_37": "insured@emailaddress.com",
+        "website_address_38": "https://www.InsuredSite.com",
+        "product_lob": "BAP",
+        "title_45": "*",
+        "javascript_46": "return 1+2",
+        "expected_result_value_47": "3",
+        "effectivedate_51": "09-05-2026",
+        "years_in_business_52": "6",
+        "primaryratingstate_54": "Texas",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_58": "No",
+        "primaryratingstate_60": "Texas",
+        "primaryratingstate_61": "Texas",
+        "primaryratingstate_63": "Texas",
+        "primaryratingstate_64": "Texas",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_68": "No",
+        "naics_code_search_value_79": "CONSTRUCTION SAND AND GRAVEL MINING [212321]",
+        "naics_code_search_results_81": "Construction Sand and Gravel Mining [212321]",
+        "account_credit_83": "No",
+        "expected_reference_number_innertext_96": "\"\"",
+        "no_known_losses_101": "True",
+        "expected_no_known_losses_value_102": "True",
+        "is_there_a_prior_carrier_106": "Yes",
+        "carrier_109": "Insure Us, Inc",
+        "policy_number_110": "P-0123456789",
+        "policy_type_111": "Commercial Package",
+        "modificationfactor_114": "1.1",
+        "total_premium_115": "1,250",
+        "trailer_interchange_comp_deductible_123": "{Click}0{ENTER}{TAB}",
+        "trailer_interchange_collision_deductible_124": "{Click}100{ENTER}{TAB}",
+        "vehicle_type_140": "Private Passenger",
+        "vin_144": "\"1G1AB08C0CA598143\"",
+        "vehicle_type_148": "Truck",
+        "vin_152": "1FDBF2AT3BE598143",
+        "is_this_vehicle_used_in_snow_plow_operations_153": "No",
+        "iframe_duck_creek_policy_first_name_160": "John",
+        "iframe_duck_creek_policy_last_name_161": "Snow",
+        "iframe_duck_creek_policy_state_licensed_163": "Foreign License",
+        "expected_iframe_duck_creek_policy_drivers_license_number_innertext_164": "International",
+        "iframe_duck_creek_policy_sex_165": "\"M\"",
+        "iframe_duck_creek_policy_marital_status_166": "\"Single\"",
+        "iframe_duck_creek_policy_year_licensed_167": "1997",
+        "iframe_duck_creek_policy_date_of_hire_168": "01-01-2020",
+        "iframe_duck_creek_policy_do_you_have_a_cdl_license_169": "No",
+        "endorsement_type_192": "Individual Named Insured",
+        "endorsement_type_193": "Individual Named Insured",
+        "are_there_any_commercial_vehicles_owned_by_the_applicant_not_insured_on_the_policy_204": "\"No\"",
+        "anypersonalautopolicylistingnameinsured_206": "\"No\"",
+        "anyvehiclecoveredregisteredinnotprimarystate_207": "\"No\"",
+        "borrowinghiringorleasingwithinyear_208": "\"No\"",
+        "has_any_applicant_been_convicted_of_a_felony_or_been_involved_in_any_incidents_or_claims_relating_to_sexual_abuse_or_molestation_allegations_discrimination_arson_fraud_bribery_or_negligent_hiring_212": "No",
+        "bill_type_215": "Direct",
+        "pay_plan_218": "4",
+        "easy_pay_222": "No",
+        "expected_premium_value_233": "*$3,210.00",
+        "is_this_coverage_bound_237": "Yes",
+        "order_audit_239": "No",
+        "expected_is_this_coverage_bound_value_247": "(select)",
+        "is_this_coverage_bound_248": "Yes",
+        "expected_full_term_premium_value_280": "$3,210.00",
+        "expected_premium_written_value_281": "3,210.00",
+        "expected_prior_premium_value_282": "0.00",
+        "expected_premium_change_value_283": "3,210.00",
+        "title_285": "*",
+        "javascript_286": "return DCT.sessionID",
+        "expected_statuscode_value_290": "200 OK"
+      },
+      "random": {
+        "LastName_0040": {
+          "pattern": "^[a-z]{4}$"
+        },
+        "InsuredSSN": {
+          "pattern": "125[0-9]{6}"
+        },
+        "AuditTelephone_0048": {
+          "pattern": "[0-9]{10}"
+        },
+        "InspectionTelephone_0048": {
+          "pattern": "[0-9]{10}"
+        }
+      }
+    },
+    "UMB Basic Policy": {
+      "values": {
+        "product": "Commercial Umbrella",
+        "quick_quote_2": "False",
+        "insured_type_4": "Business",
+        "business_name_7": "TX UMB Testing, Inc.",
+        "entity_type_8": "Corporation",
+        "zipcode_11": "78205",
+        "address1_12": "118 Broadway",
+        "years_in_business_14": "6",
+        "name_of_inspection_contact_16": "Inspector Smith",
+        "insured_e_mail_address_18": "insured@emailaddress.com",
+        "website_address_19": "https://www.InsuredSite.com",
+        "product_lob": "UMB",
+        "bill_type_35": "Direct",
+        "pay_plan_38": "4",
+        "easy_pay_42": "No",
+        "individualtype_45": "True",
+        "dateofbirth_50": "01-01-1985",
+        "address1_51": "118 Broadway",
+        "city_52": "Glenmont",
+        "state_53": "TX",
+        "zipcode_54": "78205",
+        "gender_55": "Male",
+        "enter_ssn_63": "{TAB}",
+        "is_there_a_prior_carrier_83": "True",
+        "carrier_86": "Insure Us, Inc",
+        "policy_number_87": "P-0123456789{TAB}",
+        "policy_type_88": "Commercial Package{TAB}",
+        "modificationfactor_91": "1.1",
+        "total_premium_92": "1,250{TAB}",
+        "no_known_losses_97": "True",
+        "title_99": "*",
+        "javascript_100": "return 1+2",
+        "expected_result_value_101": "3",
+        "effectivedate_105": "09-05-2026",
+        "years_in_business_106": "6",
+        "primaryratingstate_108": "Texas",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_112": "No",
+        "primaryratingstate_114": "Texas",
+        "primaryratingstate_115": "Texas",
+        "primaryratingstate_117": "Texas",
+        "primaryratingstate_118": "Texas",
+        "were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_122": "No",
+        "expected_umbrella_limit_value_134": "$1,000,000",
+        "expected_excluded_liability_confidential_information_value_135": "CU2186",
+        "expected_products_completed_operations_aggregate_limit_value_136": "Umbrella Policy Limit",
+        "policy_number_163": "4201C1824",
+        "policy_number_173": "GLPOL#",
+        "cgl_limits_177": "$1,000,000/$2,000,000",
+        "total_subject_premium_178": "800",
+        "policy_number_183": "4202X0927",
+        "policy_number_192": "WCPOL#",
+        "policy_number_200": "CPPPOL#",
+        "liability_limit_204": "$1,000,000/$2,000,000",
+        "total_subject_premium_205": "75",
+        "policy_number_210": "SPFPOL#",
+        "liability_limit_214": "$300,000/$1,000,000",
+        "total_subject_premium_215": "50",
+        "please_provide_website_address_es_225": "UW.Test.Com",
+        "expected_premium_value_228": "*$1,066.00",
+        "bill_type_231": "Direct",
+        "pay_plan_234": "4",
+        "easy_pay_238": "No",
+        "is_this_coverage_bound_249": "Yes",
+        "order_audit_251": "No",
+        "expected_is_this_coverage_bound_value_259": "(select)",
+        "is_this_coverage_bound_260": "Yes",
+        "expected_full_term_premium_value_292": "$1,066.00",
+        "expected_premium_written_value_293": "1,066.00",
+        "expected_prior_premium_value_294": "0.00",
+        "expected_premium_change_value_295": "1,066.00",
+        "title_297": "*",
+        "javascript_298": "return  DCT.sessionID;",
+        "expected_statuscode_value_302": "200 OK"
+      },
+      "random": {
+        "FEIN_0044": {
+          "pattern": "486[0-9]{6}"
+        },
+        "InspectionTelephone_0045": {
+          "pattern": "[0-9]{10}"
+        },
+        "MiddleName_0057": {
+          "pattern": "^[a-z]{1}$"
+        },
+        "LastName_0057": {
+          "pattern": "^[a-z]{7}$"
+        },
+        "FirstName_0057": {
+          "pattern": "^[a-z]{4}$"
+        }
+      }
+    }
+  }
+}

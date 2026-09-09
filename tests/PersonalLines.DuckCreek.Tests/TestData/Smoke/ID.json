@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "ID",
+    "name": "Idaho",
+    "variant": "ID"
+  },
+  "values": {
+    "state": "ID",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "ROBERT",
+    "Last Name": "ADAMS",
+    "DOB": "1/1/1962",
+    "SSN": "666677886",
+    "Street Address": "PO BOX 2078",
+    "Apartment": "19",
+    "City": "KETCHUM",
+    "ZIP": "83340",
+    "State Abbreviation": "ID"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "IDAHO",
+        "state_44": "IDAHO"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "IDAHO",
+        "state_44": "IDAHO"
+      }
+    }
+  }
+}

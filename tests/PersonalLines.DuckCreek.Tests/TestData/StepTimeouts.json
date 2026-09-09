@@ -1,0 +1,11 @@
+{
+  "_instructions": "Optional per-business-step timeout overrides. Use the exact Gherkin step text without Given/When/Then/And. Values may be milliseconds, 45s or 2m. The timeout flows through the step definition, page methods and Playwright actions. Leave features empty to use framework defaults.",
+  "_example": {
+    "features": {
+      "Smoke Test Auto": {
+        "I complete tabs": "2m"
+      }
+    }
+  },
+  "features": {}
+}

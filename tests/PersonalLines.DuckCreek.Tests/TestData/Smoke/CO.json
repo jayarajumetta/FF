@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "CO",
+    "name": "Colorado",
+    "variant": "CO"
+  },
+  "values": {
+    "state": "CO",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "KENDALL",
+    "Last Name": "BERNARDINO",
+    "DOB": "2/14/2002",
+    "SSN": "888003087",
+    "Street Address": "600 17TH ST",
+    "Apartment": "2800S",
+    "City": "DENVER",
+    "ZIP": "80202",
+    "State Abbreviation": "CO"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "COLORADO",
+        "state_44": "COLORADO"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "COLORADO",
+        "state_44": "COLORADO"
+      }
+    }
+  }
+}

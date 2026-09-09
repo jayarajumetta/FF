@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0-direct-state",
+  "state": {
+    "code": "TX",
+    "name": "Texas",
+    "variant": "TX"
+  },
+  "values": {
+    "state": "TX",
+    "transaction": "Smoke Test",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "agentcode_40": "D2102",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "First Name": "ANGELA",
+    "Last Name": "CANTRELL",
+    "DOB": "11/25/1967",
+    "SSN": "888025034",
+    "Street Address": "9504 SPRINGWATER DR",
+    "Apartment": "19",
+    "City": "DALLAS",
+    "ZIP": "75228",
+    "State Abbreviation": "TX"
+  },
+  "flows": {
+    "Smoke Test Auto": {
+      "values": {
+        "product": "Personal Auto",
+        "statename": "TEXAS",
+        "state_44": "TEXAS"
+      }
+    },
+    "Smoke Test Cycle": {
+      "values": {
+        "product": "Motorcycle",
+        "state_44": "ALABAMA"
+      }
+    },
+    "Smoke Test RV": {
+      "values": {
+        "product": "Recreational Vehicle",
+        "statename": "TEXAS",
+        "state_44": "TEXAS"
+      }
+    }
+  }
+}
