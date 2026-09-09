@@ -490,7 +490,7 @@ stages:
 
         $sourceBase = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestResults"
         if (Test-Path $sourceBase) {
-            $files = Get-ChildItem -Path $sourceBase -Recurse -Include "*.png","*.zip" -ErrorAction SilentlyContinue
+            $files = Get-ChildItem -Path $sourceBase -Recurse -Include "*.png","*.zip","*.webm" -ErrorAction SilentlyContinue
             if ($files.Count -gt 0) {
                 $files | ForEach-Object {
                     # Preserve the relative subfolder structure under Screenshots/
@@ -499,9 +499,9 @@ stages:
                     New-Item -ItemType Directory -Force -Path (Split-Path $dest) | Out-Null
                     Copy-Item $_.FullName -Destination $dest
                 }
-                Write-Host "Collected $($files.Count) screenshot/trace file(s)."
+                Write-Host "Collected $($files.Count) screenshot/trace/video file(s)."
             } else {
-                Write-Host "No screenshots or traces found (all tests may have passed)."
+                Write-Host "No screenshots, traces, or videos found (all tests may have passed)."
             }
         } else {
             Write-Host "TestResults source directory not found — skipping screenshot collection."
@@ -702,6 +702,41 @@ stages:
         targetPath: "$(Build.ArtifactStagingDirectory)/FormsReports"
         artifact: "Forms_Reports_Shard_$(SHARD_NUMBER)"
 
+    - powershell: |
+        $pathsToClean = @(
+            "$(Build.SourcesDirectory)/bin",
+            "$(Build.SourcesDirectory)/obj",
+            "$(Build.SourcesDirectory)/TestResults",
+            "$(Build.ArtifactStagingDirectory)/TestResults",
+            "$(Build.ArtifactStagingDirectory)/FormsReports"
+        )
+
+        foreach ($path in $pathsToClean) {
+            if (Test-Path $path) {
+                try {
+                    Remove-Item -Path $path -Recurse -Force -ErrorAction Stop
+                    Write-Host "Removed: $path"
+                } catch {
+                    Write-Warning "Failed to remove $path: $($_.Exception.Message)"
+                }
+            }
+        }
+
+        $browserProcesses = @("chrome", "msedge", "playwright")
+        foreach ($name in $browserProcesses) {
+            Get-Process -Name $name -ErrorAction SilentlyContinue | ForEach-Object {
+                try {
+                    Stop-Process -Id $_.Id -Force -ErrorAction Stop
+                    Write-Host "Stopped process: $($_.ProcessName) (PID: $($_.Id))"
+                } catch {
+                    Write-Warning "Failed to stop $($_.ProcessName) (PID: $($_.Id)): $($_.Exception.Message)"
+                }
+            }
+        }
+      displayName: "Agent Cleanup (Shard)"
+      condition: always()
+      continueOnError: true
+
 # ── Stage 3: Forms Validation (Isolated) ───────────────────────────────────────
 # Run forms validation outside the shard matrix so external CLAS/DuckCreek latency
 # does not inflate shard durations.
@@ -838,6 +873,41 @@ stages:
       inputs:
         targetPath: "$(Build.ArtifactStagingDirectory)/FormsReports"
         artifact: "Forms_Reports_Isolated"
+
+    - powershell: |
+        $pathsToClean = @(
+            "$(Build.SourcesDirectory)/bin",
+            "$(Build.SourcesDirectory)/obj",
+            "$(Build.SourcesDirectory)/TestResults",
+            "$(Build.ArtifactStagingDirectory)/TestResults",
+            "$(Build.ArtifactStagingDirectory)/FormsReports"
+        )
+
+        foreach ($path in $pathsToClean) {
+            if (Test-Path $path) {
+                try {
+                    Remove-Item -Path $path -Recurse -Force -ErrorAction Stop
+                    Write-Host "Removed: $path"
+                } catch {
+                    Write-Warning "Failed to remove $path: $($_.Exception.Message)"
+                }
+            }
+        }
+
+        $browserProcesses = @("chrome", "msedge", "playwright")
+        foreach ($name in $browserProcesses) {
+            Get-Process -Name $name -ErrorAction SilentlyContinue | ForEach-Object {
+                try {
+                    Stop-Process -Id $_.Id -Force -ErrorAction Stop
+                    Write-Host "Stopped process: $($_.ProcessName) (PID: $($_.Id))"
+                } catch {
+                    Write-Warning "Failed to stop $($_.ProcessName) (PID: $($_.Id)): $($_.Exception.Message)"
+                }
+            }
+        }
+      displayName: "Agent Cleanup (Forms Validation)"
+      condition: always()
+      continueOnError: true
 
 # ── Stage 4: CE Test ───────────────────────────────────────────────────────────
 # Runs after BasicPolicy (Stage 2) regardless of pass/fail.
