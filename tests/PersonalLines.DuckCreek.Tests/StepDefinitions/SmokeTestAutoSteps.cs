@@ -90,22 +90,23 @@ public sealed class SmokeTestAutoSteps
         await page.EnterAgentCodeAsync(data.Resolve("{{data:agentcode_40}}"));
         await page.SelectStateAsync("");
         await page.EnterStateAsync(data.Resolve("{{data:state_44}}"));
+        await page.SelectWritingCompanyAsync("");
+        await page.EnterWritingCompanyAsync(data.Resolve("{{data:writingcompany_48}}"));
         await page.WaitForSameAsMailingAddressAsync("True");
         await page.ClickSameAsMailingAddressAsync();
-        if (data.Condition("State == \"NEW YORK\""))
+
+        if (data.Condition("State == \"NY\""))
         {
             await page.EnterCountyComboBoxAsync(data.Resolve("{{data:county_combobox_52}}"));
         }
-        if (data.Condition("State == \"KENTUCKY\""))
+
+        if (data.Condition("State == \"KY\""))
         {
             await page.EnterCountyComboBoxAsync(data.Resolve("{{data:county_combobox_53}}"));
         }
-        if (data.Condition("State == \"NEW YORK\" OR State == \"KENTUCKY\""))
+        if (data.Condition("State == \"NY\" OR State == \"KY\""))
         {
             await page.WaitForCountyYesAsync("Exists");
-        }
-        if (data.Condition("State == \"NEW YORK\" OR State == \"KENTUCKY\""))
-        {
             await page.SelectCountyYesAsync("");
         }
         await page.WaitForStartQuoteAsync("True");
@@ -137,16 +138,6 @@ public sealed class SmokeTestAutoSteps
             await page.ClickUSEEXISTINGACCOUNTAsync();
             await page.PauseAsync(5000);
         }
-        //if (await page.IsStateMONTANAPresentAsync())
-        //{
-        //            await page.ClickStateMONTANAAsync();
-        //}
-        //if (data.Condition("State != \"MONTANA\""))
-        //{
-        //            await page.ClickUSEEXISTINGACCOUNTAsync();
-        //}
-
-
     }
 
     [Given(@"^I capture the proposal number$")]
@@ -176,11 +167,11 @@ public sealed class SmokeTestAutoSteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-
-        await page.ClickCloseTabAsync();
         await page.PauseAsync(5000);
+        await page.ClickCloseTabAsync();
         await page.EnterQuoteSearchInputAsync(data.Resolve("{{runtime:QuoteNumber}}"));
         await page.ClickTabsSearchAsync();
+        await page.PauseAsync(5000);
         await page.VerifyQNumAsync($".*\\b{data.Resolve("{{runtime:QuoteNumber}}")}\\b.*", "Regex:InnerText");
     }
 

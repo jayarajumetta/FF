@@ -54,10 +54,11 @@ public sealed class ProposalPage
         _ui.FillAsync(_locators.CountyComboBox, value, new ControlIntent("Proposal", "CountyComboBox"));
 
     public Task WaitForCountyYesAsync(string expected) =>
-        _ui.WaitAsync(_locators.CONFIRM, expected, new ControlIntent("Proposal", "CountyYes"));
+        _ui.WaitAsync(_locators.countyYesAsync, expected, new ControlIntent("Proposal", "CountyYes"));
 
     public Task SelectCountyYesAsync(string value) =>
-        _ui.SelectAsync(_locators.CONFIRM, value, new ControlIntent("Proposal", "CountyYes"));
+
+  _locators.countyYesAsync.EvaluateAsync("el => el.click()");
 
     public Task EnterEffectiveDateAsync(string value) =>
         _ui.FillAsync(_locators.EffectiveDate, value, new ControlIntent("Proposal", "EffectiveDate"));
@@ -90,7 +91,7 @@ public sealed class ProposalPage
         _ui.ClickAsync(_locators.PersonalAuto, new ControlIntent("Proposal", "PersonalAuto"));
 
     public Task VerifyProposalStartProceedSSNSUBMITAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.CONFIRM, expected, property, new ControlIntent("Proposal", "ProposalStartProceedSSNSUBMIT"));
+        _ui.VerifyAsync(_locators.SubmitAngular, expected, property, new ControlIntent("Proposal", "ProposalStartProceedSSNSUBMIT"));
 
     //public Task ClickProposalStartProceedSSNSUBMITAsync() =>
     //    _ui.ClickAsync(_locators.SubmitAngular, new ControlIntent("Proposal", "ProposalStartProceedSSNSUBMIT"));
@@ -174,6 +175,7 @@ public sealed class ProposalPage
         _ui.ExistsAsync(_locators.ClientExists);
 
     public Task EnterWritingCompanyAsync(string value) =>
+
         _ui.FillAsync(_locators.WritingCompany, value, new ControlIntent("Proposal", "WritingCompany"));
 
     public Task SelectWritingCompanyAsync(string value) =>
