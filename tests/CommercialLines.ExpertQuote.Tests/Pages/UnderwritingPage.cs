@@ -21,10 +21,10 @@ public sealed class UnderwritingPage
         _ui.WaitAsync(_locators.Accept, expected, new ControlIntent("Underwriting", "Accept"));
 
     public Task EnterAgentCommentsAsync(string value) =>
-        _ui.FillAsync(_locators.AgentComments, value, new ControlIntent("Underwriting", "AgentComments"));
+        _ui.PressSequentiallyAsync(_locators.AgentComments, value, new ControlIntent("Underwriting", "AgentComments"));
 
     public Task EnterAgentComments2Async(string value) =>
-        _ui.FillAsync(_locators.AgentComments2, value, new ControlIntent("Underwriting", "AgentComments2"));
+        _ui.PressSequentiallyAsync(_locators.AgentComments2, value, new ControlIntent("Underwriting", "AgentComments2"));
 
     public async Task<bool> IsAgentCommentsVisibleAndEditableAsync()
     {

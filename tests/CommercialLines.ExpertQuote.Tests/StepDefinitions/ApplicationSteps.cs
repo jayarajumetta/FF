@@ -80,6 +80,7 @@ public sealed class ApplicationSteps
     {
         var data = _scenario.Get<ScenarioData>();
         var description = data.Get("DescriptionOfOperations");
+        //var description = "AL BOP EQ Basic September.09.2026 11:45"; // TODO: revert to dynamic value above once testing is complete
         var page = new DuckCreekSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickQuickSearchAsync();
@@ -91,7 +92,7 @@ public sealed class ApplicationSteps
         await page.EnterSearchValueAsync(description);
         await Task.Delay(3000);
         await page.ClickSearchAsync();
-        await Task.Delay(6000);
+        await Task.Delay(9000);
         await page.ClickSearchAsync();
         await Task.Delay(3000);
     }
@@ -124,9 +125,9 @@ public sealed class ApplicationSteps
         await page.WaitForProcessingCompleteAsync();
         await Task.Delay(9000);
         await page.ClickProcessingCompleteCloseAsync();
-        await Task.Delay(3000);
+        await Task.Delay(6000);
         await page.ClickApproveAsync();
-        await Task.Delay(3000);
+        await Task.Delay(6000);
         await page.WaitForOkButtonAsync();
         await page.ClickOkAsync();
         await Task.Delay(5000);

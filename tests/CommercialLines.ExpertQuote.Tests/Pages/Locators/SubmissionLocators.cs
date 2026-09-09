@@ -40,6 +40,10 @@ public sealed class SubmissionLocators
 
     public ILocator TABLERowCellExplicitName5 => _page.GetByText("(ExplicitName=$5)", new() { Exact = true });
 
+    public ILocator TransmitButton => _page.GetByTestId("fields.data.transmit-button-label").Filter(new LocatorFilterOptions { HasText = "Transmit" });
 
+    public ILocator TransmitConfirmationHeading => _page.GetByRole(AriaRole.Heading, new() { Name = "Transmit Confirmation", Exact = true });
+
+    public ILocator TransactionStatus => _page.Locator("[id='Transaction_UI.Status-0-layout'] span.readonly-value-no-label");
 
 }

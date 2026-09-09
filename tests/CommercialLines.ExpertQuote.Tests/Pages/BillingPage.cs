@@ -47,6 +47,9 @@ public sealed class BillingPage
     public Task PressCheckNumberAsync(string key) =>
         _ui.PressAsync(_locators.CheckNumber, key, new ControlIntent("Billing", "CheckNumber"));
 
+    public Task EnterCheckNumberAsync(string value) =>
+        _ui.FillAsync(_locators.CheckNumber, value, new ControlIntent("Billing", "CheckNumber"));
+
     public Task PressChoosePaymentDueDateAsync(string key) =>
         _ui.PressAsync(_locators.ChoosePaymentDueDate, key, new ControlIntent("Billing", "ChoosePaymentDueDate"));
 
@@ -79,6 +82,9 @@ public sealed class BillingPage
 
     public Task ClickInitialPaymentFullBalanceAsync() =>
         _ui.ClickAsync(_locators.InitialPaymentFullBalance, new ControlIntent("Billing", "InitialPaymentFullBalance"));
+
+    public Task ClickCheckButtonAsync() =>
+        _ui.ClickAsync(_locators.CheckButton, new ControlIntent("Billing", "CheckButton"));
 
     public Task ClickNextSubmissionAsync() =>
         _ui.ClickAsync(_locators.NextSubmission, new ControlIntent("Billing", "NextSubmission"));

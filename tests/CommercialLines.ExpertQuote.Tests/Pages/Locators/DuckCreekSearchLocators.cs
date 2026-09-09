@@ -33,7 +33,9 @@ public sealed class DuckCreekSearchLocators
 
     public ILocator ApproveDialog => _page.Locator("div:has-text(\"Duck Creek Policy\"):has-text(\"Approve\")").Last;
 
-    public ILocator OkButton => ApproveDialog.Locator("a:has(span.g-btn-text:has-text(\"OK\"))").First;
+    public IFrameLocator ApproveDialogFrame => _page.FrameLocator("[id^=\"dctPopup_dctPopupWindow\"]");
+
+    public ILocator OkButton => ApproveDialogFrame.Locator("a:has(span.g-btn-text:has-text(\"OK\"))").First;
 
     public ILocator ApprovedStatus => _page.Locator("span.g-btn-text:has-text(\"Approved\")");
 }

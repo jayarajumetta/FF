@@ -15,7 +15,7 @@ public sealed class BillingLocators
 
     public ILocator BusinessName => _page.Locator("input[id=\"fields._PolicyPaymentInputDoc.subsequentPayorData$businessName.value\"][name=\"fields._PolicyPaymentInputDoc.subsequentPayorData$businessName.value\"]");
 
-    public ILocator CheckButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.initialPaymentData$paymentMethod.value-chip-wrapper");
+    public ILocator CheckButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.initialPaymentData$paymentMethod.value-chip-label").Filter(new LocatorFilterOptions { HasText = "Check" }).First;
 
     public ILocator CheckNumber => _page.Locator("input[id=\"fields._PolicyPaymentInputDoc.initialPaymentData$checkNumber.value\"][name=\"fields._PolicyPaymentInputDoc.initialPaymentData$checkNumber.value\"]");
 

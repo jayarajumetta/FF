@@ -66,7 +66,7 @@
     "pollIntervalMs": 250,
     "waitForDomContentLoadedBeforeActions": true,
     "frameProbeTimeoutMs": 600,
-    "dropdownOptionTimeoutMs": 1200,
-    "dropdownPollIntervalMs": 75
+    "dropdownOptionTimeoutMs": 3000,
+    "dropdownPollIntervalMs": 100
   }
 }
