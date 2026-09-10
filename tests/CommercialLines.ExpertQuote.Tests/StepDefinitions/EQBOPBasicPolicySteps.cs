@@ -247,6 +247,8 @@ public sealed class EQBOPBasicPolicySteps
         await page.PauseAsync(3000);
         await page.EnterNumberOfSeasonalEmployeesAsync("1");
         await page.PauseAsync(3000);
+        await page.ClickRaceAndGenderInformationNoIfPresentAsync();
+        await page.PauseAsync(3000);
         await page.ClickSaveAsync();
         await page.PauseAsync(2000);
 
@@ -800,6 +802,54 @@ public sealed class EQBOPBasicPolicySteps
         await Task.Delay(4000);
         await page.ClickNextPricingAsync();
         await Task.Delay(4000);
+        if (await page.IsCatastrophePotentialVisibleAndEditableAsync())
+        {
+            await Task.Delay(4000);
+            var catastrophePotential = data.GetCanonicalField("Catastrophe Potential");
+            if (!string.IsNullOrWhiteSpace(catastrophePotential))
+                await page.SelectCatastrophePotentialAsync(catastrophePotential);
+            await Task.Delay(4000);
+        }
+        if (await page.IsLossRatioVisibleAndEditableAsync())
+        {
+            await Task.Delay(4000);
+            var lossRatio = data.GetCanonicalField("Loss Ratio", "65% or less");
+            if (!string.IsNullOrWhiteSpace(lossRatio))
+                await page.SelectLossRatioAsync(lossRatio);
+            await Task.Delay(4000);
+        }
+        if (await page.IsLengthOfEmploymentVisibleAndEditableAsync())
+        {
+            await Task.Delay(4000);
+            var lengthOfEmployment = data.GetCanonicalField("Length of Employment", "50% of employees employed for 3 or more years");
+            if (!string.IsNullOrWhiteSpace(lengthOfEmployment))
+                await page.SelectLengthOfEmploymentAsync(lengthOfEmployment);
+            await Task.Delay(4000);
+        }
+        if (await page.IsMemberOfTradeAssociationVisibleAndEditableAsync())
+        {
+            await Task.Delay(4000);
+            var memberOfTradeAssociation = data.GetCanonicalField("Member of a Trade Association", "No");
+            if (!string.IsNullOrWhiteSpace(memberOfTradeAssociation))
+                await page.SelectMemberOfTradeAssociationAsync(memberOfTradeAssociation);
+            await Task.Delay(4000);
+        }
+        if (await page.IsRiskManagementProgramVisibleAndEditableAsync())
+        {
+            await Task.Delay(4000);
+            var riskManagementProgram = data.GetCanonicalField("Risk Management Program", "No");
+            if (!string.IsNullOrWhiteSpace(riskManagementProgram))
+                await page.SelectRiskManagementProgramAsync(riskManagementProgram);
+            await Task.Delay(4000);
+        }
+        if (await page.IsYearsInBusinessVisibleAndEditableAsync())
+        {
+            await Task.Delay(4000);
+            var yearsInBusiness = data.GetCanonicalField("Years in Business", "Less than 5 years");
+            if (!string.IsNullOrWhiteSpace(yearsInBusiness))
+                await page.SelectYearsInBusinessAsync(yearsInBusiness);
+            await Task.Delay(4000);
+        }
         await page.ClickNextBillingAsync();
         await Task.Delay(4000);
 
@@ -889,13 +939,13 @@ public sealed class EQBOPBasicPolicySteps
         await page.PauseAsync(4000);
         if (await page.IsAgentCommentsVisibleAndEditableAsync())
         {
-            await page.PauseAsync(3000);
+            await page.PauseAsync(4000);
             await page.EnterAgentCommentsAsync("Test");
             await page.PauseAsync(3000);
         }
         if (await page.IsAgentComments2VisibleAndEditableAsync())
         {
-            await page.PauseAsync(3000);
+            await page.PauseAsync(4000);
             await page.EnterAgentComments2Async("Test");
             await page.PauseAsync(3000);
         }
@@ -929,6 +979,7 @@ public sealed class EQBOPBasicPolicySteps
             for (var i = 0; i < 5; i++)
             {
                 await Task.Delay(2000);
+                await checklistPage.WaitForExceptionVisibleAsync();
                 await checklistPage.ClickExceptionAsync();
                 await Task.Delay(2000);
                 await checklistPage.TypeRequireNoteAsync("TestChecklistforUW");
@@ -936,6 +987,20 @@ public sealed class EQBOPBasicPolicySteps
                 await checklistPage.ClickExceptionNoteConfirmOKAsync();
                 await Task.Delay(2000);
             }
+
+            if (await checklistPage.IsSignaturePageVisibleAsync())
+            {
+                await checklistPage.ClickSignaturePageAsync();
+                await Task.Delay(2000);
+                var signatureFilePath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                    "Test.png");
+                await checklistPage.UploadSignatureFileAsync(signatureFilePath);
+                await Task.Delay(2000);
+            }
+
+            await checklistPage.WaitForCurrentItemsVisibleAsync();
+            await Task.Delay(2000);
         }
         finally
         {

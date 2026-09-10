@@ -221,6 +221,12 @@ public Task VerifyLoadingMessage4DE37Async(string expected, string property) =>
     public Task ClickOkToUpdateFromChecklistAsync() =>
         _ui.ClickAsync(_locators.OkToUpdateFromChecklist, new ControlIntent("PolicyWorkflow", "OkToUpdateFromChecklist"));
 
+    public async Task ClickRaceAndGenderInformationNoIfPresentAsync()
+    {
+        if (await _ui.ExistsAsync(_locators.RaceAndGenderInformationNo))
+            await _ui.ClickAsync(_locators.RaceAndGenderInformationNo, new ControlIntent("PolicyWorkflow", "RaceAndGenderInformationNo"));
+    }
+
     public Task ClickQuickSearchButtonAsync() =>
         _ui.ClickAsync(_locators.QuickSearchButton, new ControlIntent("PolicyWorkflow", "QuickSearchButton"));
 

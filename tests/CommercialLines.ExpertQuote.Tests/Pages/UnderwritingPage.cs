@@ -21,10 +21,35 @@ public sealed class UnderwritingPage
         _ui.WaitAsync(_locators.Accept, expected, new ControlIntent("Underwriting", "Accept"));
 
     public Task EnterAgentCommentsAsync(string value) =>
-        _ui.PressSequentiallyAsync(_locators.AgentComments, value, new ControlIntent("Underwriting", "AgentComments"));
+        EnterAgentCommentsWithRetryAsync(_locators.AgentComments, value, "AgentComments");
 
     public Task EnterAgentComments2Async(string value) =>
-        _ui.PressSequentiallyAsync(_locators.AgentComments2, value, new ControlIntent("Underwriting", "AgentComments2"));
+        EnterAgentCommentsWithRetryAsync(_locators.AgentComments2, value, "AgentComments2");
+
+    // The Agent Comments input is occasionally re-rendered/reset by Angular change detection right after
+    // keystrokes are entered, so the typed value can silently disappear. Verifying the value stuck and
+    // retrying makes the interaction deterministic instead of intermittently failing.
+    private async Task EnterAgentCommentsWithRetryAsync(ILocator locator, string value, string controlName)
+    {
+        var intent = new ControlIntent("Underwriting", controlName);
+        await locator.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
+        const int maxAttempts = 3;
+        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        {
+            await _ui.PressSequentiallyAsync(locator, value, intent);
+            string actual;
+            try
+            {
+                actual = await locator.InputValueAsync();
+            }
+            catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+            {
+                actual = string.Empty;
+            }
+            if (string.Equals(actual, value, StringComparison.Ordinal)) return;
+            if (attempt < maxAttempts) await Task.Delay(500);
+        }
+    }
 
     public async Task<bool> IsAgentCommentsVisibleAndEditableAsync()
     {

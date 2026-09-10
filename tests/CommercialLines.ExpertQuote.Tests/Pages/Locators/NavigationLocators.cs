@@ -102,6 +102,18 @@ public sealed class NavigationLocators
 
     public ILocator NextBilling => _page.Locator("[data-testid=\"fields.data.next-button-label\"]").Filter(new LocatorFilterOptions { HasText = "Next: Billing" }).First;
 
+    public ILocator CatastrophePotential => _page.Locator("[data-testid=\"fields.tierPricing.tierPricingInput$catastrophePotentialReason.value\"]");
+
+    public ILocator LossRatio => _page.Locator("[data-testid=\"fields.tierPricing.tierPricingInput$lossRatioReason.value\"]");
+
+    public ILocator LengthOfEmployment => _page.Locator("[data-testid=\"fields.tierPricing.tierPricingInput$lengthOfEmploymentReason.value\"]");
+
+    public ILocator MemberOfTradeAssociation => _page.Locator("[data-testid=\"fields.tierPricing.tierPricingInput$memberOfTradeAssociationReason.value\"]");
+
+    public ILocator RiskManagementProgram => _page.Locator("[data-testid=\"fields.tierPricing.tierPricingInput$riskManagementProgramReason.value\"]");
+
+    public ILocator YearsInBusiness => _page.Locator("[data-testid=\"fields.tierPricing.tierPricingInput$yearsInBusinessReason.value\"]");
+
     public ILocator SearchName => _page.Locator("input[id=\"temp.searchName\"][name=\"temp.searchName\"]");
 
     public ILocator SearchZipCode => _page.Locator("input[id=\"temp.searchZipCode\"][name=\"temp.searchZipCode\"]");

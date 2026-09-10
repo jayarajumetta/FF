@@ -284,6 +284,102 @@ public Task<bool> IsLoadingPresentAsync() =>
     public Task ClickNextBillingAsync() =>
         _ui.ClickAsync(_locators.NextBilling, new ControlIntent("Navigation", "NextBilling"));
 
+    public async Task<bool> IsCatastrophePotentialVisibleAndEditableAsync()
+    {
+        try
+        {
+            await _locators.CatastrophePotential.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 3000 });
+        }
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+        {
+            return false;
+        }
+        return await _locators.CatastrophePotential.IsVisibleAsync() && await _locators.CatastrophePotential.IsEditableAsync();
+    }
+
+    public Task SelectCatastrophePotentialAsync(string value) =>
+        _ui.FillAsync(_locators.CatastrophePotential, value, new ControlIntent("Navigation", "CatastrophePotential"));
+
+    public async Task<bool> IsLossRatioVisibleAndEditableAsync()
+    {
+        try
+        {
+            await _locators.LossRatio.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 3000 });
+        }
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+        {
+            return false;
+        }
+        return await _locators.LossRatio.IsVisibleAsync() && await _locators.LossRatio.IsEditableAsync();
+    }
+
+    public Task SelectLossRatioAsync(string value) =>
+        _ui.FillAsync(_locators.LossRatio, value, new ControlIntent("Navigation", "LossRatio"));
+
+    public async Task<bool> IsLengthOfEmploymentVisibleAndEditableAsync()
+    {
+        try
+        {
+            await _locators.LengthOfEmployment.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 3000 });
+        }
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+        {
+            return false;
+        }
+        return await _locators.LengthOfEmployment.IsVisibleAsync() && await _locators.LengthOfEmployment.IsEditableAsync();
+    }
+
+    public Task SelectLengthOfEmploymentAsync(string value) =>
+        _ui.FillAsync(_locators.LengthOfEmployment, value, new ControlIntent("Navigation", "LengthOfEmployment"));
+
+    public async Task<bool> IsMemberOfTradeAssociationVisibleAndEditableAsync()
+    {
+        try
+        {
+            await _locators.MemberOfTradeAssociation.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 3000 });
+        }
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+        {
+            return false;
+        }
+        return await _locators.MemberOfTradeAssociation.IsVisibleAsync() && await _locators.MemberOfTradeAssociation.IsEditableAsync();
+    }
+
+    public Task SelectMemberOfTradeAssociationAsync(string value) =>
+        _ui.FillAsync(_locators.MemberOfTradeAssociation, value, new ControlIntent("Navigation", "MemberOfTradeAssociation"));
+
+    public async Task<bool> IsRiskManagementProgramVisibleAndEditableAsync()
+    {
+        try
+        {
+            await _locators.RiskManagementProgram.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 3000 });
+        }
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+        {
+            return false;
+        }
+        return await _locators.RiskManagementProgram.IsVisibleAsync() && await _locators.RiskManagementProgram.IsEditableAsync();
+    }
+
+    public Task SelectRiskManagementProgramAsync(string value) =>
+        _ui.FillAsync(_locators.RiskManagementProgram, value, new ControlIntent("Navigation", "RiskManagementProgram"));
+
+    public async Task<bool> IsYearsInBusinessVisibleAndEditableAsync()
+    {
+        try
+        {
+            await _locators.YearsInBusiness.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 3000 });
+        }
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+        {
+            return false;
+        }
+        return await _locators.YearsInBusiness.IsVisibleAsync() && await _locators.YearsInBusiness.IsEditableAsync();
+    }
+
+    public Task SelectYearsInBusinessAsync(string value) =>
+        _ui.FillAsync(_locators.YearsInBusiness, value, new ControlIntent("Navigation", "YearsInBusiness"));
+
     public Task ClickNextClaimsPriorInsuranceAsync() =>
         _ui.ClickAsync(_locators.NextClaimsPriorInsurance, new ControlIntent("Navigation", "NextClaimsPriorInsurance"));
 
