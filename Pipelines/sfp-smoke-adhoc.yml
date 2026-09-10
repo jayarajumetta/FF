@@ -288,7 +288,7 @@ stages:
     - task: Cache@2
       displayName: "Cache Playwright Chromium"
       inputs:
-        key: 'playwright | "$(Agent.OS)" | $(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.deps.json'
+        key: 'playwright | "$(Agent.OS)" | TestAutomation.csproj'
         restoreKeys: |
           playwright | "$(Agent.OS)"
         path: "$(Agent.ToolsDirectory)/playwright-browsers"
@@ -768,7 +768,7 @@ stages:
     - task: Cache@2
       displayName: "Cache Playwright Chromium"
       inputs:
-        key: 'playwright | "$(Agent.OS)" | $(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.deps.json'
+        key: 'playwright | "$(Agent.OS)" | TestAutomation.csproj'
         restoreKeys: |
           playwright | "$(Agent.OS)"
         path: "$(Agent.ToolsDirectory)/playwright-browsers"
@@ -963,7 +963,7 @@ stages:
     - task: Cache@2
       displayName: "Cache Playwright Chromium"
       inputs:
-        key: 'playwright | "$(Agent.OS)" | $(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.deps.json'
+        key: 'playwright | "$(Agent.OS)" | TestAutomation.csproj'
         restoreKeys: |
           playwright | "$(Agent.OS)"
         path: "$(Agent.ToolsDirectory)/playwright-browsers"
