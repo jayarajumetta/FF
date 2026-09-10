@@ -17,8 +17,10 @@ public sealed class NavigationPage
         _ui = ui;
     }
 
-    public Task ClickCloseTabAsync() =>
-        _ui.ClickAsync(_locators.CloseQuote, new ControlIntent("Navigation", "CloseTab"));
+    public async Task ClickCloseTabAsync()
+    {
+        await _locators.CloseQuote.EvaluateAsync("el => el.click()");
+    }
 
     public Task PressCoveragesNewNextAsync(string key) =>
         _ui.PressAsync(_locators.CoveragesNewNext, key, new ControlIntent("Navigation", "CoveragesNewNext"));
@@ -77,8 +79,13 @@ public sealed class NavigationPage
     public Task ClickSupplementalUMUIMOptInAsync() =>
         _ui.ClickAsync(_locators.SupplementalUMUIMOptIn, new ControlIntent("Navigation", "SupplementalUMUIMOptIn"));
 
-    public Task ClickTabsSearchAsync() =>
-        _ui.ClickAsync(_locators.QuoteSearchButton, new ControlIntent("Navigation", "TabsSearch"));
+    public Task WaitForQuoteSearchButtonAsync(string expected) =>
+    _ui.WaitAsync(_locators.QuoteSearchButton, expected, new ControlIntent("Navigation", "QuoteSearchButton"));
+
+    public async Task ClickTabsSearchAsync()
+    {
+        await _locators.QuoteSearchButton.EvaluateAsync("el => el.click()");
+    }
 
     public Task WaitForUMCoverageAsync(string expected) =>
         _ui.WaitAsync(_locators.UMCoverage, expected, new ControlIntent("Navigation", "UMCoverage"));

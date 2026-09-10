@@ -7,7 +7,7 @@ Feature: Auto Rate Filings Common Policy NB
 
   Background: Prepare Personal Lines Duck Creek for policy processing
     Given I open a browser session
-  Scenario Outline: Auto Rate Filings Common Policy NB - <stateCode> <stateVariant>
+  Scenario Outline: Auto Rate Filings Common Policy NB - <stateCode>
     Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
     And I open the configured Personal Lines Duck Creek application
     And I sign in to Personal Lines Duck Creek using configured credentials

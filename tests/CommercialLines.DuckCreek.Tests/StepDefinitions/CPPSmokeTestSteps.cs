@@ -126,6 +126,7 @@ public sealed class CPPSmokeTestSteps
         await page.WaitForFirstNameAsync("Visible");
         await page.EnterFirstNameAsync(data.Resolve("{{data:first_name_56}}"));
         await page.EnterMiddleNameAsync(data.Resolve("{{data:middle_name_57}}"));
+        await page.WaitForLastNameAsync("Visible");
         await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0067}}"));
         await page.EnterDOBAsync(data.Resolve("{DATE[][-40y][MM-dd-yyyy]}"));
         if (data.Condition("State!=\"CA\""))

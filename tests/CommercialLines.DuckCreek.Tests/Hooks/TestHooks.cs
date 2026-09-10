@@ -19,7 +19,11 @@ public sealed class TestHooks
     }
 
     [BeforeTestRun(Order = -1000)]
-    public static void ValidateConfiguration() => _config = FrameworkConfig.Load();
+    public static void ValidateConfiguration()
+    {
+        _config = FrameworkConfig.Load();
+        TestResultsCleaner.CleanOnce(_config);
+    }
 
     [BeforeScenario(Order = -100)]
     public void PrepareScenario()

@@ -22,6 +22,7 @@ import tempfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
+from pldc_smoke_data import is_metadata_cleaned_smoke, is_standalone_smoke, load as load_smoke_data, validate_standalone
 
 try:
     import yaml  # type: ignore
@@ -335,7 +336,7 @@ else:
             if donor and not (data_path.parent / donor).exists():
                 fail(f"EQ {flow} Tosca donor missing: {donor}")
 
-# Layered data must reconstruct every original scenario exactly.
+# PLDC smoke data is standalone; other scenarios remain layered.
 layered_stats: dict[str, Any] = {}
 for app in APPS:
     app_root = ROOT / "tests" / app
@@ -348,12 +349,27 @@ for app in APPS:
         continue
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     entries = manifest.get("entries", {})
-    if set(entries) != {path.name for path in scenarios}:
-        missing = sorted({path.name for path in scenarios} - set(entries))
-        extra = sorted(set(entries) - {path.name for path in scenarios})
+    layered_names = {path.name for path in scenarios if not is_standalone_smoke(app, path.name)}
+    if set(entries) != layered_names:
+        missing = sorted(layered_names - set(entries))
+        extra = sorted(set(entries) - layered_names)
         fail(f"{app}: layered manifest/source mismatch; missing={missing[:10]} extra={extra[:10]}")
     reconstructed = 0
+    standalone = 0
     for source in scenarios:
+        if is_standalone_smoke(app, source.name):
+            try:
+                problems = validate_standalone(
+                    load_smoke_data(source),
+                    require_metadata_cleanup=is_metadata_cleaned_smoke(app, source.name),
+                )
+            except ValueError as ex:
+                problems = [str(ex)]
+            for problem in problems:
+                fail(f"{app}: {source.name}: {problem}")
+            if not problems:
+                standalone += 1
+            continue
         entry = entries.get(source.name)
         if not isinstance(entry, dict):
             continue
@@ -378,7 +394,8 @@ for app in APPS:
             fail(f"{app}: source checksum mismatch in layered manifest for {source.name}")
             continue
         reconstructed += 1
-    layered_stats[app] = {"scenarioRecords": len(scenarios), "reconstructedExactly": reconstructed}
+    layered_stats[app] = {"scenarioRecords": len(scenarios), "reconstructedExactly": reconstructed,
+                          "standaloneValidated": standalone}
 STATS["layeredTestData"] = layered_stats
 
 scenario_data = (ROOT / "src" / "InsuranceAutomation.Core" / "ScenarioData.cs").read_text(encoding="utf-8")
