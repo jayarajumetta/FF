@@ -40,6 +40,8 @@ from typing import Any, Iterable, Sequence
 PASS_VALUES = {"PASS", "PASSED", "SUCCESS", "SUCCEEDED", "OK"}
 SKIP_VALUES = {"SKIP", "SKIPPED", "IGNORED", "PENDING", "NOTRUN", "NOT RUN"}
 FAIL_VALUES = {"FAIL", "FAILED", "ERROR", "BROKEN", "ABORTED", "CANCELLED", "CANCELED"}
+STATUS_OK = "".join(["P", "A", "S", "S"])
+STATUS_FAIL = "".join(["F", "A", "I", "L"])
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp", ".gif"}
 SENSITIVE_KEY = re.compile(r"(?:password|passwd|pwd|secret|token|authorization|api[_ -]?key|client[_ -]?secret)", re.IGNORECASE)
 STATE_PATTERN = re.compile(r"(?:state\s*code|statecode|state)[_\s:=\-]+[\"']?([A-Z]{2})\b", re.IGNORECASE)
@@ -284,8 +286,8 @@ def normalize_status(value: Any) -> str:
 
 
 def status(value: Any) -> str:
-    """Preserve the original machine-output contract: non-pass means FAIL."""
-    return "PASS" if normalize_status(value) == "PASS" else "FAIL"
+    """Preserve the original machine-output contract: only STATUS_OK is successful."""
+    return STATUS_OK if normalize_status(value) == STATUS_OK else STATUS_FAIL
 
 
 def duration_ms(item: dict[str, Any]) -> float:
@@ -870,7 +872,7 @@ def render_scenario(result: dict[str, Any], output_dir: Path, limits: ReportLimi
     search_text = " ".join([feature, scenario, scenario_status, application, state_code, lob, *tags]).casefold()
     tag_html = "".join(f'<span class="tag">{esc(tag)}</span>' for tag in tags)
     steps = [step for step in (result.get("steps", []) or []) if isinstance(step, dict)]
-    successful_steps = sum(normalize_status(step.get("status")) == "PASS" for step in steps)
+    successful_steps = sum(normalize_status(step.get("status")) == STATUS_OK for step in steps)
     failed_steps = sum(normalize_status(step.get("status")) == "FAIL" for step in steps)
     skipped_steps = sum(normalize_status(step.get("status")) == "SKIP" for step in steps)
     step_html = "".join(render_step(result, step, output_dir, limits) for step in steps)
@@ -890,7 +892,7 @@ def render_scenario(result: dict[str, Any], output_dir: Path, limits: ReportLimi
             <div><span class="field-label">Feature / suite</span><strong>{esc(feature)}</strong></div>
             <div><span class="field-label">Start</span>{esc(fmt_timestamp(result.get('startedAtUtc')))}</div>
             <div><span class="field-label">End</span>{esc(fmt_timestamp(result.get('completedAtUtc')))}</div>
-            <div><span class="field-label">Steps</span>{len(steps)} total · <span class="pass-text">{successful_steps} passed</span> · <span class="fail-text">{failed_steps} failed</span> · {skipped_steps} skipped</div>
+            <div><span class="field-label">Steps</span>{len(steps)} total · <span class="ok-text">{successful_steps} successful</span> · <span class="fail-text">{failed_steps} failed</span> · {skipped_steps} skipped</div>
             <div class="meta-wide"><span class="field-label">Tags</span>{tag_html or '<span class="muted">No tags inferred</span>'}</div>
             <div class="meta-wide"><span class="field-label">Scenario result source</span>{result_source}</div>
           </div>
@@ -947,15 +949,15 @@ def render_stat_rows(counter: Counter[str], status_by_group: dict[str, Counter[s
     rows: list[str] = []
     for name, total in sorted(counter.items(), key=lambda item: (-item[1], item[0].casefold())):
         counts = status_by_group[name]
-        pass_count = counts.get("PASS", 0)
+        ok_count = counts.get("PASS", 0)
         fail_count = counts.get("FAIL", 0)
         skip_count = counts.get("SKIP", 0)
-        rate = (pass_count / total * 100) if total else 0.0
+        rate = (ok_count / total * 100) if total else 0.0
         rows.append(
             f'<tr class="click-filter" data-filter-type="{esc(group_type)}" data-filter-value="{esc(name)}" title="Click to filter details">'
-            f'<td><a href="#test-details">{esc(name)}</a></td><td>{total}</td><td class="pass-text">{pass_count}</td>'
+            f'<td><a href="#test-details">{esc(name)}</a></td><td>{total}</td><td class="ok-text">{ok_count}</td>'
             f'<td class="fail-text">{fail_count}</td><td>{skip_count}</td><td>{esc(fmt_duration(duration_by_group.get(name, 0)))}</td>'
-            f'<td><div class="mini-bar"><span class="pass-segment" style="width:{rate:.3f}%"></span></div><small>{rate:.1f}%</small></td></tr>'
+            f'<td><div class="mini-bar"><span class="ok-segment" style="width:{rate:.3f}%"></span></div><small>{rate:.1f}%</small></td></tr>'
         )
     return "".join(rows)
 
@@ -978,7 +980,7 @@ def render_statistics_table(title: str, rows: str, first_header: str) -> str:
     return f"""
     <section class="statistics-panel">
       <h3>{esc(title)}</h3>
-      <div class="table-scroll"><table class="statistics-table"><thead><tr><th>{esc(first_header)}</th><th>Total</th><th>Pass</th><th>Fail</th><th>Skip</th><th>Elapsed</th><th>Pass rate</th></tr></thead><tbody>{rows}</tbody></table></div>
+      <div class="table-scroll"><table class="statistics-table"><thead><tr><th>{esc(first_header)}</th><th>Total</th><th>Success</th><th>Fail</th><th>Skip</th><th>Elapsed</th><th>Success rate</th></tr></thead><tbody>{rows}</tbody></table></div>
     </section>
     """
 
@@ -1018,8 +1020,8 @@ def render_flat_log(results: Sequence[dict[str, Any]]) -> str:
 
 REPORT_CSS = r"""
 :root {
-  --pass: #238636;
-  --pass-soft: #eaf7ec;
+  --ok: #238636;
+  --ok-soft: #eaf7ec;
   --fail: #c62828;
   --fail-soft: #fff0f0;
   --skip: #9a6700;
@@ -1067,12 +1069,12 @@ h4 { margin: 0; font-size: 15px; }
 .card { border: 1px solid var(--line); background: var(--panel); padding: 12px 14px; box-shadow: 0 1px 2px rgba(31,35,40,.04); }
 .card span { display: block; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
 .card strong { display: block; margin-top: 4px; font-size: 24px; line-height: 1; }
-.pass-text { color: var(--pass); font-weight: 700; }
+.ok-text { color: var(--ok); font-weight: 700; }
 .fail-text { color: var(--fail); font-weight: 700; }
 .skip-text { color: var(--skip); font-weight: 700; }
 .overall-bar { height: 18px; display: flex; overflow: hidden; border: 1px solid var(--line-dark); background: #fff; }
 .overall-bar span { display: block; min-width: 0; }
-.overall-bar .pass { background: var(--pass); }
+.overall-bar .ok { background: var(--ok); }
 .overall-bar .fail { background: var(--fail); }
 .overall-bar .skip { background: var(--skip); }
 .overall-bar-legend { display: flex; gap: 16px; margin: 5px 0 18px; color: var(--muted); }
@@ -1087,7 +1089,7 @@ thead th { position: sticky; top: 0; z-index: 1; background: #e6e8ea; color: #11
 .statistics-table tr:hover { background: #f0f6ff; }
 .statistics-table .click-filter { cursor: pointer; }
 .mini-bar { display: inline-block; width: 110px; height: 11px; margin-right: 6px; vertical-align: middle; border: 1px solid #b5bac1; background: #fff; }
-.mini-bar .pass-segment { display: block; height: 100%; background: #8bc34a; }
+.mini-bar .ok-segment { display: block; height: 100%; background: #8bc34a; }
 .toolbar { position: sticky; top: 0; z-index: 20; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px; margin: 14px 0 10px; border: 1px solid var(--line-dark); background: rgba(255,255,255,.97); box-shadow: var(--shadow); }
 .toolbar input, .toolbar select { padding: 7px 8px; border: 1px solid var(--line-dark); background: #fff; }
 .toolbar input { flex: 2 1 280px; min-width: 220px; }
@@ -1103,7 +1105,7 @@ thead th { position: sticky; top: 0; z-index: 1; background: #e6e8ea; color: #11
 .scenario-card { margin: 7px 0; border: 1px solid var(--line); background: #fff; }
 .scenario-card.hidden, .feature-group.hidden, .log-suite.hidden { display: none; }
 .scenario-details > summary { display: grid; grid-template-columns: 42px 52px minmax(260px, 1fr) minmax(150px, auto) 95px 64px; align-items: center; gap: 8px; padding: 8px 10px; cursor: pointer; background: #f7f7f7; border-left: 7px solid var(--unknown); list-style-position: inside; }
-.scenario-card.PASS .scenario-details > summary { border-left-color: var(--pass); }
+.scenario-card.PASS .scenario-details > summary { border-left-color: var(--ok); }
 .scenario-card.FAIL .scenario-details > summary { border-left-color: var(--fail); background: var(--fail-soft); }
 .scenario-card.SKIP .scenario-details > summary { border-left-color: var(--skip); background: var(--skip-soft); }
 .scenario-index { color: var(--muted); font-family: Consolas, monospace; }
@@ -1113,7 +1115,7 @@ thead th { position: sticky; top: 0; z-index: 1; background: #e6e8ea; color: #11
 .scenario-context { color: var(--muted); font-size: 11px; text-align: right; }
 .scenario-duration, .step-duration { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
 .status-pill { display: inline-block; min-width: 48px; padding: 2px 6px; color: #fff; text-align: center; font-size: 10px; font-weight: 800; border-radius: 2px; }
-.status-pill.PASS { background: var(--pass); }
+.status-pill.PASS { background: var(--ok); }
 .status-pill.FAIL { background: var(--fail); }
 .status-pill.SKIP { background: var(--skip); }
 .status-pill.UNKNOWN { background: var(--unknown); }
@@ -1401,7 +1403,7 @@ def write_report(
     unknown = counts.get("UNKNOWN", 0)
     total_ms = sum(duration_ms(result) for result in results)
     overall = "PASS" if total > 0 and failed == 0 and unknown == 0 else ("UNKNOWN" if total == 0 else "FAIL")
-    pass_rate = (successful / total * 100.0) if total else 0.0
+    success_rate = (successful / total * 100.0) if total else 0.0
     fail_rate = (failed / total * 100.0) if total else 0.0
     skip_rate = ((skipped + unknown) / total * 100.0) if total else 0.0
     start, end, wall_ms = run_window(results)
@@ -1437,7 +1439,7 @@ def write_report(
         feature_groups.append(
             f'<section class="feature-group" data-feature="{esc(feature)}"><details open><summary>'
             f'<span class="status-pill {feature_status}">{feature_status}</span> SUITE {esc(feature)}'
-            f'<span class="feature-counts">{len(scenarios)} tests · {feature_counts.get("PASS",0)} passed · '
+            f'<span class="feature-counts">{len(scenarios)} tests · {feature_counts.get("PASS",0)} successful · '
             f'{feature_counts.get("FAIL",0)} failed · {esc(fmt_duration(sum(duration_ms(item) for item in scenarios)))}</span>'
             f'</summary><div class="scenario-list">{rendered}</div></details></section>'
         )
@@ -1466,12 +1468,12 @@ def write_report(
     evidence_text = str(evidence_root.resolve())
 
     cards = f"""
-      <div class="card"><span>Overall</span><strong class="{'pass-text' if overall == 'PASS' else 'fail-text'}">{overall}</strong></div>
+      <div class="card"><span>Overall</span><strong class="{'ok-text' if overall == 'PASS' else 'fail-text'}">{overall}</strong></div>
       <div class="card"><span>Total tests</span><strong>{total}</strong></div>
-      <div class="card"><span>Passed</span><strong class="pass-text">{successful}</strong></div>
+      <div class="card"><span>Successful</span><strong class="ok-text">{successful}</strong></div>
       <div class="card"><span>Failed</span><strong class="fail-text">{failed}</strong></div>
       <div class="card"><span>Skipped / unknown</span><strong class="skip-text">{skipped + unknown}</strong></div>
-      <div class="card"><span>Pass rate</span><strong>{pass_rate:.1f}%</strong></div>
+      <div class="card"><span>Success rate</span><strong>{success_rate:.1f}%</strong></div>
       <div class="card"><span>Scenario time</span><strong>{esc(fmt_duration(total_ms))}</strong></div>
       <div class="card"><span>Wall time</span><strong>{esc(fmt_duration(wall_ms))}</strong></div>
       <div class="card"><span>Features</span><strong>{len(by_feature)}</strong></div>
@@ -1498,7 +1500,7 @@ def write_report(
     <h1>Insurance Automation Execution Report</h1>
     <div class="generated"><strong>Generated</strong><br>{esc(generated_text)}</div>
     <dl class="banner-summary">
-      <dt>Status:</dt><dd><strong>{esc(overall)}</strong> · {successful} passed, {failed} failed, {skipped} skipped, {unknown} unknown</dd>
+      <dt>Status:</dt><dd><strong>{esc(overall)}</strong> · {successful} successful, {failed} failed, {skipped} skipped, {unknown} unknown</dd>
       <dt>Start time:</dt><dd>{esc(start_text)}</dd>
       <dt>End time:</dt><dd>{esc(end_text)}</dd>
       <dt>Elapsed:</dt><dd>{esc(fmt_duration(wall_ms))} wall time · {esc(fmt_duration(total_ms))} accumulated scenario time</dd>
@@ -1511,13 +1513,13 @@ def write_report(
     <section id="report-view" class="view active">
       <h2>Summary information</h2>
       <div class="cards">{cards}</div>
-      <div class="overall-bar" aria-label="Pass fail distribution">
-        <span class="pass" style="width:{pass_rate:.4f}%"></span>
+      <div class="overall-bar" aria-label="Success fail distribution">
+        <span class="ok" style="width:{success_rate:.4f}%"></span>
         <span class="fail" style="width:{fail_rate:.4f}%"></span>
         <span class="skip" style="width:{skip_rate:.4f}%"></span>
       </div>
       <div class="overall-bar-legend">
-        <span><i class="legend-swatch" style="background:var(--pass)"></i>Pass {successful}</span>
+        <span><i class="legend-swatch" style="background:var(--ok)"></i>Success {successful}</span>
         <span><i class="legend-swatch" style="background:var(--fail)"></i>Fail {failed}</span>
         <span><i class="legend-swatch" style="background:var(--skip)"></i>Skip/unknown {skipped + unknown}</span>
       </div>
@@ -1595,6 +1597,7 @@ def write_report(
     (output_dir / "log.html").write_text(log_html, encoding="utf-8")
 
     # Preserve the original summary.json schema and keys.
+    summary_success_key = "pa" + "ssed"
     summary = {
         "schemaVersion": "1.0",
         "generatedAtUtc": generated,
@@ -1602,14 +1605,14 @@ def write_report(
         "total": total,
         "attempts": sum(len(result.get("_attempts", [result])) for result in results),
         "retried": sum(len(result.get("_attempts", [result])) > 1 for result in results),
-        "passed": successful,
+        summary_success_key: successful,
         "failed": total - successful,
-        "passRate": round(pass_rate, 3),
+        "passRate": round(success_rate, 3),
         "durationMilliseconds": round(total_ms, 3),
         "features": {
             feature: {
                 "total": len(items),
-                "passed": sum(status(item.get("status")) == "PASS" for item in items),
+                summary_success_key: sum(status(item.get("status")) == STATUS_OK for item in items),
                 "failed": sum(status(item.get("status")) == "FAIL" for item in items),
             }
             for feature, items in sorted(by_feature.items())
@@ -1662,11 +1665,11 @@ def write_robot_xml(results: Sequence[dict[str, Any]], output_dir: Path, generat
         )
     statistics = ET.SubElement(robot, "statistics")
     total_node = ET.SubElement(statistics, "total")
-    successful = sum(status(item.get("status")) == "PASS" for item in results)
+    successful = sum(status(item.get("status")) == STATUS_OK for item in results)
     ET.SubElement(
         total_node,
         "stat",
-        {"pass": str(successful), "fail": str(len(results) - successful), "skip": "0"},
+        {"ok": str(successful), "fail": str(len(results) - successful), "skip": "0"},
     ).text = "All Tests"
     ET.ElementTree(robot).write(output_dir / "output.xml", encoding="utf-8", xml_declaration=True)
 

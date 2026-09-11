@@ -11,9 +11,11 @@ public sealed class FrameworkConfig
 
     public static FrameworkConfig Load()
     {
-        var path = FindConfigFile();
-        var repositoryRoot = TestOutputPaths.FindRoot(path);
-        var safePath = EnsureSafeConfigPath(path, repositoryRoot);
+        var repositoryRoot = FindRepositoryRoot();
+        var safePath = Path.Combine(repositoryRoot, "config", "framework.json");
+        if (!File.Exists(safePath))
+            throw new FileNotFoundException($"framework.json was not found at expected path: {safePath}");
+
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var config = JsonSerializer.Deserialize<FrameworkConfig>(File.ReadAllText(safePath), options)
                      ?? throw new InvalidOperationException($"Unable to parse framework configuration: {safePath}");
@@ -46,35 +48,20 @@ public sealed class FrameworkConfig
     }
 
 
-    private static string FindConfigFile()
+    private static string FindRepositoryRoot()
     {
-        var explicitPath = Environment.GetEnvironmentVariable("TEST_FRAMEWORK_CONFIG");
-        if (!string.IsNullOrWhiteSpace(explicitPath) && File.Exists(explicitPath)) return Path.GetFullPath(explicitPath);
-
-        foreach (var start in new[] { Directory.GetCurrentDirectory(), AppContext.BaseDirectory })
+        foreach (var start in new[] { AppContext.BaseDirectory })
         {
             var current = new DirectoryInfo(start);
             while (current is not null)
             {
-                var candidate = Path.Combine(current.FullName, "config", "framework.json");
-                if (File.Exists(candidate)) return candidate;
+                if (File.Exists(Path.Combine(current.FullName, "ToscaCanonicalSimple.sln")) ||
+                    File.Exists(Path.Combine(current.FullName, "Tosca.runsettings")))
+                    return current.FullName;
                 current = current.Parent;
             }
         }
-        throw new FileNotFoundException("config/framework.json was not found. Set TEST_FRAMEWORK_CONFIG to an explicit path if needed.");
-    }
-
-    private static string EnsureSafeConfigPath(string candidatePath, string repositoryRoot)
-    {
-        var fullPath = Path.GetFullPath(candidatePath);
-        var fullRoot = Path.GetFullPath(repositoryRoot).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-
-        if (!fullPath.StartsWith(fullRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
-            throw new InvalidOperationException("TEST_FRAMEWORK_CONFIG must point to a file inside the repository root.");
-        if (!Path.GetFileName(fullPath).Equals("framework.json", StringComparison.OrdinalIgnoreCase))
-            throw new InvalidOperationException("Framework configuration file name must be framework.json.");
-
-        return fullPath;
+        throw new DirectoryNotFoundException("Repository root was not found. Ensure execution starts from the repository/package directory tree.");
     }
 }
 

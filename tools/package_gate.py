@@ -52,11 +52,11 @@ def warn(message: str) -> None:
 
 
 def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
+    max_bytes = 256 * 1024 * 1024
+    if path.stat().st_size > max_bytes:
+        raise ValueError(f"File exceeds allowed size for hashing: {path}")
     with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+        return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
 def sha256_normalized_text(path: Path) -> str:
