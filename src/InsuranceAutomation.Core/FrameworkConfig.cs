@@ -4,6 +4,8 @@ namespace InsuranceAutomation.Core;
 
 public sealed class FrameworkConfig
 {
+    private const long MaxConfigBytes = 1 * 1024 * 1024;
+
     public BrowserOptions Browser { get; init; } = new();
     public ReportingOptions Reporting { get; init; } = new();
     public WaitOptions Waits { get; init; } = new();
@@ -13,15 +15,11 @@ public sealed class FrameworkConfig
     {
         var repositoryRoot = FindRepositoryRoot();
         var fullRoot = Path.GetFullPath(repositoryRoot).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-        var safePath = Path.GetFullPath(Path.Combine(fullRoot, "config", "framework.json"));
-        if (!safePath.StartsWith(fullRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) ||
-            !safePath.EndsWith($"{Path.DirectorySeparatorChar}config{Path.DirectorySeparatorChar}framework.json", StringComparison.OrdinalIgnoreCase))
-            throw new InvalidOperationException("Resolved framework configuration path is invalid.");
-        if (!File.Exists(safePath))
-            throw new FileNotFoundException($"framework.json was not found at expected path: {safePath}");
+        var safePath = ResolvePathInsideRoot(fullRoot, "config", "framework.json");
 
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        var config = JsonSerializer.Deserialize<FrameworkConfig>(File.ReadAllText(safePath), options)
+        var configJson = ReadSmallTextFile(safePath, MaxConfigBytes);
+        var config = JsonSerializer.Deserialize<FrameworkConfig>(configJson, options)
                      ?? throw new InvalidOperationException($"Unable to parse framework configuration: {safePath}");
         config.Validate(safePath);
         config.Reporting.ResultsRoot = TestOutputPaths.ResolveResultsRoot(repositoryRoot, config.Reporting.ResultsRoot);
@@ -66,6 +64,27 @@ public sealed class FrameworkConfig
             }
         }
         throw new DirectoryNotFoundException("Repository root was not found. Ensure execution starts from the repository/package directory tree.");
+    }
+
+    private static string ResolvePathInsideRoot(string fullRoot, params string[] relativeParts)
+    {
+        var relativePath = Path.Combine(relativeParts);
+        var candidate = Path.GetFullPath(Path.Combine(fullRoot, relativePath));
+        if (!candidate.StartsWith(fullRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("Resolved framework configuration path is invalid.");
+        if (!File.Exists(candidate))
+            throw new FileNotFoundException($"framework.json was not found at expected path: {candidate}");
+        return candidate;
+    }
+
+    private static string ReadSmallTextFile(string path, long maxBytes)
+    {
+        var info = new FileInfo(path);
+        if ((info.Attributes & FileAttributes.ReparsePoint) != 0)
+            throw new InvalidOperationException("Framework configuration cannot be a reparse point.");
+        if (info.Length <= 0 || info.Length > maxBytes)
+            throw new InvalidOperationException($"framework.json size must be between 1 and {maxBytes} bytes.");
+        return File.ReadAllText(path);
     }
 
 }
