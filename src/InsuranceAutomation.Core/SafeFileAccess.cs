@@ -76,28 +76,19 @@ internal static class SafeFileAccess
         }
     }
 
-    public static string ReadAllText(string path, long maxBytes)
+    public static string ReadAllTextUnderRoot(string rootPath, string candidatePath, long maxBytes)
     {
         if (maxBytes <= 0)
             throw new InvalidOperationException("maxBytes must be positive.");
 
-        var info = new FileInfo(path);
-        if (!info.Exists)
-            throw new FileNotFoundException($"Required file not found: {path}");
-        if ((info.Attributes & FileAttributes.ReparsePoint) != 0)
-            throw new InvalidOperationException($"Reparse-point files are not allowed: {path}");
+        var resolved = ResolveExistingFileUnderRoot(rootPath, candidatePath);
+        var info = new FileInfo(resolved);
         if (info.Length <= 0 || info.Length > maxBytes)
-            throw new InvalidOperationException($"File size must be between 1 and {maxBytes} bytes: {path}");
+            throw new InvalidOperationException($"File size must be between 1 and {maxBytes} bytes: {resolved}");
 
-        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var stream = new FileStream(info.FullName, FileMode.Open, FileAccess.Read, FileShare.Read);
         using var reader = new StreamReader(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
         return reader.ReadToEnd();
-    }
-
-    public static string ReadAllTextUnderRoot(string rootPath, string candidatePath, long maxBytes)
-    {
-        var resolved = ResolveExistingFileUnderRoot(rootPath, candidatePath);
-        return ReadAllText(resolved, maxBytes);
     }
 
     private static string NormalizeRoot(string rootPath)
