@@ -13,12 +13,11 @@ public sealed class FrameworkConfig
 
     public static FrameworkConfig Load()
     {
-        var repositoryRoot = FindRepositoryRoot();
-        var fullRoot = Path.GetFullPath(repositoryRoot).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-        var safePath = ResolvePathInsideRoot(fullRoot, "config", "framework.json");
+        var repositoryRoot = SafeFileAccess.FindRepositoryRoot();
+        var safePath = SafeFileAccess.ResolveExistingFileUnderRoot(repositoryRoot, Path.Combine("config", "framework.json"));
 
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        var configJson = ReadSmallTextFile(safePath, MaxConfigBytes);
+        var configJson = SafeFileAccess.ReadAllText(safePath, MaxConfigBytes);
         var config = JsonSerializer.Deserialize<FrameworkConfig>(configJson, options)
                      ?? throw new InvalidOperationException($"Unable to parse framework configuration: {safePath}");
         config.Validate(safePath);
@@ -48,45 +47,6 @@ public sealed class FrameworkConfig
 
 
     }
-
-
-    private static string FindRepositoryRoot()
-    {
-        foreach (var start in new[] { AppContext.BaseDirectory })
-        {
-            var current = new DirectoryInfo(start);
-            while (current is not null)
-            {
-                if (File.Exists(Path.Combine(current.FullName, "ToscaCanonicalSimple.sln")) ||
-                    File.Exists(Path.Combine(current.FullName, "Tosca.runsettings")))
-                    return current.FullName;
-                current = current.Parent;
-            }
-        }
-        throw new DirectoryNotFoundException("Repository root was not found. Ensure execution starts from the repository/package directory tree.");
-    }
-
-    private static string ResolvePathInsideRoot(string fullRoot, params string[] relativeParts)
-    {
-        var relativePath = Path.Combine(relativeParts);
-        var candidate = Path.GetFullPath(Path.Combine(fullRoot, relativePath));
-        if (!candidate.StartsWith(fullRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
-            throw new InvalidOperationException("Resolved framework configuration path is invalid.");
-        if (!File.Exists(candidate))
-            throw new FileNotFoundException($"framework.json was not found at expected path: {candidate}");
-        return candidate;
-    }
-
-    private static string ReadSmallTextFile(string path, long maxBytes)
-    {
-        var info = new FileInfo(path);
-        if ((info.Attributes & FileAttributes.ReparsePoint) != 0)
-            throw new InvalidOperationException("Framework configuration cannot be a reparse point.");
-        if (info.Length <= 0 || info.Length > maxBytes)
-            throw new InvalidOperationException($"framework.json size must be between 1 and {maxBytes} bytes.");
-        return File.ReadAllText(path);
-    }
-
 }
 
 public sealed class BrowserOptions

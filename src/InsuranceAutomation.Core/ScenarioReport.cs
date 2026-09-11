@@ -6,6 +6,9 @@ namespace InsuranceAutomation.Core;
 
 public sealed class ScenarioReport
 {
+    private const long MaxScenarioResultBytes = 5 * 1024 * 1024;
+    private const long MaxReportHtmlBytes = 10 * 1024 * 1024;
+
     private readonly List<StepResult> _steps = [];
     private readonly List<DeferredVerificationFailure> _deferredVerifications = [];
     private readonly string _artifactDirectory;
@@ -135,7 +138,7 @@ public sealed class ScenarioReport
     {
         var path = Path.Combine(_artifactDirectory, "scenario-result.json");
         if (!File.Exists(path)) return;
-        var result = System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(path))!;
+        var result = System.Text.Json.Nodes.JsonNode.Parse(SafeFileAccess.ReadAllText(path, MaxScenarioResultBytes))!;
         result["status"] = status;
         result["error"] = error ?? string.Empty;
         File.WriteAllText(path, result.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
@@ -144,7 +147,7 @@ public sealed class ScenarioReport
     public void RefreshAttemptLinks()
     {
         if (!File.Exists(ReportPath)) return;
-        var html = File.ReadAllText(ReportPath);
+        var html = SafeFileAccess.ReadAllText(ReportPath, MaxReportHtmlBytes);
         const string start = "<!-- attempt-links-start -->";
         const string end = "<!-- attempt-links-end -->";
         var from = html.IndexOf(start, StringComparison.Ordinal);
