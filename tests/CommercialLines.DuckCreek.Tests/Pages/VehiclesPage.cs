@@ -51,7 +51,7 @@ public sealed class VehiclesPage
         _ui.PressAsync(_locators.LiabilityLimit, key, new ControlIntent("Vehicles", "LiabilityLimit"));
 
     public Task WaitForMotorcycleLiabilityAsync(string expected) =>
-        _ui.WaitAsync(_locators.MotorcycleLiability, expected, new ControlIntent("Vehicles", "MotorcycleLiability"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Vehicles", "MotorcycleLiability"));
 
     public Task EnterPDLimitAsync(string value) =>
         _ui.FillAsync(_locators.PDLimit, value, new ControlIntent("Vehicles", "PDLimit"));
@@ -69,13 +69,13 @@ public sealed class VehiclesPage
         _ui.PressAsync(_locators.PolicyNumber, key, new ControlIntent("Vehicles", "PolicyNumber"));
 
     public Task WaitForRecreationalVehicleLiabilityAsync(string expected) =>
-        _ui.WaitAsync(_locators.RecreationalVehicleLiability, expected, new ControlIntent("Vehicles", "RecreationalVehicleLiability"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Vehicles", "RecreationalVehicleLiability"));
 
     public Task ClickRecreationalVehicleLiabilityAsync() =>
-        _ui.ClickAsync(_locators.RecreationalVehicleLiability, new ControlIntent("Vehicles", "RecreationalVehicleLiability"));
+        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Vehicles", "RecreationalVehicleLiability"));
 
     public Task WaitForRecreationalVehicleLiabilityHeadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.RecreationalVehicleLiabilityHeading, expected, new ControlIntent("Vehicles", "RecreationalVehicleLiabilityHeading"));
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Vehicles", "RecreationalVehicleLiabilityHeading"));
 
     public Task EnterTotalSubjectPremiumAsync(string value) =>
         _ui.FillAsync(_locators.TotalSubjectPremium, value, new ControlIntent("Vehicles", "TotalSubjectPremium"));
@@ -83,4 +83,25 @@ public sealed class VehiclesPage
     public Task PressTotalSubjectPremiumAsync(string key) =>
         _ui.PressAsync(_locators.TotalSubjectPremium, key, new ControlIntent("Vehicles", "TotalSubjectPremium"));
 
+
+    public Task EnterCarrierNameSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.CarrierName, value, new ControlIntent("Vehicles", "CarrierName"), delayMs);
+
+    public Task EnterEffectiveDateSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.EffectiveDate, value, new ControlIntent("Vehicles", "EffectiveDate"), delayMs);
+
+    public Task EnterExpirationDateSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.ExpirationDate, value, new ControlIntent("Vehicles", "ExpirationDate"), delayMs);
+
+    public Task EnterLiabilityLimitSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.LiabilityLimit, value, new ControlIntent("Vehicles", "LiabilityLimit"), delayMs);
+
+    public Task EnterPDLimitSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.PDLimit, value, new ControlIntent("Vehicles", "PDLimit"), delayMs);
+
+    public Task EnterPolicyNumberSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.PolicyNumber, value, new ControlIntent("Vehicles", "PolicyNumber"), delayMs);
+
+    public Task EnterTotalSubjectPremiumSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.TotalSubjectPremium, value, new ControlIntent("Vehicles", "TotalSubjectPremium"), delayMs);
 }

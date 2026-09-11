@@ -21,7 +21,7 @@ public sealed class AccountInformationPage
         _ui.VerifyAsync(_locators.AccountInformation, expected, property, new ControlIntent("AccountInformation", "AccountInformation"));
 
     public Task WaitForAccountInformationHeaderAsync(string expected) =>
-        _ui.WaitAsync(_locators.AccountInformationHeader, expected, new ControlIntent("AccountInformation", "AccountInformationHeader"));
+        _ui.WaitAsync(_locators.AccountInformation, expected, new ControlIntent("AccountInformation", "AccountInformationHeader"));
 
     public Task PressAdditionalInterestsNextAsync(string key) =>
         _ui.PressAsync(_locators.AdditionalInterestsNext, key, new ControlIntent("AccountInformation", "AdditionalInterestsNext"));
@@ -59,6 +59,9 @@ public sealed class AccountInformationPage
     public Task VerifyMapAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.Map, expected, property, new ControlIntent("AccountInformation", "Map"));
 
+    public Task<bool> IsMapPresentAsync() =>
+        _ui.ExistsAsync(_locators.Map);
+
     public Task SelectMarriedAsync(string value) =>
         _ui.SelectAsync(_locators.Married, value, new ControlIntent("AccountInformation", "Married"));
 
@@ -77,14 +80,17 @@ public sealed class AccountInformationPage
     public Task VerifySatelliteAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.Satellite, expected, property, new ControlIntent("AccountInformation", "Satellite"));
 
+    public Task<bool> IsSatellitePresentAsync() =>
+        _ui.ExistsAsync(_locators.Satellite);
+
     public Task SelectStateAsync(string value) =>
         _ui.SelectAsync(_locators.StateDropdown, value, new ControlIntent("AccountInformation", "StateDropdown"));
 
     public Task SelectState0110EAsync(string value) =>
-    _ui.SelectAsync(_locators.State0110E, value, new ControlIntent("AccountInformation", "State0110E"));
+    _ui.SelectAsync(_locators.StateDropdown, value, new ControlIntent("AccountInformation", "State0110E"));
 
     public Task EnterStateAE19AAsync(string value) =>
-        _ui.FillAsync(_locators.StateAE19A, value, new ControlIntent("AccountInformation", "StateAE19A"));
+        _ui.FillAsync(_locators.StateDropdown, value, new ControlIntent("AccountInformation", "StateAE19A"));
 
     public Task ClickStateDropdownAsync() =>
         _ui.ClickAsync(_locators.StateDropdown, new ControlIntent("AccountInformation", "StateDropdown"));

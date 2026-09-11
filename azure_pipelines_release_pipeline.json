@@ -1,0 +1,1144 @@
+{
+  "source": "userInterface",
+  "revision": 1,
+  "description": "Classic Azure DevOps Release definition for the FF Playwright/ReqnRoll/NUnit automation artifact. After import, reselect the primary Build artifact produced by the CI pipeline (artifact name: testpackage) and keep/reapply artifact alias _FF_CI; then select a Windows agent queue for each stage. The stages are intentionally independent/manual: Assembly Execution runs DLLs with an optional VSTest filter; Test Suite Execution runs one or more automated suites from a plan/configuration; Test Plan On-Demand Execution is the release stage selected from Azure Test Plans and consumes $(test.RunId), with ManualTestRunId as a fallback. Set credential variables as secrets before execution.",
+  "createdBy": null,
+  "createdOn": "0001-01-01T00:00:00",
+  "modifiedBy": null,
+  "modifiedOn": "0001-01-01T00:00:00",
+  "isDeleted": false,
+  "variables": {
+    "BuildConfiguration": {
+      "value": "Release",
+      "isSecret": false,
+      "allowOverride": true
+    },
+    "Headless": {
+      "value": "true",
+      "isSecret": false,
+      "allowOverride": true
+    },
+    "PlaywrightBrowser": {
+      "value": "chromium",
+      "isSecret": false,
+      "allowOverride": true
+    },
+    "RunReadyZipName": {
+      "value": "testpackage-runready.zip",
+      "isSecret": false,
+      "allowOverride": false
+    },
+    "AssemblyTestFiles": {
+      "value": "**\\tests\\**\\bin\\Release\\net8.0\\*Tests.dll\r\n!**\\*TestAdapter.dll\r\n!**\\obj\\**",
+      "isSecret": false,
+      "allowOverride": true
+    },
+    "AssemblyTestFilter": {
+      "value": "",
+      "isSecret": false,
+      "allowOverride": true
+    },
+    "TestPlanId": {
+      "value": "0",
+      "isSecret": false,
+      "allowOverride": true
+    },
+    "TestSuiteIds": {
+      "value": "0",
+      "isSecret": false,
+      "allowOverride": true
+    },
+    "TestConfigurationId": {
+      "value": "0",
+      "isSecret": false,
+      "allowOverride": true
+    },
+    "ManualTestRunId": {
+      "value": "0",
+      "isSecret": false,
+      "allowOverride": true
+    },
+    "MinimumExpectedTests": {
+      "value": "1",
+      "isSecret": false,
+      "allowOverride": true
+    },
+    "CL_DC_USERNAME": {
+      "value": "",
+      "isSecret": true,
+      "allowOverride": true
+    },
+    "CL_DC_PASSWORD": {
+      "value": "",
+      "isSecret": true,
+      "allowOverride": true
+    },
+    "CL_EQ_USERNAME": {
+      "value": "",
+      "isSecret": true,
+      "allowOverride": true
+    },
+    "CL_EQ_PASSWORD": {
+      "value": "",
+      "isSecret": true,
+      "allowOverride": true
+    },
+    "PL_DC_USERNAME": {
+      "value": "",
+      "isSecret": true,
+      "allowOverride": true
+    },
+    "PL_DC_PASSWORD": {
+      "value": "",
+      "isSecret": true,
+      "allowOverride": true
+    }
+  },
+  "variableGroups": [],
+  "environments": [
+    {
+      "id": 0,
+      "name": "01 - Assembly Execution",
+      "rank": 1,
+      "owner": null,
+      "variables": {
+        "StageKey": {
+          "value": "Assembly",
+          "isSecret": false,
+          "allowOverride": false
+        },
+        "StageResultsDirectory": {
+          "value": "TestResults\\Assembly",
+          "isSecret": false,
+          "allowOverride": false
+        }
+      },
+      "variableGroups": [],
+      "preDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": true,
+            "isNotificationOn": false,
+            "id": 0
+          }
+        ],
+        "approvalOptions": {
+          "requiredApproverCount": 0,
+          "releaseCreatorCanBeApprover": true,
+          "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+          "enforceIdentityRevalidation": false,
+          "timeoutInMinutes": 0,
+          "executionOrder": "beforeGates"
+        }
+      },
+      "deployStep": {
+        "id": 0
+      },
+      "postDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": true,
+            "isNotificationOn": false,
+            "id": 0
+          }
+        ],
+        "approvalOptions": {
+          "requiredApproverCount": 0,
+          "releaseCreatorCanBeApprover": true,
+          "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+          "enforceIdentityRevalidation": false,
+          "timeoutInMinutes": 0,
+          "executionOrder": "afterSuccessfulGates"
+        }
+      },
+      "deployPhases": [
+        {
+          "deploymentInput": {
+            "parallelExecution": {
+              "parallelExecutionType": "none"
+            },
+            "agentSpecification": {
+              "identifier": "windows-2022"
+            },
+            "skipArtifactsDownload": false,
+            "artifactsDownloadInput": {
+              "downloadInputs": [
+                {
+                  "alias": "_FF_CI",
+                  "artifactType": "Build",
+                  "artifactDownloadMode": "All",
+                  "artifactItems": []
+                }
+              ]
+            },
+            "queueId": 0,
+            "demands": [],
+            "enableAccessToken": false,
+            "timeoutInMinutes": 0,
+            "jobCancelTimeoutInMinutes": 5,
+            "condition": "succeeded()",
+            "overrideInputs": {}
+          },
+          "rank": 1,
+          "phaseType": "agentBasedDeployment",
+          "name": "Run automation on Windows agent",
+          "refName": null,
+          "workflowTasks": [
+            {
+              "environment": {},
+              "taskId": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
+              "version": "2.*",
+              "name": "Install .NET 8 SDK",
+              "refName": "UseDotNet_Assembly",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "packageType": "sdk",
+                "useGlobalJson": "false",
+                "version": "8.0.x",
+                "includePreviewVersions": "false",
+                "installationPath": "$(Agent.ToolsDirectory)\\dotnet",
+                "performMultiLevelLookup": "false"
+              }
+            },
+            {
+              "environment": {},
+              "taskId": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
+              "version": "0.*",
+              "name": "Install Python 3.11 for consolidated reporting",
+              "refName": "UsePython_Assembly",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "versionSpec": "3.11",
+                "disableDownloadFromRegistry": "false",
+                "allowUnstable": "false",
+                "addToPath": "true",
+                "architecture": "x64"
+              }
+            },
+            {
+              "environment": {},
+              "taskId": "2C65196A-54FD-4A02-9BE8-D9D1837B7111",
+              "version": "1.*",
+              "name": "Install latest stable Visual Studio Test Platform",
+              "refName": "VsTestInstaller_Assembly",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "packageFeedSelector": "nugetOrg",
+                "versionSelector": "latestStable"
+              }
+            },
+            {
+              "environment": {},
+              "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+              "version": "2.*",
+              "name": "Prepare and validate CI automation artifact",
+              "refName": "PowerShell_Assembly_Prepare",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "targetType": "inline",
+                "script": "$ErrorActionPreference = 'Stop'\n\n$downloadRoot = [IO.Path]::GetFullPath(\"$(System.DefaultWorkingDirectory)\")\n$releaseId = \"$(Release.ReleaseId)\"\nif ([string]::IsNullOrWhiteSpace($releaseId) -or $releaseId -like '$(*') { $releaseId = [guid]::NewGuid().ToString('N') }\n$stageKey = \"$(StageKey)\"\n$stageRoot = Join-Path \"$(Agent.TempDirectory)\" (\"FFTestAutomation\\{0}\\{1}\" -f $releaseId, $stageKey)\n$packageRoot = Join-Path $stageRoot 'package'\n\nif (Test-Path -LiteralPath $stageRoot) { Remove-Item -LiteralPath $stageRoot -Recurse -Force }\nNew-Item -ItemType Directory -Path $packageRoot -Force | Out-Null\n\n$runReadyZip = Get-ChildItem -LiteralPath $downloadRoot -Recurse -File -Filter \"$(RunReadyZipName)\" -ErrorAction SilentlyContinue |\n    Sort-Object LastWriteTimeUtc -Descending |\n    Select-Object -First 1\n\nif ($runReadyZip) {\n    Write-Host \"Using CI run-ready package: $($runReadyZip.FullName)\"\n    Expand-Archive -LiteralPath $runReadyZip.FullName -DestinationPath $packageRoot -Force\n}\nelse {\n    $settingsFile = Get-ChildItem -LiteralPath $downloadRoot -Recurse -File -Filter 'Tosca.runsettings' -ErrorAction SilentlyContinue |\n        Where-Object {\n            (Test-Path -LiteralPath (Join-Path $_.Directory.FullName 'tests')) -and\n            (Test-Path -LiteralPath (Join-Path $_.Directory.FullName 'scripts\\Initialize-PipelineTestOutput.ps1'))\n        } |\n        Select-Object -First 1\n\n    if (-not $settingsFile) {\n        throw \"The linked CI artifact does not contain $(RunReadyZipName) or an extracted executable testpackage. Reconnect the Build artifact after importing this release definition.\"\n    }\n\n    $sourceRoot = $settingsFile.Directory.FullName\n    Write-Host \"Using extracted CI artifact folder: $sourceRoot\"\n    Copy-Item -Path (Join-Path $sourceRoot '*') -Destination $packageRoot -Recurse -Force\n}\n\n$requiredFiles = @(\n    'Tosca.runsettings',\n    'config\\framework.json',\n    'scripts\\Initialize-PipelineTestOutput.ps1',\n    'scripts\\Generate-ConsolidatedReport.ps1',\n    'tools\\generate_consolidated_report.py',\n    'tests\\CommercialLines.DuckCreek.Tests\\bin\\Release\\net8.0\\CommercialLines.DuckCreek.Tests.dll',\n    'tests\\CommercialLines.ExpertQuote.Tests\\bin\\Release\\net8.0\\CommercialLines.ExpertQuote.Tests.dll',\n    'tests\\PersonalLines.DuckCreek.Tests\\bin\\Release\\net8.0\\PersonalLines.DuckCreek.Tests.dll'\n)\nforeach ($relativePath in $requiredFiles) {\n    $fullPath = Join-Path $packageRoot $relativePath\n    if (-not (Test-Path -LiteralPath $fullPath -PathType Leaf)) { throw \"Required CI artifact file is missing: $relativePath\" }\n}\n\n$headless = $true\nif (-not [bool]::TryParse(\"$(Headless)\", [ref]$headless)) { throw \"Headless must be true or false; received '$(Headless)'.\" }\n$configFiles = Get-ChildItem -LiteralPath $packageRoot -Recurse -File -Filter 'framework.json' |\n    Where-Object { $_.FullName -match '[\\\\/]config[\\\\/]framework\\.json$' }\nif (-not $configFiles) { throw 'No framework.json files were found in the CI artifact.' }\nforeach ($configFile in $configFiles) {\n    $config = Get-Content -LiteralPath $configFile.FullName -Raw | ConvertFrom-Json\n    if ($null -eq $config.browser) { throw \"browser configuration is missing from $($configFile.FullName)\" }\n    $config.browser.headless = $headless\n    $config | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $configFile.FullName -Encoding UTF8\n}\n\n$playwrightScript = Get-ChildItem -LiteralPath $packageRoot -Recurse -File -Filter 'playwright.ps1' |\n    Where-Object { Test-Path -LiteralPath (Join-Path $_.Directory.FullName 'Microsoft.Playwright.dll') } |\n    Select-Object -First 1\nif (-not $playwrightScript) { throw 'No playable playwright.ps1 and Microsoft.Playwright.dll pair exists in the CI artifact.' }\n& $playwrightScript.FullName install \"$(PlaywrightBrowser)\"\nif ($LASTEXITCODE -ne 0) { throw \"Playwright $(PlaywrightBrowser) installation failed with exit code $LASTEXITCODE.\" }\n\n$frameworkConfig = [IO.Path]::GetFullPath((Join-Path $packageRoot 'config\\framework.json'))\n$env:TEST_FRAMEWORK_CONFIG = $frameworkConfig\nWrite-Host \"##vso[task.setvariable variable=TEST_PACKAGE_ROOT]$packageRoot\"\nWrite-Host \"##vso[task.setvariable variable=TEST_FRAMEWORK_CONFIG]$frameworkConfig\"\n\n$initializer = Join-Path $packageRoot 'scripts\\Initialize-PipelineTestOutput.ps1'\n& $initializer -ArtifactRoot $packageRoot -ResultsDirectory \"$(StageResultsDirectory)\"\n\nWrite-Host \"Prepared test package: $packageRoot\"\nWrite-Host \"Stage result scope: $(StageResultsDirectory)\"\n$global:LASTEXITCODE = 0\n",
+                "errorActionPreference": "stop",
+                "warningPreference": "default",
+                "informationPreference": "default",
+                "verbosePreference": "default",
+                "debugPreference": "default",
+                "progressPreference": "silentlyContinue",
+                "failOnStderr": "false",
+                "showWarnings": "true",
+                "ignoreLASTEXITCODE": "false",
+                "pwsh": "false",
+                "workingDirectory": "$(System.DefaultWorkingDirectory)",
+                "runScriptInSeparateScope": "false"
+              }
+            },
+            {
+              "environment": {
+                "CI": "true",
+                "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+                "TEST_FRAMEWORK_CONFIG": "$(TEST_FRAMEWORK_CONFIG)",
+                "TEST_RESULTS_ROOT": "$(TEST_RESULTS_ROOT)",
+                "TEST_REPOSITORY_ROOT": "$(TEST_REPOSITORY_ROOT)",
+                "CL_DC_USERNAME": "$(CL_DC_USERNAME)",
+                "CL_DC_PASSWORD": "$(CL_DC_PASSWORD)",
+                "CL_EQ_USERNAME": "$(CL_EQ_USERNAME)",
+                "CL_EQ_PASSWORD": "$(CL_EQ_PASSWORD)",
+                "PL_DC_USERNAME": "$(PL_DC_USERNAME)",
+                "PL_DC_PASSWORD": "$(PL_DC_PASSWORD)"
+              },
+              "taskId": "EF087383-EE5E-42C7-9A53-AB56C98420F9",
+              "version": "3.*",
+              "name": "Execute compiled assemblies / tag filter",
+              "refName": "VSTest_Assembly",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "searchFolder": "$(TEST_PACKAGE_ROOT)",
+                "resultsFolder": "$(TEST_RESULTS_ROOT)\\Runner",
+                "vstestLocationMethod": "version",
+                "vsTestVersion": "toolsInstaller",
+                "runSettingsFile": "$(VSTEST_RUNSETTINGS)",
+                "overrideTestrunParameters": "",
+                "pathtoCustomTestAdapters": "",
+                "runInParallel": "false",
+                "runTestsInIsolation": "false",
+                "codeCoverageEnabled": "false",
+                "otherConsoleOptions": "",
+                "diagnosticsEnabled": "false",
+                "rerunFailedTests": "false",
+                "uiTests": "true",
+                "testRunTitle": "Execute compiled assemblies / tag filter - $(Release.ReleaseName)",
+                "platform": "Any CPU",
+                "configuration": "$(BuildConfiguration)",
+                "publishRunAttachments": "true",
+                "donotPublishTestResults": "false",
+                "failOnMinTestsNotRun": "true",
+                "minimumExpectedTests": "$(MinimumExpectedTests)",
+                "testSelector": "testAssemblies",
+                "testAssemblyVer2": "$(AssemblyTestFiles)",
+                "testFiltercriteria": "$(AssemblyTestFilter)",
+                "runOnlyImpactedTests": "false"
+              }
+            },
+            {
+              "environment": {},
+              "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+              "version": "2.*",
+              "name": "Generate and attach consolidated HTML report",
+              "refName": "PowerShell_Assembly_Report",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": true,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "always()",
+              "inputs": {
+                "targetType": "inline",
+                "script": "$ErrorActionPreference = 'Continue'\n\n$packageRoot = \"$(TEST_PACKAGE_ROOT)\"\n$resultsDirectory = \"$(StageResultsDirectory)\"\nif ([string]::IsNullOrWhiteSpace($packageRoot) -or -not (Test-Path -LiteralPath $packageRoot -PathType Container)) {\n    Write-Warning 'The prepared test package is unavailable, so consolidated reporting is skipped.'\n    exit 0\n}\n\n$evidenceRoot = Join-Path (Join-Path $packageRoot $resultsDirectory) 'Artifacts'\n$scenarioResult = $null\nif (Test-Path -LiteralPath $evidenceRoot -PathType Container) {\n    $scenarioResult = Get-ChildItem -LiteralPath $evidenceRoot -Recurse -File -Filter 'scenario-result.json' -ErrorAction SilentlyContinue | Select-Object -First 1\n}\nif (-not $scenarioResult) {\n    Write-Warning \"No scenario-result.json was produced under $evidenceRoot. VSTest/TRX results remain available in Azure Test Runs.\"\n    exit 0\n}\n\n$reportScript = Join-Path $packageRoot 'scripts\\Generate-ConsolidatedReport.ps1'\ntry {\n    & $reportScript -ResultsDirectory $resultsDirectory\n    if ($LASTEXITCODE -ne 0) { throw \"Report generator exited with code $LASTEXITCODE.\" }\n}\ncatch {\n    Write-Warning \"Consolidated report generation failed: $($_.Exception.Message)\"\n    exit 0\n}\n\n$reportRoot = Join-Path (Join-Path $packageRoot $resultsDirectory) 'ConsolidatedReport'\n$reportHtml = Join-Path $reportRoot 'report.html'\n$logHtml = Join-Path $reportRoot 'log.html'\n$summaryJson = Join-Path $reportRoot 'summary.json'\n\nif (Test-Path -LiteralPath $reportHtml -PathType Leaf) {\n    Write-Host \"##vso[task.uploadsummary]$reportHtml\"\n    Write-Host \"##vso[task.uploadfile]$reportHtml\"\n}\nforeach ($file in @($logHtml, $summaryJson)) {\n    if (Test-Path -LiteralPath $file -PathType Leaf) { Write-Host \"##vso[task.uploadfile]$file\" }\n}\nWrite-Host \"Consolidated report: $reportHtml\"\nexit 0\n",
+                "errorActionPreference": "stop",
+                "warningPreference": "default",
+                "informationPreference": "default",
+                "verbosePreference": "default",
+                "debugPreference": "default",
+                "progressPreference": "silentlyContinue",
+                "failOnStderr": "false",
+                "showWarnings": "true",
+                "ignoreLASTEXITCODE": "false",
+                "pwsh": "false",
+                "workingDirectory": "$(System.DefaultWorkingDirectory)",
+                "runScriptInSeparateScope": "false"
+              }
+            }
+          ]
+        }
+      ],
+      "environmentOptions": {
+        "emailNotificationType": "OnlyOnFailure",
+        "emailRecipients": "release.environment.owner;release.creator",
+        "skipArtifactsDownload": false,
+        "timeoutInMinutes": 0,
+        "enableAccessToken": false,
+        "publishDeploymentStatus": true,
+        "badgeEnabled": false,
+        "autoLinkWorkItems": true,
+        "pullRequestDeploymentEnabled": false
+      },
+      "demands": [],
+      "conditions": [],
+      "executionPolicy": {
+        "concurrencyCount": 1,
+        "queueDepthCount": 0
+      },
+      "schedules": [],
+      "retentionPolicy": {
+        "daysToKeep": 30,
+        "releasesToKeep": 10,
+        "retainBuild": true
+      },
+      "properties": {},
+      "preDeploymentGates": {
+        "id": 0,
+        "gatesOptions": null,
+        "gates": []
+      },
+      "postDeploymentGates": {
+        "id": 0,
+        "gatesOptions": null,
+        "gates": []
+      },
+      "environmentTriggers": [],
+      "processParameters": {}
+    },
+    {
+      "id": 0,
+      "name": "02 - Test Suite Execution",
+      "rank": 2,
+      "owner": null,
+      "variables": {
+        "StageKey": {
+          "value": "Suite",
+          "isSecret": false,
+          "allowOverride": false
+        },
+        "StageResultsDirectory": {
+          "value": "TestResults\\Suite",
+          "isSecret": false,
+          "allowOverride": false
+        }
+      },
+      "variableGroups": [],
+      "preDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": true,
+            "isNotificationOn": false,
+            "id": 0
+          }
+        ],
+        "approvalOptions": {
+          "requiredApproverCount": 0,
+          "releaseCreatorCanBeApprover": true,
+          "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+          "enforceIdentityRevalidation": false,
+          "timeoutInMinutes": 0,
+          "executionOrder": "beforeGates"
+        }
+      },
+      "deployStep": {
+        "id": 0
+      },
+      "postDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": true,
+            "isNotificationOn": false,
+            "id": 0
+          }
+        ],
+        "approvalOptions": {
+          "requiredApproverCount": 0,
+          "releaseCreatorCanBeApprover": true,
+          "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+          "enforceIdentityRevalidation": false,
+          "timeoutInMinutes": 0,
+          "executionOrder": "afterSuccessfulGates"
+        }
+      },
+      "deployPhases": [
+        {
+          "deploymentInput": {
+            "parallelExecution": {
+              "parallelExecutionType": "none"
+            },
+            "agentSpecification": {
+              "identifier": "windows-2022"
+            },
+            "skipArtifactsDownload": false,
+            "artifactsDownloadInput": {
+              "downloadInputs": [
+                {
+                  "alias": "_FF_CI",
+                  "artifactType": "Build",
+                  "artifactDownloadMode": "All",
+                  "artifactItems": []
+                }
+              ]
+            },
+            "queueId": 0,
+            "demands": [],
+            "enableAccessToken": false,
+            "timeoutInMinutes": 0,
+            "jobCancelTimeoutInMinutes": 5,
+            "condition": "succeeded()",
+            "overrideInputs": {}
+          },
+          "rank": 1,
+          "phaseType": "agentBasedDeployment",
+          "name": "Run automation on Windows agent",
+          "refName": null,
+          "workflowTasks": [
+            {
+              "environment": {},
+              "taskId": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
+              "version": "2.*",
+              "name": "Install .NET 8 SDK",
+              "refName": "UseDotNet_Suite",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "packageType": "sdk",
+                "useGlobalJson": "false",
+                "version": "8.0.x",
+                "includePreviewVersions": "false",
+                "installationPath": "$(Agent.ToolsDirectory)\\dotnet",
+                "performMultiLevelLookup": "false"
+              }
+            },
+            {
+              "environment": {},
+              "taskId": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
+              "version": "0.*",
+              "name": "Install Python 3.11 for consolidated reporting",
+              "refName": "UsePython_Suite",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "versionSpec": "3.11",
+                "disableDownloadFromRegistry": "false",
+                "allowUnstable": "false",
+                "addToPath": "true",
+                "architecture": "x64"
+              }
+            },
+            {
+              "environment": {},
+              "taskId": "2C65196A-54FD-4A02-9BE8-D9D1837B7111",
+              "version": "1.*",
+              "name": "Install latest stable Visual Studio Test Platform",
+              "refName": "VsTestInstaller_Suite",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "packageFeedSelector": "nugetOrg",
+                "versionSelector": "latestStable"
+              }
+            },
+            {
+              "environment": {},
+              "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+              "version": "2.*",
+              "name": "Prepare and validate CI automation artifact",
+              "refName": "PowerShell_Suite_Prepare",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "targetType": "inline",
+                "script": "$ErrorActionPreference = 'Stop'\n\n$downloadRoot = [IO.Path]::GetFullPath(\"$(System.DefaultWorkingDirectory)\")\n$releaseId = \"$(Release.ReleaseId)\"\nif ([string]::IsNullOrWhiteSpace($releaseId) -or $releaseId -like '$(*') { $releaseId = [guid]::NewGuid().ToString('N') }\n$stageKey = \"$(StageKey)\"\n$stageRoot = Join-Path \"$(Agent.TempDirectory)\" (\"FFTestAutomation\\{0}\\{1}\" -f $releaseId, $stageKey)\n$packageRoot = Join-Path $stageRoot 'package'\n\nif (Test-Path -LiteralPath $stageRoot) { Remove-Item -LiteralPath $stageRoot -Recurse -Force }\nNew-Item -ItemType Directory -Path $packageRoot -Force | Out-Null\n\n$runReadyZip = Get-ChildItem -LiteralPath $downloadRoot -Recurse -File -Filter \"$(RunReadyZipName)\" -ErrorAction SilentlyContinue |\n    Sort-Object LastWriteTimeUtc -Descending |\n    Select-Object -First 1\n\nif ($runReadyZip) {\n    Write-Host \"Using CI run-ready package: $($runReadyZip.FullName)\"\n    Expand-Archive -LiteralPath $runReadyZip.FullName -DestinationPath $packageRoot -Force\n}\nelse {\n    $settingsFile = Get-ChildItem -LiteralPath $downloadRoot -Recurse -File -Filter 'Tosca.runsettings' -ErrorAction SilentlyContinue |\n        Where-Object {\n            (Test-Path -LiteralPath (Join-Path $_.Directory.FullName 'tests')) -and\n            (Test-Path -LiteralPath (Join-Path $_.Directory.FullName 'scripts\\Initialize-PipelineTestOutput.ps1'))\n        } |\n        Select-Object -First 1\n\n    if (-not $settingsFile) {\n        throw \"The linked CI artifact does not contain $(RunReadyZipName) or an extracted executable testpackage. Reconnect the Build artifact after importing this release definition.\"\n    }\n\n    $sourceRoot = $settingsFile.Directory.FullName\n    Write-Host \"Using extracted CI artifact folder: $sourceRoot\"\n    Copy-Item -Path (Join-Path $sourceRoot '*') -Destination $packageRoot -Recurse -Force\n}\n\n$requiredFiles = @(\n    'Tosca.runsettings',\n    'config\\framework.json',\n    'scripts\\Initialize-PipelineTestOutput.ps1',\n    'scripts\\Generate-ConsolidatedReport.ps1',\n    'tools\\generate_consolidated_report.py',\n    'tests\\CommercialLines.DuckCreek.Tests\\bin\\Release\\net8.0\\CommercialLines.DuckCreek.Tests.dll',\n    'tests\\CommercialLines.ExpertQuote.Tests\\bin\\Release\\net8.0\\CommercialLines.ExpertQuote.Tests.dll',\n    'tests\\PersonalLines.DuckCreek.Tests\\bin\\Release\\net8.0\\PersonalLines.DuckCreek.Tests.dll'\n)\nforeach ($relativePath in $requiredFiles) {\n    $fullPath = Join-Path $packageRoot $relativePath\n    if (-not (Test-Path -LiteralPath $fullPath -PathType Leaf)) { throw \"Required CI artifact file is missing: $relativePath\" }\n}\n\n$headless = $true\nif (-not [bool]::TryParse(\"$(Headless)\", [ref]$headless)) { throw \"Headless must be true or false; received '$(Headless)'.\" }\n$configFiles = Get-ChildItem -LiteralPath $packageRoot -Recurse -File -Filter 'framework.json' |\n    Where-Object { $_.FullName -match '[\\\\/]config[\\\\/]framework\\.json$' }\nif (-not $configFiles) { throw 'No framework.json files were found in the CI artifact.' }\nforeach ($configFile in $configFiles) {\n    $config = Get-Content -LiteralPath $configFile.FullName -Raw | ConvertFrom-Json\n    if ($null -eq $config.browser) { throw \"browser configuration is missing from $($configFile.FullName)\" }\n    $config.browser.headless = $headless\n    $config | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $configFile.FullName -Encoding UTF8\n}\n\n$playwrightScript = Get-ChildItem -LiteralPath $packageRoot -Recurse -File -Filter 'playwright.ps1' |\n    Where-Object { Test-Path -LiteralPath (Join-Path $_.Directory.FullName 'Microsoft.Playwright.dll') } |\n    Select-Object -First 1\nif (-not $playwrightScript) { throw 'No playable playwright.ps1 and Microsoft.Playwright.dll pair exists in the CI artifact.' }\n& $playwrightScript.FullName install \"$(PlaywrightBrowser)\"\nif ($LASTEXITCODE -ne 0) { throw \"Playwright $(PlaywrightBrowser) installation failed with exit code $LASTEXITCODE.\" }\n\n$frameworkConfig = [IO.Path]::GetFullPath((Join-Path $packageRoot 'config\\framework.json'))\n$env:TEST_FRAMEWORK_CONFIG = $frameworkConfig\nWrite-Host \"##vso[task.setvariable variable=TEST_PACKAGE_ROOT]$packageRoot\"\nWrite-Host \"##vso[task.setvariable variable=TEST_FRAMEWORK_CONFIG]$frameworkConfig\"\n\n$initializer = Join-Path $packageRoot 'scripts\\Initialize-PipelineTestOutput.ps1'\n& $initializer -ArtifactRoot $packageRoot -ResultsDirectory \"$(StageResultsDirectory)\"\n\nWrite-Host \"Prepared test package: $packageRoot\"\nWrite-Host \"Stage result scope: $(StageResultsDirectory)\"\n$global:LASTEXITCODE = 0\n",
+                "errorActionPreference": "stop",
+                "warningPreference": "default",
+                "informationPreference": "default",
+                "verbosePreference": "default",
+                "debugPreference": "default",
+                "progressPreference": "silentlyContinue",
+                "failOnStderr": "false",
+                "showWarnings": "true",
+                "ignoreLASTEXITCODE": "false",
+                "pwsh": "false",
+                "workingDirectory": "$(System.DefaultWorkingDirectory)",
+                "runScriptInSeparateScope": "false"
+              }
+            },
+            {
+              "environment": {},
+              "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+              "version": "2.*",
+              "name": "Validate Test Plan suite selection",
+              "refName": "PowerShell_Suite_ValidateSelection",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "targetType": "inline",
+                "script": "$ErrorActionPreference = 'Stop'\n$values = [ordered]@{\n    TestPlanId = \"$(TestPlanId)\"\n    TestSuiteIds = \"$(TestSuiteIds)\"\n    TestConfigurationId = \"$(TestConfigurationId)\"\n}\nforeach ($entry in $values.GetEnumerator()) {\n    $value = [string]$entry.Value\n    if ([string]::IsNullOrWhiteSpace($value) -or $value -eq '0' -or $value -like '$(*') {\n        throw \"$($entry.Key) must be configured before deploying the Test Suite stage. TestSuiteIds can contain one or more comma-separated suite IDs.\"\n    }\n}\nWrite-Host \"Validated Test Plan $($values.TestPlanId), suite(s) $($values.TestSuiteIds), configuration $($values.TestConfigurationId).\"\n",
+                "errorActionPreference": "stop",
+                "warningPreference": "default",
+                "informationPreference": "default",
+                "verbosePreference": "default",
+                "debugPreference": "default",
+                "progressPreference": "silentlyContinue",
+                "failOnStderr": "false",
+                "showWarnings": "true",
+                "ignoreLASTEXITCODE": "false",
+                "pwsh": "false",
+                "workingDirectory": "$(System.DefaultWorkingDirectory)",
+                "runScriptInSeparateScope": "false"
+              }
+            },
+            {
+              "environment": {
+                "CI": "true",
+                "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+                "TEST_FRAMEWORK_CONFIG": "$(TEST_FRAMEWORK_CONFIG)",
+                "TEST_RESULTS_ROOT": "$(TEST_RESULTS_ROOT)",
+                "TEST_REPOSITORY_ROOT": "$(TEST_REPOSITORY_ROOT)",
+                "CL_DC_USERNAME": "$(CL_DC_USERNAME)",
+                "CL_DC_PASSWORD": "$(CL_DC_PASSWORD)",
+                "CL_EQ_USERNAME": "$(CL_EQ_USERNAME)",
+                "CL_EQ_PASSWORD": "$(CL_EQ_PASSWORD)",
+                "PL_DC_USERNAME": "$(PL_DC_USERNAME)",
+                "PL_DC_PASSWORD": "$(PL_DC_PASSWORD)"
+              },
+              "taskId": "EF087383-EE5E-42C7-9A53-AB56C98420F9",
+              "version": "3.*",
+              "name": "Execute Azure Test Plan suite(s)",
+              "refName": "VSTest_Suite",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "searchFolder": "$(TEST_PACKAGE_ROOT)",
+                "resultsFolder": "$(TEST_RESULTS_ROOT)\\Runner",
+                "vstestLocationMethod": "version",
+                "vsTestVersion": "toolsInstaller",
+                "runSettingsFile": "$(VSTEST_RUNSETTINGS)",
+                "overrideTestrunParameters": "",
+                "pathtoCustomTestAdapters": "",
+                "runInParallel": "false",
+                "runTestsInIsolation": "false",
+                "codeCoverageEnabled": "false",
+                "otherConsoleOptions": "",
+                "diagnosticsEnabled": "false",
+                "rerunFailedTests": "false",
+                "uiTests": "true",
+                "testRunTitle": "Execute Azure Test Plan suite(s) - $(Release.ReleaseName)",
+                "platform": "Any CPU",
+                "configuration": "$(BuildConfiguration)",
+                "publishRunAttachments": "true",
+                "donotPublishTestResults": "false",
+                "failOnMinTestsNotRun": "true",
+                "minimumExpectedTests": "$(MinimumExpectedTests)",
+                "testSelector": "testPlan",
+                "testPlan": "$(TestPlanId)",
+                "testSuite": "$(TestSuiteIds)",
+                "testConfiguration": "$(TestConfigurationId)"
+              }
+            },
+            {
+              "environment": {},
+              "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+              "version": "2.*",
+              "name": "Generate and attach consolidated HTML report",
+              "refName": "PowerShell_Suite_Report",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": true,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "always()",
+              "inputs": {
+                "targetType": "inline",
+                "script": "$ErrorActionPreference = 'Continue'\n\n$packageRoot = \"$(TEST_PACKAGE_ROOT)\"\n$resultsDirectory = \"$(StageResultsDirectory)\"\nif ([string]::IsNullOrWhiteSpace($packageRoot) -or -not (Test-Path -LiteralPath $packageRoot -PathType Container)) {\n    Write-Warning 'The prepared test package is unavailable, so consolidated reporting is skipped.'\n    exit 0\n}\n\n$evidenceRoot = Join-Path (Join-Path $packageRoot $resultsDirectory) 'Artifacts'\n$scenarioResult = $null\nif (Test-Path -LiteralPath $evidenceRoot -PathType Container) {\n    $scenarioResult = Get-ChildItem -LiteralPath $evidenceRoot -Recurse -File -Filter 'scenario-result.json' -ErrorAction SilentlyContinue | Select-Object -First 1\n}\nif (-not $scenarioResult) {\n    Write-Warning \"No scenario-result.json was produced under $evidenceRoot. VSTest/TRX results remain available in Azure Test Runs.\"\n    exit 0\n}\n\n$reportScript = Join-Path $packageRoot 'scripts\\Generate-ConsolidatedReport.ps1'\ntry {\n    & $reportScript -ResultsDirectory $resultsDirectory\n    if ($LASTEXITCODE -ne 0) { throw \"Report generator exited with code $LASTEXITCODE.\" }\n}\ncatch {\n    Write-Warning \"Consolidated report generation failed: $($_.Exception.Message)\"\n    exit 0\n}\n\n$reportRoot = Join-Path (Join-Path $packageRoot $resultsDirectory) 'ConsolidatedReport'\n$reportHtml = Join-Path $reportRoot 'report.html'\n$logHtml = Join-Path $reportRoot 'log.html'\n$summaryJson = Join-Path $reportRoot 'summary.json'\n\nif (Test-Path -LiteralPath $reportHtml -PathType Leaf) {\n    Write-Host \"##vso[task.uploadsummary]$reportHtml\"\n    Write-Host \"##vso[task.uploadfile]$reportHtml\"\n}\nforeach ($file in @($logHtml, $summaryJson)) {\n    if (Test-Path -LiteralPath $file -PathType Leaf) { Write-Host \"##vso[task.uploadfile]$file\" }\n}\nWrite-Host \"Consolidated report: $reportHtml\"\nexit 0\n",
+                "errorActionPreference": "stop",
+                "warningPreference": "default",
+                "informationPreference": "default",
+                "verbosePreference": "default",
+                "debugPreference": "default",
+                "progressPreference": "silentlyContinue",
+                "failOnStderr": "false",
+                "showWarnings": "true",
+                "ignoreLASTEXITCODE": "false",
+                "pwsh": "false",
+                "workingDirectory": "$(System.DefaultWorkingDirectory)",
+                "runScriptInSeparateScope": "false"
+              }
+            }
+          ]
+        }
+      ],
+      "environmentOptions": {
+        "emailNotificationType": "OnlyOnFailure",
+        "emailRecipients": "release.environment.owner;release.creator",
+        "skipArtifactsDownload": false,
+        "timeoutInMinutes": 0,
+        "enableAccessToken": false,
+        "publishDeploymentStatus": true,
+        "badgeEnabled": false,
+        "autoLinkWorkItems": true,
+        "pullRequestDeploymentEnabled": false
+      },
+      "demands": [],
+      "conditions": [],
+      "executionPolicy": {
+        "concurrencyCount": 1,
+        "queueDepthCount": 0
+      },
+      "schedules": [],
+      "retentionPolicy": {
+        "daysToKeep": 30,
+        "releasesToKeep": 10,
+        "retainBuild": true
+      },
+      "properties": {},
+      "preDeploymentGates": {
+        "id": 0,
+        "gatesOptions": null,
+        "gates": []
+      },
+      "postDeploymentGates": {
+        "id": 0,
+        "gatesOptions": null,
+        "gates": []
+      },
+      "environmentTriggers": [],
+      "processParameters": {}
+    },
+    {
+      "id": 0,
+      "name": "03 - Test Plan On-Demand Execution",
+      "rank": 3,
+      "owner": null,
+      "variables": {
+        "StageKey": {
+          "value": "TestPlan",
+          "isSecret": false,
+          "allowOverride": false
+        },
+        "StageResultsDirectory": {
+          "value": "TestResults\\TestPlan",
+          "isSecret": false,
+          "allowOverride": false
+        }
+      },
+      "variableGroups": [],
+      "preDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": true,
+            "isNotificationOn": false,
+            "id": 0
+          }
+        ],
+        "approvalOptions": {
+          "requiredApproverCount": 0,
+          "releaseCreatorCanBeApprover": true,
+          "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+          "enforceIdentityRevalidation": false,
+          "timeoutInMinutes": 0,
+          "executionOrder": "beforeGates"
+        }
+      },
+      "deployStep": {
+        "id": 0
+      },
+      "postDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": true,
+            "isNotificationOn": false,
+            "id": 0
+          }
+        ],
+        "approvalOptions": {
+          "requiredApproverCount": 0,
+          "releaseCreatorCanBeApprover": true,
+          "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+          "enforceIdentityRevalidation": false,
+          "timeoutInMinutes": 0,
+          "executionOrder": "afterSuccessfulGates"
+        }
+      },
+      "deployPhases": [
+        {
+          "deploymentInput": {
+            "parallelExecution": {
+              "parallelExecutionType": "none"
+            },
+            "agentSpecification": {
+              "identifier": "windows-2022"
+            },
+            "skipArtifactsDownload": false,
+            "artifactsDownloadInput": {
+              "downloadInputs": [
+                {
+                  "alias": "_FF_CI",
+                  "artifactType": "Build",
+                  "artifactDownloadMode": "All",
+                  "artifactItems": []
+                }
+              ]
+            },
+            "queueId": 0,
+            "demands": [],
+            "enableAccessToken": false,
+            "timeoutInMinutes": 0,
+            "jobCancelTimeoutInMinutes": 5,
+            "condition": "succeeded()",
+            "overrideInputs": {}
+          },
+          "rank": 1,
+          "phaseType": "agentBasedDeployment",
+          "name": "Run automation on Windows agent",
+          "refName": null,
+          "workflowTasks": [
+            {
+              "environment": {},
+              "taskId": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
+              "version": "2.*",
+              "name": "Install .NET 8 SDK",
+              "refName": "UseDotNet_TestPlan",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "packageType": "sdk",
+                "useGlobalJson": "false",
+                "version": "8.0.x",
+                "includePreviewVersions": "false",
+                "installationPath": "$(Agent.ToolsDirectory)\\dotnet",
+                "performMultiLevelLookup": "false"
+              }
+            },
+            {
+              "environment": {},
+              "taskId": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
+              "version": "0.*",
+              "name": "Install Python 3.11 for consolidated reporting",
+              "refName": "UsePython_TestPlan",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "versionSpec": "3.11",
+                "disableDownloadFromRegistry": "false",
+                "allowUnstable": "false",
+                "addToPath": "true",
+                "architecture": "x64"
+              }
+            },
+            {
+              "environment": {},
+              "taskId": "2C65196A-54FD-4A02-9BE8-D9D1837B7111",
+              "version": "1.*",
+              "name": "Install latest stable Visual Studio Test Platform",
+              "refName": "VsTestInstaller_TestPlan",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "packageFeedSelector": "nugetOrg",
+                "versionSelector": "latestStable"
+              }
+            },
+            {
+              "environment": {},
+              "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+              "version": "2.*",
+              "name": "Prepare and validate CI automation artifact",
+              "refName": "PowerShell_TestPlan_Prepare",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "targetType": "inline",
+                "script": "$ErrorActionPreference = 'Stop'\n\n$downloadRoot = [IO.Path]::GetFullPath(\"$(System.DefaultWorkingDirectory)\")\n$releaseId = \"$(Release.ReleaseId)\"\nif ([string]::IsNullOrWhiteSpace($releaseId) -or $releaseId -like '$(*') { $releaseId = [guid]::NewGuid().ToString('N') }\n$stageKey = \"$(StageKey)\"\n$stageRoot = Join-Path \"$(Agent.TempDirectory)\" (\"FFTestAutomation\\{0}\\{1}\" -f $releaseId, $stageKey)\n$packageRoot = Join-Path $stageRoot 'package'\n\nif (Test-Path -LiteralPath $stageRoot) { Remove-Item -LiteralPath $stageRoot -Recurse -Force }\nNew-Item -ItemType Directory -Path $packageRoot -Force | Out-Null\n\n$runReadyZip = Get-ChildItem -LiteralPath $downloadRoot -Recurse -File -Filter \"$(RunReadyZipName)\" -ErrorAction SilentlyContinue |\n    Sort-Object LastWriteTimeUtc -Descending |\n    Select-Object -First 1\n\nif ($runReadyZip) {\n    Write-Host \"Using CI run-ready package: $($runReadyZip.FullName)\"\n    Expand-Archive -LiteralPath $runReadyZip.FullName -DestinationPath $packageRoot -Force\n}\nelse {\n    $settingsFile = Get-ChildItem -LiteralPath $downloadRoot -Recurse -File -Filter 'Tosca.runsettings' -ErrorAction SilentlyContinue |\n        Where-Object {\n            (Test-Path -LiteralPath (Join-Path $_.Directory.FullName 'tests')) -and\n            (Test-Path -LiteralPath (Join-Path $_.Directory.FullName 'scripts\\Initialize-PipelineTestOutput.ps1'))\n        } |\n        Select-Object -First 1\n\n    if (-not $settingsFile) {\n        throw \"The linked CI artifact does not contain $(RunReadyZipName) or an extracted executable testpackage. Reconnect the Build artifact after importing this release definition.\"\n    }\n\n    $sourceRoot = $settingsFile.Directory.FullName\n    Write-Host \"Using extracted CI artifact folder: $sourceRoot\"\n    Copy-Item -Path (Join-Path $sourceRoot '*') -Destination $packageRoot -Recurse -Force\n}\n\n$requiredFiles = @(\n    'Tosca.runsettings',\n    'config\\framework.json',\n    'scripts\\Initialize-PipelineTestOutput.ps1',\n    'scripts\\Generate-ConsolidatedReport.ps1',\n    'tools\\generate_consolidated_report.py',\n    'tests\\CommercialLines.DuckCreek.Tests\\bin\\Release\\net8.0\\CommercialLines.DuckCreek.Tests.dll',\n    'tests\\CommercialLines.ExpertQuote.Tests\\bin\\Release\\net8.0\\CommercialLines.ExpertQuote.Tests.dll',\n    'tests\\PersonalLines.DuckCreek.Tests\\bin\\Release\\net8.0\\PersonalLines.DuckCreek.Tests.dll'\n)\nforeach ($relativePath in $requiredFiles) {\n    $fullPath = Join-Path $packageRoot $relativePath\n    if (-not (Test-Path -LiteralPath $fullPath -PathType Leaf)) { throw \"Required CI artifact file is missing: $relativePath\" }\n}\n\n$headless = $true\nif (-not [bool]::TryParse(\"$(Headless)\", [ref]$headless)) { throw \"Headless must be true or false; received '$(Headless)'.\" }\n$configFiles = Get-ChildItem -LiteralPath $packageRoot -Recurse -File -Filter 'framework.json' |\n    Where-Object { $_.FullName -match '[\\\\/]config[\\\\/]framework\\.json$' }\nif (-not $configFiles) { throw 'No framework.json files were found in the CI artifact.' }\nforeach ($configFile in $configFiles) {\n    $config = Get-Content -LiteralPath $configFile.FullName -Raw | ConvertFrom-Json\n    if ($null -eq $config.browser) { throw \"browser configuration is missing from $($configFile.FullName)\" }\n    $config.browser.headless = $headless\n    $config | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $configFile.FullName -Encoding UTF8\n}\n\n$playwrightScript = Get-ChildItem -LiteralPath $packageRoot -Recurse -File -Filter 'playwright.ps1' |\n    Where-Object { Test-Path -LiteralPath (Join-Path $_.Directory.FullName 'Microsoft.Playwright.dll') } |\n    Select-Object -First 1\nif (-not $playwrightScript) { throw 'No playable playwright.ps1 and Microsoft.Playwright.dll pair exists in the CI artifact.' }\n& $playwrightScript.FullName install \"$(PlaywrightBrowser)\"\nif ($LASTEXITCODE -ne 0) { throw \"Playwright $(PlaywrightBrowser) installation failed with exit code $LASTEXITCODE.\" }\n\n$frameworkConfig = [IO.Path]::GetFullPath((Join-Path $packageRoot 'config\\framework.json'))\n$env:TEST_FRAMEWORK_CONFIG = $frameworkConfig\nWrite-Host \"##vso[task.setvariable variable=TEST_PACKAGE_ROOT]$packageRoot\"\nWrite-Host \"##vso[task.setvariable variable=TEST_FRAMEWORK_CONFIG]$frameworkConfig\"\n\n$initializer = Join-Path $packageRoot 'scripts\\Initialize-PipelineTestOutput.ps1'\n& $initializer -ArtifactRoot $packageRoot -ResultsDirectory \"$(StageResultsDirectory)\"\n\nWrite-Host \"Prepared test package: $packageRoot\"\nWrite-Host \"Stage result scope: $(StageResultsDirectory)\"\n$global:LASTEXITCODE = 0\n",
+                "errorActionPreference": "stop",
+                "warningPreference": "default",
+                "informationPreference": "default",
+                "verbosePreference": "default",
+                "debugPreference": "default",
+                "progressPreference": "silentlyContinue",
+                "failOnStderr": "false",
+                "showWarnings": "true",
+                "ignoreLASTEXITCODE": "false",
+                "pwsh": "false",
+                "workingDirectory": "$(System.DefaultWorkingDirectory)",
+                "runScriptInSeparateScope": "false"
+              }
+            },
+            {
+              "environment": {},
+              "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+              "version": "2.*",
+              "name": "Resolve Azure Test Plans test run ID",
+              "refName": "PowerShell_TestPlan_ResolveRunId",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "targetType": "inline",
+                "script": "$ErrorActionPreference = 'Stop'\n$manualRunId = \"$(ManualTestRunId)\".Trim()\n$testPlanRunId = \"$(test.RunId)\".Trim()\n\n$resolvedRunId = $null\nif (-not [string]::IsNullOrWhiteSpace($manualRunId) -and $manualRunId -ne '0' -and $manualRunId -notlike '$(*') {\n    $resolvedRunId = $manualRunId\n}\nelseif (-not [string]::IsNullOrWhiteSpace($testPlanRunId) -and $testPlanRunId -ne '0' -and $testPlanRunId -notlike '$(*') {\n    $resolvedRunId = $testPlanRunId\n}\n\nif ([string]::IsNullOrWhiteSpace($resolvedRunId)) {\n    throw 'No Test Run ID is available. Trigger this stage from Azure Test Plans, or override ManualTestRunId when creating/deploying the release.'\n}\nif ($resolvedRunId -notmatch '^\\d+$') { throw \"The resolved Test Run ID '$resolvedRunId' is not numeric.\" }\n\nWrite-Host \"##vso[task.setvariable variable=TCM_TEST_RUN_ID]$resolvedRunId\"\nWrite-Host \"Resolved Azure Test Plan run ID: $resolvedRunId\"\n",
+                "errorActionPreference": "stop",
+                "warningPreference": "default",
+                "informationPreference": "default",
+                "verbosePreference": "default",
+                "debugPreference": "default",
+                "progressPreference": "silentlyContinue",
+                "failOnStderr": "false",
+                "showWarnings": "true",
+                "ignoreLASTEXITCODE": "false",
+                "pwsh": "false",
+                "workingDirectory": "$(System.DefaultWorkingDirectory)",
+                "runScriptInSeparateScope": "false"
+              }
+            },
+            {
+              "environment": {
+                "CI": "true",
+                "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+                "TEST_FRAMEWORK_CONFIG": "$(TEST_FRAMEWORK_CONFIG)",
+                "TEST_RESULTS_ROOT": "$(TEST_RESULTS_ROOT)",
+                "TEST_REPOSITORY_ROOT": "$(TEST_REPOSITORY_ROOT)",
+                "CL_DC_USERNAME": "$(CL_DC_USERNAME)",
+                "CL_DC_PASSWORD": "$(CL_DC_PASSWORD)",
+                "CL_EQ_USERNAME": "$(CL_EQ_USERNAME)",
+                "CL_EQ_PASSWORD": "$(CL_EQ_PASSWORD)",
+                "PL_DC_USERNAME": "$(PL_DC_USERNAME)",
+                "PL_DC_PASSWORD": "$(PL_DC_PASSWORD)"
+              },
+              "taskId": "EF087383-EE5E-42C7-9A53-AB56C98420F9",
+              "version": "3.*",
+              "name": "Execute Azure Test Plans on-demand test run",
+              "refName": "VSTest_TestPlanRun",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "searchFolder": "$(TEST_PACKAGE_ROOT)",
+                "resultsFolder": "$(TEST_RESULTS_ROOT)\\Runner",
+                "vstestLocationMethod": "version",
+                "vsTestVersion": "toolsInstaller",
+                "runSettingsFile": "$(VSTEST_RUNSETTINGS)",
+                "overrideTestrunParameters": "",
+                "pathtoCustomTestAdapters": "",
+                "runInParallel": "false",
+                "runTestsInIsolation": "false",
+                "codeCoverageEnabled": "false",
+                "otherConsoleOptions": "",
+                "diagnosticsEnabled": "false",
+                "rerunFailedTests": "false",
+                "uiTests": "true",
+                "testRunTitle": "Execute Azure Test Plans on-demand test run - $(Release.ReleaseName)",
+                "platform": "Any CPU",
+                "configuration": "$(BuildConfiguration)",
+                "publishRunAttachments": "true",
+                "donotPublishTestResults": "false",
+                "failOnMinTestsNotRun": "true",
+                "minimumExpectedTests": "$(MinimumExpectedTests)",
+                "testSelector": "testRun",
+                "tcmTestRun": "$(TCM_TEST_RUN_ID)"
+              }
+            },
+            {
+              "environment": {},
+              "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+              "version": "2.*",
+              "name": "Generate and attach consolidated HTML report",
+              "refName": "PowerShell_TestPlan_Report",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": true,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "always()",
+              "inputs": {
+                "targetType": "inline",
+                "script": "$ErrorActionPreference = 'Continue'\n\n$packageRoot = \"$(TEST_PACKAGE_ROOT)\"\n$resultsDirectory = \"$(StageResultsDirectory)\"\nif ([string]::IsNullOrWhiteSpace($packageRoot) -or -not (Test-Path -LiteralPath $packageRoot -PathType Container)) {\n    Write-Warning 'The prepared test package is unavailable, so consolidated reporting is skipped.'\n    exit 0\n}\n\n$evidenceRoot = Join-Path (Join-Path $packageRoot $resultsDirectory) 'Artifacts'\n$scenarioResult = $null\nif (Test-Path -LiteralPath $evidenceRoot -PathType Container) {\n    $scenarioResult = Get-ChildItem -LiteralPath $evidenceRoot -Recurse -File -Filter 'scenario-result.json' -ErrorAction SilentlyContinue | Select-Object -First 1\n}\nif (-not $scenarioResult) {\n    Write-Warning \"No scenario-result.json was produced under $evidenceRoot. VSTest/TRX results remain available in Azure Test Runs.\"\n    exit 0\n}\n\n$reportScript = Join-Path $packageRoot 'scripts\\Generate-ConsolidatedReport.ps1'\ntry {\n    & $reportScript -ResultsDirectory $resultsDirectory\n    if ($LASTEXITCODE -ne 0) { throw \"Report generator exited with code $LASTEXITCODE.\" }\n}\ncatch {\n    Write-Warning \"Consolidated report generation failed: $($_.Exception.Message)\"\n    exit 0\n}\n\n$reportRoot = Join-Path (Join-Path $packageRoot $resultsDirectory) 'ConsolidatedReport'\n$reportHtml = Join-Path $reportRoot 'report.html'\n$logHtml = Join-Path $reportRoot 'log.html'\n$summaryJson = Join-Path $reportRoot 'summary.json'\n\nif (Test-Path -LiteralPath $reportHtml -PathType Leaf) {\n    Write-Host \"##vso[task.uploadsummary]$reportHtml\"\n    Write-Host \"##vso[task.uploadfile]$reportHtml\"\n}\nforeach ($file in @($logHtml, $summaryJson)) {\n    if (Test-Path -LiteralPath $file -PathType Leaf) { Write-Host \"##vso[task.uploadfile]$file\" }\n}\nWrite-Host \"Consolidated report: $reportHtml\"\nexit 0\n",
+                "errorActionPreference": "stop",
+                "warningPreference": "default",
+                "informationPreference": "default",
+                "verbosePreference": "default",
+                "debugPreference": "default",
+                "progressPreference": "silentlyContinue",
+                "failOnStderr": "false",
+                "showWarnings": "true",
+                "ignoreLASTEXITCODE": "false",
+                "pwsh": "false",
+                "workingDirectory": "$(System.DefaultWorkingDirectory)",
+                "runScriptInSeparateScope": "false"
+              }
+            }
+          ]
+        }
+      ],
+      "environmentOptions": {
+        "emailNotificationType": "OnlyOnFailure",
+        "emailRecipients": "release.environment.owner;release.creator",
+        "skipArtifactsDownload": false,
+        "timeoutInMinutes": 0,
+        "enableAccessToken": false,
+        "publishDeploymentStatus": true,
+        "badgeEnabled": false,
+        "autoLinkWorkItems": true,
+        "pullRequestDeploymentEnabled": false
+      },
+      "demands": [],
+      "conditions": [],
+      "executionPolicy": {
+        "concurrencyCount": 1,
+        "queueDepthCount": 0
+      },
+      "schedules": [],
+      "retentionPolicy": {
+        "daysToKeep": 30,
+        "releasesToKeep": 10,
+        "retainBuild": true
+      },
+      "properties": {},
+      "preDeploymentGates": {
+        "id": 0,
+        "gatesOptions": null,
+        "gates": []
+      },
+      "postDeploymentGates": {
+        "id": 0,
+        "gatesOptions": null,
+        "gates": []
+      },
+      "environmentTriggers": [],
+      "processParameters": {}
+    }
+  ],
+  "artifacts": [
+    {
+      "sourceId": "00000000-0000-0000-0000-000000000000:0",
+      "type": "Build",
+      "alias": "_FF_CI",
+      "definitionReference": {
+        "artifactSourceDefinitionUrl": {
+          "id": "",
+          "name": ""
+        },
+        "defaultVersionBranch": {
+          "id": "",
+          "name": ""
+        },
+        "defaultVersionSpecific": {
+          "id": "",
+          "name": ""
+        },
+        "defaultVersionTags": {
+          "id": "",
+          "name": ""
+        },
+        "defaultVersionType": {
+          "id": "latestType",
+          "name": "Latest"
+        },
+        "definition": {
+          "id": "0",
+          "name": "RESELECT_CI_PIPELINE_AFTER_IMPORT"
+        },
+        "project": {
+          "id": "00000000-0000-0000-0000-000000000000",
+          "name": "RESELECT_PROJECT_AFTER_IMPORT"
+        }
+      },
+      "isPrimary": true,
+      "isRetained": false
+    }
+  ],
+  "triggers": [],
+  "releaseNameFormat": "FF-Automation-$(rev:r)",
+  "tags": [
+    "FF",
+    "Playwright",
+    "ReqnRoll",
+    "NUnit",
+    "ClassicRelease"
+  ],
+  "properties": {},
+  "id": 0,
+  "name": "FF Test Automation - Classic Release",
+  "path": "\\",
+  "projectReference": null,
+  "_links": {}
+}

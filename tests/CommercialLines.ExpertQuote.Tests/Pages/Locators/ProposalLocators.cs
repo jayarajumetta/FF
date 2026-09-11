@@ -9,21 +9,20 @@ public sealed class ProposalLocators
 
     // Source: EQ|Common|Proposal Start.
     public ILocator ProposalDetailsHeader => _page.GetByRole(AriaRole.Heading, new() { Name = "Proposal Details", Exact = true });
-    public ILocator ProposalDetails => ProposalDetailsHeader;
 
     // Product ModuleAttribute is a DIV with data-testid=proposal.product-chip-item-wrapper.
     public ILocator BusinessOwnersChip =>
-        _page.Locator("[data-testid='proposal.product-chip-item-wrapper']").Filter(new() { HasText = "Business Owners" });
+        _page.Locator("[data-testid='proposal.product-chip-item-wrapper'].chip-item-wrapper, [data-testid='proposal.product-chip-item-wrapper'] > .chip-wrapper").Filter(new() { HasText = "Business Owners" }).First;
     public ILocator SpecialFarmPackageChip =>
-        _page.Locator("[data-testid='proposal.product-chip-item-wrapper']").Filter(new() { HasText = "Special Farm Package" });
+        _page.Locator("[data-testid='proposal.product-chip-item-wrapper'].chip-item-wrapper, [data-testid='proposal.product-chip-item-wrapper'] > .chip-wrapper").Filter(new() { HasText = "Special Farm Package" }).First;
     public ILocator PersonalAutoChip =>
-        _page.Locator("[data-testid='proposal.product-chip-item-wrapper']").Filter(new() { HasText = "Personal Auto" });
+        _page.Locator("[data-testid='proposal.product-chip-item-wrapper'].chip-item-wrapper, [data-testid='proposal.product-chip-item-wrapper'] > .chip-wrapper").Filter(new() { HasText = "Personal Auto" }).First;
     public ILocator MotorcycleChip =>
-        _page.Locator("[data-testid='proposal.product-chip-item-wrapper']").Filter(new() { HasText = "Motorcycle" });
+        _page.Locator("[data-testid='proposal.product-chip-item-wrapper'].chip-item-wrapper, [data-testid='proposal.product-chip-item-wrapper'] > .chip-wrapper").Filter(new() { HasText = "Motorcycle" }).First;
     public ILocator RecreationalVehicleChip =>
-        _page.Locator("[data-testid='proposal.product-chip-item-wrapper']").Filter(new() { HasText = "Recreational Vehicle" });
+        _page.Locator("[data-testid='proposal.product-chip-item-wrapper'].chip-item-wrapper, [data-testid='proposal.product-chip-item-wrapper'] > .chip-wrapper").Filter(new() { HasText = "Recreational Vehicle" }).First;
     public ILocator HomeChip =>
-        _page.Locator("[data-testid='proposal.product-chip-item-wrapper']").Filter(new() { HasText = "Home" });
+        _page.Locator("[data-testid='proposal.product-chip-item-wrapper'].chip-item-wrapper, [data-testid='proposal.product-chip-item-wrapper'] > .chip-wrapper").Filter(new() { HasText = "Home" }).First;
 
     public ILocator BusinessNameSearchField => _page.Locator("[id='business.search.businessName']");
     public ILocator IndividuallyOwnedDbaCheckbox => _page.Locator("[id='business.isIndividualDba-checkbox']");
@@ -55,26 +54,13 @@ public sealed class ProposalLocators
     public ILocator GetDropdownOption(string optionText) =>
         _page.GetByRole(AriaRole.Option, new() { Name = optionText, Exact = true });
 
-    // Compatibility aliases. No duplicate locator definitions.
-    public ILocator BusinessOwners => BusinessOwnersChip;
-    public ILocator EffectiveDate6F16B => EffectiveDate;
-    public ILocator EffectiveDate78F67 => EffectiveDate;
-    public ILocator PolicyTerm => PolicyTermDropdown;
-    public ILocator SpecialFarmPackage => SpecialFarmPackageChip;
-    public ILocator StartQuote => StartQuoteButton;
-    public ILocator State => RatingStateDropdown;
-    public ILocator StateDropdown => RatingStateDropdown;
-    public ILocator NewAccountAddress => AccountAddressRadio;
-    public ILocator IndividualDBA => DbaOrTaNameField;
-    public ILocator IndividuallyOwnedDBAOrTA => IndividuallyOwnedDbaCheckbox;
-    public ILocator LessorsRiskNo => LessorsRiskNoChip;
-    public ILocator SearchBusinessName => BusinessNameSearchField;
+    // Compatibility aliases. LessorsRiskNoChip duplicate locator definitions.
 
     // These source values are orchestration parameters, not editable UI controls.
     // Kept only for legacy method compatibility and should not be used with FillAsync.
     public ILocator Individual => _page.GetByText("Individual", new() { Exact = true });
     public ILocator Missouri => _page.GetByText("Missouri", new() { Exact = true });
-    public ILocator No => LessorsRiskNoChip;
+
     public ILocator SelectSFPCE => _page.GetByRole(AriaRole.Button, new() { Name = "Select -SFP CE", Exact = true });
-    public ILocator True => AccountAddressRadio;
+
 }

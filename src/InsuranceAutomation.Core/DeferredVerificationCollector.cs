@@ -12,7 +12,7 @@ public sealed record DeferredVerificationFailure(
 
 /// <summary>
 /// Scenario-scoped collector for mature soft verification. A verification is deferred only after
-/// the normal locator, configured wait, deterministic Tosca fallback and optional AI healing have
+/// the canonical locator and configured wait have
 /// all been exhausted. Fatal navigation/browser/action failures are never collected here.
 /// </summary>
 public sealed class DeferredVerificationCollector

@@ -30,28 +30,28 @@ public sealed class CoveragesPage
         _ui.ClickAsync(_locators.ADDDriver1, new ControlIntent("Coverages", "ADDDriver1"));
 
     public Task ClickADDDriver2Async() =>
-        _ui.ClickAsync(_locators.ADDDriver2, new ControlIntent("Coverages", "ADDDriver2"));
+        _ui.ClickAsync(_locators.ADDDriver1, new ControlIntent("Coverages", "ADDDriver2"));
 
     public Task ClickADDDriver3Async() =>
-        _ui.ClickAsync(_locators.ADDDriver3, new ControlIntent("Coverages", "ADDDriver3"));
+        _ui.ClickAsync(_locators.ADDDriver1, new ControlIntent("Coverages", "ADDDriver3"));
 
     public Task ClickADDDriver4Async() =>
-        _ui.ClickAsync(_locators.ADDDriver4, new ControlIntent("Coverages", "ADDDriver4"));
+        _ui.ClickAsync(_locators.ADDDriver1, new ControlIntent("Coverages", "ADDDriver4"));
 
     public Task ClickADDDriver5Async() =>
-        _ui.ClickAsync(_locators.ADDDriver5, new ControlIntent("Coverages", "ADDDriver5"));
+        _ui.ClickAsync(_locators.ADDDriver1, new ControlIntent("Coverages", "ADDDriver5"));
 
     public Task ClickAdditionalCoveragesNextNewNextAsync() =>
         _ui.ClickAsync(_locators.AdditionalCoveragesNextNewNext, new ControlIntent("Coverages", "AdditionalCoveragesNextNewNext"));
 
     public Task ClickExtraordinaryMedicalBenefitAsync() =>
-        _ui.ClickAsync(_locators.ExtraordinaryMedicalBenefit, new ControlIntent("Coverages", "ExtraordinaryMedicalBenefit"));
+        _ui.ClickAsync(_locators.ADDDriver1, new ControlIntent("Coverages", "ExtraordinaryMedicalBenefit"));
 
     public Task WaitForH1AdditionalCoveragesAsync(string expected) =>
         _ui.WaitAsync(_locators.H1AdditionalCoverages, expected, new ControlIntent("Coverages", "H1AdditionalCoverages"));
 
     public Task ClickIncLiabilityClaimsOfFamilyMembersAsync() =>
-        _ui.ClickAsync(_locators.IncLiabilityClaimsOfFamilyMembers, new ControlIntent("Coverages", "IncLiabilityClaimsOfFamilyMembers"));
+        _ui.ClickAsync(_locators.ADDDriver1, new ControlIntent("Coverages", "IncLiabilityClaimsOfFamilyMembers"));
 
     public Task PressIncomeLossCoverageAsync(string key) =>
         _ui.PressAsync(_locators.IncomeLossCoverage, key, new ControlIntent("Coverages", "IncomeLossCoverage"));
@@ -81,7 +81,7 @@ public sealed class CoveragesPage
         _ui.ClickAsync(_locators.TortOption, new ControlIntent("Coverages", "TortOption"));
 
     public Task ClickTotalDisabilityCoverageDriver1Async() =>
-        _ui.ClickAsync(_locators.TotalDisabilityCoverageDriver1, new ControlIntent("Coverages", "TotalDisabilityCoverageDriver1"));
+        _ui.ClickAsync(_locators.ADDDriver1, new ControlIntent("Coverages", "TotalDisabilityCoverageDriver1"));
 
     public Task ClickUIMPDAsync() =>
         _ui.ClickAsync(_locators.UIMPD, new ControlIntent("Coverages", "UIMPD"));
@@ -90,6 +90,6 @@ public sealed class CoveragesPage
         _ui.ClickAsync(_locators.UMPD, new ControlIntent("Coverages", "UMPD"));
 
     public Task SelectWorkLossNoAsync(string value) =>
-        _ui.SelectAsync(_locators.WorkLossNo, value, new ControlIntent("Coverages", "WorkLossNo"));
+        _ui.SelectAsync(_locators.ADDDriver1, value, new ControlIntent("Coverages", "WorkLossNo"));
 
 }

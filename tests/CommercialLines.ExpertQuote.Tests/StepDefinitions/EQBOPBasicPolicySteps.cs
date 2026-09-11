@@ -45,7 +45,6 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForExistingClientMatchAsync("Exists");
         await page.ClickCreateNewClient1Async();
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets AdditionalInterestsNext
         data.Set("StateName", data.Resolve("{{data:statename}}"));
 
     }
@@ -61,7 +60,6 @@ public sealed class EQBOPBasicPolicySteps
 
         var page = new AccountInformationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        // v54 RAW TOSCA ORDER. Source: EQ|Common|Account Details - Account Info.
         // XTestStep/XTestStepValue order is authoritative; manual CSV/workbooks are not inputs.
         await page.WaitForAccountInformationHeaderAsync("Visible");
         await page.EnterOwnerMiddleNameAsync("");
@@ -101,17 +99,13 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForProposalDetailsHeaderAsync("Visible");
         await page.SelectBusinessOwnersAsync("");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets SearchBusinessName
         await page.ClickIndividuallyOwnedDBAOrTAAsync();
         await page.EnterIndividualDBAAsync(data.Resolve("{{data:individual_dba_35}}"));
         await page.PressEffectiveDate78F67Async("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets EffectiveDate78F67
         await page.EnterTrueAsync(data.Resolve("{{data:true_37}}"));
         await page.SelectLessorsRiskNoAsync("");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets StateDropdown
         await page.SelectStateAsync(data.Resolve("{{runtime:StateName}}"));
         await page.PressAgentPCAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets AgentPC
         await page.ClickStateDropdownAsync();
         await page.ClickStartQuoteAsync();
 
@@ -132,7 +126,6 @@ public sealed class EQBOPBasicPolicySteps
         // Source step 0041: RANDOM input for ssn.
         await page.EnterTheSSNCouldNotBeFoundPleaseEnterAnSSNAsync(data.Resolve("{{runtime:InsuredSSN}}"));
         await page.WaitForSubmitAngularAsync("Visible");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets SubmitAngular
         await page.ClickSubmitAngularAsync();
         if (await page.IsNoPrefillMatchFoundPresentAsync())
         {
@@ -174,14 +167,11 @@ public sealed class EQBOPBasicPolicySteps
         {
                     await page.WaitForScreenHeading9696CAsync("Exists");
         }
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets SearchAddClassCode
         await page.WaitForFindAClassCodeAsync("Exists");
         await page.EnterClassFilterAsync(data.Resolve("{{data:class_filter_64}}"));
         await page.ClickClientInfoSearchAsync();
         await page.WaitForOnAsync("Exists");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets On
         await page.WaitForYouHaveSelected1ClassCodesAsync("Exists");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets YouHaveSelected1ClassCodes
         await page.ClickAddAsync();
 
     }
@@ -197,7 +187,6 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForIndustryClassCodeRestrictionsHeadingAsync("Exists");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets NoneOfTheAbove
         if (!await page.IsScreenHeadingPresentAsync())
         {
                     await page.VerifyScreenHeadingAsync("Absent", "");
@@ -243,10 +232,8 @@ public sealed class EQBOPBasicPolicySteps
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets ExistingClient
         await page.ClickNextBOPAsync();
         await page.ClickIndividualSoleProprietorAsync();
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Save
         await page.ClickSaveAsync();
         if (data.Condition("ReadOnly == NULL"))
         {
@@ -255,22 +242,18 @@ public sealed class EQBOPBasicPolicySteps
         if (data.Condition("ReadOnly == NULL"))
         {
                     await page.PressDescriptionOfOperationsAsync("ENTER");
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets DescriptionOfOperations
         }
         if (data.Condition("ReadOnly == NULL"))
         {
                     await page.PressNumberOfFulltimeEmployeesAsync("ENTER");
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets NumberOfFulltimeEmployees
         }
         if (data.Condition("ReadOnly == NULL"))
         {
                     await page.PressNumberOfPartTimeEmployeesAsync("ENTER");
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets NumberOfPartTimeEmployees
         }
         if (data.Condition("ReadOnly == NULL"))
         {
                     await page.PressNumberOfSeasonalEmployeesAsync("ENTER");
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets NumberOfSeasonalEmployees
         }
         if (data.Condition("ReadOnly == NULL"))
         {
@@ -293,7 +276,6 @@ public sealed class EQBOPBasicPolicySteps
         var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets NoneOfTheAboveCheckBox
 
     }
 
@@ -307,7 +289,6 @@ public sealed class EQBOPBasicPolicySteps
         var page = new BusinessClassificationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets NoneOfTheAboveCheckbox
         if (!await page.IsScreenHeadingPresentAsync())
         {
                     await page.VerifyScreenHeadingAsync("Absent", "");
@@ -353,7 +334,6 @@ public sealed class EQBOPBasicPolicySteps
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets InspectionContact
         if (!await page.IsScreenHeading9696CPresentAsync())
         {
                     await page.VerifyScreenHeading9696CAsync("Absent", "");
@@ -462,13 +442,9 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.SelectPriorPolicyNoAsync("");
         await page.PressYearsInBusinessAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets YearsInBusiness
         await page.ClickN3YearsAsync();
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets N3Years
         await page.PressPriorInsuranceLatestExpirationDateAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets PriorInsuranceLatestExpirationDate
         await page.PressPriorInsuranceLatestCarrierAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets PriorInsuranceLatestCarrier
 
     }
 
@@ -485,26 +461,18 @@ public sealed class EQBOPBasicPolicySteps
         await page.ClickADDCLAIMAsync();
         await page.PressDateOfOccurrenceAsync("CTRL+A");
         await page.PressDateOfOccurrenceAsync("Enter");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets DateOfOccurrence
         await page.PressPolicyStartAsync("CTRL+A");
         await page.PressPolicyStartAsync("Enter");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets PolicyStart
         await page.PressPolicyExpireAsync("CTRL+A");
         await page.PressPolicyExpireAsync("Enter");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets PolicyExpire
         await page.PressAmountPaidAsync("CTRL+A");
         await page.PressAmountPaidAsync("Enter");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets AmountPaid
         await page.PressAmountReservedAsync("CTRL+A");
         await page.PressAmountReservedAsync("Enter");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets AmountReserved
         await page.PressExpenseAmountAsync("CTRL+A");
         await page.PressExpenseAmountAsync("Enter");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets ExpenseAmount
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets TypeOfLossDropdown
         await page.ClickTypeOfLossSelectionAsync();
         await page.PressDescriptionOfOccurrenceOrClaimAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets DescriptionOfOccurrenceOrClaim
         await page.ClickOpenButtonAsync();
         await page.ClickSaveAsync();
         await page.VerifyClaimSummaryTableRowCellExplicitNameClaimDateAsync(data.Resolve("{{data:expected_claim_summary_table_row_cell_explicitname_claim_date_165}}"), "");
@@ -566,7 +534,6 @@ public sealed class EQBOPBasicPolicySteps
         await page.EnterTerritoryAsync(data.Resolve("{{data:territory_188}}"));
         await page.PressMilesFromFireDeptAsync("CTRL+A");
         await page.PressMilesFromFireDeptAsync("Enter");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets MilesFromFireDept
         await page.EnterFeetFromHydrantAsync(data.Resolve("{{data:feetfromhydrant_190}}"));
         await page.ClickSaveAsync();
         await page.WaitForSaveAsync("Absent");
@@ -604,15 +571,12 @@ public sealed class EQBOPBasicPolicySteps
         await page.WaitForSelectIfClientOwnsOrRentsTheBuildingAsync("Visible");
         if (data.Condition("'Client Own or Rent' == \"OWN\""))
         {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets OwnButton
         }
         await page.WaitForTotalBuildingSqFootageAsync("Visible");
         await page.WaitForInsuredOccupancySqFtAngularAsync("Visible");
         await page.PressInsuredOccupancySqFtAngularAsync("SHIFTTAB");
         await page.PressTotalBuildingSqFootageAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets TotalBuildingSqFootage
         await page.PressInsuredOccupancySqFtAngularAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets InsuredOccupancySqFtAngular
 
     }
 
@@ -629,7 +593,6 @@ public sealed class EQBOPBasicPolicySteps
         await page.WaitForSelectIfClientOwnsOrRentsTheBuildingAsync("Visible");
         if (data.Condition("'Select Building Coverage' == \"Building Coverage\""))
         {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets BuildingCoverageAngular
         }
         if (data.Condition("'Select Functional Personal Property' == \"Include Functional Personal Property\""))
         {
@@ -661,10 +624,8 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.EnterInsuredOccupancySqFtAsync("");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets InsuredOccupancySqFtAngular
         await page.PressInsuredOccupancySqFtAngularAsync("CTRL+A");
         await page.PressInsuredOccupancySqFtAngularAsync("Enter");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets InsuredOccupancySqFtAngular
 
     }
 
@@ -680,19 +641,14 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.WaitForClassCodesAsync("Exists");
         await page.WaitForCheckBoxAngularAsync("Exists");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets CheckBoxAngular
         await page.ClickCheckBoxAngularAsync();
         await page.WaitForOccupancySQFTHeadingAsync("Exists");
         await page.PressOccupancySqFtLimitAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets OccupancySqFtLimit
         await page.VerifyOccupancySqFootageTotalAsync(data.Resolve("{{data:expected_occupancy_sq_footage_total_value_227}}"), "Value");
         await page.WaitForPersonalPropertyLimitCheckBoxAngularAsync("Exists");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets PersonalPropertyLimitCheckBoxAngular
         await page.ClickPersonalPropertyLimitCheckBoxAngularAsync();
         await page.PressPersonalPropertyLimitAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets PersonalPropertyLimit
         await page.PressGrossSalesReceiptsAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets GrossSalesReceipts
         data.Set("Roof Type", data.Resolve("{{data:roof_type}}"));
 
     }
@@ -707,22 +663,13 @@ public sealed class EQBOPBasicPolicySteps
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets CommercialButton
         await page.ClickCommercialButtonAsync();
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets BVSButton
         await page.ClickBVSButtonAsync();
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Frame
         await page.ClickFrameAsync();
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets BVSGroupCombobox
         await page.ClickBVSGroupAsync();
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets BVSResultsCombobox
         await page.ClickBVSResultAsync();
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets YearBuilt
         await page.PressYearBuiltAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets YearBuilt
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets RoofTypeMain
         await page.ClickRoofTypeSelectionAsync();
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets GetValuation
         await page.ClickGetValuationAsync();
 
     }
@@ -737,11 +684,9 @@ public sealed class EQBOPBasicPolicySteps
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets NumberOfStories
         await page.WaitForBuildingDetailsHeadingAsync("Exists");
         if (data.Condition("'Actual Cash Value' != NULL"))
         {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets ActualCashValue
         }
         if (data.Condition("'Actual Cash Value' != NULL"))
         {
@@ -749,7 +694,6 @@ public sealed class EQBOPBasicPolicySteps
         }
         if (data.Condition("'Replacement Cost' != NULL"))
         {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets ReplacementCost
         }
         if (data.Condition("'Replacement Cost' != NULL"))
         {
@@ -757,26 +701,20 @@ public sealed class EQBOPBasicPolicySteps
         }
         await page.PauseAsync(1000);
         await page.PressBuildingAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Building
         await page.PressYearBuiltRenovatedAsync("CTRL+A");
         await page.PressYearBuiltRenovatedAsync("DELETE");
         await page.PressYearBuiltRenovatedAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets YearBuiltRenovated
         await page.PressWiringYearAsync("CTRL+A");
         await page.PressWiringYearAsync("DELETE");
         await page.PressWiringYearAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets WiringYear
         await page.PressHeatingYearAsync("CTRL+A");
         await page.PressHeatingYearAsync("DELETE");
         await page.PressHeatingYearAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets HeatingYear
         await page.PressPlumbingYearAsync("CTRL+A");
         await page.PressPlumbingYearAsync("DELETE");
         await page.PressPlumbingYearAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets PlumbingYear
         await page.VerifyEQBOPBuildingBuildingDetailsSelectBurglarAlarmAsync("Exists", "");
         await page.PressRoofYearAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets RoofYear
         await page.SelectSprinklerYesAsync("");
         await page.WaitForSprinklerYesAsync("Visible");
         if (data.Condition("ANSUL != NULL"))
@@ -797,11 +735,9 @@ public sealed class EQBOPBasicPolicySteps
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets IsTheBuildingHeatedWithOneOfTheFollowingNoneOfTheAboveCheckboxAngular
         await page.VerifyEQBOPBuildingBuildingDetailsSelectPelletStoveAsync("Exists", "");
         await page.VerifyEQBOPBuildingBuildingDetailsSelectWoodFurnaceAsync("Exists", "");
         await page.VerifyEQBOPBuildingBuildingDetailsSelectWoodStoveAsync("Exists", "");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets IsTheBuildingHeatedWithOneOfTheFollowingNoneOfTheAboveCheckboxAngular
 
     }
 
@@ -815,7 +751,6 @@ public sealed class EQBOPBasicPolicySteps
         var page = new BuildingsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets SelectAnyOfTheFollowingWhichApplyToThisBuildingNoneOfTheAboveCheckboxAngular
         await page.VerifyEQBOPBuildingBuildingDetailsAnswerAnyExtraPropertyAdditionalQuestionsAsync("Exists", "");
 
     }
@@ -830,7 +765,6 @@ public sealed class EQBOPBasicPolicySteps
         var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets BuildingEligibilityQuestionsNoneOfTheAboveCheckboxAngular
         await page.ClickSaveAsync();
         if (!await page.IsScreenHeadingPresentAsync())
         {
@@ -898,9 +832,7 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.PressHaveThereBeenAnyEPLClaimsSuitsOrComplaintsOrAreThereAnyNowPendingAgainstTheInsuredOrAnyExecutiveOfficerOrOwnerAsync("ENTER");
         await page.PressHaveThereBeenAnyEPLClaimsSuitsOrComplaintsOrAreThereAnyNowPendingAgainstTheInsuredOrAnyExecutiveOfficerOrOwnerAsync("END");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets HaveThereBeenAnyEPLClaimsSuitsOrComplaintsOrAreThereAnyNowPendingAgainstTheInsuredOrAnyExecutiveOfficerOrOwner
         await page.PressDoesTheInsuredAndAnyExecutiveOfficerOrOwnerHaveAnyKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets DoesTheInsuredAndAnyExecutiveOfficerOrOwnerHaveAnyKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaint
         if (!await page.IsScreenHeadingPresentAsync())
         {
                     await page.VerifyScreenHeadingAsync("Absent", "");
@@ -951,19 +883,12 @@ public sealed class EQBOPBasicPolicySteps
         await page.WaitForBillingInformationHeadingAsync("Exists");
         await page.ClickOTHERButtonAsync();
         await page.PressFirstNameAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets FirstName
         await page.PressLastNameAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets LastName
         await page.PressBusinessNameAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets BusinessName
         await page.PressAddress1Async("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Address1
         await page.PressCityAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets City
         await page.PressStateAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets State
         await page.PressZipCodeAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets ZipCode
 
     }
 
@@ -977,11 +902,8 @@ public sealed class EQBOPBasicPolicySteps
         var page = new BillingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets DirectBillButton
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets N1PaymentButton
         await page.PauseAsync(1000);
         await page.PressChoosePaymentDueDateAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets ChoosePaymentDueDate
 
     }
 
@@ -997,11 +919,9 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         if (data.Condition("'Payment Type' ==\"Check\""))
         {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets CheckButton
         }
         if (data.Condition("'Payment Type' ==\"Credit Card\""))
         {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets CreditCardButton
         }
         if (data.Condition("'Payment Type' == \"Check\""))
         {
@@ -1009,11 +929,9 @@ public sealed class EQBOPBasicPolicySteps
         }
         if (data.Condition("'Payment Type' == \"Check\""))
         {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets CheckButton
         }
         if (data.Condition("'Payment Type' == \"Check\""))
         {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets CreditCardButton
         }
         if (data.Condition("'Payment Type' == \"Check\""))
         {
@@ -1022,7 +940,6 @@ public sealed class EQBOPBasicPolicySteps
         if (data.Condition("'Payment Type' == \"Check\""))
         {
                     await page.PressCheckNumberAsync("ENTER");
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets CheckNumber
         }
         await page.ClickInitialPaymentFullBalanceAsync();
         if (!await page.IsScreenHeadingPresentAsync())
@@ -1378,17 +1295,13 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.EnterSearchTextAsync(data.Resolve("{B[QuoteDescription]}"));
         await page.ClickQuickSearchButtonAsync();
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets SearchMethodEGDescriptionPolicy
         await page.WaitForSearchButtonAsync("Equal");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets SearchButton
         await page.ClickSearchButtonAsync();
         if (await page.IsLoadingMessageC7A0DPresentAsync())
         {
                     await page.VerifyLoadingMessageC7A0DAsync("Visible", "");
         }
         await page.WaitForViewPolicy56E09Async("Exists");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets ViewPolicy56E09
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets SearchButton
         await page.ClickSearchButtonAsync();
         if (await page.IsLoadingMessageC7A0DPresentAsync())
         {
@@ -1757,7 +1670,6 @@ public sealed class EQBOPBasicPolicySteps
         await page.WaitForLossRunsHeaderAsync("Exists");
         await page.ClickExceptionAsync();
         await page.WaitForAddANoteAsync("Visible");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets AddANote
         await page.ClickEChecklistEChecklistOKAsync();
         await page.WaitForEChecklistEChecklistOKAsync("Absent");
         await page.WaitForLossRuns3YearsHeaderAsync("Absent");
@@ -1822,7 +1734,6 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.PressUnderwritingRulesAgentCommentsAsync("ENTER");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets UnderwritingRulesAgentComments
         await page.ClickReferToUWAsync();
 
     }
@@ -1934,17 +1845,13 @@ public sealed class EQBOPBasicPolicySteps
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await page.EnterSearchTextAsync(data.Resolve("{B[QuoteDescription]}"));
         await page.ClickQuickSearchButtonAsync();
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets SearchMethodEGDescriptionPolicy
         await page.WaitForSearchButtonAsync("Equal");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets SearchButton
         await page.ClickSearchButtonAsync();
         if (await page.IsLoadingMessageC7A0DPresentAsync())
         {
                     await page.VerifyLoadingMessageC7A0DAsync("Visible", "");
         }
         await page.WaitForViewPolicy56E09Async("Exists");
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets ViewPolicy56E09
-        // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets SearchButton
         await page.ClickSearchButtonAsync();
         if (await page.IsLoadingMessageC7A0DPresentAsync())
         {
@@ -1995,7 +1902,6 @@ public sealed class EQBOPBasicPolicySteps
         }
         if (await page.IsSubmission7E601PresentAsync())
         {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets Submission7E601
         }
         if (await page.IsSubmission7E601PresentAsync())
         {
@@ -2038,7 +1944,6 @@ public sealed class EQBOPBasicPolicySteps
         }
         if (await page.IsIsThisCoverageBoundPresentAsync())
         {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets IsThisCoverageBound
         }
         await page.ClickCompleteApplicationAsync();
         if (await page.IsClosePresentAsync())
@@ -2165,7 +2070,6 @@ public sealed class EQBOPBasicPolicySteps
         }
         if (await page.IsIsThisCoverageBoundPresentAsync())
         {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets IsThisCoverageBound
         }
         if (data.Condition("'Refer Needed' == NULL"))
         {

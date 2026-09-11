@@ -127,11 +127,9 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    // v56 suppressed redundant Tosca keyboard steering: AgentCode TAB
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets State
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
@@ -140,7 +138,6 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
         await page.SelectStateNameAsync("");
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
-                    // v56 suppressed Tosca focus-navigation TAB: direct Playwright locator targets WritingCompany
         }
         if (data.Condition("LOB != \"RecreationalVehicle\""))
         {
@@ -301,7 +298,6 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
                     await page.SetBypassLevel9BRulesAsync(data.Resolve("{{data:bypass_level_9b_rules_83}}"));
         }
         await page.EnterBypassLevel9BRulesCommentsAsync(data.Resolve("{{data:bypass_level_9b_rules_comments_84}}"));
-        // v56 suppressed redundant Tosca keyboard steering: BypassLevel9BRulesComments Click
         await page.ClickHomeAsync();
 
     }
@@ -1985,7 +1981,6 @@ public sealed class CycleRateFilingsPolicy3NBPriorEffDateSteps
                     await page.WaitForTxtUnderwritingNotesAsync("True");
         }
         await page.EnterTxtUnderwritingNotesAsync(data.Resolve("{{data:txt_underwriting_notes_597}}"));
-        // v56 suppressed redundant Tosca keyboard steering: TxtUnderwritingNotes Click
         await page.WaitForBtnApproveAsync("Visible");
         await page.ClickBtnApproveAsync();
         await page.ClickLnkHomeAsync();

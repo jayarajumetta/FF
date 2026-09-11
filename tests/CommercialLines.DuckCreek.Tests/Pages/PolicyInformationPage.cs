@@ -104,4 +104,28 @@ public sealed class PolicyInformationPage
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);
 
+
+    public Task EnterCarrierSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.Carrier, value, new ControlIntent("PolicyInformation", "Carrier"), delayMs);
+
+    public Task EnterEffectiveDateSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.EffectiveDate, value, new ControlIntent("PolicyInformation", "EffectiveDate"), delayMs);
+
+    public Task EnterExpirationDateSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.ExpirationDate, value, new ControlIntent("PolicyInformation", "ExpirationDate"), delayMs);
+
+    public Task EnterIsThereAPriorCarrierSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.IsThereAPriorCarrier, value, new ControlIntent("PolicyInformation", "IsThereAPriorCarrier"), delayMs);
+
+    public Task EnterModificationFactorSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.ModificationFactor, value, new ControlIntent("PolicyInformation", "ModificationFactor"), delayMs);
+
+    public Task EnterPolicyNumberSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.PolicyNumber, value, new ControlIntent("PolicyInformation", "PolicyNumber"), delayMs);
+
+    public Task EnterPolicyTypeSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.PolicyType, value, new ControlIntent("PolicyInformation", "PolicyType"), delayMs);
+
+    public Task EnterTotalPremiumSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.TotalPremium, value, new ControlIntent("PolicyInformation", "TotalPremium"), delayMs);
 }

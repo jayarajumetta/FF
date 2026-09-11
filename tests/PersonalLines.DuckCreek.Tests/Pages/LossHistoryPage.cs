@@ -42,19 +42,19 @@ public sealed class LossHistoryPage
         _ui.SelectAsync(_locators.ClaimVehicleLoanedToDriverThatDoesNotDidNotResideInHouseholdAndHasNoAccessToVehicleSInsuredByAmericanNational, value, new ControlIntent("LossHistory", "ClaimVehicleLoanedToDriverThatDoesNotDidNotResideInHouseholdAndHasNoAccessToVehicleSInsuredByAmericanNational"));
 
     public Task SelectClaimViolationDoesNotApplyAsync(string value) =>
-        _ui.SelectAsync(_locators.ClaimViolationDoesNotApply, value, new ControlIntent("LossHistory", "ClaimViolationDoesNotApply"));
+        _ui.SelectAsync(_locators.CONTINUEDoesnTApply, value, new ControlIntent("LossHistory", "ClaimViolationDoesNotApply"));
 
     public Task ClickClaimViolationSaveAndContinueAsync() =>
-        _ui.ClickAsync(_locators.ClaimViolationSaveAndContinue, new ControlIntent("LossHistory", "ClaimViolationSaveAndContinue"));
+        _ui.ClickAsync(_locators.CONTINUEDoesnTApply, new ControlIntent("LossHistory", "ClaimViolationSaveAndContinue"));
 
     public Task ClickClaimsViolationNEWNextAsync() =>
         _ui.ClickAsync(_locators.ClaimsViolationNEWNext, new ControlIntent("LossHistory", "ClaimsViolationNEWNext"));
 
     public Task EnterComboBoxAsync(string value) =>
-        _ui.FillAsync(_locators.ComboBox, value, new ControlIntent("LossHistory", "ComboBox"));
+        _ui.FillAsync(_locators.CONTINUEDoesnTApply, value, new ControlIntent("LossHistory", "ComboBox"));
 
     public Task<bool> IsComboBoxPresentAsync() =>
-        _ui.ExistsAsync(_locators.ComboBox);
+        _ui.ExistsAsync(_locators.CONTINUEDoesnTApply);
 
     public Task WaitForEditClaimAsync(string expected) =>
         _ui.WaitAsync(_locators.EditClaim, expected, new ControlIntent("LossHistory", "EditClaim"));

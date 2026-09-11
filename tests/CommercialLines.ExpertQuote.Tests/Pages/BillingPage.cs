@@ -51,7 +51,7 @@ public sealed class BillingPage
         _ui.ClickAsync(_locators.CreateNewBillingAccount, new ControlIntent("Billing", "CreateNewBillingAccount"));
 
     public Task PressCreditCardButtonAsync(string key) =>
-        _ui.PressAsync(_locators.CreditCardButton, key, new ControlIntent("Billing", "CreditCardButton"));
+        _ui.PressAsync(_locators.CheckButton, key, new ControlIntent("Billing", "CreditCardButton"));
 
     public Task PressDirectBillButtonAsync(string key) =>
         _ui.PressAsync(_locators.DirectBillButton, key, new ControlIntent("Billing", "DirectBillButton"));

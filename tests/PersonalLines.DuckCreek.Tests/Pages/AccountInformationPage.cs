@@ -48,13 +48,13 @@ public sealed class AccountInformationPage
         _ui.VerifyAsync(_locators.FirstNameAccountOwner, expected, property, new ControlIntent("AccountInformation", "FirstNameAccountOwner"));
 
     public Task WaitForIsTheAccountAddressAlsoWhereTheClientResidesAsync(string expected) =>
-        _ui.WaitAsync(_locators.IsTheAccountAddressAlsoWhereTheClientResides, expected, new ControlIntent("AccountInformation", "IsTheAccountAddressAlsoWhereTheClientResides"));
+        _ui.WaitAsync(_locators.AccountInformation, expected, new ControlIntent("AccountInformation", "IsTheAccountAddressAlsoWhereTheClientResides"));
 
     public Task WaitForMaritalStatusAsync(string expected) =>
-        _ui.WaitAsync(_locators.MaritalStatus, expected, new ControlIntent("AccountInformation", "MaritalStatus"));
+        _ui.WaitAsync(_locators.AccountInformation, expected, new ControlIntent("AccountInformation", "MaritalStatus"));
 
     public Task SelectMarriedAsync(string value) =>
-        _ui.SelectAsync(_locators.Married, value, new ControlIntent("AccountInformation", "Married"));
+        _ui.SelectAsync(_locators.Divorced, value, new ControlIntent("AccountInformation", "Married"));
 
     public Task EnterOwnerAddressCityNewAsync(string value) =>
         _ui.FillAsync(_locators.OwnerAddressCityNew, value, new ControlIntent("AccountInformation", "OwnerAddressCityNew"));
@@ -72,7 +72,13 @@ public sealed class AccountInformationPage
         _ui.ClickAsync(_locators.Single, new ControlIntent("AccountInformation", "Single"));
 
     public Task SelectStateNameAsync(string value) =>
-        _ui.SelectAsync(_locators.StateName, value, new ControlIntent("AccountInformation", "StateName"));
+        _ui.SelectAsync(_locators.AccountDetailsNext, value, new ControlIntent("AccountInformation", "StateName"));
+
+    public Task SelectStateAsync(string value) =>
+        _ui.SelectAsync(_locators.StateDropdown, value, new ControlIntent("AccountInformation", "StateDropdown"));
+
+    public Task EnterStateAsync(string value) =>
+    _ui.FillAsync(_locators.StateDropdown, value, new ControlIntent("Proposal", "State"));
 
     public Task SelectYesAtLeast90DaysAsync(string value) =>
         _ui.SelectAsync(_locators.YesAtLeast90Days, value, new ControlIntent("AccountInformation", "YesAtLeast90Days"));

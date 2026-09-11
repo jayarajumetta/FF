@@ -36,7 +36,7 @@ public sealed class ClientSearchPage
         _ui.ClickAsync(_locators.CreateNewClient, new ControlIntent("ClientSearch", "CreateNewClient"));
 
     public Task ClickCreateNewClient1Async() =>
-        _ui.ClickAsync(_locators.CreateNewClient1, new ControlIntent("ClientSearch", "CreateNewClient1"));
+        _ui.ClickAsync(_locators.CreateNewClient, new ControlIntent("ClientSearch", "CreateNewClient1"));
 
     public Task EnterCustomerDateOfBirthAsync(string value) =>
         _ui.FillAsync(_locators.CustomerDateOfBirth, value, new ControlIntent("ClientSearch", "CustomerDateOfBirth"));
@@ -52,6 +52,9 @@ public sealed class ClientSearchPage
 
     public Task VerifyExistingClientMatchAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.ExistingClientMatch, expected, property, new ControlIntent("ClientSearch", "ExistingClientMatch"));
+
+    public Task<bool> IsExistingClientMatchPresentAsync() =>
+        _ui.ExistsAsync(_locators.ExistingClientMatch);
 
     public Task WaitForNewExistingClientSearchAsync(string expected) =>
         _ui.WaitAsync(_locators.NewExistingClientSearch, expected, new ControlIntent("ClientSearch", "NewExistingClientSearch"));

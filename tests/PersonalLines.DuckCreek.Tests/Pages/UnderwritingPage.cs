@@ -39,13 +39,13 @@ public sealed class UnderwritingPage
         _ui.WaitAsync(_locators.HeaderUnderwriting, expected, new ControlIntent("Underwriting", "HeaderUnderwriting"));
 
     public Task WaitForIsAnyVintageCycleGaragedInADifferentLocationAsync(string expected) =>
-        _ui.WaitAsync(_locators.IsAnyVintageCycleGaragedInADifferentLocation, expected, new ControlIntent("Underwriting", "IsAnyVintageCycleGaragedInADifferentLocation"));
+        _ui.WaitAsync(_locators.HaveYouOrAnyHouseholdMemberEverBeenConvictedOfAFelony, expected, new ControlIntent("Underwriting", "IsAnyVintageCycleGaragedInADifferentLocation"));
 
     public Task ClickNewQuoteSearchAsync() =>
         _ui.ClickAsync(_locators.NewQuoteSearch, new ControlIntent("Underwriting", "NewQuoteSearch"));
 
     public Task SelectNo1Async(string value) =>
-        _ui.SelectAsync(_locators.No1, value, new ControlIntent("Underwriting", "No1"));
+        _ui.SelectAsync(_locators.HaveYouOrAnyHouseholdMemberEverBeenConvictedOfAFelony, value, new ControlIntent("Underwriting", "No1"));
 
     public Task SelectNo43938Async(string value) =>
         _ui.SelectAsync(_locators.No43938, value, new ControlIntent("Underwriting", "No43938"));
@@ -57,13 +57,13 @@ public sealed class UnderwritingPage
         _ui.ClickAsync(_locators.No77DAE, new ControlIntent("Underwriting", "No77DAE"));
 
     public Task PressPreQualificationNextAsync(string key) =>
-        _ui.PressAsync(_locators.PreQualificationNext, key, new ControlIntent("Underwriting", "PreQualificationNext"));
+        _ui.PressAsync(_locators.ChkBoxCheckBoxNoneOfTheAbove, key, new ControlIntent("Underwriting", "PreQualificationNext"));
 
     public Task ClickPreQualificationNextAsync() =>
-        _ui.ClickAsync(_locators.PreQualificationNext, new ControlIntent("Underwriting", "PreQualificationNext"));
+        _ui.ClickAsync(_locators.ChkBoxCheckBoxNoneOfTheAbove, new ControlIntent("Underwriting", "PreQualificationNext"));
 
     public Task<bool> IsPreQualificationNextPresentAsync() =>
-        _ui.ExistsAsync(_locators.PreQualificationNext);
+        _ui.ExistsAsync(_locators.ChkBoxCheckBoxNoneOfTheAbove);
 
     public Task EnterQuotePolicySearchAsync(string value) =>
         _ui.FillAsync(_locators.QuotePolicySearch, value, new ControlIntent("Underwriting", "QuotePolicySearch"));
@@ -75,10 +75,10 @@ public sealed class UnderwritingPage
         _ui.ExistsAsync(_locators.QuotePolicySearch);
 
     public Task ClickUnderwritingUnderwritingNextNextAsync() =>
-        _ui.ClickAsync(_locators.UnderwritingUnderwritingNextNext, new ControlIntent("Underwriting", "UnderwritingUnderwritingNextNext"));
+        _ui.ClickAsync(_locators.CycleUnderwritingNext, new ControlIntent("Underwriting", "UnderwritingUnderwritingNextNext"));
 
     public Task SelectYes707BBAsync(string value) =>
-        _ui.SelectAsync(_locators.Yes707BB, value, new ControlIntent("Underwriting", "Yes707BB"));
+        _ui.SelectAsync(_locators.No77DAE, value, new ControlIntent("Underwriting", "Yes707BB"));
 
     public Task SelectYes71588Async(string value) =>
         _ui.SelectAsync(_locators.Yes71588, value, new ControlIntent("Underwriting", "Yes71588"));

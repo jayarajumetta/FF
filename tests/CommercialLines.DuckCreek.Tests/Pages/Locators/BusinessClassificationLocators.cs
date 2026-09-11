@@ -7,8 +7,5 @@ public sealed class BusinessClassificationLocators
     private readonly IPage _page;
     public BusinessClassificationLocators(IPage page) => _page = page;
 
-    // Source modules: Pricing | confidence=Review score=97
-    // v57 raw Tosca: Pricing | Invalid Class Code Message | guid=3a13d49c-1688-e731-1800-7c037b36bb13 | strategy=associatedlabel-from-v55
-    public ILocator InvalidClassCodeMessage => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Invalid Class Code Message");
-
+    public ILocator InvalidClassCodeMessage => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Invalid Class Code Message']/@for] | //label[normalize-space(string(.))='Invalid Class Code Message']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Invalid Class Code Message']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 }

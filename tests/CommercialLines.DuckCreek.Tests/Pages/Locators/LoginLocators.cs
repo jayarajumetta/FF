@@ -7,20 +7,13 @@ public sealed class LoginLocators
     private readonly IPage _page;
     public LoginLocators(IPage page) => _page = page;
 
-    // Source modules: Synthetic | confidence=Review score=40
-    // Fallback derived from source control name
     public ILocator BODY => _page.GetByText("BODY", new() { Exact = true });
 
-    // Source modules: Logout | confidence=Review score=97
-    public ILocator LoggedInUser => InsuranceAutomation.Core.LocatorResolution.ByAssociatedLabel(_page, "Logged In User");
+    public ILocator LoggedInUser => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Logged In User']/@for] | //label[normalize-space(string(.))='Logged In User']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Logged In User']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    // Source modules: Login | confidence=High score=125
     public ILocator Login => _page.GetByRole(AriaRole.Link, new() { Name = "Login", Exact = true });
 
-    // Source modules: Login | confidence=High score=127
     public ILocator Password => _page.Locator("[id=\"password-inputEl\"]");
 
-    // Source modules: Login | confidence=High score=127
     public ILocator UserName => _page.Locator("[id=\"username-inputEl\"]");
-
 }

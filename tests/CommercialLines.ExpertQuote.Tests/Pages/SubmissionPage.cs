@@ -59,7 +59,7 @@ public Task VerifyLoadingMessageAsync(string expected, string property) =>
         _ui.ExistsAsync(_locators.LoadingMessage);
 
     public Task VerifyNoReferralNeededVerificationAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.NoReferralNeededVerification, expected, property, new ControlIntent("Submission", "NoReferralNeededVerification"));
+        _ui.VerifyAsync(_locators.LaunchToChecklistButton, expected, property, new ControlIntent("Submission", "NoReferralNeededVerification"));
 
     public Task ClickReferToUWAsync() =>
         _ui.ClickAsync(_locators.ReferToUW, new ControlIntent("Submission", "ReferToUW"));
@@ -98,10 +98,10 @@ public Task VerifyLoadingMessageAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.TABLERowCellExplicitName5, expected, property, new ControlIntent("Submission", "TABLERowCellExplicitName5"));
 
     public Task ClickTransmitAsync() =>
-        _ui.ClickAsync(_locators.Transmit, new ControlIntent("Submission", "Transmit"));
+        _ui.ClickAsync(_locators.LaunchToChecklistButton, new ControlIntent("Submission", "Transmit"));
 
     public Task PressUnderwritingRulesAgentCommentsAsync(string key) =>
-        _ui.PressAsync(_locators.UnderwritingRulesAgentComments, key, new ControlIntent("Submission", "UnderwritingRulesAgentComments"));
+        _ui.PressAsync(_locators.ReferToUW, key, new ControlIntent("Submission", "UnderwritingRulesAgentComments"));
 
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);

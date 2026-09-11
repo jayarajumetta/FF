@@ -17,15 +17,18 @@ public sealed class NavigationPage
         _ui = ui;
     }
 
-    public Task ClickCloseTabAsync() =>
-        _ui.ClickAsync(_locators.CloseTab, new ControlIntent("Navigation", "CloseTab"));
+    public async Task ClickCloseTabAsync()
+    {
+        await _locators.CloseQuote.EvaluateAsync("el => el.click()");
+    }
 
     public Task PressCoveragesNewNextAsync(string key) =>
         _ui.PressAsync(_locators.CoveragesNewNext, key, new ControlIntent("Navigation", "CoveragesNewNext"));
 
     public Task ClickCoveragesNewNextAsync() =>
         _ui.ClickAsync(_locators.CoveragesNewNext, new ControlIntent("Navigation", "CoveragesNewNext"));
-
+    public Task PauseAsync(int milliseconds) =>
+        Task.Delay(milliseconds);
     public Task<string> CaptureDriver1Async(string property = "") =>
         _ui.CaptureAsync(_locators.Driver1, property, new ControlIntent("Navigation", "Driver1"));
 
@@ -40,8 +43,8 @@ public sealed class NavigationPage
 
     public Task ClickEDITCOVERAGEOpt3Async() =>
         _ui.ClickAsync(_locators.EDITCOVERAGEOpt3, new ControlIntent("Navigation", "EDITCOVERAGEOpt3"));
-public Task SetOption1Async(string value) =>
-        _ui.SmartSetAsync(_locators.Option1, value, new ControlIntent("Navigation", "Option1"));
+    public Task SetOption1Async(string value) =>
+            _ui.SmartSetAsync(_locators.Option1, value, new ControlIntent("Navigation", "Option1"));
 
     public Task SetOption2Async(string value) =>
         _ui.SmartSetAsync(_locators.Option2, value, new ControlIntent("Navigation", "Option2"));
@@ -53,10 +56,10 @@ public Task SetOption1Async(string value) =>
         _ui.PressAsync(_locators.Option3, key, new ControlIntent("Navigation", "Option3"));
 
     public Task VerifyQNumAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.QNum, expected, property, new ControlIntent("Navigation", "QNum"));
+        _ui.VerifyAsync(_locators.NameAndQuote, expected, property, new ControlIntent("Navigation", "QNum"));
 
     public Task<string> CaptureQNumAsync(string property = "") =>
-        _ui.CaptureAsync(_locators.QNum, property, new ControlIntent("Navigation", "QNum"));
+        _ui.CaptureAsync(_locators.CloseQuote, property, new ControlIntent("Navigation", "QNum"));
 
     public Task EnterQuoteSearchInputAsync(string value) =>
         _ui.FillAsync(_locators.QuoteSearchInput, value, new ControlIntent("Navigation", "QuoteSearchInput"));
@@ -76,8 +79,13 @@ public Task SetOption1Async(string value) =>
     public Task ClickSupplementalUMUIMOptInAsync() =>
         _ui.ClickAsync(_locators.SupplementalUMUIMOptIn, new ControlIntent("Navigation", "SupplementalUMUIMOptIn"));
 
-    public Task ClickTabsSearchAsync() =>
-        _ui.ClickAsync(_locators.TabsSearch, new ControlIntent("Navigation", "TabsSearch"));
+    public Task WaitForQuoteSearchButtonAsync(string expected) =>
+    _ui.WaitAsync(_locators.QuoteSearchButton, expected, new ControlIntent("Navigation", "QuoteSearchButton"));
+
+    public async Task ClickTabsSearchAsync()
+    {
+        await _locators.QuoteSearchButton.EvaluateAsync("el => el.click()");
+    }
 
     public Task WaitForUMCoverageAsync(string expected) =>
         _ui.WaitAsync(_locators.UMCoverage, expected, new ControlIntent("Navigation", "UMCoverage"));
@@ -131,7 +139,7 @@ public Task SetOption1Async(string value) =>
         _ui.ClickAsync(_locators.V2ComprehensiveAndCollisionOnly, new ControlIntent("Navigation", "V2ComprehensiveAndCollisionOnly"));
 
     public Task VerifyV2ComprehensiveDeductibleAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.V2ComprehensiveDeductible, expected, property, new ControlIntent("Navigation", "V2ComprehensiveDeductible"));
+        _ui.VerifyAsync(_locators.V1ComprehensiveDeductible, expected, property, new ControlIntent("Navigation", "V2ComprehensiveDeductible"));
 
     public Task WaitForV2ComprehensiveOnlyAsync(string expected) =>
         _ui.WaitAsync(_locators.V2ComprehensiveOnly, expected, new ControlIntent("Navigation", "V2ComprehensiveOnly"));
@@ -158,7 +166,7 @@ public Task SetOption1Async(string value) =>
         _ui.ClickAsync(_locators.V3ComprehensiveAndCollisionOnly, new ControlIntent("Navigation", "V3ComprehensiveAndCollisionOnly"));
 
     public Task VerifyV3ComprehensiveDeductibleAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.V3ComprehensiveDeductible, expected, property, new ControlIntent("Navigation", "V3ComprehensiveDeductible"));
+        _ui.VerifyAsync(_locators.V1ComprehensiveDeductible, expected, property, new ControlIntent("Navigation", "V3ComprehensiveDeductible"));
 
     public Task WaitForV3ComprehensiveOnlyAsync(string expected) =>
         _ui.WaitAsync(_locators.V3ComprehensiveOnly, expected, new ControlIntent("Navigation", "V3ComprehensiveOnly"));
@@ -185,7 +193,7 @@ public Task SetOption1Async(string value) =>
         _ui.ClickAsync(_locators.V4ComprehensiveAndCollisionOnly, new ControlIntent("Navigation", "V4ComprehensiveAndCollisionOnly"));
 
     public Task VerifyV4ComprehensiveDeductibleAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.V4ComprehensiveDeductible, expected, property, new ControlIntent("Navigation", "V4ComprehensiveDeductible"));
+        _ui.VerifyAsync(_locators.V1ComprehensiveDeductible, expected, property, new ControlIntent("Navigation", "V4ComprehensiveDeductible"));
 
     public Task WaitForV4ComprehensiveOnlyAsync(string expected) =>
         _ui.WaitAsync(_locators.V4ComprehensiveOnly, expected, new ControlIntent("Navigation", "V4ComprehensiveOnly"));

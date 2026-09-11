@@ -1,10 +1,11 @@
 using System.Collections.Concurrent;
 using System.IO.Compression;
+using InsuranceAutomation.Core;
 using NUnit.Framework;
 
 namespace InsuranceAutomation.NUnit;
 
-/// <summary>Stages immutable evidence in NUnit WorkDirectory/TestResults/TestEvidence before registering it with NUnit/VS Test Explorer.</summary>
+/// <summary>Stages external evidence under the configured results root before registering it with NUnit.</summary>
 public static class NUnitEvidenceAttachment
 {
     private static readonly ConcurrentDictionary<string, string> TestDirectories = new();
@@ -40,9 +41,7 @@ public static class NUnitEvidenceAttachment
         var safe = string.Concat((string.IsNullOrWhiteSpace(id) ? Guid.NewGuid().ToString("N") : id).Select(c => char.IsLetterOrDigit(c) || c is '-' or '_' ? c : '_'));
         return TestDirectories.GetOrAdd(safe, key =>
         {
-            var work = TestContext.CurrentContext.WorkDirectory;
-            if (string.IsNullOrWhiteSpace(work)) work = TestContext.CurrentContext.TestDirectory;
-            var dir = Path.Combine(work, "TestResults", "TestEvidence", key);
+            var dir = Path.Combine(FrameworkConfig.Load().Reporting.ResultsRoot, "TestEvidence", $"{Environment.ProcessId}_{key}_{Guid.NewGuid():N}");
             Directory.CreateDirectory(dir);
             return dir;
         });

@@ -46,10 +46,10 @@ public Task VerifyLoadingMessageAsync(string expected, string property) =>
         _ui.ExistsAsync(_locators.Login07237);
 
     public Task WaitForLogin0D21AAsync(string expected) =>
-        _ui.WaitAsync(_locators.Login0D21A, expected, new ControlIntent("Login", "Login0D21A"));
+        _ui.WaitAsync(_locators.Login07237, expected, new ControlIntent("Login", "Login0D21A"));
 
     public Task WaitForLoginC45A2Async(string expected) =>
-        _ui.WaitAsync(_locators.LoginC45A2, expected, new ControlIntent("Login", "LoginC45A2"));
+        _ui.WaitAsync(_locators.Login07237, expected, new ControlIntent("Login", "LoginC45A2"));
 
     public Task ClickQuickSearchButtonAsync() =>
         _ui.ClickAsync(_locators.QuickSearchButton, new ControlIntent("Login", "QuickSearchButton"));
@@ -67,7 +67,7 @@ public Task VerifyLoadingMessageAsync(string expected, string property) =>
         _ui.WaitAsync(_locators.UserName, expected, new ControlIntent("Login", "UserName"));
 
     public Task WaitForUsernameAsync(string expected) =>
-        _ui.WaitAsync(_locators.Username, expected, new ControlIntent("Login", "Username"));
+        _ui.WaitAsync(_locators.UserName, expected, new ControlIntent("Login", "Username"));
 
     public Task WaitForViewPolicyAsync(string expected) =>
         _ui.WaitAsync(_locators.ViewPolicy, expected, new ControlIntent("Login", "ViewPolicy"));

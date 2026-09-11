@@ -65,10 +65,10 @@ public sealed class SubmissionPage
         _ui.CaptureAsync(_locators.DIVAgentDocumentsCount, property, new ControlIntent("Submission", "DIVAgentDocumentsCount"));
 
     public Task ClickDIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorerAsync() =>
-        _ui.ClickAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer, new ControlIntent("Submission", "DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer"));
+        _ui.ClickAsync(_locators.AutoCycleRVApplication, new ControlIntent("Submission", "DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer"));
 
     public Task<bool> IsDIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorerPresentAsync() =>
-        _ui.ExistsAsync(_locators.DIVDragAndDropFilesHereToUploadOrClickHereToOpenAFileExplorer);
+        _ui.ExistsAsync(_locators.AutoCycleRVApplication);
 
     public Task ClickDIVSubmissionAsync() =>
         _ui.ClickAsync(_locators.DIVSubmission, new ControlIntent("Submission", "DIVSubmission"));
