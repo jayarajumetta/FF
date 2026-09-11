@@ -1,4 +1,4 @@
-@PL_DC @smoke_test @PL_DC_smoke_test @RV_smoke_test @RV
+@PL_DC @RV @smoke_test @rv_smoke_test @pldc_smoke_test
 
 Feature: Smoke Test RV
   As a Personal Lines Duck Creek policy processing user

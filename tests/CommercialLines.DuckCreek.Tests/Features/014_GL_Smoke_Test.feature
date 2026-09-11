@@ -1,4 +1,4 @@
-@CLDC @CLDC_smoke_test @smoke_test @GL @GL_smoke
+@CLDC @GL @smoke_test @gl_smoke_test @cldc_smoke_test
 
 Feature: GL Smoke Test
   As a Commercial Lines Duck Creek policy processing user

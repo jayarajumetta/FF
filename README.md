@@ -63,35 +63,110 @@ $env:CL_DC_UW_DIRECTOR_PASSWORD = ""
 
 ## Running tests
 
-Run every application:
+Use `run.cmd` for normal execution. It applies repository run settings, initializes a safe owned results folder, and writes per-project TRX/NUnit output.
+
+### Run command flavors
 
 ```powershell
+# 1) All applications
 .\run.cmd -Project ALL
-```
 
-Run one application:
-
-```powershell
+# 2) Single application
 .\run.cmd -Project CLDC
 .\run.cmd -Project CLEQ
 .\run.cmd -Project PLDC
-```
 
-Run by ReqnRoll/NUnit tag:
+# 3) Configuration flavor
+.\run.cmd -Project CLDC -Configuration Debug
+.\run.cmd -Project CLDC -Configuration Release
 
-```powershell
+# 4) Smoke runs
+.\run.cmd -Project ALL -Filter "TestCategory=smoke_test"
 .\run.cmd -Project CLDC -Filter "TestCategory=smoke_test"
+
+# 5) LOB smoke + app smoke tag flavor
+.\run.cmd -Project CLDC -Filter "TestCategory=smoke_test&TestCategory=cp_smoke_test"
+.\run.cmd -Project CLDC -Filter "TestCategory=smoke_test&TestCategory=cldc_smoke_test"
+.\run.cmd -Project PLDC -Filter "TestCategory=smoke_test&TestCategory=cycle_smoke_test"
+
+# 6) Product/LOB flavor
 .\run.cmd -Project CLDC -Filter "TestCategory=BAP"
-.\run.cmd -Project CLDC -Filter "TestCategory=smoke_test&TestCategory=UMB"
+.\run.cmd -Project CLEQ -Filter "TestCategory=SFP"
+.\run.cmd -Project PLDC -Filter "TestCategory=AUTO"
+
+# 7) Custom output root
+.\run.cmd -Project ALL -ResultsDirectory "TestResults"
+.\run.cmd -Project CLDC -ResultsDirectory "ClientA_Run_2026_09_11"
 ```
 
-Run directly with `dotnet test` when required:
+### Direct dotnet test flavor (advanced)
+
+Use this only when you intentionally bypass `run.cmd` output orchestration:
 
 ```powershell
-dotnet test .\tests\CommercialLines.DuckCreek.Tests\CommercialLines.DuckCreek.Tests.csproj -c Debug --filter "TestCategory=smoke_test"
+dotnet test .\tests\CommercialLines.DuckCreek.Tests\CommercialLines.DuckCreek.Tests.csproj -c Debug --settings .\Tosca.runsettings --filter "TestCategory=smoke_test"
+dotnet test .\tests\CommercialLines.ExpertQuote.Tests\CommercialLines.ExpertQuote.Tests.csproj -c Release --settings .\Tosca.runsettings --filter "TestCategory=smoke_test"
+dotnet test .\tests\PersonalLines.DuckCreek.Tests\PersonalLines.DuckCreek.Tests.csproj -c Release --settings .\Tosca.runsettings --filter "TestCategory=smoke_test"
 ```
 
-TRX and NUnit output are written under `TestResults` by the supplied run script.
+### Results produced by `run.cmd`
+
+- Root: `TestResults` (or `-ResultsDirectory` override)
+- TRX: `<ResultsRoot>\CLDC.trx`, `<ResultsRoot>\CLEQ.trx`, `<ResultsRoot>\PLDC.trx`
+- NUnit xml work area: `<ResultsRoot>\NUnit`, `<ResultsRoot>\NUnitWork\<Project>`
+- Scenario evidence: `<ResultsRoot>\Artifacts\<TestAssembly>\<Feature>\<ScenarioTimestampGuid>`
+
+`run.cmd` cleans only the owned results root for the current run and protects it using `.automation-run.lock`.
+
+### Failed-test retries and attempt evidence
+
+Set `execution.retryCount` in `config/framework.json` (or the configuration selected by `TEST_FRAMEWORK_CONFIG`):
+
+- `0` (default): execute once, without retrying.
+- `1`: retry a failed scenario once, at most two attempts.
+- `2`: retry a failed scenario twice, at most three attempts.
+
+This applies to generated Reqnroll scenarios in CLDC, CLEQ, and PLDC, including Test Explorer, `run.cmd`, and pipeline execution. Each retry repeats scenario setup and teardown with a fresh browser/scenario context. Passing, skipped, and canceled tests are not retried. Assembly/feature initialization failures are outside scenario retry scope. Application-side changes are not rolled back: enable retries only when repeating the scenario is safe.
+
+Every attempt retains its own evidence folder. In the consolidated report, expand a test case and click **1**, **2**, **3** under **Attempts** to view that attempt's steps, logs, screenshots, and errors. The final attempt is selected initially; totals count logical test cases by their final result, while earlier failures remain visible. Standalone scenario reports also link to the other attempt reports. Regenerate the consolidated report after execution using the existing report command.
+
+Offline regression checks (no browser execution): `dotnet test tools/InsuranceAutomation.Retry.Tests/InsuranceAutomation.Retry.Tests.csproj` and `python -B -m unittest discover -s tools -p test_retry_report.py -v`.
+
+### Consolidated report generation
+
+After execution completes:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Generate-ConsolidatedReport.ps1 -ResultsDirectory "TestResults"
+```
+
+Output:
+
+- `TestResults\ConsolidatedReport\report.html`
+- `TestResults\ConsolidatedReport\log.html`
+- `TestResults\ConsolidatedReport\output.xml`
+- `TestResults\ConsolidatedReport\summary.json`
+
+In each test card, attempt buttons `1`, `2`, `3` switch the displayed evidence for that attempt.
+
+### Common execution troubleshooting
+
+- **Credentials missing**: set required `CL_DC_*`, `CL_EQ_*`, `PL_DC_*` environment variables.
+- **Parallel appears capped at 2**: `Tosca.runsettings` has `MaxCpuCount=2` and `NumberOfTestWorkers=2`.
+- **`state_44` mismatch in PLDC Cycle smoke data**: ensure `state_44` equals uppercase `state_name` in `212_smoke_test_cycle_*.json`.
+- **Results lock errors**: avoid manually deleting files under active `TestResults` while a run is in progress.
+- **Playwright/browser failures after cleanup**: rerun `.\setup.cmd` to rebuild and reinstall browser dependencies.
+
+### One-time maintenance commands
+
+```powershell
+# Clear all bin folders in this repository and rebuild
+Get-ChildItem -Path . -Directory -Recurse -Force | Where-Object Name -eq 'bin' | Remove-Item -Recurse -Force
+dotnet build .\ToscaCanonicalSimple.sln -c Debug
+
+# Quality gate
+python .\tools\package_gate.py
+```
 
 ## Test structure
 

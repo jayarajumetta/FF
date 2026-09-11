@@ -1,4 +1,4 @@
-@PL_DC @CYCLE @smoke_test @PL_DC_smoke_test @CYCLE_smoke_test 
+@PL_DC @CYCLE @smoke_test @cycle_smoke_test @pldc_smoke_test
 
 Feature: Smoke Test Cycle
   As a Personal Lines Duck Creek policy processing user

@@ -1,4 +1,4 @@
-@PL_DC @AUTO @smoke_test @PL_DC_smoke_test @AUTO_smoke_test 
+@PL_DC @AUTO @smoke_test @auto_smoke_test @pldc_smoke_test
 
 Feature: Smoke Test Auto
   As a Personal Lines Duck Creek policy processing user

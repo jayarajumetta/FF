@@ -247,6 +247,31 @@ def enrich(results: list[dict[str, Any]], bindings: Sequence[Binding]) -> None:
         result["_tags"] = infer_tags(result)
 
 
+def group_attempts(results: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
+    groups: dict[tuple[str, str, str], list[dict[str, Any]]] = {}
+    grouped: list[dict[str, Any]] = []
+    for result in results:
+        execution = result.get("executionId")
+        identity = result.get("testFullName")
+        number = result.get("attemptNumber")
+        if not execution or not identity or not isinstance(number, int) or isinstance(number, bool) or number < 1:
+            grouped.append(result)
+            continue
+        key = (str(result.get("_application", "")), str(execution), str(identity))
+        groups.setdefault(key, []).append(result)
+    for attempts in groups.values():
+        attempts.sort(key=lambda item: item["attemptNumber"])
+        numbers = [item["attemptNumber"] for item in attempts]
+        if len(set(numbers)) != len(numbers):
+            raise ValueError("Duplicate attempt numbers for the same test execution.")
+        final = dict(attempts[-1])
+        final["_attempts"] = attempts
+        final["durationMilliseconds"] = sum(duration_ms(item) for item in attempts)
+        final["startedAtUtc"] = attempts[0].get("startedAtUtc")
+        grouped.append(final)
+    return grouped
+
+
 def normalize_status(value: Any) -> str:
     normalized = str(value or "").strip().upper()
     if normalized in PASS_VALUES:
@@ -675,9 +700,6 @@ def render_screenshot_gallery(
 
 
 def render_failure_evidence(result: dict[str, Any], output_dir: Path, limits: ReportLimits) -> str:
-    if normalize_status(result.get("status")) != "FAIL":
-        return ""
-
     gallery, embedded_count, total_images = render_screenshot_gallery(result, output_dir, limits)
     log_path = find_execution_log(result)
     log_html = '<p class="muted">No execution log file was found in this scenario evidence directory.</p>'
@@ -714,7 +736,7 @@ def render_failure_evidence(result: dict[str, Any], output_dir: Path, limits: Re
     return f"""
     <section class="failure-evidence">
       <div class="section-title-row">
-        <h4>Failure evidence</h4>
+        <h4>{'Failure evidence' if normalize_status(result.get('status')) == 'FAIL' else 'Attempt evidence'}</h4>
         <span class="evidence-count">{embedded_count}/{total_images} screenshots embedded</span>
       </div>
       <div class="evidence-tabs" role="tablist" aria-label="Failure evidence">
@@ -836,7 +858,7 @@ def render_video(result: dict[str, Any], output_dir: Path) -> str:
     """
 
 
-def render_scenario(result: dict[str, Any], output_dir: Path, limits: ReportLimits, ordinal: int) -> str:
+def render_scenario(result: dict[str, Any], output_dir: Path, limits: ReportLimits, ordinal: int, body_only: bool = False) -> str:
     scenario_status = normalize_status(result.get("status"))
     feature = str(result.get("feature") or "Unknown feature")
     scenario = str(result.get("scenario") or "Unknown scenario")
@@ -863,20 +885,7 @@ def render_scenario(result: dict[str, Any], output_dir: Path, limits: ReportLimi
         if result_file and result_file.exists()
         else esc(result_file)
     )
-    return f"""
-    <article class="scenario-card {scenario_status}" id="{esc(scenario_id)}"
-      data-status="{esc(scenario_status)}" data-feature="{esc(feature)}" data-state="{esc(state_code)}"
-      data-application="{esc(application)}" data-lob="{esc(lob)}" data-search="{esc(search_text)}">
-      <details class="scenario-details"{open_attribute}>
-        <summary>
-          <span class="scenario-index">{ordinal:03d}</span>
-          <span class="test-label">TEST</span>
-          <span class="scenario-title">{esc(scenario)}</span>
-          <span class="scenario-context">{esc(application)} · {esc(lob)} · {esc(state_code)}</span>
-          <span class="scenario-duration">{esc(fmt_duration(duration_ms(result)))}</span>
-          <span class="status-pill {scenario_status}">{scenario_status}</span>
-        </summary>
-        <div class="scenario-content">
+    content = f"""
           <div class="scenario-meta-grid">
             <div><span class="field-label">Feature / suite</span><strong>{esc(feature)}</strong></div>
             <div><span class="field-label">Start</span>{esc(fmt_timestamp(result.get('startedAtUtc')))}</div>
@@ -891,6 +900,43 @@ def render_scenario(result: dict[str, Any], output_dir: Path, limits: ReportLimi
           <div class="step-list">{step_html}</div>
           {render_failure_evidence(result, output_dir, limits)}
           {render_video(result, output_dir)}
+    """
+    if body_only:
+        return content
+    attempts = result.get("_attempts", [result])
+    buttons = []
+    panels = []
+    for index, attempt in enumerate(attempts):
+        number = attempt.get("attemptNumber", index + 1)
+        selected = index == len(attempts) - 1
+        panel_id = f"{scenario_id}-attempt-{number}"
+        attempt_status = normalize_status(attempt.get("status"))
+        buttons.append(
+            f'<button type="button" class="evidence-tab attempt-tab{" active" if selected else ""}" '
+            f'data-attempt="{esc(panel_id)}" aria-controls="{esc(panel_id)}" aria-pressed="{str(selected).lower()}" '
+            f'title="Attempt {number}: {attempt_status}">{number}</button>'
+        )
+        panels.append(
+            f'<section class="attempt-panel" id="{esc(panel_id)}"{" hidden" if not selected else ""}>'
+            f'<div class="steps-heading"><h4>Attempt {number}</h4><span class="status-pill {attempt_status}">{attempt_status}</span></div>'
+            f'{render_scenario(attempt, output_dir, limits, ordinal, body_only=True)}</section>'
+        )
+    return f"""
+    <article class="scenario-card {scenario_status}" id="{esc(scenario_id)}"
+      data-status="{esc(scenario_status)}" data-feature="{esc(feature)}" data-state="{esc(state_code)}"
+      data-application="{esc(application)}" data-lob="{esc(lob)}" data-search="{esc(search_text)}">
+      <details class="scenario-details"{open_attribute}>
+        <summary>
+          <span class="scenario-index">{ordinal:03d}</span>
+          <span class="test-label">TEST</span>
+          <span class="scenario-title">{esc(scenario)}</span>
+          <span class="scenario-context">{esc(application)} · {esc(lob)} · {esc(state_code)}</span>
+          <span class="scenario-duration">{esc(fmt_duration(duration_ms(result)))}</span>
+          <span class="status-pill {scenario_status}">{scenario_status}</span>
+        </summary>
+        <div class="scenario-content">
+          <div class="attempt-tabs" role="group" aria-label="Execution attempts"><span class="field-label">Attempts</span>{''.join(buttons)}</div>
+          {''.join(panels)}
         </div>
       </details>
     </article>
@@ -1238,6 +1284,16 @@ REPORT_JS = r"""
       card.classList.toggle('hidden', !matches);
       if (matches) visible += 1;
     });
+
+  all('.scenario-card').forEach((card) => {
+    all('.attempt-tab', card).forEach((button) => button.addEventListener('click', () => {
+      all('.attempt-tab', card).forEach((tab) => {
+        tab.classList.toggle('active', tab === button);
+        tab.setAttribute('aria-pressed', String(tab === button));
+      });
+      all('.attempt-panel', card).forEach((panel) => { panel.hidden = panel.id !== button.dataset.attempt; });
+    }));
+  });
     all('.feature-group').forEach((group) => {
       const anyVisible = all('.scenario-card:not(.hidden)', group).length > 0;
       group.classList.toggle('hidden', !anyVisible);
@@ -1401,7 +1457,7 @@ def write_report(
     )
 
     report_body = "".join(feature_groups) if feature_groups else '<p class="notice">No scenario-result.json files were found below the supplied evidence root.</p>'
-    flat_log = render_flat_log(ordered_results)
+    flat_log = render_flat_log([attempt for result in ordered_results for attempt in result.get("_attempts", [result])])
 
     generated_text = fmt_timestamp(generated)
     start_text = start.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3] + " UTC" if start else "Not recorded"
@@ -1544,6 +1600,8 @@ def write_report(
         "generatedAtUtc": generated,
         "status": overall,
         "total": total,
+        "attempts": sum(len(result.get("_attempts", [result])) for result in results),
+        "retried": sum(len(result.get("_attempts", [result])) > 1 for result in results),
         "passed": passed,
         "failed": total - passed,
         "passRate": round(pass_rate, 3),
@@ -1639,6 +1697,7 @@ def main(argv: Iterable[str] | None = None) -> int:
     results = load_results(args.evidence_root)
     bindings = discover_bindings(args.source_root)
     enrich(results, bindings)
+    results = group_attempts(results)
     limits = ReportLimits(
         max_log_bytes=int(args.max_log_mb * 1024 * 1024),
         max_image_bytes=int(args.max_image_mb * 1024 * 1024),

@@ -1,4 +1,4 @@
-@CLDC @CLDC_smoke_test @smoke_test @UMB @UMB_smoke
+@CLDC @UMB @smoke_test @umb_smoke_test @cldc_smoke_test
 
 Feature: UMB Smoke Test
   As a Commercial Lines Duck Creek policy processing user

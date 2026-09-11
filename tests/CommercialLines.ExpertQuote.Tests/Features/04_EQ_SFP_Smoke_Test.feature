@@ -1,4 +1,4 @@
-@CL_EQ @SFP 
+@CL_EQ @SFP  @sfp_smoke_test @cleq_smoke_test
 
 Feature: EQ SFP Smoke Test
   As a Commercial Lines ExpertQuote policy processing user

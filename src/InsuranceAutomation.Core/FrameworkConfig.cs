@@ -23,6 +23,8 @@ public sealed class FrameworkConfig
 
     public void Validate(string path)
     {
+        if (Execution.RetryCount < 0 || Execution.RetryCount == int.MaxValue)
+            throw new InvalidOperationException($"execution.retryCount must be between 0 and {int.MaxValue - 1}. Config: {path}");
         if (Browser.ActionTimeoutMs <= 0 || Browser.NavigationTimeoutMs <= 0)
             throw new InvalidOperationException($"Browser timeouts must be positive. Config: {path}");
         if (Browser.HighlightDurationMs < 0)
@@ -138,6 +140,7 @@ public sealed class EvidenceAttachmentPolicy
 
 public sealed class ExecutionOptions
 {
+    public int RetryCount { get; init; } = 0;
     public bool StrictUnknownConditions { get; init; } = true;
     // Tosca verification failures are accumulated after mature waits and canonical locator resolution and fail at scenario end,
     // allowing later steps and all requested evidence to complete. Fatal browser/action failures still fail immediately.
