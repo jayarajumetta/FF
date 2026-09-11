@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 namespace InsuranceAutomation.Core;
 public sealed class ScenarioData
 {
+    private const long MaxJsonBytes = 5 * 1024 * 1024;
+
     private readonly Dictionary<string, string> _static = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _runtime = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _external = new(StringComparer.OrdinalIgnoreCase);
@@ -73,8 +75,10 @@ public sealed class ScenarioData
 
     private void LoadExternalData(string externalFile)
     {
-        if (!File.Exists(externalFile)) return;
-        using var externalDocument = JsonDocument.Parse(File.ReadAllText(externalFile));
+        var externalRelative = SafeFileAccess.ToRepositoryRelativePath(externalFile);
+        if (!SafeFileAccess.TryResolveExistingFileUnderRoot(externalRelative, out var externalPath)) return;
+        externalPath = SafeFileAccess.ResolveExistingFileUnderRoot(externalRelative, MaxJsonBytes, ".json");
+        using var externalDocument = JsonDocument.Parse(File.ReadAllText(externalPath));
         var externalRoot = externalDocument.RootElement;
         Flatten(externalRoot, string.Empty, _external);
         if (!externalRoot.TryGetProperty("values", out var values) || values.ValueKind != JsonValueKind.Object) return;
@@ -90,17 +94,27 @@ public sealed class ScenarioData
 
     private static JsonDocument OpenScenarioDocument(string scenarioFile)
     {
-        JsonDocument Direct() => JsonDocument.Parse(File.ReadAllText(scenarioFile));
+        var repositoryRoot = SafeFileAccess.FindRepositoryRoot();
+        var scenarioRelative = SafeFileAccess.ToRepositoryRelativePath(scenarioFile);
+        JsonDocument Direct()
+        {
+            var scenarioPath = SafeFileAccess.ResolveExistingFileUnderRoot(scenarioRelative, MaxJsonBytes, ".json");
+            return JsonDocument.Parse(File.ReadAllText(scenarioPath));
+        }
         var scenarioDirectory = Path.GetDirectoryName(scenarioFile);
         if (string.IsNullOrWhiteSpace(scenarioDirectory)) return Direct();
         var testDataRoot = Directory.GetParent(scenarioDirectory)?.FullName;
         if (string.IsNullOrWhiteSpace(testDataRoot)) return Direct();
-        var manifestPath = Path.Combine(testDataRoot, "Layered", "manifest.json");
+        var testDataRootRelative = SafeFileAccess.ToRepositoryRelativePath(testDataRoot);
+        var safeTestDataRoot = SafeFileAccess.ResolveExistingDirectoryUnderRoot(testDataRootRelative);
+        var manifestPath = Path.Combine(safeTestDataRoot, "Layered", "manifest.json");
         if (!File.Exists(manifestPath)) return Direct();
 
         try
         {
-            if (JsonNode.Parse(File.ReadAllText(manifestPath)) is not JsonObject manifest ||
+            var manifestRelative = Path.GetRelativePath(repositoryRoot, manifestPath);
+            var safeManifestPath = SafeFileAccess.ResolveExistingFileUnderRoot(manifestRelative, MaxJsonBytes, ".json");
+            if (JsonNode.Parse(File.ReadAllText(safeManifestPath)) is not JsonObject manifest ||
                 manifest["entries"] is not JsonObject entries ||
                 entries[Path.GetFileName(scenarioFile)] is not JsonObject entry)
             {
@@ -126,12 +140,16 @@ public sealed class ScenarioData
             if (string.IsNullOrWhiteSpace(baseRelative) || string.IsNullOrWhiteSpace(overridesRelative) ||
                 string.IsNullOrWhiteSpace(overrideKey)) return Direct();
 
-            var basePath = Path.Combine(testDataRoot, baseRelative.Replace('/', Path.DirectorySeparatorChar));
-            var overridesPath = Path.Combine(testDataRoot, overridesRelative.Replace('/', Path.DirectorySeparatorChar));
+            var basePath = Path.Combine(safeTestDataRoot, baseRelative.Replace('/', Path.DirectorySeparatorChar));
+            var overridesPath = Path.Combine(safeTestDataRoot, overridesRelative.Replace('/', Path.DirectorySeparatorChar));
             if (!File.Exists(basePath) || !File.Exists(overridesPath)) return Direct();
 
-            var baseNode = JsonNode.Parse(File.ReadAllText(basePath));
-            if (JsonNode.Parse(File.ReadAllText(overridesPath)) is not JsonObject overrideRoot ||
+            var baseRelativePath = Path.GetRelativePath(repositoryRoot, basePath);
+            var overridesRelativePath = Path.GetRelativePath(repositoryRoot, overridesPath);
+            var safeBasePath = SafeFileAccess.ResolveExistingFileUnderRoot(baseRelativePath, MaxJsonBytes, ".json");
+            var safeOverridesPath = SafeFileAccess.ResolveExistingFileUnderRoot(overridesRelativePath, MaxJsonBytes, ".json");
+            var baseNode = JsonNode.Parse(File.ReadAllText(safeBasePath));
+            if (JsonNode.Parse(File.ReadAllText(safeOverridesPath)) is not JsonObject overrideRoot ||
                 overrideRoot["overrides"] is not JsonObject allOverrides ||
                 allOverrides[overrideKey] is not JsonNode mergePatch)
             {
@@ -174,38 +192,6 @@ public sealed class ScenarioData
             result[item.Key] = ApplyMergePatch(result[item.Key]?.DeepClone(), item.Value);
         }
         return result;
-    }
-    public void LoadSmoke(string baseFile, string stateCode, string stateName, string stateOverridesFile, string externalFile)
-    {
-        Load(baseFile, externalFile);
-        var normalizedState = (stateCode ?? string.Empty).Trim().ToUpperInvariant();
-        var normalizedName = (stateName ?? string.Empty).Trim();
-        if (string.IsNullOrWhiteSpace(normalizedState))
-            throw new InvalidOperationException("CLDC smoke stateCode is required.");
-        _runtime["State"] = normalizedState;
-        _runtime["state"] = normalizedState;
-        _runtime["stateCode"] = normalizedState;
-        _runtime["statecode"] = normalizedState;
-        _runtime["stateVariant"] = normalizedState;
-        _runtime["state_variant"] = normalizedState;
-        _runtime["StateName"] = normalizedName;
-        _runtime["stateName"] = normalizedName;
-        _runtime["statename"] = normalizedName;
-        _runtime["state_name"] = normalizedName;
-        if (!File.Exists(stateOverridesFile)) return;
-        using var overrideDocument = JsonDocument.Parse(File.ReadAllText(stateOverridesFile));
-        var overrideRoot = overrideDocument.RootElement;
-        if (!overrideRoot.TryGetProperty("overrides", out var allOverrides) || allOverrides.ValueKind != JsonValueKind.Object) return;
-        var product = Get("productCode", Get("product_lob")).Trim();
-        if (string.IsNullOrWhiteSpace(product) || !allOverrides.TryGetProperty(product, out var productOverrides) || productOverrides.ValueKind != JsonValueKind.Object) return;
-        if (!productOverrides.TryGetProperty(normalizedState, out var stateOverride) || stateOverride.ValueKind != JsonValueKind.Object) return;
-        if (!stateOverride.TryGetProperty("values", out var values) || values.ValueKind != JsonValueKind.Object) return;
-        foreach (var property in values.EnumerateObject())
-        {
-            _runtime[property.Name] = property.Value.ValueKind == JsonValueKind.String
-                ? property.Value.GetString() ?? string.Empty
-                : property.Value.ToString();
-        }
     }
     private void PrimeScenarioAliases()
     {

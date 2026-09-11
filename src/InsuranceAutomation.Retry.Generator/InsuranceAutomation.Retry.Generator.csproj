@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+	<TargetFramework>netstandard2.0</TargetFramework>
+	<AssemblyName>InsuranceAutomation.Retry.Generator.ReqnrollPlugin</AssemblyName>
+	<OutputPath>bin/$(Configuration)/compiler/</OutputPath>
+	<IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+	<PackageReference Include="Reqnroll.Tools.MsBuild.Generation" Version="3.3.4" GeneratePathProperty="true" PrivateAssets="all" ExcludeAssets="all" />
+	<Reference Include="Reqnroll.Generator" HintPath="$(PkgReqnroll_Tools_MsBuild_Generation)/build/netstandard2.0/Reqnroll.Generator.dll" Private="false" />
+	<Reference Include="Reqnroll" HintPath="$(PkgReqnroll_Tools_MsBuild_Generation)/build/netstandard2.0/Reqnroll.dll" Private="false" />
+	<Reference Include="System.CodeDom" HintPath="$(PkgReqnroll_Tools_MsBuild_Generation)/build/netstandard2.0/System.CodeDom.dll" Private="false" />
+  </ItemGroup>
+</Project>

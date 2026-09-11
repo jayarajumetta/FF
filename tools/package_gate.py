@@ -22,6 +22,7 @@ import tempfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
+from pldc_smoke_data import is_metadata_cleaned_smoke, is_standalone_smoke, load as load_smoke_data, validate_standalone
 
 try:
     import yaml  # type: ignore
@@ -51,11 +52,11 @@ def warn(message: str) -> None:
 
 
 def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
+    max_bytes = 256 * 1024 * 1024
+    if path.stat().st_size > max_bytes:
+        raise ValueError(f"File exceeds allowed size for hashing: {path}")
     with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+        return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
 def sha256_normalized_text(path: Path) -> str:
@@ -64,6 +65,14 @@ def sha256_normalized_text(path: Path) -> str:
         text = text[1:]
     text = text.replace("\r\n", "\n").replace("\r", "\n")
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def load_json_with_size_guard(path: Path, *, max_bytes: int = 5 * 1024 * 1024) -> Any:
+    if not path.exists():
+        raise FileNotFoundError(path)
+    if path.stat().st_size > max_bytes:
+        raise ValueError(f"JSON file exceeds allowed size: {path}")
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def csharp_balance(text: str) -> tuple[int, int, int]:
@@ -307,8 +316,8 @@ def active_codes(feature_name: str) -> list[str]:
         return []
     return [row.get("stateCode", "") for row in parse_feature(path)["rows"]]
 
-bop_codes = active_codes("03_EQ_BOP_Smoke_Test_MO.feature")
-sfp_codes = active_codes("04_EQ_SFP_Smoke_Test_MN.feature")
+bop_codes = active_codes("03_EQ_BOP_Smoke_Test.feature")
+sfp_codes = active_codes("04_EQ_SFP_Smoke_Test.feature")
 STATS["eqSmoke"] = {"BOP": len(bop_codes), "SFP": len(sfp_codes)}
 if len(bop_codes) != 45 or len(set(bop_codes)) != 45:
     fail(f"EQ BOP Smoke must contain 45 unique active state examples; found {len(bop_codes)}/{len(set(bop_codes))}")
@@ -319,7 +328,7 @@ lineage_path = VALIDATION_DIR / "eq-smoke-state-lineage.json"
 if not lineage_path.exists():
     fail("EQ Smoke state-lineage manifest is missing")
 else:
-    lineage = json.loads(lineage_path.read_text(encoding="utf-8"))
+    lineage = load_json_with_size_guard(lineage_path)
     for flow, expected_codes in (("BOP", bop_codes), ("SFP", sfp_codes)):
         entries = lineage.get("flows", {}).get(flow, {}).get("entries", [])
         lineage_codes = [entry.get("stateCode", "") for entry in entries]
@@ -335,7 +344,7 @@ else:
             if donor and not (data_path.parent / donor).exists():
                 fail(f"EQ {flow} Tosca donor missing: {donor}")
 
-# Layered data must reconstruct every original scenario exactly.
+# PLDC smoke data is standalone; other scenarios remain layered.
 layered_stats: dict[str, Any] = {}
 for app in APPS:
     app_root = ROOT / "tests" / app
@@ -346,14 +355,29 @@ for app in APPS:
     if not manifest_path.exists():
         fail(f"{app}: layered-data manifest is missing")
         continue
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest = load_json_with_size_guard(manifest_path)
     entries = manifest.get("entries", {})
-    if set(entries) != {path.name for path in scenarios}:
-        missing = sorted({path.name for path in scenarios} - set(entries))
-        extra = sorted(set(entries) - {path.name for path in scenarios})
+    layered_names = {path.name for path in scenarios if not is_standalone_smoke(app, path.name)}
+    if set(entries) != layered_names:
+        missing = sorted(layered_names - set(entries))
+        extra = sorted(set(entries) - layered_names)
         fail(f"{app}: layered manifest/source mismatch; missing={missing[:10]} extra={extra[:10]}")
     reconstructed = 0
+    standalone = 0
     for source in scenarios:
+        if is_standalone_smoke(app, source.name):
+            try:
+                problems = validate_standalone(
+                    load_smoke_data(source),
+                    require_metadata_cleanup=is_metadata_cleaned_smoke(app, source.name),
+                )
+            except ValueError as ex:
+                problems = [str(ex)]
+            for problem in problems:
+                fail(f"{app}: {source.name}: {problem}")
+            if not problems:
+                standalone += 1
+            continue
         entry = entries.get(source.name)
         if not isinstance(entry, dict):
             continue
@@ -378,7 +402,8 @@ for app in APPS:
             fail(f"{app}: source checksum mismatch in layered manifest for {source.name}")
             continue
         reconstructed += 1
-    layered_stats[app] = {"scenarioRecords": len(scenarios), "reconstructedExactly": reconstructed}
+    layered_stats[app] = {"scenarioRecords": len(scenarios), "reconstructedExactly": reconstructed,
+                          "standaloneValidated": standalone}
 STATS["layeredTestData"] = layered_stats
 
 scenario_data = (ROOT / "src" / "InsuranceAutomation.Core" / "ScenarioData.cs").read_text(encoding="utf-8")
@@ -392,7 +417,7 @@ protected_ok = 0
 if not protected_path.exists():
     fail("Protected baseline checksum manifest is missing")
 else:
-    protected = json.loads(protected_path.read_text(encoding="utf-8"))
+    protected = load_json_with_size_guard(protected_path)
     for relative, expected in protected.items():
         path = ROOT / relative
         if not path.exists():
