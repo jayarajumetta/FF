@@ -74,8 +74,10 @@ public sealed class ScenarioData
     private void LoadExternalData(string externalFile)
     {
         var repositoryRoot = SafeFileAccess.FindRepositoryRoot();
-        if (!SafeFileAccess.TryResolveExistingFileUnderRoot(repositoryRoot, externalFile, out _)) return;
-        using var externalDocument = JsonDocument.Parse(SafeFileAccess.ReadAllTextUnderRoot(repositoryRoot, externalFile, MaxJsonBytes));
+        var externalRelative = SafeFileAccess.ToRepositoryRelativePath(repositoryRoot, externalFile);
+        if (!SafeFileAccess.TryResolveExistingFileUnderRoot(repositoryRoot, externalRelative, out var externalPath)) return;
+        externalPath = SafeFileAccess.ResolveExistingFileUnderRoot(repositoryRoot, externalRelative, MaxJsonBytes, ".json");
+        using var externalDocument = JsonDocument.Parse(SafeFileAccess.ReadText(externalPath));
         var externalRoot = externalDocument.RootElement;
         Flatten(externalRoot, string.Empty, _external);
         if (!externalRoot.TryGetProperty("values", out var values) || values.ValueKind != JsonValueKind.Object) return;
@@ -92,19 +94,26 @@ public sealed class ScenarioData
     private static JsonDocument OpenScenarioDocument(string scenarioFile)
     {
         var repositoryRoot = SafeFileAccess.FindRepositoryRoot();
-        JsonDocument Direct() => JsonDocument.Parse(SafeFileAccess.ReadAllTextUnderRoot(repositoryRoot, scenarioFile, MaxJsonBytes));
+        var scenarioRelative = SafeFileAccess.ToRepositoryRelativePath(repositoryRoot, scenarioFile);
+        JsonDocument Direct()
+        {
+            var scenarioPath = SafeFileAccess.ResolveExistingFileUnderRoot(repositoryRoot, scenarioRelative, MaxJsonBytes, ".json");
+            return JsonDocument.Parse(SafeFileAccess.ReadText(scenarioPath));
+        }
         var scenarioDirectory = Path.GetDirectoryName(scenarioFile);
         if (string.IsNullOrWhiteSpace(scenarioDirectory)) return Direct();
         var testDataRoot = Directory.GetParent(scenarioDirectory)?.FullName;
         if (string.IsNullOrWhiteSpace(testDataRoot)) return Direct();
-        var safeTestDataRoot = SafeFileAccess.ResolveExistingDirectoryUnderRoot(repositoryRoot, testDataRoot);
+        var testDataRootRelative = SafeFileAccess.ToRepositoryRelativePath(repositoryRoot, testDataRoot);
+        var safeTestDataRoot = SafeFileAccess.ResolveExistingDirectoryUnderRoot(repositoryRoot, testDataRootRelative);
         var manifestPath = Path.Combine(safeTestDataRoot, "Layered", "manifest.json");
         if (!File.Exists(manifestPath)) return Direct();
 
         try
         {
             var manifestRelative = Path.GetRelativePath(repositoryRoot, manifestPath);
-            if (JsonNode.Parse(SafeFileAccess.ReadAllTextUnderRoot(repositoryRoot, manifestRelative, MaxJsonBytes)) is not JsonObject manifest ||
+            var safeManifestPath = SafeFileAccess.ResolveExistingFileUnderRoot(repositoryRoot, manifestRelative, MaxJsonBytes, ".json");
+            if (JsonNode.Parse(SafeFileAccess.ReadText(safeManifestPath)) is not JsonObject manifest ||
                 manifest["entries"] is not JsonObject entries ||
                 entries[Path.GetFileName(scenarioFile)] is not JsonObject entry)
             {
@@ -123,8 +132,10 @@ public sealed class ScenarioData
 
             var baseRelativePath = Path.GetRelativePath(repositoryRoot, basePath);
             var overridesRelativePath = Path.GetRelativePath(repositoryRoot, overridesPath);
-            var baseNode = JsonNode.Parse(SafeFileAccess.ReadAllTextUnderRoot(repositoryRoot, baseRelativePath, MaxJsonBytes));
-            if (JsonNode.Parse(SafeFileAccess.ReadAllTextUnderRoot(repositoryRoot, overridesRelativePath, MaxJsonBytes)) is not JsonObject overrideRoot ||
+            var safeBasePath = SafeFileAccess.ResolveExistingFileUnderRoot(repositoryRoot, baseRelativePath, MaxJsonBytes, ".json");
+            var safeOverridesPath = SafeFileAccess.ResolveExistingFileUnderRoot(repositoryRoot, overridesRelativePath, MaxJsonBytes, ".json");
+            var baseNode = JsonNode.Parse(SafeFileAccess.ReadText(safeBasePath));
+            if (JsonNode.Parse(SafeFileAccess.ReadText(safeOverridesPath)) is not JsonObject overrideRoot ||
                 overrideRoot["overrides"] is not JsonObject allOverrides ||
                 allOverrides[overrideKey] is not JsonNode mergePatch)
             {
