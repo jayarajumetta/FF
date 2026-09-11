@@ -13,13 +13,16 @@ public sealed class FrameworkConfig
 
     public static FrameworkConfig Load()
     {
+        var repositoryRoot = SafeFileAccess.FindRepositoryRoot();
         var configRelativePath = Path.Combine("config", "framework.json");
         var safePath = SafeFileAccess.ResolveExistingFileUnderRoot(configRelativePath, MaxConfigBytes, ".json");
-        var repositoryRoot = SafeFileAccess.FindRepositoryRoot();
+        var expectedPath = Path.GetFullPath(Path.Combine(repositoryRoot, configRelativePath));
+        if (!safePath.Equals(expectedPath, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("Resolved framework configuration path is invalid.");
 
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        var configJson = File.ReadAllText(safePath);
-        var config = JsonSerializer.Deserialize<FrameworkConfig>(configJson, options)
+        using var configStream = File.Open(safePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        var config = JsonSerializer.Deserialize<FrameworkConfig>(configStream, options)
                      ?? throw new InvalidOperationException($"Unable to parse framework configuration: {safePath}");
         config.Validate(safePath);
         config.Reporting.ResultsRoot = TestOutputPaths.ResolveResultsRoot(repositoryRoot, config.Reporting.ResultsRoot);
