@@ -12,11 +12,13 @@ public sealed class FrameworkConfig
     public static FrameworkConfig Load()
     {
         var path = FindConfigFile();
+        var repositoryRoot = TestOutputPaths.FindRoot(path);
+        var safePath = EnsureSafeConfigPath(path, repositoryRoot);
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        var config = JsonSerializer.Deserialize<FrameworkConfig>(File.ReadAllText(path), options)
-                     ?? throw new InvalidOperationException($"Unable to parse framework configuration: {path}");
-        config.Validate(path);
-        config.Reporting.ResultsRoot = TestOutputPaths.ResolveResultsRoot(TestOutputPaths.FindRoot(path), config.Reporting.ResultsRoot);
+        var config = JsonSerializer.Deserialize<FrameworkConfig>(File.ReadAllText(safePath), options)
+                     ?? throw new InvalidOperationException($"Unable to parse framework configuration: {safePath}");
+        config.Validate(safePath);
+        config.Reporting.ResultsRoot = TestOutputPaths.ResolveResultsRoot(repositoryRoot, config.Reporting.ResultsRoot);
         config.Reporting.ArtifactRoot = TestOutputPaths.ResolveArtifactRoot(config.Reporting.ResultsRoot, config.Reporting.ArtifactRoot);
         return config;
     }
@@ -60,6 +62,19 @@ public sealed class FrameworkConfig
             }
         }
         throw new FileNotFoundException("config/framework.json was not found. Set TEST_FRAMEWORK_CONFIG to an explicit path if needed.");
+    }
+
+    private static string EnsureSafeConfigPath(string candidatePath, string repositoryRoot)
+    {
+        var fullPath = Path.GetFullPath(candidatePath);
+        var fullRoot = Path.GetFullPath(repositoryRoot).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+        if (!fullPath.StartsWith(fullRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("TEST_FRAMEWORK_CONFIG must point to a file inside the repository root.");
+        if (!Path.GetFileName(fullPath).Equals("framework.json", StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("Framework configuration file name must be framework.json.");
+
+        return fullPath;
     }
 }
 

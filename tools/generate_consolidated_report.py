@@ -346,7 +346,7 @@ def redact_json(value: Any) -> Any:
 
 
 def slug(value: str, prefix: str = "id") -> str:
-    digest = hashlib.sha1(value.encode("utf-8", errors="ignore")).hexdigest()[:10]
+    digest = hashlib.sha256(value.encode("utf-8", errors="ignore")).hexdigest()[:10]
     readable = re.sub(r"[^A-Za-z0-9_-]+", "-", value).strip("-")[:42] or prefix
     return f"{readable}-{digest}"
 
@@ -870,7 +870,7 @@ def render_scenario(result: dict[str, Any], output_dir: Path, limits: ReportLimi
     search_text = " ".join([feature, scenario, scenario_status, application, state_code, lob, *tags]).casefold()
     tag_html = "".join(f'<span class="tag">{esc(tag)}</span>' for tag in tags)
     steps = [step for step in (result.get("steps", []) or []) if isinstance(step, dict)]
-    passed_steps = sum(normalize_status(step.get("status")) == "PASS" for step in steps)
+    successful_steps = sum(normalize_status(step.get("status")) == "PASS" for step in steps)
     failed_steps = sum(normalize_status(step.get("status")) == "FAIL" for step in steps)
     skipped_steps = sum(normalize_status(step.get("status")) == "SKIP" for step in steps)
     step_html = "".join(render_step(result, step, output_dir, limits) for step in steps)
@@ -890,7 +890,7 @@ def render_scenario(result: dict[str, Any], output_dir: Path, limits: ReportLimi
             <div><span class="field-label">Feature / suite</span><strong>{esc(feature)}</strong></div>
             <div><span class="field-label">Start</span>{esc(fmt_timestamp(result.get('startedAtUtc')))}</div>
             <div><span class="field-label">End</span>{esc(fmt_timestamp(result.get('completedAtUtc')))}</div>
-            <div><span class="field-label">Steps</span>{len(steps)} total · <span class="pass-text">{passed_steps} passed</span> · <span class="fail-text">{failed_steps} failed</span> · {skipped_steps} skipped</div>
+            <div><span class="field-label">Steps</span>{len(steps)} total · <span class="pass-text">{successful_steps} passed</span> · <span class="fail-text">{failed_steps} failed</span> · {skipped_steps} skipped</div>
             <div class="meta-wide"><span class="field-label">Tags</span>{tag_html or '<span class="muted">No tags inferred</span>'}</div>
             <div class="meta-wide"><span class="field-label">Scenario result source</span>{result_source}</div>
           </div>
@@ -1395,13 +1395,13 @@ def write_report(
     output_dir.mkdir(parents=True, exist_ok=True)
     total = len(results)
     counts = Counter(normalize_status(result.get("status")) for result in results)
-    passed = counts.get("PASS", 0)
+    successful = counts.get("PASS", 0)
     failed = counts.get("FAIL", 0)
     skipped = counts.get("SKIP", 0)
     unknown = counts.get("UNKNOWN", 0)
     total_ms = sum(duration_ms(result) for result in results)
     overall = "PASS" if total > 0 and failed == 0 and unknown == 0 else ("UNKNOWN" if total == 0 else "FAIL")
-    pass_rate = (passed / total * 100.0) if total else 0.0
+    pass_rate = (successful / total * 100.0) if total else 0.0
     fail_rate = (failed / total * 100.0) if total else 0.0
     skip_rate = ((skipped + unknown) / total * 100.0) if total else 0.0
     start, end, wall_ms = run_window(results)
@@ -1468,7 +1468,7 @@ def write_report(
     cards = f"""
       <div class="card"><span>Overall</span><strong class="{'pass-text' if overall == 'PASS' else 'fail-text'}">{overall}</strong></div>
       <div class="card"><span>Total tests</span><strong>{total}</strong></div>
-      <div class="card"><span>Passed</span><strong class="pass-text">{passed}</strong></div>
+      <div class="card"><span>Passed</span><strong class="pass-text">{successful}</strong></div>
       <div class="card"><span>Failed</span><strong class="fail-text">{failed}</strong></div>
       <div class="card"><span>Skipped / unknown</span><strong class="skip-text">{skipped + unknown}</strong></div>
       <div class="card"><span>Pass rate</span><strong>{pass_rate:.1f}%</strong></div>
@@ -1498,7 +1498,7 @@ def write_report(
     <h1>Insurance Automation Execution Report</h1>
     <div class="generated"><strong>Generated</strong><br>{esc(generated_text)}</div>
     <dl class="banner-summary">
-      <dt>Status:</dt><dd><strong>{esc(overall)}</strong> · {passed} passed, {failed} failed, {skipped} skipped, {unknown} unknown</dd>
+      <dt>Status:</dt><dd><strong>{esc(overall)}</strong> · {successful} passed, {failed} failed, {skipped} skipped, {unknown} unknown</dd>
       <dt>Start time:</dt><dd>{esc(start_text)}</dd>
       <dt>End time:</dt><dd>{esc(end_text)}</dd>
       <dt>Elapsed:</dt><dd>{esc(fmt_duration(wall_ms))} wall time · {esc(fmt_duration(total_ms))} accumulated scenario time</dd>
@@ -1517,7 +1517,7 @@ def write_report(
         <span class="skip" style="width:{skip_rate:.4f}%"></span>
       </div>
       <div class="overall-bar-legend">
-        <span><i class="legend-swatch" style="background:var(--pass)"></i>Pass {passed}</span>
+        <span><i class="legend-swatch" style="background:var(--pass)"></i>Pass {successful}</span>
         <span><i class="legend-swatch" style="background:var(--fail)"></i>Fail {failed}</span>
         <span><i class="legend-swatch" style="background:var(--skip)"></i>Skip/unknown {skipped + unknown}</span>
       </div>
@@ -1602,8 +1602,8 @@ def write_report(
         "total": total,
         "attempts": sum(len(result.get("_attempts", [result])) for result in results),
         "retried": sum(len(result.get("_attempts", [result])) > 1 for result in results),
-        "passed": passed,
-        "failed": total - passed,
+        "passed": successful,
+        "failed": total - successful,
         "passRate": round(pass_rate, 3),
         "durationMilliseconds": round(total_ms, 3),
         "features": {
@@ -1662,11 +1662,11 @@ def write_robot_xml(results: Sequence[dict[str, Any]], output_dir: Path, generat
         )
     statistics = ET.SubElement(robot, "statistics")
     total_node = ET.SubElement(statistics, "total")
-    passed = sum(status(item.get("status")) == "PASS" for item in results)
+    successful = sum(status(item.get("status")) == "PASS" for item in results)
     ET.SubElement(
         total_node,
         "stat",
-        {"pass": str(passed), "fail": str(len(results) - passed), "skip": "0"},
+        {"pass": str(successful), "fail": str(len(results) - successful), "skip": "0"},
     ).text = "All Tests"
     ET.ElementTree(robot).write(output_dir / "output.xml", encoding="utf-8", xml_declaration=True)
 

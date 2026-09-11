@@ -67,6 +67,14 @@ def sha256_normalized_text(path: Path) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
+def load_json_with_size_guard(path: Path, *, max_bytes: int = 5 * 1024 * 1024) -> Any:
+    if not path.exists():
+        raise FileNotFoundError(path)
+    if path.stat().st_size > max_bytes:
+        raise ValueError(f"JSON file exceeds allowed size: {path}")
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def csharp_balance(text: str) -> tuple[int, int, int]:
     """Balance {}, (), [] while ignoring ordinary/verbatim strings, chars and comments."""
     braces = parens = brackets = 0
@@ -320,7 +328,7 @@ lineage_path = VALIDATION_DIR / "eq-smoke-state-lineage.json"
 if not lineage_path.exists():
     fail("EQ Smoke state-lineage manifest is missing")
 else:
-    lineage = json.loads(lineage_path.read_text(encoding="utf-8"))
+    lineage = load_json_with_size_guard(lineage_path)
     for flow, expected_codes in (("BOP", bop_codes), ("SFP", sfp_codes)):
         entries = lineage.get("flows", {}).get(flow, {}).get("entries", [])
         lineage_codes = [entry.get("stateCode", "") for entry in entries]
@@ -347,7 +355,7 @@ for app in APPS:
     if not manifest_path.exists():
         fail(f"{app}: layered-data manifest is missing")
         continue
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest = load_json_with_size_guard(manifest_path)
     entries = manifest.get("entries", {})
     layered_names = {path.name for path in scenarios if not is_standalone_smoke(app, path.name)}
     if set(entries) != layered_names:
@@ -409,7 +417,7 @@ protected_ok = 0
 if not protected_path.exists():
     fail("Protected baseline checksum manifest is missing")
 else:
-    protected = json.loads(protected_path.read_text(encoding="utf-8"))
+    protected = load_json_with_size_guard(protected_path)
     for relative, expected in protected.items():
         path = ROOT / relative
         if not path.exists():
