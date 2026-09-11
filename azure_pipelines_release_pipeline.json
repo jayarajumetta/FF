@@ -1,4 +1,4 @@
-﻿{
+{
   "source": "userInterface",
   "revision": 1,
   "description": "Classic Azure DevOps Release definition for Playwright/ReqnRoll/NUnit automation from the CI bin artifact (artifact name: testpackage, alias _FF_CI). Stages are independent/manual: Assembly Execution (DLLs + optional TestCategory filter), Test Suite Execution (test plan/suite/configuration), and Test Plan On-Demand Execution (uses $(test.RunId) with ManualTestRunId fallback).",
