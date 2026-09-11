@@ -63,10 +63,10 @@ steps:
     }
 
     $candidateScripts = @(
-      "$(Build.SourcesDirectory)\\src\\InsuranceAutomation.Core\\bin\\$(BuildConfiguration)\\net8.0\\playwright.ps1",
-      "$(Build.SourcesDirectory)\\tests\\CommercialLines.DuckCreek.Tests\\bin\\$(BuildConfiguration)\\net8.0\\playwright.ps1",
-      "$(Build.SourcesDirectory)\\tests\\CommercialLines.ExpertQuote.Tests\\bin\\$(BuildConfiguration)\\net8.0\\playwright.ps1",
-      "$(Build.SourcesDirectory)\\tests\\PersonalLines.DuckCreek.Tests\\bin\\$(BuildConfiguration)\\net8.0\\playwright.ps1"
+      "$(Build.SourcesDirectory)\\bin\\InsuranceAutomation.Core\\$(BuildConfiguration)\\net8.0\\playwright.ps1",
+      "$(Build.SourcesDirectory)\\bin\\CommercialLines.DuckCreek.Tests\\$(BuildConfiguration)\\net8.0\\playwright.ps1",
+      "$(Build.SourcesDirectory)\\bin\\CommercialLines.ExpertQuote.Tests\\$(BuildConfiguration)\\net8.0\\playwright.ps1",
+      "$(Build.SourcesDirectory)\\bin\\PersonalLines.DuckCreek.Tests\\$(BuildConfiguration)\\net8.0\\playwright.ps1"
     )
 
     $playwright = Get-PlayablePlaywrightScript -Candidates $candidateScripts
@@ -89,64 +89,29 @@ steps:
 
 - powershell: |
     $ErrorActionPreference = 'Stop'
-    $dest = '$(Build.ArtifactStagingDirectory)\testpackage'
-    New-Item -ItemType Directory -Force -Path $dest | Out-Null
-    $outputs = @(
-      @{ Source = '$(Build.SourcesDirectory)\src\InsuranceAutomation.Core\bin\$(BuildConfiguration)\net8.0'; Target = 'src\InsuranceAutomation.Core\bin\$(BuildConfiguration)\net8.0' },
-      @{ Source = '$(Build.SourcesDirectory)\tests\CommercialLines.DuckCreek.Tests\bin\$(BuildConfiguration)\net8.0'; Target = 'tests\CommercialLines.DuckCreek.Tests\bin\$(BuildConfiguration)\net8.0' },
-      @{ Source = '$(Build.SourcesDirectory)\tests\CommercialLines.ExpertQuote.Tests\bin\$(BuildConfiguration)\net8.0'; Target = 'tests\CommercialLines.ExpertQuote.Tests\bin\$(BuildConfiguration)\net8.0' },
-      @{ Source = '$(Build.SourcesDirectory)\tests\PersonalLines.DuckCreek.Tests\bin\$(BuildConfiguration)\net8.0'; Target = 'tests\PersonalLines.DuckCreek.Tests\bin\$(BuildConfiguration)\net8.0' }
-    )
-
-    foreach ($output in $outputs) {
-      if (-not (Test-Path -LiteralPath $output.Source)) {
-        throw "Build output not found: $($output.Source)"
-      }
-      $targetDir = Join-Path $dest $output.Target
-      New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
-      robocopy $output.Source $targetDir /E /R:2 /W:1 /XD TestResults Artifacts
-      $robocopyExitCode = $LASTEXITCODE
-      if ($robocopyExitCode -ge 8) { throw "robocopy failed with exit code $robocopyExitCode while copying $($output.Source)" }
+    $binRoot = '$(Build.SourcesDirectory)\bin'
+    if (-not (Test-Path -LiteralPath $binRoot -PathType Container)) {
+      throw "Shared bin output folder not found: $binRoot"
     }
-
-    Copy-Item -LiteralPath '$(Build.SourcesDirectory)\Tosca.runsettings' -Destination (Join-Path $dest 'Tosca.runsettings') -Force
-    New-Item -ItemType Directory -Path (Join-Path $dest 'scripts') -Force | Out-Null
-    Copy-Item -LiteralPath '$(Build.SourcesDirectory)\scripts\TestOutput.ps1', '$(Build.SourcesDirectory)\scripts\Initialize-PipelineTestOutput.ps1' -Destination (Join-Path $dest 'scripts') -Force
-    Copy-Item -LiteralPath '$(Build.SourcesDirectory)\scripts\Generate-ConsolidatedReport.ps1', '$(Build.SourcesDirectory)\scripts\Verify-TestEvidence.ps1' -Destination (Join-Path $dest 'scripts') -Force
-    New-Item -ItemType Directory -Path (Join-Path $dest 'tools'), (Join-Path $dest 'config') -Force | Out-Null
-    Copy-Item -LiteralPath '$(Build.SourcesDirectory)\tools\generate_consolidated_report.py', '$(Build.SourcesDirectory)\tools\send_consolidated_report.py' -Destination (Join-Path $dest 'tools') -Force
-    Copy-Item -LiteralPath '$(Build.SourcesDirectory)\config\framework.json' -Destination (Join-Path $dest 'config') -Force
 
     $required = @(
-      'tests\CommercialLines.DuckCreek.Tests\bin\$(BuildConfiguration)\net8.0\CommercialLines.DuckCreek.Tests.dll',
-      'tests\CommercialLines.ExpertQuote.Tests\bin\$(BuildConfiguration)\net8.0\CommercialLines.ExpertQuote.Tests.dll',
-      'tests\PersonalLines.DuckCreek.Tests\bin\$(BuildConfiguration)\net8.0\PersonalLines.DuckCreek.Tests.dll',
-      'Tosca.runsettings',
-      'tools\generate_consolidated_report.py',
-      'tools\send_consolidated_report.py',
-      'scripts\Generate-ConsolidatedReport.ps1',
-      'config\framework.json'
+      'InsuranceAutomation.Core\$(BuildConfiguration)\net8.0\InsuranceAutomation.Core.dll',
+      'CommercialLines.DuckCreek.Tests\$(BuildConfiguration)\net8.0\CommercialLines.DuckCreek.Tests.dll',
+      'CommercialLines.ExpertQuote.Tests\$(BuildConfiguration)\net8.0\CommercialLines.ExpertQuote.Tests.dll',
+      'PersonalLines.DuckCreek.Tests\$(BuildConfiguration)\net8.0\PersonalLines.DuckCreek.Tests.dll'
     )
     foreach ($relative in $required) {
-      $path = Join-Path $dest $relative
-      if (-not (Test-Path -LiteralPath $path)) {
-        throw "Compiled artifact is missing required output: $relative"
+      $path = Join-Path $binRoot $relative
+      if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+        throw "Compiled artifact is missing required output: $path"
       }
     }
 
-    $zipPath = '$(Build.ArtifactStagingDirectory)\testpackage-runready.zip'
-    if (Test-Path -LiteralPath $zipPath) { Remove-Item -LiteralPath $zipPath -Force }
-    Compress-Archive -Path (Join-Path $dest '*') -DestinationPath $zipPath -CompressionLevel Optimal
-    if (-not (Test-Path -LiteralPath $zipPath)) {
-      throw 'Failed to produce run-ready zip package.'
-    }
-    Copy-Item -LiteralPath $zipPath -Destination (Join-Path $dest 'testpackage-runready.zip') -Force
-
     $global:LASTEXITCODE = 0
-  displayName: Assemble executable test artifact
+  displayName: Validate shared bin outputs
 
 - task: PublishPipelineArtifact@1
-  displayName: Publish executable test artifact
+  displayName: Publish bin artifact
   inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)\testpackage'
+    targetPath: '$(Build.SourcesDirectory)\bin'
     artifact: '$(ArtifactName)'

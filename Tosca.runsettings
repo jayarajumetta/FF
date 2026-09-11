@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
   <RunConfiguration>
-    <ResultsDirectory>TestResults</ResultsDirectory>
+    <ResultsDirectory>bin\TestResults</ResultsDirectory>
     <MaxCpuCount>3</MaxCpuCount>
   </RunConfiguration>
   <NUnit>
-    <WorkDirectory>TestResults\NUnitWork</WorkDirectory>
+    <WorkDirectory>bin\NUnitWork</WorkDirectory>
     <NumberOfTestWorkers>3</NumberOfTestWorkers>
     <UseParentFQNForParametrizedTests>false</UseParentFQNForParametrizedTests>
   </NUnit>
