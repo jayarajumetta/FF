@@ -12,7 +12,11 @@ public sealed class FrameworkConfig
     public static FrameworkConfig Load()
     {
         var repositoryRoot = FindRepositoryRoot();
-        var safePath = Path.Combine(repositoryRoot, "config", "framework.json");
+        var fullRoot = Path.GetFullPath(repositoryRoot).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        var safePath = Path.GetFullPath(Path.Combine(fullRoot, "config", "framework.json"));
+        if (!safePath.StartsWith(fullRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) ||
+            !safePath.EndsWith($"{Path.DirectorySeparatorChar}config{Path.DirectorySeparatorChar}framework.json", StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("Resolved framework configuration path is invalid.");
         if (!File.Exists(safePath))
             throw new FileNotFoundException($"framework.json was not found at expected path: {safePath}");
 
@@ -63,6 +67,7 @@ public sealed class FrameworkConfig
         }
         throw new DirectoryNotFoundException("Repository root was not found. Ensure execution starts from the repository/package directory tree.");
     }
+
 }
 
 public sealed class BrowserOptions

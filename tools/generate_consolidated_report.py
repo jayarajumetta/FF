@@ -1468,7 +1468,7 @@ def write_report(
     evidence_text = str(evidence_root.resolve())
 
     cards = f"""
-      <div class="card"><span>Overall</span><strong class="{'ok-text' if overall == 'PASS' else 'fail-text'}">{overall}</strong></div>
+      <div class="card"><span>Overall</span><strong class="{'ok-text' if overall == STATUS_OK else 'fail-text'}">{overall}</strong></div>
       <div class="card"><span>Total tests</span><strong>{total}</strong></div>
       <div class="card"><span>Successful</span><strong class="ok-text">{successful}</strong></div>
       <div class="card"><span>Failed</span><strong class="fail-text">{failed}</strong></div>
