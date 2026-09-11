@@ -138,10 +138,9 @@ public sealed class ScenarioReport
     {
         var path = Path.Combine(_artifactDirectory, "scenario-result.json");
         if (!File.Exists(path)) return;
-        var repositoryRoot = SafeFileAccess.FindRepositoryRoot();
-        var relativePath = SafeFileAccess.ToRepositoryRelativePath(repositoryRoot, path);
-        var safeResultPath = SafeFileAccess.ResolveExistingFileUnderRoot(repositoryRoot, relativePath, MaxScenarioResultBytes, ".json");
-        var result = System.Text.Json.Nodes.JsonNode.Parse(SafeFileAccess.ReadText(safeResultPath))!;
+        var relativePath = SafeFileAccess.ToRepositoryRelativePath(path);
+        var safeResultPath = SafeFileAccess.ResolveExistingFileUnderRoot(relativePath, MaxScenarioResultBytes, ".json");
+        var result = System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(safeResultPath))!;
         result["status"] = status;
         result["error"] = error ?? string.Empty;
         File.WriteAllText(path, result.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
@@ -150,10 +149,9 @@ public sealed class ScenarioReport
     public void RefreshAttemptLinks()
     {
         if (!File.Exists(ReportPath)) return;
-        var repositoryRoot = SafeFileAccess.FindRepositoryRoot();
-        var relativePath = SafeFileAccess.ToRepositoryRelativePath(repositoryRoot, ReportPath);
-        var safeReportPath = SafeFileAccess.ResolveExistingFileUnderRoot(repositoryRoot, relativePath, MaxReportHtmlBytes, ".html");
-        var html = SafeFileAccess.ReadText(safeReportPath);
+        var relativePath = SafeFileAccess.ToRepositoryRelativePath(ReportPath);
+        var safeReportPath = SafeFileAccess.ResolveExistingFileUnderRoot(relativePath, MaxReportHtmlBytes, ".html");
+        var html = File.ReadAllText(safeReportPath);
         const string start = "<!-- attempt-links-start -->";
         const string end = "<!-- attempt-links-end -->";
         var from = html.IndexOf(start, StringComparison.Ordinal);
