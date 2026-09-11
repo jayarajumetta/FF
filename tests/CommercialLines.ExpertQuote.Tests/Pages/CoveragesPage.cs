@@ -69,6 +69,12 @@ public sealed class CoveragesPage
     public Task ClickNextAdditionalInterestsAsync() =>
         _ui.ClickAsync(_locators.NextAdditionalInterests, new ControlIntent("Coverages", "NextAdditionalInterests"));
 
+    public async Task ClickEndLiquorLiabilityNoneOfTheAboveIfPresentAsync()
+    {
+        if (await _ui.ExistsAsync(_locators.EndLiquorLiabilityNoneOfTheAbove))
+            await _ui.ClickAsync(_locators.EndLiquorLiabilityNoneOfTheAbove, new ControlIntent("Coverages", "EndLiquorLiabilityNoneOfTheAbove"));
+    }
+
     public Task VerifyIFRAMEAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.IFRAME, expected, property, new ControlIntent("Coverages", "IFRAME"));
 

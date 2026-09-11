@@ -85,6 +85,8 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator RaceAndGenderInformationNo => _page.GetByTestId("fields.data.policy.policyOutputNonShredded$raceAndGenderInformation.value-chip-label").Filter(new LocatorFilterOptions { HasText = "No" });
 
+    public ILocator FarmBureauMemberNo => _page.GetByTestId("fields.data.account.policyInput$farmBureauMember.value-chip-label").Filter(new LocatorFilterOptions { HasText = "No" });
+
     public ILocator QuickSearchButton => _page.Locator("[id=\"id_quickSearch\"]");
 
     public ILocator QuoteSearchInput => _page.Locator("input[id=\"quoteSearchInput\"][name=\"quoteSearchInput\"]");

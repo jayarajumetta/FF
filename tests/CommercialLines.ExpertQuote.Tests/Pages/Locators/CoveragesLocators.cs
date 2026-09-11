@@ -29,6 +29,8 @@ public sealed class CoveragesLocators
 
     public ILocator IFRAME => _page.GetByText("IFRAME", new() { Exact = true });
 
+    public ILocator EndLiquorLiabilityNoneOfTheAbove => _page.Locator("input[id=\"fields.line.endLiquorLiability.endLiquorLiabilityInput$noneOfTheAbove.value-checkbox\"]");
+
     public ILocator NextAdditionalInterests => _page.Locator("[data-testid=\"fields.data-Next.next-button-label\"]").Filter(new LocatorFilterOptions { HasText = "Next: Additional Interests" }).First;
 
     public ILocator IFRAMEDuckCreekPolicyIFRAMEOK => _page.GetByText("IFRAME - OK", new() { Exact = true });

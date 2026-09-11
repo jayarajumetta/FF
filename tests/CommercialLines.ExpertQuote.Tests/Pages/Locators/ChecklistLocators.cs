@@ -11,6 +11,8 @@ public sealed class ChecklistLocators
 
     public ILocator SignaturePage => _page.Locator("a.checklist-summary-item").Filter(new LocatorFilterOptions { HasText = "Signature Page" }).First;
 
+    public ILocator SignaturePageItemName => _page.Locator("span.text-info#checklist-item-name").Filter(new LocatorFilterOptions { HasText = "Signature Page" });
+
     public ILocator Exception => _page.Locator("button#exception.js-exception");
 
     public ILocator RequireNote => _page.Locator("textarea.js-require-note.require-note");

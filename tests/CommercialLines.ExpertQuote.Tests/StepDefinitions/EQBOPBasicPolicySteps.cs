@@ -249,6 +249,8 @@ public sealed class EQBOPBasicPolicySteps
         await page.PauseAsync(3000);
         await page.ClickRaceAndGenderInformationNoIfPresentAsync();
         await page.PauseAsync(3000);
+        await page.ClickFarmBureauMemberNoIfPresentAsync();
+        await page.PauseAsync(3000);
         await page.ClickSaveAsync();
         await page.PauseAsync(2000);
 
@@ -780,6 +782,8 @@ public sealed class EQBOPBasicPolicySteps
 
         // Field-level orchestration derived from the canonical Tosca method sequence.
         await Task.Delay(5000);
+        await page.ClickEndLiquorLiabilityNoneOfTheAboveIfPresentAsync();
+        await Task.Delay(5000);
         await page.SelectHaveThereBeenAnyEPLClaimsSuitsOrComplaintsOrAreThereAnyNowPendingAgainstTheInsuredOrAnyExecutiveOfficerOrOwnerAsync("No");
         await Task.Delay(7000);
         await page.SelectDoesTheInsuredAndAnyExecutiveOfficerOrOwnerHaveAnyKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync("No");
@@ -987,18 +991,17 @@ public sealed class EQBOPBasicPolicySteps
                 await checklistPage.ClickExceptionNoteConfirmOKAsync();
                 await Task.Delay(2000);
             }
-
-            if (await checklistPage.IsSignaturePageVisibleAsync())
+            await Task.Delay(6000);
+            if (await checklistPage.IsSignaturePageItemAlreadyOpenAsync())
             {
-                await checklistPage.ClickSignaturePageAsync();
                 await Task.Delay(2000);
                 var signatureFilePath = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                     "Test.png");
                 await checklistPage.UploadSignatureFileAsync(signatureFilePath);
-                await Task.Delay(2000);
+                await Task.Delay(6000);
             }
-
+            await Task.Delay(2000);
             await checklistPage.WaitForCurrentItemsVisibleAsync();
             await Task.Delay(2000);
         }

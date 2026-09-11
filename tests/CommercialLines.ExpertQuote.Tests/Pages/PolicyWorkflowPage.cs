@@ -227,6 +227,12 @@ public Task VerifyLoadingMessage4DE37Async(string expected, string property) =>
             await _ui.ClickAsync(_locators.RaceAndGenderInformationNo, new ControlIntent("PolicyWorkflow", "RaceAndGenderInformationNo"));
     }
 
+    public async Task ClickFarmBureauMemberNoIfPresentAsync()
+    {
+        if (await _ui.ExistsAsync(_locators.FarmBureauMemberNo))
+            await _ui.ClickAsync(_locators.FarmBureauMemberNo, new ControlIntent("PolicyWorkflow", "FarmBureauMemberNo"));
+    }
+
     public Task ClickQuickSearchButtonAsync() =>
         _ui.ClickAsync(_locators.QuickSearchButton, new ControlIntent("PolicyWorkflow", "QuickSearchButton"));
 

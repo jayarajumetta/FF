@@ -52,7 +52,7 @@
     "territory": "001",
     "territory_188": "001",
     "feetfromhydrant_190": "101 - 250",
-    "expected_occupancy_sq_footage_total_value_227": "2500",
+    "expected_occupancy_sq_footage_total_value_227": "10000",
     "bvs_group": "Offices",
     "bvs_result": "2100 - Office, Low-Rise",
     "roof_type": "Aluminum- Shingle",
@@ -981,7 +981,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "2500"
+        "value": "10000"
       },
       {
         "order": 4.01,
@@ -1029,7 +1029,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "2500"
+        "value": "10000"
       },
 	  {
 		"order": 4.01,
@@ -1041,7 +1041,7 @@
 		"actionMode": "",
 		"actionProperty": "",
 		"condition": "",
-		"value": "5000"
+		"value": "800000"
 	  },
 	  {
 		"order": 4.01,
@@ -1053,7 +1053,7 @@
 		"actionMode": "",
 		"actionProperty": "",
 		"condition": "",
-		"value": "250000"
+		"value": "9000000"
 	  },      {
         "order": 4.01,
         "derivedFrom": "3a143a18-bf9f-4149-4309-9b63c50318f3",

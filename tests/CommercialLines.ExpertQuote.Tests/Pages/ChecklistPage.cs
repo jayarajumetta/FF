@@ -20,11 +20,47 @@ public sealed class ChecklistPage
     public Task ClickBuildingPhoto1Async() =>
         _ui.ClickAsync(_locators.BuildingPhoto1, new ControlIntent("Checklist", "BuildingPhoto1"));
 
-    public Task<bool> IsSignaturePageVisibleAsync() =>
-        _locators.SignaturePage.IsVisibleAsync();
+    public async Task<bool> IsSignaturePageVisibleAsync()
+    {
+        // The checklist item list can still be rendering after the exception-note loop above,
+        // so wait for the "Current Items" heading to settle first, then give the Signature Page
+        // item a bounded wait instead of an instantaneous, non-waiting visibility check.
+        try
+        {
+            await _locators.CurrentItemsHeading.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 15000 });
+        }
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException) { }
+
+        try
+        {
+            await _locators.SignaturePage.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 5000 });
+        }
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+        {
+            return false;
+        }
+        return await _locators.SignaturePage.IsVisibleAsync();
+    }
 
     public Task ClickSignaturePageAsync() =>
         _ui.ClickAsync(_locators.SignaturePage, new ControlIntent("Checklist", "SignaturePage"));
+
+    // Returns true when the Signature Page item is already open (its item-name span is showing),
+    // meaning the checklist list link does not need to be clicked again before attaching the file.
+    // Instead of an instantaneous, non-waiting visibility check, poll for up to 15 seconds so the
+    // element is given a real chance to appear if the page/section is still rendering.
+    public async Task<bool> IsSignaturePageItemAlreadyOpenAsync()
+    {
+        try
+        {
+            await _locators.SignaturePageItemName.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 15000 });
+        }
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+        {
+            return false;
+        }
+        return await _locators.SignaturePageItemName.IsVisibleAsync();
+    }
 
     public Task ClickExceptionAsync() =>
         _ui.ClickAsync(_locators.Exception, new ControlIntent("Checklist", "Exception"));
@@ -49,10 +85,16 @@ public sealed class ChecklistPage
 
     public async Task UploadSignatureFileAsync(string filePath)
     {
-        // Dropzone.js injects the hidden <input class="dz-hidden-input"> dynamically after
-        // initialization, so wait for it to be attached to the DOM before setting the file.
-        await _locators.FileUploadInput.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Attached });
-        await _locators.FileUploadInput.SetInputFilesAsync(filePath);
+        // Some Dropzone.js configurations (like this one) do not keep a persistent hidden
+        // <input class="dz-hidden-input"> attached to the DOM; they only invoke the native OS
+        // file picker when the dropzone element is clicked. Waiting for that input to attach
+        // silently times out and no file ever gets uploaded, so use Playwright's file chooser
+        // interception instead: click the dropzone and supply the file to the resulting chooser.
+        await _locators.FileUploadDropzone.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
+        var fileChooserTask = _browser.Page.WaitForFileChooserAsync();
+        await _locators.FileUploadDropzone.ClickAsync();
+        var fileChooser = await fileChooserTask;
+        await fileChooser.SetFilesAsync(filePath);
     }
 
     public Task WaitForCurrentItemsVisibleAsync() =>
