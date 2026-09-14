@@ -717,7 +717,7 @@ stages:
                     Remove-Item -Path $path -Recurse -Force -ErrorAction Stop
                     Write-Host "Removed: $path"
                 } catch {
-                    Write-Warning "Failed to remove ${path}: $($_.Exception.Message)"
+                    Write-Warning "Failed to remove $path: $($_.Exception.Message)"
                 }
             }
         }
@@ -889,7 +889,7 @@ stages:
                     Remove-Item -Path $path -Recurse -Force -ErrorAction Stop
                     Write-Host "Removed: $path"
                 } catch {
-                    Write-Warning "Failed to remove ${path}: $($_.Exception.Message)"
+                    Write-Warning "Failed to remove $path: $($_.Exception.Message)"
                 }
             }
         }
