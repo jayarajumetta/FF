@@ -359,9 +359,8 @@ stages:
         DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
 
     # ✅ RETRY FAILED TESTS
-    # Parses the TRX from the first run and re-runs only failed tests once.
-    # This catches transient 500 errors, SSO blips, and network timeouts without
-    # re-running the entire shard.
+    # Parses the TRX from the first run and re-runs only failures that look
+    # transient, such as timeouts, browser disconnects, and HTTP/network issues.
     - powershell: |
         $trxPath = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
 
@@ -379,43 +378,81 @@ stages:
             exit 0
         }
 
-        $failedFqns = @()
+        $transientFailurePattern = '(?is)(timeout|timed out|playwright.*timeout|net::err_|502|503|504|500|service unavailable|bad gateway|gateway timeout|connection.*(reset|refused|closed|aborted)|socket|dns|ssl|tls|httpclient|httprequestexception|taskcanceledexception|econnreset|etimedout|enotfound|eai_again|target page, context or browser has been closed|target closed|browser has been closed|navigation failed|execution context was destroyed|websocket|temporary failure|unable to read data from the transport connection|an existing connection was forcibly closed)'
+        $nonRetriablePattern = '(?is)(premium|mismatch|assert\.fail|assertionexception|expected:|expected\s+.*\s+but\s+was|expected\<|forms validation|baseline|returned unexpected premium|business validation)'
+
+        $retryCandidates = [System.Collections.Generic.List[string]]::new()
+        $skippedFailures = [System.Collections.Generic.List[string]]::new()
+
         foreach ($result in $failed) {
             $testId = $result.Node.testId
             $testMethod = Select-Xml -Xml $trx -XPath "//t:UnitTest[@id='$testId']/t:TestMethod" -Namespace $ns
             if ($testMethod -and $testMethod.Node.className -and $testMethod.Node.name) {
-                $failedFqns += "$($testMethod.Node.className).$($testMethod.Node.name)"
+                $fqName = "$($testMethod.Node.className).$($testMethod.Node.name)"
             } elseif ($result.Node.testName) {
-                $failedFqns += $result.Node.testName
+                $fqName = $result.Node.testName
+            } else {
+                continue
+            }
+
+            $normalizedName = if ($fqName -match '^([^\(]+)') { $matches[1].Trim() } else { $fqName.Trim() }
+            if ([string]::IsNullOrWhiteSpace($normalizedName)) {
+                continue
+            }
+
+            $messageNode = Select-Xml -Xml $trx -XPath "//t:UnitTestResult[@testId='$testId']/t:Output/t:ErrorInfo/t:Message" -Namespace $ns | Select-Object -First 1
+            $stackNode = Select-Xml -Xml $trx -XPath "//t:UnitTestResult[@testId='$testId']/t:Output/t:ErrorInfo/t:StackTrace" -Namespace $ns | Select-Object -First 1
+            $failureText = @($messageNode.Node.'#text', $stackNode.Node.'#text') -join "`n"
+            $failureText = ($failureText ?? '').Trim()
+
+            $isTransient = $failureText -match $transientFailurePattern
+            $isNonRetriable = $failureText -match $nonRetriablePattern
+
+            if ($normalizedName -notmatch '\.') {
+                $skippedFailures.Add("$normalizedName [non-FQN]")
+                continue
+            }
+
+            if ($isTransient -and -not $isNonRetriable) {
+                if (-not $retryCandidates.Contains($normalizedName)) {
+                    $retryCandidates.Add($normalizedName)
+                }
+
+                Write-Host "Retrying transient failure: $normalizedName"
+                if (-not [string]::IsNullOrWhiteSpace($failureText)) {
+                    $firstLine = ($failureText -split "`r?`n" | Select-Object -First 1)
+                    Write-Host "  Reason: $firstLine"
+                }
+            }
+            else {
+                $reason = if ([string]::IsNullOrWhiteSpace($failureText)) {
+                    'No failure details found in TRX'
+                }
+                elseif ($isNonRetriable) {
+                    'Matched non-retriable assertion/business-failure pattern'
+                }
+                else {
+                    'Did not match transient failure pattern'
+                }
+
+                $skippedFailures.Add("$normalizedName [$reason]")
             }
         }
-        $failedFqns = $failedFqns | Select-Object -Unique
 
-        Write-Host "Failed tests extracted:"
-        $failedFqns | ForEach-Object { Write-Host "  - $_" }
-
-        # Normalize parameterized names to method-level FQNs for a valid VSTest filter
-        $failedMethodsRaw = ($failedFqns | ForEach-Object {
-            if ($_ -match '^([^\(]+)') { $matches[1] } else { $_ }
-        }) | ForEach-Object { $_.Trim() } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique
-
-        $failedMethods = @($failedMethodsRaw | Where-Object { $_ -match '\.' })
-        $invalidMethods = @($failedMethodsRaw | Where-Object { $_ -notmatch '\.' })
-
-        Write-Host "Retry methods extracted:"
-        $failedMethodsRaw | ForEach-Object { Write-Host "  - $_" }
-
-        if ($invalidMethods.Count -gt 0) {
-            Write-Warning "Skipping non-FQN retry entries:"
-            $invalidMethods | ForEach-Object { Write-Warning "  - $_" }
+        if ($skippedFailures.Count -gt 0) {
+            Write-Host "Failures skipped from retry:"
+            $skippedFailures | ForEach-Object { Write-Host "  - $_" }
         }
 
-        if ($failedMethods.Count -eq 0) {
-            Write-Warning "No valid fully-qualified test names were extracted from TRX; skipping retry."
+        if ($retryCandidates.Count -eq 0) {
+            Write-Host "No transient failures qualified for retry — skipping retry run."
             exit 0
         }
 
-        $nameFilter = ($failedMethods | ForEach-Object {
+        Write-Host "Retry methods extracted:"
+        $retryCandidates | ForEach-Object { Write-Host "  - $_" }
+
+        $nameFilter = ($retryCandidates | ForEach-Object {
             $escaped = $_.Replace("'", "").Replace('"', '')
             if ($env:SHARD_NUMBER -match '^\d+$') {
                 "(FullyQualifiedName~`"$escaped`"&TestCategory=Shard$($env:SHARD_NUMBER))"
@@ -838,30 +875,81 @@ stages:
             exit 0
         }
 
-        $failedFqns = @()
+        $transientFailurePattern = '(?is)(timeout|timed out|playwright.*timeout|net::err_|502|503|504|500|service unavailable|bad gateway|gateway timeout|connection.*(reset|refused|closed|aborted)|socket|dns|ssl|tls|httpclient|httprequestexception|taskcanceledexception|econnreset|etimedout|enotfound|eai_again|target page, context or browser has been closed|target closed|browser has been closed|navigation failed|execution context was destroyed|websocket|temporary failure|unable to read data from the transport connection|an existing connection was forcibly closed)'
+        $nonRetriablePattern = '(?is)(premium|mismatch|assert\.fail|assertionexception|expected:|expected\s+.*\s+but\s+was|expected\<|forms validation|baseline|returned unexpected premium|business validation)'
+
+        $retryCandidates = [System.Collections.Generic.List[string]]::new()
+        $skippedFailures = [System.Collections.Generic.List[string]]::new()
+
         foreach ($result in $failed) {
             $testId = $result.Node.testId
             $testMethod = Select-Xml -Xml $trx -XPath "//t:UnitTest[@id='$testId']/t:TestMethod" -Namespace $ns
             if ($testMethod -and $testMethod.Node.className -and $testMethod.Node.name) {
-                $failedFqns += "$($testMethod.Node.className).$($testMethod.Node.name)"
+                $fqName = "$($testMethod.Node.className).$($testMethod.Node.name)"
             } elseif ($result.Node.testName) {
-                $failedFqns += $result.Node.testName
+                $fqName = $result.Node.testName
+            } else {
+                continue
+            }
+
+            $normalizedName = if ($fqName -match '^([^\(]+)') { $matches[1].Trim() } else { $fqName.Trim() }
+            if ([string]::IsNullOrWhiteSpace($normalizedName)) {
+                continue
+            }
+
+            $messageNode = Select-Xml -Xml $trx -XPath "//t:UnitTestResult[@testId='$testId']/t:Output/t:ErrorInfo/t:Message" -Namespace $ns | Select-Object -First 1
+            $stackNode = Select-Xml -Xml $trx -XPath "//t:UnitTestResult[@testId='$testId']/t:Output/t:ErrorInfo/t:StackTrace" -Namespace $ns | Select-Object -First 1
+            $failureText = @($messageNode.Node.'#text', $stackNode.Node.'#text') -join "`n"
+            $failureText = ($failureText ?? '').Trim()
+
+            $isTransient = $failureText -match $transientFailurePattern
+            $isNonRetriable = $failureText -match $nonRetriablePattern
+
+            if ($normalizedName -notmatch '\.') {
+                $skippedFailures.Add("$normalizedName [non-FQN]")
+                continue
+            }
+
+            if ($isTransient -and -not $isNonRetriable) {
+                if (-not $retryCandidates.Contains($normalizedName)) {
+                    $retryCandidates.Add($normalizedName)
+                }
+
+                Write-Host "Retrying transient failure: $normalizedName"
+                if (-not [string]::IsNullOrWhiteSpace($failureText)) {
+                    $firstLine = ($failureText -split "`r?`n" | Select-Object -First 1)
+                    Write-Host "  Reason: $firstLine"
+                }
+            }
+            else {
+                $reason = if ([string]::IsNullOrWhiteSpace($failureText)) {
+                    'No failure details found in TRX'
+                }
+                elseif ($isNonRetriable) {
+                    'Matched non-retriable assertion/business-failure pattern'
+                }
+                else {
+                    'Did not match transient failure pattern'
+                }
+
+                $skippedFailures.Add("$normalizedName [$reason]")
             }
         }
-        $failedFqns = $failedFqns | Select-Object -Unique
 
-        Write-Host "Failed tests extracted:"
-        $failedFqns | ForEach-Object { Write-Host "  - $_" }
+        if ($skippedFailures.Count -gt 0) {
+            Write-Host "Failures skipped from retry:"
+            $skippedFailures | ForEach-Object { Write-Host "  - $_" }
+        }
 
-        # Normalize parameterized names to method-level FQNs for a valid VSTest filter
-        $failedMethods = ($failedFqns | ForEach-Object {
-            if ($_ -match '^([^\(]+)') { $matches[1] } else { $_ }
-        }) | Select-Object -Unique
+        if ($retryCandidates.Count -eq 0) {
+            Write-Host "No transient failures qualified for retry — skipping retry run."
+            exit 0
+        }
 
         Write-Host "Retry methods extracted:"
-        $failedMethods | ForEach-Object { Write-Host "  - $_" }
+        $retryCandidates | ForEach-Object { Write-Host "  - $_" }
 
-        $nameFilter = ($failedMethods | ForEach-Object {
+        $nameFilter = ($retryCandidates | ForEach-Object {
             $escaped = $_.Replace("'", "").Replace('"', '')
             if ($env:SHARD_NUMBER -match '^\d+$') {
                 "(FullyQualifiedName~`"$escaped`"&TestCategory=Shard$($env:SHARD_NUMBER))"
@@ -869,6 +957,11 @@ stages:
                 "FullyQualifiedName~`"$escaped`""
             }
         }) -join "|"
+
+        if ([string]::IsNullOrWhiteSpace($nameFilter)) {
+            Write-Warning "Generated retry filter is empty after normalization; skipping retry."
+            exit 0
+        }
 
         Write-Host "Generated filter:"
         Write-Host $nameFilter

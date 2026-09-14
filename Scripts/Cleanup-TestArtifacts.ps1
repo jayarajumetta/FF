@@ -29,7 +29,7 @@ foreach ($targetPath in $TargetPaths) {
         $removedCount++
     }
     catch {
-        Write-Warning "[cleanup] Failed to remove $resolvedPath: $($_.Exception.Message)"
+        Write-Warning "[cleanup] Failed to remove ${resolvedPath}: $($_.Exception.Message)"
         throw
     }
 }
