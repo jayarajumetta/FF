@@ -293,6 +293,18 @@ stages:
           playwright | "$(Agent.OS)"
         path: "$(Agent.ToolsDirectory)/playwright-browsers"
 
+    - powershell: |
+        $targets = @(
+          "$(Build.SourcesDirectory)/TestResults",
+          "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestResults",
+          "$(Build.ArtifactStagingDirectory)/TestResults",
+          "$(Build.ArtifactStagingDirectory)/FormsReports"
+        )
+
+        & "$(Build.SourcesDirectory)/Scripts/Cleanup-TestArtifacts.ps1" -TargetPaths $targets
+      displayName: "Pre-Clean Test Artifacts"
+      condition: always()
+
     # ✅ Create results folder
     - powershell: |
         New-Item -ItemType Directory -Force -Path "$(Build.ArtifactStagingDirectory)/TestResults" | Out-Null
@@ -1065,3 +1077,15 @@ stages:
       inputs:
         targetPath: "$(Build.ArtifactStagingDirectory)/FormsReports"
         artifact: "Forms_Reports_CE_Shard_$(SHARD_NUMBER)"
+
+    - powershell: |
+        $targets = @(
+          "$(Build.SourcesDirectory)/TestResults",
+          "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestResults",
+          "$(Build.ArtifactStagingDirectory)/TestResults",
+          "$(Build.ArtifactStagingDirectory)/FormsReports"
+        )
+
+        & "$(Build.SourcesDirectory)/Scripts/Cleanup-TestArtifacts.ps1" -TargetPaths $targets
+      displayName: "Post-Publish Test Artifact Cleanup"
+      condition: always()

@@ -78,6 +78,17 @@ stages:
               targetPath: "$(Build.SourcesDirectory)/bin/Release/net8.0"
 
           - powershell: |
+              $targets = @(
+                "$(Build.SourcesDirectory)/TestResults",
+                "$(Build.SourcesDirectory)/bin/Release/net8.0/TestResults",
+                "$(Build.ArtifactStagingDirectory)/TestResults"
+              )
+
+              & "$(Build.SourcesDirectory)/Scripts/Cleanup-TestArtifacts.ps1" -TargetPaths $targets
+            displayName: "Pre-Clean Test Artifacts"
+            condition: always()
+
+          - powershell: |
               New-Item -ItemType Directory -Force -Path "$(Build.ArtifactStagingDirectory)/TestResults" | Out-Null
             displayName: "Create TestResults Directory"
 
@@ -105,6 +116,17 @@ stages:
             artifact: "SFP_FormsResults"
             condition: always()
 
+          - powershell: |
+              $targets = @(
+                "$(Build.SourcesDirectory)/TestResults",
+                "$(Build.SourcesDirectory)/bin/Release/net8.0/TestResults",
+                "$(Build.ArtifactStagingDirectory)/TestResults"
+              )
+
+              & "$(Build.SourcesDirectory)/Scripts/Cleanup-TestArtifacts.ps1" -TargetPaths $targets
+            displayName: "Post-Publish Test Artifact Cleanup"
+            condition: always()
+
       - job: CE_FormsCheck
         displayName: "Country Estate Forms Check"
         steps:
@@ -121,6 +143,17 @@ stages:
             inputs:
               artifact: "BuildOutput"
               targetPath: "$(Build.SourcesDirectory)/bin/Release/net8.0"
+
+          - powershell: |
+              $targets = @(
+                "$(Build.SourcesDirectory)/TestResults",
+                "$(Build.SourcesDirectory)/bin/Release/net8.0/TestResults",
+                "$(Build.ArtifactStagingDirectory)/TestResults"
+              )
+
+              & "$(Build.SourcesDirectory)/Scripts/Cleanup-TestArtifacts.ps1" -TargetPaths $targets
+            displayName: "Pre-Clean Test Artifacts"
+            condition: always()
 
           - powershell: |
               New-Item -ItemType Directory -Force -Path "$(Build.ArtifactStagingDirectory)/TestResults" | Out-Null
@@ -148,4 +181,15 @@ stages:
           - publish: $(Build.SourcesDirectory)/TestResults
             displayName: "Publish CE Forms HTML Reports"
             artifact: "CE_FormsResults"
+            condition: always()
+
+          - powershell: |
+              $targets = @(
+                "$(Build.SourcesDirectory)/TestResults",
+                "$(Build.SourcesDirectory)/bin/Release/net8.0/TestResults",
+                "$(Build.ArtifactStagingDirectory)/TestResults"
+              )
+
+              & "$(Build.SourcesDirectory)/Scripts/Cleanup-TestArtifacts.ps1" -TargetPaths $targets
+            displayName: "Post-Publish Test Artifact Cleanup"
             condition: always()

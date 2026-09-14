@@ -14,6 +14,16 @@ steps:
       versionSpec: '18.x'
     displayName: 'Install Node.js'
 
+  - powershell: |
+      $targets = @(
+        "$(System.DefaultWorkingDirectory)/playwright-report",
+        "$(System.DefaultWorkingDirectory)/test-results"
+      )
+
+      & "$(System.DefaultWorkingDirectory)/Scripts/Cleanup-TestArtifacts.ps1" -TargetPaths $targets
+    displayName: 'Pre-Clean Playwright Artifacts'
+    condition: always()
+
   - script: npm ci
     displayName: 'Install dependencies'
 
@@ -29,4 +39,14 @@ steps:
 
   - publish: $(System.DefaultWorkingDirectory)/playwright-report
     artifact: playwright-report
+    condition: always()
+
+  - powershell: |
+      $targets = @(
+        "$(System.DefaultWorkingDirectory)/playwright-report",
+        "$(System.DefaultWorkingDirectory)/test-results"
+      )
+
+      & "$(System.DefaultWorkingDirectory)/Scripts/Cleanup-TestArtifacts.ps1" -TargetPaths $targets
+    displayName: 'Post-Publish Playwright Artifact Cleanup'
     condition: always()
