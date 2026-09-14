@@ -231,13 +231,13 @@ stages:
             SHARD_FILTER_FULL: "TestCategory=Shard3"
             SHARD_FILTER_DEBUG: "TestCategory=Shard3&TestCategory=Debug"
             DEBUG_MODE: ${{ parameters.debugModeBasic }}
-          # Catch-all: only @SFP @Smoke tests not already assigned to a numbered shard
+          # Catch-all: any @SFP @Smoke test not already assigned to a numbered shard
           ShardMisc:
             SHARD_NUMBER: "misc"
             SHARD_SUITE: "BasicPolicy"
             SHARD_SUITE_LABEL: "SFP Basic Policy"
-            SHARD_FILTER_FULL: "TestCategory=SFP&TestCategory=Smoke&TestCategory!=Forms&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6"
-            SHARD_FILTER_DEBUG: "TestCategory=SFP&TestCategory=Smoke&TestCategory!=Forms&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6"
+            SHARD_FILTER_FULL: "TestCategory=SFP&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6"
+            SHARD_FILTER_DEBUG: "TestCategory=SFP&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6"
             DEBUG_MODE: ${{ parameters.debugModeBasic }}
         ${{ if ne(parameters.suiteToRun, 'BasicPolicy Only') }}:
           # CE shards
@@ -702,144 +702,7 @@ stages:
         targetPath: "$(Build.ArtifactStagingDirectory)/FormsReports"
         artifact: "Forms_Reports_Shard_$(SHARD_NUMBER)"
 
-# ── Stage 3: Forms Validation (Isolated) ───────────────────────────────────────
-# Run forms validation outside the shard matrix so external CLAS/DuckCreek latency
-# does not inflate shard durations.
-- stage: FormsValidation
-  displayName: "Forms Validation (Isolated)"
-  dependsOn: Build
-  condition: in(dependencies.Build.result, 'Succeeded', 'SucceededWithIssues')
-
-  jobs:
-  - job: FormsValidation
-    displayName: "SFP Forms Validation"
-    timeoutInMinutes: 120
-
-    steps:
-    - checkout: self
-
-    - task: UseDotNet@2
-      displayName: "Install .NET SDK $(DOTNET_VERSION)"
-      inputs:
-        packageType: sdk
-        version: $(DOTNET_VERSION)
-
-    - task: DownloadPipelineArtifact@2
-      displayName: "Download Build Output"
-      inputs:
-        artifact: "BuildOutput"
-        targetPath: "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0"
-
-    - task: Cache@2
-      displayName: "Cache Playwright Chromium"
-      inputs:
-        key: 'playwright | "$(Agent.OS)" | $(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.deps.json'
-        restoreKeys: |
-          playwright | "$(Agent.OS)"
-        path: "$(Agent.ToolsDirectory)/playwright-browsers"
-
-    - powershell: |
-        New-Item -ItemType Directory -Force -Path "$(Build.ArtifactStagingDirectory)/TestResults" | Out-Null
-      displayName: "Create TestResults Directory"
-      condition: always()
-
-    - powershell: |
-        $testDll = "$(Build.SourcesDirectory)/bin/$(BUILD_CONFIGURATION)/net8.0/TestAutomation.dll"
-        $filter = "TestCategory=SFP&TestCategory=Forms&TestCategory=Smoke"
-
-        Write-Host "===================================="
-        Write-Host "Running isolated Forms validation"
-        Write-Host "Filter: $filter"
-        Write-Host "DLL:    $testDll"
-        Write-Host "===================================="
-
-        if (!(Test-Path $testDll)) {
-            Write-Error "Test DLL not found!"
-            exit 1
-        }
-
-        & dotnet test $testDll `
-            --filter "$filter" `
-            --settings "$(Build.SourcesDirectory)/ci.runsettings" `
-            --logger "trx;LogFileName=FormsValidation_Results.trx" `
-            --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
-
-        $firstRunExit = $LASTEXITCODE
-        Write-Host "Forms first run exit code: $firstRunExit"
-        if ($firstRunExit -eq 0) { exit 0 }
-
-        Write-Host "Retrying Forms validation once..."
-        & dotnet test $testDll `
-            --filter "$filter" `
-            --settings "$(Build.SourcesDirectory)/ci.runsettings" `
-            --logger "trx;LogFileName=FormsValidation_Retry.trx" `
-            --results-directory "$(Build.ArtifactStagingDirectory)/TestResults"
-
-        $retryExit = $LASTEXITCODE
-        Write-Host "Forms retry exit code: $retryExit"
-        if ($retryExit -ne 0) { exit $retryExit }
-        exit 0
-      displayName: "Run Forms Validation (with retry)"
-      condition: always()
-      env:
-        Playwright__Headless: "true"
-        Playwright__BrowserType: "chromium"
-        TEST_ENVIRONMENT: "qa"
-        CI: "true"
-        PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
-        PLAYWRIGHT_HEADLESS: "true"
-        BROWSER_TYPE: "chromium"
-        DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
-        DataPool__AutoStart: "false"
-
-    - powershell: |
-        $reportsDir = "$(Build.ArtifactStagingDirectory)/FormsReports"
-        New-Item -ItemType Directory -Force -Path $reportsDir | Out-Null
-
-        $sourceBase = "$(Build.SourcesDirectory)/TestResults"
-        if (Test-Path $sourceBase) {
-            $reports = Get-ChildItem -Path $sourceBase -Recurse -Filter "FormsReport_*.html"
-            foreach ($r in $reports) {
-                Copy-Item $r.FullName -Destination $reportsDir
-                Write-Host "Collected: $($r.Name)"
-            }
-
-            $mdFiles = Get-ChildItem -Path $sourceBase -Recurse -Filter "FormsValidationSummary_*.md" | Sort-Object Name
-            if ($mdFiles.Count -gt 0) {
-                $summaryPath = "$(Build.ArtifactStagingDirectory)/FormsValidationSummary_Isolated.md"
-                "# Forms Validation — Isolated" | Out-File $summaryPath -Encoding UTF8
-                "" | Out-File $summaryPath -Append
-                foreach ($f in $mdFiles) {
-                    Get-Content $f.FullName | Out-File $summaryPath -Append
-                    "" | Out-File $summaryPath -Append
-                }
-                Write-Host "##vso[task.uploadsummary]$summaryPath"
-            }
-        }
-      displayName: "Collect Forms Validation Reports"
-      condition: always()
-
-    - task: PublishTestResults@2
-      displayName: "Publish Forms Validation Results"
-      condition: always()
-      inputs:
-        testResultsFormat: VSTest
-        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/FormsValidation_*.trx"
-        searchFolder: "$(Build.ArtifactStagingDirectory)/TestResults"
-        mergeTestResults: true
-        failTaskOnFailedTests: true
-        failTaskOnMissingResultsFile: true
-        failTaskOnFailureToPublishResults: true
-        testRunTitle: "Forms Validation (Isolated) — $(Build.BuildNumber)"
-
-    - task: PublishPipelineArtifact@1
-      displayName: "Publish Forms Reports"
-      condition: always()
-      inputs:
-        targetPath: "$(Build.ArtifactStagingDirectory)/FormsReports"
-        artifact: "Forms_Reports_Isolated"
-
-# ── Stage 4: CE Test ───────────────────────────────────────────────────────────
+# ── Stage 3: CE Test ───────────────────────────────────────────────────────────
 # Runs after BasicPolicy (Stage 2) regardless of pass/fail.
 # Reuses the same BuildOutput artifact — no second build needed.
 - stage: CE_Test
