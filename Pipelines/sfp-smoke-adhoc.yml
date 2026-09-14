@@ -517,9 +517,8 @@ stages:
         artifact: "SFP_Smoke_Shard_$(SHARD_NUMBER)"
 
     # ✅ FORMS REPORTS
-    # Copies HTML/Markdown forms outputs into FormsReports and pipeline Summary.
-    # Custom forms TRX files are intentionally not copied into staged TestResults
-    # to keep ADO analytics based on runner-generated TRX only.
+    # Copies HTML reports to FormsReports artifact and TRX files to TestResults
+    # so PublishTestResults@2 includes forms outcomes in the ADO Tests tab.
     - powershell: |
         $reportsDir = "$(Build.ArtifactStagingDirectory)/FormsReports"
         New-Item -ItemType Directory -Force -Path $reportsDir | Out-Null
@@ -535,6 +534,15 @@ stages:
                 Write-Host "Collected $($reports.Count) forms report(s)."
             } else {
                 Write-Host "No forms reports found — forms validation may not have run or all states skipped."
+            }
+
+            # Copy forms TRX to staging TestResults so PublishTestResults@2 picks them up
+            $trxFiles = Get-ChildItem -Path $sourceBase -Recurse -Filter "FormsValidation_*.trx"
+            if ($trxFiles.Count -gt 0) {
+                $trxFiles | ForEach-Object {
+                    Copy-Item $_.FullName -Destination "$(Build.ArtifactStagingDirectory)/TestResults"
+                    Write-Host "Collected TRX: $($_.Name)"
+                }
             }
 
             # Build one consolidated Markdown summary for the pipeline Summary tab.
@@ -675,6 +683,17 @@ stages:
         failTaskOnMissingResultsFile: true
         failTaskOnFailureToPublishResults: true
         testRunTitle: "SFP $(SHARD_SUITE) — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
+
+    # Forms results are informational — failures here must not fail the shard job
+    - task: PublishTestResults@2
+      displayName: "Publish Forms Validation Results (Informational)"
+      condition: failed()
+      inputs:
+        testResultsFormat: VSTest
+        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/FormsValidation_*.trx"
+        mergeTestResults: false
+        failTaskOnFailedTests: false
+        testRunTitle: "Forms Validation — $(SHARD_SUITE_LABEL) — Shard $(SHARD_NUMBER)"
 
     - task: PublishPipelineArtifact@1
       displayName: "Publish Forms Reports"
@@ -840,13 +859,11 @@ stages:
       condition: always()
       inputs:
         testResultsFormat: VSTest
-        testResultsFiles: |
-          $(Build.ArtifactStagingDirectory)/TestResults/FormsValidation_Results.trx
-          $(Build.ArtifactStagingDirectory)/TestResults/FormsValidation_Retry.trx
+        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/FormsValidation_*.trx"
         searchFolder: "$(Build.ArtifactStagingDirectory)/TestResults"
         mergeTestResults: true
         failTaskOnFailedTests: true
-        failTaskOnMissingResultsFile: false
+        failTaskOnMissingResultsFile: true
         failTaskOnFailureToPublishResults: true
         testRunTitle: "Forms Validation (Isolated) — $(Build.BuildNumber)"
 
@@ -1154,6 +1171,15 @@ stages:
                 Write-Host "No forms reports found — forms validation may not have run or all states skipped."
             }
 
+            # Copy forms TRX to staging TestResults so PublishTestResults@2 picks them up
+            $trxFiles = Get-ChildItem -Path $sourceBase -Recurse -Filter "FormsValidation_*.trx"
+            if ($trxFiles.Count -gt 0) {
+                $trxFiles | ForEach-Object {
+                    Copy-Item $_.FullName -Destination "$(Build.ArtifactStagingDirectory)/TestResults"
+                    Write-Host "Collected TRX: $($_.Name)"
+                }
+            }
+
             # Build one consolidated Markdown summary for the pipeline Summary tab.
             $mdFiles = Get-ChildItem -Path $sourceBase -Recurse -Filter "FormsValidationSummary_*.md" | Sort-Object Name
             if ($mdFiles.Count -gt 0) {
@@ -1228,6 +1254,17 @@ stages:
         failTaskOnMissingResultsFile: true
         failTaskOnFailureToPublishResults: true
         testRunTitle: "SFP CE — Shard $(SHARD_NUMBER) — $(Build.BuildNumber)"
+
+    # Forms results are informational — failures here must not fail the shard job
+    - task: PublishTestResults@2
+      displayName: "Publish Forms Validation Results (Informational)"
+      condition: always()
+      inputs:
+        testResultsFormat: VSTest
+        testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/FormsValidation_*.trx"
+        mergeTestResults: false
+        failTaskOnFailedTests: false
+        testRunTitle: "Forms Validation — SFP CE — Shard $(SHARD_NUMBER)"
 
     - task: PublishPipelineArtifact@1
       displayName: "Publish Forms Reports"

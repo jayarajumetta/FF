@@ -96,11 +96,8 @@ stages:
             condition: always()
             inputs:
               testResultsFormat: "VSTest"
-              testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/SFP_FormsResults.trx"
-              searchFolder: "$(Build.ArtifactStagingDirectory)/TestResults"
+              testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/*.trx"
               mergeTestResults: true
-              failTaskOnMissingResultsFile: true
-              failTaskOnFailureToPublishResults: true
               testRunTitle: "SFP Forms Validation"
 
           - publish: $(Build.SourcesDirectory)/TestResults
@@ -144,11 +141,8 @@ stages:
             condition: always()
             inputs:
               testResultsFormat: "VSTest"
-              testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/CE_FormsResults.trx"
-              searchFolder: "$(Build.ArtifactStagingDirectory)/TestResults"
+              testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/*.trx"
               mergeTestResults: true
-              failTaskOnMissingResultsFile: true
-              failTaskOnFailureToPublishResults: true
               testRunTitle: "CE Forms Validation"
 
           - publish: $(Build.SourcesDirectory)/TestResults
