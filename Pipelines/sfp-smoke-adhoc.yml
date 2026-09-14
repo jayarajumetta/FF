@@ -198,7 +198,7 @@ stages:
 - stage: Test
   displayName: "Test (Unified Matrix Shards)"
   dependsOn: Build
-  condition: succeeded()
+  condition: in(dependencies.Build.result, 'Succeeded', 'SucceededWithIssues')
 
   jobs:
   - job: TestShard
