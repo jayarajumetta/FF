@@ -717,7 +717,7 @@ stages:
                     Remove-Item -Path $path -Recurse -Force -ErrorAction Stop
                     Write-Host "Removed: $path"
                 } catch {
-                    Write-Warning ("Failed to remove '{0}': {1}" -f $path, $_.Exception.Message)
+                    Write-Warning "Failed to remove ${path}: $($_.Exception.Message)"
                 }
             }
         }
@@ -729,7 +729,7 @@ stages:
                     Stop-Process -Id $_.Id -Force -ErrorAction Stop
                     Write-Host "Stopped process: $($_.ProcessName) (PID: $($_.Id))"
                 } catch {
-                    Write-Warning ("Failed to stop '{0}' (PID: {1}): {2}" -f $_.ProcessName, $_.Id, $_.Exception.Message)
+                    Write-Warning "Failed to stop $($_.ProcessName) (PID: $($_.Id)): $($_.Exception.Message)"
                 }
             }
         }
@@ -889,7 +889,7 @@ stages:
                     Remove-Item -Path $path -Recurse -Force -ErrorAction Stop
                     Write-Host "Removed: $path"
                 } catch {
-                    Write-Warning ("Failed to remove '{0}': {1}" -f $path, $_.Exception.Message)
+                    Write-Warning "Failed to remove ${path}: $($_.Exception.Message)"
                 }
             }
         }
@@ -901,7 +901,7 @@ stages:
                     Stop-Process -Id $_.Id -Force -ErrorAction Stop
                     Write-Host "Stopped process: $($_.ProcessName) (PID: $($_.Id))"
                 } catch {
-                    Write-Warning ("Failed to stop '{0}' (PID: {1}): {2}" -f $_.ProcessName, $_.Id, $_.Exception.Message)
+                    Write-Warning "Failed to stop $($_.ProcessName) (PID: $($_.Id)): $($_.Exception.Message)"
                 }
             }
         }
