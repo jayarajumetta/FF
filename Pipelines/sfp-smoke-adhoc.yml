@@ -367,13 +367,6 @@ stages:
             exit 0
         }
 
-        $failedCount = @($failed).Count
-        Write-Host "Failed tests detected for retry: $failedCount"
-        if ($failedCount -gt 3) {
-            Write-Error "Skipping retry because $failedCount tests failed in this shard (systemic failure threshold exceeded). Failing fast to protect runtime."
-            exit 1
-        }
-
         $failedFqns = @()
         foreach ($result in $failed) {
             $testId = $result.Node.testId
