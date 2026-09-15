@@ -403,7 +403,8 @@ stages:
             $messageNode = Select-Xml -Xml $trx -XPath "//t:UnitTestResult[@testId='$testId']/t:Output/t:ErrorInfo/t:Message" -Namespace $ns | Select-Object -First 1
             $stackNode = Select-Xml -Xml $trx -XPath "//t:UnitTestResult[@testId='$testId']/t:Output/t:ErrorInfo/t:StackTrace" -Namespace $ns | Select-Object -First 1
             $failureText = @($messageNode.Node.'#text', $stackNode.Node.'#text') -join "`n"
-            $failureText = ($failureText ?? '').Trim()
+            if ($null -eq $failureText) { $failureText = '' }
+            $failureText = $failureText.Trim()
 
             $isTransient = $failureText -match $transientFailurePattern
             $isNonRetriable = $failureText -match $nonRetriablePattern
@@ -900,7 +901,8 @@ stages:
             $messageNode = Select-Xml -Xml $trx -XPath "//t:UnitTestResult[@testId='$testId']/t:Output/t:ErrorInfo/t:Message" -Namespace $ns | Select-Object -First 1
             $stackNode = Select-Xml -Xml $trx -XPath "//t:UnitTestResult[@testId='$testId']/t:Output/t:ErrorInfo/t:StackTrace" -Namespace $ns | Select-Object -First 1
             $failureText = @($messageNode.Node.'#text', $stackNode.Node.'#text') -join "`n"
-            $failureText = ($failureText ?? '').Trim()
+            if ($null -eq $failureText) { $failureText = '' }
+            $failureText = $failureText.Trim()
 
             $isTransient = $failureText -match $transientFailurePattern
             $isNonRetriable = $failureText -match $nonRetriablePattern
