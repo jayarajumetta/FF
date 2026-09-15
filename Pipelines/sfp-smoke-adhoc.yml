@@ -379,7 +379,7 @@ stages:
         }
 
         $transientFailurePattern = '(?is)(timeout|timed out|playwright.*timeout|net::err_|502|503|504|500|service unavailable|bad gateway|gateway timeout|connection.*(reset|refused|closed|aborted)|socket|dns|ssl|tls|httpclient|httprequestexception|taskcanceledexception|econnreset|etimedout|enotfound|eai_again|target page, context or browser has been closed|target closed|browser has been closed|navigation failed|execution context was destroyed|websocket|temporary failure|unable to read data from the transport connection|an existing connection was forcibly closed)'
-        $nonRetriablePattern = '(?is)(premium|mismatch|assert\.fail|assertionexception|expected:|expected\s+.*\s+but\s+was|expected\<|forms validation|baseline|returned unexpected premium|business validation)'
+        $nonRetriablePattern = '(?is)(premium|mismatch|assert\.fail|assertionexception|expected:|expected\s+.*\s+but\s+was|expected\<|forms validation|baseline|returned unexpected premium|business validation|locator|strict mode violation|no element matches|element(s)? not found|cannot find|bad test data|test data|nullreferenceexception|object reference not set|indexoutofrangeexception|argumentoutofrangeexception|invalidoperationexception|invalidcastexception|unhandled exception|programming defect)'
 
         $retryCandidates = [System.Collections.Generic.List[string]]::new()
         $skippedFailures = [System.Collections.Generic.List[string]]::new()
@@ -877,7 +877,7 @@ stages:
         }
 
         $transientFailurePattern = '(?is)(timeout|timed out|playwright.*timeout|net::err_|502|503|504|500|service unavailable|bad gateway|gateway timeout|connection.*(reset|refused|closed|aborted)|socket|dns|ssl|tls|httpclient|httprequestexception|taskcanceledexception|econnreset|etimedout|enotfound|eai_again|target page, context or browser has been closed|target closed|browser has been closed|navigation failed|execution context was destroyed|websocket|temporary failure|unable to read data from the transport connection|an existing connection was forcibly closed)'
-        $nonRetriablePattern = '(?is)(premium|mismatch|assert\.fail|assertionexception|expected:|expected\s+.*\s+but\s+was|expected\<|forms validation|baseline|returned unexpected premium|business validation)'
+        $nonRetriablePattern = '(?is)(premium|mismatch|assert\.fail|assertionexception|expected:|expected\s+.*\s+but\s+was|expected\<|forms validation|baseline|returned unexpected premium|business validation|locator|strict mode violation|no element matches|element(s)? not found|cannot find|bad test data|test data|nullreferenceexception|object reference not set|indexoutofrangeexception|argumentoutofrangeexception|invalidoperationexception|invalidcastexception|unhandled exception|programming defect)'
 
         $retryCandidates = [System.Collections.Generic.List[string]]::new()
         $skippedFailures = [System.Collections.Generic.List[string]]::new()
