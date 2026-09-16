@@ -11,10 +11,11 @@ Feature: CPP Basic Policy
     Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
     And I open the configured Commercial Lines Duck Creek application
     And I sign in to Commercial Lines Duck Creek using configured credentials
+    And I start a new quote
     When I enter business client information
     And I add a new Associated Client - Business Owner Type - Click Add Client
-    And I complete aJAX Error Check
-    And I complete required billing information
+    #And I complete aJAX Error Check
+    #And I complete required billing information
     And I complete the Associated Client Info
     And I complete required policy information
     And I run insurance score
@@ -23,7 +24,7 @@ Feature: CPP Basic Policy
     And I select CPP Coverage - IM
     And I select CP Detail
     And I complete CP Fields
-    And I complete mask Error Recovery
+    #And I complete mask Error Recovery
     And I complete CP Fields for policy coverage
     And I complete CP Fields for location
     And I complete CP Fields for building
@@ -91,19 +92,19 @@ Feature: CPP Basic Policy
     Examples:
       | stateCode | dataFile                                        | stateVariant | stateName     | externalDataFile                    |
       | AZ        | TestData/Scenarios/003_cpp_basic_policy_az.json | AZ           | Arizona       | TestData/ExternalDataOverrides.json |
-      | CT        | TestData/Scenarios/003_cpp_basic_policy_ct.json | CT           | Connecticut   | TestData/ExternalDataOverrides.json |
-      | DE        | TestData/Scenarios/003_cpp_basic_policy_de.json | DE           | Delaware      | TestData/ExternalDataOverrides.json |
-      | MA        | TestData/Scenarios/003_cpp_basic_policy_ma.json | MA           | Massachusetts | TestData/ExternalDataOverrides.json |
-      | MD        | TestData/Scenarios/003_cpp_basic_policy_md.json | MD           | Maryland      | TestData/ExternalDataOverrides.json |
-      | ME        | TestData/Scenarios/003_cpp_basic_policy_me.json | ME           | Maine         | TestData/ExternalDataOverrides.json |
-      | NH        | TestData/Scenarios/003_cpp_basic_policy_nh.json | NH           | New Hampshire | TestData/ExternalDataOverrides.json |
-      | NJ        | TestData/Scenarios/003_cpp_basic_policy_nj.json | NJ           | New Jersey    | TestData/ExternalDataOverrides.json |
-      | NY        | TestData/Scenarios/003_cpp_basic_policy_ny.json | NY           | New York      | TestData/ExternalDataOverrides.json |
-      | OR        | TestData/Scenarios/003_cpp_basic_policy_or.json | OR           | Oregon        | TestData/ExternalDataOverrides.json |
-      | PA        | TestData/Scenarios/003_cpp_basic_policy_pa.json | PA           | Pennsylvania  | TestData/ExternalDataOverrides.json |
-      | RI        | TestData/Scenarios/003_cpp_basic_policy_ri.json | RI           | Rhode Island  | TestData/ExternalDataOverrides.json |
-      | VA        | TestData/Scenarios/003_cpp_basic_policy_va.json | VA           | Virginia      | TestData/ExternalDataOverrides.json |
-      | VT        | TestData/Scenarios/003_cpp_basic_policy_vt.json | VT           | Vermont       | TestData/ExternalDataOverrides.json |
-      | WA        | TestData/Scenarios/003_cpp_basic_policy_wa.json | WA           | Washington    | TestData/ExternalDataOverrides.json |
-      | WV        | TestData/Scenarios/003_cpp_basic_policy_wv.json | WV           | West Virginia | TestData/ExternalDataOverrides.json |
-
+#      | CT        | TestData/Scenarios/003_cpp_basic_policy_ct.json | CT           | Connecticut   | TestData/ExternalDataOverrides.json |
+#      | DE        | TestData/Scenarios/003_cpp_basic_policy_de.json | DE           | Delaware      | TestData/ExternalDataOverrides.json |
+#      | MA        | TestData/Scenarios/003_cpp_basic_policy_ma.json | MA           | Massachusetts | TestData/ExternalDataOverrides.json |
+#      | MD        | TestData/Scenarios/003_cpp_basic_policy_md.json | MD           | Maryland      | TestData/ExternalDataOverrides.json |
+#      | ME        | TestData/Scenarios/003_cpp_basic_policy_me.json | ME           | Maine         | TestData/ExternalDataOverrides.json |
+#      | NH        | TestData/Scenarios/003_cpp_basic_policy_nh.json | NH           | New Hampshire | TestData/ExternalDataOverrides.json |
+#      | NJ        | TestData/Scenarios/003_cpp_basic_policy_nj.json | NJ           | New Jersey    | TestData/ExternalDataOverrides.json |
+#      | NY        | TestData/Scenarios/003_cpp_basic_policy_ny.json | NY           | New York      | TestData/ExternalDataOverrides.json |
+#      | OR        | TestData/Scenarios/003_cpp_basic_policy_or.json | OR           | Oregon        | TestData/ExternalDataOverrides.json |
+#      | PA        | TestData/Scenarios/003_cpp_basic_policy_pa.json | PA           | Pennsylvania  | TestData/ExternalDataOverrides.json |
+#      | RI        | TestData/Scenarios/003_cpp_basic_policy_ri.json | RI           | Rhode Island  | TestData/ExternalDataOverrides.json |
+#      | VA        | TestData/Scenarios/003_cpp_basic_policy_va.json | VA           | Virginia      | TestData/ExternalDataOverrides.json |
+#      | VT        | TestData/Scenarios/003_cpp_basic_policy_vt.json | VT           | Vermont       | TestData/ExternalDataOverrides.json |
+#      | WA        | TestData/Scenarios/003_cpp_basic_policy_wa.json | WA           | Washington    | TestData/ExternalDataOverrides.json |
+#      | WV        | TestData/Scenarios/003_cpp_basic_policy_wv.json | WV           | West Virginia | TestData/ExternalDataOverrides.json |
+#

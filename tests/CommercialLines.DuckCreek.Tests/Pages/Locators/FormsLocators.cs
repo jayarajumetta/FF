@@ -11,6 +11,8 @@ public sealed class FormsLocators
 
     public ILocator AddlInterests => _page.Locator("[id=\"pageTop\"]");
 
+    public ILocator AddlInterestsLink => _page.GetByRole(AriaRole.Link, new() { Name = "Addl Interests", Exact = true });
+
 
 
     public ILocator EffectiveDate => _page.Locator("input[fieldref=\"UmbrellaBusinessOwnersInput.EffectiveDate\"]");

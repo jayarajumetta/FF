@@ -323,17 +323,27 @@ public static class ComponentAwareControlActions
     private static ILocatorScope CurrentScope(IPage page) =>
         FrameExecutionContext.Current is null ? new PageScope(page) : new FrameScope(FrameExecutionContext.Current);
     private static async Task<ControlMeta> ReadMetaAsync(ILocator control) =>
-        await control.EvaluateAsync<ControlMeta>(@"el => ({
-            tag: (el.tagName || '').toLowerCase(),
-            type: (el.getAttribute('type') || '').toLowerCase(),
-            role: (el.getAttribute('role') || '').toLowerCase(),
-            popup: (el.getAttribute('aria-haspopup') || '').toLowerCase(),
-            cls: typeof el.className === 'string' ? el.className.toLowerCase() : '',
-            fieldref: el.getAttribute('fieldref') || el.getAttribute('data-fieldref') || '',
-            ariaAutocomplete: el.getAttribute('aria-autocomplete') || '',
-            popupTargetId: el.getAttribute('aria-controls') || el.getAttribute('aria-owns') || '',
-            readOnly: !!el.readOnly
-        })") ?? new ControlMeta();
+        await control.EvaluateAsync<ControlMeta>(@"el => {
+            const ownId = el.id || '';
+            const pickTargetId = (attr) => {
+                const raw = el.getAttribute(attr) || '';
+                const tokens = raw.split(/\s+/).filter(Boolean).filter(t => t !== ownId);
+                if (tokens.length === 0) return '';
+                const listLike = tokens.find(t => /list|picker|popup|panel|menu/i.test(t));
+                return listLike || tokens[0];
+            };
+            return ({
+                tag: (el.tagName || '').toLowerCase(),
+                type: (el.getAttribute('type') || '').toLowerCase(),
+                role: (el.getAttribute('role') || '').toLowerCase(),
+                popup: (el.getAttribute('aria-haspopup') || '').toLowerCase(),
+                cls: typeof el.className === 'string' ? el.className.toLowerCase() : '',
+                fieldref: el.getAttribute('fieldref') || el.getAttribute('data-fieldref') || '',
+                ariaAutocomplete: el.getAttribute('aria-autocomplete') || '',
+                popupTargetId: pickTargetId('aria-controls') || pickTargetId('aria-owns'),
+                readOnly: !!el.readOnly
+            });
+        }") ?? new ControlMeta();
     private static bool IsDropdownLike(ControlMeta meta) =>
         meta.Role is "combobox" or "listbox" || meta.Popup is "listbox" or "menu" ||
         meta.Cls.Contains("mat-select") || meta.Cls.Contains("mdc-select") ||

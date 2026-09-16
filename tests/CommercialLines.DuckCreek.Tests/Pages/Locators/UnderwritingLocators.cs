@@ -17,7 +17,7 @@ public sealed class UnderwritingLocators
 
     public ILocator UnderwritingInfoNavigationGeneralUWQuestions => _page.GetByRole(AriaRole.Link, new() { Name = "General UW Questions", Exact = true });
 
-    public ILocator InsuranceScore => _page.GetByRole(AriaRole.Link, new() { Name = "Insurance Score", Exact = true });
+    public ILocator InsuranceScore => _page.Locator("span.g-btn-text").Filter(new LocatorFilterOptions { HasText = "Insurance Score" }).First;
 
     public ILocator InsuranceScoreConsent => _page.GetByRole(AriaRole.Link, new() { Name = "Insurance Score Consent", Exact = true });
 

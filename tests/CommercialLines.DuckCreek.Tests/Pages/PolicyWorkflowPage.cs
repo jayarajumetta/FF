@@ -42,7 +42,7 @@ public sealed class PolicyWorkflowPage
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("PolicyWorkflow", "Businessowners"));
 
     public Task ClickCPDetailAsync() =>
-        _ui.ClickAsync(_locators.Detail, new ControlIntent("PolicyWorkflow", "CPDetail"));
+        _ui.ClickAsync(_locators.CPDetail, new ControlIntent("PolicyWorkflow", "CPDetail"));
 
     public Task WaitForCPPLiabilityAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("PolicyWorkflow", "CPPLiability"));

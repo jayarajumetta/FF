@@ -18,10 +18,10 @@ public sealed class FormsPage
     }
 
     public Task WaitForAdditionalInterestsAsync(string expected) =>
-        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Forms", "AdditionalInterests"));
+        _ui.WaitAsync(_locators.AddlInterestsLink, expected, new ControlIntent("Forms", "AdditionalInterests"));
 
     public Task ClickAdditionalInterestsAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Forms", "AdditionalInterests"));
+        _ui.ClickAsync(_locators.AddlInterestsLink, new ControlIntent("Forms", "AdditionalInterests"));
 
     public Task WaitForAddlInterestsAsync(string expected) =>
         _ui.WaitAsync(_locators.AddlInterests, expected, new ControlIntent("Forms", "AddlInterests"));

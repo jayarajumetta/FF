@@ -458,9 +458,8 @@ public sealed class UiActions
         await WaitForPageReadyBestEffortAsync();
         try
         {
-            await PrepareForActionAsync(locator, intent, action);
             var resolved = _runtimeLocatorResolver is null ? locator : await _runtimeLocatorResolver.ResolveAsync(_browser.Page, locator, intent, action) ?? locator;
-            if (!ReferenceEquals(resolved, locator)) await PrepareForActionAsync(resolved, intent, action);
+            await PrepareForActionAsync(resolved, intent, action);
             using var frameScope = FrameExecutionContext.Push(null);
             await ExecuteWithHighlightAsync(resolved, action, operation);
         }
@@ -472,9 +471,8 @@ public sealed class UiActions
         await WaitForPageReadyBestEffortAsync();
         try
         {
-            await PrepareForActionAsync(locator, intent, action);
             var resolved = _runtimeLocatorResolver is null ? locator : await _runtimeLocatorResolver.ResolveAsync(_browser.Page, locator, intent, action) ?? locator;
-            if (!ReferenceEquals(resolved, locator)) await PrepareForActionAsync(resolved, intent, action);
+            await PrepareForActionAsync(resolved, intent, action);
             using var frameScope = FrameExecutionContext.Push(null);
             return await ExecuteWithHighlightAsync(resolved, action, operation);
         }

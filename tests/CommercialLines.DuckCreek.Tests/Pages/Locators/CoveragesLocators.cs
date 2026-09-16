@@ -46,7 +46,7 @@ public sealed class CoveragesLocators
 
     public ILocator HasTheInsuredEverHadAClaimForEmploymentPractices => _page.Locator("input[fieldref=\"CovEndorsementsInput.EPLIClaim\"]");
 
-    public ILocator IM => _page.GetByText("IM", new() { Exact = true });
+    public ILocator IM => _page.Locator("input[type='checkbox'][fieldref='LineInput.Selected'][name='boolean_2F6_2']");
 
     public ILocator LimitDeductible => _page.Locator("input[fieldref=\"CovEndorsementsInput.EPLILimitDeductible\"]");
 
