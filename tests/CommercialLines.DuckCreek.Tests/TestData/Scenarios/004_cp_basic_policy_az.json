@@ -23,8 +23,10 @@
     "stateVariant": "AZ"
   },
   "values": {
+    "effective_date_43": "12-01-2025",
+    "product_45": "Carrier  WorkersCompensation  Pages   US   (9.8.0.0)",
     "quick_quote_2": "False",
-    "insured_type_4": "Individual/ Person",
+    "insured_type_4": "Business",
     "business_name_7": "AZ CP Testing, Inc.",
     "entity_type_8": "Corporation",
     "zipcode_11": "85016",

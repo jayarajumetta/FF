@@ -38,7 +38,7 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator GeneralLiab => _page.GetByRole(AriaRole.Link, new() { Name = "General Liab", Exact = true });
 
-    public ILocator HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage => _page.Locator("input[fieldref=\"PolicyInput.ContinuousWCCoverageForAtLeast3Years\"]");
+    public ILocator HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage => _page.Locator("input[fieldref='PolicyInput.ContinuousWCCoverageForAtLeast3Years']");
 
 
     public ILocator OK => _page.GetByRole(AriaRole.Link, new() { Name = "OK", Exact = true });
