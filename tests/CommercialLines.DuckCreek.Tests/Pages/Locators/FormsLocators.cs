@@ -9,9 +9,11 @@ public sealed class FormsLocators
 
     public ILocator PageTitle => _page.Locator("[id=\"pageTitle\"]");
 
+    public ILocator BusinessOwnerHeading => _page.Locator("//div[@id=\"pageTitle\" and text()='Businessowners']");
+
     public ILocator AddlInterests => _page.Locator("[id=\"pageTop\"]");
 
-
+    public ILocator Businessowners => _page.GetByRole(AriaRole.Link, new() { Name = "Businessowners", Exact = true });
 
     public ILocator EffectiveDate => _page.Locator("input[fieldref=\"UmbrellaBusinessOwnersInput.EffectiveDate\"]");
 

@@ -275,6 +275,9 @@ public sealed class ClientSearchPage
     public Task VerifyVerifyAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.Verify, expected, property, new ControlIntent("ClientSearch", "Verify"));
 
+    public Task<bool> HasVerifyAsync() =>
+        _ui.ExistsAsync(_locators.Verify);
+
     public Task EnterWebsiteAddressAsync(string value) =>
         _ui.FillAsync(_locators.WebsiteAddress, value, new ControlIntent("ClientSearch", "WebsiteAddress"));
 
@@ -283,6 +286,9 @@ public sealed class ClientSearchPage
 
     public Task VerifyYearsInBusinessAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.YearsInBusiness, expected, property, new ControlIntent("ClientSearch", "YearsInBusiness"));
+
+    public Task<bool> HasYearsInBusinessAsync() =>
+        _ui.ExistsAsync(_locators.YearsInBusiness);
 
     public Task EnterYearsInBusinessAsync(string value) =>
         _ui.FillAsync(_locators.YearsInBusiness, value, new ControlIntent("ClientSearch", "YearsInBusiness"));

@@ -10,6 +10,23 @@ public sealed class IMBasicPolicySteps
     private readonly ScenarioContext _scenario;
     public IMBasicPolicySteps(ScenarioContext scenario) => _scenario = scenario;
 
+    [Given(@"^I start a new quote$")]
+    [When(@"^I start a new quote$")]
+    [Then(@"^I start a new quote$")]
+    public async Task StartANewQuoteAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickNewQuoteAsync();
+        await page.EnterEffectiveDateAsync(data.Resolve("{{data:effectivedate_98}}"));
+        await page.EnterProductAsync(data.Resolve("{{data:product_11}}"));
+        await page.WaitForStartAsync("Visible");
+        await page.ClickStartAsync();
+
+    }
+
     [Given(@"^I enter business client information$")]
     [When(@"^I enter business client information$")]
     [Then(@"^I enter business client information$")]

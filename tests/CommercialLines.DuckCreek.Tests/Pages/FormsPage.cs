@@ -27,10 +27,10 @@ public sealed class FormsPage
         _ui.WaitAsync(_locators.AddlInterests, expected, new ControlIntent("Forms", "AddlInterests"));
 
     public Task ClickBusinessownersAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Forms", "Businessowners"));
+        _ui.ClickAsync(_locators.Businessowners, new ControlIntent("Forms", "Businessowners"));
 
     public Task WaitForBusinessownersHeadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Forms", "BusinessownersHeading"));
+        _ui.WaitAsync(_locators.BusinessOwnerHeading, expected, new ControlIntent("Forms", "BusinessownersHeading"));
 
     public Task WaitForEffectiveDateAsync(string expected) =>
         _ui.WaitAsync(_locators.EffectiveDate, expected, new ControlIntent("Forms", "EffectiveDate"));

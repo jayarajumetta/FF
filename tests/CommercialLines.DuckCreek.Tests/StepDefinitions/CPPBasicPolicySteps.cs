@@ -10,6 +10,22 @@ public sealed class CPPBasicPolicySteps
     private readonly ScenarioContext _scenario;
     public CPPBasicPolicySteps(ScenarioContext scenario) => _scenario = scenario;
 
+    [Given(@"^I start a new quote$")]
+    [When(@"^I start a new quote$")]
+    [Then(@"^I start a new quote$")]
+    public async Task StartANewQuoteAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickNewQuoteAsync();
+        await page.EnterEffectiveDateAsync("02/03/1980");
+        await page.EnterProductAsync("Carrier  CommercialAuto  Pages   US   (9.23.0.0)");
+        await page.WaitForStartAsync("Visible");
+        await page.ClickStartAsync();
+    }
+
     [Given(@"^I enter business client information$")]
     [When(@"^I enter business client information$")]
     [Then(@"^I enter business client information$")]

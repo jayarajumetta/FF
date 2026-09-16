@@ -21,11 +21,11 @@ public sealed class SubmissionLocators
 
     public ILocator StoplightWaitingWindow => _page.Locator("[id=\"stoplightWaitingWindow\"]");
 
-    public ILocator StoplightWaitingWindowClose => _page.GetByText("Close", new() { Exact = true });
+    public ILocator StoplightWaitingWindowClose => _page.Locator("xpath=//*[@id='stoplightWaitingWindow']//span[contains(@id,'-btnInnerEl') and normalize-space()='Close']");
 
     public ILocator StoplightWaitingWindowError => _page.GetByText("Error:", new() { Exact = true });
 
-    public ILocator StoplightWaitingWindowFirstCloseButtonOnError => _page.GetByText("First Close button on Error", new() { Exact = true });
+    public ILocator StoplightWaitingWindowFirstCloseButtonOnError => _page.Locator("xpath=(//*[@id='stoplightWaitingWindow']//span[contains(@id,'-btnInnerEl') and normalize-space()='Close'])[1]");
 
     public ILocator Title => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Title']/@for] | //label[normalize-space(string(.))='Title']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Title']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 }

@@ -113,6 +113,9 @@ public sealed class PolicyWorkflowPage
     public Task EnterIFRAMEDuckCreekPolicyDescriptionOfOtherAsync(string value) =>
         _ui.FillAsync(_locators.IFRAMEDuckCreekPolicyDescriptionOfOther, value, new ControlIntent("PolicyWorkflow", "IFRAMEDuckCreekPolicyDescriptionOfOther"));
 
+    public Task EnterDoesThisPolicyCoversAContractorExposureAsync(string value) =>
+        _ui.FillAsync(_locators.DoesThisPolicyCoverContractorExposure, value, new ControlIntent("PolicyWorkflow", "IFRAMEDuckCreekPolicyDescriptionOfOther"));
+
     public Task ClickIFRAMEDuckCreekPolicyOtherCheckBoxAsync() =>
         _ui.ClickAsync(_locators.IFRAMEDuckCreekPolicyOtherCheckBox, new ControlIntent("PolicyWorkflow", "IFRAMEDuckCreekPolicyOtherCheckBox"));
 
