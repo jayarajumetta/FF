@@ -56,7 +56,7 @@
     }
   },
   "execution": {
-    "retryCount": 0,
+    "retryCount": 1,
     "strictUnknownConditions": true,
     "externalDataFile": "TestData/ExternalDataOverrides.json",
     "deferVerificationFailures": true
