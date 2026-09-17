@@ -18,6 +18,7 @@ changes the locator used by the test.
 | `ANI-ID-001` | `ClientSearchPage` | `new-quote-button` | ANi-owned navigation control migrated from `data-testid` |
 | `ANI-ID-002` | `QuoteDetailsPage` | `startQuote` | ANi-owned quote-start control with a stable application ID |
 | `ANI-ID-003` | `SFP_ChecklistPage` | `exception-note-confirm` | ANi-owned modal confirmation control with a stable application ID |
+| `ANI-ID-004` | `SFP_PricingPage` | `*FullPremiumTotalPremiumSumm*` | ANi-owned generated premium summary ID; used only for exact premium text extraction |
 
 ---
 
@@ -124,6 +125,16 @@ document.querySelectorAll('[data-testid]').forEach(el => {
 | ⚪ | 17 | `DashboardElement` | `GetByText("Quote")` | Navigation detection only |
 | ⚪ | 18 | `PageHeader` | `GetByText(...)` | Page header assertion only |
 | 🟡 | 20 | `SearchButton` | `GetByRole(Button, "Search")` | Inspect for test ID |
+| ⚪ | dynamic | Exact quote result link | `GetByRole(Link, quote identity, Exact=true)` | Search result exposes no known test ID; exact accessible identity is required and ambiguity fails |
+
+---
+
+## Pages\ExpertQuotePages\SubmissionPage.cs
+
+| Status | Line | Locator | Issue | Fix |
+|--------|------|---------|-------|-----|
+| ✅ | dynamic | `TransmitButton` | `GetByTestId("fields.data.submission.transmit")` | Primary readiness locator |
+| ⚪ | dynamic | `TransmitButtonAlt` | `GetByRole(Button, "Transmit")` | Exact accessible fallback only when the test ID is absent; multiple matches fail |
 
 ---
 

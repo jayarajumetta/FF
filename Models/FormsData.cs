@@ -154,6 +154,12 @@ namespace PnCTestAutomation.Models
         public Dictionary<string, string> PrintJobs { get; set; } = new();
 
         /// <summary>
+        /// QA-owned baseline version by LOB and test case, for example SFP:BASIC.
+        /// The outcome profile must declare the same version.
+        /// </summary>
+        public Dictionary<string, string> BaselineVersions { get; set; } = new();
+
+        /// <summary>
         /// Company filter rules by state. E.g., TX → exclude ANPAC prefixes for new business.
         /// </summary>
         public List<CompanyFilterRule> CompanyFilters { get; set; } = new();
@@ -176,6 +182,20 @@ namespace PnCTestAutomation.Models
             if (PrintJobs != null && PrintJobs.TryGetValue(lob.ToUpperInvariant(), out var pj))
                 return pj;
             return PrintJob;
+        }
+
+        public string GetBaselineVersion(string lob, string testCase)
+        {
+            var key = $"{lob}:{testCase}";
+            if (BaselineVersions != null &&
+                BaselineVersions.TryGetValue(key, out var version) &&
+                !string.IsNullOrWhiteSpace(version))
+            {
+                return version;
+            }
+
+            throw new InvalidOperationException(
+                $"No forms baseline version is configured for '{key}'.");
         }
     }
 }

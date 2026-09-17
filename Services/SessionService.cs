@@ -15,8 +15,12 @@ namespace PnCTestAutomation.Services
 {
     public interface IFormsSessionProvider
     {
-        Task<string> GetDuckCreekSessionIdViaCLASAsync(string quoteNumber);
+        Task<FormsSession> PrepareSessionAsync(string quoteNumber);
     }
+
+    public sealed record FormsSession(
+        string SessionId,
+        string DisplayedQuoteIdentity);
 
     /// <summary>
     /// Opens CLAS Express in a second tab, logs in, opens a quote, and extracts
@@ -42,17 +46,7 @@ namespace PnCTestAutomation.Services
             _artifactCapture = artifactCapture;
         }
 
-        /// <summary>
-        /// Opens CLAS, logs in, opens the policy, and extracts the DuckCreek_SessionId cookie.
-        /// Returns (sessionId, empty list) — the list is kept for API compatibility.
-        /// </summary>
-        public async Task<(string SessionId, List<string> ApiCalls)> GetDuckCreekSessionIdAndInterceptClasAsync(string quoteNumber)
-        {
-            var sessionId = await GetDuckCreekSessionIdViaCLASAsync(quoteNumber);
-            return (sessionId, new List<string>());
-        }
-
-        public async Task<string> GetDuckCreekSessionIdViaCLASAsync(string quoteNumber)
+        public async Task<FormsSession> PrepareSessionAsync(string quoteNumber)
         {
             var page = _context.Page
                 ?? throw new InvalidOperationException("No Playwright page is available.");
@@ -186,7 +180,9 @@ namespace PnCTestAutomation.Services
                         Console.WriteLine($"[SessionService] Save For Later not found on CLAS page (non-fatal): {ex.Message}");
                     }
 
-                    return dckCookie.Value;
+                    return new FormsSession(
+                        dckCookie.Value,
+                        displayedNumber);
                 }
 
                 throw new InvalidOperationException(

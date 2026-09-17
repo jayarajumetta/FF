@@ -1,5 +1,6 @@
 ﻿// Pages/ExpertQuotePages/ClientSearchPage.cs
 using Microsoft.Playwright;
+using System;
 using System.Threading.Tasks;
 
 namespace PnCTestAutomation.Pages.ExpertQuotePages
@@ -40,6 +41,48 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
             // Wait for search button to be visible and clickable
             await SearchButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
             await SearchButton.ClickAsync();
+            await WaitForSpinnerAsync();
+        }
+
+        public async Task<string> GetExactQuoteIdentityAsync(string quoteIdentity)
+        {
+            if (string.IsNullOrWhiteSpace(quoteIdentity))
+                throw new ArgumentException(
+                    "An authoritative quote identity is required.",
+                    nameof(quoteIdentity));
+
+            var result = _page.GetByRole(
+                AriaRole.Link,
+                new() { Name = quoteIdentity, Exact = true });
+            await result.First.WaitForAsync(
+                new()
+                {
+                    State = WaitForSelectorState.Visible,
+                    Timeout = 30000
+                });
+            var count = await result.CountAsync();
+            if (count != 1)
+            {
+                throw new InvalidOperationException(
+                    $"Expected one exact quote search result but found {count}.");
+            }
+
+            return (await result.InnerTextAsync()).Trim();
+        }
+
+        public async Task OpenExactQuoteAsync(string quoteIdentity)
+        {
+            var displayed = await GetExactQuoteIdentityAsync(quoteIdentity);
+            if (!displayed.Equals(quoteIdentity, StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    "The exact quote search result did not match the requested identity.");
+            }
+
+            await _page.GetByRole(
+                    AriaRole.Link,
+                    new() { Name = quoteIdentity, Exact = true })
+                .ClickAsync();
             await WaitForSpinnerAsync();
         }
 

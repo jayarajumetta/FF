@@ -68,6 +68,18 @@ Before a sharded run, CI must compare discovered cases with the union of shard
 cases and fail when a case is missing, duplicated, or when a shard discovers
 zero tests.
 
+### 6. Business outcome profiles
+
+| Tag | Meaning |
+|-----|---------|
+| `@BusinessOutcomes` | Resolve a versioned expected-outcome profile before browser startup. |
+| `@SfpBasicOutcome` | Stable profile identity `sfp-basic`. |
+| `@SfpCountryEstateOutcome` | Stable profile identity `sfp-country-estate`. |
+
+An approved profile makes the scenario runnable. A matching `NonRunnable`
+profile produces an explicit ignored outcome with its QA-blocked reason; it
+cannot count as a gated pass.
+
 ---
 
 ## Feature File Layout
@@ -126,6 +138,9 @@ dotnet test --filter "TestCategory=ExpertQuote&TestCategory=Smoke"
    `TestCategory!=Shard1` through `TestCategory!=Shard6`.
 9. **Retries do not change ownership** — a retry uses the original case identity
    and shard and produces one canonical final outcome.
+10. **Business outcome tags require profiles** — missing or ambiguous profile
+    matches are configuration failures. Placeholder profiles must be explicitly
+    `NonRunnable`.
 
 ---
 

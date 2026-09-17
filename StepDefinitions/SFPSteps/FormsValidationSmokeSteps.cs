@@ -1,7 +1,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using PnCTestAutomation.Artifacts;
+using PnCTestAutomation.BusinessOutcomes;
+using PnCTestAutomation.QuoteHandoffs;
 using PnCTestAutomation.Services;
 using Reqnroll;
 
@@ -11,25 +14,42 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
     public sealed class FormsValidationSmokeSteps
     {
         private readonly IFormsOrchestrationService _formsOrchestrator;
+        private readonly IBusinessOutcomeContext _businessOutcomeContext;
+        private readonly IQuoteHandoff _quoteHandoff;
+        private readonly IConfiguration _configuration;
         private string _quoteNumber = string.Empty;
         private string _state = string.Empty;
         private string _lob = string.Empty;
 
         public FormsValidationSmokeSteps(
-            IFormsOrchestrationService formsOrchestrator)
+            IFormsOrchestrationService formsOrchestrator,
+            IBusinessOutcomeContext businessOutcomeContext,
+            IQuoteHandoff quoteHandoff,
+            IConfiguration configuration)
         {
             _formsOrchestrator = formsOrchestrator;
+            _businessOutcomeContext = businessOutcomeContext;
+            _quoteHandoff = quoteHandoff;
+            _configuration = configuration;
         }
 
-        [Given(@"I have an existing quote ""(.*)"" in state ""(.*)"" for LOB ""(.*)""")]
+        [Given(@"I have an existing quote ""(.*)"" in state ""(.*)"" for LOB ""(.*)"" and company ""(.*)""")]
         public void GivenIHaveAnExistingQuote(
             string quoteNumber,
             string state,
-            string lob)
+            string lob,
+            string company)
         {
             _quoteNumber = quoteNumber;
             _state = state;
             _lob = lob;
+            _quoteHandoff.Publish(quoteNumber);
+            _businessOutcomeContext.ConfirmApplicability(
+                Environment.GetEnvironmentVariable("TEST_ENVIRONMENT")
+                ?? _configuration["Environment"]
+                ?? "qa",
+                state,
+                company);
             Console.WriteLine(
                 $"Preparing forms validation for state {state}, LOB {lob}.");
         }

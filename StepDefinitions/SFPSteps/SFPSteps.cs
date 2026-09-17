@@ -5,6 +5,7 @@ using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Pages;
 using PnCTestAutomation.Pages.ExpertQuotePages;
 using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
+using PnCTestAutomation.QuoteHandoffs;
 using Reqnroll;
 using System;
 using System.Linq;
@@ -21,13 +22,18 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         private readonly PlaywrightContext _context;
         private readonly ScenarioContextData _contextData;
         private readonly ScenarioContext _scenarioContext;
+        private readonly IQuoteHandoff _quoteHandoff;
 
-        public SFPSteps(PlaywrightContext context, ScenarioContext scenarioContext)
+        public SFPSteps(
+            PlaywrightContext context,
+            ScenarioContext scenarioContext,
+            IQuoteHandoff quoteHandoff)
         {
             _context = context;
             _scenarioContext = scenarioContext;
             _contextData = _scenarioContext[ScenarioContextData.ContextKey] as ScenarioContextData
                 ?? throw new InvalidOperationException("ScenarioContextData not found. Ensure TestHooks.BeforeTestRun registered it.");
+            _quoteHandoff = quoteHandoff;
         }
 
         [When("user selects Special Farm Package and inputs Quote Details")]
@@ -102,7 +108,10 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         {
             _contextData.QuoteNumber = await ExtractQuoteNumberFromPageAsync(_context.Page);
             if (!string.IsNullOrEmpty(_contextData.QuoteNumber))
-                Console.WriteLine($"*** QUOTE NUMBER: {_contextData.QuoteNumber} ***");
+            {
+                _quoteHandoff.Publish(_contextData.QuoteNumber);
+                Console.WriteLine("[QuoteIdentity] Captured the scenario quote identity.");
+            }
             else
                 Console.WriteLine("[CaptureQuoteNumber] Not found yet — will retry at Pricing.");
         }

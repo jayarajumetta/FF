@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PnCTestAutomation.Artifacts;
+using PnCTestAutomation.BusinessOutcomes;
 using PnCTestAutomation.Configuration;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.DataPool;
@@ -93,6 +94,18 @@ namespace PnCTestAutomation
             artifactOptions.Validate();
             services.AddSingleton(artifactOptions);
 
+            var businessOutcomeOptions = configuration
+                .GetSection("BusinessOutcomes")
+                .Get<BusinessOutcomeOptions>()
+                ?? new BusinessOutcomeOptions();
+            businessOutcomeOptions.ProfilePath = GetEnvironmentValue(
+                "TEST_OUTCOME_PROFILE_PATH",
+                businessOutcomeOptions.ProfilePath);
+            businessOutcomeOptions.Validate();
+            services.AddSingleton(businessOutcomeOptions);
+            services.AddSingleton<IExpectedOutcomeProfileProvider,
+                ExpectedOutcomeProfileProvider>();
+
             services.AddSingleton<BrowserFactory>();
             services.AddSingleton<PlaywrightContext>();
 
@@ -182,6 +195,8 @@ namespace PnCTestAutomation
                     scenarioId);
             });
             services.AddScoped<IArtifactCaptureService, ArtifactCaptureService>();
+            services.AddScoped<IBusinessOutcomeContext, BusinessOutcomeContext>();
+            services.AddScoped<IBusinessOutcomeVerifier, BusinessOutcomeVerifier>();
 
             // ── Forms Checking services ──
             var formsConfig = configuration.GetSection("DuckCreekForms").Get<DuckCreekFormsConfig>();

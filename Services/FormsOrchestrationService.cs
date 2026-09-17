@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using PnCTestAutomation.Artifacts;
+using PnCTestAutomation.BusinessOutcomes;
 using PnCTestAutomation.Clients;
 using PnCTestAutomation.Models;
 using PnCTestAutomation.Parsers;
@@ -56,6 +57,7 @@ namespace PnCTestAutomation.Services
         private readonly IFormsEvidenceWriter _evidenceWriter;
         private readonly IArtifactContext _artifacts;
         private readonly IArtifactCaptureService _capture;
+        private readonly IBusinessOutcomeVerifier _businessOutcomes;
         private readonly DuckCreekFormsConfig _config;
         private string? _preparedQuoteId;
         private string? _preparedSessionId;
@@ -67,6 +69,7 @@ namespace PnCTestAutomation.Services
             IFormsEvidenceWriter evidenceWriter,
             IArtifactContext artifacts,
             IArtifactCaptureService capture,
+            IBusinessOutcomeVerifier businessOutcomes,
             DuckCreekFormsConfig config)
         {
             _sessionProvider = sessionProvider;
@@ -75,6 +78,7 @@ namespace PnCTestAutomation.Services
             _evidenceWriter = evidenceWriter;
             _artifacts = artifacts;
             _capture = capture;
+            _businessOutcomes = businessOutcomes;
             _config = config;
         }
 
@@ -83,17 +87,21 @@ namespace PnCTestAutomation.Services
             ValidateIdentifier(quoteId, nameof(quoteId), 128);
             try
             {
-                var sessionId =
-                    await _sessionProvider.GetDuckCreekSessionIdViaCLASAsync(quoteId);
-                if (string.IsNullOrWhiteSpace(sessionId))
+                var session =
+                    await _sessionProvider.PrepareSessionAsync(quoteId);
+                if (string.IsNullOrWhiteSpace(session.SessionId))
                 {
                     throw new FormsValidationException(
                         "session acquisition",
                         "DuckCreek did not provide a session.");
                 }
 
+                await _businessOutcomes.VerifyQuoteIdentityAsync(
+                    quoteId,
+                    session.DisplayedQuoteIdentity,
+                    "forms-session");
                 _preparedQuoteId = quoteId;
-                _preparedSessionId = sessionId;
+                _preparedSessionId = session.SessionId;
             }
             catch (FormsValidationException)
             {
@@ -131,6 +139,31 @@ namespace PnCTestAutomation.Services
                 ValidateIdentifier(manuscript, "manuscript", 256);
                 ValidateIdentifier(printJob, "printJob", 128);
 
+                FormsBaselineSnapshot baseline;
+                try
+                {
+                    baseline = _validationService.LoadExpectedBaseline(
+                        request.Lob,
+                        request.State,
+                        request.TestCase);
+                    if (baseline.Entries.Count == 0)
+                    {
+                        throw new FormsValidationException(
+                            "baseline resolution",
+                            "The resolved forms baseline contains no expectations.");
+                    }
+                }
+                catch (FormsValidationException)
+                {
+                    throw;
+                }
+                catch
+                {
+                    throw new FormsValidationException(
+                        "baseline resolution",
+                        "A valid forms baseline was not available.");
+                }
+
                 string responseXml;
                 try
                 {
@@ -158,7 +191,7 @@ namespace PnCTestAutomation.Services
                 {
                     actualForms = FormsXmlParser.Parse(responseXml);
                     metadata = FormsXmlParser.ParseMetadata(responseXml);
-                    ValidateResponse(actualForms, metadata, manuscript, printJob);
+                    ValidateResponse(actualForms);
                 }
                 catch (FormsValidationException)
                 {
@@ -171,33 +204,14 @@ namespace PnCTestAutomation.Services
                         "DuckCreek returned invalid forms XML.");
                 }
 
-                List<ExpectedFormEntry> expected;
-                try
-                {
-                    expected = _validationService.LoadExpectedFormsForLob(
-                        request.Lob,
-                        request.State,
-                        request.TestCase);
-                    if (expected.Count == 0)
-                    {
-                        throw new FormsValidationException(
-                            "baseline resolution",
-                            "The resolved forms baseline contains no expectations.");
-                    }
-                }
-                catch (FormsValidationException)
-                {
-                    throw;
-                }
-                catch
-                {
-                    throw new FormsValidationException(
-                        "baseline resolution",
-                        "A valid forms baseline was not available.");
-                }
+                await _businessOutcomes.VerifyFormsContractAsync(
+                    baseline,
+                    metadata,
+                    manuscript,
+                    printJob);
 
                 var summary = _validationService.Validate(
-                    expected,
+                    baseline.Entries.ToList(),
                     actualForms,
                     request.Lob,
                     request.State,
@@ -274,10 +288,7 @@ namespace PnCTestAutomation.Services
         }
 
         private static void ValidateResponse(
-            IReadOnlyCollection<ActualFormEntry> actualForms,
-            FormsResponseMetadata metadata,
-            string expectedManuscript,
-            string expectedPrintJob)
+            IReadOnlyCollection<ActualFormEntry> actualForms)
         {
             if (actualForms.Count == 0)
             {
@@ -286,20 +297,6 @@ namespace PnCTestAutomation.Services
                     "DuckCreek returned no forms.");
             }
 
-            if (!string.Equals(
-                    metadata.Manuscript,
-                    expectedManuscript,
-                    StringComparison.Ordinal) ||
-                !string.Equals(
-                    metadata.PrintJobName,
-                    expectedPrintJob,
-                    StringComparison.Ordinal) ||
-                string.IsNullOrWhiteSpace(metadata.ReturnSuccessStatus))
-            {
-                throw new FormsValidationException(
-                    "response metadata",
-                    "DuckCreek response metadata is missing or does not match the request.");
-            }
         }
 
         private static void ValidateRequest(FormsValidationRequest request)

@@ -44,6 +44,14 @@ from introducing parallel infrastructure.
    for remote exposure without HTTPS and external authentication, validates
    state transitions, and atomically replaces validated JSON without resetting
    corrupt storage.
+10. **Business outcomes are profile-owned.** Gated SFP scenarios resolve one
+    approved, versioned environment/state/company profile before browser work.
+    Provenance, validity, and checksums are mandatory. Missing, ambiguous,
+    stale, synthetic, or inapplicable expectations fail; explicit
+    `NonRunnable` profiles are ignored before execution and cannot pass a gate.
+    Quote identity is scenario-owned, premiums use typed currency/tolerance
+    comparison, forms bind to a versioned baseline and response metadata, and
+    transmit availability never substitutes for a completed transmission.
 
 ## SGS adaptation contract
 

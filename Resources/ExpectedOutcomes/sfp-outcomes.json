@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "profileId": "sfp-basic-qa-pending",
+      "version": "1.0.0-pending-qa",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "*",
+      "company": "*",
+      "mode": "NonRunnable",
+      "blockedReason": "QA-approved premium, forms baseline metadata, and transmission expectations have not been supplied for this state and company.",
+      "provenance": {
+        "source": "Pending QA approval"
+      },
+      "checksum": "PENDING-QA"
+    },
+    {
+      "profileId": "sfp-country-estate-qa-pending",
+      "version": "1.0.0-pending-qa",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "qa",
+      "state": "*",
+      "company": "*",
+      "mode": "NonRunnable",
+      "blockedReason": "QA-approved premium, forms baseline metadata, and transmission expectations have not been supplied for this state and company.",
+      "provenance": {
+        "source": "Pending QA approval"
+      },
+      "checksum": "PENDING-QA"
+    },
+    {
+      "profileId": "sfp-basic-dev-pending",
+      "version": "1.0.0-pending-qa",
+      "scenarioProfile": "sfp-basic",
+      "environment": "dev",
+      "state": "*",
+      "company": "*",
+      "mode": "NonRunnable",
+      "blockedReason": "QA-approved Dev premium, forms baseline metadata, and transmission expectations have not been supplied for this state and company.",
+      "provenance": {
+        "source": "Pending QA approval"
+      },
+      "checksum": "PENDING-QA"
+    },
+    {
+      "profileId": "sfp-country-estate-dev-pending",
+      "version": "1.0.0-pending-qa",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "dev",
+      "state": "*",
+      "company": "*",
+      "mode": "NonRunnable",
+      "blockedReason": "QA-approved Dev premium, forms baseline metadata, and transmission expectations have not been supplied for this state and company.",
+      "provenance": {
+        "source": "Pending QA approval"
+      },
+      "checksum": "PENDING-QA"
+    }
+  ]
+}

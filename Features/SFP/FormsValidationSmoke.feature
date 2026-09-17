@@ -1,4 +1,4 @@
-@SFP @Forms
+@SFP @Forms @BusinessOutcomes @SfpBasicOutcome
 Feature: Forms Validation Smoke Test
 
   Standalone test that grabs the DuckCreek_SessionId cookie from CLAS Express
@@ -8,10 +8,10 @@ Feature: Forms Validation Smoke Test
 
   @Smoke
   Scenario Outline: SFP Forms Validation - <State>
-    Given I have an existing quote "<QuoteNumber>" in state "<State>" for LOB "SFP"
+    Given I have an existing quote "<QuoteNumber>" in state "<State>" for LOB "SFP" and company "<Company>"
     When I extract the DuckCreek session via CLAS cookie
     Then the forms should match the baseline
 
     Examples:
-      | State | QuoteNumber |
-      | AR    | 01918753    |
+      | State | QuoteNumber | Company                                      |
+      | AR    | 01918753    | American National Property And Casualty Co. |

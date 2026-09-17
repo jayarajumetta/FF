@@ -1,4 +1,4 @@
-@SFP @CE @ExpertQuote
+@SFP @CE @ExpertQuote @BusinessOutcomes @SfpCountryEstateOutcome
 Feature: SFP Country Estate Policy
 
   @Regression
@@ -217,8 +217,8 @@ Feature: SFP Country Estate Policy
     # Step 30: Close Checklist and confirm Update
     When user closes Checklist and confirms Update
 
-    # Step 31: Verify Transmit button is enabled
-    Then user verifies Transmit button is enabled on Submission page
+    # Step 31: Verify transmission readiness only; this scenario does not transmit.
+    Then user verifies Transmit action is available on Submission page
 
     @Shard4 @Debug
     Examples:

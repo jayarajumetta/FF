@@ -24,6 +24,7 @@ namespace PnCTestAutomation.Artifacts
         FormsHtml,
         FormsMarkdown,
         FormsTrx,
+        BusinessOutcome,
         TrxMetadata,
         TimingSummary,
         QuoteHandoff
@@ -638,6 +639,7 @@ namespace PnCTestAutomation.Artifacts
             ArtifactKind.FormsHtml => Path.Combine("forms", "html"),
             ArtifactKind.FormsMarkdown => Path.Combine("forms", "markdown"),
             ArtifactKind.FormsTrx => Path.Combine("forms", "trx"),
+            ArtifactKind.BusinessOutcome => "business-outcomes",
             ArtifactKind.TrxMetadata => "metadata",
             ArtifactKind.TimingSummary => "metadata",
             ArtifactKind.QuoteHandoff => "metadata",

@@ -1,7 +1,4 @@
 ﻿using Microsoft.Playwright;
-using System;
-using System.Globalization;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PnCTestAutomation.Pages
@@ -26,31 +23,19 @@ namespace PnCTestAutomation.Pages
         public ILocator ViewFullDetails => _page.GetByLabel("View Full Details");
 
         /// <summary>
-        /// Attempts to read the annual premium amount from the pricing page.
-        /// Tries known EQ test ID patterns first, then falls back to body text scan.
-        /// Returns null if the amount cannot be located — refine locators after first run.
+        /// Reads the displayed annual premium text from the documented ANi HTML-ID
+        /// exception. Parsing and business comparison are owned by the outcome verifier.
         /// </summary>
-        public async Task<decimal?> GetAnnualPremiumAsync()
+        public async Task<string> GetAnnualPremiumTextAsync()
         {
-            try
-            {
-                // Target the Total Premium value cell by its known EQ id pattern.
-                // id="LineCoverages.EQPricingSummaryFullPremiumTotalPremiumSumm-0-layout"
-                var el = _page.Locator("[id*='FullPremiumTotalPremiumSumm']").First;
-                if (await el.CountAsync() > 0)
-                {
-                    var raw = await el.InnerTextAsync(new() { Timeout = 5000 });
-                    var m = Regex.Match(raw, @"\$([\d,]+\.?\d{0,2})");
-                    if (m.Success && decimal.TryParse(m.Groups[1].Value.Replace(",", ""),
-                            NumberStyles.Any, CultureInfo.InvariantCulture, out var v))
-                        return v;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Premium] Error reading premium amount: {ex.Message}");
-            }
-            return null;
+            var premium = _page
+                .Locator("[id*='FullPremiumTotalPremiumSumm']")
+                .First;
+            if (await premium.CountAsync() == 0)
+                return string.Empty;
+
+            return (await premium.InnerTextAsync(
+                new() { Timeout = 5000 })).Trim();
         }
     }
 }

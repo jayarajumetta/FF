@@ -1,4 +1,4 @@
-@SFP @ExpertQuote
+@SFP @ExpertQuote @BusinessOutcomes @SfpBasicOutcome
 Feature: SFP Basic Policy
 
 
@@ -249,8 +249,8 @@ Feature: SFP Basic Policy
     # Step 35: Close Checklist and Click OK to Update
     When user closes Checklist and confirms Update
 
-    # Step 36: Transmit and Verify Premium
-    Then user verifies Transmit button is enabled on Submission page
+    # Step 36: Verify transmission readiness only; this scenario does not transmit.
+    Then user verifies Transmit action is available on Submission page
 
     # Step 37: Validate Forms attachment via Duckcreek
     When user validates Forms via Duckcreek for state "<StateAbbv>"

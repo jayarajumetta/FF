@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using PnCTestAutomation.BusinessOutcomes;
 using PnCTestAutomation.Models;
 
 namespace PnCTestAutomation.Services
@@ -11,6 +13,11 @@ namespace PnCTestAutomation.Services
     public interface IFormsValidationService
     {
         List<ExpectedFormEntry> LoadExpectedFormsForLob(
+            string lob,
+            string state,
+            string testCase = "BASIC");
+
+        FormsBaselineSnapshot LoadExpectedBaseline(
             string lob,
             string state,
             string testCase = "BASIC");
@@ -73,7 +80,16 @@ namespace PnCTestAutomation.Services
         ///   3. Include-only JSON: {LOB}.json
         ///   4. Per-state JSON: {LOB}_{state}.json
         /// </summary>
-        public List<ExpectedFormEntry> LoadExpectedFormsForLob(string lob, string state, string testCase = "BASIC")
+        public List<ExpectedFormEntry> LoadExpectedFormsForLob(
+            string lob,
+            string state,
+            string testCase = "BASIC") =>
+            LoadExpectedBaseline(lob, state, testCase).Entries.ToList();
+
+        public FormsBaselineSnapshot LoadExpectedBaseline(
+            string lob,
+            string state,
+            string testCase = "BASIC")
         {
             // Reject any value that contains path separators or other traversal characters
             if (!Regex.IsMatch(lob ?? "", @"^[A-Za-z0-9_]{1,20}$"))
@@ -91,7 +107,11 @@ namespace PnCTestAutomation.Services
             if (File.Exists(legacyCsv))
             {
                 Console.WriteLine($"Loading test-case baseline: {lob}_{testCase}.csv for state {state}");
-                return LoadFromCsv(legacyCsv, state);
+                return CreateSnapshot(
+                    LoadFromCsv(legacyCsv, state),
+                    legacyCsv,
+                    lob,
+                    testCase);
             }
 
             // 2. Merged CSV: one file per LOB, filtered by Type column
@@ -100,7 +120,14 @@ namespace PnCTestAutomation.Services
             {
                 var typeCode = GetTypeCodeForTestCase(testCase);
                 Console.WriteLine($"Loading merged baseline: {lob}.csv (types: BASE + {typeCode}) for state {state}");
-                return LoadFromCsv(mergedCsv, state, typeFilter: new[] { "BASE", typeCode });
+                return CreateSnapshot(
+                    LoadFromCsv(
+                        mergedCsv,
+                        state,
+                        typeFilter: new[] { "BASE", typeCode }),
+                    mergedCsv,
+                    lob,
+                    testCase);
             }
 
             // 3. Include-only JSON: {LOB}.json
@@ -108,17 +135,47 @@ namespace PnCTestAutomation.Services
             if (File.Exists(includeOnlyJson))
             {
                 Console.WriteLine($"Loading include-only JSON: {lob}.json for state {state}, testCase {testCase}");
-                return LoadFromIncludeOnlyJson(includeOnlyJson, state, testCase);
+                return CreateSnapshot(
+                    LoadFromIncludeOnlyJson(
+                        includeOnlyJson,
+                        state,
+                        testCase),
+                    includeOnlyJson,
+                    lob,
+                    testCase);
             }
 
             // 4. Per-state JSON (backward compat)
             var jsonPath = Path.Combine(basePath, $"{lob}_{state}.json");
             if (File.Exists(jsonPath))
-                return LoadFromJson(jsonPath);
+            {
+                return CreateSnapshot(
+                    LoadFromJson(jsonPath),
+                    jsonPath,
+                    lob,
+                    testCase);
+            }
 
             throw new FileNotFoundException(
                 $"No baseline found for {lob}/{state} (testCase={testCase}). " +
                 $"Place {lob}.json (include-only) or {lob}.csv (merged) in Resources/ExpectedForms/{lob}/");
+        }
+
+        private FormsBaselineSnapshot CreateSnapshot(
+            IReadOnlyList<ExpectedFormEntry> entries,
+            string path,
+            string lob,
+            string testCase)
+        {
+            var resolvedPath = SafeResolvePath(path);
+            return new FormsBaselineSnapshot(
+                entries,
+                $"{lob}:{testCase}".ToUpperInvariant(),
+                _config.GetBaselineVersion(
+                    lob.ToUpperInvariant(),
+                    testCase.ToUpperInvariant()),
+                Convert.ToHexString(
+                    SHA256.HashData(File.ReadAllBytes(resolvedPath))));
         }
 
         /// <summary>

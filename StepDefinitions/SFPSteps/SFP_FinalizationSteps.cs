@@ -2,6 +2,7 @@
 using Microsoft.Playwright;
 using NUnit.Framework;
 using PnCTestAutomation.Artifacts;
+using PnCTestAutomation.BusinessOutcomes;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Models;
@@ -30,13 +31,17 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         private readonly IFormsOrchestrationService _formsOrchestrator;
         private readonly IConfiguration _configuration;
         private readonly IQuoteHandoff _quoteHandoff;
+        private readonly IBusinessOutcomeContext _businessOutcomeContext;
+        private readonly IBusinessOutcomeVerifier _businessOutcomes;
 
         public SFP_FinalizationSteps(
             PlaywrightContext context,
             ScenarioContext scenarioContext,
             IFormsOrchestrationService formsOrchestrator,
             IConfiguration configuration,
-            IQuoteHandoff quoteHandoff)
+            IQuoteHandoff quoteHandoff,
+            IBusinessOutcomeContext businessOutcomeContext,
+            IBusinessOutcomeVerifier businessOutcomes)
         {
             _context = context;
             _scenarioContext = scenarioContext;
@@ -45,6 +50,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             _formsOrchestrator = formsOrchestrator;
             _configuration = configuration;
             _quoteHandoff = quoteHandoff;
+            _businessOutcomeContext = businessOutcomeContext;
+            _businessOutcomes = businessOutcomes;
         }
 
         [When("user runs Insurance Score")]
@@ -145,73 +152,34 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         [Then("user verifies Premium on Pricing screen")]
         public async Task UserVerifiesPremiumOnPricingScreen()
         {
-            // Do not assume the previous step landed on Pricing; navigate explicitly.
             var sideNav = new SideMenuNavigation(_context.Page);
-            try
-            {
-                await sideNav.GoToPricingAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Pricing] Could not navigate via side menu to Pricing: {ex.Message}");
-            }
+            await sideNav.GoToPricingAsync();
 
             var pricingPage = new SFP_PricingPage(_context.Page);
             await pricingPage.WaitForSpinnerAsync();
-
-            // Check if either the Quote Link or View Full Details is visible (indicating pricing loaded)
-            var quoteLink = pricingPage.QuoteLink;
-            var viewToggle = pricingPage.ViewFullDetailsToggle;
-
-            var isPremiumVisible = await quoteLink.CountAsync() > 0 || await viewToggle.CountAsync() > 0;
-            Assert.That(isPremiumVisible, Is.True, "Premium should be displayed on Pricing screen");
 
             // Capture quote number if SSN step didn't get it
             if (string.IsNullOrWhiteSpace(_contextData.QuoteNumber))
             {
                 _contextData.QuoteNumber = await SFPSteps.ExtractQuoteNumberFromPageAsync(_context.Page);
-                if (!string.IsNullOrWhiteSpace(_contextData.QuoteNumber))
-                    Console.WriteLine($"*** QUOTE NUMBER (captured at Pricing): {_contextData.QuoteNumber} ***");
-                else
-                    Console.WriteLine("[Pricing] Quote number not found on page.");
+                _quoteHandoff.Publish(_contextData.QuoteNumber);
             }
 
-            Console.WriteLine("Premium verified on Pricing screen");
+            ConfirmOutcomeProfileApplicability();
+            var authoritativeQuote = _quoteHandoff
+                .Require(nameof(UserVerifiesPremiumOnPricingScreen))
+                .QuoteNumber;
+            var displayedQuote =
+                await SFPSteps.ExtractQuoteNumberFromPageAsync(_context.Page);
+            await _businessOutcomes.VerifyQuoteIdentityAsync(
+                authoritativeQuote,
+                displayedQuote,
+                "pricing");
 
-            // Capture actual premium, log it, then assert against baseline if one is configured.
-            var premium = await pricingPage.GetAnnualPremiumAsync();
-            if (premium.HasValue)
-            {
-                Console.WriteLine($"*** ANNUAL PREMIUM: ${premium.Value:N2} ***");
-
-                var stateAbbv = StateAbbreviations.ToAbbreviation(_contextData.RatingState);
-                var productKey = GetPremiumBaselineProductKey();
-                var expectedRaw = _configuration[$"ExpectedPremiums:{productKey}:{stateAbbv}:Amount"];
-                var skipPremiumBaselineAssertion = string.Equals(
-                    _configuration["Debugging:SkipPremiumBaselineAssertion"],
-                    "true",
-                    StringComparison.OrdinalIgnoreCase);
-
-                if (!string.IsNullOrWhiteSpace(expectedRaw) && decimal.TryParse(expectedRaw, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var expectedPremium))
-                {
-                    if (skipPremiumBaselineAssertion)
-                    {
-                        Console.WriteLine($"[Premium][DEBUG] Baseline assertion skipped for {productKey}/{stateAbbv}. Expected ${expectedPremium:N2}, captured ${premium.Value:N2}.");
-                    }
-                    else
-                    {
-                        Assert.That(premium.Value, Is.EqualTo(expectedPremium).Within(0.01m),
-                            $"[Premium Regression] {productKey}/{stateAbbv}: expected ${expectedPremium:N2} but captured ${premium.Value:N2}");
-                        Console.WriteLine($"[Premium] {productKey}/{stateAbbv} baseline assertion passed: ${premium.Value:N2}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"[Premium] No configured baseline for {productKey}/{stateAbbv}; captured ${premium.Value:N2}.");
-                }
-            }
-            else
-                Console.WriteLine("[Premium] Could not extract annual premium amount – inspect pricing page test IDs to refine locator.");
+            var rawPremium = await pricingPage.GetAnnualPremiumTextAsync();
+            await _businessOutcomes.VerifyPremiumAsync(rawPremium);
+            Console.WriteLine(
+                "[BusinessOutcome] Quote identity and premium matched the approved profile.");
         }
 
         /// <summary>
@@ -239,32 +207,6 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 return "CE";
 
             return "BASIC";
-        }
-
-        private string GetPremiumBaselineProductKey()
-        {
-            var productSelection = (_contextData?.ProductSelection ?? string.Empty).Trim();
-            if (productSelection.Equals("CE", StringComparison.OrdinalIgnoreCase)
-                || productSelection.Equals("Country Estate", StringComparison.OrdinalIgnoreCase))
-            {
-                return "CE";
-            }
-
-            if (productSelection.Equals("SFP", StringComparison.OrdinalIgnoreCase)
-                || productSelection.Equals("Special Farm Package", StringComparison.OrdinalIgnoreCase))
-            {
-                return "SFP";
-            }
-
-            var tags = _scenarioContext?.ScenarioInfo?.Tags ?? Array.Empty<string>();
-            if (tags.Any(t => t.Equals("CE", StringComparison.OrdinalIgnoreCase)))
-                return "CE";
-
-            var scenarioTitle = _scenarioContext?.ScenarioInfo?.Title ?? string.Empty;
-            if (scenarioTitle.IndexOf("Country Estate", StringComparison.OrdinalIgnoreCase) >= 0)
-                return "CE";
-
-            return "SFP";
         }
 
         [When("user completes Billing Information")]
@@ -450,59 +392,35 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         public async Task UserClicksSaveForLater()
         {
             var page = _context.Page;
-
-            // Strategy 1: "QUOTE ACTIONS" dropdown (present on Submission and finalization pages).
-            // Save for Later lives inside this menu — open it first, then click the item.
-            var quoteActionsBtn = page.Locator("button").Filter(new() { HasText = "QUOTE ACTIONS" });
-            if (await quoteActionsBtn.CountAsync() > 0)
+            var quoteActions = page.GetByRole(
+                AriaRole.Button,
+                new() { Name = "QUOTE ACTIONS", Exact = true });
+            if (await quoteActions.CountAsync() == 1)
             {
-                try
-                {
-                    await quoteActionsBtn.First.ClickAsync();
-                    var saveItem = page.Locator("mat-menu-item, [role='menuitem'], button")
-                        .Filter(new()
-                        {
-                            HasTextRegex = new System.Text.RegularExpressions.Regex(
-                                @"save\s*for\s*later|suspend",
-                                System.Text.RegularExpressions.RegexOptions.IgnoreCase)
-                        });
-
-                    if (await saveItem.CountAsync() > 0)
+                await quoteActions.ClickAsync();
+                var saveItem = page.GetByRole(
+                    AriaRole.Menuitem,
+                    new()
                     {
-                        await saveItem.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 3000 });
-                        await saveItem.First.ClickAsync();
-                        Console.WriteLine("[SaveForLater] Clicked via QUOTE ACTIONS dropdown.");
-                        await page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
-                        return;
-                    }
-
-                    Console.WriteLine("[SaveForLater] QUOTE ACTIONS opened, but no Save for Later item was found.");
-                }
-                catch (TimeoutException)
+                        NameRegex = new System.Text.RegularExpressions.Regex(
+                            @"save\s*for\s*later|suspend",
+                            System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+                    });
+                if (await saveItem.CountAsync() == 1)
                 {
-                    Console.WriteLine("[SaveForLater] QUOTE ACTIONS menu item did not become visible in time; trying fallback strategies.");
-                }
-            }
-
-            // Strategy 2: Direct button or link visible on earlier pages in the flow.
-            foreach (var text in new[] { "Save for Later", "Save For Later", "Suspend" })
-            {
-                var loc = page.Locator("button, a").Filter(new() { HasText = text });
-                if (await loc.CountAsync() > 0)
-                {
-                    await loc.First.ClickAsync();
-                    Console.WriteLine($"[SaveForLater] Clicked '{text}' directly.");
-                    await page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
+                    await saveItem.ClickAsync();
+                    await page.WaitForLoadStateAsync(
+                        LoadState.NetworkIdle,
+                        new() { Timeout = 30000 });
+                    Console.WriteLine(
+                        "[SaveForLater] The scenario quote was saved.");
                     return;
                 }
             }
 
-            // Fallback: navigate home. Quote number is already captured so next step can search for it.
-            Console.WriteLine("[SaveForLater] WARNING: Save for Later not found — navigating to EQ home.");
-            var eqBase = _configuration["Playwright:ExpertQuoteBase"]
-                         ?? "https://expertquote-qa.americannational.com";
-            await page.GotoAsync(eqBase.TrimEnd('/') + "/expertquote/",
-                new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle, Timeout = 60000 });
+            throw new BusinessOutcomeException(
+                "quote handoff",
+                "The Save for Later action was missing or ambiguous.");
         }
 
         [When("user navigates to Expert Quote and searches by Quote Number")]
@@ -529,7 +447,21 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             }
 
             await clientSearchPage.SearchForClientAsync(quoteNumber);
-            Console.WriteLine($"Searched for Quote: {quoteNumber}");
+            var displayedQuote =
+                await clientSearchPage.GetExactQuoteIdentityAsync(quoteNumber);
+            await _businessOutcomes.VerifyQuoteIdentityAsync(
+                quoteNumber,
+                displayedQuote,
+                "save-search-result");
+            await clientSearchPage.OpenExactQuoteAsync(quoteNumber);
+            var reopenedQuote =
+                await SFPSteps.ExtractQuoteNumberFromPageAsync(_context.Page);
+            await _businessOutcomes.VerifyQuoteIdentityAsync(
+                quoteNumber,
+                reopenedQuote,
+                "save-reopen");
+            Console.WriteLine(
+                "[BusinessOutcome] Reopened quote identity matched the scenario.");
         }
 
         [When("user navigates to Submission page")]
@@ -627,8 +559,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             Console.WriteLine("Checklist tab closed and EQ Submission page is ready");
         }
 
-        [Then("user verifies Transmit button is enabled on Submission page")]
-        public async Task UserVerifiesTransmitButtonIsEnabled()
+        [Then("user verifies Transmit action is available on Submission page")]
+        public async Task UserVerifiesTransmitActionIsAvailable()
         {
             // Navigate to Submission explicitly — EQ may have moved after the Ok dialog
             var sideMenu = new SideMenuNavigation(_context.Page);
@@ -637,24 +569,26 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             var submissionPage = new SubmissionPage(_context.Page);
             await submissionPage.WaitForSpinnerAsync();
 
-            // Try role name first, then testId, then any button containing "Transmit" text
-            var transmitBtn = submissionPage.TransmitButtonAlt;
-            if (await transmitBtn.CountAsync() == 0)
-                transmitBtn = submissionPage.TransmitButton;
-            if (await transmitBtn.CountAsync() == 0)
-                transmitBtn = _context.Page.Locator("button").Filter(new() { HasText = "Transmit" });
+            var availability =
+                await submissionPage.GetTransmitAvailabilityAsync();
+            await _businessOutcomes.VerifyTransmissionAvailabilityAsync(
+                availability);
+            Console.WriteLine(
+                "[BusinessOutcome] Transmit action is available; no transmission was performed.");
+        }
 
-            Assert.That(await transmitBtn.CountAsync() > 0, Is.True, "Transmit button should be present on Submission page");
-
-            var cannotTransmitMessage = _context.Page.GetByText("Cannot Transmit", new() { Exact = false });
-            var blockerDetails = await cannotTransmitMessage.CountAsync() > 0
-                ? (await cannotTransmitMessage.First.InnerTextAsync()).Trim()
-                : "No explicit transmit blocker message was found.";
-
-            Assert.That(await transmitBtn.IsEnabledAsync(), Is.True,
-                $"Transmit button should be enabled. UI blocker details: {blockerDetails}");
-
-            Console.WriteLine("Verified: Transmit button is enabled on Submission page");
+        private void ConfirmOutcomeProfileApplicability()
+        {
+            var environment =
+                Environment.GetEnvironmentVariable("TEST_ENVIRONMENT")
+                ?? _configuration["Environment"]
+                ?? "qa";
+            var state =
+                StateAbbreviations.ToAbbreviation(_contextData.RatingState);
+            _businessOutcomeContext.ConfirmApplicability(
+                environment,
+                state,
+                _contextData.WritingCompany);
         }
 
     }

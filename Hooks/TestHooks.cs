@@ -2,6 +2,7 @@
 using Microsoft.Playwright;
 
 using PnCTestAutomation.Artifacts;
+using PnCTestAutomation.BusinessOutcomes;
 using PnCTestAutomation.Configuration;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.DataPool;
@@ -44,6 +45,8 @@ namespace PnCTestAutomation.Hooks
         private readonly IQuoteHandoff _quoteHandoff;
         private readonly IArtifactContext _artifacts;
         private readonly IArtifactCaptureService _artifactCapture;
+        private readonly IExpectedOutcomeProfileProvider _outcomeProfiles;
+        private readonly IBusinessOutcomeContext _businessOutcomeContext;
         private ArtifactEvidenceException _artifactFailure;
 
         public TestHooks(
@@ -58,7 +61,9 @@ namespace PnCTestAutomation.Hooks
             IDataPoolClient dataPoolClient,
             IQuoteHandoff quoteHandoff,
             IArtifactContext artifacts,
-            IArtifactCaptureService artifactCapture)
+            IArtifactCaptureService artifactCapture,
+            IExpectedOutcomeProfileProvider outcomeProfiles,
+            IBusinessOutcomeContext businessOutcomeContext)
         {
             _context = context;
             _browserFactory = browserFactory;
@@ -74,6 +79,8 @@ namespace PnCTestAutomation.Hooks
             _quoteHandoff = quoteHandoff;
             _artifacts = artifacts;
             _artifactCapture = artifactCapture;
+            _outcomeProfiles = outcomeProfiles;
+            _businessOutcomeContext = businessOutcomeContext;
         }
 
         [BeforeTestRun]
@@ -141,6 +148,30 @@ namespace PnCTestAutomation.Hooks
             {
                 NUnit.Framework.Assert.Ignore(skipReason);
                 return;
+            }
+
+            if (TryGetBusinessOutcomeScenarioProfile(out var scenarioProfile))
+            {
+                var state = TryGetScenarioStateAbbreviation()
+                            ?? throw new BusinessOutcomeConfigurationException(
+                                "A state argument is required for an SFP business outcome scenario.");
+                var environment =
+                    Environment.GetEnvironmentVariable("TEST_ENVIRONMENT")
+                    ?? _configuration["Environment"]
+                    ?? "qa";
+                var resolution = _outcomeProfiles.ResolvePreflight(
+                    scenarioProfile,
+                    environment,
+                    state);
+                if (!resolution.IsRunnable)
+                {
+                    NUnit.Framework.Assert.Ignore(
+                        $"Business outcome profile '{resolution.Profile.ProfileId}' " +
+                        $"is explicitly non-runnable: {resolution.Reason}");
+                    return;
+                }
+
+                _businessOutcomeContext.Set(resolution.Profile);
             }
 
             if (IsApiScenario())
@@ -406,6 +437,31 @@ namespace PnCTestAutomation.Hooks
                 || featureTags.Any(t => t.Equals("API", StringComparison.OrdinalIgnoreCase));
         }
 
+        private bool TryGetBusinessOutcomeScenarioProfile(out string profile)
+        {
+            profile = string.Empty;
+            var tags = (_scenarioContext.ScenarioInfo.Tags ?? [])
+                .Concat(_featureContext.FeatureInfo.Tags ?? [])
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            if (!tags.Contains("BusinessOutcomes"))
+                return false;
+
+            if (tags.Contains("SfpCountryEstateOutcome"))
+            {
+                profile = "sfp-country-estate";
+                return true;
+            }
+
+            if (tags.Contains("SfpBasicOutcome"))
+            {
+                profile = "sfp-basic";
+                return true;
+            }
+
+            throw new BusinessOutcomeConfigurationException(
+                "A BusinessOutcomes scenario must declare a stable SFP outcome profile tag.");
+        }
+
         private static void CleanupOldTestResults(string testResultsRoot, int days)
         {
             if (!Directory.Exists(testResultsRoot)) return;
@@ -434,8 +490,8 @@ namespace PnCTestAutomation.Hooks
         {
             reason = string.Empty;
 
-            var envSetting = _configuration["Environment"]
-                             ?? Environment.GetEnvironmentVariable("TEST_ENVIRONMENT")
+            var envSetting = Environment.GetEnvironmentVariable("TEST_ENVIRONMENT")
+                             ?? _configuration["Environment"]
                              ?? "QA";
 
             if (!envSetting.Equals("Dev", StringComparison.OrdinalIgnoreCase))

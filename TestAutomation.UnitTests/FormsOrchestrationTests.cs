@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using PnCTestAutomation.Artifacts;
+using PnCTestAutomation.BusinessOutcomes;
 using PnCTestAutomation.Clients;
 using PnCTestAutomation.Models;
 using PnCTestAutomation.Services;
@@ -142,6 +143,7 @@ public class FormsOrchestrationTests
             new FakeEvidenceWriter(),
             artifacts,
             new ArtifactCaptureService(artifacts),
+            CreateVerifier(artifacts),
             new DuckCreekFormsConfig
             {
                 Manuscript = "Manuscript",
@@ -158,20 +160,34 @@ public class FormsOrchestrationTests
         });
     }
 
-    [TestCase("<server><responses /></server>", "response validation")]
-    [TestCase("<server><responses><FormsEngine.initPrintJobRs returnSuccessStatus=\"1\"><printJob name=\"Wrong\" manuscript=\"Manuscript\"><printDoc name=\"FORM-A\" selected=\"2\" /></printJob></FormsEngine.initPrintJobRs></responses></server>", "response metadata")]
-    public void InvalidFormsOutputFailsClosed(string xml, string expectedStage)
+    [Test]
+    public void EmptyFormsOutputFailsClosed()
     {
         var service = CreateService(
-            CreateArtifacts($"invalid-{expectedStage.Replace(' ', '-')}"),
+            CreateArtifacts("invalid-response"),
             new FakeValidationService(PassingSummary()),
-            xml,
+            "<server><responses /></server>",
             new FakeEvidenceWriter());
 
         var exception = Assert.ThrowsAsync<FormsValidationException>(
             async () => await service.ValidateAsync(Request()));
 
-        Assert.That(exception!.Stage, Is.EqualTo(expectedStage));
+        Assert.That(exception!.Stage, Is.EqualTo("response validation"));
+    }
+
+    [Test]
+    public void FormsMetadataMismatchFailsClosed()
+    {
+        var service = CreateService(
+            CreateArtifacts("metadata-mismatch"),
+            new FakeValidationService(PassingSummary()),
+            "<server><responses><FormsEngine.initPrintJobRs returnSuccessStatus=\"1\"><printJob name=\"Wrong\" manuscript=\"Manuscript\"><printDoc name=\"FORM-A\" selected=\"2\" /></printJob></FormsEngine.initPrintJobRs></responses></server>",
+            new FakeEvidenceWriter());
+
+        var exception = Assert.ThrowsAsync<BusinessOutcomeException>(
+            async () => await service.ValidateAsync(Request()));
+
+        Assert.That(exception!.Outcome, Is.EqualTo("forms contract"));
     }
 
     [Test]
@@ -209,11 +225,43 @@ public class FormsOrchestrationTests
             writer,
             artifacts,
             new ArtifactCaptureService(artifacts),
+            CreateVerifier(artifacts),
             new DuckCreekFormsConfig
             {
                 Manuscript = "Manuscript",
                 PrintJob = "PrintJob"
             });
+
+    private static BusinessOutcomeVerifier CreateVerifier(
+        IArtifactContext artifacts)
+    {
+        var context = new BusinessOutcomeContext();
+        context.Set(new ExpectedOutcomeProfile
+        {
+            ProfileId = "unit-profile",
+            Version = "1.0.0",
+            ScenarioProfile = "sfp-basic",
+            Environment = "qa",
+            State = "MN",
+            Company = "Company",
+            Mode = BusinessOutcomeProfileMode.Approved,
+            Forms = new FormsOutcomeExpectation
+            {
+                BaselineId = "SFP:BASIC",
+                BaselineVersion = "v1",
+                BaselineChecksum = new string('A', 64),
+                Manuscript = "Manuscript",
+                PrintJob = "PrintJob",
+                ExpectedReturnSuccessStatuses = ["1"],
+                RequireRoleBasedSecurity = true
+            }
+        });
+        context.ConfirmApplicability("qa", "MN", "Company");
+        return new BusinessOutcomeVerifier(
+            context,
+            new ArtifactCaptureService(artifacts),
+            artifacts);
+    }
 
     private ArtifactContext CreateArtifacts(string scenarioId) =>
         new(
@@ -275,10 +323,13 @@ public class FormsOrchestrationTests
             _failure = failure;
         }
 
-        public Task<string> GetDuckCreekSessionIdViaCLASAsync(string quoteNumber) =>
+        public Task<FormsSession> PrepareSessionAsync(string quoteNumber) =>
             _failure == null
-                ? Task.FromResult("sensitive-session-id")
-                : Task.FromException<string>(_failure);
+                ? Task.FromResult(
+                    new FormsSession(
+                        "sensitive-session-id",
+                        quoteNumber))
+                : Task.FromException<FormsSession>(_failure);
     }
 
     private sealed class FakeFormsApiClient : IFormsApiClient
@@ -334,6 +385,16 @@ public class FormsOrchestrationTests
                 }
             ];
         }
+
+        public FormsBaselineSnapshot LoadExpectedBaseline(
+            string lob,
+            string state,
+            string testCase = "BASIC") =>
+            new(
+                LoadExpectedFormsForLob(lob, state, testCase),
+                "SFP:BASIC",
+                "v1",
+                new string('A', 64));
 
         public FormsValidationSummary Validate(
             List<ExpectedFormEntry> expected,

@@ -230,6 +230,7 @@ Set these before running tests. They override the corresponding `appsettings.jso
 | `DATAPOOL_LISTEN_URL` | `DataPool:ListenUrl` (DataPool host) | DataPool server binding |
 | `TEST_ARTIFACT_ROOT` | `Artifacts:RootPath` | Owned run/scenario evidence root |
 | `TEST_ARTIFACT_PROFILE` | `Artifacts:ProfileName` | Evidence profile name recorded in manifests |
+| `TEST_OUTCOME_PROFILE_PATH` | `BusinessOutcomes:ProfilePath` | External QA-approved business outcome catalog |
 
 ```powershell
 # Minimum required for UI tests
@@ -258,13 +259,15 @@ Ask your QA lead for the credential values. Do **not** commit them to any file.
     "ExpertQuote": "https://expertquote-qa.americannational.com/expertquote/#/quote"
   },
   "Debugging": {
-    "PauseOnFailure": false,
-    "SkipPremiumBaselineAssertion": false
+    "PauseOnFailure": false
   },
   "Artifacts": {
     "RootPath": "TestResults",
     "ProfileName": "standard",
     "RequiredOnFailure": [ "Screenshot" ]
+  },
+  "BusinessOutcomes": {
+    "ProfilePath": "Resources/ExpectedOutcomes/sfp-outcomes.json"
   },
   "LocatorRescue": {
     "Enabled": true
@@ -277,6 +280,18 @@ Ask your QA lead for the credential values. Do **not** commit them to any file.
   }
 }
 ```
+
+### SFP business outcomes
+
+`@BusinessOutcomes` scenarios resolve a versioned profile before browser
+startup. The default SFP catalog contains only explicit `NonRunnable` entries
+until QA supplies approved environment/state/company expectations. A gated
+profile validates quote identity, normalized USD premium and tolerance, forms
+baseline version/checksum and response metadata, and either transmission
+availability or a completed transmission result.
+
+See `Docs/Business-Outcome-Profiles.md`. The old unversioned
+`ExpectedPremiums` section is not used.
 
 ### Quote handoff and DataPool
 
@@ -487,6 +502,8 @@ TestResults/
         │   └── {ordinal}-scenario-failure.zip
         ├── video/
         │   └── {ordinal}-scenario-failure.webm
+        ├── business-outcomes/
+        │   └── {ordinal}-{outcome}.json
         └── forms/
             ├── xml/
             ├── csv/

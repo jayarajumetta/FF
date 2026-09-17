@@ -1,4 +1,6 @@
 ﻿using Microsoft.Playwright;
+using PnCTestAutomation.BusinessOutcomes;
+using System;
 using System.Threading.Tasks;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Pages;
@@ -38,5 +40,29 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
         public ILocator TransmitButtonAlt =>
             _page.GetByRole(AriaRole.Button, new() { Name = "Transmit" });
         #endregion
+
+        public async Task<TransmissionAvailability> GetTransmitAvailabilityAsync()
+        {
+            var transmit = TransmitButton;
+            var count = await transmit.CountAsync();
+            if (count == 0)
+            {
+                transmit = TransmitButtonAlt;
+                count = await transmit.CountAsync();
+            }
+
+            if (count > 1)
+            {
+                throw new InvalidOperationException(
+                    "Transmission readiness is ambiguous because multiple Transmit actions matched.");
+            }
+
+            if (count == 0)
+                return new TransmissionAvailability(false, false);
+
+            return new TransmissionAvailability(
+                await transmit.IsVisibleAsync(),
+                await transmit.IsEnabledAsync());
+        }
     }
 }
