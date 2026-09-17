@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PnCTestAutomation.Artifacts;
 using PnCTestAutomation.Configuration;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.DataPool;
@@ -81,6 +82,17 @@ namespace PnCTestAutomation
             dataPoolConfig.Validate();
             services.AddSingleton(dataPoolConfig);
 
+            var artifactOptions = configuration.GetSection("Artifacts").Get<ArtifactOptions>()
+                                  ?? new ArtifactOptions();
+            artifactOptions.RootPath = GetEnvironmentValue(
+                "TEST_ARTIFACT_ROOT",
+                artifactOptions.RootPath);
+            artifactOptions.ProfileName = GetEnvironmentValue(
+                "TEST_ARTIFACT_PROFILE",
+                artifactOptions.ProfileName);
+            artifactOptions.Validate();
+            services.AddSingleton(artifactOptions);
+
             services.AddSingleton<BrowserFactory>();
             services.AddSingleton<PlaywrightContext>();
 
@@ -157,6 +169,19 @@ namespace PnCTestAutomation
                 return created;
             });
             services.AddScoped<IQuoteHandoff, ScenarioQuoteHandoff>();
+            services.AddScoped<IArtifactContext>(provider =>
+            {
+                var scenarioContext = provider.GetRequiredService<ScenarioContext>();
+                var scenarioId = NUnit.Framework.TestContext.CurrentContext.Test.ID;
+                if (string.IsNullOrWhiteSpace(scenarioId))
+                    scenarioId = scenarioContext.ScenarioInfo.Title;
+
+                return new ArtifactContext(
+                    artifactOptions,
+                    ArtifactRunIdentity.Current,
+                    scenarioId);
+            });
+            services.AddScoped<IArtifactCaptureService, ArtifactCaptureService>();
 
             // ── Forms Checking services ──
             var formsConfig = configuration.GetSection("DuckCreekForms").Get<DuckCreekFormsConfig>();
@@ -189,9 +214,11 @@ namespace PnCTestAutomation
                 services.AddSingleton(new DuckCreekFormsConfig());
             }
 
-            services.AddScoped<SessionService>();
-            services.AddScoped<FormsValidationService>();
-            services.AddHttpClient<DuckCreekFormsClient>();
+            services.AddScoped<IFormsSessionProvider, SessionService>();
+            services.AddScoped<IFormsValidationService, FormsValidationService>();
+            services.AddScoped<IFormsEvidenceWriter, FormsEvidenceWriter>();
+            services.AddScoped<IFormsOrchestrationService, FormsOrchestrationService>();
+            services.AddHttpClient<IFormsApiClient, DuckCreekFormsClient>();
         }
 
         private static void OverrideFromEnvironment(OAuthConfig config)

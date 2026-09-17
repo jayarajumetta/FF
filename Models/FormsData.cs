@@ -136,7 +136,6 @@ namespace PnCTestAutomation.Models
         public string CLASBaseUrlDev { get; set; } = string.Empty;
         public string ServerBaseUrlDev { get; set; } = string.Empty;
         public string PrintJob { get; set; } = "TransactionPrint";
-        public string ResultsBasePath { get; set; } = string.Empty;
 
         /// <summary>
         /// Default manuscript (fallback when LOB not found in Manuscripts dictionary).

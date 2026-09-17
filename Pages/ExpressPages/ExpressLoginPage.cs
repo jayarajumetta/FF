@@ -56,10 +56,6 @@ namespace PnCTestAutomation.Pages.ExpressPages
                 catch (TimeoutException ex)
                 {
                     Console.WriteLine($"[ExpressLogin] ERROR: Search input not visible after 90s. Current URL: {_page.Url}");
-                    // Take a screenshot for debugging
-                    var screenshotPath = $"clas_login_timeout_{DateTime.Now:yyyyMMdd_HHmmss}.png";
-                    await _page.ScreenshotAsync(new() { Path = screenshotPath });
-                    Console.WriteLine($"[ExpressLogin] Screenshot saved: {screenshotPath}");
                     throw new TimeoutException($"CLAS homepage did not load after login. Search input not found. Current URL: {_page.Url}", ex);
                 }
             }

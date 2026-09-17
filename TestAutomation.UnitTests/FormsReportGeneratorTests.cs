@@ -24,9 +24,13 @@ public class FormsReportGeneratorTests
         try
         {
             if (writeTrx)
-                FormsReportGenerator.WriteTrxResults(summary, outputDirectory);
+                FormsReportGenerator.WriteTrxResults(
+                    summary,
+                    Path.Combine(outputDirectory, "forms-results.trx"));
             else
-                FormsReportGenerator.WritePipelineSummary(summary, outputDirectory);
+                FormsReportGenerator.WritePipelineSummary(
+                    summary,
+                    Path.Combine(outputDirectory, "forms-summary.md"));
 
             var outputPath = Directory.GetFiles(outputDirectory).Single();
             Assert.Multiple(() =>

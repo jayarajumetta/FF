@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using PnCTestAutomation.Models;
@@ -28,7 +29,14 @@ namespace PnCTestAutomation.Parsers
             {
                 var name = element.Attribute("name")?.Value ?? string.Empty;
                 var selectedStr = element.Attribute("selected")?.Value ?? "0";
-                int.TryParse(selectedStr, out var selected);
+                if (string.IsNullOrWhiteSpace(name))
+                    throw new FormatException("Forms XML contains a printDoc without a name.");
+                if (!int.TryParse(selectedStr, out var selected) ||
+                    selected is < 0 or > 2)
+                {
+                    throw new FormatException(
+                        $"Forms XML contains an invalid selected value for form '{name}'.");
+                }
 
                 forms.Add(new ActualFormEntry
                 {

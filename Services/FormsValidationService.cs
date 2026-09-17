@@ -8,6 +8,25 @@ using PnCTestAutomation.Models;
 
 namespace PnCTestAutomation.Services
 {
+    public interface IFormsValidationService
+    {
+        List<ExpectedFormEntry> LoadExpectedFormsForLob(
+            string lob,
+            string state,
+            string testCase = "BASIC");
+
+        FormsValidationSummary Validate(
+            List<ExpectedFormEntry> expected,
+            List<ActualFormEntry> actual,
+            string lob,
+            string state,
+            string quoteId);
+
+        string WriteResultsCsv(
+            FormsValidationSummary summary,
+            string outputPath);
+    }
+
     /// <summary>
     /// Enhanced forms validation engine — replaces the legacy Tosca PowerShell FormsCheck workflow.
     ///
@@ -15,10 +34,9 @@ namespace PnCTestAutomation.Services
     ///   - Merged single-file-per-LOB baselines (Type column: BASE=shared, B=BASIC-only, C=CE-only)
     ///   - Human-readable validation messages (no more cryptic C-codes as primary output)
     ///   - HTML report generation via FormsReportGenerator
-    ///   - Record mode: capture actual API response as a proposed baseline update
     ///   - Legacy C1–C15 codes preserved as reference field for backward compatibility
     /// </summary>
-    public class FormsValidationService
+    public class FormsValidationService : IFormsValidationService
     {
         private readonly DuckCreekFormsConfig _config;
 
@@ -162,8 +180,8 @@ namespace PnCTestAutomation.Services
 
                 if (!seen.Add(formName))
                 {
-                    Console.WriteLine($"  WARNING: Duplicate form '{formName}' — keeping first occurrence");
-                    continue;
+                    throw new InvalidDataException(
+                        $"The forms baseline contains duplicate form '{formName}'.");
                 }
 
                 entries.Add(new ExpectedFormEntry
@@ -347,7 +365,7 @@ namespace PnCTestAutomation.Services
                     FormName = policyForm.Name,
                     ExpectedStatus = "",
                     ActualSelected = policyForm.Selected,
-                    Result = "INFO",
+                    Result = "FAIL",
                     ResultCode = code,
                     Details = $"{code} INFO: Form {policyForm.Name} is not on test case but is listed on policy",
                     Message = $"Not in baseline but found on policy as {selectedDesc}"
@@ -455,27 +473,12 @@ namespace PnCTestAutomation.Services
         /// <summary>
         /// Saves results CSV with both human-readable and legacy formats.
         /// </summary>
-        public string SaveResultsCsv(FormsValidationSummary summary, string testCaseName)
+        public string WriteResultsCsv(
+            FormsValidationSummary summary,
+            string outputPath)
         {
-            // Sanitize at the sink: testCaseName and the summary fields used in the file
-            // name all originate from external data (CSV ReadLine / Gherkin arguments).
-            // Path traversal mitigation (CWE-22): strip traversal sequences, apply an
-            // allowlist, then verify the final path stays inside the intended directory.
-            var safeTestCase  = SanitizeFileNameSegment(testCaseName);
-            var safeLob       = SanitizeFileNameSegment(summary.LOB);
-            var safeState     = SanitizeFileNameSegment(summary.State);
-            var safeQuoteId   = SanitizeFileNameSegment(summary.QuoteId);
-
-            var baseDir  = Path.GetFullPath(Path.Combine(_config.ResultsBasePath, safeLob));
-            Directory.CreateDirectory(baseDir);
-
-            var safeFile = Path.GetFileName($"{safeTestCase}_{safeState}_{safeQuoteId}Results.csv");
-            var filePath = Path.GetFullPath(Path.Combine(baseDir, safeFile));
-
-            // Containment check: reject any path that escapes the intended output directory.
-            if (!filePath.StartsWith(baseDir + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
-                throw new InvalidOperationException("Path traversal detected: CSV path escapes the intended output directory.");
-
+            var filePath = Path.GetFullPath(outputPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
             using var writer = new StreamWriter(filePath);
             writer.WriteLine("Form,Expected,Actual,Result,Code,Message");
 
@@ -494,29 +497,6 @@ namespace PnCTestAutomation.Services
 
             Console.WriteLine($"Results CSV saved: {filePath}");
             return filePath;
-        }
-
-        /// <summary>
-        /// Sanitizes a single file name segment against path traversal (CWE-22).
-        /// Strips OS-invalid characters, neutralizes traversal sequences, then
-        /// applies an allowlist so only letters, digits, underscores, and dashes remain.
-        /// </summary>
-        private static string SanitizeFileNameSegment(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-                return "_";
-
-            // Neutralize traversal sequences before character-level checks
-            var value = input.Replace("..", "_");
-
-            // Strip OS-invalid file name characters
-            foreach (var c in Path.GetInvalidFileNameChars())
-                value = value.Replace(c, '_');
-
-            // Allowlist: permit only letters, digits, underscore, and dash
-            value = Regex.Replace(value, @"[^a-zA-Z0-9_\-]", "_");
-
-            return value;
         }
 
         // ───────────────────────── Output: Console summary ───────────────────────
@@ -563,135 +543,6 @@ namespace PnCTestAutomation.Services
                 Console.WriteLine("\n  All forms validated successfully.");
 
             Console.WriteLine();
-        }
-
-        // ───────────────────────── Record mode: baseline capture ──────────────────
-
-        /// <summary>
-        /// Captures the actual API response as a proposed baseline update.
-        /// Saves to a _PROPOSED.csv file alongside the existing baseline.
-        /// The user reviews the diff and replaces the baseline manually.
-        /// </summary>
-        public string SaveProposedBaseline(
-            List<ActualFormEntry> actualForms,
-            List<ExpectedFormEntry> currentBaseline,
-            string lob,
-            string state,
-            string testCase = "BASIC")
-        {
-            var basePath = Path.Combine(AppContext.BaseDirectory, "Resources", "ExpectedForms", lob);
-            Directory.CreateDirectory(basePath);
-            var suffix = string.IsNullOrWhiteSpace(testCase) ? "" : $"_{testCase.ToUpperInvariant()}";
-            var proposedPath = Path.Combine(basePath, $"{lob}{suffix}_PROPOSED.csv");
-
-            // If the proposed file already exists, read it and merge the new state column.
-            // Otherwise, start from the current baseline structure.
-            var allForms = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
-            var allTypes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            var states = new List<string>();
-
-            // Read existing proposed file if it exists (accumulates across multiple state runs)
-            if (File.Exists(proposedPath))
-            {
-                using var reader = new StreamReader(proposedPath);
-                var header = reader.ReadLine();
-                if (header != null)
-                {
-                    var cols = header.Split(',');
-                    var pFormIdx = Array.FindIndex(cols, c => c.Trim().Equals("Form", StringComparison.OrdinalIgnoreCase));
-                    var pTypeIdx = Array.FindIndex(cols, c => c.Trim().Equals("Type", StringComparison.OrdinalIgnoreCase));
-                    if (pFormIdx < 0) pFormIdx = 1;
-
-                    for (int i = 0; i < cols.Length; i++)
-                    {
-                        var col = cols[i].Trim();
-                        if (i != pFormIdx && i != pTypeIdx && col.Length == 2)
-                            states.Add(col);
-                    }
-
-                    while (!reader.EndOfStream)
-                    {
-                        var line = reader.ReadLine();
-                        if (string.IsNullOrWhiteSpace(line)) continue;
-                        var parts = line.Split(',');
-                        var formName = pFormIdx < parts.Length ? parts[pFormIdx].Trim() : "";
-                        if (string.IsNullOrEmpty(formName)) continue;
-
-                        var type = pTypeIdx >= 0 && pTypeIdx < parts.Length ? parts[pTypeIdx].Trim() : "BASE";
-                        allTypes[formName] = type;
-
-                        var stateVals = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                        for (int i = 0; i < states.Count; i++)
-                        {
-                            var colIdx = Array.FindIndex(cols, c => c.Trim().Equals(states[i], StringComparison.OrdinalIgnoreCase));
-                            if (colIdx >= 0 && colIdx < parts.Length)
-                                stateVals[states[i]] = parts[colIdx].Trim();
-                        }
-                        allForms[formName] = stateVals;
-                    }
-                }
-            }
-            else
-            {
-                // Seed from current baseline
-                foreach (var entry in currentBaseline)
-                {
-                    allForms[entry.FormName] = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                    allTypes[entry.FormName] = string.IsNullOrEmpty(entry.Type) ? "BASE" : entry.Type;
-                }
-            }
-
-            if (!states.Contains(state, StringComparer.OrdinalIgnoreCase))
-                states.Add(state);
-
-            // Map actual forms for this state
-            var actualLookup = actualForms.ToDictionary(a => a.Name, a => a);
-
-            // Update state column based on actual API response
-            foreach (var formName in allForms.Keys.ToList())
-            {
-                if (actualLookup.TryGetValue(formName, out var actual))
-                {
-                    allForms[formName][state] = actual.Selected switch
-                    {
-                        2 => "YM",
-                        1 => "YS",
-                        0 => "YU",
-                        _ => "YU"
-                    };
-                }
-                else
-                {
-                    allForms[formName][state] = "N";
-                }
-            }
-
-            // Add forms found on policy but not in baseline
-            foreach (var actual in actualForms.Where(a => !allForms.ContainsKey(a.Name)))
-            {
-                allForms[actual.Name] = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-                {
-                    [state] = actual.Selected switch { 2 => "YM", 1 => "YS", _ => "YU" }
-                };
-                allTypes[actual.Name] = "BASE";
-            }
-
-            // Write proposed file
-            states.Sort(StringComparer.OrdinalIgnoreCase);
-            using (var writer = new StreamWriter(proposedPath))
-            {
-                writer.WriteLine("Type,Form," + string.Join(",", states));
-                foreach (var (formName, stateVals) in allForms.OrderBy(kv => kv.Key))
-                {
-                    var type = allTypes.GetValueOrDefault(formName, "BASE");
-                    var values = states.Select(s => stateVals.GetValueOrDefault(s, "")).ToArray();
-                    writer.WriteLine($"{type},{formName},{string.Join(",", values)}");
-                }
-            }
-
-            Console.WriteLine($"\n  PROPOSED BASELINE saved: {proposedPath}");
-            Console.WriteLine($"  Review the file, then merge into {lob}.json (or rename to {lob}.csv) to activate.");
-            return proposedPath;
         }
 
         // ───────────────────────── Company filtering ─────────────────────────────

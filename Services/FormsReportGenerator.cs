@@ -19,6 +19,11 @@ namespace PnCTestAutomation.Services
         /// </summary>
         public static string Generate(IList<FormsValidationSummary> summaries, string outputPath)
         {
+            if (summaries == null || summaries.Count == 0)
+                throw new ArgumentException(
+                    "At least one forms validation summary is required.",
+                    nameof(summaries));
+
             Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
 
             var sb = new StringBuilder();
@@ -157,7 +162,9 @@ namespace PnCTestAutomation.Services
         /// <summary>
         /// Writes a Markdown summary file and emits ##vso[task.uploadsummary] so ADO attaches it to the pipeline run page.
         /// </summary>
-        public static void WritePipelineSummary(FormsValidationSummary summary, string outputDirectory)
+        public static string WritePipelineSummary(
+            FormsValidationSummary summary,
+            string outputPath)
         {
             var overall = summary.AllPassed ? "✅ ALL PASSED" : $"❌ {summary.Failed} FAILURE(S)";
             var md = new StringBuilder();
@@ -189,21 +196,20 @@ namespace PnCTestAutomation.Services
                     md.AppendLine($"| {item.FormName} | {item.Result} | {item.Message?.Replace("|", "\\|")} |");
             }
 
-            Directory.CreateDirectory(outputDirectory);
-            // Keep stored baseline data out of the filesystem path. The descriptive
-            // LOB/state values remain in the Markdown content and pipeline summary.
-            var mdPath = Path.GetFullPath(Path.Combine(
-                outputDirectory,
-                $"FormsValidationSummary_{Guid.NewGuid():N}.md"));
+            var mdPath = Path.GetFullPath(outputPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(mdPath)!);
             File.WriteAllText(mdPath, md.ToString(), Encoding.UTF8);
             // ##vso[task.uploadsummary] is emitted once per shard by the pipeline collect step, not per state.
+            return mdPath;
         }
 
         /// <summary>
         /// Writes a TRX file so ADO's Tests tab and Test Results Trend dashboard widget reflect forms health over time.
         /// One test entry per state run: pass if AllPassed, fail otherwise.
         /// </summary>
-        public static void WriteTrxResults(FormsValidationSummary summary, string outputDirectory)
+        public static string WriteTrxResults(
+            FormsValidationSummary summary,
+            string outputPath)
         {
             var runId = Guid.NewGuid().ToString();
             var testId = Guid.NewGuid().ToString();
@@ -252,12 +258,11 @@ namespace PnCTestAutomation.Services
   </ResultSummary>
 </TestRun>";
 
-            Directory.CreateDirectory(outputDirectory);
-            // Keep stored baseline data out of the filesystem path. The descriptive
-            // LOB/state values remain in the TRX content for Azure DevOps reporting.
-            var trxPath = Path.GetFullPath(Path.Combine(outputDirectory, $"FormsValidation_{testId}.trx"));
+            var trxPath = Path.GetFullPath(outputPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(trxPath)!);
             File.WriteAllText(trxPath, trx, Encoding.UTF8);
             Console.WriteLine($"[FormsValidation] TRX written: {trxPath}");
+            return trxPath;
         }
 
         private static void AppendCard(StringBuilder sb, string label, int value, string cssClass)

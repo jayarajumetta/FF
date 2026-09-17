@@ -1,14 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 using NUnit.Framework;
-using PnCTestAutomation.Clients;
+using PnCTestAutomation.Artifacts;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Models;
 using PnCTestAutomation.Pages;
 using PnCTestAutomation.Pages.ExpertQuotePages;
 using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
-using PnCTestAutomation.Parsers;
 using PnCTestAutomation.Services;
 using PnCTestAutomation.QuoteHandoffs;
 using Reqnroll;
@@ -28,18 +27,14 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         private readonly PlaywrightContext _context;
         private readonly ScenarioContextData _contextData;
         private readonly ScenarioContext _scenarioContext;
-        private readonly SessionService _sessionService;
-        private readonly DuckCreekFormsClient _formsClient;
-        private readonly FormsValidationService _validationService;
+        private readonly IFormsOrchestrationService _formsOrchestrator;
         private readonly IConfiguration _configuration;
         private readonly IQuoteHandoff _quoteHandoff;
 
         public SFP_FinalizationSteps(
             PlaywrightContext context,
             ScenarioContext scenarioContext,
-            SessionService sessionService,
-            DuckCreekFormsClient formsClient,
-            FormsValidationService validationService,
+            IFormsOrchestrationService formsOrchestrator,
             IConfiguration configuration,
             IQuoteHandoff quoteHandoff)
         {
@@ -47,9 +42,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             _scenarioContext = scenarioContext;
             _contextData = _scenarioContext[ScenarioContextData.ContextKey] as ScenarioContextData
                 ?? throw new InvalidOperationException("ScenarioContextData not found. Ensure TestHooks.BeforeTestRun registered it.");
-            _sessionService = sessionService;
-            _formsClient = formsClient;
-            _validationService = validationService;
+            _formsOrchestrator = formsOrchestrator;
             _configuration = configuration;
             _quoteHandoff = quoteHandoff;
         }
@@ -437,151 +430,20 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         [When("user validates Forms via Duckcreek for state {string}")]
         public async Task UserValidatesFormsViaDuckcreek(string state)
         {
-            var page = _context.Page;
-            var quoteId = _contextData.QuoteNumber;
-
-            Console.WriteLine($"[FormsValidation] Quote ID: '{quoteId}' (state={state})");
-
-            if (string.IsNullOrWhiteSpace(quoteId))
-                throw new InvalidOperationException(
-                    $"Quote number was not captured during the scenario — cannot run forms validation for {state}. " +
-                    "Check the '*** QUOTE NUMBER ***' log line from the SSN or Pricing step.");
-
+            var quoteId = _quoteHandoff
+                .Require(nameof(UserValidatesFormsViaDuckcreek))
+                .QuoteNumber;
             var lob = _contextData.FormsLob ?? "SFP";
-
-            try
-            {
-                // 1. Open CLAS Express in a second tab, log in, and extract DCT.sessionID
-                var sessionId = await _sessionService.GetDuckCreekSessionIdViaCLASAsync(quoteId);
-
-                // 2. Call the DuckCreek Forms Engine API
-                var testCase = DeriveFormsTestCase();
-                var responseXml = await _formsClient.GetFormsAndSaveAsync(
-                    sessionId, lob, $"{lob}_{testCase}", state, quoteId);
-
-                // 3. Parse XML response into typed form entries
-                var actualForms = FormsXmlParser.Parse(responseXml);
-                Console.WriteLine($"DuckCreek returned {actualForms.Count} forms for {lob}/{state}/{quoteId}");
-
-                // Parse response metadata (non-printDoc elements).
-                // NOTE: XML "failure" status is EXPECTED because the API user (PA3402)
-                // differs from the UI login that created the session. This is by design.
-                var metadata = FormsXmlParser.ParseMetadata(responseXml);
-                foreach (var w in metadata.Warnings)
-                    Console.WriteLine($"  [META INFO] {w}");
-                Console.WriteLine($"  Metadata: PrintJob={metadata.PrintJobName}, Manuscript={metadata.Manuscript}, " +
-                                  $"RoleBasedSecurity={metadata.HasRoleBasedSecurity}, ReturnSuccess={metadata.ReturnSuccessStatus}");
-
-                // 4a. Record mode: capture actual forms as proposed baseline and skip comparison
-                var recordBaseline = string.Equals(
-                    _configuration["Debugging:RecordBaseline"], "true",
-                    StringComparison.OrdinalIgnoreCase);
-
-                if (recordBaseline)
-                {
-                    var currentBaseline = _validationService.LoadExpectedFormsForLob(lob, state, testCase);
-                    var proposedPath = _validationService.SaveProposedBaseline(actualForms, currentBaseline, lob, state, testCase);
-                    Console.WriteLine($"[FormsValidation][RECORD] {lob}/{state}/{testCase} — {actualForms.Count} forms captured.");
-                    Console.WriteLine($"[FormsValidation][RECORD] Proposed baseline: {proposedPath}");
-                    return;
-                }
-
-                // 4b. Normal mode: load expected forms and validate (ANPAC filtering applied inside Validate)
-                var expected = _validationService.LoadExpectedFormsForLob(lob, state, testCase);
-                var summary = _validationService.Validate(expected, actualForms, lob, state, quoteId);
-                summary.ResponseMetadata = metadata;
-                summary.TestCaseName = $"{lob}_{testCase}";
-
-                // 5. Print grouped summary to console
-                FormsValidationService.PrintSummary(summary);
-
-                // 6. Save results CSV
-                _validationService.SaveResultsCsv(summary, $"{lob}_{testCase}");
-
-                // 7. Generate HTML report
-                var htmlDir = Path.Combine(
-                    _validationService.GetType().Assembly.Location, "..", "..", "..", "TestResults",
-                    DateTime.Now.ToString("ddMMMyyyy").ToUpperInvariant());
-                var htmlPath = Path.Combine(htmlDir, $"FormsReport_{lob}_{state}_{quoteId}.html");
-                FormsReportGenerator.Generate(summary, htmlPath);
-
-                var absoluteHtmlPath = Path.GetFullPath(htmlPath);
-                Console.WriteLine($"[FormsValidation] HTML report saved: {absoluteHtmlPath}");
-                FormsReportGenerator.WritePipelineSummary(summary, Path.GetDirectoryName(absoluteHtmlPath)!);
-                FormsReportGenerator.WriteTrxResults(summary, Path.GetDirectoryName(absoluteHtmlPath)!);
-                MaybeOpenFormsReport(absoluteHtmlPath, summary.Failed > 0);
-
-                // 8. Log outcome; assert when FailOnFormsValidationError=true so failures surface in ADO
-                if (summary.Failed > 0)
-                {
-                    var failures = string.Join("\n", summary.Results
-                        .Where(r => r.Result == "FAIL")
-                        .Select(r => $"    {r.FormName}: {r.Message}"));
-                    var message = $"[FormsValidation] {summary.Failed} failure(s) — see report: {absoluteHtmlPath}\n{failures}";
-                    Console.WriteLine(message);
-
-                    var failOnFormsValidationError = string.Equals(
-                        _configuration["Debugging:FailOnFormsValidationError"],
-                        "true",
-                        StringComparison.OrdinalIgnoreCase);
-                    if (failOnFormsValidationError)
-                        Assert.Fail(message);
-                }
-            }
-            catch (Exception ex)
-            {
-                // Forms validation is non-blocking — a server error or unavailable DuckCreek
-                // instance should not fail a scenario that has already passed all business steps.
-                Console.WriteLine($"[FormsValidation] SKIPPED — could not complete forms check for {state}: {ex.Message}");
-
-                // Debug toggle: allow temporarily failing the scenario when forms validation errors occur.
-                var failOnFormsValidationError = string.Equals(
-                    _configuration["Debugging:FailOnFormsValidationError"],
-                    "true",
-                    StringComparison.OrdinalIgnoreCase);
-
-                if (failOnFormsValidationError)
-                    throw;
-            }
-        }
-
-        private void MaybeOpenFormsReport(string absoluteHtmlPath, bool hasFailures)
-        {
-            var mode = (_configuration["Debugging:FormsReportOpenMode"] ?? "on-failure").Trim().ToLowerInvariant();
-
-            var openHtml = false;
-            var openFolder = false;
-
-            switch (mode)
-            {
-                case "none":
-                    break;
-                case "html":
-                    openHtml = true;
-                    break;
-                case "folder":
-                    openFolder = true;
-                    break;
-                case "both":
-                    openHtml = true;
-                    openFolder = true;
-                    break;
-                case "on-failure":
-                    openHtml = hasFailures;
-                    openFolder = hasFailures;
-                    break;
-                default:
-                    Console.WriteLine($"[FormsValidation] Unknown Debugging:FormsReportOpenMode '{mode}'. Using 'on-failure'.");
-                    openHtml = hasFailures;
-                    openFolder = hasFailures;
-                    break;
-            }
-
-            if (openHtml)
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(absoluteHtmlPath) { UseShellExecute = true });
-
-            if (openFolder)
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", $"/select,\"{absoluteHtmlPath}\"") { UseShellExecute = true });
+            var result = await _formsOrchestrator.ValidateAsync(
+                new FormsValidationRequest(
+                    quoteId,
+                    state,
+                    lob,
+                    DeriveFormsTestCase()));
+            var report = result.Evidence.Single(
+                artifact => artifact.Kind == ArtifactKind.FormsHtml);
+            Console.WriteLine(
+                $"[FormsValidation] Validation passed. Report: {report.RelativePath}");
         }
 
         [When("user clicks Save for Later")]

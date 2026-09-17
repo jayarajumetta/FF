@@ -6,28 +6,40 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 using Microsoft.Extensions.Configuration;
+using PnCTestAutomation.Artifacts;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.Models;
 using PnCTestAutomation.Pages.ExpressPages;
 
 namespace PnCTestAutomation.Services
 {
+    public interface IFormsSessionProvider
+    {
+        Task<string> GetDuckCreekSessionIdViaCLASAsync(string quoteNumber);
+    }
+
     /// <summary>
     /// Opens CLAS Express in a second tab, logs in, opens a quote, and extracts
     /// the DuckCreek_SessionId cookie — the colon-separated session ID that
     /// Session.resumeRq expects.
     /// </summary>
-    public class SessionService
+    public class SessionService : IFormsSessionProvider
     {
         private readonly PlaywrightContext _context;
         private readonly DuckCreekFormsConfig _formsConfig;
         private readonly IConfiguration _configuration;
+        private readonly IArtifactCaptureService _artifactCapture;
 
-        public SessionService(PlaywrightContext context, DuckCreekFormsConfig formsConfig, IConfiguration configuration)
+        public SessionService(
+            PlaywrightContext context,
+            DuckCreekFormsConfig formsConfig,
+            IConfiguration configuration,
+            IArtifactCaptureService artifactCapture)
         {
             _context = context;
             _formsConfig = formsConfig;
             _configuration = configuration;
+            _artifactCapture = artifactCapture;
         }
 
         /// <summary>
@@ -84,27 +96,14 @@ namespace PnCTestAutomation.Services
                     if (!IsRelevantUrl(response.Url)) return;
 
                     var ct = response.Headers.TryGetValue("content-type", out var h) ? h : string.Empty;
-                    AppendTrace($"RES  {response.Status} {response.Request.Method} {response.Url} [content-type={ct}]");
-
-                    if ((response.Request.ResourceType == "xhr" || response.Request.ResourceType == "fetch" || response.Request.ResourceType == "document")
-                        && !string.IsNullOrEmpty(ct)
-                        && (ct.Contains("json", StringComparison.OrdinalIgnoreCase)
-                            || ct.Contains("xml", StringComparison.OrdinalIgnoreCase)
-                            || ct.Contains("html", StringComparison.OrdinalIgnoreCase)
-                            || ct.Contains("text", StringComparison.OrdinalIgnoreCase)))
-                    {
-                        var body = await response.TextAsync();
-                        if (!string.IsNullOrWhiteSpace(body))
-                        {
-                            var oneLine = body.Replace("\r", " ").Replace("\n", " ").Trim();
-                            if (oneLine.Length > 900) oneLine = oneLine[..900] + "...";
-                            AppendTrace($"BODY {response.Status} {response.Url} => {oneLine}");
-                        }
-                    }
+                    AppendTrace(
+                        $"RES  {response.Status} {response.Request.Method} " +
+                        $"{RedactUrl(response.Url)} [content-type={ct}]");
+                    await Task.CompletedTask;
                 }
-                catch (Exception ex)
+                catch
                 {
-                    AppendTrace($"RES  <error reading body> {response.Url} => {ex.Message}");
+                    AppendTrace("RES  <diagnostic capture failed>");
                 }
             }
 
@@ -112,7 +111,7 @@ namespace PnCTestAutomation.Services
             {
                 if (!traceEnabled) return;
                 if (!IsRelevantUrl(req.Url)) return;
-                AppendTrace($"REQ  {req.Method} {req.Url} [type={req.ResourceType}]");
+                AppendTrace($"REQ  {req.Method} {RedactUrl(req.Url)} [type={req.ResourceType}]");
             }
 
             void ResponseHandler(object sender, IResponse res)
@@ -123,7 +122,7 @@ namespace PnCTestAutomation.Services
 
             if (traceEnabled)
             {
-                AppendTrace($"TRACE START quote={quoteNumber}, clasBase={_formsConfig.CLASBaseUrl}");
+                AppendTrace("TRACE START forms-session");
                 page.Request += RequestHandler;
                 page.Response += ResponseHandler;
             }
@@ -138,12 +137,12 @@ namespace PnCTestAutomation.Services
                     new() { WaitUntil = WaitUntilState.NetworkIdle, Timeout = 30000 });
 
                 // 2. Log in
-                Console.WriteLine($"[SessionService] Logging in as {_formsConfig.CLASUsername}");
+                Console.WriteLine("[SessionService] Logging in to CLAS.");
                 var loginPage = new ExpressLoginPage(page);
                 await loginPage.ExpressLoginAsync(_formsConfig.CLASUsername, _formsConfig.CLASPassword);
 
                 // 3. Search for the quote
-                Console.WriteLine($"[SessionService] Searching for quote: {quoteNumber}");
+                Console.WriteLine("[SessionService] Searching for the scenario quote.");
                 var homePage = new ExpressHomePage(page);
                 await homePage.EnterQuoteNumber(quoteNumber);
                 await homePage.ClickSearchButtonAsync();
@@ -152,11 +151,11 @@ namespace PnCTestAutomation.Services
                 var quoteCell = page.Locator($"p[fieldref='PolicyInput.PolicyNumber']:has-text('{quoteNumber}')");
                 await quoteCell.WaitForAsync(new() { Timeout = 30000 });
                 var displayedNumber = (await quoteCell.TextContentAsync())?.Trim();
-                Console.WriteLine($"[SessionService] Found quote in grid: {displayedNumber}");
+                Console.WriteLine("[SessionService] Found the scenario quote in the results grid.");
 
                 if (displayedNumber != quoteNumber)
                     throw new InvalidOperationException(
-                        $"Quote mismatch: searched for '{quoteNumber}' but grid shows '{displayedNumber}'");
+                        "The CLAS result did not match the scenario quote.");
 
                 // 5. Click "View Policy" to open the policy and establish the DuckCreek session
                 var viewPolicyButton = page.Locator("button[title='View Policy']").First;
@@ -170,7 +169,7 @@ namespace PnCTestAutomation.Services
 
                 if (dckCookie != null && !string.IsNullOrWhiteSpace(dckCookie.Value))
                 {
-                    Console.WriteLine($"[SessionService] DuckCreek_SessionId cookie: {dckCookie.Value}");
+                    Console.WriteLine("[SessionService] DuckCreek session established.");
 
                     // 7. Click Save For Later to release the edit lock before leaving CLAS.
                     //    The next step will navigate back to EQ and search for the quote.
@@ -190,12 +189,8 @@ namespace PnCTestAutomation.Services
                     return dckCookie.Value;
                 }
 
-                Console.WriteLine("[SessionService] DuckCreek_SessionId cookie not found. All cookies:");
-                foreach (var c in cookies)
-                    Console.WriteLine($"  {c.Name} = {c.Value[..Math.Min(60, c.Value.Length)]}...");
-
                 throw new InvalidOperationException(
-                    $"Opened quote {quoteNumber} in CLAS but DuckCreek_SessionId cookie was not set.");
+                    "CLAS opened the scenario quote but did not establish a DuckCreek session.");
             }
             finally
             {
@@ -204,13 +199,23 @@ namespace PnCTestAutomation.Services
                     page.Request -= RequestHandler;
                     page.Response -= ResponseHandler;
 
-                    var traceDir = Path.Combine(AppContext.BaseDirectory, "TestResults", "FormsCheck", "NetworkTrace");
-                    Directory.CreateDirectory(traceDir);
-                    var tracePath = Path.Combine(traceDir, $"forms_network_{quoteNumber}_{DateTime.Now:yyyyMMdd_HHmmss}.log");
-                    await File.WriteAllTextAsync(tracePath, traceBuilder.ToString());
-                    Console.WriteLine($"[SessionService] Forms network trace saved: {tracePath}");
+                    var trace = await _artifactCapture.CaptureAsync(
+                        ArtifactKind.Trace,
+                        "forms-network",
+                        ".log",
+                        path => File.WriteAllTextAsync(path, traceBuilder.ToString()),
+                        required: false);
+                    Console.WriteLine(
+                        $"[SessionService] Forms network trace saved: {trace.RelativePath}");
                 }
             }
+        }
+
+        private static string RedactUrl(string value)
+        {
+            if (!Uri.TryCreate(value, UriKind.Absolute, out var uri))
+                return "<invalid-url>";
+            return uri.GetLeftPart(UriPartial.Path);
         }
     }
 }

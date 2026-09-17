@@ -13,8 +13,9 @@ from introducing parallel infrastructure.
    qualified, versioned envelope with producer and intended-consumer identity;
    missing, stale, or mismatched payloads are fatal.
 3. **One lifecycle owns resources.** `TestHooks` owns browser/API setup,
-   screenshots, results, and disposal. Product modules do not add competing
-   hooks or browser factories.
+   screenshots, results, and disposal. `IArtifactContext` owns the deterministic
+   run/scenario output root and all evidence paths. Product modules do not add
+   competing hooks, browser factories, or output-path conventions.
 4. **Features remain business-readable.** Product knowledge stays in Reqnroll
    features and business-focused step/page methods rather than pipeline scripts.
 5. **Selectors are contract-first.** Use `GetByTestId` for DuckCreek controls.
@@ -31,7 +32,9 @@ from introducing parallel infrastructure.
    failures; product code must not add another retry system.
 7. **Results are explicit.** Failed tests, zero discovered tests, missing final
    TRX, and missing promised business artifacts are failures. Reporting and
-   publication cannot convert failed execution into success.
+   publication cannot convert failed execution into success. The versioned
+   scenario manifest derives its outcome from the authoritative Reqnroll/NUnit
+   failure plus declared component outcomes and verifies all required evidence.
 8. **Packages are immutable.** Test jobs consume one versioned package produced
    by a clean .NET 8 build, rather than rebuilding or assembling partial
    artifacts per shard.
@@ -60,6 +63,10 @@ the contracts owned here.
   page.
 - Every checkpoint screenshot has a unique ordinal/name. A cached
   `scenario.png` is not sufficient evidence.
+- Forms-only and full-SFP validation use the same orchestration service. Missing
+  baselines, Forms API/session failures, metadata mismatches, invalid output,
+  comparison failures, and missing XML/CSV/HTML/Markdown/TRX evidence are fatal.
+  Baseline generation is an explicitly separate tool, never a validation fallback.
 - Missing required reports, logs, traces, videos, manifests, test results, or
   attachments fail the run rather than producing a success-shaped outcome.
 - Required data never resolves to an empty string. Ambiguous flattened keys and

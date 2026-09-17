@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 
+using PnCTestAutomation.Artifacts;
 using PnCTestAutomation.Configuration;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.DataPool;
@@ -41,9 +42,9 @@ namespace PnCTestAutomation.Hooks
         private readonly IConfiguration _configuration;
         private readonly IDataPoolClient _dataPoolClient;
         private readonly IQuoteHandoff _quoteHandoff;
-
-        // Test results folder for this run
-        private static string _testResultsRunFolder;
+        private readonly IArtifactContext _artifacts;
+        private readonly IArtifactCaptureService _artifactCapture;
+        private ArtifactEvidenceException _artifactFailure;
 
         public TestHooks(
             PlaywrightContext context,
@@ -55,7 +56,9 @@ namespace PnCTestAutomation.Hooks
             IApiService apiService,
             IConfiguration configuration,
             IDataPoolClient dataPoolClient,
-            IQuoteHandoff quoteHandoff)
+            IQuoteHandoff quoteHandoff,
+            IArtifactContext artifacts,
+            IArtifactCaptureService artifactCapture)
         {
             _context = context;
             _browserFactory = browserFactory;
@@ -69,6 +72,8 @@ namespace PnCTestAutomation.Hooks
             _configuration = configuration;
             _dataPoolClient = dataPoolClient;
             _quoteHandoff = quoteHandoff;
+            _artifacts = artifacts;
+            _artifactCapture = artifactCapture;
         }
 
         [BeforeTestRun]
@@ -106,16 +111,18 @@ namespace PnCTestAutomation.Hooks
                     "false",
                     StringComparison.OrdinalIgnoreCase);
                 DataPoolLauncher.EnsureRunning(dataPoolBaseUrl, autoStart);
+
+                var artifactOptions =
+                    config.GetSection("Artifacts").Get<ArtifactOptions>()
+                    ?? new ArtifactOptions();
+                artifactOptions.RootPath =
+                    Environment.GetEnvironmentVariable("TEST_ARTIFACT_ROOT")
+                    ?? artifactOptions.RootPath;
+                artifactOptions.Validate();
+                CleanupOldTestResults(
+                    ArtifactContext.ResolveOutputRoot(artifactOptions),
+                    days: 7);
             }
-
-            // Create timestamped test results folder for this run
-            var root = Directory.GetCurrentDirectory();
-            var testResultsRoot = Path.Combine(root, "TestResults");
-            _testResultsRunFolder = Path.Combine(testResultsRoot, DateTime.Now.ToString("yyyy-MM-dd_HHmmss"));
-            Directory.CreateDirectory(_testResultsRunFolder);
-
-            // Auto-cleanup: Delete TestResults folders older than 7 days
-            CleanupOldTestResults(testResultsRoot, days: 7);
         }
 
         [BeforeScenario]
@@ -150,7 +157,7 @@ namespace PnCTestAutomation.Hooks
                 _browserContext = await _browser.NewContextAsync(new BrowserNewContextOptions
                 {
                     ViewportSize = new ViewportSize { Width = 1900, Height = 1080 },
-                    RecordVideoDir = Path.Combine(_testResultsRunFolder, "Videos")
+                    RecordVideoDir = _artifacts.GetArtifactDirectory(ArtifactKind.Video)
                 });
 
                 // Start tracing — skip on CI unless a full trace is needed for debugging.
@@ -191,21 +198,26 @@ namespace PnCTestAutomation.Hooks
         {
             if (_scenarioContext.TestError != null && _context.Page != null)
             {
-                var scenarioFolder = GetScenarioResultsFolder();
-                Directory.CreateDirectory(scenarioFolder);
-
-                var stepText = SanitizeFileName(_scenarioContext.StepContext.StepInfo.Text);
-                var fileName = $"Step__{stepText}.png";
-                var screenshotFile = Path.Combine(scenarioFolder, fileName);
-
                 try
                 {
-                    await _context.Page.ScreenshotAsync(new() { Path = screenshotFile, FullPage = true });
-                    NUnitTestContext.WriteLine($"[screenshot] {screenshotFile}");
+                    _artifacts.RequireFailureEvidence();
+                    var screenshot = await _artifactCapture.CaptureAsync(
+                        ArtifactKind.Screenshot,
+                        "step-failure",
+                        ".png",
+                        path => _context.Page.ScreenshotAsync(
+                            new()
+                            {
+                                Path = path,
+                                FullPage = true
+                            }));
+                    NUnitTestContext.WriteLine(
+                        $"[screenshot] {screenshot.RelativePath}");
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Console.WriteLine($"[Warning] Failed to capture screenshot: {ex.Message}");
+                    _artifactFailure = new ArtifactEvidenceException(
+                        "A requested failure screenshot could not be captured.");
                 }
             }
         }
@@ -226,6 +238,8 @@ namespace PnCTestAutomation.Hooks
             }
             // Handle tracing and video on failure
             var hasFailed = _scenarioContext.TestError != null;
+            if (hasFailed && _context.Page != null)
+                _artifacts.RequireFailureEvidence();
 
             // Pause on failure only when a debugger is attached (i.e. Run > Debug in VS/Rider).
             // Normal CI / right-click "Run Test" runs are never blocked.
@@ -250,27 +264,29 @@ namespace PnCTestAutomation.Hooks
 
             if (_browserContext != null)
             {
-                var scenarioFolder = GetScenarioResultsFolder();
-
                 var isCI = string.Equals(Environment.GetEnvironmentVariable("CI"), "true",
                     StringComparison.OrdinalIgnoreCase);
 
                 if (hasFailed)
                 {
-                    Directory.CreateDirectory(scenarioFolder);
-
                     // Save trace on failure (only if tracing was started — not on CI)
                     if (!isCI)
                     {
-                        var traceFile = Path.Combine(scenarioFolder, "trace.zip");
                         try
                         {
-                            await _browserContext.Tracing.StopAsync(new TracingStopOptions { Path = traceFile });
-                            NUnitTestContext.WriteLine($"[trace] {traceFile}");
+                            var trace = await _artifactCapture.CaptureAsync(
+                                ArtifactKind.Trace,
+                                "scenario-failure",
+                                ".zip",
+                                path => _browserContext.Tracing.StopAsync(
+                                    new TracingStopOptions { Path = path }),
+                                required: false);
+                            NUnitTestContext.WriteLine($"[trace] {trace.RelativePath}");
                         }
-                        catch (Exception ex)
+                        catch
                         {
-                            Console.WriteLine($"[Warning] Failed to save trace: {ex.Message}");
+                            _artifactFailure ??= new ArtifactEvidenceException(
+                                "A requested failure trace could not be captured.");
                         }
                     }
                 }
@@ -282,15 +298,6 @@ namespace PnCTestAutomation.Hooks
                         try { await _browserContext.Tracing.StopAsync(); } catch { /* ignore */ }
                     }
 
-                    // Write pass record for telemetry (time-to-resolution tracking)
-                    try
-                    {
-                        var passRecord = Path.Combine(_testResultsRunFolder, "pass-records.csv");
-                        var scenarioName = _scenarioContext.ScenarioInfo.Title;
-                        var line = $"{DateTime.UtcNow:O},{scenarioName}";
-                        File.AppendAllText(passRecord, line + Environment.NewLine);
-                    }
-                    catch { /* ignore — telemetry must never block test execution */ }
                 }
             }
 
@@ -311,18 +318,22 @@ namespace PnCTestAutomation.Hooks
                 {
                     if (hasFailed)
                     {
-                        var videoFolder = GetScenarioResultsFolder();
-                        Directory.CreateDirectory(videoFolder);
-                        var videoFile = Path.Combine(videoFolder, "video.webm");
-                        await video.SaveAsAsync(videoFile);
-                        NUnitTestContext.WriteLine($"[video] {videoFile}");
+                        var videoArtifact = await _artifactCapture.CaptureAsync(
+                            ArtifactKind.Video,
+                            "scenario-failure",
+                            ".webm",
+                            video.SaveAsAsync,
+                            required: false);
+                        NUnitTestContext.WriteLine(
+                            $"[video] {videoArtifact.RelativePath}");
                     }
 
                     await video.DeleteAsync();
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Console.WriteLine($"[Warning] Failed to handle scenario video: {ex.Message}");
+                    _artifactFailure ??= new ArtifactEvidenceException(
+                        "Requested video evidence could not be finalized.");
                 }
             }
 
@@ -332,7 +343,8 @@ namespace PnCTestAutomation.Hooks
             // Exclude: failed tests (TestError != null), skipped tests (outcome = Skipped),
             // and scenarios without a captured quote number.
             var isPassing = !hasFailed && _scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.OK;
-            if (isPassing)
+            Exception persistenceFailure = null;
+            if (isPassing && _artifactFailure == null)
             {
                 if (_quoteHandoff.TryGet(out _))
                 {
@@ -343,14 +355,34 @@ namespace PnCTestAutomation.Hooks
                               ?? Environment.GetEnvironmentVariable("TEST_ENVIRONMENT")
                               ?? "qa";
                     var record = QuoteRecordFactory.FromScenarioContext(ctx, env);
-                    var result = await _dataPoolClient.PersistAsync(record);
-                    if (!result.Succeeded)
+                    try
                     {
-                        Console.WriteLine(
-                            $"[DataPool] Persistence not completed: {result.Status}. {result.Message}");
+                        var result = await _dataPoolClient.PersistAsync(record);
+                        if (!result.Succeeded)
+                        {
+                            Console.WriteLine(
+                                $"[DataPool] Persistence not completed: {result.Status}. {result.Message}");
+                        }
+                    }
+                    catch (DataPoolPersistenceException exception)
+                    {
+                        persistenceFailure = exception;
                     }
                 }
             }
+
+            if (_quoteHandoff.TryGet(out _))
+                _artifacts.RecordMarker(ArtifactKind.QuoteHandoff, "quote-captured");
+
+            _artifacts.Complete(
+                hasFailed ||
+                _artifactFailure != null ||
+                persistenceFailure != null);
+
+            if (_artifactFailure != null)
+                throw _artifactFailure;
+            if (persistenceFailure != null)
+                throw persistenceFailure;
         }
 
         [AfterTestRun]
@@ -361,27 +393,6 @@ namespace PnCTestAutomation.Hooks
 
             // Only stops DataPool if this run was the one that started it.
             DataPoolLauncher.StopIfStarted();
-
-            // Cleanup empty folders in TestResults
-            if (Directory.Exists(_testResultsRunFolder))
-            {
-                try
-                {
-                    // Remove Videos folder if empty
-                    var videosFolder = Path.Combine(_testResultsRunFolder, "Videos");
-                    if (Directory.Exists(videosFolder) && !Directory.EnumerateFiles(videosFolder).Any())
-                    {
-                        Directory.Delete(videosFolder, true);
-                    }
-
-                    // Remove run folder if empty
-                    if (!Directory.EnumerateFileSystemEntries(_testResultsRunFolder).Any())
-                    {
-                        Directory.Delete(_testResultsRunFolder);
-                    }
-                }
-                catch { /* ignore cleanup errors */ }
-            }
         }
 
         // ------------ Helpers ------------
@@ -393,19 +404,6 @@ namespace PnCTestAutomation.Hooks
 
             return scenarioTags.Any(t => t.Equals("API", StringComparison.OrdinalIgnoreCase))
                 || featureTags.Any(t => t.Equals("API", StringComparison.OrdinalIgnoreCase));
-        }
-
-        private static string SanitizeFileName(string name)
-        {
-            foreach (var c in Path.GetInvalidFileNameChars())
-                name = name.Replace(c, '_');
-            return name;
-        }
-
-        private string GetScenarioResultsFolder()
-        {
-            var scenarioName = SanitizeFileName(_scenarioContext.ScenarioInfo.Title);
-            return Path.Combine(_testResultsRunFolder, scenarioName);
         }
 
         private static void CleanupOldTestResults(string testResultsRoot, int days)

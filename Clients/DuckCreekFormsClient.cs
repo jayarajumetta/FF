@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -10,6 +9,14 @@ using PnCTestAutomation.Models;
 
 namespace PnCTestAutomation.Clients
 {
+    public interface IFormsApiClient
+    {
+        Task<string> GetFormsAsync(
+            string sessionId,
+            string manuscript,
+            string printJob);
+    }
+
     /// <summary>
     /// HTTP client for the DuckCreek Forms Engine API.
     /// Posts Session.resumeRq + FormsEngine.initPrintJobRq XML to dctserver.aspx.
@@ -21,7 +28,7 @@ namespace PnCTestAutomation.Clients
     /// HTTP 200 and 500 both contain valid forms XML.
     /// Only 401/403 indicate real authentication failures.
     /// </summary>
-    public class DuckCreekFormsClient
+    public class DuckCreekFormsClient : IFormsApiClient
     {
         private readonly HttpClient _httpClient;
         private readonly DuckCreekFormsConfig _config;
@@ -45,8 +52,7 @@ namespace PnCTestAutomation.Clients
             var xmlPayload = BuildPayload(sessionId, manuscript, printJob);
             var url = $"{_config.ServerBaseUrl.TrimEnd('/')}{_config.Endpoint}";
 
-            Console.WriteLine($"[DuckCreekFormsClient] POST {url}");
-            Console.WriteLine($"[DuckCreekFormsClient] SessionID: {sessionId}");
+            Console.WriteLine("[DuckCreekFormsClient] Requesting forms XML.");
 
             var content = new StringContent(xmlPayload, Encoding.UTF8, "text/xml");
             var response = await _httpClient.PostAsync(url, content);
@@ -55,15 +61,18 @@ namespace PnCTestAutomation.Clients
             var responseBody = await response.Content.ReadAsStringAsync();
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)
-                throw new HttpRequestException($"DuckCreek returned 401 Unauthorized — check API credentials (Username: {_config.Username})");
+                throw new HttpRequestException(
+                    "DuckCreek returned 401 Unauthorized; verify the configured API credential.");
             if (response.StatusCode == HttpStatusCode.Forbidden)
-                throw new HttpRequestException($"DuckCreek returned 403 Forbidden — API user {_config.Username} lacks permission");
+                throw new HttpRequestException(
+                    "DuckCreek returned 403 Forbidden; the configured API identity lacks permission.");
+            if (response.StatusCode is not (HttpStatusCode.OK or HttpStatusCode.InternalServerError))
+            {
+                throw new HttpRequestException(
+                    $"DuckCreek Forms API returned HTTP {statusCode} ({response.StatusCode}).");
+            }
 
             Console.WriteLine($"[DuckCreekFormsClient] Response: HTTP {statusCode}, {responseBody.Length} chars");
-
-            // Log first part of response for diagnostics
-            if (statusCode != 200 || !responseBody.Contains("form name="))
-                Console.WriteLine($"[DuckCreekFormsClient] Response body (first 600): {responseBody[..Math.Min(600, responseBody.Length)]}");
 
             if (string.IsNullOrWhiteSpace(responseBody) || responseBody.Length <= 8)
                 throw new InvalidOperationException(
@@ -75,36 +84,11 @@ namespace PnCTestAutomation.Clients
             if (trimmed.StartsWith("<!", StringComparison.OrdinalIgnoreCase) ||
                 trimmed.StartsWith("<html", StringComparison.OrdinalIgnoreCase))
             {
-                var snippet = responseBody[..Math.Min(200, responseBody.Length)];
                 throw new InvalidOperationException(
-                    $"DuckCreek Forms API returned an HTML error page instead of XML (HTTP {statusCode}). " +
-                    $"The DuckCreek server may be unavailable. Snippet: {snippet}");
+                    $"DuckCreek Forms API returned HTML instead of XML (HTTP {statusCode}).");
             }
 
             return responseBody;
-        }
-
-        /// <summary>
-        /// Calls the Forms API and saves the XML response to the results directory.
-        /// File naming: {TestCaseName}_{State}_{QuoteID}.xml
-        /// </summary>
-        public async Task<string> GetFormsAndSaveAsync(
-            string sessionId, string lob, string testCaseName, string state, string quoteId)
-        {
-            var manuscript = _config.GetManuscriptForLob(lob);
-            var printJob = _config.GetPrintJobForLob(lob);
-            Console.WriteLine($"[DuckCreekFormsClient] LOB={lob}, Manuscript={manuscript}, PrintJob={printJob}");
-            var responseXml = await GetFormsAsync(sessionId, manuscript, printJob);
-
-            var resultsDir = Path.Combine(_config.ResultsBasePath, lob);
-            Directory.CreateDirectory(resultsDir);
-
-            var fileName = $"{testCaseName}_{state}_{quoteId}.xml";
-            var filePath = Path.Combine(resultsDir, fileName);
-            await File.WriteAllTextAsync(filePath, responseXml);
-
-            Console.WriteLine($"[DuckCreekFormsClient] Forms XML saved: {filePath}");
-            return responseXml;
         }
 
         private static string BuildPayload(string sessionId, string manuscript, string printJob) =>

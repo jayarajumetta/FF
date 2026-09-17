@@ -228,6 +228,8 @@ Set these before running tests. They override the corresponding `appsettings.jso
 | `DATAPOOL_AUTO_START` | `DataPool:AutoStart` | Local DataPool process ownership |
 | `DATAPOOL_API_KEY` | `DataPool:ApiKey` | Authenticated DataPool client/server access |
 | `DATAPOOL_LISTEN_URL` | `DataPool:ListenUrl` (DataPool host) | DataPool server binding |
+| `TEST_ARTIFACT_ROOT` | `Artifacts:RootPath` | Owned run/scenario evidence root |
+| `TEST_ARTIFACT_PROFILE` | `Artifacts:ProfileName` | Evidence profile name recorded in manifests |
 
 ```powershell
 # Minimum required for UI tests
@@ -257,8 +259,12 @@ Ask your QA lead for the credential values. Do **not** commit them to any file.
   },
   "Debugging": {
     "PauseOnFailure": false,
-    "FailOnFormsValidationError": false,
     "SkipPremiumBaselineAssertion": false
+  },
+  "Artifacts": {
+    "RootPath": "TestResults",
+    "ProfileName": "standard",
+    "RequiredOnFailure": [ "Screenshot" ]
   },
   "LocatorRescue": {
     "Enabled": true
@@ -462,19 +468,40 @@ When a `GetByTestId` call finds 0 elements and `LocatorRescue:Enabled = true` in
 
 ## Test Artifacts
 
-On scenario failure, the following are automatically saved:
+Each scenario owns deterministic artifact paths and a versioned manifest. Failure
+evidence is controlled by the configured artifact profile. The standard profile
+requires a fresh screenshot; forms validation additionally requires XML, CSV, HTML,
+Markdown, and TRX evidence.
 
 ```
 TestResults/
-└── {yyyy-MM-dd_HHmmss}/              ← one folder per test run
-    ├── pass-records.csv              ← telemetry for all passing scenarios
-    └── {ScenarioName}/               ← one folder per FAILED scenario
-        ├── trace.zip                 ← Playwright trace (upload to trace.playwright.dev)
-        ├── Videos/                   ← screen recording
-        └── Step__{StepText}.png      ← screenshot at point of failure
+└── run-{run-id}/
+    └── scenario-{scenario-id}/
+        ├── manifest.json
+        ├── metadata/
+        │   ├── {ordinal}-scenario-timing.json
+        │   └── {ordinal}-trx-attachments.json
+        ├── screenshots/
+        │   └── {ordinal}-step-failure.png
+        ├── traces/
+        │   └── {ordinal}-scenario-failure.zip
+        ├── video/
+        │   └── {ordinal}-scenario-failure.webm
+        └── forms/
+            ├── xml/
+            ├── csv/
+            ├── html/
+            ├── markdown/
+            └── trx/
 ```
 
-Folders older than 7 days are automatically deleted.
+Paths outside the owned scenario root, traversal segments, and reparse points are
+rejected. Missing or corrupt required evidence and forms outcome disagreement fail
+the scenario. Folders older than 7 days are automatically deleted.
+
+Promised forms validation is always gating. Missing baselines, session/API failures,
+invalid response metadata, comparison mismatches, or missing reports fail; baseline
+generation remains the separate tool described below.
 
 ### Viewing a Playwright Trace
 
