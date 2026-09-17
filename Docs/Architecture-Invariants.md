@@ -36,8 +36,10 @@ from introducing parallel infrastructure.
    scenario manifest derives its outcome from the authoritative Reqnroll/NUnit
    failure plus declared component outcomes and verifies all required evidence.
 8. **Packages are immutable.** Test jobs consume one versioned package produced
-   by a clean .NET 8 build, rather than rebuilding or assembling partial
-   artifacts per shard.
+   by a clean, locked .NET 8 restore/build, rather than rebuilding or
+   assembling partial artifacts per shard. Its manifest inventories every file
+   with size and SHA-256 and excludes secrets, result files, and runtime quote
+   data. Extraction must prove source-free test discovery before execution.
 9. **DataPool outcomes are explicit.** Required profiles fail when quote
    persistence is unavailable or rejected. Optional profiles emit a visible
    non-success result. The service binds to loopback by default, fails closed
@@ -52,6 +54,11 @@ from introducing parallel infrastructure.
     Quote identity is scenario-owned, premiums use typed currency/tolerance
     comparison, forms bind to a versioned baseline and response metadata, and
     transmit availability never substitutes for a completed transmission.
+11. **A compiled inventory owns sharding.** CI enumerates NUnit/Reqnroll cases
+    and case categories from the packaged assembly before execution. The
+    selected gated set must equal the disjoint union of nonempty shard sets.
+    Initial/retry attempts reconcile to one canonical final TRX and one result
+    manifest; only non-parameterized `RetrySafe` transient failures can retry.
 
 ## SGS adaptation contract
 

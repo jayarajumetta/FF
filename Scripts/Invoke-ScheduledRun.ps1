@@ -3,17 +3,16 @@
     Scheduled local test runner — called by Windows Task Scheduler.
 
 .DESCRIPTION
-    Runs a named test suite via dotnet test, writes all output to a dated log
-    file under <repo>\TestResults\ScheduledLogs\, and exits with the dotnet
-    exit code so Task Scheduler can report pass/fail.
+    Builds one validated package and runs its canonical shard runner. All output
+    is written to a dated log under <repo>\TestResults\ScheduledLogs\.
 
 .PARAMETER Suite
     Which suite to run:
         SFP          – Basic Policy smoke tests
         CE           – Country Estate smoke tests
-        FormsCheck   – SFP + CE forms validation checks
+        FormsCheck   – current SFP forms validation check
         FormsCheck-SFP  – SFP forms only
-        FormsCheck-CE   – Country Estate forms only
+        FormsCheck-CE   – retired; fails because no CE forms-only case exists
 
 .PARAMETER Environment
     Target environment: QA | DEV | STG  (default: QA)
@@ -54,34 +53,39 @@ Write-Host "======================================================"
 
 $env:TEST_ENVIRONMENT = $Environment
 
-$filterMap = @{
-    "SFP"           = "TestCategory=SFP"
-    "CE"            = "TestCategory=CE"
-    "FormsCheck"    = "Category=FormsCheck"
-    "FormsCheck-SFP"= "Category=FormsCheck&Category=SFP"
-    "FormsCheck-CE" = "Category=FormsCheck&Category=CE"
+$suiteMap = @{
+    "SFP"            = "BasicPolicy"
+    "CE"             = "CE"
+    "FormsCheck"     = "Forms"
+    "FormsCheck-SFP" = "Forms"
 }
 
-$filter  = $filterMap[$Suite]
-$trxFile = Join-Path $logDir "${Suite}_${timestamp}.trx"
-$project = Join-Path $repoRoot "TestAutomation.csproj"
+if ($Suite -eq "FormsCheck-CE") {
+    Write-Error "FormsCheck-CE is retired because the repository contains no CE-tagged forms-only cases."
+    Stop-Transcript
+    exit 1
+}
 
-Write-Host ""
-Write-Host "Running: dotnet test --filter `"$filter`""
-Write-Host ""
-
-dotnet test $project `
-    --filter $filter `
-    --logger "trx;LogFileName=$trxFile" `
-    --no-build
-
-$exitCode = $LASTEXITCODE
+$packageSuite = $suiteMap[$Suite]
+$runOutput = Join-Path $repoRoot "TestResults\ScheduledPackageRuns"
+$exitCode = 0
+try {
+    & (Join-Path $repoRoot "Scripts\CI\Invoke-PackageSuite.ps1") `
+        -Suite $packageSuite `
+        -Mode Full `
+        -OutputDirectory $runOutput `
+        -InstallBrowser
+}
+catch {
+    Write-Error $_
+    $exitCode = 1
+}
 
 Write-Host ""
 Write-Host "======================================================"
 Write-Host "  Finished    : $(Get-Date)"
 Write-Host "  Exit code   : $exitCode  $(if ($exitCode -eq 0) { '(PASSED)' } else { '(FAILED)' })"
-Write-Host "  TRX report  : $trxFile"
+Write-Host "  Results root: $runOutput"
 Write-Host "======================================================"
 
 Stop-Transcript

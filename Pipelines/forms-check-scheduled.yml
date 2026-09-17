@@ -1,195 +1,24 @@
-# Azure DevOps Pipeline: Forms Checking (Manual)
-# Run manually from Azure DevOps — no automatic schedule.
-#
-# Set pipeline variables in Azure DevOps:
-#   DUCKCREEK_PASSWORD  (secret) — DuckCreek Basic Auth password
-#   TEST_ENVIRONMENT    (plain)  — QA | DEV | STG  (defaults to QA)
-
+# Compatibility entry point for the manual SFP forms validation job.
+# The former CE filter discovered zero tests and is intentionally not retained.
 trigger: none
-schedules: []   # Schedules disabled — manual runs only
+pr: none
+schedules: []
 
 pool:
-  name: "Default"
+  name: Default
 
 variables:
-  - name: TEST_ENVIRONMENT
-    value: "QA"
-  - name: DOTNET_VERSION
-    value: "8.x"
-  - name: NUGET_PACKAGES
-    value: "$(Pipeline.Workspace)/.nuget/packages"
+  DATAPOOL_BASE_URL: ""
+  DATAPOOL_API_KEY: ""
 
 stages:
-  - stage: Build
-    displayName: "Build Once"
-    jobs:
-      - job: Build
-        displayName: "Restore and Build"
-        steps:
-          - checkout: self
+  - template: templates/build-package-stage.yml
 
-          - task: UseDotNet@2
-            displayName: "Install .NET SDK"
-            inputs:
-              packageType: sdk
-              version: $(DOTNET_VERSION)
-
-          - task: Cache@2
-            displayName: "Cache NuGet packages"
-            inputs:
-              key: 'nuget | "$(Agent.OS)" | TestAutomation.csproj'
-              restoreKeys: |
-                nuget | "$(Agent.OS)"
-              path: "$(NUGET_PACKAGES)"
-
-          - script: dotnet restore TestAutomation.csproj
-            displayName: "Restore NuGet packages"
-            env:
-              NUGET_PACKAGES: $(NUGET_PACKAGES)
-
-          - script: dotnet build TestAutomation.csproj --configuration Release --no-restore
-            displayName: "Build project"
-
-          - task: PublishPipelineArtifact@1
-            displayName: "Publish Build Output"
-            inputs:
-              targetPath: "$(Build.SourcesDirectory)/bin/Release/net8.0"
-              artifact: "BuildOutput"
-
-  - stage: FormsCheck
-    displayName: "DuckCreek Forms Validation"
-    dependsOn: Build
-    jobs:
-      - job: SFP_FormsCheck
-        displayName: "SFP Forms Check"
-        steps:
-          - checkout: self
-
-          - task: UseDotNet@2
-            displayName: "Install .NET SDK"
-            inputs:
-              packageType: sdk
-              version: $(DOTNET_VERSION)
-
-          - task: DownloadPipelineArtifact@2
-            displayName: "Download Build Output"
-            inputs:
-              artifact: "BuildOutput"
-              targetPath: "$(Build.SourcesDirectory)/bin/Release/net8.0"
-
-          - powershell: |
-              $targets = @(
-                "$(Build.SourcesDirectory)/TestResults",
-                "$(Build.SourcesDirectory)/bin/Release/net8.0/TestResults",
-                "$(Build.ArtifactStagingDirectory)/TestResults"
-              )
-
-              & "$(Build.SourcesDirectory)/Scripts/Cleanup-TestArtifacts.ps1" -TargetPaths $targets
-            displayName: "Pre-Clean Test Artifacts"
-            condition: always()
-
-          - powershell: |
-              New-Item -ItemType Directory -Force -Path "$(Build.ArtifactStagingDirectory)/TestResults" | Out-Null
-            displayName: "Create TestResults Directory"
-
-          - script: |
-              dotnet test $(Build.SourcesDirectory)/bin/Release/net8.0/TestAutomation.dll ^
-                --filter "Category=Forms&Category=SFP" ^
-                --logger "trx;LogFileName=SFP_FormsResults.trx" ^
-                --results-directory $(Build.ArtifactStagingDirectory)/TestResults
-            displayName: "Run SFP Forms Validation"
-            env:
-              DUCKCREEK_PASSWORD: $(DUCKCREEK_PASSWORD)
-              TEST_ENVIRONMENT: $(TEST_ENVIRONMENT)
-
-          - task: PublishTestResults@2
-            displayName: "Publish SFP Forms Test Results"
-            condition: always()
-            inputs:
-              testResultsFormat: "VSTest"
-              testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/*.trx"
-              mergeTestResults: true
-              testRunTitle: "SFP Forms Validation"
-
-          - publish: $(Build.SourcesDirectory)/TestResults
-            displayName: "Publish SFP Forms HTML Reports"
-            artifact: "SFP_FormsResults"
-            condition: always()
-
-          - powershell: |
-              $targets = @(
-                "$(Build.SourcesDirectory)/TestResults",
-                "$(Build.SourcesDirectory)/bin/Release/net8.0/TestResults",
-                "$(Build.ArtifactStagingDirectory)/TestResults"
-              )
-
-              & "$(Build.SourcesDirectory)/Scripts/Cleanup-TestArtifacts.ps1" -TargetPaths $targets
-            displayName: "Post-Publish Test Artifact Cleanup"
-            condition: always()
-
-      - job: CE_FormsCheck
-        displayName: "Country Estate Forms Check"
-        steps:
-          - checkout: self
-
-          - task: UseDotNet@2
-            displayName: "Install .NET SDK"
-            inputs:
-              packageType: sdk
-              version: $(DOTNET_VERSION)
-
-          - task: DownloadPipelineArtifact@2
-            displayName: "Download Build Output"
-            inputs:
-              artifact: "BuildOutput"
-              targetPath: "$(Build.SourcesDirectory)/bin/Release/net8.0"
-
-          - powershell: |
-              $targets = @(
-                "$(Build.SourcesDirectory)/TestResults",
-                "$(Build.SourcesDirectory)/bin/Release/net8.0/TestResults",
-                "$(Build.ArtifactStagingDirectory)/TestResults"
-              )
-
-              & "$(Build.SourcesDirectory)/Scripts/Cleanup-TestArtifacts.ps1" -TargetPaths $targets
-            displayName: "Pre-Clean Test Artifacts"
-            condition: always()
-
-          - powershell: |
-              New-Item -ItemType Directory -Force -Path "$(Build.ArtifactStagingDirectory)/TestResults" | Out-Null
-            displayName: "Create TestResults Directory"
-
-          - script: |
-              dotnet test $(Build.SourcesDirectory)/bin/Release/net8.0/TestAutomation.dll ^
-                --filter "Category=Forms&Category=CE" ^
-                --logger "trx;LogFileName=CE_FormsResults.trx" ^
-                --results-directory $(Build.ArtifactStagingDirectory)/TestResults
-            displayName: "Run Country Estate Forms Validation"
-            env:
-              DUCKCREEK_PASSWORD: $(DUCKCREEK_PASSWORD)
-              TEST_ENVIRONMENT: $(TEST_ENVIRONMENT)
-
-          - task: PublishTestResults@2
-            displayName: "Publish CE Forms Test Results"
-            condition: always()
-            inputs:
-              testResultsFormat: "VSTest"
-              testResultsFiles: "$(Build.ArtifactStagingDirectory)/TestResults/*.trx"
-              mergeTestResults: true
-              testRunTitle: "CE Forms Validation"
-
-          - publish: $(Build.SourcesDirectory)/TestResults
-            displayName: "Publish CE Forms HTML Reports"
-            artifact: "CE_FormsResults"
-            condition: always()
-
-          - powershell: |
-              $targets = @(
-                "$(Build.SourcesDirectory)/TestResults",
-                "$(Build.SourcesDirectory)/bin/Release/net8.0/TestResults",
-                "$(Build.ArtifactStagingDirectory)/TestResults"
-              )
-
-              & "$(Build.SourcesDirectory)/Scripts/Cleanup-TestArtifacts.ps1" -TargetPaths $targets
-            displayName: "Post-Publish Test Artifact Cleanup"
-            condition: always()
+  - template: templates/test-shards-stage.yml
+    parameters:
+      maxParallel: 1
+      dataPoolRequired: false
+      matrix:
+        FormsSfp:
+          SHARD_ID: FormsSfp
+          DEBUG_MODE: false

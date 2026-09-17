@@ -1,0 +1,84 @@
+parameters:
+  - name: dependsOn
+    type: object
+    default: []
+  - name: condition
+    type: string
+    default: succeeded()
+  - name: artifactName
+    type: string
+    default: PnC-TestPackage
+
+stages:
+  - stage: BuildPackage
+    displayName: Build and validate immutable test package
+    dependsOn: ${{ parameters.dependsOn }}
+    condition: ${{ parameters.condition }}
+    jobs:
+      - job: BuildPackage
+        displayName: Clean restore, build, unit tests, and package
+        timeoutInMinutes: 30
+        steps:
+          - checkout: self
+            clean: true
+            fetchDepth: 0
+
+          - task: UseDotNet@2
+            displayName: Install .NET 8 SDK
+            inputs:
+              packageType: sdk
+              version: 8.x
+
+          - task: Cache@2
+            displayName: Cache locked NuGet packages
+            inputs:
+              key: 'nuget | "$(Agent.OS)" | **/packages.lock.json'
+              restoreKeys: |
+                nuget | "$(Agent.OS)"
+              path: $(Pipeline.Workspace)/.nuget/packages
+
+          - powershell: |
+              $output = "$(Build.SourcesDirectory)\artifacts\ci-package-$(Build.BuildId)"
+              if (Test-Path -LiteralPath $output) {
+                Remove-Item -LiteralPath $output -Recurse -Force
+              }
+              & "$(Build.SourcesDirectory)\Scripts\CI\New-TestPackage.ps1" `
+                -RepositoryRoot "$(Build.SourcesDirectory)" `
+                -OutputDirectory $output `
+                -CommitSha "$(Build.SourceVersion)" `
+                -BuildId "$(Build.BuildId)" `
+                -BuildNumber "$(Build.BuildNumber)" `
+                -RequireClean
+
+              $archives = @(Get-ChildItem -LiteralPath $output -Filter "*.zip" -File)
+              if ($archives.Count -ne 1) {
+                throw "Expected exactly one immutable package archive, found $($archives.Count)."
+              }
+
+              $publishRoot = "$(Build.ArtifactStagingDirectory)\package"
+              if (Test-Path -LiteralPath $publishRoot) {
+                Remove-Item -LiteralPath $publishRoot -Recurse -Force
+              }
+              New-Item -ItemType Directory -Force -Path $publishRoot | Out-Null
+              Copy-Item -LiteralPath $archives[0].FullName -Destination $publishRoot
+            displayName: Build and validate package
+            env:
+              CI: "true"
+              NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+
+          - task: PublishTestResults@2
+            displayName: Publish unit and contract test results
+            condition: always()
+            inputs:
+              testResultsFormat: VSTest
+              testResultsFiles: "$(Build.SourcesDirectory)/artifacts/ci-package-$(Build.BuildId)/verification/unit/UnitTests.trx"
+              failTaskOnFailedTests: true
+              failTaskOnMissingResultsFile: true
+              failTaskOnFailureToPublishResults: true
+              testRunTitle: "PnC framework unit contracts - $(Build.BuildNumber)"
+
+          - task: PublishPipelineArtifact@1
+            displayName: Publish immutable test package
+            inputs:
+              targetPath: "$(Build.ArtifactStagingDirectory)/package"
+              artifact: ${{ parameters.artifactName }}

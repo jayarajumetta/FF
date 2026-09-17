@@ -1,0 +1,78 @@
+parameters:
+  - name: artifactName
+    type: string
+    default: PnC-TestPackage
+  - name: enabled
+    type: boolean
+    default: false
+
+stages:
+  - stage: SetupDataPool
+    displayName: Install loopback DataPool service
+    dependsOn: BuildPackage
+    condition: and(succeeded('BuildPackage'), eq('${{ parameters.enabled }}', 'True'))
+    pool:
+      name: Playwright
+      demands:
+        - Agent.Name -equals scpw-pnc-plw1
+    jobs:
+      - job: SetupDataPool
+        timeoutInMinutes: 10
+        steps:
+          - checkout: none
+
+          - task: DownloadPipelineArtifact@2
+            displayName: Download immutable test package
+            inputs:
+              artifact: ${{ parameters.artifactName }}
+              targetPath: "$(Pipeline.Workspace)/package-download/$(Build.BuildId)"
+
+          - powershell: |
+              $archive = @(Get-ChildItem "$(Pipeline.Workspace)\package-download\$(Build.BuildId)" -Filter "*.zip" -File -Recurse)
+              if ($archive.Count -ne 1) {
+                throw "Expected exactly one package archive."
+              }
+              $extract = "$(Agent.TempDirectory)\pnc-datapool-package-$(Build.BuildId)"
+              if (Test-Path $extract) {
+                Remove-Item -LiteralPath $extract -Recurse -Force
+              }
+              Expand-Archive $archive[0].FullName -DestinationPath $extract
+              & "$extract\scripts\CI\Test-TestPackage.ps1" -PackageRoot $extract
+
+              $serviceRoot = "C:\Services\DataPool"
+              New-Item -ItemType Directory -Force -Path $serviceRoot | Out-Null
+              $service = Get-Service -Name DataPool -ErrorAction SilentlyContinue
+              if ($service) {
+                Stop-Service -Name DataPool -Force
+              }
+              Copy-Item "$extract\datapool\*" $serviceRoot -Recurse -Force
+
+              if (-not $service) {
+                sc.exe create DataPool `
+                  binPath= "dotnet C:\Services\DataPool\DataPool.dll --DataPool:ListenUrl http://127.0.0.1:5100" `
+                  start= auto `
+                  DisplayName= "PnC DataPool"
+                if ($LASTEXITCODE -ne 0) {
+                  throw "DataPool service registration failed."
+                }
+              }
+              Start-Service -Name DataPool
+
+              $ready = $false
+              for ($attempt = 0; $attempt -lt 12; $attempt++) {
+                Start-Sleep -Seconds 5
+                try {
+                  $health = Invoke-RestMethod http://127.0.0.1:5100/health -TimeoutSec 3
+                  if ($health.status -eq "Healthy") {
+                    $ready = $true
+                    break
+                  }
+                }
+                catch {
+                  Write-Host "DataPool is not ready yet."
+                }
+              }
+              if (-not $ready) {
+                throw "DataPool did not become healthy."
+              }
+            displayName: Install and verify packaged DataPool

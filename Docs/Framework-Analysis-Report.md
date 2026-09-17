@@ -397,11 +397,13 @@ The `Tools/LocatorScan/` toolchain can scan the repo for stale test IDs. It is w
 
 **Recommendation:** Add a one-page Tools guide to `Docs/`. Covered in Phase 3b (onboarding guide).
 
-### 7.3 `Pipelines/forms-check-scheduled.yml` only covers forms validation
+### 7.3 Scheduled UI/package execution — resolved in Phase 5
 
-There is no pipeline definition for running the UI regression suite on a schedule. The forms check pipeline exists, but the main test suites (`@Smoke`, `@Regression`) have no automated scheduled execution defined in the repo.
-
-**Recommendation:** Add a `ui-regression-scheduled.yml` that runs `@Smoke` tests nightly and `@Regression` tests weekly. (CI thresholds are recommendations only per project scope.)
+The SFP compatibility pipelines retain main and Development schedules and now
+share one immutable package build plus canonical shard runner. The forms entry
+retains the one discovered SFP forms-only case; its former CE filter was
+removed because it discovered zero tests. Required Azure branch policies remain
+an external project-administration action.
 
 ---
 

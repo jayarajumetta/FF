@@ -406,6 +406,7 @@ namespace PnCTestAutomation.Hooks
                 _artifacts.RecordMarker(ArtifactKind.QuoteHandoff, "quote-captured");
 
             _artifacts.Complete(
+                _scenarioContext.ScenarioExecutionStatus != ScenarioExecutionStatus.OK ||
                 hasFailed ||
                 _artifactFailure != null ||
                 persistenceFailure != null);

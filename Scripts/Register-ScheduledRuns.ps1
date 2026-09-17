@@ -3,11 +3,10 @@
     Registers Windows Task Scheduler tasks to replace the removed ADO pipeline schedules.
 
 .DESCRIPTION
-    Creates three scheduled tasks under the folder "PnC Test Automation":
+    Creates two scheduled package-runner tasks under "PnC Test Automation":
 
-        PnC-SFP-FormsCheck     — weekdays 11:30 AM CST  (was ADO forms-check-scheduled.yml)
-        PnC-CE-FormsCheck      — weekdays 12:45 PM CST  (was ADO forms-check-scheduled.yml)
-        PnC-SFP-NightlySmoke   — every day  04:00 AM CST (was ADO sfp-smoke-adhoc.yml)
+        PnC-SFP-NightlySmoke   - every day 04:00 AM
+        PnC-CE-NightlySmoke    - every day 04:30 AM
 
     Run this script ONCE on the server/machine where tests should execute.
     Must be run as Administrator (Task Scheduler requires elevation to create tasks).
@@ -24,7 +23,7 @@
     Default: current logged-in user (DOMAIN\username).
 
 .PARAMETER Disable
-    Pass -Disable to remove / unregister all three tasks instead of creating them.
+    Pass -Disable to remove / unregister both tasks instead of creating them.
 
 .EXAMPLE
     # Register tasks (run as Administrator)

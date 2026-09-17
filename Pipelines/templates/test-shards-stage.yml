@@ -1,0 +1,135 @@
+parameters:
+  - name: dependsOn
+    type: object
+    default:
+      - BuildPackage
+  - name: condition
+    type: string
+    default: succeeded()
+  - name: artifactName
+    type: string
+    default: PnC-TestPackage
+  - name: matrix
+    type: object
+    default: {}
+  - name: maxParallel
+    type: number
+    default: 2
+  - name: environmentName
+    type: string
+    default: qa
+  - name: dataPoolRequired
+    type: boolean
+    default: true
+
+stages:
+  - stage: Test
+    displayName: Execute packaged deterministic shards
+    dependsOn: ${{ parameters.dependsOn }}
+    condition: ${{ parameters.condition }}
+    jobs:
+      - job: TestShard
+        displayName: Packaged SFP shard
+        timeoutInMinutes: 120
+        strategy:
+          maxParallel: ${{ parameters.maxParallel }}
+          matrix: ${{ parameters.matrix }}
+
+        steps:
+          - checkout: none
+
+          - task: UseDotNet@2
+            displayName: Install .NET 8 SDK
+            inputs:
+              packageType: sdk
+              version: 8.x
+
+          - task: DownloadPipelineArtifact@2
+            displayName: Download immutable test package
+            inputs:
+              artifact: ${{ parameters.artifactName }}
+              targetPath: "$(Pipeline.Workspace)/package-download/$(Build.BuildId)"
+
+          - powershell: |
+              $archives = @(
+                Get-ChildItem -LiteralPath "$(Pipeline.Workspace)\package-download\$(Build.BuildId)" `
+                  -Filter "*.zip" -File -Recurse
+              )
+              if ($archives.Count -ne 1) {
+                throw "Expected exactly one package archive, found $($archives.Count)."
+              }
+
+              $packageRoot = "$(Agent.TempDirectory)\pnc-package-$(Build.BuildId)-$(SHARD_ID)"
+              if (Test-Path -LiteralPath $packageRoot) {
+                Remove-Item -LiteralPath $packageRoot -Recurse -Force
+              }
+              New-Item -ItemType Directory -Force -Path $packageRoot | Out-Null
+              Expand-Archive -LiteralPath $archives[0].FullName -DestinationPath $packageRoot
+
+              & "$packageRoot\scripts\CI\Test-TestPackage.ps1" `
+                -PackageRoot $packageRoot `
+                -DiscoverySmoke `
+                -ScanForSecrets
+
+              $results = "$(Build.ArtifactStagingDirectory)\Shard_$(SHARD_ID)"
+              if (Test-Path -LiteralPath $results) {
+                Remove-Item -LiteralPath $results -Recurse -Force
+              }
+              New-Item -ItemType Directory -Force -Path $results | Out-Null
+            displayName: Extract and validate package
+
+          - task: Cache@2
+            displayName: Cache Playwright Chromium
+            inputs:
+              key: 'playwright | "$(Agent.OS)" | "$(Agent.TempDirectory)/pnc-package-$(Build.BuildId)-$(SHARD_ID)/test/TestAutomation.deps.json"'
+              restoreKeys: |
+                playwright | "$(Agent.OS)"
+              path: $(Agent.ToolsDirectory)/playwright-browsers
+
+          - powershell: |
+              & "$(Agent.TempDirectory)\pnc-package-$(Build.BuildId)-$(SHARD_ID)\scripts\CI\Install-Playwright.ps1" `
+                -PackageRoot "$(Agent.TempDirectory)\pnc-package-$(Build.BuildId)-$(SHARD_ID)"
+            displayName: Install packaged Playwright Chromium
+            env:
+              PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+
+          - powershell: |
+              $mode = if ("$(DEBUG_MODE)" -eq "true") { "Debug" } else { "Full" }
+              & "$(Agent.TempDirectory)\pnc-package-$(Build.BuildId)-$(SHARD_ID)\scripts\CI\Invoke-TestShard.ps1" `
+                -PackageRoot "$(Agent.TempDirectory)\pnc-package-$(Build.BuildId)-$(SHARD_ID)" `
+                -ShardId "$(SHARD_ID)" `
+                -Mode $mode `
+                -ResultsDirectory "$(Build.ArtifactStagingDirectory)\Shard_$(SHARD_ID)"
+            displayName: Execute and reconcile shard $(SHARD_ID)
+            env:
+              Playwright__Headless: "true"
+              Playwright__BrowserType: "chromium"
+              PLAYWRIGHT_HEADLESS: "true"
+              BROWSER_TYPE: "chromium"
+              PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
+              TEST_ENVIRONMENT: ${{ parameters.environmentName }}
+              CI: "true"
+              DATAPOOL_BASE_URL: $(DATAPOOL_BASE_URL)
+              DATAPOOL_API_KEY: $(DATAPOOL_API_KEY)
+              DATAPOOL_REQUIRED: "${{ parameters.dataPoolRequired }}"
+              DATAPOOL_AUTO_START: "false"
+
+          - task: PublishTestResults@2
+            displayName: Publish canonical shard results
+            condition: always()
+            inputs:
+              testResultsFormat: VSTest
+              testResultsFiles: "$(Build.ArtifactStagingDirectory)/Shard_$(SHARD_ID)/trx/$(SHARD_ID)-final.trx"
+              searchFolder: "$(Build.ArtifactStagingDirectory)/Shard_$(SHARD_ID)"
+              mergeTestResults: false
+              failTaskOnFailedTests: true
+              failTaskOnMissingResultsFile: true
+              failTaskOnFailureToPublishResults: true
+              testRunTitle: "PnC $(SHARD_ID) - $(Build.BuildNumber)"
+
+          - task: PublishPipelineArtifact@1
+            displayName: Publish shard results and evidence
+            condition: always()
+            inputs:
+              targetPath: "$(Build.ArtifactStagingDirectory)/Shard_$(SHARD_ID)"
+              artifact: "PnC_Results_$(SHARD_ID)"

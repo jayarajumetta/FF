@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "suites": [
+    {
+      "name": "All",
+      "fullSelectionFilter": "TestCategory=SfpBasicOutcome|TestCategory=SfpCountryEstateOutcome",
+      "debugSelectionFilter": "(TestCategory=SfpBasicOutcome&TestCategory=Debug)|(TestCategory=SfpBasicOutcome&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6)|(TestCategory=SfpCountryEstateOutcome&TestCategory=Debug)",
+      "fullRules": [
+        { "all": [ "SfpBasicOutcome" ] },
+        { "all": [ "SfpCountryEstateOutcome" ] }
+      ],
+      "debugRules": [
+        { "all": [ "SfpBasicOutcome", "Debug" ] },
+        {
+          "all": [ "SfpBasicOutcome" ],
+          "none": [ "Shard1", "Shard2", "Shard3", "Shard4", "Shard5", "Shard6" ]
+        },
+        { "all": [ "SfpCountryEstateOutcome", "Debug" ] }
+      ],
+      "shards": [
+        "Basic1",
+        "Basic2",
+        "Basic3",
+        "BasicMisc",
+        "CE4",
+        "CE5",
+        "CE6"
+      ]
+    },
+    {
+      "name": "BasicPolicy",
+      "fullSelectionFilter": "TestCategory=SfpBasicOutcome",
+      "debugSelectionFilter": "(TestCategory=SfpBasicOutcome&TestCategory=Debug)|(TestCategory=SfpBasicOutcome&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6)",
+      "fullRules": [
+        { "all": [ "SfpBasicOutcome" ] }
+      ],
+      "debugRules": [
+        { "all": [ "SfpBasicOutcome", "Debug" ] },
+        {
+          "all": [ "SfpBasicOutcome" ],
+          "none": [ "Shard1", "Shard2", "Shard3", "Shard4", "Shard5", "Shard6" ]
+        }
+      ],
+      "shards": [
+        "Basic1",
+        "Basic2",
+        "Basic3",
+        "BasicMisc"
+      ]
+    },
+    {
+      "name": "CE",
+      "fullSelectionFilter": "TestCategory=SfpCountryEstateOutcome",
+      "debugSelectionFilter": "TestCategory=SfpCountryEstateOutcome&TestCategory=Debug",
+      "fullRules": [
+        { "all": [ "SfpCountryEstateOutcome" ] }
+      ],
+      "debugRules": [
+        { "all": [ "SfpCountryEstateOutcome", "Debug" ] }
+      ],
+      "shards": [
+        "CE4",
+        "CE5",
+        "CE6"
+      ]
+    },
+    {
+      "name": "Forms",
+      "fullSelectionFilter": "TestCategory=Forms&TestCategory=SFP",
+      "debugSelectionFilter": "TestCategory=Forms&TestCategory=SFP",
+      "fullRules": [
+        { "all": [ "Forms", "SFP" ] }
+      ],
+      "debugRules": [
+        { "all": [ "Forms", "SFP" ] }
+      ],
+      "shards": [
+        "FormsSfp"
+      ]
+    }
+  ],
+  "shards": [
+    {
+      "id": "Basic1",
+      "suite": "BasicPolicy",
+      "fullFilter": "TestCategory=SfpBasicOutcome&TestCategory=Shard1",
+      "debugFilter": "TestCategory=SfpBasicOutcome&TestCategory=Shard1&TestCategory=Debug",
+      "fullRules": [ { "all": [ "SfpBasicOutcome", "Shard1" ] } ],
+      "debugRules": [ { "all": [ "SfpBasicOutcome", "Shard1", "Debug" ] } ]
+    },
+    {
+      "id": "Basic2",
+      "suite": "BasicPolicy",
+      "fullFilter": "TestCategory=SfpBasicOutcome&TestCategory=Shard2",
+      "debugFilter": "TestCategory=SfpBasicOutcome&TestCategory=Shard2&TestCategory=Debug",
+      "fullRules": [ { "all": [ "SfpBasicOutcome", "Shard2" ] } ],
+      "debugRules": [ { "all": [ "SfpBasicOutcome", "Shard2", "Debug" ] } ]
+    },
+    {
+      "id": "Basic3",
+      "suite": "BasicPolicy",
+      "fullFilter": "TestCategory=SfpBasicOutcome&TestCategory=Shard3",
+      "debugFilter": "TestCategory=SfpBasicOutcome&TestCategory=Shard3&TestCategory=Debug",
+      "fullRules": [ { "all": [ "SfpBasicOutcome", "Shard3" ] } ],
+      "debugRules": [ { "all": [ "SfpBasicOutcome", "Shard3", "Debug" ] } ]
+    },
+    {
+      "id": "BasicMisc",
+      "suite": "BasicPolicy",
+      "fullFilter": "TestCategory=SfpBasicOutcome&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6",
+      "debugFilter": "TestCategory=SfpBasicOutcome&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6",
+      "fullRules": [
+        {
+          "all": [ "SfpBasicOutcome" ],
+          "none": [ "Shard1", "Shard2", "Shard3", "Shard4", "Shard5", "Shard6" ]
+        }
+      ],
+      "debugRules": [
+        {
+          "all": [ "SfpBasicOutcome" ],
+          "none": [ "Shard1", "Shard2", "Shard3", "Shard4", "Shard5", "Shard6" ]
+        }
+      ]
+    },
+    {
+      "id": "CE4",
+      "suite": "CE",
+      "fullFilter": "TestCategory=SfpCountryEstateOutcome&TestCategory=Shard4",
+      "debugFilter": "TestCategory=SfpCountryEstateOutcome&TestCategory=Shard4&TestCategory=Debug",
+      "fullRules": [ { "all": [ "SfpCountryEstateOutcome", "Shard4" ] } ],
+      "debugRules": [ { "all": [ "SfpCountryEstateOutcome", "Shard4", "Debug" ] } ]
+    },
+    {
+      "id": "CE5",
+      "suite": "CE",
+      "fullFilter": "TestCategory=SfpCountryEstateOutcome&TestCategory=Shard5",
+      "debugFilter": "TestCategory=SfpCountryEstateOutcome&TestCategory=Shard5&TestCategory=Debug",
+      "fullRules": [ { "all": [ "SfpCountryEstateOutcome", "Shard5" ] } ],
+      "debugRules": [ { "all": [ "SfpCountryEstateOutcome", "Shard5", "Debug" ] } ]
+    },
+    {
+      "id": "CE6",
+      "suite": "CE",
+      "fullFilter": "TestCategory=SfpCountryEstateOutcome&TestCategory=Shard6",
+      "debugFilter": "TestCategory=SfpCountryEstateOutcome&TestCategory=Shard6&TestCategory=Debug",
+      "fullRules": [ { "all": [ "SfpCountryEstateOutcome", "Shard6" ] } ],
+      "debugRules": [ { "all": [ "SfpCountryEstateOutcome", "Shard6", "Debug" ] } ]
+    },
+    {
+      "id": "FormsSfp",
+      "suite": "Forms",
+      "fullFilter": "TestCategory=Forms&TestCategory=SFP",
+      "debugFilter": "TestCategory=Forms&TestCategory=SFP",
+      "fullRules": [ { "all": [ "Forms", "SFP" ] } ],
+      "debugRules": [ { "all": [ "Forms", "SFP" ] } ]
+    }
+  ]
+}

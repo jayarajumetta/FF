@@ -76,11 +76,13 @@ PnC-TestAutomation/
 ├── Parsers/                     # FormsXmlParser
 ├── Tools/                       # Developer tools (not test scenarios)
 │   ├── LocatorScan/             # Live DOM locator scanner
-│   └── FormsBaselineGenerator/  # Generates forms expectation JSON from Excel
+│   ├── FormsBaselineGenerator/  # Generates forms expectation JSON from Excel
+│   └── CiTestInventory/         # Compiled NUnit/Reqnroll case inventory
 ├── Docs/                        # Framework documentation
 ├── Pipelines/                   # Azure DevOps pipeline YAML definitions
 ├── Resources/                   # Static test data (expected forms JSON)
 ├── Scripts/                     # PowerShell helper scripts
+│   └── CI/                      # Package, shard, retry, and result entry points
 ├── appsettings.json             # Default (QA) configuration
 └── appsettings.Dev.json         # Dev environment overrides
 ```
@@ -122,6 +124,18 @@ $env:EQ_PASSWORD  = "your-eq-password"
 # 5. Run Smoke tests
 dotnet test TestAutomation.csproj --filter "Category=Smoke"
 ```
+
+### Build the run-ready CI package
+
+```powershell
+pwsh .\Scripts\CI\New-TestPackage.ps1
+```
+
+This performs locked restore, Release build, all unit/contract tests, compiled
+test inventory and shard validation, package checksum/secret validation, and a
+source-free extraction smoke. The versioned archive is written under
+`artifacts/package/` and is never overwritten. See
+`Docs/CI-Package-Contract.md`.
 
 > ⚠️ `appsettings.json` leaves all credential values empty.
 > Tests will fail immediately with a login error until you set the env vars above.

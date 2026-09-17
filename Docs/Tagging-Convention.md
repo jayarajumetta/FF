@@ -30,6 +30,7 @@ unless the scenario has a *different* value for that tag.
 | `@Regression` | Full end-to-end workflow including edge cases and multi-state coverage. Run nightly or before releases. |
 | `@Forms` | Forms-only validation scenarios (no UI navigation). Run via `FormsValidationSmoke.feature`. |
 | `@API` | API-only scenarios. Triggers headless path in `TestHooks.IsApiScenario()`. |
+| `@RetrySafe` | Non-parameterized, idempotent test approved for one CI retry after a classified transient infrastructure failure. |
 | `@Manual` | Scenarios not yet automated. Tracked in the repo as documentation; never executed in CI. |
 | `@Ignore` | Temporarily disabled. Must include a comment with the reason and a tracking ticket reference. |
 
@@ -141,6 +142,9 @@ dotnet test --filter "TestCategory=ExpertQuote&TestCategory=Smoke"
 10. **Business outcome tags require profiles** — missing or ambiguous profile
     matches are configuration failures. Placeholder profiles must be explicitly
     `NonRunnable`.
+11. **`@RetrySafe` is exceptional** — do not apply it to parameterized quote,
+    policy, forms, transmission, or other state-changing workflows. A retry
+    tag does not override deterministic business/configuration failures.
 
 ---
 
