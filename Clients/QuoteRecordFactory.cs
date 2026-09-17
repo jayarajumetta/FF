@@ -68,15 +68,21 @@ namespace PnCTestAutomation.DataPool
 
             var ps = (ctx.ProductSelection ?? string.Empty).Trim();
 
-            if (ContainsIgnoreCase(ps, "BOP")) return "BOP";
-            if (ContainsIgnoreCase(ps, "PA"))  return "PA";
-
             // SFP family
             if (ContainsIgnoreCase(ps, "CE")
                 || ContainsIgnoreCase(ps, "Country Estate")
                 || ContainsIgnoreCase(ps, "SFP")
                 || ContainsIgnoreCase(ps, "Special Farm Package"))
                 return "SFP";
+
+            if (ps.Equals("BOP", StringComparison.OrdinalIgnoreCase)
+                || ContainsIgnoreCase(ps, "Business Owners")
+                || ContainsIgnoreCase(ps, "Businessowners"))
+                return "BOP";
+
+            if (ps.Equals("PA", StringComparison.OrdinalIgnoreCase)
+                || ContainsIgnoreCase(ps, "Personal Auto"))
+                return "PA";
 
             // Final fallback: non-null farm data means SFP
             if (!string.IsNullOrWhiteSpace(ctx.Farm?.PrimaryFarmType))

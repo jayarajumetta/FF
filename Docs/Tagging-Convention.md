@@ -57,6 +57,17 @@ unless the scenario has a *different* value for that tag.
 | `@DevOnly` | Runs only against the Dev environment |
 | `@QAOnly` | Runs only against the QA environment |
 
+### 5. Execution ownership (required for sharded suites)
+
+`@Shard1` through `@Shard6` are execution-ownership tags, not business
+classification. Each `Examples:` block selected by a sharded pipeline must have
+exactly one numbered shard tag. Catch-all jobs must explicitly exclude all
+numbered shard tags so no generated case can execute twice.
+
+Before a sharded run, CI must compare discovered cases with the union of shard
+cases and fail when a case is missing, duplicated, or when a shard discovers
+zero tests.
+
 ---
 
 ## Feature File Layout
@@ -109,6 +120,12 @@ dotnet test --filter "TestCategory=ExpertQuote&TestCategory=Smoke"
 4. **`@Manual` scenarios stay in the repo** as living documentation but are never executed. They document what still needs to be automated.
 5. **Do not add environment tags** (`@DevOnly`, `@QAOnly`) unless the scenario is genuinely environment-specific. The Dev state filter in `TestHooks` handles most environment routing programmatically.
 6. **No trailing commas** — `@UI,` is not valid Gherkin. Use `@UI` only.
+7. **Exactly one shard owner** — every `Examples:` block in a sharded suite has
+   one `@ShardN` tag; never combine numbered shard tags.
+8. **Catch-all filters are exclusionary** — use the suite tags plus
+   `TestCategory!=Shard1` through `TestCategory!=Shard6`.
+9. **Retries do not change ownership** — a retry uses the original case identity
+   and shard and produces one canonical final outcome.
 
 ---
 

@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "scenarioState": {
+    "owner": "ScenarioContextData",
+    "contextKey": "ContextData",
+    "missingRequiredValue": "fail",
+    "flattenedKeyCollisions": "fail"
+  },
+  "controls": {
+    "selectorPriority": [
+      "GetByTestId",
+      "DocumentedAniHtmlId",
+      "AccessibleRoleOrLabel",
+      "DocumentedException"
+    ],
+    "selectedValueAssertion": "actual-selected-value",
+    "trueAssertion": "checked-or-selected",
+    "enabledAssertion": "enabled",
+    "captureSemantics": [
+      "value",
+      "checked",
+      "selected"
+    ]
+  },
+  "frames": {
+    "resolvedScopeMustReachAction": true,
+    "resolutionEvidenceRequired": true
+  },
+  "evidence": {
+    "missingRequiredEvidence": "fail",
+    "checkpointScreenshotPattern": "{runId}/{scenarioId}/checkpoints/{ordinal}-{checkpoint}.png",
+    "uniqueCheckpointScreenshots": true,
+    "requiredPilotEvidence": [
+      "canonical-test-result",
+      "scenario-report",
+      "execution-log",
+      "evidence-manifest",
+      "screenshots",
+      "trace-on-failure",
+      "video-on-failure"
+    ]
+  },
+  "dataProfiles": {
+    "precedence": [
+      "scenario",
+      "profile",
+      "environment"
+    ],
+    "missingRequiredValue": "fail",
+    "profileChecksumRequired": true,
+    "staleChecksum": "fail"
+  },
+  "retry": {
+    "stateChangingUiRetry": "disabled-unless-idempotent",
+    "oneFinalOutcomePerScenario": true
+  },
+  "package": {
+    "oneVersionedArtifact": true,
+    "requiredInventory": [
+      "TestAutomation.dll",
+      "TestAutomation.deps.json",
+      "TestAutomation.runtimeconfig.json",
+      "DataPool/DataPool.dll",
+      "playwright.ps1",
+      "Resources",
+      "appsettings.json",
+      "ci.runsettings",
+      "Scripts",
+      "manifest.json"
+    ]
+  }
+}

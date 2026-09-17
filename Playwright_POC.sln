@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAutomation", "TestAutom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataPool", "DataPool\DataPool.csproj", "{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAutomation.UnitTests", "TestAutomation.UnitTests\TestAutomation.UnitTests.csproj", "{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
@@ -46,6 +48,18 @@ Global
 		{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421}.Release|x64.Build.0 = Release|Any CPU
 		{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421}.Release|x86.ActiveCfg = Release|Any CPU
 		{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421}.Release|x86.Build.0 = Release|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Debug|x64.Build.0 = Debug|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Debug|x86.Build.0 = Debug|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Release|x64.ActiveCfg = Release|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Release|x64.Build.0 = Release|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Release|x86.ActiveCfg = Release|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
