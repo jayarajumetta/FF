@@ -179,7 +179,7 @@ pwsh bin/Debug/net8.0/playwright.ps1 install
 
 ### 3.4 Set credentials
 
-`appsettings.json` contains only `"PLACEHOLDER"` values — **no real passwords are stored in the repository.**
+`appsettings.json` leaves credential values empty — **no real passwords are stored in the repository.**
 You must set credentials as environment variables. Ask your team lead for the actual values.
 
 ```powershell
@@ -188,7 +188,13 @@ $env:EQ_USERNAME = "your-eq-username"
 $env:EQ_PASSWORD = "your-eq-password"
 
 # Required for Forms validation tests
+$env:DUCKCREEK_USERNAME = "your-duckcreek-username"
 $env:DUCKCREEK_PASSWORD = "your-duckcreek-password"
+
+# Required for API tests
+$env:PING_SECRET_ID = "your-ping-secret-id"
+$env:PING_BOOTSTRAP_CLIENT_ID = "your-bootstrap-client-id"
+$env:PING_BOOTSTRAP_CLIENT_SECRET = "your-bootstrap-client-secret"
 ```
 
 Environment variables only persist for the current PowerShell session. You will need to re-set them
@@ -402,7 +408,7 @@ When running in **Debug mode** (VS: right-click test → Debug), the browser wil
 | Mistake | Why it's wrong | What to do instead |
 |---------|---------------|-------------------|
 | Hardcoding credentials in `appsettings.json` | File is committed to git — credentials become visible to everyone and the build history | Use environment variables (see section 3.4) |
-| Replacing a `"PLACEHOLDER"` value and committing it | Same risk as above | Set the env var; do not edit the placeholder |
+| Filling an empty credential value and committing it | Same risk as above | Set the env var; do not edit the tracked file |
 | Injecting a page object from DI (e.g. constructor parameter `AccountOwnerInfoPage page`) | Page objects are registered as singletons but `IPage` is scenario-scoped — you will get a stale page reference after the first test | Construct page objects inline: `new AccountOwnerInfoPage(_context.Page)` |
 | Using `Thread.Sleep()` or `Task.Delay()` to wait | Fragile — too short fails, too long wastes time | Use `WaitForSpinnerAsync()`, `WaitForAsync()`, or Playwright `Expect` |
 | `IsVisibleAsync()` in a loop to wait | No auto-retry — will burn CPU and still fail | Use `locator.WaitForAsync(new(){ State = WaitForSelectorState.Visible })` |

@@ -122,7 +122,7 @@ $env:EQ_PASSWORD  = "your-eq-password"
 dotnet test TestAutomation.csproj --filter "Category=Smoke"
 ```
 
-> ⚠️ `appsettings.json` contains only `"PLACEHOLDER"` values for all credentials.
+> ⚠️ `appsettings.json` leaves all credential values empty.
 > Tests will fail immediately with a login error until you set the env vars above.
 
 ---
@@ -194,7 +194,7 @@ See [Docs/Tagging-Convention.md](Docs/Tagging-Convention.md) for the full specif
 
 ## Configuration
 
-> ⚠️ **`appsettings.json` contains placeholder values only.** Real credentials must be supplied via
+> ⚠️ **`appsettings.json` contains empty credential values only.** Real credentials must be supplied via
 > environment variables. **Never replace a placeholder with a real password and commit it.**
 
 ### Environment Variables
@@ -207,9 +207,18 @@ Set these before running tests. They override the corresponding `appsettings.jso
 | `EQ_PASSWORD` | `Credentials:Password` | All UI tests |
 | `EXPRESS_USERNAME` | `QAExpressCreds:Username` | Express/CLAS tests |
 | `EXPRESS_PASSWORD` | `QAExpressCreds:Password` | Express/CLAS tests |
-| `OAUTH_CLIENT_SECRET` | `OAuthConfig:ClientSecret` | API tests |
+| `OAUTH_CLIENT_ID` | `OAuthConfig:ClientId` | API tests |
+| `OAUTH_TOKEN_URL` | `OAuthConfig:TokenUrl` | API tests |
 | `PING_SECRET_ID` | `OAuthConfig:PingSecretId` | API tests |
+| `PING_TOKEN_ENDPOINT` | `PingSecret:TokenEndpoint` | API tests |
+| `PING_SECRET_ENDPOINT` | `PingSecret:SecretEndpoint` | API tests |
+| `PING_BOOTSTRAP_CLIENT_ID` | `PingSecret:BootstrapClientId` | API tests |
+| `PING_BOOTSTRAP_CLIENT_SECRET` | `PingSecret:BootstrapClientSecret` | API tests |
+| `EXPERT_QUOTE_API_BASE_URL` | `ApiClient:BaseUrl` | API tests |
+| `DUCKCREEK_USERNAME` | `DuckCreekForms:Username` | Forms validation |
 | `DUCKCREEK_PASSWORD` | `DuckCreekForms:Password` | Forms validation |
+| `CLAS_USERNAME` | `DuckCreekForms:CLASUsername` | Forms validation |
+| `CLAS_PASSWORD` | `DuckCreekForms:CLASPassword` | Forms validation |
 | `TEST_ENVIRONMENT` | `Environment` | Dev environment runs |
 | `BROWSER_TYPE` | `Playwright:BrowserType` | Browser override |
 | `PLAYWRIGHT_HEADLESS` | `Playwright:Headless` | Headless mode |
@@ -224,7 +233,8 @@ $env:DUCKCREEK_PASSWORD = "your-duckcreek-password"
 
 # For API tests
 $env:PING_SECRET_ID   = "your-ping-secret-id"
-$env:OAUTH_CLIENT_SECRET = "your-oauth-secret"
+$env:PING_BOOTSTRAP_CLIENT_ID = "your-bootstrap-client-id"
+$env:PING_BOOTSTRAP_CLIENT_SECRET = "your-bootstrap-client-secret"
 ```
 
 Ask your QA lead for the credential values. Do **not** commit them to any file.
@@ -476,7 +486,7 @@ See `Tools/FormsBaselineGenerator/` for source and `Resources/ExpectedForms/` fo
 | `ScenarioContextData` fields are null | Table key in Gherkin doesn't match a mapped case | Check `TableMappingHelpers` for the relevant mapper method |
 | Browser not found | Playwright browsers not installed | Run `pwsh bin/Debug/net8.0/playwright.ps1 install` |
 | Test passes locally but fails in CI | Headless rendering difference | Reproduce with `$env:PLAYWRIGHT_HEADLESS = "true"` locally |
-| "Failed to retrieve ClientSecret from Ping" | API test — Ping secret ID not configured | Set `OAuthConfig:PingSecretId` in config or contact QA lead |
+| `OAuthConfig:*` or `PingSecret:*` validation error | Required API authentication setting is missing or invalid | Set the documented API environment variables or contact the QA lead |
 | Quote number not found | Nav element changed | Check `cl-sfp-nav` testId or the tab label XPath in `SharedEQSteps` |
 | Video/trace not saved | `AfterScenario` hook error swallowed | Check test output for `[Warning]` lines |
 

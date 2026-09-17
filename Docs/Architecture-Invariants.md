@@ -18,9 +18,11 @@ from introducing parallel infrastructure.
    ANi HTML `id` and other fallbacks require a documented exception in the
    locator audit. Locator rescue diagnoses drift; it does not turn missing
    required controls into passing tests.
-6. **Retries have one owner.** Page actions use Playwright auto-waiting and
-   shared control helpers. CI alone may retry explicitly classified transient
-   test failures; product code must not add a second retry system.
+6. **Retries have one owner per boundary.** Page actions use Playwright
+   auto-waiting and shared control helpers. `IApiService` is the only HTTP
+   transient-retry path, and callers must explicitly mark a request as
+   idempotent. CI alone may retry explicitly classified transient test
+   failures; product code must not add another retry system.
 7. **Results are explicit.** Failed tests, zero discovered tests, missing final
    TRX, and missing promised business artifacts are failures. Reporting and
    publication cannot convert failed execution into success.

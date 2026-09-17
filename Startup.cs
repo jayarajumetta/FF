@@ -4,6 +4,7 @@ using PnCTestAutomation.Configuration;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.DataPool;
 using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Integrations;
 using PnCTestAutomation.Models;
 using PnCTestAutomation.Pages;
 using PnCTestAutomation.Pages.ExpertQuotePages;
@@ -14,6 +15,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace PnCTestAutomation
 {
@@ -38,27 +40,83 @@ namespace PnCTestAutomation
             services.AddSingleton<IConfiguration>(configuration);
 
             var credentials = configuration.GetSection("Credentials").Get<CredentialsConfig>();
-            if (credentials != null) services.AddSingleton(credentials);
+            if (credentials != null)
+            {
+                credentials.Username =
+                    GetEnvironmentValue("EQ_USERNAME", credentials.Username);
+                credentials.Password =
+                    GetEnvironmentValue("EQ_PASSWORD", credentials.Password);
+                services.AddSingleton(credentials);
+            }
 
             var expressCreds = configuration.GetSection("QAExpressCreds").Get<ExpressCredentialsConfig>();
-            if (expressCreds != null) services.AddSingleton(expressCreds);
+            if (expressCreds != null)
+            {
+                expressCreds.Username =
+                    GetEnvironmentValue("EXPRESS_USERNAME", expressCreds.Username);
+                expressCreds.Password =
+                    GetEnvironmentValue("EXPRESS_PASSWORD", expressCreds.Password);
+                services.AddSingleton(expressCreds);
+            }
 
-            var oauthConfig = configuration.GetSection("OAuthConfig").Get<OAuthConfig>();
-            if (oauthConfig != null) services.AddSingleton(oauthConfig);
+            var oauthConfig = configuration.GetSection("OAuthConfig").Get<OAuthConfig>()
+                              ?? new OAuthConfig();
+            OverrideFromEnvironment(oauthConfig);
+            services.AddSingleton(oauthConfig);
+
+            var pingSecretConfig = configuration.GetSection("PingSecret").Get<PingSecretConfig>()
+                                   ?? new PingSecretConfig();
+            OverrideFromEnvironment(pingSecretConfig);
+            services.AddSingleton(pingSecretConfig);
+
+            var apiClientConfig = configuration.GetSection("ApiClient").Get<ApiClientConfig>()
+                                  ?? new ApiClientConfig();
+            OverrideFromEnvironment(apiClientConfig);
+            services.AddSingleton(apiClientConfig);
 
             services.AddSingleton<BrowserFactory>();
             services.AddSingleton<PlaywrightContext>();
 
-            services.AddSingleton<PingSecretProvider>(provider =>
-                new PingSecretProvider(
-                    new HttpClient(),
-                    "https://ssoqa.anico.com/as/token.oauth2",
-                    "https://ssoqa.anico.com/secrets",
-                    Environment.GetEnvironmentVariable("PING_BOOTSTRAP_CLIENT_ID"),
-                    Environment.GetEnvironmentVariable("PING_BOOTSTRAP_CLIENT_SECRET")
-                ));
+            services.AddHttpClient("PingSecret");
+            services.AddHttpClient("OAuthToken");
+            services.AddHttpClient("ScenarioApi", client =>
+            {
+                if (Uri.TryCreate(apiClientConfig.BaseUrl, UriKind.Absolute, out var baseUri))
+                {
+                    client.BaseAddress = baseUri;
+                    client.DefaultRequestHeaders.Referrer =
+                        new Uri(
+                            $"{baseUri.GetLeftPart(UriPartial.Authority)}/expertquote/");
+                    client.DefaultRequestHeaders.TryAddWithoutValidation(
+                        "Origin",
+                        baseUri.GetLeftPart(UriPartial.Authority));
+                }
 
-            services.AddHttpClient<IApiService, ApiService>();
+                client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.TryAddWithoutValidation(
+                    "User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+                    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 " +
+                    "Safari/537.36 Edg/142.0.0.0");
+            });
+
+            services.AddScoped<IPingSecretProvider>(provider =>
+                new PingSecretProvider(
+                    provider.GetRequiredService<IHttpClientFactory>()
+                        .CreateClient("PingSecret"),
+                    pingSecretConfig));
+            services.AddScoped<IAccessTokenProvider>(provider =>
+                new AccessTokenProvider(
+                    provider.GetRequiredService<IHttpClientFactory>()
+                        .CreateClient("OAuthToken"),
+                    oauthConfig,
+                    provider.GetRequiredService<IPingSecretProvider>()));
+            services.AddScoped<IApiService>(provider =>
+                new ApiService(
+                    provider.GetRequiredService<IHttpClientFactory>()
+                        .CreateClient("ScenarioApi"),
+                    apiClientConfig));
 
             // DataPool client — optional; silently no-ops if DataPool:BaseUrl is absent.
             var dataPoolUrl = configuration["DataPool:BaseUrl"];
@@ -75,8 +133,6 @@ namespace PnCTestAutomation
 
             // Scenario-scoped NavigationService (resolved in step constructors)
             services.AddScoped<NavigationService>();
-
-            services.AddSingleton<ApiHeaders>();
 
             // One ScenarioContextData per scenario, shared by every binding that touches it.
             // Some step classes inject it; others read ScenarioContext["ContextData"]. Both routes
@@ -101,10 +157,14 @@ namespace PnCTestAutomation
             var formsConfig = configuration.GetSection("DuckCreekForms").Get<DuckCreekFormsConfig>();
             if (formsConfig != null)
             {
-                // Allow env-var override for the password so it's not committed to source control
-                var envPassword = Environment.GetEnvironmentVariable("DUCKCREEK_PASSWORD");
-                if (!string.IsNullOrEmpty(envPassword))
-                    formsConfig.Password = envPassword;
+                formsConfig.Username =
+                    GetEnvironmentValue("DUCKCREEK_USERNAME", formsConfig.Username);
+                formsConfig.Password =
+                    GetEnvironmentValue("DUCKCREEK_PASSWORD", formsConfig.Password);
+                formsConfig.CLASUsername =
+                    GetEnvironmentValue("CLAS_USERNAME", formsConfig.CLASUsername);
+                formsConfig.CLASPassword =
+                    GetEnvironmentValue("CLAS_PASSWORD", formsConfig.CLASPassword);
 
                 // Swap in Dev CLAS/server URLs when running against the Dev environment
                 var envSetting = configuration["Environment"] ?? "QA";
@@ -128,5 +188,35 @@ namespace PnCTestAutomation
             services.AddScoped<FormsValidationService>();
             services.AddHttpClient<DuckCreekFormsClient>();
         }
+
+        private static void OverrideFromEnvironment(OAuthConfig config)
+        {
+            config.TokenUrl = GetEnvironmentValue("OAUTH_TOKEN_URL", config.TokenUrl);
+            config.ClientId = GetEnvironmentValue("OAUTH_CLIENT_ID", config.ClientId);
+            config.PingSecretId = GetEnvironmentValue("PING_SECRET_ID", config.PingSecretId);
+        }
+
+        private static void OverrideFromEnvironment(PingSecretConfig config)
+        {
+            config.TokenEndpoint =
+                GetEnvironmentValue("PING_TOKEN_ENDPOINT", config.TokenEndpoint);
+            config.SecretEndpoint =
+                GetEnvironmentValue("PING_SECRET_ENDPOINT", config.SecretEndpoint);
+            config.BootstrapClientId =
+                GetEnvironmentValue("PING_BOOTSTRAP_CLIENT_ID", config.BootstrapClientId);
+            config.BootstrapClientSecret =
+                GetEnvironmentValue("PING_BOOTSTRAP_CLIENT_SECRET", config.BootstrapClientSecret);
+        }
+
+        private static void OverrideFromEnvironment(ApiClientConfig config)
+        {
+            config.BaseUrl =
+                GetEnvironmentValue("EXPERT_QUOTE_API_BASE_URL", config.BaseUrl);
+        }
+
+        private static string GetEnvironmentValue(string name, string configuredValue) =>
+            Environment.GetEnvironmentVariable(name) is { Length: > 0 } value
+                ? value
+                : configuredValue;
     }
 }

@@ -1,24 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PnCTestAutomation.Configuration
 {
-    public class OAuthConfig
+    public sealed class OAuthConfig
     {
-        public string AuthUrl { get; set; }
-        public string TokenUrl { get; set; }
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
-        public string RedirectUri { get; set; }
+        public string AuthUrl { get; set; } = string.Empty;
+        public string TokenUrl { get; set; } = string.Empty;
+        public string ClientId { get; set; } = string.Empty;
+        public string RedirectUri { get; set; } = string.Empty;
         public string Scope { get; set; } = "openid profile";
         public string GrantType { get; set; } = "password";
-        /// <summary>
-        /// The secret ID passed to PingSecretProvider for API test token retrieval.
-        /// Set via OAuthConfig:PingSecretId in appsettings or PING_SECRET_ID env var.
-        /// </summary>
-        public string PingSecretId { get; set; }
+        public string PingSecretId { get; set; } = string.Empty;
+
+        public void ValidateClientCredentials()
+        {
+            ValidateHttpsUri(TokenUrl, nameof(TokenUrl));
+            RequireValue(ClientId, nameof(ClientId));
+            RequireValue(PingSecretId, nameof(PingSecretId));
+        }
+
+        private static void RequireValue(string value, string propertyName)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new InvalidOperationException(
+                    $"OAuthConfig:{propertyName} must be supplied through configuration.");
+            }
+        }
+
+        private static void ValidateHttpsUri(string value, string propertyName)
+        {
+            RequireValue(value, propertyName);
+            if (!Uri.TryCreate(value, UriKind.Absolute, out var uri) ||
+                uri.Scheme != Uri.UriSchemeHttps)
+            {
+                throw new InvalidOperationException(
+                    $"OAuthConfig:{propertyName} must be an absolute HTTPS URI.");
+            }
+        }
     }
 }

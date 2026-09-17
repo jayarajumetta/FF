@@ -16,7 +16,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 using NUnitTestContext = NUnit.Framework.TestContext;
@@ -36,8 +35,8 @@ namespace PnCTestAutomation.Hooks
         private readonly ScenarioContext _scenarioContext;
         private readonly FeatureContext _featureContext;
 
-        private readonly OAuthConfig _oauthConfig;
-        private readonly PingSecretProvider _pingSecretProvider;
+        private readonly IAccessTokenProvider _accessTokenProvider;
+        private readonly IApiService _apiService;
         private readonly IConfiguration _configuration;
         private readonly IDataPoolClient _dataPoolClient;
 
@@ -50,8 +49,8 @@ namespace PnCTestAutomation.Hooks
             IObjectContainer container,
             ScenarioContext scenarioContext,
             FeatureContext featureContext,
-            OAuthConfig oauthConfig,
-            PingSecretProvider pingSecretProvider,
+            IAccessTokenProvider accessTokenProvider,
+            IApiService apiService,
             IConfiguration configuration,
             IDataPoolClient dataPoolClient)
         {
@@ -62,8 +61,8 @@ namespace PnCTestAutomation.Hooks
             _scenarioContext = scenarioContext;
             _featureContext = featureContext;
 
-            _oauthConfig = oauthConfig;
-            _pingSecretProvider = pingSecretProvider;
+            _accessTokenProvider = accessTokenProvider;
+            _apiService = apiService;
             _configuration = configuration;
             _dataPoolClient = dataPoolClient;
         }
@@ -74,7 +73,6 @@ namespace PnCTestAutomation.Hooks
             // Global type registrations
             container.RegisterTypeAs<PlaywrightContext, PlaywrightContext>();
             container.RegisterTypeAs<BrowserFactory, BrowserFactory>();
-            container.RegisterTypeAs<ApiService, IApiService>();
 
             // Configure locator rescue from appsettings
             var configPath = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
@@ -135,30 +133,10 @@ namespace PnCTestAutomation.Hooks
                 Console.WriteLine("[Hooks] Deleted stale QuoteNumber.txt");
             }
 
-            // Initialize HttpClient for API scenarios (kept from your original code)
-            _context.HttpClient = new System.Net.Http.HttpClient
-            {
-                BaseAddress = new Uri(_configuration["Playwright:ExpertQuoteBase"] ?? "https://expertquote-qa.americannational.com")
-            };
-            _container.RegisterInstanceAs(_context.HttpClient);
-
             if (IsApiScenario())
             {
-                var pingSecretId = _configuration["OAuthConfig:PingSecretId"]
-                    ?? Environment.GetEnvironmentVariable("PING_SECRET_ID")
-                    ?? throw new InvalidOperationException(
-                        "PING_SECRET_ID is not configured. Set OAuthConfig:PingSecretId in appsettings.json " +
-                        "or the PING_SECRET_ID environment variable.");
-
-                var clientSecret = await _pingSecretProvider.GetSecretAsync(pingSecretId);
-                if (string.IsNullOrWhiteSpace(clientSecret))
-                    throw new Exception("Failed to retrieve ClientSecret from Ping.");
-
-                var token = await AuthHelper.GetTokenWithClientCredentialsAsync(_oauthConfig, clientSecret);
-                _context.HttpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", token);
-
-                Console.WriteLine("API token retrieved successfully.");
+                var accessToken = await _accessTokenProvider.GetAccessTokenAsync();
+                _apiService.SetAccessToken(accessToken);
             }
             else
             {
@@ -346,9 +324,6 @@ namespace PnCTestAutomation.Hooks
             }
 
             try { if (_browser != null) await _browser.CloseAsync(); } catch { /* ignore */ }
-
-            // Dispose HttpClient (API and UI scenarios)
-            _context.HttpClient?.Dispose();
 
             // ── DataPool: persist quote only from truly passing tests ──
             // Exclude: failed tests (TestError != null), skipped tests (outcome = Skipped),
