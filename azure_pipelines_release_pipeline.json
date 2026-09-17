@@ -408,7 +408,7 @@
             "enableAccessToken": true,
             "timeoutInMinutes": 0,
             "jobCancelTimeoutInMinutes": 5,
-            "condition": "always()",
+            "condition": "succeededOrFailed()",
             "overrideInputs": {}
           },
           "rank": 2,
@@ -823,7 +823,7 @@
             "enableAccessToken": true,
             "timeoutInMinutes": 0,
             "jobCancelTimeoutInMinutes": 5,
-            "condition": "always()",
+            "condition": "succeededOrFailed()",
             "overrideInputs": {}
           },
           "rank": 2,
@@ -1236,7 +1236,7 @@
             "enableAccessToken": true,
             "timeoutInMinutes": 0,
             "jobCancelTimeoutInMinutes": 5,
-            "condition": "always()",
+            "condition": "succeededOrFailed()",
             "overrideInputs": {}
           },
           "rank": 2,

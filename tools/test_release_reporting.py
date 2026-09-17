@@ -233,8 +233,9 @@ class ReleaseReportingTests(unittest.TestCase):
         for environment in pipeline["environments"]:
             execution, aggregate = environment["deployPhases"]
             self.assertEqual("Run automation on Windows agent", execution["name"])
+            self.assertEqual("succeeded()", execution["deploymentInput"]["condition"])
             self.assertEqual("none", aggregate["deploymentInput"]["parallelExecution"]["parallelExecutionType"])
-            self.assertEqual("always()", aggregate["deploymentInput"]["condition"])
+            self.assertEqual("succeededOrFailed()", aggregate["deploymentInput"]["condition"])
             self.assertTrue(aggregate["deploymentInput"]["enableAccessToken"])
             self.assertLess(execution["rank"], aggregate["rank"])
             prepare = next(t for t in execution["workflowTasks"] if t["refName"].endswith("_Prepare"))
@@ -245,6 +246,7 @@ class ReleaseReportingTests(unittest.TestCase):
             self.assertEqual("always()", publisher["condition"])
             self.assertFalse(publisher["continueOnError"])
             collector = aggregate["workflowTasks"][-1]
+            self.assertEqual("always()", collector["condition"])
             self.assertIn(".FullName collect", collector["inputs"]["script"])
             self.assertEqual("$(System.AccessToken)", collector["environment"]["SYSTEM_ACCESSTOKEN"])
             self.assertFalse(collector["continueOnError"])
