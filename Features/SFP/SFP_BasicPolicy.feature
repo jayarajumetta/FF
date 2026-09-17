@@ -1,4 +1,4 @@
-@SFP @ExpertQuote @BusinessOutcomes @SfpBasicOutcome
+@SFP @ExpertQuote @BusinessOutcomes @SfpBasicOutcome @AutomationId-SFP-BASIC-POLICY
 Feature: SFP Basic Policy
 
 

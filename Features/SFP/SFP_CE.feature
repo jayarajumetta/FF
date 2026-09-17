@@ -1,4 +1,4 @@
-@SFP @CE @ExpertQuote @BusinessOutcomes @SfpCountryEstateOutcome
+@SFP @CE @ExpertQuote @BusinessOutcomes @SfpCountryEstateOutcome @AutomationId-SFP-COUNTRY-ESTATE
 Feature: SFP Country Estate Policy
 
   @Regression

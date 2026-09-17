@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DataPool\DataPool.csproj" />
     <ProjectReference Include="..\TestAutomation.csproj" />
+    <ProjectReference Include="..\Tools\TestPlanPublisher\TestPlanPublisher.csproj" />
   </ItemGroup>
 
 </Project>

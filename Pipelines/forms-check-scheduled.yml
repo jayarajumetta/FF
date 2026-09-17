@@ -11,6 +11,20 @@ variables:
   DATAPOOL_BASE_URL: ""
   DATAPOOL_API_KEY: ""
 
+parameters:
+  - name: testPlanPublishMode
+    displayName: "Azure Test Plans publication"
+    type: string
+    default: Off
+    values:
+      - Off
+      - Dry-Run
+      - Publish
+  - name: testPlanMappingSecureFile
+    displayName: "Azure Test Plans mapping secure-file name"
+    type: string
+    default: ""
+
 stages:
   - template: templates/build-package-stage.yml
 
@@ -18,6 +32,8 @@ stages:
     parameters:
       maxParallel: 1
       dataPoolRequired: false
+      testPlanPublishMode: ${{ parameters.testPlanPublishMode }}
+      testPlanMappingSecureFile: ${{ parameters.testPlanMappingSecureFile }}
       matrix:
         FormsSfp:
           SHARD_ID: FormsSfp

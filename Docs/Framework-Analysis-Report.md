@@ -405,6 +405,14 @@ retains the one discovered SFP forms-only case; its former CE filter was
 removed because it discovered zero tests. Required Azure branch policies remain
 an external project-administration action.
 
+### 7.4 Azure Test Plans publication — resolved in Phase 6
+
+The packaged publisher consumes only canonical final TRX and scenario evidence,
+uses stable automation IDs plus an external checksummed ADO mapping catalog,
+and persists an idempotent reconciliation record. Dry-run is deterministic;
+live publication remains off until Azure Test Management permissions, a secure
+mapping file, and external endpoint credentials are supplied.
+
 ---
 
 ## 8. Positive Patterns Worth Preserving

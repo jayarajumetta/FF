@@ -11,6 +11,8 @@ param(
 
     [switch]$DiscoverySmoke,
 
+    [switch]$PublisherDryRunSmoke,
+
     [switch]$ScanForSecrets
 )
 
@@ -139,6 +141,10 @@ try {
             throw "Extracted package discovery smoke found zero SFP tests."
         }
         Write-Host "Extracted package discovery smoke found $($sfpTests.Count) SFP tests."
+    }
+    if ($PublisherDryRunSmoke) {
+        & (Join-Path $PackageRoot "scripts\CI\Test-TestPlanPublisherSmoke.ps1") `
+            -PackageRoot $PackageRoot
     }
 
     Write-Host (

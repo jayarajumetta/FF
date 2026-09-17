@@ -137,6 +137,11 @@ source-free extraction smoke. The versioned archive is written under
 `artifacts/package/` and is never overwritten. See
 `Docs/CI-Package-Contract.md`.
 
+Azure DevOps Test Plans publication is disabled by default. The packaged
+publisher supports validation, deterministic dry-run, live publication, and
+resumable reconciliation using an externally supplied checksummed mapping
+catalog. See `Docs/Azure-Test-Plans-Publishing.md`.
+
 > ⚠️ `appsettings.json` leaves all credential values empty.
 > Tests will fail immediately with a login error until you set the env vars above.
 

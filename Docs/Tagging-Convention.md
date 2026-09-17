@@ -76,10 +76,15 @@ zero tests.
 | `@BusinessOutcomes` | Resolve a versioned expected-outcome profile before browser startup. |
 | `@SfpBasicOutcome` | Stable profile identity `sfp-basic`. |
 | `@SfpCountryEstateOutcome` | Stable profile identity `sfp-country-estate`. |
+| `@AutomationId-<NAME>` | Immutable external automation family; the runtime appends the stable scenario data qualifier. |
 
 An approved profile makes the scenario runnable. A matching `NonRunnable`
 profile produces an explicit ignored outcome with its QA-blocked reason; it
 cannot count as a gated pass.
+
+Automation IDs are independent of scenario prose and Azure DevOps numeric IDs.
+For the current SFP outlines, `StateAbbv` is the qualifier, producing IDs such
+as `SFP-BASIC-POLICY:AL`.
 
 ---
 

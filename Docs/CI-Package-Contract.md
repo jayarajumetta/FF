@@ -30,7 +30,9 @@ The archive name includes package version and commit SHA. It contains:
 - `config/shards.json`;
 - `scripts/CI/`: validation, browser install, ownership, and canonical runner;
 - `tools/CiTestInventory/`: compiled NUnit/Reqnroll inventory tool;
+- `tools/TestPlanPublisher/`: typed canonical Azure Test Plans publisher CLI;
 - `tools/reports/`: existing report/cleanup utilities;
+- `config/testplans-mapping.template.json`: non-secret external mapping schema;
 - `metadata/`: compiled test inventory plus validated full/debug ownership;
 - `package-manifest.json`.
 
@@ -106,9 +108,11 @@ Execution fails on any of the following:
 - missing result-manifest/publication preparation;
 - missing result files, failed test publication, or publication failure.
 
-Publication and evidence upload use `always()` so diagnostics survive failure,
-but `PublishTestResults` has all fail-on-error switches enabled and cannot
-convert the job to success.
+Publication and evidence upload use `always()` so diagnostics survive failure.
+`PublishTestResults` has all fail-on-error switches enabled for `Off` and
+`Dry-Run`; live mapped Test Plans mode suppresses that task and uses the typed
+publisher instead so a canonical execution is not published twice. Either
+publisher failure keeps the job failed.
 
 ## Compatibility and Azure administration
 
@@ -130,4 +134,6 @@ branches/patterns and point existing scheduled/manual pipeline definitions at
 the compatibility YAML paths. Organization/project settings cannot be changed
 from this repository.
 
-Live Azure DevOps Test Plans publishing is intentionally outside Phase 5.
+Phase 6 adds opt-in Azure DevOps Test Plans publication. It is `Off` by default
+and consumes only canonical final TRX/result/evidence inputs. See
+`Docs/Azure-Test-Plans-Publishing.md`.

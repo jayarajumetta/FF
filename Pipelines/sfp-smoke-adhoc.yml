@@ -48,6 +48,18 @@ parameters:
     displayName: "[One-time] Install DataPool as Windows Service"
     type: boolean
     default: false
+  - name: testPlanPublishMode
+    displayName: "Azure Test Plans publication"
+    type: string
+    default: Off
+    values:
+      - Off
+      - Dry-Run
+      - Publish
+  - name: testPlanMappingSecureFile
+    displayName: "Azure Test Plans mapping secure-file name"
+    type: string
+    default: ""
 
 pool:
   name: Playwright
@@ -66,6 +78,8 @@ stages:
         - SetupDataPool
       condition: and(succeeded('BuildPackage'), in(dependencies.SetupDataPool.result, 'Succeeded', 'Skipped'))
       maxParallel: 2
+      testPlanPublishMode: ${{ parameters.testPlanPublishMode }}
+      testPlanMappingSecureFile: ${{ parameters.testPlanMappingSecureFile }}
       matrix:
         ${{ if ne(parameters.suiteToRun, 'CE Only') }}:
           Basic1:

@@ -52,6 +52,7 @@
     <Compile Remove="TestAutomation.UnitTests\**\*" />
     <Compile Remove="SimpleCapture\**\*" />
     <Compile Remove="Tools\CiTestInventory\**\*" />
+    <Compile Remove="Tools\TestPlanPublisher\**\*" />
     <!-- DataPool is a fully standalone web project — exclude all its source from TestAutomation compilation -->
     <Compile Remove="DataPool\**\*" />
   </ItemGroup>

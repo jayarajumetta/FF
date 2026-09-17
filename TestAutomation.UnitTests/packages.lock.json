@@ -1383,6 +1383,9 @@
           "Reqnroll.Microsoft.Extensions.DependencyInjection": "[3.3.0, )",
           "Reqnroll.NUnit": "[3.3.0, )"
         }
+      },
+      "testplanpublisher": {
+        "type": "Project"
       }
     }
   }

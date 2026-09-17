@@ -13,6 +13,7 @@ using PnCTestAutomation.Pages.ExpertQuotePages;
 using PnCTestAutomation.QuoteHandoffs;
 using PnCTestAutomation.Services;
 using PnCTestAutomation.Clients;
+using PnCTestAutomation.TestPlans;
 using Reqnroll;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -188,11 +189,20 @@ namespace PnCTestAutomation
                 var scenarioId = NUnit.Framework.TestContext.CurrentContext.Test.ID;
                 if (string.IsNullOrWhiteSpace(scenarioId))
                     scenarioId = scenarioContext.ScenarioInfo.Title;
+                var automationId = ScenarioAutomationIdentity.Resolve(
+                    scenarioContext.ScenarioInfo.Tags ?? [],
+                    provider.GetRequiredService<FeatureContext>().FeatureInfo.Tags ?? [],
+                    TryGetScenarioQualifier(scenarioContext));
+                var testIdentity = automationId == null
+                    ? null
+                    : NUnit.Framework.TestContext.CurrentContext.Test.Name;
 
                 return new ArtifactContext(
                     artifactOptions,
                     ArtifactRunIdentity.Current,
-                    scenarioId);
+                    scenarioId,
+                    automationId: automationId,
+                    testIdentity: testIdentity);
             });
             services.AddScoped<IArtifactCaptureService, ArtifactCaptureService>();
             services.AddScoped<IBusinessOutcomeContext, BusinessOutcomeContext>();
@@ -279,6 +289,22 @@ namespace PnCTestAutomation
             {
                 config.AutoStart = autoStart;
             }
+        }
+
+        private static string TryGetScenarioQualifier(ScenarioContext context)
+        {
+            var arguments = context.ScenarioInfo.Arguments;
+            if (arguments == null)
+                return null;
+            foreach (var key in new[] { "StateAbbv", "State" })
+            {
+                if (!arguments.Contains(key))
+                    continue;
+                var value = arguments[key]?.ToString()?.Trim();
+                if (!string.IsNullOrWhiteSpace(value))
+                    return value;
+            }
+            return null;
         }
 
         private static string GetEnvironmentValue(string name, string configuredValue) =>

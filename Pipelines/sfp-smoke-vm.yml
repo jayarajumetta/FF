@@ -21,6 +21,18 @@ parameters:
     displayName: "Smoke Mode"
     type: boolean
     default: false
+  - name: testPlanPublishMode
+    displayName: "Azure Test Plans publication"
+    type: string
+    default: Off
+    values:
+      - Off
+      - Dry-Run
+      - Publish
+  - name: testPlanMappingSecureFile
+    displayName: "Azure Test Plans mapping secure-file name"
+    type: string
+    default: ""
 
 pool:
   name: Playwright
@@ -31,6 +43,8 @@ stages:
   - template: templates/test-shards-stage.yml
     parameters:
       maxParallel: 2
+      testPlanPublishMode: ${{ parameters.testPlanPublishMode }}
+      testPlanMappingSecureFile: ${{ parameters.testPlanMappingSecureFile }}
       matrix:
         Basic1:
           SHARD_ID: Basic1

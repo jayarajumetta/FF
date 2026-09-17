@@ -70,7 +70,8 @@ foreach ($buildOutput in @(
     (Join-Path $root "bin\Release"),
     (Join-Path $root "DataPool\bin\Release"),
     (Join-Path $root "TestAutomation.UnitTests\bin\Release"),
-    (Join-Path $root "Tools\CiTestInventory\bin\Release")
+    (Join-Path $root "Tools\CiTestInventory\bin\Release"),
+    (Join-Path $root "Tools\TestPlanPublisher\bin\Release")
 )) {
     if (Test-Path -LiteralPath $buildOutput) {
         Remove-Item -LiteralPath $buildOutput -Recurse -Force
@@ -115,6 +116,7 @@ finally {
 $testOutput = Join-Path $root "bin\Release\net8.0"
 $dataPoolOutput = Join-Path $root "DataPool\bin\Release\net8.0"
 $inventoryToolOutput = Join-Path $root "Tools\CiTestInventory\bin\Release\net8.0"
+$publisherToolOutput = Join-Path $root "Tools\TestPlanPublisher\bin\Release\net8.0"
 foreach ($required in @(
     (Join-Path $testOutput "TestAutomation.dll"),
     (Join-Path $testOutput "TestAutomation.deps.json"),
@@ -122,7 +124,9 @@ foreach ($required in @(
     (Join-Path $testOutput "playwright.ps1"),
     (Join-Path $dataPoolOutput "DataPool.dll"),
     (Join-Path $inventoryToolOutput "CiTestInventory.dll"),
-    (Join-Path $inventoryToolOutput "CiTestInventory.runtimeconfig.json")
+    (Join-Path $inventoryToolOutput "CiTestInventory.runtimeconfig.json"),
+    (Join-Path $publisherToolOutput "TestPlanPublisher.dll"),
+    (Join-Path $publisherToolOutput "TestPlanPublisher.runtimeconfig.json")
 )) {
     if (-not (Test-Path -LiteralPath $required -PathType Leaf)) {
         throw "Build output '$required' is missing."
@@ -152,18 +156,25 @@ New-Item -ItemType Directory -Force -Path `
     (Join-Path $stageRoot "config"), `
     (Join-Path $stageRoot "scripts\CI"), `
     (Join-Path $stageRoot "tools\CiTestInventory"), `
+    (Join-Path $stageRoot "tools\TestPlanPublisher"), `
     (Join-Path $stageRoot "tools\reports") | Out-Null
 
 Copy-Item -LiteralPath (Join-Path $root "ci.runsettings") `
     -Destination (Join-Path $stageRoot "runsettings\ci.runsettings")
 Copy-Item -LiteralPath (Join-Path $root "Pipelines\config\shards.json") `
     -Destination (Join-Path $stageRoot "config\shards.json")
+Copy-Item -LiteralPath (
+    Join-Path $root "Pipelines\config\testplans-mapping.template.json") `
+    -Destination (
+        Join-Path $stageRoot "config\testplans-mapping.template.json")
 foreach ($script in @(
     "PipelineContracts.psm1",
     "Test-TestPackage.ps1",
     "Test-ShardOwnership.ps1",
     "Install-Playwright.ps1",
-    "Invoke-TestShard.ps1"
+    "Invoke-TestShard.ps1",
+    "Invoke-TestPlanPublication.ps1",
+    "Test-TestPlanPublisherSmoke.ps1"
 )) {
     Copy-Item -LiteralPath (Join-Path $root "Scripts\CI\$script") `
         -Destination (Join-Path $stageRoot "scripts\CI\$script")
@@ -182,6 +193,9 @@ $metadataRoot = Join-Path $stageRoot "metadata"
 New-Item -ItemType Directory -Force -Path $metadataRoot | Out-Null
 Copy-Item -Path (Join-Path $inventoryToolOutput "*") `
     -Destination (Join-Path $stageRoot "tools\CiTestInventory") `
+    -Recurse -Force
+Copy-Item -Path (Join-Path $publisherToolOutput "*") `
+    -Destination (Join-Path $stageRoot "tools\TestPlanPublisher") `
     -Recurse -Force
 
 Import-Module (Join-Path $stageRoot "scripts\CI\PipelineContracts.psm1") -Force
@@ -225,6 +239,7 @@ Compress-Archive -Path (Join-Path $stageRoot "*") -DestinationPath $archivePath
 & (Join-Path $stageRoot "scripts\CI\Test-TestPackage.ps1") `
     -ArchivePath $archivePath `
     -DiscoverySmoke `
+    -PublisherDryRunSmoke `
     -ScanForSecrets
 
 Write-Host "Created validated package: $archivePath"

@@ -59,6 +59,11 @@ from introducing parallel infrastructure.
     selected gated set must equal the disjoint union of nonempty shard sets.
     Initial/retry attempts reconcile to one canonical final TRX and one result
     manifest; only non-parameterized `RetrySafe` transient failures can retry.
+12. **Test Plans consumes canonical evidence only.** Stable automation IDs
+    come from explicit feature tags plus stable data qualifiers, never feature
+    prose or Azure DevOps numeric IDs. A versioned checksummed external catalog
+    owns ADO mappings. Publication is idempotent, resumable, redacted, and
+    cannot publish initial/retry attempts as separate final results.
 
 ## SGS adaptation contract
 

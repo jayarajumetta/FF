@@ -115,16 +115,22 @@ try {
         "tools\CiTestInventory\CiTestInventory.dll",
         "tools\CiTestInventory\CiTestInventory.deps.json",
         "tools\CiTestInventory\CiTestInventory.runtimeconfig.json",
+        "tools\TestPlanPublisher\TestPlanPublisher.dll",
+        "tools\TestPlanPublisher\TestPlanPublisher.deps.json",
+        "tools\TestPlanPublisher\TestPlanPublisher.runtimeconfig.json",
         "metadata\test-inventory.json",
         "metadata\shards-All-Full.json",
         "metadata\shards-All-Debug.json",
         "metadata\shards-Forms-Full.json",
         "runsettings\ci.runsettings",
         "config\shards.json",
+        "config\testplans-mapping.template.json",
         "scripts\CI\PipelineContracts.psm1",
         "scripts\CI\Invoke-TestShard.ps1",
+        "scripts\CI\Invoke-TestPlanPublication.ps1",
         "scripts\CI\Test-ShardOwnership.ps1",
         "scripts\CI\Install-Playwright.ps1",
+        "scripts\CI\Test-TestPlanPublisherSmoke.ps1",
         "scripts\CI\Test-TestPackage.ps1",
         "tools\reports\Cleanup-TestArtifacts.ps1",
         "tools\reports\Extract-SFPPremiums.ps1",
@@ -374,6 +380,22 @@ try {
     Assert-True ($testTemplate -match "failTaskOnMissingResultsFile:\s*true") "Missing TRX does not fail publication."
     Assert-True ($testTemplate -notmatch "failTaskOnFailedTests:\s*false") "A test publisher can hide failures."
     Assert-True ($testTemplate -notmatch "continueOnError:\s*true") "The test template permits hidden failures."
+    Assert-True (
+        $testTemplate -match "Invoke-TestPlanPublication\.ps1"
+    ) "Test Plans publication bypasses the packaged publisher."
+    Assert-True (
+        $testTemplate -match "testPlanPublishMode[\s\S]*default:\s*Off"
+    ) "Test Plans publication is not disabled by default."
+    Assert-True (
+        $testTemplate -match "Publish canonical result to Azure Test Plans[\s\S]*condition:\s*always\(\)"
+    ) "Test Plans publication is not wired as a diagnostic-safe fail-closed step."
+    Assert-True (
+        $testTemplate -match "Publish canonical shard results[\s\S]*condition:\s*and\(always\(\), ne\('[^']*testPlanPublishMode[^']*', 'Publish'\)\)"
+    ) "Live mapped publication does not suppress duplicate PublishTestResults results."
+    Assert-True (
+        $testTemplate -match "AZDO_ORGANIZATION_URL:\s*\$\(System\.CollectionUri\)" -and
+        $testTemplate -match "SYSTEM_COLLECTIONURI:\s*\$\(System\.CollectionUri\)"
+    ) "Credential-bearing publication is not pinned to System.CollectionUri."
     Assert-True ($entry -match "Development" -and $entry -match "combined-framework") "CI branch coverage is incomplete."
 
     Write-Host "CI contract tests passed: $script:Passed assertions."

@@ -21,6 +21,12 @@ parameters:
   - name: dataPoolRequired
     type: boolean
     default: true
+  - name: testPlanPublishMode
+    type: string
+    default: Off
+  - name: testPlanMappingSecureFile
+    type: string
+    default: ""
 
 stages:
   - stage: Test
@@ -69,6 +75,7 @@ stages:
               & "$packageRoot\scripts\CI\Test-TestPackage.ps1" `
                 -PackageRoot $packageRoot `
                 -DiscoverySmoke `
+                -PublisherDryRunSmoke `
                 -ScanForSecrets
 
               $results = "$(Build.ArtifactStagingDirectory)\Shard_$(SHARD_ID)"
@@ -116,7 +123,7 @@ stages:
 
           - task: PublishTestResults@2
             displayName: Publish canonical shard results
-            condition: always()
+            condition: and(always(), ne('${{ parameters.testPlanPublishMode }}', 'Publish'))
             inputs:
               testResultsFormat: VSTest
               testResultsFiles: "$(Build.ArtifactStagingDirectory)/Shard_$(SHARD_ID)/trx/$(SHARD_ID)-final.trx"
@@ -126,6 +133,39 @@ stages:
               failTaskOnMissingResultsFile: true
               failTaskOnFailureToPublishResults: true
               testRunTitle: "PnC $(SHARD_ID) - $(Build.BuildNumber)"
+
+          - ${{ if ne(parameters.testPlanPublishMode, 'Off') }}:
+              - task: DownloadSecureFile@1
+                name: testPlanMappings
+                displayName: Download Test Plans mapping catalog
+                condition: always()
+                inputs:
+                  secureFile: ${{ parameters.testPlanMappingSecureFile }}
+
+              - powershell: |
+                  $mode = "${{ parameters.testPlanPublishMode }}".ToLowerInvariant()
+                  $stateName = if ($mode -eq "dry-run") {
+                    "ado-publication-dry-run-reconciliation.json"
+                  } else {
+                    "ado-publication-reconciliation.json"
+                  }
+                  & "$(Agent.TempDirectory)\pnc-package-$(Build.BuildId)-$(SHARD_ID)\scripts\CI\Invoke-TestPlanPublication.ps1" `
+                    -Mode $mode `
+                    -PackageRoot "$(Agent.TempDirectory)\pnc-package-$(Build.BuildId)-$(SHARD_ID)" `
+                    -ResultsRoot "$(Build.ArtifactStagingDirectory)\Shard_$(SHARD_ID)" `
+                    -MappingCatalog "$(testPlanMappings.secureFilePath)" `
+                    -Environment "${{ parameters.environmentName }}" `
+                    -Browser "chromium" `
+                    -ReconciliationPath "$(Build.ArtifactStagingDirectory)\Shard_$(SHARD_ID)\$stateName" `
+                    -DryRunOutputPath "$(Build.ArtifactStagingDirectory)\Shard_$(SHARD_ID)\ado-testplans-dry-run.json"
+                displayName: Publish canonical result to Azure Test Plans
+                condition: always()
+                env:
+                  AZDO_ORGANIZATION_URL: $(System.CollectionUri)
+                  AZDO_PROJECT: $(AZDO_PROJECT)
+                  AZDO_TEST_PAT: $(AZDO_TEST_PAT)
+                  SYSTEM_COLLECTIONURI: $(System.CollectionUri)
+                  SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
           - task: PublishPipelineArtifact@1
             displayName: Publish shard results and evidence

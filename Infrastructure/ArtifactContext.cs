@@ -71,6 +71,8 @@ namespace PnCTestAutomation.Artifacts
         int Version,
         string RunId,
         string ScenarioId,
+        string? AutomationId,
+        string? TestIdentity,
         string ProfileName,
         ArtifactOutcome Outcome,
         bool AuthoritativeScenarioFailed,
@@ -159,7 +161,7 @@ namespace PnCTestAutomation.Artifacts
 
     public sealed class ArtifactContext : IArtifactContext
     {
-        public const int CurrentManifestVersion = 1;
+        public const int CurrentManifestVersion = 2;
 
         private static readonly JsonSerializerOptions ManifestJsonOptions = new()
         {
@@ -169,6 +171,8 @@ namespace PnCTestAutomation.Artifacts
 
         private readonly ArtifactOptions _options;
         private readonly Func<DateTimeOffset> _utcNow;
+        private readonly string? _automationId;
+        private readonly string? _testIdentity;
         private readonly DateTimeOffset _startedAtUtc;
         private readonly object _gate = new();
         private readonly List<ArtifactRecord> _records = [];
@@ -182,7 +186,9 @@ namespace PnCTestAutomation.Artifacts
             ArtifactOptions options,
             string runId,
             string scenarioId,
-            Func<DateTimeOffset>? utcNow = null)
+            Func<DateTimeOffset>? utcNow = null,
+            string? automationId = null,
+            string? testIdentity = null)
         {
             options.Validate();
             _options = options;
@@ -191,6 +197,18 @@ namespace PnCTestAutomation.Artifacts
 
             RunId = RequireSafeLabel(runId, nameof(runId));
             ScenarioId = RequireSafeLabel(scenarioId, nameof(scenarioId));
+            if (string.IsNullOrWhiteSpace(automationId) !=
+                string.IsNullOrWhiteSpace(testIdentity))
+            {
+                throw new ArgumentException(
+                    "Automation ID and test identity must be supplied together.");
+            }
+            _automationId = string.IsNullOrWhiteSpace(automationId)
+                ? null
+                : automationId.Trim();
+            _testIdentity = string.IsNullOrWhiteSpace(testIdentity)
+                ? null
+                : testIdentity.Trim();
 
             var outputRoot = ResolveOutputRoot(options);
             RunRoot = ArtifactPathGuard.EnsureSafe(
@@ -349,6 +367,8 @@ namespace PnCTestAutomation.Artifacts
                 CurrentManifestVersion,
                 RunId,
                 ScenarioId,
+                _automationId,
+                _testIdentity,
                 _options.ProfileName,
                 outcome,
                 authoritativeScenarioFailed,
@@ -438,6 +458,7 @@ namespace PnCTestAutomation.Artifacts
                     version = CurrentManifestVersion,
                     runId = RunId,
                     scenarioId = ScenarioId,
+                    automationId = _automationId,
                     attachments
                 },
                 ManifestJsonOptions);
@@ -464,6 +485,8 @@ namespace PnCTestAutomation.Artifacts
                     saved.Version != CurrentManifestVersion ||
                     !string.Equals(saved.RunId, manifest.RunId, StringComparison.Ordinal) ||
                     !string.Equals(saved.ScenarioId, manifest.ScenarioId, StringComparison.Ordinal) ||
+                    !string.Equals(saved.AutomationId, manifest.AutomationId, StringComparison.Ordinal) ||
+                    !string.Equals(saved.TestIdentity, manifest.TestIdentity, StringComparison.Ordinal) ||
                     !string.Equals(saved.ProfileName, manifest.ProfileName, StringComparison.Ordinal) ||
                     saved.Outcome != manifest.Outcome ||
                     saved.AuthoritativeScenarioFailed !=
