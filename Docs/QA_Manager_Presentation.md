@@ -30,7 +30,7 @@ dotnet build Playwright_POC.sln --verbosity minimal
 cd DataPool
 dotnet run &
 Start-Sleep 3
-Invoke-RestMethod http://localhost:5100/api/quotes | ConvertTo-Json
+Invoke-RestMethod http://127.0.0.1:5100/health | ConvertTo-Json
 
 # 3. Confirm a recent HTML forms report exists
 Get-ChildItem "bin\TestResults" -Recurse -Filter "FormsReport_SFP_AL_*.html" `
@@ -69,8 +69,8 @@ Here are the key highlights:
 
 **Key architecture points to mention:**
 - Three layers: Tests (Gherkin) → Step Definitions → Page Objects → Services
-- appsettings.json holds all baselines, credentials, and environment config
-- Every completed test auto-persists its quote to the DataPool
+- appsettings.json holds non-secret baselines and environment config; credentials come from environment variables
+- Passing scenarios with a captured quote use explicit required/optional DataPool persistence
 
 ---
 
@@ -82,14 +82,16 @@ Here are the key highlights:
 cd "C:\PnC Test Automation\PnC-TestAutomation\DataPool"
 dotnet run
 ```
-Then open **http://localhost:5100** in the browser.
+Then open **http://127.0.0.1:5100** in the browser. This loopback-only default
+is intentionally unauthenticated. Remote exposure requires HTTPS and an
+externally supplied `DATAPOOL_API_KEY`.
 
 ### Talk track:
 "The DataPool is a lightweight local web application that acts as a quote registry for the
-automation framework. Every time a test run completes successfully, the framework automatically
-posts the quote ID, state, line of business, premium amount, and policy type to this pool.
+automation framework. When a passing scenario captures a quote, the framework explicitly
+posts the quote ID, state, line of business, effective date, and policy type to this pool.
 
-The pool tracks three statuses:
+The pool validates and atomically persists three statuses:
 - Available  — quote exists and is ready to be used by a test
 - Claimed    — a test is currently using this quote
 - Consumed   — the quote has been fully used and is retired
@@ -98,14 +100,15 @@ This matters because some tests don't need to create a brand new quote from scra
 need an existing quote to work from. Instead of spending 5 minutes creating one, a test can pull
 an available quote from the pool in seconds. This saves significant runtime across a full suite.
 
-It also gives us full traceability — we always know exactly which quotes were produced by
-automation, when, and what state and product they cover."
+It also gives us traceability for quote identity, creation time, state, product,
+and claim/consume ownership. Corrupt storage is reported and preserved rather
+than silently reset."
 
 ### Show live:
 1. The main quotes table — ID, state, LOB, variant, status, premium, date
-2. The raw REST API at: http://localhost:5100/api/quotes
-3. Filter by status: http://localhost:5100/api/quotes?status=available&lob=SFP
-4. Filter by variant: http://localhost:5100/api/quotes?lob=SFP&sfpVariant=CE
+2. The raw REST API at: http://127.0.0.1:5100/api/quotes
+3. Filter by status: http://127.0.0.1:5100/api/quotes?status=available&lob=SFP
+4. Filter by variant: http://127.0.0.1:5100/api/quotes?lob=SFP&sfpVariant=CE
 5. Point out the automatic cleanup — quotes older than 90 days are purged automatically
 
 ---
@@ -139,9 +142,9 @@ under 30 minutes instead of 3 hours."
 ### When it finishes — point out in the output:
 - `*** QUOTE NUMBER: XXXXXXXX ***` — quote captured mid-flow
 - `[Premium] SFP/AL baseline assertion passed: $1,540.00` — premium validated
-- `[DataPool] Persisted quote XXXXXXXX (SFP/BasicPolicy)` — auto-saved to pool
+- DataPool output — success, already-exists, or an explicit optional/required failure
 - Total duration in the final line
-- Go back to http://localhost:5100 and show the new quote appeared in the pool
+- Go back to http://127.0.0.1:5100 and show the new quote appeared in the pool
 
 ---
 

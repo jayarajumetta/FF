@@ -8,6 +8,7 @@ using PnCTestAutomation.Integrations;
 using PnCTestAutomation.Models;
 using PnCTestAutomation.Pages;
 using PnCTestAutomation.Pages.ExpertQuotePages;
+using PnCTestAutomation.QuoteHandoffs;
 using PnCTestAutomation.Services;
 using PnCTestAutomation.Clients;
 using Reqnroll;
@@ -74,6 +75,12 @@ namespace PnCTestAutomation
             OverrideFromEnvironment(apiClientConfig);
             services.AddSingleton(apiClientConfig);
 
+            var dataPoolConfig = configuration.GetSection("DataPool").Get<DataPoolClientConfig>()
+                                 ?? new DataPoolClientConfig();
+            OverrideFromEnvironment(dataPoolConfig);
+            dataPoolConfig.Validate();
+            services.AddSingleton(dataPoolConfig);
+
             services.AddSingleton<BrowserFactory>();
             services.AddSingleton<PlaywrightContext>();
 
@@ -118,17 +125,14 @@ namespace PnCTestAutomation
                         .CreateClient("ScenarioApi"),
                     apiClientConfig));
 
-            // DataPool client — optional; silently no-ops if DataPool:BaseUrl is absent.
-            var dataPoolUrl = configuration["DataPool:BaseUrl"];
-            if (!string.IsNullOrWhiteSpace(dataPoolUrl))
+            if (!string.IsNullOrWhiteSpace(dataPoolConfig.BaseUrl))
             {
                 services.AddHttpClient<IDataPoolClient, DataPoolClient>(c =>
-                    c.BaseAddress = new Uri(dataPoolUrl));
+                    c.BaseAddress = new Uri(dataPoolConfig.BaseUrl));
             }
             else
             {
-                // Register a no-op so dependants resolve without error when DataPool is not running.
-                services.AddSingleton<IDataPoolClient, NullDataPoolClient>();
+                services.AddSingleton<IDataPoolClient, UnavailableDataPoolClient>();
             }
 
             // Scenario-scoped NavigationService (resolved in step constructors)
@@ -152,6 +156,7 @@ namespace PnCTestAutomation
                 scenarioContext[ScenarioContextData.ContextKey] = created;
                 return created;
             });
+            services.AddScoped<IQuoteHandoff, ScenarioQuoteHandoff>();
 
             // ── Forms Checking services ──
             var formsConfig = configuration.GetSection("DuckCreekForms").Get<DuckCreekFormsConfig>();
@@ -212,6 +217,26 @@ namespace PnCTestAutomation
         {
             config.BaseUrl =
                 GetEnvironmentValue("EXPERT_QUOTE_API_BASE_URL", config.BaseUrl);
+        }
+
+        private static void OverrideFromEnvironment(DataPoolClientConfig config)
+        {
+            config.BaseUrl = GetEnvironmentValue("DATAPOOL_BASE_URL", config.BaseUrl);
+            config.ApiKey = GetEnvironmentValue("DATAPOOL_API_KEY", config.ApiKey);
+
+            if (bool.TryParse(
+                    Environment.GetEnvironmentVariable("DATAPOOL_REQUIRED"),
+                    out var required))
+            {
+                config.Required = required;
+            }
+
+            if (bool.TryParse(
+                    Environment.GetEnvironmentVariable("DATAPOOL_AUTO_START"),
+                    out var autoStart))
+            {
+                config.AutoStart = autoStart;
+            }
         }
 
         private static string GetEnvironmentValue(string name, string configuredValue) =>

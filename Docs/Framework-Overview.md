@@ -60,7 +60,9 @@ public static IServiceCollection CreateServices()
 - `CredentialsConfig` - login credentials
 - `BrowserFactory` - creates browser instances
 - `TestContext` - holds IPage, HttpClient references
-- `PingSecretProvider` - OAuth/secrets integration
+- `IAccessTokenProvider` / `IApiService` - scenario-scoped API authentication
+- `IQuoteHandoff` - typed access to the scenario-owned quote identity
+- `IDataPoolClient` - explicit required/optional quote persistence
 
 ### 2. Test Hooks (TestHooks.cs)
 
@@ -104,6 +106,11 @@ public class ScenarioContextData
     }
 }
 ```
+
+Quote-producing and quote-consuming steps share this single scenario instance
+through `IQuoteHandoff`. Browser restarts do not require a filesystem handoff.
+An explicit `ICrossProcessQuoteHandoffStore` is reserved for real process
+boundaries and validates run, scenario, producer, consumer, version, and age.
 
 ### 4. BasePage (Page Object Base)
 

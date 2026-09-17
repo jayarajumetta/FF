@@ -71,6 +71,7 @@ PnC-TestAutomation/
 ├── Context/                     # TestContext — holds IPage and HttpClient per scenario
 ├── Services/                    # NavigationService, ApiService, FormsValidationService
 ├── Clients/                     # HTTP clients (DuckCreekFormsClient)
+├── QuoteHandoffs/               # Typed scenario and explicit cross-process quote contracts
 ├── Integrations/                # External integrations (PingSecretProvider)
 ├── Parsers/                     # FormsXmlParser
 ├── Tools/                       # Developer tools (not test scenarios)
@@ -222,6 +223,11 @@ Set these before running tests. They override the corresponding `appsettings.jso
 | `TEST_ENVIRONMENT` | `Environment` | Dev environment runs |
 | `BROWSER_TYPE` | `Playwright:BrowserType` | Browser override |
 | `PLAYWRIGHT_HEADLESS` | `Playwright:Headless` | Headless mode |
+| `DATAPOOL_BASE_URL` | `DataPool:BaseUrl` | DataPool client/persistence |
+| `DATAPOOL_REQUIRED` | `DataPool:Required` | Execution profiles that must persist produced quotes |
+| `DATAPOOL_AUTO_START` | `DataPool:AutoStart` | Local DataPool process ownership |
+| `DATAPOOL_API_KEY` | `DataPool:ApiKey` | Authenticated DataPool client/server access |
+| `DATAPOOL_LISTEN_URL` | `DataPool:ListenUrl` (DataPool host) | DataPool server binding |
 
 ```powershell
 # Minimum required for UI tests
@@ -256,9 +262,47 @@ Ask your QA lead for the credential values. Do **not** commit them to any file.
   },
   "LocatorRescue": {
     "Enabled": true
+  },
+  "DataPool": {
+    "BaseUrl": "http://localhost:5100",
+    "Required": false,
+    "AutoStart": true,
+    "ApiKey": ""
   }
 }
 ```
+
+### Quote handoff and DataPool
+
+`ScenarioContextData` is the authoritative store for quote identity within a
+Reqnroll scenario. `IQuoteHandoff` exposes that state to producers and
+consumers; same-scenario flows never use `QuoteNumber.txt` or another global
+file. Cross-process transfer, when genuinely required, uses
+`ICrossProcessQuoteHandoffStore`, whose versioned JSON is qualified by run,
+scenario, producer, and intended consumer identity and rejects missing, stale,
+or mismatched payloads.
+
+DataPool persistence is explicit per execution profile:
+
+- `DataPool:Required=false` returns and logs a visible non-success result when
+  persistence is unavailable; it does not report success.
+- `DataPool:Required=true` fails the scenario when a produced quote cannot be
+  persisted.
+
+The DataPool host binds to `http://127.0.0.1:5100` by default. Remote binding
+requires an HTTPS `DATAPOOL_LISTEN_URL` and an externally supplied
+`DATAPOOL_API_KEY`; clients send it in `X-DataPool-Key`. Never store the key in
+configuration. The unauthenticated `/health` response contains only health
+state. JSON storage is serialized per file, validated before transitions, and
+atomically replaced with a recovery backup; malformed existing JSON is
+reported and preserved.
+
+Private-agent pipelines now expect secret-backed `DATAPOOL_BASE_URL` and
+`DATAPOOL_API_KEY` variables and treat persistence as required. The remote URL
+must be an approved HTTPS endpoint. The included one-time Windows-service setup
+binds only to loopback; exposing that service across agents requires separately
+approved TLS/certificate and host configuration rather than changing it back
+to `0.0.0.0` over HTTP.
 
 ### Multi-Environment
 

@@ -6,6 +6,7 @@ using PnCTestAutomation.Context;
 using PnCTestAutomation.DataPool;
 using PnCTestAutomation.Helpers;            // <-- ScenarioContextData lives here
 using PnCTestAutomation.Pages;
+using PnCTestAutomation.QuoteHandoffs;
 using PnCTestAutomation.Services;
 
 using Reqnroll;
@@ -39,6 +40,7 @@ namespace PnCTestAutomation.Hooks
         private readonly IApiService _apiService;
         private readonly IConfiguration _configuration;
         private readonly IDataPoolClient _dataPoolClient;
+        private readonly IQuoteHandoff _quoteHandoff;
 
         // Test results folder for this run
         private static string _testResultsRunFolder;
@@ -52,7 +54,8 @@ namespace PnCTestAutomation.Hooks
             IAccessTokenProvider accessTokenProvider,
             IApiService apiService,
             IConfiguration configuration,
-            IDataPoolClient dataPoolClient)
+            IDataPoolClient dataPoolClient,
+            IQuoteHandoff quoteHandoff)
         {
             _context = context;
             _browserFactory = browserFactory;
@@ -65,6 +68,7 @@ namespace PnCTestAutomation.Hooks
             _apiService = apiService;
             _configuration = configuration;
             _dataPoolClient = dataPoolClient;
+            _quoteHandoff = quoteHandoff;
         }
 
         [BeforeTestRun]
@@ -91,9 +95,17 @@ namespace PnCTestAutomation.Hooks
                 // Quotes are persisted over HTTP at the end of each passing scenario, so the
                 // DataPool app has to be up before the first one finishes. Opt out with
                 // "DataPool:AutoStart": false when something else owns its lifetime.
+                var dataPoolBaseUrl =
+                    Environment.GetEnvironmentVariable("DATAPOOL_BASE_URL")
+                    ?? config["DataPool:BaseUrl"];
+                var autoStartSetting =
+                    Environment.GetEnvironmentVariable("DATAPOOL_AUTO_START")
+                    ?? config["DataPool:AutoStart"];
                 var autoStart = !string.Equals(
-                    config["DataPool:AutoStart"], "false", StringComparison.OrdinalIgnoreCase);
-                DataPoolLauncher.EnsureRunning(config["DataPool:BaseUrl"], autoStart);
+                    autoStartSetting,
+                    "false",
+                    StringComparison.OrdinalIgnoreCase);
+                DataPoolLauncher.EnsureRunning(dataPoolBaseUrl, autoStart);
             }
 
             // Create timestamped test results folder for this run
@@ -122,14 +134,6 @@ namespace PnCTestAutomation.Hooks
             {
                 NUnit.Framework.Assert.Ignore(skipReason);
                 return;
-            }
-
-            // Delete any stale QuoteNumber.txt from a previous run so the file-based
-            // fallback in UserValidatesFormsViaDuckcreek can never pick up an old quote.
-            if (File.Exists("QuoteNumber.txt"))
-            {
-                File.Delete("QuoteNumber.txt");
-                Console.WriteLine("[Hooks] Deleted stale QuoteNumber.txt");
             }
 
             if (IsApiScenario())
@@ -330,17 +334,21 @@ namespace PnCTestAutomation.Hooks
             var isPassing = !hasFailed && _scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.OK;
             if (isPassing)
             {
-                try
+                if (_quoteHandoff.TryGet(out _))
                 {
-                    var ctx = _scenarioContext[ScenarioContextData.ContextKey] as ScenarioContextData;
-                    var env = _configuration["Environment"] ?? Environment.GetEnvironmentVariable("TEST_ENVIRONMENT") ?? "qa";
+                    var ctx = _scenarioContext[ScenarioContextData.ContextKey] as ScenarioContextData
+                              ?? throw new InvalidOperationException(
+                                  "ScenarioContextData was unavailable during DataPool persistence.");
+                    var env = _configuration["Environment"]
+                              ?? Environment.GetEnvironmentVariable("TEST_ENVIRONMENT")
+                              ?? "qa";
                     var record = QuoteRecordFactory.FromScenarioContext(ctx, env);
-                    if (record != null)
-                        await _dataPoolClient.TryPersistAsync(record);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[DataPool] Error building quote record: {ex.Message}");
+                    var result = await _dataPoolClient.PersistAsync(record);
+                    if (!result.Succeeded)
+                    {
+                        Console.WriteLine(
+                            $"[DataPool] Persistence not completed: {result.Status}. {result.Message}");
+                    }
                 }
             }
         }

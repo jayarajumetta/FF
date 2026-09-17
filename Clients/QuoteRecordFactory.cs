@@ -31,12 +31,17 @@ namespace PnCTestAutomation.DataPool
     /// </summary>
     public static class QuoteRecordFactory
     {
-        public static QuoteRecord? FromScenarioContext(ScenarioContextData ctx, string? environment = null)
+        public static QuoteRecord FromScenarioContext(ScenarioContextData ctx, string? environment = null)
         {
-            if (ctx is null) return null;
+            if (ctx is null)
+                throw new ArgumentNullException(nameof(ctx));
 
             var quoteId = ctx.QuoteNumber;
-            if (string.IsNullOrWhiteSpace(quoteId)) return null;
+            if (string.IsNullOrWhiteSpace(quoteId))
+            {
+                throw new InvalidOperationException(
+                    "A quote number must be captured in ScenarioContextData before persistence.");
+            }
 
             var lob        = DeriveLineOfBusiness(ctx);
             var sfpVariant = lob == "SFP" ? DeriveSfpVariant(ctx) : null;

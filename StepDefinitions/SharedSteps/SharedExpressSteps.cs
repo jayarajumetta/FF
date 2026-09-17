@@ -9,6 +9,7 @@ using Reqnroll;
 using System;
 using System.Threading.Tasks;
 using PnCTestAutomation.Pages.ExpressPages;
+using PnCTestAutomation.QuoteHandoffs;
 using static Microsoft.Playwright.Assertions;
 
 [Binding]
@@ -18,16 +19,19 @@ public class SharedExpressSteps
     private readonly ExpressCredentialsConfig _expressCreds;
     private readonly IConfiguration _configuration;
     private readonly ScenarioContextData _contextData;
+    private readonly IQuoteHandoff _quoteHandoff;
 
     public SharedExpressSteps(PlaywrightContext context,
                         ExpressCredentialsConfig expressCreds,
                         IConfiguration configuration,
-                        ScenarioContextData contextData)
+                        ScenarioContextData contextData,
+                        IQuoteHandoff quoteHandoff)
     {
         _context = context;
         _expressCreds = expressCreds;
         _configuration = configuration;
         _contextData = contextData;
+        _quoteHandoff = quoteHandoff;
     }
 
 
@@ -43,8 +47,7 @@ public class SharedExpressSteps
 
         await loginPage.ExpressLoginAsync(username, password);
 
-        _contextData.QuoteNumber = System.IO.File.ReadAllText("QuoteNumber.txt");
-        Console.WriteLine($"Quote Number: {_contextData.QuoteNumber}");
+        _quoteHandoff.Require(nameof(EnterQAExpressCredentialsAndLogin));
 
         // Use Playwright Expect for visibility assertion with auto-retry
         await Expect(loginPage.DefaultViewModelElement).ToBeVisibleAsync();
@@ -54,7 +57,9 @@ public class SharedExpressSteps
     {
         TableMappingHelpers.SearchExpress(table, _contextData);
         var searchType = _contextData.SearchType;
-        var quoteNumber = _contextData.QuoteNumber;
+        var quoteNumber = _quoteHandoff
+            .Require(nameof(UserSelectsSearchTypeAndEntersQuoteNumber))
+            .QuoteNumber;
         var home = new ExpressHomePage(_context.Page);
         Console.WriteLine($"Search Type: {searchType}, Quote Number: {quoteNumber}");
         await home.SelectSearchTypeAsync(searchType);

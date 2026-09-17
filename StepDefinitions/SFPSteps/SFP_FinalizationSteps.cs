@@ -10,6 +10,7 @@ using PnCTestAutomation.Pages.ExpertQuotePages;
 using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 using PnCTestAutomation.Parsers;
 using PnCTestAutomation.Services;
+using PnCTestAutomation.QuoteHandoffs;
 using Reqnroll;
 using System;
 using System.IO;
@@ -31,6 +32,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         private readonly DuckCreekFormsClient _formsClient;
         private readonly FormsValidationService _validationService;
         private readonly IConfiguration _configuration;
+        private readonly IQuoteHandoff _quoteHandoff;
 
         public SFP_FinalizationSteps(
             PlaywrightContext context,
@@ -38,7 +40,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             SessionService sessionService,
             DuckCreekFormsClient formsClient,
             FormsValidationService validationService,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IQuoteHandoff quoteHandoff)
         {
             _context = context;
             _scenarioContext = scenarioContext;
@@ -48,6 +51,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             _formsClient = formsClient;
             _validationService = validationService;
             _configuration = configuration;
+            _quoteHandoff = quoteHandoff;
         }
 
         [When("user runs Insurance Score")]
@@ -645,12 +649,9 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             var page = _context.Page;
             var clientSearchPage = new ClientSearchPage(page);
 
-            var quoteNumber = _contextData.QuoteNumber;
-            if (string.IsNullOrWhiteSpace(quoteNumber) && System.IO.File.Exists("QuoteNumber.txt"))
-            {
-                quoteNumber = System.IO.File.ReadAllText("QuoteNumber.txt").Trim();
-                _contextData.QuoteNumber = quoteNumber;
-            }
+            var quoteNumber = _quoteHandoff
+                .Require(nameof(UserNavigatesToExpertQuoteAndSearchesByQuoteNumber))
+                .QuoteNumber;
 
             // If the dashboard search input isn't visible (e.g. still inside the quote after a fallback
             // "Save for Later"), navigate to the EQ home page first.

@@ -360,20 +360,17 @@ The codebase uses `Console.WriteLine(...)` extensively for status output. This w
 - `Console.WriteLine($"[Warning] ...")` — non-fatal degraded path (already partially done)
 - `Console.WriteLine($"[Debug] ...")` — verbose diagnostic that may be removed
 
-### 6.4 File I/O for quote number passing is fragile
+### 6.4 Quote handoff file I/O — resolved
 
-**Files:** `SharedEQSteps.cs`
+Same-scenario quote transfer now uses the typed `IQuoteHandoff` boundary over
+the scenario-owned `ScenarioContextData`. Browser restarts preserve the same
+Reqnroll scenario state, so hooks and steps no longer read, write, delete, or
+fall back to a global `QuoteNumber.txt`.
 
-```csharp
-System.IO.File.WriteAllText("QuoteNumber.txt", _contextData.QuoteNumber ?? "");
-```
-```csharp
-quoteNumber = System.IO.File.ReadAllText("QuoteNumber.txt").Trim();
-```
-
-Writing a quote number to a text file in the working directory to pass it between two test steps is fragile: it fails if tests run in parallel, and the stale-file risk exists despite the cleanup in `BeforeScenario`. `ScenarioContextData.QuoteNumber` is already in-memory — the file write/read is redundant unless the test genuinely closes and reopens the browser (which only `EQ_SFP_Smoke.feature` does).
-
-**Fix:** Only write the file in scenarios that actually close and reopen the browser. For all others, rely on the in-memory value.
+A separate `ICrossProcessQuoteHandoffStore` is available only for a real
+process boundary. It stores versioned JSON under run/scenario-qualified paths
+and validates producer, intended consumer, payload age, and identity before
+returning a quote.
 
 ### 6.5 `BasePage.cs` has a redundant null-safe Playwright call pattern
 

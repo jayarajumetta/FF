@@ -38,7 +38,7 @@ namespace PnCTestAutomation.Helpers
 
             if (!Uri.TryCreate(baseUrl, UriKind.Absolute, out var uri))
             {
-                Console.WriteLine($"[DataPool] BaseUrl '{baseUrl}' is not a valid URL — not starting anything.");
+                Console.WriteLine("[DataPool] BaseUrl is invalid - not starting anything.");
                 return;
             }
 
@@ -65,11 +65,11 @@ namespace PnCTestAutomation.Helpers
             Process process;
             try
             {
-                process = Start(assembly);
+                process = Start(assembly, uri);
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"[DataPool] Failed to start: {ex.Message}");
+                Console.WriteLine("[DataPool] Failed to start; inspect the DataPool host logs.");
                 return;
             }
 
@@ -106,7 +106,7 @@ namespace PnCTestAutomation.Helpers
             Console.WriteLine("[DataPool] Stopped.");
         }
 
-        private static Process Start(string assemblyPath)
+        private static Process Start(string assemblyPath, Uri baseUri)
         {
             var startInfo = new ProcessStartInfo("dotnet")
             {
@@ -119,6 +119,8 @@ namespace PnCTestAutomation.Helpers
                 RedirectStandardError = true
             };
             startInfo.ArgumentList.Add(assemblyPath);
+            startInfo.Environment["DATAPOOL_LISTEN_URL"] =
+                baseUri.GetLeftPart(UriPartial.Authority);
 
             var process = Process.Start(startInfo)!;
 
@@ -151,10 +153,8 @@ namespace PnCTestAutomation.Helpers
         }
 
         /// <summary>
-        /// Probes every address the host resolves to, not just the first.
-        /// DataPool binds 0.0.0.0, which is IPv4 only, while "localhost" resolves to ::1
-        /// ahead of 127.0.0.1 on Windows. Testing only the first address reports a healthy
-        /// server as unreachable.
+        /// Probes every address the host resolves to, not just the first. A configured
+        /// localhost origin may resolve to IPv6 before the loopback address used by the host.
         /// </summary>
         private static bool IsListening(string host, int port)
         {
@@ -230,9 +230,9 @@ namespace PnCTestAutomation.Helpers
                     process.WaitForExit(5000);
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"[DataPool] Could not stop the server cleanly: {ex.Message}");
+                Console.WriteLine("[DataPool] Could not stop the server cleanly.");
             }
             finally
             {

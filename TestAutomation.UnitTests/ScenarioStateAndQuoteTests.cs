@@ -64,6 +64,9 @@ public class ScenarioStateAndQuoteTests
             RatingState = "Alabama"
         };
 
-        Assert.That(QuoteRecordFactory.FromScenarioContext(state), Is.Null);
+        Assert.That(
+            () => QuoteRecordFactory.FromScenarioContext(state),
+            Throws.InvalidOperationException.With.Message.Contains(
+                "must be captured in ScenarioContextData"));
     }
 }

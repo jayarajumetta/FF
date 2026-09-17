@@ -52,9 +52,10 @@ namespace DataPool.Services
                 else
                     _logger.LogDebug("[DataPool Cleanup] Nothing to clean up.");
             }
-            catch (Exception ex)
+            catch
             {
-                _logger.LogError(ex, "[DataPool Cleanup] Error during scheduled cleanup.");
+                _logger.LogError(
+                    "[DataPool Cleanup] Cleanup failed; inspect protected host diagnostics.");
             }
         }
     }

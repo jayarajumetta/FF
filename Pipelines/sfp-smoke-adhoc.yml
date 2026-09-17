@@ -92,7 +92,7 @@ stages:
             Start-Sleep -Seconds 2
         }
         sc.exe create DataPool `
-            binPath= "dotnet C:\Services\DataPool\DataPool.dll --urls http://0.0.0.0:5100" `
+            binPath= "dotnet C:\Services\DataPool\DataPool.dll --DataPool:ListenUrl http://127.0.0.1:5100" `
             start= auto `
             DisplayName= "PnC DataPool"
         sc.exe start DataPool
@@ -104,8 +104,8 @@ stages:
         for ($i = 0; $i -lt 12; $i++) {
             Start-Sleep -Seconds 5
             try {
-                $r = Invoke-RestMethod http://localhost:5100/api/quotes -TimeoutSec 3
-                Write-Host "DataPool up. Quote count: $($r.Count)"
+                $r = Invoke-RestMethod http://127.0.0.1:5100/health -TimeoutSec 3
+                Write-Host "DataPool up. Status: $($r.status)"
                 $ready = $true
                 break
             } catch { Write-Host "Not ready yet ($i)..." }
@@ -117,7 +117,7 @@ stages:
         Copy-Item "$(Build.SourcesDirectory)\DataPool\data\quotes.json" "$dataDir\quotes.json" -Force
         sc.exe stop DataPool | Out-Null; Start-Sleep -Seconds 3; sc.exe start DataPool | Out-Null
         Start-Sleep -Seconds 5
-        $r = Invoke-RestMethod http://localhost:5100/api/quotes -TimeoutSec 5
+        $r = Invoke-RestMethod http://127.0.0.1:5100/api/quotes -TimeoutSec 5
         Write-Host "Done. DataPool ready with $($r.Count) quotes."
       displayName: "Verify and Seed Quotes"
 
@@ -356,7 +356,10 @@ stages:
         SHARD_FILTER_DEBUG: $(SHARD_FILTER_DEBUG)
         SHARD_SUITE: $(SHARD_SUITE)
         SHARD_SUITE_LABEL: $(SHARD_SUITE_LABEL)
-        DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
+        DATAPOOL_BASE_URL: "$(DATAPOOL_BASE_URL)"
+        DATAPOOL_API_KEY: "$(DATAPOOL_API_KEY)"
+        DATAPOOL_REQUIRED: "true"
+        DATAPOOL_AUTO_START: "false"
 
     # ✅ RETRY FAILED TESTS
     # Parses the TRX from the first run and re-runs only failures that look
@@ -499,8 +502,10 @@ stages:
         PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
         PLAYWRIGHT_HEADLESS: "true"
         BROWSER_TYPE: "chromium"
-        DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
-        DataPool__AutoStart: "false"
+        DATAPOOL_BASE_URL: "$(DATAPOOL_BASE_URL)"
+        DATAPOOL_API_KEY: "$(DATAPOOL_API_KEY)"
+        DATAPOOL_REQUIRED: "true"
+        DATAPOOL_AUTO_START: "false"
 
     # ✅ ENSURE RETRY TRX EXISTS
     # When all tests pass the retry step exits early without calling dotnet test,
@@ -857,7 +862,10 @@ stages:
         DEBUG_MODE: ${{ parameters.debugModeCE }}
         SHARD_FILTER_FULL: $(SHARD_FILTER_FULL)
         SHARD_FILTER_DEBUG: $(SHARD_FILTER_DEBUG)
-        DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
+        DATAPOOL_BASE_URL: "$(DATAPOOL_BASE_URL)"
+        DATAPOOL_API_KEY: "$(DATAPOOL_API_KEY)"
+        DATAPOOL_REQUIRED: "true"
+        DATAPOOL_AUTO_START: "false"
 
     - powershell: |
         $trxPath = "$(Build.ArtifactStagingDirectory)/TestResults/Shard_$($env:SHARD_NUMBER)_Results.trx"
@@ -997,8 +1005,10 @@ stages:
         PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
         PLAYWRIGHT_HEADLESS: "true"
         BROWSER_TYPE: "chromium"
-        DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
-        DataPool__AutoStart: "false"
+        DATAPOOL_BASE_URL: "$(DATAPOOL_BASE_URL)"
+        DATAPOOL_API_KEY: "$(DATAPOOL_API_KEY)"
+        DATAPOOL_REQUIRED: "true"
+        DATAPOOL_AUTO_START: "false"
 
     # ✅ ENSURE RETRY TRX EXISTS
     - powershell: |

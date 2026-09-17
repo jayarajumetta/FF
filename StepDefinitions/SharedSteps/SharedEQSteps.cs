@@ -7,6 +7,7 @@ using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Pages;
 using PnCTestAutomation.Pages.ExpertQuotePages;
 using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
+using PnCTestAutomation.QuoteHandoffs;
 using Reqnroll;
 using System.Text.RegularExpressions;
 using System;
@@ -28,10 +29,16 @@ namespace PnCTestAutomation.StepDefinitions.SharedSteps
         private readonly CredentialsConfig _credentials;
         private readonly IConfiguration _configuration;
         private readonly ScenarioContext _scenarioContext;
+        private readonly IQuoteHandoff _quoteHandoff;
 
         private static readonly char[] NewLineSeparator = ['\n'];
 
-        public SharedEQSteps(PlaywrightContext context, ScenarioContext scenarioContext, CredentialsConfig credentials, IConfiguration configuration)
+        public SharedEQSteps(
+            PlaywrightContext context,
+            ScenarioContext scenarioContext,
+            CredentialsConfig credentials,
+            IConfiguration configuration,
+            IQuoteHandoff quoteHandoff)
         {
             _context = context;
             _scenarioContext = scenarioContext;
@@ -39,6 +46,7 @@ namespace PnCTestAutomation.StepDefinitions.SharedSteps
                 ?? throw new InvalidOperationException("ScenarioContextData not found. Ensure TestHooks.BeforeTestRun registered it.");
             _credentials = credentials;
             _configuration = configuration;
+            _quoteHandoff = quoteHandoff;
         }
 
 
@@ -265,7 +273,7 @@ namespace PnCTestAutomation.StepDefinitions.SharedSteps
             await billingPage.SelectPaperlessCommunicationAsync(_contextData.Paperless);
             await billingPage.ClickNextAsync();
             billingPage.DisplayQuoteNumber(_contextData.QuoteNumber);
-            System.IO.File.WriteAllText("QuoteNumber.txt", _contextData.QuoteNumber ?? "");
+            _quoteHandoff.Publish(_contextData.QuoteNumber);
         }
 
         [When("user captures the quote number")]
@@ -283,8 +291,8 @@ namespace PnCTestAutomation.StepDefinitions.SharedSteps
                 if (match.Success)
                 {
                     _contextData.QuoteNumber = match.Groups[1].Value;
+                    _quoteHandoff.Publish(_contextData.QuoteNumber);
                     Console.WriteLine($"Captured Quote Number from nav: {_contextData.QuoteNumber}");
-                    System.IO.File.WriteAllText("QuoteNumber.txt", _contextData.QuoteNumber);
                     return;
                 }
             }
@@ -300,8 +308,8 @@ namespace PnCTestAutomation.StepDefinitions.SharedSteps
                 if (QuoteNumberTabPattern().IsMatch(quoteNumber))
                 {
                     _contextData.QuoteNumber = quoteNumber;
+                    _quoteHandoff.Publish(_contextData.QuoteNumber);
                     Console.WriteLine($"Captured Quote Number from tab: {_contextData.QuoteNumber}");
-                    System.IO.File.WriteAllText("QuoteNumber.txt", _contextData.QuoteNumber);
                     return;
                 }
             }
@@ -365,13 +373,9 @@ namespace PnCTestAutomation.StepDefinitions.SharedSteps
         [Then("user verifies the quote exists in search results")]
         public async Task UserVerifiesTheQuoteExistsInSearchResults()
         {
-            // Read quote number from context or file
-            var quoteNumber = _contextData.QuoteNumber;
-            if (string.IsNullOrWhiteSpace(quoteNumber))
-            {
-                quoteNumber = System.IO.File.ReadAllText("QuoteNumber.txt").Trim();
-                _contextData.QuoteNumber = quoteNumber;
-            }
+            var quoteNumber = _quoteHandoff
+                .Require(nameof(UserVerifiesTheQuoteExistsInSearchResults))
+                .QuoteNumber;
 
             Console.WriteLine($"Searching for quote: {quoteNumber}");
 

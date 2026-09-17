@@ -1,59 +1,170 @@
-using PnCTestAutomation.Models;
+#nullable enable
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Threading;
 using System.Threading.Tasks;
+using PnCTestAutomation.Configuration;
+using PnCTestAutomation.Models;
 
 namespace PnCTestAutomation.DataPool
 {
-    /// <summary>
-    /// Thin HTTP client used by the test project to push completed quotes
-    /// into the running DataPool web app.
-    ///
-    /// Configure the base URL via appsettings.json:
-    ///   "DataPool": { "BaseUrl": "http://localhost:5100" }
-    ///
-    /// If the URL is absent or the server is unreachable the call is silently
-    /// skipped — DataPool availability must never fail a test.
-    /// </summary>
-    public interface IDataPoolClient
+    public enum DataPoolPersistenceStatus
     {
-        Task TryPersistAsync(QuoteRecord record);
+        Persisted,
+        AlreadyExists,
+        NotConfigured,
+        Unavailable,
+        Rejected
     }
 
-    public class DataPoolClient : IDataPoolClient
+    public sealed record DataPoolPersistenceResult(
+        DataPoolPersistenceStatus Status,
+        string Message)
     {
-        private readonly HttpClient _http;
+        public bool Succeeded =>
+            Status is DataPoolPersistenceStatus.Persisted or
+                DataPoolPersistenceStatus.AlreadyExists;
+    }
 
-        public DataPoolClient(HttpClient http)
-            => _http = http;
-
-        public async Task TryPersistAsync(QuoteRecord record)
+    public sealed class DataPoolPersistenceException : Exception
+    {
+        public DataPoolPersistenceException(
+            string message,
+            HttpStatusCode? statusCode = null,
+            Exception? innerException = null)
+            : base(message, innerException)
         {
+            StatusCode = statusCode;
+        }
+
+        public HttpStatusCode? StatusCode { get; }
+    }
+
+    public interface IDataPoolClient
+    {
+        Task<DataPoolPersistenceResult> PersistAsync(
+            QuoteRecord record,
+            CancellationToken cancellationToken = default);
+    }
+
+    public sealed class DataPoolClient : IDataPoolClient
+    {
+        public const string ApiKeyHeader = "X-DataPool-Key";
+
+        private readonly HttpClient _httpClient;
+        private readonly DataPoolClientConfig _config;
+
+        public DataPoolClient(HttpClient httpClient, DataPoolClientConfig config)
+        {
+            config.Validate();
+            _httpClient = httpClient;
+            _httpClient.BaseAddress = new Uri(config.BaseUrl);
+            _config = config;
+        }
+
+        public async Task<DataPoolPersistenceResult> PersistAsync(
+            QuoteRecord record,
+            CancellationToken cancellationToken = default)
+        {
+            ValidateRecord(record);
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, "api/quotes")
+            {
+                Content = JsonContent.Create(record)
+            };
+            if (!string.IsNullOrWhiteSpace(_config.ApiKey))
+                request.Headers.Add(ApiKeyHeader, _config.ApiKey);
+
             try
             {
-                var response = await _http.PostAsJsonAsync("api/quotes", record);
+                using var response = await _httpClient.SendAsync(request, cancellationToken);
                 if (response.IsSuccessStatusCode)
-                    Console.WriteLine($"[DataPool] Persisted quote {record.Id} ({record.Lob}/{record.SfpVariant}).");
-                else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
-                    Console.WriteLine($"[DataPool] Quote {record.Id} already exists — skipped.");
-                else
-                    Console.WriteLine($"[DataPool] Unexpected response {(int)response.StatusCode} for quote {record.Id}.");
+                {
+                    return new DataPoolPersistenceResult(
+                        DataPoolPersistenceStatus.Persisted,
+                        "Quote persistence completed.");
+                }
+
+                if (response.StatusCode == HttpStatusCode.Conflict)
+                {
+                    return new DataPoolPersistenceResult(
+                        DataPoolPersistenceStatus.AlreadyExists,
+                        "The quote already exists in DataPool.");
+                }
+
+                return HandleFailure(
+                    DataPoolPersistenceStatus.Rejected,
+                    $"DataPool rejected persistence with HTTP {(int)response.StatusCode} ({response.StatusCode}).",
+                    response.StatusCode);
             }
-            catch (Exception ex)
+            catch (HttpRequestException exception)
             {
-                // Never fail the test — DataPool is a convenience tool.
-                Console.WriteLine($"[DataPool] Could not persist quote {record?.Id}: {ex.Message}");
+                return HandleFailure(
+                    DataPoolPersistenceStatus.Unavailable,
+                    "DataPool was unavailable before a response was received.",
+                    innerException: exception);
+            }
+            catch (OperationCanceledException exception)
+                when (!cancellationToken.IsCancellationRequested)
+            {
+                return HandleFailure(
+                    DataPoolPersistenceStatus.Unavailable,
+                    "DataPool timed out before persistence completed.",
+                    innerException: exception);
+            }
+        }
+
+        private DataPoolPersistenceResult HandleFailure(
+            DataPoolPersistenceStatus status,
+            string message,
+            HttpStatusCode? statusCode = null,
+            Exception? innerException = null)
+        {
+            if (_config.Required)
+                throw new DataPoolPersistenceException(message, statusCode, innerException);
+
+            return new DataPoolPersistenceResult(status, message);
+        }
+
+        private static void ValidateRecord(QuoteRecord record)
+        {
+            if (record == null)
+                throw new ArgumentNullException(nameof(record));
+            if (string.IsNullOrWhiteSpace(record.Id) || record.Id.Length > 128)
+            {
+                throw new ArgumentException(
+                    "A quote identifier between 1 and 128 characters is required.",
+                    nameof(record));
             }
         }
     }
 
-    /// <summary>
-    /// Used when DataPool:BaseUrl is not configured — all calls are silent no-ops.
-    /// </summary>
-    public class NullDataPoolClient : IDataPoolClient
+    public sealed class UnavailableDataPoolClient : IDataPoolClient
     {
-        public Task TryPersistAsync(QuoteRecord record) => Task.CompletedTask;
+        private readonly DataPoolClientConfig _config;
+
+        public UnavailableDataPoolClient(DataPoolClientConfig config)
+        {
+            config.Validate();
+            _config = config;
+        }
+
+        public Task<DataPoolPersistenceResult> PersistAsync(
+            QuoteRecord record,
+            CancellationToken cancellationToken = default)
+        {
+            if (_config.Required)
+            {
+                throw new DataPoolPersistenceException(
+                    "DataPool is required but DataPool:BaseUrl is not configured.");
+            }
+
+            return Task.FromResult(
+                new DataPoolPersistenceResult(
+                    DataPoolPersistenceStatus.NotConfigured,
+                    "Optional DataPool persistence was not configured."));
+        }
     }
 }

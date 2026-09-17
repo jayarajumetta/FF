@@ -246,7 +246,10 @@ stages:
         SMOKE_MODE: ${{ parameters.smokeMode }}
         SHARD_FILTER_FULL: $(SHARD_FILTER_FULL)
         SHARD_FILTER_SMOKE: $(SHARD_FILTER_SMOKE)
-        DataPool__BaseUrl: "http://scpw-pnc-plw1:5100"
+        DATAPOOL_BASE_URL: "$(DATAPOOL_BASE_URL)"
+        DATAPOOL_API_KEY: "$(DATAPOOL_API_KEY)"
+        DATAPOOL_REQUIRED: "true"
+        DATAPOOL_AUTO_START: "false"
 
     # ✅ DEBUG: verify trx files exist
     - powershell: |

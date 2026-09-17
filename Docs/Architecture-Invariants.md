@@ -8,7 +8,10 @@ from introducing parallel infrastructure.
    adapted behind shared contracts; repositories are not merged wholesale.
 2. **`ScenarioContextData` owns scenario state.** A scenario has one instance,
    resolved through the Reqnroll service provider. Files and static state are
-   not used for same-scenario handoffs.
+   not used for same-scenario handoffs. `IQuoteHandoff` is the typed boundary
+   over that state. A genuine cross-process transfer must use a run/scenario-
+   qualified, versioned envelope with producer and intended-consumer identity;
+   missing, stale, or mismatched payloads are fatal.
 3. **One lifecycle owns resources.** `TestHooks` owns browser/API setup,
    screenshots, results, and disposal. Product modules do not add competing
    hooks or browser factories.
@@ -32,6 +35,12 @@ from introducing parallel infrastructure.
 8. **Packages are immutable.** Test jobs consume one versioned package produced
    by a clean .NET 8 build, rather than rebuilding or assembling partial
    artifacts per shard.
+9. **DataPool outcomes are explicit.** Required profiles fail when quote
+   persistence is unavailable or rejected. Optional profiles emit a visible
+   non-success result. The service binds to loopback by default, fails closed
+   for remote exposure without HTTPS and external authentication, validates
+   state transitions, and atomically replaces validated JSON without resetting
+   corrupt storage.
 
 ## SGS adaptation contract
 
