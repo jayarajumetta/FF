@@ -176,6 +176,9 @@ public sealed class NavigationPage
     public Task EnterAddressStreetCityStateZipAsync(string value) =>
         _ui.FillAsync(_locators.AddressStreetCityStateZip, value, new ControlIntent("Navigation", "AddressStreetCityStateZip"));
 
+    public Task<string> CaptureAddressStreetCityStateZipAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.AddressStreetCityStateZip, property, new ControlIntent("Navigation", "AddressStreetCityStateZip"));
+
     public Task PressAddressStreetCityStateZipAsync(string key) =>
         _ui.PressAsync(_locators.AddressStreetCityStateZip, key, new ControlIntent("Navigation", "AddressStreetCityStateZip"));
 
@@ -812,6 +815,9 @@ public sealed class NavigationPage
     public Task EnterPolicyCovgBaileesCutomersDescriptionAsync(string value) =>
         _ui.FillAsync(_locators.CoverageFormDescription, value, new ControlIntent("Navigation", "PolicyCovgBaileesCutomersDescription"));
 
+    public Task<string> CapturePolicyCovgBaileesCutomersDescriptionAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.CoverageFormDescription, property, new ControlIntent("Navigation", "PolicyCovgBaileesCutomersDescription"));
+
     public Task PressPolicyCovgBaileesCutomersDescriptionAsync(string key) =>
         _ui.PressAsync(_locators.CoverageFormDescription, key, new ControlIntent("Navigation", "PolicyCovgBaileesCutomersDescription"));
 
@@ -835,6 +841,9 @@ public sealed class NavigationPage
 
     public Task EnterPolicyCovgMotorTruckCargoDescriptionAsync(string value) =>
         _ui.FillAsync(_locators.CoverageFormDescription, value, new ControlIntent("Navigation", "PolicyCovgMotorTruckCargoDescription"));
+
+    public Task<string> CapturePolicyCovgMotorTruckCargoDescriptionAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.CoverageFormDescription, property, new ControlIntent("Navigation", "PolicyCovgMotorTruckCargoDescription"));
 
     public Task PressPolicyCovgMotorTruckCargoDescriptionAsync(string key) =>
         _ui.PressAsync(_locators.CoverageFormDescription, key, new ControlIntent("Navigation", "PolicyCovgMotorTruckCargoDescription"));
@@ -2414,6 +2423,9 @@ public sealed class NavigationPage
     public Task EnterRiskAccountsReceivableSearchResultAsync(string value) =>
         _ui.FillAsync(_locators.RiskAccountsReceivableSearchResult, value, new ControlIntent("Navigation", "RiskAccountsReceivableSearchResult"));
 
+    public Task<string> CaptureRiskAccountsReceivableSearchResultAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.RiskAccountsReceivableSearchResult, property, new ControlIntent("Navigation", "RiskAccountsReceivableSearchResult"));
+
     public Task PressRiskAccountsReceivableSearchResultAsync(string key) =>
         _ui.PressAsync(_locators.RiskAccountsReceivableSearchResult, key, new ControlIntent("Navigation", "RiskAccountsReceivableSearchResult"));
 
@@ -2440,6 +2452,9 @@ public sealed class NavigationPage
 
     public Task EnterRiskAccountsReceivableSearchValueAsync(string value) =>
         _ui.FillAsync(_locators.RiskAccountsReceivableSearchValue, value, new ControlIntent("Navigation", "RiskAccountsReceivableSearchValue"));
+
+    public Task<string> CaptureRiskAccountsReceivableSearchValueAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.RiskAccountsReceivableSearchValue, property, new ControlIntent("Navigation", "RiskAccountsReceivableSearchValue"));
 
     public Task PressRiskAccountsReceivableSearchValueAsync(string key) =>
         _ui.PressAsync(_locators.RiskAccountsReceivableSearchValue, key, new ControlIntent("Navigation", "RiskAccountsReceivableSearchValue"));
@@ -2629,6 +2644,9 @@ public sealed class NavigationPage
 
     public Task EnterTextBoxAsync(string value) =>
         _ui.FillAsync(_locators.TextBox, value, new ControlIntent("Navigation", "TextBox"));
+
+    public Task<string> CaptureTextBoxAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.TextBox, property, new ControlIntent("Navigation", "TextBox"));
 
     public Task PressAddressTextBoxAsync(string key) =>
        _ui.PressAsync(_locators.TextBox, key, new ControlIntent("Navigation", "TapesCoverage"));

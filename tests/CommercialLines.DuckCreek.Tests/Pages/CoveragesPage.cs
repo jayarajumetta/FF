@@ -58,6 +58,9 @@ public sealed class CoveragesPage
     public Task EnterDescriptionAsync(string value) =>
         _ui.FillAsync(_locators.Description, value, new ControlIntent("Coverages", "Description"));
 
+    public Task<string> CaptureDescriptionAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.Description, property, new ControlIntent("Coverages", "Description"));
+
     public Task PressDescriptionAsync(string key) =>
         _ui.PressAsync(_locators.Description, key, new ControlIntent("Coverages", "Description"));
 
