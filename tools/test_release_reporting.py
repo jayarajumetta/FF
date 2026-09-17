@@ -329,7 +329,9 @@ class ReleaseReportingTests(unittest.TestCase):
             if project.endswith("Tests"):
                 for name in (f"{project}.deps.json", f"{project}.runtimeconfig.json", "playwright.ps1", "Microsoft.Playwright.dll", "NUnit3.TestAdapter.dll", "reqnroll.json"):
                     (directory / name).touch()
-                (directory / "TestData").mkdir()
+                source_data = source / "tests" / project / "TestData"
+                source_data.mkdir(parents=True)
+                (source_data / "fixture.json").write_text("{}", encoding="utf-8")
         command = ["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(ROOT / "scripts" / "Build-TestPackage.ps1"), "-SourceRoot", str(source), "-StagingDirectory", str(staging)]
         env = {**os.environ, "BUILD_BUILDID": "54321", "BUILD_BUILDNUMBER": "ci-54321", "BUILD_SOURCEBRANCH": "refs/heads/sgs/develop", "BUILD_SOURCEVERSION": "def456"}
         package = staging / "testpackage"
@@ -345,6 +347,8 @@ class ReleaseReportingTests(unittest.TestCase):
             self.assertEqual("def456", info["sourceVersion"])
             self.assertEqual(2, info["schemaVersion"])
             self.assertEqual("Release", info["buildConfiguration"])
+            for project in ("CommercialLines.DuckCreek.Tests", "CommercialLines.ExpertQuote.Tests", "PersonalLines.DuckCreek.Tests"):
+                self.assertTrue((package / "bin" / project / "Release" / "net8.0" / "TestData" / "fixture.json").is_file())
             for relative, checksum in info["runtimeHashes"].items():
                 self.assertEqual(checksum.lower(), hashlib.sha256((package / relative).read_bytes()).hexdigest())
         (source / "scripts" / "Prepare-ReleaseTestPackage.ps1").unlink()

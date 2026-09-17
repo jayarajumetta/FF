@@ -21,13 +21,21 @@ $runtimeFiles = @(
 	'tools/generate_consolidated_report.py'
 )
 $required = @($runtimeFiles)
-foreach ($project in @('CommercialLines.DuckCreek.Tests', 'CommercialLines.ExpertQuote.Tests', 'PersonalLines.DuckCreek.Tests')) {
+$testProjects = @('CommercialLines.DuckCreek.Tests', 'CommercialLines.ExpertQuote.Tests', 'PersonalLines.DuckCreek.Tests')
+$testDataCopies = @()
+foreach ($project in $testProjects) {
 	$base = "bin/$project/$BuildConfiguration/net8.0"
 	foreach ($name in @("$project.dll", "$project.deps.json", "$project.runtimeconfig.json", 'playwright.ps1', 'Microsoft.Playwright.dll', 'NUnit3.TestAdapter.dll', 'reqnroll.json')) {
 		$required += "$base/$name"
 	}
-	if (-not (Test-Path -LiteralPath (Join-Path $SourceRoot "$base/TestData") -PathType Container)) {
-		throw "Compiled test data is missing: $base/TestData. Restore and build the full solution before packaging."
+	$compiledTestData = Join-Path $SourceRoot "$base/TestData"
+	$sourceTestData = Join-Path $SourceRoot "tests/$project/TestData"
+	if (Test-Path -LiteralPath $compiledTestData -PathType Container) {
+		$testDataCopies += @{ Source = $compiledTestData; Destination = "$base/TestData" }
+	} elseif (Test-Path -LiteralPath $sourceTestData -PathType Container) {
+		$testDataCopies += @{ Source = $sourceTestData; Destination = "$base/TestData" }
+	} else {
+		throw "TestData is missing for $project. Expected compiled output $base/TestData or source tests/$project/TestData."
 	}
 }
 $required += "bin/InsuranceAutomation.Core/$BuildConfiguration/net8.0/InsuranceAutomation.Core.dll"
@@ -42,6 +50,12 @@ if (Test-Path -LiteralPath $package) {
 }
 New-Item -ItemType Directory -Path $package -Force | Out-Null
 Copy-Item -LiteralPath $binSource -Destination (Join-Path $package 'bin') -Recurse -Force
+foreach ($copy in $testDataCopies) {
+	$destination = Join-Path $package $copy.Destination
+	if (Test-Path -LiteralPath $destination) { Remove-Item -LiteralPath $destination -Recurse -Force }
+	New-Item -ItemType Directory -Path (Split-Path $destination -Parent) -Force | Out-Null
+	Copy-Item -LiteralPath $copy.Source -Destination $destination -Recurse -Force
+}
 foreach ($relative in $runtimeFiles) {
 	$destination = Join-Path $package $relative
 	New-Item -ItemType Directory -Path (Split-Path $destination -Parent) -Force | Out-Null
