@@ -19,6 +19,7 @@ import zipfile
 MANIFEST_TYPE = "InsuranceAutomation.EvidenceManifest"
 CHUNK_TYPE = "InsuranceAutomation.EvidenceChunk"
 CHUNK_BYTES = 64 * 1024 * 1024
+RESULT_DIRECTORIES = ("Artifacts", "Runner", "NUnit", "NUnitWork")
 
 
 def required(name: str) -> str:
@@ -61,19 +62,24 @@ def attach(path: Path, kind: str, name: str | None = None) -> None:
 def pack(results: Path, output: Path, identity: dict, position: int, total: int, chunk_bytes: int = CHUNK_BYTES) -> Path:
     if not 1 <= position <= total:
         raise ValueError("Invalid System.JobPositionInPhase / System.TotalJobsInPhase")
+    if chunk_bytes < 1:
+        raise ValueError("Chunk size must be positive")
     if not results.is_dir():
         raise FileNotFoundError(f"Test results directory not found: {results}")
-    evidence = results / "Artifacts"
     output.mkdir(parents=True, exist_ok=False)
     archive = output / f"agent-{position}.zip"
     count = 0
     with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED, allowZip64=True) as zipped:
-        for path in sorted(evidence.rglob("*")) if evidence.exists() else []:
-            if path.is_symlink() or not path.resolve().is_relative_to(evidence.resolve()):
-                raise ValueError(f"Evidence links outside the source are not supported: {path}")
-            if path.is_file():
-                zipped.write(path, path.relative_to(results).as_posix())
-                count += path.name == "scenario-result.json"
+        for name in RESULT_DIRECTORIES:
+            evidence = results / name
+            if evidence.is_symlink() or not evidence.resolve().is_relative_to(results.resolve()):
+                raise ValueError(f"Evidence links outside the source are not supported: {evidence}")
+            for path in sorted(evidence.rglob("*")) if evidence.exists() else []:
+                if path.is_symlink() or not path.resolve().is_relative_to(evidence.resolve()):
+                    raise ValueError(f"Evidence links outside the source are not supported: {path}")
+                if path.is_file():
+                    zipped.write(path, path.relative_to(results).as_posix())
+                    count += name == "Artifacts" and path.name == "scenario-result.json"
     parts = []
     with archive.open("rb") as source:
         index = 0
@@ -208,14 +214,14 @@ def unpack(manifest: dict, parts: Path, target: Path) -> None:
         for item in zipped.infolist():
             relative = Path(item.filename)
             destination = (target / relative).resolve()
-            if (not item.filename.startswith("Artifacts/") or "\\" in item.filename or ":" in item.filename
+            if (not any(item.filename.startswith(name + "/") for name in RESULT_DIRECTORIES) or "\\" in item.filename or ":" in item.filename
                     or ".." in relative.parts or not destination.is_relative_to(target.resolve())
                     or (item.external_attr >> 16) & 0o170000 == 0o120000
                     or item.filename.casefold() in seen):
                 raise ValueError(f"Unsafe/duplicate evidence archive member: {item.filename}")
             seen.add(item.filename.casefold())
             zipped.extract(item, target)
-    count = sum(1 for _ in target.rglob("scenario-result.json"))
+    count = sum(1 for _ in (target / "Artifacts").rglob("scenario-result.json"))
     if count != manifest["scenarioCount"]:
         raise ValueError("Extracted scenario count does not match agent manifest")
 

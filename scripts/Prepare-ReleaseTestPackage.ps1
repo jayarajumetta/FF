@@ -8,7 +8,16 @@ $resultsDirectory = $env:STAGERESULTSDIRECTORY
 foreach ($value in @($configuration, $stageKey, $resultsDirectory, $env:AGENT_TEMPDIRECTORY)) {
 	if ([string]::IsNullOrWhiteSpace($value) -or $value.Contains('$(')) { throw 'Required release preparation variable is missing.' }
 }
+if ($configuration -notin @('Debug', 'Release')) { throw 'Unsupported BuildConfiguration.' }
+if ($stageKey -notin @('Assembly', 'Suite', 'TestPlan')) { throw 'Unsupported StageKey.' }
+if ($env:PLAYWRIGHTBROWSER -notin @('chromium', 'firefox', 'webkit')) { throw 'PlaywrightBrowser must be chromium, firefox, or webkit.' }
 $packageRoot = Join-Path $env:AGENT_TEMPDIRECTORY ("FFTestAutomation\{0}\{1}\{2}\{3}\package" -f $env:RELEASE_RELEASEID, $env:RELEASE_ENVIRONMENTID, $env:RELEASE_DEPLOYMENTID, [guid]::NewGuid().ToString('N'))
+if ([IO.Path]::IsPathRooted($resultsDirectory) -or $resultsDirectory.Contains(':')) { throw 'StageResultsDirectory must be a relative path inside the package.' }
+$resultsRoot = [IO.Path]::GetFullPath((Join-Path $packageRoot $resultsDirectory))
+if (-not $resultsRoot.StartsWith($packageRoot + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
+	$resultsRoot.StartsWith((Join-Path $packageRoot 'bin') + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
+	$resultsRoot.StartsWith((Join-Path $packageRoot 'config') + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
+	$resultsRoot -in @((Join-Path $packageRoot 'bin'), (Join-Path $packageRoot 'config'))) { throw 'StageResultsDirectory must stay inside the package and outside bin/config.' }
 $binRoot = Join-Path $packageRoot 'bin'
 New-Item -ItemType Directory -Path $binRoot -Force | Out-Null
 $sourceBin = Join-Path $sourceRoot 'bin'
@@ -26,13 +35,13 @@ if (-not [bool]::TryParse($env:HEADLESS, [ref]$headless)) { throw 'Headless must
 $configSource = Join-Path $sourceRoot 'config\framework.json'
 $config = Get-Content -LiteralPath $configSource -Raw | ConvertFrom-Json
 $config.browser.headless = $headless
+$config.browser.fallbackBrowser = $env:PLAYWRIGHTBROWSER
 $config.reporting.resultsRoot = $resultsDirectory
 $config.reporting.artifactRoot = 'Artifacts'
 $configDirectory = Join-Path $packageRoot 'config'
 New-Item -ItemType Directory -Path $configDirectory -Force | Out-Null
 $frameworkConfig = Join-Path $configDirectory 'framework.json'
 $config | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath $frameworkConfig -Encoding UTF8
-$resultsRoot = Join-Path $packageRoot $resultsDirectory
 foreach ($name in @('Runner', 'NUnit', 'NUnitWork', 'Artifacts')) {
 	New-Item -ItemType Directory -Path (Join-Path $resultsRoot $name) -Force | Out-Null
 }

@@ -1,7 +1,7 @@
 {
   "source": "userInterface",
-  "revision": 1,
-  "description": "Classic Azure DevOps Release definition for Playwright/ReqnRoll/NUnit automation from the CI bin artifact (artifact name: testpackage, alias _FF_CI). Stages are independent/manual: Assembly Execution (DLLs + optional TestCategory filter), Test Suite Execution (test plan/suite/configuration), and Test Plan On-Demand Execution (uses $(test.RunId) with ManualTestRunId fallback). Independent execution modes, each with a distributed execution phase followed by one single-agent report collection phase for that deployment.",
+  "revision": 2,
+  "description": "Classic Azure DevOps Release definition for Playwright/ReqnRoll/NUnit automation using a version-2 compiled testpackage directly from the CI bin artifact (artifact name: testpackage, alias _FF_CI). Stages are independent/manual: Assembly Execution (DLLs + optional TestCategory filter), Test Suite Execution (test plan/suite/configuration), and Test Plan On-Demand Execution (uses $(test.RunId) with ManualTestRunId fallback). Independent execution modes, each with a distributed execution phase followed by one single-agent report collection phase for that deployment. VSTest tasks use test-count slicing with two agents, and report collectors run as separate deployments with evidence publication.",
   "createdBy": null,
   "createdOn": "0001-01-01T00:00:00",
   "modifiedBy": null,
@@ -158,7 +158,7 @@
           "deploymentInput": {
             "parallelExecution": {
               "parallelExecutionType": "multiMachine",
-              "maxNumberOfAgents": 1
+              "maxNumberOfAgents": 2
             },
             "agentSpecification": {
               "identifier": "windows-2022"
@@ -274,8 +274,9 @@
               "overrideInputs": {},
               "condition": "succeeded()",
               "inputs": {
-                "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Stop'\n\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'Prepare-ReleaseTestPackage.ps1' | Where-Object { $_.Directory.Name -eq 'scripts' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged Prepare-ReleaseTestPackage.ps1. Run a new CI build with reporting dependencies and select that artifact.' }\n& $matches[0].FullName",
+                "targetType": "filePath",
+                "filePath": "$(System.DefaultWorkingDirectory)\\_FF_CI\\testpackage\\scripts\\Invoke-ReleaseStage.ps1",
+                "arguments": "-Mode Prepare",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
@@ -325,8 +326,9 @@
                 "overrideTestrunParameters": "",
                 "pathtoCustomTestAdapters": "",
                 "runInParallel": "$(EnableParallelExecution)",
-                "distributionBatchType": "basedOnExecutionTime",
+                "distributionBatchType": "basedOnTestCases",
                 "batchingBasedOnAgentsOption": "autoBatchSize",
+                "batchingBasedOnExecutionTimeOption": "autoBatchSize",
                 "dontDistribute": "false",
                 "runTestsInIsolation": "false",
                 "codeCoverageEnabled": "false",
@@ -366,8 +368,9 @@
                 "SYSTEM_TOTALJOBSINPHASE": "$(System.TotalJobsInPhase)"
               },
               "inputs": {
-                "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Stop'\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'release_reporting.py' | Where-Object { $_.Directory.Name -eq 'tools' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged release_reporting.py. Rebuild the CI artifact with reporting dependencies.' }\n& python $matches[0].FullName publish\nif ($LASTEXITCODE -ne 0) { throw \"Evidence publication failed with exit code $LASTEXITCODE\" }",
+                "targetType": "filePath",
+                "filePath": "$(System.DefaultWorkingDirectory)\\_FF_CI\\testpackage\\scripts\\Invoke-ReleaseStage.ps1",
+                "arguments": "-Mode Publish",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
@@ -455,8 +458,9 @@
               "overrideInputs": {},
               "condition": "always()",
               "inputs": {
-                "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Stop'\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'release_reporting.py' | Where-Object { $_.Directory.Name -eq 'tools' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged release_reporting.py. Rebuild the CI artifact with reporting dependencies.' }\n& python $matches[0].FullName collect\nif ($LASTEXITCODE -ne 0) { throw \"Consolidated reporting failed with exit code $LASTEXITCODE\" }",
+                "targetType": "filePath",
+                "filePath": "$(System.DefaultWorkingDirectory)\\_FF_CI\\testpackage\\scripts\\Invoke-ReleaseStage.ps1",
+                "arguments": "-Mode Collect",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
@@ -573,7 +577,7 @@
           "deploymentInput": {
             "parallelExecution": {
               "parallelExecutionType": "multiMachine",
-              "maxNumberOfAgents": 1
+              "maxNumberOfAgents": 2
             },
             "agentSpecification": {
               "identifier": "windows-2022"
@@ -689,8 +693,9 @@
               "overrideInputs": {},
               "condition": "succeeded()",
               "inputs": {
-                "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Stop'\n\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'Prepare-ReleaseTestPackage.ps1' | Where-Object { $_.Directory.Name -eq 'scripts' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged Prepare-ReleaseTestPackage.ps1. Run a new CI build with reporting dependencies and select that artifact.' }\n& $matches[0].FullName",
+                "targetType": "filePath",
+                "filePath": "$(System.DefaultWorkingDirectory)\\_FF_CI\\testpackage\\scripts\\Invoke-ReleaseStage.ps1",
+                "arguments": "-Mode Prepare",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
@@ -740,8 +745,9 @@
                 "overrideTestrunParameters": "",
                 "pathtoCustomTestAdapters": "",
                 "runInParallel": "$(EnableParallelExecution)",
-                "distributionBatchType": "basedOnExecutionTime",
+                "distributionBatchType": "basedOnTestCases",
                 "batchingBasedOnAgentsOption": "autoBatchSize",
+                "batchingBasedOnExecutionTimeOption": "autoBatchSize",
                 "dontDistribute": "false",
                 "runTestsInIsolation": "false",
                 "codeCoverageEnabled": "false",
@@ -774,15 +780,16 @@
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
               "overrideInputs": {},
-              "condition": "always()",
+              "condition": "always",
               "environment": {
                 "TEST_RESULTS_ROOT": "$(TEST_RESULTS_ROOT)",
                 "SYSTEM_JOBPOSITIONINPHASE": "$(System.JobPositionInPhase)",
                 "SYSTEM_TOTALJOBSINPHASE": "$(System.TotalJobsInPhase)"
               },
               "inputs": {
-                "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Stop'\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'release_reporting.py' | Where-Object { $_.Directory.Name -eq 'tools' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged release_reporting.py. Rebuild the CI artifact with reporting dependencies.' }\n& python $matches[0].FullName publish\nif ($LASTEXITCODE -ne 0) { throw \"Evidence publication failed with exit code $LASTEXITCODE\" }",
+                "targetType": "filePath",
+                "filePath": "$(System.DefaultWorkingDirectory)\\_FF_CI\\testpackage\\scripts\\Invoke-ReleaseStage.ps1",
+                "arguments": "-Mode Publish",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
@@ -868,10 +875,11 @@
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
               "overrideInputs": {},
-              "condition": "always()",
+              "condition": "always",
               "inputs": {
-                "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Stop'\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'release_reporting.py' | Where-Object { $_.Directory.Name -eq 'tools' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged release_reporting.py. Rebuild the CI artifact with reporting dependencies.' }\n& python $matches[0].FullName collect\nif ($LASTEXITCODE -ne 0) { throw \"Consolidated reporting failed with exit code $LASTEXITCODE\" }",
+                "targetType": "filePath",
+                "filePath": "$(System.DefaultWorkingDirectory)\\_FF_CI\\testpackage\\scripts\\Invoke-ReleaseStage.ps1",
+                "arguments": "-Mode Collect",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
@@ -988,7 +996,7 @@
           "deploymentInput": {
             "parallelExecution": {
               "parallelExecutionType": "multiMachine",
-              "maxNumberOfAgents": 1
+              "maxNumberOfAgents": 2
             },
             "agentSpecification": {
               "identifier": "windows-2022"
@@ -1104,8 +1112,9 @@
               "overrideInputs": {},
               "condition": "succeeded()",
               "inputs": {
-                "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Stop'\n\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'Prepare-ReleaseTestPackage.ps1' | Where-Object { $_.Directory.Name -eq 'scripts' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged Prepare-ReleaseTestPackage.ps1. Run a new CI build with reporting dependencies and select that artifact.' }\n& $matches[0].FullName",
+                "targetType": "filePath",
+                "filePath": "$(System.DefaultWorkingDirectory)\\_FF_CI\\testpackage\\scripts\\Invoke-ReleaseStage.ps1",
+                "arguments": "-Mode Prepare",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
@@ -1155,8 +1164,9 @@
                 "overrideTestrunParameters": "",
                 "pathtoCustomTestAdapters": "",
                 "runInParallel": "$(EnableParallelExecution)",
-                "distributionBatchType": "basedOnExecutionTime",
+                "distributionBatchType": "basedOnTestCases",
                 "batchingBasedOnAgentsOption": "autoBatchSize",
+                "batchingBasedOnExecutionTimeOption": "autoBatchSize",
                 "dontDistribute": "false",
                 "runTestsInIsolation": "false",
                 "codeCoverageEnabled": "false",
@@ -1187,15 +1197,16 @@
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
               "overrideInputs": {},
-              "condition": "always()",
+              "condition": "always",
               "environment": {
                 "TEST_RESULTS_ROOT": "$(TEST_RESULTS_ROOT)",
                 "SYSTEM_JOBPOSITIONINPHASE": "$(System.JobPositionInPhase)",
                 "SYSTEM_TOTALJOBSINPHASE": "$(System.TotalJobsInPhase)"
               },
               "inputs": {
-                "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Stop'\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'release_reporting.py' | Where-Object { $_.Directory.Name -eq 'tools' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged release_reporting.py. Rebuild the CI artifact with reporting dependencies.' }\n& python $matches[0].FullName publish\nif ($LASTEXITCODE -ne 0) { throw \"Evidence publication failed with exit code $LASTEXITCODE\" }",
+                "targetType": "filePath",
+                "filePath": "$(System.DefaultWorkingDirectory)\\_FF_CI\\testpackage\\scripts\\Invoke-ReleaseStage.ps1",
+                "arguments": "-Mode Publish",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
@@ -1257,7 +1268,7 @@
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
               "overrideInputs": {},
-              "condition": "always()",
+              "condition": "always",
               "inputs": {
                 "versionSpec": "3.11",
                 "disableDownloadFromRegistry": "false",
@@ -1281,10 +1292,11 @@
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
               "overrideInputs": {},
-              "condition": "always()",
+              "condition": "always",
               "inputs": {
-                "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Stop'\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'release_reporting.py' | Where-Object { $_.Directory.Name -eq 'tools' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged release_reporting.py. Rebuild the CI artifact with reporting dependencies.' }\n& python $matches[0].FullName collect\nif ($LASTEXITCODE -ne 0) { throw \"Consolidated reporting failed with exit code $LASTEXITCODE\" }",
+                "targetType": "filePath",
+                "filePath": "$(System.DefaultWorkingDirectory)\\_FF_CI\\testpackage\\scripts\\Invoke-ReleaseStage.ps1",
+                "arguments": "-Mode Collect",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
