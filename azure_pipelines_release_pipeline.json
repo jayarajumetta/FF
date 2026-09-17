@@ -58,6 +58,16 @@
       "isSecret": false,
       "allowOverride": true
     },
+    "EnableParallelExecution": {
+      "value": "true",
+      "isSecret": false,
+      "allowOverride": true
+    },
+    "AvailableTagFilters": {
+      "value": "TestCategory=smoke|TestCategory=regression|TestCategory=pldc|TestCategory=cldc|TestCategory=cleq",
+      "isSecret": false,
+      "allowOverride": false
+    },
     "CL_DC_USERNAME": {
       "value": "",
       "isSecret": true,
@@ -152,7 +162,7 @@
         {
           "deploymentInput": {
             "parallelExecution": {
-              "parallelExecutionType": "none"
+              "parallelExecutionType": "multiMachine"
             },
             "agentSpecification": {
               "identifier": "windows-2022"
@@ -310,7 +320,10 @@
                 "runSettingsFile": "$(VSTEST_RUNSETTINGS)",
                 "overrideTestrunParameters": "",
                 "pathtoCustomTestAdapters": "",
-                "runInParallel": "false",
+                "runInParallel": "$(EnableParallelExecution)",
+                "distributionBatchType": "basedOnExecutionTime",
+                "batchingBasedOnAgentsOption": "autoBatchSize",
+                "dontDistribute": "false",
                 "runTestsInIsolation": "false",
                 "codeCoverageEnabled": "false",
                 "otherConsoleOptions": "",
@@ -358,7 +371,7 @@
               "condition": "always()",
               "inputs": {
                 "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Continue'\n\n$packageRoot = \"$(TEST_PACKAGE_ROOT)\"\n$resultsDirectory = \"$(StageResultsDirectory)\"\n$stageKey = \"$(StageKey)\"\nif ([string]::IsNullOrWhiteSpace($packageRoot) -or -not (Test-Path -LiteralPath $packageRoot -PathType Container)) {\n    Write-Warning 'The prepared test package is unavailable, so report/zip publishing is skipped.'\n    exit 0\n}\n\n$resultsRoot = Join-Path $packageRoot $resultsDirectory\n$evidenceRoot = Join-Path $resultsRoot 'Artifacts'\n$scenarioResult = $null\nif ((Test-Path -LiteralPath $reportScript -PathType Leaf) -and $null -ne $scenarioResult) {\n    try {\n        & $reportScript -ResultsDirectory $resultsDirectory\n        if ($LASTEXITCODE -ne 0) { throw \"Report generator exited with code $LASTEXITCODE.\" }\n        $reportRoot = Join-Path $resultsRoot 'ConsolidatedReport'\n        foreach ($file in @('report.html','log.html','summary.json','output.xml')) {\n            $full = Join-Path $reportRoot $file\n            if (Test-Path -LiteralPath $full -PathType Leaf) {\n                if ($file -eq 'report.html') { Write-Host \"##vso[task.uploadsummary]$full\" }\n                Write-Host \"##vso[task.uploadfile]$full\"\n            }\n        }\n    }\n    catch { Write-Warning \"Consolidated report generation failed: $($_.Exception.Message)\" }\n}\n\nif (Test-Path -LiteralPath $resultsRoot -PathType Container) {\n    $artifactDir = Join-Path $packageRoot 'StageArtifacts'\n    New-Item -ItemType Directory -Path $artifactDir -Force | Out-Null\n    $zipPath = Join-Path $artifactDir (\"{0}-TestResults.zip\" -f $stageKey)\n    if (Test-Path -LiteralPath $zipPath) { Remove-Item -LiteralPath $zipPath -Force }\n    Compress-Archive -Path (Join-Path $resultsRoot '*') -DestinationPath $zipPath -CompressionLevel Optimal\n    Write-Host \"##vso[task.uploadfile]$zipPath\"\n}\nexit 0\n",
+                "script": "$ErrorActionPreference = 'Continue'\n\n$packageRoot = \"$(TEST_PACKAGE_ROOT)\"\n$resultsDirectory = \"$(StageResultsDirectory)\"\n$stageKey = \"$(StageKey)\"\nif ([string]::IsNullOrWhiteSpace($packageRoot) -or -not (Test-Path -LiteralPath $packageRoot -PathType Container)) {\n    Write-Warning 'The prepared test package is unavailable, so report/zip publishing is skipped.'\n    exit 0\n}\n\n$resultsRoot = Join-Path $packageRoot $resultsDirectory\n$evidenceRoot = Join-Path $resultsRoot 'Artifacts'\n$reportScript = Join-Path $env:SYSTEM_DEFAULTWORKINGDIRECTORY 'scripts\\Generate-ConsolidatedReport.ps1'\nif (Test-Path -LiteralPath $reportScript -PathType Leaf) {\n    try {\n        & $reportScript -ResultsDirectory $resultsRoot\n        if ($LASTEXITCODE -ne 0) { throw \"Report generator exited with code $LASTEXITCODE.\" }\n        $reportRoot = Join-Path $resultsRoot 'ConsolidatedReport'\n        foreach ($file in @('report.html','log.html','summary.json','output.xml')) {\n            $full = Join-Path $reportRoot $file\n            if (Test-Path -LiteralPath $full -PathType Leaf) {\n                if ($file -eq 'report.html') { Write-Host \"##vso[task.uploadsummary]$full\" }\n                Write-Host \"##vso[task.uploadfile]$full\"\n            }\n        }\n    }\n    catch { Write-Warning \"Consolidated report generation failed: $($_.Exception.Message)\" }\n}\n\nif (Test-Path -LiteralPath $resultsRoot -PathType Container) {\n    $artifactDir = Join-Path $packageRoot 'StageArtifacts'\n    New-Item -ItemType Directory -Path $artifactDir -Force | Out-Null\n    $zipPath = Join-Path $artifactDir (\"{0}-TestResults.zip\" -f $stageKey)\n    if (Test-Path -LiteralPath $zipPath) { Remove-Item -LiteralPath $zipPath -Force }\n    Compress-Archive -Path (Join-Path $resultsRoot '*') -DestinationPath $zipPath -CompressionLevel Optimal\n    Write-Host \"##vso[task.uploadfile]$zipPath\"\n}\nexit 0\n",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
@@ -474,7 +487,7 @@
         {
           "deploymentInput": {
             "parallelExecution": {
-              "parallelExecutionType": "none"
+              "parallelExecutionType": "multiMachine"
             },
             "agentSpecification": {
               "identifier": "windows-2022"
@@ -632,7 +645,10 @@
                 "runSettingsFile": "$(VSTEST_RUNSETTINGS)",
                 "overrideTestrunParameters": "",
                 "pathtoCustomTestAdapters": "",
-                "runInParallel": "false",
+                "runInParallel": "$(EnableParallelExecution)",
+                "distributionBatchType": "basedOnExecutionTime",
+                "batchingBasedOnAgentsOption": "autoBatchSize",
+                "dontDistribute": "false",
                 "runTestsInIsolation": "false",
                 "codeCoverageEnabled": "false",
                 "otherConsoleOptions": "",
@@ -668,7 +684,7 @@
               "condition": "always()",
               "inputs": {
                 "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Continue'\n\n$packageRoot = \"$(TEST_PACKAGE_ROOT)\"\n$resultsDirectory = \"$(StageResultsDirectory)\"\n$stageKey = \"$(StageKey)\"\nif ([string]::IsNullOrWhiteSpace($packageRoot) -or -not (Test-Path -LiteralPath $packageRoot -PathType Container)) {\n    Write-Warning 'The prepared test package is unavailable, so report/zip publishing is skipped.'\n    exit 0\n}\n\n$resultsRoot = Join-Path $packageRoot $resultsDirectory\n$evidenceRoot = Join-Path $resultsRoot 'Artifacts'\n$scenarioResult = $null\nif ((Test-Path -LiteralPath $reportScript -PathType Leaf) -and $null -ne $scenarioResult) {\n    try {\n        & $reportScript -ResultsDirectory $resultsDirectory\n        if ($LASTEXITCODE -ne 0) { throw \"Report generator exited with code $LASTEXITCODE.\" }\n        $reportRoot = Join-Path $resultsRoot 'ConsolidatedReport'\n        foreach ($file in @('report.html','log.html','summary.json','output.xml')) {\n            $full = Join-Path $reportRoot $file\n            if (Test-Path -LiteralPath $full -PathType Leaf) {\n                if ($file -eq 'report.html') { Write-Host \"##vso[task.uploadsummary]$full\" }\n                Write-Host \"##vso[task.uploadfile]$full\"\n            }\n        }\n    }\n    catch { Write-Warning \"Consolidated report generation failed: $($_.Exception.Message)\" }\n}\n\nif (Test-Path -LiteralPath $resultsRoot -PathType Container) {\n    $artifactDir = Join-Path $packageRoot 'StageArtifacts'\n    New-Item -ItemType Directory -Path $artifactDir -Force | Out-Null\n    $zipPath = Join-Path $artifactDir (\"{0}-TestResults.zip\" -f $stageKey)\n    if (Test-Path -LiteralPath $zipPath) { Remove-Item -LiteralPath $zipPath -Force }\n    Compress-Archive -Path (Join-Path $resultsRoot '*') -DestinationPath $zipPath -CompressionLevel Optimal\n    Write-Host \"##vso[task.uploadfile]$zipPath\"\n}\nexit 0\n",
+                "script": "$ErrorActionPreference = 'Continue'\n\n$packageRoot = \"$(TEST_PACKAGE_ROOT)\"\n$resultsDirectory = \"$(StageResultsDirectory)\"\n$stageKey = \"$(StageKey)\"\nif ([string]::IsNullOrWhiteSpace($packageRoot) -or -not (Test-Path -LiteralPath $packageRoot -PathType Container)) {\n    Write-Warning 'The prepared test package is unavailable, so report/zip publishing is skipped.'\n    exit 0\n}\n\n$resultsRoot = Join-Path $packageRoot $resultsDirectory\n$evidenceRoot = Join-Path $resultsRoot 'Artifacts'\n$reportScript = Join-Path $env:SYSTEM_DEFAULTWORKINGDIRECTORY 'scripts\\Generate-ConsolidatedReport.ps1'\nif (Test-Path -LiteralPath $reportScript -PathType Leaf) {\n    try {\n        & $reportScript -ResultsDirectory $resultsRoot\n        if ($LASTEXITCODE -ne 0) { throw \"Report generator exited with code $LASTEXITCODE.\" }\n        $reportRoot = Join-Path $resultsRoot 'ConsolidatedReport'\n        foreach ($file in @('report.html','log.html','summary.json','output.xml')) {\n            $full = Join-Path $reportRoot $file\n            if (Test-Path -LiteralPath $full -PathType Leaf) {\n                if ($file -eq 'report.html') { Write-Host \"##vso[task.uploadsummary]$full\" }\n                Write-Host \"##vso[task.uploadfile]$full\"\n            }\n        }\n    }\n    catch { Write-Warning \"Consolidated report generation failed: $($_.Exception.Message)\" }\n}\n\nif (Test-Path -LiteralPath $resultsRoot -PathType Container) {\n    $artifactDir = Join-Path $packageRoot 'StageArtifacts'\n    New-Item -ItemType Directory -Path $artifactDir -Force | Out-Null\n    $zipPath = Join-Path $artifactDir (\"{0}-TestResults.zip\" -f $stageKey)\n    if (Test-Path -LiteralPath $zipPath) { Remove-Item -LiteralPath $zipPath -Force }\n    Compress-Archive -Path (Join-Path $resultsRoot '*') -DestinationPath $zipPath -CompressionLevel Optimal\n    Write-Host \"##vso[task.uploadfile]$zipPath\"\n}\nexit 0\n",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
@@ -784,7 +800,7 @@
         {
           "deploymentInput": {
             "parallelExecution": {
-              "parallelExecutionType": "none"
+              "parallelExecutionType": "multiMachine"
             },
             "agentSpecification": {
               "identifier": "windows-2022"
@@ -942,7 +958,10 @@
                 "runSettingsFile": "$(VSTEST_RUNSETTINGS)",
                 "overrideTestrunParameters": "",
                 "pathtoCustomTestAdapters": "",
-                "runInParallel": "false",
+                "runInParallel": "$(EnableParallelExecution)",
+                "distributionBatchType": "basedOnExecutionTime",
+                "batchingBasedOnAgentsOption": "autoBatchSize",
+                "dontDistribute": "false",
                 "runTestsInIsolation": "false",
                 "codeCoverageEnabled": "false",
                 "otherConsoleOptions": "",
@@ -976,7 +995,188 @@
               "condition": "always()",
               "inputs": {
                 "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Continue'\n\n$packageRoot = \"$(TEST_PACKAGE_ROOT)\"\n$resultsDirectory = \"$(StageResultsDirectory)\"\n$stageKey = \"$(StageKey)\"\nif ([string]::IsNullOrWhiteSpace($packageRoot) -or -not (Test-Path -LiteralPath $packageRoot -PathType Container)) {\n    Write-Warning 'The prepared test package is unavailable, so report/zip publishing is skipped.'\n    exit 0\n}\n\n$resultsRoot = Join-Path $packageRoot $resultsDirectory\n$evidenceRoot = Join-Path $resultsRoot 'Artifacts'\n$scenarioResult = $null\nif ((Test-Path -LiteralPath $reportScript -PathType Leaf) -and $null -ne $scenarioResult) {\n    try {\n        & $reportScript -ResultsDirectory $resultsDirectory\n        if ($LASTEXITCODE -ne 0) { throw \"Report generator exited with code $LASTEXITCODE.\" }\n        $reportRoot = Join-Path $resultsRoot 'ConsolidatedReport'\n        foreach ($file in @('report.html','log.html','summary.json','output.xml')) {\n            $full = Join-Path $reportRoot $file\n            if (Test-Path -LiteralPath $full -PathType Leaf) {\n                if ($file -eq 'report.html') { Write-Host \"##vso[task.uploadsummary]$full\" }\n                Write-Host \"##vso[task.uploadfile]$full\"\n            }\n        }\n    }\n    catch { Write-Warning \"Consolidated report generation failed: $($_.Exception.Message)\" }\n}\n\nif (Test-Path -LiteralPath $resultsRoot -PathType Container) {\n    $artifactDir = Join-Path $packageRoot 'StageArtifacts'\n    New-Item -ItemType Directory -Path $artifactDir -Force | Out-Null\n    $zipPath = Join-Path $artifactDir (\"{0}-TestResults.zip\" -f $stageKey)\n    if (Test-Path -LiteralPath $zipPath) { Remove-Item -LiteralPath $zipPath -Force }\n    Compress-Archive -Path (Join-Path $resultsRoot '*') -DestinationPath $zipPath -CompressionLevel Optimal\n    Write-Host \"##vso[task.uploadfile]$zipPath\"\n}\nexit 0\n",
+                "script": "$ErrorActionPreference = 'Continue'\n\n$packageRoot = \"$(TEST_PACKAGE_ROOT)\"\n$resultsDirectory = \"$(StageResultsDirectory)\"\n$stageKey = \"$(StageKey)\"\nif ([string]::IsNullOrWhiteSpace($packageRoot) -or -not (Test-Path -LiteralPath $packageRoot -PathType Container)) {\n    Write-Warning 'The prepared test package is unavailable, so report/zip publishing is skipped.'\n    exit 0\n}\n\n$resultsRoot = Join-Path $packageRoot $resultsDirectory\n$evidenceRoot = Join-Path $resultsRoot 'Artifacts'\n$reportScript = Join-Path $env:SYSTEM_DEFAULTWORKINGDIRECTORY 'scripts\\Generate-ConsolidatedReport.ps1'\nif (Test-Path -LiteralPath $reportScript -PathType Leaf) {\n    try {\n        & $reportScript -ResultsDirectory $resultsRoot\n        if ($LASTEXITCODE -ne 0) { throw \"Report generator exited with code $LASTEXITCODE.\" }\n        $reportRoot = Join-Path $resultsRoot 'ConsolidatedReport'\n        foreach ($file in @('report.html','log.html','summary.json','output.xml')) {\n            $full = Join-Path $reportRoot $file\n            if (Test-Path -LiteralPath $full -PathType Leaf) {\n                if ($file -eq 'report.html') { Write-Host \"##vso[task.uploadsummary]$full\" }\n                Write-Host \"##vso[task.uploadfile]$full\"\n            }\n        }\n    }\n    catch { Write-Warning \"Consolidated report generation failed: $($_.Exception.Message)\" }\n}\n\nif (Test-Path -LiteralPath $resultsRoot -PathType Container) {\n    $artifactDir = Join-Path $packageRoot 'StageArtifacts'\n    New-Item -ItemType Directory -Path $artifactDir -Force | Out-Null\n    $zipPath = Join-Path $artifactDir (\"{0}-TestResults.zip\" -f $stageKey)\n    if (Test-Path -LiteralPath $zipPath) { Remove-Item -LiteralPath $zipPath -Force }\n    Compress-Archive -Path (Join-Path $resultsRoot '*') -DestinationPath $zipPath -CompressionLevel Optimal\n    Write-Host \"##vso[task.uploadfile]$zipPath\"\n}\nexit 0\n",
+                "errorActionPreference": "stop",
+                "warningPreference": "default",
+                "informationPreference": "default",
+                "verbosePreference": "default",
+                "debugPreference": "default",
+                "progressPreference": "silentlyContinue",
+                "failOnStderr": "false",
+                "showWarnings": "true",
+                "ignoreLASTEXITCODE": "false",
+                "pwsh": "false",
+                "workingDirectory": "$(System.DefaultWorkingDirectory)",
+                "runScriptInSeparateScope": "false"
+              }
+            }
+          ]
+        }
+      ],
+      "environmentOptions": {
+        "emailNotificationType": "OnlyOnFailure",
+        "emailRecipients": "release.environment.owner;release.creator",
+        "skipArtifactsDownload": false,
+        "timeoutInMinutes": 0,
+        "enableAccessToken": false,
+        "publishDeploymentStatus": true,
+        "badgeEnabled": false,
+        "autoLinkWorkItems": true,
+        "pullRequestDeploymentEnabled": false
+      },
+      "demands": [],
+      "conditions": [],
+      "executionPolicy": {
+        "concurrencyCount": 1,
+        "queueDepthCount": 0
+      },
+      "schedules": [],
+      "retentionPolicy": {
+        "daysToKeep": 30,
+        "releasesToKeep": 10,
+        "retainBuild": true
+      },
+      "properties": {},
+      "preDeploymentGates": {
+        "id": 0,
+        "gatesOptions": null,
+        "gates": []
+      },
+      "postDeploymentGates": {
+        "id": 0,
+        "gatesOptions": null,
+        "gates": []
+      },
+      "environmentTriggers": [],
+      "processParameters": {}
+    },
+    {
+      "id": 0,
+      "name": "04 - Final Consolidated Report",
+      "rank": 4,
+      "owner": null,
+      "variables": {
+        "StageKey": {
+          "value": "FinalConsolidated",
+          "isSecret": false,
+          "allowOverride": false
+        },
+        "StageResultsDirectory": {
+          "value": "TestResults\\FinalConsolidated",
+          "isSecret": false,
+          "allowOverride": false
+        }
+      },
+      "variableGroups": [],
+      "preDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": true,
+            "isNotificationOn": false,
+            "id": 0
+          }
+        ],
+        "approvalOptions": {
+          "requiredApproverCount": 0,
+          "releaseCreatorCanBeApprover": true,
+          "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+          "enforceIdentityRevalidation": false,
+          "timeoutInMinutes": 0,
+          "executionOrder": "beforeGates"
+        }
+      },
+      "deployStep": {
+        "id": 0
+      },
+      "postDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": true,
+            "isNotificationOn": false,
+            "id": 0
+          }
+        ],
+        "approvalOptions": {
+          "requiredApproverCount": 0,
+          "releaseCreatorCanBeApprover": true,
+          "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+          "enforceIdentityRevalidation": false,
+          "timeoutInMinutes": 0,
+          "executionOrder": "afterSuccessfulGates"
+        }
+      },
+      "deployPhases": [
+        {
+          "deploymentInput": {
+            "parallelExecution": {
+              "parallelExecutionType": "none"
+            },
+            "agentSpecification": {
+              "identifier": "windows-2022"
+            },
+            "skipArtifactsDownload": false,
+            "artifactsDownloadInput": {
+              "downloadInputs": [
+                {
+                  "alias": "_FF_CI",
+                  "artifactType": "Build",
+                  "artifactDownloadMode": "All",
+                  "artifactItems": []
+                }
+              ]
+            },
+            "queueId": 0,
+            "demands": [],
+            "enableAccessToken": false,
+            "timeoutInMinutes": 0,
+            "jobCancelTimeoutInMinutes": 5,
+            "condition": "always()",
+            "overrideInputs": {}
+          },
+          "rank": 1,
+          "phaseType": "agentBasedDeployment",
+          "name": "Aggregate all stage evidence into one report",
+          "refName": null,
+          "workflowTasks": [
+            {
+              "environment": {},
+              "taskId": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
+              "version": "0.*",
+              "name": "Install Python 3.x",
+              "refName": "UsePython_FinalAggregate",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "always()",
+              "inputs": {
+                "versionSpec": "3.x",
+                "addToPath": "true",
+                "architecture": "x64"
+              }
+            },
+            {
+              "environment": {},
+              "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+              "version": "2.*",
+              "name": "Generate one release-level consolidated report",
+              "refName": "PowerShell_FinalAggregate_Report",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": true,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "always()",
+              "inputs": {
+                "targetType": "inline",
+                "script": "$ErrorActionPreference = 'Continue'\n\n$releaseId = \"$(Release.ReleaseId)\"\n$workRoot = Join-Path \"$(Agent.TempDirectory)\" (\"FFTestAutomation\\Aggregate\\{0}\" -f $releaseId)\n$zipsRoot = Join-Path $workRoot 'zips'\n$extractRoot = Join-Path $workRoot 'extract'\n$mergedRoot = Join-Path $workRoot 'merged'\n$mergedEvidence = Join-Path $mergedRoot 'Artifacts'\n$reportOut = Join-Path $mergedRoot 'ConsolidatedReport'\n\nif (Test-Path -LiteralPath $workRoot) { Remove-Item -LiteralPath $workRoot -Recurse -Force }\nNew-Item -ItemType Directory -Path $zipsRoot,$extractRoot,$mergedEvidence,$reportOut -Force | Out-Null\n\n$zipCandidates = @(Get-ChildItem -Path \"$(System.DefaultWorkingDirectory)\",\"$(Agent.TempDirectory)\" -Recurse -File -Filter '*-TestResults.zip' -ErrorAction SilentlyContinue)\nif (-not $zipCandidates -or $zipCandidates.Count -eq 0) {\n    Write-Warning 'No stage result zip files were discoverable on this agent. Cross-agent aggregation requires stage zips to be downloaded or otherwise made available to this final environment.'\n    exit 0\n}\n\nforeach ($zip in $zipCandidates | Sort-Object FullName -Unique) {\n    $name = [IO.Path]::GetFileNameWithoutExtension($zip.Name)\n    $target = Join-Path $extractRoot $name\n    New-Item -ItemType Directory -Path $target -Force | Out-Null\n    Expand-Archive -LiteralPath $zip.FullName -DestinationPath $target -Force\n}\n\n$artifactRoots = Get-ChildItem -Path $extractRoot -Recurse -Directory -Filter 'Artifacts' -ErrorAction SilentlyContinue\nforeach ($artRoot in $artifactRoots) {\n    $zipLabel = Split-Path -Path $artRoot.Parent.FullName -Leaf\n    Get-ChildItem -LiteralPath $artRoot.FullName -Directory -ErrorAction SilentlyContinue | ForEach-Object {\n        $dest = Join-Path $mergedEvidence (\"{0}__{1}\" -f $zipLabel, $_.Name)\n        Copy-Item -LiteralPath $_.FullName -Destination $dest -Recurse -Force\n    }\n}\n\n$generator = Get-ChildItem -Path \"$(System.DefaultWorkingDirectory)\" -Recurse -File -Filter 'generate_consolidated_report.py' -ErrorAction SilentlyContinue | Select-Object -First 1\nif (-not $generator) {\n    Write-Warning 'generate_consolidated_report.py not found in downloaded artifact; skipping final aggregate report generation.'\n    exit 0\n}\n$python = Get-Command python -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1\nif (-not $python) { throw 'Python executable not available after UsePython step.' }\n\n& $python.Source $generator.FullName --evidence-root $mergedEvidence --source-root \"$(System.DefaultWorkingDirectory)\" --output-dir $reportOut --fail-on-empty\nif ($LASTEXITCODE -ne 0) { throw \"Consolidated report generator failed with exit code $LASTEXITCODE\" }\n\nforeach ($file in @('report.html','log.html','summary.json','output.xml')) {\n    $full = Join-Path $reportOut $file\n    if (Test-Path -LiteralPath $full -PathType Leaf) {\n        if ($file -eq 'report.html') { Write-Host \"##vso[task.uploadsummary]$full\" }\n        Write-Host \"##vso[task.uploadfile]$full\"\n    }\n}\n\n$finalZip = Join-Path $workRoot 'FinalConsolidatedReport.zip'\nif (Test-Path -LiteralPath $finalZip) { Remove-Item -LiteralPath $finalZip -Force }\nCompress-Archive -Path (Join-Path $mergedRoot '*') -DestinationPath $finalZip -CompressionLevel Optimal\nWrite-Host \"##vso[task.uploadfile]$finalZip\"\nexit 0\n",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",

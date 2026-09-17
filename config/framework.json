@@ -27,6 +27,7 @@
     "includeNetworkErrors": true,
     "createEvidenceBundle": true,
     "attachEvidenceToTestResult": true,
+    "attachPassedEvidenceToTestResult": true,
     "attachmentMode": "all",
     "maxSingleAttachmentBytes": 536870912,
     "maxAttachmentCount": 5000,
