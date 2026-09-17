@@ -206,7 +206,8 @@ Import-Module (Join-Path $stageRoot "scripts\CI\PipelineContracts.psm1") -Force
 foreach ($suiteMode in @(
     @("All", "Full"),
     @("All", "Debug"),
-    @("Forms", "Full")
+    @("Forms", "Full"),
+    @("ExpertQuotePilot", "Full")
 )) {
     $suite = $suiteMode[0]
     $mode = $suiteMode[1]
@@ -239,6 +240,7 @@ Compress-Archive -Path (Join-Path $stageRoot "*") -DestinationPath $archivePath
 & (Join-Path $stageRoot "scripts\CI\Test-TestPackage.ps1") `
     -ArchivePath $archivePath `
     -DiscoverySmoke `
+    -PilotNonRunnableSmoke `
     -PublisherDryRunSmoke `
     -ScanForSecrets
 

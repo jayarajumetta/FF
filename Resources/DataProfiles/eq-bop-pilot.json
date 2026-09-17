@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "catalogVersion": "0.1.0",
+  "sourceRepository": "PnC_DC_TestAutomation",
+  "sourceFiles": [
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/Features/Smoke/03_EQ_BOP_Smoke_Test.feature",
+      "sha256": "88CB2FAD3E287EE335EEE39F0A1107940708B053F6D1F2769727BF033E91BF80"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/StepDefinitions/EQBOPSmokeTestSteps.cs",
+      "sha256": "045B5BD9C160C1007B9E7C33C38F061CDBD822EDB4C59590200433E1C3FA419C"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/ApplicationPage.cs",
+      "sha256": "E8A991E6715B66A1A811F6924191CC297376B3BFE5DFFD34A7B2E826AE6EE80F"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/ClientSearchPage.cs",
+      "sha256": "D793B9E7322C202E6DA5BC288C88C114EC90472031E31C68A094F2EE7CE493CC"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/ClientSearchLocators.cs",
+      "sha256": "1D675D31871C6A8662E9F6800A49B75C210FC406840273F41005368274F7C28C"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/AccountInformationPage.cs",
+      "sha256": "02180A1756D6615809BF421B18E116D357697B1998E6D41F459BC974B2FD49F9"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/AccountInformationLocators.cs",
+      "sha256": "F6D1055EE8575161C09825B4185BE0FE29FF9B03E46DDBE6A1E823CCD4D768B6"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/ProposalPage.cs",
+      "sha256": "9062D6836C2D9DC0E2B24B947908298281FADE26839F8C9E6CE4612BF44FAFED"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/ProposalLocators.cs",
+      "sha256": "94C4A2A57609291762A12F0AA795D5284FA1AAC6AC7CC912E583FD1A24473B85"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/SocialSecurityPage.cs",
+      "sha256": "32CEC4FF95B2EDBF851DC7AD41928F13BB66A0497486A30418133FD3728E1F95"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/SocialSecurityLocators.cs",
+      "sha256": "D34ACBCF03C5BEA9A6FBEE39C2ACCD6027FFBC9BBCD9E85180CE32BDDAC4CB7B"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/NavigationPage.cs",
+      "sha256": "B800302795444E41809C1E9307416478103D9292A7E4F997E53F2EA2A148124D"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/NavigationLocators.cs",
+      "sha256": "B6974F08EDEEEDF1451CCA3EEF3FD390AB1654ADD3241C8F764FE415CB72FBEC"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/QuoteSearchPage.cs",
+      "sha256": "360906F5B71E9B01F0FC113632EFA0744AE84AE8F2DF61DBC6C5591B0BBB11B8"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/Pages/Locators/QuoteSearchLocators.cs",
+      "sha256": "50BD23EDEB7BC02540893F3493951D0A22ABA31EA8C77769981D91599AECB222"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/TestData/Scenarios/03_eq_bop_smoke_test_al.json",
+      "sha256": "64FCA2C4AA23CB746156FB388A80503D1487D0D7ADD0D99D92723BB656721FF6"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/TestData/Layered/03_EQ_BOP_Smoke_Test_MO/Base.json",
+      "sha256": "64FCA2C4AA23CB746156FB388A80503D1487D0D7ADD0D99D92723BB656721FF6"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/TestData/Layered/03_EQ_BOP_Smoke_Test_MO/StateOverrides.json",
+      "sha256": "16686A5A7B2E0EDDB23EBAF1465186C1C827864A1A7EEEFD8621F9765660277F"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/TestData/Layered/manifest.json",
+      "sha256": "8A749A2BC0A4DDCBB04F079536A5F78A0DF2E3165A989FC12F97EE1727B90405"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/TestData/Scenarios/03_eq_bop_smoke_test_mo.json",
+      "sha256": "85B41D2095CB49C30508F7FC80D452E1EF1F73CF0351052CFD0D0208D77FE5BB"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/TestData/Scenarios/02_eq_bop_basic_policy_al.json",
+      "sha256": "B52621F4BE654E04191E5150DF735515D808321BD512851AB61F3A894CFEACAD"
+    },
+    {
+      "path": "tests/CommercialLines.ExpertQuote.Tests/TestData/ExternalDataOverrides.json",
+      "sha256": "AAC183149BE5D245B1794CC0F20C80D82B9E0ABEEB67F3B969660302DFD0027D"
+    }
+  ],
+  "profiles": [
+    {
+      "profileId": "eq-bop-al-smoke",
+      "version": "0.1.0",
+      "moduleId": "expertquote-bop-al-pilot",
+      "environment": "qa",
+      "state": "AL",
+      "mode": "NonRunnable",
+      "blockedReason": "QA must approve safe personal data, a current effective date, the agent code, selector/frame evidence, the prefill result, and the quote identity format before execution.",
+      "validUntilUtc": "2027-12-31T23:59:59Z",
+      "requiredKeys": [
+        "client.firstName",
+        "client.lastName",
+        "client.dateOfBirth",
+        "client.phone",
+        "client.email",
+        "client.ssn",
+        "account.maritalStatus",
+        "address.line1",
+        "address.city",
+        "address.stateName",
+        "address.stateCode",
+        "address.zip",
+        "address.receivedMail",
+        "address.isResidence",
+        "proposal.product",
+        "proposal.businessType",
+        "proposal.dbaName",
+        "proposal.effectiveDate",
+        "proposal.useAccountAddress",
+        "proposal.lessorsRiskExposure",
+        "proposal.ratingState",
+        "proposal.agentCode",
+        "prefill.expectedOutcome",
+        "navigation.target",
+        "quote.identityPattern"
+      ],
+      "missingRequiredKeys": [
+        "client.firstName",
+        "client.lastName",
+        "client.dateOfBirth",
+        "client.phone",
+        "client.email",
+        "client.ssn",
+        "address.line1",
+        "address.city",
+        "address.zip",
+        "proposal.dbaName",
+        "proposal.effectiveDate",
+        "proposal.agentCode",
+        "prefill.expectedOutcome",
+        "quote.identityPattern"
+      ],
+      "layers": [
+        {
+          "name": "source-base",
+          "precedence": 100,
+          "values": {
+            "account.maritalStatus": "Married",
+            "address.receivedMail": "true",
+            "address.isResidence": "true",
+            "proposal.product": "Business Owners",
+            "proposal.businessType": "Individual",
+            "proposal.useAccountAddress": "True",
+            "proposal.lessorsRiskExposure": "No",
+            "navigation.target": "PreQualification"
+          }
+        },
+        {
+          "name": "state-al",
+          "precedence": 200,
+          "values": {
+            "address.stateName": "Alabama",
+            "address.stateCode": "AL",
+            "proposal.ratingState": "ALABAMA"
+          }
+        }
+      ],
+      "checksum": "3B743BEE2C9EA6915098AB2EC7D9F5629347BBD25046B476C787E47D690A5EF9"
+    }
+  ]
+}

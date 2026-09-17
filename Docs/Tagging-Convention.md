@@ -33,6 +33,9 @@ unless the scenario has a *different* value for that tag.
 | `@RetrySafe` | Non-parameterized, idempotent test approved for one CI retry after a classified transient infrastructure failure. |
 | `@Manual` | Scenarios not yet automated. Tracked in the repo as documentation; never executed in CI. |
 | `@Ignore` | Temporarily disabled. Must include a comment with the reason and a tracking ticket reference. |
+| `@Pilot` | Adapted workflow under contract validation; it is not production-gated until its profile is approved. |
+| `@NonRunnable` | Explicitly blocked by typed profile/configuration requirements and must produce an ignored, never passing, result. |
+| `@NoRetry` | State-changing workflow that cannot enter the transient retry path. |
 
 ### 2. Line of Business (required on every scenario or its parent feature)
 
@@ -85,6 +88,11 @@ cannot count as a gated pass.
 Automation IDs are independent of scenario prose and Azure DevOps numeric IDs.
 For the current SFP outlines, `StateAbbv` is the qualifier, producing IDs such
 as `SFP-BASIC-POLICY:AL`.
+
+The ExpertQuote BOP pilot uses `EQ-BOP-SMOKE:AL`, is owned by
+`@EqBopAlPilot`, and is deliberately absent from production schedules while
+tagged `@NonRunnable`. Its isolated suite exists for discovery, package, and
+explicit ignored-result probes only.
 
 ---
 

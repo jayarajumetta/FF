@@ -157,6 +157,76 @@ public class TestPlanPublisherTests
     }
 
     [Test]
+    public void DeferredPilotMappingIsVisibleButCannotSatisfyAGatedRun()
+    {
+        var draft = new TestPlanMappingCatalog
+        {
+            SchemaVersion = 1,
+            CatalogVersion = "1.0.0",
+            Provenance = "unit-test",
+            DeferredAutomationIds = ["EQ-BOP-SMOKE:AL"]
+        };
+        var catalog = new TestPlanMappingCatalog
+        {
+            SchemaVersion = draft.SchemaVersion,
+            CatalogVersion = draft.CatalogVersion,
+            Provenance = draft.Provenance,
+            DeferredAutomationIds = draft.DeferredAutomationIds,
+            Checksum = TestPlanMappingCatalog.ComputeChecksum(draft)
+        };
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(
+                () => catalog.Validate([]),
+                Throws.Nothing);
+            Assert.That(
+                () => catalog.Validate(["EQ-BOP-SMOKE:AL"]),
+                Throws.TypeOf<TestPlanPublicationException>()
+                    .With.Message.Contains("explicitly deferred"));
+        });
+    }
+
+    [Test]
+    public void MappingCatalogRejectsDuplicateOrMappedDeferredIds()
+    {
+        var mapping = Mapping("EQ-BOP-SMOKE:AL", 101);
+        var duplicateDraft = new TestPlanMappingCatalog
+        {
+            SchemaVersion = 1,
+            CatalogVersion = "1.0.0",
+            Provenance = "unit-test",
+            DeferredAutomationIds =
+            [
+                "EQ-BOP-SMOKE:AL",
+                "EQ-BOP-SMOKE:AL"
+            ]
+        };
+        var overlapDraft = new TestPlanMappingCatalog
+        {
+            SchemaVersion = 1,
+            CatalogVersion = "1.0.0",
+            Provenance = "unit-test",
+            Mappings = [mapping],
+            DeferredAutomationIds = ["EQ-BOP-SMOKE:AL"]
+        };
+        var duplicate = WithChecksum(duplicateDraft);
+        var overlap = WithChecksum(overlapDraft);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(
+                () => duplicate.Validate([]),
+                Throws.TypeOf<TestPlanPublicationException>()
+                    .With.Message.Contains("Duplicate deferred"));
+            Assert.That(
+                () => overlap.Validate([]),
+                Throws.TypeOf<TestPlanPublicationException>()
+                    .With.Message.Contains("both mapped and deferred"));
+        });
+    }
+
+    [Test]
     public void CanonicalLoaderValidatesOneToOneParityAndSafeIdentityHashes()
     {
         var fixture = CreateCanonicalFixture();
@@ -693,6 +763,18 @@ public class TestPlanPublisherTests
             Checksum = TestPlanMappingCatalog.ComputeChecksum(draft)
         };
     }
+
+    private static TestPlanMappingCatalog WithChecksum(
+        TestPlanMappingCatalog draft) =>
+        new()
+        {
+            SchemaVersion = draft.SchemaVersion,
+            CatalogVersion = draft.CatalogVersion,
+            Provenance = draft.Provenance,
+            Mappings = draft.Mappings,
+            DeferredAutomationIds = draft.DeferredAutomationIds,
+            Checksum = TestPlanMappingCatalog.ComputeChecksum(draft)
+        };
 
     private static void WriteCatalog(
         string path,

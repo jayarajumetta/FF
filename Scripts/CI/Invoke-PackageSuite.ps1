@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet("All", "BasicPolicy", "CE", "Forms")]
+    [ValidateSet("All", "BasicPolicy", "CE", "Forms", "ExpertQuotePilot")]
     [string]$Suite = "All",
 
     [ValidateSet("Full", "Debug")]

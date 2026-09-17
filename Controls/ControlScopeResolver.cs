@@ -83,8 +83,11 @@ namespace PnCTestAutomation.Controls
         }
 
         private static string DescribeSelector(ControlSelector selector) =>
-            selector.Kind == ControlSelectorKind.TestId
+            (selector.Kind == ControlSelectorKind.TestId
                 ? $"GetByTestId('{selector.Value}')"
-                : $"documented ANi id '#{selector.Value}' ({selector.ExceptionReference})";
+                : $"documented ANi id '#{selector.Value}' ({selector.ExceptionReference})") +
+            (selector.ExactText == null
+                ? ""
+                : $" with exact text '{selector.ExactText}'");
     }
 }

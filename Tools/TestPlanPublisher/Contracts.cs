@@ -19,6 +19,7 @@ public sealed class TestPlanMappingCatalog
     public string Provenance { get; init; } = "";
     public string Checksum { get; init; } = "";
     public List<TestPlanMappingEntry> Mappings { get; init; } = [];
+    public List<string> DeferredAutomationIds { get; init; } = [];
 
     public IReadOnlyDictionary<string, TestPlanMappingEntry> Validate(
         IEnumerable<string> requiredAutomationIds)
@@ -56,18 +57,45 @@ public sealed class TestPlanMappingCatalog
             }
         }
 
+        var deferred = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var automationId in DeferredAutomationIds)
+        {
+            ValidateAutomationId(automationId, "deferred automation ID");
+            if (!deferred.Add(automationId))
+            {
+                throw new TestPlanPublicationException(
+                    $"Duplicate deferred automation ID '{automationId}'.");
+            }
+            if (byAutomationId.ContainsKey(automationId))
+            {
+                throw new TestPlanPublicationException(
+                    $"Automation ID '{automationId}' cannot be both mapped and deferred.");
+            }
+        }
+
         var required = requiredAutomationIds
             .Where(value => !string.IsNullOrWhiteSpace(value))
             .Distinct(StringComparer.Ordinal)
             .ToArray();
         var missing = required
-            .Where(id => !byAutomationId.ContainsKey(id))
+            .Where(id =>
+                !byAutomationId.ContainsKey(id) &&
+                !deferred.Contains(id))
             .OrderBy(id => id, StringComparer.Ordinal)
             .ToArray();
         if (missing.Length > 0)
         {
             throw new TestPlanPublicationException(
                 $"The mapping catalog is missing gated automation IDs: {string.Join(", ", missing)}.");
+        }
+        var gatedDeferred = required
+            .Where(deferred.Contains)
+            .OrderBy(id => id, StringComparer.Ordinal)
+            .ToArray();
+        if (gatedDeferred.Length > 0)
+        {
+            throw new TestPlanPublicationException(
+                $"Gated automation IDs remain explicitly deferred: {string.Join(", ", gatedDeferred)}.");
         }
 
         return byAutomationId;
@@ -90,6 +118,9 @@ public sealed class TestPlanMappingCatalog
                 item.SuiteId,
                 item.TestCaseId,
                 item.ConfigurationId)));
+        lines.AddRange(catalog.DeferredAutomationIds
+            .OrderBy(item => item, StringComparer.Ordinal)
+            .Select(item => $"deferred|{item.Trim()}"));
         return Convert.ToHexString(
             SHA256.HashData(Encoding.UTF8.GetBytes(string.Join("\n", lines))));
     }
@@ -103,6 +134,17 @@ public sealed class TestPlanMappingCatalog
         {
             throw new TestPlanPublicationException(
                 $"Mapping catalog {name} is missing or invalid.");
+        }
+    }
+
+    private static void ValidateAutomationId(
+        string automationId,
+        string description)
+    {
+        if (!TestPlanMappingEntry.IsValidAutomationId(automationId))
+        {
+            throw new TestPlanPublicationException(
+                $"The {description} '{automationId}' is invalid.");
         }
     }
 }
@@ -121,7 +163,7 @@ public sealed record TestPlanMappingEntry
 
     public void Validate()
     {
-        if (!AutomationIdPattern.IsMatch(AutomationId))
+        if (!IsValidAutomationId(AutomationId))
             throw new TestPlanPublicationException(
                 $"Automation ID '{AutomationId}' is invalid.");
         if (PlanId <= 0 || SuiteId <= 0 ||
@@ -131,6 +173,10 @@ public sealed record TestPlanMappingEntry
                 $"Azure DevOps IDs for '{AutomationId}' must be positive.");
         }
     }
+
+    internal static bool IsValidAutomationId(string automationId) =>
+        !string.IsNullOrWhiteSpace(automationId) &&
+        AutomationIdPattern.IsMatch(automationId);
 }
 
 public enum CanonicalTestOutcome

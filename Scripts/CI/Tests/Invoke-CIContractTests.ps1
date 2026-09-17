@@ -109,6 +109,7 @@ try {
         "test\Resources\Contracts\combined-framework-contract.json",
         "test\Resources\ExpectedForms\SFP\forms.json",
         "test\Resources\ExpectedOutcomes\sfp-outcomes.json",
+        "test\Resources\DataProfiles\eq-bop-pilot.json",
         "datapool\DataPool.dll",
         "datapool\DataPool.deps.json",
         "datapool\DataPool.runtimeconfig.json",
@@ -122,6 +123,7 @@ try {
         "metadata\shards-All-Full.json",
         "metadata\shards-All-Debug.json",
         "metadata\shards-Forms-Full.json",
+        "metadata\shards-ExpertQuotePilot-Full.json",
         "runsettings\ci.runsettings",
         "config\shards.json",
         "config\testplans-mapping.template.json",
@@ -397,6 +399,22 @@ try {
         $testTemplate -match "SYSTEM_COLLECTIONURI:\s*\$\(System\.CollectionUri\)"
     ) "Credential-bearing publication is not pinned to System.CollectionUri."
     Assert-True ($entry -match "Development" -and $entry -match "combined-framework") "CI branch coverage is incomplete."
+    $shardCatalog = Get-Content -LiteralPath (
+        Join-Path $RepositoryRoot "Pipelines\config\shards.json") -Raw |
+        ConvertFrom-Json
+    $pilotSuite = @($shardCatalog.suites |
+        Where-Object name -eq "ExpertQuotePilot")
+    $pilotShard = @($shardCatalog.shards |
+        Where-Object id -eq "EqBopAlPilot")
+    Assert-True (
+        $pilotSuite.Count -eq 1 -and
+        $pilotShard.Count -eq 1 -and
+        @($pilotSuite[0].shards).Count -eq 1 -and
+        $pilotSuite[0].shards[0] -eq "EqBopAlPilot"
+    ) "ExpertQuote pilot does not have one isolated shard owner."
+    Assert-True (
+        $entry -notmatch "ExpertQuotePilot|EqBopAlPilot"
+    ) "NonRunnable ExpertQuote pilot entered scheduled production execution."
 
     Write-Host "CI contract tests passed: $script:Passed assertions."
 }

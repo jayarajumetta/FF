@@ -6,10 +6,13 @@ using PnCTestAutomation.BusinessOutcomes;
 using PnCTestAutomation.Configuration;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.DataPool;
+using PnCTestAutomation.DataProfiles;
 using PnCTestAutomation.Helpers;            // <-- ScenarioContextData lives here
 using PnCTestAutomation.Pages;
+using PnCTestAutomation.Products;
 using PnCTestAutomation.QuoteHandoffs;
 using PnCTestAutomation.Services;
+using PnCTestAutomation.TestPlans;
 
 using Reqnroll;
 using Reqnroll.BoDi;
@@ -47,6 +50,9 @@ namespace PnCTestAutomation.Hooks
         private readonly IArtifactCaptureService _artifactCapture;
         private readonly IExpectedOutcomeProfileProvider _outcomeProfiles;
         private readonly IBusinessOutcomeContext _businessOutcomeContext;
+        private readonly IProductModuleRegistry _productModules;
+        private readonly IPilotDataProfileProvider _pilotDataProfiles;
+        private readonly IPilotDataContext _pilotDataContext;
         private ArtifactEvidenceException _artifactFailure;
 
         public TestHooks(
@@ -63,7 +69,10 @@ namespace PnCTestAutomation.Hooks
             IArtifactContext artifacts,
             IArtifactCaptureService artifactCapture,
             IExpectedOutcomeProfileProvider outcomeProfiles,
-            IBusinessOutcomeContext businessOutcomeContext)
+            IBusinessOutcomeContext businessOutcomeContext,
+            IProductModuleRegistry productModules,
+            IPilotDataProfileProvider pilotDataProfiles,
+            IPilotDataContext pilotDataContext)
         {
             _context = context;
             _browserFactory = browserFactory;
@@ -81,6 +90,9 @@ namespace PnCTestAutomation.Hooks
             _artifactCapture = artifactCapture;
             _outcomeProfiles = outcomeProfiles;
             _businessOutcomeContext = businessOutcomeContext;
+            _productModules = productModules;
+            _pilotDataProfiles = pilotDataProfiles;
+            _pilotDataContext = pilotDataContext;
         }
 
         [BeforeTestRun]
@@ -148,6 +160,45 @@ namespace PnCTestAutomation.Hooks
             {
                 NUnit.Framework.Assert.Ignore(skipReason);
                 return;
+            }
+
+            var automationId = ScenarioAutomationIdentity.Resolve(
+                _scenarioContext.ScenarioInfo.Tags ?? [],
+                _featureContext.FeatureInfo.Tags ?? [],
+                TryGetScenarioStateAbbreviation());
+            var productModule = automationId == null
+                ? null
+                : _productModules.TryResolve(automationId);
+            if (productModule?.UsesPilotDataProfile == true)
+            {
+                var environment =
+                    Environment.GetEnvironmentVariable("TEST_ENVIRONMENT")
+                    ?? _configuration["Environment"]
+                    ?? "qa";
+                var state = TryGetScenarioStateAbbreviation()
+                            ?? throw new PilotDataConfigurationException(
+                                "A state argument is required for a pilot data profile.");
+                var resolution = _pilotDataProfiles.Resolve(
+                    productModule.DataProfileId,
+                    environment,
+                    state);
+                if (!resolution.IsRunnable)
+                {
+                    NUnit.Framework.Assert.Ignore(
+                        $"Pilot data profile '{resolution.Profile.ProfileId}' " +
+                        $"is explicitly non-runnable: {resolution.Reason}");
+                    return;
+                }
+                if (productModule.BlockedSelectors.Count > 0)
+                {
+                    throw new PilotDataConfigurationException(
+                        $"Product module '{productModule.ModuleId}' is blocked " +
+                        $"on selector approval: {string.Join(", ", productModule.BlockedSelectors)}.");
+                }
+
+                _pilotDataContext.Set(resolution);
+                _artifacts.Require(
+                    productModule.Evidence.RequiredArtifacts.ToArray());
             }
 
             if (TryGetBusinessOutcomeScenarioProfile(out var scenarioProfile))

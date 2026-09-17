@@ -5,15 +5,19 @@ using PnCTestAutomation.BusinessOutcomes;
 using PnCTestAutomation.Configuration;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.DataPool;
+using PnCTestAutomation.DataProfiles;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Integrations;
 using PnCTestAutomation.Models;
 using PnCTestAutomation.Pages;
 using PnCTestAutomation.Pages.ExpertQuotePages;
+using PnCTestAutomation.Pages.ExpertQuotePages.BOP;
+using PnCTestAutomation.Products;
 using PnCTestAutomation.QuoteHandoffs;
 using PnCTestAutomation.Services;
 using PnCTestAutomation.Clients;
 using PnCTestAutomation.TestPlans;
+using PnCTestAutomation.Workflows;
 using Reqnroll;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -42,6 +46,9 @@ namespace PnCTestAutomation
                 .Build();
 
             services.AddSingleton<IConfiguration>(configuration);
+            services.AddSingleton<IProductModule, SfpProductModule>();
+            services.AddSingleton<IProductModule, ExpertQuoteBopPilotModule>();
+            services.AddSingleton<IProductModuleRegistry, ProductModuleRegistry>();
 
             var credentials = configuration.GetSection("Credentials").Get<CredentialsConfig>();
             if (credentials != null)
@@ -106,6 +113,19 @@ namespace PnCTestAutomation
             services.AddSingleton(businessOutcomeOptions);
             services.AddSingleton<IExpectedOutcomeProfileProvider,
                 ExpectedOutcomeProfileProvider>();
+
+            var pilotDataOptions = configuration
+                .GetSection("PilotDataProfiles")
+                .Get<PilotDataProfileOptions>()
+                ?? new PilotDataProfileOptions();
+            pilotDataOptions.CatalogPath = GetEnvironmentValue(
+                "TEST_PILOT_DATA_PROFILE_PATH",
+                pilotDataOptions.CatalogPath);
+            pilotDataOptions.Validate();
+            services.AddSingleton(pilotDataOptions);
+            services.AddSingleton<IPilotDataProfileProvider,
+                PilotDataProfileProvider>();
+            services.AddScoped<IPilotDataContext, PilotDataContext>();
 
             services.AddSingleton<BrowserFactory>();
             services.AddSingleton<PlaywrightContext>();
@@ -207,6 +227,10 @@ namespace PnCTestAutomation
             services.AddScoped<IArtifactCaptureService, ArtifactCaptureService>();
             services.AddScoped<IBusinessOutcomeContext, BusinessOutcomeContext>();
             services.AddScoped<IBusinessOutcomeVerifier, BusinessOutcomeVerifier>();
+            services.AddScoped<IExpertQuoteBopPilotRuntime,
+                ExpertQuoteBopPilotPage>();
+            services.AddScoped<IExpertQuoteBopPilotWorkflow,
+                ExpertQuoteBopPilotWorkflow>();
 
             // ── Forms Checking services ──
             var formsConfig = configuration.GetSection("DuckCreekForms").Get<DuckCreekFormsConfig>();

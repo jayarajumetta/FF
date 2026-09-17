@@ -24,11 +24,12 @@ Current families are:
 - `SFP-BASIC-POLICY:<STATE>`
 - `SFP-COUNTRY-ESTATE:<STATE>`
 - `SFP-FORMS-VALIDATION:<STATE>`
+- `EQ-BOP-SMOKE:AL` (Phase 7A pilot, explicitly deferred)
 
 ## Mapping catalog
 
-`Pipelines/config/testplans-mapping.template.json` is a non-secret empty
-template. The Azure DevOps owner supplies a versioned catalog as a secure file:
+`Pipelines/config/testplans-mapping.template.json` is a non-secret template.
+The Azure DevOps owner supplies a versioned catalog as a secure file:
 
 ```json
 {
@@ -36,6 +37,7 @@ template. The Azure DevOps owner supplies a versioned catalog as a secure file:
   "catalogVersion": "2026.09.1",
   "provenance": "Approved by QA and Azure DevOps Test Plans owners",
   "checksum": "<SHA-256 OF THE CANONICAL CATALOG>",
+  "deferredAutomationIds": [],
   "mappings": [
     {
       "automationId": "SFP-BASIC-POLICY:AL",
@@ -61,6 +63,12 @@ automation IDs, ambiguous Azure targets, mapping drift, and any selected gated
 ID without a mapping. Updating the catalog changes the
 publication correlation key, preventing an old reconciliation record from
 silently targeting new Test Plans objects.
+
+An optional `deferredAutomationIds` array records known pilot identities that
+do not yet have approved ADO ownership. Deferred IDs contribute
+`deferred|automationId` lines to the checksum. They may not duplicate or
+overlap mappings, and a selected gated execution that is still deferred fails
+explicitly rather than being published or treated as unmapped success.
 
 ## CLI
 

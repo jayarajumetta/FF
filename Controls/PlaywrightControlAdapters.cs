@@ -91,7 +91,18 @@ namespace PnCTestAutomation.Controls
             var count = await visible.CountAsync();
             var matches = new List<IControlElement>(count);
             for (var index = 0; index < count; index++)
-                matches.Add(new PlaywrightControlElement(visible.Nth(index)));
+            {
+                var candidate = visible.Nth(index);
+                if (selector.ExactText != null &&
+                    !string.Equals(
+                        (await candidate.InnerTextAsync()).Trim(),
+                        selector.ExactText,
+                        StringComparison.Ordinal))
+                {
+                    continue;
+                }
+                matches.Add(new PlaywrightControlElement(candidate));
+            }
             return matches;
         }
 

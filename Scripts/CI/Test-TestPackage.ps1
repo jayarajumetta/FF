@@ -11,6 +11,8 @@ param(
 
     [switch]$DiscoverySmoke,
 
+    [switch]$PilotNonRunnableSmoke,
+
     [switch]$PublisherDryRunSmoke,
 
     [switch]$ScanForSecrets
@@ -141,6 +143,47 @@ try {
             throw "Extracted package discovery smoke found zero SFP tests."
         }
         Write-Host "Extracted package discovery smoke found $($sfpTests.Count) SFP tests."
+    }
+    if ($PilotNonRunnableSmoke) {
+        $testAssembly = Join-Path $PackageRoot "test\TestAutomation.dll"
+        $runSettings = Join-Path $PackageRoot "runsettings\ci.runsettings"
+        $probeRoot = Join-Path ([IO.Path]::GetTempPath()) (
+            "PnC-EqBopPilotProbe-" + [Guid]::NewGuid().ToString("N"))
+        $probeTestRoot = Join-Path $probeRoot "test"
+        $probeResults = Join-Path $probeRoot "results"
+        New-Item -ItemType Directory -Force -Path $probeTestRoot, $probeResults |
+            Out-Null
+        Copy-Item -Path (Join-Path $PackageRoot "test\*") `
+            -Destination $probeTestRoot -Recurse -Force
+        Push-Location $probeRoot
+        try {
+            & dotnet test (Join-Path $probeTestRoot "TestAutomation.dll") `
+                --settings $runSettings `
+                --filter "TestCategory=EqBopAlPilot" `
+                --logger "trx;LogFileName=EqBopAlPilot.trx" `
+                --results-directory $probeResults
+            if ($LASTEXITCODE -ne 0) {
+                throw "Extracted ExpertQuote pilot NonRunnable probe failed."
+            }
+            [xml]$probe = Get-Content -LiteralPath (
+                Join-Path $probeResults "EqBopAlPilot.trx") -Raw
+            $namespace = [Xml.XmlNamespaceManager]::new($probe.NameTable)
+            $namespace.AddNamespace(
+                "t",
+                "http://microsoft.com/schemas/VisualStudio/TeamTest/2010")
+            $results = @($probe.SelectNodes(
+                "/t:TestRun/t:Results/t:UnitTestResult",
+                $namespace))
+            if ($results.Count -ne 1 -or
+                $results[0].outcome -ne "NotExecuted") {
+                throw "ExpertQuote pilot must discover exactly one explicitly ignored NonRunnable execution."
+            }
+        }
+        finally {
+            Pop-Location
+            Remove-Item -LiteralPath $probeRoot -Recurse -Force
+        }
+        Write-Host "Extracted ExpertQuote pilot NonRunnable probe passed."
     }
     if ($PublisherDryRunSmoke) {
         & (Join-Path $PackageRoot "scripts\CI\Test-TestPlanPublisherSmoke.ps1") `

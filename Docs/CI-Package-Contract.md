@@ -60,6 +60,9 @@ output directory is required.
    compiled inventory by exact test identity, not only by count. Discovery and
    execution use disposable copies of the test runtime so adapter-generated
    files cannot mutate the validated package.
+   The extracted package also executes the isolated ExpertQuote BOP pilot and
+   requires exactly one `NotExecuted` result while its profile is
+   `NonRunnable`.
 7. Test jobs use `checkout: none`, download exactly one archive, validate it,
    cache/install Chromium with the packaged Playwright runtime pair, and invoke
    one shard through `Invoke-TestShard.ps1`.
@@ -89,6 +92,10 @@ Only a non-parameterized test explicitly tagged `@RetrySafe` can be retried,
 and only for the approved transient network/browser failure classification.
 Business/assertion/configuration/locator failures are never retried. Current
 parameterized SFP UI workflows are state-changing and are not `@RetrySafe`.
+
+The `ExpertQuotePilot` suite owns exactly one `EqBopAlPilot` shard. It is
+validated and packaged but is absent from production scheduled matrices until
+its QA profile, selector evidence, and ADO mapping are approved.
 
 Initial and retry TRX files are diagnostic attempts. The runner reconciles
 them into exactly one `*-final.trx`, rejects unexpected or duplicate retry

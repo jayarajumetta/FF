@@ -15,24 +15,36 @@ namespace PnCTestAutomation.Controls
     public sealed record ControlSelector(
         ControlSelectorKind Kind,
         string Value,
-        string? ExceptionReference = null)
+        string? ExceptionReference = null,
+        string? ExactText = null)
     {
-        public static ControlSelector ByTestId(string testId)
+        public static ControlSelector ByTestId(
+            string testId,
+            string? exactText = null)
         {
             RequireValue(testId, nameof(testId));
-            return new ControlSelector(ControlSelectorKind.TestId, testId);
+            if (exactText != null)
+                RequireValue(exactText, nameof(exactText));
+            return new ControlSelector(
+                ControlSelectorKind.TestId,
+                testId,
+                ExactText: exactText);
         }
 
         public static ControlSelector ByDocumentedAniId(
             string id,
-            string exceptionReference)
+            string exceptionReference,
+            string? exactText = null)
         {
             RequireValue(id, nameof(id));
             RequireValue(exceptionReference, nameof(exceptionReference));
+            if (exactText != null)
+                RequireValue(exactText, nameof(exactText));
             return new ControlSelector(
                 ControlSelectorKind.AniHtmlId,
                 id,
-                exceptionReference);
+                exceptionReference,
+                exactText);
         }
 
         private static void RequireValue(string value, string parameterName)
@@ -81,15 +93,25 @@ namespace PnCTestAutomation.Controls
         public static ControlDefinition ByTestId(string name, string testId) =>
             new(name, ControlSelector.ByTestId(testId));
 
+        public static ControlDefinition ByTestIdWithExactText(
+            string name,
+            string testId,
+            string exactText) =>
+            new(name, ControlSelector.ByTestId(testId, exactText));
+
         public static ControlDefinition WithDocumentedAniIdFallback(
             string name,
             string testId,
             string htmlId,
-            string exceptionReference) =>
+            string exceptionReference,
+            string? exactText = null) =>
             new(
                 name,
-                ControlSelector.ByTestId(testId),
-                ControlSelector.ByDocumentedAniId(htmlId, exceptionReference));
+                ControlSelector.ByTestId(testId, exactText),
+                ControlSelector.ByDocumentedAniId(
+                    htmlId,
+                    exceptionReference,
+                    exactText));
     }
 
     public sealed record ControlScope(

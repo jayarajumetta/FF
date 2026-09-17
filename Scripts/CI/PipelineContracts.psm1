@@ -172,6 +172,7 @@ function Test-PackageManifest {
         "metadata/shards-All-Full.json",
         "metadata/shards-All-Debug.json",
         "metadata/shards-Forms-Full.json",
+        "metadata/shards-ExpertQuotePilot-Full.json",
         "runsettings/ci.runsettings",
         "config/shards.json",
         "config/testplans-mapping.template.json",
@@ -201,7 +202,8 @@ function Test-PackageManifest {
     foreach ($requiredPrefix in @(
         "test/Resources/Contracts/",
         "test/Resources/ExpectedForms/",
-        "test/Resources/ExpectedOutcomes/"
+        "test/Resources/ExpectedOutcomes/",
+        "test/Resources/DataProfiles/"
     )) {
         if (@($manifestPaths | Where-Object {
                     $_.StartsWith(

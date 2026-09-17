@@ -77,6 +77,20 @@
       "shards": [
         "FormsSfp"
       ]
+    },
+    {
+      "name": "ExpertQuotePilot",
+      "fullSelectionFilter": "TestCategory=EqBopAlPilot",
+      "debugSelectionFilter": "TestCategory=EqBopAlPilot",
+      "fullRules": [
+        { "all": [ "EqBopAlPilot" ] }
+      ],
+      "debugRules": [
+        { "all": [ "EqBopAlPilot" ] }
+      ],
+      "shards": [
+        "EqBopAlPilot"
+      ]
     }
   ],
   "shards": [
@@ -153,6 +167,14 @@
       "debugFilter": "TestCategory=Forms&TestCategory=SFP",
       "fullRules": [ { "all": [ "Forms", "SFP" ] } ],
       "debugRules": [ { "all": [ "Forms", "SFP" ] } ]
+    },
+    {
+      "id": "EqBopAlPilot",
+      "suite": "ExpertQuotePilot",
+      "fullFilter": "TestCategory=EqBopAlPilot",
+      "debugFilter": "TestCategory=EqBopAlPilot",
+      "fullRules": [ { "all": [ "EqBopAlPilot" ] } ],
+      "debugRules": [ { "all": [ "EqBopAlPilot" ] } ]
     }
   ]
 }
