@@ -20,6 +20,9 @@ public static class NUnitEvidencePublisher
         if (!config.Reporting.AttachEvidenceToTestResult)
             return new EvidencePublishResult(false, 0, 0, [], [], null);
 
+        if (scenarioError is null && !config.Reporting.AttachPassedEvidenceToTestResult)
+            return new EvidencePublishResult(false, 0, 0, [], [], null);
+
         try
         {
             return PublishCore(artifactDirectory, config, feature, scenario, scenarioError, testEvidenceContext);

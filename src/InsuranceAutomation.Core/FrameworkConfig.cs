@@ -108,6 +108,7 @@ public sealed class ReportingOptions
     // "all" attaches every scenario-owned file; "key" attaches the report/log,
     // screenshots, trace, HAR, videos, evidence manifest and bundle only.
     public bool AttachEvidenceToTestResult { get; init; } = true;
+    public bool AttachPassedEvidenceToTestResult { get; init; } = true;
     public string AttachmentMode { get; init; } = "all";
     public long MaxSingleAttachmentBytes { get; init; } = 536870912; // 512 MiB guardrail
     public int MaxAttachmentCount { get; init; } = 5000;
