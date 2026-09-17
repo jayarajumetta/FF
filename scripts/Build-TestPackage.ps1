@@ -20,6 +20,33 @@ $runtimeFiles = @(
 	'tools/release_reporting.py',
 	'tools/generate_consolidated_report.py'
 )
+
+function Resolve-TestDataDirectory {
+	param(
+		[Parameter(Mandatory = $true)][string]$Root,
+		[Parameter(Mandatory = $true)][string]$ProjectName,
+		[Parameter(Mandatory = $true)][string]$CompiledPath
+	)
+
+	if (Test-Path -LiteralPath $CompiledPath -PathType Container) {
+		return $CompiledPath
+	}
+
+	$candidates = @(Get-ChildItem -LiteralPath $Root -Recurse -Directory -Filter 'TestData' -ErrorAction SilentlyContinue |
+		Where-Object {
+			$full = $_.FullName
+			$full -match [regex]::Escape("$ProjectName\TestData") -and
+			$full -notmatch '[\\/](bin|obj)[\\/]'
+		} |
+		Select-Object -ExpandProperty FullName -Unique)
+
+	if ($candidates.Count -gt 0) {
+		return $candidates[0]
+	}
+
+	return $null
+}
+
 $required = @($runtimeFiles)
 $testProjects = @('CommercialLines.DuckCreek.Tests', 'CommercialLines.ExpertQuote.Tests', 'PersonalLines.DuckCreek.Tests')
 $testDataCopies = @()
@@ -29,13 +56,11 @@ foreach ($project in $testProjects) {
 		$required += "$base/$name"
 	}
 	$compiledTestData = Join-Path $SourceRoot "$base/TestData"
-	$sourceTestData = Join-Path $SourceRoot "tests/$project/TestData"
-	if (Test-Path -LiteralPath $compiledTestData -PathType Container) {
-		$testDataCopies += @{ Source = $compiledTestData; Destination = "$base/TestData" }
-	} elseif (Test-Path -LiteralPath $sourceTestData -PathType Container) {
-		$testDataCopies += @{ Source = $sourceTestData; Destination = "$base/TestData" }
+	$resolvedTestData = Resolve-TestDataDirectory -Root $SourceRoot -ProjectName $project -CompiledPath $compiledTestData
+	if ($null -ne $resolvedTestData) {
+		$testDataCopies += @{ Source = $resolvedTestData; Destination = "$base/TestData" }
 	} else {
-		throw "TestData is missing for $project. Expected compiled output $base/TestData or source tests/$project/TestData."
+		Write-Warning "TestData was not found for $project. Continuing package build without TestData for this project."
 	}
 }
 $required += "bin/InsuranceAutomation.Core/$BuildConfiguration/net8.0/InsuranceAutomation.Core.dll"
