@@ -5,6 +5,20 @@
 - Context menu items (`AriaRole.Menuitem`) — no `data-testid`
 - Page header text used only as a load/visibility assertion (not clicked)
 
+Shared control definitions must list `GetByTestId` first. An exact HTML `id`
+may be added only through `WithDocumentedAniIdFallback`, with a reference to an
+entry in the exception table below. Generic CSS fallback and locator
+substitution are not supported. Locator rescue logs candidates only; it never
+changes the locator used by the test.
+
+## ANi HTML-ID Exceptions
+
+| Exception | Page | HTML `id` | Reason |
+|-----------|------|-----------|--------|
+| `ANI-ID-001` | `ClientSearchPage` | `new-quote-button` | ANi-owned navigation control migrated from `data-testid` |
+| `ANI-ID-002` | `QuoteDetailsPage` | `startQuote` | ANi-owned quote-start control with a stable application ID |
+| `ANI-ID-003` | `SFP_ChecklistPage` | `exception-note-confirm` | ANi-owned modal confirmation control with a stable application ID |
+
 ---
 
 ## Status Legend
@@ -35,6 +49,16 @@
 | ✅ | dynamic | `GetThermostatButton(string)` | Was `buildingThermostatQuestion.value-0/1` (indexed) | Fixed → `value-chip-item-wrapper` + `HasText` + `.First` |
 | ✅ | dynamic | `EstimatorTypeRCTButton` | Was `estimatorType.value-0` (indexed) | Fixed → `value-chip-item-wrapper` + `HasText = "RCT"` |
 | ✅ | dynamic | `GetValuationTypeChip(string)` | Was `valuationType.value-0/1/2` (indexed) | Fixed → `value-chip-item-wrapper` + `HasText` + `.First` |
+
+---
+
+## Pages\ExpertQuotePages\SFP\SFP_InsuranceScorePage.cs
+
+| Status | Locator | Resolution |
+|--------|---------|------------|
+| ✅ | Insurance score consent | Shared `ControlScopeResolver`, exact test ID |
+| ✅ | Accept/Decline decision | Shared resolver across main page, popup pages, and nested frames; ambiguous matches fail |
+| ✅ | Decision action | Shared semantic click verifies enabled state and the actual selected state |
 
 ---
 

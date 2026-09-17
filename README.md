@@ -255,8 +255,7 @@ Ask your QA lead for the credential values. Do **not** commit them to any file.
     "SkipPremiumBaselineAssertion": false
   },
   "LocatorRescue": {
-    "Enabled": true,
-    "AutoHeal": false
+    "Enabled": true
   }
 }
 ```
@@ -399,20 +398,21 @@ All page objects inherit from `BasePage` which provides:
 | `WaitForSpinnerAsync()` | Waits for Angular loading overlay to clear |
 | `ClickNextAsync()` | Clicks the standard "Next" workflow button |
 | `ClickSaveAsync()` | Clicks the standard "Save" button |
-| `GetById(id)` | Locates element by HTML `id` attribute |
-| `RescueAsync(locator, hint)` | Runs locator rescue scan on failure |
-| `GetByTestIdRescueAsync(testId)` | `GetByTestId` + automatic rescue on miss |
+| `ControlResolver` | Resolves one visible test-id-first control while retaining page/frame scope |
+| `SemanticControls` | Performs click/fill/select/toggle operations with state postconditions |
+| `RescueAsync(locator, hint)` | Runs a diagnostic locator scan on failure |
+| `GetByTestIdRescueAsync(testId)` | `GetByTestId` + diagnostic rescue on miss |
 
 ### Selector Strategy
 
 1. **DuckCreek form fields** — use `GetByTestId("fields.data.*")`. These are DuckCreek-owned IDs; do not change them.
-2. **ANi-built UI components** — prefer `GetByTestId()` for elements still in transition; use `GetById()` for elements that have been migrated to `id` attributes.
-3. **Navigation / buttons by role** — use `GetByRole(AriaRole.Button, ...)`.
-4. **Avoid** complex CSS selectors, XPath, or selectors based on position (`.first`, `:nth-child`) unless there is no stable alternative.
+2. **ANi-built UI components** — use `GetByTestId()` first. An exact HTML `id` fallback is allowed only when its exception is recorded in `Docs/Locator-Audit.md`.
+3. **Overlay options and non-interactive assertions** — accessible role/text locators are allowed only where the locator audit documents that no test ID exists.
+4. **Avoid** generic CSS fallback, XPath, or selectors based on position (`.first`, `:nth-child`) unless the locator audit documents the exception.
 
 ### Locator Rescue
 
-When a `GetByTestId` call finds 0 elements and `LocatorRescue:Enabled = true` in `appsettings.json`, the framework automatically scans the live DOM for similar elements and logs candidates. Set `AutoHeal = true` to automatically substitute the best candidate (use with caution — review logs before enabling in CI).
+When a `GetByTestId` call finds 0 elements and `LocatorRescue:Enabled = true` in `appsettings.json`, the framework scans the live DOM for similar elements and logs candidates. Rescue is diagnostic-only: it never substitutes a candidate, and the required control still fails.
 
 ---
 

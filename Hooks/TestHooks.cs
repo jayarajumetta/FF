@@ -84,10 +84,9 @@ namespace PnCTestAutomation.Hooks
                     .Build();
                 var rescueEnabled = string.Equals(
                     config["LocatorRescue:Enabled"], "true", StringComparison.OrdinalIgnoreCase);
-                var rescueAutoHeal = string.Equals(
-                    config["LocatorRescue:AutoHeal"], "true", StringComparison.OrdinalIgnoreCase);
-                BasePage.ConfigureRescue(rescueEnabled, rescueAutoHeal);
-                Console.WriteLine($"[Hooks] LocatorRescue: Enabled={rescueEnabled}, AutoHeal={rescueAutoHeal}");
+                BasePage.ConfigureRescue(rescueEnabled);
+                Console.WriteLine(
+                    $"[Hooks] LocatorRescue: Enabled={rescueEnabled}, Mode=diagnostic-only");
 
                 // Quotes are persisted over HTTP at the end of each passing scenario, so the
                 // DataPool app has to be up before the first one finishes. Opt out with

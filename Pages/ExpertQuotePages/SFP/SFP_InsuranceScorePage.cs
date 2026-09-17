@@ -1,6 +1,6 @@
 using Microsoft.Playwright;
+using PnCTestAutomation.Controls;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,6 +8,11 @@ namespace PnCTestAutomation.Pages
 {
     public class SFP_InsuranceScorePage : BasePage
     {
+        private static readonly ControlDefinition ConsentControl =
+            ControlDefinition.ByTestId(
+                "Insurance Score Consent",
+                "fields.data.insuranceScoreConsen_1");
+
         public SFP_InsuranceScorePage(IPage page) : base(page) { }
 
         public ILocator EntityTypeSelect => _page.GetByTestId("fields.data.sFPInsuranceScoreDesigneeInput$entityType.value");
@@ -27,15 +32,10 @@ namespace PnCTestAutomation.Pages
                     nameof(decision))
             };
 
-            try
-            {
-                await InsuranceScoreConsentButton.WaitForAsync(new()
-                {
-                    State = WaitForSelectorState.Visible,
-                    Timeout = 10000
-                });
-            }
-            catch (TimeoutException)
+            var consentControl = await ControlResolver.TryResolveAsync(
+                ConsentControl,
+                TimeSpan.FromSeconds(10));
+            if (consentControl == null)
             {
                 Console.WriteLine(
                     "[InsuranceScore] Consent button not present for this state - skipping consent/accept flow");
@@ -45,26 +45,31 @@ namespace PnCTestAutomation.Pages
             try
             {
                 await ClickWithApplicationResponseAsync(
-                    InsuranceScoreConsentButton,
-                    "Insurance Score Consent");
+                    consentControl,
+                    "Insurance Score Consent",
+                    postcondition: null);
 
-                var decisionControl = await WaitForVisibleControlAsync(decisionTestId, timeoutMs: 8000);
-                if (decisionControl == null)
-                {
-                    throw new PlaywrightException(
-                        $"The {normalizedDecision} control did not appear after the consent action completed.");
-                }
-
+                var decisionDefinition = ControlDefinition.ByTestId(
+                    $"Insurance Score Consent {normalizedDecision}",
+                    decisionTestId);
+                var decisionControl = await ControlResolver.ResolveAsync(
+                    decisionDefinition,
+                    TimeSpan.FromSeconds(8));
                 Console.WriteLine(
-                    $"[InsuranceScore] Found {normalizedDecision} control in {decisionControl.Value.Scope}.");
+                    $"[InsuranceScore] Found {normalizedDecision} control in {decisionControl.Scope.Description}.");
 
                 await ClickWithApplicationResponseAsync(
-                    decisionControl.Value.Locator,
-                    $"Insurance Score Consent {normalizedDecision}");
+                    decisionControl,
+                    $"Insurance Score Consent {normalizedDecision}",
+                    ControlExpectation.Selected());
 
                 await WaitForSpinnerAsync();
             }
-            catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
+            catch (Exception ex) when (
+                ex is TimeoutException or
+                PlaywrightException or
+                ControlResolutionException or
+                ControlPostconditionException)
             {
                 throw new PlaywrightException(
                     $"{ex.Message}{Environment.NewLine}{await BuildConsentDiagnosticsAsync(decisionTestId)}",
@@ -73,29 +78,19 @@ namespace PnCTestAutomation.Pages
         }
 
         private async Task ClickWithApplicationResponseAsync(
-            ILocator locator,
-            string controlName)
+            ResolvedControl control,
+            string controlName,
+            ControlExpectation postcondition)
         {
-            await locator.ScrollIntoViewIfNeededAsync();
-
             var request = await TryClickAndWaitForRequestAsync(
-                () => locator.ClickAsync(),
-                timeoutMs: 1500);
-
-            if (request == null)
-            {
-                Console.WriteLine(
-                    $"[InsuranceScore] {controlName} received a trusted Playwright click but dispatched no Duck Creek request; retrying once with the element's DOM click.");
-
-                request = await TryClickAndWaitForRequestAsync(
-                    () => locator.EvaluateAsync("element => element.click()"),
-                    timeoutMs: 5000);
-            }
+                control,
+                () => SemanticControls.ClickAsync(control, postcondition),
+                timeoutMs: 5000);
 
             if (request == null)
             {
                 throw new PlaywrightException(
-                    $"{controlName} dispatched no Duck Creek request after either a trusted click or a DOM click.");
+                    $"{controlName} dispatched no Duck Creek request.");
             }
 
             var response = await request.ResponseAsync().WaitAsync(TimeSpan.FromSeconds(8));
@@ -111,12 +106,20 @@ namespace PnCTestAutomation.Pages
         }
 
         private async Task<IRequest> TryClickAndWaitForRequestAsync(
+            ResolvedControl control,
             Func<Task> click,
             int timeoutMs)
         {
+            var pages = _page.Context.Pages;
+            if (control.Scope.PageIndex < 0 || control.Scope.PageIndex >= pages.Count)
+            {
+                throw new PlaywrightException(
+                    $"{control.Definition.Name} resolved to a page that is no longer available.");
+            }
+
             try
             {
-                return await _page.RunAndWaitForRequestAsync(
+                return await pages[control.Scope.PageIndex].RunAndWaitForRequestAsync(
                     click,
                     request => IsDuckCreekProductRequest(request.Url),
                     new() { Timeout = timeoutMs });
@@ -127,50 +130,6 @@ namespace PnCTestAutomation.Pages
             }
         }
 
-        private async Task<(ILocator Locator, string Scope)?> WaitForVisibleControlAsync(
-            string testId,
-            int timeoutMs)
-        {
-            var stopwatch = Stopwatch.StartNew();
-
-            while (stopwatch.ElapsedMilliseconds < timeoutMs)
-            {
-                var match = await FindVisibleControlAsync(testId);
-                if (match != null)
-                    return match;
-
-                await Task.Delay(100);
-            }
-
-            return null;
-        }
-
-        private async Task<(ILocator Locator, string Scope)?> FindVisibleControlAsync(string testId)
-        {
-            var pages = _page.Context.Pages;
-
-            for (var pageIndex = 0; pageIndex < pages.Count; pageIndex++)
-            {
-                var page = pages[pageIndex];
-                if (page.IsClosed)
-                    continue;
-
-                foreach (var frame in page.Frames)
-                {
-                    var visibleControl = frame.GetByTestId(testId).Filter(new() { Visible = true });
-                    if (await visibleControl.CountAsync() > 0)
-                    {
-                        var frameName = string.IsNullOrWhiteSpace(frame.Name) ? "<unnamed>" : frame.Name;
-                        return (
-                            visibleControl.First,
-                            $"page {pageIndex + 1}, frame '{frameName}' ({frame.Url})");
-                    }
-                }
-            }
-
-            return null;
-        }
-
         private async Task<string> BuildConsentDiagnosticsAsync(string decisionTestId)
         {
             var pageAndFrameState = _page.Context.Pages
@@ -178,10 +137,11 @@ namespace PnCTestAutomation.Pages
                     $"page {pageIndex + 1}, frame '{(string.IsNullOrWhiteSpace(frame.Name) ? "<unnamed>" : frame.Name)}': {frame.Url}"))
                 .ToArray();
 
-            var consentCount = await InsuranceScoreConsentButton.CountAsync();
-            var consentVisible = consentCount > 0 && await InsuranceScoreConsentButton.First.IsVisibleAsync();
-            var consentEnabled = consentVisible && await InsuranceScoreConsentButton.First.IsEnabledAsync();
-            var decisionVisible = await FindVisibleControlAsync(decisionTestId) != null;
+            var consentState = await DescribeControlStateAsync(ConsentControl);
+            var decisionState = await DescribeControlStateAsync(
+                ControlDefinition.ByTestId(
+                    "Insurance Score Consent Decision",
+                    decisionTestId));
 
             var visibleMessages = await _page
                 .Locator("[role='alert']:visible, .alert:visible, .error:visible, .validation-message:visible")
@@ -190,10 +150,29 @@ namespace PnCTestAutomation.Pages
             return string.Join(
                 Environment.NewLine,
                 $"Page URL: {_page.Url}",
-                $"Consent button: count={consentCount}, visible={consentVisible}, enabled={consentEnabled}",
-                $"Decision control '{decisionTestId}' visible in any page/frame: {decisionVisible}",
+                $"Consent button: {consentState}",
+                $"Decision control '{decisionTestId}': {decisionState}",
                 $"Pages/frames: {(pageAndFrameState.Length == 0 ? "<none>" : string.Join(" | ", pageAndFrameState))}",
                 $"Visible application messages: {(visibleMessages.Count == 0 ? "<none>" : string.Join(" | ", visibleMessages.Select(NormalizeDiagnosticText)))}");
+        }
+
+        private async Task<string> DescribeControlStateAsync(ControlDefinition definition)
+        {
+            try
+            {
+                var control = await ControlResolver.TryResolveAsync(
+                    definition,
+                    TimeSpan.Zero);
+                if (control == null)
+                    return "not found";
+
+                var enabled = await control.Element.IsEnabledAsync();
+                return $"visible, enabled={enabled}, scope={control.Scope.Description}";
+            }
+            catch (ControlResolutionException exception)
+            {
+                return exception.Message;
+            }
         }
 
         private static bool IsDuckCreekProductRequest(string url) =>

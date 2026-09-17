@@ -1,4 +1,5 @@
 ﻿using Microsoft.Playwright;
+using PnCTestAutomation.Controls;
 using PnCTestAutomation.Helpers;
 using System;
 using System.Linq;
@@ -12,21 +13,20 @@ namespace PnCTestAutomation.Pages
     /// Selector strategy:
     ///   - DuckCreek form engine fields use <c>GetByTestId("fields.data.*")</c> — those test IDs
     ///     are owned by DuckCreek and are not being migrated.
-    ///   - ANi-built UI components (nav, dashboard, landing page) are migrating from
-    ///     <c>data-testid</c> attributes to standard HTML <c>id</c> attributes as part of the
-    ///     internal library migration (INC0183313 and subsequent rollout).
-    ///     Use <c>GetById(id)</c> for <c>#id</c> lookups, or the dual-selector helper
-    ///     <c>_page.Locator($"[data-testid='{x}'], #{x}")</c> for elements currently in
-    ///     transition so they work whether or not the attribute has been migrated yet.
+    ///   - ANi-built UI components also use <c>GetByTestId</c> first. A stable HTML
+    ///     <c>id</c> may be a fallback only through a shared control definition whose
+    ///     exception is recorded in <c>Docs/Locator-Audit.md</c>.
     ///
     /// Locator Rescue:
     ///   When a locator fails to find an element, <see cref="RescueAsync"/> runs a lightweight
     ///   DOM scan to find similar elements by partial test-id, text, or aria-label.
-    ///   Controlled by appsettings <c>LocatorRescue:Enabled</c> and <c>LocatorRescue:AutoHeal</c>.
+    ///   It is diagnostic-only and never substitutes a different locator.
     /// </summary>
     public abstract class BasePage
     {
         protected readonly IPage _page;
+        protected IControlScopeResolver ControlResolver { get; }
+        protected ISemanticControlActions SemanticControls { get; }
 
         /// <summary>
         /// Global rescue options, initialized once from appsettings by TestHooks.
@@ -37,10 +37,10 @@ namespace PnCTestAutomation.Pages
         /// <summary>
         /// Called once at test run start (from TestHooks) to configure rescue behavior.
         /// </summary>
-        public static void ConfigureRescue(bool enabled, bool autoHeal)
+        public static void ConfigureRescue(bool enabled)
         {
             _globalRescueOptions = enabled
-                ? new LocatorRescueOptions { AutoHeal = autoHeal }
+                ? LocatorRescueOptions.Default
                 : LocatorRescueOptions.Disabled;
         }
 
@@ -51,22 +51,28 @@ namespace PnCTestAutomation.Pages
         protected LocatorRescueOptions RescueOptions { get; set; }
 
         protected BasePage(IPage page)
+            : this(
+                page,
+                new ControlScopeResolver(new PlaywrightControlRuntime(page)),
+                new SemanticControlActions())
+        {
+        }
+
+        protected BasePage(
+            IPage page,
+            IControlScopeResolver controlResolver,
+            ISemanticControlActions semanticControls)
         {
             _page = page;
+            ControlResolver = controlResolver;
+            SemanticControls = semanticControls;
             RescueOptions = _globalRescueOptions;
         }
 
         /// <summary>
-        /// Locate an element by standard HTML <c>id</c> attribute.
-        /// Use this for ANi-built components that have been migrated away from <c>data-testid</c>.
-        /// </summary>
-        protected ILocator GetById(string id) => _page.Locator($"#{id}");
-
-        /// <summary>
         /// Rescue-aware locator resolution. If the locator finds 0 elements and rescue is enabled,
-        /// runs a targeted DOM scan to find candidates. Returns the healed locator if auto-heal is
-        /// on, otherwise returns the original locator (which will fail with Playwright's normal error
-        /// plus rescue candidates logged to output).
+        /// runs a targeted DOM scan to find candidates, then returns the original locator so the
+        /// required control still fails through Playwright's normal error.
         /// </summary>
         /// <param name="locator">The original locator to try.</param>
         /// <param name="selectorHint">

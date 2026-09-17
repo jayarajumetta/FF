@@ -18,6 +18,9 @@ from introducing parallel infrastructure.
    ANi HTML `id` and other fallbacks require a documented exception in the
    locator audit. Locator rescue diagnoses drift; it does not turn missing
    required controls into passing tests.
+   Shared resolution returns a `ResolvedControl` that carries its page/frame
+   scope into the action, semantic postcondition, and evidence record. Missing
+   controls and multiple visible matches are fatal.
 6. **Retries have one owner per boundary.** Page actions use Playwright
    auto-waiting and shared control helpers. `IApiService` is the only HTTP
    transient-retry path, and callers must explicitly mark a request as
@@ -39,6 +42,9 @@ the contracts owned here.
 
 - Selected-value checks assert the actual selected value. `True` means
   checked/selected and `Enabled` means enabled; neither is a visibility alias.
+- Semantic operations distinguish click, fill, select, and toggle. Each
+  operation verifies the corresponding enabled, selected, checked, or value
+  state instead of treating visibility as success.
 - Capture supports value, checked, and selected semantics.
 - A resolved frame scope must be passed through to the action that uses it and
   recorded in evidence. Product adapters cannot silently fall back to the top

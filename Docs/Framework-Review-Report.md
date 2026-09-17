@@ -307,7 +307,7 @@ A file named `FormsValidation.cs` exists at the root of the project directory ou
 - **Selector strategy:** `GetByTestId` is used correctly for DuckCreek fields. `GetByRole` fallbacks are used appropriately. Positional selectors are rare and justified.
 - **Lifecycle management:** Browser, context, and page are correctly created fresh per scenario in `BeforeScenario` and fully closed in `AfterScenario`. No stale-page risk from the hooks layer.
 - **Failure diagnostics:** Trace, video, and per-step screenshot on failure is excellent. The 7-day auto-cleanup prevents disk exhaustion. The debugger-attached pause is a nice DX touch.
-- **LocatorRescue:** Well-designed, non-intrusive, and properly gated behind a feature flag. AutoHeal defaulting to `false` is correct.
+- **LocatorRescue:** Gated behind a feature flag and diagnostic-only; candidate locators are logged without replacing a failed required locator.
 - **`ScenarioContextData` domain model:** The composition approach (domain models + legacy aliases) is a clean migration path. The comment explaining the dual structure is appropriate.
 - **Multi-environment support:** `TEST_ENVIRONMENT` → config file selection → state filter logic is clean and consistent.
 - **NavigationService:** Clean abstraction over navigation with retry, timeout configuration, and env-aware URL selection.

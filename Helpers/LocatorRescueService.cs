@@ -14,8 +14,8 @@ namespace PnCTestAutomation.Helpers
     ///   3. aria-label match
     ///   4. Role + accessible name match
     ///
-    /// Results are logged to test output. If <see cref="LocatorRescueOptions.AutoHeal"/>
-    /// is enabled, the best candidate is returned for the test to continue.
+    /// Results are logged to test output for diagnostics only. The failed locator is
+    /// never replaced, so a missing required control remains a test failure.
     /// </summary>
     public static class LocatorRescueService
     {
@@ -106,8 +106,7 @@ namespace PnCTestAutomation.Helpers
         /// <param name="failedSelector">The original selector string that failed.</param>
         /// <param name="options">Rescue behavior options.</param>
         /// <returns>
-        /// A <see cref="RescueResult"/> containing candidates found and, if auto-heal is on,
-        /// a usable <see cref="ILocator"/> for the best match.
+        /// A <see cref="RescueResult"/> containing diagnostic candidates.
         /// </returns>
         public static async Task<RescueResult> TryRescueAsync(
             IPage page,
@@ -148,22 +147,9 @@ namespace PnCTestAutomation.Helpers
                         $"  [{i + 1}] score={c.Score} reason={c.MatchReason} → {locatorHint}");
                 }
 
-                // Build healed locator from best candidate
-                var best = candidates[0];
-                result.BestCandidate = best;
-                result.HealedLocator = BuildLocator(page, best);
-                result.WasHealed = options.AutoHeal;
-
-                if (options.AutoHeal)
-                {
-                    LogRescue(options,
-                        $"[LocatorRescue] AUTO-HEAL ON — using candidate #1 (score={best.Score})");
-                }
-                else
-                {
-                    LogRescue(options,
-                        $"[LocatorRescue] AUTO-HEAL OFF — candidates logged but test will fail as normal.");
-                }
+                result.BestCandidate = candidates[0];
+                LogRescue(options,
+                    "[LocatorRescue] Diagnostic candidates logged; the required control will still fail.");
             }
             catch (Exception ex)
             {
@@ -175,8 +161,8 @@ namespace PnCTestAutomation.Helpers
         }
 
         /// <summary>
-        /// Wraps a Playwright action with locator rescue. If the action throws because the
-        /// element wasn't found, runs rescue and optionally retries with the healed locator.
+        /// Checks the original locator and, when it has no matches, logs diagnostic
+        /// candidates without substituting them.
         /// </summary>
         public static async Task<ILocator> ResolveLocatorAsync(
             IPage page,
@@ -203,52 +189,8 @@ namespace PnCTestAutomation.Helpers
             }
 
             // Element not found — run rescue
-            var result = await TryRescueAsync(page, selectorHint, options);
-
-            if (result.WasHealed && result.HealedLocator != null)
-            {
-                // Verify the healed locator actually finds something
-                var healedCount = await result.HealedLocator.CountAsync();
-                if (healedCount > 0)
-                    return result.HealedLocator;
-
-                LogRescue(options,
-                    "[LocatorRescue] Healed locator found 0 elements — falling back to original.");
-            }
-
-            // Return original so the caller gets Playwright's normal error
+            await TryRescueAsync(page, selectorHint, options);
             return original;
-        }
-
-        private static ILocator BuildLocator(IPage page, RescueCandidate candidate)
-        {
-            if (!string.IsNullOrEmpty(candidate.TestId))
-                return page.GetByTestId(candidate.TestId);
-            if (!string.IsNullOrEmpty(candidate.Id))
-                return page.Locator($"#{candidate.Id}");
-            if (!string.IsNullOrEmpty(candidate.AriaLbl))
-                return page.GetByLabel(candidate.AriaLbl);
-            if (!string.IsNullOrEmpty(candidate.Name))
-                return page.Locator($"[name='{candidate.Name}']");
-            // Last resort: role + text
-            return page.GetByRole(
-                MapRole(candidate.Role),
-                new() { Name = candidate.Text });
-        }
-
-        private static AriaRole MapRole(string role)
-        {
-            return (role ?? "").ToLowerInvariant() switch
-            {
-                "button" => AriaRole.Button,
-                "link" or "a" => AriaRole.Link,
-                "checkbox" or "mat-checkbox" => AriaRole.Checkbox,
-                "radio" or "mat-radio-button" => AriaRole.Radio,
-                "combobox" or "select" or "mat-select" => AriaRole.Combobox,
-                "textbox" or "input" or "textarea" => AriaRole.Textbox,
-                "tab" => AriaRole.Tab,
-                _ => AriaRole.Generic
-            };
         }
 
         private static void LogRescue(LocatorRescueOptions options, string message)
@@ -262,13 +204,6 @@ namespace PnCTestAutomation.Helpers
     public class LocatorRescueOptions
     {
         /// <summary>
-        /// When true, the best candidate locator is used automatically so the test
-        /// can continue. When false, candidates are logged but the test fails normally.
-        /// Default: false (log-only mode).
-        /// </summary>
-        public bool AutoHeal { get; set; }
-
-        /// <summary>
         /// When false, rescue is completely skipped (no DOM scan, no logging).
         /// </summary>
         public bool Enabled { get; set; } = true;
@@ -279,8 +214,8 @@ namespace PnCTestAutomation.Helpers
         /// </summary>
         public Action<string> LogAction { get; set; }
 
-        public static LocatorRescueOptions Default => new() { AutoHeal = false, Enabled = true };
-        public static LocatorRescueOptions Disabled => new() { AutoHeal = false, Enabled = false };
+        public static LocatorRescueOptions Default => new() { Enabled = true };
+        public static LocatorRescueOptions Disabled => new() { Enabled = false };
     }
 
     // ── Result model ───────────────────────────────────────────────────
@@ -289,8 +224,6 @@ namespace PnCTestAutomation.Helpers
         public string OriginalSelector { get; set; }
         public List<RescueCandidate> Candidates { get; set; } = new();
         public RescueCandidate BestCandidate { get; set; }
-        public ILocator HealedLocator { get; set; }
-        public bool WasHealed { get; set; }
     }
 
     public class RescueCandidate
