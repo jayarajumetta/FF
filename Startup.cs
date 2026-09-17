@@ -14,6 +14,7 @@ using PnCTestAutomation.Pages;
 using PnCTestAutomation.Pages.ExpertQuotePages;
 using PnCTestAutomation.Pages.ExpertQuotePages.BOP;
 using PnCTestAutomation.Pages.CommercialDuckCreekPages.BAP;
+using PnCTestAutomation.Pages.PersonalDuckCreekPages.Auto;
 using PnCTestAutomation.Products;
 using PnCTestAutomation.QuoteHandoffs;
 using PnCTestAutomation.Services;
@@ -52,6 +53,10 @@ namespace PnCTestAutomation
             services.AddSingleton<IProductModule, ExpertQuoteBopPilotModule>();
             services.AddSingleton<IProductModule,
                 CommercialDuckCreekBapPilotModule>();
+            services.AddSingleton<IProductModule,
+                PersonalDuckCreekAutoSmokePilotModule>();
+            services.AddSingleton<IProductModule,
+                PersonalDuckCreekStateMaritalPilotModule>();
             services.AddSingleton<IProductModuleRegistry, ProductModuleRegistry>();
 
             var credentials = configuration.GetSection("Credentials").Get<CredentialsConfig>();
@@ -254,6 +259,12 @@ namespace PnCTestAutomation
                 CommercialDuckCreekBapPilotPage>();
             services.AddScoped<ICommercialDuckCreekBapPilotWorkflow,
                 CommercialDuckCreekBapPilotWorkflow>();
+            services.AddScoped<IPersonalDuckCreekAutoPilotRuntime,
+                PersonalDuckCreekAutoPilotPage>();
+            services.AddScoped<IPersonalDuckCreekAutoSmokeWorkflow,
+                PersonalDuckCreekAutoSmokeWorkflow>();
+            services.AddScoped<IPersonalDuckCreekStateMaritalWorkflow,
+                PersonalDuckCreekStateMaritalWorkflow>();
 
             // ── Forms Checking services ──
             var formsConfig = configuration.GetSection("DuckCreekForms").Get<DuckCreekFormsConfig>();

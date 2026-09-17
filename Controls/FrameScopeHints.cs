@@ -17,18 +17,35 @@ namespace PnCTestAutomation.Controls
             "Resources",
             "FrameHints",
             "cldc-bap-frame-hints.json");
+        public List<string> AdditionalCatalogPaths { get; set; } = [];
 
         public void Validate()
         {
-            if (string.IsNullOrWhiteSpace(CatalogPath) ||
-                !Path.GetExtension(CatalogPath).Equals(
-                    ".json",
-                    StringComparison.OrdinalIgnoreCase))
+            if (AdditionalCatalogPaths == null)
             {
                 throw new FrameScopeConfigurationException(
-                    "FrameHints:CatalogPath must identify a JSON file.");
+                    "Additional frame hint catalog paths cannot be null.");
             }
+            var paths = GetCatalogPaths();
+            if (paths.Any(path =>
+                    string.IsNullOrWhiteSpace(path) ||
+                    !Path.GetExtension(path).Equals(
+                        ".json",
+                        StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new FrameScopeConfigurationException(
+                    "Every frame hint catalog path must identify a JSON file.");
+            }
+            var duplicate = paths
+                .GroupBy(path => path, StringComparer.OrdinalIgnoreCase)
+                .FirstOrDefault(group => group.Count() > 1);
+            if (duplicate != null)
+                throw new FrameScopeConfigurationException(
+                    $"Duplicate frame hint catalog path '{duplicate.Key}'.");
         }
+
+        public IReadOnlyList<string> GetCatalogPaths() =>
+            [CatalogPath, .. AdditionalCatalogPaths];
     }
 
     public sealed class FrameScopeHintCatalog
@@ -72,9 +89,28 @@ namespace PnCTestAutomation.Controls
         }
 
         public FrameScopeHintProvider(FrameScopeHintCatalog catalog)
+            : this([catalog])
         {
-            FrameScopeHintValidator.Validate(catalog);
-            Hints = catalog.Hints.ToArray();
+        }
+
+        public FrameScopeHintProvider(
+            IReadOnlyList<FrameScopeHintCatalog> catalogs)
+        {
+            ArgumentNullException.ThrowIfNull(catalogs);
+            if (catalogs.Count == 0)
+                throw new FrameScopeConfigurationException(
+                    "At least one frame hint catalog is required.");
+            foreach (var catalog in catalogs)
+                FrameScopeHintValidator.Validate(catalog);
+            Hints = catalogs.SelectMany(catalog => catalog.Hints).ToArray();
+            var duplicate = Hints
+                .GroupBy(hint => hint.ScopeId, StringComparer.Ordinal)
+                .FirstOrDefault(group => group.Count() > 1);
+            if (duplicate != null)
+            {
+                throw new FrameScopeConfigurationException(
+                    $"Frame scope hint '{duplicate.Key}' is ambiguous across catalogs.");
+            }
             _hints = Hints.ToDictionary(
                 hint => hint.ScopeId,
                 StringComparer.Ordinal);
@@ -92,27 +128,33 @@ namespace PnCTestAutomation.Controls
             return hint;
         }
 
-        private static FrameScopeHintCatalog Load(
+        private static IReadOnlyList<FrameScopeHintCatalog> Load(
             FrameScopeHintOptions options)
         {
             ArgumentNullException.ThrowIfNull(options);
             options.Validate();
-            var path = Path.IsPathRooted(options.CatalogPath)
-                ? options.CatalogPath
-                : Path.Combine(AppContext.BaseDirectory, options.CatalogPath);
-            try
+            var catalogs = new List<FrameScopeHintCatalog>();
+            foreach (var configuredPath in options.GetCatalogPaths())
             {
-                return JsonSerializer.Deserialize<FrameScopeHintCatalog>(
-                           File.ReadAllText(Path.GetFullPath(path)),
-                           JsonOptions)
-                       ?? throw new JsonException();
+                var path = Path.IsPathRooted(configuredPath)
+                    ? configuredPath
+                    : Path.Combine(AppContext.BaseDirectory, configuredPath);
+                try
+                {
+                    catalogs.Add(
+                        JsonSerializer.Deserialize<FrameScopeHintCatalog>(
+                            File.ReadAllText(Path.GetFullPath(path)),
+                            JsonOptions)
+                        ?? throw new JsonException());
+                }
+                catch (Exception exception) when (
+                    exception is IOException or JsonException)
+                {
+                    throw new FrameScopeConfigurationException(
+                        $"Frame hint catalog '{configuredPath}' is missing or malformed.");
+                }
             }
-            catch (Exception exception) when (
-                exception is IOException or JsonException)
-            {
-                throw new FrameScopeConfigurationException(
-                    "The configured frame hint catalog is missing or malformed.");
-            }
+            return catalogs;
         }
     }
 

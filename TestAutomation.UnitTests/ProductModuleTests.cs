@@ -3,6 +3,7 @@ using NUnit.Framework;
 using PnCTestAutomation.Artifacts;
 using PnCTestAutomation.Pages.ExpertQuotePages.BOP;
 using PnCTestAutomation.Pages.CommercialDuckCreekPages.BAP;
+using PnCTestAutomation.Pages.PersonalDuckCreekPages.Auto;
 using PnCTestAutomation.Products;
 using PnCTestAutomation.Workflows;
 
@@ -18,7 +19,7 @@ public class ProductModuleTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(registry.Modules, Has.Count.EqualTo(3));
+            Assert.That(registry.Modules, Has.Count.EqualTo(5));
             Assert.That(
                 registry.Resolve("SFP-BASIC-POLICY:AL").ModuleId,
                 Is.EqualTo("sfp-reference"));
@@ -28,6 +29,13 @@ public class ProductModuleTests
             Assert.That(
                 registry.Resolve("CLDC-BAP-SMOKE:AL").ModuleId,
                 Is.EqualTo("commercial-duckcreek-bap-al-pilot"));
+            Assert.That(
+                registry.Resolve("PLDC-AUTO-SMOKE:AZ").ModuleId,
+                Is.EqualTo("personal-duckcreek-auto-az-ang-pilot"));
+            Assert.That(
+                registry.Resolve("PLDC-AUTO-STATE-MARITAL:AZ").ModuleId,
+                Is.EqualTo(
+                    "personal-duckcreek-auto-state-marital-pilot"));
             Assert.That(registry.TryResolve("UNREGISTERED:AL"), Is.Null);
         });
     }
@@ -96,6 +104,42 @@ public class ProductModuleTests
         });
     }
 
+    [TestCase("PLDC-AUTO-SMOKE:AZ")]
+    [TestCase("PLDC-AUTO-STATE-MARITAL:AL")]
+    public void PersonalDuckCreekPilotsRequireSharedContractsAndNoRetry(
+        string automationId)
+    {
+        var descriptor = Registry().Resolve(automationId);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(descriptor.UsesPilotDataProfile, Is.True);
+            Assert.That(
+                descriptor.RequiredCapabilities,
+                Does.Contain(ProductCapability.SemanticControls));
+            Assert.That(
+                descriptor.RequiredCapabilities,
+                Does.Contain(ProductCapability.FrameScope));
+            Assert.That(
+                descriptor.RequiredCapabilities.Contains(
+                    ProductCapability.QuoteHandoff),
+                Is.EqualTo(automationId.StartsWith(
+                    "PLDC-AUTO-SMOKE:",
+                    StringComparison.Ordinal)));
+            Assert.That(
+                descriptor.Evidence.RequiredArtifacts,
+                Does.Contain(ArtifactKind.RuntimeLocator));
+            Assert.That(
+                descriptor.Evidence.RequiredArtifacts.Contains(
+                    ArtifactKind.QuoteHandoff),
+                Is.EqualTo(automationId.StartsWith(
+                    "PLDC-AUTO-SMOKE:",
+                    StringComparison.Ordinal)));
+            Assert.That(descriptor.SelectorExceptionReferences, Is.Empty);
+            Assert.That(descriptor.RetrySafe, Is.False);
+        });
+    }
+
     [Test]
     public void StartupRegistersOneRegistryAndNoAdditionalHook()
     {
@@ -129,6 +173,21 @@ public class ProductModuleTests
                     typeof(ICommercialDuckCreekBapPilotWorkflow)),
                 Is.EqualTo(1));
             Assert.That(
+                services.Count(service =>
+                    service.ServiceType ==
+                    typeof(IPersonalDuckCreekAutoPilotRuntime)),
+                Is.EqualTo(1));
+            Assert.That(
+                services.Count(service =>
+                    service.ServiceType ==
+                    typeof(IPersonalDuckCreekAutoSmokeWorkflow)),
+                Is.EqualTo(1));
+            Assert.That(
+                services.Count(service =>
+                    service.ServiceType ==
+                    typeof(IPersonalDuckCreekStateMaritalWorkflow)),
+                Is.EqualTo(1));
+            Assert.That(
                 typeof(Startup).Assembly.GetTypes().Count(type =>
                     type.Name == "TestHooks"),
                 Is.EqualTo(1));
@@ -140,7 +199,9 @@ public class ProductModuleTests
         [
             new SfpProductModule(),
             new ExpertQuoteBopPilotModule(),
-            new CommercialDuckCreekBapPilotModule()
+            new CommercialDuckCreekBapPilotModule(),
+            new PersonalDuckCreekAutoSmokePilotModule(),
+            new PersonalDuckCreekStateMaritalPilotModule()
         ]);
 
     private sealed class TestProductModule(

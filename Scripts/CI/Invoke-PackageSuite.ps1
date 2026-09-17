@@ -6,7 +6,8 @@ param(
         "CE",
         "Forms",
         "ExpertQuotePilot",
-        "CommercialDuckCreekPilot")]
+        "CommercialDuckCreekPilot",
+        "PersonalDuckCreekPilot")]
     [string]$Suite = "All",
 
     [ValidateSet("Full", "Debug")]

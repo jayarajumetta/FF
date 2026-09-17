@@ -60,6 +60,28 @@ HTML-ID fallback requires a new row in the exception table and test-ID-first
 ordering. `fieldref`, role, text, generic CSS, and bare `iframe` selectors are
 not silent rescue paths.
 
+## Personal DuckCreek Auto pilots
+
+The Phase 7C audit found source IDs/test IDs for account state, marital
+choices, writing company, proposal actions, and quote search, but the source
+state method targets Account Details Next and its Married method targets the
+broad/misnamed Divorced locator. Those defects are not copied. Destination
+contracts use selector-neutral logical controls until exact current
+`data-testid` evidence is approved.
+
+No `ANI-ID-*` exception is added for PLDC. Source HTML IDs such as
+`owner.address.state`, `proposal.ratingState`, `startQuote`,
+`quoteSearchInput`, and `quoteSearchButton` remain audit evidence only.
+`account-state`, `policy-state`, `writing-company`, and
+`marital-status-married` must each resolve exactly one actual control, become
+enabled, and verify the selected value. Account Details Next, the Account
+Information heading, Divorced, broad `.First`, direct DOM clicks, and generic
+top-document fallback are invalid substitutes.
+
+The source has no surviving PLDC frame resolver or frame hint for the selected
+flows. The checked-in PLDC frame catalog is intentionally empty; any discovered
+frame requirement needs a stable approved page/frame path before execution.
+
 ---
 
 ## Status Legend

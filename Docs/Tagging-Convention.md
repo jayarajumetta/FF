@@ -52,6 +52,7 @@ unless the scenario has a *different* value for that tag.
 |-----|---------|
 | `@ExpertQuote` | Runs against the ExpertQuote web application |
 | `@CommercialDuckCreek` | Runs against the Commercial Lines DuckCreek application |
+| `@PersonalDuckCreek` | Runs against the Personal Lines DuckCreek application |
 | `@ExpertService` | Runs against ExpertService |
 | `@Express` | Runs against the Express (CLAS) application |
 
@@ -98,6 +99,13 @@ explicit ignored-result probes only.
 The Commercial DuckCreek BAP pilot uses `CLDC-BAP-SMOKE:AL`, is owned by
 `@CldcBapAlPilot`, and follows the same isolated `@NonRunnable`/`@NoRetry`
 contract. It is not part of scheduled production matrices.
+
+The Personal DuckCreek pilot suite has two isolated owners:
+`@PldcAutoAzAngPilot` for `PLDC-AUTO-SMOKE:AZ` and
+`@PldcAutoStateMaritalPilot` for
+`PLDC-AUTO-STATE-MARITAL:AL`. Both remain
+`@NonRunnable`/`@NoRetry` and absent from production schedules; the second is
+also blocked because no audited source row supplies Married data.
 
 ---
 

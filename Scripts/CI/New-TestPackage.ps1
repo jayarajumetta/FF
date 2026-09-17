@@ -209,7 +209,8 @@ foreach ($suiteMode in @(
     @("All", "Debug"),
     @("Forms", "Full"),
     @("ExpertQuotePilot", "Full"),
-    @("CommercialDuckCreekPilot", "Full")
+    @("CommercialDuckCreekPilot", "Full"),
+    @("PersonalDuckCreekPilot", "Full")
 )) {
     $suite = $suiteMode[0]
     $mode = $suiteMode[1]
@@ -244,6 +245,7 @@ Compress-Archive -Path (Join-Path $stageRoot "*") -DestinationPath $archivePath
     -DiscoverySmoke `
     -PilotNonRunnableSmoke `
     -CldcPilotNonRunnableSmoke `
+    -PldcPilotNonRunnableSmoke `
     -PublisherDryRunSmoke `
     -ScanForSecrets
 

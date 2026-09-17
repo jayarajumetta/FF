@@ -714,4 +714,152 @@ namespace PnCTestAutomation.DataProfiles
                         $"Pilot value '{key}' must be a non-negative integer.");
         }
     }
+
+    public sealed record PersonalDuckCreekAutoSmokePilotData(
+        string FirstName,
+        string LastName,
+        string DateOfBirth,
+        string Phone,
+        string Email,
+        string AddressLine1,
+        string AddressLine2,
+        string City,
+        string StateName,
+        string StateCode,
+        string Zip,
+        string MaritalStatus,
+        bool ResidedNinetyDays,
+        bool IsResidence,
+        string Product,
+        string EffectiveDate,
+        string AgentCode,
+        string WritingCompany,
+        bool UseMailingAddress,
+        string SocialSecurityNumber,
+        bool InvalidAddressExpected,
+        bool SsnWarningExpected,
+        bool ConfirmSsnExpected,
+        bool ExistingClientExpected,
+        string QuoteIdentityPattern,
+        string SaveExpectation,
+        string SearchExpectation,
+        string ReopenExpectation)
+    {
+        public static PersonalDuckCreekAutoSmokePilotData From(
+            PilotDataResolution resolution)
+        {
+            ArgumentNullException.ThrowIfNull(resolution);
+            PilotDataValueReader.EnsureRunnable(resolution);
+            return new PersonalDuckCreekAutoSmokePilotData(
+                Value("client.firstName"),
+                Value("client.lastName"),
+                Value("client.dateOfBirth"),
+                Value("client.phone"),
+                Value("client.email"),
+                Value("address.line1"),
+                Value("address.line2"),
+                Value("address.city"),
+                Value("address.stateName"),
+                Value("address.stateCode"),
+                Value("address.zip"),
+                Value("account.maritalStatus"),
+                Boolean("account.residedNinetyDays"),
+                Boolean("account.isResidence"),
+                Value("proposal.product"),
+                Value("proposal.effectiveDate"),
+                Value("proposal.agentCode"),
+                Value("proposal.writingCompany"),
+                Boolean("proposal.useMailingAddress"),
+                Value("identity.ssn"),
+                Boolean("conditional.invalidAddressExpected"),
+                Boolean("conditional.ssnWarningExpected"),
+                Boolean("conditional.confirmSsnExpected"),
+                Boolean("conditional.existingClientExpected"),
+                Value("quote.identityPattern"),
+                Value("quote.saveExpectation"),
+                Value("quote.searchExpectation"),
+                Value("quote.reopenExpectation"));
+
+            string Value(string key) =>
+                PilotDataValueReader.RequiredValue(resolution, key);
+            bool Boolean(string key) =>
+                PilotDataValueReader.RequiredBoolean(resolution, key);
+        }
+    }
+
+    public sealed record PersonalDuckCreekStateMaritalPilotData(
+        string FirstName,
+        string LastName,
+        string DateOfBirth,
+        string Phone,
+        string Email,
+        string AddressLine1,
+        string AddressLine2,
+        string City,
+        string StateName,
+        string StateCode,
+        string Zip,
+        string MaritalStatus,
+        bool ResidedNinetyDays,
+        bool IsResidence,
+        string AccountPageExpectation)
+    {
+        public static PersonalDuckCreekStateMaritalPilotData From(
+            PilotDataResolution resolution)
+        {
+            ArgumentNullException.ThrowIfNull(resolution);
+            PilotDataValueReader.EnsureRunnable(resolution);
+            return new PersonalDuckCreekStateMaritalPilotData(
+                Value("client.firstName"),
+                Value("client.lastName"),
+                Value("client.dateOfBirth"),
+                Value("client.phone"),
+                Value("client.email"),
+                Value("address.line1"),
+                Value("address.line2"),
+                Value("address.city"),
+                Value("address.stateName"),
+                Value("address.stateCode"),
+                Value("address.zip"),
+                Value("account.maritalStatus"),
+                Boolean("account.residedNinetyDays"),
+                Boolean("account.isResidence"),
+                Value("account.pageExpectation"));
+
+            string Value(string key) =>
+                PilotDataValueReader.RequiredValue(resolution, key);
+            bool Boolean(string key) =>
+                PilotDataValueReader.RequiredBoolean(resolution, key);
+        }
+    }
+
+    internal static class PilotDataValueReader
+    {
+        internal static void EnsureRunnable(
+            PilotDataResolution resolution)
+        {
+            if (!resolution.IsRunnable)
+            {
+                throw new PilotDataConfigurationException(
+                    $"Pilot profile '{resolution.Profile.ProfileId}' is non-runnable.");
+            }
+        }
+
+        internal static string RequiredValue(
+            PilotDataResolution resolution,
+            string key) =>
+            resolution.Values.TryGetValue(key, out var value) &&
+            !string.IsNullOrWhiteSpace(value)
+                ? value
+                : throw new PilotDataConfigurationException(
+                    $"Required pilot value '{key}' is missing.");
+
+        internal static bool RequiredBoolean(
+            PilotDataResolution resolution,
+            string key) =>
+            bool.TryParse(RequiredValue(resolution, key), out var value)
+                ? value
+                : throw new PilotDataConfigurationException(
+                    $"Pilot value '{key}' must be true or false.");
+    }
 }

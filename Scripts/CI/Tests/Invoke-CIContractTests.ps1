@@ -111,7 +111,9 @@ try {
         "test\Resources\ExpectedOutcomes\sfp-outcomes.json",
         "test\Resources\DataProfiles\eq-bop-pilot.json",
         "test\Resources\DataProfiles\cldc-bap-pilot.json",
+        "test\Resources\DataProfiles\pldc-auto-pilot.json",
         "test\Resources\FrameHints\cldc-bap-frame-hints.json",
+        "test\Resources\FrameHints\pldc-auto-frame-hints.json",
         "datapool\DataPool.dll",
         "datapool\DataPool.deps.json",
         "datapool\DataPool.runtimeconfig.json",
@@ -127,6 +129,7 @@ try {
         "metadata\shards-Forms-Full.json",
         "metadata\shards-ExpertQuotePilot-Full.json",
         "metadata\shards-CommercialDuckCreekPilot-Full.json",
+        "metadata\shards-PersonalDuckCreekPilot-Full.json",
         "runsettings\ci.runsettings",
         "config\shards.json",
         "config\testplans-mapping.template.json",
@@ -432,6 +435,24 @@ try {
     Assert-True (
         $entry -notmatch "CommercialDuckCreekPilot|CldcBapAlPilot"
     ) "NonRunnable Commercial DuckCreek pilot entered scheduled production execution."
+    $pldcPilotSuite = @($shardCatalog.suites |
+        Where-Object name -eq "PersonalDuckCreekPilot")
+    $pldcPilotShards = @($shardCatalog.shards |
+        Where-Object id -in @(
+            "PldcAutoAzAngPilot",
+            "PldcAutoStateMaritalPilot"))
+    Assert-True (
+        $pldcPilotSuite.Count -eq 1 -and
+        $pldcPilotShards.Count -eq 2 -and
+        @($pldcPilotSuite[0].shards).Count -eq 2 -and
+        @($pldcPilotSuite[0].shards) -contains "PldcAutoAzAngPilot" -and
+        @($pldcPilotSuite[0].shards) -contains "PldcAutoStateMaritalPilot"
+    ) "Personal DuckCreek pilots do not have two isolated shard owners."
+    Assert-True (
+        $entry -notmatch (
+            "PersonalDuckCreekPilot|PldcAutoAzAngPilot|" +
+            "PldcAutoStateMaritalPilot")
+    ) "NonRunnable Personal DuckCreek pilots entered scheduled production execution."
 
     Write-Host "CI contract tests passed: $script:Passed assertions."
 }

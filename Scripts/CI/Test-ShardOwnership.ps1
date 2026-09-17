@@ -10,7 +10,8 @@ param(
         "CE",
         "Forms",
         "ExpertQuotePilot",
-        "CommercialDuckCreekPilot")]
+        "CommercialDuckCreekPilot",
+        "PersonalDuckCreekPilot")]
     [string]$Suite,
 
     [ValidateSet("Full", "Debug")]

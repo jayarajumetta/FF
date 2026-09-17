@@ -26,6 +26,8 @@ Current families are:
 - `SFP-FORMS-VALIDATION:<STATE>`
 - `EQ-BOP-SMOKE:AL` (Phase 7A pilot, explicitly deferred)
 - `CLDC-BAP-SMOKE:AL` (Phase 7B pilot, explicitly deferred)
+- `PLDC-AUTO-SMOKE:AZ` (Phase 7C pilot, explicitly deferred)
+- `PLDC-AUTO-STATE-MARITAL:AL` (Phase 7C pilot, explicitly deferred)
 
 ## Mapping catalog
 

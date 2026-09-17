@@ -73,6 +73,11 @@ from introducing parallel infrastructure.
     publication contracts. Adapted products reuse the existing lifecycle,
     semantic controls, artifact context, quote handoff, retry policy, and
     canonical results; they do not add parallel hooks or factories.
+14. **Corrected product controls prove business state.** Adapted PLDC state,
+    writing-company, and marital actions target the actual logical control,
+    wait for that control to be enabled, and verify its selected value. A
+    navigation button, generic page heading, or differently named marital
+    option cannot substitute for the requested control or postcondition.
 
 ## SGS adaptation contract
 

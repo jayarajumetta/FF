@@ -68,7 +68,9 @@ public class ExpertQuotePilotIntegrationTests
                 catalog.DeferredAutomationIds,
                 Is.EqualTo([
                     "CLDC-BAP-SMOKE:AL",
-                    "EQ-BOP-SMOKE:AL"
+                    "EQ-BOP-SMOKE:AL",
+                    "PLDC-AUTO-SMOKE:AZ",
+                    "PLDC-AUTO-STATE-MARITAL:AL"
                 ]));
             Assert.That(() => catalog.Validate([]), Throws.Nothing);
         });

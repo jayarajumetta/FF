@@ -60,9 +60,10 @@ output directory is required.
    compiled inventory by exact test identity, not only by count. Discovery and
    execution use disposable copies of the test runtime so adapter-generated
    files cannot mutate the validated package.
-   The extracted package also executes the isolated ExpertQuote BOP and
-   Commercial DuckCreek BAP pilots independently and requires exactly one
-   `NotExecuted` result for each while its profile is `NonRunnable`.
+   The extracted package also executes the isolated ExpertQuote BOP,
+   Commercial DuckCreek BAP, PLDC AZ ANG smoke, and PLDC AL state/marital
+   pilots independently and requires exactly one `NotExecuted` result for each
+   while its profile is `NonRunnable`.
 7. Test jobs use `checkout: none`, download exactly one archive, validate it,
    cache/install Chromium with the packaged Playwright runtime pair, and invoke
    one shard through `Invoke-TestShard.ps1`.
@@ -102,6 +103,13 @@ The `CommercialDuckCreekPilot` suite similarly owns exactly one
 frame-hint catalog are packaged, but the suite remains absent from production
 schedules until data, selectors, exact frame paths, credentials, quote
 round-trip expectations, and ADO ownership are approved.
+
+The `PersonalDuckCreekPilot` suite owns exactly two disjoint shards:
+`PldcAutoAzAngPilot` and `PldcAutoStateMaritalPilot`. Its complete 50-file
+checksummed source catalog and empty approved frame catalog are packaged. It
+remains unscheduled until sanitized data, a QA-approved Married microcase,
+credentials, exact selectors/frame paths, PII-safe evidence, quote outcomes,
+and ADO ownership are approved.
 
 Initial and retry TRX files are diagnostic attempts. The runner reconciles
 them into exactly one `*-final.trx`, rejects unexpected or duplicate retry

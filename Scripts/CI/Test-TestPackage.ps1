@@ -15,6 +15,8 @@ param(
 
     [switch]$CldcPilotNonRunnableSmoke,
 
+    [switch]$PldcPilotNonRunnableSmoke,
+
     [switch]$PublisherDryRunSmoke,
 
     [switch]$ScanForSecrets
@@ -220,6 +222,18 @@ try {
             -Category "CldcBapAlPilot" `
             -ResultName "CldcBapAlPilot" `
             -DisplayName "Commercial DuckCreek pilot"
+    }
+    if ($PldcPilotNonRunnableSmoke) {
+        Test-NonRunnablePilot `
+            -PackageRoot $PackageRoot `
+            -Category "PldcAutoAzAngPilot" `
+            -ResultName "PldcAutoAzAngPilot" `
+            -DisplayName "Personal DuckCreek Auto AZ ANG pilot"
+        Test-NonRunnablePilot `
+            -PackageRoot $PackageRoot `
+            -Category "PldcAutoStateMaritalPilot" `
+            -ResultName "PldcAutoStateMaritalPilot" `
+            -DisplayName "Personal DuckCreek state/marital pilot"
     }
     if ($PublisherDryRunSmoke) {
         & (Join-Path $PackageRoot "scripts\CI\Test-TestPlanPublisherSmoke.ps1") `

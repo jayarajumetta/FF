@@ -309,6 +309,106 @@ namespace PnCTestAutomation.Products
             false);
     }
 
+    public sealed class PersonalDuckCreekAutoSmokePilotModule :
+        IProductModule
+    {
+        public const string DataProfileId = "pldc-auto-az-ang-smoke";
+        public const string AutomationIdFamily = "PLDC-AUTO-SMOKE";
+
+        public ProductModuleDescriptor Descriptor { get; } = Create(
+            "personal-duckcreek-auto-az-ang-pilot",
+            "SGS 211 Personal Auto AZ ANG smoke",
+            AutomationIdFamily,
+            DataProfileId,
+            [
+                "login",
+                "new-quote",
+                "policy-state",
+                "writing-company",
+                "conditional-proposal",
+                "stable-frame-paths",
+                "pii-safe-evidence-policy",
+                "quote-capture",
+                "quote-search",
+                "quote-reopen"
+            ]);
+
+        internal static ProductModuleDescriptor Create(
+            string moduleId,
+            string workflow,
+            string automationIdFamily,
+            string dataProfileId,
+            IReadOnlyList<string> blockers,
+            bool requiresQuoteHandoff = true)
+        {
+            var requiredArtifacts = new List<ArtifactKind>
+            {
+                ArtifactKind.Screenshot,
+                ArtifactKind.BusinessOutcome
+            };
+            if (requiresQuoteHandoff)
+                requiredArtifacts.Add(ArtifactKind.QuoteHandoff);
+            requiredArtifacts.AddRange(
+            [
+                ArtifactKind.TrxMetadata,
+                ArtifactKind.TimingSummary,
+                ArtifactKind.RuntimeLocator
+            ]);
+            var requiredCapabilities = new List<ProductCapability>
+            {
+                ProductCapability.SemanticControls,
+                ProductCapability.FrameScope,
+                ProductCapability.DataProfile,
+                ProductCapability.ArtifactEvidence,
+                ProductCapability.BusinessOutcomes,
+                ProductCapability.TestPlans
+            };
+            if (requiresQuoteHandoff)
+                requiredCapabilities.Add(ProductCapability.QuoteHandoff);
+
+            return new(
+                moduleId,
+                "Personal Lines DuckCreek Auto",
+                workflow,
+                [automationIdFamily],
+                requiredCapabilities,
+                dataProfileId,
+                true,
+                new ProductEvidenceContract(
+                    requiredArtifacts,
+                    true,
+                    true,
+                    true),
+                [],
+                blockers,
+                false);
+        }
+    }
+
+    public sealed class PersonalDuckCreekStateMaritalPilotModule :
+        IProductModule
+    {
+        public const string DataProfileId =
+            "pldc-auto-state-marital-microcase";
+        public const string AutomationIdFamily =
+            "PLDC-AUTO-STATE-MARITAL";
+
+        public ProductModuleDescriptor Descriptor { get; } =
+            PersonalDuckCreekAutoSmokePilotModule.Create(
+                "personal-duckcreek-auto-state-marital-pilot",
+                "Personal Auto state and marital rate-filing microcase",
+                AutomationIdFamily,
+                DataProfileId,
+                [
+                    "account-state",
+                    "marital-status",
+                    "account-readiness",
+                    "stable-frame-paths",
+                    "pii-safe-evidence-policy"
+                ],
+                requiresQuoteHandoff: false);
+    }
+
     public sealed class ProductModuleConfigurationException : Exception
     {
         public ProductModuleConfigurationException(string message)

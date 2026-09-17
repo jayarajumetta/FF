@@ -103,6 +103,65 @@ public class PilotDataProfileTests
     }
 
     [Test]
+    public void PersonalDuckCreekProfilesPreserveSourceAndBlockUnsafeData()
+    {
+        var catalog = ReadRepositoryCatalog("pldc-auto-pilot.json");
+        var provider = new PilotDataProfileProvider(
+            catalog,
+            () => ValidationTime);
+        var smoke = provider.Resolve(
+            PersonalDuckCreekAutoSmokePilotModule.DataProfileId,
+            "qa",
+            "AZ");
+        var microcase = provider.Resolve(
+            PersonalDuckCreekStateMaritalPilotModule.DataProfileId,
+            "qa",
+            "AL");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(catalog.SourceFiles, Has.Count.EqualTo(50));
+            Assert.That(
+                catalog.SourceFiles.Single(source =>
+                    source.Path.EndsWith(
+                        "211_Smoke_Test_Auto.feature",
+                        StringComparison.Ordinal)).Sha256,
+                Is.EqualTo(
+                    "29FD4E2A4013FC06A3902F68411E6CF6829D21CC4D2A0DF93538660B0E13A8E1"));
+            Assert.That(
+                catalog.SourceFiles.Single(source =>
+                    source.Path.EndsWith(
+                        "AccountInformationPage.cs",
+                        StringComparison.Ordinal)).Sha256,
+                Is.EqualTo(
+                    "08EA1A8FEE8C7C35B5AF2DE7CB826AF29A79C5E525A489E1C5721B27C58749F9"));
+            Assert.That(smoke.IsRunnable, Is.False);
+            Assert.That(
+                smoke.Values["proposal.writingCompany"],
+                Is.EqualTo("ANG"));
+            Assert.That(
+                smoke.Values["account.maritalStatus"],
+                Is.EqualTo("Single"));
+            Assert.That(
+                smoke.Profile.MissingRequiredKeys,
+                Does.Contain("proposal.effectiveDate"));
+            Assert.That(microcase.IsRunnable, Is.False);
+            Assert.That(
+                microcase.Values["address.stateName"],
+                Is.EqualTo("Alabama"));
+            Assert.That(
+                microcase.Profile.MissingRequiredKeys,
+                Does.Contain("account.maritalStatus"));
+            Assert.That(
+                microcase.Values.Keys.Any(key =>
+                    key.Contains(
+                        "password",
+                        StringComparison.OrdinalIgnoreCase)),
+                Is.False);
+        });
+    }
+
+    [Test]
     public void ResolutionUsesExplicitPrecedence()
     {
         var catalog = ValidCatalog();

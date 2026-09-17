@@ -2,10 +2,12 @@
   "schemaVersion": 1,
   "catalogVersion": "0.1.0-template",
   "provenance": "Replace with Azure DevOps-owned mappings before gated publication.",
-  "checksum": "BB1EC6FB7816481DAF407BADDBFC19125737A61E469F89B74F0BA9DDA9DED8C6",
+  "checksum": "B5810795F562F7C4A64C2AB16291B2956DE46B38B9068984554FFD48E41C8B23",
   "mappings": [],
   "deferredAutomationIds": [
     "CLDC-BAP-SMOKE:AL",
-    "EQ-BOP-SMOKE:AL"
+    "EQ-BOP-SMOKE:AL",
+    "PLDC-AUTO-SMOKE:AZ",
+    "PLDC-AUTO-STATE-MARITAL:AL"
   ]
 }

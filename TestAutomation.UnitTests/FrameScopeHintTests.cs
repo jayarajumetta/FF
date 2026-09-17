@@ -126,6 +126,57 @@ public class FrameScopeHintTests
         });
     }
 
+    [Test]
+    public void MultipleCatalogsRemainIndependentAndRejectScopeCollisions()
+    {
+        var policy = Catalog(
+            new FrameScopeHint
+            {
+                ScopeId = "policy",
+                PageIndex = 0,
+                FramePath = ["policy-frame"]
+            });
+        policy.Checksum = FrameScopeHintValidator.ComputeChecksum(policy);
+        var account = Catalog(
+            new FrameScopeHint
+            {
+                ScopeId = "account",
+                PageIndex = 0,
+                FramePath = ["shell-frame", "account-frame"]
+            });
+        account.CatalogVersion = "2.0.0";
+        account.Checksum = FrameScopeHintValidator.ComputeChecksum(account);
+
+        var provider = new FrameScopeHintProvider([policy, account]);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(provider.Hints, Has.Count.EqualTo(2));
+            Assert.That(
+                provider.Require("account").FramePath,
+                Is.EqualTo(new[] { "shell-frame", "account-frame" }));
+            Assert.That(
+                () => new FrameScopeHintProvider([policy, policy]),
+                Throws.TypeOf<FrameScopeConfigurationException>()
+                    .With.Message.Contains("ambiguous across catalogs"));
+        });
+    }
+
+    [Test]
+    public void CatalogOptionsRejectDuplicatePaths()
+    {
+        var options = new FrameScopeHintOptions
+        {
+            CatalogPath = "first.json",
+            AdditionalCatalogPaths = ["FIRST.JSON"]
+        };
+
+        Assert.That(
+            options.Validate,
+            Throws.TypeOf<FrameScopeConfigurationException>()
+                .With.Message.Contains("Duplicate"));
+    }
+
     private static FrameScopeHintCatalog Catalog(
         params FrameScopeHint[] hints) =>
         new()

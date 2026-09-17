@@ -1,0 +1,353 @@
+{
+  "schemaVersion": 1,
+  "catalogVersion": "0.1.0",
+  "sourceRepository": "PnC_DC_TestAutomation",
+  "sourceFiles": [
+    {
+      "path": "Tosca.runsettings",
+      "sha256": "09CD6640F2027DDA82C34AB8C5DF5A1659FBA0CB701B7DD11CE6466ACB362839"
+    },
+    {
+      "path": "reqnroll.json",
+      "sha256": "1C55AF84CB460A12F39836C47D165E8FC5FA3634674F7CCAFDB699FDBD012D54"
+    },
+    {
+      "path": "Parallelization.cs",
+      "sha256": "84F99328B9AE0CC3094383AAD629E3311B6CC0395228EE4B285A05F962DC906D"
+    },
+    {
+      "path": "Directory.Build.props",
+      "sha256": "D0BFAA8E753FB6F11FCF923600E61E59FE93A0A7AEF64C8AE3B45365436BC2C8"
+    },
+    {
+      "path": "Directory.Build.targets",
+      "sha256": "16B4A4178AE416E528620A17387C4A6A667F5091605326E0EFBA21E65E61A163"
+    },
+    {
+      "path": "config/framework.json",
+      "sha256": "CE7D2BE7BBB09A4BDC8C13F42A164F78B2B3E14BD6001CC2D1AF623B8201B065"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/PersonalLines.DuckCreek.Tests.csproj",
+      "sha256": "AEF69DBB34D444B94D23F2E784C2647805BA4BE27478DA4E23142BCFEFC15EC7"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/Features/Smoke/211_Smoke_Test_Auto.feature",
+      "sha256": "29FD4E2A4013FC06A3902F68411E6CF6829D21CC4D2A0DF93538660B0E13A8E1"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/Features/181_Auto_Rate_Filings_Policy_1_NB.feature",
+      "sha256": "54A0CD54779CCACF1059B0FC443F0331354BA72090597F514A62D67BEC8E7568"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/ApplicationSteps.cs",
+      "sha256": "326A9B4CD09C5A06FA2F946FE4C8D499B006E1D726F6E30CF6A7D46391BC4D4A"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/SmokeTestAutoSteps.cs",
+      "sha256": "27C3FC6B2AB056509FBD04CD22AB5823B570A04C0320DDA5303DAD82F12C8934"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/StepDefinitions/AutoRateFilingsPolicy1NBSteps.cs",
+      "sha256": "9E600479C3B0FB89369AD6B3708B34E66F3C7BC82756B355C1B50E7EB68B2416"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/Hooks/TestHooks.cs",
+      "sha256": "9E9EB286D394E18E42DD61545FE2AB538117063E28C224CB1D08BCC5A812877D"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/TestData/Scenarios/Smoke/211_smoke_test_auto_az_ang.json",
+      "sha256": "2B4C89AB92BEF485A0ADA1BE91007710850E8CA5CBC76FC5F1780DDA11CE85B0"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/TestData/Scenarios/181_auto_rate_filings_policy_1_nb_al.json",
+      "sha256": "2F9A630342BC3E91210931E04C80B24E2CB38377B647875EED0A47ECC0641C4E"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/TestData/ExternalDataOverrides.json",
+      "sha256": "6468C06FEB179E858B026AA889BA3732B9D424C476F2ECC68648CA7EDB521BAD"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/TestData/Layered/manifest.json",
+      "sha256": "6E04D132B1EF5273002B8FF10CABB069588720B4341903CEB0C8EB122C8F2F63"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/TestData/Layered/181_Auto_Rate_Filings_Policy_1_NB_AL/Base.json",
+      "sha256": "2F9A630342BC3E91210931E04C80B24E2CB38377B647875EED0A47ECC0641C4E"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/TestData/Layered/181_Auto_Rate_Filings_Policy_1_NB_AL/StateOverrides.json",
+      "sha256": "1EFDA964D7C6B0F9561634BC11D22161B7DAB593509412104CD4E56933D3F128"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/Pages/ApplicationPage.cs",
+      "sha256": "90B0828EE029D1670E95BD684EE6F0745ABE296EEB821CFD49AF12D94D5DC457"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/Pages/ProposalPage.cs",
+      "sha256": "D23DD7FEA09A862235684FB3F989435A84D50FCA4AE3C064476E9EB7F271F1A3"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/Pages/PolicyWorkflowPage.cs",
+      "sha256": "AF180304356A58B156515D41BCEC74CC35FA945601B264586CDA2635EF4ACC1C"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/Pages/AccountInformationPage.cs",
+      "sha256": "08EA1A8FEE8C7C35B5AF2DE7CB826AF29A79C5E525A489E1C5721B27C58749F9"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/Pages/NavigationPage.cs",
+      "sha256": "D02AF83EB54B2A72DA0B8BC9C8D456A6F249BF43B58D7AD658C0CA7022D8B676"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/Pages/Locators/ProposalLocators.cs",
+      "sha256": "6F733C7F953AB384FBE4D96F2E511046F003C0FD4099BE977E7877BCCAB8E146"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/Pages/Locators/PolicyWorkflowLocators.cs",
+      "sha256": "9AD784A417C0ABB205ECD6DADDB101CFBCAB1A2D123FAA76769C129573793FDE"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/Pages/Locators/AccountInformationLocators.cs",
+      "sha256": "4CD98D69BD4B19DDB80764BF41E53969C3023CDF7E87A9D72C40FD01C84BE073"
+    },
+    {
+      "path": "tests/PersonalLines.DuckCreek.Tests/Pages/Locators/NavigationLocators.cs",
+      "sha256": "F816371B389C893589F80FD5A34F06EC90707285D2B97E2DD74934424A3F5E62"
+    },
+    {
+      "path": "src/InsuranceAutomation.Core/InsuranceAutomation.Core.csproj",
+      "sha256": "EEBBE0FEEEBDD9B0DA951037ECEC102DD05AE8A2C094E2504D791FF1B6076AD1"
+    },
+    {
+      "path": "src/InsuranceAutomation.Core/FrameworkConfig.cs",
+      "sha256": "A64B67A6A4595AE888375D9FE8A69F6A6A7242BBD5CE264375F6E6155CA82211"
+    },
+    {
+      "path": "src/InsuranceAutomation.Core/TestOutputPaths.cs",
+      "sha256": "CD265167BE34777C82907FA9E6777106445F088EBB65D4024A81BF9F0A670381"
+    },
+    {
+      "path": "src/InsuranceAutomation.Core/BrowserSession.cs",
+      "sha256": "8C33CE59D2CB1570A85EC6BF63BF768E843C1368139AFC29914740FBC283B3A5"
+    },
+    {
+      "path": "src/InsuranceAutomation.Core/ScenarioData.cs",
+      "sha256": "B6494F1C79BC5FC62D3E1152BC83A75AB1080A3983941695B8180A5E61D5D953"
+    },
+    {
+      "path": "src/InsuranceAutomation.Core/UiActions.cs",
+      "sha256": "9B6980CAEEB015B912E5F815B529B5CB7746738C6C13420C60F942F5A7DBB507"
+    },
+    {
+      "path": "src/InsuranceAutomation.Core/ComponentAwareControlActions.cs",
+      "sha256": "4E3DEA2D4ACFBB4882870C396A6123BFA26F974BB56DE026A2BB362F7DFCE0FA"
+    },
+    {
+      "path": "src/InsuranceAutomation.Core/ControlIntent.cs",
+      "sha256": "222BBC2B9CE1C1FA57868C38A071CD1A38FE641D757986EA13E1887743BEAAF5"
+    },
+    {
+      "path": "src/InsuranceAutomation.Core/FrameExecutionContext.cs",
+      "sha256": "6357752322A9F1A944845A47C08A2B5DAF9FCD42246D1A79E2A038B1FC5973FF"
+    },
+    {
+      "path": "src/InsuranceAutomation.Core/InteractionHighlighter.cs",
+      "sha256": "3DADD9F1791C05ECBD19E4F4C26DEF21F901DDF10D2048C95D4815432FB70411"
+    },
+    {
+      "path": "src/InsuranceAutomation.Core/DeferredVerificationCollector.cs",
+      "sha256": "A910B76541A8811B88BE193762005A23589EB65B79154B9F6FDC9DB5370E28D2"
+    },
+    {
+      "path": "src/InsuranceAutomation.Core/ScenarioAttemptContext.cs",
+      "sha256": "78A25CB18050188E361B11322A1F69C7E29F57CD6D2E1EF9B34D3F8635EDD996"
+    },
+    {
+      "path": "src/InsuranceAutomation.Core/ScenarioReport.cs",
+      "sha256": "CAF488306FFF359FE08F01AC4B562CD228ACC665B20FFFABCF7F839759F60611"
+    },
+    {
+      "path": "src/InsuranceAutomation.Core/RunLogger.cs",
+      "sha256": "9EF78C761ADAD0798A6D9152EE58DF4557C412C0C7AF35EC53BC6A99736B0FD3"
+    },
+    {
+      "path": "src/InsuranceAutomation.Core/SafeFileAccess.cs",
+      "sha256": "72D1699823C20630C0FDF4DC9E0A983B656F7A717DDD2BEF2A7FDCD74B852B22"
+    },
+    {
+      "path": "src/InsuranceAutomation.NUnit/InsuranceAutomation.NUnit.csproj",
+      "sha256": "62A43A5B1D9E661CD9B93F4AFD3FBB7B7B60A2709F6027086E6DF4CC9642F0B5"
+    },
+    {
+      "path": "src/InsuranceAutomation.NUnit/ConfiguredRetryAttribute.cs",
+      "sha256": "B7E8637DC5B06C806D8964660162F31D757E957746D80BC9C7388DE7E05F6375"
+    },
+    {
+      "path": "src/InsuranceAutomation.NUnit/NUnitScenarioEvidenceFinalizer.cs",
+      "sha256": "59E448B8C0DED42878BC590A66ACF976AE3DEB8C25706F9FFDD805F25A3E947B"
+    },
+    {
+      "path": "src/InsuranceAutomation.NUnit/NUnitEvidencePublisher.cs",
+      "sha256": "C20C022EACD5A2E92655B7EAD2EFBE96E014D27A9984900F729DF98DEAE29456"
+    },
+    {
+      "path": "src/InsuranceAutomation.NUnit/NUnitEvidenceAttachment.cs",
+      "sha256": "FEC7A4944173F1F11F6D658CDE0B1343174026E6A1E84EAA8D7053B5E9CBF817"
+    },
+    {
+      "path": "src/InsuranceAutomation.Retry.Generator/InsuranceAutomation.Retry.Generator.csproj",
+      "sha256": "99C9F7AC7A12A6FDA66C024FAC78BA9688911186E886DB3EFCBC3E2E99C5B45A"
+    },
+    {
+      "path": "src/InsuranceAutomation.Retry.Generator/RetryGeneratorPlugin.cs",
+      "sha256": "ADD1F6F6DC9310B2E2A4088A6222EB2E260736453437EC8EF10134E60ABB293B"
+    }
+  ],
+  "profiles": [
+    {
+      "profileId": "pldc-auto-az-ang-smoke",
+      "version": "0.1.0",
+      "moduleId": "personal-duckcreek-auto-az-ang-pilot",
+      "environment": "qa",
+      "state": "AZ",
+      "mode": "NonRunnable",
+      "blockedReason": "QA and application owners must approve sanitized client data, current date/agent, deterministic conditional outcomes, exact test IDs/frame paths, PII-safe evidence, credentials, and quote round-trip expectations.",
+      "validUntilUtc": "2027-12-31T23:59:59Z",
+      "requiredKeys": [
+        "client.firstName",
+        "client.lastName",
+        "client.dateOfBirth",
+        "client.phone",
+        "client.email",
+        "address.line1",
+        "address.line2",
+        "address.city",
+        "address.stateName",
+        "address.stateCode",
+        "address.zip",
+        "account.maritalStatus",
+        "account.residedNinetyDays",
+        "account.isResidence",
+        "proposal.product",
+        "proposal.effectiveDate",
+        "proposal.agentCode",
+        "proposal.writingCompany",
+        "proposal.useMailingAddress",
+        "identity.ssn",
+        "conditional.invalidAddressExpected",
+        "conditional.ssnWarningExpected",
+        "conditional.confirmSsnExpected",
+        "conditional.existingClientExpected",
+        "quote.identityPattern",
+        "quote.saveExpectation",
+        "quote.searchExpectation",
+        "quote.reopenExpectation"
+      ],
+      "missingRequiredKeys": [
+        "client.firstName",
+        "client.lastName",
+        "client.dateOfBirth",
+        "client.phone",
+        "client.email",
+        "address.line1",
+        "address.line2",
+        "address.city",
+        "address.zip",
+        "proposal.effectiveDate",
+        "proposal.agentCode",
+        "identity.ssn",
+        "conditional.invalidAddressExpected",
+        "conditional.ssnWarningExpected",
+        "conditional.confirmSsnExpected",
+        "conditional.existingClientExpected",
+        "quote.identityPattern",
+        "quote.saveExpectation",
+        "quote.searchExpectation",
+        "quote.reopenExpectation"
+      ],
+      "layers": [
+        {
+          "name": "source-safe-intent",
+          "precedence": 100,
+          "values": {
+            "account.maritalStatus": "Single",
+            "account.residedNinetyDays": "true",
+            "account.isResidence": "true",
+            "proposal.product": "Personal Auto",
+            "proposal.writingCompany": "ANG",
+            "proposal.useMailingAddress": "true"
+          }
+        },
+        {
+          "name": "state-az",
+          "precedence": 200,
+          "values": {
+            "address.stateName": "Arizona",
+            "address.stateCode": "AZ"
+          }
+        }
+      ],
+      "checksum": "1336CE0BAD83CECA1C35BBD27BCA3446365E4BF8EA3B82AB6ED8C94C6C8DD071"
+    },
+    {
+      "profileId": "pldc-auto-state-marital-microcase",
+      "version": "0.1.0",
+      "moduleId": "personal-duckcreek-auto-state-marital-pilot",
+      "environment": "qa",
+      "state": "AL",
+      "mode": "NonRunnable",
+      "blockedReason": "No audited Policy 1 NB row selects Married. QA must supply an approved sanitized Married AL row, exact state/marital test IDs, PII-safe evidence, credentials, and retry cleanup before this proof can run.",
+      "validUntilUtc": "2027-12-31T23:59:59Z",
+      "requiredKeys": [
+        "client.firstName",
+        "client.lastName",
+        "client.dateOfBirth",
+        "client.phone",
+        "client.email",
+        "address.line1",
+        "address.line2",
+        "address.city",
+        "address.stateName",
+        "address.stateCode",
+        "address.zip",
+        "account.maritalStatus",
+        "account.residedNinetyDays",
+        "account.isResidence",
+        "account.pageExpectation"
+      ],
+      "missingRequiredKeys": [
+        "client.firstName",
+        "client.lastName",
+        "client.dateOfBirth",
+        "client.phone",
+        "client.email",
+        "address.line1",
+        "address.line2",
+        "address.city",
+        "address.zip",
+        "account.maritalStatus"
+      ],
+      "layers": [
+        {
+          "name": "source-safe-intent",
+          "precedence": 100,
+          "values": {
+            "account.residedNinetyDays": "true",
+            "account.isResidence": "true",
+            "account.pageExpectation": "Account Information"
+          }
+        },
+        {
+          "name": "state-al",
+          "precedence": 200,
+          "values": {
+            "address.stateName": "Alabama",
+            "address.stateCode": "AL"
+          }
+        }
+      ],
+      "checksum": "42E8EF802CB6EAB1AE8383FB2219C3C6C020EDB3E3AB965B93C9DF353BDB0AF5"
+    }
+  ]
+}
