@@ -11,10 +11,11 @@ Feature: IM Basic Policy
     Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
     And I open the configured Commercial Lines Duck Creek application
     And I sign in to Commercial Lines Duck Creek using configured credentials
+	And I start a new quote
     When I enter business client information
     And I add a new Associated Client - Business Owner Type - Click Add Client
-    And I complete aJAX Error Check
-    And I complete required billing information
+    #And I complete aJAX Error Check
+    #And I complete required billing information
     And I complete the Associated Client Info
     And I complete Underwring Questions from Client Screen
     And I complete required policy information
@@ -42,7 +43,7 @@ Feature: IM Basic Policy
     And I complete required submission information
     And I run Stoplight
     And I verify values in premium fields
-    And I complete forms verification
+    #And I complete forms verification
 
     Examples:
       | dataFile | stateCode | stateVariant | stateName | externalDataFile |

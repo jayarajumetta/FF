@@ -77,6 +77,7 @@ public sealed class BrowserSession : IAsyncDisposable
         var path = Path.Combine(_artifactDirectory, "screenshots", Safe(fileName));
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         await _page.ScreenshotAsync(new PageScreenshotOptions { Path = path, FullPage = true });
+        
         return path;
     }
     public async Task<byte[]> CaptureScreenshotBytesAsync()

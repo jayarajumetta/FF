@@ -33,7 +33,7 @@ public sealed class NavigationPage
         _ui.VerifyAsync(_locators.AcceptUM, expected, property, new ControlIntent("Navigation", "AcceptUM"));
 
     public Task WaitForAccountsReceivableHeadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "AccountsReceivableHeading"));
+        _ui.WaitAsync(_locators.RiskAccountsReceivableSearchResult, expected, new ControlIntent("Navigation", "AccountsReceivableHeading"));
 
     public Task ClickAccountsReceivableUWQuestionsAsync() =>
         _ui.ClickAsync(_locators.AccountsReceivableUWQuestions, new ControlIntent("Navigation", "AccountsReceivableUWQuestions"));
@@ -312,7 +312,7 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.BillType, key, new ControlIntent("Navigation", "BillType"));
 
     public Task ClickNavigationBillingAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "NavigationBilling"));
+        _ui.ClickAsync(_locators.Billing, new ControlIntent("Navigation", "NavigationBilling"));
 
     public Task WaitForBillingAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "Billing"));
@@ -858,7 +858,13 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.DescriptionOfOperations, key, new ControlIntent("Navigation", "DescriptionOfOperations"));
 
     public Task WaitForDescriptionOfSpecifiedOperationAsync(string expected) =>
-        _ui.WaitAsync(_locators.DescriptionOfSpecifiedOperation, expected, new ControlIntent("Navigation", "DescriptionOfSpecifiedOperation"));
+        _ui.WaitAsync(_locators.DescriptionOfOperations, expected, new ControlIntent("Navigation", "DescriptionOfSpecifiedOperation"));
+
+    public Task WaitFostimatedPremiumAsync(string expected) =>
+        _ui.WaitAsync(_locators.EstimatedPremium, expected, new ControlIntent("Navigation", "EstimatedPremium"));
+
+    public Task EnterEstimatedPremiumsAsync(string value) =>
+        _ui.FillAsync(_locators.EstimatedPremium, value, new ControlIntent("Navigation", "EstimatedPremium"));
 
     public Task VerifyDescriptionOfSpecifiedOperationAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.DescriptionOfSpecifiedOperation, expected, property, new ControlIntent("Navigation", "DescriptionOfSpecifiedOperation"));
@@ -1005,7 +1011,7 @@ public sealed class NavigationPage
         _ui.ClickAsync(_locators.EmployersLiab, new ControlIntent("Navigation", "EmployersLiab"));
 
     public Task ClickEndorsementAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "Endorsement"));
+        _ui.ClickAsync(_locators.Endorsement, new ControlIntent("Navigation", "Endorsement"));
 
     public Task WaitForEndorsementHeadingAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "EndorsementHeading"));
@@ -1578,7 +1584,7 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.LocationOfCoveredOperations, key, new ControlIntent("Navigation", "LocationOfCoveredOperations"));
 
     public Task ClickLossExperienceAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "LossExperience"));
+        _ui.ClickAsync(_locators.LossExperience, new ControlIntent("Navigation", "LossExperience"));
 
     public Task WaitForLossExperienceHeadingAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "LossExperienceHeading"));
@@ -1629,7 +1635,7 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.ModificationFactor, key, new ControlIntent("Navigation", "ModificationFactor"));
 
     public Task ClickMotorTruckCargoUWQuestionsAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "MotorTruckCargoUWQuestions"));
+        _ui.ClickAsync(_locators.MotorTruckCargo, new ControlIntent("Navigation", "MotorTruckCargoUWQuestions"));
 
     public Task WaitForMotorcycleLiabilityAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "MotorcycleLiability"));
@@ -1869,7 +1875,7 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.NonOwnedAuto, key, new ControlIntent("Navigation", "NonOwnedAuto"));
 
     public Task ClickNotepadAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "Notepad"));
+        _ui.ClickAsync(_locators.Notepad, new ControlIntent("Navigation", "Notepad"));
 
     public Task WaitForNotepadHeadingAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "NotepadHeading"));
@@ -2127,7 +2133,7 @@ public sealed class NavigationPage
         _ui.ClickAsync(_locators.PolicyCovgerage, new ControlIntent("Navigation", "IMNavigationLinksPolicyCovg"));
 
     public Task WaitForPolicyCovgMainPolicyCovgAsync(string expected) =>
-        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "PolicyCovgMainPolicyCovg"));
+        _ui.WaitAsync(_locators.PolicyCovg, expected, new ControlIntent("Navigation", "PolicyCovgMainPolicyCovg"));
 
     public Task WaitForPolicyCovgAsync(string expected) =>
         _ui.WaitAsync(_locators.PolicyCovg, expected, new ControlIntent("Navigation", "PolicyCovg"));
@@ -2352,7 +2358,7 @@ public sealed class NavigationPage
         _ui.ClickAsync(_locators.ReturnToQuote, new ControlIntent("Navigation", "ReturnToQuote"));
 
     public Task ClickRiskAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "Risk"));
+        _ui.ClickAsync(_locators.Risk, new ControlIntent("Navigation", "Risk"));
 
     public Task ClickRiskAccountsReceivableOKAsync() =>
         _ui.ClickAsync(_locators.OK, new ControlIntent("Navigation", "RiskAccountsReceivableOK"));
@@ -2601,13 +2607,13 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.Stories, key, new ControlIntent("Navigation", "Stories"));
 
     public Task WaitForSubmissionAsync(string expected) =>
-        _ui.WaitAsync(_locators.PageTop, expected, new ControlIntent("Navigation", "Submission"));
+        _ui.WaitAsync(_locators.Submission, expected, new ControlIntent("Navigation", "Submission"));
 
     public Task PressSubmissionAsync(string key) =>
         _ui.PressAsync(_locators.PageTop, key, new ControlIntent("Navigation", "Submission"));
 
     public Task ClickSubmissionAsync() =>
-        _ui.ClickAsync(_locators.PageTop, new ControlIntent("Navigation", "Submission"));
+        _ui.ClickAsync(_locators.Submission, new ControlIntent("Navigation", "Submission"));
 
     public Task WaitForSubmissionHeadingAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTop, expected, new ControlIntent("Navigation", "SubmissionHeading"));
@@ -2623,6 +2629,9 @@ public sealed class NavigationPage
 
     public Task EnterTextBoxAsync(string value) =>
         _ui.FillAsync(_locators.TextBox, value, new ControlIntent("Navigation", "TextBox"));
+
+    public Task PressAddressTextBoxAsync(string key) =>
+       _ui.PressAsync(_locators.TextBox, key, new ControlIntent("Navigation", "TapesCoverage"));
 
     public Task ClickThirdPartyDesigneeAsync() =>
         _ui.ClickAsync(_locators.ThirdPartyDesignee, new ControlIntent("Navigation", "ThirdPartyDesignee"));
@@ -3056,7 +3065,7 @@ public sealed class NavigationPage
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);
 public Task<string> CaptureDescriptionOfSpecifiedOperationAsync(string property = "") =>
-        _ui.CaptureAsync(_locators.DescriptionOfSpecifiedOperation, property, new ControlIntent("Navigation", "DescriptionOfSpecifiedOperation"));
+        _ui.CaptureAsync(_locators.DescriptionOfOperations, property, new ControlIntent("Navigation", "DescriptionOfSpecifiedOperation"));
 
     public Task<string> CaptureVehicleSchedule1VehAsync(string property = "") =>
         _ui.CaptureAsync(_locators.VehicleSchedule1Veh, property, new ControlIntent("Navigation", "VehicleSchedule1Veh"));

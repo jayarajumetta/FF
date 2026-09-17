@@ -52,6 +52,8 @@ public sealed class CoveragesPage
 
     public Task PressCoverageFormToBeAddedAsync(string key) =>
         _ui.PressAsync(_locators.CoverageFormToBeAdded, key, new ControlIntent("Coverages", "CoverageFormToBeAdded"));
+    public Task WaitForDescriptionAsync(string expected) =>
+        _ui.WaitAsync(_locators.Description, expected, new ControlIntent("Coverages", "Description"));
 
     public Task EnterDescriptionAsync(string value) =>
         _ui.FillAsync(_locators.Description, value, new ControlIntent("Coverages", "Description"));
