@@ -24,7 +24,10 @@ from introducing parallel infrastructure.
    required controls into passing tests.
    Shared resolution returns a `ResolvedControl` that carries its page/frame
    scope into the action, semantic postcondition, and evidence record. Missing
-   controls and multiple visible matches are fatal.
+   controls and multiple visible matches are fatal. A required product frame
+   scope maps to one exact runtime frame by stable name, page index, and depth;
+   bare `iframe`, wildcard, missing, and ambiguous mappings are rejected and
+   never fall back to the top document.
 6. **Retries have one owner per boundary.** Page actions use Playwright
    auto-waiting and shared control helpers. `IApiService` is the only HTTP
    transient-retry path, and callers must explicitly mark a request as
@@ -85,8 +88,9 @@ the contracts owned here.
   state instead of treating visibility as success.
 - Capture supports value, checked, and selected semantics.
 - A resolved frame scope must be passed through to the action that uses it and
-  recorded in evidence. Product adapters cannot silently fall back to the top
-  page.
+  recorded in redacted runtime-locator evidence. Nested depth and the logical
+  scope ID remain attached through postcondition verification. Product
+  adapters cannot silently fall back to the top page.
 - Every checkpoint screenshot has a unique ordinal/name. A cached
   `scenario.png` is not sufficient evidence.
 - Forms-only and full-SFP validation use the same orchestration service. Missing

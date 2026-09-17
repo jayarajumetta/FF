@@ -1,0 +1,269 @@
+#nullable enable
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
+using System.Text.RegularExpressions;
+
+namespace PnCTestAutomation.Controls
+{
+    public sealed class FrameScopeHintOptions
+    {
+        public string CatalogPath { get; set; } = Path.Combine(
+            "Resources",
+            "FrameHints",
+            "cldc-bap-frame-hints.json");
+
+        public void Validate()
+        {
+            if (string.IsNullOrWhiteSpace(CatalogPath) ||
+                !Path.GetExtension(CatalogPath).Equals(
+                    ".json",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new FrameScopeConfigurationException(
+                    "FrameHints:CatalogPath must identify a JSON file.");
+            }
+        }
+    }
+
+    public sealed class FrameScopeHintCatalog
+    {
+        public int SchemaVersion { get; set; }
+        public string CatalogVersion { get; set; } = "";
+        public string SourcePath { get; set; } = "";
+        public string SourceSha256 { get; set; } = "";
+        public string Checksum { get; set; } = "";
+        public List<FrameScopeHint> Hints { get; set; } = [];
+        public List<string> RejectedSourceHints { get; set; } = [];
+    }
+
+    public sealed record FrameScopeHint
+    {
+        public string ScopeId { get; init; } = "";
+        public int PageIndex { get; init; }
+        public List<string> FramePath { get; init; } = [];
+    }
+
+    public interface IFrameScopeHintProvider
+    {
+        IReadOnlyList<FrameScopeHint> Hints { get; }
+        FrameScopeHint Require(string scopeId);
+    }
+
+    public sealed class FrameScopeHintProvider : IFrameScopeHintProvider
+    {
+        private static readonly JsonSerializerOptions JsonOptions = new()
+        {
+            PropertyNameCaseInsensitive = true,
+            ReadCommentHandling = JsonCommentHandling.Skip,
+            AllowTrailingCommas = true
+        };
+
+        private readonly IReadOnlyDictionary<string, FrameScopeHint> _hints;
+
+        public FrameScopeHintProvider(FrameScopeHintOptions options)
+            : this(Load(options))
+        {
+        }
+
+        public FrameScopeHintProvider(FrameScopeHintCatalog catalog)
+        {
+            FrameScopeHintValidator.Validate(catalog);
+            Hints = catalog.Hints.ToArray();
+            _hints = Hints.ToDictionary(
+                hint => hint.ScopeId,
+                StringComparer.Ordinal);
+        }
+
+        public IReadOnlyList<FrameScopeHint> Hints { get; }
+
+        public FrameScopeHint Require(string scopeId)
+        {
+            if (!_hints.TryGetValue(scopeId, out var hint))
+            {
+                throw new FrameScopeConfigurationException(
+                    $"Required frame scope hint '{scopeId}' is not approved.");
+            }
+            return hint;
+        }
+
+        private static FrameScopeHintCatalog Load(
+            FrameScopeHintOptions options)
+        {
+            ArgumentNullException.ThrowIfNull(options);
+            options.Validate();
+            var path = Path.IsPathRooted(options.CatalogPath)
+                ? options.CatalogPath
+                : Path.Combine(AppContext.BaseDirectory, options.CatalogPath);
+            try
+            {
+                return JsonSerializer.Deserialize<FrameScopeHintCatalog>(
+                           File.ReadAllText(Path.GetFullPath(path)),
+                           JsonOptions)
+                       ?? throw new JsonException();
+            }
+            catch (Exception exception) when (
+                exception is IOException or JsonException)
+            {
+                throw new FrameScopeConfigurationException(
+                    "The configured frame hint catalog is missing or malformed.");
+            }
+        }
+    }
+
+    public static class FrameScopeHintValidator
+    {
+        public static void Validate(FrameScopeHintCatalog catalog)
+        {
+            ArgumentNullException.ThrowIfNull(catalog);
+            if (catalog.SchemaVersion != 1)
+                throw new FrameScopeConfigurationException(
+                    $"Unsupported frame hint schema '{catalog.SchemaVersion}'.");
+            Require(catalog.CatalogVersion, "catalogVersion");
+            Require(catalog.SourcePath, "sourcePath");
+            RequireHash(catalog.SourceSha256, "sourceSha256");
+            var duplicate = catalog.Hints
+                .GroupBy(hint => hint.ScopeId, StringComparer.Ordinal)
+                .FirstOrDefault(group => group.Count() > 1);
+            if (duplicate != null)
+            {
+                throw new FrameScopeConfigurationException(
+                    $"Duplicate frame scope hint '{duplicate.Key}'.");
+            }
+            foreach (var hint in catalog.Hints)
+            {
+                Require(hint.ScopeId, "scopeId");
+                StableIdentifier(hint.ScopeId, "scopeId");
+                if (hint.PageIndex < 0 || hint.FramePath.Count == 0)
+                {
+                    throw new FrameScopeConfigurationException(
+                        $"Frame scope hint '{hint.ScopeId}' has invalid page/path.");
+                }
+                foreach (var frameName in hint.FramePath)
+                {
+                    Require(frameName, "frameName");
+                    StableIdentifier(frameName, "frameName");
+                    if (IsGeneric(frameName))
+                    {
+                        throw new FrameScopeConfigurationException(
+                            $"Frame scope hint '{hint.ScopeId}' is generic or ambiguous.");
+                    }
+                }
+            }
+            foreach (var rejected in catalog.RejectedSourceHints)
+            {
+                if (!IsGeneric(rejected))
+                {
+                    throw new FrameScopeConfigurationException(
+                        $"Rejected source frame hint '{rejected}' is not generic.");
+                }
+            }
+            if (!catalog.Checksum.Equals(
+                    ComputeChecksum(catalog),
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new FrameScopeConfigurationException(
+                    "The frame hint catalog checksum is stale or invalid.");
+            }
+        }
+
+        public static string ComputeChecksum(FrameScopeHintCatalog catalog)
+        {
+            var lines = new List<string>
+            {
+                catalog.SchemaVersion.ToString(CultureInfo.InvariantCulture),
+                catalog.CatalogVersion.Trim(),
+                catalog.SourcePath.Trim(),
+                catalog.SourceSha256.Trim().ToUpperInvariant()
+            };
+            lines.AddRange(catalog.Hints
+                .OrderBy(hint => hint.ScopeId, StringComparer.Ordinal)
+                .Select(hint =>
+                    $"hint|{hint.ScopeId.Trim()}|{hint.PageIndex}|" +
+                    string.Join(
+                        ">",
+                        hint.FramePath.Select(value => value.Trim()))));
+            lines.AddRange(catalog.RejectedSourceHints
+                .OrderBy(value => value, StringComparer.Ordinal)
+                .Select(value => $"rejected|{value.Trim()}"));
+            return Convert.ToHexString(
+                SHA256.HashData(
+                    Encoding.UTF8.GetBytes(string.Join("\n", lines))));
+        }
+
+        private static bool IsGeneric(string value) =>
+            value.Trim().Equals("iframe", StringComparison.OrdinalIgnoreCase) ||
+            value.Trim().Equals("frame", StringComparison.OrdinalIgnoreCase) ||
+            value.Trim().Equals("*", StringComparison.Ordinal);
+
+        private static void StableIdentifier(string value, string name)
+        {
+            if (!Regex.IsMatch(
+                    value.Trim(),
+                    "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+                    RegexOptions.CultureInvariant,
+                    TimeSpan.FromSeconds(1)))
+            {
+                throw new FrameScopeConfigurationException(
+                    $"Frame hint {name} must be an exact stable identifier.");
+            }
+        }
+
+        private static void Require(string value, string name)
+        {
+            if (string.IsNullOrWhiteSpace(value) ||
+                value.Any(char.IsControl))
+            {
+                throw new FrameScopeConfigurationException(
+                    $"Frame hint {name} is missing or invalid.");
+            }
+        }
+
+        private static void RequireHash(string value, string name)
+        {
+            if (value.Length != 64 ||
+                value.Any(character => !Uri.IsHexDigit(character)))
+            {
+                throw new FrameScopeConfigurationException(
+                    $"Frame hint {name} must be a SHA-256 value.");
+            }
+        }
+    }
+
+    public static class FrameScopeHintMatcher
+    {
+        public static string? Match(
+            IReadOnlyList<FrameScopeHint> hints,
+            int pageIndex,
+            IReadOnlyList<string> framePath)
+        {
+            ArgumentNullException.ThrowIfNull(hints);
+            ArgumentNullException.ThrowIfNull(framePath);
+            var matches = hints.Where(hint =>
+                    hint.PageIndex == pageIndex &&
+                    hint.FramePath.SequenceEqual(
+                        framePath,
+                        StringComparer.Ordinal))
+                .ToArray();
+            if (matches.Length > 1)
+            {
+                throw new FrameScopeConfigurationException(
+                    "A runtime frame path matched multiple configured scopes.");
+            }
+            return matches.SingleOrDefault()?.ScopeId;
+        }
+    }
+
+    public sealed class FrameScopeConfigurationException : Exception
+    {
+        public FrameScopeConfigurationException(string message)
+            : base(message)
+        {
+        }
+    }
+}

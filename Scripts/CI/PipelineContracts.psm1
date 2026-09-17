@@ -173,6 +173,9 @@ function Test-PackageManifest {
         "metadata/shards-All-Debug.json",
         "metadata/shards-Forms-Full.json",
         "metadata/shards-ExpertQuotePilot-Full.json",
+        "metadata/shards-CommercialDuckCreekPilot-Full.json",
+        "test/Resources/DataProfiles/cldc-bap-pilot.json",
+        "test/Resources/FrameHints/cldc-bap-frame-hints.json",
         "runsettings/ci.runsettings",
         "config/shards.json",
         "config/testplans-mapping.template.json",
@@ -180,6 +183,7 @@ function Test-PackageManifest {
         "scripts/CI/Invoke-TestShard.ps1",
         "scripts/CI/Test-ShardOwnership.ps1",
         "scripts/CI/Install-Playwright.ps1",
+        "scripts/CI/Invoke-PackageSuite.ps1",
         "scripts/CI/Invoke-TestPlanPublication.ps1",
         "scripts/CI/Test-TestPlanPublisherSmoke.ps1",
         "scripts/CI/Test-TestPackage.ps1",
@@ -203,7 +207,8 @@ function Test-PackageManifest {
         "test/Resources/Contracts/",
         "test/Resources/ExpectedForms/",
         "test/Resources/ExpectedOutcomes/",
-        "test/Resources/DataProfiles/"
+        "test/Resources/DataProfiles/",
+        "test/Resources/FrameHints/"
     )) {
         if (@($manifestPaths | Where-Object {
                     $_.StartsWith(

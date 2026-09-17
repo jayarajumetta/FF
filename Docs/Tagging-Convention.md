@@ -51,6 +51,7 @@ unless the scenario has a *different* value for that tag.
 | Tag | Meaning |
 |-----|---------|
 | `@ExpertQuote` | Runs against the ExpertQuote web application |
+| `@CommercialDuckCreek` | Runs against the Commercial Lines DuckCreek application |
 | `@ExpertService` | Runs against ExpertService |
 | `@Express` | Runs against the Express (CLAS) application |
 
@@ -93,6 +94,10 @@ The ExpertQuote BOP pilot uses `EQ-BOP-SMOKE:AL`, is owned by
 `@EqBopAlPilot`, and is deliberately absent from production schedules while
 tagged `@NonRunnable`. Its isolated suite exists for discovery, package, and
 explicit ignored-result probes only.
+
+The Commercial DuckCreek BAP pilot uses `CLDC-BAP-SMOKE:AL`, is owned by
+`@CldcBapAlPilot`, and follows the same isolated `@NonRunnable`/`@NoRetry`
+contract. It is not part of scheduled production matrices.
 
 ---
 

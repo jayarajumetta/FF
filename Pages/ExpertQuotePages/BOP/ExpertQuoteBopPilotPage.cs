@@ -238,9 +238,12 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.BOP
             ISemanticControlActions Actions)> _runtime;
         private readonly Func<string, CancellationToken, Task> _screenshot;
 
-        public ExpertQuoteBopPilotPage(PlaywrightContext context)
+        public ExpertQuoteBopPilotPage(
+            PlaywrightContext context,
+            ISemanticControlActions actions)
         {
             ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(actions);
             _runtime = () =>
             {
                 var page = context.Page
@@ -249,7 +252,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.BOP
                 return (
                     new ControlScopeResolver(
                         new PlaywrightControlRuntime(page)),
-                    new SemanticControlActions());
+                    actions);
             };
             _screenshot = (path, _) =>
             {

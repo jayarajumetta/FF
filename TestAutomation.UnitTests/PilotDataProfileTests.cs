@@ -49,6 +49,60 @@ public class PilotDataProfileTests
     }
 
     [Test]
+    public void CommercialDuckCreekProfileHasCompleteRedactedProvenance()
+    {
+        var catalog = ReadRepositoryCatalog("cldc-bap-pilot.json");
+        var resolution = new PilotDataProfileProvider(
+                catalog,
+                () => ValidationTime)
+            .Resolve(
+                CommercialDuckCreekBapPilotModule.DataProfileId,
+                "qa",
+                "AL");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(catalog.SourceFiles, Has.Count.EqualTo(46));
+            Assert.That(
+                catalog.SourceFiles.Single(source =>
+                    source.Path.EndsWith(
+                        "012_bap_smoke_test_al.json",
+                        StringComparison.Ordinal)).Sha256,
+                Is.EqualTo(
+                    "6A6629A2281F495060137731320F03178068193B4DDBDB8C0DA0124C4E39E7C2"));
+            Assert.That(
+                catalog.SourceFiles.Single(source =>
+                    source.Path.EndsWith(
+                        "DuckCreekFrameHints.json",
+                        StringComparison.Ordinal)).Sha256,
+                Is.EqualTo(
+                    "6F4DDFABA85EA620CE17AD401AEB940B0F047B7C3FBF45FEF20F8999B1D25D32"));
+            Assert.That(resolution.IsRunnable, Is.False);
+            Assert.That(
+                resolution.Profile.MissingRequiredKeys,
+                Does.Contain("identity.ssn"));
+            Assert.That(
+                resolution.Profile.MissingRequiredKeys,
+                Does.Contain("policy.effectiveDate"));
+            Assert.That(
+                resolution.Profile.MissingRequiredKeys,
+                Does.Contain("quote.reopenExpectation"));
+            Assert.That(
+                resolution.Values["policy.primaryState"],
+                Is.EqualTo("Alabama"));
+            Assert.That(
+                resolution.Values.Keys.Any(key =>
+                    key.Contains(
+                        "password",
+                        StringComparison.OrdinalIgnoreCase)),
+                Is.False);
+            Assert.That(
+                resolution.Values.Values,
+                Has.None.EqualTo("12-01-2025"));
+        });
+    }
+
+    [Test]
     public void ResolutionUsesExplicitPrecedence()
     {
         var catalog = ValidCatalog();
@@ -74,6 +128,67 @@ public class PilotDataProfileTests
         Assert.That(
             resolution.Values["proposal.product"],
             Is.EqualTo("Business Owners"));
+    }
+
+    [Test]
+    public void MultipleCatalogsResolveIndependentlyAndRejectAmbiguousKeys()
+    {
+        var first = ValidCatalog();
+        var second = ValidCatalog();
+        second.CatalogVersion = "2.0.0";
+        second.Profiles[0].ProfileId = "cldc-bap-al-smoke";
+        second.Profiles[0].ModuleId =
+            "commercial-duckcreek-bap-al-pilot";
+        second.Profiles[0].Checksum =
+            PilotDataProfileValidator.ComputeChecksum(
+                second,
+                second.Profiles[0]);
+        var provider = new PilotDataProfileProvider(
+            [first, second],
+            () => ValidationTime);
+
+        var resolution = provider.Resolve(
+            "cldc-bap-al-smoke",
+            "qa",
+            "AL");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(
+                resolution.Profile.ModuleId,
+                Is.EqualTo("commercial-duckcreek-bap-al-pilot"));
+            Assert.That(
+                () => new PilotDataProfileProvider(
+                    [first, first],
+                    () => ValidationTime),
+                Throws.TypeOf<PilotDataConfigurationException>()
+                    .With.Message.Contains("ambiguous across catalogs"));
+        });
+    }
+
+    [Test]
+    public void CatalogOptionsRejectDuplicatesAndSupportExclusiveOverride()
+    {
+        var options = new PilotDataProfileOptions
+        {
+            CatalogPath = "first.json",
+            AdditionalCatalogPaths = ["FIRST.JSON"]
+        };
+
+        Assert.That(
+            options.Validate,
+            Throws.TypeOf<PilotDataConfigurationException>()
+                .With.Message.Contains("Duplicate"));
+
+        options.UseExclusiveCatalog("external.json");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(options.Validate, Throws.Nothing);
+            Assert.That(
+                options.GetCatalogPaths(),
+                Is.EqualTo(["external.json"]));
+        });
     }
 
     [TestCase("missing")]
@@ -131,13 +246,14 @@ public class PilotDataProfileTests
             Throws.TypeOf<PilotDataConfigurationException>());
     }
 
-    private static PilotDataCatalog ReadRepositoryCatalog()
+    private static PilotDataCatalog ReadRepositoryCatalog(
+        string fileName = "eq-bop-pilot.json")
     {
         var path = Path.Combine(
             FindRepositoryRoot(),
             "Resources",
             "DataProfiles",
-            "eq-bop-pilot.json");
+            fileName);
         return JsonSerializer.Deserialize<PilotDataCatalog>(
             File.ReadAllText(path),
             new JsonSerializerOptions

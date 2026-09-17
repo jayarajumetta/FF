@@ -4,7 +4,13 @@ param(
     [string]$PackageRoot,
 
     [Parameter(Mandatory)]
-    [ValidateSet("All", "BasicPolicy", "CE", "Forms", "ExpertQuotePilot")]
+    [ValidateSet(
+        "All",
+        "BasicPolicy",
+        "CE",
+        "Forms",
+        "ExpertQuotePilot",
+        "CommercialDuckCreekPilot")]
     [string]$Suite,
 
     [ValidateSet("Full", "Debug")]

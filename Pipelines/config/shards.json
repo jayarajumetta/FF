@@ -91,6 +91,20 @@
       "shards": [
         "EqBopAlPilot"
       ]
+    },
+    {
+      "name": "CommercialDuckCreekPilot",
+      "fullSelectionFilter": "TestCategory=CldcBapAlPilot",
+      "debugSelectionFilter": "TestCategory=CldcBapAlPilot",
+      "fullRules": [
+        { "all": [ "CldcBapAlPilot" ] }
+      ],
+      "debugRules": [
+        { "all": [ "CldcBapAlPilot" ] }
+      ],
+      "shards": [
+        "CldcBapAlPilot"
+      ]
     }
   ],
   "shards": [
@@ -175,6 +189,14 @@
       "debugFilter": "TestCategory=EqBopAlPilot",
       "fullRules": [ { "all": [ "EqBopAlPilot" ] } ],
       "debugRules": [ { "all": [ "EqBopAlPilot" ] } ]
+    },
+    {
+      "id": "CldcBapAlPilot",
+      "suite": "CommercialDuckCreekPilot",
+      "fullFilter": "TestCategory=CldcBapAlPilot",
+      "debugFilter": "TestCategory=CldcBapAlPilot",
+      "fullRules": [ { "all": [ "CldcBapAlPilot" ] } ],
+      "debugRules": [ { "all": [ "CldcBapAlPilot" ] } ]
     }
   ]
 }

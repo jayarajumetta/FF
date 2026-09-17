@@ -45,6 +45,21 @@ workflow boundaries remain blocked because the SGS source did not provide a
 reliable destination control for client search, prefill outcome, active quote
 identity, close, or retrieved quote identity.
 
+## Commercial DuckCreek BAP pilot
+
+The Phase 7B SGS audit found no invoked `data-testid` selectors. It found
+source `fieldref` selectors, exact accessible-role links, login HTML IDs, and
+the generic frame recipe `iframe`. None is approved as a destination fallback:
+there are no new `ANI-ID-*` exceptions for the CLDC pilot.
+
+The module therefore blocks login, proposal start, client/profile, masked
+identity, policy, score, BAP fields, stable frame paths, quote save, search,
+and reopen. Before any boundary can become runnable, the application owner
+must supply exact destination `data-testid` evidence. Any unavoidable ANi
+HTML-ID fallback requires a new row in the exception table and test-ID-first
+ordering. `fieldref`, role, text, generic CSS, and bare `iframe` selectors are
+not silent rescue paths.
+
 ---
 
 ## Status Legend

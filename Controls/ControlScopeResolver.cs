@@ -26,7 +26,10 @@ namespace PnCTestAutomation.Controls
             await TryResolveAsync(definition, timeout, cancellationToken)
             ?? throw new ControlNotFoundException(
                 $"Required control '{definition.Name}' was not found using: " +
-                string.Join(", ", definition.Selectors.Select(DescribeSelector)));
+                string.Join(", ", definition.Selectors.Select(DescribeSelector)) +
+                (definition.RequiredScopeId == null
+                    ? ""
+                    : $" in required frame scope '{definition.RequiredScopeId}'"));
 
         public async Task<ResolvedControl?> TryResolveAsync(
             ControlDefinition definition,
@@ -41,10 +44,24 @@ namespace PnCTestAutomation.Controls
             do
             {
                 var scopes = await _runtime.GetScopesAsync(cancellationToken);
+                var eligibleScopes = definition.RequiredScopeId == null
+                    ? scopes
+                    : scopes.Where(scope =>
+                        string.Equals(
+                            scope.Scope.ContractId,
+                            definition.RequiredScopeId,
+                            StringComparison.Ordinal)).ToArray();
+                if (definition.RequiredScopeId != null &&
+                    eligibleScopes.Count() > 1)
+                {
+                    throw new AmbiguousControlMatchException(
+                        $"Required frame scope '{definition.RequiredScopeId}' " +
+                        $"matched {eligibleScopes.Count()} runtime frames.");
+                }
                 foreach (var selector in definition.Selectors)
                 {
                     var matches = new List<ResolvedControl>();
-                    foreach (var scope in scopes)
+                    foreach (var scope in eligibleScopes)
                     {
                         var elements = await scope.FindVisibleAsync(
                             selector,

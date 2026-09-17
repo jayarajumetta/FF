@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
@@ -11,10 +13,14 @@ namespace PnCTestAutomation.Controls
     public sealed class PlaywrightControlRuntime : IControlRuntime
     {
         private readonly IPage _rootPage;
+        private readonly IReadOnlyList<FrameScopeHint> _frameHints;
 
-        public PlaywrightControlRuntime(IPage rootPage)
+        public PlaywrightControlRuntime(
+            IPage rootPage,
+            IReadOnlyList<FrameScopeHint>? frameHints = null)
         {
             _rootPage = rootPage;
+            _frameHints = frameHints ?? [];
         }
 
         public Task<IReadOnlyList<IControlScopeAdapter>> GetScopesAsync(
@@ -33,6 +39,7 @@ namespace PnCTestAutomation.Controls
                 foreach (var frame in orderedFrames)
                 {
                     var depth = GetFrameDepth(frame);
+                    var framePath = GetFramePath(frame);
                     var isMainFrame = depth == 0;
                     var frameName = string.IsNullOrWhiteSpace(frame.Name)
                         ? "<unnamed>"
@@ -40,6 +47,10 @@ namespace PnCTestAutomation.Controls
                     var description = isMainFrame
                         ? $"page {pageIndex + 1} main frame"
                         : $"page {pageIndex + 1} frame '{frameName}' depth {depth}";
+                    var contractId = FrameScopeHintMatcher.Match(
+                        _frameHints,
+                        pageIndex,
+                        framePath);
 
                     scopes.Add(new PlaywrightControlScope(
                         frame,
@@ -47,7 +58,11 @@ namespace PnCTestAutomation.Controls
                             description,
                             pageIndex,
                             depth,
-                            isMainFrame)));
+                            isMainFrame,
+                            CreateRuntimeIdentity(
+                                pageIndex,
+                                framePath),
+                            contractId)));
                 }
             }
 
@@ -60,6 +75,28 @@ namespace PnCTestAutomation.Controls
             for (var parent = frame.ParentFrame; parent != null; parent = parent.ParentFrame)
                 depth++;
             return depth;
+        }
+
+        private static IReadOnlyList<string> GetFramePath(IFrame frame)
+        {
+            var path = new Stack<string>();
+            for (var current = frame;
+                 current.ParentFrame != null;
+                 current = current.ParentFrame)
+            {
+                path.Push(current.Name);
+            }
+            return path.ToArray();
+        }
+
+        private static string CreateRuntimeIdentity(
+            int pageIndex,
+            IReadOnlyList<string> framePath)
+        {
+            var canonical =
+                $"{pageIndex}|{string.Join(">", framePath)}";
+            return Convert.ToHexString(
+                SHA256.HashData(Encoding.UTF8.GetBytes(canonical)));
         }
     }
 

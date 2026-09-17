@@ -23,17 +23,40 @@ namespace PnCTestAutomation.DataProfiles
             "Resources",
             "DataProfiles",
             "eq-bop-pilot.json");
+        public List<string> AdditionalCatalogPaths { get; set; } = [];
 
         public void Validate()
         {
-            if (string.IsNullOrWhiteSpace(CatalogPath) ||
-                !Path.GetExtension(CatalogPath).Equals(
-                    ".json",
-                    StringComparison.OrdinalIgnoreCase))
+            if (AdditionalCatalogPaths == null)
             {
                 throw new PilotDataConfigurationException(
-                    "PilotDataProfiles:CatalogPath must identify a JSON file.");
+                    "Additional pilot data catalog paths cannot be null.");
             }
+            var paths = GetCatalogPaths();
+            if (paths.Any(path =>
+                    string.IsNullOrWhiteSpace(path) ||
+                    !Path.GetExtension(path).Equals(
+                        ".json",
+                        StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new PilotDataConfigurationException(
+                    "Every pilot data catalog path must identify a JSON file.");
+            }
+            var duplicate = paths
+                .GroupBy(path => path, StringComparer.OrdinalIgnoreCase)
+                .FirstOrDefault(group => group.Count() > 1);
+            if (duplicate != null)
+                throw new PilotDataConfigurationException(
+                    $"Duplicate pilot data catalog path '{duplicate.Key}'.");
+        }
+
+        public IReadOnlyList<string> GetCatalogPaths() =>
+            [CatalogPath, .. AdditionalCatalogPaths];
+
+        public void UseExclusiveCatalog(string path)
+        {
+            CatalogPath = path;
+            AdditionalCatalogPaths.Clear();
         }
     }
 
@@ -128,7 +151,7 @@ namespace PnCTestAutomation.DataProfiles
             Converters = { new JsonStringEnumConverter() }
         };
 
-        private readonly PilotDataCatalog _catalog;
+        private readonly IReadOnlyList<PilotDataCatalog> _catalogs;
 
         public PilotDataProfileProvider(PilotDataProfileOptions options)
             : this(Load(options), () => DateTimeOffset.UtcNow)
@@ -138,12 +161,34 @@ namespace PnCTestAutomation.DataProfiles
         public PilotDataProfileProvider(
             PilotDataCatalog catalog,
             Func<DateTimeOffset>? utcNow = null)
+            : this([catalog], utcNow)
         {
-            ArgumentNullException.ThrowIfNull(catalog);
-            PilotDataProfileValidator.ValidateCatalog(
-                catalog,
-                utcNow?.Invoke() ?? DateTimeOffset.UtcNow);
-            _catalog = catalog;
+        }
+
+        public PilotDataProfileProvider(
+            IReadOnlyList<PilotDataCatalog> catalogs,
+            Func<DateTimeOffset>? utcNow = null)
+        {
+            ArgumentNullException.ThrowIfNull(catalogs);
+            if (catalogs.Count == 0)
+                throw new PilotDataConfigurationException(
+                    "At least one pilot data catalog is required.");
+            var now = utcNow?.Invoke() ?? DateTimeOffset.UtcNow;
+            foreach (var catalog in catalogs)
+                PilotDataProfileValidator.ValidateCatalog(catalog, now);
+            var duplicateProfile = catalogs
+                .SelectMany(catalog => catalog.Profiles)
+                .GroupBy(
+                    profile =>
+                        $"{profile.ProfileId}|{profile.Environment}|{profile.State}",
+                    StringComparer.OrdinalIgnoreCase)
+                .FirstOrDefault(group => group.Count() > 1);
+            if (duplicateProfile != null)
+            {
+                throw new PilotDataConfigurationException(
+                    $"Pilot data profile key '{duplicateProfile.Key}' is ambiguous across catalogs.");
+            }
+            _catalogs = catalogs;
         }
 
         public PilotDataResolution Resolve(
@@ -151,7 +196,9 @@ namespace PnCTestAutomation.DataProfiles
             string environment,
             string state)
         {
-            var matches = _catalog.Profiles.Where(profile =>
+            var matches = _catalogs
+                .SelectMany(catalog => catalog.Profiles)
+                .Where(profile =>
                     profile.ProfileId.Equals(
                         Required(profileId, nameof(profileId)),
                         StringComparison.OrdinalIgnoreCase) &&
@@ -181,26 +228,33 @@ namespace PnCTestAutomation.DataProfiles
                     : profile.BlockedReason);
         }
 
-        private static PilotDataCatalog Load(PilotDataProfileOptions options)
+        private static IReadOnlyList<PilotDataCatalog> Load(
+            PilotDataProfileOptions options)
         {
             ArgumentNullException.ThrowIfNull(options);
             options.Validate();
-            var path = Path.IsPathRooted(options.CatalogPath)
-                ? options.CatalogPath
-                : Path.Combine(AppContext.BaseDirectory, options.CatalogPath);
-            try
+            var catalogs = new List<PilotDataCatalog>();
+            foreach (var configuredPath in options.GetCatalogPaths())
             {
-                return JsonSerializer.Deserialize<PilotDataCatalog>(
-                           File.ReadAllText(Path.GetFullPath(path)),
-                           JsonOptions)
-                       ?? throw new JsonException();
+                var path = Path.IsPathRooted(configuredPath)
+                    ? configuredPath
+                    : Path.Combine(AppContext.BaseDirectory, configuredPath);
+                try
+                {
+                    catalogs.Add(
+                        JsonSerializer.Deserialize<PilotDataCatalog>(
+                            File.ReadAllText(Path.GetFullPath(path)),
+                            JsonOptions)
+                        ?? throw new JsonException());
+                }
+                catch (Exception exception) when (
+                    exception is IOException or JsonException)
+                {
+                    throw new PilotDataConfigurationException(
+                        $"Pilot data catalog '{configuredPath}' is missing or malformed.");
+                }
             }
-            catch (Exception exception) when (
-                exception is IOException or JsonException)
-            {
-                throw new PilotDataConfigurationException(
-                    "The configured pilot data profile is missing or malformed.");
-            }
+            return catalogs;
         }
 
         private static string Required(string value, string field)
@@ -555,6 +609,109 @@ namespace PnCTestAutomation.DataProfiles
                     ? value
                     : throw new PilotDataConfigurationException(
                         $"Pilot value '{key}' must be true or false.");
+        }
+    }
+
+    public sealed record CommercialDuckCreekBapPilotData(
+        string FirstName,
+        string MiddleName,
+        string LastName,
+        string DateOfBirth,
+        string Gender,
+        string Phone,
+        string Email,
+        string Website,
+        string InsuredType,
+        string EntityType,
+        string AddressLine1,
+        string Zip,
+        string AuditContactName,
+        string AuditContactPhone,
+        string InspectionContactName,
+        string InspectionContactPhone,
+        string SocialSecurityNumber,
+        string MaskedIdentityPattern,
+        bool QuickQuote,
+        string Product,
+        string EffectiveDate,
+        int YearsInBusiness,
+        string PrimaryState,
+        bool PriorCoverageWithin90Days,
+        string NaicsCode,
+        string AccountCredit,
+        string QuoteDescriptionPattern,
+        string ScoreReferencePattern,
+        string QuoteIdentityPattern,
+        string SaveExpectation,
+        string SearchExpectation,
+        string ReopenExpectation)
+    {
+        public static CommercialDuckCreekBapPilotData From(
+            PilotDataResolution resolution)
+        {
+            ArgumentNullException.ThrowIfNull(resolution);
+            if (!resolution.IsRunnable)
+            {
+                throw new PilotDataConfigurationException(
+                    $"Pilot profile '{resolution.Profile.ProfileId}' is non-runnable.");
+            }
+
+            return new CommercialDuckCreekBapPilotData(
+                Value("client.firstName"),
+                Value("client.middleName"),
+                Value("client.lastName"),
+                Value("client.dateOfBirth"),
+                Value("client.gender"),
+                Value("client.phone"),
+                Value("client.email"),
+                Value("client.website"),
+                Value("client.insuredType"),
+                Value("client.entityType"),
+                Value("address.line1"),
+                Value("address.zip"),
+                Value("contact.auditName"),
+                Value("contact.auditPhone"),
+                Value("contact.inspectionName"),
+                Value("contact.inspectionPhone"),
+                Value("identity.ssn"),
+                Value("identity.maskedPattern"),
+                Boolean("policy.quickQuote"),
+                Value("policy.product"),
+                Value("policy.effectiveDate"),
+                Integer("policy.yearsInBusiness"),
+                Value("policy.primaryState"),
+                Boolean("policy.priorCoverageWithin90Days"),
+                Value("policy.naicsCode"),
+                Value("policy.accountCredit"),
+                Value("policy.quoteDescriptionPattern"),
+                Value("score.referencePattern"),
+                Value("quote.identityPattern"),
+                Value("quote.saveExpectation"),
+                Value("quote.searchExpectation"),
+                Value("quote.reopenExpectation"));
+
+            string Value(string key) =>
+                resolution.Values.TryGetValue(key, out var value) &&
+                !string.IsNullOrWhiteSpace(value)
+                    ? value
+                    : throw new PilotDataConfigurationException(
+                        $"Required pilot value '{key}' is missing.");
+
+            bool Boolean(string key) =>
+                bool.TryParse(Value(key), out var value)
+                    ? value
+                    : throw new PilotDataConfigurationException(
+                        $"Pilot value '{key}' must be true or false.");
+
+            int Integer(string key) =>
+                int.TryParse(
+                    Value(key),
+                    NumberStyles.None,
+                    CultureInfo.InvariantCulture,
+                    out var value) && value >= 0
+                    ? value
+                    : throw new PilotDataConfigurationException(
+                        $"Pilot value '{key}' must be a non-negative integer.");
         }
     }
 }

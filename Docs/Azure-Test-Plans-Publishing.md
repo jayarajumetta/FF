@@ -25,6 +25,7 @@ Current families are:
 - `SFP-COUNTRY-ESTATE:<STATE>`
 - `SFP-FORMS-VALIDATION:<STATE>`
 - `EQ-BOP-SMOKE:AL` (Phase 7A pilot, explicitly deferred)
+- `CLDC-BAP-SMOKE:AL` (Phase 7B pilot, explicitly deferred)
 
 ## Mapping catalog
 

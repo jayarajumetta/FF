@@ -13,6 +13,8 @@ param(
 
     [switch]$PilotNonRunnableSmoke,
 
+    [switch]$CldcPilotNonRunnableSmoke,
+
     [switch]$PublisherDryRunSmoke,
 
     [switch]$ScanForSecrets
@@ -20,6 +22,67 @@ param(
 
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
+
+function Test-NonRunnablePilot {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$PackageRoot,
+
+        [Parameter(Mandatory)]
+        [string]$Category,
+
+        [Parameter(Mandatory)]
+        [string]$ResultName,
+
+        [Parameter(Mandatory)]
+        [string]$DisplayName
+    )
+
+    $testAssembly = Join-Path $PackageRoot "test\TestAutomation.dll"
+    $runSettings = Join-Path $PackageRoot "runsettings\ci.runsettings"
+    $probeRoot = Join-Path ([IO.Path]::GetTempPath()) (
+        "PnC-$ResultName-" + [Guid]::NewGuid().ToString("N"))
+    $probeTestRoot = Join-Path $probeRoot "test"
+    $probeResults = Join-Path $probeRoot "results"
+    New-Item -ItemType Directory -Force -Path $probeTestRoot, $probeResults |
+        Out-Null
+    Copy-Item -Path (Join-Path $PackageRoot "test\*") `
+        -Destination $probeTestRoot -Recurse -Force
+    try {
+        Push-Location $probeRoot
+        try {
+            & dotnet test (Join-Path $probeTestRoot "TestAutomation.dll") `
+                --settings $runSettings `
+                --filter "TestCategory=$Category" `
+                --logger "trx;LogFileName=$ResultName.trx" `
+                --results-directory $probeResults
+            if ($LASTEXITCODE -ne 0) {
+                throw "Extracted $DisplayName NonRunnable probe failed."
+            }
+            [xml]$probe = Get-Content -LiteralPath (
+                Join-Path $probeResults "$ResultName.trx") -Raw
+            $namespace = [Xml.XmlNamespaceManager]::new($probe.NameTable)
+            $namespace.AddNamespace(
+                "t",
+                "http://microsoft.com/schemas/VisualStudio/TeamTest/2010")
+            $results = @($probe.SelectNodes(
+                "/t:TestRun/t:Results/t:UnitTestResult",
+                $namespace))
+            if ($results.Count -ne 1 -or
+                $results[0].outcome -ne "NotExecuted") {
+                throw "$DisplayName must discover exactly one explicitly ignored NonRunnable execution."
+            }
+        }
+        finally {
+            Pop-Location
+        }
+    }
+    finally {
+        Remove-Item -LiteralPath $probeRoot -Recurse -Force
+    }
+    Write-Host "Extracted $DisplayName NonRunnable probe passed."
+}
 
 $temporaryExtraction = $false
 if ($PSCmdlet.ParameterSetName -eq "Archive") {
@@ -145,45 +208,18 @@ try {
         Write-Host "Extracted package discovery smoke found $($sfpTests.Count) SFP tests."
     }
     if ($PilotNonRunnableSmoke) {
-        $testAssembly = Join-Path $PackageRoot "test\TestAutomation.dll"
-        $runSettings = Join-Path $PackageRoot "runsettings\ci.runsettings"
-        $probeRoot = Join-Path ([IO.Path]::GetTempPath()) (
-            "PnC-EqBopPilotProbe-" + [Guid]::NewGuid().ToString("N"))
-        $probeTestRoot = Join-Path $probeRoot "test"
-        $probeResults = Join-Path $probeRoot "results"
-        New-Item -ItemType Directory -Force -Path $probeTestRoot, $probeResults |
-            Out-Null
-        Copy-Item -Path (Join-Path $PackageRoot "test\*") `
-            -Destination $probeTestRoot -Recurse -Force
-        Push-Location $probeRoot
-        try {
-            & dotnet test (Join-Path $probeTestRoot "TestAutomation.dll") `
-                --settings $runSettings `
-                --filter "TestCategory=EqBopAlPilot" `
-                --logger "trx;LogFileName=EqBopAlPilot.trx" `
-                --results-directory $probeResults
-            if ($LASTEXITCODE -ne 0) {
-                throw "Extracted ExpertQuote pilot NonRunnable probe failed."
-            }
-            [xml]$probe = Get-Content -LiteralPath (
-                Join-Path $probeResults "EqBopAlPilot.trx") -Raw
-            $namespace = [Xml.XmlNamespaceManager]::new($probe.NameTable)
-            $namespace.AddNamespace(
-                "t",
-                "http://microsoft.com/schemas/VisualStudio/TeamTest/2010")
-            $results = @($probe.SelectNodes(
-                "/t:TestRun/t:Results/t:UnitTestResult",
-                $namespace))
-            if ($results.Count -ne 1 -or
-                $results[0].outcome -ne "NotExecuted") {
-                throw "ExpertQuote pilot must discover exactly one explicitly ignored NonRunnable execution."
-            }
-        }
-        finally {
-            Pop-Location
-            Remove-Item -LiteralPath $probeRoot -Recurse -Force
-        }
-        Write-Host "Extracted ExpertQuote pilot NonRunnable probe passed."
+        Test-NonRunnablePilot `
+            -PackageRoot $PackageRoot `
+            -Category "EqBopAlPilot" `
+            -ResultName "EqBopAlPilot" `
+            -DisplayName "ExpertQuote pilot"
+    }
+    if ($CldcPilotNonRunnableSmoke) {
+        Test-NonRunnablePilot `
+            -PackageRoot $PackageRoot `
+            -Category "CldcBapAlPilot" `
+            -ResultName "CldcBapAlPilot" `
+            -DisplayName "Commercial DuckCreek pilot"
     }
     if ($PublisherDryRunSmoke) {
         & (Join-Path $PackageRoot "scripts\CI\Test-TestPlanPublisherSmoke.ps1") `

@@ -1,6 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using PnCTestAutomation.Artifacts;
 using PnCTestAutomation.Pages.ExpertQuotePages.BOP;
+using PnCTestAutomation.Pages.CommercialDuckCreekPages.BAP;
 using PnCTestAutomation.Products;
 using PnCTestAutomation.Workflows;
 
@@ -16,13 +18,16 @@ public class ProductModuleTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(registry.Modules, Has.Count.EqualTo(2));
+            Assert.That(registry.Modules, Has.Count.EqualTo(3));
             Assert.That(
                 registry.Resolve("SFP-BASIC-POLICY:AL").ModuleId,
                 Is.EqualTo("sfp-reference"));
             Assert.That(
                 registry.Resolve("EQ-BOP-SMOKE:AL").ModuleId,
                 Is.EqualTo("expertquote-bop-al-pilot"));
+            Assert.That(
+                registry.Resolve("CLDC-BAP-SMOKE:AL").ModuleId,
+                Is.EqualTo("commercial-duckcreek-bap-al-pilot"));
             Assert.That(registry.TryResolve("UNREGISTERED:AL"), Is.Null);
         });
     }
@@ -70,6 +75,28 @@ public class ProductModuleTests
     }
 
     [Test]
+    public void CommercialDuckCreekPilotRequiresFrameEvidenceAndNoRetry()
+    {
+        var descriptor = Registry().Resolve("CLDC-BAP-SMOKE:AL");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(descriptor.UsesPilotDataProfile, Is.True);
+            Assert.That(
+                descriptor.RequiredCapabilities,
+                Does.Contain(ProductCapability.FrameScope));
+            Assert.That(
+                descriptor.Evidence.RequiredArtifacts,
+                Does.Contain(ArtifactKind.RuntimeLocator));
+            Assert.That(
+                descriptor.BlockedSelectors,
+                Does.Contain("stable-frame-paths"));
+            Assert.That(descriptor.SelectorExceptionReferences, Is.Empty);
+            Assert.That(descriptor.RetrySafe, Is.False);
+        });
+    }
+
+    [Test]
     public void StartupRegistersOneRegistryAndNoAdditionalHook()
     {
         var services = new ServiceCollection();
@@ -92,6 +119,16 @@ public class ProductModuleTests
                     typeof(IExpertQuoteBopPilotWorkflow)),
                 Is.EqualTo(1));
             Assert.That(
+                services.Count(service =>
+                    service.ServiceType ==
+                    typeof(ICommercialDuckCreekBapPilotRuntime)),
+                Is.EqualTo(1));
+            Assert.That(
+                services.Count(service =>
+                    service.ServiceType ==
+                    typeof(ICommercialDuckCreekBapPilotWorkflow)),
+                Is.EqualTo(1));
+            Assert.That(
                 typeof(Startup).Assembly.GetTypes().Count(type =>
                     type.Name == "TestHooks"),
                 Is.EqualTo(1));
@@ -99,7 +136,12 @@ public class ProductModuleTests
     }
 
     private static ProductModuleRegistry Registry() =>
-        new([new SfpProductModule(), new ExpertQuoteBopPilotModule()]);
+        new(
+        [
+            new SfpProductModule(),
+            new ExpertQuoteBopPilotModule(),
+            new CommercialDuckCreekBapPilotModule()
+        ]);
 
     private sealed class TestProductModule(
         ProductModuleDescriptor descriptor) : IProductModule

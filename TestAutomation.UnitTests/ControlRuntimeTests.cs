@@ -50,6 +50,77 @@ public class ControlRuntimeTests
     }
 
     [Test]
+    public async Task RequiredFrameScopeIsExactAndPreserved()
+    {
+        var element = new FakeControlElement();
+        var main = FakeScope.MainPage()
+            .WithTestId("policy.state", new FakeControlElement());
+        var nested = FakeScope.Frame(
+                "page 1 frame 'policy-editor' depth 2",
+                depth: 2,
+                contractId: "cldc-policy")
+            .WithTestId("policy.state", element);
+        var definition = ControlDefinition
+            .ByTestId("Primary state", "policy.state")
+            .InScope("cldc-policy");
+
+        var resolved = await new ControlScopeResolver(
+                new FakeRuntime(main, nested))
+            .ResolveAsync(definition, TimeSpan.Zero);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(resolved.Element, Is.SameAs(element));
+            Assert.That(
+                resolved.Scope.ContractId,
+                Is.EqualTo("cldc-policy"));
+            Assert.That(resolved.Scope.FrameDepth, Is.EqualTo(2));
+        });
+    }
+
+    [Test]
+    public void RequiredFrameScopeNeverFallsBackToTopDocument()
+    {
+        var main = FakeScope.MainPage()
+            .WithTestId("policy.state", new FakeControlElement());
+        var definition = ControlDefinition
+            .ByTestId("Primary state", "policy.state")
+            .InScope("cldc-policy");
+
+        var exception = Assert.ThrowsAsync<ControlNotFoundException>(
+            async () => await new ControlScopeResolver(
+                    new FakeRuntime(main))
+                .ResolveAsync(definition, TimeSpan.Zero));
+
+        Assert.That(
+            exception!.Message,
+            Does.Contain("required frame scope 'cldc-policy'"));
+    }
+
+    [Test]
+    public void MultipleRuntimeFramesForRequiredScopeFailBeforeControlLookup()
+    {
+        var first = FakeScope.Frame(
+            "page 1 frame 'policy' depth 1",
+            contractId: "cldc-policy");
+        var second = FakeScope.Frame(
+            "page 1 frame 'policy' depth 1 duplicate",
+            contractId: "cldc-policy");
+        var definition = ControlDefinition
+            .ByTestId("Primary state", "policy.state")
+            .InScope("cldc-policy");
+
+        var exception = Assert.ThrowsAsync<AmbiguousControlMatchException>(
+            async () => await new ControlScopeResolver(
+                    new FakeRuntime(first, second))
+                .ResolveAsync(definition, TimeSpan.Zero));
+
+        Assert.That(
+            exception!.Message,
+            Does.Contain("matched 2 runtime frames"));
+    }
+
+    [Test]
     public async Task ResolvedFrameScopeIsPreservedForActionAssertionAndEvidence()
     {
         var element = new FakeControlElement();
@@ -299,8 +370,16 @@ public class ControlRuntimeTests
         public static FakeScope MainPage() =>
             new(new ControlScope("page 1 main frame", 0, 0, true));
 
-        public static FakeScope Frame(string description, int depth = 1) =>
-            new(new ControlScope(description, 0, depth, false));
+        public static FakeScope Frame(
+            string description,
+            int depth = 1,
+            string? contractId = null) =>
+            new(new ControlScope(
+                description,
+                0,
+                depth,
+                false,
+                ContractId: contractId));
 
         public FakeScope WithTestId(string value, params IControlElement[] elements) =>
             With(ControlSelectorKind.TestId, value, elements);

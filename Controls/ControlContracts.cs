@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -61,6 +62,14 @@ namespace PnCTestAutomation.Controls
     public sealed class ControlDefinition
     {
         public ControlDefinition(string name, params ControlSelector[] selectors)
+            : this(name, null, selectors)
+        {
+        }
+
+        private ControlDefinition(
+            string name,
+            string? requiredScopeId,
+            params ControlSelector[] selectors)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("A control name is required.", nameof(name));
@@ -84,11 +93,25 @@ namespace PnCTestAutomation.Controls
             }
 
             Name = name;
+            RequiredScopeId = requiredScopeId;
             Selectors = Array.AsReadOnly((ControlSelector[])selectors.Clone());
         }
 
         public string Name { get; }
+        public string? RequiredScopeId { get; }
         public IReadOnlyList<ControlSelector> Selectors { get; }
+
+        public ControlDefinition InScope(string scopeId)
+        {
+            if (string.IsNullOrWhiteSpace(scopeId))
+                throw new ArgumentException(
+                    "A scope ID is required.",
+                    nameof(scopeId));
+            return new ControlDefinition(
+                Name,
+                scopeId.Trim(),
+                Selectors.ToArray());
+        }
 
         public static ControlDefinition ByTestId(string name, string testId) =>
             new(name, ControlSelector.ByTestId(testId));
@@ -118,7 +141,9 @@ namespace PnCTestAutomation.Controls
         string Description,
         int PageIndex,
         int FrameDepth,
-        bool IsMainFrame);
+        bool IsMainFrame,
+        string RuntimeIdentity = "",
+        string? ContractId = null);
 
     public interface IControlElement
     {

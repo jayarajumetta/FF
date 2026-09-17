@@ -172,6 +172,7 @@ foreach ($script in @(
     "Test-TestPackage.ps1",
     "Test-ShardOwnership.ps1",
     "Install-Playwright.ps1",
+    "Invoke-PackageSuite.ps1",
     "Invoke-TestShard.ps1",
     "Invoke-TestPlanPublication.ps1",
     "Test-TestPlanPublisherSmoke.ps1"
@@ -207,7 +208,8 @@ foreach ($suiteMode in @(
     @("All", "Full"),
     @("All", "Debug"),
     @("Forms", "Full"),
-    @("ExpertQuotePilot", "Full")
+    @("ExpertQuotePilot", "Full"),
+    @("CommercialDuckCreekPilot", "Full")
 )) {
     $suite = $suiteMode[0]
     $mode = $suiteMode[1]
@@ -241,6 +243,7 @@ Compress-Archive -Path (Join-Path $stageRoot "*") -DestinationPath $archivePath
     -ArchivePath $archivePath `
     -DiscoverySmoke `
     -PilotNonRunnableSmoke `
+    -CldcPilotNonRunnableSmoke `
     -PublisherDryRunSmoke `
     -ScanForSecrets
 

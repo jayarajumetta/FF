@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "catalogVersion": "0.1.0",
+  "sourcePath": "tests/CommercialLines.DuckCreek.Tests/Runtime/DuckCreekFrameHints.json",
+  "sourceSha256": "6F4DDFABA85EA620CE17AD401AEB940B0F047B7C3FBF45FEF20F8999B1D25D32",
+  "checksum": "CEDFA8B7BE1491B6A834F6D083901EBE74695179EB60CD00CB9764C613122188",
+  "hints": [],
+  "rejectedSourceHints": [
+    "iframe"
+  ]
+}

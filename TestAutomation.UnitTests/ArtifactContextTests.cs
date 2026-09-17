@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
+using PnCTestAutomation.Controls;
 using PnCTestAutomation.Artifacts;
 
 namespace PnCTestAutomation.UnitTests;
@@ -152,6 +153,42 @@ public class ArtifactContextTests
         {
             Assert.That(optionalManifest.Outcome, Is.EqualTo(ArtifactOutcome.Passed));
             Assert.That(exception!.Message, Does.Contain("Screenshot"));
+        });
+    }
+
+    [Test]
+    public async Task RuntimeLocatorEvidenceRecordsScopeWithoutRawSelector()
+    {
+        var context = CreateContext("runtime-locator");
+        context.Require(ArtifactKind.RuntimeLocator);
+        var sink = new ArtifactControlEvidenceSink(context);
+        var selector = ControlSelector.ByTestId("sensitive.runtime.id");
+
+        await sink.RecordAsync(new ControlEvidence(
+            "Policy state",
+            selector,
+            new ControlScope(
+                "page 1 frame 'policy'",
+                0,
+                1,
+                false,
+                "FRAME-IDENTITY",
+                "cldc-policy"),
+            "select",
+            ControlAssertion.SelectedValue));
+        var manifest = context.Complete(false);
+        var record = manifest.Artifacts.Single(item =>
+            item.Kind == ArtifactKind.RuntimeLocator);
+        var content = File.ReadAllText(Path.Combine(
+            context.ScenarioRoot,
+            record.RelativePath!));
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(content, Does.Contain("FRAME-IDENTITY"));
+            Assert.That(content, Does.Contain("cldc-policy"));
+            Assert.That(content, Does.Contain("SelectedValue"));
+            Assert.That(content, Does.Not.Contain("sensitive.runtime.id"));
         });
     }
 

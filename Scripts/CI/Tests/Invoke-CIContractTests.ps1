@@ -110,6 +110,8 @@ try {
         "test\Resources\ExpectedForms\SFP\forms.json",
         "test\Resources\ExpectedOutcomes\sfp-outcomes.json",
         "test\Resources\DataProfiles\eq-bop-pilot.json",
+        "test\Resources\DataProfiles\cldc-bap-pilot.json",
+        "test\Resources\FrameHints\cldc-bap-frame-hints.json",
         "datapool\DataPool.dll",
         "datapool\DataPool.deps.json",
         "datapool\DataPool.runtimeconfig.json",
@@ -124,6 +126,7 @@ try {
         "metadata\shards-All-Debug.json",
         "metadata\shards-Forms-Full.json",
         "metadata\shards-ExpertQuotePilot-Full.json",
+        "metadata\shards-CommercialDuckCreekPilot-Full.json",
         "runsettings\ci.runsettings",
         "config\shards.json",
         "config\testplans-mapping.template.json",
@@ -132,6 +135,7 @@ try {
         "scripts\CI\Invoke-TestPlanPublication.ps1",
         "scripts\CI\Test-ShardOwnership.ps1",
         "scripts\CI\Install-Playwright.ps1",
+        "scripts\CI\Invoke-PackageSuite.ps1",
         "scripts\CI\Test-TestPlanPublisherSmoke.ps1",
         "scripts\CI\Test-TestPackage.ps1",
         "tools\reports\Cleanup-TestArtifacts.ps1",
@@ -415,6 +419,19 @@ try {
     Assert-True (
         $entry -notmatch "ExpertQuotePilot|EqBopAlPilot"
     ) "NonRunnable ExpertQuote pilot entered scheduled production execution."
+    $cldcPilotSuite = @($shardCatalog.suites |
+        Where-Object name -eq "CommercialDuckCreekPilot")
+    $cldcPilotShard = @($shardCatalog.shards |
+        Where-Object id -eq "CldcBapAlPilot")
+    Assert-True (
+        $cldcPilotSuite.Count -eq 1 -and
+        $cldcPilotShard.Count -eq 1 -and
+        @($cldcPilotSuite[0].shards).Count -eq 1 -and
+        $cldcPilotSuite[0].shards[0] -eq "CldcBapAlPilot"
+    ) "Commercial DuckCreek pilot does not have one isolated shard owner."
+    Assert-True (
+        $entry -notmatch "CommercialDuckCreekPilot|CldcBapAlPilot"
+    ) "NonRunnable Commercial DuckCreek pilot entered scheduled production execution."
 
     Write-Host "CI contract tests passed: $script:Passed assertions."
 }

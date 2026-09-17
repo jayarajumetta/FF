@@ -27,7 +27,8 @@ namespace PnCTestAutomation.Artifacts
         BusinessOutcome,
         TrxMetadata,
         TimingSummary,
-        QuoteHandoff
+        QuoteHandoff,
+        RuntimeLocator
     }
 
     public enum ArtifactOutcome
@@ -535,7 +536,9 @@ namespace PnCTestAutomation.Artifacts
                         .StartsWith(
                             "# Forms Validation",
                             StringComparison.Ordinal) == true,
-                    ArtifactKind.TrxMetadata or ArtifactKind.TimingSummary => IsJson(path),
+                    ArtifactKind.TrxMetadata or
+                    ArtifactKind.TimingSummary or
+                    ArtifactKind.RuntimeLocator => IsJson(path),
                     _ => true
                 };
             }
@@ -666,6 +669,9 @@ namespace PnCTestAutomation.Artifacts
             ArtifactKind.TrxMetadata => "metadata",
             ArtifactKind.TimingSummary => "metadata",
             ArtifactKind.QuoteHandoff => "metadata",
+            ArtifactKind.RuntimeLocator => Path.Combine(
+                "metadata",
+                "runtime-locators"),
             _ => "other"
         };
 

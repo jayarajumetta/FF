@@ -255,6 +255,60 @@ namespace PnCTestAutomation.Products
             false);
     }
 
+    public sealed class CommercialDuckCreekBapPilotModule : IProductModule
+    {
+        public const string DataProfileId = "cldc-bap-al-smoke";
+        public const string AutomationIdFamily = "CLDC-BAP-SMOKE";
+
+        public ProductModuleDescriptor Descriptor { get; } = new(
+            "commercial-duckcreek-bap-al-pilot",
+            "Commercial Lines DuckCreek BAP",
+            "SGS 012 BAP Alabama smoke",
+            [AutomationIdFamily],
+            [
+                ProductCapability.SemanticControls,
+                ProductCapability.FrameScope,
+                ProductCapability.DataProfile,
+                ProductCapability.ArtifactEvidence,
+                ProductCapability.QuoteHandoff,
+                ProductCapability.BusinessOutcomes,
+                ProductCapability.TestPlans
+            ],
+            DataProfileId,
+            true,
+            new ProductEvidenceContract(
+                [
+                    ArtifactKind.Screenshot,
+                    ArtifactKind.BusinessOutcome,
+                    ArtifactKind.QuoteHandoff,
+                    ArtifactKind.TrxMetadata,
+                    ArtifactKind.TimingSummary,
+                    ArtifactKind.RuntimeLocator
+                ],
+                true,
+                true,
+                true),
+            [],
+            [
+                "login",
+                "new-quote",
+                "effective-date",
+                "product",
+                "start",
+                "client-profile",
+                "masked-identity",
+                "policy-info",
+                "insurance-score",
+                "bap-fields",
+                "stable-frame-paths",
+                "pii-safe-evidence-policy",
+                "quote-save",
+                "quote-search",
+                "quote-reopen"
+            ],
+            false);
+    }
+
     public sealed class ProductModuleConfigurationException : Exception
     {
         public ProductModuleConfigurationException(string message)
