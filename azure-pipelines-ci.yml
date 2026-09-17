@@ -35,6 +35,13 @@ steps:
     if ($LASTEXITCODE -ne 0) { throw 'Python dependency installation failed' }
   displayName: Install Python dependencies
 
+- powershell: |
+    python -B -m unittest discover -s tools -p test_release_reporting.py -v
+    if ($LASTEXITCODE -ne 0) { throw 'Release reporting regression tests failed' }
+    python -c "import yaml; from pathlib import Path; yaml.safe_load(Path('azure-pipelines-ci.yml').read_text())"
+    if ($LASTEXITCODE -ne 0) { throw 'CI YAML validation failed' }
+  displayName: Validate distributed report handoff
+
 # - powershell: |
 #     python .\tools\package_gate.py
 #     if ($LASTEXITCODE -ne 0) { throw 'Client package quality gate failed' }
@@ -110,8 +117,35 @@ steps:
     $global:LASTEXITCODE = 0
   displayName: Validate shared bin outputs
 
+- powershell: |
+    $ErrorActionPreference = 'Stop'
+    $root = '$(Build.SourcesDirectory)'
+    $package = '$(Build.ArtifactStagingDirectory)\testpackage'
+    New-Item -ItemType Directory -Path $package -Force | Out-Null
+    foreach ($directory in @('bin', 'config', 'scripts')) {
+      Copy-Item -LiteralPath (Join-Path $root $directory) -Destination (Join-Path $package $directory) -Recurse -Force
+    }
+    $tools = Join-Path $package 'tools'
+    New-Item -ItemType Directory -Path $tools -Force | Out-Null
+    foreach ($name in @('release_reporting.py', 'generate_consolidated_report.py')) {
+      Copy-Item -LiteralPath (Join-Path $root "tools\$name") -Destination $tools
+    }
+    foreach ($directory in @('src', 'tests')) {
+      Get-ChildItem -LiteralPath (Join-Path $root $directory) -Recurse -File -Filter '*.cs' |
+        Where-Object { $_.FullName -notmatch '[\\/](bin|obj)[\\/]' } |
+        ForEach-Object {
+          $relative = $_.FullName.Substring($root.Length).TrimStart('\', '/')
+          $target = Join-Path $package $relative
+          New-Item -ItemType Directory -Path (Split-Path $target -Parent) -Force | Out-Null
+          Copy-Item -LiteralPath $_.FullName -Destination $target
+        }
+    }
+    python -m py_compile "$tools\release_reporting.py" "$tools\generate_consolidated_report.py"
+    if ($LASTEXITCODE -ne 0) { throw 'Reporting tools failed syntax validation' }
+  displayName: Package binaries and reporting dependencies
+
 - task: PublishPipelineArtifact@1
-  displayName: Publish bin artifact
+  displayName: Publish run-ready test package
   inputs:
-    targetPath: '$(Build.SourcesDirectory)\bin'
+    targetPath: '$(Build.ArtifactStagingDirectory)\testpackage'
     artifact: '$(ArtifactName)'

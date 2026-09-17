@@ -1,7 +1,7 @@
 {
   "source": "userInterface",
   "revision": 1,
-  "description": "Classic Azure DevOps Release definition for Playwright/ReqnRoll/NUnit automation from the CI bin artifact (artifact name: testpackage, alias _FF_CI). Stages are independent/manual: Assembly Execution (DLLs + optional TestCategory filter), Test Suite Execution (test plan/suite/configuration), and Test Plan On-Demand Execution (uses $(test.RunId) with ManualTestRunId fallback).",
+  "description": "Classic Azure DevOps Release definition for Playwright/ReqnRoll/NUnit automation from the CI bin artifact (artifact name: testpackage, alias _FF_CI). Stages are independent/manual: Assembly Execution (DLLs + optional TestCategory filter), Test Suite Execution (test plan/suite/configuration), and Test Plan On-Demand Execution (uses $(test.RunId) with ManualTestRunId fallback). Independent execution modes, each with a distributed execution phase followed by one single-agent report collection phase for that deployment.",
   "createdBy": null,
   "createdOn": "0001-01-01T00:00:00",
   "modifiedBy": null,
@@ -29,7 +29,7 @@
       "allowOverride": true
     },
     "AssemblyTestFilter": {
-      "value": "",
+      "value": "TestCategory=gl_smoke_test",
       "isSecret": false,
       "allowOverride": true
     },
@@ -62,11 +62,6 @@
       "value": "true",
       "isSecret": false,
       "allowOverride": true
-    },
-    "AvailableTagFilters": {
-      "value": "TestCategory=smoke|TestCategory=regression|TestCategory=pldc|TestCategory=cldc|TestCategory=cleq",
-      "isSecret": false,
-      "allowOverride": false
     },
     "CL_DC_USERNAME": {
       "value": "",
@@ -162,7 +157,8 @@
         {
           "deploymentInput": {
             "parallelExecution": {
-              "parallelExecutionType": "multiMachine"
+              "parallelExecutionType": "multiMachine",
+              "maxNumberOfAgents": 1
             },
             "agentSpecification": {
               "identifier": "windows-2022"
@@ -256,7 +252,15 @@
               }
             },
             {
-              "environment": {},
+              "environment": {
+                "BUILDCONFIGURATION": "$(BuildConfiguration)",
+                "HEADLESS": "$(Headless)",
+                "STAGEKEY": "$(StageKey)",
+                "STAGERESULTSDIRECTORY": "$(StageResultsDirectory)",
+                "PLAYWRIGHTBROWSER": "$(PlaywrightBrowser)",
+                "ONDEMAND_TEST_RUN_ID": "$(test.RunId)",
+                "MANUALTESTRUNID": "$(ManualTestRunId)"
+              },
               "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
               "version": "2.*",
               "name": "Prepare and validate CI automation artifact",
@@ -271,7 +275,7 @@
               "condition": "succeeded()",
               "inputs": {
                 "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Stop'\n\n$downloadRoot = [IO.Path]::GetFullPath(\"$(System.DefaultWorkingDirectory)\")\n$releaseId = \"$(Release.ReleaseId)\"\nif ([string]::IsNullOrWhiteSpace($releaseId) -or $releaseId -like '$(*') { $releaseId = [guid]::NewGuid().ToString('N') }\n$stageKey = \"$(StageKey)\"\n$stageRoot = Join-Path \"$(Agent.TempDirectory)\" (\"FFTestAutomation\\{0}\\{1}\" -f $releaseId, $stageKey)\n$packageRoot = Join-Path $stageRoot 'package'\n$binRoot = Join-Path $packageRoot 'bin'\n\nif (Test-Path -LiteralPath $stageRoot) { Remove-Item -LiteralPath $stageRoot -Recurse -Force }\nNew-Item -ItemType Directory -Path $binRoot -Force | Out-Null\n\n$coreDll = Get-ChildItem -LiteralPath $downloadRoot -Recurse -File -Filter 'InsuranceAutomation.Core.dll' -ErrorAction SilentlyContinue |\n    Where-Object { $_.FullName -match '[\\\\/]InsuranceAutomation\\.Core[\\\\/]$(BuildConfiguration)[\\\\/]net8\\.0[\\\\/]InsuranceAutomation\\.Core\\.dll$' } |\n    Select-Object -First 1\nif (-not $coreDll) { throw 'Unable to locate InsuranceAutomation.Core.dll in downloaded CI artifact.' }\n$sourceBinRoot = $coreDll.Directory.Parent.Parent.Parent.FullName\nrobocopy $sourceBinRoot $binRoot /E /R:2 /W:1\nif ($LASTEXITCODE -ge 8) { throw \"robocopy failed with exit code $LASTEXITCODE\" }\n\n$required = @(\n  'InsuranceAutomation.Core\\$(BuildConfiguration)\\net8.0\\InsuranceAutomation.Core.dll',\n  'CommercialLines.DuckCreek.Tests\\$(BuildConfiguration)\\net8.0\\CommercialLines.DuckCreek.Tests.dll',\n  'CommercialLines.ExpertQuote.Tests\\$(BuildConfiguration)\\net8.0\\CommercialLines.ExpertQuote.Tests.dll',\n  'PersonalLines.DuckCreek.Tests\\$(BuildConfiguration)\\net8.0\\PersonalLines.DuckCreek.Tests.dll'\n)\nforeach ($relative in $required) {\n  $path = Join-Path $binRoot $relative\n  if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw \"Required CI artifact file is missing: $relative\" }\n}\n\n$resultsRoot = Join-Path $packageRoot \"$(StageResultsDirectory)\"\nforeach ($name in @('Runner','NUnit','NUnitWork')) { New-Item -ItemType Directory -Path (Join-Path $resultsRoot $name) -Force | Out-Null }\n\n$headless = $true\nif (-not [bool]::TryParse(\"$(Headless)\", [ref]$headless)) { throw \"Headless must be true or false; received '$(Headless)'.\" }\n\n$configDir = Join-Path $packageRoot 'config'\nNew-Item -ItemType Directory -Path $configDir -Force | Out-Null\n$frameworkConfig = Join-Path $configDir 'framework.json'\n$config = @{\n  browser = @{\n    headless = $headless\n    channel = 'msedge'\n    fallbackBrowser = 'chromium'\n  }\n  reporting = @{\n    resultsRoot = '$(StageResultsDirectory)'\n    artifactRoot = 'Artifacts'\n  }\n} | ConvertTo-Json -Depth 20\nSet-Content -LiteralPath $frameworkConfig -Value $config -Encoding UTF8\n\n$runSettingsPath = Join-Path $packageRoot 'Tosca.runsettings'\n$runSettings = @'\n<?xml version='1.0' encoding='utf-8'?>\n<RunSettings>\n  <RunConfiguration>\n    <ResultsDirectory>$(StageResultsDirectory)\\Runner</ResultsDirectory>\n    <MaxCpuCount>3</MaxCpuCount>\n  </RunConfiguration>\n  <NUnit>\n    <WorkDirectory>$(StageResultsDirectory)\\NUnitWork</WorkDirectory>\n    <NumberOfTestWorkers>3</NumberOfTestWorkers>\n    <UseParentFQNForParametrizedTests>false</UseParentFQNForParametrizedTests>\n    <TestOutputXml>$(StageResultsDirectory)\\NUnit</TestOutputXml>\n  </NUnit>\n</RunSettings>\n'@\nSet-Content -LiteralPath $runSettingsPath -Value $runSettings -Encoding UTF8\n\n$playwrightScript = Get-ChildItem -LiteralPath $binRoot -Recurse -File -Filter 'playwright.ps1' |\n    Where-Object { Test-Path -LiteralPath (Join-Path $_.Directory.FullName 'Microsoft.Playwright.dll') } |\n    Select-Object -First 1\nif (-not $playwrightScript) { throw 'No playable playwright.ps1 + Microsoft.Playwright.dll pair exists in bin artifact.' }\n& $playwrightScript.FullName install \"$(PlaywrightBrowser)\"\nif ($LASTEXITCODE -ne 0) { throw \"Playwright $(PlaywrightBrowser) installation failed with exit code $LASTEXITCODE.\" }\n\nWrite-Host \"##vso[task.setvariable variable=TEST_PACKAGE_ROOT]$packageRoot\"\nWrite-Host \"##vso[task.setvariable variable=TEST_FRAMEWORK_CONFIG]$frameworkConfig\"\nWrite-Host \"##vso[task.setvariable variable=TEST_RESULTS_ROOT]$resultsRoot\"\nWrite-Host \"##vso[task.setvariable variable=TEST_REPOSITORY_ROOT]$packageRoot\"\nWrite-Host \"##vso[task.setvariable variable=VSTEST_RUNSETTINGS]$runSettingsPath\"\n\nWrite-Host \"Prepared test package: $packageRoot\"\nWrite-Host \"Stage result scope: $(StageResultsDirectory)\"\n$global:LASTEXITCODE = 0\n",
+                "script": "$ErrorActionPreference = 'Stop'\n\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'Prepare-ReleaseTestPackage.ps1' | Where-Object { $_.Directory.Name -eq 'scripts' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged Prepare-ReleaseTestPackage.ps1. Run a new CI build with reporting dependencies and select that artifact.' }\n& $matches[0].FullName",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
@@ -344,26 +348,107 @@
               }
             },
             {
+              "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+              "version": "2.*",
+              "name": "Publish this agent evidence for consolidation",
+              "refName": "PowerShell_Assembly_Report",
+              "enabled": true,
+              "alwaysRun": true,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "always()",
               "environment": {
-                "CI": "true",
-                "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
-                "TEST_FRAMEWORK_CONFIG": "$(TEST_FRAMEWORK_CONFIG)",
                 "TEST_RESULTS_ROOT": "$(TEST_RESULTS_ROOT)",
-                "TEST_REPOSITORY_ROOT": "$(TEST_REPOSITORY_ROOT)",
-                "CL_DC_USERNAME": "$(CL_DC_USERNAME)",
-                "CL_DC_PASSWORD": "$(CL_DC_PASSWORD)",
-                "CL_EQ_USERNAME": "$(CL_EQ_USERNAME)",
-                "CL_EQ_PASSWORD": "$(CL_EQ_PASSWORD)",
-                "PL_DC_USERNAME": "$(PL_DC_USERNAME)",
-                "PL_DC_PASSWORD": "$(PL_DC_PASSWORD)"
+                "SYSTEM_JOBPOSITIONINPHASE": "$(System.JobPositionInPhase)",
+                "SYSTEM_TOTALJOBSINPHASE": "$(System.TotalJobsInPhase)"
+              },
+              "inputs": {
+                "targetType": "inline",
+                "script": "$ErrorActionPreference = 'Stop'\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'release_reporting.py' | Where-Object { $_.Directory.Name -eq 'tools' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged release_reporting.py. Rebuild the CI artifact with reporting dependencies.' }\n& python $matches[0].FullName publish\nif ($LASTEXITCODE -ne 0) { throw \"Evidence publication failed with exit code $LASTEXITCODE\" }",
+                "errorActionPreference": "stop",
+                "warningPreference": "default",
+                "informationPreference": "default",
+                "verbosePreference": "default",
+                "debugPreference": "default",
+                "progressPreference": "silentlyContinue",
+                "failOnStderr": "false",
+                "showWarnings": "true",
+                "ignoreLASTEXITCODE": "false",
+                "pwsh": "false",
+                "workingDirectory": "$(System.DefaultWorkingDirectory)",
+                "runScriptInSeparateScope": "false"
+              }
+            }
+          ]
+        },
+        {
+          "deploymentInput": {
+            "parallelExecution": {
+              "parallelExecutionType": "none"
+            },
+            "agentSpecification": {
+              "identifier": "windows-2022"
+            },
+            "skipArtifactsDownload": false,
+            "artifactsDownloadInput": {
+              "downloadInputs": [
+                {
+                  "alias": "_FF_CI",
+                  "artifactType": "Build",
+                  "artifactDownloadMode": "All",
+                  "artifactItems": []
+                }
+              ]
+            },
+            "queueId": 0,
+            "demands": [],
+            "enableAccessToken": true,
+            "timeoutInMinutes": 0,
+            "jobCancelTimeoutInMinutes": 5,
+            "condition": "always()",
+            "overrideInputs": {}
+          },
+          "rank": 2,
+          "phaseType": "agentBasedDeployment",
+          "name": "Collect all agents and publish one consolidated report",
+          "refName": null,
+          "workflowTasks": [
+            {
+              "environment": {},
+              "taskId": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
+              "version": "0.*",
+              "name": "Install Python 3.11 for consolidated reporting",
+              "refName": "UsePython_Assembly_Aggregate",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "always()",
+              "inputs": {
+                "versionSpec": "3.11",
+                "disableDownloadFromRegistry": "false",
+                "allowUnstable": "false",
+                "addToPath": "true",
+                "architecture": "x64"
+              }
+            },
+            {
+              "environment": {
+                "SYSTEM_ACCESSTOKEN": "$(System.AccessToken)"
               },
               "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
               "version": "2.*",
               "name": "Generate and attach consolidated HTML report",
-              "refName": "PowerShell_Assembly_Report",
+              "refName": "PowerShell_Assembly_Aggregate",
               "enabled": true,
-              "alwaysRun": false,
-              "continueOnError": true,
+              "alwaysRun": true,
+              "continueOnError": false,
               "timeoutInMinutes": 0,
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
@@ -371,7 +456,7 @@
               "condition": "always()",
               "inputs": {
                 "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Continue'\n\n$packageRoot = \"$(TEST_PACKAGE_ROOT)\"\n$resultsDirectory = \"$(StageResultsDirectory)\"\n$stageKey = \"$(StageKey)\"\nif ([string]::IsNullOrWhiteSpace($packageRoot) -or -not (Test-Path -LiteralPath $packageRoot -PathType Container)) {\n    Write-Warning 'The prepared test package is unavailable, so report/zip publishing is skipped.'\n    exit 0\n}\n\n$resultsRoot = Join-Path $packageRoot $resultsDirectory\n$evidenceRoot = Join-Path $resultsRoot 'Artifacts'\n$reportScript = Join-Path $env:SYSTEM_DEFAULTWORKINGDIRECTORY 'scripts\\Generate-ConsolidatedReport.ps1'\nif (Test-Path -LiteralPath $reportScript -PathType Leaf) {\n    try {\n        & $reportScript -ResultsDirectory $resultsRoot\n        if ($LASTEXITCODE -ne 0) { throw \"Report generator exited with code $LASTEXITCODE.\" }\n        $reportRoot = Join-Path $resultsRoot 'ConsolidatedReport'\n        foreach ($file in @('report.html','log.html','summary.json','output.xml')) {\n            $full = Join-Path $reportRoot $file\n            if (Test-Path -LiteralPath $full -PathType Leaf) {\n                if ($file -eq 'report.html') { Write-Host \"##vso[task.uploadsummary]$full\" }\n                Write-Host \"##vso[task.uploadfile]$full\"\n            }\n        }\n    }\n    catch { Write-Warning \"Consolidated report generation failed: $($_.Exception.Message)\" }\n}\n\nif (Test-Path -LiteralPath $resultsRoot -PathType Container) {\n    $artifactDir = Join-Path $packageRoot 'StageArtifacts'\n    New-Item -ItemType Directory -Path $artifactDir -Force | Out-Null\n    $zipPath = Join-Path $artifactDir (\"{0}-TestResults.zip\" -f $stageKey)\n    if (Test-Path -LiteralPath $zipPath) { Remove-Item -LiteralPath $zipPath -Force }\n    Compress-Archive -Path (Join-Path $resultsRoot '*') -DestinationPath $zipPath -CompressionLevel Optimal\n    Write-Host \"##vso[task.uploadfile]$zipPath\"\n}\nexit 0\n",
+                "script": "$ErrorActionPreference = 'Stop'\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'release_reporting.py' | Where-Object { $_.Directory.Name -eq 'tools' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged release_reporting.py. Rebuild the CI artifact with reporting dependencies.' }\n& python $matches[0].FullName collect\nif ($LASTEXITCODE -ne 0) { throw \"Consolidated reporting failed with exit code $LASTEXITCODE\" }",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
@@ -487,7 +572,8 @@
         {
           "deploymentInput": {
             "parallelExecution": {
-              "parallelExecutionType": "multiMachine"
+              "parallelExecutionType": "multiMachine",
+              "maxNumberOfAgents": 1
             },
             "agentSpecification": {
               "identifier": "windows-2022"
@@ -581,7 +667,15 @@
               }
             },
             {
-              "environment": {},
+              "environment": {
+                "BUILDCONFIGURATION": "$(BuildConfiguration)",
+                "HEADLESS": "$(Headless)",
+                "STAGEKEY": "$(StageKey)",
+                "STAGERESULTSDIRECTORY": "$(StageResultsDirectory)",
+                "PLAYWRIGHTBROWSER": "$(PlaywrightBrowser)",
+                "ONDEMAND_TEST_RUN_ID": "$(test.RunId)",
+                "MANUALTESTRUNID": "$(ManualTestRunId)"
+              },
               "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
               "version": "2.*",
               "name": "Prepare and validate CI automation artifact",
@@ -596,7 +690,7 @@
               "condition": "succeeded()",
               "inputs": {
                 "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Stop'\n\n$downloadRoot = [IO.Path]::GetFullPath(\"$(System.DefaultWorkingDirectory)\")\n$releaseId = \"$(Release.ReleaseId)\"\nif ([string]::IsNullOrWhiteSpace($releaseId) -or $releaseId -like '$(*') { $releaseId = [guid]::NewGuid().ToString('N') }\n$stageKey = \"$(StageKey)\"\n$stageRoot = Join-Path \"$(Agent.TempDirectory)\" (\"FFTestAutomation\\{0}\\{1}\" -f $releaseId, $stageKey)\n$packageRoot = Join-Path $stageRoot 'package'\n$binRoot = Join-Path $packageRoot 'bin'\n\nif (Test-Path -LiteralPath $stageRoot) { Remove-Item -LiteralPath $stageRoot -Recurse -Force }\nNew-Item -ItemType Directory -Path $binRoot -Force | Out-Null\n\n$coreDll = Get-ChildItem -LiteralPath $downloadRoot -Recurse -File -Filter 'InsuranceAutomation.Core.dll' -ErrorAction SilentlyContinue |\n    Where-Object { $_.FullName -match '[\\\\/]InsuranceAutomation\\.Core[\\\\/]$(BuildConfiguration)[\\\\/]net8\\.0[\\\\/]InsuranceAutomation\\.Core\\.dll$' } |\n    Select-Object -First 1\nif (-not $coreDll) { throw 'Unable to locate InsuranceAutomation.Core.dll in downloaded CI artifact.' }\n$sourceBinRoot = $coreDll.Directory.Parent.Parent.Parent.FullName\nrobocopy $sourceBinRoot $binRoot /E /R:2 /W:1\nif ($LASTEXITCODE -ge 8) { throw \"robocopy failed with exit code $LASTEXITCODE\" }\n\n$required = @(\n  'InsuranceAutomation.Core\\$(BuildConfiguration)\\net8.0\\InsuranceAutomation.Core.dll',\n  'CommercialLines.DuckCreek.Tests\\$(BuildConfiguration)\\net8.0\\CommercialLines.DuckCreek.Tests.dll',\n  'CommercialLines.ExpertQuote.Tests\\$(BuildConfiguration)\\net8.0\\CommercialLines.ExpertQuote.Tests.dll',\n  'PersonalLines.DuckCreek.Tests\\$(BuildConfiguration)\\net8.0\\PersonalLines.DuckCreek.Tests.dll'\n)\nforeach ($relative in $required) {\n  $path = Join-Path $binRoot $relative\n  if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw \"Required CI artifact file is missing: $relative\" }\n}\n\n$resultsRoot = Join-Path $packageRoot \"$(StageResultsDirectory)\"\nforeach ($name in @('Runner','NUnit','NUnitWork')) { New-Item -ItemType Directory -Path (Join-Path $resultsRoot $name) -Force | Out-Null }\n\n$headless = $true\nif (-not [bool]::TryParse(\"$(Headless)\", [ref]$headless)) { throw \"Headless must be true or false; received '$(Headless)'.\" }\n\n$configDir = Join-Path $packageRoot 'config'\nNew-Item -ItemType Directory -Path $configDir -Force | Out-Null\n$frameworkConfig = Join-Path $configDir 'framework.json'\n$config = @{\n  browser = @{\n    headless = $headless\n    channel = 'msedge'\n    fallbackBrowser = 'chromium'\n  }\n  reporting = @{\n    resultsRoot = '$(StageResultsDirectory)'\n    artifactRoot = 'Artifacts'\n  }\n} | ConvertTo-Json -Depth 20\nSet-Content -LiteralPath $frameworkConfig -Value $config -Encoding UTF8\n\n$runSettingsPath = Join-Path $packageRoot 'Tosca.runsettings'\n$runSettings = @\"\n<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<RunSettings>\n  <RunConfiguration>\n    <ResultsDirectory>$(StageResultsDirectory)\\Runner</ResultsDirectory>\n    <MaxCpuCount>3</MaxCpuCount>\n  </RunConfiguration>\n  <NUnit>\n    <WorkDirectory>$(StageResultsDirectory)\\NUnitWork</WorkDirectory>\n    <NumberOfTestWorkers>3</NumberOfTestWorkers>\n    <UseParentFQNForParametrizedTests>false</UseParentFQNForParametrizedTests>\n    <TestOutputXml>$(StageResultsDirectory)\\NUnit</TestOutputXml>\n  </NUnit>\n</RunSettings>\n\"@\nSet-Content -LiteralPath $runSettingsPath -Value $runSettings -Encoding UTF8\n\n$playwrightScript = Get-ChildItem -LiteralPath $binRoot -Recurse -File -Filter 'playwright.ps1' |\n    Where-Object { Test-Path -LiteralPath (Join-Path $_.Directory.FullName 'Microsoft.Playwright.dll') } |\n    Select-Object -First 1\nif (-not $playwrightScript) { throw 'No playable playwright.ps1 + Microsoft.Playwright.dll pair exists in bin artifact.' }\n& $playwrightScript.FullName install \"$(PlaywrightBrowser)\"\nif ($LASTEXITCODE -ne 0) { throw \"Playwright $(PlaywrightBrowser) installation failed with exit code $LASTEXITCODE.\" }\n\nWrite-Host \"##vso[task.setvariable variable=TEST_PACKAGE_ROOT]$packageRoot\"\nWrite-Host \"##vso[task.setvariable variable=TEST_FRAMEWORK_CONFIG]$frameworkConfig\"\nWrite-Host \"##vso[task.setvariable variable=TEST_RESULTS_ROOT]$resultsRoot\"\nWrite-Host \"##vso[task.setvariable variable=TEST_REPOSITORY_ROOT]$packageRoot\"\nWrite-Host \"##vso[task.setvariable variable=VSTEST_RUNSETTINGS]$runSettingsPath\"\n\nWrite-Host \"Prepared test package: $packageRoot\"\nWrite-Host \"Stage result scope: $(StageResultsDirectory)\"\n$global:LASTEXITCODE = 0\n",
+                "script": "$ErrorActionPreference = 'Stop'\n\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'Prepare-ReleaseTestPackage.ps1' | Where-Object { $_.Directory.Name -eq 'scripts' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged Prepare-ReleaseTestPackage.ps1. Run a new CI build with reporting dependencies and select that artifact.' }\n& $matches[0].FullName",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
@@ -669,14 +763,107 @@
               }
             },
             {
+              "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+              "version": "2.*",
+              "name": "Publish this agent evidence for consolidation",
+              "refName": "PowerShell_Suite_Report",
+              "enabled": true,
+              "alwaysRun": true,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "always()",
+              "environment": {
+                "TEST_RESULTS_ROOT": "$(TEST_RESULTS_ROOT)",
+                "SYSTEM_JOBPOSITIONINPHASE": "$(System.JobPositionInPhase)",
+                "SYSTEM_TOTALJOBSINPHASE": "$(System.TotalJobsInPhase)"
+              },
+              "inputs": {
+                "targetType": "inline",
+                "script": "$ErrorActionPreference = 'Stop'\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'release_reporting.py' | Where-Object { $_.Directory.Name -eq 'tools' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged release_reporting.py. Rebuild the CI artifact with reporting dependencies.' }\n& python $matches[0].FullName publish\nif ($LASTEXITCODE -ne 0) { throw \"Evidence publication failed with exit code $LASTEXITCODE\" }",
+                "errorActionPreference": "stop",
+                "warningPreference": "default",
+                "informationPreference": "default",
+                "verbosePreference": "default",
+                "debugPreference": "default",
+                "progressPreference": "silentlyContinue",
+                "failOnStderr": "false",
+                "showWarnings": "true",
+                "ignoreLASTEXITCODE": "false",
+                "pwsh": "false",
+                "workingDirectory": "$(System.DefaultWorkingDirectory)",
+                "runScriptInSeparateScope": "false"
+              }
+            }
+          ]
+        },
+        {
+          "deploymentInput": {
+            "parallelExecution": {
+              "parallelExecutionType": "none"
+            },
+            "agentSpecification": {
+              "identifier": "windows-2022"
+            },
+            "skipArtifactsDownload": false,
+            "artifactsDownloadInput": {
+              "downloadInputs": [
+                {
+                  "alias": "_FF_CI",
+                  "artifactType": "Build",
+                  "artifactDownloadMode": "All",
+                  "artifactItems": []
+                }
+              ]
+            },
+            "queueId": 0,
+            "demands": [],
+            "enableAccessToken": true,
+            "timeoutInMinutes": 0,
+            "jobCancelTimeoutInMinutes": 5,
+            "condition": "always()",
+            "overrideInputs": {}
+          },
+          "rank": 2,
+          "phaseType": "agentBasedDeployment",
+          "name": "Collect all agents and publish one consolidated report",
+          "refName": null,
+          "workflowTasks": [
+            {
               "environment": {},
+              "taskId": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
+              "version": "0.*",
+              "name": "Install Python 3.11 for consolidated reporting",
+              "refName": "UsePython_Suite_Aggregate",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "always()",
+              "inputs": {
+                "versionSpec": "3.11",
+                "disableDownloadFromRegistry": "false",
+                "allowUnstable": "false",
+                "addToPath": "true",
+                "architecture": "x64"
+              }
+            },
+            {
+              "environment": {
+                "SYSTEM_ACCESSTOKEN": "$(System.AccessToken)"
+              },
               "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
               "version": "2.*",
               "name": "Generate and attach consolidated HTML report",
-              "refName": "PowerShell_Suite_Report",
+              "refName": "PowerShell_Suite_Aggregate",
               "enabled": true,
-              "alwaysRun": false,
-              "continueOnError": true,
+              "alwaysRun": true,
+              "continueOnError": false,
               "timeoutInMinutes": 0,
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
@@ -684,7 +871,7 @@
               "condition": "always()",
               "inputs": {
                 "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Continue'\n\n$packageRoot = \"$(TEST_PACKAGE_ROOT)\"\n$resultsDirectory = \"$(StageResultsDirectory)\"\n$stageKey = \"$(StageKey)\"\nif ([string]::IsNullOrWhiteSpace($packageRoot) -or -not (Test-Path -LiteralPath $packageRoot -PathType Container)) {\n    Write-Warning 'The prepared test package is unavailable, so report/zip publishing is skipped.'\n    exit 0\n}\n\n$resultsRoot = Join-Path $packageRoot $resultsDirectory\n$evidenceRoot = Join-Path $resultsRoot 'Artifacts'\n$reportScript = Join-Path $env:SYSTEM_DEFAULTWORKINGDIRECTORY 'scripts\\Generate-ConsolidatedReport.ps1'\nif (Test-Path -LiteralPath $reportScript -PathType Leaf) {\n    try {\n        & $reportScript -ResultsDirectory $resultsRoot\n        if ($LASTEXITCODE -ne 0) { throw \"Report generator exited with code $LASTEXITCODE.\" }\n        $reportRoot = Join-Path $resultsRoot 'ConsolidatedReport'\n        foreach ($file in @('report.html','log.html','summary.json','output.xml')) {\n            $full = Join-Path $reportRoot $file\n            if (Test-Path -LiteralPath $full -PathType Leaf) {\n                if ($file -eq 'report.html') { Write-Host \"##vso[task.uploadsummary]$full\" }\n                Write-Host \"##vso[task.uploadfile]$full\"\n            }\n        }\n    }\n    catch { Write-Warning \"Consolidated report generation failed: $($_.Exception.Message)\" }\n}\n\nif (Test-Path -LiteralPath $resultsRoot -PathType Container) {\n    $artifactDir = Join-Path $packageRoot 'StageArtifacts'\n    New-Item -ItemType Directory -Path $artifactDir -Force | Out-Null\n    $zipPath = Join-Path $artifactDir (\"{0}-TestResults.zip\" -f $stageKey)\n    if (Test-Path -LiteralPath $zipPath) { Remove-Item -LiteralPath $zipPath -Force }\n    Compress-Archive -Path (Join-Path $resultsRoot '*') -DestinationPath $zipPath -CompressionLevel Optimal\n    Write-Host \"##vso[task.uploadfile]$zipPath\"\n}\nexit 0\n",
+                "script": "$ErrorActionPreference = 'Stop'\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'release_reporting.py' | Where-Object { $_.Directory.Name -eq 'tools' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged release_reporting.py. Rebuild the CI artifact with reporting dependencies.' }\n& python $matches[0].FullName collect\nif ($LASTEXITCODE -ne 0) { throw \"Consolidated reporting failed with exit code $LASTEXITCODE\" }",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
@@ -800,7 +987,8 @@
         {
           "deploymentInput": {
             "parallelExecution": {
-              "parallelExecutionType": "multiMachine"
+              "parallelExecutionType": "multiMachine",
+              "maxNumberOfAgents": 1
             },
             "agentSpecification": {
               "identifier": "windows-2022"
@@ -894,7 +1082,15 @@
               }
             },
             {
-              "environment": {},
+              "environment": {
+                "BUILDCONFIGURATION": "$(BuildConfiguration)",
+                "HEADLESS": "$(Headless)",
+                "STAGEKEY": "$(StageKey)",
+                "STAGERESULTSDIRECTORY": "$(StageResultsDirectory)",
+                "PLAYWRIGHTBROWSER": "$(PlaywrightBrowser)",
+                "ONDEMAND_TEST_RUN_ID": "$(test.RunId)",
+                "MANUALTESTRUNID": "$(ManualTestRunId)"
+              },
               "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
               "version": "2.*",
               "name": "Prepare and validate CI automation artifact",
@@ -909,7 +1105,7 @@
               "condition": "succeeded()",
               "inputs": {
                 "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Stop'\n\n$downloadRoot = [IO.Path]::GetFullPath(\"$(System.DefaultWorkingDirectory)\")\n$releaseId = \"$(Release.ReleaseId)\"\nif ([string]::IsNullOrWhiteSpace($releaseId) -or $releaseId -like '$(*') { $releaseId = [guid]::NewGuid().ToString('N') }\n$stageKey = \"$(StageKey)\"\n$stageRoot = Join-Path \"$(Agent.TempDirectory)\" (\"FFTestAutomation\\{0}\\{1}\" -f $releaseId, $stageKey)\n$packageRoot = Join-Path $stageRoot 'package'\n$binRoot = Join-Path $packageRoot 'bin'\n\nif (Test-Path -LiteralPath $stageRoot) { Remove-Item -LiteralPath $stageRoot -Recurse -Force }\nNew-Item -ItemType Directory -Path $binRoot -Force | Out-Null\n\n$coreDll = Get-ChildItem -LiteralPath $downloadRoot -Recurse -File -Filter 'InsuranceAutomation.Core.dll' -ErrorAction SilentlyContinue |\n    Where-Object { $_.FullName -match '[\\\\/]InsuranceAutomation\\.Core[\\\\/]$(BuildConfiguration)[\\\\/]net8\\.0[\\\\/]InsuranceAutomation\\.Core\\.dll$' } |\n    Select-Object -First 1\nif (-not $coreDll) { throw 'Unable to locate InsuranceAutomation.Core.dll in downloaded CI artifact.' }\n$sourceBinRoot = $coreDll.Directory.Parent.Parent.Parent.FullName\nrobocopy $sourceBinRoot $binRoot /E /R:2 /W:1\nif ($LASTEXITCODE -ge 8) { throw \"robocopy failed with exit code $LASTEXITCODE\" }\n\n$required = @(\n  'InsuranceAutomation.Core\\$(BuildConfiguration)\\net8.0\\InsuranceAutomation.Core.dll',\n  'CommercialLines.DuckCreek.Tests\\$(BuildConfiguration)\\net8.0\\CommercialLines.DuckCreek.Tests.dll',\n  'CommercialLines.ExpertQuote.Tests\\$(BuildConfiguration)\\net8.0\\CommercialLines.ExpertQuote.Tests.dll',\n  'PersonalLines.DuckCreek.Tests\\$(BuildConfiguration)\\net8.0\\PersonalLines.DuckCreek.Tests.dll'\n)\nforeach ($relative in $required) {\n  $path = Join-Path $binRoot $relative\n  if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw \"Required CI artifact file is missing: $relative\" }\n}\n\n$resultsRoot = Join-Path $packageRoot \"$(StageResultsDirectory)\"\nforeach ($name in @('Runner','NUnit','NUnitWork')) { New-Item -ItemType Directory -Path (Join-Path $resultsRoot $name) -Force | Out-Null }\n\n$headless = $true\nif (-not [bool]::TryParse(\"$(Headless)\", [ref]$headless)) { throw \"Headless must be true or false; received '$(Headless)'.\" }\n\n$configDir = Join-Path $packageRoot 'config'\nNew-Item -ItemType Directory -Path $configDir -Force | Out-Null\n$frameworkConfig = Join-Path $configDir 'framework.json'\n$config = @{\n  browser = @{\n    headless = $headless\n    channel = 'msedge'\n    fallbackBrowser = 'chromium'\n  }\n  reporting = @{\n    resultsRoot = '$(StageResultsDirectory)'\n    artifactRoot = 'Artifacts'\n  }\n} | ConvertTo-Json -Depth 20\nSet-Content -LiteralPath $frameworkConfig -Value $config -Encoding UTF8\n\n$runSettingsPath = Join-Path $packageRoot 'Tosca.runsettings'\n$runSettings = @\"\n<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<RunSettings>\n  <RunConfiguration>\n    <ResultsDirectory>$(StageResultsDirectory)\\Runner</ResultsDirectory>\n    <MaxCpuCount>3</MaxCpuCount>\n  </RunConfiguration>\n  <NUnit>\n    <WorkDirectory>$(StageResultsDirectory)\\NUnitWork</WorkDirectory>\n    <NumberOfTestWorkers>3</NumberOfTestWorkers>\n    <UseParentFQNForParametrizedTests>false</UseParentFQNForParametrizedTests>\n    <TestOutputXml>$(StageResultsDirectory)\\NUnit</TestOutputXml>\n  </NUnit>\n</RunSettings>\n\"@\nSet-Content -LiteralPath $runSettingsPath -Value $runSettings -Encoding UTF8\n\n$playwrightScript = Get-ChildItem -LiteralPath $binRoot -Recurse -File -Filter 'playwright.ps1' |\n    Where-Object { Test-Path -LiteralPath (Join-Path $_.Directory.FullName 'Microsoft.Playwright.dll') } |\n    Select-Object -First 1\nif (-not $playwrightScript) { throw 'No playable playwright.ps1 + Microsoft.Playwright.dll pair exists in bin artifact.' }\n& $playwrightScript.FullName install \"$(PlaywrightBrowser)\"\nif ($LASTEXITCODE -ne 0) { throw \"Playwright $(PlaywrightBrowser) installation failed with exit code $LASTEXITCODE.\" }\n\nWrite-Host \"##vso[task.setvariable variable=TEST_PACKAGE_ROOT]$packageRoot\"\nWrite-Host \"##vso[task.setvariable variable=TEST_FRAMEWORK_CONFIG]$frameworkConfig\"\nWrite-Host \"##vso[task.setvariable variable=TEST_RESULTS_ROOT]$resultsRoot\"\nWrite-Host \"##vso[task.setvariable variable=TEST_REPOSITORY_ROOT]$packageRoot\"\nWrite-Host \"##vso[task.setvariable variable=VSTEST_RUNSETTINGS]$runSettingsPath\"\n\nWrite-Host \"Prepared test package: $packageRoot\"\nWrite-Host \"Stage result scope: $(StageResultsDirectory)\"\n$global:LASTEXITCODE = 0\n",
+                "script": "$ErrorActionPreference = 'Stop'\n\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'Prepare-ReleaseTestPackage.ps1' | Where-Object { $_.Directory.Name -eq 'scripts' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged Prepare-ReleaseTestPackage.ps1. Run a new CI build with reporting dependencies and select that artifact.' }\n& $matches[0].FullName",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
@@ -980,22 +1176,26 @@
               }
             },
             {
-              "environment": {},
               "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
               "version": "2.*",
-              "name": "Generate and attach consolidated HTML report",
+              "name": "Publish this agent evidence for consolidation",
               "refName": "PowerShell_TestPlan_Report",
               "enabled": true,
-              "alwaysRun": false,
-              "continueOnError": true,
+              "alwaysRun": true,
+              "continueOnError": false,
               "timeoutInMinutes": 0,
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
               "overrideInputs": {},
               "condition": "always()",
+              "environment": {
+                "TEST_RESULTS_ROOT": "$(TEST_RESULTS_ROOT)",
+                "SYSTEM_JOBPOSITIONINPHASE": "$(System.JobPositionInPhase)",
+                "SYSTEM_TOTALJOBSINPHASE": "$(System.TotalJobsInPhase)"
+              },
               "inputs": {
                 "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Continue'\n\n$packageRoot = \"$(TEST_PACKAGE_ROOT)\"\n$resultsDirectory = \"$(StageResultsDirectory)\"\n$stageKey = \"$(StageKey)\"\nif ([string]::IsNullOrWhiteSpace($packageRoot) -or -not (Test-Path -LiteralPath $packageRoot -PathType Container)) {\n    Write-Warning 'The prepared test package is unavailable, so report/zip publishing is skipped.'\n    exit 0\n}\n\n$resultsRoot = Join-Path $packageRoot $resultsDirectory\n$evidenceRoot = Join-Path $resultsRoot 'Artifacts'\n$reportScript = Join-Path $env:SYSTEM_DEFAULTWORKINGDIRECTORY 'scripts\\Generate-ConsolidatedReport.ps1'\nif (Test-Path -LiteralPath $reportScript -PathType Leaf) {\n    try {\n        & $reportScript -ResultsDirectory $resultsRoot\n        if ($LASTEXITCODE -ne 0) { throw \"Report generator exited with code $LASTEXITCODE.\" }\n        $reportRoot = Join-Path $resultsRoot 'ConsolidatedReport'\n        foreach ($file in @('report.html','log.html','summary.json','output.xml')) {\n            $full = Join-Path $reportRoot $file\n            if (Test-Path -LiteralPath $full -PathType Leaf) {\n                if ($file -eq 'report.html') { Write-Host \"##vso[task.uploadsummary]$full\" }\n                Write-Host \"##vso[task.uploadfile]$full\"\n            }\n        }\n    }\n    catch { Write-Warning \"Consolidated report generation failed: $($_.Exception.Message)\" }\n}\n\nif (Test-Path -LiteralPath $resultsRoot -PathType Container) {\n    $artifactDir = Join-Path $packageRoot 'StageArtifacts'\n    New-Item -ItemType Directory -Path $artifactDir -Force | Out-Null\n    $zipPath = Join-Path $artifactDir (\"{0}-TestResults.zip\" -f $stageKey)\n    if (Test-Path -LiteralPath $zipPath) { Remove-Item -LiteralPath $zipPath -Force }\n    Compress-Archive -Path (Join-Path $resultsRoot '*') -DestinationPath $zipPath -CompressionLevel Optimal\n    Write-Host \"##vso[task.uploadfile]$zipPath\"\n}\nexit 0\n",
+                "script": "$ErrorActionPreference = 'Stop'\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'release_reporting.py' | Where-Object { $_.Directory.Name -eq 'tools' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged release_reporting.py. Rebuild the CI artifact with reporting dependencies.' }\n& python $matches[0].FullName publish\nif ($LASTEXITCODE -ne 0) { throw \"Evidence publication failed with exit code $LASTEXITCODE\" }",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
@@ -1011,103 +1211,7 @@
               }
             }
           ]
-        }
-      ],
-      "environmentOptions": {
-        "emailNotificationType": "OnlyOnFailure",
-        "emailRecipients": "release.environment.owner;release.creator",
-        "skipArtifactsDownload": false,
-        "timeoutInMinutes": 0,
-        "enableAccessToken": false,
-        "publishDeploymentStatus": true,
-        "badgeEnabled": false,
-        "autoLinkWorkItems": true,
-        "pullRequestDeploymentEnabled": false
-      },
-      "demands": [],
-      "conditions": [],
-      "executionPolicy": {
-        "concurrencyCount": 1,
-        "queueDepthCount": 0
-      },
-      "schedules": [],
-      "retentionPolicy": {
-        "daysToKeep": 30,
-        "releasesToKeep": 10,
-        "retainBuild": true
-      },
-      "properties": {},
-      "preDeploymentGates": {
-        "id": 0,
-        "gatesOptions": null,
-        "gates": []
-      },
-      "postDeploymentGates": {
-        "id": 0,
-        "gatesOptions": null,
-        "gates": []
-      },
-      "environmentTriggers": [],
-      "processParameters": {}
-    },
-    {
-      "id": 0,
-      "name": "04 - Final Consolidated Report",
-      "rank": 4,
-      "owner": null,
-      "variables": {
-        "StageKey": {
-          "value": "FinalConsolidated",
-          "isSecret": false,
-          "allowOverride": false
         },
-        "StageResultsDirectory": {
-          "value": "TestResults\\FinalConsolidated",
-          "isSecret": false,
-          "allowOverride": false
-        }
-      },
-      "variableGroups": [],
-      "preDeployApprovals": {
-        "approvals": [
-          {
-            "rank": 1,
-            "isAutomated": true,
-            "isNotificationOn": false,
-            "id": 0
-          }
-        ],
-        "approvalOptions": {
-          "requiredApproverCount": 0,
-          "releaseCreatorCanBeApprover": true,
-          "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
-          "enforceIdentityRevalidation": false,
-          "timeoutInMinutes": 0,
-          "executionOrder": "beforeGates"
-        }
-      },
-      "deployStep": {
-        "id": 0
-      },
-      "postDeployApprovals": {
-        "approvals": [
-          {
-            "rank": 1,
-            "isAutomated": true,
-            "isNotificationOn": false,
-            "id": 0
-          }
-        ],
-        "approvalOptions": {
-          "requiredApproverCount": 0,
-          "releaseCreatorCanBeApprover": true,
-          "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
-          "enforceIdentityRevalidation": false,
-          "timeoutInMinutes": 0,
-          "executionOrder": "afterSuccessfulGates"
-        }
-      },
-      "deployPhases": [
         {
           "deploymentInput": {
             "parallelExecution": {
@@ -1129,23 +1233,23 @@
             },
             "queueId": 0,
             "demands": [],
-            "enableAccessToken": false,
+            "enableAccessToken": true,
             "timeoutInMinutes": 0,
             "jobCancelTimeoutInMinutes": 5,
             "condition": "always()",
             "overrideInputs": {}
           },
-          "rank": 1,
+          "rank": 2,
           "phaseType": "agentBasedDeployment",
-          "name": "Aggregate all stage evidence into one report",
+          "name": "Collect all agents and publish one consolidated report",
           "refName": null,
           "workflowTasks": [
             {
               "environment": {},
               "taskId": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
               "version": "0.*",
-              "name": "Install Python 3.x",
-              "refName": "UsePython_FinalAggregate",
+              "name": "Install Python 3.11 for consolidated reporting",
+              "refName": "UsePython_TestPlan_Aggregate",
               "enabled": true,
               "alwaysRun": false,
               "continueOnError": false,
@@ -1155,20 +1259,24 @@
               "overrideInputs": {},
               "condition": "always()",
               "inputs": {
-                "versionSpec": "3.x",
+                "versionSpec": "3.11",
+                "disableDownloadFromRegistry": "false",
+                "allowUnstable": "false",
                 "addToPath": "true",
                 "architecture": "x64"
               }
             },
             {
-              "environment": {},
+              "environment": {
+                "SYSTEM_ACCESSTOKEN": "$(System.AccessToken)"
+              },
               "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
               "version": "2.*",
-              "name": "Generate one release-level consolidated report",
-              "refName": "PowerShell_FinalAggregate_Report",
+              "name": "Generate and attach consolidated HTML report",
+              "refName": "PowerShell_TestPlan_Aggregate",
               "enabled": true,
-              "alwaysRun": false,
-              "continueOnError": true,
+              "alwaysRun": true,
+              "continueOnError": false,
               "timeoutInMinutes": 0,
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
@@ -1176,7 +1284,7 @@
               "condition": "always()",
               "inputs": {
                 "targetType": "inline",
-                "script": "$ErrorActionPreference = 'Continue'\n\n$releaseId = \"$(Release.ReleaseId)\"\n$workRoot = Join-Path \"$(Agent.TempDirectory)\" (\"FFTestAutomation\\Aggregate\\{0}\" -f $releaseId)\n$zipsRoot = Join-Path $workRoot 'zips'\n$extractRoot = Join-Path $workRoot 'extract'\n$mergedRoot = Join-Path $workRoot 'merged'\n$mergedEvidence = Join-Path $mergedRoot 'Artifacts'\n$reportOut = Join-Path $mergedRoot 'ConsolidatedReport'\n\nif (Test-Path -LiteralPath $workRoot) { Remove-Item -LiteralPath $workRoot -Recurse -Force }\nNew-Item -ItemType Directory -Path $zipsRoot,$extractRoot,$mergedEvidence,$reportOut -Force | Out-Null\n\n$zipCandidates = @(Get-ChildItem -Path \"$(System.DefaultWorkingDirectory)\",\"$(Agent.TempDirectory)\" -Recurse -File -Filter '*-TestResults.zip' -ErrorAction SilentlyContinue)\nif (-not $zipCandidates -or $zipCandidates.Count -eq 0) {\n    Write-Warning 'No stage result zip files were discoverable on this agent. Cross-agent aggregation requires stage zips to be downloaded or otherwise made available to this final environment.'\n    exit 0\n}\n\nforeach ($zip in $zipCandidates | Sort-Object FullName -Unique) {\n    $name = [IO.Path]::GetFileNameWithoutExtension($zip.Name)\n    $target = Join-Path $extractRoot $name\n    New-Item -ItemType Directory -Path $target -Force | Out-Null\n    Expand-Archive -LiteralPath $zip.FullName -DestinationPath $target -Force\n}\n\n$artifactRoots = Get-ChildItem -Path $extractRoot -Recurse -Directory -Filter 'Artifacts' -ErrorAction SilentlyContinue\nforeach ($artRoot in $artifactRoots) {\n    $zipLabel = Split-Path -Path $artRoot.Parent.FullName -Leaf\n    Get-ChildItem -LiteralPath $artRoot.FullName -Directory -ErrorAction SilentlyContinue | ForEach-Object {\n        $dest = Join-Path $mergedEvidence (\"{0}__{1}\" -f $zipLabel, $_.Name)\n        Copy-Item -LiteralPath $_.FullName -Destination $dest -Recurse -Force\n    }\n}\n\n$generator = Get-ChildItem -Path \"$(System.DefaultWorkingDirectory)\" -Recurse -File -Filter 'generate_consolidated_report.py' -ErrorAction SilentlyContinue | Select-Object -First 1\nif (-not $generator) {\n    Write-Warning 'generate_consolidated_report.py not found in downloaded artifact; skipping final aggregate report generation.'\n    exit 0\n}\n$python = Get-Command python -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1\nif (-not $python) { throw 'Python executable not available after UsePython step.' }\n\n& $python.Source $generator.FullName --evidence-root $mergedEvidence --source-root \"$(System.DefaultWorkingDirectory)\" --output-dir $reportOut --fail-on-empty\nif ($LASTEXITCODE -ne 0) { throw \"Consolidated report generator failed with exit code $LASTEXITCODE\" }\n\nforeach ($file in @('report.html','log.html','summary.json','output.xml')) {\n    $full = Join-Path $reportOut $file\n    if (Test-Path -LiteralPath $full -PathType Leaf) {\n        if ($file -eq 'report.html') { Write-Host \"##vso[task.uploadsummary]$full\" }\n        Write-Host \"##vso[task.uploadfile]$full\"\n    }\n}\n\n$finalZip = Join-Path $workRoot 'FinalConsolidatedReport.zip'\nif (Test-Path -LiteralPath $finalZip) { Remove-Item -LiteralPath $finalZip -Force }\nCompress-Archive -Path (Join-Path $mergedRoot '*') -DestinationPath $finalZip -CompressionLevel Optimal\nWrite-Host \"##vso[task.uploadfile]$finalZip\"\nexit 0\n",
+                "script": "$ErrorActionPreference = 'Stop'\n$matches = @(Get-ChildItem -LiteralPath $env:SYSTEM_DEFAULTWORKINGDIRECTORY -Recurse -File -Filter 'release_reporting.py' | Where-Object { $_.Directory.Name -eq 'tools' })\nif ($matches.Count -ne 1) { throw 'Expected one packaged release_reporting.py. Rebuild the CI artifact with reporting dependencies.' }\n& python $matches[0].FullName collect\nif ($LASTEXITCODE -ne 0) { throw \"Consolidated reporting failed with exit code $LASTEXITCODE\" }",
                 "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
