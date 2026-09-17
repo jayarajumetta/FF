@@ -189,6 +189,37 @@
           "workflowTasks": [
             {
               "environment": {},
+              "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+              "version": "2.*",
+              "name": "Diagnose downloaded artifact layout",
+              "refName": "PowerShell_Assembly_Diagnose",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": true,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "targetType": "inline",
+                "script": "$root = Join-Path $env:SYSTEM_DEFAULTWORKINGDIRECTORY '_FF_CI'\nWrite-Host \"Listing artifact root: $root\"\nif (-not (Test-Path -LiteralPath $root)) { Write-Host '##[warning]_FF_CI artifact folder was not downloaded.'; return }\nGet-ChildItem -LiteralPath $root -Recurse -Depth 3 | ForEach-Object { Write-Host $_.FullName.Substring($root.Length) }\n$target = Join-Path $root 'testpackage\\scripts\\Invoke-ReleaseStage.ps1'\nWrite-Host \"Expected entrypoint present: $([bool](Test-Path -LiteralPath $target))\"",
+                "errorActionPreference": "continue",
+                "warningPreference": "default",
+                "informationPreference": "default",
+                "verbosePreference": "default",
+                "debugPreference": "default",
+                "progressPreference": "silentlyContinue",
+                "failOnStderr": "false",
+                "showWarnings": "true",
+                "ignoreLASTEXITCODE": "true",
+                "pwsh": "false",
+                "workingDirectory": "$(System.DefaultWorkingDirectory)",
+                "runScriptInSeparateScope": "false"
+              }
+            },
+            {
+              "environment": {},
               "taskId": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
               "version": "2.*",
               "name": "Install .NET 8 SDK",
