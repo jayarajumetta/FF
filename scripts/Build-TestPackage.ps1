@@ -1,11 +1,21 @@
 param(
 	[Parameter(Mandatory = $true)][string]$StagingDirectory,
-	[string]$SourceRoot = (Split-Path $PSScriptRoot -Parent),
+	[string]$SourceRoot,
 	[ValidateSet('Debug', 'Release')][string]$BuildConfiguration = 'Release'
 )
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
+if ([string]::IsNullOrWhiteSpace($SourceRoot)) {
+	$scriptDirectory = $PSScriptRoot
+	if ([string]::IsNullOrWhiteSpace($scriptDirectory)) {
+		$scriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Path
+	}
+	if ([string]::IsNullOrWhiteSpace($scriptDirectory)) {
+		throw 'Unable to determine the source root. Provide -SourceRoot explicitly.'
+	}
+	$SourceRoot = Split-Path -Parent $scriptDirectory
+}
 $SourceRoot = [IO.Path]::GetFullPath($SourceRoot)
 $package = [IO.Path]::GetFullPath((Join-Path $StagingDirectory 'testpackage'))
 $binSource = Join-Path $SourceRoot 'bin'
