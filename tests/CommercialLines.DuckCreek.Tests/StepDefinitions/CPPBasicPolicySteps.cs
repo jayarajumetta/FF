@@ -630,12 +630,13 @@ public sealed class CPPBasicPolicySteps
         await page.EnterDescriptionOfPropertyAsync(data.Resolve("{{data:description_of_property_242}}"));
         await page.ClickAssignLocationsAsync();
         await page.WaitForOtherInterestPremisesScheduleAsync("Exists");
+        await Task.Delay(2000);
         await page.ClickNewAssignmentAsync();
         await page.WaitForNewAssignmentAsync("Exists");
         await page.ClickOtherInterestPremisesDetailOKAsync();
         await page.WaitForAssignmentScheduleForAsync("Exists");
         await page.ClickAssignmentScheduleForOKAsync();
-        await page.ClickOtherInterestPremisesScheduleOKAsync();
+        //await page.ClickOtherInterestPremisesScheduleOKAsync();
         if (data.Condition("State != \"OR\""))
         {
             await page.ClickAddlInterestsMainOKAsync();
@@ -653,7 +654,7 @@ public sealed class CPPBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickPropertyUWQuestionsAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
+        //await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickPropertyUWQuestionsUpdateAnswersAsync();
 
     }
@@ -680,11 +681,7 @@ public sealed class CPPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.ClickPolicyInfoAsync();
-        if (data.Condition("'CPP LOB' == \"GL\""))
-        {
             await page.ClickGLDetailAsync();
-        }
 
     }
 
@@ -722,38 +719,38 @@ public sealed class CPPBasicPolicySteps
         {
             await page.EnterPremOpDedAsync(data.Resolve("{{data:premop_ded_264}}"));
         }
-        if (data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await page.EnterPremOpPDDedAsync("");
-        }
+        //if (data.Condition("'Coverage Form' != \"OCP\""))
+        //{
+        //    await page.EnterPremOpPDDedAsync("");
+        //}
         if (data.Condition("'Coverage Form' != \"OCP\""))
         {
             await page.SetSplitBIDedAsync(data.Resolve("{{data:split_bi_ded_266}}"));
         }
-        if (data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await page.EnterSplitPDDedAsync("");
-        }
+        //if (data.Condition("'Coverage Form' != \"OCP\""))
+        //{
+        //    await page.EnterSplitPDDedAsync("");
+        //}
         if (data.Condition("'Coverage Form' != \"OCP\""))
         {
             await page.EnterProdBIDedAsync(data.Resolve("{{data:prod_bi_ded_268}}"));
         }
-        if (data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await page.EnterProdPDDedAsync("");
-        }
-        if (data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await page.EnterFireDamageAsync("");
-        }
-        if (data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await page.EnterMedicalAsync("");
-        }
-        if (data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await page.EnterPersAdvInjAsync("");
-        }
+        //if (data.Condition("'Coverage Form' != \"OCP\""))
+        //{
+        //    await page.EnterProdPDDedAsync("");
+        //}
+        //if (data.Condition("'Coverage Form' != \"OCP\""))
+        //{
+        //    await page.EnterFireDamageAsync("");
+        //}
+        //if (data.Condition("'Coverage Form' != \"OCP\""))
+        //{
+        //    await page.EnterMedicalAsync("");
+        //}
+        //if (data.Condition("'Coverage Form' != \"OCP\""))
+        //{
+        //    await page.EnterPersAdvInjAsync("");
+        //}
         if (data.Condition("'Coverage Form' != \"OCP\""))
         {
             await page.EnterIsTheInsuredEngagedInAnySnowOrIceRemovalOperationsAsync(data.Resolve("{{data:is_the_insured_engaged_in_any_snow_or_ice_removal_operations_273}}"));
@@ -841,6 +838,7 @@ public sealed class CPPBasicPolicySteps
         {
             await page.ClickExcludeUndergroundPropertyDamageHazardAsync();
         }
+        await page.ClickOKAsync();
 
     }
 
@@ -875,7 +873,7 @@ public sealed class CPPBasicPolicySteps
 
         await page.WaitForFGFormTableRowAsync("Exists");
         await page.VerifyFG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementAsync("Exists", "");
-        await page.ClickDetailAsync();
+        await page.ClickFG0055DetailAsync();
         await page.EnterLimitDeductibleAsync(data.Resolve("{{data:limit_deductible_308}}"));
         await page.EnterHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_309}}"));
         await page.EnterTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_310}}"));
@@ -900,15 +898,16 @@ public sealed class CPPBasicPolicySteps
         {
             await page.WaitForCG2007AddLInsuredEngineersArchitectsTypeAsync("Exists");
         }
-        await page.ClickOKAsync();
-        if (data.Condition("Type != NULL"))
-        {
-            await page.ClickCG2007AddLInsuredEngineersArchitectsTypeAsync();
-        }
         if (data.Condition("Type != NULL"))
         {
             await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_319}}"));
         }
+        await page.ClickOKAsync();
+        //if (data.Condition("Type != NULL"))
+        //{
+        //    await page.ClickCG2007AddLInsuredEngineersArchitectsTypeAsync();
+        //}
+        
 
     }
 
@@ -1012,10 +1011,11 @@ public sealed class CPPBasicPolicySteps
         await page.ClickGLUWQuestionsAsync();
         await page.WaitForGeneralLiabilityInformationAsync("Exists");
         await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
+        await Task.Delay(3000);
         await page.EnterDescribeAllHoldHarmlessAgreementsAndPleaseProvideACopyAsync(data.Resolve("{{data:describe_all_hold_harmless_agreements_and_please_provide_a_copy_345}}"));
-        await page.ClickGeneralLiabilityInformationAsync();
-        await page.ClickGLUWQuestionsAsync();
-        await page.WaitForGeneralLiabilityInformationAsync("Exists");
+        //await page.ClickGeneralLiabilityInformationAsync();
+        //await page.ClickGLUWQuestionsAsync();
+        //await page.WaitForGeneralLiabilityInformationAsync("Exists");
         await page.ClickProductsCompletedOpsButtonAsync();
         await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();

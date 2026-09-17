@@ -14,8 +14,8 @@ Feature: CPP Basic Policy
     And I start a new quote
     When I enter business client information
     And I add a new Associated Client - Business Owner Type - Click Add Client
-    #And I complete aJAX Error Check
-    #And I complete required billing information
+    And I complete aJAX Error Check
+    And I complete required billing information
     And I complete the Associated Client Info
     And I complete required policy information
     And I run insurance score
@@ -24,7 +24,7 @@ Feature: CPP Basic Policy
     And I select CPP Coverage - IM
     And I select CP Detail
     And I complete CP Fields
-    #And I complete mask Error Recovery
+    ##And I complete mask Error Recovery - Not Needed
     And I complete CP Fields for policy coverage
     And I complete CP Fields for location
     And I complete CP Fields for building
@@ -34,7 +34,7 @@ Feature: CPP Basic Policy
     And I add Addl Interests
     And I complete Property UW Questions
     And I return to CPP Navigation
-    And I switch to UW Director for OR and WA when required
+    ##And I switch to UW Director for OR and WA when required - Not Needed
     And I select GL Detail
     And I complete CGL Fields
     And I add Class

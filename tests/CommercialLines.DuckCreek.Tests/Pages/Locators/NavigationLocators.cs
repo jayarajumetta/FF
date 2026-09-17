@@ -28,6 +28,8 @@ public sealed class NavigationLocators
     public ILocator AcceptUM => _page.GetByText("Accept UM", new() { Exact = true });
 
     public ILocator PageTitle => _page.Locator("[id=\"pageTitle\"]");
+
+    public ILocator ProductsCompletedOpsButton => _page.GetByRole(AriaRole.Link, new() { Name = "Products/Completed Ops", Exact = true });
     public ILocator PolicyInfo => _page.GetByRole(AriaRole.Link, new() { Name = "Policy Info", Exact = true });
     public ILocator WCNavigationLinksLocation => _page.GetByRole(AriaRole.Link, new() { Name = "Location", Exact = true });
     public ILocator WCNavigationLinksEndorsements => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsements", Exact = true });
@@ -340,13 +342,14 @@ public sealed class NavigationLocators
 
     public ILocator DefaultExperienceMod => _page.Locator("input[fieldref=\"LineInput.ExperienceModifier\"]");
 
-    public ILocator DescribeAllHoldHarmlessAgreementsAndPleaseProvideACopy => _page.Locator("textarea[fieldref=\"GeneralLiabilityInput.Description\"]");
+    public ILocator DescribeAllHoldHarmlessAgreementsAndPleaseProvideACopy => _page.Locator(
+        "div.downFieldGroup:has(label:text-is(\"Describe all hold harmless agreements and please provide a copy.\")) textarea[fieldref=\"GeneralLiabilityInput.Description\"]");
 
     public ILocator RatingGroupsDescription => _page.Locator("input[fieldref=\"RatingGroupInput.Description\"]");
 
     public ILocator DescriptionOfBusinessActivites => _page.Locator("input[fieldref=\"BusinessInterruptionEndorsementInput.DescriptionOfBusinessActivites\"]");
 
-    public ILocator DescriptionOfOperationS => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Description of Operation(s)']/@for] | //label[normalize-space(string(.))='Description of Operation(s)']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Description of Operation(s)']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
+    public ILocator DescriptionOfOperationS => _page.Locator("textarea[fieldref=\"CovEndorsementsInput.Description\"]");
 
     public ILocator DescriptionOfOperations => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Description of Operations']/@for] | //label[normalize-space(string(.))='Description of Operations']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Description of Operations']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
@@ -449,7 +452,7 @@ public sealed class NavigationLocators
 
     public ILocator GCW => _page.Locator("input[fieldref=\"RiskTruckInput.GCW\"]");
 
-    public ILocator GLDetail => _page.GetByRole(AriaRole.Link, new() { Name = "Detail", Exact = true });
+    public ILocator GLDetail => _page.GetByRole(AriaRole.Link, new() { Name = "Detail", Exact = true }).Nth(0);
 
     public ILocator GLUWQuestions => _page.GetByRole(AriaRole.Link, new() { Name = "GL UW Questions", Exact = true });
 
@@ -836,6 +839,14 @@ public sealed class NavigationLocators
 
 
     public ILocator RiskSchedule => _page.GetByRole(AriaRole.Link, new() { Name = "Risk Schedule", Exact = true });
+
+    public ILocator CGL => _page.GetByRole(AriaRole.Link, new() { Name = "CGL", Exact = true });
+
+    public ILocator GLNavigationLinksAddlInterests => _page.GetByRole(AriaRole.Link, new() { Name = "Addl Interests", Exact = true });
+
+    public ILocator GLNavigationLinksEndorsements => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsements", Exact = true });
+
+    public ILocator PropertyUWQuestions => _page.GetByRole(AriaRole.Link, new() { Name = "Property UW Questions", Exact = true });
 
     public ILocator Property => _page.GetByRole(AriaRole.Link, new() { Name = "Property", Exact = true });
 

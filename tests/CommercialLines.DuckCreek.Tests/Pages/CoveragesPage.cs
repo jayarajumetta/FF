@@ -74,6 +74,9 @@ public sealed class CoveragesPage
     public Task ClickDetailAsync() =>
         _ui.ClickAsync(_locators.Detail, new ControlIntent("Coverages", "Detail"));
 
+    public Task ClickFG0055DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0055Detail, new ControlIntent("Coverages", "FG0055Detail"));
+
     public Task EnterEndorsementTypeAsync(string value) =>
         _ui.FillAsync(_locators.EndorsementType, value, new ControlIntent("Coverages", "EndorsementType"));
 

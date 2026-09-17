@@ -150,7 +150,7 @@ public sealed class NavigationPage
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "SignsHeading"));
 
     public Task ClickGLNavigationLinksAddlInterestsAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "GLNavigationLinksAddlInterests"));
+        _ui.ClickAsync(_locators.GLNavigationLinksAddlInterests, new ControlIntent("Navigation", "GLNavigationLinksAddlInterests"));
 
     public Task EnterAddressAsync(string value) =>
         _ui.FillAsync(_locators.Address, value, new ControlIntent("Navigation", "Address"));
@@ -420,7 +420,7 @@ public sealed class NavigationPage
         _ui.ClickAsync(_locators.ExcludeUndergroundPropertyDamageHazard, new ControlIntent("Navigation", "ExcludeUndergroundPropertyDamageHazard"));
 
     public Task ClickCGLAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "CGL"));
+        _ui.ClickAsync(_locators.CGL, new ControlIntent("Navigation", "CGL"));
 
     public Task EnterCGLLimitsAsync(string value) =>
         _ui.FillAsync(_locators.CGLLimits, value, new ControlIntent("Navigation", "CGLLimits"));
@@ -1062,7 +1062,7 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.CoverageEndorsementType, key, new ControlIntent("Navigation", "EndorsementsPartnersOfficersAndOthersExclusionEndorsementType"));
 
     public Task ClickGLNavigationLinksEndorsementsAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "GLNavigationLinksEndorsements"));
+        _ui.ClickAsync(_locators.GLNavigationLinksEndorsements, new ControlIntent("Navigation", "GLNavigationLinksEndorsements"));
 
     public Task WaitForEndorsementsAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "Endorsements"));
@@ -2298,7 +2298,7 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.ProductsCompletedOperationsAggregateLimit, key, new ControlIntent("Navigation", "ProductsCompletedOperationsAggregateLimit"));
 
     public Task ClickProductsCompletedOpsButtonAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "ProductsCompletedOpsButton"));
+        _ui.ClickAsync(_locators.ProductsCompletedOpsButton, new ControlIntent("Navigation", "ProductsCompletedOpsButton"));
 
     public Task ClickPropertyAsync() =>
         _ui.ClickAsync(_locators.Property, new ControlIntent("Navigation", "Property"));
@@ -2331,7 +2331,7 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.RiskInputRatingGroupID, key, new ControlIntent("Navigation", "PropertyOfOthersRatingGroup"));
 
     public Task ClickPropertyUWQuestionsAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "PropertyUWQuestions"));
+        _ui.ClickAsync(_locators.PropertyUWQuestions, new ControlIntent("Navigation", "PropertyUWQuestions"));
 
     public Task EnterProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWestAsync(string value) =>
         _ui.FillAsync(_locators.ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest, value, new ControlIntent("Navigation", "ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest"));

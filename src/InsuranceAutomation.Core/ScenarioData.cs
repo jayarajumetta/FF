@@ -199,6 +199,8 @@ public sealed class ScenarioData
             _runtime["Product (LOB)"] = lob;
         if (_static.TryGetValue("state", out var state) && !string.IsNullOrWhiteSpace(state))
             _runtime["State"] = state;
+        if (_static.TryGetValue("stateCode", out var stateCode) && !string.IsNullOrWhiteSpace(stateCode))
+            _runtime["State"] = stateCode;
         if (_static.TryGetValue("primaryratingstate", out var ratingState) && !string.IsNullOrWhiteSpace(ratingState))
             _runtime["PrimaryRatingState"] = ratingState;
     }

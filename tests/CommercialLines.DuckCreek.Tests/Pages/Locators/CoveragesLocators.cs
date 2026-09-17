@@ -28,6 +28,8 @@ public sealed class CoveragesLocators
 
     public ILocator Detail => _page.Locator("[id=\"dctGridLink\"]");
 
+    public ILocator FG0055Detail => _page.Locator("tr:has-text(\"Employment Practices Liability Insurance Coverage Endorsement\")").Locator("a:has(span.g-btn-text:has-text(\"Detail\"))").First;
+
     public ILocator EndorsementType => _page.Locator("input[fieldref=\"CovEndorsementsInput.Type\"]");
 
     public ILocator PageTitle => _page.Locator("[id=\"pageTitle\"]");

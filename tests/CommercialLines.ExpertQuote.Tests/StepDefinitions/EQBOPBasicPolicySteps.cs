@@ -996,8 +996,8 @@ public sealed class EQBOPBasicPolicySteps
             {
                 await Task.Delay(2000);
                 var signatureFilePath = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                    "Test.png");
+                    AppContext.BaseDirectory,
+                    "TestData", "Assets", "Test.png");
                 await checklistPage.UploadSignatureFileAsync(signatureFilePath);
                 await Task.Delay(6000);
             }
