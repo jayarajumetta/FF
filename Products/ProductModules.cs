@@ -21,7 +21,21 @@ namespace PnCTestAutomation.Products
         IReadOnlyList<ArtifactKind> RequiredArtifacts,
         bool RequiresCanonicalResult,
         bool RequiresFailureTrace,
-        bool RequiresFailureVideo);
+        bool RequiresFailureVideo)
+    {
+        public IReadOnlyList<ArtifactKind> RequiredFailureArtifacts
+        {
+            get
+            {
+                var required = new List<ArtifactKind>();
+                if (RequiresFailureTrace)
+                    required.Add(ArtifactKind.Trace);
+                if (RequiresFailureVideo)
+                    required.Add(ArtifactKind.Video);
+                return required;
+            }
+        }
+    }
 
     public sealed record ProductModuleDescriptor(
         string ModuleId,

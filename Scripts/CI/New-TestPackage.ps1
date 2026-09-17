@@ -175,6 +175,8 @@ foreach ($script in @(
     "Invoke-PackageSuite.ps1",
     "Invoke-TestShard.ps1",
     "Invoke-TestPlanPublication.ps1",
+    "Invoke-StabilizationVerification.ps1",
+    "Test-IntegrationReadiness.ps1",
     "Test-TestPlanPublisherSmoke.ps1"
 )) {
     Copy-Item -LiteralPath (Join-Path $root "Scripts\CI\$script") `
@@ -240,18 +242,15 @@ if (Test-Path -LiteralPath $archivePath) {
 }
 Compress-Archive -Path (Join-Path $stageRoot "*") -DestinationPath $archivePath
 
-& (Join-Path $stageRoot "scripts\CI\Test-TestPackage.ps1") `
+$stabilizationReport = Join-Path $verificationRoot "stabilization-report.json"
+& (Join-Path $stageRoot "scripts\CI\Invoke-StabilizationVerification.ps1") `
     -ArchivePath $archivePath `
-    -DiscoverySmoke `
-    -PilotNonRunnableSmoke `
-    -CldcPilotNonRunnableSmoke `
-    -PldcPilotNonRunnableSmoke `
-    -PublisherDryRunSmoke `
-    -ScanForSecrets
+    -OutputPath $stabilizationReport
 
 Write-Host "Created validated package: $archivePath"
 return [PSCustomObject]@{
     ArchivePath = $archivePath
     PackageRoot = $stageRoot
     UnitResultsPath = $unitResults
+    StabilizationReportPath = $stabilizationReport
 }

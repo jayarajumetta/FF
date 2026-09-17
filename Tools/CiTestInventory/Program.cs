@@ -25,9 +25,13 @@ try
     {
         var assembly = context.LoadFromAssemblyPath(assemblyPath);
         var tests = Discover(assembly);
+        var modules = DiscoverModules(assembly);
         if (tests.Count == 0)
             throw new InvalidOperationException(
                 "Compiled test assembly contains no NUnit tests.");
+        if (modules.Count == 0)
+            throw new InvalidOperationException(
+                "Compiled test assembly contains no product modules.");
         var duplicates = tests
             .GroupBy(test => test.Id, StringComparer.Ordinal)
             .Where(group => group.Count() > 1)
@@ -45,7 +49,8 @@ try
             schemaVersion = 1,
             assembly = Path.GetFileName(assemblyPath),
             count = tests.Count,
-            tests
+            tests,
+            modules
         };
         File.WriteAllText(
             outputPath,
@@ -66,6 +71,74 @@ catch (Exception exception)
 }
 
 return 0;
+
+static List<ProductModuleInventoryEntry> DiscoverModules(Assembly assembly)
+{
+    var moduleInterface = assembly.GetType(
+        "PnCTestAutomation.Products.IProductModule",
+        throwOnError: true)
+        ?? throw new InvalidOperationException(
+            "Product module contract was not found.");
+    var modules = new List<ProductModuleInventoryEntry>();
+    foreach (var type in assembly.GetTypes()
+                 .Where(type =>
+                     !type.IsAbstract &&
+                     !type.IsInterface &&
+                     moduleInterface.IsAssignableFrom(type))
+                 .OrderBy(type => type.FullName, StringComparer.Ordinal))
+    {
+        var instance = Activator.CreateInstance(type)
+                       ?? throw new InvalidOperationException(
+                           $"Product module '{type.FullName}' could not be created.");
+        var descriptor = RequiredProperty(instance, "Descriptor");
+        var evidence = RequiredProperty(descriptor, "Evidence");
+        modules.Add(new ProductModuleInventoryEntry(
+            RequiredString(descriptor, "ModuleId"),
+            RequiredString(descriptor, "Product"),
+            RequiredString(descriptor, "Workflow"),
+            RequiredStrings(descriptor, "AutomationIdFamilies"),
+            RequiredStrings(descriptor, "RequiredCapabilities"),
+            RequiredString(descriptor, "DataProfileId"),
+            RequiredBoolean(descriptor, "UsesPilotDataProfile"),
+            new ProductEvidenceInventory(
+                RequiredStrings(evidence, "RequiredArtifacts"),
+                RequiredBoolean(evidence, "RequiresCanonicalResult"),
+                RequiredBoolean(evidence, "RequiresFailureTrace"),
+                RequiredBoolean(evidence, "RequiresFailureVideo")),
+            RequiredStrings(descriptor, "SelectorExceptionReferences"),
+            RequiredStrings(descriptor, "BlockedSelectors"),
+            RequiredBoolean(descriptor, "RetrySafe")));
+    }
+    return modules;
+}
+
+static object RequiredProperty(object instance, string name) =>
+    instance.GetType().GetProperty(name)?.GetValue(instance)
+    ?? throw new InvalidOperationException(
+        $"Compiled contract '{instance.GetType().FullName}.{name}' is missing.");
+
+static string RequiredString(object instance, string name) =>
+    RequiredProperty(instance, name).ToString()
+    ?? throw new InvalidOperationException(
+        $"Compiled contract '{instance.GetType().FullName}.{name}' is empty.");
+
+static bool RequiredBoolean(object instance, string name) =>
+    RequiredProperty(instance, name) is bool value
+        ? value
+        : throw new InvalidOperationException(
+            $"Compiled contract '{instance.GetType().FullName}.{name}' is not Boolean.");
+
+static IReadOnlyList<string> RequiredStrings(object instance, string name)
+{
+    if (RequiredProperty(instance, name) is not System.Collections.IEnumerable values)
+    {
+        throw new InvalidOperationException(
+            $"Compiled contract '{instance.GetType().FullName}.{name}' is not enumerable.");
+    }
+    return values.Cast<object>()
+        .Select(value => value.ToString() ?? "")
+        .ToArray();
+}
 
 static List<TestInventoryEntry> Discover(Assembly assembly)
 {
@@ -229,6 +302,25 @@ sealed record TestInventoryEntry(
     bool Parameterized,
     string DisplayName,
     IReadOnlyList<string> Categories);
+
+sealed record ProductModuleInventoryEntry(
+    string ModuleId,
+    string Product,
+    string Workflow,
+    IReadOnlyList<string> AutomationIdFamilies,
+    IReadOnlyList<string> RequiredCapabilities,
+    string DataProfileId,
+    bool UsesPilotDataProfile,
+    ProductEvidenceInventory Evidence,
+    IReadOnlyList<string> SelectorExceptionReferences,
+    IReadOnlyList<string> BlockedSelectors,
+    bool RetrySafe);
+
+sealed record ProductEvidenceInventory(
+    IReadOnlyList<string> RequiredArtifacts,
+    bool RequiresCanonicalResult,
+    bool RequiresFailureTrace,
+    bool RequiresFailureVideo);
 
 sealed class InspectionLoadContext : AssemblyLoadContext
 {

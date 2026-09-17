@@ -107,6 +107,7 @@ try {
         "test\.playwright\package\cli.js",
         "test\appsettings.Dev.json",
         "test\Resources\Contracts\combined-framework-contract.json",
+        "test\Resources\Contracts\integration-readiness.json",
         "test\Resources\ExpectedForms\SFP\forms.json",
         "test\Resources\ExpectedOutcomes\sfp-outcomes.json",
         "test\Resources\DataProfiles\eq-bop-pilot.json",
@@ -136,6 +137,8 @@ try {
         "scripts\CI\PipelineContracts.psm1",
         "scripts\CI\Invoke-TestShard.ps1",
         "scripts\CI\Invoke-TestPlanPublication.ps1",
+        "scripts\CI\Invoke-StabilizationVerification.ps1",
+        "scripts\CI\Test-IntegrationReadiness.ps1",
         "scripts\CI\Test-ShardOwnership.ps1",
         "scripts\CI\Install-Playwright.ps1",
         "scripts\CI\Invoke-PackageSuite.ps1",
@@ -381,6 +384,10 @@ try {
         Join-Path $RepositoryRoot "Pipelines\templates\test-shards-stage.yml") -Raw
     $entry = Get-Content -LiteralPath (
         Join-Path $RepositoryRoot "Pipelines\sfp-smoke-adhoc.yml") -Raw
+    $dataPoolSetup = Get-Content -LiteralPath (
+        Join-Path $RepositoryRoot "Pipelines\templates\setup-datapool-stage.yml") -Raw
+    $dataPoolProgram = Get-Content -LiteralPath (
+        Join-Path $RepositoryRoot "DataPool\Program.cs") -Raw
     Assert-True ($buildTemplate -match "New-TestPackage\.ps1") "Build template bypasses package entry point."
     Assert-True ($buildTemplate -match "failTaskOnFailedTests:\s*true") "Unit publication is not fail-closed."
     Assert-True ($testTemplate -match "checkout:\s*none") "Test jobs still use a source checkout."
@@ -406,6 +413,10 @@ try {
         $testTemplate -match "SYSTEM_COLLECTIONURI:\s*\$\(System\.CollectionUri\)"
     ) "Credential-bearing publication is not pinned to System.CollectionUri."
     Assert-True ($entry -match "Development" -and $entry -match "combined-framework") "CI branch coverage is incomplete."
+    Assert-True (
+        $dataPoolProgram -match 'status\s*=\s*"ok"' -and
+        $dataPoolSetup -match '\$health\.status\s+-eq\s+"ok"'
+    ) "DataPool installation health contract disagrees with the service."
     $shardCatalog = Get-Content -LiteralPath (
         Join-Path $RepositoryRoot "Pipelines\config\shards.json") -Raw |
         ConvertFrom-Json
@@ -453,6 +464,35 @@ try {
             "PersonalDuckCreekPilot|PldcAutoAzAngPilot|" +
             "PldcAutoStateMaritalPilot")
     ) "NonRunnable Personal DuckCreek pilots entered scheduled production execution."
+    $packageVersion = (
+        Get-Content -LiteralPath (
+            Join-Path $RepositoryRoot "Pipelines\package-version.txt") -Raw
+    ).Trim()
+    $readiness = Get-Content -LiteralPath (
+        Join-Path $RepositoryRoot (
+            "Resources\Contracts\integration-readiness.json")) -Raw |
+        ConvertFrom-Json
+    $packageBuilder = Get-Content -LiteralPath (
+        Join-Path $RepositoryRoot "Scripts\CI\New-TestPackage.ps1") -Raw
+    $stabilization = Get-Content -LiteralPath (
+        Join-Path $RepositoryRoot (
+            "Scripts\CI\Invoke-StabilizationVerification.ps1")) -Raw
+    Assert-True (
+        $packageVersion -eq "1.4.0" -and
+        $readiness.packageVersion -eq "1.4.0"
+    ) "Package/runtime stabilization is not frozen at 1.4.0."
+    Assert-True (
+        @($readiness.workflows).Count -eq 7 -and
+        @($readiness.requiredApprovalRoles).Count -eq 4 -and
+        @($readiness.workflows | Where-Object state -ne "Gated").Count -eq 0
+    ) "The integration readiness matrix is incomplete or success-shaped."
+    Assert-True (
+        $packageBuilder -match "Invoke-StabilizationVerification\.ps1" -and
+        $stabilization -match "SfpGatedSmoke" -and
+        $stabilization -match "Test-IntegrationReadiness\.ps1" -and
+        $stabilization -match "ExternalValidationRequired" -and
+        $stabilization -notmatch "ValidatedByCatalog"
+    ) "Package creation bypasses the source-free stabilization gate."
 
     Write-Host "CI contract tests passed: $script:Passed assertions."
 }

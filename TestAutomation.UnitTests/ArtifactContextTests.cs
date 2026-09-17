@@ -232,7 +232,10 @@ public class ArtifactContextTests
     public void ExistingScenarioFailurePreservesPrimaryErrorAndRecordsEvidenceDefect()
     {
         var context = CreateContext();
-        context.Require(ArtifactKind.Screenshot);
+        context.Require(
+            ArtifactKind.Screenshot,
+            ArtifactKind.Trace,
+            ArtifactKind.Video);
 
         var manifest = context.Complete(authoritativeScenarioFailed: true);
 
@@ -242,6 +245,12 @@ public class ArtifactContextTests
             Assert.That(
                 manifest.EvidenceErrors,
                 Does.Contain("Missing required evidence: Screenshot."));
+            Assert.That(
+                manifest.EvidenceErrors,
+                Does.Contain("Missing required evidence: Trace."));
+            Assert.That(
+                manifest.EvidenceErrors,
+                Does.Contain("Missing required evidence: Video."));
         });
     }
 

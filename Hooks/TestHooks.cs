@@ -53,6 +53,8 @@ namespace PnCTestAutomation.Hooks
         private readonly IProductModuleRegistry _productModules;
         private readonly IPilotDataProfileProvider _pilotDataProfiles;
         private readonly IPilotDataContext _pilotDataContext;
+        private ProductEvidenceContract _productEvidence;
+        private bool _tracingStarted;
         private ArtifactEvidenceException _artifactFailure;
 
         public TestHooks(
@@ -197,8 +199,6 @@ namespace PnCTestAutomation.Hooks
                 }
 
                 _pilotDataContext.Set(resolution);
-                _artifacts.Require(
-                    productModule.Evidence.RequiredArtifacts.ToArray());
             }
 
             if (TryGetBusinessOutcomeScenarioProfile(out var scenarioProfile))
@@ -225,6 +225,13 @@ namespace PnCTestAutomation.Hooks
                 _businessOutcomeContext.Set(resolution.Profile);
             }
 
+            _productEvidence = productModule?.Evidence;
+            if (_productEvidence != null)
+            {
+                _artifacts.Require(
+                    _productEvidence.RequiredArtifacts.ToArray());
+            }
+
             if (IsApiScenario())
             {
                 var accessToken = await _accessTokenProvider.GetAccessTokenAsync();
@@ -242,13 +249,10 @@ namespace PnCTestAutomation.Hooks
                     RecordVideoDir = _artifacts.GetArtifactDirectory(ArtifactKind.Video)
                 });
 
-                // Start tracing — skip on CI unless a full trace is needed for debugging.
-                // On CI, traces are only saved on failure anyway, so the overhead is wasted
-                // for passing tests. Locally, always trace for developer convenience.
                 var isCI = string.Equals(Environment.GetEnvironmentVariable("CI"), "true",
                     StringComparison.OrdinalIgnoreCase);
 
-                if (!isCI)
+                if (!isCI || _productEvidence?.RequiresFailureTrace == true)
                 {
                     await _browserContext.Tracing.StartAsync(new TracingStartOptions
                     {
@@ -256,6 +260,7 @@ namespace PnCTestAutomation.Hooks
                         Snapshots = true,
                         Sources = true
                     });
+                    _tracingStarted = true;
                 }
 
                 _page = await _browserContext.NewPageAsync();
@@ -282,7 +287,7 @@ namespace PnCTestAutomation.Hooks
             {
                 try
                 {
-                    _artifacts.RequireFailureEvidence();
+                    RequireFailureEvidence();
                     var screenshot = await _artifactCapture.CaptureAsync(
                         ArtifactKind.Screenshot,
                         "step-failure",
@@ -320,8 +325,8 @@ namespace PnCTestAutomation.Hooks
             }
             // Handle tracing and video on failure
             var hasFailed = _scenarioContext.TestError != null;
-            if (hasFailed && _context.Page != null)
-                _artifacts.RequireFailureEvidence();
+            if (hasFailed)
+                RequireFailureEvidence();
 
             // Pause on failure only when a debugger is attached (i.e. Run > Debug in VS/Rider).
             // Normal CI / right-click "Run Test" runs are never blocked.
@@ -346,13 +351,9 @@ namespace PnCTestAutomation.Hooks
 
             if (_browserContext != null)
             {
-                var isCI = string.Equals(Environment.GetEnvironmentVariable("CI"), "true",
-                    StringComparison.OrdinalIgnoreCase);
-
                 if (hasFailed)
                 {
-                    // Save trace on failure (only if tracing was started — not on CI)
-                    if (!isCI)
+                    if (_tracingStarted)
                     {
                         try
                         {
@@ -362,8 +363,10 @@ namespace PnCTestAutomation.Hooks
                                 ".zip",
                                 path => _browserContext.Tracing.StopAsync(
                                     new TracingStopOptions { Path = path }),
-                                required: false);
+                                required:
+                                    _productEvidence?.RequiresFailureTrace == true);
                             NUnitTestContext.WriteLine($"[trace] {trace.RelativePath}");
+                            _tracingStarted = false;
                         }
                         catch
                         {
@@ -374,10 +377,10 @@ namespace PnCTestAutomation.Hooks
                 }
                 else
                 {
-                    // Stop tracing without saving if test passed (only if it was started)
-                    if (!isCI)
+                    if (_tracingStarted)
                     {
                         try { await _browserContext.Tracing.StopAsync(); } catch { /* ignore */ }
+                        _tracingStarted = false;
                     }
 
                 }
@@ -405,7 +408,8 @@ namespace PnCTestAutomation.Hooks
                             "scenario-failure",
                             ".webm",
                             video.SaveAsAsync,
-                            required: false);
+                            required:
+                                _productEvidence?.RequiresFailureVideo == true);
                         NUnitTestContext.WriteLine(
                             $"[video] {videoArtifact.RelativePath}");
                     }
@@ -487,6 +491,16 @@ namespace PnCTestAutomation.Hooks
 
             return scenarioTags.Any(t => t.Equals("API", StringComparison.OrdinalIgnoreCase))
                 || featureTags.Any(t => t.Equals("API", StringComparison.OrdinalIgnoreCase));
+        }
+
+        private void RequireFailureEvidence()
+        {
+            _artifacts.RequireFailureEvidence();
+            if (_productEvidence != null)
+            {
+                _artifacts.Require(
+                    _productEvidence.RequiredFailureArtifacts.ToArray());
+            }
         }
 
         private bool TryGetBusinessOutcomeScenarioProfile(out string profile)

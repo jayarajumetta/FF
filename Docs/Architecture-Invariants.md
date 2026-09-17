@@ -78,6 +78,11 @@ from introducing parallel infrastructure.
     wait for that control to be enabled, and verify its selected value. A
     navigation button, generic page heading, or differently named marital
     option cannot substitute for the requested control or postcondition.
+15. **Physical product separation is an explicit architecture decision.**
+    Package 1.4.0 retains the in-assembly `IProductModule` topology only as a
+    provisional boundary. See
+    `Docs/Decisions/ADR-001-Provisional-Module-Topology.md`; no project split
+    occurs without Architecture/David approval and discovery/package parity.
 
 ## SGS adaptation contract
 

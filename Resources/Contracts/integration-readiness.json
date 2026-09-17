@@ -1,0 +1,723 @@
+{
+  "schemaVersion": 1,
+  "catalogVersion": "1.4.0",
+  "packageVersion": "1.4.0",
+  "topologyDecision": "ProvisionalInAssembly",
+  "adaptedSourceRepository": "PnC_DC_TestAutomation",
+  "requiredApprovalRoles": [
+    "Architecture/David",
+    "QA",
+    "Security/Operations",
+    "DevOps/ADO"
+  ],
+  "workflows": [
+    {
+      "workflowId": "sfp-basic",
+      "stableAutomationId": "SFP-BASIC-POLICY:<STATE>",
+      "automationIdFamily": "SFP-BASIC-POLICY",
+      "moduleId": "sfp-reference",
+      "sourceProvenance": {
+        "status": "RepositoryNative",
+        "path": "Features/SFP/SFP_BasicPolicy.feature"
+      },
+      "profile": {
+        "contractId": "sfp-outcomes",
+        "profileId": "sfp-basic",
+        "status": "NonRunnable",
+        "catalogPath": "test/Resources/ExpectedOutcomes/sfp-outcomes.json"
+      },
+      "selectorFrameStatus": "Contracted",
+      "requiredBusinessAssertions": [
+        "quote-identity",
+        "premium",
+        "forms",
+        "reopened-quote-identity",
+        "transmit-action-available"
+      ],
+      "evidenceContract": [
+        "Screenshot",
+        "BusinessOutcome",
+        "QuoteHandoff",
+        "TrxMetadata",
+        "TimingSummary"
+      ],
+      "discoveryCategories": [
+        "SFP",
+        "ExpertQuote",
+        "SfpBasicOutcome",
+        "AutomationId-SFP-BASIC-POLICY"
+      ],
+      "shardOwnership": [
+        {
+          "report": "metadata/shards-All-Full.json",
+          "shards": [
+            "Basic1",
+            "Basic2",
+            "Basic3"
+          ]
+        }
+      ],
+      "retryPolicy": "NoRetry",
+      "packagePaths": [
+        "test/TestAutomation.dll",
+        "test/Resources/ExpectedOutcomes/sfp-outcomes.json",
+        "metadata/shards-All-Full.json"
+      ],
+      "adoMappingStatus": "ExternalRequired",
+      "businessOutcomeStatus": "Pending",
+      "state": "Gated",
+      "blockers": [
+        {
+          "gate": "Profile",
+          "owner": "QA",
+          "reason": "State/company premium, forms, quote identity, and transmit-readiness outcomes remain NonRunnable."
+        },
+        {
+          "gate": "Runtime",
+          "owner": "Security/Operations",
+          "reason": "Credentials, private-agent access, browser runtime, and retained evidence controls require operational approval."
+        },
+        {
+          "gate": "Architecture",
+          "owner": "Architecture/David",
+          "reason": "Final combined-framework topology and pilot-to-product separation remain provisional."
+        },
+        {
+          "gate": "AdoMapping",
+          "owner": "DevOps/ADO",
+          "reason": "The secure Test Plans catalog must map every selected state before publication."
+        }
+      ],
+      "approvalEvidence": [
+        {
+          "role": "Architecture/David",
+          "status": "Pending",
+          "required": "Approve the provisional module topology or record the physical project-separation decision."
+        },
+        {
+          "role": "QA",
+          "status": "Pending",
+          "required": "Approve versioned state/company outcomes and current forms baseline metadata."
+        },
+        {
+          "role": "Security/Operations",
+          "status": "Pending",
+          "required": "Approve credentials, private-agent access, evidence retention, and redaction controls."
+        },
+        {
+          "role": "DevOps/ADO",
+          "status": "Pending",
+          "required": "Provide secure plan, suite, case, and configuration mappings and branch gates."
+        }
+      ]
+    },
+    {
+      "workflowId": "sfp-country-estate",
+      "stableAutomationId": "SFP-COUNTRY-ESTATE:<STATE>",
+      "automationIdFamily": "SFP-COUNTRY-ESTATE",
+      "moduleId": "sfp-reference",
+      "sourceProvenance": {
+        "status": "RepositoryNative",
+        "path": "Features/SFP/SFP_CE.feature"
+      },
+      "profile": {
+        "contractId": "sfp-outcomes",
+        "profileId": "sfp-country-estate",
+        "status": "NonRunnable",
+        "catalogPath": "test/Resources/ExpectedOutcomes/sfp-outcomes.json"
+      },
+      "selectorFrameStatus": "Contracted",
+      "requiredBusinessAssertions": [
+        "quote-identity",
+        "premium",
+        "forms",
+        "reopened-quote-identity",
+        "transmit-action-available"
+      ],
+      "evidenceContract": [
+        "Screenshot",
+        "BusinessOutcome",
+        "QuoteHandoff",
+        "TrxMetadata",
+        "TimingSummary"
+      ],
+      "discoveryCategories": [
+        "SFP",
+        "CE",
+        "ExpertQuote",
+        "SfpCountryEstateOutcome",
+        "AutomationId-SFP-COUNTRY-ESTATE"
+      ],
+      "shardOwnership": [
+        {
+          "report": "metadata/shards-All-Full.json",
+          "shards": [
+            "CE4",
+            "CE5",
+            "CE6"
+          ]
+        }
+      ],
+      "retryPolicy": "NoRetry",
+      "packagePaths": [
+        "test/TestAutomation.dll",
+        "test/Resources/ExpectedOutcomes/sfp-outcomes.json",
+        "metadata/shards-All-Full.json"
+      ],
+      "adoMappingStatus": "ExternalRequired",
+      "businessOutcomeStatus": "Pending",
+      "state": "Gated",
+      "blockers": [
+        {
+          "gate": "Profile",
+          "owner": "QA",
+          "reason": "Country Estate state/company outcomes and current forms metadata remain NonRunnable."
+        },
+        {
+          "gate": "Runtime",
+          "owner": "Security/Operations",
+          "reason": "Credentials, private-agent access, browser runtime, and retained evidence controls require operational approval."
+        },
+        {
+          "gate": "Architecture",
+          "owner": "Architecture/David",
+          "reason": "Final combined-framework topology and pilot-to-product separation remain provisional."
+        },
+        {
+          "gate": "AdoMapping",
+          "owner": "DevOps/ADO",
+          "reason": "The secure Test Plans catalog must map every selected state before publication."
+        }
+      ],
+      "approvalEvidence": [
+        {
+          "role": "Architecture/David",
+          "status": "Pending",
+          "required": "Approve the provisional module topology or record the physical project-separation decision."
+        },
+        {
+          "role": "QA",
+          "status": "Pending",
+          "required": "Approve versioned Country Estate outcomes and current forms baseline metadata."
+        },
+        {
+          "role": "Security/Operations",
+          "status": "Pending",
+          "required": "Approve credentials, private-agent access, evidence retention, and redaction controls."
+        },
+        {
+          "role": "DevOps/ADO",
+          "status": "Pending",
+          "required": "Provide secure plan, suite, case, and configuration mappings and branch gates."
+        }
+      ]
+    },
+    {
+      "workflowId": "sfp-forms",
+      "stableAutomationId": "SFP-FORMS-VALIDATION:<STATE>",
+      "automationIdFamily": "SFP-FORMS-VALIDATION",
+      "moduleId": "sfp-reference",
+      "sourceProvenance": {
+        "status": "RepositoryNative",
+        "path": "Features/SFP/FormsValidationSmoke.feature"
+      },
+      "profile": {
+        "contractId": "sfp-outcomes",
+        "profileId": "sfp-basic",
+        "status": "NonRunnable",
+        "catalogPath": "test/Resources/ExpectedOutcomes/sfp-outcomes.json"
+      },
+      "selectorFrameStatus": "Contracted",
+      "requiredBusinessAssertions": [
+        "quote-identity",
+        "forms"
+      ],
+      "evidenceContract": [
+        "Screenshot",
+        "BusinessOutcome",
+        "QuoteHandoff",
+        "TrxMetadata",
+        "TimingSummary"
+      ],
+      "discoveryCategories": [
+        "SFP",
+        "Forms",
+        "AutomationId-SFP-FORMS-VALIDATION"
+      ],
+      "shardOwnership": [
+        {
+          "report": "metadata/shards-All-Full.json",
+          "shards": [
+            "BasicMisc"
+          ]
+        },
+        {
+          "report": "metadata/shards-Forms-Full.json",
+          "shards": [
+            "FormsSfp"
+          ]
+        }
+      ],
+      "retryPolicy": "NoRetry",
+      "packagePaths": [
+        "test/TestAutomation.dll",
+        "test/Resources/ExpectedOutcomes/sfp-outcomes.json",
+        "test/Resources/ExpectedForms/SFP/SFP.json",
+        "metadata/shards-All-Full.json",
+        "metadata/shards-Forms-Full.json"
+      ],
+      "adoMappingStatus": "ExternalRequired",
+      "businessOutcomeStatus": "Pending",
+      "state": "Gated",
+      "blockers": [
+        {
+          "gate": "Profile",
+          "owner": "QA",
+          "reason": "The approved quote, forms baseline provenance, version, and response metadata remain NonRunnable."
+        },
+        {
+          "gate": "Runtime",
+          "owner": "Security/Operations",
+          "reason": "CLAS and Forms API credentials, network access, and evidence retention require operational approval."
+        },
+        {
+          "gate": "Architecture",
+          "owner": "Architecture/David",
+          "reason": "Final combined-framework topology and pilot-to-product separation remain provisional."
+        },
+        {
+          "gate": "AdoMapping",
+          "owner": "DevOps/ADO",
+          "reason": "The secure Test Plans catalog must map the forms execution before publication."
+        }
+      ],
+      "approvalEvidence": [
+        {
+          "role": "Architecture/David",
+          "status": "Pending",
+          "required": "Approve the provisional module topology or record the physical project-separation decision."
+        },
+        {
+          "role": "QA",
+          "status": "Pending",
+          "required": "Approve a stable QA quote and versioned forms baseline metadata."
+        },
+        {
+          "role": "Security/Operations",
+          "status": "Pending",
+          "required": "Approve CLAS/Forms access and evidence retention/redaction controls."
+        },
+        {
+          "role": "DevOps/ADO",
+          "status": "Pending",
+          "required": "Provide the secure Test Plans mapping and branch gate."
+        }
+      ]
+    },
+    {
+      "workflowId": "eq-bop-al",
+      "stableAutomationId": "EQ-BOP-SMOKE:AL",
+      "automationIdFamily": "EQ-BOP-SMOKE",
+      "moduleId": "expertquote-bop-al-pilot",
+      "sourceProvenance": {
+        "status": "VerifiedLedger",
+        "commit": "7f7eec53b0a111e76e0bf60c6eef42c331068051",
+        "catalogPath": "test/Resources/DataProfiles/eq-bop-pilot.json",
+        "expectedFiles": 22
+      },
+      "profile": {
+        "contractId": "eq-bop-al-smoke",
+        "profileId": "eq-bop-al-smoke",
+        "status": "NonRunnable",
+        "catalogPath": "test/Resources/DataProfiles/eq-bop-pilot.json"
+      },
+      "selectorFrameStatus": "Blocked",
+      "requiredBusinessAssertions": [
+        "selected-values",
+        "quote-identity",
+        "save",
+        "search",
+        "reopened-quote-identity"
+      ],
+      "evidenceContract": [
+        "Screenshot",
+        "BusinessOutcome",
+        "QuoteHandoff",
+        "TrxMetadata",
+        "TimingSummary"
+      ],
+      "discoveryCategories": [
+        "EqBopAlPilot",
+        "AutomationId-EQ-BOP-SMOKE"
+      ],
+      "shardOwnership": [
+        {
+          "report": "metadata/shards-ExpertQuotePilot-Full.json",
+          "shards": [
+            "EqBopAlPilot"
+          ]
+        }
+      ],
+      "retryPolicy": "NoRetry",
+      "packagePaths": [
+        "test/TestAutomation.dll",
+        "test/Resources/DataProfiles/eq-bop-pilot.json",
+        "metadata/shards-ExpertQuotePilot-Full.json"
+      ],
+      "adoMappingStatus": "Deferred",
+      "businessOutcomeStatus": "Pending",
+      "state": "Gated",
+      "blockers": [
+        {
+          "gate": "Profile",
+          "owner": "QA",
+          "reason": "Safe data, current dates, prefill outcome, and quote identity expectations are missing."
+        },
+        {
+          "gate": "SelectorFrame",
+          "owner": "Architecture/David",
+          "reason": "Destination controls and any required frame scopes are not fully approved."
+        },
+        {
+          "gate": "Runtime",
+          "owner": "Security/Operations",
+          "reason": "Credentials, QA access, PII handling, and evidence retention require approval."
+        },
+        {
+          "gate": "AdoMapping",
+          "owner": "DevOps/ADO",
+          "reason": "The automation identity is deferred pending numeric Test Plans ownership."
+        }
+      ],
+      "approvalEvidence": [
+        {
+          "role": "Architecture/David",
+          "status": "Pending",
+          "required": "Approve destination test IDs, frame behavior, and the provisional module topology."
+        },
+        {
+          "role": "QA",
+          "status": "Pending",
+          "required": "Approve sanitized data and exact prefill/quote outcomes."
+        },
+        {
+          "role": "Security/Operations",
+          "status": "Pending",
+          "required": "Approve credentials, QA access, PII redaction, and retained evidence."
+        },
+        {
+          "role": "DevOps/ADO",
+          "status": "Pending",
+          "required": "Replace the deferred ID with a secure numeric Test Plans mapping."
+        }
+      ]
+    },
+    {
+      "workflowId": "cldc-bap-al",
+      "stableAutomationId": "CLDC-BAP-SMOKE:AL",
+      "automationIdFamily": "CLDC-BAP-SMOKE",
+      "moduleId": "commercial-duckcreek-bap-al-pilot",
+      "sourceProvenance": {
+        "status": "VerifiedLedger",
+        "commit": "a7dd24867a024eb921038bba3816d79a099d9920",
+        "catalogPath": "test/Resources/DataProfiles/cldc-bap-pilot.json",
+        "frameCatalogPath": "test/Resources/FrameHints/cldc-bap-frame-hints.json",
+        "expectedFiles": 46
+      },
+      "profile": {
+        "contractId": "cldc-bap-al-smoke",
+        "profileId": "cldc-bap-al-smoke",
+        "status": "NonRunnable",
+        "catalogPath": "test/Resources/DataProfiles/cldc-bap-pilot.json"
+      },
+      "selectorFrameStatus": "Blocked",
+      "requiredBusinessAssertions": [
+        "selected-values",
+        "masked-identity",
+        "insurance-score",
+        "quote-description",
+        "quote-identity",
+        "save",
+        "search",
+        "reopened-quote-identity",
+        "frame-locator-evidence"
+      ],
+      "evidenceContract": [
+        "Screenshot",
+        "BusinessOutcome",
+        "QuoteHandoff",
+        "TrxMetadata",
+        "TimingSummary",
+        "RuntimeLocator"
+      ],
+      "discoveryCategories": [
+        "CldcBapAlPilot",
+        "AutomationId-CLDC-BAP-SMOKE"
+      ],
+      "shardOwnership": [
+        {
+          "report": "metadata/shards-CommercialDuckCreekPilot-Full.json",
+          "shards": [
+            "CldcBapAlPilot"
+          ]
+        }
+      ],
+      "retryPolicy": "NoRetry",
+      "packagePaths": [
+        "test/TestAutomation.dll",
+        "test/Resources/DataProfiles/cldc-bap-pilot.json",
+        "test/Resources/FrameHints/cldc-bap-frame-hints.json",
+        "metadata/shards-CommercialDuckCreekPilot-Full.json"
+      ],
+      "adoMappingStatus": "Deferred",
+      "businessOutcomeStatus": "Pending",
+      "state": "Gated",
+      "blockers": [
+        {
+          "gate": "Profile",
+          "owner": "QA",
+          "reason": "Safe data, score, quote description, and quote round-trip outcomes are missing."
+        },
+        {
+          "gate": "SelectorFrame",
+          "owner": "Architecture/David",
+          "reason": "Exact destination test IDs and stable nested frame paths are not approved."
+        },
+        {
+          "gate": "Runtime",
+          "owner": "Security/Operations",
+          "reason": "Credentials, QA/service access, PII redaction, and retained evidence require approval."
+        },
+        {
+          "gate": "AdoMapping",
+          "owner": "DevOps/ADO",
+          "reason": "The automation identity is deferred pending numeric Test Plans ownership."
+        }
+      ],
+      "approvalEvidence": [
+        {
+          "role": "Architecture/David",
+          "status": "Pending",
+          "required": "Approve exact test IDs, frame paths, and the provisional module topology."
+        },
+        {
+          "role": "QA",
+          "status": "Pending",
+          "required": "Approve sanitized data, score, description, and quote save/search/reopen outcomes."
+        },
+        {
+          "role": "Security/Operations",
+          "status": "Pending",
+          "required": "Approve credentials, dependent-service access, PII redaction, and evidence retention."
+        },
+        {
+          "role": "DevOps/ADO",
+          "status": "Pending",
+          "required": "Replace the deferred ID with a secure numeric Test Plans mapping."
+        }
+      ]
+    },
+    {
+      "workflowId": "pldc-auto-az-ang",
+      "stableAutomationId": "PLDC-AUTO-SMOKE:AZ",
+      "automationIdFamily": "PLDC-AUTO-SMOKE",
+      "moduleId": "personal-duckcreek-auto-az-ang-pilot",
+      "sourceProvenance": {
+        "status": "VerifiedLedger",
+        "commit": "ecd9019ab991028341ad76de11cff06aa43cb32f",
+        "catalogPath": "test/Resources/DataProfiles/pldc-auto-pilot.json",
+        "frameCatalogPath": "test/Resources/FrameHints/pldc-auto-frame-hints.json",
+        "expectedFiles": 50
+      },
+      "profile": {
+        "contractId": "pldc-auto-az-ang-smoke",
+        "profileId": "pldc-auto-az-ang-smoke",
+        "status": "NonRunnable",
+        "catalogPath": "test/Resources/DataProfiles/pldc-auto-pilot.json"
+      },
+      "selectorFrameStatus": "Blocked",
+      "requiredBusinessAssertions": [
+        "policy-state-selected",
+        "writing-company-selected",
+        "marital-status-selected",
+        "conditional-proposal-outcome",
+        "quote-identity",
+        "save",
+        "search",
+        "reopened-quote-identity"
+      ],
+      "evidenceContract": [
+        "Screenshot",
+        "BusinessOutcome",
+        "QuoteHandoff",
+        "TrxMetadata",
+        "TimingSummary",
+        "RuntimeLocator"
+      ],
+      "discoveryCategories": [
+        "PldcAutoAzAngPilot",
+        "AutomationId-PLDC-AUTO-SMOKE"
+      ],
+      "shardOwnership": [
+        {
+          "report": "metadata/shards-PersonalDuckCreekPilot-Full.json",
+          "shards": [
+            "PldcAutoAzAngPilot"
+          ]
+        }
+      ],
+      "retryPolicy": "NoRetry",
+      "packagePaths": [
+        "test/TestAutomation.dll",
+        "test/Resources/DataProfiles/pldc-auto-pilot.json",
+        "test/Resources/FrameHints/pldc-auto-frame-hints.json",
+        "metadata/shards-PersonalDuckCreekPilot-Full.json"
+      ],
+      "adoMappingStatus": "Deferred",
+      "businessOutcomeStatus": "Pending",
+      "state": "Gated",
+      "blockers": [
+        {
+          "gate": "Profile",
+          "owner": "QA",
+          "reason": "Sanitized client data, current date/agent, conditional outcomes, and quote contracts are missing."
+        },
+        {
+          "gate": "SelectorFrame",
+          "owner": "Architecture/David",
+          "reason": "Exact state, writing-company, marital, proposal, quote controls, and frame paths are not approved."
+        },
+        {
+          "gate": "Runtime",
+          "owner": "Security/Operations",
+          "reason": "Credentials, QA access, PII-safe evidence, and retention require approval."
+        },
+        {
+          "gate": "AdoMapping",
+          "owner": "DevOps/ADO",
+          "reason": "The automation identity is deferred pending numeric Test Plans ownership."
+        }
+      ],
+      "approvalEvidence": [
+        {
+          "role": "Architecture/David",
+          "status": "Pending",
+          "required": "Approve exact test IDs, frame paths, and the provisional module topology."
+        },
+        {
+          "role": "QA",
+          "status": "Pending",
+          "required": "Approve sanitized data and exact conditional/quote outcomes."
+        },
+        {
+          "role": "Security/Operations",
+          "status": "Pending",
+          "required": "Approve credentials, QA access, PII redaction, and evidence retention."
+        },
+        {
+          "role": "DevOps/ADO",
+          "status": "Pending",
+          "required": "Replace the deferred ID with a secure numeric Test Plans mapping."
+        }
+      ]
+    },
+    {
+      "workflowId": "pldc-state-marital-al",
+      "stableAutomationId": "PLDC-AUTO-STATE-MARITAL:AL",
+      "automationIdFamily": "PLDC-AUTO-STATE-MARITAL",
+      "moduleId": "personal-duckcreek-auto-state-marital-pilot",
+      "sourceProvenance": {
+        "status": "VerifiedLedger",
+        "commit": "ecd9019ab991028341ad76de11cff06aa43cb32f",
+        "catalogPath": "test/Resources/DataProfiles/pldc-auto-pilot.json",
+        "frameCatalogPath": "test/Resources/FrameHints/pldc-auto-frame-hints.json",
+        "expectedFiles": 50
+      },
+      "profile": {
+        "contractId": "pldc-auto-state-marital-microcase",
+        "profileId": "pldc-auto-state-marital-microcase",
+        "status": "NonRunnable",
+        "catalogPath": "test/Resources/DataProfiles/pldc-auto-pilot.json"
+      },
+      "selectorFrameStatus": "Blocked",
+      "requiredBusinessAssertions": [
+        "account-state-selected",
+        "married-selected",
+        "account-information-remains-current"
+      ],
+      "evidenceContract": [
+        "Screenshot",
+        "BusinessOutcome",
+        "TrxMetadata",
+        "TimingSummary",
+        "RuntimeLocator"
+      ],
+      "discoveryCategories": [
+        "PldcAutoStateMaritalPilot",
+        "AutomationId-PLDC-AUTO-STATE-MARITAL"
+      ],
+      "shardOwnership": [
+        {
+          "report": "metadata/shards-PersonalDuckCreekPilot-Full.json",
+          "shards": [
+            "PldcAutoStateMaritalPilot"
+          ]
+        }
+      ],
+      "retryPolicy": "NoRetry",
+      "packagePaths": [
+        "test/TestAutomation.dll",
+        "test/Resources/DataProfiles/pldc-auto-pilot.json",
+        "test/Resources/FrameHints/pldc-auto-frame-hints.json",
+        "metadata/shards-PersonalDuckCreekPilot-Full.json"
+      ],
+      "adoMappingStatus": "Deferred",
+      "businessOutcomeStatus": "Pending",
+      "state": "Gated",
+      "blockers": [
+        {
+          "gate": "Profile",
+          "owner": "QA",
+          "reason": "No audited source row supplies Married; sanitized AL client data and an approved Married outcome are missing."
+        },
+        {
+          "gate": "SelectorFrame",
+          "owner": "Architecture/David",
+          "reason": "Exact account-state and Married controls plus any frame path are not approved."
+        },
+        {
+          "gate": "Runtime",
+          "owner": "Security/Operations",
+          "reason": "Credentials, QA access, PII-safe evidence, and mutation cleanup require approval."
+        },
+        {
+          "gate": "AdoMapping",
+          "owner": "DevOps/ADO",
+          "reason": "The automation identity is deferred pending numeric Test Plans ownership."
+        }
+      ],
+      "approvalEvidence": [
+        {
+          "role": "Architecture/David",
+          "status": "Pending",
+          "required": "Approve exact state/Married selectors, frame behavior, and provisional module topology."
+        },
+        {
+          "role": "QA",
+          "status": "Pending",
+          "required": "Supply and approve a sanitized AL Married row and exact selected-value outcomes."
+        },
+        {
+          "role": "Security/Operations",
+          "status": "Pending",
+          "required": "Approve credentials, QA access, PII redaction, retention, and mutation cleanup."
+        },
+        {
+          "role": "DevOps/ADO",
+          "status": "Pending",
+          "required": "Replace the deferred ID with a secure numeric Test Plans mapping."
+        }
+      ]
+    }
+  ]
+}

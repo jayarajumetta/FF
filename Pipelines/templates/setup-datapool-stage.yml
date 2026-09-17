@@ -63,7 +63,7 @@ stages:
                 Start-Sleep -Seconds 5
                 try {
                   $health = Invoke-RestMethod http://127.0.0.1:5100/health -TimeoutSec 3
-                  if ($health.status -eq "Healthy") {
+                  if ($health.status -eq "ok") {
                     $ready = $true
                     break
                   }

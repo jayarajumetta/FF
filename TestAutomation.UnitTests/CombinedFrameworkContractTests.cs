@@ -112,7 +112,15 @@ public class CombinedFrameworkContractTests
             Assert.That(inventory, Does.Contain("Resources"));
             Assert.That(inventory, Does.Contain("ci.runsettings"));
             Assert.That(inventory, Does.Contain("Scripts"));
-            Assert.That(inventory, Does.Contain("manifest.json"));
+            Assert.That(inventory, Does.Contain("package-manifest.json"));
+            Assert.That(
+                inventory,
+                Does.Contain(
+                    "Resources/Contracts/integration-readiness.json"));
+            Assert.That(
+                inventory,
+                Does.Contain(
+                    "Scripts/CI/Invoke-StabilizationVerification.ps1"));
         });
     }
 

@@ -78,6 +78,10 @@ public class ProductModuleTests
                 descriptor.RequiredCapabilities,
                 Does.Contain(ProductCapability.TestPlans));
             Assert.That(descriptor.Evidence.RequiresCanonicalResult, Is.True);
+            Assert.That(
+                descriptor.Evidence.RequiredFailureArtifacts,
+                Is.EquivalentTo(
+                    new[] { ArtifactKind.Trace, ArtifactKind.Video }));
             Assert.That(descriptor.RetrySafe, Is.False);
         });
     }

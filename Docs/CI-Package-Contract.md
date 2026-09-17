@@ -18,6 +18,8 @@ private execution agents. Test jobs do not check out source or rebuild.
 The YAML files share `Pipelines/templates/build-package-stage.yml`,
 `test-shards-stage.yml`, and `setup-datapool-stage.yml`. Package version is
 owned by `Pipelines/package-version.txt`.
+The final integration baseline is frozen at `1.4.0`; changing it requires a
+new reviewed package-contract milestone rather than an ad hoc build override.
 
 ## Package layout
 
@@ -35,6 +37,9 @@ The archive name includes package version and commit SHA. It contains:
 - `config/testplans-mapping.template.json`: non-secret external mapping schema;
 - `metadata/`: compiled test inventory plus validated full/debug ownership;
 - `package-manifest.json`.
+- `test/Resources/Contracts/integration-readiness.json`;
+- `scripts/CI/Invoke-StabilizationVerification.ps1` and
+  `Test-IntegrationReadiness.ps1`.
 
 The manifest records schema/package version, commit, build ID/number, target
 framework, package dependencies, and every file's relative path, size, and
@@ -158,3 +163,25 @@ from this repository.
 Phase 6 adds opt-in Azure DevOps Test Plans publication. It is `Off` by default
 and consumes only canonical final TRX/result/evidence inputs. See
 `Docs/Azure-Test-Plans-Publishing.md`.
+
+## Stabilization verification
+
+Run the credential-free source-free gate against an extracted package or its
+archive:
+
+```powershell
+pwsh .\scripts\CI\Invoke-StabilizationVerification.ps1 `
+  -PackageRoot . `
+  -OutputPath C:\results\stabilization-report.json
+```
+
+The command validates package checksums/secrets, compiled discovery and module
+contracts, exact shard ownership, all NonRunnable EQ/CLDC/PLDC probes, the
+current NonRunnable SFP Basic/CE/forms gates, canonical TRX/evidence parity,
+and Test Plans dry-run reconciliation. Its JSON report carries a SHA-256 over
+the canonical report body. A source-free report records catalog integrity as
+passed and historical source-ledger validation as
+`ExternalValidationRequired`; it is not approval evidence for source
+provenance. Supplying `-SgsRepositoryRoot` verifies every distinct adapted
+source file at its audited commit without modifying that checkout and changes
+that ledger status to `Passed`.

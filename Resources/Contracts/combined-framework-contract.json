@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "runtimePackageVersion": "1.4.0",
   "scenarioState": {
     "owner": "ScenarioContextData",
     "contextKey": "ContextData",
@@ -66,7 +67,28 @@
       "appsettings.json",
       "ci.runsettings",
       "Scripts",
-      "manifest.json"
+      "package-manifest.json",
+      "Resources/Contracts/integration-readiness.json",
+      "Scripts/CI/Invoke-StabilizationVerification.ps1"
+    ]
+  },
+  "readiness": {
+    "matrix": "Resources/Contracts/integration-readiness.json",
+    "topology": "ProvisionalInAssembly",
+    "requiredApprovalRoles": [
+      "Architecture/David",
+      "QA",
+      "Security/Operations",
+      "DevOps/ADO"
+    ],
+    "runnableRequires": [
+      "approved-profile",
+      "approved-selectors-and-frames",
+      "approved-business-outcomes",
+      "complete-package-inventory",
+      "mapped-test-plans-identity",
+      "no-unresolved-blockers",
+      "all-approval-gates-owned-and-approved"
     ]
   }
 }

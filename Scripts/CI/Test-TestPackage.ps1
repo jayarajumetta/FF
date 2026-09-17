@@ -17,6 +17,8 @@ param(
 
     [switch]$PldcPilotNonRunnableSmoke,
 
+    [switch]$SfpGatedSmoke,
+
     [switch]$PublisherDryRunSmoke,
 
     [switch]$ScanForSecrets
@@ -25,24 +27,39 @@ param(
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 
-function Test-NonRunnablePilot {
+function Test-NonRunnableSelection {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [string]$PackageRoot,
 
         [Parameter(Mandatory)]
-        [string]$Category,
+        [string]$Filter,
 
         [Parameter(Mandatory)]
         [string]$ResultName,
 
         [Parameter(Mandatory)]
-        [string]$DisplayName
+        [string]$DisplayName,
+
+        [Parameter(Mandatory)]
+        [string[]]$RequiredCategories
     )
 
     $testAssembly = Join-Path $PackageRoot "test\TestAutomation.dll"
     $runSettings = Join-Path $PackageRoot "runsettings\ci.runsettings"
+    $inventory = Get-Content -LiteralPath (
+        Join-Path $PackageRoot "metadata\test-inventory.json") -Raw |
+        ConvertFrom-Json
+    $expectedCount = @($inventory.tests | Where-Object {
+        $categories = @($_.categories | ForEach-Object { [string]$_ })
+        @($RequiredCategories | Where-Object {
+            $categories -notcontains $_
+        }).Count -eq 0
+    }).Count
+    if ($expectedCount -eq 0) {
+        throw "$DisplayName has no compiled tests."
+    }
     $probeRoot = Join-Path ([IO.Path]::GetTempPath()) (
         "PnC-$ResultName-" + [Guid]::NewGuid().ToString("N"))
     $probeTestRoot = Join-Path $probeRoot "test"
@@ -56,7 +73,7 @@ function Test-NonRunnablePilot {
         try {
             & dotnet test (Join-Path $probeTestRoot "TestAutomation.dll") `
                 --settings $runSettings `
-                --filter "TestCategory=$Category" `
+                --filter $Filter `
                 --logger "trx;LogFileName=$ResultName.trx" `
                 --results-directory $probeResults
             if ($LASTEXITCODE -ne 0) {
@@ -71,9 +88,9 @@ function Test-NonRunnablePilot {
             $results = @($probe.SelectNodes(
                 "/t:TestRun/t:Results/t:UnitTestResult",
                 $namespace))
-            if ($results.Count -ne 1 -or
-                $results[0].outcome -ne "NotExecuted") {
-                throw "$DisplayName must discover exactly one explicitly ignored NonRunnable execution."
+            if ($results.Count -ne $expectedCount -or
+                @($results | Where-Object outcome -ne "NotExecuted").Count -ne 0) {
+                throw "$DisplayName must discover exactly $expectedCount explicitly ignored NonRunnable executions."
             }
         }
         finally {
@@ -83,7 +100,10 @@ function Test-NonRunnablePilot {
     finally {
         Remove-Item -LiteralPath $probeRoot -Recurse -Force
     }
-    Write-Host "Extracted $DisplayName NonRunnable probe passed."
+    Write-Host (
+        "Extracted {0} NonRunnable probe passed: {1} NotExecuted." -f
+        $DisplayName,
+        $expectedCount)
 }
 
 $temporaryExtraction = $false
@@ -210,30 +230,68 @@ try {
         Write-Host "Extracted package discovery smoke found $($sfpTests.Count) SFP tests."
     }
     if ($PilotNonRunnableSmoke) {
-        Test-NonRunnablePilot `
+        Test-NonRunnableSelection `
             -PackageRoot $PackageRoot `
-            -Category "EqBopAlPilot" `
+            -Filter "TestCategory=EqBopAlPilot" `
             -ResultName "EqBopAlPilot" `
-            -DisplayName "ExpertQuote pilot"
+            -DisplayName "ExpertQuote pilot" `
+            -RequiredCategories @("EqBopAlPilot")
     }
     if ($CldcPilotNonRunnableSmoke) {
-        Test-NonRunnablePilot `
+        Test-NonRunnableSelection `
             -PackageRoot $PackageRoot `
-            -Category "CldcBapAlPilot" `
+            -Filter "TestCategory=CldcBapAlPilot" `
             -ResultName "CldcBapAlPilot" `
-            -DisplayName "Commercial DuckCreek pilot"
+            -DisplayName "Commercial DuckCreek pilot" `
+            -RequiredCategories @("CldcBapAlPilot")
     }
     if ($PldcPilotNonRunnableSmoke) {
-        Test-NonRunnablePilot `
+        Test-NonRunnableSelection `
             -PackageRoot $PackageRoot `
-            -Category "PldcAutoAzAngPilot" `
+            -Filter "TestCategory=PldcAutoAzAngPilot" `
             -ResultName "PldcAutoAzAngPilot" `
-            -DisplayName "Personal DuckCreek Auto AZ ANG pilot"
-        Test-NonRunnablePilot `
+            -DisplayName "Personal DuckCreek Auto AZ ANG pilot" `
+            -RequiredCategories @("PldcAutoAzAngPilot")
+        Test-NonRunnableSelection `
             -PackageRoot $PackageRoot `
-            -Category "PldcAutoStateMaritalPilot" `
+            -Filter "TestCategory=PldcAutoStateMaritalPilot" `
             -ResultName "PldcAutoStateMaritalPilot" `
-            -DisplayName "Personal DuckCreek state/marital pilot"
+            -DisplayName "Personal DuckCreek state/marital pilot" `
+            -RequiredCategories @("PldcAutoStateMaritalPilot")
+    }
+    if ($SfpGatedSmoke) {
+        Test-NonRunnableSelection `
+            -PackageRoot $PackageRoot `
+            -Filter (
+                "TestCategory=SfpBasicOutcome&" +
+                "TestCategory=ExpertQuote&" +
+                "TestCategory=AutomationId-SFP-BASIC-POLICY") `
+            -ResultName "SfpBasicPolicy" `
+            -DisplayName "SFP Basic Policy gate" `
+            -RequiredCategories @(
+                "SfpBasicOutcome",
+                "ExpertQuote",
+                "AutomationId-SFP-BASIC-POLICY")
+        Test-NonRunnableSelection `
+            -PackageRoot $PackageRoot `
+            -Filter (
+                "TestCategory=SfpCountryEstateOutcome&" +
+                "TestCategory=AutomationId-SFP-COUNTRY-ESTATE") `
+            -ResultName "SfpCountryEstate" `
+            -DisplayName "SFP Country Estate gate" `
+            -RequiredCategories @(
+                "SfpCountryEstateOutcome",
+                "AutomationId-SFP-COUNTRY-ESTATE")
+        Test-NonRunnableSelection `
+            -PackageRoot $PackageRoot `
+            -Filter (
+                "TestCategory=Forms&" +
+                "TestCategory=AutomationId-SFP-FORMS-VALIDATION") `
+            -ResultName "SfpForms" `
+            -DisplayName "SFP forms gate" `
+            -RequiredCategories @(
+                "Forms",
+                "AutomationId-SFP-FORMS-VALIDATION")
     }
     if ($PublisherDryRunSmoke) {
         & (Join-Path $PackageRoot "scripts\CI\Test-TestPlanPublisherSmoke.ps1") `
