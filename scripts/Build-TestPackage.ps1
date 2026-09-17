@@ -138,18 +138,19 @@ foreach ($relative in $runtimeFiles) {
 	New-Item -ItemType Directory -Path (Split-Path $destination -Parent) -Force | Out-Null
 	Copy-Item -LiteralPath $runtimeSourceFiles[$relative] -Destination $destination
 }
-foreach ($directory in @('src', 'tests')) {
-	$sourceDirectory = Join-Path $SourceRoot $directory
-	if (Test-Path -LiteralPath $sourceDirectory -PathType Container) {
-		Get-ChildItem -LiteralPath $sourceDirectory -Recurse -File -Filter '*.cs' |
-			Where-Object { $_.FullName -notmatch '[\\/](bin|obj)[\\/]' } |
-			ForEach-Object {
-				$relative = $_.FullName.Substring($SourceRoot.Length).TrimStart('\', '/')
-				$destination = Join-Path $package $relative
-				New-Item -ItemType Directory -Path (Split-Path $destination -Parent) -Force | Out-Null
-				Copy-Item -LiteralPath $_.FullName -Destination $destination
-			}
-	}
+$testsDirectory = Join-Path $SourceRoot 'tests'
+if (Test-Path -LiteralPath $testsDirectory -PathType Container) {
+	Get-ChildItem -LiteralPath $testsDirectory -Recurse -File -Filter '*.cs' |
+		Where-Object {
+			$_.FullName -notmatch '[\\/](bin|obj)[\\/]' -and
+			$_.Directory.Name -in @('StepDefinitions', 'Steps')
+		} |
+		ForEach-Object {
+			$relative = $_.FullName.Substring($SourceRoot.Length).TrimStart('\', '/')
+			$destination = Join-Path $package $relative
+			New-Item -ItemType Directory -Path (Split-Path $destination -Parent) -Force | Out-Null
+			Copy-Item -LiteralPath $_.FullName -Destination $destination
+		}
 }
 $manifest = @{
 	schemaVersion = 2
