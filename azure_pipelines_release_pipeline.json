@@ -780,7 +780,7 @@
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
               "overrideInputs": {},
-              "condition": "always",
+              "condition": "always()",
               "environment": {
                 "TEST_RESULTS_ROOT": "$(TEST_RESULTS_ROOT)",
                 "SYSTEM_JOBPOSITIONINPHASE": "$(System.JobPositionInPhase)",
@@ -875,7 +875,7 @@
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
               "overrideInputs": {},
-              "condition": "always",
+              "condition": "always()",
               "inputs": {
                 "targetType": "filePath",
                 "filePath": "$(System.DefaultWorkingDirectory)\\_FF_CI\\testpackage\\scripts\\Invoke-ReleaseStage.ps1",
@@ -1197,7 +1197,7 @@
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
               "overrideInputs": {},
-              "condition": "always",
+              "condition": "always()",
               "environment": {
                 "TEST_RESULTS_ROOT": "$(TEST_RESULTS_ROOT)",
                 "SYSTEM_JOBPOSITIONINPHASE": "$(System.JobPositionInPhase)",
@@ -1268,7 +1268,7 @@
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
               "overrideInputs": {},
-              "condition": "always",
+              "condition": "always()",
               "inputs": {
                 "versionSpec": "3.11",
                 "disableDownloadFromRegistry": "false",
@@ -1292,7 +1292,7 @@
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
               "overrideInputs": {},
-              "condition": "always",
+              "condition": "always()",
               "inputs": {
                 "targetType": "filePath",
                 "filePath": "$(System.DefaultWorkingDirectory)\\_FF_CI\\testpackage\\scripts\\Invoke-ReleaseStage.ps1",
