@@ -1,0 +1,5 @@
+# Retained SGS checksums are byte-for-byte contracts. Pin the source formats so
+# Git checkout settings cannot rewrite payloads on developer or build machines.
+Features/SGS/** text eol=crlf
+Resources/SGS/**/TestData/** text eol=lf
+Resources/SGS/**/Runtime/** text eol=crlf
