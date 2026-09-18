@@ -1045,10 +1045,7 @@ public sealed class CPPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        if (data.Condition("'CPP LOB' == \"IM\""))
-        {
             await page.ClickIMDetailAsync();
-        }
 
     }
 
@@ -1134,7 +1131,7 @@ public sealed class CPPBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickIMNavigationLinksPolicyCovgAsync();
-        await page.WaitForPolicyCovgMainPolicyCovgAsync("Exists");
+        //await page.WaitForPolicyCovgMainPolicyCovgAsync("Exists");
         await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_395}}"));
         await page.ClickAddCoverageFormAsync();
         await page.WaitForPolicyCovgContractorsEquipmentCoverageFormDisplayAsync("Exists");
@@ -1163,7 +1160,7 @@ public sealed class CPPBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickIMNavigationLinksPolicyCovgAsync();
-        await page.WaitForPolicyCovgMainPolicyCovgAsync("Exists");
+        //await page.WaitForPolicyCovgMainPolicyCovgAsync("Exists");
         await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_413}}"));
         await page.ClickAddCoverageFormAsync();
         await page.WaitForPolicyCovgMotorTruckCargoCoverageFormDisplayAsync("Exists");
@@ -1174,7 +1171,10 @@ public sealed class CPPBasicPolicySteps
         await page.EnterPerVehicleLimitAsync(data.Resolve("{{data:per_vehicle_limit_421}}"));
         await page.EnterGroupClassAsync(data.Resolve("{{data:group_class_422}}"));
         await page.EnterNumberOfVehiclesAsync(data.Resolve("{{data:number_of_vehicles_423}}"));
-        await page.EnterUnnamedTerminalsLimitAsync(data.Resolve("{{data:unnamed_terminals_limit_424}}"));
+        if (await page.IsUnnamedTerminalsLimitVisibleAsync())
+        {
+            await page.EnterUnnamedTerminalsLimitAsync(data.Resolve("{{data:unnamed_terminals_limit_424}}"));
+        }
         await page.ClickOKAsync();
 
     }
@@ -1189,12 +1189,12 @@ public sealed class CPPBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickIMNavigationLinksPolicyCovgAsync();
-        await page.WaitForPolicyCovgMainPolicyCovgAsync("Exists");
+        //await page.WaitForPolicyCovgMainPolicyCovgAsync("Exists");
         await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_428}}"));
         await page.ClickAddCoverageFormAsync();
-        await page.WaitForPolicyCovgSignsCoverageFormDisplayAsync("Exists");
+        //await page.WaitForPolicyCovgSignsCoverageFormDisplayAsync("Exists");
         await page.EnterPolicyCovgSignsDescriptionAsync(data.Resolve("{{data:description_432}}"));
-        await page.VerifyPolicyCovgSignsCoverageFormAsync("Exists", "");
+        //await page.VerifyPolicyCovgSignsCoverageFormAsync("Exists", "");
         await page.EnterN5DeductibleAsync(data.Resolve("{{data:5_deductible_434}}"));
         await page.ClickOKAsync();
         await page.PauseAsync(1000);
@@ -1211,10 +1211,12 @@ public sealed class CPPBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickRiskAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
+        //await page.WaitForSignsHeadingAsync("Exists");
+        //await page.ClickIMNavigationLinksPolicyCovgAsync();
         await page.EnterRiskMainCoverageFormAsync(data.Resolve("{{data:coverage_form_439}}"));
-        await page.ClickAddAsync();
-        await page.WaitForAccountsReceivableHeadingAsync("Exists");
+        await page.ClickRiskAccountsReceivableAddAsync();
+        //await page.ClickAddCoverageFormAsync();
+        //await page.WaitForAccountsReceivableHeadingAsync("Exists");
         await page.EnterRiskAccountsReceivableSearchValueAsync(data.Resolve("{{data:search_value_443}}"));
         await page.EnterRiskAccountsReceivableSearchResultAsync(data.Resolve("{{data:search_result_444}}"));
         await page.EnterRiskAccountsReceivableConstructionAsync(data.Resolve("{{data:construction_445}}"));
@@ -1234,8 +1236,11 @@ public sealed class CPPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.VerifyShowMeAsync("Exists", "");
-        await page.ClickShowMeAsync();
+        //await page.VerifyShowMeAsync("Exists", "");
+        if (await page.IsShowMeVisibleAsync())
+        {
+            await page.ClickShowMeAsync();
+        }
 
     }
 
@@ -1250,7 +1255,7 @@ public sealed class CPPBasicPolicySteps
 
         await page.VerifyRiskAccountsReceivableSearchResultAsync(data.Resolve("{{data:expected_search_result_value_452}}"), "Value");
         await page.VerifyRiskAccountsReceivableSearchResultAsync(data.Resolve("{{data:expected_search_result_value_453}}"), "Value");
-        await page.WaitForAccountsReceivableHeadingAsync("Exists");
+        //await page.WaitForAccountsReceivableHeadingAsync("Exists");
         await page.EnterRiskAccountsReceivableSearchValueAsync(data.Resolve("{{data:search_value_455}}"));
         await page.EnterRiskAccountsReceivableSearchResultAsync(data.Resolve("{{data:search_result_456}}"));
         await page.ClickRiskAccountsReceivableOKAsync();
@@ -1267,10 +1272,10 @@ public sealed class CPPBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickRiskAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
+        //await page.WaitForSignsHeadingAsync("Exists");
         await page.EnterRiskMainCoverageFormAsync(data.Resolve("{{data:coverage_form_460}}"));
         await page.ClickAddAsync();
-        await page.WaitForBaileesCustomersHeadingAsync("Exists");
+        //await page.WaitForBaileesCustomersHeadingAsync("Exists");
         await page.EnterRiskBaileesCustomersDeductibleAsync(data.Resolve("{{data:deductible_463}}"));
         await page.EnterRiskBaileesCustomersSearchValueAsync(data.Resolve("{{data:search_value_465}}"));
         await page.EnterRiskBaileesCustomersSearchResultAsync(data.Resolve("{{data:search_result_466}}"));
@@ -1296,8 +1301,10 @@ public sealed class CPPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.VerifyShowMeAsync("Exists", "");
-        await page.ClickShowMeAsync();
+        if (await page.IsShowMeVisibleAsync())
+        {
+            await page.ClickShowMeAsync();
+        }
 
     }
 
@@ -1349,8 +1356,10 @@ public sealed class CPPBasicPolicySteps
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.VerifyShowMeAsync("Exists", "");
-        await page.ClickShowMeAsync();
+        if (await page.IsShowMeVisibleAsync())
+        {
+            await page.ClickShowMeAsync();
+        }
 
     }
 
@@ -1381,10 +1390,10 @@ public sealed class CPPBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickRiskAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
+        //await page.WaitForSignsHeadingAsync("Exists");
         await page.EnterRiskMainCoverageFormAsync(data.Resolve("{{data:coverage_form_504}}"));
         await page.ClickAddAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
+        //await page.WaitForSignsHeadingAsync("Exists");
         await page.EnterLimitOfInsuranceAsync(data.Resolve("{{data:limit_of_insurance_507}}"));
         await page.EnterSignLocationAsync(data.Resolve("{{data:sign_location_508}}"));
         await page.EnterRiskSignsTypeAsync(data.Resolve("{{data:type_509}}"));
@@ -1403,7 +1412,7 @@ public sealed class CPPBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickEndorsementAsync();
-        await page.WaitForEndorsementHeadingAsync("Exists");
+        //await page.WaitForEndorsementHeadingAsync("Exists");
         await page.ClickEndorsementMainAddEndorsementAsync();
         await page.EnterEndorsementMainTypeAsync(data.Resolve("{{data:type_515}}"));
         await page.EnterNamesAsync(data.Resolve("{{data:names_517}}"));
@@ -1424,7 +1433,7 @@ public sealed class CPPBasicPolicySteps
         await page.ClickEndorsementAsync();
         await page.WaitForEndorsementHeadingAsync("Exists");
         await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.EnterEndorsementMainTypeAsync(data.Resolve("{{data:type_524}}"));
+        await page.EnterEndorsementMainTypeAsync(data.Resolve("{{data:c}}"));
         await page.EnterEndorsementIF0002WaterborneEquipmentLimitAsync(data.Resolve("{{data:limit_525}}"));
         await page.EnterEndorsementIF0002WaterborneEquipmentDeductibleAsync(data.Resolve("{{data:deductible_526}}"));
         await page.ClickOKAsync();

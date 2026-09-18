@@ -55,6 +55,8 @@ public sealed class NavigationLocators
 
     public ILocator AddBuilding => _page.Locator("a:has(span.g-btn-text:has-text(\"Add Building\"))");
 
+    public ILocator RiskAccountsReceivableAdd => _page.Locator("span.g-btn-text:text-is(\"Add\")").First;
+
     public ILocator RatingGroups => _page.GetByRole(AriaRole.Link, new() { Name = "Rating Groups", Exact = true });
 
     public ILocator AddClass => _page.GetByRole(AriaRole.Link, new() { Name = "Add Class", Exact = true });
@@ -280,15 +282,15 @@ public sealed class NavigationLocators
 
     public ILocator RiskMainCoverageForm => _page.Locator("input[fieldref=\"LineInput.RiskType\"]");
 
-    public ILocator PolicyCovgComputerSystemsCoverageFormDisplay => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Policy Covg Computer Systems Coverage Form Display']/@for] | //label[normalize-space(string(.))='Policy Covg Computer Systems Coverage Form Display']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Policy Covg Computer Systems Coverage Form Display']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
+    public ILocator PolicyCovgComputerSystemsCoverageFormDisplay => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Coverage Form Display']/@for] | //label[normalize-space(string(.))='Coverage Form Display']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Coverage Form Display']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])").Last;
 
-    public ILocator PolicyCovgBaileesCutomersCoverageFormDisplay => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Policy Covg Bailees Cutomers Coverage Form Display']/@for] | //label[normalize-space(string(.))='Policy Covg Bailees Cutomers Coverage Form Display']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Policy Covg Bailees Cutomers Coverage Form Display']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
+    public ILocator PolicyCovgBaileesCutomersCoverageFormDisplay => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Coverage Form Display']/@for] | //label[normalize-space(string(.))='Coverage Form Display']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Coverage Form Display']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])").Last;
 
-    public ILocator PolicyCovgMotorTruckCargoCoverageFormDisplay => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Policy Covg Motor Truck Cargo Coverage Form Display']/@for] | //label[normalize-space(string(.))='Policy Covg Motor Truck Cargo Coverage Form Display']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Policy Covg Motor Truck Cargo Coverage Form Display']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
+    public ILocator PolicyCovgMotorTruckCargoCoverageFormDisplay => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Coverage Form Display']/@for] | //label[normalize-space(string(.))='Coverage Form Display']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Coverage Form Display']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])").Last;
 
     public ILocator PolicyCovgSignsCoverageFormDisplay => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Policy Covg Signs Coverage Form Display']/@for] | //label[normalize-space(string(.))='Policy Covg Signs Coverage Form Display']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Policy Covg Signs Coverage Form Display']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    public ILocator PolicyCovgContractorsEquipmentCoverageFormDisplay => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Policy Covg Contractors Equipment Coverage Form Display']/@for] | //label[normalize-space(string(.))='Policy Covg Contractors Equipment Coverage Form Display']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Policy Covg Contractors Equipment Coverage Form Display']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
+    public ILocator PolicyCovgContractorsEquipmentCoverageFormDisplay => _page.Locator("[fieldref=\"CoverageFormsOutputNonShredded.CoverageFormDisplay\"]").Last;
 
     public ILocator CoverageFormToBeAdded => _page.Locator("input[fieldref=\"LineInput.CoverageForm\"]");
 
@@ -400,6 +402,10 @@ public sealed class NavigationLocators
 
     public ILocator EmployersLiab => _page.GetByRole(AriaRole.Link, new() { Name = "Employers Liab", Exact = true });
 
+    public ILocator Risk => _page.GetByRole(AriaRole.Link, new() { Name = "Risk", Exact = true });
+
+    public ILocator Endorsement => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsement", Exact = true });
+
 
 
     public ILocator FirstEndorsementScheduleRow => _page.GetByText("$1", new() { Exact = true });
@@ -463,7 +469,7 @@ public sealed class NavigationLocators
 
     public ILocator GetCalculatedValue => _page.GetByRole(AriaRole.Link, new() { Name = "Get Calculated Value", Exact = true });
 
-    public ILocator GroupClass => _page.Locator("input[fieldref=\"MotorTruckCargoInput.CarriersGroupClass\"]");
+    public ILocator GroupClass => _page.Locator("input[fieldref=\"MotorTruckCargoInput.Owners200MilesAndUnderGroupClass\"]");
 
     public ILocator HasAnyApplicantBeenConvictedOfAFelonyOrBeenInvolvedInAnyIncidentsOrClaimsRelatingToSexualAbuseOrMolestationAllegationsDiscriminationArsonFraudBriberyOrNegligentHiring => _page.Locator("input[fieldref=\"UnderwritingQuestionsAutoInput.AnyFelonies\"]");
 
@@ -682,7 +688,7 @@ public sealed class NavigationLocators
 
     public ILocator NumberOfPartTimeEmployees => _page.Locator("input[fieldref=\"CoverageInput.NumberOfPartTimeEmployees\"]");
 
-    public ILocator NumberOfVehicles => _page.Locator("input[fieldref=\"MotorTruckCargoInput.CarriersNumberOfVehicles\"]");
+    public ILocator NumberOfVehicles => _page.Locator("input[fieldref=\"MotorTruckCargoInput.Owners200MilesAndUnderNumberOfVehicles\"]");
 
     public ILocator OCP => _page.GetByRole(AriaRole.Link, new() { Name = "OCP", Exact = true });
 

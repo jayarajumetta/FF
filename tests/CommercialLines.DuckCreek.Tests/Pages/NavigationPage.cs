@@ -47,6 +47,9 @@ public sealed class NavigationPage
     public Task ClickAddBuildingAsync() =>
         _ui.ClickAsync(_locators.AddBuilding, new ControlIntent("Navigation", "AddBuilding"));
 
+    public Task ClickRiskAccountsReceivableAddAsync() =>
+        _ui.ClickAsync(_locators.RiskAccountsReceivableAdd, new ControlIntent("Navigation", "RiskAccountsReceivableAdd"));
+
     public Task ClickAddClassAsync() =>
         _ui.ClickAsync(_locators.AddClass, new ControlIntent("Navigation", "AddClass"));
 
@@ -482,6 +485,8 @@ public sealed class NavigationPage
     public Task EnterClassificationOfRiskAsync(string value) =>
         _ui.FillAsync(_locators.ClassificationOfRisk, value, new ControlIntent("Navigation", "ClassificationOfRisk"));
 
+    public Task<bool> IsClassificationOfRiskVisibleAsync() => _ui.ExistsAsync(_locators.ClassificationOfRisk);
+
     public Task PressClassificationOfRiskAsync(string key) =>
         _ui.PressAsync(_locators.ClassificationOfRisk, key, new ControlIntent("Navigation", "ClassificationOfRisk"));
 
@@ -598,6 +603,8 @@ public sealed class NavigationPage
 
     public Task EnterRiskAccountsReceivableConstructionAsync(string value) =>
         _ui.FillAsync(_locators.RiskAccountsReceivableConstruction, value, new ControlIntent("Navigation", "RiskAccountsReceivableConstruction"));
+
+    public Task<bool> IsRiskAccountsReceivableConstructionVisibleAsync() => _ui.ExistsAsync(_locators.RiskAccountsReceivableConstruction);
 
     public Task PressRiskAccountsReceivableConstructionAsync(string key) =>
         _ui.PressAsync(_locators.RiskAccountsReceivableConstruction, key, new ControlIntent("Navigation", "RiskAccountsReceivableConstruction"));
@@ -953,6 +960,8 @@ public sealed class NavigationPage
     public Task EnterDuplicatedRecordsAsync(string value) =>
         _ui.FillAsync(_locators.DuplicatedRecords, value, new ControlIntent("Navigation", "DuplicatedRecords"));
 
+    public Task<bool> IsDuplicatedRecordsVisibleAsync() => _ui.ExistsAsync(_locators.DuplicatedRecords);
+
     public Task PressDuplicatedRecordsAsync(string key) =>
         _ui.PressAsync(_locators.DuplicatedRecords, key, new ControlIntent("Navigation", "DuplicatedRecords"));
 
@@ -1023,7 +1032,7 @@ public sealed class NavigationPage
         _ui.ClickAsync(_locators.EmployersLiab, new ControlIntent("Navigation", "EmployersLiab"));
 
     public Task ClickEndorsementAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "Endorsement"));
+        _ui.ClickAsync(_locators.Endorsement, new ControlIntent("Navigation", "Endorsement"));
 
     public Task WaitForEndorsementHeadingAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "EndorsementHeading"));
@@ -2219,6 +2228,8 @@ public sealed class NavigationPage
     public Task EnterPremisesTypeAsync(string value) =>
         _ui.FillAsync(_locators.PremisesType, value, new ControlIntent("Navigation", "PremisesType"));
 
+    public Task<bool> IsPremisesTypeVisibleAsync() => _ui.ExistsAsync(_locators.PremisesType);
+
     public Task PressPremisesTypeAsync(string key) =>
         _ui.PressAsync(_locators.PremisesType, key, new ControlIntent("Navigation", "PremisesType"));
 
@@ -2382,7 +2393,7 @@ public sealed class NavigationPage
         _ui.ClickAsync(_locators.ReturnToQuote, new ControlIntent("Navigation", "ReturnToQuote"));
 
     public Task ClickRiskAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "Risk"));
+        _ui.ClickAsync(_locators.Risk, new ControlIntent("Navigation", "Risk"));
 
     public Task ClickRiskAccountsReceivableOKAsync() =>
         _ui.ClickAsync(_locators.OK, new ControlIntent("Navigation", "RiskAccountsReceivableOK"));
@@ -2438,6 +2449,8 @@ public sealed class NavigationPage
     public Task EnterRiskAccountsReceivableSearchResultAsync(string value) =>
         _ui.FillAsync(_locators.RiskAccountsReceivableSearchResult, value, new ControlIntent("Navigation", "RiskAccountsReceivableSearchResult"));
 
+    public Task<bool> IsRiskAccountsReceivableSearchResultVisibleAsync() => _ui.ExistsAsync(_locators.RiskAccountsReceivableSearchResult);
+
     public Task PressRiskAccountsReceivableSearchResultAsync(string key) =>
         _ui.PressAsync(_locators.RiskAccountsReceivableSearchResult, key, new ControlIntent("Navigation", "RiskAccountsReceivableSearchResult"));
 
@@ -2464,6 +2477,8 @@ public sealed class NavigationPage
 
     public Task EnterRiskAccountsReceivableSearchValueAsync(string value) =>
         _ui.FillAsync(_locators.RiskAccountsReceivableSearchValue, value, new ControlIntent("Navigation", "RiskAccountsReceivableSearchValue"));
+
+    public Task<bool> IsRiskAccountsReceivableSearchValueVisibleAsync() => _ui.ExistsAsync(_locators.RiskAccountsReceivableSearchValue);
 
     public Task PressRiskAccountsReceivableSearchValueAsync(string key) =>
         _ui.PressAsync(_locators.RiskAccountsReceivableSearchValue, key, new ControlIntent("Navigation", "RiskAccountsReceivableSearchValue"));
@@ -2860,6 +2875,8 @@ public sealed class NavigationPage
 
     public Task EnterUnnamedTerminalsLimitAsync(string value) =>
         _ui.FillAsync(_locators.UnnamedTerminalsLimit, value, new ControlIntent("Navigation", "UnnamedTerminalsLimit"));
+
+    public Task<bool> IsUnnamedTerminalsLimitVisibleAsync() => _ui.ExistsAsync(_locators.UnnamedTerminalsLimit);
 
     public Task PressUnnamedTerminalsLimitAsync(string key) =>
         _ui.PressAsync(_locators.UnnamedTerminalsLimit, key, new ControlIntent("Navigation", "UnnamedTerminalsLimit"));

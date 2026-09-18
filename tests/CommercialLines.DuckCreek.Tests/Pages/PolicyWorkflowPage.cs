@@ -117,7 +117,7 @@ public sealed class PolicyWorkflowPage
         _ui.ClickAsync(_locators.IFRAMEDuckCreekPolicyOtherCheckBox, new ControlIntent("PolicyWorkflow", "IFRAMEDuckCreekPolicyOtherCheckBox"));
 
     public Task ClickIMDetailAsync() =>
-        _ui.ClickAsync(_locators.Detail, new ControlIntent("PolicyWorkflow", "IMDetail"));
+        _ui.ClickAsync(_locators.IMDetail, new ControlIntent("PolicyWorkflow", "IMDetail"));
 
     public Task ClickIncludeBusinessownersAsync() =>
         _ui.ClickAsync(_locators.IncludeBusinessowners, new ControlIntent("PolicyWorkflow", "IncludeBusinessowners"));
@@ -352,6 +352,8 @@ public sealed class PolicyWorkflowPage
 
     public Task ClickShowMeAsync() =>
         _ui.ClickAsync(_locators.ShowMe, new ControlIntent("PolicyWorkflow", "ShowMe"));
+
+    public Task<bool> IsShowMeVisibleAsync() => _ui.ExistsAsync(_locators.ShowMe);
 
     public Task SetSplitBIDedAsync(string value) =>
         _ui.SmartSetAsync(_locators.SplitBIDed, value, new ControlIntent("PolicyWorkflow", "SplitBIDed"));

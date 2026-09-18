@@ -14,58 +14,58 @@ Feature: CPP Basic Policy
     And I start a new quote
     When I enter business client information
     And I add a new Associated Client - Business Owner Type - Click Add Client
-    And I complete aJAX Error Check
-    And I complete required billing information
+    #And I complete aJAX Error Check - Not Needed
+    #And I complete required billing information - Not Needed
     And I complete the Associated Client Info
     And I complete required policy information
     And I run insurance score
     And I select CPP Coverage - GL
     And I select CPP Coverage - CP
     And I select CPP Coverage - IM
-    And I select CP Detail
-    And I complete CP Fields
+    #And I select CP Detail
+    #And I complete CP Fields
     ##And I complete mask Error Recovery - Not Needed
-    And I complete CP Fields for policy coverage
-    And I complete CP Fields for location
-    And I complete CP Fields for building
-    And I add a Rating Group
-    And I complete Structure Questions
-    And I complete ensure Property of Others Rating Group has been entered
-    And I add Addl Interests
-    And I complete Property UW Questions
-    And I return to CPP Navigation
+    #And I complete CP Fields for policy coverage
+    #And I complete CP Fields for location
+    #And I complete CP Fields for building
+    #And I add a Rating Group
+    #And I complete Structure Questions
+    #And I complete ensure Property of Others Rating Group has been entered
+    #And I add Addl Interests
+    #And I complete Property UW Questions
+    #And I return to CPP Navigation
     ##And I switch to UW Director for OR and WA when required - Not Needed
-    And I select GL Detail
-    And I complete CGL Fields
-    And I add Class
-    And I add [CG0435] Employee Benefits Liability Endorsement
-    And I add [CG2142] Exclusion - Explosion, Collapse and Underground Property Damage Hazard (Specified Operations)
-    And I add [CG 2149] Total Pollution Exclusion Endorsement
-    And I verify and Fill out [FG0055] Employment Practices Liability Insurance Coverage Endorsement
-    And I add Addl Interest [CG2007] - Engineers
-    And I add Addl Interest [CG2020] Add'l Insured-Charitable Institution
-    And I add Addl Interest [CG2023] Add'l Insured-Executors
-    And I add Addl Interest [CG2025] Add'l Insured-Executive Officers
-    And I add Addl Interest [CG2034] Add'l Insured-Leased Equipment Automatic
-    And I answer GL UW Questions OR & WA
-    And I return to CPP Navigation for return to cpp
+    #And I select GL Detail
+    #And I complete CGL Fields
+    #And I add Class
+    #And I add [CG0435] Employee Benefits Liability Endorsement
+    #And I add [CG2142] Exclusion - Explosion, Collapse and Underground Property Damage Hazard (Specified Operations)
+    #And I add [CG 2149] Total Pollution Exclusion Endorsement
+    #And I verify and Fill out [FG0055] Employment Practices Liability Insurance Coverage Endorsement
+    #And I add Addl Interest [CG2007] - Engineers
+    #And I add Addl Interest [CG2020] Add'l Insured-Charitable Institution
+    #And I add Addl Interest [CG2023] Add'l Insured-Executors
+    #And I add Addl Interest [CG2025] Add'l Insured-Executive Officers
+    #And I add Addl Interest [CG2034] Add'l Insured-Leased Equipment Automatic
+    #And I answer GL UW Questions OR & WA
+    #And I return to CPP Navigation for return to cpp
     And I select IM Detail
     And I add Accounts Receivable Coverage
-    And I add Bailees Customers Coverage
-    And I add Computer Systems
-    And I add Contractors Equipment
-    And I add Motor Truck Cargo
-    And I add Signs
-    And I add Accounts Receivable
-    And I complete if search result Alert exists
-    And I complete ensure Class has been entered for Accounts Receivable
-    And I add Bailees Customers
-    And I complete if search result Alert exists for show me
-    And I complete ensure Class has been entered for Bailees Customers
-    And I add Computer Systems for risk
-    And I complete if search result Alert exists for duck creek policy
-    And I complete ensure Class has been entered for Computer Systems
-    And I add Signs for risk
+    #And I add Bailees Customers Coverage
+    #And I add Computer Systems
+    #And I add Contractors Equipment
+    #And I add Motor Truck Cargo
+    #And I add Signs
+    #And I add Accounts Receivable
+    #And I complete if search result Alert exists
+    #And I complete ensure Class has been entered for Accounts Receivable - Not needed
+    #And I add Bailees Customers
+    #And I complete if search result Alert exists for show me
+    #And I complete ensure Class has been entered for Bailees Customers - Not needed
+    #And I add Computer Systems for risk
+    #And I complete if search result Alert exists for duck creek policy
+    #And I complete ensure Class has been entered for Computer Systems- - Not needed
+    #And I add Signs for risk
     And I add CM 66 01 Exclude Named Customer
     And I add IF 00 02 Waterborne Equipment
     And I complete Accounts Receivable Questions

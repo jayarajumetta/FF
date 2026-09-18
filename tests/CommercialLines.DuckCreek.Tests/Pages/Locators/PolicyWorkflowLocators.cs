@@ -20,6 +20,8 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator CPDetail => _page.GetByRole(AriaRole.Link, new() { Name = "Detail", Exact = true }).Nth(1);
 
+    public ILocator IMDetail => _page.GetByRole(AriaRole.Link, new() { Name = "Detail", Exact = true }).Nth(2);
+
 
     public ILocator CTStraightThroughLiabilityLimitTo1M => _page.GetByText("CT StraightThrough Liability Limit to 1M", new() { Exact = true });
 
