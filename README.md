@@ -152,7 +152,7 @@ catalog. See `Docs/Azure-Test-Plans-Publishing.md`.
 ### Visual Studio / Rider — Test Explorer (recommended for local dev)
 
 1. Check out `pa3402-anico-combined-framework-integration`.
-2. Open `PnC-TestAutomation.sln`.
+2. Open `Playwright_POC.sln`.
 3. Build (`Ctrl+Shift+B`).
 4. Open Test Explorer (`Ctrl+E, T` in VS, `Alt+8` in Rider).
 5. Filter by tag or run all.

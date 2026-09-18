@@ -51,9 +51,9 @@ try {
     Push-Location $root
     try {
         if (-not $NoBuild) {
-            & dotnet restore .\PnC-TestAutomation.sln --locked-mode
+            & dotnet restore .\Playwright_POC.sln --locked-mode
             if ($LASTEXITCODE -ne 0) { throw "Locked restore failed." }
-            & dotnet build .\PnC-TestAutomation.sln -c Release --no-restore
+            & dotnet build .\Playwright_POC.sln -c Release --no-restore
             if ($LASTEXITCODE -ne 0) { throw "Release build failed." }
         }
         $assembly = Join-Path $root "bin\Release\net8.0\TestAutomation.dll"

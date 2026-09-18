@@ -257,7 +257,9 @@ Update the comment to reference the ADO work item: `# TODO: Scenario incomplete 
 
 #### LOW-1: Solution and namespace still named `Playwright_POC`
 
-The solution was originally named `Playwright_POC.sln`, which made the production framework appear experimental. The primary solution is now `PnC-TestAutomation.sln`; historical namespaces remain unchanged to avoid an unrelated broad refactor.
+The solution file remains `Playwright_POC.sln` to preserve established local
+workflows. Its Solution Explorer layout now uses production-oriented display
+names; any future physical rename should be handled as a separate team decision.
 
 **Recommendation:**  
 Rename to `PnCTestAutomation` in a dedicated refactor commit. Low urgency but worth tracking.

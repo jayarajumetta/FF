@@ -24,7 +24,7 @@
 ```powershell
 # 1. Clean build
 cd "C:\PnC Test Automation\PnC-TestAutomation"
-dotnet build PnC-TestAutomation.sln --verbosity minimal
+dotnet build Playwright_POC.sln --verbosity minimal
 
 # 2. Start DataPool and confirm it responds
 cd DataPool
@@ -295,5 +295,5 @@ Invoke-RestMethod "http://localhost:5100/api/quotes?status=available" | ConvertT
 Start-Process (Get-ChildItem "bin\TestResults" -Recurse -Filter "FormsReport_SFP_AL_*.html" | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
 
 # Clean build
-dotnet build PnC-TestAutomation.sln --verbosity minimal
+dotnet build Playwright_POC.sln --verbosity minimal
 ```

@@ -12,7 +12,7 @@ In Visual Studio:
 2. Open **Git > Manage Branches**.
 3. Fetch the `origin` remote.
 4. Check out `origin/pa3402-anico-combined-framework-integration` as a local branch if it is not already checked out.
-5. Open `PnC-TestAutomation.sln` from the repository root.
+5. Open `Playwright_POC.sln` from the repository root.
 6. In Solution Explorer, select **Switch Views > Solution View** and clear any active search or filter.
 
 If Visual Studio opened a different clone or worktree, use **File > Open > Project/Solution** and select the solution from the checkout whose Git status bar shows the integration branch.
