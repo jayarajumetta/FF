@@ -6,21 +6,16 @@ using PnCTestAutomation.Configuration;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.Controls;
 using PnCTestAutomation.DataPool;
-using PnCTestAutomation.DataProfiles;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Integrations;
 using PnCTestAutomation.Models;
 using PnCTestAutomation.Pages;
 using PnCTestAutomation.Pages.ExpertQuotePages;
-using PnCTestAutomation.Pages.ExpertQuotePages.BOP;
-using PnCTestAutomation.Pages.CommercialDuckCreekPages.BAP;
-using PnCTestAutomation.Pages.PersonalDuckCreekPages.Auto;
 using PnCTestAutomation.Products;
 using PnCTestAutomation.QuoteHandoffs;
 using PnCTestAutomation.Services;
 using PnCTestAutomation.Clients;
 using PnCTestAutomation.TestPlans;
-using PnCTestAutomation.Workflows;
 using Reqnroll;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -50,13 +45,6 @@ namespace PnCTestAutomation
 
             services.AddSingleton<IConfiguration>(configuration);
             services.AddSingleton<IProductModule, SfpProductModule>();
-            services.AddSingleton<IProductModule, ExpertQuoteBopPilotModule>();
-            services.AddSingleton<IProductModule,
-                CommercialDuckCreekBapPilotModule>();
-            services.AddSingleton<IProductModule,
-                PersonalDuckCreekAutoSmokePilotModule>();
-            services.AddSingleton<IProductModule,
-                PersonalDuckCreekStateMaritalPilotModule>();
             services.AddSingleton<IProductModuleRegistry, ProductModuleRegistry>();
 
             var credentials = configuration.GetSection("Credentials").Get<CredentialsConfig>();
@@ -122,29 +110,6 @@ namespace PnCTestAutomation
             services.AddSingleton(businessOutcomeOptions);
             services.AddSingleton<IExpectedOutcomeProfileProvider,
                 ExpectedOutcomeProfileProvider>();
-
-            var pilotDataOptions = configuration
-                .GetSection("PilotDataProfiles")
-                .Get<PilotDataProfileOptions>()
-                ?? new PilotDataProfileOptions();
-            var pilotDataCatalogOverride = Environment.GetEnvironmentVariable(
-                "TEST_PILOT_DATA_PROFILE_PATH");
-            if (!string.IsNullOrWhiteSpace(pilotDataCatalogOverride))
-                pilotDataOptions.UseExclusiveCatalog(pilotDataCatalogOverride);
-            pilotDataOptions.Validate();
-            services.AddSingleton(pilotDataOptions);
-            services.AddSingleton<IPilotDataProfileProvider,
-                PilotDataProfileProvider>();
-            services.AddScoped<IPilotDataContext, PilotDataContext>();
-
-            var frameHintOptions = configuration
-                .GetSection("FrameHints")
-                .Get<FrameScopeHintOptions>()
-                ?? new FrameScopeHintOptions();
-            frameHintOptions.Validate();
-            services.AddSingleton(frameHintOptions);
-            services.AddSingleton<IFrameScopeHintProvider,
-                FrameScopeHintProvider>();
 
             services.AddSingleton<BrowserFactory>();
             services.AddSingleton<PlaywrightContext>();
@@ -251,21 +216,6 @@ namespace PnCTestAutomation
                     provider.GetRequiredService<IControlEvidenceSink>()));
             services.AddScoped<IBusinessOutcomeContext, BusinessOutcomeContext>();
             services.AddScoped<IBusinessOutcomeVerifier, BusinessOutcomeVerifier>();
-            services.AddScoped<IExpertQuoteBopPilotRuntime,
-                ExpertQuoteBopPilotPage>();
-            services.AddScoped<IExpertQuoteBopPilotWorkflow,
-                ExpertQuoteBopPilotWorkflow>();
-            services.AddScoped<ICommercialDuckCreekBapPilotRuntime,
-                CommercialDuckCreekBapPilotPage>();
-            services.AddScoped<ICommercialDuckCreekBapPilotWorkflow,
-                CommercialDuckCreekBapPilotWorkflow>();
-            services.AddScoped<IPersonalDuckCreekAutoPilotRuntime,
-                PersonalDuckCreekAutoPilotPage>();
-            services.AddScoped<IPersonalDuckCreekAutoSmokeWorkflow,
-                PersonalDuckCreekAutoSmokeWorkflow>();
-            services.AddScoped<IPersonalDuckCreekStateMaritalWorkflow,
-                PersonalDuckCreekStateMaritalWorkflow>();
-
             // ── Forms Checking services ──
             var formsConfig = configuration.GetSection("DuckCreekForms").Get<DuckCreekFormsConfig>();
             if (formsConfig != null)

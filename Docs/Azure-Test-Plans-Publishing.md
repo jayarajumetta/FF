@@ -24,10 +24,6 @@ Current families are:
 - `SFP-BASIC-POLICY:<STATE>`
 - `SFP-COUNTRY-ESTATE:<STATE>`
 - `SFP-FORMS-VALIDATION:<STATE>`
-- `EQ-BOP-SMOKE:AL` (Phase 7A pilot, explicitly deferred)
-- `CLDC-BAP-SMOKE:AL` (Phase 7B pilot, explicitly deferred)
-- `PLDC-AUTO-SMOKE:AZ` (Phase 7C pilot, explicitly deferred)
-- `PLDC-AUTO-STATE-MARITAL:AL` (Phase 7C pilot, explicitly deferred)
 
 ## Mapping catalog
 
@@ -67,7 +63,7 @@ ID without a mapping. Updating the catalog changes the
 publication correlation key, preventing an old reconciliation record from
 silently targeting new Test Plans objects.
 
-An optional `deferredAutomationIds` array records known pilot identities that
+An optional `deferredAutomationIds` array records known automation identities that
 do not yet have approved ADO ownership. Deferred IDs contribute
 `deferred|automationId` lines to the checksum. They may not duplicate or
 overlap mappings, and a selected gated execution that is still deferred fails

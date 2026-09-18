@@ -4,10 +4,7 @@ param(
         "All",
         "BasicPolicy",
         "CE",
-        "Forms",
-        "ExpertQuotePilot",
-        "CommercialDuckCreekPilot",
-        "PersonalDuckCreekPilot")]
+        "Forms")]
     [string]$Suite = "All",
 
     [ValidateSet("Full", "Debug")]

@@ -6,11 +6,11 @@
 
 ## Context
 
-The combined framework currently keeps shared contracts, SFP reference
-workflows, and the EQ/CLDC/PLDC pilot adapters in `TestAutomation.dll`.
-Product boundaries are represented by `IProductModule` descriptors, typed data
-profiles, shared control/frame/evidence services, and isolated shard
-ownership. This gives the integration branch one lifecycle, one dependency
+The combined framework currently keeps shared contracts and SFP reference
+workflows in `TestAutomation.dll`. Product boundaries are represented by
+`IProductModule` descriptors and shared control/frame/evidence services.
+Original SGS features remain retained and non-runnable until product adapters
+are implemented against those shared contracts. This gives the integration branch one lifecycle, one dependency
 graph, one test assembly, and one package while the imported product
 boundaries are still blocked.
 

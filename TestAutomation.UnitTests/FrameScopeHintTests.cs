@@ -7,23 +7,6 @@ namespace PnCTestAutomation.UnitTests;
 public class FrameScopeHintTests
 {
     [Test]
-    public void RepositoryCatalogRejectsGenericSourceHintWithoutApprovingIt()
-    {
-        var catalog = ReadRepositoryCatalog();
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(
-                () => FrameScopeHintValidator.Validate(catalog),
-                Throws.Nothing);
-            Assert.That(catalog.Hints, Is.Empty);
-            Assert.That(
-                catalog.RejectedSourceHints,
-                Is.EqualTo(new[] { "iframe" }));
-        });
-    }
-
-    [Test]
     public void GenericAndDuplicateApprovedHintsFailClosed()
     {
         var generic = Catalog(
@@ -188,38 +171,4 @@ public class FrameScopeHintTests
             Hints = hints.ToList()
         };
 
-    private static FrameScopeHintCatalog ReadRepositoryCatalog()
-    {
-        var path = Path.Combine(
-            FindRepositoryRoot(),
-            "Resources",
-            "FrameHints",
-            "cldc-bap-frame-hints.json");
-        return System.Text.Json.JsonSerializer.Deserialize<
-            FrameScopeHintCatalog>(
-            File.ReadAllText(path),
-            new System.Text.Json.JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            })!;
-    }
-
-    private static string FindRepositoryRoot()
-    {
-        var directory = new DirectoryInfo(
-            TestContext.CurrentContext.TestDirectory);
-        while (directory != null)
-        {
-            if (File.Exists(
-                    Path.Combine(
-                        directory.FullName,
-                        "TestAutomation.csproj")))
-            {
-                return directory.FullName;
-            }
-            directory = directory.Parent;
-        }
-        throw new DirectoryNotFoundException(
-            "Could not locate the repository root.");
-    }
 }

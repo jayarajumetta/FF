@@ -209,10 +209,7 @@ Import-Module (Join-Path $stageRoot "scripts\CI\PipelineContracts.psm1") -Force
 foreach ($suiteMode in @(
     @("All", "Full"),
     @("All", "Debug"),
-    @("Forms", "Full"),
-    @("ExpertQuotePilot", "Full"),
-    @("CommercialDuckCreekPilot", "Full"),
-    @("PersonalDuckCreekPilot", "Full")
+    @("Forms", "Full")
 )) {
     $suite = $suiteMode[0]
     $mode = $suiteMode[1]

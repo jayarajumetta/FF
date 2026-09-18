@@ -11,12 +11,6 @@ param(
 
     [switch]$DiscoverySmoke,
 
-    [switch]$PilotNonRunnableSmoke,
-
-    [switch]$CldcPilotNonRunnableSmoke,
-
-    [switch]$PldcPilotNonRunnableSmoke,
-
     [switch]$SfpGatedSmoke,
 
     [switch]$PublisherDryRunSmoke,
@@ -228,36 +222,6 @@ try {
             throw "Extracted package discovery smoke found zero SFP tests."
         }
         Write-Host "Extracted package discovery smoke found $($sfpTests.Count) SFP tests."
-    }
-    if ($PilotNonRunnableSmoke) {
-        Test-NonRunnableSelection `
-            -PackageRoot $PackageRoot `
-            -Filter "TestCategory=EqBopAlPilot" `
-            -ResultName "EqBopAlPilot" `
-            -DisplayName "ExpertQuote pilot" `
-            -RequiredCategories @("EqBopAlPilot")
-    }
-    if ($CldcPilotNonRunnableSmoke) {
-        Test-NonRunnableSelection `
-            -PackageRoot $PackageRoot `
-            -Filter "TestCategory=CldcBapAlPilot" `
-            -ResultName "CldcBapAlPilot" `
-            -DisplayName "Commercial DuckCreek pilot" `
-            -RequiredCategories @("CldcBapAlPilot")
-    }
-    if ($PldcPilotNonRunnableSmoke) {
-        Test-NonRunnableSelection `
-            -PackageRoot $PackageRoot `
-            -Filter "TestCategory=PldcAutoAzAngPilot" `
-            -ResultName "PldcAutoAzAngPilot" `
-            -DisplayName "Personal DuckCreek Auto AZ ANG pilot" `
-            -RequiredCategories @("PldcAutoAzAngPilot")
-        Test-NonRunnableSelection `
-            -PackageRoot $PackageRoot `
-            -Filter "TestCategory=PldcAutoStateMaritalPilot" `
-            -ResultName "PldcAutoStateMaritalPilot" `
-            -DisplayName "Personal DuckCreek state/marital pilot" `
-            -RequiredCategories @("PldcAutoStateMaritalPilot")
     }
     if ($SfpGatedSmoke) {
         Test-NonRunnableSelection `

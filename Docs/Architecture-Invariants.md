@@ -67,13 +67,13 @@ from introducing parallel infrastructure.
     prose or Azure DevOps numeric IDs. A versioned checksummed external catalog
     owns ADO mappings. Publication is idempotent, resumable, redacted, and
     cannot publish initial/retry attempts as separate final results.
-13. **Product pilots register capabilities, not infrastructure.** One
+13. **Product modules register capabilities, not infrastructure.** One
     `IProductModule` descriptor owns each stable automation family and declares
     its data profile, selector exceptions, evidence, frame, quote, and
-    publication contracts. Adapted products reuse the existing lifecycle,
+    publication contracts. Product adapters reuse the existing lifecycle,
     semantic controls, artifact context, quote handoff, retry policy, and
     canonical results; they do not add parallel hooks or factories.
-14. **Corrected product controls prove business state.** Adapted PLDC state,
+14. **Product controls prove business state.** State,
     writing-company, and marital actions target the actual logical control,
     wait for that control to be enabled, and verify its selected value. A
     navigation button, generic page heading, or differently named marital

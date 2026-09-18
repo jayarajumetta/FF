@@ -31,7 +31,7 @@
     "missingRequiredEvidence": "fail",
     "checkpointScreenshotPattern": "{runId}/{scenarioId}/checkpoints/{ordinal}-{checkpoint}.png",
     "uniqueCheckpointScreenshots": true,
-    "requiredPilotEvidence": [
+    "requiredScenarioEvidence": [
       "canonical-test-result",
       "scenario-report",
       "execution-log",

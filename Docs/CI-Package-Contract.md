@@ -65,10 +65,6 @@ output directory is required.
    compiled inventory by exact test identity, not only by count. Discovery and
    execution use disposable copies of the test runtime so adapter-generated
    files cannot mutate the validated package.
-   The extracted package also executes the isolated ExpertQuote BOP,
-   Commercial DuckCreek BAP, PLDC AZ ANG smoke, and PLDC AL state/marital
-   pilots independently and requires exactly one `NotExecuted` result for each
-   while its profile is `NonRunnable`.
 7. Test jobs use `checkout: none`, download exactly one archive, validate it,
    cache/install Chromium with the packaged Playwright runtime pair, and invoke
    one shard through `Invoke-TestShard.ps1`.
@@ -98,23 +94,6 @@ Only a non-parameterized test explicitly tagged `@RetrySafe` can be retried,
 and only for the approved transient network/browser failure classification.
 Business/assertion/configuration/locator failures are never retried. Current
 parameterized SFP UI workflows are state-changing and are not `@RetrySafe`.
-
-The `ExpertQuotePilot` suite owns exactly one `EqBopAlPilot` shard. It is
-validated and packaged but is absent from production scheduled matrices until
-its QA profile, selector evidence, and ADO mapping are approved.
-
-The `CommercialDuckCreekPilot` suite similarly owns exactly one
-`CldcBapAlPilot` shard. Its complete checksummed source profile and rejected
-frame-hint catalog are packaged, but the suite remains absent from production
-schedules until data, selectors, exact frame paths, credentials, quote
-round-trip expectations, and ADO ownership are approved.
-
-The `PersonalDuckCreekPilot` suite owns exactly two disjoint shards:
-`PldcAutoAzAngPilot` and `PldcAutoStateMaritalPilot`. Its complete 50-file
-checksummed source catalog and empty approved frame catalog are packaged. It
-remains unscheduled until sanitized data, a QA-approved Married microcase,
-credentials, exact selectors/frame paths, PII-safe evidence, quote outcomes,
-and ADO ownership are approved.
 
 Initial and retry TRX files are diagnostic attempts. The runner reconciles
 them into exactly one `*-final.trx`, rejects unexpected or duplicate retry
@@ -176,12 +155,7 @@ pwsh .\scripts\CI\Invoke-StabilizationVerification.ps1 `
 ```
 
 The command validates package checksums/secrets, compiled discovery and module
-contracts, exact shard ownership, all NonRunnable EQ/CLDC/PLDC probes, the
-current NonRunnable SFP Basic/CE/forms gates, canonical TRX/evidence parity,
+contracts, exact shard ownership, the current NonRunnable SFP Basic/CE/forms
+gates, canonical TRX/evidence parity,
 and Test Plans dry-run reconciliation. Its JSON report carries a SHA-256 over
-the canonical report body. A source-free report records catalog integrity as
-passed and historical source-ledger validation as
-`ExternalValidationRequired`; it is not approval evidence for source
-provenance. Supplying `-SgsRepositoryRoot` verifies every distinct adapted
-source file at its audited commit without modifying that checkout and changes
-that ledger status to `Passed`.
+the canonical report body.

@@ -4,9 +4,7 @@ param(
     [string]$PackageRoot,
 
     [Parameter(Mandatory)]
-    [string]$OutputPath,
-
-    [string]$SgsRepositoryRoot
+    [string]$OutputPath
 )
 
 $ErrorActionPreference = "Stop"
@@ -52,88 +50,6 @@ function Assert-ExactSet {
             ForEach-Object { "$($_.SideIndicator) $($_.InputObject)" }) -join "; "
         throw "$Description disagrees with committed contracts. $sample"
     }
-}
-
-function Get-PilotProfileChecksum {
-    param(
-        [object]$Catalog,
-        [object]$Profile
-    )
-    $lines = [Collections.Generic.List[string]]::new()
-    $lines.Add([string]$Catalog.schemaVersion)
-    $lines.Add(([string]$Catalog.catalogVersion).Trim())
-    $lines.Add(([string]$Catalog.sourceRepository).Trim())
-    $paths = @(Get-OrdinalStrings @(
-        $Catalog.sourceFiles | ForEach-Object { [string]$_.path }))
-    foreach ($path in $paths) {
-        $source = @($Catalog.sourceFiles |
-            Where-Object { ([string]$_.path).Equals(
-                $path,
-                [StringComparison]::Ordinal) })
-        Assert-True ($source.Count -eq 1) (
-            "Source ledger path '$path' is missing or duplicated.")
-        $lines.Add(
-            "source|$($path.Trim())|$(([string]$source[0].sha256).Trim().ToUpperInvariant())")
-    }
-    $lines.Add(([string]$Profile.profileId).Trim())
-    $lines.Add(([string]$Profile.version).Trim())
-    $lines.Add(([string]$Profile.moduleId).Trim())
-    $lines.Add(([string]$Profile.environment).Trim())
-    $lines.Add(([string]$Profile.state).Trim())
-    $lines.Add(([string]$Profile.mode).Trim())
-    $lines.Add(([string]$Profile.blockedReason).Trim())
-    $lines.Add(
-        ([DateTimeOffset]$Profile.validUntilUtc).
-            ToUniversalTime().
-            ToString("O", [Globalization.CultureInfo]::InvariantCulture))
-    $lines.Add((@(Get-OrdinalStrings @(
-        $Profile.requiredKeys) -IgnoreCase) -join ","))
-    $lines.Add((@(Get-OrdinalStrings @(
-        $Profile.missingRequiredKeys) -IgnoreCase) -join ","))
-    $layers = @($Profile.layers | Sort-Object precedence, name)
-    foreach ($layer in $layers) {
-        $lines.Add(
-            "layer|$([int]$layer.precedence)|$(([string]$layer.name).Trim())")
-        $keys = @(Get-OrdinalStrings @(
-            $layer.values.PSObject.Properties |
-                ForEach-Object { $_.Name }))
-        foreach ($key in $keys) {
-            $value = [string]$layer.values.PSObject.Properties[$key].Value
-            $lines.Add("value|$($key.Trim())|$($value.Trim())")
-        }
-    }
-    return [Convert]::ToHexString(
-        [Security.Cryptography.SHA256]::HashData(
-            [Text.Encoding]::UTF8.GetBytes(($lines -join "`n"))))
-}
-
-function Test-PilotCatalog {
-    param(
-        [string]$Path,
-        [int]$ExpectedFiles
-    )
-    $catalog = Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json
-    Assert-True ($catalog.schemaVersion -eq 1) (
-        "Pilot catalog '$Path' has an unsupported schema.")
-    $sources = @($catalog.sourceFiles)
-    Assert-True ($sources.Count -eq $ExpectedFiles) (
-        "Pilot catalog '$Path' source count is stale.")
-    Assert-True (@($sources.path | Sort-Object -Unique).Count -eq
-        $sources.Count) (
-        "Pilot catalog '$Path' contains duplicate source paths.")
-    foreach ($source in $sources) {
-        Assert-True (
-            ([string]$source.sha256) -match '^[A-Fa-f0-9]{64}$') (
-            "Pilot source '$($source.path)' has an invalid checksum.")
-    }
-    foreach ($profile in @($catalog.profiles)) {
-        $actual = Get-PilotProfileChecksum $catalog $profile
-        Assert-True ($actual.Equals(
-            [string]$profile.checksum,
-            [StringComparison]::OrdinalIgnoreCase)) (
-            "Pilot profile '$($profile.profileId)' has a stale checksum.")
-    }
-    return $catalog
 }
 
 function Get-FrameCatalogChecksum {
@@ -187,31 +103,6 @@ function Select-WorkflowTests {
     })
 }
 
-function Get-GitWorkingTreeSha256 {
-    param(
-        [string]$RepositoryRoot,
-        [string]$Commit,
-        [string]$Path
-    )
-    $temporary = [IO.Path]::GetTempFileName()
-    try {
-        $object = "${Commit}:$Path"
-        & git -C $RepositoryRoot show $object > $temporary
-        if ($LASTEXITCODE -ne 0) {
-            throw "Unable to read '$Path' from SGS commit '$Commit'."
-        }
-        $bytes = [IO.File]::ReadAllBytes($temporary)
-        $text = [Text.Encoding]::UTF8.GetString($bytes)
-        $workingTreeBytes = [Text.Encoding]::UTF8.GetBytes(
-            ($text -replace "(?<!`r)`n", "`r`n"))
-        return [Convert]::ToHexString(
-            [Security.Cryptography.SHA256]::HashData($workingTreeBytes))
-    }
-    finally {
-        Remove-Item -LiteralPath $temporary -Force
-    }
-}
-
 $root = [IO.Path]::GetFullPath($PackageRoot)
 Import-Module (Join-Path $root "scripts\CI\PipelineContracts.psm1") -Force
 $package = Test-PackageManifest -PackageRoot $root -ScanForSecrets
@@ -244,12 +135,12 @@ Assert-True (([string]$matrix.topologyDecision).Equals(
     "The topology decision was changed without an approved decision record.")
 
 $workflows = @($matrix.workflows)
-Assert-True ($workflows.Count -eq 7) (
-    "The readiness matrix must contain exactly seven selected workflows.")
-Assert-True (@($workflows.workflowId | Sort-Object -Unique).Count -eq 7) (
+Assert-True ($workflows.Count -eq 3) (
+    "The readiness matrix must contain exactly three reference workflows.")
+Assert-True (@($workflows.workflowId | Sort-Object -Unique).Count -eq 3) (
     "Readiness workflow IDs must be unique.")
 Assert-True (@($workflows.stableAutomationId |
-    Sort-Object -Unique).Count -eq 7) (
+    Sort-Object -Unique).Count -eq 3) (
     "Stable readiness automation IDs must be unique.")
 $requiredRoles = @($matrix.requiredApprovalRoles |
     ForEach-Object { [string]$_ })
@@ -259,8 +150,6 @@ Assert-True ($requiredRoles.Count -eq 4) (
 $manifestPaths = @($package.inventory | ForEach-Object { [string]$_.path })
 $ownershipKeys = [Collections.Generic.HashSet[string]]::new(
     [StringComparer]::OrdinalIgnoreCase)
-$pilotCatalogs = @{}
-$pilotCatalogCommits = @{}
 $frameCatalogs = @{}
 $workflowReports = [Collections.Generic.List[object]]::new()
 foreach ($workflow in $workflows) {
@@ -369,32 +258,12 @@ foreach ($workflow in $workflows) {
         "Workflow '$workflowId' profile catalog is missing.")
     $profileCatalog = Get-Content -LiteralPath $profilePath -Raw |
         ConvertFrom-Json
-    if ($workflow.sourceProvenance.status -eq "VerifiedLedger") {
-        $expectedFiles = [int]$workflow.sourceProvenance.expectedFiles
-        $sourceCommit = [string]$workflow.sourceProvenance.commit
-        Assert-True ($sourceCommit -match '^[A-Fa-f0-9]{40}$') (
-            "Workflow '$workflowId' has an invalid audited source commit.")
-        if (-not $pilotCatalogs.ContainsKey($profilePath)) {
-            $pilotCatalogs[$profilePath] = Test-PilotCatalog `
-                -Path $profilePath `
-                -ExpectedFiles $expectedFiles
-            $pilotCatalogCommits[$profilePath] = $sourceCommit
-        } else {
-            Assert-True (
-                ([string]$pilotCatalogCommits[$profilePath]).Equals(
-                    $sourceCommit,
-                    [StringComparison]::OrdinalIgnoreCase)) (
-                "Workflow '$workflowId' disagrees on its catalog source commit.")
-        }
-        $profileMatches = @($pilotCatalogs[$profilePath].profiles |
-            Where-Object profileId -eq ([string]$workflow.profile.profileId))
-    } elseif ($workflow.sourceProvenance.status -eq "RepositoryNative") {
-        $profileMatches = @($profileCatalog.profiles |
-            Where-Object scenarioProfile -eq (
-                [string]$workflow.profile.profileId))
-    } else {
+    if ($workflow.sourceProvenance.status -ne "RepositoryNative") {
         throw "Workflow '$workflowId' has an unsupported provenance status."
     }
+    $profileMatches = @($profileCatalog.profiles |
+        Where-Object scenarioProfile -eq (
+            [string]$workflow.profile.profileId))
     Assert-True ($profileMatches.Count -gt 0) (
         "Workflow '$workflowId' profile is missing.")
     Assert-True (@($profileMatches | Where-Object {
@@ -468,34 +337,6 @@ foreach ($workflow in $workflows) {
     })
 }
 
-$sourceFilesValidated = 0
-if (-not [string]::IsNullOrWhiteSpace($SgsRepositoryRoot)) {
-    $sourceRoot = [IO.Path]::GetFullPath($SgsRepositoryRoot)
-    $before = @(git -C $sourceRoot status --porcelain=v1 --untracked-files=all)
-    Assert-True ($before.Count -eq 0) (
-        "The SGS source checkout is not clean.")
-    foreach ($catalogPath in $pilotCatalogs.Keys) {
-        $commit = [string]$pilotCatalogCommits[$catalogPath]
-        & git -C $sourceRoot cat-file -e "$commit^{commit}"
-        Assert-True ($LASTEXITCODE -eq 0) (
-            "Audited SGS commit '$commit' is unavailable.")
-        foreach ($source in @($pilotCatalogs[$catalogPath].sourceFiles)) {
-            $actualHash = Get-GitWorkingTreeSha256 `
-                -RepositoryRoot $sourceRoot `
-                -Commit $commit `
-                -Path ([string]$source.path)
-            Assert-True ($actualHash.Equals(
-                [string]$source.sha256,
-                [StringComparison]::OrdinalIgnoreCase)) (
-                "SGS source '$($source.path)' checksum is stale at '$commit'.")
-            $sourceFilesValidated++
-        }
-    }
-    $after = @(git -C $sourceRoot status --porcelain=v1 --untracked-files=all)
-    Assert-True ($after.Count -eq 0) (
-        "The SGS source checkout changed during readiness validation.")
-}
-
 $reportData = [PSCustomObject][ordered]@{
     schemaVersion = 1
     catalogVersion = [string]$matrix.catalogVersion
@@ -506,9 +347,6 @@ $reportData = [PSCustomObject][ordered]@{
     ).Hash.ToUpperInvariant()
     topologyDecision = [string]$matrix.topologyDecision
     adaptedSourceRepository = [string]$matrix.adaptedSourceRepository
-    adaptedSourceCommits = @($pilotCatalogCommits.Values |
-        Sort-Object -Unique)
-    sourceFilesValidated = $sourceFilesValidated
     workflowCount = $workflowReports.Count
     workflows = @($workflowReports)
 }
@@ -526,8 +364,7 @@ if ($parent) {
 $report | ConvertTo-Json -Depth 18 |
     Set-Content -LiteralPath $OutputPath -Encoding UTF8
 Write-Host (
-    "Integration readiness validated: workflows={0}, gated={1}, sourceFiles={2}, checksum={3}." -f
+    "Integration readiness validated: workflows={0}, gated={1}, checksum={2}." -f
     $workflowReports.Count,
     @($workflowReports | Where-Object state -eq "Gated").Count,
-    $sourceFilesValidated,
     $report.checksum)

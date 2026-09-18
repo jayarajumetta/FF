@@ -33,7 +33,6 @@ unless the scenario has a *different* value for that tag.
 | `@RetrySafe` | Non-parameterized, idempotent test approved for one CI retry after a classified transient infrastructure failure. |
 | `@Manual` | Scenarios not yet automated. Tracked in the repo as documentation; never executed in CI. |
 | `@Ignore` | Temporarily disabled. Must include a comment with the reason and a tracking ticket reference. |
-| `@Pilot` | Adapted workflow under contract validation; it is not production-gated until its profile is approved. |
 | `@NonRunnable` | Explicitly blocked by typed profile/configuration requirements and must produce an ignored, never passing, result. |
 | `@NoRetry` | State-changing workflow that cannot enter the transient retry path. |
 | `@SgsImported` | Original SGS feature deliverable retained in `Features/SGS`. It is visible and discoverable but ignored before browser startup until adapted to destination bindings and contracts. |
@@ -91,22 +90,6 @@ cannot count as a gated pass.
 Automation IDs are independent of scenario prose and Azure DevOps numeric IDs.
 For the current SFP outlines, `StateAbbv` is the qualifier, producing IDs such
 as `SFP-BASIC-POLICY:AL`.
-
-The ExpertQuote BOP pilot uses `EQ-BOP-SMOKE:AL`, is owned by
-`@EqBopAlPilot`, and is deliberately absent from production schedules while
-tagged `@NonRunnable`. Its isolated suite exists for discovery, package, and
-explicit ignored-result probes only.
-
-The Commercial DuckCreek BAP pilot uses `CLDC-BAP-SMOKE:AL`, is owned by
-`@CldcBapAlPilot`, and follows the same isolated `@NonRunnable`/`@NoRetry`
-contract. It is not part of scheduled production matrices.
-
-The Personal DuckCreek pilot suite has two isolated owners:
-`@PldcAutoAzAngPilot` for `PLDC-AUTO-SMOKE:AZ` and
-`@PldcAutoStateMaritalPilot` for
-`PLDC-AUTO-STATE-MARITAL:AL`. Both remain
-`@NonRunnable`/`@NoRetry` and absent from production schedules; the second is
-also blocked because no audited source row supplies Married data.
 
 ---
 
@@ -171,7 +154,7 @@ All 32 SGS feature deliverables are retained under `Features/SGS`, grouped by
 their original product project. `Resources/Contracts/sgs-feature-inventory.json`
 records the source repository commit, original path, destination path, and
 source/imported SHA-256 values for every feature. Their outlines compile into
-1,203 discoverable test cases.
+1,115 discoverable test cases.
 
 The only content added during import is the common feature-level header:
 
@@ -183,9 +166,7 @@ The source payload after that header remains byte-for-byte checksummed. These
 files are not silently treated as completed destination automation. The
 `SgsImported` hook ignores them before browser startup until their SGS-specific
 bindings, data, selectors/frames, business outcomes, and shard ownership are
-adapted into the combined framework. Existing adapted pilot features remain
-separate because they exercise destination contracts rather than the original
-SGS binding text.
+adapted into the combined framework.
 
 The JSON files referenced by those features are retained under `Resources/SGS`.
 `Resources/Contracts/sgs-data-inventory.json` records each source checksum and

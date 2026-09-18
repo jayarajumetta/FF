@@ -108,13 +108,11 @@ try {
         "test\appsettings.Dev.json",
         "test\Resources\Contracts\combined-framework-contract.json",
         "test\Resources\Contracts\integration-readiness.json",
+        "test\Resources\Contracts\sgs-feature-inventory.json",
+        "test\Resources\Contracts\sgs-data-inventory.json",
         "test\Resources\ExpectedForms\SFP\forms.json",
         "test\Resources\ExpectedOutcomes\sfp-outcomes.json",
-        "test\Resources\DataProfiles\eq-bop-pilot.json",
-        "test\Resources\DataProfiles\cldc-bap-pilot.json",
-        "test\Resources\DataProfiles\pldc-auto-pilot.json",
-        "test\Resources\FrameHints\cldc-bap-frame-hints.json",
-        "test\Resources\FrameHints\pldc-auto-frame-hints.json",
+        "test\Resources\SGS\retained-data.json",
         "datapool\DataPool.dll",
         "datapool\DataPool.deps.json",
         "datapool\DataPool.runtimeconfig.json",
@@ -128,9 +126,6 @@ try {
         "metadata\shards-All-Full.json",
         "metadata\shards-All-Debug.json",
         "metadata\shards-Forms-Full.json",
-        "metadata\shards-ExpertQuotePilot-Full.json",
-        "metadata\shards-CommercialDuckCreekPilot-Full.json",
-        "metadata\shards-PersonalDuckCreekPilot-Full.json",
         "runsettings\ci.runsettings",
         "config\shards.json",
         "config\testplans-mapping.template.json",
@@ -420,50 +415,10 @@ try {
     $shardCatalog = Get-Content -LiteralPath (
         Join-Path $RepositoryRoot "Pipelines\config\shards.json") -Raw |
         ConvertFrom-Json
-    $pilotSuite = @($shardCatalog.suites |
-        Where-Object name -eq "ExpertQuotePilot")
-    $pilotShard = @($shardCatalog.shards |
-        Where-Object id -eq "EqBopAlPilot")
     Assert-True (
-        $pilotSuite.Count -eq 1 -and
-        $pilotShard.Count -eq 1 -and
-        @($pilotSuite[0].shards).Count -eq 1 -and
-        $pilotSuite[0].shards[0] -eq "EqBopAlPilot"
-    ) "ExpertQuote pilot does not have one isolated shard owner."
-    Assert-True (
-        $entry -notmatch "ExpertQuotePilot|EqBopAlPilot"
-    ) "NonRunnable ExpertQuote pilot entered scheduled production execution."
-    $cldcPilotSuite = @($shardCatalog.suites |
-        Where-Object name -eq "CommercialDuckCreekPilot")
-    $cldcPilotShard = @($shardCatalog.shards |
-        Where-Object id -eq "CldcBapAlPilot")
-    Assert-True (
-        $cldcPilotSuite.Count -eq 1 -and
-        $cldcPilotShard.Count -eq 1 -and
-        @($cldcPilotSuite[0].shards).Count -eq 1 -and
-        $cldcPilotSuite[0].shards[0] -eq "CldcBapAlPilot"
-    ) "Commercial DuckCreek pilot does not have one isolated shard owner."
-    Assert-True (
-        $entry -notmatch "CommercialDuckCreekPilot|CldcBapAlPilot"
-    ) "NonRunnable Commercial DuckCreek pilot entered scheduled production execution."
-    $pldcPilotSuite = @($shardCatalog.suites |
-        Where-Object name -eq "PersonalDuckCreekPilot")
-    $pldcPilotShards = @($shardCatalog.shards |
-        Where-Object id -in @(
-            "PldcAutoAzAngPilot",
-            "PldcAutoStateMaritalPilot"))
-    Assert-True (
-        $pldcPilotSuite.Count -eq 1 -and
-        $pldcPilotShards.Count -eq 2 -and
-        @($pldcPilotSuite[0].shards).Count -eq 2 -and
-        @($pldcPilotSuite[0].shards) -contains "PldcAutoAzAngPilot" -and
-        @($pldcPilotSuite[0].shards) -contains "PldcAutoStateMaritalPilot"
-    ) "Personal DuckCreek pilots do not have two isolated shard owners."
-    Assert-True (
-        $entry -notmatch (
-            "PersonalDuckCreekPilot|PldcAutoAzAngPilot|" +
-            "PldcAutoStateMaritalPilot")
-    ) "NonRunnable Personal DuckCreek pilots entered scheduled production execution."
+        @($shardCatalog.suites).Count -eq 4 -and
+        @($shardCatalog.shards).Count -eq 8
+    ) "Shard catalog contains unexpected non-reference suites."
     $packageVersion = (
         Get-Content -LiteralPath (
             Join-Path $RepositoryRoot "Pipelines\package-version.txt") -Raw
@@ -482,7 +437,7 @@ try {
         $readiness.packageVersion -eq "1.4.0"
     ) "Package/runtime stabilization is not frozen at 1.4.0."
     Assert-True (
-        @($readiness.workflows).Count -eq 7 -and
+        @($readiness.workflows).Count -eq 3 -and
         @($readiness.requiredApprovalRoles).Count -eq 4 -and
         @($readiness.workflows | Where-Object state -ne "Gated").Count -eq 0
     ) "The integration readiness matrix is incomplete or success-shaped."
@@ -490,7 +445,7 @@ try {
         $packageBuilder -match "Invoke-StabilizationVerification\.ps1" -and
         $stabilization -match "SfpGatedSmoke" -and
         $stabilization -match "Test-IntegrationReadiness\.ps1" -and
-        $stabilization -match "ExternalValidationRequired" -and
+        $stabilization -match 'catalogIntegrity = "Passed"' -and
         $stabilization -notmatch "ValidatedByCatalog"
     ) "Package creation bypasses the source-free stabilization gate."
 

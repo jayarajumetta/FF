@@ -155,7 +155,7 @@ public class BusinessOutcomeTests
     }
 
     [Test]
-    public void RepositoryProfileCatalogKeepsSfpPilotsNonRunnable()
+    public void RepositoryProfileCatalogKeepsUnapprovedSfpProfilesNonRunnable()
     {
         var provider = new ExpectedOutcomeProfileProvider(
             new BusinessOutcomeOptions

@@ -6,7 +6,6 @@ using PnCTestAutomation.BusinessOutcomes;
 using PnCTestAutomation.Configuration;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.DataPool;
-using PnCTestAutomation.DataProfiles;
 using PnCTestAutomation.Helpers;            // <-- ScenarioContextData lives here
 using PnCTestAutomation.Pages;
 using PnCTestAutomation.Products;
@@ -51,8 +50,6 @@ namespace PnCTestAutomation.Hooks
         private readonly IExpectedOutcomeProfileProvider _outcomeProfiles;
         private readonly IBusinessOutcomeContext _businessOutcomeContext;
         private readonly IProductModuleRegistry _productModules;
-        private readonly IPilotDataProfileProvider _pilotDataProfiles;
-        private readonly IPilotDataContext _pilotDataContext;
         private ProductEvidenceContract _productEvidence;
         private bool _tracingStarted;
         private ArtifactEvidenceException _artifactFailure;
@@ -72,9 +69,7 @@ namespace PnCTestAutomation.Hooks
             IArtifactCaptureService artifactCapture,
             IExpectedOutcomeProfileProvider outcomeProfiles,
             IBusinessOutcomeContext businessOutcomeContext,
-            IProductModuleRegistry productModules,
-            IPilotDataProfileProvider pilotDataProfiles,
-            IPilotDataContext pilotDataContext)
+            IProductModuleRegistry productModules)
         {
             _context = context;
             _browserFactory = browserFactory;
@@ -93,8 +88,6 @@ namespace PnCTestAutomation.Hooks
             _outcomeProfiles = outcomeProfiles;
             _businessOutcomeContext = businessOutcomeContext;
             _productModules = productModules;
-            _pilotDataProfiles = pilotDataProfiles;
-            _pilotDataContext = pilotDataContext;
         }
 
         [BeforeTestRun]
@@ -181,36 +174,6 @@ namespace PnCTestAutomation.Hooks
             var productModule = automationId == null
                 ? null
                 : _productModules.TryResolve(automationId);
-            if (productModule?.UsesPilotDataProfile == true)
-            {
-                var environment =
-                    Environment.GetEnvironmentVariable("TEST_ENVIRONMENT")
-                    ?? _configuration["Environment"]
-                    ?? "qa";
-                var state = TryGetScenarioStateAbbreviation()
-                            ?? throw new PilotDataConfigurationException(
-                                "A state argument is required for a pilot data profile.");
-                var resolution = _pilotDataProfiles.Resolve(
-                    productModule.DataProfileId,
-                    environment,
-                    state);
-                if (!resolution.IsRunnable)
-                {
-                    NUnit.Framework.Assert.Ignore(
-                        $"Pilot data profile '{resolution.Profile.ProfileId}' " +
-                        $"is explicitly non-runnable: {resolution.Reason}");
-                    return;
-                }
-                if (productModule.BlockedSelectors.Count > 0)
-                {
-                    throw new PilotDataConfigurationException(
-                        $"Product module '{productModule.ModuleId}' is blocked " +
-                        $"on selector approval: {string.Join(", ", productModule.BlockedSelectors)}.");
-                }
-
-                _pilotDataContext.Set(resolution);
-            }
-
             if (TryGetBusinessOutcomeScenarioProfile(out var scenarioProfile))
             {
                 var state = TryGetScenarioStateAbbreviation()

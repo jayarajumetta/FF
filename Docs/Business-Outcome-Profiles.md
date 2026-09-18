@@ -110,7 +110,7 @@ expectation requires an explicitly reviewed profile and recomputed checksum.
 The forms checksum pins the actual baseline file bytes, including line endings.
 Do not silently update it, premium, or forms to match an unexpected live result.
 `AvailabilityOnly` checks the transmit option without transmitting a policy.
-Other SFP states, Country Estate, standalone forms, and SGS pilots remain gated
+Other SFP states, Country Estate, standalone forms, and imported SGS scenarios remain gated
 by their existing default contracts.
 
 ### Verified boundary on September 18, 2026

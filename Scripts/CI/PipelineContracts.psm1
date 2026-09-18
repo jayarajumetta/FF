@@ -172,14 +172,9 @@ function Test-PackageManifest {
         "metadata/shards-All-Full.json",
         "metadata/shards-All-Debug.json",
         "metadata/shards-Forms-Full.json",
-        "metadata/shards-ExpertQuotePilot-Full.json",
-        "metadata/shards-CommercialDuckCreekPilot-Full.json",
-        "metadata/shards-PersonalDuckCreekPilot-Full.json",
         "test/Resources/Contracts/integration-readiness.json",
-        "test/Resources/DataProfiles/cldc-bap-pilot.json",
-        "test/Resources/DataProfiles/pldc-auto-pilot.json",
-        "test/Resources/FrameHints/cldc-bap-frame-hints.json",
-        "test/Resources/FrameHints/pldc-auto-frame-hints.json",
+        "test/Resources/Contracts/sgs-feature-inventory.json",
+        "test/Resources/Contracts/sgs-data-inventory.json",
         "runsettings/ci.runsettings",
         "config/shards.json",
         "config/testplans-mapping.template.json",
@@ -213,8 +208,7 @@ function Test-PackageManifest {
         "test/Resources/Contracts/",
         "test/Resources/ExpectedForms/",
         "test/Resources/ExpectedOutcomes/",
-        "test/Resources/DataProfiles/",
-        "test/Resources/FrameHints/"
+        "test/Resources/SGS/"
     )) {
         if (@($manifestPaths | Where-Object {
                     $_.StartsWith(

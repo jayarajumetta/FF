@@ -4,7 +4,7 @@
   "sourceCommit": "ecd9019ab991028341ad76de11cff06aa43cb32f",
   "importHeader": "@SgsImported @NonRunnable @NoRetry",
   "featureCount": 32,
-  "generatedCaseCount": 1203,
+  "generatedCaseCount": 1115,
   "features": [
     {
       "sourceProject": "CommercialLines.DuckCreek.Tests",

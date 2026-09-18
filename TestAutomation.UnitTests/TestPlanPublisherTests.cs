@@ -157,14 +157,14 @@ public class TestPlanPublisherTests
     }
 
     [Test]
-    public void DeferredPilotMappingIsVisibleButCannotSatisfyAGatedRun()
+    public void DeferredMappingIsVisibleButCannotSatisfyAGatedRun()
     {
         var draft = new TestPlanMappingCatalog
         {
             SchemaVersion = 1,
             CatalogVersion = "1.0.0",
             Provenance = "unit-test",
-            DeferredAutomationIds = ["EQ-BOP-SMOKE:AL"]
+            DeferredAutomationIds = ["DEFERRED-WORKFLOW:AL"]
         };
         var catalog = new TestPlanMappingCatalog
         {
@@ -181,7 +181,7 @@ public class TestPlanPublisherTests
                 () => catalog.Validate([]),
                 Throws.Nothing);
             Assert.That(
-                () => catalog.Validate(["EQ-BOP-SMOKE:AL"]),
+                () => catalog.Validate(["DEFERRED-WORKFLOW:AL"]),
                 Throws.TypeOf<TestPlanPublicationException>()
                     .With.Message.Contains("explicitly deferred"));
         });
@@ -190,7 +190,7 @@ public class TestPlanPublisherTests
     [Test]
     public void MappingCatalogRejectsDuplicateOrMappedDeferredIds()
     {
-        var mapping = Mapping("EQ-BOP-SMOKE:AL", 101);
+        var mapping = Mapping("DEFERRED-WORKFLOW:AL", 101);
         var duplicateDraft = new TestPlanMappingCatalog
         {
             SchemaVersion = 1,
@@ -198,8 +198,8 @@ public class TestPlanPublisherTests
             Provenance = "unit-test",
             DeferredAutomationIds =
             [
-                "EQ-BOP-SMOKE:AL",
-                "EQ-BOP-SMOKE:AL"
+                "DEFERRED-WORKFLOW:AL",
+                "DEFERRED-WORKFLOW:AL"
             ]
         };
         var overlapDraft = new TestPlanMappingCatalog
@@ -208,7 +208,7 @@ public class TestPlanPublisherTests
             CatalogVersion = "1.0.0",
             Provenance = "unit-test",
             Mappings = [mapping],
-            DeferredAutomationIds = ["EQ-BOP-SMOKE:AL"]
+            DeferredAutomationIds = ["DEFERRED-WORKFLOW:AL"]
         };
         var duplicate = WithChecksum(duplicateDraft);
         var overlap = WithChecksum(overlapDraft);

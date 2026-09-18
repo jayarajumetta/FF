@@ -34,7 +34,7 @@ public class SgsFeatureInventoryTests
             Assert.That(manifest.GetProperty("featureCount").GetInt32(), Is.EqualTo(32));
             Assert.That(
                 manifest.GetProperty("generatedCaseCount").GetInt32(),
-                Is.EqualTo(1203));
+                Is.EqualTo(1115));
             Assert.That(features, Has.Length.EqualTo(32));
             Assert.That(
                 features.Select(feature =>

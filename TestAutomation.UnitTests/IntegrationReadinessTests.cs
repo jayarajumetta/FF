@@ -37,7 +37,7 @@ public class IntegrationReadinessTests
             Assert.That(
                 root.GetProperty("topologyDecision").GetString(),
                 Is.EqualTo("ProvisionalInAssembly"));
-            Assert.That(workflows, Has.Length.EqualTo(7));
+            Assert.That(workflows, Has.Length.EqualTo(3));
             Assert.That(
                 workflows.Select(workflow =>
                     workflow.GetProperty("workflowId").GetString()!),
@@ -215,14 +215,7 @@ public class IntegrationReadinessTests
     }
 
     private static ProductModuleRegistry Registry() =>
-        new(
-        [
-            new SfpProductModule(),
-            new ExpertQuoteBopPilotModule(),
-            new CommercialDuckCreekBapPilotModule(),
-            new PersonalDuckCreekAutoSmokePilotModule(),
-            new PersonalDuckCreekStateMaritalPilotModule()
-        ]);
+        new([new SfpProductModule()]);
 
     private static JsonDocument ReadJson(params string[] path) =>
         JsonDocument.Parse(File.ReadAllText(

@@ -7,9 +7,7 @@ param(
     [string]$ArchivePath,
 
     [Parameter(Mandatory)]
-    [string]$OutputPath,
-
-    [string]$SgsRepositoryRoot
+    [string]$OutputPath
 )
 
 $ErrorActionPreference = "Stop"
@@ -51,23 +49,14 @@ try {
     & (Join-Path $root "scripts\CI\Test-TestPackage.ps1") `
         -PackageRoot $root `
         -DiscoverySmoke `
-        -PilotNonRunnableSmoke `
-        -CldcPilotNonRunnableSmoke `
-        -PldcPilotNonRunnableSmoke `
         -SfpGatedSmoke `
         -PublisherDryRunSmoke `
         -ScanForSecrets
 
     $readinessPath = Join-Path $verificationRoot "readiness.json"
-    $readinessArguments = @{
-        PackageRoot = $root
-        OutputPath = $readinessPath
-    }
-    if (-not [string]::IsNullOrWhiteSpace($SgsRepositoryRoot)) {
-        $readinessArguments.SgsRepositoryRoot = $SgsRepositoryRoot
-    }
     & (Join-Path $root "scripts\CI\Test-IntegrationReadiness.ps1") `
-        @readinessArguments
+        -PackageRoot $root `
+        -OutputPath $readinessPath
 
     $readiness = Get-Content -LiteralPath $readinessPath -Raw |
         ConvertFrom-Json
@@ -81,17 +70,10 @@ try {
             packageManifest = "Passed"
             sourceFreeDiscovery = "Passed"
             sfpGatedProfiles = "Passed"
-            nonRunnablePilotProbes = "Passed"
             canonicalResultEvidenceParity = "Passed"
             testPlansDryRunReconciliation = "Passed"
             readinessContract = "Passed"
             catalogIntegrity = "Passed"
-            historicalSourceLedgers = if (
-                [int]$readiness.report.sourceFilesValidated -gt 0) {
-                "Passed"
-            } else {
-                "ExternalValidationRequired"
-            }
         }
         readinessChecksum = [string]$readiness.checksum
         readiness = $readiness.report

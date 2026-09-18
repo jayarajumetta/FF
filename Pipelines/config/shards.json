@@ -77,51 +77,6 @@
       "shards": [
         "FormsSfp"
       ]
-    },
-    {
-      "name": "ExpertQuotePilot",
-      "fullSelectionFilter": "TestCategory=EqBopAlPilot",
-      "debugSelectionFilter": "TestCategory=EqBopAlPilot",
-      "fullRules": [
-        { "all": [ "EqBopAlPilot" ] }
-      ],
-      "debugRules": [
-        { "all": [ "EqBopAlPilot" ] }
-      ],
-      "shards": [
-        "EqBopAlPilot"
-      ]
-    },
-    {
-      "name": "CommercialDuckCreekPilot",
-      "fullSelectionFilter": "TestCategory=CldcBapAlPilot",
-      "debugSelectionFilter": "TestCategory=CldcBapAlPilot",
-      "fullRules": [
-        { "all": [ "CldcBapAlPilot" ] }
-      ],
-      "debugRules": [
-        { "all": [ "CldcBapAlPilot" ] }
-      ],
-      "shards": [
-        "CldcBapAlPilot"
-      ]
-    },
-    {
-      "name": "PersonalDuckCreekPilot",
-      "fullSelectionFilter": "TestCategory=PldcAutoAzAngPilot|TestCategory=PldcAutoStateMaritalPilot",
-      "debugSelectionFilter": "TestCategory=PldcAutoAzAngPilot|TestCategory=PldcAutoStateMaritalPilot",
-      "fullRules": [
-        { "all": [ "PldcAutoAzAngPilot" ] },
-        { "all": [ "PldcAutoStateMaritalPilot" ] }
-      ],
-      "debugRules": [
-        { "all": [ "PldcAutoAzAngPilot" ] },
-        { "all": [ "PldcAutoStateMaritalPilot" ] }
-      ],
-      "shards": [
-        "PldcAutoAzAngPilot",
-        "PldcAutoStateMaritalPilot"
-      ]
     }
   ],
   "shards": [
@@ -198,38 +153,6 @@
       "debugFilter": "TestCategory=Forms&TestCategory=SFP",
       "fullRules": [ { "all": [ "Forms", "SFP" ] } ],
       "debugRules": [ { "all": [ "Forms", "SFP" ] } ]
-    },
-    {
-      "id": "EqBopAlPilot",
-      "suite": "ExpertQuotePilot",
-      "fullFilter": "TestCategory=EqBopAlPilot",
-      "debugFilter": "TestCategory=EqBopAlPilot",
-      "fullRules": [ { "all": [ "EqBopAlPilot" ] } ],
-      "debugRules": [ { "all": [ "EqBopAlPilot" ] } ]
-    },
-    {
-      "id": "CldcBapAlPilot",
-      "suite": "CommercialDuckCreekPilot",
-      "fullFilter": "TestCategory=CldcBapAlPilot",
-      "debugFilter": "TestCategory=CldcBapAlPilot",
-      "fullRules": [ { "all": [ "CldcBapAlPilot" ] } ],
-      "debugRules": [ { "all": [ "CldcBapAlPilot" ] } ]
-    },
-    {
-      "id": "PldcAutoAzAngPilot",
-      "suite": "PersonalDuckCreekPilot",
-      "fullFilter": "TestCategory=PldcAutoAzAngPilot",
-      "debugFilter": "TestCategory=PldcAutoAzAngPilot",
-      "fullRules": [ { "all": [ "PldcAutoAzAngPilot" ] } ],
-      "debugRules": [ { "all": [ "PldcAutoAzAngPilot" ] } ]
-    },
-    {
-      "id": "PldcAutoStateMaritalPilot",
-      "suite": "PersonalDuckCreekPilot",
-      "fullFilter": "TestCategory=PldcAutoStateMaritalPilot",
-      "debugFilter": "TestCategory=PldcAutoStateMaritalPilot",
-      "fullRules": [ { "all": [ "PldcAutoStateMaritalPilot" ] } ],
-      "debugRules": [ { "all": [ "PldcAutoStateMaritalPilot" ] } ]
     }
   ]
 }

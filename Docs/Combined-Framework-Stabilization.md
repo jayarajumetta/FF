@@ -6,8 +6,8 @@ Package/runtime contract 1.4.0 is frozen by
 manifest. `Scripts/CI/Invoke-StabilizationVerification.ps1` is the single
 source-free verification entry point. It validates the extracted package,
 compiled discovery/modules, shard ownership, all current NonRunnable SFP and
-pilot probes, canonical result/evidence parity, credential-free Test Plans
-dry-run reconciliation, profile/frame/source checksums, and emits a
+canonical result/evidence parity, credential-free Test Plans dry-run
+reconciliation, profile checksums, and emits a
 checksummed stabilization report.
 
 ## Current readiness
@@ -17,10 +17,6 @@ checksummed stabilization report.
 | SFP Basic | `SFP-BASIC-POLICY:<STATE>` | Gated | QA outcome profiles, runtime/security approval, ADO mappings, topology decision |
 | SFP Country Estate | `SFP-COUNTRY-ESTATE:<STATE>` | Gated | QA outcome profiles, runtime/security approval, ADO mappings, topology decision |
 | SFP forms | `SFP-FORMS-VALIDATION:<STATE>` | Gated | approved quote/baseline metadata, Forms access, ADO mapping, topology decision |
-| EQ BOP AL | `EQ-BOP-SMOKE:AL` | Gated | safe data/outcomes, selector/frame approval, credentials/PII policy, ADO mapping |
-| CLDC BAP AL | `CLDC-BAP-SMOKE:AL` | Gated | safe data/outcomes, exact frame/test-ID evidence, credentials/services/PII policy, ADO mapping |
-| PLDC Auto AZ ANG | `PLDC-AUTO-SMOKE:AZ` | Gated | safe data/outcomes, exact controls/frames, credentials/PII policy, ADO mapping |
-| PLDC state/marital AL | `PLDC-AUTO-STATE-MARITAL:AL` | Gated | approved Married row, exact state/Married controls, credentials/cleanup/PII policy, ADO mapping |
 
 The JSON readiness matrix is authoritative for detailed business assertions,
 evidence, package paths, blockers, approval evidence, and accountable roles.
@@ -40,16 +36,12 @@ inventory, unowned gates, or a Runnable state without every approval.
 | Test Plans | Stable automation identity and publisher boundary | Checksummed external mappings, idempotent dry-run/publish/reconcile, attachment parity | Numeric IDs in features/code, duplicate TRX publication, credentials in artifacts |
 | Hooks/retry/pipelines | Private agents, browser caching, sharding, schedules, DataPool, result publication | One destination hook set, one classified CI retry boundary, disjoint compiled ownership | SGS hooks/browser factories/retry generator/pipelines and state-changing replay without rollback |
 | SFP Basic/CE/forms | Existing business-readable reference workflows and domain assertions | Versioned expected outcomes, strict quote/premium/forms/transmit-readiness evidence | Treating availability as transmission, missing-baseline success, duplicate forms orchestration |
-| EQ BOP AL | Selected AL BOP intent and quote round trip | Destination module/profile/control/evidence/Test Plans contracts | SGS bindings/pages/infrastructure and unapproved selectors/data |
-| CLDC BAP AL | Selected BAP field/score/quote intent | Exact frame propagation, redacted runtime locator evidence, typed profile | Generic frames, fieldref/role rescue, source retry/hooks/pipeline |
-| PLDC pilots | AZ ANG quote round trip and AL state/Married proof intent | Correct state/Married targets, control readiness, selected-value assertions, deterministic outcomes | Wrong Next/Divorced targets, heading waits, empty selects, fixed delays, broad `.First`, unsupported business claims |
 
 ## Approval path
 
 - **Architecture/David:** decide physical topology and approve exact selector
   and frame contracts.
-- **QA:** approve sanitized data, versioned expected outcomes, baselines, and
-  the missing AL Married case.
+- **QA:** approve sanitized data, versioned expected outcomes, and baselines.
 - **Security/Operations:** approve credentials/runtime access, PII redaction,
   evidence retention, dependent services, and mutation cleanup.
 - **DevOps/ADO:** provide secure numeric mappings, permissions, branch

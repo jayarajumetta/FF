@@ -99,7 +99,6 @@ static List<ProductModuleInventoryEntry> DiscoverModules(Assembly assembly)
             RequiredStrings(descriptor, "AutomationIdFamilies"),
             RequiredStrings(descriptor, "RequiredCapabilities"),
             RequiredString(descriptor, "DataProfileId"),
-            RequiredBoolean(descriptor, "UsesPilotDataProfile"),
             new ProductEvidenceInventory(
                 RequiredStrings(evidence, "RequiredArtifacts"),
                 RequiredBoolean(evidence, "RequiresCanonicalResult"),
@@ -310,7 +309,6 @@ sealed record ProductModuleInventoryEntry(
     IReadOnlyList<string> AutomationIdFamilies,
     IReadOnlyList<string> RequiredCapabilities,
     string DataProfileId,
-    bool UsesPilotDataProfile,
     ProductEvidenceInventory Evidence,
     IReadOnlyList<string> SelectorExceptionReferences,
     IReadOnlyList<string> BlockedSelectors,
