@@ -10,6 +10,6 @@
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
     "csharp-dev-tools.roslyn.projectOrSolutionFiles": [
-        "c:\\PnC Test Automation\\PnC-TestAutomation\\Playwright_POC.sln"
+        "PnC-TestAutomation.sln"
     ]
 }

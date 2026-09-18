@@ -80,12 +80,12 @@ foreach ($buildOutput in @(
 
 Push-Location $root
 try {
-    & dotnet restore Playwright_POC.sln --locked-mode
+    & dotnet restore PnC-TestAutomation.sln --locked-mode
     if ($LASTEXITCODE -ne 0) {
         throw "Locked solution restore failed."
     }
 
-    & dotnet build Playwright_POC.sln `
+    & dotnet build PnC-TestAutomation.sln `
         --configuration Release `
         --no-restore `
         --nologo `

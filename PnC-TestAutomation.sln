@@ -1,0 +1,168 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.5.11723.231
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 - Automation Framework", "01 - Automation Framework", "{64D61C96-A110-43B1-9D17-55AAB5B1E18D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PnC Test Automation", "TestAutomation.csproj", "{ACA6444D-3BE4-F22E-1493-58B3A21325F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 - SGS Deliverables", "02 - SGS Deliverables", "{33157D50-E0A3-4910-A9DF-41F6D8631721}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Commercial Lines - DuckCreek", "Commercial Lines - DuckCreek", "{9C81269D-6BC2-4E5E-B601-B7671E9CF2A0}"
+	ProjectSection(SolutionItems) = preProject
+		Features\SGS\CommercialLines.DuckCreek\001_BAP_Basic_Policy.feature = Features\SGS\CommercialLines.DuckCreek\001_BAP_Basic_Policy.feature
+		Features\SGS\CommercialLines.DuckCreek\002_BAP_Expanded.feature = Features\SGS\CommercialLines.DuckCreek\002_BAP_Expanded.feature
+		Features\SGS\CommercialLines.DuckCreek\003_CPP_Basic_Policy.feature = Features\SGS\CommercialLines.DuckCreek\003_CPP_Basic_Policy.feature
+		Features\SGS\CommercialLines.DuckCreek\004_CP_Basic_Policy.feature = Features\SGS\CommercialLines.DuckCreek\004_CP_Basic_Policy.feature
+		Features\SGS\CommercialLines.DuckCreek\005_GL_Basic_Policy.feature = Features\SGS\CommercialLines.DuckCreek\005_GL_Basic_Policy.feature
+		Features\SGS\CommercialLines.DuckCreek\006_GL_OCP_Policy.feature = Features\SGS\CommercialLines.DuckCreek\006_GL_OCP_Policy.feature
+		Features\SGS\CommercialLines.DuckCreek\007_IM_Basic_Policy.feature = Features\SGS\CommercialLines.DuckCreek\007_IM_Basic_Policy.feature
+		Features\SGS\CommercialLines.DuckCreek\008_UMB_Basic_Policy.feature = Features\SGS\CommercialLines.DuckCreek\008_UMB_Basic_Policy.feature
+		Features\SGS\CommercialLines.DuckCreek\009_UMB_Expanded.feature = Features\SGS\CommercialLines.DuckCreek\009_UMB_Expanded.feature
+		Features\SGS\CommercialLines.DuckCreek\010_WC_Basic_Policy.feature = Features\SGS\CommercialLines.DuckCreek\010_WC_Basic_Policy.feature
+		Features\SGS\CommercialLines.DuckCreek\011_WC_Expanded.feature = Features\SGS\CommercialLines.DuckCreek\011_WC_Expanded.feature
+		Features\SGS\CommercialLines.DuckCreek\Smoke\012_BAP_Smoke_Test.feature = Features\SGS\CommercialLines.DuckCreek\Smoke\012_BAP_Smoke_Test.feature
+		Features\SGS\CommercialLines.DuckCreek\Smoke\013_CP_Smoke_Test.feature = Features\SGS\CommercialLines.DuckCreek\Smoke\013_CP_Smoke_Test.feature
+		Features\SGS\CommercialLines.DuckCreek\Smoke\014_GL_Smoke_Test.feature = Features\SGS\CommercialLines.DuckCreek\Smoke\014_GL_Smoke_Test.feature
+		Features\SGS\CommercialLines.DuckCreek\Smoke\015_IM_Smoke_Test.feature = Features\SGS\CommercialLines.DuckCreek\Smoke\015_IM_Smoke_Test.feature
+		Features\SGS\CommercialLines.DuckCreek\Smoke\016_WC_Smoke_Test.feature = Features\SGS\CommercialLines.DuckCreek\Smoke\016_WC_Smoke_Test.feature
+		Features\SGS\CommercialLines.DuckCreek\Smoke\017_CPP_Smoke_Test.feature = Features\SGS\CommercialLines.DuckCreek\Smoke\017_CPP_Smoke_Test.feature
+		Features\SGS\CommercialLines.DuckCreek\Smoke\018_UMB_Smoke_Test.feature = Features\SGS\CommercialLines.DuckCreek\Smoke\018_UMB_Smoke_Test.feature
+		Resources\SGS\CommercialLines.DuckCreek\Runtime\DuckCreekFrameHints.json = Resources\SGS\CommercialLines.DuckCreek\Runtime\DuckCreekFrameHints.json
+		Resources\SGS\CommercialLines.DuckCreek\TestData\ExternalDataOverrides.json = Resources\SGS\CommercialLines.DuckCreek\TestData\ExternalDataOverrides.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Commercial Lines - ExpertQuote", "Commercial Lines - ExpertQuote", "{059D7E99-AB83-47FE-9D70-ED392D208B62}"
+	ProjectSection(SolutionItems) = preProject
+		Features\SGS\CommercialLines.ExpertQuote\02_EQ_BOP_Basic_Policy.feature = Features\SGS\CommercialLines.ExpertQuote\02_EQ_BOP_Basic_Policy.feature
+		Features\SGS\CommercialLines.ExpertQuote\05_EQ_SFP_Basic_Policy.feature = Features\SGS\CommercialLines.ExpertQuote\05_EQ_SFP_Basic_Policy.feature
+		Features\SGS\CommercialLines.ExpertQuote\06_EQ_SFP_Country_Estate_Policy.feature = Features\SGS\CommercialLines.ExpertQuote\06_EQ_SFP_Country_Estate_Policy.feature
+		Features\SGS\CommercialLines.ExpertQuote\Smoke\03_EQ_BOP_Smoke_Test.feature = Features\SGS\CommercialLines.ExpertQuote\Smoke\03_EQ_BOP_Smoke_Test.feature
+		Features\SGS\CommercialLines.ExpertQuote\Smoke\04_EQ_SFP_Smoke_Test.feature = Features\SGS\CommercialLines.ExpertQuote\Smoke\04_EQ_SFP_Smoke_Test.feature
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Personal Lines - DuckCreek", "Personal Lines - DuckCreek", "{E9B39C0E-5B15-4597-A230-D537764126FC}"
+	ProjectSection(SolutionItems) = preProject
+		Features\SGS\PersonalLines.DuckCreek\181_Auto_Rate_Filings_Policy_1_NB.feature = Features\SGS\PersonalLines.DuckCreek\181_Auto_Rate_Filings_Policy_1_NB.feature
+		Features\SGS\PersonalLines.DuckCreek\182_Auto_Rate_Filings_Policy_3_NB_Prior_Eff_Date.feature = Features\SGS\PersonalLines.DuckCreek\182_Auto_Rate_Filings_Policy_3_NB_Prior_Eff_Date.feature
+		Features\SGS\PersonalLines.DuckCreek\183_Auto_Rate_Filings_Common_Policy_NB.feature = Features\SGS\PersonalLines.DuckCreek\183_Auto_Rate_Filings_Common_Policy_NB.feature
+		Features\SGS\PersonalLines.DuckCreek\184_Auto_Rate_Filings_Common_Policy_NB_Prior_Eff_Date.feature = Features\SGS\PersonalLines.DuckCreek\184_Auto_Rate_Filings_Common_Policy_NB_Prior_Eff_Date.feature
+		Features\SGS\PersonalLines.DuckCreek\185_Cycle_Rate_Filings_Policy_1_NB_1.feature = Features\SGS\PersonalLines.DuckCreek\185_Cycle_Rate_Filings_Policy_1_NB_1.feature
+		Features\SGS\PersonalLines.DuckCreek\186_Cycle_Rate_Filings_Policy_3_NB_Prior_Eff_Date.feature = Features\SGS\PersonalLines.DuckCreek\186_Cycle_Rate_Filings_Policy_3_NB_Prior_Eff_Date.feature
+		Features\SGS\PersonalLines.DuckCreek\Smoke\211_Smoke_Test_Auto.feature = Features\SGS\PersonalLines.DuckCreek\Smoke\211_Smoke_Test_Auto.feature
+		Features\SGS\PersonalLines.DuckCreek\Smoke\212_Smoke_Test_Cycle.feature = Features\SGS\PersonalLines.DuckCreek\Smoke\212_Smoke_Test_Cycle.feature
+		Features\SGS\PersonalLines.DuckCreek\Smoke\215_Smoke_Test_RV.feature = Features\SGS\PersonalLines.DuckCreek\Smoke\215_Smoke_Test_RV.feature
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03 - Supporting Projects", "03 - Supporting Projects", "{62D366A0-7D1D-4F60-A0C2-8B50A768D90A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataPool", "DataPool\DataPool.csproj", "{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAutomation.UnitTests", "TestAutomation.UnitTests\TestAutomation.UnitTests.csproj", "{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+		appsettings.json = appsettings.json
+		ci.runsettings = ci.runsettings
+		Docs\Visual-Studio-Guide.md = Docs\Visual-Studio-Guide.md
+		Resources\Contracts\sgs-data-inventory.json = Resources\Contracts\sgs-data-inventory.json
+		Resources\Contracts\sgs-feature-inventory.json = Resources\Contracts\sgs-feature-inventory.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04 - Tools", "04 - Tools", "{07C2787E-EAC7-C090-1BA3-A61EC2A24D84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CiTestInventory", "Tools\CiTestInventory\CiTestInventory.csproj", "{E6EFC4B9-1996-4442-9535-CE673FF26B7F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPlanPublisher", "Tools\TestPlanPublisher\TestPlanPublisher.csproj", "{7132D1D9-7836-437A-B0B0-FD0D67E99764}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ACA6444D-3BE4-F22E-1493-58B3A21325F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACA6444D-3BE4-F22E-1493-58B3A21325F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACA6444D-3BE4-F22E-1493-58B3A21325F3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{ACA6444D-3BE4-F22E-1493-58B3A21325F3}.Debug|x64.Build.0 = Debug|Any CPU
+		{ACA6444D-3BE4-F22E-1493-58B3A21325F3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ACA6444D-3BE4-F22E-1493-58B3A21325F3}.Debug|x86.Build.0 = Debug|Any CPU
+		{ACA6444D-3BE4-F22E-1493-58B3A21325F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACA6444D-3BE4-F22E-1493-58B3A21325F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACA6444D-3BE4-F22E-1493-58B3A21325F3}.Release|x64.ActiveCfg = Release|Any CPU
+		{ACA6444D-3BE4-F22E-1493-58B3A21325F3}.Release|x64.Build.0 = Release|Any CPU
+		{ACA6444D-3BE4-F22E-1493-58B3A21325F3}.Release|x86.ActiveCfg = Release|Any CPU
+		{ACA6444D-3BE4-F22E-1493-58B3A21325F3}.Release|x86.Build.0 = Release|Any CPU
+		{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421}.Debug|x64.Build.0 = Debug|Any CPU
+		{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421}.Debug|x86.Build.0 = Debug|Any CPU
+		{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421}.Release|x64.ActiveCfg = Release|Any CPU
+		{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421}.Release|x64.Build.0 = Release|Any CPU
+		{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421}.Release|x86.ActiveCfg = Release|Any CPU
+		{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421}.Release|x86.Build.0 = Release|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Debug|x64.Build.0 = Debug|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Debug|x86.Build.0 = Debug|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Release|x64.ActiveCfg = Release|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Release|x64.Build.0 = Release|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Release|x86.ActiveCfg = Release|Any CPU
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4}.Release|x86.Build.0 = Release|Any CPU
+		{E6EFC4B9-1996-4442-9535-CE673FF26B7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6EFC4B9-1996-4442-9535-CE673FF26B7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6EFC4B9-1996-4442-9535-CE673FF26B7F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E6EFC4B9-1996-4442-9535-CE673FF26B7F}.Debug|x64.Build.0 = Debug|Any CPU
+		{E6EFC4B9-1996-4442-9535-CE673FF26B7F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E6EFC4B9-1996-4442-9535-CE673FF26B7F}.Debug|x86.Build.0 = Debug|Any CPU
+		{E6EFC4B9-1996-4442-9535-CE673FF26B7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6EFC4B9-1996-4442-9535-CE673FF26B7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6EFC4B9-1996-4442-9535-CE673FF26B7F}.Release|x64.ActiveCfg = Release|Any CPU
+		{E6EFC4B9-1996-4442-9535-CE673FF26B7F}.Release|x64.Build.0 = Release|Any CPU
+		{E6EFC4B9-1996-4442-9535-CE673FF26B7F}.Release|x86.ActiveCfg = Release|Any CPU
+		{E6EFC4B9-1996-4442-9535-CE673FF26B7F}.Release|x86.Build.0 = Release|Any CPU
+		{7132D1D9-7836-437A-B0B0-FD0D67E99764}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7132D1D9-7836-437A-B0B0-FD0D67E99764}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7132D1D9-7836-437A-B0B0-FD0D67E99764}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7132D1D9-7836-437A-B0B0-FD0D67E99764}.Debug|x64.Build.0 = Debug|Any CPU
+		{7132D1D9-7836-437A-B0B0-FD0D67E99764}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7132D1D9-7836-437A-B0B0-FD0D67E99764}.Debug|x86.Build.0 = Debug|Any CPU
+		{7132D1D9-7836-437A-B0B0-FD0D67E99764}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7132D1D9-7836-437A-B0B0-FD0D67E99764}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7132D1D9-7836-437A-B0B0-FD0D67E99764}.Release|x64.ActiveCfg = Release|Any CPU
+		{7132D1D9-7836-437A-B0B0-FD0D67E99764}.Release|x64.Build.0 = Release|Any CPU
+		{7132D1D9-7836-437A-B0B0-FD0D67E99764}.Release|x86.ActiveCfg = Release|Any CPU
+		{7132D1D9-7836-437A-B0B0-FD0D67E99764}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{ACA6444D-3BE4-F22E-1493-58B3A21325F3} = {64D61C96-A110-43B1-9D17-55AAB5B1E18D}
+		{9C81269D-6BC2-4E5E-B601-B7671E9CF2A0} = {33157D50-E0A3-4910-A9DF-41F6D8631721}
+		{059D7E99-AB83-47FE-9D70-ED392D208B62} = {33157D50-E0A3-4910-A9DF-41F6D8631721}
+		{E9B39C0E-5B15-4597-A230-D537764126FC} = {33157D50-E0A3-4910-A9DF-41F6D8631721}
+		{C5F2A8B3-4D76-4E89-A1C2-3F0B9E7D5421} = {62D366A0-7D1D-4F60-A0C2-8B50A768D90A}
+		{AA48DC1D-9F0B-4F57-A15E-C1FBA53374E4} = {62D366A0-7D1D-4F60-A0C2-8B50A768D90A}
+		{E6EFC4B9-1996-4442-9535-CE673FF26B7F} = {07C2787E-EAC7-C090-1BA3-A61EC2A24D84}
+		{7132D1D9-7836-437A-B0B0-FD0D67E99764} = {07C2787E-EAC7-C090-1BA3-A61EC2A24D84}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1799A08B-A64B-4845-91B4-758EAE23E4F5}
+	EndGlobalSection
+EndGlobal

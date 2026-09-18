@@ -33,6 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Keep all business-readable features visible in Visual Studio Solution Explorer. -->
+    <None Update="Features\**\*.feature">
+      <Visible>true</Visible>
+    </None>
     <!-- Glob rather than just appsettings.json: Startup loads appsettings.{TEST_ENVIRONMENT}.json
          with optional:true, so an env file that never reaches the output folder fails silently. -->
     <None Update="appsettings*.json">
@@ -40,6 +44,7 @@
     </None>
     <Content Include="Resources\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>true</Visible>
     </Content>
   </ItemGroup>
 

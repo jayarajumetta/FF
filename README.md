@@ -151,10 +151,15 @@ catalog. See `Docs/Azure-Test-Plans-Publishing.md`.
 
 ### Visual Studio / Rider — Test Explorer (recommended for local dev)
 
-1. Open `Playwright_POC.sln`
-2. Build (`Ctrl+Shift+B`)
-3. Open Test Explorer (`Ctrl+E, T` in VS, `Alt+8` in Rider)
-4. Filter by tag or run all
+1. Check out `pa3402-anico-combined-framework-integration`.
+2. Open `PnC-TestAutomation.sln`.
+3. Build (`Ctrl+Shift+B`).
+4. Open Test Explorer (`Ctrl+E, T` in VS, `Alt+8` in Rider).
+5. Filter by tag or run all.
+
+The solution groups the framework, SGS deliverables, supporting projects, and
+tools separately. See [Finding the combined framework in Visual Studio](Docs/Visual-Studio-Guide.md)
+for exact navigation paths and checkout verification.
 
 ### Command Line
 
