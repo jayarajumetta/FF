@@ -30,6 +30,9 @@ def required(name: str) -> str:
 
 
 def scope() -> dict:
+    if os.environ.get("EVIDENCE_TRANSPORT") == "pipeline":
+        return {"buildId": required("BUILD_BUILDID"), "stageKey": required("STAGEKEY"),
+                "stageAttempt": required("SYSTEM_STAGEATTEMPT")}
     return {key: required(env) for key, env in (
         ("releaseId", "RELEASE_RELEASEID"),
         ("environmentId", "RELEASE_ENVIRONMENTID"),
@@ -95,7 +98,6 @@ def pack(results: Path, output: Path, identity: dict, position: int, total: int,
     }
     path = output / f"agent-{position}.json"
     path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
-    archive.unlink()
     return path
 
 
@@ -105,6 +107,10 @@ def publish() -> None:
     manifest_path = pack(results, output, scope(), int(required("SYSTEM_JOBPOSITIONINPHASE")), int(required("SYSTEM_TOTALJOBSINPHASE")))
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     print(f"Evidence root: {results / 'Artifacts'}; shard {manifest['position']}/{manifest['totalJobs']}; scenarios/attempts: {manifest['scenarioCount']}", flush=True)
+    if os.environ.get("EVIDENCE_TRANSPORT") == "pipeline":
+        print(f"##vso[task.setvariable variable=EVIDENCE_HANDOFF]{command_escape(str(output))}", flush=True)
+        return
+    attach(output / f"agent-{manifest['position']}.zip", "file")
     for part in manifest["parts"]:
         attach(output / part["name"], CHUNK_TYPE)
     attach(manifest_path, MANIFEST_TYPE)
@@ -226,6 +232,58 @@ def unpack(manifest: dict, parts: Path, target: Path) -> None:
         raise ValueError("Extracted scenario count does not match agent manifest")
 
 
+def archive_bundle(bundle: Path, archive: Path) -> Path:
+    with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED, allowZip64=True) as zipped:
+        for path in sorted(bundle.rglob("*")):
+            if path.is_file():
+                zipped.write(path, path.relative_to(bundle).as_posix())
+    return archive
+
+
+def collect_pipeline() -> None:
+    incoming = Path(required("EVIDENCE_DOWNLOAD_ROOT"))
+    output = Path(required("REPORT_OUTPUT_ROOT"))
+    output.mkdir(parents=True, exist_ok=True)
+    archive_bundle(incoming, output / "RawTestResults.zip")
+    work = Path(tempfile.mkdtemp(prefix="pipeline-report-", dir=required("AGENT_TEMPDIRECTORY")))
+    bundle = work / "bundle"
+    evidence = bundle / "Artifacts"
+    expected = json.loads(required("EXPECTED_EVIDENCE"))
+    if not isinstance(expected, dict) or not expected or any(
+        stage not in ("Assembly", "Suite", "SingleCase") or type(total) is not int or total < 1
+        for stage, total in expected.items()
+    ):
+        raise ValueError("Expected evidence must specify selected modes with positive shard counts")
+    all_manifests = []
+    attempt = required("SYSTEM_STAGEATTEMPT")
+    for stage, total in expected.items():
+        manifests = []
+        for position in range(1, total + 1):
+            parts = incoming / f"evidence-{stage}-{position}-{attempt}"
+            path = parts / f"agent-{position}.json"
+            if not path.is_file():
+                raise ValueError(f"Missing agent evidence: {stage} shard {position}/{total}")
+            manifest = json.loads(path.read_text(encoding="utf-8"))
+            if manifest["position"] != position or manifest["totalJobs"] != total:
+                raise ValueError(f"Unexpected shard identity: {stage} shard {position}/{total}")
+            manifests.append(manifest)
+        identity = {"buildId": required("BUILD_BUILDID"), "stageKey": stage,
+                    "stageAttempt": required("SYSTEM_STAGEATTEMPT")}
+        validate_manifests(manifests, identity)
+        for manifest in manifests:
+            position = manifest["position"]
+            unpack(manifest, incoming / f"evidence-{stage}-{position}-{attempt}", evidence / stage / f"agent-{position}")
+        all_manifests.extend(manifests)
+    actual = {p.name for p in incoming.iterdir() if p.is_dir()}
+    expected_names = {f"evidence-{stage}-{p}-{attempt}" for stage, total in expected.items() for p in range(1, total + 1)}
+    if actual != expected_names:
+        raise ValueError("Unexpected or missing evidence artifacts; refusing an ambiguous report")
+    (bundle / "collection-manifest.json").write_text(json.dumps(all_manifests, indent=2), encoding="utf-8")
+    archive = generate(evidence, bundle, Path(__file__).resolve().parent.parent)
+    shutil.copyfile(archive, output / archive.name)
+    print(f"Verified {len(all_manifests)} shards; report and raw results: {output}", flush=True)
+
+
 def generate(evidence: Path, bundle: Path, source: Path) -> Path:
     import generate_consolidated_report as generator
 
@@ -236,11 +294,7 @@ def generate(evidence: Path, bundle: Path, source: Path) -> Path:
         if not (report / name).is_file():
             raise FileNotFoundError(f"Expected report output missing: {name}")
     archive = bundle.parent / "FinalConsolidatedReport.zip"
-    with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED, allowZip64=True) as zipped:
-        for path in sorted(bundle.rglob("*")):
-            if path.is_file():
-                zipped.write(path, path.relative_to(bundle).as_posix())
-    return archive
+    return archive_bundle(bundle, archive)
 
 
 def collect() -> None:
@@ -288,6 +342,7 @@ def collect() -> None:
         unpack(manifest, downloads, evidence / f"agent-{manifest['position']}")
     (bundle / "collection-manifest.json").write_text(json.dumps(manifests, indent=2), encoding="utf-8")
     print(f"Verified {total} agent(s), {sum(m['scenarioCount'] for m in manifests)} scenario attempts for deployment {identity['deploymentId']}", flush=True)
+    attach(archive_bundle(bundle, work / "RawTestResults.zip"), "file")
     archive = generate(evidence, bundle, Path(__file__).resolve().parent.parent)
     report = bundle / "ConsolidatedReport"
     summary = work / "report-summary.md"
@@ -303,7 +358,12 @@ def main() -> int:
     parser.add_argument("mode", choices=["publish", "collect"])
     args = parser.parse_args()
     try:
-        publish() if args.mode == "publish" else collect()
+        if args.mode == "publish":
+            publish()
+        elif os.environ.get("EVIDENCE_TRANSPORT") == "pipeline":
+            collect_pipeline()
+        else:
+            collect()
         return 0
     except Exception as error:
         print(f"##vso[task.logissue type=error;]{command_escape(str(error))}", flush=True)

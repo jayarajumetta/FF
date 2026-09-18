@@ -290,8 +290,9 @@ Headed Chromium/Edge execution starts maximized when `browser.maximize` is enabl
 Pipeline files:
 
 ```text
-.azuredevops/build.yml
-.azuredevops/release.yml
+azure-pipelines-ci.yml
+azure-pipelines-cd.yml
+azure_pipelines_release_pipeline.json
 ```
 
 Both pipelines use run names in the form:
@@ -304,11 +305,10 @@ yyyyMMdd.increment
 
 The build pipeline:
 
-1. installs .NET 8 and Python;
+1. installs .NET 8;
 2. restores and builds the solution;
-3. validates the Playwright browser installation;
-4. runs `tools/package_gate.py`;
-5. publishes the executable `testpackage` pipeline artifact.
+3. validates and packages compiled binaries, runtime scripts, configuration and report binding sources;
+4. publishes the version-2 `testpackage` **Build Artifact**. CI does not run browser tests.
 
 ### Release/execution pipeline
 
@@ -318,24 +318,24 @@ The release pipeline downloads the compiled `testpackage` artifact and can indep
 - one complete Test Plan suite;
 - compiled test DLLs with an optional VSTest tag/filter expression.
 
-The appropriate boolean parameters select which execution stages run. Test Plan IDs, suite IDs, configuration IDs and optional filter are pipeline parameters.
+For YAML execution, supply `buildPipelineDefinitionId` and **`ciBuildId`** from one successful CI build. Every job downloads that exact build, not independently selected latest builds. Set `buildConfiguration` to the packaged configuration. Boolean parameters select execution modes; suite and assembly modes use `agentCount` VSTest slices, while a single selected case uses one agent. Test Plan IDs, suite IDs, configuration IDs and the assembly filter are parameters.
 
-Every execution stage publishes TRX results with run attachments and also publishes the raw evidence directory as a pipeline artifact.
+Set `agentPool` to your self-hosted Windows pool name in both YAML pipelines. The default `Azure Pipelines` selects a Microsoft-hosted image. For Classic Release, select your actual agent pool in **both** execution and collector phases; the JSON's queue ID is a deployment-time placeholder. Provide sufficient online agents and parallel-job entitlement for VSTest distributed execution; do not rely on multi-agent jobs running correctly with insufficient capacity. Self-hosted agents need .NET/tool download access and Python 3.11 available to `UsePythonVersion` (populate the agent tool cache if automatic installation is unavailable). Configure application credentials as secret pipeline variables.
 
-### Email report
+All execution and collection jobs use `checkout: none` in YAML; Classic consumes only the linked CI artifact. Runtime/results directories are unique per job. **Agent temp directories can be cleaned between jobs**: safety comes from uploading each shard before the execution job ends, not from keeping files on the agent. Each agent service must have its own work directory. Collectors download server-side evidence and never read a previous job's local results.
 
-The final email stage downloads available evidence artifacts and sends an HTML summary using secure SMTP variables:
+### Test results and consolidated artifacts
 
-```text
-SMTP_HOST
-SMTP_PORT
-SMTP_FROM
-SMTP_TO
-SMTP_USER
-SMTP_PASSWORD
-```
+VSTest publishes test results and individual test attachments to the Tests view. This is separate from publishing downloadable result archives; the YAML no longer republishes the same TRX through a second `PublishTestResults` task.
 
-Each scenario writes `scenario-result.json` beside its individual HTML report. The final release stage combines all available scenario results into Robot Framework-inspired `report.html`, `log.html`, `output.xml` and `summary.json`, publishes them as `consolidated-test-report`, and sends the same report set through SMTP when the secure SMTP variables are configured.
+- **YAML:** each agent publishes `evidence-<mode>-<position>-<stageAttempt>` containing `agent-<position>.zip`, checksum-verified chunks and a manifest. The collector waits for every selected execution job, verifies every expected shard, and publishes `consolidated-test-report-<stageAttempt>-<collectorJobAttempt>`.
+- **Classic:** each execution job uploads its `agent-<position>.zip` as a task log attachment plus manifest/chunk attachments for the collector. The collector downloads these through the Release API using OAuth (`View releases` permission required). These are **Release task attachments, not named Build/Pipeline Artifacts**.
+- Both collectors retain `RawTestResults.zip` before attempting HTML generation. A successful collection also publishes `FinalConsolidatedReport.zip`, containing `ConsolidatedReport/report.html`, `log.html`, `output.xml`, `summary.json`, the collection manifest, and all agents' raw TRX/NUnit/evidence files, including videos and traces that were recorded.
+- Extract the complete final ZIP and open `ConsolidatedReport/report.html`; keep its adjacent `Artifacts` directory so evidence links work. Individual test attachment settings do not replace this full evidence handoff.
+- Missing, duplicate, stale or corrupt shards fail collection rather than producing a misleading complete report. Previously uploaded per-agent archives remain available for investigation. Force-cancelled/offline agents cannot guarantee an upload; the collector reports missing evidence.
+- Rerun the **whole YAML stage**, not selected failed execution jobs: artifact names are immutable and attempt-scoped. A new Classic deployment similarly collects only that deployment's evidence.
+
+Queue a new CI build after changing runtime scripts, then select that build in a new release. Classic definitions are not synchronized from repository JSON automatically. The YAML publishing path is artifact-based; it does not send SMTP email automatically.
 
 ## Repository quality gate
 
@@ -346,7 +346,6 @@ python .\tools\package_gate.py
 ```
 
 The gate checks JSON/YAML/project syntax, C# structural balance, all active feature-step bindings, feature/test-data references, exact layered-data reconstruction, EQ Smoke state lineage, Page-to-Locator references, ExpertQuote locator restrictions, protected CLDC Smoke/NUnit checksums, report generation and package cleanliness. A real `dotnet restore`, `dotnet build` and `dotnet test` remains authoritative and is performed by the Azure build/execution pipelines.
-
 
 ## Layered scenario test data
 
@@ -371,4 +370,3 @@ Root Azure entry points are also included for easier pipeline selection:
 ```text
 azure-pipelines-ci.yml
 azure-pipelines-cd.yml
-```

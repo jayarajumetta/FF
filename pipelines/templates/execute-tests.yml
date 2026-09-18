@@ -1,0 +1,119 @@
+parameters:
+- name: mode
+  type: string
+- name: agents
+  type: number
+  default: 1
+
+jobs:
+- job: Run${{ parameters.mode }}
+  displayName: Execute ${{ parameters.mode }} shards
+  dependsOn: ValidateInput
+  strategy:
+    parallel: ${{ parameters.agents }}
+  variables:
+    StageKey: ${{ parameters.mode }}
+    StageResultsDirectory: 'TestResults\${{ parameters.mode }}'
+  steps:
+  - checkout: none
+  - template: download-testpackage.yml
+  - task: UseDotNet@2
+    inputs: { packageType: sdk, version: '8.0.x' }
+  - task: UsePythonVersion@0
+    inputs: { versionSpec: '3.11', architecture: x64 }
+  - task: VisualStudioTestPlatformInstaller@1
+    inputs: { packageFeedSelector: nugetOrg, versionSelector: latestStable }
+  - task: PowerShell@2
+    displayName: Prepare and validate CI automation artifact
+    inputs:
+      targetType: filePath
+      filePath: '$(ArtifactRoot)\scripts\Invoke-ReleaseStage.ps1'
+      arguments: '-Mode Prepare'
+  - ${{ if eq(parameters.mode, 'SingleCase') }}:
+    - powershell: |
+        $ErrorActionPreference = 'Stop'
+        foreach ($value in @($env:TESTPLANID, $env:SINGLECASEPARENTSUITEID, $env:SINGLETESTCASEID)) {
+          if ($value -notmatch '^[1-9][0-9]*$') { throw 'Single-case plan, parent suite and test case IDs must be positive integers.' }
+        }
+        $headers = @{ Authorization = "Bearer $env:SYSTEM_ACCESSTOKEN" }
+        $base = "$($env:SYSTEM_COLLECTIONURI.TrimEnd('/'))/$env:SYSTEM_TEAMPROJECTID/_apis"
+        $uri = "$base/testplan/Plans/$env:TESTPLANID/suites/$($env:SINGLECASEPARENTSUITEID)?api-version=7.1-preview.1"
+        $body = @{ suiteType = 'StaticTestSuite'; name = "Pipeline $env:BUILD_BUILDID single case $env:SINGLETESTCASEID attempt $env:SYSTEM_JOBATTEMPT" } | ConvertTo-Json
+        $suite = Invoke-RestMethod -Method Post -Uri $uri -Headers $headers -ContentType 'application/json' -Body $body
+        if (-not $suite.id) { throw 'Temporary suite creation returned no ID.' }
+        Write-Host "##vso[task.setvariable variable=PIPELINE_SINGLE_CASE_SUITE_ID]$($suite.id)"
+        $uri = "$base/test/Plans/$env:TESTPLANID/suites/$($suite.id)/testcases/$($env:SINGLETESTCASEID)?api-version=7.1-preview.2"
+        Invoke-RestMethod -Method Post -Uri $uri -Headers $headers | Out-Null
+      env:
+        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+      displayName: Create temporary single-case suite
+  - task: VSTest@3
+    displayName: Execute compiled tests with agent slicing
+    inputs:
+      ${{ if eq(parameters.mode, 'Assembly') }}:
+        testSelector: testAssemblies
+        testAssemblyVer2: |
+          **\bin\*Tests\$(BuildConfiguration)\net8.0\*Tests.dll
+          !**\*TestAdapter.dll
+          !**\obj\**
+        testFiltercriteria: '$(AssemblyTestFilter)'
+      ${{ else }}:
+        testSelector: testPlan
+        testPlan: '$(TestPlanId)'
+        testConfiguration: '$(TestConfigurationId)'
+        ${{ if eq(parameters.mode, 'SingleCase') }}:
+          testSuite: '$(PIPELINE_SINGLE_CASE_SUITE_ID)'
+        ${{ else }}:
+          testSuite: '$(SuiteId)'
+      searchFolder: '$(TEST_PACKAGE_ROOT)'
+      runSettingsFile: '$(VSTEST_RUNSETTINGS)'
+      resultsFolder: '$(TEST_RESULTS_ROOT)\Runner'
+      vsTestVersion: toolsInstaller
+      runInParallel: true
+      distributionBatchType: basedOnTestCases
+      batchingBasedOnAgentsOption: autoBatchSize
+      dontDistribute: false
+      rerunFailedTests: false
+      publishRunAttachments: true
+      failOnMinTestsNotRun: true
+      minimumExpectedTests: '1'
+      testRunTitle: '${{ parameters.mode }} $(Build.BuildNumber)'
+    env:
+      CI: 'true'
+      TEST_FRAMEWORK_CONFIG: $(TEST_FRAMEWORK_CONFIG)
+      TEST_RESULTS_ROOT: $(TEST_RESULTS_ROOT)
+      TEST_REPOSITORY_ROOT: $(TEST_REPOSITORY_ROOT)
+      CL_DC_USERNAME: $(CL_DC_USERNAME)
+      CL_DC_PASSWORD: $(CL_DC_PASSWORD)
+      CL_EQ_USERNAME: $(CL_EQ_USERNAME)
+      CL_EQ_PASSWORD: $(CL_EQ_PASSWORD)
+      PL_DC_USERNAME: $(PL_DC_USERNAME)
+      PL_DC_PASSWORD: $(PL_DC_PASSWORD)
+  - task: PowerShell@2
+    displayName: Package this agent's raw results and evidence
+    condition: always()
+    inputs:
+      targetType: filePath
+      filePath: '$(ArtifactRoot)\scripts\Invoke-ReleaseStage.ps1'
+      arguments: '-Mode Publish'
+    env:
+      TEST_RESULTS_ROOT: $(TEST_RESULTS_ROOT)
+      SYSTEM_JOBPOSITIONINPHASE: $(System.JobPositionInPhase)
+      SYSTEM_TOTALJOBSINPHASE: $(System.TotalJobsInPhase)
+  - task: PublishPipelineArtifact@1
+    displayName: Upload this agent's evidence before job cleanup
+    condition: and(always(), ne(variables['EVIDENCE_HANDOFF'], ''))
+    inputs:
+      targetPath: '$(EVIDENCE_HANDOFF)'
+      artifact: 'evidence-${{ parameters.mode }}-$(System.JobPositionInPhase)-$(System.StageAttempt)'
+  - ${{ if eq(parameters.mode, 'SingleCase') }}:
+    - powershell: |
+        $ErrorActionPreference = 'Stop'
+        $headers = @{ Authorization = "Bearer $env:SYSTEM_ACCESSTOKEN" }
+        $base = "$($env:SYSTEM_COLLECTIONURI.TrimEnd('/'))/$env:SYSTEM_TEAMPROJECTID/_apis"
+        $uri = "$base/testplan/Plans/$env:TESTPLANID/suites/$($env:PIPELINE_SINGLE_CASE_SUITE_ID)?api-version=7.1-preview.1"
+        Invoke-RestMethod -Method Delete -Uri $uri -Headers $headers | Out-Null
+      condition: and(always(), ne(variables['PIPELINE_SINGLE_CASE_SUITE_ID'], ''))
+      env:
+        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+      displayName: Remove temporary single-case suite

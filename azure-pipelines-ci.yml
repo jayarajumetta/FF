@@ -6,8 +6,18 @@ pr:
   branches:
     include: [main,sgs/develop]
 
+parameters:
+- name: agentPool
+  type: string
+  default: 'Azure Pipelines'
+
 pool:
-  vmImage: windows-latest
+  name: ${{ parameters.agentPool }}
+  ${{ if eq(parameters.agentPool, 'Azure Pipelines') }}:
+    vmImage: windows-latest
+  ${{ else }}:
+    demands:
+    - Agent.OS -equals Windows_NT
 
 variables:
   BuildConfiguration: Release

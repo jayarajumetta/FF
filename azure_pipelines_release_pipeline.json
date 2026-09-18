@@ -1,7 +1,7 @@
 {
   "source": "userInterface",
   "revision": 2,
-  "description": "Classic Azure DevOps Release definition for Playwright/ReqnRoll/NUnit automation using a version-2 compiled testpackage directly from the CI bin artifact (artifact name: testpackage, alias _FF_CI). Stages are independent/manual: Assembly Execution (DLLs + optional TestCategory filter), Test Suite Execution (test plan/suite/configuration), and Test Plan On-Demand Execution (uses $(test.RunId) with ManualTestRunId fallback). Independent execution modes, each with a distributed execution phase followed by one single-agent report collection phase for that deployment. VSTest tasks use test-count slicing with two agents, and report collectors run as separate deployments with evidence publication.",
+  "description": "IMPORT SETUP: select your self-hosted Windows agent pool in ALL six agent phases (queueId 0 is a placeholder); link a successful NEW CI build artifact named testpackage using alias _FF_CI; configure secret credentials. Each manual mode (Assembly, Suite, on-demand TestPlan) has a two-agent VSTest execution phase followed by ONE collector phase within the SAME deployment. Provide two available agents and parallel-job capacity. No source checkout or cross-job local-disk dependency: agents upload raw ZIPs and verified evidence attachments before job cleanup. Collector downloads current-deployment shards using OAuth and publishes RawTestResults.zip and FinalConsolidatedReport.zip as Release task log attachments, NOT Pipeline Artifacts. Extract the complete final ZIP to preserve HTML evidence links. Python 3.11 x64 must be available in each self-hosted agent tool cache. Collector identity requires View releases permission. Repository JSON changes do not update existing live definitions automatically.",
   "createdBy": null,
   "createdOn": "0001-01-01T00:00:00",
   "modifiedBy": null,
@@ -160,9 +160,6 @@
               "parallelExecutionType": "multiMachine",
               "maxNumberOfAgents": 2
             },
-            "agentSpecification": {
-              "identifier": "windows-2022"
-            },
             "skipArtifactsDownload": false,
             "artifactsDownloadInput": {
               "downloadInputs": [
@@ -175,10 +172,12 @@
               ]
             },
             "queueId": 0,
-            "demands": [],
+            "demands": [
+              "Agent.OS -equals Windows_NT"
+            ],
             "enableAccessToken": false,
             "timeoutInMinutes": 0,
-            "jobCancelTimeoutInMinutes": 5,
+            "jobCancelTimeoutInMinutes": 10,
             "condition": "succeeded()",
             "overrideInputs": {}
           },
@@ -188,14 +187,17 @@
           "refName": null,
           "workflowTasks": [
             {
-              "environment": {},
+              "environment": {
+                "SELECTED_CI_BUILD_ID": "$(Release.Artifacts._FF_CI.BuildId)",
+                "BUILDCONFIGURATION": "$(BuildConfiguration)"
+              },
               "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
               "version": "2.*",
-              "name": "Diagnose downloaded artifact layout",
-              "refName": "PowerShell_Assembly_Diagnose",
+              "name": "Validate downloaded CI package and selected build",
+              "refName": "PowerShell_Assembly_Preflight",
               "enabled": true,
               "alwaysRun": false,
-              "continueOnError": true,
+              "continueOnError": false,
               "timeoutInMinutes": 0,
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
@@ -203,8 +205,8 @@
               "condition": "succeeded()",
               "inputs": {
                 "targetType": "inline",
-                "script": "$root = Join-Path $env:SYSTEM_DEFAULTWORKINGDIRECTORY '_FF_CI'\nWrite-Host \"Listing artifact root: $root\"\nif (-not (Test-Path -LiteralPath $root)) { Write-Host '##[warning]_FF_CI artifact folder was not downloaded.'; return }\nGet-ChildItem -LiteralPath $root -Recurse -Depth 3 | ForEach-Object { Write-Host $_.FullName.Substring($root.Length) }\n$target = Join-Path $root 'testpackage\\scripts\\Invoke-ReleaseStage.ps1'\nWrite-Host \"Expected entrypoint present: $([bool](Test-Path -LiteralPath $target))\"",
-                "errorActionPreference": "continue",
+                "script": "$ErrorActionPreference = 'Stop'\n$download = $env:SYSTEM_DEFAULTWORKINGDIRECTORY\n$root = Join-Path $download '_FF_CI\\testpackage'\nWrite-Host \"Agent: $env:AGENT_NAME; release: $env:RELEASE_RELEASEID; deployment: $env:RELEASE_DEPLOYMENTID; selected CI build: $env:SELECTED_CI_BUILD_ID\"\nWrite-Host \"Expected package: $root\"\nforeach ($relative in @('package-info.json', 'scripts/Invoke-ReleaseStage.ps1', 'scripts/Prepare-ReleaseTestPackage.ps1', 'tools/release_reporting.py', 'tools/generate_consolidated_report.py', 'config/framework.json')) {\n  if (-not (Test-Path -LiteralPath (Join-Path $root $relative) -PathType Leaf)) {\n    if (Test-Path -LiteralPath $download) { Get-ChildItem -LiteralPath $download -Recurse -Depth 3 -ErrorAction SilentlyContinue | Select-Object -First 100 -ExpandProperty FullName | ForEach-Object { Write-Host $_ } }\n    throw \"Missing CI package file: $relative. Enable artifact download in this phase, keep alias _FF_CI, and select a new CI build containing the version-2 testpackage.\"\n  }\n}\n$info = Get-Content -LiteralPath (Join-Path $root 'package-info.json') -Raw | ConvertFrom-Json\nif ($info.schemaVersion -ne 2) { throw 'Unsupported package schema; select a new CI build.' }\nif ($env:SELECTED_CI_BUILD_ID -notmatch '^[1-9][0-9]*$') { throw 'CI artifact alias _FF_CI is not linked to a build. Reselect the Build artifact after import.' }\nif ([string]$info.buildId -ne $env:SELECTED_CI_BUILD_ID) { throw 'Package build ID differs from the selected release artifact. Refusing stale agent content.' }\nif ($info.buildConfiguration -ne $env:BUILDCONFIGURATION) { throw \"BuildConfiguration must match the packaged configuration: $($info.buildConfiguration)\" }\nWrite-Host \"Validated CI build $($info.buildId); branch: $($info.sourceBranch); commit: $($info.sourceVersion)\"",
+                "errorActionPreference": "stop",
                 "warningPreference": "default",
                 "informationPreference": "default",
                 "verbosePreference": "default",
@@ -212,7 +214,7 @@
                 "progressPreference": "silentlyContinue",
                 "failOnStderr": "false",
                 "showWarnings": "true",
-                "ignoreLASTEXITCODE": "true",
+                "ignoreLASTEXITCODE": "false",
                 "pwsh": "false",
                 "workingDirectory": "$(System.DefaultWorkingDirectory)",
                 "runScriptInSeparateScope": "false"
@@ -245,7 +247,7 @@
               "environment": {},
               "taskId": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
               "version": "0.*",
-              "name": "Install Python 3.11 for consolidated reporting",
+              "name": "Use cached Python 3.11 (self-hosted prerequisite)",
               "refName": "UsePython_Assembly",
               "enabled": true,
               "alwaysRun": false,
@@ -257,7 +259,7 @@
               "condition": "succeeded()",
               "inputs": {
                 "versionSpec": "3.11",
-                "disableDownloadFromRegistry": "false",
+                "disableDownloadFromRegistry": "true",
                 "allowUnstable": "false",
                 "addToPath": "true",
                 "architecture": "x64"
@@ -290,7 +292,8 @@
                 "STAGERESULTSDIRECTORY": "$(StageResultsDirectory)",
                 "PLAYWRIGHTBROWSER": "$(PlaywrightBrowser)",
                 "ONDEMAND_TEST_RUN_ID": "$(test.RunId)",
-                "MANUALTESTRUNID": "$(ManualTestRunId)"
+                "MANUALTESTRUNID": "$(ManualTestRunId)",
+                "EVIDENCE_TRANSPORT": "classic"
               },
               "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
               "version": "2.*",
@@ -366,7 +369,7 @@
                 "otherConsoleOptions": "",
                 "diagnosticsEnabled": "false",
                 "rerunFailedTests": "false",
-                "uiTests": "true",
+                "uiTests": "false",
                 "testRunTitle": "Execute compiled assemblies / tag filter - $(Release.ReleaseName)",
                 "platform": "Any CPU",
                 "configuration": "$(BuildConfiguration)",
@@ -383,7 +386,7 @@
             {
               "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
               "version": "2.*",
-              "name": "Publish this agent evidence for consolidation",
+              "name": "Upload this agent raw results ZIP and evidence for consolidation",
               "refName": "PowerShell_Assembly_Report",
               "enabled": true,
               "alwaysRun": true,
@@ -396,7 +399,10 @@
               "environment": {
                 "TEST_RESULTS_ROOT": "$(TEST_RESULTS_ROOT)",
                 "SYSTEM_JOBPOSITIONINPHASE": "$(System.JobPositionInPhase)",
-                "SYSTEM_TOTALJOBSINPHASE": "$(System.TotalJobsInPhase)"
+                "SYSTEM_TOTALJOBSINPHASE": "$(System.TotalJobsInPhase)",
+                "EVIDENCE_TRANSPORT": "classic",
+                "BUILDCONFIGURATION": "$(BuildConfiguration)",
+                "STAGEKEY": "$(StageKey)"
               },
               "inputs": {
                 "targetType": "filePath",
@@ -423,9 +429,6 @@
             "parallelExecution": {
               "parallelExecutionType": "none"
             },
-            "agentSpecification": {
-              "identifier": "windows-2022"
-            },
             "skipArtifactsDownload": false,
             "artifactsDownloadInput": {
               "downloadInputs": [
@@ -438,10 +441,12 @@
               ]
             },
             "queueId": 0,
-            "demands": [],
+            "demands": [
+              "Agent.OS -equals Windows_NT"
+            ],
             "enableAccessToken": true,
             "timeoutInMinutes": 0,
-            "jobCancelTimeoutInMinutes": 5,
+            "jobCancelTimeoutInMinutes": 10,
             "condition": "succeededOrFailed()",
             "overrideInputs": {}
           },
@@ -451,10 +456,44 @@
           "refName": null,
           "workflowTasks": [
             {
+              "environment": {
+                "SELECTED_CI_BUILD_ID": "$(Release.Artifacts._FF_CI.BuildId)",
+                "BUILDCONFIGURATION": "$(BuildConfiguration)"
+              },
+              "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+              "version": "2.*",
+              "name": "Validate downloaded CI package and selected build",
+              "refName": "PowerShell_Assembly_CollectPreflight",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "targetType": "inline",
+                "script": "$ErrorActionPreference = 'Stop'\n$download = $env:SYSTEM_DEFAULTWORKINGDIRECTORY\n$root = Join-Path $download '_FF_CI\\testpackage'\nWrite-Host \"Agent: $env:AGENT_NAME; release: $env:RELEASE_RELEASEID; deployment: $env:RELEASE_DEPLOYMENTID; selected CI build: $env:SELECTED_CI_BUILD_ID\"\nWrite-Host \"Expected package: $root\"\nforeach ($relative in @('package-info.json', 'scripts/Invoke-ReleaseStage.ps1', 'scripts/Prepare-ReleaseTestPackage.ps1', 'tools/release_reporting.py', 'tools/generate_consolidated_report.py', 'config/framework.json')) {\n  if (-not (Test-Path -LiteralPath (Join-Path $root $relative) -PathType Leaf)) {\n    if (Test-Path -LiteralPath $download) { Get-ChildItem -LiteralPath $download -Recurse -Depth 3 -ErrorAction SilentlyContinue | Select-Object -First 100 -ExpandProperty FullName | ForEach-Object { Write-Host $_ } }\n    throw \"Missing CI package file: $relative. Enable artifact download in this phase, keep alias _FF_CI, and select a new CI build containing the version-2 testpackage.\"\n  }\n}\n$info = Get-Content -LiteralPath (Join-Path $root 'package-info.json') -Raw | ConvertFrom-Json\nif ($info.schemaVersion -ne 2) { throw 'Unsupported package schema; select a new CI build.' }\nif ($env:SELECTED_CI_BUILD_ID -notmatch '^[1-9][0-9]*$') { throw 'CI artifact alias _FF_CI is not linked to a build. Reselect the Build artifact after import.' }\nif ([string]$info.buildId -ne $env:SELECTED_CI_BUILD_ID) { throw 'Package build ID differs from the selected release artifact. Refusing stale agent content.' }\nif ($info.buildConfiguration -ne $env:BUILDCONFIGURATION) { throw \"BuildConfiguration must match the packaged configuration: $($info.buildConfiguration)\" }\nWrite-Host \"Validated CI build $($info.buildId); branch: $($info.sourceBranch); commit: $($info.sourceVersion)\"",
+                "errorActionPreference": "stop",
+                "warningPreference": "default",
+                "informationPreference": "default",
+                "verbosePreference": "default",
+                "debugPreference": "default",
+                "progressPreference": "silentlyContinue",
+                "failOnStderr": "false",
+                "showWarnings": "true",
+                "ignoreLASTEXITCODE": "false",
+                "pwsh": "false",
+                "workingDirectory": "$(System.DefaultWorkingDirectory)",
+                "runScriptInSeparateScope": "false"
+              }
+            },
+            {
               "environment": {},
               "taskId": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
               "version": "0.*",
-              "name": "Install Python 3.11 for consolidated reporting",
+              "name": "Use cached Python 3.11 (self-hosted prerequisite)",
               "refName": "UsePython_Assembly_Aggregate",
               "enabled": true,
               "alwaysRun": false,
@@ -463,10 +502,10 @@
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
               "overrideInputs": {},
-              "condition": "always()",
+              "condition": "succeeded()",
               "inputs": {
                 "versionSpec": "3.11",
-                "disableDownloadFromRegistry": "false",
+                "disableDownloadFromRegistry": "true",
                 "allowUnstable": "false",
                 "addToPath": "true",
                 "architecture": "x64"
@@ -474,20 +513,23 @@
             },
             {
               "environment": {
-                "SYSTEM_ACCESSTOKEN": "$(System.AccessToken)"
+                "SYSTEM_ACCESSTOKEN": "$(System.AccessToken)",
+                "EVIDENCE_TRANSPORT": "classic",
+                "BUILDCONFIGURATION": "$(BuildConfiguration)",
+                "STAGEKEY": "$(StageKey)"
               },
               "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
               "version": "2.*",
-              "name": "Generate and attach consolidated HTML report",
+              "name": "Verify all agents and attach raw results plus consolidated report ZIPs",
               "refName": "PowerShell_Assembly_Aggregate",
               "enabled": true,
-              "alwaysRun": true,
+              "alwaysRun": false,
               "continueOnError": false,
               "timeoutInMinutes": 0,
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
               "overrideInputs": {},
-              "condition": "always()",
+              "condition": "succeeded()",
               "inputs": {
                 "targetType": "filePath",
                 "filePath": "$(System.DefaultWorkingDirectory)\\_FF_CI\\testpackage\\scripts\\Invoke-ReleaseStage.ps1",
@@ -610,9 +652,6 @@
               "parallelExecutionType": "multiMachine",
               "maxNumberOfAgents": 2
             },
-            "agentSpecification": {
-              "identifier": "windows-2022"
-            },
             "skipArtifactsDownload": false,
             "artifactsDownloadInput": {
               "downloadInputs": [
@@ -625,10 +664,12 @@
               ]
             },
             "queueId": 0,
-            "demands": [],
+            "demands": [
+              "Agent.OS -equals Windows_NT"
+            ],
             "enableAccessToken": false,
             "timeoutInMinutes": 0,
-            "jobCancelTimeoutInMinutes": 5,
+            "jobCancelTimeoutInMinutes": 10,
             "condition": "succeeded()",
             "overrideInputs": {}
           },
@@ -637,6 +678,40 @@
           "name": "Run automation on Windows agent",
           "refName": null,
           "workflowTasks": [
+            {
+              "environment": {
+                "SELECTED_CI_BUILD_ID": "$(Release.Artifacts._FF_CI.BuildId)",
+                "BUILDCONFIGURATION": "$(BuildConfiguration)"
+              },
+              "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+              "version": "2.*",
+              "name": "Validate downloaded CI package and selected build",
+              "refName": "PowerShell_Suite_Preflight",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "targetType": "inline",
+                "script": "$ErrorActionPreference = 'Stop'\n$download = $env:SYSTEM_DEFAULTWORKINGDIRECTORY\n$root = Join-Path $download '_FF_CI\\testpackage'\nWrite-Host \"Agent: $env:AGENT_NAME; release: $env:RELEASE_RELEASEID; deployment: $env:RELEASE_DEPLOYMENTID; selected CI build: $env:SELECTED_CI_BUILD_ID\"\nWrite-Host \"Expected package: $root\"\nforeach ($relative in @('package-info.json', 'scripts/Invoke-ReleaseStage.ps1', 'scripts/Prepare-ReleaseTestPackage.ps1', 'tools/release_reporting.py', 'tools/generate_consolidated_report.py', 'config/framework.json')) {\n  if (-not (Test-Path -LiteralPath (Join-Path $root $relative) -PathType Leaf)) {\n    if (Test-Path -LiteralPath $download) { Get-ChildItem -LiteralPath $download -Recurse -Depth 3 -ErrorAction SilentlyContinue | Select-Object -First 100 -ExpandProperty FullName | ForEach-Object { Write-Host $_ } }\n    throw \"Missing CI package file: $relative. Enable artifact download in this phase, keep alias _FF_CI, and select a new CI build containing the version-2 testpackage.\"\n  }\n}\n$info = Get-Content -LiteralPath (Join-Path $root 'package-info.json') -Raw | ConvertFrom-Json\nif ($info.schemaVersion -ne 2) { throw 'Unsupported package schema; select a new CI build.' }\nif ($env:SELECTED_CI_BUILD_ID -notmatch '^[1-9][0-9]*$') { throw 'CI artifact alias _FF_CI is not linked to a build. Reselect the Build artifact after import.' }\nif ([string]$info.buildId -ne $env:SELECTED_CI_BUILD_ID) { throw 'Package build ID differs from the selected release artifact. Refusing stale agent content.' }\nif ($info.buildConfiguration -ne $env:BUILDCONFIGURATION) { throw \"BuildConfiguration must match the packaged configuration: $($info.buildConfiguration)\" }\nWrite-Host \"Validated CI build $($info.buildId); branch: $($info.sourceBranch); commit: $($info.sourceVersion)\"",
+                "errorActionPreference": "stop",
+                "warningPreference": "default",
+                "informationPreference": "default",
+                "verbosePreference": "default",
+                "debugPreference": "default",
+                "progressPreference": "silentlyContinue",
+                "failOnStderr": "false",
+                "showWarnings": "true",
+                "ignoreLASTEXITCODE": "false",
+                "pwsh": "false",
+                "workingDirectory": "$(System.DefaultWorkingDirectory)",
+                "runScriptInSeparateScope": "false"
+              }
+            },
             {
               "environment": {},
               "taskId": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
@@ -664,7 +739,7 @@
               "environment": {},
               "taskId": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
               "version": "0.*",
-              "name": "Install Python 3.11 for consolidated reporting",
+              "name": "Use cached Python 3.11 (self-hosted prerequisite)",
               "refName": "UsePython_Suite",
               "enabled": true,
               "alwaysRun": false,
@@ -676,7 +751,7 @@
               "condition": "succeeded()",
               "inputs": {
                 "versionSpec": "3.11",
-                "disableDownloadFromRegistry": "false",
+                "disableDownloadFromRegistry": "true",
                 "allowUnstable": "false",
                 "addToPath": "true",
                 "architecture": "x64"
@@ -709,7 +784,8 @@
                 "STAGERESULTSDIRECTORY": "$(StageResultsDirectory)",
                 "PLAYWRIGHTBROWSER": "$(PlaywrightBrowser)",
                 "ONDEMAND_TEST_RUN_ID": "$(test.RunId)",
-                "MANUALTESTRUNID": "$(ManualTestRunId)"
+                "MANUALTESTRUNID": "$(ManualTestRunId)",
+                "EVIDENCE_TRANSPORT": "classic"
               },
               "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
               "version": "2.*",
@@ -785,7 +861,7 @@
                 "otherConsoleOptions": "",
                 "diagnosticsEnabled": "false",
                 "rerunFailedTests": "false",
-                "uiTests": "true",
+                "uiTests": "false",
                 "testRunTitle": "Execute Azure Test Plan suite(s) - $(Release.ReleaseName)",
                 "platform": "Any CPU",
                 "configuration": "$(BuildConfiguration)",
@@ -802,7 +878,7 @@
             {
               "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
               "version": "2.*",
-              "name": "Publish this agent evidence for consolidation",
+              "name": "Upload this agent raw results ZIP and evidence for consolidation",
               "refName": "PowerShell_Suite_Report",
               "enabled": true,
               "alwaysRun": true,
@@ -815,7 +891,10 @@
               "environment": {
                 "TEST_RESULTS_ROOT": "$(TEST_RESULTS_ROOT)",
                 "SYSTEM_JOBPOSITIONINPHASE": "$(System.JobPositionInPhase)",
-                "SYSTEM_TOTALJOBSINPHASE": "$(System.TotalJobsInPhase)"
+                "SYSTEM_TOTALJOBSINPHASE": "$(System.TotalJobsInPhase)",
+                "EVIDENCE_TRANSPORT": "classic",
+                "BUILDCONFIGURATION": "$(BuildConfiguration)",
+                "STAGEKEY": "$(StageKey)"
               },
               "inputs": {
                 "targetType": "filePath",
@@ -842,9 +921,6 @@
             "parallelExecution": {
               "parallelExecutionType": "none"
             },
-            "agentSpecification": {
-              "identifier": "windows-2022"
-            },
             "skipArtifactsDownload": false,
             "artifactsDownloadInput": {
               "downloadInputs": [
@@ -857,10 +933,12 @@
               ]
             },
             "queueId": 0,
-            "demands": [],
+            "demands": [
+              "Agent.OS -equals Windows_NT"
+            ],
             "enableAccessToken": true,
             "timeoutInMinutes": 0,
-            "jobCancelTimeoutInMinutes": 5,
+            "jobCancelTimeoutInMinutes": 10,
             "condition": "succeededOrFailed()",
             "overrideInputs": {}
           },
@@ -870,10 +948,44 @@
           "refName": null,
           "workflowTasks": [
             {
+              "environment": {
+                "SELECTED_CI_BUILD_ID": "$(Release.Artifacts._FF_CI.BuildId)",
+                "BUILDCONFIGURATION": "$(BuildConfiguration)"
+              },
+              "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+              "version": "2.*",
+              "name": "Validate downloaded CI package and selected build",
+              "refName": "PowerShell_Suite_CollectPreflight",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "targetType": "inline",
+                "script": "$ErrorActionPreference = 'Stop'\n$download = $env:SYSTEM_DEFAULTWORKINGDIRECTORY\n$root = Join-Path $download '_FF_CI\\testpackage'\nWrite-Host \"Agent: $env:AGENT_NAME; release: $env:RELEASE_RELEASEID; deployment: $env:RELEASE_DEPLOYMENTID; selected CI build: $env:SELECTED_CI_BUILD_ID\"\nWrite-Host \"Expected package: $root\"\nforeach ($relative in @('package-info.json', 'scripts/Invoke-ReleaseStage.ps1', 'scripts/Prepare-ReleaseTestPackage.ps1', 'tools/release_reporting.py', 'tools/generate_consolidated_report.py', 'config/framework.json')) {\n  if (-not (Test-Path -LiteralPath (Join-Path $root $relative) -PathType Leaf)) {\n    if (Test-Path -LiteralPath $download) { Get-ChildItem -LiteralPath $download -Recurse -Depth 3 -ErrorAction SilentlyContinue | Select-Object -First 100 -ExpandProperty FullName | ForEach-Object { Write-Host $_ } }\n    throw \"Missing CI package file: $relative. Enable artifact download in this phase, keep alias _FF_CI, and select a new CI build containing the version-2 testpackage.\"\n  }\n}\n$info = Get-Content -LiteralPath (Join-Path $root 'package-info.json') -Raw | ConvertFrom-Json\nif ($info.schemaVersion -ne 2) { throw 'Unsupported package schema; select a new CI build.' }\nif ($env:SELECTED_CI_BUILD_ID -notmatch '^[1-9][0-9]*$') { throw 'CI artifact alias _FF_CI is not linked to a build. Reselect the Build artifact after import.' }\nif ([string]$info.buildId -ne $env:SELECTED_CI_BUILD_ID) { throw 'Package build ID differs from the selected release artifact. Refusing stale agent content.' }\nif ($info.buildConfiguration -ne $env:BUILDCONFIGURATION) { throw \"BuildConfiguration must match the packaged configuration: $($info.buildConfiguration)\" }\nWrite-Host \"Validated CI build $($info.buildId); branch: $($info.sourceBranch); commit: $($info.sourceVersion)\"",
+                "errorActionPreference": "stop",
+                "warningPreference": "default",
+                "informationPreference": "default",
+                "verbosePreference": "default",
+                "debugPreference": "default",
+                "progressPreference": "silentlyContinue",
+                "failOnStderr": "false",
+                "showWarnings": "true",
+                "ignoreLASTEXITCODE": "false",
+                "pwsh": "false",
+                "workingDirectory": "$(System.DefaultWorkingDirectory)",
+                "runScriptInSeparateScope": "false"
+              }
+            },
+            {
               "environment": {},
               "taskId": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
               "version": "0.*",
-              "name": "Install Python 3.11 for consolidated reporting",
+              "name": "Use cached Python 3.11 (self-hosted prerequisite)",
               "refName": "UsePython_Suite_Aggregate",
               "enabled": true,
               "alwaysRun": false,
@@ -882,10 +994,10 @@
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
               "overrideInputs": {},
-              "condition": "always()",
+              "condition": "succeeded()",
               "inputs": {
                 "versionSpec": "3.11",
-                "disableDownloadFromRegistry": "false",
+                "disableDownloadFromRegistry": "true",
                 "allowUnstable": "false",
                 "addToPath": "true",
                 "architecture": "x64"
@@ -893,20 +1005,23 @@
             },
             {
               "environment": {
-                "SYSTEM_ACCESSTOKEN": "$(System.AccessToken)"
+                "SYSTEM_ACCESSTOKEN": "$(System.AccessToken)",
+                "EVIDENCE_TRANSPORT": "classic",
+                "BUILDCONFIGURATION": "$(BuildConfiguration)",
+                "STAGEKEY": "$(StageKey)"
               },
               "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
               "version": "2.*",
-              "name": "Generate and attach consolidated HTML report",
+              "name": "Verify all agents and attach raw results plus consolidated report ZIPs",
               "refName": "PowerShell_Suite_Aggregate",
               "enabled": true,
-              "alwaysRun": true,
+              "alwaysRun": false,
               "continueOnError": false,
               "timeoutInMinutes": 0,
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
               "overrideInputs": {},
-              "condition": "always()",
+              "condition": "succeeded()",
               "inputs": {
                 "targetType": "filePath",
                 "filePath": "$(System.DefaultWorkingDirectory)\\_FF_CI\\testpackage\\scripts\\Invoke-ReleaseStage.ps1",
@@ -1029,9 +1144,6 @@
               "parallelExecutionType": "multiMachine",
               "maxNumberOfAgents": 2
             },
-            "agentSpecification": {
-              "identifier": "windows-2022"
-            },
             "skipArtifactsDownload": false,
             "artifactsDownloadInput": {
               "downloadInputs": [
@@ -1044,10 +1156,12 @@
               ]
             },
             "queueId": 0,
-            "demands": [],
+            "demands": [
+              "Agent.OS -equals Windows_NT"
+            ],
             "enableAccessToken": false,
             "timeoutInMinutes": 0,
-            "jobCancelTimeoutInMinutes": 5,
+            "jobCancelTimeoutInMinutes": 10,
             "condition": "succeeded()",
             "overrideInputs": {}
           },
@@ -1056,6 +1170,40 @@
           "name": "Run automation on Windows agent",
           "refName": null,
           "workflowTasks": [
+            {
+              "environment": {
+                "SELECTED_CI_BUILD_ID": "$(Release.Artifacts._FF_CI.BuildId)",
+                "BUILDCONFIGURATION": "$(BuildConfiguration)"
+              },
+              "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+              "version": "2.*",
+              "name": "Validate downloaded CI package and selected build",
+              "refName": "PowerShell_TestPlan_Preflight",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "targetType": "inline",
+                "script": "$ErrorActionPreference = 'Stop'\n$download = $env:SYSTEM_DEFAULTWORKINGDIRECTORY\n$root = Join-Path $download '_FF_CI\\testpackage'\nWrite-Host \"Agent: $env:AGENT_NAME; release: $env:RELEASE_RELEASEID; deployment: $env:RELEASE_DEPLOYMENTID; selected CI build: $env:SELECTED_CI_BUILD_ID\"\nWrite-Host \"Expected package: $root\"\nforeach ($relative in @('package-info.json', 'scripts/Invoke-ReleaseStage.ps1', 'scripts/Prepare-ReleaseTestPackage.ps1', 'tools/release_reporting.py', 'tools/generate_consolidated_report.py', 'config/framework.json')) {\n  if (-not (Test-Path -LiteralPath (Join-Path $root $relative) -PathType Leaf)) {\n    if (Test-Path -LiteralPath $download) { Get-ChildItem -LiteralPath $download -Recurse -Depth 3 -ErrorAction SilentlyContinue | Select-Object -First 100 -ExpandProperty FullName | ForEach-Object { Write-Host $_ } }\n    throw \"Missing CI package file: $relative. Enable artifact download in this phase, keep alias _FF_CI, and select a new CI build containing the version-2 testpackage.\"\n  }\n}\n$info = Get-Content -LiteralPath (Join-Path $root 'package-info.json') -Raw | ConvertFrom-Json\nif ($info.schemaVersion -ne 2) { throw 'Unsupported package schema; select a new CI build.' }\nif ($env:SELECTED_CI_BUILD_ID -notmatch '^[1-9][0-9]*$') { throw 'CI artifact alias _FF_CI is not linked to a build. Reselect the Build artifact after import.' }\nif ([string]$info.buildId -ne $env:SELECTED_CI_BUILD_ID) { throw 'Package build ID differs from the selected release artifact. Refusing stale agent content.' }\nif ($info.buildConfiguration -ne $env:BUILDCONFIGURATION) { throw \"BuildConfiguration must match the packaged configuration: $($info.buildConfiguration)\" }\nWrite-Host \"Validated CI build $($info.buildId); branch: $($info.sourceBranch); commit: $($info.sourceVersion)\"",
+                "errorActionPreference": "stop",
+                "warningPreference": "default",
+                "informationPreference": "default",
+                "verbosePreference": "default",
+                "debugPreference": "default",
+                "progressPreference": "silentlyContinue",
+                "failOnStderr": "false",
+                "showWarnings": "true",
+                "ignoreLASTEXITCODE": "false",
+                "pwsh": "false",
+                "workingDirectory": "$(System.DefaultWorkingDirectory)",
+                "runScriptInSeparateScope": "false"
+              }
+            },
             {
               "environment": {},
               "taskId": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
@@ -1083,7 +1231,7 @@
               "environment": {},
               "taskId": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
               "version": "0.*",
-              "name": "Install Python 3.11 for consolidated reporting",
+              "name": "Use cached Python 3.11 (self-hosted prerequisite)",
               "refName": "UsePython_TestPlan",
               "enabled": true,
               "alwaysRun": false,
@@ -1095,7 +1243,7 @@
               "condition": "succeeded()",
               "inputs": {
                 "versionSpec": "3.11",
-                "disableDownloadFromRegistry": "false",
+                "disableDownloadFromRegistry": "true",
                 "allowUnstable": "false",
                 "addToPath": "true",
                 "architecture": "x64"
@@ -1128,7 +1276,8 @@
                 "STAGERESULTSDIRECTORY": "$(StageResultsDirectory)",
                 "PLAYWRIGHTBROWSER": "$(PlaywrightBrowser)",
                 "ONDEMAND_TEST_RUN_ID": "$(test.RunId)",
-                "MANUALTESTRUNID": "$(ManualTestRunId)"
+                "MANUALTESTRUNID": "$(ManualTestRunId)",
+                "EVIDENCE_TRANSPORT": "classic"
               },
               "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
               "version": "2.*",
@@ -1204,7 +1353,7 @@
                 "otherConsoleOptions": "",
                 "diagnosticsEnabled": "false",
                 "rerunFailedTests": "false",
-                "uiTests": "true",
+                "uiTests": "false",
                 "testRunTitle": "Execute Azure Test Plans on-demand test run - $(Release.ReleaseName)",
                 "platform": "Any CPU",
                 "configuration": "$(BuildConfiguration)",
@@ -1219,7 +1368,7 @@
             {
               "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
               "version": "2.*",
-              "name": "Publish this agent evidence for consolidation",
+              "name": "Upload this agent raw results ZIP and evidence for consolidation",
               "refName": "PowerShell_TestPlan_Report",
               "enabled": true,
               "alwaysRun": true,
@@ -1232,7 +1381,10 @@
               "environment": {
                 "TEST_RESULTS_ROOT": "$(TEST_RESULTS_ROOT)",
                 "SYSTEM_JOBPOSITIONINPHASE": "$(System.JobPositionInPhase)",
-                "SYSTEM_TOTALJOBSINPHASE": "$(System.TotalJobsInPhase)"
+                "SYSTEM_TOTALJOBSINPHASE": "$(System.TotalJobsInPhase)",
+                "EVIDENCE_TRANSPORT": "classic",
+                "BUILDCONFIGURATION": "$(BuildConfiguration)",
+                "STAGEKEY": "$(StageKey)"
               },
               "inputs": {
                 "targetType": "filePath",
@@ -1259,9 +1411,6 @@
             "parallelExecution": {
               "parallelExecutionType": "none"
             },
-            "agentSpecification": {
-              "identifier": "windows-2022"
-            },
             "skipArtifactsDownload": false,
             "artifactsDownloadInput": {
               "downloadInputs": [
@@ -1274,10 +1423,12 @@
               ]
             },
             "queueId": 0,
-            "demands": [],
+            "demands": [
+              "Agent.OS -equals Windows_NT"
+            ],
             "enableAccessToken": true,
             "timeoutInMinutes": 0,
-            "jobCancelTimeoutInMinutes": 5,
+            "jobCancelTimeoutInMinutes": 10,
             "condition": "succeededOrFailed()",
             "overrideInputs": {}
           },
@@ -1287,10 +1438,44 @@
           "refName": null,
           "workflowTasks": [
             {
+              "environment": {
+                "SELECTED_CI_BUILD_ID": "$(Release.Artifacts._FF_CI.BuildId)",
+                "BUILDCONFIGURATION": "$(BuildConfiguration)"
+              },
+              "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
+              "version": "2.*",
+              "name": "Validate downloaded CI package and selected build",
+              "refName": "PowerShell_TestPlan_CollectPreflight",
+              "enabled": true,
+              "alwaysRun": false,
+              "continueOnError": false,
+              "timeoutInMinutes": 0,
+              "retryCountOnTaskFailure": 0,
+              "definitionType": "task",
+              "overrideInputs": {},
+              "condition": "succeeded()",
+              "inputs": {
+                "targetType": "inline",
+                "script": "$ErrorActionPreference = 'Stop'\n$download = $env:SYSTEM_DEFAULTWORKINGDIRECTORY\n$root = Join-Path $download '_FF_CI\\testpackage'\nWrite-Host \"Agent: $env:AGENT_NAME; release: $env:RELEASE_RELEASEID; deployment: $env:RELEASE_DEPLOYMENTID; selected CI build: $env:SELECTED_CI_BUILD_ID\"\nWrite-Host \"Expected package: $root\"\nforeach ($relative in @('package-info.json', 'scripts/Invoke-ReleaseStage.ps1', 'scripts/Prepare-ReleaseTestPackage.ps1', 'tools/release_reporting.py', 'tools/generate_consolidated_report.py', 'config/framework.json')) {\n  if (-not (Test-Path -LiteralPath (Join-Path $root $relative) -PathType Leaf)) {\n    if (Test-Path -LiteralPath $download) { Get-ChildItem -LiteralPath $download -Recurse -Depth 3 -ErrorAction SilentlyContinue | Select-Object -First 100 -ExpandProperty FullName | ForEach-Object { Write-Host $_ } }\n    throw \"Missing CI package file: $relative. Enable artifact download in this phase, keep alias _FF_CI, and select a new CI build containing the version-2 testpackage.\"\n  }\n}\n$info = Get-Content -LiteralPath (Join-Path $root 'package-info.json') -Raw | ConvertFrom-Json\nif ($info.schemaVersion -ne 2) { throw 'Unsupported package schema; select a new CI build.' }\nif ($env:SELECTED_CI_BUILD_ID -notmatch '^[1-9][0-9]*$') { throw 'CI artifact alias _FF_CI is not linked to a build. Reselect the Build artifact after import.' }\nif ([string]$info.buildId -ne $env:SELECTED_CI_BUILD_ID) { throw 'Package build ID differs from the selected release artifact. Refusing stale agent content.' }\nif ($info.buildConfiguration -ne $env:BUILDCONFIGURATION) { throw \"BuildConfiguration must match the packaged configuration: $($info.buildConfiguration)\" }\nWrite-Host \"Validated CI build $($info.buildId); branch: $($info.sourceBranch); commit: $($info.sourceVersion)\"",
+                "errorActionPreference": "stop",
+                "warningPreference": "default",
+                "informationPreference": "default",
+                "verbosePreference": "default",
+                "debugPreference": "default",
+                "progressPreference": "silentlyContinue",
+                "failOnStderr": "false",
+                "showWarnings": "true",
+                "ignoreLASTEXITCODE": "false",
+                "pwsh": "false",
+                "workingDirectory": "$(System.DefaultWorkingDirectory)",
+                "runScriptInSeparateScope": "false"
+              }
+            },
+            {
               "environment": {},
               "taskId": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
               "version": "0.*",
-              "name": "Install Python 3.11 for consolidated reporting",
+              "name": "Use cached Python 3.11 (self-hosted prerequisite)",
               "refName": "UsePython_TestPlan_Aggregate",
               "enabled": true,
               "alwaysRun": false,
@@ -1299,10 +1484,10 @@
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
               "overrideInputs": {},
-              "condition": "always()",
+              "condition": "succeeded()",
               "inputs": {
                 "versionSpec": "3.11",
-                "disableDownloadFromRegistry": "false",
+                "disableDownloadFromRegistry": "true",
                 "allowUnstable": "false",
                 "addToPath": "true",
                 "architecture": "x64"
@@ -1310,20 +1495,23 @@
             },
             {
               "environment": {
-                "SYSTEM_ACCESSTOKEN": "$(System.AccessToken)"
+                "SYSTEM_ACCESSTOKEN": "$(System.AccessToken)",
+                "EVIDENCE_TRANSPORT": "classic",
+                "BUILDCONFIGURATION": "$(BuildConfiguration)",
+                "STAGEKEY": "$(StageKey)"
               },
               "taskId": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
               "version": "2.*",
-              "name": "Generate and attach consolidated HTML report",
+              "name": "Verify all agents and attach raw results plus consolidated report ZIPs",
               "refName": "PowerShell_TestPlan_Aggregate",
               "enabled": true,
-              "alwaysRun": true,
+              "alwaysRun": false,
               "continueOnError": false,
               "timeoutInMinutes": 0,
               "retryCountOnTaskFailure": 0,
               "definitionType": "task",
               "overrideInputs": {},
-              "condition": "always()",
+              "condition": "succeeded()",
               "inputs": {
                 "targetType": "filePath",
                 "filePath": "$(System.DefaultWorkingDirectory)\\_FF_CI\\testpackage\\scripts\\Invoke-ReleaseStage.ps1",
@@ -1438,4 +1626,3 @@
   "projectReference": null,
   "_links": {}
 }
-

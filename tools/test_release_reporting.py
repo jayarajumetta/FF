@@ -194,7 +194,7 @@ class ReleaseReportingTests(unittest.TestCase):
         self.assertIn("agent-1.json", downloads)
         self.assertIn("agent-2.json", downloads)
         self.assertIn("Verified 2 agent(s), 3 scenario attempts", console.getvalue())
-        self.assertEqual(5, console.getvalue().count("##vso[task.uploadfile]"))
+        self.assertEqual(6, console.getvalue().count("##vso[task.uploadfile]"))
         archives = list(self.root.rglob("FinalConsolidatedReport.zip"))
         self.assertEqual(1, len(archives))
         with zipfile.ZipFile(archives[0]) as zipped:
@@ -202,6 +202,113 @@ class ReleaseReportingTests(unittest.TestCase):
             self.assertEqual(2, summary["total"])
             self.assertEqual(3, sum(n.endswith("scenario-result.json") for n in zipped.namelist()))
         self.assertNotIn("test-only-token", console.getvalue())
+
+    def pipeline_fixture(self, total=2):
+        incoming = self.root / "downloaded"
+        incoming.mkdir()
+        identity = {"buildId": "101", "stageKey": "Assembly", "stageAttempt": "2"}
+        for position in range(1, total + 1):
+            results = self.evidence(f"worker-{position}")
+            (results / "Runner").mkdir()
+            (results / "Runner" / "result.trx").write_text(f"shard {position}")
+            reporting.pack(results, incoming / f"evidence-Assembly-{position}-2", identity, position, total)
+            shutil.rmtree(results)
+        return {
+            "BUILD_BUILDID": "101", "SYSTEM_STAGEATTEMPT": "2", "EVIDENCE_TRANSPORT": "pipeline",
+            "EVIDENCE_DOWNLOAD_ROOT": str(incoming), "REPORT_OUTPUT_ROOT": str(self.root / "reports"),
+            "EXPECTED_EVIDENCE": json.dumps({"Assembly": total}), "AGENT_TEMPDIRECTORY": str(self.root),
+        }
+
+    def test_pipeline_collect_survives_execution_workspace_cleanup(self):
+        environment = self.pipeline_fixture()
+        with patch.dict(os.environ, environment), contextlib.redirect_stdout(io.StringIO()):
+            reporting.collect_pipeline()
+        output = Path(environment["REPORT_OUTPUT_ROOT"])
+        self.assertTrue((output / "RawTestResults.zip").is_file())
+        with zipfile.ZipFile(output / "FinalConsolidatedReport.zip") as archive:
+            self.assertEqual(2, sum(n.endswith("result.trx") for n in archive.namelist()))
+            self.assertEqual(2, sum(n.endswith("scenario-result.json") for n in archive.namelist()))
+            self.assertEqual(2, sum(n.endswith("trace.zip") for n in archive.namelist()))
+            self.assertIn("ConsolidatedReport/report.html", archive.namelist())
+
+    def test_pipeline_missing_shard_fails_but_preserves_raw_downloads(self):
+        environment = self.pipeline_fixture()
+        shutil.rmtree(Path(environment["EVIDENCE_DOWNLOAD_ROOT"]) / "evidence-Assembly-2-2")
+        with patch.dict(os.environ, environment), self.assertRaisesRegex(ValueError, "Missing agent evidence"):
+            reporting.collect_pipeline()
+        output = Path(environment["REPORT_OUTPUT_ROOT"])
+        self.assertTrue((output / "RawTestResults.zip").is_file())
+        self.assertFalse((output / "FinalConsolidatedReport.zip").exists())
+
+    def test_pipeline_rejects_stale_attempt_and_keeps_raw_results(self):
+        environment = self.pipeline_fixture(1)
+        path = Path(environment["EVIDENCE_DOWNLOAD_ROOT"]) / "evidence-Assembly-1-2" / "agent-1.json"
+        manifest = json.loads(path.read_text())
+        manifest["stageAttempt"] = "1"
+        path.write_text(json.dumps(manifest))
+        with patch.dict(os.environ, environment), self.assertRaisesRegex(ValueError, "different release"):
+            reporting.collect_pipeline()
+        self.assertTrue((Path(environment["REPORT_OUTPUT_ROOT"]) / "RawTestResults.zip").exists())
+
+    def test_pipeline_report_failure_keeps_raw_results(self):
+        environment = self.pipeline_fixture(1)
+        with patch.dict(os.environ, environment), patch.object(reporting, "generate", side_effect=ValueError("report failed")):
+            with self.assertRaisesRegex(ValueError, "report failed"):
+                reporting.collect_pipeline()
+        self.assertTrue((Path(environment["REPORT_OUTPUT_ROOT"]) / "RawTestResults.zip").exists())
+
+    def test_pipeline_rejects_unexpected_duplicate_artifact(self):
+        environment = self.pipeline_fixture(1)
+        incoming = Path(environment["EVIDENCE_DOWNLOAD_ROOT"])
+        shutil.copytree(incoming / "evidence-Assembly-1-2", incoming / "duplicate")
+        with patch.dict(os.environ, environment), self.assertRaisesRegex(ValueError, "Unexpected or missing evidence"):
+            reporting.collect_pipeline()
+        self.assertFalse((Path(environment["REPORT_OUTPUT_ROOT"]) / "FinalConsolidatedReport.zip").exists())
+
+    def test_classic_publish_uploads_raw_zip_before_manifest(self):
+        results = self.evidence("classic-publish")
+        environment = {"EVIDENCE_TRANSPORT": "", "RELEASE_RELEASEID": "51", "RELEASE_ENVIRONMENTID": "62",
+                       "RELEASE_DEPLOYMENTID": "73", "TEST_RESULTS_ROOT": str(results),
+                       "AGENT_TEMPDIRECTORY": str(self.root), "SYSTEM_JOBPOSITIONINPHASE": "1", "SYSTEM_TOTALJOBSINPHASE": "2"}
+        with patch.dict(os.environ, environment), patch.object(reporting, "attach") as attach, contextlib.redirect_stdout(io.StringIO()):
+            reporting.publish()
+        first, last = attach.call_args_list[0], attach.call_args_list[-1]
+        self.assertEqual("agent-1.zip", first.args[0].name)
+        self.assertEqual("file", first.args[1])
+        self.assertEqual(reporting.MANIFEST_TYPE, last.args[1])
+
+    def test_pipeline_publish_exposes_handoff_and_downloadable_zip(self):
+        results = self.evidence("publish")
+        environment = {"EVIDENCE_TRANSPORT": "pipeline", "BUILD_BUILDID": "101", "STAGEKEY": "Assembly",
+                       "SYSTEM_STAGEATTEMPT": "1", "TEST_RESULTS_ROOT": str(results),
+                       "AGENT_TEMPDIRECTORY": str(self.root), "SYSTEM_JOBPOSITIONINPHASE": "1", "SYSTEM_TOTALJOBSINPHASE": "2"}
+        console = io.StringIO()
+        with patch.dict(os.environ, environment), contextlib.redirect_stdout(console):
+            reporting.publish()
+        self.assertIn("task.setvariable variable=EVIDENCE_HANDOFF", console.getvalue())
+        self.assertNotIn("task.addattachment", console.getvalue())
+        self.assertEqual(1, len(list(self.root.rglob("agent-1.zip"))))
+
+    def test_yaml_pipeline_contract(self):
+        pipeline = (ROOT / "azure-pipelines-cd.yml").read_text()
+        execution = (ROOT / "pipelines/templates/execute-tests.yml").read_text()
+        collector = (ROOT / "pipelines/templates/collect-results.yml").read_text()
+        download = (ROOT / "pipelines/templates/download-testpackage.yml").read_text()
+        for text in (pipeline, execution, collector, download):
+            self.assertNotIn("checkout: self", text)
+            self.assertNotIn("buildVersionToDownload: latest", text)
+            self.assertNotIn("continueOnError: true", text)
+        self.assertIn("DownloadBuildArtifacts@1", download)
+        self.assertIn("buildVersionToDownload: specific", download)
+        self.assertIn("parallel: ${{ parameters.agents }}", execution)
+        self.assertIn("dependsOn: ValidateInput", execution)
+        self.assertIn("distributionBatchType: basedOnTestCases", execution)
+        self.assertIn("arguments: '-Mode Publish'", execution)
+        self.assertIn("$(System.JobPositionInPhase)-$(System.StageAttempt)", execution)
+        self.assertNotIn("PublishTestResults@2", execution)
+        self.assertIn("dependsOn: ${{ parameters.dependencies }}", collector)
+        self.assertIn("arguments: '-Mode Collect'", collector)
+        self.assertIn("targetPath: '$(REPORT_OUTPUT_ROOT)'", collector)
 
     def test_release_api_routes_and_pagination(self):
         api = reporting.ReleaseApi("https://dev.azure.com/org/", "project", "unused")
@@ -250,6 +357,15 @@ class ReleaseReportingTests(unittest.TestCase):
             self.assertEqual(original["reporting"]["attachPassedEvidenceToTestResult"], config["reporting"]["attachPassedEvidenceToTestResult"])
             self.assertTrue((package / "TestResults" / "TestPlan" / "Artifacts").is_dir())
         self.assertNotEqual(*roots)
+
+        env.update(EVIDENCE_TRANSPORT="pipeline", BUILD_BUILDID="101", STAGEKEY="SingleCase",
+                   STAGERESULTSDIRECTORY="TestResults/SingleCase")
+        for name in ("RELEASE_RELEASEID", "RELEASE_ENVIRONMENTID", "RELEASE_DEPLOYMENTID"):
+            env.pop(name, None)
+        result = subprocess.run(["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(wrapper)], env=env, text=True, capture_output=True, timeout=30)
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+        self.assertIn("build-101", result.stdout)
+        self.assertNotIn("variable=TCM_TEST_RUN_ID", result.stdout)
 
     def bootstrap(self, download):
         pipeline = json.loads((ROOT / "azure_pipelines_release_pipeline.json").read_text(encoding="utf-8-sig"))
@@ -357,6 +473,46 @@ class ReleaseReportingTests(unittest.TestCase):
         self.assertIn("Cannot publish an incomplete testpackage", result.stderr)
         self.assertTrue((package / "package-info.json").exists(), "Preflight failure must not destroy an existing package")
 
+    @unittest.skipUnless(shutil.which("powershell.exe"), "Windows PowerShell is required for preflight")
+    def test_classic_inline_preflight_checks_selected_build_and_missing_files(self):
+        pipeline = json.loads((ROOT / "azure_pipelines_release_pipeline.json").read_text(encoding="utf-8-sig"))
+        scripts = [phase["workflowTasks"][0]["inputs"]["script"]
+                   for environment in pipeline["environments"] for phase in environment["deployPhases"]]
+        self.assertEqual(1, len(set(scripts)), "Every phase must enforce the same package contract")
+        wrapper = self.root / "preflight.ps1"
+        wrapper.write_text(scripts[0], encoding="utf-8")
+        download = self.root / "downloads"
+        package = download / "_FF_CI" / "testpackage"
+        self.fake_package(package)
+        env = {**os.environ, "SYSTEM_DEFAULTWORKINGDIRECTORY": str(download),
+               "SELECTED_CI_BUILD_ID": "12345", "BUILDCONFIGURATION": "Release"}
+
+        def run():
+            return subprocess.run(["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(wrapper)],
+                                  env=env, text=True, capture_output=True, timeout=30)
+
+        result = run()
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+        self.assertIn("Validated CI build 12345", result.stdout)
+        env["SELECTED_CI_BUILD_ID"] = "54321"
+        result = run()
+        self.assertNotEqual(0, result.returncode)
+        self.assertIn("Package build ID differs", result.stderr)
+        env["SELECTED_CI_BUILD_ID"] = "$(Release.Artifacts._FF_CI.BuildId)"
+        result = run()
+        self.assertNotEqual(0, result.returncode)
+        self.assertIn("not linked to a build", result.stderr)
+        env["SELECTED_CI_BUILD_ID"] = "12345"
+        env["BUILDCONFIGURATION"] = "Debug"
+        result = run()
+        self.assertNotEqual(0, result.returncode)
+        self.assertIn("BuildConfiguration must match", result.stderr)
+        env["BUILDCONFIGURATION"] = "Release"
+        (package / "scripts" / "Invoke-ReleaseStage.ps1").unlink()
+        result = run()
+        self.assertNotEqual(0, result.returncode)
+        self.assertIn("Missing CI package file", result.stderr)
+
     def test_pipeline_contract(self):
         def unique_keys(pairs):
             result = {}
@@ -368,8 +524,28 @@ class ReleaseReportingTests(unittest.TestCase):
         pipeline = json.loads((ROOT / "azure_pipelines_release_pipeline.json").read_text(encoding="utf-8-sig"), object_pairs_hook=unique_keys)
         self.assertEqual("TestCategory=gl_smoke_test", pipeline["variables"]["AssemblyTestFilter"]["value"])
         self.assertEqual(3, len(pipeline["environments"]))
+        references = []
         for environment in pipeline["environments"]:
             execution, aggregate = environment["deployPhases"]
+            for phase in (execution, aggregate):
+                deployment = phase["deploymentInput"]
+                self.assertNotIn("agentSpecification", deployment)
+                self.assertIn("Agent.OS -equals Windows_NT", deployment["demands"])
+                self.assertEqual(10, deployment["jobCancelTimeoutInMinutes"])
+                self.assertFalse(deployment["skipArtifactsDownload"])
+                self.assertEqual("_FF_CI", deployment["artifactsDownloadInput"]["downloadInputs"][0]["alias"])
+                preflight = phase["workflowTasks"][0]
+                self.assertTrue(preflight["refName"].endswith("Preflight"))
+                self.assertEqual("inline", preflight["inputs"]["targetType"])
+                self.assertEqual("succeeded()", preflight["condition"])
+                self.assertFalse(preflight["continueOnError"])
+                self.assertEqual("$(Release.Artifacts._FF_CI.BuildId)", preflight["environment"]["SELECTED_CI_BUILD_ID"])
+                for task in phase["workflowTasks"]:
+                    references.append(task["refName"])
+                    if task["refName"].startswith("UsePython_"):
+                        self.assertEqual("true", task["inputs"]["disableDownloadFromRegistry"])
+                        self.assertEqual("succeeded()", task["condition"])
+                        self.assertEqual({}, task["environment"])
             self.assertEqual("Run automation on Windows agent", execution["name"])
             self.assertEqual("succeeded()", execution["deploymentInput"]["condition"])
             self.assertEqual("none", aggregate["deploymentInput"]["parallelExecution"]["parallelExecutionType"])
@@ -384,12 +560,16 @@ class ReleaseReportingTests(unittest.TestCase):
             self.assertEqual("always()", publisher["condition"])
             self.assertFalse(publisher["continueOnError"])
             collector = aggregate["workflowTasks"][-1]
-            self.assertEqual("always()", collector["condition"])
+            self.assertEqual("succeeded()", collector["condition"])
+            self.assertFalse(collector["alwaysRun"])
             self.assertEqual("-Mode Collect", collector["inputs"]["arguments"])
             self.assertEqual("$(System.AccessToken)", collector["environment"]["SYSTEM_ACCESSTOKEN"])
             self.assertFalse(collector["continueOnError"])
             self.assertEqual(2, execution["deploymentInput"]["parallelExecution"]["maxNumberOfAgents"])
             for task in (prepare, publisher, collector):
+                self.assertEqual("classic", task["environment"]["EVIDENCE_TRANSPORT"])
+                self.assertEqual("$(BuildConfiguration)", task["environment"]["BUILDCONFIGURATION"])
+                self.assertEqual(0, task["retryCountOnTaskFailure"])
                 self.assertEqual("filePath", task["inputs"]["targetType"])
                 self.assertEqual("$(System.DefaultWorkingDirectory)\\_FF_CI\\testpackage\\scripts\\Invoke-ReleaseStage.ps1", task["inputs"]["filePath"])
                 self.assertNotIn("script", task["inputs"])
@@ -397,6 +577,8 @@ class ReleaseReportingTests(unittest.TestCase):
             self.assertEqual("basedOnTestCases", vstest["inputs"]["distributionBatchType"])
             self.assertEqual("autoBatchSize", vstest["inputs"]["batchingBasedOnAgentsOption"])
             self.assertEqual("false", vstest["inputs"]["dontDistribute"])
+            self.assertEqual("false", vstest["inputs"]["uiTests"])
+        self.assertEqual(len(references), len(set(references)))
 
 
 if __name__ == "__main__":

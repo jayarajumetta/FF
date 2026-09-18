@@ -9,9 +9,12 @@ foreach ($value in @($configuration, $stageKey, $resultsDirectory, $env:AGENT_TE
 	if ([string]::IsNullOrWhiteSpace($value) -or $value.Contains('$(')) { throw 'Required release preparation variable is missing.' }
 }
 if ($configuration -notin @('Debug', 'Release')) { throw 'Unsupported BuildConfiguration.' }
-if ($stageKey -notin @('Assembly', 'Suite', 'TestPlan')) { throw 'Unsupported StageKey.' }
+if ($stageKey -notin @('Assembly', 'Suite', 'TestPlan', 'SingleCase')) { throw 'Unsupported StageKey.' }
 if ($env:PLAYWRIGHTBROWSER -notin @('chromium', 'firefox', 'webkit')) { throw 'PlaywrightBrowser must be chromium, firefox, or webkit.' }
 $packageRoot = Join-Path $env:AGENT_TEMPDIRECTORY ("FFTestAutomation\{0}\{1}\{2}\{3}\package" -f $env:RELEASE_RELEASEID, $env:RELEASE_ENVIRONMENTID, $env:RELEASE_DEPLOYMENTID, [guid]::NewGuid().ToString('N'))
+if ($env:EVIDENCE_TRANSPORT -eq 'pipeline') {
+	$packageRoot = Join-Path $env:AGENT_TEMPDIRECTORY ("FFTestAutomation\build-{0}\{1}\{2}\package" -f $env:BUILD_BUILDID, $stageKey, [guid]::NewGuid().ToString('N'))
+}
 if ([IO.Path]::IsPathRooted($resultsDirectory) -or $resultsDirectory.Contains(':')) { throw 'StageResultsDirectory must be a relative path inside the package.' }
 $resultsRoot = [IO.Path]::GetFullPath((Join-Path $packageRoot $resultsDirectory))
 if (-not $resultsRoot.StartsWith($packageRoot + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or

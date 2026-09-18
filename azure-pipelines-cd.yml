@@ -6,6 +6,20 @@ parameters:
 - name: buildPipelineDefinitionId
   type: string
   default: '0'
+- name: ciBuildId
+  type: string
+  default: '0'
+- name: agentPool
+  type: string
+  default: 'Azure Pipelines'
+- name: agentCount
+  type: number
+  default: 2
+  values: [1, 2, 3, 4, 5, 6, 7, 8]
+- name: buildConfiguration
+  type: string
+  default: Release
+  values: [Debug, Release]
 - name: testPlanId
   type: string
   default: '0'
@@ -38,390 +52,84 @@ parameters:
   default: true
 
 pool:
-  vmImage: windows-latest
+  name: ${{ parameters.agentPool }}
+  ${{ if eq(parameters.agentPool, 'Azure Pipelines') }}:
+    vmImage: windows-latest
+  ${{ else }}:
+    demands:
+    - Agent.OS -equals Windows_NT
 
 variables:
-  ArtifactName: testpackage
-  ArtifactRoot: '$(Pipeline.Workspace)\testpackage'
-  ResultsDirectory: 'TestResults'
+  CiDefinitionId: ${{ parameters.buildPipelineDefinitionId }}
+  CiBuildId: ${{ parameters.ciBuildId }}
+  BuildConfiguration: ${{ parameters.buildConfiguration }}
+  Headless: ${{ parameters.headless }}
+  PlaywrightBrowser: chromium
+  AssemblyTestFilter: ${{ parameters.testFilter }}
+  TestPlanId: ${{ parameters.testPlanId }}
+  SingleTestCaseId: ${{ parameters.singleTestCaseId }}
+  SingleCaseParentSuiteId: ${{ parameters.singleCaseParentSuiteId }}
+  SuiteId: ${{ parameters.suiteId }}
+  TestConfigurationId: ${{ parameters.testConfigurationId }}
+  EVIDENCE_TRANSPORT: pipeline
+  PackageDownloadRoot: '$(Agent.TempDirectory)\ci-$(Build.BuildId)-$(System.JobId)-$(System.JobAttempt)'
+  ArtifactRoot: '$(PackageDownloadRoot)\testpackage'
 
 stages:
-- stage: SingleTestPlanCase
-  displayName: Execute selected Test Plan case
-  condition: and(succeeded(), eq(${{ parameters.runSingleTestCase }}, true))
+- stage: ExecuteAndCollect
+  displayName: Execute selected modes and consolidate every agent
   jobs:
-  - job: RunSingleCase
+  - job: ValidateInput
     steps:
     - checkout: none
-    - task: UseDotNet@2
-      inputs: { packageType: sdk, version: '8.0.x' }
-      displayName: Install .NET 8
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        buildType: specific
-        project: '$(System.TeamProject)'
-        definition: '${{ parameters.buildPipelineDefinitionId }}'
-        buildVersionToDownload: latest
-        artifactName: '$(ArtifactName)'
-        targetPath: '$(ArtifactRoot)'
-      displayName: Download test artifact
-    - powershell: |
-        $zipPath = "$(ArtifactRoot)\testpackage-runready.zip"
-        if (Test-Path -LiteralPath $zipPath) {
-          Expand-Archive -LiteralPath $zipPath -DestinationPath "$(ArtifactRoot)" -Force
-          Write-Host "Extracted run-ready zip: $zipPath"
-        }
-        else {
-          Write-Host 'Run-ready zip not found; using downloaded folder content as-is.'
-        }
-      displayName: Ensure run-ready artifact is extracted
     - powershell: |
         $ErrorActionPreference = 'Stop'
-
-        $configFiles = Get-ChildItem "$(ArtifactRoot)\tests" -Recurse -File -Filter framework.json |
-          Where-Object { $_.FullName -match '\\bin\\Release\\net8.0\\config\\framework.json$' }
-        if (-not $configFiles) { throw 'No compiled framework.json files found in artifact.' }
-
-        foreach ($configFile in $configFiles) {
-          $config = Get-Content -Raw -LiteralPath $configFile.FullName | ConvertFrom-Json
-          $config.browser.headless = [System.Convert]::ToBoolean('${{ parameters.headless }}')
-          $config | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $configFile.FullName -Encoding UTF8
+        if ($env:CIDEFINITIONID -notmatch '^[1-9][0-9]*$' -or $env:CIBUILDID -notmatch '^[1-9][0-9]*$') {
+          throw 'Set buildPipelineDefinitionId and ciBuildId to the successful CI definition and build IDs. Latest is deliberately not used.'
         }
-
-        $playwright = Get-ChildItem "$(ArtifactRoot)\tests" -Recurse -File -Filter playwright.ps1 |
-          Where-Object { Test-Path (Join-Path $_.Directory.FullName 'Microsoft.Playwright.dll') } |
-          Select-Object -First 1 -ExpandProperty FullName
-        if (-not $playwright) { throw 'No playable playwright.ps1 + Microsoft.Playwright.dll pair found in artifact.' }
-        & $playwright install chromium
-        if ($LASTEXITCODE -ne 0) { throw 'Playwright browser installation failed' }
-
-        $runsettings = Join-Path "$(ArtifactRoot)" 'Tosca.runsettings'
-        if (-not (Test-Path -LiteralPath $runsettings)) { throw 'Tosca.runsettings is missing from compiled artifact.' }
-        & "$(ArtifactRoot)\scripts\Initialize-PipelineTestOutput.ps1" -ArtifactRoot "$(ArtifactRoot)" -ResultsDirectory "$(ResultsDirectory)\SingleCase"
-      displayName: Prepare test runtime
-    - powershell: |
-        $ErrorActionPreference = 'Stop'
-        $headers = @{ Authorization = "Bearer $env:SYSTEM_ACCESSTOKEN" }
-        $collectionUri = $env:SYSTEM_COLLECTIONURI.TrimEnd('/')
-        $project = $env:SYSTEM_TEAMPROJECT
-        $planId = '${{ parameters.testPlanId }}'
-        $parentSuiteId = '${{ parameters.singleCaseParentSuiteId }}'
-        $testCaseId = '${{ parameters.singleTestCaseId }}'
-
-        $suiteName = "Pipeline SingleCase $env:BUILD_BUILDID TC$testCaseId"
-        $createSuiteUri = "$collectionUri/$project/_apis/testplan/Plans/$planId/suites/$parentSuiteId?api-version=7.1-preview.1"
-        $createSuiteBody = @{ suiteType = 'StaticTestSuite'; name = $suiteName } | ConvertTo-Json
-        $createdSuite = Invoke-RestMethod -Method Post -Uri $createSuiteUri -Headers $headers -ContentType 'application/json' -Body $createSuiteBody
-        $suiteId = [string]$createdSuite.id
-        if ([string]::IsNullOrWhiteSpace($suiteId)) { throw 'Failed to create temporary single-case suite.' }
-
-        $addTestCaseUri = "$collectionUri/$project/_apis/test/Plans/$planId/suites/$suiteId/testcases/$testCaseId?api-version=7.1-preview.2"
-        Invoke-RestMethod -Method Post -Uri $addTestCaseUri -Headers $headers | Out-Null
-        Write-Host "##vso[task.setvariable variable=PIPELINE_SINGLE_CASE_SUITE_ID]$suiteId"
+        if (-not ([Convert]::ToBoolean($env:RUN_SINGLE) -or [Convert]::ToBoolean($env:RUN_SUITE) -or [Convert]::ToBoolean($env:RUN_ASSEMBLY))) {
+          throw 'Select at least one execution mode.'
+        }
+        $uri = "$($env:SYSTEM_COLLECTIONURI.TrimEnd('/'))/$env:SYSTEM_TEAMPROJECTID/_apis/build/builds/$($env:CIBUILDID)?api-version=7.1"
+        $build = Invoke-RestMethod -Uri $uri -Headers @{ Authorization = "Bearer $env:SYSTEM_ACCESSTOKEN" }
+        if ([string]$build.definition.id -ne $env:CIDEFINITIONID -or $build.status -ne 'completed' -or $build.result -ne 'succeeded') {
+          throw 'The selected CI build must be completed successfully and belong to the selected definition.'
+        }
       env:
         SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-        SYSTEM_COLLECTIONURI: $(System.CollectionUri)
-        SYSTEM_TEAMPROJECT: $(System.TeamProject)
-      displayName: Create temporary single-case suite
-    - task: VSTest@3
-      inputs:
-        testSelector: testPlan
-        testPlan: '${{ parameters.testPlanId }}'
-        testSuite: '$(PIPELINE_SINGLE_CASE_SUITE_ID)'
-        testConfiguration: '${{ parameters.testConfigurationId }}'
-        searchFolder: '$(ArtifactRoot)'
-        runSettingsFile: '$(VSTEST_RUNSETTINGS)'
-        resultsFolder: '$(ArtifactRoot)\$(ResultsDirectory)\SingleCase\Runner'
-        publishRunAttachments: true
-      env:
-        CL_DC_USERNAME: $(CL_DC_USERNAME)
-        CL_DC_PASSWORD: $(CL_DC_PASSWORD)
-        CL_EQ_USERNAME: $(CL_EQ_USERNAME)
-        CL_EQ_PASSWORD: $(CL_EQ_PASSWORD)
-        PL_DC_USERNAME: $(PL_DC_USERNAME)
-        PL_DC_PASSWORD: $(PL_DC_PASSWORD)
-      displayName: Execute selected Test Plan case
-    - powershell: |
-        $ErrorActionPreference = 'Continue'
-        if ([string]::IsNullOrWhiteSpace('$(PIPELINE_SINGLE_CASE_SUITE_ID)')) {
-          Write-Host 'Temporary suite id is empty; cleanup skipped.'
-          exit 0
-        }
-        $headers = @{ Authorization = "Bearer $env:SYSTEM_ACCESSTOKEN" }
-        $collectionUri = $env:SYSTEM_COLLECTIONURI.TrimEnd('/')
-        $project = $env:SYSTEM_TEAMPROJECT
-        $planId = '${{ parameters.testPlanId }}'
-        $suiteId = '$(PIPELINE_SINGLE_CASE_SUITE_ID)'
-        $deleteUri = "$collectionUri/$project/_apis/testplan/Plans/$planId/suites/$suiteId?api-version=7.1-preview.1"
-        try { Invoke-RestMethod -Method Delete -Uri $deleteUri -Headers $headers | Out-Null }
-        catch { Write-Warning "Temporary suite cleanup failed: $($_.Exception.Message)" }
-      condition: always()
-      env:
-        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-        SYSTEM_COLLECTIONURI: $(System.CollectionUri)
-        SYSTEM_TEAMPROJECT: $(System.TeamProject)
-      displayName: Remove temporary suite
-    - task: PublishTestResults@2
-      condition: always()
-      inputs:
-        testResultsFormat: VSTest
-        testResultsFiles: '$(ArtifactRoot)\$(ResultsDirectory)\SingleCase\Runner\**\*.trx'
-        publishRunAttachments: true
-        testRunTitle: 'Single Test Plan Case $(Build.BuildNumber)'
-    - task: PublishPipelineArtifact@1
-      condition: always()
-      inputs:
-        targetPath: '$(ArtifactRoot)\$(ResultsDirectory)\SingleCase'
-        artifact: 'evidence-single-case'
-
-- stage: TestPlanSuite
-  displayName: Execute Test Plan suite
-  condition: and(succeeded(), eq(${{ parameters.runTestPlanSuite }}, true))
-  jobs:
-  - job: RunSuite
-    steps:
-    - checkout: none
-    - task: UseDotNet@2
-      inputs: { packageType: sdk, version: '8.0.x' }
-      displayName: Install .NET 8
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        buildType: specific
-        project: '$(System.TeamProject)'
-        definition: '${{ parameters.buildPipelineDefinitionId }}'
-        buildVersionToDownload: latest
-        artifactName: '$(ArtifactName)'
-        targetPath: '$(ArtifactRoot)'
-      displayName: Download test artifact
-    - powershell: |
-        $zipPath = "$(ArtifactRoot)\testpackage-runready.zip"
-        if (Test-Path -LiteralPath $zipPath) {
-          Expand-Archive -LiteralPath $zipPath -DestinationPath "$(ArtifactRoot)" -Force
-          Write-Host "Extracted run-ready zip: $zipPath"
-        }
-        else {
-          Write-Host 'Run-ready zip not found; using downloaded folder content as-is.'
-        }
-      displayName: Ensure run-ready artifact is extracted
-    - powershell: |
-        $ErrorActionPreference = 'Stop'
-
-        $configFiles = Get-ChildItem "$(ArtifactRoot)\tests" -Recurse -File -Filter framework.json |
-          Where-Object { $_.FullName -match '\\bin\\Release\\net8.0\\config\\framework.json$' }
-        if (-not $configFiles) { throw 'No compiled framework.json files found in artifact.' }
-        foreach ($configFile in $configFiles) {
-          $config = Get-Content -Raw -LiteralPath $configFile.FullName | ConvertFrom-Json
-          $config.browser.headless = [System.Convert]::ToBoolean('${{ parameters.headless }}')
-          $config | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $configFile.FullName -Encoding UTF8
-        }
-
-        $playwright = Get-ChildItem "$(ArtifactRoot)\tests" -Recurse -File -Filter playwright.ps1 |
-          Where-Object { Test-Path (Join-Path $_.Directory.FullName 'Microsoft.Playwright.dll') } |
-          Select-Object -First 1 -ExpandProperty FullName
-        if (-not $playwright) { throw 'No playable playwright.ps1 + Microsoft.Playwright.dll pair found in artifact.' }
-        & $playwright install chromium
-        if ($LASTEXITCODE -ne 0) { throw 'Playwright browser installation failed' }
-
-        $runsettings = Join-Path "$(ArtifactRoot)" 'Tosca.runsettings'
-        if (-not (Test-Path -LiteralPath $runsettings)) { throw 'Tosca.runsettings is missing from compiled artifact.' }
-        & "$(ArtifactRoot)\scripts\Initialize-PipelineTestOutput.ps1" -ArtifactRoot "$(ArtifactRoot)" -ResultsDirectory "$(ResultsDirectory)\Suite"
-      displayName: Prepare test runtime
-    - task: VSTest@3
-      inputs:
-        testSelector: testPlan
-        testPlan: '${{ parameters.testPlanId }}'
-        testSuite: '${{ parameters.suiteId }}'
-        testConfiguration: '${{ parameters.testConfigurationId }}'
-        searchFolder: '$(ArtifactRoot)'
-        runSettingsFile: '$(VSTEST_RUNSETTINGS)'
-        resultsFolder: '$(ArtifactRoot)\$(ResultsDirectory)\Suite\Runner'
-        publishRunAttachments: true
-      env:
-        CL_DC_USERNAME: $(CL_DC_USERNAME)
-        CL_DC_PASSWORD: $(CL_DC_PASSWORD)
-        CL_EQ_USERNAME: $(CL_EQ_USERNAME)
-        CL_EQ_PASSWORD: $(CL_EQ_PASSWORD)
-        PL_DC_USERNAME: $(PL_DC_USERNAME)
-        PL_DC_PASSWORD: $(PL_DC_PASSWORD)
-      displayName: Execute Test Plan suite
-    - task: PublishTestResults@2
-      condition: always()
-      inputs:
-        testResultsFormat: VSTest
-        testResultsFiles: '$(ArtifactRoot)\$(ResultsDirectory)\Suite\Runner\**\*.trx'
-        publishRunAttachments: true
-        testRunTitle: 'Test Plan Suite $(Build.BuildNumber)'
-    - task: PublishPipelineArtifact@1
-      condition: always()
-      inputs:
-        targetPath: '$(ArtifactRoot)\$(ResultsDirectory)\Suite'
-        artifact: 'evidence-suite'
-
-- stage: TestDllOrTags
-  displayName: Execute DLL / tag filter
-  condition: and(succeeded(), eq(${{ parameters.runDllOrTags }}, true))
-  jobs:
-  - job: RunDll
-    steps:
-    - checkout: none
-    - task: UseDotNet@2
-      inputs: { packageType: sdk, version: '8.0.x' }
-      displayName: Install .NET 8
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        buildType: specific
-        project: '$(System.TeamProject)'
-        definition: '${{ parameters.buildPipelineDefinitionId }}'
-        buildVersionToDownload: latest
-        artifactName: '$(ArtifactName)'
-        targetPath: '$(ArtifactRoot)'
-      displayName: Download test artifact
-    - powershell: |
-        $zipPath = "$(ArtifactRoot)\testpackage-runready.zip"
-        if (Test-Path -LiteralPath $zipPath) {
-          Expand-Archive -LiteralPath $zipPath -DestinationPath "$(ArtifactRoot)" -Force
-          Write-Host "Extracted run-ready zip: $zipPath"
-        }
-        else {
-          Write-Host 'Run-ready zip not found; using downloaded folder content as-is.'
-        }
-      displayName: Ensure run-ready artifact is extracted
-    - powershell: |
-        $ErrorActionPreference = 'Stop'
-
-        $configFiles = Get-ChildItem "$(ArtifactRoot)\tests" -Recurse -File -Filter framework.json |
-          Where-Object { $_.FullName -match '\\bin\\Release\\net8.0\\config\\framework.json$' }
-        if (-not $configFiles) { throw 'No compiled framework.json files found in artifact.' }
-        foreach ($configFile in $configFiles) {
-          $config = Get-Content -Raw -LiteralPath $configFile.FullName | ConvertFrom-Json
-          $config.browser.headless = [System.Convert]::ToBoolean('${{ parameters.headless }}')
-          $config | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $configFile.FullName -Encoding UTF8
-        }
-
-        $playwright = Get-ChildItem "$(ArtifactRoot)\tests" -Recurse -File -Filter playwright.ps1 |
-          Where-Object { Test-Path (Join-Path $_.Directory.FullName 'Microsoft.Playwright.dll') } |
-          Select-Object -First 1 -ExpandProperty FullName
-        if (-not $playwright) { throw 'No playable playwright.ps1 + Microsoft.Playwright.dll pair found in artifact.' }
-        & $playwright install chromium
-        if ($LASTEXITCODE -ne 0) { throw 'Playwright browser installation failed' }
-
-        $runsettings = Join-Path "$(ArtifactRoot)" 'Tosca.runsettings'
-        if (-not (Test-Path -LiteralPath $runsettings)) { throw 'Tosca.runsettings is missing from compiled artifact.' }
-        & "$(ArtifactRoot)\scripts\Initialize-PipelineTestOutput.ps1" -ArtifactRoot "$(ArtifactRoot)" -ResultsDirectory "$(ResultsDirectory)\Dll"
-      displayName: Prepare test runtime
-    - task: VSTest@3
-      inputs:
-        testSelector: testAssemblies
-        testAssemblyVer2: |
-          **\tests\**\bin\Release\net8.0\*Tests.dll
-          !**\*TestAdapter.dll
-          !**\obj\**
-        searchFolder: '$(ArtifactRoot)'
-        resultsFolder: '$(ArtifactRoot)\$(ResultsDirectory)\Dll\Runner'
-        testFiltercriteria: '${{ parameters.testFilter }}'
-        runSettingsFile: '$(VSTEST_RUNSETTINGS)'
-        publishRunAttachments: true
-      env:
-        CL_DC_USERNAME: $(CL_DC_USERNAME)
-        CL_DC_PASSWORD: $(CL_DC_PASSWORD)
-        CL_EQ_USERNAME: $(CL_EQ_USERNAME)
-        CL_EQ_PASSWORD: $(CL_EQ_PASSWORD)
-        PL_DC_USERNAME: $(PL_DC_USERNAME)
-        PL_DC_PASSWORD: $(PL_DC_PASSWORD)
-      displayName: Execute compiled tests
-    - task: PublishTestResults@2
-      condition: always()
-      inputs:
-        testResultsFormat: VSTest
-        testResultsFiles: '$(ArtifactRoot)\$(ResultsDirectory)\Dll\Runner\**\*.trx'
-        publishRunAttachments: true
-        testRunTitle: 'DLL / Tags $(Build.BuildNumber)'
-    - task: PublishPipelineArtifact@1
-      condition: always()
-      inputs:
-        targetPath: '$(ArtifactRoot)\$(ResultsDirectory)\Dll'
-        artifact: 'evidence-dll'
-
-- stage: ConsolidatedReportAndEmail
-  displayName: Consolidate execution evidence and send email
-  dependsOn: [SingleTestPlanCase, TestPlanSuite, TestDllOrTags]
-  condition: always()
-  jobs:
-  - job: ConsolidateAndEmail
-    steps:
-    - checkout: none
-    - task: UsePythonVersion@0
-      displayName: Install Python
-      inputs:
-        versionSpec: '3.x'
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        buildType: specific
-        project: '$(System.TeamProject)'
-        definition: '${{ parameters.buildPipelineDefinitionId }}'
-        buildVersionToDownload: latest
-        artifactName: '$(ArtifactName)'
-        targetPath: '$(ArtifactRoot)'
-      displayName: Download reporting source and scripts
-    - powershell: |
-        $zipPath = "$(ArtifactRoot)\testpackage-runready.zip"
-        if (Test-Path -LiteralPath $zipPath) {
-          Expand-Archive -LiteralPath $zipPath -DestinationPath "$(ArtifactRoot)" -Force
-          Write-Host "Extracted run-ready zip: $zipPath"
-        }
-        else {
-          Write-Host 'Run-ready zip not found; using downloaded folder content as-is.'
-        }
-      displayName: Ensure run-ready artifact is extracted
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        buildType: current
-        targetPath: '$(ArtifactRoot)\$(ResultsDirectory)\DownloadedEvidence'
-      continueOnError: true
-      displayName: Download all execution evidence artifacts
-    - powershell: |
-        $output = '$(ArtifactRoot)\$(ResultsDirectory)\ConsolidatedReport'
-        New-Item -ItemType Directory -Force -Path $output | Out-Null
-        $reportScript = "$(ArtifactRoot)\tools\generate_consolidated_report.py"
-        if (-not (Test-Path -LiteralPath $reportScript)) {
-          '{"status":"skipped","reason":"report script not included in compiled artifact"}' | Set-Content -LiteralPath (Join-Path $output 'summary.json') -Encoding UTF8
-          Write-Host 'Consolidated report script not found; generated placeholder summary.'
-          exit 0
-        }
-        python $reportScript `
-          --evidence-root "$(ArtifactRoot)\$(ResultsDirectory)\DownloadedEvidence" `
-          --source-root "$(ArtifactRoot)" `
-          --output-dir "$output"
-        if ($LASTEXITCODE -ne 0) { throw 'Consolidated report generation failed' }
-      displayName: Generate Robot-style consolidated HTML report
-    - task: PublishPipelineArtifact@1
-      condition: always()
-      inputs:
-        targetPath: '$(ArtifactRoot)\$(ResultsDirectory)\ConsolidatedReport'
-        artifact: 'consolidated-test-report'
-      displayName: Publish consolidated report
-    - powershell: |
-        if ([string]::IsNullOrWhiteSpace($env:SMTP_HOST) -or
-            [string]::IsNullOrWhiteSpace($env:SMTP_FROM) -or
-            [string]::IsNullOrWhiteSpace($env:SMTP_TO)) {
-          Write-Host 'SMTP variables are not configured; consolidated report remains available as a pipeline artifact.'
-          exit 0
-        }
-        $mailScript = "$(ArtifactRoot)\tools\send_consolidated_report.py"
-        if (-not (Test-Path -LiteralPath $mailScript)) {
-          Write-Host 'SMTP script not found in compiled artifact; skipping email send.'
-          exit 0
-        }
-        python $mailScript `
-          --report-dir "$(ArtifactRoot)\$(ResultsDirectory)\ConsolidatedReport" `
-          --subject "Insurance automation $(Build.BuildNumber)"
-        if ($LASTEXITCODE -ne 0) { throw 'SMTP delivery failed' }
-      env:
-        SMTP_HOST: $(SMTP_HOST)
-        SMTP_PORT: $(SMTP_PORT)
-        SMTP_FROM: $(SMTP_FROM)
-        SMTP_TO: $(SMTP_TO)
-        SMTP_USER: $(SMTP_USER)
-        SMTP_PASSWORD: $(SMTP_PASSWORD)
-        SMTP_SSL: $(SMTP_SSL)
-      displayName: Send consolidated report through SMTP
+        RUN_SINGLE: ${{ parameters.runSingleTestCase }}
+        RUN_SUITE: ${{ parameters.runTestPlanSuite }}
+        RUN_ASSEMBLY: ${{ parameters.runDllOrTags }}
+      displayName: Validate immutable CI selection and execution modes
+  - ${{ if parameters.runSingleTestCase }}:
+    - template: pipelines/templates/execute-tests.yml
+      parameters:
+        mode: SingleCase
+        agents: 1
+  - ${{ if parameters.runTestPlanSuite }}:
+    - template: pipelines/templates/execute-tests.yml
+      parameters:
+        mode: Suite
+        agents: ${{ parameters.agentCount }}
+  - ${{ if parameters.runDllOrTags }}:
+    - template: pipelines/templates/execute-tests.yml
+      parameters:
+        mode: Assembly
+        agents: ${{ parameters.agentCount }}
+  - template: pipelines/templates/collect-results.yml
+    parameters:
+      dependencies:
+      - ValidateInput
+      - ${{ if parameters.runSingleTestCase }}:
+        - RunSingleCase
+      - ${{ if parameters.runTestPlanSuite }}:
+        - RunSuite
+      - ${{ if parameters.runDllOrTags }}:
+        - RunAssembly
+      expected:
+        ${{ if parameters.runSingleTestCase }}:
+          SingleCase: 1
+        ${{ if parameters.runTestPlanSuite }}:
+          Suite: ${{ parameters.agentCount }}
+        ${{ if parameters.runDllOrTags }}:
+          Assembly: ${{ parameters.agentCount }}
