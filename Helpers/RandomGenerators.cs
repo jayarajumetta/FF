@@ -106,6 +106,11 @@ namespace PnCTestAutomation.Helpers
             return $"{TestNamePrefix}{FemaleFirstNames[index]}";
         }
 
+        public static string GenerateRandomMiddleInitial()
+        {
+            return ((char)('A' + Random.Shared.Next(26))).ToString();
+        }
+
         /// <summary>
         /// Generates a random DOB for a person between 21 and 65 years old.
         /// Returns date in MM/dd/yyyy format.
@@ -210,6 +215,99 @@ namespace PnCTestAutomation.Helpers
             string domain = domains[Random.Shared.Next(domains.Length)];
 
             return $"{localPart}@{domain}";
+        }
+
+        public static string ResolveRuntimeTokens(
+            string value,
+            ScenarioContextData contextData)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return value;
+
+            ArgumentNullException.ThrowIfNull(contextData);
+
+            if (ContainsToken(value, "{{firstName}}") ||
+                ContainsToken(value, "{{male}}"))
+            {
+                contextData.ClientFirstName ??= GenerateRandomFirstName();
+                value = ReplaceToken(value, "{{firstName}}", contextData.ClientFirstName);
+                value = ReplaceToken(value, "{{male}}", contextData.ClientFirstName);
+            }
+
+            if (ContainsToken(value, "{{female}}"))
+            {
+                contextData.ClientFirstName ??= GenerateRandomFemaleFirstName();
+                value = ReplaceToken(value, "{{female}}", contextData.ClientFirstName);
+            }
+
+            if (ContainsToken(value, "{{lastName}}") ||
+                ContainsToken(value, "{{random}}"))
+            {
+                contextData.ClientLastName ??= GenerateRandomLastName();
+                value = ReplaceToken(value, "{{lastName}}", contextData.ClientLastName);
+                value = ReplaceToken(value, "{{random}}", contextData.ClientLastName);
+            }
+
+            if (ContainsToken(value, "{{middleInitial}}"))
+            {
+                contextData.ClientMiddleName ??= GenerateRandomMiddleInitial();
+                value = ReplaceToken(
+                    value,
+                    "{{middleInitial}}",
+                    contextData.ClientMiddleName);
+            }
+
+            if (ContainsToken(value, "{{randomDOB}}"))
+            {
+                contextData.ClientDOB ??= GenerateRandomDOB();
+                value = ReplaceToken(value, "{{randomDOB}}", contextData.ClientDOB);
+            }
+
+            if (ContainsToken(value, "{{randomPhone}}"))
+            {
+                contextData.ClientPhoneNumber ??= GenerateRandomPhoneNumber();
+                value = ReplaceToken(
+                    value,
+                    "{{randomPhone}}",
+                    contextData.ClientPhoneNumber);
+            }
+
+            if (ContainsToken(value, "{{randomEmail}}"))
+            {
+                contextData.ClientFirstName ??= GenerateRandomFirstName();
+                contextData.ClientLastName ??= GenerateRandomLastName();
+                contextData.ClientEmail ??= GenerateRandomEmail(
+                    contextData.ClientFirstName,
+                    contextData.ClientLastName);
+                value = ReplaceToken(
+                    value,
+                    "{{randomEmail}}",
+                    contextData.ClientEmail);
+            }
+
+            if (ContainsToken(value, "{{randomSSN}}"))
+            {
+                contextData.SSN ??= GenerateRandomSSN();
+                value = ReplaceToken(value, "{{randomSSN}}", contextData.SSN);
+            }
+
+            return value;
+        }
+
+        private static bool ContainsToken(string value, string token)
+        {
+            return value.Contains(token, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string ReplaceToken(
+            string value,
+            string token,
+            string replacement)
+        {
+            return value.Replace(
+                token,
+                replacement,
+                StringComparison.OrdinalIgnoreCase);
         }
 
     }

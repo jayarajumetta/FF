@@ -36,6 +36,7 @@ unless the scenario has a *different* value for that tag.
 | `@Pilot` | Adapted workflow under contract validation; it is not production-gated until its profile is approved. |
 | `@NonRunnable` | Explicitly blocked by typed profile/configuration requirements and must produce an ignored, never passing, result. |
 | `@NoRetry` | State-changing workflow that cannot enter the transient retry path. |
+| `@SgsImported` | Original SGS feature deliverable retained in `Features/SGS`. It is visible and discoverable but ignored before browser startup until adapted to destination bindings and contracts. |
 
 ### 2. Line of Business (required on every scenario or its parent feature)
 
@@ -163,6 +164,38 @@ dotnet test --filter "TestCategory=ExpertQuote&TestCategory=Smoke"
    one `@ShardN` tag; never combine numbered shard tags.
 8. **Catch-all filters are exclusionary** — use the suite tags plus
    `TestCategory!=Shard1` through `TestCategory!=Shard6`.
+
+## SGS retained feature inventory
+
+All 32 SGS feature deliverables are retained under `Features/SGS`, grouped by
+their original product project. `Resources/Contracts/sgs-feature-inventory.json`
+records the source repository commit, original path, destination path, and
+source/imported SHA-256 values for every feature. Their outlines compile into
+1,203 discoverable test cases.
+
+The only content added during import is the common feature-level header:
+
+```gherkin
+@SgsImported @NonRunnable @NoRetry
+```
+
+The source payload after that header remains byte-for-byte checksummed. These
+files are not silently treated as completed destination automation. The
+`SgsImported` hook ignores them before browser startup until their SGS-specific
+bindings, data, selectors/frames, business outcomes, and shard ownership are
+adapted into the combined framework. Existing adapted pilot features remain
+separate because they exercise destination contracts rather than the original
+SGS binding text.
+
+The JSON files referenced by those features are retained under `Resources/SGS`.
+`Resources/Contracts/sgs-data-inventory.json` records each source checksum and
+the checksum of its imported copy. Business inputs, state variants, and address
+data remain literal. Personal identity and contact inputs do not: names, dates
+of birth, phone numbers, email addresses, and synthetic SSNs use the original
+framework's `RandomGenerators` tokens and are resolved once per scenario into
+`ScenarioContextData`. Usernames and passwords remain external credential
+placeholders. An SGS feature cannot become runnable until its adapter resolves
+these tokens and keeps generated values out of logs and evidence.
 9. **Retries do not change ownership** — a retry uses the original case identity
    and shard and produces one canonical final outcome.
 10. **Business outcome tags require profiles** — missing or ambiguous profile

@@ -1,0 +1,57 @@
+{
+  "_meta": {
+    "schemaVersion": "3.0-state-lineage",
+    "sourceFile": "211_Smoke_Test_Auto_AL.feature",
+    "sourceSha256": "20687c5a13836e75eb1a2e6662bc44b0a6ff51feef58ffe12f386472e738e3d5",
+    "sourceRevision": "55681",
+    "application": "PL_DC",
+    "feature": "Personal Lines Duck Creek - Smoke Test Auto",
+    "representativeIteration": "OR",
+    "note": "Only the attached representative flow is generated.",
+    "sourceConcreteTestCase": "OR",
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
+  },
+  "dimensions": {
+    "state": "Oregon",
+    "stateCode": "OR",
+    "product": "Personal Auto",
+    "productCode": "AUTO",
+    "transaction": "Smoke Test",
+    "effectiveDateMode": "Current",
+    "stateVariant": "OR"
+  },
+  "values": {
+    "Apartment": "19",
+    "City": "MCMINNVILLE",
+    "DOB": "{{randomDOB}}",
+    "First Name": "{{firstName}}",
+    "Last Name": "{{lastName}}",
+    "SSN": "{{randomSSN}}",
+    "State Abbreviation": "OR",
+    "Street Address": "307 SW ADAMS ST",
+    "ZIP": "97128",
+    "agentcode_40": "9997F",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "state": "OR",
+    "state_44": "OREGON",
+    "state_name": "Oregon",
+    "state_variant": "OR",
+    "statecode": "OR",
+    "statename": "OREGON",
+    "txt_best_phone_account_owner_18": "{{randomPhone}}",
+    "txt_email_account_owner_19": "{{randomEmail}}",
+    "writingcompany_48": "American National Property And Casualty Co."
+  },
+  "random": {},
+  "application": {
+    "url": "https://expertquote-qa.americannational.com/expertquote/#/quote",
+    "username": "SYNTHETIC_REPLACE_ME",
+    "password": "SYNTHETIC_REPLACE_ME"
+  },
+  "external": {}
+}

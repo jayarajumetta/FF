@@ -1,0 +1,57 @@
+{
+  "_meta": {
+    "schemaVersion": "3.0-state-lineage",
+    "sourceFile": "212_Smoke_Test_Cycle_AL.feature",
+    "sourceSha256": "11ccf7b372f5203904ce529981c438f925189c7b733ef40d0b15504af2a115b8",
+    "sourceRevision": "48026",
+    "application": "PL_DC",
+    "feature": "Personal Lines Duck Creek - Smoke Test Cycle",
+    "representativeIteration": "MD",
+    "note": "Only the attached representative flow is generated.",
+    "sourceConcreteTestCase": "MD",
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
+  },
+  "dimensions": {
+    "state": "Maryland",
+    "stateCode": "MD",
+    "product": "Motorcycle",
+    "productCode": "CYCLE",
+    "transaction": "Smoke Test",
+    "effectiveDateMode": "Current",
+    "stateVariant": "MD"
+  },
+  "values": {
+    "Apartment": "19",
+    "City": "LUSBY",
+    "DOB": "{{randomDOB}}",
+    "First Name": "{{firstName}}",
+    "Last Name": "{{lastName}}",
+    "SSN": "{{randomSSN}}",
+    "State Abbreviation": "MD",
+    "Street Address": "158 LEASON COVE DR",
+    "ZIP": "20657",
+    "agentcode_40": "9997F",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "state": "MD",
+    "state_44": "MARYLAND",
+    "state_name": "Maryland",
+    "state_variant": "MD",
+    "statecode": "MD",
+    "statename": "Maryland",
+    "txt_best_phone_account_owner_18": "{{randomPhone}}",
+    "txt_email_account_owner_19": "{{randomEmail}}",
+    "writingcompany_48": "American National Property And Casualty Co."
+  },
+  "random": {},
+  "application": {
+    "url": "https://expertquote-qa.americannational.com/expertquote/#/quote",
+    "username": "SYNTHETIC_REPLACE_ME",
+    "password": "SYNTHETIC_REPLACE_ME"
+  },
+  "external": {}
+}

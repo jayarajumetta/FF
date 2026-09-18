@@ -158,6 +158,16 @@ namespace PnCTestAutomation.Hooks
                 _scenarioContext[ScenarioContextData.ContextKey] = new ScenarioContextData();
             }
 
+            if ((_scenarioContext.ScenarioInfo.Tags ?? []).Any(tag =>
+                    tag.Equals("SgsImported", StringComparison.OrdinalIgnoreCase)))
+            {
+                NUnit.Framework.Assert.Ignore(
+                    "Imported SGS feature retained as a business deliverable. " +
+                    "Destination bindings, profiles, selectors, outcomes, and " +
+                    "execution ownership must be adapted before it can run.");
+                return;
+            }
+
             if (ShouldSkipScenarioForDevStateFilter(out var skipReason))
             {
                 NUnit.Framework.Assert.Ignore(skipReason);
