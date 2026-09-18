@@ -311,6 +311,66 @@ public class ControlRuntimeTests
         Assert.That(exception!.Message, Does.Contain("Selected postcondition"));
     }
 
+    [Test]
+    public async Task KeyboardActivationUsesOneNativeKeyAndPreservesScope()
+    {
+        var element = new FakeControlElement();
+        var control = Resolved(element);
+        var evidence = new RecordingEvidenceSink();
+
+        await ImmediateActions(evidence).ActivateAsync(control);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Calls, Is.EqualTo(new[] { "enter" }));
+            Assert.That(evidence.Items.Single().Operation, Is.EqualTo("keyboard-activate"));
+            Assert.That(evidence.Items.Single().Scope, Is.SameAs(control.Scope));
+        });
+    }
+
+    [Test]
+    public void KeyboardActivationRejectsDisabledControlsWithoutSendingAKey()
+    {
+        var element = new FakeControlElement { Enabled = false };
+        Assert.ThrowsAsync<ControlPostconditionException>(async () =>
+            await ImmediateActions().ActivateAsync(Resolved(element)));
+        Assert.That(element.Calls, Is.Empty);
+    }
+
+    [Test]
+    public async Task ModalActionCompletionRequiresDisappearanceNotSelection()
+    {
+        var element = new FakeControlElement
+        {
+            SelectOnClick = false,
+            HideOnClick = true
+        };
+        var control = Resolved(element);
+        var evidence = new RecordingEvidenceSink();
+
+        await ImmediateActions(evidence).ClickAsync(
+            control, ControlExpectation.Visible(false));
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Calls, Is.EqualTo(new[] { "click" }));
+            Assert.That(element.Selected, Is.False);
+            Assert.That(evidence.Items.Single().Scope, Is.SameAs(control.Scope));
+            Assert.That(evidence.Items.Single().Assertion, Is.EqualTo(ControlAssertion.Visible));
+        });
+    }
+
+    [Test]
+    public void VisibleUnchangedModalFailsWithoutReplayingItsAction()
+    {
+        var element = new FakeControlElement { SelectOnClick = false };
+
+        Assert.ThrowsAsync<ControlPostconditionException>(async () =>
+            await ImmediateActions().ClickAsync(
+                Resolved(element), ControlExpectation.Visible(false)));
+        Assert.That(element.Calls, Is.EqualTo(new[] { "click" }));
+    }
+
     private static SemanticControlActions ImmediateActions(
         IControlEvidenceSink? evidenceSink = null) =>
         new(
@@ -416,6 +476,8 @@ public class ControlRuntimeTests
         public bool Enabled { get; set; } = true;
         public bool Selected { get; set; }
         public bool SelectOnClick { get; set; } = true;
+        public bool Visible { get; set; } = true;
+        public bool HideOnClick { get; set; }
 
         public Task ScrollIntoViewAsync(CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
@@ -425,6 +487,14 @@ public class ControlRuntimeTests
             Calls.Add("click");
             if (SelectOnClick)
                 Selected = true;
+            if (HideOnClick)
+                Visible = false;
+            return Task.CompletedTask;
+        }
+
+        public Task PressEnterAsync(CancellationToken cancellationToken = default)
+        {
+            Calls.Add("enter");
             return Task.CompletedTask;
         }
 
@@ -460,6 +530,9 @@ public class ControlRuntimeTests
 
         public Task<bool> IsEnabledAsync(CancellationToken cancellationToken = default) =>
             Task.FromResult(Enabled);
+
+        public Task<bool> IsVisibleAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult(Visible);
 
         public Task<bool> IsSelectedAsync(CancellationToken cancellationToken = default) =>
             Task.FromResult(Selected);

@@ -494,6 +494,41 @@ try {
         $stabilization -notmatch "ValidatedByCatalog"
     ) "Package creation bypasses the source-free stabilization gate."
 
+    $roles = @("Architecture/David", "QA", "Security/Operations", "DevOps/ADO")
+    $enabled = [PSCustomObject]@{
+        workflowId = "enabled-regression"
+        state = "Runnable"
+        profile = @{ status = "Approved" }
+        selectorFrameStatus = "Approved"
+        businessOutcomeStatus = "Approved"
+        adoMappingStatus = "Mapped"
+        blockers = @()
+        approvalEvidence = @($roles | ForEach-Object {
+            @{ role = $_; status = "Approved"; required = "Recorded approval evidence" }
+        })
+    }
+    Test-WorkflowActivation -Workflow $enabled -RequiredRoles $roles
+    Assert-True ($true) "Runnable workflows with complete evidence must be accepted."
+    $enabled.state = "Gated"
+    Assert-Throws {
+        Test-WorkflowActivation -Workflow $enabled -RequiredRoles $roles
+    } "without explicit blockers"
+    $enabled.state = "Runnable"
+    $enabled.profile.status = "NonRunnable"
+    Assert-Throws {
+        Test-WorkflowActivation -Workflow $enabled -RequiredRoles $roles
+    } "without all approvals"
+    $enabled.profile.status = "Approved"
+    $enabled.blockers = @(@{ owner = "Nobody"; reason = "Unowned" })
+    Assert-Throws {
+        Test-WorkflowActivation -Workflow $enabled -RequiredRoles $roles
+    } "unowned blocker"
+    $enabled.blockers = @()
+    $enabled.approvalEvidence[0].role = "QA"
+    Assert-Throws {
+        Test-WorkflowActivation -Workflow $enabled -RequiredRoles $roles
+    } "duplicate approval ownership"
+
     Write-Host "CI contract tests passed: $script:Passed assertions."
 }
 finally {

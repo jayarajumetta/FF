@@ -576,6 +576,53 @@ function Merge-TrxResults {
     }
 }
 
+function Test-WorkflowActivation {
+    param(
+        [Parameter(Mandatory)][object]$Workflow,
+        [Parameter(Mandatory)][string[]]$RequiredRoles
+    )
+
+    $id = [string]$Workflow.workflowId
+    $blockers = @($Workflow.blockers)
+    $approvals = @($Workflow.approvalEvidence)
+    $roles = @($approvals | ForEach-Object { [string]$_.role })
+    if ($roles.Count -ne $RequiredRoles.Count -or
+        @($roles | Sort-Object -Unique).Count -ne $RequiredRoles.Count -or
+        @($RequiredRoles | Where-Object { $roles -notcontains $_ }).Count -ne 0) {
+        throw "Workflow '$id' has missing or duplicate approval ownership."
+    }
+    foreach ($approval in $approvals) {
+        if ([string]::IsNullOrWhiteSpace([string]$approval.required) -or
+            [string]$approval.status -notin @("Pending", "Approved")) {
+            throw "Workflow '$id' has invalid approval evidence."
+        }
+    }
+    foreach ($blocker in $blockers) {
+        if ($RequiredRoles -notcontains [string]$blocker.owner -or
+            [string]::IsNullOrWhiteSpace([string]$blocker.reason)) {
+            throw "Workflow '$id' has an unowned blocker or missing blocker evidence."
+        }
+    }
+    if ([string]$Workflow.state -eq "Runnable") {
+        if ([string]$Workflow.profile.status -ne "Approved" -or
+            [string]$Workflow.selectorFrameStatus -ne "Approved" -or
+            [string]$Workflow.businessOutcomeStatus -ne "Approved" -or
+            [string]$Workflow.adoMappingStatus -ne "Mapped" -or
+            $blockers.Count -ne 0 -or
+            @($approvals | Where-Object status -ne "Approved").Count -ne 0) {
+            throw "Workflow '$id' is Runnable without all approvals."
+        }
+    }
+    elseif ([string]$Workflow.state -eq "Gated") {
+        if ($blockers.Count -eq 0) {
+            throw "Workflow '$id' is Gated without explicit blockers."
+        }
+    }
+    else {
+        throw "Workflow '$id' has an unsupported readiness state."
+    }
+}
+
 Export-ModuleMember -Function @(
     "Get-FileSha256",
     "Get-PackageInventory",
@@ -586,5 +633,6 @@ Export-ModuleMember -Function @(
     "Test-ShardOwnershipSets",
     "Read-TrxResults",
     "Get-RetryDecision",
-    "Merge-TrxResults"
+    "Merge-TrxResults",
+    "Test-WorkflowActivation"
 )

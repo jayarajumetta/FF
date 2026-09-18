@@ -162,6 +162,9 @@ namespace PnCTestAutomation.Controls
         public Task ClickAsync(CancellationToken cancellationToken = default) =>
             _locator.ClickAsync();
 
+        public Task PressEnterAsync(CancellationToken cancellationToken = default) =>
+            _locator.PressAsync("Enter");
+
         public Task FillAsync(
             string value,
             CancellationToken cancellationToken = default) =>
@@ -184,6 +187,9 @@ namespace PnCTestAutomation.Controls
 
         public Task<bool> IsEnabledAsync(CancellationToken cancellationToken = default) =>
             _locator.IsEnabledAsync();
+
+        public Task<bool> IsVisibleAsync(CancellationToken cancellationToken = default) =>
+            _locator.IsVisibleAsync();
 
         public Task<bool> IsSelectedAsync(CancellationToken cancellationToken = default) =>
             _locator.EvaluateAsync<bool>(

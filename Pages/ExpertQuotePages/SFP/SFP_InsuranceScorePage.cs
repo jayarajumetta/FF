@@ -44,10 +44,12 @@ namespace PnCTestAutomation.Pages
 
             try
             {
-                await ClickWithApplicationResponseAsync(
+                // Focus changes can move this button between pointerdown and pointerup.
+                // Native keyboard activation avoids losing the click during that reflow.
+                await ActivateWithApplicationResponseAsync(
                     consentControl,
                     "Insurance Score Consent",
-                    postcondition: null);
+                    () => SemanticControls.ActivateAsync(consentControl));
 
                 var decisionDefinition = ControlDefinition.ByTestId(
                     $"Insurance Score Consent {normalizedDecision}",
@@ -58,12 +60,16 @@ namespace PnCTestAutomation.Pages
                 Console.WriteLine(
                     $"[InsuranceScore] Found {normalizedDecision} control in {decisionControl.Scope.Description}.");
 
-                await ClickWithApplicationResponseAsync(
+                await ActivateWithApplicationResponseAsync(
                     decisionControl,
                     $"Insurance Score Consent {normalizedDecision}",
-                    ControlExpectation.Selected());
+                    () => SemanticControls.ClickAsync(decisionControl));
 
                 await WaitForSpinnerAsync();
+                // Accept/Decline are modal actions, not selectable toggles.
+                await SemanticControls.AssertAsync(
+                    decisionControl,
+                    ControlExpectation.Visible(false));
             }
             catch (Exception ex) when (
                 ex is TimeoutException or
@@ -77,14 +83,14 @@ namespace PnCTestAutomation.Pages
             }
         }
 
-        private async Task ClickWithApplicationResponseAsync(
+        private async Task ActivateWithApplicationResponseAsync(
             ResolvedControl control,
             string controlName,
-            ControlExpectation postcondition)
+            Func<Task> activate)
         {
-            var request = await TryClickAndWaitForRequestAsync(
+            var request = await TryActivateAndWaitForRequestAsync(
                 control,
-                () => SemanticControls.ClickAsync(control, postcondition),
+                activate,
                 timeoutMs: 5000);
 
             if (request == null)
@@ -105,9 +111,9 @@ namespace PnCTestAutomation.Pages
             }
         }
 
-        private async Task<IRequest> TryClickAndWaitForRequestAsync(
+        private async Task<IRequest> TryActivateAndWaitForRequestAsync(
             ResolvedControl control,
-            Func<Task> click,
+            Func<Task> activate,
             int timeoutMs)
         {
             var pages = _page.Context.Pages;
@@ -120,7 +126,7 @@ namespace PnCTestAutomation.Pages
             try
             {
                 return await pages[control.Scope.PageIndex].RunAndWaitForRequestAsync(
-                    click,
+                    activate,
                     request => IsDuckCreekProductRequest(request.Url),
                     new() { Timeout = timeoutMs });
             }

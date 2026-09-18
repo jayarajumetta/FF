@@ -33,6 +33,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         private readonly IQuoteHandoff _quoteHandoff;
         private readonly IBusinessOutcomeContext _businessOutcomeContext;
         private readonly IBusinessOutcomeVerifier _businessOutcomes;
+        private readonly IArtifactCaptureService _artifactCapture;
 
         public SFP_FinalizationSteps(
             PlaywrightContext context,
@@ -41,7 +42,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             IConfiguration configuration,
             IQuoteHandoff quoteHandoff,
             IBusinessOutcomeContext businessOutcomeContext,
-            IBusinessOutcomeVerifier businessOutcomes)
+            IBusinessOutcomeVerifier businessOutcomes,
+            IArtifactCaptureService artifactCapture)
         {
             _context = context;
             _scenarioContext = scenarioContext;
@@ -52,6 +54,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             _quoteHandoff = quoteHandoff;
             _businessOutcomeContext = businessOutcomeContext;
             _businessOutcomes = businessOutcomes;
+            _artifactCapture = artifactCapture;
         }
 
         [When("user runs Insurance Score")]
@@ -177,6 +180,12 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 "pricing");
 
             var rawPremium = await pricingPage.GetAnnualPremiumTextAsync();
+            await _artifactCapture.CaptureAsync(
+                ArtifactKind.Screenshot,
+                "pricing-business-check",
+                ".png",
+                path => _context.Page.ScreenshotAsync(
+                    new() { Path = path, FullPage = true }));
             await _businessOutcomes.VerifyPremiumAsync(rawPremium);
             Console.WriteLine(
                 "[BusinessOutcome] Quote identity and premium matched the approved profile.");
@@ -447,13 +456,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             }
 
             await clientSearchPage.SearchForClientAsync(quoteNumber);
-            var displayedQuote =
-                await clientSearchPage.GetExactQuoteIdentityAsync(quoteNumber);
-            await _businessOutcomes.VerifyQuoteIdentityAsync(
-                quoteNumber,
-                displayedQuote,
-                "save-search-result");
-            await clientSearchPage.OpenExactQuoteAsync(quoteNumber);
+            // ExpertQuote loads exact quote-number searches directly, without a result table.
+            await new SFP_PolicyDetailsPage(page).EnsureOnPolicyDetailsPageAsync();
             var reopenedQuote =
                 await SFPSteps.ExtractQuoteNumberFromPageAsync(_context.Page);
             await _businessOutcomes.VerifyQuoteIdentityAsync(

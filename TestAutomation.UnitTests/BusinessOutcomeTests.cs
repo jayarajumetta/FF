@@ -1,8 +1,10 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using NUnit.Framework;
 using PnCTestAutomation.Artifacts;
 using PnCTestAutomation.BusinessOutcomes;
 using PnCTestAutomation.Models;
+using PnCTestAutomation.Services;
 
 namespace PnCTestAutomation.UnitTests;
 
@@ -177,6 +179,58 @@ public class BusinessOutcomeTests
                     "AL").IsRunnable,
                 Is.False);
         });
+    }
+
+    [Test]
+    public void LocalAlabamaProfileReusesLegacyBaselineWithoutEnablingOtherStates()
+    {
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            Converters = { new JsonStringEnumConverter() }
+        };
+        var catalog = JsonSerializer.Deserialize<ExpectedOutcomeCatalog>(
+            File.ReadAllText(Path.Combine(
+                AppContext.BaseDirectory, "Resources", "ExpectedOutcomes",
+                "sfp-basic-al-local.json")), options)!;
+        var provider = new ExpectedOutcomeProfileProvider(
+            catalog,
+            () => new DateTimeOffset(2026, 9, 18, 13, 0, 0, TimeSpan.Zero));
+        var resolution = provider.ResolvePreflight("sfp-basic", "qa", "AL");
+        var profile = resolution.Profile;
+        var baseline = new FormsValidationService(new DuckCreekFormsConfig
+        {
+            BaselineVersions = { ["SFP:BASIC"] = profile.Forms!.BaselineVersion }
+        }).LoadExpectedBaseline("SFP", "AL", "BASIC");
+        Assert.Multiple(() =>
+        {
+            Assert.That(resolution.IsRunnable, Is.True);
+            Assert.That(profile.Premium!.ExpectedAmount, Is.EqualTo(1540m));
+            Assert.That(profile.Premium.Tolerance, Is.EqualTo(0.01m));
+            Assert.That(profile.Forms.BaselineChecksum, Is.EqualTo(baseline.Checksum));
+            Assert.That(profile.Forms.BaselineId, Is.EqualTo(baseline.BaselineId));
+            Assert.That(baseline.Entries, Is.Not.Empty);
+            Assert.That(profile.Transmission!.Mode,
+                Is.EqualTo(TransmissionExpectationMode.AvailabilityOnly));
+            Assert.That(() => provider.ResolvePreflight("sfp-basic", "qa", "AR"),
+                Throws.TypeOf<BusinessOutcomeConfigurationException>());
+            Assert.That(() => provider.ResolvePreflight("sfp-country-estate", "qa", "AL"),
+                Throws.TypeOf<BusinessOutcomeConfigurationException>());
+        });
+    }
+
+    [Test]
+    public void FormsBaselineVersionSupportsEnvironmentSafeKeys()
+    {
+        var config = new DuckCreekFormsConfig
+        {
+            BaselineVersions = { ["SFP_BASIC"] = "development-b10b339" }
+        };
+
+        var baseline = new FormsValidationService(config)
+            .LoadExpectedBaseline("SFP", "AL", "BASIC");
+
+        Assert.That(baseline.Version, Is.EqualTo("development-b10b339"));
     }
 
     [Test]

@@ -96,6 +96,13 @@ the contracts owned here.
 - Semantic operations distinguish click, fill, select, and toggle. Each
   operation verifies the corresponding enabled, selected, checked, or value
   state instead of treating visibility as success.
+- Modal action buttons such as Insurance Score Accept/Decline are not toggles.
+  Their completion requires an application response and disappearance of the
+  resolved decision control; `Visible(false)` never substitutes for selection.
+- Native button keyboard activation is a single trusted Enter key, with the
+  same enabled-state, scope, and evidence contracts as click. Insurance Score
+  consent uses it because focus-related reflow can change the pointer target
+  between mouse-down and mouse-up. It is not a click retry or DOM event injection.
 - Capture supports value, checked, and selected semantics.
 - A resolved frame scope must be passed through to the action that uses it and
   recorded in redacted runtime-locator evidence. Nested depth and the logical

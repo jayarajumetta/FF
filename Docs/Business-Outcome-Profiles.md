@@ -58,6 +58,78 @@ profiles for each runnable environment/state/company combination:
 The legacy `ExpectedPremiums` values were intentionally removed because they
 did not carry QA provenance, tolerance, validity, or integrity metadata.
 
+## Local SFP Basic Alabama verification
+
+`Resources\ExpectedOutcomes\sfp-basic-al-local.json` is an explicit opt-in for
+one QA case, not the default release catalog. It records the user's approval
+to reuse the original Alabama expectation from `origin/Development`: USD
+1540.00 with a 0.01 absolute tolerance, and the existing `SFP:BASIC` forms
+baseline. The original feature tables still supply the policy inputs. They
+have not been replaced with generated data or migrated into this outcome JSON.
+
+Set `EQ_USERNAME`, `EQ_PASSWORD`, `CLAS_USERNAME`, `CLAS_PASSWORD`,
+`DUCKCREEK_USERNAME`, and `DUCKCREEK_PASSWORD` in the process environment using
+your local secret source, then run from the repository root:
+
+```powershell
+.\Scripts\run-sfp-basic-al.ps1 -InstallBrowser
+```
+
+If the credentials are in Azure Key Vault, use the Key Vault wrapper instead.
+It reads the required secrets through the signed-in Azure CLI account, sets
+them only for the child test process, and restores the caller environment:
+
+```powershell
+az login
+.\Scripts\run-sfp-basic-al-keyvault.ps1 -VaultName "<vault-name>" -InstallBrowser
+```
+
+The wrapper maps these exact secret names:
+
+| Key Vault secret | Runtime variable |
+|------------------|------------------|
+| `pnc-testautomation-credentials-username` | `EQ_USERNAME` |
+| `pnc-testautomation-credentials-password` | `EQ_PASSWORD` |
+| `pnc-test-automation-duckcreek-username` | `DUCKCREEK_USERNAME` |
+| `pnc-test-automation-duckcreek-password` | `DUCKCREEK_PASSWORD` |
+| `pnc-test-automation-clas-username` | `CLAS_USERNAME` |
+| `pnc-test-automation-clas-password` | `CLAS_PASSWORD` |
+
+The script performs a locked restore and Release build, installs Chromium when
+requested, and executes exactly the Alabama Basic case. Subsequent runs can use
+`-NoBuild` after rebuilding any changed code. It does not require DataPool,
+Azure DevOps credentials, or Test Plans mappings for this local verification.
+It temporarily selects the local profile, restores the caller's environment,
+does not retry, and fails if the expected case is missing, skipped, or failed.
+Results and scenario evidence are written to a unique `TestResults\SfpBasicAl-*`
+directory, or to the empty directory supplied with `-ResultsDirectory`.
+
+The profile authorizes regression comparison, not a claim that the current
+application already passes. It expires on October 18, 2026; renewal or a changed
+expectation requires an explicitly reviewed profile and recomputed checksum.
+The forms checksum pins the actual baseline file bytes, including line endings.
+Do not silently update it, premium, or forms to match an unexpected live result.
+`AvailabilityOnly` checks the transmit option without transmitting a policy.
+Other SFP states, Country Estate, standalone forms, and SGS pilots remain gated
+by their existing default contracts.
+
+### Verified boundary on September 18, 2026
+
+The local Alabama run applied the original feature inputs, completed Insurance
+Score and billing, and verified the quote identity and the exact USD 1540.00
+premium. It then failed at the external QA eChecklist application with
+`EChecklist/Error/ChecklistNotFound` after SSO. Checklist completion, transmit
+availability, and Forms validation were not reached; the full case is **not
+passing**. Do not skip those steps or weaken the baseline to make it green.
+
+Source inspection confirms that the Checklist button opens the Duck-provided
+`PolicyPrivate.ChecklistURLNoURL` under the configured QA eChecklist launch URL;
+it does not create a checklist. The upstream checklist record and environment
+mapping must be verified in the test eChecklist store. The accessible ExpertQuote
+`develop` and `qa` refs describe an older UI than the deployed bundles, so their
+commit IDs do not establish QA deployment parity. Ag-Comm Projects contains no
+product implementation with which to verify checklist generation.
+
 ## Evidence
 
 Business assertions write redacted JSON under the scenario-owned

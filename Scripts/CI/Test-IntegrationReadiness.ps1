@@ -314,7 +314,7 @@ foreach ($workflow in $workflows) {
     } else {
         throw "Workflow '$workflowId' has an unsupported retry policy."
     }
-    if ([string]$workflow.selectorFrameStatus -eq "Contracted") {
+    if ([string]$workflow.selectorFrameStatus -in @("Contracted", "Approved")) {
         Assert-True (@($module.blockedSelectors).Count -eq 0) (
             "Workflow '$workflowId' claims contracted selectors while module blockers remain.")
     } elseif ([string]$workflow.selectorFrameStatus -eq "Blocked") {
@@ -446,39 +446,7 @@ foreach ($workflow in $workflows) {
         "Workflow '$workflowId' has no required business assertions.")
     $blockers = @($workflow.blockers)
     $approvals = @($workflow.approvalEvidence)
-    Assert-True ($blockers.Count -gt 0) (
-        "Workflow '$workflowId' has no explicit blockers.")
-    Assert-ExactSet `
-        -Expected $requiredRoles `
-        -Actual @($approvals.role) `
-        -Description "Workflow '$workflowId' approval ownership"
-    foreach ($approval in $approvals) {
-        Assert-True (-not [string]::IsNullOrWhiteSpace(
-            [string]$approval.required)) (
-            "Workflow '$workflowId' has an approval gate without evidence.")
-        Assert-True (([string]$approval.status) -in
-            @("Pending", "Approved")) (
-            "Workflow '$workflowId' has an invalid approval status.")
-    }
-    foreach ($blocker in $blockers) {
-        Assert-True ($requiredRoles -contains [string]$blocker.owner) (
-            "Workflow '$workflowId' blocker '$($blocker.gate)' is unowned.")
-        Assert-True (-not [string]::IsNullOrWhiteSpace(
-            [string]$blocker.reason)) (
-            "Workflow '$workflowId' blocker '$($blocker.gate)' lacks evidence.")
-    }
-    if ([string]$workflow.state -eq "Runnable") {
-        Assert-True (
-            [string]$workflow.profile.status -eq "Approved" -and
-            [string]$workflow.selectorFrameStatus -eq "Approved" -and
-            [string]$workflow.businessOutcomeStatus -eq "Approved" -and
-            [string]$workflow.adoMappingStatus -eq "Mapped" -and
-            $blockers.Count -eq 0 -and
-            @($approvals | Where-Object status -ne "Approved").Count -eq 0
-        ) "Workflow '$workflowId' is Runnable without all approvals."
-    } elseif ([string]$workflow.state -ne "Gated") {
-        throw "Workflow '$workflowId' has an unsupported readiness state."
-    }
+    Test-WorkflowActivation -Workflow $workflow -RequiredRoles $requiredRoles
 
     $workflowReports.Add([PSCustomObject][ordered]@{
         workflowId = $workflowId

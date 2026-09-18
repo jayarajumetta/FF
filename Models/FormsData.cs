@@ -194,6 +194,14 @@ namespace PnCTestAutomation.Models
                 return version;
             }
 
+            var environmentSafeKey = $"{lob}_{testCase}";
+            if (BaselineVersions != null &&
+                BaselineVersions.TryGetValue(environmentSafeKey, out version) &&
+                !string.IsNullOrWhiteSpace(version))
+            {
+                return version;
+            }
+
             throw new InvalidOperationException(
                 $"No forms baseline version is configured for '{key}'.");
         }

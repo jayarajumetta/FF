@@ -26,23 +26,41 @@ namespace PnCTestAutomation.Controls
                 throw new ArgumentOutOfRangeException(nameof(pollInterval));
         }
 
-        public async Task ClickAsync(
+        public Task ClickAsync(
             ResolvedControl control,
             ControlExpectation? postcondition = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default) =>
+            PerformActivationAsync(
+                control, () => control.Element.ClickAsync(cancellationToken),
+                "click", postcondition, cancellationToken);
+
+        public Task ActivateAsync(
+            ResolvedControl control,
+            ControlExpectation? postcondition = null,
+            CancellationToken cancellationToken = default) =>
+            PerformActivationAsync(
+                control, () => control.Element.PressEnterAsync(cancellationToken),
+                "keyboard-activate", postcondition, cancellationToken);
+
+        private async Task PerformActivationAsync(
+            ResolvedControl control,
+            Func<Task> activate,
+            string operation,
+            ControlExpectation? postcondition,
+            CancellationToken cancellationToken)
         {
             await WaitForExpectedStateAsync(
                 control,
                 ControlExpectation.Enabled(),
                 cancellationToken);
             await control.Element.ScrollIntoViewAsync(cancellationToken);
-            await control.Element.ClickAsync(cancellationToken);
+            await activate();
 
             if (postcondition != null)
                 await WaitForExpectedStateAsync(control, postcondition, cancellationToken);
 
             var verified = postcondition ?? ControlExpectation.Enabled();
-            await RecordAsync(control, "click", verified.Assertion, cancellationToken);
+            await RecordAsync(control, operation, verified.Assertion, cancellationToken);
         }
 
         public async Task FillAsync(
@@ -163,6 +181,9 @@ namespace PnCTestAutomation.Controls
                     bool.Parse(expectation.ExpectedValue),
                 ControlAssertion.Enabled =>
                     await element.IsEnabledAsync(cancellationToken) ==
+                    bool.Parse(expectation.ExpectedValue),
+                ControlAssertion.Visible =>
+                    await element.IsVisibleAsync(cancellationToken) ==
                     bool.Parse(expectation.ExpectedValue),
                 _ => throw new ArgumentOutOfRangeException(nameof(expectation))
             };

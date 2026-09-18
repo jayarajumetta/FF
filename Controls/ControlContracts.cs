@@ -149,11 +149,13 @@ namespace PnCTestAutomation.Controls
     {
         Task ScrollIntoViewAsync(CancellationToken cancellationToken = default);
         Task ClickAsync(CancellationToken cancellationToken = default);
+        Task PressEnterAsync(CancellationToken cancellationToken = default);
         Task FillAsync(string value, CancellationToken cancellationToken = default);
         Task SelectAsync(string value, CancellationToken cancellationToken = default);
         Task SetCheckedAsync(bool value, CancellationToken cancellationToken = default);
         Task<bool> IsCheckedAsync(CancellationToken cancellationToken = default);
         Task<bool> IsEnabledAsync(CancellationToken cancellationToken = default);
+        Task<bool> IsVisibleAsync(CancellationToken cancellationToken = default);
         Task<bool> IsSelectedAsync(CancellationToken cancellationToken = default);
         Task<string> GetValueAsync(CancellationToken cancellationToken = default);
         Task<string> GetSelectedValueAsync(CancellationToken cancellationToken = default);
@@ -222,7 +224,8 @@ namespace PnCTestAutomation.Controls
         SelectedValue,
         Checked,
         Selected,
-        Enabled
+        Enabled,
+        Visible
     }
 
     public sealed record ControlExpectation(
@@ -243,6 +246,9 @@ namespace PnCTestAutomation.Controls
 
         public static ControlExpectation Enabled(bool expected = true) =>
             new(ControlAssertion.Enabled, expected.ToString());
+
+        public static ControlExpectation Visible(bool expected = true) =>
+            new(ControlAssertion.Visible, expected.ToString());
     }
 
     public sealed record ControlEvidence(
@@ -261,6 +267,11 @@ namespace PnCTestAutomation.Controls
 
     public interface ISemanticControlActions
     {
+        Task ActivateAsync(
+            ResolvedControl control,
+            ControlExpectation? postcondition = null,
+            CancellationToken cancellationToken = default);
+
         Task ClickAsync(
             ResolvedControl control,
             ControlExpectation? postcondition = null,

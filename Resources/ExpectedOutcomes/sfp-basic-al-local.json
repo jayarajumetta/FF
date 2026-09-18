@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "profileId": "sfp-basic-qa-al-legacy",
+      "version": "1.0.0",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "AL",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-authorized local verification of origin/Development a86a202c2d39f7c266d84c7a3a9bfde4fa493c88: appsettings.json ExpectedPremiums:SFP:AL and Resources/ExpectedForms/SFP/SFP.json. This is a regression expectation, not evidence of a current application pass.",
+        "approvedBy": "PA3402 (local baseline reuse requested 2026-09-18)",
+        "approvedAtUtc": "2026-09-18T12:44:42.1790000Z",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000Z"
+      },
+      "premium": {
+        "expectedAmount": 1540.00,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-b10b339",
+        "baselineChecksum": "202130B85581216A4917FC1B0ED6A0F2E0054B7D3631FA06E8BB6581C5753855",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [ "1" ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "AAE5DBBDA9A58AFE48A2B9AA7B2A10D4A44FBF3AEA9C3D56A3B6DA52178073CF"
+    }
+  ]
+}

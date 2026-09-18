@@ -351,6 +351,15 @@ public class ExpertQuoteBopPilotTests
     {
         public List<string> Operations { get; } = [];
 
+        public Task ActivateAsync(
+            ResolvedControl control,
+            ControlExpectation? postcondition = null,
+            CancellationToken cancellationToken = default)
+        {
+            Operations.Add($"keyboard-activate:{control.Definition.Name}");
+            return Task.CompletedTask;
+        }
+
         public Task ClickAsync(
             ResolvedControl control,
             ControlExpectation? postcondition = null,
@@ -400,6 +409,10 @@ public class ExpertQuoteBopPilotTests
 
     private sealed class StubElement : IControlElement
     {
+        public Task PressEnterAsync(
+            CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
+
         public Task ScrollIntoViewAsync(
             CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
@@ -422,6 +435,9 @@ public class ExpertQuoteBopPilotTests
             CancellationToken cancellationToken = default) =>
             Task.FromResult(false);
         public Task<bool> IsEnabledAsync(
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(true);
+        public Task<bool> IsVisibleAsync(
             CancellationToken cancellationToken = default) =>
             Task.FromResult(true);
         public Task<bool> IsSelectedAsync(
