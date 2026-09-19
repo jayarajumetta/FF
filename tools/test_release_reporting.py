@@ -39,6 +39,76 @@ class ReleaseReportingTests(unittest.TestCase):
             (directory / "trace.zip").write_bytes(b"trace fixture")
         return results
 
+    def test_video_policy_defaults_and_boolean_validation(self):
+        from generate_consolidated_report import video_policy, exclude_video
+        self.assertEqual((True, True), video_policy(self.root))
+        config = self.root / "config"
+        config.mkdir()
+        (config / "framework.json").write_text(json.dumps({"reporting": {"excludeVideos": False}}))
+        self.assertEqual((False, True), video_policy(self.root))
+        self.assertTrue(exclude_video((True, False), "FAIL"))
+        self.assertTrue(exclude_video((False, True), "PASS"))
+        self.assertFalse(exclude_video((False, True), "FAIL"))
+        (config / "framework.json").write_text(json.dumps({"reporting": {"excludeVideos": "false"}}))
+        with self.assertRaisesRegex(ValueError, "must be booleans"):
+            video_policy(self.root)
+
+    def test_video_exclusion_archive_and_report_matrix(self):
+        import generate_consolidated_report as generator
+        for policy, retained in (((True, True), ()), ((True, False), ()),
+                                 ((False, True), (1,)), ((False, False), (1, 2))):
+            with self.subTest(policy=policy):
+                name = f"video-{policy[0]}-{policy[1]}"
+                results = self.evidence(name, ("FAIL", "PASS"))
+                for number in (1, 2):
+                    directory = results / "Artifacts" / "CommercialLines.DuckCreek.Tests" / f"case-{number}"
+                    video = directory / f"attempt-{number}.webm"
+                    video.write_bytes(b"video fixture")
+                    (directory / "execution.log").write_text("compressed log\n" * 100)
+                    result_path = directory / "scenario-result.json"
+                    result = json.loads(result_path.read_text())
+                    result["artifacts"]["video"] = video.name
+                    result_path.write_text(json.dumps(result))
+                    nested = io.BytesIO()
+                    with zipfile.ZipFile(nested, "w") as archive:
+                        archive.writestr(video.name, b"nested video")
+                        archive.writestr("execution.log", "nested log")
+                    with zipfile.ZipFile(directory / "evidence-bundle.zip", "w") as archive:
+                        archive.writestr("nested.zip", nested.getvalue())
+                    runner = results / "Runner" / str(number)
+                    runner.mkdir(parents=True)
+                    shutil.copyfile(video, runner / video.name)
+                output = self.root / name / "handoff"
+                manifest = json.loads(reporting.pack(results, output, IDENTITY, 1, 1, policy=policy).read_text())
+                with zipfile.ZipFile(output / "agent-1.zip") as archive:
+                    videos = [n for n in archive.namelist() if n.endswith(".webm")]
+                    self.assertEqual(2 * len(retained), len(videos))
+                    for number in (1, 2):
+                        prefix = f"Artifacts/CommercialLines.DuckCreek.Tests/case-{number}/"
+                        self.assertEqual(zipfile.ZIP_DEFLATED, archive.getinfo(prefix + "execution.log").compress_type)
+                        with zipfile.ZipFile(io.BytesIO(archive.read(prefix + "evidence-bundle.zip"))) as bundle:
+                            with zipfile.ZipFile(io.BytesIO(bundle.read("nested.zip"))) as nested_zip:
+                                self.assertEqual(number in retained, f"attempt-{number}.webm" in nested_zip.namelist())
+                                self.assertIn("execution.log", nested_zip.namelist())
+                self.assertEqual(2, manifest["scenarioCount"])
+                final_archive = self.root / (name + "-final.zip")
+                with patch.object(reporting, "video_policy", return_value=policy):
+                    reporting.archive_bundle(results / "Artifacts", final_archive)
+                with zipfile.ZipFile(final_archive) as archive:
+                    self.assertEqual(len(retained), sum(n.endswith(".webm") for n in archive.namelist()))
+                    self.assertEqual(2, sum(n.endswith("execution.log") for n in archive.namelist()))
+                source = self.root / (name + "-source")
+                (source / "config").mkdir(parents=True)
+                (source / "config/framework.json").write_text(json.dumps({"reporting": {
+                    "excludeVideos": policy[0], "excludePassedVideos": policy[1]}}))
+                report = self.root / (name + "-report")
+                with contextlib.redirect_stdout(io.StringIO()):
+                    generator.main(["--evidence-root", str(results / "Artifacts"), "--source-root", str(source), "--output-dir", str(report)])
+                html = (report / "report.html").read_text(encoding="utf-8")
+                self.assertEqual(len(retained), html.count("<video controls"))
+                for number in (1, 2):
+                    self.assertTrue((results / "Artifacts" / "CommercialLines.DuckCreek.Tests" / f"case-{number}" / f"attempt-{number}.webm").exists())
+
     def manifest(self, position, total, attempts=("PASS",)):
         results = self.evidence(f"agent{position}", attempts)
         output = self.root / f"parts-{position}"
@@ -62,6 +132,67 @@ class ReleaseReportingTests(unittest.TestCase):
             self.assertIn("../Artifacts/agent-1/Artifacts/CommercialLines.DuckCreek.Tests/case-1/trace.zip", report_html)
             summary = json.loads(zipped.read("ConsolidatedReport/summary.json"))
         self.assertEqual(1, summary["total"])
+
+    def test_report_ignores_runner_attachment_copies_but_archives_them(self):
+        results = self.evidence("copied", ("FAIL", "PASS"))
+        original = results / "Artifacts" / "CommercialLines.DuckCreek.Tests" / "case-1"
+        for name in ("Runner", "NUnit", "NUnitWork"):
+            shutil.copytree(original, results / name / "attachments" / "case-1")
+        parts = self.root / "parts"
+        manifest = json.loads(reporting.pack(results, parts, IDENTITY, 1, 1).read_text())
+        self.assertEqual(2, manifest["scenarioCount"])
+        bundle = self.root / "bundle"
+        evidence = bundle / "Artifacts"
+        reporting.unpack(manifest, parts, evidence / "agent-1")
+        with contextlib.redirect_stdout(io.StringIO()):
+            archive = reporting.generate(evidence, bundle, ROOT)
+        with zipfile.ZipFile(archive) as zipped:
+            self.assertEqual(5, sum(n.endswith("scenario-result.json") for n in zipped.namelist()))
+            summary = json.loads(zipped.read("ConsolidatedReport/summary.json"))
+            self.assertEqual(1, summary["total"])
+            self.assertIn("../Artifacts/agent-1/Artifacts/CommercialLines.DuckCreek.Tests/case-1/trace.zip",
+                          zipped.read("ConsolidatedReport/report.html").decode())
+
+    def test_report_rejects_duplicate_canonical_attempts_with_paths(self):
+        results = self.evidence("conflict")
+        original = results / "Artifacts" / "CommercialLines.DuckCreek.Tests" / "case-1"
+        shutil.copytree(original, original.parent / "conflicting-copy")
+        parts = self.root / "parts"
+        manifest = json.loads(reporting.pack(results, parts, IDENTITY, 1, 1).read_text())
+        bundle = self.root / "bundle"
+        evidence = bundle / "Artifacts"
+        reporting.unpack(manifest, parts, evidence / "agent-1")
+        with self.assertRaises(ValueError) as error:
+            reporting.generate(evidence, bundle, ROOT)
+        self.assertIn("Duplicate attempt numbers", str(error.exception))
+        self.assertIn("conflicting-copy", str(error.exception))
+        self.assertIn("case-1", str(error.exception))
+
+    def test_report_handles_empty_agent_and_populated_agent(self):
+        bundle = self.root / "bundle"
+        evidence = bundle / "Artifacts"
+        for position, attempts in ((1, ()), (2, ("FAIL", "PASS"))):
+            results = self.root / f"results-{position}"
+            if attempts:
+                results = self.evidence(f"results-{position}", attempts)
+            else:
+                results.mkdir()
+            parts = self.root / f"parts-{position}"
+            manifest = json.loads(reporting.pack(results, parts, IDENTITY, position, 2).read_text())
+            reporting.unpack(manifest, parts, evidence / f"agent-{position}")
+        with contextlib.redirect_stdout(io.StringIO()):
+            archive = reporting.generate(evidence, bundle, ROOT)
+        with zipfile.ZipFile(archive) as zipped:
+            self.assertEqual(1, json.loads(zipped.read("ConsolidatedReport/summary.json"))["total"])
+
+    def test_report_generator_rejects_overlapping_and_external_roots(self):
+        import generate_consolidated_report as generator
+        evidence = self.evidence("roots")
+        args = ["--evidence-root", str(evidence), "--source-root", str(ROOT),
+                "--output-dir", str(self.root / "report")]
+        for roots in ((evidence, evidence / "Artifacts"), (self.root,)):
+            with self.subTest(roots=roots), contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+                generator.main(args + [value for root in roots for value in ("--scenario-root", str(root))])
 
     def test_missing_duplicate_and_wrong_deployment_shards_fail(self):
         first, _ = self.manifest(1, 2)

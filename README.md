@@ -279,6 +279,16 @@ The framework can collect:
 
 `reporting.passed` and `reporting.failed` independently control what is attached for passed and failed cases. Failure screenshots are always captured when the browser is available.
 
+Video exclusion is controlled in `config/framework.json` and takes precedence over the attachment video switches:
+
+| `reporting.excludeVideos` | `reporting.excludePassedVideos` | Behavior |
+| --- | --- | --- |
+| `true` (default) | either value | No video recording, report videos, test video attachments or published video files. |
+| `false` | `true` (default) | Record when `browser.video` is enabled; remove passed-attempt videos before reporting/publication, retain failed-attempt videos even if a later retry passes. |
+| `false` | `false` | Retain recorded videos for all outcomes; existing attachment policies still apply. |
+
+Passed-only filtering cannot prevent recording because the outcome is not known until the attempt ends. Publication filtering also covers video copies and nested evidence ZIPs. Unknown outcomes are not treated as passed. Logs, scenario results, screenshots and traces remain included; result ZIPs use DEFLATE compression. Build a new CI package after changing these settings so Release uses the same policy throughout execution and collection.
+
 Playwright context closure occurs before evidence publication so video, trace and HAR are finalized. Evidence is copied into the NUnit test-result evidence directory, checked for readability and registered using `TestContext.AddTestAttachment`.
 
 ## Browser lifecycle

@@ -15,11 +15,57 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import zipfile
+from generate_consolidated_report import exclude_video, video_policy
 
 MANIFEST_TYPE = "InsuranceAutomation.EvidenceManifest"
 CHUNK_TYPE = "InsuranceAutomation.EvidenceChunk"
 CHUNK_BYTES = 64 * 1024 * 1024
 RESULT_DIRECTORIES = ("Artifacts", "Runner", "NUnit", "NUnitWork")
+VIDEO_SUFFIXES = {".webm", ".mp4", ".m4v", ".mov", ".avi", ".mkv", ".wmv", ".mpeg", ".mpg", ".ogv"}
+
+
+def evidence_outcomes(root: Path) -> tuple[dict, dict]:
+    directories, videos = {}, {}
+    for path in root.rglob("scenario-result.json"):
+        result = json.loads(path.read_text(encoding="utf-8-sig"))
+        status = str(result.get("status", ""))
+        directories[path.parent] = status
+        for video in path.parent.rglob("*"):
+            if video.suffix.lower() in VIDEO_SUFFIXES:
+                videos.setdefault(video.name, set()).add(status)
+    return directories, videos
+
+
+def write_filtered_file(archive, path, name, policy, outcome, video_outcomes, depth=0):
+    if path.suffix.lower() in VIDEO_SUFFIXES:
+        outcomes = {outcome} if outcome else video_outcomes.get(path.name, {""})
+        if all(exclude_video(policy, status) for status in outcomes):
+            return
+    if path.suffix.lower() == ".zip" and any(policy) and zipfile.is_zipfile(path):
+        if depth >= 8:
+            raise ValueError("Evidence ZIP nesting exceeds supported depth")
+        with tempfile.TemporaryDirectory(prefix="video-filter-") as temporary:
+            filtered = Path(temporary) / "filtered.zip"
+            with zipfile.ZipFile(path) as source, zipfile.ZipFile(filtered, "w", zipfile.ZIP_DEFLATED) as target:
+                statuses = {}
+                for entry in source.infolist():
+                    if entry.filename.endswith("scenario-result.json"):
+                        result = json.loads(source.read(entry).decode("utf-8-sig"))
+                        statuses[Path(entry.filename).parent] = str(result.get("status", ""))
+                for index, entry in enumerate(source.infolist()):
+                    if entry.is_dir():
+                        continue
+                    relative = Path(entry.filename)
+                    status = next((statuses[parent] for parent in relative.parents if parent in statuses), outcome)
+                    member = Path(temporary) / f"member-{index}" / relative.name
+                    member.parent.mkdir()
+                    with source.open(entry) as stream, member.open("wb") as output:
+                        shutil.copyfileobj(stream, output)
+                    write_filtered_file(target, member, entry.filename, policy, status, video_outcomes, depth + 1)
+                    member.unlink()
+            archive.write(filtered, name)
+    else:
+        archive.write(path, name)
 
 
 def required(name: str) -> str:
@@ -62,7 +108,8 @@ def attach(path: Path, kind: str, name: str | None = None) -> None:
         print(f"##vso[task.addattachment type={kind};name={command_escape(name or path.name)};]{command_escape(str(path.resolve()))}", flush=True)
 
 
-def pack(results: Path, output: Path, identity: dict, position: int, total: int, chunk_bytes: int = CHUNK_BYTES) -> Path:
+def pack(results: Path, output: Path, identity: dict, position: int, total: int, chunk_bytes: int = CHUNK_BYTES,
+         policy: tuple[bool, bool] | None = None) -> Path:
     if not 1 <= position <= total:
         raise ValueError("Invalid System.JobPositionInPhase / System.TotalJobsInPhase")
     if chunk_bytes < 1:
@@ -71,6 +118,8 @@ def pack(results: Path, output: Path, identity: dict, position: int, total: int,
         raise FileNotFoundError(f"Test results directory not found: {results}")
     output.mkdir(parents=True, exist_ok=False)
     archive = output / f"agent-{position}.zip"
+    policy = policy if policy is not None else video_policy(Path(__file__).resolve().parent.parent)
+    directories, videos = evidence_outcomes(results)
     count = 0
     with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED, allowZip64=True) as zipped:
         for name in RESULT_DIRECTORIES:
@@ -81,7 +130,8 @@ def pack(results: Path, output: Path, identity: dict, position: int, total: int,
                 if path.is_symlink() or not path.resolve().is_relative_to(evidence.resolve()):
                     raise ValueError(f"Evidence links outside the source are not supported: {path}")
                 if path.is_file():
-                    zipped.write(path, path.relative_to(results).as_posix())
+                    outcome = next((directories[parent] for parent in path.parents if parent in directories), "")
+                    write_filtered_file(zipped, path, path.relative_to(results).as_posix(), policy, outcome, videos)
                     count += name == "Artifacts" and path.name == "scenario-result.json"
     parts = []
     with archive.open("rb") as source:
@@ -233,10 +283,13 @@ def unpack(manifest: dict, parts: Path, target: Path) -> None:
 
 
 def archive_bundle(bundle: Path, archive: Path) -> Path:
+    policy = video_policy(Path(__file__).resolve().parent.parent)
+    directories, videos = evidence_outcomes(bundle)
     with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED, allowZip64=True) as zipped:
         for path in sorted(bundle.rglob("*")):
             if path.is_file():
-                zipped.write(path, path.relative_to(bundle).as_posix())
+                outcome = next((directories[parent] for parent in path.parents if parent in directories), "")
+                write_filtered_file(zipped, path, path.relative_to(bundle).as_posix(), policy, outcome, videos)
     return archive
 
 
@@ -288,7 +341,15 @@ def generate(evidence: Path, bundle: Path, source: Path) -> Path:
     import generate_consolidated_report as generator
 
     report = bundle / "ConsolidatedReport"
-    if generator.main(["--evidence-root", str(evidence), "--source-root", str(source), "--output-dir", str(report), "--fail-on-empty"]) != 0:
+    scenario_roots = sorted(root for pattern in ("agent-*/Artifacts", "*/agent-*/Artifacts")
+                            for root in evidence.glob(pattern) if root.is_dir())
+    if not scenario_roots:
+        raise ValueError("No completed scenario evidence found; no canonical agent Artifacts directories")
+    arguments = ["--evidence-root", str(evidence), "--source-root", str(source), "--output-dir", str(report), "--fail-on-empty"]
+    for root in scenario_roots:
+        arguments.extend(["--scenario-root", str(root)])
+    print(f"Generating report from {len(scenario_roots)} canonical scenario directories; raw runner attachments remain archived.", flush=True)
+    if generator.main(arguments) != 0:
         raise ValueError("No completed scenario evidence found; consolidated report generation failed")
     for name in ("report.html", "log.html", "summary.json", "output.xml"):
         if not (report / name).is_file():

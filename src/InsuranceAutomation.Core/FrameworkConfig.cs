@@ -92,6 +92,9 @@ public sealed class WaitOptions
 
 public sealed class ReportingOptions
 {
+    public bool ExcludeVideos { get; init; } = true;
+    public bool ExcludePassedVideos { get; init; } = true;
+    public bool ShouldExcludeVideo(bool passed) => ExcludeVideos || (ExcludePassedVideos && passed);
     public bool CollectConsole { get; init; } = true;
     public bool CollectNetwork { get; init; } = true;
     public EvidenceAttachmentPolicy Passed { get; init; } = EvidenceAttachmentPolicy.PassedDefaults();
