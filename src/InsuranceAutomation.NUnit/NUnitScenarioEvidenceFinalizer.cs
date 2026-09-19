@@ -46,6 +46,9 @@ public static class NUnitScenarioEvidenceFinalizer
             if (effectiveError is null && verificationFailures.HasFailures)
                 effectiveError = new AssertionException($"{verificationFailures.Failures.Count} deferred verification failure(s). {deferredSummary}");
 
+            browser.ApplyVideoRetention(effectiveError is null &&
+                TestContext.CurrentContext.Result.Outcome.Status == global::NUnit.Framework.Interfaces.TestStatus.Passed);
+
             if (config.Reporting.HtmlReport)
                 report.Write(feature, scenario, logger.LogPath, browser.TracePath, browser.VideoPath, browser.HarPath, null);
 

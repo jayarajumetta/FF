@@ -48,6 +48,19 @@ STATE_PATTERN = re.compile(r"(?:state\s*code|statecode|state)[_\s:=\-]+[\"']?([A
 LOB_PATTERN = re.compile(r"\b(BAP|GL|IM|WC|CP|CPP|UMB|BOP|SFP|RV|CYCLE|AUTO)\b", re.IGNORECASE)
 
 
+def video_policy(source: Path) -> tuple[bool, bool]:
+    config = source / "config" / "framework.json"
+    settings = json.loads(config.read_text(encoding="utf-8-sig")).get("reporting", {}) if config.is_file() else {}
+    values = tuple(settings.get(key, True) for key in ("excludeVideos", "excludePassedVideos"))
+    if any(type(value) is not bool for value in values):
+        raise ValueError("reporting.excludeVideos and reporting.excludePassedVideos must be booleans")
+    return values
+
+
+def exclude_video(policy: tuple[bool, bool], outcome: str) -> bool:
+    return policy[0] or (policy[1] and str(outcome).upper() in PASS_VALUES)
+
+
 @dataclass(frozen=True)
 class Binding:
     feature: str
@@ -265,7 +278,12 @@ def group_attempts(results: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
         attempts.sort(key=lambda item: item["attemptNumber"])
         numbers = [item["attemptNumber"] for item in attempts]
         if len(set(numbers)) != len(numbers):
-            raise ValueError("Duplicate attempt numbers for the same test execution.")
+            duplicates = sorted(number for number in set(numbers) if numbers.count(number) > 1)
+            paths = [str(item.get("_resultFile", "<unknown file>")) for item in attempts if item["attemptNumber"] in duplicates]
+            raise ValueError(
+                f"Duplicate attempt numbers for the same test execution: executionId={attempts[0]['executionId']!r}, "
+                f"testFullName={attempts[0]['testFullName']!r}, attempts={duplicates}; files: {'; '.join(paths)}"
+            )
         final = dict(attempts[-1])
         final["_attempts"] = attempts
         final["durationMilliseconds"] = sum(duration_ms(item) for item in attempts)
@@ -1681,6 +1699,8 @@ def write_robot_xml(results: Sequence[dict[str, Any]], output_dir: Path, generat
 def main(argv: Iterable[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--evidence-root", required=True, type=Path)
+    parser.add_argument("--scenario-root", action="append", type=Path,
+                        help="Canonical scenario directory within evidence-root; repeat for each shard. Defaults to evidence-root.")
     parser.add_argument("--source-root", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
     parser.add_argument("--fail-on-empty", action="store_true")
@@ -1697,7 +1717,17 @@ def main(argv: Iterable[str] | None = None) -> int:
         parser.error("Embed limits must be greater than zero.")
 
     generated = dt.datetime.now(dt.timezone.utc).isoformat()
-    results = load_results(args.evidence_root)
+    scenario_roots = [root.resolve() for root in (args.scenario_root or [args.evidence_root])]
+    for index, root in enumerate(scenario_roots):
+        if not root.is_dir() or not root.is_relative_to(args.evidence_root.resolve()):
+            parser.error(f"Scenario root must be a directory within evidence-root: {root}")
+        if any(root.is_relative_to(other) or other.is_relative_to(root) for other in scenario_roots[:index]):
+            parser.error(f"Scenario roots must not overlap: {root}")
+    results = [result for root in scenario_roots for result in load_results(root)]
+    policy = video_policy(args.source_root)
+    for result in results:
+        if exclude_video(policy, result.get("status", "")):
+            (result.get("artifacts") or {}).pop("video", None)
     bindings = discover_bindings(args.source_root)
     enrich(results, bindings)
     results = group_attempts(results)

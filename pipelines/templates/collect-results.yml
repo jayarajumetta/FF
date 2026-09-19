@@ -1,0 +1,43 @@
+parameters:
+- name: dependencies
+  type: object
+- name: expected
+  type: object
+
+jobs:
+- job: Consolidate
+  displayName: Collect every agent and publish one portable report
+  dependsOn: ${{ parameters.dependencies }}
+  condition: succeededOrFailed()
+  variables:
+    REPORT_OUTPUT_ROOT: '$(Agent.TempDirectory)\reports-$(Build.BuildId)-$(System.JobId)-$(System.JobAttempt)'
+    EVIDENCE_DOWNLOAD_ROOT: '$(Agent.TempDirectory)\evidence-$(Build.BuildId)-$(System.JobId)-$(System.JobAttempt)'
+    EXPECTED_EVIDENCE: ${{ convertToJson(parameters.expected) }}
+  steps:
+  - checkout: none
+  - template: download-testpackage.yml
+  - task: UsePythonVersion@0
+    inputs: { versionSpec: '3.11', architecture: x64 }
+  - powershell: |
+      $ErrorActionPreference = 'Stop'
+      New-Item -ItemType Directory -Path $env:REPORT_OUTPUT_ROOT, $env:EVIDENCE_DOWNLOAD_ROOT | Out-Null
+    displayName: Create isolated collector directories
+  - task: DownloadPipelineArtifact@2
+    displayName: Download server-side evidence from this execution
+    inputs:
+      buildType: current
+      itemPattern: 'evidence-*-$(System.StageAttempt)/**'
+      targetPath: '$(EVIDENCE_DOWNLOAD_ROOT)'
+  - task: PowerShell@2
+    displayName: Verify all shards and generate consolidated report ZIP
+    condition: succeededOrFailed()
+    inputs:
+      targetType: filePath
+      filePath: '$(ArtifactRoot)\scripts\Invoke-ReleaseStage.ps1'
+      arguments: '-Mode Collect'
+  - task: PublishPipelineArtifact@1
+    displayName: Publish consolidated report and raw test results
+    condition: succeededOrFailed()
+    inputs:
+      targetPath: '$(REPORT_OUTPUT_ROOT)'
+      artifact: 'consolidated-test-report-$(System.StageAttempt)-$(System.JobAttempt)'

@@ -1,0 +1,23 @@
+steps:
+- task: DownloadBuildArtifacts@1
+  displayName: Download selected CI build package
+  inputs:
+    buildType: specific
+    project: '$(System.TeamProject)'
+    pipeline: '$(CiDefinitionId)'
+    buildVersionToDownload: specific
+    buildId: '$(CiBuildId)'
+    downloadType: single
+    artifactName: testpackage
+    downloadPath: '$(PackageDownloadRoot)'
+- powershell: |
+    $ErrorActionPreference = 'Stop'
+    $entrypoint = Join-Path $env:ARTIFACTROOT 'scripts\Invoke-ReleaseStage.ps1'
+    Write-Host "Agent: $env:AGENT_NAME; selected CI build: $env:CIBUILDID; package: $env:ARTIFACTROOT"
+    if (-not (Test-Path -LiteralPath $entrypoint -PathType Leaf)) {
+      Get-ChildItem -LiteralPath $env:PACKAGEDOWNLOADROOT -Recurse -Depth 3 | Select-Object -First 100 -ExpandProperty FullName | Write-Host
+      throw "CI entrypoint missing: $entrypoint. Select a CI build produced by the current packaging pipeline."
+    }
+    $info = Get-Content -LiteralPath (Join-Path $env:ARTIFACTROOT 'package-info.json') -Raw | ConvertFrom-Json
+    if ([string]$info.buildId -ne $env:CIBUILDID) { throw 'Downloaded package build ID does not match selected CI build.' }
+  displayName: Verify downloaded package identity and entrypoint

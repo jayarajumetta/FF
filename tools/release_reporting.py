@@ -15,11 +15,57 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import zipfile
+from generate_consolidated_report import exclude_video, video_policy
 
 MANIFEST_TYPE = "InsuranceAutomation.EvidenceManifest"
 CHUNK_TYPE = "InsuranceAutomation.EvidenceChunk"
 CHUNK_BYTES = 64 * 1024 * 1024
 RESULT_DIRECTORIES = ("Artifacts", "Runner", "NUnit", "NUnitWork")
+VIDEO_SUFFIXES = {".webm", ".mp4", ".m4v", ".mov", ".avi", ".mkv", ".wmv", ".mpeg", ".mpg", ".ogv"}
+
+
+def evidence_outcomes(root: Path) -> tuple[dict, dict]:
+    directories, videos = {}, {}
+    for path in root.rglob("scenario-result.json"):
+        result = json.loads(path.read_text(encoding="utf-8-sig"))
+        status = str(result.get("status", ""))
+        directories[path.parent] = status
+        for video in path.parent.rglob("*"):
+            if video.suffix.lower() in VIDEO_SUFFIXES:
+                videos.setdefault(video.name, set()).add(status)
+    return directories, videos
+
+
+def write_filtered_file(archive, path, name, policy, outcome, video_outcomes, depth=0):
+    if path.suffix.lower() in VIDEO_SUFFIXES:
+        outcomes = {outcome} if outcome else video_outcomes.get(path.name, {""})
+        if all(exclude_video(policy, status) for status in outcomes):
+            return
+    if path.suffix.lower() == ".zip" and any(policy) and zipfile.is_zipfile(path):
+        if depth >= 8:
+            raise ValueError("Evidence ZIP nesting exceeds supported depth")
+        with tempfile.TemporaryDirectory(prefix="video-filter-") as temporary:
+            filtered = Path(temporary) / "filtered.zip"
+            with zipfile.ZipFile(path) as source, zipfile.ZipFile(filtered, "w", zipfile.ZIP_DEFLATED) as target:
+                statuses = {}
+                for entry in source.infolist():
+                    if entry.filename.endswith("scenario-result.json"):
+                        result = json.loads(source.read(entry).decode("utf-8-sig"))
+                        statuses[Path(entry.filename).parent] = str(result.get("status", ""))
+                for index, entry in enumerate(source.infolist()):
+                    if entry.is_dir():
+                        continue
+                    relative = Path(entry.filename)
+                    status = next((statuses[parent] for parent in relative.parents if parent in statuses), outcome)
+                    member = Path(temporary) / f"member-{index}" / relative.name
+                    member.parent.mkdir()
+                    with source.open(entry) as stream, member.open("wb") as output:
+                        shutil.copyfileobj(stream, output)
+                    write_filtered_file(target, member, entry.filename, policy, status, video_outcomes, depth + 1)
+                    member.unlink()
+            archive.write(filtered, name)
+    else:
+        archive.write(path, name)
 
 
 def required(name: str) -> str:
@@ -30,6 +76,9 @@ def required(name: str) -> str:
 
 
 def scope() -> dict:
+    if os.environ.get("EVIDENCE_TRANSPORT") == "pipeline":
+        return {"buildId": required("BUILD_BUILDID"), "stageKey": required("STAGEKEY"),
+                "stageAttempt": required("SYSTEM_STAGEATTEMPT")}
     return {key: required(env) for key, env in (
         ("releaseId", "RELEASE_RELEASEID"),
         ("environmentId", "RELEASE_ENVIRONMENTID"),
@@ -59,7 +108,8 @@ def attach(path: Path, kind: str, name: str | None = None) -> None:
         print(f"##vso[task.addattachment type={kind};name={command_escape(name or path.name)};]{command_escape(str(path.resolve()))}", flush=True)
 
 
-def pack(results: Path, output: Path, identity: dict, position: int, total: int, chunk_bytes: int = CHUNK_BYTES) -> Path:
+def pack(results: Path, output: Path, identity: dict, position: int, total: int, chunk_bytes: int = CHUNK_BYTES,
+         policy: tuple[bool, bool] | None = None) -> Path:
     if not 1 <= position <= total:
         raise ValueError("Invalid System.JobPositionInPhase / System.TotalJobsInPhase")
     if chunk_bytes < 1:
@@ -68,6 +118,8 @@ def pack(results: Path, output: Path, identity: dict, position: int, total: int,
         raise FileNotFoundError(f"Test results directory not found: {results}")
     output.mkdir(parents=True, exist_ok=False)
     archive = output / f"agent-{position}.zip"
+    policy = policy if policy is not None else video_policy(Path(__file__).resolve().parent.parent)
+    directories, videos = evidence_outcomes(results)
     count = 0
     with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED, allowZip64=True) as zipped:
         for name in RESULT_DIRECTORIES:
@@ -78,7 +130,8 @@ def pack(results: Path, output: Path, identity: dict, position: int, total: int,
                 if path.is_symlink() or not path.resolve().is_relative_to(evidence.resolve()):
                     raise ValueError(f"Evidence links outside the source are not supported: {path}")
                 if path.is_file():
-                    zipped.write(path, path.relative_to(results).as_posix())
+                    outcome = next((directories[parent] for parent in path.parents if parent in directories), "")
+                    write_filtered_file(zipped, path, path.relative_to(results).as_posix(), policy, outcome, videos)
                     count += name == "Artifacts" and path.name == "scenario-result.json"
     parts = []
     with archive.open("rb") as source:
@@ -95,7 +148,6 @@ def pack(results: Path, output: Path, identity: dict, position: int, total: int,
     }
     path = output / f"agent-{position}.json"
     path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
-    archive.unlink()
     return path
 
 
@@ -105,6 +157,10 @@ def publish() -> None:
     manifest_path = pack(results, output, scope(), int(required("SYSTEM_JOBPOSITIONINPHASE")), int(required("SYSTEM_TOTALJOBSINPHASE")))
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     print(f"Evidence root: {results / 'Artifacts'}; shard {manifest['position']}/{manifest['totalJobs']}; scenarios/attempts: {manifest['scenarioCount']}", flush=True)
+    if os.environ.get("EVIDENCE_TRANSPORT") == "pipeline":
+        print(f"##vso[task.setvariable variable=EVIDENCE_HANDOFF]{command_escape(str(output))}", flush=True)
+        return
+    attach(output / f"agent-{manifest['position']}.zip", "file")
     for part in manifest["parts"]:
         attach(output / part["name"], CHUNK_TYPE)
     attach(manifest_path, MANIFEST_TYPE)
@@ -226,21 +282,80 @@ def unpack(manifest: dict, parts: Path, target: Path) -> None:
         raise ValueError("Extracted scenario count does not match agent manifest")
 
 
+def archive_bundle(bundle: Path, archive: Path) -> Path:
+    policy = video_policy(Path(__file__).resolve().parent.parent)
+    directories, videos = evidence_outcomes(bundle)
+    with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED, allowZip64=True) as zipped:
+        for path in sorted(bundle.rglob("*")):
+            if path.is_file():
+                outcome = next((directories[parent] for parent in path.parents if parent in directories), "")
+                write_filtered_file(zipped, path, path.relative_to(bundle).as_posix(), policy, outcome, videos)
+    return archive
+
+
+def collect_pipeline() -> None:
+    incoming = Path(required("EVIDENCE_DOWNLOAD_ROOT"))
+    output = Path(required("REPORT_OUTPUT_ROOT"))
+    output.mkdir(parents=True, exist_ok=True)
+    archive_bundle(incoming, output / "RawTestResults.zip")
+    work = Path(tempfile.mkdtemp(prefix="pipeline-report-", dir=required("AGENT_TEMPDIRECTORY")))
+    bundle = work / "bundle"
+    evidence = bundle / "Artifacts"
+    expected = json.loads(required("EXPECTED_EVIDENCE"))
+    if not isinstance(expected, dict) or not expected or any(
+        stage not in ("Assembly", "Suite", "SingleCase") or type(total) is not int or total < 1
+        for stage, total in expected.items()
+    ):
+        raise ValueError("Expected evidence must specify selected modes with positive shard counts")
+    all_manifests = []
+    attempt = required("SYSTEM_STAGEATTEMPT")
+    for stage, total in expected.items():
+        manifests = []
+        for position in range(1, total + 1):
+            parts = incoming / f"evidence-{stage}-{position}-{attempt}"
+            path = parts / f"agent-{position}.json"
+            if not path.is_file():
+                raise ValueError(f"Missing agent evidence: {stage} shard {position}/{total}")
+            manifest = json.loads(path.read_text(encoding="utf-8"))
+            if manifest["position"] != position or manifest["totalJobs"] != total:
+                raise ValueError(f"Unexpected shard identity: {stage} shard {position}/{total}")
+            manifests.append(manifest)
+        identity = {"buildId": required("BUILD_BUILDID"), "stageKey": stage,
+                    "stageAttempt": required("SYSTEM_STAGEATTEMPT")}
+        validate_manifests(manifests, identity)
+        for manifest in manifests:
+            position = manifest["position"]
+            unpack(manifest, incoming / f"evidence-{stage}-{position}-{attempt}", evidence / stage / f"agent-{position}")
+        all_manifests.extend(manifests)
+    actual = {p.name for p in incoming.iterdir() if p.is_dir()}
+    expected_names = {f"evidence-{stage}-{p}-{attempt}" for stage, total in expected.items() for p in range(1, total + 1)}
+    if actual != expected_names:
+        raise ValueError("Unexpected or missing evidence artifacts; refusing an ambiguous report")
+    (bundle / "collection-manifest.json").write_text(json.dumps(all_manifests, indent=2), encoding="utf-8")
+    archive = generate(evidence, bundle, Path(__file__).resolve().parent.parent)
+    shutil.copyfile(archive, output / archive.name)
+    print(f"Verified {len(all_manifests)} shards; report and raw results: {output}", flush=True)
+
+
 def generate(evidence: Path, bundle: Path, source: Path) -> Path:
     import generate_consolidated_report as generator
 
     report = bundle / "ConsolidatedReport"
-    if generator.main(["--evidence-root", str(evidence), "--source-root", str(source), "--output-dir", str(report), "--fail-on-empty"]) != 0:
+    scenario_roots = sorted(root for pattern in ("agent-*/Artifacts", "*/agent-*/Artifacts")
+                            for root in evidence.glob(pattern) if root.is_dir())
+    if not scenario_roots:
+        raise ValueError("No completed scenario evidence found; no canonical agent Artifacts directories")
+    arguments = ["--evidence-root", str(evidence), "--source-root", str(source), "--output-dir", str(report), "--fail-on-empty"]
+    for root in scenario_roots:
+        arguments.extend(["--scenario-root", str(root)])
+    print(f"Generating report from {len(scenario_roots)} canonical scenario directories; raw runner attachments remain archived.", flush=True)
+    if generator.main(arguments) != 0:
         raise ValueError("No completed scenario evidence found; consolidated report generation failed")
     for name in ("report.html", "log.html", "summary.json", "output.xml"):
         if not (report / name).is_file():
             raise FileNotFoundError(f"Expected report output missing: {name}")
     archive = bundle.parent / "FinalConsolidatedReport.zip"
-    with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED, allowZip64=True) as zipped:
-        for path in sorted(bundle.rglob("*")):
-            if path.is_file():
-                zipped.write(path, path.relative_to(bundle).as_posix())
-    return archive
+    return archive_bundle(bundle, archive)
 
 
 def collect() -> None:
@@ -288,6 +403,7 @@ def collect() -> None:
         unpack(manifest, downloads, evidence / f"agent-{manifest['position']}")
     (bundle / "collection-manifest.json").write_text(json.dumps(manifests, indent=2), encoding="utf-8")
     print(f"Verified {total} agent(s), {sum(m['scenarioCount'] for m in manifests)} scenario attempts for deployment {identity['deploymentId']}", flush=True)
+    attach(archive_bundle(bundle, work / "RawTestResults.zip"), "file")
     archive = generate(evidence, bundle, Path(__file__).resolve().parent.parent)
     report = bundle / "ConsolidatedReport"
     summary = work / "report-summary.md"
@@ -303,7 +419,12 @@ def main() -> int:
     parser.add_argument("mode", choices=["publish", "collect"])
     args = parser.parse_args()
     try:
-        publish() if args.mode == "publish" else collect()
+        if args.mode == "publish":
+            publish()
+        elif os.environ.get("EVIDENCE_TRANSPORT") == "pipeline":
+            collect_pipeline()
+        else:
+            collect()
         return 0
     except Exception as error:
         print(f"##vso[task.logissue type=error;]{command_escape(str(error))}", flush=True)

@@ -19,6 +19,8 @@
     "maximize": true
   },
   "reporting": {
+    "excludeVideos": true,
+    "excludePassedVideos": true,
     "resultsRoot": "TestResults",
     "artifactRoot": "Artifacts",
     "htmlReport": true,
