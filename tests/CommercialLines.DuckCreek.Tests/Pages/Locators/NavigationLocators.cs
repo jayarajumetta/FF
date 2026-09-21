@@ -662,7 +662,6 @@ public sealed class NavigationLocators
     public ILocator NonOwnedAuto => _page.Locator("input[fieldref=\"LineCoveragesInput.NonOwnedAuto\"]");
 
 
-
     public ILocator NumberOfEmployees => _page.Locator("input[fieldref=\"CovEmployeeBenefitsLiabInput.NumberOfEmployees\"]");
 
     public ILocator NumberOfFullTimeEmployees => _page.Locator("input[fieldref=\"CoverageInput.NumberOfFullTimeEmployees\"]");
@@ -672,10 +671,6 @@ public sealed class NavigationLocators
     public ILocator NumberOfVehicles => _page.Locator("input[fieldref='MotorTruckCargoInput.Owners200MilesAndUnderNumberOfVehicles'], input[fieldref=\"MotorTruckCargoInput.CarriersNumberOfVehicles\"]");
 
     public ILocator OCP => _page.GetByRole(AriaRole.Link, new() { Name = "OCP", Exact = true });
-
-
-
-
 
     public ILocator OTCCausesOfLoss => _page.Locator("input[fieldref=\"CovOTCInput.CoverageForm\"]");
 

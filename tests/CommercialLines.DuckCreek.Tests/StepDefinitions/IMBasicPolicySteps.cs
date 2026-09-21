@@ -481,7 +481,7 @@ public sealed class IMBasicPolicySteps
         await page.EnterPerVehicleLimitAsync(data.Resolve("{{data:per_vehicle_limit_199}}"));
         await page.EnterGroupClassAsync(data.Resolve("{{data:group_class_200}}"));
         await page.EnterNumberOfVehiclesAsync(data.Resolve("{{data:number_of_vehicles_201}}"));
-        //await page.EnterUnnamedTerminalsLimitAsync(data.Resolve("{{data:unnamed_terminals_limit_202}}"));
+        await page.EnterUnnamedTerminalsLimitAsync(data.Resolve("{{data:unnamed_terminals_limit_202}}"));
         await page.ClickOKAsync();
 
     }
@@ -509,6 +509,7 @@ public sealed class IMBasicPolicySteps
             "Signs Description");
 
         //await page.VerifyPolicyCovgSignsCoverageFormAsync("Exists", "");
+        await page.PauseAsync(3000);
         await page.EnterN5DeductibleAsync(data.Resolve("{{data:5_deductible_212}}"));
         await page.ClickOKAsync();
         await page.PauseAsync(1000);
@@ -578,7 +579,7 @@ public sealed class IMBasicPolicySteps
         await page.EnterAverageNumberOfWorkingDaysAsync(data.Resolve("{{data:average_number_of_working_days_240}}"));
         await page.EnterAverageServiceChargeAsync(data.Resolve("{{data:average_service_charge_241}}"));
         await page.EnterAverageValuePerOrderAsync(data.Resolve("{{data:average_value_per_order_242}}"));
-        await page.EnterRiskBaileesCustomersLimitAsync(data.Resolve("{{data:limit_243}}"));
+        await page.EnterRiskBaileesCustomersLimitAsync(data.Resolve("{{data:limit_244}}"));
         await page.EnterEarthquakeAsync(data.Resolve("{{data:earthquake_244}}"));
         await page.EnterStorageLimitAsync(data.Resolve("{{data:storage_limit_245}}"));
         await page.ClickRiskBaileesCustomersOKAsync();
@@ -940,34 +941,10 @@ public sealed class IMBasicPolicySteps
 
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        //await page.VerifyIsThisCoverageBoundAsync("Exists", "");
-        //await page.VerifyIsThisCoverageBoundAsync(data.Resolve("{{data:expected_is_this_coverage_bound_value_398}}"), "Value");
-        //await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_399}}"));
         await page.ClickCompleteApplicationAsync();
-        //await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
         await page.PauseAsync(5000);
-        //await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
         await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
         await page.PauseAsync(5000);
-        //await page.ClickCompleteApplicationAsync();
-        //await page.PauseAsync(1000);
-        //await page.ClickStoplightWaitingWindowCloseAsync();
-        //await page.WaitForStoplightWaitingWindowAsync("Absent");
-        //await page.PauseAsync(1000);
-        //await page.VerifyLoadingMessageAsync("Visible", "");
-        //await page.PauseAsync(1000);
-        //await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists", "");
-        //await page.ClickCompleteApplicationAsync();
-        //await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
-        //await page.PauseAsync(1000);
-        //await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
-        //await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
-        //await page.PauseAsync(1000);
-        //await page.ClickCompleteApplicationAsync();
-        //await page.PauseAsync(1000);
-        //await page.ClickStoplightWaitingWindowCloseAsync();
-        //await page.WaitForStoplightWaitingWindowAsync("Absent");
-        //await page.PauseAsync(1000);
         await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
     }
 

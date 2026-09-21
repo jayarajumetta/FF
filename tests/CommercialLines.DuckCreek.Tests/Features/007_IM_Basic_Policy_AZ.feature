@@ -14,8 +14,6 @@ Feature: IM Basic Policy
 	And I start a new quote
     When I enter business client information
     And I add a new Associated Client - Business Owner Type - Click Add Client
-    #And I complete aJAX Error Check
-    #And I complete required billing information
     And I complete the Associated Client Info
     And I complete Underwring Questions from Client Screen
     And I complete required policy information
@@ -42,24 +40,23 @@ Feature: IM Basic Policy
     And I add notepad comment
     And I complete required submission information
     And I run Stoplight
-    And I verify values in premium fields
-    #And I complete forms verification
+    #And I verify values in premium fields
 
     Examples:
       | dataFile | stateCode | stateVariant | stateName | externalDataFile |
-      #| TestData/Scenarios/007_im_basic_policy_az.json | AZ | AZ | Arizona | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/007_im_basic_policy_ct.json | CT | CT | Connecticut | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/007_im_basic_policy_de.json | DE | DE | Delaware | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/007_im_basic_policy_ma.json | MA | MA | Massachusetts | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/007_im_basic_policy_md.json | MD | MD | Maryland | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/007_im_basic_policy_me.json | ME | ME | Maine | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/007_im_basic_policy_nh.json | NH | NH | New Hampshire | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/007_im_basic_policy_nj.json | NJ | NJ | New Jersey | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/007_im_basic_policy_ny.json | NY | NY | New York | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/007_im_basic_policy_or.json | OR | OR | Oregon | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/007_im_basic_policy_pa.json | PA | PA | Pennsylvania | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/007_im_basic_policy_az.json | AZ | AZ | Arizona | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/007_im_basic_policy_ct.json | CT | CT | Connecticut | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/007_im_basic_policy_de.json | DE | DE | Delaware | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/007_im_basic_policy_ma.json | MA | MA | Massachusetts | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/007_im_basic_policy_md.json | MD | MD | Maryland | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/007_im_basic_policy_me.json | ME | ME | Maine | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/007_im_basic_policy_nh.json | NH | NH | New Hampshire | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/007_im_basic_policy_nj.json | NJ | NJ | New Jersey | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/007_im_basic_policy_ny.json | NY | NY | New York | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/007_im_basic_policy_or.json | OR | OR | Oregon | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/007_im_basic_policy_pa.json | PA | PA | Pennsylvania | TestData/ExternalDataOverrides.json |
       | TestData/Scenarios/007_im_basic_policy_ri.json | RI | RI | Rhode Island | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/007_im_basic_policy_va.json | VA | VA | Virginia | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/007_im_basic_policy_vt.json | VT | VT | Vermont | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/007_im_basic_policy_wa.json | WA | WA | Washington | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/007_im_basic_policy_wv.json | WV | WV | West Virginia | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/007_im_basic_policy_va.json | VA | VA | Virginia | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/007_im_basic_policy_vt.json | VT | VT | Vermont | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/007_im_basic_policy_wa.json | WA | WA | Washington | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/007_im_basic_policy_wv.json | WV | WV | West Virginia | TestData/ExternalDataOverrides.json |
