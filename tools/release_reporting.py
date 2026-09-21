@@ -15,13 +15,42 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import zipfile
-from generate_consolidated_report import exclude_video, video_policy
+from generate_consolidated_report import exclude_video, video_policy, normalize_status, redact_sensitive_text
 
 MANIFEST_TYPE = "InsuranceAutomation.EvidenceManifest"
 CHUNK_TYPE = "InsuranceAutomation.EvidenceChunk"
 CHUNK_BYTES = 64 * 1024 * 1024
 RESULT_DIRECTORIES = ("Artifacts", "Runner", "NUnit", "NUnitWork")
 VIDEO_SUFFIXES = {".webm", ".mp4", ".m4v", ".mov", ".avi", ".mkv", ".wmv", ".mpeg", ".mpg", ".ogv"}
+REPORT_LOG_BYTES = 64 * 1024
+RESULT_FIELDS = "schemaVersion executionId testFullName attemptNumber maxAttempts feature scenario status startedAtUtc completedAtUtc durationMilliseconds tags application app project stateCode state_code state StateCode State lob".split()
+STEP_FIELDS = "order text status durationMilliseconds data error consoleErrors networkErrors binding bindingSource bindingLine".split()
+VERIFICATION_FIELDS = "businessStep page control property expected error".split()
+
+
+def report_record(path: Path) -> dict:
+    result = json.loads(path.read_text(encoding="utf-8-sig"))
+    if not isinstance(result, dict):
+        raise ValueError(f"Scenario result must be an object: {path}")
+    record = {key: result[key] for key in RESULT_FIELDS if key in result}
+    for field, keys in (("steps", STEP_FIELDS), ("deferredVerifications", VERIFICATION_FIELDS)):
+        record[field] = [{key: item[key] for key in keys if key in item} for item in result.get(field, []) or []]
+    if normalize_status(result.get("status")) == "FAIL":
+        log_name = (result.get("artifacts") or {}).get("log") or "execution.log"
+        log = path.parent / log_name
+        if not log.resolve().is_relative_to(path.parent.resolve()) or log.is_symlink():
+            raise ValueError(f"Execution log must stay within the scenario directory: {path}")
+        if log.is_file():
+            size = log.stat().st_size
+            with log.open("rb") as stream:
+                raw = stream.read(REPORT_LOG_BYTES)
+                if size > REPORT_LOG_BYTES:
+                    head = REPORT_LOG_BYTES // 3
+                    stream.seek(-(REPORT_LOG_BYTES - head), os.SEEK_END)
+                    raw = raw[:head] + b"\n... LOG MIDDLE OMITTED ...\n" + stream.read(REPORT_LOG_BYTES - head)
+            record["executionLog"] = {"text": redact_sensitive_text(raw.decode("utf-8-sig", errors="replace")),
+                                      "originalBytes": size, "truncated": size > REPORT_LOG_BYTES}
+    return record
 
 
 def evidence_outcomes(root: Path) -> tuple[dict, dict]:
@@ -118,21 +147,16 @@ def pack(results: Path, output: Path, identity: dict, position: int, total: int,
         raise FileNotFoundError(f"Test results directory not found: {results}")
     output.mkdir(parents=True, exist_ok=False)
     archive = output / f"agent-{position}.zip"
-    policy = policy if policy is not None else video_policy(Path(__file__).resolve().parent.parent)
-    directories, videos = evidence_outcomes(results)
     count = 0
     with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED, allowZip64=True) as zipped:
-        for name in RESULT_DIRECTORIES:
-            evidence = results / name
-            if evidence.is_symlink() or not evidence.resolve().is_relative_to(results.resolve()):
-                raise ValueError(f"Evidence links outside the source are not supported: {evidence}")
-            for path in sorted(evidence.rglob("*")) if evidence.exists() else []:
-                if path.is_symlink() or not path.resolve().is_relative_to(evidence.resolve()):
-                    raise ValueError(f"Evidence links outside the source are not supported: {path}")
-                if path.is_file():
-                    outcome = next((directories[parent] for parent in path.parents if parent in directories), "")
-                    write_filtered_file(zipped, path, path.relative_to(results).as_posix(), policy, outcome, videos)
-                    count += name == "Artifacts" and path.name == "scenario-result.json"
+        evidence = results / "Artifacts"
+        if evidence.is_symlink() or not evidence.resolve().is_relative_to(results.resolve()):
+            raise ValueError(f"Evidence links outside the source are not supported: {evidence}")
+        for path in sorted(evidence.rglob("scenario-result.json")):
+            if path.is_symlink() or not path.resolve().is_relative_to(evidence.resolve()):
+                raise ValueError(f"Evidence links outside the source are not supported: {path}")
+            zipped.writestr(path.relative_to(results).as_posix(), json.dumps(report_record(path), ensure_ascii=False))
+            count += 1
     parts = []
     with archive.open("rb") as source:
         index = 0
@@ -143,7 +167,7 @@ def pack(results: Path, output: Path, identity: dict, position: int, total: int,
             parts.append({"name": name, "bytes": len(block), "sha256": digest(part)})
             index += 1
     manifest = {
-        "schemaVersion": 1, **identity, "position": position, "totalJobs": total,
+        "schemaVersion": 2, **identity, "position": position, "totalJobs": total,
         "scenarioCount": count, "archiveSha256": digest(archive), "parts": parts,
     }
     path = output / f"agent-{position}.json"
@@ -157,10 +181,10 @@ def publish() -> None:
     manifest_path = pack(results, output, scope(), int(required("SYSTEM_JOBPOSITIONINPHASE")), int(required("SYSTEM_TOTALJOBSINPHASE")))
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     print(f"Evidence root: {results / 'Artifacts'}; shard {manifest['position']}/{manifest['totalJobs']}; scenarios/attempts: {manifest['scenarioCount']}", flush=True)
+    (output / f"agent-{manifest['position']}.zip").unlink()
     if os.environ.get("EVIDENCE_TRANSPORT") == "pipeline":
         print(f"##vso[task.setvariable variable=EVIDENCE_HANDOFF]{command_escape(str(output))}", flush=True)
         return
-    attach(output / f"agent-{manifest['position']}.zip", "file")
     for part in manifest["parts"]:
         attach(output / part["name"], CHUNK_TYPE)
     attach(manifest_path, MANIFEST_TYPE)
@@ -238,7 +262,7 @@ def validate_manifests(manifests: list[dict], identity: dict) -> int:
         raise ValueError("Invalid total job count")
     positions = []
     for manifest in manifests:
-        if manifest.get("schemaVersion") != 1 or any(manifest.get(k) != v for k, v in identity.items()):
+        if manifest.get("schemaVersion") != 2 or any(manifest.get(k) != v for k, v in identity.items()):
             raise ValueError("Evidence belongs to a different release/environment/deployment or schema")
         if manifest["totalJobs"] != total or type(manifest["position"]) is not int:
             raise ValueError("Inconsistent shard identity")
@@ -270,7 +294,7 @@ def unpack(manifest: dict, parts: Path, target: Path) -> None:
         for item in zipped.infolist():
             relative = Path(item.filename)
             destination = (target / relative).resolve()
-            if (not any(item.filename.startswith(name + "/") for name in RESULT_DIRECTORIES) or "\\" in item.filename or ":" in item.filename
+            if (not item.filename.startswith("Artifacts/") or relative.name != "scenario-result.json" or "\\" in item.filename or ":" in item.filename
                     or ".." in relative.parts or not destination.is_relative_to(target.resolve())
                     or (item.external_attr >> 16) & 0o170000 == 0o120000
                     or item.filename.casefold() in seen):
@@ -297,7 +321,6 @@ def collect_pipeline() -> None:
     incoming = Path(required("EVIDENCE_DOWNLOAD_ROOT"))
     output = Path(required("REPORT_OUTPUT_ROOT"))
     output.mkdir(parents=True, exist_ok=True)
-    archive_bundle(incoming, output / "RawTestResults.zip")
     work = Path(tempfile.mkdtemp(prefix="pipeline-report-", dir=required("AGENT_TEMPDIRECTORY")))
     bundle = work / "bundle"
     evidence = bundle / "Artifacts"
@@ -332,9 +355,9 @@ def collect_pipeline() -> None:
     if actual != expected_names:
         raise ValueError("Unexpected or missing evidence artifacts; refusing an ambiguous report")
     (bundle / "collection-manifest.json").write_text(json.dumps(all_manifests, indent=2), encoding="utf-8")
-    archive = generate(evidence, bundle, Path(__file__).resolve().parent.parent)
-    shutil.copyfile(archive, output / archive.name)
-    print(f"Verified {len(all_manifests)} shards; report and raw results: {output}", flush=True)
+    report = generate(evidence, bundle, Path(__file__).resolve().parent.parent)
+    shutil.copyfile(report, output / "report.html")
+    print(f"Verified {len(all_manifests)} shards; standalone report: {output / 'report.html'}", flush=True)
 
 
 def generate(evidence: Path, bundle: Path, source: Path) -> Path:
@@ -345,17 +368,15 @@ def generate(evidence: Path, bundle: Path, source: Path) -> Path:
                             for root in evidence.glob(pattern) if root.is_dir())
     if not scenario_roots:
         raise ValueError("No completed scenario evidence found; no canonical agent Artifacts directories")
-    arguments = ["--evidence-root", str(evidence), "--source-root", str(source), "--output-dir", str(report), "--fail-on-empty"]
+    arguments = ["--evidence-root", str(evidence), "--source-root", str(source), "--output-dir", str(report), "--fail-on-empty", "--summary-only"]
     for root in scenario_roots:
         arguments.extend(["--scenario-root", str(root)])
-    print(f"Generating report from {len(scenario_roots)} canonical scenario directories; raw runner attachments remain archived.", flush=True)
+    print(f"Generating standalone report from {len(scenario_roots)} canonical scenario directories; media and runner attachments are excluded.", flush=True)
     if generator.main(arguments) != 0:
         raise ValueError("No completed scenario evidence found; consolidated report generation failed")
-    for name in ("report.html", "log.html", "summary.json", "output.xml"):
-        if not (report / name).is_file():
-            raise FileNotFoundError(f"Expected report output missing: {name}")
-    archive = bundle.parent / "FinalConsolidatedReport.zip"
-    return archive_bundle(bundle, archive)
+    if not (report / "report.html").is_file():
+        raise FileNotFoundError("Expected report output missing: report.html")
+    return report / "report.html"
 
 
 def collect() -> None:
@@ -403,15 +424,8 @@ def collect() -> None:
         unpack(manifest, downloads, evidence / f"agent-{manifest['position']}")
     (bundle / "collection-manifest.json").write_text(json.dumps(manifests, indent=2), encoding="utf-8")
     print(f"Verified {total} agent(s), {sum(m['scenarioCount'] for m in manifests)} scenario attempts for deployment {identity['deploymentId']}", flush=True)
-    attach(archive_bundle(bundle, work / "RawTestResults.zip"), "file")
-    archive = generate(evidence, bundle, Path(__file__).resolve().parent.parent)
-    report = bundle / "ConsolidatedReport"
-    summary = work / "report-summary.md"
-    summary.write_text(f"# Consolidated test report\n\nRelease {identity['releaseId']}, environment {identity['environmentId']}, deployment {identity['deploymentId']}.\n\nCollected all **{total}** agent shards. Download `FinalConsolidatedReport.zip` from this task's logs/attachments, extract it, and open `ConsolidatedReport/report.html`. Keep the adjacent `Artifacts` folder for linked videos/traces.\n", encoding="utf-8")
-    print(f"##vso[task.uploadsummary]{command_escape(str(summary))}", flush=True)
-    for name in ("report.html", "log.html", "summary.json", "output.xml"):
-        attach(report / name, "file")
-    attach(archive, "file")
+    report = generate(evidence, bundle, Path(__file__).resolve().parent.parent)
+    attach(report, "file")
 
 
 def main() -> int:

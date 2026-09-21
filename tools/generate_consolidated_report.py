@@ -92,6 +92,7 @@ class ReportLimits:
     max_image_bytes: int = 12 * 1024 * 1024
     max_images_per_scenario: int = 20
     max_raw_json_bytes: int = 512 * 1024
+    summary_only: bool = False
 
 
 # ---------------------------------------------------------------------------
@@ -720,6 +721,14 @@ def render_screenshot_gallery(
 
 
 def render_failure_evidence(result: dict[str, Any], output_dir: Path, limits: ReportLimits) -> str:
+    if limits.summary_only:
+        log = result.get("executionLog") or {}
+        if not log:
+            return ""
+        note = " · middle omitted" if log.get("truncated") else ""
+        return (f'<details class="failure-evidence"><summary>Failed-attempt execution log · '
+                f'{esc(fmt_bytes(log.get("originalBytes", 0)))}{note}</summary>'
+                f'<pre class="embedded-log">{esc(redact_sensitive_text(log.get("text", "")))}</pre></details>')
     gallery, embedded_count, total_images = render_screenshot_gallery(result, output_dir, limits)
     log_path = find_execution_log(result)
     log_html = '<p class="muted">No execution log file was found in this scenario evidence directory.</p>'
@@ -778,7 +787,7 @@ def render_deferred_verifications(result: dict[str, Any], output_dir: Path, limi
     rows: list[str] = []
     for index, item in enumerate(items, 1):
         screenshot_html = ""
-        path = resolve_path(result, item.get("screenshot"))
+        path = None if limits.summary_only else resolve_path(result, item.get("screenshot"))
         if path:
             embedded = embed_image(path, output_dir, limits.max_image_bytes)
             if embedded.embedded:
@@ -822,7 +831,7 @@ def render_step(result: dict[str, Any], step: dict[str, Any], output_dir: Path, 
         if panel
     )
     screenshot_html = ""
-    screenshot_path = resolve_path(result, step.get("screenshot"))
+    screenshot_path = None if limits.summary_only else resolve_path(result, step.get("screenshot"))
     if screenshot_path:
         embedded = embed_image(screenshot_path, output_dir, limits.max_image_bytes)
         if embedded.embedded and normalize_status(result.get("status")) == "FAIL":
@@ -844,7 +853,7 @@ def render_step(result: dict[str, Any], step: dict[str, Any], output_dir: Path, 
         <div class="step-grid">
           <div><div class="field-label">C# step definition</div><strong>{esc(binding)}</strong>{source_html}{resolution_html}</div>
           <div><div class="field-label">Resolved test data</div>{render_data(step.get('data'))}</div>
-          <div><div class="field-label">Step screenshot</div>{screenshot_html or '<span class="muted">Not recorded</span>'}</div>
+          {'' if limits.summary_only else '<div><div class="field-label">Step screenshot</div>' + (screenshot_html or '<span class="muted">Not recorded</span>') + '</div>'}
         </div>
         {diagnostics or '<p class="muted no-diagnostics">No error, console or network diagnostics were recorded for this step.</p>'}
       </div>
@@ -905,6 +914,8 @@ def render_scenario(result: dict[str, Any], output_dir: Path, limits: ReportLimi
         if result_file and result_file.exists()
         else esc(result_file)
     )
+    if limits.summary_only:
+        result_source = "Agent scenario metadata (embedded)"
     content = f"""
           <div class="scenario-meta-grid">
             <div><span class="field-label">Feature / suite</span><strong>{esc(feature)}</strong></div>
@@ -914,12 +925,12 @@ def render_scenario(result: dict[str, Any], output_dir: Path, limits: ReportLimi
             <div class="meta-wide"><span class="field-label">Tags</span>{tag_html or '<span class="muted">No tags inferred</span>'}</div>
             <div class="meta-wide"><span class="field-label">Scenario result source</span>{result_source}</div>
           </div>
-          {render_artifact_strip(result, output_dir)}
+          {'' if limits.summary_only else render_artifact_strip(result, output_dir)}
           {render_deferred_verifications(result, output_dir, limits)}
           <div class="steps-heading"><h4>Execution steps</h4><span>{len(steps)} keyword(s)</span></div>
           <div class="step-list">{step_html}</div>
           {render_failure_evidence(result, output_dir, limits)}
-          {render_video(result, output_dir)}
+          {'' if limits.summary_only else render_video(result, output_dir)}
     """
     if body_only:
         return content
@@ -1612,7 +1623,8 @@ def write_report(
         f"<th>Status</th><th>Duration</th><th>Error</th></tr></thead><tbody>{''.join(log_rows)}</tbody></table>"
         "</body></html>"
     )
-    (output_dir / "log.html").write_text(log_html, encoding="utf-8")
+    if not limits.summary_only:
+        (output_dir / "log.html").write_text(log_html, encoding="utf-8")
 
     # Preserve the original summary.json schema and keys.
     summary_success_key = "pa" + "ssed"
@@ -1636,7 +1648,8 @@ def write_report(
             for feature, items in sorted(by_feature.items())
         },
     }
-    (output_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    if not limits.summary_only:
+        (output_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     return summary
 
 
@@ -1704,6 +1717,7 @@ def main(argv: Iterable[str] | None = None) -> int:
     parser.add_argument("--source-root", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
     parser.add_argument("--fail-on-empty", action="store_true")
+    parser.add_argument("--summary-only", action="store_true", help="Write only standalone report.html without media or external evidence links.")
     parser.add_argument("--max-log-mb", type=float, default=2.0, help="Maximum execution-log text embedded per failed scenario (default: 2 MB).")
     parser.add_argument("--max-image-mb", type=float, default=12.0, help="Maximum size of each base64-embedded image (default: 12 MB).")
     parser.add_argument("--max-images-per-scenario", type=int, default=20, help="Maximum embedded screenshots per scenario (default: 20).")
@@ -1735,6 +1749,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         max_log_bytes=int(args.max_log_mb * 1024 * 1024),
         max_image_bytes=int(args.max_image_mb * 1024 * 1024),
         max_images_per_scenario=args.max_images_per_scenario,
+        summary_only=args.summary_only,
     )
     summary = write_report(
         results,
@@ -1744,7 +1759,8 @@ def main(argv: Iterable[str] | None = None) -> int:
         args.source_root,
         limits,
     )
-    write_robot_xml(results, args.output_dir, generated)
+    if not args.summary_only:
+        write_robot_xml(results, args.output_dir, generated)
     print(
         json.dumps(
             {

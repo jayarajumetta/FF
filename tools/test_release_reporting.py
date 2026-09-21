@@ -1,6 +1,7 @@
 """Offline release handoff regressions; no browser or Azure credentials required."""
 import contextlib
 import hashlib
+from html.parser import HTMLParser
 import io
 import json
 import os
@@ -81,15 +82,13 @@ class ReleaseReportingTests(unittest.TestCase):
                 output = self.root / name / "handoff"
                 manifest = json.loads(reporting.pack(results, output, IDENTITY, 1, 1, policy=policy).read_text())
                 with zipfile.ZipFile(output / "agent-1.zip") as archive:
-                    videos = [n for n in archive.namelist() if n.endswith(".webm")]
-                    self.assertEqual(2 * len(retained), len(videos))
-                    for number in (1, 2):
-                        prefix = f"Artifacts/CommercialLines.DuckCreek.Tests/case-{number}/"
-                        self.assertEqual(zipfile.ZIP_DEFLATED, archive.getinfo(prefix + "execution.log").compress_type)
-                        with zipfile.ZipFile(io.BytesIO(archive.read(prefix + "evidence-bundle.zip"))) as bundle:
-                            with zipfile.ZipFile(io.BytesIO(bundle.read("nested.zip"))) as nested_zip:
-                                self.assertEqual(number in retained, f"attempt-{number}.webm" in nested_zip.namelist())
-                                self.assertIn("execution.log", nested_zip.namelist())
+                    self.assertEqual(2, len(archive.namelist()))
+                    self.assertTrue(all(n.endswith("scenario-result.json") for n in archive.namelist()))
+                    for entry in archive.infolist():
+                        self.assertEqual(zipfile.ZIP_DEFLATED, entry.compress_type)
+                        record = json.loads(archive.read(entry))
+                        self.assertNotIn("artifacts", record)
+                        self.assertEqual(record["status"] == "FAIL", "executionLog" in record)
                 self.assertEqual(2, manifest["scenarioCount"])
                 final_archive = self.root / (name + "-final.zip")
                 with patch.object(reporting, "video_policy", return_value=policy):
@@ -123,17 +122,82 @@ class ReleaseReportingTests(unittest.TestCase):
         evidence = bundle / "Artifacts"
         reporting.unpack(manifest, parts, evidence / "agent-1")
         with contextlib.redirect_stdout(io.StringIO()):
-            archive = reporting.generate(evidence, bundle, ROOT)
-        with zipfile.ZipFile(archive) as zipped:
-            self.assertIn("ConsolidatedReport/report.html", zipped.namelist())
-            self.assertEqual(2, sum(p.endswith("scenario-result.json") for p in zipped.namelist()))
-            self.assertEqual(2, sum(p.endswith("trace.zip") for p in zipped.namelist()))
-            report_html = zipped.read("ConsolidatedReport/report.html").decode("utf-8")
-            self.assertIn("../Artifacts/agent-1/Artifacts/CommercialLines.DuckCreek.Tests/case-1/trace.zip", report_html)
-            summary = json.loads(zipped.read("ConsolidatedReport/summary.json"))
-        self.assertEqual(1, summary["total"])
+            report = reporting.generate(evidence, bundle, ROOT)
+        self.assertEqual(["report.html"], [p.name for p in report.parent.iterdir()])
+        self.assertNotIn("trace.zip", report.read_text(encoding="utf-8"))
+        self.assertIn("Attempt 1: FAIL", report.read_text(encoding="utf-8"))
+        self.assertIn("Attempt 2: PASS", report.read_text(encoding="utf-8"))
 
-    def test_report_ignores_runner_attachment_copies_but_archives_them(self):
+    def test_metadata_only_report_is_portable_and_preserves_source_evidence(self):
+        results = self.evidence("lightweight", ("FAIL", "PASS"))
+        for number in (1, 2):
+            directory = results / "Artifacts/CommercialLines.DuckCreek.Tests" / f"case-{number}"
+            path = directory / "scenario-result.json"
+            record = json.loads(path.read_text())
+            record["steps"] = [{"order": 1, "text": "Verify result", "status": record["status"],
+                                "error": "<script>not executable</script>", "screenshot": "screen.png"}]
+            record["deferredVerifications"] = [{"error": "mismatch", "screenshot": "screen.png"}]
+            record["artifacts"].update({"log": "execution.log", "video": "video.webm", "screenshot": "screen.png"})
+            path.write_text(json.dumps(record))
+            (directory / "screen.png").write_bytes(b"image")
+            (directory / "video.webm").write_bytes(b"video")
+            (directory / "execution.log").write_text("LOG-START\n" + "x" * 100000 + "\nLOG-END<script>alert(1)</script>", encoding="utf-8")
+        original = {p: reporting.digest(p) for p in results.rglob("*") if p.is_file()}
+        parts = self.root / "metadata-parts"
+        manifest = json.loads(reporting.pack(results, parts, IDENTITY, 1, 1).read_text())
+        self.assertEqual(2, manifest["schemaVersion"])
+        self.assertEqual(original, {p: reporting.digest(p) for p in original})
+        with zipfile.ZipFile(parts / "agent-1.zip") as archive:
+            self.assertEqual(2, len(archive.namelist()))
+            records = [json.loads(archive.read(name)) for name in archive.namelist()]
+        self.assertNotIn("executionLog", records[1])
+        log = records[0]["executionLog"]
+        self.assertTrue(log["truncated"])
+        self.assertLessEqual(len(log["text"].encode()), reporting.REPORT_LOG_BYTES + 40)
+        self.assertIn("LOG-START", log["text"])
+        self.assertIn("LOG-END", log["text"])
+        self.assertNotIn("screen.png", json.dumps(records))
+        self.assertNotIn("video.webm", json.dumps(records))
+        bundle = self.root / "portable"
+        evidence = bundle / "Artifacts"
+        reporting.unpack(manifest, parts, evidence / "agent-1")
+        console = io.StringIO()
+        with contextlib.redirect_stdout(console):
+            report = reporting.generate(evidence, bundle, ROOT)
+        self.assertIn('"total": 1', console.getvalue())
+        self.assertIn('"passed": 1', console.getvalue())
+        self.assertIn('"attempts": 2', console.getvalue())
+        standalone = self.root / "report.html"
+        shutil.copyfile(report, standalone)
+        shutil.rmtree(bundle)
+        html = standalone.read_text(encoding="utf-8")
+        self.assertIn("LOG-END&lt;script&gt;", html)
+        self.assertIn("middle omitted", html)
+        self.assertNotIn("<video", html)
+        self.assertNotIn("data:image", html)
+
+        class References(HTMLParser):
+            def handle_starttag(self, tag, attrs):
+                for key, value in attrs:
+                    if key in ("href", "src") and value and not value.startswith("#"):
+                        raise AssertionError(f"External dependency: {tag} {key}={value}")
+
+        References().feed(html)
+
+    def test_report_transport_rejects_external_log_and_legacy_schema(self):
+        results = self.evidence("external", ("FAIL",))
+        path = next(results.rglob("scenario-result.json"))
+        result = json.loads(path.read_text())
+        result["artifacts"]["log"] = "../../outside.log"
+        path.write_text(json.dumps(result))
+        with self.assertRaisesRegex(ValueError, "within the scenario directory"):
+            reporting.pack(results, self.root / "unsafe", IDENTITY, 1, 1)
+        manifest, _ = self.manifest(1, 1)
+        manifest["schemaVersion"] = 1
+        with self.assertRaisesRegex(ValueError, "schema"):
+            reporting.validate_manifests([manifest], IDENTITY)
+
+    def test_report_excludes_runner_attachment_copies(self):
         results = self.evidence("copied", ("FAIL", "PASS"))
         original = results / "Artifacts" / "CommercialLines.DuckCreek.Tests" / "case-1"
         for name in ("Runner", "NUnit", "NUnitWork"):
@@ -145,13 +209,10 @@ class ReleaseReportingTests(unittest.TestCase):
         evidence = bundle / "Artifacts"
         reporting.unpack(manifest, parts, evidence / "agent-1")
         with contextlib.redirect_stdout(io.StringIO()):
-            archive = reporting.generate(evidence, bundle, ROOT)
-        with zipfile.ZipFile(archive) as zipped:
-            self.assertEqual(5, sum(n.endswith("scenario-result.json") for n in zipped.namelist()))
-            summary = json.loads(zipped.read("ConsolidatedReport/summary.json"))
-            self.assertEqual(1, summary["total"])
-            self.assertIn("../Artifacts/agent-1/Artifacts/CommercialLines.DuckCreek.Tests/case-1/trace.zip",
-                          zipped.read("ConsolidatedReport/report.html").decode())
+            report = reporting.generate(evidence, bundle, ROOT)
+        self.assertEqual(2, len(list(evidence.rglob("scenario-result.json"))))
+        self.assertNotIn("trace.zip", report.read_text(encoding="utf-8"))
+        self.assertTrue((results / "Runner/attachments/case-1/trace.zip").is_file())
 
     def test_report_rejects_duplicate_canonical_attempts_with_paths(self):
         results = self.evidence("conflict")
@@ -181,9 +242,9 @@ class ReleaseReportingTests(unittest.TestCase):
             manifest = json.loads(reporting.pack(results, parts, IDENTITY, position, 2).read_text())
             reporting.unpack(manifest, parts, evidence / f"agent-{position}")
         with contextlib.redirect_stdout(io.StringIO()):
-            archive = reporting.generate(evidence, bundle, ROOT)
-        with zipfile.ZipFile(archive) as zipped:
-            self.assertEqual(1, json.loads(zipped.read("ConsolidatedReport/summary.json"))["total"])
+            report = reporting.generate(evidence, bundle, ROOT)
+        self.assertTrue(report.is_file())
+        self.assertIn("Attempt 2: PASS", report.read_text(encoding="utf-8"))
 
     def test_report_generator_rejects_overlapping_and_external_roots(self):
         import generate_consolidated_report as generator
@@ -211,7 +272,7 @@ class ReleaseReportingTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "checksum/size"):
             reporting.unpack(manifest, parts, self.root / "unpacked")
 
-    def test_raw_results_are_preserved_across_agents(self):
+    def test_raw_results_stay_on_source_and_are_not_transported(self):
         results = self.evidence("raw")
         for name in ("Runner", "NUnit", "NUnitWork"):
             (results / name).mkdir()
@@ -221,7 +282,8 @@ class ReleaseReportingTests(unittest.TestCase):
         target = self.root / "unpacked"
         reporting.unpack(manifest, parts, target)
         for name in ("Runner", "NUnit", "NUnitWork"):
-            self.assertEqual("<results />", (target / name / "result.xml").read_text())
+            self.assertFalse((target / name).exists())
+            self.assertEqual("<results />", (results / name / "result.xml").read_text())
 
     @unittest.skipUnless(shutil.which("powershell.exe"), "Windows PowerShell is required")
     def test_entrypoint_rejects_tampered_runtime_and_wrong_configuration(self):
@@ -291,7 +353,7 @@ class ReleaseReportingTests(unittest.TestCase):
             ]},
         ]}]}
 
-    def test_multi_agent_collector_downloads_and_publishes_one_zip(self):
+    def test_multi_agent_collector_publishes_only_report_html(self):
         sources = {}
         for position in (1, 2):
             _, parts = self.manifest(position, 2, ("FAIL", "PASS") if position == 1 else ("FAIL",))
@@ -325,13 +387,10 @@ class ReleaseReportingTests(unittest.TestCase):
         self.assertIn("agent-1.json", downloads)
         self.assertIn("agent-2.json", downloads)
         self.assertIn("Verified 2 agent(s), 3 scenario attempts", console.getvalue())
-        self.assertEqual(6, console.getvalue().count("##vso[task.uploadfile]"))
-        archives = list(self.root.rglob("FinalConsolidatedReport.zip"))
-        self.assertEqual(1, len(archives))
-        with zipfile.ZipFile(archives[0]) as zipped:
-            summary = json.loads(zipped.read("ConsolidatedReport/summary.json"))
-            self.assertEqual(2, summary["total"])
-            self.assertEqual(3, sum(n.endswith("scenario-result.json") for n in zipped.namelist()))
+        self.assertEqual(1, console.getvalue().count("##vso[task.uploadfile]"))
+        self.assertFalse(list(self.root.rglob("FinalConsolidatedReport.zip")))
+        self.assertFalse(list(self.root.rglob("RawTestResults.zip")))
+        self.assertEqual(1, len(list(self.root.rglob("report.html"))))
         self.assertNotIn("test-only-token", console.getvalue())
 
     def pipeline_fixture(self, total=2):
@@ -355,12 +414,9 @@ class ReleaseReportingTests(unittest.TestCase):
         with patch.dict(os.environ, environment), contextlib.redirect_stdout(io.StringIO()):
             reporting.collect_pipeline()
         output = Path(environment["REPORT_OUTPUT_ROOT"])
-        self.assertTrue((output / "RawTestResults.zip").is_file())
-        with zipfile.ZipFile(output / "FinalConsolidatedReport.zip") as archive:
-            self.assertEqual(2, sum(n.endswith("result.trx") for n in archive.namelist()))
-            self.assertEqual(2, sum(n.endswith("scenario-result.json") for n in archive.namelist()))
-            self.assertEqual(2, sum(n.endswith("trace.zip") for n in archive.namelist()))
-            self.assertIn("ConsolidatedReport/report.html", archive.namelist())
+        self.assertEqual(["report.html"], [p.name for p in output.iterdir()])
+        self.assertIn("worker-1", (output / "report.html").read_text(encoding="utf-8"))
+        self.assertIn("worker-2", (output / "report.html").read_text(encoding="utf-8"))
 
     def test_pipeline_missing_shard_fails_but_preserves_raw_downloads(self):
         environment = self.pipeline_fixture()
@@ -368,8 +424,7 @@ class ReleaseReportingTests(unittest.TestCase):
         with patch.dict(os.environ, environment), self.assertRaisesRegex(ValueError, "Missing agent evidence"):
             reporting.collect_pipeline()
         output = Path(environment["REPORT_OUTPUT_ROOT"])
-        self.assertTrue((output / "RawTestResults.zip").is_file())
-        self.assertFalse((output / "FinalConsolidatedReport.zip").exists())
+        self.assertEqual([], list(output.iterdir()))
 
     def test_pipeline_rejects_stale_attempt_and_keeps_raw_results(self):
         environment = self.pipeline_fixture(1)
@@ -379,14 +434,14 @@ class ReleaseReportingTests(unittest.TestCase):
         path.write_text(json.dumps(manifest))
         with patch.dict(os.environ, environment), self.assertRaisesRegex(ValueError, "different release"):
             reporting.collect_pipeline()
-        self.assertTrue((Path(environment["REPORT_OUTPUT_ROOT"]) / "RawTestResults.zip").exists())
+        self.assertEqual([], list(Path(environment["REPORT_OUTPUT_ROOT"]).iterdir()))
 
     def test_pipeline_report_failure_keeps_raw_results(self):
         environment = self.pipeline_fixture(1)
         with patch.dict(os.environ, environment), patch.object(reporting, "generate", side_effect=ValueError("report failed")):
             with self.assertRaisesRegex(ValueError, "report failed"):
                 reporting.collect_pipeline()
-        self.assertTrue((Path(environment["REPORT_OUTPUT_ROOT"]) / "RawTestResults.zip").exists())
+        self.assertEqual([], list(Path(environment["REPORT_OUTPUT_ROOT"]).iterdir()))
 
     def test_pipeline_rejects_unexpected_duplicate_artifact(self):
         environment = self.pipeline_fixture(1)
@@ -394,9 +449,9 @@ class ReleaseReportingTests(unittest.TestCase):
         shutil.copytree(incoming / "evidence-Assembly-1-2", incoming / "duplicate")
         with patch.dict(os.environ, environment), self.assertRaisesRegex(ValueError, "Unexpected or missing evidence"):
             reporting.collect_pipeline()
-        self.assertFalse((Path(environment["REPORT_OUTPUT_ROOT"]) / "FinalConsolidatedReport.zip").exists())
+        self.assertFalse((Path(environment["REPORT_OUTPUT_ROOT"]) / "report.html").exists())
 
-    def test_classic_publish_uploads_raw_zip_before_manifest(self):
+    def test_classic_publish_uploads_only_chunks_before_manifest(self):
         results = self.evidence("classic-publish")
         environment = {"EVIDENCE_TRANSPORT": "", "RELEASE_RELEASEID": "51", "RELEASE_ENVIRONMENTID": "62",
                        "RELEASE_DEPLOYMENTID": "73", "TEST_RESULTS_ROOT": str(results),
@@ -404,11 +459,12 @@ class ReleaseReportingTests(unittest.TestCase):
         with patch.dict(os.environ, environment), patch.object(reporting, "attach") as attach, contextlib.redirect_stdout(io.StringIO()):
             reporting.publish()
         first, last = attach.call_args_list[0], attach.call_args_list[-1]
-        self.assertEqual("agent-1.zip", first.args[0].name)
-        self.assertEqual("file", first.args[1])
+        self.assertEqual("agent-1-00000.part", first.args[0].name)
+        self.assertEqual(reporting.CHUNK_TYPE, first.args[1])
+        self.assertTrue(all(call.args[1] != "file" for call in attach.call_args_list))
         self.assertEqual(reporting.MANIFEST_TYPE, last.args[1])
 
-    def test_pipeline_publish_exposes_handoff_and_downloadable_zip(self):
+    def test_pipeline_publish_exposes_metadata_handoff_without_duplicate_zip(self):
         results = self.evidence("publish")
         environment = {"EVIDENCE_TRANSPORT": "pipeline", "BUILD_BUILDID": "101", "STAGEKEY": "Assembly",
                        "SYSTEM_STAGEATTEMPT": "1", "TEST_RESULTS_ROOT": str(results),
@@ -418,7 +474,7 @@ class ReleaseReportingTests(unittest.TestCase):
             reporting.publish()
         self.assertIn("task.setvariable variable=EVIDENCE_HANDOFF", console.getvalue())
         self.assertNotIn("task.addattachment", console.getvalue())
-        self.assertEqual(1, len(list(self.root.rglob("agent-1.zip"))))
+        self.assertEqual(0, len(list(self.root.rglob("agent-1.zip"))))
 
     def test_yaml_pipeline_contract(self):
         pipeline = (ROOT / "azure-pipelines-cd.yml").read_text()
@@ -439,7 +495,7 @@ class ReleaseReportingTests(unittest.TestCase):
         self.assertNotIn("PublishTestResults@2", execution)
         self.assertIn("dependsOn: ${{ parameters.dependencies }}", collector)
         self.assertIn("arguments: '-Mode Collect'", collector)
-        self.assertIn("targetPath: '$(REPORT_OUTPUT_ROOT)'", collector)
+        self.assertIn("targetPath: '$(REPORT_OUTPUT_ROOT)\\report.html'", collector)
 
     def test_release_api_routes_and_pagination(self):
         api = reporting.ReleaseApi("https://dev.azure.com/org/", "project", "unused")

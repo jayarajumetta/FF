@@ -29,15 +29,15 @@ jobs:
       itemPattern: 'evidence-*-$(System.StageAttempt)/**'
       targetPath: '$(EVIDENCE_DOWNLOAD_ROOT)'
   - task: PowerShell@2
-    displayName: Verify all shards and generate consolidated report ZIP
+    displayName: Verify all metadata shards and generate report.html
     condition: succeededOrFailed()
     inputs:
       targetType: filePath
       filePath: '$(ArtifactRoot)\scripts\Invoke-ReleaseStage.ps1'
       arguments: '-Mode Collect'
   - task: PublishPipelineArtifact@1
-    displayName: Publish consolidated report and raw test results
-    condition: succeededOrFailed()
+    displayName: Publish standalone report.html
+    condition: succeeded()
     inputs:
-      targetPath: '$(REPORT_OUTPUT_ROOT)'
+      targetPath: '$(REPORT_OUTPUT_ROOT)\report.html'
       artifact: 'consolidated-test-report-$(System.StageAttempt)-$(System.JobAttempt)'
