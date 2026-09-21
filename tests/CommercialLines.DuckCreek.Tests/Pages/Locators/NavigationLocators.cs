@@ -454,7 +454,7 @@ public sealed class NavigationLocators
 
     public ILocator GetCalculatedValue => _page.GetByRole(AriaRole.Link, new() { Name = "Get Calculated Value", Exact = true });
 
-    public ILocator GroupClass => _page.Locator("input[fieldref='MotorTruckCargoInput.Owners200MilesAndUnderGroupClass']");
+    public ILocator GroupClass => _page.Locator("input[fieldref='MotorTruckCargoInput.Owners200MilesAndUnderGroupClass'], input[fieldref=\"MotorTruckCargoInput.CarriersGroupClass\"]");
 
     public ILocator HasAnyApplicantBeenConvictedOfAFelonyOrBeenInvolvedInAnyIncidentsOrClaimsRelatingToSexualAbuseOrMolestationAllegationsDiscriminationArsonFraudBriberyOrNegligentHiring => _page.Locator("input[fieldref=\"UnderwritingQuestionsAutoInput.AnyFelonies\"]");
 
@@ -669,7 +669,7 @@ public sealed class NavigationLocators
 
     public ILocator NumberOfPartTimeEmployees => _page.Locator("input[fieldref=\"CoverageInput.NumberOfPartTimeEmployees\"]");
 
-    public ILocator NumberOfVehicles => _page.Locator("input[fieldref='MotorTruckCargoInput.Owners200MilesAndUnderNumberOfVehicles']");
+    public ILocator NumberOfVehicles => _page.Locator("input[fieldref='MotorTruckCargoInput.Owners200MilesAndUnderNumberOfVehicles'], input[fieldref=\"MotorTruckCargoInput.CarriersNumberOfVehicles\"]");
 
     public ILocator OCP => _page.GetByRole(AriaRole.Link, new() { Name = "OCP", Exact = true });
 

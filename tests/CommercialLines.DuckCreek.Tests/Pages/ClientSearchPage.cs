@@ -44,6 +44,9 @@ public sealed class ClientSearchPage
     public Task EnterAddressAsync(string value) =>
         _ui.FillAsync(_locators.Address, value, new ControlIntent("ClientSearch", "Address"));
 
+    public Task<string> CaptureAddressAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.Address, property, new ControlIntent("ClientSearch", "Address"));
+
     public Task PressAddressAsync(string key) =>
         _ui.PressAsync(_locators.Address, key, new ControlIntent("ClientSearch", "Address"));
 
@@ -70,6 +73,9 @@ public sealed class ClientSearchPage
 
     public Task EnterCityAsync(string value) =>
         _ui.FillAsync(_locators.City, value, new ControlIntent("ClientSearch", "City"));
+
+    public Task<string> CaptureCityAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.City, property, new ControlIntent("ClientSearch", "City"));
 
     public Task PressCityAsync(string key) =>
         _ui.PressAsync(_locators.City, key, new ControlIntent("ClientSearch", "City"));
@@ -151,6 +157,9 @@ public sealed class ClientSearchPage
 
     public Task EnterFirstNameAsync(string value) =>
         _ui.FillAsync(_locators.FirstName, value, new ControlIntent("ClientSearch", "FirstName"));
+
+    public Task<string> CaptureFirstNameAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.FirstName, property, new ControlIntent("ClientSearch", "FirstName"));
 
     public Task PressFirstNameAsync(string key) =>
         _ui.PressAsync(_locators.FirstName, key, new ControlIntent("ClientSearch", "FirstName"));
@@ -284,8 +293,14 @@ public sealed class ClientSearchPage
     public Task VerifyYearsInBusinessAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.YearsInBusiness, expected, property, new ControlIntent("ClientSearch", "YearsInBusiness"));
 
+    public Task<bool> ExistsYearsInBusinessAsync() =>
+        _ui.ExistsAsync(_locators.YearsInBusiness);
+
     public Task EnterYearsInBusinessAsync(string value) =>
         _ui.FillAsync(_locators.YearsInBusiness, value, new ControlIntent("ClientSearch", "YearsInBusiness"));
+
+    public Task<string> CaptureYearsInBusinessAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.YearsInBusiness, property, new ControlIntent("ClientSearch", "YearsInBusiness"));
 
     public Task PressYearsInBusinessAsync(string key) =>
         _ui.PressAsync(_locators.YearsInBusiness, key, new ControlIntent("ClientSearch", "YearsInBusiness"));
@@ -295,6 +310,9 @@ public sealed class ClientSearchPage
 
     public Task EnterNamedInsuredZipCodeAsync(string value) =>
         _ui.FillAsync(_locators.NamedInsuredZipCode, value, new ControlIntent("ClientSearch", "NamedInsuredZipCode"));
+
+    public Task<string> CaptureNamedInsuredZipCodeAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.NamedInsuredZipCode, property, new ControlIntent("ClientSearch", "NamedInsuredZipCode"));
 
     public Task PressNamedInsuredZipCodeAsync(string key) =>
         _ui.PressAsync(_locators.NamedInsuredZipCode, key, new ControlIntent("ClientSearch", "NamedInsuredZipCode"));
@@ -307,6 +325,9 @@ public sealed class ClientSearchPage
 
     public Task EnterLastNameAsync(string value) =>
         _ui.FillAsync(_locators.LastName, value, new ControlIntent("ClientSearch", "LastName"));
+
+    public Task<string> CaptureLastNameAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.LastName, property, new ControlIntent("ClientSearch", "LastName"));
 
     public Task EnterNamedInsuredIndividualEnterSSNAsync(string value) =>
         _ui.FillAsync(_locators.NamedInsuredIndividualEnterSSN, value, new ControlIntent("ClientSearch", "NamedInsuredIndividualEnterSSN"));

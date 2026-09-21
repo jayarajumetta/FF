@@ -3,44 +3,60 @@
   "WorkspaceRootPath": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\stepdefinitions\\imbasicpolicysteps.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\stepdefinitions\\imbasicpolicysteps.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\features\\007_im_basic_policy_az.feature||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\features\\007_im_basic_policy_az.feature||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\pages\\navigationpage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\pages\\navigationpage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\stepdefinitions\\imbasicpolicysteps.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\stepdefinitions\\imbasicpolicysteps.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_md.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_md.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\pages\\coveragespage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\pages\\coveragespage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_ct.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_ct.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_ri.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_ri.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\pages\\locators\\navigationlocators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\pages\\locators\\navigationlocators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{98445B7E-61EE-62E6-A18D-3574CE58E020}|src\\InsuranceAutomation.Core\\InsuranceAutomation.Core.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\src\\insuranceautomation.core\\uiactions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98445B7E-61EE-62E6-A18D-3574CE58E020}|src\\InsuranceAutomation.Core\\InsuranceAutomation.Core.csproj|solutionrelative:src\\insuranceautomation.core\\uiactions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\pages\\navigationpage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\pages\\navigationpage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{98445B7E-61EE-62E6-A18D-3574CE58E020}|src\\InsuranceAutomation.Core\\InsuranceAutomation.Core.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\src\\insuranceautomation.core\\frameworkconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{98445B7E-61EE-62E6-A18D-3574CE58E020}|src\\InsuranceAutomation.Core\\InsuranceAutomation.Core.csproj|solutionrelative:src\\insuranceautomation.core\\frameworkconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_vt.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_vt.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{98445B7E-61EE-62E6-A18D-3574CE58E020}|src\\InsuranceAutomation.Core\\InsuranceAutomation.Core.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\src\\insuranceautomation.core\\uiactions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98445B7E-61EE-62E6-A18D-3574CE58E020}|src\\InsuranceAutomation.Core\\InsuranceAutomation.Core.csproj|solutionrelative:src\\insuranceautomation.core\\uiactions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\pages\\locators\\submissionlocators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\pages\\locators\\submissionlocators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\pages\\clientsearchpage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\pages\\clientsearchpage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_va.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_va.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\pages\\coveragespage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\pages\\coveragespage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_vt.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_vt.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_az.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -49,10 +65,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_nh.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_nh.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_ct.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_ct.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_de.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -83,10 +95,6 @@
       "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_pa.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_ri.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_ri.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7857\\documents\\backupbasic\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_wa.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\007_im_basic_policy_wa.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
@@ -102,17 +110,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "007_IM_Basic_Policy_AZ.feature",
               "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Features\\007_IM_Basic_Policy_AZ.feature",
               "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\Features\\007_IM_Basic_Policy_AZ.feature",
               "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Features\\007_IM_Basic_Policy_AZ.feature",
               "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\Features\\007_IM_Basic_Policy_AZ.feature",
-              "ViewState": "AgIAABEAAADgMjMzM/MvwCQAAAAgAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAACwAAAAEAAAAAAAAAA==",
               "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI8SURBVDhPddBPiNR1GMfx1/c36\u002Bx/29Ylf7NUrriiKIhhHYKgdMMgukXNEBSCFEInb3WKghYCIRBBOnjpoLOHBMsOQaBQQhc71EFrUwmUmdm1Nqddnd119tth9zc7s9hz\u002B36ez\u002Bf9PN8neFSdSwcFe7AdDwW3NF33VnWhwxdjDJ0CptIjOI496FrrLOFXTCpVz7dH1gHltAcn8D50J3mLK0uSkOhO8h40G5nzAyGcUKw0IWkBeA/HYO9ju/w4ccHezbu8M/aGy4fOC\u002BuzPhLjy9ljFVBOh/AJcsP5IfXledv6n/L8yLNeLUy4//CBKGaZXnzqm9Gg9YVyWkR5W/\u002BTLh38yve1H3z\u002B2xf\u002BXvrHcH7IX4tzZhbvZgBr19qpVL2RfWE/3LlfcebmWV0hp9aYVWvMulaf3hi2Nni/tht0QTOu\u002BHPhtmv1aY3mYss9PjBmct\u002BHDqcvtTT0awPchPHB7U4dmHRo6wtGurfYkn9coecJuZDzSnrQ6QOftQNua91gKt0h\u002Bj0IyY6BMfeW665MfO3k9Bm7N4/bPTju9StH9eX6VBo1aBC3KtXqqxsUqzfwZRT9MX/L4KYBISR\u002BnvvFT3evGu1NNeNKFoazSrX6\u002BgZQTkdxEc/AcH7I3NI9SUj0dfX6d3k\u002Bc84I8UXF2vVOAJxLRwSn8Rp6OnqrtYCiUvXbTOgEwFRhk\u002Bg54jG83dap4l2l6sU27RGArKYKh8X4He7gAuFjpcrMRtv/A8qFp4n7cFXSrHhzdqMD/AfXwLdp/4rZ5QAAAABJRU5ErkJggg==",
               "WhenOpened": "2026-09-17T05:51:48.579Z",
               "IsPinned": true,
@@ -120,27 +128,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "007_im_basic_policy_md.json",
-              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_md.json",
-              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_md.json",
-              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_md.json",
-              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_md.json",
-              "ViewState": "AgIAABwAAAAAAAAAAAD4vzgAAAAUAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-09-17T05:54:48.02Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "IMBasicPolicySteps.cs",
               "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\StepDefinitions\\IMBasicPolicySteps.cs",
               "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\StepDefinitions\\IMBasicPolicySteps.cs",
               "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\StepDefinitions\\IMBasicPolicySteps.cs",
               "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\StepDefinitions\\IMBasicPolicySteps.cs",
-              "ViewState": "AgIAAJEBAAAAFAAAAAAewJoBAABrAAAAAAAAAA==",
+              "ViewState": "AgIAAOcBAACAZWZmZmYpwOQBAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-09-17T05:52:15.786Z",
               "IsPinned": true,
@@ -160,52 +154,26 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "007_im_basic_policy_ct.json",
-              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ct.json",
-              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ct.json",
-              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ct.json",
-              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ct.json",
-              "ViewState": "AgIAADAAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-09-17T05:56:04.548Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "007_im_basic_policy_va.json",
-              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_va.json",
-              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_va.json",
-              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_va.json",
-              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_va.json",
-              "ViewState": "AgIAADAAAAAAAAAAAABBwDEAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-09-17T05:56:06.165Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "007_im_basic_policy_vt.json",
-              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_vt.json",
-              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_vt.json",
-              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_vt.json",
-              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_vt.json",
-              "ViewState": "AgIAADAAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-09-17T05:56:06.326Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "007_im_basic_policy_md.json",
+              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_md.json",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_md.json",
+              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_md.json",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_md.json",
+              "ViewState": "AgIAAFcAAACAzMzMzMwpwGIAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-09-17T05:54:48.02Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "NavigationPage.cs",
               "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\NavigationPage.cs",
               "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\NavigationPage.cs",
               "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\NavigationPage.cs",
               "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\NavigationPage.cs",
-              "ViewState": "AgIAAGgJAAAAAAAAAAAiwC8DAAAuAAAAAAAAAA==",
+              "ViewState": "AgIAAHsHAAAAAAAAAAAQwIsHAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-09-17T06:17:21.406Z",
               "EditorCaption": ""
@@ -218,34 +186,23 @@
               "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\Locators\\NavigationLocators.cs",
               "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\Locators\\NavigationLocators.cs",
               "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\Locators\\NavigationLocators.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAYwBIAAAAUAAAAAAAAAA==",
+              "ViewState": "AgIAAJECAAAAAAAAAAAAAJ8CAADHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-17T06:16:46.337Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "CoveragesPage.cs",
-              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\CoveragesPage.cs",
-              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\CoveragesPage.cs",
-              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\CoveragesPage.cs",
-              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\CoveragesPage.cs",
-              "ViewState": "AgIAACsAAAAAAAAAAIA8wDoAAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-17T10:48:49.955Z",
+              "WhenOpened": "2026-09-17T06:16:46.337Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "UiActions.cs",
               "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\src\\InsuranceAutomation.Core\\UiActions.cs",
               "RelativeDocumentMoniker": "src\\InsuranceAutomation.Core\\UiActions.cs",
               "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\src\\InsuranceAutomation.Core\\UiActions.cs",
               "RelativeToolTip": "src\\InsuranceAutomation.Core\\UiActions.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEwCAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAFQBAAAAAAAAAAAowHQBAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-17T09:56:34.972Z"
+              "WhenOpened": "2026-09-17T09:56:34.972Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -255,161 +212,238 @@
               "RelativeDocumentMoniker": "src\\InsuranceAutomation.Core\\FrameworkConfig.cs",
               "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\src\\InsuranceAutomation.Core\\FrameworkConfig.cs",
               "RelativeToolTip": "src\\InsuranceAutomation.Core\\FrameworkConfig.cs",
-              "ViewState": "AgIAAEMAAAAAAAAAAAA5wEkAAAAsAAAAAAAAAA==",
+              "ViewState": "AgIAAEMAAAAAAAAAAAA5wFgAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-17T11:57:10.192Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "007_im_basic_policy_de.json",
-              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_de.json",
-              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_de.json",
-              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_de.json",
-              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_de.json",
-              "ViewState": "AgIAADAAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-09-17T05:56:04.716Z",
+              "WhenOpened": "2026-09-17T11:57:10.192Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "007_im_basic_policy_ma.json",
-              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ma.json",
-              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ma.json",
-              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ma.json",
-              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ma.json",
-              "ViewState": "AgIAADAAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-09-17T05:56:04.857Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "007_im_basic_policy_me.json",
-              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_me.json",
-              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_me.json",
-              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_me.json",
-              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_me.json",
-              "ViewState": "AgIAADAAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-09-17T05:56:05.13Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "007_im_basic_policy_nj.json",
-              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_nj.json",
-              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_nj.json",
-              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_nj.json",
-              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_nj.json",
-              "ViewState": "AgIAADAAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-09-17T05:56:05.33Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "007_im_basic_policy_az.json",
-              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_az.json",
-              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_az.json",
-              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_az.json",
-              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_az.json",
-              "ViewState": "AgIAADAAAAAAAAAAAABBwDUAAAAgAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-09-17T06:05:11.205Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "007_im_basic_policy_ny.json",
-              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ny.json",
-              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ny.json",
-              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ny.json",
-              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ny.json",
-              "ViewState": "AgIAADYAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-09-17T05:56:05.487Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "007_im_basic_policy_or.json",
-              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_or.json",
-              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_or.json",
-              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_or.json",
-              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_or.json",
-              "ViewState": "AgIAADAAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-09-17T05:56:05.665Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "007_im_basic_policy_wv.json",
-              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_wv.json",
-              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_wv.json",
-              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_wv.json",
-              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_wv.json",
-              "ViewState": "AgIAADAAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-09-17T05:56:06.64Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 21,
-              "Title": "007_im_basic_policy_wa.json",
-              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_wa.json",
-              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_wa.json",
-              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_wa.json",
-              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_wa.json",
-              "ViewState": "AgIAADAAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-09-17T05:56:06.497Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 4,
               "Title": "007_im_basic_policy_ri.json",
               "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ri.json",
               "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ri.json",
               "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ri.json",
               "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ri.json",
-              "ViewState": "AgIAADAAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADUAAAAAAAAAAAAjwGYAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2026-09-17T05:56:06.027Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "007_im_basic_policy_ct.json",
+              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ct.json",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ct.json",
+              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ct.json",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ct.json",
+              "ViewState": "AgIAAFQAAAAAMzMzMzMtwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-09-17T05:56:04.548Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "007_im_basic_policy_vt.json",
+              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_vt.json",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_vt.json",
+              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_vt.json",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_vt.json",
+              "ViewState": "AgIAAEoAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-09-17T05:56:06.326Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "007_im_basic_policy_va.json",
+              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_va.json",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_va.json",
+              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_va.json",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_va.json",
+              "ViewState": "AgIAAEkAAAAAAAAAAABBwDEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-09-17T05:56:06.165Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ClientSearchPage.cs",
+              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\ClientSearchPage.cs",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\ClientSearchPage.cs",
+              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\ClientSearchPage.cs",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\ClientSearchPage.cs",
+              "ViewState": "AgIAABYBAAAAAAAAAAAiwCsBAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-18T03:50:06.987Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "SubmissionLocators.cs",
+              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\Locators\\SubmissionLocators.cs",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\Locators\\SubmissionLocators.cs",
+              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\Locators\\SubmissionLocators.cs",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\Locators\\SubmissionLocators.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAC5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-18T17:29:53.944Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "CoveragesPage.cs",
+              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\CoveragesPage.cs",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\CoveragesPage.cs",
+              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\CoveragesPage.cs",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\CoveragesPage.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAIA8wDoAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-17T10:48:49.955Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "007_im_basic_policy_de.json",
+              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_de.json",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_de.json",
+              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_de.json",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_de.json",
+              "ViewState": "AgIAAEkAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-09-17T05:56:04.716Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "007_im_basic_policy_ma.json",
+              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ma.json",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ma.json",
+              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ma.json",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ma.json",
+              "ViewState": "AgIAAEkAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-09-17T05:56:04.857Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "007_im_basic_policy_me.json",
+              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_me.json",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_me.json",
+              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_me.json",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_me.json",
+              "ViewState": "AgIAAEkAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-09-17T05:56:05.13Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 19,
+              "Title": "007_im_basic_policy_nj.json",
+              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_nj.json",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_nj.json",
+              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_nj.json",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_nj.json",
+              "ViewState": "AgIAAEoAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-09-17T05:56:05.33Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "007_im_basic_policy_az.json",
+              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_az.json",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_az.json",
+              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_az.json",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_az.json",
+              "ViewState": "AgIAAEkAAAAAAAAAAABBwDUAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-09-17T06:05:11.205Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "007_im_basic_policy_ny.json",
+              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ny.json",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ny.json",
+              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ny.json",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_ny.json",
+              "ViewState": "AgIAAEoAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-09-17T05:56:05.487Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "007_im_basic_policy_or.json",
+              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_or.json",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_or.json",
+              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_or.json",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_or.json",
+              "ViewState": "AgIAAEkAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-09-17T05:56:05.665Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "007_im_basic_policy_wv.json",
+              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_wv.json",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_wv.json",
+              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_wv.json",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_wv.json",
+              "ViewState": "AgIAAEkAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-09-17T05:56:06.64Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "007_im_basic_policy_wa.json",
+              "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_wa.json",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_wa.json",
+              "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_wa.json",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_wa.json",
+              "ViewState": "AgIAAEkAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-09-17T05:56:06.497Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
               "Title": "007_im_basic_policy_pa.json",
               "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_pa.json",
               "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_pa.json",
               "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_pa.json",
               "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_pa.json",
-              "ViewState": "AgIAADAAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAEkAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2026-09-17T05:56:05.821Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 15,
               "Title": "007_im_basic_policy_nh.json",
               "DocumentMoniker": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_nh.json",
               "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_nh.json",
               "ToolTip": "C:\\Users\\CT7857\\Documents\\BackUpBasic\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_nh.json",
               "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\007_im_basic_policy_nh.json",
-              "ViewState": "AgIAADAAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAEkAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2026-09-17T05:46:54.32Z",
               "EditorCaption": ""

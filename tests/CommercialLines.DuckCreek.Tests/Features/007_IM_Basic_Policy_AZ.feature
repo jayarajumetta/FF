@@ -42,7 +42,7 @@ Feature: IM Basic Policy
     And I add notepad comment
     And I complete required submission information
     And I run Stoplight
-    #And I verify values in premium fields
+    And I verify values in premium fields
     #And I complete forms verification
 
     Examples:
@@ -58,8 +58,8 @@ Feature: IM Basic Policy
       #| TestData/Scenarios/007_im_basic_policy_ny.json | NY | NY | New York | TestData/ExternalDataOverrides.json |
       #| TestData/Scenarios/007_im_basic_policy_or.json | OR | OR | Oregon | TestData/ExternalDataOverrides.json |
       #| TestData/Scenarios/007_im_basic_policy_pa.json | PA | PA | Pennsylvania | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/007_im_basic_policy_ri.json | RI | RI | Rhode Island | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/007_im_basic_policy_ri.json | RI | RI | Rhode Island | TestData/ExternalDataOverrides.json |
       #| TestData/Scenarios/007_im_basic_policy_va.json | VA | VA | Virginia | TestData/ExternalDataOverrides.json |
       #| TestData/Scenarios/007_im_basic_policy_vt.json | VT | VT | Vermont | TestData/ExternalDataOverrides.json |
       #| TestData/Scenarios/007_im_basic_policy_wa.json | WA | WA | Washington | TestData/ExternalDataOverrides.json |
-      | TestData/Scenarios/007_im_basic_policy_wv.json | WV | WV | West Virginia | TestData/ExternalDataOverrides.json |
+      #| TestData/Scenarios/007_im_basic_policy_wv.json | WV | WV | West Virginia | TestData/ExternalDataOverrides.json |
