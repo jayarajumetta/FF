@@ -313,15 +313,31 @@ public sealed class UiActions
         return ComponentKind.Generic;
     }
 
-    private static async Task ClickSemanticAsync(ILocator control)
+    private async Task ClickSemanticAsync(ILocator control)
     {
+        await WaitForDuckCreekLoadingOverlayBestEffortAsync();
+
         var tag = (await control.EvaluateAsync<string>("e=>e.tagName.toLowerCase()")).ToLowerInvariant();
         if (tag == "mat-expansion-panel")
         {
             var header = control.Locator("mat-expansion-panel-header");
             if (await header.CountAsync() == 1) { await header.ClickAsync(); return; }
         }
-        await control.ClickAsync();
+
+        try
+        {
+            await control.ClickAsync();
+        }
+        catch (PlaywrightException ex) when (ex.Message.Contains("loadingMask", StringComparison.OrdinalIgnoreCase) ||
+                                             ex.Message.Contains("intercepts pointer events", StringComparison.OrdinalIgnoreCase))
+        {
+            _logger.Warn("CLICK RETRY: Duck Creek loading overlay intercepted the click. Waiting for overlay to clear and retrying.");
+            await WaitForDuckCreekLoadingOverlayBestEffortAsync();
+            await control.ClickAsync(new LocatorClickOptions
+            {
+                Timeout = Math.Max(_config.Browser.ActionTimeoutMs, _config.Waits.ElementReadyTimeoutMs)
+            });
+        }
     }
 
     public async Task<bool> ExistsAsync(ILocator locator)
@@ -530,6 +546,27 @@ public sealed class UiActions
             // SPA applications can keep navigation/network activity alive. DOMContentLoaded is a readiness
             // hint, not a business assertion; the element-level wait below remains authoritative.
             _logger.Warn($"PAGE READY WAIT CONTINUING: DOMContentLoaded did not settle within {_config.Waits.PageReadyTimeoutMs}ms: {ex.Message}");
+        }
+
+        await WaitForDuckCreekLoadingOverlayBestEffortAsync();
+    }
+
+    private async Task WaitForDuckCreekLoadingOverlayBestEffortAsync()
+    {
+        if (!_browser.IsStarted) return;
+
+        try
+        {
+            await _browser.Page.WaitForFunctionAsync(
+                "() => { const overlays = Array.from(document.querySelectorAll('#loadingMask, #loadingWindow')); if (overlays.length === 0) return true; return overlays.every(el => { const style = window.getComputedStyle(el); const rect = el.getBoundingClientRect(); const hiddenByStyle = style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0'; const hiddenByState = el.hasAttribute('hidden') || el.getAttribute('aria-hidden') === 'true'; const noSize = rect.width === 0 || rect.height === 0; return hiddenByStyle || hiddenByState || noSize; }); }",
+                new PageWaitForFunctionOptions
+                {
+                    Timeout = _config.Waits.PageReadyTimeoutMs
+                });
+        }
+        catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
+        {
+            _logger.Warn($"LOADING OVERLAY WAIT CONTINUING: #loadingMask/#loadingWindow did not clear within {_config.Waits.PageReadyTimeoutMs}ms: {ex.Message}");
         }
     }
 

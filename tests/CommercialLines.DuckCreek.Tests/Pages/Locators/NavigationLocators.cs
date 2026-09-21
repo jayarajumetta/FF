@@ -11,10 +11,10 @@ public sealed class NavigationLocators
 
     public ILocator StateDetailsDriveOtherCarFirstName => _page.Locator("input[fieldref=\"RiskDriveOtherCarIteratorInput.FirstName\"]");
     public ILocator StateDetailsDriveOtherCarLastName => _page.Locator("input[fieldref=\"RiskDriveOtherCarIteratorInput.LastName\"]");
-    public ILocator CommercialAutoEffectiveDate => _page.Locator("input[fieldref='OtherInsuranceHistoryInput.EffectiveDate']");
-    public ILocator GeneralLiabilityExpirationDate => _page.Locator("input[fieldref='OtherInsuranceHistoryInput.ExpirationDate']");
+    public ILocator CommercialAutoEffectiveDate => _page.Locator("input[fieldref='CommercialPropertyHistoryInput.EffectiveDate']");
+    public ILocator GeneralLiabilityExpirationDate => _page.Locator("input[fieldref='CommercialPropertyHistoryInput.ExpirationDate']");
     public ILocator CommercialAutoPolicyNumber => _page.Locator("input[fieldref=\"UmbrellaCommercialAutoInput.PolicyNumber\"]");
-    public ILocator GeneralLiabilityPolicyNumber => _page.Locator("//input[@fieldref='OtherInsuranceHistoryInput.PolicyNumber']");
+    public ILocator GeneralLiabilityPolicyNumber => _page.Locator("//input[@fieldref='CommercialPropertyHistoryInput.PolicyNumber']");
     public ILocator GeneralLiabilityTotalSubjectPremium => _page.Locator("input[fieldref=\"UmbrellaGeneralLiabilityInputPremiums.TotalSubjectPremium\"]");
     public ILocator SFP10LiabilityFarmLiabilityLimit => _page.Locator("input[fieldref=\"UmbrellaSFP10LiabilityInput.LiabilityLimit\"]");
 
@@ -30,6 +30,15 @@ public sealed class NavigationLocators
     public ILocator AcceptUM => _page.GetByText("Accept UM", new() { Exact = true });
 
     public ILocator PageTitle => _page.Locator("[id=\"pageTitle\"]");
+    public ILocator Building => _page.GetByRole(AriaRole.Link, new() { Name = "Building", Exact = true });
+
+    
+
+        public ILocator PropertyUWQuestions => _page.GetByRole(AriaRole.Link, new() { Name = "Property UW Questions", Exact = true });
+
+    public ILocator Property => _page.GetByRole(AriaRole.Link, new() { Name = "Property", Exact = true });
+
+    public ILocator RatingGroups => _page.GetByRole(AriaRole.Link, new() { Name = "Rating Groups", Exact = true });
 
     public ILocator Notepad => _page.GetByRole(AriaRole.Link, new() { Name = "Notepad", Exact = true });
     public ILocator PolicyInfo => _page.GetByRole(AriaRole.Link, new() { Name = "Policy Info", Exact = true });
@@ -46,6 +55,7 @@ public sealed class NavigationLocators
 
     public ILocator AssignLocationDetails => _page.Locator("[class='g-btn-text']").Filter(new() { HasText = "Detail" }).First;
 
+    public ILocator AssignBuildingDetails => _page.Locator(" //div[.//div[@fieldref='BuildingInput.Description' and normalize-space()='Building #1']]//span[normalize-space()='Detail']/ancestor::a[1]");
 
     public ILocator EntityInformation => _page.Locator("[class='x_FontCaption']").Filter(new() { HasText = "Entity Information" }).First;
 
@@ -184,9 +194,13 @@ public sealed class NavigationLocators
     public ILocator BorrowingHiringOrLeasingWithinYear => _page.Locator("input[fieldref=\"UnderwritingQuestionsAutoInput.BorrowingHiringOrLeasingWithinYear\"]");
 
 
-    public ILocator BuildingLimit => _page.Locator("xpath=(//*[self::input or self::textarea or self::select][@fieldref='RiskPropertyInput.Limit'][@aria-label='Building Limit' or @placeholder='Building Limit'] | //*[(self::label or self::span or self::div or self::td) and normalize-space(string(.))='Building Limit']/following::*[self::input or self::textarea or self::select][@fieldref='RiskPropertyInput.Limit'][1])");
+    public ILocator BuildingLimit => _page.Locator("//div[text()='Building']/ancestor::table[1]//input[@fieldref='RiskPropertyInput.Limit']");
 
-    public ILocator RiskInputRatingGroupID => _page.Locator("input[fieldref=\"RiskInput.RatingGroupID\"]");
+    public ILocator RiskInputRatingGroupID => _page.Locator("//div[text()='Building']/ancestor::table[1]//input[@fieldref='RiskInput.RatingGroupID']");
+
+    public ILocator PropertyOfOthersRatingGroup => _page.Locator("//div[text()='Building']/ancestor::table[1]//input[@fieldref='RiskInput.RatingGroupID']");
+
+    public ILocator PersonalPropertyRatingGroup => _page.Locator("//div[contains(normalize-space(),'Property of Others')]/ancestor::table[1]//input[@fieldref='RiskInput.RatingGroupID']");
 
     public ILocator BusinessInterruptionDescriptionOfScheduledProperty => _page.Locator("input[fieldref=\"BusinessInterruptionOptionAInput.DescriptionOfScheduledProperty\"]");
 
@@ -219,7 +233,7 @@ public sealed class NavigationLocators
 
     public ILocator CallISO => _page.GetByRole(AriaRole.Link, new() { Name = "Call ISO", Exact = true });
 
-    public ILocator Carrier => _page.Locator("//input[@fieldref='OtherInsuranceHistoryInput.CarrierName']");
+    public ILocator Carrier => _page.Locator("//input[@fieldref='CommercialPropertyHistoryInput.CarrierName']");
 
     public ILocator CauseOfLoss => _page.Locator("input[fieldref=\"RatingGroupInput.CauseOfLossType\"]");
 
@@ -322,7 +336,7 @@ public sealed class NavigationLocators
 
     public ILocator DedicatedLine => _page.Locator("input[fieldref=\"ComputerSystemsUnderwritingQuestionsInput.DedicatedLineIndicator\"]");
 
-    public ILocator RatingGroupsDeductible => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Deductible']/@for] | //label[normalize-space(string(.))='Deductible']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Deductible']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
+    public ILocator RatingGroupsDeductible => _page.Locator("input[fieldref=\"RatingGroupInput.Deductible\"]");
 
     public ILocator EndorsementIF0002WaterborneEquipmentDeductible => _page.Locator("input[fieldref=\"CovEndorsementInput.WaterborneEquipmentDeductible\"]");
 
@@ -365,6 +379,10 @@ public sealed class NavigationLocators
     public ILocator DesignatedWorkplacesExclusionOK => _page.GetByRole(AriaRole.Link, new() { Name = "Add Designated Workplace", Exact = true });
 
     public ILocator Select => _page.Locator("[id=\"dctGridLink\"]");
+
+    public ILocator EstimatedPremium => _page.Locator("input[fieldref='PolicyInput.EstimatedPremium']");
+
+    public ILocator PropertLocated2Miles => _page.Locator("input[fieldref='LocationInput.IsLocation2MilesOrLessFromShore']");
 
 
     public ILocator DoYouHaveACDLLicense => _page.Locator("input[fieldref=\"DriverUnderwritingInformationInput.HaveCDLLicense\"]");
@@ -599,7 +617,7 @@ public sealed class NavigationLocators
 
     public ILocator Model => _page.Locator("input[fieldref=\"RiskVehicleInput.Model\"]");
 
-    public ILocator ModificationFactor => _page.Locator("input[fieldref='OtherInsuranceHistoryInput.ModificationFactor']");
+    public ILocator ModificationFactor => _page.Locator("input[fieldref='CommercialPropertyHistoryInput.ModificationFactor']");
 
 
 
@@ -703,6 +721,10 @@ public sealed class NavigationLocators
 
     public ILocator OccupancyType => _page.Locator("input[fieldref=\"OccupancyInput.OccupancyTypeMonoline\"]");
 
+    
+
+         public ILocator OccupancyTypeOverride => _page.Locator("input[fieldref=\"OccupancyInput.OccupancyTypeOverride\"]");
+
     public ILocator Occupied => _page.Locator("input[fieldref=\"BuildingInput.VacancyPercentageOccupied\"]");
 
     public ILocator OccurenceLimit => _page.Locator("input[fieldref=\"LineInput.PolicyPerOccurenceLimit\"]");
@@ -743,7 +765,7 @@ public sealed class NavigationLocators
 
     public ILocator PersonalPortableComputers => _page.Locator("input[fieldref=\"ComputerSystemsInput.PersonalPortableComputersIndicator\"]");
 
-    public ILocator PersonalPropertyLimit => _page.Locator("xpath=(//*[self::input or self::textarea or self::select][@fieldref='RiskPropertyInput.Limit'][@aria-label='Personal Property Limit' or @placeholder='Personal Property Limit'] | //*[(self::label or self::span or self::div or self::td) and normalize-space(string(.))='Personal Property Limit']/following::*[self::input or self::textarea or self::select][@fieldref='RiskPropertyInput.Limit'][1])");
+    public ILocator PersonalPropertyLimit => _page.Locator("//div[contains(normalize-space(),'Personal Property')]/ancestor::table[1]//input[@fieldref='RiskPropertyInput.Limit']");
 
 
     public ILocator PierOrWharf => _page.Locator("input[fieldref=\"BuildingInput.PierOrWharf\"]");
@@ -758,9 +780,6 @@ public sealed class NavigationLocators
 
     public ILocator PolicyCovgerage => _page.GetByRole(AriaRole.Link, new() { Name = "Policy Covg", Exact = true });
 
-
-
-
     public ILocator PolicyCovg => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Policy Covg']/@for] | //label[normalize-space(string(.))='Policy Covg']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Policy Covg']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
     public ILocator PolicyHolderName => _page.Locator("input[fieldref=\"CovOwnersContractorsOrPrincipalsInput.PolicyHolderName\"]");
@@ -771,7 +790,7 @@ public sealed class NavigationLocators
 
 
 
-    public ILocator PolicyType => _page.Locator("input[fieldref='OtherInsuranceHistoryInput.PolicyType']");
+    public ILocator PolicyType => _page.Locator("input[fieldref='CommercialPropertyHistoryInput.PolicyType']");
 
     public ILocator PowerSuppressorVoltageRegulator => _page.Locator("input[fieldref=\"ComputerSystemsUnderwritingQuestionsInput.PowerShortageIndicator\"]");
 
@@ -815,8 +834,7 @@ public sealed class NavigationLocators
 
     public ILocator PolicyCovgBaileesCutomersPropertyInTransit => _page.Locator("input[fieldref=\"BaileesCustomersInput.PropertyInTransit\"]");
 
-    public ILocator PropertyOfOthersLimit => _page.Locator("xpath=(//*[self::input or self::textarea or self::select][@fieldref='RiskPropertyInput.Limit'][@aria-label='Property of Others Limit' or @placeholder='Property of Others Limit'] | //*[(self::label or self::span or self::div or self::td) and normalize-space(string(.))='Property of Others Limit']/following::*[self::input or self::textarea or self::select][@fieldref='RiskPropertyInput.Limit'][1])");
-
+    public ILocator PropertyOfOthersLimit => _page.Locator("//div[contains(normalize-space(),'Property of Others')]/ancestor::table[1]//input[@fieldref='RiskPropertyInput.Limit']");
 
 
     public ILocator ProvideAListOfSurroundingExposureOtherOccupanciesWithin100FtIncludingNorthEastSouthAndWest => _page.Locator("textarea[fieldref=\"BuildingInput.SurroundingExposureOrOtherOccupancies\"]");
@@ -933,7 +951,7 @@ public sealed class NavigationLocators
 
     public ILocator TotalPayrollEstimated => _page.Locator("input[fieldref=\"CoverageInput.UnitsOfExposureEstimated\"]");
 
-    public ILocator TotalPremium => _page.Locator("input[fieldref='OtherInsuranceHistoryInput.TotalPremium']");
+    public ILocator TotalPremium => _page.Locator("input[fieldref='CommercialPropertyHistoryInput.TotalPremium']");
     public ILocator BusinessownersTotalSubjectPremium => _page.Locator("input[fieldref=\"UmbrellaBusinessOwnersInputPremiums.TotalSubjectPremium\"]");
 
 

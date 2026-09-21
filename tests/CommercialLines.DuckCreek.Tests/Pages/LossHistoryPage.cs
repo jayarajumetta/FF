@@ -21,7 +21,7 @@ public sealed class LossHistoryPage
         _ui.ClickAsync(_locators.AddAddlInterest, new ControlIntent("LossHistory", "AddAddlInterest"));
 
     public Task ClickAddlInterestsAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("LossHistory", "AddlInterests"));
+        _ui.ClickAsync(_locators.AddlInterests, new ControlIntent("LossHistory", "AddlInterests"));
 
     public Task ClickAddlInterestsMainOKAsync() =>
         _ui.ClickAsync(_locators.OK, new ControlIntent("LossHistory", "AddlInterestsMainOK"));
@@ -94,6 +94,9 @@ public sealed class LossHistoryPage
 
     public Task EnterProvisionsApplicableAsync(string value) =>
         _ui.FillAsync(_locators.ProvisionsApplicable, value, new ControlIntent("LossHistory", "ProvisionsApplicable"));
+
+    public async Task<bool> IsProvisionsApplicableAvailableAsync() =>
+        await _locators.ProvisionsApplicable.CountAsync() > 0;
 
     public Task PressProvisionsApplicableAsync(string key) =>
         _ui.PressAsync(_locators.ProvisionsApplicable, key, new ControlIntent("LossHistory", "ProvisionsApplicable"));

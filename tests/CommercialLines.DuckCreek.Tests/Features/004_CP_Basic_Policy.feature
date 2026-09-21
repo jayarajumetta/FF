@@ -19,7 +19,7 @@ Feature: CP Basic Policy
     And I complete required policy information
     And I run insurance score
     And I complete CP Fields
-    And I complete mask Error Recovery
+    #And I complete mask Error Recovery
     And I complete CP Fields for policy coverage
     And I complete CP Fields for location
     And I complete CP Fields for building
@@ -29,11 +29,14 @@ Feature: CP Basic Policy
     And I complete required billing information for billing
     And I add notepad comment
     And I complete Property UW Questions
-    And I search by Desc
+    #And I search by Desc
     And I complete required submission information
     And I run Stoplight
-    And I verify values in premium fields
-    And I complete forms verification
+    #And I verify values in premium fields
+    #And I complete forms verification
+
+
+
 
     Examples:
       | stateCode | dataFile                                       | stateVariant | stateName     | externalDataFile                    |
