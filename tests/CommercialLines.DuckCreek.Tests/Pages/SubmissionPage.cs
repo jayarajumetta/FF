@@ -32,6 +32,9 @@ public sealed class SubmissionPage
     public Task PressIsThisCoverageBoundAsync(string key) =>
         _ui.PressAsync(_locators.IsThisCoverageBound, key, new ControlIntent("Submission", "IsThisCoverageBound"));
 
+    public Task<bool> IsThisCoverageBoundExistsAsync() =>
+        _ui.ExistsAsync(_locators.IsThisCoverageBound);
+
     public Task EnterJavaScriptAsync(string value) =>
         _ui.FillAsync(_locators.JavaScript, value, new ControlIntent("Submission", "JavaScript"));
 
@@ -58,6 +61,12 @@ public sealed class SubmissionPage
 
     public Task EnterTitleAsync(string value) =>
         _ui.FillAsync(_locators.Title, value, new ControlIntent("Submission", "Title"));
+
+    public Task WaitForStoplightProcessingCompleteMessageAsync(string expected) =>
+        _ui.WaitAsync(_locators.StoplightProcessingCompleteMessage, expected, new ControlIntent("Submission", "StoplightProcessingCompleteMessage"));
+
+    public Task ClickStoplightWaitingWindowCloseButtonAsync() =>
+        _ui.ClickAsync(_locators.StoplightWaitingWindowCloseButton, new ControlIntent("Submission", "StoplightWaitingWindowCloseButton"));
 
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);

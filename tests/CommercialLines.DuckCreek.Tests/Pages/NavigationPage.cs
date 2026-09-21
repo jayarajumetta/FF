@@ -514,6 +514,9 @@ public sealed class NavigationPage
     public Task ClickAddClientAsync() =>
         _ui.ClickAsync(_locators.AddClient, new ControlIntent("Navigation", "AddClient"));
 
+    public Task ClickClientLinkAsync() =>
+        _ui.ClickAsync(_locators.ClientLink, new ControlIntent("Navigation", "ClientLink"));
+
     public Task EnterPolicyCovgComputerSystemsCoinsuranceAsync(string value) =>
         _ui.FillAsync(_locators.PolicyCovgComputerSystemsCoinsurance, value, new ControlIntent("Navigation", "PolicyCovgComputerSystemsCoinsurance"));
 
@@ -1478,6 +1481,12 @@ public sealed class NavigationPage
     public Task PressIsThisCoverageBoundAsync(string key) =>
         _ui.PressAsync(_locators.IsThisCoverageBound, key, new ControlIntent("Navigation", "IsThisCoverageBound"));
 
+    public Task<bool> IsThisCoverageBoundExistsAsync() =>
+        _ui.ExistsAsync(_locators.IsThisCoverageBound);
+
+    public Task<bool> OrderAuditExistsAsync() =>
+        _ui.ExistsAsync(_locators.OrderAudit);
+
     public Task VerifyIsThisPolicyBeingFullyCancelledAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.IsThisPolicyBeingFullyCancelled, expected, property, new ControlIntent("Navigation", "IsThisPolicyBeingFullyCancelled"));
 
@@ -1668,7 +1677,7 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.ModificationFactor, key, new ControlIntent("Navigation", "ModificationFactor"));
 
     public Task ClickMotorTruckCargoUWQuestionsAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "MotorTruckCargoUWQuestions"));
+        _ui.ClickAsync(_locators.MotorTruckCargoUWQuestions, new ControlIntent("Navigation", "MotorTruckCargoUWQuestions"));
 
     public Task WaitForMotorcycleLiabilityAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "MotorcycleLiability"));
