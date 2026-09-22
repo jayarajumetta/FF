@@ -46,6 +46,13 @@ inputs, stale/corrupt input checksums, malformed responses, Forms API failures,
 wrong quote identity, missing evidence and reporting defects remain blockers.
 Classify failures from their evidence; do not exempt every premium/forms error.
 
+At the SFP checkpoint on 2026-09-22, the user explicitly included its missing
+`returnSuccessStatus="1"` expectation in this deferral. The authenticated
+response returned HTTP 200, `status="success"` and actual Forms XML, but omitted
+that separate attribute. Keep the response-contract assertion and its real
+failure unchanged; do not manufacture `"1"` from `"success"`. This specific
+deferral does not excuse authentication, unusable-response or evidence failures.
+
 For items 5-14, record implementation/workflow readiness separately from full
 business verification. Keep two-run evidence for the demonstrated non-baseline
 behavior, and list baseline failures or unexecuted comparisons explicitly.
@@ -91,7 +98,7 @@ The user is not being assigned coding, dependency mapping, or integration work.
 | Parent framework suite | Current SFP evidence-fix gate: 441 passed, 0 failed, 0 skipped; 150 targeted checks passed. The earlier item 2 gate also passed 54 CI contract assertions and reconciled 45 real gated SKIP results with their scenario reports. |
 | Live SGS verification | No imported SGS case has been live-verified. Discovery, unit tests, and synthetic report previews do not count. |
 | Premium/forms baselines | Original validation stays active and real results stay visible. Baseline approval/refresh and baseline-dependent acceptance are deferred until the user's test/data refresh; baseline mismatches do not gate current integration progress. |
-| Work/process state | Items 1-4 are complete under the approved local-access and just-in-time SGS-input boundaries. Item 5 is active: the latest real SFP run has complete evidence and a reconciled FAIL, not a reporting error. Quote identity, premium, transmit availability and authenticated Forms retrieval passed. Forms comparisons and the response-status expectation remain failed; the latter needs an explicit deferral/blocker decision. Key Vault approval remains pending. |
+| Work/process state | Items 1-5 are complete for engineering progress under the approved boundaries. Both SFP qualification runs have complete evidence and reconciled FAIL results solely for the explicitly deferred Forms expectations. Item 6 is next: original ExpertQuote BOP Alabama, beginning with its just-in-time input review. No SGS case is business-verified; Key Vault approval remains pending. |
 
 ## Ordered remaining work
 
@@ -195,8 +202,8 @@ The user is not being assigned coding, dependency mapping, or integration work.
    Actual transmission, binding, issuance, or payment requires separate
    explicit authorization; quote-only authorization does not imply it.
 
-5. [ ] **Prove the existing PnC SFP Alabama reference still works.**
-   **Active item; response-status expectation decision pending.**
+5. [x] **Prove the existing PnC SFP Alabama reference still works.**
+   **Engineering exit completed; deferred Forms results remain failed.**
    Rerun the original SFP Basic workflow, including the pending forms retest.
    Verify the same quote identity, genuine forms retrieval and the existing
    availability-only transmission contract. Run the original premium/forms
@@ -228,10 +235,19 @@ The user is not being assigned coding, dependency mapping, or integration work.
    the response has `status="success"` and omits `returnSuccessStatus`.
    Manuscript, print job, baseline version/checksum and security requirements
    matched. This response-status expectation has not been declared equivalent,
-   rebaselined or passed; obtain an explicit decision on carrying it with the
-   deferred Forms expectations before advancing. One more complete-evidence
-   demonstration is still required; the incomplete first run does not satisfy
-   the two-run exit gate.
+   rebaselined or passed. The user explicitly approved carrying this specific
+   expectation with the deferred Forms baselines, preserving the assertion
+   and failed result.
+   Completed 2026-09-22 with the second separate, non-retried qualification:
+   `checklist-05-sfp-al-04`, one failed case in `00:05:44.3459230`.
+   Both `-03` and `-04` have the same successful non-baseline assertions,
+   30 retrieved forms, 29 passing/four failing row comparisons, 62 artifacts,
+   41 unique screenshots, complete required evidence and zero consolidation
+   issues. Both credential-source files were unchanged. No other component
+   failed and no policy was transmitted. These two complete-evidence runs
+   satisfy the approved engineering boundary; neither is reclassified as
+   passed or fully business-verified. The incomplete first run is not counted
+   toward that exit gate. Evidence/reporting implementation: `7f88563`.
    Regression evidence: `checklist-05-evidence-fix-targeted.trx` (150/0/0),
    `checklist-05-evidence-fix-full-suite.trx` (441/0/0),
    `checklist-05-evidence-format-final.log`, and
