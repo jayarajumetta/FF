@@ -152,6 +152,7 @@ namespace PnCTestAutomation.Controls
         Task PressEnterAsync(CancellationToken cancellationToken = default);
         Task FillAsync(string value, CancellationToken cancellationToken = default);
         Task SelectAsync(string value, CancellationToken cancellationToken = default);
+        Task SelectByLabelAsync(string label, CancellationToken cancellationToken = default);
         Task SetCheckedAsync(bool value, CancellationToken cancellationToken = default);
         Task<bool> IsCheckedAsync(CancellationToken cancellationToken = default);
         Task<bool> IsEnabledAsync(CancellationToken cancellationToken = default);
@@ -159,6 +160,8 @@ namespace PnCTestAutomation.Controls
         Task<bool> IsSelectedAsync(CancellationToken cancellationToken = default);
         Task<string> GetValueAsync(CancellationToken cancellationToken = default);
         Task<string> GetSelectedValueAsync(CancellationToken cancellationToken = default);
+        Task<string> GetSelectedTextAsync(CancellationToken cancellationToken = default);
+        Task<string> GetTextAsync(CancellationToken cancellationToken = default);
     }
 
     public interface IControlScopeAdapter
@@ -225,8 +228,13 @@ namespace PnCTestAutomation.Controls
         Checked,
         Selected,
         Enabled,
-        Visible
+        Visible,
+        Text,
+        SelectedText
     }
+
+    public enum ControlTextCapture { Value, SelectedValue, SelectedText, Text }
+    public enum ControlStateCapture { Checked, Selected, Enabled }
 
     public sealed record ControlExpectation(
         ControlAssertion Assertion,
@@ -237,6 +245,12 @@ namespace PnCTestAutomation.Controls
 
         public static ControlExpectation SelectedValue(string expected) =>
             new(ControlAssertion.SelectedValue, expected);
+
+        public static ControlExpectation Text(string expected) =>
+            new(ControlAssertion.Text, expected);
+
+        public static ControlExpectation SelectedText(string expected) =>
+            new(ControlAssertion.SelectedText, expected);
 
         public static ControlExpectation Checked(bool expected) =>
             new(ControlAssertion.Checked, expected.ToString());
@@ -285,6 +299,21 @@ namespace PnCTestAutomation.Controls
         Task SelectAsync(
             ResolvedControl control,
             string value,
+            CancellationToken cancellationToken = default);
+
+        Task SelectByLabelAsync(
+            ResolvedControl control,
+            string label,
+            CancellationToken cancellationToken = default);
+
+        Task<string> CaptureAsync(
+            ResolvedControl control,
+            ControlTextCapture capture,
+            CancellationToken cancellationToken = default);
+
+        Task<bool> CaptureStateAsync(
+            ResolvedControl control,
+            ControlStateCapture capture,
             CancellationToken cancellationToken = default);
 
         Task ToggleAsync(

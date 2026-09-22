@@ -11,6 +11,12 @@ entry in the exception table below. Generic CSS fallback and locator
 substitution are not supported. Locator rescue logs candidates only; it never
 changes the locator used by the test.
 
+Shared control adapters may resolve one structural input/select descendant
+inside the already resolved test-ID element. Ambiguous descendants fail.
+Material option lookup is restricted to the trigger's exact `aria-controls`
+panel in its original frame; this existing overlay exception does not permit
+searching unrelated listboxes or the top document.
+
 ## ANi HTML-ID Exceptions
 
 | Exception | Page | HTML `id` | Reason |

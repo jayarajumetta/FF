@@ -94,6 +94,15 @@ try {
         throw "Release solution build failed."
     }
 
+    $browserInstaller = Join-Path $root "bin\Release\net8.0\playwright.ps1"
+    if (-not (Test-Path -LiteralPath $browserInstaller -PathType Leaf)) {
+        throw "The built Playwright installer is missing."
+    }
+    & $browserInstaller install chromium
+    if ($LASTEXITCODE -ne 0) {
+        throw "Chromium setup for offline browser contract tests failed."
+    }
+
     $unitResults = Join-Path $verificationRoot "unit"
     New-Item -ItemType Directory -Force -Path $unitResults | Out-Null
     & dotnet test TestAutomation.UnitTests\TestAutomation.UnitTests.csproj `

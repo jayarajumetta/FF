@@ -114,6 +114,61 @@ namespace PnCTestAutomation.Controls
                 cancellationToken);
         }
 
+        public async Task SelectByLabelAsync(
+            ResolvedControl control,
+            string label,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(label))
+                throw new ArgumentException("A selected option label is required.", nameof(label));
+            await WaitForExpectedStateAsync(control, ControlExpectation.Enabled(), cancellationToken);
+            await control.Element.SelectByLabelAsync(label, cancellationToken);
+            await AssertAndRecordAsync(
+                control, "select-label", ControlExpectation.SelectedText(label), cancellationToken);
+        }
+
+        public async Task<string> CaptureAsync(
+            ResolvedControl control,
+            ControlTextCapture capture,
+            CancellationToken cancellationToken = default)
+        {
+            await WaitForExpectedStateAsync(control, ControlExpectation.Visible(), cancellationToken);
+            var (value, assertion) = capture switch
+            {
+                ControlTextCapture.Value =>
+                    (await control.Element.GetValueAsync(cancellationToken), ControlAssertion.Value),
+                ControlTextCapture.SelectedValue =>
+                    (await control.Element.GetSelectedValueAsync(cancellationToken), ControlAssertion.SelectedValue),
+                ControlTextCapture.SelectedText =>
+                    (await control.Element.GetSelectedTextAsync(cancellationToken), ControlAssertion.SelectedText),
+                ControlTextCapture.Text =>
+                    (await control.Element.GetTextAsync(cancellationToken), ControlAssertion.Text),
+                _ => throw new ArgumentOutOfRangeException(nameof(capture))
+            };
+            await RecordAsync(control, "capture", assertion, cancellationToken);
+            return value;
+        }
+
+        public async Task<bool> CaptureStateAsync(
+            ResolvedControl control,
+            ControlStateCapture capture,
+            CancellationToken cancellationToken = default)
+        {
+            await WaitForExpectedStateAsync(control, ControlExpectation.Visible(), cancellationToken);
+            var (value, assertion) = capture switch
+            {
+                ControlStateCapture.Checked =>
+                    (await control.Element.IsCheckedAsync(cancellationToken), ControlAssertion.Checked),
+                ControlStateCapture.Selected =>
+                    (await control.Element.IsSelectedAsync(cancellationToken), ControlAssertion.Selected),
+                ControlStateCapture.Enabled =>
+                    (await control.Element.IsEnabledAsync(cancellationToken), ControlAssertion.Enabled),
+                _ => throw new ArgumentOutOfRangeException(nameof(capture))
+            };
+            await RecordAsync(control, "capture", assertion, cancellationToken);
+            return value;
+        }
+
         public Task AssertAsync(
             ResolvedControl control,
             ControlExpectation expectation,
@@ -142,6 +197,7 @@ namespace PnCTestAutomation.Controls
             var stopwatch = Stopwatch.StartNew();
             do
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 if (await MatchesAsync(control.Element, expectation, cancellationToken))
                     return;
 
@@ -171,6 +227,16 @@ namespace PnCTestAutomation.Controls
                 ControlAssertion.SelectedValue =>
                     string.Equals(
                         await element.GetSelectedValueAsync(cancellationToken),
+                        expectation.ExpectedValue,
+                        StringComparison.Ordinal),
+                ControlAssertion.SelectedText =>
+                    string.Equals(
+                        await element.GetSelectedTextAsync(cancellationToken),
+                        expectation.ExpectedValue,
+                        StringComparison.Ordinal),
+                ControlAssertion.Text =>
+                    string.Equals(
+                        await element.GetTextAsync(cancellationToken),
                         expectation.ExpectedValue,
                         StringComparison.Ordinal),
                 ControlAssertion.Checked =>

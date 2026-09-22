@@ -371,6 +371,45 @@ public class ControlRuntimeTests
         Assert.That(element.Calls, Is.EqualTo(new[] { "click" }));
     }
 
+    [Test]
+    public async Task CaptureDistinguishesSelectedCheckedEnabledAndTextWithoutLoggingValues()
+    {
+        var element = new FakeControlElement
+        {
+            Value = "sensitive-value",
+            SelectedValue = "AL",
+            SelectedText = "Alabama",
+            Text = "Policy",
+            Checked = false,
+            Enabled = false,
+            Selected = true
+        };
+        var evidence = new RecordingEvidenceSink();
+        var actions = ImmediateActions(evidence);
+        var control = Resolved(element);
+
+        Assert.That(await actions.CaptureAsync(control, ControlTextCapture.Value), Is.EqualTo(element.Value));
+        Assert.That(await actions.CaptureAsync(control, ControlTextCapture.SelectedValue), Is.EqualTo("AL"));
+        Assert.That(await actions.CaptureAsync(control, ControlTextCapture.SelectedText), Is.EqualTo("Alabama"));
+        Assert.That(await actions.CaptureStateAsync(control, ControlStateCapture.Checked), Is.False);
+        Assert.That(await actions.CaptureStateAsync(control, ControlStateCapture.Enabled), Is.False);
+        Assert.That(await actions.CaptureStateAsync(control, ControlStateCapture.Selected), Is.True);
+        await actions.AssertAsync(control, ControlExpectation.Text("Policy"));
+        Assert.That(evidence.Items.All(item => ReferenceEquals(item.Scope, control.Scope)), Is.True);
+        Assert.That(evidence.Items.Select(item => item.Operation), Does.Contain("capture"));
+        Assert.That(System.Text.Json.JsonSerializer.Serialize(evidence.Items),
+            Does.Not.Contain(element.Value));
+    }
+
+    [Test]
+    public void VisibleTextIsNotAutomaticallyEqual()
+    {
+        var actions = ImmediateActions();
+        var control = Resolved(new FakeControlElement { Text = "Unexpected" });
+        Assert.That(async () => await actions.AssertAsync(control, ControlExpectation.Text("Expected")),
+            Throws.TypeOf<ControlPostconditionException>());
+    }
+
     private static SemanticControlActions ImmediateActions(
         IControlEvidenceSink? evidenceSink = null) =>
         new(
@@ -472,6 +511,8 @@ public class ControlRuntimeTests
         public List<string> Calls { get; } = new();
         public string Value { get; set; } = string.Empty;
         public string SelectedValue { get; set; } = string.Empty;
+        public string SelectedText { get; set; } = string.Empty;
+        public string Text { get; set; } = string.Empty;
         public bool Checked { get; set; }
         public bool Enabled { get; set; } = true;
         public bool Selected { get; set; }
@@ -516,6 +557,13 @@ public class ControlRuntimeTests
             return Task.CompletedTask;
         }
 
+        public Task SelectByLabelAsync(string label, CancellationToken cancellationToken = default)
+        {
+            Calls.Add("select-label");
+            SelectedText = label;
+            return Task.CompletedTask;
+        }
+
         public Task SetCheckedAsync(
             bool value,
             CancellationToken cancellationToken = default)
@@ -543,6 +591,12 @@ public class ControlRuntimeTests
         public Task<string> GetSelectedValueAsync(
             CancellationToken cancellationToken = default) =>
             Task.FromResult(SelectedValue);
+
+        public Task<string> GetSelectedTextAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult(SelectedText);
+
+        public Task<string> GetTextAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult(Text);
     }
 
     private sealed class RecordingEvidenceSink : IControlEvidenceSink

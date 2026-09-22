@@ -56,7 +56,12 @@ output directory is required.
    package builder clears all Release output roots before compiling so deleted
    or renamed build products cannot leak into a later package.
 2. NuGet restores the committed `packages.lock.json` files in locked mode.
-3. The Release solution build and full unit/contract suite must pass.
+3. The Release solution build and full unit/contract suite must pass. The
+   builder ensures Chromium is available using that build's Playwright
+   installer and the existing browser cache. `BrowserContract` cases exercise
+   native/Material controls against in-memory HTML only; they use no product
+   endpoints, credentials, quotes, or DataPool. Missing browser/runtime files
+   fail rather than skipping those contracts.
 4. The compiled inventory tool enumerates NUnit cases and case-level
    categories directly from `TestAutomation.dll`.
 5. Full/debug shard ownership must be a nonempty, exact, disjoint partition.

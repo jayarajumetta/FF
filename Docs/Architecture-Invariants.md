@@ -112,7 +112,15 @@ evidence before local execution can be enabled.
   same enabled-state, scope, and evidence contracts as click. Insurance Score
   consent uses it because focus-related reflow can change the pointer target
   between mouse-down and mouse-up. It is not a click retry or DOM event injection.
-- Capture supports value, checked, and selected semantics.
+- Capture distinguishes value, text, selected value/label, checked, selected,
+  and enabled state. Unsupported or ambiguous semantics fail rather than
+  substituting visibility or arbitrary text. Captured values are not added to
+  runtime-locator evidence.
+- Native dropdown values and option labels are separate contracts. Material
+  label selection uses the exact `aria-controls` panel in the resolved frame,
+  one exact option, and a verified selected label after the overlay closes.
+  No global listbox fallback, injected click, fixed sleep, or action replay is
+  permitted.
 - A resolved frame scope must be passed through to the action that uses it and
   recorded in redacted runtime-locator evidence. Nested depth and the logical
   scope ID remain attached through postcondition verification. Product
