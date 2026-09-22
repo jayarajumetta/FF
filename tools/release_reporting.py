@@ -23,8 +23,8 @@ CHUNK_BYTES = 64 * 1024 * 1024
 RESULT_DIRECTORIES = ("Artifacts", "Runner", "NUnit", "NUnitWork")
 VIDEO_SUFFIXES = {".webm", ".mp4", ".m4v", ".mov", ".avi", ".mkv", ".wmv", ".mpeg", ".mpg", ".ogv"}
 REPORT_LOG_BYTES = 64 * 1024
-RESULT_FIELDS = "schemaVersion executionId testFullName attemptNumber maxAttempts feature scenario status startedAtUtc completedAtUtc durationMilliseconds tags application app project stateCode state_code state StateCode State lob".split()
-STEP_FIELDS = "order text status durationMilliseconds data error consoleErrors networkErrors binding bindingSource bindingLine".split()
+RESULT_FIELDS = "schemaVersion executionId testFullName attemptNumber maxAttempts feature scenario status startedAtUtc completedAtUtc durationMilliseconds tags application app project stateCode state_code state StateCode State lob data stepDataScope".split()
+STEP_FIELDS = "order text status durationMilliseconds data error consoleErrors networkErrors binding bindingSource bindingLine bindingCaptured bindingResolution actions".split()
 VERIFICATION_FIELDS = "businessStep page control property expected error".split()
 
 

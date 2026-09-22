@@ -40,6 +40,69 @@ class ReleaseReportingTests(unittest.TestCase):
             (directory / "trace.zip").write_bytes(b"trace fixture")
         return results
 
+    def test_runtime_binding_survives_handoff_and_source_free_report(self):
+        import generate_consolidated_report as generator
+        results = self.evidence("binding", ("FAIL", "PASS"))
+        for path in results.rglob("scenario-result.json"):
+            record = json.loads(path.read_text())
+            record["data"] = {"CaseOnly": "case-value", "Policy": "one; two=three", "password": "hidden-secret"}
+            record["stepDataScope"] = "accessed"
+            record["steps"] = [{"order": 1, "text": "Verify policy", "status": record["status"],
+                                "binding": "Example.PolicySteps.VerifyPolicyAsync", "bindingCaptured": True,
+                                "data": {"Policy": "one; two=three"},
+                                "actions": [{"method": "ClientPage.EnterNameAsync", "operation": "FillAsync",
+                                             "status": record["status"], "durationMilliseconds": 12,
+                                             "data": {"value": "<name>"}, "error": "failure <detail>",
+                                             "children": [{"method": "ClientPage.ChildAsync", "status": "PASS"}]}],
+                                "error": "policy failure" if record["status"] == "FAIL" else ""}]
+            path.write_text(json.dumps(record))
+        parts = self.root / "binding-parts"
+        manifest = json.loads(reporting.pack(results, parts, IDENTITY, 1, 1).read_text())
+        bundle = self.root / "binding-bundle"
+        evidence = bundle / "Artifacts"
+        reporting.unpack(manifest, parts, evidence / "agent-1")
+        loaded = generator.load_results(evidence)
+        generator.enrich(loaded, [])
+        self.assertTrue(all(r["steps"][0]["bindingCaptured"] for r in loaded))
+        for record in loaded:
+            self.assertEqual("case-value", record["data"]["CaseOnly"])
+            self.assertEqual("accessed", record["stepDataScope"])
+            step_html = generator.render_step(record, record["steps"][0], self.root, generator.ReportLimits(summary_only=True))
+            self.assertNotIn("CaseOnly", step_html)
+            self.assertIn("one; two=three", step_html)
+            self.assertIn('class="binding-node"', step_html)
+            self.assertIn("ClientPage.EnterNameAsync", step_html)
+            self.assertIn("ClientPage.ChildAsync", step_html)
+            self.assertIn("failure &lt;detail&gt;", step_html)
+            self.assertNotIn("<name>", step_html)
+        with contextlib.redirect_stdout(io.StringIO()):
+            report = reporting.generate(evidence, bundle, self.root)
+        html = report.read_text(encoding="utf-8")
+        self.assertIn("Example.PolicySteps.VerifyPolicyAsync", html)
+        self.assertIn("Selected by ReqnRoll at runtime.", html)
+        self.assertIn("policy failure", html)
+        self.assertIn("Attempt 1: FAIL", html)
+        self.assertIn("Attempt 2: PASS", html)
+        self.assertIn("Test-case data (final resolved snapshot for this attempt)", html)
+        self.assertNotIn("hidden-secret", html)
+        self.assertIn("Data read or written in this step", html)
+        self.assertIn('class="action-node FAIL" open', html)
+
+    def test_runtime_binding_is_authoritative_and_legacy_inference_is_labeled(self):
+        import generate_consolidated_report as generator
+        import re
+        candidate = generator.Binding("", "Verify policy", "WrongSteps", "WrongMethod", "wrong.cs", 1,
+                                      re.compile("Verify policy"))
+        steps = [{"text": "Verify policy", "binding": "CorrectSteps.CorrectMethod", "bindingCaptured": True},
+                 {"text": "Verify policy", "binding": "", "bindingCaptured": True},
+                 {"text": "Verify policy"}]
+        generator.enrich([{"steps": steps}], [candidate])
+        self.assertEqual("CorrectSteps.CorrectMethod", steps[0]["binding"])
+        self.assertEqual("", steps[1]["binding"])
+        self.assertIn("No step-definition method", steps[1]["bindingResolution"])
+        self.assertEqual("WrongSteps.WrongMethod", steps[2]["binding"])
+        self.assertIn("Inferred from source", steps[2]["bindingResolution"])
+
     def test_video_policy_defaults_and_boolean_validation(self):
         from generate_consolidated_report import video_policy, exclude_video
         self.assertEqual((True, True), video_policy(self.root))
