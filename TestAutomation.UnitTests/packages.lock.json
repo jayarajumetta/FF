@@ -1364,6 +1364,13 @@
       "datapool": {
         "type": "Project"
       },
+      "sgsreport": {
+        "type": "Project",
+        "dependencies": {
+          "TestAutomation": "[1.0.0, )",
+          "TestPlanPublisher": "[1.0.0, )"
+        }
+      },
       "testautomation": {
         "type": "Project",
         "dependencies": {

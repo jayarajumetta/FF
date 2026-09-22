@@ -1,6 +1,8 @@
 using System.Security.Cryptography;
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace PnCTestAutomation.TestPlanPublisher;
@@ -13,6 +15,71 @@ public sealed class CanonicalResultLoader
     {
         PropertyNameCaseInsensitive = true
     };
+
+    public IReadOnlyList<CanonicalReportResult> LoadReportResults(string canonicalResultPath)
+    {
+        var document = ReadResultDocument(canonicalResultPath);
+        XNamespace trx = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010";
+        IReadOnlyList<CanonicalReportResult> results;
+        if (document.Root?.Name == trx + "TestRun")
+        {
+            var root = document.Root;
+            var containers = root.Elements(trx + "Results").ToArray();
+            if (containers.Length != 1)
+                throw new TestPlanPublicationException("The canonical TRX requires one executed Results element.");
+            var elements = containers[0].Elements(trx + "UnitTestResult").ToArray();
+            results = elements.Select(element => ReadTrxResult(element, reporting: true)).ToArray();
+            ValidateReportIdentities(results);
+            var summaries = root.Elements(trx + "ResultSummary").ToArray();
+            if (summaries.Length != 1 || summaries[0].Elements(trx + "Counters").Count() != 1)
+                throw new TestPlanPublicationException("The canonical TRX requires final execution counters.");
+            var summary = summaries[0];
+            var counters = summary.Element(trx + "Counters")!;
+            RequireCounter(counters, "total", results.Count);
+            RequireCounter(counters, "executed", results.Count(item => item.Outcome != CanonicalReportOutcome.Skipped));
+            RequireCounter(counters, "passed", results.Count(item => item.Outcome == CanonicalReportOutcome.Passed));
+            RequireCounter(counters, "failed", elements.Count(item => (string?)item.Attribute("outcome") == "Failed"));
+            RequireCounter(counters, "notExecuted", results.Count(item => item.Outcome == CanonicalReportOutcome.Skipped));
+            foreach (var (counter, outcome) in new[] { ("error", "Error"), ("timeout", "Timeout"), ("aborted", "Aborted") })
+                RequireCounter(counters, counter, elements.Count(item => (string?)item.Attribute("outcome") == outcome), optionalZero: true);
+            foreach (var counter in new[] { "inProgress", "pending", "inconclusive", "notRunnable", "disconnected", "passedButRunAborted" })
+                RequireCounter(counters, counter, 0, optionalZero: true);
+            var summaryOutcome = (string?)summary.Attribute("outcome");
+            var failed = results.Any(item => item.Outcome == CanonicalReportOutcome.Failed);
+            if (summaryOutcome is not ("Passed" or "Failed" or "Completed" or "NotExecuted") ||
+                summaryOutcome == "Passed" && failed ||
+                summaryOutcome == "Failed" && !failed ||
+                summaryOutcome == "NotExecuted" && results.Any(item => item.Outcome != CanonicalReportOutcome.Skipped) ||
+                summary.Descendants(trx + "ErrorInfo").Any() ||
+                summary.Descendants(trx + "RunInfo").Any(item =>
+                    (string?)item.Attribute("outcome") is "Error" or "Failed" or "Aborted"))
+                throw new TestPlanPublicationException(
+                    "The canonical TRX run outcome or setup/teardown diagnostics disagree with its individual test results.");
+        }
+        else if (document.Root?.Name == "test-run")
+        {
+            var root = document.Root;
+            var cases = root.Descendants("test-case").ToArray();
+            results = cases.Select(ReadNUnitResult).ToArray();
+            ValidateReportIdentities(results);
+            RequireCounter(root, "total", results.Count);
+            RequireCounter(root, "passed", results.Count(item => item.Outcome == CanonicalReportOutcome.Passed));
+            RequireCounter(root, "failed", results.Count(item => item.Outcome == CanonicalReportOutcome.Failed));
+            RequireCounter(root, "skipped", cases.Count(item => (string?)item.Attribute("result") == "Skipped"));
+            RequireCounter(root, "inconclusive", cases.Count(item => (string?)item.Attribute("result") == "Inconclusive"), optionalZero: true);
+            if (root.Attribute("testcasecount") != null)
+                RequireCounter(root, "testcasecount", results.Count);
+            _ = ReadNUnitDuration(root);
+            ValidateNUnitContainer(root);
+            foreach (var suite in root.Descendants("test-suite"))
+                ValidateNUnitContainer(suite);
+        }
+        else
+        {
+            throw new TestPlanPublicationException("Canonical input must be an actual TRX TestRun or NUnit test-run.");
+        }
+        return results;
+    }
 
     public TestPlanPublicationBatch Load(
         string packageRoot,
@@ -272,45 +339,16 @@ public sealed class CanonicalResultLoader
 
     private static IReadOnlyList<TrxResult> ReadTrx(string path)
     {
-        XDocument document;
-        try
-        {
-            document = XDocument.Load(path, LoadOptions.None);
-        }
-        catch (Exception exception) when (
-            exception is System.Xml.XmlException or IOException)
-        {
-            throw new TestPlanPublicationException(
-                "The canonical TRX is missing or malformed.");
-        }
+        var document = ReadResultDocument(path);
         XNamespace ns =
             "http://microsoft.com/schemas/VisualStudio/TeamTest/2010";
         var results = document
             .Descendants(ns + "UnitTestResult")
-            .Select(element =>
-            {
-                var name = (string?)element.Attribute("testName") ?? "";
-                var outcomeText = (string?)element.Attribute("outcome") ?? "";
-                var outcome = outcomeText switch
-                {
-                    "Passed" => CanonicalTestOutcome.Passed,
-                    "Failed" => CanonicalTestOutcome.Failed,
-                    _ => throw new TestPlanPublicationException(
-                        $"Canonical TRX contains non-final outcome '{outcomeText}'.")
-                };
-                var durationText = (string?)element.Attribute("duration");
-                if (!TimeSpan.TryParse(durationText, out var duration))
-                {
-                    throw new TestPlanPublicationException(
-                        $"Canonical TRX duration is invalid for '{name}'.");
-                }
-                if (string.IsNullOrWhiteSpace(name))
-                {
-                    throw new TestPlanPublicationException(
-                        "Canonical TRX contains an unnamed test.");
-                }
-                return new TrxResult(name, outcome, duration);
-            })
+            .Select(element => ReadTrxResult(element, reporting: false))
+            .Select(result => new TrxResult(result.TestIdentity,
+                result.Outcome == CanonicalReportOutcome.Passed
+                    ? CanonicalTestOutcome.Passed : CanonicalTestOutcome.Failed,
+                result.Duration))
             .ToArray();
         if (results.Length == 0)
             throw new TestPlanPublicationException(
@@ -322,6 +360,131 @@ public sealed class CanonicalResultLoader
                 "The canonical TRX contains duplicate test identities.");
         }
         return results;
+    }
+
+    private static XDocument ReadResultDocument(string path)
+    {
+        try
+        {
+            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using var reader = XmlReader.Create(stream, new XmlReaderSettings
+            {
+                DtdProcessing = DtdProcessing.Prohibit,
+                XmlResolver = null,
+                MaxCharactersInDocument = 100 * 1024 * 1024
+            });
+            return XDocument.Load(reader, LoadOptions.None);
+        }
+        catch (Exception exception) when (exception is XmlException or IOException or UnauthorizedAccessException)
+        {
+            throw new TestPlanPublicationException("The canonical execution result is missing, empty or malformed.");
+        }
+    }
+
+    private static CanonicalReportResult ReadTrxResult(XElement element, bool reporting)
+    {
+        var name = (string?)element.Attribute("testName") ?? "";
+        var outcomeText = (string?)element.Attribute("outcome") ?? "";
+        var outcome = outcomeText switch
+        {
+            "Passed" => CanonicalReportOutcome.Passed,
+            "Failed" => CanonicalReportOutcome.Failed,
+            "NotExecuted" when reporting => CanonicalReportOutcome.Skipped,
+            "Error" or "Timeout" or "Aborted" when reporting => CanonicalReportOutcome.Failed,
+            _ => throw new TestPlanPublicationException($"Canonical TRX contains non-final outcome '{outcomeText}'.")
+        };
+        var durationText = (string?)element.Attribute("duration");
+        if (!TimeSpan.TryParse(durationText, reporting ? CultureInfo.InvariantCulture : CultureInfo.CurrentCulture, out var duration) ||
+            reporting && duration < TimeSpan.Zero)
+            throw new TestPlanPublicationException($"Canonical TRX duration is invalid for '{name}'.");
+        if (string.IsNullOrWhiteSpace(name))
+            throw new TestPlanPublicationException("Canonical TRX contains an unnamed test.");
+        var ns = element.Name.Namespace;
+        var error = element.Element(ns + "Output")?.Element(ns + "ErrorInfo");
+        if (reporting && outcome != CanonicalReportOutcome.Failed && error != null)
+            throw new TestPlanPublicationException("A non-failed canonical TRX test contains failure diagnostics.");
+        if (reporting)
+            ValidateWindow(element, "startTime", "endTime");
+        return new CanonicalReportResult(name, outcome, duration,
+            error == null ? null : string.Join("\n", error.Elements().Select(item => item.Value)));
+    }
+
+    private static CanonicalReportResult ReadNUnitResult(XElement element)
+    {
+        var name = (string?)element.Attribute("fullname");
+        if (string.IsNullOrWhiteSpace(name))
+            throw new TestPlanPublicationException("A canonical NUnit case requires its full identity.");
+        var outcome = (string?)element.Attribute("result") switch
+        {
+            "Passed" => CanonicalReportOutcome.Passed,
+            "Failed" => CanonicalReportOutcome.Failed,
+            "Skipped" or "Inconclusive" => CanonicalReportOutcome.Skipped,
+            _ => throw new TestPlanPublicationException("Canonical NUnit contains a non-final test result.")
+        };
+        if (outcome != CanonicalReportOutcome.Failed && element.Element("failure") != null)
+            throw new TestPlanPublicationException("A non-failed canonical NUnit case contains failure diagnostics.");
+        ValidateWindow(element, "start-time", "end-time");
+        var diagnostic = element.Element("failure") ?? element.Element("reason");
+        return new CanonicalReportResult(name, outcome, ReadNUnitDuration(element),
+            diagnostic == null ? null : string.Join("\n", diagnostic.Elements().Select(item => item.Value)));
+    }
+
+    private static TimeSpan ReadNUnitDuration(XElement element)
+    {
+        if (!double.TryParse((string?)element.Attribute("duration"),
+                NumberStyles.Float, CultureInfo.InvariantCulture, out var seconds) ||
+            !double.IsFinite(seconds) || seconds < 0 || seconds >= TimeSpan.MaxValue.TotalSeconds)
+            throw new TestPlanPublicationException("Canonical NUnit duration is invalid.");
+        return TimeSpan.FromSeconds(seconds);
+    }
+
+    private static void ValidateNUnitContainer(XElement element)
+    {
+        var cases = element.Descendants("test-case").ToArray();
+        if (cases.Length == 0)
+        {
+            if ((string?)element.Attribute("result") == "Failed" || element.Element("failure") != null)
+                throw new TestPlanPublicationException("A canonical NUnit suite has a setup/teardown failure with no executed cases.");
+            return;
+        }
+        var failed = cases.Any(item => (string?)item.Attribute("result") == "Failed");
+        var passed = cases.Any(item => (string?)item.Attribute("result") == "Passed");
+        var outcome = (string?)element.Attribute("result");
+        if (outcome is not ("Passed" or "Failed" or "Skipped" or "Inconclusive") ||
+            outcome == "Failed" && !failed ||
+            outcome == "Passed" && (failed || element.Element("failure") != null) ||
+            outcome is "Skipped" or "Inconclusive" && (passed || failed))
+            throw new TestPlanPublicationException(
+                "A canonical NUnit run/suite has setup, teardown or outcome failures inconsistent with its test cases.");
+    }
+
+    private static void ValidateReportIdentities(IReadOnlyList<CanonicalReportResult> results)
+    {
+        if (results.Count == 0)
+            throw new TestPlanPublicationException("The canonical input contains zero executed test results.");
+        if (results.GroupBy(item => item.TestIdentity, StringComparer.Ordinal).Any(group => group.Count() != 1))
+            throw new TestPlanPublicationException("The canonical input contains duplicate test identities.");
+    }
+
+    private static void RequireCounter(XElement element, string name, int expected, bool optionalZero = false)
+    {
+        var value = (string?)element.Attribute(name);
+        if (value == null && optionalZero && expected == 0)
+            return;
+        if (!int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var actual) || actual != expected)
+            throw new TestPlanPublicationException($"Canonical '{name}' counter disagrees with the actual test results.");
+    }
+
+    private static void ValidateWindow(XElement element, string startName, string endName)
+    {
+        var startText = (string?)element.Attribute(startName);
+        var endText = (string?)element.Attribute(endName);
+        if (startText == null && endText == null)
+            return;
+        if (!DateTimeOffset.TryParse(startText, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var start) ||
+            !DateTimeOffset.TryParse(endText, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var end) ||
+            end < start)
+            throw new TestPlanPublicationException("Canonical result timestamps are missing or reversed.");
     }
 
     private static CanonicalTestOutcome ParseArtifactOutcome(JsonElement value)

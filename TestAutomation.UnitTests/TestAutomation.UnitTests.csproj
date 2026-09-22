@@ -22,6 +22,7 @@
     <ProjectReference Include="..\DataPool\DataPool.csproj" />
     <ProjectReference Include="..\TestAutomation.csproj" />
     <ProjectReference Include="..\Tools\TestPlanPublisher\TestPlanPublisher.csproj" />
+    <ProjectReference Include="..\Tools\SgsReport\SgsReport.csproj" />
   </ItemGroup>
 
 </Project>
