@@ -14,6 +14,7 @@ using PnCTestAutomation.Pages;
 using PnCTestAutomation.Pages.ExpertQuotePages;
 using PnCTestAutomation.Products;
 using PnCTestAutomation.QuoteHandoffs;
+using PnCTestAutomation.Reporting;
 using PnCTestAutomation.Services;
 using PnCTestAutomation.Clients;
 using PnCTestAutomation.TestPlans;
@@ -192,6 +193,10 @@ namespace PnCTestAutomation
             });
             services.AddScoped<IQuoteHandoff, ScenarioQuoteHandoff>();
             services.AddScoped<ISgsScenarioData, SgsScenarioData>();
+            services.AddScoped<ScenarioReportPrivacy>();
+            services.AddScoped(provider =>
+                provider.GetRequiredService<ScenarioReportPrivacy>().CreateRedactor());
+            services.AddScoped<ScenarioReportRecorder>();
             services.AddScoped<IArtifactContext>(provider =>
             {
                 var scenarioContext = provider.GetRequiredService<ScenarioContext>();

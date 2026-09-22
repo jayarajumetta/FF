@@ -4,6 +4,7 @@ using NUnit.Framework;
 using PnCTestAutomation.DataProfiles;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.QuoteHandoffs;
+using PnCTestAutomation.Reporting;
 
 namespace PnCTestAutomation.UnitTests;
 
@@ -25,6 +26,10 @@ public sealed class SgsRuntimeCompositionTests
         var handoff = first.ServiceProvider.GetRequiredService<IQuoteHandoff>();
         var otherData = second.ServiceProvider.GetRequiredService<ISgsScenarioData>();
         var otherOwner = second.ServiceProvider.GetRequiredService<ScenarioContextData>();
+        var recorder = first.ServiceProvider.GetRequiredService<ScenarioReportRecorder>();
+        var privacy = first.ServiceProvider.GetRequiredService<ScenarioReportPrivacy>();
+        privacy.RegisterSensitiveValue("first-scope-only");
+        owner.ClientFirstName = "LateBoundPrivateName";
 
         data.Load(new("CLEQ", @"TestData\Scenarios\Smoke\03_eq_bop_smoke_test_al.json", "AL",
             @"TestData\ExternalDataOverrides.json"));
@@ -38,6 +43,13 @@ public sealed class SgsRuntimeCompositionTests
             Assert.That(owner.QuoteNumber, Is.EqualTo("01234567"));
             Assert.That(handoff.Require("SGS runtime contract").QuoteNumber, Is.EqualTo("01234567"));
             Assert.That(otherOwner.SgsData.IsLoaded, Is.False);
+            Assert.That(first.ServiceProvider.GetRequiredService<ScenarioReportRecorder>(), Is.SameAs(recorder));
+            Assert.That(second.ServiceProvider.GetRequiredService<ScenarioReportRecorder>(), Is.Not.SameAs(recorder));
+            Assert.That(privacy.CreateRedactor().Text("first-scope-only LateBoundPrivateName"),
+                Is.EqualTo($"{ReportRedactor.Mask} {ReportRedactor.Mask}"));
+            Assert.That(second.ServiceProvider.GetRequiredService<ScenarioReportPrivacy>()
+                .CreateRedactor().Text("first-scope-only LateBoundPrivateName"),
+                Is.EqualTo("first-scope-only LateBoundPrivateName"));
             Assert.That(second.ServiceProvider.GetRequiredService<IQuoteHandoff>().TryGet(out _), Is.False);
             Assert.That(data.GetRequired("values.effective_date"), Is.EqualTo("03-01-2025"));
         });

@@ -119,7 +119,7 @@ public sealed class ReportAggregator
             else
                 Reconcile(result, matches, issues);
             tests.Add(new ReportTestResult(identity, Status(result.Outcome), result.Duration.TotalMilliseconds,
-                matches.Select(item => item.View).ToImmutableArray(), Safe(result.FailureMessage)));
+                matches.Select(item => item.View).ToImmutableArray(), FailureMessage(result, matches)));
         }
         var duplicateIds = candidates.GroupBy(item => item.Manifest.AutomationId, StringComparer.Ordinal)
             .Where(group => group.Select(item => item.Projection.TestIdentityHash).Distinct().Count() > 1);
@@ -226,6 +226,19 @@ public sealed class ReportAggregator
         if (candidates[^1].Projection.Status != Status(canonical.Outcome))
             issues.Add(new ReportIssue("outcome-mismatch",
                 $"Final manifest outcome {candidates[^1].Projection.Status.Text()} differs from canonical {Status(canonical.Outcome).Text()}; no result is repaired.", identity));
+    }
+
+    private string FailureMessage(CanonicalReportResult canonical, Candidate[] candidates)
+    {
+        if (canonical.Outcome == CanonicalReportOutcome.Passed)
+            return "";
+        // Only the scenario process knows generated PII and runtime tokens. Do not republish raw TRX assertion text.
+        var projection = candidates.LastOrDefault()?.Projection;
+        var diagnostic = projection?.Diagnostics.LastOrDefault(item =>
+            item.Component is "scenario" or "preflight" && item.Level is "error" or "skip")?.Message;
+        var stepError = projection?.Steps.LastOrDefault(item => item.Status == ReportStatus.Fail)?.Error;
+        return Safe(new[] { diagnostic, stepError }.FirstOrDefault(value => !string.IsNullOrWhiteSpace(value))
+            ?? "Canonical execution did not pass; no scenario-redacted failure detail was recorded.");
     }
 
     private static bool SameEvidence(string first, string second, ArtifactManifest manifest)

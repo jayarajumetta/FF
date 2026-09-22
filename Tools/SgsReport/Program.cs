@@ -1,5 +1,7 @@
 using System.Collections.Immutable;
+using Microsoft.Extensions.Configuration;
 using PnCTestAutomation.Artifacts;
+using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Reporting;
 
 namespace PnCTestAutomation.SgsReport;
@@ -13,6 +15,13 @@ public static class Program
         var redactor = new ReportRedactor();
         try
         {
+            var environment = Environment.GetEnvironmentVariable("TEST_ENVIRONMENT") ?? "QA";
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile(Path.Combine(AppContext.BaseDirectory, "appsettings.json"), optional: true)
+                .AddJsonFile(Path.Combine(AppContext.BaseDirectory, $"appsettings.{environment}.json"), optional: true)
+                .AddEnvironmentVariables()
+                .Build();
+            redactor = new ScenarioReportPrivacy(configuration, new ScenarioContextData()).CreateRedactor();
             var values = new Dictionary<string, string>(StringComparer.Ordinal);
             var roots = ImmutableArray.CreateBuilder<string>();
             for (var index = 0; index < args.Length; index++)
@@ -39,7 +48,8 @@ public static class Program
             output.WriteLine($"{ConsolidatedReportRenderer.OverallStatus(result.Report).Text()}: {redactor.Text(result.ReportPath)}");
             return result.ExitCode;
         }
-        catch (Exception exception) when (exception is ArgumentException or IOException or UnauthorizedAccessException or ArtifactEvidenceException)
+        catch (Exception exception) when (exception is ArgumentException or IOException or UnauthorizedAccessException
+            or ArtifactEvidenceException or FormatException)
         {
             error.WriteLine("Report generation failed: " + redactor.Text(exception.Message));
             return 2;

@@ -115,6 +115,7 @@ namespace PnCTestAutomation.Artifacts
         string RunRoot { get; }
         string ScenarioRoot { get; }
         IReadOnlyList<ArtifactRecord> Records { get; }
+        bool HasFailedComponents { get; }
 
         string GetArtifactDirectory(ArtifactKind kind);
 
@@ -228,7 +229,7 @@ namespace PnCTestAutomation.Artifacts
                 : automationId.Trim();
             _testIdentity = string.IsNullOrWhiteSpace(testIdentity)
                 ? null
-                : testIdentity.Trim();
+                : testIdentity;
 
             var outputRoot = ResolveOutputRoot(options);
             RunRoot = ArtifactPathGuard.EnsureSafe(
@@ -255,6 +256,15 @@ namespace PnCTestAutomation.Artifacts
         public string ScenarioId { get; }
         public string RunRoot { get; }
         public string ScenarioRoot { get; }
+
+        public bool HasFailedComponents
+        {
+            get
+            {
+                lock (_gate)
+                    return _componentOutcomes.Any(item => !item.Value);
+            }
+        }
 
         public IReadOnlyList<ArtifactRecord> Records
         {

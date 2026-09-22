@@ -23,6 +23,21 @@ public sealed class ScenarioReportRecorder
         _redactor = redactor ?? new ReportRedactor();
     }
 
+    public bool HasFailures
+    {
+        get
+        {
+            lock (_gate)
+                return _deferred.Count > 0 || _steps.Any(step => step.Status == ReportStatus.Fail);
+        }
+    }
+
+    public ImmutableArray<ReportDiagnostic> ReadDiagnostics()
+    {
+        lock (_gate)
+            return _diagnostics.ToImmutableArray();
+    }
+
     public int StartStep(string text, ReportBinding? binding = null, int? parentOrder = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(text);
@@ -48,7 +63,8 @@ public sealed class ScenarioReportRecorder
         ImmutableDictionary<string, string>? displayData = null,
         ImmutableArray<string> screenshots = default,
         ImmutableArray<string> consoleErrors = default,
-        ImmutableArray<string> networkErrors = default)
+        ImmutableArray<string> networkErrors = default,
+        ReportBinding? binding = null)
     {
         if (!Enum.IsDefined(status) || status == ReportStatus.Unknown)
             throw new ArgumentOutOfRangeException(nameof(status), "A completed step needs an explicit status.");
@@ -61,6 +77,7 @@ public sealed class ScenarioReportRecorder
             _steps.Add(current.Step with
             {
                 Status = status,
+                Binding = binding ?? current.Step.Binding,
                 DurationMilliseconds = _clock.GetElapsedTime(current.Timestamp).TotalMilliseconds,
                 Data = _redactor.Data(displayData ?? ImmutableDictionary<string, string>.Empty),
                 Error = _redactor.Text(error),

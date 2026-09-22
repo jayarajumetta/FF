@@ -8,8 +8,9 @@ neither references the utility. No Python, CDN, service, new browser, retry
 engine, or additional hook is needed.
 
 This slice does not enable SGS business scenarios, modify their coverage, or
-claim live execution. The existing integration-owned hooks must supply the
-scenario metadata, recorder events, canonical outcome and finalized evidence.
+claim live execution. The existing integration-owned `TestHooks` supplies the
+scenario metadata, recorder events, canonical outcome and finalized evidence;
+`TestHooks.Reporting.cs` is part of that same binding class, not another lifecycle.
 
 ## Source provenance and retained presentation
 
@@ -94,6 +95,10 @@ Child steps must finish before their parent. `Snapshot(metadata)` refuses
 active steps. It uses monotonic elapsed time, has no static scenario state and
 never owns the test outcome or browser. It only records events the existing
 hook/page flow actually supplies; it does not create skipped steps or retries.
+`EndStep` can accept the actual binding after execution, when Reqnroll has
+resolved it. `HasFailures` exposes recorded failed steps/deferred checks;
+`ReadDiagnostics` returns an immutable diagnostic snapshot. Neither changes
+the canonical outcome by itself.
 
 The transaction belongs to `IArtifactContext`:
 
@@ -103,7 +108,12 @@ var manifest = artifacts.Complete(authoritativeOutcome, snapshot =>
 {
     var files = ScenarioReportWriter.Write(
         artifacts.ScenarioRoot, snapshot, metadata, redactor);
-    if (snapshot.Outcome != ArtifactOutcome.Failed && files.Issues.Length != 0)
+    var unexpected = files.Issues.Where(issue =>
+        !(snapshot.Outcome == ArtifactOutcome.Failed &&
+          snapshot.EvidenceErrors.Count > 0 &&
+          issue.Code is "manifest-evidence-error" or
+              "required-evidence" or "missing-evidence"));
+    if (unexpected.Any())
         throw new ArtifactEvidenceException(
             "Report evidence disagrees with the canonical scenario outcome.");
 });
@@ -142,6 +152,43 @@ exact raw canonical identity without disclosing sensitive identity text;
 serialized frozen manifest, so a stale pre-teardown projection cannot reconcile
 with a later failed manifest. The HTML also carries that fingerprint/status;
 a stale or corrupt individual HTML report is not linked.
+
+## Wired scenario lifecycle
+
+`Startup` registers one scoped recorder and `ScenarioReportPrivacy` alongside
+the existing `ScenarioContextData`, quote handoff and artifact owner. Reporting
+starts before preflight gates, so a gated scenario gets genuine SKIP evidence
+without authentication, a browser, synthetic steps or fake media. Untagged
+legacy cases retain their existing artifact behavior; no automation ID is
+invented to force them into report/Test Plans reconciliation.
+
+The existing BeforeStep/AfterStep boundaries record actual text, status,
+elapsed time, nested ordering, resolved binding method and unique checkpoint
+screenshots. Binding source file/line is left unavailable rather than guessed.
+Registered UI scenarios retain trace and scenario-owned main/checklist-page
+videos on passing as well as failing runs. Transient, unowned popup tabs remain
+in the trace/diagnostics but are not required to produce their own video clip.
+Final screenshots precede browser shutdown; videos are registered only after
+context closure. API-only and preflight-skipped runs do not invent browser evidence.
+
+Failed steps, deferred verifications, sticky required components, capture/log
+failures, teardown failures and required DataPool failures affect finalization.
+They prevent quote persistence when known before that operation. Optional
+DataPool failures remain explicit warnings under the existing optional policy.
+Metadata/recorder errors cannot suppress the failed canonical manifest.
+Unexpected render defects delete partial projections; known missing evidence
+can retain a truthful failed report and still fail the scenario.
+
+The scenario-owned execution log contains recorder events, not redirected
+process-wide Console output. Browser logs record console/page errors, failed
+requests and HTTP error statuses, without request bodies or headers. At most
+500 browser events are retained; oversized events over 4,096 characters are
+explicitly omitted, never cut through a potentially sensitive value.
+
+`TEST_ATTEMPT_NUMBER` is a positive integer. A fresh local invocation defaults
+to one; the owning shard runner explicitly sets/restores one and two for actual
+authorized attempts and retains the same execution-group ID across them.
+It never infers retries from filenames or enables retries for SGS mutations.
 
 ## Canonical aggregation
 
@@ -219,6 +266,9 @@ The reporting outcome supports Passed, Failed and Skipped. Existing ADO `Load`
 still accepts only its previous Passed/Failed contract and still enforces its
 package/result mapping, safe attachment allowlist and 4 MiB upload limit.
 Publication transport is unchanged.
+When a result manifest includes the new reporting gate, the publisher also
+checks its exit status, summary checksum/counts and consolidated report
+presence before publication. It does not widen the attachment allowlist.
 
 Each final canonical test must match its finalized manifest/projection and actual
 attempt group. Attempt numbers must be unique, contiguous and chronological;
@@ -237,6 +287,14 @@ keys, credential headers, URL user info/query/fragment data, JWTs, SSNs, simple
 sensitive XML values and email text are redacted. HTML attributes/text and XML
 are encoded. Redaction preserves exact
 identity correlation by hashing the original identity before display redaction.
+`ScenarioReportPrivacy` collects configured/process credentials, registered
+runtime tokens and known scenario PII for redaction only; it does not export
+those values. Metadata is re-redacted after late-bound data is available and
+before writing logs/projections. The CLI uses the same configured/process
+redaction policy. Consolidated failure detail comes from the scenario-redacted
+diagnostics, not raw TRX assertions that may contain generated PII or runtime
+tokens unavailable to the later reporting process. Canonical runner inputs
+remain unchanged and require their existing restricted retention/access policy.
 
 The reader only links manifest-registered, existing, nonempty, contained files.
 `ArtifactPathGuard` is reused and ancestor reparse points are checked. Absolute,
@@ -265,7 +323,7 @@ complete line; their unexamined original file is not linked.
 
 ```powershell
 dotnet test .\TestAutomation.UnitTests\TestAutomation.UnitTests.csproj `
-  --filter 'FullyQualifiedName~SgsReportingTests|FullyQualifiedName~CanonicalReportResultsTests|FullyQualifiedName~ArtifactContextTests|FullyQualifiedName~TestPlanPublisherTests'
+  --filter 'FullyQualifiedName~SgsReportingTests|FullyQualifiedName~ScenarioReportingLifecycleTests|FullyQualifiedName~CanonicalReportResultsTests|FullyQualifiedName~ArtifactContextTests|FullyQualifiedName~TestPlanPublisherTests'
 ```
 
 These tests cover pass/failure/skip, owner-backed transactional finalization,

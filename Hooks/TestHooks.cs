@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 
 using PnCTestAutomation.Artifacts;
@@ -10,6 +10,7 @@ using PnCTestAutomation.Helpers;            // <-- ScenarioContextData lives her
 using PnCTestAutomation.Pages;
 using PnCTestAutomation.Products;
 using PnCTestAutomation.QuoteHandoffs;
+using PnCTestAutomation.Reporting;
 using PnCTestAutomation.Services;
 using PnCTestAutomation.TestPlans;
 
@@ -28,7 +29,7 @@ using NUnitTestContext = NUnit.Framework.TestContext;
 namespace PnCTestAutomation.Hooks
 {
     [Binding]
-    public class TestHooks
+    public partial class TestHooks
     {
         private readonly PlaywrightContext _context;
         private readonly BrowserFactory _browserFactory;
@@ -51,9 +52,10 @@ namespace PnCTestAutomation.Hooks
         private readonly IBusinessOutcomeContext _businessOutcomeContext;
         private readonly IProductModuleRegistry _productModules;
         private readonly SgsExecutionCatalog _sgsCatalog;
+        private readonly ScenarioContextData _scenarioData;
+        private readonly DataPoolClientConfig _dataPoolOptions;
         private ProductEvidenceContract _productEvidence;
         private bool _tracingStarted;
-        private ArtifactEvidenceException _artifactFailure;
 
         public TestHooks(
             PlaywrightContext context,
@@ -71,7 +73,11 @@ namespace PnCTestAutomation.Hooks
             IExpectedOutcomeProfileProvider outcomeProfiles,
             IBusinessOutcomeContext businessOutcomeContext,
             IProductModuleRegistry productModules,
-            SgsExecutionCatalog sgsCatalog)
+            SgsExecutionCatalog sgsCatalog,
+            ScenarioContextData scenarioData,
+            DataPoolClientConfig dataPoolOptions,
+            ScenarioReportRecorder reportRecorder,
+            ScenarioReportPrivacy reportPrivacy)
         {
             _context = context;
             _browserFactory = browserFactory;
@@ -91,6 +97,10 @@ namespace PnCTestAutomation.Hooks
             _businessOutcomeContext = businessOutcomeContext;
             _productModules = productModules;
             _sgsCatalog = sgsCatalog;
+            _scenarioData = scenarioData;
+            _dataPoolOptions = dataPoolOptions;
+            _reportRecorder = reportRecorder;
+            _reportPrivacy = reportPrivacy;
         }
 
         [BeforeTestRun]
@@ -157,40 +167,44 @@ namespace PnCTestAutomation.Hooks
             var tags = (_scenarioContext.ScenarioInfo.Tags ?? [])
                 .Concat(_featureContext.FeatureInfo.Tags ?? [])
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            var automationId = ScenarioAutomationIdentity.Resolve(
+                _scenarioContext.ScenarioInfo.Tags ?? [],
+                _featureContext.FeatureInfo.Tags ?? [],
+                ScenarioAutomationIdentity.ResolveQualifier(tags, _scenarioContext.ScenarioInfo.Arguments));
+            InitializeReporting(automationId, tags);
+            SgsCaseResolution sgsResolution = null;
             if (tags.Contains("SgsImported"))
             {
-                var resolution = _sgsCatalog.Resolve(
+                sgsResolution = _sgsCatalog.Resolve(
                     _featureContext.FeatureInfo.Title,
                     tags,
                     ScenarioAutomationIdentity.ReadArguments(_scenarioContext.ScenarioInfo.Arguments));
-                if (!resolution.IsRunnable)
+                _reportMetadata = _reportMetadata with { Application = sgsResolution.Workflow.ApplicationTag };
+                if (!sgsResolution.IsRunnable)
                 {
-                    NUnit.Framework.Assert.Ignore(
-                        $"SGS case '{resolution.Case.AutomationId}' is non-runnable: " +
-                        resolution.Case.BlockedReason);
+                    SkipScenario(
+                        $"SGS case '{sgsResolution.Case.AutomationId}' is non-runnable: " +
+                        sgsResolution.Case.BlockedReason);
                     return;
                 }
                 if (tags.Contains("NonRunnable"))
                     throw new SgsExecutionConfigurationException(
                         "An SGS case marked runnable still has a NonRunnable feature tag.");
                 _sgsCatalog.ValidateResourcePayloads(
-                    Path.Combine(AppContext.BaseDirectory, "Resources"), resolution);
+                    Path.Combine(AppContext.BaseDirectory, "Resources"), sgsResolution);
             }
 
             if (ShouldSkipScenarioForDevStateFilter(out var skipReason))
             {
-                NUnit.Framework.Assert.Ignore(skipReason);
+                SkipScenario(skipReason);
                 return;
             }
 
-            var automationId = ScenarioAutomationIdentity.Resolve(
-                _scenarioContext.ScenarioInfo.Tags ?? [],
-                _featureContext.FeatureInfo.Tags ?? [],
-                ScenarioAutomationIdentity.ResolveQualifier(
-                    tags, _scenarioContext.ScenarioInfo.Arguments));
             var productModule = automationId == null
                 ? null
                 : _productModules.TryResolve(automationId);
+            if (_reportingEnabled && productModule != null)
+                _reportMetadata = _reportMetadata with { Lob = productModule.Product };
             if (TryGetBusinessOutcomeScenarioProfile(out var scenarioProfile))
             {
                 var state = TryGetScenarioStateAbbreviation()
@@ -206,7 +220,7 @@ namespace PnCTestAutomation.Hooks
                     state);
                 if (!resolution.IsRunnable)
                 {
-                    NUnit.Framework.Assert.Ignore(
+                    SkipScenario(
                         $"Business outcome profile '{resolution.Profile.ProfileId}' " +
                         $"is explicitly non-runnable: {resolution.Reason}");
                     return;
@@ -221,14 +235,19 @@ namespace PnCTestAutomation.Hooks
                 _artifacts.Require(
                     _productEvidence.RequiredArtifacts.ToArray());
             }
+            if (sgsResolution != null)
+                _artifacts.Require(sgsResolution.Workflow.RequiredEvidence.ToArray());
 
             if (IsApiScenario())
             {
                 var accessToken = await _accessTokenProvider.GetAccessTokenAsync();
+                _reportPrivacy.RegisterSensitiveValue(accessToken.Value);
                 _apiService.SetAccessToken(accessToken);
             }
             else
             {
+                if (_reportingEnabled)
+                    _artifacts.Require(ArtifactKind.Screenshot, ArtifactKind.Trace, ArtifactKind.Video);
                 var browserType = _browserFactory.ResolveBrowserType();
                 _browser = await _browserFactory.GetBrowserAsync(browserType);
 
@@ -238,11 +257,12 @@ namespace PnCTestAutomation.Hooks
                     ViewportSize = new ViewportSize { Width = 1900, Height = 1080 },
                     RecordVideoDir = _artifacts.GetArtifactDirectory(ArtifactKind.Video)
                 });
+                AttachBrowserReporting();
 
                 var isCI = string.Equals(Environment.GetEnvironmentVariable("CI"), "true",
                     StringComparison.OrdinalIgnoreCase);
 
-                if (!isCI || _productEvidence?.RequiresFailureTrace == true)
+                if (_reportingEnabled || !isCI || _productEvidence?.RequiresFailureTrace == true)
                 {
                     await _browserContext.Tracing.StartAsync(new TracingStartOptions
                     {
@@ -254,6 +274,8 @@ namespace PnCTestAutomation.Hooks
                 }
 
                 _page = await _browserContext.NewPageAsync();
+                if (_reportingEnabled)
+                    OnReportPage(this, _page);
 
                 // Timeouts: 30s element / 90s navigation (SSO redirect chains can exceed 60s)
                 _page.SetDefaultTimeout(30000);
@@ -270,204 +292,163 @@ namespace PnCTestAutomation.Hooks
             }
         }
 
-        [AfterStep]
-        public async Task AfterStepAsync()
-        {
-            if (_scenarioContext.TestError != null && _context.Page != null)
-            {
-                try
-                {
-                    RequireFailureEvidence();
-                    var screenshot = await _artifactCapture.CaptureAsync(
-                        ArtifactKind.Screenshot,
-                        "step-failure",
-                        ".png",
-                        path => _context.Page.ScreenshotAsync(
-                            new()
-                            {
-                                Path = path,
-                                FullPage = true
-                            }));
-                    NUnitTestContext.WriteLine(
-                        $"[screenshot] {screenshot.RelativePath}");
-                }
-                catch
-                {
-                    _artifactFailure = new ArtifactEvidenceException(
-                        "A requested failure screenshot could not be captured.");
-                }
-            }
-        }
-
-        [AfterScenario]
+        [AfterScenario(Order = int.MaxValue)]
         public async Task AfterScenarioAsync()
         {
-            // Close the checklist popup tab if it is still open (e.g. test failed mid-checklist)
-            if (_context.ChecklistPage != null)
+            var wasSkipped =
+                NUnitTestContext.CurrentContext.Result.Outcome.Status == NUnit.Framework.Interfaces.TestStatus.Skipped ||
+                _scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.Skipped ||
+                _scenarioContext.TestError is NUnit.Framework.IgnoreException or NUnit.Framework.InconclusiveException;
+            var runnerFailed = !wasSkipped &&
+                (_scenarioContext.TestError != null ||
+                 _scenarioContext.ScenarioExecutionStatus != ScenarioExecutionStatus.OK ||
+                 NUnitTestContext.CurrentContext.Result.Outcome.Status == NUnit.Framework.Interfaces.TestStatus.Failed);
+            if (_scenarioContext.TestError != null)
+                RecordDiagnostic("scenario", wasSkipped ? "skip" : "error", _scenarioContext.TestError.Message);
+            while (_reportSteps.TryPop(out var unfinished))
             {
+                var failure = RecordCompletionFailure("step-recording",
+                    new InvalidOperationException("A started step did not reach its AfterStep boundary."));
                 try
                 {
-                    if (!_context.ChecklistPage.IsClosed)
-                        await _context.ChecklistPage.CloseAsync();
+                    _reportRecorder.EndStep(unfinished.Order, ReportStatus.Fail, failure.Message);
                 }
-                catch { /* ignore — tab may already be gone */ }
-                _context.ChecklistPage = null;
+                catch (InvalidOperationException exception)
+                {
+                    RecordCompletionFailure("step-recording", exception);
+                }
             }
-            // Handle tracing and video on failure
-            var wasSkipped =
-                NUnitTestContext.CurrentContext.Result.Outcome.Status ==
-                NUnit.Framework.Interfaces.TestStatus.Skipped ||
-                _scenarioContext.TestError is NUnit.Framework.IgnoreException;
-            var hasFailed = _scenarioContext.TestError != null && !wasSkipped;
-            if (hasFailed)
+            if (_reportRecorder.HasFailures)
+                _artifacts.RecordComponentOutcome("business-verification", false);
+            var hasFailed = runnerFailed || !_completionFailures.IsEmpty ||
+                _reportRecorder.HasFailures || _artifacts.HasFailedComponents;
+            if (hasFailed && !IsApiScenario())
                 RequireFailureEvidence();
 
-            // Pause on failure only when a debugger is attached (i.e. Run > Debug in VS/Rider).
-            // Normal CI / right-click "Run Test" runs are never blocked.
-            if (hasFailed && System.Diagnostics.Debugger.IsAttached && _context.Page != null)
+            if (hasFailed && Debugger.IsAttached && _context.Page is { IsClosed: false })
             {
                 Console.WriteLine("\n" + new string('=', 60));
                 Console.WriteLine("TEST FAILED - BROWSER PAUSED FOR DEBUGGING");
-                Console.WriteLine($"Error: {_scenarioContext.TestError?.Message}");
+                Console.WriteLine($"Error: {_reportPrivacy.CreateRedactor().Text(_scenarioContext.TestError?.Message)}");
                 Console.WriteLine("Playwright Inspector is open. Hit Resume there to finish the run.");
                 Console.WriteLine(new string('=', 60) + "\n");
-
                 try
                 {
-                    // Blocks until Resume is clicked in the Inspector — there is no timeout.
                     await _context.Page.PauseAsync();
                 }
-                catch (Exception ex)
+                catch (Exception exception)
                 {
-                    Console.WriteLine($"[Debug] Pause ended: {ex.Message}");
+                    RecordDiagnostic("debugger", "warning", exception.Message);
                 }
             }
 
+            if (_context.Page is { IsClosed: false } && (_reportingEnabled || hasFailed))
+                await TryCompleteAsync("final-screenshot", async () => await CaptureScreenshotAsync("scenario-final"));
+
+            if (_browserContext != null && _tracingStarted)
+            {
+                await TryCompleteAsync("trace-finalization", async () =>
+                {
+                    if (_reportingEnabled || hasFailed || !_completionFailures.IsEmpty)
+                        await _artifactCapture.CaptureAsync(ArtifactKind.Trace, "scenario-trace", ".zip",
+                            path => _browserContext.Tracing.StopAsync(new TracingStopOptions { Path = path }),
+                            required: _reportingEnabled || _productEvidence?.RequiresFailureTrace == true);
+                    else
+                        await _browserContext.Tracing.StopAsync();
+                });
+                _tracingStarted = false;
+            }
+
+            var pages = ReportPages().Concat(_browserContext?.Pages ?? Array.Empty<IPage>())
+                .Concat(new[] { _context.Page, _context.ChecklistPage }).Where(page => page != null).Distinct().ToArray();
+            var videos = pages.Select((page, index) => (Video: page.Video, Index: index + 1,
+                    Owned: page == _page || page == _context.Page || page == _context.ChecklistPage))
+                .Where(item => item.Video != null).ToArray();
+            foreach (var page in pages)
+            {
+                if (!page.IsClosed)
+                    await TryCompleteAsync("page-close", () => page.CloseAsync());
+            }
+            _context.ChecklistPage = null;
+            var contextClosed = _browserContext == null;
             if (_browserContext != null)
+                await TryCompleteAsync("browser-context-close", async () =>
+                {
+                    await _browserContext.CloseAsync();
+                    contextClosed = true;
+                });
+            if (!contextClosed && _browser != null)
+                await TryCompleteAsync("browser-close", () => _browser.CloseAsync());
+            if (contextClosed)
             {
-                if (hasFailed)
+                foreach (var (video, index, owned) in videos)
                 {
-                    if (_tracingStarted)
-                    {
-                        try
-                        {
-                            var trace = await _artifactCapture.CaptureAsync(
-                                ArtifactKind.Trace,
-                                "scenario-failure",
-                                ".zip",
-                                path => _browserContext.Tracing.StopAsync(
-                                    new TracingStopOptions { Path = path }),
-                                required:
-                                    _productEvidence?.RequiresFailureTrace == true);
-                            NUnitTestContext.WriteLine($"[trace] {trace.RelativePath}");
-                            _tracingStarted = false;
-                        }
-                        catch
-                        {
-                            _artifactFailure ??= new ArtifactEvidenceException(
-                                "A requested failure trace could not be captured.");
-                        }
-                    }
-                }
-                else
-                {
-                    if (_tracingStarted)
-                    {
-                        try { await _browserContext.Tracing.StopAsync(); } catch { /* ignore */ }
-                        _tracingStarted = false;
-                    }
-
+                    if (owned && (_reportingEnabled || hasFailed || !_completionFailures.IsEmpty))
+                        await TryCompleteAsync("video-finalization", async () =>
+                            await _artifactCapture.CaptureAsync(ArtifactKind.Video, $"page-{index}", ".webm",
+                                video.SaveAsAsync,
+                                required: _reportingEnabled || _productEvidence?.RequiresFailureVideo == true));
+                    await TryCompleteAsync("video-cleanup", video.DeleteAsync);
                 }
             }
-
-            // Close Playwright resources safely. Grab the video handle first — it hangs off the
-            // page and we need it after both the page and the context are gone.
-            var video = _context.Page?.Video;
-
-            try { if (_context.Page != null) await _context.Page.CloseAsync(); } catch { /* ignore */ }
-            try { if (_browserContext != null) await _browserContext.CloseAsync(); } catch { /* ignore */ }
-
-            // Playwright only finalizes the .webm once the context closes, which is why this
-            // runs here. Keep it for failures, drop it otherwise: previously every scenario left
-            // a video behind and FinalizeRun only removed the folder when it was empty, so it
-            // never was.
-            if (video != null)
-            {
-                try
-                {
-                    if (hasFailed)
-                    {
-                        var videoArtifact = await _artifactCapture.CaptureAsync(
-                            ArtifactKind.Video,
-                            "scenario-failure",
-                            ".webm",
-                            video.SaveAsAsync,
-                            required:
-                                _productEvidence?.RequiresFailureVideo == true);
-                        NUnitTestContext.WriteLine(
-                            $"[video] {videoArtifact.RelativePath}");
-                    }
-
-                    await video.DeleteAsync();
-                }
-                catch
-                {
-                    _artifactFailure ??= new ArtifactEvidenceException(
-                        "Requested video evidence could not be finalized.");
-                }
-            }
-
-            try { if (_browser != null) await _browser.CloseAsync(); } catch { /* ignore */ }
-
-            // ── DataPool: persist quote only from truly passing tests ──
-            // Exclude: failed tests (TestError != null), skipped tests (outcome = Skipped),
-            // and scenarios without a captured quote number.
-            var isPassing = !wasSkipped && !hasFailed &&
-                            _scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.OK;
-            Exception persistenceFailure = null;
-            if (isPassing && _artifactFailure == null)
-            {
-                if (_quoteHandoff.TryGet(out _))
-                {
-                    var ctx = _scenarioContext[ScenarioContextData.ContextKey] as ScenarioContextData
-                              ?? throw new InvalidOperationException(
-                                  "ScenarioContextData was unavailable during DataPool persistence.");
-                    var env = _configuration["Environment"]
-                              ?? Environment.GetEnvironmentVariable("TEST_ENVIRONMENT")
-                              ?? "qa";
-                    var record = QuoteRecordFactory.FromScenarioContext(ctx, env);
-                    try
-                    {
-                        var result = await _dataPoolClient.PersistAsync(record);
-                        if (!result.Succeeded)
-                        {
-                            Console.WriteLine(
-                                $"[DataPool] Persistence not completed: {result.Status}. {result.Message}");
-                        }
-                    }
-                    catch (DataPoolPersistenceException exception)
-                    {
-                        persistenceFailure = exception;
-                    }
-                }
-            }
+            else if (videos.Length > 0)
+                RecordCompletionFailure("video-finalization",
+                    new InvalidOperationException("Video completion could not be confirmed after browser-context shutdown failed."));
+            if (contextClosed && _browser != null)
+                await TryCompleteAsync("browser-close", () => _browser.CloseAsync());
+            DetachBrowserReporting();
 
             if (_quoteHandoff.TryGet(out _))
                 _artifacts.RecordMarker(ArtifactKind.QuoteHandoff, "quote-captured");
+            ScenarioReportMetadata metadata = null;
+            if (_reportingEnabled)
+            {
+                try
+                {
+                    metadata = SnapshotReportMetadata();
+                }
+                catch (Exception exception)
+                {
+                    RecordCompletionFailure("report-metadata", exception);
+                }
+            }
 
-            var outcome = hasFailed || _artifactFailure != null || persistenceFailure != null
+            if (!wasSkipped && !hasFailed && _completionFailures.IsEmpty &&
+                !_artifacts.HasFailedComponents && _quoteHandoff.TryGet(out _))
+                await TryCompleteAsync("data-pool-persistence", async () =>
+                {
+                    var environment = Environment.GetEnvironmentVariable("TEST_ENVIRONMENT")
+                        ?? _configuration["Environment"] ?? "qa";
+                    var result = await _dataPoolClient.PersistAsync(
+                        QuoteRecordFactory.FromScenarioContext(_scenarioData, environment));
+                    if (!result.Succeeded && _dataPoolOptions.Required)
+                        throw new DataPoolPersistenceException(
+                            $"Required DataPool persistence was not completed: {result.Status}. {result.Message}");
+                    RecordDiagnostic("data-pool-persistence", result.Succeeded ? "info" : "warning",
+                        $"{result.Status}: {result.Message}");
+                });
+
+            if (_reportingEnabled)
+            {
+                if (metadata != null)
+                    metadata = SnapshotReportMetadata();
+                await TryCompleteAsync("execution-log", () => WriteScenarioLogsAsync(metadata));
+                if (metadata != null)
+                    metadata = SnapshotReportMetadata();
+            }
+            var outcome = hasFailed || !_completionFailures.IsEmpty || _artifacts.HasFailedComponents
                 ? ArtifactOutcome.Failed
-                : wasSkipped
-                    ? ArtifactOutcome.Skipped
-                    : _scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.OK
-                        ? ArtifactOutcome.Passed
-                        : ArtifactOutcome.Failed;
-            _artifacts.Complete(outcome);
+                : wasSkipped ? ArtifactOutcome.Skipped : ArtifactOutcome.Passed;
+            if (metadata != null)
+                _artifacts.Complete(outcome, manifest => WriteFrozenReport(manifest, metadata));
+            else
+                _artifacts.Complete(outcome);
 
-            if (_artifactFailure != null)
-                throw _artifactFailure;
-            if (persistenceFailure != null)
-                throw persistenceFailure;
+            if (!_completionFailures.IsEmpty)
+                throw new ArtifactEvidenceException(string.Join(Environment.NewLine,
+                    _completionFailures.Select(failure => failure.Message).Distinct(StringComparer.Ordinal)));
+            if (!runnerFailed && (_reportRecorder.HasFailures || _artifacts.HasFailedComponents))
+                throw new ArtifactEvidenceException("Scenario completion found failed business verifications or required components.");
         }
 
         [AfterTestRun]

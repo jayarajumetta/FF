@@ -16,12 +16,13 @@ public sealed class ReportRedactor
     private const string PersonalNames =
         @"email|e-mail|phone|ssn|" +
         @"social[_ -]?security|date[_ -]?of[_ -]?birth|birth[_ -]?date|dob|" +
-        @"first[_ -]?name|last[_ -]?name|insured[_ -]?name|street|address";
-    private static readonly Regex SensitiveKey = new(
-        CredentialNames + "|" + PersonalNames, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant |
-        RegexOptions.NonBacktracking, TimeSpan.FromSeconds(1));
+        @"first[_ -]?name|middle[_ -]?name|last[_ -]?name|insured[_ -]?name|street|address";
+    private const string AccountNames =
+        @"account[_ -]?number|routing[_ -]?number|check[_ -]?number|licen[cs]e[_ -]?number|\bvin\b";
+    private static readonly Regex[] SensitiveKeys =
+        [KeyPattern(CredentialNames), KeyPattern(PersonalNames), KeyPattern(AccountNames)];
     private static readonly Regex[] NamedValues =
-        [AssignmentPattern(CredentialNames), AssignmentPattern(PersonalNames)];
+        [AssignmentPattern(CredentialNames), AssignmentPattern(PersonalNames), AssignmentPattern(AccountNames)];
     private static readonly Regex Authorization = new(
         @"\b(?:Bearer|Basic)\s+[A-Za-z0-9+/=_\-.]+",
         RegexOptions.IgnoreCase | RegexOptions.CultureInvariant |
@@ -79,14 +80,14 @@ public sealed class ReportRedactor
         text = Email.Replace(text, Mask);
         text = Jwt.Replace(text, Mask);
         text = SocialSecurity.Replace(text, Mask);
-        text = XmlValue.Replace(text, match => SensitiveKey.IsMatch(match.Groups["name"].Value)
+        text = XmlValue.Replace(text, match => IsSensitiveKey(match.Groups["name"].Value)
             ? match.Groups["open"].Value + Mask + match.Groups["close"].Value : match.Value);
         return new string(text.Where(character =>
             !char.IsControl(character) || character is '\r' or '\n' or '\t').ToArray());
     }
 
     public string Value(string key, string? value) =>
-        SensitiveKey.IsMatch(key) ? Mask : Text(value);
+        IsSensitiveKey(key) ? Mask : Text(value);
 
     public ImmutableDictionary<string, string> Data(
         ImmutableDictionary<string, string> values) =>
@@ -94,6 +95,49 @@ public sealed class ReportRedactor
             pair => Text(pair.Key),
             pair => Value(pair.Key, pair.Value),
             StringComparer.Ordinal);
+
+    public ScenarioReportMetadata Metadata(ScenarioReportMetadata metadata) => metadata with
+    {
+        Feature = Text(metadata.Feature),
+        Scenario = Text(metadata.Scenario),
+        Application = Text(metadata.Application),
+        State = Text(metadata.State),
+        Lob = Text(metadata.Lob),
+        ExecutionId = Text(metadata.ExecutionId),
+        Tags = metadata.Tags.Select(Text).ToImmutableArray(),
+        Steps = metadata.Steps.Select(step => step with
+        {
+            Text = Text(step.Text),
+            Binding = step.Binding is { } binding
+                ? binding with { Method = Text(binding.Method), SourceFile = Text(binding.SourceFile) }
+                : null,
+            Data = Data(step.Data),
+            Error = Text(step.Error),
+            ConsoleErrors = step.ConsoleErrors.Select(Text).ToImmutableArray(),
+            NetworkErrors = step.NetworkErrors.Select(Text).ToImmutableArray()
+        }).ToImmutableArray(),
+        DeferredVerifications = metadata.DeferredVerifications.Select(item => item with
+        {
+            BusinessStep = Text(item.BusinessStep),
+            Page = Text(item.Page),
+            Control = Text(item.Control),
+            Property = Text(item.Property),
+            Expected = Value(item.Control + "." + item.Property, item.Expected),
+            Error = Text(item.Error)
+        }).ToImmutableArray(),
+        Diagnostics = metadata.Diagnostics.Select(item => item with
+        {
+            Component = Text(item.Component),
+            Level = Text(item.Level),
+            Message = Text(item.Message)
+        }).ToImmutableArray()
+    };
+
+    private static bool IsSensitiveKey(string key) => SensitiveKeys.Any(pattern => pattern.IsMatch(key));
+
+    private static Regex KeyPattern(string names) => new(names,
+        RegexOptions.IgnoreCase | RegexOptions.CultureInvariant |
+        RegexOptions.NonBacktracking, TimeSpan.FromSeconds(1));
 
     private static Regex AssignmentPattern(string names) => new(
         @"(?<key>\b[\w.-]*(?:" + names + @")[\w .-]*[""']?\s*[:=]\s*)" +

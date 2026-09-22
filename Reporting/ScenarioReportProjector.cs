@@ -24,6 +24,7 @@ public static class ScenarioReportProjector
             .Concat(metadata.DeferredVerifications.Where(item => item.Screenshot != null).Select(item => item.Screenshot!));
         if (paths.Any(path => redactor.Text(path) != path))
             throw new ArtifactEvidenceException("Sensitive artifact filenames cannot be published; use neutral checkpoint paths.");
+        metadata = redactor.Metadata(metadata);
 
         return new ScenarioReportProjection
         {
@@ -46,44 +47,17 @@ public static class ScenarioReportProjector
             EvidenceErrors = manifest.EvidenceErrors.Select(redactor.Text).ToImmutableArray(),
             StartedAtUtc = manifest.StartedAtUtc,
             CompletedAtUtc = manifest.CompletedAtUtc,
-            ExecutionId = redactor.Text(metadata.ExecutionId),
+            ExecutionId = metadata.ExecutionId,
             AttemptNumber = metadata.AttemptNumber,
-            Feature = redactor.Text(metadata.Feature),
-            Scenario = redactor.Text(metadata.Scenario),
-            Application = redactor.Text(metadata.Application),
-            State = redactor.Text(metadata.State),
-            Lob = redactor.Text(metadata.Lob),
-            Tags = metadata.Tags.Select(redactor.Text).ToImmutableArray(),
-            Steps = metadata.Steps.Select(step => step with
-            {
-                Text = redactor.Text(step.Text),
-                Binding = step.Binding is { } binding
-                    ? binding with
-                    {
-                        Method = redactor.Text(binding.Method),
-                        SourceFile = redactor.Text(binding.SourceFile)
-                    }
-                    : null,
-                Data = redactor.Data(step.Data),
-                Error = redactor.Text(step.Error),
-                ConsoleErrors = step.ConsoleErrors.Select(redactor.Text).ToImmutableArray(),
-                NetworkErrors = step.NetworkErrors.Select(redactor.Text).ToImmutableArray()
-            }).ToImmutableArray(),
-            DeferredVerifications = metadata.DeferredVerifications.Select(item => item with
-            {
-                BusinessStep = redactor.Text(item.BusinessStep),
-                Page = redactor.Text(item.Page),
-                Control = redactor.Text(item.Control),
-                Property = redactor.Text(item.Property),
-                Expected = redactor.Value(item.Control + "." + item.Property, item.Expected),
-                Error = redactor.Text(item.Error)
-            }).ToImmutableArray(),
-            Diagnostics = metadata.Diagnostics.Select(item => item with
-            {
-                Component = redactor.Text(item.Component),
-                Level = redactor.Text(item.Level),
-                Message = redactor.Text(item.Message)
-            }).ToImmutableArray(),
+            Feature = metadata.Feature,
+            Scenario = metadata.Scenario,
+            Application = metadata.Application,
+            State = metadata.State,
+            Lob = metadata.Lob,
+            Tags = metadata.Tags,
+            Steps = metadata.Steps,
+            DeferredVerifications = metadata.DeferredVerifications,
+            Diagnostics = metadata.Diagnostics,
             Artifacts = manifest.Artifacts.Select(item => new ReportArtifactReference(
                 item.Kind.ToString(),
                 redactor.Text(item.Checkpoint),
