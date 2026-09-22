@@ -124,6 +124,20 @@ public sealed class CanonicalResultLoader
             throw new TestPlanPublicationException(
                 "The canonical result manifest disagrees with package or execution counts.");
         }
+        if (result.Reporting is { } reporting)
+        {
+            if (reporting.ExitCode is not (0 or 1))
+                throw new TestPlanPublicationException("Canonical reporting or evidence reconciliation failed.");
+            var summaryPath = SafeFile(resultsRoot, reporting.SummaryPath);
+            RequireChecksum(summaryPath, reporting.SummarySha256, "canonical report summary");
+            var summary = ReadJson<ReportSummary>(summaryPath, "canonical report summary");
+            if (!summary.Valid || summary.Total != result.Executed || summary.Passed != result.Passed ||
+                summary.Failed != result.Failed || summary.Skipped != 0 ||
+                reporting.ExitCode != (result.Failed > 0 ? 1 : 0))
+                throw new TestPlanPublicationException("Canonical reporting disagrees with the result manifest.");
+            if (new FileInfo(SafeFile(resultsRoot, reporting.ReportPath)).Length == 0)
+                throw new TestPlanPublicationException("The consolidated report is empty.");
+        }
 
         var finalTrx = SafeFile(resultsRoot, result.FinalTrx);
         RequireChecksum(finalTrx, result.FinalTrxSha256, "canonical TRX");
@@ -720,6 +734,24 @@ public sealed class CanonicalResultLoader
         public string FinalTrxSha256 { get; init; } = "";
         public int EvidenceManifests { get; init; }
         public List<ResultAttachment> Attachments { get; init; } = [];
+        public ReportingResult? Reporting { get; init; }
+    }
+
+    private sealed class ReportingResult
+    {
+        public int? ExitCode { get; init; }
+        public string ReportPath { get; init; } = "";
+        public string SummaryPath { get; init; } = "";
+        public string SummarySha256 { get; init; } = "";
+    }
+
+    private sealed class ReportSummary
+    {
+        public bool Valid { get; init; }
+        public int Total { get; init; }
+        public int Passed { get; init; }
+        public int Failed { get; init; }
+        public int Skipped { get; init; }
     }
 
     private sealed class ResultAttachment

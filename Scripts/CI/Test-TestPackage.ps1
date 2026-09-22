@@ -15,6 +15,8 @@ param(
 
     [switch]$PublisherDryRunSmoke,
 
+    [switch]$ReportToolSmoke,
+
     [switch]$ScanForSecrets
 )
 
@@ -260,6 +262,26 @@ try {
     if ($PublisherDryRunSmoke) {
         & (Join-Path $PackageRoot "scripts\CI\Test-TestPlanPublisherSmoke.ps1") `
             -PackageRoot $PackageRoot
+    }
+    if ($ReportToolSmoke) {
+        $reportSmokeRoot = Join-Path ([IO.Path]::GetTempPath()) (
+            "PnC-ReportRuntime-" + [Guid]::NewGuid().ToString("N"))
+        New-Item -ItemType Directory -Path $reportSmokeRoot | Out-Null
+        try {
+            $reportSmoke = Invoke-CanonicalReport `
+                -ReportTool (Join-Path $PackageRoot "tools\SgsReport\SgsReport.dll") `
+                -EvidenceRoot $reportSmokeRoot `
+                -CanonicalResultPath (Join-Path $reportSmokeRoot "deliberately-missing.trx") `
+                -OutputDirectory (Join-Path $reportSmokeRoot "report")
+            if ($reportSmoke.ExitCode -ne 2 -or $reportSmoke.Total -ne 0) {
+                throw "Source-free reporting did not fail closed for missing canonical execution."
+            }
+            $global:LASTEXITCODE = 0
+            [void](Test-PackageManifest -PackageRoot $PackageRoot)
+        }
+        finally {
+            Remove-Item -LiteralPath $reportSmokeRoot -Recurse -Force
+        }
     }
 
     Write-Host (

@@ -39,6 +39,14 @@
       "screenshots",
       "trace-on-failure",
       "video-on-failure"
+    ],
+    "richUiRequiredArtifacts": [
+      "unique-checkpoint-screenshots",
+      "execution-log",
+      "console-log",
+      "network-log",
+      "trace-on-pass-and-failure",
+      "video-on-pass-and-failure"
     ]
   },
   "dataProfiles": {
@@ -69,7 +77,10 @@
       "Scripts",
       "package-manifest.json",
       "Resources/Contracts/integration-readiness.json",
-      "Scripts/CI/Invoke-StabilizationVerification.ps1"
+      "Scripts/CI/Invoke-StabilizationVerification.ps1",
+      "Tools/SgsReport/SgsReport.dll",
+      "Tools/SgsReport/SgsReport.deps.json",
+      "Tools/SgsReport/SgsReport.runtimeconfig.json"
     ]
   },
   "readiness": {

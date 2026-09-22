@@ -113,6 +113,9 @@ public class CombinedFrameworkContractTests
             Assert.That(inventory, Does.Contain("ci.runsettings"));
             Assert.That(inventory, Does.Contain("Scripts"));
             Assert.That(inventory, Does.Contain("package-manifest.json"));
+            Assert.That(inventory, Does.Contain("Tools/SgsReport/SgsReport.dll"));
+            Assert.That(inventory, Does.Contain("Tools/SgsReport/SgsReport.deps.json"));
+            Assert.That(inventory, Does.Contain("Tools/SgsReport/SgsReport.runtimeconfig.json"));
             Assert.That(
                 inventory,
                 Does.Contain(

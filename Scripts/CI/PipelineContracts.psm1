@@ -168,6 +168,11 @@ function Test-PackageManifest {
         "tools/TestPlanPublisher/TestPlanPublisher.dll",
         "tools/TestPlanPublisher/TestPlanPublisher.deps.json",
         "tools/TestPlanPublisher/TestPlanPublisher.runtimeconfig.json",
+        "tools/SgsReport/SgsReport.dll",
+        "tools/SgsReport/SgsReport.deps.json",
+        "tools/SgsReport/SgsReport.runtimeconfig.json",
+        "tools/SgsReport/TestAutomation.dll",
+        "tools/SgsReport/TestPlanPublisher.dll",
         "metadata/test-inventory.json",
         "metadata/shards-All-Full.json",
         "metadata/shards-All-Debug.json",
@@ -500,6 +505,58 @@ function Get-RetryDecision {
     return [PSCustomObject]@{ ShouldRetry = $true; Reason = "RetrySafe test matched an approved transient failure." }
 }
 
+function Invoke-CanonicalReport {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$ReportTool,
+        [Parameter(Mandatory)][string]$EvidenceRoot,
+        [Parameter(Mandatory)][string]$CanonicalResultPath,
+        [Parameter(Mandatory)][string]$OutputDirectory,
+        [string[]]$ScenarioRoots = @()
+    )
+
+    if (-not (Test-Path -LiteralPath $ReportTool -PathType Leaf)) {
+        throw "The packaged .NET reporting utility is missing."
+    }
+    $arguments = @(
+        $ReportTool, "--evidence-root", $EvidenceRoot,
+        "--canonical-result", $CanonicalResultPath, "--output-dir", $OutputDirectory
+    )
+    foreach ($scenarioRoot in $ScenarioRoots) {
+        $arguments += @("--scenario-root", $scenarioRoot)
+    }
+    $PSNativeCommandUseErrorActionPreference = $false
+    & dotnet @arguments 2>&1 | ForEach-Object { Write-Host $_ }
+    $reportExit = $LASTEXITCODE
+    if ($reportExit -notin @(0, 1, 2)) {
+        throw "The reporting utility process failed with exit code $reportExit."
+    }
+    foreach ($name in @("report.html", "log.html", "output.xml", "summary.json")) {
+        $path = Join-Path $OutputDirectory $name
+        if (-not (Test-Path -LiteralPath $path -PathType Leaf) -or
+            (Get-Item -LiteralPath $path).Length -eq 0) {
+            throw "Required consolidated reporting output '$name' is missing or empty."
+        }
+    }
+    $summary = Get-Content -LiteralPath (Join-Path $OutputDirectory "summary.json") -Raw | ConvertFrom-Json
+    if (($reportExit -eq 0 -and
+            (-not $summary.valid -or $summary.total -le 0 -or $summary.passed -ne $summary.total)) -or
+        ($reportExit -eq 1 -and
+            (-not $summary.valid -or ($summary.failed + $summary.skipped) -le 0)) -or
+        ($reportExit -eq 2 -and $summary.valid)) {
+        throw "The reporting utility exit code disagrees with its summary."
+    }
+    return [PSCustomObject]@{
+        ExitCode = $reportExit
+        Total = [int]$summary.total
+        Passed = [int]$summary.passed
+        Failed = [int]$summary.failed
+        Skipped = [int]$summary.skipped
+        ReportPath = Join-Path $OutputDirectory "report.html"
+        SummarySha256 = Get-FileSha256 -Path (Join-Path $OutputDirectory "summary.json")
+    }
+}
+
 function Merge-TrxResults {
     param(
         [Parameter(Mandatory)][string]$InitialPath,
@@ -537,21 +594,29 @@ function Merge-TrxResults {
     $manager = $initial.NamespaceManager
     $resultNodes = @($initial.Xml.SelectNodes("//t:UnitTestResult", $manager))
     foreach ($resultNode in $resultNodes) {
-        if ($resultNode.GetAttribute("outcome") -ne "Passed") {
+        $outcome = $resultNode.GetAttribute("outcome")
+        if ($outcome -notin @("Passed", "Failed", "NotExecuted", "Error", "Timeout", "Aborted")) {
+            throw "Canonical TRX cannot contain unsupported or unfinished outcome '$outcome'."
+        }
+        if ($outcome -notin @("Passed", "NotExecuted")) {
             $resultNode.SetAttribute("outcome", "Failed")
         }
     }
     $passed = @($resultNodes | Where-Object { $_.GetAttribute("outcome") -eq "Passed" }).Count
     $failed = @($resultNodes | Where-Object { $_.GetAttribute("outcome") -eq "Failed" }).Count
+    $skipped = @($resultNodes | Where-Object { $_.GetAttribute("outcome") -eq "NotExecuted" }).Count
     $counters = $initial.Xml.SelectSingleNode("//t:ResultSummary/t:Counters", $manager)
     if ($null -eq $counters) {
         throw "Initial TRX has no result counters."
     }
     $counters.SetAttribute("total", [string]$resultNodes.Count)
-    $counters.SetAttribute("executed", [string]$resultNodes.Count)
+    $counters.SetAttribute("executed", [string]($resultNodes.Count - $skipped))
     $counters.SetAttribute("passed", [string]$passed)
     $counters.SetAttribute("failed", [string]$failed)
-    $counters.SetAttribute("notExecuted", "0")
+    $counters.SetAttribute("notExecuted", [string]$skipped)
+    foreach ($counter in @("error", "timeout", "aborted")) {
+        $counters.SetAttribute($counter, "0")
+    }
 
     $summary = $initial.Xml.SelectSingleNode("//t:ResultSummary", $manager)
     $summary.SetAttribute("outcome", $(if ($failed -eq 0) { "Completed" } else { "Failed" }))
@@ -564,8 +629,10 @@ function Merge-TrxResults {
 
     return [PSCustomObject][ordered]@{
         total = $resultNodes.Count
+        executed = $resultNodes.Count - $skipped
         passed = $passed
         failed = $failed
+        skipped = $skipped
         retried = $retryCount
     }
 }
@@ -626,6 +693,7 @@ Export-ModuleMember -Function @(
     "Select-TestInventory",
     "Test-ShardOwnershipSets",
     "Read-TrxResults",
+    "Invoke-CanonicalReport",
     "Get-RetryDecision",
     "Merge-TrxResults",
     "Test-WorkflowActivation"

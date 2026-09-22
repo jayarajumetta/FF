@@ -51,6 +51,7 @@ try {
         -DiscoverySmoke `
         -SfpGatedSmoke `
         -PublisherDryRunSmoke `
+        -ReportToolSmoke `
         -ScanForSecrets
 
     $readinessPath = Join-Path $verificationRoot "readiness.json"
@@ -72,6 +73,7 @@ try {
             sfpGatedProfiles = "Passed"
             canonicalResultEvidenceParity = "Passed"
             testPlansDryRunReconciliation = "Passed"
+            sourceFreeReportingRuntime = "Passed"
             readinessContract = "Passed"
             catalogIntegrity = "Passed"
         }

@@ -49,6 +49,7 @@ function Get-EvidenceSummary {
 
     $passed = 0
     $failed = 0
+    $skipped = 0
     foreach ($manifestFile in $files) {
         try {
             $artifact = Get-Content -LiteralPath $manifestFile.FullName -Raw |
@@ -65,6 +66,10 @@ function Get-EvidenceSummary {
             [string]$artifact.outcome -eq "1") {
             $failed++
         }
+        elseif ($artifact.outcome -eq "Skipped" -or
+            [string]$artifact.outcome -eq "2") {
+            $skipped++
+        }
         else {
             throw "$Attempt evidence manifest '$($manifestFile.FullName)' has invalid outcome '$($artifact.outcome)'."
         }
@@ -78,6 +83,7 @@ function Get-EvidenceSummary {
         Files = $files
         Passed = $passed
         Failed = $failed
+        Skipped = $skipped
     }
 }
 
@@ -176,8 +182,10 @@ $finalPath = Join-Path $trxRoot "$ShardId-final.trx"
 
 $previousArtifactRoot = $env:TEST_ARTIFACT_ROOT
 $previousRunId = $env:TEST_RUN_ID
+$previousAttemptNumber = $env:TEST_ATTEMPT_NUMBER
 $env:TEST_ARTIFACT_ROOT = $initialEvidenceRoot
-$env:TEST_RUN_ID = "$($packageManifest.build.id)-$ShardId"
+$env:TEST_RUN_ID = "$($packageManifest.build.id)-$ShardId-$([Guid]::NewGuid().ToString('N'))"
+$env:TEST_ATTEMPT_NUMBER = "1"
 
 $attempts = 1
 $retryExitCode = $null
@@ -221,10 +229,12 @@ try {
         -ExpectedCount $expectedCount `
         -Attempt "Initial"
     $initialPassed = @($initial.Results | Where-Object outcome -eq "Passed").Count
-    $initialFailed = $initial.Results.Count - $initialPassed
+    $initialSkipped = @($initial.Results | Where-Object outcome -eq "NotExecuted").Count
+    $initialFailed = $initial.Results.Count - $initialPassed - $initialSkipped
     if ($initialEvidence.Passed -ne $initialPassed -or
-        $initialEvidence.Failed -ne $initialFailed) {
-        throw "Initial outcome disagreement. TRX passed/failed=$initialPassed/$initialFailed, evidence=$($initialEvidence.Passed)/$($initialEvidence.Failed)."
+        $initialEvidence.Failed -ne $initialFailed -or
+        $initialEvidence.Skipped -ne $initialSkipped) {
+        throw "Initial pass/fail/skip outcomes disagree with the canonical scenario evidence."
     }
 
     if ($MaxRetryCount -eq 1) {
@@ -239,7 +249,7 @@ try {
             $safeSet["$($safeTest.className).$($safeTest.methodName)"] = $true
         }
 
-        foreach ($failure in @($initial.Results | Where-Object outcome -ne "Passed")) {
+        foreach ($failure in @($initial.Results | Where-Object outcome -in @("Failed", "Error", "Timeout", "Aborted"))) {
             $unitTest = $initial.Xml.SelectSingleNode(
                 "//t:UnitTest[@id='$($failure.testId)']/t:TestMethod",
                 $initial.NamespaceManager)
@@ -278,6 +288,7 @@ try {
         )
         $retryFilter = "TestCategory=RetrySafe&(" + ($retryFilters -join "|") + ")"
         $env:TEST_ARTIFACT_ROOT = $retryEvidenceRoot
+        $env:TEST_ATTEMPT_NUMBER = "2"
         Push-Location $executionTestRoot
         try {
             & dotnet test "TestAutomation.dll" `
@@ -300,10 +311,12 @@ try {
             -ExpectedCount $retry.Results.Count `
             -Attempt "Retry"
         $retryPassed = @($retry.Results | Where-Object outcome -eq "Passed").Count
-        $retryFailed = $retry.Results.Count - $retryPassed
+        $retrySkipped = @($retry.Results | Where-Object outcome -eq "NotExecuted").Count
+        $retryFailed = $retry.Results.Count - $retryPassed - $retrySkipped
         if ($retryEvidence.Passed -ne $retryPassed -or
-            $retryEvidence.Failed -ne $retryFailed) {
-            throw "Retry outcome disagreement. TRX passed/failed=$retryPassed/$retryFailed, evidence=$($retryEvidence.Passed)/$($retryEvidence.Failed)."
+            $retryEvidence.Failed -ne $retryFailed -or
+            $retryEvidence.Skipped -ne $retrySkipped) {
+            throw "Retry pass/fail/skip outcomes disagree with the canonical scenario evidence."
         }
         Write-Host "Retry process exit code: $retryExitCode"
     }
@@ -313,6 +326,7 @@ try {
             Files = @()
             Passed = 0
             Failed = 0
+            Skipped = 0
         }
     }
 
@@ -329,10 +343,19 @@ try {
     $artifactPassed = $initialEvidence.Passed + $retryEvidence.Passed
     $artifactFailed = $initialEvidence.Failed -
         $retryEvidence.Files.Count + $retryEvidence.Failed
+    $artifactSkipped = $initialEvidence.Skipped + $retryEvidence.Skipped
     if ($artifactPassed -ne $canonical.passed -or
-        $artifactFailed -ne $canonical.failed) {
-        throw "Canonical outcome disagreement. TRX passed/failed=$($canonical.passed)/$($canonical.failed), reconciled evidence=$artifactPassed/$artifactFailed."
+        $artifactFailed -ne $canonical.failed -or
+        $artifactSkipped -ne $canonical.skipped) {
+        throw "Canonical pass/fail/skip outcomes disagree with the reconciled evidence."
     }
+
+    $report = Invoke-CanonicalReport `
+        -ReportTool (Join-Path $root "tools\SgsReport\SgsReport.dll") `
+        -EvidenceRoot $resultsRoot `
+        -CanonicalResultPath $finalPath `
+        -ScenarioRoots @("evidence") `
+        -OutputDirectory (Join-Path $resultsRoot "report")
 
     $attachments = @(
         Get-ChildItem -LiteralPath $evidenceRoot -Recurse -File |
@@ -362,9 +385,11 @@ try {
         filter = $filter
         expected = $expectedCount
         discovered = $discovered.Count
-        executed = $canonical.total
+        reported = $canonical.total
+        executed = $canonical.executed
         passed = $canonical.passed
         failed = $canonical.failed
+        skipped = $canonical.skipped
         attempts = $attempts
         retried = $canonical.retried
         initialExitCode = $initialExitCode
@@ -375,13 +400,25 @@ try {
         initialEvidenceManifests = $initialEvidence.Files.Count
         retryEvidenceManifests = $retryEvidence.Files.Count
         attachments = $attachments
+        reporting = [PSCustomObject][ordered]@{
+            exitCode = $report.ExitCode
+            reportPath = "report/report.html"
+            summaryPath = "report/summary.json"
+            summarySha256 = $report.SummarySha256
+        }
     }
     $resultManifest | ConvertTo-Json -Depth 8 |
         Set-Content -LiteralPath (Join-Path $resultsRoot "result-manifest.json") `
             -Encoding UTF8
 
-    if ($canonical.failed -ne 0) {
-        throw "Shard '$ShardId' has $($canonical.failed) non-passing canonical result(s)."
+    if ($report.ExitCode -eq 2) {
+        throw "Shard '$ShardId' canonical reporting failed with exit code $($report.ExitCode)."
+    }
+    if ($canonical.failed -ne 0 -or $canonical.skipped -ne 0) {
+        throw "Shard '$ShardId' has $($canonical.failed) failed and $($canonical.skipped) skipped canonical result(s)."
+    }
+    if ($report.ExitCode -ne 0) {
+        throw "Shard '$ShardId' reporting disagrees with its passing canonical results."
     }
     if ($retryNames.Count -gt 0 -and $retryExitCode -ne 0) {
         throw "Shard '$ShardId' retry process failed with exit code $retryExitCode."
@@ -395,6 +432,7 @@ try {
 finally {
     $env:TEST_ARTIFACT_ROOT = $previousArtifactRoot
     $env:TEST_RUN_ID = $previousRunId
+    $env:TEST_ATTEMPT_NUMBER = $previousAttemptNumber
     if (Test-Path -LiteralPath $workRoot) {
         Remove-Item -LiteralPath $workRoot -Recurse -Force
     }

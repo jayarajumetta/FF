@@ -72,7 +72,8 @@ function Write-Trx {
         }
     ) -join [Environment]::NewLine
     $passed = @($Results | Where-Object Outcome -eq "Passed").Count
-    $failed = $Results.Count - $passed
+    $skipped = @($Results | Where-Object Outcome -eq "NotExecuted").Count
+    $failed = @($Results | Where-Object Outcome -eq "Failed").Count
     @"
 <?xml version="1.0" encoding="utf-8"?>
 <TestRun xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
@@ -86,7 +87,7 @@ function Write-Trx {
     $entryXml
   </TestEntries>
   <ResultSummary outcome="$(if ($failed -eq 0) { "Completed" } else { "Failed" })">
-    <Counters total="$($Results.Count)" executed="$($Results.Count)" passed="$passed" failed="$failed" notExecuted="0" />
+    <Counters total="$($Results.Count)" executed="$($Results.Count - $skipped)" passed="$passed" failed="$failed" notExecuted="$skipped" />
   </ResultSummary>
 </TestRun>
 "@ | Set-Content -LiteralPath $Path -Encoding UTF8
@@ -122,6 +123,11 @@ try {
         "tools\TestPlanPublisher\TestPlanPublisher.dll",
         "tools\TestPlanPublisher\TestPlanPublisher.deps.json",
         "tools\TestPlanPublisher\TestPlanPublisher.runtimeconfig.json",
+        "tools\SgsReport\SgsReport.dll",
+        "tools\SgsReport\SgsReport.deps.json",
+        "tools\SgsReport\SgsReport.runtimeconfig.json",
+        "tools\SgsReport\TestAutomation.dll",
+        "tools\SgsReport\TestPlanPublisher.dll",
         "metadata\test-inventory.json",
         "metadata\shards-All-Full.json",
         "metadata\shards-All-Debug.json",
@@ -174,6 +180,14 @@ try {
     Assert-True (
         @($manifest.dependencies | Where-Object name -eq "Microsoft.Playwright").Count -eq 1
     ) "Dependency inventory omitted Playwright."
+
+    Remove-Item -LiteralPath (Join-Path $packageRoot "tools\SgsReport\SgsReport.dll")
+    [void](New-PackageManifest -PackageRoot $packageRoot -PackageVersion "1.0.0" `
+        -CommitSha "0123456789abcdef" -BuildId "42" -BuildNumber "20260917.1")
+    Assert-Throws { Test-PackageManifest -PackageRoot $packageRoot } "missing.*SgsReport"
+    "contract-file" | Set-Content -LiteralPath (Join-Path $packageRoot "tools\SgsReport\SgsReport.dll") -Encoding UTF8
+    [void](New-PackageManifest -PackageRoot $packageRoot -PackageVersion "1.0.0" `
+        -CommitSha "0123456789abcdef" -BuildId "42" -BuildNumber "20260917.1")
 
     Add-Content -LiteralPath (Join-Path $packageRoot "test\TestAutomation.dll") `
         -Value "tampered"
@@ -348,6 +362,31 @@ try {
     Assert-True (
         $finalResult.node.GetAttribute("executionId") -eq "initial-execution"
     ) "Canonical TRX did not preserve its initial execution identity."
+
+    $skippedTrx = Join-Path $trxRoot "skipped.trx"
+    $skippedFinal = Join-Path $trxRoot "skipped-final.trx"
+    Write-Trx -Path $skippedTrx -Results @(
+        @{ Id = "1"; Name = "Passes"; Outcome = "Passed" },
+        @{ Id = "2"; Name = "Gated"; Outcome = "NotExecuted" }
+    )
+    $skipCanonical = Merge-TrxResults -InitialPath $skippedTrx -OutputPath $skippedFinal
+    Assert-True (
+        $skipCanonical.total -eq 2 -and $skipCanonical.executed -eq 1 -and
+        $skipCanonical.passed -eq 1 -and $skipCanonical.failed -eq 0 -and $skipCanonical.skipped -eq 1
+    ) "Canonical consolidation changed a genuine skip into a pass or failure."
+    Assert-True (
+        @((Read-TrxResults -Path $skippedFinal).Results | Where-Object outcome -eq "NotExecuted").Count -eq 1
+    ) "The final TRX did not retain its skipped result."
+    $unfinished = Join-Path $trxRoot "unfinished.trx"
+    Write-Trx -Path $unfinished -Results @(@{ Id = "1"; Name = "Unfinished"; Outcome = "Running" })
+    Assert-Throws {
+        Merge-TrxResults -InitialPath $unfinished -OutputPath (Join-Path $trxRoot "unfinished-final.trx")
+    } "unsupported or unfinished outcome"
+    Assert-Throws {
+        Invoke-CanonicalReport -ReportTool (Join-Path $temporaryRoot "missing.dll") `
+            -EvidenceRoot $temporaryRoot -CanonicalResultPath $finalTrx `
+            -OutputDirectory (Join-Path $temporaryRoot "report")
+    } "utility is missing"
 
     Assert-Throws {
         Read-TrxResults -Path (Join-Path $trxRoot "missing.trx")

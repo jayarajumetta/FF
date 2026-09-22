@@ -33,6 +33,8 @@ The archive name includes package version and commit SHA. It contains:
 - `scripts/CI/`: validation, browser install, ownership, and canonical runner;
 - `tools/CiTestInventory/`: compiled NUnit/Reqnroll inventory tool;
 - `tools/TestPlanPublisher/`: typed canonical Azure Test Plans publisher CLI;
+- `tools/SgsReport/`: complete .NET reporting runtime, including its main
+  assembly/publisher dependencies and compiled offline presentation assets;
 - `tools/reports/`: existing report/cleanup utilities;
 - `config/testplans-mapping.template.json`: non-secret external mapping schema;
 - `metadata/`: compiled test inventory plus validated full/debug ownership;
@@ -59,7 +61,8 @@ output directory is required.
 3. The Release solution build and full unit/contract suite must pass. The
    builder ensures Chromium is available using that build's Playwright
    installer and the existing browser cache. `BrowserContract` cases exercise
-   native/Material controls against in-memory HTML only; they use no product
+   native/Material controls and reporting lifecycle evidence against in-memory
+   HTML only; they use no product
    endpoints, credentials, quotes, or DataPool. Missing browser/runtime files
    fail rather than skipping those contracts.
 4. The compiled inventory tool enumerates NUnit cases and case-level
@@ -105,6 +108,22 @@ them into exactly one `*-final.trx`, rejects unexpected or duplicate retry
 results, validates initial and retry evidence in separate attempt roots, and
 emits one `result-manifest.json` containing the final TRX checksum and the
 path, size, and checksum of every published evidence attachment.
+The runner explicitly sets/restores `TEST_ATTEMPT_NUMBER` for actual initial
+and retry attempts. A unique invocation ID is shared only by those attempts;
+separate reruns of the same package are not the same execution group.
+Genuine `NotExecuted` results remain skipped in the final
+TRX and counts; they fail the execution gate and are never retried or promoted
+to executed/passing cases.
+
+After canonical TRX consolidation, the shared `Invoke-CanonicalReport` helper
+runs the packaged .NET utility and requires nonempty `report.html`, `log.html`,
+`output.xml` and `summary.json` in `report/`. The result manifest records this
+gate and its summary checksum. Exit 1 means actual failure/skip; exit 2 means
+invalid/missing evidence, input or reporting output. Either prevents a passing
+shard. The local SFP Alabama wrapper uses the same helper after its one
+non-retried execution and verifies reporting runtime availability beforehand.
+Raw `dotnet test` produces scenario reports; consolidate only after its TRX
+has been written. See `Docs/SGS-Reporting.md`.
 
 ## Fail-closed gates
 
@@ -115,6 +134,7 @@ Execution fails on any of the following:
 - missing, empty, malformed, zero-test, duplicate, or count-mismatched TRX;
 - a non-passing canonical result or exhausted retry;
 - missing/corrupt scenario manifests or aggregate TRX/evidence disagreement;
+- missing reporting runtime/output, stale projections or canonical report disagreement;
 - missing result-manifest/publication preparation;
 - missing result files, failed test publication, or publication failure.
 
@@ -162,5 +182,7 @@ pwsh .\scripts\CI\Invoke-StabilizationVerification.ps1 `
 The command validates package checksums/secrets, compiled discovery and module
 contracts, exact shard ownership, the current NonRunnable SFP Basic/CE/forms
 gates, canonical TRX/evidence parity,
-and Test Plans dry-run reconciliation. Its JSON report carries a SHA-256 over
+Test Plans dry-run reconciliation, and source-free reporting startup with an
+explicitly rejected missing-canonical fixture. This utility fixture is not a
+business execution or evidence of application readiness. Its JSON report carries a SHA-256 over
 the canonical report body.

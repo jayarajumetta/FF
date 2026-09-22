@@ -2,6 +2,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using NUnit.Framework;
 using PnCTestAutomation.Artifacts;
 using PnCTestAutomation.TestPlanPublisher;
@@ -330,6 +331,64 @@ public class TestPlanPublisherTests
                 "chromium"),
             Throws.TypeOf<TestPlanPublicationException>()
                 .With.Message.Contains("duplicate automation IDs"));
+    }
+
+    [TestCase(0, true)]
+    [TestCase(1, false)]
+    [TestCase(2, false)]
+    [TestCase(null, false)]
+    public void PresentReportingGateMustAgreeBeforeTestPlanPublication(int? exitCode, bool accepted)
+    {
+        var fixture = CreateCanonicalFixture();
+        AddReportingGate(fixture, exitCode);
+        if (accepted)
+        {
+            var batch = new CanonicalResultLoader().Load(
+                fixture.PackageRoot, fixture.ResultsRoot, fixture.CatalogPath, "qa", "chromium");
+            Assert.That(batch.Executions, Has.Count.EqualTo(1));
+            Assert.That(batch.Executions.SelectMany(item => item.Attachments)
+                .Any(item => item.RelativePath.StartsWith("report/", StringComparison.Ordinal)), Is.False);
+        }
+        else
+            Assert.That(() => new CanonicalResultLoader().Load(
+                fixture.PackageRoot, fixture.ResultsRoot, fixture.CatalogPath, "qa", "chromium"),
+                Throws.TypeOf<TestPlanPublicationException>().With.Message.Contains("reporting"));
+    }
+
+    [Test]
+    public void ReportSummaryTamperingAndMissingConsolidatedOutputPreventPublication()
+    {
+        var fixture = CreateCanonicalFixture();
+        AddReportingGate(fixture, 0);
+        var summary = Path.Combine(fixture.ResultsRoot, "report", "summary.json");
+        File.AppendAllText(summary, " ");
+        Assert.That(() => new CanonicalResultLoader().Load(
+            fixture.PackageRoot, fixture.ResultsRoot, fixture.CatalogPath, "qa", "chromium"),
+            Throws.TypeOf<TestPlanPublicationException>().With.Message.Contains("Checksum"));
+        AddReportingGate(fixture, 0);
+        File.Delete(Path.Combine(fixture.ResultsRoot, "report", "report.html"));
+        Assert.That(() => new CanonicalResultLoader().Load(
+            fixture.PackageRoot, fixture.ResultsRoot, fixture.CatalogPath, "qa", "chromium"),
+            Throws.TypeOf<TestPlanPublicationException>().With.Message.Contains("missing"));
+    }
+
+    private static void AddReportingGate(CanonicalFixture fixture, int? exitCode)
+    {
+        var reportRoot = Path.Combine(fixture.ResultsRoot, "report");
+        Directory.CreateDirectory(reportRoot);
+        var summary = Path.Combine(reportRoot, "summary.json");
+        File.WriteAllText(summary, """{"valid":true,"total":1,"passed":1,"failed":0,"skipped":0}""");
+        File.WriteAllText(Path.Combine(reportRoot, "report.html"), "<html>Offline publication contract</html>");
+        var path = Path.Combine(fixture.ResultsRoot, "result-manifest.json");
+        var manifest = JsonNode.Parse(File.ReadAllText(path))!.AsObject();
+        manifest["reporting"] = JsonSerializer.SerializeToNode(new
+        {
+            exitCode,
+            reportPath = "report/report.html",
+            summaryPath = "report/summary.json",
+            summarySha256 = Sha256(summary)
+        });
+        File.WriteAllText(path, manifest.ToJsonString());
     }
 
     [Test]

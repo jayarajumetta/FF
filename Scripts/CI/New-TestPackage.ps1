@@ -71,7 +71,8 @@ foreach ($buildOutput in @(
     (Join-Path $root "DataPool\bin\Release"),
     (Join-Path $root "TestAutomation.UnitTests\bin\Release"),
     (Join-Path $root "Tools\CiTestInventory\bin\Release"),
-    (Join-Path $root "Tools\TestPlanPublisher\bin\Release")
+    (Join-Path $root "Tools\TestPlanPublisher\bin\Release"),
+    (Join-Path $root "Tools\SgsReport\bin\Release")
 )) {
     if (Test-Path -LiteralPath $buildOutput) {
         Remove-Item -LiteralPath $buildOutput -Recurse -Force
@@ -126,6 +127,7 @@ $testOutput = Join-Path $root "bin\Release\net8.0"
 $dataPoolOutput = Join-Path $root "DataPool\bin\Release\net8.0"
 $inventoryToolOutput = Join-Path $root "Tools\CiTestInventory\bin\Release\net8.0"
 $publisherToolOutput = Join-Path $root "Tools\TestPlanPublisher\bin\Release\net8.0"
+$reportToolOutput = Join-Path $root "Tools\SgsReport\bin\Release\net8.0"
 foreach ($required in @(
     (Join-Path $testOutput "TestAutomation.dll"),
     (Join-Path $testOutput "TestAutomation.deps.json"),
@@ -135,7 +137,12 @@ foreach ($required in @(
     (Join-Path $inventoryToolOutput "CiTestInventory.dll"),
     (Join-Path $inventoryToolOutput "CiTestInventory.runtimeconfig.json"),
     (Join-Path $publisherToolOutput "TestPlanPublisher.dll"),
-    (Join-Path $publisherToolOutput "TestPlanPublisher.runtimeconfig.json")
+    (Join-Path $publisherToolOutput "TestPlanPublisher.runtimeconfig.json"),
+    (Join-Path $reportToolOutput "SgsReport.dll"),
+    (Join-Path $reportToolOutput "SgsReport.deps.json"),
+    (Join-Path $reportToolOutput "SgsReport.runtimeconfig.json"),
+    (Join-Path $reportToolOutput "TestAutomation.dll"),
+    (Join-Path $reportToolOutput "TestPlanPublisher.dll")
 )) {
     if (-not (Test-Path -LiteralPath $required -PathType Leaf)) {
         throw "Build output '$required' is missing."
@@ -166,6 +173,7 @@ New-Item -ItemType Directory -Force -Path `
     (Join-Path $stageRoot "scripts\CI"), `
     (Join-Path $stageRoot "tools\CiTestInventory"), `
     (Join-Path $stageRoot "tools\TestPlanPublisher"), `
+    (Join-Path $stageRoot "tools\SgsReport"), `
     (Join-Path $stageRoot "tools\reports") | Out-Null
 
 Copy-Item -LiteralPath (Join-Path $root "ci.runsettings") `
@@ -208,6 +216,9 @@ Copy-Item -Path (Join-Path $inventoryToolOutput "*") `
     -Recurse -Force
 Copy-Item -Path (Join-Path $publisherToolOutput "*") `
     -Destination (Join-Path $stageRoot "tools\TestPlanPublisher") `
+    -Recurse -Force
+Copy-Item -Path (Join-Path $reportToolOutput "*") `
+    -Destination (Join-Path $stageRoot "tools\SgsReport") `
     -Recurse -Force
 
 Import-Module (Join-Path $stageRoot "scripts\CI\PipelineContracts.psm1") -Force

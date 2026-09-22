@@ -32,6 +32,7 @@ $settings = @{
     TEST_OUTCOME_PROFILE_PATH = $profilePath
     TEST_ARTIFACT_ROOT = (Join-Path $results "evidence")
     TEST_RUN_ID = ("sfp-basic-al-" + [Guid]::NewGuid().ToString("N"))
+    TEST_ATTEMPT_NUMBER = "1"
     TEST_ARTIFACT_PROFILE = "sfp-basic-al-local"
     DATAPOOL_AUTO_START = "false"
     DATAPOOL_REQUIRED = "false"
@@ -60,6 +61,13 @@ try {
         if (-not (Test-Path -LiteralPath $assembly -PathType Leaf)) {
             throw "The Release test assembly is missing. Run without -NoBuild."
         }
+        $reportToolRoot = Join-Path $root "Tools\SgsReport\bin\Release\net8.0"
+        foreach ($name in @("SgsReport.dll", "SgsReport.deps.json", "SgsReport.runtimeconfig.json",
+                "TestAutomation.dll", "TestPlanPublisher.dll")) {
+            if (-not (Test-Path -LiteralPath (Join-Path $reportToolRoot $name) -PathType Leaf)) {
+                throw "The Release reporting runtime is incomplete. Run without -NoBuild before business execution."
+            }
+        }
         if ($InstallBrowser) {
             & pwsh -NoProfile -File (
                 Join-Path $root "bin\Release\net8.0\playwright.ps1") install chromium
@@ -74,11 +82,15 @@ try {
         $testExit = $LASTEXITCODE
         Import-Module (Join-Path $root "Scripts\CI\PipelineContracts.psm1") -Force
         $result = Read-TrxResults -Path $trx
+        $report = Invoke-CanonicalReport `
+            -ReportTool (Join-Path $reportToolRoot "SgsReport.dll") `
+            -EvidenceRoot $results -CanonicalResultPath $trx `
+            -ScenarioRoots @("evidence") -OutputDirectory (Join-Path $results "report")
         if ($result.Results.Count -ne 1 -or
             $result.Results[0].testName -notmatch '^SFPBasicPolicy_State\("Alabama","AL",') {
             throw "The local run did not execute exactly the expected Alabama Basic case."
         }
-        if ($testExit -ne 0 -or $result.Results[0].outcome -ne "Passed") {
+        if ($testExit -ne 0 -or $result.Results[0].outcome -ne "Passed" -or $report.ExitCode -ne 0) {
             throw "SFP Basic Alabama did not pass. Review '$trx'; expectations have not been changed."
         }
         Write-Host "SFP Basic Alabama passed. Results and scenario evidence: $results"
