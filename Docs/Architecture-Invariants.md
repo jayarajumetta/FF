@@ -129,6 +129,10 @@ evidence before local execution can be enabled.
   `IArtifactContext` as existing evidence. A file artifact cannot be satisfied
   by an in-memory marker. Skipped execution remains skipped in the manifest;
   skipping does not conceal a previously declared missing required artifact.
+  Report projection runs inside artifact completion against one frozen manifest,
+  including reserved report paths and timestamps. A failed or incomplete writer
+  removes its partial projections, persists a failed manifest, and fails
+  execution. Later component success cannot erase an earlier failure.
 - Required data never resolves to an empty string. Ambiguous flattened keys and
   stale or missing profile checksums fail before UI execution.
 - State-changing UI actions are not retried unless the operation is proven

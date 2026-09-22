@@ -245,6 +245,116 @@ public class ArtifactContextTests
     }
 
     [Test]
+    public void ReportProjectionUsesTheExactFrozenManifestIncludingItsOwnRecords()
+    {
+        var context = CreateContext("projected-report");
+        ArtifactManifest? projected = null;
+        var manifest = context.Complete(ArtifactOutcome.Passed, snapshot =>
+        {
+            projected = snapshot;
+            Assert.That(snapshot.Artifacts.Select(item => item.Kind),
+                Does.Contain(ArtifactKind.ScenarioReportHtml).And.Contain(ArtifactKind.ScenarioResultJson));
+            Assert.That(() => context.RecordComponentOutcome("late-update", false),
+                Throws.TypeOf<InvalidOperationException>());
+            WriteProjectedReports(context, snapshot);
+        });
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(manifest, Is.SameAs(projected));
+            Assert.That(File.ReadAllText(Path.Combine(context.ScenarioRoot, ArtifactReportPaths.Result)),
+                Is.EqualTo(JsonSerializer.Serialize(manifest)));
+            Assert.That(manifest.CompletedAtUtc, Is.EqualTo(projected!.CompletedAtUtc));
+            Assert.That(manifest.EvidenceErrors, Is.Empty);
+            Assert.That(manifest.RequiredEvidence, Does.Contain(ArtifactKind.ScenarioReportHtml));
+        });
+    }
+
+    [Test]
+    public void MissingRequiredEvidenceIsProjectedAsFailureBeforeTheContextThrows()
+    {
+        var context = CreateContext("failed-projection");
+        context.Require(ArtifactKind.Screenshot);
+        ArtifactManifest? projected = null;
+
+        Assert.Throws<ArtifactEvidenceException>(() => context.Complete(
+            ArtifactOutcome.Passed, snapshot =>
+            {
+                projected = snapshot;
+                WriteProjectedReports(context, snapshot);
+            }));
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(projected!.Outcome, Is.EqualTo(ArtifactOutcome.Failed));
+            Assert.That(projected.EvidenceErrors, Does.Contain("Missing required evidence: Screenshot."));
+            Assert.That(File.ReadAllText(Path.Combine(context.ScenarioRoot, ArtifactReportPaths.Result)),
+                Is.EqualTo(JsonSerializer.Serialize(projected)));
+        });
+    }
+
+    [Test]
+    public void FailedReportWriterRemovesPartialSuccessAndSavesFailedManifest()
+    {
+        var context = CreateContext("partial-report");
+        Assert.That(() => context.Complete(ArtifactOutcome.Passed, _ =>
+        {
+            File.WriteAllText(Path.Combine(context.ScenarioRoot, ArtifactReportPaths.Report),
+                "<html>Passed</html>");
+            throw new IOException("Test writer failed.");
+        }), Throws.TypeOf<IOException>().With.Message.EqualTo("Test writer failed."));
+        var saved = ReadSavedManifest(context);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(File.Exists(Path.Combine(context.ScenarioRoot, ArtifactReportPaths.Report)), Is.False);
+            Assert.That(File.Exists(Path.Combine(context.ScenarioRoot, ArtifactReportPaths.Result)), Is.False);
+            Assert.That(saved.Outcome, Is.EqualTo(ArtifactOutcome.Failed));
+            Assert.That(saved.ComponentOutcomes["artifact-finalization"], Is.False);
+        });
+    }
+
+    [Test]
+    public void MissingOrChangedProjectionOutputsCannotLeaveASuccessReport()
+    {
+        var context = CreateContext("missing-projection");
+        Assert.That(() => context.Complete(ArtifactOutcome.Passed, _ =>
+        {
+            File.WriteAllText(Path.Combine(context.ScenarioRoot, ArtifactReportPaths.Report), "<html>Passed</html>");
+        }), Throws.TypeOf<ArtifactEvidenceException>().With.Message.Contains("frozen scenario outcome"));
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(File.Exists(Path.Combine(context.ScenarioRoot, ArtifactReportPaths.Report)), Is.False);
+            Assert.That(ReadSavedManifest(context).Outcome, Is.EqualTo(ArtifactOutcome.Failed));
+        });
+    }
+
+    [Test]
+    public void LaterComponentSuccessCannotEraseAnEarlierFailure()
+    {
+        var context = CreateContext("component-outcome");
+        context.RecordComponentOutcome("required-evidence", false);
+        context.RecordComponentOutcome("required-evidence", true);
+        Assert.That(() => context.Complete(ArtifactOutcome.Passed),
+            Throws.TypeOf<ArtifactEvidenceException>().With.Message.Contains("disagrees"));
+        Assert.That(ReadSavedManifest(context).ComponentOutcomes["required-evidence"], Is.False);
+    }
+
+    private static void WriteProjectedReports(ArtifactContext context, ArtifactManifest manifest)
+    {
+        File.WriteAllText(Path.Combine(context.ScenarioRoot, ArtifactReportPaths.Report),
+            $"<html>{manifest.Outcome}</html>");
+        File.WriteAllText(Path.Combine(context.ScenarioRoot, ArtifactReportPaths.Result),
+            JsonSerializer.Serialize(manifest));
+    }
+
+    private static ArtifactManifest ReadSavedManifest(ArtifactContext context) =>
+        JsonSerializer.Deserialize<ArtifactManifest>(
+            File.ReadAllText(Path.Combine(context.ScenarioRoot, "manifest.json")),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
+
+    [Test]
     public async Task RuntimeLocatorEvidenceRecordsScopeWithoutRawSelector()
     {
         var context = CreateContext("runtime-locator");

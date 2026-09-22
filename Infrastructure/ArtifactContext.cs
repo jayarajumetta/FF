@@ -45,6 +45,12 @@ namespace PnCTestAutomation.Artifacts
         Skipped
     }
 
+    public static class ArtifactReportPaths
+    {
+        public const string Report = "reports/report.html";
+        public const string Result = "reports/scenario-result.json";
+    }
+
     public sealed class ArtifactOptions
     {
         public string RootPath { get; set; } = "TestResults";
@@ -131,6 +137,9 @@ namespace PnCTestAutomation.Artifacts
         void RecordComponentOutcome(string component, bool succeeded);
         ArtifactManifest Complete(bool authoritativeScenarioFailed);
         ArtifactManifest Complete(ArtifactOutcome authoritativeOutcome);
+        ArtifactManifest Complete(
+            ArtifactOutcome authoritativeOutcome,
+            Action<ArtifactManifest> writeReports);
     }
 
     public interface IArtifactCaptureService
@@ -191,6 +200,7 @@ namespace PnCTestAutomation.Artifacts
             new(StringComparer.OrdinalIgnoreCase);
         private int _sequence;
         private bool _completed;
+        private bool _finalizing;
 
         public ArtifactContext(
             ArtifactOptions options,
@@ -350,7 +360,10 @@ namespace PnCTestAutomation.Artifacts
             EnsureNotCompleted();
             var safeComponent = RequireSafeLabel(component, nameof(component));
             lock (_gate)
-                _componentOutcomes[safeComponent] = succeeded;
+            {
+                _componentOutcomes[safeComponent] =
+                    (!_componentOutcomes.TryGetValue(safeComponent, out var previous) || previous) && succeeded;
+            }
         }
 
         public ArtifactManifest Complete(bool authoritativeScenarioFailed) =>
@@ -358,15 +371,113 @@ namespace PnCTestAutomation.Artifacts
                 ? ArtifactOutcome.Failed
                 : ArtifactOutcome.Passed);
 
-        public ArtifactManifest Complete(ArtifactOutcome authoritativeOutcome)
+        public ArtifactManifest Complete(ArtifactOutcome authoritativeOutcome) =>
+            CompleteCore(authoritativeOutcome, null);
+
+        public ArtifactManifest Complete(
+            ArtifactOutcome authoritativeOutcome,
+            Action<ArtifactManifest> writeReports)
+        {
+            ArgumentNullException.ThrowIfNull(writeReports);
+            return CompleteCore(authoritativeOutcome, writeReports);
+        }
+
+        private ArtifactManifest CompleteCore(
+            ArtifactOutcome authoritativeOutcome,
+            Action<ArtifactManifest>? writeReports)
         {
             EnsureNotCompleted();
             if (!Enum.IsDefined(authoritativeOutcome))
                 throw new ArgumentOutOfRangeException(nameof(authoritativeOutcome));
             var authoritativeScenarioFailed = authoritativeOutcome == ArtifactOutcome.Failed;
+            var pendingReports = new List<ArtifactRecord>();
+            if (writeReports != null)
+            {
+                pendingReports.Add(ReserveReport(
+                    ArtifactKind.ScenarioReportHtml, "scenario-report", ArtifactReportPaths.Report));
+                pendingReports.Add(ReserveReport(
+                    ArtifactKind.ScenarioResultJson, "scenario-result", ArtifactReportPaths.Result));
+            }
             WriteTimingSummary(authoritativeScenarioFailed);
             WriteTrxMetadata();
+            var completedAt = _utcNow();
+            var manifest = BuildManifest(
+                authoritativeOutcome,
+                completedAt,
+                pendingReports.Select(record => record.Kind).ToHashSet());
+            _finalizing = true;
+            var finalized = false;
+            try
+            {
+                writeReports?.Invoke(manifest);
+                var verified = BuildManifest(authoritativeOutcome, completedAt, new HashSet<ArtifactKind>());
+                if (JsonSerializer.Serialize(manifest, ManifestJsonOptions) !=
+                    JsonSerializer.Serialize(verified, ManifestJsonOptions))
+                {
+                    throw new ArtifactEvidenceException(
+                        "Report projection did not produce complete evidence for the frozen scenario outcome.");
+                }
+                WriteAndVerifyManifest(manifest);
+                finalized = true;
+            }
+            finally
+            {
+                try
+                {
+                    if (!finalized)
+                    {
+                        // A partial success projection must not survive a failed finalization.
+                        foreach (var report in pendingReports)
+                        {
+                            File.Delete(ArtifactPathGuard.EnsureSafe(
+                                ScenarioRoot, Path.Combine(ScenarioRoot, report.RelativePath!)));
+                        }
+                        _componentOutcomes["artifact-finalization"] = false;
+                        WriteAndVerifyManifest(BuildManifest(
+                            authoritativeOutcome, completedAt, new HashSet<ArtifactKind>()));
+                    }
+                }
+                finally
+                {
+                    _completed = true;
+                    _finalizing = false;
+                }
+            }
 
+            if (!authoritativeScenarioFailed && manifest.EvidenceErrors.Count > 0)
+                throw new ArtifactEvidenceException(string.Join(" ", manifest.EvidenceErrors));
+            if (!authoritativeScenarioFailed && manifest.ComponentOutcomes.Any(item => !item.Value))
+            {
+                throw new ArtifactEvidenceException(
+                    "Scenario outcome disagrees with a failed required component.");
+            }
+            return manifest;
+        }
+
+        private ArtifactRecord ReserveReport(
+            ArtifactKind kind,
+            string checkpoint,
+            string relativePath)
+        {
+            if (_records.Any(record => record.Kind == kind))
+                throw new ArtifactEvidenceException("Report projections already belong to this scenario.");
+            var path = ArtifactPathGuard.EnsureSafe(
+                ScenarioRoot, Path.Combine(ScenarioRoot, relativePath));
+            if (File.Exists(path))
+                throw new ArtifactEvidenceException("A report projection would overwrite existing scenario evidence.");
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            var record = new ArtifactRecord(kind, checkpoint, relativePath, _utcNow());
+            _required.Add(kind);
+            _records.Add(record);
+            return record;
+        }
+
+        private ArtifactManifest BuildManifest(
+            ArtifactOutcome authoritativeOutcome,
+            DateTimeOffset completedAt,
+            IReadOnlySet<ArtifactKind> pendingReports)
+        {
+            var authoritativeScenarioFailed = authoritativeOutcome == ArtifactOutcome.Failed;
             var missing = _required
                 .Where(kind => _records.All(record => record.Kind != kind))
                 .OrderBy(kind => kind)
@@ -374,6 +485,7 @@ namespace PnCTestAutomation.Artifacts
             var corrupt = _records
                 .Where(record =>
                     record.RelativePath != null &&
+                    !pendingReports.Contains(record.Kind) &&
                     !IsValidRecordedFile(record))
                 .Select(record => record.Kind)
                 .Distinct()
@@ -391,7 +503,7 @@ namespace PnCTestAutomation.Artifacts
                 ? ArtifactOutcome.Failed
                 : authoritativeOutcome;
 
-            var manifest = new ArtifactManifest(
+            return new ArtifactManifest(
                 CurrentManifestVersion,
                 RunId,
                 ScenarioId,
@@ -404,38 +516,15 @@ namespace PnCTestAutomation.Artifacts
                     new Dictionary<string, bool>(
                         _componentOutcomes,
                         StringComparer.OrdinalIgnoreCase)),
-                _required.OrderBy(kind => kind).ToList(),
-                evidenceErrors,
-                _records.OrderBy(record => record.CapturedAtUtc).ToList(),
+                _required.OrderBy(kind => kind).ToList().AsReadOnly(),
+                evidenceErrors.AsReadOnly(),
+                _records.OrderBy(record => record.CapturedAtUtc).ToList().AsReadOnly(),
                 _records.Single(record => record.Kind == ArtifactKind.TrxMetadata)
                     .RelativePath!,
                 _records.Single(record => record.Kind == ArtifactKind.TimingSummary)
                     .RelativePath!,
                 _startedAtUtc,
-                _utcNow());
-
-            WriteAndVerifyManifest(manifest);
-            _completed = true;
-
-            if (!authoritativeScenarioFailed && missing.Count > 0)
-            {
-                throw new ArtifactEvidenceException(
-                    $"Required evidence is missing: {string.Join(", ", missing)}.");
-            }
-
-            if (!authoritativeScenarioFailed && corrupt.Count > 0)
-            {
-                throw new ArtifactEvidenceException(
-                    $"Required evidence is missing or corrupt: {string.Join(", ", corrupt)}.");
-            }
-
-            if (!authoritativeScenarioFailed && componentFailed)
-            {
-                throw new ArtifactEvidenceException(
-                    "Scenario outcome disagrees with a failed required component.");
-            }
-
-            return manifest;
+                completedAt);
         }
 
         private void WriteTimingSummary(bool authoritativeScenarioFailed)
@@ -630,7 +719,7 @@ namespace PnCTestAutomation.Artifacts
 
         private void EnsureNotCompleted()
         {
-            if (_completed)
+            if (_completed || _finalizing)
                 throw new InvalidOperationException(
                     "The scenario artifact manifest has already been completed.");
         }
