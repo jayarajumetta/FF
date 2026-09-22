@@ -412,6 +412,141 @@ try {
         Read-TrxResults -Path $countMismatchTrx
     } "counters disagree"
 
+    $localRunner = Join-Path $RepositoryRoot "Scripts\run-sfp-basic-al.ps1"
+    $localSettingsPath = Join-Path $temporaryRoot "appsettings.local.json"
+    $localResults = Join-Path $temporaryRoot "must-not-execute"
+    $localSettings = @{
+        Credentials = @{ Username = "offline-contract-user"; Password = "offline-contract-password" }
+        DuckCreekForms = @{
+            Username = "offline-contract-dc"; Password = "offline-contract-dc-password"
+            CLASUsername = "offline-contract-clas"; CLASPassword = "offline-contract-clas-password"
+        }
+        OAuthConfig = @{ ClientSecret = "must-not-import-an-oauth-secret" }
+        BusinessOutcomes = @{ ProfilePath = "must-not-override-approved-profile" }
+    }
+    $localSettingsJson = $localSettings | ConvertTo-Json -Depth 4
+    $localSettingsJson | Set-Content -LiteralPath $localSettingsPath -Encoding UTF8
+    $credentialEnvironment = @(
+        "EQ_USERNAME", "EQ_PASSWORD", "DUCKCREEK_USERNAME", "DUCKCREEK_PASSWORD",
+        "CLAS_USERNAME", "CLAS_PASSWORD")
+    $originalEnvironment = @{}
+    foreach ($name in $credentialEnvironment) {
+        $originalEnvironment[$name] = [Environment]::GetEnvironmentVariable($name)
+        [Environment]::SetEnvironmentVariable($name, "existing-offline-contract")
+    }
+    $originalRunId = $env:TEST_RUN_ID
+    $originalProfile = $env:TEST_OUTCOME_PROFILE_PATH
+    try {
+        $settingsHash = Get-FileSha256 -Path $localSettingsPath
+        $receipt = & $localRunner -AppSettingsPath $localSettingsPath `
+            -ValidateCredentialsOnly -ResultsDirectory $localResults
+        Assert-True (
+            $receipt.CredentialSource -eq "ExplicitLocalAppSettings" -and
+            $receipt.RequiredCredentialFields -eq 6 -and $receipt.FieldValidationPassed -and
+            -not $receipt.ApplicationAccessVerified -and -not $receipt.BusinessTestsExecuted
+        ) "Local credential preflight fabricated application access or skipped a required field."
+        Assert-True (
+            (Get-FileSha256 -Path $localSettingsPath) -eq $settingsHash -and
+            -not (Test-Path -LiteralPath $localResults)
+        ) "Local credential preflight changed its source file or started a test run."
+        Assert-True (
+            ($receipt | ConvertTo-Json) -notmatch "offline-contract|must-not-import" -and
+            $env:TEST_RUN_ID -eq $originalRunId -and
+            $env:TEST_OUTCOME_PROFILE_PATH -eq $originalProfile
+        ) "Local credential preflight leaked values or retained an execution-profile override."
+        foreach ($name in $credentialEnvironment) {
+            Assert-True (
+                [Environment]::GetEnvironmentVariable($name) -eq "existing-offline-contract"
+            ) "Local credential preflight failed to restore '$name'."
+        }
+        $existingDotnetFunction = Get-Item -LiteralPath "Function:\dotnet" -ErrorAction SilentlyContinue
+        try {
+            function dotnet {
+                if ($args[0] -ne "restore" -or
+                    $env:EQ_USERNAME -ne "offline-contract-user" -or
+                    $env:EQ_PASSWORD -ne "offline-contract-password" -or
+                    $env:DUCKCREEK_USERNAME -ne "offline-contract-dc" -or
+                    $env:DUCKCREEK_PASSWORD -ne "offline-contract-dc-password" -or
+                    $env:CLAS_USERNAME -ne "offline-contract-clas" -or
+                    $env:CLAS_PASSWORD -ne "offline-contract-clas-password" -or
+                    $env:TEST_OUTCOME_PROFILE_PATH -eq "must-not-override-approved-profile") {
+                    throw "Local credential handoff or approved profile isolation failed."
+                }
+                throw "Controlled stop after verifying the credential handoff; no build or tests started."
+            }
+            Assert-Throws {
+                & $localRunner -AppSettingsPath $localSettingsPath -ResultsDirectory $localResults
+            } "Controlled stop after verifying the credential handoff"
+        }
+        finally {
+            if ($null -eq $existingDotnetFunction) {
+                Remove-Item -LiteralPath "Function:\dotnet"
+            }
+            else {
+                Set-Item -LiteralPath "Function:\dotnet" -Value $existingDotnetFunction.ScriptBlock
+            }
+        }
+        foreach ($name in $credentialEnvironment) {
+            Assert-True (
+                [Environment]::GetEnvironmentVariable($name) -eq "existing-offline-contract"
+            ) "Failed local execution did not restore '$name'."
+        }
+        Assert-Throws {
+            & $localRunner -AppSettingsPath (Join-Path $temporaryRoot "missing-settings.json") `
+                -ValidateCredentialsOnly
+        } "explicitly selected local appsettings file is missing"
+        foreach ($invalid in @("", "PLACEHOLDER", 123, '$(UNRESOLVED_PASSWORD)')) {
+            $localSettings.Credentials.Password = $invalid
+            $localSettings | ConvertTo-Json -Depth 4 |
+                Set-Content -LiteralPath $localSettingsPath -Encoding UTF8
+            Assert-Throws {
+                & $localRunner -AppSettingsPath $localSettingsPath -ValidateCredentialsOnly
+            } "Credentials.Password.*missing, non-text, or a placeholder"
+        }
+        $localSettings.Remove("DuckCreekForms")
+        $localSettings.Credentials.Password = "offline-contract-password"
+        $localSettings | ConvertTo-Json -Depth 4 |
+            Set-Content -LiteralPath $localSettingsPath -Encoding UTF8
+        Assert-Throws {
+            & $localRunner -AppSettingsPath $localSettingsPath -ValidateCredentialsOnly
+        } "DuckCreekForms.Username.*missing"
+        '{"Credentials":{"Password":"offline-secret-must-not-be-printed"' |
+            Set-Content -LiteralPath $localSettingsPath -Encoding UTF8
+        $invalidMessage = $null
+        try {
+            & $localRunner -AppSettingsPath $localSettingsPath -ValidateCredentialsOnly
+        }
+        catch {
+            $invalidMessage = $_.Exception.Message
+        }
+        Assert-True (
+            $null -ne $invalidMessage -and
+            $invalidMessage -match "could not be read as JSON" -and
+            $invalidMessage -notmatch "offline-secret"
+        ) "Malformed credential JSON exposed its contents or did not fail."
+        $receipt = & $localRunner -ValidateCredentialsOnly
+        Assert-True (
+            $receipt.CredentialSource -eq "ProcessEnvironment" -and $receipt.FieldValidationPassed
+        ) "The existing environment/Key Vault handoff no longer works."
+        $env:EQ_PASSWORD = ""
+        Assert-Throws {
+            & $localRunner -ValidateCredentialsOnly
+        } "EQ_PASSWORD.*missing"
+    }
+    finally {
+        foreach ($name in $originalEnvironment.Keys) {
+            if ($null -eq $originalEnvironment[$name]) {
+                if (Test-Path -LiteralPath "Env:\$name") {
+                    Remove-Item -LiteralPath "Env:\$name"
+                }
+            }
+            else {
+                [Environment]::SetEnvironmentVariable($name, $originalEnvironment[$name])
+            }
+        }
+        $originalEnvironment.Clear()
+    }
+
     $buildTemplate = Get-Content -LiteralPath (
         Join-Path $RepositoryRoot "Pipelines\templates\build-package-stage.yml") -Raw
     $testTemplate = Get-Content -LiteralPath (

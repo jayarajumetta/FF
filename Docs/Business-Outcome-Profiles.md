@@ -75,6 +75,36 @@ your local secret source, then run from the repository root:
 .\Scripts\run-sfp-basic-al.ps1 -InstallBrowser
 ```
 
+For the user-approved temporary local setup while Key Vault access is pending,
+the same runner can read an explicitly selected existing `appsettings.json`:
+
+```powershell
+# Checks credential fields only: no build, browser, login or business test.
+.\Scripts\run-sfp-basic-al.ps1 `
+  -AppSettingsPath 'C:\private-config\appsettings.json' `
+  -ValidateCredentialsOnly
+
+# Execute only after application access and business-run prerequisites are approved.
+.\Scripts\run-sfp-basic-al.ps1 `
+  -AppSettingsPath 'C:\private-config\appsettings.json' `
+  -InstallBrowser
+```
+
+The file is read-only and is never copied into the integration checkout, build
+output, report or package. Only `Credentials.Username/Password` and
+`DuckCreekForms.Username/Password/CLASUsername/CLASPassword` are loaded into the
+six existing process variables. The previous environment is restored when the
+runner exits, including on failure. An explicitly selected file must supply all
+six usable string fields; missing files, malformed JSON, empty fields and
+placeholder values fail rather than silently using another credential source.
+Other settings in that file do not override the approved environment, expected
+outcomes, business inputs or Ping authentication configuration.
+
+`-ValidateCredentialsOnly` confirms configuration shape, not that the accounts
+can authenticate. Credential values must not be pasted into chat or committed.
+This is an explicit local option, not an automatic fallback after Key Vault
+denies access, and it does not change private-agent/CI credential delivery.
+
 If the credentials are in Azure Key Vault, use the Key Vault wrapper instead.
 It reads the required secrets through the signed-in Azure CLI account, sets
 them only for the child test process, and restores the caller environment:

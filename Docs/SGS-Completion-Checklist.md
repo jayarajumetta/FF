@@ -57,7 +57,7 @@ The user is not being assigned coding, dependency mapping, or integration work.
 | Reporting adaptation | Integrated: child `05644a9` picked as `37a9dbd`; actual-runner skip compatibility in `6f369fb`, lifecycle/DI/privacy in `d7e47c2`, package/runner/publication gates in `e9c89ec`. No duplicate lifecycle or SGS retry engine. |
 | Parent framework suite | Item 2 gate passed: 431 passed, 0 failed, 0 skipped; 54 CI contract assertions passed. Real gated Reqnroll execution reconciled 45 SKIP results with 45 scenario reports and no reporting issues. |
 | Live SGS verification | No imported SGS case has been live-verified. Discovery, unit tests, and synthetic report previews do not count. |
-| Work/process state | Items 1 and 2 are complete; item 3 is blocked after its access recheck again returned `ForbiddenByRbac`. Later items have not started. No push, PR, pipeline rollout, live business execution, or IDE synchronization during this reporting milestone. |
+| Work/process state | Items 1 and 2 are complete. Item 3 resumed after the user explicitly authorized temporary local appsettings credentials while Key Vault read approval is pending. Six required fields pass configuration preflight; actual QA authentication is still unverified. Later items have not started. |
 
 ## Ordered remaining work
 
@@ -100,18 +100,33 @@ The user is not being assigned coding, dependency mapping, or integration work.
    runtime check is not live SGS verification or pipeline rollout.
 
 3. [ ] **Unblock and verify local credentials and application access.**
-   Use the user-selected `kv-pa-d-tstauto-1`, existing process-only secret
+   Prefer the user-selected `kv-pa-d-tstauto-1`, existing process-only secret
    loading, and Ping. Confirm required credential reads and authorized access
    to the relevant QA applications/services without printing secrets.
    Exit: credential and connectivity prerequisites are demonstrated.
-   Current blocker: the CLI identity receives `ForbiddenByRbac` for secret
-   reads; an authorized Azure owner must supply the required access.
+   Key Vault access remains pending approval: the CLI identity receives
+   `ForbiddenByRbac` for secret reads.
    Rechecked after item 2 using the approved vault and named credential secret,
    returning only ID/enabled metadata: still `ForbiddenByRbac`. No secret value
    was displayed or persisted. Evidence:
    `files\resume-validation\checklist-03-keyvault-access.json` in the integration
-   session. Work is paused at this gate; no alternate credentials, RBAC changes,
-   application mutations or later checklist work were attempted.
+   session.
+   On 2026-09-22 the user explicitly authorized the existing local
+   `appsettings.json` as the temporary credential source. This supersedes the
+   Key Vault-only pause for local execution, not the long-term vault or CI
+   policy. The Visual Studio checkout's file contains the existing credentials;
+   the integration copy intentionally leaves those fields empty.
+   `Scripts\run-sfp-basic-al.ps1 -AppSettingsPath <external-file>` reads only
+   the six required credential fields into process variables, restores the
+   caller environment, and never copies the source file into this branch or
+   its package. There is no automatic fallback from a denied vault read.
+   `-ValidateCredentialsOnly` passed for all six fields without modifying
+   the source file, printing values, building, logging in or executing tests.
+   Evidence: `files\resume-validation\checklist-03-local-appsettings-preflight.json`
+   and `checklist-03-local-credential-contracts.log` (79 assertions).
+   Actual QA authentication/connectivity remains the unfinished part of item 3;
+   a nonempty password is not proof that it works. No business-data approvals,
+   application mutations, RBAC changes or later checklist items were bypassed.
 
 4. [ ] **Confirm the first-run business data and execution permissions.**
    Resolve the specific outstanding inputs/expectations for the SFP reference
@@ -254,7 +269,7 @@ Selective component reuse is not permission to drop required business coverage.
 | Controls, locators, frames, data, thin bindings (pages 2-3) | Strict data and reusable control/frame foundations are integrated. This does not mean the SGS business bindings/pages or live control mappings have been adapted or accepted. | Items 4, 6-14 |
 | Business outcomes, forms, required inputs (pages 3-4) | The intended acceptance matches the checklist: actual applied inputs and promised outcomes, QA-owned expectations, and explicit failures. Add structured redacted applied-input evidence and controlled known-pass/known-fail demonstrations to the workflow evidence, not just navigation screenshots. | Items 2, 4-15 |
 | Reporting, deferred verification, diagnostics, retention (pages 3-4) | Reporting code is saved separately and has focused passing checks, but lifecycle integration remains unfinished. Deferred checks must fail the final result, not merely appear in HTML. The current flat seven-day cleanup is not evidence of the matrix's tiered-retention requirement; record the Security/DevOps policy decision and validate approved behavior. | Items 2, 15-17 |
-| Secret consumption and sensitive-data approval (pages 2-3) | Keep Key Vault as the protected-configuration source and process variables only as its transport. No alternate SGS credential provider or plaintext fallback is authorized. Vault access is currently blocked, and Security review/approval is still distinct from code completion. | Items 3, 4, 17 |
+| Secret consumption and sensitive-data approval (pages 2-3) | Key Vault remains the intended protected source. While read approval is pending, the user explicitly authorized read-only import from the existing local appsettings file into process variables for local execution only. No secrets enter this branch/package, no automatic fallback is added, and no SGS credential provider replaces Ping. Security review/approval remains distinct from code completion. | Items 3, 4, 17 |
 | Coverage and component disposition (pages 3, 6) | The existing ledger accounts for all 32 features, 1,115 active cases, 34 source-commented examples, and 191 path-level dependency decisions. It is a technical traceability register, not a signed acceptance record. The document's separate claim of 53 omitted vendor branches has not been reconciled to a finding register/current source pin; it is not the same as the 34 commented examples. | Items 4, 6-15 |
 | Package, result integrity, CI/CD, Test Plans (pages 3-4) | The checklist intentionally completes local engineering/package qualification first. Formal operational acceptance still needs DevOps-owned combined execution, deliberate assertion-failure propagation, missing/malformed-result failure, and accurate real Test Plans results/attachments. Local dry runs cannot satisfy those final operational criteria. | Item 16 locally; separate later DevOps acceptance |
 | Acceptance records, measurements, knowledge transfer (pages 4-6) | Add delivery-level evidence/decisions to milestone handoffs. Capture execution time, fixed-wait usage, flaky behavior, and artifact size as delivery metrics, not a pilot reassessment. Include an internal-engineer setup/diagnosis walkthrough; no blanket acceptance based on test counts. | Each checkpoint; consolidated in items 15-17 |

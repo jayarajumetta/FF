@@ -2,6 +2,8 @@
 param(
     [string]$ResultsDirectory = (Join-Path $PSScriptRoot (
         "..\TestResults\SfpBasicAl-" + [Guid]::NewGuid().ToString("N"))),
+    [string]$AppSettingsPath,
+    [switch]$ValidateCredentialsOnly,
     [switch]$NoBuild,
     [switch]$InstallBrowser
 )
@@ -14,16 +16,6 @@ if ((Test-Path -LiteralPath $results) -and
     @(Get-ChildItem -LiteralPath $results -Force).Count -gt 0) {
     throw "Use an empty results directory for this state-changing, non-retried run."
 }
-foreach ($name in @(
-    "EQ_USERNAME", "EQ_PASSWORD",
-    "CLAS_USERNAME", "CLAS_PASSWORD",
-    "DUCKCREEK_USERNAME", "DUCKCREEK_PASSWORD")) {
-    if ([string]::IsNullOrWhiteSpace(
-        [Environment]::GetEnvironmentVariable($name))) {
-        throw "Required credential environment variable '$name' is missing."
-    }
-}
-
 $profilePath = Join-Path $root "Resources\ExpectedOutcomes\sfp-basic-al-local.json"
 $profile = (Get-Content -LiteralPath $profilePath -Raw |
     ConvertFrom-Json).profiles[0]
@@ -42,13 +34,69 @@ $settings = @{
     'DuckCreekForms__BaselineVersions__SFP_BASIC' =
         [string]$profile.forms.baselineVersion
 }
-$previous = @{}
-foreach ($name in $settings.Keys) {
-    $previous[$name] = [Environment]::GetEnvironmentVariable($name)
-    [Environment]::SetEnvironmentVariable($name, $settings[$name])
+$credentialFields = [ordered]@{
+    EQ_USERNAME = @("Credentials", "Username")
+    EQ_PASSWORD = @("Credentials", "Password")
+    DUCKCREEK_USERNAME = @("DuckCreekForms", "Username")
+    DUCKCREEK_PASSWORD = @("DuckCreekForms", "Password")
+    CLAS_USERNAME = @("DuckCreekForms", "CLASUsername")
+    CLAS_PASSWORD = @("DuckCreekForms", "CLASPassword")
 }
-
+$fromFile = $PSBoundParameters.ContainsKey("AppSettingsPath")
+$localSettings = $null
+if ($fromFile) {
+    if ([string]::IsNullOrWhiteSpace($AppSettingsPath) -or
+        -not (Test-Path -LiteralPath $AppSettingsPath -PathType Leaf)) {
+        throw "The explicitly selected local appsettings file is missing."
+    }
+    try {
+        $localSettings = Get-Content -LiteralPath $AppSettingsPath -Raw |
+            ConvertFrom-Json
+    }
+    catch {
+        throw "The local appsettings file could not be read as JSON. Configuration values are not included in this error."
+    }
+    if ($localSettings -isnot [PSCustomObject]) {
+        throw "The local appsettings file must contain a JSON object."
+    }
+}
+foreach ($entry in $credentialFields.GetEnumerator()) {
+    $value = [Environment]::GetEnvironmentVariable($entry.Key)
+    if ($fromFile) {
+        $section = $localSettings.PSObject.Properties[$entry.Value[0]]
+        $field = if ($null -ne $section -and $section.Value -is [PSCustomObject]) {
+            $section.Value.PSObject.Properties[$entry.Value[1]]
+        } else {
+            $null
+        }
+        $value = if ($null -ne $field) { $field.Value } else { $null }
+    }
+    if ($value -isnot [string] -or [string]::IsNullOrWhiteSpace($value) -or
+        $value.Trim() -match '(?i)^(PLACEHOLDER|CHANGEME|\$\([^)]*\)|\$\{[^}]*\}|<[^>]*>)$') {
+        $source = if ($fromFile) { $entry.Value -join "." } else { $entry.Key }
+        throw "Required credential '$source' is missing, non-text, or a placeholder."
+    }
+    if ($fromFile) {
+        $settings[$entry.Key] = $value
+    }
+}
+$localSettings = $null
+$value = $null
+$previous = @{}
 try {
+    foreach ($name in $settings.Keys) {
+        $previous[$name] = [Environment]::GetEnvironmentVariable($name)
+        [Environment]::SetEnvironmentVariable($name, $settings[$name])
+    }
+    if ($ValidateCredentialsOnly) {
+        return [PSCustomObject]@{
+            CredentialSource = $(if ($fromFile) { "ExplicitLocalAppSettings" } else { "ProcessEnvironment" })
+            RequiredCredentialFields = $credentialFields.Count
+            FieldValidationPassed = $true
+            ApplicationAccessVerified = $false
+            BusinessTestsExecuted = $false
+        }
+    }
     Push-Location $root
     try {
         if (-not $NoBuild) {
@@ -100,7 +148,16 @@ try {
     }
 }
 finally {
-    foreach ($name in $settings.Keys) {
-        [Environment]::SetEnvironmentVariable($name, $previous[$name])
+    foreach ($name in $previous.Keys) {
+        if ($null -eq $previous[$name]) {
+            if (Test-Path -LiteralPath "Env:\$name") {
+                Remove-Item -LiteralPath "Env:\$name" -ErrorAction Stop
+            }
+        }
+        else {
+            [Environment]::SetEnvironmentVariable($name, $previous[$name])
+        }
     }
+    $settings.Clear()
+    $previous.Clear()
 }

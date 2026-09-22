@@ -163,7 +163,10 @@ as a tracked execution ledger; it is not a second open-ended inventory exercise.
    not equality, and transmit-button availability is not transmission.
 9. Keep credentials external. Reuse process-only Key Vault loading and current
    Ping authentication. Do not change to Okta or assume another OAuth secret
-   works. Generate personal test identity once per scenario; never fabricate
+   works. While vault read approval is pending, the user explicitly authorized
+   a read-only local appsettings credential source through the existing
+   process-variable handoff; this does not copy secrets into this branch or
+   change CI credential delivery. Generate personal test identity once per scenario; never fabricate
    missing required business inputs or expected outcomes.
 10. Follow the two-consecutive-local-runs requirement for completed scenario
     coverage. Unit tests and successful discovery support, but do not replace,
@@ -468,9 +471,12 @@ is committed in `d7e47c2`, with package/runner/publication gates in `e9c89ec`.
 The combined framework gate passed 431 tests without failures/skips; 54 CI
 contract assertions passed. Forty-five real gated Reqnroll results remained
 SKIP and reconciled with their reports; no SGS business case was verified.
-The next action is item 3: resolve the known Key Vault access blocker before
-application verification. M1 source accounting must not be restarted. The
-matrix review adds no pilot gate or parallel workstream.
+Item 3 now has an explicitly approved temporary local appsettings credential
+path while Key Vault read approval is pending. Its six required fields passed
+configuration preflight without exposing values or changing the source file;
+actual QA authentication/connectivity remains to be verified. M1 source
+accounting must not be restarted. The matrix review adds no pilot gate or
+parallel workstream.
 
 ## Appendix A - Complete latest-source feature/binding coverage
 
