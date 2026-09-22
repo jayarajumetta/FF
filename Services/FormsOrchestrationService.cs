@@ -121,7 +121,6 @@ namespace PnCTestAutomation.Services
             ArgumentNullException.ThrowIfNull(request);
             ValidateRequest(request);
             _artifacts.Require(RequiredEvidence);
-            _artifacts.RecordComponentOutcome("forms-validation", succeeded: false);
 
             try
             {

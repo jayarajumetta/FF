@@ -1,10 +1,11 @@
 # SGS scenario-data adapter
 
 `PnCTestAutomation.DataProfiles.ISgsScenarioData` adapts retained SGS business
-inputs, not SGS lifecycle or state ownership. Register `SgsScenarioData` in the
-existing scenario scope with the exact `ScenarioContextData` and `IQuoteHandoff`
-already owned by that scope. DI, hook preflight, business bindings and live
-execution are separate integration work; this adapter adds none of them.
+inputs, not SGS lifecycle or state ownership. `Startup` registers
+`SgsScenarioData` in the existing scenario scope with the exact
+`ScenarioContextData` and `IQuoteHandoff` already owned by that scope. Hook
+preflight, business bindings and live execution remain separate integration
+work; adapter registration alone does not make a workflow executable.
 
 ## Public contract
 

@@ -6,6 +6,7 @@ using PnCTestAutomation.Configuration;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.Controls;
 using PnCTestAutomation.DataPool;
+using PnCTestAutomation.DataProfiles;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Integrations;
 using PnCTestAutomation.Models;
@@ -190,6 +191,7 @@ namespace PnCTestAutomation
                 return created;
             });
             services.AddScoped<IQuoteHandoff, ScenarioQuoteHandoff>();
+            services.AddScoped<ISgsScenarioData, SgsScenarioData>();
             services.AddScoped<IArtifactContext>(provider =>
             {
                 var scenarioContext = provider.GetRequiredService<ScenarioContext>();

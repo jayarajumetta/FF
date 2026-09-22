@@ -53,6 +53,7 @@ public class FormsOrchestrationTests
                 ArtifactKind.FormsTrx
             }));
             Assert.That(manifest.Outcome, Is.EqualTo(ArtifactOutcome.Passed));
+            Assert.That(manifest.ComponentOutcomes["forms-validation"], Is.True);
             Assert.That(manifest.RequiredEvidence, Is.SupersetOf(result.Evidence.Select(item => item.Kind)));
         });
     }
@@ -61,21 +62,9 @@ public class FormsOrchestrationTests
     public void FormsMismatchFailsEvenWhenCallerWouldOtherwisePass()
     {
         var artifacts = CreateArtifacts("mismatch");
-        var summary = PassingSummary();
-        summary.Passed = 0;
-        summary.Failed = 1;
-        summary.Results =
-        [
-            new FormValidationResult
-            {
-                FormName = "FORM-A",
-                Result = "FAIL",
-                Message = "Expected mandatory form was missing."
-            }
-        ];
         var service = CreateService(
             artifacts,
-            new FakeValidationService(summary),
+            new FakeValidationService(FailingSummary()),
             ValidXml(),
             new FakeEvidenceWriter());
 
@@ -92,10 +81,31 @@ public class FormsOrchestrationTests
     }
 
     [Test]
+    public async Task PassingFormsCheckCannotEraseAnEarlierRealFailure()
+    {
+        var artifacts = CreateArtifacts("sticky-failure");
+        var failedCheck = CreateService(
+            artifacts, new FakeValidationService(FailingSummary()),
+            ValidXml(), new FakeEvidenceWriter());
+        var passingCheck = CreateService(
+            artifacts, new FakeValidationService(PassingSummary()),
+            ValidXml(), new FakeEvidenceWriter());
+
+        Assert.ThrowsAsync<FormsValidationException>(async () =>
+            await failedCheck.ValidateAsync(Request()));
+        var result = await passingCheck.ValidateAsync(Request());
+
+        Assert.That(result.Summary.AllPassed, Is.True);
+        Assert.That(() => artifacts.Complete(authoritativeScenarioFailed: false),
+            Throws.TypeOf<ArtifactEvidenceException>().With.Message.Contains("failed required component"));
+    }
+
+    [Test]
     public void MissingBaselineFailsClosed()
     {
+        var artifacts = CreateArtifacts("missing-baseline");
         var service = CreateService(
-            CreateArtifacts("missing-baseline"),
+            artifacts,
             new FakeValidationService(
                 new FileNotFoundException("sensitive baseline path")),
             ValidXml(),
@@ -103,11 +113,13 @@ public class FormsOrchestrationTests
 
         var exception = Assert.ThrowsAsync<FormsValidationException>(
             async () => await service.ValidateAsync(Request()));
+        var manifest = artifacts.Complete(authoritativeScenarioFailed: true);
 
         Assert.Multiple(() =>
         {
             Assert.That(exception!.Stage, Is.EqualTo("baseline resolution"));
             Assert.That(exception.ToString(), Does.Not.Contain("sensitive baseline path"));
+            Assert.That(manifest.ComponentOutcomes["forms-validation"], Is.False);
         });
     }
 
@@ -298,6 +310,23 @@ public class FormsOrchestrationTests
                 }
             ]
         };
+
+    private static FormsValidationSummary FailingSummary()
+    {
+        var summary = PassingSummary();
+        summary.Passed = 0;
+        summary.Failed = 1;
+        summary.Results =
+        [
+            new FormValidationResult
+            {
+                FormName = "FORM-A",
+                Result = "FAIL",
+                Message = "Expected mandatory form was missing."
+            }
+        ];
+        return summary;
+    }
 
     private static string ValidXml() =>
         """
