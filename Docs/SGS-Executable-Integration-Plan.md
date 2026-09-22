@@ -182,7 +182,7 @@ copying every old example or redesigning DI.
 
 | Surface | Existing implementation to reuse | Required adaptation |
 |---|---|---|
-| Scenario lifecycle | `Hooks\TestHooks.cs`: `BeforeScenarioAsync`, `AfterStepAsync`, `AfterScenarioAsync`, `FinalizeRun` | Explicit per-case SGS readiness is integrated. Add reporting to the existing lifecycle, not another hook class. |
+| Scenario lifecycle | `Hooks\TestHooks.cs` and its `TestHooks.Reporting.cs` partial: scenario/step boundaries and `FinalizeRun` | Per-case SGS readiness and canonical reporting are integrated in the same lifecycle. Adapt actual business bindings without another hook class. |
 | State and DI | `Startup.ConfigureServices`, `Helpers\ScenarioContextData.cs`, `Context\PlaywrightContext.cs` | Scenario-owned `SgsData` and scoped adapter registration are integrated. Wire business preflight/bindings without changing ownership or resolving pages before initialization. |
 | Shared business pages | `StepDefinitions\SharedSteps\SharedEQSteps.cs`, `Pages\ExpertQuotePages`, `Pages\ExpertQuotePages\SFP`, `Pages\ExpertQuotePages\PA` | Extract/reuse matching page actions; remediate only directly reused nonconforming inline locator logic. Do not assume EQ pages represent CLDC or PLDC pages. |
 | Controls | `Controls\ControlContracts.cs`, `ControlScopeResolver`, `SemanticControlActions`, `PlaywrightControlRuntime` | Pass the scenario's resolver and evidence sink into adapted pages. The default `BasePage(IPage)` creates controls without scenario evidence, so it is insufficient for required SGS locator evidence. |
@@ -191,7 +191,7 @@ copying every old example or redesigning DI.
 | Business outcomes | `BusinessOutcomes\BusinessOutcomeProfiles.cs`, `IBusinessOutcomeVerifier` | Generalize the SFP-only hook/profile selection to workflow-declared assertions. Support state, company, variant, and effective-date distinctions without weakening SFP validation or inventing irrelevant premium/forms requirements for quote-only smoke cases. |
 | Quote handoff | `QuoteHandoffs\QuoteHandoff.cs`: `IQuoteHandoff`, `ScenarioQuoteHandoff`, `FileQuoteHandoffStore` | Use scenario state for close/reopen/search; no shared quote text file. Cross-process sharing only through the qualified envelope. |
 | Forms | `IFormsOrchestrationService`, `DuckCreekFormsClient`, `FormsEvidenceWriter`, `FormsReportGenerator` | Reuse the existing validation/report path when forms are promised; link its evidence into the unified report. |
-| Evidence/reporting | `Infrastructure\ArtifactContext.cs`: `IArtifactContext`, `IArtifactCaptureService`, `ArtifactManifest` | Adapt SGS rich HTML/report presentation and step records onto this owner; add required report/log artifacts and canonical outcome reconciliation. |
+| Evidence/reporting | `Infrastructure\ArtifactContext.cs`, `Reporting`, `Tools\SgsReport` | Rich reports, required logs/media, frozen-manifest reconciliation and package/runner gates are integrated. Each adapted business workflow must still produce its actual promised evidence. |
 | Product ownership | `Products\ProductModules.cs`: `IProductModule`, `ProductModuleRegistry` | Register actual SGS workflow families in the current assembly; no physical project split or new solution. |
 | Identity and discovery | `TestPlans\ScenarioAutomationIdentity.cs`, `Tools\CiTestInventory\Program.cs` | Stable SGS argument/profile fingerprints are integrated while preserving SFP identities. Keep exact identity/discovery parity as real workflows are enabled. |
 | Inventory integrity | `SgsFeatureInventoryTests`, `SgsExecutionCatalogTests`, `Resources\Contracts\sgs-*-inventory.json`, `.gitattributes` | Source/import/adaptation hashes and per-case readiness are integrated. Update exact case readiness/evidence as work completes; do not disable checks or bulk-enable unfinished cases. |
@@ -463,11 +463,14 @@ Before calling the integration complete, require:
 - Clean, verified commit/checkout handoff with the established solution visible
   in Visual Studio.
 
-Checklist item 1 is complete at implementation commit `d6670f1`, with all 283
-framework tests passing and no skips. The next action is item 2: integrate
-reporting into the existing lifecycle. M1 source accounting is already
-integrated and must not be restarted. The matrix review does not add a pilot
-gate or authorize parallel workstreams.
+Checklist items 1 and 2 are complete. Reporting lifecycle/DI/privacy integration
+is committed in `d7e47c2`, with package/runner/publication gates in `e9c89ec`.
+The combined framework gate passed 431 tests without failures/skips; 54 CI
+contract assertions passed. Forty-five real gated Reqnroll results remained
+SKIP and reconciled with their reports; no SGS business case was verified.
+The next action is item 3: resolve the known Key Vault access blocker before
+application verification. M1 source accounting must not be restarted. The
+matrix review adds no pilot gate or parallel workstream.
 
 ## Appendix A - Complete latest-source feature/binding coverage
 

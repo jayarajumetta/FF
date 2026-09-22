@@ -54,10 +54,10 @@ The user is not being assigned coding, dependency mapping, or integration work.
 | Coverage ledger and stable identities | Integrated; all 32 features, 1,115 active cases, and 34 source-commented cases are accounted for. |
 | Strict SGS data adapter | Integrated, including scoped Startup registration and the shared-state/quote-handoff composition test. |
 | Semantic controls and frame contracts | Integrated; typed captures, actual selection checks, frame-safe Material dropdowns, and explicit main/nested frame scopes have focused passing coverage. |
-| Reporting adaptation | Saved in the reporting child, not integrated or committed. Its latest focused gate passed 167 tests. Final offline UI recheck, cleanup, commit, and parent lifecycle integration remain. |
-| Parent framework suite | Item 1 gate passed: 283 passed, 0 failed, 0 skipped. Forms no longer records an unexecuted check as failed; actual failures remain sticky. |
+| Reporting adaptation | Integrated: child `05644a9` picked as `37a9dbd`; actual-runner skip compatibility in `6f369fb`, lifecycle/DI/privacy in `d7e47c2`, package/runner/publication gates in `e9c89ec`. No duplicate lifecycle or SGS retry engine. |
+| Parent framework suite | Item 2 gate passed: 431 passed, 0 failed, 0 skipped; 54 CI contract assertions passed. Real gated Reqnroll execution reconciled 45 SKIP results with 45 scenario reports and no reporting issues. |
 | Live SGS verification | No imported SGS case has been live-verified. Discovery, unit tests, and synthetic report previews do not count. |
-| Work/process state | Item 1 is complete; item 2 is next. Only reporting work may resume. No push, PR, pipeline rollout, or IDE synchronization during this resumed work. |
+| Work/process state | Items 1 and 2 are complete; item 3 is next, with the known Key Vault RBAC blocker. No push, PR, pipeline rollout, live business execution, or IDE synchronization during this reporting milestone. |
 
 ## Ordered remaining work
 
@@ -74,7 +74,7 @@ The user is not being assigned coding, dependency mapping, or integration work.
    for genuine failures remaining failed after a subsequent passing check,
    baseline-resolution failures, and scenario-scoped data/quote ownership.
 
-2. [ ] **Finish and integrate reporting into the existing lifecycle.**
+2. [x] **Finish and integrate reporting into the existing lifecycle.**
    Finish the reporting child's final offline check and handoff, then integrate
    its renderer, canonical reader, and report tool. Wire the existing
    `TestHooks` and artifact finalizer, not a second lifecycle. Include unique
@@ -82,6 +82,22 @@ The user is not being assigned coding, dependency mapping, or integration work.
    pass/fail/skip/teardown outcomes.
    Exit: canonical results, manifests, and reports agree; required missing
    evidence fails; existing PnC behavior remains intact.
+   Completed 2026-09-22: `d7e47c2` and `e9c89ec`, following the single approved
+   child cherry-pick and runner compatibility fix above. The existing artifact
+   owner now freezes rich reports after real step/deferred outcomes, owned
+   browser evidence, teardown, persistence handling and log flushing.
+   Required omissions/report defects fail rather than disappearing.
+   Canonical consolidation preserves skips and actual attempt groups.
+   Evidence under the integration session's `files\resume-validation`:
+   `checklist-02-full-suite.trx` (431/0/0),
+   `checklist-02-ci-contracts.log` (54 assertions),
+   `checklist-02-native-gates` (45 genuinely skipped, zero business passes;
+   canonical/manifests/reports agree), and
+   `checklist-02-sourcefree-report\verification.json` (copied .NET 8 Release
+   runtime, unchanged inventory, expected exit 1 for skips and 2 for missing
+   canonical input). The Release reporting build had zero warnings/errors.
+   Full immutable-package/case qualification remains item 16; this reporting
+   runtime check is not live SGS verification or pipeline rollout.
 
 3. [ ] **Unblock and verify local credentials and application access.**
    Use the user-selected `kv-pa-d-tstauto-1`, existing process-only secret
