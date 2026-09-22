@@ -22,6 +22,39 @@ publication, a PR, and a Development merge are outside this local finish line.
 
 ## How work will proceed
 
+### Temporary premium/forms baseline policy
+
+Approved by the user on 2026-09-22: keep the original premium and forms
+validation logic active and record its genuine pass/fail results against the
+existing baselines. Do not spend this integration phase approving, correcting,
+regenerating or tuning those baselines; the user will update tests and data.
+Baseline comparison outcomes are observations, not gates on current integration
+progress. Rebaselining and final baseline-dependent acceptance belong after
+that refresh, in item 15.
+
+This is an engineering-progress exception, not a test-result override. A
+baseline mismatch may still fail the runner, component, manifest and report.
+Do not relabel it as a pass, remove assertions, suppress exceptions, widen
+tolerances or update expected values merely to obtain a green run. No runtime
+assertion bypass or pipeline fail-on-error change is authorized by this policy.
+If a comparison stops execution, later unexecuted steps remain unverified.
+Missing baseline execution evidence is not a successful comparison.
+
+Only demonstrated expected-versus-actual premium/forms baseline discrepancies
+are non-blocking. Authentication, navigation, selectors/frames, unusable required
+inputs, stale/corrupt input checksums, malformed responses, Forms API failures,
+wrong quote identity, missing evidence and reporting defects remain blockers.
+Classify failures from their evidence; do not exempt every premium/forms error.
+
+For items 5-14, record implementation/workflow readiness separately from full
+business verification. Keep two-run evidence for the demonstrated non-baseline
+behavior, and list baseline failures or unexecuted comparisons explicitly.
+An engineering checkpoint may advance with those baseline results pending;
+the affected business case must not be marked fully `Verified` on that basis.
+All 32 workflows and 1,115 active cases remain in scope.
+
+### Sequential execution
+
 The user chose sequential progress, pausing only for blockers or scope changes.
 Only one numbered implementation item is active at a time. Complete and
 verify its exit gate before starting the next item. Work inside a coverage
@@ -57,6 +90,7 @@ The user is not being assigned coding, dependency mapping, or integration work.
 | Reporting adaptation | Integrated: child `05644a9` picked as `37a9dbd`; actual-runner skip compatibility in `6f369fb`, lifecycle/DI/privacy in `d7e47c2`, package/runner/publication gates in `e9c89ec`. No duplicate lifecycle or SGS retry engine. |
 | Parent framework suite | Item 2 gate passed: 431 passed, 0 failed, 0 skipped; 54 CI contract assertions passed. Real gated Reqnroll execution reconciled 45 SKIP results with 45 scenario reports and no reporting issues. |
 | Live SGS verification | No imported SGS case has been live-verified. Discovery, unit tests, and synthetic report previews do not count. |
+| Premium/forms baselines | Original validation stays active and real results stay visible. Baseline approval/refresh and baseline-dependent acceptance are deferred until the user's test/data refresh; baseline mismatches do not gate current integration progress. |
 | Work/process state | Items 1-3 are complete under the explicitly approved local-access boundary; item 4 is active. ExpertQuote QA, CLAS QA and QA Express sign-ins are verified. Key Vault approval remains pending; authenticated Forms API verification is an explicit item 5 requirement, not a passed check. No business workflow has been executed in this access check. |
 
 ## Ordered remaining work
@@ -140,13 +174,15 @@ The user is not being assigned coding, dependency mapping, or integration work.
    quote/forms check. Item 4 must record the approved Forms connection/transport
    before a credential-bearing request. Key Vault approval is still pending.
 
-4. [ ] **Confirm the first-run business data and execution permissions.**
+4. [ ] **Confirm usable first-run inputs and execution permissions.**
    **Active item.**
-   Resolve the specific outstanding inputs/expectations for the SFP reference
-   and first four SGS examples below. Confirm date applicability, expected
-   premium/forms where promised, and rerun/cleanup rules. CLEQ AL currently
+   Resolve the operational inputs for the SFP reference and first four SGS
+   examples below. Confirm date applicability and rerun/cleanup rules, without
+   blocking on approval or updates to premium/forms baselines. CLEQ AL currently
    retains `values.effective_date = 03-01-2025`; do not silently replace it.
-   Exit: the first-run inputs and expectations are explicit and usable.
+   Exit: required execution inputs and permissions are explicit and usable.
+   Existing premium/forms comparisons remain available under the observation
+   policy above; their pass/fail outcomes are not this item's exit gate.
    Confirm the approved Forms service connection/transport; the current
    configured internal HTTP endpoint has only been checked anonymously.
    Actual transmission, binding, issuance, or payment requires separate
@@ -154,36 +190,44 @@ The user is not being assigned coding, dependency mapping, or integration work.
 
 5. [ ] **Prove the existing PnC SFP Alabama reference still works.**
    Rerun the original SFP Basic workflow, including the pending forms retest.
-   Verify the same quote identity, approved premium, genuine forms results,
-   and the existing availability-only transmission contract.
+   Verify the same quote identity, genuine forms retrieval and the existing
+   availability-only transmission contract. Run the original premium/forms
+   comparisons and preserve their actual outcomes; do not rebaseline here.
    Authenticated Forms API access for that real quote/session is a required
    part of this item, explicitly carried from item 3 by user approval. A
    reachable endpoint or a successful browser login does not satisfy it.
-   Exit: two consecutive authorized local passes with complete evidence.
+   Exit: two authorized local runs demonstrating the non-baseline workflow
+   behavior with complete evidence. Carry baseline comparison discrepancies
+   explicitly to item 15; do not claim those failed cases as business-verified.
 
 6. [ ] **Implement and prove original ExpertQuote BOP smoke, Alabama.**
    Adapt `03_EQ_BOP_Smoke_Test.feature` through thin scoped bindings and reused
    PnC/shared page behavior. Apply and assert the account/address/proposal
    inputs; capture, close, retrieve, and verify the same quote.
-   Exit: two consecutive local passes with conforming selectors, the rich
-   report, and canonical evidence. Other rows remain individually gated.
+   Exit: two local runs demonstrating non-baseline behavior with conforming
+   selectors, the rich report and truthful canonical evidence. Baseline
+   observations follow the temporary policy. Other rows remain individually gated.
 
 7. [ ] **Implement and prove original Commercial DuckCreek BAP smoke, Alabama.**
    Adapt `012_BAP_Smoke_Test.feature`. Apply intended BAP inputs, verify the
    promised business result, and prove actual frame scope through actions and
    locator evidence.
-   Exit: two consecutive authorized local passes with complete evidence.
+   Exit: two authorized local runs demonstrating non-baseline behavior with
+   complete evidence and separately recorded baseline comparison outcomes.
 
 8. [ ] **Implement and prove original Personal DuckCreek Auto smoke, AZ ANG.**
    Adapt `211_Smoke_Test_Auto.feature`. Verify state/company/auto inputs and
    actual quote/proposal identity using the correct controls and frame.
-   Exit: two consecutive authorized local passes with complete evidence.
+   Exit: two authorized local runs demonstrating non-baseline behavior with
+   complete evidence and separately recorded baseline comparison outcomes.
 
 9. [ ] **Prove the corrected Personal DuckCreek rate-filing workflow.**
    Start with one approved example from `181_Auto_Rate_Filings_Policy_1_NB`.
-   Correct state/marital/driver targeting, verify actual premium, and prove
-   durable transaction identity/status when the operation is authorized.
-   Exit: two consecutive passes for all promised, authorized outcomes.
+   Correct state/marital/driver targeting, capture the actual premium and run
+   its comparison, and prove durable transaction identity/status when the
+   operation is authorized.
+   Exit: two runs demonstrating all promised, authorized non-baseline outcomes,
+   with premium/forms comparison results preserved rather than rebaselined.
    An unauthorized required transaction remains a blocker, not a substitute
    transmit-button assertion or a passing case.
 
@@ -199,14 +243,17 @@ The user is not being assigned coding, dependency mapping, or integration work.
     effective-date distinctions, genuine premium comparisons, and authorized
     transaction outcomes.
     Exit: each workflow has a proven initial example and every remaining
-    required input/expectation has an explicit readiness or blocker record.
+    required input has an explicit readiness or blocker record. Baseline
+    expectation changes remain deferred, with actual comparison results retained.
 
 12. [ ] **Complete the full ExpertQuote workflows.**
     Adapt CLEQ 02, 05, and 06: full BOP, SFP Basic, and SFP Country Estate.
-    Reuse correct PnC SFP logic and replace source placeholder premium checks.
+    Reuse correct PnC SFP validation logic rather than source placeholder
+    premium checks; do not invent or tune expectations during this phase.
     Preserve the separate disposition of the 34 source-commented examples.
-    Exit: all promised business steps and outcomes are implemented and proven
-    for initial examples, with remaining rows tracked individually.
+    Exit: all promised steps and comparison logic are implemented; initial
+    examples demonstrate non-baseline behavior and record real comparison
+    outcomes, with remaining rows tracked individually.
 
 13. [ ] **Complete Commercial DuckCreek BAP/package/liability workflows.**
     Adapt CLDC 001-006: BAP basic/expanded, CPP, CP, GL, and OCP. Correct pricing
@@ -220,6 +267,8 @@ The user is not being assigned coding, dependency mapping, or integration work.
     Together, items 6-14 cover all 32 source features.
 
 15. [ ] **Qualify the complete case matrix and reporting parity.**
+    After the user's test/data refresh, approve the applicable premium/forms
+    baselines and resolve the comparison results deferred from items 5-14.
     Reconcile all 1,115 active cases. Execute remaining unverified rows in
     controlled batches and rerun cases affected by later shared changes.
     Validate required data/checksums, intended inputs, business assertions,

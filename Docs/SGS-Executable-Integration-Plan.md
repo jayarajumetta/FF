@@ -8,6 +8,16 @@ The completion checklist is the current execution-order and progress record.
 The technical milestones below remain the scope/reference, not authorization
 to run multiple implementation workstreams simultaneously.
 
+The user clarified on 2026-09-22 that premium/forms validation must keep using
+the original logic and record genuine outcomes, but baseline comparison
+pass/fail must not gate current integration progress. Baseline approval,
+refresh and final baseline-dependent acceptance are deferred until the user's
+test/data refresh. This changes engineering checkpoint acceptance, not runner
+truth: do not disable assertions, relabel failures, tune expectations, or mark
+affected cases fully verified. Authentication, runtime, required-input, API
+and evidence defects remain blocking. The completion checklist defines this
+temporary exception to the earlier all-pass milestone language below.
+
 The user explicitly rejected a pilot approach during the matrix review.
 Deliver the full approved scope incrementally; do not introduce a pilot,
 proof-of-concept, pilot-week reassessment, or pilot go/no-go gate. The draft
@@ -477,8 +487,10 @@ actual ExpertQuote QA, CLAS QA and QA Express logins succeeded without business
 operations. Key Vault read approval is still pending. Forms endpoint
 reachability is confirmed, but the user explicitly retained authenticated
 Forms API verification as an item 5 requirement; it has not passed.
-Item 4 is active: confirm first-run business inputs, expectations and execution
-permissions, including the approved Forms connection/transport. M1 source
+Item 4 is active: confirm usable first-run inputs and execution permissions,
+including the approved Forms connection/transport, without holding on premium
+or forms baseline approval. Original comparisons remain active and their real
+outcomes are recorded. M1 source
 accounting must not be restarted. No pilot gate or parallel workstream is added.
 
 ## Appendix A - Complete latest-source feature/binding coverage
