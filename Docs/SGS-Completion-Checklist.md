@@ -98,7 +98,7 @@ The user is not being assigned coding, dependency mapping, or integration work.
 | Parent framework suite | Current SFP evidence-fix gate: 441 passed, 0 failed, 0 skipped; 150 targeted checks passed. The earlier item 2 gate also passed 54 CI contract assertions and reconciled 45 real gated SKIP results with their scenario reports. |
 | Live SGS verification | No imported SGS case has been live-verified. Discovery, unit tests, and synthetic report previews do not count. |
 | Premium/forms baselines | Original validation stays active and real results stay visible. Baseline approval/refresh and baseline-dependent acceptance are deferred until the user's test/data refresh; baseline mismatches do not gate current integration progress. |
-| Work/process state | Items 1-5 are complete for engineering progress under the approved boundaries. Both SFP qualification runs have complete evidence and reconciled FAIL results solely for the explicitly deferred Forms expectations. Item 6 is next: original ExpertQuote BOP Alabama, beginning with its just-in-time input review. No SGS case is business-verified; Key Vault approval remains pending. |
+| Work/process state | Items 1-5 are complete for engineering progress under the approved boundaries. Both SFP qualification runs have complete evidence and reconciled FAIL results solely for the explicitly deferred Forms expectations. Item 6 is active: original ExpertQuote BOP Alabama; its execution-date rule is explicitly approved, while runtime adaptation and live qualification remain outstanding. No SGS case is business-verified; Key Vault approval remains pending. |
 
 ## Ordered remaining work
 
@@ -255,12 +255,23 @@ The user is not being assigned coding, dependency mapping, or integration work.
    checksums, runner failure gates, SGS readiness entries or pipelines changed.
 
 6. [ ] **Implement and prove original ExpertQuote BOP smoke, Alabama.**
+   **Active item.**
    Adapt `03_EQ_BOP_Smoke_Test.feature` through thin scoped bindings and reused
    PnC/shared page behavior. Apply and assert the account/address/proposal
    inputs; capture, close, retrieve, and verify the same quote.
    Exit: two local runs demonstrating non-baseline behavior with conforming
    selectors, the rich report and truthful canonical evidence. Baseline
    observations follow the temporary policy. Other rows remain individually gated.
+   Input decision approved 2026-09-22: use the execution date for Alabama
+   case `SGS-CLEQ-03-EQ-BOP-SMOKE-TEST:AL-3B2D76491867`, as an explicit recorded
+   runtime override of `values.effective_date`. Freeze it at scenario data
+   load through the existing data resolver; do not silently change dates
+   during a run. The imported value `03-01-2025`, source profile, external
+   overrides and their reviewed checksums remain unchanged. This approval
+   applies to this workflow/example, not all later rate-filing dates.
+   The existing source binding actively enters that value; the external
+   override file is empty. No SGS case has been enabled or live-executed
+   as a result of this input decision.
 
 7. [ ] **Implement and prove original Commercial DuckCreek BAP smoke, Alabama.**
    Adapt `012_BAP_Smoke_Test.feature`. Apply intended BAP inputs, verify the
