@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using PnCTestAutomation.Artifacts;
 using PnCTestAutomation.BusinessOutcomes;
@@ -203,12 +204,6 @@ namespace PnCTestAutomation.Services
                         "DuckCreek returned invalid forms XML.");
                 }
 
-                await _businessOutcomes.VerifyFormsContractAsync(
-                    baseline,
-                    metadata,
-                    manuscript,
-                    printJob);
-
                 var summary = _validationService.Validate(
                     baseline.Entries.ToList(),
                     actualForms,
@@ -217,6 +212,17 @@ namespace PnCTestAutomation.Services
                     request.QuoteId);
                 summary.ResponseMetadata = metadata;
                 summary.TestCaseName = $"{request.Lob}_{request.TestCase}";
+                ExceptionDispatchInfo? contractFailure = null;
+                try
+                {
+                    await _businessOutcomes.VerifyFormsContractAsync(
+                        baseline, metadata, manuscript, printJob);
+                }
+                catch (BusinessOutcomeException exception)
+                {
+                    summary.ContractFailures.Add(exception.Message);
+                    contractFailure = ExceptionDispatchInfo.Capture(exception);
+                }
 
                 FormsValidationService.PrintSummary(summary);
                 await WriteEvidenceAsync(summary);
@@ -224,6 +230,7 @@ namespace PnCTestAutomation.Services
                 _artifacts.RecordComponentOutcome(
                     "forms-validation",
                     summary.AllPassed);
+                contractFailure?.Throw();
                 if (!summary.AllPassed)
                 {
                     throw new FormsValidationException(

@@ -153,6 +153,20 @@ serialized frozen manifest, so a stale pre-teardown projection cannot reconcile
 with a later failed manifest. The HTML also carries that fingerprint/status;
 a stale or corrupt individual HTML report is not linked.
 
+The scenario may know sensitive values that the later CLI does not. For display
+identities (`TestFullName`, automation, run, scenario and profile IDs), the CLI
+accepts only additional `[REDACTED]` spans over the reconstructed value, not
+arbitrary renamed text. Raw identity hashes, manifest fingerprints, outcomes,
+timestamps and evidence still have to reconcile exactly. Unmatched executions
+use a neutral hash label rather than republishing the raw runner identity.
+The raw-result HTML preview encodes the already-redacted projection as JSON;
+it does not run text/URL redaction over serialized JSON escape sequences.
+
+`QuoteHandoff` is the existing artifact owner's one marker-only evidence kind.
+An actual manifest-listed handoff marker satisfies that requirement without a
+file or fabricated download link. Missing markers still fail; markers cannot
+substitute for required screenshots, video or other file evidence.
+
 ## Wired scenario lifecycle
 
 `Startup` registers one scoped recorder and `ScenarioReportPrivacy` alongside
@@ -170,6 +184,16 @@ videos on passing as well as failing runs. Transient, unowned popup tabs remain
 in the trace/diagnostics but are not required to produce their own video clip.
 Final screenshots precede browser shutdown; videos are registered only after
 context closure. API-only and preflight-skipped runs do not invent browser evidence.
+
+When usable Forms XML and a baseline are available, a failed forms
+profile/response-contract assertion must not discard the actual row comparison.
+`FormsOrchestrationService` records that assertion in
+`FormsValidationSummary.ContractFailures`, writes the real CSV/HTML/Markdown/TRX
+evidence, then rethrows the original `BusinessOutcomeException`. HTML, Markdown,
+console output and Forms TRX show the contract failure even if every individual
+form row passed. Row counts stay unchanged; a contract error is not an invented
+extra form. Invalid API responses, missing baselines and missing required exports
+remain fatal, and no expected status, checksum or baseline is changed.
 
 Failed steps, deferred verifications, sticky required components, capture/log
 failures, teardown failures and required DataPool failures affect finalization.

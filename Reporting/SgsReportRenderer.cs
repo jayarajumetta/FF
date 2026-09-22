@@ -324,7 +324,7 @@ internal sealed class SgsHtmlRenderer
               </div>
               <div class="evidence-pane active" data-evidence-pane="screenshots">{{gallery}}</div>
               <div class="evidence-pane" data-evidence-pane="execution-log">{{logHtml}}</div>
-              <div class="evidence-pane" data-evidence-pane="raw-result"><details class="raw-json" open><summary>Redacted scenario-result.json</summary><pre>{{E(rawText)}}</pre></details></div>
+              <div class="evidence-pane" data-evidence-pane="raw-result"><details class="raw-json" open><summary>Redacted scenario-result.json</summary><pre>{{A(rawText)}}</pre></details></div>
             </section>
             """;
     }
@@ -402,7 +402,8 @@ internal sealed class SgsHtmlRenderer
             duplicateCopies = report.DuplicateCopies.Select(_redactor.Text),
             issues = report.Issues.Select(item => item with
             {
-                Message = _redactor.Text(item.Message), TestIdentity = _redactor.Text(item.TestIdentity)
+                Message = _redactor.Text(item.Message),
+                TestIdentity = _redactor.Text(item.TestIdentity)
             })
         });
     }

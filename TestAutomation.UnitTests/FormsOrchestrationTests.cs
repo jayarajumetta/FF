@@ -1,3 +1,4 @@
+using System.Xml.Linq;
 using NUnit.Framework;
 using PnCTestAutomation.Artifacts;
 using PnCTestAutomation.BusinessOutcomes;
@@ -200,6 +201,46 @@ public class FormsOrchestrationTests
             async () => await service.ValidateAsync(Request()));
 
         Assert.That(exception!.Outcome, Is.EqualTo("forms contract"));
+    }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    public void MissingReturnStatusKeepsRowComparisonEvidenceAndFailingContractOutcome(bool rowsPass)
+    {
+        var artifacts = CreateArtifacts("contract-evidence");
+        var summary = rowsPass ? PassingSummary() : FailingSummary();
+        var service = CreateService(
+            artifacts, new FakeValidationService(summary),
+            ValidXml().Replace(" returnSuccessStatus=\"1\"", "", StringComparison.Ordinal),
+            new FormsEvidenceWriter(new FormsValidationService(new DuckCreekFormsConfig())));
+
+        var failure = Assert.ThrowsAsync<BusinessOutcomeException>(async () =>
+            await service.ValidateAsync(Request()));
+        var manifest = artifacts.Complete(authoritativeScenarioFailed: true);
+        string EvidencePath(ArtifactKind kind) => Path.Combine(artifacts.ScenarioRoot,
+            manifest.Artifacts.Single(item => item.Kind == kind).RelativePath!);
+        var xml = XDocument.Load(EvidencePath(ArtifactKind.FormsTrx));
+        XNamespace ns = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010";
+        Assert.Multiple(() =>
+        {
+            Assert.That(failure!.Outcome, Is.EqualTo("forms contract"));
+            Assert.That(summary.ContractFailures, Has.Count.EqualTo(1));
+            Assert.That(summary.AllPassed, Is.False);
+            Assert.That(summary.Results.Single().Result, Is.EqualTo(rowsPass ? "PASS" : "FAIL"));
+            Assert.That(summary.TotalForms, Is.EqualTo(1), "A contract error must not invent another form.");
+            Assert.That(manifest.EvidenceErrors, Is.Empty);
+            Assert.That(manifest.Outcome, Is.EqualTo(ArtifactOutcome.Failed));
+            Assert.That(manifest.ComponentOutcomes["business-forms-contract"], Is.False);
+            Assert.That(manifest.ComponentOutcomes["forms-validation"], Is.False);
+            Assert.That(File.ReadAllText(EvidencePath(ArtifactKind.FormsCsv)), Does.Contain("FORM-A"));
+            Assert.That(File.ReadAllText(EvidencePath(ArtifactKind.FormsHtml)),
+                Does.Contain("FAILURES DETECTED").And.Contain("Forms contract failures"));
+            Assert.That(File.ReadAllText(EvidencePath(ArtifactKind.FormsMarkdown)),
+                Does.Contain("FAILURES DETECTED").And.Contain("Forms contract failures"));
+            Assert.That(xml.Descendants(ns + "UnitTestResult").Single().Attribute("outcome")!.Value, Is.EqualTo("Failed"));
+            Assert.That(xml.Descendants(ns + "Counters").Single().Attribute("failed")!.Value, Is.EqualTo("1"));
+            Assert.That(xml.Descendants(ns + "ErrorInfo").Single().Value, Does.Contain("Forms contract"));
+        });
     }
 
     [Test]

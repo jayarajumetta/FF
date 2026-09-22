@@ -94,6 +94,121 @@ public sealed class SgsReportingTests
         Assert.That(result.ExitCode, Is.EqualTo(1));
     }
 
+    [Test]
+    public void ConsolidationPreservesScenarioOnlyIdentityRedactionAndRawIdentityCorrelation()
+    {
+        const string identity = "QuoteFor(\"PrivateCustomer\",\"111 Private Lane\")";
+        var fixture = CreateScenario(ArtifactOutcome.Passed, identity: identity);
+        fixture = fixture with
+        {
+            Manifest = fixture.Manifest with
+            {
+                RunId = "run-PrivateCustomer",
+                ScenarioId = "scenario-PrivateCustomer",
+                AutomationId = "SGS-UNIT:PrivateCustomer",
+                ProfileName = "profile-PrivateCustomer"
+            }
+        };
+        File.WriteAllText(Path.Combine(fixture.Directory, "manifest.json"), ReportJson.Serialize(fixture.Manifest));
+        ScenarioReportWriter.Write(fixture.Directory, fixture.Manifest, fixture.Metadata,
+            new ReportRedactor(["PrivateCustomer", "111 Private Lane"]));
+
+        var result = Aggregate((identity, "Passed"));
+        var projection = result.Report.Tests.Single().Attempts.Single().Projection;
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ExitCode, Is.Zero);
+            Assert.That(result.Report.Issues, Is.Empty);
+            Assert.That(result.Report.Tests.Single().TestIdentity, Is.EqualTo(projection.TestFullName));
+            Assert.That(projection.TestIdentityHash, Is.EqualTo(ScenarioReportProjector.IdentityHash(identity)));
+            Assert.That(projection.ManifestFingerprint,
+                Is.EqualTo(ScenarioReportProjector.ManifestFingerprint(fixture.Manifest)));
+            Assert.That(projection.AutomationId, Is.EqualTo("SGS-UNIT:[REDACTED]"));
+            Assert.That(projection.TestFullName, Is.EqualTo("QuoteFor(\"[REDACTED]\",\"[REDACTED]\")"));
+            foreach (var name in new[] { "report.html", "log.html", "output.xml", "summary.json" })
+                Assert.That(File.ReadAllText(Path.Combine(_root, "consolidated", name)),
+                    Does.Not.Contain("PrivateCustomer").And.Not.Contain("111 Private Lane"));
+        });
+    }
+
+    [TestCase("different-case")]
+    [TestCase("case-1[REDACTED]invented-suffix")]
+    public void DisplayIdentityCannotBeChangedIntoAnUnrelatedExecution(string displayIdentity)
+    {
+        var fixture = CreateScenario(ArtifactOutcome.Passed);
+        var path = ReportPaths.Resolve(fixture.Directory, ScenarioReportWriter.ResultRelativePath);
+        var saved = ReportJson.Deserialize<ScenarioReportProjection>(File.ReadAllText(path));
+        File.WriteAllText(path, ReportJson.Serialize(saved with { TestFullName = displayIdentity }));
+
+        var result = Aggregate(("case-1", "Passed"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ExitCode, Is.EqualTo(2));
+            Assert.That(result.Report.Issues.Any(issue => issue.Code == "projection-mismatch"), Is.True);
+            Assert.That(result.Report.Tests.Single().TestIdentity, Does.Not.Contain(displayIdentity));
+        });
+    }
+
+    [Test]
+    public void ScenarioOwnedQuoteHandoffMarkerSatisfiesTheCanonicalMarkerRequirement()
+    {
+        var owner = CreateOwner();
+        owner.Require(ArtifactKind.QuoteHandoff);
+        owner.RecordMarker(ArtifactKind.QuoteHandoff, "quote-captured");
+        owner.Complete(ArtifactOutcome.Passed, snapshot =>
+        {
+            var files = ScenarioReportWriter.Write(owner.ScenarioRoot, snapshot, OwnerMetadata());
+            Assert.That(files.Issues, Is.Empty);
+        });
+        var result = Aggregate(("owner-case", "Passed"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ExitCode, Is.Zero);
+            Assert.That(result.Report.Issues, Is.Empty);
+            Assert.That(result.Report.Tests.Single().Attempts.Single().Evidence.Files
+                .Any(file => file.Kind == nameof(ArtifactKind.QuoteHandoff)), Is.False);
+        });
+    }
+
+    [TestCase(ArtifactKind.FormsCsv)]
+    [TestCase(ArtifactKind.Video)]
+    public void MarkerCannotReplaceRequiredFileEvidence(ArtifactKind kind)
+    {
+        var fixture = CreateScenario(ArtifactOutcome.Passed, media: false);
+        fixture = fixture with
+        {
+            Manifest = fixture.Manifest with
+            {
+                RequiredEvidence = fixture.Manifest.RequiredEvidence.Append(kind).ToArray(),
+                Artifacts = fixture.Manifest.Artifacts.Append(
+                    new ArtifactRecord(kind, "invalid-file-marker", null, Started)).ToArray()
+            }
+        };
+        Save(fixture);
+        var result = Aggregate(("case-1", "Passed"));
+        Assert.That(result.Report.Issues.Any(issue =>
+            issue.Code == "required-evidence" && issue.Message.Contains(kind.ToString())), Is.True);
+        Assert.That(result.ExitCode, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void MissingQuoteHandoffCannotBeSynthesizedDuringConsolidation()
+    {
+        var fixture = CreateScenario(ArtifactOutcome.Passed);
+        fixture = fixture with
+        {
+            Manifest = fixture.Manifest with
+            {
+                RequiredEvidence = fixture.Manifest.RequiredEvidence.Append(ArtifactKind.QuoteHandoff).ToArray()
+            }
+        };
+        Save(fixture);
+        var result = Aggregate(("case-1", "Passed"));
+        Assert.That(result.Report.Issues.Any(issue =>
+            issue.Code == "required-evidence" && issue.Message.Contains(nameof(ArtifactKind.QuoteHandoff))), Is.True);
+        Assert.That(result.ExitCode, Is.EqualTo(2));
+    }
+
     [TestCase(ArtifactOutcome.Passed, "Passed", 0)]
     [TestCase(ArtifactOutcome.Failed, "Failed", 1)]
     [TestCase(ArtifactOutcome.Skipped, "NotExecuted", 1)]
@@ -668,6 +783,37 @@ public sealed class SgsReportingTests
         using var document = JsonDocument.Parse(json);
         Assert.That(document.RootElement.GetProperty("data").GetProperty("password").GetString(), Is.EqualTo(ReportRedactor.Mask));
         Assert.That(redactor.Text(json), Is.EqualTo(json));
+    }
+
+    [Test]
+    public void RawProjectionPreviewPreservesRedactedUrlAndNewlineValues()
+    {
+        var fixture = CreateScenario();
+        fixture = fixture with
+        {
+            Metadata = fixture.Metadata with
+            {
+                Diagnostics = [new ReportDiagnostic(Started, "browser", "warning",
+                    "Request failed https://example.test/path?token=private-value\n  at Client.Execute()")]
+            }
+        };
+        Save(fixture);
+        var result = Aggregate(("case-1", "Passed"));
+        var expected = ReportJson.Serialize(result.Report.Tests.Single().Attempts.Single().Projection);
+        foreach (var path in new[]
+        {
+            result.ReportPath, ReportPaths.Resolve(fixture.Directory, ScenarioReportWriter.ReportRelativePath)
+        })
+        {
+            var html = File.ReadAllText(path);
+            var match = System.Text.RegularExpressions.Regex.Match(html,
+                """<details class="raw-json"[^>]*>.*?<pre>(.*?)</pre>""",
+                System.Text.RegularExpressions.RegexOptions.Singleline);
+            Assert.That(match.Success, Is.True);
+            var json = System.Net.WebUtility.HtmlDecode(match.Groups[1].Value);
+            Assert.That(json, Is.EqualTo(expected));
+            Assert.That(json, Does.Not.Contain("private-value"));
+        }
     }
 
     [Test]

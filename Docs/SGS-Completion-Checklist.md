@@ -87,11 +87,11 @@ The user is not being assigned coding, dependency mapping, or integration work.
 | Coverage ledger and stable identities | Integrated; all 32 features, 1,115 active cases, and 34 source-commented cases are accounted for. |
 | Strict SGS data adapter | Integrated, including scoped Startup registration and the shared-state/quote-handoff composition test. |
 | Semantic controls and frame contracts | Integrated; typed captures, actual selection checks, frame-safe Material dropdowns, and explicit main/nested frame scopes have focused passing coverage. |
-| Reporting adaptation | Integrated: child `05644a9` picked as `37a9dbd`; actual-runner skip compatibility in `6f369fb`, lifecycle/DI/privacy in `d7e47c2`, package/runner/publication gates in `e9c89ec`. No duplicate lifecycle or SGS retry engine. |
-| Parent framework suite | Item 2 gate passed: 431 passed, 0 failed, 0 skipped; 54 CI contract assertions passed. Real gated Reqnroll execution reconciled 45 SKIP results with 45 scenario reports and no reporting issues. |
+| Reporting adaptation | Integrated: child `05644a9` picked as `37a9dbd`; actual-runner skip compatibility in `6f369fb`, lifecycle/DI/privacy in `d7e47c2`, package/runner/publication gates in `e9c89ec`. Item 5 now preserves Forms comparison evidence after a contract failure and corrects live-discovered marker/redaction/raw-JSON issues. No duplicate lifecycle or SGS retry engine. |
+| Parent framework suite | Current SFP evidence-fix gate: 441 passed, 0 failed, 0 skipped; 150 targeted checks passed. The earlier item 2 gate also passed 54 CI contract assertions and reconciled 45 real gated SKIP results with their scenario reports. |
 | Live SGS verification | No imported SGS case has been live-verified. Discovery, unit tests, and synthetic report previews do not count. |
 | Premium/forms baselines | Original validation stays active and real results stay visible. Baseline approval/refresh and baseline-dependent acceptance are deferred until the user's test/data refresh; baseline mismatches do not gate current integration progress. |
-| Work/process state | Items 1-3 are complete under the explicitly approved local-access boundary; item 4 is active. ExpertQuote QA, CLAS QA and QA Express sign-ins are verified. Key Vault approval remains pending; authenticated Forms API verification is an explicit item 5 requirement, not a passed check. No business workflow has been executed in this access check. |
+| Work/process state | Items 1-4 are complete under the approved local-access and just-in-time SGS-input boundaries. Item 5 is active: the latest real SFP run has complete evidence and a reconciled FAIL, not a reporting error. Quote identity, premium, transmit availability and authenticated Forms retrieval passed. Forms comparisons and the response-status expectation remain failed; the latter needs an explicit deferral/blocker decision. Key Vault approval remains pending. |
 
 ## Ordered remaining work
 
@@ -174,21 +174,29 @@ The user is not being assigned coding, dependency mapping, or integration work.
    quote/forms check. Item 4 must record the approved Forms connection/transport
    before a credential-bearing request. Key Vault approval is still pending.
 
-4. [ ] **Confirm usable first-run inputs and execution permissions.**
-   **Active item.**
-   Resolve the operational inputs for the SFP reference and first four SGS
-   examples below. Confirm date applicability and rerun/cleanup rules, without
-   blocking on approval or updates to premium/forms baselines. CLEQ AL currently
-   retains `values.effective_date = 03-01-2025`; do not silently replace it.
+4. [x] **Confirm usable first-run inputs and execution permissions.**
+   Resolve the operational inputs for the SFP reference. By explicit user
+   approval, review SGS operational inputs just in time at each workflow item,
+   rather than blocking SFP on future SGS examples. Confirm date applicability
+   and rerun/cleanup rules without approving or updating premium/forms baselines.
+   CLEQ AL retains `values.effective_date = 03-01-2025`; do not silently replace it.
    Exit: required execution inputs and permissions are explicit and usable.
    Existing premium/forms comparisons remain available under the observation
    policy above; their pass/fail outcomes are not this item's exit gate.
-   Confirm the approved Forms service connection/transport; the current
-   configured internal HTTP endpoint has only been checked anonymously.
+   Completed 2026-09-22: after disclosure that HTTP does not provide TLS
+   protection for the service credentials, the user explicitly approved the
+   existing internal QA HTTP Forms connection. The user also approved proceeding
+   with SFP now and checking SGS inputs at each workflow step. The unchanged
+   SFP profile is valid through `2026-10-18T12:44:42.179Z`; all six required
+   credentials passed the explicit external-settings preflight. An earlier
+   launch stopped before execution when that external file was blank; once
+   the user's Development copy was populated, the same loader succeeded.
+   No credential fallback, IDE modification or Development change was made.
    Actual transmission, binding, issuance, or payment requires separate
    explicit authorization; quote-only authorization does not imply it.
 
 5. [ ] **Prove the existing PnC SFP Alabama reference still works.**
+   **Active item; response-status expectation decision pending.**
    Rerun the original SFP Basic workflow, including the pending forms retest.
    Verify the same quote identity, genuine forms retrieval and the existing
    availability-only transmission contract. Run the original premium/forms
@@ -199,6 +207,36 @@ The user is not being assigned coding, dependency mapping, or integration work.
    Exit: two authorized local runs demonstrating the non-baseline workflow
    behavior with complete evidence. Carry baseline comparison discrepancies
    explicitly to item 15; do not claim those failed cases as business-verified.
+   Current evidence under `files\resume-validation` in this integration session:
+   `checklist-05-sfp-al-02` is the first real execution. It reached the Forms API
+   but the response-contract failure prevented required comparison exports.
+   Its original TRX/manifest/projection remain unchanged; replay into
+   `report-after-evidence-fix-final` removes false projection/handoff errors
+   while correctly retaining the four genuinely missing Forms exports.
+   `checklist-05-sfp-al-03` is the new non-retried qualification run:
+   one failed case, duration `00:07:19.8675880`, 62 registered artifacts,
+   41 unique screenshots, all required Forms XML/CSV/HTML/Markdown/TRX,
+   zero manifest evidence errors and zero consolidation issues.
+   Quote identity at pricing and Forms session, USD 1540.00 premium, and
+   transmission availability passed. No policy was transmitted. The
+   credential-bearing Forms request returned HTTP 200 and 30 actual forms;
+   the credential source file remained unchanged.
+   The row comparison reports 29 passes and four failures across 33 compared
+   forms (three expected mandatory forms absent and one unexpected mandatory
+   form). These are deferred baseline observations, not integration blockers.
+   Separately, the unchanged profile requires `returnSuccessStatus="1"`, but
+   the response has `status="success"` and omits `returnSuccessStatus`.
+   Manuscript, print job, baseline version/checksum and security requirements
+   matched. This response-status expectation has not been declared equivalent,
+   rebaselined or passed; obtain an explicit decision on carrying it with the
+   deferred Forms expectations before advancing. One more complete-evidence
+   demonstration is still required; the incomplete first run does not satisfy
+   the two-run exit gate.
+   Regression evidence: `checklist-05-evidence-fix-targeted.trx` (150/0/0),
+   `checklist-05-evidence-fix-full-suite.trx` (441/0/0),
+   `checklist-05-evidence-format-final.log`, and
+   `checklist-05-evidence-replay-final.log`. No expected values, profile
+   checksums, runner failure gates, SGS readiness entries or pipelines changed.
 
 6. [ ] **Implement and prove original ExpertQuote BOP smoke, Alabama.**
    Adapt `03_EQ_BOP_Smoke_Test.feature` through thin scoped bindings and reused
@@ -335,7 +373,7 @@ Selective component reuse is not permission to drop required business coverage.
 | Lifecycle, API/authentication, DataPool, quote handoffs (pages 2-3) | Existing shared implementations and regression tests are retained. Item 1 corrected the forms/finalization regression and restored a green framework baseline. Technical evidence does not itself constitute security or operational approval. | Items 1, 3, 5-15 |
 | Controls, locators, frames, data, thin bindings (pages 2-3) | Strict data and reusable control/frame foundations are integrated. This does not mean the SGS business bindings/pages or live control mappings have been adapted or accepted. | Items 4, 6-14 |
 | Business outcomes, forms, required inputs (pages 3-4) | The intended acceptance matches the checklist: actual applied inputs and promised outcomes, QA-owned expectations, and explicit failures. Add structured redacted applied-input evidence and controlled known-pass/known-fail demonstrations to the workflow evidence, not just navigation screenshots. | Items 2, 4-15 |
-| Reporting, deferred verification, diagnostics, retention (pages 3-4) | Reporting code is saved separately and has focused passing checks, but lifecycle integration remains unfinished. Deferred checks must fail the final result, not merely appear in HTML. The current flat seven-day cleanup is not evidence of the matrix's tiered-retention requirement; record the Security/DevOps policy decision and validate approved behavior. | Items 2, 15-17 |
+| Reporting, deferred verification, diagnostics, retention (pages 3-4) | Lifecycle/report integration is complete, and the latest actual SFP failure reconciles with complete evidence. Deferred checks still fail the final result, not merely appear in HTML. The current flat seven-day cleanup is not evidence of the matrix's tiered-retention requirement; record the Security/DevOps policy decision and validate approved behavior. | Items 2, 5, 15-17 |
 | Secret consumption and sensitive-data approval (pages 2-3) | Key Vault remains the intended protected source. While read approval is pending, the user explicitly authorized read-only import from the existing local appsettings file into process variables for local execution only. No secrets enter this branch/package, no automatic fallback is added, and no SGS credential provider replaces Ping. Security review/approval remains distinct from code completion. | Items 3, 4, 17 |
 | Coverage and component disposition (pages 3, 6) | The existing ledger accounts for all 32 features, 1,115 active cases, 34 source-commented examples, and 191 path-level dependency decisions. It is a technical traceability register, not a signed acceptance record. The document's separate claim of 53 omitted vendor branches has not been reconciled to a finding register/current source pin; it is not the same as the 34 commented examples. | Items 4, 6-15 |
 | Package, result integrity, CI/CD, Test Plans (pages 3-4) | The checklist intentionally completes local engineering/package qualification first. Formal operational acceptance still needs DevOps-owned combined execution, deliberate assertion-failure propagation, missing/malformed-result failure, and accurate real Test Plans results/attachments. Local dry runs cannot satisfy those final operational criteria. | Item 16 locally; separate later DevOps acceptance |

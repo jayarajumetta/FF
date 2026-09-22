@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace PnCTestAutomation.Models
@@ -73,10 +73,11 @@ namespace PnCTestAutomation.Models
         public int Info { get; set; }
         public int Issues { get; set; }
         public List<FormValidationResult> Results { get; set; } = new();
+        public List<string> ContractFailures { get; set; } = new();
         public FormsResponseMetadata ResponseMetadata { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.Now;
         public string TestCaseName { get; set; } = string.Empty;
-        public bool AllPassed => Failed == 0 && Issues == 0;
+        public bool AllPassed => Failed == 0 && Issues == 0 && ContractFailures.Count == 0;
 
         /// <summary>Human-readable label derived from TestCaseName (e.g. "SFP_CE" → "Country Estate").</summary>
         public string PolicyTypeLabel =>

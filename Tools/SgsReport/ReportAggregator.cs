@@ -66,11 +66,23 @@ public sealed class ReportAggregator
                     scenarioRoot, ScenarioReportWriter.ResultRelativePath, options.Limits.MaxInputJsonBytes);
                 var saved = ReportJson.Deserialize<ScenarioReportProjection>(projectionJson);
                 var projection = ScenarioReportProjector.Project(manifest, saved.ToMetadata(), _redactor);
-                var projectionMatches = JsonNode.DeepEquals(
+                var displayIdentity = Safe(saved.TestFullName);
+                var validDisplayIdentity = IsRedactedIdentity(projection.TestFullName, displayIdentity);
+                projection = projection with
+                {
+                    RunId = RedactedDisplay(projection.RunId, saved.RunId),
+                    ScenarioId = RedactedDisplay(projection.ScenarioId, saved.ScenarioId),
+                    AutomationId = RedactedDisplay(projection.AutomationId, saved.AutomationId),
+                    ProfileName = RedactedDisplay(projection.ProfileName, saved.ProfileName),
+                    TestFullName = validDisplayIdentity ? displayIdentity : projection.TestFullName
+                };
+                var projectionMatches = validDisplayIdentity && JsonNode.DeepEquals(
                     JsonNode.Parse(projectionJson), JsonNode.Parse(ReportJson.Serialize(projection)));
+                if (!validDisplayIdentity)
+                    projection = projection with { TestFullName = $"Execution {projection.TestIdentityHash[..12]}" };
                 if (!projectionMatches)
                     issues.Add(new ReportIssue("projection-mismatch",
-                        $"Scenario projection does not match its finalized manifest: {Safe(source)}.", Safe(manifest.TestIdentity)));
+                        $"Scenario projection does not match its finalized manifest: {Safe(source)}.", projection.TestFullName));
 
                 var duplicate = candidates.FirstOrDefault(item =>
                     item.Projection.ManifestFingerprint == projection.ManifestFingerprint);
@@ -113,7 +125,7 @@ public sealed class ReportAggregator
             var hash = ScenarioReportProjector.IdentityHash(result.TestIdentity);
             var matches = candidates.Where(item => item.Projection.TestIdentityHash == hash)
                 .OrderBy(item => item.Projection.AttemptNumber).ToArray();
-            var identity = Safe(result.TestIdentity);
+            var identity = matches.LastOrDefault()?.Projection.TestFullName ?? $"Unmatched execution {hash[..12]}";
             if (matches.Length == 0)
                 issues.Add(new ReportIssue("missing-scenario", "Canonical execution has no finalized manifest/report projection.", identity));
             else
@@ -208,7 +220,7 @@ public sealed class ReportAggregator
     private void Reconcile(CanonicalReportResult canonical, Candidate[] candidates,
         ImmutableArray<ReportIssue>.Builder issues)
     {
-        var identity = Safe(canonical.TestIdentity);
+        var identity = candidates[^1].Projection.TestFullName;
         if (candidates.Select(item => item.Manifest.RunId).Distinct(StringComparer.Ordinal).Count() != 1 ||
             candidates.Select(item => item.Projection.ExecutionId).Distinct(StringComparer.Ordinal).Count() != 1)
             issues.Add(new ReportIssue("ambiguous-execution", "Scenario evidence mixes separate runs or execution groups.", identity));
@@ -239,6 +251,32 @@ public sealed class ReportAggregator
         var stepError = projection?.Steps.LastOrDefault(item => item.Status == ReportStatus.Fail)?.Error;
         return Safe(new[] { diagnostic, stepError }.FirstOrDefault(value => !string.IsNullOrWhiteSpace(value))
             ?? "Canonical execution did not pass; no scenario-redacted failure detail was recorded.");
+    }
+
+    private static bool IsRedactedIdentity(string canonical, string display)
+    {
+        // The scenario knows PII unavailable to the later CLI. Only additional masking is permitted.
+        var parts = display.Split(ReportRedactor.Mask, StringSplitOptions.None);
+        if (parts.Length == 1)
+            return canonical.Equals(display, StringComparison.Ordinal);
+        if (!canonical.StartsWith(parts[0], StringComparison.Ordinal))
+            return false;
+        var offset = parts[0].Length;
+        foreach (var part in parts.Skip(1).SkipLast(1))
+        {
+            var next = canonical.IndexOf(part, offset, StringComparison.Ordinal);
+            if (next < 0)
+                return false;
+            offset = next + part.Length;
+        }
+        return canonical.Length - offset >= parts[^1].Length &&
+            canonical.EndsWith(parts[^1], StringComparison.Ordinal);
+    }
+
+    private string RedactedDisplay(string canonical, string saved)
+    {
+        var display = Safe(saved);
+        return IsRedactedIdentity(canonical, display) ? display : canonical;
     }
 
     private static bool SameEvidence(string first, string second, ArtifactManifest manifest)

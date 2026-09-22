@@ -596,6 +596,8 @@ namespace PnCTestAutomation.Services
                     Console.WriteLine($"    [INFO] {i.FormName} — {i.Message}");
             }
 
+            foreach (var failure in summary.ContractFailures)
+                Console.WriteLine($"  [FAIL] Forms contract: {failure}");
             if (summary.AllPassed)
                 Console.WriteLine("\n  All forms validated successfully.");
 

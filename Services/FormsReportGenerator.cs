@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -62,8 +62,9 @@ namespace PnCTestAutomation.Services
             var totalInfo = summaries.Sum(s => s.Info);
             var totalIssue = summaries.Sum(s => s.Issues);
             var totalForms = summaries.Sum(s => s.TotalForms);
-            var overallStatus = totalFail == 0 && totalIssue == 0 ? "ALL PASSED" : "FAILURES DETECTED";
-            var bannerClass = totalFail == 0 && totalIssue == 0 ? "banner-pass" : "banner-fail";
+            var overallPassed = summaries.All(summary => summary.AllPassed);
+            var overallStatus = overallPassed ? "ALL PASSED" : "FAILURES DETECTED";
+            var bannerClass = overallPassed ? "banner-pass" : "banner-fail";
 
             sb.AppendLine($"<div class=\"banner {bannerClass}\">");
             sb.AppendLine($"  <span class=\"banner-status\">{overallStatus}</span>");
@@ -85,6 +86,14 @@ namespace PnCTestAutomation.Services
                 AppendCard(sb, "Info", summary.Info, "card-info");
                 AppendCard(sb, "Issue", summary.Issues, summary.Issues > 0 ? "card-issue" : "card-pass");
                 sb.AppendLine("</div>");
+
+                if (summary.ContractFailures.Count > 0)
+                {
+                    sb.AppendLine("<h3>Forms contract failures</h3><ul>");
+                    foreach (var failure in summary.ContractFailures)
+                        sb.AppendLine($"<li>{Enc(failure)}</li>");
+                    sb.AppendLine("</ul>");
+                }
 
                 // Metadata
                 if (summary.ResponseMetadata != null)
@@ -166,7 +175,7 @@ namespace PnCTestAutomation.Services
             FormsValidationSummary summary,
             string outputPath)
         {
-            var overall = summary.AllPassed ? "✅ ALL PASSED" : $"❌ {summary.Failed} FAILURE(S)";
+            var overall = summary.AllPassed ? "✅ ALL PASSED" : "❌ FAILURES DETECTED";
             var md = new StringBuilder();
             md.AppendLine($"# Forms Validation — {summary.LOB} / {summary.State}");
             md.AppendLine();
@@ -180,6 +189,13 @@ namespace PnCTestAutomation.Services
             md.AppendLine("| Forms Checked | Pass | Fail | Info | Result |");
             md.AppendLine("|---:|---:|---:|---:|---|");
             md.AppendLine($"| {summary.TotalForms} | {summary.Passed} | {summary.Failed} | {summary.Info} | {overall} |");
+            if (summary.ContractFailures.Count > 0)
+            {
+                md.AppendLine();
+                md.AppendLine("## Forms contract failures");
+                foreach (var failure in summary.ContractFailures)
+                    md.AppendLine($"- {Enc(failure).Replace("\r", " ").Replace("\n", " ")}");
+            }
 
             var attention = summary.Results
                 .Where(r => r.Result == "FAIL" || r.Result == "INFO" || r.Result == "ISSUE")
@@ -225,7 +241,8 @@ namespace PnCTestAutomation.Services
             {
                 var failures = string.Join("\n", summary.Results
                     .Where(r => r.Result == "FAIL" || r.Result == "ISSUE")
-                    .Select(r => $"  {r.FormName}: {r.Message}"));
+                    .Select(r => $"  {r.FormName}: {r.Message}")
+                    .Concat(summary.ContractFailures.Select(message => $"  Forms contract: {message}")));
                 failureBlock = $@"
           <Output>
             <ErrorInfo>

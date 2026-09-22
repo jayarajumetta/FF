@@ -117,6 +117,9 @@ public sealed class ReportEvidenceReader
         {
             if (generatingScenarioDocuments && kind is "ScenarioReportHtml" or "ScenarioResultJson")
                 continue;
+            if (kind == nameof(ArtifactKind.QuoteHandoff) &&
+                projection.Artifacts.Any(item => item.Kind == kind && item.RelativePath == null))
+                continue;
             if (!files.Any(item => item.Kind == kind))
                 AddIssue("required-evidence", $"Missing required evidence: {kind}.");
         }
