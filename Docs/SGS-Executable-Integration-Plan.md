@@ -1,6 +1,19 @@
 # SGS executable integration plan
 
-Status: APPROVED - implementation resumed at the user's request on 2026-09-22.
+Status: approved technical scope and sequential order as of 2026-09-22.
+Use `Docs\SGS-Completion-Checklist.md` for the approved execution order,
+current progress, and the attached responsibility-matrix alignment.
+
+The completion checklist is the current execution-order and progress record.
+The technical milestones below remain the scope/reference, not authorization
+to run multiple implementation workstreams simultaneously.
+
+The user explicitly rejected a pilot approach during the matrix review.
+Deliver the full approved scope incrementally; do not introduce a pilot,
+proof-of-concept, pilot-week reassessment, or pilot go/no-go gate. The draft
+matrix's pilot recommendations are superseded for this implementation.
+Its ownership and evidence criteria inform delivery acceptance, with formal
+CI/CD/program sign-off tracked separately from the approved local-first work.
 
 ## Objective and authority
 
@@ -17,7 +30,7 @@ The user explicitly approved this plan and authorized implementation on
 Approval does not authorize production activity, transmission, binding,
 issuance, payment, pipeline rollout, a pull request, or a solution rename.
 
-## Implementation pause checkpoint
+## Historical September 18 pause checkpoint
 
 The user requested a safe pause on 2026-09-18 and explicitly resumed work on
 2026-09-22. The following historical checkpoint was preserved; implementation
@@ -43,10 +56,10 @@ At the pause, all three workstreams confirmed their commands completed:
 | Data adapter | API/ownership agreed; no source changes or implementation commit yet. |
 | Reporting | Four untracked draft files under `Reporting`: `ReportContracts.cs`, `ReportRedactor.cs`, `ScenarioReportProjector.cs`, and `ScenarioReportRecorder.cs`. Not yet validated or committed; do not treat them as a finished report implementation. |
 
-The saved workstreams have resumed. Continue the coverage ledger and shared
-artifact/finalization contracts, integrate tested data/reporting slices, then
-adapt the original ExpertQuote BOP smoke workflow. Preserve the existing
-solution and scenario lifecycle throughout.
+The workstreams resumed on September 22 and have since checkpointed for the
+user's sequential-work request. Current integrated/draft work and regression
+status are recorded in the completion checklist; the table above
+describes the historical September 18 pause only.
 
 ## Baselines and source freshness
 
@@ -169,19 +182,19 @@ copying every old example or redesigning DI.
 
 | Surface | Existing implementation to reuse | Required adaptation |
 |---|---|---|
-| Scenario lifecycle | `Hooks\TestHooks.cs`: `BeforeScenarioAsync`, `AfterStepAsync`, `AfterScenarioAsync`, `FinalizeRun` | Replace the blanket `SgsImported` ignore with explicit per-case readiness; add reporting to the existing lifecycle, not another hook class. |
-| State and DI | `Startup.ConfigureServices`, `Helpers\ScenarioContextData.cs`, `Context\PlaywrightContext.cs` | Attach one SGS data/buffer context to the existing scenario scope. Preserve scenario ownership and page availability at construction. |
+| Scenario lifecycle | `Hooks\TestHooks.cs`: `BeforeScenarioAsync`, `AfterStepAsync`, `AfterScenarioAsync`, `FinalizeRun` | Explicit per-case SGS readiness is integrated. Add reporting to the existing lifecycle, not another hook class. |
+| State and DI | `Startup.ConfigureServices`, `Helpers\ScenarioContextData.cs`, `Context\PlaywrightContext.cs` | Scenario-owned `SgsData` and scoped adapter registration are integrated. Wire business preflight/bindings without changing ownership or resolving pages before initialization. |
 | Shared business pages | `StepDefinitions\SharedSteps\SharedEQSteps.cs`, `Pages\ExpertQuotePages`, `Pages\ExpertQuotePages\SFP`, `Pages\ExpertQuotePages\PA` | Extract/reuse matching page actions; remediate only directly reused nonconforming inline locator logic. Do not assume EQ pages represent CLDC or PLDC pages. |
 | Controls | `Controls\ControlContracts.cs`, `ControlScopeResolver`, `SemanticControlActions`, `PlaywrightControlRuntime` | Pass the scenario's resolver and evidence sink into adapted pages. The default `BasePage(IPage)` creates controls without scenario evidence, so it is insufficient for required SGS locator evidence. |
-| Frames | `Controls\FrameScopeHints.cs`: `IFrameScopeHintProvider`, `FrameScopeHintMatcher` | Wire approved product catalogs into `PlaywrightControlRuntime`. Remove reliance on the deleted pilot catalog default. Verify CLEQ/PLDC scope as well as CLDC. |
-| Data resolution | `Helpers\RandomGenerators.ResolveRuntimeTokens`, typed models, `ScenarioContextData` | Implement one collision-safe, strict product-aware scenario-data loader; the pilot data engine was removed and there is no active SGS loader. |
+| Frames | `Controls\FrameScopeHints.cs`: `IFrameScopeHintProvider`, `FrameScopeHintMatcher` | Explicit main/nested scope contracts are integrated and the deleted catalog default is removed. Wire approved product catalogs into real workflows and verify CLEQ/PLDC scope as well as CLDC. |
+| Data resolution | `DataProfiles\SgsScenarioData`, `Helpers\RandomGenerators.ResolveRuntimeTokens`, typed models, `ScenarioContextData` | The strict, checksummed, collision-safe adapter is integrated. Business workflows still must select their exact profiles and validate consumed inputs before mutations. |
 | Business outcomes | `BusinessOutcomes\BusinessOutcomeProfiles.cs`, `IBusinessOutcomeVerifier` | Generalize the SFP-only hook/profile selection to workflow-declared assertions. Support state, company, variant, and effective-date distinctions without weakening SFP validation or inventing irrelevant premium/forms requirements for quote-only smoke cases. |
 | Quote handoff | `QuoteHandoffs\QuoteHandoff.cs`: `IQuoteHandoff`, `ScenarioQuoteHandoff`, `FileQuoteHandoffStore` | Use scenario state for close/reopen/search; no shared quote text file. Cross-process sharing only through the qualified envelope. |
 | Forms | `IFormsOrchestrationService`, `DuckCreekFormsClient`, `FormsEvidenceWriter`, `FormsReportGenerator` | Reuse the existing validation/report path when forms are promised; link its evidence into the unified report. |
 | Evidence/reporting | `Infrastructure\ArtifactContext.cs`: `IArtifactContext`, `IArtifactCaptureService`, `ArtifactManifest` | Adapt SGS rich HTML/report presentation and step records onto this owner; add required report/log artifacts and canonical outcome reconciliation. |
 | Product ownership | `Products\ProductModules.cs`: `IProductModule`, `ProductModuleRegistry` | Register actual SGS workflow families in the current assembly; no physical project split or new solution. |
-| Identity and discovery | `TestPlans\ScenarioAutomationIdentity.cs`, `Tools\CiTestInventory\Program.cs` | Add stable SGS case qualifiers; current state-only argument lookup does not cover SGS `stateCode`/`stateVariant` and can collide across company/effective-date variants. |
-| Inventory integrity | `SgsFeatureInventoryTests`, `Resources\Contracts\sgs-*-inventory.json`, `.gitattributes` | Preserve immutable source hashes while tracking deliberate adaptations and case parity. Current tests require every imported feature to remain `NonRunnable`; change that model explicitly rather than disabling integrity checks. |
+| Identity and discovery | `TestPlans\ScenarioAutomationIdentity.cs`, `Tools\CiTestInventory\Program.cs` | Stable SGS argument/profile fingerprints are integrated while preserving SFP identities. Keep exact identity/discovery parity as real workflows are enabled. |
+| Inventory integrity | `SgsFeatureInventoryTests`, `SgsExecutionCatalogTests`, `Resources\Contracts\sgs-*-inventory.json`, `.gitattributes` | Source/import/adaptation hashes and per-case readiness are integrated. Update exact case readiness/evidence as work completes; do not disable checks or bulk-enable unfinished cases. |
 | Execution/package/ADO | `Scripts\CI\Invoke-PackageSuite.ps1`, `Invoke-TestShard.ps1`, `New-TestPackage.ps1`, `Pipelines\config\shards.json`, `Tools\TestPlanPublisher\CanonicalResultLoader.cs` | Extend existing selectors, inventory, package content, and result/evidence mapping. Do not create a parallel SGS pipeline or reporter that changes test outcomes. |
 
 ## Latest SGS findings that shape the implementation
@@ -378,16 +391,17 @@ Operational/ADO readiness is reported separately from local execution readiness.
 ## Work ownership and milestone handoff
 
 The integration session owns the shared contracts, branch, final verification,
-and IDE synchronization. After shared interfaces are stable, independent
-product/reporting adaptations may be delegated to isolated workstreams; they
-must not concurrently edit shared hooks, DI, configuration, or canonical result
-code. The integrator reviews and incorporates changes in dependency order.
+and IDE synchronization. One completion-checklist item is active at a time.
+Existing child work is preserved and resumed only for the current item; no
+parallel product/reporting implementation is started. Shared hooks, DI,
+configuration, and canonical result integration remain parent-owned.
 The user does not manage these workstreams.
 
 Each milestone handoff states the exact commit, source SHA, changed surfaces,
 cases implemented versus live-verified, evidence/report locations, regressions,
-and external blockers. Approval of this plan permits safe work to continue
-through its milestones; a new architectural decision or unauthorized business
+and external blockers. The ordered checklist is approved; proceed
+sequentially without requesting approval after every routine step. Pause for a
+blocker or scope change; a new architectural decision or unauthorized business
 mutation is escalated rather than assumed. No repeated requests for the user
 to write code or map dependencies are part of the workflow.
 
@@ -423,9 +437,10 @@ Git troubleshooting should be delegated to the user.
 | Architecture | Continue logical modules inside `TestAutomation.dll` | David's decision before physical project splitting, lifetime redesign, or a broader architecture change |
 | CI/ADO rollout | Preserve contracts and prepare complete packages/mappings/dry runs | Service connection/PAT, plan/suite/configuration IDs, agent access, scheduling/retention and rollout decisions |
 
-Do not freeze unrelated safe work while one external gate is unresolved.
-Blocked work remains visible and incomplete. Source receipt, code adaptation,
-local verification, and operational readiness are different statuses.
+Do not silently skip a blocked checklist item to start unrelated work.
+Report the dependency and pause; any proposed reorder must be explicit.
+Source receipt, code adaptation, local verification, and operational readiness
+remain different statuses.
 
 ## Approval boundary and completion criteria
 
@@ -448,9 +463,11 @@ Before calling the integration complete, require:
 - Clean, verified commit/checkout handoff with the established solution visible
   in Visual Studio.
 
-The next action after approval is M1/M2 implementation followed immediately by
-the first original CLEQ BOP smoke workflow, not another import-only milestone.
-Until explicit approval: stop after presenting this plan.
+Checklist item 1 is complete at implementation commit `d6670f1`, with all 283
+framework tests passing and no skips. The next action is item 2: integrate
+reporting into the existing lifecycle. M1 source accounting is already
+integrated and must not be restarted. The matrix review does not add a pilot
+gate or authorize parallel workstreams.
 
 ## Appendix A - Complete latest-source feature/binding coverage
 
