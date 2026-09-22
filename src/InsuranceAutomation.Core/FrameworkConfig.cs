@@ -4,6 +4,8 @@ namespace InsuranceAutomation.Core;
 
 public sealed class FrameworkConfig
 {
+    private const long MaxConfigBytes = 1 * 1024 * 1024;
+
     public BrowserOptions Browser { get; init; } = new();
     public ReportingOptions Reporting { get; init; } = new();
     public WaitOptions Waits { get; init; } = new();
@@ -11,16 +13,27 @@ public sealed class FrameworkConfig
 
     public static FrameworkConfig Load()
     {
-        var path = FindConfigFile();
+        var repositoryRoot = SafeFileAccess.FindRepositoryRoot();
+        var configRelativePath = Path.Combine("config", "framework.json");
+        var safePath = SafeFileAccess.ResolveExistingFileUnderRoot(configRelativePath, MaxConfigBytes, ".json");
+        var expectedPath = Path.GetFullPath(Path.Combine(repositoryRoot, configRelativePath));
+        if (!safePath.Equals(expectedPath, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("Resolved framework configuration path is invalid.");
+
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        var config = JsonSerializer.Deserialize<FrameworkConfig>(File.ReadAllText(path), options)
-                     ?? throw new InvalidOperationException($"Unable to parse framework configuration: {path}");
-        config.Validate(path);
+        using var configStream = File.Open(safePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        var config = JsonSerializer.Deserialize<FrameworkConfig>(configStream, options)
+                     ?? throw new InvalidOperationException($"Unable to parse framework configuration: {safePath}");
+        config.Validate(safePath);
+        config.Reporting.ResultsRoot = TestOutputPaths.ResolveResultsRoot(repositoryRoot, config.Reporting.ResultsRoot);
+        config.Reporting.ArtifactRoot = TestOutputPaths.ResolveArtifactRoot(config.Reporting.ResultsRoot, config.Reporting.ArtifactRoot);
         return config;
     }
 
     public void Validate(string path)
     {
+        if (Execution.RetryCount < 0 || Execution.RetryCount == int.MaxValue)
+            throw new InvalidOperationException($"execution.retryCount must be between 0 and {int.MaxValue - 1}. Config: {path}");
         if (Browser.ActionTimeoutMs <= 0 || Browser.NavigationTimeoutMs <= 0)
             throw new InvalidOperationException($"Browser timeouts must be positive. Config: {path}");
         if (Browser.HighlightDurationMs < 0)
@@ -37,25 +50,6 @@ public sealed class FrameworkConfig
 
 
 
-    }
-
-
-    private static string FindConfigFile()
-    {
-        var explicitPath = Environment.GetEnvironmentVariable("TEST_FRAMEWORK_CONFIG");
-        if (!string.IsNullOrWhiteSpace(explicitPath) && File.Exists(explicitPath)) return Path.GetFullPath(explicitPath);
-
-        foreach (var start in new[] { Directory.GetCurrentDirectory(), AppContext.BaseDirectory })
-        {
-            var current = new DirectoryInfo(start);
-            while (current is not null)
-            {
-                var candidate = Path.Combine(current.FullName, "config", "framework.json");
-                if (File.Exists(candidate)) return candidate;
-                current = current.Parent;
-            }
-        }
-        throw new FileNotFoundException("config/framework.json was not found. Set TEST_FRAMEWORK_CONFIG to an explicit path if needed.");
     }
 }
 
@@ -98,11 +92,15 @@ public sealed class WaitOptions
 
 public sealed class ReportingOptions
 {
+    public bool ExcludeVideos { get; init; } = true;
+    public bool ExcludePassedVideos { get; init; } = true;
+    public bool ShouldExcludeVideo(bool passed) => ExcludeVideos || (ExcludePassedVideos && passed);
     public bool CollectConsole { get; init; } = true;
     public bool CollectNetwork { get; init; } = true;
     public EvidenceAttachmentPolicy Passed { get; init; } = EvidenceAttachmentPolicy.PassedDefaults();
     public EvidenceAttachmentPolicy Failed { get; init; } = EvidenceAttachmentPolicy.FailedDefaults();
-    public string ArtifactRoot { get; init; } = "Artifacts";
+    public string ResultsRoot { get; set; } = "TestResults";
+    public string ArtifactRoot { get; set; } = "Artifacts";
     public bool HtmlReport { get; init; } = true;
     public bool IncludeResolvedData { get; init; } = true;
     public bool IncludeConsoleErrors { get; init; } = true;
@@ -113,6 +111,7 @@ public sealed class ReportingOptions
     // "all" attaches every scenario-owned file; "key" attaches the report/log,
     // screenshots, trace, HAR, videos, evidence manifest and bundle only.
     public bool AttachEvidenceToTestResult { get; init; } = true;
+    public bool AttachPassedEvidenceToTestResult { get; init; } = true;
     public string AttachmentMode { get; init; } = "all";
     public long MaxSingleAttachmentBytes { get; init; } = 536870912; // 512 MiB guardrail
     public int MaxAttachmentCount { get; init; } = 5000;
@@ -135,6 +134,7 @@ public sealed class EvidenceAttachmentPolicy
 
 public sealed class ExecutionOptions
 {
+    public int RetryCount { get; init; } = 0;
     public bool StrictUnknownConditions { get; init; } = true;
     // Tosca verification failures are accumulated after mature waits and canonical locator resolution and fail at scenario end,
     // allowing later steps and all requested evidence to complete. Fatal browser/action failures still fail immediately.

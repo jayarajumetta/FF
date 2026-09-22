@@ -197,6 +197,9 @@ public sealed class ClientSearchPage
     public Task PressLastNameAsync(string key) =>
         _ui.PressAsync(_locators.LastName, key, new ControlIntent("ClientSearch", "LastName"));
 
+    public Task WaitForLastNameAsync(string expected) =>
+        _ui.WaitAsync(_locators.LastName, expected, new ControlIntent("ClientSearch", "LastName"));
+
     public Task EnterMiddleNameAsync(string value) =>
         _ui.FillAsync(_locators.MiddleName, value, new ControlIntent("ClientSearch", "MiddleName"));
 
@@ -225,7 +228,7 @@ public sealed class ClientSearchPage
         _ui.WaitAsync(_locators.OK, expected, new ControlIntent("ClientSearch", "OK"));
 
     public Task PauseAsync(int milliseconds) =>
-    Task.Delay(milliseconds);
+        Task.Delay(milliseconds);
 
     public Task ClickOrderSSNAsync() =>
         _ui.ClickAsync(_locators.OrderSSN, new ControlIntent("ClientSearch", "OrderSSN"));

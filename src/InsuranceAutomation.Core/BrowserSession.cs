@@ -5,6 +5,7 @@ public sealed class BrowserSession : IAsyncDisposable
 {
     private readonly FrameworkConfig _config;
     private readonly object _evidenceGate = new();
+    private readonly SemaphoreSlim _screenshotGate = new(1, 1);
     private readonly List<string> _stepConsoleErrors = [];
     private readonly List<string> _stepNetworkErrors = [];
     private IPlaywright? _playwright;
@@ -22,6 +23,7 @@ public sealed class BrowserSession : IAsyncDisposable
     public string? VideoPath { get; private set; }
     public string? HarPath { get; private set; }
     public string? EvidenceBundlePath { get; private set; }
+    public string? ScreenshotPath { get; private set; }
     public void SetArtifactDirectory(string artifactDirectory)
     {
         _artifactDirectory = artifactDirectory;
@@ -35,13 +37,14 @@ public sealed class BrowserSession : IAsyncDisposable
         _playwright = await Playwright.CreateAsync();
         _browser = await LaunchAsync(logger);
         var videoDirectory = Path.Combine(_artifactDirectory, "video");
-        if (_config.Browser.Video) Directory.CreateDirectory(videoDirectory);
+        var recordVideo = _config.Browser.Video && !_config.Reporting.ExcludeVideos;
+        if (recordVideo) Directory.CreateDirectory(videoDirectory);
         HarPath = _config.Browser.Har ? Path.Combine(_artifactDirectory, "network.har.zip") : null;
         _context = await _browser.NewContextAsync(new BrowserNewContextOptions
         {
             IgnoreHTTPSErrors = _config.Browser.IgnoreHttpsErrors,
             ViewportSize = _config.Browser.Maximize ? ViewportSize.NoViewport : new ViewportSize { Width = _config.Browser.ViewportWidth, Height = _config.Browser.ViewportHeight },
-            RecordVideoDir = _config.Browser.Video ? videoDirectory : null,
+            RecordVideoDir = recordVideo ? videoDirectory : null,
             RecordHarPath = HarPath,
             RecordHarMode = _config.Browser.Har ? HarMode.Full : null,
             RecordHarContent = _config.Browser.Har ? HarContentPolicy.Attach : null
@@ -73,17 +76,32 @@ public sealed class BrowserSession : IAsyncDisposable
     }
     public async Task<string?> CaptureScreenshotAsync(string fileName)
     {
+<<<<<<< HEAD
         if (_page is null) return null;
         var path = Path.Combine(_artifactDirectory, "screenshots", Safe(fileName));
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         await _page.ScreenshotAsync(new PageScreenshotOptions { Path = path, FullPage = true });
         
         return path;
+=======
+        await _screenshotGate.WaitAsync();
+        try
+        {
+            if (ScreenshotPath is not null) return ScreenshotPath;
+            if (_page is null) return null;
+            var path = Path.Combine(_artifactDirectory, "screenshots", "scenario.png");
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            await _page.ScreenshotAsync(new PageScreenshotOptions { Path = path, FullPage = true });
+            ScreenshotPath = path;
+            return path;
+        }
+        finally { _screenshotGate.Release(); }
+>>>>>>> sgs/develop
     }
     public async Task<byte[]> CaptureScreenshotBytesAsync()
     {
-        if (_page is null) return Array.Empty<byte>();
-        return await _page.ScreenshotAsync(new PageScreenshotOptions { FullPage = true });
+        var path = await CaptureScreenshotAsync("scenario.png");
+        return path is null ? Array.Empty<byte>() : await File.ReadAllBytesAsync(path);
     }
     public async Task CloseAsync(RunLogger logger)
     {
@@ -114,6 +132,14 @@ public sealed class BrowserSession : IAsyncDisposable
         _playwright?.Dispose();
         _page = null; _context = null; _browser = null; _playwright = null;
     }
+    public void ApplyVideoRetention(bool passed)
+    {
+        if (!_config.Reporting.ShouldExcludeVideo(passed)) return;
+        var directory = Path.Combine(_artifactDirectory, "video");
+        if (Directory.Exists(directory)) Directory.Delete(directory, recursive: true);
+        VideoPath = null;
+    }
+
     private string PersistFinalizedVideo(string resolvedPath, RunLogger logger)
     {
         if (string.IsNullOrWhiteSpace(resolvedPath) || !File.Exists(resolvedPath))

@@ -1,17 +1,31 @@
 using System.Net;
 using System.Text;
+using System.Text.Json;
 
 namespace InsuranceAutomation.Core;
 
 public sealed class ScenarioReport
 {
+    private const long MaxScenarioResultBytes = 5 * 1024 * 1024;
+    private const long MaxReportHtmlBytes = 10 * 1024 * 1024;
+
     private readonly List<StepResult> _steps = [];
     private readonly List<DeferredVerificationFailure> _deferredVerifications = [];
     private readonly string _artifactDirectory;
+    private readonly DateTimeOffset _scenarioStartUtc = DateTimeOffset.UtcNow;
     private DateTime _currentStart;
     private string _currentStep = string.Empty;
+    public string? ScreenshotPath { get; set; }
+    private readonly ScenarioAttemptContext? _attemptContext = ScenarioAttemptContext.Current;
+    public int AttemptNumber { get; }
+    public string ReportPath => Path.Combine(_artifactDirectory, "report.html");
 
-    public ScenarioReport(string artifactDirectory) => _artifactDirectory = artifactDirectory;
+    public ScenarioReport(string artifactDirectory)
+    {
+        _artifactDirectory = artifactDirectory;
+        AttemptNumber = _attemptContext?.AttemptNumber ?? 1;
+        _attemptContext?.Register(this);
+    }
 
     public void StartStep(string step)
     {
@@ -60,12 +74,98 @@ public sealed class ScenarioReport
         details summary{cursor:pointer}.mono{font-family:Consolas,Menlo,monospace;font-size:11px}
         </style></head>
         <body><h1>{{Encode(feature)}}</h1><div class="meta">Scenario: {{Encode(scenario)}}</div>
-        <div class="artifacts"><a href='{{Rel(logPath)}}'>execution log</a>{{Link("trace", tracePath)}}{{Link("video", videoPath)}}{{Link("HAR", harPath)}}{{Link("evidence bundle", bundlePath)}}</div>
+        <!-- attempt-links-start -->{{RenderAttemptLinks()}}<!-- attempt-links-end -->
+        <div class="artifacts"><a href='{{Rel(logPath)}}'>execution log</a>{{Link("screenshot", ScreenshotPath)}}{{Link("trace", tracePath)}}{{Link("video", videoPath)}}{{Link("HAR", harPath)}}{{Link("evidence bundle", bundlePath)}}</div>
         <h2>Execution steps</h2><table><thead><tr><th>Business step</th><th>Status</th><th>Duration</th><th>Resolved data</th><th>Console/Page errors</th><th>Network errors</th><th>Test error</th><th>Evidence</th></tr></thead><tbody>{{rows}}</tbody></table>
         {{deferredTable}}
         </body></html>
         """;
         File.WriteAllText(file, html);
+
+        var scenarioPassed = _steps.All(step => step.Passed) && _deferredVerifications.Count == 0;
+        var result = new
+        {
+            schemaVersion = "1.0",
+            executionId = _attemptContext?.ExecutionId,
+            testFullName = _attemptContext?.TestFullName,
+            attemptNumber = AttemptNumber,
+            maxAttempts = _attemptContext?.MaxAttempts ?? 1,
+            feature,
+            scenario,
+            status = scenarioPassed ? "PASS" : "FAIL",
+            startedAtUtc = _scenarioStartUtc,
+            completedAtUtc = DateTimeOffset.UtcNow,
+            durationMilliseconds = Math.Round(_steps.Sum(step => step.Duration.TotalMilliseconds), 3),
+            steps = _steps.Select((step, index) => new
+            {
+                order = index + 1,
+                text = step.Step,
+                status = step.Passed ? "PASS" : "FAIL",
+                durationMilliseconds = Math.Round(step.Duration.TotalMilliseconds, 3),
+                data = step.Data,
+                error = step.Error,
+                consoleErrors = step.ConsoleErrors,
+                networkErrors = step.NetworkErrors,
+                screenshot = string.IsNullOrWhiteSpace(step.Screenshot) ? string.Empty : Rel(step.Screenshot)
+            }),
+            deferredVerifications = _deferredVerifications.Select(item => new
+            {
+                businessStep = item.BusinessStep,
+                page = item.Page,
+                control = item.Control,
+                property = item.Property,
+                expected = item.Expected,
+                error = item.Error,
+                screenshot = string.IsNullOrWhiteSpace(item.Screenshot) ? string.Empty : Rel(item.Screenshot)
+            }),
+            artifacts = new
+            {
+                report = "report.html",
+                screenshot = string.IsNullOrWhiteSpace(ScreenshotPath) ? string.Empty : Rel(ScreenshotPath),
+                log = Rel(logPath),
+                trace = string.IsNullOrWhiteSpace(tracePath) ? string.Empty : Rel(tracePath),
+                video = string.IsNullOrWhiteSpace(videoPath) ? string.Empty : Rel(videoPath),
+                har = string.IsNullOrWhiteSpace(harPath) ? string.Empty : Rel(harPath),
+                evidenceBundle = string.IsNullOrWhiteSpace(bundlePath) ? string.Empty : Rel(bundlePath)
+            }
+        };
+        File.WriteAllText(
+            Path.Combine(_artifactDirectory, "scenario-result.json"),
+            JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true }));
+    }
+
+    public void CompleteAttempt(string status, string? error)
+    {
+        var path = Path.Combine(_artifactDirectory, "scenario-result.json");
+        if (!File.Exists(path)) return;
+        var relativePath = SafeFileAccess.ToRepositoryRelativePath(path);
+        var safeResultPath = SafeFileAccess.ResolveExistingFileUnderRoot(relativePath, MaxScenarioResultBytes, ".json");
+        var result = System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(safeResultPath))!;
+        result["status"] = status;
+        result["error"] = error ?? string.Empty;
+        File.WriteAllText(path, result.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
+    }
+
+    public void RefreshAttemptLinks()
+    {
+        if (!File.Exists(ReportPath)) return;
+        var relativePath = SafeFileAccess.ToRepositoryRelativePath(ReportPath);
+        var safeReportPath = SafeFileAccess.ResolveExistingFileUnderRoot(relativePath, MaxReportHtmlBytes, ".html");
+        var html = File.ReadAllText(safeReportPath);
+        const string start = "<!-- attempt-links-start -->";
+        const string end = "<!-- attempt-links-end -->";
+        var from = html.IndexOf(start, StringComparison.Ordinal);
+        var to = html.IndexOf(end, StringComparison.Ordinal);
+        if (from >= 0 && to > from)
+            File.WriteAllText(ReportPath, html[..(from + start.Length)] + RenderAttemptLinks() + html[to..]);
+    }
+
+    private string RenderAttemptLinks()
+    {
+        var reports = _attemptContext?.Reports ?? new[] { this };
+        return "<div class='artifacts meta'>Attempts: " + string.Join(" ", reports.Select(report =>
+            report == this ? $"<strong aria-current='page'>{report.AttemptNumber}</strong>" :
+            $"<a href='{Encode(Rel(report.ReportPath))}' aria-label='Attempt {report.AttemptNumber}'>{report.AttemptNumber}</a>")) + "</div>";
     }
 
     private string RenderDeferredVerificationTable()
