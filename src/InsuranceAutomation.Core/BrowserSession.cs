@@ -76,27 +76,11 @@ public sealed class BrowserSession : IAsyncDisposable
     }
     public async Task<string?> CaptureScreenshotAsync(string fileName)
     {
-<<<<<<< HEAD
         if (_page is null) return null;
         var path = Path.Combine(_artifactDirectory, "screenshots", Safe(fileName));
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         await _page.ScreenshotAsync(new PageScreenshotOptions { Path = path, FullPage = true });
-        
         return path;
-=======
-        await _screenshotGate.WaitAsync();
-        try
-        {
-            if (ScreenshotPath is not null) return ScreenshotPath;
-            if (_page is null) return null;
-            var path = Path.Combine(_artifactDirectory, "screenshots", "scenario.png");
-            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-            await _page.ScreenshotAsync(new PageScreenshotOptions { Path = path, FullPage = true });
-            ScreenshotPath = path;
-            return path;
-        }
-        finally { _screenshotGate.Release(); }
->>>>>>> sgs/develop
     }
     public async Task<byte[]> CaptureScreenshotBytesAsync()
     {
