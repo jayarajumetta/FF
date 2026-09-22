@@ -57,7 +57,7 @@ The user is not being assigned coding, dependency mapping, or integration work.
 | Reporting adaptation | Integrated: child `05644a9` picked as `37a9dbd`; actual-runner skip compatibility in `6f369fb`, lifecycle/DI/privacy in `d7e47c2`, package/runner/publication gates in `e9c89ec`. No duplicate lifecycle or SGS retry engine. |
 | Parent framework suite | Item 2 gate passed: 431 passed, 0 failed, 0 skipped; 54 CI contract assertions passed. Real gated Reqnroll execution reconciled 45 SKIP results with 45 scenario reports and no reporting issues. |
 | Live SGS verification | No imported SGS case has been live-verified. Discovery, unit tests, and synthetic report previews do not count. |
-| Work/process state | Items 1 and 2 are complete; item 3 is next, with the known Key Vault RBAC blocker. No push, PR, pipeline rollout, live business execution, or IDE synchronization during this reporting milestone. |
+| Work/process state | Items 1 and 2 are complete; item 3 is blocked after its access recheck again returned `ForbiddenByRbac`. Later items have not started. No push, PR, pipeline rollout, live business execution, or IDE synchronization during this reporting milestone. |
 
 ## Ordered remaining work
 
@@ -96,7 +96,7 @@ The user is not being assigned coding, dependency mapping, or integration work.
    `checklist-02-sourcefree-report\verification.json` (copied .NET 8 Release
    runtime, unchanged inventory, expected exit 1 for skips and 2 for missing
    canonical input). The Release reporting build had zero warnings/errors.
-   Full immutable-package/case qualification remains item 16; this reporting
+   Full case and immutable-package qualification remains items 15-16; this reporting
    runtime check is not live SGS verification or pipeline rollout.
 
 3. [ ] **Unblock and verify local credentials and application access.**
@@ -106,6 +106,12 @@ The user is not being assigned coding, dependency mapping, or integration work.
    Exit: credential and connectivity prerequisites are demonstrated.
    Current blocker: the CLI identity receives `ForbiddenByRbac` for secret
    reads; an authorized Azure owner must supply the required access.
+   Rechecked after item 2 using the approved vault and named credential secret,
+   returning only ID/enabled metadata: still `ForbiddenByRbac`. No secret value
+   was displayed or persisted. Evidence:
+   `files\resume-validation\checklist-03-keyvault-access.json` in the integration
+   session. Work is paused at this gate; no alternate credentials, RBAC changes,
+   application mutations or later checklist work were attempted.
 
 4. [ ] **Confirm the first-run business data and execution permissions.**
    Resolve the specific outstanding inputs/expectations for the SFP reference
