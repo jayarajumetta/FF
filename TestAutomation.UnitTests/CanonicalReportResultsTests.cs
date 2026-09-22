@@ -51,6 +51,42 @@ public sealed class CanonicalReportResultsTests
         Assert.That(results.Single().Outcome, Is.EqualTo(CanonicalReportOutcome.Failed));
     }
 
+    [TestCase(false)]
+    [TestCase(true)]
+    public void TrxPreservesRunnerSkipReasonsWhenTheSkipCounterIsUnpopulated(bool includePassedCase)
+    {
+        var document = includePassedCase
+            ? TestCanonicalFiles.Trx(("completed", "Passed"), ("gated", "NotExecuted"))
+            : TestCanonicalFiles.Trx(("gated", "NotExecuted"));
+        var ns = TestCanonicalFiles.TrxNamespace;
+        document.Descendants(ns + "Counters").Single().SetAttributeValue("notExecuted", "0");
+        document.Descendants(ns + "UnitTestResult").Single(item => (string?)item.Attribute("outcome") == "NotExecuted")
+            .Add(new XElement(ns + "Output", new XElement(ns + "ErrorInfo",
+                new XElement(ns + "Message", "Required business inputs are not approved."))));
+
+        var results = Load(document);
+        var skipped = results.Single(item => item.Outcome == CanonicalReportOutcome.Skipped);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(results, Has.Count.EqualTo(includePassedCase ? 2 : 1));
+            Assert.That(skipped.TestIdentity, Is.EqualTo("gated"));
+            Assert.That(skipped.FailureMessage, Is.EqualTo("Required business inputs are not approved."));
+            Assert.That(results.Count(item => item.Outcome == CanonicalReportOutcome.Passed),
+                Is.EqualTo(includePassedCase ? 1 : 0));
+        });
+    }
+
+    [Test]
+    public void PopulatedSkipCounterMustStillMatchTheActualResults()
+    {
+        var document = TestCanonicalFiles.Trx(("gated", "NotExecuted"));
+        document.Descendants(TestCanonicalFiles.TrxNamespace + "Counters").Single()
+            .SetAttributeValue("notExecuted", "2");
+        Assert.That(() => Load(document),
+            Throws.TypeOf<TestPlanPublicationException>().With.Message.Contains("counter"));
+    }
+
     [Test]
     public void NUnitReadsFullIdentityAndIgnoredOrInconclusiveAsSkipped()
     {

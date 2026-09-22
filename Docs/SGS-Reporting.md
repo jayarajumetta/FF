@@ -209,6 +209,12 @@ unique identities, finite/nonnegative durations and timestamps, and rejects
 setup/teardown/run failures inconsistent with individual results. TRX uses
 `testName`, matching the existing publisher; NUnit uses `fullname`. The raw
 identity supplied to `ArtifactContext` must be the same runner identity.
+VSTest/NUnit may put an ignore reason in a skipped TRX result's `ErrorInfo`
+and leave `Counters.notExecuted` at zero. The reader preserves that reason
+and derives skipped status from the actual results, while requiring exact
+total/executed/passed/failed counts and any populated skipped count. This
+runner representation never converts a skip into a pass or accepts missing
+required counter fields.
 The reporting outcome supports Passed, Failed and Skipped. Existing ADO `Load`
 still accepts only its previous Passed/Failed contract and still enforces its
 package/result mapping, safe attachment allowlist and 4 MiB upload limit.

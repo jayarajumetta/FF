@@ -39,7 +39,9 @@ public sealed class CanonicalResultLoader
             RequireCounter(counters, "executed", results.Count(item => item.Outcome != CanonicalReportOutcome.Skipped));
             RequireCounter(counters, "passed", results.Count(item => item.Outcome == CanonicalReportOutcome.Passed));
             RequireCounter(counters, "failed", elements.Count(item => (string?)item.Attribute("outcome") == "Failed"));
-            RequireCounter(counters, "notExecuted", results.Count(item => item.Outcome == CanonicalReportOutcome.Skipped));
+            // VSTest can leave this counter at zero; total/executed and individual results still reconcile above.
+            RequireCounter(counters, "notExecuted", results.Count(item => item.Outcome == CanonicalReportOutcome.Skipped),
+                allowUnreportedZero: true);
             foreach (var (counter, outcome) in new[] { ("error", "Error"), ("timeout", "Timeout"), ("aborted", "Aborted") })
                 RequireCounter(counters, counter, elements.Count(item => (string?)item.Attribute("outcome") == outcome), optionalZero: true);
             foreach (var counter in new[] { "inProgress", "pending", "inconclusive", "notRunnable", "disconnected", "passedButRunAborted" })
@@ -401,8 +403,8 @@ public sealed class CanonicalResultLoader
             throw new TestPlanPublicationException("Canonical TRX contains an unnamed test.");
         var ns = element.Name.Namespace;
         var error = element.Element(ns + "Output")?.Element(ns + "ErrorInfo");
-        if (reporting && outcome != CanonicalReportOutcome.Failed && error != null)
-            throw new TestPlanPublicationException("A non-failed canonical TRX test contains failure diagnostics.");
+        if (reporting && outcome == CanonicalReportOutcome.Passed && error != null)
+            throw new TestPlanPublicationException("A passed canonical TRX test contains failure diagnostics.");
         if (reporting)
             ValidateWindow(element, "startTime", "endTime");
         return new CanonicalReportResult(name, outcome, duration,
@@ -466,12 +468,14 @@ public sealed class CanonicalResultLoader
             throw new TestPlanPublicationException("The canonical input contains duplicate test identities.");
     }
 
-    private static void RequireCounter(XElement element, string name, int expected, bool optionalZero = false)
+    private static void RequireCounter(
+        XElement element, string name, int expected, bool optionalZero = false, bool allowUnreportedZero = false)
     {
         var value = (string?)element.Attribute(name);
         if (value == null && optionalZero && expected == 0)
             return;
-        if (!int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var actual) || actual != expected)
+        if (!int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var actual) ||
+            actual != expected && !(allowUnreportedZero && actual == 0))
             throw new TestPlanPublicationException($"Canonical '{name}' counter disagrees with the actual test results.");
     }
 
