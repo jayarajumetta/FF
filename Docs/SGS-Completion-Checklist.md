@@ -57,7 +57,7 @@ The user is not being assigned coding, dependency mapping, or integration work.
 | Reporting adaptation | Integrated: child `05644a9` picked as `37a9dbd`; actual-runner skip compatibility in `6f369fb`, lifecycle/DI/privacy in `d7e47c2`, package/runner/publication gates in `e9c89ec`. No duplicate lifecycle or SGS retry engine. |
 | Parent framework suite | Item 2 gate passed: 431 passed, 0 failed, 0 skipped; 54 CI contract assertions passed. Real gated Reqnroll execution reconciled 45 SKIP results with 45 scenario reports and no reporting issues. |
 | Live SGS verification | No imported SGS case has been live-verified. Discovery, unit tests, and synthetic report previews do not count. |
-| Work/process state | Items 1 and 2 are complete. Item 3 resumed after the user explicitly authorized temporary local appsettings credentials while Key Vault read approval is pending. Six required fields pass configuration preflight; actual QA authentication is still unverified. Later items have not started. |
+| Work/process state | Items 1-3 are complete under the explicitly approved local-access boundary; item 4 is active. ExpertQuote QA, CLAS QA and QA Express sign-ins are verified. Key Vault approval remains pending; authenticated Forms API verification is an explicit item 5 requirement, not a passed check. No business workflow has been executed in this access check. |
 
 ## Ordered remaining work
 
@@ -99,7 +99,7 @@ The user is not being assigned coding, dependency mapping, or integration work.
    Full case and immutable-package qualification remains items 15-16; this reporting
    runtime check is not live SGS verification or pipeline rollout.
 
-3. [ ] **Unblock and verify local credentials and application access.**
+3. [x] **Unblock and verify local credentials and application access.**
    Prefer the user-selected `kv-pa-d-tstauto-1`, existing process-only secret
    loading, and Ping. Confirm required credential reads and authorized access
    to the relevant QA applications/services without printing secrets.
@@ -124,16 +124,31 @@ The user is not being assigned coding, dependency mapping, or integration work.
    the source file, printing values, building, logging in or executing tests.
    Evidence: `files\resume-validation\checklist-03-local-appsettings-preflight.json`
    and `checklist-03-local-credential-contracts.log` (79 assertions).
-   Actual QA authentication/connectivity remains the unfinished part of item 3;
-   a nonempty password is not proof that it works. No business-data approvals,
-   application mutations, RBAC changes or later checklist items were bypassed.
+   Actual access verification completed on 2026-09-22 using the existing
+   `ExpertQuoteLoginPage`, `ExpressLoginPage` and `BrowserFactory`: ExpertQuote
+   QA, CLAS QA and QA Express each authenticated once and passed their actual
+   landing-page assertion. All owned browser contexts were closed. No quote
+   searches, business mutations, saved cookies/tokens, screenshots or traces
+   were produced. The local credential file remained unchanged.
+   Evidence: `files\resume-validation\checklist-03-qa-access.json` and
+   `checklist-03-qa-access-console.log`.
+   The Forms endpoint returned HTTP 200 to an anonymous HEAD request. This
+   proves reachability only, not Forms API authentication. Its configured
+   address uses HTTP; no service password was sent by this access probe.
+   The user explicitly approved closing item 3 on the verified browser logins
+   and moving authenticated Forms API verification to the required item 5
+   quote/forms check. Item 4 must record the approved Forms connection/transport
+   before a credential-bearing request. Key Vault approval is still pending.
 
 4. [ ] **Confirm the first-run business data and execution permissions.**
+   **Active item.**
    Resolve the specific outstanding inputs/expectations for the SFP reference
    and first four SGS examples below. Confirm date applicability, expected
    premium/forms where promised, and rerun/cleanup rules. CLEQ AL currently
    retains `values.effective_date = 03-01-2025`; do not silently replace it.
    Exit: the first-run inputs and expectations are explicit and usable.
+   Confirm the approved Forms service connection/transport; the current
+   configured internal HTTP endpoint has only been checked anonymously.
    Actual transmission, binding, issuance, or payment requires separate
    explicit authorization; quote-only authorization does not imply it.
 
@@ -141,6 +156,9 @@ The user is not being assigned coding, dependency mapping, or integration work.
    Rerun the original SFP Basic workflow, including the pending forms retest.
    Verify the same quote identity, approved premium, genuine forms results,
    and the existing availability-only transmission contract.
+   Authenticated Forms API access for that real quote/session is a required
+   part of this item, explicitly carried from item 3 by user approval. A
+   reachable endpoint or a successful browser login does not satisfy it.
    Exit: two consecutive authorized local passes with complete evidence.
 
 6. [ ] **Implement and prove original ExpertQuote BOP smoke, Alabama.**

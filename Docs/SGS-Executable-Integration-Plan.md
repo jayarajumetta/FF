@@ -471,12 +471,15 @@ is committed in `d7e47c2`, with package/runner/publication gates in `e9c89ec`.
 The combined framework gate passed 431 tests without failures/skips; 54 CI
 contract assertions passed. Forty-five real gated Reqnroll results remained
 SKIP and reconciled with their reports; no SGS business case was verified.
-Item 3 now has an explicitly approved temporary local appsettings credential
-path while Key Vault read approval is pending. Its six required fields passed
-configuration preflight without exposing values or changing the source file;
-actual QA authentication/connectivity remains to be verified. M1 source
-accounting must not be restarted. The matrix review adds no pilot gate or
-parallel workstream.
+Item 3 is complete under the user's explicitly approved local-access boundary:
+the temporary local appsettings credential source passed field validation and
+actual ExpertQuote QA, CLAS QA and QA Express logins succeeded without business
+operations. Key Vault read approval is still pending. Forms endpoint
+reachability is confirmed, but the user explicitly retained authenticated
+Forms API verification as an item 5 requirement; it has not passed.
+Item 4 is active: confirm first-run business inputs, expectations and execution
+permissions, including the approved Forms connection/transport. M1 source
+accounting must not be restarted. No pilot gate or parallel workstream is added.
 
 ## Appendix A - Complete latest-source feature/binding coverage
 
