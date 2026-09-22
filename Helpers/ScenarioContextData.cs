@@ -1,4 +1,4 @@
-﻿using PnCTestAutomation.Models;
+using PnCTestAutomation.Models;
 
 namespace PnCTestAutomation.Helpers
 {
@@ -31,6 +31,7 @@ namespace PnCTestAutomation.Helpers
         public BusinessData Business { get; set; } = new();
         public FarmData Farm { get; set; } = new();
         public UnderwritingData Underwriting { get; set; } = new();
+        public SgsScenarioDataState SgsData { get; } = new();
 
         // --- Forms Validation ---
         public string FormsLob { get; set; }
