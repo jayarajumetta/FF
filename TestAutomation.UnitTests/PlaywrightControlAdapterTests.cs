@@ -85,6 +85,28 @@ public sealed class PlaywrightControlAdapterTests
     }
 
     [Test]
+    public async Task ExplicitMainFrameScopeCannotSelectAMatchingChildControl()
+    {
+        const string markup = """
+            <select data-testid="state"><option value="AZ">Arizona</option><option value="AL">Alabama</option></select>
+            """;
+        await _page.SetContentAsync(markup +
+            $"<iframe name=\"policy\" srcdoc=\"{WebUtility.HtmlEncode(markup)}\"></iframe>");
+        var hint = new FrameScopeHint { ScopeId = "cleq-main", IsMainFrame = true };
+        var resolver = new ControlScopeResolver(new PlaywrightControlRuntime(_page, [hint]));
+        var control = await resolver.ResolveAsync(
+            ControlDefinition.ByTestId("State", "state").InScope("cleq-main"));
+
+        await Actions().SelectAsync(control, "AL");
+
+        Assert.That(control.Scope.IsMainFrame, Is.True);
+        Assert.That(control.Scope.ContractId, Is.EqualTo("cleq-main"));
+        Assert.That(await _page.GetByTestId("state").InputValueAsync(), Is.EqualTo("AL"));
+        Assert.That(await _page.Frames.Single(frame => frame.Name == "policy").GetByTestId("state").InputValueAsync(),
+            Is.EqualTo("AZ"));
+    }
+
+    [Test]
     public async Task IncorrectSelectionFailsWithoutReplayingTheOption()
     {
         await _page.SetContentAsync(MaterialSelect("Arizona", updateSelection: false));

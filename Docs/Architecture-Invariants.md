@@ -125,6 +125,11 @@ evidence before local execution can be enabled.
   recorded in redacted runtime-locator evidence. Nested depth and the logical
   scope ID remain attached through postcondition verification. Product
   adapters cannot silently fall back to the top page.
+  Frame catalogs are explicitly configured; removed pilot catalogs are not
+  defaults. Schema 1 retains exact nonempty named-frame paths. Schema 2 also
+  supports an explicit `IsMainFrame` scope for one page index, with an empty
+  path; an empty path alone never means main-frame fallback. Both schemas
+  retain source/checksum validation.
 - Every checkpoint screenshot has a unique ordinal/name. A cached
   `scenario.png` is not sufficient evidence.
 - Forms-only and full-SFP validation use the same orchestration service. Missing

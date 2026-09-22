@@ -13,10 +13,7 @@ namespace PnCTestAutomation.Controls
 {
     public sealed class FrameScopeHintOptions
     {
-        public string CatalogPath { get; set; } = Path.Combine(
-            "Resources",
-            "FrameHints",
-            "cldc-bap-frame-hints.json");
+        public string? CatalogPath { get; set; }
         public List<string> AdditionalCatalogPaths { get; set; } = [];
 
         public void Validate()
@@ -27,6 +24,9 @@ namespace PnCTestAutomation.Controls
                     "Additional frame hint catalog paths cannot be null.");
             }
             var paths = GetCatalogPaths();
+            if (paths.Count == 0)
+                throw new FrameScopeConfigurationException(
+                    "At least one explicit approved frame scope catalog must be configured.");
             if (paths.Any(path =>
                     string.IsNullOrWhiteSpace(path) ||
                     !Path.GetExtension(path).Equals(
@@ -45,7 +45,7 @@ namespace PnCTestAutomation.Controls
         }
 
         public IReadOnlyList<string> GetCatalogPaths() =>
-            [CatalogPath, .. AdditionalCatalogPaths];
+            CatalogPath is null ? [.. AdditionalCatalogPaths] : [CatalogPath, .. AdditionalCatalogPaths];
     }
 
     public sealed class FrameScopeHintCatalog
@@ -63,6 +63,7 @@ namespace PnCTestAutomation.Controls
     {
         public string ScopeId { get; init; } = "";
         public int PageIndex { get; init; }
+        public bool IsMainFrame { get; init; }
         public List<string> FramePath { get; init; } = [];
     }
 
@@ -163,9 +164,13 @@ namespace PnCTestAutomation.Controls
         public static void Validate(FrameScopeHintCatalog catalog)
         {
             ArgumentNullException.ThrowIfNull(catalog);
-            if (catalog.SchemaVersion != 1)
+            if (catalog.SchemaVersion is not (1 or 2))
                 throw new FrameScopeConfigurationException(
                     $"Unsupported frame hint schema '{catalog.SchemaVersion}'.");
+            if (catalog.Hints is null || catalog.RejectedSourceHints is null ||
+                catalog.Hints.Any(hint => hint is null))
+                throw new FrameScopeConfigurationException(
+                    "Frame scope catalog entries must not be null.");
             Require(catalog.CatalogVersion, "catalogVersion");
             Require(catalog.SourcePath, "sourcePath");
             RequireHash(catalog.SourceSha256, "sourceSha256");
@@ -181,7 +186,10 @@ namespace PnCTestAutomation.Controls
             {
                 Require(hint.ScopeId, "scopeId");
                 StableIdentifier(hint.ScopeId, "scopeId");
-                if (hint.PageIndex < 0 || hint.FramePath.Count == 0)
+                if (hint.PageIndex < 0 || hint.FramePath is null ||
+                    (hint.IsMainFrame
+                        ? catalog.SchemaVersion < 2 || hint.FramePath.Count != 0
+                        : hint.FramePath.Count == 0))
                 {
                     throw new FrameScopeConfigurationException(
                         $"Frame scope hint '{hint.ScopeId}' has invalid page/path.");
@@ -227,6 +235,7 @@ namespace PnCTestAutomation.Controls
                 .OrderBy(hint => hint.ScopeId, StringComparer.Ordinal)
                 .Select(hint =>
                     $"hint|{hint.ScopeId.Trim()}|{hint.PageIndex}|" +
+                    (catalog.SchemaVersion >= 2 ? (hint.IsMainFrame ? "main|" : "frame|") : "") +
                     string.Join(
                         ">",
                         hint.FramePath.Select(value => value.Trim()))));
@@ -245,7 +254,7 @@ namespace PnCTestAutomation.Controls
 
         private static void StableIdentifier(string value, string name)
         {
-            if (!Regex.IsMatch(
+            if (!value.Equals(value.Trim(), StringComparison.Ordinal) || !Regex.IsMatch(
                     value.Trim(),
                     "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
                     RegexOptions.CultureInvariant,
@@ -266,9 +275,9 @@ namespace PnCTestAutomation.Controls
             }
         }
 
-        private static void RequireHash(string value, string name)
+        private static void RequireHash(string? value, string name)
         {
-            if (value.Length != 64 ||
+            if (value is null || value.Length != 64 ||
                 value.Any(character => !Uri.IsHexDigit(character)))
             {
                 throw new FrameScopeConfigurationException(
@@ -288,6 +297,7 @@ namespace PnCTestAutomation.Controls
             ArgumentNullException.ThrowIfNull(framePath);
             var matches = hints.Where(hint =>
                     hint.PageIndex == pageIndex &&
+                    hint.IsMainFrame == (framePath.Count == 0) &&
                     hint.FramePath.SequenceEqual(
                         framePath,
                         StringComparer.Ordinal))
