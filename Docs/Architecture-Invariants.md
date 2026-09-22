@@ -116,6 +116,10 @@ the contracts owned here.
   Baseline generation is an explicitly separate tool, never a validation fallback.
 - Missing required reports, logs, traces, videos, manifests, test results, or
   attachments fail the run rather than producing a success-shaped outcome.
+  SGS report HTML/JSON, logs, and optional HAR/bundles use the same
+  `IArtifactContext` as existing evidence. A file artifact cannot be satisfied
+  by an in-memory marker. Skipped execution remains skipped in the manifest;
+  skipping does not conceal a previously declared missing required artifact.
 - Required data never resolves to an empty string. Ambiguous flattened keys and
   stale or missing profile checksums fail before UI execution.
 - State-changing UI actions are not retried unless the operation is proven

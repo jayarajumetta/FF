@@ -157,6 +157,94 @@ public class ArtifactContextTests
     }
 
     [Test]
+    public void SkippedScenarioRemainsSkippedInSavedManifest()
+    {
+        var context = CreateContext("skipped");
+        var manifest = context.Complete(ArtifactOutcome.Skipped);
+        var saved = JsonSerializer.Deserialize<ArtifactManifest>(
+            File.ReadAllText(Path.Combine(context.ScenarioRoot, "manifest.json")),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(manifest.Outcome, Is.EqualTo(ArtifactOutcome.Skipped));
+            Assert.That(saved!.Outcome, Is.EqualTo(ArtifactOutcome.Skipped));
+            Assert.That(manifest.AuthoritativeScenarioFailed, Is.False);
+            Assert.That((int)ArtifactOutcome.Passed, Is.Zero);
+            Assert.That((int)ArtifactOutcome.Failed, Is.EqualTo(1));
+            Assert.That((int)ArtifactKind.RuntimeLocator, Is.EqualTo(12));
+        });
+    }
+
+    [Test]
+    public void SkipCannotHideMissingRequiredEvidence()
+    {
+        var context = CreateContext("incomplete-skip");
+        context.Require(ArtifactKind.ExecutionLog);
+
+        Assert.That(
+            () => context.Complete(ArtifactOutcome.Skipped),
+            Throws.TypeOf<ArtifactEvidenceException>().With.Message.Contains("ExecutionLog"));
+
+        var saved = JsonSerializer.Deserialize<ArtifactManifest>(
+            File.ReadAllText(Path.Combine(context.ScenarioRoot, "manifest.json")),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        Assert.That(saved!.Outcome, Is.EqualTo(ArtifactOutcome.Failed));
+    }
+
+    [TestCase(ArtifactKind.ScenarioReportHtml, ".html", "<html></html>", "reports")]
+    [TestCase(ArtifactKind.ScenarioResultJson, ".json", "{\"outcome\":\"Failed\"}", "reports")]
+    [TestCase(ArtifactKind.ExecutionLog, ".log", "Scenario failed.", "logs")]
+    [TestCase(ArtifactKind.ConsoleLog, ".log", "No console errors.", "logs")]
+    [TestCase(ArtifactKind.NetworkLog, ".log", "No network errors.", "logs")]
+    [TestCase(ArtifactKind.Har, ".har", "{\"log\":{}}", "network")]
+    [TestCase(ArtifactKind.EvidenceBundle, ".zip", "test-bundle", "bundles")]
+    public void RichReportEvidenceUsesTheExistingArtifactOwner(
+        ArtifactKind kind,
+        string extension,
+        string content,
+        string directory)
+    {
+        var context = CreateContext(kind.ToString());
+        context.Require(kind);
+        var path = context.CreateArtifactPath(kind, "checkpoint", extension);
+        File.WriteAllText(path, content);
+        var record = context.RecordFile(kind, "checkpoint", path);
+        var manifest = context.Complete(ArtifactOutcome.Failed);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(Path.GetDirectoryName(path), Is.EqualTo(Path.Combine(context.ScenarioRoot, directory)));
+            Assert.That(manifest.Artifacts, Does.Contain(record));
+            Assert.That(manifest.EvidenceErrors, Is.Empty);
+        });
+    }
+
+    [TestCase(ArtifactKind.ScenarioReportHtml, ".html")]
+    [TestCase(ArtifactKind.ScenarioResultJson, ".json")]
+    [TestCase(ArtifactKind.Har, ".har")]
+    public void CorruptRichEvidenceIsFatal(ArtifactKind kind, string extension)
+    {
+        var context = CreateContext("corrupt-report");
+        var path = context.CreateArtifactPath(kind, "report", extension);
+        File.WriteAllText(path, "not a report or structured document");
+        context.RecordFile(kind, "report", path);
+
+        Assert.That(
+            () => context.Complete(ArtifactOutcome.Passed),
+            Throws.TypeOf<ArtifactEvidenceException>().With.Message.Contains("missing or corrupt"));
+    }
+
+    [TestCase(ArtifactKind.Screenshot)]
+    [TestCase(ArtifactKind.ScenarioReportHtml)]
+    [TestCase(ArtifactKind.ExecutionLog)]
+    public void FileEvidenceCannotBeSatisfiedByAMarker(ArtifactKind kind)
+    {
+        var context = CreateContext();
+        Assert.That(() => context.RecordMarker(kind, "not-a-file"), Throws.ArgumentException);
+    }
+
+    [Test]
     public async Task RuntimeLocatorEvidenceRecordsScopeWithoutRawSelector()
     {
         var context = CreateContext("runtime-locator");

@@ -28,13 +28,21 @@ namespace PnCTestAutomation.Artifacts
         TrxMetadata,
         TimingSummary,
         QuoteHandoff,
-        RuntimeLocator
+        RuntimeLocator,
+        ScenarioReportHtml,
+        ScenarioResultJson,
+        ExecutionLog,
+        ConsoleLog,
+        NetworkLog,
+        Har,
+        EvidenceBundle
     }
 
     public enum ArtifactOutcome
     {
         Passed,
-        Failed
+        Failed,
+        Skipped
     }
 
     public sealed class ArtifactOptions
@@ -122,6 +130,7 @@ namespace PnCTestAutomation.Artifacts
         void RequireFailureEvidence();
         void RecordComponentOutcome(string component, bool succeeded);
         ArtifactManifest Complete(bool authoritativeScenarioFailed);
+        ArtifactManifest Complete(ArtifactOutcome authoritativeOutcome);
     }
 
     public interface IArtifactCaptureService
@@ -303,6 +312,13 @@ namespace PnCTestAutomation.Artifacts
             string checkpoint)
         {
             EnsureNotCompleted();
+            if (kind != ArtifactKind.QuoteHandoff)
+            {
+                throw new ArgumentException(
+                    "Only a scenario-owned quote handoff can use a marker; " +
+                    "file evidence must be recorded with a nonempty file.",
+                    nameof(kind));
+            }
             var record = new ArtifactRecord(
                 kind,
                 RequireSafeLabel(checkpoint, nameof(checkpoint)),
@@ -316,6 +332,9 @@ namespace PnCTestAutomation.Artifacts
         public void Require(params ArtifactKind[] kinds)
         {
             EnsureNotCompleted();
+            ArgumentNullException.ThrowIfNull(kinds);
+            if (kinds.Any(kind => !Enum.IsDefined(kind)))
+                throw new ArgumentException("Required evidence contains an invalid kind.", nameof(kinds));
             lock (_gate)
             {
                 foreach (var kind in kinds)
@@ -334,9 +353,17 @@ namespace PnCTestAutomation.Artifacts
                 _componentOutcomes[safeComponent] = succeeded;
         }
 
-        public ArtifactManifest Complete(bool authoritativeScenarioFailed)
+        public ArtifactManifest Complete(bool authoritativeScenarioFailed) =>
+            Complete(authoritativeScenarioFailed
+                ? ArtifactOutcome.Failed
+                : ArtifactOutcome.Passed);
+
+        public ArtifactManifest Complete(ArtifactOutcome authoritativeOutcome)
         {
             EnsureNotCompleted();
+            if (!Enum.IsDefined(authoritativeOutcome))
+                throw new ArgumentOutOfRangeException(nameof(authoritativeOutcome));
+            var authoritativeScenarioFailed = authoritativeOutcome == ArtifactOutcome.Failed;
             WriteTimingSummary(authoritativeScenarioFailed);
             WriteTrxMetadata();
 
@@ -362,7 +389,7 @@ namespace PnCTestAutomation.Artifacts
                           componentFailed ||
                           evidenceErrors.Count > 0
                 ? ArtifactOutcome.Failed
-                : ArtifactOutcome.Passed;
+                : authoritativeOutcome;
 
             var manifest = new ArtifactManifest(
                 CurrentManifestVersion,
@@ -529,7 +556,8 @@ namespace PnCTestAutomation.Artifacts
                         .StartsWith(
                             "Form,Expected,Actual,Result,Code,Message",
                             StringComparison.Ordinal) == true,
-                    ArtifactKind.FormsHtml => File.ReadAllText(path)
+                    ArtifactKind.FormsHtml or
+                    ArtifactKind.ScenarioReportHtml => File.ReadAllText(path)
                         .Contains("<html", StringComparison.OrdinalIgnoreCase),
                     ArtifactKind.FormsMarkdown => File.ReadLines(path)
                         .FirstOrDefault()?
@@ -538,7 +566,9 @@ namespace PnCTestAutomation.Artifacts
                             StringComparison.Ordinal) == true,
                     ArtifactKind.TrxMetadata or
                     ArtifactKind.TimingSummary or
-                    ArtifactKind.RuntimeLocator => IsJson(path),
+                    ArtifactKind.RuntimeLocator or
+                    ArtifactKind.ScenarioResultJson or
+                    ArtifactKind.Har => IsJson(path),
                     _ => true
                 };
             }
@@ -672,6 +702,10 @@ namespace PnCTestAutomation.Artifacts
             ArtifactKind.RuntimeLocator => Path.Combine(
                 "metadata",
                 "runtime-locators"),
+            ArtifactKind.ScenarioReportHtml or ArtifactKind.ScenarioResultJson => "reports",
+            ArtifactKind.ExecutionLog or ArtifactKind.ConsoleLog or ArtifactKind.NetworkLog => "logs",
+            ArtifactKind.Har => "network",
+            ArtifactKind.EvidenceBundle => "bundles",
             _ => "other"
         };
 
