@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @CommercialDuckCreek @Regression @AutomationId-SGS-CLDC-001-BAP-BASIC-POLICY
 @CL_DC @BAP @basic_new_business_policy
 
 Feature: BAP Basic Policy

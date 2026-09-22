@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @PersonalDuckCreek @Smoke @AutomationId-SGS-PLDC-211-SMOKE-TEST-AUTO
 @PL_DC @AUTO @smoke_test @auto_smoke_test @pldc_smoke_test
 
 Feature: Smoke Test Auto

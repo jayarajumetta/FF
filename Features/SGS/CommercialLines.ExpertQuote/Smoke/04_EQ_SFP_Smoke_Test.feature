@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @ExpertQuote @Smoke @AutomationId-SGS-CLEQ-04-EQ-SFP-SMOKE-TEST
 @CL_EQ @SFP  @sfp_smoke_test @cleq_smoke_test
 
 Feature: EQ SFP Smoke Test

@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @ExpertQuote @Regression @AutomationId-SGS-CLEQ-05-EQ-SFP-BASIC-POLICY
 @CL_EQ @SFP @basic_new_business_policy
 
 Feature: EQ SFP Basic Policy

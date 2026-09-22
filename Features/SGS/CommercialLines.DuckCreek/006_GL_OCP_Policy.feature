@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @CommercialDuckCreek @Regression @AutomationId-SGS-CLDC-006-GL-OCP-POLICY
 @CL_DC @owners_and_contractors_protective_new_business
 
 Feature: GL OCP Policy

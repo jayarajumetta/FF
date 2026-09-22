@@ -86,10 +86,19 @@ from introducing parallel infrastructure.
 
 ## SGS adaptation contract
 
-The SGS inventory is design input, not source to copy. Adapt useful concepts
-such as control intent, runtime locator resolution, semantic UI actions, data
-precedence, output paths, evidence manifests, finalizers, and publishers behind
-the contracts owned here.
+The SGS inventory includes required executable business coverage, not only
+design ideas or retained feature files. Adapt every delivered business binding,
+workflow, page/locator dependency, and assertion behind the contracts owned here.
+Reuse correct PnC behavior and useful SGS contracts for control intent, data
+precedence, reporting, and evidence. Do not transplant SGS lifecycle owners,
+browser factories, retry engines, or pipelines.
+
+`sgs-execution-ledger.json` preserves source/import/adaptation provenance
+separately and accounts for every active and source-disabled example. Unknown
+cases or stale profile payloads fail before browser work. A provenance tag is
+not an unconditional skip; per-case readiness records explicit unfinished work
+and requires the shared runtime, selected-value/frame assertions, and rich
+evidence before local execution can be enabled.
 
 - Selected-value checks assert the actual selected value. `True` means
   checked/selected and `Enabled` means enabled; neither is a visibility alias.

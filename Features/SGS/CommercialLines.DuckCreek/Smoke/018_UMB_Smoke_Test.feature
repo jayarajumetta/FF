@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @CommercialDuckCreek @Smoke @AutomationId-SGS-CLDC-018-UMB-SMOKE-TEST
 @CLDC @UMB @smoke_test @umb_smoke_test @cldc_smoke_test
 
 Feature: UMB Smoke Test

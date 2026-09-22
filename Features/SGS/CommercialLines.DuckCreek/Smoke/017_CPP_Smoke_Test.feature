@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @CommercialDuckCreek @Smoke @AutomationId-SGS-CLDC-017-CPP-SMOKE-TEST
 @CLDC @CPP @smoke_test @cpp_smoke_test @cldc_smoke_test
 
 Feature: CPP Smoke Test

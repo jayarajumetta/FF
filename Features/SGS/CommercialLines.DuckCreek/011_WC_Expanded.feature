@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @CommercialDuckCreek @Regression @AutomationId-SGS-CLDC-011-WC-EXPANDED
 @CL_DC @expanded_new_business
 
 Feature: WC Expanded

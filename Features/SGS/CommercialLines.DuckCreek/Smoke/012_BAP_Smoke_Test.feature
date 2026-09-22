@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @CommercialDuckCreek @Smoke @AutomationId-SGS-CLDC-012-BAP-SMOKE-TEST
 @CLDC @BAP @smoke_test @bap_smoke_test @cldc_smoke_test
 
 Feature: BAP Smoke Test

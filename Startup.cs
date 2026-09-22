@@ -20,6 +20,7 @@ using Reqnroll;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
@@ -46,6 +47,8 @@ namespace PnCTestAutomation
             services.AddSingleton<IConfiguration>(configuration);
             services.AddSingleton<IProductModule, SfpProductModule>();
             services.AddSingleton<IProductModuleRegistry, ProductModuleRegistry>();
+            services.AddSingleton(_ =>
+                SgsExecutionCatalog.Load(Path.Combine(AppContext.BaseDirectory, "Resources")));
 
             var credentials = configuration.GetSection("Credentials").Get<CredentialsConfig>();
             if (credentials != null)
@@ -196,7 +199,10 @@ namespace PnCTestAutomation
                 var automationId = ScenarioAutomationIdentity.Resolve(
                     scenarioContext.ScenarioInfo.Tags ?? [],
                     provider.GetRequiredService<FeatureContext>().FeatureInfo.Tags ?? [],
-                    TryGetScenarioQualifier(scenarioContext));
+                    ScenarioAutomationIdentity.ResolveQualifier(
+                        (scenarioContext.ScenarioInfo.Tags ?? [])
+                            .Concat(provider.GetRequiredService<FeatureContext>().FeatureInfo.Tags ?? []),
+                        scenarioContext.ScenarioInfo.Arguments));
                 var testIdentity = automationId == null
                     ? null
                     : NUnit.Framework.TestContext.CurrentContext.Test.Name;
@@ -297,22 +303,6 @@ namespace PnCTestAutomation
             {
                 config.AutoStart = autoStart;
             }
-        }
-
-        private static string TryGetScenarioQualifier(ScenarioContext context)
-        {
-            var arguments = context.ScenarioInfo.Arguments;
-            if (arguments == null)
-                return null;
-            foreach (var key in new[] { "StateAbbv", "State" })
-            {
-                if (!arguments.Contains(key))
-                    continue;
-                var value = arguments[key]?.ToString()?.Trim();
-                if (!string.IsNullOrWhiteSpace(value))
-                    return value;
-            }
-            return null;
         }
 
         private static string GetEnvironmentValue(string name, string configuredValue) =>

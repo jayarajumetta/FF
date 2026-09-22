@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @PersonalDuckCreek @Regression @AutomationId-SGS-PLDC-182-AUTO-RATE-FILINGS-POLICY-3-NB-PRIOR-EFF-DATE
 @PL_DC @AUTO @new_business_with_prior_effective_date
 
 Feature: Auto Rate Filings Policy 3 NB Prior Eff Date

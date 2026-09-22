@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @PersonalDuckCreek @Smoke @AutomationId-SGS-PLDC-212-SMOKE-TEST-CYCLE
 @PL_DC @CYCLE @smoke_test @cycle_smoke_test @pldc_smoke_test
 
 Feature: Smoke Test Cycle

@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @CommercialDuckCreek @Smoke @AutomationId-SGS-CLDC-014-GL-SMOKE-TEST
 @CLDC @GL @smoke_test @gl_smoke_test @cldc_smoke_test
 
 Feature: GL Smoke Test

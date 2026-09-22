@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @ExpertQuote @Regression @AutomationId-SGS-CLEQ-02-EQ-BOP-BASIC-POLICY
 @CL_EQ @BOP @basic_new_business_policy
 
 Feature: EQ BOP Basic Policy

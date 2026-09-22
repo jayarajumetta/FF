@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @ExpertQuote @Regression @AutomationId-SGS-CLEQ-06-EQ-SFP-COUNTRY-ESTATE-POLICY
 @CL_EQ @SFP @country_estate_new_business_policy
 
 Feature: EQ SFP Country Estate Policy

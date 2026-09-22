@@ -3,6 +3,9 @@ using System.Runtime.Loader;
 using System.Globalization;
 using System.Text.Json;
 
+if (args.Length > 0 && args[0] == "initialize-sgs-ledger")
+    return SgsLedgerInitializer.Run(args[1..]);
+
 if (args.Length != 2)
 {
     Console.Error.WriteLine(

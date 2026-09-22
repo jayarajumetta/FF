@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @CommercialDuckCreek @Regression @AutomationId-SGS-CLDC-007-IM-BASIC-POLICY
 @CL_DC @basic_new_business_policy
 
 Feature: IM Basic Policy

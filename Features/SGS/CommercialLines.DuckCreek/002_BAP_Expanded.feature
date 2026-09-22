@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @CommercialDuckCreek @Regression @AutomationId-SGS-CLDC-002-BAP-EXPANDED
 @CL_DC @BAP @expanded_new_business
 
 Feature: BAP Expanded

@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @CommercialDuckCreek @Smoke @AutomationId-SGS-CLDC-015-IM-SMOKE-TEST
 @CLDC @IM @smoke_test @im_smoke_test @cldc_smoke_test
 
 Feature: IM Smoke Test

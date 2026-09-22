@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @CommercialDuckCreek @Regression @AutomationId-SGS-CLDC-009-UMB-EXPANDED
 @CL_DC @UMB @expanded_new_business
 
 Feature: UMB Expanded

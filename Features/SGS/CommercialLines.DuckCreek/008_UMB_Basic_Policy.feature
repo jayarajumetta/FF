@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @CommercialDuckCreek @Regression @AutomationId-SGS-CLDC-008-UMB-BASIC-POLICY
 @CL_DC @UMB @basic_new_business_policy
 
 Feature: UMB Basic Policy

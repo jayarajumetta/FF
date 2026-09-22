@@ -50,6 +50,7 @@ namespace PnCTestAutomation.Hooks
         private readonly IExpectedOutcomeProfileProvider _outcomeProfiles;
         private readonly IBusinessOutcomeContext _businessOutcomeContext;
         private readonly IProductModuleRegistry _productModules;
+        private readonly SgsExecutionCatalog _sgsCatalog;
         private ProductEvidenceContract _productEvidence;
         private bool _tracingStarted;
         private ArtifactEvidenceException _artifactFailure;
@@ -69,7 +70,8 @@ namespace PnCTestAutomation.Hooks
             IArtifactCaptureService artifactCapture,
             IExpectedOutcomeProfileProvider outcomeProfiles,
             IBusinessOutcomeContext businessOutcomeContext,
-            IProductModuleRegistry productModules)
+            IProductModuleRegistry productModules,
+            SgsExecutionCatalog sgsCatalog)
         {
             _context = context;
             _browserFactory = browserFactory;
@@ -88,6 +90,7 @@ namespace PnCTestAutomation.Hooks
             _outcomeProfiles = outcomeProfiles;
             _businessOutcomeContext = businessOutcomeContext;
             _productModules = productModules;
+            _sgsCatalog = sgsCatalog;
         }
 
         [BeforeTestRun]
@@ -151,14 +154,27 @@ namespace PnCTestAutomation.Hooks
                 _scenarioContext[ScenarioContextData.ContextKey] = new ScenarioContextData();
             }
 
-            if ((_scenarioContext.ScenarioInfo.Tags ?? []).Any(tag =>
-                    tag.Equals("SgsImported", StringComparison.OrdinalIgnoreCase)))
+            var tags = (_scenarioContext.ScenarioInfo.Tags ?? [])
+                .Concat(_featureContext.FeatureInfo.Tags ?? [])
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            if (tags.Contains("SgsImported"))
             {
-                NUnit.Framework.Assert.Ignore(
-                    "Imported SGS feature retained as a business deliverable. " +
-                    "Destination bindings, profiles, selectors, outcomes, and " +
-                    "execution ownership must be adapted before it can run.");
-                return;
+                var resolution = _sgsCatalog.Resolve(
+                    _featureContext.FeatureInfo.Title,
+                    tags,
+                    ScenarioAutomationIdentity.ReadArguments(_scenarioContext.ScenarioInfo.Arguments));
+                if (!resolution.IsRunnable)
+                {
+                    NUnit.Framework.Assert.Ignore(
+                        $"SGS case '{resolution.Case.AutomationId}' is non-runnable: " +
+                        resolution.Case.BlockedReason);
+                    return;
+                }
+                if (tags.Contains("NonRunnable"))
+                    throw new SgsExecutionConfigurationException(
+                        "An SGS case marked runnable still has a NonRunnable feature tag.");
+                _sgsCatalog.ValidateResourcePayloads(
+                    Path.Combine(AppContext.BaseDirectory, "Resources"), resolution);
             }
 
             if (ShouldSkipScenarioForDevStateFilter(out var skipReason))
@@ -170,7 +186,8 @@ namespace PnCTestAutomation.Hooks
             var automationId = ScenarioAutomationIdentity.Resolve(
                 _scenarioContext.ScenarioInfo.Tags ?? [],
                 _featureContext.FeatureInfo.Tags ?? [],
-                TryGetScenarioStateAbbreviation());
+                ScenarioAutomationIdentity.ResolveQualifier(
+                    tags, _scenarioContext.ScenarioInfo.Arguments));
             var productModule = automationId == null
                 ? null
                 : _productModules.TryResolve(automationId);
@@ -297,7 +314,11 @@ namespace PnCTestAutomation.Hooks
                 _context.ChecklistPage = null;
             }
             // Handle tracing and video on failure
-            var hasFailed = _scenarioContext.TestError != null;
+            var wasSkipped =
+                NUnitTestContext.CurrentContext.Result.Outcome.Status ==
+                NUnit.Framework.Interfaces.TestStatus.Skipped ||
+                _scenarioContext.TestError is NUnit.Framework.IgnoreException;
+            var hasFailed = _scenarioContext.TestError != null && !wasSkipped;
             if (hasFailed)
                 RequireFailureEvidence();
 
@@ -401,7 +422,8 @@ namespace PnCTestAutomation.Hooks
             // ── DataPool: persist quote only from truly passing tests ──
             // Exclude: failed tests (TestError != null), skipped tests (outcome = Skipped),
             // and scenarios without a captured quote number.
-            var isPassing = !hasFailed && _scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.OK;
+            var isPassing = !wasSkipped && !hasFailed &&
+                            _scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.OK;
             Exception persistenceFailure = null;
             if (isPassing && _artifactFailure == null)
             {
@@ -433,11 +455,14 @@ namespace PnCTestAutomation.Hooks
             if (_quoteHandoff.TryGet(out _))
                 _artifacts.RecordMarker(ArtifactKind.QuoteHandoff, "quote-captured");
 
-            _artifacts.Complete(
-                _scenarioContext.ScenarioExecutionStatus != ScenarioExecutionStatus.OK ||
-                hasFailed ||
-                _artifactFailure != null ||
-                persistenceFailure != null);
+            var outcome = hasFailed || _artifactFailure != null || persistenceFailure != null
+                ? ArtifactOutcome.Failed
+                : wasSkipped
+                    ? ArtifactOutcome.Skipped
+                    : _scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.OK
+                        ? ArtifactOutcome.Passed
+                        : ArtifactOutcome.Failed;
+            _artifacts.Complete(outcome);
 
             if (_artifactFailure != null)
                 throw _artifactFailure;
@@ -571,6 +596,13 @@ namespace PnCTestAutomation.Hooks
                 var stateAbbv = args["StateAbbv"]?.ToString()?.Trim();
                 if (!string.IsNullOrWhiteSpace(stateAbbv))
                     return stateAbbv.ToUpperInvariant();
+            }
+
+            if (args.Contains("stateCode"))
+            {
+                var stateCode = args["stateCode"]?.ToString()?.Trim();
+                if (!string.IsNullOrWhiteSpace(stateCode))
+                    return stateCode.ToUpperInvariant();
             }
 
             if (args.Contains("State"))

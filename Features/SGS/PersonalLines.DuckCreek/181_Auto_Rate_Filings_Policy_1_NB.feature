@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @PersonalDuckCreek @Regression @AutomationId-SGS-PLDC-181-AUTO-RATE-FILINGS-POLICY-1-NB
 @PL_DC @AUTO @rate_filing_new_business
 
 Feature: Auto Rate Filings Policy 1 NB

@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @CommercialDuckCreek @Smoke @AutomationId-SGS-CLDC-016-WC-SMOKE-TEST
 @CLDC @WC @smoke_test @wc_smoke_test @cldc_smoke_test
 
 Feature: WC Smoke Test

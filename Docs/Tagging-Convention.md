@@ -35,7 +35,7 @@ unless the scenario has a *different* value for that tag.
 | `@Ignore` | Temporarily disabled. Must include a comment with the reason and a tracking ticket reference. |
 | `@NonRunnable` | Explicitly blocked by typed profile/configuration requirements and must produce an ignored, never passing, result. |
 | `@NoRetry` | State-changing workflow that cannot enter the transient retry path. |
-| `@SgsImported` | Original SGS feature deliverable retained in `Features/SGS`. It is visible and discoverable but ignored before browser startup until adapted to destination bindings and contracts. |
+| `@SgsImported` | SGS source provenance, not a permanent skip. The exact example's entry in `sgs-execution-ledger.json` controls readiness before browser startup. |
 
 ### 2. Line of Business (required on every scenario or its parent feature)
 
@@ -156,17 +156,38 @@ records the source repository commit, original path, destination path, and
 source/imported SHA-256 values for every feature. Their outlines compile into
 1,115 discoverable test cases.
 
-The only content added during import is the common feature-level header:
+The immutable imported snapshot added the common feature-level header:
 
 ```gherkin
 @SgsImported @NonRunnable @NoRetry
 ```
 
-The source payload after that header remains byte-for-byte checksummed. These
-files are not silently treated as completed destination automation. The
-`SgsImported` hook ignores them before browser startup until their SGS-specific
-bindings, data, selectors/frames, business outcomes, and shard ownership are
-adapted into the combined framework.
+The source payload after that header remains byte-for-byte checksummed. The
+current adaptation header additionally declares the standard application/run
+tags and an immutable `AutomationId-SGS-<PRODUCT>-<SOURCE-FILE>` family, without
+removing original SGS tags or changing business wording/example rows.
+
+`Resources/Contracts/sgs-execution-ledger.json` separately records the current
+adapted checksum, all 1,115 active examples, 34 source-commented examples, exact
+business-code dependencies, reviewed profile checksums, and per-case readiness.
+The hook resolves one exact ledger case; unknown or inconsistent cases fail
+configuration rather than falling back to another profile. Non-runnable cases
+produce an explicit ignored result with their blocker, never a passing result.
+`ReadyForLocalVerification` is not `Verified`: the latter requires two distinct,
+evidenced local passes. Source-commented rows cannot silently become runnable.
+
+SGS case qualifiers combine the state/company variant with a hash of the
+original input arguments (including profile paths), excluding display-only
+state names and example row order. `AZ ANG` and `AZ ANP`, or different profiles
+for the same state, cannot collapse to one automation identity. Existing SFP
+identities such as `SFP-BASIC-POLICY:AL` are unchanged. SGS sharded/CI selection
+is not enabled merely by tag normalization; existing SFP shard ownership stays
+unchanged until each adapted workflow has an explicitly reviewed selection.
+
+The ledger initializer uses the existing `Tools/CiTestInventory` .NET executable
+and the shared identity/schema contracts. `Scripts/New-SgsExecutionLedger.ps1`
+is a one-time initialization wrapper and refuses to replace an existing ledger:
+regeneration must not erase adaptation or verification progress.
 
 The JSON files referenced by those features are retained under `Resources/SGS`.
 `Resources/Contracts/sgs-data-inventory.json` records each source checksum and

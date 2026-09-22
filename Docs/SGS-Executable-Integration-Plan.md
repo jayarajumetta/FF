@@ -1,6 +1,6 @@
 # SGS executable integration plan
 
-Status: APPROVED - implementation paused at the user's request on 2026-09-18.
+Status: APPROVED - implementation resumed at the user's request on 2026-09-22.
 
 ## Objective and authority
 
@@ -19,9 +19,9 @@ issuance, payment, pipeline rollout, a pull request, or a solution rename.
 
 ## Implementation pause checkpoint
 
-The user requested a safe pause before leaving on 2026-09-18. Do not resume
-implementation without a new instruction. Isolated workstreams may only finish
-and save their current small checkpoint, then remain idle.
+The user requested a safe pause on 2026-09-18 and explicitly resumed work on
+2026-09-22. The following historical checkpoint was preserved; implementation
+continues from it rather than restarting the completed inventory.
 
 - Latest-source reconciliation is complete at the SHA recorded below. No
   new source inventory is needed unless the remote changes before resumption.
@@ -35,7 +35,7 @@ and save their current small checkpoint, then remain idle.
 - No browser runs, pipeline changes, or Visual Studio checkout updates were
   started during this implementation entry.
 
-All three workstreams confirmed their commands completed and they are idle:
+At the pause, all three workstreams confirmed their commands completed:
 
 | Workstream | Saved checkpoint |
 |---|---|
@@ -43,10 +43,10 @@ All three workstreams confirmed their commands completed and they are idle:
 | Data adapter | API/ownership agreed; no source changes or implementation commit yet. |
 | Reporting | Four untracked draft files under `Reporting`: `ReportContracts.cs`, `ReportRedactor.cs`, `ScenarioReportProjector.cs`, and `ScenarioReportRecorder.cs`. Not yet validated or committed; do not treat them as a finished report implementation. |
 
-On resumption, collect the saved workstream checkpoints first. Continue the
-coverage ledger and shared artifact/finalization contracts, integrate the
-tested data/reporting slices, then adapt the original ExpertQuote BOP smoke
-workflow. Preserve the existing solution and scenario lifecycle throughout.
+The saved workstreams have resumed. Continue the coverage ledger and shared
+artifact/finalization contracts, integrate tested data/reporting slices, then
+adapt the original ExpertQuote BOP smoke workflow. Preserve the existing
+solution and scenario lifecycle throughout.
 
 ## Baselines and source freshness
 
@@ -73,6 +73,20 @@ changed source files to reconcile at this snapshot.
 The implementation-entry fetch and live remote-HEAD check at 18:51:42 UTC
 on 2026-09-18 reconfirmed that same SHA and default branch. The first
 implementation milestone is pinned to that commit.
+
+The 2026-09-22 resume fetch (12:57:29-12:57:46 UTC) found newer remote `main`:
+`d1fa9404f1a245722879e523626beb72e68d033b`, nine commits after the original
+snapshot. This is the current implementation pin. Its 19 changed paths affect
+reporting/configuration/delivery only; features, bindings, pages, locators, and
+data profiles are unchanged, so the completed executable map remains valid.
+Imported checksums continue to describe the original immutable import.
+
+The preserved reference overlay is `sgs-source-delta-ecd9019-to-d1fa940` in the
+inventory session's `files` directory. Its manifest SHA-256 is
+`E3DBC24F204A89377C66A4E306A7FB20630B923DA8432BE5522BAFDA6B20F8CB`.
+Adapt the newer report root/deduplication and evidence-integrity improvements.
+Do not copy source video-omission defaults over required destination evidence,
+or replace the destination pipelines with the source release implementation.
 
 The research worktree itself was ten commits behind at `496d6a3`; it was NOT
 used as source truth. The dependency audit read the freshly fetched Git

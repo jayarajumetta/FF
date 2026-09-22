@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Products;
 using NUnit.Framework;
 
 namespace PnCTestAutomation.UnitTests;
@@ -57,6 +58,7 @@ public class SgsFeatureInventoryTests
 
         var header = Encoding.UTF8.GetBytes(
             "@SgsImported @NonRunnable @NoRetry\r\n");
+        var catalog = SgsExecutionCatalog.Load(Path.Combine(root, "Resources"));
         foreach (var feature in features)
         {
             var relativePath = feature.GetProperty("destinationPath")
@@ -64,20 +66,32 @@ public class SgsFeatureInventoryTests
                 .Replace('/', Path.DirectorySeparatorChar);
             var path = Path.Combine(root, relativePath);
             var bytes = File.ReadAllBytes(path);
+            var workflow = catalog.Ledger.Workflows.Single(item =>
+                item.DestinationPath == feature.GetProperty("destinationPath").GetString());
+            var adaptedHeaderLength = Array.IndexOf(bytes, (byte)'\n') + 1;
+            Assert.That(adaptedHeaderLength, Is.GreaterThan(0), relativePath);
+            var adaptedHeader = Encoding.UTF8.GetString(bytes, 0, adaptedHeaderLength);
+            var sourcePayload = bytes.AsSpan(adaptedHeaderLength).ToArray();
 
             Assert.Multiple(() =>
             {
-                Assert.That(bytes.AsSpan(0, header.Length).ToArray(),
-                    Is.EqualTo(header),
-                    relativePath);
+                Assert.That(adaptedHeader, Does.Contain("@SgsImported"), relativePath);
+                Assert.That(adaptedHeader, Does.Contain("@NoRetry"), relativePath);
+                Assert.That(adaptedHeader, Does.Contain("@AutomationId-" + workflow.AutomationFamily), relativePath);
                 Assert.That(
                     Convert.ToHexString(SHA256.HashData(bytes)),
+                    Is.EqualTo(workflow.AdaptedSha256),
+                    relativePath);
+                Assert.That(
+                    Convert.ToHexString(SHA256.HashData(header.Concat(sourcePayload).ToArray())),
                     Is.EqualTo(feature.GetProperty("importedSha256").GetString()),
                     relativePath);
                 Assert.That(
-                    Convert.ToHexString(SHA256.HashData(bytes.AsSpan(header.Length))),
+                    Convert.ToHexString(SHA256.HashData(sourcePayload)),
                     Is.EqualTo(feature.GetProperty("sourceSha256").GetString()),
                     relativePath);
+                Assert.That(workflow.SourceSha256, Is.EqualTo(feature.GetProperty("sourceSha256").GetString()));
+                Assert.That(workflow.ImportedSha256, Is.EqualTo(feature.GetProperty("importedSha256").GetString()));
                 Assert.That(
                     feature.GetProperty("executionStatus").GetString(),
                     Is.EqualTo("NonRunnable"),

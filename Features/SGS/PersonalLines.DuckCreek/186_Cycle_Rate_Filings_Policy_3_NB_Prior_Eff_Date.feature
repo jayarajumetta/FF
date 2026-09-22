@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @PersonalDuckCreek @Regression @AutomationId-SGS-PLDC-186-CYCLE-RATE-FILINGS-POLICY-3-NB-PRIOR-EFF-DATE
 @PL_DC @CYCLE @new_business_with_prior_effective_date
 
 Feature: Cycle Rate Filings Policy 3 NB Prior Eff Date

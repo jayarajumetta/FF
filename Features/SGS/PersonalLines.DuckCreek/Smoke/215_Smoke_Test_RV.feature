@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @PersonalDuckCreek @Smoke @AutomationId-SGS-PLDC-215-SMOKE-TEST-RV
 @PL_DC @RV @smoke_test @rv_smoke_test @pldc_smoke_test
 
 Feature: Smoke Test RV

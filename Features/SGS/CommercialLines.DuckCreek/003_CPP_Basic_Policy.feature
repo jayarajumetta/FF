@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @CommercialDuckCreek @Regression @AutomationId-SGS-CLDC-003-CPP-BASIC-POLICY
 @CL_DC @CPP @basic_new_business_policy
 
 Feature: CPP Basic Policy

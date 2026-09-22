@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry
+@SgsImported @NonRunnable @NoRetry @PersonalDuckCreek @Regression @AutomationId-SGS-PLDC-185-CYCLE-RATE-FILINGS-POLICY-1-NB-1
 @PL_DC @CYCLE @rate_filing_new_business
 
 Feature: Cycle Rate Filings Policy 1 NB 1
