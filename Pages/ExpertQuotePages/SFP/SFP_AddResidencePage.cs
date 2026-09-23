@@ -154,9 +154,12 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await Expect(AdditionalDescriptionInput).ToHaveValueAsync(data.ResidenceAdditionalDesc);
             await Expect(YearBuiltInput).ToHaveValueAsync(data.ResidenceYearBuilt);
             await Expect(RoofYearInput).ToHaveValueAsync(data.ResidenceRoofYear);
-            await Expect(HeatingYearInput).ToHaveValueAsync(data.Farm.ResidenceHeatingYear);
-            await Expect(PlumbingYearInput).ToHaveValueAsync(data.Farm.ResidencePlumbingYear);
-            await Expect(WiringYearInput).ToHaveValueAsync(data.Farm.ResidenceElectricalYear);
+            if (data.Farm.ResidenceHeatingYear != null)
+                await Expect(HeatingYearInput).ToHaveValueAsync(data.Farm.ResidenceHeatingYear);
+            if (data.Farm.ResidencePlumbingYear != null)
+                await Expect(PlumbingYearInput).ToHaveValueAsync(data.Farm.ResidencePlumbingYear);
+            if (data.Farm.ResidenceElectricalYear != null)
+                await Expect(WiringYearInput).ToHaveValueAsync(data.Farm.ResidenceElectricalYear);
             await SfpFieldAssertions.SelectionAsync(FrameSelect, data.ResidenceRateType);
             await SfpFieldAssertions.SelectionAsync(RoofTypeSelect, data.ResidenceRoofType);
             await SfpFieldAssertions.SelectionAsync(RoofImpactResistanceSelect, data.ResidenceRoofImpact);

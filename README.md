@@ -380,6 +380,55 @@ and queries forms. Do not use it as an input-only check or bypass Checklist
 outages. No transmission, issuance, binding, payment, or baseline recording is
 authorized by the workbook update.
 
+### SFP Country Estate workbook update
+
+CE implementation is pending reconciliation with the current product contract.
+Year built and roof year remain fixed at 2022, with Asphalt / UL 2, AOI 375000
+and Expanded Replacement Cost. CE does not inherit Basic's renovation years or
+rolling roof.
+
+The requested perils 5 change is blocked by the current CLAS CE contract:
+residence coverage 220 defaults to perils 6, disables that control for CE, and
+offers perils 1-5 only for other coverage types. The canonical feature's existing
+perils 3 is retained pending reconciliation, not endorsed as valid; strict
+verification rejects a disabled value that differs from the requested value.
+Separate Residence Contents is hidden for CE; household contents instead derives
+from coverage 220's limit and its replacement-cost percentage. The requested
+separate contents AOI 120000 cannot be forced into a hidden non-CE coverage.
+Supported percentages are 50/60/70/80/90/100, so AOI 375000 yields at least
+187500 in household contents. A calculated 32% is not an available option.
+
+The detailed CE workbook's highlighted goals also request residence contents,
+a Division II greenhouse with building/contents coverages and BVS valuation,
+and Division IV categories 409/411 with unattended-vehicle coverage. These
+additions are pending source-backed control implementation, not approved
+omissions. Greenhouse installation date is fixed at 04/25/2025 (Excel serial
+45772, 1900 date system). The exact Greenhouse / rate type 1 / plastic thickness
+5 combination triggers CLAS rule 12811: plastic-covered greenhouses require rate
+type 4 or 5. The FarmBuilding / description 249 exception does not apply to the
+requested Greenhouse coverage; neither coverage type nor inputs may be silently
+substituted. QA has not supplied distinct CE location addresses or
+a replacement wind/hail deductible; existing addresses and 1% remain unchanged,
+and those workbook requirements are not complete.
+
+CE input-only qualification must stop after visible Pricing and current-quote
+confirmation, before Step 24 Forms. The full canonical scenario also performs
+Save for Later/reopen and Checklist updates; it is not an input-only test.
+Premium comparison and forms exclusion in a partial qualification does not
+qualify those outputs or authorize baseline recording.
+
+Contract references: `Carrier_SpecialFarmPackage_Data_US_4_0_0_0.xml`
+lines 8625-8699 and 9410 (CE type 220/perils), 8815-8830 and 19818-19844
+(household contents percentage/amount), 13361-13389 and 13472-13484
+(plastic greenhouse eligibility); headless Pages lines 1763-1776 and 66167
+(hidden separate contents), 66284 (disabled CE perils), 66358 (percentage field).
+Offline fixture checks characterize these controls; they do not execute CLAS
+rules or certify deployed behavior.
+
+```powershell
+dotnet test TestAutomation.csproj --filter "FullyQualifiedName~PnCTestAutomation.Tests.SfpCountryEstate|FullyQualifiedName~PnCTestAutomation.Tests.SfpBasic"
+```
+
 ### Usage in Feature Files
 
 ```gherkin
