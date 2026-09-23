@@ -1,6 +1,7 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using PnCTestAutomation.Helpers;
 using System.Threading.Tasks;
+using static Microsoft.Playwright.Assertions;
 
 namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 {
@@ -111,6 +112,13 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             if (!string.IsNullOrEmpty(contextData.ResidenceRoofYear))
                 await RoofYearInput.FillAsync(contextData.ResidenceRoofYear);
 
+            if (!string.IsNullOrEmpty(contextData.Farm.ResidenceHeatingYear))
+                await FillRenovationYearAsync(HeatingYearInput, contextData.Farm.ResidenceHeatingYear);
+            if (!string.IsNullOrEmpty(contextData.Farm.ResidencePlumbingYear))
+                await FillRenovationYearAsync(PlumbingYearInput, contextData.Farm.ResidencePlumbingYear);
+            if (!string.IsNullOrEmpty(contextData.Farm.ResidenceElectricalYear))
+                await FillRenovationYearAsync(WiringYearInput, contextData.Farm.ResidenceElectricalYear);
+
             if (!string.IsNullOrEmpty(contextData.ResidenceRoofType))
             {
                 await RoofTypeSelect.ClickAsync();
@@ -131,6 +139,38 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                 var yesOrNo = contextData.ResidenceSolidFuelQuestion.ToLower() is "yes" or "true" ? "Yes" : "No";
                 await GetSolidFuelButton(yesOrNo).ClickAsync();
             }
+        }
+
+        private async Task FillRenovationYearAsync(ILocator input, string year)
+        {
+            await input.FillAsync(year);
+            await input.PressAsync("Tab");
+            await WaitForSpinnerAsync();
+            await Expect(input).ToHaveValueAsync(year);
+        }
+
+        public async Task VerifyResidenceFormAsync(ScenarioContextData data)
+        {
+            await Expect(AdditionalDescriptionInput).ToHaveValueAsync(data.ResidenceAdditionalDesc);
+            await Expect(YearBuiltInput).ToHaveValueAsync(data.ResidenceYearBuilt);
+            await Expect(RoofYearInput).ToHaveValueAsync(data.ResidenceRoofYear);
+            await Expect(HeatingYearInput).ToHaveValueAsync(data.Farm.ResidenceHeatingYear);
+            await Expect(PlumbingYearInput).ToHaveValueAsync(data.Farm.ResidencePlumbingYear);
+            await Expect(WiringYearInput).ToHaveValueAsync(data.Farm.ResidenceElectricalYear);
+            await SfpFieldAssertions.SelectionAsync(FrameSelect, data.ResidenceRateType);
+            await SfpFieldAssertions.SelectionAsync(RoofTypeSelect, data.ResidenceRoofType);
+            await SfpFieldAssertions.SelectionAsync(RoofImpactResistanceSelect, data.ResidenceRoofImpact);
+            await Expect(GetNumberOfFamiliesButton(data.ResidenceNumberOfFamilies)
+                .Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
+            await Expect(GetConditionRatingButton(data.ResidenceConditionRating)
+                .Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
+            await Expect(GetSolidFuelButton(data.ResidenceSolidFuelQuestion)
+                .Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
+            var vacantChip = GetVacantSeasonalButton(data.ResidenceSeasonalOrVacant);
+            if (await vacantChip.IsVisibleAsync())
+                await Expect(vacantChip.Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
+            else
+                await SfpFieldAssertions.SelectionAsync(VacantSeasonalSelect, data.ResidenceSeasonalOrVacant);
         }
 
         private async Task SelectVacantSeasonalAsync(string value)

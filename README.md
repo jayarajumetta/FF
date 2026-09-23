@@ -293,6 +293,77 @@ Use tokens in feature file tables to generate randomized test data at runtime:
 |-------|-------------|---------|
 | `{{today}}` | Today's date | `05/08/2026` |
 | `{{tomorrow}}` | Tomorrow's date | `05/09/2026` |
+| `CURRENT YEAR` / `{{currentYear}}` | Residence `RoofYear` only: current calendar year at execution | `2026` |
+
+### SFP Basic workbook inputs
+
+`Features/SFP/SFP_BasicPolicy.feature` follows the **Proposed Basic Policy** sheet
+of *SFP Base Policies (2).xlsx*. Only the roof year rolls forward. Year built
+remains 2024; heating/electrical remain 2026 and plumbing remains 2025.
+The Basic-only verified steps check entered values and selected options, including
+AOI 550000 after RCT, perils 5 (also when disabled), Slate / UL 4, and exact
+FPP code 464 with limit 101500 and deductible $1,000. Existing CE steps retain
+their prior behavior.
+After saving the residence, Basic reopens Location #1 / Residence #1 and checks
+the persisted residence and coverage values before proceeding. The edit action
+uses the source-derived row-scoped `editResidence` test ID (no `.value` suffix);
+a missing/changed action fails rather than opening another row or silently
+skipping readback.
+
+QA still needs to supply replacement Basic location addresses/ZIPs distinct from
+Rate and CE. The 38 existing examples are deliberately unchanged; do not invent
+ZIPs or treat this workbook requirement as complete.
+Existing expected premiums and premium assertions are unchanged pending confirmed
+inputs and authorized recalibration. Missing premium baselines are not newly
+populated.
+
+**Deferred workbook requirements (not QA-approved omissions):** Limited Farm
+Pollution is coverage 146, not Special Farm Pollution 145. The requested
+occurrence/aggregate 50000/300000 requires a base liability aggregate of at least
+300000, incompatible with the workbook's unchanged Basic base 100000/100000.
+Reviewed CLAS SD/WI/NE/MN metadata also leaves coverage 146 unavailable; current
+runtime eligibility must be confirmed. No mandatory pollution step, eligibility
+bypass, base-limit change, or successful skip has been added.
+Pending exact inputs are 50000/300000, total onsite manure/chemical capacity
+8000000 gallons, maximum distance 23 miles, 550 waste trips/year, aboveground
+tank Yes, tank capacity 500000 gallons, and fixed construction date 03/31/2024
+(Excel serial 45382, 1900 date system). The tank exceeds the 10000-gallon
+threshold for UW rule 11128; genuine applicable referrals must remain visible.
+
+The unchanged 38 examples are AL, AR, AZ, CO, DE, GA, ID, IL, IN, IA, KS, KY, LA,
+CT, MS, MO, MA, ME, MN, MT, NE, NV, NH, NM, ND, OK, NJ, OH, OR, SC, SD, TN, TX,
+UT, WA, WI, WY, RI. There are 27 existing SFP premium baselines; the 11 without
+baselines are IN, IA, CT, MS, MO, NH, NM, OK, NJ, OH, RI. Recalibration requires
+final approved inputs (including compatible pollution scope and distinct location
+data) plus actual quote evidence; none is inferred from these offline changes.
+
+Contract references: CLAS changeset 308935,
+`Source\DuckCreekTechnologies\ManuScripts\CarrierSpecialFarmPackage\US-INH\Carrier_SpecialFarmPackage_Data_US_4_0_0_0.xml`
+(`BuildingInput` renovation/roof fields, `CovLimitedFarmPollutionLiabilityInput`,
+`LimitedPollutionTank`, aggregate eligibility at lines 34437-34482);
+EQ UI `origin/develop` 9b9b292 and `origin/qa` 9bbd84e agree on the relevant
+SFP builders. Electrical year maps to `BuildingInput.WiringYear`. Code 464
+descriptions are uppercased on change; the feature keeps the business input
+`Bose Sound Bars` and verification expects `BOSE SOUND BARS`.
+The saved-residence action is defined in
+`Headless\US\SpecialFarmPackage_Common_Headless_ViewModels_US_4_0_0_0.xml`
+lines 1090-1126. UI `cl-sfp-locations-buildings-page-builders.service.ts`
+builds the nested Building row's `EditResidence` action; metadata/action builders
+derive its test ID from the response model path. These source references establish
+the contract, not deployed-environment availability.
+
+Offline regression checks (no business workflows):
+
+```powershell
+dotnet test TestAutomation.csproj --filter "FullyQualifiedName~PnCTestAutomation.Tests.SfpBasic"
+```
+
+Page checks use local fixture HTML with network requests blocked, not a live
+product-contract certification. A full Basic feature run creates and saves quotes,
+orders scores/valuation, proceeds through billing/payment setup and Checklist,
+and queries forms. Do not use it as an input-only check or bypass Checklist
+outages. No transmission, issuance, binding, payment, or baseline recording is
+authorized by the workbook update.
 
 ### Usage in Feature Files
 

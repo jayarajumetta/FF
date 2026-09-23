@@ -110,25 +110,28 @@ Feature: SFP Basic Policy
       | WindHailDeductible      | 1%               |
 
     # Step 18: Add a Residence
-    When user adds a Residence to the Location
+    When user adds and verifies a Basic Residence to the Location
       | Question          | Answer        |
       | AdditionalDesc    | Main House    |
-      | YearBuilt         | 2022          |
+      | YearBuilt         | 2024          |
       | NumberOfFamilies  | Single Family |
       | RateType          | Frame         |
       | ConditionRating   | 1             |
-      | RoofYear          | 2022          |
-      | RoofType          | Asphalt       |
-      | RoofImpact        | UL 2          |
+      | RoofYear          | CURRENT YEAR  |
+      | RoofType          | Slate         |
+      | RoofImpact        | UL 4          |
+      | HeatingYear       | 2026          |
+      | PlumbingYear      | 2025          |
+      | ElectricalYear    | 2026          |
       | SeasonalOrVacant  | No            |
       | SolidFuelQuestion | No            |
 
     # Step 19: Add Residence Coverage
-    When user adds Residence Coverage
+    When user adds and verifies Basic Residence Coverage
       | Question           | Answer           |
-      | InsuranceAmount    | 375000           |
+      | InsuranceAmount    | 550000           |
       | SquareFeet         | 1800             |
-      | Perils             | 3                |
+      | Perils             | 5                |
       | ThermostatQuestion | Yes              |
       | ActualCashValue    | Replacement Cost |
       | RCTOption          | Standard         |
@@ -138,11 +141,11 @@ Feature: SFP Basic Policy
     When user skips Optional Coverages and continues
 
     # Step 21: Add Farm Personal Property
-    When user adds Farm Personal Property
+    When user adds and verifies Basic Farm Personal Property
       | Question    | Answer          |
       | Code        | 464             |
       | Description | Bose Sound Bars |
-      | Limit       | 15000           |
+      | Limit       | 101500          |
       | Deductible  | $1,000          |
 
     # Step 22: Add Equipment Breakdown

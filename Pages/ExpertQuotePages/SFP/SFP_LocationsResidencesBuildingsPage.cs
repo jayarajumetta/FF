@@ -1,4 +1,6 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
+using System.Threading.Tasks;
+using static Microsoft.Playwright.Assertions;
 
 namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 {
@@ -7,6 +9,17 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         // Locators
         public ILocator AddLocationButton => _page.GetByTestId("fields.data.account.location.addLocationButton");
         public ILocator NextButton => _page.GetByTestId("fields.data_Rules.next");
+        public ILocator LocationsNavigation => _page.GetByTestId("LocationsBuildings-nav");
+
+        public ILocator EditResidenceButton(int locationRow = 0, int buildingRow = 0) =>
+            _page.GetByTestId($"fields.data.accountDetail.locationDetail.rows[{locationRow}].building.rows[{buildingRow}].editResidence");
+
+        public async Task OpenResidenceAsync(int locationRow = 0, int buildingRow = 0)
+        {
+            await Expect(EditResidenceButton(locationRow, buildingRow)).ToHaveCountAsync(1);
+            await EditResidenceButton(locationRow, buildingRow).ClickAsync();
+            await WaitForSpinnerAsync();
+        }
 
         public ILocator MainFarmLocationSwitch(int row = 0) =>
             _page.GetByTestId($"fields.data.account.location.rows[{row}].locationInput$mainFarmLocationSelected.value");

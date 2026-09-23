@@ -1,7 +1,8 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using PnCTestAutomation.Helpers;
 using System;
 using System.Threading.Tasks;
+using static Microsoft.Playwright.Assertions;
 
 namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 {
@@ -121,6 +122,19 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 
             // Step 3: Click Get Valuation button to trigger RCT calculation
             await ClickGetValuationButtonAsync();
+        }
+
+        public async Task VerifyResidenceCoverageAsync(ScenarioContextData data)
+        {
+            await SfpFieldAssertions.NumberAsync(InsuranceAmountInput, data.ResidenceInsuranceAmount);
+            await SfpFieldAssertions.NumberAsync(SquareFeetInput, data.ResidenceSquareFeet);
+            await SfpFieldAssertions.SelectionAsync(PerilsSelect, data.ResidencePerils);
+            await SfpFieldAssertions.SelectionAsync(ReplacementCostSelect, data.ResidenceActualCashValue);
+            await Expect(GetThermostatButton(data.ResidenceThermostatQuestion)
+                .Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
+            await Expect(EstimatorTypeRCTButton.Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
+            await Expect(GetValuationTypeButton(data.ResidenceRCTOption, data.ResidenceUseDefaults)
+                .Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
         }
 
         private async Task SelectThermostatAsync(string answer)

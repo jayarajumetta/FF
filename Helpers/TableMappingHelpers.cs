@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -776,7 +776,16 @@ namespace PnCTestAutomation.Helpers
                         _contextData.ResidenceConditionRating = answer;
                         break;
                     case "RoofYear":
-                        _contextData.ResidenceRoofYear = answer;
+                        _contextData.ResidenceRoofYear = DateHelpers.ResolveYearToken(answer);
+                        break;
+                    case "HeatingYear":
+                        _contextData.Farm.ResidenceHeatingYear = answer;
+                        break;
+                    case "PlumbingYear":
+                        _contextData.Farm.ResidencePlumbingYear = answer;
+                        break;
+                    case "ElectricalYear":
+                        _contextData.Farm.ResidenceElectricalYear = answer;
                         break;
                     case "RoofType":
                         _contextData.ResidenceRoofType = answer;

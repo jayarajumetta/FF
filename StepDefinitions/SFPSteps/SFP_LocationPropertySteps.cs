@@ -1,4 +1,4 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Pages;
@@ -15,14 +15,16 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
     {
         private readonly PlaywrightContext _context;
         private readonly ScenarioContextData _contextData;
-        private readonly ScenarioContext _scenarioContext;
-
         public SFP_LocationPropertySteps(PlaywrightContext context, ScenarioContext scenarioContext)
+            : this(context, scenarioContext[ScenarioContextData.ContextKey] as ScenarioContextData
+                ?? throw new InvalidOperationException("ScenarioContextData not found. Ensure TestHooks.BeforeTestRun registered it."))
+        {
+        }
+
+        internal SFP_LocationPropertySteps(PlaywrightContext context, ScenarioContextData contextData)
         {
             _context = context;
-            _scenarioContext = scenarioContext;
-            _contextData = _scenarioContext[ScenarioContextData.ContextKey] as ScenarioContextData
-                ?? throw new InvalidOperationException("ScenarioContextData not found. Ensure TestHooks.BeforeTestRun registered it.");
+            _contextData = contextData;
         }
 
         [When("user provides location information and continues")]
@@ -44,7 +46,12 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         }
 
         [When("user adds a Residence to the Location")]
-        public async Task UserAddsResidenceToLocation(Table table)
+        public Task UserAddsResidenceToLocation(Table table) => AddResidenceAsync(table, verify: false);
+
+        [When("user adds and verifies a Basic Residence to the Location")]
+        public Task UserAddsAndVerifiesBasicResidenceToLocation(Table table) => AddResidenceAsync(table, verify: true);
+
+        private async Task AddResidenceAsync(Table table, bool verify)
         {
             TableMappingHelpers.ResidenceFields(table, _contextData);
 
@@ -62,6 +69,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             // Fill residence form using page object method
             var residencePage = new SFP_AddResidencePage(_context.Page);
             await residencePage.FillResidenceFormAsync(_contextData);
+            if (verify)
+                await residencePage.VerifyResidenceFormAsync(_contextData);
 
             // Select Residence Coverage checkbox — coverage detail section expands inline
             await residencePage.ResidenceCoverageCheckbox.ClickAsync();
@@ -72,16 +81,34 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         }
 
         [When("user adds Residence Coverage")]
-        public async Task UserAddsResidenceCoverage(Table table)
+        public Task UserAddsResidenceCoverage(Table table) => AddResidenceCoverageAsync(table, verify: false);
+
+        [When("user adds and verifies Basic Residence Coverage")]
+        public Task UserAddsAndVerifiesBasicResidenceCoverage(Table table) => AddResidenceCoverageAsync(table, verify: true);
+
+        private async Task AddResidenceCoverageAsync(Table table, bool verify)
         {
             TableMappingHelpers.ResidenceCoverageFields(table, _contextData);
 
             var residenceCovPage = new SFP_ResidenceCoveragePage(_context.Page);
             await residenceCovPage.FillResidenceCoverageAsync(_contextData);
             await residenceCovPage.WaitForSpinnerAsync();
+            if (verify)
+            {
+                await residenceCovPage.VerifyResidenceCoverageAsync(_contextData);
+                await new SFP_AddResidencePage(_context.Page).VerifyResidenceFormAsync(_contextData);
+            }
             await residenceCovPage.ClickSaveAsync();
 
             var locationsPage = new SFP_LocationsResidencesBuildingsPage(_context.Page);
+            if (verify)
+            {
+                await locationsPage.OpenResidenceAsync();
+                await new SFP_AddResidencePage(_context.Page).VerifyResidenceFormAsync(_contextData);
+                await residenceCovPage.VerifyResidenceCoverageAsync(_contextData);
+                await locationsPage.LocationsNavigation.ClickAsync();
+                await locationsPage.WaitForSpinnerAsync();
+            }
             await locationsPage.NextButton.ClickAsync();
             await locationsPage.WaitForSpinnerAsync();
 
@@ -89,7 +116,12 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         }
 
         [When("user adds Farm Personal Property")]
-        public async Task UserAddsFarmPersonalProperty(Table table)
+        public Task UserAddsFarmPersonalProperty(Table table) => AddFarmPersonalPropertyAsync(table, verify: false);
+
+        [When("user adds and verifies Basic Farm Personal Property")]
+        public Task UserAddsAndVerifiesBasicFarmPersonalProperty(Table table) => AddFarmPersonalPropertyAsync(table, verify: true);
+
+        private async Task AddFarmPersonalPropertyAsync(Table table, bool verify)
         {
             TableMappingHelpers.FarmPersonalPropertyFields(table, _contextData);
 
@@ -98,10 +130,14 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
             // Resolve row index dynamically by scanning DOM text — avoids positional index
             // assumptions that break when states omit certain coverage categories
-            var rowIndex = await fppPage.FindRowByCodeAsync(_contextData.FarmPropertyCode, _contextData.FarmPropertyDescription);
+            var rowIndex = verify
+                ? await fppPage.FindRequiredRowByCodeAsync(_contextData.FarmPropertyCode)
+                : await fppPage.FindRowByCodeAsync(_contextData.FarmPropertyCode, _contextData.FarmPropertyDescription);
 
             if (rowIndex < 0)
             {
+                if (verify)
+                    throw new PlaywrightException($"Required Basic FPP coverage '{_contextData.FarmPropertyCode}' was not found.");
                 Console.WriteLine($"WARNING: FPP code '{_contextData.FarmPropertyCode}' not mapped - skipping");
                 return;
             }
@@ -109,6 +145,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             var checkbox = fppPage.CoverageCheckbox(rowIndex);
             if (await checkbox.CountAsync() == 0 || !await checkbox.IsVisibleAsync())
             {
+                if (verify)
+                    throw new PlaywrightException($"Required Basic FPP coverage '{_contextData.FarmPropertyCode}' is not selectable.");
                 Console.WriteLine($"WARNING: FPP coverage checkbox row {rowIndex} (code '{_contextData.FarmPropertyCode}') not visible for this state - skipping FPP");
                 await fppPage.ClickNextAsync();
                 await fppPage.WaitForSpinnerAsync();
@@ -133,6 +171,9 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 await fppPage.ItemDeductible().ClickAsync();
                 await _context.Page.GetByRole(AriaRole.Option, new() { Name = _contextData.FarmPropertyDeductible }).ClickAsync();
             }
+
+            if (verify)
+                await fppPage.VerifyItemAsync(_contextData);
 
             await fppPage.SaveItemButton.ClickAsync();
             await fppPage.WaitForSpinnerAsync();

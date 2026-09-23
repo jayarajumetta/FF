@@ -1,6 +1,9 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using PnCTestAutomation.Helpers;
+using static Microsoft.Playwright.Assertions;
 
 namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 {
@@ -57,6 +60,14 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 
         public ILocator SaveItemButton => _page.GetByTestId("fields.covEndorsements.save");
 
+        public async Task VerifyItemAsync(ScenarioContextData data)
+        {
+            // CLAS SetDescriptionToUppercase normalizes the description on change.
+            await Expect(ItemDescription()).ToHaveValueAsync(data.FarmPropertyDescription.ToUpperInvariant());
+            await SfpFieldAssertions.NumberAsync(ItemLimit(), data.FarmPropertyLimit);
+            await SfpFieldAssertions.SelectionAsync(ItemDeductible(), data.FarmPropertyDeductible);
+        }
+
         /// <summary>
         /// Clicks the Add Coverage button. Tries multiple locator strategies, logs available
         /// button testids on failure to aid diagnosis.
@@ -106,6 +117,22 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         #endregion
 
         #region Dynamic Row Lookup
+        public async Task<int> FindRequiredRowByCodeAsync(string code)
+        {
+            var codeCell = _page.Locator("td, mat-cell")
+                .Filter(new() { HasTextRegex = new Regex(@"^\s*" + Regex.Escape(code) + @"\s*$") });
+            var row = CoverageTable.Locator("tr, mat-row").Filter(new() { Has = codeCell });
+            await Expect(row).ToHaveCountAsync(1);
+            var checkbox = row.Locator("label[data-testid*='covCatEntry.rows'][data-testid$='selected.value']");
+            await Expect(checkbox).ToHaveCountAsync(1);
+            var testId = await checkbox.GetAttributeAsync("data-testid");
+            var match = Regex.Match(testId ?? "", @"^fields\.page\.covCatEntry\.rows\[(\d+)\]\.covCatEntryInput\$selected\.value$");
+            if (!match.Success)
+                throw new PlaywrightException($"Required FPP coverage '{code}' has no recognized row identifier.");
+
+            return int.Parse(match.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
         /// <summary>
         /// Finds the DuckCreek row index for a coverage by scanning the visible table rows for
         /// a cell whose text matches <paramref name="code"/> (exact) or <paramref name="descriptionFragment"/>

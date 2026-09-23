@@ -1,4 +1,4 @@
-﻿namespace PnCTestAutomation.Models
+namespace PnCTestAutomation.Models
 {
     /// <summary>
     /// Farm information for SFP (Special Farm Package)
@@ -31,6 +31,9 @@
         public string ResidenceNumberOfFamilies { get; set; }
         public string ResidenceConditionRating { get; set; }
         public string ResidenceRoofYear { get; set; }
+        public string ResidenceHeatingYear { get; set; }
+        public string ResidencePlumbingYear { get; set; }
+        public string ResidenceElectricalYear { get; set; }
         public string ResidenceRoofType { get; set; }
         public string ResidenceRoofImpact { get; set; }
         public string ResidenceSeasonalOrVacant { get; set; }
