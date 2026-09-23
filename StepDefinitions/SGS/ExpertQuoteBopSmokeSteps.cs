@@ -209,7 +209,7 @@ public sealed class ExpertQuoteBopSmokeSteps(
 
     private async Task SelectChip(string testId, string text)
     {
-        var control = await Resolver.ResolveAsync(ControlDefinition.ByTestIdWithExactText(testId, testId, text)
+        var control = await Resolver.ResolveAsync(ControlDefinition.ByTestIdWithExactText(testId, testId, text.ToUpperInvariant())
             .InScope(ExpertQuoteBopSmokeInputs.MainScope));
         await controls.ClickAsync(control, ControlExpectation.Selected());
     }

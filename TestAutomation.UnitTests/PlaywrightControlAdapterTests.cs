@@ -212,6 +212,23 @@ public sealed class PlaywrightControlAdapterTests
         Assert.ThrowsAsync<PlaywrightException>(async () => await Actions().CaptureStateAsync(control, ControlStateCapture.Selected));
     }
 
+    [Test]
+    public async Task ExactPresentedChipCaptionSelectsMarriedWithoutSelectingDivorced()
+    {
+        await _page.SetContentAsync("""
+            <div style="text-transform:uppercase">
+              <div data-testid="marital" class="chip-item-wrapper"
+                onclick="this.firstElementChild.className='chip-wrapper-selected'"><div class="chip-wrapper">Married</div></div>
+              <div data-testid="marital" class="chip-item-wrapper"><div class="chip-wrapper">Divorced</div></div>
+            </div>
+            """);
+        var resolver = new ControlScopeResolver(new PlaywrightControlRuntime(_page));
+        var married = await resolver.ResolveAsync(ControlDefinition.ByTestIdWithExactText("Married", "marital", "MARRIED"));
+        var divorced = await resolver.ResolveAsync(ControlDefinition.ByTestIdWithExactText("Divorced", "marital", "DIVORCED"));
+        await Actions().ClickAsync(married, ControlExpectation.Selected());
+        Assert.That(await Actions().CaptureStateAsync(divorced, ControlStateCapture.Selected), Is.False);
+    }
+
     private static SemanticControlActions Actions(IControlEvidenceSink? sink = null) =>
         new(sink, assertionTimeout: TimeSpan.Zero);
 
