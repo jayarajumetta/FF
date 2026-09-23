@@ -261,6 +261,11 @@ namespace PnCTestAutomation.Controls
                             element.classList.contains('mat-mdc-button-toggle-checked');
                     if (element.matches('.chip-wrapper, .chip-wrapper-selected'))
                         return element.classList.contains('chip-wrapper-selected');
+                    if (element.matches('.chip-label')) {
+                        const chip = element.closest('.chip-wrapper, .chip-wrapper-selected');
+                        if (!chip) throw new Error('Chip label has no owning selected-state control.');
+                        return chip.classList.contains('chip-wrapper-selected');
+                    }
                     if (element.matches('.chip-item-wrapper')) {
                         const chips = element.querySelectorAll('.chip-wrapper, .chip-wrapper-selected');
                         if (chips.length !== 1) throw new Error('Chip selected state is absent or ambiguous.');

@@ -129,7 +129,7 @@ public sealed class ExpertQuoteBopSmokeSteps(
     {
         var proposal = new QuoteDetailsPage(Page);
         await Expect(Page.GetByText("Proposal Details", new() { Exact = true })).ToBeVisibleAsync();
-        await SelectChip("proposal.product-chip-item-wrapper", "Business Owners");
+        await SelectChip("proposal.product-chip-label", "Business Owners");
         await controls.ToggleAsync(await Resolve("business.isIndividualDba"), true);
         await controls.FillAsync(await Resolve("business.individualDba"), state.Business.DBAName);
         await proposal.EnterAndVerifyEffectiveDateAsync(state.Policy.EffectiveDate);

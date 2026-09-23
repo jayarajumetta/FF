@@ -194,9 +194,9 @@ public sealed class PlaywrightControlAdapterTests
         var css = selected ? "chip-wrapper-selected" : "chip-wrapper";
         await _page.SetContentAsync($"""
             <div data-testid="wrapped" class="chip-item-wrapper"><div class="{css}">Married</div></div>
-            <div data-testid="direct" class="{css}">Business Owners</div>
+            <div data-testid="direct" class="{css}"><span data-testid="label" class="chip-label">Business Owners</span></div>
             """);
-        foreach (var id in new[] { "wrapped", "direct" })
+        foreach (var id in new[] { "wrapped", "direct", "label" })
             Assert.That(await Actions().CaptureStateAsync(await ResolveAsync(id), ControlStateCapture.Selected), Is.EqualTo(selected));
     }
 
@@ -227,6 +227,24 @@ public sealed class PlaywrightControlAdapterTests
         var divorced = await resolver.ResolveAsync(ControlDefinition.ByTestIdWithExactText("Divorced", "marital", "DIVORCED"));
         await Actions().ClickAsync(married, ControlExpectation.Selected());
         Assert.That(await Actions().CaptureStateAsync(divorced, ControlStateCapture.Selected), Is.False);
+    }
+
+    [Test]
+    public async Task ProductCaptionIdentifiesItsOwningChipDespiteRepeatedWrapperTestIds()
+    {
+        await _page.SetContentAsync("""
+            <div style="text-transform:uppercase" data-testid="product-wrapper" class="chip-item-wrapper">
+              <div data-testid="product-wrapper" class="chip-wrapper"
+                onclick="this.className='chip-wrapper-selected'">
+                <span data-testid="product-label" class="chip-label">Business Owners</span>
+              </div>
+            </div>
+            """);
+        var resolver = new ControlScopeResolver(new PlaywrightControlRuntime(_page));
+        var control = await resolver.ResolveAsync(
+            ControlDefinition.ByTestIdWithExactText("BOP", "product-label", "BUSINESS OWNERS"));
+        await Actions().ClickAsync(control, ControlExpectation.Selected());
+        Assert.That(await Actions().CaptureStateAsync(control, ControlStateCapture.Selected), Is.True);
     }
 
     [TestCase("9/2/2026")]
