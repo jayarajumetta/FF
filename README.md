@@ -440,17 +440,54 @@ omissions:
 - **Farm Contents: host dependency.** Coverage 601 supports AOI 25000, perils 5,
   replacement cost Yes and description 249 on a valid Division II building.
   There is no proven attachment to Residence #1; its greenhouse host is unresolved.
-- **Division IV: missing required data.** Categories 409 (Stamp Collections) and
-  411 (Auto Trailer Home Personal Effects) are CE/Alabama-offered. Both require
-  Description and Amount of Insurance, which the workbook omits; Alabama supplies
-  no limit default. The unattended fields are respectively
+- **Division IV: amounts still required; descriptions approved.** Categories 409
+  and 411 are CE/Alabama-offered. The user approved generic descriptions:
+  **Stamp Collections** for 409 and **Auto Trailer Home Personal Effects** for 411.
+  Use these as item descriptions (the application uppercases them), not merely
+  catalog search labels. Both require Amount of Insurance; the workbook supplies
+  neither amount and Alabama supplies no limit default. The unattended fields
+  for the requested Yes selections are respectively
   `CovStampCollectionsInput.UnattendedVehicle` (singular) and
   `CovAutoTrailerHomePersonalEffectsInput.UnattendedVehicles` (plural).
-  Do not reuse the Stamp field for 411 or create incomplete items. Stamp limits
-  above 25000 additionally require an appraisal year.
+  Do not reuse the Stamp field for 411 or create incomplete items. These approved
+  descriptions are recorded here pending amount selection; neither coverage has
+  been added to the executable CE scenario.
 - **Location data:** QA has not supplied distinct CE addresses or a replacement
   wind/hail deductible. Existing addresses and 1% remain unchanged, not qualified
   as satisfying the missing workbook inputs.
+
+Division IV amount rules, inspected read-only in the CLAS Dev-ST source snapshot
+synced 2026-09-23:
+
+| Coverage | Amount / appraisal contract |
+| --- | --- |
+| 409 - Stamp Collections | Integer amount required. Above 25000 requires Year of Last Appraisal; exactly 25000 does not trigger that requirement. The year cannot exceed the current year. This is an appraisal threshold, not a maximum insured amount. |
+| 411 - Auto Trailer Home Personal Effects | Integer amount required. The appraisal field is not displayed. Its internal appraisal-table sentinel 9999999 is not a supported coverage maximum or recommended amount. |
+
+The reviewed shared `LimitMin` / `LimitMax` rules impose no coverage-specific
+minimum or maximum on 409/411. This does not establish unlimited insurability,
+permit invalid numeric input, or guarantee underwriting acceptance. The amount
+must be explicitly chosen; no amounts or appraisal years have been invented.
+
+Separate Division IV **non-new-business audit** rules flag added amounts above
+25000, or modified limits above 25000. Another predicate flags an added item
+above 35000 with an appraisal older than five years (both comparisons are strict
+`>`). These are audit conditions, not input maxima or proven blockers for this
+new-business Pricing qualification. Actual deployed underwriting disposition
+remains unverified. The inspected rating paths use amount divided by 100;
+no amount-band breakpoint was found for these two categories in those paths or
+Alabama's `SPPBaseRates` table. Residence perils 6 does not change these separate
+Division IV amount/appraisal rules.
+
+Source references: carrier Data lines 24014-24082 (required integer amount and
+description), 25734-25782 (limit bounds/default lookup), 26104-26121 and
+103711-103713 (appraisal visibility); carrier States Base `DropdownDefault`
+at 14025 (409/411 default-state limit cells blank; no Alabama table override);
+Pages 4550-4586 and 45639-45681 (strict appraisal threshold), 7495-7514 (year
+validation). `CarrierSpecialFarmPackageUnderwritingRules_4_0_0_0.xml`
+250-252, 1851-1873, 3018-3075 and 6399-6478 distinguish audit thresholds and
+transaction routing. Carrier RatingControl 2279-2325, 2526-2589 and Alabama
+7049-7131 establish the amount-based rating paths, not a live premium prediction.
 
 CE input-only qualification must stop after visible Pricing and current-quote
 confirmation, before Step 24 Forms. The full canonical scenario also performs
