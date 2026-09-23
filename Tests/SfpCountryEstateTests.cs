@@ -62,6 +62,8 @@ namespace PnCTestAutomation.Tests
                 Assert.That(data.ResidenceInsuranceAmount, Is.EqualTo("375000"));
                 Assert.That(data.ResidencePerils, Is.EqualTo("6"));
                 Assert.That(data.ResidenceActualCashValue, Is.EqualTo("Expanded Replacement Cost"));
+                Assert.That(data.Farm.CountryEstateHouseholdContentsAmount, Is.EqualTo("187500"));
+                Assert.That(SFP_ResidenceCoveragePage.GetCountryEstateContentsPercent(data), Is.EqualTo("50%"));
                 Assert.That(DateTime.FromOADate(45772), Is.EqualTo(new DateTime(2025, 4, 25)));
                 Assert.That(DateHelpers.ResolveDateToken("04/25/2025"), Is.EqualTo("04/25/2025"));
             });
@@ -76,6 +78,64 @@ namespace PnCTestAutomation.Tests
             await page.VerifyCountryEstateResidenceFormAsync(data);
             await page.RoofYearInput.FillAsync("2026");
             Assert.ThrowsAsync<PlaywrightException>(() => page.VerifyCountryEstateResidenceFormAsync(data));
+        }
+
+        [TestCase("187500", "50%")]
+        [TestCase("225000", "60%")]
+        [TestCase("262500", "70%")]
+        [TestCase("300000", "80%")]
+        [TestCase("337500", "90%")]
+        [TestCase("375000", "100%")]
+        public void HouseholdContents_RequiresAnExactlySupportedPercentage(string amount, string percentage)
+        {
+            var data = ResidenceData();
+            TableMappingHelpers.ResidenceCoverageFields(CoverageTable("6"), data);
+            data.Farm.CountryEstateHouseholdContentsAmount = amount;
+            Assert.That(SFP_ResidenceCoveragePage.GetCountryEstateContentsPercent(data), Is.EqualTo(percentage));
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("120000")]
+        [TestCase("190000")]
+        public void HouseholdContentsBinding_RejectsMissingOrUnsupportedAmountBeforeEntry(string amount)
+        {
+            var table = CoverageTable("6");
+            foreach (var row in table.Rows)
+                if (row["Question"] == "HouseholdContentsAmount")
+                    row["Answer"] = amount;
+            var steps = new SFP_LocationPropertySteps(new PlaywrightContext { Page = _page }, ResidenceData());
+            Assert.ThrowsAsync<ArgumentException>(() => steps.UserAddsAndVerifiesCountryEstateResidenceCoverage(table));
+        }
+
+        [TestCase("missing before save")]
+        [TestCase("missing after save")]
+        [TestCase("wrong after save")]
+        public async Task HouseholdContentsBinding_RequiresControlAndSavedPercentage(string failure)
+        {
+            await _page.SetContentAsync(BindingHtml());
+            if (failure == "missing before save")
+                await new SFP_ResidenceCoveragePage(_page).HouseholdContentsPercentSelect.EvaluateAsync("el => el.remove()");
+            else
+                await _page.EvaluateAsync(@"failure =>
+                    document.querySelector('button[data-testid$=""editResidence""]').addEventListener('click', () => {
+                        const field = document.querySelector('[data-testid$=""coverageInput$householdContentReplacementCost.value""]');
+                        if (failure === 'missing after save') field.remove();
+                        else field.textContent = '60%';
+                    })", failure);
+            var steps = new SFP_LocationPropertySteps(new PlaywrightContext { Page = _page }, ResidenceData());
+            Assert.ThrowsAsync<PlaywrightException>(() =>
+                steps.UserAddsAndVerifiesCountryEstateResidenceCoverage(CoverageTable("6")));
+            Assert.That(await _page.EvaluateAsync<string[]>("window.actions"),
+                Is.EqualTo(failure == "missing before save" ? Array.Empty<string>() : new[] { "save", "reopen" }));
+        }
+
+        [Test]
+        public void NonCeBinding_CannotSilentlyIgnoreHouseholdContentsAmount()
+        {
+            var data = ResidenceData();
+            TableMappingHelpers.ResidenceCoverageFields(CoverageTable("6"), data);
+            Assert.ThrowsAsync<ArgumentException>(() => new SFP_ResidenceCoveragePage(_page).FillResidenceCoverageAsync(data));
         }
 
         [Test]
@@ -228,6 +288,8 @@ namespace PnCTestAutomation.Tests
                 Is.EqualTo(new[] { "save", "reopen", "locations", "next" }));
             Assert.That(await _page.EvaluateAsync<int>("window.perilsClicks"), Is.Zero);
             Assert.That(data.ResidencePerils, Is.EqualTo("6"));
+            Assert.That(await new SFP_ResidenceCoveragePage(_page).HouseholdContentsPercentSelect.InnerTextAsync(), Is.EqualTo("50%"));
+            Assert.That(data.Farm.CountryEstateHouseholdContentsAmount, Is.EqualTo("187500"));
         }
 
         [TestCase("3")]
@@ -302,8 +364,9 @@ namespace PnCTestAutomation.Tests
             $"<div role='option' onclick=\"document.querySelector('[data-testid$=&quot;coverageInput$replacementCost.value&quot;]').textContent = this.textContent\">{caption}</div>";
 
         private static string BindingHtml(string options = null) =>
-            ResidenceHtml() + CoverageHtml()
-            + "<div role='listbox'>" + (options ?? SettlementOption("Expanded Replacement Cost")) + "</div>"
+            ResidenceHtml() + CoverageHtml(householdPercent: "60%")
+            + "<div role='listbox'>" + (options ?? SettlementOption("Expanded Replacement Cost"))
+            + "<div role='option' onclick=\"document.querySelector('[data-testid$=&quot;coverageInput$householdContentReplacementCost.value&quot;]').textContent = this.textContent\">50%</div></div>"
             + """
                 <script>
                   window.actions = [];
@@ -335,7 +398,7 @@ namespace PnCTestAutomation.Tests
         private static Reqnroll.Table CoverageTable(string perils) => SfpBasicInputTests.TableOf(
             ("InsuranceAmount", "375000"), ("SquareFeet", "1800"), ("Perils", perils),
             ("ThermostatQuestion", "Yes"), ("ActualCashValue", "Expanded Replacement Cost"),
-            ("RCTOption", "Standard"), ("UseDefaults", "Yes"));
+            ("RCTOption", "Standard"), ("UseDefaults", "Yes"), ("HouseholdContentsAmount", "187500"));
 
         private static string ResidenceHtml() =>
             Input("additionalDescription", "Main House") + Input("yearBuilt", "2022") + Input("roofYear", "2022")
@@ -346,11 +409,12 @@ namespace PnCTestAutomation.Tests
             + Chip("fields.building.rows[0].buildingInput$rateType.value", "1")
             + Chip("fields.building_SolidFuel.rows[0].buildingInput$solidFuelHeatingDevices.value", "No");
 
-        private static string CoverageHtml(string amount = "375000", string settlement = "Expanded Replacement Cost") =>
+        private static string CoverageHtml(string amount = "375000", string settlement = "Expanded Replacement Cost", string householdPercent = "50%") =>
             $"<input data-testid='{CoveragePrefix}coverageInput$limit.value' value='{amount}'>"
             + $"<input data-testid='{CoveragePrefix}buildingInput$squareFt.value' value='1800'>"
             + $"<div data-testid='{CoveragePrefix}coverageInput$perilGroup.value' aria-disabled='true'>6</div>"
             + $"<div data-testid='{CoveragePrefix}coverageInput$replacementCost.value'>{settlement}</div>"
+            + $"<div data-testid='{CoveragePrefix}coverageInput$householdContentReplacementCost.value'>{householdPercent}</div>"
             + Chip(CoveragePrefix + "buildingInput$buildingThermostatQuestion.value", "Yes")
             + Chip(CoveragePrefix + "buildingValuatioinInput$estimatorType.value", "RCT")
             + Chip(CoveragePrefix + "buildingValuatioinInput$valuationType.value", "Standard");

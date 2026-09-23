@@ -47,6 +47,7 @@ namespace PnCTestAutomation.Models
         public string ResidenceActualCashValue { get; set; }
         public string ResidenceRCTOption { get; set; }
         public string ResidenceUseDefaults { get; set; }
+        public string CountryEstateHouseholdContentsAmount { get; set; }
 
         // Farm Personal Property
         public string FarmPropertyCode { get; set; }

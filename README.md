@@ -411,10 +411,20 @@ groups 1-5 only for other coverage types. The canonical feature asserts the
 approved source-owned 6 instead of its stale request for 3; it does not force
 group 5 into CE or claim that rate calculations have been validated.
 Separate Residence Contents is hidden for CE; household contents instead derives
-from coverage 220's limit and its replacement-cost percentage. The requested
-separate contents AOI 120000 cannot be forced into a hidden non-CE coverage.
-Supported percentages are 50/60/70/80/90/100, so AOI 375000 yields at least
-187500 in household contents. A calculated 32% is not an available option.
+from coverage 220's limit and its replacement-cost percentage. On 2026-09-23,
+the user approved **187500 household contents** in place of the worksheet's
+120000. The CE feature now explicitly requests that amount with the unchanged
+375000 residence and perils 6. The binding selects the native **50%** option and
+verifies it before saving and after exact Residence #1 / Location #1 reopening,
+alongside the residence amount. This verifies the inputs that derive 187500,
+not a separately entered or independently displayed contents limit.
+
+Supported percentages are 50/60/70/80/90/100; unsupported requested amounts fail
+rather than rounding or changing the residence value. The exact
+`coverageInput$householdContentReplacementCost.value` control and `50%` caption
+were observed in the existing quote 02081373 trace. No separate 211 coverage is
+added. The revised amount resolves the residence-contents amount/attachment
+conflict, but not the separate Division II Farm Contents host dependency below.
 
 The detailed CE workbook's highlighted goals remain unresolved, not approved
 omissions:

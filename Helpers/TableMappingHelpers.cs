@@ -835,6 +835,9 @@ namespace PnCTestAutomation.Helpers
                     case "UseDefaults":
                         _contextData.ResidenceUseDefaults = answer;
                         break;
+                    case "HouseholdContentsAmount":
+                        _contextData.Farm.CountryEstateHouseholdContentsAmount = answer;
+                        break;
                     default:
                         throw new ArgumentException($"Unknown Residence Coverage question: {question}");
                 }

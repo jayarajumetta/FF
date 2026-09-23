@@ -1,6 +1,7 @@
 using Microsoft.Playwright;
 using PnCTestAutomation.Helpers;
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using static Microsoft.Playwright.Assertions;
 
@@ -31,6 +32,9 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 
         public ILocator ReplacementCostSelect =>
             _page.GetByTestId("fields.risk.rows[0].residenceCoverage.rows[0].coverageInput$replacementCost.value");
+
+        public ILocator HouseholdContentsPercentSelect =>
+            _page.GetByTestId("fields.risk.rows[0].residenceCoverage.rows[0].coverageInput$householdContentReplacementCost.value");
 
         // Estimator Type — "RCT" is the only option; must be clicked to reveal Valuation Type
         public ILocator EstimatorTypeRCTButton =>
@@ -66,12 +70,19 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 
         public async Task FillCountryEstateResidenceCoverageAsync(ScenarioContextData contextData)
         {
+            var contentsPercent = GetCountryEstateContentsPercent(contextData);
             await VerifyCountryEstatePerilsAsync(contextData);
             await FillResidenceCoverageAsync(contextData, countryEstate: true);
+            await SelectExactOptionAsync(HouseholdContentsPercentSelect, contentsPercent);
+            await WaitForSpinnerAsync();
+            await SfpFieldAssertions.SelectionAsync(HouseholdContentsPercentSelect, contentsPercent);
         }
 
         private async Task FillResidenceCoverageAsync(ScenarioContextData contextData, bool countryEstate)
         {
+            if (!countryEstate && contextData.Farm.CountryEstateHouseholdContentsAmount != null)
+                throw new ArgumentException("HouseholdContentsAmount requires the verified Country Estate coverage binding.");
+
             await WaitForSpinnerAsync();
 
             if (!string.IsNullOrEmpty(contextData.ResidenceInsuranceAmount))
@@ -114,16 +125,13 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             // ActualCashValue selects the settlement/replacement cost option from a dropdown
             if (!string.IsNullOrEmpty(contextData.ResidenceActualCashValue))
             {
-                await ReplacementCostSelect.ClickAsync();
                 if (countryEstate)
                 {
-                    var option = _page.GetByRole(AriaRole.Listbox).And(_page.Locator(":visible"))
-                        .GetByRole(AriaRole.Option, new() { Name = contextData.ResidenceActualCashValue, Exact = true });
-                    await Expect(option).ToHaveCountAsync(1);
-                    await option.ClickAsync();
+                    await SelectExactOptionAsync(ReplacementCostSelect, contextData.ResidenceActualCashValue);
                 }
                 else
                 {
+                    await ReplacementCostSelect.ClickAsync();
                     await _page.GetByRole(AriaRole.Listbox).Last.GetByRole(AriaRole.Option, new() { Name = contextData.ResidenceActualCashValue }).First.ClickAsync();
                 }
             }
@@ -160,6 +168,32 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         {
             await VerifyCountryEstatePerilsAsync(data);
             await VerifyResidenceCoverageAsync(data);
+            await SfpFieldAssertions.SelectionAsync(HouseholdContentsPercentSelect, GetCountryEstateContentsPercent(data));
+        }
+
+        internal static string GetCountryEstateContentsPercent(ScenarioContextData data)
+        {
+            if (!decimal.TryParse(data.ResidenceInsuranceAmount, NumberStyles.Number, CultureInfo.InvariantCulture, out var residence)
+                || residence <= 0
+                || !decimal.TryParse(data.Farm.CountryEstateHouseholdContentsAmount, NumberStyles.Number, CultureInfo.InvariantCulture, out var contents)
+                || contents <= 0)
+                throw new ArgumentException("Country Estate requires positive residence and household contents amounts.");
+
+            var percent = contents / residence * 100;
+            if (percent is not (50m or 60m or 70m or 80m or 90m or 100m))
+                throw new ArgumentException("Country Estate household contents must equal 50, 60, 70, 80, 90 or 100 percent of the residence amount.");
+
+            return percent.ToString("0", CultureInfo.InvariantCulture) + "%";
+        }
+
+        private async Task SelectExactOptionAsync(ILocator select, string caption)
+        {
+            await Expect(select).ToHaveCountAsync(1);
+            await select.ClickAsync();
+            var option = _page.GetByRole(AriaRole.Listbox).And(_page.Locator(":visible"))
+                .GetByRole(AriaRole.Option, new() { Name = caption, Exact = true });
+            await Expect(option).ToHaveCountAsync(1);
+            await option.ClickAsync();
         }
 
         private async Task VerifyCountryEstatePerilsAsync(ScenarioContextData data)

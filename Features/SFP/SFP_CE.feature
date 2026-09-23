@@ -137,14 +137,15 @@ Feature: SFP Country Estate Policy
 
     # Step 20: Add Residence Coverage
     When user adds and verifies Country Estate Residence Coverage
-      | Question           | Answer                    |
-      | InsuranceAmount    | 375000                    |
-      | SquareFeet         | 1800                      |
-      | Perils             | 6                         |
-      | ThermostatQuestion | Yes                       |
-      | ActualCashValue    | Expanded Replacement Cost |
-      | RCTOption          | Standard                  |
-      | UseDefaults        | Yes                       |
+      | Question                | Answer                    |
+      | InsuranceAmount         | 375000                    |
+      | HouseholdContentsAmount | 187500                    |
+      | SquareFeet              | 1800                      |
+      | Perils                  | 6                         |
+      | ThermostatQuestion      | Yes                       |
+      | ActualCashValue         | Expanded Replacement Cost |
+      | RCTOption               | Standard                  |
+      | UseDefaults             | Yes                       |
 
     # Step 21: Skip Optional Coverages
     When user skips Optional Coverages and continues
