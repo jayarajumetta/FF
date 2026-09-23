@@ -119,7 +119,10 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         #region Dynamic Row Lookup
         public async Task<int> FindRequiredRowByCodeAsync(string code)
         {
-            var codeCell = _page.Locator("td, mat-cell")
+            // TableBuilder assigns CoverageID to column1; verify the schema before matching.
+            await Expect(CoverageTable.Locator("th.mat-column-column1, mat-header-cell.mat-column-column1"))
+                .ToHaveTextAsync("Coverage Code");
+            var codeCell = _page.Locator("td.mat-column-column1, mat-cell.mat-column-column1")
                 .Filter(new() { HasTextRegex = new Regex(@"^\s*" + Regex.Escape(code) + @"\s*$") });
             var row = CoverageTable.Locator("tr, mat-row").Filter(new() { Has = codeCell });
             await Expect(row).ToHaveCountAsync(1);

@@ -112,8 +112,7 @@ namespace PnCTestAutomation.Tests
         [Test]
         public async Task RequiredFpp_UsesExactCodeAndResponseRowIndex()
         {
-            await _page.SetContentAsync("<table data-testid='coverageTable'>"
-                + FppRow("1464", 0) + FppRow("464", 7) + "</table>");
+            await _page.SetContentAsync(FppTable(FppRow("1464", 0) + FppRow("464", 7)));
             var page = new SFP_FarmPersonalPropertyPage(_page);
             Assert.That(await page.FindRequiredRowByCodeAsync("464"), Is.EqualTo(7));
         }
@@ -122,9 +121,8 @@ namespace PnCTestAutomation.Tests
         [TestCase(true)]
         public async Task RequiredFpp_MissingOrAmbiguousCodeFails(bool duplicate)
         {
-            await _page.SetContentAsync("<table data-testid='coverageTable'>"
-                + (duplicate ? FppRow("464", 0) + FppRow("464", 1) : FppRow("1464", 0))
-                + "</table>");
+            await _page.SetContentAsync(FppTable(
+                duplicate ? FppRow("464", 0) + FppRow("464", 1) : FppRow("1464", 0)));
             var page = new SFP_FarmPersonalPropertyPage(_page);
             Assert.ThrowsAsync<PlaywrightException>(() => page.FindRequiredRowByCodeAsync("464"));
         }
@@ -132,7 +130,7 @@ namespace PnCTestAutomation.Tests
         [Test]
         public async Task BasicFppBinding_FailsMissingCoverageWhileLegacyBindingRetainsBehavior()
         {
-            await _page.SetContentAsync("<table data-testid='coverageTable'></table>");
+            await _page.SetContentAsync(FppTable(""));
             var data = new ScenarioContextData();
             var steps = new SFP_LocationPropertySteps(new PlaywrightContext { Page = _page }, data);
             var table = SfpBasicInputTests.TableOf(("Code", "464"), ("Description", "Bose Sound Bars"),
@@ -220,8 +218,54 @@ namespace PnCTestAutomation.Tests
         private static string Chip(string testId, string value) =>
             $"<div data-testid='{testId}-chip-item-wrapper'><span class='chip-wrapper-selected'>{value}</span></div>";
 
-        private static string FppRow(string code, int index) =>
-            $"<tr><td>{code}</td><td><label data-testid='fields.page.covCatEntry.rows[{index}].covCatEntryInput$selected.value'>Select</label></td></tr>";
+        private static string FppTable(string rows) =>
+            "<table data-testid='coverageTable'><thead><tr><th></th><th class='mat-column-column1'>Coverage Code</th>"
+            + "<th>Coverage Name</th><th>Coverage Description</th></tr></thead><tbody>"
+            + rows + "</tbody></table>";
+
+        private static string FppRow(string code, int index, string description = "") =>
+            $"<tr><td><label data-testid='fields.page.covCatEntry.rows[{index}].covCatEntryInput$selected.value'>Select</label></td>"
+            + $"<td class='mat-column-column1'>{code}</td><td>Equipment</td><td>{description}</td></tr>";
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task RequiredFpp_IgnoresMatchingNonCodeCell(bool includeRealCode)
+        {
+            await _page.SetContentAsync(FppTable(FppRow("463", 8, "464")
+                + (includeRealCode ? FppRow("464", 12) : "")));
+            var page = new SFP_FarmPersonalPropertyPage(_page);
+            if (includeRealCode)
+                Assert.That(await page.FindRequiredRowByCodeAsync("464"), Is.EqualTo(12));
+            else
+                Assert.ThrowsAsync<PlaywrightException>(() => page.FindRequiredRowByCodeAsync("464"));
+        }
+
+        [Test]
+        public async Task RequiredFpp_UsesColumnIdentityNotCellPosition()
+        {
+            await _page.SetContentAsync("""
+                <table data-testid="coverageTable">
+                  <thead><tr><th>Coverage Description</th><th>Selected</th><th class="mat-column-column1">Coverage Code</th></tr></thead>
+                  <tbody>
+                    <tr><td>464</td><td><label data-testid="fields.page.covCatEntry.rows[8].covCatEntryInput$selected.value">Select</label></td>
+                        <td class="mat-column-column1">463</td></tr>
+                    <tr><td>Audio equipment</td><td><label data-testid="fields.page.covCatEntry.rows[12].covCatEntryInput$selected.value">Select</label></td>
+                        <td class="mat-column-column1"> 464 </td></tr>
+                  </tbody>
+                </table>
+                """);
+            var page = new SFP_FarmPersonalPropertyPage(_page);
+            Assert.That(await page.FindRequiredRowByCodeAsync("464"), Is.EqualTo(12));
+        }
+
+        [Test]
+        public async Task RequiredFpp_RejectsChangedCodeColumnSchema()
+        {
+            await _page.SetContentAsync(FppTable(FppRow("464", 7)));
+            await _page.Locator("th.mat-column-column1").EvaluateAsync("el => el.textContent = 'Coverage Description'");
+            Assert.ThrowsAsync<PlaywrightException>(() =>
+                new SFP_FarmPersonalPropertyPage(_page).FindRequiredRowByCodeAsync("464"));
+        }
 
         [Test]
         public async Task ReopenResidence_TargetsFirstResidenceAtFirstLocation()

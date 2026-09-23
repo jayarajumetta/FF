@@ -345,6 +345,12 @@ EQ UI `origin/develop` 9b9b292 and `origin/qa` 9bbd84e agree on the relevant
 SFP builders. Electrical year maps to `BuildingInput.WiringYear`. Code 464
 descriptions are uppercased on change; the feature keeps the business input
 `Bose Sound Bars` and verification expects `BOSE SOUND BARS`.
+Code identity is matched only in the source-defined `CoverageID` column
+(`mat-column-column1`), with its `Coverage Code` header asserted first. A value
+of 464 in another row's name/description/amount cell cannot select that row or
+make the real code ambiguous. This column contract comes from
+`cl-sfp-farm-coverages-page-builder.service.ts` lines 990-1045 and
+`table-builder.ts` lines 103-125, not a guessed cell position.
 The saved-residence action is defined in
 `Headless\US\SpecialFarmPackage_Common_Headless_ViewModels_US_4_0_0_0.xml`
 lines 1090-1126. UI `cl-sfp-locations-buildings-page-builders.service.ts`
