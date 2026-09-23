@@ -61,7 +61,16 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         #endregion
 
         #region Actions
-        public async Task FillResidenceCoverageAsync(ScenarioContextData contextData)
+        public Task FillResidenceCoverageAsync(ScenarioContextData contextData) =>
+            FillResidenceCoverageAsync(contextData, countryEstate: false);
+
+        public async Task FillCountryEstateResidenceCoverageAsync(ScenarioContextData contextData)
+        {
+            await VerifyCountryEstatePerilsAsync(contextData);
+            await FillResidenceCoverageAsync(contextData, countryEstate: true);
+        }
+
+        private async Task FillResidenceCoverageAsync(ScenarioContextData contextData, bool countryEstate)
         {
             await WaitForSpinnerAsync();
 
@@ -79,7 +88,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                 await SquareFeetInput.PressAsync("Tab");
             }
 
-            if (!string.IsNullOrEmpty(contextData.ResidencePerils))
+            if (!countryEstate && !string.IsNullOrEmpty(contextData.ResidencePerils))
             {
                 var perilsAriaDisabled = await PerilsSelect.GetAttributeAsync("aria-disabled");
                 var perilsDisabled = string.Equals(perilsAriaDisabled, "true", System.StringComparison.OrdinalIgnoreCase);
@@ -135,6 +144,23 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await Expect(EstimatorTypeRCTButton.Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
             await Expect(GetValuationTypeButton(data.ResidenceRCTOption, data.ResidenceUseDefaults)
                 .Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
+        }
+
+        public async Task VerifyCountryEstateResidenceCoverageAsync(ScenarioContextData data)
+        {
+            await VerifyCountryEstatePerilsAsync(data);
+            await VerifyResidenceCoverageAsync(data);
+        }
+
+        private async Task VerifyCountryEstatePerilsAsync(ScenarioContextData data)
+        {
+            if (data.ResidencePerils != "6")
+                throw new ArgumentException("Country Estate coverage 220 requires the source-owned perils value 6.");
+
+            await Expect(PerilsSelect).ToHaveCountAsync(1);
+            await Expect(PerilsSelect).ToBeVisibleAsync();
+            await Expect(PerilsSelect).ToHaveAttributeAsync("aria-disabled", "true");
+            await SfpFieldAssertions.SelectionAsync(PerilsSelect, "6");
         }
 
         private async Task SelectThermostatAsync(string answer)

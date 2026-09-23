@@ -137,11 +137,11 @@ Feature: SFP Country Estate Policy
       | SolidFuelQuestion | No            |
 
     # Step 20: Add Residence Coverage
-    When user adds Residence Coverage
+    When user adds and verifies Country Estate Residence Coverage
       | Question           | Answer                    |
       | InsuranceAmount    | 375000                    |
       | SquareFeet         | 1800                      |
-      | Perils             | 3                         |
+      | Perils             | 6                         |
       | ThermostatQuestion | Yes                       |
       | ActualCashValue    | Expanded Replacement Cost |
       | RCTOption          | Standard                  |

@@ -86,16 +86,26 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         [When("user adds and verifies Basic Residence Coverage")]
         public Task UserAddsAndVerifiesBasicResidenceCoverage(Table table) => AddResidenceCoverageAsync(table, verify: true);
 
-        private async Task AddResidenceCoverageAsync(Table table, bool verify)
+        [When("user adds and verifies Country Estate Residence Coverage")]
+        public Task UserAddsAndVerifiesCountryEstateResidenceCoverage(Table table) =>
+            AddResidenceCoverageAsync(table, verify: true, countryEstate: true);
+
+        private async Task AddResidenceCoverageAsync(Table table, bool verify, bool countryEstate = false)
         {
             TableMappingHelpers.ResidenceCoverageFields(table, _contextData);
 
             var residenceCovPage = new SFP_ResidenceCoveragePage(_context.Page);
-            await residenceCovPage.FillResidenceCoverageAsync(_contextData);
+            if (countryEstate)
+                await residenceCovPage.FillCountryEstateResidenceCoverageAsync(_contextData);
+            else
+                await residenceCovPage.FillResidenceCoverageAsync(_contextData);
             await residenceCovPage.WaitForSpinnerAsync();
             if (verify)
             {
-                await residenceCovPage.VerifyResidenceCoverageAsync(_contextData);
+                if (countryEstate)
+                    await residenceCovPage.VerifyCountryEstateResidenceCoverageAsync(_contextData);
+                else
+                    await residenceCovPage.VerifyResidenceCoverageAsync(_contextData);
                 await new SFP_AddResidencePage(_context.Page).VerifyResidenceFormAsync(_contextData);
             }
             await residenceCovPage.ClickSaveAsync();
@@ -105,7 +115,10 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             {
                 await locationsPage.OpenResidenceAsync();
                 await new SFP_AddResidencePage(_context.Page).VerifyResidenceFormAsync(_contextData);
-                await residenceCovPage.VerifyResidenceCoverageAsync(_contextData);
+                if (countryEstate)
+                    await residenceCovPage.VerifyCountryEstateResidenceCoverageAsync(_contextData);
+                else
+                    await residenceCovPage.VerifyResidenceCoverageAsync(_contextData);
                 await locationsPage.LocationsNavigation.ClickAsync();
                 await locationsPage.WaitForSpinnerAsync();
             }

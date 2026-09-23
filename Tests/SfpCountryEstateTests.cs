@@ -2,8 +2,10 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 using NUnit.Framework;
+using PnCTestAutomation.Context;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
+using PnCTestAutomation.StepDefinitions.SFPSteps;
 
 namespace PnCTestAutomation.Tests
 {
@@ -46,7 +48,7 @@ namespace PnCTestAutomation.Tests
         public void ResidenceMapping_DoesNotInheritBasicYearsOrCoverage()
         {
             var data = ResidenceData();
-            TableMappingHelpers.ResidenceCoverageFields(CoverageTable("5"), data);
+            TableMappingHelpers.ResidenceCoverageFields(CoverageTable("6"), data);
             Assert.Multiple(() =>
             {
                 Assert.That(data.ResidenceYearBuilt, Is.EqualTo("2022"));
@@ -57,7 +59,7 @@ namespace PnCTestAutomation.Tests
                 Assert.That(data.Farm.ResidencePlumbingYear, Is.Null);
                 Assert.That(data.Farm.ResidenceElectricalYear, Is.Null);
                 Assert.That(data.ResidenceInsuranceAmount, Is.EqualTo("375000"));
-                Assert.That(data.ResidencePerils, Is.EqualTo("5"));
+                Assert.That(data.ResidencePerils, Is.EqualTo("6"));
                 Assert.That(data.ResidenceActualCashValue, Is.EqualTo("Expanded Replacement Cost"));
                 Assert.That(DateTime.FromOADate(45772), Is.EqualTo(new DateTime(2025, 4, 25)));
                 Assert.That(DateHelpers.ResolveDateToken("04/25/2025"), Is.EqualTo("04/25/2025"));
@@ -122,6 +124,100 @@ namespace PnCTestAutomation.Tests
             await page.PerilsSelect.EvaluateAsync("element => element.remove()");
             Assert.ThrowsAsync<PlaywrightException>(() => page.VerifyResidenceCoverageAsync(data));
         }
+
+        [TestCase("3")]
+        [TestCase("5")]
+        public async Task CountryEstateBinding_RejectsUnsupportedRequestedPerilsBeforeEntry(string requested)
+        {
+            await _page.SetContentAsync(CoverageHtml());
+            var steps = new SFP_LocationPropertySteps(new PlaywrightContext { Page = _page }, ResidenceData());
+            Assert.ThrowsAsync<ArgumentException>(() =>
+                steps.UserAddsAndVerifiesCountryEstateResidenceCoverage(CoverageTable(requested)));
+        }
+
+        [TestCase("3")]
+        [TestCase("5")]
+        [TestCase("enabled")]
+        [TestCase("missing")]
+        public async Task CountryEstateBinding_RejectsInitialContractViolationBeforeEntry(string violation)
+        {
+            await _page.SetContentAsync(CoverageHtml("1"));
+            await AlterPerilsAsync(violation);
+            var steps = new SFP_LocationPropertySteps(new PlaywrightContext { Page = _page }, ResidenceData());
+            Assert.ThrowsAsync<PlaywrightException>(() =>
+                steps.UserAddsAndVerifiesCountryEstateResidenceCoverage(CoverageTable("6")));
+            Assert.That(await new SFP_ResidenceCoveragePage(_page).InsuranceAmountInput.InputValueAsync(), Is.EqualTo("1"));
+        }
+
+        [Test]
+        public async Task CountryEstateBinding_VerifiesSavedResidenceWithoutSelectingDisabledPerils()
+        {
+            await _page.SetContentAsync(BindingHtml());
+            var data = ResidenceData();
+            var steps = new SFP_LocationPropertySteps(new PlaywrightContext { Page = _page }, data);
+            await steps.UserAddsAndVerifiesCountryEstateResidenceCoverage(CoverageTable("6"));
+            Assert.That(await _page.EvaluateAsync<string[]>("window.actions"),
+                Is.EqualTo(new[] { "save", "reopen", "locations", "next" }));
+            Assert.That(await _page.EvaluateAsync<int>("window.perilsClicks"), Is.Zero);
+            Assert.That(data.ResidencePerils, Is.EqualTo("6"));
+        }
+
+        [TestCase("3")]
+        [TestCase("5")]
+        [TestCase("enabled")]
+        [TestCase("missing")]
+        [TestCase("missing edit")]
+        public async Task CountryEstateBinding_RejectsInvalidOrUnavailableSavedReadback(string violation)
+        {
+            await _page.SetContentAsync(BindingHtml());
+            if (violation == "missing edit")
+                await new SFP_LocationsResidencesBuildingsPage(_page).EditResidenceButton().EvaluateAsync("el => el.remove()");
+            else
+                await _page.EvaluateAsync(@"violation => {
+                    document.querySelector('button[data-testid$=""editResidence""]').addEventListener('click', () => {
+                        const field = document.querySelector('[data-testid$=""coverageInput$perilGroup.value""]');
+                        if (violation === 'missing') field.remove();
+                        else if (violation === 'enabled') field.setAttribute('aria-disabled', 'false');
+                        else field.textContent = violation;
+                    });
+                }", violation);
+
+            var steps = new SFP_LocationPropertySteps(new PlaywrightContext { Page = _page }, ResidenceData());
+            Assert.ThrowsAsync<PlaywrightException>(() =>
+                steps.UserAddsAndVerifiesCountryEstateResidenceCoverage(CoverageTable("6")));
+            var actions = await _page.EvaluateAsync<string[]>("window.actions");
+            Assert.That(actions, Is.EqualTo(violation == "missing edit" ? new[] { "save" } : new[] { "save", "reopen" }));
+            Assert.That(await _page.EvaluateAsync<int>("window.perilsClicks"), Is.Zero);
+        }
+
+        private async Task AlterPerilsAsync(string violation)
+        {
+            await new SFP_ResidenceCoveragePage(_page).PerilsSelect.EvaluateAsync(@"(field, violation) => {
+                if (violation === 'missing') field.remove();
+                else if (violation === 'enabled') field.setAttribute('aria-disabled', 'false');
+                else field.textContent = violation;
+            }", violation);
+        }
+
+        private static string BindingHtml() =>
+            ResidenceHtml() + CoverageHtml()
+            + """
+                <script>
+                  window.actions = [];
+                  window.perilsClicks = 0;
+                  document.querySelector('[data-testid$="coverageInput$perilGroup.value"]')
+                    .addEventListener('click', () => window.perilsClicks++);
+                </script>
+                <div role="listbox"><div role="option">Expanded Replacement Cost</div></div>
+                <button data-testid="fields.risk.rows[0].residenceCoverage.rows[0].completeRCTProcess1">Get Valuation</button>
+                <button data-testid="fields.data.save" onclick="window.actions.push('save')">Save</button>
+                <button data-testid="fields.data.accountDetail.locationDetail.rows[0].building.rows[0].editResidence"
+                        onclick="window.actions.push('reopen')">
+                  <div data-testid="fields.data.accountDetail.locationDetail.rows[0].building.rows[0].editResidence">Edit</div>
+                </button>
+                <button data-testid="LocationsBuildings-nav" onclick="window.actions.push('locations')">Locations</button>
+                <button data-testid="fields.data_Rules.next" onclick="window.actions.push('next')">Next</button>
+                """;
 
         private static ScenarioContextData ResidenceData()
         {
