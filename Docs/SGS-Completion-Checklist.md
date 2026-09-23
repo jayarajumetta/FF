@@ -98,7 +98,7 @@ The user is not being assigned coding, dependency mapping, or integration work.
 | Parent framework suite | Current BOP checkpoint: 481 passed, 0 failed, 0 skipped; 83 offline CI/runner assertions passed. Ready-case authorization was separately proved before promotion. |
 | Live SGS verification | Original ExpertQuote BOP smoke AL is `Verified` after two independent real QA passes with complete evidence. One of 1,115 active SGS cases is verified; all other active cases remain individually gated. |
 | Premium/forms baselines | Original validation stays active and real results stay visible. Baseline approval/refresh and baseline-dependent acceptance are deferred until the user's test/data refresh; baseline mismatches do not gate current integration progress. |
-| Work/process state | Items 1-6 are complete for engineering progress under the approved boundaries. SFP retains its explicitly deferred Forms failures; BOP AL has two genuine passes. Next is item 7, original Commercial DuckCreek BAP smoke AL. Key Vault approval remains pending; no PR, push, Development merge, IDE synchronization or pipeline rollout has occurred. |
+| Work/process state | Items 1-6 are complete for engineering progress under the approved boundaries. SFP retains its explicitly deferred Forms failures; BOP AL is verified. Item 7 is in just-in-time input review: BAP AL needs an effective-date decision and an insurance-score verification expectation before qualification. Key Vault approval remains pending; no PR, push, Development merge, IDE synchronization or pipeline rollout has occurred. |
 
 ## Ordered remaining work
 
@@ -329,11 +329,25 @@ The user is not being assigned coding, dependency mapping, or integration work.
    implementation commits; the earlier complete pass and failed runs remain intact.
 
 7. [ ] **Implement and prove original Commercial DuckCreek BAP smoke, Alabama.**
+   **Active item - operational input decisions pending.**
    Adapt `012_BAP_Smoke_Test.feature`. Apply intended BAP inputs, verify the
    promised business result, and prove actual frame scope through actions and
    locator evidence.
    Exit: two authorized local runs demonstrating non-baseline behavior with
    complete evidence and separately recorded baseline comparison outcomes.
+   Just-in-time review: original AL identity
+   `SGS-CLDC-012-BAP-SMOKE-TEST:AL-CC1465315B0B`, profile checksum
+   `83A75FEAFA039C3E15EEA1306DB298DAC73A3484D2970C75BF2C7CC3A6186FEE`.
+   The source binding actively enters `values.effective_date_43` at quote
+   start and `values.effectivedate_100` at Policy Info. Both contain
+   `12-01-2025`, despite `dimensions.effectiveDateMode` being `Current`.
+   The BOP date approval was case-specific and is not automatically inherited.
+   Separately, `values.expected_reference_number_innertext_135` is empty,
+   while the source binding uses it to verify the insurance-score reference.
+   An approved expected result or actual-reference validity rule is needed;
+   do not synthesize an expected number or silently accept an empty assertion.
+   This is not a deferred premium/forms baseline. BAP source files and gates
+   remain unchanged; no BAP business execution has occurred.
 
 8. [ ] **Implement and prove original Personal DuckCreek Auto smoke, AZ ANG.**
    Adapt `211_Smoke_Test_Auto.feature`. Verify state/company/auto inputs and
