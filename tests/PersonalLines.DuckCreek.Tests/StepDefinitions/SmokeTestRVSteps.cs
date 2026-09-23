@@ -170,6 +170,7 @@ public sealed class SmokeTestRVSteps
         await page.PauseAsync(5000);
         await page.ClickCloseTabAsync();
         await page.EnterQuoteSearchInputAsync(data.Resolve("{{runtime:QuoteNumber}}"));
+        await page.WaitForQuoteSearchButtonAsync("True");
         await page.ClickTabsSearchAsync();
         await page.PauseAsync(5000);
         await page.VerifyQNumAsync($".*\\b{data.Resolve("{{runtime:QuoteNumber}}")}\\b.*", "Regex:InnerText");

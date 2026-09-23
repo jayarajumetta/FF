@@ -1,0 +1,57 @@
+{
+  "_meta": {
+    "schemaVersion": "3.0-state-lineage",
+    "sourceFile": "215_Smoke_Test_RV_AL.feature",
+    "sourceSha256": "ea1d62280eb0abb6eb50747901f8f526d1c1c391a4ad37629180a698d646c026",
+    "sourceRevision": "48026",
+    "application": "PL_DC",
+    "feature": "Personal Lines Duck Creek - Smoke Test RV",
+    "representativeIteration": "NY FFCIC",
+    "note": "Only the attached representative flow is generated.",
+    "sourceConcreteTestCase": "NY FFCIC",
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
+  },
+  "dimensions": {
+    "state": "New York",
+    "stateCode": "NY",
+    "product": "Recreational Vehicle",
+    "productCode": "RV",
+    "transaction": "Smoke Test",
+    "effectiveDateMode": "Current",
+    "stateVariant": "NY FFCIC"
+  },
+  "values": {
+    "Apartment": "17",
+    "City": "RENSSELAER",
+    "DOB": "3/28/1950",
+    "First Name": "AARON",
+    "Last Name": "ABDO",
+    "SSN": "666334650",
+    "State Abbreviation": "NY",
+    "Street Address": "10 CELESTE DR",
+    "ZIP": "12144",
+    "agentcode_40": "9997F",
+    "county_combobox_52": "Albany",
+    "county_combobox_53": "Adair",
+    "expected_btn_new_quote_2": "New Quote",
+    "expected_lbl_client_info_5": "Client Info",
+    "state": "NY",
+    "state_44": "NEW YORK",
+    "state_name": "New York",
+    "state_variant": "NY FFCIC",
+    "statecode": "NY",
+    "statename": "NEW YORK",
+    "txt_best_phone_account_owner_18": "5555551234",
+    "txt_email_account_owner_19": "a@a.com",
+    "writingcompany_48": "Farm Family Casualty Insurance Co."
+  },
+  "random": {},
+  "application": {
+    "url": "https://expertquote-qa.americannational.com/expertquote/#/quote",
+    "username": "SYNTHETIC_REPLACE_ME",
+    "password": "SYNTHETIC_REPLACE_ME"
+  },
+  "external": {}
+}
