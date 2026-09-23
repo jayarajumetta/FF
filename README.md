@@ -386,6 +386,10 @@ CE's strict residence-coverage binding verifies the source-owned disabled perils
 6 control before entry and again after saving/reopening Location #1 / Residence
 #1. It never selects or enables that control; missing, enabled, incorrect, or
 unavailable saved values fail. Basic's perils selection path is unchanged.
+CE settlement selection requires one exact matching option. Alabama qualification
+quote 02081333 exposed a prefix collision: `Expanded Replacement Cost w/ACV Roof`
+precedes `Expanded Replacement Cost`. The CE selector must not choose the former
+or weaken saved-value verification to accept it.
 Year built and roof year remain fixed at 2022, with Asphalt / UL 2, AOI 375000
 and Expanded Replacement Cost. CE does not inherit Basic's renovation years or
 rolling roof.

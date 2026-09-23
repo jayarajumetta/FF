@@ -115,7 +115,17 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             if (!string.IsNullOrEmpty(contextData.ResidenceActualCashValue))
             {
                 await ReplacementCostSelect.ClickAsync();
-                await _page.GetByRole(AriaRole.Listbox).Last.GetByRole(AriaRole.Option, new() { Name = contextData.ResidenceActualCashValue }).First.ClickAsync();
+                if (countryEstate)
+                {
+                    var option = _page.GetByRole(AriaRole.Listbox).And(_page.Locator(":visible"))
+                        .GetByRole(AriaRole.Option, new() { Name = contextData.ResidenceActualCashValue, Exact = true });
+                    await Expect(option).ToHaveCountAsync(1);
+                    await option.ClickAsync();
+                }
+                else
+                {
+                    await _page.GetByRole(AriaRole.Listbox).Last.GetByRole(AriaRole.Option, new() { Name = contextData.ResidenceActualCashValue }).First.ClickAsync();
+                }
             }
 
             // Step 1: Click Estimator Type (RCT) — reveals the Valuation Type options

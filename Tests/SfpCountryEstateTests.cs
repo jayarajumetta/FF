@@ -199,8 +199,43 @@ namespace PnCTestAutomation.Tests
             }", violation);
         }
 
-        private static string BindingHtml() =>
+        [Test]
+        public async Task CountryEstateBinding_SelectsExactSettlementNotAcvRoofPrefixCollision()
+        {
+            await _page.SetContentAsync(BindingHtml(
+                SettlementOption("Expanded Replacement Cost w/ACV Roof") + SettlementOption("Expanded Replacement Cost")));
+            var prefixMatch = _page.GetByRole(AriaRole.Listbox).GetByRole(AriaRole.Option,
+                new() { Name = "Expanded Replacement Cost" });
+            Assert.That(await prefixMatch.CountAsync(), Is.EqualTo(2), "Captured QA option order exposes the old partial-match defect");
+            Assert.That(await prefixMatch.First.InnerTextAsync(), Is.EqualTo("Expanded Replacement Cost w/ACV Roof"));
+            var steps = new SFP_LocationPropertySteps(new PlaywrightContext { Page = _page }, ResidenceData());
+            await steps.UserAddsAndVerifiesCountryEstateResidenceCoverage(CoverageTable("6"));
+            Assert.That(await new SFP_ResidenceCoveragePage(_page).ReplacementCostSelect.InnerTextAsync(),
+                Is.EqualTo("Expanded Replacement Cost"));
+            Assert.That(await _page.EvaluateAsync<string[]>("window.actions"),
+                Is.EqualTo(new[] { "save", "reopen", "locations", "next" }));
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task CountryEstateBinding_RejectsMissingOrAmbiguousExactSettlement(bool duplicate)
+        {
+            var options = duplicate
+                ? SettlementOption("Expanded Replacement Cost") + SettlementOption("Expanded Replacement Cost")
+                : SettlementOption("Expanded Replacement Cost w/ACV Roof");
+            await _page.SetContentAsync(BindingHtml(options));
+            var steps = new SFP_LocationPropertySteps(new PlaywrightContext { Page = _page }, ResidenceData());
+            Assert.ThrowsAsync<PlaywrightException>(() =>
+                steps.UserAddsAndVerifiesCountryEstateResidenceCoverage(CoverageTable("6")));
+            Assert.That(await _page.EvaluateAsync<string[]>("window.actions"), Is.Empty);
+        }
+
+        private static string SettlementOption(string caption) =>
+            $"<div role='option' onclick=\"document.querySelector('[data-testid$=&quot;coverageInput$replacementCost.value&quot;]').textContent = this.textContent\">{caption}</div>";
+
+        private static string BindingHtml(string options = null) =>
             ResidenceHtml() + CoverageHtml()
+            + "<div role='listbox'>" + (options ?? SettlementOption("Expanded Replacement Cost")) + "</div>"
             + """
                 <script>
                   window.actions = [];
@@ -208,7 +243,6 @@ namespace PnCTestAutomation.Tests
                   document.querySelector('[data-testid$="coverageInput$perilGroup.value"]')
                     .addEventListener('click', () => window.perilsClicks++);
                 </script>
-                <div role="listbox"><div role="option">Expanded Replacement Cost</div></div>
                 <button data-testid="fields.risk.rows[0].residenceCoverage.rows[0].completeRCTProcess1">Get Valuation</button>
                 <button data-testid="fields.data.save" onclick="window.actions.push('save')">Save</button>
                 <button data-testid="fields.data.accountDetail.locationDetail.rows[0].building.rows[0].editResidence"
