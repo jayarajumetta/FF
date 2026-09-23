@@ -40,7 +40,7 @@ Feature: IM Basic Policy
     And I add notepad comment
     And I complete required submission information
     And I run Stoplight
-    #And I verify values in premium fields
+    And I verify values in premium fields
 
     Examples:
       | dataFile | stateCode | stateVariant | stateName | externalDataFile |

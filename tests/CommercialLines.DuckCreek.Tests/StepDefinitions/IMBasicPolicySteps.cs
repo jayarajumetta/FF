@@ -16,12 +16,18 @@ public sealed class IMBasicPolicySteps
         Func<Task<string>> captureValueAsync,
         string fieldName,
         int maxAttempts = 4,
-        int delayMs = 2000)
+        int delayMs = 2000,
+        Func<Task>? postEnterKeyboardActionAsync = null)
     {
         for (var attempt = 1; attempt <= maxAttempts; attempt++)
         {
             await enterValueAsync(value);
             await Task.Delay(delayMs);
+
+            if (postEnterKeyboardActionAsync is not null)
+            {
+                await postEnterKeyboardActionAsync();
+            }
 
             var enteredValue = await captureValueAsync();
             if (!string.IsNullOrWhiteSpace(enteredValue))
@@ -45,7 +51,7 @@ public sealed class IMBasicPolicySteps
 
         await page.ClickNewQuoteAsync();
         await page.EnterEffectiveDateAsync(data.Resolve("{{data:effectivedate_98}}"));
-        await Task.Delay(2000);
+        //await Task.Delay(2000);
         await page.EnterProductAsync(data.Resolve("{{data:product_45}}"));
         await page.WaitForStartAsync("Visible");
         await page.ClickStartAsync();
@@ -69,7 +75,6 @@ public sealed class IMBasicPolicySteps
         await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_2}}"));
         await page.WaitForUnderwritingInfoAsync("Exists");
         await page.EnterInsuredTypeAsync(data.Resolve("{{data:insured_type_4}}"));
-        await Task.Delay(2000);
         await page.EnterEntityTypeAsync(data.Resolve("{{data:entity_type_8}}"));
         await page.WaitForBusinessNameAsync("Visible");
         await page.EnterBusinessNameAsync(data.Resolve("{{data:business_name_7}}"));
@@ -88,7 +93,6 @@ public sealed class IMBasicPolicySteps
             () => page.CaptureNamedInsuredZipCodeAsync("value"),
             "Named Insured Zip Code");
 
-        await Task.Delay(4000);
         if (await page.ExistsYearsInBusinessAsync())
         {
             var yearsInBusiness = data.Resolve("{{data:years_in_business_14}}");
@@ -121,7 +125,7 @@ public sealed class IMBasicPolicySteps
 
         await page.WaitForAddClientAsync("Exists");
         await page.ClickAddClientAsync();
-        await page.VerifyIndividualTypeAsync("Absent", "");
+        await page.VerifyIndividualTypeAsync("Exists", "");
 
     }
 
@@ -155,7 +159,7 @@ public sealed class IMBasicPolicySteps
         await page.WaitForPayPlanAsync("Equal");
         await page.WaitForEasyPayAsync("Exists");
         await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_44}}"));
-        await page.PauseAsync(1000);
+        //await page.PauseAsync(1000);
 
     }
 
@@ -212,15 +216,12 @@ public sealed class IMBasicPolicySteps
             "Associated Client Zip Code");
 
         await page.PressNamedInsuredZipCodeAsync("Tab");
-        await Task.Delay(4000);
         await page.EnterGenderAsync(data.Resolve("{{data:gender_57}}"));
         await page.WaitForClientSearchAsync("Exists");
         await page.ClickClientSearchAsync();
         await page.VerifySearchResultsDuckCreekPolicyFirstCheckboxAsync("Absent", "");
         await page.ClickOKAsync();
         await page.ClickOrderSSNAsync();
-        await Task.Delay(4000);
-        //await page.PressAddAssociatedClientEnterSSNAsync("Enter");
         await page.EnterAddAssociatedClientEnterSSNAsync(data.Resolve("{{data:enter_ssn_65}}"));
         await page.ClickVerifyAsync();
         await page.WaitForPleaseVerifySSNAsync("Absent");
@@ -258,6 +259,7 @@ public sealed class IMBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
+        await page.WaitForPolicyInfoAsync("Exists");
         await page.ClickPolicyInfoAsync();
         await page.PauseAsync(1000);
         await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateAsync(data.Resolve("{{data:effectivedate_98}}"));
@@ -269,7 +271,6 @@ public sealed class IMBasicPolicySteps
         await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
         await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
         await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
-        await page.PauseAsync(3000);
         var descriptionOfSpecifiedOperation = data.BuildQuoteDescription();
         await EnterWithRetryAsync(
             descriptionOfSpecifiedOperation,
@@ -278,14 +279,12 @@ public sealed class IMBasicPolicySteps
             "Description Of Specified Operation");
 
         await page.PressDescriptionOfSpecifiedOperationAsync("Tab");
-        await page.PauseAsync(2000);
 
         if (data.Resolve("{{data:state_variant}}") == "MD" || data.Resolve("{{data:state_variant}}") == "NY" || data.Resolve("{{data:state_variant}}") == "VT" || data.Resolve("{{data:state_variant}}") == "NJ")
         {
             await page.PauseAsync(3000);
             await page.WaitFostimatedPremiumAsync("Visible");
             await page.EnterEstimatedPremiumsAsync(data.Resolve("{{data:estimated_Premium_11}}"));
-            await page.PauseAsync(3000);
         }
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
     }
@@ -299,14 +298,9 @@ public sealed class IMBasicPolicySteps
 
         var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        //await page.VerifyTheInsuranceScoreServiceHasReturnedTheFollowingErrorCREDITVENDORUNREACHABLEPLEASEREPROCESSAsync("Exists", "");
-        ////await page.ClickInsuranceScoreConsentAsync();
-        //await page.WaitForAcceptAsync("Exists");
-        //await page.ClickAcceptAsync();
         await page.WaitForInsuranceScoreAsync("Exists");
         await page.ClickInsuranceScoreAsync();
         await page.PauseAsync(3000);
-        //await page.VerifyReferenceNumberAsync(data.Resolve("{{data:expected_reference_number_innertext_129}}"), "InnerText");
     }
 
     [Given(@"^I add Accounts Receivable Coverage$")]
@@ -319,10 +313,8 @@ public sealed class IMBasicPolicySteps
         var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickIMNavigationLinksPolicyCovgAsync();
-        await Task.Delay(2000);
         await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_134}}"));
         await page.ClickAddCoverageFormAsync();
-        await Task.Delay(3000);
         await page.WaitForDescriptionAsync("Visible");
         var description = data.Resolve("{{data:description_136}}");
         await EnterWithRetryAsync(
@@ -373,7 +365,6 @@ public sealed class IMBasicPolicySteps
             () => page.CaptureAddressStreetCityStateZipAsync("value"),
             "AddressStreetCityStateZip");
 
-        await page.PressAddressStreetCityStateZipAsync("Tab");
         await page.EnterPolicyCovgBaileesPropertyAwayFromYourPremisesLimitAsync(data.Resolve("{{data:limit_152}}"));
         await page.ClickOKAsync();
         await page.PauseAsync(3000);
@@ -496,7 +487,6 @@ public sealed class IMBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickIMNavigationLinksPolicyCovgAsync();
-        //await page.WaitForPolicyCovgMainPolicyCovgAsync("Exists");
         await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_206}}"));
         await page.PauseAsync(1000);
         await page.ClickAddCoverageFormAsync();
@@ -508,7 +498,6 @@ public sealed class IMBasicPolicySteps
             () => page.CapturePolicyCovgSignsDescriptionAsync("value"),
             "Signs Description");
 
-        //await page.VerifyPolicyCovgSignsCoverageFormAsync("Exists", "");
         await page.PauseAsync(3000);
         await page.EnterN5DeductibleAsync(data.Resolve("{{data:5_deductible_212}}"));
         await page.ClickOKAsync();
@@ -633,7 +622,7 @@ public sealed class IMBasicPolicySteps
             () => page.CaptureSignLocationAsync("value"),
             "Sign Location");
 
-        await page.EnterRiskSignsTypeAsync(data.Resolve("{{data:type_265}}"));
+        await EnterWithRetryAsync(data.Resolve("{{data:type_265}}"), page.EnterRiskSignsTypeAsync, () => page.CaptureRiskSignsTypeAsync("value"), "Risk Signs Type");
         var lettering = data.Resolve("{{data:lettering_266}}");
         await EnterWithRetryAsync(
             lettering,
@@ -700,7 +689,7 @@ public sealed class IMBasicPolicySteps
 
         await page.ClickSpecificUnderwritingQuestionsAsync();
         await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
-        await Task.Delay(2000);
+        await page.PauseAsync(2000);
         var receivablesPremisesConstruction = data.Resolve("{{data:what_is_the_construction_of_the_premises_where_the_receivables_are_stored_288}}");
         await EnterWithRetryAsync(
             receivablesPremisesConstruction,
@@ -890,7 +879,7 @@ public sealed class IMBasicPolicySteps
         await page.WaitForPayPlanAsync("Equal");
         await page.WaitForEasyPayAsync("Exists");
         await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_377}}"));
-        await page.PauseAsync(1000);
+        //await page.PauseAsync(1000);
 
     }
 
@@ -906,7 +895,7 @@ public sealed class IMBasicPolicySteps
         await page.ClickNotepadAsync();
         //await page.WaitForNotepadHeadingAsync("Exists");
         await page.ClickAddNotesRemarksAsync();
-        await page.PauseAsync(3000);
+        //await page.PauseAsync(3000);
         var textBoxValue = data.Resolve("Test {B[Product (LOB)]}");
         await EnterWithRetryAsync(
             textBoxValue,
@@ -942,9 +931,9 @@ public sealed class IMBasicPolicySteps
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickCompleteApplicationAsync();
-        await page.PauseAsync(5000);
+        await page.WaitForStoplightWaitingWindowAsync("Exists");
         await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
-        await page.PauseAsync(5000);
+        //await page.WaitForStoplightWaitingWindowAsync("Absent");
         await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
     }
 
@@ -974,8 +963,8 @@ public sealed class IMBasicPolicySteps
 
         await page.EnterSessionIDAsync(data.Resolve("{B[SessionId]}"));
         await page.VerifyStatusCodeAsync(data.Resolve("{{data:expected_statuscode_value_441}}"), "value");
-        await page.PauseAsync(1000);
-        await page.PauseAsync(1000);
+        //await page.PauseAsync(1000);
+        //await page.PauseAsync(1000);
 
     }
 

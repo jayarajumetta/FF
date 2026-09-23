@@ -525,7 +525,7 @@ public sealed class NavigationLocators
 
     public ILocator IsTheInsuredEngagedInAnySnowOrIceRemovalOperations => _page.Locator("input[fieldref=\"LineInput.InsuredEngaged\"]");
 
-    public ILocator IsThereAPriorCarrier => _page.GetByPlaceholder("(select)");
+    public ILocator IsThereAPriorCarrier => _page.GetByPlaceholder("(select)").First;
 
     public ILocator IsThisCoverageBound => _page.Locator("input[fieldref='PolicyWorkflowDataInput.IsCoverageBound']");
 

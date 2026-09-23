@@ -1517,6 +1517,9 @@ public sealed class NavigationPage
     public Task<string> CaptureLetteringAsync(string property = "") =>
         _ui.CaptureAsync(_locators.Lettering, property, new ControlIntent("Navigation", "Lettering"));
 
+    public Task<string> CaptureRiskTypeAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.RiskType, property, new ControlIntent("Navigation", "RiskType"));
+
     public Task PressLetteringAsync(string key) =>
         _ui.PressAsync(_locators.Lettering, key, new ControlIntent("Navigation", "Lettering"));
 
@@ -2180,6 +2183,9 @@ public sealed class NavigationPage
     public Task ClickPolicyInfoAsync() =>
         _ui.ClickAsync(_locators.PolicyInfo, new ControlIntent("Navigation", "PolicyInfo"));
 
+    public Task WaitForPolicyInfoAsync(string expected) =>
+        _ui.WaitAsync(_locators.PolicyInfo, expected, new ControlIntent("Navigation", "PolicyInfo"));
+
     public Task WaitForPolicyInfoHeaderAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "PolicyInfoHeader"));
 
@@ -2776,6 +2782,9 @@ public sealed class NavigationPage
 
     public Task EnterRiskSignsTypeAsync(string value) =>
         _ui.FillAsync(_locators.RiskSignsType, value, new ControlIntent("Navigation", "RiskSignsType"));
+
+    public Task<string> CaptureRiskSignsTypeAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.RiskSignsType, property, new ControlIntent("Navigation", "RiskSignsType"));
 
     public Task PressRiskSignsTypeAsync(string key) =>
         _ui.PressAsync(_locators.RiskSignsType, key, new ControlIntent("Navigation", "RiskSignsType"));
