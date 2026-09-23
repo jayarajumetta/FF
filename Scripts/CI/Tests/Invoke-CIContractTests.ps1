@@ -573,6 +573,8 @@ try {
         Join-Path $RepositoryRoot "Pipelines\templates\test-shards-stage.yml") -Raw
     $entry = Get-Content -LiteralPath (
         Join-Path $RepositoryRoot "Pipelines\sfp-smoke-adhoc.yml") -Raw
+    $buildEntry = Get-Content -LiteralPath (
+        Join-Path $RepositoryRoot "Pipelines\build-package-validation.yml") -Raw
     $dataPoolSetup = Get-Content -LiteralPath (
         Join-Path $RepositoryRoot "Pipelines\templates\setup-datapool-stage.yml") -Raw
     $dataPoolProgram = Get-Content -LiteralPath (
@@ -601,7 +603,87 @@ try {
         $testTemplate -match "AZDO_ORGANIZATION_URL:\s*\$\(System\.CollectionUri\)" -and
         $testTemplate -match "SYSTEM_COLLECTIONURI:\s*\$\(System\.CollectionUri\)"
     ) "Credential-bearing publication is not pinned to System.CollectionUri."
-    Assert-True ($entry -match "Development" -and $entry -match "combined-framework") "CI branch coverage is incomplete."
+    foreach ($pipeline in @(
+        @{ Name = "Build/package validation"; Yaml = $buildEntry },
+        @{ Name = "Canonical UI validation"; Yaml = $entry }
+    )) {
+        foreach ($trigger in @("trigger", "pr")) {
+            Assert-True (
+                [regex]::Matches($pipeline.Yaml, "(?m)^${trigger}:").Count -eq 1 -and
+                $pipeline.Yaml -cmatch "(?m)^${trigger}:[ \t]*none[ \t]*\r?$"
+            ) "$($pipeline.Name) must explicitly disable its '$trigger' automatic trigger."
+        }
+        Assert-True (
+            $pipeline.Yaml -notmatch "(?m)^resources:"
+        ) "$($pipeline.Name) must not introduce resource-triggered execution during cutover."
+    }
+    Assert-True (
+        $buildEntry -match "(?m)^pool:\r?\n  name: Playwright[ \t]*\r?$"
+    ) "Build/package validation must use the existing Playwright pool."
+    Assert-True (
+        [regex]::Matches($buildEntry, "(?m)^  - ").Count -eq 1 -and
+        $buildEntry -match "(?m)^stages:\r?\n  - template: templates/build-package-stage\.yml[ \t]*\r?$" -and
+        $buildEntry -notmatch "(?m)^(schedules|jobs|steps):"
+    ) "Build/package validation must include only the package template, without schedules, UI shards or DataPool setup."
+
+    $schedules = [regex]::Match($entry, "(?ms)^schedules:\r?\n(?<content>.*?)^parameters:")
+    $crons = @([regex]::Matches($schedules.Groups["content"].Value, '(?m)^  - cron: "([^"]+)"[ \t]*\r?$') |
+        ForEach-Object { $_.Groups[1].Value })
+    $scheduleBranches = @([regex]::Matches($schedules.Groups["content"].Value, "(?m)^        - ([^\r\n]+)") |
+        ForEach-Object { $_.Groups[1].Value.Trim() })
+    Assert-True (
+        $schedules.Success -and $crons.Count -eq 2 -and
+        @($crons | Sort-Object -Unique).Count -eq 2 -and
+        @($crons | Where-Object { $_ -notin @("0 6 * * *", "0 17 * * *") }).Count -eq 0
+    ) "Canonical validation must retain both existing Development schedule times."
+    Assert-True (
+        $scheduleBranches.Count -eq 2 -and
+        @($scheduleBranches | Where-Object { $_ -cne "Development" }).Count -eq 0 -and
+        [regex]::Matches($schedules.Groups["content"].Value, "(?m)^    always: true[ \t]*\r?$").Count -eq 2
+    ) "Canonical schedules must retain Development-only ownership and always-run behavior."
+
+    $executionEnvironments = [regex]::Matches($testTemplate, (
+        '(?m)^            displayName: Execute and reconcile shard \$\(SHARD_ID\)\r?\n' +
+        '            env:\r?\n(?<content>(?:              [^\r\n]+\r?\n)+)'))
+    Assert-True ($executionEnvironments.Count -eq 1) "The canonical shard execution environment is missing or ambiguous."
+    $executionEnvironment = @{}
+    foreach ($assignment in [regex]::Matches(
+        $executionEnvironments[0].Groups["content"].Value,
+        "(?m)^              (?<key>[A-Za-z_][A-Za-z0-9_]*):[ \t]*(?<value>[^\r\n]+)")) {
+        $key = $assignment.Groups["key"].Value
+        Assert-True (-not $executionEnvironment.ContainsKey($key)) "Duplicate test execution environment key '$key'."
+        $executionEnvironment[$key] = $assignment.Groups["value"].Value.Trim()
+    }
+    $expectedVariableMappings = [ordered]@{
+        EQ_USERNAME = "EQ_USERNAME"
+        EQ_PASSWORD = "EQ_PASSWORD"
+        EXPRESS_USERNAME = "EXPRESS_USERNAME"
+        EXPRESS_PASSWORD = "EXPRESS_PASSWORD"
+        DuckCreekForms__Username = "DUCKCREEK_FORMS_USERNAME"
+        DuckCreekForms__Password = "DUCKCREEK_FORMS_PASSWORD"
+        DuckCreekForms__CLASUsername = "DUCKCREEK_FORMS_CLAS_USERNAME"
+        DuckCreekForms__CLASPassword = "DUCKCREEK_FORMS_CLAS_PASSWORD"
+        OAUTH_TOKEN_URL = "OAUTH_TOKEN_URL"
+        OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID"
+        PING_SECRET_ID = "PING_SECRET_ID"
+        PING_TOKEN_ENDPOINT = "PING_TOKEN_ENDPOINT"
+        PING_SECRET_ENDPOINT = "PING_SECRET_ENDPOINT"
+        PING_BOOTSTRAP_CLIENT_ID = "PING_BOOTSTRAP_CLIENT_ID"
+        PING_BOOTSTRAP_CLIENT_SECRET = "PING_BOOTSTRAP_CLIENT_SECRET"
+        EXPERT_QUOTE_API_BASE_URL = "EXPERT_QUOTE_API_BASE_URL"
+        DATAPOOL_BASE_URL = "DATAPOOL_BASE_URL"
+        DATAPOOL_API_KEY = "DATAPOOL_API_KEY"
+    }
+    foreach ($mapping in $expectedVariableMappings.GetEnumerator()) {
+        Assert-True (
+            $executionEnvironment.ContainsKey($mapping.Key) -and
+            $executionEnvironment[$mapping.Key] -ceq ('$(' + $mapping.Value + ')')
+        ) "Execution environment '$($mapping.Key)' must reference its exact ADO variable, never an inline value."
+    }
+    Assert-True (
+        $executionEnvironment["DATAPOOL_REQUIRED"] -ceq '"${{ parameters.dataPoolRequired }}"' -and
+        $executionEnvironment["DATAPOOL_AUTO_START"] -ceq '"false"'
+    ) "The existing DataPool requiredness or no-auto-start execution policy changed."
     Assert-True (
         $dataPoolProgram -match 'status\s*=\s*"ok"' -and
         $dataPoolSetup -match '\$health\.status\s+-eq\s+"ok"'

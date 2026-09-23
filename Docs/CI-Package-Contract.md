@@ -7,7 +7,8 @@ private execution agents. Test jobs do not check out source or rebuild.
 
 | Path | Contract |
 |------|----------|
-| `Pipelines/sfp-smoke-adhoc.yml` | Canonical CI/PR/manual entry point plus the existing Development schedules. |
+| `Pipelines/build-package-validation.yml` | Manual-only package validation on the `Playwright` pool; uses only the build/package stage, with no UI shards, schedules or DataPool installation. |
+| `Pipelines/sfp-smoke-adhoc.yml` | Canonical manual entry point plus the existing Development schedules; CI/PR triggers are disabled during cutover. |
 | `Pipelines/sfp-smoke-vm.yml` | Compatibility entry point retaining the existing main-branch schedules. |
 | `Pipelines/forms-check-scheduled.yml` | Compatibility entry point for the one discovered SFP forms-only case. |
 | `Pipelines/setup-datapool-service.yml` | One-time compatibility entry point that installs DataPool from the validated package. |
@@ -20,6 +21,55 @@ The YAML files share `Pipelines/templates/build-package-stage.yml`,
 owned by `Pipelines/package-version.txt`.
 The final integration baseline is frozen at `1.4.0`; changing it requires a
 new reviewed package-contract milestone rather than an ad hoc build override.
+
+### First cutover validation
+
+Manually queue `Pipelines/build-package-validation.yml` on the integration
+branch first. It reuses the existing clean checkout, locked restore, Release
+build, offline unit/contract checks, immutable package validation and artifact
+publication. It does not include `test-shards-stage.yml` or
+`setup-datapool-stage.yml`, and it does not require application credentials.
+
+Keep `sfp-smoke-adhoc.yml` at `trigger: none` and `pr: none` while validating
+the cutover. Its two existing Development schedules and manual queue parameters
+are unchanged; branch commits and PRs must not automatically start all seven
+UI shards. Do not activate NonRunnable outcome profiles, invent QA expectations,
+install DataPool, or change Azure resources as part of this repository-only step.
+
+CI triggers, PR validation and Azure Repos build-validation branch policies
+should be enabled only after package and authorized execution validation.
+Branch policies can queue builds independently of YAML `pr: none`; administrators
+must keep automatic UI validation disabled during this cutover. This change
+does not create or update pipeline definitions, policies, variable groups,
+agent pools or schedules in Azure DevOps.
+
+### Execution environment and secret variables
+
+Azure DevOps secret variables are not automatically available to scripts.
+`test-shards-stage.yml` explicitly maps the following variables into the
+`Execute and reconcile shard` step's environment. Configure the values through
+the authorized pipeline/variable-group mechanism, marking credentials and
+secrets as secret; commit only variable references, never values. These mappings
+do not copy local `appsettings.json` credentials into Azure or into the package.
+
+| Azure DevOps variable | Test process environment key |
+|----------------------|------------------------------|
+| `EQ_USERNAME`, `EQ_PASSWORD` | Same names |
+| `EXPRESS_USERNAME`, `EXPRESS_PASSWORD` | Same names |
+| `DUCKCREEK_FORMS_USERNAME` | `DuckCreekForms__Username` |
+| `DUCKCREEK_FORMS_PASSWORD` | `DuckCreekForms__Password` |
+| `DUCKCREEK_FORMS_CLAS_USERNAME` | `DuckCreekForms__CLASUsername` |
+| `DUCKCREEK_FORMS_CLAS_PASSWORD` | `DuckCreekForms__CLASPassword` |
+| `OAUTH_TOKEN_URL`, `OAUTH_CLIENT_ID`, `PING_SECRET_ID` | Same names |
+| `PING_TOKEN_ENDPOINT`, `PING_SECRET_ENDPOINT` | Same names |
+| `PING_BOOTSTRAP_CLIENT_ID`, `PING_BOOTSTRAP_CLIENT_SECRET` | Same names |
+| `EXPERT_QUOTE_API_BASE_URL` | Same name |
+| `DATAPOOL_BASE_URL`, `DATAPOOL_API_KEY` | Same names; existing mappings retained |
+
+The double underscores bind the Forms credentials to the existing .NET
+`DuckCreekForms` configuration section. Ping/OAuth/API settings apply when the
+selected scenarios use those existing services. Existing DataPool requiredness
+and `DATAPOOL_AUTO_START: "false"` behavior are unchanged.
 
 ## Package layout
 
@@ -157,12 +207,12 @@ publisher failure keeps the job failed.
 - The disabled duplicate CE stage and inline retry implementations were
   removed from the compatibility YAML entry points.
 
-YAML declares CI and PR coverage for `main`, `Development`, and
-`pa3402-anico-combined-framework-*`. For Azure Repos, repository administrators
-must also configure required build-validation branch policies for those
-branches/patterns and point existing scheduled/manual pipeline definitions at
-the compatibility YAML paths. Organization/project settings cannot be changed
-from this repository.
+During cutover, YAML does not declare CI or PR triggers for any branch. After
+validation and approval, repository administrators can enable the intended
+CI/PR coverage and required Azure Repos build-validation policies, and point
+the appropriate scheduled/manual definitions at the reviewed entry-point paths.
+Until then, retain the established manual/scheduled behavior. Organization/project
+settings cannot be changed from this repository.
 
 Phase 6 adds opt-in Azure DevOps Test Plans publication. It is `Off` by default
 and consumes only canonical final TRX/result/evidence inputs. See

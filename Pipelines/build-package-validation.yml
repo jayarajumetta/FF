@@ -1,0 +1,9 @@
+# Manual-only package validation; no UI shards or DataPool installation.
+trigger: none
+pr: none
+
+pool:
+  name: Playwright
+
+stages:
+  - template: templates/build-package-stage.yml

@@ -1,7 +1,7 @@
 # Combined framework completion checklist
 
 Status: APPROVED - full-scope sequential delivery; no pilot phase.
-Updated: 2026-09-22.
+Updated: 2026-09-23.
 
 ## Goal
 
@@ -98,7 +98,7 @@ The user is not being assigned coding, dependency mapping, or integration work.
 | Parent framework suite | Current BOP checkpoint: 481 passed, 0 failed, 0 skipped; 83 offline CI/runner assertions passed. Ready-case authorization was separately proved before promotion. |
 | Live SGS verification | Original ExpertQuote BOP smoke AL is `Verified` after two independent real QA passes with complete evidence. One of 1,115 active SGS cases is verified; all other active cases remain individually gated. |
 | Premium/forms baselines | Original validation stays active and real results stay visible. Baseline approval/refresh and baseline-dependent acceptance are deferred until the user's test/data refresh; baseline mismatches do not gate current integration progress. |
-| Work/process state | Items 1-6 are complete for engineering progress under the approved boundaries. SFP retains its explicitly deferred Forms failures; BOP AL is verified. Item 7 is blocked at CLAS QA sign-in: HTTP 500 from `/express/workbench/listgroups`. Its date, score-result and documented fieldref decisions are approved. No BAP execution or readiness promotion has occurred. Key Vault approval remains pending; no PR, push, Development merge, IDE synchronization or pipeline rollout has occurred. |
+| Work/process state | Items 1-6 are complete for engineering progress under the approved boundaries. SFP retains its explicitly deferred Forms failures; BOP AL is verified. Item 7 is blocked at CLAS QA sign-in: HTTP 500 from `/express/workbench/listgroups`. Its date, score-result and documented fieldref decisions are approved. No BAP execution or readiness promotion has occurred. The separate approved first pipeline cutover permits repository changes and a push to this integration branch only; see `Docs/CI-Package-Contract.md`. It does not authorize a PR, Development merge, IDE synchronization, ADO resource changes, outcome-profile activation or DataPool installation. Key Vault approval remains pending. |
 
 ## Ordered remaining work
 

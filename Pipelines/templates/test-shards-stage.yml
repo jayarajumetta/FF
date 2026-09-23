@@ -116,6 +116,22 @@ stages:
               PLAYWRIGHT_BROWSERS_PATH: $(Agent.ToolsDirectory)/playwright-browsers
               TEST_ENVIRONMENT: ${{ parameters.environmentName }}
               CI: "true"
+              EQ_USERNAME: $(EQ_USERNAME)
+              EQ_PASSWORD: $(EQ_PASSWORD)
+              EXPRESS_USERNAME: $(EXPRESS_USERNAME)
+              EXPRESS_PASSWORD: $(EXPRESS_PASSWORD)
+              DuckCreekForms__Username: $(DUCKCREEK_FORMS_USERNAME)
+              DuckCreekForms__Password: $(DUCKCREEK_FORMS_PASSWORD)
+              DuckCreekForms__CLASUsername: $(DUCKCREEK_FORMS_CLAS_USERNAME)
+              DuckCreekForms__CLASPassword: $(DUCKCREEK_FORMS_CLAS_PASSWORD)
+              OAUTH_TOKEN_URL: $(OAUTH_TOKEN_URL)
+              OAUTH_CLIENT_ID: $(OAUTH_CLIENT_ID)
+              PING_SECRET_ID: $(PING_SECRET_ID)
+              PING_TOKEN_ENDPOINT: $(PING_TOKEN_ENDPOINT)
+              PING_SECRET_ENDPOINT: $(PING_SECRET_ENDPOINT)
+              PING_BOOTSTRAP_CLIENT_ID: $(PING_BOOTSTRAP_CLIENT_ID)
+              PING_BOOTSTRAP_CLIENT_SECRET: $(PING_BOOTSTRAP_CLIENT_SECRET)
+              EXPERT_QUOTE_API_BASE_URL: $(EXPERT_QUOTE_API_BASE_URL)
               DATAPOOL_BASE_URL: $(DATAPOOL_BASE_URL)
               DATAPOOL_API_KEY: $(DATAPOOL_API_KEY)
               DATAPOOL_REQUIRED: "${{ parameters.dataPoolRequired }}"

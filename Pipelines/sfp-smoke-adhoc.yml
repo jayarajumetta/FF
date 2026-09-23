@@ -1,17 +1,6 @@
-# Canonical SFP CI, PR, manual, and Development schedule entry point.
-trigger:
-  branches:
-    include:
-      - main
-      - Development
-      - "pa3402-anico-combined-framework-*"
-
-pr:
-  branches:
-    include:
-      - main
-      - Development
-      - "pa3402-anico-combined-framework-*"
+# Canonical manual and Development-scheduled SFP entry point during cutover.
+trigger: none
+pr: none
 
 schedules:
   - cron: "0 6 * * *"
