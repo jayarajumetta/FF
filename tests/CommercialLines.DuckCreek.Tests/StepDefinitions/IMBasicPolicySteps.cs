@@ -902,7 +902,7 @@ public sealed class IMBasicPolicySteps
             page.EnterTextBoxAsync,
             () => page.CaptureTextBoxAsync("value"),
             "TextBox",
-            delayMs: 2000);
+            delayMs: 2000, postEnterKeyboardActionAsync: () => page.PressAddressTextBoxAsync("Tab"));
 
         await page.PressAddressTextBoxAsync("Tab");
         await page.ClickOKAsync();
