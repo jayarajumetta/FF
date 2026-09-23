@@ -123,7 +123,7 @@ Feature: SFP Country Estate Policy
       | WindHailDeductible      | 1%               |
 
     # Step 19: Add a Residence
-    When user adds a Residence to the Location
+    When user adds a Country Estate Residence to the Location
       | Question          | Answer        |
       | AdditionalDesc    | Main House    |
       | YearBuilt         | 2022          |
@@ -133,7 +133,6 @@ Feature: SFP Country Estate Policy
       | RoofYear          | 2022          |
       | RoofType          | Asphalt       |
       | RoofImpact        | UL 2          |
-      | SeasonalOrVacant  | No            |
       | SolidFuelQuestion | No            |
 
     # Step 20: Add Residence Coverage

@@ -58,6 +58,7 @@ namespace PnCTestAutomation.Tests
                 Assert.That(data.Farm.ResidenceHeatingYear, Is.Null);
                 Assert.That(data.Farm.ResidencePlumbingYear, Is.Null);
                 Assert.That(data.Farm.ResidenceElectricalYear, Is.Null);
+                Assert.That(data.ResidenceSeasonalOrVacant, Is.Null);
                 Assert.That(data.ResidenceInsuranceAmount, Is.EqualTo("375000"));
                 Assert.That(data.ResidencePerils, Is.EqualTo("6"));
                 Assert.That(data.ResidenceActualCashValue, Is.EqualTo("Expanded Replacement Cost"));
@@ -72,9 +73,9 @@ namespace PnCTestAutomation.Tests
             var data = ResidenceData();
             await _page.SetContentAsync(ResidenceHtml());
             var page = new SFP_AddResidencePage(_page);
-            await page.VerifyResidenceFormAsync(data);
+            await page.VerifyCountryEstateResidenceFormAsync(data);
             await page.RoofYearInput.FillAsync("2026");
-            Assert.ThrowsAsync<PlaywrightException>(() => page.VerifyResidenceFormAsync(data));
+            Assert.ThrowsAsync<PlaywrightException>(() => page.VerifyCountryEstateResidenceFormAsync(data));
         }
 
         [Test]
@@ -83,7 +84,7 @@ namespace PnCTestAutomation.Tests
             var data = ResidenceData();
             data.Farm.ResidenceHeatingYear = "2026";
             await _page.SetContentAsync(ResidenceHtml());
-            Assert.ThrowsAsync<PlaywrightException>(() => new SFP_AddResidencePage(_page).VerifyResidenceFormAsync(data));
+            Assert.ThrowsAsync<PlaywrightException>(() => new SFP_AddResidencePage(_page).VerifyCountryEstateResidenceFormAsync(data));
         }
 
         [TestCase("3")]
@@ -133,6 +134,73 @@ namespace PnCTestAutomation.Tests
             var steps = new SFP_LocationPropertySteps(new PlaywrightContext { Page = _page }, ResidenceData());
             Assert.ThrowsAsync<ArgumentException>(() =>
                 steps.UserAddsAndVerifiesCountryEstateResidenceCoverage(CoverageTable(requested)));
+        }
+
+        [TestCase("No")]
+        [TestCase("Seasonal")]
+        [TestCase("Vacant")]
+        [TestCase("")]
+        public void CountryEstateResidenceBinding_RejectsInapplicableTableInput(string value)
+        {
+            var steps = new SFP_LocationPropertySteps(new PlaywrightContext { Page = _page }, new ScenarioContextData());
+            Assert.Throws<ArgumentException>(() =>
+                steps.UserAddsCountryEstateResidenceToLocation(SfpBasicInputTests.TableOf(("SeasonalOrVacant", value))));
+        }
+
+        [Test]
+        public void CountryEstateCoverageBinding_RejectsSeasonalValueCarriedFromAnotherBinding()
+        {
+            var data = ResidenceData();
+            data.ResidenceSeasonalOrVacant = "No";
+            var steps = new SFP_LocationPropertySteps(new PlaywrightContext { Page = _page }, data);
+            Assert.ThrowsAsync<ArgumentException>(() =>
+                steps.UserAddsAndVerifiesCountryEstateResidenceCoverage(CoverageTable("6")));
+        }
+
+        [TestCase(false, false)]
+        [TestCase(false, true)]
+        [TestCase(true, false)]
+        [TestCase(true, true)]
+        public async Task CountryEstateBinding_RejectsUnexpectedApplicableSeasonalControl(bool dropdown, bool afterSave)
+        {
+            var control = dropdown
+                ? "<div data-testid='fields.building.rows[0].buildingInput$eqVacantSeasonal.value'>No</div>"
+                : Chip("fields.building.rows[0].buildingInput$eQVacantSeasonal.value", "No");
+            await _page.SetContentAsync(BindingHtml());
+            if (afterSave)
+                await _page.EvaluateAsync(@"html =>
+                    document.querySelector('button[data-testid$=""editResidence""]').addEventListener('click',
+                        () => document.body.insertAdjacentHTML('beforeend', html))", control);
+            else
+                await _page.EvaluateAsync("html => document.body.insertAdjacentHTML('beforeend', html)", control);
+            var steps = new SFP_LocationPropertySteps(new PlaywrightContext { Page = _page }, ResidenceData());
+            Assert.ThrowsAsync<PlaywrightException>(() =>
+                steps.UserAddsAndVerifiesCountryEstateResidenceCoverage(CoverageTable("6")));
+            Assert.That(await _page.EvaluateAsync<string[]>("window.actions"),
+                Is.EqualTo(afterSave ? new[] { "save", "reopen" } : Array.Empty<string>()));
+        }
+
+        [Test]
+        public async Task CountryEstateNonApplicability_DoesNotClaimHiddenSeasonalValueIsNo()
+        {
+            var data = ResidenceData();
+            await _page.SetContentAsync(ResidenceHtml()
+                + "<div hidden data-testid='fields.building.rows[0].buildingInput$eQVacantSeasonal.value'>Seasonal</div>");
+            await new SFP_AddResidencePage(_page).VerifyCountryEstateResidenceFormAsync(data);
+            Assert.That(data.ResidenceSeasonalOrVacant, Is.Null);
+        }
+
+        [Test]
+        public async Task NonCeResidence_StillRequiresVisibleSeasonalValue()
+        {
+            var data = ResidenceData();
+            data.ResidenceSeasonalOrVacant = "No";
+            await _page.SetContentAsync(ResidenceHtml()
+                + Chip("fields.building.rows[0].buildingInput$eQVacantSeasonal.value", "No"));
+            var page = new SFP_AddResidencePage(_page);
+            await page.VerifyResidenceFormAsync(data);
+            await page.GetVacantSeasonalButton("No").EvaluateAsync("el => el.remove()");
+            Assert.ThrowsAsync<PlaywrightException>(() => page.VerifyResidenceFormAsync(data));
         }
 
         [TestCase("3")]
@@ -260,7 +328,7 @@ namespace PnCTestAutomation.Tests
                 ("AdditionalDesc", "Main House"), ("YearBuilt", "2022"),
                 ("NumberOfFamilies", "Single Family"), ("RateType", "Frame"), ("ConditionRating", "1"),
                 ("RoofYear", "2022"), ("RoofType", "Asphalt"), ("RoofImpact", "UL 2"),
-                ("SeasonalOrVacant", "No"), ("SolidFuelQuestion", "No")), data);
+                ("SolidFuelQuestion", "No")), data);
             return data;
         }
 
@@ -276,7 +344,6 @@ namespace PnCTestAutomation.Tests
             + "<div data-testid='fields.building.rows[0].buildingInput$roofImpactResistance.value'>UL 2</div>"
             + Chip("fields.building.rows[0].buildingInput$eQNumberOfFamilies.value", "Single Family")
             + Chip("fields.building.rows[0].buildingInput$rateType.value", "1")
-            + Chip("fields.building.rows[0].buildingInput$eQVacantSeasonal.value", "No")
             + Chip("fields.building_SolidFuel.rows[0].buildingInput$solidFuelHeatingDevices.value", "No");
 
         private static string CoverageHtml(string amount = "375000", string settlement = "Expanded Replacement Cost") =>

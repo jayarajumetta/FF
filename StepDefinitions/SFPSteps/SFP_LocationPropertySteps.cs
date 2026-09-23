@@ -51,6 +51,16 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         [When("user adds and verifies a Basic Residence to the Location")]
         public Task UserAddsAndVerifiesBasicResidenceToLocation(Table table) => AddResidenceAsync(table, verify: true);
 
+        [When("user adds a Country Estate Residence to the Location")]
+        public Task UserAddsCountryEstateResidenceToLocation(Table table)
+        {
+            foreach (var row in table.Rows)
+                if (row["Question"].Trim() == "SeasonalOrVacant")
+                    throw new ArgumentException("SeasonalOrVacant is not applicable or readable in the Country Estate residence editor.");
+
+            return AddResidenceAsync(table, verify: false);
+        }
+
         private async Task AddResidenceAsync(Table table, bool verify)
         {
             TableMappingHelpers.ResidenceFields(table, _contextData);
@@ -92,6 +102,9 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
         private async Task AddResidenceCoverageAsync(Table table, bool verify, bool countryEstate = false)
         {
+            if (countryEstate && _contextData.ResidenceSeasonalOrVacant != null)
+                throw new ArgumentException("Country Estate cannot verify a supplied SeasonalOrVacant value.");
+
             TableMappingHelpers.ResidenceCoverageFields(table, _contextData);
 
             var residenceCovPage = new SFP_ResidenceCoveragePage(_context.Page);
@@ -106,7 +119,10 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                     await residenceCovPage.VerifyCountryEstateResidenceCoverageAsync(_contextData);
                 else
                     await residenceCovPage.VerifyResidenceCoverageAsync(_contextData);
-                await new SFP_AddResidencePage(_context.Page).VerifyResidenceFormAsync(_contextData);
+                if (countryEstate)
+                    await new SFP_AddResidencePage(_context.Page).VerifyCountryEstateResidenceFormAsync(_contextData);
+                else
+                    await new SFP_AddResidencePage(_context.Page).VerifyResidenceFormAsync(_contextData);
             }
             await residenceCovPage.ClickSaveAsync();
 
@@ -114,7 +130,10 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             if (verify)
             {
                 await locationsPage.OpenResidenceAsync();
-                await new SFP_AddResidencePage(_context.Page).VerifyResidenceFormAsync(_contextData);
+                if (countryEstate)
+                    await new SFP_AddResidencePage(_context.Page).VerifyCountryEstateResidenceFormAsync(_contextData);
+                else
+                    await new SFP_AddResidencePage(_context.Page).VerifyResidenceFormAsync(_contextData);
                 if (countryEstate)
                     await residenceCovPage.VerifyCountryEstateResidenceCoverageAsync(_contextData);
                 else

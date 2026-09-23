@@ -394,11 +394,22 @@ Year built and roof year remain fixed at 2022, with Asphalt / UL 2, AOI 375000
 and Expanded Replacement Cost. CE does not inherit Basic's renovation years or
 rolling roof.
 
-The requested perils 5 change is blocked by the current CLAS CE contract:
-residence coverage 220 defaults to perils 6, disables that control for CE, and
-offers perils 1-5 only for other coverage types. The canonical feature now asserts
-the supported default 6 instead of its stale request for 3. This correction does
-not satisfy or silently reinterpret the workbook request for perils 5.
+CE intentionally hides `BuildingInput.EQVacantSeasonal` through
+`HideResidenceDetailsFields = IsCountryEstateStartedOrTypeSelected`. The CE
+feature therefore omits the former `SeasonalOrVacant = No` input. Its strict
+path rejects supplied seasonal/vacant values and verifies UI non-applicability
+before saving and after reopening, separately from the other residence values.
+Absence does **not** prove saved No: the normal default is raw `0`, but CE does
+not force or clear existing storage, and no authorized saved-value output was
+established. The workbook's No requirement remains unverified. Basic/non-CE
+visible chips and value verification are unchanged.
+
+CE perils 6 was explicitly user-approved on 2026-09-23: groups 5 and 6 both
+include all perils, meeting the workbook's intended full-peril coverage scope.
+Residence coverage 220 defaults to 6, disables that control for CE, and offers
+groups 1-5 only for other coverage types. The canonical feature asserts the
+approved source-owned 6 instead of its stale request for 3; it does not force
+group 5 into CE or claim that rate calculations have been validated.
 Separate Residence Contents is hidden for CE; household contents instead derives
 from coverage 220's limit and its replacement-cost percentage. The requested
 separate contents AOI 120000 cannot be forced into a hidden non-CE coverage.
@@ -443,6 +454,8 @@ lines 8625-8699 and 9410 (CE type 220/perils), 8815-8830 and 19818-19844
 (plastic greenhouse eligibility), 17890-17904 (CE stoplight suppression);
 headless Pages lines 1763-1776 and 66167
 (hidden separate contents), 66284 (disabled CE perils), 66358 (percentage field).
+Seasonal/vacant visibility is Pages 65972-65977 and carrier Data 82208-82216;
+the normal default is base Data 15632-15644, not an absence-to-value guarantee.
 Offline fixture checks characterize these controls; they do not execute CLAS
 rules or certify deployed behavior.
 

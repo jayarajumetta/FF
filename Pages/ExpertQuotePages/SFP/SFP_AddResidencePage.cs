@@ -1,5 +1,7 @@
 using Microsoft.Playwright;
 using PnCTestAutomation.Helpers;
+using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Microsoft.Playwright.Assertions;
 
@@ -149,7 +151,18 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await Expect(input).ToHaveValueAsync(year);
         }
 
-        public async Task VerifyResidenceFormAsync(ScenarioContextData data)
+        public Task VerifyResidenceFormAsync(ScenarioContextData data) =>
+            VerifyResidenceFormAsync(data, countryEstate: false);
+
+        public Task VerifyCountryEstateResidenceFormAsync(ScenarioContextData data)
+        {
+            if (data.ResidenceSeasonalOrVacant != null)
+                throw new ArgumentException("Country Estate cannot verify a supplied SeasonalOrVacant value.");
+
+            return VerifyResidenceFormAsync(data, countryEstate: true);
+        }
+
+        private async Task VerifyResidenceFormAsync(ScenarioContextData data, bool countryEstate)
         {
             await Expect(AdditionalDescriptionInput).ToHaveValueAsync(data.ResidenceAdditionalDesc);
             await Expect(YearBuiltInput).ToHaveValueAsync(data.ResidenceYearBuilt);
@@ -169,11 +182,21 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                 .Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
             await Expect(GetSolidFuelButton(data.ResidenceSolidFuelQuestion)
                 .Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
-            var vacantChip = GetVacantSeasonalButton(data.ResidenceSeasonalOrVacant);
-            if (await vacantChip.IsVisibleAsync())
-                await Expect(vacantChip.Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
+            if (countryEstate)
+            {
+                var controls = _page.GetByTestId(new Regex(
+                    @"^fields\.building\.rows\[0\]\.buildingInput\$eQVacantSeasonal\.value(?:-chip-item-wrapper)?$",
+                    RegexOptions.IgnoreCase)).And(_page.Locator(":visible"));
+                await Expect(controls).ToHaveCountAsync(0);
+            }
             else
-                await SfpFieldAssertions.SelectionAsync(VacantSeasonalSelect, data.ResidenceSeasonalOrVacant);
+            {
+                var vacantChip = GetVacantSeasonalButton(data.ResidenceSeasonalOrVacant);
+                if (await vacantChip.IsVisibleAsync())
+                    await Expect(vacantChip.Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
+                else
+                    await SfpFieldAssertions.SelectionAsync(VacantSeasonalSelect, data.ResidenceSeasonalOrVacant);
+            }
         }
 
         private async Task SelectVacantSeasonalAsync(string value)
