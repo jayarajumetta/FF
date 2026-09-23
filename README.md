@@ -315,9 +315,12 @@ than opening another row or silently skipping readback.
 QA still needs to supply replacement Basic location addresses/ZIPs distinct from
 Rate and CE. The 38 existing examples are deliberately unchanged; do not invent
 ZIPs or treat this workbook requirement as complete.
-Existing expected premiums and premium assertions are unchanged pending confirmed
-inputs and authorized recalibration. Missing premium baselines are not newly
-populated.
+Alabama's SFP premium baseline is $6,489.00, promoted with user approval on
+2026-09-23 from QA quote 02081297, passing input-to-pricing qualification attempt 3.
+That run captured the amount with premium comparison and forms excluded; it did
+not qualify the full workflow or deferred pollution/ZIP requirements. The committed
+premium assertion remains enabled. Other state/product baselines are unchanged
+and await approved recalibration; missing baselines are not newly populated.
 
 **Deferred workbook requirements (not QA-approved omissions):** Limited Farm
 Pollution is coverage 146, not Special Farm Pollution 145. The requested
@@ -335,9 +338,10 @@ threshold for UW rule 11128; genuine applicable referrals must remain visible.
 The unchanged 38 examples are AL, AR, AZ, CO, DE, GA, ID, IL, IN, IA, KS, KY, LA,
 CT, MS, MO, MA, ME, MN, MT, NE, NV, NH, NM, ND, OK, NJ, OH, OR, SC, SD, TN, TX,
 UT, WA, WI, WY, RI. There are 27 existing SFP premium baselines; the 11 without
-baselines are IN, IA, CT, MS, MO, NH, NM, OK, NJ, OH, RI. Recalibration requires
+baselines are IN, IA, CT, MS, MO, NH, NM, OK, NJ, OH, RI. Beyond the explicitly
+approved Alabama promotion above, further recalibration requires
 final approved inputs (including compatible pollution scope and distinct location
-data) plus actual quote evidence; none is inferred from these offline changes.
+data) plus actual quote evidence; no additional amounts are inferred.
 
 Contract references: CLAS changeset 308935,
 `Source\DuckCreekTechnologies\ManuScripts\CarrierSpecialFarmPackage\US-INH\Carrier_SpecialFarmPackage_Data_US_4_0_0_0.xml`
