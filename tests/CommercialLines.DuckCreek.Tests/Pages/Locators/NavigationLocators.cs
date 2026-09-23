@@ -37,11 +37,11 @@ public sealed class NavigationLocators
     public ILocator StateDetails => _page.GetByRole(AriaRole.Link, new() { Name = "State Details", Exact = true });
     public ILocator NavigationBillingLink => _page.Locator("a[onclick*='MainInterview_Billing']").Filter(new LocatorFilterOptions { Visible = true }).First;
     public ILocator NotepadLink => _page.Locator("a[onclick*='MainInterview_NotePad']").Filter(new LocatorFilterOptions { Visible = true }).First;
-    public ILocator PricingLink => _page.Locator("a[onclick*='RateSchedule']").Filter(new LocatorFilterOptions { Visible = true }).First;
+    public ILocator PricingLink => _page.Locator("a[onclick*='RateSchedule'], a[onclick*='MainInterview_Pricing']").Filter(new LocatorFilterOptions { Visible = true }).First;
     public ILocator SubmissionLink => _page.Locator("a[onclick*='MainInterview_SubmissionDetail']").Filter(new LocatorFilterOptions { Visible = true }).First;
     public ILocator CompleteApplication => _page.Locator("a:has(span.g-btn-text:has-text(\"Complete Application\"))");
-    public ILocator StoplightWaitingResults => _page.Locator("#stoplightWaitingResults");
-    public ILocator StoplightCloseButton => _page.Locator("span[id^='button-'][id$='-btnInnerEl']:has-text(\"Close\")");
+    public ILocator StoplightWaitingResults => _page.Locator("#stoplightWaitingResults", new() { HasTextString = "Processing is complete." }).Filter(new LocatorFilterOptions { Visible = true }).First;
+    public ILocator StoplightCloseButton => _page.Locator("span[id^='button-'][id$='-btnInnerEl']:has-text(\"Close\")").Filter(new LocatorFilterOptions { Visible = true }).First;
     public ILocator LocationDetail => _page.Locator("a:has(span.g-btn-text:has-text(\"Detail\"))").Nth(0);
 
 

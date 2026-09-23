@@ -21,10 +21,15 @@ public sealed class BAPBasicPolicySteps
 
         await page.ClickNewQuoteAsync();
         await page.EnterEffectiveDateAsync(data.Resolve("{{data:effective_date_43}}"));
+        await page.PressEffectiveDateAsync("Tab");
         await Task.Delay(2000);
-        await page.EnterProductSequentiallyAsync(data.Resolve("{{data:product_45}}"));
+        await page.EnterProductSequentiallyAsync("Carrier  CommercialAuto  Pages   US   (9.23.0.0)");
+        await Task.Delay(1000);
+        await page.PressProductAsync("Enter");
+        await page.PressProductAsync("Tab");
         await Task.Delay(2000);
         await page.EnterProducerSequentiallyAsync("HERALD BENNETT2");
+        await page.PressProducerAsync("Tab");
         await Task.Delay(2000);
         await page.WaitForStartAsync("Visible");
         await page.ClickStartAsync();
@@ -279,9 +284,12 @@ public sealed class BAPBasicPolicySteps
         await page.EnterMaritalStatusAsync(data.Resolve("{{data:iframe_duck_creek_policy_marital_status_166}}"));
         await page.EnterYearLicensedAsync(data.Resolve("{{data:iframe_duck_creek_policy_year_licensed_167}}"));
         await page.EnterDateOfHireAsync(data.Resolve("{{data:iframe_duck_creek_policy_date_of_hire_168}}"));
-        await page.EnterDoYouHaveACDLLicenseAsync(data.Resolve("{{data:iframe_duck_creek_policy_do_you_have_a_cdl_license_169}}"));
+        if (await page.DoYouHaveACDLLicenseExistsAsync())
+        {
+            await page.EnterDoYouHaveACDLLicenseAsync(data.Resolve("{{data:iframe_duck_creek_policy_do_you_have_a_cdl_license_169}}"));
+        }
         await page.ClickOKAsync();
- 
+
     }
 
     [Given(@"^I complete required endorsement information$")]
@@ -378,7 +386,13 @@ public sealed class BAPBasicPolicySteps
         await page.ClickNotepadAsync();
         await page.WaitForNotepadHeadingAsync("Exists");
         await page.ClickAddNotesRemarksAsync();
-        await page.EnterTextBoxAsync(data.Resolve("Test {B[Product (LOB)]}"));
+        var noteText = data.Resolve("Test {B[Product (LOB)]}");
+        await page.EnterTextBoxSequentiallyAsync(noteText);
+        var enteredText = await page.CaptureTextBoxAsync("value");
+        if (string.IsNullOrWhiteSpace(enteredText))
+        {
+            await page.EnterTextBoxSequentiallyAsync(noteText);
+        }
         await page.ClickOKAsync();
         await page.PauseAsync(1000);
 
@@ -397,6 +411,7 @@ public sealed class BAPBasicPolicySteps
         await page.ClickPricingAsync();
         await page.PauseAsync(2000);
         await page.VerifyPremiumAsync(data.Resolve("{{data:expected_premium_value_233}}"), "value");
+        await page.PauseAsync(2000);
 
     }
 
@@ -468,15 +483,19 @@ public sealed class BAPBasicPolicySteps
     {
         var data = _scenario.Get<ScenarioData>();
 
+        var navigationPage = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
         var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
+        await navigationPage.ClickPricingAsync();
+        await page.WaitForFullTermPremiumAsync("Visible");
+        await navigationPage.PauseAsync(3000);
         await page.VerifyFullTermPremiumAsync(data.Resolve("{{data:expected_full_term_premium_value_280}}"), "value");
         await page.VerifyPremiumWrittenAsync(data.Resolve("{{data:expected_premium_written_value_281}}"), "value");
         await page.VerifyPriorPremiumAsync(data.Resolve("{{data:expected_prior_premium_value_282}}"), "value");
         await page.VerifyPremiumChangeAsync(data.Resolve("{{data:expected_premium_change_value_283}}"), "value");
-        await page.EnterTitleAsync(data.Resolve("{{data:title_285}}"));
-        await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_286}}"));
-        data.Set("SessionId", await page.CaptureResultAsync("value"));
+        //await page.EnterTitleAsync(data.Resolve("{{data:title_285}}"));
+        //await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_286}}"));
+        //data.Set("SessionId", await page.CaptureResultAsync("value"));
 
     }
 

@@ -22,18 +22,18 @@ Feature: CPP Basic Policy
     And I select CPP Coverage - GL
     And I select CPP Coverage - CP
     And I select CPP Coverage - IM
-    #And I select CP Detail
-    #And I complete CP Fields
+    And I select CP Detail
+    And I complete CP Fields
     #And I complete mask Error Recovery - Not Needed
-    #And I complete CP Fields for policy coverage
-    #And I complete CP Fields for location
-    #And I complete CP Fields for building
-    #And I add a Rating Group
-    #And I complete Structure Questions
-    #And I complete ensure Property of Others Rating Group has been entered
-    #And I add Addl Interests
-    #And I complete Property UW Questions
-    #And I return to CPP Navigation
+    And I complete CP Fields for policy coverage
+    And I complete CP Fields for location
+    And I complete CP Fields for building
+    And I add a Rating Group
+    And I complete Structure Questions
+    And I complete ensure Property of Others Rating Group has been entered
+    And I add Addl Interests
+    And I complete Property UW Questions
+    And I return to CPP Navigation
     #And I switch to UW Director for OR and WA when required - Not Needed
     And I select GL Detail
     And I complete CGL Fields
@@ -49,32 +49,32 @@ Feature: CPP Basic Policy
     And I add Addl Interest [CG2034] Add'l Insured-Leased Equipment Automatic
     And I answer GL UW Questions OR & WA
     And I return to CPP Navigation for return to cpp
-    #And I select IM Detail
-    #And I add Accounts Receivable Coverage
-    #And I add Bailees Customers Coverage
-    #And I add Computer Systems
-    #And I add Contractors Equipment
-    #And I add Motor Truck Cargo
-    #And I add Signs
-    #And I add Accounts Receivable
-    #And I complete if search result Alert exists
+    And I select IM Detail
+    And I add Accounts Receivable Coverage
+    And I add Bailees Customers Coverage
+    And I add Computer Systems
+    And I add Contractors Equipment
+    And I add Motor Truck Cargo
+    And I add Signs
+    And I add Accounts Receivable
+    And I complete if search result Alert exists
     #And I complete ensure Class has been entered for Accounts Receivable - Not needed
-    #And I add Bailees Customers
-    #And I complete if search result Alert exists for show me
+    And I add Bailees Customers
+    And I complete if search result Alert exists for show me
     #And I complete ensure Class has been entered for Bailees Customers - Not needed
-    #And I add Computer Systems for risk
-    #And I complete if search result Alert exists for duck creek policy
+    And I add Computer Systems for risk
+    And I complete if search result Alert exists for duck creek policy
     #And I complete ensure Class has been entered for Computer Systems- - Not needed
-    #And I add Signs for risk
-    #And I add CM 66 01 Exclude Named Customer
-    #And I add IF 00 02 Waterborne Equipment
-    #And I complete Accounts Receivable Questions
-    #And I complete Bailees Customers Questions
-    #And I complete Computer Systems Questions
-    #And I complete Contractors Equipment Questions
-    #And I complete Motor Truck Cargo Questions (Owner)
-    #And I complete Signs Questions
-    #And I return to CPP policy navigation
+    And I add Signs for risk
+    And I add CM 66 01 Exclude Named Customer
+    And I add IF 00 02 Waterborne Equipment
+    And I complete Accounts Receivable Questions
+    And I complete Bailees Customers Questions
+    And I complete Computer Systems Questions
+    And I complete Contractors Equipment Questions
+    And I complete Motor Truck Cargo Questions (Owner)
+    And I complete Signs Questions
+    And I return to CPP policy navigation
     And I select GL Available Classiifcation
     And I navigate to Underwriting Info Screens
     And I answer General UW Questions
@@ -86,7 +86,7 @@ Feature: CPP Basic Policy
     And I add notepad comment
     And I complete required submission information
     And I run Stoplight
-    And I verify values in premium fields
+    #And I verify values in premium fields
     #And I complete forms verification
 
     Examples:

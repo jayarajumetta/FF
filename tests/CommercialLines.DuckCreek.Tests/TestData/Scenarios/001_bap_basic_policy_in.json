@@ -97,7 +97,7 @@
     "pay_plan_218": "4",
     "wait_pay_plan_value_220": "4",
     "easy_pay_222": "No",
-    "expected_premium_value_233": "*$1,430.00",
+    "expected_premium_value_233": "$1,430.00",
     "is_this_coverage_bound_237": "Yes",
     "order_audit_239": "No",
     "expected_is_this_coverage_bound_value_247": "(select)",

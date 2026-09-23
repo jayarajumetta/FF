@@ -900,6 +900,9 @@ public sealed class NavigationPage
     public Task WaitForDoYouHaveACDLLicenseAsync(string expected) =>
         _ui.WaitAsync(_locators.DoYouHaveACDLLicense, expected, new ControlIntent("Navigation", "DoYouHaveACDLLicense"));
 
+    public Task<bool> DoYouHaveACDLLicenseExistsAsync() =>
+        _ui.ExistsAsync(_locators.DoYouHaveACDLLicense);
+
     public Task EnterDoYouHaveACDLLicenseAsync(string value) =>
         _ui.FillAsync(_locators.DoYouHaveACDLLicense, value, new ControlIntent("Navigation", "DoYouHaveACDLLicense"));
 
@@ -2695,6 +2698,9 @@ public sealed class NavigationPage
 
     public Task EnterTextBoxAsync(string value) =>
         _ui.FillAsync(_locators.TextBox, value, new ControlIntent("Navigation", "TextBox"));
+
+    public Task<string> CaptureTextBoxAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.TextBox, property, new ControlIntent("Navigation", "TextBox"));
 
     public Task ClickThirdPartyDesigneeAsync() =>
         _ui.ClickAsync(_locators.ThirdPartyDesignee, new ControlIntent("Navigation", "ThirdPartyDesignee"));
