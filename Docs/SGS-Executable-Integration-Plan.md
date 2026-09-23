@@ -161,6 +161,11 @@ as a tracked execution ledger; it is not a second open-ended inventory exercise.
    specifically documented overlay/display exceptions. Missing IDs require live
    DOM evidence and an approved exception or application fix, not guessed CSS,
    XPath, position-based selection, or silent locator substitution.
+   ANi's observed wrapper/input/label reuse of a test ID may be refined with
+   `ControlDefinition.OnElementTag("input")`. Lookup remains test-ID-first in
+   the declared frame; multiple matching inputs still fail. The refinement is
+   recorded as `selectorElementTag` in runtime locator evidence. Product chips
+   use their unique caption test IDs and the owning chip's actual selected state.
 6. Preserve exact page/frame scope from resolution through action, assertion,
    and evidence. Reject ambiguous controls, generic iframe hints, and a fallback
    to the top document when a required frame is absent.

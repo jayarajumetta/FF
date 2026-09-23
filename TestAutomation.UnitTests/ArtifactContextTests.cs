@@ -360,7 +360,7 @@ public class ArtifactContextTests
         var context = CreateContext("runtime-locator");
         context.Require(ArtifactKind.RuntimeLocator);
         var sink = new ArtifactControlEvidenceSink(context);
-        var selector = ControlSelector.ByTestId("sensitive.runtime.id");
+        var selector = ControlSelector.ByTestId("sensitive.runtime.id") with { ElementTag = "input" };
 
         await sink.RecordAsync(new ControlEvidence(
             "Policy state",
@@ -384,6 +384,7 @@ public class ArtifactContextTests
         Assert.Multiple(() =>
         {
             Assert.That(content, Does.Contain("FRAME-IDENTITY"));
+            Assert.That(content, Does.Contain("\"selectorElementTag\": \"input\""));
             Assert.That(content, Does.Contain("cldc-policy"));
             Assert.That(content, Does.Contain("SelectedValue"));
             Assert.That(content, Does.Not.Contain("sensitive.runtime.id"));

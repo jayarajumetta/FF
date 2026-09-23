@@ -23,7 +23,8 @@ namespace PnCTestAutomation.Controls
         bool IsMainFrame,
         string Operation,
         string Assertion,
-        DateTimeOffset CapturedAtUtc);
+        DateTimeOffset CapturedAtUtc,
+        string? SelectorElementTag = null);
 
     public sealed class ArtifactControlEvidenceSink : IControlEvidenceSink
     {
@@ -66,7 +67,8 @@ namespace PnCTestAutomation.Controls
                 evidence.Scope.IsMainFrame,
                 evidence.Operation,
                 evidence.Assertion.ToString(),
-                DateTimeOffset.UtcNow);
+                DateTimeOffset.UtcNow,
+                evidence.Selector.ElementTag);
             var path = _artifacts.CreateArtifactPath(
                 ArtifactKind.RuntimeLocator,
                 $"{evidence.ControlName}-{evidence.Operation}",

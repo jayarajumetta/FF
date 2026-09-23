@@ -247,6 +247,30 @@ public sealed class PlaywrightControlAdapterTests
         Assert.That(await Actions().CaptureStateAsync(control, ControlStateCapture.Selected), Is.True);
     }
 
+    [Test]
+    public async Task NativeTagRefinementDisambiguatesCheckboxWithoutTakingTheFirstMatch()
+    {
+        await _page.SetContentAsync("""
+            <div data-testid="individual">
+              <input data-testid="individual" id="individual" type="checkbox">
+              <label data-testid="individual" for="individual">Individually owned</label>
+            </div>
+            """);
+        var definition = ControlDefinition.ByTestId("DBA", "individual").OnElementTag("input");
+        var resolver = new ControlScopeResolver(new PlaywrightControlRuntime(_page));
+        var control = await resolver.ResolveAsync(definition);
+        await Actions().ToggleAsync(control, true);
+        Assert.That(await Actions().CaptureStateAsync(control, ControlStateCapture.Checked), Is.True);
+        Assert.That(control.Selector.Kind, Is.EqualTo(ControlSelectorKind.TestId));
+        Assert.That(control.Selector.ElementTag, Is.EqualTo("input"));
+
+        await _page.SetContentAsync("""
+            <input data-testid="individual" type="checkbox"><input data-testid="individual" type="checkbox">
+            """);
+        Assert.ThrowsAsync<AmbiguousControlMatchException>(async () =>
+            await resolver.ResolveAsync(definition, TimeSpan.Zero));
+    }
+
     [TestCase("9/2/2026")]
     [TestCase("09/02/2026")]
     [TestCase("9/02/2026")]

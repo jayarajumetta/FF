@@ -17,7 +17,8 @@ namespace PnCTestAutomation.Controls
         ControlSelectorKind Kind,
         string Value,
         string? ExceptionReference = null,
-        string? ExactText = null)
+        string? ExactText = null,
+        string? ElementTag = null)
     {
         public static ControlSelector ByTestId(
             string testId,
@@ -111,6 +112,15 @@ namespace PnCTestAutomation.Controls
                 Name,
                 scopeId.Trim(),
                 Selectors.ToArray());
+        }
+
+        public ControlDefinition OnElementTag(string tag)
+        {
+            if (string.IsNullOrWhiteSpace(tag) || !char.IsAsciiLetter(tag[0]) ||
+                tag.Any(character => !char.IsAsciiLetterOrDigit(character) && character != '-'))
+                throw new ArgumentException("An element refinement must be one HTML tag name.", nameof(tag));
+            return new ControlDefinition(Name, RequiredScopeId,
+                Selectors.Select(selector => selector with { ElementTag = tag.ToLowerInvariant() }).ToArray());
         }
 
         public static ControlDefinition ByTestId(string name, string testId) =>

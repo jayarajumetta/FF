@@ -105,6 +105,7 @@ namespace PnCTestAutomation.Controls
                 : $"documented ANi id '#{selector.Value}' ({selector.ExceptionReference})") +
             (selector.ExactText == null
                 ? ""
-                : $" with exact text '{selector.ExactText}'");
+                : $" with exact text '{selector.ExactText}'") +
+            (selector.ElementTag == null ? "" : $" on element <{selector.ElementTag}>");
     }
 }

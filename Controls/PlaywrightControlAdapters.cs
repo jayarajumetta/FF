@@ -131,6 +131,9 @@ namespace PnCTestAutomation.Controls
             for (var index = 0; index < count; index++)
             {
                 var candidate = visible.Nth(index);
+                if (selector.ElementTag != null &&
+                    !await candidate.EvaluateAsync<bool>("(element, tag) => element.localName === tag", selector.ElementTag))
+                    continue;
                 if (selector.ExactText != null &&
                     !string.Equals(
                         (await candidate.InnerTextAsync()).Trim(),

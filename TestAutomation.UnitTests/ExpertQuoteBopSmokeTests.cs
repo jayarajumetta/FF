@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using PnCTestAutomation.Controls;
 using PnCTestAutomation.Pages.ExpertQuotePages;
 using PnCTestAutomation.Products;
 
@@ -7,6 +8,12 @@ namespace PnCTestAutomation.UnitTests;
 [TestFixture]
 public sealed class ExpertQuoteBopSmokeTests
 {
+    [TestCase("")]
+    [TestCase("input[type=checkbox]")]
+    [TestCase("input, label")]
+    public void ElementRefinementCannotBecomeAnUnrestrictedCssSelector(string tag) =>
+        Assert.Throws<ArgumentException>(() => ControlDefinition.ByTestId("DBA", "individual").OnElementTag(tag));
+
     [TestCase("Smokeabcd\n01945678", "01945678")]
     [TestCase("BOP (01945678)", "01945678")]
     public void QuoteCaptureUsesTheCompleteIdentity(string header, string expected) =>
