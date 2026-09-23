@@ -320,6 +320,13 @@ The user is not being assigned coding, dependency mapping, or integration work.
    the shared optional-dialog handler; an unrelated page transition cannot
    silently skip that input. Negative browser coverage and the promoted ledger
    pass `checklist-06-required-input-framework.trx` (481/0/0).
+   The committed guard was then confirmed by
+   `checklist-06-cleq-bop-al-08` at `d3532cae63a79cf09a06a4acc6df99dfe382d33a`:
+   another real PASS in 58.682577 seconds, a third distinct quote, 46 artifacts,
+   12 unique screenshots, zero evidence/report issues and an unchanged credential
+   source. See `checklist-06-required-input-qualification.json`. The ledger retains
+   the latest consecutive passes, `-07` and `-08`, with their respective exact
+   implementation commits; the earlier complete pass and failed runs remain intact.
 
 7. [ ] **Implement and prove original Commercial DuckCreek BAP smoke, Alabama.**
    Adapt `012_BAP_Smoke_Test.feature`. Apply intended BAP inputs, verify the
