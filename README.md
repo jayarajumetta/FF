@@ -306,9 +306,11 @@ FPP code 464 with limit 101500 and deductible $1,000. Existing CE steps retain
 their prior behavior.
 After saving the residence, Basic reopens Location #1 / Residence #1 and checks
 the persisted residence and coverage values before proceeding. The edit action
-uses the source-derived row-scoped `editResidence` test ID (no `.value` suffix);
-a missing/changed action fails rather than opening another row or silently
-skipping readback.
+uses the source-derived row-scoped `editResidence` test ID (no `.value` suffix),
+restricted to the native `button`. The captured Alabama QA DOM contains a nested
+`aa-icons > div` sharing that test ID with its enclosing button. Exactly one
+matching native button is required; missing or duplicate buttons fail rather
+than opening another row or silently skipping readback.
 
 QA still needs to supply replacement Basic location addresses/ZIPs distinct from
 Rate and CE. The 38 existing examples are deliberately unchanged; do not invent

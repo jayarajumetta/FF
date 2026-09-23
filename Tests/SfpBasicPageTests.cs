@@ -268,6 +268,48 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
+        public async Task ReopenResidence_ClicksNativeButtonWhenNestedIconSharesTestId()
+        {
+            const string testId = "fields.data.accountDetail.locationDetail.rows[0].building.rows[0].editResidence";
+            await _page.SetContentAsync($"""
+                <aa-button-icon-action>
+                  <button data-testid="{testId}" onclick="document.body.dataset.opened='R1L1'">
+                    <aa-icons>
+                      <div data-testid="{testId}"><mat-icon>edit</mat-icon></div>
+                    </aa-icons>
+                  </button>
+                </aa-button-icon-action>
+                <button data-testid="fields.data.accountDetail.locationDetail.rows[1].building.rows[0].editResidence"
+                        onclick="document.body.dataset.opened='wrong-location'">edit</button>
+                <button data-testid="fields.data.accountDetail.locationDetail.rows[0].building.rows[1].editResidence"
+                        onclick="document.body.dataset.opened='wrong-residence'">edit</button>
+                """);
+            Assert.That(await _page.GetByTestId(testId).CountAsync(), Is.EqualTo(2));
+            Assert.ThrowsAsync<PlaywrightException>(() =>
+                Microsoft.Playwright.Assertions.Expect(_page.GetByTestId(testId)).ToHaveCountAsync(1));
+
+            var page = new SFP_LocationsResidencesBuildingsPage(_page);
+            Assert.That(await page.EditResidenceButton().EvaluateAsync<string>("el => el.tagName"), Is.EqualTo("BUTTON"));
+            await page.OpenResidenceAsync();
+            Assert.That(await _page.Locator("body").GetAttributeAsync("data-opened"), Is.EqualTo("R1L1"));
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task ReopenResidence_RejectsTwoMatchingNativeButtons(bool nestedIcon)
+        {
+            const string testId = "fields.data.accountDetail.locationDetail.rows[0].building.rows[0].editResidence";
+            var content = nestedIcon
+                ? $"<aa-icons><div data-testid='{testId}'><mat-icon>edit</mat-icon></div></aa-icons>"
+                : "edit";
+            var button = $"<button data-testid='{testId}' onclick=\"document.body.dataset.opened='unexpected'\">{content}</button>";
+            await _page.SetContentAsync(button + button);
+            Assert.ThrowsAsync<PlaywrightException>(() =>
+                new SFP_LocationsResidencesBuildingsPage(_page).OpenResidenceAsync());
+            Assert.That(await _page.Locator("body").GetAttributeAsync("data-opened"), Is.Null);
+        }
+
+        [Test]
         public async Task ReopenResidence_TargetsFirstResidenceAtFirstLocation()
         {
             await _page.SetContentAsync("""

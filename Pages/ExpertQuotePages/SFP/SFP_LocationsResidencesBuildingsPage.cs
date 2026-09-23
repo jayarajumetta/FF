@@ -12,7 +12,8 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         public ILocator LocationsNavigation => _page.GetByTestId("LocationsBuildings-nav");
 
         public ILocator EditResidenceButton(int locationRow = 0, int buildingRow = 0) =>
-            _page.GetByTestId($"fields.data.accountDetail.locationDetail.rows[{locationRow}].building.rows[{buildingRow}].editResidence");
+            _page.GetByTestId($"fields.data.accountDetail.locationDetail.rows[{locationRow}].building.rows[{buildingRow}].editResidence")
+                .And(_page.Locator("button"));
 
         public async Task OpenResidenceAsync(int locationRow = 0, int buildingRow = 0)
         {
