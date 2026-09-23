@@ -98,7 +98,7 @@ The user is not being assigned coding, dependency mapping, or integration work.
 | Parent framework suite | Current BOP checkpoint: 481 passed, 0 failed, 0 skipped; 83 offline CI/runner assertions passed. Ready-case authorization was separately proved before promotion. |
 | Live SGS verification | Original ExpertQuote BOP smoke AL is `Verified` after two independent real QA passes with complete evidence. One of 1,115 active SGS cases is verified; all other active cases remain individually gated. |
 | Premium/forms baselines | Original validation stays active and real results stay visible. Baseline approval/refresh and baseline-dependent acceptance are deferred until the user's test/data refresh; baseline mismatches do not gate current integration progress. |
-| Work/process state | Items 1-6 are complete for engineering progress under the approved boundaries. SFP retains its explicitly deferred Forms failures; BOP AL is verified. Item 7 is active: BAP AL execution dates and a genuine successful-score/reference verification rule are approved; adaptation and qualification follow. Key Vault approval remains pending; no PR, push, Development merge, IDE synchronization or pipeline rollout has occurred. |
+| Work/process state | Items 1-6 are complete for engineering progress under the approved boundaries. SFP retains its explicitly deferred Forms failures; BOP AL is verified. Item 7 is blocked at CLAS QA sign-in: HTTP 500 from `/express/workbench/listgroups`. Its date, score-result and documented fieldref decisions are approved. No BAP execution or readiness promotion has occurred. Key Vault approval remains pending; no PR, push, Development merge, IDE synchronization or pipeline rollout has occurred. |
 
 ## Ordered remaining work
 
@@ -329,7 +329,7 @@ The user is not being assigned coding, dependency mapping, or integration work.
    implementation commits; the earlier complete pass and failed runs remain intact.
 
 7. [ ] **Implement and prove original Commercial DuckCreek BAP smoke, Alabama.**
-   **Active item - operational input decisions approved.**
+   **Active item - blocked by CLAS QA sign-in; input decisions approved.**
    Adapt `012_BAP_Smoke_Test.feature`. Apply intended BAP inputs, verify the
    promised business result, and prove actual frame scope through actions and
    locator evidence.
@@ -356,6 +356,28 @@ The user is not being assigned coding, dependency mapping, or integration work.
    and record this explicit verification-rule adaptation.
    This is not a deferred premium/forms baseline. BAP source files and gates
    remain unchanged; no BAP business execution has occurred.
+   The user also approved a documented legacy DuckCreek `fieldref` fallback,
+   retaining test-ID-first priority, exact frame scope and ambiguity failures.
+   See `DUCKCREEK-FIELDREF-001` in `Docs\Locator-Audit.md`; actual CLAS selector
+   metadata confirms the missing test IDs. The shared adapter still needs this
+   implementation; generic source `iframe` hints are not approved frame scopes.
+   Current execution prerequisite failure: a bounded read-only inspection using
+   the approved external credentials, PnC's configured Chrome channel and
+   `https://clasq.anico.com/express/express.aspx` did not reach the authenticated
+   search page. CLAS returned HTTP 500 from
+   `https://clasq.anico.com/express/workbench/listgroups` and remained on
+   `/express/default.aspx` with Login/OK actions. The observed DOM did not expose
+   an invalid-credentials message; the evidence does not establish whether the
+   cause is a service fault or account/group configuration. Do not assume that
+   changing the framework or suppressing login checks would fix it.
+   Evidence: `checklist-07-clas-dom-configured.json` and its `.log` under the
+   integration session's `files\resume-validation`. The earlier root-URL probe
+   also failed but did not match PnC's browser/entry-point settings, so use the
+   configured-probe evidence for escalation. Neither inspection clicked quote
+   Start or ran a business case; the credential file was unchanged and owned
+   browser contexts were closed. Resume this item when CLAS QA login and its
+   workbench group lookup are functioning. Do not switch to item 8 or promote
+   BAP to runnable while this prerequisite is unresolved.
 
 8. [ ] **Implement and prove original Personal DuckCreek Auto smoke, AZ ANG.**
    Adapt `211_Smoke_Test_Auto.feature`. Verify state/company/auto inputs and

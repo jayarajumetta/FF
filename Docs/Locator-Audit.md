@@ -26,6 +26,24 @@ searching unrelated listboxes or the top document.
 | `ANI-ID-003` | `SFP_ChecklistPage` | `exception-note-confirm` | ANi-owned modal confirmation control with a stable application ID |
 | `ANI-ID-004` | `SFP_PricingPage` | `*FullPremiumTotalPremiumSumm*` | ANi-owned generated premium summary ID; used only for exact premium text extraction |
 
+## Approved legacy DuckCreek fieldref exception
+
+The user approved `DUCKCREEK-FIELDREF-001` for the shared selector contract
+during checklist item 7. Implementation is pending; this approval is not a
+claim that the adapter already supports it.
+
+Legacy CLAS exposes stable `fieldref` attributes without `data-testid` on
+some fields. Actual SFP/CLAS evidence shows `PolicyHeaderInput.SearchText`
+with generated HTML ID `tf_0` and no test ID, and `PolicyInput.EffectiveDate`
+without either ID. Structural metadata is retained in the integration session's
+`files\resume-validation\checklist-07-clas-selector-metadata.json`.
+
+The permitted adapter must try `GetByTestId` first, then an exact documented
+DuckCreek `fieldref` in the required frame. It must preserve ambiguity failures,
+typed value/selection assertions and locator evidence. This does not authorize
+generated-ID guesses, generic CSS/XPath fallback, positional selection,
+generic `iframe` hints, or a fallback to the top document.
+
 ---
 
 ## Status Legend
