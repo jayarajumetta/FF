@@ -382,7 +382,7 @@ namespace PnCTestAutomation.DataProfiles
         private static void ValidateCredentialStorage(string key, string? value)
         {
             if (IsCredentialKey(key) && !string.IsNullOrWhiteSpace(value) &&
-                !IsPlaceholder(value) && !Regex.IsMatch(value, @"\A\{\{env:[A-Za-z_][A-Za-z0-9_]*\}\}\z", RegexOptions.IgnoreCase))
+                !Regex.IsMatch(value, @"\A\{\{env:[A-Za-z_][A-Za-z0-9_]*\}\}\z", RegexOptions.IgnoreCase))
             {
                 throw new SgsScenarioDataException("SGS credentials must remain external environment references, never literal profile or runtime-override values.");
             }

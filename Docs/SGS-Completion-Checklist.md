@@ -102,6 +102,19 @@ The user is not being assigned coding, dependency mapping, or integration work.
 
 ## Ordered remaining work
 
+Paused by user request on 2026-09-23 to prioritize other test updates. Local
+package corrections are retained without a push. The seed-copy correction
+passed clean restore/build, 481 unit tests, 148 CI assertions and shard ownership,
+then exposed the existing imported credential-sentinel scan failure. That
+credential-only correction preserves business inputs and checksum provenance.
+Its stopping-point checks passed: 130 focused framework tests and 149 CI
+assertions, with zero remaining imported SGS secret-pattern matches and no
+change to either package scanner. Evidence is retained as
+`package-credential-slots-targeted.trx`, `package-credential-slots-ci.log` and
+`sgs-credential-slot-migration.json` in the session's `files\resume-validation`.
+Complete clean package/stabilization validation and publishing remain pending.
+Do not start further workflow work or ADO runs until the user resumes this work.
+
 1. [x] **Stabilize the current integration baseline.**
    Correct the forms-finalization regression without allowing real failures to
    be overwritten by later success. Finish the saved data DI/composition slice.

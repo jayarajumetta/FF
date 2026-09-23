@@ -177,8 +177,8 @@
   "random": {},
   "application": {
     "url": "https://expertquote-qa.americannational.com/expertquote/#/quote",
-    "username": "SYNTHETIC_REPLACE_ME",
-    "password": "SYNTHETIC_REPLACE_ME"
+    "username": "",
+    "password": ""
   },
   "external": {
     "AL_ClientData.Street Address": "1724 ALSTON FARM RD",

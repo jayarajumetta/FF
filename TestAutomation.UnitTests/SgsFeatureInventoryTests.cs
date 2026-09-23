@@ -137,6 +137,15 @@ public class SgsFeatureInventoryTests
                     .GetProperty("mode")
                     .GetString(),
                 Is.EqualTo("runtime-generated"));
+            Assert.That(
+                manifest.GetProperty("credentialDataPolicy").GetProperty("mode").GetString(),
+                Is.EqualTo("external-required-empty-slots"));
+            Assert.That(
+                manifest.GetProperty("credentialDataPolicy").GetProperty("businessInputsChanged").GetBoolean(),
+                Is.False);
+            Assert.That(
+                manifest.GetProperty("importedBytes").GetInt64(),
+                Is.EqualTo(files.Sum(file => file.GetProperty("importedSize").GetInt64())));
         });
 
         foreach (var file in files)
@@ -172,7 +181,9 @@ public class SgsFeatureInventoryTests
                 }
             }
 
-            ValidateCredentialPlaceholders(dataDocument.RootElement, relativePath);
+            ValidateExternalCredentialSlots(dataDocument.RootElement, relativePath);
+            if (dataDocument.RootElement.TryGetProperty("application", out _))
+                VerifyCredentialOnlyAdaptation(bytes, file, relativePath);
         }
     }
 
@@ -249,7 +260,7 @@ public class SgsFeatureInventoryTests
         return null;
     }
 
-    private static void ValidateCredentialPlaceholders(
+    private static void ValidateExternalCredentialSlots(
         JsonElement element,
         string relativePath)
     {
@@ -263,16 +274,19 @@ public class SgsFeatureInventoryTests
                          StringComparison.OrdinalIgnoreCase) ||
                      property.Name.Equals(
                          "password",
+                         StringComparison.OrdinalIgnoreCase) ||
+                     property.Name.Equals(
+                         "_passwordNote",
                          StringComparison.OrdinalIgnoreCase)))
                 {
                     Assert.That(
-                        property.Value.GetString(),
-                        Is.EqualTo("SYNTHETIC_REPLACE_ME"),
-                        $"{relativePath}: credential placeholders must be external");
+                        string.IsNullOrEmpty(property.Value.GetString()),
+                        Is.True,
+                        $"{relativePath}: credential slots must be empty and supplied externally");
                 }
                 else
                 {
-                    ValidateCredentialPlaceholders(
+                    ValidateExternalCredentialSlots(
                         property.Value,
                         relativePath);
                 }
@@ -281,8 +295,27 @@ public class SgsFeatureInventoryTests
         else if (element.ValueKind == JsonValueKind.Array)
         {
             foreach (var item in element.EnumerateArray())
-                ValidateCredentialPlaceholders(item, relativePath);
+                ValidateExternalCredentialSlots(item, relativePath);
         }
+    }
+
+    private static void VerifyCredentialOnlyAdaptation(byte[] bytes, JsonElement inventory, string relativePath)
+    {
+        var text = Encoding.UTF8.GetString(bytes);
+        var applications = Regex.Matches(text, @"""application""\s*:\s*(?<body>\{[^{}]*\})");
+        Assert.That(applications, Has.Count.EqualTo(1), relativePath);
+        var body = applications[0].Groups["body"];
+        var restoredBody = Regex.Replace(body.Value,
+            "(?<prefix>\"(?:username|password|_passwordNote)\"\\s*:\\s*)\"\"",
+            match => match.Groups["prefix"].Value + JsonSerializer.Serialize("SYNTHETIC_REPLACE_ME"));
+        var previousBytes = Encoding.UTF8.GetBytes(text[..body.Index] + restoredBody + text[(body.Index + body.Length)..]);
+        Assert.Multiple(() =>
+        {
+            Assert.That(Convert.ToHexString(SHA256.HashData(previousBytes)),
+                Is.EqualTo(inventory.GetProperty("previousImportedSha256").GetString()), relativePath);
+            Assert.That(previousBytes.Length,
+                Is.EqualTo(inventory.GetProperty("previousImportedSize").GetInt32()), relativePath);
+        });
     }
 
     private static string FindRepositoryRoot()

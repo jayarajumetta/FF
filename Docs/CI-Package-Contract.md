@@ -117,6 +117,13 @@ its runtime store when needed; no existing source or service-local quote data
 is deleted or seeded by this exclusion. Clean Release output roots remain
 required so files from an older build cannot survive incremental compilation.
 
+Imported SGS application credential slots are empty strings, not credential-like
+placeholder literals. Credentials remain external. The data inventory records
+the original source hashes, prior imported hashes/sizes and the current verified
+bytes for this credential-only adaptation; business values and execution states
+are unchanged. The secret scanner has no sentinel exemption, and CI regression
+fixtures still require it to reject a credential-like placeholder.
+
 ## Build and execution
 
 1. Azure performs a clean, full-history checkout and installs .NET 8. The

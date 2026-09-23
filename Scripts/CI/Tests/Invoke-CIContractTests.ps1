@@ -199,19 +199,23 @@ try {
             -Encoding UTF8
 
     $secretPath = Join-Path $packageRoot "config\credential.json"
-    '{ "clientSecret": "not-a-real-secret-but-must-be-rejected" }' |
-        Set-Content -LiteralPath $secretPath -Encoding UTF8
-    Remove-Item -LiteralPath (Join-Path $packageRoot "package-manifest.json")
-    [void](New-PackageManifest `
-        -PackageRoot $packageRoot `
-        -PackageVersion "1.0.0" `
-        -CommitSha "0123456789abcdef" `
-        -BuildId "42" `
-        -BuildNumber "20260917.1")
-    Assert-Throws {
-        Test-PackageManifest -PackageRoot $packageRoot -ScanForSecrets
-    } "secret literal"
-    Remove-Item -LiteralPath $secretPath
+    foreach ($credentialFixture in @(
+        '{ "clientSecret": "not-a-real-secret-but-must-be-rejected" }',
+        '{ "password": "SYNTHETIC_REPLACE_ME" }'
+    )) {
+        $credentialFixture | Set-Content -LiteralPath $secretPath -Encoding UTF8
+        Remove-Item -LiteralPath (Join-Path $packageRoot "package-manifest.json")
+        [void](New-PackageManifest `
+            -PackageRoot $packageRoot `
+            -PackageVersion "1.0.0" `
+            -CommitSha "0123456789abcdef" `
+            -BuildId "42" `
+            -BuildNumber "20260917.1")
+        Assert-Throws {
+            Test-PackageManifest -PackageRoot $packageRoot -ScanForSecrets
+        } "secret literal"
+        Remove-Item -LiteralPath $secretPath
+    }
 
     $privateKeyPath = Join-Path $packageRoot "config\diagnostic.txt"
     '-----BEGIN PRIVATE KEY-----' |

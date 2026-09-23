@@ -195,8 +195,10 @@ the checksum of its imported copy. Business inputs, state variants, and address
 data remain literal. Personal identity and contact inputs do not: names, dates
 of birth, phone numbers, email addresses, and synthetic SSNs use the original
 framework's `RandomGenerators` tokens and are resolved once per scenario into
-`ScenarioContextData`. Usernames and passwords remain external credential
-placeholders. An SGS feature cannot become runnable until its adapter resolves
+`ScenarioContextData`. Username/password slots remain empty and require the
+existing external credential provider, not literal credential placeholders.
+The inventory preserves prior imported hashes for credential-slot normalization.
+An SGS feature cannot become runnable until its adapter resolves
 these tokens and keeps generated values out of logs and evidence.
 9. **Retries do not change ownership** — a retry uses the original case identity
    and shard and produces one canonical final outcome.

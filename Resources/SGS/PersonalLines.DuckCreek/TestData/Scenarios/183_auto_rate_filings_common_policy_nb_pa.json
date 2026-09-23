@@ -174,8 +174,8 @@
   "random": {},
   "application": {
     "url": "https://expertquote-qa.americannational.com/expertquote/#/quote",
-    "username": "SYNTHETIC_REPLACE_ME",
-    "password": "SYNTHETIC_REPLACE_ME"
+    "username": "",
+    "password": ""
   },
   "external": {
     "PA_ClientData.Street Address": "1710 ROCKCRESS DR",

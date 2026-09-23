@@ -174,8 +174,8 @@
   "random": {},
   "application": {
     "url": "https://expertquote-qa.americannational.com/expertquote/#/quote",
-    "username": "SYNTHETIC_REPLACE_ME",
-    "password": "SYNTHETIC_REPLACE_ME"
+    "username": "",
+    "password": ""
   },
   "external": {
     "DE_ClientData.Street Address": "12 KINGSTON TER",

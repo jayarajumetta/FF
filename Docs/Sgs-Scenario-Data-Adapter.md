@@ -76,6 +76,16 @@ This adapter does not repair, automatically discover, reconstruct from, or
 accept stale SGS `Layered\manifest.json` files. Explicit legacy manifest input
 is rejected. It does not regenerate production hashes.
 
+The approved 2026-09-23 package correction replaces only known non-secret
+application credential sentinels with empty external-credential slots.
+`credentialDataPolicy` records that adaptation. Original `sourceSha256` and
+`sourceSize` remain intact; `previousImportedSha256` and `previousImportedSize`
+retain each affected profile's prior imported representation. Current imported
+hashes/sizes and the execution ledger's profile checksums track the new bytes.
+Regression coverage reconstructs the prior credential representation and checks
+its exact hash, proving that business data did not change. Prior run artifacts
+and execution states are not rewritten or promoted by this correction.
+
 ## Precedence and key semantics
 
 1. Load the verified flattened profile and apply explicit verified `LayerPaths`
@@ -111,7 +121,7 @@ nested object cannot occupy the same qualified path.
 
 Required values reject absence, null, whitespace, empty quoted strings,
 placeholder markers, arrays, unresolved/unsupported expressions and cyclic
-references. Unused placeholders do not block unrelated required inputs.
+references. Unused non-credential placeholders do not block unrelated required inputs.
 `TryGetOptional` returns false/null only for an absent key; a present invalid
 value still throws. It is not a blank-success or synthetic-data fallback.
 The state variant, when supplied, must match the effective declared variant.
@@ -157,10 +167,11 @@ Reading those identity aliases delegates generation to `RandomGenerators`.
 Spaces, underscores and casing are equivalent for these documented domain
 buffer aliases. Other captures are case-insensitive named literal values.
 
-Credentials stay with the current Ping/Key Vault process environment. Literal
-credential profile/runtime overrides and credential capture buffers are
-rejected. Credential placeholders may remain unused; explicit environment
-references may be resolved for a consuming caller. Errors never echo input
+Credentials stay with the existing external provider/process environment.
+Literal credential profile/runtime overrides, credential-looking placeholders,
+and credential capture buffers are rejected. Imported credential slots remain
+empty; explicit environment references may be resolved for a consuming caller.
+Errors never echo input
 values, expression text, malformed JSON payloads or credential values.
 
 ## Focused checks

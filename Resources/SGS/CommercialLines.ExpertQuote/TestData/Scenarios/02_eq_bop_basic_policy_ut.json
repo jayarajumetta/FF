@@ -132,8 +132,8 @@
   },
   "application": {
     "url": "https://expertquote-qa.americannational.com/expertquote/",
-    "username": "SYNTHETIC_REPLACE_ME",
-    "password": "SYNTHETIC_REPLACE_ME"
+    "username": "",
+    "password": ""
   },
   "external": {},
   "_canonical": {

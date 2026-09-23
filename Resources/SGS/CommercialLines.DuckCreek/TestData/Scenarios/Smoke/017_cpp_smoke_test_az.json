@@ -89,9 +89,9 @@
   },
   "application": {
     "url": "https://clasq.anico.com/Express/",
-    "username": "SYNTHETIC_REPLACE_ME",
-    "password": "SYNTHETIC_REPLACE_ME",
-    "_passwordNote": "SYNTHETIC_REPLACE_ME"
+    "username": "",
+    "password": "",
+    "_passwordNote": ""
   },
   "external": {},
   "_canonical": {

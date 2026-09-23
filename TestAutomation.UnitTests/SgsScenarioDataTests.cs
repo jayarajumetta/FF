@@ -665,7 +665,7 @@ public sealed class SgsScenarioDataTests
     {
         using var fixture = new DataFixture();
         const string sentinel = "unit-test-only-redaction-sentinel";
-        fixture.AddValues(new { approved = "usable", password = "SYNTHETIC_REPLACE_ME" });
+        fixture.AddValues(new { approved = "usable", password = "" });
         var data = fixture.Load();
         var overrideError = Assert.Throws<SgsScenarioDataException>(() => data.Load(new SgsScenarioDataRequest(
             "CLEQ", @"TestData\profile.json", RuntimeOverrides: new Dictionary<string, string?> { ["password"] = sentinel })));
@@ -699,6 +699,17 @@ public sealed class SgsScenarioDataTests
         {
             Environment.SetEnvironmentVariable(name, null);
         }
+    }
+
+    [TestCase("SYNTHETIC_REPLACE_ME")]
+    [TestCase("PLACEHOLDER")]
+    [TestCase("<external-required>")]
+    public void CredentialPlaceholdersCannotBeImportedAsLiteralCredentialValues(string placeholder)
+    {
+        using var fixture = new DataFixture();
+        fixture.AddValues(new { password = placeholder });
+        var error = Assert.Throws<SgsScenarioDataException>(() => fixture.Load());
+        Assert.That(error!.ToString().Contains(placeholder, StringComparison.Ordinal), Is.False);
     }
 
     [TestCase(false)]
