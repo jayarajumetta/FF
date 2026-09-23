@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using PnCTestAutomation.Helpers;
@@ -57,6 +58,12 @@ public sealed class ScenarioReportPrivacy
         lock (_gate)
             values.AddRange(_runtimeSecrets);
         values.AddRange(_state.SgsData.GeneratedValues.Values);
+        foreach (var birthDate in new[] { _state.Client?.DateOfBirth, _state.Driver?.DateOfBirth, _state.AdditionalInterest?.DateOfBirth })
+        {
+            if (DateOnly.TryParseExact(birthDate, "M/d/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+                foreach (var format in new[] { "M/d/yyyy", "MM/dd/yyyy", "M/dd/yyyy", "MM/d/yyyy" })
+                    values.Add(date.ToString(format, CultureInfo.InvariantCulture));
+        }
         return new ReportRedactor(values);
     }
 }

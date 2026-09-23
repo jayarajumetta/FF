@@ -1,5 +1,6 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using static Microsoft.Playwright.Assertions;
@@ -9,6 +10,18 @@ namespace PnCTestAutomation.Helpers
 {
     public class Helpers
     {
+        public static async Task AssertUsDateValueAsync(ILocator input, string expected, string fieldName)
+        {
+            if (!DateOnly.TryParseExact(expected, "M/d/yyyy", CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out var expectedDate))
+                throw new InvalidOperationException($"The expected {fieldName} is not a valid US calendar date.");
+            await Expect(input).ToBeVisibleAsync();
+            var actual = await input.InputValueAsync();
+            if (!DateOnly.TryParseExact(actual, "M/d/yyyy", CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out var actualDate) || actualDate != expectedDate)
+                throw new InvalidOperationException($"The {fieldName} does not match the scenario-owned calendar date.");
+        }
+
         public static async Task ClickSaveAsync(IPage page)
         {
             var candidates = new[]

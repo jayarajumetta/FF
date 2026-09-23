@@ -426,7 +426,7 @@ namespace PnCTestAutomation.Pages
         {
             await EffDateInput.FillAsync(effectiveDate);
             await EffDateInput.PressAsync("Tab");
-            await Expect(EffDateInput).ToHaveValueAsync(effectiveDate);
+            await PnCTestAutomation.Helpers.Helpers.AssertUsDateValueAsync(EffDateInput, effectiveDate, "proposal effective date");
         }
     }
 }

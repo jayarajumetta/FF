@@ -74,7 +74,7 @@ namespace PnCTestAutomation.Pages
         {
             await Assertions.Expect(FirstNameInput).ToHaveValueAsync(firstName);
             await Assertions.Expect(LastNameInput).ToHaveValueAsync(lastName);
-            await Assertions.Expect(DateOfBirthInput).ToHaveValueAsync(dateOfBirth);
+            await PnCTestAutomation.Helpers.Helpers.AssertUsDateValueAsync(DateOfBirthInput, dateOfBirth, "client birth date");
         }
 
         public async Task WaitForNextButtonAsync()

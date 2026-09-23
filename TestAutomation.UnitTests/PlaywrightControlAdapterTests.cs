@@ -229,6 +229,28 @@ public sealed class PlaywrightControlAdapterTests
         Assert.That(await Actions().CaptureStateAsync(divorced, ControlStateCapture.Selected), Is.False);
     }
 
+    [TestCase("9/2/2026")]
+    [TestCase("09/02/2026")]
+    [TestCase("9/02/2026")]
+    [TestCase("09/2/2026")]
+    public async Task UsDateAssertionComparesTheCalendarDateNotZeroPadding(string actual)
+    {
+        await _page.SetContentAsync($"<input data-testid=\"date\" value=\"{actual}\">");
+        await Helpers.Helpers.AssertUsDateValueAsync(_page.GetByTestId("date"), "09/02/2026", "birth date");
+    }
+
+    [TestCase("09/03/2026")]
+    [TestCase("09/02/2025")]
+    [TestCase("not-a-date")]
+    [TestCase("")]
+    public async Task UsDateAssertionRejectsChangedOrMissingDatesWithoutLoggingValues(string actual)
+    {
+        await _page.SetContentAsync($"<input data-testid=\"date\" value=\"{actual}\">");
+        var exception = Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await Helpers.Helpers.AssertUsDateValueAsync(_page.GetByTestId("date"), "09/02/2026", "birth date"));
+        Assert.That(exception!.Message, Is.EqualTo("The birth date does not match the scenario-owned calendar date."));
+    }
+
     private static SemanticControlActions Actions(IControlEvidenceSink? sink = null) =>
         new(sink, assertionTimeout: TimeSpan.Zero);
 

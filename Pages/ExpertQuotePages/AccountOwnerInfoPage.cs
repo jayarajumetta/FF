@@ -167,7 +167,7 @@ namespace PnCTestAutomation.Pages
         {
             await Assertions.Expect(FirstNameInput).ToHaveValueAsync(data.ClientFirstName);
             await Assertions.Expect(LastNameInput).ToHaveValueAsync(data.ClientLastName);
-            await Assertions.Expect(DateOfBirthInput).ToHaveValueAsync(data.ClientDOB);
+            await PnCTestAutomation.Helpers.Helpers.AssertUsDateValueAsync(DateOfBirthInput, data.ClientDOB, "owner birth date");
             await Assertions.Expect(MiddleNameInput).ToHaveValueAsync(data.ClientMiddleName);
             await Assertions.Expect(BestPhoneInput).ToHaveValueAsync(data.ClientPhoneNumber);
             await Assertions.Expect(EmailAddressInput).ToHaveValueAsync(data.ClientEmail);

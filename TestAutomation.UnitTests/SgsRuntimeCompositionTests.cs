@@ -35,6 +35,7 @@ public sealed class SgsRuntimeCompositionTests
             @"TestData\ExternalDataOverrides.json"));
         var rawPhone = data.GenerateRandom("OwnerPhone");
         owner.Client.Phone = $"({rawPhone[..3]}) {rawPhone[3..6]}-{rawPhone[6..]}";
+        owner.Client.DateOfBirth = "06/08/1974";
         data.CaptureBuffer("Quote_Num", "01234567");
 
         Assert.Multiple(() =>
@@ -51,6 +52,8 @@ public sealed class SgsRuntimeCompositionTests
                 Is.EqualTo($"{ReportRedactor.Mask} {ReportRedactor.Mask}"));
             Assert.That(privacy.CreateRedactor().Text(rawPhone + " " + owner.Client.Phone),
                 Is.EqualTo($"{ReportRedactor.Mask} {ReportRedactor.Mask}"));
+            Assert.That(privacy.CreateRedactor().Text("6/8/1974 06/08/1974 6/08/1974 06/8/1974"),
+                Is.EqualTo(string.Join(" ", Enumerable.Repeat(ReportRedactor.Mask, 4))));
             Assert.That(second.ServiceProvider.GetRequiredService<ScenarioReportPrivacy>()
                 .CreateRedactor().Text("first-scope-only LateBoundPrivateName"),
                 Is.EqualTo("first-scope-only LateBoundPrivateName"));
