@@ -259,6 +259,13 @@ namespace PnCTestAutomation.Controls
                     if (element.matches('mat-button-toggle, .mat-button-toggle, .mat-mdc-button-toggle'))
                         return element.classList.contains('mat-button-toggle-checked') ||
                             element.classList.contains('mat-mdc-button-toggle-checked');
+                    if (element.matches('.chip-wrapper, .chip-wrapper-selected'))
+                        return element.classList.contains('chip-wrapper-selected');
+                    if (element.matches('.chip-item-wrapper')) {
+                        const chips = element.querySelectorAll('.chip-wrapper, .chip-wrapper-selected');
+                        if (chips.length !== 1) throw new Error('Chip selected state is absent or ambiguous.');
+                        return chips[0].classList.contains('chip-wrapper-selected');
+                    }
                     throw new Error('This control does not expose selected state.');
                 }
                 """);

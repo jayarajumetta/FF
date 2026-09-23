@@ -48,6 +48,7 @@ namespace PnCTestAutomation
 
             services.AddSingleton<IConfiguration>(configuration);
             services.AddSingleton<IProductModule, SfpProductModule>();
+            services.AddSingleton<IProductModule, ExpertQuoteBopSmokeModule>();
             services.AddSingleton<IProductModuleRegistry, ProductModuleRegistry>();
             services.AddSingleton(_ =>
                 SgsExecutionCatalog.Load(Path.Combine(AppContext.BaseDirectory, "Resources")));

@@ -1,4 +1,4 @@
-﻿// Pages/QuoteDetailsPage.cs
+// Pages/QuoteDetailsPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Linq;
@@ -337,6 +337,8 @@ namespace PnCTestAutomation.Pages
             var digitsOnly = new string(ssnToUse.Where(char.IsDigit).ToArray());
             await SSNInput.ClickAsync();
             await SSNInput.PressSequentiallyAsync(digitsOnly, new() { Delay = 50 });
+            await Expect(SSNInput).ToHaveValueAsync(
+                new Regex(@"^" + string.Join(@"-?", digitsOnly.Select(character => Regex.Escape(character.ToString()))) + "$"));
             await Task.Delay(500);
 
             Console.WriteLine($"[SSN] Typed SSN digits, clicking Submit");
@@ -418,6 +420,13 @@ namespace PnCTestAutomation.Pages
         {
             // Use robust mat-select handler to avoid race conditions with the dropdown panel
             await PnCTestAutomation.Helpers.Helpers.SelectByTextAsync(_page, RatingStateDropdown, contextData.RatingState.ToUpper(), timeoutMs: 30000, blurAfterSelect: false);
+        }
+
+        public async Task EnterAndVerifyEffectiveDateAsync(string effectiveDate)
+        {
+            await EffDateInput.FillAsync(effectiveDate);
+            await EffDateInput.PressAsync("Tab");
+            await Expect(EffDateInput).ToHaveValueAsync(effectiveDate);
         }
     }
 }

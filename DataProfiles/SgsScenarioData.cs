@@ -73,6 +73,20 @@ namespace PnCTestAutomation.DataProfiles
                 Flatten(inputObject, section);
             }
             RebuildAliases();
+            if (profile["random"] is JsonObject random)
+            {
+                foreach (var entry in random)
+                {
+                    ValidateKey(entry.Key);
+                    if (entry.Value is not JsonObject definition ||
+                        definition["pattern"] is not JsonValue pattern ||
+                        !pattern.TryGetValue<string>(out var text) ||
+                        !State.RandomPatterns.TryAdd(entry.Key, text))
+                        throw new SgsScenarioDataException("A declared random-data pattern is invalid or ambiguous.");
+                }
+            }
+            else if (profile["random"] is not null)
+                throw new SgsScenarioDataException("SGS random-data declarations must be an object.");
             ApplyRuntimeOverrides(request.RuntimeOverrides);
             ValidateStateVariant(request.StateVariant, request.StateOverridesPath is not null);
             State.ProductCode = request.ProductCode;
@@ -91,6 +105,43 @@ namespace PnCTestAutomation.DataProfiles
         {
             EnsureLoaded();
             return ResolveText(expression, new ResolutionScope());
+        }
+
+        public string GenerateRandom(string name)
+        {
+            EnsureLoaded();
+            ValidateKey(name);
+            if (IsCredentialKey(name))
+                throw new SgsScenarioDataException("Credentials cannot be generated as scenario data.");
+            if (NormalizeBufferKey(name) is not ("firstname" or "lastname" or "ownerphone" or "owneremail" or "insuredssn"))
+                throw new SgsScenarioDataException("Only declared client identity fields may use source random-data generation.");
+            if (State.GeneratedValues.TryGetValue(name, out var existing))
+                return existing;
+            if (!State.RandomPatterns.TryGetValue(name, out var pattern))
+                throw new SgsScenarioDataException($"Required random-data declaration '{name}' is absent.");
+            var current = NormalizeBufferKey(name) switch
+            {
+                "firstname" => _context.ClientFirstName,
+                "lastname" => _context.ClientLastName,
+                "ownerphone" => _context.ClientPhoneNumber,
+                "owneremail" => _context.ClientEmail,
+                "insuredssn" => _context.SSN,
+                _ => null
+            };
+            if (!string.IsNullOrEmpty(current))
+                throw new SgsScenarioDataException("Source generation cannot replace an already-owned scenario identity.");
+            string value;
+            try
+            {
+                value = RandomGenerators.GenerateFromSimplePattern(pattern);
+            }
+            catch (ArgumentException)
+            {
+                throw new SgsScenarioDataException($"Random-data declaration '{name}' uses unsupported or oversized syntax.");
+            }
+            CaptureBuffer(name, value);
+            State.GeneratedValues.Add(name, value);
+            return value;
         }
 
         public void ValidateRequiredInputs(IEnumerable<string> keys)

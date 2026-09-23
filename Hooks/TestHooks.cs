@@ -190,6 +190,11 @@ namespace PnCTestAutomation.Hooks
                 if (tags.Contains("NonRunnable"))
                     throw new SgsExecutionConfigurationException(
                         "An SGS case marked runnable still has a NonRunnable feature tag.");
+                if (!sgsResolution.CanExecute(Environment.GetEnvironmentVariable("TEST_SGS_LOCAL_CASE")))
+                {
+                    SkipScenario("This SGS case requires its exact, explicitly authorized local qualification selection.");
+                    return;
+                }
                 _sgsCatalog.ValidateResourcePayloads(
                     Path.Combine(AppContext.BaseDirectory, "Resources"), sgsResolution);
             }

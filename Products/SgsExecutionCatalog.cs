@@ -105,6 +105,10 @@ namespace PnCTestAutomation.Products
     {
         public bool IsRunnable => Case.SourceStatus == SgsSourceCaseStatus.Active &&
                                   Case.ExecutionStatus != SgsExecutionStatus.NonRunnable;
+
+        public bool CanExecute(string? authorizedLocalCase) => IsRunnable &&
+            (Case.ExecutionStatus == SgsExecutionStatus.Verified ||
+             string.Equals(Case.AutomationId, authorizedLocalCase, StringComparison.Ordinal));
     }
 
     public static class SgsCaseIdentity

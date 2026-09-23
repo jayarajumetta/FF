@@ -202,6 +202,22 @@ namespace PnCTestAutomation.Products
             false);
     }
 
+    public sealed class ExpertQuoteBopSmokeModule : IProductModule
+    {
+        public ProductModuleDescriptor Descriptor { get; } = new(
+            "sgs-cleq-03-eq-bop-smoke-test", "BOP", "Original ExpertQuote BOP smoke",
+            [ExpertQuoteBopSmokeInputs.AutomationFamily],
+            [ProductCapability.SemanticControls, ProductCapability.FrameScope, ProductCapability.DataProfile,
+             ProductCapability.ArtifactEvidence, ProductCapability.QuoteHandoff, ProductCapability.BusinessOutcomes,
+             ProductCapability.TestPlans],
+            "sgs-cleq-bop-smoke",
+            new ProductEvidenceContract(
+                [ArtifactKind.Screenshot, ArtifactKind.BusinessOutcome, ArtifactKind.RuntimeLocator,
+                 ArtifactKind.QuoteHandoff, ArtifactKind.TrxMetadata, ArtifactKind.TimingSummary],
+                true, true, true),
+            [], [], false);
+    }
+
     public sealed class ProductModuleConfigurationException : Exception
     {
         public ProductModuleConfigurationException(string message)

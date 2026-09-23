@@ -14345,7 +14345,7 @@
       "destinationPath": "Features/SGS/CommercialLines.ExpertQuote/Smoke/03_EQ_BOP_Smoke_Test.feature",
       "sourceSha256": "854D25CFDDECB6C48D28B6E4D0456C257384BF8C7452F1754FA83789E9D7B1B6",
       "importedSha256": "540B6A0A99CFDEAA1D244A419111FC7ECEA89CA05B650559954A1A6471D613F2",
-      "adaptedSha256": "B5F7BAED15CE2CE41D2E61BFE00212B61FE3E591F8486C669929A76A8AA40BD5",
+      "adaptedSha256": "9BF8D6433D73B50C241149D461826C45C18A67B493DBE3DFC742EE47FC3032AC",
       "applicationTag": "ExpertQuote",
       "runTypeTag": "Smoke",
       "moduleId": "sgs-cleq-03-eq-bop-smoke-test",
@@ -14400,13 +14400,13 @@
         "frameInputs": []
       },
       "readiness": {
-        "bindingsAdapted": false,
-        "selectorsReviewed": false,
-        "frameScopeReviewed": false,
-        "requiredInputsReviewed": false,
-        "businessAssertionsImplemented": false,
-        "richEvidenceWired": false,
-        "localQuoteCreationAuthorized": false,
+        "bindingsAdapted": true,
+        "selectorsReviewed": true,
+        "frameScopeReviewed": true,
+        "requiredInputsReviewed": true,
+        "businessAssertionsImplemented": true,
+        "richEvidenceWired": true,
+        "localQuoteCreationAuthorized": true,
         "transactionExecutionAuthorized": false
       },
       "cases": [
@@ -14424,8 +14424,8 @@
           "externalProfilePath": "SGS/CommercialLines.ExpertQuote/TestData/ExternalDataOverrides.json",
           "externalProfileSha256": "27C196632995F829B5E9CF88A9FAF07F7364AE2C973B8060A15A78100FEB297E",
           "sourceStatus": "Active",
-          "executionStatus": "NonRunnable",
-          "blockedReason": "Business bindings/pages, strict inputs, selectors/frames, assertions and rich evidence are not yet adapted and verified.",
+          "executionStatus": "ReadyForLocalVerification",
+          "blockedReason": "",
           "consecutivePassingRuns": []
         },
         {

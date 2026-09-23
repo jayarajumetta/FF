@@ -1,4 +1,4 @@
-﻿// Pages/AccountOwnerInfoPage.cs
+// Pages/AccountOwnerInfoPage.cs
 using Microsoft.Playwright;
 using System;
 using System.Globalization;
@@ -161,6 +161,20 @@ namespace PnCTestAutomation.Pages
         public async Task AnswerReceivedMailAsync(ScenarioContextData contextData)
         {
             await ClickIfNotSelectedAsync(GetReceivedMailButton(contextData.RecievedMail));
+        }
+
+        public async Task VerifyAddressAndIdentityAsync(ScenarioContextData data)
+        {
+            await Assertions.Expect(FirstNameInput).ToHaveValueAsync(data.ClientFirstName);
+            await Assertions.Expect(LastNameInput).ToHaveValueAsync(data.ClientLastName);
+            await Assertions.Expect(DateOfBirthInput).ToHaveValueAsync(data.ClientDOB);
+            await Assertions.Expect(MiddleNameInput).ToHaveValueAsync(data.ClientMiddleName);
+            await Assertions.Expect(BestPhoneInput).ToHaveValueAsync(data.ClientPhoneNumber);
+            await Assertions.Expect(EmailAddressInput).ToHaveValueAsync(data.ClientEmail);
+            await Assertions.Expect(StreetAddressInput).ToHaveValueAsync(data.StreetAddress);
+            await Assertions.Expect(AptNumberInput).ToHaveValueAsync(data.AptNumber);
+            await Assertions.Expect(CityInput).ToHaveValueAsync(data.City);
+            await Assertions.Expect(ZipCodeInput).ToHaveValueAsync(data.ZipCode);
         }
     }
 }

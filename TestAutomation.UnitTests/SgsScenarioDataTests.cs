@@ -7,6 +7,7 @@ using NUnit.Framework;
 using PnCTestAutomation.DataProfiles;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.QuoteHandoffs;
+using PnCTestAutomation.Products;
 
 namespace PnCTestAutomation.UnitTests;
 
@@ -15,6 +16,100 @@ public sealed class SgsScenarioDataTests
 {
     private const string CleqSmoke = @"TestData\Scenarios\Smoke\03_eq_bop_smoke_test_al.json";
     private const string PldcSmoke = @"TestData\Scenarios\Smoke\211_smoke_test_auto_az_ang.json";
+
+    [Test]
+    public void ReviewedBopInputsUseApprovedScenarioDateAndPreserveSourcePayload()
+    {
+        var context = new ScenarioContextData();
+        var root = Path.Combine(FindRepositoryRoot(), "Resources");
+        var path = Path.Combine(root, "SGS", "CommercialLines.ExpertQuote", CleqSmoke);
+        var before = SHA256.HashData(File.ReadAllBytes(path));
+        var data = new SgsScenarioData(context, new ScenarioQuoteHandoff(context), new SgsScenarioDataOptions
+        {
+            ResourcesRootPath = root,
+            TimeProvider = new FixedTimeProvider()
+        });
+        ExpertQuoteBopSmokeInputs.Load(data, context, ExpertQuoteBopSmokeInputs.Profile, ExpertQuoteBopSmokeInputs.ExternalProfile);
+        Assert.Multiple(() =>
+        {
+            Assert.That(context.Policy.EffectiveDate, Is.EqualTo("09/22/2026"));
+            Assert.That(context.Client.FirstName, Does.Match("^BOP [a-z]{3}$"));
+            Assert.That(context.Client.LastName, Does.Match("^Smoke[a-z]{4}$"));
+            Assert.That(data.GenerateRandom("FirstName"), Is.EqualTo(context.Client.FirstName));
+            Assert.That(context.Client.Email, Does.Match("^test@[a-z]{4}\\.com$"));
+            Assert.That(context.Client.SSN, Does.Match("^025[0-9]{6}$"));
+            Assert.That(context.Client.Phone, Does.Match("^\\(3[0-9]{2}\\) [0-9]{3}-[0-9]{4}$"));
+            Assert.That(context.Address.State, Is.EqualTo("Alabama"));
+            Assert.That(context.Client.MiddleName, Is.Empty);
+            Assert.That(SHA256.HashData(File.ReadAllBytes(path)), Is.EqualTo(before));
+        });
+    }
+
+    [TestCase("([a-z]+)+")]
+    [TestCase("[a-z]{0}")]
+    [TestCase("[a-z]{129}")]
+    [TestCase("[a-z]{999999999}")]
+    [TestCase("[^a-z]{3}")]
+    [TestCase("PLACEHOLDER.*")]
+    public void UnsupportedSourceRandomPatternsFailWithoutFallback(string pattern)
+    {
+        using var fixture = new DataFixture();
+        fixture.Add("profile.json", JsonSerializer.Serialize(new
+        {
+            values = new { state = "AL" },
+            random = new { FirstName = new { pattern } }
+        }));
+        var data = fixture.Load();
+        Assert.Throws<SgsScenarioDataException>(() => data.GenerateRandom("FirstName"));
+    }
+
+    [Test]
+    public void SourceGenerationCannotInventQuotesOrReplaceOwnedIdentity()
+    {
+        using var fixture = new DataFixture();
+        fixture.Add("profile.json", """
+            {"values":{},"random":{"FirstName":{"pattern":"BOP [a-z]{3}"},"QuoteNumber":{"pattern":"[0-9]{8}"}}}
+            """);
+        var context = new ScenarioContextData { ClientFirstName = "Already owned" };
+        var data = fixture.Load(context);
+        Assert.Throws<SgsScenarioDataException>(() => data.GenerateRandom("FirstName"));
+        Assert.Throws<SgsScenarioDataException>(() => data.GenerateRandom("QuoteNumber"));
+        Assert.That(context.ClientFirstName, Is.EqualTo("Already owned"));
+        Assert.That(context.QuoteNumber, Is.Null.Or.Empty);
+    }
+
+    [Test]
+    public void SourceRandomValuesAreReusedButCannotRegenerateIdentityAfterReload()
+    {
+        using var fixture = new DataFixture();
+        fixture.Add("profile.json", """
+            {"values":{},"random":{"FirstName":{"pattern":"BOP [a-z]{3}"},"OwnerPhone":{"pattern":"3[0-9]{9}"}}}
+            """);
+        var first = new ScenarioContextData();
+        var second = new ScenarioContextData();
+        var data = fixture.Load(first);
+        var other = fixture.Load(second);
+        var generated = data.GenerateRandom("FirstName");
+        Assert.That(data.GenerateRandom("firstname"), Is.EqualTo(generated));
+        Assert.That(second.ClientFirstName, Is.Null.Or.Empty);
+        Assert.That(other.GenerateRandom("OwnerPhone"), Does.Match("^3[0-9]{9}$"));
+        Assert.That(first.ClientPhoneNumber, Is.Null.Or.Empty);
+        data.Load(new("CLEQ", @"TestData\profile.json"));
+        Assert.Throws<SgsScenarioDataException>(() => data.GenerateRandom("FirstName"));
+        Assert.That(first.ClientFirstName, Is.EqualTo(generated));
+    }
+
+    [TestCase("Username")]
+    [TestCase("Password")]
+    [TestCase("QuoteNumber")]
+    [TestCase("ProposalNumber")]
+    [TestCase("MissingName")]
+    public void SourceGenerationRejectsCredentialsAuthoritativeIdentitiesAndAbsentDeclarations(string name)
+    {
+        using var fixture = new DataFixture();
+        fixture.Add("profile.json", """{"values":{},"random":{}}""");
+        Assert.Throws<SgsScenarioDataException>(() => fixture.Load().GenerateRandom(name));
+    }
 
     [Test]
     public void RealCleqAlSmokeUsesImportedInputsNotProvenance()

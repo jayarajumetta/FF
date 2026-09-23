@@ -1,6 +1,7 @@
-﻿// Pages/ExpertQuotePages/ClientSearchPage.cs
+// Pages/ExpertQuotePages/ClientSearchPage.cs
 using Microsoft.Playwright;
 using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PnCTestAutomation.Pages.ExpertQuotePages
@@ -102,6 +103,33 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
         {
             await CancelButton.ClickAsync();
             await WaitForSpinnerAsync();
+        }
+
+        public async Task<string> ReadActiveQuoteIdentityAsync()
+        {
+            var tab = _page.GetByRole(AriaRole.Tab, new() { Selected = true });
+            await Assertions.Expect(tab).ToHaveCountAsync(1);
+            await Assertions.Expect(tab).ToContainTextAsync(new Regex(@"(?<!\d)\d{8}(?!\d)"));
+            return ParseQuoteIdentity(await tab.InnerTextAsync());
+        }
+
+        public static string ParseQuoteIdentity(string text)
+        {
+            var matches = Regex.Matches(text, @"(?<!\d)\d{8}(?!\d)");
+            if (matches.Count != 1)
+                throw new InvalidOperationException("The active quote header must contain exactly one complete quote identity.");
+            return matches[0].Value;
+        }
+
+        public async Task CloseActiveQuoteAsync()
+        {
+            var tab = _page.GetByRole(AriaRole.Tab, new() { Selected = true });
+            await Assertions.Expect(tab).ToHaveCountAsync(1);
+            var close = tab.GetByText("clear", new() { Exact = true });
+            await Assertions.Expect(close).ToHaveCountAsync(1);
+            await close.ClickAsync();
+            await Assertions.Expect(SearchInput).ToBeVisibleAsync();
+            await Assertions.Expect(_page.GetByRole(AriaRole.Tab, new() { Selected = true })).ToHaveCountAsync(0);
         }
         #endregion
 

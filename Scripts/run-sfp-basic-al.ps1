@@ -1,7 +1,9 @@
 [CmdletBinding()]
 param(
+    [ValidateSet("SfpBasicAl", "SgsExpertQuoteBopAl")]
+    [string]$Workflow = "SfpBasicAl",
     [string]$ResultsDirectory = (Join-Path $PSScriptRoot (
-        "..\TestResults\SfpBasicAl-" + [Guid]::NewGuid().ToString("N"))),
+        "..\TestResults\$Workflow-" + [Guid]::NewGuid().ToString("N"))),
     [string]$AppSettingsPath,
     [switch]$ValidateCredentialsOnly,
     [switch]$NoBuild,
@@ -33,6 +35,15 @@ $settings = @{
     PLAYWRIGHT_HEADLESS = "true"
     'DuckCreekForms__BaselineVersions__SFP_BASIC' =
         [string]$profile.forms.baselineVersion
+}
+$filter = "TestCategory=AutomationId-SFP-BASIC-POLICY&TestCategory=Shard1&TestCategory=Debug"
+$identityPattern = '^SFPBasicPolicy_State\("Alabama","AL",'
+if ($Workflow -eq "SgsExpertQuoteBopAl") {
+    $filter = 'TestCategory=AutomationId-SGS-CLEQ-03-EQ-BOP-SMOKE-TEST&FullyQualifiedName~03_eq_bop_smoke_test_al.json'
+    $identityPattern = '^EQBOPSmokeTest_StateCode\("AL","TestData/Scenarios/Smoke/03_eq_bop_smoke_test_al\.json",'
+    $settings.TEST_RUN_ID = "sgs-cleq-bop-al-" + [Guid]::NewGuid().ToString("N")
+    $settings.TEST_ARTIFACT_PROFILE = "sgs-cleq-bop-al-local"
+    $settings.TEST_SGS_LOCAL_CASE = "SGS-CLEQ-03-EQ-BOP-SMOKE-TEST:AL-3B2D76491867"
 }
 $credentialFields = [ordered]@{
     EQ_USERNAME = @("Credentials", "Username")
@@ -121,11 +132,10 @@ try {
                 Join-Path $root "bin\Release\net8.0\playwright.ps1") install chromium
             if ($LASTEXITCODE -ne 0) { throw "Playwright installation failed." }
         }
-        $trx = Join-Path $results "SfpBasicAl.trx"
+        $trx = Join-Path $results "$Workflow.trx"
         & dotnet test $assembly `
-            --filter ("TestCategory=AutomationId-SFP-BASIC-POLICY&" +
-                "TestCategory=Shard1&TestCategory=Debug") `
-            --logger "trx;LogFileName=SfpBasicAl.trx" `
+            --filter $filter `
+            --logger "trx;LogFileName=$Workflow.trx" `
             --results-directory $results
         $testExit = $LASTEXITCODE
         Import-Module (Join-Path $root "Scripts\CI\PipelineContracts.psm1") -Force
@@ -135,13 +145,13 @@ try {
             -EvidenceRoot $results -CanonicalResultPath $trx `
             -ScenarioRoots @("evidence") -OutputDirectory (Join-Path $results "report")
         if ($result.Results.Count -ne 1 -or
-            $result.Results[0].testName -notmatch '^SFPBasicPolicy_State\("Alabama","AL",') {
-            throw "The local run did not execute exactly the expected Alabama Basic case."
+            $result.Results[0].testName -notmatch $identityPattern) {
+            throw "The local run did not execute exactly the expected '$Workflow' case."
         }
         if ($testExit -ne 0 -or $result.Results[0].outcome -ne "Passed" -or $report.ExitCode -ne 0) {
-            throw "SFP Basic Alabama did not pass. Review '$trx'; expectations have not been changed."
+            throw "$Workflow did not pass. Review '$trx'; expectations have not been changed."
         }
-        Write-Host "SFP Basic Alabama passed. Results and scenario evidence: $results"
+        Write-Host "$Workflow passed. Results and scenario evidence: $results"
     }
     finally {
         Pop-Location

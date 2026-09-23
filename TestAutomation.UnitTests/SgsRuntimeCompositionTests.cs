@@ -33,6 +33,8 @@ public sealed class SgsRuntimeCompositionTests
 
         data.Load(new("CLEQ", @"TestData\Scenarios\Smoke\03_eq_bop_smoke_test_al.json", "AL",
             @"TestData\ExternalDataOverrides.json"));
+        var rawPhone = data.GenerateRandom("OwnerPhone");
+        owner.Client.Phone = $"({rawPhone[..3]}) {rawPhone[3..6]}-{rawPhone[6..]}";
         data.CaptureBuffer("Quote_Num", "01234567");
 
         Assert.Multiple(() =>
@@ -46,6 +48,8 @@ public sealed class SgsRuntimeCompositionTests
             Assert.That(first.ServiceProvider.GetRequiredService<ScenarioReportRecorder>(), Is.SameAs(recorder));
             Assert.That(second.ServiceProvider.GetRequiredService<ScenarioReportRecorder>(), Is.Not.SameAs(recorder));
             Assert.That(privacy.CreateRedactor().Text("first-scope-only LateBoundPrivateName"),
+                Is.EqualTo($"{ReportRedactor.Mask} {ReportRedactor.Mask}"));
+            Assert.That(privacy.CreateRedactor().Text(rawPhone + " " + owner.Client.Phone),
                 Is.EqualTo($"{ReportRedactor.Mask} {ReportRedactor.Mask}"));
             Assert.That(second.ServiceProvider.GetRequiredService<ScenarioReportPrivacy>()
                 .CreateRedactor().Text("first-scope-only LateBoundPrivateName"),

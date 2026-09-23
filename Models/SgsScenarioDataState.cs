@@ -18,6 +18,10 @@ namespace PnCTestAutomation.Models
             new(StringComparer.OrdinalIgnoreCase);
         internal Dictionary<string, string> Captures { get; } =
             new(StringComparer.OrdinalIgnoreCase);
+        internal Dictionary<string, string> RandomPatterns { get; } =
+            new(StringComparer.OrdinalIgnoreCase);
+        internal Dictionary<string, string> GeneratedValues { get; } =
+            new(StringComparer.OrdinalIgnoreCase);
 
         internal void Reset()
         {
@@ -28,6 +32,8 @@ namespace PnCTestAutomation.Models
             Inputs.Clear();
             Aliases.Clear();
             Captures.Clear();
+            RandomPatterns.Clear();
+            GeneratedValues.Clear();
         }
     }
 

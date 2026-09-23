@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PnCTestAutomation.Helpers
@@ -23,6 +24,38 @@ namespace PnCTestAutomation.Helpers
     /// </remarks>
     public static class RandomGenerators
     {
+        public static string GenerateFromSimplePattern(string pattern)
+        {
+            if (string.IsNullOrWhiteSpace(pattern) || pattern.Length > 256)
+                throw new ArgumentException("A bounded random-data pattern is required.", nameof(pattern));
+            var result = new StringBuilder();
+            for (var index = 0; index < pattern.Length;)
+            {
+                if (pattern[index] == '[')
+                {
+                    var match = Regex.Match(pattern[index..], @"^\[(a-z|A-Z|0-9)\]\{([1-9][0-9]{0,2})\}",
+                        RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
+                    if (!match.Success || !int.TryParse(match.Groups[2].Value, out var count) ||
+                        count > 128 || result.Length + count > 256)
+                        throw new ArgumentException("Unsupported or oversized random-data pattern.", nameof(pattern));
+                    var range = match.Groups[1].Value;
+                    for (var number = 0; number < count; number++)
+                        result.Append((char)Random.Shared.Next(range[0], range[2] + 1));
+                    index += match.Length;
+                }
+                else
+                {
+                    var character = pattern[index++];
+                    if (!char.IsAsciiLetterOrDigit(character) && !" @._-".Contains(character))
+                        throw new ArgumentException("Unsupported random-data pattern syntax.", nameof(pattern));
+                    result.Append(character);
+                }
+            }
+            if (result.Length == 0 || result.Length > 256)
+                throw new ArgumentException("Random-data output exceeds its size contract.", nameof(pattern));
+            return result.ToString();
+        }
+
         /// <summary>
         /// Prefix added to first names to identify Playwright test records.
         /// Change to "Playwright" for full prefix, or "" for no prefix.

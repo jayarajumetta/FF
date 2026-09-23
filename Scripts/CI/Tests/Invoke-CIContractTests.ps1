@@ -436,6 +436,7 @@ try {
     }
     $originalRunId = $env:TEST_RUN_ID
     $originalProfile = $env:TEST_OUTCOME_PROFILE_PATH
+    $originalLocalCase = $env:TEST_SGS_LOCAL_CASE
     try {
         $settingsHash = Get-FileSha256 -Path $localSettingsPath
         $receipt = & $localRunner -AppSettingsPath $localSettingsPath `
@@ -459,6 +460,14 @@ try {
                 [Environment]::GetEnvironmentVariable($name) -eq "existing-offline-contract"
             ) "Local credential preflight failed to restore '$name'."
         }
+        $sgsReceipt = & $localRunner -Workflow SgsExpertQuoteBopAl `
+            -AppSettingsPath $localSettingsPath -ValidateCredentialsOnly -ResultsDirectory $localResults
+        Assert-True (
+            $sgsReceipt.FieldValidationPassed -and -not $sgsReceipt.BusinessTestsExecuted -and
+            $env:TEST_SGS_LOCAL_CASE -eq $originalLocalCase -and
+            $env:TEST_RUN_ID -eq $originalRunId -and
+            -not (Test-Path -LiteralPath $localResults)
+        ) "SGS preflight started execution or retained its local-case permission."
         $existingDotnetFunction = Get-Item -LiteralPath "Function:\dotnet" -ErrorAction SilentlyContinue
         try {
             function dotnet {
@@ -472,11 +481,22 @@ try {
                     $env:TEST_OUTCOME_PROFILE_PATH -eq "must-not-override-approved-profile") {
                     throw "Local credential handoff or approved profile isolation failed."
                 }
+                if ($expectedWorkflow -eq "SgsExpertQuoteBopAl" -and
+                    ($env:TEST_SGS_LOCAL_CASE -ne "SGS-CLEQ-03-EQ-BOP-SMOKE-TEST:AL-3B2D76491867" -or
+                     $env:TEST_ARTIFACT_PROFILE -ne "sgs-cleq-bop-al-local" -or
+                     $env:TEST_RUN_ID -notlike "sgs-cleq-bop-al-*")) {
+                    throw "The SGS local runner did not select exactly its reviewed case and evidence identity."
+                }
                 throw "Controlled stop after verifying the credential handoff; no build or tests started."
             }
-            Assert-Throws {
-                & $localRunner -AppSettingsPath $localSettingsPath -ResultsDirectory $localResults
-            } "Controlled stop after verifying the credential handoff"
+            foreach ($expectedWorkflow in @("SfpBasicAl", "SgsExpertQuoteBopAl")) {
+                Assert-Throws {
+                    & $localRunner -Workflow $expectedWorkflow `
+                        -AppSettingsPath $localSettingsPath -ResultsDirectory $localResults
+                } "Controlled stop after verifying the credential handoff"
+                Assert-True ($env:TEST_SGS_LOCAL_CASE -eq $originalLocalCase) `
+                    "Failed local execution retained SGS case authorization."
+            }
         }
         finally {
             if ($null -eq $existingDotnetFunction) {

@@ -30,6 +30,7 @@ namespace PnCTestAutomation.DataProfiles
         void Load(SgsScenarioDataRequest request);
         string GetRequired(string key);
         string ResolveRequired(string expression);
+        string GenerateRandom(string name);
         void ValidateRequiredInputs(IEnumerable<string> keys);
         bool TryGetOptional(string key, [NotNullWhen(true)] out string? value);
         void CaptureBuffer(string key, string value);

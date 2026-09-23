@@ -1,4 +1,4 @@
-@SgsImported @NonRunnable @NoRetry @ExpertQuote @Smoke @AutomationId-SGS-CLEQ-03-EQ-BOP-SMOKE-TEST
+@SgsImported @NoRetry @ExpertQuote @Smoke @AutomationId-SGS-CLEQ-03-EQ-BOP-SMOKE-TEST
 @CL_EQ @BOP @smoke_test @bop_smoke_test @cleq_smoke_test
 
 Feature: EQ BOP Smoke Test

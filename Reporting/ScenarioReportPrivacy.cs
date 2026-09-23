@@ -56,6 +56,7 @@ public sealed class ScenarioReportPrivacy
             .ToList();
         lock (_gate)
             values.AddRange(_runtimeSecrets);
+        values.AddRange(_state.SgsData.GeneratedValues.Values);
         return new ReportRedactor(values);
     }
 }

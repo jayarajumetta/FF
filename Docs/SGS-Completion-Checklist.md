@@ -95,10 +95,10 @@ The user is not being assigned coding, dependency mapping, or integration work.
 | Strict SGS data adapter | Integrated, including scoped Startup registration and the shared-state/quote-handoff composition test. |
 | Semantic controls and frame contracts | Integrated; typed captures, actual selection checks, frame-safe Material dropdowns, and explicit main/nested frame scopes have focused passing coverage. |
 | Reporting adaptation | Integrated: child `05644a9` picked as `37a9dbd`; actual-runner skip compatibility in `6f369fb`, lifecycle/DI/privacy in `d7e47c2`, package/runner/publication gates in `e9c89ec`. Item 5 now preserves Forms comparison evidence after a contract failure and corrects live-discovered marker/redaction/raw-JSON issues. No duplicate lifecycle or SGS retry engine. |
-| Parent framework suite | Current SFP evidence-fix gate: 441 passed, 0 failed, 0 skipped; 150 targeted checks passed. The earlier item 2 gate also passed 54 CI contract assertions and reconciled 45 real gated SKIP results with their scenario reports. |
+| Parent framework suite | Current BOP adaptation gate: 465 passed, 0 failed, 0 skipped; 83 offline CI/runner assertions passed. Exact AL selection was independently exercised with authorization absent: one actual SKIP and no browser/business execution. |
 | Live SGS verification | No imported SGS case has been live-verified. Discovery, unit tests, and synthetic report previews do not count. |
 | Premium/forms baselines | Original validation stays active and real results stay visible. Baseline approval/refresh and baseline-dependent acceptance are deferred until the user's test/data refresh; baseline mismatches do not gate current integration progress. |
-| Work/process state | Items 1-5 are complete for engineering progress under the approved boundaries. Both SFP qualification runs have complete evidence and reconciled FAIL results solely for the explicitly deferred Forms expectations. Item 6 is active: original ExpertQuote BOP Alabama; its execution-date rule is explicitly approved, while runtime adaptation and live qualification remain outstanding. No SGS case is business-verified; Key Vault approval remains pending. |
+| Work/process state | Items 1-5 are complete for engineering progress under the approved boundaries. Both SFP qualification runs have complete evidence and reconciled FAIL results solely for the explicitly deferred Forms expectations. Item 6 is active: original ExpertQuote BOP Alabama is adapted and locally gated; live qualification remains outstanding. No SGS case is business-verified; Key Vault approval remains pending. |
 
 ## Ordered remaining work
 
@@ -272,6 +272,26 @@ The user is not being assigned coding, dependency mapping, or integration work.
    The existing source binding actively enters that value; the external
    override file is empty. No SGS case has been enabled or live-executed
    as a result of this input decision.
+   Adaptation checkpoint: scoped bindings reuse the existing browser/state,
+   pages, strict data adapter, semantic controls, quote handoff and artifact
+   finalizer. Source-declared random identities use the bounded shared
+   generator; they cannot supply credentials or authoritative quote IDs,
+   replace an owned identity, or leak raw generated contact values into reports.
+   Actual account values, chip/checkbox selections, proposal inputs and complete
+   captured/retrieved quote identity are asserted. Reviewed profile hashes and
+   the frozen execution-date override are included in scenario evidence.
+   Only AL is `ReadyForLocalVerification`; the other 1,114 active SGS examples
+   remain `NonRunnable`. A ready case also requires its exact
+   `TEST_SGS_LOCAL_CASE` authorization. Use the existing credential/evidence
+   runner with `-Workflow SgsExpertQuoteBopAl -AppSettingsPath <external-file>`
+   and a fresh `-ResultsDirectory`; omitting `-Workflow` retains SFP behavior.
+   The runner restores local permission and credentials even on failure.
+   No transaction execution or automatic mutation retries are enabled.
+   Source feature body bytes and profile/checksum inventory are unchanged.
+   Pre-execution evidence in `files\resume-validation`:
+   `checklist-06-framework.trx` (465/0/0), `checklist-06-ci-contracts.log`
+   (83 assertions), and `checklist-06-selector-probe\selection.trx`
+   (one genuinely gated SKIP). These are not business qualification runs.
 
 7. [ ] **Implement and prove original Commercial DuckCreek BAP smoke, Alabama.**
    Adapt `012_BAP_Smoke_Test.feature`. Apply intended BAP inputs, verify the

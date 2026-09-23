@@ -187,6 +187,31 @@ public sealed class PlaywrightControlAdapterTests
         new ControlScopeResolver(new PlaywrightControlRuntime(_page))
             .ResolveAsync(ControlDefinition.ByTestId(testId, testId));
 
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task AniChipSelectionReadsActualSelectedClassRatherThanVisibility(bool selected)
+    {
+        var css = selected ? "chip-wrapper-selected" : "chip-wrapper";
+        await _page.SetContentAsync($"""
+            <div data-testid="wrapped" class="chip-item-wrapper"><div class="{css}">Married</div></div>
+            <div data-testid="direct" class="{css}">Business Owners</div>
+            """);
+        foreach (var id in new[] { "wrapped", "direct" })
+            Assert.That(await Actions().CaptureStateAsync(await ResolveAsync(id), ControlStateCapture.Selected), Is.EqualTo(selected));
+    }
+
+    [Test]
+    public async Task AmbiguousChipSelectionCannotPass()
+    {
+        await _page.SetContentAsync("""
+            <div data-testid="chip" class="chip-item-wrapper">
+              <div class="chip-wrapper">No</div><div class="chip-wrapper-selected">Yes</div>
+            </div>
+            """);
+        var control = await ResolveAsync("chip");
+        Assert.ThrowsAsync<PlaywrightException>(async () => await Actions().CaptureStateAsync(control, ControlStateCapture.Selected));
+    }
+
     private static SemanticControlActions Actions(IControlEvidenceSink? sink = null) =>
         new(sink, assertionTimeout: TimeSpan.Zero);
 

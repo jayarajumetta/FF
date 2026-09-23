@@ -14,6 +14,24 @@ public sealed class SgsExecutionCatalogTests
     private static SgsExecutionCatalog Catalog => SgsExecutionCatalog.Load(Path.Combine(Root, "Resources"));
 
     [Test]
+    public void OnlyReviewedAlabamaCaseCanBeExplicitlySelectedForQualification()
+    {
+        var cases = Catalog.Ledger.Workflows.SelectMany(workflow =>
+            workflow.Cases.Select(item => new SgsCaseResolution(workflow, item))).ToArray();
+        var ready = cases.Single(item => item.IsRunnable);
+        Assert.Multiple(() =>
+        {
+            Assert.That(ready.Case.AutomationId, Is.EqualTo(ExpertQuoteBopSmokeInputs.AlabamaIdentity));
+            Assert.That(ready.Case.ExecutionStatus, Is.EqualTo(SgsExecutionStatus.ReadyForLocalVerification));
+            Assert.That(ready.CanExecute(null), Is.False);
+            Assert.That(ready.CanExecute("wrong-case"), Is.False);
+            Assert.That(ready.CanExecute(ExpertQuoteBopSmokeInputs.AlabamaIdentity), Is.True);
+            Assert.That(cases.Count(item => item.CanExecute(ExpertQuoteBopSmokeInputs.AlabamaIdentity)), Is.EqualTo(1));
+            Assert.That(ready.Workflow.Readiness.TransactionExecutionAuthorized, Is.False);
+        });
+    }
+
+    [Test]
     public void LedgerPreservesEveryActiveAndSourceDisabledCaseWithItsDependencies()
     {
         var ledger = Catalog.Ledger;
@@ -76,13 +94,13 @@ public sealed class SgsExecutionCatalogTests
     {
         var catalog = Catalog;
         foreach (var workflow in catalog.Ledger.Workflows)
-        foreach (var item in workflow.Cases)
-        {
-            Assert.That(
-                () => catalog.ValidateResourcePayloads(
-                    Path.Combine(Root, "Resources"), new SgsCaseResolution(workflow, item)),
-                Throws.Nothing, item.AutomationId);
-        }
+            foreach (var item in workflow.Cases)
+            {
+                Assert.That(
+                    () => catalog.ValidateResourcePayloads(
+                        Path.Combine(Root, "Resources"), new SgsCaseResolution(workflow, item)),
+                    Throws.Nothing, item.AutomationId);
+            }
     }
 
     [Test]

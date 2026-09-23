@@ -1,4 +1,4 @@
-﻿// Pages/NewClientPage.cs
+// Pages/NewClientPage.cs
 using Microsoft.Playwright;
 using System.Threading.Tasks;
 
@@ -15,8 +15,8 @@ namespace PnCTestAutomation.Pages
 
         #region Locators
         // New/Existing Client Search locators - moved from NewExistingClientSearchLocators
-        private ILocator FirstNameInput => _page.Locator("input[name='customer.name.first']");
-        private ILocator LastNameInput => _page.Locator("input[name='customer.name.last']");
+        private ILocator FirstNameInput => _page.GetByTestId("customer.name.first");
+        private ILocator LastNameInput => _page.GetByTestId("customer.name.last");
         private ILocator DateOfBirthInput => _page.Locator("input[name='customer.dateOfBirth']");
         private ILocator BestPhoneInput => _page.Locator("input[name='customer.phone']");
         private ILocator EmailAddressInput => _page.Locator("input[name='customer.email']");
@@ -68,6 +68,13 @@ namespace PnCTestAutomation.Pages
         public async Task ClickSearchAsync()
         {
             await SearchButton.ClickAsync();
+        }
+
+        public async Task VerifyClientDetailsAsync(string firstName, string lastName, string dateOfBirth)
+        {
+            await Assertions.Expect(FirstNameInput).ToHaveValueAsync(firstName);
+            await Assertions.Expect(LastNameInput).ToHaveValueAsync(lastName);
+            await Assertions.Expect(DateOfBirthInput).ToHaveValueAsync(dateOfBirth);
         }
 
         public async Task WaitForNextButtonAsync()
