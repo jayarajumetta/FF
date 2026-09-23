@@ -228,19 +228,31 @@ try {
     } "secret literal"
     Remove-Item -LiteralPath $privateKeyPath
 
-    $quotesPath = Join-Path $packageRoot "datapool\quotes.json"
-    '[]' | Set-Content -LiteralPath $quotesPath -Encoding UTF8
-    Remove-Item -LiteralPath (Join-Path $packageRoot "package-manifest.json")
-    [void](New-PackageManifest `
-        -PackageRoot $packageRoot `
-        -PackageVersion "1.0.0" `
-        -CommitSha "0123456789abcdef" `
-        -BuildId "42" `
-        -BuildNumber "20260917.1")
-    Assert-Throws {
-        Test-PackageManifest -PackageRoot $packageRoot
-    } "forbidden"
-    Remove-Item -LiteralPath $quotesPath
+    foreach ($relativeQuotesPath in @(
+        "datapool\quotes.json",
+        "datapool\data\quotes.json",
+        "test\data\quotes.json",
+        "tools\CiTestInventory\data\quotes.json",
+        "tools\SgsReport\data\quotes.json",
+        "tools\TestPlanPublisher\data\quotes.json",
+        "tools\reports\data\quotes.json",
+        "tools\future-tool\nested\data\quotes.json"
+    )) {
+        $quotesPath = Join-Path $packageRoot $relativeQuotesPath
+        New-Item -ItemType Directory -Force -Path (Split-Path -Parent $quotesPath) | Out-Null
+        '[]' | Set-Content -LiteralPath $quotesPath -Encoding UTF8
+        Remove-Item -LiteralPath (Join-Path $packageRoot "package-manifest.json")
+        [void](New-PackageManifest `
+            -PackageRoot $packageRoot `
+            -PackageVersion "1.0.0" `
+            -CommitSha "0123456789abcdef" `
+            -BuildId "42" `
+            -BuildNumber "20260917.1")
+        Assert-Throws {
+            Test-PackageManifest -PackageRoot $packageRoot -ScanForSecrets
+        } ("forbidden secret/runtime files: " + [regex]::Escape($relativeQuotesPath.Replace('\', '/')))
+        Remove-Item -LiteralPath $quotesPath
+    }
 
     $seedPath = Join-Path $packageRoot "test\nunit_random_seed.tmp"
     "mutable-runtime-state" |
@@ -579,6 +591,17 @@ try {
         Join-Path $RepositoryRoot "Pipelines\templates\setup-datapool-stage.yml") -Raw
     $dataPoolProgram = Get-Content -LiteralPath (
         Join-Path $RepositoryRoot "DataPool\Program.cs") -Raw
+    [xml]$dataPoolProject = Get-Content -LiteralPath (
+        Join-Path $RepositoryRoot "DataPool\DataPool.csproj") -Raw
+    foreach ($itemType in @("Content", "None")) {
+        $runtimeExclusions = @($dataPoolProject.SelectNodes(
+            "/Project/ItemGroup/$itemType[@Update='data\**\*']"))
+        Assert-True (
+            $runtimeExclusions.Count -eq 1 -and
+            $runtimeExclusions[0].GetAttribute("CopyToOutputDirectory") -ceq "Never" -and
+            $runtimeExclusions[0].GetAttribute("CopyToPublishDirectory") -ceq "Never"
+        ) "DataPool runtime $itemType items must be excluded from both build and publish propagation."
+    }
     Assert-True ($buildTemplate -match "New-TestPackage\.ps1") "Build template bypasses package entry point."
     Assert-True ($buildTemplate -match "failTaskOnFailedTests:\s*true") "Unit publication is not fail-closed."
     Assert-True ($testTemplate -match "checkout:\s*none") "Test jobs still use a source checkout."

@@ -7,5 +7,10 @@
     <RootNamespace>DataPool</RootNamespace>
   </PropertyGroup>
 
+  <!-- Runtime data must not propagate through project references or publish outputs. -->
+  <ItemGroup>
+    <Content Update="data\**\*" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never" />
+    <None Update="data\**\*" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never" />
+  </ItemGroup>
 
 </Project>

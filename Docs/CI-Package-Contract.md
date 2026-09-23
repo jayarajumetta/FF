@@ -102,6 +102,21 @@ files, test-run seed files, `QuoteNumber.txt`, and DataPool `quotes.json`.
 An existing archive is never overwritten. A new version, commit, or clean
 output directory is required.
 
+DataPool's `data/` directory is runtime-owned, not package content.
+`DataPool.csproj` disables both build-output and publish copying for its
+`Content` and `None` items. This boundary matters for the inventory and report
+tools: `ReferenceOutputAssembly="false"` on the framework's DataPool build
+dependency does not suppress transitive content copying. Without the explicit
+exclusion, the Web SDK's default JSON copy rules also place `data/quotes.json`
+under those tools.
+
+The package's forbidden-file scan still rejects `quotes.json` anywhere,
+including every tool subtree and nested or future tool directories. A valid
+checksum manifest does not exempt runtime data. DataPool continues to create
+its runtime store when needed; no existing source or service-local quote data
+is deleted or seeded by this exclusion. Clean Release output roots remain
+required so files from an older build cannot survive incremental compilation.
+
 ## Build and execution
 
 1. Azure performs a clean, full-history checkout and installs .NET 8. The
