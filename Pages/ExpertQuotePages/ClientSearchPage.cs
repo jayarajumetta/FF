@@ -123,13 +123,17 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
 
         public async Task CloseActiveQuoteAsync()
         {
-            var tab = _page.GetByRole(AriaRole.Tab, new() { Selected = true });
+            var identity = await ReadActiveQuoteIdentityAsync();
+            var tab = _page.GetByRole(AriaRole.Tab).Filter(new()
+            {
+                HasTextRegex = new Regex(@"(?<!\d)" + Regex.Escape(identity) + @"(?!\d)")
+            });
             await Assertions.Expect(tab).ToHaveCountAsync(1);
             var close = tab.GetByText("clear", new() { Exact = true });
             await Assertions.Expect(close).ToHaveCountAsync(1);
             await close.ClickAsync();
             await Assertions.Expect(SearchInput).ToBeVisibleAsync();
-            await Assertions.Expect(_page.GetByRole(AriaRole.Tab, new() { Selected = true })).ToHaveCountAsync(0);
+            await Assertions.Expect(tab).ToHaveCountAsync(0);
         }
         #endregion
 

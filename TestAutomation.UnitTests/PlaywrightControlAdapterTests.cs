@@ -2,6 +2,7 @@ using System.Net;
 using Microsoft.Playwright;
 using NUnit.Framework;
 using PnCTestAutomation.Controls;
+using PnCTestAutomation.Pages.ExpertQuotePages;
 
 namespace PnCTestAutomation.UnitTests;
 
@@ -269,6 +270,23 @@ public sealed class PlaywrightControlAdapterTests
             """);
         Assert.ThrowsAsync<AmbiguousControlMatchException>(async () =>
             await resolver.ResolveAsync(definition, TimeSpan.Zero));
+    }
+
+    [Test]
+    public async Task ClosingTheCapturedQuotePermitsTheDashboardTabToRemainSelected()
+    {
+        await _page.SetContentAsync("""
+            <div id="dashboard" role="tab" aria-selected="false">Search / Recently Accessed</div>
+            <div role="tab" aria-selected="true">BOP 01945678
+              <button onclick="this.parentElement.remove();
+                document.getElementById('dashboard').setAttribute('aria-selected','true');
+                document.getElementById('search').hidden=false">clear</button>
+            </div>
+            <input id="search" data-testid="quoteSearchInput" hidden>
+            """);
+        await new ClientSearchPage(_page).CloseActiveQuoteAsync();
+        Assert.That(await _page.GetByRole(AriaRole.Tab, new() { Selected = true }).InnerTextAsync(),
+            Is.EqualTo("Search / Recently Accessed"));
     }
 
     [TestCase("9/2/2026")]
