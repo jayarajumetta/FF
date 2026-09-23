@@ -141,11 +141,12 @@ namespace PnCTestAutomation.Tests
             await steps.UserAddsFarmPersonalProperty(table);
         }
 
-        [Test]
-        public async Task RequiredFpp_VerifiesUppercasedDescriptionAndExactAmount()
+        [TestCase("BOSE SOUND BARS")]
+        [TestCase("Bose Sound Bars")]
+        public async Task RequiredFpp_VerifiesEnteredOrUppercasedDescriptionAndExactAmount(string description)
         {
             await _page.SetContentAsync("""
-                <input data-testid="fields.covEndorsements.rows[0].covEndorsementsInput$description.value" value="BOSE SOUND BARS">
+                <input type="search" data-testid="fields.covEndorsements.rows[0].covEndorsementsInput$description.value">
                 <input data-testid="fields.covEndorsements.rows[0].covEndorsementsInput$limit.value" value="101,500">
                 <div data-testid="fields.covEndorsements.rows[0].covEndorsementsInput$deductible.value">$1,000</div>
                 """);
@@ -153,8 +154,28 @@ namespace PnCTestAutomation.Tests
             TableMappingHelpers.FarmPersonalPropertyFields(SfpBasicInputTests.TableOf(
                 ("Description", "Bose Sound Bars"), ("Limit", "101500"), ("Deductible", "$1,000")), data);
             var page = new SFP_FarmPersonalPropertyPage(_page);
+            await page.ItemDescription().FillAsync(description);
             await page.VerifyItemAsync(data);
             await page.ItemLimit().FillAsync("15000");
+            Assert.ThrowsAsync<PlaywrightException>(() => page.VerifyItemAsync(data));
+        }
+
+        [TestCase("")]
+        [TestCase("Bose Sound Bar")]
+        [TestCase("Bose Sound Bars extra")]
+        [TestCase("Extra BOSE SOUND BARS")]
+        public async Task RequiredFpp_RejectsMissingOrChangedDescription(string description)
+        {
+            await _page.SetContentAsync("""
+                <input type="search" data-testid="fields.covEndorsements.rows[0].covEndorsementsInput$description.value">
+                <input data-testid="fields.covEndorsements.rows[0].covEndorsementsInput$limit.value" value="101500">
+                <div data-testid="fields.covEndorsements.rows[0].covEndorsementsInput$deductible.value">$1,000</div>
+                """);
+            var data = new ScenarioContextData();
+            TableMappingHelpers.FarmPersonalPropertyFields(SfpBasicInputTests.TableOf(
+                ("Description", "Bose Sound Bars"), ("Limit", "101500"), ("Deductible", "$1,000")), data);
+            var page = new SFP_FarmPersonalPropertyPage(_page);
+            await page.ItemDescription().FillAsync(description);
             Assert.ThrowsAsync<PlaywrightException>(() => page.VerifyItemAsync(data));
         }
 

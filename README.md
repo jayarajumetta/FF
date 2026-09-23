@@ -345,8 +345,11 @@ Contract references: CLAS changeset 308935,
 `LimitedPollutionTank`, aggregate eligibility at lines 34437-34482);
 EQ UI `origin/develop` 9b9b292 and `origin/qa` 9bbd84e agree on the relevant
 SFP builders. Electrical year maps to `BuildingInput.WiringYear`. Code 464
-descriptions are uppercased on change; the feature keeps the business input
-`Bose Sound Bars` and verification expects `BOSE SOUND BARS`.
+description metadata supports uppercase normalization, but the captured Alabama
+QA pre-save input retains its entered casing. The feature keeps the business
+input `Bose Sound Bars`; pre-save verification accepts exactly that value or
+`BOSE SOUND BARS`, not changed wording or additional text. Limit and deductible
+checks remain unchanged.
 Code identity is matched only in the source-defined `CoverageID` column
 (`mat-column-column1`), with its `Coverage Code` header asserted first. A value
 of 464 in another row's name/description/amount cell cannot select that row or

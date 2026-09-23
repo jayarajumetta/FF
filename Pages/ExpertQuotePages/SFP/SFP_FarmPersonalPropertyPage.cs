@@ -62,8 +62,10 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 
         public async Task VerifyItemAsync(ScenarioContextData data)
         {
-            // CLAS SetDescriptionToUppercase normalizes the description on change.
-            await Expect(ItemDescription()).ToHaveValueAsync(data.FarmPropertyDescription.ToUpperInvariant());
+            // QA can retain entered casing before Save; CLAS also supports uppercase normalization.
+            var description = data.FarmPropertyDescription;
+            await Expect(ItemDescription()).ToHaveValueAsync(new Regex(
+                "^(?:" + Regex.Escape(description) + "|" + Regex.Escape(description.ToUpperInvariant()) + ")$"));
             await SfpFieldAssertions.NumberAsync(ItemLimit(), data.FarmPropertyLimit);
             await SfpFieldAssertions.SelectionAsync(ItemDeductible(), data.FarmPropertyDeductible);
         }
