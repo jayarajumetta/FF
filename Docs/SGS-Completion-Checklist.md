@@ -95,10 +95,10 @@ The user is not being assigned coding, dependency mapping, or integration work.
 | Strict SGS data adapter | Integrated, including scoped Startup registration and the shared-state/quote-handoff composition test. |
 | Semantic controls and frame contracts | Integrated; typed captures, actual selection checks, frame-safe Material dropdowns, and explicit main/nested frame scopes have focused passing coverage. |
 | Reporting adaptation | Integrated: child `05644a9` picked as `37a9dbd`; actual-runner skip compatibility in `6f369fb`, lifecycle/DI/privacy in `d7e47c2`, package/runner/publication gates in `e9c89ec`. Item 5 now preserves Forms comparison evidence after a contract failure and corrects live-discovered marker/redaction/raw-JSON issues. No duplicate lifecycle or SGS retry engine. |
-| Parent framework suite | Current BOP adaptation gate: 465 passed, 0 failed, 0 skipped; 83 offline CI/runner assertions passed. Exact AL selection was independently exercised with authorization absent: one actual SKIP and no browser/business execution. |
-| Live SGS verification | No imported SGS case has been live-verified. Discovery, unit tests, and synthetic report previews do not count. |
+| Parent framework suite | Current BOP checkpoint: 481 passed, 0 failed, 0 skipped; 83 offline CI/runner assertions passed. Ready-case authorization was separately proved before promotion. |
+| Live SGS verification | Original ExpertQuote BOP smoke AL is `Verified` after two independent real QA passes with complete evidence. One of 1,115 active SGS cases is verified; all other active cases remain individually gated. |
 | Premium/forms baselines | Original validation stays active and real results stay visible. Baseline approval/refresh and baseline-dependent acceptance are deferred until the user's test/data refresh; baseline mismatches do not gate current integration progress. |
-| Work/process state | Items 1-5 are complete for engineering progress under the approved boundaries. Both SFP qualification runs have complete evidence and reconciled FAIL results solely for the explicitly deferred Forms expectations. Item 6 is active: original ExpertQuote BOP Alabama is adapted and locally gated; live qualification remains outstanding. No SGS case is business-verified; Key Vault approval remains pending. |
+| Work/process state | Items 1-6 are complete for engineering progress under the approved boundaries. SFP retains its explicitly deferred Forms failures; BOP AL has two genuine passes. Next is item 7, original Commercial DuckCreek BAP smoke AL. Key Vault approval remains pending; no PR, push, Development merge, IDE synchronization or pipeline rollout has occurred. |
 
 ## Ordered remaining work
 
@@ -254,8 +254,7 @@ The user is not being assigned coding, dependency mapping, or integration work.
    `checklist-05-evidence-replay-final.log`. No expected values, profile
    checksums, runner failure gates, SGS readiness entries or pipelines changed.
 
-6. [ ] **Implement and prove original ExpertQuote BOP smoke, Alabama.**
-   **Active item.**
+6. [x] **Implement and prove original ExpertQuote BOP smoke, Alabama.**
    Adapt `03_EQ_BOP_Smoke_Test.feature` through thin scoped bindings and reused
    PnC/shared page behavior. Apply and assert the account/address/proposal
    inputs; capture, close, retrieve, and verify the same quote.
@@ -280,8 +279,8 @@ The user is not being assigned coding, dependency mapping, or integration work.
    Actual account values, chip/checkbox selections, proposal inputs and complete
    captured/retrieved quote identity are asserted. Reviewed profile hashes and
    the frozen execution-date override are included in scenario evidence.
-   Only AL is `ReadyForLocalVerification`; the other 1,114 active SGS examples
-   remain `NonRunnable`. A ready case also requires its exact
+   At the pre-execution checkpoint only AL was `ReadyForLocalVerification`;
+   the other 1,114 active SGS examples remained `NonRunnable`. A ready case requires its exact
    `TEST_SGS_LOCAL_CASE` authorization. Use the existing credential/evidence
    runner with `-Workflow SgsExpertQuoteBopAl -AppSettingsPath <external-file>`
    and a fresh `-ResultsDirectory`; omitting `-Workflow` retains SFP behavior.
@@ -292,6 +291,35 @@ The user is not being assigned coding, dependency mapping, or integration work.
    `checklist-06-framework.trx` (465/0/0), `checklist-06-ci-contracts.log`
    (83 assertions), and `checklist-06-selector-probe\selection.trx`
    (one genuinely gated SKIP). These are not business qualification runs.
+   Completed 2026-09-22: implementation `72894ff3e75d8603ee813a150d0c7703a8432c24`
+   passed two separate, non-retried QA qualifications:
+   `checklist-06-cleq-bop-al-06` (48.553495 seconds) and
+   `checklist-06-cleq-bop-al-07` (47.704908 seconds). Each verified actual
+   client/account/address values, marital/product/DBA/address/lessors selections,
+   effective date, rating state, agent PC and entered SSN, then captured,
+   closed and retrieved its own complete quote identity. The two runs created
+   different quote identities; no transmission, issuance or payment occurred.
+   Each has canonical/report PASS parity, zero evidence/consolidation issues,
+   46 artifacts, 12 unique screenshots, 19 explicit main-frame locator records,
+   complete logs/trace/video/manifest, and matching reviewed source checksums.
+   The credential source remained unchanged. This original smoke promises no
+   premium, Forms or transmission outcome, and none is claimed.
+   Live adaptation failures in runs `-01` through `-05` remain preserved as
+   failures: exact displayed chip casing, date zero-padding, duplicated product
+   wrappers, duplicated checkbox IDs, and the dashboard's selected tab after
+   quote closure. Corrections retain exact input/selection/identity assertions,
+   test-ID-first targeting and ambiguity failures. UI logic now resides in
+   `ExpertQuoteBopSmokePage` behind thin scoped bindings.
+   Qualification evidence: `checklist-06-qualification-evidence.json`, each
+   run's canonical TRX/scenario manifest/consolidated report and receipt, plus
+   `checklist-06-framework-final.trx` (480/0/0). Only the AL ledger entry is
+   promoted to `Verified`, with both actual run IDs, artifact paths and the
+   exact implementation commit. Other 1,114 active cases and 34 source-commented
+   examples remain gated. Organizational acceptance remains separate.
+   The BOP page also explicitly requires its promised SSN input before using
+   the shared optional-dialog handler; an unrelated page transition cannot
+   silently skip that input. Negative browser coverage and the promoted ledger
+   pass `checklist-06-required-input-framework.trx` (481/0/0).
 
 7. [ ] **Implement and prove original Commercial DuckCreek BAP smoke, Alabama.**
    Adapt `012_BAP_Smoke_Test.feature`. Apply intended BAP inputs, verify the

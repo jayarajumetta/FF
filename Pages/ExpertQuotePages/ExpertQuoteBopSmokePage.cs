@@ -74,6 +74,7 @@ public sealed class ExpertQuoteBopSmokePage(IPage page, ISemanticControlActions 
 
     public async Task EnterSsnAsync(ScenarioContextData state)
     {
+        await Expect(_page.GetByTestId("ssn")).ToBeVisibleAsync();
         await new QuoteDetailsPage(_page).HandleSSNPopupsAsync(state);
         await new QuoteDetailsPage(_page).HandleClientExistsPopupAsync();
     }

@@ -289,6 +289,15 @@ public sealed class PlaywrightControlAdapterTests
             Is.EqualTo("Search / Recently Accessed"));
     }
 
+    [Test]
+    public async Task BopCannotSilentlySkipItsPromisedSsnInputOnAPageTransition()
+    {
+        await _page.SetContentAsync("<h1>Policy Details</h1>");
+        var exception = Assert.ThrowsAsync<PlaywrightException>(async () =>
+            await new ExpertQuoteBopSmokePage(_page, Actions()).EnterSsnAsync(new Helpers.ScenarioContextData()));
+        Assert.That(exception!.Message, Does.Contain("ssn"));
+    }
+
     [TestCase("9/2/2026")]
     [TestCase("09/02/2026")]
     [TestCase("9/02/2026")]

@@ -14424,9 +14424,26 @@
           "externalProfilePath": "SGS/CommercialLines.ExpertQuote/TestData/ExternalDataOverrides.json",
           "externalProfileSha256": "27C196632995F829B5E9CF88A9FAF07F7364AE2C973B8060A15A78100FEB297E",
           "sourceStatus": "Active",
-          "executionStatus": "ReadyForLocalVerification",
+          "executionStatus": "Verified",
           "blockedReason": "",
-          "consecutivePassingRuns": []
+          "consecutivePassingRuns": [
+            {
+              "runId": "sgs-cleq-bop-al-58ae06462074413babaa1a026fbefaff",
+              "environment": "qa",
+              "canonicalResultPath": "C:\\Users\\PA3402\\.copilot\\session-state\\b5d8958a-08d6-45e6-a051-0037662dfada\\files\\resume-validation\\checklist-06-cleq-bop-al-06\\SgsExpertQuoteBopAl.trx",
+              "manifestPath": "C:\\Users\\PA3402\\.copilot\\session-state\\b5d8958a-08d6-45e6-a051-0037662dfada\\files\\resume-validation\\checklist-06-cleq-bop-al-06\\evidence\\run-sgs-cleq-bop-al-58ae06462074413babaa1a026fbefaff-3AA200786D\\scenario-0-1552-09ED795D6C\\manifest.json",
+              "implementationCommit": "72894ff3e75d8603ee813a150d0c7703a8432c24",
+              "completedAtUtc": "2026-09-23T02:27:37.1361454+00:00"
+            },
+            {
+              "runId": "sgs-cleq-bop-al-23c1faa0e10d41dfa15ad086fcb0583c",
+              "environment": "qa",
+              "canonicalResultPath": "C:\\Users\\PA3402\\.copilot\\session-state\\b5d8958a-08d6-45e6-a051-0037662dfada\\files\\resume-validation\\checklist-06-cleq-bop-al-07\\SgsExpertQuoteBopAl.trx",
+              "manifestPath": "C:\\Users\\PA3402\\.copilot\\session-state\\b5d8958a-08d6-45e6-a051-0037662dfada\\files\\resume-validation\\checklist-06-cleq-bop-al-07\\evidence\\run-sgs-cleq-bop-al-23c1faa0e10d41dfa15ad086fcb0583c-32FC394D55\\scenario-0-1552-09ED795D6C\\manifest.json",
+              "implementationCommit": "72894ff3e75d8603ee813a150d0c7703a8432c24",
+              "completedAtUtc": "2026-09-23T02:29:52.3981338+00:00"
+            }
+          ]
         },
         {
           "automationId": "SGS-CLEQ-03-EQ-BOP-SMOKE-TEST:AR-C7101B633AD1",

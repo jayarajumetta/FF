@@ -14,14 +14,25 @@ public sealed class SgsExecutionCatalogTests
     private static SgsExecutionCatalog Catalog => SgsExecutionCatalog.Load(Path.Combine(Root, "Resources"));
 
     [Test]
-    public void OnlyReviewedAlabamaCaseCanBeExplicitlySelectedForQualification()
+    public void OnlyVerifiedAlabamaIsExecutableAndReadyCasesRequireExplicitLocalSelection()
     {
         var cases = Catalog.Ledger.Workflows.SelectMany(workflow =>
             workflow.Cases.Select(item => new SgsCaseResolution(workflow, item))).ToArray();
-        var ready = cases.Single(item => item.IsRunnable);
+        var verified = cases.Single(item => item.IsRunnable);
+        var ready = verified with
+        {
+            Case = verified.Case with
+            {
+                ExecutionStatus = SgsExecutionStatus.ReadyForLocalVerification,
+                ConsecutivePassingRuns = []
+            }
+        };
         Assert.Multiple(() =>
         {
-            Assert.That(ready.Case.AutomationId, Is.EqualTo(ExpertQuoteBopSmokeInputs.AlabamaIdentity));
+            Assert.That(verified.Case.AutomationId, Is.EqualTo(ExpertQuoteBopSmokeInputs.AlabamaIdentity));
+            Assert.That(verified.Case.ExecutionStatus, Is.EqualTo(SgsExecutionStatus.Verified));
+            Assert.That(verified.Case.ConsecutivePassingRuns, Has.Count.EqualTo(2));
+            Assert.That(verified.CanExecute(null), Is.True);
             Assert.That(ready.Case.ExecutionStatus, Is.EqualTo(SgsExecutionStatus.ReadyForLocalVerification));
             Assert.That(ready.CanExecute(null), Is.False);
             Assert.That(ready.CanExecute("wrong-case"), Is.False);
