@@ -706,10 +706,10 @@ public sealed class CPPBasicPolicySteps
         {
             await page.EnterAggregateLimitAsync(data.Resolve("{{data:aggregate_limit_260}}"));
         }
-        if (data.Condition("'Coverage Form' != \"OCP\""))
-        {
-            await page.EnterProductsAggLimitAsync("");
-        }
+        //if (data.Condition("'Coverage Form' != \"OCP\""))
+        //{
+        //    await page.EnterProductsAggLimitAsync("");
+        //}
         if (data.Condition("'Coverage Form' != \"OCP\""))
         {
             await page.EnterDedTypeAsync(data.Resolve("{{data:ded_type_262}}"));
@@ -1280,18 +1280,54 @@ public sealed class CPPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.ClickGLUWQuestionsAsync();
-        await page.WaitForGeneralLiabilityInformationAsync("Exists");
-        await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
-        await Task.Delay(3000);
-        await page.EnterDescribeAllHoldHarmlessAgreementsAndPleaseProvideACopyAsync(data.Resolve("{{data:describe_all_hold_harmless_agreements_and_please_provide_a_copy_345}}"));
-        //await page.ClickGeneralLiabilityInformationAsync();
-        //await page.ClickGLUWQuestionsAsync();
-        //await page.WaitForGeneralLiabilityInformationAsync("Exists");
-        await page.ClickProductsCompletedOpsButtonAsync();
-        await page.WaitForSignsHeadingAsync("Exists");
-        await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
-        await page.ClickOKAsync();
+        var state = data.Get("State");
+
+        if (state == "OR" || state == "WA")
+        {
+            await page.ClickGLUWQuestionsAsync();
+            await page.WaitForGeneralLiabilityInformationAsync("Exists");
+            await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
+            await Task.Delay(3000);
+            await page.EnterDescribeAllHoldHarmlessAgreementsAndPleaseProvideACopyAsync(data.Resolve("{{data:describe_all_hold_harmless_agreements_and_please_provide_a_copy_345}}"));
+            //await page.ClickGeneralLiabilityInformationAsync();
+            //await page.ClickGLUWQuestionsAsync();
+            //await page.WaitForGeneralLiabilityInformationAsync("Exists");
+            await page.ClickProductsCompletedOpsButtonAsync();
+            await page.WaitForSignsHeadingAsync("Exists");
+            await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
+            await Task.Delay(3000);
+            await page.ClickWineryQuestionnaireWithRetryAsync();
+            await page.EnterPercentOfRetailWineSalesOtherThanRestaurantAsync(data.Resolve("{{data:percent_of_retail_wine_sales_other_than_restaurant_346}}"));
+            await page.EnterPercentOfRetailWineSalesDirectToConsumerAsync(data.Resolve("{{data:percent_of_retail_wine_sales_direct_to_consumer_347}}"));
+            await page.EnterWhatPercentOfRetailSalesIsDerivedFromOtherSalesAsync(data.Resolve("{{data:what_percent_of_retail_sales_is_derived_from_other_sales_348}}"));
+            await page.SetDoYouHaveABanquetHallThatIsRentedToOthersAsync("No");
+            await page.SetDoYouPerformOnOrOffPremisesCateringAsync("No");
+            await page.SetGuestLodgingForPublicAsync("No");
+            await page.SetLifeSafetyControlsAsync("No");
+            await page.SetSwimmingPoolOrBeachesAsync("No");
+            await page.SetGuestActivitiesAsync("No");
+            await page.SetSpecialEventsAsync("No");
+            await page.SetBottleWineForOthersAsync("No");
+            await page.SetStoredWineForOthersAsync("No");
+            await page.SetBeerOrAleManufacturedAsync("No");
+            await page.SetHardManufacturedAsync("No");
+            await page.SetOwnHerbicidesPesticidesFertilizersAsync("No");
+            await page.SetOthersHerbicidesPesticidesFertilizersAsync("No");
+            await page.SetAircraftConductedApplicationsAsync("No");
+            await page.SetAlcoholBeverageInterventionAsync("No");
+            await page.SetCitedForLiquorControlAsync("No");
+            await page.SetCateringBanquetAllowAlcoholAsync("No");
+            await page.SetCertificateOfInsurancefForLiquorLiabilityAsync("No");
+            await page.SetEmplyesAlcoholBeverageInterventionTrainingAsync("When  Hired");
+            await page.EnterNumberOfShipmentAnnualAsync("50");
+            await page.EnterAverageValueEachShipmentAsync("4500");
+            await page.EnterAverageDistanceShippedAsync("55");
+            await page.SetTransportWineForOthersAsync("No");
+            await page.SetSuppliersDependentToProduceWineAsync("No");
+            await page.ClickOKAsync();
+        }
+
+       
 
     }
 

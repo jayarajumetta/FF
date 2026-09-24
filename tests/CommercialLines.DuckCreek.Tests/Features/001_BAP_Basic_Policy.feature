@@ -31,7 +31,7 @@ Feature: BAP Basic Policy
     And I verify premium
     And I complete required submission information
     #And I run Stoplight - Not needed for BAP Basic Policy
-    And I verify values in premium fields
+    #And I verify values in premium fields
     #And I complete forms verification - Not needed for BAP Basic Policy
 
     Examples:

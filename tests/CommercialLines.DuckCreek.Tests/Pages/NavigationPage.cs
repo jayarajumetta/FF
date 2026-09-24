@@ -2332,6 +2332,104 @@ public sealed class NavigationPage
     public Task ClickProductsCompletedOpsButtonAsync() =>
         _ui.ClickAsync(_locators.ProductsCompletedOpsButton, new ControlIntent("Navigation", "ProductsCompletedOpsButton"));
 
+    public Task ClickWineryQuestionnaireAsync() =>
+        _ui.ClickAsync(_locators.WineryQuestionnaire, new ControlIntent("Navigation", "WineryQuestionnaire"));
+
+    public async Task ClickWineryQuestionnaireWithRetryAsync(int maxAttempts = 3, int waitBeforeMs = 1000)
+    {
+        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        {
+            await Task.Delay(waitBeforeMs);
+            if (await _ui.ExistsAsync(_locators.WineryQuestionnaire))
+            {
+                await ClickWineryQuestionnaireAsync();
+                return;
+            }
+        }
+        await ClickWineryQuestionnaireAsync();
+    }
+
+    public Task EnterPercentOfRetailWineSalesOtherThanRestaurantAsync(string value) =>
+        _ui.FillAsync(_locators.PercentOfRetailWineSalesOtherThanRestaurant, value, new ControlIntent("Navigation", "PercentOfRetailWineSalesOtherThanRestaurant"));
+
+    public Task EnterPercentOfRetailWineSalesDirectToConsumerAsync(string value) =>
+        _ui.FillAsync(_locators.PercentOfRetailWineSalesDirectToConsumer, value, new ControlIntent("Navigation", "PercentOfRetailWineSalesDirectToConsumer"));
+
+    public Task EnterWhatPercentOfRetailSalesIsDerivedFromOtherSalesAsync(string value) =>
+        _ui.FillAsync(_locators.WhatPercentOfRetailSalesIsDerivedFromOtherSales, value, new ControlIntent("Navigation", "WhatPercentOfRetailSalesIsDerivedFromOtherSales"));
+
+    public Task SetDoYouHaveABanquetHallThatIsRentedToOthersAsync(string value) =>
+        _ui.SmartSetAsync(_locators.DoYouHaveABanquetHallThatIsRentedToOthers, value, new ControlIntent("Navigation", "DoYouHaveABanquetHallThatIsRentedToOthers"));
+
+    public Task SetDoYouPerformOnOrOffPremisesCateringAsync(string value) =>
+        _ui.SmartSetAsync(_locators.DoYouPerformOnOrOffPremisesCatering, value, new ControlIntent("Navigation", "DoYouPerformOnOrOffPremisesCatering"));
+
+    public Task SetGuestLodgingForPublicAsync(string value) =>
+        _ui.SmartSetAsync(_locators.GuestLodgingForPublic, value, new ControlIntent("Navigation", "GuestLodgingForPublic"));
+
+    public Task SetLifeSafetyControlsAsync(string value) =>
+        _ui.SmartSetAsync(_locators.LifeSafetyControls, value, new ControlIntent("Navigation", "LifeSafetyControls"));
+
+    public Task SetSwimmingPoolOrBeachesAsync(string value) =>
+        _ui.SmartSetAsync(_locators.SwimmingPoolOrBeaches, value, new ControlIntent("Navigation", "SwimmingPoolOrBeaches"));
+
+    public Task SetGuestActivitiesAsync(string value) =>
+        _ui.SmartSetAsync(_locators.GuestActivities, value, new ControlIntent("Navigation", "GuestActivities"));
+
+    public Task SetSpecialEventsAsync(string value) =>
+        _ui.SmartSetAsync(_locators.SpecialEvents, value, new ControlIntent("Navigation", "SpecialEvents"));
+
+    public Task SetBottleWineForOthersAsync(string value) =>
+        _ui.SmartSetAsync(_locators.BottleWineForOthers, value, new ControlIntent("Navigation", "BottleWineForOthers"));
+
+    public Task SetStoredWineForOthersAsync(string value) =>
+        _ui.SmartSetAsync(_locators.StoredWineForOthers, value, new ControlIntent("Navigation", "StoredWineForOthers"));
+
+    public Task SetBeerOrAleManufacturedAsync(string value) =>
+        _ui.SmartSetAsync(_locators.BeerOrAleManufactured, value, new ControlIntent("Navigation", "BeerOrAleManufactured"));
+
+    public Task SetHardManufacturedAsync(string value) =>
+        _ui.SmartSetAsync(_locators.HardManufactured, value, new ControlIntent("Navigation", "HardManufactured"));
+
+    public Task SetOwnHerbicidesPesticidesFertilizersAsync(string value) =>
+        _ui.SmartSetAsync(_locators.OwnHerbicidesPesticidesFertilizers, value, new ControlIntent("Navigation", "OwnHerbicidesPesticidesFertilizers"));
+
+    public Task SetOthersHerbicidesPesticidesFertilizersAsync(string value) =>
+        _ui.SmartSetAsync(_locators.OthersHerbicidesPesticidesFertilizers, value, new ControlIntent("Navigation", "OthersHerbicidesPesticidesFertilizers"));
+
+    public Task SetAircraftConductedApplicationsAsync(string value) =>
+        _ui.SmartSetAsync(_locators.AircraftConductedApplications, value, new ControlIntent("Navigation", "AircraftConductedApplications"));
+
+    public Task SetAlcoholBeverageInterventionAsync(string value) =>
+        _ui.SmartSetAsync(_locators.AlcoholBeverageIntervention, value, new ControlIntent("Navigation", "AlcoholBeverageIntervention"));
+
+    public Task SetCitedForLiquorControlAsync(string value) =>
+        _ui.SmartSetAsync(_locators.CitedForLiquorControl, value, new ControlIntent("Navigation", "CitedForLiquorControl"));
+
+    public Task SetCateringBanquetAllowAlcoholAsync(string value) =>
+        _ui.SmartSetAsync(_locators.CateringBanquetAllowAlcohol, value, new ControlIntent("Navigation", "CateringBanquetAllowAlcohol"));
+
+    public Task SetCertificateOfInsurancefForLiquorLiabilityAsync(string value) =>
+        _ui.SmartSetAsync(_locators.CertificateOfInsurancefForLiquorLiability, value, new ControlIntent("Navigation", "CertificateOfInsurancefForLiquorLiability"));
+
+    public Task SetEmplyesAlcoholBeverageInterventionTrainingAsync(string value) =>
+        _ui.SmartSetAsync(_locators.EmplyesAlcoholBeverageInterventionTraining, value, new ControlIntent("Navigation", "EmplyesAlcoholBeverageInterventionTraining"));
+
+    public Task EnterNumberOfShipmentAnnualAsync(string value) =>
+        _ui.FillAsync(_locators.NumberOfShipmentAnnual, value, new ControlIntent("Navigation", "NumberOfShipmentAnnual"));
+
+    public Task EnterAverageValueEachShipmentAsync(string value) =>
+        _ui.FillAsync(_locators.AverageValueEachShipment, value, new ControlIntent("Navigation", "AverageValueEachShipment"));
+
+    public Task EnterAverageDistanceShippedAsync(string value) =>
+        _ui.FillAsync(_locators.AverageDistanceShipped, value, new ControlIntent("Navigation", "AverageDistanceShipped"));
+
+    public Task SetTransportWineForOthersAsync(string value) =>
+        _ui.SmartSetAsync(_locators.TransportWineForOthers, value, new ControlIntent("Navigation", "TransportWineForOthers"));
+
+    public Task SetSuppliersDependentToProduceWineAsync(string value) =>
+        _ui.SmartSetAsync(_locators.SuppliersDependentToProduceWine, value, new ControlIntent("Navigation", "SuppliersDependentToProduceWine"));
+
     public Task ClickPropertyAsync() =>
         _ui.ClickAsync(_locators.Property, new ControlIntent("Navigation", "Property"));
 

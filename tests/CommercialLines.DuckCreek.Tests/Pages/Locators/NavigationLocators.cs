@@ -30,6 +30,35 @@ public sealed class NavigationLocators
     public ILocator PageTitle => _page.Locator("[id=\"pageTitle\"]");
 
     public ILocator ProductsCompletedOpsButton => _page.GetByRole(AriaRole.Link, new() { Name = "Products/Completed Ops", Exact = true });
+
+    public ILocator WineryQuestionnaire => _page.GetByRole(AriaRole.Link, new() { Name = "Winery Questionnaire", Exact = true });
+    public ILocator PercentOfRetailWineSalesOtherThanRestaurant => _page.Locator("input[fieldref=\"UnderwritingWineryInput.PercentOfRetailWineSalesOtherThanRestaurant\"]");
+    public ILocator PercentOfRetailWineSalesDirectToConsumer => _page.Locator("input[fieldref=\"UnderwritingWineryInput.PercentOfRetailWineSalesDirectToConsumer\"]");
+    public ILocator WhatPercentOfRetailSalesIsDerivedFromOtherSales => _page.Locator("input[fieldref=\"UnderwritingWineryInput.WhatPercentOfRetailSalesIsDerivedFromOtherSales\"]");
+    public ILocator DoYouHaveABanquetHallThatIsRentedToOthers => _page.Locator("input[fieldref=\"UnderwritingWineryInput.DoYouHaveABanquetHallThatIsRentedToOthers\"]");
+    public ILocator DoYouPerformOnOrOffPremisesCatering => _page.Locator("input[fieldref=\"UnderwritingWineryInput.DoYouPerformOnOrOffPremisesCatering\"]");
+    public ILocator GuestLodgingForPublic => _page.Locator("input[fieldref=\"UnderwritingWineryInput.GuestLodgingForPublic\"]");
+    public ILocator LifeSafetyControls => _page.Locator("input[fieldref=\"UnderwritingWineryInput.LifeSafetyControls\"]");
+    public ILocator SwimmingPoolOrBeaches => _page.Locator("input[fieldref=\"UnderwritingWineryInput.SwimmingPoolOrBeaches\"]");
+    public ILocator GuestActivities => _page.Locator("input[fieldref=\"UnderwritingWineryInput.GuestActivities\"]");
+    public ILocator SpecialEvents => _page.Locator("input[fieldref=\"UnderwritingWineryInput.SpecialEvents\"]");
+    public ILocator BottleWineForOthers => _page.Locator("input[fieldref=\"UnderwritingWineryInput.BottleWineForOthers\"]");
+    public ILocator StoredWineForOthers => _page.Locator("input[fieldref=\"UnderwritingWineryInput.StoredWineForOthers\"]");
+    public ILocator BeerOrAleManufactured => _page.Locator("input[fieldref=\"UnderwritingWineryInput.BeerOrAleManufactured\"]");
+    public ILocator HardManufactured => _page.Locator("input[fieldref=\"UnderwritingWineryInput.HardManufactured\"]");
+    public ILocator OwnHerbicidesPesticidesFertilizers => _page.Locator("input[fieldref=\"UnderwritingWineryInput.OwnHerbicidesPesticidesFertilizers\"]");
+    public ILocator OthersHerbicidesPesticidesFertilizers => _page.Locator("input[fieldref=\"UnderwritingWineryInput.OthersHerbicidesPesticidesFertilizers\"]");
+    public ILocator AircraftConductedApplications => _page.Locator("input[fieldref=\"UnderwritingWineryInput.AircraftConductedApplications\"]");
+    public ILocator AlcoholBeverageIntervention => _page.Locator("input[fieldref=\"UnderwritingWineryInput.AlcoholBeverageIntervention\"]");
+    public ILocator CitedForLiquorControl => _page.Locator("input[fieldref=\"UnderwritingWineryInput.CitedForLiquorControl\"]");
+    public ILocator CateringBanquetAllowAlcohol => _page.Locator("input[fieldref=\"UnderwritingWineryInput.CateringBanquetAllowAlcohol\"]");
+    public ILocator CertificateOfInsurancefForLiquorLiability => _page.Locator("input[fieldref=\"UnderwritingWineryInput.CertificateOfInsurancefForLiquorLiability\"]");
+    public ILocator EmplyesAlcoholBeverageInterventionTraining => _page.Locator("input[fieldref=\"UnderwritingWineryInput.EmplyesAlcoholBeverageInterventionTraining\"]");
+    public ILocator NumberOfShipmentAnnual => _page.Locator("input[fieldref=\"UnderwritingWineryInput.NumberOfShipmentAnnual\"]");
+    public ILocator AverageValueEachShipment => _page.Locator("input[fieldref=\"UnderwritingWineryInput.AverageValueEachShipment\"]");
+    public ILocator AverageDistanceShipped => _page.Locator("input[fieldref=\"UnderwritingWineryInput.AverageDistanceShipped\"]");
+    public ILocator TransportWineForOthers => _page.Locator("input[fieldref=\"UnderwritingWineryInput.TransportWineForOthers\"]");
+    public ILocator SuppliersDependentToProduceWine => _page.Locator("input[fieldref=\"UnderwritingWineryInput.SuppliersDependentToProduceWine\"]");
     public ILocator PolicyInfo => _page.GetByRole(AriaRole.Link, new() { Name = "Policy Info", Exact = true });
     public ILocator WCNavigationLinksLocation => _page.GetByRole(AriaRole.Link, new() { Name = "Location", Exact = true });
     public ILocator WCNavigationLinksEndorsements => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsements", Exact = true });
