@@ -141,6 +141,58 @@ namespace PnCTestAutomation.Tests
             await steps.UserAddsFarmPersonalProperty(table);
         }
 
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task BasicSppBinding_NavigatesAndRequiresRequestedCategory(bool categoryPresent)
+        {
+            await _page.SetContentAsync("""
+                <button data-testid="ScheduledPersonalProperty-nav" onclick="catalog()">Scheduled Property</button>
+                <main>Previous coverage page</main>
+                <script>
+                    window.actions = [];
+                    function catalog() {
+                        actions.push('navigate');
+                        document.querySelector('main').innerHTML = `
+                            <table><tr><td id="CovCatEntryOutput.CoverageID-3-layout">COVERAGE_CODE</td>
+                            <td><label data-testid="fields.page.covCatEntry.rows[3].covCatEntryInput$selected.value">
+                                <input type="checkbox" onchange="actions.push('select')">Bicycles</label></td></tr></table>
+                            <button data-testid="fields.covEndorsements.add" onclick="edit()">Add Coverage</button>
+                            <button data-testid="fields.data-Next.next" onclick="actions.push('next')">Next</button>`;
+                    }
+                    function edit() {
+                        actions.push('add');
+                        document.querySelector('main').innerHTML = `
+                            <input id="description" data-testid="fields.covEndorsements.rows[0].covEndorsementsInput$description.value">
+                            <input id="limit" data-testid="fields.covEndorsements.rows[0].covEndorsementsInput$limit.value">
+                            <input id="year" data-testid="fields.covEndorsements.rows[0].covEndorsementsInput$yearOfLastAppraisal.value">
+                            <button data-testid="fields.data.save" onclick="save()">Save</button>
+                            <button data-testid="fields.data-Next.next" onclick="actions.push('next')">Next</button>`;
+                    }
+                    function save() {
+                        actions.push('save');
+                        window.saved = ['description', 'limit', 'year'].map(id => document.getElementById(id).value);
+                    }
+                </script>
+                """.Replace("COVERAGE_CODE", categoryPresent ? "401" : "402"));
+            var steps = new SFP_CoverageSteps(new PlaywrightContext { Page = _page }, new ScenarioContextData());
+            var table = SfpBasicInputTests.TableOf(("Category", "401"), ("ItemType", "Bicycles"),
+                ("Description", "Road Bike"), ("Limit", "750"), ("YearOfAppraisal", "2025"));
+
+            if (!categoryPresent)
+            {
+                var error = Assert.ThrowsAsync<PlaywrightException>(() => steps.UserAddsScheduledPersonalProperty(table));
+                Assert.That(error.Message, Does.Contain("Required SPP category '401'"));
+                Assert.That(await _page.EvaluateAsync<string[]>("window.actions"), Is.EqualTo(new[] { "navigate" }));
+                return;
+            }
+
+            await steps.UserAddsScheduledPersonalProperty(table);
+            Assert.That(await _page.EvaluateAsync<string[]>("window.actions"),
+                Is.EqualTo(new[] { "navigate", "select", "add", "save", "next" }));
+            Assert.That(await _page.EvaluateAsync<string[]>("window.saved"),
+                Is.EqualTo(new[] { "Road Bike", "750", "2025" }));
+        }
+
         [TestCase("BOSE SOUND BARS")]
         [TestCase("Bose Sound Bars")]
         public async Task RequiredFpp_VerifiesEnteredOrUppercasedDescriptionAndExactAmount(string description)

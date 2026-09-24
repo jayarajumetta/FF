@@ -721,9 +721,139 @@ dotnet test TestAutomation.csproj --settings locatorscan.runsettings
 
 Output appears in `TestResults/{date}/LocatorScan/`.
 
+### SFP Basic and CE forms baselines
+
+The canonical Basic and CE workflows load `Resources\ExpectedForms\SFP\SFP_BASIC.csv`
+and `SFP_CE.csv`, respectively. Both are deployed with the existing Resources copy
+rule and take precedence over `SFP.json`. They cover all 38 states in each feature's
+Examples tables, including CT, NJ and RI, with explicit `YM`/`N` expectations.
+`N` requires a form to be absent, even unchecked; an unlisted form is informational.
+
+These matrices were imported on 2026-09-23 from the user-designated Tosca masters:
+`\\mis\sys\QLTY\Test_Automation\Tricentis_Tosca\Forms_Check\SFP\SFP_BASIC.csv`
+and `SFP_CE.csv`. Basic preserves all 182 source rows. CE preserves all 168 source
+rows and adds `C,SF04010120` with `YM` in every Example state for the approved
+Division IV scheduled-property items 409 and 411. Its state matrix matches the
+same form in the Basic Tosca master. Both files preserve the same 147 `BASE` rows,
+including applicable common forms; no shared rows are filtered out.
+
+The CE addition is supported by the local SFP v9 workbook's
+`Division 4 Masterlist!BG5` (attach when any Division IV coverage is present)
+and `BJ5` (mandatory). The local workbook does not explicitly populate every later
+state/company column; the supplied Tosca matrix provides the 38-state mapping,
+rather than extrapolating blank workbook cells. On 2026-09-23, the user confirmed
+that the SharePoint-linked workbooks are the same masterlists supplied for this
+review; the filename suffix differences do not indicate different source versions.
+
+The workbook catalog is not itself a scenario baseline. Its coverage, company,
+effective-date and transaction/output rules still apply. In particular, the local
+SFP workbook's `Policy Admin Forms Print Order!A2,B8,B9,B11` separates X-4296,
+X-4306 and SM-1703 from customer policy output. Do not merge these administration
+forms indiscriminately into the policy-output matrices from the Common catalog.
+The older `SFP_BASIC.xlsx` beside the network CSV is not the source of this import.
+
+Source SHA-256 values before the CE addition:
+
+| Master | SHA-256 |
+|--------|---------|
+| `SFP_BASIC.csv` | `E3D5B3410E9DDF245DE886C36D29F935A8F09E8510DD5B85B0096A724CCF2CE5` |
+| `SFP_CE.csv` | `99F1F6F365A8C04B738B7BE30E77A85072F3A698FAE7BF0B57903CEFE64F55C8` |
+
+Offline coverage exercises the deployed runtime loader and evaluator for every
+Example state, verifies the shared matrices, and checks missing mandatory and
+explicitly prohibited forms:
+
+```powershell
+dotnet test TestAutomation.csproj --no-restore --filter "FullyQualifiedName~SfpFormsBaselineTests"
+```
+
+The forms CSV updates do not change premium assertions, Checklist steps, Forms
+nonblocking configuration, or the legacy JSON fallback used by other variants.
+Baselines are reviewed expectations, not recorded from whatever the application returns.
+
+### SFP premium recalibration and live qualification
+
+The 2026-09-24 QA batch attempted all 38 Basic states, then all 38 CE states.
+It used one worker, headless execution, process-only premium-assertion bypass,
+and the scenario forms CSVs above. Forms comparison remained enabled and
+nonblocking; forms recording remained disabled. No policies were transmitted,
+issued, bound, or paid. Normal runs retain `SkipPremiumBaselineAssertion: false`.
+
+The first pass completed 27 Basic and 13 CE workflows, producing 39 qualified
+captures: 26 Basic and 13 CE. This changed or added 37 state amounts; both Alabama
+amounts were already correct. A qualified capture requires a completed workflow, one
+unambiguous positive annual premium and quote number, and a completed comparison
+against the correct forms CSV. Forms findings remain separate from premium
+qualification; a premium update does not approve its forms result.
+
+Basic Washington's original $9,920 is **not** promoted: the old binding silently
+skipped its required code-401 Road Bike, and the Division IV form was missing.
+The binding now explicitly navigates to Scheduled Personal Property and fails if
+the requested category cannot be found, rather than returning a false pass.
+The later complete retry qualified $9,926 (quote `02082192`) with clean forms,
+confirming the repaired workflow. CE New Jersey's $2,100 remains held:
+Submission's saved Required Fields response
+identifies `Liability / Workers' Compensation - Residence Employees`.
+Failed or otherwise unqualified states retain their old amounts, or remain
+unconfigured where no prior baseline existed.
+
+The completed forms comparisons exposed the following outstanding differences;
+the matrices have not been changed just to match live output:
+
+| Workflow/state | Finding |
+|----------------|---------|
+| Basic OH | Informational extras `OHMSI10709` and `OHMSI20913` |
+| Basic MS | Required `SF06200510` and `X35690422` missing |
+| Basic TN and CE TN | `SF06200510` and `X35690422` present despite `N` expectations |
+| CE LA | Required `SF16300123` and `SF36191224` missing; unlisted `SF26990124` present |
+| CE SC | Required `SF06131125` missing |
+
+Developer forms predicates depend on selected wind/hail, hurricane and named-storm
+deductibles, Louisiana wind zone, and Ohio mine-subsidence conditions. State/date
+coverage alone does not settle these findings, especially after CE address changes.
+
+Other CE qualification blockers are the Potential Invalid Address dialog in
+AR, CO, ID, IL, IN, KY, MO, ME, MN, MT, NE, ND, OK, OH, SD and UT, and missing or
+incompatible ZIP-specific wind/hail expectations in DE, MS, NH, OR, RI, TX and WA.
+The supplied addresses and deductible inputs have not been changed or warnings
+dismissed to force a pass. Original TRX, forms reports, failure diagnostics and the
+premium-promotion ledger are preserved in the session's recalibration artifacts.
+
+One bounded recovery pass retried the 11 Basic sign-in/session failures and CE WY;
+all 12 encountered `DC-500` Duck Creek integration errors before pricing. A single
+Basic WA attempt with the guarded SPP binding encountered the same upstream error.
+No recovery premiums were promoted. The SPP binding's navigation, required-category
+failure and saved input flow are covered by offline browser tests.
+
+A subsequent user-requested retry attempted all 41 workflow/forms failures,
+Basic first: 13 Basic and 28 CE. All 13 Basic workflows passed, with 11 clean
+forms results and findings in MS/TN. Four CE workflows passed: LA/SC/TN retained
+their forms findings and prior premium amounts; WY passed with clean forms and
+qualified $4,623 (quote `02082292`). The other 24 CE workflows failed: 16 at the
+Potential Invalid Address dialog, seven on ZIP-specific wind/hail expectations,
+and NJ on incomplete required fields. These failures were not bypassed.
+
+The 17 independently verified retry captures change or add 13 amounts: 12 Basic
+and CE WY; four amounts already matched. Together with the earlier qualified
+captures, `ExpectedPremiums:SFP` now has updated premiums for all 38 Basic states,
+and `ExpectedPremiums:CE` has 14 qualified states. CE DE/ME retain their older,
+unqualified amounts; other unsuccessful CE states remain unconfigured. The CE
+matrix is therefore still incomplete. A clean premium capture is not approval of
+the outstanding forms findings.
+
+The wind/hail helper still maps the original ZIPs, while the updated CE examples
+use replacement ZIPs. An unmapped ZIP falls back to the feature's literal `1%`;
+the old mapped rules could instead require an absent field or a different minimum.
+This integration gap remains unresolved. Replacement ZIP rules must be verified
+before updating the lookup; do not silently accept absent fields or select an
+arbitrary deductible, because those inputs affect premiums and forms.
+
 ### Forms Baseline Generator
 
-Generates the expected-forms JSON files used by `FormsValidationService`.
+Generates legacy expected-forms JSON. It does not update the scenario-specific
+SFP CSVs above. The current generator supports only 23 states and does not evaluate
+all workbook attachment conditions or preserve explicit negative expectations;
+do not use its output to replace the reviewed Basic/CE matrices.
 
 ```powershell
 # Run via the dedicated runsettings

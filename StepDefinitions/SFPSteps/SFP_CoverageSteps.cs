@@ -156,6 +156,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
             var sppPage = new SFP_ScheduledPersonalPropertyPage(_context.Page);
             await sppPage.WaitForSpinnerAsync();
+            var sideNav = new SideMenuNavigation(_context.Page);
+            await sideNav.GoToScheduledPersonalPropertyAsync();
 
             // Resolve row index — dynamic DOM scan first (state-safe), then name heuristic
             var rowIndex = await sppPage.FindRowByCodeAsync(_contextData.SPPCategory);
@@ -164,21 +166,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
             if (rowIndex < 0)
             {
-                Console.WriteLine($"WARNING: SPP category '{_contextData.SPPCategory}' not mapped - checking if Next button exists");
-
-                // Check if the Next button exists before deciding how to proceed.
-                var nextButtonCount = await sppPage.NextLiabilityButton.CountAsync();
-                if (nextButtonCount > 0 && await sppPage.NextLiabilityButton.IsVisibleAsync())
-                {
-                    Console.WriteLine($"[SPP] Next button found - clicking to proceed to Liability");
-                    await sppPage.NextLiabilityButton.ClickAsync();
-                    await sppPage.WaitForSpinnerAsync();
-                }
-                else
-                {
-                    Console.WriteLine($"[SPP] Next button not found - SPP page may not be available in current flow. Continuing to next step.");
-                }
-                return;
+                throw new PlaywrightException(
+                    $"Required SPP category '{_contextData.SPPCategory}' was not found. The scheduled item cannot be skipped.");
             }
 
             var checkboxSelected = await sppPage.TrySelectCoverageCheckboxAsync(rowIndex);
