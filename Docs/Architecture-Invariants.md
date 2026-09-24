@@ -130,17 +130,35 @@ evidence before local execution can be enabled.
   supports an explicit `IsMainFrame` scope for one page index, with an empty
   path; an empty path alone never means main-frame fallback. Both schemas
   retain source/checksum validation.
-- File-backed frame catalogs (`CatalogPath` and `AdditionalCatalogPaths`) use
-  `AppContext.BaseDirectory` as a fixed trusted application/package root.
-  Relative JSON paths resolve against that directory; fully qualified local
-  paths are accepted only when their canonical location remains inside it.
-  Containment uses directory-separator boundaries and OS-appropriate case
-  comparison. Outside paths (including traversal and sibling-prefix paths),
-  UNC/device paths, ambiguous drive-relative paths, and symbolic links,
-  junctions or other reparse points in the file path or root ancestors fail
-  before catalog contents are read. Previously accepted external absolute
-  paths must instead be packaged under the application directory.
-  The package directory and its ancestors must be protected from untrusted
+- File-backed frame catalogs live only in
+  `AppContext.BaseDirectory\Resources\FrameScopeHints`, separate from application
+  binaries. Despite their retained names, `CatalogPath` and
+  `AdditionalCatalogPaths` select **filenames only**, such as
+  `policy.v1-2_AL.json`. A name consists of ASCII letter/digit groups separated
+  by single dots, hyphens or underscores, followed by `.json` (any letter case).
+  Windows device names (`CON`, `PRN`, `AUX`, `NUL`, `COM1`-`COM9`, `LPT1`-`LPT9`,
+  including names with extra extensions) are rejected on every OS.
+  Empty names, whitespace, trailing dots/spaces, either directory separator,
+  absolute/nested/drive-relative/UNC/device paths, traversal and ADS colons are
+  rejected, not silently reduced to a basename even if that basename exists.
+  This grammar is not an exact approved-file inventory or authenticity check;
+  catalog schema, provenance metadata and checksum validation still apply.
+- This is an intentional breaking change from relative/absolute catalog paths.
+  Deploy each approved catalog directly in `Resources\FrameScopeHints` and
+  configure just its filename in both options. Preserve catalog contents,
+  provenance metadata and checksums when moving it. The existing
+  `Resources\**\*` content glob copies these files to application and test-host
+  output; SDK publishing preserves the resource path, and CI packages the
+  application output recursively. No fallback folder or configurable root is
+  supported. The legacy imported
+  `Resources\SGS\CommercialLines.DuckCreek\Runtime\DuckCreekFrameHints.json`
+  remains provenance data, not an approved schema-1/2 runtime catalog; no
+  production file-backed catalog or caller currently requires migration.
+- Validated catalog filenames are combined with the fixed data root before
+  canonical, separator-boundary containment checks using OS-appropriate case
+  comparison. Symbolic links, junctions and other reparse points, including
+  dangling links and root ancestors, fail before catalog contents are read.
+  The catalog directory and its ancestors must be protected from untrusted
   writes: these path checks do not provide an atomic defense against a local
   process replacing filesystem entries between validation and opening.
 - Every checkpoint screenshot has a unique ordinal/name. A cached

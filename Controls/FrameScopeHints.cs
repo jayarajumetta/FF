@@ -17,7 +17,9 @@ namespace PnCTestAutomation.Controls
         public string? CatalogPath { get; set; }
         public List<string> AdditionalCatalogPaths { get; set; } = [];
 
-        public void Validate()
+        public void Validate() => _ = GetValidatedCatalogPaths();
+
+        internal IReadOnlyList<string> GetValidatedCatalogPaths()
         {
             if (AdditionalCatalogPaths == null)
             {
@@ -30,12 +32,19 @@ namespace PnCTestAutomation.Controls
                     "At least one explicit approved frame scope catalog must be configured.");
             if (paths.Any(path =>
                     string.IsNullOrWhiteSpace(path) ||
-                    !Path.GetExtension(path).Equals(
-                        ".json",
-                        StringComparison.OrdinalIgnoreCase)))
+                    !Regex.IsMatch(
+                        path,
+                        @"\A[A-Za-z0-9]+(?:[._-][A-Za-z0-9]+)*\.[Jj][Ss][Oo][Nn]\z",
+                        RegexOptions.CultureInvariant,
+                        TimeSpan.FromSeconds(1)) ||
+                    Regex.IsMatch(
+                        path,
+                        @"\A(?:CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])\.",
+                        RegexOptions.IgnoreCase | RegexOptions.CultureInvariant,
+                        TimeSpan.FromSeconds(1))))
             {
                 throw new FrameScopeConfigurationException(
-                    "Every frame hint catalog path must identify a JSON file.");
+                    "Every frame hint catalog selection must be a portable JSON filename, not a path or reserved device name.");
             }
             var duplicate = paths
                 .GroupBy(path => path, StringComparer.OrdinalIgnoreCase)
@@ -43,6 +52,7 @@ namespace PnCTestAutomation.Controls
             if (duplicate != null)
                 throw new FrameScopeConfigurationException(
                     $"Duplicate frame hint catalog path '{duplicate.Key}'.");
+            return paths;
         }
 
         public IReadOnlyList<string> GetCatalogPaths() =>
@@ -134,9 +144,9 @@ namespace PnCTestAutomation.Controls
             FrameScopeHintOptions options)
         {
             ArgumentNullException.ThrowIfNull(options);
-            options.Validate();
-            var root = Path.GetFullPath(AppContext.BaseDirectory);
-            var configuredPaths = options.GetCatalogPaths();
+            var configuredPaths = options.GetValidatedCatalogPaths();
+            var root = Path.GetFullPath(
+                Path.Combine(AppContext.BaseDirectory, "Resources", "FrameScopeHints"));
             var catalogs = new List<FrameScopeHintCatalog>();
             foreach (var configuredPath in configuredPaths)
             {
@@ -151,16 +161,9 @@ namespace PnCTestAutomation.Controls
         {
             try
             {
-                if (configuredPath.StartsWith(@"\\", StringComparison.Ordinal) ||
-                    configuredPath.StartsWith("//", StringComparison.Ordinal) ||
-                    (Path.IsPathRooted(configuredPath) && !Path.IsPathFullyQualified(configuredPath)))
-                {
-                    throw new FrameScopeConfigurationException(
-                        "Frame hint catalog paths must be relative or fully qualified local paths.");
-                }
                 var path = ArtifactPathGuard.EnsureSafe(
                     root,
-                    Path.GetFullPath(configuredPath, root),
+                    Path.GetFullPath(Path.Combine(root, Path.GetFileName(configuredPath))),
                     entry => File.GetAttributes(entry));
                 for (var parent = new DirectoryInfo(root).Parent; parent is not null; parent = parent.Parent)
                 {
@@ -176,7 +179,7 @@ namespace PnCTestAutomation.Controls
             catch (ArtifactEvidenceException)
             {
                 throw new FrameScopeConfigurationException(
-                    "Frame hint catalogs must remain within the application directory and cannot traverse symbolic links or reparse points.");
+                    "Frame hint catalogs must remain within Resources\\FrameScopeHints and cannot traverse symbolic links or reparse points.");
             }
             catch (Exception exception) when (
                 exception is ArgumentException or NotSupportedException)
