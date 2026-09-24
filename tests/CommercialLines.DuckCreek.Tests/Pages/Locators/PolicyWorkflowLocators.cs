@@ -78,6 +78,10 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator LoadingMessage => _page.Locator("[id=\"loadingMessage\"]");
 
+    public ILocator Location => _page.GetByRole(AriaRole.Link, new() { Name = "Location", Exact = true });
+
+    public ILocator Territory => _page.Locator("input[fieldref=\"LocationGeneralLiabilityInput.Territory\"]");
+
     public ILocator LoggedInUser => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Logged In User']/@for] | //label[normalize-space(string(.))='Logged In User']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Logged In User']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
     public ILocator Logout => _page.Locator("[id=\"id_LogOut\"]");

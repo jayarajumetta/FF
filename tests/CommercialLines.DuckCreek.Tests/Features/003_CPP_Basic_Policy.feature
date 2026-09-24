@@ -37,11 +37,22 @@ Feature: CPP Basic Policy
     #And I switch to UW Director for OR and WA when required - Not Needed
     And I select GL Detail
     And I complete CGL Fields
+    And I navigate to Location
     And I add Class
+    And I click Detail for [CG2151] Amendment Of Liquor Liability Exclusion - Exception For Scheduled Activities
     And I add [CG0435] Employee Benefits Liability Endorsement
     And I add [CG2142] Exclusion - Explosion, Collapse and Underground Property Damage Hazard (Specified Operations)
     And I add [CG 2149] Total Pollution Exclusion Endorsement
     And I verify and Fill out [FG0055] Employment Practices Liability Insurance Coverage Endorsement
+    And I click Detail for [FG0059] Employment Practices Liability Insurance Coverage Endorsement (NY)
+    And I click Detail for [FG0063] Employment Practices Liability Insurance Coverage Endorsement (MD)
+    And I click Detail for [FG0062] Employment Practices Liability Insurance Coverage Endorsement (PA)
+    And I click Detail for [FG0069] Employment Practices Liability Insurance Coverage Endorsement (OR)
+    And I click Detail for [FG0071] Employment Practices Liability Insurance Coverage Endorsement (NH)
+    And I click Detail for [FG0072] Employment Practices Liability Insurance Coverage Endorsement (ME)
+    And I click Detail for [FG0074] Employment Practices Liability Insurance Coverage Endorsement (CT)
+    And I click Detail for [FG0077] Employment Practices Liability Insurance Coverage Endorsement (VA)
+    And I click Detail for [FG0078] Employment Practices Liability Insurance Coverage Endorsement (VT)
     And I add Addl Interest [CG2007] - Engineers
     And I add Addl Interest [CG2020] Add'l Insured-Charitable Institution
     And I add Addl Interest [CG2023] Add'l Insured-Executors
@@ -91,15 +102,15 @@ Feature: CPP Basic Policy
 
     Examples:
       | stateCode | dataFile                                        | stateVariant | stateName     | externalDataFile                    |
-      | AZ        | TestData/Scenarios/003_cpp_basic_policy_az.json | AZ           | Arizona       | TestData/ExternalDataOverrides.json |
+#      | AZ        | TestData/Scenarios/003_cpp_basic_policy_az.json | AZ           | Arizona       | TestData/ExternalDataOverrides.json |
 #      | CT        | TestData/Scenarios/003_cpp_basic_policy_ct.json | CT           | Connecticut   | TestData/ExternalDataOverrides.json |
 #      | DE        | TestData/Scenarios/003_cpp_basic_policy_de.json | DE           | Delaware      | TestData/ExternalDataOverrides.json |
 #      | MA        | TestData/Scenarios/003_cpp_basic_policy_ma.json | MA           | Massachusetts | TestData/ExternalDataOverrides.json |
 #      | MD        | TestData/Scenarios/003_cpp_basic_policy_md.json | MD           | Maryland      | TestData/ExternalDataOverrides.json |
 #      | ME        | TestData/Scenarios/003_cpp_basic_policy_me.json | ME           | Maine         | TestData/ExternalDataOverrides.json |
-#      | NH        | TestData/Scenarios/003_cpp_basic_policy_nh.json | NH           | New Hampshire | TestData/ExternalDataOverrides.json |
+      | NH        | TestData/Scenarios/003_cpp_basic_policy_nh.json | NH           | New Hampshire | TestData/ExternalDataOverrides.json |
 #      | NJ        | TestData/Scenarios/003_cpp_basic_policy_nj.json | NJ           | New Jersey    | TestData/ExternalDataOverrides.json |
-#      | NY        | TestData/Scenarios/003_cpp_basic_policy_ny.json | NY           | New York      | TestData/ExternalDataOverrides.json |
+      #| NY        | TestData/Scenarios/003_cpp_basic_policy_ny.json | NY           | New York      | TestData/ExternalDataOverrides.json |
 #      | OR        | TestData/Scenarios/003_cpp_basic_policy_or.json | OR           | Oregon        | TestData/ExternalDataOverrides.json |
 #      | PA        | TestData/Scenarios/003_cpp_basic_policy_pa.json | PA           | Pennsylvania  | TestData/ExternalDataOverrides.json |
 #      | RI        | TestData/Scenarios/003_cpp_basic_policy_ri.json | RI           | Rhode Island  | TestData/ExternalDataOverrides.json |
@@ -107,4 +118,4 @@ Feature: CPP Basic Policy
 #      | VT        | TestData/Scenarios/003_cpp_basic_policy_vt.json | VT           | Vermont       | TestData/ExternalDataOverrides.json |
 #      | WA        | TestData/Scenarios/003_cpp_basic_policy_wa.json | WA           | Washington    | TestData/ExternalDataOverrides.json |
 #      | WV        | TestData/Scenarios/003_cpp_basic_policy_wv.json | WV           | West Virginia | TestData/ExternalDataOverrides.json |
-#
+

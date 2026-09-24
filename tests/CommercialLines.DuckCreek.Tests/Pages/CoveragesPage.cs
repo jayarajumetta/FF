@@ -95,6 +95,69 @@ public sealed class CoveragesPage
     public Task VerifyFG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.FG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsement, expected, property, new ControlIntent("Coverages", "FG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsement"));
 
+    public Task<bool> IsCG2151TableRowAmendmentOfLiquorLiabilityExclusionVisibleAsync() =>
+        _ui.ExistsAsync(_locators.CG2151TableRowAmendmentOfLiquorLiabilityExclusion);
+
+    public Task ClickCG2151DetailAsync() =>
+        _ui.ClickAsync(_locators.CG2151Detail, new ControlIntent("Coverages", "CG2151Detail"));
+
+    public Task EnterCovEndorsementsDescriptionAsync(string value) =>
+        _ui.FillAsync(_locators.CovEndorsementsDescription, value, new ControlIntent("Coverages", "CovEndorsementsDescription"));
+
+    public Task<bool> IsFG0059TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementNYVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0059TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementNY);
+
+    public Task ClickFG0059DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0059Detail, new ControlIntent("Coverages", "FG0059Detail"));
+
+    public Task<bool> IsFG0063TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementMDVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0063TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementMD);
+
+    public Task ClickFG0063DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0063Detail, new ControlIntent("Coverages", "FG0063Detail"));
+
+    public Task<bool> IsFG0062TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementPAVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0062TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementPA);
+
+    public Task ClickFG0062DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0062Detail, new ControlIntent("Coverages", "FG0062Detail"));
+
+    public Task<bool> IsFG0069TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementORVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0069TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementOR);
+
+    public Task ClickFG0069DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0069Detail, new ControlIntent("Coverages", "FG0069Detail"));
+
+    public Task<bool> IsFG0071TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementNHVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0071TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementNH);
+
+    public Task ClickFG0071DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0071Detail, new ControlIntent("Coverages", "FG0071Detail"));
+
+    public Task<bool> IsFG0072TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementMEVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0072TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementME);
+
+    public Task ClickFG0072DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0072Detail, new ControlIntent("Coverages", "FG0072Detail"));
+
+    public Task<bool> IsFG0074TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementCTVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0074TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementCT);
+
+    public Task ClickFG0074DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0074Detail, new ControlIntent("Coverages", "FG0074Detail"));
+
+    public Task<bool> IsFG0077TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementVAVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0077TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementVA);
+
+    public Task ClickFG0077DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0077Detail, new ControlIntent("Coverages", "FG0077Detail"));
+
+    public Task<bool> IsFG0078TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementVTVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0078TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementVT);
+
+    public Task ClickFG0078DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0078Detail, new ControlIntent("Coverages", "FG0078Detail"));
+
     public Task WaitForFGFormTableRowAsync(string expected) =>
         _ui.WaitAsync(_locators.FGFormTableRow, expected, new ControlIntent("Coverages", "FGFormTableRow"));
 

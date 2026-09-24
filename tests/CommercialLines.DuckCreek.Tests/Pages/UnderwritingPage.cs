@@ -41,6 +41,8 @@ public sealed class UnderwritingPage
     public Task WaitForInsuranceScoreAsync(string expected) =>
         _ui.WaitAsync(_locators.InsuranceScore, expected, new ControlIntent("Underwriting", "InsuranceScore"));
 
+    public Task<bool> IsInsuranceScoreVisibleAsync() => _ui.ExistsAsync(_locators.InsuranceScore);
+
     public Task ClickInsuranceScoreAsync() =>
         _ui.ClickAsync(_locators.InsuranceScore, new ControlIntent("Underwriting", "InsuranceScore"));
 

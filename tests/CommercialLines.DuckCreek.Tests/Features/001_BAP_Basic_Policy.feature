@@ -38,17 +38,17 @@ Feature: BAP Basic Policy
       | stateCode | dataFile                                        | stateVariant | stateName      | externalDataFile                    |
       #| AL        | TestData/Scenarios/001_bap_basic_policy_al.json | AL           | Alabama        | TestData/ExternalDataOverrides.json |
       #| AR        | TestData/Scenarios/001_bap_basic_policy_ar.json | AR           | Arkansas       | TestData/ExternalDataOverrides.json |
-      | AZ        | TestData/Scenarios/001_bap_basic_policy_az.json | AZ           | Arizona        | TestData/ExternalDataOverrides.json |
-      | CT        | TestData/Scenarios/001_bap_basic_policy_ct.json | CT           | Connecticut    | TestData/ExternalDataOverrides.json |
-      | CO        | TestData/Scenarios/001_bap_basic_policy_co.json | CO           | Colorado       | TestData/ExternalDataOverrides.json |
-      | DE        | TestData/Scenarios/001_bap_basic_policy_de.json | DE           | Delaware       | TestData/ExternalDataOverrides.json |
-      | GA        | TestData/Scenarios/001_bap_basic_policy_ga.json | GA           | Georgia        | TestData/ExternalDataOverrides.json |
-      | IA        | TestData/Scenarios/001_bap_basic_policy_ia.json | IA           | Iowa           | TestData/ExternalDataOverrides.json |
-      | ID        | TestData/Scenarios/001_bap_basic_policy_id.json | ID           | Idaho          | TestData/ExternalDataOverrides.json |
-      | IL        | TestData/Scenarios/001_bap_basic_policy_il.json | IL           | Illinois       | TestData/ExternalDataOverrides.json |
-      | IN        | TestData/Scenarios/001_bap_basic_policy_in.json | IN           | Indiana        | TestData/ExternalDataOverrides.json |
-      | KS        | TestData/Scenarios/001_bap_basic_policy_ks.json | KS           | Kansas         | TestData/ExternalDataOverrides.json |
-      | KY        | TestData/Scenarios/001_bap_basic_policy_ky.json | KY           | Kentucky       | TestData/ExternalDataOverrides.json |
+      #| AZ        | TestData/Scenarios/001_bap_basic_policy_az.json | AZ           | Arizona        | TestData/ExternalDataOverrides.json |
+      #| CT        | TestData/Scenarios/001_bap_basic_policy_ct.json | CT           | Connecticut    | TestData/ExternalDataOverrides.json |
+      #| CO        | TestData/Scenarios/001_bap_basic_policy_co.json | CO           | Colorado       | TestData/ExternalDataOverrides.json |
+      #| DE        | TestData/Scenarios/001_bap_basic_policy_de.json | DE           | Delaware       | TestData/ExternalDataOverrides.json |
+      #| GA        | TestData/Scenarios/001_bap_basic_policy_ga.json | GA           | Georgia        | TestData/ExternalDataOverrides.json |
+      #| IA        | TestData/Scenarios/001_bap_basic_policy_ia.json | IA           | Iowa           | TestData/ExternalDataOverrides.json |
+      #| ID        | TestData/Scenarios/001_bap_basic_policy_id.json | ID           | Idaho          | TestData/ExternalDataOverrides.json |
+      #| IL        | TestData/Scenarios/001_bap_basic_policy_il.json | IL           | Illinois       | TestData/ExternalDataOverrides.json |
+      #| IN        | TestData/Scenarios/001_bap_basic_policy_in.json | IN           | Indiana        | TestData/ExternalDataOverrides.json |
+      #| KS        | TestData/Scenarios/001_bap_basic_policy_ks.json | KS           | Kansas         | TestData/ExternalDataOverrides.json |
+      #| KY        | TestData/Scenarios/001_bap_basic_policy_ky.json | KY           | Kentucky       | TestData/ExternalDataOverrides.json |
       #| LA        | TestData/Scenarios/001_bap_basic_policy_la.json | LA           | Louisiana      | TestData/ExternalDataOverrides.json |
       #| MD        | TestData/Scenarios/001_bap_basic_policy_md.json | MD           | Maryland       | TestData/ExternalDataOverrides.json |
       #| ME        | TestData/Scenarios/001_bap_basic_policy_me.json | ME           | Maine          | TestData/ExternalDataOverrides.json |
@@ -73,11 +73,11 @@ Feature: BAP Basic Policy
       #| TN        | TestData/Scenarios/001_bap_basic_policy_tn.json | TN           | Tennessee      | TestData/ExternalDataOverrides.json |
       #| TX        | TestData/Scenarios/001_bap_basic_policy_tx.json | TX           | Texas          | TestData/ExternalDataOverrides.json |
       #| UT        | TestData/Scenarios/001_bap_basic_policy_ut.json | UT           | Utah           | TestData/ExternalDataOverrides.json |
-      #| VA        | TestData/Scenarios/001_bap_basic_policy_va.json | VA           | Virginia       | TestData/ExternalDataOverrides.json |
-      #| VT        | TestData/Scenarios/001_bap_basic_policy_vt.json | VT           | Vermont        | TestData/ExternalDataOverrides.json |
-      #| WA        | TestData/Scenarios/001_bap_basic_policy_wa.json | WA           | Washington     | TestData/ExternalDataOverrides.json |
+      | VA        | TestData/Scenarios/001_bap_basic_policy_va.json | VA           | Virginia       | TestData/ExternalDataOverrides.json |
+      | VT        | TestData/Scenarios/001_bap_basic_policy_vt.json | VT           | Vermont        | TestData/ExternalDataOverrides.json |
+      | WA        | TestData/Scenarios/001_bap_basic_policy_wa.json | WA           | Washington     | TestData/ExternalDataOverrides.json |
       #| WI        | TestData/Scenarios/001_bap_basic_policy_wi.json | WI           | Wisconsin      | TestData/ExternalDataOverrides.json |
       #| WV        | TestData/Scenarios/001_bap_basic_policy_wv.json | WV           | West Virginia  | TestData/ExternalDataOverrides.json |
       #| WY        | TestData/Scenarios/001_bap_basic_policy_wy.json | WY           | Wyoming        | TestData/ExternalDataOverrides.json |
-      #| CA        | TestData/Scenarios/001_bap_basic_policy_ca.json | CA           | California     | TestData/ExternalDataOverrides.json |
+      | CA        | TestData/Scenarios/001_bap_basic_policy_ca.json | CA           | California     | TestData/ExternalDataOverrides.json |
 

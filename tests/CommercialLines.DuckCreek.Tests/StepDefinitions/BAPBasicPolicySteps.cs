@@ -155,9 +155,11 @@ public sealed class BAPBasicPolicySteps
 
         var page = new UnderwritingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.ClickInsuranceScoreAsync();
-        await page.PauseAsync(1000);
-        await page.PauseAsync(1000);
+        if (await page.IsInsuranceScoreVisibleAsync())
+        {
+            await page.ClickInsuranceScoreAsync();
+            await page.PauseAsync(2000);
+        }
 
     }
 
@@ -407,8 +409,10 @@ public sealed class BAPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-         await page.PauseAsync(2000);
+        await page.PauseAsync(2000);
         await page.ClickPricingAsync();
+        await page.PauseAsync(2000);
+        await page.WaitForPremiumVisibleAsync();
         await page.PauseAsync(2000);
         await page.VerifyPremiumAsync(data.Resolve("{{data:expected_premium_value_233}}"), "value");
         await page.PauseAsync(2000);

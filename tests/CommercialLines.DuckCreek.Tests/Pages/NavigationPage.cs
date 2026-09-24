@@ -53,6 +53,12 @@ public sealed class NavigationPage
     public Task ClickAddClassAsync() =>
         _ui.ClickAsync(_locators.AddClass, new ControlIntent("Navigation", "AddClass"));
 
+    public Task<bool> IsTerritoryVisibleAsync() =>
+        _ui.ExistsAsync(_locators.Territory);
+
+    public Task EnterTerritoryAsync(string value) =>
+        _ui.FillAsync(_locators.Territory, value, new ControlIntent("Navigation", "Territory"));
+
     public Task WaitForAddClassCodeAsync(string expected) =>
         _ui.WaitAsync(_locators.AddClassCode, expected, new ControlIntent("Navigation", "AddClassCode"));
 
@@ -2245,6 +2251,9 @@ public sealed class NavigationPage
     public Task PressPremisesTypeAsync(string key) =>
         _ui.PressAsync(_locators.PremisesType, key, new ControlIntent("Navigation", "PremisesType"));
 
+    public Task WaitForPremiumVisibleAsync(int timeoutMs = 30000) =>
+        _ui.WaitReadyBestEffortAsync(_locators.Premium, new ControlIntent("Navigation", "Premium"), timeoutMs);
+
     public Task VerifyPremiumAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.Premium, expected, property, new ControlIntent("Navigation", "Premium"));
 
@@ -2587,6 +2596,20 @@ public sealed class NavigationPage
 
     public Task ClickSpecificUnderwritingQuestionsAsync() =>
         _ui.ClickAsync(_locators.SpecificUnderwritingQuestions, new ControlIntent("Navigation", "SpecificUnderwritingQuestions"));
+
+    public async Task ClickSpecificUnderwritingQuestionsWithRetryAsync(int maxAttempts = 3, int waitBeforeMs = 1000)
+    {
+        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        {
+            await Task.Delay(waitBeforeMs);
+            if (await _ui.ExistsAsync(_locators.SpecificUnderwritingQuestions))
+            {
+                await ClickSpecificUnderwritingQuestionsAsync();
+                return;
+            }
+        }
+        await ClickSpecificUnderwritingQuestionsAsync();
+    }
 
     public Task SetSplitBIDedAsync(string value) =>
         _ui.SmartSetAsync(_locators.SplitBIDed, value, new ControlIntent("Navigation", "SplitBIDed"));

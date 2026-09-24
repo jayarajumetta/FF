@@ -203,6 +203,13 @@ public sealed class CPPBasicPolicySteps
         //await page.WaitForPolicyInfoHeaderAsync("Visible");
         await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
         await page.EnterDescriptionOfSpecifiedOperationAsync(data.BuildQuoteDescription());
+
+        if (data.Condition("(State == \"MD\")||(State == \"NJ\")||(State == \"NY\")||(State == \"VT\")"))
+        {
+            var coveragesPage = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+            await coveragesPage.EnterEstimatedPremiumAsync("Over 2,500");
+        }
+
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
         await page.PauseAsync(1000);
 
@@ -238,10 +245,6 @@ public sealed class CPPBasicPolicySteps
 
         var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        if (data.Condition("(State == \"MD\")||(State == \"NJ\")||(State == \"NY\")||(State == \"VT\")"))
-        {
-            await page.EnterEstimatedPremiumAsync("");
-        }
             await page.ClickGLAsync();
 
     }
@@ -770,6 +773,27 @@ public sealed class CPPBasicPolicySteps
 
     }
 
+    [Given(@"^I navigate to Location$")]
+    [When(@"^I navigate to Location$")]
+    [Then(@"^I navigate to Location$")]
+    public async Task NavigateToLocationAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickLocationAsync();
+        await page.PauseAsync(1000);
+
+        var state = data.Get("State");
+
+        if ((state == "NH" || state == "NY") && await page.IsTerritoryVisibleAsync())
+        {
+            await page.EnterTerritoryAsync("001");
+        }
+
+    }
+
     [Given(@"^I add Class$")]
     [When(@"^I add Class$")]
     [Then(@"^I add Class$")]
@@ -782,10 +806,38 @@ public sealed class CPPBasicPolicySteps
         await page.ClickCGLAsync();
         await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickAddClassAsync();
+        if (await page.IsTerritoryVisibleAsync())
+        {
+            await page.EnterTerritoryAsync("001");
+        }
         await page.EnterSearchResultsAsync(data.Resolve("{{data:search_results_280}}"));
         await page.ClickOKAsync();
         await page.EnterExposureAsync(data.Resolve("{{data:exposure_282}}"));
         await page.ClickOKAsync();
+
+    }
+
+    [Given(@"^I click Detail for \[CG2151\] Amendment Of Liquor Liability Exclusion - Exception For Scheduled Activities$")]
+    [When(@"^I click Detail for \[CG2151\] Amendment Of Liquor Liability Exclusion - Exception For Scheduled Activities$")]
+    [Then(@"^I click Detail for \[CG2151\] Amendment Of Liquor Liability Exclusion - Exception For Scheduled Activities$")]
+    public async Task ClickDetailForCG2151AmendmentOfLiquorLiabilityExclusionAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var state = data.Get("State");
+
+        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        if ((state == "MA" || state == "NH") && await page.IsCG2151TableRowAmendmentOfLiquorLiabilityExclusionVisibleAsync())
+        {
+            if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
+            {
+                await page.ClickGLNavigationLinksEndorsementsAsync();
+            }
+            await page.ClickCG2151DetailAsync();
+            await page.EnterCovEndorsementsDescriptionAsync("Test");
+            await page.ClickPolicyCovgAccountsReceivableOKAsync();
+        }
 
     }
 
@@ -796,17 +848,22 @@ public sealed class CPPBasicPolicySteps
     {
         var data = _scenario.Get<ScenarioData>();
 
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        var state = data.Get("State");
 
-        if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
+        if (state != "NH" && state != "NY" && state != "VA" && state != "CT")
         {
-            await page.ClickGLNavigationLinksEndorsementsAsync();
+            var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+            if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
+            {
+                await page.ClickGLNavigationLinksEndorsementsAsync();
+            }
+            await page.WaitForEndorsementsAsync("Exists");
+            await page.ClickEndorsementsAddEndorsementAsync();
+            await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_287}}"));
+            await page.EnterNumberOfEmployeesAsync(data.Resolve("{{data:number_of_employees_288}}"));
+            await page.ClickOKAsync();
         }
-        await page.WaitForEndorsementsAsync("Exists");
-        await page.ClickEndorsementsAddEndorsementAsync();
-        await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_287}}"));
-        await page.EnterNumberOfEmployeesAsync(data.Resolve("{{data:number_of_employees_288}}"));
-        await page.ClickOKAsync();
 
     }
 
@@ -849,16 +906,228 @@ public sealed class CPPBasicPolicySteps
     {
         var data = _scenario.Get<ScenarioData>();
 
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        var state = data.Get("State");
 
-        if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
+        if (state != "VA")
         {
-            await page.ClickGLNavigationLinksEndorsementsAsync();
+            var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+            if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
+            {
+                await page.ClickGLNavigationLinksEndorsementsAsync();
+            }
+            await page.WaitForEndorsementsAsync("Exists");
+            await page.ClickEndorsementsAddEndorsementAsync();
+            await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_303}}"));
+            await page.ClickOKAsync();
         }
-        await page.WaitForEndorsementsAsync("Exists");
-        await page.ClickEndorsementsAddEndorsementAsync();
-        await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_303}}"));
-        await page.ClickOKAsync();
+
+    }
+
+    [Given(@"^I click Detail for \[FG0059\] Employment Practices Liability Insurance Coverage Endorsement \(NY\)$")]
+    [When(@"^I click Detail for \[FG0059\] Employment Practices Liability Insurance Coverage Endorsement \(NY\)$")]
+    [Then(@"^I click Detail for \[FG0059\] Employment Practices Liability Insurance Coverage Endorsement \(NY\)$")]
+    public async Task ClickDetailForFG0059EmploymentPracticesLiabilityInsuranceCoverageEndorsementNYAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var state = data.Get("State");
+
+        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        if (state == "NY" && await page.IsFG0059TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementNYVisibleAsync())
+        {
+            await page.ClickFG0059DetailAsync();
+            await page.EnterLimitDeductibleAsync(data.Resolve("{{data:fg0059_limit_deductible_ny}}"));
+            await page.EnterHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_309}}"));
+            await page.EnterTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_310}}"));
+            await page.EnterThirdPartyAsync(data.Resolve("{{data:third_party_311}}"));
+            await page.ClickPolicyCovgAccountsReceivableOKAsync();
+        }
+
+    }
+
+    [Given(@"^I click Detail for \[FG0063\] Employment Practices Liability Insurance Coverage Endorsement \(MD\)$")]
+    [When(@"^I click Detail for \[FG0063\] Employment Practices Liability Insurance Coverage Endorsement \(MD\)$")]
+    [Then(@"^I click Detail for \[FG0063\] Employment Practices Liability Insurance Coverage Endorsement \(MD\)$")]
+    public async Task ClickDetailForFG0063EmploymentPracticesLiabilityInsuranceCoverageEndorsementMDAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var state = data.Get("State");
+
+        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        if (state == "MD" && await page.IsFG0063TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementMDVisibleAsync())
+        {
+            await page.ClickFG0063DetailAsync();
+            await page.EnterLimitDeductibleAsync(data.Resolve("{{data:fg0063_limit_deductible_md}}"));
+            await page.EnterHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_309}}"));
+            await page.EnterTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_310}}"));
+            await page.EnterThirdPartyAsync(data.Resolve("{{data:third_party_311}}"));
+            await page.ClickPolicyCovgAccountsReceivableOKAsync();
+        }
+
+    }
+
+    [Given(@"^I click Detail for \[FG0062\] Employment Practices Liability Insurance Coverage Endorsement \(PA\)$")]
+    [When(@"^I click Detail for \[FG0062\] Employment Practices Liability Insurance Coverage Endorsement \(PA\)$")]
+    [Then(@"^I click Detail for \[FG0062\] Employment Practices Liability Insurance Coverage Endorsement \(PA\)$")]
+    public async Task ClickDetailForFG0062EmploymentPracticesLiabilityInsuranceCoverageEndorsementPAAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var state = data.Get("State");
+
+        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        if (state == "PA" && await page.IsFG0062TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementPAVisibleAsync())
+        {
+            await page.ClickFG0062DetailAsync();
+            await page.EnterLimitDeductibleAsync(data.Resolve("{{data:fg0062_limit_deductible_pa}}"));
+            await page.EnterHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_309}}"));
+            await page.EnterTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_310}}"));
+            await page.EnterThirdPartyAsync(data.Resolve("{{data:third_party_311}}"));
+            await page.ClickPolicyCovgAccountsReceivableOKAsync();
+        }
+
+    }
+
+    [Given(@"^I click Detail for \[FG0069\] Employment Practices Liability Insurance Coverage Endorsement \(OR\)$")]
+    [When(@"^I click Detail for \[FG0069\] Employment Practices Liability Insurance Coverage Endorsement \(OR\)$")]
+    [Then(@"^I click Detail for \[FG0069\] Employment Practices Liability Insurance Coverage Endorsement \(OR\)$")]
+    public async Task ClickDetailForFG0069EmploymentPracticesLiabilityInsuranceCoverageEndorsementORAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var state = data.Get("State");
+
+        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        if (state == "OR" && await page.IsFG0069TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementORVisibleAsync())
+        {
+            await page.ClickFG0069DetailAsync();
+            await page.EnterLimitDeductibleAsync(data.Resolve("{{data:fg0069_limit_deductible_or}}"));
+            await page.EnterHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_309}}"));
+            await page.EnterTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_310}}"));
+            await page.EnterThirdPartyAsync(data.Resolve("{{data:third_party_311}}"));
+            await page.ClickPolicyCovgAccountsReceivableOKAsync();
+        }
+
+    }
+
+    [Given(@"^I click Detail for \[FG0071\] Employment Practices Liability Insurance Coverage Endorsement \(NH\)$")]
+    [When(@"^I click Detail for \[FG0071\] Employment Practices Liability Insurance Coverage Endorsement \(NH\)$")]
+    [Then(@"^I click Detail for \[FG0071\] Employment Practices Liability Insurance Coverage Endorsement \(NH\)$")]
+    public async Task ClickDetailForFG0071EmploymentPracticesLiabilityInsuranceCoverageEndorsementNHAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var state = data.Get("State");
+
+        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        if (state == "NH" && await page.IsFG0071TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementNHVisibleAsync())
+        {
+            await page.ClickFG0071DetailAsync();
+            await page.EnterLimitDeductibleAsync(data.Resolve("{{data:fg0071_limit_deductible_nh}}"));
+            await page.EnterHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_309}}"));
+            await page.EnterTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_310}}"));
+            await page.EnterThirdPartyAsync(data.Resolve("{{data:third_party_311}}"));
+            await page.ClickPolicyCovgAccountsReceivableOKAsync();
+        }
+
+    }
+
+    [Given(@"^I click Detail for \[FG0072\] Employment Practices Liability Insurance Coverage Endorsement \(ME\)$")]
+    [When(@"^I click Detail for \[FG0072\] Employment Practices Liability Insurance Coverage Endorsement \(ME\)$")]
+    [Then(@"^I click Detail for \[FG0072\] Employment Practices Liability Insurance Coverage Endorsement \(ME\)$")]
+    public async Task ClickDetailForFG0072EmploymentPracticesLiabilityInsuranceCoverageEndorsementMEAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var state = data.Get("State");
+
+        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        if (state == "ME" && await page.IsFG0072TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementMEVisibleAsync())
+        {
+            await page.ClickFG0072DetailAsync();
+            await page.EnterLimitDeductibleAsync(data.Resolve("{{data:fg0072_limit_deductible_me}}"));
+            await page.EnterHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_309}}"));
+            await page.EnterTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_310}}"));
+            await page.EnterThirdPartyAsync(data.Resolve("{{data:third_party_311}}"));
+            await page.ClickPolicyCovgAccountsReceivableOKAsync();
+        }
+
+    }
+
+    [Given(@"^I click Detail for \[FG0074\] Employment Practices Liability Insurance Coverage Endorsement \(CT\)$")]
+    [When(@"^I click Detail for \[FG0074\] Employment Practices Liability Insurance Coverage Endorsement \(CT\)$")]
+    [Then(@"^I click Detail for \[FG0074\] Employment Practices Liability Insurance Coverage Endorsement \(CT\)$")]
+    public async Task ClickDetailForFG0074EmploymentPracticesLiabilityInsuranceCoverageEndorsementCTAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var state = data.Get("State");
+
+        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        if (state == "CT" && await page.IsFG0074TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementCTVisibleAsync())
+        {
+            await page.ClickFG0074DetailAsync();
+            await page.EnterLimitDeductibleAsync(data.Resolve("{{data:fg0074_limit_deductible_ct}}"));
+            await page.EnterHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_309}}"));
+            await page.EnterTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_310}}"));
+            await page.EnterThirdPartyAsync(data.Resolve("{{data:third_party_311}}"));
+            await page.ClickPolicyCovgAccountsReceivableOKAsync();
+        }
+
+    }
+
+    [Given(@"^I click Detail for \[FG0077\] Employment Practices Liability Insurance Coverage Endorsement \(VA\)$")]
+    [When(@"^I click Detail for \[FG0077\] Employment Practices Liability Insurance Coverage Endorsement \(VA\)$")]
+    [Then(@"^I click Detail for \[FG0077\] Employment Practices Liability Insurance Coverage Endorsement \(VA\)$")]
+    public async Task ClickDetailForFG0077EmploymentPracticesLiabilityInsuranceCoverageEndorsementVAAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var state = data.Get("State");
+
+        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        if (state == "VA" && await page.IsFG0077TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementVAVisibleAsync())
+        {
+            await page.ClickFG0077DetailAsync();
+            await page.EnterLimitDeductibleAsync(data.Resolve("{{data:fg0077_limit_deductible_va}}"));
+            await page.EnterHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_309}}"));
+            await page.EnterTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_310}}"));
+            await page.EnterThirdPartyAsync(data.Resolve("{{data:third_party_311}}"));
+            await page.ClickPolicyCovgAccountsReceivableOKAsync();
+        }
+
+    }
+
+    [Given(@"^I click Detail for \[FG0078\] Employment Practices Liability Insurance Coverage Endorsement \(VT\)$")]
+    [When(@"^I click Detail for \[FG0078\] Employment Practices Liability Insurance Coverage Endorsement \(VT\)$")]
+    [Then(@"^I click Detail for \[FG0078\] Employment Practices Liability Insurance Coverage Endorsement \(VT\)$")]
+    public async Task ClickDetailForFG0078EmploymentPracticesLiabilityInsuranceCoverageEndorsementVTAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var state = data.Get("State");
+
+        var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        if (state == "VT" && await page.IsFG0078TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementVTVisibleAsync())
+        {
+            await page.ClickFG0078DetailAsync();
+            await page.EnterLimitDeductibleAsync(data.Resolve("{{data:fg0078_limit_deductible_vt}}"));
+            await page.EnterHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_309}}"));
+            await page.EnterTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_310}}"));
+            await page.EnterThirdPartyAsync(data.Resolve("{{data:third_party_311}}"));
+            await page.ClickPolicyCovgAccountsReceivableOKAsync();
+        }
 
     }
 
@@ -871,14 +1140,17 @@ public sealed class CPPBasicPolicySteps
 
         var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.WaitForFGFormTableRowAsync("Exists");
-        await page.VerifyFG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementAsync("Exists", "");
-        await page.ClickFG0055DetailAsync();
-        await page.EnterLimitDeductibleAsync(data.Resolve("{{data:limit_deductible_308}}"));
-        await page.EnterHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_309}}"));
-        await page.EnterTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_310}}"));
-        await page.EnterThirdPartyAsync(data.Resolve("{{data:third_party_311}}"));
-        await page.ClickPolicyCovgAccountsReceivableOKAsync();
+        if (data.Condition("State != \"ME\" && State != \"CT\" && State != \"NH\" && State != \"OR\" && State != \"PA\" && State != \"MD\" && State != \"VA\" && State != \"VT\" && State != \"NY\""))
+        {
+            await page.WaitForFGFormTableRowAsync("Exists");
+            await page.VerifyFG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementAsync("Exists", "");
+            await page.ClickFG0055DetailAsync();
+            await page.EnterLimitDeductibleAsync(data.Resolve("{{data:limit_deductible_308}}"));
+            await page.EnterHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_309}}"));
+            await page.EnterTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_310}}"));
+            await page.EnterThirdPartyAsync(data.Resolve("{{data:third_party_311}}"));
+            await page.ClickPolicyCovgAccountsReceivableOKAsync();
+        }
 
     }
 
@@ -1449,7 +1721,7 @@ public sealed class CPPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.ClickSpecificUnderwritingQuestionsAsync();
+        await page.ClickSpecificUnderwritingQuestionsWithRetryAsync();
         await page.ClickAccountsReceivableUWQuestionsAsync();
         //await page.WaitForAccountsReceivableHeadingAsync("Exists");
         await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
@@ -1468,7 +1740,7 @@ public sealed class CPPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.ClickSpecificUnderwritingQuestionsAsync();
+        await page.ClickSpecificUnderwritingQuestionsWithRetryAsync();
         await page.ClickBaileesCustomerUWQuestionsAsync();
         //await page.WaitForSignsHeadingAsync("Exists");
         await page.EnterDryCleaningAsync(data.Resolve("{{data:dry_cleaning_539}}"));
@@ -1505,7 +1777,7 @@ public sealed class CPPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.ClickSpecificUnderwritingQuestionsAsync();
+        await page.ClickSpecificUnderwritingQuestionsWithRetryAsync();
         await page.ClickComputerSystemsUWQuestionsAsync();
         await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
         await page.EnterWhatIsTheProcedureForTransportingTheComputerEquipmentAsync(data.Resolve("{{data:what_is_the_procedure_for_transporting_the_computer_equipment_564}}"));
@@ -1534,7 +1806,7 @@ public sealed class CPPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.ClickSpecificUnderwritingQuestionsAsync();
+        await page.ClickSpecificUnderwritingQuestionsWithRetryAsync();
         await page.ClickContractorsEquipmentUWQuestionsAsync();
         await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickSpecificUnderwritingQuestionsContractorsEquipmentUpdateAnswersAsync();
@@ -1553,7 +1825,7 @@ public sealed class CPPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.ClickSpecificUnderwritingQuestionsAsync();
+        await page.ClickSpecificUnderwritingQuestionsWithRetryAsync();
         await page.ClickMotorTruckCargoUWQuestionsAsync();
         await page.WaitForSignsHeadingAsync("Exists");
         await page.EnterWhichFormAreYouCompletingAsync(data.Resolve("{{data:which_form_are_you_completing_588}}"));
@@ -1584,7 +1856,7 @@ public sealed class CPPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.ClickSpecificUnderwritingQuestionsAsync();
+        await page.ClickSpecificUnderwritingQuestionsWithRetryAsync();
         await page.ClickSignsUWQuestionsAsync();
         await page.WaitForSignsHeadingAsync("Exists");
         await page.EnterAreAnySignsOffPremisesOrNotAttachedToBuildingAsync(data.Resolve("{{data:are_any_signs_off_premises_or_not_attached_to_building_608}}"));
@@ -1760,6 +2032,7 @@ public sealed class CPPBasicPolicySteps
 
         await page.WaitForSubmissionAsync("Visible");
         await page.ClickSubmissionAsync();
+        await page.PauseAsync(4000);
         //await page.WaitForSubmissionHeadingAsync("Exists");
         if (await page.IsThisCoverageBoundExistsAsync())
         {
@@ -1787,6 +2060,7 @@ public sealed class CPPBasicPolicySteps
 
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
+        await page.PauseAsync(4000);
         if (await page.IsThisCoverageBoundExistsAsync())
         {
             await page.VerifyIsThisCoverageBoundAsync("Exists", "");

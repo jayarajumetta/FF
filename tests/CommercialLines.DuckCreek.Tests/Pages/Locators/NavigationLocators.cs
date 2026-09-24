@@ -63,6 +63,8 @@ public sealed class NavigationLocators
 
     public ILocator AddClassCode => _page.GetByRole(AriaRole.Link, new() { Name = "Add Class Code", Exact = true });
 
+    public ILocator Territory => _page.Locator("input[fieldref=\"LocationGeneralLiabilityInput.Territory\"]");
+
     public ILocator OK => _page.Locator("span.g-btn-text").Filter(new LocatorFilterOptions { HasText = "OK" }).First;
 
     public ILocator AddCoverageForm => _page.GetByRole(AriaRole.Link, new() { Name = "Add Coverage Form", Exact = true });

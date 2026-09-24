@@ -484,4 +484,12 @@ public sealed class PolicyWorkflowPage
 
     public Task EnterSplitPDDedSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.SplitPDDed, value, new ControlIntent("PolicyWorkflow", "SplitPDDed"), delayMs);
+
+    public Task ClickLocationAsync() =>
+        _ui.ClickAsync(_locators.Location, new ControlIntent("PolicyWorkflow", "Location"));
+
+    public Task<bool> IsTerritoryVisibleAsync() => _ui.ExistsAsync(_locators.Territory);
+
+    public Task EnterTerritoryAsync(string value) =>
+        _ui.FillAsync(_locators.Territory, value, new ControlIntent("PolicyWorkflow", "Territory"));
 }
