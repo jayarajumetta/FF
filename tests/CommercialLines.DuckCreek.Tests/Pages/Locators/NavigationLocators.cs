@@ -9,14 +9,16 @@ public sealed class NavigationLocators
 
     public ILocator StateDetailsDriveOtherCarFirstName => _page.Locator("input[fieldref=\"RiskDriveOtherCarIteratorInput.FirstName\"]");
     public ILocator StateDetailsDriveOtherCarLastName => _page.Locator("input[fieldref=\"RiskDriveOtherCarIteratorInput.LastName\"]");
-    public ILocator CommercialAutoEffectiveDate => _page.Locator("input[fieldref='OtherInsuranceHistoryInput.EffectiveDate'], input[fieldref='UmbrellaGeneralLiabilityInput.EffectiveDate'], input[fieldref=\"UmbrellaSFP10LiabilityInput.EffectiveDate\"]");
-    public ILocator GeneralLiabilityExpirationDate => _page.Locator("input[fieldref='OtherInsuranceHistoryInput.ExpirationDate'], input[fieldref='UmbrellaGeneralLiabilityInput.ExpirationDate'], input[fieldref=\"UmbrellaSFP10LiabilityInput.ExpirationDate\"]");
+    public ILocator CommercialAutoEffectiveDate => _page.Locator("input[fieldref='OtherInsuranceHistoryInput.EffectiveDate'], input[fieldref='UmbrellaGeneralLiabilityInput.EffectiveDate'], input[fieldref=\"UmbrellaSFP10LiabilityInput.EffectiveDate\"], input[fieldref=\"UmbrellaEmployersLiabilityInput.EffectiveDate\"]");
+    public ILocator CommercialAutoExpiryDateDate => _page.Locator("input[fieldref=\"UmbrellaCommercialAutoInput.ExpirationDate\"]");
+
+    public ILocator GeneralLiabilityExpirationDate => _page.Locator("input[fieldref='OtherInsuranceHistoryInput.ExpirationDate'], input[fieldref='UmbrellaGeneralLiabilityInput.ExpirationDate'], input[fieldref=\"UmbrellaSFP10LiabilityInput.ExpirationDate\"], input[fieldref=\"UmbrellaEmployersLiabilityInput.ExpirationDate\"]");
     public ILocator CommercialAutoPolicyNumber => _page.Locator("input[fieldref=\"UmbrellaCommercialAutoInput.PolicyNumber\"]");
     public ILocator GeneralLiabilityPolicyNumber => _page.Locator("input[fieldref='OtherInsuranceHistoryInput.PolicyNumber'], input[fieldref='UmbrellaGeneralLiabilityInput.PolicyNumber'], input[fieldref=\"UmbrellaSFP10LiabilityInput.PolicyNumber\"]");
     public ILocator CPPLiabilityPolicyNumber => _page.Locator("input[fieldref='UmbrellaCPPLiabilityInput.PolicyNumber']");
 
     public ILocator OtherInsuranceHistoryLimit => _page.Locator("input[fieldref='OtherInsuranceHistoryInput.Limit']");
-    public ILocator GeneralLiabilityTotalSubjectPremium => _page.Locator("input[fieldref=\"UmbrellaGeneralLiabilityInputPremiums.TotalSubjectPremium\"], input[fieldref=\"UmbrellaSFP10LiabilityInput.TotalSubjectPremium\"]");
+    public ILocator GeneralLiabilityTotalSubjectPremium => _page.Locator("input[fieldref=\"UmbrellaGeneralLiabilityInputPremiums.TotalSubjectPremium\"], input[fieldref=\"UmbrellaSFP10LiabilityInput.TotalSubjectPremium\"], input[fieldref=\"UmbrellaEmployersLiabilityInput.TotalSubjectPremium\"]");
     public ILocator SFP10LiabilityFarmLiabilityLimit => _page.Locator("input[fieldref=\"UmbrellaSFP10LiabilityInput.LiabilityLimit\"]");
 
     public ILocator CoverageFormDescription => _page.Locator("input[fieldref=\"CoverageFormsInput.Description\"]");
@@ -201,7 +203,7 @@ public sealed class NavigationLocators
     public ILocator ExcludeUndergroundPropertyDamageHazard => _page.Locator("input[fieldref=\"CovEndorsementsInput.IndicatorPropertyDamageCG2142\"]");
 
 
-    public ILocator CGLLimits => _page.Locator("input[fieldref=\"UmbrellaGeneralLiabilityInputLimitsNonShredded.CGLLimits\"]");
+    public ILocator CGLLimits => _page.Locator("input[fieldref=\"UmbrellaGeneralLiabilityInputLimitsNonShredded.CGLLimits\"], input[fieldref=\"UmbrellaEmployersLiabilityInput.LiabilityLimit\"]");
 
 
     public ILocator CWhatIsTheDistanceInFeetToTheNearestHydrant => _page.Locator("input[fieldref=\"BaileesCustomerUnderwritingQuestionsInput.HydrantDistance\"]");
@@ -916,6 +918,8 @@ public sealed class NavigationLocators
     public ILocator TotalPayrollEstimated => _page.Locator("input[fieldref=\"CoverageInput.UnitsOfExposureEstimated\"]");
 
     public ILocator TotalPremium => _page.Locator("input[fieldref='OtherInsuranceHistoryInput.TotalPremium']");
+
+    public ILocator TotalSubjectivePremium => _page.Locator("input[fieldref=\"UmbrellaCommercialAutoInput.TotalSubjectPremiumCombined\"]");
 
     public ILocator BusinessownersTotalSubjectPremium => _page.Locator("input[fieldref=\"UmbrellaBusinessOwnersInputPremiums.TotalSubjectPremium\"], input[fieldref=\"UmbrellaCPPLiabilityInput.TotalSubjectPremium\"]");
 

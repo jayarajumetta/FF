@@ -7,7 +7,11 @@
     "note": "Base plus lossless state/scenario merge patches. Original scenario JSON files remain as immutable Tosca lineage and fallback."
   },
   "overrides": {
-    "008_umb_basic_policy_al.json": {},
+    "008_umb_basic_policy_al.json": {
+      "values": {
+        "does_this_policy_cover_contractor_exposure_224": "No"
+      }
+    },
     "008_umb_basic_policy_ar.json": {
       "_meta": {
         "representativeIteration": "AR",

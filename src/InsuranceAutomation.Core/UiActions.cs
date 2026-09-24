@@ -44,7 +44,6 @@ public sealed class UiActions
             _config.Waits.DropdownOptionTimeoutMs, _config.Waits.DropdownPollIntervalMs));
         _semanticallyCommittedControls.Add(IntentKey(intent));
     }
-
     public async Task PressSequentiallyAsync(ILocator locator, string value, ControlIntent intent, int delayMs = 20)
     {
         await ExecuteAsync(locator, intent, "press-sequentially", async x =>
@@ -54,6 +53,7 @@ public sealed class UiActions
             await x.PressSequentiallyAsync(value ?? string.Empty, new LocatorPressSequentiallyOptions { Delay = Math.Max(0, delayMs) });
         });
     }
+
 
     public async Task PressAsync(ILocator locator, string key, ControlIntent intent)
     {

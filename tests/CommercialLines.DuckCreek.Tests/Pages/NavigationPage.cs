@@ -968,6 +968,9 @@ public sealed class NavigationPage
     public Task EnterCommercialAutoEffectiveDateAsync(string value) =>
         _ui.FillAsync(_locators.CommercialAutoEffectiveDate, value, new ControlIntent("Navigation", "CommercialAutoEffectiveDate"));
 
+    public Task EnterCommercialAutoExpirynDateAsync(string value) =>
+        _ui.FillAsync(_locators.CommercialAutoExpiryDateDate, value, new ControlIntent("Navigation", "CommercialAutoExpiryDateDate"));
+
     public Task PressCommercialAutoEffectiveDateAsync(string key) =>
         _ui.PressAsync(_locators.CommercialAutoEffectiveDate, key, new ControlIntent("Navigation", "CommercialAutoEffectiveDate"));
 
@@ -1111,6 +1114,9 @@ public sealed class NavigationPage
 
     public Task VerifyExcludedLiabilityConfidentialInformationAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.ExcludedLiabilityConfidentialInformation, expected, property, new ControlIntent("Navigation", "ExcludedLiabilityConfidentialInformation"));
+
+    public Task<string> CaptureExcludedLiabilityConfidentialInformationAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.ExcludedLiabilityConfidentialInformation, property, new ControlIntent("Navigation", "ExcludedLiabilityConfidentialInformation"));
 
     public Task EnterExcludedLiabilityConfidentialInformationAsync(string value) =>
         _ui.FillAsync(_locators.ExcludedLiabilityConfidentialInformation, value, new ControlIntent("Navigation", "ExcludedLiabilityConfidentialInformation"));
@@ -2267,6 +2273,9 @@ public sealed class NavigationPage
     public Task VerifyProductsCompletedOperationsAggregateLimitAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.ProductsCompletedOperationsAggregateLimit, expected, property, new ControlIntent("Navigation", "ProductsCompletedOperationsAggregateLimit"));
 
+    public Task<string> CaptuteProductsCompletedOperationsAggregateLimitAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.ProductsCompletedOperationsAggregateLimit, property, new ControlIntent("Navigation", "ProductsCompletedOperationsAggregateLimit"));
+
     public Task EnterProductsCompletedOperationsAggregateLimitAsync(string value) =>
         _ui.FillAsync(_locators.ProductsCompletedOperationsAggregateLimit, value, new ControlIntent("Navigation", "ProductsCompletedOperationsAggregateLimit"));
 
@@ -2794,6 +2803,9 @@ public sealed class NavigationPage
 
     public Task VerifyUmbrellaLimitAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.UmbrellaLimit, expected, property, new ControlIntent("Navigation", "UmbrellaLimit"));
+
+    public Task<string> CaptureUmbrellaLimitAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.UmbrellaLimit, property, new ControlIntent("Navigation", "UmbrellaLimit"));
 
     public Task EnterUmbrellaLimitAsync(string value) =>
         _ui.FillAsync(_locators.UmbrellaLimit, value, new ControlIntent("Navigation", "UmbrellaLimit"));

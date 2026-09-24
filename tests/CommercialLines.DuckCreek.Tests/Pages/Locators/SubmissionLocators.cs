@@ -7,7 +7,7 @@ public sealed class SubmissionLocators
     private readonly IPage _page;
     public SubmissionLocators(IPage page) => _page = page;
 
-    public ILocator AllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabs => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='All required fields have not been completed. Please complete highlighted tabs.']/@for] | //label[normalize-space(string(.))='All required fields have not been completed. Please complete highlighted tabs.']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='All required fields have not been completed. Please complete highlighted tabs.']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
+    public ILocator AllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabs => _page.GetByText("All required fields have not been completed. Please complete highlighted tabs.");
 
     public ILocator CompleteApplication => _page.GetByRole(AriaRole.Link, new() { Name = "Complete Application", Exact = true });
 
