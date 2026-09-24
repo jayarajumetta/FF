@@ -3,3 +3,4 @@
 Features/SGS/** text eol=crlf
 Resources/SGS/**/TestData/** text eol=lf
 Resources/SGS/**/Runtime/** text eol=crlf
+Resources/ExpectedForms/SFP/SFP_*.csv text eol=lf

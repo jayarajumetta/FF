@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Reqnroll;
+using System.Globalization;
+using PnCTestAutomation.Models;
 
 namespace PnCTestAutomation.Helpers
 {
@@ -776,7 +778,16 @@ namespace PnCTestAutomation.Helpers
                         _contextData.ResidenceConditionRating = answer;
                         break;
                     case "RoofYear":
-                        _contextData.ResidenceRoofYear = answer;
+                        _contextData.ResidenceRoofYear = DateHelpers.ResolveYearToken(answer);
+                        break;
+                    case "HeatingYear":
+                        _contextData.Farm.ResidenceHeatingYear = answer;
+                        break;
+                    case "PlumbingYear":
+                        _contextData.Farm.ResidencePlumbingYear = answer;
+                        break;
+                    case "ElectricalYear":
+                        _contextData.Farm.ResidenceElectricalYear = answer;
                         break;
                     case "RoofType":
                         _contextData.ResidenceRoofType = answer;
@@ -825,6 +836,9 @@ namespace PnCTestAutomation.Helpers
                         break;
                     case "UseDefaults":
                         _contextData.ResidenceUseDefaults = answer;
+                        break;
+                    case "HouseholdContentsAmount":
+                        _contextData.Farm.CountryEstateHouseholdContentsAmount = answer;
                         break;
                     default:
                         throw new ArgumentException($"Unknown Residence Coverage question: {question}");
@@ -887,6 +901,70 @@ namespace PnCTestAutomation.Helpers
                         throw new ArgumentException($"Unknown Scheduled Personal Property question: {question}");
                 }
             }
+        }
+
+        public static IReadOnlyList<SfpScheduledPropertyItem> CountryEstateScheduledPropertyFields(Table table, ScenarioContextData contextData = null)
+        {
+            var required = new[] { "Code", "Description", "AmountOfInsurance", "UnattendedVehicle", "NamedPersonCount", "NamedPersonNames" };
+            if (required.Any(column => !table.Header.Contains(column)) ||
+                table.Header.Any(column => !required.Contains(column) && column != "YearOfAppraisal"))
+                throw new ArgumentException("CE scheduled property requires Code, Description, AmountOfInsurance, UnattendedVehicle, NamedPersonCount and NamedPersonNames; only YearOfAppraisal is optional.");
+
+            var items = new List<SfpScheduledPropertyItem>();
+            var codes = new HashSet<string>();
+            foreach (var row in table.Rows)
+            {
+                var code = row["Code"]?.Trim();
+                if (code is not ("409" or "411") || !codes.Add(code))
+                    throw new ArgumentException("CE scheduled property requires unique coverage codes 409 and 411.");
+                var description = row["Description"]?.Trim();
+                if (string.IsNullOrWhiteSpace(description))
+                    throw new ArgumentException($"CE scheduled property {code} requires a description.");
+                if (!int.TryParse(row["AmountOfInsurance"], NumberStyles.None, CultureInfo.InvariantCulture, out var amount) || amount <= 0)
+                    throw new ArgumentException($"CE scheduled property {code} requires a positive whole-dollar AmountOfInsurance.");
+                var unattended = row["UnattendedVehicle"]?.Trim();
+                if (unattended is not ("Yes" or "No"))
+                    throw new ArgumentException($"CE scheduled property {code} requires UnattendedVehicle Yes or No.");
+
+                int? year = null;
+                var yearText = table.Header.Contains("YearOfAppraisal") ? row["YearOfAppraisal"]?.Trim() : null;
+                if (!string.IsNullOrEmpty(yearText))
+                {
+                    if (code != "409")
+                        throw new ArgumentException("Coverage 411 has no applicable YearOfAppraisal field.");
+                    if (!int.TryParse(yearText, NumberStyles.None, CultureInfo.InvariantCulture, out var parsedYear) ||
+                        yearText.Length != 4 || parsedYear <= 0 || parsedYear > DateTime.Today.Year)
+                        throw new ArgumentException("YearOfAppraisal must be a four-digit year no later than the current year.");
+                    year = parsedYear;
+                }
+                if (code == "409" && amount > 25000 && year == null)
+                    throw new ArgumentException("Stamp Collections amounts above 25000 require YearOfAppraisal; 25000 is not a coverage maximum.");
+
+                int? namedPersonCount = null;
+                var countText = row["NamedPersonCount"]?.Trim();
+                var names = row["NamedPersonNames"]?.Trim();
+                if (code == "411")
+                {
+                    if (!int.TryParse(countText, NumberStyles.None, CultureInfo.InvariantCulture, out var count) || count < 0 || count > 9)
+                        throw new ArgumentException("Coverage 411 requires an explicit NamedPersonCount from 0 (None) through 9.");
+                    namedPersonCount = count;
+                    if (names == "{{fullName}}")
+                    {
+                        if (string.IsNullOrWhiteSpace(contextData?.ClientFirstName) || string.IsNullOrWhiteSpace(contextData?.ClientLastName))
+                            throw new ArgumentException("Coverage 411 {{fullName}} requires the quote's generated client first and last names.");
+                        names = $"{contextData.ClientFirstName.Trim()} {contextData.ClientLastName.Trim()}";
+                    }
+                    if (string.IsNullOrWhiteSpace(names) || names.Length > 85 || names.Contains("{{") || names.Contains("}}"))
+                        throw new ArgumentException("Coverage 411 requires NamedPersonNames of 1-85 characters, even when NamedPersonCount is 0.");
+                }
+                else if (!string.IsNullOrEmpty(countText) || !string.IsNullOrEmpty(names))
+                    throw new ArgumentException("NamedPersonCount and NamedPersonNames apply only to coverage 411.");
+
+                items.Add(new(code, description, amount, unattended == "Yes", year, namedPersonCount, names));
+            }
+            if (codes.Count != 2)
+                throw new ArgumentException("The CE scheduled-property step requires both 409 and 411.");
+            return items;
         }
 
         public static void LiabilityFields(Table table, ScenarioContextData _contextData)

@@ -2,6 +2,2058 @@
   "schemaVersion": 1,
   "profiles": [
     {
+      "profileId": "sfp-basic-qa-al-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "AL",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:AL and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 6489.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "09F3878E4F2BCBB0B77D8CE694F0C2459941038ED5C1420131AAB471C3DC5B67"
+    },
+    {
+      "profileId": "sfp-basic-qa-ar-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "AR",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:AR and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 7103.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "C37C40CCD6208286744BBFDE22B69F5C3BD137984837A066E474E1B69538BE58"
+    },
+    {
+      "profileId": "sfp-basic-qa-az-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "AZ",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:AZ and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 7390.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "C45EADD00530AB76A26F02E601B17DEAA1AD59DB65704529184C9A0921FC6B06"
+    },
+    {
+      "profileId": "sfp-basic-qa-co-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "CO",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:CO and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 5289.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "74F0C23872830A5A245E9BB855A788D6A40C5D8D2BBA1F2FD6C1ED7566A5A554"
+    },
+    {
+      "profileId": "sfp-basic-qa-ct-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "CT",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:CT and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 6539.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "ED498403B708C21904A252C33C55B1A2135DD2B155B7531D2AFF48674F08F967"
+    },
+    {
+      "profileId": "sfp-basic-qa-de-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "DE",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:DE and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 5752.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "D48A91BD560717C56A04CB6344FCDA73348CAACF03A8C5BF70052EFAFD86316D"
+    },
+    {
+      "profileId": "sfp-basic-qa-ga-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "GA",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:GA and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 6091.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "37B6B5B1F7509CE8269C77AAEBB9AB369476E98B2B722E66233C2C44633F66F7"
+    },
+    {
+      "profileId": "sfp-basic-qa-ia-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "IA",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:IA and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 5014.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "6109D0A458E3A03CE8A7EF48A77CC15EAAD6213804EEC2C2B0DC4714BAA1C2C9"
+    },
+    {
+      "profileId": "sfp-basic-qa-id-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "ID",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:ID and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 4465.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "BB99581C6FDA7E86081867EDA52D51D820D2222458314A968FE0FA9C57713F2B"
+    },
+    {
+      "profileId": "sfp-basic-qa-il-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "IL",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:IL and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 3677.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "CA7C7B123F917D7B819289F9FF42BE8A0980167DCDAEEF51531BD998B14BFA45"
+    },
+    {
+      "profileId": "sfp-basic-qa-in-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "IN",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:IN and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 3757.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "E71D12D36004E88AE5F6FC252514EDABBCC773E6466C0E277E12E24DF4A3DE26"
+    },
+    {
+      "profileId": "sfp-basic-qa-ks-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "KS",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:KS and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 6968.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "9658E7248431DD8F02AC36711819ECBD2C5BDEB8DDB6DA9DD12BB093F1422FA1"
+    },
+    {
+      "profileId": "sfp-basic-qa-ky-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "KY",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:KY and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 6117.78,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "5B6F1CE37CD6E15CC653066BEADDF052C0EE14C82813AF0604B519AAA3EE6DF0"
+    },
+    {
+      "profileId": "sfp-basic-qa-la-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "LA",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:LA and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 7336.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "28A981DB8E2C085189C04AC1A06A70A82F9707562F7778CF920DC4EDFAA4F538"
+    },
+    {
+      "profileId": "sfp-basic-qa-ma-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "MA",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:MA and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 5836.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "22D456196EBA4945654A0826DA846F3FAFDC5ECA2779F685AAE3324FFBED09C1"
+    },
+    {
+      "profileId": "sfp-basic-qa-me-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "ME",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:ME and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 7010.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "D316A408A47D47DE75F821DECC8E228732C82DA1C7B4D7AF9525E376383C350D"
+    },
+    {
+      "profileId": "sfp-basic-qa-mn-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "MN",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:MN and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 4500.96,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "1E102C8923EF3448D59D83C5AF788FAC138F9476B240E3C6F474DDFB4B4012F3"
+    },
+    {
+      "profileId": "sfp-basic-qa-mo-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "MO",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:MO and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 5281.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "8750B4CBEC2D207D13E7B871CFB9E9004C31EF09775189ED2299F0627FCB7E8F"
+    },
+    {
+      "profileId": "sfp-basic-qa-ms-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "MS",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:MS and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 10206.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "2EB9E6DBEF55E3AB89FEFF71C8D1689E5747908059A2BDEA0A904A2661153B54"
+    },
+    {
+      "profileId": "sfp-basic-qa-mt-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "MT",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:MT and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 4063.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "D73276AF3016154A522E16FB16AB1FF011A057E443E4163B4B4588AFA1CDDBC3"
+    },
+    {
+      "profileId": "sfp-basic-qa-nd-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "ND",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:ND and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 4198.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "632BCB8978BCD09F93B35BDD24BD2522B45165F8B23D97B6B1CAFD1EF3995885"
+    },
+    {
+      "profileId": "sfp-basic-qa-ne-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "NE",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:NE and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 4873.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "1CCBF3718FC23318CA1B82F324A2DC4041739F873D746FDCCFA96D8136C3AEE4"
+    },
+    {
+      "profileId": "sfp-basic-qa-nh-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "NH",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:NH and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 5540.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "C6CFB62C366A330D696108174357BAEB4F0AC4B995ABFABD1CF0803CD7782267"
+    },
+    {
+      "profileId": "sfp-basic-qa-nj-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "NJ",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:NJ and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 4860.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "EA531C48BD713629116713830CB71F003E43979A7D4D28C3780BD5D26EB19251"
+    },
+    {
+      "profileId": "sfp-basic-qa-nm-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "NM",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:NM and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 5848.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "6D7CE06ED318FC00F180B72C1CB198F3FDF68401F35006449D29E6078C246E72"
+    },
+    {
+      "profileId": "sfp-basic-qa-nv-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "NV",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:NV and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 7012.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "26580FA58A8C650BE3FE9BF0DBA9CE6CF897084A18AB710AF37B7CE8B209B8EE"
+    },
+    {
+      "profileId": "sfp-basic-qa-oh-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "OH",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:OH and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 3796.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "B59CBE537CDC8BC00A271349145E963095AD0E9DB10D3BB3A863BCB28D61435E"
+    },
+    {
+      "profileId": "sfp-basic-qa-ok-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "OK",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:OK and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 8454.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "FDA74FFD921687D4A67A0EB22882E7E98E4BC2B43C5DF296F611FE762B34E56E"
+    },
+    {
+      "profileId": "sfp-basic-qa-or-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "OR",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:OR and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 3308.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "B7C0C27FFF600AA11EDB9FBBC5208E8625369670ED4FF709A3EC4DD6BBB6C9B2"
+    },
+    {
+      "profileId": "sfp-basic-qa-ri-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "RI",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:RI and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 6394.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "93ED548BEC13080C9BB0D1428B61A5A8BE015AF77EF31B725F592AE8BC671540"
+    },
+    {
+      "profileId": "sfp-basic-qa-sc-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "SC",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:SC and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 8600.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "FE1D38C7170D0FF20581CBB5FEDCE29C24955B938139E3413E28054FE10DC167"
+    },
+    {
+      "profileId": "sfp-basic-qa-sd-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "SD",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:SD and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 5641.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "27D40D7D095CAB97C188C5434DA9D74C29E20762F4DECE37664985E253DE1A95"
+    },
+    {
+      "profileId": "sfp-basic-qa-tn-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "TN",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:TN and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 6594.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "838DAB1280C6406A4AAB1477E87259F45F3A7A33F7207C82D77803C5DEFD15D7"
+    },
+    {
+      "profileId": "sfp-basic-qa-tx-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "TX",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:TX and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 11214.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "D27AD8AF47598F6E012290B4A19381D70F7D2BC62C8452D7F09B65EA2D44A900"
+    },
+    {
+      "profileId": "sfp-basic-qa-ut-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "UT",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:UT and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 4834.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "24C70CA584620DB98993EDA96E9706B5B7ECBD353D1A2D6DD4833CC474ED9600"
+    },
+    {
+      "profileId": "sfp-basic-qa-wa-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "WA",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:WA and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 9926.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "48445574BDA70A397005DBB45B0712108716AC422BB7E0C84B21D4E6BA587510"
+    },
+    {
+      "profileId": "sfp-basic-qa-wi-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "WI",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:WI and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 4758.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "A837F566D85F2F96A417A519EA8734A7260DD3B36B17E23FB7D99F47F2FF91AB"
+    },
+    {
+      "profileId": "sfp-basic-qa-wy-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-basic",
+      "environment": "qa",
+      "state": "WY",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:WY and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 5789.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:BASIC",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "A50D863939D7C67532F33671A9C2ECA09E15914BD2FFA06F5447555574238100"
+    },
+    {
+      "profileId": "sfp-country-estate-qa-al-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "qa",
+      "state": "AL",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:CE:AL and Resources/ExpectedForms/SFP/SFP_CE.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 3089.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:CE",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "D9A60CB384FE530FD97A752C2FD09C2DEDBB55E0A6EF61FDBFD17B3D040CB606",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "DDDA69E7BF550B1DA78C9E1E669133752A8B47C064360CD296D0E48736D76A67"
+    },
+    {
+      "profileId": "sfp-country-estate-qa-az-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "qa",
+      "state": "AZ",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:CE:AZ and Resources/ExpectedForms/SFP/SFP_CE.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 3940.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:CE",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "D9A60CB384FE530FD97A752C2FD09C2DEDBB55E0A6EF61FDBFD17B3D040CB606",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "45A5C0145B5CB0DE21BEC9FEEF6B526E60BEE908512996992C1356B54D5B60DB"
+    },
+    {
+      "profileId": "sfp-country-estate-qa-ct-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "qa",
+      "state": "CT",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:CE:CT and Resources/ExpectedForms/SFP/SFP_CE.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 3564.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:CE",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "D9A60CB384FE530FD97A752C2FD09C2DEDBB55E0A6EF61FDBFD17B3D040CB606",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "4E714CE8B83267A01FC94F6E07B321F2818258E15AFD7957D8F591839AE55F96"
+    },
+    {
+      "profileId": "sfp-country-estate-qa-de-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "qa",
+      "state": "DE",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:CE:DE and Resources/ExpectedForms/SFP/SFP_CE.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained. The source README identifies this amount as retained legacy data, not a freshly qualified premium.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 2283.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:CE",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "D9A60CB384FE530FD97A752C2FD09C2DEDBB55E0A6EF61FDBFD17B3D040CB606",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "67732AE9792B5B765BB89A38B961C7B82DADB30C921EA9051A6F2D528FBE6BF6"
+    },
+    {
+      "profileId": "sfp-country-estate-qa-ga-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "qa",
+      "state": "GA",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:CE:GA and Resources/ExpectedForms/SFP/SFP_CE.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 3843.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:CE",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "D9A60CB384FE530FD97A752C2FD09C2DEDBB55E0A6EF61FDBFD17B3D040CB606",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "2525F1736B29219DE704160576F3B8D38A441F41D43FE0D0BCBD73A331E04352"
+    },
+    {
+      "profileId": "sfp-country-estate-qa-ia-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "qa",
+      "state": "IA",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:CE:IA and Resources/ExpectedForms/SFP/SFP_CE.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 2839.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:CE",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "D9A60CB384FE530FD97A752C2FD09C2DEDBB55E0A6EF61FDBFD17B3D040CB606",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "DFB8B0B0033BFA32F2B38060BD0743855EF380D2AEC9100700F9C4C102585612"
+    },
+    {
+      "profileId": "sfp-country-estate-qa-ks-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "qa",
+      "state": "KS",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:CE:KS and Resources/ExpectedForms/SFP/SFP_CE.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 5110.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:CE",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "D9A60CB384FE530FD97A752C2FD09C2DEDBB55E0A6EF61FDBFD17B3D040CB606",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "312535146B71639ED8F8FB1FDD1A02734BABFFCFB0D4D579B929349FD8008DBC"
+    },
+    {
+      "profileId": "sfp-country-estate-qa-la-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "qa",
+      "state": "LA",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:CE:LA and Resources/ExpectedForms/SFP/SFP_CE.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 5095.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:CE",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "D9A60CB384FE530FD97A752C2FD09C2DEDBB55E0A6EF61FDBFD17B3D040CB606",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "DE6FE78A11B7F4C0DF590142C283B908C9B7C0FBCA0AF9249D3421F85D8915DD"
+    },
+    {
+      "profileId": "sfp-country-estate-qa-ma-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "qa",
+      "state": "MA",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:CE:MA and Resources/ExpectedForms/SFP/SFP_CE.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 2599.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:CE",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "D9A60CB384FE530FD97A752C2FD09C2DEDBB55E0A6EF61FDBFD17B3D040CB606",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "920EE5A4FB028243D0C590C3CCA90AD30C577CD1C3997AB3578839A342165A12"
+    },
+    {
+      "profileId": "sfp-country-estate-qa-me-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "qa",
+      "state": "ME",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:CE:ME and Resources/ExpectedForms/SFP/SFP_CE.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained. The source README identifies this amount as retained legacy data, not a freshly qualified premium.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 674.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:CE",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "D9A60CB384FE530FD97A752C2FD09C2DEDBB55E0A6EF61FDBFD17B3D040CB606",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "C962AC0CC8B9C98C39441E64B4C6737CF9DFA5A2176777561E5BB230E365790B"
+    },
+    {
+      "profileId": "sfp-country-estate-qa-nm-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "qa",
+      "state": "NM",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:CE:NM and Resources/ExpectedForms/SFP/SFP_CE.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 6037.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:CE",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "D9A60CB384FE530FD97A752C2FD09C2DEDBB55E0A6EF61FDBFD17B3D040CB606",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "7DE224C5134BA86254715D3FB5B1E18F5B1FB41970391EC7F1C9A4D8629723B4"
+    },
+    {
+      "profileId": "sfp-country-estate-qa-nv-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "qa",
+      "state": "NV",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:CE:NV and Resources/ExpectedForms/SFP/SFP_CE.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 3110.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:CE",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "D9A60CB384FE530FD97A752C2FD09C2DEDBB55E0A6EF61FDBFD17B3D040CB606",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "73C0EBF18E659187931A58211105E87D24F44B642D5C165D5625E5C998C72B31"
+    },
+    {
+      "profileId": "sfp-country-estate-qa-sc-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "qa",
+      "state": "SC",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:CE:SC and Resources/ExpectedForms/SFP/SFP_CE.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 3547.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:CE",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "D9A60CB384FE530FD97A752C2FD09C2DEDBB55E0A6EF61FDBFD17B3D040CB606",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "8B41CD9ECF12F745CC019CBBAFEA90C48A13C8F7E114C4877C730369775E92FC"
+    },
+    {
+      "profileId": "sfp-country-estate-qa-tn-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "qa",
+      "state": "TN",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:CE:TN and Resources/ExpectedForms/SFP/SFP_CE.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 3626.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:CE",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "D9A60CB384FE530FD97A752C2FD09C2DEDBB55E0A6EF61FDBFD17B3D040CB606",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "1964C0ADC3AC4CEEDBF6F0A9B7F67FE3805E9358AB99771BA87FF84500976A67"
+    },
+    {
+      "profileId": "sfp-country-estate-qa-wi-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "qa",
+      "state": "WI",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:CE:WI and Resources/ExpectedForms/SFP/SFP_CE.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 2164.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:CE",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "D9A60CB384FE530FD97A752C2FD09C2DEDBB55E0A6EF61FDBFD17B3D040CB606",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "F432F446EA4AE22743E4E5502293B160F2916140254709A4198D5579B981FC1B"
+    },
+    {
+      "profileId": "sfp-country-estate-qa-wy-development",
+      "version": "2026.09.24-d91ced6",
+      "scenarioProfile": "sfp-country-estate",
+      "environment": "qa",
+      "state": "WY",
+      "company": "American National Property And Casualty Co.",
+      "mode": "Approved",
+      "provenance": {
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:CE:WY and Resources/ExpectedForms/SFP/SFP_CE.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
+      },
+      "premium": {
+        "expectedAmount": 4623.0,
+        "currency": "USD",
+        "toleranceRule": "Absolute",
+        "tolerance": 0.01
+      },
+      "forms": {
+        "baselineId": "SFP:CE",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "D9A60CB384FE530FD97A752C2FD09C2DEDBB55E0A6EF61FDBFD17B3D040CB606",
+        "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
+        "printJob": "_TransactionPrint",
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
+        "requireRoleBasedSecurity": false
+      },
+      "transmission": {
+        "mode": "AvailabilityOnly",
+        "expectedStatuses": [],
+        "identityKind": ""
+      },
+      "checksum": "067C92EC588040C65D301D903C9253032FCEA2EE41A03F1B9CB6CA1CE961C673"
+    },
+    {
       "profileId": "sfp-basic-qa-pending",
       "version": "1.0.0-pending-qa",
       "scenarioProfile": "sfp-basic",

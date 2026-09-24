@@ -39,10 +39,30 @@ execution also compares the loaded baseline's SHA-256 and
 forms, or transmission expectations. It is reported as an explicit ignored
 scenario before browser startup and cannot satisfy a gated run.
 
-## Values awaiting QA approval
+## Development baseline import
 
-All default SFP entries are currently `NonRunnable`. QA must provide exact
-profiles for each runnable environment/state/company combination:
+On September 24, 2026, PA3402 confirmed that the premiums on
+`origin/Development` should be used in the integration branch. The default
+catalog now contains 54 approved QA profiles copied from commit
+`d91ced656df2652d65aa9b2de3d0f188d0233845`: all 38 Basic amounts and all 16
+configured CE amounts. No premium is derived from another state or product.
+The source README identifies CE Delaware (2283.00) and Maine (674.00) as
+retained older amounts rather than newly qualified captures; those values
+are carried forward exactly with that provenance recorded.
+
+The profiles use the scenario's existing writing company, a USD 0.01 absolute
+tolerance, the imported `SFP_BASIC.csv` / `SFP_CE.csv` baseline checksums and
+`development-d91ced6` version, the existing Forms response contract, and
+`AvailabilityOnly` transmission. CSV line endings are pinned to LF so their
+checksums survive different Git checkout settings. The pre-existing approval
+horizon, October 18, 2026 at 12:44:42.179 UTC, is retained rather than extended.
+This is authorization to compare against Development's expectations, not a
+claim that these cases or all forms checks have passed on the integration branch.
+
+The 22 CE states without configured Development premiums and all Dev profiles
+remain explicitly `NonRunnable`; imported SGS contracts are unchanged.
+Additional or renewed profiles still require exact
+environment/state/company expectations:
 
 - expected premium amount and explicit absolute tolerance;
 - forms baseline version and SHA-256 checksum;
@@ -55,16 +75,20 @@ profiles for each runnable environment/state/company combination:
 - approval source, approver, approval timestamp, validity horizon, profile
   version, and computed profile checksum.
 
-The legacy `ExpectedPremiums` values were intentionally removed because they
-did not carry QA provenance, tolerance, validity, or integrity metadata.
+The integration runtime does not read the legacy `ExpectedPremiums` section.
+The imported values instead live in the versioned catalog with provenance,
+tolerance, validity, and integrity metadata. The offline regression suite
+checks all 54 amounts against the pinned Development values, checks the
+deployed forms files and configured versions, and verifies that missing
+CE/Dev approvals remain gated.
 
 ## Local SFP Basic Alabama verification
 
 `Resources\ExpectedOutcomes\sfp-basic-al-local.json` is an explicit opt-in for
-one QA case, not the default release catalog. It records the user's approval
-to reuse the original Alabama expectation from `origin/Development`: USD
-1540.00 with a 0.01 absolute tolerance, and the existing `SFP:BASIC` forms
-baseline. The original feature tables still supply the policy inputs. They
+one QA case. It now contains the same updated Alabama profile as the default
+catalog: USD 6489.00 with a 0.01 absolute tolerance, and the imported
+`SFP:BASIC` CSV forms baseline from `d91ced6`.
+The updated canonical feature tables still supply the policy inputs. They
 have not been replaced with generated data or migrated into this outcome JSON.
 
 Set `EQ_USERNAME`, `EQ_PASSWORD`, `CLAS_USERNAME`, `CLAS_PASSWORD`,
@@ -140,8 +164,9 @@ expectation requires an explicitly reviewed profile and recomputed checksum.
 The forms checksum pins the actual baseline file bytes, including line endings.
 Do not silently update it, premium, or forms to match an unexpected live result.
 `AvailabilityOnly` checks the transmit option without transmitting a policy.
-Other SFP states, Country Estate, standalone forms, and imported SGS scenarios remain gated
-by their existing default contracts.
+The local runner still selects only Basic Alabama. Other SFP cases use their
+own catalog entries; missing approvals and imported SGS scenarios remain gated
+by their applicable contracts.
 
 ### Verified boundary on September 18, 2026
 

@@ -1,6 +1,11 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Models;
+using static Microsoft.Playwright.Assertions;
 
 namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 {
@@ -10,6 +15,163 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
     public class SFP_ScheduledPersonalPropertyPage : BasePage
     {
         public SFP_ScheduledPersonalPropertyPage(IPage page) : base(page) { }
+
+        public async Task AddAndVerifyCountryEstateItemAsync(SfpScheduledPropertyItem item)
+        {
+            var action = item.Code switch
+            {
+                "409" => "Stamp",
+                "411" => "AutoTrailer",
+                _ => throw new ArgumentException($"Unsupported CE scheduled-property code '{item.Code}'.")
+            };
+            await WaitForSpinnerAsync();
+            await Expect(CoverageTable).ToBeVisibleAsync();
+            await Expect(FilterInput).ToHaveCountAsync(1);
+            await FilterInput.FillAsync(item.Code);
+            await Expect(CoverageTable.Locator("th.mat-column-column1, mat-header-cell.mat-column-column1"))
+                .ToHaveTextAsync("Coverage Code");
+            var codeCell = _page.Locator("td.mat-column-column1, mat-cell.mat-column-column1")
+                .Filter(new() { HasTextRegex = new Regex(@"^\s*" + Regex.Escape(item.Code) + @"\s*$") });
+            var row = CoverageTable.Locator("tr, mat-row").Filter(new() { Has = codeCell });
+            await Expect(row).ToHaveCountAsync(1);
+            var checkbox = row.GetByTestId(new Regex(@"\.covCatEntryInput\$selected\.value$", RegexOptions.IgnoreCase))
+                .And(_page.Locator("input[type='checkbox']"));
+            await Expect(checkbox).ToHaveCountAsync(1);
+            await Expect(checkbox).ToBeEnabledAsync();
+            var label = row.GetByTestId(new Regex(@"\.covCatEntryInput\$selected\.value$", RegexOptions.IgnoreCase))
+                .And(_page.Locator("label"));
+            await Expect(label).ToHaveCountAsync(1);
+            if (!await checkbox.IsCheckedAsync())
+                await label.ClickAsync();
+            await Expect(checkbox).ToBeCheckedAsync();
+            await WaitForSpinnerAsync();
+
+            await ClickRequiredActionAsync("add" + action);
+            await FillCountryEstateItemAsync(item);
+            await VerifyCountryEstateItemAsync(item);
+            await ClickRequiredActionAsync("save");
+            await Expect(CoverageTable).ToBeVisibleAsync();
+
+            // Reopen by the category-specific action, never a generic first Edit button.
+            await ClickRequiredActionAsync("edit" + action);
+            await VerifyCountryEstateItemAsync(item);
+            var nav = _page.Locator("[data-testid='ScheduledPersonalProperty-nav'], #ScheduledPersonalProperty-nav");
+            await Expect(nav).ToHaveCountAsync(1);
+            await nav.ClickAsync();
+            await WaitForSpinnerAsync();
+            await Expect(CoverageTable).ToBeVisibleAsync();
+        }
+
+        private ILocator RequiredItemField(string name) =>
+            _page.GetByTestId(new Regex(@"\.covEndorsementsInput\$" + Regex.Escape(name) + @"\.value$", RegexOptions.IgnoreCase))
+                .And(_page.Locator("input:visible, textarea:visible"));
+
+        private ILocator NamedPersonCount =>
+            _page.GetByTestId(new Regex(@"\.covAutoTrailerHomePersonalEffectsInput\$namedPerson\.value$", RegexOptions.IgnoreCase))
+                .And(_page.Locator(":visible"));
+
+        private ILocator NamedPersonNames =>
+            _page.GetByTestId(new Regex(@"\.covAutoTrailerHomePersonalEffectsInput\$name\.value$", RegexOptions.IgnoreCase))
+                .And(_page.Locator("input:visible, textarea:visible"));
+
+        private static string NamedPersonCaption(SfpScheduledPropertyItem item) =>
+            item.NamedPersonCount == 0 ? "None" : item.NamedPersonCount?.ToString(CultureInfo.InvariantCulture)
+                ?? throw new ArgumentException("Coverage 411 requires an explicit NamedPersonCount.");
+
+        private ILocator UnattendedChips(string code)
+        {
+            var field = code switch
+            {
+                "409" => @"covStampCollectionsInput\$unattendedVehicle",
+                "411" => @"covAutoTrailerHomePersonalEffectsInput\$unattendedVehicles",
+                _ => throw new ArgumentException($"Unsupported CE scheduled-property code '{code}'.")
+            };
+            return _page.GetByTestId(new Regex(@"\." + field + @"\.value-chip-item-wrapper$", RegexOptions.IgnoreCase))
+                .And(_page.Locator(":visible"));
+        }
+
+        private async Task FillCountryEstateItemAsync(SfpScheduledPropertyItem item)
+        {
+            // Requiring both exact options also establishes the intended category's editor.
+            var chips = UnattendedChips(item.Code);
+            await Expect(chips).ToHaveCountAsync(2);
+            foreach (var value in new[] { "Yes", "No" })
+                await Expect(chips.Filter(new() { HasTextRegex = new Regex(@"^\s*" + value + @"\s*$") })).ToHaveCountAsync(1);
+
+            await FillRequiredItemFieldAsync("description", item.Description);
+            await FillRequiredItemFieldAsync("limit", item.Amount.ToString(CultureInfo.InvariantCulture));
+            if (item.Code == "411")
+            {
+                await Expect(NamedPersonCount).ToHaveCountAsync(1);
+                await Expect(NamedPersonCount).ToBeEnabledAsync();
+                await NamedPersonCount.ClickAsync();
+                var option = _page.GetByRole(AriaRole.Listbox).And(_page.Locator(":visible"))
+                    .GetByRole(AriaRole.Option, new() { Name = NamedPersonCaption(item), Exact = true });
+                await Expect(option).ToHaveCountAsync(1);
+                await option.ClickAsync();
+                await WaitForSpinnerAsync();
+                await Expect(NamedPersonNames).ToHaveCountAsync(1);
+                await NamedPersonNames.FillAsync(item.NamedPersonNames);
+                await NamedPersonNames.PressAsync("Tab");
+                await WaitForSpinnerAsync();
+            }
+            if (item.YearOfAppraisal.HasValue)
+                await FillRequiredItemFieldAsync("yearOfLastAppraisal", item.YearOfAppraisal.Value.ToString(CultureInfo.InvariantCulture));
+            await chips.Filter(new() { HasTextRegex = new Regex(item.UnattendedVehicle ? @"^\s*Yes\s*$" : @"^\s*No\s*$") }).ClickAsync();
+            await WaitForSpinnerAsync();
+        }
+
+        private async Task FillRequiredItemFieldAsync(string name, string value)
+        {
+            var input = RequiredItemField(name);
+            await Expect(input).ToHaveCountAsync(1);
+            await input.FillAsync(value);
+            await input.PressAsync("Tab");
+            await WaitForSpinnerAsync();
+        }
+
+        public async Task VerifyCountryEstateItemAsync(SfpScheduledPropertyItem item)
+        {
+            var description = RequiredItemField("description");
+            await Expect(description).ToHaveCountAsync(1);
+            await Expect(description).ToHaveValueAsync(new Regex(
+                "^(?:" + Regex.Escape(item.Description) + "|" + Regex.Escape(item.Description.ToUpperInvariant()) + ")$"));
+            var limit = RequiredItemField("limit");
+            await Expect(limit).ToHaveCountAsync(1);
+            await SfpFieldAssertions.NumberAsync(limit, item.Amount.ToString(CultureInfo.InvariantCulture));
+            if (item.Code == "411")
+            {
+                await Expect(NamedPersonCount).ToHaveCountAsync(1);
+                await SfpFieldAssertions.SelectionAsync(NamedPersonCount, NamedPersonCaption(item));
+                await Expect(NamedPersonNames).ToHaveCountAsync(1);
+                await Expect(NamedPersonNames).ToHaveValueAsync(new Regex(
+                    "^(?:" + Regex.Escape(item.NamedPersonNames) + "|" + Regex.Escape(item.NamedPersonNames.ToUpperInvariant()) + ")$"));
+            }
+            if (item.YearOfAppraisal.HasValue)
+            {
+                var year = RequiredItemField("yearOfLastAppraisal");
+                await Expect(year).ToHaveCountAsync(1);
+                await Expect(year).ToHaveValueAsync(item.YearOfAppraisal.Value.ToString(CultureInfo.InvariantCulture));
+            }
+            var chips = UnattendedChips(item.Code);
+            await Expect(chips).ToHaveCountAsync(2);
+            var selected = chips.Filter(new() { HasTextRegex = new Regex(item.UnattendedVehicle ? @"^\s*Yes\s*$" : @"^\s*No\s*$") });
+            await Expect(selected).ToHaveCountAsync(1);
+            await Expect(selected.Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
+            var unselected = chips.Filter(new() { HasTextRegex = new Regex(item.UnattendedVehicle ? @"^\s*No\s*$" : @"^\s*Yes\s*$") });
+            await Expect(unselected).ToHaveCountAsync(1);
+            await Expect(unselected.Locator(".chip-wrapper-selected")).ToHaveCountAsync(0);
+        }
+
+        private async Task ClickRequiredActionAsync(string name)
+        {
+            var action = _page.GetByTestId(new Regex(@"\." + Regex.Escape(name) + "$", RegexOptions.IgnoreCase))
+                .And(_page.Locator("button:visible"));
+            await Expect(action).ToHaveCountAsync(1);
+            await Expect(action).ToBeEnabledAsync();
+            await action.ClickAsync();
+            await WaitForSpinnerAsync();
+        }
 
         #region Locators
         public ILocator FilterInput => _page.GetByTestId("temp.filter");

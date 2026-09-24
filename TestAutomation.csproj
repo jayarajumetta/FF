@@ -30,6 +30,7 @@
   <!-- DataPool must be built so DataPoolLauncher can find and start it at runtime -->
   <ItemGroup>
     <ProjectReference Include="DataPool\DataPool.csproj" ReferenceOutputAssembly="false" />
+    <InternalsVisibleTo Include="TestAutomation.UnitTests" />
   </ItemGroup>
 
   <ItemGroup>

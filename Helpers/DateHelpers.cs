@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace PnCTestAutomation.Helpers
@@ -31,6 +32,19 @@ namespace PnCTestAutomation.Helpers
         /// </summary>
         /// <returns>Today's date as a string.</returns>
         public static string GetTodayDate() => GetFutureDate(0);
+
+        public static string ResolveYearToken(string value)
+        {
+            if (string.Equals(value?.Trim(), "CURRENT YEAR", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(value?.Trim(), "{{currentYear}}", StringComparison.OrdinalIgnoreCase))
+                return DateTime.Today.Year.ToString(CultureInfo.InvariantCulture);
+
+            if (!int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var year)
+                || value.Length != 4 || year < 1000)
+                throw new ArgumentException($"Expected a four-digit year or CURRENT YEAR, received '{value}'.", nameof(value));
+
+            return value;
+        }
 
         /// <summary>
         /// Gets a future date by adding days to today.
@@ -119,4 +133,3 @@ namespace PnCTestAutomation.Helpers
         }
     }
 }
-

@@ -2,32 +2,34 @@
   "schemaVersion": 1,
   "profiles": [
     {
-      "profileId": "sfp-basic-qa-al-legacy",
-      "version": "1.0.0",
+      "profileId": "sfp-basic-qa-al-development",
+      "version": "2026.09.24-d91ced6",
       "scenarioProfile": "sfp-basic",
       "environment": "qa",
       "state": "AL",
       "company": "American National Property And Casualty Co.",
       "mode": "Approved",
       "provenance": {
-        "source": "User-authorized local verification of origin/Development a86a202c2d39f7c266d84c7a3a9bfde4fa493c88: appsettings.json ExpectedPremiums:SFP:AL and Resources/ExpectedForms/SFP/SFP.json. This is a regression expectation, not evidence of a current application pass.",
-        "approvedBy": "PA3402 (local baseline reuse requested 2026-09-18)",
-        "approvedAtUtc": "2026-09-18T12:44:42.1790000Z",
-        "validUntilUtc": "2026-10-18T12:44:42.1790000Z"
+        "source": "User-confirmed reuse of origin/Development d91ced656df2652d65aa9b2de3d0f188d0233845: appsettings.json ExpectedPremiums:SFP:AL and Resources/ExpectedForms/SFP/SFP_BASIC.csv. Regression expectations, not evidence of an integration-branch application pass. Existing October 18 approval horizon retained.",
+        "approvedBy": "PA3402 (Development baseline reuse confirmed 2026-09-24)",
+        "approvedAtUtc": "2026-09-24T16:22:39.5238110+00:00",
+        "validUntilUtc": "2026-10-18T12:44:42.1790000+00:00"
       },
       "premium": {
-        "expectedAmount": 1540.00,
+        "expectedAmount": 6489.0,
         "currency": "USD",
         "toleranceRule": "Absolute",
         "tolerance": 0.01
       },
       "forms": {
         "baselineId": "SFP:BASIC",
-        "baselineVersion": "development-b10b339",
-        "baselineChecksum": "202130B85581216A4917FC1B0ED6A0F2E0054B7D3631FA06E8BB6581C5753855",
+        "baselineVersion": "development-d91ced6",
+        "baselineChecksum": "87BB405CD4BBD60102DA67D56B827D1A93D969C20789860FB23CB6E5175C39C6",
         "manuscript": "Carrier_CommercialLines_Forms_US_4_0_0_0",
         "printJob": "_TransactionPrint",
-        "expectedReturnSuccessStatuses": [ "1" ],
+        "expectedReturnSuccessStatuses": [
+          "1"
+        ],
         "requireRoleBasedSecurity": false
       },
       "transmission": {
@@ -35,7 +37,7 @@
         "expectedStatuses": [],
         "identityKind": ""
       },
-      "checksum": "AAE5DBBDA9A58AFE48A2B9AA7B2A10D4A44FBF3AEA9C3D56A3B6DA52178073CF"
+      "checksum": "09F3878E4F2BCBB0B77D8CE694F0C2459941038ED5C1420131AAB471C3DC5B67"
     }
   ]
 }

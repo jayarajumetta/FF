@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Tools\SgsReport\SgsReport.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="..\Tests\Sfp*.cs" Link="Sfp\%(Filename)%(Extension)" />
+  </ItemGroup>
+
 </Project>

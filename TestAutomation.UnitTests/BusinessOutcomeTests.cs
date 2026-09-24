@@ -157,32 +157,38 @@ public class BusinessOutcomeTests
     [Test]
     public void RepositoryProfileCatalogKeepsUnapprovedSfpProfilesNonRunnable()
     {
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            Converters = { new JsonStringEnumConverter() }
+        };
+        var catalog = JsonSerializer.Deserialize<ExpectedOutcomeCatalog>(
+            File.ReadAllText(Path.Combine(
+                AppContext.BaseDirectory, "Resources", "ExpectedOutcomes",
+                "sfp-outcomes.json")), options)!;
         var provider = new ExpectedOutcomeProfileProvider(
-            new BusinessOutcomeOptions
-            {
-                ProfilePath = Path.Combine(
-                    AppContext.BaseDirectory,
-                    "Resources",
-                    "ExpectedOutcomes",
-                    "sfp-outcomes.json")
-            });
+            catalog,
+            () => new DateTimeOffset(2026, 9, 25, 0, 0, 0, TimeSpan.Zero));
 
         Assert.Multiple(() =>
         {
             Assert.That(
-                provider.ResolvePreflight("sfp-basic", "qa", "AL").IsRunnable,
+                provider.ResolvePreflight("sfp-basic", "dev", "AL").IsRunnable,
                 Is.False);
             Assert.That(
                 provider.ResolvePreflight(
                     "sfp-country-estate",
                     "qa",
-                    "AL").IsRunnable,
+                    "AR").IsRunnable,
+                Is.False);
+            Assert.That(
+                provider.ResolvePreflight("sfp-country-estate", "dev", "AL").IsRunnable,
                 Is.False);
         });
     }
 
     [Test]
-    public void LocalAlabamaProfileReusesLegacyBaselineWithoutEnablingOtherStates()
+    public void LocalAlabamaProfileUsesDevelopmentBaselineWithoutEnablingOtherStates()
     {
         var options = new JsonSerializerOptions
         {
@@ -195,7 +201,7 @@ public class BusinessOutcomeTests
                 "sfp-basic-al-local.json")), options)!;
         var provider = new ExpectedOutcomeProfileProvider(
             catalog,
-            () => new DateTimeOffset(2026, 9, 18, 13, 0, 0, TimeSpan.Zero));
+            () => new DateTimeOffset(2026, 9, 25, 0, 0, 0, TimeSpan.Zero));
         var resolution = provider.ResolvePreflight("sfp-basic", "qa", "AL");
         var profile = resolution.Profile;
         var baseline = new FormsValidationService(new DuckCreekFormsConfig
@@ -205,8 +211,9 @@ public class BusinessOutcomeTests
         Assert.Multiple(() =>
         {
             Assert.That(resolution.IsRunnable, Is.True);
-            Assert.That(profile.Premium!.ExpectedAmount, Is.EqualTo(1540m));
+            Assert.That(profile.Premium!.ExpectedAmount, Is.EqualTo(6489m));
             Assert.That(profile.Premium.Tolerance, Is.EqualTo(0.01m));
+            Assert.That(profile.Forms.BaselineVersion, Is.EqualTo("development-d91ced6"));
             Assert.That(profile.Forms.BaselineChecksum, Is.EqualTo(baseline.Checksum));
             Assert.That(profile.Forms.BaselineId, Is.EqualTo(baseline.BaselineId));
             Assert.That(baseline.Entries, Is.Not.Empty);

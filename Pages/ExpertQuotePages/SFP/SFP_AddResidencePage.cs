@@ -1,6 +1,9 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using PnCTestAutomation.Helpers;
+using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static Microsoft.Playwright.Assertions;
 
 namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 {
@@ -111,6 +114,13 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             if (!string.IsNullOrEmpty(contextData.ResidenceRoofYear))
                 await RoofYearInput.FillAsync(contextData.ResidenceRoofYear);
 
+            if (!string.IsNullOrEmpty(contextData.Farm.ResidenceHeatingYear))
+                await FillRenovationYearAsync(HeatingYearInput, contextData.Farm.ResidenceHeatingYear);
+            if (!string.IsNullOrEmpty(contextData.Farm.ResidencePlumbingYear))
+                await FillRenovationYearAsync(PlumbingYearInput, contextData.Farm.ResidencePlumbingYear);
+            if (!string.IsNullOrEmpty(contextData.Farm.ResidenceElectricalYear))
+                await FillRenovationYearAsync(WiringYearInput, contextData.Farm.ResidenceElectricalYear);
+
             if (!string.IsNullOrEmpty(contextData.ResidenceRoofType))
             {
                 await RoofTypeSelect.ClickAsync();
@@ -130,6 +140,62 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             {
                 var yesOrNo = contextData.ResidenceSolidFuelQuestion.ToLower() is "yes" or "true" ? "Yes" : "No";
                 await GetSolidFuelButton(yesOrNo).ClickAsync();
+            }
+        }
+
+        private async Task FillRenovationYearAsync(ILocator input, string year)
+        {
+            await input.FillAsync(year);
+            await input.PressAsync("Tab");
+            await WaitForSpinnerAsync();
+            await Expect(input).ToHaveValueAsync(year);
+        }
+
+        public Task VerifyResidenceFormAsync(ScenarioContextData data) =>
+            VerifyResidenceFormAsync(data, countryEstate: false);
+
+        public Task VerifyCountryEstateResidenceFormAsync(ScenarioContextData data)
+        {
+            if (data.ResidenceSeasonalOrVacant != null)
+                throw new ArgumentException("Country Estate cannot verify a supplied SeasonalOrVacant value.");
+
+            return VerifyResidenceFormAsync(data, countryEstate: true);
+        }
+
+        private async Task VerifyResidenceFormAsync(ScenarioContextData data, bool countryEstate)
+        {
+            await Expect(AdditionalDescriptionInput).ToHaveValueAsync(data.ResidenceAdditionalDesc);
+            await Expect(YearBuiltInput).ToHaveValueAsync(data.ResidenceYearBuilt);
+            await Expect(RoofYearInput).ToHaveValueAsync(data.ResidenceRoofYear);
+            if (data.Farm.ResidenceHeatingYear != null)
+                await Expect(HeatingYearInput).ToHaveValueAsync(data.Farm.ResidenceHeatingYear);
+            if (data.Farm.ResidencePlumbingYear != null)
+                await Expect(PlumbingYearInput).ToHaveValueAsync(data.Farm.ResidencePlumbingYear);
+            if (data.Farm.ResidenceElectricalYear != null)
+                await Expect(WiringYearInput).ToHaveValueAsync(data.Farm.ResidenceElectricalYear);
+            await SfpFieldAssertions.SelectionAsync(FrameSelect, data.ResidenceRateType);
+            await SfpFieldAssertions.SelectionAsync(RoofTypeSelect, data.ResidenceRoofType);
+            await SfpFieldAssertions.SelectionAsync(RoofImpactResistanceSelect, data.ResidenceRoofImpact);
+            await Expect(GetNumberOfFamiliesButton(data.ResidenceNumberOfFamilies)
+                .Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
+            await Expect(GetConditionRatingButton(data.ResidenceConditionRating)
+                .Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
+            await Expect(GetSolidFuelButton(data.ResidenceSolidFuelQuestion)
+                .Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
+            if (countryEstate)
+            {
+                var controls = _page.GetByTestId(new Regex(
+                    @"^fields\.building\.rows\[0\]\.buildingInput\$eQVacantSeasonal\.value(?:-chip-item-wrapper)?$",
+                    RegexOptions.IgnoreCase)).And(_page.Locator(":visible"));
+                await Expect(controls).ToHaveCountAsync(0);
+            }
+            else
+            {
+                var vacantChip = GetVacantSeasonalButton(data.ResidenceSeasonalOrVacant);
+                if (await vacantChip.IsVisibleAsync())
+                    await Expect(vacantChip.Locator(".chip-wrapper-selected")).ToBeVisibleAsync();
+                else
+                    await SfpFieldAssertions.SelectionAsync(VacantSeasonalSelect, data.ResidenceSeasonalOrVacant);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.Playwright;
+using Microsoft.Playwright;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Pages;
@@ -18,14 +18,16 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
     {
         private readonly PlaywrightContext _context;
         private readonly ScenarioContextData _contextData;
-        private readonly ScenarioContext _scenarioContext;
-
         public SFP_CoverageSteps(PlaywrightContext context, ScenarioContext scenarioContext)
+            : this(context, scenarioContext[ScenarioContextData.ContextKey] as ScenarioContextData
+                ?? throw new InvalidOperationException("ScenarioContextData not found. Ensure TestHooks.BeforeTestRun registered it."))
+        {
+        }
+
+        internal SFP_CoverageSteps(PlaywrightContext context, ScenarioContextData contextData)
         {
             _context = context;
-            _scenarioContext = scenarioContext;
-            _contextData = _scenarioContext[ScenarioContextData.ContextKey] as ScenarioContextData
-                ?? throw new InvalidOperationException("ScenarioContextData not found. Ensure TestHooks.BeforeTestRun registered it.");
+            _contextData = contextData;
         }
 
         [When("user selects Policy Wide or Division Specific Coverages and continues")]
@@ -132,6 +134,21 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             await equipmentPage.ClickNextAsync();
         }
 
+        [When("user adds and verifies Country Estate Scheduled Personal Property")]
+        public async Task UserAddsAndVerifiesCountryEstateScheduledPersonalProperty(Table table)
+        {
+            if (_contextData.ProductSelection != "CE")
+                throw new ArgumentException("Country Estate scheduled property requires CE product context.");
+            var items = TableMappingHelpers.CountryEstateScheduledPropertyFields(table, _contextData);
+            var page = new SFP_ScheduledPersonalPropertyPage(_context.Page);
+            await page.WaitForSpinnerAsync();
+            var nav = _context.Page.Locator("[data-testid='ScheduledPersonalProperty-nav'], #ScheduledPersonalProperty-nav");
+            await Microsoft.Playwright.Assertions.Expect(nav).ToHaveCountAsync(1);
+            await nav.ClickAsync();
+            foreach (var item in items)
+                await page.AddAndVerifyCountryEstateItemAsync(item);
+        }
+
         [When("user adds Scheduled Personal Property")]
         public async Task UserAddsScheduledPersonalProperty(Table table)
         {
@@ -139,6 +156,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
             var sppPage = new SFP_ScheduledPersonalPropertyPage(_context.Page);
             await sppPage.WaitForSpinnerAsync();
+            var sideNav = new SideMenuNavigation(_context.Page);
+            await sideNav.GoToScheduledPersonalPropertyAsync();
 
             // Resolve row index — dynamic DOM scan first (state-safe), then name heuristic
             var rowIndex = await sppPage.FindRowByCodeAsync(_contextData.SPPCategory);
@@ -147,21 +166,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
             if (rowIndex < 0)
             {
-                Console.WriteLine($"WARNING: SPP category '{_contextData.SPPCategory}' not mapped - checking if Next button exists");
-
-                // Check if the Next button exists before deciding how to proceed.
-                var nextButtonCount = await sppPage.NextLiabilityButton.CountAsync();
-                if (nextButtonCount > 0 && await sppPage.NextLiabilityButton.IsVisibleAsync())
-                {
-                    Console.WriteLine($"[SPP] Next button found - clicking to proceed to Liability");
-                    await sppPage.NextLiabilityButton.ClickAsync();
-                    await sppPage.WaitForSpinnerAsync();
-                }
-                else
-                {
-                    Console.WriteLine($"[SPP] Next button not found - SPP page may not be available in current flow. Continuing to next step.");
-                }
-                return;
+                throw new PlaywrightException(
+                    $"Required SPP category '{_contextData.SPPCategory}' was not found. The scheduled item cannot be skipped.");
             }
 
             var checkboxSelected = await sppPage.TrySelectCoverageCheckboxAsync(rowIndex);
@@ -247,8 +253,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             if (isWorkersCompVisible)
             {
                 await liabilityPage.EditWorkersCompCoverageAsync(
-                    _contextData.WorkersCompFullTimeInServants  ?? "1",
-                    _contextData.WorkersCompPartTimeInServants  ?? "1",
+                    _contextData.WorkersCompFullTimeInServants ?? "1",
+                    _contextData.WorkersCompPartTimeInServants ?? "1",
                     _contextData.WorkersCompFullTimeOutServants ?? "0",
                     _contextData.WorkersCompPartTimeOutServants ?? "0");
             }
