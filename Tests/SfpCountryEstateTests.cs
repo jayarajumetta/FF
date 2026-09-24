@@ -10,7 +10,7 @@ using PnCTestAutomation.StepDefinitions.SFPSteps;
 namespace PnCTestAutomation.Tests
 {
     [TestFixture]
-    public class SfpCountryEstateTests
+    public partial class SfpCountryEstateTests
     {
         private IPlaywright _playwright;
         private IBrowser _browser;

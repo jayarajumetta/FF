@@ -426,8 +426,9 @@ were observed in the existing quote 02081373 trace. No separate 211 coverage is
 added. The revised amount resolves the residence-contents amount/attachment
 conflict, but not the separate Division II Farm Contents host dependency below.
 
-The detailed CE workbook's highlighted goals remain unresolved, not approved
-omissions:
+The workbook's separate **CE Policy Feature File** worksheet contains highlighted
+goals beyond the **Proposed CE Policy** summary sheet. The following Division II
+items remain deferred; neither is an executable step in `SFP_CE.feature`:
 
 - **Greenhouse: unknown true-CE completion.** Greenhouse / rate type 1 / plastic
   thickness 5 triggers the generic invalid-rate predicate and rule 12811, but CE
@@ -437,24 +438,39 @@ omissions:
   and vacancy may require missing inputs or actual saved defaults; BVS Processes
   and result 9050 require the runtime service catalog. Installation date is fixed
   at 04/25/2025 (Excel serial 45772, 1900 date system).
+  Provenance: **CE Policy Feature File!B164/B173** name Greenhouse and **B174**
+  requests 75000. This is not an implemented greenhouse workflow or a new
+  requirement inferred from the source review.
 - **Farm Contents: host dependency.** Coverage 601 supports AOI 25000, perils 5,
   replacement cost Yes and description 249 on a valid Division II building.
   There is no proven attachment to Residence #1; its greenhouse host is unresolved.
-- **Division IV: amounts still required; descriptions approved.** Categories 409
-  and 411 are CE/Alabama-offered. The user approved generic descriptions:
-  **Stamp Collections** for 409 and **Auto Trailer Home Personal Effects** for 411.
-  Use these as item descriptions (the application uppercases them), not merely
-  catalog search labels. Both require Amount of Insurance; the workbook supplies
-  neither amount and Alabama supplies no limit default. The unattended fields
-  for the requested Yes selections are respectively
+
+The following inputs are now explicitly approved and implemented in the CE
+feature; their changes have not yet been qualified against the live application:
+
+- **Division IV:** 409 **Stamp Collections / 5000** and 411 **Auto Trailer Home
+  Personal Effects / 10000**, with unattended-vehicle theft **Yes** for both.
+  These are item descriptions, not merely catalog search labels; readback accepts
+  the entered description or its application-normalized uppercase form.
+  The unattended fields are respectively
   `CovStampCollectionsInput.UnattendedVehicle` (singular) and
   `CovAutoTrailerHomePersonalEffectsInput.UnattendedVehicles` (plural).
-  Do not reuse the Stamp field for 411 or create incomplete items. These approved
-  descriptions are recorded here pending amount selection; neither coverage has
-  been added to the executable CE scenario.
-- **Location data:** QA has not supplied distinct CE addresses or a replacement
-  wind/hail deductible. Existing addresses and 1% remain unchanged, not qualified
-  as satisfying the missing workbook inputs.
+  The CE-only binding validates both item rows before navigation, selects exact
+  coverage-code cells, requires category-specific Add/Edit actions, and verifies
+  descriptions, amounts and selected Yes chips before Save and after reopening.
+  Missing, ambiguous, disabled or incorrectly persisted controls fail explicitly;
+  the older non-CE SPP binding is unchanged. No appraisal year is invented for the
+  approved 5000 stamp amount.
+- **Location data:** all 38 CE state examples now use the user's replacement
+  Address / AddressLine2 / City / Zip / County records, with five-digit ZIP strings
+  (including leading zeros), AddressLine2 111 and existing shard/state inventory
+  preserved. All 38 ZIPs differ from their previous CE values. This records the
+  supplied data exactly; it does not certify geocoding, deliverability or
+  city/ZIP/county consistency. The County example column remains informational;
+  the existing workflow obtains location resolution from the application.
+  Basic and Rate data are unchanged. No replacement wind/hail deductible was
+  supplied, so the existing 1% request remains and may need runtime reconciliation
+  for the new locations.
 
 Division IV amount rules, inspected read-only in the CLAS Dev-ST source snapshot
 synced 2026-09-23:
@@ -467,7 +483,7 @@ synced 2026-09-23:
 The reviewed shared `LimitMin` / `LimitMax` rules impose no coverage-specific
 minimum or maximum on 409/411. This does not establish unlimited insurability,
 permit invalid numeric input, or guarantee underwriting acceptance. The amount
-must be explicitly chosen; no amounts or appraisal years have been invented.
+is now explicitly chosen as 5000 / 10000; no appraisal years have been invented.
 
 Separate Division IV **non-new-business audit** rules flag added amounts above
 25000, or modified limits above 25000. Another predicate flags an added item
@@ -478,6 +494,12 @@ remains unverified. The inspected rating paths use amount divided by 100;
 no amount-band breakpoint was found for these two categories in those paths or
 Alabama's `SPPBaseRates` table. Residence perils 6 does not change these separate
 Division IV amount/appraisal rules.
+
+The earlier Alabama CE Pricing pass (quote 02081373) predates the explicit
+household-contents binding, these scheduled items and the replacement addresses.
+It must not be treated as live qualification of the updated inputs. Premium
+baselines, forms expectations, residence perils 6 and their strict checks remain
+unchanged; input changes do not authorize a rebaseline or transaction finalization.
 
 Source references: carrier Data lines 24014-24082 (required integer amount and
 description), 25734-25782 (limit bounds/default lookup), 26104-26121 and
