@@ -19,6 +19,8 @@
     "maximize": true
   },
   "reporting": {
+    "excludeVideos": true,
+    "excludePassedVideos": true,
     "resultsRoot": "TestResults",
     "artifactRoot": "Artifacts",
     "htmlReport": true,
@@ -27,6 +29,7 @@
     "includeNetworkErrors": true,
     "createEvidenceBundle": true,
     "attachEvidenceToTestResult": true,
+    "attachPassedEvidenceToTestResult": true,
     "attachmentMode": "all",
     "maxSingleAttachmentBytes": 536870912,
     "maxAttachmentCount": 5000,
@@ -56,6 +59,7 @@
     }
   },
   "execution": {
+    "retryCount": 1,
     "strictUnknownConditions": true,
     "externalDataFile": "TestData/ExternalDataOverrides.json",
     "deferVerificationFailures": true

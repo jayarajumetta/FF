@@ -7,7 +7,7 @@ Feature: Cycle Rate Filings Policy 1 NB 1
 
   Background: Prepare Personal Lines Duck Creek for policy processing
     Given I open a browser session
-  Scenario Outline: Cycle Rate Filings Policy 1 NB 1 - <stateCode> <stateVariant>
+  Scenario Outline: Cycle Rate Filings Policy 1 NB 1 - <stateCode>
     Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
     And I open the configured Personal Lines Duck Creek application
     And I sign in to Personal Lines Duck Creek using configured credentials

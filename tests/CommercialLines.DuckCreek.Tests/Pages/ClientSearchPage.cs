@@ -188,6 +188,9 @@ public sealed class ClientSearchPage
     public Task PressLastNameAsync(string key) =>
         _ui.PressAsync(_locators.LastName, key, new ControlIntent("ClientSearch", "LastName"));
 
+    public Task WaitForLastNameAsync(string expected) =>
+        _ui.WaitAsync(_locators.LastName, expected, new ControlIntent("ClientSearch", "LastName"));
+
     public Task EnterMiddleNameAsync(string value) =>
         _ui.FillAsync(_locators.MiddleName, value, new ControlIntent("ClientSearch", "MiddleName"));
 

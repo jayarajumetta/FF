@@ -19,7 +19,10 @@ public sealed class TestHooks
     }
 
     [BeforeTestRun(Order = -1000)]
-    public static void ValidateConfiguration() => _config = FrameworkConfig.Load();
+    public static void ValidateConfiguration()
+    {
+        _config = FrameworkConfig.Load();
+    }
 
     [BeforeScenario(Order = -100)]
     public void PrepareScenario()
@@ -67,6 +70,7 @@ public sealed class TestHooks
             3);
 
         _scenario.Get<BrowserSession>().BeginStepEvidence();
+        _scenario.Get<ScenarioData>().BeginStep();
         _scenario.Set(_scenario.Get<DeferredVerificationCollector>().Failures.Count, "DeferredVerificationCountAtStepStart");
         _scenario.Get<RunLogger>().Info($"START STEP: {step}");
         _scenario.Get<ScenarioReport>().StartStep(step);
@@ -101,7 +105,10 @@ public sealed class TestHooks
 
         var evidence = browser.EndStepEvidence();
         var stepError = _scenario.TestError?.Message ?? (deferredInStep ? "Verification failed after canonical locator/readiness wait; deferred until scenario end." : null);
-        report.EndStep(!failed, stepError, data.Snapshot(), screenshot, evidence);
+        var binding = _scenario.StepContext.StepInfo.BindingMatch?.StepBinding?.Method;
+        report.SetScenarioData(data.Snapshot());
+        report.EndStep(!failed, stepError, data.StepSnapshot(), screenshot, evidence,
+            binding is null ? null : $"{binding.Type.FullName}.{binding.Name}", bindingCaptured: true);
     }
 
     [AfterScenario(Order = 100)]

@@ -7,7 +7,7 @@ Feature: UMB Basic Policy
 
   Background: Prepare Commercial Lines Duck Creek for policy processing
     Given I open a browser session
-  Scenario Outline: UMB Basic Policy - <stateCode> <stateVariant>
+  Scenario Outline: UMB Basic Policy - <stateCode>
     Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
     And I open the configured Commercial Lines Duck Creek application
     And I sign in to Commercial Lines Duck Creek using configured credentials
