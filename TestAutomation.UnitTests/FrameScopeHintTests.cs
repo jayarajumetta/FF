@@ -203,6 +203,43 @@ public class FrameScopeHintTests
         });
     }
 
+    [Test]
+    public void CatalogContentsCannotRedirectSelectedPathsOrMutateOptions()
+    {
+        using var files = new CatalogFiles();
+        var additional = Path.Combine(files.InsideRoot, "account.json");
+        CatalogFiles.WriteCatalog(additional, "account");
+        var outside = Path.Combine(files.OutsideRoot, "not-selected.json");
+        var catalog = JsonSerializer.Deserialize<FrameScopeHintCatalog>(File.ReadAllText(files.CatalogPath))!;
+        catalog.SourcePath = outside;
+        catalog.Checksum = FrameScopeHintValidator.ComputeChecksum(catalog);
+        var contents = JsonSerializer.SerializeToNode(catalog)!.AsObject();
+        contents["CatalogPath"] = outside;
+        contents["AdditionalCatalogPaths"] = JsonSerializer.SerializeToNode(new[] { outside });
+        File.WriteAllText(files.CatalogPath, contents.ToJsonString());
+
+        var additionalPaths = new List<string> { additional };
+        var options = new FrameScopeHintOptions
+        {
+            CatalogPath = files.RelativePath,
+            AdditionalCatalogPaths = additionalPaths
+        };
+        var selectedPaths = options.GetCatalogPaths().ToArray();
+        Assert.That(File.Exists(outside), Is.False);
+
+        var provider = new FrameScopeHintProvider(options);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(provider.Hints.Select(hint => hint.ScopeId), Is.EqualTo(new[] { "policy", "account" }));
+            Assert.That(provider.Require("account").FramePath, Is.EqualTo(new[] { "account-frame" }));
+            Assert.That(options.CatalogPath, Is.EqualTo(files.RelativePath));
+            Assert.That(options.AdditionalCatalogPaths, Is.SameAs(additionalPaths));
+            Assert.That(additionalPaths, Is.EqualTo(new[] { additional }));
+            Assert.That(options.GetCatalogPaths(), Is.EqualTo(selectedPaths));
+        });
+    }
+
     [TestCase(false, false)]
     [TestCase(false, true)]
     [TestCase(true, false)]
