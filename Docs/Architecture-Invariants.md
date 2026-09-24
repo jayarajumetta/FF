@@ -130,6 +130,19 @@ evidence before local execution can be enabled.
   supports an explicit `IsMainFrame` scope for one page index, with an empty
   path; an empty path alone never means main-frame fallback. Both schemas
   retain source/checksum validation.
+- File-backed frame catalogs (`CatalogPath` and `AdditionalCatalogPaths`) use
+  `AppContext.BaseDirectory` as a fixed trusted application/package root.
+  Relative JSON paths resolve against that directory; fully qualified local
+  paths are accepted only when their canonical location remains inside it.
+  Containment uses directory-separator boundaries and OS-appropriate case
+  comparison. Outside paths (including traversal and sibling-prefix paths),
+  UNC/device paths, ambiguous drive-relative paths, and symbolic links,
+  junctions or other reparse points in the file path or root ancestors fail
+  before catalog contents are read. Previously accepted external absolute
+  paths must instead be packaged under the application directory.
+  The package directory and its ancestors must be protected from untrusted
+  writes: these path checks do not provide an atomic defense against a local
+  process replacing filesystem entries between validation and opening.
 - Every checkpoint screenshot has a unique ordinal/name. A cached
   `scenario.png` is not sufficient evidence.
 - Forms-only and full-SFP validation use the same orchestration service. Missing

@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using PnCTestAutomation.Artifacts;
 
 namespace PnCTestAutomation.Controls
 {
@@ -134,25 +135,56 @@ namespace PnCTestAutomation.Controls
         {
             ArgumentNullException.ThrowIfNull(options);
             options.Validate();
+            var root = Path.GetFullPath(AppContext.BaseDirectory);
             var catalogs = new List<FrameScopeHintCatalog>();
             foreach (var configuredPath in options.GetCatalogPaths())
             {
-                var path = Path.IsPathRooted(configuredPath)
-                    ? configuredPath
-                    : Path.Combine(AppContext.BaseDirectory, configuredPath);
                 try
                 {
+                    if (configuredPath.StartsWith(@"\\", StringComparison.Ordinal) ||
+                        configuredPath.StartsWith("//", StringComparison.Ordinal) ||
+                        (Path.IsPathRooted(configuredPath) && !Path.IsPathFullyQualified(configuredPath)))
+                    {
+                        throw new FrameScopeConfigurationException(
+                            "Frame hint catalog paths must be relative or fully qualified local paths.");
+                    }
+                    var path = ArtifactPathGuard.EnsureSafe(
+                        root,
+                        Path.GetFullPath(configuredPath, root),
+                        entry => File.GetAttributes(entry));
+                    for (var parent = new DirectoryInfo(root).Parent; parent is not null; parent = parent.Parent)
+                    {
+                        if (parent.Attributes.HasFlag(FileAttributes.ReparsePoint))
+                            throw new FrameScopeConfigurationException(
+                                "Frame hint catalog ancestors cannot traverse symbolic links or reparse points.");
+                    }
                     catalogs.Add(
                         JsonSerializer.Deserialize<FrameScopeHintCatalog>(
-                            File.ReadAllText(Path.GetFullPath(path)),
+                            File.ReadAllText(path),
                             JsonOptions)
                         ?? throw new JsonException());
+                }
+                catch (ArtifactEvidenceException)
+                {
+                    throw new FrameScopeConfigurationException(
+                        "Frame hint catalogs must remain within the application directory and cannot traverse symbolic links or reparse points.");
+                }
+                catch (Exception exception) when (
+                    exception is ArgumentException or NotSupportedException)
+                {
+                    throw new FrameScopeConfigurationException(
+                        $"Frame hint catalog path '{configuredPath}' is invalid.");
                 }
                 catch (Exception exception) when (
                     exception is IOException or JsonException)
                 {
                     throw new FrameScopeConfigurationException(
                         $"Frame hint catalog '{configuredPath}' is missing or malformed.");
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    throw new FrameScopeConfigurationException(
+                        $"Frame hint catalog '{configuredPath}' is not accessible.");
                 }
             }
             return catalogs;

@@ -72,8 +72,7 @@ public class DuckCreekFormsClientTests
             {
                 ServerBaseUrl = "https://forms.example.test",
                 Endpoint = "/forms",
-                Username = "configured-user",
-                Password = "configured-secret"
+                Username = "configured-user"
             });
     }
 

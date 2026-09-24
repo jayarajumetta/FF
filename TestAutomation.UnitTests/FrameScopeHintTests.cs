@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Text.Json;
 using NUnit.Framework;
 using PnCTestAutomation.Controls;
 
@@ -170,6 +172,196 @@ public class FrameScopeHintTests
             Throws.TypeOf<FrameScopeConfigurationException>().With.Message.Contains("explicit approved"));
     }
 
+    [TestCase(false)]
+    [TestCase(true)]
+    public void CatalogFilesInsideApplicationDirectoryLoad(bool absolute)
+    {
+        using var files = new CatalogFiles();
+        var path = absolute ? files.CatalogPath : files.RelativePath;
+        var provider = new FrameScopeHintProvider(new FrameScopeHintOptions { CatalogPath = path });
+
+        Assert.That(provider.Require("policy").FramePath, Is.EqualTo(new[] { "policy-frame" }));
+    }
+
+    [Test]
+    public void CanonicalInBoundaryPathsAndAdditionalCatalogsLoad()
+    {
+        using var files = new CatalogFiles();
+        var additional = Path.Combine(files.InsideRoot, "account.json");
+        CatalogFiles.WriteCatalog(additional, "account");
+        var provider = new FrameScopeHintProvider(new FrameScopeHintOptions
+        {
+            CatalogPath = Path.Combine(files.RelativeRoot, "nested", "..", "nested", "policy.json"),
+            AdditionalCatalogPaths = [additional]
+        });
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(provider.Hints, Has.Count.EqualTo(2));
+            Assert.That(provider.Require("policy").FramePath, Is.EqualTo(new[] { "policy-frame" }));
+            Assert.That(provider.Require("account").FramePath, Is.EqualTo(new[] { "account-frame" }));
+        });
+    }
+
+    [TestCase(false, false)]
+    [TestCase(false, true)]
+    [TestCase(true, false)]
+    [TestCase(true, true)]
+    public void OutsideCatalogsIncludingSiblingPrefixesAreRejected(bool absolute, bool additional)
+    {
+        using var files = new CatalogFiles();
+        var path = absolute
+            ? files.OutsideCatalogPath
+            : Path.GetRelativePath(AppContext.BaseDirectory, files.OutsideCatalogPath);
+        var options = new FrameScopeHintOptions
+        {
+            CatalogPath = additional ? files.RelativePath : path,
+            AdditionalCatalogPaths = additional ? [path] : []
+        };
+
+        Assert.That(() => new FrameScopeHintProvider(options),
+            Throws.TypeOf<FrameScopeConfigurationException>().With.Message.Contains("application directory"));
+    }
+
+    [TestCase(@"\\untrusted.invalid\catalogs\policy.json")]
+    [TestCase("//untrusted.invalid/catalogs/policy.json")]
+    [TestCase(@"\\?\C:\outside.json")]
+    [TestCase(@"\\.\C:\outside.json")]
+    public void NetworkAndDeviceCatalogPathsAreRejected(string path)
+    {
+        Assert.That(() => new FrameScopeHintProvider(new FrameScopeHintOptions { CatalogPath = path }),
+            Throws.TypeOf<FrameScopeConfigurationException>().With.Message.Contains("local paths"));
+    }
+
+    [TestCase(@"C:policy.json")]
+    [TestCase(@"\policy.json")]
+    [Platform("Win")]
+    public void AmbiguousRootedCatalogPathsAreRejected(string path)
+    {
+        Assert.That(() => new FrameScopeHintProvider(new FrameScopeHintOptions { CatalogPath = path }),
+            Throws.TypeOf<FrameScopeConfigurationException>().With.Message.Contains("fully qualified"));
+    }
+
+    [Test]
+    public void CatalogRootComparisonUsesPlatformCaseSemantics()
+    {
+        using var files = new CatalogFiles();
+        var root = AppContext.BaseDirectory;
+        var differentCase = root == root.ToUpperInvariant() ? root.ToLowerInvariant() : root.ToUpperInvariant();
+        var options = new FrameScopeHintOptions { CatalogPath = Path.Combine(differentCase, files.RelativePath) };
+
+        if (OperatingSystem.IsWindows())
+            Assert.That(new FrameScopeHintProvider(options).Require("policy").ScopeId, Is.EqualTo("policy"));
+        else
+            Assert.That(() => new FrameScopeHintProvider(options),
+                Throws.TypeOf<FrameScopeConfigurationException>().With.Message.Contains("application directory"));
+    }
+
+    [TestCase(false, false)]
+    [TestCase(true, false)]
+    [TestCase(false, true)]
+    [TestCase(true, true)]
+    public void LinkedCatalogDirectoriesCannotEscapeApplicationDirectory(bool additional, bool dangling)
+    {
+        using var files = new CatalogFiles();
+        var link = Path.Combine(files.InsideRoot, "linked");
+        var target = dangling ? Path.Combine(files.OutsideRoot, "missing") : files.OutsideRoot;
+        if (OperatingSystem.IsWindows())
+        {
+            using var process = Process.Start(new ProcessStartInfo
+            {
+                FileName = Environment.GetEnvironmentVariable("ComSpec") ?? "cmd.exe",
+                Arguments = $"/c mklink /J \"{link}\" \"{target}\"",
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            })!;
+            Assert.That(process.WaitForExit(10000), Is.True, "The test junction command must finish.");
+            Assert.That(process.ExitCode, Is.Zero, "The test junction must be created.");
+        }
+        else
+        {
+            Directory.CreateSymbolicLink(link, target);
+        }
+        try
+        {
+            var path = Path.Combine(link, "outside.json");
+            var options = new FrameScopeHintOptions
+            {
+                CatalogPath = additional ? files.RelativePath : path,
+                AdditionalCatalogPaths = additional ? [path] : []
+            };
+            Assert.That(() => new FrameScopeHintProvider(options),
+                Throws.TypeOf<FrameScopeConfigurationException>().With.Message.Contains("reparse points"));
+        }
+        finally
+        {
+            Directory.Delete(link);
+        }
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void LinkedCatalogFilesAreRejectedEvenWhenDangling(bool dangling)
+    {
+        const int errorPrivilegeNotHeld = 1314;
+        using var files = new CatalogFiles();
+        var link = Path.Combine(files.InsideRoot, "linked.json");
+        var target = dangling ? Path.Combine(files.OutsideRoot, "missing.json") : files.OutsideCatalogPath;
+        try
+        {
+            File.CreateSymbolicLink(link, target);
+        }
+        catch (IOException exception) when (
+            OperatingSystem.IsWindows() && (exception.HResult & 0xffff) == errorPrivilegeNotHeld)
+        {
+            Assert.Ignore("File symbolic links require Windows Developer Mode or the symbolic-link privilege.");
+        }
+        try
+        {
+            Assert.That(() => new FrameScopeHintProvider(new FrameScopeHintOptions { CatalogPath = link }),
+                Throws.TypeOf<FrameScopeConfigurationException>().With.Message.Contains("reparse points"));
+        }
+        finally
+        {
+            File.Delete(link);
+        }
+    }
+
+    [TestCase("missing", "missing or malformed")]
+    [TestCase("malformed", "missing or malformed")]
+    [TestCase("null", "missing or malformed")]
+    [TestCase("checksum", "checksum")]
+    [TestCase("schema", "schema")]
+    public void FileCatalogsStillFailForMissingOrInvalidContent(string defect, string message)
+    {
+        using var files = new CatalogFiles();
+        switch (defect)
+        {
+            case "missing":
+                File.Delete(files.CatalogPath);
+                break;
+            case "malformed":
+                File.WriteAllText(files.CatalogPath, "{");
+                break;
+            case "null":
+                File.WriteAllText(files.CatalogPath, "null");
+                break;
+            default:
+                var catalog = JsonSerializer.Deserialize<FrameScopeHintCatalog>(File.ReadAllText(files.CatalogPath))!;
+                if (defect == "checksum")
+                    catalog.Checksum = "";
+                else
+                    catalog.SchemaVersion = 0;
+                File.WriteAllText(files.CatalogPath, JsonSerializer.Serialize(catalog));
+                break;
+        }
+
+        Assert.That(() => new FrameScopeHintProvider(new FrameScopeHintOptions { CatalogPath = files.RelativePath }),
+            Throws.TypeOf<FrameScopeConfigurationException>().With.Message.Contains(message));
+    }
+
     [Test]
     public void MainFrameScopeIsExplicitAndMatchesOnlyItsDeclaredPage()
     {
@@ -225,4 +417,34 @@ public class FrameScopeHintTests
             Hints = hints.ToList()
         };
 
+    private sealed class CatalogFiles : IDisposable
+    {
+        internal string RelativeRoot { get; } = "frame-hint-tests-" + Guid.NewGuid().ToString("N");
+        internal string InsideRoot => Path.Combine(AppContext.BaseDirectory, RelativeRoot);
+        internal string RelativePath => Path.Combine(RelativeRoot, "nested", "policy.json");
+        internal string CatalogPath => Path.Combine(AppContext.BaseDirectory, RelativePath);
+        internal string OutsideRoot { get; } =
+            Path.TrimEndingDirectorySeparator(AppContext.BaseDirectory) + "-frame-hint-tests-" + Guid.NewGuid().ToString("N");
+        internal string OutsideCatalogPath => Path.Combine(OutsideRoot, "outside.json");
+
+        internal CatalogFiles()
+        {
+            WriteCatalog(CatalogPath, "policy");
+            WriteCatalog(OutsideCatalogPath, "outside");
+        }
+
+        internal static void WriteCatalog(string path, string scope)
+        {
+            var catalog = Catalog(new FrameScopeHint { ScopeId = scope, FramePath = [scope + "-frame"] });
+            catalog.Checksum = FrameScopeHintValidator.ComputeChecksum(catalog);
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            File.WriteAllText(path, JsonSerializer.Serialize(catalog));
+        }
+
+        public void Dispose()
+        {
+            Directory.Delete(InsideRoot, recursive: true);
+            Directory.Delete(OutsideRoot, recursive: true);
+        }
+    }
 }
