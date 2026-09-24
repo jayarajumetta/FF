@@ -356,6 +356,9 @@ public sealed class NavigationPage
     public Task PressBuildingRatingGroupAsync(string key) =>
         _ui.PressAsync(_locators.RiskInputRatingGroupID, key, new ControlIntent("Navigation", "BuildingRatingGroup"));
 
+    public Task<string> CaptureBuildingRatingGroupAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.RiskInputRatingGroupID, property, new ControlIntent("Navigation", "BuildingRatingGroup"));
+
     public async Task<bool> IsBuildingRatingGroupVisibleAsync() =>
         await _locators.RiskInputRatingGroupID.First.IsVisibleAsync();
 
@@ -2165,13 +2168,32 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.PersonalPropertyLimit, key, new ControlIntent("Navigation", "PersonalPropertyLimit"));
 
     public Task EnterPersonalPropertyRatingGroupAsync(string value) =>
-        _ui.FillAsync(_locators.RiskInputRatingGroupID, value, new ControlIntent("Navigation", "PersonalPropertyRatingGroup"));
+        _ui.FillAsync(_locators.RiskInputPersonalPropertyRatingGroupID, value, new ControlIntent("Navigation", "PersonalPropertyRatingGroup"));
 
     public Task PressPersonalPropertyRatingGroupAsync(string key) =>
-        _ui.PressAsync(_locators.RiskInputRatingGroupID, key, new ControlIntent("Navigation", "PersonalPropertyRatingGroup"));
+        _ui.PressAsync(_locators.RiskInputPersonalPropertyRatingGroupID, key, new ControlIntent("Navigation", "PersonalPropertyRatingGroup"));
+
+
+    public Task<string> CapturePersonalPropertyRatingGroupAsync(string property = "") =>
+
+    _ui.CaptureAsync(_locators.RiskInputPersonalPropertyRatingGroupID, property, new ControlIntent("Navigation", "PersonalPropertyRatingGroup"));
 
     public async Task<bool> IsPersonalPropertyRatingGroupVisibleAsync() =>
-        await _locators.RiskInputRatingGroupID.First.IsVisibleAsync();
+        await _locators.RiskInputPersonalPropertyRatingGroupID.First.IsVisibleAsync();
+    public Task EnterPersonalPropertyGroupAsync(string value) =>
+       _ui.FillAsync(_locators.RiskInputPersonalPropertyRatingGroupID, value, new ControlIntent("Navigation", "PersonalPropertyRatingGroup"));
+
+
+    public Task<string> CapturePropertyOfOthersRatingGroupAsync(string property = "") =>
+
+   _ui.CaptureAsync(_locators.PersonalPropertyRatingGroup, property, new ControlIntent("Navigation", "PropertyOfOthersRatingGroup"));
+
+    public async Task<bool> IsPersonalPropertyRatingVisibleAsync() =>
+        await _locators.RiskInputPersonalPropertyRatingGroupID.First.IsVisibleAsync();
+
+    public async Task<bool> IsPersonalPropertyVisibleAsync() =>
+        await _locators.PersonalPropertyLimit.First.IsVisibleAsync();
+
 
     public Task EnterPierOrWharfAsync(string value) =>
         _ui.FillAsync(_locators.PierOrWharf, value, new ControlIntent("Navigation", "PierOrWharf"));

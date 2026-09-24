@@ -32,7 +32,7 @@ Feature: CP Basic Policy
     #And I search by Desc
     And I complete required submission information
     And I run Stoplight
-    #And I verify values in premium fields
+    And I verify values in premium fields
     #And I complete forms verification
 
 

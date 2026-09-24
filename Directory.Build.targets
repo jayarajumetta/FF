@@ -2,13 +2,10 @@
 	<PropertyGroup Condition="'$(MSBuildProjectName)' == 'CommercialLines.DuckCreek.Tests' Or '$(MSBuildProjectName)' == 'CommercialLines.ExpertQuote.Tests' Or '$(MSBuildProjectName)' == 'PersonalLines.DuckCreek.Tests'">
 	<EnableConfiguredRetries>true</EnableConfiguredRetries>
   </PropertyGroup>
-  <ItemGroup Condition="'$(EnableConfiguredRetries)' == 'true'">
-	<ProjectReference Include="$(MSBuildThisFileDirectory)src/InsuranceAutomation.Retry.Generator/InsuranceAutomation.Retry.Generator.csproj" ReferenceOutputAssembly="false" PrivateAssets="all" />
-  </ItemGroup>
-	<Target Name="BuildRetryGenerator" BeforeTargets="ReqnrollCreateProcessFeatureFileInputsCacheFile" DependsOnTargets="ResolveProjectReferences"
+	<Target Name="BuildRetryGenerator" BeforeTargets="ReqnrollCreateProcessFeatureFileInputsCacheFile"
 			Condition="'$(EnableConfiguredRetries)' == 'true'">
 	<MSBuild Projects="$(MSBuildThisFileDirectory)src/InsuranceAutomation.Retry.Generator/InsuranceAutomation.Retry.Generator.csproj"
-		 Targets="Build"
+		 Targets="Restore;Build"
 		 Properties="Configuration=$(Configuration)" />
 	<PropertyGroup>
 	  <RetryGeneratorBinary>$(MSBuildThisFileDirectory)src/InsuranceAutomation.Retry.Generator/bin/$(Configuration)/compiler/netstandard2.0/InsuranceAutomation.Retry.Generator.ReqnrollPlugin.dll</RetryGeneratorBinary>
