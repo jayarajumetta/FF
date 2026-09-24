@@ -1,4 +1,5 @@
 using Microsoft.Playwright;
+using System.Runtime.CompilerServices;
 
 namespace InsuranceAutomation.Core;
 
@@ -28,16 +29,80 @@ public sealed class UiActions
         _runtimeLocatorResolver = runtimeLocatorResolver;
     }
 
-    public async Task WaitReadyBestEffortAsync(ILocator locator, ControlIntent intent, int timeoutMs)
+    public Task WaitReadyBestEffortAsync(ILocator locator, ControlIntent intent, int timeoutMs, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(WaitReadyBestEffortAsync), intent.ToString(), new Dictionary<string, string> { ["timeoutMs"] = timeoutMs.ToString() }, () => WaitReadyBestEffortCoreAsync(locator, intent, timeoutMs));
+
+    public Task ClickAsync(ILocator locator, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(ClickAsync), string.Empty, new Dictionary<string, string>(), () => ClickCoreAsync(locator));
+
+    public Task FillAsync(ILocator locator, string value, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(FillAsync), string.Empty, new Dictionary<string, string> { ["value"] = value }, () => FillCoreAsync(locator, value));
+
+    public Task ClickAsync(ILocator locator, ControlIntent intent, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(ClickAsync), intent.ToString(), new Dictionary<string, string>(), () => ClickCoreAsync(locator, intent));
+
+    public Task FillAsync(ILocator locator, string value, ControlIntent intent, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(FillAsync), intent.ToString(), new Dictionary<string, string> { ["value"] = value }, () => FillCoreAsync(locator, value, intent));
+
+    public Task PressSequentiallyAsync(ILocator locator, string value, ControlIntent intent, int delayMs = 20, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(PressSequentiallyAsync), intent.ToString(), new Dictionary<string, string> { ["value"] = value, ["delayMs"] = delayMs.ToString() }, () => PressSequentiallyCoreAsync(locator, value, intent, delayMs));
+
+    public Task PressAsync(ILocator locator, string key, ControlIntent intent, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(PressAsync), intent.ToString(), new Dictionary<string, string> { ["key"] = key }, () => PressCoreAsync(locator, key, intent));
+
+    public Task SmartSetAsync(ILocator locator, string value, ControlIntent intent, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(SmartSetAsync), intent.ToString(), new Dictionary<string, string> { ["value"] = value }, () => SmartSetCoreAsync(locator, value, intent));
+
+    public Task SelectAsync(ILocator locator, string value, ControlIntent intent, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(SelectAsync), intent.ToString(), new Dictionary<string, string> { ["value"] = value }, () => SelectCoreAsync(locator, value, intent));
+
+    public Task ActivateTabAsync(ILocator container, string tabName, ControlIntent intent, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(ActivateTabAsync), intent.ToString(), new Dictionary<string, string> { ["tabName"] = tabName }, () => ActivateTabCoreAsync(container, tabName, intent));
+
+    public Task ClickDialogActionAsync(ILocator dialog, string actionName, ControlIntent intent, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(ClickDialogActionAsync), intent.ToString(), new Dictionary<string, string> { ["actionName"] = actionName }, () => ClickDialogActionCoreAsync(dialog, actionName, intent));
+
+    public Task ToggleExpansionPanelAsync(ILocator panel, bool expanded, ControlIntent intent, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(ToggleExpansionPanelAsync), intent.ToString(), new Dictionary<string, string> { ["expanded"] = expanded.ToString() }, () => ToggleExpansionPanelCoreAsync(panel, expanded, intent));
+
+    public Task ClickGridCellAsync(ILocator grid, string cellText, ControlIntent intent, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(ClickGridCellAsync), intent.ToString(), new Dictionary<string, string> { ["cellText"] = cellText }, () => ClickGridCellCoreAsync(grid, cellText, intent));
+
+    public Task<bool> ExistsAsync(ILocator locator, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(ExistsAsync), string.Empty, new Dictionary<string, string> {  }, () => ExistsCoreAsync(locator));
+
+    public Task WaitAsync(ILocator locator, string expected, ControlIntent intent, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(WaitAsync), intent.ToString(), new Dictionary<string, string> { ["expected"] = expected }, () => WaitCoreAsync(locator, expected, intent));
+
+    public Task VerifyAsync(ILocator locator, string expected, string property, ControlIntent intent, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(VerifyAsync), intent.ToString(), new Dictionary<string, string> { ["expected"] = expected, ["property"] = property }, () => VerifyCoreAsync(locator, expected, property, intent));
+
+    public Task<string> CaptureAsync(ILocator locator, string property, ControlIntent intent, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(CaptureAsync), intent.ToString(), new Dictionary<string, string> { ["property"] = property }, () => CaptureCoreAsync(locator, property, intent));
+
+    public Task ReviewRequiredAsync(string reason, [CallerMemberName] string caller = "", [CallerFilePath] string source = "") =>
+        TraceAsync(caller, source, nameof(ReviewRequiredAsync), string.Empty, new Dictionary<string, string> { ["reason"] = reason }, () => ReviewRequiredCoreAsync(reason));
+
+    private Task<T> TraceAsync<T>(string caller, string source, string operation, string target,
+        IReadOnlyDictionary<string, string> data, Func<Task<T>> action) =>
+        _report is null ? action() : _report.TraceActionAsync($"{Path.GetFileNameWithoutExtension(source)}.{caller}", operation, target, data, action);
+
+    private async Task TraceAsync(string caller, string source, string operation, string target,
+        IReadOnlyDictionary<string, string> data, Func<Task> action)
+    {
+        await TraceAsync(caller, source, operation, target, data, async () => { await action(); return true; });
+    }
+
+    private async Task WaitReadyBestEffortCoreAsync(ILocator locator, ControlIntent intent, int timeoutMs)
     {
         try { await locator.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = timeoutMs }); }
         catch (Exception ex) when (ex is PlaywrightException or TimeoutException) { _logger.Warn($"DEPENDENT CONTROL WAIT CONTINUING: {intent}; {ex.Message}"); }
     }
 
-    public Task ClickAsync(ILocator locator) => ClickAsync(locator, new ControlIntent("Application", "Control"));
-    public Task FillAsync(ILocator locator, string value) => FillAsync(locator, value, new ControlIntent("Application", "Control"));
-    public Task ClickAsync(ILocator locator, ControlIntent intent) => ExecuteAsync(locator, intent, "click", x => ClickSemanticAsync(x));
-    public async Task FillAsync(ILocator locator, string value, ControlIntent intent)
+    private Task ClickCoreAsync(ILocator locator) => ClickCoreAsync(locator, new ControlIntent("Application", "Control"));
+    private Task FillCoreAsync(ILocator locator, string value) => FillCoreAsync(locator, value, new ControlIntent("Application", "Control"));
+    private Task ClickCoreAsync(ILocator locator, ControlIntent intent) => ExecuteAsync(locator, intent, "click", x => ClickSemanticAsync(x));
+    private async Task FillCoreAsync(ILocator locator, string value, ControlIntent intent)
     {
         await ExecuteAsync(locator, intent, "fill", x => ComponentAwareControlActions.SelectOrFillAsync(
             _browser.Page, x, value ?? string.Empty, _config.Browser.ActionTimeoutMs,
@@ -45,7 +110,7 @@ public sealed class UiActions
         _semanticallyCommittedControls.Add(IntentKey(intent));
     }
 
-    public async Task PressSequentiallyAsync(ILocator locator, string value, ControlIntent intent, int delayMs = 20)
+    private async Task PressSequentiallyCoreAsync(ILocator locator, string value, ControlIntent intent, int delayMs = 20)
     {
         await ExecuteAsync(locator, intent, "press-sequentially", async x =>
         {
@@ -55,11 +120,11 @@ public sealed class UiActions
         });
     }
 
-    public async Task PressAsync(ILocator locator, string key, ControlIntent intent)
+    private async Task PressCoreAsync(ILocator locator, string key, ControlIntent intent)
     {
         var normalized = NormalizeKey(key).Trim();
         // Tosca CLICK is an interaction intent, never a keyboard key.
-        if (normalized.Equals("CLICK", StringComparison.OrdinalIgnoreCase)) { await ClickAsync(locator, intent); return; }
+        if (normalized.Equals("CLICK", StringComparison.OrdinalIgnoreCase)) { await ClickCoreAsync(locator, intent); return; }
         if (normalized.Equals("DOUBLECLICK", StringComparison.OrdinalIgnoreCase))
         { await ExecuteAsync(locator, intent, "double-click", x => x.DblClickAsync()); return; }
 
@@ -88,7 +153,7 @@ public sealed class UiActions
     /// <summary>
     /// Component-aware set semantics for dropdowns, autocomplete, toggles and editable controls.
     /// </summary>
-    public async Task SmartSetAsync(ILocator locator, string value, ControlIntent intent)
+    private async Task SmartSetCoreAsync(ILocator locator, string value, ControlIntent intent)
     {
         await ExecuteAsync(locator, intent, "set", async x =>
         {
@@ -127,7 +192,7 @@ public sealed class UiActions
     /// <summary>
     /// Source/component-aware Select semantics. Native and rendered dropdowns use one bounded deterministic algorithm.
     /// </summary>
-    public async Task SelectAsync(ILocator locator, string value, ControlIntent intent)
+    private async Task SelectCoreAsync(ILocator locator, string value, ControlIntent intent)
     {
         await ExecuteAsync(locator, intent, "select", async x =>
         {
@@ -154,19 +219,19 @@ public sealed class UiActions
         _semanticallyCommittedControls.Add(IntentKey(intent));
     }
 
-    public Task ActivateTabAsync(ILocator container, string tabName, ControlIntent intent) => ExecuteAsync(container, intent, "activate-tab", async x =>
+    private Task ActivateTabCoreAsync(ILocator container, string tabName, ControlIntent intent) => ExecuteAsync(container, intent, "activate-tab", async x =>
     {
         var tab = x.GetByRole(AriaRole.Tab, new() { Name = tabName, Exact = true });
         await ClickSingleVisibleAsync(tab, $"tab '{tabName}'", intent);
     });
 
-    public Task ClickDialogActionAsync(ILocator dialog, string actionName, ControlIntent intent) => ExecuteAsync(dialog, intent, "dialog-action", async x =>
+    private Task ClickDialogActionCoreAsync(ILocator dialog, string actionName, ControlIntent intent) => ExecuteAsync(dialog, intent, "dialog-action", async x =>
     {
         var button = x.GetByRole(AriaRole.Button, new() { Name = actionName, Exact = true });
         await ClickSingleVisibleAsync(button, $"dialog action '{actionName}'", intent);
     });
 
-    public Task ToggleExpansionPanelAsync(ILocator panel, bool expanded, ControlIntent intent) => ExecuteAsync(panel, intent, "expansion-panel", async x =>
+    private Task ToggleExpansionPanelCoreAsync(ILocator panel, bool expanded, ControlIntent intent) => ExecuteAsync(panel, intent, "expansion-panel", async x =>
     {
         var header = (await x.EvaluateAsync<string>("e=>e.tagName.toLowerCase()")) == "mat-expansion-panel-header"
             ? x
@@ -175,7 +240,7 @@ public sealed class UiActions
         if (actual != expanded) await header.ClickAsync();
     });
 
-    public Task ClickGridCellAsync(ILocator grid, string cellText, ControlIntent intent) => ExecuteAsync(grid, intent, "grid-cell", async x =>
+    private Task ClickGridCellCoreAsync(ILocator grid, string cellText, ControlIntent intent) => ExecuteAsync(grid, intent, "grid-cell", async x =>
     {
         var cell = x.GetByRole(AriaRole.Gridcell, new() { Name = cellText, Exact = true });
         if (await cell.CountAsync() == 0) cell = x.Locator("td,[role=gridcell]").Filter(new() { HasText = cellText });
@@ -324,13 +389,13 @@ public sealed class UiActions
         await control.ClickAsync();
     }
 
-    public async Task<bool> ExistsAsync(ILocator locator)
+    private async Task<bool> ExistsCoreAsync(ILocator locator)
     {
         try { return await locator.CountAsync() > 0 && await locator.First.IsVisibleAsync(); }
         catch { return false; }
     }
 
-    public async Task WaitAsync(ILocator locator, string expected, ControlIntent intent)
+    private async Task WaitCoreAsync(ILocator locator, string expected, ControlIntent intent)
     {
         await WaitForPageReadyBestEffortAsync();
         if (expected.Contains("Absent", StringComparison.OrdinalIgnoreCase) ||
@@ -353,7 +418,7 @@ public sealed class UiActions
         }));
     }
 
-    public async Task VerifyAsync(ILocator locator, string expected, string property, ControlIntent intent)
+    private async Task VerifyCoreAsync(ILocator locator, string expected, string property, ControlIntent intent)
     {
         try
         {
@@ -401,7 +466,7 @@ public sealed class UiActions
             if (captureProperty.StartsWith("Regex:", StringComparison.OrdinalIgnoreCase)) captureProperty = captureProperty[6..].Trim();
             if (captureProperty.StartsWith("NotEqual:", StringComparison.OrdinalIgnoreCase)) captureProperty = captureProperty[9..].Trim();
 
-            var actual = await CaptureAsync(locator, captureProperty, intent);
+            var actual = await CaptureCoreAsync(locator, captureProperty, intent);
             if (regexMode)
             {
                 var pattern = normalized.StartsWith("Regex:", StringComparison.OrdinalIgnoreCase) ? normalized[6..] : normalized;
@@ -437,7 +502,7 @@ public sealed class UiActions
         }
     }
 
-    public Task<string> CaptureAsync(ILocator locator, string property, ControlIntent intent) => ExecuteAsync(locator, intent, "capture", async x =>
+    private Task<string> CaptureCoreAsync(ILocator locator, string property, ControlIntent intent) => ExecuteAsync(locator, intent, "capture", async x =>
     {
         if (property.Contains("Value", StringComparison.OrdinalIgnoreCase))
         {
@@ -447,7 +512,7 @@ public sealed class UiActions
         catch { return (await x.TextContentAsync() ?? "").Trim(); }
     });
 
-    public Task ReviewRequiredAsync(string reason)
+    private Task ReviewRequiredCoreAsync(string reason)
     {
         _logger.Warn($"SOURCE TRACE NOTE: {reason}");
         return Task.CompletedTask;

@@ -6,112 +6,58 @@ pr:
   branches:
     include: [main,sgs/develop]
 
-pool:
-  vmImage: windows-latest
+parameters:
+- name: agentPool
+  type: string
+  default: 'Azure Pipelines'
 
 variables:
   BuildConfiguration: Release
   ArtifactName: testpackage
 
-steps:
-- checkout: self
-  clean: true
+jobs:
+- job: BuildTestPackage
+  displayName: Build and publish test package
+  pool:
+    name: ${{ parameters.agentPool }}
+    ${{ if eq(parameters.agentPool, 'Azure Pipelines') }}:
+      vmImage: windows-latest
+    ${{ else }}:
+      demands:
+      - Agent.OS -equals Windows_NT
+  steps:
+  - checkout: self
+    clean: true
 
-- task: UseDotNet@2
-  displayName: Install .NET 8 SDK
-  inputs:
-    packageType: sdk
-    version: 8.0.x
+  - task: UseDotNet@2
+    displayName: Install .NET 8 SDK
+    inputs:
+      packageType: sdk
+      version: 8.0.x
 
-- task: UsePythonVersion@0
-  displayName: Install Python
-  inputs:
-    versionSpec: '3.11'
+  - powershell: |
+      $ErrorActionPreference = 'Stop'
+      dotnet restore .\ToscaCanonicalSimple.sln
+      if ($LASTEXITCODE -ne 0) { throw 'dotnet restore failed' }
+    displayName: Restore solution
 
-- powershell: |
-    python --version
-    python -m pip install --upgrade pip
-    python -m pip install pyyaml
-    if ($LASTEXITCODE -ne 0) { throw 'Python dependency installation failed' }
-  displayName: Install Python dependencies
+  - powershell: |
+      $ErrorActionPreference = 'Stop'
+      dotnet build .\ToscaCanonicalSimple.sln -c $(BuildConfiguration) --no-restore
+      if ($LASTEXITCODE -ne 0) { throw 'dotnet build failed' }
+    displayName: Build compiled test binaries
 
-# - powershell: |
-#     python .\tools\package_gate.py
-#     if ($LASTEXITCODE -ne 0) { throw 'Client package quality gate failed' }
-#   displayName: Run framework quality gate
+  - task: PowerShell@2
+    displayName: Package compiled bin and release runtime
+    inputs:
+      targetType: filePath
+      filePath: scripts/Build-TestPackage.ps1
+      arguments: '-StagingDirectory "$(Build.ArtifactStagingDirectory)" -BuildConfiguration "$(BuildConfiguration)"'
+      workingDirectory: '$(Build.SourcesDirectory)'
 
-- powershell: |
-    dotnet restore .\ToscaCanonicalSimple.sln
-    if ($LASTEXITCODE -ne 0) { throw 'dotnet restore failed' }
-    dotnet build .\ToscaCanonicalSimple.sln -c $(BuildConfiguration) --no-restore
-    if ($LASTEXITCODE -ne 0) { throw 'dotnet build failed' }
-  displayName: Restore and build solution
-
-- powershell: |
-    $ErrorActionPreference = 'Stop'
-
-    function Get-PlayablePlaywrightScript {
-      param([string[]]$Candidates)
-
-      foreach ($candidate in $Candidates | Select-Object -Unique) {
-        if (-not (Test-Path -LiteralPath $candidate)) { continue }
-        $dll = Join-Path (Split-Path -Parent $candidate) 'Microsoft.Playwright.dll'
-        if (Test-Path -LiteralPath $dll) { return $candidate }
-      }
-
-      return $null
-    }
-
-    $candidateScripts = @(
-      "$(Build.SourcesDirectory)\\bin\\InsuranceAutomation.Core\\$(BuildConfiguration)\\net8.0\\playwright.ps1",
-      "$(Build.SourcesDirectory)\\bin\\CommercialLines.DuckCreek.Tests\\$(BuildConfiguration)\\net8.0\\playwright.ps1",
-      "$(Build.SourcesDirectory)\\bin\\CommercialLines.ExpertQuote.Tests\\$(BuildConfiguration)\\net8.0\\playwright.ps1",
-      "$(Build.SourcesDirectory)\\bin\\PersonalLines.DuckCreek.Tests\\$(BuildConfiguration)\\net8.0\\playwright.ps1"
-    )
-
-    $playwright = Get-PlayablePlaywrightScript -Candidates $candidateScripts
-
-    if (-not $playwright) {
-      Write-Host 'No valid Playwright runtime pair found after solution build. Building CommercialLines.DuckCreek.Tests as fallback...'
-      dotnet build .\tests\CommercialLines.DuckCreek.Tests\CommercialLines.DuckCreek.Tests.csproj -c $(BuildConfiguration) --no-restore
-      if ($LASTEXITCODE -ne 0) { throw 'Fallback test project build failed' }
-      $playwright = Get-PlayablePlaywrightScript -Candidates $candidateScripts
-    }
-
-    if (-not $playwright) {
-      throw 'No playable playwright.ps1 + Microsoft.Playwright.dll pair was produced by the build outputs.'
-    }
-
-    Write-Host "Using Playwright script: $playwright"
-    & $playwright install chromium
-    if ($LASTEXITCODE -ne 0) { throw 'Playwright browser installation failed' }
-  displayName: Validate Playwright browser installation
-
-- powershell: |
-    $ErrorActionPreference = 'Stop'
-    $binRoot = '$(Build.SourcesDirectory)\bin'
-    if (-not (Test-Path -LiteralPath $binRoot -PathType Container)) {
-      throw "Shared bin output folder not found: $binRoot"
-    }
-
-    $required = @(
-      'InsuranceAutomation.Core\$(BuildConfiguration)\net8.0\InsuranceAutomation.Core.dll',
-      'CommercialLines.DuckCreek.Tests\$(BuildConfiguration)\net8.0\CommercialLines.DuckCreek.Tests.dll',
-      'CommercialLines.ExpertQuote.Tests\$(BuildConfiguration)\net8.0\CommercialLines.ExpertQuote.Tests.dll',
-      'PersonalLines.DuckCreek.Tests\$(BuildConfiguration)\net8.0\PersonalLines.DuckCreek.Tests.dll'
-    )
-    foreach ($relative in $required) {
-      $path = Join-Path $binRoot $relative
-      if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
-        throw "Compiled artifact is missing required output: $path"
-      }
-    }
-
-    $global:LASTEXITCODE = 0
-  displayName: Validate shared bin outputs
-
-- task: PublishPipelineArtifact@1
-  displayName: Publish bin artifact
-  inputs:
-    targetPath: '$(Build.SourcesDirectory)\bin'
-    artifact: '$(ArtifactName)'
+  - task: PublishBuildArtifacts@1
+    displayName: Publish compiled test package
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)\testpackage'
+      ArtifactName: '$(ArtifactName)'
+      publishLocation: Container

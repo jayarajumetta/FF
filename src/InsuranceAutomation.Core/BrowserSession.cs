@@ -38,13 +38,14 @@ public sealed class BrowserSession : IAsyncDisposable
         _playwright = await Playwright.CreateAsync();
         _browser = await LaunchAsync(logger);
         var videoDirectory = Path.Combine(_artifactDirectory, "video");
-        if (_config.Browser.Video) Directory.CreateDirectory(videoDirectory);
+        var recordVideo = _config.Browser.Video && !_config.Reporting.ExcludeVideos;
+        if (recordVideo) Directory.CreateDirectory(videoDirectory);
         HarPath = _config.Browser.Har ? Path.Combine(_artifactDirectory, "network.har.zip") : null;
         _context = await _browser.NewContextAsync(new BrowserNewContextOptions
         {
             IgnoreHTTPSErrors = _config.Browser.IgnoreHttpsErrors,
             ViewportSize = _config.Browser.Maximize ? ViewportSize.NoViewport : new ViewportSize { Width = _config.Browser.ViewportWidth, Height = _config.Browser.ViewportHeight },
-            RecordVideoDir = _config.Browser.Video ? videoDirectory : null,
+            RecordVideoDir = recordVideo ? videoDirectory : null,
             RecordHarPath = HarPath,
             RecordHarMode = _config.Browser.Har ? HarMode.Full : null,
             RecordHarContent = _config.Browser.Har ? HarContentPolicy.Attach : null
@@ -162,6 +163,14 @@ public sealed class BrowserSession : IAsyncDisposable
         _playwright?.Dispose();
         _page = null; _context = null; _browser = null; _playwright = null;
     }
+    public void ApplyVideoRetention(bool passed)
+    {
+        if (!_config.Reporting.ShouldExcludeVideo(passed)) return;
+        var directory = Path.Combine(_artifactDirectory, "video");
+        if (Directory.Exists(directory)) Directory.Delete(directory, recursive: true);
+        VideoPath = null;
+    }
+
     private string PersistFinalizedVideo(string resolvedPath, RunLogger logger)
     {
         if (string.IsNullOrWhiteSpace(resolvedPath) || !File.Exists(resolvedPath))

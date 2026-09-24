@@ -48,6 +48,19 @@ STATE_PATTERN = re.compile(r"(?:state\s*code|statecode|state)[_\s:=\-]+[\"']?([A
 LOB_PATTERN = re.compile(r"\b(BAP|GL|IM|WC|CP|CPP|UMB|BOP|SFP|RV|CYCLE|AUTO)\b", re.IGNORECASE)
 
 
+def video_policy(source: Path) -> tuple[bool, bool]:
+    config = source / "config" / "framework.json"
+    settings = json.loads(config.read_text(encoding="utf-8-sig")).get("reporting", {}) if config.is_file() else {}
+    values = tuple(settings.get(key, True) for key in ("excludeVideos", "excludePassedVideos"))
+    if any(type(value) is not bool for value in values):
+        raise ValueError("reporting.excludeVideos and reporting.excludePassedVideos must be booleans")
+    return values
+
+
+def exclude_video(policy: tuple[bool, bool], outcome: str) -> bool:
+    return policy[0] or (policy[1] and str(outcome).upper() in PASS_VALUES)
+
+
 @dataclass(frozen=True)
 class Binding:
     feature: str
@@ -79,6 +92,7 @@ class ReportLimits:
     max_image_bytes: int = 12 * 1024 * 1024
     max_images_per_scenario: int = 20
     max_raw_json_bytes: int = 512 * 1024
+    summary_only: bool = False
 
 
 # ---------------------------------------------------------------------------
@@ -237,11 +251,18 @@ def enrich(results: list[dict[str, Any]], bindings: Sequence[Binding]) -> None:
             if not isinstance(step, dict):
                 continue
             text = str(step.get("text") or "")
+            if step.get("bindingCaptured") is True:
+                step["bindingResolution"] = ("Selected by ReqnRoll at runtime." if step.get("binding")
+                                             else "No step-definition method was selected or captured at runtime.")
+                continue
+            if step.get("binding") and step["binding"] != "Unresolved":
+                step.setdefault("bindingResolution", "Binding recorded in scenario metadata.")
+                continue
             display, source, line, note = resolve_binding(bindings, feature, text)
             step["binding"] = display
             step["bindingSource"] = source
             step["bindingLine"] = line
-            step["bindingResolution"] = note
+            step["bindingResolution"] = "Inferred from source; runtime binding was not recorded. " + note
         result["_status"] = normalize_status(result.get("status"))
         result["_application"] = infer_application(result)
         result["_stateCode"] = infer_state(result)
@@ -265,7 +286,12 @@ def group_attempts(results: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
         attempts.sort(key=lambda item: item["attemptNumber"])
         numbers = [item["attemptNumber"] for item in attempts]
         if len(set(numbers)) != len(numbers):
-            raise ValueError("Duplicate attempt numbers for the same test execution.")
+            duplicates = sorted(number for number in set(numbers) if numbers.count(number) > 1)
+            paths = [str(item.get("_resultFile", "<unknown file>")) for item in attempts if item["attemptNumber"] in duplicates]
+            raise ValueError(
+                f"Duplicate attempt numbers for the same test execution: executionId={attempts[0]['executionId']!r}, "
+                f"testFullName={attempts[0]['testFullName']!r}, attempts={duplicates}; files: {'; '.join(paths)}"
+            )
         final = dict(attempts[-1])
         final["_attempts"] = attempts
         final["durationMilliseconds"] = sum(duration_ms(item) for item in attempts)
@@ -388,6 +414,7 @@ def _all_text(result: dict[str, Any]) -> str:
         str(result.get("scenario") or ""),
         str(result.get("_resultFile") or ""),
         json.dumps(result.get("tags") or [], ensure_ascii=False),
+        json.dumps(result.get("data") or {}, ensure_ascii=False),
     ]
     for step in result.get("steps", []) or []:
         if isinstance(step, dict):
@@ -702,6 +729,14 @@ def render_screenshot_gallery(
 
 
 def render_failure_evidence(result: dict[str, Any], output_dir: Path, limits: ReportLimits) -> str:
+    if limits.summary_only:
+        log = result.get("executionLog") or {}
+        if not log:
+            return ""
+        note = " · middle omitted" if log.get("truncated") else ""
+        return (f'<details class="failure-evidence"><summary>Failed-attempt execution log · '
+                f'{esc(fmt_bytes(log.get("originalBytes", 0)))}{note}</summary>'
+                f'<pre class="embedded-log">{esc(redact_sensitive_text(log.get("text", "")))}</pre></details>')
     gallery, embedded_count, total_images = render_screenshot_gallery(result, output_dir, limits)
     log_path = find_execution_log(result)
     log_html = '<p class="muted">No execution log file was found in this scenario evidence directory.</p>'
@@ -760,7 +795,7 @@ def render_deferred_verifications(result: dict[str, Any], output_dir: Path, limi
     rows: list[str] = []
     for index, item in enumerate(items, 1):
         screenshot_html = ""
-        path = resolve_path(result, item.get("screenshot"))
+        path = None if limits.summary_only else resolve_path(result, item.get("screenshot"))
         if path:
             embedded = embed_image(path, output_dir, limits.max_image_bytes)
             if embedded.embedded:
@@ -782,16 +817,34 @@ def render_deferred_verifications(result: dict[str, Any], output_dir: Path, limi
     """
 
 
+def render_actions(actions: Any) -> str:
+    if not actions:
+        return '<p class="muted">No instrumented page/action calls recorded. Direct calls outside UiActions are not traced.</p>'
+    blocks = []
+    for action in actions:
+        state = normalize_status(action.get("status"))
+        blocks.append(
+            f'<details class="action-node {state}"{" open" if state == "FAIL" else ""}>'
+            f'<summary>{esc(action.get("method"))} · <span class="status-pill {state}">{state}</span> '
+            f'{esc(fmt_duration(duration_ms(action)))}</summary>'
+            f'<div>Operation: {esc(action.get("operation"))} · Target: {esc(action.get("target"))}</div>'
+            f'{render_data(action.get("data"))}<div>{esc(action.get("result"))}</div>'
+            f'{render_text_panel("Action failure", action.get("error"), "error")}'
+            f'{render_actions(action["children"]) if action.get("children") else ""}</details>'
+        )
+    return "".join(blocks)
+
+
 def render_step(result: dict[str, Any], step: dict[str, Any], output_dir: Path, limits: ReportLimits) -> str:
     step_status = normalize_status(step.get("status"))
     order = step.get("order", "")
     text = str(step.get("text") or "Unnamed step")
-    binding = str(step.get("binding") or "Unresolved")
+    binding = str(step.get("binding") or "No step-definition method captured")
     source = str(step.get("bindingSource") or "")
     line = step.get("bindingLine") or 0
     resolution = str(step.get("bindingResolution") or "")
     source_html = (
-        f'<div class="binding-source">{esc(source)}:{esc(line)}</div>' if source else '<div class="binding-source unresolved">No source match</div>'
+        f'<div class="binding-source">{esc(source)}:{esc(line)}</div>' if source else '<div class="binding-source">Source location unavailable</div>'
     )
     resolution_html = f'<div class="binding-note">{esc(resolution)}</div>' if resolution else ""
     diagnostics = "".join(
@@ -804,7 +857,7 @@ def render_step(result: dict[str, Any], step: dict[str, Any], output_dir: Path, 
         if panel
     )
     screenshot_html = ""
-    screenshot_path = resolve_path(result, step.get("screenshot"))
+    screenshot_path = None if limits.summary_only else resolve_path(result, step.get("screenshot"))
     if screenshot_path:
         embedded = embed_image(screenshot_path, output_dir, limits.max_image_bytes)
         if embedded.embedded and normalize_status(result.get("status")) == "FAIL":
@@ -823,12 +876,15 @@ def render_step(result: dict[str, Any], step: dict[str, Any], output_dir: Path, 
         <span class="status-pill {step_status}">{step_status}</span>
       </summary>
       <div class="step-body">
+        <details class="binding-node"{open_attribute}><summary>C# step definition: {esc(binding)} · {step_status} · {esc(fmt_duration(duration_ms(step)))}</summary>
         <div class="step-grid">
           <div><div class="field-label">C# step definition</div><strong>{esc(binding)}</strong>{source_html}{resolution_html}</div>
-          <div><div class="field-label">Resolved test data</div>{render_data(step.get('data'))}</div>
-          <div><div class="field-label">Step screenshot</div>{screenshot_html or '<span class="muted">Not recorded</span>'}</div>
+          <div><div class="field-label">{'Data read or written in this step' if result.get('stepDataScope') == 'accessed' else 'Recorded step snapshot (legacy)'}</div>{render_data(step.get('data'))}</div>
+          {'' if limits.summary_only else '<div><div class="field-label">Step screenshot</div>' + (screenshot_html or '<span class="muted">Not recorded</span>') + '</div>'}
         </div>
+        <h4>Executed actions</h4>{render_actions(step.get('actions'))}
         {diagnostics or '<p class="muted no-diagnostics">No error, console or network diagnostics were recorded for this step.</p>'}
+        </details>
       </div>
     </details>
     """
@@ -887,6 +943,8 @@ def render_scenario(result: dict[str, Any], output_dir: Path, limits: ReportLimi
         if result_file and result_file.exists()
         else esc(result_file)
     )
+    if limits.summary_only:
+        result_source = "Agent scenario metadata (embedded)"
     content = f"""
           <div class="scenario-meta-grid">
             <div><span class="field-label">Feature / suite</span><strong>{esc(feature)}</strong></div>
@@ -896,12 +954,13 @@ def render_scenario(result: dict[str, Any], output_dir: Path, limits: ReportLimi
             <div class="meta-wide"><span class="field-label">Tags</span>{tag_html or '<span class="muted">No tags inferred</span>'}</div>
             <div class="meta-wide"><span class="field-label">Scenario result source</span>{result_source}</div>
           </div>
-          {render_artifact_strip(result, output_dir)}
+          {'' if limits.summary_only else render_artifact_strip(result, output_dir)}
           {render_deferred_verifications(result, output_dir, limits)}
+          <details class="scenario-data" open><summary>Test-case data (final resolved snapshot for this attempt)</summary>{render_data(result.get('data'))}</details>
           <div class="steps-heading"><h4>Execution steps</h4><span>{len(steps)} keyword(s)</span></div>
           <div class="step-list">{step_html}</div>
           {render_failure_evidence(result, output_dir, limits)}
-          {render_video(result, output_dir)}
+          {'' if limits.summary_only else render_video(result, output_dir)}
     """
     if body_only:
         return content
@@ -1002,10 +1061,11 @@ def render_flat_log(results: Sequence[dict[str, Any]]) -> str:
                 f'<details class="log-step {step_status}" {"open" if step_status == "FAIL" else ""}>'
                 f'<summary><span class="step-kind">KEYWORD</span> {esc(step.get("text"))}'
                 f'<span class="step-duration">{esc(fmt_duration(duration_ms(step)))}</span><span class="status-pill {step_status}">{step_status}</span></summary>'
-                f'<div class="log-step-body"><div><strong>Binding:</strong> {esc(step.get("binding"))}</div>'
-                f'<div><strong>Source:</strong> {esc(step.get("bindingSource"))}:{esc(step.get("bindingLine"))}</div>'
+                f'<div class="log-step-body"><details class="binding-node" {"open" if step_status == "FAIL" else ""}><summary>C# step definition: {esc(step.get("binding") or "No step-definition method captured")} · {step_status}</summary>'
+                f'<div>{esc(step.get("bindingResolution"))}</div>'
                 f'{render_data(step.get("data"))}'
-                f'{f"<pre>{esc(diagnostics)}</pre>" if diagnostics else ""}</div></details>'
+                f'{render_actions(step.get("actions"))}'
+                f'{f"<pre>{esc(diagnostics)}</pre>" if diagnostics else ""}</details></div></details>'
             )
         blocks.append(
             f'<section class="log-suite" data-status="{esc(scenario_status)}" data-search="{esc((feature + " " + scenario).casefold())}">'
@@ -1013,12 +1073,16 @@ def render_flat_log(results: Sequence[dict[str, Any]]) -> str:
             f'{esc(feature)} / {esc(scenario)}<span class="step-duration">{esc(fmt_duration(duration_ms(result)))}</span>'
             f'<span class="status-pill {scenario_status}">{scenario_status}</span></summary>'
             f'<div class="log-scenario-meta">Start / End: {esc(fmt_timestamp(result.get("startedAtUtc")))} / {esc(fmt_timestamp(result.get("completedAtUtc")))}</div>'
+            f'<details class="scenario-data"><summary>Test-case data (final resolved snapshot for this attempt)</summary>{render_data(result.get("data"))}</details>'
             f'{"".join(step_blocks) or "<p class=\"muted\">No step records.</p>"}</details></section>'
         )
     return "".join(blocks) or '<p class="notice">No scenario results were discovered.</p>'
 
 
 REPORT_CSS = r"""
+.binding-node, .action-node { margin:8px 0 8px 16px; padding:8px; border-left:3px solid #c9ced4; }
+.action-node.FAIL { border-color:#c62828; }
+.action-node.PASS { border-color:#238636; }
 :root {
   --ok: #238636;
   --ok-soft: #eaf7ec;
@@ -1594,7 +1658,8 @@ def write_report(
         f"<th>Status</th><th>Duration</th><th>Error</th></tr></thead><tbody>{''.join(log_rows)}</tbody></table>"
         "</body></html>"
     )
-    (output_dir / "log.html").write_text(log_html, encoding="utf-8")
+    if not limits.summary_only:
+        (output_dir / "log.html").write_text(log_html, encoding="utf-8")
 
     # Preserve the original summary.json schema and keys.
     summary_success_key = "pa" + "ssed"
@@ -1618,7 +1683,8 @@ def write_report(
             for feature, items in sorted(by_feature.items())
         },
     }
-    (output_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    if not limits.summary_only:
+        (output_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     return summary
 
 
@@ -1681,9 +1747,12 @@ def write_robot_xml(results: Sequence[dict[str, Any]], output_dir: Path, generat
 def main(argv: Iterable[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--evidence-root", required=True, type=Path)
+    parser.add_argument("--scenario-root", action="append", type=Path,
+                        help="Canonical scenario directory within evidence-root; repeat for each shard. Defaults to evidence-root.")
     parser.add_argument("--source-root", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
     parser.add_argument("--fail-on-empty", action="store_true")
+    parser.add_argument("--summary-only", action="store_true", help="Write only standalone report.html without media or external evidence links.")
     parser.add_argument("--max-log-mb", type=float, default=2.0, help="Maximum execution-log text embedded per failed scenario (default: 2 MB).")
     parser.add_argument("--max-image-mb", type=float, default=12.0, help="Maximum size of each base64-embedded image (default: 12 MB).")
     parser.add_argument("--max-images-per-scenario", type=int, default=20, help="Maximum embedded screenshots per scenario (default: 20).")
@@ -1697,7 +1766,17 @@ def main(argv: Iterable[str] | None = None) -> int:
         parser.error("Embed limits must be greater than zero.")
 
     generated = dt.datetime.now(dt.timezone.utc).isoformat()
-    results = load_results(args.evidence_root)
+    scenario_roots = [root.resolve() for root in (args.scenario_root or [args.evidence_root])]
+    for index, root in enumerate(scenario_roots):
+        if not root.is_dir() or not root.is_relative_to(args.evidence_root.resolve()):
+            parser.error(f"Scenario root must be a directory within evidence-root: {root}")
+        if any(root.is_relative_to(other) or other.is_relative_to(root) for other in scenario_roots[:index]):
+            parser.error(f"Scenario roots must not overlap: {root}")
+    results = [result for root in scenario_roots for result in load_results(root)]
+    policy = video_policy(args.source_root)
+    for result in results:
+        if exclude_video(policy, result.get("status", "")):
+            (result.get("artifacts") or {}).pop("video", None)
     bindings = discover_bindings(args.source_root)
     enrich(results, bindings)
     results = group_attempts(results)
@@ -1705,6 +1784,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         max_log_bytes=int(args.max_log_mb * 1024 * 1024),
         max_image_bytes=int(args.max_image_mb * 1024 * 1024),
         max_images_per_scenario=args.max_images_per_scenario,
+        summary_only=args.summary_only,
     )
     summary = write_report(
         results,
@@ -1714,7 +1794,8 @@ def main(argv: Iterable[str] | None = None) -> int:
         args.source_root,
         limits,
     )
-    write_robot_xml(results, args.output_dir, generated)
+    if not args.summary_only:
+        write_robot_xml(results, args.output_dir, generated)
     print(
         json.dumps(
             {

@@ -13,10 +13,19 @@ public sealed class ScenarioData
     private readonly Dictionary<string, string> _external = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _randomPatterns = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _canonicalFields = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, string> _stepData = new(StringComparer.OrdinalIgnoreCase);
     private readonly FrameworkConfig _config;
     public ScenarioData(FrameworkConfig config) => _config = config;
     public string CurrentFile { get; private set; } = string.Empty;
     public bool IsLoaded => !string.IsNullOrWhiteSpace(CurrentFile);
+    public void BeginStep() => _stepData.Clear();
+    public IReadOnlyDictionary<string, string> StepSnapshot() => MaskSnapshot(_stepData);
+
+    private string Track(string key, string value)
+    {
+        _stepData[key] = value;
+        return value;
+    }
     public void Load(string scenarioFile, string externalFile)
     {
         Reset();
@@ -206,8 +215,8 @@ public sealed class ScenarioData
     }
     public string GetCanonicalField(string fieldName, string fallback = "")
     {
-        if (_canonicalFields.TryGetValue(fieldName, out var value)) return Resolve(value);
-        return fallback;
+        if (_canonicalFields.TryGetValue(fieldName, out var value)) return Track(fieldName, Resolve(value));
+        return Track(fieldName, fallback);
     }
     public string GetCanonicalFieldRequired(string fieldName)
     {
@@ -227,32 +236,32 @@ public sealed class ScenarioData
     }
     public string Get(string key, string fallback = "")
     {
-        if (_runtime.TryGetValue(key, out var runtimeValue)) return runtimeValue;
+        if (_runtime.TryGetValue(key, out var runtimeValue)) return Track(key, runtimeValue);
         // An explicit external override wins over the source/static value.
         if (_external.TryGetValue(key, out var externalValue) && !IsSynthetic(externalValue))
         {
-            return externalValue;
+            return Track(key, externalValue);
         }
-        if (_static.TryGetValue(key, out var staticValue)) return staticValue;
-        if (_canonicalFields.TryGetValue(key, out var canonicalValue)) return canonicalValue;
-        return fallback;
+        if (_static.TryGetValue(key, out var staticValue)) return Track(key, staticValue);
+        if (_canonicalFields.TryGetValue(key, out var canonicalValue)) return Track(key, canonicalValue);
+        return Track(key, fallback);
     }
     public static bool IsSynthetic(string? value) =>
         string.IsNullOrWhiteSpace(value) || value.Equals("SYNTHETIC_REPLACE_ME", StringComparison.OrdinalIgnoreCase);
-    public void SetRuntime(string key, string value) => _runtime[key] = value;
+    public void SetRuntime(string key, string value) => _runtime[key] = Track(key, value);
     // Kept as a compatibility alias for source-derived runtime captures.
     public void Set(string key, string value) => SetRuntime(key, value);
     public string GenerateRandom(string key, string? pattern = null)
     {
         if (_runtime.TryGetValue(key, out var existing))
         {
-            return existing;
+            return Track(key, existing);
         }
         var effectivePattern = string.IsNullOrWhiteSpace(pattern) && _randomPatterns.TryGetValue(key, out var configured)
             ? configured
             : pattern ?? string.Empty;
         var value = RandomData.Generate(effectivePattern);
-        _runtime[key] = value;
+        SetRuntime(key, value);
         return value;
     }
     // Compatibility alias; random data is created in StepDefinitions.
@@ -389,16 +398,18 @@ public sealed class ScenarioData
     }
     public IReadOnlyDictionary<string, string> Snapshot()
     {
-        var result = new Dictionary<string, string>(_static, StringComparer.OrdinalIgnoreCase);
+        var result = new Dictionary<string, string>(_canonicalFields, StringComparer.OrdinalIgnoreCase);
+        foreach (var item in _static) result[item.Key] = item.Value;
+        foreach (var item in _external)
+            if (!IsSynthetic(item.Value)) result[item.Key] = item.Value;
         foreach (var item in _runtime) result[item.Key] = item.Value;
-        foreach (var key in result.Keys.Where(key =>
-                     key.Contains("password", StringComparison.OrdinalIgnoreCase) ||
-                     key.Contains("secret", StringComparison.OrdinalIgnoreCase)))
-        {
-            result[key] = "***";
-        }
-        return result;
+        return MaskSnapshot(result);
     }
+
+    private static IReadOnlyDictionary<string, string> MaskSnapshot(IReadOnlyDictionary<string, string> values) =>
+        values.ToDictionary(item => item.Key, item => Regex.IsMatch(item.Key,
+            "password|passwd|pwd|secret|token|authorization|api[_ -]?key", RegexOptions.IgnoreCase) ? "***" : item.Value,
+            StringComparer.OrdinalIgnoreCase);
     private static void ReadFlatObject(JsonElement root, string name, IDictionary<string, string> target)
     {
         if (!root.TryGetProperty(name, out var value) || value.ValueKind != JsonValueKind.Object) return;
