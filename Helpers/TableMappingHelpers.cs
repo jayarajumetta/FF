@@ -903,12 +903,12 @@ namespace PnCTestAutomation.Helpers
             }
         }
 
-        public static IReadOnlyList<SfpScheduledPropertyItem> CountryEstateScheduledPropertyFields(Table table)
+        public static IReadOnlyList<SfpScheduledPropertyItem> CountryEstateScheduledPropertyFields(Table table, ScenarioContextData contextData = null)
         {
-            var required = new[] { "Code", "Description", "AmountOfInsurance", "UnattendedVehicle" };
+            var required = new[] { "Code", "Description", "AmountOfInsurance", "UnattendedVehicle", "NamedPersonCount", "NamedPersonNames" };
             if (required.Any(column => !table.Header.Contains(column)) ||
                 table.Header.Any(column => !required.Contains(column) && column != "YearOfAppraisal"))
-                throw new ArgumentException("CE scheduled property requires Code, Description, AmountOfInsurance and UnattendedVehicle; only YearOfAppraisal is optional.");
+                throw new ArgumentException("CE scheduled property requires Code, Description, AmountOfInsurance, UnattendedVehicle, NamedPersonCount and NamedPersonNames; only YearOfAppraisal is optional.");
 
             var items = new List<SfpScheduledPropertyItem>();
             var codes = new HashSet<string>();
@@ -940,7 +940,27 @@ namespace PnCTestAutomation.Helpers
                 if (code == "409" && amount > 25000 && year == null)
                     throw new ArgumentException("Stamp Collections amounts above 25000 require YearOfAppraisal; 25000 is not a coverage maximum.");
 
-                items.Add(new(code, description, amount, unattended == "Yes", year));
+                int? namedPersonCount = null;
+                var countText = row["NamedPersonCount"]?.Trim();
+                var names = row["NamedPersonNames"]?.Trim();
+                if (code == "411")
+                {
+                    if (!int.TryParse(countText, NumberStyles.None, CultureInfo.InvariantCulture, out var count) || count < 0 || count > 9)
+                        throw new ArgumentException("Coverage 411 requires an explicit NamedPersonCount from 0 (None) through 9.");
+                    namedPersonCount = count;
+                    if (names == "{{fullName}}")
+                    {
+                        if (string.IsNullOrWhiteSpace(contextData?.ClientFirstName) || string.IsNullOrWhiteSpace(contextData?.ClientLastName))
+                            throw new ArgumentException("Coverage 411 {{fullName}} requires the quote's generated client first and last names.");
+                        names = $"{contextData.ClientFirstName.Trim()} {contextData.ClientLastName.Trim()}";
+                    }
+                    if (string.IsNullOrWhiteSpace(names) || names.Length > 85 || names.Contains("{{") || names.Contains("}}"))
+                        throw new ArgumentException("Coverage 411 requires NamedPersonNames of 1-85 characters, even when NamedPersonCount is 0.");
+                }
+                else if (!string.IsNullOrEmpty(countText) || !string.IsNullOrEmpty(names))
+                    throw new ArgumentException("NamedPersonCount and NamedPersonNames apply only to coverage 411.");
+
+                items.Add(new(code, description, amount, unattended == "Yes", year, namedPersonCount, names));
             }
             if (codes.Count != 2)
                 throw new ArgumentException("The CE scheduled-property step requires both 409 and 411.");

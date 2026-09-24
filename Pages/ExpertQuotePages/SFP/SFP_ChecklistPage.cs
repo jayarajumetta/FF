@@ -43,6 +43,8 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         public static async Task<IPage> OpenChecklistAsync(IPage eqPage)
         {
             var openBtn = eqPage.GetByRole(AriaRole.Button, new() { Name = "Checklist" });
+            await openBtn.WaitForAsync(new() { State = WaitForSelectorState.Visible });
+            await EnsureSubmissionReadyAsync(eqPage);
 
             // Use Context.WaitForPageAsync so we capture both true popups (window.open)
             // and plain new-tab navigations (target="_blank" links).
@@ -59,6 +61,15 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await ThrowIfChecklistApplicationErrorAsync(checklistPage);
 
             return checklistPage;
+        }
+
+        internal static async Task EnsureSubmissionReadyAsync(IPage page)
+        {
+            var incomplete = page.GetByText("Required fields are incomplete.", new() { Exact = false });
+            if (await incomplete.IsVisibleAsync())
+                throw new PlaywrightException(
+                    "Submission has incomplete required fields. Resolve the Required Fields list before opening Checklist; " +
+                    "an incomplete quote may have no valid Checklist ID.");
         }
 
         private static async Task ThrowIfChecklistApplicationErrorAsync(IPage page)

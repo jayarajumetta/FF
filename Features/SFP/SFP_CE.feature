@@ -152,9 +152,9 @@ Feature: SFP Country Estate Policy
 
     # Step 21A: Add and verify the approved Division IV items
     When user adds and verifies Country Estate Scheduled Personal Property
-      | Code | Description                        | AmountOfInsurance | UnattendedVehicle |
-      | 409  | Stamp Collections                  | 5000              | Yes               |
-      | 411  | Auto Trailer Home Personal Effects | 10000             | Yes               |
+      | Code | Description                        | AmountOfInsurance | UnattendedVehicle | NamedPersonCount | NamedPersonNames |
+      | 409  | Stamp Collections                  | 5000              | Yes               |                  |                  |
+      | 411  | Auto Trailer Home Personal Effects | 10000             | Yes               | 0                | {{fullName}}     |
 
     # Step 22: Run the Insurance Score
     When user runs Insurance Score
@@ -176,18 +176,28 @@ Feature: SFP Country Estate Policy
     # Step 23: Verify Premium on Pricing Screen
     Then user verifies Premium on Pricing screen
 
-    # Step 24: Validate Forms via Duckcreek
-    When user validates Forms via Duckcreek for state "<StateAbbv>"
+    # Step 24: Navigate to Billing via left menu
+    When user navigates to the "Billing" page via the left menu
 
-    # Step 25: Save for Later and re-open by quote number
-    When user clicks Save for Later
-    And user navigates to Expert Quote and searches by Quote Number
+    # Step 25: Complete Billing Information
+    When user completes Billing Information
+      | Question       | Answer          |
+      | BillingAccount | Create New      |
+      | PrimaryPayer   | Primary Insured |
+      | PaymentType    | Easy Pay        |
+      | RoutingNumber  | 021000021       |
+      | AccountNumber  | 123456789       |
+      | BankName       | Test Bank       |
+      | PaymentPlan    | 12 Payments     |
+      | PaymentDueDate | 01              |
+      | PaymentAmount  | Minimum         |
+      | PaymentMethod  | Check           |
 
-    # Step 25: Navigate to Submission and open Checklist
+    # Step 26: Visit the Checklist page
     When user navigates to Submission and opens Checklist
     Then user verifies no referrals are needed
 
-    # Step 26: Enter required information for Checklist (Residence Photo #1)
+    # Step 27: Enter required information for Checklist (Residence Photo #1)
     When user completes Checklist item
       | Question      | Answer              |
       | ItemName      | Residence Photo #1  |
@@ -195,36 +205,39 @@ Feature: SFP Country Estate Policy
       | ExceptionNote | Photo not available |
       | Note          | Photo not available |
 
-    # Step 27: Enter required information for Checklist (UL Roof Type)
+    # Step 28: Enter required information for Checklist (UL Roof Type Credit)
     When user completes Checklist item
       | Question      | Answer              |
-      | ItemName      | UL Roof Type        |
+      | ItemName      | UL Roof Type Credit |
       | Action        | Exception           |
       | ExceptionNote | Roof type confirmed |
       | Note          | Roof type confirmed |
 
-    # Step 28: Enter required information for Checklist (Loss Runs)
+    # Step 29: Enter required information for Checklist (Easy Pay)
     When user completes Checklist item
-      | Question      | Answer                                             |
-      | ItemName      | Loss Runs (Tiered - 5 Years; Not tiered - 3 years) |
-      | Action        | Exception                                          |
-      | ExceptionNote | Loss runs on file                                  |
-      | Note          | Loss runs on file                                  |
+      | Question      | Answer      |
+      | ItemName      | Easy Pay    |
+      | Action        | Exception   |
+      | ExceptionNote | EasyPay set |
+      | Note          | EasyPay set |
+      | Optional      | Yes         |
 
-    # Step 29: Enter required information for Checklist (Signature Page)
+    # Step 30: Enter required information for Checklist (Loss Runs)
     When user completes Checklist item
-      | Question      | Answer                 |
-      | ItemName      | Signature Page         |
-      | Action        | Exception              |
-      | ExceptionNote | Signature page on file |
-      | Note          | Signature page on file |
-      | Optional      | Yes                    |
+      | Question      | Answer                                            |
+      | ItemName      | Loss Runs (Tiered - 5 Years; Not tiered - 3 years)  |
+      | Action        | Exception                                         |
+      | ExceptionNote | Loss runs on file                                 |
+      | Note          | Loss runs on file                                 |
 
-    # Step 30: Close Checklist and confirm Update
+    # Step 31: Close Checklist and confirm Update
     When user closes Checklist and confirms Update
 
-    # Step 31: Verify Transmit button is enabled
+    # Step 32: Verify Transmit button is enabled
     Then user verifies Transmit button is enabled on Submission page
+
+    # Step 33: Validate Forms attachment via Duckcreek
+    When user validates Forms via Duckcreek for state "<StateAbbv>"
 
     @Shard4 @Debug
     Examples:

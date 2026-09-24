@@ -5,5 +5,7 @@ namespace PnCTestAutomation.Models
         string Description,
         int Amount,
         bool UnattendedVehicle,
-        int? YearOfAppraisal);
+        int? YearOfAppraisal,
+        int? NamedPersonCount,
+        string NamedPersonNames);
 }

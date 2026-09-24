@@ -139,7 +139,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         {
             if (_contextData.ProductSelection != "CE")
                 throw new ArgumentException("Country Estate scheduled property requires CE product context.");
-            var items = TableMappingHelpers.CountryEstateScheduledPropertyFields(table);
+            var items = TableMappingHelpers.CountryEstateScheduledPropertyFields(table, _contextData);
             var page = new SFP_ScheduledPersonalPropertyPage(_context.Page);
             await page.WaitForSpinnerAsync();
             var nav = _context.Page.Locator("[data-testid='ScheduledPersonalProperty-nav'], #ScheduledPersonalProperty-nav");

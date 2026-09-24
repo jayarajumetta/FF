@@ -66,6 +66,18 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             _page.GetByTestId(new Regex(@"\.covEndorsementsInput\$" + Regex.Escape(name) + @"\.value$", RegexOptions.IgnoreCase))
                 .And(_page.Locator("input:visible, textarea:visible"));
 
+        private ILocator NamedPersonCount =>
+            _page.GetByTestId(new Regex(@"\.covAutoTrailerHomePersonalEffectsInput\$namedPerson\.value$", RegexOptions.IgnoreCase))
+                .And(_page.Locator(":visible"));
+
+        private ILocator NamedPersonNames =>
+            _page.GetByTestId(new Regex(@"\.covAutoTrailerHomePersonalEffectsInput\$name\.value$", RegexOptions.IgnoreCase))
+                .And(_page.Locator("input:visible, textarea:visible"));
+
+        private static string NamedPersonCaption(SfpScheduledPropertyItem item) =>
+            item.NamedPersonCount == 0 ? "None" : item.NamedPersonCount?.ToString(CultureInfo.InvariantCulture)
+                ?? throw new ArgumentException("Coverage 411 requires an explicit NamedPersonCount.");
+
         private ILocator UnattendedChips(string code)
         {
             var field = code switch
@@ -88,6 +100,21 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 
             await FillRequiredItemFieldAsync("description", item.Description);
             await FillRequiredItemFieldAsync("limit", item.Amount.ToString(CultureInfo.InvariantCulture));
+            if (item.Code == "411")
+            {
+                await Expect(NamedPersonCount).ToHaveCountAsync(1);
+                await Expect(NamedPersonCount).ToBeEnabledAsync();
+                await NamedPersonCount.ClickAsync();
+                var option = _page.GetByRole(AriaRole.Listbox).And(_page.Locator(":visible"))
+                    .GetByRole(AriaRole.Option, new() { Name = NamedPersonCaption(item), Exact = true });
+                await Expect(option).ToHaveCountAsync(1);
+                await option.ClickAsync();
+                await WaitForSpinnerAsync();
+                await Expect(NamedPersonNames).ToHaveCountAsync(1);
+                await NamedPersonNames.FillAsync(item.NamedPersonNames);
+                await NamedPersonNames.PressAsync("Tab");
+                await WaitForSpinnerAsync();
+            }
             if (item.YearOfAppraisal.HasValue)
                 await FillRequiredItemFieldAsync("yearOfLastAppraisal", item.YearOfAppraisal.Value.ToString(CultureInfo.InvariantCulture));
             await chips.Filter(new() { HasTextRegex = new Regex(item.UnattendedVehicle ? @"^\s*Yes\s*$" : @"^\s*No\s*$") }).ClickAsync();
@@ -112,6 +139,14 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             var limit = RequiredItemField("limit");
             await Expect(limit).ToHaveCountAsync(1);
             await SfpFieldAssertions.NumberAsync(limit, item.Amount.ToString(CultureInfo.InvariantCulture));
+            if (item.Code == "411")
+            {
+                await Expect(NamedPersonCount).ToHaveCountAsync(1);
+                await SfpFieldAssertions.SelectionAsync(NamedPersonCount, NamedPersonCaption(item));
+                await Expect(NamedPersonNames).ToHaveCountAsync(1);
+                await Expect(NamedPersonNames).ToHaveValueAsync(new Regex(
+                    "^(?:" + Regex.Escape(item.NamedPersonNames) + "|" + Regex.Escape(item.NamedPersonNames.ToUpperInvariant()) + ")$"));
+            }
             if (item.YearOfAppraisal.HasValue)
             {
                 var year = RequiredItemField("yearOfLastAppraisal");

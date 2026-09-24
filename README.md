@@ -446,7 +446,8 @@ items remain deferred; neither is an executable step in `SFP_CE.feature`:
   There is no proven attachment to Residence #1; its greenhouse host is unresolved.
 
 The following inputs are now explicitly approved and implemented in the CE
-feature; their changes have not yet been qualified against the live application:
+feature. Alabama quote 02081797 verified the updated inputs through Pricing;
+the other state examples have not yet been live-qualified:
 
 - **Division IV:** 409 **Stamp Collections / 5000** and 411 **Auto Trailer Home
   Personal Effects / 10000**, with unattended-vehicle theft **Yes** for both.
@@ -461,6 +462,12 @@ feature; their changes have not yet been qualified against the live application:
   Missing, ambiguous, disabled or incorrectly persisted controls fail explicitly;
   the older non-CE SPP binding is unchanged. No appraisal year is invented for the
   approved 5000 stamp amount.
+  Coverage 411 also requires **NamedPersonNames**, separate from the generic item
+  description. The CE scenario resolves `{{fullName}}` to its existing generated
+  primary insured and explicitly retains **NamedPersonCount 0 (None)**; it does
+  not add a named-person extension. Both fields are checked before Save and after
+  reopening. Blank names are invalid even at count 0. Other explicit counts must
+  be integers 0-9; names have the source maximum of 85 characters.
 - **Location data:** all 38 CE state examples now use the user's replacement
   Address / AddressLine2 / City / Zip / County records, with five-digit ZIP strings
   (including leading zeros), AddressLine2 111 and existing shard/state inventory
@@ -497,9 +504,35 @@ Division IV amount/appraisal rules.
 
 The earlier Alabama CE Pricing pass (quote 02081373) predates the explicit
 household-contents binding, these scheduled items and the replacement addresses.
-It must not be treated as live qualification of the updated inputs. Premium
-baselines, forms expectations, residence perils 6 and their strict checks remain
-unchanged; input changes do not authorize a rebaseline or transaction finalization.
+The subsequent quote 02081797 matched the explicitly approved Alabama CE premium
+baseline of 3089, but failed opening eChecklist with "Checklist Not Found."
+Alabama Basic quote 02081808 completed Checklist using the same shared bindings.
+
+Per the user's 2026-09-23 clarification, CE now uses exactly Basic's finalization
+sequence and table inputs from Pricing onward: Billing, Submission/Checklist,
+no-referral check, Residence Photo #1, UL Roof Type Credit, optional Easy Pay,
+Loss Runs, close/update, Transmit-enabled assertion, then nonblocking Forms.
+The CE-only Save for Later/reopen detour and optional Signature Page step have
+been removed. A canonical-feature regression compares every binding, order and
+table value with Basic. This alignment is not proof of the earlier error's root
+cause. No Transmit click, issuance, binding or payment execution is added;
+premium assertions and Forms expectations remain unchanged by this alignment.
+
+The original and aligned CE failures (02081797 and 02081820) both reported the
+missing scheduled-property **Name** field and launched `cldc_SFP00`. Source and
+captured responses identify the missing 411 field, rather than Save/reopen, as
+the blocker: Submission cannot advance an incomplete Quote to Application, so
+no valid Checklist ID is assigned. The shared Checklist step now rejects a
+visible incomplete-required-fields message before opening the popup. A successful
+Pricing assertion or visible Checklist button alone does not establish readiness.
+
+After filling and verifying the 411 name, Alabama CE quote **02081833** passed
+the full canonical workflow on 2026-09-23 with the unchanged **3089** premium.
+Checklist **cldc_sfp3388818** opened successfully, required items completed, and
+close/update and Transmit-enabled checks passed. Optional Easy Pay was absent
+and skipped. Forms ran last and retained two nonblocking missing-mandatory-form
+discrepancies (**X42960309**, **X43061125**). No Transmit click, issue, bind or
+payment was performed. The remaining 37 CE states have not been live-qualified.
 
 Source references: carrier Data lines 24014-24082 (required integer amount and
 description), 25734-25782 (limit bounds/default lookup), 26104-26121 and

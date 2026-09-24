@@ -5,6 +5,7 @@ using Microsoft.Playwright;
 using NUnit.Framework;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 using PnCTestAutomation.StepDefinitions.SFPSteps;
 using Reqnroll;
 
@@ -23,6 +24,8 @@ namespace PnCTestAutomation.Tests
                 Assert.That(items.Select(item => item.Amount), Is.EqualTo(new[] { 5000, 10000 }));
                 Assert.That(items.All(item => item.UnattendedVehicle), Is.True);
                 Assert.That(items.All(item => item.YearOfAppraisal == null), Is.True);
+                Assert.That(items[1].NamedPersonCount, Is.EqualTo(0));
+                Assert.That(items[1].NamedPersonNames, Is.EqualTo("Jamie Example"));
             });
         }
 
@@ -36,6 +39,12 @@ namespace PnCTestAutomation.Tests
         [TestCase("UnattendedVehicle", "Maybe")]
         [TestCase("Code", "409")]
         [TestCase("Code", "1411")]
+        [TestCase("NamedPersonCount", "")]
+        [TestCase("NamedPersonCount", "-1")]
+        [TestCase("NamedPersonCount", "10")]
+        [TestCase("NamedPersonCount", "1.5")]
+        [TestCase("NamedPersonNames", "")]
+        [TestCase("NamedPersonNames", "{{unknown}}")]
         public void ScheduledPropertyBinding_ValidatesEntireTableBeforeNavigating(string field, string value)
         {
             var table = ScheduledPropertyTable();
@@ -48,6 +57,8 @@ namespace PnCTestAutomation.Tests
         [TestCase("Description")]
         [TestCase("AmountOfInsurance")]
         [TestCase("UnattendedVehicle")]
+        [TestCase("NamedPersonCount")]
+        [TestCase("NamedPersonNames")]
         public void ScheduledPropertyMapping_RejectsMissingRequiredColumn(string missing)
         {
             var table = new Table(ScheduledPropertyTable().Header.Where(column => column != missing).ToArray());
@@ -59,8 +70,8 @@ namespace PnCTestAutomation.Tests
         {
             Assert.Throws<ArgumentException>(() => TableMappingHelpers.CountryEstateScheduledPropertyFields(
                 new Table("Code", "Description", "AmountOfInsurance", "UnattendedVehicle", "Perils")));
-            var table = new Table("Code", "Description", "AmountOfInsurance", "UnattendedVehicle");
-            table.AddRow("409", "Stamp Collections", "5000", "Yes");
+            var table = new Table(ScheduledPropertyTable().Header.ToArray());
+            table.AddRow("409", "Stamp Collections", "5000", "Yes", "", "", "");
             Assert.Throws<ArgumentException>(() => TableMappingHelpers.CountryEstateScheduledPropertyFields(table));
         }
 
@@ -112,8 +123,87 @@ namespace PnCTestAutomation.Tests
                         "select411", "add411", "save411", "edit411", "catalog" }));
                 Assert.That(saved,
                     Is.EqualTo("{\"409\":{\"description\":\"STAMP COLLECTIONS\",\"amount\":\"5000\",\"unattended\":\"Yes\",\"year\":\"\"}," +
-                        "\"411\":{\"description\":\"AUTO TRAILER HOME PERSONAL EFFECTS\",\"amount\":\"10000\",\"unattended\":\"Yes\",\"year\":\"\"}}"));
+                        "\"411\":{\"description\":\"AUTO TRAILER HOME PERSONAL EFFECTS\",\"amount\":\"10000\",\"unattended\":\"Yes\",\"year\":\"\",\"names\":\"JAMIE EXAMPLE\",\"count\":\"None\"}}"));
             });
+        }
+
+        [Test]
+        public async Task ScheduledPropertyBinding_ResolvesExistingInsuredNameWithoutAddingNamedPersons()
+        {
+            await _page.SetContentAsync(ScheduledPropertyHtml);
+            var table = ScheduledPropertyTable();
+            table.Rows[1]["NamedPersonNames"] = "{{fullName}}";
+            await ScheduledPropertySteps().UserAddsAndVerifiesCountryEstateScheduledPersonalProperty(table);
+            Assert.That(await _page.EvaluateAsync<string>("window.saved['411'].names"), Is.EqualTo("JAMIE EXAMPLE"));
+            Assert.That(await _page.EvaluateAsync<string>("window.saved['411'].count"), Is.EqualTo("None"));
+        }
+
+        [TestCase(null, "Example")]
+        [TestCase("Jamie", "")]
+        public void ScheduledPropertyMapping_RejectsUnresolvedNameToken(string first, string last)
+        {
+            var table = ScheduledPropertyTable();
+            table.Rows[1]["NamedPersonNames"] = "{{fullName}}";
+            Assert.Throws<ArgumentException>(() => TableMappingHelpers.CountryEstateScheduledPropertyFields(table,
+                new ScenarioContextData { ClientFirstName = first, ClientLastName = last }));
+        }
+
+        [Test]
+        public void ScheduledPropertyMapping_RejectsOversizedAndInapplicableNames()
+        {
+            var table = ScheduledPropertyTable();
+            table.Rows[1]["NamedPersonNames"] = new string('A', 86);
+            Assert.Throws<ArgumentException>(() => TableMappingHelpers.CountryEstateScheduledPropertyFields(table));
+            table = ScheduledPropertyTable();
+            table.Rows[0]["NamedPersonNames"] = "Jamie Example";
+            Assert.Throws<ArgumentException>(() => TableMappingHelpers.CountryEstateScheduledPropertyFields(table));
+        }
+
+        [TestCase("1")]
+        [TestCase("9")]
+        public async Task ScheduledPropertyBinding_VerifiesExplicitNamedPersonCount(string count)
+        {
+            await _page.SetContentAsync(ScheduledPropertyHtml);
+            var table = ScheduledPropertyTable();
+            table.Rows[1]["NamedPersonCount"] = count;
+            await ScheduledPropertySteps().UserAddsAndVerifiesCountryEstateScheduledPersonalProperty(table);
+            Assert.That(await _page.EvaluateAsync<string>("window.saved['411'].count"), Is.EqualTo(count));
+        }
+
+        [TestCase("missingNames", false)]
+        [TestCase("duplicateNames", false)]
+        [TestCase("missingNamedCount", false)]
+        [TestCase("wrongNames", true)]
+        [TestCase("wrongNamedCount", true)]
+        public async Task ScheduledPropertyBinding_RejectsMissingOrIncorrectNamedPersonFields(string failure, bool saved)
+        {
+            await _page.SetContentAsync(ScheduledPropertyHtml);
+            await _page.EvaluateAsync("failure => window.failure = failure", failure);
+            Assert.ThrowsAsync<PlaywrightException>(() => ScheduledPropertySteps()
+                .UserAddsAndVerifiesCountryEstateScheduledPersonalProperty(ScheduledPropertyTable()));
+            Assert.That(await _page.EvaluateAsync<bool>("window.actions.includes('save411')"), Is.EqualTo(saved));
+        }
+
+        [Test]
+        public async Task ChecklistOpening_RejectsMissingSubmissionFieldsBeforeLaunchingPopup()
+        {
+            await _page.SetContentAsync("""
+                <p>Required fields are incomplete. In order to ensure accuracy of the quote, please address the questions noted below</p>
+                <button onclick="window.clicked=true">Checklist</button>
+                <script>window.clicked=false;</script>
+                """);
+            var error = Assert.ThrowsAsync<PlaywrightException>(() => SFP_ChecklistPage.OpenChecklistAsync(_page));
+            Assert.That(error.Message, Does.Contain("Submission has incomplete required fields"));
+            Assert.That(await _page.EvaluateAsync<bool>("window.clicked"), Is.False);
+            Assert.That(_context.Pages.Count, Is.EqualTo(1));
+        }
+
+        [TestCase("")]
+        [TestCase("<p hidden>Required fields are incomplete.</p>")]
+        public async Task ChecklistReadiness_AllowsCompleteSubmission(string html)
+        {
+            await _page.SetContentAsync(html);
+            Assert.DoesNotThrowAsync(() => SFP_ChecklistPage.EnsureSubmissionReadyAsync(_page));
         }
 
         [TestCase("missing409")]
@@ -182,13 +272,14 @@ namespace PnCTestAutomation.Tests
         }
 
         private SFP_CoverageSteps ScheduledPropertySteps() =>
-            new(new PlaywrightContext { Page = _page }, new ScenarioContextData { ProductSelection = "CE" });
+            new(new PlaywrightContext { Page = _page }, new ScenarioContextData
+            { ProductSelection = "CE", ClientFirstName = "Jamie", ClientLastName = "Example" });
 
         private static Table ScheduledPropertyTable()
         {
-            var table = new Table("Code", "Description", "AmountOfInsurance", "UnattendedVehicle", "YearOfAppraisal");
-            table.AddRow("409", "Stamp Collections", "5000", "Yes", "");
-            table.AddRow("411", "Auto Trailer Home Personal Effects", "10000", "Yes", "");
+            var table = new Table("Code", "Description", "AmountOfInsurance", "UnattendedVehicle", "YearOfAppraisal", "NamedPersonCount", "NamedPersonNames");
+            table.AddRow("409", "Stamp Collections", "5000", "Yes", "", "", "");
+            table.AddRow("411", "Auto Trailer Home Personal Effects", "10000", "Yes", "", "0", "Jamie Example");
             return table;
         }
 
@@ -227,26 +318,43 @@ namespace PnCTestAutomation.Tests
                 }
               }
               function editor(code, reopen) {
-                let item = {...(saved[code] || {description:'', amount:'', unattended:'No', year:''})};
+                let item = {...(saved[code] || {description:'', amount:'', unattended:'No', year:'', names:'', count:'None'})};
                 if (reopen && failure === 'wrongDescription') item.description = 'WRONG ITEM';
                 if (reopen && failure === 'wrongAmount') item.amount = '1';
                 if (reopen && failure === 'wrongUnattended') item.unattended = 'No';
+                if (reopen && failure === 'wrongNames') item.names = 'WRONG PERSON';
+                if (reopen && failure === 'wrongNamedCount') item.count = '1';
                 let field = code === '409' ? 'covStampCollectionsInput$unattendedVehicle' : 'covAutoTrailerHomePersonalEffectsInput$unattendedVehicles';
                 if (failure === 'wrong409Plural' && code === '409') field += 's';
                 if (failure === 'wrong411Singular' && code === '411') field = field.slice(0, -1);
                 const input = (name, value) => `<input data-testid="fields.covEndorsements.rows[0].covEndorsementsInput$${name}.value" value="${value}">`;
+                const names = `<input data-testid="fields.covEndorsements.rows[0].covAutoTrailerHomePersonalEffectsInput$name.value" value="${item.names}">`;
+                const count = `<button id="namedCount" role="combobox" data-testid="fields.covEndorsements.rows[0].covAutoTrailerHomePersonalEffectsInput$namedPerson.value"
+                    onclick="showCounts()"><span class="mat-select-value-text">${item.count}</span></button>`;
                 screen.innerHTML = (failure === 'missingDescription' ? '' : input('description', item.description)) +
                     input('limit', item.amount) + (failure === 'duplicateLimit' ? input('limit', item.amount) : '') +
                     (code === '409' ? input('yearOfLastAppraisal', item.year) : '') +
+                    (code === '411' ? (failure === 'missingNames' ? '' : names) + (failure === 'duplicateNames' ? names : '') +
+                      (failure === 'missingNamedCount' ? '' : count) : '') +
                     ['Yes', 'No'].map(value => `<div data-testid="fields.covEndorsements.rows[0].${field}.value-chip-item-wrapper"
                       onclick="document.querySelectorAll('.choice').forEach(x => x.classList.remove('chip-wrapper-selected')); this.firstElementChild.classList.add('chip-wrapper-selected')">
                       <span class="choice ${item.unattended === value ? 'chip-wrapper-selected' : ''}">${value}</span></div>`).join('') +
                     button('save', code, 'Save', `saveItem('${code}')`);
               }
+              function showCounts() {
+                const list = document.createElement('div'); list.setAttribute('role', 'listbox');
+                list.innerHTML = ['None','1','2','3','4','5','6','7','8','9'].map(v =>
+                    `<div role="option" onclick="document.querySelector('#namedCount span').textContent='${v}'; this.parentNode.remove()">${v}</div>`).join('');
+                screen.appendChild(list);
+              }
               function saveItem(code) {
                 const read = field => screen.querySelector(`[data-testid$="$${field}.value"]`)?.value || '';
                 saved[code] = {description:read('description').toUpperCase(), amount:read('limit'),
                   unattended:screen.querySelector('.chip-wrapper-selected').textContent, year:read('yearOfLastAppraisal')};
+                if (code === '411') {
+                  saved[code].names = read('name').toUpperCase();
+                  saved[code].count = document.querySelector('#namedCount span').textContent;
+                }
                 actions.push('save' + code); catalog();
               }
               catalog();
