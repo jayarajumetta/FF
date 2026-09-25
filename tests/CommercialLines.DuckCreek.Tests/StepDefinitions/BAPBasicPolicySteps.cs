@@ -50,6 +50,7 @@ public sealed class BAPBasicPolicySteps
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
+        await page.WaitForQuickQuoteAsync("Visible");
         await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_1}}"));
         await page.WaitForUnderwritingInfoAsync("Exists");
         await page.EnterInsuredTypeAsync(data.Resolve("{{data:insured_type_3}}"));
@@ -57,6 +58,7 @@ public sealed class BAPBasicPolicySteps
         await page.WaitForFirstNameAsync("Visible");
         await page.EnterFirstNameAsync(data.Resolve("{{data:first_name_7}}"));
         await page.EnterMiddleNameAsync(data.Resolve("{{data:middle_name_8}}"));
+        await page.WaitForLastNameAsync("Visible");
         await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0040}}"));
         await page.EnterDOBAsync(data.Resolve("{DATE[][-40y][MM-dd-yyyy]}"));
         if (data.Condition("State!=\"CA\""))
@@ -66,6 +68,7 @@ public sealed class BAPBasicPolicySteps
         await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0041}}"));
         await page.EnterAddressAsync(data.Resolve("{{data:address1_15}}"));
         await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:zipcode_16}}"));
+        await page.WaitForClientSearchAsync("Visible");
         await page.ClickClientSearchAsync();
         await page.WaitForOKAsync("Exists");
         await page.ClickOKAsync();
@@ -273,23 +276,32 @@ public sealed class BAPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
+        await Task.Delay(2000);
         await page.ClickDriverScheduleAsync();
         await page.WaitForDriverSchedulePageTitleAsync("Exists");
         await page.ClickAddDriverAsync();
-        await Task.Delay(3000);
+        await page.WaitForFirstNameAsync("Visible");
         await page.EnterFirstNameAsync(data.Resolve("{{data:iframe_duck_creek_policy_first_name_160}}"));
+        await page.WaitForLastNameAsync("Visible");
         await page.EnterLastNameAsync(data.Resolve("{{data:iframe_duck_creek_policy_last_name_161}}"));
+        await page.WaitForDateOfBirthAsync("Visible");
         await page.EnterDateOfBirthAsync(data.Resolve("{DATE[09-05-2026][-40y][MM-dd-yyyy]}"));
+        await page.WaitForStateLicensedAsync("Visible");
         await page.EnterStateLicensedAsync(data.Resolve("{{data:iframe_duck_creek_policy_state_licensed_163}}"));
-        await Task.Delay(4000);
+        await page.WaitForSexAsync("Visible");
         await page.EnterSexAsync(data.Resolve("{{data:iframe_duck_creek_policy_sex_165}}"));
+        await page.WaitForMaritalStatusAsync("Visible");
         await page.EnterMaritalStatusAsync(data.Resolve("{{data:iframe_duck_creek_policy_marital_status_166}}"));
+        await page.WaitForYearLicensedAsync("Visible");
         await page.EnterYearLicensedAsync(data.Resolve("{{data:iframe_duck_creek_policy_year_licensed_167}}"));
+        await page.WaitForDateOfHireAsync("Visible");
         await page.EnterDateOfHireAsync(data.Resolve("{{data:iframe_duck_creek_policy_date_of_hire_168}}"));
         if (await page.DoYouHaveACDLLicenseExistsAsync())
         {
+            await page.WaitForDoYouHaveACDLLicenseAsync("Visible");
             await page.EnterDoYouHaveACDLLicenseAsync(data.Resolve("{{data:iframe_duck_creek_policy_do_you_have_a_cdl_license_169}}"));
         }
+        await page.WaitForOKAsync("Exists");
         await page.ClickOKAsync();
 
     }
