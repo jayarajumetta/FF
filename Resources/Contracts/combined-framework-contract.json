@@ -93,7 +93,7 @@
       "DevOps/ADO"
     ],
     "runnableRequires": [
-      "approved-profile",
+      "approved-per-case-profiles-for-declared-environments",
       "approved-selectors-and-frames",
       "approved-business-outcomes",
       "complete-package-inventory",

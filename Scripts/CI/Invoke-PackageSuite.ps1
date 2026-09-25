@@ -1,3 +1,4 @@
+#requires -Version 7.2
 [CmdletBinding()]
 param(
     [ValidateSet(
@@ -29,11 +30,12 @@ $packageRoot = Join-Path $runRoot "package"
 New-Item -ItemType Directory -Force -Path $runRoot | Out-Null
 
 if ([string]::IsNullOrWhiteSpace($PackageArchive)) {
+    Import-Module (Join-Path $PSScriptRoot "PipelineContracts.psm1") -Force
     $packageOutput = Join-Path $repoRoot "artifacts\package\$runId"
-    $created = & (Join-Path $PSScriptRoot "New-TestPackage.ps1") `
+    $created = @(& (Join-Path $PSScriptRoot "New-TestPackage.ps1") `
         -RepositoryRoot $repoRoot `
-        -OutputDirectory $packageOutput
-    $PackageArchive = $created.ArchivePath
+        -OutputDirectory $packageOutput)
+    $PackageArchive = (Get-PackageReceipt -Output $created).ArchivePath
 }
 
 & (Join-Path $PSScriptRoot "Test-TestPackage.ps1") `

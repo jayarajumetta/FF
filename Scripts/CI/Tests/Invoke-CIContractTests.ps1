@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-    [string]$RepositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..\..")).Path
+    [string]$RepositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..\..")).Path,
+    [switch]$IncludeCompiledInventory
 )
 
 $ErrorActionPreference = "Stop"
@@ -746,8 +747,8 @@ try {
     ) "The integration readiness matrix is incomplete or success-shaped."
     Assert-True (
         $packageBuilder -match "Invoke-StabilizationVerification\.ps1" -and
-        $stabilization -match "SfpGatedSmoke" -and
-        $stabilization -match "Test-IntegrationReadiness\.ps1" -and
+        $stabilization -match "SfpProfileContract" -and
+        $stabilization -match "ReadinessOutputPath" -and
         $stabilization -match 'catalogIntegrity = "Passed"' -and
         $stabilization -notmatch "ValidatedByCatalog"
     ) "Package creation bypasses the source-free stabilization gate."
@@ -756,7 +757,7 @@ try {
     $enabled = [PSCustomObject]@{
         workflowId = "enabled-regression"
         state = "Runnable"
-        profile = @{ status = "Approved" }
+        profile = @{ status = "PerCase" }
         selectorFrameStatus = "Approved"
         businessOutcomeStatus = "Approved"
         adoMappingStatus = "Mapped"
@@ -765,7 +766,9 @@ try {
             @{ role = $_; status = "Approved"; required = "Recorded approval evidence" }
         })
     }
-    Test-WorkflowActivation -Workflow $enabled -RequiredRoles $roles
+    $admissions = @([PSCustomObject]@{ isRunnable = $true })
+    Test-WorkflowActivation -Workflow $enabled -RequiredRoles $roles `
+        -ProfileAdmissions $admissions
     Assert-True ($true) "Runnable workflows with complete evidence must be accepted."
     $enabled.state = "Gated"
     Assert-Throws {
@@ -776,7 +779,14 @@ try {
     Assert-Throws {
         Test-WorkflowActivation -Workflow $enabled -RequiredRoles $roles
     } "without all approvals"
-    $enabled.profile.status = "Approved"
+    $enabled.profile.status = "PerCase"
+    Assert-Throws {
+        Test-WorkflowActivation -Workflow $enabled -RequiredRoles $roles
+    } "without all approvals"
+    Assert-Throws {
+        Test-WorkflowActivation -Workflow $enabled -RequiredRoles $roles `
+            -ProfileAdmissions @([PSCustomObject]@{ isRunnable = $false })
+    } "without all approvals"
     $enabled.blockers = @(@{ owner = "Nobody"; reason = "Unowned" })
     Assert-Throws {
         Test-WorkflowActivation -Workflow $enabled -RequiredRoles $roles
@@ -787,6 +797,8 @@ try {
         Test-WorkflowActivation -Workflow $enabled -RequiredRoles $roles
     } "duplicate approval ownership"
 
+    & (Join-Path $PSScriptRoot "Invoke-PackagingContractTests.ps1") `
+        -RepositoryRoot $RepositoryRoot -IncludeCompiledInventory:$IncludeCompiledInventory
     Write-Host "CI contract tests passed: $script:Passed assertions."
 }
 finally {

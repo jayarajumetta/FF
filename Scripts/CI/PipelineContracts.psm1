@@ -1,6 +1,30 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
+function Get-PackageReceipt {
+    param([AllowEmptyCollection()][object[]]$Output)
+
+    if ($null -eq $Output -or $Output.Count -ne 1 -or $null -eq $Output[0] -or
+        $Output[0].PSObject.TypeNames -notcontains "PnCTestAutomation.PackageReceipt") {
+        throw "Package builder must return exactly one typed package receipt."
+    }
+    $receipt = $Output[0]
+    foreach ($field in @(
+        @{ Name = "ArchivePath"; Type = "Leaf" },
+        @{ Name = "PackageRoot"; Type = "Container" },
+        @{ Name = "UnitResultsPath"; Type = "Container" },
+        @{ Name = "StabilizationReportPath"; Type = "Leaf" }
+    )) {
+        $property = $receipt.PSObject.Properties[$field.Name]
+        if ($null -eq $property -or $property.Value -isnot [string] -or
+            [string]::IsNullOrWhiteSpace($property.Value) -or
+            -not (Test-Path -LiteralPath $property.Value -PathType $field.Type)) {
+            throw "Package receipt has an invalid or missing '$($field.Name)'."
+        }
+    }
+    return $receipt
+}
+
 function Get-FileSha256 {
     param([Parameter(Mandatory)][string]$Path)
 
@@ -283,7 +307,9 @@ function Get-CompiledTestInventory {
     param(
         [Parameter(Mandatory)][string]$InventoryTool,
         [Parameter(Mandatory)][string]$TestAssembly,
-        [Parameter(Mandatory)][string]$OutputPath
+        [Parameter(Mandatory)][string]$OutputPath,
+        [string]$ReadinessMatrix,
+        [string]$PackageRoot
     )
 
     foreach ($required in @($InventoryTool, $TestAssembly)) {
@@ -292,7 +318,14 @@ function Get-CompiledTestInventory {
         }
     }
 
-    & dotnet $InventoryTool $TestAssembly $OutputPath
+    $arguments = @($InventoryTool, $TestAssembly, $OutputPath)
+    if ($ReadinessMatrix -or $PackageRoot) {
+        if (-not $ReadinessMatrix -or -not $PackageRoot) {
+            throw "Profile admission discovery requires both readiness matrix and package root."
+        }
+        $arguments += @($ReadinessMatrix, $PackageRoot)
+    }
+    & dotnet @arguments | Out-Host
     if ($LASTEXITCODE -ne 0) {
         throw "Compiled test inventory generation failed."
     }
@@ -640,7 +673,8 @@ function Merge-TrxResults {
 function Test-WorkflowActivation {
     param(
         [Parameter(Mandatory)][object]$Workflow,
-        [Parameter(Mandatory)][string[]]$RequiredRoles
+        [Parameter(Mandatory)][string[]]$RequiredRoles,
+        [object[]]$ProfileAdmissions = @()
     )
 
     $id = [string]$Workflow.workflowId
@@ -665,7 +699,9 @@ function Test-WorkflowActivation {
         }
     }
     if ([string]$Workflow.state -eq "Runnable") {
-        if ([string]$Workflow.profile.status -ne "Approved" -or
+        if ([string]$Workflow.profile.status -ne "PerCase" -or
+            $ProfileAdmissions.Count -eq 0 -or
+            @($ProfileAdmissions | Where-Object { -not $_.isRunnable }).Count -ne 0 -or
             [string]$Workflow.selectorFrameStatus -ne "Approved" -or
             [string]$Workflow.businessOutcomeStatus -ne "Approved" -or
             [string]$Workflow.adoMappingStatus -ne "Mapped" -or
@@ -685,6 +721,7 @@ function Test-WorkflowActivation {
 }
 
 Export-ModuleMember -Function @(
+    "Get-PackageReceipt",
     "Get-FileSha256",
     "Get-PackageInventory",
     "New-PackageManifest",

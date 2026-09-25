@@ -1,3 +1,4 @@
+#requires -Version 7.2
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)]
@@ -119,7 +120,7 @@ foreach ($path in @($matrixPath, $inventoryPath, $mappingPath)) {
 $matrix = Get-Content -LiteralPath $matrixPath -Raw | ConvertFrom-Json
 $inventory = Get-Content -LiteralPath $inventoryPath -Raw | ConvertFrom-Json
 $mapping = Get-Content -LiteralPath $mappingPath -Raw | ConvertFrom-Json
-Assert-True ($matrix.schemaVersion -eq 1) (
+Assert-True ($matrix.schemaVersion -eq 2) (
     "Unsupported integration readiness schema.")
 Assert-True (([string]$matrix.packageVersion).Equals(
     "1.4.0",
@@ -146,6 +147,24 @@ $requiredRoles = @($matrix.requiredApprovalRoles |
     ForEach-Object { [string]$_ })
 Assert-True ($requiredRoles.Count -eq 4) (
     "Exactly four accountable approval roles are required.")
+
+$runtimeInventoryPath = Join-Path ([IO.Path]::GetTempPath()) (
+    "PnC-ProfileAdmission-" + [Guid]::NewGuid().ToString("N") + ".json")
+try {
+    $runtimeInventory = Get-CompiledTestInventory `
+        -InventoryTool (Join-Path $root "tools\CiTestInventory\CiTestInventory.dll") `
+        -TestAssembly (Join-Path $root "test\TestAutomation.dll") `
+        -OutputPath $runtimeInventoryPath `
+        -ReadinessMatrix $matrixPath `
+        -PackageRoot $root
+}
+finally {
+    if (Test-Path -LiteralPath $runtimeInventoryPath) {
+        Remove-Item -LiteralPath $runtimeInventoryPath -Force
+    }
+}
+Assert-ExactSet -Expected @($inventory.tests.id) `
+    -Actual @($runtimeInventory.tests.id) -Description "Readiness compiled discovery"
 
 $manifestPaths = @($package.inventory | ForEach-Object { [string]$_.path })
 $ownershipKeys = [Collections.Generic.HashSet[string]]::new(
@@ -256,20 +275,25 @@ foreach ($workflow in $workflows) {
         ([string]$workflow.profile.catalogPath).Replace("/", "\"))
     Assert-True (Test-Path -LiteralPath $profilePath -PathType Leaf) (
         "Workflow '$workflowId' profile catalog is missing.")
-    $profileCatalog = Get-Content -LiteralPath $profilePath -Raw |
-        ConvertFrom-Json
     if ($workflow.sourceProvenance.status -ne "RepositoryNative") {
         throw "Workflow '$workflowId' has an unsupported provenance status."
     }
-    $profileMatches = @($profileCatalog.profiles |
-        Where-Object scenarioProfile -eq (
-            [string]$workflow.profile.profileId))
-    Assert-True ($profileMatches.Count -gt 0) (
-        "Workflow '$workflowId' profile is missing.")
-    Assert-True (@($profileMatches | Where-Object {
-        ([string]$_.mode) -ne [string]$workflow.profile.status
-    }).Count -eq 0) (
-        "Workflow '$workflowId' profile status disagrees with its catalog.")
+    Assert-True ([string]$workflow.profile.status -eq "PerCase") (
+        "Workflow '$workflowId' requires PerCase profile admission.")
+    $admissionReports = @($runtimeInventory.profileAdmissions |
+        Where-Object workflowId -eq $workflowId)
+    Assert-True ($admissionReports.Count -eq 1) (
+        "Workflow '$workflowId' compiled profile admission is missing or duplicated.")
+    $admissions = @($admissionReports[0].cases)
+    $environments = @($workflow.profile.environments)
+    Assert-True ($admissions.Count -eq ($discovered.Count * $environments.Count)) (
+        "Workflow '$workflowId' profile admission coverage is incomplete.")
+    foreach ($environment in $environments) {
+        Assert-ExactSet -Expected @($discovered.id) `
+            -Actual @($admissions | Where-Object environment -eq $environment |
+                ForEach-Object testId) `
+            -Description "Workflow '$workflowId' profile admission for '$environment'"
+    }
 
     $frameProperty = $workflow.sourceProvenance.PSObject.Properties[
         "frameCatalogPath"]
@@ -315,7 +339,8 @@ foreach ($workflow in $workflows) {
         "Workflow '$workflowId' has no required business assertions.")
     $blockers = @($workflow.blockers)
     $approvals = @($workflow.approvalEvidence)
-    Test-WorkflowActivation -Workflow $workflow -RequiredRoles $requiredRoles
+    Test-WorkflowActivation -Workflow $workflow -RequiredRoles $requiredRoles `
+        -ProfileAdmissions $admissions
 
     $workflowReports.Add([PSCustomObject][ordered]@{
         workflowId = $workflowId
@@ -323,6 +348,7 @@ foreach ($workflow in $workflows) {
         moduleId = [string]$workflow.moduleId
         sourceProvenanceStatus = [string]$workflow.sourceProvenance.status
         profileStatus = [string]$workflow.profile.status
+        profileAdmissions = $admissions
         selectorFrameStatus = [string]$workflow.selectorFrameStatus
         businessOutcomeStatus = [string]$workflow.businessOutcomeStatus
         evidenceContract = @($workflow.evidenceContract)
@@ -338,7 +364,7 @@ foreach ($workflow in $workflows) {
 }
 
 $reportData = [PSCustomObject][ordered]@{
-    schemaVersion = 1
+    schemaVersion = 2
     catalogVersion = [string]$matrix.catalogVersion
     packageVersion = [string]$package.packageVersion
     packageCommit = [string]$package.commit.sha

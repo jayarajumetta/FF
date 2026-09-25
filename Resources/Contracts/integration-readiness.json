@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "catalogVersion": "1.4.0",
   "packageVersion": "1.4.0",
   "topologyDecision": "ProvisionalInAssembly",
@@ -23,7 +23,8 @@
       "profile": {
         "contractId": "sfp-outcomes",
         "profileId": "sfp-basic",
-        "status": "NonRunnable",
+        "status": "PerCase",
+        "environments": ["qa", "dev"],
         "catalogPath": "test/Resources/ExpectedOutcomes/sfp-outcomes.json"
       },
       "selectorFrameStatus": "Contracted",
@@ -70,7 +71,7 @@
         {
           "gate": "Profile",
           "owner": "QA",
-          "reason": "State/company premium, forms, quote identity, and transmit-readiness outcomes remain NonRunnable."
+          "reason": "Per-case profile admission does not constitute workflow approval; QA must approve the selected environment/state scope and complete business evidence."
         },
         {
           "gate": "Runtime",
@@ -123,7 +124,8 @@
       "profile": {
         "contractId": "sfp-outcomes",
         "profileId": "sfp-country-estate",
-        "status": "NonRunnable",
+        "status": "PerCase",
+        "environments": ["qa", "dev"],
         "catalogPath": "test/Resources/ExpectedOutcomes/sfp-outcomes.json"
       },
       "selectorFrameStatus": "Contracted",
@@ -171,7 +173,7 @@
         {
           "gate": "Profile",
           "owner": "QA",
-          "reason": "Country Estate state/company outcomes and current forms metadata remain NonRunnable."
+          "reason": "Per-case profile admission does not constitute workflow approval; QA must approve the selected environment/state scope and complete business evidence."
         },
         {
           "gate": "Runtime",
@@ -224,7 +226,8 @@
       "profile": {
         "contractId": "sfp-outcomes",
         "profileId": "sfp-basic",
-        "status": "NonRunnable",
+        "status": "PerCase",
+        "environments": ["qa", "dev"],
         "catalogPath": "test/Resources/ExpectedOutcomes/sfp-outcomes.json"
       },
       "selectorFrameStatus": "Contracted",
@@ -273,7 +276,7 @@
         {
           "gate": "Profile",
           "owner": "QA",
-          "reason": "The approved quote, forms baseline provenance, version, and response metadata remain NonRunnable."
+          "reason": "Per-case profile admission does not approve the stable quote or complete forms workflow evidence; QA workflow approval remains pending."
         },
         {
           "gate": "Runtime",

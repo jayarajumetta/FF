@@ -22,6 +22,7 @@
     .\Scripts\Invoke-ScheduledRun.ps1 -Suite FormsCheck-SFP -Environment QA
 #>
 
+#requires -Version 7.2
 param(
     [Parameter(Mandatory)]
     [ValidateSet("SFP", "CE", "FormsCheck", "FormsCheck-SFP", "FormsCheck-CE")]

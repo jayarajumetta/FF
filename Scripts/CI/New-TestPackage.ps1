@@ -1,3 +1,4 @@
+#requires -Version 7.2
 [CmdletBinding()]
 param(
     [string]$RepositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path,
@@ -81,7 +82,7 @@ foreach ($buildOutput in @(
 
 Push-Location $root
 try {
-    & dotnet restore Playwright_POC.sln --locked-mode
+    & dotnet restore Playwright_POC.sln --locked-mode | Out-Host
     if ($LASTEXITCODE -ne 0) {
         throw "Locked solution restore failed."
     }
@@ -90,7 +91,7 @@ try {
         --configuration Release `
         --no-restore `
         --nologo `
-        -p:ContinuousIntegrationBuild=true
+        -p:ContinuousIntegrationBuild=true | Out-Host
     if ($LASTEXITCODE -ne 0) {
         throw "Release solution build failed."
     }
@@ -99,7 +100,7 @@ try {
     if (-not (Test-Path -LiteralPath $browserInstaller -PathType Leaf)) {
         throw "The built Playwright installer is missing."
     }
-    & $browserInstaller install chromium
+    & $browserInstaller install chromium | Out-Host
     if ($LASTEXITCODE -ne 0) {
         throw "Chromium setup for offline browser contract tests failed."
     }
@@ -111,13 +112,13 @@ try {
         --no-build `
         --no-restore `
         --logger "trx;LogFileName=UnitTests.trx" `
-        --results-directory $unitResults
+        --results-directory $unitResults | Out-Host
     if ($LASTEXITCODE -ne 0) {
         throw "Unit/contract tests failed."
     }
 
     & (Join-Path $root "Scripts\CI\Tests\Invoke-CIContractTests.ps1") `
-        -RepositoryRoot $root
+        -RepositoryRoot $root -IncludeCompiledInventory | Out-Host
 }
 finally {
     Pop-Location
@@ -262,10 +263,11 @@ Compress-Archive -Path (Join-Path $stageRoot "*") -DestinationPath $archivePath
 $stabilizationReport = Join-Path $verificationRoot "stabilization-report.json"
 & (Join-Path $stageRoot "scripts\CI\Invoke-StabilizationVerification.ps1") `
     -ArchivePath $archivePath `
-    -OutputPath $stabilizationReport
+    -OutputPath $stabilizationReport | Out-Host
 
 Write-Host "Created validated package: $archivePath"
 return [PSCustomObject]@{
+    PSTypeName = "PnCTestAutomation.PackageReceipt"
     ArchivePath = $archivePath
     PackageRoot = $stageRoot
     UnitResultsPath = $unitResults

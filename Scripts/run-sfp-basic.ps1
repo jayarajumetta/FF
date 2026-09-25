@@ -14,6 +14,7 @@
     .\Scripts\run-sfp-basic.ps1 -NoBuild
 #>
 
+#requires -Version 7.2
 param(
     [switch]$NoBuild
 )

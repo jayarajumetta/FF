@@ -27,7 +27,8 @@ stages:
               artifact: ${{ parameters.artifactName }}
               targetPath: "$(Pipeline.Workspace)/package-download/$(Build.BuildId)"
 
-          - powershell: |
+          # Package validation requires PowerShell 7.2+ (pwsh) on the agent PATH.
+          - pwsh: |
               $archive = @(Get-ChildItem "$(Pipeline.Workspace)\package-download\$(Build.BuildId)" -Filter "*.zip" -File -Recurse)
               if ($archive.Count -ne 1) {
                 throw "Expected exactly one package archive."

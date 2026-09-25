@@ -6,10 +6,10 @@ using System.Text.Json;
 if (args.Length > 0 && args[0] == "initialize-sgs-ledger")
     return SgsLedgerInitializer.Run(args[1..]);
 
-if (args.Length != 2)
+if (args.Length is not (2 or 4))
 {
     Console.Error.WriteLine(
-        "Usage: CiTestInventory <test-assembly> <output-json>");
+        "Usage: CiTestInventory <test-assembly> <output-json> [<readiness-matrix> <package-root>]");
     return 2;
 }
 
@@ -53,7 +53,10 @@ try
             assembly = Path.GetFileName(assemblyPath),
             count = tests.Count,
             tests,
-            modules
+            modules,
+            profileAdmissions = args.Length == 4
+                ? DiscoverProfileAdmissions(assembly, tests, args[2], args[3])
+                : []
         };
         File.WriteAllText(
             outputPath,
@@ -69,11 +72,81 @@ try
 catch (Exception exception)
 {
     Console.Error.WriteLine(
-        $"Test inventory generation failed: {exception.Message}");
+        $"Test inventory generation failed: {exception.GetBaseException().Message}");
     return 1;
 }
 
 return 0;
+
+static List<WorkflowProfileAdmission> DiscoverProfileAdmissions(
+    Assembly assembly,
+    IReadOnlyList<TestInventoryEntry> tests,
+    string matrixPath,
+    string packageRoot)
+{
+    using var matrix = JsonDocument.Parse(File.ReadAllText(matrixPath));
+    if (matrix.RootElement.GetProperty("schemaVersion").GetInt32() != 2)
+        throw new InvalidOperationException("Unsupported integration readiness schema.");
+
+    // Use the provider from the inspected test assembly, not the tool's copy or a
+    // second implementation of its checksum, expiry, and selection rules.
+    var optionsType = assembly.GetType(
+        "PnCTestAutomation.BusinessOutcomes.BusinessOutcomeOptions", throwOnError: true)!;
+    var providerType = assembly.GetType(
+        "PnCTestAutomation.BusinessOutcomes.ExpectedOutcomeProfileProvider", throwOnError: true)!;
+    var resolve = providerType.GetMethod(
+        "ResolvePreflight", [typeof(string), typeof(string), typeof(string)])
+        ?? throw new InvalidOperationException("Compiled profile resolver is missing.");
+    var root = Path.GetFullPath(packageRoot).TrimEnd(Path.DirectorySeparatorChar)
+               + Path.DirectorySeparatorChar;
+    var reports = new List<WorkflowProfileAdmission>();
+    foreach (var workflow in matrix.RootElement.GetProperty("workflows").EnumerateArray())
+    {
+        var id = workflow.GetProperty("workflowId").GetString()!;
+        var profile = workflow.GetProperty("profile");
+        if (profile.GetProperty("status").GetString() != "PerCase")
+            throw new InvalidOperationException($"Workflow '{id}' requires PerCase profile admission.");
+        var catalogPath = Path.GetFullPath(Path.Combine(
+            root, profile.GetProperty("catalogPath").GetString()!.Replace('/', Path.DirectorySeparatorChar)));
+        if (!catalogPath.StartsWith(root, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException($"Workflow '{id}' profile catalog is outside the package.");
+        var options = Activator.CreateInstance(optionsType)!;
+        optionsType.GetProperty("ProfilePath")!.SetValue(options, catalogPath);
+        var provider = Activator.CreateInstance(providerType, [options])
+                       ?? throw new InvalidOperationException("Compiled profile provider could not be created.");
+        var categories = workflow.GetProperty("discoveryCategories").EnumerateArray()
+            .Select(item => item.GetString()!).ToArray();
+        var selected = tests.Where(test => categories.All(category =>
+            test.Categories.Contains(category, StringComparer.OrdinalIgnoreCase))).ToArray();
+        var environments = profile.GetProperty("environments").EnumerateArray()
+            .Select(item => item.GetString()!).ToArray();
+        if (categories.Length == 0 || selected.Length == 0 || environments.Length == 0 ||
+            environments.Any(string.IsNullOrWhiteSpace) ||
+            environments.Distinct(StringComparer.OrdinalIgnoreCase).Count() != environments.Length)
+            throw new InvalidOperationException($"Workflow '{id}' has empty or duplicate admission scope.");
+        var cases = new List<CaseProfileAdmission>();
+        foreach (var test in selected)
+        {
+            if (string.IsNullOrWhiteSpace(test.State))
+                throw new InvalidOperationException($"Compiled test '{test.Id}' has no state argument.");
+            foreach (var environment in environments)
+            {
+                var resolution = resolve.Invoke(provider,
+                    [profile.GetProperty("profileId").GetString()!, environment, test.State])
+                    ?? throw new InvalidOperationException("Compiled profile resolution is missing.");
+                var resolvedProfile = RequiredProperty(resolution, "Profile");
+                cases.Add(new CaseProfileAdmission(
+                    test.Id, environment, test.State,
+                    RequiredString(resolvedProfile, "ProfileId"),
+                    RequiredString(resolvedProfile, "Mode"),
+                    RequiredBoolean(resolution, "IsRunnable"),
+                    RequiredString(resolution, "Reason")));
+            }
+        }
+        reports.Add(new WorkflowProfileAdmission(id, cases));
+    }
+    return reports;
+}
 
 static List<ProductModuleInventoryEntry> DiscoverModules(Assembly assembly)
 {
@@ -192,7 +265,8 @@ static List<TestInventoryEntry> Discover(Assembly assembly)
                     GetDisplayName(method, testCases[index]),
                     fixtureCategories
                         .Concat(methodCategories)
-                        .Concat(caseCategories)));
+                        .Concat(caseCategories),
+                    GetStateArgument(method, testCases[index])));
             }
         }
     }
@@ -206,7 +280,8 @@ static TestInventoryEntry CreateEntry(
     int caseIndex,
     bool parameterized,
     string displayName,
-    IEnumerable<string> categories)
+    IEnumerable<string> categories,
+    string? state = null)
 {
     var typeName = type.FullName
                    ?? throw new InvalidOperationException(
@@ -222,7 +297,29 @@ static TestInventoryEntry CreateEntry(
             .Select(category => category.Trim())
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(category => category, StringComparer.OrdinalIgnoreCase)
-            .ToArray());
+            .ToArray(),
+        state);
+}
+
+static string? GetStateArgument(MethodInfo method, CustomAttributeData testCase)
+{
+    var arguments = testCase.ConstructorArguments;
+    if (arguments.Count == 1 &&
+        arguments[0].Value is IEnumerable<CustomAttributeTypedArgument> items)
+        arguments = items.ToArray();
+    var parameters = method.GetParameters();
+    foreach (var name in new[] { "stateAbbv", "stateCode", "state" })
+    {
+        var index = Array.FindIndex(parameters, parameter =>
+            string.Equals(parameter.Name, name, StringComparison.OrdinalIgnoreCase));
+        if (index < 0 || index >= arguments.Count ||
+            arguments[index].Value is not string value || string.IsNullOrWhiteSpace(value))
+            continue;
+        value = value.Trim();
+        if (name != "state" || value.Length == 2)
+            return value.ToUpperInvariant();
+    }
+    return null;
 }
 
 static string GetDisplayName(
@@ -303,7 +400,21 @@ sealed record TestInventoryEntry(
     string MethodName,
     bool Parameterized,
     string DisplayName,
-    IReadOnlyList<string> Categories);
+    IReadOnlyList<string> Categories,
+    string? State);
+
+sealed record WorkflowProfileAdmission(
+    string WorkflowId,
+    IReadOnlyList<CaseProfileAdmission> Cases);
+
+sealed record CaseProfileAdmission(
+    string TestId,
+    string Environment,
+    string State,
+    string ProfileId,
+    string Mode,
+    bool IsRunnable,
+    string Reason);
 
 sealed record ProductModuleInventoryEntry(
     string ModuleId,

@@ -1,3 +1,4 @@
+#requires -Version 7.2
 [CmdletBinding(DefaultParameterSetName = "Directory")]
 param(
     [Parameter(Mandatory, ParameterSetName = "Directory")]
@@ -11,7 +12,10 @@ param(
 
     [switch]$DiscoverySmoke,
 
-    [switch]$SfpGatedSmoke,
+    [Alias("SfpGatedSmoke")]
+    [switch]$SfpProfileContract,
+
+    [string]$ReadinessOutputPath,
 
     [switch]$PublisherDryRunSmoke,
 
@@ -22,85 +26,6 @@ param(
 
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
-
-function Test-NonRunnableSelection {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$PackageRoot,
-
-        [Parameter(Mandatory)]
-        [string]$Filter,
-
-        [Parameter(Mandatory)]
-        [string]$ResultName,
-
-        [Parameter(Mandatory)]
-        [string]$DisplayName,
-
-        [Parameter(Mandatory)]
-        [string[]]$RequiredCategories
-    )
-
-    $testAssembly = Join-Path $PackageRoot "test\TestAutomation.dll"
-    $runSettings = Join-Path $PackageRoot "runsettings\ci.runsettings"
-    $inventory = Get-Content -LiteralPath (
-        Join-Path $PackageRoot "metadata\test-inventory.json") -Raw |
-        ConvertFrom-Json
-    $expectedCount = @($inventory.tests | Where-Object {
-        $categories = @($_.categories | ForEach-Object { [string]$_ })
-        @($RequiredCategories | Where-Object {
-            $categories -notcontains $_
-        }).Count -eq 0
-    }).Count
-    if ($expectedCount -eq 0) {
-        throw "$DisplayName has no compiled tests."
-    }
-    $probeRoot = Join-Path ([IO.Path]::GetTempPath()) (
-        "PnC-$ResultName-" + [Guid]::NewGuid().ToString("N"))
-    $probeTestRoot = Join-Path $probeRoot "test"
-    $probeResults = Join-Path $probeRoot "results"
-    New-Item -ItemType Directory -Force -Path $probeTestRoot, $probeResults |
-        Out-Null
-    Copy-Item -Path (Join-Path $PackageRoot "test\*") `
-        -Destination $probeTestRoot -Recurse -Force
-    try {
-        Push-Location $probeRoot
-        try {
-            & dotnet test (Join-Path $probeTestRoot "TestAutomation.dll") `
-                --settings $runSettings `
-                --filter $Filter `
-                --logger "trx;LogFileName=$ResultName.trx" `
-                --results-directory $probeResults
-            if ($LASTEXITCODE -ne 0) {
-                throw "Extracted $DisplayName NonRunnable probe failed."
-            }
-            [xml]$probe = Get-Content -LiteralPath (
-                Join-Path $probeResults "$ResultName.trx") -Raw
-            $namespace = [Xml.XmlNamespaceManager]::new($probe.NameTable)
-            $namespace.AddNamespace(
-                "t",
-                "http://microsoft.com/schemas/VisualStudio/TeamTest/2010")
-            $results = @($probe.SelectNodes(
-                "/t:TestRun/t:Results/t:UnitTestResult",
-                $namespace))
-            if ($results.Count -ne $expectedCount -or
-                @($results | Where-Object outcome -ne "NotExecuted").Count -ne 0) {
-                throw "$DisplayName must discover exactly $expectedCount explicitly ignored NonRunnable executions."
-            }
-        }
-        finally {
-            Pop-Location
-        }
-    }
-    finally {
-        Remove-Item -LiteralPath $probeRoot -Recurse -Force
-    }
-    Write-Host (
-        "Extracted {0} NonRunnable probe passed: {1} NotExecuted." -f
-        $DisplayName,
-        $expectedCount)
-}
 
 $temporaryExtraction = $false
 if ($PSCmdlet.ParameterSetName -eq "Archive") {
@@ -225,39 +150,21 @@ try {
         }
         Write-Host "Extracted package discovery smoke found $($sfpTests.Count) SFP tests."
     }
-    if ($SfpGatedSmoke) {
-        Test-NonRunnableSelection `
-            -PackageRoot $PackageRoot `
-            -Filter (
-                "TestCategory=SfpBasicOutcome&" +
-                "TestCategory=ExpertQuote&" +
-                "TestCategory=AutomationId-SFP-BASIC-POLICY") `
-            -ResultName "SfpBasicPolicy" `
-            -DisplayName "SFP Basic Policy gate" `
-            -RequiredCategories @(
-                "SfpBasicOutcome",
-                "ExpertQuote",
-                "AutomationId-SFP-BASIC-POLICY")
-        Test-NonRunnableSelection `
-            -PackageRoot $PackageRoot `
-            -Filter (
-                "TestCategory=SfpCountryEstateOutcome&" +
-                "TestCategory=AutomationId-SFP-COUNTRY-ESTATE") `
-            -ResultName "SfpCountryEstate" `
-            -DisplayName "SFP Country Estate gate" `
-            -RequiredCategories @(
-                "SfpCountryEstateOutcome",
-                "AutomationId-SFP-COUNTRY-ESTATE")
-        Test-NonRunnableSelection `
-            -PackageRoot $PackageRoot `
-            -Filter (
-                "TestCategory=Forms&" +
-                "TestCategory=AutomationId-SFP-FORMS-VALIDATION") `
-            -ResultName "SfpForms" `
-            -DisplayName "SFP forms gate" `
-            -RequiredCategories @(
-                "Forms",
-                "AutomationId-SFP-FORMS-VALIDATION")
+    if ($SfpProfileContract -or $ReadinessOutputPath) {
+        $temporaryReadiness = [string]::IsNullOrWhiteSpace($ReadinessOutputPath)
+        if ($temporaryReadiness) {
+            $ReadinessOutputPath = Join-Path ([IO.Path]::GetTempPath()) (
+                "PnC-Readiness-" + [Guid]::NewGuid().ToString("N") + ".json")
+        }
+        try {
+            & (Join-Path $PackageRoot "scripts\CI\Test-IntegrationReadiness.ps1") `
+                -PackageRoot $PackageRoot -OutputPath $ReadinessOutputPath
+        }
+        finally {
+            if ($temporaryReadiness -and (Test-Path -LiteralPath $ReadinessOutputPath)) {
+                Remove-Item -LiteralPath $ReadinessOutputPath -Force
+            }
+        }
     }
     if ($PublisherDryRunSmoke) {
         & (Join-Path $PackageRoot "scripts\CI\Test-TestPlanPublisherSmoke.ps1") `

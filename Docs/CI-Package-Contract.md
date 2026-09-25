@@ -240,6 +240,19 @@ Phase 6 adds opt-in Azure DevOps Test Plans publication. It is `Off` by default
 and consumes only canonical final TRX/result/evidence inputs. See
 `Docs/Azure-Test-Plans-Publishing.md`.
 
+## Packaging host and receipt
+
+Packaging and validation require **PowerShell 7.2+** (`pwsh` on the private
+Windows agent PATH). All three package-consuming templates explicitly use
+`pwsh`; installing the .NET SDK does not upgrade Windows PowerShell 5.1.
+Local package and scheduled entrypoints fail before execution on older hosts.
+
+`New-TestPackage.ps1` keeps restore/build/test diagnostics visible on the host
+stream and propagates failures. Its success stream contains only one
+`PnCTestAutomation.PackageReceipt`. The fresh-build suite caller rejects
+missing, duplicate, untyped, or malformed receipts instead of selecting a log
+line or an arbitrary last result.
+
 ## Stabilization verification
 
 Run the credential-free source-free gate against an extracted package or its
@@ -252,9 +265,37 @@ pwsh .\scripts\CI\Invoke-StabilizationVerification.ps1 `
 ```
 
 The command validates package checksums/secrets, compiled discovery and module
-contracts, exact shard ownership, the current NonRunnable SFP Basic/CE/forms
-gates, canonical TRX/evidence parity,
+contracts, exact shard ownership, SFP Basic/CE/forms per-case profile admission,
+canonical TRX/evidence parity,
 Test Plans dry-run reconciliation, and source-free reporting startup with an
 explicitly rejected missing-canonical fixture. This utility fixture is not a
 business execution or evidence of application readiness. Its JSON report carries a SHA-256 over
 the canonical report body.
+
+The readiness matrix/report schema is **2**. `profile.status: PerCase` declares
+admission for each discovered state's `qa` and `dev` environments, using the
+actual compiled `ExpectedOutcomeProfileProvider` with its checksum, expiry,
+exact selection, and NonRunnable fallback rules. The report records each test
+ID, environment, state, selected profile, mode, runnable flag, and blocked reason.
+No approval values or catalog ownership change. Profile admission is not
+workflow authorization: all three integration workflows remain `Gated`, with
+the same accountable approval roles and pending runtime/business/mapping gates.
+
+`Test-TestPackage -SfpProfileContract` performs only offline provider/discovery
+and contract validation. The old `-SfpGatedSmoke` switch is an alias to this
+same offline path; it cannot execute business features. The only test-host
+command in package validation uses `--list-tests`. Stabilization report schema
+2 records `sourceFreeOfflineValidation: true`, `businessTestsExecuted: false`,
+and `sfpPerCaseProfileAdmission`, not an all-ignored business smoke result.
+No business credentials, browser login, DataPool, APIC, Forms, ADO, or application
+network access is required. Business execution remains opt-in through the
+existing explicit suite/shard commands.
+
+Focused offline regressions run with
+`pwsh .\Scripts\CI\Tests\Invoke-PackagingContractTests.ps1`; add
+`-IncludeCompiledInventory` after the Release inventory, publisher, report, and
+test assemblies are built to validate a synthetic package using the real
+compiled provider. The package builder includes these contracts automatically.
+The harness rejects native business-test commands and covers the fresh-build
+receipt, unsupported hosts, profile checksum/expiry, state/environment selection,
+fallbacks, and admission versus workflow authorization.

@@ -5,17 +5,27 @@ Package/runtime contract 1.4.0 is frozen by
 `Resources/Contracts/integration-readiness.json`, and the immutable package
 manifest. `Scripts/CI/Invoke-StabilizationVerification.ps1` is the single
 source-free verification entry point. It validates the extracted package,
-compiled discovery/modules, shard ownership, all current NonRunnable SFP and
+compiled discovery/modules, shard ownership, per-case SFP profile admission and
 canonical result/evidence parity, credential-free Test Plans dry-run
 reconciliation, profile checksums, and emits a
 checksummed stabilization report.
+
+Use PowerShell 7.2+ (`pwsh`). Readiness matrix/report schema 2 separates
+`profile.status: PerCase` from integration workflow `state: Gated`. The existing
+compiled outcome provider validates checksums/expiry and resolves every
+discovered state's declared `qa`/`dev` selection, preserving the 54 approved QA
+profiles and four NonRunnable fallbacks. An approved case is not workflow
+approval. The mandatory package gate never executes business features:
+`SfpProfileContract` (including the legacy `SfpGatedSmoke` alias) is offline, and
+test-host discovery uses only `--list-tests`. Stabilization report schema 2
+explicitly records no business tests executed.
 
 ## Current readiness
 
 | Workflow | Stable automation ID | State | Primary gates |
 |----------|----------------------|-------|---------------|
-| SFP Basic | `SFP-BASIC-POLICY:<STATE>` | Gated | QA outcome profiles, runtime/security approval, ADO mappings, topology decision |
-| SFP Country Estate | `SFP-COUNTRY-ESTATE:<STATE>` | Gated | QA outcome profiles, runtime/security approval, ADO mappings, topology decision |
+| SFP Basic | `SFP-BASIC-POLICY:<STATE>` | Gated | per-case scope/business evidence approval, runtime/security approval, ADO mappings, topology decision |
+| SFP Country Estate | `SFP-COUNTRY-ESTATE:<STATE>` | Gated | per-case scope/business evidence approval, runtime/security approval, ADO mappings, topology decision |
 | SFP forms | `SFP-FORMS-VALIDATION:<STATE>` | Gated | approved quote/baseline metadata, Forms access, ADO mapping, topology decision |
 
 The JSON readiness matrix is authoritative for detailed business assertions,

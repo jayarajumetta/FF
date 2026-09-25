@@ -1,5 +1,7 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using NUnit.Framework;
+using PnCTestAutomation.BusinessOutcomes;
 using PnCTestAutomation.Products;
 
 namespace PnCTestAutomation.UnitTests;
@@ -26,6 +28,7 @@ public class IntegrationReadinessTests
 
         Assert.Multiple(() =>
         {
+            Assert.That(root.GetProperty("schemaVersion").GetInt32(), Is.EqualTo(2));
             Assert.That(root.GetProperty("packageVersion").GetString(),
                 Is.EqualTo("1.4.0"));
             Assert.That(
@@ -89,6 +92,9 @@ public class IntegrationReadinessTests
                     profile.GetProperty("contractId").GetString(),
                     Is.EqualTo(module.DataProfileId),
                     workflowId);
+                Assert.That(profile.GetProperty("status").GetString(), Is.EqualTo("PerCase"));
+                Assert.That(profile.GetProperty("environments").EnumerateArray()
+                    .Select(item => item.GetString()), Is.EquivalentTo(new[] { "qa", "dev" }));
                 Assert.That(
                     evidence,
                     Is.EquivalentTo(module.Evidence.RequiredArtifacts
@@ -135,6 +141,54 @@ public class IntegrationReadinessTests
                 module.BlockedSelectors.Count > 0,
                 Is.EqualTo(selectorStatus == "Blocked"),
                 workflowId);
+        }
+    }
+
+    [Test]
+    public void ProfileAdmissionIsPerEnvironmentAndStateNotWorkflowApproval()
+    {
+        using var matrix = ReadJson("Resources", "Contracts", "integration-readiness.json");
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            Converters = { new JsonStringEnumConverter() }
+        };
+        var catalog = JsonSerializer.Deserialize<ExpectedOutcomeCatalog>(
+            File.ReadAllText(Path.Combine(FindRepositoryRoot(), "Resources",
+                "ExpectedOutcomes", "sfp-outcomes.json")), options)!;
+        var provider = new ExpectedOutcomeProfileProvider(catalog,
+            () => new DateTimeOffset(2026, 9, 25, 0, 0, 0, TimeSpan.Zero));
+        Assert.Multiple(() =>
+        {
+            Assert.That(catalog.Profiles.Count(profile =>
+                profile.Mode == BusinessOutcomeProfileMode.Approved), Is.EqualTo(54));
+            Assert.That(catalog.Profiles.Count(profile =>
+                profile.Mode == BusinessOutcomeProfileMode.NonRunnable && profile.State == "*"),
+                Is.EqualTo(4));
+        });
+        foreach (var workflow in matrix.RootElement.GetProperty("workflows").EnumerateArray())
+        {
+            var profile = workflow.GetProperty("profile");
+            var scenario = profile.GetProperty("profileId").GetString()!;
+            Assert.Multiple(() =>
+            {
+                Assert.That(profile.GetProperty("status").GetString(), Is.EqualTo("PerCase"));
+                Assert.That(provider.ResolvePreflight(scenario, "QA", "al").IsRunnable, Is.True);
+                Assert.That(provider.ResolvePreflight(scenario, "dev", "AL").IsRunnable, Is.False);
+                Assert.That(provider.ResolvePreflight(scenario, "qa", "ZZ").Profile.State, Is.EqualTo("*"));
+                Assert.That(workflow.GetProperty("state").GetString(), Is.EqualTo("Gated"),
+                    "An approved case must not approve the integration workflow.");
+                Assert.That(workflow.GetProperty("approvalEvidence").EnumerateArray()
+                    .All(approval => approval.GetProperty("status").GetString() == "Pending"), Is.True);
+            });
+        }
+        foreach (var profile in catalog.Profiles.Where(profile =>
+                     profile.Mode == BusinessOutcomeProfileMode.Approved))
+        {
+            var resolution = provider.ResolvePreflight(
+                profile.ScenarioProfile, profile.Environment, profile.State);
+            Assert.That(resolution.Profile, Is.SameAs(profile),
+                "The approved exact state/environment must win over the fallback.");
         }
     }
 

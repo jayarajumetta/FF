@@ -37,7 +37,8 @@ stages:
                 nuget | "$(Agent.OS)"
               path: $(Pipeline.Workspace)/.nuget/packages
 
-          - powershell: |
+          # Agent prerequisite: PowerShell 7.2+ (pwsh) on PATH; UseDotNet does not install it.
+          - pwsh: |
               $output = "$(Build.SourcesDirectory)\artifacts\ci-package-$(Build.BuildId)"
               if (Test-Path -LiteralPath $output) {
                 Remove-Item -LiteralPath $output -Recurse -Force

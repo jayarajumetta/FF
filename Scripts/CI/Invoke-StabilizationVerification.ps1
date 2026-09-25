@@ -1,3 +1,4 @@
+#requires -Version 7.2
 [CmdletBinding(DefaultParameterSetName = "Directory")]
 param(
     [Parameter(Mandatory, ParameterSetName = "Directory")]
@@ -46,31 +47,29 @@ $verificationRoot = Join-Path ([IO.Path]::GetTempPath()) (
 New-Item -ItemType Directory -Force -Path $verificationRoot | Out-Null
 try {
     $root = [IO.Path]::GetFullPath($PackageRoot)
+    $readinessPath = Join-Path $verificationRoot "readiness.json"
     & (Join-Path $root "scripts\CI\Test-TestPackage.ps1") `
         -PackageRoot $root `
         -DiscoverySmoke `
-        -SfpGatedSmoke `
+        -SfpProfileContract `
+        -ReadinessOutputPath $readinessPath `
         -PublisherDryRunSmoke `
         -ReportToolSmoke `
         -ScanForSecrets
 
-    $readinessPath = Join-Path $verificationRoot "readiness.json"
-    & (Join-Path $root "scripts\CI\Test-IntegrationReadiness.ps1") `
-        -PackageRoot $root `
-        -OutputPath $readinessPath
-
     $readiness = Get-Content -LiteralPath $readinessPath -Raw |
         ConvertFrom-Json
     $body = [PSCustomObject][ordered]@{
-        schemaVersion = 1
+        schemaVersion = 2
         packageVersion = [string]$readiness.report.packageVersion
         packageCommit = [string]$readiness.report.packageCommit
         credentialFree = $true
-        sourceFreePackageExecution = $true
+        sourceFreeOfflineValidation = $true
+        businessTestsExecuted = $false
         checks = [PSCustomObject][ordered]@{
             packageManifest = "Passed"
             sourceFreeDiscovery = "Passed"
-            sfpGatedProfiles = "Passed"
+            sfpPerCaseProfileAdmission = "Passed"
             canonicalResultEvidenceParity = "Passed"
             testPlansDryRunReconciliation = "Passed"
             sourceFreeReportingRuntime = "Passed"
