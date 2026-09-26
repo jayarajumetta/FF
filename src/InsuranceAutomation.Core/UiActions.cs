@@ -116,7 +116,8 @@ public sealed class UiActions
         {
             await x.ClickAsync();
             try { await x.FillAsync(string.Empty); } catch { }
-            await Task.Delay(100);
+            await x.ClickAsync();
+            await Task.Delay(150);
             await x.PressSequentiallyAsync(value ?? string.Empty, new LocatorPressSequentiallyOptions { Delay = Math.Max(0, delayMs) });
         });
     }

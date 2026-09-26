@@ -47,10 +47,13 @@ public sealed class CPPBasicPolicySteps
         await page.WaitForQuickQuoteAsync("Exists");
         await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_2}}"));
         //await page.WaitForUnderwritingInfoAsync("Exists");
+        await page.PauseAsync(1000);
         await page.WaitForInsuredTypeAsync("Visible");
         await page.EnterInsuredTypeSequentiallyAsync(data.Resolve("{{data:insured_type_4}}"));
         await page.WaitForEntityTypeAsync("Visible");
+        await page.PauseAsync(1000);
         await page.EnterEntityTypeSequentiallyAsync(data.Resolve("{{data:entity_type_8}}"));
+        await page.PauseAsync(1000);
         await page.WaitForBusinessNameAsync("Visible");
         await page.EnterBusinessNameSequentiallyAsync(data.Resolve("{{data:business_name_7}}"));
         await page.WaitForPrimaryPhoneAsync("Visible");
@@ -1513,14 +1516,17 @@ public sealed class CPPBasicPolicySteps
         await page.EnterPolicyCovgBaileesCutomersPropertyInTransitAsync(data.Resolve("{{data:property_in_transit_370}}"));
         await page.ClickPropertyAwayFromYourPremisesScheduleAsync();
         await page.ClickAddPremisesAsync();
+        await page.PauseAsync(2000);
         await page.WaitForAddressStreetCityStateZipAsync("Visible");
         await page.EnterAddressStreetCityStateZipAsync(data.Resolve("{{data:address_street_city_state_zip_373}}"));
         await page.WaitForPolicyCovgBaileesPropertyAwayFromYourPremisesLimitAsync("Visible");
+        await page.PauseAsync(2000);
         await page.EnterPolicyCovgBaileesPropertyAwayFromYourPremisesLimitAsync(data.Resolve("{{data:limit_374}}"));
         await page.ClickOKAsync();
+        await page.PauseAsync(2000);
         await page.WaitForPolicyCovgBaileesCutomersCoverageFormDisplayAsync("Exists");
         await page.ClickOKAsync();
-
+        await page.PauseAsync(2000);
     }
 
     [Given(@"^I add Computer Systems$")]
@@ -1532,6 +1538,7 @@ public sealed class CPPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
+        await page.PauseAsync(2000);
         await page.ClickIMNavigationLinksPolicyCovgAsync();
         await page.WaitForPolicyCovgMainPolicyCovgAsync("Exists");
         await page.WaitForCoverageFormToBeAddedAsync("Visible");
@@ -1568,6 +1575,7 @@ public sealed class CPPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
+        await page.PauseAsync(2000);
         await page.ClickIMNavigationLinksPolicyCovgAsync();
         //await page.WaitForPolicyCovgMainPolicyCovgAsync("Exists");
         await page.WaitForCoverageFormToBeAddedAsync("Visible");
@@ -1610,6 +1618,7 @@ public sealed class CPPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
+        await page.PauseAsync(2000);
         await page.ClickIMNavigationLinksPolicyCovgAsync();
         //await page.WaitForPolicyCovgMainPolicyCovgAsync("Exists");
         await page.WaitForCoverageFormToBeAddedAsync("Visible");
@@ -1649,6 +1658,7 @@ public sealed class CPPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
+        await page.PauseAsync(2000);
         await page.ClickIMNavigationLinksPolicyCovgAsync();
         //await page.WaitForPolicyCovgMainPolicyCovgAsync("Exists");
         await page.WaitForCoverageFormToBeAddedAsync("Visible");
@@ -1675,6 +1685,7 @@ public sealed class CPPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
+        await page.PauseAsync(2000);
         await page.WaitForRiskAsync("Visible");
         await page.ClickRiskAsync();
         //await page.WaitForSignsHeadingAsync("Exists");
