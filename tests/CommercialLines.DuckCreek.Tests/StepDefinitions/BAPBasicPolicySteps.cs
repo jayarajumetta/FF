@@ -69,17 +69,22 @@ public sealed class BAPBasicPolicySteps
         await page.EnterAddressAsync(data.Resolve("{{data:address1_15}}"));
         await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:zipcode_16}}"));
         await page.WaitForClientSearchAsync("Visible");
+        await page.PauseAsync(1000);
         await page.ClickClientSearchAsync();
         await page.WaitForOKAsync("Exists");
+        await page.PauseAsync(1000);
         await page.ClickOKAsync();
+        await page.PauseAsync(1000);
         await page.WaitForOrderSSNAsync("Exists");
         await page.ClickOrderSSNAsync();
         await page.WaitForNamedInsuredIndividualEnterSSNAsync("Exists");
         await page.EnterNamedInsuredIndividualEnterSSNAsync(data.Resolve("{{runtime:InsuredSSN}}"));
         data.Set("Last4SSN", data.Get("InsuredSSN").Length >= 4 ? data.Get("InsuredSSN")[^4..] : data.Get("InsuredSSN"));
         await page.PressNamedInsuredIndividualEnterSSNAsync("Doubleclick");
+        await page.PauseAsync(1000);
         await page.ClickVerifyAsync();
         await page.WaitForVerifyAsync("Absent");
+        await page.PauseAsync(1000);
         await page.WaitForSocialSecurityAsync("Equal");
         await page.VerifySocialSecurityAsync(data.Resolve("XXX-XX-{B[Last4SSN]}"), "InnerText");
         await page.WaitForPleaseVerifySSNAsync("Absent");
@@ -280,6 +285,7 @@ public sealed class BAPBasicPolicySteps
         await page.ClickDriverScheduleAsync();
         await page.WaitForDriverSchedulePageTitleAsync("Exists");
         await page.ClickAddDriverAsync();
+        await page.PauseAsync(1000);
         await page.WaitForFirstNameAsync("Visible");
         await page.EnterFirstNameAsync(data.Resolve("{{data:iframe_duck_creek_policy_first_name_160}}"));
         await page.WaitForLastNameAsync("Visible");
@@ -303,6 +309,7 @@ public sealed class BAPBasicPolicySteps
         }
         await page.WaitForOKAsync("Exists");
         await page.ClickOKAsync();
+        await page.PauseAsync(1000);
 
     }
 
@@ -315,6 +322,7 @@ public sealed class BAPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
+        await page.PauseAsync(1000);
         await page.WaitForWCNavigationLinksEndorsementsAsync("Exists");
         await page.ClickWCNavigationLinksEndorsementsAsync();
 
@@ -328,7 +336,8 @@ public sealed class BAPBasicPolicySteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-
+        
+        await page.PauseAsync(1000);
         await page.EnterBAPEndorsementsEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_192}}"));
         await page.ClickEndorsementsAddEndorsementAsync();
         await page.ClickOKAsync();
@@ -345,6 +354,7 @@ public sealed class BAPBasicPolicySteps
         var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.WaitForAdditionalInterestsAsync("Exists");
+        await page.PauseAsync(1000);
         await page.ClickAdditionalInterestsAsync();
 
     }
@@ -358,6 +368,7 @@ public sealed class BAPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
+        await page.PauseAsync(1000);
         await page.ClickUWQuestionsAsync();
         await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickUpdateAnswersButtonAsync();
@@ -377,7 +388,9 @@ public sealed class BAPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
+        await page.PauseAsync(1000);
         await page.ClickNavigationBillingAsync();
+        await page.PauseAsync(4000);
         await page.WaitForBillingAsync("Exists");
         await page.EnterBillTypeAsync(data.Resolve("{{data:bill_type_215}}"));
         await page.WaitForBillTypeAsync("Equal");
@@ -397,7 +410,9 @@ public sealed class BAPBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
+        await page.PauseAsync(1000);
         await page.ClickNotepadAsync();
+        await page.PauseAsync(1000);
         await page.WaitForNotepadHeadingAsync("Exists");
         await page.ClickAddNotesRemarksAsync();
         var noteText = data.Resolve("Test {B[Product (LOB)]}");
@@ -442,7 +457,7 @@ public sealed class BAPBasicPolicySteps
 
         await page.WaitForSubmissionAsync("Visible");
         await page.ClickSubmissionAsync();
-        await page.PauseAsync(1000);
+        await page.PauseAsync(4000);
         await page.WaitForCompleteApplicationAsync("Exists");
         await page.ClickCompleteApplicationAsync();
         await page.WaitForStoplightWaitingResultsAsync("Visible");
