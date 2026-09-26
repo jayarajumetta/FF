@@ -88,6 +88,8 @@ public sealed class WaitOptions
     public int DropdownPollIntervalMs { get; init; } = 75;
     public int PollIntervalMs { get; init; } = 250;
     public bool WaitForDomContentLoadedBeforeActions { get; init; } = true;
+    // Framework-level pacing applied before every UiActions-driven action.
+    public int PreActionDelayMs { get; init; } = 500;
 }
 
 public sealed class ReportingOptions

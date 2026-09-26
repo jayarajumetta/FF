@@ -22,18 +22,18 @@ Feature: CPP Basic Policy
     And I select CPP Coverage - GL
     And I select CPP Coverage - CP
     And I select CPP Coverage - IM
-    #And I select CP Detail
-    #And I complete CP Fields
-    ##And I complete mask Error Recovery - Not Needed
-    #And I complete CP Fields for policy coverage
-    #And I complete CP Fields for location
-    #And I complete CP Fields for building
-    #And I add a Rating Group
-    #And I complete Structure Questions
-    ##And I complete ensure Property of Others Rating Group has been entered - Not Needed
-    #And I add Addl Interests
-    #And I complete Property UW Questions
-    #And I return to CPP Navigation
+    And I select CP Detail
+    And I complete CP Fields
+    #And I complete mask Error Recovery - Not Needed
+    And I complete CP Fields for policy coverage
+    And I complete CP Fields for location
+    And I complete CP Fields for building
+    And I add a Rating Group
+    And I complete Structure Questions
+    #And I complete ensure Property of Others Rating Group has been entered - Not Needed
+    And I add Addl Interests
+    And I complete Property UW Questions
+    And I return to CPP Navigation
     #And I switch to UW Director for OR and WA when required - Not Needed
     And I select GL Detail
     And I complete CGL Fields

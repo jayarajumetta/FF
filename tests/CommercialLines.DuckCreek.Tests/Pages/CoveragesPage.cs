@@ -20,17 +20,32 @@ public sealed class CoveragesPage
     public Task ClickAddCoverageFormAsync() =>
         _ui.ClickAsync(_locators.AddCoverageForm, new ControlIntent("Coverages", "AddCoverageForm"));
 
+    public Task WaitForAddCoverageFormAsync(string expected) =>
+        _ui.WaitAsync(_locators.AddCoverageForm, expected, new ControlIntent("Coverages", "AddCoverageForm"));
+
     public Task ClickAddEndorsementAsync() =>
         _ui.ClickAsync(_locators.AddEndorsement, new ControlIntent("Coverages", "AddEndorsement"));
+
+    public Task WaitForAwayFromPremisesDescAsync(string expected) =>
+        _ui.WaitAsync(_locators.AwayFromPremisesDesc, expected, new ControlIntent("Coverages", "AwayFromPremisesDesc"));
 
     public Task EnterAwayFromPremisesDescAsync(string value) =>
         _ui.FillAsync(_locators.AwayFromPremisesDesc, value, new ControlIntent("Coverages", "AwayFromPremisesDesc"));
 
+    public Task EnterAwayFromPremisesDescSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.AwayFromPremisesDesc, value, new ControlIntent("Coverages", "AwayFromPremisesDesc"), delayMs);
+
     public Task PressAwayFromPremisesDescAsync(string key) =>
         _ui.PressAsync(_locators.AwayFromPremisesDesc, key, new ControlIntent("Coverages", "AwayFromPremisesDesc"));
 
+    public Task WaitForAwayFromPremisesLmtAsync(string expected) =>
+        _ui.WaitAsync(_locators.AwayFromPremisesLmt, expected, new ControlIntent("Coverages", "AwayFromPremisesLmt"));
+
     public Task EnterAwayFromPremisesLmtAsync(string value) =>
         _ui.FillAsync(_locators.AwayFromPremisesLmt, value, new ControlIntent("Coverages", "AwayFromPremisesLmt"));
+
+    public Task EnterAwayFromPremisesLmtSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.AwayFromPremisesLmt, value, new ControlIntent("Coverages", "AwayFromPremisesLmt"), delayMs);
 
     public Task PressAwayFromPremisesLmtAsync(string key) =>
         _ui.PressAsync(_locators.AwayFromPremisesLmt, key, new ControlIntent("Coverages", "AwayFromPremisesLmt"));
@@ -38,8 +53,14 @@ public sealed class CoveragesPage
     public Task ClickPolicyCovgAccountsReceivableOKAsync() =>
         _ui.ClickAsync(_locators.PolicyCovgAccountsReceivableOK, new ControlIntent("Coverages", "PolicyCovgAccountsReceivableOK"));
 
+    public Task WaitForPolicyCovgAccountsReceivableOKAsync(string expected) =>
+        _ui.WaitAsync(_locators.PolicyCovgAccountsReceivableOK, expected, new ControlIntent("Coverages", "PolicyCovgAccountsReceivableOK"));
+
     public Task ClickCPAsync() =>
         _ui.ClickAsync(_locators.CP, new ControlIntent("Coverages", "CP"));
+
+    public Task WaitForCoinsuranceAsync(string expected) =>
+        _ui.WaitAsync(_locators.Coinsurance, expected, new ControlIntent("Coverages", "Coinsurance"));
 
     public Task EnterCoinsuranceAsync(string value) =>
         _ui.FillAsync(_locators.Coinsurance, value, new ControlIntent("Coverages", "Coinsurance"));
@@ -47,11 +68,31 @@ public sealed class CoveragesPage
     public Task PressCoinsuranceAsync(string key) =>
         _ui.PressAsync(_locators.Coinsurance, key, new ControlIntent("Coverages", "Coinsurance"));
 
+    public Task WaitForCoverageFormToBeAddedAsync(string expected) =>
+        _ui.WaitAsync(_locators.CoverageFormToBeAdded, expected, new ControlIntent("Coverages", "CoverageFormToBeAdded"));
+
     public Task EnterCoverageFormToBeAddedAsync(string value) =>
         _ui.FillAsync(_locators.CoverageFormToBeAdded, value, new ControlIntent("Coverages", "CoverageFormToBeAdded"));
 
     public Task PressCoverageFormToBeAddedAsync(string key) =>
         _ui.PressAsync(_locators.CoverageFormToBeAdded, key, new ControlIntent("Coverages", "CoverageFormToBeAdded"));
+
+    public async Task EnterCoverageFormToBeAddedWithRetryAsync(string value, int maxAttempts = 3, int waitBeforeMs = 1000, int delayMs = 20)
+    {
+        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        {
+            await Task.Delay(waitBeforeMs);
+            if (await _ui.ExistsAsync(_locators.CoverageFormToBeAdded))
+            {
+                await _ui.PressSequentiallyAsync(_locators.CoverageFormToBeAdded, value, new ControlIntent("Coverages", "CoverageFormToBeAdded"), delayMs);
+                return;
+            }
+        }
+        await _ui.PressSequentiallyAsync(_locators.CoverageFormToBeAdded, value, new ControlIntent("Coverages", "CoverageFormToBeAdded"), delayMs);
+    }
+
+    public Task WaitForDescriptionAsync(string expected) =>
+        _ui.WaitAsync(_locators.Description, expected, new ControlIntent("Coverages", "Description"));
 
     public Task EnterDescriptionAsync(string value) =>
         _ui.FillAsync(_locators.Description, value, new ControlIntent("Coverages", "Description"));
@@ -227,12 +268,6 @@ public sealed class CoveragesPage
     public Task<string> CaptureDescriptionOfSpecifiedOperationAsync(string property = "") =>
         _ui.CaptureAsync(_locators.DescriptionOfSpecifiedOperation, property, new ControlIntent("Coverages", "DescriptionOfSpecifiedOperation"));
 
-
-    public Task EnterAwayFromPremisesDescSequentiallyAsync(string value, int delayMs = 20) =>
-        _ui.PressSequentiallyAsync(_locators.AwayFromPremisesDesc, value, new ControlIntent("Coverages", "AwayFromPremisesDesc"), delayMs);
-
-    public Task EnterAwayFromPremisesLmtSequentiallyAsync(string value, int delayMs = 20) =>
-        _ui.PressSequentiallyAsync(_locators.AwayFromPremisesLmt, value, new ControlIntent("Coverages", "AwayFromPremisesLmt"), delayMs);
 
     public Task EnterCoinsuranceSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.Coinsurance, value, new ControlIntent("Coverages", "Coinsurance"), delayMs);

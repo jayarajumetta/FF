@@ -116,6 +116,7 @@ public sealed class UiActions
         {
             await x.ClickAsync();
             try { await x.FillAsync(string.Empty); } catch { }
+            await Task.Delay(100);
             await x.PressSequentiallyAsync(value ?? string.Empty, new LocatorPressSequentiallyOptions { Delay = Math.Max(0, delayMs) });
         });
     }
@@ -521,6 +522,7 @@ public sealed class UiActions
     private async Task ExecuteAsync(ILocator locator, ControlIntent intent, string action, Func<ILocator, Task> operation)
     {
         await WaitForPageReadyBestEffortAsync();
+        await PreActionDelayAsync();
         try
         {
             var resolved = _runtimeLocatorResolver is null ? locator : await _runtimeLocatorResolver.ResolveAsync(_browser.Page, locator, intent, action) ?? locator;
@@ -534,6 +536,7 @@ public sealed class UiActions
     private async Task<T> ExecuteAsync<T>(ILocator locator, ControlIntent intent, string action, Func<ILocator, Task<T>> operation)
     {
         await WaitForPageReadyBestEffortAsync();
+        await PreActionDelayAsync();
         try
         {
             var resolved = _runtimeLocatorResolver is null ? locator : await _runtimeLocatorResolver.ResolveAsync(_browser.Page, locator, intent, action) ?? locator;
@@ -542,6 +545,12 @@ public sealed class UiActions
             return await ExecuteWithHighlightAsync(resolved, action, operation);
         }
         catch (Exception) { throw; }
+    }
+
+    private Task PreActionDelayAsync()
+    {
+        var delayMs = _config.Waits.PreActionDelayMs;
+        return delayMs > 0 ? Task.Delay(delayMs) : Task.CompletedTask;
     }
 
     private async Task ExecuteWithHighlightAsync(ILocator locator, string action, Func<ILocator, Task> operation)
