@@ -41,10 +41,10 @@ public sealed class CPPBasicPolicySteps
         data.GenerateRandom("InspectionTelephone_0045", "[0-9]{10}");
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await page.WaitForFEINAsync("Visible");
-        await page.EnterFEINSequentiallyAsync(data.Resolve("{{runtime:FEIN_0044}}"));
+        
 
         await page.WaitForQuickQuoteAsync("Exists");
+        await page.PauseAsync(1000);
         await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_2}}"));
         //await page.WaitForUnderwritingInfoAsync("Exists");
         await page.PauseAsync(1000);
@@ -62,6 +62,8 @@ public sealed class CPPBasicPolicySteps
         await page.EnterNamedInsuredZipCodeSequentiallyAsync(data.Resolve("{{data:zipcode_11}}"));
         await page.WaitForAddressAsync("Visible");
         await page.EnterAddressSequentiallyAsync(data.Resolve("{{data:address1_12}}"));
+        await page.WaitForFEINAsync("Visible");
+        await page.EnterFEINSequentiallyAsync(data.Resolve("{{runtime:FEIN_0044}}"));
         //await page.VerifyYearsInBusinessAsync("Exists", "");
         //await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_14}}"));
         await page.WaitForNameOfAuditContactAsync("Visible");
@@ -1507,6 +1509,7 @@ public sealed class CPPBasicPolicySteps
         await page.ClickIMNavigationLinksPolicyCovgAsync();
         await page.WaitForPolicyCovgMainPolicyCovgAsync("Exists");
         await page.WaitForCoverageFormToBeAddedAsync("Visible");
+        await page.PauseAsync(2000);
         await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_365}}"));
         await page.ClickAddCoverageFormAsync();
         await page.WaitForPolicyCovgBaileesCutomersCoverageFormDisplayAsync("Exists");
@@ -1518,6 +1521,7 @@ public sealed class CPPBasicPolicySteps
         await page.ClickAddPremisesAsync();
         await page.PauseAsync(2000);
         await page.WaitForAddressStreetCityStateZipAsync("Visible");
+        await page.PauseAsync(1000);
         await page.EnterAddressStreetCityStateZipAsync(data.Resolve("{{data:address_street_city_state_zip_373}}"));
         await page.WaitForPolicyCovgBaileesPropertyAwayFromYourPremisesLimitAsync("Visible");
         await page.PauseAsync(2000);

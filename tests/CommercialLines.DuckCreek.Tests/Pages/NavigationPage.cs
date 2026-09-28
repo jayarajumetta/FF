@@ -200,8 +200,8 @@ public sealed class NavigationPage
     public Task WaitForAddressStreetCityStateZipAsync(string expected) =>
         _ui.WaitAsync(_locators.AddressStreetCityStateZip, expected, new ControlIntent("Navigation", "AddressStreetCityStateZip"));
 
-    public Task EnterAddressStreetCityStateZipAsync(string value) =>
-        _ui.FillAsync(_locators.AddressStreetCityStateZip, value, new ControlIntent("Navigation", "AddressStreetCityStateZip"));
+    public Task EnterAddressStreetCityStateZipAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.AddressStreetCityStateZip, value, new ControlIntent("Navigation", "AddressStreetCityStateZip"), delayMs);
 
     public Task PressAddressStreetCityStateZipAsync(string key) =>
         _ui.PressAsync(_locators.AddressStreetCityStateZip, key, new ControlIntent("Navigation", "AddressStreetCityStateZip"));
