@@ -251,11 +251,18 @@ def enrich(results: list[dict[str, Any]], bindings: Sequence[Binding]) -> None:
             if not isinstance(step, dict):
                 continue
             text = str(step.get("text") or "")
+            if step.get("bindingCaptured") is True:
+                step["bindingResolution"] = ("Selected by ReqnRoll at runtime." if step.get("binding")
+                                             else "No step-definition method was selected or captured at runtime.")
+                continue
+            if step.get("binding") and step["binding"] != "Unresolved":
+                step.setdefault("bindingResolution", "Binding recorded in scenario metadata.")
+                continue
             display, source, line, note = resolve_binding(bindings, feature, text)
             step["binding"] = display
             step["bindingSource"] = source
             step["bindingLine"] = line
-            step["bindingResolution"] = note
+            step["bindingResolution"] = "Inferred from source; runtime binding was not recorded. " + note
         result["_status"] = normalize_status(result.get("status"))
         result["_application"] = infer_application(result)
         result["_stateCode"] = infer_state(result)
@@ -407,6 +414,7 @@ def _all_text(result: dict[str, Any]) -> str:
         str(result.get("scenario") or ""),
         str(result.get("_resultFile") or ""),
         json.dumps(result.get("tags") or [], ensure_ascii=False),
+        json.dumps(result.get("data") or {}, ensure_ascii=False),
     ]
     for step in result.get("steps", []) or []:
         if isinstance(step, dict):
@@ -809,16 +817,34 @@ def render_deferred_verifications(result: dict[str, Any], output_dir: Path, limi
     """
 
 
+def render_actions(actions: Any) -> str:
+    if not actions:
+        return '<p class="muted">No instrumented page/action calls recorded. Direct calls outside UiActions are not traced.</p>'
+    blocks = []
+    for action in actions:
+        state = normalize_status(action.get("status"))
+        blocks.append(
+            f'<details class="action-node {state}"{" open" if state == "FAIL" else ""}>'
+            f'<summary>{esc(action.get("method"))} · <span class="status-pill {state}">{state}</span> '
+            f'{esc(fmt_duration(duration_ms(action)))}</summary>'
+            f'<div>Operation: {esc(action.get("operation"))} · Target: {esc(action.get("target"))}</div>'
+            f'{render_data(action.get("data"))}<div>{esc(action.get("result"))}</div>'
+            f'{render_text_panel("Action failure", action.get("error"), "error")}'
+            f'{render_actions(action["children"]) if action.get("children") else ""}</details>'
+        )
+    return "".join(blocks)
+
+
 def render_step(result: dict[str, Any], step: dict[str, Any], output_dir: Path, limits: ReportLimits) -> str:
     step_status = normalize_status(step.get("status"))
     order = step.get("order", "")
     text = str(step.get("text") or "Unnamed step")
-    binding = str(step.get("binding") or "Unresolved")
+    binding = str(step.get("binding") or "No step-definition method captured")
     source = str(step.get("bindingSource") or "")
     line = step.get("bindingLine") or 0
     resolution = str(step.get("bindingResolution") or "")
     source_html = (
-        f'<div class="binding-source">{esc(source)}:{esc(line)}</div>' if source else '<div class="binding-source unresolved">No source match</div>'
+        f'<div class="binding-source">{esc(source)}:{esc(line)}</div>' if source else '<div class="binding-source">Source location unavailable</div>'
     )
     resolution_html = f'<div class="binding-note">{esc(resolution)}</div>' if resolution else ""
     diagnostics = "".join(
@@ -850,12 +876,15 @@ def render_step(result: dict[str, Any], step: dict[str, Any], output_dir: Path, 
         <span class="status-pill {step_status}">{step_status}</span>
       </summary>
       <div class="step-body">
+        <details class="binding-node"{open_attribute}><summary>C# step definition: {esc(binding)} · {step_status} · {esc(fmt_duration(duration_ms(step)))}</summary>
         <div class="step-grid">
           <div><div class="field-label">C# step definition</div><strong>{esc(binding)}</strong>{source_html}{resolution_html}</div>
-          <div><div class="field-label">Resolved test data</div>{render_data(step.get('data'))}</div>
+          <div><div class="field-label">{'Data read or written in this step' if result.get('stepDataScope') == 'accessed' else 'Recorded step snapshot (legacy)'}</div>{render_data(step.get('data'))}</div>
           {'' if limits.summary_only else '<div><div class="field-label">Step screenshot</div>' + (screenshot_html or '<span class="muted">Not recorded</span>') + '</div>'}
         </div>
+        <h4>Executed actions</h4>{render_actions(step.get('actions'))}
         {diagnostics or '<p class="muted no-diagnostics">No error, console or network diagnostics were recorded for this step.</p>'}
+        </details>
       </div>
     </details>
     """
@@ -927,6 +956,7 @@ def render_scenario(result: dict[str, Any], output_dir: Path, limits: ReportLimi
           </div>
           {'' if limits.summary_only else render_artifact_strip(result, output_dir)}
           {render_deferred_verifications(result, output_dir, limits)}
+          <details class="scenario-data" open><summary>Test-case data (final resolved snapshot for this attempt)</summary>{render_data(result.get('data'))}</details>
           <div class="steps-heading"><h4>Execution steps</h4><span>{len(steps)} keyword(s)</span></div>
           <div class="step-list">{step_html}</div>
           {render_failure_evidence(result, output_dir, limits)}
@@ -1031,10 +1061,11 @@ def render_flat_log(results: Sequence[dict[str, Any]]) -> str:
                 f'<details class="log-step {step_status}" {"open" if step_status == "FAIL" else ""}>'
                 f'<summary><span class="step-kind">KEYWORD</span> {esc(step.get("text"))}'
                 f'<span class="step-duration">{esc(fmt_duration(duration_ms(step)))}</span><span class="status-pill {step_status}">{step_status}</span></summary>'
-                f'<div class="log-step-body"><div><strong>Binding:</strong> {esc(step.get("binding"))}</div>'
-                f'<div><strong>Source:</strong> {esc(step.get("bindingSource"))}:{esc(step.get("bindingLine"))}</div>'
+                f'<div class="log-step-body"><details class="binding-node" {"open" if step_status == "FAIL" else ""}><summary>C# step definition: {esc(step.get("binding") or "No step-definition method captured")} · {step_status}</summary>'
+                f'<div>{esc(step.get("bindingResolution"))}</div>'
                 f'{render_data(step.get("data"))}'
-                f'{f"<pre>{esc(diagnostics)}</pre>" if diagnostics else ""}</div></details>'
+                f'{render_actions(step.get("actions"))}'
+                f'{f"<pre>{esc(diagnostics)}</pre>" if diagnostics else ""}</details></div></details>'
             )
         blocks.append(
             f'<section class="log-suite" data-status="{esc(scenario_status)}" data-search="{esc((feature + " " + scenario).casefold())}">'
@@ -1042,12 +1073,16 @@ def render_flat_log(results: Sequence[dict[str, Any]]) -> str:
             f'{esc(feature)} / {esc(scenario)}<span class="step-duration">{esc(fmt_duration(duration_ms(result)))}</span>'
             f'<span class="status-pill {scenario_status}">{scenario_status}</span></summary>'
             f'<div class="log-scenario-meta">Start / End: {esc(fmt_timestamp(result.get("startedAtUtc")))} / {esc(fmt_timestamp(result.get("completedAtUtc")))}</div>'
+            f'<details class="scenario-data"><summary>Test-case data (final resolved snapshot for this attempt)</summary>{render_data(result.get("data"))}</details>'
             f'{"".join(step_blocks) or "<p class=\"muted\">No step records.</p>"}</details></section>'
         )
     return "".join(blocks) or '<p class="notice">No scenario results were discovered.</p>'
 
 
 REPORT_CSS = r"""
+.binding-node, .action-node { margin:8px 0 8px 16px; padding:8px; border-left:3px solid #c9ced4; }
+.action-node.FAIL { border-color:#c62828; }
+.action-node.PASS { border-color:#238636; }
 :root {
   --ok: #238636;
   --ok-soft: #eaf7ec;

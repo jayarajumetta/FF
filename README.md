@@ -134,7 +134,7 @@ Offline regression checks (no browser execution): `dotnet test tools/InsuranceAu
 
 ### Consolidated report generation
 
-After execution completes:
+`run.cmd` now regenerates the consolidated report after test execution, including failed runs, and prints its path. Python must be available. For direct `dotnet test` runs, regenerate explicitly using the same results directory (do not use `--no-build` after changing reporting code):
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Generate-ConsolidatedReport.ps1 -ResultsDirectory "TestResults"
@@ -148,6 +148,10 @@ Output:
 - `TestResults\ConsolidatedReport\summary.json`
 
 In each test card, attempt buttons `1`, `2`, `3` switch the displayed evidence for that attempt.
+
+Expand an execution step to see **C# step definition** in both the individual and consolidated HTML reports. New runs record the fully qualified method selected by ReqnRoll, including failed steps and each retry; internal helper calls are not traced. Failed step details open automatically. Consolidation preserves this runtime identity even without source files. If no binding was selected/captured, the report says so; older results use explicitly labeled source inference. Source locations are shown only when available. Build a new CI package and execute tests again to capture this metadata.
+
+Both reports show **Test-case data (final resolved snapshot for this attempt)** before the execution steps. Expanded steps contain only keys read or written through `ScenarioData` during that step, the selected binding method, and diagnostics. Values are stored as structured JSON so semicolons and equals signs are preserved; sensitive keys are masked. Runtime captures appear in the final case snapshot, not falsely labeled as initial input. Legacy results still display their recorded step snapshots because historical key access cannot be reconstructed.
 
 ### Common execution troubleshooting
 
