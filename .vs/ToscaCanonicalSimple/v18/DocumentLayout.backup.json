@@ -7,8 +7,24 @@
       "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\features\\005_gl_basic_policy_az.feature||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7859\\workdirectory\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\005_gl_basic_policy_wv.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\005_gl_basic_policy_wv.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7859\\workdirectory\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\pages\\coveragespage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\pages\\coveragespage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7859\\workdirectory\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\pages\\navigationpage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\pages\\navigationpage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7859\\workdirectory\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\pages\\locators\\coverageslocators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\pages\\locators\\coverageslocators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7859\\workdirectory\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\pages\\locators\\navigationlocators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\pages\\locators\\navigationlocators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7859\\workdirectory\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\stepdefinitions\\glbasicpolicysteps.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\stepdefinitions\\glbasicpolicysteps.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -28,7 +44,7 @@
               "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\Features\\005_GL_Basic_Policy_AZ.feature",
               "ToolTip": "C:\\Users\\CT7859\\WorkDirectory\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Features\\005_GL_Basic_Policy_AZ.feature",
               "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\Features\\005_GL_Basic_Policy_AZ.feature",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAABkAAAAAAAAAA==",
+              "ViewState": "AgIAABYAAACQZmZmZqYswDAAAAB9AAAAAAAAAA==",
               "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAARRSURBVEhLjZVbbBRVGMd/Z3a3s91btdu7pLRbLRFCQWwbWi0KhJho8An7UDQkYkjoAyWxxBvGC0ljUoEaifggKAkRYvCBmCBEiaBNi5ByKyhEsWivS1u7vUx39jbHh3amu0tr\u002BM/LnO/y/8985zvfETwIjheBTLgAJyARhHG7dDb2pEemQkop0m0Wap0KFY5i6lzVKNQCpUAWYACjQA\u002BG7ORn/RLdsX46wjKdAmB\u002BgQ\u002BBR/PrEbwGLAf8gD0pQgIxYAToQrKPhuD5JL\u002BFVIGHBHzyiJeMWDPwborv/yGRbOHLiW/4IRxNdtiSF1zLVLnnaASaADeAx\u002B5mbV4ddmFjLBrCZcukLnc1BZl59E0PmJkCwQpWqncJGbfpiVuUivUG0OV7AmgEckzTcwVrOVS9l7eXNpGr\u002BlmVXcGByhYOV7WhpKYXA4286s1PNs5F7MrKQHAAKAGEwswTik2SnfEwNf5KFrmLqM2potwTYDI2hYGRzGVHsA5FvIJrrvJzJarNrKPI/gYgXLZMXi55icd8Aa6HfmMyrqElNE4PncMubDhtKnt\u002B38/fWq\u002BVPgsBLKHE8QXtetQ0QIWqsCPrfdxiN8Bq/5OcWvM1MSPGueEOtl58HY/dxUhkFNWm4rN7uBcdIWEk0vgBkHRFnuHjUDtWiTzCg1sEzIhrYzc5OXCaYHSEJb4A5Z5ShvQgcRlHi2sM6sGFyJn96BXmwtyDjNlTCkDY0GnsepNtF5vZcmEnV0M3TFcKclU/Poc33Uxyk8wKyARg9ZZAsL1sC7uXNfHO0h0UZqY0BgBbSzdzrOYgh6vaWF\u002BwJt1t7fKMgBDTs8cfgKdzqmlZ/hbr8uoo9RQzFdfwObwoQsEu7LjtLu5O/0O5t4zni9bzVXWbmWqi33yZ6SJJgmVqIT7lRQA9HsWhODg/3Mm\u002B259T469kc8kmbk/eocxTws7ybVwZ6\u002BZs8Bd6pwc52X\u002BGy2PX5\u002BgHEy106P2kjIpdWUWsct4BVACn4kRiUODM59cNp9CNCA2d2wl4SjhUtZeroZs89eNGbMJGQiaIS6vCg1wOl9E6oZNy0FrHBxDsAcIAuqETMaIEPMVkKA5uTdxhMBzkr6m79Gi9LHYtwq9mEzEiyeQ6yBaTnPtm0Sbvn8DjQMD0jUbGGNSDfDdwhu7xW4xGxvhjqofvh85y5d9uJNaUNkB2IviIE9qEaUydpjkKfJq7GvgMWGmaFaEgpbTIFARydoQmYQRkMzkjR9lgWDMk9Q\u002BmJXyr9aGKdpZkLAayAVUiU6baPDeLhma0sX/8MK3xSLIjVcBEd3SYBu9PJOgFEoAPcN03fWe0gsBB9ofauBq1SmNi/hsNQBXwgk9Q7/IhjQpgL1CZFjUEfIDkCA1Ba2OTsbBAMo4XFSKNoyCfBTSgD7jAleg\u002BzkVucHE6PcPCgwkcK8gB3gOZB1wCo4MjU92cDk\u002Bmh6bjQQUUIAubLUx9/7ylWAj/AQ0Jh6r5YMmjAAAAAElFTkSuQmCC",
               "WhenOpened": "2026-09-02T14:58:35.58Z",
               "IsPinned": true,
@@ -36,15 +52,68 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "GLBasicPolicySteps.cs",
+              "DocumentMoniker": "C:\\Users\\CT7859\\WorkDirectory\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\StepDefinitions\\GLBasicPolicySteps.cs",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\StepDefinitions\\GLBasicPolicySteps.cs",
+              "ToolTip": "C:\\Users\\CT7859\\WorkDirectory\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\StepDefinitions\\GLBasicPolicySteps.cs",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\StepDefinitions\\GLBasicPolicySteps.cs",
+              "ViewState": "AgIAANMBAAAAAAAAAAAAAMkBAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-17T02:19:03.466Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "NavigationLocators.cs",
+              "DocumentMoniker": "C:\\Users\\CT7859\\WorkDirectory\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\Locators\\NavigationLocators.cs",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\Locators\\NavigationLocators.cs",
+              "ToolTip": "C:\\Users\\CT7859\\WorkDirectory\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\Locators\\NavigationLocators.cs",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\Locators\\NavigationLocators.cs",
+              "ViewState": "AgIAAAQAAAAA//////8gwBQAAAB2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-28T04:01:01.571Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CoveragesLocators.cs",
+              "DocumentMoniker": "C:\\Users\\CT7859\\WorkDirectory\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\Locators\\CoveragesLocators.cs",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\Locators\\CoveragesLocators.cs",
+              "ToolTip": "C:\\Users\\CT7859\\WorkDirectory\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\Locators\\CoveragesLocators.cs",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\Locators\\CoveragesLocators.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAwFAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-28T04:00:51.649Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "NavigationPage.cs",
+              "DocumentMoniker": "C:\\Users\\CT7859\\WorkDirectory\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\NavigationPage.cs",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\NavigationPage.cs",
+              "ToolTip": "C:\\Users\\CT7859\\WorkDirectory\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\NavigationPage.cs",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\NavigationPage.cs",
+              "ViewState": "AgIAAPkDAADAzMzMzAwjwAsEAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-28T03:55:25.056Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "005_gl_basic_policy_wv.json",
-              "DocumentMoniker": "C:\\Users\\CT7859\\WorkDirectory\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\005_gl_basic_policy_wv.json",
-              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\005_gl_basic_policy_wv.json",
-              "ToolTip": "C:\\Users\\CT7859\\WorkDirectory\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\005_gl_basic_policy_wv.json",
-              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\005_gl_basic_policy_wv.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-09-02T15:19:42.782Z",
+              "Title": "CoveragesPage.cs",
+              "DocumentMoniker": "C:\\Users\\CT7859\\WorkDirectory\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\CoveragesPage.cs",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\CoveragesPage.cs",
+              "ToolTip": "C:\\Users\\CT7859\\WorkDirectory\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\Pages\\CoveragesPage.cs",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\Pages\\CoveragesPage.cs",
+              "ViewState": "AgIAAAkAAACAAQAAAIAswGMAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-27T20:39:56.817Z",
               "EditorCaption": ""
             }
           ]

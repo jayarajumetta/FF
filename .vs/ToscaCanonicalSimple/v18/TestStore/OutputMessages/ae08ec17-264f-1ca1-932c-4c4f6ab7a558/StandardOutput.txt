@@ -1,0 +1,313 @@
+Given I open a browser session
+2026-09-16 16:05:15.483 [INFO] START STEP: I open a browser session
+2026-09-16 16:05:23.833 [INFO] Browser session opened. Channel=msedge; Headless=False; HAR=True; Console=True; Network=True
+-> done: ApplicationSteps.OpenBrowserSessionAsync() (8.3s)
+2026-09-16 16:05:23.850 [INFO] PASSED STEP: I open a browser session
+Given test data "TestData/Scenarios/005_gl_basic_policy_de.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+2026-09-16 16:05:23.934 [INFO] START STEP: test data "TestData/Scenarios/005_gl_basic_policy_de.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+2026-09-16 16:05:23.966 [INFO] Loaded scenario data: C:\Users\CT7859\WorkDirectory\PnC_DC_TestAutomation\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestData\Scenarios\005_gl_basic_policy_de.json
+-> done: ApplicationSteps.LoadScenarioData("TestData/Scenario...", "TestData/External...") (0.0s)
+2026-09-16 16:05:23.972 [INFO] PASSED STEP: test data "TestData/Scenarios/005_gl_basic_policy_de.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+And I open the configured Commercial Lines Duck Creek application
+2026-09-16 16:05:23.976 [INFO] START STEP: I open the configured Commercial Lines Duck Creek application
+2026-09-16 16:05:25.908 [ERROR] 2026-09-16T16:05:25.9012870+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+-> done: ApplicationSteps.OpenApplicationAsync() (2.1s)
+2026-09-16 16:05:26.094 [INFO] PASSED STEP: I open the configured Commercial Lines Duck Creek application
+And I sign in to Commercial Lines Duck Creek using configured credentials
+2026-09-16 16:05:26.103 [INFO] START STEP: I sign in to Commercial Lines Duck Creek using configured credentials
+2026-09-16 16:05:27.888 [INFO] RUNTIME LOCATOR: Login.UserName => id
+2026-09-16 16:05:28.972 [INFO] RUNTIME LOCATOR: Login.Password => id
+2026-09-16 16:05:29.831 [INFO] RUNTIME LOCATOR: Login.Login => name
+2026-09-16 16:05:34.169 [ERROR] 2026-09-16T16:05:34.1668724+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?type=js3&sn=v_4_srv_17_sn_2A3F5725271E86AD4E52B01291E71379_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&svrid=17&flavor=post&vi=CRQBDHAQMAQUVDRVPVVIMRPMCFCMWHGP-0&modifiedSince=1787035876796&bp=3&app=1286464dd003b906&crc=373491220&en=c2dndj2n&end=1 :: net::ERR_ABORTED
+2026-09-16 16:05:34.458 [ERROR] 2026-09-16T16:05:34.4569636+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+-> done: ApplicationSteps.SignInAsync() (8.7s)
+2026-09-16 16:05:34.779 [INFO] PASSED STEP: I sign in to Commercial Lines Duck Creek using configured credentials
+And I start a new quote
+2026-09-16 16:05:34.784 [INFO] START STEP: I start a new quote
+2026-09-16 16:05:35.345 [INFO] RUNTIME LOCATOR: Proposal.NewQuote => id
+2026-09-16 16:05:37.410 [INFO] RUNTIME LOCATOR: Proposal.EffectiveDate => tag+fieldref fieldref=PolicyInput.EffectiveDate
+2026-09-16 16:05:39.429 [INFO] RUNTIME LOCATOR: Proposal.Product => tag+fieldref fieldref=data.VersionIDPages
+2026-09-16 16:05:41.557 [INFO] RUNTIME LOCATOR: Proposal.Producer => tag+fieldref fieldref=data.Producer
+2026-09-16 16:05:43.951 [INFO] RUNTIME LOCATOR: Proposal.Start => link-text
+-> done: GLBasicPolicySteps.StartANewQuoteAsync() (10.2s)
+2026-09-16 16:05:44.995 [INFO] PASSED STEP: I start a new quote
+When I enter individual client information
+2026-09-16 16:05:44.997 [INFO] START STEP: I enter individual client information
+2026-09-16 16:05:46.236 [WARN] CONTROL READY WAIT CONTINUING: ClientSearch.QuickQuote; Action=set; visible wait did not settle within 15000ms: Error: strict mode violation: Locator("input[fieldref=\"PolicyOutputNonShredded.QuoteQuick\"]") resolved to 2 elements:
+    1) <input value="1" type="checkbox" hidefocus="true" checked="checked" name="boolean_123" data-ref="inputEl" autocomplete="off" aria-hidden="false" aria-invalid="false" aria-disabled="false" class="x-form-cb-input" fieldref="PolicyOutputNonShredded.QuoteQuick" objectref="p37F6A19FE6934525A1A17A521502F58C" id="f_p37F6A19FE6934525A1A17A521502F58C123_3_1-inputEl" data-componentid="f_p37F6A19FE6934525A1A17A521502F58C123_3_1" aria-describedby="f_p37F6A19FE6934525A1A17A521502F58C123_3_1-ariaStatusEl"/> aka GetByRole(AriaRole.Checkbox)
+    2) <input hidden="" value="1" role="checkbox" hidefocus="true" autocomplete="off" name="~boolean_123" data-ref="hiddenCheckBoxEl" fieldref="PolicyOutputNonShredded.QuoteQuick" objectref="p37F6A19FE6934525A1A17A521502F58C" data-cmpid="f_p37F6A19FE6934525A1A17A521502F58C123_3_1" id="f_p37F6A19FE6934525A1A17A521502F58C123_3_1-hiddenCheckBoxEl"/> aka Locator("input[name=\"~boolean_123\"]")
+
+Call log:
+  - waiting for Locator("input[fieldref=\"PolicyOutputNonShredded.QuoteQuick\"]") to be visible
+2026-09-16 16:05:46.560 [WARN] ELEMENT ATTACH WAIT CONTINUING: Error: strict mode violation: Locator("input[fieldref=\"PolicyOutputNonShredded.QuoteQuick\"]") resolved to 2 elements:
+    1) <input value="1" type="checkbox" hidefocus="true" checked="checked" name="boolean_123" data-ref="inputEl" autocomplete="off" aria-hidden="false" aria-invalid="false" aria-disabled="false" class="x-form-cb-input" fieldref="PolicyOutputNonShredded.QuoteQuick" objectref="p37F6A19FE6934525A1A17A521502F58C" id="f_p37F6A19FE6934525A1A17A521502F58C123_3_1-inputEl" data-componentid="f_p37F6A19FE6934525A1A17A521502F58C123_3_1" aria-describedby="f_p37F6A19FE6934525A1A17A521502F58C123_3_1-ariaStatusEl"/> aka GetByRole(AriaRole.Checkbox)
+    2) <input hidden="" value="1" role="checkbox" hidefocus="true" autocomplete="off" name="~boolean_123" data-ref="hiddenCheckBoxEl" fieldref="PolicyOutputNonShredded.QuoteQuick" objectref="p37F6A19FE6934525A1A17A521502F58C" data-cmpid="f_p37F6A19FE6934525A1A17A521502F58C123_3_1" id="f_p37F6A19FE6934525A1A17A521502F58C123_3_1-hiddenCheckBoxEl"/> aka Locator("input[name=\"~boolean_123\"]")
+
+Call log:
+  - waiting for Locator("input[fieldref=\"PolicyOutputNonShredded.QuoteQuick\"]")
+2026-09-16 16:05:46.745 [INFO] RUNTIME LOCATOR: ClientSearch.QuickQuote => id fieldref=PolicyOutputNonShredded.QuoteQuick
+2026-09-16 16:05:48.801 [INFO] RUNTIME LOCATOR: ClientSearch.UnderwritingInfo => link-text
+2026-09-16 16:05:49.796 [INFO] RUNTIME LOCATOR: ClientSearch.InsuredType => tag+fieldref fieldref=AccountInput.InsuredType
+2026-09-16 16:05:52.503 [INFO] RUNTIME LOCATOR: ClientSearch.EntityType => tag+fieldref fieldref=AccountInput.EntityType
+2026-09-16 16:05:55.701 [INFO] RUNTIME LOCATOR: ClientSearch.FirstName => tag+fieldref fieldref=AccountInput.NameFirst
+2026-09-16 16:05:57.563 [INFO] RUNTIME LOCATOR: ClientSearch.MiddleName => tag+fieldref fieldref=AccountInput.NameMI
+2026-09-16 16:05:59.302 [INFO] RUNTIME LOCATOR: ClientSearch.LastName => tag+fieldref fieldref=AccountInput.NameLast
+2026-09-16 16:06:00.672 [INFO] RUNTIME LOCATOR: ClientSearch.DOB => tag+fieldref fieldref=AccountInput.DateOfBirth
+2026-09-16 16:06:03.489 [INFO] RUNTIME LOCATOR: ClientSearch.Gender => tag+fieldref fieldref=AccountInput.Gender
+2026-09-16 16:06:06.813 [INFO] RUNTIME LOCATOR: ClientSearch.PrimaryPhone => tag+fieldref fieldref=AccountInput.PrimaryPhone
+2026-09-16 16:06:08.059 [INFO] RUNTIME LOCATOR: ClientSearch.Address => tag+fieldref fieldref=AccountInput.Address1
+2026-09-16 16:06:09.833 [INFO] RUNTIME LOCATOR: ClientSearch.NamedInsuredZipCode => tag+fieldref fieldref=AccountInput.ZipCode
+2026-09-16 16:06:11.507 [INFO] RUNTIME LOCATOR: ClientSearch.ClientSearch => link-text
+2026-09-16 16:06:13.256 [ERROR] 2026-09-16T16:06:13.2555944+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+2026-09-16 16:06:28.846 [WARN] CONTROL READY WAIT CONTINUING: ClientSearch.OK; Action=wait-visible; visible wait did not settle within 15000ms: Timeout 15000ms exceeded.
+Call log:
+  - waiting for GetByRole(AriaRole.Link, new() { Name = "OK", Exact = true }) to be visible
+2026-09-16 16:06:29.015 [INFO] FRAME SCOPE: ClientSearch|OK resolved in hinted frame css:iframe
+2026-09-16 16:06:29.206 [INFO] RUNTIME LOCATOR: ClientSearch.OK => seed
+2026-09-16 16:06:44.454 [WARN] CONTROL READY WAIT CONTINUING: ClientSearch.OK; Action=click; visible wait did not settle within 15000ms: Timeout 15000ms exceeded.
+Call log:
+  - waiting for GetByRole(AriaRole.Link, new() { Name = "OK", Exact = true }) to be visible
+2026-09-16 16:06:44.760 [INFO] RUNTIME LOCATOR: ClientSearch.OK => seed
+2026-09-16 16:06:46.063 [ERROR] 2026-09-16T16:06:46.0608807+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?type=js3&sn=v_4_srv_17_sn_2A3F5725271E86AD4E52B01291E71379_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&svrid=17&flavor=post&vi=CRQBDHAQMAQUVDRVPVVIMRPMCFCMWHGP-0&modifiedSince=1787035876796&bp=3&app=1286464dd003b906&crc=793796950&en=c2dndj2n&end=1 :: net::ERR_ABORTED
+2026-09-16 16:06:47.335 [INFO] RUNTIME LOCATOR: ClientSearch.OrderSSN => link-text
+2026-09-16 16:06:50.206 [INFO] RUNTIME LOCATOR: ClientSearch.NamedInsuredIndividualEnterSSN => tag+fieldref fieldref=AccountSSNRetrievalInput.SSNInput
+2026-09-16 16:06:55.004 [INFO] RUNTIME LOCATOR: ClientSearch.Verify => link-text
+2026-09-16 16:06:56.758 [INFO] RUNTIME LOCATOR: ClientSearch.SocialSecurity => id fieldref=AccountSSNRetrievalOuput.SSNDisplay
+2026-09-16 16:06:57.671 [INFO] RUNTIME LOCATOR: ClientSearch.NameOfAuditContact => tag+fieldref fieldref=AccountInput.AuditContact
+2026-09-16 16:06:59.326 [INFO] RUNTIME LOCATOR: ClientSearch.AuditTelephone => tag+fieldref fieldref=AccountInput.AuditContactPhone
+2026-09-16 16:07:00.312 [INFO] RUNTIME LOCATOR: ClientSearch.NameOfInspectionContact => tag+fieldref fieldref=AccountInput.InspectionContact
+2026-09-16 16:07:01.973 [INFO] RUNTIME LOCATOR: ClientSearch.InspectionTelephone => tag+fieldref fieldref=AccountInput.InspectionContactPhone
+2026-09-16 16:07:04.211 [INFO] RUNTIME LOCATOR: ClientSearch.InsuredEMailAddress => tag+fieldref fieldref=AccountInput.Email
+2026-09-16 16:07:05.149 [INFO] RUNTIME LOCATOR: ClientSearch.WebsiteAddress => tag+fieldref fieldref=AccountInput.WebsiteAddress
+-> done: GLBasicPolicySteps.EnterIndividualClientInformationAsync() (81.0s)
+2026-09-16 16:07:06.058 [INFO] PASSED STEP: I enter individual client information
+And I complete Underwriting Info from Client Screen
+2026-09-16 16:07:06.061 [INFO] START STEP: I complete Underwriting Info from Client Screen
+2026-09-16 16:07:07.695 [INFO] RUNTIME LOCATOR: Navigation.UnderwritingInfo => link-text
+2026-09-16 16:07:09.479 [INFO] RUNTIME LOCATOR: Navigation.GeneralUWQuestions => seed
+2026-09-16 16:07:09.879 [INFO] RUNTIME LOCATOR: Navigation.PropertyUWQuestionsUpdateAnswers => link-text
+2026-09-16 16:07:11.346 [INFO] RUNTIME LOCATOR: Navigation.InsuranceHistory => id
+2026-09-16 16:07:12.561 [INFO] RUNTIME LOCATOR: Navigation.IsThereAPriorCarrier => tag+fieldref fieldref=PolicyUnderwritingInput.CommercialGeneralLiabilityNoPriorCarrier
+2026-09-16 16:07:15.520 [INFO] RUNTIME LOCATOR: Navigation.Carrier => tag+fieldref fieldref=CommercialGeneralLiabilityHistoryInput.CarrierName
+2026-09-16 16:07:16.752 [INFO] RUNTIME LOCATOR: Navigation.GeneralLiabilityPolicyNumber => tag+fieldref fieldref=CommercialGeneralLiabilityHistoryInput.PolicyNumber
+2026-09-16 16:07:18.038 [INFO] RUNTIME LOCATOR: Navigation.PolicyType => tag+fieldref fieldref=CommercialGeneralLiabilityHistoryInput.PolicyType
+2026-09-16 16:07:21.019 [INFO] RUNTIME LOCATOR: Navigation.CommercialAutoEffectiveDate => tag+fieldref fieldref=CommercialGeneralLiabilityHistoryInput.EffectiveDate
+2026-09-16 16:07:23.021 [INFO] RUNTIME LOCATOR: Navigation.GeneralLiabilityExpirationDate => tag+fieldref fieldref=CommercialGeneralLiabilityHistoryInput.ExpirationDate
+2026-09-16 16:07:25.001 [INFO] RUNTIME LOCATOR: Navigation.ModificationFactor => tag+fieldref fieldref=CommercialGeneralLiabilityHistoryInput.ModificationFactor
+2026-09-16 16:07:26.199 [INFO] RUNTIME LOCATOR: Navigation.TotalPremium => tag+fieldref fieldref=CommercialGeneralLiabilityHistoryInput.TotalPremium
+2026-09-16 16:07:27.815 [INFO] RUNTIME LOCATOR: Navigation.OK => link-text
+2026-09-16 16:07:29.073 [INFO] RUNTIME LOCATOR: Navigation.LossExperience => id
+2026-09-16 16:07:32.699 [INFO] RUNTIME LOCATOR: Navigation.ReturnToQuote => seed
+-> done: GLBasicPolicySteps.CompleteUnderwritingInfoFromClientScreenAsync() (27.2s)
+2026-09-16 16:07:33.294 [INFO] PASSED STEP: I complete Underwriting Info from Client Screen
+And I complete required policy information
+2026-09-16 16:07:33.307 [INFO] START STEP: I complete required policy information
+2026-09-16 16:07:34.503 [INFO] RUNTIME LOCATOR: Navigation.PolicyInfo => id
+2026-09-16 16:07:36.128 [INFO] RUNTIME LOCATOR: Navigation.PolicyInfoHeader => id
+2026-09-16 16:07:37.587 [INFO] RUNTIME LOCATOR: Navigation.PolicyInfoRequiredAndOptionalFieldsEffectiveDate => tag+fieldref fieldref=PolicyInput.EffectiveDate
+2026-09-16 16:07:39.882 [INFO] RUNTIME LOCATOR: Navigation.YearsInBusiness => tag+fieldref fieldref=AccountInput.YearsInBusiness
+2026-09-16 16:07:42.000 [INFO] RUNTIME LOCATOR: Navigation.PrimaryRatingState => tag+fieldref fieldref=PolicyInput.PrimaryRatingState
+2026-09-16 16:07:44.197 [INFO] RUNTIME LOCATOR: Navigation.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days => tag+fieldref fieldref=PolicyInput.ExposuresInsuredAN90Days
+2026-09-16 16:07:55.646 [INFO] RUNTIME LOCATOR: Navigation.DescriptionOfSpecifiedOperation => tag+fieldref fieldref=PolicyOutput.DescriptionOfOperations
+-> done: GLBasicPolicySteps.CompleteRequiredPolicyInformationAsync() (23.2s)
+2026-09-16 16:07:56.499 [INFO] PASSED STEP: I complete required policy information
+And I complete CGL Fields
+2026-09-16 16:07:56.500 [INFO] START STEP: I complete CGL Fields
+2026-09-16 16:07:57.169 [INFO] RUNTIME LOCATOR: Navigation.PolicyCovgerage => id
+2026-09-16 16:07:58.792 [INFO] RUNTIME LOCATOR: Navigation.PolicyCovgGLPolicyCovg => id
+2026-09-16 16:07:59.155 [INFO] RUNTIME LOCATOR: Navigation.PolicyCovgGLCoverageForm => tag+fieldref fieldref=LineInput.PolicyType
+2026-09-16 16:08:01.193 [INFO] RUNTIME LOCATOR: Navigation.OccurenceLimit => tag+fieldref fieldref=LineInput.PolicyPerOccurenceLimit
+2026-09-16 16:08:04.360 [INFO] RUNTIME LOCATOR: Navigation.AggregateLimit => tag+fieldref fieldref=LineInput.PolicyAggregateLimit
+2026-09-16 16:08:06.463 [INFO] RUNTIME LOCATOR: Navigation.ProductsAggLimit => tag+fieldref fieldref=LineInput.ProductsAggregateLimit
+2026-09-16 16:08:09.314 [INFO] RUNTIME LOCATOR: Navigation.DedType => tag+fieldref fieldref=LineInput.DeductibleType
+2026-09-16 16:08:11.913 [INFO] RUNTIME LOCATOR: Navigation.DeductibleBasis => tag+fieldref fieldref=LineInput.DeductibleScope
+2026-09-16 16:08:14.835 [INFO] RUNTIME LOCATOR: Navigation.PremOpDed => tag+fieldref fieldref=LineInput.Deductible
+2026-09-16 16:08:17.329 [INFO] RUNTIME LOCATOR: Navigation.SplitBIDed => id fieldref=LineInput.SeparateProductsDeductible
+2026-09-16 16:08:18.880 [INFO] RUNTIME LOCATOR: Navigation.ProdBIDed => tag+fieldref fieldref=LineInput.DeductibleProducts
+2026-09-16 16:08:20.989 [INFO] RUNTIME LOCATOR: Navigation.FireDamage => tag+fieldref fieldref=CovFireDamageInput.FireDamage
+2026-09-16 16:08:22.992 [INFO] RUNTIME LOCATOR: Navigation.Medical => tag+fieldref fieldref=CovMedicalInput.Medical
+2026-09-16 16:08:25.044 [INFO] RUNTIME LOCATOR: Navigation.PersAdvInj => tag+fieldref fieldref=CovPersonalAdvertisingInjuryInput.PersonalAdvertisingInjury
+2026-09-16 16:08:26.990 [INFO] RUNTIME LOCATOR: Navigation.IsTheInsuredEngagedInAnySnowOrIceRemovalOperations => tag+fieldref fieldref=LineInput.InsuredEngaged
+2026-09-16 16:08:29.420 [INFO] RUNTIME LOCATOR: Navigation.OfFullTimeEmployees => tag+fieldref fieldref=LineInput.NumberOfFullTimeEmployees
+2026-09-16 16:08:31.183 [INFO] RUNTIME LOCATOR: Navigation.OfPartTimeEmployees => tag+fieldref fieldref=LineInput.NumberOfPartTimeEmployees
+2026-09-16 16:08:33.137 [INFO] RUNTIME LOCATOR: Navigation.OfSeasonalTemporaryEmployees => tag+fieldref fieldref=LineInput.NumberOfSeasonalTemporaryEmployees
+-> done: GLBasicPolicySteps.CompleteCGLFieldsAsync() (37.3s)
+2026-09-16 16:08:33.817 [INFO] PASSED STEP: I complete CGL Fields
+And I add Class
+2026-09-16 16:08:33.818 [INFO] START STEP: I add Class
+2026-09-16 16:08:34.397 [INFO] RUNTIME LOCATOR: Navigation.CGL => link-text
+2026-09-16 16:08:36.335 [INFO] RUNTIME LOCATOR: Navigation.AddClass => link-text
+2026-09-16 16:08:37.874 [INFO] RUNTIME LOCATOR: Navigation.SearchResults => tag+fieldref fieldref=OccupancySearchInputNonShredded.SearchResults
+2026-09-16 16:08:42.730 [INFO] RUNTIME LOCATOR: Navigation.Exposure => tag+fieldref fieldref=RiskGeneralLiabilityInput.UnitsOfExposureEstimated
+-> done: GLBasicPolicySteps.AddClassAsync() (10.5s)
+2026-09-16 16:08:44.301 [INFO] PASSED STEP: I add Class
+And I add [CG0435] Employee Benefits Liability Endorsement
+2026-09-16 16:08:44.303 [INFO] START STEP: I add [CG0435] Employee Benefits Liability Endorsement
+2026-09-16 16:08:45.043 [INFO] RUNTIME LOCATOR: Navigation.GLNavigationLinksEndorsements => link-text
+2026-09-16 16:08:47.395 [INFO] RUNTIME LOCATOR: Navigation.EndorsementsAddEndorsement => link-text
+2026-09-16 16:08:49.194 [INFO] RUNTIME LOCATOR: Navigation.CG2401NonBindingArbitrationEndorsementType => tag+fieldref fieldref=CovEndorsementsInput.Type
+2026-09-16 16:08:52.083 [INFO] RUNTIME LOCATOR: Navigation.NumberOfEmployees => tag+fieldref fieldref=CovEmployeeBenefitsLiabInput.NumberOfEmployees
+-> done: GLBasicPolicySteps.AddCG0435EmployeeBenefitsLiabilityEndorsementAsync() (9.6s)
+2026-09-16 16:08:53.927 [INFO] PASSED STEP: I add [CG0435] Employee Benefits Liability Endorsement
+And I add [CG2142] Exclusion - Explosion, Collapse and Underground Property Damage Hazard (Specified Operations)
+2026-09-16 16:08:53.928 [INFO] START STEP: I add [CG2142] Exclusion - Explosion, Collapse and Underground Property Damage Hazard (Specified Operations)
+2026-09-16 16:09:00.299 [WARN] CONTROL READY WAIT CONTINUING: Navigation.ExcludeExplosionHazard; Action=set; visible wait did not settle within 15000ms: Error: strict mode violation: Locator("input[fieldref=\"CovEndorsementsInput.IndicatorExplosionCG2142\"]") resolved to 2 elements:
+    1) <input value="1" type="checkbox" hidefocus="true" data-ref="inputEl" autocomplete="off" name="boolean_293E" aria-hidden="false" aria-invalid="false" aria-disabled="false" class="x-form-cb-input" objectref="c21598A6777114C7D9427117C1AFA2B89" fieldref="CovEndorsementsInput.IndicatorExplosionCG2142" id="f_c21598A6777114C7D9427117C1AFA2B89293E_3_20-inputEl" data-componentid="f_c21598A6777114C7D9427117C1AFA2B89293E_3_20" aria-describedby="f_c21598A6777114C7D9427117C1AFA2B89293E_3_20-ariaStatusEl"/> aka Locator("input[name=\"boolean_293E\"]")
+    2) <input hidden="" value="0" role="checkbox" hidefocus="true" autocomplete="off" name="~boolean_293E" data-ref="hiddenCheckBoxEl" objectref="c21598A6777114C7D9427117C1AFA2B89" fieldref="CovEndorsementsInput.IndicatorExplosionCG2142" data-cmpid="f_c21598A6777114C7D9427117C1AFA2B89293E_3_20" id="f_c21598A6777114C7D9427117C1AFA2B89293E_3_20-hiddenCheckBoxEl"/> aka Locator("input[name=\"~boolean_293E\"]")
+
+Call log:
+  - waiting for Locator("input[fieldref=\"CovEndorsementsInput.IndicatorExplosionCG2142\"]") to be visible
+2026-09-16 16:09:00.353 [WARN] ELEMENT ATTACH WAIT CONTINUING: Error: strict mode violation: Locator("input[fieldref=\"CovEndorsementsInput.IndicatorExplosionCG2142\"]") resolved to 2 elements:
+    1) <input value="1" type="checkbox" hidefocus="true" data-ref="inputEl" autocomplete="off" name="boolean_293E" aria-hidden="false" aria-invalid="false" aria-disabled="false" class="x-form-cb-input" objectref="c21598A6777114C7D9427117C1AFA2B89" fieldref="CovEndorsementsInput.IndicatorExplosionCG2142" id="f_c21598A6777114C7D9427117C1AFA2B89293E_3_20-inputEl" data-componentid="f_c21598A6777114C7D9427117C1AFA2B89293E_3_20" aria-describedby="f_c21598A6777114C7D9427117C1AFA2B89293E_3_20-ariaStatusEl"/> aka Locator("input[name=\"boolean_293E\"]")
+    2) <input hidden="" value="0" role="checkbox" hidefocus="true" autocomplete="off" name="~boolean_293E" data-ref="hiddenCheckBoxEl" objectref="c21598A6777114C7D9427117C1AFA2B89" fieldref="CovEndorsementsInput.IndicatorExplosionCG2142" data-cmpid="f_c21598A6777114C7D9427117C1AFA2B89293E_3_20" id="f_c21598A6777114C7D9427117C1AFA2B89293E_3_20-hiddenCheckBoxEl"/> aka Locator("input[name=\"~boolean_293E\"]")
+
+Call log:
+  - waiting for Locator("input[fieldref=\"CovEndorsementsInput.IndicatorExplosionCG2142\"]")
+2026-09-16 16:09:00.604 [INFO] RUNTIME LOCATOR: Navigation.ExcludeExplosionHazard => id fieldref=CovEndorsementsInput.IndicatorExplosionCG2142
+2026-09-16 16:09:01.495 [WARN] CONTROL READY WAIT CONTINUING: Navigation.ExcludeCollapseHazard; Action=set; visible wait did not settle within 15000ms: Error: strict mode violation: Locator("input[fieldref=\"CovEndorsementsInput.IndicatorCollapseCG2142\"]") resolved to 2 elements:
+    1) <input value="1" type="checkbox" hidefocus="true" data-ref="inputEl" autocomplete="off" name="boolean_2942" aria-hidden="false" aria-invalid="false" aria-disabled="false" class="x-form-cb-input" objectref="c21598A6777114C7D9427117C1AFA2B89" fieldref="CovEndorsementsInput.IndicatorCollapseCG2142" id="f_c21598A6777114C7D9427117C1AFA2B892942_3_20-inputEl" data-componentid="f_c21598A6777114C7D9427117C1AFA2B892942_3_20" aria-describedby="f_c21598A6777114C7D9427117C1AFA2B892942_3_20-ariaStatusEl"/> aka Locator("input[name=\"boolean_2942\"]")
+    2) <input hidden="" value="0" role="checkbox" hidefocus="true" autocomplete="off" name="~boolean_2942" data-ref="hiddenCheckBoxEl" objectref="c21598A6777114C7D9427117C1AFA2B89" fieldref="CovEndorsementsInput.IndicatorCollapseCG2142" data-cmpid="f_c21598A6777114C7D9427117C1AFA2B892942_3_20" id="f_c21598A6777114C7D9427117C1AFA2B892942_3_20-hiddenCheckBoxEl"/> aka Locator("input[name=\"~boolean_2942\"]")
+
+Call log:
+  - waiting for Locator("input[fieldref=\"CovEndorsementsInput.IndicatorCollapseCG2142\"]") to be visible
+2026-09-16 16:09:01.624 [WARN] ELEMENT ATTACH WAIT CONTINUING: Error: strict mode violation: Locator("input[fieldref=\"CovEndorsementsInput.IndicatorCollapseCG2142\"]") resolved to 2 elements:
+    1) <input value="1" type="checkbox" hidefocus="true" data-ref="inputEl" autocomplete="off" name="boolean_2942" aria-hidden="false" aria-invalid="false" aria-disabled="false" class="x-form-cb-input" objectref="c21598A6777114C7D9427117C1AFA2B89" fieldref="CovEndorsementsInput.IndicatorCollapseCG2142" id="f_c21598A6777114C7D9427117C1AFA2B892942_3_20-inputEl" data-componentid="f_c21598A6777114C7D9427117C1AFA2B892942_3_20" aria-describedby="f_c21598A6777114C7D9427117C1AFA2B892942_3_20-ariaStatusEl"/> aka Locator("input[name=\"boolean_2942\"]")
+    2) <input hidden="" value="0" role="checkbox" hidefocus="true" autocomplete="off" name="~boolean_2942" data-ref="hiddenCheckBoxEl" objectref="c21598A6777114C7D9427117C1AFA2B89" fieldref="CovEndorsementsInput.IndicatorCollapseCG2142" data-cmpid="f_c21598A6777114C7D9427117C1AFA2B892942_3_20" id="f_c21598A6777114C7D9427117C1AFA2B892942_3_20-hiddenCheckBoxEl"/> aka Locator("input[name=\"~boolean_2942\"]")
+
+Call log:
+  - waiting for Locator("input[fieldref=\"CovEndorsementsInput.IndicatorCollapseCG2142\"]")
+2026-09-16 16:09:02.381 [INFO] RUNTIME LOCATOR: Navigation.ExcludeCollapseHazard => id fieldref=CovEndorsementsInput.IndicatorCollapseCG2142
+2026-09-16 16:09:03.346 [WARN] CONTROL READY WAIT CONTINUING: Navigation.ExcludeUndergroundPropertyDamageHazard; Action=set; visible wait did not settle within 15000ms: Error: strict mode violation: Locator("input[fieldref=\"CovEndorsementsInput.IndicatorPropertyDamageCG2142\"]") resolved to 2 elements:
+    1) <input value="1" type="checkbox" hidefocus="true" data-ref="inputEl" autocomplete="off" name="boolean_2946" aria-hidden="false" aria-invalid="false" aria-disabled="false" class="x-form-cb-input" objectref="c21598A6777114C7D9427117C1AFA2B89" id="f_c21598A6777114C7D9427117C1AFA2B892946_3_20-inputEl" fieldref="CovEndorsementsInput.IndicatorPropertyDamageCG2142" data-componentid="f_c21598A6777114C7D9427117C1AFA2B892946_3_20" aria-describedby="f_c21598A6777114C7D9427117C1AFA2B892946_3_20-ariaStatusEl"/> aka Locator("input[name=\"boolean_2946\"]")
+    2) <input hidden="" value="0" role="checkbox" hidefocus="true" autocomplete="off" name="~boolean_2946" data-ref="hiddenCheckBoxEl" objectref="c21598A6777114C7D9427117C1AFA2B89" data-cmpid="f_c21598A6777114C7D9427117C1AFA2B892946_3_20" fieldref="CovEndorsementsInput.IndicatorPropertyDamageCG2142" id="f_c21598A6777114C7D9427117C1AFA2B892946_3_20-hiddenCheckBoxEl"/> aka Locator("input[name=\"~boolean_2946\"]")
+
+Call log:
+  - waiting for Locator("input[fieldref=\"CovEndorsementsInput.IndicatorPropertyDamageCG2142\"]") to be visible
+2026-09-16 16:09:03.428 [WARN] ELEMENT ATTACH WAIT CONTINUING: Error: strict mode violation: Locator("input[fieldref=\"CovEndorsementsInput.IndicatorPropertyDamageCG2142\"]") resolved to 2 elements:
+    1) <input value="1" type="checkbox" hidefocus="true" data-ref="inputEl" autocomplete="off" name="boolean_2946" aria-hidden="false" aria-invalid="false" aria-disabled="false" class="x-form-cb-input" objectref="c21598A6777114C7D9427117C1AFA2B89" id="f_c21598A6777114C7D9427117C1AFA2B892946_3_20-inputEl" fieldref="CovEndorsementsInput.IndicatorPropertyDamageCG2142" data-componentid="f_c21598A6777114C7D9427117C1AFA2B892946_3_20" aria-describedby="f_c21598A6777114C7D9427117C1AFA2B892946_3_20-ariaStatusEl"/> aka Locator("input[name=\"boolean_2946\"]")
+    2) <input hidden="" value="0" role="checkbox" hidefocus="true" autocomplete="off" name="~boolean_2946" data-ref="hiddenCheckBoxEl" objectref="c21598A6777114C7D9427117C1AFA2B89" data-cmpid="f_c21598A6777114C7D9427117C1AFA2B892946_3_20" fieldref="CovEndorsementsInput.IndicatorPropertyDamageCG2142" id="f_c21598A6777114C7D9427117C1AFA2B892946_3_20-hiddenCheckBoxEl"/> aka Locator("input[name=\"~boolean_2946\"]")
+
+Call log:
+  - waiting for Locator("input[fieldref=\"CovEndorsementsInput.IndicatorPropertyDamageCG2142\"]")
+2026-09-16 16:09:04.855 [INFO] RUNTIME LOCATOR: Navigation.ExcludeUndergroundPropertyDamageHazard => id fieldref=CovEndorsementsInput.IndicatorPropertyDamageCG2142
+2026-09-16 16:09:06.408 [INFO] RUNTIME LOCATOR: Navigation.DescriptionOfOperationS => tag+fieldref fieldref=CovEndorsementsInput.Description
+2026-09-16 16:09:07.679 [WARN] CONTROL READY WAIT CONTINUING: Navigation.ExcludeUndergroundPropertyDamageHazard; Action=click; visible wait did not settle within 15000ms: Error: strict mode violation: Locator("input[fieldref=\"CovEndorsementsInput.IndicatorPropertyDamageCG2142\"]") resolved to 2 elements:
+    1) <input value="1" type="checkbox" hidefocus="true" checked="checked" data-ref="inputEl" autocomplete="off" name="boolean_2946" aria-hidden="false" aria-invalid="false" aria-disabled="false" class="x-form-cb-input" objectref="c21598A6777114C7D9427117C1AFA2B89" id="f_c21598A6777114C7D9427117C1AFA2B892946_3_20-inputEl" fieldref="CovEndorsementsInput.IndicatorPropertyDamageCG2142" data-componentid="f_c21598A6777114C7D9427117C1AFA2B892946_3_20" aria-describedby="f_c21598A6777114C7D9427117C1AFA2B892946_3_20…/> aka Locator("input[name=\"boolean_2946\"]")
+    2) <input hidden="" value="1" role="checkbox" hidefocus="true" autocomplete="off" name="~boolean_2946" data-ref="hiddenCheckBoxEl" objectref="c21598A6777114C7D9427117C1AFA2B89" data-cmpid="f_c21598A6777114C7D9427117C1AFA2B892946_3_20" fieldref="CovEndorsementsInput.IndicatorPropertyDamageCG2142" id="f_c21598A6777114C7D9427117C1AFA2B892946_3_20-hiddenCheckBoxEl"/> aka Locator("input[name=\"~boolean_2946\"]")
+
+Call log:
+  - waiting for Locator("input[fieldref=\"CovEndorsementsInput.IndicatorPropertyDamageCG2142\"]") to be visible
+-> done: GLBasicPolicySteps.AddCG2142ExclusionExplosionCollapseAndUndergroundPropertyDamageHazardSpecifiedOperationsAsync() (17.0s)
+2026-09-16 16:09:10.942 [INFO] PASSED STEP: I add [CG2142] Exclusion - Explosion, Collapse and Underground Property Damage Hazard (Specified Operations)
+And I add [CG 2149] Total Pollution Exclusion Endorsement
+2026-09-16 16:09:10.944 [INFO] START STEP: I add [CG 2149] Total Pollution Exclusion Endorsement
+-> done: GLBasicPolicySteps.AddCG2149TotalPollutionExclusionEndorsementAsync() (6.8s)
+2026-09-16 16:09:17.791 [INFO] PASSED STEP: I add [CG 2149] Total Pollution Exclusion Endorsement
+And I verify and Fill out [FG0055] Employment Practices Liability Insurance Coverage Endorsement
+2026-09-16 16:09:17.792 [INFO] START STEP: I verify and Fill out [FG0055] Employment Practices Liability Insurance Coverage Endorsement
+2026-09-16 16:09:18.345 [INFO] RUNTIME LOCATOR: Coverages.FG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsement => id fieldref=CovEndorsementsInput.FormName
+2026-09-16 16:09:19.338 [INFO] RUNTIME LOCATOR: Coverages.Detail => seed
+2026-09-16 16:09:21.364 [INFO] RUNTIME LOCATOR: Coverages.LimitDeductible => tag+fieldref fieldref=CovEndorsementsInput.EPLILimitDeductible
+2026-09-16 16:09:23.997 [INFO] RUNTIME LOCATOR: Coverages.HasTheInsuredEverHadAClaimForEmploymentPractices => tag+fieldref fieldref=CovEndorsementsInput.EPLIClaim
+2026-09-16 16:09:26.990 [INFO] RUNTIME LOCATOR: Coverages.TheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaint => tag+fieldref fieldref=CovEndorsementsInput.EPLIClaimInfo
+2026-09-16 16:09:29.576 [INFO] RUNTIME LOCATOR: Coverages.ThirdParty => tag+fieldref fieldref=CovEndorsementsInput.EPLIThirdParty
+2026-09-16 16:09:33.141 [INFO] RUNTIME LOCATOR: Coverages.PolicyCovgAccountsReceivableOK => link-text
+-> done: GLBasicPolicySteps.VerifyAndFillOutFG0055EmploymentPracticesLiabilityInsuranceCoverageEndorsementAsync() (16.0s)
+2026-09-16 16:09:33.835 [INFO] PASSED STEP: I verify and Fill out [FG0055] Employment Practices Liability Insurance Coverage Endorsement
+And I add Addl Interest [CG2007] - Engineers
+2026-09-16 16:09:33.836 [INFO] START STEP: I add Addl Interest [CG2007] - Engineers
+2026-09-16 16:09:34.223 [INFO] RUNTIME LOCATOR: Navigation.GLNavigationLinksAddlInterests => link-text
+2026-09-16 16:09:35.940 [INFO] RUNTIME LOCATOR: Navigation.AddAddlInterest => link-text
+2026-09-16 16:09:37.962 [INFO] RUNTIME LOCATOR: Navigation.CG2007AddLInsuredEngineersArchitectsType => tag+fieldref fieldref=AdditionalOtherInterestInput.Type
+-> done: GLBasicPolicySteps.AddAddlInterestCG2007EngineersAsync() (8.3s)
+2026-09-16 16:09:42.157 [INFO] PASSED STEP: I add Addl Interest [CG2007] - Engineers
+And I add Addl Interest [CG2020] Add'l Insured-Charitable Institution
+2026-09-16 16:09:42.158 [INFO] START STEP: I add Addl Interest [CG2020] Add'l Insured-Charitable Institution
+2026-09-16 16:09:42.522 [WARN] CONTROL READY WAIT CONTINUING: Navigation.GLNavigationLinksAddlInterests; Action=click; visible wait did not settle within 15000ms: Error: strict mode violation: GetByText("Addl Interests") resolved to 2 elements:
+    1) <a id="" class="" data-onclick="" href="javascript:;" onmouseout="window.status='';" onmousemove="window.status='';" onclick="DCT.ajaxProcess.submitAjax('PageContainer','Carrier_GeneralLiability_Pages_US_4_0_0_0_MainInterview_AOISchedule','0','0','','','');">Addl Interests</a> aka GetByRole(AriaRole.Link, new() { Name = "Addl Interests" })
+    2) <div id="pageTitle">Addl Interests</div> aka Locator("#pageTitle")
+
+Call log:
+  - waiting for GetByText("Addl Interests") to be visible
+2026-09-16 16:09:48.103 [INFO] RUNTIME LOCATOR: Navigation.TypeOfLicense => tag+fieldref fieldref=AdditionalOtherInterestInput.DescriptionOfCompletedOps
+-> done: GLBasicPolicySteps.AddAddlInterestCG2020AddLInsuredCharitableInstitutionAsync() (7.7s)
+2026-09-16 16:09:49.867 [INFO] PASSED STEP: I add Addl Interest [CG2020] Add'l Insured-Charitable Institution
+And I add Addl Interest [CG2023] Add'l Insured-Executors
+2026-09-16 16:09:49.868 [INFO] START STEP: I add Addl Interest [CG2023] Add'l Insured-Executors
+2026-09-16 16:09:50.480 [WARN] CONTROL READY WAIT CONTINUING: Navigation.GLNavigationLinksAddlInterests; Action=click; visible wait did not settle within 15000ms: Error: strict mode violation: GetByText("Addl Interests") resolved to 2 elements:
+    1) <a id="" class="" data-onclick="" href="javascript:;" onmouseout="window.status='';" onmousemove="window.status='';" onclick="DCT.ajaxProcess.submitAjax('PageContainer','Carrier_GeneralLiability_Pages_US_4_0_0_0_MainInterview_AOISchedule','0','0','','','');">Addl Interests</a> aka GetByRole(AriaRole.Link, new() { Name = "Addl Interests" })
+    2) <div id="pageTitle">Addl Interests</div> aka Locator("#pageTitle")
+
+Call log:
+  - waiting for GetByText("Addl Interests") to be visible
+-> done: GLBasicPolicySteps.AddAddlInterestCG2023AddLInsuredExecutorsAsync() (6.4s)
+2026-09-16 16:09:56.272 [INFO] PASSED STEP: I add Addl Interest [CG2023] Add'l Insured-Executors
+And I add Addl Interest [CG2025] Add'l Insured-Executive Officers
+2026-09-16 16:09:56.273 [INFO] START STEP: I add Addl Interest [CG2025] Add'l Insured-Executive Officers
+2026-09-16 16:09:57.092 [WARN] CONTROL READY WAIT CONTINUING: Navigation.GLNavigationLinksAddlInterests; Action=click; visible wait did not settle within 15000ms: Error: strict mode violation: GetByText("Addl Interests") resolved to 2 elements:
+    1) <a id="" class="" data-onclick="" href="javascript:;" onmouseout="window.status='';" onmousemove="window.status='';" onclick="DCT.ajaxProcess.submitAjax('PageContainer','Carrier_GeneralLiability_Pages_US_4_0_0_0_MainInterview_AOISchedule','0','0','','','');">Addl Interests</a> aka GetByRole(AriaRole.Link, new() { Name = "Addl Interests" })
+    2) <div id="pageTitle">Addl Interests</div> aka Locator("#pageTitle")
+
+Call log:
+  - waiting for GetByText("Addl Interests") to be visible
+-> done: GLBasicPolicySteps.AddAddlInterestCG2025AddLInsuredExecutiveOfficersAsync() (7.1s)
+2026-09-16 16:10:03.388 [INFO] PASSED STEP: I add Addl Interest [CG2025] Add'l Insured-Executive Officers
+And I add Addl Interest [CG2034] Add'l Insured-Leased Equipment Automatic
+2026-09-16 16:10:03.389 [INFO] START STEP: I add Addl Interest [CG2034] Add'l Insured-Leased Equipment Automatic
+2026-09-16 16:10:04.067 [WARN] CONTROL READY WAIT CONTINUING: Navigation.GLNavigationLinksAddlInterests; Action=click; visible wait did not settle within 15000ms: Error: strict mode violation: GetByText("Addl Interests") resolved to 2 elements:
+    1) <a id="" class="" data-onclick="" href="javascript:;" onmouseout="window.status='';" onmousemove="window.status='';" onclick="DCT.ajaxProcess.submitAjax('PageContainer','Carrier_GeneralLiability_Pages_US_4_0_0_0_MainInterview_AOISchedule','0','0','','','');">Addl Interests</a> aka GetByRole(AriaRole.Link, new() { Name = "Addl Interests" })
+    2) <div id="pageTitle">Addl Interests</div> aka Locator("#pageTitle")
+
+Call log:
+  - waiting for GetByText("Addl Interests") to be visible
+-> done: GLBasicPolicySteps.AddAddlInterestCG2034AddLInsuredLeasedEquipmentAutomaticAsync() (6.5s)
+2026-09-16 16:10:09.875 [INFO] PASSED STEP: I add Addl Interest [CG2034] Add'l Insured-Leased Equipment Automatic
+And I add notepad comment
+2026-09-16 16:10:09.876 [INFO] START STEP: I add notepad comment
+2026-09-16 16:10:12.050 [INFO] RUNTIME LOCATOR: Navigation.Notepad => link-text
+2026-09-16 16:10:14.875 [INFO] RUNTIME LOCATOR: Navigation.AddNotesRemarks => link-text
+2026-09-16 16:10:16.383 [INFO] RUNTIME LOCATOR: Navigation.TextBox => tag+fieldref fieldref=NotesInput.Remarks
+-> done: GLBasicPolicySteps.AddNotepadCommentAsync() (8.4s)
+2026-09-16 16:10:18.242 [INFO] PASSED STEP: I add notepad comment
+And I switch to UW Director for OR and WA when required
+2026-09-16 16:10:18.245 [INFO] START STEP: I switch to UW Director for OR and WA when required
+2026-09-16 16:10:18.257 [INFO] Raw Tosca conditional authentication skipped for state 'DE'. Role=uw-director.
+-> done: ApplicationSteps.SwitchToUwDirectorAsync() (0.0s)
+2026-09-16 16:10:18.257 [INFO] PASSED STEP: I switch to UW Director for OR and WA when required
+And I answer GL UW Questions OR & WA
+2026-09-16 16:10:18.258 [INFO] START STEP: I answer GL UW Questions OR & WA
+2026-09-16 16:10:18.971 [INFO] RUNTIME LOCATOR: Navigation.GLUWQuestions => link-text
+2026-09-16 16:10:21.756 [INFO] RUNTIME LOCATOR: Navigation.UWQuestionsUmbrellaUpdateAnswers => link-text
+2026-09-16 16:10:23.283 [INFO] RUNTIME LOCATOR: Navigation.DescribeAllHoldHarmlessAgreementsAndPleaseProvideACopy => id fieldref=GeneralLiabilityInput.Description
+2026-09-16 16:10:27.448 [INFO] RUNTIME LOCATOR: Navigation.GeneralLiabilityInformation => id
+-> done: GLBasicPolicySteps.AnswerGLUWQuestionsORWAAsync() (15.3s)
+2026-09-16 16:10:33.536 [INFO] PASSED STEP: I answer GL UW Questions OR & WA
+And I complete required billing information
+2026-09-16 16:10:33.571 [INFO] START STEP: I complete required billing information
+2026-09-16 16:10:37.792 [INFO] RUNTIME LOCATOR: Navigation.NavigationBilling => link-text
+2026-09-16 16:10:39.367 [INFO] RUNTIME LOCATOR: Navigation.BillType => tag+fieldref fieldref=BillingDetailInput.BillType
+2026-09-16 16:10:42.131 [INFO] RUNTIME LOCATOR: Navigation.PayPlan => tag+fieldref fieldref=BillingDetailInput.PayPlan
+2026-09-16 16:10:45.086 [INFO] RUNTIME LOCATOR: Navigation.EasyPay => tag+fieldref fieldref=BillingDetailInput.EasyPay
+-> done: GLBasicPolicySteps.CompleteRequiredBillingInformationAsync() (14.8s)
+2026-09-16 16:10:48.346 [INFO] PASSED STEP: I complete required billing information
+And I complete required submission information
+2026-09-16 16:10:48.348 [INFO] START STEP: I complete required submission information
+2026-09-16 16:10:48.584 [INFO] RUNTIME LOCATOR: Navigation.Submission => link-text
+-> done: GLBasicPolicySteps.CompleteRequiredSubmissionInformationAsync() (0.7s)
+2026-09-16 16:10:49.020 [INFO] PASSED STEP: I complete required submission information
+And I run Stoplight
+2026-09-16 16:10:49.021 [INFO] START STEP: I run Stoplight
+2026-09-16 16:10:50.975 [INFO] RUNTIME LOCATOR: Submission.CompleteApplication => link-text
+2026-09-16 16:11:01.744 [INFO] RUNTIME LOCATOR: Submission.StoplightWaitingWindowFirstCloseButtonOnError => id
+-> done: GLBasicPolicySteps.RunStoplightAsync() (18.3s)
+2026-09-16 16:11:07.355 [INFO] PASSED STEP: I run Stoplight
+And I verify values in premium fields
+2026-09-16 16:11:07.356 [INFO] START STEP: I verify values in premium fields
+2026-09-16 16:11:07.551 [INFO] RUNTIME LOCATOR: Pricing.FullTermPremium => id fieldref=PolicyOutput.Premium
+2026-09-16 16:11:07.850 [INFO] RUNTIME LOCATOR: Pricing.PremiumWritten => id fieldref=PolicyOutput.PremiumWritten
+2026-09-16 16:11:08.168 [INFO] RUNTIME LOCATOR: Pricing.PriorPremium => id fieldref=PolicyOutput.PremiumPrior
+2026-09-16 16:11:08.555 [INFO] RUNTIME LOCATOR: Pricing.PremiumChange => id fieldref=PolicyOutput.PremiumChange
+-> done: GLBasicPolicySteps.VerifyValuesInPremiumFieldsAsync() (1.3s)
+2026-09-16 16:11:08.634 [INFO] PASSED STEP: I verify values in premium fields
+2026-09-16 16:11:23.629 [INFO] Playwright video finalized: C:\Users\CT7859\WorkDirectory\PnC_DC_TestAutomation\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestResults\NUnitWork\Artifacts\GL_Basic_Policy\GL_Basic_Policy____stateCode_20260916_160515_375_b13d97de\video\page@dcf83c3921a0c70731480f94e86d8387.webm
+2026-09-16 16:11:25.521 [WARN] Unable to create evidence bundle: The process cannot access the file 'C:\Users\CT7859\WorkDirectory\PnC_DC_TestAutomation\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestResults\NUnitWork\Artifacts\GL_Basic_Policy\GL_Basic_Policy____stateCode_20260916_160515_375_b13d97de\execution.log' because it is being used by another process.

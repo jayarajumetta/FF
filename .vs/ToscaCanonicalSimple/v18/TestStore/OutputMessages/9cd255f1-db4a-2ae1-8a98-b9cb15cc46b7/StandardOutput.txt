@@ -1,0 +1,87 @@
+Given I open a browser session
+2026-09-27 19:41:33.289 [INFO] START STEP: I open a browser session
+2026-09-27 19:41:41.402 [INFO] Browser session opened. Channel=msedge; Headless=False; HAR=True; Console=True; Network=True
+-> done: ApplicationSteps.OpenBrowserSessionAsync() (8.1s)
+2026-09-27 19:41:41.509 [INFO] PASSED STEP: I open a browser session
+Given test data "TestData/Scenarios/005_gl_basic_policy_wa.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+2026-09-27 19:41:41.611 [INFO] START STEP: test data "TestData/Scenarios/005_gl_basic_policy_wa.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+2026-09-27 19:41:41.634 [INFO] Loaded scenario data: C:\Users\CT7859\WorkDirectory\PnC_DC_TestAutomation\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestData\Scenarios\005_gl_basic_policy_wa.json
+-> done: ApplicationSteps.LoadScenarioData("TestData/Scenario...", "TestData/External...") (0.0s)
+2026-09-27 19:41:41.638 [INFO] PASSED STEP: test data "TestData/Scenarios/005_gl_basic_policy_wa.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+And I open the configured Commercial Lines Duck Creek application
+2026-09-27 19:41:41.650 [INFO] START STEP: I open the configured Commercial Lines Duck Creek application
+2026-09-27 19:41:43.090 [ERROR] 2026-09-27T19:41:43.0854813+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+-> done: ApplicationSteps.OpenApplicationAsync() (1.7s)
+2026-09-27 19:41:43.350 [INFO] PASSED STEP: I open the configured Commercial Lines Duck Creek application
+And I sign in to Commercial Lines Duck Creek using configured credentials
+2026-09-27 19:41:43.352 [INFO] START STEP: I sign in to Commercial Lines Duck Creek using configured credentials
+2026-09-27 19:41:44.888 [INFO] RUNTIME LOCATOR: Login.UserName => id
+2026-09-27 19:41:46.132 [INFO] RUNTIME LOCATOR: Login.Password => id
+2026-09-27 19:41:47.109 [INFO] RUNTIME LOCATOR: Login.Login => name
+-> error: Timeout 15000ms exceeded.
+Call log:
+  - waiting for GetByRole(AriaRole.Link, new() { Name = "Login", Exact = true }) to be detached
+    33 × locator resolved to visible <a class="" onblur="" onfocus="" name="home" data-onclick="" href="javascript:;" onmouseout="window.status='';" onmousemove="window.status='';" onclick="DCT.Submit.submitAction('login');">…</a> (19.9s)
+2026-09-27 19:42:03.501 [ERROR] FAILED STEP: I sign in to Commercial Lines Duck Creek using configured credentials :: System.TimeoutException: Timeout 15000ms exceeded.
+Call log:
+  - waiting for GetByRole(AriaRole.Link, new() { Name = "Login", Exact = true }) to be detached
+    33 × locator resolved to visible <a class="" onblur="" onfocus="" name="home" data-onclick="" href="javascript:;" onmouseout="window.status='';" onmousemove="window.status='';" onclick="DCT.Submit.submitAction('login');">…</a>
+   at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls) in /_/src/Playwright/Transport/Connection.cs:line 222
+   at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title) in /_/src/Playwright/Transport/Connection.cs:line 528
+   at InsuranceAutomation.Core.UiActions.WaitAsync(ILocator locator, String expected, ControlIntent intent) in C:\Users\CT7859\WorkDirectory\PnC_DC_TestAutomation\src\InsuranceAutomation.Core\UiActions.cs:line 339
+   at InsuranceAutomation.CLDC.StepDefinitions.ApplicationSteps.SignInWithLoginPageAsync(LoginPage page, String username, String password) in C:\Users\CT7859\WorkDirectory\PnC_DC_TestAutomation\tests\CommercialLines.DuckCreek.Tests\StepDefinitions\ApplicationSteps.cs:line 124
+   at Reqnroll.Bindings.AsyncMethodHelper.ConvertTaskOfT(Task task, Boolean getValue)
+   at Reqnroll.Bindings.BindingDelegateInvoker.InvokeDelegateAsync(Delegate bindingDelegate, Object[] invokeArgs, ExecutionContextHolder executionContext)
+   at Reqnroll.Bindings.BindingInvoker.InvokeBindingAsync(IBinding binding, IContextManager contextManager, Object[] arguments, ITestTracer testTracer, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>b__7>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>g__HandleStepExecutionExceptions|0>d.MoveNext()
+And I start a new quote
+-> skipped because of previous errors
+When I enter individual client information
+-> skipped because of previous errors
+And I complete Underwriting Info from Client Screen
+-> skipped because of previous errors
+And I complete required policy information
+-> skipped because of previous errors
+And I complete CGL Fields
+-> skipped because of previous errors
+And I add Class
+-> skipped because of previous errors
+And I add [CG0435] Employee Benefits Liability Endorsement
+-> skipped because of previous errors
+And I add [CG2142] Exclusion - Explosion, Collapse and Underground Property Damage Hazard (Specified Operations)
+-> skipped because of previous errors
+And I add [CG 2149] Total Pollution Exclusion Endorsement
+-> skipped because of previous errors
+And I verify and Fill out [FG0055] Employment Practices Liability Insurance Coverage Endorsement
+-> skipped because of previous errors
+And I add Addl Interest [CG2007] - Engineers
+-> skipped because of previous errors
+And I add Addl Interest [CG2020] Add'l Insured-Charitable Institution
+-> skipped because of previous errors
+And I add Addl Interest [CG2023] Add'l Insured-Executors
+-> skipped because of previous errors
+And I add Addl Interest [CG2025] Add'l Insured-Executive Officers
+-> skipped because of previous errors
+And I add Addl Interest [CG2034] Add'l Insured-Leased Equipment Automatic
+-> skipped because of previous errors
+And I add notepad comment
+-> skipped because of previous errors
+And I switch to UW Director for OR and WA when required
+-> skipped because of previous errors
+And I answer GL UW Questions OR & WA
+-> skipped because of previous errors
+And I complete required billing information
+-> skipped because of previous errors
+And I complete required submission information
+-> skipped because of previous errors
+And I run Stoplight
+-> skipped because of previous errors
+And I verify values in premium fields
+-> skipped because of previous errors
+2026-09-27 19:42:05.888 [ERROR] 2026-09-27T19:42:05.8847622+05:30 REQUEST FAILED: GET https://clasq.anico.com/Express/default.aspx?_windowGuid=d4ec3208-273a-4d20-9f54-05fac13b8da4&resumeState=202102da-1328-47a9-bfd4-6503ae39d6cc :: net::ERR_ABORTED
+2026-09-27 19:42:05.959 [INFO] Playwright video finalized: C:\Users\CT7859\WorkDirectory\PnC_DC_TestAutomation\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestResults\NUnitWork\Artifacts\GL_Basic_Policy\GL_Basic_Policy____stateCode_20260927_194133_222_60df7d9a\video\page@49e7c020407b27cabcb5fb2b4f116ff3.webm
+2026-09-27 19:42:06.727 [WARN] Unable to create evidence bundle: The process cannot access the file 'C:\Users\CT7859\WorkDirectory\PnC_DC_TestAutomation\tests\CommercialLines.DuckCreek.Tests\bin\Debug\net8.0\TestResults\NUnitWork\Artifacts\GL_Basic_Policy\GL_Basic_Policy____stateCode_20260927_194133_222_60df7d9a\execution.log' because it is being used by another process.

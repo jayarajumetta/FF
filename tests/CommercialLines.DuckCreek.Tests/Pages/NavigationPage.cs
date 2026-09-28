@@ -866,6 +866,19 @@ public sealed class NavigationPage
     public Task EnterDescriptionOfSpecifiedOperationAsync(string value) =>
         _ui.FillAsync(_locators.DescriptionOfSpecifiedOperation, value, new ControlIntent("Navigation", "DescriptionOfSpecifiedOperation"));
 
+
+    public async Task<bool> IsEstimatedPremiumAvailableAsync() =>
+        await _locators.EstimatedPremium.CountAsync() > 0;
+
+
+    public Task EnterEstimatedPremiumAsync(string value) =>
+        _ui.FillAsync(_locators.EstimatedPremium, value, new ControlIntent("Navigation", "EstimatedPremium"));
+        public Task ClickInsuranceScoreConsentAsync() =>
+        _ui.ClickAsync(_locators.InsuranceScoreConsent, new ControlIntent("Underwriting", "InsuranceScoreConsent"));
+
+    public Task ClickInsuranceScoreAsync() =>
+     _ui.ClickAsync(_locators.InsuranceScoreConsent, new ControlIntent("Underwriting", "InsuranceScore"));
+
     public Task PressDescriptionOfSpecifiedOperationAsync(string key) =>
         _ui.PressAsync(_locators.DescriptionOfSpecifiedOperation, key, new ControlIntent("Navigation", "DescriptionOfSpecifiedOperation"));
 
@@ -1021,6 +1034,16 @@ public sealed class NavigationPage
 
     public Task EnterCG2401NonBindingArbitrationEndorsementTypeAsync(string value) =>
         _ui.FillAsync(_locators.CoverageEndorsementType, value, new ControlIntent("Navigation", "CG2401NonBindingArbitrationEndorsementType"));
+
+
+    public Task EnterDescriptionOfActivitiesAsync(string value) =>
+        _ui.FillAsync(_locators.DescriptionOfActivities, value, new ControlIntent("Navigation", "DescriptionOfActivities"));
+
+
+
+
+
+
 
     public Task PressCG2401NonBindingArbitrationEndorsementTypeAsync(string key) =>
         _ui.PressAsync(_locators.CoverageEndorsementType, key, new ControlIntent("Navigation", "CG2401NonBindingArbitrationEndorsementType"));

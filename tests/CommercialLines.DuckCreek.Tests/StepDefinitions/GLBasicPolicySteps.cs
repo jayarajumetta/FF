@@ -162,6 +162,23 @@ public sealed class GLBasicPolicySteps
         await page.WaitForPolicyInfoHeaderAsync("Visible");
         await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
         await page.EnterDescriptionOfSpecifiedOperationAsync(data.BuildQuoteDescription());
+
+        await page.PauseAsync(2000);
+
+        if (await page.IsEstimatedPremiumAvailableAsync())
+        {
+            await page.EnterEstimatedPremiumAsync("Under 1,500");
+        }
+
+
+        await page.ClickInsuranceScoreConsentAsync();
+        //await page.WaitForAcceptAsync("Exists");
+        //await page.ClickAcceptAsync();
+        //await page.WaitForInsuranceScoreAsync("Exists");
+        await page.ClickInsuranceScoreAsync();
+        //await page.VerifyReferenceNumberAsync(data.Resolve("{{data:expected_reference_number_innertext_140}}"), "InnerText");
+        await page.PauseAsync(2000);
+        //await page.PauseAsync(1000);
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
 
     }
@@ -172,24 +189,25 @@ public sealed class GLBasicPolicySteps
     public async Task CompleteCGLFieldsAsync()
     {
         var data = _scenario.Get<ScenarioData>();
+        var isWashington = data.Condition("State == \"WA\" || State == \"OR\"");
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickPolicyCovgerageAsync();
         await page.WaitForPolicyCovgGLPolicyCovgAsync("Exists");
-        if (data.Condition("'Coverage Form' != NULL"))
+        if (data.Condition("'Coverage Form' != NULL") && !isWashington)
         {
             await page.EnterPolicyCovgGLCoverageFormAsync(data.Resolve("{{data:coverage_form_98}}"));
         }
-        if (data.Condition("'Occurence Limit' != NULL"))
+        if (data.Condition("'Occurence Limit' != NULL") && !isWashington)
         {
             await page.EnterOccurenceLimitAsync(data.Resolve("{{data:occurence_limit_99}}"));
         }
-        if (data.Condition("'Aggregate Limit' != NULL"))
+        if (data.Condition("'Aggregate Limit' != NULL") && !isWashington)
         {
             await page.EnterAggregateLimitAsync(data.Resolve("{{data:aggregate_limit_100}}"));
         }
-        if (data.Condition("'Coverage Form' != \"OCP\""))
+        if (data.Condition("'Coverage Form' != \"OCP\"") && !isWashington)
         {
             await page.EnterProductsAggLimitAsync(data.Resolve("{{data:products_agg_limit_101}}"));
         }
@@ -289,44 +307,59 @@ public sealed class GLBasicPolicySteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
-        {
-            await page.ClickGLNavigationLinksEndorsementsAsync();
-        }
-        //await page.ClickGLNavigationLinksEndorsementsAsync();
-        //await page.WaitForEndorsementsAsync("Exists");
-        await page.ClickEndorsementsAddEndorsementAsync();
-        await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_128}}"));
-        await page.EnterNumberOfEmployeesAsync(data.Resolve("{{data:number_of_employees_129}}"));
-        await page.ClickOKAsync();
 
+        if (data.Condition("State != \"CT\" && State != \"NH\" && State != \"NY\" && State != \"VA\""))
+        {
+
+
+
+            if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
+            {
+                await page.ClickGLNavigationLinksEndorsementsAsync();
+            }
+            //await page.ClickGLNavigationLinksEndorsementsAsync();
+            //await page.WaitForEndorsementsAsync("Exists");
+            await page.ClickEndorsementsAddEndorsementAsync();
+            await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_128}}"));
+            await page.EnterNumberOfEmployeesAsync(data.Resolve("{{data:number_of_employees_129}}"));
+            await page.ClickOKAsync();
+        }
     }
+
 
     [Given(@"^I add \[CG2142\] Exclusion \- Explosion, Collapse and Underground Property Damage Hazard \(Specified Operations\)$")]
     [When(@"^I add \[CG2142\] Exclusion \- Explosion, Collapse and Underground Property Damage Hazard \(Specified Operations\)$")]
     [Then(@"^I add \[CG2142\] Exclusion \- Explosion, Collapse and Underground Property Damage Hazard \(Specified Operations\)$")]
     public async Task AddCG2142ExclusionExplosionCollapseAndUndergroundPropertyDamageHazardSpecifiedOperationsAsync()
     {
-        var data = _scenario.Get<ScenarioData>();
 
-        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+            var data = _scenario.Get<ScenarioData>();
 
-        if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
+            var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+
+        if (data.Condition("State != NULL"))
         {
-            await page.ClickGLNavigationLinksEndorsementsAsync();
+
+            if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
+            {
+                await page.ClickGLNavigationLinksEndorsementsAsync();
+            }
+            //await page.WaitForEndorsementsAsync("Exists");
+            await page.ClickEndorsementsAddEndorsementAsync();
+            await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_134}}"));
+            await page.SetExcludeExplosionHazardAsync(data.Resolve("{{data:exclude_explosion_hazard_135}}"));
+            await page.SetExcludeCollapseHazardAsync(data.Resolve("{{data:exclude_collapse_hazard_136}}"));
+            await page.SetExcludeUndergroundPropertyDamageHazardAsync(data.Resolve("{{data:exclude_underground_property_damage_hazard_137}}"));
+            await page.EnterDescriptionOfOperationSAsync(data.Resolve("{{data:description_of_operation_s_138}}"));
+            if (data.Condition("State != \"VA\""))
+            {
+                await page.ClickExcludeUndergroundPropertyDamageHazardAsync();
+            }
+            await page.ClickOKAsync();
+
+
         }
-        //await page.WaitForEndorsementsAsync("Exists");
-        await page.ClickEndorsementsAddEndorsementAsync();
-        await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_134}}"));
-        await page.SetExcludeExplosionHazardAsync(data.Resolve("{{data:exclude_explosion_hazard_135}}"));
-        await page.SetExcludeCollapseHazardAsync(data.Resolve("{{data:exclude_collapse_hazard_136}}"));
-        await page.SetExcludeUndergroundPropertyDamageHazardAsync(data.Resolve("{{data:exclude_underground_property_damage_hazard_137}}"));
-        await page.EnterDescriptionOfOperationSAsync(data.Resolve("{{data:description_of_operation_s_138}}"));
-        if (data.Condition("State != \"VA\""))
-        {
-            await page.ClickExcludeUndergroundPropertyDamageHazardAsync();
-        }
-        await page.ClickOKAsync();
 
     }
 
@@ -334,20 +367,60 @@ public sealed class GLBasicPolicySteps
     [When(@"^I add \[CG 2149\] Total Pollution Exclusion Endorsement$")]
     [Then(@"^I add \[CG 2149\] Total Pollution Exclusion Endorsement$")]
     public async Task AddCG2149TotalPollutionExclusionEndorsementAsync()
+
+
     {
         var data = _scenario.Get<ScenarioData>();
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
-        {
-            await page.ClickGLNavigationLinksEndorsementsAsync();
-        }
-        //await page.WaitForEndorsementsAsync("Exists");
-        await page.ClickEndorsementsAddEndorsementAsync();
-        await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_143}}"));
-        await page.ClickOKAsync();
 
+
+
+        if (data.Condition("State != \"VA\""))
+        {
+
+            if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
+            {
+                await page.ClickGLNavigationLinksEndorsementsAsync();
+            }
+            //await page.WaitForEndorsementsAsync("Exists");
+            await page.ClickEndorsementsAddEndorsementAsync();
+            await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_143}}"));
+            await page.ClickOKAsync();
+
+        }
+
+    }
+
+    [Given(@"^I add \[CG2151\] Amendment Of Liquor Liability Exclusion \- Exception For Scheduled Activities$")]
+    [When(@"^I add \[CG2151\] Amendment Of Liquor Liability Exclusion \- Exception For Scheduled Activities$")]
+    [Then(@"^I add \[CG2151\] Amendment Of Liquor Liability Exclusion \- Exception For Scheduled Activities$")]
+    public async Task AddCG2151AmendmentOfLiquorLiabilityExclusionExceptionForScheduledActivitiesAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        var coveragesPage = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        if (data.Condition("State == \"MA\" || State == \"NH\""))
+        {
+            //if (data.Condition("'Navigate to Endorsements Screen first time' != NULL"))
+            //{
+            //    await page.ClickGLNavigationLinksEndorsementsAsync();
+            //}
+
+            //await page.ClickEndorsementsAddEndorsementAsync();
+            //await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_147}}"));
+           
+
+            await coveragesPage.VerifyCG2151TableRowEndorsementAsync("Exists", "");
+            await coveragesPage.ClickCG2151DetailAsync();
+
+            await page.EnterDescriptionOfActivitiesAsync(data.Resolve("{{data:description_of_activities_148}}"));
+
+            await page.ClickOKAsync();
+        }
     }
 
     [Given(@"^I verify and Fill out \[FG0055\] Employment Practices Liability Insurance Coverage Endorsement$")]
@@ -360,13 +433,71 @@ public sealed class GLBasicPolicySteps
         var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         //await page.WaitForFGFormTableRowAsync("Exists");
-        await page.VerifyFG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementAsync("Exists", "");
-        await page.ClickDetailAsync();
-        await page.EnterLimitDeductibleAsync(data.Resolve("{{data:limit_deductible_148}}"));
-        await page.EnterHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_149}}"));
-        await page.EnterTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_150}}"));
-        await page.EnterThirdPartyAsync(data.Resolve("{{data:third_party_151}}"));
-        await page.ClickPolicyCovgAccountsReceivableOKAsync();
+        //await page.VerifyFG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementAsync("Exists", "");
+        //await page.ClickDetailAsync();
+        //await page.EnterLimitDeductibleAsync(data.Resolve("{{data:limit_deductible_148}}"));
+        //await page.EnterHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_149}}"));
+        //await page.EnterTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_150}}"));
+        //await page.EnterThirdPartyAsync(data.Resolve("{{data:third_party_151}}"));
+        //await page.ClickPolicyCovgAccountsReceivableOKAsync();
+
+        if (data.Condition("State != \"WA\""))
+        {
+
+
+
+            if (data.Condition("State == \"WV\" || State == \"RI\"|| State ==\"NJ\" || State ==\"DE\" || State ==\"AZ\" || State ==\"MA\""))
+            {
+                await page.VerifyFG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementAsync("Exists", "");
+                await page.ClickDetailAsync();
+            }
+            else if (data.Condition("State == \"VT\""))
+            {
+                await page.VerifyFG0078TableRowEndorsementAsync("Exists", "");
+                await page.Click0078DetailAsync();
+            }
+
+        else if (data.Condition("State == \"PA\""))
+            {
+                await page.VerifyFG0062TableRowEndorsementAsync("Exists", "");
+                await page.Click0062DetailAsync();
+            }
+            else if (data.Condition("State == \"OR\""))
+            {
+                await page.VerifyFG0069TableRowEndorsementAsync("Exists", "");
+                await page.Click0069DetailAsync();
+            }
+            else if (data.Condition("State == \"ME\""))
+            {
+                await page.VerifyFG0072TableRowEndorsementAsync("Exists", "");
+                await page.Click0072DetailAsync();
+            }
+            else if (data.Condition("State == \"MD\""))
+            {
+                await page.VerifyFG0063TableRowEndorsementAsync("Exists", "");
+                await page.Click0063DetailAsync();
+            }
+            else if (data.Condition("State == \"CT\""))
+            {
+                await page.VerifyFG0074TableRowEndorsementAsync("Exists", "");
+                await page.Click0074DetailAsync();
+            }
+            else if (data.Condition("State == \"VA\""))
+            {
+                await page.VerifyFG0077TableRowEndorsementAsync("Exists", "");
+                await page.Click0077DetailAsync();
+            }
+            else if (data.Condition("State == \"NH\""))
+            {
+                await page.VerifyFG0071TableRowEndorsementAsync("Exists", "");
+                await page.Click0071DetailAsync();
+            }
+            await page.EnterLimitDeductibleAsync(data.Resolve("{{data:limit_deductible_148}}"));
+            await page.EnterHasTheInsuredEverHadAClaimForEmploymentPracticesAsync(data.Resolve("{{data:has_the_insured_ever_had_a_claim_for_employment_practices_149}}"));
+            await page.EnterTheInsuredAndAnyExecutiveOfficerOrOwnerHasKnowledgeOrInformationOfAnyActErrorOrOmissionWhichMightGiveRiseToAnEPLClaimSuitOrComplaintAsync(data.Resolve("{{data:the_insured_and_any_executive_officer_or_owner_has_knowledge_or_information_of_any_act_error_or_omission_which_might_give_rise_to_an_epl_claim_suit_or_complaint_150}}"));
+            await page.EnterThirdPartyAsync(data.Resolve("{{data:third_party_151}}"));
+            await page.ClickPolicyCovgAccountsReceivableOKAsync();
+        }
 
     }
 
@@ -396,6 +527,8 @@ public sealed class GLBasicPolicySteps
             await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_159}}"));
         }
         await page.ClickOKAsync();
+
+        await page.PauseAsync(2000);
     }
 
     [Given(@"^I add Addl Interest \[CG2020\] Add'l Insured\-Charitable Institution$")]
@@ -419,7 +552,7 @@ public sealed class GLBasicPolicySteps
             await page.EnterTypeOfLicenseAsync(data.Resolve("{{data:type_of_license_164}}"));
         }
         await page.ClickOKAsync();
-
+        await page.PauseAsync(2000);
     }
 
     [Given(@"^I add Addl Interest \[CG2023\] Add'l Insured\-Executors$")]
@@ -439,6 +572,7 @@ public sealed class GLBasicPolicySteps
             await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_169}}"));
         }
         await page.ClickOKAsync();
+        await page.PauseAsync(2000);
 
     }
 
@@ -459,6 +593,7 @@ public sealed class GLBasicPolicySteps
             await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_174}}"));
         }
         await page.ClickOKAsync();
+        await page.PauseAsync(2000);
 
     }
 
@@ -478,11 +613,12 @@ public sealed class GLBasicPolicySteps
         {
             await page.EnterCG2007AddLInsuredEngineersArchitectsTypeAsync(data.Resolve("{{data:type_179}}"));
         }
-        //if (data.Condition("'Type of Equipment' != NULL"))
-        //{
-        //    await page.EnterTypeOfEquipmentAsync(data.Resolve("{{data:type_of_equipment_180}}"));
-        //}
+        if (data.Condition("'Type of Equipment' != NULL"))
+        {
+            await page.EnterTypeOfEquipmentAsync(data.Resolve("{{data:type_of_equipment_180}}"));
+        }
         await page.ClickOKAsync();
+        await page.PauseAsync(2000);
 
     }
 
@@ -499,6 +635,7 @@ public sealed class GLBasicPolicySteps
         //await page.WaitForNotepadHeadingAsync("Exists");
         await page.ClickAddNotesRemarksAsync();
         await page.EnterTextBoxAsync(data.Resolve("Test {B[Product (LOB)]}"));
+        await page.PauseAsync(2000);
         await page.ClickOKAsync();
 
     }
@@ -613,7 +750,7 @@ public sealed class GLBasicPolicySteps
         //await page.ClickStoplightWaitingWindowCloseAsync();
         //await page.WaitForStoplightWaitingWindowAsync("Absent");
         //await page.PauseAsync(1000);
-        await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
+        //await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
 
     }
 

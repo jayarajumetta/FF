@@ -39,7 +39,33 @@ public sealed class CoveragesLocators
     public ILocator EstimatedPremium => _page.Locator("input[fieldref=\"PolicyInput.EstimatedPremium\"]");
     public ILocator FG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsement => _page.GetByText("Employment Practices Liability Insurance Coverage Endorsement", new() { Exact = true });
 
+
+
+
+    public ILocator FG0078Detail => _page.Locator("//tr[.//*[contains(text(),'Employment Practices Liability Insurance Coverage Endorsement (VT)')]]//span[.='Detail']");
+
+
+
+    public ILocator FG0062 => _page.Locator("//tr[.//div[@fieldref='CovEndorsementsInput.FormNumber' and normalize-space()='FG0062'] and .//div[@fieldref='CovEndorsementsInput.FormName' and contains(normalize-space(),'Employment Practices Liability Insurance Coverage Endorsement (PA)')]]//span[normalize-space()='Detail']");
+
+    public ILocator FG0069 => _page.Locator("//tr[.//div[@fieldref='CovEndorsementsInput.FormNumber' and normalize-space()='FG0069'] and .//div[@fieldref='CovEndorsementsInput.FormName' and contains(normalize-space(),'Employment Practices Liability Insurance Coverage Endorsement (OR)')]]//span[normalize-space()='Detail']");
+
+    public ILocator FG0072 => _page.Locator("//tr[.//div[@fieldref='CovEndorsementsInput.FormNumber' and normalize-space()='FG0072'] and .//div[@fieldref='CovEndorsementsInput.FormName' and contains(normalize-space(),'Employment Practices Liability Insurance Coverage Endorsement (ME)')]]//span[normalize-space()='Detail']");
+
+    public ILocator FG0063 => _page.Locator("//tr[.//div[@fieldref='CovEndorsementsInput.FormNumber' and normalize-space()='FG0063'] and .//div[@fieldref='CovEndorsementsInput.FormName' and contains(normalize-space(),'Employment Practices Liability Insurance Coverage Endorsement (MD)')]]//span[normalize-space()='Detail']");
+
+    public ILocator FG0074 => _page.Locator("//tr[.//div[@fieldref='CovEndorsementsInput.FormNumber' and normalize-space()='FG0074'] and .//div[@fieldref='CovEndorsementsInput.FormName' and contains(normalize-space(),'Employment Practices Liability Insurance Coverage Endorsement (CT)')]]//span[normalize-space()='Detail']");
+
+    public ILocator FG0077 => _page.Locator("//tr[.//div[@fieldref='CovEndorsementsInput.FormNumber' and normalize-space()='FG0077'] and .//div[@fieldref='CovEndorsementsInput.FormName' and contains(normalize-space(),'Employment Practices Liability Insurance Coverage Endorsement (VA)')]]//span[normalize-space()='Detail']");
+
+    public ILocator FG0071 => _page.Locator("//tr[.//div[@fieldref='CovEndorsementsInput.FormNumber' and normalize-space()='FG0071'] and .//div[@fieldref='CovEndorsementsInput.FormName' and contains(normalize-space(),'Employment Practices Liability Insurance Coverage Endorsement (NH)')]]//span[normalize-space()='Detail']");
+
+    public ILocator CG2151 => _page.Locator("//tr[.//div[@fieldref='CovEndorsementsInput.FormNumber' and normalize-space()='CG2151'] and .//div[@fieldref='CovEndorsementsInput.FormName' and contains(normalize-space(),'Amendment Of Liquor Liability Exclusion - Exception For Scheduled Activities')]]//span[normalize-space()='Detail']");
+
     public ILocator FGFormTableRow => _page.GetByText("FG0055", new() { Exact = true });
+
+
+    
 
     public ILocator Fungus => _page.Locator("input[fieldref=\"CovFungusInput.Indicator\"]");
     public ILocator GL => _page.Locator("input[type='checkbox'][fieldref='LineInput.Selected'][name='boolean_2F6']");
@@ -52,7 +78,7 @@ public sealed class CoveragesLocators
 
     public ILocator LimitDeductible => _page.Locator("input[fieldref='CovEndorsementsInput.EPLILimitDeductible']");
 
-
+ 
     public ILocator IMNavigationLinksPolicyCovg => _page.GetByRole(AriaRole.Link, new() { Name = "Policy Covg", Exact = true });
 
 
