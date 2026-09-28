@@ -76,6 +76,8 @@ public sealed class CoveragesPage
 
     public Task PressCoverageFormToBeAddedAsync(string key) =>
         _ui.PressAsync(_locators.CoverageFormToBeAdded, key, new ControlIntent("Coverages", "CoverageFormToBeAdded"));
+    public Task WaitForDescriptionAsync(string expected) =>
+        _ui.WaitAsync(_locators.Description, expected, new ControlIntent("Coverages", "Description"));
 
     public async Task EnterCoverageFormToBeAddedWithRetryAsync(string value, int maxAttempts = 3, int waitBeforeMs = 1000, int delayMs = 20)
     {
@@ -97,6 +99,9 @@ public sealed class CoveragesPage
     public Task EnterDescriptionAsync(string value) =>
         _ui.FillAsync(_locators.Description, value, new ControlIntent("Coverages", "Description"));
 
+    public Task<string> CaptureDescriptionAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.Description, property, new ControlIntent("Coverages", "Description"));
+
     public Task PressDescriptionAsync(string key) =>
         _ui.PressAsync(_locators.Description, key, new ControlIntent("Coverages", "Description"));
 
@@ -115,6 +120,41 @@ public sealed class CoveragesPage
     public Task ClickDetailAsync() =>
         _ui.ClickAsync(_locators.Detail, new ControlIntent("Coverages", "Detail"));
 
+    public Task Click0078DetailAsync() =>
+      _ui.ClickAsync(_locators.FG0078Detail, new ControlIntent("Coverages", "FG0078Detail"));
+
+
+
+
+
+
+    public Task Click0062DetailAsync() =>
+     _ui.ClickAsync(_locators.FG0062, new ControlIntent("Coverages", "FG0078Detail"));
+
+    public Task Click0069DetailAsync() =>
+     _ui.ClickAsync(_locators.FG0069, new ControlIntent("Coverages", "FG0069Detail"));
+
+    public Task Click0072DetailAsync() =>
+     _ui.ClickAsync(_locators.FG0072, new ControlIntent("Coverages", "FG0072Detail"));
+
+    public Task Click0063DetailAsync() =>
+     _ui.ClickAsync(_locators.FG0063, new ControlIntent("Coverages", "FG0063Detail"));
+
+    public Task Click0074DetailAsync() =>
+     _ui.ClickAsync(_locators.FG0074, new ControlIntent("Coverages", "FG0074Detail"));
+
+    public Task Click0077DetailAsync() =>
+     _ui.ClickAsync(_locators.FG0077, new ControlIntent("Coverages", "FG0077Detail"));
+
+    public Task Click0071DetailAsync() =>
+     _ui.ClickAsync(_locators.FG0071, new ControlIntent("Coverages", "FG0071Detail"));
+
+    public Task ClickCG2151DetailAsync() =>
+     _ui.ClickAsync(_locators.CG2151, new ControlIntent("Coverages", "CG2151Detail"));
+
+
+
+    
     public Task ClickFG0055DetailAsync() =>
         _ui.ClickAsync(_locators.FG0055Detail, new ControlIntent("Coverages", "FG0055Detail"));
 
@@ -198,6 +238,36 @@ public sealed class CoveragesPage
 
     public Task ClickFG0078DetailAsync() =>
         _ui.ClickAsync(_locators.FG0078Detail, new ControlIntent("Coverages", "FG0078Detail"));
+
+    public Task VerifyFG0078TableRowEndorsementAsync(string expected, string property) =>
+      _ui.VerifyAsync(_locators.FG0078Detail, expected, property, new ControlIntent("Coverages", "FG0078TableRowEndorsement"));
+
+
+    public Task VerifyFG0062TableRowEndorsementAsync(string expected, string property) =>
+    _ui.VerifyAsync(_locators.FG0062, expected, property, new ControlIntent("Coverages", "FG0078TableRowEndorsement"));
+
+    public Task VerifyFG0069TableRowEndorsementAsync(string expected, string property) =>
+    _ui.VerifyAsync(_locators.FG0069, expected, property, new ControlIntent("Coverages", "FG0069TableRowEndorsement"));
+
+    public Task VerifyFG0072TableRowEndorsementAsync(string expected, string property) =>
+    _ui.VerifyAsync(_locators.FG0072, expected, property, new ControlIntent("Coverages", "FG0072TableRowEndorsement"));
+
+    public Task VerifyFG0063TableRowEndorsementAsync(string expected, string property) =>
+    _ui.VerifyAsync(_locators.FG0063, expected, property, new ControlIntent("Coverages", "FG0063TableRowEndorsement"));
+
+    public Task VerifyFG0077TableRowEndorsementAsync(string expected, string property) =>
+    _ui.VerifyAsync(_locators.FG0077, expected, property, new ControlIntent("Coverages", "FG0077TableRowEndorsement"));
+
+    public Task VerifyFG0071TableRowEndorsementAsync(string expected, string property) =>
+    _ui.VerifyAsync(_locators.FG0071, expected, property, new ControlIntent("Coverages", "FG0071TableRowEndorsement"));
+
+    public Task VerifyCG2151TableRowEndorsementAsync(string expected, string property) =>
+    _ui.VerifyAsync(_locators.CG2151, expected, property, new ControlIntent("Coverages", "CG2151TableRowEndorsement"));
+
+    public Task VerifyFG0074TableRowEndorsementAsync(string expected, string property) =>
+    _ui.VerifyAsync(_locators.FG0074, expected, property, new ControlIntent("Coverages", "FG0074TableRowEndorsement"));
+
+
 
     public Task WaitForFGFormTableRowAsync(string expected) =>
         _ui.WaitAsync(_locators.FGFormTableRow, expected, new ControlIntent("Coverages", "FGFormTableRow"));
