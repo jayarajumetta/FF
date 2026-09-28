@@ -335,6 +335,9 @@ public sealed class ClientSearchPage
     public Task<bool> HasYearsInBusinessAsync() =>
         _ui.ExistsAsync(_locators.YearsInBusiness);
 
+    public Task<bool> ExistsYearsInBusinessAsync() =>
+        _ui.ExistsAsync(_locators.YearsInBusiness);
+
     public Task EnterYearsInBusinessAsync(string value) =>
         _ui.FillAsync(_locators.YearsInBusiness, value, new ControlIntent("ClientSearch", "YearsInBusiness"));
 
