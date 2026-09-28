@@ -150,7 +150,7 @@ public sealed class NavigationPage
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "SignsHeading"));
 
     public Task ClickGLNavigationLinksAddlInterestsAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "GLNavigationLinksAddlInterests"));
+        _ui.ClickAsync(_locators.AddInterests, new ControlIntent("Navigation", "GLNavigationLinksAddlInterests"));
 
     public Task EnterAddressAsync(string value) =>
         _ui.FillAsync(_locators.Address, value, new ControlIntent("Navigation", "Address"));
@@ -324,7 +324,7 @@ public sealed class NavigationPage
         _ui.ClickAsync(_locators.Billing, new ControlIntent("Navigation", "NavigationBilling"));
 
     public Task WaitForBillingAsync(string expected) =>
-        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "Billing"));
+        _ui.WaitAsync(_locators.Billing, expected, new ControlIntent("Navigation", "Billing"));
 
     public Task EnterBodyStyleAsync(string value) =>
         _ui.FillAsync(_locators.BodyStyle, value, new ControlIntent("Navigation", "BodyStyle"));
@@ -429,7 +429,7 @@ public sealed class NavigationPage
         _ui.ClickAsync(_locators.ExcludeUndergroundPropertyDamageHazard, new ControlIntent("Navigation", "ExcludeUndergroundPropertyDamageHazard"));
 
     public Task ClickCGLAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "CGL"));
+        _ui.ClickAsync(_locators.CGL, new ControlIntent("Navigation", "CGL"));
 
     public Task EnterCGLLimitsAsync(string value) =>
         _ui.FillAsync(_locators.CGLLimits, value, new ControlIntent("Navigation", "CGLLimits"));
@@ -896,6 +896,19 @@ public sealed class NavigationPage
     public Task EnterDescriptionOfSpecifiedOperationAsync(string value) =>
         _ui.FillAsync(_locators.DescriptionOfSpecifiedOperation, value, new ControlIntent("Navigation", "DescriptionOfSpecifiedOperation"));
 
+
+    public async Task<bool> IsEstimatedPremiumAvailableAsync() =>
+        await _locators.EstimatedPremium.CountAsync() > 0;
+
+
+    public Task EnterEstimatedPremiumAsync(string value) =>
+        _ui.FillAsync(_locators.EstimatedPremium, value, new ControlIntent("Navigation", "EstimatedPremium"));
+        public Task ClickInsuranceScoreConsentAsync() =>
+        _ui.ClickAsync(_locators.InsuranceScoreConsent, new ControlIntent("Underwriting", "InsuranceScoreConsent"));
+
+    public Task ClickInsuranceScoreAsync() =>
+     _ui.ClickAsync(_locators.InsuranceScoreConsent, new ControlIntent("Underwriting", "InsuranceScore"));
+
     public Task PressDescriptionOfSpecifiedOperationAsync(string key) =>
         _ui.PressAsync(_locators.DescriptionOfSpecifiedOperation, key, new ControlIntent("Navigation", "DescriptionOfSpecifiedOperation"));
 
@@ -1055,6 +1068,16 @@ public sealed class NavigationPage
     public Task EnterCG2401NonBindingArbitrationEndorsementTypeAsync(string value) =>
         _ui.FillAsync(_locators.CoverageEndorsementType, value, new ControlIntent("Navigation", "CG2401NonBindingArbitrationEndorsementType"));
 
+
+    public Task EnterDescriptionOfActivitiesAsync(string value) =>
+        _ui.FillAsync(_locators.DescriptionOfActivities, value, new ControlIntent("Navigation", "DescriptionOfActivities"));
+
+
+
+
+
+
+
     public Task PressCG2401NonBindingArbitrationEndorsementTypeAsync(string key) =>
         _ui.PressAsync(_locators.CoverageEndorsementType, key, new ControlIntent("Navigation", "CG2401NonBindingArbitrationEndorsementType"));
 
@@ -1077,7 +1100,7 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.CoverageEndorsementType, key, new ControlIntent("Navigation", "EndorsementsPartnersOfficersAndOthersExclusionEndorsementType"));
 
     public Task ClickGLNavigationLinksEndorsementsAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "GLNavigationLinksEndorsements"));
+        _ui.ClickAsync(_locators.Endorsements, new ControlIntent("Navigation", "GLNavigationLinksEndorsements"));
 
     public Task WaitForEndorsementsAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "Endorsements"));
@@ -1254,7 +1277,7 @@ public sealed class NavigationPage
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "GeneralLiabilityInformation"));
 
     public Task ClickGeneralLiabilityInformationAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "GeneralLiabilityInformation"));
+        _ui.ClickAsync(_locators.ProductsOrCompletedOps, new ControlIntent("Navigation", "GeneralLiabilityInformation"));
 
     public Task WaitForGeneralUWQuestionsAsync(string expected) =>
         _ui.WaitAsync(_locators.GeneralUWQuestions, expected, new ControlIntent("Navigation", "GeneralUWQuestions"));
@@ -1911,7 +1934,7 @@ public sealed class NavigationPage
         _ui.ClickAsync(_locators.Notepad, new ControlIntent("Navigation", "Notepad"));
 
     public Task WaitForNotepadHeadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "NotepadHeading"));
+        _ui.WaitAsync(_locators.Notepad, expected, new ControlIntent("Navigation", "NotepadHeading"));
 
     public Task EnterNumberOfEmployeesAsync(string value) =>
         _ui.FillAsync(_locators.NumberOfEmployees, value, new ControlIntent("Navigation", "NumberOfEmployees"));
@@ -2160,7 +2183,7 @@ public sealed class NavigationPage
         _ui.ClickAsync(_locators.PolicyCovgerage, new ControlIntent("Navigation", "PolicyCovgerage"));
 
     public Task WaitForPolicyCovgGLPolicyCovgAsync(string expected) =>
-        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "PolicyCovgGLPolicyCovg"));
+        _ui.WaitAsync(_locators.PolicyCovgerage, expected, new ControlIntent("Navigation", "PolicyCovgGLPolicyCovg"));
 
     public Task ClickIMNavigationLinksPolicyCovgAsync() =>
         _ui.ClickAsync(_locators.PolicyCovgerage, new ControlIntent("Navigation", "IMNavigationLinksPolicyCovg"));
@@ -2665,6 +2688,9 @@ public sealed class NavigationPage
 
     public Task ClickSubmissionAsync() =>
         _ui.ClickAsync(_locators.Submission, new ControlIntent("Navigation", "Submission"));
+
+    public Task ClickCompleteApplicationAsync() =>
+        _ui.ClickAsync(_locators.completeApplication, new ControlIntent("Navigation", "Complete Application"));
 
     public Task WaitForSubmissionHeadingAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTop, expected, new ControlIntent("Navigation", "SubmissionHeading"));
