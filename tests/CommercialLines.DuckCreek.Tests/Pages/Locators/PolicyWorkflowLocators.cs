@@ -52,6 +52,7 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator IncludeCommercialAuto => _page.Locator("input[fieldref=\"LineUmbrellaCommercialAuto.IncludeCommercialAuto\"]").First;
 
+    public ILocator UMLimits => _page.Locator("input[fieldref=\"LineInput.UMLimits\"]");
     public ILocator IncludeCommercialPackagePolicyLiability => _page.Locator("input[fieldref=\"LineUmbrellaCPPLiability.IncludeCPPLiability\"]").First;
 
     public ILocator IncludeEmployersLiability => _page.Locator("input[fieldref=\"LineUmbrellaEmployersLiability.IncludeEmployersLiability\"]");

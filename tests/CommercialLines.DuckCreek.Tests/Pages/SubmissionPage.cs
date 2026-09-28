@@ -43,9 +43,11 @@ public sealed class SubmissionPage
 
     public Task WaitForStoplightWaitingWindowAsync(string expected) =>
         _ui.WaitAsync(_locators.StoplightWaitingWindow, expected, new ControlIntent("Submission", "StoplightWaitingWindow"));
+    public Task WaitStoplightWaitingWindowCloseAsync(string expected) =>
+        _ui.WaitAsync(_locators.StoplightWaitingWindowFirstCloseButtonOnError, expected, new ControlIntent("Navigation", "SubmissionHeading"));
 
     public Task VerifyStoplightWaitingWindowCloseAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.StoplightWaitingWindowClose, expected, property, new ControlIntent("Submission", "StoplightWaitingWindowClose"));
+        _ui.VerifyAsync(_locators.StoplightWaitingWindowFirstCloseButtonOnError, expected, property, new ControlIntent("Submission", "StoplightWaitingWindowClose"));
 
     public Task ClickStoplightWaitingWindowCloseAsync() =>
         _ui.ClickAsync(_locators.StoplightWaitingWindowClose, new ControlIntent("Submission", "StoplightWaitingWindowClose"));

@@ -17,14 +17,18 @@ public sealed class FormsLocators
 
     public ILocator EffectiveDate => _page.Locator("input[fieldref=\"UmbrellaBusinessOwnersInput.EffectiveDate\"]");
 
+    public ILocator LiquifiedGas => _page.Locator("input[fieldref=\"UmbrellaBusinessOwnersInput.PetroleumGasExposure\"]");
+
+
     public ILocator EmployerSLiabilityCheckBox => _page.Locator("input[fieldref=\"UmbrellaBusinessOwnersInput.EmployersLiability\"]");
 
     public ILocator ExpirationDate => _page.Locator("input[fieldref=\"UmbrellaBusinessOwnersInput.ExpirationDate\"]");
 
+    public ILocator YearBuilt1980 => _page.Locator("div[fieldref=\"UmbrellaGeneralLiabilityInput.BuiltPrior1980\"], input[fieldref=\"UmbrellaSFP10LiabilityInput.BuiltPrior1980\"], div[fieldref=\"UmbrellaBusinessOwnersInput.BuiltPrior1980\"]");
 
     public ILocator ImportPolicyDataButton => _page.GetByRole(AriaRole.Link, new() { Name = "Import Policy Data", Exact = true });
 
-    public ILocator LiabilityLimit => _page.Locator("input[fieldref=\"UmbrellaCommercialAutoInput.LiabilityLimit\"]");
+    public ILocator LiabilityLimit => _page.Locator("input[fieldref=\"UmbrellaCommercialAutoInput.LiabilityLimit\"], input[fieldref=\"UmbrellaBusinessOwnersInputLimits.BusinessOwnersLiabilityLimit\"]");
 
     public ILocator LoadingMessage => _page.Locator("[id=\"loadingMessage\"]");
 

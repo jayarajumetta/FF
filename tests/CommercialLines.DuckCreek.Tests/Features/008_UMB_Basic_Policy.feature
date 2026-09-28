@@ -39,8 +39,7 @@ Feature: UMB Basic Policy
     And I complete required submission information
     And I run Stoplight
     And I verify values in premium fields
-    #And I complete forms verification UMB
-    #And I sign out of the application
+    And I complete forms verification UMB
 
     Examples:
       | stateCode | dataFile                                             | stateVariant | stateName      | externalDataFile                    |
