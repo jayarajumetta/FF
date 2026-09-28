@@ -1,0 +1,135 @@
+name: $(Date:yyyyMMdd).$(Rev:r)
+trigger: none
+pr: none
+
+parameters:
+- name: buildPipelineDefinitionId
+  type: string
+  default: '0'
+- name: ciBuildId
+  type: string
+  default: '0'
+- name: agentPool
+  type: string
+  default: 'Azure Pipelines'
+- name: agentCount
+  type: number
+  default: 2
+  values: [1, 2, 3, 4, 5, 6, 7, 8]
+- name: buildConfiguration
+  type: string
+  default: Release
+  values: [Debug, Release]
+- name: testPlanId
+  type: string
+  default: '0'
+- name: singleTestCaseId
+  type: string
+  default: '0'
+- name: singleCaseParentSuiteId
+  type: string
+  default: '0'
+- name: suiteId
+  type: string
+  default: '0'
+- name: testConfigurationId
+  type: string
+  default: '0'
+- name: testFilter
+  type: string
+  default: ''
+- name: headless
+  type: boolean
+  default: true
+- name: runSingleTestCase
+  type: boolean
+  default: false
+- name: runTestPlanSuite
+  type: boolean
+  default: false
+- name: runDllOrTags
+  type: boolean
+  default: true
+
+pool:
+  name: ${{ parameters.agentPool }}
+  ${{ if eq(parameters.agentPool, 'Azure Pipelines') }}:
+    vmImage: windows-latest
+  ${{ else }}:
+    demands:
+    - Agent.OS -equals Windows_NT
+
+variables:
+  CiDefinitionId: ${{ parameters.buildPipelineDefinitionId }}
+  CiBuildId: ${{ parameters.ciBuildId }}
+  BuildConfiguration: ${{ parameters.buildConfiguration }}
+  Headless: ${{ parameters.headless }}
+  PlaywrightBrowser: chromium
+  AssemblyTestFilter: ${{ parameters.testFilter }}
+  TestPlanId: ${{ parameters.testPlanId }}
+  SingleTestCaseId: ${{ parameters.singleTestCaseId }}
+  SingleCaseParentSuiteId: ${{ parameters.singleCaseParentSuiteId }}
+  SuiteId: ${{ parameters.suiteId }}
+  TestConfigurationId: ${{ parameters.testConfigurationId }}
+  EVIDENCE_TRANSPORT: pipeline
+  PackageDownloadRoot: '$(Agent.TempDirectory)\ci-$(Build.BuildId)-$(System.JobId)-$(System.JobAttempt)'
+  ArtifactRoot: '$(PackageDownloadRoot)\testpackage'
+
+stages:
+- stage: ExecuteAndCollect
+  displayName: Execute selected modes and consolidate every agent
+  jobs:
+  - job: ValidateInput
+    steps:
+    - checkout: none
+    - powershell: |
+        $ErrorActionPreference = 'Stop'
+        if ($env:CIDEFINITIONID -notmatch '^[1-9][0-9]*$' -or $env:CIBUILDID -notmatch '^[1-9][0-9]*$') {
+          throw 'Set buildPipelineDefinitionId and ciBuildId to the successful CI definition and build IDs. Latest is deliberately not used.'
+        }
+        if (-not ([Convert]::ToBoolean($env:RUN_SINGLE) -or [Convert]::ToBoolean($env:RUN_SUITE) -or [Convert]::ToBoolean($env:RUN_ASSEMBLY))) {
+          throw 'Select at least one execution mode.'
+        }
+        $uri = "$($env:SYSTEM_COLLECTIONURI.TrimEnd('/'))/$env:SYSTEM_TEAMPROJECTID/_apis/build/builds/$($env:CIBUILDID)?api-version=7.1"
+        $build = Invoke-RestMethod -Uri $uri -Headers @{ Authorization = "Bearer $env:SYSTEM_ACCESSTOKEN" }
+        if ([string]$build.definition.id -ne $env:CIDEFINITIONID -or $build.status -ne 'completed' -or $build.result -ne 'succeeded') {
+          throw 'The selected CI build must be completed successfully and belong to the selected definition.'
+        }
+      env:
+        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+        RUN_SINGLE: ${{ parameters.runSingleTestCase }}
+        RUN_SUITE: ${{ parameters.runTestPlanSuite }}
+        RUN_ASSEMBLY: ${{ parameters.runDllOrTags }}
+      displayName: Validate immutable CI selection and execution modes
+  - ${{ if parameters.runSingleTestCase }}:
+    - template: pipelines/templates/execute-tests.yml
+      parameters:
+        mode: SingleCase
+        agents: 1
+  - ${{ if parameters.runTestPlanSuite }}:
+    - template: pipelines/templates/execute-tests.yml
+      parameters:
+        mode: Suite
+        agents: ${{ parameters.agentCount }}
+  - ${{ if parameters.runDllOrTags }}:
+    - template: pipelines/templates/execute-tests.yml
+      parameters:
+        mode: Assembly
+        agents: ${{ parameters.agentCount }}
+  - template: pipelines/templates/collect-results.yml
+    parameters:
+      dependencies:
+      - ValidateInput
+      - ${{ if parameters.runSingleTestCase }}:
+        - RunSingleCase
+      - ${{ if parameters.runTestPlanSuite }}:
+        - RunSuite
+      - ${{ if parameters.runDllOrTags }}:
+        - RunAssembly
+      expected:
+        ${{ if parameters.runSingleTestCase }}:
+          SingleCase: 1
+        ${{ if parameters.runTestPlanSuite }}:
+          Suite: ${{ parameters.agentCount }}
+        ${{ if parameters.runDllOrTags }}:
+          Assembly: ${{ parameters.agentCount }}

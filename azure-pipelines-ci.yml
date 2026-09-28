@@ -1,0 +1,63 @@
+name: $(Date:yyyyMMdd).$(Rev:r)
+trigger:
+  branches:
+    include: [main,sgs/develop]
+pr:
+  branches:
+    include: [main,sgs/develop]
+
+parameters:
+- name: agentPool
+  type: string
+  default: 'Azure Pipelines'
+
+variables:
+  BuildConfiguration: Release
+  ArtifactName: testpackage
+
+jobs:
+- job: BuildTestPackage
+  displayName: Build and publish test package
+  pool:
+    name: ${{ parameters.agentPool }}
+    ${{ if eq(parameters.agentPool, 'Azure Pipelines') }}:
+      vmImage: windows-latest
+    ${{ else }}:
+      demands:
+      - Agent.OS -equals Windows_NT
+  steps:
+  - checkout: self
+    clean: true
+
+  - task: UseDotNet@2
+    displayName: Install .NET 8 SDK
+    inputs:
+      packageType: sdk
+      version: 8.0.x
+
+  - powershell: |
+      $ErrorActionPreference = 'Stop'
+      dotnet restore .\ToscaCanonicalSimple.sln
+      if ($LASTEXITCODE -ne 0) { throw 'dotnet restore failed' }
+    displayName: Restore solution
+
+  - powershell: |
+      $ErrorActionPreference = 'Stop'
+      dotnet build .\ToscaCanonicalSimple.sln -c $(BuildConfiguration) --no-restore
+      if ($LASTEXITCODE -ne 0) { throw 'dotnet build failed' }
+    displayName: Build compiled test binaries
+
+  - task: PowerShell@2
+    displayName: Package compiled bin and release runtime
+    inputs:
+      targetType: filePath
+      filePath: scripts/Build-TestPackage.ps1
+      arguments: '-StagingDirectory "$(Build.ArtifactStagingDirectory)" -BuildConfiguration "$(BuildConfiguration)"'
+      workingDirectory: '$(Build.SourcesDirectory)'
+
+  - task: PublishBuildArtifacts@1
+    displayName: Publish compiled test package
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)\testpackage'
+      ArtifactName: '$(ArtifactName)'
+      publishLocation: Container

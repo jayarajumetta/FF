@@ -1,27 +1,49 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 namespace InsuranceAutomation.Core;
 public sealed class ScenarioData
 {
+    private const long MaxJsonBytes = 5 * 1024 * 1024;
+
     private readonly Dictionary<string, string> _static = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _runtime = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _external = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _randomPatterns = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _canonicalFields = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, string> _stepData = new(StringComparer.OrdinalIgnoreCase);
     private readonly FrameworkConfig _config;
     public ScenarioData(FrameworkConfig config) => _config = config;
     public string CurrentFile { get; private set; } = string.Empty;
     public bool IsLoaded => !string.IsNullOrWhiteSpace(CurrentFile);
+    public void BeginStep() => _stepData.Clear();
+    public IReadOnlyDictionary<string, string> StepSnapshot() => MaskSnapshot(_stepData);
+
+    private string Track(string key, string value)
+    {
+        _stepData[key] = value;
+        return value;
+    }
     public void Load(string scenarioFile, string externalFile)
+    {
+        Reset();
+        CurrentFile = scenarioFile;
+        using var document = OpenScenarioDocument(scenarioFile);
+        PopulateScenario(document.RootElement);
+        LoadExternalData(externalFile);
+    }
+
+    private void Reset()
     {
         _static.Clear();
         _runtime.Clear();
         _external.Clear();
         _randomPatterns.Clear();
         _canonicalFields.Clear();
-        CurrentFile = scenarioFile;
-        using var document = JsonDocument.Parse(File.ReadAllText(scenarioFile));
-        var root = document.RootElement;
+    }
+
+    private void PopulateScenario(JsonElement root)
+    {
         ReadFlatObject(root, "application", _static);
         ReadFlatObject(root, "dimensions", _static);
         ReadFlatObject(root, "values", _static);
@@ -35,7 +57,7 @@ public sealed class ScenarioData
                 }
             }
         }
-        // Canonical fields are optional source-backed test-data aliases.
+
         if (root.TryGetProperty("_canonical", out var canonical) && canonical.ValueKind == JsonValueKind.Object &&
             canonical.TryGetProperty("fields", out var fields) && fields.ValueKind == JsonValueKind.Array)
         {
@@ -56,59 +78,106 @@ public sealed class ScenarioData
             }
         }
         PrimeScenarioAliases();
-        if (File.Exists(externalFile))
-        {
-            using var externalDocument = JsonDocument.Parse(File.ReadAllText(externalFile));
-            var externalRoot = externalDocument.RootElement;
-            Flatten(externalRoot, string.Empty, _external);
-            // ExternalDataOverrides.json uses { "values": { "Business Key": { "value": "..." } } }.
-            // Make the business key directly resolvable without exposing the file structure to tests.
-            if (externalRoot.TryGetProperty("values", out var values) && values.ValueKind == JsonValueKind.Object)
-            {
-                foreach (var property in values.EnumerateObject())
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Object &&
-                        property.Value.TryGetProperty("value", out var valueElement))
-                    {
-                        _external[property.Name] = valueElement.ValueKind == JsonValueKind.String
-                            ? valueElement.GetString() ?? string.Empty
-                            : valueElement.ToString();
-                    }
-                }
-            }
-        }
     }
-    public void LoadSmoke(string baseFile, string stateCode, string stateName, string stateOverridesFile, string externalFile)
+
+    private void LoadExternalData(string externalFile)
     {
-        Load(baseFile, externalFile);
-        var normalizedState = (stateCode ?? string.Empty).Trim().ToUpperInvariant();
-        var normalizedName = (stateName ?? string.Empty).Trim();
-        if (string.IsNullOrWhiteSpace(normalizedState))
-            throw new InvalidOperationException("CLDC smoke stateCode is required.");
-        _runtime["State"] = normalizedState;
-        _runtime["state"] = normalizedState;
-        _runtime["stateCode"] = normalizedState;
-        _runtime["statecode"] = normalizedState;
-        _runtime["stateVariant"] = normalizedState;
-        _runtime["state_variant"] = normalizedState;
-        _runtime["StateName"] = normalizedName;
-        _runtime["stateName"] = normalizedName;
-        _runtime["statename"] = normalizedName;
-        _runtime["state_name"] = normalizedName;
-        if (!File.Exists(stateOverridesFile)) return;
-        using var overrideDocument = JsonDocument.Parse(File.ReadAllText(stateOverridesFile));
-        var overrideRoot = overrideDocument.RootElement;
-        if (!overrideRoot.TryGetProperty("overrides", out var allOverrides) || allOverrides.ValueKind != JsonValueKind.Object) return;
-        var product = Get("productCode", Get("product_lob")).Trim();
-        if (string.IsNullOrWhiteSpace(product) || !allOverrides.TryGetProperty(product, out var productOverrides) || productOverrides.ValueKind != JsonValueKind.Object) return;
-        if (!productOverrides.TryGetProperty(normalizedState, out var stateOverride) || stateOverride.ValueKind != JsonValueKind.Object) return;
-        if (!stateOverride.TryGetProperty("values", out var values) || values.ValueKind != JsonValueKind.Object) return;
+        var externalRelative = SafeFileAccess.ToRepositoryRelativePath(externalFile);
+        if (!SafeFileAccess.TryResolveExistingFileUnderRoot(externalRelative, out var externalPath)) return;
+        externalPath = SafeFileAccess.ResolveExistingFileUnderRoot(externalRelative, MaxJsonBytes, ".json");
+        using var externalDocument = JsonDocument.Parse(File.ReadAllText(externalPath));
+        var externalRoot = externalDocument.RootElement;
+        Flatten(externalRoot, string.Empty, _external);
+        if (!externalRoot.TryGetProperty("values", out var values) || values.ValueKind != JsonValueKind.Object) return;
         foreach (var property in values.EnumerateObject())
         {
-            _runtime[property.Name] = property.Value.ValueKind == JsonValueKind.String
-                ? property.Value.GetString() ?? string.Empty
-                : property.Value.ToString();
+            if (property.Value.ValueKind != JsonValueKind.Object ||
+                !property.Value.TryGetProperty("value", out var valueElement)) continue;
+            _external[property.Name] = valueElement.ValueKind == JsonValueKind.String
+                ? valueElement.GetString() ?? string.Empty
+                : valueElement.ToString();
         }
+    }
+
+    private static JsonDocument OpenScenarioDocument(string scenarioFile)
+    {
+        var repositoryRoot = SafeFileAccess.FindRepositoryRoot();
+        var scenarioRelative = SafeFileAccess.ToRepositoryRelativePath(scenarioFile);
+        JsonDocument Direct()
+        {
+            var scenarioPath = SafeFileAccess.ResolveExistingFileUnderRoot(scenarioRelative, MaxJsonBytes, ".json");
+            return JsonDocument.Parse(File.ReadAllText(scenarioPath));
+        }
+        var scenarioDirectory = Path.GetDirectoryName(scenarioFile);
+        if (string.IsNullOrWhiteSpace(scenarioDirectory)) return Direct();
+        var testDataRoot = Directory.GetParent(scenarioDirectory)?.FullName;
+        if (string.IsNullOrWhiteSpace(testDataRoot)) return Direct();
+        var testDataRootRelative = SafeFileAccess.ToRepositoryRelativePath(testDataRoot);
+        var safeTestDataRoot = SafeFileAccess.ResolveExistingDirectoryUnderRoot(testDataRootRelative);
+        var manifestPath = Path.Combine(safeTestDataRoot, "Layered", "manifest.json");
+        if (!File.Exists(manifestPath)) return Direct();
+
+        try
+        {
+            var manifestRelative = Path.GetRelativePath(repositoryRoot, manifestPath);
+            var safeManifestPath = SafeFileAccess.ResolveExistingFileUnderRoot(manifestRelative, MaxJsonBytes, ".json");
+            if (JsonNode.Parse(File.ReadAllText(safeManifestPath)) is not JsonObject manifest ||
+                manifest["entries"] is not JsonObject entries ||
+                entries[Path.GetFileName(scenarioFile)] is not JsonObject entry)
+            {
+                return Direct();
+            }
+
+            var baseRelative = entry["baseFile"]?.GetValue<string>() ?? string.Empty;
+            var overridesRelative = entry["overridesFile"]?.GetValue<string>() ?? string.Empty;
+            var overrideKey = entry["overrideKey"]?.GetValue<string>() ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(baseRelative) || string.IsNullOrWhiteSpace(overridesRelative) ||
+                string.IsNullOrWhiteSpace(overrideKey)) return Direct();
+
+            var basePath = Path.Combine(safeTestDataRoot, baseRelative.Replace('/', Path.DirectorySeparatorChar));
+            var overridesPath = Path.Combine(safeTestDataRoot, overridesRelative.Replace('/', Path.DirectorySeparatorChar));
+            if (!File.Exists(basePath) || !File.Exists(overridesPath)) return Direct();
+
+            var baseRelativePath = Path.GetRelativePath(repositoryRoot, basePath);
+            var overridesRelativePath = Path.GetRelativePath(repositoryRoot, overridesPath);
+            var safeBasePath = SafeFileAccess.ResolveExistingFileUnderRoot(baseRelativePath, MaxJsonBytes, ".json");
+            var safeOverridesPath = SafeFileAccess.ResolveExistingFileUnderRoot(overridesRelativePath, MaxJsonBytes, ".json");
+            var baseNode = JsonNode.Parse(File.ReadAllText(safeBasePath));
+            if (JsonNode.Parse(File.ReadAllText(safeOverridesPath)) is not JsonObject overrideRoot ||
+                overrideRoot["overrides"] is not JsonObject allOverrides ||
+                allOverrides[overrideKey] is not JsonNode mergePatch)
+            {
+                return Direct();
+            }
+
+            var merged = ApplyMergePatch(baseNode, mergePatch) ?? new JsonObject();
+            return JsonDocument.Parse(merged.ToJsonString());
+        }
+        catch (JsonException ex)
+        {
+            throw new InvalidOperationException(
+                $"Layered test data could not be reconstructed for '{scenarioFile}'. Original Tosca scenario data was not silently substituted. {ex.Message}", ex);
+        }
+    }
+
+    private static JsonNode? ApplyMergePatch(JsonNode? target, JsonNode? patch)
+    {
+        if (patch is null) return null;
+        if (patch is not JsonObject patchObject) return patch.DeepClone();
+
+        var result = target is JsonObject targetObject
+            ? (JsonObject)targetObject.DeepClone()
+            : new JsonObject();
+        foreach (var item in patchObject)
+        {
+            if (item.Value is null)
+            {
+                result.Remove(item.Key);
+                continue;
+            }
+            result[item.Key] = ApplyMergePatch(result[item.Key]?.DeepClone(), item.Value);
+        }
+        return result;
     }
     private void PrimeScenarioAliases()
     {
@@ -121,8 +190,8 @@ public sealed class ScenarioData
     }
     public string GetCanonicalField(string fieldName, string fallback = "")
     {
-        if (_canonicalFields.TryGetValue(fieldName, out var value)) return Resolve(value);
-        return fallback;
+        if (_canonicalFields.TryGetValue(fieldName, out var value)) return Track(fieldName, Resolve(value));
+        return Track(fieldName, fallback);
     }
     public string GetCanonicalFieldRequired(string fieldName)
     {
@@ -142,32 +211,32 @@ public sealed class ScenarioData
     }
     public string Get(string key, string fallback = "")
     {
-        if (_runtime.TryGetValue(key, out var runtimeValue)) return runtimeValue;
+        if (_runtime.TryGetValue(key, out var runtimeValue)) return Track(key, runtimeValue);
         // An explicit external override wins over the source/static value.
         if (_external.TryGetValue(key, out var externalValue) && !IsSynthetic(externalValue))
         {
-            return externalValue;
+            return Track(key, externalValue);
         }
-        if (_static.TryGetValue(key, out var staticValue)) return staticValue;
-        if (_canonicalFields.TryGetValue(key, out var canonicalValue)) return canonicalValue;
-        return fallback;
+        if (_static.TryGetValue(key, out var staticValue)) return Track(key, staticValue);
+        if (_canonicalFields.TryGetValue(key, out var canonicalValue)) return Track(key, canonicalValue);
+        return Track(key, fallback);
     }
     public static bool IsSynthetic(string? value) =>
         string.IsNullOrWhiteSpace(value) || value.Equals("SYNTHETIC_REPLACE_ME", StringComparison.OrdinalIgnoreCase);
-    public void SetRuntime(string key, string value) => _runtime[key] = value;
+    public void SetRuntime(string key, string value) => _runtime[key] = Track(key, value);
     // Kept as a compatibility alias for source-derived runtime captures.
     public void Set(string key, string value) => SetRuntime(key, value);
     public string GenerateRandom(string key, string? pattern = null)
     {
         if (_runtime.TryGetValue(key, out var existing))
         {
-            return existing;
+            return Track(key, existing);
         }
         var effectivePattern = string.IsNullOrWhiteSpace(pattern) && _randomPatterns.TryGetValue(key, out var configured)
             ? configured
             : pattern ?? string.Empty;
         var value = RandomData.Generate(effectivePattern);
-        _runtime[key] = value;
+        SetRuntime(key, value);
         return value;
     }
     // Compatibility alias; random data is created in StepDefinitions.
@@ -304,16 +373,18 @@ public sealed class ScenarioData
     }
     public IReadOnlyDictionary<string, string> Snapshot()
     {
-        var result = new Dictionary<string, string>(_static, StringComparer.OrdinalIgnoreCase);
+        var result = new Dictionary<string, string>(_canonicalFields, StringComparer.OrdinalIgnoreCase);
+        foreach (var item in _static) result[item.Key] = item.Value;
+        foreach (var item in _external)
+            if (!IsSynthetic(item.Value)) result[item.Key] = item.Value;
         foreach (var item in _runtime) result[item.Key] = item.Value;
-        foreach (var key in result.Keys.Where(key =>
-                     key.Contains("password", StringComparison.OrdinalIgnoreCase) ||
-                     key.Contains("secret", StringComparison.OrdinalIgnoreCase)))
-        {
-            result[key] = "***";
-        }
-        return result;
+        return MaskSnapshot(result);
     }
+
+    private static IReadOnlyDictionary<string, string> MaskSnapshot(IReadOnlyDictionary<string, string> values) =>
+        values.ToDictionary(item => item.Key, item => Regex.IsMatch(item.Key,
+            "password|passwd|pwd|secret|token|authorization|api[_ -]?key", RegexOptions.IgnoreCase) ? "***" : item.Value,
+            StringComparer.OrdinalIgnoreCase);
     private static void ReadFlatObject(JsonElement root, string name, IDictionary<string, string> target)
     {
         if (!root.TryGetProperty(name, out var value) || value.ValueKind != JsonValueKind.Object) return;

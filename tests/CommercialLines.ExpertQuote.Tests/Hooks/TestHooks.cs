@@ -18,7 +18,10 @@ public sealed class TestHooks
     }
 
     [BeforeTestRun(Order = -1000)]
-    public static void ValidateConfiguration() => _config = FrameworkConfig.Load();
+    public static void ValidateConfiguration()
+    {
+        _config = FrameworkConfig.Load();
+    }
 
     [BeforeScenario(Order = -100)]
     public void PrepareScenario()
@@ -27,11 +30,12 @@ public sealed class TestHooks
         var scenarioName = Safe(_scenario.ScenarioInfo.Title);
         var artifactDirectory = Path.Combine(
             config.Reporting.ArtifactRoot,
+            typeof(TestHooks).Assembly.GetName().Name!,
             Safe(_feature.FeatureInfo.Title),
             scenarioName + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss_fff") + "_" + Guid.NewGuid().ToString("N")[..8]);
 
         Directory.CreateDirectory(artifactDirectory);
-        var testEvidenceContext = NUnitTestEvidenceContext.Capture(_feature.FeatureInfo.Title, _scenario.ScenarioInfo.Title);
+        var testEvidenceContext = NUnitTestEvidenceContext.Capture(_feature.FeatureInfo.Title, _scenario.ScenarioInfo.Title, artifactDirectory);
         var logger = new RunLogger(artifactDirectory);
         var browser = new BrowserSession(config);
         browser.SetArtifactDirectory(artifactDirectory);
@@ -64,6 +68,7 @@ public sealed class TestHooks
             3);
 
         _scenario.Get<BrowserSession>().BeginStepEvidence();
+        _scenario.Get<ScenarioData>().BeginStep();
         _scenario.Set(_scenario.Get<DeferredVerificationCollector>().Failures.Count, "DeferredVerificationCountAtStepStart");
         _scenario.Get<RunLogger>().Info($"START STEP: {step}");
         _scenario.Get<ScenarioReport>().StartStep(step);
@@ -83,10 +88,10 @@ public sealed class TestHooks
         var failed = _scenario.TestError is not null || deferredInStep;
         string? screenshot = null;
 
-        if (browser.IsStarted && (failed || config.Browser.ScreenshotEachStep))
+        if (browser.IsStarted && failed && config.Browser.ScreenshotOnFailure)
         {
-            screenshot = await browser.CaptureScreenshotAsync(
-                $"{DateTime.Now:HHmmssfff}_{Safe(_scenario.StepContext.StepInfo.Text)}.png");
+            try { screenshot = await browser.CaptureScreenshotAsync("scenario.png"); }
+            catch (Exception ex) { logger.Warn($"Unable to capture failure screenshot: {ex.Message}"); }
         }
 
         if (_scenario.TestError is not null)
@@ -98,7 +103,10 @@ public sealed class TestHooks
 
         var evidence = browser.EndStepEvidence();
         var stepError = _scenario.TestError?.Message ?? (deferredInStep ? "Verification failed after readiness wait and resolved-control interaction; deferred until scenario end." : null);
-        report.EndStep(!failed, stepError, data.Snapshot(), screenshot, evidence);
+        var binding = _scenario.StepContext.StepInfo.BindingMatch?.StepBinding?.Method;
+        report.SetScenarioData(data.Snapshot());
+        report.EndStep(!failed, stepError, data.StepSnapshot(), screenshot, evidence,
+            binding is null ? null : $"{binding.Type.FullName}.{binding.Name}", bindingCaptured: true);
     }
 
     [AfterScenario(Order = 100)]

@@ -21,8 +21,8 @@ public sealed class AccountInformationLocators
     public ILocator IsTheAccountAddressAlsoWhereTheClientResidesYes =>
         _page.Locator("[data-testid='owner.address.useAsResidence-chip-wrapper']").Filter(new() { HasText = "Yes" });
 
-    public ILocator Map => _page.GetByRole(AriaRole.Button, new() { Name = "Map", Exact = true });
-    public ILocator Satellite => _page.GetByRole(AriaRole.Button, new() { Name = "Satellite", Exact = true });
+    public ILocator Map => _page.Locator("button:has-text('Map'), [aria-label='Map'], [data-testid='map'], [title='Map']").First;
+    public ILocator Satellite => _page.Locator("button:has-text('Satellite'), [aria-label='Satellite'], [data-testid='satellite'], [title='Satellite']").First;
     public ILocator AdditionalInterestsNext => _page.GetByRole(AriaRole.Button, new() { Name = "Next", Exact = true });
 
     public ILocator StreetAddress => _page.Locator("[id='owner.address.line1']");

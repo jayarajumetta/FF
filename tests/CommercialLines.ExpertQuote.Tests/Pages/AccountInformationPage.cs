@@ -59,6 +59,9 @@ public sealed class AccountInformationPage
     public Task VerifyMapAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.Map, expected, property, new ControlIntent("AccountInformation", "Map"));
 
+    public Task<bool> IsMapPresentAsync() =>
+        _ui.ExistsAsync(_locators.Map);
+
     public Task SelectMarriedAsync(string value) =>
         _ui.SelectAsync(_locators.Married, value, new ControlIntent("AccountInformation", "Married"));
 
@@ -76,6 +79,9 @@ public sealed class AccountInformationPage
 
     public Task VerifySatelliteAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.Satellite, expected, property, new ControlIntent("AccountInformation", "Satellite"));
+
+    public Task<bool> IsSatellitePresentAsync() =>
+        _ui.ExistsAsync(_locators.Satellite);
 
     public Task SelectStateAsync(string value) =>
         _ui.SelectAsync(_locators.StateDropdown, value, new ControlIntent("AccountInformation", "StateDropdown"));

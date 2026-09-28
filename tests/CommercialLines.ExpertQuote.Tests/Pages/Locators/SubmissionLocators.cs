@@ -11,7 +11,7 @@ public sealed class SubmissionLocators
 
     public ILocator Close => _page.GetByRole(AriaRole.Button, new() { Name = "Close", Exact = true });
 
-    public ILocator CompleteApplication => _page.Locator("[duckcreekid=\"Complete Application\"], [data-duckcreekid=\"Complete Application\"]");
+    public ILocator CompleteApplication => _page.Locator("button:has-text(\"Complete Application\"), a:has-text(\"Complete Application\")").First;
 
     public ILocator IsThisCoverageBound => _page.GetByText("Is this coverage bound?*", new() { Exact = true });
 
@@ -22,7 +22,7 @@ public sealed class SubmissionLocators
     public ILocator LoadingMessage => _page.Locator("[id=\"loadingMessage\"]");
 
 
-    public ILocator ReferToUW => _page.Locator("input[id=\"\\\"fields.data.policy - Step 2 Underwriting Rules.uWRulesReview.uWRuleReviewLevel8.rows[0].uWRuleReview$agentComments.value\\\"\"][name=\"\\\"fields.data.policy - Step 2 Underwriting Rules.uWRulesReview.uWRuleReviewLevel8.rows[0].uWRuleReview$agentComments.value\\\"\"]");
+    public ILocator ReferToUW => _page.Locator("input[id=\"fields.data.policy - Step 2 Underwriting Rules.uWRulesReview.uWRuleReviewLevel8.rows[0].uWRuleReview$agentComments.value\"][name=\"fields.data.policy - Step 2 Underwriting Rules.uWRulesReview.uWRuleReviewLevel8.rows[0].uWRuleReview$agentComments.value\"]");
 
     public ILocator StoplightWaitingWindow => _page.Locator("[id=\"stoplightWaitingWindow\"]");
 

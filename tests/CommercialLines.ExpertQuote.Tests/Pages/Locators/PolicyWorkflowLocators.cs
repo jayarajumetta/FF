@@ -9,9 +9,9 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator AddLiabilityYes => _page.GetByTestId("fields.policy.line.lineCoverages$isBaseLiability.value-chip-wrapper");
 
-    public ILocator AddNarrative => _page.Locator("textarea[id=\"\\\"fields.data.notes.rows[0].notesInput$remarks.value\\\"\"][name=\"\\\"fields.data.notes.rows[0].notesInput$remarks.value\\\"\"]");
+    public ILocator AddNarrative => _page.Locator("textarea[id=\"fields.data.notes.rows[0].notesInput$remarks.value\"][name=\"fields.data.notes.rows[0].notesInput$remarks.value\"]");
 
-    public ILocator AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Quote\"], [data-duckcreekid=\"Quote\"]");
+    public ILocator AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe => _page.GetByText(new System.Text.RegularExpressions.Regex("policy number exists for this quote", System.Text.RegularExpressions.RegexOptions.IgnoreCase)).First;
 
     public ILocator BODY4F40D => _page.GetByText("BODY", new() { Exact = true });
 
@@ -91,7 +91,7 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator ReturnToAdmin => _page.GetByText("Return To Admin", new() { Exact = true });
 
-    public ILocator Save => _page.FrameLocator("iframe").Locator("[duckcreekid=\"Save\"], [data-duckcreekid=\"Save\"]");
+    public ILocator Save => _page.Locator("button[id=\"fields.data.save\"], button[id=\"fields.data.saveLocation\"], button[data-testid=\"fields.line.save\"], button:has-text(\"Save\"), a:has-text(\"Save\")").First;
 
     public ILocator SaveForLater => _page.GetByText("Save for Later", new() { Exact = true });
 
@@ -101,7 +101,7 @@ public sealed class PolicyWorkflowLocators
 
 
 
-    public ILocator SearchButton => _page.Locator("[duckcreekid=\"Search\"], [data-duckcreekid=\"Search\"]");
+    public ILocator SearchButton => _page.Locator("button:has-text(\"Search\"), a:has-text(\"Search\")").First;
 
     public ILocator SearchMethodEGDescriptionPolicy => _page.Locator("[id=\"_keynameAdvSearch1-inputEl\"]");
 
@@ -111,7 +111,7 @@ public sealed class PolicyWorkflowLocators
 
 
 
-    public ILocator TransactionType => _page.Locator("input[id=\"f_tB2C8F4EC9E3041B7B52430914E990D15D2_2_1-inputEl\"][name=\"f_tB2C8F4EC9E3041B7B52430914E990D15D2_2_1-inputEl\"][duckcreekid=\"TransACTInput.TransactionTypeList\"]");
+    public ILocator TransactionType => _page.GetByRole(AriaRole.Textbox, new() { Name = "Transaction Type", Exact = true }).First;
 
 
     public ILocator UnlistedAcreage => _page.Locator("input[id=\"fields.policy.line.liability.lineInput$unlistedAcreage.value\"][name=\"fields.policy.line.liability.lineInput$unlistedAcreage.value\"]");

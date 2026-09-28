@@ -17,7 +17,7 @@ public sealed class LoginLocators
 
     public ILocator LoggedInUser => _page.GetByText("Logged In User", new() { Exact = true });
 
-    public ILocator Login07237 => _page.Locator("[duckcreekid=\"Login\"], [data-duckcreekid=\"Login\"]");
+    public ILocator Login07237 => _page.Locator("input[id$=\"_MainContent_MainLogin_btnLogin\"], input[type=\"submit\"][value=\"Login\"], button:has-text(\"Login\"), a:has-text(\"Login\")").First;
 
 
 

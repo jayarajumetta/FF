@@ -20,6 +20,9 @@ public static class NUnitEvidencePublisher
         if (!config.Reporting.AttachEvidenceToTestResult)
             return new EvidencePublishResult(false, 0, 0, [], [], null);
 
+        if (scenarioError is null && !config.Reporting.AttachPassedEvidenceToTestResult)
+            return new EvidencePublishResult(false, 0, 0, [], [], null);
+
         try
         {
             return PublishCore(artifactDirectory, config, feature, scenario, scenarioError, testEvidenceContext);
@@ -41,7 +44,7 @@ public static class NUnitEvidencePublisher
     {
         var root = Path.GetFullPath(artifactDirectory);
         Directory.CreateDirectory(root);
-        var identity = testEvidenceContext ?? NUnitTestEvidenceContext.Capture(feature, scenario);
+        var identity = testEvidenceContext ?? NUnitTestEvidenceContext.Capture(feature, scenario, root);
         var stageRoot = Path.GetFullPath(identity.ResultDirectory);
         Directory.CreateDirectory(stageRoot);
 
@@ -60,12 +63,15 @@ public static class NUnitEvidencePublisher
             allFiles = allFiles.Where(IsKeyEvidence).ToList();
 
         var policy = scenarioError is null ? config.Reporting.Passed : config.Reporting.Failed;
-        allFiles = allFiles.Where(path => AllowedByPolicy(root, path, policy)).ToList();
+        var excludeVideo = config.Reporting.ShouldExcludeVideo(scenarioError is null &&
+            TestContext.CurrentContext.Result.Outcome.Status == global::NUnit.Framework.Interfaces.TestStatus.Passed);
+        allFiles = allFiles.Where(path => AllowedByPolicy(root, path, policy) &&
+            !(excludeVideo && Category(root, path) == "video")).ToList();
 
         var attached = new List<string>();
         var skipped = new List<string>();
         var failures = new List<string>();
-        ValidateRequiredEvidence(root, config, failures);
+        ValidateRequiredEvidence(root, config, failures, excludeVideo);
 
         foreach (var sourceFile in allFiles.Take(config.Reporting.MaxAttachmentCount))
         {
@@ -153,7 +159,7 @@ public static class NUnitEvidencePublisher
         return new EvidencePublishResult(true, attached.Count, skipped.Count, attached, failures, stagedResultPath);
     }
 
-    private static void ValidateRequiredEvidence(string root, FrameworkConfig config, ICollection<string> failures)
+    private static void ValidateRequiredEvidence(string root, FrameworkConfig config, ICollection<string> failures, bool excludeVideo)
     {
         foreach (var required in new[] { "report.html", "execution.log" })
             if (!File.Exists(Path.Combine(root, required))) failures.Add($"required-finalized-evidence-missing::{required}");
@@ -162,7 +168,7 @@ public static class NUnitEvidencePublisher
             (!Directory.Exists(screenshotDirectory) || !Directory.EnumerateFiles(screenshotDirectory, "*.png", SearchOption.TopDirectoryOnly).Any()))
             failures.Add("required-finalized-evidence-missing::screenshot");
         var videoDirectory = Path.Combine(root, "video");
-        if (config.Browser.Video &&
+        if (config.Browser.Video && !excludeVideo &&
             (!Directory.Exists(videoDirectory) || !Directory.EnumerateFiles(videoDirectory, "*", SearchOption.TopDirectoryOnly).Any()))
             failures.Add("required-finalized-evidence-missing::video");
     }
