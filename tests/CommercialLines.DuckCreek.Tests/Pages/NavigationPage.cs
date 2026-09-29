@@ -1039,13 +1039,13 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.DescriptionOfOperationS, key, new ControlIntent("Navigation", "DescriptionOfOperationS"));
 
     public Task EnterDescriptionOfOperationsAsync(string value) =>
-        _ui.FillAsync(_locators.DescriptionOfOperations, value, new ControlIntent("Navigation", "DescriptionOfOperations"));
+        _ui.FillAsync(_locators.DescriptionOfSpecifiedOperation, value, new ControlIntent("Navigation", "DescriptionOfOperations"));
 
     public Task PressDescriptionOfOperationsAsync(string key) =>
         _ui.PressAsync(_locators.DescriptionOfOperations, key, new ControlIntent("Navigation", "DescriptionOfOperations"));
 
     public Task WaitForDescriptionOfSpecifiedOperationAsync(string expected) =>
-        _ui.WaitAsync(_locators.DescriptionOfOperations, expected, new ControlIntent("Navigation", "DescriptionOfSpecifiedOperation"));
+        _ui.WaitAsync(_locators.DescriptionOfSpecifiedOperation, expected, new ControlIntent("Navigation", "DescriptionOfSpecifiedOperation"));
 
     public Task WaitFostimatedPremiumAsync(string expected) =>
         _ui.WaitAsync(_locators.EstimatedPremium, expected, new ControlIntent("Navigation", "EstimatedPremium"));
@@ -3786,8 +3786,8 @@ public sealed class NavigationPage
 
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);
-public Task<string> CaptureDescriptionOfSpecifiedOperationAsync(string property = "") =>
-        _ui.CaptureAsync(_locators.DescriptionOfOperations, property, new ControlIntent("Navigation", "DescriptionOfSpecifiedOperation"));
+    public Task<string> CaptureDescriptionOfSpecifiedOperationAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.DescriptionOfSpecifiedOperation, property, new ControlIntent("Navigation", "DescriptionOfSpecifiedOperation"));
 
     public Task<string> CaptureVehicleSchedule1VehAsync(string property = "") =>
         _ui.CaptureAsync(_locators.VehicleSchedule1Veh, property, new ControlIntent("Navigation", "VehicleSchedule1Veh"));

@@ -39,6 +39,29 @@ public sealed class IMBasicPolicySteps
         throw new InvalidOperationException($"{fieldName} field is empty after {maxAttempts} attempts.");
     }
 
+    private static async Task EnterWithTabAndNonEmptyRetryAsync(
+        Func<Task> enter,
+        Func<Task> pressTab,
+        Func<Task<string>> capture,
+        string fieldName,
+        int maxAttempts = 4)
+    {
+        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        {
+            await enter();
+            await pressTab();
+            await Task.Delay(2000);
+
+            var actual = (await capture())?.Trim() ?? string.Empty;
+            if (!string.IsNullOrWhiteSpace(actual))
+            {
+                return;
+            }
+        }
+
+        throw new InvalidOperationException($"Value was empty after Tab commit for field '{fieldName}' after {maxAttempts} attempts.");
+    }
+
 
     [Given(@"^I start a new quote$")]
     [When(@"^I start a new quote$")]
@@ -76,33 +99,15 @@ public sealed class IMBasicPolicySteps
         await page.EnterInsuredTypeAsync(data.Resolve("{{data:insured_type_4}}"));
         await page.EnterEntityTypeAsync(data.Resolve("{{data:entity_type_8}}"));
         await page.WaitForBusinessNameAsync("Visible");
-        await page.EnterBusinessNameAsync(data.Resolve("{{data:business_name_7}}"));
-        await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0041}}"));
-        var businessAddress = data.Resolve("{{data:address1_12}}");
-        await EnterWithRetryAsync(
-            businessAddress,
-            page.EnterAddressAsync,
-            () => page.CaptureAddressAsync("value"),
-            "Business Address");
-
-        var namedInsuredZipCode = data.Resolve("{{data:zipcode_11}}");
-        await EnterWithRetryAsync(
-            namedInsuredZipCode,
-            page.EnterNamedInsuredZipCodeAsync,
-            () => page.CaptureNamedInsuredZipCodeAsync("value"),
-            "Named Insured Zip Code");
-
+        await page.EnterBusinessNameSequentiallyAsync(data.Resolve("{{data:business_name_7}}"));
+        await page.EnterPrimaryPhoneSequentiallyAsync(data.Resolve("{{runtime:PrimaryPhone_0041}}"));
+        await page.EnterAddressSequentiallyAsync(data.Resolve("{{data:address1_12}}"));
+        await page.EnterNamedInsuredZipCodeSequentiallyAsync(data.Resolve("{{data:zipcode_11}}"));
         if (await page.ExistsYearsInBusinessAsync())
         {
-            var yearsInBusiness = data.Resolve("{{data:years_in_business_14}}");
-            await EnterWithRetryAsync(
-                yearsInBusiness,
-                page.EnterYearsInBusinessAsync,
-                () => page.CaptureYearsInBusinessAsync("value"),
-                "Years In Business");
+            await page.EnterYearsInBusinessSequentiallyAsync(data.Resolve("{{data:years_in_business_14}}"));
         }
-
-        await page.EnterFEINAsync(data.Resolve("{{runtime:FEIN_0044}}"));
+        await page.EnterFEINSequentiallyAsync(data.Resolve("{{runtime:FEIN_0044}}"));
         await page.EnterNameOfAuditContactAsync(data.Resolve("{{data:name_of_audit_contact_16}}"));
         await page.EnterAuditTelephoneAsync(data.Resolve("{{runtime:AuditTelephone_0045}}"));
         await page.EnterNameOfInspectionContactAsync(data.Resolve("{{data:name_of_inspection_contact_18}}"));
@@ -174,46 +179,20 @@ public sealed class IMBasicPolicySteps
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.EnterIndividualTypeAsync(data.Resolve("{{data:individualtype_47}}"));
+        await page.EnterIndividualTypeSequentiallyAsync(data.Resolve("{{data:individualtype_47}}"));
+        await page.PressIndividualTypeAsync("Tab");
         await page.WaitForPleaseVerifySSNAsync("Exists");
+        await page.EnterFirstNameSequentiallyAsync(data.Resolve("{{runtime:FirstName_0057}}"));
         var firstName = data.Resolve("{{runtime:FirstName_0057}}");
-        await EnterWithRetryAsync(
-            firstName,
-            page.EnterFirstNameAsync,
-            () => page.CaptureFirstNameAsync("value"),
-            "First Name");
-
-        await page.EnterMiddleNameAsync(data.Resolve("{{runtime:MiddleName_0057}}"));
+        await page.EnterMiddleNameSequentiallyAsync(data.Resolve("{{runtime:MiddleName_0057}}"));
+        await page.EnterLastNameSequentiallyAsync(data.Resolve("{{runtime:LastName_0057}}"));
         var lastName = data.Resolve("{{runtime:LastName_0057}}");
-        await EnterWithRetryAsync(
-            lastName,
-            page.EnterLastNameAsync,
-            () => page.CaptureLastNameAsync("value"),
-            "Last Name");
-
-        await page.EnterAddAssociatedClientDateOfBirthAsync(data.Resolve("{{data:dateofbirth_52}}"));
+        await page.EnterAddAssociatedClientDateOfBirthSequentiallyAsync(data.Resolve("{{data:dateofbirth_52}}"));
+        await page.EnterAddressSequentiallyAsync(data.Resolve("{{data:address1_53}}"));
         var associatedClientAddress = data.Resolve("{{data:address1_53}}");
-        await EnterWithRetryAsync(
-            associatedClientAddress,
-            page.EnterAddressAsync,
-            () => page.CaptureAddressAsync("value"),
-            "Associated Client Address");
-
-        var associatedClientCity = data.Resolve("{{data:city_54}}");
-        await EnterWithRetryAsync(
-            associatedClientCity,
-            page.EnterCityAsync,
-            () => page.CaptureCityAsync("value"),
-            "Associated Client City");
-
-        await page.EnterStateAsync(data.Resolve("{{data:state_55}}"));
-        var associatedClientZipCode = data.Resolve("{{data:zipcode_56}}");
-        await EnterWithRetryAsync(
-            associatedClientZipCode,
-            page.EnterNamedInsuredZipCodeAsync,
-            () => page.CaptureNamedInsuredZipCodeAsync("value"),
-            "Associated Client Zip Code");
-
+        await page.EnterCitySequentiallyAsync(data.Resolve("{{data:city_54}}"));
+        await page.EnterStateSequentiallyAsync(data.Resolve("{{data:state_55}}"));
+        await page.EnterNamedInsuredZipCodeSequentiallyAsync(data.Resolve("{{data:zipcode_56}}"));
         await page.PressNamedInsuredZipCodeAsync("Tab");
         await page.EnterGenderAsync(data.Resolve("{{data:gender_57}}"));
         await page.WaitForClientSearchAsync("Exists");
@@ -221,7 +200,8 @@ public sealed class IMBasicPolicySteps
         await page.VerifySearchResultsDuckCreekPolicyFirstCheckboxAsync("Absent", "");
         await page.ClickOKAsync();
         await page.ClickOrderSSNAsync();
-        await page.EnterAddAssociatedClientEnterSSNAsync(data.Resolve("{{data:enter_ssn_65}}"));
+        await page.EnterAddAssociatedClientEnterSSNSequentiallyAsync(data.Resolve("{{data:enter_ssn_65}}"));
+        await page.PressAddAssociatedClientEnterSSNAsync("Tab");
         await page.ClickVerifyAsync();
         await page.WaitForPleaseVerifySSNAsync("Absent");
         await page.ClickCompleteAsync();
@@ -244,7 +224,7 @@ public sealed class IMBasicPolicySteps
         await page.ClickUnderwritingInfoAsync();
         await page.ClickPropertyUWQuestionsUpdateAnswersAsync();
         await page.ClickInsuranceHistoryAsync();
-        await page.EnterIsThereAPriorCarrierAsync(data.Resolve("{{data:is_there_a_prior_carrier_87}}"));
+        await page.EnterIsThereAPriorCarrierSequentiallyAsync(data.Resolve("{{data:is_there_a_prior_carrier_87}}"));
         await page.ClickLossExperienceAsync();
         await page.ClickReturnToQuoteAsync();
     }
@@ -261,24 +241,18 @@ public sealed class IMBasicPolicySteps
         await page.WaitForPolicyInfoAsync("Exists");
         await page.ClickPolicyInfoAsync();
         await page.PauseAsync(1000);
-        await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateAsync(data.Resolve("{{data:effectivedate_98}}"));
-        await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_99}}"));
+        await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateSequentiallyAsync(data.Resolve("{{data:effectivedate_98}}"));
+        await page.EnterYearsInBusinessSequentiallyAsync(data.Resolve("{{data:years_in_business_99}}"));
         await page.PauseAsync(1000);
-        await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_101}}"));
-        await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_105}}"));
+        await page.EnterPrimaryRatingStateSequentiallyAsync(data.Resolve("{{data:primaryratingstate_101}}"));
+        await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysSequentiallyAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_105}}"));
         await page.PauseAsync(1000);
         await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
         await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
         await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
         var descriptionOfSpecifiedOperation = data.BuildQuoteDescription();
-        await EnterWithRetryAsync(
-            descriptionOfSpecifiedOperation,
-            page.EnterDescriptionOfSpecifiedOperationAsync,
-            () => page.CaptureDescriptionOfSpecifiedOperationAsync("value"),
-            "Description Of Specified Operation");
-
+        await page.EnterDescriptionOfSpecifiedOperationSequentiallyAsync(descriptionOfSpecifiedOperation);
         await page.PressDescriptionOfSpecifiedOperationAsync("Tab");
-
         if (data.Resolve("{{data:state_variant}}") == "MD" || data.Resolve("{{data:state_variant}}") == "NY" || data.Resolve("{{data:state_variant}}") == "VT" || data.Resolve("{{data:state_variant}}") == "NJ")
         {
             await page.PauseAsync(3000);
@@ -312,7 +286,7 @@ public sealed class IMBasicPolicySteps
         var page = new CoveragesPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickIMNavigationLinksPolicyCovgAsync();
-        await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_134}}"));
+        await page.EnterCoverageFormToBeAddedSequentiallyAsync(data.Resolve("{{data:coverage_form_to_be_added_134}}"));
         await page.ClickAddCoverageFormAsync();
         await page.WaitForDescriptionAsync("Visible");
         var description = data.Resolve("{{data:description_136}}");
@@ -323,9 +297,9 @@ public sealed class IMBasicPolicySteps
             "Description");
 
         await page.PressDescriptionAsync("Tab");
-        await page.EnterCoinsuranceAsync(data.Resolve("{{data:coinsurance_137}}"));
-        await page.EnterAwayFromPremisesLmtAsync(data.Resolve("{{data:away_from_premises_lmt_138}}"));
-        await page.EnterAwayFromPremisesDescAsync(data.Resolve("{{data:away_from_premises_desc_139}}"));
+        await page.EnterCoinsuranceSequentiallyAsync(data.Resolve("{{data:coinsurance_137}}"));
+        await page.EnterAwayFromPremisesLmtSequentiallyAsync(data.Resolve("{{data:away_from_premises_lmt_138}}"));
+        await page.EnterAwayFromPremisesDescSequentiallyAsync(data.Resolve("{{data:away_from_premises_desc_139}}"));
         await page.ClickPolicyCovgAccountsReceivableOKAsync();
 
     }
@@ -341,30 +315,19 @@ public sealed class IMBasicPolicySteps
 
         await page.ClickIMNavigationLinksPolicyCovgAsync();
         await page.WaitForPolicyCovgMainPolicyCovgAsync("Exists");
-        await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_143}}"));
+        await page.EnterCoverageFormToBeAddedSequentiallyAsync(data.Resolve("{{data:coverage_form_to_be_added_143}}"));
+        await page.PressCoverageFormToBeAddedAsync("Tab");
         await page.ClickAddCoverageFormAsync();
         await page.WaitForPolicyCovgBaileesCutomersCoverageFormDisplayAsync("Exists");
         await page.PauseAsync(3000);
-        var baileesDescription = data.Resolve("{{data:description_147}}");
-        await EnterWithRetryAsync(
-            baileesDescription,
-            page.EnterPolicyCovgBaileesCutomersDescriptionAsync,
-            () => page.CapturePolicyCovgBaileesCutomersDescriptionAsync("value"),
-            "Bailees Customers Description");
-
+        await page.EnterPolicyCovgBaileesCutomersDescriptionSequentiallyAsync(data.Resolve("{{data:description_147}}"));
         await page.PressPolicyCovgBaileesCutomersDescriptionAsync("Tab");
-        await page.EnterPolicyCovgBaileesCutomersPropertyInTransitAsync(data.Resolve("{{data:property_in_transit_148}}"));
+        await page.EnterPolicyCovgBaileesCutomersPropertyInTransitSequentiallyAsync(data.Resolve("{{data:property_in_transit_148}}"));
         await page.ClickPropertyAwayFromYourPremisesScheduleAsync();
         await page.ClickAddPremisesAsync();
         await page.PauseAsync(3000);
-        var addressStreetCityStateZip = data.Resolve("{{data:address_street_city_state_zip_151}}");
-        await EnterWithRetryAsync(
-            addressStreetCityStateZip,
-            value => page.EnterAddressStreetCityStateZipAsync(value),
-            () => page.CaptureAddressStreetCityStateZipAsync("value"),
-            "AddressStreetCityStateZip");
-
-        await page.EnterPolicyCovgBaileesPropertyAwayFromYourPremisesLimitAsync(data.Resolve("{{data:limit_152}}"));
+        await page.EnterAddressStreetCityStateZipSequentiallyAsync(data.Resolve("{{data:address_street_city_state_zip_151}}"));
+        await page.EnterPolicyCovgBaileesPropertyAwayFromYourPremisesLimitSequentiallyAsync(data.Resolve("{{data:limit_152}}"));
         await page.ClickOKAsync();
         await page.PauseAsync(3000);
         await page.WaitForPolicyCovgBaileesCutomersCoverageFormDisplayAsync("Exists");
@@ -383,28 +346,22 @@ public sealed class IMBasicPolicySteps
 
         await page.ClickIMNavigationLinksPolicyCovgAsync();
         await page.WaitForPolicyCovgMainPolicyCovgAsync("Exists");
-        await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_158}}"));
-        await page.PauseAsync(1000);
+        await page.EnterCoverageFormToBeAddedSequentiallyAsync(data.Resolve("{{data:coverage_form_to_be_added_158}}"));
+        await page.PauseAsync(2000);
+        await page.PressCoverageFormToBeAddedAsync("Tab");
         await page.ClickAddCoverageFormAsync();
         await page.WaitForPolicyCovgContractorsEquipmentCoverageFormDisplayAsync("Exists");
-        var contractorsEquipmentDescription = data.Resolve("{{data:description_162}}");
-        await EnterWithRetryAsync(
-            contractorsEquipmentDescription,
-            page.EnterPolicyCovgContractorsEquipmentDescriptionAsync,
-            () => page.CapturePolicyCovgContractorsEquipmentDescriptionAsync("value"),
-            "Contractors Equipment Description",
-            delayMs: 2000);
-
-        await page.EnterPolicyCovgContractorsEquipmentCoinsuranceAsync(data.Resolve("{{data:coinsurance_163}}"));
-        await page.EnterPolicyCovgContractorsEquipmentDeductibleAsync(data.Resolve("{{data:deductible_164}}"));
-        await page.EnterBoomDeductibleAsync(data.Resolve("{{data:boom_deductible_165}}"));
-        await page.EnterTypeOfContractorAsync(data.Resolve("{{data:type_of_contractor_166}}"));
-        await page.EnterScheduledCoverageAsync(data.Resolve("{{data:scheduled_coverage_167}}"));
-        await page.EnterRentedEquipmentExpenseAsync(data.Resolve("{{data:rented_equipment_expense_168}}"));
-        await page.EnterToolsAndClothingBelongingToYourEmployeesAsync(data.Resolve("{{data:tools_and_clothing_belonging_to_your_employees_169}}"));
-        await page.EnterMiscItemsBlanketCoverageAsync(data.Resolve("{{data:misc_items_blanket_coverage_170}}"));
-        await page.EnterRentalReimbursementAsync(data.Resolve("{{data:rental_reimbursement_171}}"));
-        await page.EnterHiredEquipmentAsync(data.Resolve("{{data:hired_equipment_172}}"));
+        await page.EnterPolicyCovgContractorsEquipmentDescriptionSequentiallyAsync(data.Resolve("{{data:description_162}}"));
+        await page.EnterPolicyCovgContractorsEquipmentCoinsuranceSequentiallyAsync(data.Resolve("{{data:coinsurance_163}}"));
+        await page.EnterPolicyCovgContractorsEquipmentDeductibleSequentiallyAsync(data.Resolve("{{data:deductible_164}}"));
+        await page.EnterBoomDeductibleSequentiallyAsync(data.Resolve("{{data:boom_deductible_165}}"));
+        await page.EnterTypeOfContractorSequentiallyAsync(data.Resolve("{{data:type_of_contractor_166}}"));
+        await page.EnterScheduledCoverageSequentiallyAsync(data.Resolve("{{data:scheduled_coverage_167}}"));
+        await page.EnterRentedEquipmentExpenseSequentiallyAsync(data.Resolve("{{data:rented_equipment_expense_168}}"));
+        await page.EnterToolsAndClothingBelongingToYourEmployeesSequentiallyAsync(data.Resolve("{{data:tools_and_clothing_belonging_to_your_employees_169}}"));
+        await page.EnterMiscItemsBlanketCoverageSequentiallyAsync(data.Resolve("{{data:misc_items_blanket_coverage_170}}"));
+        await page.EnterRentalReimbursementSequentiallyAsync(data.Resolve("{{data:rental_reimbursement_171}}"));
+        await page.EnterHiredEquipmentSequentiallyAsync(data.Resolve("{{data:hired_equipment_172}}"));
         await page.ClickOKAsync();
 
     }
@@ -420,25 +377,20 @@ public sealed class IMBasicPolicySteps
 
         await page.ClickIMNavigationLinksPolicyCovgAsync();
         await page.WaitForPolicyCovgMainPolicyCovgAsync("Exists");
-        await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_176}}"));
-        await page.PauseAsync(1000);
+        await page.EnterCoverageFormToBeAddedSequentiallyAsync(data.Resolve("{{data:coverage_form_to_be_added_176}}"));
+        await page.PauseAsync(2000);
+        await page.PressCoverageFormToBeAddedAsync("Tab");
         await page.ClickAddCoverageFormAsync();
         await page.WaitForPolicyCovgComputerSystemsCoverageFormDisplayAsync("Exists");
-        var computerSystemsDescription = data.Resolve("{{data:description_180}}");
-        await EnterWithRetryAsync(
-            computerSystemsDescription,
-            page.EnterPolicyCovgComputerSystemsDescriptionAsync,
-            () => page.CapturePolicyCovgComputerSystemsDescriptionAsync("value"),
-            "Computer Systems Description");
-
+        await page.EnterPolicyCovgComputerSystemsDescriptionSequentiallyAsync(data.Resolve("{{data:description_180}}"));
         await page.PressPolicyCovgComputerSystemsDescriptionAsync("Tab");
-        await page.EnterPolicyCovgComputerSystemsDeductibleAsync(data.Resolve("{{data:deductible_181}}"));
-        await page.EnterPolicyCovgComputerSystemsCoinsuranceAsync(data.Resolve("{{data:coinsurance_182}}"));
-        await page.EnterPolicyCovgComputerSystemsPropertyInTransitAsync(data.Resolve("{{data:property_in_transit_183}}"));
-        await page.EnterUnnamedPremisesAsync(data.Resolve("{{data:unnamed_premises_184}}"));
-        await page.EnterPersonalPortableComputersAsync(data.Resolve("{{data:personal_portable_computers_185}}"));
-        await page.EnterExtraExpenseAsync(data.Resolve("{{data:extra_expense_186}}"));
-        await page.EnterVirusHarmfulCodeOrSimilarInstructionAsync(data.Resolve("{{data:virus_harmful_code_or_similar_instruction_187}}"));
+        await page.EnterPolicyCovgComputerSystemsDeductibleSequentiallyAsync(data.Resolve("{{data:deductible_181}}"));
+        await page.EnterPolicyCovgComputerSystemsCoinsuranceSequentiallyAsync(data.Resolve("{{data:coinsurance_182}}"));
+        await page.EnterPolicyCovgComputerSystemsPropertyInTransitSequentiallyAsync(data.Resolve("{{data:property_in_transit_183}}"));
+        await page.EnterUnnamedPremisesSequentiallyAsync(data.Resolve("{{data:unnamed_premises_184}}"));
+        await page.EnterPersonalPortableComputersSequentiallyAsync(data.Resolve("{{data:personal_portable_computers_185}}"));
+        await page.EnterExtraExpenseSequentiallyAsync(data.Resolve("{{data:extra_expense_186}}"));
+        await page.EnterVirusHarmfulCodeOrSimilarInstructionSequentiallyAsync(data.Resolve("{{data:virus_harmful_code_or_similar_instruction_187}}"));
         await page.ClickOKAsync();
 
     }
@@ -454,23 +406,18 @@ public sealed class IMBasicPolicySteps
 
         await page.ClickIMNavigationLinksPolicyCovgAsync();
         await page.WaitForPolicyCovgMainPolicyCovgAsync("Exists");
-        await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_191}}"));
+        await page.EnterCoverageFormToBeAddedSequentiallyAsync(data.Resolve("{{data:coverage_form_to_be_added_191}}"));
+        await page.PressCoverageFormToBeAddedAsync("Tab");
         await page.PauseAsync(1000);
         await page.ClickAddCoverageFormAsync();
         await page.WaitForPolicyCovgMotorTruckCargoCoverageFormDisplayAsync("Exists");
-        var motorTruckCargoDescription = data.Resolve("{{data:description_195}}");
-        await EnterWithRetryAsync(
-            motorTruckCargoDescription,
-            page.EnterPolicyCovgMotorTruckCargoDescriptionAsync,
-            () => page.CapturePolicyCovgMotorTruckCargoDescriptionAsync("value"),
-            "Motor Truck Cargo Description");
-
-        await page.EnterCoverageTypeAsync(data.Resolve("{{data:coverage_type_196}}"));
-        await page.EnterCoveredPropertyConsistingPrincipallyOfAsync(data.Resolve("{{data:covered_property_consisting_principally_of_197}}"));
-        await page.EnterPolicyCovgMotorTruckCargoDeductibleAsync(data.Resolve("{{data:deductible_198}}"));
-        await page.EnterPerVehicleLimitAsync(data.Resolve("{{data:per_vehicle_limit_199}}"));
-        await page.EnterGroupClassAsync(data.Resolve("{{data:group_class_200}}"));
-        await page.EnterNumberOfVehiclesAsync(data.Resolve("{{data:number_of_vehicles_201}}"));
+        await page.EnterPolicyCovgMotorTruckCargoDescriptionSequentiallyAsync(data.Resolve("{{data:description_195}}"));
+        await page.EnterCoverageTypeSequentiallyAsync(data.Resolve("{{data:coverage_type_196}}"));
+        await page.EnterCoveredPropertyConsistingPrincipallyOfSequentiallyAsync(data.Resolve("{{data:covered_property_consisting_principally_of_197}}"));
+        await page.EnterPolicyCovgMotorTruckCargoDeductibleSequentiallyAsync(data.Resolve("{{data:deductible_198}}"));
+        await page.EnterPerVehicleLimitSequentiallyAsync(data.Resolve("{{data:per_vehicle_limit_199}}"));
+        await page.EnterGroupClassSequentiallyAsync(data.Resolve("{{data:group_class_200}}"));
+        await page.EnterNumberOfVehiclesSequentiallyAsync(data.Resolve("{{data:number_of_vehicles_201}}"));
         await page.EnterUnnamedTerminalsLimitAsync(data.Resolve("{{data:unnamed_terminals_limit_202}}"));
         await page.ClickOKAsync();
 
@@ -486,19 +433,14 @@ public sealed class IMBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickIMNavigationLinksPolicyCovgAsync();
-        await page.EnterCoverageFormToBeAddedAsync(data.Resolve("{{data:coverage_form_to_be_added_206}}"));
+        await page.EnterCoverageFormToBeAddedSequentiallyAsync(data.Resolve("{{data:coverage_form_to_be_added_206}}"));
+        await page.PressCoverageFormToBeAddedAsync("Tab");
         await page.PauseAsync(1000);
         await page.ClickAddCoverageFormAsync();
         await page.WaitForPolicyCovgSignsCoverageFormDisplayAsync("Exists");
-        var signsDescription = data.Resolve("{{data:description_210}}");
-        await EnterWithRetryAsync(
-            signsDescription,
-            page.EnterPolicyCovgSignsDescriptionAsync,
-            () => page.CapturePolicyCovgSignsDescriptionAsync("value"),
-            "Signs Description");
-
+        await page.EnterPolicyCovgSignsDescriptionSequentiallyAsync(data.Resolve("{{data:description_210}}"));
         await page.PauseAsync(3000);
-        await page.EnterN5DeductibleAsync(data.Resolve("{{data:5_deductible_212}}"));
+        await page.EnterN5DeductibleSequentiallyAsync(data.Resolve("{{data:5_deductible_212}}"));
         await page.ClickOKAsync();
         await page.PauseAsync(1000);
 
@@ -514,7 +456,8 @@ public sealed class IMBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickRiskAsync();
-        await page.EnterRiskMainCoverageFormAsync(data.Resolve("{{data:coverage_form_217}}"));
+        await page.EnterRiskMainCoverageFormSequentiallyAsync(data.Resolve("{{data:coverage_form_217}}"));
+        await page.PressRiskMainCoverageFormAsync("Tab");
         await page.ClickAddAsync();
         await page.WaitForAccountsReceivableHeadingAsync("Exists");
         var riskAccountsReceivableSearchValue = data.Resolve("{{data:search_value_221}}");
@@ -531,12 +474,15 @@ public sealed class IMBasicPolicySteps
             () => page.CaptureRiskAccountsReceivableSearchResultAsync("value"),
             "Risk Accounts Receivable Search Result");
 
-        await page.EnterRiskAccountsReceivableConstructionAsync(data.Resolve("{{data:construction_223}}"));
-        await page.EnterPremisesTypeAsync(data.Resolve("{{data:premises_type_224}}"));
-        await page.EnterDuplicatedRecordsAsync(data.Resolve("{{data:duplicated_records_225}}"));
-        await page.EnterClassificationOfRiskAsync(data.Resolve("{{data:classification_of_risk_226}}"));
+        await page.EnterRiskAccountsReceivableConstructionSequentiallyAsync(data.Resolve("{{data:construction_223}}"));
+        await page.PressRiskAccountsReceivableConstructionAsync("Tab");
+        await page.EnterPremisesTypeSequentiallyAsync(data.Resolve("{{data:premises_type_224}}"));
+        await page.PressPremisesTypeAsync("Tab");
+        await page.EnterDuplicatedRecordsSequentiallyAsync(data.Resolve("{{data:duplicated_records_225}}"));
+        await page.PressDuplicatedRecordsAsync("Tab");
+        await page.EnterClassificationOfRiskSequentiallyAsync(data.Resolve("{{data:classification_of_risk_226}}"));
+        await page.PressClassificationOfRiskAsync("Tab");
         await page.ClickRiskAccountsReceivableOKAsync();
-
     }
 
     [Given(@"^I add Bailees Customers$")]
@@ -549,10 +495,12 @@ public sealed class IMBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickRiskAsync();
-        await page.EnterRiskMainCoverageFormAsync(data.Resolve("{{data:coverage_form_230}}"));
+        await page.EnterRiskMainCoverageFormSequentiallyAsync(data.Resolve("{{data:coverage_form_230}}"));
+        await page.PressRiskMainCoverageFormAsync("Tab");
         await page.ClickAddAsync();
         await page.WaitForBaileesCustomersHeadingAsync("Exists");
         await page.EnterRiskBaileesCustomersDeductibleAsync(data.Resolve("{{data:deductible_233}}"));
+        await page.PressRiskBaileesCustomersDeductibleAsync("Tab");
         var riskBaileesCustomersSearchValue = data.Resolve("{{data:search_value_235}}");
         await EnterWithRetryAsync(
             riskBaileesCustomersSearchValue,
@@ -560,18 +508,27 @@ public sealed class IMBasicPolicySteps
             () => page.CaptureRiskBaileesCustomersSearchValueAsync("value"),
             "Risk Bailees Customers Search Value");
 
-        await page.EnterRiskBaileesCustomersSearchResultAsync(data.Resolve("{{data:search_result_236}}"));
-        await page.EnterRiskBaileesCustomersConstructionAsync(data.Resolve("{{data:construction_237}}"));
+        await page.EnterRiskBaileesCustomersSearchResultSequentiallyAsync(data.Resolve("{{data:search_result_236}}"));
+        await page.PressRiskBaileesCustomersSearchResultAsync("Tab");
+        await page.EnterRiskBaileesCustomersConstructionSequentiallyAsync(data.Resolve("{{data:construction_237}}"));
+        await page.PressRiskBaileesCustomersConstructionAsync("Tab");
         await page.EnterAnnualGrossReceiptsAsync(data.Resolve("{{data:annual_gross_receipts_238}}"));
-        await page.EnterAverageNumberOfDaysServiceAsync(data.Resolve("{{data:average_number_of_days_service_239}}"));
-        await page.EnterAverageNumberOfWorkingDaysAsync(data.Resolve("{{data:average_number_of_working_days_240}}"));
-        await page.EnterAverageServiceChargeAsync(data.Resolve("{{data:average_service_charge_241}}"));
-        await page.EnterAverageValuePerOrderAsync(data.Resolve("{{data:average_value_per_order_242}}"));
-        await page.EnterRiskBaileesCustomersLimitAsync(data.Resolve("{{data:limit_244}}"));
-        await page.EnterEarthquakeAsync(data.Resolve("{{data:earthquake_244}}"));
-        await page.EnterStorageLimitAsync(data.Resolve("{{data:storage_limit_245}}"));
+        await page.PressAnnualGrossReceiptsAsync("Tab");
+        await page.EnterAverageNumberOfDaysServiceSequentiallyAsync(data.Resolve("{{data:average_number_of_days_service_239}}"));
+        await page.PressAverageNumberOfDaysServiceAsync("Tab");
+        await page.EnterAverageNumberOfWorkingDaysSequentiallyAsync(data.Resolve("{{data:average_number_of_working_days_240}}"));
+        await page.PressAverageNumberOfWorkingDaysAsync("Tab");
+        await page.EnterAverageServiceChargeSequentiallyAsync(data.Resolve("{{data:average_service_charge_241}}"));
+        await page.PressAverageServiceChargeAsync("Tab");
+        await page.EnterAverageValuePerOrderSequentiallyAsync(data.Resolve("{{data:average_value_per_order_242}}"));
+        await page.PressAverageValuePerOrderAsync("Tab");
+        await page.EnterRiskBaileesCustomersLimitSequentiallyAsync(data.Resolve("{{data:limit_244}}"));
+        await page.PressRiskBaileesCustomersLimitAsync("Tab");
+        await page.EnterEarthquakeSequentiallyAsync(data.Resolve("{{data:earthquake_244}}"));
+        await page.PressEarthquakeAsync("Tab");
+        await page.EnterStorageLimitSequentiallyAsync(data.Resolve("{{data:storage_limit_245}}"));
+        await page.PressStorageLimitAsync("Tab");
         await page.ClickRiskBaileesCustomersOKAsync();
-
     }
 
     [Given(@"^I add Computer Systems for risk$")]
@@ -584,10 +541,11 @@ public sealed class IMBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickRiskAsync();
-        await page.EnterRiskMainCoverageFormAsync(data.Resolve("{{data:coverage_form_249}}"));
+        await page.EnterRiskMainCoverageFormSequentiallyAsync(data.Resolve("{{data:coverage_form_249}}"));
+        await page.PressRiskMainCoverageFormAsync("Tab");
         await page.ClickAddAsync();
-        await page.EnterComputerEquipmentAsync(data.Resolve("{{data:computer_equipment_251}}"));
-        await page.EnterDataAndMediaAsync(data.Resolve("{{data:data_and_media_252}}"));
+        await page.EnterComputerEquipmentSequentiallyAsync(data.Resolve("{{data:computer_equipment_251}}"));
+        await page.EnterDataAndMediaSequentiallyAsync(data.Resolve("{{data:data_and_media_252}}"));
         var riskComputerSystemsSearchValue = data.Resolve("{{data:search_value_254}}");
         await EnterWithRetryAsync(
             riskComputerSystemsSearchValue,
@@ -595,8 +553,11 @@ public sealed class IMBasicPolicySteps
             () => page.CaptureRiskComputerSystemsSearchValueAsync("value"),
             "Risk Computer Systems Search Value");
 
-        await page.EnterRiskComputerSystemsSearchResultAsync(data.Resolve("{{data:search_result_255}}"));
-        await page.EnterConstructionCodeAsync(data.Resolve("{{data:construction_code_256}}"));
+        await page.PressRiskComputerSystemsSearchValueAsync("Tab");
+        await page.EnterRiskComputerSystemsSearchResultSequentiallyAsync(data.Resolve("{{data:search_result_255}}"));
+        await page.PressRiskComputerSystemsSearchResultAsync("Tab");
+        await page.EnterConstructionCodeSequentiallyAsync(data.Resolve("{{data:construction_code_256}}"));
+        await page.PressConstructionCodeAsync("Tab");
         await page.ClickRiskComputerSystemsOKAsync();
 
     }
@@ -611,9 +572,10 @@ public sealed class IMBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickRiskAsync();
-        await page.EnterRiskMainCoverageFormAsync(data.Resolve("{{data:coverage_form_260}}"));
+        await page.EnterRiskMainCoverageFormSequentiallyAsync(data.Resolve("{{data:coverage_form_260}}"));
+        await page.PressRiskMainCoverageFormAsync("Tab");
         await page.ClickAddAsync();
-        await page.EnterLimitOfInsuranceAsync(data.Resolve("{{data:limit_of_insurance_263}}"));
+        await page.EnterLimitOfInsuranceSequentiallyAsync(data.Resolve("{{data:limit_of_insurance_263}}"));
         var signLocation = data.Resolve("{{data:sign_location_264}}");
         await EnterWithRetryAsync(
             signLocation,
@@ -644,8 +606,8 @@ public sealed class IMBasicPolicySteps
 
         await page.ClickEndorsementAsync();
         await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.EnterEndorsementMainTypeAsync(data.Resolve("{{data:type_271}}"));
-        await page.EnterNamesAsync(data.Resolve("{{data:names_273}}"));
+        await page.EnterEndorsementMainTypeSequentiallyAsync(data.Resolve("{{data:type_271}}"));
+        await page.EnterNamesSequentiallyAsync(data.Resolve("{{data:names_273}}"));
         var endorsementAddress = data.Resolve("{{data:address_275}}");
         await EnterWithRetryAsync(
             endorsementAddress,
@@ -670,9 +632,9 @@ public sealed class IMBasicPolicySteps
 
         await page.ClickEndorsementAsync();
         await page.ClickEndorsementMainAddEndorsementAsync();
-        await page.EnterEndorsementMainTypeAsync(data.Resolve("{{data:type_280}}"));
-        await page.EnterEndorsementIF0002WaterborneEquipmentLimitAsync(data.Resolve("{{data:limit_281}}"));
-        await page.EnterEndorsementIF0002WaterborneEquipmentDeductibleAsync(data.Resolve("{{data:deductible_282}}"));
+        await page.EnterEndorsementMainTypeSequentiallyAsync(data.Resolve("{{data:type_280}}"));
+        await page.EnterEndorsementIF0002WaterborneEquipmentLimitSequentiallyAsync(data.Resolve("{{data:limit_281}}"));
+        await page.EnterEndorsementIF0002WaterborneEquipmentDeductibleSequentiallyAsync(data.Resolve("{{data:deductible_282}}"));
         await page.ClickOKAsync();
 
     }
@@ -720,27 +682,27 @@ public sealed class IMBasicPolicySteps
 
         await page.ClickSpecificUnderwritingQuestionsAsync();
         await page.ClickBaileesCustomerUWQuestionsAsync();
-        await page.EnterDryCleaningAsync(data.Resolve("{{data:dry_cleaning_295}}"));
-        await page.EnterLaundryAsync(data.Resolve("{{data:laundry_296}}"));
-        await page.EnterN2IndicateTheAgeTypeOfConstructionAndProtectionClassOfThePremisesAsync(data.Resolve("{{data:2_indicate_the_age_type_of_construction_and_protection_class_of_the_premises_297}}"));
-        await page.EnterN3WhatIsThePercentageOfAnnualGrossReceiptsDerivedFromServiceOrRepairAsync(data.Resolve("{{data:3_what_is_the_percentage_of_annual_gross_receipts_derived_from_service_or_repair_298}}"));
-        await page.EnterN4WhatMethodDoYouUseForKeepingRecordsOfPropertyInYourCareAndHowOftenAreTheRecordsUpdatedAsync(data.Resolve("{{data:4_what_method_do_you_use_for_keeping_records_of_property_in_your_care_and_how_often_are_the_records_updated_299}}"));
-        await page.EnterN5AreRecognizedApprovedCentralStationBurglarAlarmsInstalledAndMaintainedAsync(data.Resolve("{{data:5_are_recognized_approved_central_station_burglar_alarms_installed_and_maintained_300}}"));
-        await page.EnterN6AreAllStorageAreasLockedAtAllTimesWhenUnoccupiedAsync(data.Resolve("{{data:6_are_all_storage_areas_locked_at_all_times_when_unoccupied_301}}"));
-        await page.EnterN7AreThereAnyHazardousOrFlammableMaterialsUsedOrStoredOnThePremisesAsync(data.Resolve("{{data:7_are_there_any_hazardous_or_flammable_materials_used_or_stored_on_the_premises_302}}"));
-        await page.EnterAWhatIsThePublicProtectionClassRatingAsync(data.Resolve("{{data:a_what_is_the_public_protection_class_rating_303}}"));
-        await page.EnterBAreThereAnyPrivateProtectionImprovementsAsync(data.Resolve("{{data:b_are_there_any_private_protection_improvements_304}}"));
-        await page.EnterCWhatIsTheDistanceInFeetToTheNearestHydrantAsync(data.Resolve("{{data:c_what_is_the_distance_in_feet_to_the_nearest_hydrant_305}}"));
-        await page.EnterDWhatIsTheDistanceInMilesToTheNearestRespondingFireDepartmentAsync(data.Resolve("{{data:d_what_is_the_distance_in_miles_to_the_nearest_responding_fire_department_306}}"));
-        await page.EnterEAreNoSmokingRulesPostedAndEnforcedAsync(data.Resolve("{{data:e_are_no_smoking_rules_posted_and_enforced_307}}"));
-        await page.EnterN9AreThePremisesOrAnyPortionOfThePremisesEquippedWithASprinklerSystemAsync(data.Resolve("{{data:9_are_the_premises_or_any_portion_of_the_premises_equipped_with_a_sprinkler_system_308}}"));
-        await page.EnterN10AreThePremisesEquippedWithARecognizedApprovedCentralStationFireAlarmFireExtinguishersOrSmokeAlarmsAsync(data.Resolve("{{data:10_are_the_premises_equipped_with_a_recognized_approved_central_station_fire_alarm_fire_extinguishers_or_smoke_alarms_309}}"));
-        await page.EnterN11WhatIsTheProcedureForTransportingPropertyIncludeTheTransitMethodsUsedAndTheProtectionClassProvidedWhileInTransitAsync(data.Resolve("{{data:11_what_is_the_procedure_for_transporting_property_include_the_transit_methods_used_and_the_protection_class_provided_while_in_transit_310}}"));
-        await page.EnterN12AreDriversMVRsReviewedOnARegularBasisAndMaintainedAsync(data.Resolve("{{data:12_are_drivers_mvrs_reviewed_on_a_regular_basis_and_maintained_311}}"));
-        await page.EnterN13WhatTypesOfVehiclesDoYouOperateAndWhatProtectiveDevicesAreOnEachVehicleAsync(data.Resolve("{{data:13_what_types_of_vehicles_do_you_operate_and_what_protective_devices_are_on_each_vehicle_312}}"));
-        await page.EnterN14WhatIsYourProcedureForProtectingSmallItemsFromBreakageOrDisappearanceWhileInStorageAsync(data.Resolve("{{data:14_what_is_your_procedure_for_protecting_small_items_from_breakage_or_disappearance_while_in_storage_313}}"));
-        await page.EnterN15WhatMeasuresDoesTheInsuredTakeToProtectCustomerSPropertyAgainstTheftAsync(data.Resolve("{{data:15_what_measures_does_the_insured_take_to_protect_customer_s_property_against_theft_314}}"));
-        await page.EnterN16DoesTheRiskUseReleaseFormsAsync(data.Resolve("{{data:16_does_the_risk_use_release_forms_315}}"));
+        await page.EnterDryCleaningSequentiallyAsync(data.Resolve("{{data:dry_cleaning_295}}"));
+        await page.EnterLaundrySequentiallyAsync(data.Resolve("{{data:laundry_296}}"));
+        await page.EnterN2IndicateTheAgeTypeOfConstructionAndProtectionClassOfThePremisesSequentiallyAsync(data.Resolve("{{data:2_indicate_the_age_type_of_construction_and_protection_class_of_the_premises_297}}"));
+        await page.EnterN3WhatIsThePercentageOfAnnualGrossReceiptsDerivedFromServiceOrRepairSequentiallyAsync(data.Resolve("{{data:3_what_is_the_percentage_of_annual_gross_receipts_derived_from_service_or_repair_298}}"));
+        await page.EnterN4WhatMethodDoYouUseForKeepingRecordsOfPropertyInYourCareAndHowOftenAreTheRecordsUpdatedSequentiallyAsync(data.Resolve("{{data:4_what_method_do_you_use_for_keeping_records_of_property_in_your_care_and_how_often_are_the_records_updated_299}}"));
+        await page.EnterN5AreRecognizedApprovedCentralStationBurglarAlarmsInstalledAndMaintainedSequentiallyAsync(data.Resolve("{{data:5_are_recognized_approved_central_station_burglar_alarms_installed_and_maintained_300}}"));
+        await page.EnterN6AreAllStorageAreasLockedAtAllTimesWhenUnoccupiedSequentiallyAsync(data.Resolve("{{data:6_are_all_storage_areas_locked_at_all_times_when_unoccupied_301}}"));
+        await page.EnterN7AreThereAnyHazardousOrFlammableMaterialsUsedOrStoredOnThePremisesSequentiallyAsync(data.Resolve("{{data:7_are_there_any_hazardous_or_flammable_materials_used_or_stored_on_the_premises_302}}"));
+        await page.EnterAWhatIsThePublicProtectionClassRatingSequentiallyAsync(data.Resolve("{{data:a_what_is_the_public_protection_class_rating_303}}"));
+        await page.EnterBAreThereAnyPrivateProtectionImprovementsSequentiallyAsync(data.Resolve("{{data:b_are_there_any_private_protection_improvements_304}}"));
+        await page.EnterCWhatIsTheDistanceInFeetToTheNearestHydrantSequentiallyAsync(data.Resolve("{{data:c_what_is_the_distance_in_feet_to_the_nearest_hydrant_305}}"));
+        await page.EnterDWhatIsTheDistanceInMilesToTheNearestRespondingFireDepartmentSequentiallyAsync(data.Resolve("{{data:d_what_is_the_distance_in_miles_to_the_nearest_responding_fire_department_306}}"));
+        await page.EnterEAreNoSmokingRulesPostedAndEnforcedSequentiallyAsync(data.Resolve("{{data:e_are_no_smoking_rules_posted_and_enforced_307}}"));
+        await page.EnterN9AreThePremisesOrAnyPortionOfThePremisesEquippedWithASprinklerSystemSequentiallyAsync(data.Resolve("{{data:9_are_the_premises_or_any_portion_of_the_premises_equipped_with_a_sprinkler_system_308}}"));
+        await page.EnterN10AreThePremisesEquippedWithARecognizedApprovedCentralStationFireAlarmFireExtinguishersOrSmokeAlarmsSequentiallyAsync(data.Resolve("{{data:10_are_the_premises_equipped_with_a_recognized_approved_central_station_fire_alarm_fire_extinguishers_or_smoke_alarms_309}}"));
+        await page.EnterN11WhatIsTheProcedureForTransportingPropertyIncludeTheTransitMethodsUsedAndTheProtectionClassProvidedWhileInTransitSequentiallyAsync(data.Resolve("{{data:11_what_is_the_procedure_for_transporting_property_include_the_transit_methods_used_and_the_protection_class_provided_while_in_transit_310}}"));
+        await page.EnterN12AreDriversMVRsReviewedOnARegularBasisAndMaintainedSequentiallyAsync(data.Resolve("{{data:12_are_drivers_mvrs_reviewed_on_a_regular_basis_and_maintained_311}}"));
+        await page.EnterN13WhatTypesOfVehiclesDoYouOperateAndWhatProtectiveDevicesAreOnEachVehicleSequentiallyAsync(data.Resolve("{{data:13_what_types_of_vehicles_do_you_operate_and_what_protective_devices_are_on_each_vehicle_312}}"));
+        await page.EnterN14WhatIsYourProcedureForProtectingSmallItemsFromBreakageOrDisappearanceWhileInStorageSequentiallyAsync(data.Resolve("{{data:14_what_is_your_procedure_for_protecting_small_items_from_breakage_or_disappearance_while_in_storage_313}}"));
+        await page.EnterN15WhatMeasuresDoesTheInsuredTakeToProtectCustomerSPropertyAgainstTheftSequentiallyAsync(data.Resolve("{{data:15_what_measures_does_the_insured_take_to_protect_customer_s_property_against_theft_314}}"));
+        await page.EnterN16DoesTheRiskUseReleaseFormsSequentiallyAsync(data.Resolve("{{data:16_does_the_risk_use_release_forms_315}}"));
         await page.ClickOKAsync();
 
     }
@@ -757,19 +719,19 @@ public sealed class IMBasicPolicySteps
         await page.ClickSpecificUnderwritingQuestionsAsync();
         await page.ClickComputerSystemsUWQuestionsAsync();
         await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
-        await page.EnterWhatIsTheProcedureForTransportingTheComputerEquipmentAsync(data.Resolve("{{data:what_is_the_procedure_for_transporting_the_computer_equipment_320}}"));
-        await page.EnterIndicateTheBuildingSAgeTypeOfConstructionAndProtectionClassAndOtherTenantsInTheBuildingSWhereTheComputerEquipmentIsLocatedAsync(data.Resolve("{{data:indicate_the_building_s_age_type_of_construction_and_protection_class_and_other_tenants_in_the_building_s_where_the_computer_equipment_is_located_321}}"));
-        await page.EnterWhatAreTheProceduresAndMethodsForKeepingTheEDPAreasSecuredAsync(data.Resolve("{{data:what_are_the_procedures_and_methods_for_keeping_the_edp_areas_secured_322}}"));
-        await page.EnterWhatAreTheProceduresAndScheduleForBackingUpTheMediaAndDataAndTheirStorageAsync(data.Resolve("{{data:what_are_the_procedures_and_schedule_for_backing_up_the_media_and_data_and_their_storage_323}}"));
-        await page.EnterProvideInformationRegardingAntivirusMethodsAndCopyrightProtectionOfDataAndMediaAsync(data.Resolve("{{data:provide_information_regarding_antivirus_methods_and_copyright_protection_of_data_and_media_324}}"));
-        await page.EnterWhatIsThePublicProtectionClassRatingAsync(data.Resolve("{{data:what_is_the_public_protection_class_rating_325}}"));
-        await page.EnterWhatIsTheDistanceInFeetToTheNearestFireHydrantAsync(data.Resolve("{{data:what_is_the_distance_in_feet_to_the_nearest_fire_hydrant_326}}"));
-        await page.EnterWhatIsTheDistanceInMilesToTheNearestRespondingFireDepartmentAsync(data.Resolve("{{data:what_is_the_distance_in_miles_to_the_nearest_responding_fire_department_327}}"));
-        await page.EnterUninterruptiblePowerSourceAsync(data.Resolve("{{data:uninterruptible_power_source_328}}"));
-        await page.EnterLineConditionerAsync(data.Resolve("{{data:line_conditioner_329}}"));
-        await page.EnterPowerSuppressorVoltageRegulatorAsync(data.Resolve("{{data:power_suppressor_voltage_regulator_330}}"));
-        await page.EnterDedicatedLineAsync(data.Resolve("{{data:dedicated_line_331}}"));
-        await page.EnterHowOftenIsDataBackedUpAsync(data.Resolve("{{data:how_often_is_data_backed_up_332}}"));
+        await page.EnterWhatIsTheProcedureForTransportingTheComputerEquipmentSequentiallyAsync(data.Resolve("{{data:what_is_the_procedure_for_transporting_the_computer_equipment_320}}"));
+        await page.EnterIndicateTheBuildingSAgeTypeOfConstructionAndProtectionClassAndOtherTenantsInTheBuildingSWhereTheComputerEquipmentIsLocatedSequentiallyAsync(data.Resolve("{{data:indicate_the_building_s_age_type_of_construction_and_protection_class_and_other_tenants_in_the_building_s_where_the_computer_equipment_is_located_321}}"));
+        await page.EnterWhatAreTheProceduresAndMethodsForKeepingTheEDPAreasSecuredSequentiallyAsync(data.Resolve("{{data:what_are_the_procedures_and_methods_for_keeping_the_edp_areas_secured_322}}"));
+        await page.EnterWhatAreTheProceduresAndScheduleForBackingUpTheMediaAndDataAndTheirStorageSequentiallyAsync(data.Resolve("{{data:what_are_the_procedures_and_schedule_for_backing_up_the_media_and_data_and_their_storage_323}}"));
+        await page.EnterProvideInformationRegardingAntivirusMethodsAndCopyrightProtectionOfDataAndMediaSequentiallyAsync(data.Resolve("{{data:provide_information_regarding_antivirus_methods_and_copyright_protection_of_data_and_media_324}}"));
+        await page.EnterWhatIsThePublicProtectionClassRatingSequentiallyAsync(data.Resolve("{{data:what_is_the_public_protection_class_rating_325}}"));
+        await page.EnterWhatIsTheDistanceInFeetToTheNearestFireHydrantSequentiallyAsync(data.Resolve("{{data:what_is_the_distance_in_feet_to_the_nearest_fire_hydrant_326}}"));
+        await page.EnterWhatIsTheDistanceInMilesToTheNearestRespondingFireDepartmentSequentiallyAsync(data.Resolve("{{data:what_is_the_distance_in_miles_to_the_nearest_responding_fire_department_327}}"));
+        await page.EnterUninterruptiblePowerSourceSequentiallyAsync(data.Resolve("{{data:uninterruptible_power_source_328}}"));
+        await page.EnterLineConditionerSequentiallyAsync(data.Resolve("{{data:line_conditioner_329}}"));
+        await page.EnterPowerSuppressorVoltageRegulatorSequentiallyAsync(data.Resolve("{{data:power_suppressor_voltage_regulator_330}}"));
+        await page.EnterDedicatedLineSequentiallyAsync(data.Resolve("{{data:dedicated_line_331}}"));
+        await page.EnterHowOftenIsDataBackedUpSequentiallyAsync(data.Resolve("{{data:how_often_is_data_backed_up_332}}"));
         await page.ClickOKAsync();
 
     }
@@ -787,8 +749,8 @@ public sealed class IMBasicPolicySteps
         await page.ClickContractorsEquipmentUWQuestionsAsync();
         //await page.WaitForSignsHeadingAsync("Exists");
         await page.ClickSpecificUnderwritingQuestionsContractorsEquipmentUpdateAnswersAsync();
-        await page.EnterEstimatedHighestValueAsync(data.Resolve("{{data:estimated_highest_value_338}}"));
-        await page.EnterIfYesDescribeAsync(data.Resolve("{{data:if_yes_describe_339}}"));
+        await page.EnterEstimatedHighestValueSequentiallyAsync(data.Resolve("{{data:estimated_highest_value_338}}"));
+        await page.EnterIfYesDescribeSequentiallyAsync(data.Resolve("{{data:if_yes_describe_339}}"));
         await page.ClickOKAsync();
 
     }
@@ -805,21 +767,21 @@ public sealed class IMBasicPolicySteps
         await page.ClickSpecificUnderwritingQuestionsAsync();
         await page.ClickMotorTruckCargoUWQuestionsAsync();
         //await page.WaitForSignsHeadingAsync("Exists");
-        await page.EnterWhichFormAreYouCompletingAsync(data.Resolve("{{data:which_form_are_you_completing_344}}"));
-        await page.EnterN1WhatAreTheDistancesTheShipmentsWillTravelAndTheTimeRequiredToCompleteTheShipmentAsync(data.Resolve("{{data:1_what_are_the_distances_the_shipments_will_travel_and_the_time_required_to_complete_the_shipment_346}}"));
-        await page.EnterN2WhatAreTheTypesAndAgesOfTheVehiclesTrailersUsedToTransportYourCommoditiesAsync(data.Resolve("{{data:2_what_are_the_types_and_ages_of_the_vehicles_trailers_used_to_transport_your_commodities_347}}"));
-        await page.EnterN3DoesTheApplicantHaulForOthersAsync(data.Resolve("{{data:3_does_the_applicant_haul_for_others_348}}"));
-        await page.EnterN4WhatProtectiveDevicesAreInstalledOnEachVehicleOrTrailerAsync(data.Resolve("{{data:4_what_protective_devices_are_installed_on_each_vehicle_or_trailer_349}}"));
-        await page.EnterN5DoAnyVehiclesHaveSpecialEquipmentMountedOrAttachedAsync(data.Resolve("{{data:5_do_any_vehicles_have_special_equipment_mounted_or_attached_350}}"));
-        await page.EnterN6DoesTheApplicantPullDoubleOrTripleTrailersAsync(data.Resolve("{{data:6_does_the_applicant_pull_double_or_triple_trailers_351}}"));
-        await page.EnterN7DoesTheApplicantLeaveTheTruckWindowsDoorsAndCompartmentsClosedAndLockedWhenUnattendedAsync(data.Resolve("{{data:7_does_the_applicant_leave_the_truck_windows_doors_and_compartments_closed_and_locked_when_unattended_352}}"));
-        await page.EnterN8DoYouProvideScheduledMaintenanceForTheVehiclesAndTrailersYouOperateAsync(data.Resolve("{{data:8_do_you_provide_scheduled_maintenance_for_the_vehicles_and_trailers_you_operate_353}}"));
-        await page.EnterN9AreTheEmployeesThatPackLoadAndUnloadTrainedInProperHandlingOfTheCommoditiesAsync(data.Resolve("{{data:9_are_the_employees_that_pack_load_and_unload_trained_in_proper_handling_of_the_commodities_354}}"));
-        await page.EnterN10HowAreTheGoodsBeingTransportedProtectedFromDamageAndTheftAsync(data.Resolve("{{data:10_how_are_the_goods_being_transported_protected_from_damage_and_theft_355}}"));
-        await page.EnterN11AreDriversMVRsAndTripLogsMaintainedAsync(data.Resolve("{{data:11_are_drivers_mvrs_and_trip_logs_maintained_356}}"));
-        await page.EnterN12HowOftenAreTheseLogsReviewedOrUpdatedAsync(data.Resolve("{{data:12_how_often_are_these_logs_reviewed_or_updated_357}}"));
-        await page.EnterN13LiveAnimalInTransitCoverageAsync(data.Resolve("{{data:13_live_animal_in_transit_coverage_358}}"));
-        await page.EnterN14LegalLiabilityCoverageAsync(data.Resolve("{{data:14_legal_liability_coverage_359}}"));
+        await page.EnterWhichFormAreYouCompletingSequentiallyAsync(data.Resolve("{{data:which_form_are_you_completing_344}}"));
+        await page.EnterN1WhatAreTheDistancesTheShipmentsWillTravelAndTheTimeRequiredToCompleteTheShipmentSequentiallyAsync(data.Resolve("{{data:1_what_are_the_distances_the_shipments_will_travel_and_the_time_required_to_complete_the_shipment_346}}"));
+        await page.EnterN2WhatAreTheTypesAndAgesOfTheVehiclesTrailersUsedToTransportYourCommoditiesSequentiallyAsync(data.Resolve("{{data:2_what_are_the_types_and_ages_of_the_vehicles_trailers_used_to_transport_your_commodities_347}}"));
+        await page.EnterN3DoesTheApplicantHaulForOthersSequentiallyAsync(data.Resolve("{{data:3_does_the_applicant_haul_for_others_348}}"));
+        await page.EnterN4WhatProtectiveDevicesAreInstalledOnEachVehicleOrTrailerSequentiallyAsync(data.Resolve("{{data:4_what_protective_devices_are_installed_on_each_vehicle_or_trailer_349}}"));
+        await page.EnterN5DoAnyVehiclesHaveSpecialEquipmentMountedOrAttachedSequentiallyAsync(data.Resolve("{{data:5_do_any_vehicles_have_special_equipment_mounted_or_attached_350}}"));
+        await page.EnterN6DoesTheApplicantPullDoubleOrTripleTrailersSequentiallyAsync(data.Resolve("{{data:6_does_the_applicant_pull_double_or_triple_trailers_351}}"));
+        await page.EnterN7DoesTheApplicantLeaveTheTruckWindowsDoorsAndCompartmentsClosedAndLockedWhenUnattendedSequentiallyAsync(data.Resolve("{{data:7_does_the_applicant_leave_the_truck_windows_doors_and_compartments_closed_and_locked_when_unattended_352}}"));
+        await page.EnterN8DoYouProvideScheduledMaintenanceForTheVehiclesAndTrailersYouOperateSequentiallyAsync(data.Resolve("{{data:8_do_you_provide_scheduled_maintenance_for_the_vehicles_and_trailers_you_operate_353}}"));
+        await page.EnterN9AreTheEmployeesThatPackLoadAndUnloadTrainedInProperHandlingOfTheCommoditiesSequentiallyAsync(data.Resolve("{{data:9_are_the_employees_that_pack_load_and_unload_trained_in_proper_handling_of_the_commodities_354}}"));
+        await page.EnterN10HowAreTheGoodsBeingTransportedProtectedFromDamageAndTheftSequentiallyAsync(data.Resolve("{{data:10_how_are_the_goods_being_transported_protected_from_damage_and_theft_355}}"));
+        await page.EnterN11AreDriversMVRsAndTripLogsMaintainedSequentiallyAsync(data.Resolve("{{data:11_are_drivers_mvrs_and_trip_logs_maintained_356}}"));
+        await page.EnterN12HowOftenAreTheseLogsReviewedOrUpdatedSequentiallyAsync(data.Resolve("{{data:12_how_often_are_these_logs_reviewed_or_updated_357}}"));
+        await page.EnterN13LiveAnimalInTransitCoverageSequentiallyAsync(data.Resolve("{{data:13_live_animal_in_transit_coverage_358}}"));
+        await page.EnterN14LegalLiabilityCoverageSequentiallyAsync(data.Resolve("{{data:14_legal_liability_coverage_359}}"));
         await page.ClickOKAsync();
 
     }
