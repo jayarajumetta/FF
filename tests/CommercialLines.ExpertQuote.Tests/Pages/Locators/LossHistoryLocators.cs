@@ -43,7 +43,9 @@ public sealed class LossHistoryLocators
 
     public ILocator N3Years => _page.GetByTestId("fields.data.policy.policyUnderwriting.policyUnderwritingInput$yearsMaintainedContinuousInsuranceCoverage.value-chip-wrapper");
 
-    public ILocator OpenButton => _page.GetByTestId("fields.underwritingLossExperience.rows[0].addLoss.rows[0].addLossInput$claimStatus.value-chip-wrapper");
+    public ILocator OpenButton => _page.Locator("[data-testid='fields.underwritingLossExperience.rows[0].addLoss.rows[0].addLossInput$claimStatus.value-chip-wrapper']").Filter(new() { HasText = "Open" });
+
+    public ILocator SaveClaim => _page.GetByTestId("fields.underwritingLossExperience.rows[0].addLoss.rows[0].save");
 
     public ILocator PolicyExpire => _page.Locator("input[id=\"fields.underwritingLossExperience.rows[0].addLoss.rows[0].underwritingLossExperienceInput$policyPeriodExpirationDate.value\"][name=\"fields.underwritingLossExperience.rows[0].addLoss.rows[0].underwritingLossExperienceInput$policyPeriodExpirationDate.value\"]");
 
@@ -56,6 +58,8 @@ public sealed class LossHistoryLocators
     public ILocator PriorPolicyNo => _page.GetByTestId("fields.data.policy.policyInput$exposuresInsuredAN90Days.value-chip-wrapper");
 
     public ILocator Save => _page.Locator("button[id=\"fields.data.save\"], button[data-testid=\"fields.line.save\"], button:has-text(\"Save\"), a:has-text(\"Save\")").First;
+
+    public ILocator AddClaim => _page.GetByTestId("fields.data.policy.policyUnderwriting.underwritingLossExperience.addClaim");
 
     public ILocator ScreenHeading => _page.GetByText("Screen Heading", new() { Exact = true });
 

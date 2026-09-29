@@ -9,7 +9,18 @@ public sealed class UnderwritingLocators
 
     public ILocator Accept => _page.Locator("[id=\"accept-checklist-item\"]");
 
-    public ILocator BuildingEligibilityQuestionsNoneOfTheAboveCheckboxAngular => _page.GetByTestId("fields.data.account.buildingEligibility.rows[0].buildingInput$noneOfTheAboveUWQuestions.value");
+    // Row indices in the id/data-testid (rows[0], rows[1], ...) reflect the underlying rule
+    // configuration, not the order alerts are actually rendered on screen; different alert
+    // combinations can shift which row index appears first. Selecting by rendered order
+    // (Nth) instead of a hardcoded row index keeps this pointed at the first/second visible
+    // Agent Comments box regardless of which row index the platform assigns.
+    private ILocator AgentCommentsInputs => _page.Locator("input[data-testid*=\"uWRuleReview$agentComments.value\"]");
+
+    public ILocator AgentComments => AgentCommentsInputs.Nth(0);
+
+    public ILocator AgentComments2 => AgentCommentsInputs.Nth(1);
+
+    public ILocator BuildingEligibilityQuestionsNoneOfTheAboveCheckboxAngular => _page.Locator("input[id=\"fields.data.account.buildingEligibility.rows[0].buildingInput$noneOfTheAboveUWQuestions.value-checkbox\"]");
 
     public ILocator EntityType => _page.Locator("[id=\"fields.data.sFPInsuranceScoreDesigneeInput$entityType.value\"]");
 
@@ -20,6 +31,10 @@ public sealed class UnderwritingLocators
     public ILocator NoneOfTheAboveCheckBox => _page.Locator("[id=\"fields.underwritingQuestionsGeneralUWQuestions.generalInformationNewInput$noneOfTheAboveGeneralUWQuestions.value-checkbox\"]");
 
     public ILocator Premium => _page.Locator("[id=\"LineOutput.PremiumSummaryPremium124-0-layout\"]");
+
+    public ILocator ReferToUW => _page.Locator("button#fields\\.data\\.refer[data-testid=\"fields.data.refer\"]");
+
+    public ILocator KeepGoingConfirm => _page.Locator("button#btnConfirmYes[data-testid=\"btnConfirmYes\"]").Filter(new LocatorFilterOptions { HasText = "Keep Going" });
 
     public ILocator PrimaryInsured => _page.GetByTestId("fields.data.sFPInsuranceScoreDesigneeInput$headlessSelectionOption.value-chip-wrapper");
 

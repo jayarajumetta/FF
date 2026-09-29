@@ -32,6 +32,9 @@ public sealed class BuildingsPage
     public Task ClickAddBuildingBPPAsync() =>
         _ui.ClickAsync(_locators.AddBuildingBPP, new ControlIntent("Buildings", "AddBuildingBPP"));
 
+    public Task EnterBuildingLimitAsync(string value) =>
+        _ui.FillAsync(_locators.Building, value, new ControlIntent("Buildings", "Building"));
+
     public Task WaitForAddResidenceHeaderAsync(string expected) =>
         _ui.WaitAsync(_locators.AddResidenceHeader, expected, new ControlIntent("Buildings", "AddResidenceHeader"));
 
@@ -56,11 +59,23 @@ public sealed class BuildingsPage
     public Task PressBVSGroupComboboxAsync(string key) =>
         _ui.PressAsync(_locators.BVSGroup, key, new ControlIntent("Buildings", "BVSGroupCombobox"));
 
+    public Task SelectBVSGroupAsync(string value) =>
+        _ui.SelectAsync(_locators.BVSGroup, value, new ControlIntent("Buildings", "BVSGroup"));
+
     public Task ClickBVSResultAsync() =>
         _ui.ClickAsync(_locators.BVSResult, new ControlIntent("Buildings", "BVSResult"));
 
     public Task PressBVSResultsComboboxAsync(string key) =>
         _ui.PressAsync(_locators.BVSResult, key, new ControlIntent("Buildings", "BVSResultsCombobox"));
+
+    public Task SelectBVSResultAsync(string value) =>
+        _ui.SelectAsync(_locators.BVSResult, value, new ControlIntent("Buildings", "BVSResult"));
+
+    public Task EnterYearBuiltValuationAsync(string value) =>
+        _ui.FillAsync(_locators.GetValuation, value, new ControlIntent("Buildings", "GetValuation"));
+
+    public Task SelectRoofTypeValuationAsync(string value) =>
+        _ui.SelectAsync(_locators.RoofTypeValuation, value, new ControlIntent("Buildings", "RoofTypeValuation"));
 
     public Task PressBuildingAsync(string key) =>
         _ui.PressAsync(_locators.Building, key, new ControlIntent("Buildings", "Building"));
@@ -73,6 +88,9 @@ public sealed class BuildingsPage
 
     public Task PressBuildingCoverageAngularAsync(string key) =>
         _ui.PressAsync(_locators.BuildingCoverageAngular, key, new ControlIntent("Buildings", "BuildingCoverageAngular"));
+
+    public Task ClickBuildingCoverageAngularAsync() =>
+        _ui.ClickAsync(_locators.BuildingCoverageAngular, new ControlIntent("Buildings", "BuildingCoverageAngular"));
 
     public Task WaitForBuildingDetailsHeadingAsync(string expected) =>
         _ui.WaitAsync(_locators.BuildingDetailsHeading, expected, new ControlIntent("Buildings", "BuildingDetailsHeading"));
@@ -101,14 +119,14 @@ public sealed class BuildingsPage
     public Task WaitForBuildingPhoto4HeaderAsync(string expected) =>
         _ui.WaitAsync(_locators.BuildingPhoto1, expected, new ControlIntent("Buildings", "BuildingPhoto4Header"));
 
-    public Task WaitForCheckBoxAngularAsync(string expected) =>
-        _ui.WaitAsync(_locators.CheckBoxAngular, expected, new ControlIntent("Buildings", "CheckBoxAngular"));
+    public Task WaitForClassCodeCheckboxAsync(string expected) =>
+        _ui.WaitAsync(_locators.ClassCodeCheckbox, expected, new ControlIntent("Buildings", "ClassCodeCheckbox"));
 
-    public Task PressCheckBoxAngularAsync(string key) =>
-        _ui.PressAsync(_locators.CheckBoxAngular, key, new ControlIntent("Buildings", "CheckBoxAngular"));
+    public Task PressClassCodeCheckboxAsync(string key) =>
+        _ui.PressAsync(_locators.ClassCodeCheckbox, key, new ControlIntent("Buildings", "ClassCodeCheckbox"));
 
-    public Task ClickCheckBoxAngularAsync() =>
-        _ui.ClickAsync(_locators.CheckBoxAngular, new ControlIntent("Buildings", "CheckBoxAngular"));
+    public Task ClickClassCodeCheckboxAsync() =>
+        _ui.ClickAsync(_locators.ClassCodeCheckbox, new ControlIntent("Buildings", "ClassCodeCheckbox"));
 
     public Task WaitForClassCodesAsync(string expected) =>
         _ui.WaitAsync(_locators.ClassCodes, expected, new ControlIntent("Buildings", "ClassCodes"));
@@ -165,13 +183,19 @@ public sealed class BuildingsPage
         _ui.PressAsync(_locators.GetValuation, key, new ControlIntent("Buildings", "GetValuation"));
 
     public Task ClickGetValuationAsync() =>
-        _ui.ClickAsync(_locators.GetValuation, new ControlIntent("Buildings", "GetValuation"));
+        _ui.ClickAsync(_locators.GetValuationButton, new ControlIntent("Buildings", "GetValuationButton"));
 
     public Task PressGrossSalesReceiptsAsync(string key) =>
         _ui.PressAsync(_locators.GrossSalesReceipts, key, new ControlIntent("Buildings", "GrossSalesReceipts"));
 
+    public Task EnterGrossSalesReceiptsAsync(string value) =>
+        _ui.FillAsync(_locators.GrossSalesReceipts, value, new ControlIntent("Buildings", "GrossSalesReceipts"));
+
     public Task PressHeatingYearAsync(string key) =>
         _ui.PressAsync(_locators.HeatingYear, key, new ControlIntent("Buildings", "HeatingYear"));
+
+    public Task EnterHeatingYearAsync(string value) =>
+        _ui.FillAsync(_locators.HeatingYear, value, new ControlIntent("Buildings", "HeatingYear"));
 
     public Task PressInsuranceAmountAsync(string key) =>
         _ui.PressAsync(_locators.InsuranceAmount, key, new ControlIntent("Buildings", "InsuranceAmount"));
@@ -185,16 +209,28 @@ public sealed class BuildingsPage
     public Task SelectIsAnyHeatSourceThermostaticallyControlledYesAsync(string value) =>
         _ui.SelectAsync(_locators.IsAnyHeatSourceThermostaticallyControlledYes, value, new ControlIntent("Buildings", "IsAnyHeatSourceThermostaticallyControlledYes"));
 
+    public Task ClickIsAnyHeatSourceThermostaticallyControlledYesAsync() =>
+        _ui.ClickAsync(_locators.IsAnyHeatSourceThermostaticallyControlledYes.Filter(new() { HasText = "Yes" }), new ControlIntent("Buildings", "IsAnyHeatSourceThermostaticallyControlledYes"));
+
     public Task PressIsTheBuildingHeatedWithOneOfTheFollowingNoneOfTheAboveCheckboxAngularAsync(string key) =>
         _ui.PressAsync(_locators.IsTheBuildingHeatedWithOneOfTheFollowingNoneOfTheAboveCheckboxAngular, key, new ControlIntent("Buildings", "IsTheBuildingHeatedWithOneOfTheFollowingNoneOfTheAboveCheckboxAngular"));
+
+    public Task ClickIsTheBuildingHeatedWithOneOfTheFollowingNoneOfTheAboveCheckboxAngularAsync() =>
+        _ui.ClickAsync(_locators.IsTheBuildingHeatedWithOneOfTheFollowingNoneOfTheAboveCheckboxAngular, new ControlIntent("Buildings", "IsTheBuildingHeatedWithOneOfTheFollowingNoneOfTheAboveCheckboxAngular"));
 public Task PressNumberOfStoriesAsync(string key) =>
         _ui.PressAsync(_locators.NumberOfStories, key, new ControlIntent("Buildings", "NumberOfStories"));
+
+    public Task EnterNumberOfStoriesAsync(string value) =>
+        _ui.FillAsync(_locators.NumberOfStories, value, new ControlIntent("Buildings", "NumberOfStories"));
 
     public Task WaitForOccupancySQFTHeadingAsync(string expected) =>
         _ui.WaitAsync(_locators.OccupancySQFTHeading, expected, new ControlIntent("Buildings", "OccupancySQFTHeading"));
 
     public Task VerifyOccupancySqFootageTotalAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.OccupancySqFootageTotal, expected, property, new ControlIntent("Buildings", "OccupancySqFootageTotal"));
+
+    public Task EnterOccupancySqFootageTotalAsync(string value) =>
+        _ui.FillAsync(_locators.OccupancySqFootageTotal, value, new ControlIntent("Buildings", "OccupancySqFootageTotal"));
 
     public Task PressOccupancySqFtLimitAsync(string key) =>
         _ui.PressAsync(_locators.OccupancySqFtLimit, key, new ControlIntent("Buildings", "OccupancySqFtLimit"));
@@ -204,6 +240,9 @@ public Task PressNumberOfStoriesAsync(string key) =>
 
     public Task PressPersonalPropertyLimitAsync(string key) =>
         _ui.PressAsync(_locators.PersonalPropertyLimit, key, new ControlIntent("Buildings", "PersonalPropertyLimit"));
+
+    public Task EnterPersonalPropertyLimitAsync(string value) =>
+        _ui.FillAsync(_locators.PersonalPropertyLimit, value, new ControlIntent("Buildings", "PersonalPropertyLimit"));
 
     public Task WaitForPersonalPropertyLimitCheckBoxAngularAsync(string expected) =>
         _ui.WaitAsync(_locators.PersonalPropertyLimitCheckBoxAngular, expected, new ControlIntent("Buildings", "PersonalPropertyLimitCheckBoxAngular"));
@@ -217,6 +256,9 @@ public Task PressNumberOfStoriesAsync(string key) =>
     public Task PressPlumbingYearAsync(string key) =>
         _ui.PressAsync(_locators.PlumbingYear, key, new ControlIntent("Buildings", "PlumbingYear"));
 
+    public Task EnterPlumbingYearAsync(string value) =>
+        _ui.FillAsync(_locators.PlumbingYear, value, new ControlIntent("Buildings", "PlumbingYear"));
+
     public Task ClickRCTAsync() =>
         _ui.ClickAsync(_locators.RCT, new ControlIntent("Buildings", "RCT"));
 
@@ -227,7 +269,7 @@ public Task PressNumberOfStoriesAsync(string key) =>
         _ui.PressAsync(_locators.ActualCashValue, key, new ControlIntent("Buildings", "ReplacementCost"));
 
     public Task ClickReplacementCostAsync() =>
-        _ui.ClickAsync(_locators.ActualCashValue, new ControlIntent("Buildings", "ReplacementCost"));
+        _ui.ClickAsync(_locators.ActualCashValue.Filter(new() { HasText = "Replacement Cost" }), new ControlIntent("Buildings", "ReplacementCost"));
 
     public Task VerifyResidenceCoverageAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.ResidenceCoverage, expected, property, new ControlIntent("Buildings", "ResidenceCoverage"));
@@ -244,6 +286,9 @@ public Task PressNumberOfStoriesAsync(string key) =>
     public Task EnterRoofType1Async(string value) =>
         _ui.FillAsync(_locators.RoofType1, value, new ControlIntent("Buildings", "RoofType1"));
 
+    public Task SelectRoofType1Async(string value) =>
+        _ui.SelectAsync(_locators.RoofType1, value, new ControlIntent("Buildings", "RoofType1"));
+
     public Task PressRoofTypeMainAsync(string key) =>
         _ui.PressAsync(_locators.GetValuation, key, new ControlIntent("Buildings", "RoofTypeMain"));
 
@@ -252,6 +297,9 @@ public Task PressNumberOfStoriesAsync(string key) =>
 
     public Task PressRoofYearAsync(string key) =>
         _ui.PressAsync(_locators.AutomaticCommercialCookingExhaustAndExtinguishingANSULSystemYes, key, new ControlIntent("Buildings", "RoofYear"));
+
+    public Task EnterRoofYearAsync(string value) =>
+        _ui.FillAsync(_locators.AutomaticCommercialCookingExhaustAndExtinguishingANSULSystemYes, value, new ControlIntent("Buildings", "RoofYear"));
 
     public Task PressSaveAsync(string key) =>
         _ui.PressAsync(_locators.Save, key, new ControlIntent("Buildings", "Save"));
@@ -271,8 +319,14 @@ public Task PressNumberOfStoriesAsync(string key) =>
     public Task PressSelectAnyOfTheFollowingWhichApplyToThisBuildingNoneOfTheAboveCheckboxAngularAsync(string key) =>
         _ui.PressAsync(_locators.SelectAnyOfTheFollowingWhichApplyToThisBuildingNoneOfTheAboveCheckboxAngular, key, new ControlIntent("Buildings", "SelectAnyOfTheFollowingWhichApplyToThisBuildingNoneOfTheAboveCheckboxAngular"));
 
+    public Task ClickSelectAnyOfTheFollowingWhichApplyToThisBuildingNoneOfTheAboveCheckboxAngularAsync() =>
+        _ui.ClickAsync(_locators.SelectAnyOfTheFollowingWhichApplyToThisBuildingNoneOfTheAboveCheckboxAngular, new ControlIntent("Buildings", "SelectAnyOfTheFollowingWhichApplyToThisBuildingNoneOfTheAboveCheckboxAngular"));
+
     public Task WaitForSelectIfClientOwnsOrRentsTheBuildingAsync(string expected) =>
         _ui.WaitAsync(_locators.SelectIfClientOwnsOrRentsTheBuilding, expected, new ControlIntent("Buildings", "SelectIfClientOwnsOrRentsTheBuilding"));
+
+    public Task EnterTotalBuildingSqFootageAsync(string value) =>
+        _ui.FillAsync(_locators.SelectIfClientOwnsOrRentsTheBuilding, value, new ControlIntent("Buildings", "TotalBuildingSqFootage"));
 
     public Task PressSingleFamilyAsync(string key) =>
         _ui.PressAsync(_locators.SingleFamily, key, new ControlIntent("Buildings", "SingleFamily"));
@@ -283,6 +337,9 @@ public Task PressNumberOfStoriesAsync(string key) =>
     public Task SelectSprinklerYesAsync(string value) =>
         _ui.SelectAsync(_locators.SprinklerYes, value, new ControlIntent("Buildings", "SprinklerYes"));
 
+    public Task ClickSprinklerYesAsync() =>
+        _ui.ClickAsync(_locators.SprinklerYes.Filter(new() { HasText = "Yes" }), new ControlIntent("Buildings", "SprinklerYes"));
+
     public Task PressSquareFeetAsync(string key) =>
         _ui.PressAsync(_locators.SquareFeet, key, new ControlIntent("Buildings", "SquareFeet"));
 
@@ -292,11 +349,20 @@ public Task PressNumberOfStoriesAsync(string key) =>
     public Task PressWiringYearAsync(string key) =>
         _ui.PressAsync(_locators.WiringYear, key, new ControlIntent("Buildings", "WiringYear"));
 
+    public Task EnterWiringYearAsync(string value) =>
+        _ui.FillAsync(_locators.WiringYear, value, new ControlIntent("Buildings", "WiringYear"));
+
     public Task PressYearBuiltAsync(string key) =>
         _ui.PressAsync(_locators.YearBuilt, key, new ControlIntent("Buildings", "YearBuilt"));
 
+    public Task EnterYearBuiltAsync(string value) =>
+        _ui.FillAsync(_locators.YearBuilt, value, new ControlIntent("Buildings", "YearBuilt"));
+
     public Task PressYearBuiltRenovatedAsync(string key) =>
         _ui.PressAsync(_locators.YearBuiltRenovated, key, new ControlIntent("Buildings", "YearBuiltRenovated"));
+
+    public Task EnterYearBuiltRenovatedAsync(string value) =>
+        _ui.FillAsync(_locators.YearBuiltRenovated, value, new ControlIntent("Buildings", "YearBuiltRenovated"));
 
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);

@@ -28,6 +28,44 @@ public sealed class CoveragesLocators
 
     public ILocator Detail => _page.Locator("[id=\"dctGridLink\"]");
 
+    public ILocator FG0055Detail => _page.Locator("tr:has-text(\"Employment Practices Liability Insurance Coverage Endorsement\")").Locator("a:has(span.g-btn-text:has-text(\"Detail\"))").First;
+
+    public ILocator FG0059TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementNY => _page.GetByText("Employment Practices Liability Insurance Coverage Endorsement (NY)", new() { Exact = true });
+
+    public ILocator FG0059Detail => _page.Locator("tr:has-text(\"Employment Practices Liability Insurance Coverage Endorsement (NY)\")").Locator("a:has(span.g-btn-text:has-text(\"Detail\"))").First;
+
+    public ILocator FG0063TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementMD => _page.GetByText("Employment Practices Liability Insurance Coverage Endorsement (MD)", new() { Exact = true });
+
+    public ILocator FG0063Detail => _page.Locator("tr:has-text(\"Employment Practices Liability Insurance Coverage Endorsement (MD)\")").Locator("a:has(span.g-btn-text:has-text(\"Detail\"))").First;
+
+    public ILocator FG0062TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementPA => _page.GetByText("Employment Practices Liability Insurance Coverage Endorsement (PA)", new() { Exact = true });
+
+    public ILocator FG0062Detail => _page.Locator("tr:has-text(\"Employment Practices Liability Insurance Coverage Endorsement (PA)\")").Locator("a:has(span.g-btn-text:has-text(\"Detail\"))").First;
+
+    public ILocator FG0069TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementOR => _page.GetByText("Employment Practices Liability Insurance Coverage Endorsement (OR)", new() { Exact = true });
+
+    public ILocator FG0069Detail => _page.Locator("tr:has-text(\"Employment Practices Liability Insurance Coverage Endorsement (OR)\")").Locator("a:has(span.g-btn-text:has-text(\"Detail\"))").First;
+
+    public ILocator FG0071TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementNH => _page.GetByText("Employment Practices Liability Insurance Coverage Endorsement (NH)", new() { Exact = true });
+
+    public ILocator FG0071Detail => _page.Locator("tr:has-text(\"Employment Practices Liability Insurance Coverage Endorsement (NH)\")").Locator("a:has(span.g-btn-text:has-text(\"Detail\"))").First;
+
+    public ILocator FG0072TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementME => _page.GetByText("Employment Practices Liability Insurance Coverage Endorsement (ME)", new() { Exact = true });
+
+    public ILocator FG0072Detail => _page.Locator("tr:has-text(\"Employment Practices Liability Insurance Coverage Endorsement (ME)\")").Locator("a:has(span.g-btn-text:has-text(\"Detail\"))").First;
+
+    public ILocator FG0074TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementCT => _page.GetByText("Employment Practices Liability Insurance Coverage Endorsement (CT)", new() { Exact = true });
+
+    public ILocator FG0074Detail => _page.Locator("tr:has-text(\"Employment Practices Liability Insurance Coverage Endorsement (CT)\")").Locator("a:has(span.g-btn-text:has-text(\"Detail\"))").First;
+
+    public ILocator FG0077TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementVA => _page.GetByText("Employment Practices Liability Insurance Coverage Endorsement (VA)", new() { Exact = true });
+
+    public ILocator FG0077Detail => _page.Locator("tr:has-text(\"Employment Practices Liability Insurance Coverage Endorsement (VA)\")").Locator("a:has(span.g-btn-text:has-text(\"Detail\"))").First;
+
+    public ILocator FG0078TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementVT => _page.GetByText("Employment Practices Liability Insurance Coverage Endorsement (VT)", new() { Exact = true });
+
+    public ILocator FG0078Detail => _page.Locator("tr:has-text(\"Employment Practices Liability Insurance Coverage Endorsement (VT)\")").Locator("a:has(span.g-btn-text:has-text(\"Detail\"))").First;
+
     public ILocator EndorsementType => _page.Locator("input[fieldref=\"CovEndorsementsInput.Type\"]");
 
     public ILocator PageTitle => _page.Locator("[id=\"pageTitle\"]");
@@ -38,6 +76,12 @@ public sealed class CoveragesLocators
     public ILocator EstimatedPremium => _page.Locator("input[fieldref=\"PolicyInput.EstimatedPremium\"]");
     public ILocator FG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsement => _page.GetByText("Employment Practices Liability Insurance Coverage Endorsement", new() { Exact = true });
 
+    public ILocator CG2151TableRowAmendmentOfLiquorLiabilityExclusion => _page.GetByText("Amendment Of Liquor Liability Exclusion - Exception For Scheduled Activities", new() { Exact = true });
+
+    public ILocator CG2151Detail => _page.Locator("tr:has-text(\"Amendment Of Liquor Liability Exclusion - Exception For Scheduled Activities\")").Locator("a:has(span.g-btn-text:has-text(\"Detail\"))").First;
+
+    public ILocator CovEndorsementsDescription => _page.Locator("textarea[fieldref=\"CovEndorsementsInput.Description\"]");
+
     public ILocator FGFormTableRow => _page.GetByText("FG0055", new() { Exact = true });
 
     public ILocator Fungus => _page.Locator("input[fieldref=\"CovFungusInput.Indicator\"]");
@@ -46,7 +90,7 @@ public sealed class CoveragesLocators
 
     public ILocator HasTheInsuredEverHadAClaimForEmploymentPractices => _page.Locator("input[fieldref=\"CovEndorsementsInput.EPLIClaim\"]");
 
-    public ILocator IM => _page.GetByText("IM", new() { Exact = true });
+    public ILocator IM => _page.Locator("input[type='checkbox'][fieldref='LineInput.Selected'][name='boolean_2F6_2']");
 
     public ILocator LimitDeductible => _page.Locator("input[fieldref=\"CovEndorsementsInput.EPLILimitDeductible\"]");
 

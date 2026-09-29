@@ -42,7 +42,7 @@ public sealed class PolicyWorkflowPage
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("PolicyWorkflow", "Businessowners"));
 
     public Task ClickCPDetailAsync() =>
-        _ui.ClickAsync(_locators.Detail, new ControlIntent("PolicyWorkflow", "CPDetail"));
+        _ui.ClickAsync(_locators.CPDetail, new ControlIntent("PolicyWorkflow", "CPDetail"));
 
     public Task WaitForCPPLiabilityAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("PolicyWorkflow", "CPPLiability"));
@@ -117,7 +117,7 @@ public sealed class PolicyWorkflowPage
         _ui.ClickAsync(_locators.IFRAMEDuckCreekPolicyOtherCheckBox, new ControlIntent("PolicyWorkflow", "IFRAMEDuckCreekPolicyOtherCheckBox"));
 
     public Task ClickIMDetailAsync() =>
-        _ui.ClickAsync(_locators.Detail, new ControlIntent("PolicyWorkflow", "IMDetail"));
+        _ui.ClickAsync(_locators.IMDetail, new ControlIntent("PolicyWorkflow", "IMDetail"));
 
     public Task ClickIncludeBusinessownersAsync() =>
         _ui.ClickAsync(_locators.IncludeBusinessowners, new ControlIntent("PolicyWorkflow", "IncludeBusinessowners"));
@@ -353,6 +353,8 @@ public sealed class PolicyWorkflowPage
     public Task ClickShowMeAsync() =>
         _ui.ClickAsync(_locators.ShowMe, new ControlIntent("PolicyWorkflow", "ShowMe"));
 
+    public Task<bool> IsShowMeVisibleAsync() => _ui.ExistsAsync(_locators.ShowMe);
+
     public Task SetSplitBIDedAsync(string value) =>
         _ui.SmartSetAsync(_locators.SplitBIDed, value, new ControlIntent("PolicyWorkflow", "SplitBIDed"));
 
@@ -482,4 +484,12 @@ public sealed class PolicyWorkflowPage
 
     public Task EnterSplitPDDedSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.SplitPDDed, value, new ControlIntent("PolicyWorkflow", "SplitPDDed"), delayMs);
+
+    public Task ClickLocationAsync() =>
+        _ui.ClickAsync(_locators.Location, new ControlIntent("PolicyWorkflow", "Location"));
+
+    public Task<bool> IsTerritoryVisibleAsync() => _ui.ExistsAsync(_locators.Territory);
+
+    public Task EnterTerritoryAsync(string value) =>
+        _ui.FillAsync(_locators.Territory, value, new ControlIntent("PolicyWorkflow", "Territory"));
 }

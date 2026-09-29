@@ -15,7 +15,7 @@ public sealed class BillingLocators
 
     public ILocator BusinessName => _page.Locator("input[id=\"fields._PolicyPaymentInputDoc.subsequentPayorData$businessName.value\"][name=\"fields._PolicyPaymentInputDoc.subsequentPayorData$businessName.value\"]");
 
-    public ILocator CheckButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.initialPaymentData$paymentMethod.value-chip-wrapper");
+    public ILocator CheckButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.initialPaymentData$paymentMethod.value-chip-label").Filter(new LocatorFilterOptions { HasText = "Check" }).First;
 
     public ILocator CheckNumber => _page.Locator("input[id=\"fields._PolicyPaymentInputDoc.initialPaymentData$checkNumber.value\"][name=\"fields._PolicyPaymentInputDoc.initialPaymentData$checkNumber.value\"]");
 
@@ -23,28 +23,30 @@ public sealed class BillingLocators
 
     public ILocator City => _page.Locator("input[id=\"fields._PolicyPaymentInputDoc.subsequentPayorDataAddress$city.value\"][name=\"fields._PolicyPaymentInputDoc.subsequentPayorDataAddress$city.value\"]");
 
-    public ILocator CreateNewBillingAccount => _page.GetByTestId("fields._PolicyPaymentInputDoc._PolicyPaymentInputDoc$billingCenterAccount.value-new-account-chip-chip");
+    public ILocator CreateNewBillingAccount => _page.GetByTestId("fields._PolicyPaymentInputDoc._PolicyPaymentInputDoc$billingCenterAccount.value-chip-label").Filter(new LocatorFilterOptions { HasText = "Create New Billing Account" }).First;
 
 
-    public ILocator DirectBillButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$paymentMethod.value-chip-wrapper");
+    public ILocator DirectBillButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$paymentMethod.value-chip-label").Filter(new LocatorFilterOptions { HasText = "Direct Bill" }).First;
 
     public ILocator FirstName => _page.Locator("input[id=\"fields._PolicyPaymentInputDoc.subsequentPayorData$firstName.value\"][name=\"fields._PolicyPaymentInputDoc.subsequentPayorData$firstName.value\"]");
 
-    public ILocator InitialPaymentFullBalance => _page.Locator("input[id=\"fields._PolicyPaymentInputDoc.initialPaymentData$amountSelection.value-1-input\"][name=\"mat-radio-group-8\"]");
+    public ILocator InitialPaymentFullBalance => _page.Locator("label[for=\"fields._PolicyPaymentInputDoc.initialPaymentData$amountSelection.value-1-input\"]").Filter(new LocatorFilterOptions { HasText = "Full Balance" }).First;
 
     public ILocator LastName => _page.Locator("input[id=\"fields._PolicyPaymentInputDoc.subsequentPayorData$lastName.value\"][name=\"fields._PolicyPaymentInputDoc.subsequentPayorData$lastName.value\"]");
 
     public ILocator Loading => _page.GetByLabel("Loading ...", new() { Exact = true });
 
-    public ILocator N1PaymentButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$paymentPlan.value-chip-wrapper");
+    public ILocator N1PaymentButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$paymentPlan.value-chip-label").Filter(new LocatorFilterOptions { HasText = "1 Payment" }).First;
 
-    public ILocator OTHERButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$payerID.value-OTHER-payer-chip-chip");
+    public ILocator OTHERButton => _page.GetByTestId("fields._PolicyPaymentInputDoc.subsequentPaymentData$payerID.value-chip-label").Filter(new LocatorFilterOptions { HasText = "OTHER" }).First;
 
     public ILocator ScreenHeading => _page.GetByText("Screen Heading", new() { Exact = true });
 
     public ILocator State => _page.Locator("[id=\"_temp.fields._PolicyPaymentInputDoc.subsequentPayorDataAddress$state.value\"]");
 
     public ILocator TableRowCellLink => _page.GetByText("Link", new() { Exact = true });
+
+    public ILocator NextSubmission => _page.Locator("[data-testid=\"fields.data-Next.next-button-label\"], [data-testid=\"fields.data.next-button-label\"]").Filter(new LocatorFilterOptions { HasText = "Next: Submission" }).First;
 
     public ILocator ZipCode => _page.Locator("input[id=\"fields._PolicyPaymentInputDoc.subsequentPayorDataAddress$zipCode.value\"][name=\"fields._PolicyPaymentInputDoc.subsequentPayorDataAddress$zipCode.value\"]");
 

@@ -20,17 +20,32 @@ public sealed class CoveragesPage
     public Task ClickAddCoverageFormAsync() =>
         _ui.ClickAsync(_locators.AddCoverageForm, new ControlIntent("Coverages", "AddCoverageForm"));
 
+    public Task WaitForAddCoverageFormAsync(string expected) =>
+        _ui.WaitAsync(_locators.AddCoverageForm, expected, new ControlIntent("Coverages", "AddCoverageForm"));
+
     public Task ClickAddEndorsementAsync() =>
         _ui.ClickAsync(_locators.AddEndorsement, new ControlIntent("Coverages", "AddEndorsement"));
+
+    public Task WaitForAwayFromPremisesDescAsync(string expected) =>
+        _ui.WaitAsync(_locators.AwayFromPremisesDesc, expected, new ControlIntent("Coverages", "AwayFromPremisesDesc"));
 
     public Task EnterAwayFromPremisesDescAsync(string value) =>
         _ui.FillAsync(_locators.AwayFromPremisesDesc, value, new ControlIntent("Coverages", "AwayFromPremisesDesc"));
 
+    public Task EnterAwayFromPremisesDescSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.AwayFromPremisesDesc, value, new ControlIntent("Coverages", "AwayFromPremisesDesc"), delayMs);
+
     public Task PressAwayFromPremisesDescAsync(string key) =>
         _ui.PressAsync(_locators.AwayFromPremisesDesc, key, new ControlIntent("Coverages", "AwayFromPremisesDesc"));
 
+    public Task WaitForAwayFromPremisesLmtAsync(string expected) =>
+        _ui.WaitAsync(_locators.AwayFromPremisesLmt, expected, new ControlIntent("Coverages", "AwayFromPremisesLmt"));
+
     public Task EnterAwayFromPremisesLmtAsync(string value) =>
         _ui.FillAsync(_locators.AwayFromPremisesLmt, value, new ControlIntent("Coverages", "AwayFromPremisesLmt"));
+
+    public Task EnterAwayFromPremisesLmtSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.AwayFromPremisesLmt, value, new ControlIntent("Coverages", "AwayFromPremisesLmt"), delayMs);
 
     public Task PressAwayFromPremisesLmtAsync(string key) =>
         _ui.PressAsync(_locators.AwayFromPremisesLmt, key, new ControlIntent("Coverages", "AwayFromPremisesLmt"));
@@ -38,8 +53,14 @@ public sealed class CoveragesPage
     public Task ClickPolicyCovgAccountsReceivableOKAsync() =>
         _ui.ClickAsync(_locators.PolicyCovgAccountsReceivableOK, new ControlIntent("Coverages", "PolicyCovgAccountsReceivableOK"));
 
+    public Task WaitForPolicyCovgAccountsReceivableOKAsync(string expected) =>
+        _ui.WaitAsync(_locators.PolicyCovgAccountsReceivableOK, expected, new ControlIntent("Coverages", "PolicyCovgAccountsReceivableOK"));
+
     public Task ClickCPAsync() =>
         _ui.ClickAsync(_locators.CP, new ControlIntent("Coverages", "CP"));
+
+    public Task WaitForCoinsuranceAsync(string expected) =>
+        _ui.WaitAsync(_locators.Coinsurance, expected, new ControlIntent("Coverages", "Coinsurance"));
 
     public Task EnterCoinsuranceAsync(string value) =>
         _ui.FillAsync(_locators.Coinsurance, value, new ControlIntent("Coverages", "Coinsurance"));
@@ -47,11 +68,31 @@ public sealed class CoveragesPage
     public Task PressCoinsuranceAsync(string key) =>
         _ui.PressAsync(_locators.Coinsurance, key, new ControlIntent("Coverages", "Coinsurance"));
 
+    public Task WaitForCoverageFormToBeAddedAsync(string expected) =>
+        _ui.WaitAsync(_locators.CoverageFormToBeAdded, expected, new ControlIntent("Coverages", "CoverageFormToBeAdded"));
+
     public Task EnterCoverageFormToBeAddedAsync(string value) =>
         _ui.FillAsync(_locators.CoverageFormToBeAdded, value, new ControlIntent("Coverages", "CoverageFormToBeAdded"));
 
     public Task PressCoverageFormToBeAddedAsync(string key) =>
         _ui.PressAsync(_locators.CoverageFormToBeAdded, key, new ControlIntent("Coverages", "CoverageFormToBeAdded"));
+
+    public async Task EnterCoverageFormToBeAddedWithRetryAsync(string value, int maxAttempts = 3, int waitBeforeMs = 1000, int delayMs = 20)
+    {
+        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        {
+            await Task.Delay(waitBeforeMs);
+            if (await _ui.ExistsAsync(_locators.CoverageFormToBeAdded))
+            {
+                await _ui.PressSequentiallyAsync(_locators.CoverageFormToBeAdded, value, new ControlIntent("Coverages", "CoverageFormToBeAdded"), delayMs);
+                return;
+            }
+        }
+        await _ui.PressSequentiallyAsync(_locators.CoverageFormToBeAdded, value, new ControlIntent("Coverages", "CoverageFormToBeAdded"), delayMs);
+    }
+
+    public Task WaitForDescriptionAsync(string expected) =>
+        _ui.WaitAsync(_locators.Description, expected, new ControlIntent("Coverages", "Description"));
 
     public Task EnterDescriptionAsync(string value) =>
         _ui.FillAsync(_locators.Description, value, new ControlIntent("Coverages", "Description"));
@@ -74,6 +115,9 @@ public sealed class CoveragesPage
     public Task ClickDetailAsync() =>
         _ui.ClickAsync(_locators.Detail, new ControlIntent("Coverages", "Detail"));
 
+    public Task ClickFG0055DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0055Detail, new ControlIntent("Coverages", "FG0055Detail"));
+
     public Task EnterEndorsementTypeAsync(string value) =>
         _ui.FillAsync(_locators.EndorsementType, value, new ControlIntent("Coverages", "EndorsementType"));
 
@@ -91,6 +135,69 @@ public sealed class CoveragesPage
 
     public Task VerifyFG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.FG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsement, expected, property, new ControlIntent("Coverages", "FG0055TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsement"));
+
+    public Task<bool> IsCG2151TableRowAmendmentOfLiquorLiabilityExclusionVisibleAsync() =>
+        _ui.ExistsAsync(_locators.CG2151TableRowAmendmentOfLiquorLiabilityExclusion);
+
+    public Task ClickCG2151DetailAsync() =>
+        _ui.ClickAsync(_locators.CG2151Detail, new ControlIntent("Coverages", "CG2151Detail"));
+
+    public Task EnterCovEndorsementsDescriptionAsync(string value) =>
+        _ui.FillAsync(_locators.CovEndorsementsDescription, value, new ControlIntent("Coverages", "CovEndorsementsDescription"));
+
+    public Task<bool> IsFG0059TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementNYVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0059TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementNY);
+
+    public Task ClickFG0059DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0059Detail, new ControlIntent("Coverages", "FG0059Detail"));
+
+    public Task<bool> IsFG0063TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementMDVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0063TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementMD);
+
+    public Task ClickFG0063DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0063Detail, new ControlIntent("Coverages", "FG0063Detail"));
+
+    public Task<bool> IsFG0062TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementPAVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0062TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementPA);
+
+    public Task ClickFG0062DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0062Detail, new ControlIntent("Coverages", "FG0062Detail"));
+
+    public Task<bool> IsFG0069TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementORVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0069TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementOR);
+
+    public Task ClickFG0069DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0069Detail, new ControlIntent("Coverages", "FG0069Detail"));
+
+    public Task<bool> IsFG0071TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementNHVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0071TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementNH);
+
+    public Task ClickFG0071DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0071Detail, new ControlIntent("Coverages", "FG0071Detail"));
+
+    public Task<bool> IsFG0072TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementMEVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0072TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementME);
+
+    public Task ClickFG0072DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0072Detail, new ControlIntent("Coverages", "FG0072Detail"));
+
+    public Task<bool> IsFG0074TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementCTVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0074TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementCT);
+
+    public Task ClickFG0074DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0074Detail, new ControlIntent("Coverages", "FG0074Detail"));
+
+    public Task<bool> IsFG0077TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementVAVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0077TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementVA);
+
+    public Task ClickFG0077DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0077Detail, new ControlIntent("Coverages", "FG0077Detail"));
+
+    public Task<bool> IsFG0078TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementVTVisibleAsync() =>
+        _ui.ExistsAsync(_locators.FG0078TableRowEmploymentPracticesLiabilityInsuranceCoverageEndorsementVT);
+
+    public Task ClickFG0078DetailAsync() =>
+        _ui.ClickAsync(_locators.FG0078Detail, new ControlIntent("Coverages", "FG0078Detail"));
 
     public Task WaitForFGFormTableRowAsync(string expected) =>
         _ui.WaitAsync(_locators.FGFormTableRow, expected, new ControlIntent("Coverages", "FGFormTableRow"));
@@ -161,12 +268,6 @@ public sealed class CoveragesPage
     public Task<string> CaptureDescriptionOfSpecifiedOperationAsync(string property = "") =>
         _ui.CaptureAsync(_locators.DescriptionOfSpecifiedOperation, property, new ControlIntent("Coverages", "DescriptionOfSpecifiedOperation"));
 
-
-    public Task EnterAwayFromPremisesDescSequentiallyAsync(string value, int delayMs = 20) =>
-        _ui.PressSequentiallyAsync(_locators.AwayFromPremisesDesc, value, new ControlIntent("Coverages", "AwayFromPremisesDesc"), delayMs);
-
-    public Task EnterAwayFromPremisesLmtSequentiallyAsync(string value, int delayMs = 20) =>
-        _ui.PressSequentiallyAsync(_locators.AwayFromPremisesLmt, value, new ControlIntent("Coverages", "AwayFromPremisesLmt"), delayMs);
 
     public Task EnterCoinsuranceSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.Coinsurance, value, new ControlIntent("Coverages", "Coinsurance"), delayMs);

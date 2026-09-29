@@ -116,6 +116,8 @@ public sealed class UiActions
         {
             await x.ClickAsync();
             try { await x.FillAsync(string.Empty); } catch { }
+            await x.ClickAsync();
+            await Task.Delay(150);
             await x.PressSequentiallyAsync(value ?? string.Empty, new LocatorPressSequentiallyOptions { Delay = Math.Max(0, delayMs) });
         });
     }
@@ -537,11 +539,11 @@ public sealed class UiActions
     private async Task ExecuteAsync(ILocator locator, ControlIntent intent, string action, Func<ILocator, Task> operation)
     {
         await WaitForPageReadyBestEffortAsync();
+        await PreActionDelayAsync();
         try
         {
-            await PrepareForActionAsync(locator, intent, action);
             var resolved = _runtimeLocatorResolver is null ? locator : await _runtimeLocatorResolver.ResolveAsync(_browser.Page, locator, intent, action) ?? locator;
-            if (!ReferenceEquals(resolved, locator)) await PrepareForActionAsync(resolved, intent, action);
+            await PrepareForActionAsync(resolved, intent, action);
             using var frameScope = FrameExecutionContext.Push(null);
             await ExecuteWithHighlightAsync(resolved, action, operation);
         }
@@ -551,15 +553,21 @@ public sealed class UiActions
     private async Task<T> ExecuteAsync<T>(ILocator locator, ControlIntent intent, string action, Func<ILocator, Task<T>> operation)
     {
         await WaitForPageReadyBestEffortAsync();
+        await PreActionDelayAsync();
         try
         {
-            await PrepareForActionAsync(locator, intent, action);
             var resolved = _runtimeLocatorResolver is null ? locator : await _runtimeLocatorResolver.ResolveAsync(_browser.Page, locator, intent, action) ?? locator;
-            if (!ReferenceEquals(resolved, locator)) await PrepareForActionAsync(resolved, intent, action);
+            await PrepareForActionAsync(resolved, intent, action);
             using var frameScope = FrameExecutionContext.Push(null);
             return await ExecuteWithHighlightAsync(resolved, action, operation);
         }
         catch (Exception) { throw; }
+    }
+
+    private Task PreActionDelayAsync()
+    {
+        var delayMs = _config.Waits.PreActionDelayMs;
+        return delayMs > 0 ? Task.Delay(delayMs) : Task.CompletedTask;
     }
 
     private async Task ExecuteWithHighlightAsync(ILocator locator, string action, Func<ILocator, Task> operation)

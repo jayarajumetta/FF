@@ -1,4 +1,5 @@
 using System.IO.Compression;
+using System.Linq;
 using Microsoft.Playwright;
 namespace InsuranceAutomation.Core;
 public sealed class BrowserSession : IAsyncDisposable
@@ -88,6 +89,45 @@ public sealed class BrowserSession : IAsyncDisposable
             return path;
         }
         finally { _screenshotGate.Release(); }
+    }
+    /// <summary>
+    /// Switches the active page to a newly opened tab/window (e.g. a checklist launched via
+    /// window.open/target=_blank) and waits for it to finish loading. If no new page opens within
+    /// the timeout, the current page remains active.
+    /// </summary>
+    public async Task<IPage> SwitchToNewPageAsync(Func<Task> triggerAction, int timeoutMs = 15000)
+    {
+        if (_context is null) throw new InvalidOperationException("Browser is not open. Ensure the Feature Background contains: Given I open a browser session.");
+        var waitForPopup = _context.WaitForPageAsync(new BrowserContextWaitForPageOptions { Timeout = timeoutMs });
+        var trigger = triggerAction();
+        var newPage = await waitForPopup;
+        await trigger;
+        await newPage.WaitForLoadStateAsync(LoadState.DOMContentLoaded, new PageWaitForLoadStateOptions { Timeout = timeoutMs });
+        _page = newPage;
+        await _page.BringToFrontAsync();
+        return _page;
+    }
+    /// <summary>
+    /// Switches the active page back to the first (original) window/tab opened in this browser
+    /// context, e.g. returning from a checklist popup to the primary ExpertQuote window.
+    /// </summary>
+    public Task<IPage> SwitchToFirstPageAsync() => SwitchToPageAtAsync(0);
+    /// <summary>
+    /// Switches the active page to the browser context page at the given index (0-based, in the
+    /// order the pages were opened). Closed pages are skipped so a popup that closed itself
+    /// (e.g. the checklist window) does not shift the index of the still-open original window.
+    /// </summary>
+    public async Task<IPage> SwitchToPageAtAsync(int index)
+    {
+        if (_context is null) throw new InvalidOperationException("Browser is not open. Ensure the Feature Background contains: Given I open a browser session.");
+        var openPages = _context.Pages.Where(p => !p.IsClosed).ToList();
+        if (index < 0 || index >= openPages.Count)
+            throw new InvalidOperationException($"Cannot switch to page index {index}; browser context currently has {openPages.Count} open page(s).");
+        _page = openPages[index];
+        // BringToFrontAsync makes the browser visually activate/focus this tab/window, not just
+        // retarget subsequent Playwright actions to it, so the user actually sees the switch happen.
+        await _page.BringToFrontAsync();
+        return _page;
     }
     public async Task<byte[]> CaptureScreenshotBytesAsync()
     {

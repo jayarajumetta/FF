@@ -27,8 +27,31 @@ public sealed class NavigationPage
     public Task PressAccountNumberAsync(string key) =>
         _ui.PressAsync(_locators.AccountNumber, key, new ControlIntent("Navigation", "AccountNumber"));
 
-    public Task ClickAddAsync() =>
-        _ui.ClickAsync(_locators.Add, new ControlIntent("Navigation", "Add"));
+    public async Task ClickAddAsync()
+    {
+        await _locators.FindClassCodeDialog.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 20000 });
+        await _locators.Add.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 20000 });
+        await _locators.Add.ScrollIntoViewIfNeededAsync();
+
+        var retries = 0;
+        while (retries < 10)
+        {
+            if (await _locators.Add.IsEnabledAsync()) break;
+            await Task.Delay(500);
+            retries++;
+        }
+
+        try
+        {
+            await _locators.Add.ClickAsync();
+        }
+        catch
+        {
+            await _locators.Add.ClickAsync(new() { Force = true });
+        }
+
+        await _locators.FindClassCodeDialog.WaitForAsync(new() { State = WaitForSelectorState.Hidden, Timeout = 10000 });
+    }
 
     public Task WaitForAttachmentsListGridRowCellExplicitName1Async(string expected) =>
         _ui.WaitAsync(_locators.AttachmentsListGridRowCellExplicitName1, expected, new ControlIntent("Navigation", "AttachmentsListGridRowCellExplicitName1"));
@@ -44,6 +67,9 @@ public sealed class NavigationPage
 
     public Task EnterClassFilterAsync(string value) =>
         _ui.FillAsync(_locators.ClassFilter, value, new ControlIntent("Navigation", "ClassFilter"));
+
+    public Task ClickClassFilterSearchButtonAsync() =>
+        _ui.ClickAsync(_locators.ClassFilterSearchButton, new ControlIntent("Navigation", "ClassFilterSearchButton"));
 
     public Task ClickClientInfoSearchAsync() =>
         _ui.ClickAsync(_quoteSearchLocators.QuoteSearchButton, new ControlIntent("Navigation", "ClientInfoSearch"));
@@ -80,6 +106,61 @@ public sealed class NavigationPage
 
     public Task ClickKeepGoingAsync() =>
         _ui.ClickAsync(_locators.KeepGoing, new ControlIntent("Navigation", "KeepGoing"));
+
+    public Task ClickNextPrimaryInsuredDetailsAsync() =>
+        _ui.ClickAsync(_locators.NextPrimaryInsuredDetails, new ControlIntent("Navigation", "NextPrimaryInsuredDetails"));
+
+    public Task ClickNextClientDetailsAsync() =>
+        _ui.ClickAsync(_locators.NextClientDetails, new ControlIntent("Navigation", "NextClientDetails"));
+
+    public async Task ClickNextNarrativeFromClaimsAsync()
+    {
+        await _locators.NextNarrativeFromClaims.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 20000 });
+        await _locators.NextNarrativeFromClaims.ScrollIntoViewIfNeededAsync();
+
+        var retries = 0;
+        while (retries < 10)
+        {
+            if (await _locators.NextNarrativeFromClaims.IsEnabledAsync()) break;
+            await Task.Delay(500);
+            retries++;
+        }
+
+        try
+        {
+            await _locators.NextNarrativeFromClaims.ClickAsync();
+        }
+        catch
+        {
+            await _locators.NextNarrativeFromClaims.ClickAsync(new() { Force = true });
+        }
+    }
+
+    public Task ClickNextLocationsBuildingsAsync() =>
+        _ui.ClickAsync(_locators.NextLocationsBuildings, new ControlIntent("Navigation", "NextLocationsBuildings"));
+
+    public async Task ClickInspectionContactCheckBoxAsync()
+    {
+        var checkboxInput = _locators.InspectionContactCheckBox.Locator("input[type='checkbox']");
+        await checkboxInput.WaitForAsync(new() { State = WaitForSelectorState.Attached, Timeout = 20000 });
+        await checkboxInput.ScrollIntoViewIfNeededAsync();
+
+        try
+        {
+            await checkboxInput.CheckAsync();
+        }
+        catch
+        {
+            try
+            {
+                await checkboxInput.CheckAsync(new() { Force = true });
+            }
+            catch
+            {
+                await checkboxInput.ClickAsync(new() { Force = true });
+            }
+        }
+    }
 public Task<bool> IsLoadingPresentAsync() =>
         _ui.ExistsAsync(_locators.Loading);
 
@@ -98,11 +179,21 @@ public Task<bool> IsLoadingPresentAsync() =>
     public Task WaitForOnAsync(string expected) =>
         _ui.WaitAsync(_locators.On, expected, new ControlIntent("Navigation", "On"));
 
+    public async Task ClickAddToPolicyCheckboxAsync()
+    {
+        await _locators.AddToPolicyCheckbox.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
+        await _locators.AddToPolicyCheckbox.SetCheckedAsync(true);
+        await Task.Delay(800);
+    }
+
     public Task PressOnAsync(string key) =>
         _ui.PressAsync(_locators.On, key, new ControlIntent("Navigation", "On"));
 
     public Task PressOwnButtonAsync(string key) =>
         _ui.PressAsync(_locators.OwnButton, key, new ControlIntent("Navigation", "OwnButton"));
+
+    public Task ClickOwnButtonAsync() =>
+        _ui.ClickAsync(_locators.OwnButton, new ControlIntent("Navigation", "OwnButton"));
 
     public Task VerifyPolicyDetailsABBA9Async(string expected, string property) =>
         _ui.VerifyAsync(_locators.PolicyDetailsABBA9, expected, property, new ControlIntent("Navigation", "PolicyDetailsABBA9"));
@@ -128,8 +219,44 @@ public Task<bool> IsLoadingPresentAsync() =>
     public Task VerifyPreQualificationAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.PreQualification, expected, property, new ControlIntent("Navigation", "PreQualification"));
 
-    public Task NavigateToScreenAsync(string screen) =>
-        _ui.ClickAsync(_locators.GetNavigationLink(screen), new ControlIntent("Navigation", $"NavLink:{screen}"));
+    public async Task NavigateToScreenAsync(string screen)
+    {
+        var link = _locators.GetNavigationLink(screen);
+        await link.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 20000 });
+        await link.ScrollIntoViewIfNeededAsync();
+
+        var heading = _locators.GetScreenHeading(screen);
+        var retries = 0;
+        while (retries < 5)
+        {
+            try
+            {
+                await link.ClickAsync(new() { Timeout = 5000 });
+            }
+            catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
+            {
+                try
+                {
+                    await link.ClickAsync(new() { Force = true, Timeout = 5000 });
+                }
+                catch (Exception ex2) when (ex2 is TimeoutException or PlaywrightException)
+                {
+                    await link.EvaluateAsync("el => el.click()");
+                }
+            }
+
+            try
+            {
+                await heading.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 3000 });
+                return;
+            }
+            catch (Exception ex) when (ex is TimeoutException or PlaywrightException)
+            {
+                retries++;
+                await Task.Delay(500);
+            }
+        }
+    }
 
     public Task VerifyScreenAsync(string screen) =>
         _ui.VerifyAsync(_locators.GetScreenHeading(screen), "Visible", "", new ControlIntent("Navigation", $"ScreenHeading:{screen}"));
@@ -141,6 +268,120 @@ public Task<bool> IsLoadingPresentAsync() =>
 
     public Task ClickSaveAsync() =>
         _ui.ClickAsync(_locators.Save, new ControlIntent("Navigation", "Save"));
+
+    public Task ClickSaveBuildingAsync() =>
+        _ui.ClickAsync(_locators.SaveBuilding, new ControlIntent("Navigation", "SaveBuilding"));
+
+    public Task ClickLaunchToChecklistAsync() =>
+        _ui.ClickAsync(_locators.LaunchToChecklist, new ControlIntent("Navigation", "LaunchToChecklist"));
+
+    public Task ClickChecklistOpenedOKAsync() =>
+        _ui.ClickAsync(_locators.ChecklistOpenedOK, new ControlIntent("Navigation", "ChecklistOpenedOK"));
+
+    public Task ClickNextPricingAsync() =>
+        _ui.ClickAsync(_locators.NextPricing, new ControlIntent("Navigation", "NextPricing"));
+
+    public Task ClickNextBillingAsync() =>
+        _ui.ClickAsync(_locators.NextBilling, new ControlIntent("Navigation", "NextBilling"));
+
+    public async Task<bool> IsCatastrophePotentialVisibleAndEditableAsync()
+    {
+        try
+        {
+            await _locators.CatastrophePotential.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 3000 });
+        }
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+        {
+            return false;
+        }
+        return await _locators.CatastrophePotential.IsVisibleAsync() && await _locators.CatastrophePotential.IsEditableAsync();
+    }
+
+    public Task SelectCatastrophePotentialAsync(string value) =>
+        _ui.FillAsync(_locators.CatastrophePotential, value, new ControlIntent("Navigation", "CatastrophePotential"));
+
+    public async Task<bool> IsLossRatioVisibleAndEditableAsync()
+    {
+        try
+        {
+            await _locators.LossRatio.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 3000 });
+        }
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+        {
+            return false;
+        }
+        return await _locators.LossRatio.IsVisibleAsync() && await _locators.LossRatio.IsEditableAsync();
+    }
+
+    public Task SelectLossRatioAsync(string value) =>
+        _ui.FillAsync(_locators.LossRatio, value, new ControlIntent("Navigation", "LossRatio"));
+
+    public async Task<bool> IsLengthOfEmploymentVisibleAndEditableAsync()
+    {
+        try
+        {
+            await _locators.LengthOfEmployment.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 3000 });
+        }
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+        {
+            return false;
+        }
+        return await _locators.LengthOfEmployment.IsVisibleAsync() && await _locators.LengthOfEmployment.IsEditableAsync();
+    }
+
+    public Task SelectLengthOfEmploymentAsync(string value) =>
+        _ui.FillAsync(_locators.LengthOfEmployment, value, new ControlIntent("Navigation", "LengthOfEmployment"));
+
+    public async Task<bool> IsMemberOfTradeAssociationVisibleAndEditableAsync()
+    {
+        try
+        {
+            await _locators.MemberOfTradeAssociation.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 3000 });
+        }
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+        {
+            return false;
+        }
+        return await _locators.MemberOfTradeAssociation.IsVisibleAsync() && await _locators.MemberOfTradeAssociation.IsEditableAsync();
+    }
+
+    public Task SelectMemberOfTradeAssociationAsync(string value) =>
+        _ui.FillAsync(_locators.MemberOfTradeAssociation, value, new ControlIntent("Navigation", "MemberOfTradeAssociation"));
+
+    public async Task<bool> IsRiskManagementProgramVisibleAndEditableAsync()
+    {
+        try
+        {
+            await _locators.RiskManagementProgram.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 3000 });
+        }
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+        {
+            return false;
+        }
+        return await _locators.RiskManagementProgram.IsVisibleAsync() && await _locators.RiskManagementProgram.IsEditableAsync();
+    }
+
+    public Task SelectRiskManagementProgramAsync(string value) =>
+        _ui.FillAsync(_locators.RiskManagementProgram, value, new ControlIntent("Navigation", "RiskManagementProgram"));
+
+    public async Task<bool> IsYearsInBusinessVisibleAndEditableAsync()
+    {
+        try
+        {
+            await _locators.YearsInBusiness.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 3000 });
+        }
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+        {
+            return false;
+        }
+        return await _locators.YearsInBusiness.IsVisibleAsync() && await _locators.YearsInBusiness.IsEditableAsync();
+    }
+
+    public Task SelectYearsInBusinessAsync(string value) =>
+        _ui.FillAsync(_locators.YearsInBusiness, value, new ControlIntent("Navigation", "YearsInBusiness"));
+
+    public Task ClickNextClaimsPriorInsuranceAsync() =>
+        _ui.ClickAsync(_locators.NextClaimsPriorInsurance, new ControlIntent("Navigation", "NextClaimsPriorInsurance"));
 
     public Task ClickScreen25E91Async() =>
         _ui.ClickAsync(_locators.Screen25E91, new ControlIntent("Navigation", "Screen25E91"));
@@ -180,6 +421,9 @@ public Task<bool> IsLoadingPresentAsync() =>
 
     public Task<bool> IsScreenHeadingDCABFPresentAsync() =>
         _ui.ExistsAsync(_locators.ScreenHeading69631);
+
+    public Task ClickSearchAddClassCodeAsync() =>
+        _ui.ClickAsync(_locators.SearchAddClassCode, new ControlIntent("Navigation", "SearchAddClassCode"));
 
     public Task PressSearchAddClassCodeAsync(string key) =>
         _ui.PressAsync(_locators.SearchAddClassCode, key, new ControlIntent("Navigation", "SearchAddClassCode"));

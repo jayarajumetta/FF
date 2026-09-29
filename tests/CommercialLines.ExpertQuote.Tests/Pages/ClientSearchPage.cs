@@ -38,6 +38,12 @@ public sealed class ClientSearchPage
     public Task ClickCreateNewClient1Async() =>
         _ui.ClickAsync(_locators.CreateNewClient, new ControlIntent("ClientSearch", "CreateNewClient1"));
 
+    public Task ClickExistingClientSuggestionAsync() =>
+        _ui.ClickAsync(_locators.ExistingClientSuggestion, new ControlIntent("ClientSearch", "ExistingClientSuggestion"));
+
+    public Task ClickPrimaryInsuredSelectionNextAsync() =>
+        _ui.ClickAsync(_locators.PrimaryInsuredSelectionNext, new ControlIntent("ClientSearch", "PrimaryInsuredSelectionNext"));
+
     public Task EnterCustomerDateOfBirthAsync(string value) =>
         _ui.FillAsync(_locators.CustomerDateOfBirth, value, new ControlIntent("ClientSearch", "CustomerDateOfBirth"));
 
