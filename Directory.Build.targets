@@ -5,6 +5,7 @@
 	<Target Name="BuildRetryGenerator" BeforeTargets="ReqnrollCreateProcessFeatureFileInputsCacheFile"
 			Condition="'$(EnableConfiguredRetries)' == 'true'">
 	<MSBuild Projects="$(MSBuildThisFileDirectory)src/InsuranceAutomation.Retry.Generator/InsuranceAutomation.Retry.Generator.csproj"
+
 			 Targets="Restore;Build"
 			 Properties="Configuration=$(Configuration);RetryGeneratorHostProject=$(MSBuildProjectName)" />
 	<PropertyGroup>

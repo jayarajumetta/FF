@@ -26,6 +26,9 @@ public sealed class RetryTestGeneratorProvider : NUnit3TestGeneratorProvider
     public override void FinalizeTestClass(TestClassGenerationContext context)
     {
         base.FinalizeTestClass(context);
+        if (context.TestClass.Name is "WCBasicPolicyFeature")
+            return;
+
         foreach (CodeTypeMember member in context.TestClass.Members)
         {
             if (member is not CodeMemberMethod method) continue;

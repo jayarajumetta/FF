@@ -25,7 +25,7 @@ public sealed class UnderwritingLocators
 
     public ILocator InsuranceScore => _page.Locator("span.g-btn-text").Filter(new LocatorFilterOptions { HasText = "Insurance Score" }).First;
 
-    public ILocator InsuranceScoreConsent => _page.GetByRole(AriaRole.Link, new() { Name = "Insurance Score Consent", Exact = true });
+    public ILocator InsuranceScoreConsent => _page.GetByRole(AriaRole.Link, new() { Name = "Insurance Score", Exact = true });
 
     public ILocator UnderwritingInfoCommercialPropertyHistoryIsThereAPriorCarrier => _page.Locator("input[fieldref=\"PolicyUnderwritingInput.CommercialPropertyNoPriorCarrier\"]");
 

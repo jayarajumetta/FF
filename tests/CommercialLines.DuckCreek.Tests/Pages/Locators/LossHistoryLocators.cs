@@ -12,7 +12,6 @@ public sealed class LossHistoryLocators
     public ILocator PageTitle => _page.Locator("[id=\"pageTitle\"]");
 
     public ILocator AddlInterests => _page.GetByRole(AriaRole.Link, new() { Name = "Addl Interests", Exact = true });
-
     public ILocator OtherInterestPremisesSchedule => _page.Locator("div#pageTitle", new() { HasTextString = "Other Interest Premises Schedule" });
 
     public ILocator OK => _page.GetByRole(AriaRole.Link, new() { Name = "OK", Exact = true });
