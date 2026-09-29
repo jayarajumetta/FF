@@ -31,15 +31,31 @@ public sealed class ApplicationPage
     {
         if (string.IsNullOrWhiteSpace(username)) throw new ArgumentException("Username is required.", nameof(username));
         if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Password is required.", nameof(password));
-        await _ui.FillAsync(Username, username);
-        await _ui.FillAsync(Password, password);
-        await _ui.ClickAsync(SignIn);
 
-        // Wait for navigation to complete after sign-in
-        await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new PageWaitForLoadStateOptions { Timeout = 60000 });
+        // If the session is still authenticated (e.g., returning from Duck Creek), the app may
+        // skip the login form and land directly on the dashboard. Detect that before waiting on the form.
+        var newQuoteButton = _page.GetByRole(AriaRole.Button, new() { Name = "New Quote", Exact = true });
+        bool isAlreadySignedIn;
+        try
+        {
+            isAlreadySignedIn = await newQuoteButton.IsVisibleAsync(new LocatorIsVisibleOptions { Timeout = 3000 });
+        }
+        catch
+        {
+            isAlreadySignedIn = false;
+        }
+
+        if (!isAlreadySignedIn)
+        {
+            await _ui.FillAsync(Username, username);
+            await _ui.FillAsync(Password, password);
+            await _ui.ClickAsync(SignIn);
+
+            // Wait for navigation to complete after sign-in
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new PageWaitForLoadStateOptions { Timeout = 60000 });
+        }
 
         // Wait for the dashboard to be ready by checking for the New Quote button
-        var newQuoteButton = _page.GetByRole(AriaRole.Button, new() { Name = "New Quote", Exact = true });
         await newQuoteButton.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 30000 });
     }
 }

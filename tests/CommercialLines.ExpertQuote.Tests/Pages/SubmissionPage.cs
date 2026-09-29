@@ -98,7 +98,19 @@ public Task VerifyLoadingMessageAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.TABLERowCellExplicitName5, expected, property, new ControlIntent("Submission", "TABLERowCellExplicitName5"));
 
     public Task ClickTransmitAsync() =>
-        _ui.ClickAsync(_locators.LaunchToChecklistButton, new ControlIntent("Submission", "Transmit"));
+        _ui.ClickAsync(_locators.TransmitButton, new ControlIntent("Submission", "Transmit"));
+
+    public Task WaitForTransmitConfirmationAsync(string expected = "Visible") =>
+        _ui.WaitAsync(_locators.TransmitConfirmationHeading, expected, new ControlIntent("Submission", "TransmitConfirmation"));
+
+    public Task VerifyTransactionStatusAsync(string expected, string property = "InnerText") =>
+        _ui.VerifyAsync(_locators.TransactionStatus, expected, property, new ControlIntent("Submission", "TransactionStatus"));
+
+    public async Task WaitForTransactionStatusAsync(string expected)
+    {
+        await _locators.TransactionStatus.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
+        await VerifyTransactionStatusAsync(expected);
+    }
 
     public Task PressUnderwritingRulesAgentCommentsAsync(string key) =>
         _ui.PressAsync(_locators.ReferToUW, key, new ControlIntent("Submission", "UnderwritingRulesAgentComments"));

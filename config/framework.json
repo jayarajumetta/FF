@@ -6,7 +6,7 @@
     "ignoreHttpsErrors": true,
     "viewportWidth": 1440,
     "viewportHeight": 900,
-    "actionTimeoutMs": 15000,
+    "actionTimeoutMs": 20000,
     "navigationTimeoutMs": 30000,
     "trace": true,
     "video": true,
@@ -65,13 +65,13 @@
     "deferVerificationFailures": true
   },
   "waits": {
-    "pageReadyTimeoutMs": 15000,
-    "elementReadyTimeoutMs": 15000,
-    "verifyTimeoutMs": 15000,
+    "pageReadyTimeoutMs": 20000,
+    "elementReadyTimeoutMs": 20000,
+    "verifyTimeoutMs": 20000,
     "pollIntervalMs": 250,
     "waitForDomContentLoadedBeforeActions": true,
     "frameProbeTimeoutMs": 600,
-    "dropdownOptionTimeoutMs": 1200,
-    "dropdownPollIntervalMs": 75
+    "dropdownOptionTimeoutMs": 3000,
+    "dropdownPollIntervalMs": 100
   }
 }

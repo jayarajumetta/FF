@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
@@ -128,6 +130,19 @@ public sealed class ScenarioData
                 return Direct();
             }
 
+            var recordedSha256 = entry["sourceSha256"]?.GetValue<string>() ?? string.Empty;
+            if (!string.IsNullOrWhiteSpace(recordedSha256) && File.Exists(scenarioFile))
+            {
+                var actualSha256 = ComputeSha256(File.ReadAllText(scenarioFile));
+                if (!string.Equals(recordedSha256, actualSha256, StringComparison.OrdinalIgnoreCase))
+                {
+                    // The layered manifest cache is stale relative to the current scenario file
+                    // (for example after direct edits to the scenario JSON). Fall back to the
+                    // source file so newly added fields are not silently dropped.
+                    return Direct();
+                }
+            }
+
             var baseRelative = entry["baseFile"]?.GetValue<string>() ?? string.Empty;
             var overridesRelative = entry["overridesFile"]?.GetValue<string>() ?? string.Empty;
             var overrideKey = entry["overrideKey"]?.GetValue<string>() ?? string.Empty;
@@ -160,6 +175,14 @@ public sealed class ScenarioData
         }
     }
 
+    private static string ComputeSha256(string content)
+    {
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(content));
+        var builder = new StringBuilder(bytes.Length * 2);
+        foreach (var b in bytes) builder.Append(b.ToString("x2"));
+        return builder.ToString();
+    }
+
     private static JsonNode? ApplyMergePatch(JsonNode? target, JsonNode? patch)
     {
         if (patch is null) return null;
@@ -185,6 +208,8 @@ public sealed class ScenarioData
             _runtime["Product (LOB)"] = lob;
         if (_static.TryGetValue("state", out var state) && !string.IsNullOrWhiteSpace(state))
             _runtime["State"] = state;
+        if (_static.TryGetValue("stateCode", out var stateCode) && !string.IsNullOrWhiteSpace(stateCode))
+            _runtime["State"] = stateCode;
         if (_static.TryGetValue("primaryratingstate", out var ratingState) && !string.IsNullOrWhiteSpace(ratingState))
             _runtime["PrimaryRatingState"] = ratingState;
     }

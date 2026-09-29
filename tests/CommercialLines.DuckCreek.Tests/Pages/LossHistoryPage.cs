@@ -17,14 +17,26 @@ public sealed class LossHistoryPage
         _ui = ui;
     }
 
+    public Task WaitForAddAddlInterestAsync(string expected) =>
+        _ui.WaitAsync(_locators.AddAddlInterest, expected, new ControlIntent("LossHistory", "AddAddlInterest"));
+
     public Task ClickAddAddlInterestAsync() =>
         _ui.ClickAsync(_locators.AddAddlInterest, new ControlIntent("LossHistory", "AddAddlInterest"));
 
+    public Task WaitForAddlInterestsAsync(string expected) =>
+        _ui.WaitAsync(_locators.AddlInterests, expected, new ControlIntent("LossHistory", "AddlInterests"));
+
     public Task ClickAddlInterestsAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("LossHistory", "AddlInterests"));
+        _ui.ClickAsync(_locators.AddlInterests, new ControlIntent("LossHistory", "AddlInterests"));
+
+    public Task WaitForAddlInterestsMainOKAsync(string expected) =>
+        _ui.WaitAsync(_locators.OK, expected, new ControlIntent("LossHistory", "AddlInterestsMainOK"));
 
     public Task ClickAddlInterestsMainOKAsync() =>
         _ui.ClickAsync(_locators.OK, new ControlIntent("LossHistory", "AddlInterestsMainOK"));
+
+    public Task WaitForLossAddressAsync(string expected) =>
+        _ui.WaitAsync(_locators.LossAddress, expected, new ControlIntent("LossHistory", "LossAddress"));
 
     public Task EnterLossAddressAsync(string value) =>
         _ui.FillAsync(_locators.LossAddress, value, new ControlIntent("LossHistory", "LossAddress"));
@@ -32,14 +44,23 @@ public sealed class LossHistoryPage
     public Task PressLossAddressAsync(string key) =>
         _ui.PressAsync(_locators.LossAddress, key, new ControlIntent("LossHistory", "LossAddress"));
 
+    public Task WaitForAssignLocationsAsync(string expected) =>
+        _ui.WaitAsync(_locators.AssignLocations, expected, new ControlIntent("LossHistory", "AssignLocations"));
+
     public Task ClickAssignLocationsAsync() =>
         _ui.ClickAsync(_locators.AssignLocations, new ControlIntent("LossHistory", "AssignLocations"));
 
     public Task WaitForAssignmentScheduleForAsync(string expected) =>
-        _ui.WaitAsync(_locators.AssignmentScheduleFor, expected, new ControlIntent("LossHistory", "AssignmentScheduleFor"));
+        _ui.WaitAsync(_locators.OtherInterestPremisesSchedule, expected, new ControlIntent("LossHistory", "AssignmentScheduleFor"));
+
+    public Task WaitForAssignmentScheduleForOKAsync(string expected) =>
+        _ui.WaitAsync(_locators.OK, expected, new ControlIntent("LossHistory", "AssignmentScheduleForOK"));
 
     public Task ClickAssignmentScheduleForOKAsync() =>
         _ui.ClickAsync(_locators.OK, new ControlIntent("LossHistory", "AssignmentScheduleForOK"));
+
+    public Task WaitForDescriptionOfPropertyAsync(string expected) =>
+        _ui.WaitAsync(_locators.DescriptionOfProperty, expected, new ControlIntent("LossHistory", "DescriptionOfProperty"));
 
     public Task EnterDescriptionOfPropertyAsync(string value) =>
         _ui.FillAsync(_locators.DescriptionOfProperty, value, new ControlIntent("LossHistory", "DescriptionOfProperty"));
@@ -47,11 +68,17 @@ public sealed class LossHistoryPage
     public Task PressDescriptionOfPropertyAsync(string key) =>
         _ui.PressAsync(_locators.DescriptionOfProperty, key, new ControlIntent("LossHistory", "DescriptionOfProperty"));
 
+    public Task WaitForFirstNameAsync(string expected) =>
+        _ui.WaitAsync(_locators.FirstName, expected, new ControlIntent("LossHistory", "FirstName"));
+
     public Task EnterFirstNameAsync(string value) =>
         _ui.FillAsync(_locators.FirstName, value, new ControlIntent("LossHistory", "FirstName"));
 
     public Task PressFirstNameAsync(string key) =>
         _ui.PressAsync(_locators.FirstName, key, new ControlIntent("LossHistory", "FirstName"));
+
+    public Task WaitForInsuredTypeAsync(string expected) =>
+        _ui.WaitAsync(_locators.InsuredType, expected, new ControlIntent("LossHistory", "InsuredType"));
 
     public Task EnterInsuredTypeAsync(string value) =>
         _ui.FillAsync(_locators.InsuredType, value, new ControlIntent("LossHistory", "InsuredType"));
@@ -59,17 +86,26 @@ public sealed class LossHistoryPage
     public Task PressInsuredTypeAsync(string key) =>
         _ui.PressAsync(_locators.InsuredType, key, new ControlIntent("LossHistory", "InsuredType"));
 
+    public Task WaitForLastNameAsync(string expected) =>
+        _ui.WaitAsync(_locators.LastName, expected, new ControlIntent("LossHistory", "LastName"));
+
     public Task EnterLastNameAsync(string value) =>
         _ui.FillAsync(_locators.LastName, value, new ControlIntent("LossHistory", "LastName"));
 
     public Task PressLastNameAsync(string key) =>
         _ui.PressAsync(_locators.LastName, key, new ControlIntent("LossHistory", "LastName"));
 
+    public Task WaitForLoanNumberAsync(string expected) =>
+        _ui.WaitAsync(_locators.LoanNumber, expected, new ControlIntent("LossHistory", "LoanNumber"));
+
     public Task EnterLoanNumberAsync(string value) =>
         _ui.FillAsync(_locators.LoanNumber, value, new ControlIntent("LossHistory", "LoanNumber"));
 
     public Task PressLoanNumberAsync(string key) =>
         _ui.PressAsync(_locators.LoanNumber, key, new ControlIntent("LossHistory", "LoanNumber"));
+
+    public Task WaitForMIAsync(string expected) =>
+        _ui.WaitAsync(_locators.MI, expected, new ControlIntent("LossHistory", "MI"));
 
     public Task EnterMIAsync(string value) =>
         _ui.FillAsync(_locators.MI, value, new ControlIntent("LossHistory", "MI"));
@@ -78,19 +114,25 @@ public sealed class LossHistoryPage
         _ui.PressAsync(_locators.MI, key, new ControlIntent("LossHistory", "MI"));
 
     public Task WaitForNewAssignmentAsync(string expected) =>
-        _ui.WaitAsync(_locators.NewAssignment, expected, new ControlIntent("LossHistory", "NewAssignment"));
+        _ui.WaitAsync(_locators.NewAssignmentHeading, expected, new ControlIntent("LossHistory", "NewAssignment"));
 
     public Task ClickNewAssignmentAsync() =>
         _ui.ClickAsync(_locators.NewAssignment, new ControlIntent("LossHistory", "NewAssignment"));
+
+    public Task WaitForOtherInterestPremisesDetailOKAsync(string expected) =>
+        _ui.WaitAsync(_locators.OK, expected, new ControlIntent("LossHistory", "OtherInterestPremisesDetailOK"));
 
     public Task ClickOtherInterestPremisesDetailOKAsync() =>
         _ui.ClickAsync(_locators.OK, new ControlIntent("LossHistory", "OtherInterestPremisesDetailOK"));
 
     public Task WaitForOtherInterestPremisesScheduleAsync(string expected) =>
-        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("LossHistory", "OtherInterestPremisesSchedule"));
+        _ui.WaitAsync(_locators.OtherInterestPremisesSchedule, expected, new ControlIntent("LossHistory", "OtherInterestPremisesSchedule"));
 
     public Task ClickOtherInterestPremisesScheduleOKAsync() =>
         _ui.ClickAsync(_locators.OK, new ControlIntent("LossHistory", "OtherInterestPremisesScheduleOK"));
+
+    public Task WaitForProvisionsApplicableAsync(string expected) =>
+        _ui.WaitAsync(_locators.ProvisionsApplicable, expected, new ControlIntent("LossHistory", "ProvisionsApplicable"));
 
     public Task EnterProvisionsApplicableAsync(string value) =>
         _ui.FillAsync(_locators.ProvisionsApplicable, value, new ControlIntent("LossHistory", "ProvisionsApplicable"));
@@ -98,11 +140,17 @@ public sealed class LossHistoryPage
     public Task PressProvisionsApplicableAsync(string key) =>
         _ui.PressAsync(_locators.ProvisionsApplicable, key, new ControlIntent("LossHistory", "ProvisionsApplicable"));
 
+    public Task WaitForTypeAsync(string expected) =>
+        _ui.WaitAsync(_locators.Type, expected, new ControlIntent("LossHistory", "Type"));
+
     public Task EnterTypeAsync(string value) =>
         _ui.FillAsync(_locators.Type, value, new ControlIntent("LossHistory", "Type"));
 
     public Task PressTypeAsync(string key) =>
         _ui.PressAsync(_locators.Type, key, new ControlIntent("LossHistory", "Type"));
+
+    public Task WaitForZipCodeAsync(string expected) =>
+        _ui.WaitAsync(_locators.ZipCode, expected, new ControlIntent("LossHistory", "ZipCode"));
 
     public Task EnterZipCodeAsync(string value) =>
         _ui.FillAsync(_locators.ZipCode, value, new ControlIntent("LossHistory", "ZipCode"));

@@ -18,19 +18,19 @@ public sealed class FormsPage
     }
 
     public Task WaitForAdditionalInterestsAsync(string expected) =>
-        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Forms", "AdditionalInterests"));
+        _ui.WaitAsync(_locators.AddlInterestsLink, expected, new ControlIntent("Forms", "AdditionalInterests"));
 
     public Task ClickAdditionalInterestsAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Forms", "AdditionalInterests"));
+        _ui.ClickAsync(_locators.AddlInterestsLink, new ControlIntent("Forms", "AdditionalInterests"));
 
     public Task WaitForAddlInterestsAsync(string expected) =>
         _ui.WaitAsync(_locators.AddlInterests, expected, new ControlIntent("Forms", "AddlInterests"));
 
     public Task ClickBusinessownersAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Forms", "Businessowners"));
+        _ui.ClickAsync(_locators.Businessowners, new ControlIntent("Forms", "Businessowners"));
 
     public Task WaitForBusinessownersHeadingAsync(string expected) =>
-        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Forms", "BusinessownersHeading"));
+        _ui.WaitAsync(_locators.BusinessOwnerHeading, expected, new ControlIntent("Forms", "BusinessownersHeading"));
 
     public Task WaitForEffectiveDateAsync(string expected) =>
         _ui.WaitAsync(_locators.EffectiveDate, expected, new ControlIntent("Forms", "EffectiveDate"));
@@ -38,11 +38,18 @@ public sealed class FormsPage
     public Task EnterEffectiveDateAsync(string value) =>
         _ui.FillAsync(_locators.EffectiveDate, value, new ControlIntent("Forms", "EffectiveDate"));
 
+    public Task EnterLiquifiedGasAsync(string value) =>
+        _ui.FillAsync(_locators.LiquifiedGas, value, new ControlIntent("Navigation", "LiquifiedGas"));
+
     public Task PressEffectiveDateAsync(string key) =>
         _ui.PressAsync(_locators.EffectiveDate, key, new ControlIntent("Forms", "EffectiveDate"));
 
     public Task VerifyEmployerSLiabilityCheckBoxAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.EmployerSLiabilityCheckBox, expected, property, new ControlIntent("Forms", "EmployerSLiabilityCheckBox"));
+
+
+    public Task VerifyYearBuilt1980Async(string expected, string property) =>
+        _ui.VerifyAsync(_locators.YearBuilt1980, expected, property, new ControlIntent("Navigation", "YearBuilt1980"));
 
     public Task EnterExpirationDateAsync(string value) =>
         _ui.FillAsync(_locators.ExpirationDate, value, new ControlIntent("Forms", "ExpirationDate"));
@@ -88,6 +95,9 @@ public sealed class FormsPage
 
     public Task EnterPolicyNumberAsync(string value) =>
         _ui.FillAsync(_locators.PolicyNumber, value, new ControlIntent("Forms", "PolicyNumber"));
+
+    public Task<string> CapturePolicyNumberAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.PolicyNumber, property, new ControlIntent("Forms", "PolicyNumber"));
 
     public Task PressPolicyNumberAsync(string key) =>
         _ui.PressAsync(_locators.PolicyNumber, key, new ControlIntent("Forms", "PolicyNumber"));

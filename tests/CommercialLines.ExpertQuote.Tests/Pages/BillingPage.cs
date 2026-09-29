@@ -20,6 +20,9 @@ public sealed class BillingPage
     public Task PressAddress1Async(string key) =>
         _ui.PressAsync(_locators.Address1, key, new ControlIntent("Billing", "Address1"));
 
+    public Task EnterAddress1Async(string value) =>
+        _ui.FillAsync(_locators.Address1, value, new ControlIntent("Billing", "Address1"));
+
     public Task WaitForBillingAsync(string expected) =>
         _ui.WaitAsync(_locators.Billing, expected, new ControlIntent("Billing", "Billing"));
 
@@ -28,6 +31,9 @@ public sealed class BillingPage
 
     public Task PressBusinessNameAsync(string key) =>
         _ui.PressAsync(_locators.BusinessName, key, new ControlIntent("Billing", "BusinessName"));
+
+    public Task EnterBusinessNameAsync(string value) =>
+        _ui.FillAsync(_locators.BusinessName, value, new ControlIntent("Billing", "BusinessName"));
 
     public Task PressCheckButtonAsync(string key) =>
         _ui.PressAsync(_locators.CheckButton, key, new ControlIntent("Billing", "CheckButton"));
@@ -41,11 +47,20 @@ public sealed class BillingPage
     public Task PressCheckNumberAsync(string key) =>
         _ui.PressAsync(_locators.CheckNumber, key, new ControlIntent("Billing", "CheckNumber"));
 
+    public Task EnterCheckNumberAsync(string value) =>
+        _ui.FillAsync(_locators.CheckNumber, value, new ControlIntent("Billing", "CheckNumber"));
+
     public Task PressChoosePaymentDueDateAsync(string key) =>
         _ui.PressAsync(_locators.ChoosePaymentDueDate, key, new ControlIntent("Billing", "ChoosePaymentDueDate"));
 
+    public Task EnterChoosePaymentDueDateAsync(string value) =>
+        _ui.FillAsync(_locators.ChoosePaymentDueDate, value, new ControlIntent("Billing", "ChoosePaymentDueDate"));
+
     public Task PressCityAsync(string key) =>
         _ui.PressAsync(_locators.City, key, new ControlIntent("Billing", "City"));
+
+    public Task EnterCityAsync(string value) =>
+        _ui.FillAsync(_locators.City, value, new ControlIntent("Billing", "City"));
 
     public Task ClickCreateNewBillingAccountAsync() =>
         _ui.ClickAsync(_locators.CreateNewBillingAccount, new ControlIntent("Billing", "CreateNewBillingAccount"));
@@ -56,16 +71,34 @@ public sealed class BillingPage
     public Task PressDirectBillButtonAsync(string key) =>
         _ui.PressAsync(_locators.DirectBillButton, key, new ControlIntent("Billing", "DirectBillButton"));
 
+    public Task ClickDirectBillButtonAsync() =>
+        _ui.ClickAsync(_locators.DirectBillButton, new ControlIntent("Billing", "DirectBillButton"));
+
     public Task PressFirstNameAsync(string key) =>
         _ui.PressAsync(_locators.FirstName, key, new ControlIntent("Billing", "FirstName"));
+
+    public Task EnterFirstNameAsync(string value) =>
+        _ui.FillAsync(_locators.FirstName, value, new ControlIntent("Billing", "FirstName"));
 
     public Task ClickInitialPaymentFullBalanceAsync() =>
         _ui.ClickAsync(_locators.InitialPaymentFullBalance, new ControlIntent("Billing", "InitialPaymentFullBalance"));
 
+    public Task ClickCheckButtonAsync() =>
+        _ui.ClickAsync(_locators.CheckButton, new ControlIntent("Billing", "CheckButton"));
+
+    public Task ClickNextSubmissionAsync() =>
+        _ui.ClickAsync(_locators.NextSubmission, new ControlIntent("Billing", "NextSubmission"));
+
     public Task PressLastNameAsync(string key) =>
         _ui.PressAsync(_locators.LastName, key, new ControlIntent("Billing", "LastName"));
+
+    public Task EnterLastNameAsync(string value) =>
+        _ui.FillAsync(_locators.LastName, value, new ControlIntent("Billing", "LastName"));
 public Task PressN1PaymentButtonAsync(string key) =>
         _ui.PressAsync(_locators.N1PaymentButton, key, new ControlIntent("Billing", "N1PaymentButton"));
+
+    public Task ClickN1PaymentButtonAsync() =>
+        _ui.ClickAsync(_locators.N1PaymentButton, new ControlIntent("Billing", "N1PaymentButton"));
 
     public Task ClickOTHERButtonAsync() =>
         _ui.ClickAsync(_locators.OTHERButton, new ControlIntent("Billing", "OTHERButton"));
@@ -79,11 +112,17 @@ public Task PressN1PaymentButtonAsync(string key) =>
     public Task PressStateAsync(string key) =>
         _ui.PressAsync(_locators.State, key, new ControlIntent("Billing", "State"));
 
+    public Task SelectStateAsync(string value) =>
+        _ui.SelectAsync(_locators.State, value, new ControlIntent("Billing", "State"));
+
     public Task VerifyTableRowCellLinkAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.TableRowCellLink, expected, property, new ControlIntent("Billing", "TableRowCellLink"));
 
     public Task PressZipCodeAsync(string key) =>
         _ui.PressAsync(_locators.ZipCode, key, new ControlIntent("Billing", "ZipCode"));
+
+    public Task EnterZipCodeAsync(string value) =>
+        _ui.FillAsync(_locators.ZipCode, value, new ControlIntent("Billing", "ZipCode"));
 
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);

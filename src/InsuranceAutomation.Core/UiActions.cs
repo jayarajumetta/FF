@@ -104,9 +104,38 @@ public sealed class UiActions
     private Task ClickCoreAsync(ILocator locator, ControlIntent intent) => ExecuteAsync(locator, intent, "click", x => ClickSemanticAsync(x));
     private async Task FillCoreAsync(ILocator locator, string value, ControlIntent intent)
     {
-        await ExecuteAsync(locator, intent, "fill", x => ComponentAwareControlActions.SelectOrFillAsync(
-            _browser.Page, x, value ?? string.Empty, _config.Browser.ActionTimeoutMs,
-            _config.Waits.DropdownOptionTimeoutMs, _config.Waits.DropdownPollIntervalMs));
+        await ExecuteAsync(locator, intent, "fill", async x =>
+        {
+            var resolvedValue = value ?? string.Empty;
+            const int maxAttempts = 3;
+            const int delayMs = 1000;
+
+            for (var attempt = 1; attempt <= maxAttempts; attempt++)
+            {
+                await ComponentAwareControlActions.SelectOrFillAsync(
+                    _browser.Page, x, resolvedValue, _config.Browser.ActionTimeoutMs,
+                    _config.Waits.DropdownOptionTimeoutMs, _config.Waits.DropdownPollIntervalMs);
+
+                if (string.IsNullOrWhiteSpace(resolvedValue) || !await IsTextLikeInputAsync(x))
+                {
+                    return;
+                }
+
+                await Task.Delay(delayMs);
+                var enteredValue = await TryGetInputValueAsync(x);
+                if (!string.IsNullOrWhiteSpace(enteredValue))
+                {
+                    return;
+                }
+
+                if (attempt < maxAttempts)
+                {
+                    _logger.Warn($"FILL RETRY: {intent}; value was empty after attempt {attempt}/{maxAttempts}.");
+                }
+            }
+
+            throw new InvalidOperationException($"{intent} value is empty after {maxAttempts} fill attempts.");
+        });
         _semanticallyCommittedControls.Add(IntentKey(intent));
     }
 
@@ -116,6 +145,20 @@ public sealed class UiActions
         {
             await x.ClickAsync();
             try { await x.FillAsync(string.Empty); } catch { }
+            await x.ClickAsync();
+
+            // FillAsync above can silently fail on combo/select-styled inputs (e.g. ones that
+            // start with placeholder text like "(Select)"), leaving stale text in the field.
+            // Force-clear via keyboard as a fallback so PressSequentiallyAsync never appends
+            // to leftover text.
+            try
+            {
+                await x.PressAsync("Control+A");
+                await x.PressAsync("Delete");
+            }
+            catch { }
+
+            await Task.Delay(150);
             await x.PressSequentiallyAsync(value ?? string.Empty, new LocatorPressSequentiallyOptions { Delay = Math.Max(0, delayMs) });
         });
     }
@@ -521,11 +564,11 @@ public sealed class UiActions
     private async Task ExecuteAsync(ILocator locator, ControlIntent intent, string action, Func<ILocator, Task> operation)
     {
         await WaitForPageReadyBestEffortAsync();
+        await PreActionDelayAsync();
         try
         {
-            await PrepareForActionAsync(locator, intent, action);
             var resolved = _runtimeLocatorResolver is null ? locator : await _runtimeLocatorResolver.ResolveAsync(_browser.Page, locator, intent, action) ?? locator;
-            if (!ReferenceEquals(resolved, locator)) await PrepareForActionAsync(resolved, intent, action);
+            await PrepareForActionAsync(resolved, intent, action);
             using var frameScope = FrameExecutionContext.Push(null);
             await ExecuteWithHighlightAsync(resolved, action, operation);
         }
@@ -535,15 +578,21 @@ public sealed class UiActions
     private async Task<T> ExecuteAsync<T>(ILocator locator, ControlIntent intent, string action, Func<ILocator, Task<T>> operation)
     {
         await WaitForPageReadyBestEffortAsync();
+        await PreActionDelayAsync();
         try
         {
-            await PrepareForActionAsync(locator, intent, action);
             var resolved = _runtimeLocatorResolver is null ? locator : await _runtimeLocatorResolver.ResolveAsync(_browser.Page, locator, intent, action) ?? locator;
-            if (!ReferenceEquals(resolved, locator)) await PrepareForActionAsync(resolved, intent, action);
+            await PrepareForActionAsync(resolved, intent, action);
             using var frameScope = FrameExecutionContext.Push(null);
             return await ExecuteWithHighlightAsync(resolved, action, operation);
         }
         catch (Exception) { throw; }
+    }
+
+    private Task PreActionDelayAsync()
+    {
+        var delayMs = _config.Waits.PreActionDelayMs;
+        return delayMs > 0 ? Task.Delay(delayMs) : Task.CompletedTask;
     }
 
     private async Task ExecuteWithHighlightAsync(ILocator locator, string action, Func<ILocator, Task> operation)
@@ -624,6 +673,32 @@ public sealed class UiActions
         if (value.Equals("true", StringComparison.OrdinalIgnoreCase) || value.Equals("yes", StringComparison.OrdinalIgnoreCase) || value.Equals("checked", StringComparison.OrdinalIgnoreCase) || value == "1") return true;
         if (value.Equals("false", StringComparison.OrdinalIgnoreCase) || value.Equals("no", StringComparison.OrdinalIgnoreCase) || value.Equals("unchecked", StringComparison.OrdinalIgnoreCase) || value == "0") return false;
         return defaultValue;
+    }
+
+    private static async Task<bool> IsTextLikeInputAsync(ILocator locator)
+    {
+        var tag = (await locator.EvaluateAsync<string>("e=>e.tagName.toLowerCase()") ?? string.Empty).ToLowerInvariant();
+        var type = (await locator.GetAttributeAsync("type") ?? string.Empty).ToLowerInvariant();
+        var role = (await locator.GetAttributeAsync("role") ?? string.Empty).ToLowerInvariant();
+        var contentEditable = (await locator.GetAttributeAsync("contenteditable") ?? string.Empty).ToLowerInvariant();
+
+        if (role == "textbox" || contentEditable == "true") return true;
+        if (tag == "textarea") return true;
+        if (tag != "input") return false;
+
+        return type is not ("checkbox" or "radio" or "button" or "submit" or "reset" or "file" or "image" or "range" or "color");
+    }
+
+    private static async Task<string> TryGetInputValueAsync(ILocator locator)
+    {
+        try
+        {
+            return (await locator.InputValueAsync())?.Trim() ?? string.Empty;
+        }
+        catch
+        {
+            return (await locator.GetAttributeAsync("value"))?.Trim() ?? string.Empty;
+        }
     }
 
     private static string IntentKey(ControlIntent intent) => $"{intent.Page}|{intent.Control}";

@@ -52,7 +52,7 @@
     "territory": "001",
     "territory_188": "001",
     "feetfromhydrant_190": "101 - 250",
-    "expected_occupancy_sq_footage_total_value_227": "2500",
+    "expected_occupancy_sq_footage_total_value_227": "10000",
     "bvs_group": "Offices",
     "bvs_result": "2100 - Office, Low-Rise",
     "roof_type": "Aluminum- Shingle",
@@ -989,7 +989,7 @@
         "actionMode": "",
         "actionProperty": "",
         "condition": "",
-        "value": "2500"
+        "value": "10000"
       },
       {
         "order": 4.01,
@@ -1028,6 +1028,41 @@
         "value": "2500"
       },
       {
+        "order": 4.01,
+        "derivedFrom": "3a14448e-f658-1d48-4374-9b78065b5d99",
+        "field": "Insured Occupancy Sq Ft Basic",
+        "businessName": "Insured Occupancy Sq Ft Basic",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "10000"
+      },
+	  {
+		"order": 4.01,
+		"derivedFrom": "3a14448e-f658-1d48-4374-9b78065b5d35",
+		"field": "Personal Property Limit",
+		"businessName": "Personal Property Limit",
+		"description": "Reusable block parameter",
+		"module": "Reusable parameter",
+		"actionMode": "",
+		"actionProperty": "",
+		"condition": "",
+		"value": "800000"
+	  },
+	  {
+		"order": 4.01,
+		"derivedFrom": "3a14448e-f658-1d48-4374-9b78065b5d36",
+		"field": "Gross Sales Receipts",
+		"businessName": "Gross Sales Receipts",
+		"description": "Reusable block parameter",
+		"module": "Reusable parameter",
+		"actionMode": "",
+		"actionProperty": "",
+		"condition": "",
+		"value": "9000000"
+	  },      {
         "order": 4.01,
         "derivedFrom": "3a143a18-bf9f-4149-4309-9b63c50318f3",
         "field": "BVS Group",
@@ -2454,6 +2489,114 @@
         "actionProperty": "",
         "condition": "",
         "value": "SYNTHETIC_REPLACE_ME"
+      },
+      {
+        "order": 10.01,
+        "derivedFrom": null,
+        "field": "PriorInsuranceExpDate",
+        "businessName": "PriorInsuranceExpDate",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "1/1/2025"
+      },
+      {
+        "order": 10.01,
+        "derivedFrom": null,
+        "field": "PriorInsuranceCarrier",
+        "businessName": "PriorInsuranceCarrier",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "GEICO"
+      },
+      {
+        "order": 10.01,
+        "derivedFrom": null,
+        "field": "ClaimDateOfOccurrence",
+        "businessName": "ClaimDateOfOccurrence",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "1/2/2026"
+      },
+      {
+        "order": 10.01,
+        "derivedFrom": null,
+        "field": "ClaimPolicyPeriodEffectiveDate",
+        "businessName": "ClaimPolicyPeriodEffectiveDate",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "1/1/2026"
+      },
+      {
+        "order": 10.01,
+        "derivedFrom": null,
+        "field": "ClaimPolicyPeriodExpirationDate",
+        "businessName": "ClaimPolicyPeriodExpirationDate",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "1/1/2027"
+      },
+      {
+        "order": 10.01,
+        "derivedFrom": null,
+        "field": "ClaimAmountPaid",
+        "businessName": "ClaimAmountPaid",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "15000"
+      },
+      {
+        "order": 10.01,
+        "derivedFrom": null,
+        "field": "ClaimAmountReserved",
+        "businessName": "ClaimAmountReserved",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "10000"
+      },
+      {
+        "order": 10.01,
+        "derivedFrom": null,
+        "field": "ClaimExpenseAmount",
+        "businessName": "ClaimExpenseAmount",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "500"
+      },
+      {
+        "order": 10.01,
+        "derivedFrom": null,
+        "field": "ClaimTypeOfLoss",
+        "businessName": "ClaimTypeOfLoss",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "PROP"
       }
     ]
   },
