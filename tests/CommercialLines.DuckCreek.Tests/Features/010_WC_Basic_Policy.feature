@@ -7,6 +7,7 @@ Feature: WC Basic Policy
 
 Background: Prepare Commercial Lines Duck Creek for policy processing
 	Given I open a browser session
+
 Scenario Outline: WC Basic Policy - <stateCode>
 	Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
 	And I open the configured Commercial Lines Duck Creek application

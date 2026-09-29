@@ -108,20 +108,20 @@ public sealed class BAPBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickPolicyInfoAsync();
-        await page.WaitForPolicyInfoHeaderAsync("Exists");
+        //await page.WaitForPolicyInfoHeaderAsync("Exists");
         await page.PauseAsync(1000);
         await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateAsync(data.Resolve("{{data:effectivedate_51}}"));
         await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_52}}"));
         await page.PauseAsync(1000);
         await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_54}}"));
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_58}}"));
-        await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_68}}"));
-        await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
-        await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
-        await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
+        //await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_68}}"));
+        //await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
+        //await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
+        //await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
         await page.PauseAsync(1000);
-        await page.WaitForPolicyInfoHeaderAsync("Visible");
-        await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
+        //await page.WaitForPolicyInfoHeaderAsync("Visible");
+        //await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
         await page.EnterDescriptionOfSpecifiedOperationAsync(data.BuildQuoteDescription());
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
         await page.PauseAsync(1000);

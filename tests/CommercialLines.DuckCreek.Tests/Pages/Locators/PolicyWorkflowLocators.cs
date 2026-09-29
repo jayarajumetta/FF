@@ -51,26 +51,27 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator IFRAMEDuckCreekPolicyOtherCheckBox => _page.Locator("input[fieldref=\"CovExclusionDesignatedWorkInput.Other\"]");
 
+    public ILocator DoesThisPolicyCoverContractorExposure => _page.Locator("input[fieldref='LineInput.PolicyContractorExposure']");
+    public ILocator IncludeBusinessowners => _page.Locator("input[fieldref=\"LineUmbrellaBusinessOwners.IncludeBusinessOwners\"]").First;
 
-    public ILocator IncludeBusinessowners => _page.Locator("input[fieldref=\"LineUmbrellaBusinessOwners.IncludeBusinessOwners\"]");
+    public ILocator IncludeCommercialAuto => _page.Locator("input[fieldref=\"LineUmbrellaCommercialAuto.IncludeCommercialAuto\"]").First;
 
-    public ILocator IncludeCommercialAuto => _page.Locator("input[fieldref=\"LineUmbrellaCommercialAuto.IncludeCommercialAuto\"]");
-
-    public ILocator IncludeCommercialPackagePolicyLiability => _page.Locator("input[fieldref=\"LineUmbrellaCPPLiability.IncludeCPPLiability\"]");
+    public ILocator UMLimits => _page.Locator("input[fieldref=\"LineInput.UMLimits\"]");
+    public ILocator IncludeCommercialPackagePolicyLiability => _page.Locator("input[fieldref=\"LineUmbrellaCPPLiability.IncludeCPPLiability\"]").First;
 
     public ILocator IncludeEmployersLiability => _page.Locator("input[fieldref=\"LineUmbrellaEmployersLiability.IncludeEmployersLiability\"]");
 
     public ILocator IncludeGeneralLiability => _page.Locator("input[fieldref=\"LineUmbrellaGeneralLiability.IncludeGeneralLiability\"]");
 
-    public ILocator IncludeHomeownerSLiability => _page.Locator("input[fieldref=\"LineUmbrellaHomeownersLiability.IncludeHomeownersLiability\"]");
+    public ILocator IncludeHomeownerSLiability => _page.Locator("input[fieldref=\"LineUmbrellaHomeownersLiability.IncludeHomeownersLiability\"]").First;
 
-    public ILocator IncludePersonalAutoLiability => _page.Locator("input[fieldref=\"LineUmbrellaPersonalAutoLiability.IncludePersonalAutoLiability\"]");
+    public ILocator IncludePersonalAutoLiability => _page.Locator("input[fieldref=\"LineUmbrellaPersonalAutoLiability.IncludePersonalAutoLiability\"]").First;
 
-    public ILocator IncludeRentalOwnerSLiability => _page.Locator("input[fieldref=\"LineUmbrellaRentalOwnersLiability.IncludeRentalOwnersLiability\"]");
+    public ILocator IncludeRentalOwnerSLiability => _page.Locator("input[fieldref=\"LineUmbrellaRentalOwnersLiability.IncludeRentalOwnersLiability\"]").First;
 
-    public ILocator IncludeSFP10LiabilityFarm => _page.Locator("input[fieldref=\"LineUmbrellaSFP10Liability.IncludeSFP10Liability\"]");
+    public ILocator IncludeSFP10LiabilityFarm => _page.Locator("input[fieldref=\"LineUmbrellaSFP10Liability.IncludeSFP10Liability\"]").First;
 
-    public ILocator IncludeWatercraftLiability => _page.Locator("input[fieldref=\"LineUmbrellaWatercraftLiability.IncludeWatercraftLiability\"]");
+    public ILocator IncludeWatercraftLiability => _page.Locator("input[fieldref=\"LineUmbrellaWatercraftLiability.IncludeWatercraftLiability\"]").First;
 
     public ILocator IndividualType => _page.Locator("input[fieldref=\"AssociatedClientInput.IndividualType\"]");
 

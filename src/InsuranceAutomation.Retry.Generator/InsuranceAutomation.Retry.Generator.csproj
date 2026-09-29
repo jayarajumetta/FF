@@ -2,7 +2,8 @@
   <PropertyGroup>
 	<TargetFramework>netstandard2.0</TargetFramework>
 	<AssemblyName>InsuranceAutomation.Retry.Generator.ReqnrollPlugin</AssemblyName>
-	<OutputPath>bin/$(Configuration)/compiler/</OutputPath>
+	<OutputPath Condition="'$(RetryGeneratorHostProject)' == ''">bin/$(Configuration)/compiler/</OutputPath>
+	<OutputPath Condition="'$(RetryGeneratorHostProject)' != ''">bin/$(Configuration)/compiler/$(RetryGeneratorHostProject)/</OutputPath>
 	<IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
