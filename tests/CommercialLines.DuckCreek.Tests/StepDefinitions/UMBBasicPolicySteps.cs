@@ -301,7 +301,7 @@ public sealed class UMBBasicPolicySteps
         await page.ClickOKAsync();
         //await page.WaitForUnderwritingInfoOtherInsuranceHistoryDetailAsync("Exists");
         await page.ClickLossExperienceAsync();
-        await page.WaitForNoKnownLossesAsync("Exists");
+        await page.WaitForNoKnownLossesAsync("Visible");
         await page.SetNoKnownLossesAsync(data.Resolve("{{data:no_known_losses_97}}"));
         await page.ClickReturnToQuoteAsync();
     }

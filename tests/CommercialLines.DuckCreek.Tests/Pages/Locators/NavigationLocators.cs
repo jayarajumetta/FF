@@ -52,7 +52,7 @@ public sealed class NavigationLocators
 
     public ILocator SFP10LiabilityFarm => _page.GetByRole(AriaRole.Link, new() { Name = "SFP - 10 Liability/Farm", Exact = true });
 
-    public ILocator Endorsement => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsements", Exact = true });
+    public ILocator Endorsement => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsements", Exact = true }).Or(_page.GetByRole(AriaRole.Link, new() { Name = "Endorsement", Exact = true }));
 
     public ILocator UMQuestionsUmbrella => _page.GetByRole(AriaRole.Link, new() { Name = "UW Questions - Umbrella", Exact = true });
 
@@ -546,7 +546,7 @@ public sealed class NavigationLocators
 
     public ILocator IndicateTheBuildingSAgeTypeOfConstructionAndProtectionClassAndOtherTenantsInTheBuildingSWhereTheComputerEquipmentIsLocated => _page.Locator("[name=\"string_2F_1\"]");
 
-    public ILocator InsuranceHistory => _page.GetByRole(AriaRole.Link, new() { Name = "Insurance History", Exact = true }).Or(_page.GetByRole(AriaRole.Link, new() { Name = "Insurance History", Exact = true }));
+    public ILocator InsuranceHistory => _page.GetByRole(AriaRole.Link, new() { Name = "Insurance History", Exact = true }).Or(_page.GetByText("Commercial General Liability History")).Or(_page.GetByRole(AriaRole.Link, new() { Name = "Other Insurance History", Exact = true }));
 
     public ILocator InsuredType => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.InsuredType\"]");
 
@@ -691,7 +691,7 @@ public sealed class NavigationLocators
     public ILocator Names => _page.Locator("input[fieldref=\"CovEndorsmentIteratorNonShreddedInput.Name\"]");
 
 
-    public ILocator NoKnownLosses => _page.Locator("[fieldref='PolicyUnderwritingInput.NoKnownLosses']").Nth(1);
+    public ILocator NoKnownLosses => _page.Locator("input[fieldref='PolicyUnderwritingInput.NoKnownLosses']:visible").First;
 
     public ILocator NonOwnedAuto => _page.Locator("input[fieldref=\"LineCoveragesInput.NonOwnedAuto\"]");
 
