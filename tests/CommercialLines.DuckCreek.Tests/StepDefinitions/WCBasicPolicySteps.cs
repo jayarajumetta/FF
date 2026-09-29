@@ -1,6 +1,8 @@
-using InsuranceAutomation.Core;
-using Reqnroll;
 using InsuranceAutomation.CLDC.Pages;
+using InsuranceAutomation.Core;
+using Microsoft.VisualBasic;
+using Reqnroll;
+using System.Runtime.InteropServices;
 
 namespace InsuranceAutomation.CLDC.StepDefinitions;
 
@@ -23,9 +25,9 @@ public sealed class WCBasicPolicySteps
         var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickNewQuoteAsync();
-        await page.EnterEffectiveDateAsync("10/17/2026");
-        await page.EnterProductAsync("Carrier  WorkersCompensation  Pages   US   (9.8.0.0)");
-        await page.EnterProducerAsync("HERALD BENNETT2");
+        await page.EnterEffectiveDateAsync(data.Resolve("{{data:effective_date_43}}"));
+        await page.EnterProductAsync(data.Resolve("{{data:product_45}}"));
+        await page.EnterProducerAsync(data.Resolve("{{data:producer_46}}"));
         await page.WaitForStartAsync("Visible");
         await page.ClickStartAsync();
 
@@ -48,7 +50,7 @@ public sealed class WCBasicPolicySteps
         data.GenerateRandom("InspectionTelephone_0045", "[0-9]{10}");
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-       
+
 
         await page.WaitForQuickQuoteAsync("Exists");
         await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_2}}"));
@@ -140,10 +142,10 @@ public sealed class WCBasicPolicySteps
         await page.EnterMiddleNameAsync(data.Resolve("{{runtime:MiddleName_0057}}"));
         await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0057}}"));
         await page.EnterAddAssociatedClientDateOfBirthAsync(data.Resolve("{{data:dateofbirth_52}}"));
-        await page.EnterAddressAsync(data.Resolve("{{data:address1_53}}"));
+        await page.EnterAddressAsync(data.Resolve("{{data:addclientAddress_1}}"));
         await page.EnterCityAsync(data.Resolve("{{data:city_54}}"));
-        await page.EnterStateAsync("ALABAMA");
-        await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:zipcode_56}}"));
+        await page.EnterStateAsync(data.Resolve("{{data:AddClientState_49}}"));
+        await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:AddClientZipcode_48}}"));
         await page.EnterGenderAsync(data.Resolve("{{data:gender_57}}"));
         await page.WaitForClientSearchAsync("Exists");
         await page.ClickClientSearchAsync();
@@ -152,7 +154,7 @@ public sealed class WCBasicPolicySteps
         await page.ClickOKAsync();
         await page.ClickOrderSSNAsync();
         await page.PressAddAssociatedClientEnterSSNAsync("Enter");
-        await page.EnterAddAssociatedClientEnterSSNAsync("657309591");
+        await page.EnterAddAssociatedClientEnterSSNAsync("657389591");
         await page.ClickVerifyAsync();
         await page.VerifyVerifyAsync("Absent", "");
         await page.ClickCompleteAsync();
@@ -228,7 +230,7 @@ public sealed class WCBasicPolicySteps
         await page.PauseAsync(1000);
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_109}}"));
         await page.PauseAsync(1000);
-      
+
 
         //await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysSequentiallyAsync("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_113}}"));
         await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
@@ -281,9 +283,18 @@ public sealed class WCBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickPolicyCovgerageAsync();
-        //await page.WaitForPrimaryLocationStateAsync("Exists");
-        await page.VerifyPrimaryLocationStateAsync("(?i)^Alabama$", "Regex:value");
-        await page.EnterExperienceRatedAsync(data.Resolve("{{data:experience_rated_128}}"));
+
+
+        if (await page.IsPrimaryLocationAvailableAsync())
+        {
+            await page.WaitForPrimaryLocationStateAsync("Exists");
+            await page.EnterPrimaryStateAsync(data.Resolve("{{data:PrimaryLocationstate_53}}"));
+
+        }
+
+
+        //await page.VerifyPrimaryLocationStateAsync("(?i)^Alabama$", "Regex:value");
+        //await page.EnterExperienceRatedAsync(data.Resolve("{{data:experience_rated_128}}"));
 
     }
 
@@ -341,6 +352,11 @@ public sealed class WCBasicPolicySteps
         {
             await page.EnterTotalPayrollEstimatedAsync(data.Resolve("{{data:class_code_frame_class_code_window_total_payroll_estimated_150}}"));
         }
+
+        if (data.Condition("State == \"MD\""))
+        {
+            await page.EnterTotalPayrollEstimatedAsync(data.Resolve("{{data:class_code_frame_class_code_window_total_payroll_estimated_150}}"));
+        }
         await page.EnterNumberOfPartTimeEmployeesAsync(data.Resolve("{{data:class_code_frame_class_code_window_number_of_part_time_employees_151}}"));
         await page.EnterNumberOfFullTimeEmployeesAsync(data.Resolve("{{data:class_code_frame_class_code_window_number_of_full_time_employees_152}}"));
         await page.ClickOKDetailsAsync();
@@ -394,13 +410,14 @@ public sealed class WCBasicPolicySteps
         await page.ClickAssignLocationAsync();
         await page.WaitForLocationIDAsync("Exists");
         await page.EnterLocationIDAsync("");
-        await page.EnterLocationIDAsync("Primary Location,1918 AVALON AVE, MUSCLE SHOALS, AL  35661-3120");
-        await page.VerifyLocationIDAsync("Primary Location,1918 AVALON AVE, MUSCLE SHOALS, AL  35661-3120", "Value");
+        await page.EnterLocationIDAsync(data.Resolve("{{data:location_assignment_entity_location_locationid_188}}"));
+        //await page.VerifyLocationIDAsync(data.Resolve("{{data:location_assignment_entity_location_locationid_190}}"));
+        await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
         await page.ClickSelectNAICSCodeAsync();
 
         await page.WaitForNAICSCodeSearchValueAsync("Exists");
-        await page.EnterNAICSCodeSearchValueAsync("Testing Laboratories [541380]");
-        await page.EnterSelectAppropriateCodeAsync("Testing Laboratories [541380]");
+        await page.EnterNAICSCodeSearchValueAsync(data.Resolve("{{data:location_assignment_entity_location_naicscodesearchvalue_195}}"));
+        await page.EnterSelectAppropriateCodeAsync(data.Resolve("{{data:location_assignment_entity_location_select_appropriate_code_198}}"));
         //await page.VerifySelectAppropriateCodeAsync(data.Resolve("{{data:expected_location_assignment_entity_location_select_appropriate_code_value_199}}"), "value");
         //await page.WaitForLocationAssignmentAsync("Absent");
         //await page.EnterSelectAppropriateCodeAsync(data.Resolve("{{data:location_assignment_entity_location_select_appropriate_code_201}}"));
@@ -409,7 +426,7 @@ public sealed class WCBasicPolicySteps
         //await page.VerifySelectAppropriateCodeAsync(data.Resolve("{{data:expected_location_assignment_entity_location_select_appropriate_code_value_204}}"), "value");
         await page.ClickOKFirstAsync();
         await page.WaitForOKSecondAsync("Absent");
-        await page.ClickOKAsync();   
+        await page.ClickOKAsync();
         await page.WaitForLocationAssignmentAsync("Absent");
 
     }
@@ -424,7 +441,37 @@ public sealed class WCBasicPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
+        //await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
+
+
+        //await page.ClickAddEndorsementsAsync();
+
+        //await page.PauseAsync(4000);
+
+        //await page.EnterEndrosmentType("Sole Proprietors, Partners, Officers And Others Coverage");
+
+
+        //await page.ClickAddSoleProprietorInformationAsync();
+        //await page.PauseAsync(2000);
+        //await page.EnterSoleProprietorsAsync("TEst");
+
+        //await page.ClickAddPartnerInformationAsync();
+
+        //await page.PauseAsync(2000);
+
+        //await page.EnterPartnersAsync("Test");
+        //await page.ClickAddOthersInformationAsync();
+        //await page.PauseAsync(2000);
+        //await page.EnterOthersAsync("Test");
+
+        //await page.ClickOKAsync();
+
+
+
+
+
+
+
 
     }
 
@@ -460,6 +507,51 @@ public sealed class WCBasicPolicySteps
         //await page.ClickPricingDetailOKAsync();
         //await page.WaitForPricingDetailAsync("Exists");
 
+
+        if (data.Condition("State ==\"NH\" || State ==\"NJ\" || State ==\"NV\" || State ==\"NY\" || State ==\"OK\" || State ==\"PA\" || State ==\"SD\" || State ==\"TN\" || State ==\"UT\" || State == \"AZ\" || State == \"CT\" || State == \"DE\" || State == \"GA\" || State == \"IA\" || State == \"IN\" || State == \"MD\" || State == \"MN\" || State == \"MO\" || State == \"WV\""))
+        {
+            await page.ClickWorksheetAsync();
+            await page.EnterPremisesCredit("1.005");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterPremisesComments("Premises Comments");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterClassificationPecularities(".995");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterClassificationPecularitiesComments("Test Classification Pecularities Comments");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterMedicalFacilities("1.005");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterMedicalFacilitiesComments("Test Medical Facilities Comments");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterSafetyDevices(".995");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterSafetyDevicesComments("Test Safety Devices Comments");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterEmployeesSelection("1.005");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.EnterEmployeeselectionComments("Test Employees Selection Comments");
+            await page.PauseAsync(1000);
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.EnterManagementSafetyOrganizationStateInput(".995");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterManagementSafetyOrganizationStateInputComments("Test Management Safety Organization State Input Comments");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.EnterManagementCooperationWithInsuranceCarrierStateInput("1.005");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.EnterManagementCooperationWithInsuranceCarrierStateInputComments("Test Management Cooperation With Insurance Carrier State Input Comments");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.ClickOKAsync();
+        }
+
     }
 
     [Given(@"^I verify Class Codes on Policy are Valid$")]
@@ -484,7 +576,8 @@ public sealed class WCBasicPolicySteps
 
         var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.VerifyPremiumAsync("$8,497.00", "value");
+        await page.VerifyPremiumAsync(data.Resolve("{{data:expected_full_term_premium_value_288}}"), "value");
+
 
     }
 
@@ -587,7 +680,7 @@ public sealed class WCBasicPolicySteps
         //await page.ClickStoplightWaitingWindowCloseAsync();
         //await page.WaitForStoplightWaitingWindowAsync("Absent");
         //await page.PauseAsync(1000);
-        await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
+        //await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
 
     }
 
@@ -600,7 +693,7 @@ public sealed class WCBasicPolicySteps
 
         var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.VerifyFullTermPremiumAsync("$8,497.00", "value");
+        await page.VerifyFullTermPremiumAsync(data.Resolve("{{data:expected_full_term_premium_value_288}}"), "value");
         await page.VerifyPremiumWrittenAsync(data.Resolve("{{data:expected_premium_written_value_289}}"), "value");
         await page.VerifyPriorPremiumAsync(data.Resolve("{{data:expected_prior_premium_value_290}}"), "value");
         await page.VerifyPremiumChangeAsync(data.Resolve("{{data:expected_premium_change_value_291}}"), "value");

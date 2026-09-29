@@ -20,6 +20,9 @@ public sealed class NavigationLocators
 
     public ILocator CoverageFormDescription => _page.Locator("input[fieldref=\"CoverageFormsInput.Description\"]");
     public ILocator CoverageEndorsementType => _page.Locator("input[fieldref=\"CovEndorsementsInput.Type\"]");
+
+
+    public ILocator EndrosmentType => _page.Locator("input[fieldref='CovEndorsementsInput.Type']");
     public ILocator LineEndorsementType => _page.Locator("input[fieldref=\"LineOutputNonShredded.EndorsementType\"]");
     public ILocator AdditionalOtherInterestType => _page.Locator("input[fieldref=\"AdditionalOtherInterestInput.Type\"]");
 
@@ -45,13 +48,56 @@ public sealed class NavigationLocators
 
     public ILocator Billing => _page.GetByRole(AriaRole.Link, new PageGetByRoleOptions { Name = "Billing" });
     public ILocator Pricing => _page.GetByRole(AriaRole.Link, new() { Name = "Pricing", Exact = true });
+
+
+    public ILocator PremisesCreditOrDebit => _page.Locator("input[fieldref='PremisesConditionCareStateInput.Factor']");
+
+
+    public ILocator PremisesComments => _page.Locator("input[fieldref='PremisesConditionCareStateInput.Comment']");
+
+    public ILocator ClassificationPecularities => _page.Locator("input[fieldref='ClassificationPeculiaritiesStateInput.Factor']");
+
+    public ILocator ClassificationPecularitiesComments => _page.Locator("input[fieldref='ClassificationPeculiaritiesStateInput.Comment']");
+
+
+    public ILocator MedicalFacilities => _page.Locator("input[fieldref='MedicalFacilitiesStateInput.Factor']");
+
+    public ILocator MedicalFacilitiesComments => _page.Locator("input[fieldref='MedicalFacilitiesStateInput.Comment']");
+
+
+
+    public ILocator safetyDevices => _page.Locator("input[fieldref='SafetyDevicesStateInput.Factor']");
+
+    public ILocator SafetyDevicesComments => _page.Locator("input[fieldref='SafetyDevicesStateInput.Comment']");
+
+
+    public ILocator employeesSelection => _page.Locator("input[fieldref='EmployeesSelectionTrainingAndSupervisionStateInput.Factor']");
+
+    public ILocator EmployeeselectionComments => _page.Locator("input[fieldref='EmployeesSelectionTrainingAndSupervisionStateInput.Comment']");
+
+
+    public ILocator ManagementSafetyOrganizationStateInput => _page.Locator("input[fieldref='ManagementSafetyOrganizationStateInput.Factor']");
+
+    public ILocator ManagementSafetyOrganizationStateInputComments => _page.Locator("input[fieldref='ManagementSafetyOrganizationStateInput.Comment']");
+
+
+    public ILocator ManagementCooperationWithInsuranceCarrierStateInput => _page.Locator("input[fieldref='ManagementCooperationWithInsuranceCarrierStateInput.Factor']");
+
+    public ILocator ManagementCooperationWithInsuranceCarrierStateInputComments => _page.Locator("input[fieldref='ManagementCooperationWithInsuranceCarrierStateInput.Comment']");
+
+    public ILocator Worksheet => _page.GetByText("Worksheet", new() { Exact = true }); 
+    
     public ILocator LossExperience => _page.GetByText("Loss Experience", new() { Exact = true });
+
 
     public ILocator Location => _page.GetByRole(AriaRole.Link, new() { Name = "Location", Exact = true });
 
     public ILocator EntitySchedule => _page.GetByRole(AriaRole.Link, new() { Name = "Entity Schedule", Exact = true });
 
     public ILocator Endorsements => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsements", Exact = true });
+
+
+    public ILocator AddEndorsements => _page.Locator("//a[.//span[normalize-space()='Add Endorsement']]");
 
     public ILocator AssignLocationDetails => _page.Locator("[class='g-btn-text']").Filter(new() { HasText = "Detail" }).First;
 
@@ -103,9 +149,9 @@ public sealed class NavigationLocators
 
     public ILocator AddOtherInterest => _page.GetByRole(AriaRole.Link, new() { Name = "Add Other Interest", Exact = true });
 
-    public ILocator AddOthersInformation => _page.GetByRole(AriaRole.Link, new() { Name = "Add Others' Information", Exact = true });
+    public ILocator AddOthersInformation => _page.GetByText("Add Others' Information", new() { Exact = true });
+    public ILocator AddPartnerInformation => _page.GetByText("Add Partner Information", new() { Exact = true });
 
-    public ILocator AddPartnerInformation => _page.GetByRole(AriaRole.Link, new() { Name = "Add Partner Information", Exact = true });
 
     public ILocator AddPremises => _page.GetByRole(AriaRole.Link, new() { Name = "Add Premises", Exact = true });
 
@@ -113,7 +159,7 @@ public sealed class NavigationLocators
 
     public ILocator AddRiskAtThisLocation => _page.GetByRole(AriaRole.Link, new() { Name = "Add Risk at This Location", Exact = true });
 
-    public ILocator AddSoleProprietorInformation => _page.GetByRole(AriaRole.Link, new() { Name = "Add Sole Proprietor Information", Exact = true });
+    public ILocator AddSoleProprietorInformation => _page.GetByText("Add Sole Proprietor Information", new() { Exact = true });
 
     public ILocator AddThirdParty => _page.GetByRole(AriaRole.Link, new() { Name = "Add Third Party", Exact = true });
 

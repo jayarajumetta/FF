@@ -484,17 +484,41 @@ public sealed class CPBasicPolicySteps
 
 
 
-
         if (await page.IsRatingGroupAsync())
         {
-            await page.EnterRatingGroupsDeductibleAsync(data.Resolve("{{data:deductible_207}}"));
+            await EnterWithTabAndNonEmptyRetryAsync(
+                () => page.EnterRatingGroupsDeductibleAsync(data.Resolve("{{data:deductible_207}}")),
+            () => page.PressRatingGroupsDeductibleAsync("Tab"),
+                () => page.CaptureDeductableGroupAsync("value"),
+                "RatingGroupsDeductible"
+            );
         }
-        await page.PauseAsync(2000);
+        await page.PauseAsync(3000);
 
         if (await page.IsRatingGroupDeductableAsync())
         {
-            await page.EnterRatingGroupsDeductibleIncreasedTheftAsync(data.Resolve("{{data:deductible_increased_theft_208}}"));
+            await EnterWithTabAndNonEmptyRetryAsync(
+                () => page.EnterRatingGroupsDeductibleIncreasedTheftAsync(data.Resolve("{{data:deductible_increased_theft_208}}")),
+            () => page.PressRatingGroupsDeductibleIncreasedTheftAsync("Tab"),
+                () => page.CaptureRatingGroupsDeductibleAsync("value"),
+                "RatingGroupsDeductibleIncreasedTheft"
+            );
         }
+
+
+
+
+
+        //if (await page.IsRatingGroupAsync())
+        //{
+        //    await page.EnterRatingGroupsDeductibleAsync(data.Resolve("{{data:deductible_207}}"));
+        //}
+        //await page.PauseAsync(2000);
+
+        //if (await page.IsRatingGroupDeductableAsync())
+        //{
+        //    await page.EnterRatingGroupsDeductibleIncreasedTheftAsync(data.Resolve("{{data:deductible_increased_theft_208}}"));
+        //}
 
         await page.PauseAsync(2000);
         if (await page.IsRatingGroupDeductableblackhail())

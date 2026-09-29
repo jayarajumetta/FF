@@ -1100,6 +1100,16 @@ public sealed class NavigationPage
     public Task ClickWCNavigationLinksEndorsementsAsync() =>
         _ui.ClickAsync(_locators.Endorsements, new ControlIntent("Navigation", "WCNavigationLinksEndorsements"));
 
+
+
+    public Task EnterEndrosmentType(string value) =>
+       _ui.FillAsync(_locators.EndrosmentType, value, new ControlIntent("Navigation", "EndorsementsPartnersOfficersAndOthersExclusionEndorsementType"));
+
+
+
+    public Task ClickAddEndorsementsAsync() =>
+       _ui.ClickAsync(_locators.AddEndorsements, new ControlIntent("Navigation", "WCNavigationLinksEndorsements"));
+
     public Task VerifySignsHeadingAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.PageTitle, expected, property, new ControlIntent("Navigation", "SignsHeading"));
 
@@ -1608,7 +1618,7 @@ public sealed class NavigationPage
         _ui.WaitAsync(_locators.LocationID, expected, new ControlIntent("Navigation", "LocationID"));
 
     public Task VerifyLocationIDAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.LocationID, expected, property, new ControlIntent("Navigation", "LocationID"));
+        _ui.VerifyAsync(_locators.LocationID, expected, property, new ControlIntent("Navigation", "Locatio"));
 
     public Task EnterLocationIDAsync(string value) =>
         _ui.FillAsync(_locators.LocationID, value, new ControlIntent("Navigation", "LocationID"));
@@ -2174,6 +2184,20 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.RiskInputPersonalPropertyRatingGroupID, key, new ControlIntent("Navigation", "PersonalPropertyRatingGroup"));
 
 
+
+
+
+    public Task<string> CaptureRatingGroupsDeductibleAsync(string property = "") =>
+
+   _ui.CaptureAsync(_locators.RatingGroupsDeductibleIncreasedTheft, property, new ControlIntent("Navigation", "RatingGroupsDeductibleIncreasedTheft"));
+
+
+
+    public Task<string> CaptureDeductableGroupAsync(string property = "") =>
+
+   _ui.CaptureAsync(_locators.RatingGroupsDeductible, property, new ControlIntent("Navigation", "RatingGroupsDeductible"));
+
+
     public Task<string> CapturePersonalPropertyRatingGroupAsync(string property = "") =>
 
     _ui.CaptureAsync(_locators.RiskInputPersonalPropertyRatingGroupID, property, new ControlIntent("Navigation", "PersonalPropertyRatingGroup"));
@@ -2309,6 +2333,80 @@ public sealed class NavigationPage
     public Task EnterPremisesTypeAsync(string value) =>
         _ui.FillAsync(_locators.PremisesType, value, new ControlIntent("Navigation", "PremisesType"));
 
+
+
+
+
+
+    public Task EnterPremisesCredit(string value) =>
+        _ui.FillAsync(_locators.PremisesCreditOrDebit, value, new ControlIntent("Navigation", "PremisesCredit"));
+
+
+
+
+    public Task EnterPremisesComments(string value) =>
+        _ui.FillAsync(_locators.PremisesComments, value, new ControlIntent("Navigation", "PremisesComments"));
+
+    public Task EnterClassificationPecularities(string value) =>
+        _ui.FillAsync(_locators.ClassificationPecularities, value, new ControlIntent("Navigation", "ClassificationPecularities"));
+
+    public Task EnterClassificationPecularitiesComments(string value) =>
+        _ui.FillAsync(_locators.ClassificationPecularitiesComments, value, new ControlIntent("Navigation", "ClassificationPecularitiesComments"));
+
+    public Task EnterMedicalFacilities(string value) =>
+        _ui.FillAsync(_locators.MedicalFacilities, value, new ControlIntent("Navigation", "MedicalFacilities"));
+
+    public Task EnterMedicalFacilitiesComments(string value) =>
+        _ui.FillAsync(_locators.MedicalFacilitiesComments, value, new ControlIntent("Navigation", "MedicalFacilitiesComments"));
+
+
+
+
+    public Task EnterSafetyDevices(string value) =>
+        _ui.FillAsync(_locators.safetyDevices, value, new ControlIntent("Navigation", "SafetyDevices"));
+
+    public Task EnterSafetyDevicesComments(string value) =>
+        _ui.FillAsync(_locators.SafetyDevicesComments, value, new ControlIntent("Navigation", "SafetyDevicesComments"));
+
+    public Task EnterEmployeesSelection(string value) =>
+        _ui.FillAsync(_locators.employeesSelection, value, new ControlIntent("Navigation", "EmployeesSelection"));
+
+    public Task EnterEmployeeselectionComments(string value) =>
+        _ui.FillAsync(_locators.EmployeeselectionComments, value, new ControlIntent("Navigation", "EmployeeselectionComments"));
+
+    public Task EnterManagementSafetyOrganizationStateInput(string value) =>
+        _ui.FillAsync(_locators.ManagementSafetyOrganizationStateInput, value, new ControlIntent("Navigation", "ManagementSafetyOrganizationStateInput"));
+
+    public Task EnterManagementSafetyOrganizationStateInputComments(string value) =>
+        _ui.FillAsync(_locators.ManagementSafetyOrganizationStateInputComments, value, new ControlIntent("Navigation", "ManagementSafetyOrganizationStateInputComments"));
+
+    public Task EnterManagementCooperationWithInsuranceCarrierStateInput(string value) =>
+        _ui.FillAsync(_locators.ManagementCooperationWithInsuranceCarrierStateInput, value, new ControlIntent("Navigation", "ManagementCooperationWithInsuranceCarrierStateInput"));
+
+    public Task EnterManagementCooperationWithInsuranceCarrierStateInputComments(string value) =>
+        _ui.FillAsync(_locators.ManagementCooperationWithInsuranceCarrierStateInputComments, value, new ControlIntent("Navigation", "ManagementCooperationWithInsuranceCarrierStateInputComments"));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public Task PressPremisesTypeAsync(string key) =>
         _ui.PressAsync(_locators.PremisesType, key, new ControlIntent("Navigation", "PremisesType"));
 
@@ -2317,6 +2415,11 @@ public sealed class NavigationPage
 
     public Task ClickPricingAsync() =>
         _ui.ClickAsync(_locators.Pricing, new ControlIntent("Navigation", "Pricing"));
+
+
+
+    public Task ClickWorksheetAsync() =>
+        _ui.ClickAsync(_locators.Worksheet, new ControlIntent("Navigation", "Worksheet"));
 
     public Task WaitForPricingDetailAsync(string expected) =>
         _ui.WaitAsync(_locators.PricingDetail, expected, new ControlIntent("Navigation", "PricingDetail"));
@@ -3169,6 +3272,14 @@ public sealed class NavigationPage
 
     public Task EnterYearsInBusinessAsync(string value) =>
         _ui.FillAsync(_locators.YearsInBusiness, value, new ControlIntent("Navigation", "YearsInBusiness"));
+
+
+    public Task EnterPrimaryStateAsync(string value) =>
+      _ui.FillAsync(_locators.PrimaryLocationState, value, new ControlIntent("Navigation", "PrimaryLocationState"));
+
+
+    public async Task<bool> IsPrimaryLocationAvailableAsync() =>
+     await _locators.PrimaryLocationState.CountAsync() > 0;
 
     public Task PressYearsInBusinessAsync(string key) =>
         _ui.PressAsync(_locators.YearsInBusiness, key, new ControlIntent("Navigation", "YearsInBusiness"));
