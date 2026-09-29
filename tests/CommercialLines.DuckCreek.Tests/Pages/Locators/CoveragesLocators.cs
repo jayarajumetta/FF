@@ -70,6 +70,8 @@ public sealed class CoveragesLocators
 
     public ILocator PageTitle => _page.Locator("[id=\"pageTitle\"]");
 
+    public ILocator GLNavigationLinksEndorsements => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsements", Exact = true });
+
     public ILocator PolicyCoverage => _page.Locator("input[fieldref=\"PropertyPolicyInput.PolicyCoverage\"]");
 
 
@@ -78,8 +80,6 @@ public sealed class CoveragesLocators
 
 
 
-
-    public ILocator FG0078Detail => _page.Locator("//tr[.//*[contains(text(),'Employment Practices Liability Insurance Coverage Endorsement (VT)')]]//span[.='Detail']");
 
 
 

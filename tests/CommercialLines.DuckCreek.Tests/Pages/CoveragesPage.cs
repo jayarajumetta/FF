@@ -76,8 +76,6 @@ public sealed class CoveragesPage
 
     public Task PressCoverageFormToBeAddedAsync(string key) =>
         _ui.PressAsync(_locators.CoverageFormToBeAdded, key, new ControlIntent("Coverages", "CoverageFormToBeAdded"));
-    public Task WaitForDescriptionAsync(string expected) =>
-        _ui.WaitAsync(_locators.Description, expected, new ControlIntent("Coverages", "Description"));
 
     public async Task EnterCoverageFormToBeAddedWithRetryAsync(string value, int maxAttempts = 3, int waitBeforeMs = 1000, int delayMs = 20)
     {
@@ -149,12 +147,6 @@ public sealed class CoveragesPage
     public Task Click0071DetailAsync() =>
      _ui.ClickAsync(_locators.FG0071, new ControlIntent("Coverages", "FG0071Detail"));
 
-    public Task ClickCG2151DetailAsync() =>
-     _ui.ClickAsync(_locators.CG2151, new ControlIntent("Coverages", "CG2151Detail"));
-
-
-
-    
     public Task ClickFG0055DetailAsync() =>
         _ui.ClickAsync(_locators.FG0055Detail, new ControlIntent("Coverages", "FG0055Detail"));
 
@@ -165,7 +157,7 @@ public sealed class CoveragesPage
         _ui.PressAsync(_locators.EndorsementType, key, new ControlIntent("Coverages", "EndorsementType"));
 
     public Task ClickGLNavigationLinksEndorsementsAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Coverages", "GLNavigationLinksEndorsements"));
+        _ui.ClickAsync(_locators.GLNavigationLinksEndorsements, new ControlIntent("Coverages", "GLNavigationLinksEndorsements"));
 
     public Task WaitForEndorsementsAsync(string expected) =>
         _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Coverages", "Endorsements"));

@@ -360,7 +360,7 @@ public sealed class IMBasicPolicySteps
         var addressStreetCityStateZip = data.Resolve("{{data:address_street_city_state_zip_151}}");
         await EnterWithRetryAsync(
             addressStreetCityStateZip,
-            page.EnterAddressStreetCityStateZipAsync,
+            value => page.EnterAddressStreetCityStateZipAsync(value),
             () => page.CaptureAddressStreetCityStateZipAsync("value"),
             "AddressStreetCityStateZip");
 

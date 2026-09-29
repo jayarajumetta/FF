@@ -44,7 +44,7 @@ public sealed class NavigationLocators
     public ILocator MotorTruckCargo => _page.GetByRole(AriaRole.Link, new PageGetByRoleOptions { Name = "Motor Truck Cargo" });
     public ILocator PageTitle => _page.Locator("[id=\"pageTitle\"]");
 
-    public ILocator GeneralLiabilityHeader => _page.GetByText("General Liability", new() { Exact = true });
+    public ILocator GeneralLiabilityHeader => _page.GetByRole(AriaRole.Link, new() { Name = "General Liability Information", Exact = true });
 
 
     public ILocator Pricing => _page.GetByRole(AriaRole.Link, new() { Name = "Pricing", Exact = true });
@@ -52,7 +52,7 @@ public sealed class NavigationLocators
 
     public ILocator SFP10LiabilityFarm => _page.GetByRole(AriaRole.Link, new() { Name = "SFP - 10 Liability/Farm", Exact = true });
 
-    public ILocator Endorsement => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsements", Exact = true });
+    public ILocator Endorsement => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsement", Exact = true });
 
     public ILocator UMQuestionsUmbrella => _page.GetByRole(AriaRole.Link, new() { Name = "UW Questions - Umbrella", Exact = true });
 
@@ -123,8 +123,6 @@ public sealed class NavigationLocators
 
     public ILocator AddBuilding => _page.GetByRole(AriaRole.Link, new() { Name = "Add Building", Exact = true });
     public ILocator Building => _page.GetByRole(AriaRole.Link, new() { Name = "Building", Exact = true });
-
-    public ILocator AddBuilding => _page.Locator("a:has(span.g-btn-text:has-text(\"Add Building\"))");
 
     public ILocator RiskAccountsReceivableAdd => _page.Locator("span.g-btn-text:text-is(\"Add\")").First;
 
@@ -376,7 +374,7 @@ public sealed class NavigationLocators
 
     public ILocator PolicyCovgContractorsEquipmentCoverageFormDisplay => _page.Locator("[fieldref=\"CoverageFormsOutputNonShredded.CoverageFormDisplay\"]").Last;
 
-    public ILocator PolicyCovgContractorsEquipmentCoverageFormDisplay => _page.GetByRole(AriaRole.Heading, new PageGetByRoleOptions { Name = "Contractors Equipment", Exact = true });
+    public ILocator PolicyCovgSignsCoverageFormDisplay => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Coverage Form Display']/@for] | //label[normalize-space(string(.))='Coverage Form Display']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Coverage Form Display']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])").Last;
 
     public ILocator CoverageFormToBeAdded => _page.Locator("input[fieldref=\"LineInput.CoverageForm\"]");
 
@@ -490,10 +488,6 @@ public sealed class NavigationLocators
     public ILocator EmployeeHiredAutosCheckBox => _page.Locator("input[fieldref=\"LineStateInput.EmployeeHiredAuto\"]");
 
     public ILocator EmployersLiab => _page.GetByRole(AriaRole.Link, new() { Name = "Employers Liab", Exact = true });
-
-    public ILocator Risk => _page.GetByRole(AriaRole.Link, new() { Name = "Risk", Exact = true });
-
-    public ILocator Endorsement => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsement", Exact = true });
 
 
 
@@ -925,8 +919,6 @@ public sealed class NavigationLocators
 
 
     public ILocator RiskSchedule => _page.GetByRole(AriaRole.Link, new() { Name = "Risk Schedule", Exact = true });
-
-    public ILocator CGL => _page.GetByRole(AriaRole.Link, new() { Name = "CGL", Exact = true });
 
     public ILocator GLNavigationLinksAddlInterests => _page.GetByRole(AriaRole.Link, new() { Name = "Addl Interests", Exact = true });
 

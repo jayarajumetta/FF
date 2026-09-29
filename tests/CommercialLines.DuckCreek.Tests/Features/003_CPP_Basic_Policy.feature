@@ -1,4 +1,4 @@
-@CL_DC @CPP @basic_new_business_policy
+@CL_DC @CPP @CPP_basic_new_business_policy
 
 Feature: CPP Basic Policy
   As a Commercial Lines Duck Creek policy processing user
@@ -64,13 +64,10 @@ Feature: CPP Basic Policy
     And I add Signs
     And I add Accounts Receivable
     And I complete if search result Alert exists
-    #And I complete ensure Class has been entered for Accounts Receivable - Not needed
     And I add Bailees Customers
     And I complete if search result Alert exists for show me
-    #And I complete ensure Class has been entered for Bailees Customers - Not needed
     And I add Computer Systems for risk
     And I complete if search result Alert exists for duck creek policy
-    #And I complete ensure Class has been entered for Computer Systems- - Not needed
     And I add Signs for risk
     And I add CM 66 01 Exclude Named Customer
     And I add IF 00 02 Waterborne Equipment

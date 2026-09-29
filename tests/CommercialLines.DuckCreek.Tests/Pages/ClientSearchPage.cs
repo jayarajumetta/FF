@@ -503,8 +503,24 @@ public sealed class ClientSearchPage
     public Task EnterAddAssociatedClientEnterSSNSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.AddAssociatedClientEnterSSN, value, new ControlIntent("ClientSearch", "AddAssociatedClientEnterSSN"), delayMs);
 
-    public Task EnterEntityTypeSequentiallyAsync(string value, int delayMs = 20) =>
+    public Task EnterEntityTypeSequentiallyAsync(string value, int delayMs = 50) =>
         _ui.PressSequentiallyAsync(_locators.EntityType, value, new ControlIntent("ClientSearch", "EntityType"), delayMs);
+
+    public async Task EnterEntityTypeSequentiallyWithRetryAsync(string value, int maxAttempts = 3, int waitBeforeMs = 500, int delayMs = 50)
+    {
+        var expected = value ?? string.Empty;
+        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        {
+            await _ui.PressSequentiallyAsync(_locators.EntityType, expected, new ControlIntent("ClientSearch", "EntityType"), delayMs);
+            await Task.Delay(waitBeforeMs);
+
+            var actual = await CaptureEntityTypeAsync("value");
+            if (!string.IsNullOrWhiteSpace(actual) && actual.Contains(expected, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+        }
+    }
 
     public Task EnterFirstNameSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.FirstName, value, new ControlIntent("ClientSearch", "FirstName"), delayMs);

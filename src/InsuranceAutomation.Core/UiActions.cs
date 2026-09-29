@@ -146,6 +146,18 @@ public sealed class UiActions
             await x.ClickAsync();
             try { await x.FillAsync(string.Empty); } catch { }
             await x.ClickAsync();
+
+            // FillAsync above can silently fail on combo/select-styled inputs (e.g. ones that
+            // start with placeholder text like "(Select)"), leaving stale text in the field.
+            // Force-clear via keyboard as a fallback so PressSequentiallyAsync never appends
+            // to leftover text.
+            try
+            {
+                await x.PressAsync("Control+A");
+                await x.PressAsync("Delete");
+            }
+            catch { }
+
             await Task.Delay(150);
             await x.PressSequentiallyAsync(value ?? string.Empty, new LocatorPressSequentiallyOptions { Delay = Math.Max(0, delayMs) });
         });
