@@ -7,7 +7,7 @@
 	<Exec Command="dotnet build &quot;$(MSBuildThisFileDirectory)src/InsuranceAutomation.Retry.Generator/InsuranceAutomation.Retry.Generator.csproj&quot; --configuration &quot;$(Configuration)&quot; --property:RetryGeneratorHostProject=&quot;$(MSBuildProjectName)&quot; --nologo"
 		  WorkingDirectory="$(MSBuildThisFileDirectory)" />
 	<PropertyGroup>
-	  <RetryGeneratorBinary>$(MSBuildThisFileDirectory)src/InsuranceAutomation.Retry.Generator/bin/$(Configuration)/compiler/$(MSBuildProjectName)/netstandard2.0/InsuranceAutomation.Retry.Generator.ReqnrollPlugin.dll</RetryGeneratorBinary>
+	  <RetryGeneratorBinary>$(MSBuildThisFileDirectory)src/InsuranceAutomation.Retry.Generator/bin/$(Configuration)/compiler/$(MSBuildProjectName)/netstandard2.0/InsuranceAutomation.Retry.Generator.$(MSBuildProjectName).ReqnrollPlugin.dll</RetryGeneratorBinary>
 	</PropertyGroup>
 	<GetFileHash Files="$(RetryGeneratorBinary)">
 	  <Output TaskParameter="Hash" PropertyName="RetryGeneratorHash" />
