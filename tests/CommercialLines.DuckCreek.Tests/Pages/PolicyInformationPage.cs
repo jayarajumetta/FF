@@ -77,6 +77,9 @@ public sealed class PolicyInformationPage
     public Task PressNoKnownLossesAsync(string key) =>
         _ui.PressAsync(_locators.NoKnownLosses, key, new ControlIntent("PolicyInformation", "NoKnownLosses"));
 
+    public Task ClickNoKnownLossesAsync() =>
+        _ui.ClickAsync(_locators.NoKnownLosses, new ControlIntent("PolicyInformation", "NoKnownLosses"));
+
     public Task ClickOtherInsuranceHistoryOKAsync() =>
         _ui.ClickAsync(_locators.OtherInsuranceHistoryOK, new ControlIntent("PolicyInformation", "OtherInsuranceHistoryOK"));
 

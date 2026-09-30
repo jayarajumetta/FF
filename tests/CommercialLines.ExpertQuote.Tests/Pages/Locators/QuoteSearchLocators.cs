@@ -31,4 +31,8 @@ public sealed class QuoteSearchLocators
     // Compatibility aliases for generated APIs.
     public ILocator PreQualification => GetScreenHeading("PreQualification");
     public ILocator Loading => _page.GetByText("Loading ...", new() { Exact = true });
+
+    // Source: EQ|Submission|Large Account threshold checkbox.
+    public ILocator LargeAccountIndicatorCheckbox =>
+        _page.GetByTestId("fields.data.policyInput$largeAccountIndicator.value");
 }

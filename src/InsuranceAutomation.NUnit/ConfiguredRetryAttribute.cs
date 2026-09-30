@@ -15,6 +15,10 @@ public sealed class ConfiguredRetryAttribute : NUnitAttribute, IWrapSetUpTearDow
 public sealed class ConfiguredRetryCommand : DelegatingTestCommand
 {
     private readonly Func<int> _retryCount;
+    private static readonly string[] RetryExcludedFeatureNames =
+    {
+        ".WCBasicPolicyFeature."
+    };
 
     public ConfiguredRetryCommand(TestCommand innerCommand, Func<int>? retryCount = null) : base(innerCommand)
     {
@@ -23,7 +27,7 @@ public sealed class ConfiguredRetryCommand : DelegatingTestCommand
 
     public override TestResult Execute(TestExecutionContext context)
     {
-        var retries = _retryCount();
+        var retries = ShouldBypassRetry(context) ? 0 : _retryCount();
         if (retries < 0 || retries == int.MaxValue)
             throw new InvalidOperationException("Retry count must be nonnegative and leave room for the initial attempt.");
 
@@ -70,5 +74,17 @@ public sealed class ConfiguredRetryCommand : DelegatingTestCommand
             }
             finally { ScenarioAttemptContext.Current = previous; }
         }
+    }
+
+    private static bool ShouldBypassRetry(TestExecutionContext context)
+    {
+        var fullName = context.CurrentTest.FullName;
+        foreach (var excludedFeatureName in RetryExcludedFeatureNames)
+        {
+            if (fullName.Contains(excludedFeatureName, StringComparison.Ordinal))
+                return true;
+        }
+
+        return false;
     }
 }

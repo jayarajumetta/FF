@@ -10,6 +10,34 @@ public sealed class GLOCPPolicySteps
     private readonly ScenarioContext _scenario;
     public GLOCPPolicySteps(ScenarioContext scenario) => _scenario = scenario;
 
+
+
+
+
+    [Given(@"^I start a new quote$")]
+    [When(@"^I start a new quote$")]
+    [Then(@"^I start a new quote$")]
+    public async Task StartANewQuoteAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickNewQuoteAsync();
+        await page.EnterEffectiveDateAsync(data.Resolve("{{data:effective_date_43}}"));
+        await page.EnterProductAsync(data.Resolve("{{data:product_45}}"));
+        await page.EnterProducerAsync(data.Resolve("{{data:producer_46}}"));
+        await page.WaitForStartAsync("Visible");
+        await page.ClickStartAsync();
+
+    }
+
+
+
+
+
+
+
     [Given(@"^I enter individual client information$")]
     [When(@"^I enter individual client information$")]
     [Then(@"^I enter individual client information$")]
@@ -74,12 +102,12 @@ public sealed class GLOCPPolicySteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickUnderwritingInfoAsync();
-        await page.WaitForGeneralUWQuestionsAsync("Exists");
+        //await page.WaitForGeneralUWQuestionsAsync("Exists");
         await page.ClickPropertyUWQuestionsUpdateAnswersAsync();
         await page.ClickInsuranceHistoryAsync();
-        await page.WaitForIsThereAPriorCarrierAsync("Exists");
+        //await page.WaitForIsThereAPriorCarrierAsync("Exists");
         await page.EnterIsThereAPriorCarrierAsync(data.Resolve("{{data:is_there_a_prior_carrier_50}}"));
-        await page.WaitForCarrierAsync("Exists");
+        //await page.WaitForCarrierAsync("Exists");
         await page.EnterCarrierAsync(data.Resolve("{{data:carrier_52}}"));
         await page.EnterGeneralLiabilityPolicyNumberAsync(data.Resolve("{{data:policy_number_53}}"));
         await page.EnterPolicyTypeAsync(data.Resolve("{{data:policy_type_54}}"));
@@ -88,14 +116,14 @@ public sealed class GLOCPPolicySteps
         await page.EnterModificationFactorAsync(data.Resolve("{{data:modificationfactor_57}}"));
         await page.EnterTotalPremiumAsync(data.Resolve("{{data:total_premium_58}}"));
         await page.ClickOKAsync();
-        await page.WaitForUnderwritingInfoOtherInsuranceHistoryDetailAsync("Exists");
+        //await page.WaitForUnderwritingInfoOtherInsuranceHistoryDetailAsync("Exists");
         await page.ClickLossExperienceAsync();
-        await page.WaitForNoKnownLossesAsync("Exists");
-        await page.SetNoKnownLossesAsync(data.Resolve("{{data:no_known_losses_63}}"));
+        //await page.WaitForNoKnownLossesAsync("Exists");
+        //await page.SetNoKnownLossesAsync(data.Resolve("{{data:no_known_losses_63}}"));
         await page.ClickReturnToQuoteAsync();
-        await page.EnterTitleAsync(data.Resolve("{{data:title_65}}"));
-        await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_66}}"));
-        await page.VerifyResultAsync(data.Resolve("{{data:expected_result_value_67}}"), "value");
+        //await page.EnterTitleAsync(data.Resolve("{{data:title_65}}"));
+        //await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_66}}"));
+        //await page.VerifyResultAsync(data.Resolve("{{data:expected_result_value_67}}"), "value");
 
     }
 

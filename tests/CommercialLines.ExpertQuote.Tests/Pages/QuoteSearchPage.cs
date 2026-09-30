@@ -49,4 +49,7 @@ public sealed class QuoteSearchPage
     public Task EnterPreQualificationAsync(string value) => NavigateToScreenAsync(value);
     public Task VerifyPreQualificationAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.GetScreenHeading("PreQualification"), expected, property, new ControlIntent("Navigation", "PreQualificationHeading"));
+
+    public Task SetLargeAccountIndicatorAsync(bool value) =>
+        _ui.SmartSetAsync(_locators.LargeAccountIndicatorCheckbox, value.ToString(), new ControlIntent("Submission", "LargeAccountIndicator"));
 }

@@ -29,6 +29,9 @@ public sealed class SocialSecurityPage
         await _locators.SubmitAngular.EvaluateAsync("el => el.click()");
     }
 
+    public Task PauseAsync(int milliseconds) =>
+        Task.Delay(milliseconds);
+
     public Task ClickContinueAsync() =>
         _ui.ClickAsync(_locators.Continue, new ControlIntent("SocialSecurity", "Continue"));
 

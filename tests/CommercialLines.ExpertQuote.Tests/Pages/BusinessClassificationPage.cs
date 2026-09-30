@@ -23,8 +23,14 @@ public sealed class BusinessClassificationPage
     public Task PressNoneOfTheAboveAsync(string key) =>
         _ui.PressAsync(_locators.NoneOfTheAbove, key, new ControlIntent("BusinessClassification", "NoneOfTheAbove"));
 
-    public Task PressNoneOfTheAboveCheckboxAsync(string key) =>
-        _ui.PressAsync(_locators.NoneOfTheAboveCheckbox, key, new ControlIntent("BusinessClassification", "NoneOfTheAboveCheckbox"));
+    public Task ClickNoneOfTheAboveAsync() =>
+        _ui.ClickAsync(_locators.NoneOfTheAbove, new ControlIntent("BusinessClassification", "NoneOfTheAbove"));
+
+    public Task ClickNoneOfTheAboveLiabilityQuestionsAsync() =>
+        _ui.ClickAsync(_locators.NoneOfTheAboveLiabilityQuestions, new ControlIntent("BusinessClassification", "NoneOfTheAboveLiabilityQuestions"));
+
+    public Task PauseAsync(int milliseconds) =>
+        Task.Delay(milliseconds);
 
     public Task VerifyScreenHeadingAsync(string expected, string property) =>
         _ui.VerifyAsync(_locators.ScreenHeading, expected, property, new ControlIntent("BusinessClassification", "ScreenHeading"));

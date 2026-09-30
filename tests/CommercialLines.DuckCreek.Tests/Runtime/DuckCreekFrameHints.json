@@ -251,6 +251,24 @@
       "value": "iframe"
     }
   ],
+  "Navigation|EntityInfoFrameEntityInfoWindowFax": [
+    {
+      "strategy": "css",
+      "value": "iframe[id^='dctPopup_dctPopupWindow']"
+    }
+  ],
+  "Navigation|EntityInfoFrameEntityInfoWindowBureauNumber": [
+    {
+      "strategy": "css",
+      "value": "iframe[id^='dctPopup_dctPopupWindow']"
+    }
+  ],
+  "Navigation|EntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefault": [
+    {
+      "strategy": "css",
+      "value": "iframe[id^='dctPopup_dctPopupWindow']"
+    }
+  ],
   "Navigation|BusinessInterruptionLimitOfInsurance": [
     {
       "strategy": "css",

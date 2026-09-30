@@ -23,6 +23,9 @@
     "stateVariant": "WV"
   },
   "values": {
+    "effective_date_43": "12-01-2025",
+    "product_45": "Carrier PropertyPages US (4.0.0.0)",
+    "producer": "HERALD BENNETT2",
     "quick_quote_2": "False",
     "insured_type_4": "Individual/ Person",
     "business_name_7": "WV CP Testing, Inc.",
@@ -50,7 +53,7 @@
     "state_55": "West Virginia",
     "zipcode_56": "24739",
     "gender_57": "Male",
-    "enter_ssn_65": "{TAB}",
+    "enter_ssn_65": "202755072",
     "is_there_a_prior_carrier_88": "Yes",
     "carrier_90": "Insure Us, Inc",
     "policy_number_91": "P-0123456789",
@@ -119,7 +122,6 @@
     "personal_property_limit_234": "25000",
     "property_of_others_rating_group_235": "New Rating Group",
     "property_of_others_limit_236": "30000",
-    "search_value_237": "[2459] Wine Mfg.",
     "estimator_type_239": "RCT",
     "valuation_type_240": "Replacement Cost",
     "type_246": "Loss Payee",

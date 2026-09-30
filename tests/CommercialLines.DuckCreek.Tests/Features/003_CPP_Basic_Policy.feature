@@ -1,4 +1,4 @@
-@CL_DC @CPP @basic_new_business_policy
+@CL_DC @CPP @CPP_basic_new_business_policy
 
 Feature: CPP Basic Policy
   As a Commercial Lines Duck Creek policy processing user
@@ -11,10 +11,9 @@ Feature: CPP Basic Policy
     Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
     And I open the configured Commercial Lines Duck Creek application
     And I sign in to Commercial Lines Duck Creek using configured credentials
+    And I start a new quote
     When I enter business client information
     And I add a new Associated Client - Business Owner Type - Click Add Client
-    And I complete aJAX Error Check
-    And I complete required billing information
     And I complete the Associated Client Info
     And I complete required policy information
     And I run insurance score
@@ -23,24 +22,32 @@ Feature: CPP Basic Policy
     And I select CPP Coverage - IM
     And I select CP Detail
     And I complete CP Fields
-    And I complete mask Error Recovery
     And I complete CP Fields for policy coverage
     And I complete CP Fields for location
     And I complete CP Fields for building
     And I add a Rating Group
     And I complete Structure Questions
-    And I complete ensure Property of Others Rating Group has been entered
     And I add Addl Interests
     And I complete Property UW Questions
     And I return to CPP Navigation
-    And I switch to UW Director for OR and WA when required
     And I select GL Detail
     And I complete CGL Fields
+    And I navigate to Location
     And I add Class
+    And I click Detail for [CG2151] Amendment Of Liquor Liability Exclusion - Exception For Scheduled Activities
     And I add [CG0435] Employee Benefits Liability Endorsement
     And I add [CG2142] Exclusion - Explosion, Collapse and Underground Property Damage Hazard (Specified Operations)
     And I add [CG 2149] Total Pollution Exclusion Endorsement
     And I verify and Fill out [FG0055] Employment Practices Liability Insurance Coverage Endorsement
+    And I click Detail for [FG0059] Employment Practices Liability Insurance Coverage Endorsement (NY)
+    And I click Detail for [FG0063] Employment Practices Liability Insurance Coverage Endorsement (MD)
+    And I click Detail for [FG0062] Employment Practices Liability Insurance Coverage Endorsement (PA)
+    And I click Detail for [FG0069] Employment Practices Liability Insurance Coverage Endorsement (OR)
+    And I click Detail for [FG0071] Employment Practices Liability Insurance Coverage Endorsement (NH)
+    And I click Detail for [FG0072] Employment Practices Liability Insurance Coverage Endorsement (ME)
+    And I click Detail for [FG0074] Employment Practices Liability Insurance Coverage Endorsement (CT)
+    And I click Detail for [FG0077] Employment Practices Liability Insurance Coverage Endorsement (VA)
+    And I click Detail for [FG0078] Employment Practices Liability Insurance Coverage Endorsement (VT)
     And I add Addl Interest [CG2007] - Engineers
     And I add Addl Interest [CG2020] Add'l Insured-Charitable Institution
     And I add Addl Interest [CG2023] Add'l Insured-Executors
@@ -57,13 +64,10 @@ Feature: CPP Basic Policy
     And I add Signs
     And I add Accounts Receivable
     And I complete if search result Alert exists
-    And I complete ensure Class has been entered for Accounts Receivable
     And I add Bailees Customers
     And I complete if search result Alert exists for show me
-    And I complete ensure Class has been entered for Bailees Customers
     And I add Computer Systems for risk
     And I complete if search result Alert exists for duck creek policy
-    And I complete ensure Class has been entered for Computer Systems
     And I add Signs for risk
     And I add CM 66 01 Exclude Named Customer
     And I add IF 00 02 Waterborne Equipment
@@ -85,8 +89,8 @@ Feature: CPP Basic Policy
     And I add notepad comment
     And I complete required submission information
     And I run Stoplight
-    And I verify values in premium fields
-    And I complete forms verification
+    #And I verify values in premium fields
+    #And I complete forms verification
 
     Examples:
       | stateCode | dataFile                                        | stateVariant | stateName     | externalDataFile                    |

@@ -23,7 +23,13 @@
     "stateVariant": "VT"
   },
   "values": {
+    "effective_date_43": "10/17/2026",
+    "product_45": "Carrier  WorkersCompensation  Pages   US   (9.8.0.0)",
+    "producer_46": "HERALD BENNETT2",
     "quick_quote_2": "False",
+    "AddClientZipcode_48": "12077",
+    "addclientAddress_1": "344 Rt 9w",
+    "AddClientState_49": "New York",
     "insured_type_4": "Business",
     "business_name_7": "VT WC Testing, Inc.",
     "entity_type_8": "Corporation",
@@ -83,7 +89,7 @@
     "location_assignment_entity_location_locationid_188": "{NULL}",
     "location_assignment_entity_location_locationid_190": "{NULL}",
     "expected_location_assignment_entity_location_locationid_value_191": "Primary Location*",
-    "location_assignment_entity_location_naicscodesearchvalue_195": "{NULL}",
+    "location_assignment_entity_location_naicscodesearchvalue_195": "Testing Laboratories [541380]",
     "location_assignment_entity_location_select_appropriate_code_198": "Testing Laboratories [541380]",
     "expected_location_assignment_entity_location_select_appropriate_code_value_199": "(select)",
     "location_assignment_entity_location_select_appropriate_code_201": "Testing Laboratories [541380]",

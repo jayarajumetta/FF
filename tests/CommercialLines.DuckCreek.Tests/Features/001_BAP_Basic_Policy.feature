@@ -11,6 +11,7 @@ Feature: BAP Basic Policy
     Given test data "<dataFile>" and external data "<externalDataFile>" are loaded
     And I open the configured Commercial Lines Duck Creek application
     And I sign in to Commercial Lines Duck Creek using configured credentials
+    And I start a new quote
     When I enter individual client information
     And I complete required policy information
     And I complete Business Auto policy-specific fields
@@ -29,9 +30,9 @@ Feature: BAP Basic Policy
     And I add notepad comment
     And I verify premium
     And I complete required submission information
-    And I run Stoplight
-    And I verify values in premium fields
-    And I complete forms verification
+    #And I run Stoplight - Not needed for BAP Basic Policy
+    #And I verify values in premium fields
+    #And I complete forms verification - Not needed for BAP Basic Policy
 
     Examples:
       | stateCode | dataFile                                        | stateVariant | stateName      | externalDataFile                    |

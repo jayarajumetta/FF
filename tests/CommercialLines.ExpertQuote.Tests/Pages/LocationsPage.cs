@@ -24,7 +24,7 @@ public sealed class LocationsPage
         _ui.WaitAsync(_locators.EditLocationHeading, expected, new ControlIntent("Locations", "EditLocationHeading"));
 
     public Task EnterFeetFromHydrantAsync(string value) =>
-        _ui.FillAsync(_locators.FeetFromHydrant, value, new ControlIntent("Locations", "FeetFromHydrant"));
+        _ui.SelectAsync(_locators.FeetFromHydrant, value, new ControlIntent("Locations", "FeetFromHydrant"));
 public Task<bool> IsLoadingPresentAsync() =>
         _ui.ExistsAsync(_locators.Loading);
 
@@ -43,6 +43,9 @@ public Task<bool> IsLoadingPresentAsync() =>
     public Task PressMilesFromFireDeptAsync(string key) =>
         _ui.PressAsync(_locators.MilesFromFireDept, key, new ControlIntent("Locations", "MilesFromFireDept"));
 
+    public Task EnterMilesFromFireDeptAsync(string value) =>
+        _ui.FillAsync(_locators.MilesFromFireDept, value, new ControlIntent("Locations", "MilesFromFireDept"));
+
     public Task ClickOrderWildfireRiskScoreAsync() =>
         _ui.ClickAsync(_locators.OrderWildfireRiskScore, new ControlIntent("Locations", "OrderWildfireRiskScore"));
 
@@ -58,8 +61,32 @@ public Task<bool> IsLoadingPresentAsync() =>
     public Task<bool> IsSavePresentAsync() =>
         _ui.ExistsAsync(_locators.Save);
 
-    public Task EnterTerritoryAsync(string value) =>
-        _ui.FillAsync(_locators.Territory, value, new ControlIntent("Locations", "Territory"));
+    public Task PauseAsync(int milliseconds) =>
+        Task.Delay(milliseconds);
+
+    public async Task EnterTerritoryAsync(string value)
+    {
+        // Territory is auto-populated and rendered aria-disabled="true"/mat-form-field-disabled for
+        // some states/counties; skip the interaction entirely rather than waiting/erroring on a
+        // control the application intentionally does not allow editing.
+        var territory = _locators.Territory;
+        bool disabled;
+        try
+        {
+            disabled = await territory.EvaluateAsync<bool>(@"el => {
+                const ariaDisabled = (el.getAttribute('aria-disabled') || '').toLowerCase() === 'true';
+                const formField = el.closest('mat-form-field');
+                const formFieldDisabled = !!formField && formField.classList.contains('mat-form-field-disabled');
+                return ariaDisabled || formFieldDisabled || !!el.disabled;
+            }");
+        }
+        catch (PlaywrightException)
+        {
+            disabled = false;
+        }
+        if (disabled) return;
+        await _ui.SelectAsync(territory, value, new ControlIntent("Locations", "Territory"));
+    }
 
     public Task EnterTotalFarmingAcreageAsync(string value) =>
         _ui.FillAsync(_locators.TotalFarmingAcreage, value, new ControlIntent("Locations", "TotalFarmingAcreage"));

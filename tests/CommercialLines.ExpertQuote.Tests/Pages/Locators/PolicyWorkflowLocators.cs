@@ -9,7 +9,11 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator AddLiabilityYes => _page.GetByTestId("fields.policy.line.lineCoverages$isBaseLiability.value-chip-wrapper");
 
-    public ILocator AddNarrative => _page.Locator("textarea[id=\"fields.data.notes.rows[0].notesInput$remarks.value\"][name=\"fields.data.notes.rows[0].notesInput$remarks.value\"]");
+    public ILocator AddNarrative => _page.Locator("button[data-testid='fields.data.notes.addNarrative']").Filter(new() { HasText = "Add Narrative" });
+
+    public ILocator DescriptionOfTheBusinessExposuresActivitiesAndExperience => _page.Locator("textarea[data-testid=\"fields.data.notes.rows[0].notesInput$remarks.value\"]");
+
+    public ILocator NextNarrative => _page.GetByTestId("fields.data.next");
 
     public ILocator AlertErrorMessageBoxPolicyNumberExistsForThisQuoteNumbe => _page.GetByText(new System.Text.RegularExpressions.Regex("policy number exists for this quote", System.Text.RegularExpressions.RegexOptions.IgnoreCase)).First;
 
@@ -36,7 +40,7 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator IFRAMEDuckCreekPolicyAlertErrorMessage => _page.GetByText("Alert Error Message", new() { Exact = true });
 
-    public ILocator IndividualSoleProprietor => _page.GetByTestId("fields.data.account.accountInput$entityType.value-chip-wrapper");
+    public ILocator IndividualSoleProprietor => _page.GetByTestId("fields.data.account.accountInput$entityType.value-chip-label").Filter(new() { HasTextString = "Individual/Sole Proprietor" });
 
     public ILocator InspectionContact => _page.Locator("input[id=\"fields.primaryInsured.accountInput$isInspectionContact.value-checkbox\"][name=\"fields.primaryInsured.accountInput$isInspectionContact.value\"]");
 
@@ -79,6 +83,10 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator OkToUpdateFromChecklist => _page.GetByRole(AriaRole.Button, new() { Name = "Ok To Update from Checklist", Exact = true });
 
+    public ILocator RaceAndGenderInformationNo => _page.GetByTestId("fields.data.policy.policyOutputNonShredded$raceAndGenderInformation.value-chip-label").Filter(new LocatorFilterOptions { HasText = "No" });
+
+    public ILocator FarmBureauMemberNo => _page.GetByTestId("fields.data.account.policyInput$farmBureauMember.value-chip-label").Filter(new LocatorFilterOptions { HasText = "No" });
+
     public ILocator QuickSearchButton => _page.Locator("[id=\"id_quickSearch\"]");
 
     public ILocator QuoteSearchInput => _page.Locator("input[id=\"quoteSearchInput\"][name=\"quoteSearchInput\"]");
@@ -91,7 +99,7 @@ public sealed class PolicyWorkflowLocators
 
     public ILocator ReturnToAdmin => _page.GetByText("Return To Admin", new() { Exact = true });
 
-    public ILocator Save => _page.Locator("button[id=\"fields.data.save\"], button[id=\"fields.data.saveLocation\"], button[data-testid=\"fields.line.save\"], button:has-text(\"Save\"), a:has-text(\"Save\")").First;
+    public ILocator Save => _page.Locator("button[data-testid='fields.data.account.save'], button[id=\"fields.data.save\"], button[id=\"fields.data.saveLocation\"], button[data-testid=\"fields.line.save\"], button[data-testid=\"fields.data.notes.rows[0].save\"], button:has-text(\"Save\"), a:has-text(\"Save\")").First;
 
     public ILocator SaveForLater => _page.GetByText("Save for Later", new() { Exact = true });
 
@@ -122,6 +130,12 @@ public sealed class PolicyWorkflowLocators
 
 
     public ILocator ViewPolicy0AC0B => _page.Locator("[id=\"returnToActiveSessionA\"]");
+
+    public ILocator ExposuresInsuredAN90DaysNo => _page.Locator("[data-testid='fields.data.policy.policyInput$exposuresInsuredAN90Days.value-chip-label']", new() { HasTextString = "No" });
+
+    public ILocator YearsInBusiness => _page.Locator("input[id=\"fields.data.policy.policyUnderwriting.accountInput$yearsInBusiness.value\"][name=\"fields.data.policy.policyUnderwriting.accountInput$yearsInBusiness.value\"]");
+
+    public ILocator YearsMaintainedContinuousInsuranceCoverage3Plus => _page.Locator("[data-testid='fields.data.policy.policyUnderwriting.policyUnderwritingInput$yearsMaintainedContinuousInsuranceCoverage.value-chip-label']", new() { HasTextString = "3+ years" });
 
 
 }

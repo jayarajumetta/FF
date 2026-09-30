@@ -48,6 +48,13 @@ try {
         & dotnet @args
         if ($LASTEXITCODE -ne 0) { $exitCode = $LASTEXITCODE }
     }
+    $run.Lock.Dispose()
+    try {
+        & (Join-Path $PSScriptRoot 'Generate-ConsolidatedReport.ps1') -ResultsDirectory $resultsFull
+    } catch {
+        Write-Warning "Consolidated report generation failed: $_"
+        if ($exitCode -eq 0) { $exitCode = 1 }
+    }
 }
 finally {
     if ($null -ne $run) { $run.Lock.Dispose() }

@@ -90,7 +90,7 @@ jobs:
       PL_DC_USERNAME: $(PL_DC_USERNAME)
       PL_DC_PASSWORD: $(PL_DC_PASSWORD)
   - task: PowerShell@2
-    displayName: Package this agent's raw results and evidence
+    displayName: Package this agent's report metadata only
     condition: always()
     inputs:
       targetType: filePath
@@ -101,7 +101,7 @@ jobs:
       SYSTEM_JOBPOSITIONINPHASE: $(System.JobPositionInPhase)
       SYSTEM_TOTALJOBSINPHASE: $(System.TotalJobsInPhase)
   - task: PublishPipelineArtifact@1
-    displayName: Upload this agent's evidence before job cleanup
+    displayName: Upload report metadata before job cleanup
     condition: and(always(), ne(variables['EVIDENCE_HANDOFF'], ''))
     inputs:
       targetPath: '$(EVIDENCE_HANDOFF)'
