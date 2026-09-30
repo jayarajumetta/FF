@@ -27,7 +27,7 @@ $fieldsToFix = @(
 	'expected_premium_change_value_283'
 )
 
-$jsonFiles = Get-ChildItem -Path $scriptDir -Filter '001_bap_basic_policy_*.json' -File
+$jsonFiles = Get-ChildItem -Path (Join-Path $scriptDir 'Basic') -Filter '001_bap_basic_policy_*.json' -File
 
 $totalChanged = 0
 
