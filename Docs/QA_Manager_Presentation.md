@@ -60,7 +60,8 @@ automatically, without any manual steps.
 Here are the key highlights:
 
 - Gherkin/BDD — tests are written in plain English, readable by non-engineers
-- 27 states covered for SFP Basic Policy, Country Estate expanding
+- 41 scenario states represented for both SFP Basic Policy and Country Estate;
+  38 Basic and 14 CE states currently have live-qualified premium baselines
 - Premium regression — every run checks actual vs expected premium per state
 - Forms validation — every policy's DuckCreek forms are verified against a state baseline
 - Built-in tools — DataPool, Locator Scanner, Forms Baseline Generator
@@ -132,9 +133,9 @@ collide with existing clients or repeat data. The date of birth, phone number, e
 and SSN are all randomized as well. This means the test suite can run unlimited times without
 manual data management.
 
-In the full regression suite we run all 27 states simultaneously using sharding — 6 parallel
-threads, each picking up a different set of states. That's how we get a 27-state run done in
-under 30 minutes instead of 3 hours."
+In the full QA regression suite we run the 38 QA-available states using sharding — 6 parallel
+threads, each picking up a different set of states. The three DEV-only states are targeted
+separately with the DevOnly filter."
 
 ### When it finishes — point out in the output:
 - `*** QUOTE NUMBER: XXXXXXXX ***` — quote captured mid-flow
@@ -233,13 +234,13 @@ The report gives us three categories:
 
 | Metric | Value |
 |--------|-------|
-| States covered — SFP Basic | 27 |
-| States covered — Country Estate | Expanding |
+| Scenario states — SFP Basic | 41 (38 premium-qualified) |
+| Scenario states — Country Estate | 41 (14 premium-qualified) |
 | Average full test duration | ~5–6 min per state |
 | Parallel shards | 6 |
 | Full suite runtime (parallel) | ~25–30 min |
 | Forms validated per policy | 27–31 forms |
-| Premium baselines tracked | 27 SFP + CE states |
+| Premium baselines tracked | 38 Basic + 14 qualified CE states |
 | Tools built | DataPool, Locator Scanner, Forms Baseline Generator |
 | CI/CD | Azure DevOps pipeline — scheduled + on-demand |
 | Test data | 100% randomized — no manual data prep needed |
@@ -256,7 +257,7 @@ premium regression checks all run automatically on every execution without any m
 Our current roadmap:
 - Expanding Country Estate state coverage to match Basic Policy
 - Nightly scheduled pipeline runs with ADO dashboard reporting
-- Forms baseline coverage for all 27 states
+- Live-qualifying premiums and forms in DEV for the newly represented MD, PA and VT workflows
 - Extending the DataPool to support quote reuse across CE and future LOBs
 
 The goal is a framework that gives the business continuous confidence that Expert Quote is
@@ -267,7 +268,7 @@ working correctly across every state, every product, and every form — automati
 ## APPENDIX — Useful Commands Reference
 
 ```powershell
-# Run full SFP Basic Policy suite (all 27 states, headed)
+# Run full SFP Basic Policy suite (all 41 states, headed)
 dotnet test --filter "Category=ExpertQuote&Category=Smoke" --logger "console;verbosity=detailed"
 
 # Run a single state

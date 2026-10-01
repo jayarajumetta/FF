@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using NUnit.Framework;
 using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 using Reqnroll;
 
 namespace PnCTestAutomation.Tests
@@ -111,6 +112,42 @@ namespace PnCTestAutomation.Tests
                 Assert.That(data.Farm.LimitedFarmPollutionTankCapacity, Is.EqualTo("500000"));
                 Assert.That(data.Farm.LimitedFarmPollutionTankConstructionDate, Is.EqualTo("2024-03-31"));
             });
+        }
+
+        [Test]
+        public void SourceBackedLocationInputs_MapWithoutLosingLeadingZerosOrOptionalSemantics()
+        {
+            var data = new ScenarioContextData();
+            TableMappingHelpers.LocationInformationFields(TableOf(
+                ("Territory", "007"),
+                ("AllPerilDeductible", "$1,000"),
+                ("WindHailDeductible", "2%"),
+                ("HurricaneDeductible", "2%"),
+                ("HurricaneOptional", "Yes")), data);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(data.Farm.Territory, Is.EqualTo("007"));
+                Assert.That(data.Farm.AllPerilDeductible, Is.EqualTo("$1,000"));
+                Assert.That(data.Farm.WindHailDeductible, Is.EqualTo("2%"));
+                Assert.That(data.Farm.HurricaneDeductible, Is.EqualTo("2%"));
+                Assert.That(data.Farm.HurricaneDeductibleOptional, Is.True);
+            });
+        }
+
+        [TestCase("Main House", new string[] { "Main House" }, 0)]
+        [TestCase("Main House", new string[] { "Residence #1" }, 0)]
+        [TestCase("Main House", new string[] { "Residence #1", "Residence #2" }, -1)]
+        public void MortgageeResidence_UsesSoleGenericOptionButRejectsAmbiguousFallback(
+            string requestedResidence,
+            string[] availableResidences,
+            int expectedIndex)
+        {
+            Assert.That(
+                SFP_MortgageeLossPayeePage.ResolveResidenceOptionIndex(
+                    requestedResidence,
+                    availableResidences),
+                Is.EqualTo(expectedIndex));
         }
 
         internal static Table TableOf(params (string Question, string Answer)[] rows)

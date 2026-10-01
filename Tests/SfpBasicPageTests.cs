@@ -5,6 +5,7 @@ using NUnit.Framework;
 using PnCTestAutomation.Context;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Pages;
+using PnCTestAutomation.Pages.ExpertQuotePages;
 using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 using PnCTestAutomation.StepDefinitions.SFPSteps;
 
@@ -347,8 +348,190 @@ namespace PnCTestAutomation.Tests
             Assert.ThrowsAsync<PlaywrightException>(() => page.VerifyResidenceCoverageAsync(data));
         }
 
+        [Test]
+        public async Task EditLocation_UsesDedicatedSaveLocationAction()
+        {
+            await _page.SetContentAsync("""
+                <input data-testid="fields.data.account.location.rows[0].locationInput$additionalDescription.value">
+                <button data-testid="fields.data_Next.saveLocation"
+                        onclick="document.body.dataset.action='saveLocation'">Save Location</button>
+                """);
+            var page = new SFP_EditLocationPage(_page);
+
+            Assert.That(await page.IsCurrentAsync(), Is.True);
+            await page.SaveLocationAsync();
+            Assert.That(await _page.Locator("body").GetAttributeAsync("data-action"), Is.EqualTo("saveLocation"));
+        }
+
+        [Test]
+        public async Task SourceBackedAllPeril_SelectsExactRequestedValue()
+        {
+            await _page.SetContentAsync("""
+                <div>
+                  <button data-testid="fields.locationInput$allPeril.value-0"
+                          onclick="document.body.dataset.allPeril='$1,000'">$1,000</button>
+                  <button data-testid="fields.locationInput$allPeril.value-1"
+                          onclick="document.body.dataset.allPeril='$2,500'">$2,500</button>
+                </div>
+                """);
+            var data = new ScenarioContextData
+            {
+                RatingState = "Vermont",
+                ZipCode = "05091",
+                Territory = "031",
+                AllPerilDeductible = "$2,500"
+            };
+            var page = new LocationPage(_page, data);
+
+            await page.ConfigureSourceBackedCoverageAsync();
+            Assert.That(await _page.Locator("body").GetAttributeAsync("data-all-peril"), Is.EqualTo("$2,500"));
+        }
+
+        [Test]
+        public void SourceBackedAllPeril_AllowsTheSfpViewToLeaveControlUnexposed()
+        {
+            _page.SetContentAsync("<main>SFP location without an all-peril control</main>")
+                .GetAwaiter().GetResult();
+            var data = new ScenarioContextData
+            {
+                RatingState = "Vermont",
+                ZipCode = "05091",
+                Territory = "031",
+                AllPerilDeductible = "$2,500"
+            };
+            var page = new LocationPage(_page, data);
+
+            Assert.DoesNotThrowAsync(() => page.ConfigureSourceBackedCoverageAsync());
+        }
+
+        [Test]
+        public async Task SourceBackedWindHail_SelectsExactValueInsteadOfNextHigherOption()
+        {
+            await _page.SetContentAsync("""
+                <div id="wind-hail">
+                  <button data-testid="fields.locationInput$windHailDeductible.value-0"
+                          onclick="document.body.dataset.windHail='1%'">1%</button>
+                  <button data-testid="fields.locationInput$windHailDeductible.value-1"
+                          onclick="document.body.dataset.windHail='2%'">2%</button>
+                  <button data-testid="fields.locationInput$windHailDeductible.value-2"
+                          onclick="document.body.dataset.windHail='5%'">5%</button>
+                </div>
+                """);
+            var page = new LocationPage(_page, new ScenarioContextData());
+
+            await page.SelectWindHailDeductibleAsync("2%", "20855", selectExactRequestedValue: true);
+            Assert.That(await _page.Locator("body").GetAttributeAsync("data-wind-hail"), Is.EqualTo("2%"));
+        }
+
+        [Test]
+        public async Task PennsylvaniaWindHail_WhenPresent_SelectsAndPersistsNA()
+        {
+            await SetWindHailOptionsAsync("DEV SFP Location", "N/A", "1%", "2%", "5%");
+            var page = new LocationPage(_page, new ScenarioContextData { RatingState = "Pennsylvania" });
+
+            await page.VerifyWindHailDeductibleOptionsAsync("17601", "None");
+            await page.SelectWindHailDeductibleAsync("None", "17601", selectExactRequestedValue: true);
+
+            Assert.That(await SelectedWindHailOptionAsync(), Is.EqualTo("N/A"));
+        }
+
+        [Test]
+        public async Task PennsylvaniaWindHail_WhenAbsent_RecordsAcceptedDeploymentShape()
+        {
+            await _page.SetContentAsync("<title>DEV SFP Location</title><main>No Wind/Hail field</main>");
+            var page = new LocationPage(_page, new ScenarioContextData { RatingState = "Pennsylvania" });
+
+            Assert.DoesNotThrowAsync(async () =>
+            {
+                await page.VerifyWindHailDeductibleOptionsAsync("17601", "None");
+                await page.SelectWindHailDeductibleAsync("None", "17601", selectExactRequestedValue: true);
+            });
+        }
+
+        [Test]
+        public async Task VermontWindHail_WhenPresent_SelectsAndPersistsOnePercent()
+        {
+            await SetWindHailOptionsAsync("DEV SFP Location", "N/A", "1%", "2%", "5%");
+            var page = new LocationPage(_page, new ScenarioContextData { RatingState = "Vermont" });
+
+            await page.VerifyWindHailDeductibleOptionsAsync("05091", "1%");
+            await page.SelectWindHailDeductibleAsync("1%", "05091", selectExactRequestedValue: true);
+
+            Assert.That(await SelectedWindHailOptionAsync(), Is.EqualTo("1%"));
+        }
+
+        [Test]
+        public async Task VermontWindHail_WhenAbsent_RecordsDeploymentDriftAndContinues()
+        {
+            await _page.SetContentAsync("<title>DEV SFP Location</title><main>No Wind/Hail field</main>");
+            var page = new LocationPage(_page, new ScenarioContextData { RatingState = "Vermont" });
+
+            Assert.DoesNotThrowAsync(async () =>
+            {
+                await page.VerifyWindHailDeductibleOptionsAsync("05091", "1%");
+                await page.SelectWindHailDeductibleAsync("1%", "05091", selectExactRequestedValue: true);
+            });
+        }
+
+        [TestCase("Pennsylvania", "17601", "None", new[] { "1%", "2%", "5%" }, "N/A")]
+        [TestCase("Vermont", "05091", "1%", new[] { "N/A", "2%", "5%" }, "1%")]
+        public async Task DevWindHailContract_RejectsUnexpectedOptionState(
+            string state,
+            string zip,
+            string requested,
+            string[] offered,
+            string required)
+        {
+            await SetWindHailOptionsAsync("DEV SFP Location", offered);
+            var page = new LocationPage(_page, new ScenarioContextData { RatingState = state });
+
+            var error = Assert.ThrowsAsync<AssertionException>(
+                () => page.VerifyWindHailDeductibleOptionsAsync(zip, requested));
+            Assert.That(error.Message,
+                Does.Contain($"State={state}")
+                    .And.Contain($"ZIP={zip}")
+                    .And.Contain($"required option '{required}'")
+                    .And.Contain("Offered=")
+                    .And.Contain("Page=Title='DEV SFP Location'"));
+        }
+
+        [Test]
+        public void ClientDetails_ReportsDuckCreekQuoteErrorBeforeGenericNavigationFailure()
+        {
+            _page.SetContentAsync("<main><h1>Quote Error</h1><div class='error'>DC-500 Internal Server Error</div></main>")
+                .GetAwaiter().GetResult();
+            var page = new SFP_ClientDetailsPage(_page);
+
+            var error = Assert.ThrowsAsync<PlaywrightException>(() =>
+                page.SelectContactRoleAsync("Inspection Contact"));
+            Assert.That(error.Message, Does.Contain("DC-500").And.Contain("Client Details"));
+        }
+
         private static string Input(string field, string value = "") =>
             $"<input data-testid='fields.building.rows[0].buildingInput${field}.value' value='{value}'>";
+
+        private async Task SetWindHailOptionsAsync(string title, params string[] options)
+        {
+            var chips = string.Join(
+                "",
+                Array.ConvertAll(options, option =>
+                {
+                    var index = Array.IndexOf(options, option);
+                    return
+                    $"<div class='chip-item-wrapper' data-testid='fields.locationInput$windHailDeductible.value-chip-item-wrapper-{index}' " +
+                    "onclick=\"document.querySelectorAll('.chip-wrapper-selected').forEach(x => x.className='chip-wrapper'); this.querySelector('.chip-wrapper').className='chip-wrapper-selected'\">" +
+                    $"<div class='chip-wrapper' data-testid='fields.locationInput$windHailDeductible.value-chip-wrapper-{index}'>{option}</div></div>";
+                }));
+            await _page.SetContentAsync(
+                $"<title>{title}</title><div id='wind-hail'><div class='regular-chip-container' " +
+                $"data-testid='fields.locationInput$windHailDeductible.value'>{chips}</div></div>");
+        }
+
+        private async Task<string> SelectedWindHailOptionAsync()
+        {
+            var selected = _page.Locator("[data-testid*='windHailDeductible'].chip-wrapper-selected");
+            return await selected.InnerTextAsync();
+        }
 
         private static string Select(string testId, string value) =>
             $"<div data-testid='{testId}'>{value}</div>";

@@ -36,13 +36,27 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             await locationPage.EnterLocationInformationAsync();
             await locationPage.OrderWildfireRiskScoreIfAvailableAsync();
 
+            var hasSourceBackedCoverageInputs =
+                !string.IsNullOrWhiteSpace(_contextData.AllPerilDeductible);
+            if (hasSourceBackedCoverageInputs)
+                await locationPage.ConfigureSourceBackedCoverageAsync();
+
             await locationPage.VerifyWindHailDeductibleOptionsAsync(
                 _contextData.ZipCode,
                 _contextData.WindHailDeductible);
             await locationPage.SelectWindHailDeductibleAsync(
                 _contextData.WindHailDeductible,
-                _contextData.ZipCode);
-            await locationPage.ClickSaveAsync();
+                _contextData.ZipCode,
+                selectExactRequestedValue: hasSourceBackedCoverageInputs);
+
+            if (hasSourceBackedCoverageInputs)
+                await locationPage.ConfigureHurricaneDeductibleAsync();
+
+            var editLocationPage = new SFP_EditLocationPage(_context.Page);
+            if (await editLocationPage.IsCurrentAsync())
+                await editLocationPage.SaveLocationAsync();
+            else
+                await locationPage.ClickSaveAsync();
         }
 
         [When("user adds a Residence to the Location")]

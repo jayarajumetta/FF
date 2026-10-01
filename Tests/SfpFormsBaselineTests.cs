@@ -14,6 +14,7 @@ namespace PnCTestAutomation.Tests
     public class SfpFormsBaselineTests
     {
         private static readonly FormsValidationService Validator = new(new DuckCreekFormsConfig());
+        private static readonly string[] UnqualifiedStates = { "MD", "PA", "VT" };
 
         private static string ProjectRoot()
         {
@@ -39,10 +40,10 @@ namespace PnCTestAutomation.Tests
             }).ToArray();
         }
 
-        public static IEnumerable<TestCaseData> ScenarioStates()
+        public static IEnumerable<TestCaseData> BaselineStates()
         {
             foreach (var variant in new[] { "BASIC", "CE" })
-                foreach (var state in ExampleStates(variant))
+                foreach (var state in ReadCsv(variant)[0].Skip(2))
                     yield return new TestCaseData(variant, state);
         }
 
@@ -53,16 +54,21 @@ namespace PnCTestAutomation.Tests
 
         [TestCase("BASIC", 182, "B")]
         [TestCase("CE", 169, "C")]
-        public void DeployedBaseline_CoversExactlyEveryExampleState(string variant, int count, string type)
+        public void DeployedBaseline_CoversQualifiedStatesWithoutInventingNewStateExpectations(
+            string variant, int count, string type)
         {
             var csv = ReadCsv(variant);
-            var states = ExampleStates(variant);
+            var scenarioStates = ExampleStates(variant);
+            var baselineStates = csv[0].Skip(2).ToArray();
             Assert.Multiple(() =>
             {
-                Assert.That(states, Has.Length.EqualTo(38));
-                Assert.That(states, Is.Unique);
+                Assert.That(scenarioStates, Has.Length.EqualTo(41));
+                Assert.That(scenarioStates, Is.Unique);
                 Assert.That(csv[0].Take(2), Is.EqualTo(new[] { "Type", "Form" }));
-                Assert.That(csv[0].Skip(2), Is.EquivalentTo(states));
+                Assert.That(baselineStates, Has.Length.EqualTo(38));
+                Assert.That(baselineStates, Is.Unique);
+                Assert.That(baselineStates, Is.EquivalentTo(scenarioStates.Except(UnqualifiedStates)));
+                Assert.That(baselineStates.Intersect(UnqualifiedStates), Is.Empty);
                 Assert.That(csv[0], Is.Unique);
                 Assert.That(csv.Skip(1), Has.Count.EqualTo(count));
                 Assert.That(csv.All(row => row.Length == csv[0].Length), Is.True, "Missing or shifted state cells");
@@ -75,7 +81,7 @@ namespace PnCTestAutomation.Tests
             });
         }
 
-        [TestCaseSource(nameof(ScenarioStates))]
+        [TestCaseSource(nameof(BaselineStates))]
         public void RuntimeLoader_PreservesEveryCsvExpectationAndEnforcesIt(string variant, string state)
         {
             var csv = ReadCsv(variant);
@@ -116,6 +122,32 @@ namespace PnCTestAutomation.Tests
                     Is.EqualTo(selected == 0 ? "C7" : selected == 1 ? "C9" : "C5"));
                 actual.RemoveAt(actual.Count - 1);
             }
+        }
+
+        [TestCase("BASIC", "MD")]
+        [TestCase("BASIC", "PA")]
+        [TestCase("BASIC", "VT")]
+        [TestCase("CE", "MD")]
+        [TestCase("CE", "PA")]
+        [TestCase("CE", "VT")]
+        public void RuntimeLoader_RejectsNewStatesUntilFormsBaselinesAreQualified(string variant, string state)
+        {
+            var error = Assert.Throws<InvalidOperationException>(
+                () => Validator.LoadExpectedFormsForLob("SFP", state, variant));
+            Assert.That(error!.Message, Does.Contain($"State column '{state}' not found"));
+        }
+
+        [TestCase("BASIC", 182)]
+        [TestCase("CE", 169)]
+        public void RecordMode_CanSeedProposalBeforeNewStateColumnsExist(string variant, int count)
+        {
+            var template = Validator.LoadExpectedFormsTemplateForRecording("SFP", variant);
+            Assert.Multiple(() =>
+            {
+                Assert.That(template, Has.Count.EqualTo(count));
+                Assert.That(template.Select(form => form.FormName), Is.Unique);
+                Assert.That(template.All(form => form.Type is "BASE" or "B" or "C"), Is.True);
+            });
         }
 
         [Test]

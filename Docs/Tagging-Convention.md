@@ -57,6 +57,10 @@ unless the scenario has a *different* value for that tag.
 | `@DevOnly` | Runs only against the Dev environment |
 | `@QAOnly` | Runs only against the QA environment |
 
+`TestHooks` enforces these tags for direct/local runs. QA shard pipelines also
+exclude `TestCategory=DevOnly` at discovery so DEV-only examples cannot enter
+ordinary QA runs.
+
 ---
 
 ## Feature File Layout

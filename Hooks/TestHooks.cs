@@ -121,7 +121,8 @@ namespace PnCTestAutomation.Hooks
                 _scenarioContext[ScenarioContextData.ContextKey] = new ScenarioContextData();
             }
 
-            if (ShouldSkipScenarioForDevStateFilter(out var skipReason))
+            if (ShouldSkipScenarioForEnvironment(out var skipReason)
+                || ShouldSkipScenarioForDevStateFilter(out skipReason))
             {
                 NUnit.Framework.Assert.Ignore(skipReason);
                 return;
@@ -448,6 +449,41 @@ namespace PnCTestAutomation.Hooks
                     Console.WriteLine($"[Warning] Failed to cleanup {dir}: {ex.Message}");
                 }
             }
+        }
+
+        private bool ShouldSkipScenarioForEnvironment(out string reason)
+        {
+            var tags = (_scenarioContext.ScenarioInfo.Tags ?? [])
+                .Concat(_featureContext.FeatureInfo.Tags ?? []);
+            var environment = _configuration["Environment"]
+                              ?? Environment.GetEnvironmentVariable("TEST_ENVIRONMENT")
+                              ?? "QA";
+
+            return IsEnvironmentRestricted(tags, environment, out reason);
+        }
+
+        internal static bool IsEnvironmentRestricted(
+            IEnumerable<string> tags,
+            string environment,
+            out string reason)
+        {
+            reason = string.Empty;
+            var tagSet = new HashSet<string>(tags ?? [], StringComparer.OrdinalIgnoreCase);
+            var target = string.IsNullOrWhiteSpace(environment) ? "QA" : environment.Trim();
+
+            if (tagSet.Contains("DevOnly") && !target.Equals("Dev", StringComparison.OrdinalIgnoreCase))
+            {
+                reason = $"Skipping DevOnly scenario in '{target}'. Set TEST_ENVIRONMENT=Dev to run it.";
+                return true;
+            }
+
+            if (tagSet.Contains("QAOnly") && !target.Equals("QA", StringComparison.OrdinalIgnoreCase))
+            {
+                reason = $"Skipping QAOnly scenario in '{target}'. Set TEST_ENVIRONMENT=QA to run it.";
+                return true;
+            }
+
+            return false;
         }
 
         private bool ShouldSkipScenarioForDevStateFilter(out string reason)

@@ -20,12 +20,11 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
             return _page.Locator($"input[data-testid='fields.primaryInsured.accountInput$is{key}.value']");
         }
 
-        /// <summary>
-        /// Checks a contact role checkbox. Returns true if found and checked, false otherwise.
-        /// </summary>
+        /// <summary>Checks the requested contact role and fails with page diagnostics if it is unavailable.</summary>
         public async Task<bool> SelectContactRoleAsync(string contactRole)
         {
             await WaitForSpinnerAsync();
+            await ThrowIfQuoteErrorAsync($"selecting Client Details role '{contactRole}'");
             var input = GetContactRoleCheckbox(contactRole);
             try
             {
@@ -37,10 +36,12 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
                 Console.WriteLine($"[ClientDetails] '{contactRole}' checkbox checked.");
                 return true;
             }
-            catch (TimeoutException)
+            catch (TimeoutException ex)
             {
-                Console.WriteLine($"[ClientDetails] WARNING: '{contactRole}' checkbox not found — skipping.");
-                return false;
+                await ThrowIfQuoteErrorAsync($"waiting for Client Details role '{contactRole}'");
+                throw new PlaywrightException(
+                    $"[ClientDetails] Required '{contactRole}' checkbox was not available. " +
+                    $"{await BuildPageDiagnosticsAsync()}", ex);
             }
         }
     }

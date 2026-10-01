@@ -313,8 +313,28 @@ matching native button is required; missing or duplicate buttons fail rather
 than opening another row or silently skipping readback.
 
 QA still needs to supply replacement Basic location addresses/ZIPs distinct from
-Rate and CE. The 38 existing examples are deliberately unchanged; do not invent
-ZIPs or treat this workbook requirement as complete.
+Rate and CE for the 38 legacy examples; those rows remain unchanged. MD, PA and VT
+are represented in both Basic and CE with approved public working-farm fixtures:
+Agricultural History Farm Park in Derwood, MD; Landis Valley Village & Farm Museum
+in Lancaster, PA; and Billings Farm & Museum in Woodstock, VT. Their optional
+AddressLine2 values are empty rather than fabricated, and their five-digit ZIP
+strings are preserved, including VT `05091`. These six example rows are
+`@DevOnly`: the states are not available in QA.
+
+The DEV rows carry the reviewed source inputs used during qualification rather
+than inheriting the legacy scenario default: territory `007` / all-peril `$1,000`
+/ Wind-Hail `2%` / optional-if-exposed Hurricane `2%` for MD; territory `001` /
+all-peril `$2,000` with no Wind-Hail or Hurricane for PA; and territory `031` /
+all-peril `$2,500` / Wind-Hail `1%` with no Hurricane for VT. The automation waits
+for address-driven controls and enumerates live options. The 2026-09-29 DEV runs
+confirmed that this SFP Location view does not expose an all-peril control, so the
+reviewed all-peril value remains explicit capture context and is logged rather
+than fabricated through another control. MD continues to require and persist its
+exact `2%` Wind-Hail value. DEV currently exposes PA Wind-Hail despite the checked-in
+product source: when exposed, automation requires and persists `N/A`, never a
+percentage; absence is also accepted and logged. DEV currently omits VT Wind-Hail:
+absence after location refresh is accepted only for VT with an explicit deployment-
+drift diagnostic; if exposed, the exact `1%` option remains mandatory.
 Alabama's SFP premium baseline is $6,489.00, promoted with user approval on
 2026-09-23 from QA quote 02081297, passing input-to-pricing qualification attempt 3.
 That run captured the amount with premium comparison and forms excluded; it did
@@ -335,11 +355,11 @@ tank Yes, tank capacity 500000 gallons, and fixed construction date 03/31/2024
 (Excel serial 45382, 1900 date system). The tank exceeds the 10000-gallon
 threshold for UW rule 11128; genuine applicable referrals must remain visible.
 
-The unchanged 38 examples are AL, AR, AZ, CO, DE, GA, ID, IL, IN, IA, KS, KY, LA,
+The 41 examples are AL, AR, AZ, CO, DE, GA, ID, IL, IN, IA, KS, KY, LA,
 CT, MS, MO, MA, ME, MN, MT, NE, NV, NH, NM, ND, OK, NJ, OH, OR, SC, SD, TN, TX,
-UT, WA, WI, WY, RI. There are 27 existing SFP premium baselines; the 11 without
-baselines are IN, IA, CT, MS, MO, NH, NM, OK, NJ, OH, RI. Beyond the explicitly
-approved Alabama promotion above, further recalibration requires
+UT, WA, WI, WY, RI, MD, PA and VT. All 38 legacy states have current SFP premium
+baselines from the later qualification work documented below. MD, PA and VT have
+no premium baselines. Qualifying them requires DEV execution with
 final approved inputs (including compatible pollution scope and distinct location
 data) plus actual quote evidence; no additional amounts are inferred.
 
@@ -468,7 +488,7 @@ the other state examples have not yet been live-qualified:
   not add a named-person extension. Both fields are checked before Save and after
   reopening. Blank names are invalid even at count 0. Other explicit counts must
   be integers 0-9; names have the source maximum of 85 characters.
-- **Location data:** all 38 CE state examples now use the user's replacement
+- **Location data:** the 38 legacy CE state examples use the user's replacement
   Address / AddressLine2 / City / Zip / County records, with five-digit ZIP strings
   (including leading zeros), AddressLine2 111 and existing shard/state inventory
   preserved. All 38 ZIPs differ from their previous CE values. This records the
@@ -478,6 +498,10 @@ the other state examples have not yet been live-qualified:
   Basic and Rate data are unchanged. No replacement wind/hail deductible was
   supplied, so the existing 1% request remains and may need runtime reconciliation
   for the new locations.
+  MD, PA and VT add the supplied official public institutional addresses to both
+  workflows with empty optional AddressLine2 values. They are distributed by the
+  existing state ranges: MD in the middle shard and PA/VT in the final shard,
+  yielding 14/14/13 total rows per workflow.
 
 Division IV amount rules, inspected read-only in the CLAS Dev-ST source snapshot
 synced 2026-09-23:
@@ -725,9 +749,18 @@ Output appears in `TestResults/{date}/LocatorScan/`.
 
 The canonical Basic and CE workflows load `Resources\ExpectedForms\SFP\SFP_BASIC.csv`
 and `SFP_CE.csv`, respectively. Both are deployed with the existing Resources copy
-rule and take precedence over `SFP.json`. They cover all 38 states in each feature's
-Examples tables, including CT, NJ and RI, with explicit `YM`/`N` expectations.
+rule and take precedence over `SFP.json`. They cover the 38 previously qualified
+states, including CT, NJ and RI, with explicit `YM`/`N` expectations.
 `N` requires a form to be absent, even unchecked; an unlisted form is informational.
+
+The feature inventories now also contain MD, PA and VT, but those states do not
+have approved forms columns. No CSV values are inferred from another state.
+DEV runtime therefore reports the missing state column and skips the
+nonblocking Forms comparison (or fails when `FailOnFormsValidationError=true`).
+Each state/product combination must complete a DEV quote and DuckCreek capture,
+then receive review and approval before a `YM`/`N` column is added. Offline tests
+assert both the 41-state scenario inventory and the deliberate three-state
+baseline exclusion.
 
 These matrices were imported on 2026-09-23 from the user-designated Tosca masters:
 `\\mis\sys\QLTY\Test_Automation\Tricentis_Tosca\Forms_Check\SFP\SFP_BASIC.csv`
@@ -835,18 +868,80 @@ and NJ on incomplete required fields. These failures were not bypassed.
 
 The 17 independently verified retry captures change or add 13 amounts: 12 Basic
 and CE WY; four amounts already matched. Together with the earlier qualified
-captures, `ExpectedPremiums:SFP` now has updated premiums for all 38 Basic states,
-and `ExpectedPremiums:CE` has 14 qualified states. CE DE/ME retain their older,
+captures, `ExpectedPremiums:SFP` has updated premiums for all 38 legacy Basic states,
+and `ExpectedPremiums:CE` has 14 qualified legacy states. CE DE/ME retain their older,
 unqualified amounts; other unsuccessful CE states remain unconfigured. The CE
-matrix is therefore still incomplete. A clean premium capture is not approval of
-the outstanding forms findings.
+matrix is therefore still incomplete. MD, PA and VT are unconfigured for both
+products and require live DEV premium qualification; no values were copied or
+estimated. A clean premium capture is not approval of the outstanding forms
+findings.
 
-The wind/hail helper still maps the original ZIPs, while the updated CE examples
-use replacement ZIPs. An unmapped ZIP falls back to the feature's literal `1%`;
-the old mapped rules could instead require an absent field or a different minimum.
-This integration gap remains unresolved. Replacement ZIP rules must be verified
-before updating the lookup; do not silently accept absent fields or select an
-arbitrary deductible, because those inputs affect premiums and forms.
+Run only the new states against DEV:
+
+```powershell
+$env:TEST_ENVIRONMENT = "Dev"
+dotnet test TestAutomation.csproj --filter "TestCategory=DevOnly"
+```
+
+Use `TestCategory=DevOnly&TestCategory=Shard2` or `Shard3` for Basic MD or PA/VT,
+and `Shard5` or `Shard6` for CE MD or PA/VT. The QA SFP pipelines explicitly add
+`TestCategory!=DevOnly` to every shard filter, and the runtime hook also skips a
+`@DevOnly` scenario unless `TEST_ENVIRONMENT=Dev`.
+
+To establish the first approved premiums and forms baselines, use the dedicated
+capture profile instead of a normal validation run:
+
+```powershell
+.\Scripts\record-new-states.ps1 -ResetProposed
+```
+
+`appsettings.RecordBaseline.json` identifies the target as DEV, restricts state
+execution to MD/PA/VT, and enables forms record mode. The script still filters on
+`TestCategory=DevOnly`, so it runs exactly six cases: Basic and CE for each state.
+Missing premium baselines only produce explicit capture messages; they are not
+treated as expected values. Forms are exported as proposals rather than compared
+or silently promoted.
+
+Each run writes `TestResults\DevQualification\<timestamp>\` containing:
+
+- `SFP_DEV_Qualification.trx` with per-case output and quote evidence;
+- `SFP_DEV_Qualification.premiums.csv`;
+- `SFP_BASIC_PROPOSED.csv` and `SFP_CE_PROPOSED.csv`;
+- `FormsXml\` with the raw DuckCreek responses from that run.
+
+Raw forms responses can originate under either the repository `TestResults` tree
+or the test host's `bin\Debug\net8.0\TestResults` tree. Postprocessing matches each
+successful variant/state/quote to its XML and requires exactly one preserved
+response per successful baseline case.
+
+Review all six quotes, positive premium captures, and every proposed `YM`/`YS`/
+`YU`/`N` value. Then validate the promotion without writing:
+
+```powershell
+.\Scripts\Promote-SFPDevQualification.ps1 `
+  -QualificationDirectory ".\TestResults\DevQualification\<timestamp>"
+```
+
+After approval, rerun with `-Approve`. The script refuses incomplete/failed
+captures, missing quotes, blank statuses, overwrites, and unclassified new forms.
+It writes approved premiums under `ExpectedPremiums` in `appsettings.Dev.json`
+and appends the reviewed state columns to `SFP_BASIC.csv` and `SFP_CE.csv`.
+Review the git diff, update the baseline inventory assertions from “unqualified”
+to qualified, run the targeted tests, and commit those versioned expectations.
+`Scripts\Update-SFPBaseline.ps1` targets the legacy include-only `SFP.json` and
+must not be used to promote these canonical scenario CSV baselines.
+
+The new DEV ZIPs have explicit qualification behavior. MD `20855` requires its
+row-specific `2%` Wind-Hail option. For PA `17601`, an absent control is accepted;
+when DEV exposes it, `N/A` must be offered, selected, and verified after refresh.
+For VT `05091`, an absent control is accepted only with an explicit deployment-
+drift diagnostic; when present, `1%` must be offered, selected, and verified.
+Diagnostics include state, ZIP, offered options, and page identity. Any exposed
+all-peril control is handled before Wind-Hail because the live option set is
+form/zone/all-peril dependent. Territory is verified when exposed. The MD
+Hurricane value is selected only when the live manuscript exposes that optional
+control. No percentage is substituted for PA and no generic skip applies to
+other states because these inputs affect premiums and forms.
 
 ### Forms Baseline Generator
 

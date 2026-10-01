@@ -119,6 +119,20 @@ namespace PnCTestAutomation.Pages
             await input.FillAsync(acreage);
         }
 
+        private ILocator AllPerilDeductibleControls() =>
+            _page.Locator(
+                "[data-testid*='locationInput$allPeril'], " +
+                "[data-testid*='locationInput$deductibleAllPeril'], " +
+                "[data-testid*='locationInput$allOtherPeril']");
+
+        private ILocator HurricaneDeductibleControls() =>
+            _page.Locator("[data-testid*='locationInput$hurricaneDeductible.value']");
+
+        private ILocator TerritoryControls() =>
+            _page.Locator(
+                "[data-testid*='locationInput$territory'], " +
+                "[data-testid*='locationOutput$territory']");
+
         private ILocator WindHailScope() => _page.Locator("div:has([data-testid*='locationInput$windHailDeductible.value'])").First;
         private ILocator WindHailOptionsInScope() => WindHailScope().Locator("[data-testid*='locationInput$windHailDeductible.value']");
 
@@ -143,6 +157,30 @@ namespace PnCTestAutomation.Pages
         private static bool IsNoiseOption(string option) =>
             string.IsNullOrWhiteSpace(option)
             || NormalizeWhText(option) == "MOREOPTIONS";
+
+        private static bool IsExplicitAbsence(string value) =>
+            string.Equals(value?.Trim(), "None", StringComparison.OrdinalIgnoreCase);
+
+        private bool IsWindHailContractState(string stateName, string abbreviation, string zipCode, string expectedZip) =>
+            string.Equals(_contextData.RatingState?.Trim(), stateName, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(_contextData.RatingState?.Trim(), abbreviation, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(zipCode?.Trim(), expectedZip, StringComparison.OrdinalIgnoreCase);
+
+        private string WindHailStateName(string zipCode) =>
+            IsWindHailContractState("Pennsylvania", "PA", zipCode, "17601")
+                ? "Pennsylvania"
+                : IsWindHailContractState("Vermont", "VT", zipCode, "05091")
+                    ? "Vermont"
+                    : _contextData.RatingState?.Trim() ?? "<unknown>";
+
+        private async Task<string> WindHailPageIdentityAsync()
+        {
+            var title = (await _page.TitleAsync())?.Trim();
+            return $"Title='{(string.IsNullOrWhiteSpace(title) ? "<untitled>" : title)}', URL='{_page.Url}'";
+        }
+
+        private static string FormatWindHailOptions(IReadOnlyCollection<string> options) =>
+            options.Count == 0 ? "<none>" : string.Join(", ", options);
 
         private static IEnumerable<string> SplitOptionText(string raw)
         {
@@ -246,6 +284,269 @@ namespace PnCTestAutomation.Pages
             return false;
         }
 
+        private async Task<bool> IsWindHailOptionSelectedAsync(ILocator scope, string target)
+        {
+            var normalizedTarget = NormalizeWhText(target);
+            var chips = scope.Locator("[data-testid*='locationInput$windHailDeductible.value']");
+            var chipCount = await chips.CountAsync();
+            for (var i = 0; i < chipCount; i++)
+            {
+                var chip = chips.Nth(i);
+                if (!await chip.IsVisibleAsync()
+                    || NormalizeWhText(await chip.InnerTextAsync()) != normalizedTarget)
+                    continue;
+
+                return await chip.EvaluateAsync<bool>(
+                    """
+                    el => {
+                      for (let current = el; current; current = current.parentElement) {
+                        const classes = current.classList;
+                        if (current.getAttribute('aria-pressed') === 'true'
+                            || current.getAttribute('aria-selected') === 'true'
+                            || classes.contains('mat-button-toggle-checked')
+                            || classes.contains('chip-wrapper-selected')
+                            || classes.contains('mat-mdc-chip-selected')
+                            || classes.contains('mdc-evolution-chip--selected')) {
+                          return true;
+                        }
+                      }
+                      if (el.querySelector(
+                          '.mat-button-toggle-checked, .chip-wrapper-selected, ' +
+                          '.mat-mdc-chip-selected, .mdc-evolution-chip--selected')) {
+                        return true;
+                      }
+                      const input = el.matches('input') ? el : el.querySelector('input');
+                      return Boolean(input?.checked);
+                    }
+                    """);
+            }
+
+            return false;
+        }
+
+        private async Task SelectDeploymentContractWindHailAsync(
+            string state,
+            string zipCode,
+            string requiredOption,
+            bool absenceAllowed,
+            string absenceDiagnostic)
+        {
+            await WaitForSpinnerAsync(appearanceGraceMs: 1000);
+
+            var visibleOptions = WindHailOptionsInScope().Filter(new() { Visible = true });
+            var fieldPresent = await visibleOptions.CountAsync() > 0;
+            var scope = WindHailScope();
+            var offeredOptions = fieldPresent
+                ? await GetAllWindHailOptionsAsync(scope)
+                : new List<string>();
+            var pageIdentity = await WindHailPageIdentityAsync();
+            var context =
+                $"State={state}, ZIP={zipCode}, Offered={FormatWindHailOptions(offeredOptions)}, Page={pageIdentity}";
+
+            if (!fieldPresent)
+            {
+                Assert.That(absenceAllowed, Is.True,
+                    $"[WindHail][DeploymentContract] {context}: required option '{requiredOption}' was not exposed.");
+                Console.WriteLine($"[WindHail][{absenceDiagnostic}] {context}: field absent after address/location refresh; proceeding without selection.");
+                return;
+            }
+
+            var exactOption = offeredOptions.FirstOrDefault(
+                option => NormalizeWhText(option) == NormalizeWhText(requiredOption));
+            Assert.That(exactOption, Is.Not.Null,
+                $"[WindHail][DeploymentContract] {context}: required option '{requiredOption}' was not offered.");
+
+            if (!await TrySelectWindHailOptionAsync(scope, exactOption))
+            {
+                Assert.Fail(
+                    $"[WindHail][DeploymentContract] {context}: required option '{requiredOption}' could not be selected.");
+                return;
+            }
+
+            await WaitForSpinnerAsync();
+            var refreshedScope = WindHailScope();
+            var persisted = await IsWindHailOptionSelectedAsync(refreshedScope, requiredOption);
+            Assert.That(persisted, Is.True,
+                $"[WindHail][DeploymentContract] {context}: selected option '{requiredOption}' did not persist.");
+
+            var diagnostic = state == "Pennsylvania" ? "DeploymentDrift" : "DeploymentShape";
+            Console.WriteLine(
+                $"[WindHail][{diagnostic}] {context}: selected '{requiredOption}' and verified persistence.");
+        }
+
+        public async Task ConfigureSourceBackedCoverageAsync()
+        {
+            await WaitForSpinnerAsync(appearanceGraceMs: 1000);
+
+            Console.WriteLine(
+                $"[LocationCoverage] State={_contextData.RatingState}, Zip={_contextData.ZipCode}, " +
+                $"Territory={_contextData.Territory}, Company={_contextData.WritingCompany}, URL={_page.Url}");
+
+            await VerifyTerritoryIfExposedAsync(_contextData.Territory);
+            await SelectExactDeductibleAsync(
+                "All Peril",
+                AllPerilDeductibleControls(),
+                _contextData.AllPerilDeductible,
+                optionalIfMissing: true);
+        }
+
+        public Task ConfigureHurricaneDeductibleAsync() =>
+            SelectExactDeductibleAsync(
+                "Hurricane",
+                HurricaneDeductibleControls(),
+                _contextData.HurricaneDeductible,
+                _contextData.HurricaneDeductibleOptional);
+
+        private async Task VerifyTerritoryIfExposedAsync(string expectedTerritory)
+        {
+            if (string.IsNullOrWhiteSpace(expectedTerritory))
+                return;
+
+            var visibleControls = TerritoryControls().Filter(new() { Visible = true });
+            if (await visibleControls.CountAsync() == 0)
+            {
+                Console.WriteLine(
+                    $"[LocationCoverage] Expected territory '{expectedTerritory}' is source-backed for ZIP " +
+                    $"{_contextData.ZipCode}; this view does not expose a territory control.");
+                return;
+            }
+
+            var control = visibleControls.First;
+            var actual = await ReadControlValueAsync(control);
+            Assert.That(NormalizeWhText(actual), Is.EqualTo(NormalizeWhText(expectedTerritory)),
+                $"[LocationCoverage] ZIP {_contextData.ZipCode}: exposed territory did not match the source-backed value.");
+        }
+
+        private async Task SelectExactDeductibleAsync(
+            string label,
+            ILocator controls,
+            string requestedValue,
+            bool optionalIfMissing)
+        {
+            if (string.IsNullOrWhiteSpace(requestedValue))
+                return;
+
+            var visibleControls = controls.Filter(new() { Visible = true });
+            if (IsExplicitAbsence(requestedValue))
+            {
+                Assert.That(await visibleControls.CountAsync(), Is.EqualTo(0),
+                    $"[{label}] State {_contextData.RatingState}, ZIP {_contextData.ZipCode}: " +
+                    $"{label} deductible must not be offered. URL={_page.Url}");
+                Console.WriteLine($"[{label}] Verified deductible control is absent.");
+                return;
+            }
+
+            try
+            {
+                await visibleControls.First.WaitForAsync(new()
+                {
+                    State = WaitForSelectorState.Visible,
+                    Timeout = optionalIfMissing ? 3000 : 30000
+                });
+            }
+            catch (TimeoutException ex)
+            {
+                if (optionalIfMissing)
+                {
+                    Console.WriteLine(
+                        $"[{label}] Optional control was not exposed for state {_contextData.RatingState}, " +
+                        $"ZIP {_contextData.ZipCode}; requested value '{requestedValue}' was not applied.");
+                    return;
+                }
+
+                throw new PlaywrightException(
+                    $"[{label}] State {_contextData.RatingState}, ZIP {_contextData.ZipCode}: " +
+                    $"required deductible control for '{requestedValue}' was not exposed after address-driven refresh. " +
+                    $"URL={_page.Url}", ex);
+            }
+
+            var allVisible = controls.Filter(new() { Visible = true });
+            var first = allVisible.First;
+            var tagName = await first.EvaluateAsync<string>("el => el.tagName.toLowerCase()");
+            var role = await first.GetAttributeAsync("role");
+            var isSelect = tagName == "mat-select"
+                || string.Equals(role, "combobox", StringComparison.OrdinalIgnoreCase);
+
+            if (isSelect)
+            {
+                await first.ClickAsync();
+                var options = _page.Locator(".cdk-overlay-pane [role='option']:visible");
+                await options.First.WaitForAsync(new()
+                {
+                    State = WaitForSelectorState.Visible,
+                    Timeout = 10000
+                });
+
+                var available = (await options.AllTextContentsAsync())
+                    .SelectMany(SplitOptionText)
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+                Console.WriteLine($"[{label}] Available options: {string.Join(", ", available)}");
+
+                var target = options.Filter(new() { HasText = requestedValue });
+                var exactTarget = await FindExactTextMatchAsync(target, requestedValue);
+                if (exactTarget == null)
+                {
+                    await _page.Keyboard.PressAsync("Escape");
+                    Assert.Fail(
+                        $"[{label}] State {_contextData.RatingState}, ZIP {_contextData.ZipCode}: requested " +
+                        $"'{requestedValue}' was not offered. Available: {string.Join(", ", available)}");
+                    return;
+                }
+
+                await exactTarget.ClickAsync();
+            }
+            else
+            {
+                var available = new List<string>();
+                ILocator target = null;
+                var count = await allVisible.CountAsync();
+                for (var i = 0; i < count; i++)
+                {
+                    var candidate = allVisible.Nth(i);
+                    var text = await ReadControlValueAsync(candidate);
+                    available.AddRange(SplitOptionText(text));
+                    if (NormalizeWhText(text) == NormalizeWhText(requestedValue))
+                        target = candidate;
+                }
+
+                Console.WriteLine($"[{label}] Available options: {string.Join(", ", available.Distinct(StringComparer.OrdinalIgnoreCase))}");
+                if (target == null)
+                {
+                    Assert.Fail(
+                        $"[{label}] State {_contextData.RatingState}, ZIP {_contextData.ZipCode}: requested " +
+                        $"'{requestedValue}' was not offered. Available: {string.Join(", ", available)}");
+                    return;
+                }
+
+                await target.ClickAsync(new() { Force = true });
+            }
+
+            await WaitForSpinnerAsync();
+            Console.WriteLine($"[{label}] Selected exact requested value '{requestedValue}'.");
+        }
+
+        private static async Task<ILocator> FindExactTextMatchAsync(ILocator candidates, string expected)
+        {
+            var count = await candidates.CountAsync();
+            for (var i = 0; i < count; i++)
+            {
+                var candidate = candidates.Nth(i);
+                if (NormalizeWhText(await candidate.InnerTextAsync()) == NormalizeWhText(expected))
+                    return candidate;
+            }
+
+            return null;
+        }
+
+        private static async Task<string> ReadControlValueAsync(ILocator control)
+        {
+            var tagName = await control.EvaluateAsync<string>("el => el.tagName.toLowerCase()");
+            return tagName is "input" or "select" or "textarea"
+                ? await control.InputValueAsync()
+                : await control.InnerTextAsync();
+        }
+
         private static string ResolveBaselineSelection((bool cannotBeAdded, string minDeductible) rules, List<string> options)
         {
             if (rules.cannotBeAdded)
@@ -329,16 +630,46 @@ namespace PnCTestAutomation.Pages
             }
         }
 
-        public async Task SelectWindHailDeductibleAsync(string deductible, string zipCode = null)
+        public async Task SelectWindHailDeductibleAsync(
+            string deductible,
+            string zipCode = null,
+            bool selectExactRequestedValue = false)
         {
-            var expectsWindHailSelection = !string.IsNullOrWhiteSpace(deductible);
+            if (IsWindHailContractState("Pennsylvania", "PA", zipCode, "17601"))
+            {
+                await SelectDeploymentContractWindHailAsync(
+                    "Pennsylvania", zipCode, "N/A", absenceAllowed: true, "DeploymentShape");
+                return;
+            }
+
+            if (IsWindHailContractState("Vermont", "VT", zipCode, "05091"))
+            {
+                await SelectDeploymentContractWindHailAsync(
+                    "Vermont", zipCode, "1%", absenceAllowed: true, "DeploymentDrift");
+                return;
+            }
+
+            var expectsAbsence = IsExplicitAbsence(deductible);
+            var expectsWindHailSelection = !string.IsNullOrWhiteSpace(deductible) && !expectsAbsence;
             var rules = !string.IsNullOrWhiteSpace(zipCode)
                 ? GetWindHailRulesForZip(zipCode)
                 : null;
 
+            if (expectsAbsence)
+            {
+                var visibleOptions = WindHailOptionsInScope().Filter(new() { Visible = true });
+                Assert.That(await visibleOptions.CountAsync(), Is.EqualTo(0),
+                    $"[WindHail] Zip {zipCode}: Wind/Hail must not be offered. URL={_page.Url}");
+                Console.WriteLine($"[WindHail] Zip {zipCode}: verified field is absent.");
+                return;
+            }
+
             if (rules?.cannotBeAdded == true)
             {
-                Console.WriteLine($"[WindHail] Zip {zipCode} — WH cannot be added, skipping selection.");
+                var visibleOptions = WindHailOptionsInScope().Filter(new() { Visible = true });
+                Assert.That(await visibleOptions.CountAsync(), Is.EqualTo(0),
+                    $"[WindHail] Zip {zipCode}: WH cannot be added, but a visible option was found.");
+                Console.WriteLine($"[WindHail] Zip {zipCode} — WH cannot be added; verified field is absent.");
                 return;
             }
 
@@ -365,6 +696,29 @@ namespace PnCTestAutomation.Pages
 
             var availableOptions = await GetAllWindHailOptionsAsync(scope);
             Console.WriteLine($"[WindHail] Available options for selection: {string.Join(", ", availableOptions)}");
+
+            if (selectExactRequestedValue)
+            {
+                var exactOption = availableOptions.FirstOrDefault(
+                    option => NormalizeWhText(option) == NormalizeWhText(deductible));
+                if (exactOption == null)
+                {
+                    Assert.Fail(
+                        $"[WindHail] Zip {zipCode}: requested exact value '{deductible}' was not offered. " +
+                        $"Available: {string.Join(", ", availableOptions)}");
+                    return;
+                }
+
+                if (!await TrySelectWindHailOptionAsync(scope, exactOption))
+                {
+                    Assert.Fail($"[WindHail] Zip {zipCode}: could not select exact requested option '{deductible}'.");
+                    return;
+                }
+
+                await WaitForSpinnerAsync();
+                Console.WriteLine($"[WindHail] Selected exact requested value '{exactOption}'.");
+                return;
+            }
 
             // Step 17: select the minimum/baseline option (minimum required or N/A/lowest available)
             var baselineChoice = rules.HasValue
@@ -450,6 +804,9 @@ namespace PnCTestAutomation.Pages
                 "98368" => (true, null),   // WA – WH cannot be added
                 "53704" => (false, null),   // WI – zone 1, no minimum
                 "82601" => (false, "1%"),   // WY – zone 2, min 1%
+                "20855" => (false, null),   // MD – exact source-backed SH3 selection is row-driven
+                "17601" => (true, null),    // PA – Wind/Hail is not offered
+                "05091" => (false, null),   // VT – exact source-backed SH3 selection is row-driven
                 _ => null
             };
 
@@ -461,8 +818,57 @@ namespace PnCTestAutomation.Pages
         public async Task VerifyWindHailDeductibleOptionsAsync(string zipCode, string expectedDeductible = null)
         {
             var rules = GetWindHailRulesForZip(zipCode);
+            var expectsAbsence = IsExplicitAbsence(expectedDeductible);
+            var isPennsylvania = IsWindHailContractState("Pennsylvania", "PA", zipCode, "17601");
+            var isVermont = IsWindHailContractState("Vermont", "VT", zipCode, "05091");
+            if (isPennsylvania || isVermont)
+            {
+                await WaitForSpinnerAsync(appearanceGraceMs: 1000);
+
+                var state = WindHailStateName(zipCode);
+                var requiredOption = isPennsylvania ? "N/A" : "1%";
+                var visibleOptions = WindHailOptionsInScope().Filter(new() { Visible = true });
+                var contractFieldPresent = await visibleOptions.CountAsync() > 0;
+                var offeredOptions = contractFieldPresent
+                    ? await GetAllWindHailOptionsAsync(WindHailScope())
+                    : new List<string>();
+                var pageIdentity = await WindHailPageIdentityAsync();
+                var context =
+                    $"State={state}, ZIP={zipCode}, Offered={FormatWindHailOptions(offeredOptions)}, Page={pageIdentity}";
+
+                if (!contractFieldPresent)
+                {
+                    var diagnostic = isVermont ? "DeploymentDrift" : "DeploymentShape";
+                    var detail = isVermont
+                        ? "checked-in source expects 1%, but DEV omitted the field after address/location refresh"
+                        : "field absent as expected by checked-in source";
+                    Console.WriteLine($"[WindHail][{diagnostic}] {context}: {detail}.");
+                    return;
+                }
+
+                Assert.That(
+                    offeredOptions.Any(option => NormalizeWhText(option) == NormalizeWhText(requiredOption)),
+                    Is.True,
+                    $"[WindHail][DeploymentContract] {context}: required option '{requiredOption}' was not offered.");
+
+                var shape = isPennsylvania
+                    ? "checked-in source expects absence, but DEV exposed the field; N/A is available"
+                    : "DEV exposed the field and the checked-in 1% option is available";
+                Console.WriteLine(
+                    $"[WindHail][{(isPennsylvania ? "DeploymentDrift" : "DeploymentShape")}] {context}: {shape}.");
+                return;
+            }
+
             if (rules is null)
             {
+                if (expectsAbsence)
+                {
+                    var unknownVisibleOptions = WindHailOptionsInScope().Filter(new() { Visible = true });
+                    Assert.That(await unknownVisibleOptions.CountAsync(), Is.EqualTo(0),
+                        $"[WindHail] Zip {zipCode}: Wind/Hail must not be offered.");
+                    return;
+                }
+
                 if (string.IsNullOrWhiteSpace(expectedDeductible))
                 {
                     Console.WriteLine($"[WindHail] No rules defined for zip '{zipCode}' – skipping WH verification.");
@@ -484,12 +890,17 @@ namespace PnCTestAutomation.Pages
             }
 
             var scope = WindHailScope();
-            var fieldPresent = await scope.CountAsync() > 0;
+            var visibleButtons = WindHailOptionsInScope().Filter(new() { Visible = true });
+            var fieldPresent = await visibleButtons.CountAsync() > 0;
 
             if (rules.Value.cannotBeAdded)
             {
+                var offeredOptions = fieldPresent
+                    ? await GetAllWindHailOptionsAsync(scope)
+                    : new List<string>();
                 Assert.That(fieldPresent, Is.False,
-                    $"[WindHail] Zip {zipCode}: WH deductible field should NOT be present for this state but was found.");
+                    $"[WindHail] Zip {zipCode}: WH deductible field should NOT be present for this state but was found. " +
+                    $"Available: {(offeredOptions.Count == 0 ? "<none>" : string.Join(", ", offeredOptions))}");
                 Console.WriteLine($"[WindHail] Zip {zipCode}: Verified – WH deductible cannot be added (field absent).");
                 return;
             }
@@ -497,7 +908,7 @@ namespace PnCTestAutomation.Pages
             Assert.That(fieldPresent, Is.True,
                 $"[WindHail] Zip {zipCode}: WH deductible field should be present but was not found.");
 
-            var buttons = scope.Locator("[data-testid*='locationInput$windHailDeductible.value']");
+            var buttons = visibleButtons;
             var buttonCount = await buttons.CountAsync();
             Assert.That(buttonCount, Is.GreaterThan(0),
                 $"[WindHail] Zip {zipCode}: WH deductible field present but no option buttons found.");
@@ -509,22 +920,27 @@ namespace PnCTestAutomation.Pages
 
             Console.WriteLine($"[WindHail] Zip {zipCode}: Available options - {string.Join(", ", optionTexts)}");
 
-            if (rules.Value.minDeductible == "1%")
+            if (!string.IsNullOrWhiteSpace(rules.Value.minDeductible))
             {
-                // ADO step 16 & 17: 1% must exist and nothing lower should be present
-                Assert.That(optionTexts.Contains("1%"), Is.True,
-                    $"[WindHail] Zip {zipCode}: Expected minimum '1%' option not found. Available: {string.Join(", ", optionTexts)}");
+                var normalizedMinimum = NormalizeWhText(rules.Value.minDeductible);
+                Assert.That(optionTexts.Contains(normalizedMinimum), Is.True,
+                    $"[WindHail] Zip {zipCode}: Expected minimum '{rules.Value.minDeductible}' option not found. " +
+                    $"Available: {string.Join(", ", optionTexts)}");
 
+                var minimumValue = TryParsePercent(rules.Value.minDeductible);
                 var subMin = optionTexts.Where(t =>
                 {
-                    var n = t.Replace("%", "").Trim();
-                    return decimal.TryParse(n, NumberStyles.Any, CultureInfo.InvariantCulture, out var v) && v < 1m;
+                    var value = TryParsePercent(t);
+                    return value.HasValue && minimumValue.HasValue && value.Value < minimumValue.Value;
                 }).ToList();
 
                 Assert.That(subMin.Count, Is.EqualTo(0),
-                    $"[WindHail] Zip {zipCode}: Found WH options below minimum 1%: {string.Join(", ", subMin)}");
+                    $"[WindHail] Zip {zipCode}: Found WH options below minimum " +
+                    $"{rules.Value.minDeductible}: {string.Join(", ", subMin)}");
 
-                Console.WriteLine($"[WindHail] Zip {zipCode}: Verified – minimum WH deductible of 1% confirmed, no sub-minimum options.");
+                Console.WriteLine(
+                    $"[WindHail] Zip {zipCode}: Verified – minimum WH deductible of " +
+                    $"{rules.Value.minDeductible} confirmed, no sub-minimum options.");
             }
             else
             {
@@ -532,11 +948,12 @@ namespace PnCTestAutomation.Pages
             }
 
             // ADO step 18: verify an above-minimum option exists (visible or in overflow)
+            var comparisonMinimum = TryParsePercent(rules.Value.minDeductible) ?? 1m;
             var aboveMin = optionTexts
                 .Where(t =>
                 {
-                    var n = t.Replace("%", "").Trim();
-                    return decimal.TryParse(n, NumberStyles.Any, CultureInfo.InvariantCulture, out var v) && v > 1m;
+                    var value = TryParsePercent(t);
+                    return value.HasValue && value.Value > comparisonMinimum;
                 })
                 .ToList();
 

@@ -214,30 +214,30 @@ stages:
             SHARD_NUMBER: "1"
             SHARD_SUITE: "BasicPolicy"
             SHARD_SUITE_LABEL: "SFP Basic Policy"
-            SHARD_FILTER_FULL: "TestCategory=Shard1"
-            SHARD_FILTER_DEBUG: "TestCategory=Shard1&TestCategory=Debug"
+            SHARD_FILTER_FULL: "TestCategory=Shard1&TestCategory!=DevOnly"
+            SHARD_FILTER_DEBUG: "TestCategory=Shard1&TestCategory=Debug&TestCategory!=DevOnly"
             DEBUG_MODE: ${{ parameters.debugModeBasic }}
           Shard2:
             SHARD_NUMBER: "2"
             SHARD_SUITE: "BasicPolicy"
             SHARD_SUITE_LABEL: "SFP Basic Policy"
-            SHARD_FILTER_FULL: "TestCategory=Shard2"
-            SHARD_FILTER_DEBUG: "TestCategory=Shard2&TestCategory=Debug"
+            SHARD_FILTER_FULL: "TestCategory=Shard2&TestCategory!=DevOnly"
+            SHARD_FILTER_DEBUG: "TestCategory=Shard2&TestCategory=Debug&TestCategory!=DevOnly"
             DEBUG_MODE: ${{ parameters.debugModeBasic }}
           Shard3:
             SHARD_NUMBER: "3"
             SHARD_SUITE: "BasicPolicy"
             SHARD_SUITE_LABEL: "SFP Basic Policy"
-            SHARD_FILTER_FULL: "TestCategory=Shard3"
-            SHARD_FILTER_DEBUG: "TestCategory=Shard3&TestCategory=Debug"
+            SHARD_FILTER_FULL: "TestCategory=Shard3&TestCategory!=DevOnly"
+            SHARD_FILTER_DEBUG: "TestCategory=Shard3&TestCategory=Debug&TestCategory!=DevOnly"
             DEBUG_MODE: ${{ parameters.debugModeBasic }}
           # Catch-all: any @SFP @Smoke test not already assigned to a numbered shard
           ShardMisc:
             SHARD_NUMBER: "misc"
             SHARD_SUITE: "BasicPolicy"
             SHARD_SUITE_LABEL: "SFP Basic Policy"
-            SHARD_FILTER_FULL: "TestCategory=SFP&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6"
-            SHARD_FILTER_DEBUG: "TestCategory=SFP&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6"
+            SHARD_FILTER_FULL: "TestCategory=SFP&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6&TestCategory!=DevOnly"
+            SHARD_FILTER_DEBUG: "TestCategory=SFP&TestCategory!=Shard1&TestCategory!=Shard2&TestCategory!=Shard3&TestCategory!=Shard4&TestCategory!=Shard5&TestCategory!=Shard6&TestCategory!=DevOnly"
             DEBUG_MODE: ${{ parameters.debugModeBasic }}
         ${{ if ne(parameters.suiteToRun, 'BasicPolicy Only') }}:
           # CE shards
@@ -245,22 +245,22 @@ stages:
             SHARD_NUMBER: "4"
             SHARD_SUITE: "CE"
             SHARD_SUITE_LABEL: "SFP Country Estate"
-            SHARD_FILTER_FULL: "TestCategory=Shard4"
-            SHARD_FILTER_DEBUG: "TestCategory=Shard4&TestCategory=Debug"
+            SHARD_FILTER_FULL: "TestCategory=Shard4&TestCategory!=DevOnly"
+            SHARD_FILTER_DEBUG: "TestCategory=Shard4&TestCategory=Debug&TestCategory!=DevOnly"
             DEBUG_MODE: ${{ parameters.debugModeCE }}
           Shard5:
             SHARD_NUMBER: "5"
             SHARD_SUITE: "CE"
             SHARD_SUITE_LABEL: "SFP Country Estate"
-            SHARD_FILTER_FULL: "TestCategory=Shard5"
-            SHARD_FILTER_DEBUG: "TestCategory=Shard5&TestCategory=Debug"
+            SHARD_FILTER_FULL: "TestCategory=Shard5&TestCategory!=DevOnly"
+            SHARD_FILTER_DEBUG: "TestCategory=Shard5&TestCategory=Debug&TestCategory!=DevOnly"
             DEBUG_MODE: ${{ parameters.debugModeCE }}
           Shard6:
             SHARD_NUMBER: "6"
             SHARD_SUITE: "CE"
             SHARD_SUITE_LABEL: "SFP Country Estate"
-            SHARD_FILTER_FULL: "TestCategory=Shard6"
-            SHARD_FILTER_DEBUG: "TestCategory=Shard6&TestCategory=Debug"
+            SHARD_FILTER_FULL: "TestCategory=Shard6&TestCategory!=DevOnly"
+            SHARD_FILTER_DEBUG: "TestCategory=Shard6&TestCategory=Debug&TestCategory!=DevOnly"
             DEBUG_MODE: ${{ parameters.debugModeCE }}
 
     steps:
@@ -770,16 +770,16 @@ stages:
       matrix:
         Shard4:
           SHARD_NUMBER: "4"
-          SHARD_FILTER_FULL: "TestCategory=Shard4"
-          SHARD_FILTER_DEBUG: "TestCategory=Shard4&TestCategory=Debug"
+          SHARD_FILTER_FULL: "TestCategory=Shard4&TestCategory!=DevOnly"
+          SHARD_FILTER_DEBUG: "TestCategory=Shard4&TestCategory=Debug&TestCategory!=DevOnly"
         Shard5:
           SHARD_NUMBER: "5"
-          SHARD_FILTER_FULL: "TestCategory=Shard5"
-          SHARD_FILTER_DEBUG: "TestCategory=Shard5&TestCategory=Debug"
+          SHARD_FILTER_FULL: "TestCategory=Shard5&TestCategory!=DevOnly"
+          SHARD_FILTER_DEBUG: "TestCategory=Shard5&TestCategory=Debug&TestCategory!=DevOnly"
         Shard6:
           SHARD_NUMBER: "6"
-          SHARD_FILTER_FULL: "TestCategory=Shard6"
-          SHARD_FILTER_DEBUG: "TestCategory=Shard6&TestCategory=Debug"
+          SHARD_FILTER_FULL: "TestCategory=Shard6&TestCategory!=DevOnly"
+          SHARD_FILTER_DEBUG: "TestCategory=Shard6&TestCategory=Debug&TestCategory!=DevOnly"
 
     steps:
 

@@ -475,7 +475,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
                 if (recordBaseline)
                 {
-                    var currentBaseline = _validationService.LoadExpectedFormsForLob(lob, state, testCase);
+                    var currentBaseline =
+                        _validationService.LoadExpectedFormsTemplateForRecording(lob, testCase);
                     var proposedPath = _validationService.SaveProposedBaseline(actualForms, currentBaseline, lob, state, testCase);
                     Console.WriteLine($"[FormsValidation][RECORD] {lob}/{state}/{testCase} — {actualForms.Count} forms captured.");
                     Console.WriteLine($"[FormsValidation][RECORD] Proposed baseline: {proposedPath}");

@@ -120,7 +120,11 @@ Feature: SFP Country Estate Policy
       | MilesFromFireDepartment | 3                |
       | FeetFromHydrant         | 101-250          |
       | TotalAcreage            | 6                |
-      | WindHailDeductible      | 1%               |
+      | Territory               | <Territory>              |
+      | AllPerilDeductible      | <AllPerilDeductible>     |
+      | WindHailDeductible      | <WindHailDeductible>     |
+      | HurricaneDeductible     | <HurricaneDeductible>    |
+      | HurricaneOptional       | <HurricaneOptional>      |
 
     # Step 19: Add a Residence
     When user adds a Country Estate Residence to the Location
@@ -241,62 +245,73 @@ Feature: SFP Country Estate Policy
 
     @Shard4 @Debug
     Examples:
-      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
-      | Alabama        | AL        | 2210 Wood Ave                 |          111 | Florence      | 35630 | Lauderdale   |
+      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Alabama | AL | 2210 Wood Ave | 111 | Florence | 35630 | Lauderdale |  |  | 1% |  |  |
 
     @Shard4
     Examples:
-      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
-      | Arkansas       | AR        | 2400 Harrison St              |          111 | Batesville    | 72502 | Independence |
-      | Arizona        | AZ        | 11811 N Tatum Blvd            |          111 | Phoenix       | 85028 | Maricopa     |
-      | Colorado       | CO        | 19592 E 8th Ave                |          111 | Aurora        | 80011 | Adams        |
-      | Connecticut    | CT        | 50 Columbus Blvd              |          111 | Hartford      | 06106 | Hartford     |
-      | Delaware       | DE        | 40 E Main St                  |          111 | Newark        | 19711 | New Castle   |
-      | Georgia        | GA        | 1250 Caroline St NE           |          111 | Atlanta       | 30307 | Fulton       |
-      | Idaho          | ID        | 915 W Appleway Ave            |          111 | Coeur D Alene | 83815 | Kootenai     |
-      | Illinois       | IL        | 4601 E State St               |          111 | Rockford      | 61109 | Winnebago    |
-      | Indiana        | IN        | 6935 Indianapolis Blvd        |          111 | Hammond       | 46323 | Lake         |
-      | Iowa           | IA        | 900 Montgomery St             |          111 | Decorah       | 52144 | Winneshiek   |
-      | Kansas         | KS        | 10900 Parallel Pkwy           |          111 | Kansas City   | 66109 | Wyandotte    |
-      | Kentucky       | KY        | 201 Clinic Dr                 |          111 | Paducah       | 42003 | McCracken    |
-      | Louisiana      | LA        | 401 N Parkerson Ave           |          111 | Crowley       | 70526 | Acadia       |
+      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Arkansas | AR | 2400 Harrison St | 111 | Batesville | 72502 | Independence |  |  | 1% |  |  |
+      | Arizona | AZ | 11811 N Tatum Blvd | 111 | Phoenix | 85028 | Maricopa |  |  | 1% |  |  |
+      | Colorado | CO | 19592 E 8th Ave | 111 | Aurora | 80011 | Adams |  |  | 1% |  |  |
+      | Connecticut | CT | 50 Columbus Blvd | 111 | Hartford | 06106 | Hartford |  |  | 1% |  |  |
+      | Delaware | DE | 40 E Main St | 111 | Newark | 19711 | New Castle |  |  | 1% |  |  |
+      | Georgia | GA | 1250 Caroline St NE | 111 | Atlanta | 30307 | Fulton |  |  | 1% |  |  |
+      | Idaho | ID | 915 W Appleway Ave | 111 | Coeur D Alene | 83815 | Kootenai |  |  | 1% |  |  |
+      | Illinois | IL | 4601 E State St | 111 | Rockford | 61109 | Winnebago |  |  | 1% |  |  |
+      | Indiana | IN | 6935 Indianapolis Blvd | 111 | Hammond | 46323 | Lake |  |  | 1% |  |  |
+      | Iowa | IA | 900 Montgomery St | 111 | Decorah | 52144 | Winneshiek |  |  | 1% |  |  |
+      | Kansas | KS | 10900 Parallel Pkwy | 111 | Kansas City | 66109 | Wyandotte |  |  | 1% |  |  |
+      | Kentucky | KY | 201 Clinic Dr | 111 | Paducah | 42003 | McCracken |  |  | 1% |  |  |
+      | Louisiana | LA | 401 N Parkerson Ave | 111 | Crowley | 70526 | Acadia |  |  | 1% |  |  |
 
     @Shard5 @Debug
     Examples:
-      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
-      | Mississippi    | MS        | 15190 Community Rd            |          111 | Gulfport      | 39503 | Harrison     |
+      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Mississippi | MS | 15190 Community Rd | 111 | Gulfport | 39503 | Harrison |  |  | 1% |  |  |
 
     @Shard5
     Examples:
-      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
-      | Missouri       | MO        | 4141 S Fremont Ave            |          111 | Springfield   | 65804 | Greene       |
-      | Massachusetts  | MA        | 75 Tyler St                   |          111 | Pittsfield    | 01202 | Berkshire    |
-      | Maine          | ME        | 21 Main St                    |          111 | Caribou       | 04736 | Aroostook    |
-      | Minnesota      | MN        | 1800 University Ave SE        |          111 | Minneapolis   | 55414 | Hennepin     |
-      | Montana        | MT        | 307 W Front St                |          111 | Missoula      | 59802 | Missoula     |
-      | Nebraska       | NE        | 2502 1st Ave                  |          111 | Scottsbluff   | 69363 | Scotts Bluff |
-      | Nevada         | NV        | 4850 W Flamingo Rd            |          111 | Las Vegas     | 89103 | Clark        |
-      | New Hampshire  | NH        | 149 Emerald St                |          111 | Keene         | 03431 | Cheshire     |
-      | New Jersey     | NJ        | 120 Albany St                 |          111 | New Brunswick | 08901 | Middlesex    |
-      | New Mexico     | NM        | 2501 N Prince St              |          111 | Clovis        | 88103 | Curry        |
-      | North Dakota   | ND        | 4204 Ottawa St                |          111 | Bismarck      | 58503 | Burleigh     |
-      | Oklahoma       | OK        | 621 W Broadway Ave            |          111 | Enid          | 73701 | Garfield     |
+      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Missouri | MO | 4141 S Fremont Ave | 111 | Springfield | 65804 | Greene |  |  | 1% |  |  |
+      | Massachusetts | MA | 75 Tyler St | 111 | Pittsfield | 01202 | Berkshire |  |  | 1% |  |  |
+      | Maine | ME | 21 Main St | 111 | Caribou | 04736 | Aroostook |  |  | 1% |  |  |
+      | Minnesota | MN | 1800 University Ave SE | 111 | Minneapolis | 55414 | Hennepin |  |  | 1% |  |  |
+      | Montana | MT | 307 W Front St | 111 | Missoula | 59802 | Missoula |  |  | 1% |  |  |
+      | Nebraska | NE | 2502 1st Ave | 111 | Scottsbluff | 69363 | Scotts Bluff |  |  | 1% |  |  |
+      | Nevada | NV | 4850 W Flamingo Rd | 111 | Las Vegas | 89103 | Clark |  |  | 1% |  |  |
+      | New Hampshire | NH | 149 Emerald St | 111 | Keene | 03431 | Cheshire |  |  | 1% |  |  |
+      | New Jersey | NJ | 120 Albany St | 111 | New Brunswick | 08901 | Middlesex |  |  | 1% |  |  |
+      | New Mexico | NM | 2501 N Prince St | 111 | Clovis | 88103 | Curry |  |  | 1% |  |  |
+      | North Dakota | ND | 4204 Ottawa St | 111 | Bismarck | 58503 | Burleigh |  |  | 1% |  |  |
+      | Oklahoma | OK | 621 W Broadway Ave | 111 | Enid | 73701 | Garfield |  |  | 1% |  |  |
+
+    @Shard5 @DevOnly
+    Examples:
+      | State    | StateAbbv | Address          | AddressLine2 | City      | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Maryland | MD | 18400 Muncaster Road |  | Derwood | 20855 | Montgomery | 007 | $1,000 | 2% | 2% | Yes |
 
     @Shard6 @Debug
     Examples:
-      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
-      | Ohio           | OH        | 433 N Main St                 |          111 | Akron         | 44310 | Summit       |
+      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Ohio | OH | 433 N Main St | 111 | Akron | 44310 | Summit |  |  | 1% |  |  |
 
     @Shard6
     Examples:
-      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County       |
-      | Oregon         | OR        | 1111 NW 9th St                |          111 | Corvallis     | 97330 | Benton       |
-      | Rhode Island   | RI        | 790 N Main St                 |          111 | Providence    | 02904 | Providence   |
-      | South Carolina | SC        | 100 Laurens St SW             |          111 | Aiken         | 29801 | Aiken        |
-      | South Dakota   | SD        | 1616 N Harrison Ave           |          111 | Pierre        | 57532 | Hughes       |
-      | Tennessee      | TN        | 100 W Martin Luther King Blvd |          111 | Chattanooga   | 37402 | Hamilton     |
-      | Texas          | TX        | 6100 Camp Bowie Blvd          |          111 | Fort Worth    | 76116 | Tarrant      |
-      | Utah           | UT        | 1380 N Main St                |          111 | Logan         | 84341 | Cache        |
-      | Washington     | WA        | 505 W Riverside Ave           |          111 | Spokane       | 99201 | Spokane      |
-      | Wisconsin      | WI        | 4502 Regent St                |          111 | Madison       | 53705 | Dane         |
-      | Wyoming        | WY        | 730 E 2nd St                  |          111 | Casper        | 82609 | Natrona      |
+      | State          | StateAbbv | Address                       | AddressLine2 | City          | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Oregon | OR | 1111 NW 9th St | 111 | Corvallis | 97330 | Benton |  |  | 1% |  |  |
+      | Rhode Island | RI | 790 N Main St | 111 | Providence | 02904 | Providence |  |  | 1% |  |  |
+      | South Carolina | SC | 100 Laurens St SW | 111 | Aiken | 29801 | Aiken |  |  | 1% |  |  |
+      | South Dakota | SD | 1616 N Harrison Ave | 111 | Pierre | 57532 | Hughes |  |  | 1% |  |  |
+      | Tennessee | TN | 100 W Martin Luther King Blvd | 111 | Chattanooga | 37402 | Hamilton |  |  | 1% |  |  |
+      | Texas | TX | 6100 Camp Bowie Blvd | 111 | Fort Worth | 76116 | Tarrant |  |  | 1% |  |  |
+      | Utah | UT | 1380 N Main St | 111 | Logan | 84341 | Cache |  |  | 1% |  |  |
+      | Washington | WA | 505 W Riverside Ave | 111 | Spokane | 99201 | Spokane |  |  | 1% |  |  |
+      | Wisconsin | WI | 4502 Regent St | 111 | Madison | 53705 | Dane |  |  | 1% |  |  |
+      | Wyoming | WY | 730 E 2nd St | 111 | Casper | 82609 | Natrona |  |  | 1% |  |  |
+
+    @Shard6 @DevOnly
+    Examples:
+      | State        | StateAbbv | Address              | AddressLine2 | City       | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Pennsylvania | PA | 2451 Kissel Hill Road |  | Lancaster | 17601 | Lancaster | 001 | $2,000 | None | None | No |
+      | Vermont | VT | 69 Old River Road |  | Woodstock | 05091 | Windsor | 031 | $2,500 | 1% | None | No |

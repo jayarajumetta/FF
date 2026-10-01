@@ -107,7 +107,11 @@ Feature: SFP Basic Policy
       | MilesFromFireDepartment | 3                |
       | FeetFromHydrant         | 101-250          |
       | TotalAcreage            | 6                |
-      | WindHailDeductible      | 1%               |
+      | Territory               | <Territory>              |
+      | AllPerilDeductible      | <AllPerilDeductible>     |
+      | WindHailDeductible      | <WindHailDeductible>     |
+      | HurricaneDeductible     | <HurricaneDeductible>    |
+      | HurricaneOptional       | <HurricaneOptional>      |
 
     # Step 18: Add a Residence
     When user adds and verifies a Basic Residence to the Location
@@ -272,74 +276,85 @@ Feature: SFP Basic Policy
 
     @Shard1 @Debug
     Examples:
-      | State   | StateAbbv | Address         | AddressLine2 | City          | Zip   | County  |
-      | Alabama | AL        | 1918 Avalon Ave |          111 | Muscle Shoals | 35661 | Colbert |
+      | State   | StateAbbv | Address         | AddressLine2 | City          | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Alabama | AL | 1918 Avalon Ave | 111 | Muscle Shoals | 35661 | Colbert |  |  | 1% |  |  |
 
     @Shard1
     Examples:
-      | State       | StateAbbv | Address             | AddressLine2 | City          | Zip   | County       |
-      | Arkansas    | AR        | 3998 Harrison St    |          111 | Batesville    | 72503 | Independence |
-      | Arizona     | AZ        | 4201 N 24th St      |          111 | Phoenix       | 85016 | Maricopa     |
-      | Colorado    | CO        | 231 Main St         |          111 | Fort Morgan   | 80701 | Morgan       |
-      | Delaware    | DE        | 424 Delaware St     |          111 | New Castle    | 19720 | New Castle   |
-      | Georgia     | GA        | 3715 Northside Pkwy |          111 | Atlanta       | 30327 | Fulton       |
-      | Idaho       | ID        | 1221 W Ironwood Dr  |          111 | Coeur D Alene | 83814 | Kootenai     |
-      | Illinois    | IL        | 2576 Charles St     |          111 | Rockford      | 61108 | Winnebago    |
-      | Indiana     | IN        | 5518 Calumet Ave    |          111 | Hammond       | 46320 | Lake         |
-      | Iowa        | IA        | 808 River St        |          111 | Decorah       | 52101 | Winneshiek   |
-      | Kansas      | KS        | 9400 State Ave      |          111 | Kansas City   | 66112 | Wyandotte    |
-      | Kentucky    | KY        | 1002 Medical Dr     |          111 | Mayfield      | 42066 | Graves       |
-      | Louisiana   | LA        | 218 Meadow Dr       |          111 | Oakdale       | 71463 | Allen        |
+      | State       | StateAbbv | Address             | AddressLine2 | City          | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Arkansas | AR | 3998 Harrison St | 111 | Batesville | 72503 | Independence |  |  | 1% |  |  |
+      | Arizona | AZ | 4201 N 24th St | 111 | Phoenix | 85016 | Maricopa |  |  | 1% |  |  |
+      | Colorado | CO | 231 Main St | 111 | Fort Morgan | 80701 | Morgan |  |  | 1% |  |  |
+      | Delaware | DE | 424 Delaware St | 111 | New Castle | 19720 | New Castle |  |  | 1% |  |  |
+      | Georgia | GA | 3715 Northside Pkwy | 111 | Atlanta | 30327 | Fulton |  |  | 1% |  |  |
+      | Idaho | ID | 1221 W Ironwood Dr | 111 | Coeur D Alene | 83814 | Kootenai |  |  | 1% |  |  |
+      | Illinois | IL | 2576 Charles St | 111 | Rockford | 61108 | Winnebago |  |  | 1% |  |  |
+      | Indiana | IN | 5518 Calumet Ave | 111 | Hammond | 46320 | Lake |  |  | 1% |  |  |
+      | Iowa | IA | 808 River St | 111 | Decorah | 52101 | Winneshiek |  |  | 1% |  |  |
+      | Kansas | KS | 9400 State Ave | 111 | Kansas City | 66112 | Wyandotte |  |  | 1% |  |  |
+      | Kentucky | KY | 1002 Medical Dr | 111 | Mayfield | 42066 | Graves |  |  | 1% |  |  |
+      | Louisiana | LA | 218 Meadow Dr | 111 | Oakdale | 71463 | Allen |  |  | 1% |  |  |
 
     @Shard1 @Connecticut
     Examples:
-      | State       | StateAbbv | Address           | AddressLine2 | City    | Zip   | County  |
-      | Connecticut | CT        | 391 Old Post Road |          111 | Tolland | 06084 | Tolland |
+      | State       | StateAbbv | Address           | AddressLine2 | City    | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Connecticut | CT | 391 Old Post Road | 111 | Tolland | 06084 | Tolland |  |  | 1% |  |  |
 
     @Shard2 @Debug
     Examples:
-      | State       | StateAbbv | Address             | AddressLine2 | City     | Zip   | County   |
-      | Mississippi | MS        | 4105 Washington Ave |          111 | Gulfport | 39507 | Harrison |
+      | State       | StateAbbv | Address             | AddressLine2 | City     | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Mississippi | MS | 4105 Washington Ave | 111 | Gulfport | 39507 | Harrison |  |  | 1% |  |  |
 
     @Shard2
     Examples:
-      | State         | StateAbbv | Address                       | AddressLine2 | City         | Zip   | County       |
-      | Missouri      | MO        | 1895 S Forrest Heights Avenue |          111 | Springfield  | 65809 | Greene       |
-      | Massachusetts | MA        | 66 Wendell Ave                |          111 | Pittsfield   | 01201 | Berkshire    |
-      | Maine         | ME        | 33 Davis St                   |          111 | Presque Isle | 04769 | Aroostook    |
-      | Minnesota     | MN        | 115 S Main ST                 |          111 | Warren       | 56762 | Marshall     |
-      | Montana       | MT        | 1202 3rd St W                 |           11 | Roundup      | 59072 | Musselshell  |
-      | Nebraska      | NE        | 1517 Broadway                 |          111 | Scottsbluff  | 69361 | Scotts Bluff |
-      | Nevada        | NV        | 340 N 11th St                 |          111 | Las Vegas    | 89101 | Clark        |
-      | New Hampshire | NH        | 67 Comstock Road              |          111 | Alstead      | 03602 | Cheshire     |
-      | New Mexico    | NM        | 901 West 13th St              |          111 | Clovis       | 88101 | Curry        |
-      | North Dakota  | ND        | 600 S 2nd St                  |          111 | Bismarck     | 58504 | Burleigh     |
-      | Oklahoma      | OK        | 436255 E 330 Rd               |          111 | Big Cabin    | 74332 | Craig        |
+      | State         | StateAbbv | Address                       | AddressLine2 | City         | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Missouri | MO | 1895 S Forrest Heights Avenue | 111 | Springfield | 65809 | Greene |  |  | 1% |  |  |
+      | Massachusetts | MA | 66 Wendell Ave | 111 | Pittsfield | 01201 | Berkshire |  |  | 1% |  |  |
+      | Maine | ME | 33 Davis St | 111 | Presque Isle | 04769 | Aroostook |  |  | 1% |  |  |
+      | Minnesota | MN | 115 S Main ST | 111 | Warren | 56762 | Marshall |  |  | 1% |  |  |
+      | Montana | MT | 1202 3rd St W | 11 | Roundup | 59072 | Musselshell |  |  | 1% |  |  |
+      | Nebraska | NE | 1517 Broadway | 111 | Scottsbluff | 69361 | Scotts Bluff |  |  | 1% |  |  |
+      | Nevada | NV | 340 N 11th St | 111 | Las Vegas | 89101 | Clark |  |  | 1% |  |  |
+      | New Hampshire | NH | 67 Comstock Road | 111 | Alstead | 03602 | Cheshire |  |  | 1% |  |  |
+      | New Mexico | NM | 901 West 13th St | 111 | Clovis | 88101 | Curry |  |  | 1% |  |  |
+      | North Dakota | ND | 600 S 2nd St | 111 | Bismarck | 58504 | Burleigh |  |  | 1% |  |  |
+      | Oklahoma | OK | 436255 E 330 Rd | 111 | Big Cabin | 74332 | Craig |  |  | 1% |  |  |
+
+    @Shard2 @DevOnly
+    Examples:
+      | State    | StateAbbv | Address          | AddressLine2 | City      | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Maryland | MD | 18400 Muncaster Road |  | Derwood | 20855 | Montgomery | 007 | $1,000 | 2% | 2% | Yes |
 
     @Shard2 @NewJersey
     Examples:
-      | State      | StateAbbv | Address    | AddressLine2 | City       | Zip   | County   |
-      | New Jersey | NJ        | 27 West St |          111 | Bloomsbury | 08804 | Hunterdon |
+      | State      | StateAbbv | Address    | AddressLine2 | City       | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | New Jersey | NJ | 27 West St | 111 | Bloomsbury | 08804 | Hunterdon |  |  | 1% |  |  |
 
     @Shard3 @Debug
     Examples:
-      | State | StateAbbv | Address            | AddressLine2 | City      | Zip   | County |
-      | Ohio  | OH        | 1566 Northeast Ave |          111 | Tallmadge | 44278 | Summit |
+      | State | StateAbbv | Address            | AddressLine2 | City      | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Ohio | OH | 1566 Northeast Ave | 111 | Tallmadge | 44278 | Summit |  |  | 1% |  |  |
 
     @Shard3
     Examples:
-      | State          | StateAbbv | Address          | AddressLine2 | City          | Zip   | County     |
-      | Oregon         | OR        | 661 SW 26TH ST   |          111 | Corvallis     | 97331 | Benton     |
-      | South Carolina | SC        | 3009 Augusta Hwy |          111 | Allendale     | 29810 | Allendale  |
-      | South Dakota   | SD        | 700 Governors Dr |          111 | Pierre        | 57501 | Hughes     |
-      | Tennessee      | TN        | 207 N Boone St   |          111 | Johnson City  | 37604 | Washington |
-      | Texas          | TX        | 118 Broadway     |          111 | San Antonio   | 78205 | Bexar      |
-      | Utah           | UT        | 170 N Main       |          111 | Logan         | 84321 | Cache      |
-      | Washington     | WA        | 834 Sheridan St  |          111 | Port Townsend | 98368 | Jefferson  |
-      | Wisconsin      | WI        | 3601 Memorial Dr |          111 | Madison       | 53704 | Dane       |
-      | Wyoming        | WY        | 100 E B St       |          111 | Casper        | 82601 | Natrona    |
+      | State          | StateAbbv | Address          | AddressLine2 | City          | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Oregon | OR | 661 SW 26TH ST | 111 | Corvallis | 97331 | Benton |  |  | 1% |  |  |
+      | South Carolina | SC | 3009 Augusta Hwy | 111 | Allendale | 29810 | Allendale |  |  | 1% |  |  |
+      | South Dakota | SD | 700 Governors Dr | 111 | Pierre | 57501 | Hughes |  |  | 1% |  |  |
+      | Tennessee | TN | 207 N Boone St | 111 | Johnson City | 37604 | Washington |  |  | 1% |  |  |
+      | Texas | TX | 118 Broadway | 111 | San Antonio | 78205 | Bexar |  |  | 1% |  |  |
+      | Utah | UT | 170 N Main | 111 | Logan | 84321 | Cache |  |  | 1% |  |  |
+      | Washington | WA | 834 Sheridan St | 111 | Port Townsend | 98368 | Jefferson |  |  | 1% |  |  |
+      | Wisconsin | WI | 3601 Memorial Dr | 111 | Madison | 53704 | Dane |  |  | 1% |  |  |
+      | Wyoming | WY | 100 E B St | 111 | Casper | 82601 | Natrona |  |  | 1% |  |  |
+
+    @Shard3 @DevOnly
+    Examples:
+      | State        | StateAbbv | Address                | AddressLine2 | City       | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Pennsylvania | PA | 2451 Kissel Hill Road |  | Lancaster | 17601 | Lancaster | 001 | $2,000 | None | None | No |
+      | Vermont | VT | 69 Old River Road |  | Woodstock | 05091 | Windsor | 031 | $2,500 | 1% | None | No |
 
     @Shard3 @RhodeIsland
     Examples:
-      | State        | StateAbbv | Address     | AddressLine2 | City       | Zip   | County     |
-      | Rhode Island | RI        | 160 Pine St |          111 | Providence | 02903 | Providence |
+      | State        | StateAbbv | Address     | AddressLine2 | City       | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Rhode Island | RI | 160 Pine St | 111 | Providence | 02903 | Providence |  |  | 1% |  |  |

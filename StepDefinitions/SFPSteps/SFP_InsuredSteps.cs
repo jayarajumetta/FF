@@ -124,6 +124,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             var clientDetailsPage = new SFP_ClientDetailsPage(_context.Page);
             await clientDetailsPage.WaitForSpinnerAsync();
             await clientDetailsPage.SelectContactRoleAsync("Inspection Contact");
+            await clientDetailsPage.ThrowIfQuoteErrorAsync("continuing from Client Details");
             await clientDetailsPage.ClickNextAsync();
         }
 

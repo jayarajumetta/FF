@@ -1,5 +1,6 @@
 ﻿using Microsoft.Playwright;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using PnCTestAutomation.Helpers;
 
@@ -77,6 +78,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         public async Task AddMortgageeAsync(ScenarioContextData contextData)
         {
             await WaitForSpinnerAsync();
+            await ThrowIfQuoteErrorAsync("opening Mortgagee/Loss Payee");
 
             // Click + ADD ADDITIONAL INTEREST to open the mortgagee form
             // Wait explicitly for the button to appear — it renders after the spinner on CI.
@@ -109,11 +111,27 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             }
 
             // Select Location if specified
+            var availableLocationOptions = Array.Empty<string>();
             if (!string.IsNullOrEmpty(contextData.MortgageeLocation))
             {
                 await LocationSelect.ClickAsync();
-                await _page.GetByRole(AriaRole.Option, new() { Name = contextData.MortgageeLocation, Exact = false }).ClickAsync();
+                var locationOptions = _page.GetByRole(AriaRole.Option).Filter(new() { Visible = true });
+                await locationOptions.First.WaitForAsync(new()
+                {
+                    State = WaitForSelectorState.Visible,
+                    Timeout = 10000
+                });
+                availableLocationOptions = (await locationOptions.AllTextContentsAsync())
+                    .Select(NormalizeDiagnosticText)
+                    .Where(option => !string.IsNullOrWhiteSpace(option))
+                    .ToArray();
+                var requestedLocation = _page.GetByRole(
+                    AriaRole.Option,
+                    new() { Name = contextData.MortgageeLocation, Exact = false }).First;
+                await requestedLocation.ClickAsync();
                 await WaitForSpinnerAsync();
+                await ThrowIfQuoteErrorAsync(
+                    $"refreshing Mortgagee residence options after selecting location '{contextData.MortgageeLocation}'");
             }
 
             // Select Residence if specified
@@ -121,10 +139,60 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             // after Location is selected and the page re-renders (slower on CI agents).
             if (!string.IsNullOrEmpty(contextData.MortgageeResidence))
             {
-                await ResidenceSelect.WaitForAsync(new() { State = WaitForSelectorState.Visible });
+                try
+                {
+                    await ResidenceSelect.WaitForAsync(new()
+                    {
+                        State = WaitForSelectorState.Visible,
+                        Timeout = 30000
+                    });
+                }
+                catch (TimeoutException ex)
+                {
+                    await ThrowIfQuoteErrorAsync(
+                        $"waiting for Mortgagee residence '{contextData.MortgageeResidence}'");
+                    throw new PlaywrightException(
+                        "Mortgagee residence options did not refresh after location selection. " +
+                        await BuildMortgageeRefreshDiagnosticsAsync(availableLocationOptions),
+                        ex);
+                }
+
                 await ResidenceSelect.ClickAsync();
-                await FirstResidenceOption.ClickAsync();
+                var residenceOptions = _page.GetByRole(AriaRole.Option).Filter(new() { Visible = true });
+                await residenceOptions.First.WaitForAsync(new()
+                {
+                    State = WaitForSelectorState.Visible,
+                    Timeout = 10000
+                });
+                var availableResidences = (await residenceOptions.AllTextContentsAsync())
+                    .Select(NormalizeDiagnosticText)
+                    .Where(option => !string.IsNullOrWhiteSpace(option))
+                    .ToArray();
+                var residenceIndex = ResolveResidenceOptionIndex(
+                    contextData.MortgageeResidence,
+                    availableResidences);
+                if (residenceIndex < 0)
+                {
+                    await _page.Keyboard.PressAsync("Escape");
+                    throw new PlaywrightException(
+                        $"Mortgagee residence '{contextData.MortgageeResidence}' was not offered. " +
+                        $"Available residences: {(availableResidences.Length == 0 ? "<none>" : string.Join(", ", availableResidences))}. " +
+                        await BuildMortgageeRefreshDiagnosticsAsync(availableLocationOptions));
+                }
+
+                if (!availableResidences[residenceIndex].Contains(
+                    contextData.MortgageeResidence,
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine(
+                        $"[Mortgagee] The only residence option is '{availableResidences[residenceIndex]}'; " +
+                        $"using it for requested residence '{contextData.MortgageeResidence}'.");
+                }
+
+                await residenceOptions.Nth(residenceIndex).ClickAsync();
                 await WaitForSpinnerAsync();
+                await ThrowIfQuoteErrorAsync(
+                    $"selecting Mortgagee residence '{contextData.MortgageeResidence}'");
             }
 
             // Copy of DEC (Proof of Coverage Required)
@@ -158,6 +226,50 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             // Use ClickNextAsync() to handle variations in the Next button test ID across page states
             await ClickNextAsync();
             await WaitForSpinnerAsync();
+        }
+
+        private async Task<string> BuildMortgageeRefreshDiagnosticsAsync(string[] availableLocationOptions)
+        {
+            var locationVisible = await LocationSelect.Filter(new() { Visible = true }).CountAsync() > 0;
+            var residenceVisible = await ResidenceSelect.Filter(new() { Visible = true }).CountAsync() > 0;
+            var selectedLocation = locationVisible
+                ? NormalizeDiagnosticText(await LocationSelect.InnerTextAsync())
+                : "<unavailable>";
+            var selectedResidence = residenceVisible
+                ? NormalizeDiagnosticText(await ResidenceSelect.InnerTextAsync())
+                : "<unavailable>";
+            var spinnerVisible = await _page.Locator(".ngx-spinner-overlay:visible").CountAsync() > 0;
+
+            return string.Join(
+                " | ",
+                await BuildPageDiagnosticsAsync(),
+                $"LocationVisible={locationVisible}",
+                $"SelectedLocation={selectedLocation}",
+                $"LocationOptions={(availableLocationOptions.Length == 0 ? "<none>" : string.Join(", ", availableLocationOptions))}",
+                $"ResidenceVisible={residenceVisible}",
+                $"SelectedResidence={selectedResidence}",
+                $"OutstandingSpinner={spinnerVisible}");
+        }
+
+        private static string NormalizeDiagnosticText(string value)
+        {
+            var normalized = string.Join(
+                " ",
+                (value ?? string.Empty)
+                    .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+                .Trim();
+            return normalized.Length <= 200 ? normalized : normalized[..200] + "...";
+        }
+
+        internal static int ResolveResidenceOptionIndex(string requestedResidence, string[] availableResidences)
+        {
+            var exactOrContaining = Array.FindIndex(
+                availableResidences,
+                option => option.Contains(requestedResidence, StringComparison.OrdinalIgnoreCase));
+            if (exactOrContaining >= 0)
+                return exactOrContaining;
+
+            return availableResidences.Length == 1 ? 0 : -1;
         }
         #endregion
     }

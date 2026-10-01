@@ -177,7 +177,11 @@ namespace PnCTestAutomation.Helpers
         public string FeetFromHydrant { get => Farm.FeetFromHydrant; set => Farm.FeetFromHydrant = value; }
         public string PPC { get => Farm.PPC; set => Farm.PPC = value; }
         public string TotalAcreage { get => Farm.TotalAcreage; set => Farm.TotalAcreage = value; }
+        public string Territory { get => Farm.Territory; set => Farm.Territory = value; }
+        public string AllPerilDeductible { get => Farm.AllPerilDeductible; set => Farm.AllPerilDeductible = value; }
         public string WindHailDeductible { get => Farm.WindHailDeductible; set => Farm.WindHailDeductible = value; }
+        public string HurricaneDeductible { get => Farm.HurricaneDeductible; set => Farm.HurricaneDeductible = value; }
+        public bool HurricaneDeductibleOptional { get => Farm.HurricaneDeductibleOptional; set => Farm.HurricaneDeductibleOptional = value; }
         public string Narrative { get => Farm.Narrative; set => Farm.Narrative = value; }
 
         // --- Residence (SFP - maps to Farm) ---

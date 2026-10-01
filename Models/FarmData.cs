@@ -21,7 +21,11 @@ namespace PnCTestAutomation.Models
         public string TotalAcreage { get; set; }
 
         // Coverage Properties
+        public string Territory { get; set; }
+        public string AllPerilDeductible { get; set; }
         public string WindHailDeductible { get; set; }
+        public string HurricaneDeductible { get; set; }
+        public bool HurricaneDeductibleOptional { get; set; }
         public string Narrative { get; set; }
 
         // Residence Properties

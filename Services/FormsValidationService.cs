@@ -103,6 +103,47 @@ namespace PnCTestAutomation.Services
                 $"Place {lob}.json (include-only) or {lob}.csv (merged) in Resources/ExpectedForms/{lob}/");
         }
 
+        public List<ExpectedFormEntry> LoadExpectedFormsTemplateForRecording(
+            string lob,
+            string testCase = "BASIC")
+        {
+            if (!Regex.IsMatch(lob ?? "", @"^[A-Za-z0-9_]{1,20}$"))
+                throw new ArgumentException($"Invalid LOB value: '{lob}'");
+            if (!Regex.IsMatch(testCase ?? "BASIC", @"^[A-Za-z0-9_]{1,20}$"))
+                throw new ArgumentException($"Invalid testCase value: '{testCase}'");
+
+            var basePath = Path.Combine(AppContext.BaseDirectory, "Resources", "ExpectedForms", lob);
+            var testCaseCsv = Path.Combine(basePath, $"{lob}_{testCase}.csv");
+            if (File.Exists(testCaseCsv))
+                return LoadFirstCsvState(testCaseCsv);
+
+            var mergedCsv = Path.Combine(basePath, $"{lob}.csv");
+            if (File.Exists(mergedCsv))
+                return LoadFirstCsvState(
+                    mergedCsv,
+                    new[] { "BASE", GetTypeCodeForTestCase(testCase) });
+
+            throw new FileNotFoundException(
+                $"CSV baseline template not found for {lob}/{testCase}. " +
+                "Record mode requires a CSV whose form/type structure can seed the proposal.");
+        }
+
+        private List<ExpectedFormEntry> LoadFirstCsvState(string csvPath, string[] typeFilter = null)
+        {
+            var resolvedCsv = SafeResolvePath(csvPath);
+            var header = File.ReadLines(resolvedCsv).FirstOrDefault()
+                ?? throw new InvalidOperationException($"CSV baseline is empty: {resolvedCsv}");
+            var state = header.Split(',')
+                .Select(column => column.Trim())
+                .FirstOrDefault(column => Regex.IsMatch(column, @"^[A-Z]{2,3}$"));
+
+            if (state == null)
+                throw new InvalidOperationException(
+                    $"CSV baseline has no state columns to seed record mode: {resolvedCsv}");
+
+            return LoadFromCsv(resolvedCsv, state, typeFilter);
+        }
+
         /// <summary>
         /// Loads forms from a CSV baseline file with optional Type column filtering.
         /// CSV format: Type,Form,AL,AR,AZ,CO,...,WY

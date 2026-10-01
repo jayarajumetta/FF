@@ -720,8 +720,28 @@ namespace PnCTestAutomation.Helpers
                         _contextData.TotalAcreage = answer;
                         break;
 
+                    case "Territory":
+                        _contextData.Territory = answer;
+                        break;
+
+                    case "AllPerilDeductible":
+                        _contextData.AllPerilDeductible = answer;
+                        break;
+
                     case "WindHailDeductible":
                         _contextData.WindHailDeductible = answer;
+                        break;
+
+                    case "HurricaneDeductible":
+                        _contextData.HurricaneDeductible = answer;
+                        break;
+
+                    case "HurricaneOptional":
+                        _contextData.HurricaneDeductibleOptional =
+                            answer.Equals("Yes", StringComparison.OrdinalIgnoreCase) ||
+                            answer.Equals("Y", StringComparison.OrdinalIgnoreCase) ||
+                            answer.Equals("True", StringComparison.OrdinalIgnoreCase) ||
+                            answer.Equals("1", StringComparison.OrdinalIgnoreCase);
                         break;
 
                     default:

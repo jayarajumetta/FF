@@ -125,12 +125,26 @@ namespace PnCTestAutomation.Pages
         #endregion
 
         #region Actions - Modal Navigation
+        public async Task<bool> IsCurrentAsync()
+        {
+            var visibleSave = SaveButton.Filter(new() { Visible = true });
+            var visibleLocationField = AdditionalDescriptionInput.Filter(new() { Visible = true });
+            return await visibleSave.CountAsync() > 0
+                && await visibleLocationField.CountAsync() > 0;
+        }
+
         /// <summary>
         /// Save the location and close modal
         /// </summary>
         public async Task SaveLocationAsync()
         {
-            await SaveButton.ClickAsync();
+            var visibleSave = SaveButton.Filter(new() { Visible = true });
+            await visibleSave.First.WaitForAsync(new()
+            {
+                State = WaitForSelectorState.Visible,
+                Timeout = 10000
+            });
+            await visibleSave.First.ClickAsync();
             await WaitForSpinnerAsync();
         }
 

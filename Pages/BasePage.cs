@@ -2,6 +2,7 @@
 using PnCTestAutomation.Helpers;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PnCTestAutomation.Pages
@@ -143,6 +144,59 @@ namespace PnCTestAutomation.Pages
                 State = WaitForSelectorState.Hidden,
                 Timeout = timeoutMs
             });
+        }
+
+        public async Task ThrowIfQuoteErrorAsync(string action)
+        {
+            var visibleErrorText = string.Join(
+                " ",
+                await _page
+                    .Locator("[role='alert']:visible, .alert:visible, .error:visible, .validation-message:visible")
+                    .AllTextContentsAsync());
+            var errorCodes = Regex.Matches(visibleErrorText, @"\bDC-\d{3,}\b", RegexOptions.IgnoreCase)
+                .Select(match => match.Value.ToUpperInvariant())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+            var quoteErrorRoute = _page.Url.Contains("quoteError", StringComparison.OrdinalIgnoreCase);
+
+            if (!quoteErrorRoute && errorCodes.Length == 0)
+                return;
+
+            throw new PlaywrightException(
+                $"Duck Creek quote error while {action}. {await BuildPageDiagnosticsAsync(errorCodes)}");
+        }
+
+        public async Task<string> BuildPageDiagnosticsAsync(params string[] knownErrorCodes)
+        {
+            var title = await _page.TitleAsync();
+            var visibleMessages = await _page
+                .Locator("[role='alert']:visible, .alert:visible, .error:visible, .validation-message:visible")
+                .AllTextContentsAsync();
+            var headings = await _page.Locator("h1:visible, h2:visible, h3:visible")
+                .AllTextContentsAsync();
+
+            static string Normalize(string value)
+            {
+                var normalized = string.Join(
+                    " ",
+                    (value ?? string.Empty)
+                        .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+                    .Trim();
+                return normalized.Length <= 300 ? normalized : normalized[..300] + "...";
+            }
+
+            var codes = knownErrorCodes?
+                .Where(code => !string.IsNullOrWhiteSpace(code))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray() ?? Array.Empty<string>();
+
+            return string.Join(
+                " | ",
+                $"URL={_page.Url}",
+                $"Title={Normalize(title)}",
+                $"ErrorCodes={(codes.Length == 0 ? "<none>" : string.Join(",", codes))}",
+                $"Headings={(headings.Count == 0 ? "<none>" : string.Join(" / ", headings.Select(Normalize)))}",
+                $"Messages={(visibleMessages.Count == 0 ? "<none>" : string.Join(" / ", visibleMessages.Select(Normalize)))}");
         }
 
         /// <summary>
