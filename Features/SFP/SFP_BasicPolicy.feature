@@ -1,4 +1,4 @@
-@SFP @ExpertQuote
+@SFP @ExpertQuote @Regression
 Feature: SFP Basic Policy
 
 
@@ -117,12 +117,12 @@ Feature: SFP Basic Policy
       | NumberOfFamilies  | Single Family |
       | RateType          | Frame         |
       | ConditionRating   | 1             |
-      | RoofYear          | CURRENT YEAR  |
+      | RoofYear          | 2024          |
       | RoofType          | Slate         |
-      | RoofImpact        | UL 4          |
+      | RoofImpact        | UL 2          |
       | HeatingYear       | 2026          |
       | PlumbingYear      | 2025          |
-      | ElectricalYear    | 2026          |
+      | WiringYear        | 2026          |
       | SeasonalOrVacant  | No            |
       | SolidFuelQuestion | No            |
 
@@ -166,7 +166,7 @@ Feature: SFP Basic Policy
       | YearOfAppraisal | 2025      |
 
     # Step 24: Add Liability
-    When user adds Liability coverage
+    When user adds Liability coverage and stays
       | Question          | Answer            |
       | LiabilityLimit    | $100,000/$100,000 |
       | LivestockHorses   |                 0 |
@@ -174,6 +174,18 @@ Feature: SFP Basic Policy
       | LivestockLarge    |                 3 |
       | NumberOfEmployees |                 0 |
       | UnlistedAcreage   |                 0 |
+
+    # Step 24A: Add Limited Farm Pollution
+    When user edits liability optional coverage and continues
+      | Question              | Answer                 |
+      | CoverageName          | Limited Farm Pollution |
+      | OccurrenceAggregate   | 50000/300000           |
+      | TotalOnsiteCapacity   | 8000000                |
+      | FurthestLocationMiles | 23                     |
+      | WasteTripsPerYear     | 550                    |
+      | AboveGroundTanks      | Yes                    |
+      | TankCapacity          | 500000                 |
+      | TankConstructionDate  | 2024-03-31             |
 
     # Step 25: Add a Mortgagee
     When user adds Additional Interest Mortgagee

@@ -211,7 +211,12 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         }
 
         [When("user adds Liability coverage")]
-        public async Task UserAddsLiabilityCoverage(Table table)
+        public Task UserAddsLiabilityCoverage(Table table) => AddLiabilityCoverageAsync(table, continueToMortgagee: true);
+
+        [When("user adds Liability coverage and stays")]
+        public Task UserAddsLiabilityCoverageAndStays(Table table) => AddLiabilityCoverageAsync(table, continueToMortgagee: false);
+
+        private async Task AddLiabilityCoverageAsync(Table table, bool continueToMortgagee)
         {
             TableMappingHelpers.LiabilityFields(table, _contextData);
 
@@ -259,6 +264,17 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                     _contextData.WorkersCompPartTimeOutServants ?? "0");
             }
 
+            if (continueToMortgagee)
+                await liabilityPage.NextMortgageeLossPayeeButton.ClickAsync();
+        }
+
+        [When("user edits liability optional coverage and continues")]
+        public async Task UserEditsLiabilityOptionalCoverageAndContinues(Table table)
+        {
+            TableMappingHelpers.LimitedFarmPollutionFields(table, _contextData);
+
+            var liabilityPage = new SFP_LiabilityPage(_context.Page);
+            await liabilityPage.EditLimitedFarmPollutionAsync(_contextData.Farm);
             await liabilityPage.NextMortgageeLossPayeeButton.ClickAsync();
         }
 

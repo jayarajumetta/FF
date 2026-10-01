@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
+using PnCTestAutomation.Models;
 
 namespace PnCTestAutomation.Pages
 {
@@ -147,6 +151,222 @@ namespace PnCTestAutomation.Pages
         // Navigation
         public ILocator BackButton => _page.GetByTestId("fields.data.back");
         public ILocator NextMortgageeLossPayeeButton => _page.GetByTestId("fields.data.next");
+
+        public async Task EditLimitedFarmPollutionAsync(FarmData data)
+        {
+            await OpenOptionalCoverageEditorAsync(data.LimitedFarmPollutionCoverageName);
+            await SetRequiredEditorFieldAsync(
+                "OccurrenceAggregate",
+                data.LimitedFarmPollutionOccurrenceAggregate,
+                "occurrenceAggregate",
+                "occurrenceAndAggregate",
+                "limit");
+            await SetRequiredEditorFieldAsync(
+                "TotalOnsiteCapacity",
+                data.LimitedFarmPollutionTotalOnsiteCapacity,
+                "totalOnsite",
+                "totalCapacity",
+                "storageCapacity");
+            await SetRequiredEditorFieldAsync(
+                "FurthestLocationMiles",
+                data.LimitedFarmPollutionFurthestLocationMiles,
+                "furthest",
+                "maximumMiles",
+                "maxMiles");
+            await SetRequiredEditorFieldAsync(
+                "WasteTripsPerYear",
+                data.LimitedFarmPollutionWasteTripsPerYear,
+                "wasteTrips",
+                "numberOfTrips",
+                "trips");
+            await SetRequiredEditorFieldAsync(
+                "AboveGroundTanks",
+                data.LimitedFarmPollutionAboveGroundTanks,
+                "aboveGround");
+            await SetRequiredEditorFieldAsync(
+                "TankCapacity",
+                data.LimitedFarmPollutionTankCapacity,
+                "tankCapacity");
+            await SetRequiredEditorFieldAsync(
+                "TankConstructionDate",
+                data.LimitedFarmPollutionTankConstructionDate,
+                "tankConstructionDate",
+                "constructionDate");
+            await ClickSaveAsync();
+        }
+
+        private async Task OpenOptionalCoverageEditorAsync(string coverageName)
+        {
+            var row = await FindCoverageRowAsync(coverageName);
+            var checkbox = row.Locator(
+                "label[data-testid$='selected.value'], input[type='checkbox'][data-testid$='selected.value']").First;
+            if (await checkbox.CountAsync() == 0)
+                throw new PlaywrightException($"Coverage '{coverageName}' has no selectable checkbox.");
+
+            var tagName = await checkbox.EvaluateAsync<string>("element => element.tagName.toLowerCase()");
+            if (tagName == "input")
+                await checkbox.CheckAsync();
+            else
+                await checkbox.ClickAsync();
+            await WaitForSpinnerAsync();
+
+            row = await FindCoverageRowAsync(coverageName);
+            var editButton = row.GetByRole(AriaRole.Button, new()
+            {
+                NameRegex = new Regex("edit coverage|add coverage|edit", RegexOptions.IgnoreCase)
+            }).First;
+            if (await editButton.CountAsync() == 0 || !await editButton.IsVisibleAsync())
+                throw new PlaywrightException($"Coverage '{coverageName}' was selected, but its Edit Coverage button was not found.");
+
+            await editButton.ClickAsync();
+            await WaitForSpinnerAsync();
+        }
+
+        private async Task<ILocator> FindCoverageRowAsync(string coverageName)
+        {
+            if (string.IsNullOrWhiteSpace(coverageName))
+                throw new ArgumentException("CoverageName is required.", nameof(coverageName));
+
+            foreach (var rows in new[]
+            {
+                _page.Locator("tr").Filter(new() { HasText = coverageName }),
+                _page.Locator("[role='row']").Filter(new() { HasText = coverageName })
+            })
+            {
+                var count = await rows.CountAsync();
+                for (var index = 0; index < count; index++)
+                {
+                    var row = rows.Nth(index);
+                    if (await row.IsVisibleAsync() &&
+                        (await row.InnerTextAsync()).Contains(coverageName, StringComparison.OrdinalIgnoreCase))
+                        return row;
+                }
+            }
+
+            throw new PlaywrightException($"Required liability coverage row '{coverageName}' was not found.");
+        }
+
+        private async Task SetRequiredEditorFieldAsync(string fieldName, string value, params string[] testIdTokens)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException($"A value is required for '{fieldName}'.", nameof(value));
+
+            var tokens = testIdTokens
+                .Where(token => !string.IsNullOrWhiteSpace(token))
+                .Distinct()
+                .ToArray();
+            var chip = await FirstVisibleAsync(tokens.Select(token =>
+                _page.Locator($"[data-testid*='{EscapeCss(token)}'][data-testid*='chip-item-wrapper']")
+                    .Filter(new() { HasText = value })));
+            if (chip != null)
+            {
+                await chip.ClickAsync();
+                await WaitForSpinnerAsync();
+                return;
+            }
+
+            var candidates = new List<ILocator>();
+            foreach (var token in tokens)
+            {
+                var escaped = EscapeCss(token);
+                candidates.Add(_page.Locator(
+                    $"input[data-testid*='{escaped}'], textarea[data-testid*='{escaped}'], " +
+                    $"select[data-testid*='{escaped}'], mat-select[data-testid*='{escaped}'], " +
+                    $"[role='combobox'][data-testid*='{escaped}']"));
+            }
+
+            var spacedName = Regex.Replace(fieldName, "([a-z])([A-Z])", "$1 $2");
+            var labelPattern = string.Join(
+                @"\W*",
+                spacedName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(Regex.Escape));
+            candidates.Add(_page.GetByLabel(new Regex(labelPattern, RegexOptions.IgnoreCase)));
+
+            var control = await FirstVisibleAsync(candidates);
+            if (control == null)
+                throw new PlaywrightException(
+                    $"Required Limited Farm Pollution field '{fieldName}' was not found. " +
+                    $"Tokens=[{string.Join(", ", tokens)}].");
+
+            await SetEditorControlValueAsync(control, fieldName, value);
+        }
+
+        private async Task SetEditorControlValueAsync(ILocator control, string fieldName, string value)
+        {
+            await control.ScrollIntoViewIfNeededAsync();
+            var tagName = await control.EvaluateAsync<string>("element => element.tagName.toLowerCase()");
+            var role = await control.GetAttributeAsync("role");
+
+            if (tagName == "select")
+            {
+                await control.SelectOptionAsync(new SelectOptionValue { Label = value });
+                await WaitForSpinnerAsync();
+                return;
+            }
+
+            if (tagName == "mat-select" || string.Equals(role, "combobox", StringComparison.OrdinalIgnoreCase))
+            {
+                await control.ClickAsync();
+                var options = _page.GetByRole(AriaRole.Option).Filter(new() { Visible = true });
+                try
+                {
+                    await options.First.WaitForAsync(new()
+                    {
+                        State = WaitForSelectorState.Visible,
+                        Timeout = 10000
+                    });
+                }
+                catch (TimeoutException ex)
+                {
+                    throw new PlaywrightException(
+                        $"Limited Farm Pollution field '{fieldName}' did not expose options for '{value}'.", ex);
+                }
+
+                var expected = NormalizeOption(value);
+                var optionCount = await options.CountAsync();
+                for (var index = 0; index < optionCount; index++)
+                {
+                    var option = options.Nth(index);
+                    if (NormalizeOption(await option.InnerTextAsync()) != expected)
+                        continue;
+
+                    await option.ClickAsync();
+                    await WaitForSpinnerAsync();
+                    return;
+                }
+
+                var available = await options.AllTextContentsAsync();
+                throw new PlaywrightException(
+                    $"Limited Farm Pollution field '{fieldName}' did not expose option '{value}'. " +
+                    $"Available=[{string.Join(" | ", available)}].");
+            }
+
+            await control.ClickAsync();
+            await control.FillAsync(value);
+            await control.PressAsync("Tab");
+            await WaitForSpinnerAsync();
+        }
+
+        private static string NormalizeOption(string value) =>
+            new(value.Where(char.IsLetterOrDigit).Select(char.ToUpperInvariant).ToArray());
+
+        private static string EscapeCss(string value) =>
+            value.Replace("\\", "\\\\").Replace("'", "\\'");
+
+        private static async Task<ILocator> FirstVisibleAsync(IEnumerable<ILocator> candidates)
+        {
+            foreach (var candidate in candidates)
+            {
+                var count = await candidate.CountAsync();
+                for (var index = 0; index < count; index++)
+                {
+                    var item = candidate.Nth(index);
+                    if (await item.IsVisibleAsync())
+                        return item;
+                }
+            }
+
+            return null;
+        }
 
         // Workers' Compensation - Residence Employees optional coverage (NH and similar states).
         // Clicking this button navigates to a dedicated full Edit Coverage page (not a popup).

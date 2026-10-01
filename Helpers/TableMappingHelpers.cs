@@ -787,6 +787,7 @@ namespace PnCTestAutomation.Helpers
                         _contextData.Farm.ResidencePlumbingYear = answer;
                         break;
                     case "ElectricalYear":
+                    case "WiringYear":
                         _contextData.Farm.ResidenceElectricalYear = answer;
                         break;
                     case "RoofType":
@@ -1008,6 +1009,45 @@ namespace PnCTestAutomation.Helpers
                         break;
                     default:
                         throw new ArgumentException($"Unknown Liability question: {question}");
+                }
+            }
+        }
+
+        public static void LimitedFarmPollutionFields(Table table, ScenarioContextData _contextData)
+        {
+            foreach (var row in table.Rows)
+            {
+                var question = row["Question"];
+                var answer = row["Answer"];
+
+                switch (question)
+                {
+                    case "CoverageName":
+                        _contextData.Farm.LimitedFarmPollutionCoverageName = answer;
+                        break;
+                    case "OccurrenceAggregate":
+                        _contextData.Farm.LimitedFarmPollutionOccurrenceAggregate = answer;
+                        break;
+                    case "TotalOnsiteCapacity":
+                        _contextData.Farm.LimitedFarmPollutionTotalOnsiteCapacity = answer;
+                        break;
+                    case "FurthestLocationMiles":
+                        _contextData.Farm.LimitedFarmPollutionFurthestLocationMiles = answer;
+                        break;
+                    case "WasteTripsPerYear":
+                        _contextData.Farm.LimitedFarmPollutionWasteTripsPerYear = answer;
+                        break;
+                    case "AboveGroundTanks":
+                        _contextData.Farm.LimitedFarmPollutionAboveGroundTanks = answer;
+                        break;
+                    case "TankCapacity":
+                        _contextData.Farm.LimitedFarmPollutionTankCapacity = answer;
+                        break;
+                    case "TankConstructionDate":
+                        _contextData.Farm.LimitedFarmPollutionTankConstructionDate = answer;
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknown Limited Farm Pollution question: {question}");
                 }
             }
         }

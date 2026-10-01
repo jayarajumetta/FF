@@ -60,6 +60,7 @@ namespace PnCTestAutomation.Tests
         public void ProposedCoverageInputs_ReachExistingDomainModel()
         {
             var data = new ScenarioContextData();
+            TableMappingHelpers.ResidenceFields(TableOf(("WiringYear", "2026")), data);
             TableMappingHelpers.ResidenceCoverageFields(TableOf(
                 ("InsuranceAmount", "550000"), ("SquareFeet", "1800"), ("Perils", "5"),
                 ("ThermostatQuestion", "Yes"), ("ActualCashValue", "Replacement Cost"),
@@ -70,6 +71,7 @@ namespace PnCTestAutomation.Tests
 
             Assert.Multiple(() =>
             {
+                Assert.That(data.Farm.ResidenceElectricalYear, Is.EqualTo("2026"));
                 Assert.That(data.Farm.ResidenceInsuranceAmount, Is.EqualTo("550000"));
                 Assert.That(data.Farm.ResidenceSquareFeet, Is.EqualTo("1800"));
                 Assert.That(data.Farm.ResidencePerils, Is.EqualTo("5"));
@@ -81,6 +83,33 @@ namespace PnCTestAutomation.Tests
                 Assert.That(data.Farm.FarmPropertyDescription, Is.EqualTo("Bose Sound Bars"));
                 Assert.That(data.Farm.FarmPropertyLimit, Is.EqualTo("101500"));
                 Assert.That(data.Farm.FarmPropertyDeductible, Is.EqualTo("$1,000"));
+            });
+        }
+
+        [Test]
+        public void LimitedFarmPollutionInputs_ReachExistingDomainModel()
+        {
+            var data = new ScenarioContextData();
+            TableMappingHelpers.LimitedFarmPollutionFields(TableOf(
+                ("CoverageName", "Limited Farm Pollution"),
+                ("OccurrenceAggregate", "50000/300000"),
+                ("TotalOnsiteCapacity", "8000000"),
+                ("FurthestLocationMiles", "23"),
+                ("WasteTripsPerYear", "550"),
+                ("AboveGroundTanks", "Yes"),
+                ("TankCapacity", "500000"),
+                ("TankConstructionDate", "2024-03-31")), data);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(data.Farm.LimitedFarmPollutionCoverageName, Is.EqualTo("Limited Farm Pollution"));
+                Assert.That(data.Farm.LimitedFarmPollutionOccurrenceAggregate, Is.EqualTo("50000/300000"));
+                Assert.That(data.Farm.LimitedFarmPollutionTotalOnsiteCapacity, Is.EqualTo("8000000"));
+                Assert.That(data.Farm.LimitedFarmPollutionFurthestLocationMiles, Is.EqualTo("23"));
+                Assert.That(data.Farm.LimitedFarmPollutionWasteTripsPerYear, Is.EqualTo("550"));
+                Assert.That(data.Farm.LimitedFarmPollutionAboveGroundTanks, Is.EqualTo("Yes"));
+                Assert.That(data.Farm.LimitedFarmPollutionTankCapacity, Is.EqualTo("500000"));
+                Assert.That(data.Farm.LimitedFarmPollutionTankConstructionDate, Is.EqualTo("2024-03-31"));
             });
         }
 
