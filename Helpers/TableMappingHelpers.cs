@@ -1042,8 +1042,14 @@ namespace PnCTestAutomation.Helpers
 
                 switch (question)
                 {
+                    case "CoverageCode":
+                        _contextData.Farm.LimitedFarmPollutionCoverageCode = answer;
+                        break;
                     case "CoverageName":
                         _contextData.Farm.LimitedFarmPollutionCoverageName = answer;
+                        break;
+                    case "RequiredBaseLiabilityLimit":
+                        _contextData.Farm.LimitedFarmPollutionRequiredBaseLiabilityLimit = answer;
                         break;
                     case "OccurrenceAggregate":
                         _contextData.Farm.LimitedFarmPollutionOccurrenceAggregate = answer;
@@ -1065,6 +1071,12 @@ namespace PnCTestAutomation.Helpers
                         break;
                     case "TankConstructionDate":
                         _contextData.Farm.LimitedFarmPollutionTankConstructionDate = answer;
+                        break;
+                    case "EligibilityQuestions":
+                        _contextData.Farm.LimitedFarmPollutionEligibilityQuestions = answer;
+                        break;
+                    case "ExpectedReferralRule":
+                        _contextData.Farm.LimitedFarmPollutionExpectedReferralRule = answer;
                         break;
                     default:
                         throw new ArgumentException($"Unknown Limited Farm Pollution question: {question}");

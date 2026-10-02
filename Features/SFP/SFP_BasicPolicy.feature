@@ -179,17 +179,21 @@ Feature: SFP Basic Policy
       | NumberOfEmployees |                 0 |
       | UnlistedAcreage   |                 0 |
 
-    # Step 24A: Add Limited Farm Pollution
+    # Step 24A: Add Limited Farm Pollution where coverage 146 is offered
     When user edits liability optional coverage and continues
-      | Question              | Answer                 |
-      | CoverageName          | Limited Farm Pollution |
-      | OccurrenceAggregate   | 50000/300000           |
-      | TotalOnsiteCapacity   | 8000000                |
-      | FurthestLocationMiles | 23                     |
-      | WasteTripsPerYear     | 550                    |
-      | AboveGroundTanks      | Yes                    |
-      | TankCapacity          | 500000                 |
-      | TankConstructionDate  | 2024-03-31             |
+      | Question                   | Answer                           |
+      | CoverageCode               | 146                              |
+      | CoverageName               | Limited Farm Pollution Liability |
+      | RequiredBaseLiabilityLimit | $100,000/$300,000                |
+      | OccurrenceAggregate        | 50000/300000                     |
+      | TotalOnsiteCapacity        | 8000000                          |
+      | FurthestLocationMiles      | 23                               |
+      | WasteTripsPerYear          | 550                              |
+      | AboveGroundTanks           | Yes                              |
+      | TankCapacity               | 10000                            |
+      | TankConstructionDate       | 2024-03-31                       |
+      | EligibilityQuestions       | None Of The Above                |
+      | ExpectedReferralRule       | 11125                            |
 
     # Step 25: Add a Mortgagee
     When user adds Additional Interest Mortgagee
@@ -285,8 +289,6 @@ Feature: SFP Basic Policy
       | Arkansas | AR | 3998 Harrison St | 111 | Batesville | 72503 | Independence |  |  | 1% |  |  |
       | Arizona | AZ | 4201 N 24th St | 111 | Phoenix | 85016 | Maricopa |  |  | 1% |  |  |
       | Colorado | CO | 231 Main St | 111 | Fort Morgan | 80701 | Morgan |  |  | 1% |  |  |
-      | Delaware | DE | 424 Delaware St | 111 | New Castle | 19720 | New Castle |  |  | 1% |  |  |
-      | Georgia | GA | 3715 Northside Pkwy | 111 | Atlanta | 30327 | Fulton |  |  | 1% |  |  |
       | Idaho | ID | 1221 W Ironwood Dr | 111 | Coeur D Alene | 83814 | Kootenai |  |  | 1% |  |  |
       | Illinois | IL | 2576 Charles St | 111 | Rockford | 61108 | Winnebago |  |  | 1% |  |  |
       | Indiana | IN | 5518 Calumet Ave | 111 | Hammond | 46320 | Lake |  |  | 1% |  |  |
@@ -295,7 +297,13 @@ Feature: SFP Basic Policy
       | Kentucky | KY | 1002 Medical Dr | 111 | Mayfield | 42066 | Graves |  |  | 1% |  |  |
       | Louisiana | LA | 218 Meadow Dr | 111 | Oakdale | 71463 | Allen |  |  | 1% |  |  |
 
-    @Shard1 @Connecticut
+    @Shard1 @Pollution146
+    Examples:
+      | State    | StateAbbv | Address             | AddressLine2 | City       | Zip   | County     | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Delaware | DE        | 424 Delaware St     |          111 | New Castle | 19720 | New Castle |           |                    | 1%                 |                     |                   |
+      | Georgia  | GA        | 3715 Northside Pkwy |          111 | Atlanta    | 30327 | Fulton     |           |                    | 1%                 |                     |                   |
+
+    @Shard1 @Connecticut @Pollution146
     Examples:
       | State       | StateAbbv | Address           | AddressLine2 | City    | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
       | Connecticut | CT | 391 Old Post Road | 111 | Tolland | 06084 | Tolland |  |  | 1% |  |  |
@@ -309,16 +317,20 @@ Feature: SFP Basic Policy
     Examples:
       | State         | StateAbbv | Address                       | AddressLine2 | City         | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
       | Missouri | MO | 1895 S Forrest Heights Avenue | 111 | Springfield | 65809 | Greene |  |  | 1% |  |  |
-      | Massachusetts | MA | 66 Wendell Ave | 111 | Pittsfield | 01201 | Berkshire |  |  | 1% |  |  |
-      | Maine | ME | 33 Davis St | 111 | Presque Isle | 04769 | Aroostook |  |  | 1% |  |  |
       | Minnesota | MN | 115 S Main ST | 111 | Warren | 56762 | Marshall |  |  | 1% |  |  |
       | Montana | MT | 1202 3rd St W | 11 | Roundup | 59072 | Musselshell |  |  | 1% |  |  |
       | Nebraska | NE | 1517 Broadway | 111 | Scottsbluff | 69361 | Scotts Bluff |  |  | 1% |  |  |
       | Nevada | NV | 340 N 11th St | 111 | Las Vegas | 89101 | Clark |  |  | 1% |  |  |
-      | New Hampshire | NH | 67 Comstock Road | 111 | Alstead | 03602 | Cheshire |  |  | 1% |  |  |
       | New Mexico | NM | 901 West 13th St | 111 | Clovis | 88101 | Curry |  |  | 1% |  |  |
       | North Dakota | ND | 600 S 2nd St | 111 | Bismarck | 58504 | Burleigh |  |  | 1% |  |  |
       | Oklahoma | OK | 436255 E 330 Rd | 111 | Big Cabin | 74332 | Craig |  |  | 1% |  |  |
+
+    @Shard2 @Pollution146
+    Examples:
+      | State         | StateAbbv | Address          | AddressLine2 | City         | Zip   | County    | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
+      | Massachusetts | MA        | 66 Wendell Ave   |          111 | Pittsfield   | 01201 | Berkshire |           |                    | 1%                 |                     |                   |
+      | Maine         | ME        | 33 Davis St      |          111 | Presque Isle | 04769 | Aroostook |           |                    | 1%                 |                     |                   |
+      | New Hampshire | NH        | 67 Comstock Road |          111 | Alstead      | 03602 | Cheshire  |           |                    | 1%                 |                     |                   |
 
     @Shard2 @DevOnly
     Examples:
@@ -354,7 +366,7 @@ Feature: SFP Basic Policy
       | Pennsylvania | PA | 2451 Kissel Hill Road |  | Lancaster | 17601 | Lancaster | 001 | $2,000 | None | None | No |
       | Vermont | VT | 69 Old River Road |  | Woodstock | 05091 | Windsor | 031 | $2,500 | 1% | None | No |
 
-    @Shard3 @RhodeIsland
+    @Shard3 @RhodeIsland @Pollution146
     Examples:
       | State        | StateAbbv | Address     | AddressLine2 | City       | Zip   | County | Territory | AllPerilDeductible | WindHailDeductible | HurricaneDeductible | HurricaneOptional |
       | Rhode Island | RI | 160 Pine St | 111 | Providence | 02903 | Providence |  |  | 1% |  |  |

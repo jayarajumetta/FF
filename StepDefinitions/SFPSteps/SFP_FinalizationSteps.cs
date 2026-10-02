@@ -246,6 +246,9 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
         private string GetPremiumBaselineProductKey()
         {
+            if (IsPollution146Scenario())
+                return "SFP_POLLUTION146";
+
             var productSelection = (_contextData?.ProductSelection ?? string.Empty).Trim();
             if (productSelection.Equals("CE", StringComparison.OrdinalIgnoreCase)
                 || productSelection.Equals("Country Estate", StringComparison.OrdinalIgnoreCase))
@@ -269,6 +272,10 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
             return "SFP";
         }
+
+        private bool IsPollution146Scenario() =>
+            (_scenarioContext?.ScenarioInfo?.Tags ?? Array.Empty<string>())
+                .Any(tag => tag.Equals("Pollution146", StringComparison.OrdinalIgnoreCase));
 
         [When("user completes Billing Information")]
         public async Task UserCompletesBillingInformation(Table table)
@@ -698,10 +705,20 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         }
 
         [Then("user verifies no referrals are needed")]
-        public async Task UserVerifiesNoReferralsAreNeeded()
+        public async Task UserVerifiesExpectedReferralStatus()
         {
             var submissionPage = new SubmissionPage(_context.Page);
             await submissionPage.WaitForSpinnerAsync();
+
+            if (IsPollution146Scenario())
+            {
+                await submissionPage.ReferralRequiredText.WaitForAsync(new() { Timeout = 15000 });
+                await submissionPage.PollutionReferralRule.WaitForAsync(new() { Timeout = 15000 });
+                await submissionPage.PollutionReferralRuleCode.WaitForAsync(new() { Timeout = 15000 });
+                Console.WriteLine(
+                    "Verified: STATUS: REFERRAL NEEDED for Limited Farm Pollution rule 11125.");
+                return;
+            }
 
             await submissionPage.NoReferralsText.WaitForAsync(new() { Timeout = 15000 });
             Assert.That(await submissionPage.NoReferralsText.CountAsync(), Is.GreaterThan(0),
@@ -761,12 +778,15 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             }
 
             await submissionPage.WaitForSpinnerAsync();
-            await submissionPage.NoReferralsText.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
+            var expectedStatus = IsPollution146Scenario()
+                ? submissionPage.ReferralRequiredText
+                : submissionPage.NoReferralsText;
+            await expectedStatus.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
             Console.WriteLine("Checklist tab closed and EQ Submission page is ready");
         }
 
         [Then("user verifies Transmit button is enabled on Submission page")]
-        public async Task UserVerifiesTransmitButtonIsEnabled()
+        public async Task UserVerifiesExpectedTransmitAvailability()
         {
             // Navigate to Submission explicitly — EQ may have moved after the Ok dialog
             var sideMenu = new SideMenuNavigation(_context.Page);

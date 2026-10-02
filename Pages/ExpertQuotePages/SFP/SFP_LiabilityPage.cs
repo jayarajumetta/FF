@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 using PnCTestAutomation.Models;
+using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 
 namespace PnCTestAutomation.Pages
 {
@@ -154,54 +155,122 @@ namespace PnCTestAutomation.Pages
 
         public async Task EditLimitedFarmPollutionAsync(FarmData data)
         {
-            await OpenOptionalCoverageEditorAsync(data.LimitedFarmPollutionCoverageName);
+            await OpenOptionalCoverageEditorAsync(data);
             await SetRequiredEditorFieldAsync(
                 "OccurrenceAggregate",
                 data.LimitedFarmPollutionOccurrenceAggregate,
+                "occurrenceAggregateLimit",
                 "occurrenceAggregate",
-                "occurrenceAndAggregate",
-                "limit");
+                "occurrenceAndAggregate");
             await SetRequiredEditorFieldAsync(
                 "TotalOnsiteCapacity",
                 data.LimitedFarmPollutionTotalOnsiteCapacity,
+                "totalCapacityOfManureStorage",
                 "totalOnsite",
-                "totalCapacity",
-                "storageCapacity");
+                "totalCapacity");
             await SetRequiredEditorFieldAsync(
                 "FurthestLocationMiles",
                 data.LimitedFarmPollutionFurthestLocationMiles,
-                "furthest",
                 "maximumMiles",
-                "maxMiles");
+                "maximumNumberOfMiles");
             await SetRequiredEditorFieldAsync(
                 "WasteTripsPerYear",
                 data.LimitedFarmPollutionWasteTripsPerYear,
-                "wasteTrips",
                 "numberOfTrips",
-                "trips");
-            await SetRequiredEditorFieldAsync(
-                "AboveGroundTanks",
-                data.LimitedFarmPollutionAboveGroundTanks,
-                "aboveGround");
+                "wasteTrips");
+
+            if (!string.Equals(
+                    data.LimitedFarmPollutionAboveGroundTanks?.Trim(),
+                    "Yes",
+                    StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException(
+                    "AboveGroundTanks must be Yes when a LimitedPollutionTank is required.",
+                    nameof(data));
+
+            await AddLimitedPollutionTankAsync();
             await SetRequiredEditorFieldAsync(
                 "TankCapacity",
                 data.LimitedFarmPollutionTankCapacity,
+                "limitedPollutionTankInput$capacity",
                 "tankCapacity");
             await SetRequiredEditorFieldAsync(
                 "TankConstructionDate",
                 data.LimitedFarmPollutionTankConstructionDate,
+                "limitedPollutionTankInput$constructionDate",
                 "tankConstructionDate",
                 "constructionDate");
+
+            if (string.Equals(
+                    data.LimitedFarmPollutionEligibilityQuestions?.Trim(),
+                    "None Of The Above",
+                    StringComparison.OrdinalIgnoreCase))
+                await SetRequiredEditorFieldAsync(
+                    "EligibilityQuestions",
+                    "Yes",
+                    "limitedFarmPollutionLiabilityQuestionsInput$eqNoneAbove",
+                    "eqNoneAbove");
+
             await ClickSaveAsync();
+            await HandleReviewRequiredAsync(
+                data.LimitedFarmPollutionExpectedReferralRule,
+                CoverageTable);
         }
 
-        private async Task OpenOptionalCoverageEditorAsync(string coverageName)
+        public async Task ContinueAfterLimitedFarmPollutionAsync(FarmData data)
         {
-            var row = await FindCoverageRowAsync(coverageName);
+            var mortgageePage = new SFP_MortgageeLossPayeePage(_page);
+            var mortgageeReady = mortgageePage.AddMortgageeButton
+                .Or(mortgageePage.AddMortgageeButtonByTestId)
+                .First;
+
+            await NextMortgageeLossPayeeButton.ClickAsync();
+            await WaitForSpinnerAsync();
+            await HandleReviewRequiredAsync(
+                data.LimitedFarmPollutionExpectedReferralRule,
+                mortgageeReady);
+
+            await mortgageeReady.WaitForAsync(new()
+            {
+                State = WaitForSelectorState.Visible,
+                Timeout = 30000
+            });
+        }
+
+        public async Task VerifyLimitedFarmPollutionUnavailableAsync(FarmData data)
+        {
+            await CoverageTable.WaitForAsync(new()
+            {
+                State = WaitForSelectorState.Visible,
+                Timeout = 30000
+            });
+
+            var row = await FindCoverageRowAsync(data, required: false);
+            if (row == null)
+            {
+                Console.WriteLine($"[Liability] Source-inapplicable coverage {CoverageIdentity(data)} is absent.");
+                return;
+            }
+
+            var action = row.GetByRole(AriaRole.Button, new()
+            {
+                NameRegex = new Regex("add coverage|edit coverage", RegexOptions.IgnoreCase)
+            }).First;
+            if (await action.CountAsync() > 0 && await action.IsVisibleAsync())
+                throw new PlaywrightException(
+                    $"Coverage {CoverageIdentity(data)} is source-inapplicable for this scenario, " +
+                    "but the deployed runtime returned an actionable editor.");
+
+            Console.WriteLine(
+                $"[Liability] Runtime exposed source-inapplicable coverage {CoverageIdentity(data)} without an actionable editor; left unselected.");
+        }
+
+        private async Task OpenOptionalCoverageEditorAsync(FarmData data)
+        {
+            var row = await FindCoverageRowAsync(data, required: true);
             var checkbox = row.Locator(
                 "label[data-testid$='selected.value'], input[type='checkbox'][data-testid$='selected.value']").First;
             if (await checkbox.CountAsync() == 0)
-                throw new PlaywrightException($"Coverage '{coverageName}' has no selectable checkbox.");
+                throw new PlaywrightException($"Coverage {CoverageIdentity(data)} has no selectable checkbox.");
 
             var tagName = await checkbox.EvaluateAsync<string>("element => element.tagName.toLowerCase()");
             if (tagName == "input")
@@ -210,41 +279,178 @@ namespace PnCTestAutomation.Pages
                 await checkbox.ClickAsync();
             await WaitForSpinnerAsync();
 
-            row = await FindCoverageRowAsync(coverageName);
-            var editButton = row.GetByRole(AriaRole.Button, new()
-            {
-                NameRegex = new Regex("edit coverage|add coverage|edit", RegexOptions.IgnoreCase)
-            }).First;
-            if (await editButton.CountAsync() == 0 || !await editButton.IsVisibleAsync())
-                throw new PlaywrightException($"Coverage '{coverageName}' was selected, but its Edit Coverage button was not found.");
+            var editButton = await FindCoverageActionAsync(data);
+            if (editButton == null)
+                throw new PlaywrightException(
+                    $"Coverage {CoverageIdentity(data)} was selected, but its Add/Edit Coverage action was not found.");
 
             await editButton.ClickAsync();
             await WaitForSpinnerAsync();
+
+            await _page.Locator("#page-LimitedFarmPollutionLiability")
+                .Or(_page.GetByTestId("fields.data.save"))
+                .First
+                .WaitForAsync(new()
+                {
+                    State = WaitForSelectorState.Visible,
+                    Timeout = 30000
+                });
         }
 
-        private async Task<ILocator> FindCoverageRowAsync(string coverageName)
+        private async Task<ILocator> FindCoverageRowAsync(FarmData data, bool required)
         {
-            if (string.IsNullOrWhiteSpace(coverageName))
-                throw new ArgumentException("CoverageName is required.", nameof(coverageName));
+            var coverageCode = data.LimitedFarmPollutionCoverageCode?.Trim();
+            var coverageName = data.LimitedFarmPollutionCoverageName?.Trim();
+            if (string.IsNullOrWhiteSpace(coverageCode) || string.IsNullOrWhiteSpace(coverageName))
+                throw new ArgumentException("CoverageCode and CoverageName are required.", nameof(data));
 
             foreach (var rows in new[]
             {
-                _page.Locator("tr").Filter(new() { HasText = coverageName }),
-                _page.Locator("[role='row']").Filter(new() { HasText = coverageName })
+                CoverageTable.Locator("tr"),
+                CoverageTable.Locator("[role='row']")
             })
             {
                 var count = await rows.CountAsync();
                 for (var index = 0; index < count; index++)
                 {
                     var row = rows.Nth(index);
-                    if (await row.IsVisibleAsync() &&
-                        (await row.InnerTextAsync()).Contains(coverageName, StringComparison.OrdinalIgnoreCase))
+                    if (!await row.IsVisibleAsync())
+                        continue;
+
+                    var text = await row.InnerTextAsync();
+                    if (text.Contains(coverageName, StringComparison.OrdinalIgnoreCase) &&
+                        Regex.IsMatch(text, $@"(^|\D){Regex.Escape(coverageCode)}(\D|$)"))
                         return row;
                 }
             }
 
-            throw new PlaywrightException($"Required liability coverage row '{coverageName}' was not found.");
+            if (required)
+                throw new PlaywrightException(
+                    $"Required liability coverage row {CoverageIdentity(data)} was not found.");
+
+            return null;
         }
+
+        private async Task<ILocator> FindCoverageActionAsync(FarmData data)
+        {
+            var coverageName = data.LimitedFarmPollutionCoverageName.Trim();
+            foreach (var rows in new[] { _page.Locator("tr"), _page.Locator("[role='row']") })
+            {
+                var count = await rows.CountAsync();
+                for (var index = 0; index < count; index++)
+                {
+                    var row = rows.Nth(index);
+                    if (!await row.IsVisibleAsync())
+                        continue;
+
+                    var text = await row.InnerTextAsync();
+                    if (!text.Contains(coverageName, StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    foreach (var action in new[]
+                    {
+                        row.GetByRole(AriaRole.Button, new()
+                        {
+                            NameRegex = new Regex(@"\b(add|edit)\b", RegexOptions.IgnoreCase)
+                        }).First,
+                        row.GetByRole(AriaRole.Link, new()
+                        {
+                            NameRegex = new Regex(@"\b(add|edit)\b", RegexOptions.IgnoreCase)
+                        }).First
+                    })
+                    {
+                        if (await action.CountAsync() > 0 && await action.IsVisibleAsync())
+                            return action;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private async Task AddLimitedPollutionTankAsync()
+        {
+            var editor = _page.Locator("#page-LimitedFarmPollutionLiability");
+            var root = await editor.CountAsync() > 0 ? editor : _page.Locator("body");
+            var buttons = root.GetByRole(AriaRole.Button).Filter(new() { Visible = true });
+            var addButtons = new List<ILocator>();
+            ILocator tankButton = null;
+            var count = await buttons.CountAsync();
+            for (var index = 0; index < count; index++)
+            {
+                var button = buttons.Nth(index);
+                var metadata = string.Join(" ", new[]
+                {
+                    await button.InnerTextAsync(),
+                    await button.GetAttributeAsync("aria-label"),
+                    await button.GetAttributeAsync("data-testid")
+                }.Where(value => !string.IsNullOrWhiteSpace(value)));
+
+                var isTankAction =
+                    metadata.Contains("tank", StringComparison.OrdinalIgnoreCase) ||
+                    metadata.Contains("scheduled above ground", StringComparison.OrdinalIgnoreCase);
+                var isAddAction = Regex.IsMatch(metadata, @"\badd\b", RegexOptions.IgnoreCase) ||
+                                  metadata.TrimStart().StartsWith("+", StringComparison.Ordinal);
+                if (!isTankAction && !isAddAction)
+                    continue;
+
+                addButtons.Add(button);
+                if (isTankAction)
+                {
+                    tankButton = button;
+                    break;
+                }
+            }
+
+            tankButton ??= addButtons.Count == 1 ? addButtons[0] : null;
+            if (tankButton == null)
+                throw new PlaywrightException(
+                    "Limited Farm Pollution requested an above-ground tank, but the editor exposed no Add Tank action.");
+
+            await tankButton.ClickAsync();
+            await WaitForSpinnerAsync();
+        }
+
+        private async Task HandleReviewRequiredAsync(string expectedRule, ILocator destination)
+        {
+            var dialog = _page.Locator("[role='dialog']")
+                .Filter(new() { HasText = "Review Required" })
+                .First;
+            var hardStop = _page.Locator("[role='dialog']")
+                .Filter(new() { HasText = "Ineligible Quote" })
+                .First;
+
+            await dialog.Or(hardStop).Or(destination).First.WaitForAsync(new()
+            {
+                State = WaitForSelectorState.Visible,
+                Timeout = 30000
+            });
+
+            if (await hardStop.IsVisibleAsync())
+                throw new PlaywrightException(
+                    $"Pollution data unexpectedly produced an Ineligible Quote while expecting referral rule '{expectedRule}'.");
+
+            if (await dialog.CountAsync() == 0 || !await dialog.IsVisibleAsync())
+                return;
+
+            var keepGoing = dialog.GetByTestId("btnConfirmYes").First;
+            if (await keepGoing.CountAsync() == 0 || !await keepGoing.IsVisibleAsync())
+                throw new PlaywrightException(
+                    $"Review Required for expected rule '{expectedRule}' did not expose Keep Going.");
+
+            await keepGoing.ClickAsync(new() { Force = true });
+            await dialog.WaitForAsync(new()
+            {
+                State = WaitForSelectorState.Detached,
+                Timeout = 30000
+            });
+            await WaitForSpinnerAsync();
+            Console.WriteLine(
+                $"[Liability] Acknowledged source-supported pollution referral rule '{expectedRule}'.");
+        }
+
+        private static string CoverageIdentity(FarmData data) =>
+            $"{data.LimitedFarmPollutionCoverageCode} '{data.LimitedFarmPollutionCoverageName}'";
 
         private async Task SetRequiredEditorFieldAsync(string fieldName, string value, params string[] testIdTokens)
         {
@@ -272,7 +478,8 @@ namespace PnCTestAutomation.Pages
                 candidates.Add(_page.Locator(
                     $"input[data-testid*='{escaped}'], textarea[data-testid*='{escaped}'], " +
                     $"select[data-testid*='{escaped}'], mat-select[data-testid*='{escaped}'], " +
-                    $"[role='combobox'][data-testid*='{escaped}']"));
+                    $"[role='combobox'][data-testid*='{escaped}'], " +
+                    $"input[id*='{escaped}' i], input[name*='{escaped}' i]"));
             }
 
             var spacedName = Regex.Replace(fieldName, "([a-z])([A-Z])", "$1 $2");
@@ -295,6 +502,22 @@ namespace PnCTestAutomation.Pages
             await control.ScrollIntoViewIfNeededAsync();
             var tagName = await control.EvaluateAsync<string>("element => element.tagName.toLowerCase()");
             var role = await control.GetAttributeAsync("role");
+            var inputType = await control.GetAttributeAsync("type");
+
+            if (tagName == "input" &&
+                string.Equals(inputType, "checkbox", StringComparison.OrdinalIgnoreCase))
+            {
+                var shouldBeChecked =
+                    value.Equals("Yes", StringComparison.OrdinalIgnoreCase) ||
+                    value.Equals("True", StringComparison.OrdinalIgnoreCase) ||
+                    value.Equals("1", StringComparison.OrdinalIgnoreCase);
+                if (shouldBeChecked)
+                    await control.CheckAsync();
+                else
+                    await control.UncheckAsync();
+                await WaitForSpinnerAsync();
+                return;
+            }
 
             if (tagName == "select")
             {
@@ -340,8 +563,18 @@ namespace PnCTestAutomation.Pages
                     $"Available=[{string.Join(" | ", available)}].");
             }
 
+            var displayValue = value;
+            if (fieldName.Contains("ConstructionDate", StringComparison.OrdinalIgnoreCase) &&
+                DateTime.TryParseExact(
+                    value,
+                    "yyyy-MM-dd",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None,
+                    out var date))
+                displayValue = date.ToString("MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+
             await control.ClickAsync();
-            await control.FillAsync(value);
+            await control.FillAsync(displayValue);
             await control.PressAsync("Tab");
             await WaitForSpinnerAsync();
         }

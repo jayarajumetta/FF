@@ -92,25 +92,33 @@ namespace PnCTestAutomation.Tests
         {
             var data = new ScenarioContextData();
             TableMappingHelpers.LimitedFarmPollutionFields(TableOf(
-                ("CoverageName", "Limited Farm Pollution"),
+                ("CoverageCode", "146"),
+                ("CoverageName", "Limited Farm Pollution Liability"),
+                ("RequiredBaseLiabilityLimit", "$100,000/$300,000"),
                 ("OccurrenceAggregate", "50000/300000"),
                 ("TotalOnsiteCapacity", "8000000"),
                 ("FurthestLocationMiles", "23"),
                 ("WasteTripsPerYear", "550"),
                 ("AboveGroundTanks", "Yes"),
-                ("TankCapacity", "500000"),
-                ("TankConstructionDate", "2024-03-31")), data);
+                ("TankCapacity", "10000"),
+                ("TankConstructionDate", "2024-03-31"),
+                ("EligibilityQuestions", "None Of The Above"),
+                ("ExpectedReferralRule", "11125")), data);
 
             Assert.Multiple(() =>
             {
-                Assert.That(data.Farm.LimitedFarmPollutionCoverageName, Is.EqualTo("Limited Farm Pollution"));
+                Assert.That(data.Farm.LimitedFarmPollutionCoverageCode, Is.EqualTo("146"));
+                Assert.That(data.Farm.LimitedFarmPollutionCoverageName, Is.EqualTo("Limited Farm Pollution Liability"));
+                Assert.That(data.Farm.LimitedFarmPollutionRequiredBaseLiabilityLimit, Is.EqualTo("$100,000/$300,000"));
                 Assert.That(data.Farm.LimitedFarmPollutionOccurrenceAggregate, Is.EqualTo("50000/300000"));
                 Assert.That(data.Farm.LimitedFarmPollutionTotalOnsiteCapacity, Is.EqualTo("8000000"));
                 Assert.That(data.Farm.LimitedFarmPollutionFurthestLocationMiles, Is.EqualTo("23"));
                 Assert.That(data.Farm.LimitedFarmPollutionWasteTripsPerYear, Is.EqualTo("550"));
                 Assert.That(data.Farm.LimitedFarmPollutionAboveGroundTanks, Is.EqualTo("Yes"));
-                Assert.That(data.Farm.LimitedFarmPollutionTankCapacity, Is.EqualTo("500000"));
+                Assert.That(data.Farm.LimitedFarmPollutionTankCapacity, Is.EqualTo("10000"));
                 Assert.That(data.Farm.LimitedFarmPollutionTankConstructionDate, Is.EqualTo("2024-03-31"));
+                Assert.That(data.Farm.LimitedFarmPollutionEligibilityQuestions, Is.EqualTo("None Of The Above"));
+                Assert.That(data.Farm.LimitedFarmPollutionExpectedReferralRule, Is.EqualTo("11125"));
             });
         }
 

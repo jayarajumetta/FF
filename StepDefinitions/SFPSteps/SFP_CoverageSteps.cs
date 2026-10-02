@@ -6,6 +6,7 @@ using PnCTestAutomation.Pages.ExpertQuotePages;
 using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 using Reqnroll;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PnCTestAutomation.StepDefinitions.SFPSteps
@@ -18,16 +19,21 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
     {
         private readonly PlaywrightContext _context;
         private readonly ScenarioContextData _contextData;
+        private readonly ScenarioContext _scenarioContext;
+
         public SFP_CoverageSteps(PlaywrightContext context, ScenarioContext scenarioContext)
-            : this(context, scenarioContext[ScenarioContextData.ContextKey] as ScenarioContextData
-                ?? throw new InvalidOperationException("ScenarioContextData not found. Ensure TestHooks.BeforeTestRun registered it."))
         {
+            _context = context;
+            _scenarioContext = scenarioContext;
+            _contextData = scenarioContext[ScenarioContextData.ContextKey] as ScenarioContextData
+                ?? throw new InvalidOperationException("ScenarioContextData not found. Ensure TestHooks.BeforeTestRun registered it.");
         }
 
         internal SFP_CoverageSteps(PlaywrightContext context, ScenarioContextData contextData)
         {
             _context = context;
             _contextData = contextData;
+            _scenarioContext = null;
         }
 
         [When("user selects Policy Wide or Division Specific Coverages and continues")]
@@ -274,8 +280,21 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             TableMappingHelpers.LimitedFarmPollutionFields(table, _contextData);
 
             var liabilityPage = new SFP_LiabilityPage(_context.Page);
-            await liabilityPage.EditLimitedFarmPollutionAsync(_contextData.Farm);
-            await liabilityPage.NextMortgageeLossPayeeButton.ClickAsync();
+            var isApplicable = _scenarioContext?.ScenarioInfo.Tags.Any(
+                tag => tag.Equals("Pollution146", StringComparison.OrdinalIgnoreCase)) == true;
+
+            if (isApplicable)
+            {
+                await liabilityPage.SelectLimitAsync(
+                    _contextData.Farm.LimitedFarmPollutionRequiredBaseLiabilityLimit);
+                await liabilityPage.EditLimitedFarmPollutionAsync(_contextData.Farm);
+                await liabilityPage.ContinueAfterLimitedFarmPollutionAsync(_contextData.Farm);
+            }
+            else
+            {
+                await liabilityPage.VerifyLimitedFarmPollutionUnavailableAsync(_contextData.Farm);
+                await liabilityPage.NextMortgageeLossPayeeButton.ClickAsync();
+            }
         }
 
         /// <summary>

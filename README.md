@@ -342,18 +342,19 @@ not qualify the full workflow or deferred pollution/ZIP requirements. The commit
 premium assertion remains enabled. Other state/product baselines are unchanged
 and await approved recalibration; missing baselines are not newly populated.
 
-**Deferred workbook requirements (not QA-approved omissions):** Limited Farm
-Pollution is coverage 146, not Special Farm Pollution 145. The requested
-occurrence/aggregate 50000/300000 requires a base liability aggregate of at least
-300000, incompatible with the workbook's unchanged Basic base 100000/100000.
-Reviewed CLAS SD/WI/NE/MN metadata also leaves coverage 146 unavailable; current
-runtime eligibility must be confirmed. No mandatory pollution step, eligibility
-bypass, base-limit change, or successful skip has been added.
-Pending exact inputs are 50000/300000, total onsite manure/chemical capacity
-8000000 gallons, maximum distance 23 miles, 550 waste trips/year, aboveground
-tank Yes, tank capacity 500000 gallons, and fixed construction date 03/31/2024
-(Excel serial 45382, 1900 date system). The tank exceeds the 10000-gallon
-threshold for UW rule 11128; genuine applicable referrals must remain visible.
+**Limited Farm Pollution:** Coverage 146 is source-enabled only for CT, DE, GA,
+MA, ME, NH and RI; unsupported states leave it unselected without state-specific
+C# branching. The Basic workflow uses occurrence/aggregate 50000/300000 with a
+base liability aggregate of 300000, total onsite capacity 8000000 gallons,
+maximum distance 23 miles, 550 waste trips/year, one aboveground tank, and fixed
+construction date 03/31/2024. Tank capacity is 10000 gallons, the largest value
+that does not trigger Level-9 rule 11128 (`Capacity > 10000`). Coverage 146 still
+raises the expected Level-8 underwriting referral under rule 11125. The workflow
+uses the server-provided Keep Going action, asserts Referral Required on Submission,
+completes the checklist, and verifies the runtime-enabled Transmit action; it never
+bypasses an Ineligible Quote. Pollution-tagged pricing is treated as a separate
+baseline variant; DEV Delaware quotes 01069461 and 01069463 captured $6,248.00
+versus the non-pollution $5,752.00 baseline.
 
 The 41 examples are AL, AR, AZ, CO, DE, GA, ID, IL, IN, IA, KS, KY, LA,
 CT, MS, MO, MA, ME, MN, MT, NE, NV, NH, NM, ND, OK, NJ, OH, OR, SC, SD, TN, TX,

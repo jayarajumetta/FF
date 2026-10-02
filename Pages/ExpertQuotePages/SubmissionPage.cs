@@ -31,6 +31,15 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
         public ILocator NoReferralsTextAlt =>
             _page.GetByText("NO REFERRAL NEEDED");
 
+        public ILocator ReferralRequiredText =>
+            _page.GetByText("STATUS: REFERRAL NEEDED", new() { Exact = false });
+
+        public ILocator PollutionReferralRule =>
+            _page.GetByText("Limited Farm Pollution Liability requires Underwriting approval", new() { Exact = false });
+
+        public ILocator PollutionReferralRuleCode =>
+            _page.GetByText("11125", new() { Exact = true });
+
         /// <summary>Transmit button to submit the policy</summary>
         public ILocator TransmitButton =>
             _page.GetByTestId("fields.data.submission.transmit"); // TODO: Verify testId

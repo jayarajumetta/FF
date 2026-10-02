@@ -117,12 +117,19 @@ namespace PnCTestAutomation.Tests
                 Assert.That(examples.Select(example => string.Join(" ", example.Tags.Select(tag => tag.Name))),
                     Is.EqualTo(new[]
                     {
-                        "@Shard1 @Debug", "@Shard1", "@Shard1 @Connecticut",
-                        "@Shard2 @Debug", "@Shard2", "@Shard2 @DevOnly", "@Shard2 @NewJersey",
-                        "@Shard3 @Debug", "@Shard3", "@Shard3 @DevOnly", "@Shard3 @RhodeIsland"
+                        "@Shard1 @Debug", "@Shard1", "@Shard1 @Pollution146",
+                        "@Shard1 @Connecticut @Pollution146", "@Shard2 @Debug", "@Shard2",
+                        "@Shard2 @Pollution146", "@Shard2 @DevOnly", "@Shard2 @NewJersey",
+                        "@Shard3 @Debug", "@Shard3", "@Shard3 @DevOnly",
+                        "@Shard3 @RhodeIsland @Pollution146"
                     }));
                 Assert.That(examples.Select(example => example.TableBody.Count()),
-                    Is.EqualTo(new[] { 1, 12, 1, 1, 11, 1, 1, 1, 9, 2, 1 }));
+                    Is.EqualTo(new[] { 1, 10, 2, 1, 1, 8, 3, 1, 1, 1, 9, 2, 1 }));
+                Assert.That(
+                    examples.Where(example => example.Tags.Any(tag => tag.Name == "@Pollution146"))
+                        .SelectMany(example => example.TableBody)
+                        .Select(row => row.Cells.ElementAt(1).Value),
+                    Is.EquivalentTo(new[] { "CT", "DE", "GA", "MA", "ME", "NH", "RI" }));
                 AssertNewStatesAreDevOnly(examples);
             });
         }

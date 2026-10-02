@@ -237,50 +237,59 @@ namespace PnCTestAutomation.Tests
         public async Task LimitedFarmPollutionEditor_SelectsCoverageAndFillsRequiredFields()
         {
             await _page.SetContentAsync("""
-                <table>
+                <table data-testid="coverageTableLiability">
                     <tr role="row">
                         <td>
                             <label data-testid="fields.liability.rows[37].selected.value">
                                 <input type="checkbox" onchange="window.coverageSelected = this.checked">
                             </label>
                         </td>
-                        <td>Limited Farm Pollution</td>
+                        <td>146</td>
+                        <td>Limited Farm Pollution Liability</td>
                         <td><button aria-label="Edit Coverage" onclick="window.editorOpened = true">Edit Coverage</button></td>
                     </tr>
                 </table>
-                <input data-testid="fields.pollution.occurrenceAggregate.value">
-                <input data-testid="fields.pollution.totalOnsiteCapacity.value">
-                <input data-testid="fields.pollution.furthestLocationMiles.value">
-                <input data-testid="fields.pollution.wasteTripsPerYear.value">
-                <div data-testid="fields.pollution.aboveGroundTanks.value-chip-item-wrapper"
-                     onclick="window.aboveGroundTanks = this.textContent.trim()">Yes</div>
-                <input data-testid="fields.pollution.tankCapacity.value">
-                <input data-testid="fields.pollution.tankConstructionDate.value">
+                <input data-testid="fields.pollution.occurrenceAggregateLimit.value">
+                <input data-testid="fields.pollution.totalCapacityOfManureStorage.value">
+                <input data-testid="fields.pollution.maximumNumberOfMiles.value">
+                <input data-testid="fields.pollution.numberOfTrips.value">
+                <button aria-label="Add Tank" onclick="window.tankAdded = true">Add Tank</button>
+                <input data-testid="fields.pollution.limitedPollutionTankInput$capacity.value">
+                <input id="fields_pollution_limitedPollutionTankInput_constructionDate_value"
+                       name="fields.pollution.limitedPollutionTankInput$constructionDate.value">
+                <input type="checkbox"
+                       data-testid="fields.pollution.limitedFarmPollutionLiabilityQuestionsInput$eqNoneAbove.value"
+                       onchange="window.noneAbove = this.checked">
                 <button data-testid="fields.data.save" onclick="window.saved = true">Save</button>
                 """);
             var data = new ScenarioContextData();
             TableMappingHelpers.LimitedFarmPollutionFields(SfpBasicInputTests.TableOf(
-                ("CoverageName", "Limited Farm Pollution"),
+                ("CoverageCode", "146"),
+                ("CoverageName", "Limited Farm Pollution Liability"),
+                ("RequiredBaseLiabilityLimit", "$100,000/$300,000"),
                 ("OccurrenceAggregate", "50000/300000"),
                 ("TotalOnsiteCapacity", "8000000"),
                 ("FurthestLocationMiles", "23"),
                 ("WasteTripsPerYear", "550"),
                 ("AboveGroundTanks", "Yes"),
-                ("TankCapacity", "500000"),
-                ("TankConstructionDate", "2024-03-31")), data);
+                ("TankCapacity", "10000"),
+                ("TankConstructionDate", "2024-03-31"),
+                ("EligibilityQuestions", "None Of The Above"),
+                ("ExpectedReferralRule", "11125")), data);
 
             var page = new SFP_LiabilityPage(_page);
             await page.EditLimitedFarmPollutionAsync(data.Farm);
 
             var coverageSelected = await _page.EvaluateAsync<bool>("window.coverageSelected");
             var editorOpened = await _page.EvaluateAsync<bool>("window.editorOpened");
-            var occurrenceAggregate = await _page.GetByTestId("fields.pollution.occurrenceAggregate.value").InputValueAsync();
-            var totalOnsiteCapacity = await _page.GetByTestId("fields.pollution.totalOnsiteCapacity.value").InputValueAsync();
-            var furthestLocationMiles = await _page.GetByTestId("fields.pollution.furthestLocationMiles.value").InputValueAsync();
-            var wasteTripsPerYear = await _page.GetByTestId("fields.pollution.wasteTripsPerYear.value").InputValueAsync();
-            var aboveGroundTanks = await _page.EvaluateAsync<string>("window.aboveGroundTanks");
-            var tankCapacity = await _page.GetByTestId("fields.pollution.tankCapacity.value").InputValueAsync();
-            var tankConstructionDate = await _page.GetByTestId("fields.pollution.tankConstructionDate.value").InputValueAsync();
+            var occurrenceAggregate = await _page.GetByTestId("fields.pollution.occurrenceAggregateLimit.value").InputValueAsync();
+            var totalOnsiteCapacity = await _page.GetByTestId("fields.pollution.totalCapacityOfManureStorage.value").InputValueAsync();
+            var furthestLocationMiles = await _page.GetByTestId("fields.pollution.maximumNumberOfMiles.value").InputValueAsync();
+            var wasteTripsPerYear = await _page.GetByTestId("fields.pollution.numberOfTrips.value").InputValueAsync();
+            var tankAdded = await _page.EvaluateAsync<bool>("window.tankAdded");
+            var tankCapacity = await _page.GetByTestId("fields.pollution.limitedPollutionTankInput$capacity.value").InputValueAsync();
+            var tankConstructionDate = await _page.Locator("input[name*='constructionDate' i]").InputValueAsync();
+            var noneAbove = await _page.EvaluateAsync<bool>("window.noneAbove");
             var saved = await _page.EvaluateAsync<bool>("window.saved");
             Assert.Multiple(() =>
             {
@@ -290,9 +299,10 @@ namespace PnCTestAutomation.Tests
                 Assert.That(totalOnsiteCapacity, Is.EqualTo("8000000"));
                 Assert.That(furthestLocationMiles, Is.EqualTo("23"));
                 Assert.That(wasteTripsPerYear, Is.EqualTo("550"));
-                Assert.That(aboveGroundTanks, Is.EqualTo("Yes"));
-                Assert.That(tankCapacity, Is.EqualTo("500000"));
-                Assert.That(tankConstructionDate, Is.EqualTo("2024-03-31"));
+                Assert.That(tankAdded, Is.True);
+                Assert.That(tankCapacity, Is.EqualTo("10000"));
+                Assert.That(tankConstructionDate, Is.EqualTo("03/31/2024"));
+                Assert.That(noneAbove, Is.True);
                 Assert.That(saved, Is.True);
             });
         }

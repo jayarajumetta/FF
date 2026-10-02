@@ -76,7 +76,9 @@ namespace PnCTestAutomation.Models
         public string NumberOfEmployees { get; set; }
 
         // Limited Farm Pollution
+        public string LimitedFarmPollutionCoverageCode { get; set; }
         public string LimitedFarmPollutionCoverageName { get; set; }
+        public string LimitedFarmPollutionRequiredBaseLiabilityLimit { get; set; }
         public string LimitedFarmPollutionOccurrenceAggregate { get; set; }
         public string LimitedFarmPollutionTotalOnsiteCapacity { get; set; }
         public string LimitedFarmPollutionFurthestLocationMiles { get; set; }
@@ -84,6 +86,8 @@ namespace PnCTestAutomation.Models
         public string LimitedFarmPollutionAboveGroundTanks { get; set; }
         public string LimitedFarmPollutionTankCapacity { get; set; }
         public string LimitedFarmPollutionTankConstructionDate { get; set; }
+        public string LimitedFarmPollutionEligibilityQuestions { get; set; }
+        public string LimitedFarmPollutionExpectedReferralRule { get; set; }
 
         // Workers' Compensation - Residence Employees optional coverage (NH and similar states)
         public string WorkersCompFullTimeInServants { get; set; }
