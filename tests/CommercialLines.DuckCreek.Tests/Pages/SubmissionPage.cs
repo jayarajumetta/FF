@@ -47,10 +47,10 @@ public sealed class SubmissionPage
     public Task WaitForStoplightWaitingWindowAsync(string expected) =>
         _ui.WaitAsync(_locators.StoplightWaitingWindow, expected, new ControlIntent("Submission", "StoplightWaitingWindow"));
     public Task WaitStoplightWaitingWindowCloseAsync(string expected) =>
-        _ui.WaitAsync(_locators.StoplightWaitingWindowFirstCloseButtonOnError, expected, new ControlIntent("Navigation", "SubmissionHeading"));
+        _ui.WaitAsync(_locators.StoplightWaitingWindowClose, expected, new ControlIntent("Navigation", "SubmissionHeading"));
 
     public Task VerifyStoplightWaitingWindowCloseAsync(string expected, string property) =>
-        _ui.VerifyAsync(_locators.StoplightWaitingWindowFirstCloseButtonOnError, expected, property, new ControlIntent("Submission", "StoplightWaitingWindowClose"));
+        _ui.VerifyAsync(_locators.StoplightWaitingWindowClose, expected, property, new ControlIntent("Submission", "StoplightWaitingWindowClose"));
 
     public Task ClickStoplightWaitingWindowCloseAsync() =>
         _ui.ClickAsync(_locators.StoplightWaitingWindowClose, new ControlIntent("Submission", "StoplightWaitingWindowClose"));
@@ -59,7 +59,7 @@ public sealed class SubmissionPage
         _ui.VerifyAsync(_locators.StoplightWaitingWindowError, expected, property, new ControlIntent("Submission", "StoplightWaitingWindowError"));
 
     public Task ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync() =>
-        _ui.ClickAsync(_locators.StoplightWaitingWindowFirstCloseButtonOnError, new ControlIntent("Submission", "StoplightWaitingWindowFirstCloseButtonOnError"));
+        _ui.ClickAsync(_locators.StoplightWaitingWindowClose, new ControlIntent("Submission", "StoplightWaitingWindowFirstCloseButtonOnError"));
 
     public Task EnterTitleAsync(string value) =>
         _ui.FillAsync(_locators.Title, value, new ControlIntent("Submission", "Title"));
@@ -68,7 +68,7 @@ public sealed class SubmissionPage
         _ui.WaitAsync(_locators.StoplightProcessingCompleteMessage, expected, new ControlIntent("Submission", "StoplightProcessingCompleteMessage"));
 
     public Task ClickStoplightWaitingWindowCloseButtonAsync() =>
-        _ui.ClickAsync(_locators.StoplightWaitingWindowCloseButton, new ControlIntent("Submission", "StoplightWaitingWindowCloseButton"));
+        _ui.ClickAsync(_locators.StoplightWaitingWindowClose, new ControlIntent("Submission", "StoplightWaitingWindowCloseButton"));
 
     public Task PauseAsync(int milliseconds) =>
         Task.Delay(milliseconds);

@@ -16,12 +16,11 @@ public sealed class ProposalLocators
     public ILocator PotentialInvalidAddress => _page.GetByText("Potential Invalid Address");
 
 
-    public ILocator ConfirmBtn => _page.Locator("[id='btnConfirmYes']");
-
     public ILocator ConfirmSSN => _page.GetByText(new Regex(@"Confirm the Client's SSN#", RegexOptions.IgnoreCase));
 
     public ILocator SubmitAngular => _page.Locator("[id='btnConfirmYes']");
 
+    public ILocator ConfirmBtn => SubmitAngular;
 
     public ILocator CREATENEWACCOUNT => _page.Locator("[id=\"btnConfirmNo\"]");
 

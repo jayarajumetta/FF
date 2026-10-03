@@ -44,8 +44,6 @@ public sealed class NavigationLocators
 
     public ILocator Notepad => _page.GetByRole(AriaRole.Link, new PageGetByRoleOptions { Name = "Notepad" });
 
-    public ILocator LossExperience => _page.GetByRole(AriaRole.Link, new PageGetByRoleOptions { Name = "Loss Experience" });
-
     public ILocator MotorTruckCargo => _page.GetByRole(AriaRole.Link, new PageGetByRoleOptions { Name = "Motor Truck Cargo" });
     public ILocator PageTitle => _page.Locator("[id=\"pageTitle\"]");
     
@@ -64,13 +62,11 @@ public sealed class NavigationLocators
     public ILocator SFP10LiabilityFarm => _page.GetByRole(AriaRole.Link, new() { Name = "SFP - 10 Liability/Farm", Exact = true });
 
 
-    public ILocator Endorsement => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsements", Exact = true }).Or(_page.GetByRole(AriaRole.Link, new() { Name = "Endorsement", Exact = true }));
-
     public ILocator UMQuestionsUmbrella => _page.GetByRole(AriaRole.Link, new() { Name = "UW Questions - Umbrella", Exact = true });
 
-    public ILocator AddInterests => _page.GetByRole(AriaRole.Link, new() { Name = "Addl Interests", Exact = true });
     public ILocator ProductsOrCompletedOps => _page.GetByText("Products/Completed Ops");
     public ILocator CGL => _page.GetByRole(AriaRole.Link, new() { Name = "CGL", Exact = true });
+    public ILocator AddInterests => _page.GetByRole(AriaRole.Link, new() { Name = "Addl Interests", Exact = true });
 
     public ILocator ProductsCompletedOpsButton => _page.GetByRole(AriaRole.Link, new() { Name = "Products/Completed Ops", Exact = true });
 
@@ -103,8 +99,13 @@ public sealed class NavigationLocators
     public ILocator TransportWineForOthers => _page.Locator("input[fieldref=\"UnderwritingWineryInput.TransportWineForOthers\"]");
     public ILocator SuppliersDependentToProduceWine => _page.Locator("input[fieldref=\"UnderwritingWineryInput.SuppliersDependentToProduceWine\"]");
     public ILocator PolicyInfo => _page.GetByRole(AriaRole.Link, new() { Name = "Policy Info", Exact = true });
-    public ILocator WCNavigationLinksLocation => _page.GetByRole(AriaRole.Link, new() { Name = "Location", Exact = true });
+    public ILocator LossOfExperience => _page.GetByRole(AriaRole.Link, new PageGetByRoleOptions { Name = "Loss Experience" });
+    public ILocator LossExperience => LossOfExperience;
     public ILocator WCNavigationLinksEndorsements => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsements", Exact = true });
+    public ILocator GLNavigationLinksAddlInterests => AddInterests;
+    public ILocator Endorsements => WCNavigationLinksEndorsements;
+    public ILocator Endorsement => Endorsements;
+    public ILocator WCNavigationLinksLocation => Location;
     public ILocator UWQuestionsLink => _page.GetByRole(AriaRole.Link, new() { Name = "UW Questions", Exact = true });
     public ILocator StateDetails => _page.GetByRole(AriaRole.Link, new() { Name = "State Details", Exact = true });
     public ILocator NavigationBillingLink => _page.Locator("a[onclick*='MainInterview_Billing']").Filter(new LocatorFilterOptions { Visible = true }).First;
@@ -156,10 +157,8 @@ public sealed class NavigationLocators
     
     public ILocator EntitySchedule => _page.GetByRole(AriaRole.Link, new() { Name = "Entity Schedule", Exact = true });
 
-    public ILocator Endorsements => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsements", Exact = true });
-
-
     public ILocator AddEndorsements => _page.Locator("//a[.//span[normalize-space()='Add Endorsement']]");
+    public ILocator AddEndorsement => AddEndorsements;
 
     public ILocator AssignLocationDetails => _page.Locator("[class='g-btn-text']").Filter(new() { HasText = "Detail" }).First;
 
@@ -172,9 +171,6 @@ public sealed class NavigationLocators
     public ILocator CPPLiability => _page.GetByRole(AriaRole.Link, new() { Name = "CPP Liability", Exact = true });
 
     public ILocator Location => _page.GetByRole(AriaRole.Link, new() { Name = "Location", Exact = true });
-
-    public ILocator LossOfExperience => _page.GetByRole(AriaRole.Link, new PageGetByRoleOptions { Name = "Loss Experience" });
-
 
     public ILocator AccountsReceivableUWQuestions => _page.GetByRole(AriaRole.Link, new() { Name = "Accounts Receivable", Exact = true });
 
@@ -215,8 +211,6 @@ public sealed class NavigationLocators
     public ILocator AddDriver => _page.Locator("span.g-btn-text").Filter(new LocatorFilterOptions { HasText = "Add Driver" }).First;
 
     public ILocator AddDriverName => _page.Locator("input[fieldref=\"ExcludeDriver.ExcludedDriver\"]");
-
-    public ILocator AddEndorsement =>  _page.Locator("[class='g-btn-text']").Filter(new() { HasText = "Add Endorsement" }).First;
 
     public ILocator AddExcludedOfficerInformation => _page.GetByRole(AriaRole.Link, new() { Name = "Add Excluded Officer Information", Exact = true });
 
@@ -994,8 +988,6 @@ public sealed class NavigationLocators
 
     public ILocator RiskSchedule => _page.GetByRole(AriaRole.Link, new() { Name = "Risk Schedule", Exact = true });
 
-    public ILocator GLNavigationLinksAddlInterests => _page.GetByRole(AriaRole.Link, new() { Name = "Addl Interests", Exact = true });
-
     public ILocator GLNavigationLinksEndorsements => _page.GetByRole(AriaRole.Link, new() { Name = "Endorsements", Exact = true });
 
     public ILocator RiskType => _page.Locator("input[fieldref=\"RatingGroupInput.RiskType\"]");
@@ -1185,8 +1177,7 @@ public sealed class NavigationLocators
     public ILocator WhatAreTheProceduresAndScheduleForBackingUpTheMediaAndDataAndTheirStorage => _page.Locator("[name=\"string_2F_3\"]");
 
     public ILocator WhatIsTheConstructionOfEachSign => _page.Locator("[name=\"string_1F\"]");
-
-    public ILocator WhatIsTheConstructionOfThePremisesWhereTheReceivablesAreStored => _page.Locator("[name=\"string_1F\"]");
+    public ILocator WhatIsTheConstructionOfThePremisesWhereTheReceivablesAreStored => WhatIsTheConstructionOfEachSign;
 
     public ILocator WhatIsTheDistanceInFeetToTheNearestFireHydrant => _page.Locator("input[fieldref=\"ComputerSystemsUnderwritingQuestionsInput.HydrantDistance\"]");
 
