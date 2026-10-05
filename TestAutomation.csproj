@@ -6,6 +6,8 @@
     <RootNamespace>PnCTestAutomation</RootNamespace>
     <IsPackable>false</IsPackable>
     <LangVersion>latest</LangVersion>
+    <DefaultItemExcludes>$(DefaultItemExcludes);**\bin\**;**\obj\**</DefaultItemExcludes>
+    <ReqnrollDeleteObsoleteCodeBehindFilesOnClean>true</ReqnrollDeleteObsoleteCodeBehindFilesOnClean>
   </PropertyGroup>
 
   <ItemGroup>
@@ -58,5 +60,9 @@
   <ItemGroup>
     <Folder Include="Pages\_Staged\" />
   </ItemGroup>
+
+  <Target Name="RemoveObsoleteSfpCsvBaselines" AfterTargets="CopyFilesToOutputDirectory">
+    <Delete Files="$(TargetDir)Resources\ExpectedForms\SFP\SFP.csv;$(TargetDir)Resources\ExpectedForms\SFP\SFP_BASIC.csv;$(TargetDir)Resources\ExpectedForms\SFP\SFP_CE.csv" />
+  </Target>
 
 </Project>

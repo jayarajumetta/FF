@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
     Forms Validation — Standalone PowerShell runner.
-    Validates a DuckCreek FormsEngine XML response against a CSV baseline.
+    Validates a saved DuckCreek FormsEngine XML response against a JSON or CSV baseline.
 
 .DESCRIPTION
     Modernised replacement for the legacy Tosca FormsCheckQA.ps1.
@@ -14,13 +14,14 @@
       - Clean parameter handling (no debug mode flags)
 
 .PARAMETER BaselinePath
-    Full path to the CSV baseline file (e.g. SFP.csv or SFP_BASIC.csv).
+    Full path to SFP.json, or a legacy CSV for another LOB.
+    SFP JSON uses the built runtime parser and requires PowerShell 7.4 or newer.
 
 .PARAMETER XmlPath
     Full path to the DuckCreek FormsEngine XML response file.
 
 .PARAMETER State
-    Two-letter state abbreviation (must match a CSV column).
+    Two-letter state abbreviation (must be approved for the JSON scenario or match a CSV column).
 
 .PARAMETER QuoteID
     Quote / policy ID (used for output file naming).
@@ -33,8 +34,7 @@
     Folder for results CSV and HTML report.  Default: same folder as BaselinePath.
 
 .EXAMPLE
-    .\FormsCheck.ps1 -BaselinePath .\SFP.csv -XmlPath .\response.xml -State CO -QuoteID 777178
-    .\FormsCheck.ps1 -BaselinePath .\SFP.csv -XmlPath .\response.xml -State TX -QuoteID 123456 -TestCase CE
+    pwsh .\Scripts\FormsCheck.ps1 -BaselinePath .\Resources\ExpectedForms\SFP\SFP.json -XmlPath .\response.xml -State MD -QuoteID 01069492
 #>
 
 [CmdletBinding()]
@@ -51,6 +51,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 $startTime = Get-Date
+$isJson = [IO.Path]::GetExtension($BaselinePath) -ieq ".json"
 Write-Host "`n=== Forms Validation ===" -ForegroundColor Cyan
 Write-Host "  Baseline : $BaselinePath"
 Write-Host "  XML      : $XmlPath"
@@ -60,10 +61,13 @@ Write-Host "  TestCase : $TestCase"
 Write-Host ""
 
 # ── Resolve output directory ──────────────────────────────────────────────────
-if (-not $OutputDir) { $OutputDir = Split-Path $BaselinePath -Parent }
+if (-not $OutputDir) {
+    $OutputDir = if ($isJson) { Join-Path $PSScriptRoot "..\TestResults\FormsCheck\SFP" } else { Split-Path $BaselinePath -Parent }
+}
 if (-not (Test-Path $OutputDir)) { New-Item -Path $OutputDir -ItemType Directory -Force | Out-Null }
 
 $baseName    = [System.IO.Path]::GetFileNameWithoutExtension($BaselinePath)
+if ($isJson) { $baseName += "_$($TestCase.ToUpperInvariant())" }
 $resultsPath = Join-Path $OutputDir "${baseName}_${State}_${QuoteID}Results.csv"
 $htmlPath    = Join-Path $OutputDir "${baseName}_${State}_${QuoteID}Report.html"
 
@@ -80,23 +84,31 @@ $selectedNames = @{ 0 = "Not Checked"; 1 = "Selected"; 2 = "Mandatory (Checked)"
 function Get-StatusName($code)  { if ($statusNames.ContainsKey($code))        { $statusNames[$code] }        else { $code } }
 function Get-SelectedName($val) { if ($selectedNames.ContainsKey([int]$val))   { $selectedNames[[int]$val] }  else { "selected=$val" } }
 
-# ── Load baseline CSV with Type filtering ─────────────────────────────────────
+# ── Load the canonical JSON or a legacy non-SFP CSV ───────────────────────────
 Write-Host "Loading baseline..." -NoNewline
-$rawData = Import-Csv $BaselinePath
-
-$hasTypeColumn = ($rawData | Get-Member -Name "Type" -MemberType NoteProperty) -ne $null
-if ($hasTypeColumn) {
-    $filtered = $rawData | Where-Object { $allowedTypes -contains $_.Type }
-} else {
-    $filtered = $rawData
-}
-
 $expectedForms = [ordered]@{}
-foreach ($row in $filtered) {
-    $formName = $row.Form.Trim()
-    $stateVal = if ($row.PSObject.Properties.Name -contains $State) { $row.$State.Trim().ToUpper() } else { "" }
-    if ($formName -and -not $expectedForms.Contains($formName)) {
-        $expectedForms[$formName] = @{ Form = $formName; Expected = $stateVal }
+if ($isJson) {
+    if ($PSVersionTable.PSVersion -lt [version]"7.4") {
+        throw "JSON review requires PowerShell 7.4+ (.NET 8+). Run this command with pwsh."
+    }
+    . (Join-Path $PSScriptRoot "Get-FormsValidationRuntime.ps1")
+    $validator = (Get-FormsValidationRuntime).Validator
+    foreach ($form in $validator.ParseSfpJson((Get-Content -LiteralPath $BaselinePath -Raw), $State, $TestCase)) {
+        $expectedForms[$form.FormName] = @{ Form = $form.FormName; Expected = $form.ExpectedStatus }
+    }
+} else {
+    if ([IO.Path]::GetFileName($BaselinePath) -match '^SFP(?:_BASIC|_CE)?\.csv$') {
+        throw "SFP CSV baselines are retired. Use Resources\ExpectedForms\SFP\SFP.json."
+    }
+    $rawData = Import-Csv $BaselinePath
+    $hasTypeColumn = ($rawData | Get-Member -Name "Type" -MemberType NoteProperty) -ne $null
+    $filtered = if ($hasTypeColumn) { $rawData | Where-Object { $allowedTypes -contains $_.Type } } else { $rawData }
+    foreach ($row in $filtered) {
+        $formName = $row.Form.Trim()
+        $stateVal = if ($row.PSObject.Properties.Name -contains $State) { $row.$State.Trim().ToUpper() } else { "" }
+        if ($formName -and -not $expectedForms.Contains($formName)) {
+            $expectedForms[$formName] = @{ Form = $formName; Expected = $stateVal }
+        }
     }
 }
 Write-Host " $($expectedForms.Count) forms loaded" -ForegroundColor Green
@@ -116,6 +128,7 @@ $results = [System.Collections.Generic.List[psobject]]::new()
 $pass = 0; $fail = 0; $info = 0; $issue = 0
 
 function Add-Result($form, $expected, $actualSel, $result, $code, $message) {
+    if ($isJson -and $code -eq "C12") { return }
     $actualText = if ($actualSel -ge 0) { Get-SelectedName $actualSel } else { "Not On Policy" }
     $obj = [PSCustomObject]@{
         Form     = $form
@@ -277,8 +290,9 @@ Write-Host "HTML report : $htmlPath" -ForegroundColor DarkGray
 
 # ── Copy summary to clipboard ────────────────────────────────────────────────
 $summaryText = "Total: $total | PASS: $pass | FAIL: $fail | INFO: $info | ISSUE: $issue"
-try { $summaryText | Set-Clipboard } catch { }
+if (-not $isJson) {
+    try { $summaryText | Set-Clipboard } catch { }
+}
 
 $elapsed = (Get-Date) - $startTime
 Write-Host "`nCompleted in $($elapsed.TotalSeconds.ToString('F1'))s" -ForegroundColor DarkGray
-

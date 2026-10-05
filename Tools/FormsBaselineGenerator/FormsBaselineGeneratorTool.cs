@@ -9,7 +9,7 @@
 //
 // OPTIONAL PARAMETERS:
 //   OUTPUT    Full path for the generated JSON
-//             (default: Resources/ExpectedForms/{LOB}/{LOB}.json relative to project source)
+//             (default: TestResults/FormsBaseline/{LOB}_MASTERLIST_CANDIDATE.json)
 //   LOB       Line-of-business prefix — used for folder/file naming  (default: SFP)
 //   DRY_RUN   Print the diff and new JSON preview without writing     (default: false)
 //   FORM_COL       Excel column header that contains form numbers          (default: auto-detect)
@@ -66,12 +66,17 @@ namespace PnCTestAutomation.Tools.FormsBaselineGenerator
                     .ToArray();
             var dryRun = BoolParam("DRY_RUN", false);
 
-            // Default output: <project-root>/Resources/ExpectedForms/{LOB}/{LOB}.json
+            // Catalog extraction is a review candidate, not a scenario-qualified runtime baseline.
             // AppContext.BaseDirectory = bin/Debug/net8.0 → go up three levels
             var defaultOutput = Path.GetFullPath(Path.Combine(
                 AppContext.BaseDirectory, "..", "..", "..",
-                "Resources", "ExpectedForms", lob, $"{lob}.json"));
+                "TestResults", "FormsBaseline", $"{lob}_MASTERLIST_CANDIDATE.json"));
             var outputPath = TestContext.Parameters.Get("OUTPUT", defaultOutput);
+            var canonicalSfpPath = Path.GetFullPath(Path.Combine(
+                AppContext.BaseDirectory, "..", "..", "..", "Resources", "ExpectedForms", "SFP", "SFP.json"));
+            if (!dryRun && Path.GetFullPath(outputPath).Equals(canonicalSfpPath, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException(
+                    "Masterlist extraction cannot overwrite SFP.json. Emit a candidate and review state/company/scenario rules first.");
 
             // ── Validate ─────────────────────────────────────────────────────────
             Console.WriteLine();
@@ -183,7 +188,8 @@ namespace PnCTestAutomation.Tools.FormsBaselineGenerator
                 });
 
                 existingNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                foreach (var section in doc.RootElement.EnumerateObject())
+                foreach (var section in doc.RootElement.EnumerateObject()
+                    .Where(section => section.Name is "BASE" or "BASIC" or "CE"))
                     foreach (var form in section.Value.EnumerateObject())
                         existingNames.Add(form.Name);
             }

@@ -33,6 +33,59 @@ namespace PnCTestAutomation.Pages
             await WaitForSpinnerAsync();
         }
 
+        public async Task ApplyAddressOverrideIfRequiredAsync()
+        {
+            var unverifiedAddress = _page
+                .GetByText("Unverified Address:", new() { Exact = false })
+                .First;
+            if (await unverifiedAddress.CountAsync() == 0 ||
+                !await unverifiedAddress.IsVisibleAsync())
+                return;
+
+            const string testId =
+                "fields.data.account.location.rows[0].locationInput$addressOverride.value";
+            var addressOverride = _page.Locator(
+                $"input[type='checkbox'][data-testid='{testId}']").First;
+            await addressOverride.WaitForAsync(new()
+            {
+                State = WaitForSelectorState.Visible,
+                Timeout = 15000
+            });
+
+            if (!await addressOverride.IsCheckedAsync())
+                await addressOverride.CheckAsync();
+
+            await WaitForSpinnerAsync();
+            Console.WriteLine(
+                "[Location] Unverified address detected - selected the required Address Override.");
+        }
+
+        public async Task ContinuePastReviewRequiredIfPresentAsync()
+        {
+            var reviewRequiredDialog = _page
+                .Locator("[role='dialog'], mat-dialog-container")
+                .Filter(new() { HasText = "Review Required" })
+                .First;
+            if (await reviewRequiredDialog.CountAsync() == 0 ||
+                !await reviewRequiredDialog.IsVisibleAsync())
+                return;
+
+            var keepGoing = reviewRequiredDialog.GetByTestId("btnConfirmYes").First;
+            if (await keepGoing.CountAsync() == 0 || !await keepGoing.IsVisibleAsync())
+                throw new PlaywrightException(
+                    "Location Review Required dialog did not expose KEEP GOING.");
+
+            await keepGoing.ClickAsync(new() { Force = true });
+            await reviewRequiredDialog.WaitForAsync(new()
+            {
+                State = WaitForSelectorState.Detached,
+                Timeout = 30000
+            });
+            await WaitForSpinnerAsync();
+            Console.WriteLine(
+                "[Location] Review Required modal detected - clicked KEEP GOING.");
+        }
+
         private ILocator LocationNicknameInput() => _page.Locator("input[data-testid*='locationInput$additionalDescription.value']");
 
         private async Task SetLocationNickname(string nickname)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using PnCTestAutomation.Models;
 
@@ -49,7 +50,8 @@ namespace PnCTestAutomation.Services
         /// <summary>
         /// Primary loader: resolves the correct baseline file for a LOB/state/testCase combination.
         ///
-        /// File resolution order:
+        /// SFP uses SFP.json exclusively, including when stale CSVs remain in build output.
+        /// Other LOBs retain their file resolution order:
         ///   1. Test-case CSV: {LOB}_{testCase}.csv  → load all rows (e.g. SFP_BASIC.csv — Tosca baseline)
         ///   2. Merged CSV:    {LOB}.csv  → filter by Type column (BASE + testCase code)
         ///   3. Include-only JSON: {LOB}.json
@@ -66,6 +68,9 @@ namespace PnCTestAutomation.Services
                 throw new ArgumentException($"Invalid testCase value: '{testCase}'");
 
             var basePath = Path.Combine(AppContext.BaseDirectory, "Resources", "ExpectedForms", lob);
+
+            if (lob.Equals("SFP", StringComparison.OrdinalIgnoreCase))
+                return LoadFromSfpJson(Path.Combine(basePath, "SFP.json"), state, testCase);
 
             // 1. Test-case-specific CSV: {LOB}_{testCase}.csv (e.g. SFP_BASIC.csv) — highest priority,
             //    matches the Tosca baseline exactly.
@@ -113,6 +118,9 @@ namespace PnCTestAutomation.Services
                 throw new ArgumentException($"Invalid testCase value: '{testCase}'");
 
             var basePath = Path.Combine(AppContext.BaseDirectory, "Resources", "ExpectedForms", lob);
+            if (lob.Equals("SFP", StringComparison.OrdinalIgnoreCase))
+                return LoadFromSfpJson(Path.Combine(basePath, "SFP.json"), null, testCase);
+
             var testCaseCsv = Path.Combine(basePath, $"{lob}_{testCase}.csv");
             if (File.Exists(testCaseCsv))
                 return LoadFirstCsvState(testCaseCsv);
@@ -231,6 +239,109 @@ namespace PnCTestAutomation.Services
                 e.ExpectedStatus = (e.ExpectedStatus ?? "").Trim().ToUpperInvariant();
 
             return entries;
+        }
+
+        /// <summary>
+        /// SFP keeps the BASE/BASIC/CE JSON layout. STATES declares approved scenario coverage;
+        /// a declared form omitted from a state's include list is explicitly N, not informational.
+        /// A null state selects the first approved state only for a recording template.
+        /// </summary>
+        public List<ExpectedFormEntry> LoadFromSfpJson(string jsonPath, string state, string testCase = "BASIC")
+        {
+            return ParseSfpJson(File.ReadAllText(SafeResolvePath(jsonPath)), state, testCase);
+        }
+
+        public List<ExpectedFormEntry> ParseSfpJson(string json, string state, string testCase = "BASIC")
+        {
+            using var document = JsonDocument.Parse(json,
+                new JsonDocumentOptions { CommentHandling = JsonCommentHandling.Skip });
+            var root = document.RootElement;
+            var variant = (testCase ?? "BASIC").ToUpperInvariant();
+            if (root.ValueKind != JsonValueKind.Object ||
+                !root.TryGetProperty("STATES", out var stateMap) || stateMap.ValueKind != JsonValueKind.Object)
+                throw new InvalidOperationException("SFP.json requires a STATES object declaring approved scenario states.");
+
+            RequireUniqueProperties(root, "SFP.json");
+            RequireUniqueProperties(stateMap, "STATES");
+            var approved = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
+            foreach (var scenario in stateMap.EnumerateObject())
+            {
+                if (scenario.Name is not ("BASIC" or "CE") || scenario.Value.ValueKind != JsonValueKind.Array)
+                    throw new InvalidOperationException($"Invalid SFP scenario state declaration: {scenario.Name}.");
+                var states = new HashSet<string>(StringComparer.Ordinal);
+                foreach (var item in scenario.Value.EnumerateArray())
+                {
+                    if (item.ValueKind != JsonValueKind.String ||
+                        !Regex.IsMatch(item.GetString() ?? "", "^[A-Z]{2}$") || !states.Add(item.GetString()))
+                        throw new InvalidOperationException($"Invalid or duplicate state in STATES.{scenario.Name}.");
+                }
+                if (states.Count == 0)
+                    throw new InvalidOperationException($"STATES.{scenario.Name} cannot be empty.");
+                approved.Add(scenario.Name, states);
+            }
+            if (!approved.TryGetValue(variant, out var supported))
+                throw new InvalidOperationException($"SFP scenario '{variant}' has no approved JSON baseline.");
+            state = state?.ToUpperInvariant() ?? supported.First();
+            if (!supported.Contains(state))
+                throw new InvalidOperationException($"State '{state}' is not approved in SFP.json for {variant}.");
+
+            var knownStates = approved.Values.SelectMany(states => states).ToHashSet(StringComparer.Ordinal);
+            var result = new List<ExpectedFormEntry>();
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var sectionName in new[] { "BASE", variant })
+            {
+                if (!root.TryGetProperty(sectionName, out var section) || section.ValueKind != JsonValueKind.Object)
+                    throw new InvalidOperationException($"SFP.json requires a {sectionName} forms object.");
+                RequireUniqueProperties(section, sectionName);
+                foreach (var form in section.EnumerateObject())
+                {
+                    if (!Regex.IsMatch(form.Name, "^[A-Z0-9]+$") || !seen.Add(form.Name))
+                        throw new InvalidOperationException($"Invalid or duplicate SFP form: {form.Name}.");
+                    var value = form.Value;
+                    if (value.ValueKind == JsonValueKind.String)
+                    {
+                        if (value.GetString() != "all")
+                            throw new InvalidOperationException($"Invalid include value for {form.Name}; use \"all\", a state array or a status map.");
+                    }
+                    else if (value.ValueKind == JsonValueKind.Array)
+                    {
+                        var listed = new HashSet<string>(StringComparer.Ordinal);
+                        foreach (var item in value.EnumerateArray())
+                            if (item.ValueKind != JsonValueKind.String ||
+                                !knownStates.Contains(item.GetString()) || !listed.Add(item.GetString()))
+                                throw new InvalidOperationException($"Invalid or duplicate state for {form.Name}.");
+                    }
+                    else if (value.ValueKind == JsonValueKind.Object)
+                    {
+                        RequireUniqueProperties(value, form.Name);
+                        foreach (var status in value.EnumerateObject())
+                            if (!knownStates.Contains(status.Name) || status.Value.ValueKind != JsonValueKind.String ||
+                                status.Value.GetString() is not ("YM" or "YS" or "YU" or "N"))
+                                throw new InvalidOperationException($"Invalid state/status for {form.Name}/{status.Name}.");
+                    }
+                    else
+                        throw new InvalidOperationException($"Invalid SFP form definition: {form.Name}.");
+
+                    result.Add(new ExpectedFormEntry
+                    {
+                        FormName = form.Name,
+                        ExpectedStatus = ResolveStatusFromJsonElement(value, state) ?? "N",
+                        Type = sectionName == "BASE" ? "BASE" : GetTypeCodeForTestCase(variant)
+                    });
+                }
+            }
+            if (result.Count == 0)
+                throw new InvalidOperationException($"SFP.json contains no forms for {variant}.");
+            Console.WriteLine($"Loading SFP.json for {variant}/{state}: {result.Count} explicit expectations.");
+            return result;
+        }
+
+        private static void RequireUniqueProperties(JsonElement element, string location)
+        {
+            var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var property in element.EnumerateObject())
+                if (!names.Add(property.Name))
+                    throw new InvalidOperationException($"Duplicate property '{property.Name}' in {location}.");
         }
 
         /// <summary>
@@ -620,6 +731,9 @@ namespace PnCTestAutomation.Services
             string state,
             string testCase = "BASIC")
         {
+            if (lob.Equals("SFP", StringComparison.OrdinalIgnoreCase))
+                return SaveSfpJsonProposal(actualForms, currentBaseline, state, testCase);
+
             var basePath = Path.Combine(AppContext.BaseDirectory, "Resources", "ExpectedForms", lob);
             Directory.CreateDirectory(basePath);
             var suffix = string.IsNullOrWhiteSpace(testCase) ? "" : $"_{testCase.ToUpperInvariant()}";
@@ -733,6 +847,68 @@ namespace PnCTestAutomation.Services
             Console.WriteLine($"\n  PROPOSED BASELINE saved: {proposedPath}");
             Console.WriteLine($"  Review the file, then merge into {lob}.json (or rename to {lob}.csv) to activate.");
             return proposedPath;
+        }
+
+        private string SaveSfpJsonProposal(
+            List<ActualFormEntry> actualForms, List<ExpectedFormEntry> template, string state, string testCase)
+        {
+            var variant = (testCase ?? "BASIC").ToUpperInvariant();
+            state = state?.ToUpperInvariant();
+            if (variant is not ("BASIC" or "CE") || !Regex.IsMatch(state ?? "", "^[A-Z]{2}$"))
+                throw new ArgumentException("SFP proposals require BASIC/CE and a two-letter state.");
+            if (actualForms.Any(form => !Regex.IsMatch(form.Name ?? "", "^[A-Z0-9]+$") ||
+                form.Selected is < 0 or > 2) ||
+                actualForms.Select(form => form.Name).Distinct(StringComparer.OrdinalIgnoreCase).Count() != actualForms.Count)
+                throw new InvalidOperationException("SFP recording contains invalid or duplicate actual forms.");
+
+            var path = Path.Combine(AppContext.BaseDirectory, "Resources", "ExpectedForms", "SFP",
+                $"SFP_{variant}_PROPOSED.json");
+            JsonObject proposal;
+            if (File.Exists(path))
+            {
+                LoadFromSfpJson(path, null, variant);
+                proposal = JsonNode.Parse(File.ReadAllText(path), documentOptions:
+                    new JsonDocumentOptions { CommentHandling = JsonCommentHandling.Skip }).AsObject();
+            }
+            else
+            {
+                proposal = new JsonObject
+                {
+                    ["STATES"] = new JsonObject { [variant] = new JsonArray() },
+                    ["BASE"] = new JsonObject(),
+                    [variant] = new JsonObject()
+                };
+                foreach (var form in template)
+                {
+                    var section = form.Type == "BASE" ? "BASE" : variant;
+                    proposal[section].AsObject().Add(form.FormName, new JsonObject());
+                }
+            }
+
+            var states = proposal["STATES"][variant].AsArray();
+            if (!states.Any(item => item.GetValue<string>() == state))
+                states.Add(state);
+            var actual = actualForms.ToDictionary(form => form.Name, StringComparer.Ordinal);
+            var known = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var sectionName in new[] { "BASE", variant })
+                foreach (var form in proposal[sectionName].AsObject())
+                {
+                    if (form.Value is not JsonObject statuses)
+                        throw new InvalidOperationException($"Recorded proposal requires explicit statuses for {form.Key}.");
+                    statuses[state] = actual.TryGetValue(form.Key, out var found)
+                        ? found.Selected == 2 ? "YM" : found.Selected == 1 ? "YS" : "YU"
+                        : "N";
+                    known.Add(form.Key);
+                }
+            foreach (var form in actualForms.Where(form => !known.Contains(form.Name)))
+                proposal[variant].AsObject().Add(form.Name, new JsonObject
+                {
+                    [state] = form.Selected == 2 ? "YM" : form.Selected == 1 ? "YS" : "YU"
+                });
+
+            File.WriteAllText(path, proposal.ToJsonString(new JsonSerializerOptions { WriteIndented = true }) + Environment.NewLine);
+            Console.WriteLine($"PROPOSED JSON saved: {path}. Review state, scenario and form classification before updating SFP.json.");
+            return path;
         }
 
         // ───────────────────────── Company filtering ─────────────────────────────

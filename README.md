@@ -748,68 +748,103 @@ Output appears in `TestResults/{date}/LocatorScan/`.
 
 ### SFP Basic and CE forms baselines
 
-The canonical Basic and CE workflows load `Resources\ExpectedForms\SFP\SFP_BASIC.csv`
-and `SFP_CE.csv`, respectively. Both are deployed with the existing Resources copy
-rule and take precedence over `SFP.json`. They cover the 38 previously qualified
-states, including CT, NJ and RI, with explicit `YM`/`N` expectations.
-`N` requires a form to be absent, even unchecked; an unlisted form is informational.
+`Resources\ExpectedForms\SFP\SFP.json` is the **only SFP runtime baseline**.
+On 2026-10-05 it was refreshed from the current user-designated Tosca masters,
+both last modified on 2026-10-01. **Basic and CE now both cover all 41 Example states.**
+All required-form sets in the 38 legacy states remain unchanged.
+The retired scenario CSVs are removed from source and cleaned from build output.
+SFP never falls back to a CSV, even if a stale file is copied back.
 
-The feature inventories now also contain MD, PA and VT, but those states do not
-have approved forms columns. No CSV values are inferred from another state.
-DEV runtime therefore reports the missing state column and skips the
-nonblocking Forms comparison (or fails when `FailOnFormsValidationError=true`).
-Each state/product combination must complete a DEV quote and DuckCreek capture,
-then receive review and approval before a `YM`/`N` column is added. Offline tests
-assert both the 41-state scenario inventory and the deliberate three-state
-baseline exclusion.
+The familiar `BASE`, `BASIC` and `CE` sections remain. `STATES` explicitly lists
+approved states for each scenario; unsupported states produce an error rather
+than an empty successful comparison. A form's state array means `YM` in those
+states and `N` elsewhere in that approved scenario. `"all"` means `YM` in all
+approved states. Explicit maps such as `{"MD":"YS","PA":"YU"}` support other
+selection statuses. `N` requires absence, even unchecked; an entirely unlisted
+form remains informational. Blank/invalid statuses and duplicate IDs are rejected.
 
-These matrices were imported on 2026-09-23 from the user-designated Tosca masters:
+The current state/edition mappings come from:
 `\\mis\sys\QLTY\Test_Automation\Tricentis_Tosca\Forms_Check\SFP\SFP_BASIC.csv`
-and `SFP_CE.csv`. Basic preserves all 182 source rows. CE preserves all 168 source
-rows and adds `C,SF04010120` with `YM` in every Example state for the approved
-Division IV scheduled-property items 409 and 411. Its state matrix matches the
-same form in the Basic Tosca master. Both files preserve the same 147 `BASE` rows,
-including applicable common forms; no shared rows are filtered out.
+and `SFP_CE.csv`. These are read-only source material, **not runtime dependencies**.
+The refresh replaces the older September import and the October 2 run-derived
+positive lists with the current master mappings. JSON contains the 162 shared
+forms in `BASE`, with scenario-specific forms in `BASIC` and `CE`.
 
-The CE addition is supported by the local SFP v9 workbook's
+Basic includes all 199 master rows plus explicit `N` definitions for the two
+previously observed, non-master editions `SF01570726` and `SF07120826` (201 total).
+CE includes all 186 master rows plus the existing approved `SF04010120` requirement
+for the scenario's Division IV scheduled-property items 409 and 411 (187 total).
+That coverage correction is supported by SFP v9's
 `Division 4 Masterlist!BG5` (attach when any Division IV coverage is present)
-and `BJ5` (mandatory). The local workbook does not explicitly populate every later
-state/company column; the supplied Tosca matrix provides the 38-state mapping,
-rather than extrapolating blank workbook cells. On 2026-09-23, the user confirmed
-that the SharePoint-linked workbooks are the same masterlists supplied for this
-review; the filename suffix differences do not indicate different source versions.
+and `BJ5` (mandatory); it is not an automatic promotion from run output.
+
+The uploaded SFP v9/Common v80 Excel files remain supporting catalogs. They are
+not interchangeable with the newer complete Tosca scenario matrices: for example,
+SFP `Division 0 Masterlist!B7,AV7,AW7` still lists `SF00030120` for PA/MD and has
+blank VT company/core cells. The current Tosca masters provide the state/edition
+mappings instead of inferring values from those blanks. No newer live SharePoint
+Excel revision was verified or claimed.
 
 The workbook catalog is not itself a scenario baseline. Its coverage, company,
 effective-date and transaction/output rules still apply. In particular, the local
 SFP workbook's `Policy Admin Forms Print Order!A2,B8,B9,B11` separates X-4296,
 X-4306 and SM-1703 from customer policy output. Do not merge these administration
 forms indiscriminately into the policy-output matrices from the Common catalog.
-The older `SFP_BASIC.xlsx` beside the network CSV is not the source of this import.
+The older `SFP_BASIC.xlsx` beside the network CSV is not the source of this refresh.
 
-Source SHA-256 values before the CE addition:
+Current master SHA-256 values, checked on 2026-10-05:
 
 | Master | SHA-256 |
 |--------|---------|
-| `SFP_BASIC.csv` | `E3D5B3410E9DDF245DE886C36D29F935A8F09E8510DD5B85B0096A724CCF2CE5` |
-| `SFP_CE.csv` | `99F1F6F365A8C04B738B7BE30E77A85072F3A698FAE7BF0B57903CEFE64F55C8` |
+| `SFP_BASIC.csv` | `F17152E6B26F0626D2CFB086EE9760A441BF139BACF3EEE43262712C156108E7` |
+| `SFP_CE.csv` | `68122197C6E5ECFAEC5D4BF485CA08F0EB1820558281F6CD240C22953C5AF961` |
 
-Offline coverage exercises the deployed runtime loader and evaluator for every
-Example state, verifies the shared matrices, and checks missing mandatory and
-explicitly prohibited forms:
+The saved October 2 Basic responses intentionally no longer pass against the
+refreshed masters. All actual forms have `selected="2"`; these are missing/extra
+forms, not selection-status mismatches:
+
+| State / quote | JSON required | Saved actual | Missing | Unexpected |
+|---------------|---------------|--------------|---------|------------|
+| VT / 01069487 | 27 | 25 | 5 | 3 |
+| MD / 01069492 | 33 | 34 | 3 | 4 |
+| PA / 01069493 | 30 | 26 | 4 | 0 |
+
+The focused regressions preserve these differences instead of making expectations
+fit the observed runs. Future baseline changes still require review.
+
+After building in Visual Studio, offline coverage exercises the deployed runtime
+loader and evaluator for every supported baseline state, verifies the shared
+legacy matrix, and checks missing mandatory and explicitly prohibited forms:
 
 ```powershell
-dotnet test TestAutomation.csproj --no-restore --filter "FullyQualifiedName~SfpFormsBaselineTests"
+dotnet test TestAutomation.csproj --no-build --no-restore --filter "FullyQualifiedName~SfpFormsBaselineTests"
 ```
 
-The forms CSV updates do not change premium assertions, Checklist steps, Forms
-nonblocking configuration, or the legacy JSON fallback used by other variants.
-Baselines are reviewed expectations, not recorded from whatever the application returns.
+Review saved XML without making a live quote (PowerShell 7.4+, after a Debug build):
+
+```powershell
+pwsh .\Scripts\FormsCheck.ps1 `
+  -BaselinePath .\Resources\ExpectedForms\SFP\SFP.json `
+  -XmlPath .\bin\Debug\net8.0\TestResults\FormsCheck\SFP\SFP_BASIC_MD_01069492.xml `
+  -State MD -QuoteID 01069492 -TestCase BASIC
+```
+
+The JSON reader is shared with runtime validation; results go to
+`TestResults\FormsCheck\SFP`. Result CSV/HTML reports are not baselines.
+Masterlist extraction now writes a review candidate under `TestResults\FormsBaseline`,
+never directly over `SFP.json`; its limited state/rule handling is not sufficient
+for automatic scenario qualification.
+
+The migration does not change premium assertions, Checklist steps, Forms
+nonblocking configuration, or other LOBs' existing loaders.
+`Debugging:FailOnFormsValidationError=false` remains unchanged, so a UI pass is
+not proof that forms matched. Future run output must not be silently promoted.
 
 ### SFP premium recalibration and live qualification
 
 The 2026-09-24 QA batch attempted all 38 Basic states, then all 38 CE states.
 It used one worker, headless execution, process-only premium-assertion bypass,
-and the scenario forms CSVs above. Forms comparison remained enabled and
+and the then-active scenario forms CSVs. Forms comparison remained enabled and
 nonblocking; forms recording remained disabled. No policies were transmitted,
 issued, bound, or paid. Normal runs retain `SkipPremiumBaselineAssertion: false`.
 
@@ -889,8 +924,11 @@ and `Shard5` or `Shard6` for CE MD or PA/VT. The QA SFP pipelines explicitly add
 `TestCategory!=DevOnly` to every shard filter, and the runtime hook also skips a
 `@DevOnly` scenario unless `TEST_ENVIRONMENT=Dev`.
 
-To establish the first approved premiums and forms baselines, use the dedicated
-capture profile instead of a normal validation run:
+The combined capture/promotion workflow below predates the 41-state master
+refresh. Its existing-state guard prevents overwriting the current Basic or CE
+expectations; do not bypass it. Premium qualification remains separate work.
+The dedicated capture profile records review proposals instead of doing a
+normal validation run:
 
 ```powershell
 .\Scripts\record-new-states.ps1 -ResetProposed
@@ -907,7 +945,7 @@ Each run writes `TestResults\DevQualification\<timestamp>\` containing:
 
 - `SFP_DEV_Qualification.trx` with per-case output and quote evidence;
 - `SFP_DEV_Qualification.premiums.csv`;
-- `SFP_BASIC_PROPOSED.csv` and `SFP_CE_PROPOSED.csv`;
+- `SFP_BASIC_PROPOSED.json` and `SFP_CE_PROPOSED.json`;
 - `FormsXml\` with the raw DuckCreek responses from that run.
 
 Raw forms responses can originate under either the repository `TestResults` tree
@@ -919,18 +957,20 @@ Review all six quotes, positive premium captures, and every proposed `YM`/`YS`/
 `YU`/`N` value. Then validate the promotion without writing:
 
 ```powershell
-.\Scripts\Promote-SFPDevQualification.ps1 `
+pwsh .\Scripts\Promote-SFPDevQualification.ps1 `
   -QualificationDirectory ".\TestResults\DevQualification\<timestamp>"
 ```
 
 After approval, rerun with `-Approve`. The script refuses incomplete/failed
 captures, missing quotes, blank statuses, overwrites, and unclassified new forms.
 It writes approved premiums under `ExpectedPremiums` in `appsettings.Dev.json`
-and appends the reviewed state columns to `SFP_BASIC.csv` and `SFP_CE.csv`.
+and adds reviewed scenario states to `SFP.json`. JSON proposal validation requires
+PowerShell 7.4+ and the Debug assembly, and uses the same parser as live validation.
+Conflicting shared-form expectations require manual scenario classification.
 Review the git diff, update the baseline inventory assertions from “unqualified”
 to qualified, run the targeted tests, and commit those versioned expectations.
-`Scripts\Update-SFPBaseline.ps1` targets the legacy include-only `SFP.json` and
-must not be used to promote these canonical scenario CSV baselines.
+`Scripts\Update-SFPBaseline.ps1` is an INFO-only legacy updater and refuses to
+modify the reviewed JSON format; runtime observations alone are not authority.
 
 The new DEV ZIPs have explicit qualification behavior. MD `20855` requires its
 row-specific `2%` Wind-Hail option. For PA `17601`, an absent control is accepted;

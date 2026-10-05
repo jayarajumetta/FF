@@ -1,6 +1,7 @@
 # Forms Baseline Generator
 # Reads an LOB Excel masterlist (and optionally the Common Forms masterlist)
-# and writes Resources/ExpectedForms/{LOB}/{LOB}.json
+# and writes TestResults\FormsBaseline\{LOB}_MASTERLIST_CANDIDATE.json for review.
+# Catalog extraction does not qualify scenario rules or replace SFP.json.
 #
 # USAGE:
 #   .\.\Scripts\generate-baseline.ps1 -Excel "C:\path\to\SFP_Masterlist.xlsx"

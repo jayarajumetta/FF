@@ -60,6 +60,10 @@ if (-not (Test-Path $SfpJsonPath)) {
     exit 1
 }
 
+if ((Get-Content -LiteralPath $SfpJsonPath -Raw) -match '"STATES"\s*:') {
+    throw "This legacy INFO-only updater cannot modify the reviewed SFP.json baseline. Use reviewed JSON recording proposals; INFO output alone does not establish a complete state baseline."
+}
+
 if (-not $TrxPaths) {
     $TrxPaths = @(Get-ChildItem (Join-Path $repoRoot 'TestResults\SFP_*.trx') |
                   Select-Object -ExpandProperty FullName)

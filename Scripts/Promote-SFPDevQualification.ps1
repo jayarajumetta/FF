@@ -1,15 +1,15 @@
+#requires -Version 7.4
 <#
 .SYNOPSIS
     Validates and promotes reviewed MD/PA/VT DEV qualification artifacts.
 
 .DESCRIPTION
     Dry-run by default. With -Approve, writes reviewed premiums to
-    appsettings.Dev.json and appends approved MD/PA/VT columns to the canonical
-    SFP_BASIC.csv and SFP_CE.csv files.
+    appsettings.Dev.json and adds approved MD/PA/VT states to SFP.json.
 
     Promotion is rejected unless all six tests passed with positive premiums and
     quote numbers, every forms status is explicit, and proposal form rows already
-    exist in the canonical matrices. New/unclassified forms require manual review
+    exist in the canonical JSON scenarios. New/unclassified forms require manual review
     and classification before this script can write.
 #>
 
@@ -57,82 +57,70 @@ foreach ($variant in $expectedVariants) {
     }
 }
 
-function Get-MergedFormsCsv {
-    param(
-        [Parameter(Mandatory)][string]$CanonicalPath,
-        [Parameter(Mandatory)][string]$ProposedPath
-    )
-
-    if (-not (Test-Path $ProposedPath)) {
-        throw "Forms proposal not found: $ProposedPath"
-    }
-
-    $canonical = @(Get-Content $CanonicalPath)
-    $proposed = @(Get-Content $ProposedPath)
-    $canonicalHeader = $canonical[0].Split(",")
-    $proposedHeader = $proposed[0].Split(",")
-    $canonicalForms = @{}
-    $proposedForms = @{}
-
-    for ($i = 1; $i -lt $canonical.Count; $i++) {
-        $parts = $canonical[$i].Split(",")
-        $canonicalForms[$parts[1]] = $parts
-    }
-    for ($i = 1; $i -lt $proposed.Count; $i++) {
-        $parts = $proposed[$i].Split(",")
-        $proposedForms[$parts[1]] = $parts
-    }
-
-    $unexpected = @($proposedForms.Keys | Where-Object {
-        -not $canonicalForms.ContainsKey($_)
-    })
-    if ($unexpected.Count -gt 0) {
-        throw "Proposal contains new forms requiring manual BASE/BASIC/CE classification: " +
-              ($unexpected -join ", ")
-    }
-
+$canonicalPath = Join-Path $projectRoot "Resources\ExpectedForms\SFP\SFP.json"
+$canonicalText = Get-Content -LiteralPath $canonicalPath -Raw
+$canonical = $canonicalText | ConvertFrom-Json -AsHashtable
+. (Join-Path $PSScriptRoot "Get-FormsValidationRuntime.ps1")
+$validator = (Get-FormsValidationRuntime).Validator
+$captures = @{}
+foreach ($variant in $expectedVariants) {
+    $template = $validator.ParseSfpJson($canonicalText, $canonical.STATES[$variant][0], $variant)
+    $captures[$variant] = @{}
+    $proposalPath = Join-Path $qualification "SFP_${variant}_PROPOSED.json"
+    $proposalText = Get-Content -LiteralPath $proposalPath -Raw
     foreach ($state in $expectedStates) {
-        if ($canonicalHeader -contains $state) {
-            throw "$CanonicalPath already contains $state; refusing to overwrite."
+        if ($canonical.STATES[$variant] -contains $state) {
+            throw "SFP.json already contains $variant/$state; refusing to overwrite."
         }
-        if ($proposedHeader -notcontains $state) {
-            throw "$ProposedPath is missing the $state column."
+        $proposal = $validator.ParseSfpJson($proposalText, $state, $variant)
+        if (@(Compare-Object -ReferenceObject @($template.FormName) -DifferenceObject @($proposal.FormName) -CaseSensitive).Count -ne 0) {
+            throw "$variant proposal forms differ from the canonical scenario; manual classification/review is required."
         }
+        $values = @{}
+        foreach ($entry in $proposal) { $values[$entry.FormName] = $entry.ExpectedStatus }
+        $captures[$variant][$state] = $values
     }
-
-    $merged = [System.Collections.Generic.List[string]]::new()
-    $merged.Add(($canonicalHeader + $expectedStates) -join ",")
-
-    for ($i = 1; $i -lt $canonical.Count; $i++) {
-        $parts = $canonical[$i].Split(",")
-        $form = $parts[1]
-        if (-not $proposedForms.ContainsKey($form)) {
-            throw "Proposal is missing canonical form $form."
-        }
-
-        $proposalRow = $proposedForms[$form]
-        $values = foreach ($state in $expectedStates) {
-            $index = [Array]::IndexOf($proposedHeader, $state)
-            $value = $proposalRow[$index]
-            if ($value -notin @("YM", "YS", "YU", "N")) {
-                throw "$ProposedPath has invalid/blank $state status '$value' for $form."
-            }
-            $value
-        }
-        $merged.Add(($parts + $values) -join ",")
-    }
-
-    return $merged.ToArray()
 }
 
-$basicCanonical = Join-Path $projectRoot "Resources\ExpectedForms\SFP\SFP_BASIC.csv"
-$ceCanonical = Join-Path $projectRoot "Resources\ExpectedForms\SFP\SFP_CE.csv"
-$basicMerged = Get-MergedFormsCsv `
-    -CanonicalPath $basicCanonical `
-    -ProposedPath (Join-Path $qualification "SFP_BASIC_PROPOSED.csv")
-$ceMerged = Get-MergedFormsCsv `
-    -CanonicalPath $ceCanonical `
-    -ProposedPath (Join-Path $qualification "SFP_CE_PROPOSED.csv")
+function Get-ExistingStatus($definition, [string]$state) {
+    if ($definition -is [string]) { return "YM" }
+    if ($definition -is [System.Collections.IDictionary]) {
+        if ($definition.Contains($state)) { return $definition[$state] }
+        return "N"
+    }
+    if ($definition -contains $state) { return "YM" }
+    return "N"
+}
+
+foreach ($section in @("BASE", "BASIC", "CE")) {
+    $oldStates = if ($section -eq "BASE") {
+        @($canonical.STATES.BASIC + $canonical.STATES.CE | Sort-Object -Unique)
+    } else { @($canonical.STATES[$section]) }
+    foreach ($form in @($canonical[$section].Keys)) {
+        $statuses = [ordered]@{}
+        foreach ($state in $oldStates) {
+            $statuses[$state] = Get-ExistingStatus $canonical[$section][$form] $state
+        }
+        foreach ($state in $expectedStates) {
+            $variant = if ($section -eq "BASE") { "BASIC" } else { $section }
+            $value = $captures[$variant][$state][$form]
+            if ($section -eq "BASE" -and $value -cne $captures.CE[$state][$form]) {
+                throw "Shared form $form differs between BASIC and CE for $state; review scenario classification before promotion."
+            }
+            $statuses[$state] = $value
+        }
+        $canonical[$section][$form] = $statuses
+    }
+}
+foreach ($variant in $expectedVariants) {
+    $canonical.STATES[$variant] = @($canonical.STATES[$variant] + $expectedStates | Sort-Object -Unique)
+}
+$mergedJson = $canonical | ConvertTo-Json -Depth 10
+foreach ($variant in $expectedVariants) {
+    foreach ($state in $canonical.STATES[$variant]) {
+        [void]$validator.ParseSfpJson($mergedJson, $state, $variant)
+    }
+}
 
 $devConfigPath = Join-Path $projectRoot "appsettings.Dev.json"
 $devConfig = Get-Content $devConfigPath -Raw | ConvertFrom-Json
@@ -160,8 +148,7 @@ foreach ($variant in $expectedVariants) {
 Write-Host ""
 Write-Host "Validated qualification artifacts for all six DEV cases." -ForegroundColor Green
 Write-Host "  Premium target : appsettings.Dev.json"
-Write-Host "  Forms targets  : Resources\ExpectedForms\SFP\SFP_BASIC.csv"
-Write-Host "                   Resources\ExpectedForms\SFP\SFP_CE.csv"
+Write-Host "  Forms target   : Resources\ExpectedForms\SFP\SFP.json"
 
 if (-not $Approve) {
     Write-Host ""
@@ -170,8 +157,7 @@ if (-not $Approve) {
     exit 0
 }
 
-$basicMerged | Set-Content -Path $basicCanonical -Encoding utf8
-$ceMerged | Set-Content -Path $ceCanonical -Encoding utf8
+$mergedJson | Set-Content -LiteralPath $canonicalPath -Encoding utf8
 $devConfig | ConvertTo-Json -Depth 10 | Set-Content -Path $devConfigPath -Encoding utf8
 
 Write-Host ""

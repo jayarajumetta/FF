@@ -111,6 +111,47 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         {
             await WaitForSpinnerAsync();
             await ClickSaveAsync();
+            await ContinueToUwQuestionsAsync();
+        }
+
+        private async Task ContinueToUwQuestionsAsync()
+        {
+            var reviewRequiredDialog = _page
+                .Locator("[role='dialog'], mat-dialog-container")
+                .Filter(new() { HasText = "Review Required" })
+                .First;
+            var uwQuestions = UwToggleElement("NoneOfTheAbove");
+
+            await reviewRequiredDialog.Or(uwQuestions).First.WaitForAsync(new()
+            {
+                State = WaitForSelectorState.Visible,
+                Timeout = 30000
+            });
+
+            if (await reviewRequiredDialog.CountAsync() > 0 &&
+                await reviewRequiredDialog.IsVisibleAsync())
+            {
+                var keepGoing = reviewRequiredDialog.GetByTestId("btnConfirmYes").First;
+                if (await keepGoing.CountAsync() == 0 || !await keepGoing.IsVisibleAsync())
+                    throw new PlaywrightException(
+                        "Primary Insured Review Required dialog did not expose KEEP GOING.");
+
+                await keepGoing.ClickAsync(new() { Force = true });
+                await reviewRequiredDialog.WaitForAsync(new()
+                {
+                    State = WaitForSelectorState.Detached,
+                    Timeout = 30000
+                });
+                await WaitForSpinnerAsync();
+                Console.WriteLine(
+                    "[PrimaryInsured] Review Required modal detected - clicked KEEP GOING.");
+            }
+
+            await uwQuestions.WaitForAsync(new()
+            {
+                State = WaitForSelectorState.Visible,
+                Timeout = 30000
+            });
         }
 
         public async Task SearchPersonAsync(ScenarioContextData contextData)

@@ -52,11 +52,15 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             if (hasSourceBackedCoverageInputs)
                 await locationPage.ConfigureHurricaneDeductibleAsync();
 
+            await locationPage.ApplyAddressOverrideIfRequiredAsync();
+
             var editLocationPage = new SFP_EditLocationPage(_context.Page);
             if (await editLocationPage.IsCurrentAsync())
                 await editLocationPage.SaveLocationAsync();
             else
                 await locationPage.ClickSaveAsync();
+
+            await locationPage.ContinuePastReviewRequiredIfPresentAsync();
         }
 
         [When("user adds a Residence to the Location")]

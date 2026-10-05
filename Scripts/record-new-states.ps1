@@ -10,7 +10,7 @@
     The run captures:
       - one TRX with quote numbers and annual premiums;
       - one extracted premiums CSV;
-      - SFP_BASIC_PROPOSED.csv and SFP_CE_PROPOSED.csv;
+      - SFP_BASIC_PROPOSED.json and SFP_CE_PROPOSED.json;
       - the raw DuckCreek Forms XML files produced during this run.
 
     Existing premium baselines are not required. Missing premiums are logged as
@@ -45,8 +45,8 @@ $trxPath = Join-Path $artifactDir $trxName
 $outputRoot = Join-Path $projectRoot "bin\Debug\net8.0"
 $formsRoot = Join-Path $outputRoot "Resources\ExpectedForms\SFP"
 $proposalPaths = @(
-    (Join-Path $formsRoot "SFP_BASIC_PROPOSED.csv"),
-    (Join-Path $formsRoot "SFP_CE_PROPOSED.csv")
+    (Join-Path $formsRoot "SFP_BASIC_PROPOSED.json"),
+    (Join-Path $formsRoot "SFP_CE_PROPOSED.json")
 )
 
 $recordProfilePath = Join-Path $projectRoot "appsettings.RecordBaseline.json"
@@ -157,8 +157,8 @@ $rawForms = @(Get-ChildItem -LiteralPath $rawFormsDir -Filter "SFP_*.xml")
 $requiredArtifacts = @(
     $trxPath,
     ([IO.Path]::ChangeExtension($trxPath, "premiums.csv")),
-    (Join-Path $artifactDir "SFP_BASIC_PROPOSED.csv"),
-    (Join-Path $artifactDir "SFP_CE_PROPOSED.csv")
+    (Join-Path $artifactDir "SFP_BASIC_PROPOSED.json"),
+    (Join-Path $artifactDir "SFP_CE_PROPOSED.json")
 )
 $missing = @($requiredArtifacts | Where-Object { -not (Test-Path $_) })
 
@@ -167,8 +167,8 @@ Write-Host "=== Capture Complete ===" -ForegroundColor Cyan
 Write-Host "  Test exit code : $testExitCode"
 Write-Host "  TRX            : $trxPath"
 Write-Host "  Premiums       : $([IO.Path]::ChangeExtension($trxPath, 'premiums.csv'))"
-Write-Host "  Forms proposals: $artifactDir\SFP_BASIC_PROPOSED.csv"
-Write-Host "                   $artifactDir\SFP_CE_PROPOSED.csv"
+Write-Host "  Forms proposals: $artifactDir\SFP_BASIC_PROPOSED.json"
+Write-Host "                   $artifactDir\SFP_CE_PROPOSED.json"
 Write-Host "  Raw forms XML  : $rawFormsDir"
 
 if ($missing.Count -gt 0) {
@@ -190,7 +190,7 @@ if ($testExitCode -ne 0) {
 }
 
 Write-Host ""
-Write-Host "Review every quote, premium, and forms column before promotion." -ForegroundColor Yellow
+Write-Host "Review every quote, premium, and JSON state expectation before promotion." -ForegroundColor Yellow
 Write-Host "Dry-run promotion:"
 Write-Host "  .\Scripts\Promote-SFPDevQualification.ps1 -QualificationDirectory `"$artifactDir`""
 Write-Host "Approved promotion:"

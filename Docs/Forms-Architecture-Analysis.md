@@ -1,5 +1,12 @@
 # Excel → JSON Migration: Architectural Analysis
 
+> Historical analysis. Since 2026-10-05, `SFP.json` is the sole SFP runtime
+> baseline, with approved `STATES` and strict exclusions. The generator emits
+> review candidates only and cannot overwrite it. See the README's
+> **SFP Basic and CE forms baselines** section for current behavior and the
+> unresolved SFP v9/Common v80 source gaps; this document is not a qualification
+> record or an instruction to regenerate the active baseline.
+
 ## What Already Exists (The Migration Is Largely Done)
 
 The pipeline is already built end-to-end:

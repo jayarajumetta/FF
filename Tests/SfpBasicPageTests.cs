@@ -90,6 +90,78 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
+        public async Task PrimaryInsuredSave_ContinuesReviewRequiredAndWaitsForUwQuestions()
+        {
+            const string noneOfTheAboveTestId =
+                "fields.underwritingQuestionsGeneralUWQuestions.generalInformationNewInput$noneOfTheAboveGeneralUWQuestions.value";
+            await _page.SetContentAsync($$"""
+                <button data-testid="fields.data.save">Save</button>
+                <script>
+                  document.querySelector('[data-testid="fields.data.save"]').addEventListener('click', () => {
+                    const dialog = document.createElement('div');
+                    dialog.setAttribute('role', 'dialog');
+                    dialog.innerHTML = `
+                        <h2>Review Required</h2>
+                        <button data-testid="btnConfirmYes">KEEP GOING</button>`;
+                    dialog.querySelector('button').addEventListener('click', () => {
+                      dialog.remove();
+                      const input = document.createElement('input');
+                      input.setAttribute('data-testid', '{{noneOfTheAboveTestId}}');
+                      document.body.appendChild(input);
+                    });
+                    document.body.appendChild(dialog);
+                  });
+                </script>
+                """);
+
+            var page = new SFP_PrimaryInsuredPage(_page);
+            await page.SavePrimaryInsuredAsync();
+            var dialogCount = await _page.Locator("[role='dialog']").CountAsync();
+            var uwQuestionsVisible = await _page.GetByTestId(noneOfTheAboveTestId).IsVisibleAsync();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(dialogCount, Is.Zero);
+                Assert.That(uwQuestionsVisible, Is.True);
+            });
+        }
+
+        [Test]
+        public async Task Location_AppliesRequiredAddressOverrideForUnverifiedAddress()
+        {
+            const string addressOverrideTestId =
+                "fields.data.account.location.rows[0].locationInput$addressOverride.value";
+            await _page.SetContentAsync($$"""
+                <p><b>Unverified Address:</b> We couldn't verify this address.</p>
+                <input type="checkbox" data-testid="{{addressOverrideTestId}}">
+                """);
+
+            var locationPage = new LocationPage(_page, new ScenarioContextData());
+            await locationPage.ApplyAddressOverrideIfRequiredAsync();
+
+            Assert.That(
+                await _page.GetByTestId(addressOverrideTestId).IsCheckedAsync(),
+                Is.True);
+        }
+
+        [Test]
+        public async Task Location_ContinuesReviewRequiredAfterSave()
+        {
+            await _page.SetContentAsync("""
+                <div role="dialog">
+                  <h2>Review Required</h2>
+                  <button data-testid="btnConfirmYes"
+                          onclick="this.closest('[role=dialog]').remove()">KEEP GOING</button>
+                </div>
+                """);
+
+            var locationPage = new LocationPage(_page, new ScenarioContextData());
+            await locationPage.ContinuePastReviewRequiredIfPresentAsync();
+
+            Assert.That(await _page.Locator("[role='dialog']").CountAsync(), Is.Zero);
+        }
+
+        [Test]
         public async Task RenovationInputs_UseExistingWiringHeatingPlumbingControls()
         {
             await _page.SetContentAsync(

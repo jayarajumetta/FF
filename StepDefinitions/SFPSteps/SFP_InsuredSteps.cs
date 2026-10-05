@@ -49,7 +49,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             var primaryInsuredPage = new SFP_PrimaryInsuredPage(_context.Page);
             await primaryInsuredPage.ValidatePrimaryInsuredDetailsAsync(_contextData);
             await primaryInsuredPage.WaitForSpinnerAsync();
-            await primaryInsuredPage.ClickSaveAsync();
+            await primaryInsuredPage.SavePrimaryInsuredAsync();
         }
 
         [When("user answers UW Questions and continues")]
