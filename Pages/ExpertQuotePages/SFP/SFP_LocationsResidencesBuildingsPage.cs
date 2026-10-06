@@ -1,5 +1,6 @@
 using Microsoft.Playwright;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using static Microsoft.Playwright.Assertions;
 
 namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
@@ -10,6 +11,11 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         public ILocator AddLocationButton => _page.GetByTestId("fields.data.account.location.addLocationButton");
         public ILocator NextButton => _page.GetByTestId("fields.data_Rules.next");
         public ILocator LocationsNavigation => _page.GetByTestId("LocationsBuildings-nav");
+        public ILocator EditBuildingButtons => _page.GetByTestId(new Regex(
+            @"^fields\.data\.accountDetail\.locationDetail\.rows\[0\]\.building\.rows\[\d+\]\.editBuilding$"))
+            .And(_page.Locator("button"));
+
+        public Task WaitUntilReadyAsync() => new SFP_NativeFormPage(_page).RequireReadyAsync(AddBuildingButton());
 
         public ILocator EditResidenceButton(int locationRow = 0, int buildingRow = 0) =>
             _page.GetByTestId($"fields.data.accountDetail.locationDetail.rows[{locationRow}].building.rows[{buildingRow}].editResidence")

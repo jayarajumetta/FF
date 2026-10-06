@@ -49,6 +49,8 @@ namespace PnCTestAutomation.Models
         public string ResidencePerils { get; set; }
         public string ResidenceThermostatQuestion { get; set; }
         public string ResidenceActualCashValue { get; set; }
+        public string ResidenceEstimatorType { get; set; }
+        public string ResidenceDepreciationPercentage { get; set; }
         public string ResidenceRCTOption { get; set; }
         public string ResidenceUseDefaults { get; set; }
         public string CountryEstateHouseholdContentsAmount { get; set; }

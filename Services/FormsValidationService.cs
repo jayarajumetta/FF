@@ -50,7 +50,7 @@ namespace PnCTestAutomation.Services
         /// <summary>
         /// Primary loader: resolves the correct baseline file for a LOB/state/testCase combination.
         ///
-        /// SFP uses SFP.json exclusively, including when stale CSVs remain in build output.
+        /// SFP uses JSON exclusively: SFP.json for BASIC/CE, SFP_RATEPOLICY.json for RATEPOLICY.
         /// Other LOBs retain their file resolution order:
         ///   1. Test-case CSV: {LOB}_{testCase}.csv  → load all rows (e.g. SFP_BASIC.csv — Tosca baseline)
         ///   2. Merged CSV:    {LOB}.csv  → filter by Type column (BASE + testCase code)
@@ -70,7 +70,7 @@ namespace PnCTestAutomation.Services
             var basePath = Path.Combine(AppContext.BaseDirectory, "Resources", "ExpectedForms", lob);
 
             if (lob.Equals("SFP", StringComparison.OrdinalIgnoreCase))
-                return LoadFromSfpJson(Path.Combine(basePath, "SFP.json"), state, testCase);
+                return LoadFromSfpJson(Path.Combine(basePath, SfpJsonFileName(testCase)), state, testCase);
 
             // 1. Test-case-specific CSV: {LOB}_{testCase}.csv (e.g. SFP_BASIC.csv) — highest priority,
             //    matches the Tosca baseline exactly.
@@ -119,7 +119,7 @@ namespace PnCTestAutomation.Services
 
             var basePath = Path.Combine(AppContext.BaseDirectory, "Resources", "ExpectedForms", lob);
             if (lob.Equals("SFP", StringComparison.OrdinalIgnoreCase))
-                return LoadFromSfpJson(Path.Combine(basePath, "SFP.json"), null, testCase);
+                return LoadFromSfpJson(Path.Combine(basePath, SfpJsonFileName(testCase)), null, testCase);
 
             var testCaseCsv = Path.Combine(basePath, $"{lob}_{testCase}.csv");
             if (File.Exists(testCaseCsv))
@@ -242,7 +242,7 @@ namespace PnCTestAutomation.Services
         }
 
         /// <summary>
-        /// SFP keeps the BASE/BASIC/CE JSON layout. STATES declares approved scenario coverage;
+        /// SFP keeps the BASE plus scenario JSON layout. STATES declares scenario coverage;
         /// a declared form omitted from a state's include list is explicitly N, not informational.
         /// A null state selects the first approved state only for a recording template.
         /// </summary>
@@ -251,22 +251,27 @@ namespace PnCTestAutomation.Services
             return ParseSfpJson(File.ReadAllText(SafeResolvePath(jsonPath)), state, testCase);
         }
 
+        private static string SfpJsonFileName(string testCase) =>
+            string.Equals(testCase, "RATEPOLICY", StringComparison.OrdinalIgnoreCase)
+                ? "SFP_RATEPOLICY.json" : "SFP.json";
+
         public List<ExpectedFormEntry> ParseSfpJson(string json, string state, string testCase = "BASIC")
         {
             using var document = JsonDocument.Parse(json,
                 new JsonDocumentOptions { CommentHandling = JsonCommentHandling.Skip });
             var root = document.RootElement;
             var variant = (testCase ?? "BASIC").ToUpperInvariant();
+            var fileName = SfpJsonFileName(variant);
             if (root.ValueKind != JsonValueKind.Object ||
                 !root.TryGetProperty("STATES", out var stateMap) || stateMap.ValueKind != JsonValueKind.Object)
-                throw new InvalidOperationException("SFP.json requires a STATES object declaring approved scenario states.");
+                throw new InvalidOperationException($"{fileName} requires a STATES object declaring scenario states.");
 
-            RequireUniqueProperties(root, "SFP.json");
+            RequireUniqueProperties(root, fileName);
             RequireUniqueProperties(stateMap, "STATES");
             var approved = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
             foreach (var scenario in stateMap.EnumerateObject())
             {
-                if (scenario.Name is not ("BASIC" or "CE") || scenario.Value.ValueKind != JsonValueKind.Array)
+                if (scenario.Name is not ("BASIC" or "CE" or "RATEPOLICY") || scenario.Value.ValueKind != JsonValueKind.Array)
                     throw new InvalidOperationException($"Invalid SFP scenario state declaration: {scenario.Name}.");
                 var states = new HashSet<string>(StringComparer.Ordinal);
                 foreach (var item in scenario.Value.EnumerateArray())
@@ -283,7 +288,7 @@ namespace PnCTestAutomation.Services
                 throw new InvalidOperationException($"SFP scenario '{variant}' has no approved JSON baseline.");
             state = state?.ToUpperInvariant() ?? supported.First();
             if (!supported.Contains(state))
-                throw new InvalidOperationException($"State '{state}' is not approved in SFP.json for {variant}.");
+                throw new InvalidOperationException($"State '{state}' is not approved in {fileName} for {variant}.");
 
             var knownStates = approved.Values.SelectMany(states => states).ToHashSet(StringComparer.Ordinal);
             var result = new List<ExpectedFormEntry>();
@@ -291,7 +296,7 @@ namespace PnCTestAutomation.Services
             foreach (var sectionName in new[] { "BASE", variant })
             {
                 if (!root.TryGetProperty(sectionName, out var section) || section.ValueKind != JsonValueKind.Object)
-                    throw new InvalidOperationException($"SFP.json requires a {sectionName} forms object.");
+                    throw new InvalidOperationException($"{fileName} requires a {sectionName} forms object.");
                 RequireUniqueProperties(section, sectionName);
                 foreach (var form in section.EnumerateObject())
                 {
@@ -330,9 +335,13 @@ namespace PnCTestAutomation.Services
                     });
                 }
             }
+            if (variant == "RATEPOLICY" && !result.Any(form => form.ExpectedStatus != "N"))
+                throw new InvalidOperationException(
+                    $"Rate Policy Baseline is unpopulated for {state}: {fileName} contains no expected forms for this state. "
+                    + "Supply independently approved Rate Policy expectations; empty or exclusion-only entries cannot pass validation.");
             if (result.Count == 0)
-                throw new InvalidOperationException($"SFP.json contains no forms for {variant}.");
-            Console.WriteLine($"Loading SFP.json for {variant}/{state}: {result.Count} explicit expectations.");
+                throw new InvalidOperationException($"{fileName} contains no forms for {variant}.");
+            Console.WriteLine($"Loading {fileName} for {variant}/{state}: {result.Count} explicit expectations.");
             return result;
         }
 

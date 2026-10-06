@@ -74,6 +74,18 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             // the step is required. Checking the nav is the single source of truth —
             // faster and more reliable than probing page content.
             var sideNav = new SideMenuNavigation(_context.Page);
+            if (IsRatePolicyScenario())
+            {
+                SfpRequiredTable.Read(table, "EntityType", "InsuranceScoreConsent");
+                if (!await sideNav.IsInsuranceScoreNavPresentAsync())
+                    throw new PlaywrightException("The requested Insurance Score page is not available for Rate Policy.");
+                await sideNav.GoToInsuranceScoreAsync();
+                await insuranceScorePage.WaitForSpinnerAsync();
+                await insuranceScorePage.SelectRequiredPrimaryInsuredAsync(_contextData.InsuranceScoreEntityType);
+                await insuranceScorePage.ApplyConsentDecisionAsync(_contextData.InsuranceScoreConsent, required: true);
+                await insuranceScorePage.ClickNextAsync();
+                return;
+            }
             if (!await sideNav.IsInsuranceScoreNavPresentAsync())
             {
                 Console.WriteLine("[InsuranceScore] 'Insurance Designee' not present in side nav - step not required for this state/transaction, skipping.");
@@ -154,7 +166,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             {
                 await sideNav.GoToPricingAsync();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!IsRatePolicyScenario())
             {
                 Console.WriteLine($"[Pricing] Could not navigate via side menu to Pricing: {ex.Message}");
             }
@@ -182,7 +194,9 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             Console.WriteLine("Premium verified on Pricing screen");
 
             // Capture actual premium, log it, then assert against baseline if one is configured.
-            var premium = await pricingPage.GetAnnualPremiumAsync();
+            decimal? premium = IsRatePolicyScenario()
+                ? await pricingPage.GetRequiredAnnualPremiumAsync()
+                : await pricingPage.GetAnnualPremiumAsync();
             if (premium.HasValue)
             {
                 Console.WriteLine($"*** ANNUAL PREMIUM: ${premium.Value:N2} ***");
@@ -197,7 +211,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
                 if (!string.IsNullOrWhiteSpace(expectedRaw) && decimal.TryParse(expectedRaw, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var expectedPremium))
                 {
-                    if (skipPremiumBaselineAssertion)
+                    if (skipPremiumBaselineAssertion && !IsRatePolicyScenario())
                     {
                         Console.WriteLine($"[Premium][DEBUG] Baseline assertion skipped for {productKey}/{stateAbbv}. Expected ${expectedPremium:N2}, captured ${premium.Value:N2}.");
                     }
@@ -210,6 +224,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 }
                 else
                 {
+                    if (IsRatePolicyScenario() && !string.IsNullOrWhiteSpace(expectedRaw))
+                        throw new InvalidOperationException($"Invalid configured premium baseline for {productKey}/{stateAbbv}.");
                     Console.WriteLine($"[Premium] No configured baseline for {productKey}/{stateAbbv}; captured ${premium.Value:N2}.");
                 }
             }
@@ -218,25 +234,28 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         }
 
         /// <summary>
-        /// Derives the forms test case key ("CE" or "BASIC") from the scenario context.
-        /// Checks (in order): explicit FormsTestCase on context, ProductSelection, scenario tags, scenario title.
+        /// Keeps Rate Policy expectations independent; otherwise preserves explicit, product, tag, and title routing.
         /// </summary>
-        private string DeriveFormsTestCase()
-        {
-            // Explicit override from feature table takes highest priority.
-            if (!string.IsNullOrWhiteSpace(_contextData?.FormsTestCase))
-                return _contextData.FormsTestCase;
+        private string DeriveFormsTestCase() => DeriveFormsTestCase(
+            _contextData, _scenarioContext?.ScenarioInfo?.CombinedTags ?? Array.Empty<string>(),
+            _scenarioContext?.ScenarioInfo?.Title ?? string.Empty);
 
-            var productSelection = (_contextData?.ProductSelection ?? string.Empty).Trim();
+        internal static string DeriveFormsTestCase(ScenarioContextData data, string[] tags, string scenarioTitle)
+        {
+            if (SfpRatePolicyInputs.IsRatePolicy(tags, scenarioTitle))
+                return "RATEPOLICY";
+            // Preserve explicit overrides for existing workflows.
+            if (!string.IsNullOrWhiteSpace(data?.FormsTestCase))
+                return data.FormsTestCase;
+
+            var productSelection = (data?.ProductSelection ?? string.Empty).Trim();
             if (productSelection.Equals("CE", StringComparison.OrdinalIgnoreCase)
                 || productSelection.Equals("Country Estate", StringComparison.OrdinalIgnoreCase))
                 return "CE";
 
-            var tags = _scenarioContext?.ScenarioInfo?.Tags ?? Array.Empty<string>();
             if (tags.Any(t => t.Equals("CE", StringComparison.OrdinalIgnoreCase)))
                 return "CE";
 
-            var scenarioTitle = _scenarioContext?.ScenarioInfo?.Title ?? string.Empty;
             if (scenarioTitle.IndexOf("Country Estate", StringComparison.OrdinalIgnoreCase) >= 0
                 || scenarioTitle.IndexOf("CE", StringComparison.OrdinalIgnoreCase) >= 0)
                 return "CE";
@@ -246,6 +265,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
         private string GetPremiumBaselineProductKey()
         {
+            if (IsRatePolicyScenario())
+                return "SFP_RATEPOLICY";
             if (IsPollution146Scenario())
                 return "SFP_POLLUTION146";
 
@@ -277,6 +298,9 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             (_scenarioContext?.ScenarioInfo?.Tags ?? Array.Empty<string>())
                 .Any(tag => tag.Equals("Pollution146", StringComparison.OrdinalIgnoreCase));
 
+        private bool IsRatePolicyScenario() => SfpRatePolicyInputs.IsRatePolicy(
+            _scenarioContext?.ScenarioInfo?.CombinedTags, _scenarioContext?.ScenarioInfo?.Title);
+
         [When("user completes Billing Information")]
         public async Task UserCompletesBillingInformation(Table table)
         {
@@ -284,6 +308,15 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
             var billingPage = new SFP_BillingInformationPage(_context.Page);
             await billingPage.WaitForSpinnerAsync();
+
+            if (IsRatePolicyScenario())
+            {
+                var values = SfpRequiredTable.Read(table, "BillingAccount", "PrimaryPayer", "PaymentType",
+                    "RoutingNumber", "AccountNumber", "BankName", "PaymentPlan", "PaymentDueDate",
+                    "PaymentAmount", "PaymentMethod");
+                await billingPage.CompleteRatePolicyBillingAsync(_contextData, values);
+                return;
+            }
 
             // ── Step 1: Billing Account Setup ────────────────────────────────
             // When escrow is billed to the mortgagee the full billing form is not shown —
@@ -482,6 +515,9 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
                 if (recordBaseline)
                 {
+                    if (IsRatePolicyScenario())
+                        throw new InvalidOperationException(
+                            "Rate Policy requires an independently approved RATEPOLICY JSON baseline; recording actual forms cannot pass this scenario.");
                     var currentBaseline =
                         _validationService.LoadExpectedFormsTemplateForRecording(lob, testCase);
                     var proposedPath = _validationService.SaveProposedBaseline(actualForms, currentBaseline, lob, state, testCase);
@@ -528,11 +564,11 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                         _configuration["Debugging:FailOnFormsValidationError"],
                         "true",
                         StringComparison.OrdinalIgnoreCase);
-                    if (failOnFormsValidationError)
+                    if (failOnFormsValidationError || IsRatePolicyScenario())
                         Assert.Fail(message);
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!IsRatePolicyScenario())
             {
                 // Forms validation is non-blocking — a server error or unavailable DuckCreek
                 // instance should not fail a scenario that has already passed all business steps.
@@ -741,7 +777,8 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 _contextData.ChecklistAction,
                 _contextData.ChecklistExceptionNote,
                 _contextData.ChecklistNote,
-                skipIfNotFound: optional);
+                skipIfNotFound: optional,
+                requireException: IsRatePolicyScenario());
 
             Console.WriteLine($"Completed checklist item: {_contextData.ChecklistItemName}, Action: {_contextData.ChecklistAction}");
         }
@@ -758,6 +795,12 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
             var submissionPage = new SubmissionPage(_context.Page);
             await submissionPage.WaitForSpinnerAsync();
+
+            if (IsRatePolicyScenario())
+            {
+                await submissionPage.AcknowledgeChecklistUpdateAsync();
+                return;
+            }
 
             // 3. Dismiss the "Checklist Opened" modal. It's an Angular Material CDK overlay.
             //    Target the button inside .cdk-overlay-container — works regardless of button text.

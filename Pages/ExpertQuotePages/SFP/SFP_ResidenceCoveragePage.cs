@@ -2,6 +2,7 @@ using Microsoft.Playwright;
 using PnCTestAutomation.Helpers;
 using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Microsoft.Playwright.Assertions;
 
@@ -49,6 +50,79 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         // Get Valuation button — appears after Valuation Type is selected
         public ILocator GetValuationButton =>
             _page.GetByTestId("fields.risk.rows[0].residenceCoverage.rows[0].completeRCTProcess1");
+
+        private ILocator RecalculateValuationButton =>
+            _page.GetByTestId("fields.risk.rows[0].residenceCoverage.rows[0].completeRCTProcess3");
+
+        private ILocator EditRctButton => _page.GetByTestId("editRtcButton");
+
+        private ILocator RatePolicyValuationChips =>
+            _page.GetByTestId("fields.risk.rows[0].residenceCoverage.rows[0].buildingValuatioinInput$valuationType.value-chip-item-wrapper");
+
+        internal static Regex MobileDefaultsCaption => new(
+            @"^(?=.*\bMobile\b)(?=.*\bManufactured\b)(?=.*\b(?:Use|With)\s+Defaults\b)(?!.*\bNo\s+Defaults\b).*$",
+            RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+        public async Task FillRatePolicyResidenceCoverageAsync(ScenarioContextData data)
+        {
+            SfpRequiredTable.RequireValue("RateType", data.ResidenceRateType, "Mobile Home");
+            SfpRequiredTable.RequireValue("EstimatorType", data.Farm.ResidenceEstimatorType, "RCT");
+            SfpRequiredTable.RequireValue("RCTOption", data.ResidenceRCTOption, "Mobile / Manufactured RCT");
+            SfpRequiredTable.RequireValue("UseDefaults", data.ResidenceUseDefaults, "Yes");
+            SfpRequiredTable.RequireValue("ActualCashValue", data.ResidenceActualCashValue, "Actual Cash Value");
+            var form = new SFP_NativeFormPage(_page);
+            await form.SetControlAsync(InsuranceAmountInput, data.ResidenceInsuranceAmount, number: true);
+            await form.SetControlAsync(SquareFeetInput, data.ResidenceSquareFeet, number: true);
+            await form.SelectAsync(PerilsSelect, data.ResidencePerils);
+            await form.SelectChipAsync(
+                form.Chips("BuildingInput.BuildingThermostatQuestion"), data.ResidenceThermostatQuestion);
+            var settlement = form.Field("CoverageInput.ReplacementCost");
+            var readOnlySettlement = form.ReadOnlyValue("CoverageInput.ReplacementCost");
+            if (await settlement.CountAsync() != 0)
+                await form.SelectAsync(settlement, data.ResidenceActualCashValue);
+            else
+            {
+                await Expect(readOnlySettlement).ToHaveCountAsync(1);
+                await Expect(readOnlySettlement).ToHaveTextAsync(
+                    SFP_NativeFormPage.Caption(data.ResidenceActualCashValue));
+            }
+            await EstimatorTypeRCTButton.ClickAsync();
+            await WaitForSpinnerAsync();
+            await Expect(EstimatorTypeRCTButton.Locator(".chip-wrapper-selected")).ToHaveCountAsync(1);
+
+            var mobileWithDefaults = RatePolicyValuationChips.Filter(new() { HasTextRegex = MobileDefaultsCaption });
+            await Expect(mobileWithDefaults).ToHaveCountAsync(1);
+            await mobileWithDefaults.ClickAsync();
+            await WaitForSpinnerAsync();
+            await Expect(mobileWithDefaults.Locator(".chip-wrapper-selected")).ToHaveCountAsync(1);
+            await Expect(RatePolicyValuationChips.Locator(".chip-wrapper-selected")).ToHaveCountAsync(1);
+            await GetValuationButton.ClickAsync();
+            await WaitForSpinnerAsync();
+            await form.RequireReadyAsync(EditRctButton);
+
+            var rctPage = await _page.Context.RunAndWaitForPageAsync(() => EditRctButton.ClickAsync());
+            await new SFP_CoreLogicPage(rctPage).SetAndSaveDepreciationAsync(data.Farm.ResidenceDepreciationPercentage);
+            await _page.BringToFrontAsync();
+            await form.RequireReadyAsync(RecalculateValuationButton);
+            await RecalculateValuationButton.ClickAsync();
+            await WaitForSpinnerAsync();
+            await VerifyPositiveAcvAsync();
+            await SfpFieldAssertions.NumberAsync(InsuranceAmountInput, data.ResidenceInsuranceAmount);
+            await SfpFieldAssertions.NumberAsync(SquareFeetInput, data.ResidenceSquareFeet);
+            await SfpFieldAssertions.SelectionAsync(PerilsSelect, data.ResidencePerils);
+            if (await settlement.CountAsync() != 0)
+                await SfpFieldAssertions.SelectionAsync(settlement, data.ResidenceActualCashValue);
+            else
+                await Expect(readOnlySettlement).ToHaveTextAsync(
+                    SFP_NativeFormPage.Caption(data.ResidenceActualCashValue));
+        }
+
+        public async Task VerifyPositiveAcvAsync()
+        {
+            var acv = new SFP_NativeFormPage(_page).Field("BuildingValuationOutput.ACVValue");
+            var amount = await SfpFieldAssertions.PositiveAmountAsync(acv, "Residence calculated ACV (correction 10943)");
+            Console.WriteLine($"[RCT] Mobile/Manufactured WITH defaults; calculated ACV={amount:N2}.");
+        }
 
         /// <summary>
         /// Returns the correct Valuation Type button based on RCTOption + UseDefaults.

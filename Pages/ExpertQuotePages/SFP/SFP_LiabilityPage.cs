@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 using PnCTestAutomation.Models;
+using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 
 namespace PnCTestAutomation.Pages
@@ -12,6 +13,20 @@ namespace PnCTestAutomation.Pages
     public class SFP_LiabilityPage : BasePage
     {
         public SFP_LiabilityPage(IPage page) : base(page) { }
+
+        public async Task FillRatePolicyBaseCoverageAsync(ScenarioContextData data)
+        {
+            var form = new SFP_NativeFormPage(_page);
+            await form.SelectChipAsync(form.Chips("LineCoverages.IsBaseLiability"), "Yes");
+            foreach (var (input, value) in new[]
+            {
+                (LivestockHorsesInput, data.LivestockHorses), (LivestockSmallInput, data.LivestockSmall),
+                (LivestockLargeInput, data.LivestockLarge), (NumberOfEmployeesInput, data.NumberOfEmployees),
+                (UnlistedAcreageInput, data.UnlistedAcreage)
+            })
+                await form.SetControlAsync(input, value, number: true);
+            await form.SelectAsync(LimitSelect, data.LiabilityLimit, moneyOption: true);
+        }
 
         // Form Fields
         public ILocator LivestockHorsesInput => _page.GetByTestId("fields.policy.line.liability.liabilityInput$livestockHorses.value");

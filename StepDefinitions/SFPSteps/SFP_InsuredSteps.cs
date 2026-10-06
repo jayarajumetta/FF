@@ -92,6 +92,9 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 await claimsPriorInsurancePage.EnterPriorInsuranceCarrierAsync(_contextData.PriorInsuranceCarrier);
             }
 
+            if (SfpRatePolicyInputs.IsRatePolicy(_scenarioContext.ScenarioInfo.CombinedTags, _scenarioContext.ScenarioInfo.Title))
+                await claimsPriorInsurancePage.EnterPriorInsuranceExpirationAsync(_contextData.PriorInsuranceExpDate);
+
             await claimsPriorInsurancePage.ClickNextAsync();
         }
 

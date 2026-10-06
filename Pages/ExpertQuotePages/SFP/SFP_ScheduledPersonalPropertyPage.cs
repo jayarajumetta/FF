@@ -1,5 +1,6 @@
 using Microsoft.Playwright;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -15,6 +16,88 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
     public class SFP_ScheduledPersonalPropertyPage : BasePage
     {
         public SFP_ScheduledPersonalPropertyPage(IPage page) : base(page) { }
+
+        public async Task AddAndVerifyRatePolicyItemAsync(IReadOnlyDictionary<string, string> values)
+        {
+            var code = values["Category"];
+            var action = code switch
+            {
+                "407" => "Jewelry",
+                "409" => "Stamp",
+                "411" => "AutoTrailer",
+                _ => throw new ArgumentException($"Unsupported Rate Policy SPP category '{code}'.")
+            };
+            var form = new SFP_NativeFormPage(_page);
+            await Expect(CoverageTable).ToBeVisibleAsync();
+            await FilterInput.FillAsync(code);
+            await Expect(CoverageTable.Locator("th.mat-column-column1, mat-header-cell.mat-column-column1"))
+                .ToHaveTextAsync("Coverage Code");
+            var row = await form.SelectCatalogCoverageAsync(CoverageTable, "column1", code);
+            var caption = code switch
+            {
+                "407" => @"\bJewelry\b",
+                "409" => @"\bStamp\s+Collections?\b",
+                "411" => @"\bAuto\W+Trailer\W+Home\W+Personal\s+Effects\b",
+                _ => throw new ArgumentException($"Unsupported Rate Policy SPP category '{code}'.")
+            };
+            await Expect(row).ToContainTextAsync(new Regex(caption, RegexOptions.IgnoreCase));
+            await ClickRequiredActionAsync("Add" + action);
+            await ApplyRatePolicyItemAsync(values, verifyOnly: false);
+            await ClickRequiredActionAsync("Save");
+            await form.RequireReadyAsync(CoverageTable);
+            await ClickRequiredActionAsync("Edit" + action);
+            await ApplyRatePolicyItemAsync(values, verifyOnly: true);
+            var nav = _page.Locator("[data-testid='ScheduledPersonalProperty-nav'], #ScheduledPersonalProperty-nav");
+            await Expect(nav).ToHaveCountAsync(1);
+            await nav.ClickAsync();
+            await WaitForSpinnerAsync();
+            await form.RequireReadyAsync(CoverageTable);
+        }
+
+        internal async Task ApplyRatePolicyItemAsync(IReadOnlyDictionary<string, string> values, bool verifyOnly)
+        {
+            var form = new SFP_NativeFormPage(_page);
+            var code = values["Category"];
+            var nativeFields = new List<(string Field, string Value, bool Number)>
+            {
+                ("CovEndorsementsInput.Description", values["Description"], false),
+                ("CovEndorsementsInput.Limit", values[code == "407" ? "Limit" : "Amount"], true)
+            };
+            if (code is "407" or "409")
+                nativeFields.Add(("CovEndorsementsInput.YearOfLastAppraisal", values["AppraisalYear"], true));
+            switch (code)
+            {
+                case "407":
+                    nativeFields.Add(("CovJewelryInput.TypeOfStone", values["TypeOfStone"], false));
+                    nativeFields.Add(("CovJewelryInput.Carat", values["Carat"], false));
+                    nativeFields.Add(("CovJewelryInput.Cut", values["Cut"], false));
+                    nativeFields.Add(("CovJewelryInput.TypeOfJewelry", values["TypeOfJewelry"], false));
+                    nativeFields.Add(("CovJewelryInput.VaultCredit", values["KeptInAVault"], false));
+                    nativeFields.Add(("CovJewelryInput.GemPrint", values["GemPrint"], false));
+                    break;
+                case "409":
+                    nativeFields.Add(("CovStampCollectionsInput.VaultCredit", values["KeptInVault"], false));
+                    nativeFields.Add(("CovStampCollectionsInput.UnattendedVehicle", values["UnattendedVehicle"], false));
+                    break;
+                case "411":
+                    nativeFields.Add(("CovAutoTrailerHomePersonalEffectsInput.LimitPeril", values["LimitPeril"], false));
+                    nativeFields.Add(("CovAutoTrailerHomePersonalEffectsInput.ProfessionalEntertainer", values["ProfessionalEntertainer"], false));
+                    nativeFields.Add(("CovAutoTrailerHomePersonalEffectsInput.UnattendedVehicles", values["UnattendedVehicles"], false));
+                    // One supplied person's name requires one named-person slot in the native editor.
+                    nativeFields.Add(("CovAutoTrailerHomePersonalEffectsInput.NamedPerson", "1", false));
+                    nativeFields.Add(("CovAutoTrailerHomePersonalEffectsInput.Name", values["Name"], false));
+                    break;
+                default:
+                    throw new ArgumentException($"Unsupported Rate Policy SPP category '{code}'.");
+            }
+            foreach (var (field, value, number) in nativeFields)
+            {
+                if (verifyOnly)
+                    await form.VerifyAsync(field, value, number);
+                else
+                    await form.SetAsync(field, value, number);
+            }
+        }
 
         public async Task AddAndVerifyCountryEstateItemAsync(SfpScheduledPropertyItem item)
         {

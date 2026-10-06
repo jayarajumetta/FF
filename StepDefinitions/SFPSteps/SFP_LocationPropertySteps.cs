@@ -15,10 +15,12 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
     {
         private readonly PlaywrightContext _context;
         private readonly ScenarioContextData _contextData;
+        private readonly bool _ratePolicy;
         public SFP_LocationPropertySteps(PlaywrightContext context, ScenarioContext scenarioContext)
             : this(context, scenarioContext[ScenarioContextData.ContextKey] as ScenarioContextData
                 ?? throw new InvalidOperationException("ScenarioContextData not found. Ensure TestHooks.BeforeTestRun registered it."))
         {
+            _ratePolicy = SfpRatePolicyInputs.IsRatePolicy(scenarioContext.ScenarioInfo.CombinedTags, scenarioContext.ScenarioInfo.Title);
         }
 
         internal SFP_LocationPropertySteps(PlaywrightContext context, ScenarioContextData contextData)
@@ -33,7 +35,10 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             TableMappingHelpers.LocationInformationFields(table, _contextData);
 
             var locationPage = new LocationPage(_context.Page, _contextData);
-            await locationPage.EnterLocationInformationAsync();
+            if (_ratePolicy)
+                await locationPage.EnterRequiredRatePolicyLocationAsync();
+            else
+                await locationPage.EnterLocationInformationAsync();
             await locationPage.OrderWildfireRiskScoreIfAvailableAsync();
 
             var hasSourceBackedCoverageInputs =
@@ -44,10 +49,14 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             await locationPage.VerifyWindHailDeductibleOptionsAsync(
                 _contextData.ZipCode,
                 _contextData.WindHailDeductible);
-            await locationPage.SelectWindHailDeductibleAsync(
-                _contextData.WindHailDeductible,
-                _contextData.ZipCode,
-                selectExactRequestedValue: hasSourceBackedCoverageInputs);
+            if (_ratePolicy)
+                await new SFP_NativeFormPage(_context.Page).SelectChoiceAsync("LocationInput.WindHailDeductible",
+                    SFP_NativeFormPage.Caption(_contextData.WindHailDeductible));
+            else
+                await locationPage.SelectWindHailDeductibleAsync(
+                    _contextData.WindHailDeductible,
+                    _contextData.ZipCode,
+                    selectExactRequestedValue: hasSourceBackedCoverageInputs);
 
             if (hasSourceBackedCoverageInputs)
                 await locationPage.ConfigureHurricaneDeductibleAsync();
@@ -60,11 +69,14 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             else
                 await locationPage.ClickSaveAsync();
 
-            await locationPage.ContinuePastReviewRequiredIfPresentAsync();
+            if (_ratePolicy)
+                await new SFP_LocationsResidencesBuildingsPage(_context.Page).WaitUntilReadyAsync();
+            else
+                await locationPage.ContinuePastReviewRequiredIfPresentAsync();
         }
 
         [When("user adds a Residence to the Location")]
-        public Task UserAddsResidenceToLocation(Table table) => AddResidenceAsync(table, verify: false);
+        public Task UserAddsResidenceToLocation(Table table) => AddResidenceAsync(table, verify: _ratePolicy);
 
         [When("user adds and verifies a Basic Residence to the Location")]
         public Task UserAddsAndVerifiesBasicResidenceToLocation(Table table) => AddResidenceAsync(table, verify: true);

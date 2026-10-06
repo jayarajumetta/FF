@@ -22,6 +22,8 @@ namespace PnCTestAutomation.Pages
 
         // Dashboard indicator - confirms login was successful
         private ILocator NewQuoteButton => _page.GetByRole(AriaRole.Button, new() { Name = "New Quote" });
+        private ILocator InvalidSsoState => _page.GetByText(
+            "Invalid State value presented. Please contact your administrator", new() { Exact = true });
 
         // ══════════════════════════════════════════════════════════════════
         // PUBLIC METHODS (actions available to tests)
@@ -45,7 +47,11 @@ namespace PnCTestAutomation.Pages
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 180000 });
 
             // Wait for login to complete - dashboard should be visible
-            await NewQuoteButton.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 180000 });
+            await NewQuoteButton.Or(InvalidSsoState).Filter(new() { Visible = true }).First
+                .WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 180000 });
+            if (await InvalidSsoState.IsVisibleAsync())
+                throw new PlaywrightException(
+                    "ExpertQuote SSO rejected the login: Invalid State value presented. Please contact your administrator.");
         }
 
         /// <summary>

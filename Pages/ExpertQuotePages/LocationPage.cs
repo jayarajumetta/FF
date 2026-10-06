@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Diagnostics.CodeAnalysis;
 using static Microsoft.Playwright.Assertions;
+using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 
 namespace PnCTestAutomation.Pages
 {
@@ -31,6 +32,22 @@ namespace PnCTestAutomation.Pages
             await SetTotalFarmingAcreage(_contextData.TotalAcreage);
 
             await WaitForSpinnerAsync();
+        }
+
+        public async Task EnterRequiredRatePolicyLocationAsync()
+        {
+            var form = new SFP_NativeFormPage(_page);
+            await form.SetAsync("LocationInput.AdditionalDescription", _contextData.LocationNickname);
+            var typeCaption = SFP_NativeFormPage.Caption(_contextData.LocationType);
+            var type = form.Chips("LocationOutput.LocationType")
+                .Filter(new() { HasTextRegex = typeCaption });
+            await Expect(type).ToHaveCountAsync(1);
+            if (await type.Locator(".chip-wrapper-selected").CountAsync() == 0)
+                await form.SelectChoiceAsync("LocationOutput.LocationType", typeCaption);
+            await form.VerifyChoiceAsync("LocationOutput.LocationType", typeCaption);
+            await form.SetAsync("LocationInput.MilesFromFireDepartment", _contextData.MilesFromFireDepartment, number: true);
+            await form.SetAsync("LocationInput.FeetFromHydrant", _contextData.FeetFromHydrant);
+            await form.SetAsync("LocationInput.Acreage", _contextData.TotalAcreage, number: true);
         }
 
         public async Task ApplyAddressOverrideIfRequiredAsync()

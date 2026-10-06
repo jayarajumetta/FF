@@ -48,16 +48,17 @@ if (Test-Path $csvPath) {
 
 foreach ($unitTest in @($trx.TestRun.Results.UnitTestResult)) {
     $testName = [string]$unitTest.testName
-    if (($testName -notmatch "^(SFPBasicPolicy_State|SFPCountryEstatePolicy_State)\(") -and
-        ($testName -notmatch "SFP (Basic|Country Estate) Policy")) {
+    if (($testName -notmatch "^(SFPBasicPolicy_State|SFPCountryEstatePolicy_State|SFPRatePolicy_State)\(") -and
+        ($testName -notmatch "SFP (Basic|Country Estate|Rate) Policy")) {
         continue
     }
 
-    $variant = if ($testName -match "SFPCountryEstatePolicy|Country Estate") { "CE" } else { "BASIC" }
+    $variant = if ($testName -match "SFPRatePolicy|SFP Rate Policy") { "RATEPOLICY" }
+        elseif ($testName -match "SFPCountryEstatePolicy|Country Estate") { "CE" } else { "BASIC" }
     $state = $null
     $generatedState = [regex]::Match(
         $testName,
-        '^SFP(?:BasicPolicy|CountryEstatePolicy)_State\("[^"]+"\s*,\s*"(?<State>[A-Z]{2})"')
+        '^SFP(?:BasicPolicy|CountryEstatePolicy|RatePolicy)_State\("[^"]+"\s*,\s*"(?<State>[A-Z]{2})"')
     if ($generatedState.Success) {
         $state = $generatedState.Groups["State"].Value
     }

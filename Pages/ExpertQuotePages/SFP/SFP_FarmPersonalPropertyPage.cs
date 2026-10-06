@@ -1,5 +1,6 @@
 using Microsoft.Playwright;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using PnCTestAutomation.Helpers;
@@ -16,6 +17,56 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
     public class SFP_FarmPersonalPropertyPage : BasePage
     {
         public SFP_FarmPersonalPropertyPage(IPage page) : base(page) { }
+
+        public async Task AddDetailedMachineryAsync(IReadOnlyDictionary<string, string> values)
+        {
+            SfpRequiredTable.RequireValue("Code", values["Code"], "472");
+            SfpRequiredTable.RequireValue("SpecialUse", values["SpecialUse"], "No");
+            var form = new SFP_NativeFormPage(_page);
+            await Expect(CoverageTable.Locator("th.mat-column-column1, mat-header-cell.mat-column-column1"))
+                .ToHaveTextAsync("Coverage Code");
+            var row = await form.SelectCatalogCoverageAsync(CoverageTable, "column1", values["Code"]);
+            await Expect(row).ToContainTextAsync(new Regex(@"farm.*machinery|machinery.*farm", RegexOptions.IgnoreCase));
+            await form.ClickActionAsync("AddFarmMachinerySpecific");
+            await ApplyMachineryAsync(values, verifyOnly: false);
+            await form.ClickActionAsync("Save");
+            await form.RequireReadyAsync(CoverageTable);
+            await form.ClickActionAsync("EditFarmMachinerySpecific");
+            await ApplyMachineryAsync(values, verifyOnly: true);
+            await form.ClickActionAsync("Cancel");
+            await form.RequireReadyAsync(CoverageTable);
+
+            var nextEb = form.Action("NextEB");
+            var nextSpp = form.Action("NextSPP");
+            await nextEb.Or(nextSpp).First.WaitForAsync(new() { State = WaitForSelectorState.Visible });
+            if (!await nextEb.IsVisibleAsync())
+                await form.ClickActionAsync("NextSPP");
+            await form.ClickActionAsync("NextEB");
+        }
+
+        internal async Task ApplyMachineryAsync(IReadOnlyDictionary<string, string> values, bool verifyOnly)
+        {
+            SfpRequiredTable.RequireValue("SpecialUse", values["SpecialUse"], "No");
+            var form = new SFP_NativeFormPage(_page);
+            foreach (var (question, logical, number) in new[]
+            {
+                ("Limit", "CovEndorsementsInput.Limit", true),
+                ("Deductible", "CovEndorsementsInput.Deductible", false),
+                ("SpecialUse", "CovSpecificFarmMachineryInput.SpecialUse", false),
+                ("CabGlass", "CovSpecificFarmMachineryInput.TractorGlass", false),
+                ("Year", "CovSpecificFarmMachineryInput.Year", true),
+                ("Make", "CovSpecificFarmMachineryInput.Make", false),
+                ("Model", "CovSpecificFarmMachineryInput.Model", false),
+                ("SerialNumber", "CovSpecificFarmMachineryInput.SerialNumber", false)
+            })
+            {
+                var value = question == "SpecialUse" ? "None" : values[question];
+                if (verifyOnly)
+                    await form.VerifyAsync(logical, value, number);
+                else
+                    await form.SetAsync(logical, value, number);
+            }
+        }
 
         #region Locators
         public ILocator FilterInput => _page.GetByTestId("temp.filter");

@@ -92,6 +92,18 @@ namespace PnCTestAutomation.Tests
             });
         }
 
+        [Test]
+        public void Extractor_KeepsRatePolicySeparateFromBasicPremiums()
+        {
+            var trxPath = WriteTrx(UnitTestResult(
+                "SFPRatePolicy_State(&quot;Minnesota&quot;,&quot;MN&quot;)",
+                "Failed", "*** QUOTE NUMBER: 01070004 ***\r\n*** ANNUAL PREMIUM: $1,234.50 ***"));
+            var result = RunExtractor(trxPath);
+            Assert.That(result.ExitCode, Is.Zero, result.Output);
+            Assert.That(File.ReadAllText(Path.ChangeExtension(trxPath, "premiums.csv")),
+                Does.Contain("\"RATEPOLICY\",\"MN\",\"1234.50\",\"01070004\",\"Failed\""));
+        }
+
         private string WriteTrx(params string[] results)
         {
             var path = Path.Combine(_testDirectory, "capture.trx");

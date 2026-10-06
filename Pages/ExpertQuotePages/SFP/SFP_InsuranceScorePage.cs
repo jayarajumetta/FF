@@ -3,6 +3,9 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
+using static Microsoft.Playwright.Assertions;
 
 namespace PnCTestAutomation.Pages
 {
@@ -15,7 +18,18 @@ namespace PnCTestAutomation.Pages
         public ILocator IndividualNotListedButton => _page.GetByTestId("fields.data.sFPInsuranceScoreDesigneeInput$headlessSelectionOption.value-1");
         public ILocator InsuranceScoreConsentButton => _page.GetByTestId("fields.data.insuranceScoreConsen_1");
 
-        public async Task ApplyConsentDecisionAsync(string decision)
+        public async Task SelectRequiredPrimaryInsuredAsync(string entityType)
+        {
+            SfpRequiredTable.RequireValue("EntityType", entityType, "Primary Insured");
+            var form = new SFP_NativeFormPage(_page);
+            if (await EntityTypeSelect.IsVisibleAsync())
+                await form.SelectAsync(EntityTypeSelect, entityType);
+            else
+                await form.SelectChoiceAsync("SFPInsuranceScoreDesigneeInput.HeadlessSelectionOption",
+                    SFP_NativeFormPage.Caption(entityType));
+        }
+
+        public async Task ApplyConsentDecisionAsync(string decision, bool required = false)
         {
             var normalizedDecision = decision?.Trim().ToLowerInvariant();
             var decisionTestId = normalizedDecision switch
@@ -35,8 +49,10 @@ namespace PnCTestAutomation.Pages
                     Timeout = 10000
                 });
             }
-            catch (TimeoutException)
+            catch (TimeoutException ex)
             {
+                if (required)
+                    throw new PlaywrightException("The requested Insurance Score consent action is not available.", ex);
                 Console.WriteLine(
                     "[InsuranceScore] Consent button not present for this state - skipping consent/accept flow");
                 return;

@@ -161,6 +161,30 @@ $env:BROWSER_TYPE = "edge"
 dotnet test TestAutomation.csproj --filter "Category=Smoke"
 ```
 
+### SFP Rate Policy
+
+`Features\SFP\SFP_RatePolicy.feature` contains Minnesota/Nebraska (`Shard1`), South Dakota (`Shard2`), and Wisconsin (`Shard3`). It stops at an **enabled Transmit assertion and forms retrieval**; it never transmits a policy or executes a payment.
+
+Build the active solution in Visual Studio first. Release output can be used without overwriting a running Debug DataPool. The DEV profile's existing state filter is unchanged; use process-local overrides for this scenario:
+
+```powershell
+$env:TEST_ENVIRONMENT = "Dev"
+$env:StateFilters__DevAllowedStates__0 = "MN"
+$env:StateFilters__DevAllowedStates__1 = "NE"
+$env:StateFilters__DevAllowedStates__2 = "SD"
+$env:StateFilters__DevAllowedStates__3 = "WI"
+dotnet test .\TestAutomation.csproj -c Release --no-build --no-restore --filter "FullyQualifiedName~SFPRatePolicyFeature&Name~Minnesota"
+# Remove &Name~Minnesota to run all four examples.
+```
+
+The supplied inputs and assertions are preserved except for two user-approved acreage corrections: Special Farm Pollution `100 -> 200` and Chemical Drift/Transportation `75 -> 200`. Mobile/Manufactured RCT uses the returned **with-defaults** option, enters the supplied depreciation in CoreLogic, and requires positive recalculated ACV. Contents controls are scoped to the returned coverage section. Unknown fields, unavailable choices, required reviews, missing insurance consent, and unavailable billing controls fail rather than being skipped. SFP's source-owned ANPAC default and absence of a proposal-level Lessor's Risk control are retained; the supplied company/No values are validated. Category 411's one supplied name selects one named-person slot.
+
+Building contents explicitly selects the required `CovBuildingContentsInput.CoverageType` (`Content Type`) and verifies it after reopening; it is not derived from the building type. Retail uses the separate `CovRetailSalesOnPremisesInput` and `CovRetailSalesOffPremisesInput` records through `AddEditRetailSales`. Each save/reopen verifies both previously entered retail values and computed own/others sales, including coverage 171 and class codes 10020/10030. Missing or mismatched native fields fail; these source-backed mappings still require an authenticated DEV end-to-end run.
+
+The supplied machinery `SpecialUse=No` selects the native `None` option (value `0`), not a nonexistent No chip. Jewelry stone, carat and cut use the native dropdowns, with stone selected first. New-quote Special Farm Pollution (145) and Chemical Drift/Transportation (148) acreage is read-only and comes from the same line farming-acreage plus unlisted-acreage total; supplied expectations must match that computed value. The test never forces different acreage into these controls.
+
+**Rate Policy Baseline** is `Resources\ExpectedForms\SFP\SFP_RATEPOLICY.json`, scoped to MN/NE/SD/WI. The requested scaffold exists but is **unpopulated**: no expected forms have been supplied or approved. Populate its `BASE` and/or `RATEPOLICY` objects only from independently approved Rate Policy expectations using the existing SFP JSON status conventions. Empty, exclusion-only, and not-yet-populated states fail explicitly; the loader never falls back to the unchanged BASIC/CE baseline in `SFP.json`. The scenario cannot pass in recording mode or suppress forms failures. Premium must be positive; an exact rate comparison additionally requires `ExpectedPremiums:SFP_RATEPOLICY:<state>:Amount`. Captured forms or premiums are not automatically approved baselines. Offline helper checks do not establish a live end-to-end pass.
+
 ### Using `.runsettings` Files
 
 | File | Purpose |
@@ -748,7 +772,8 @@ Output appears in `TestResults/{date}/LocatorScan/`.
 
 ### SFP Basic and CE forms baselines
 
-`Resources\ExpectedForms\SFP\SFP.json` is the **only SFP runtime baseline**.
+`Resources\ExpectedForms\SFP\SFP.json` is the SFP **Basic/CE runtime baseline**.
+Rate Policy uses the separate, currently unpopulated `SFP_RATEPOLICY.json` described above.
 On 2026-10-05 it was refreshed from the current user-designated Tosca masters,
 both last modified on 2026-10-01. **Basic and CE now both cover all 41 Example states.**
 All required-form sets in the 38 legacy states remain unchanged.

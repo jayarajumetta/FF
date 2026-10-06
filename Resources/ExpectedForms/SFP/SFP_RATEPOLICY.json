@@ -1,0 +1,11 @@
+{
+  // Rate Policy Baseline - UNPOPULATED.
+  // Intended scope: MN, NE, SD, WI. No expected forms have been supplied or approved.
+  // Populate from an independently approved Rate Policy source before validation.
+  // Do not copy BASIC/CE or automatically approve captured quote output.
+  "STATES": {
+    "RATEPOLICY": ["MN", "NE", "SD", "WI"]
+  },
+  "BASE": {},
+  "RATEPOLICY": {}
+}

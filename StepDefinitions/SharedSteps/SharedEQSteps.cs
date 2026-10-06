@@ -193,8 +193,9 @@ namespace PnCTestAutomation.StepDefinitions.SharedSteps
         {
             TableMappingHelpers.AccountOwnerFields(table, _contextData);
 
-            // Standardize middle name to the current state abbreviation (e.g., UT, AR).
-            _contextData.ClientMiddleName = StateAbbreviations.ToAbbreviation(_contextData.State);
+            // Rate Policy supplies an explicit middle name; preserve legacy naming for other workflows.
+            if (!SfpRatePolicyInputs.IsRatePolicy(_scenarioContext.ScenarioInfo.CombinedTags, _scenarioContext.ScenarioInfo.Title))
+                _contextData.ClientMiddleName = StateAbbreviations.ToAbbreviation(_contextData.State);
 
             var accountInformationPage = new AccountOwnerInfoPage(_context.Page);
 
@@ -212,7 +213,9 @@ namespace PnCTestAutomation.StepDefinitions.SharedSteps
 
         private string GetScenarioProductLabel()
         {
-            var tags = _scenarioContext?.ScenarioInfo?.Tags ?? Array.Empty<string>();
+            var tags = _scenarioContext?.ScenarioInfo?.CombinedTags ?? Array.Empty<string>();
+            if (SfpRatePolicyInputs.IsRatePolicy(tags, _scenarioContext?.ScenarioInfo?.Title))
+                return "Rate";
             if (tags.Any(t => t.Equals("CE", StringComparison.OrdinalIgnoreCase)))
                 return "CE";
 

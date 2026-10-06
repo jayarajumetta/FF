@@ -151,8 +151,12 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         /// 4. Click Add Note.
         /// Includes SSO redirect handling for session timeout scenarios.
         /// </summary>
-        public async Task CompleteChecklistItemAsync(string itemName, string action, string exceptionNote, string note, bool skipIfNotFound = false)
+        public async Task CompleteChecklistItemAsync(string itemName, string action, string exceptionNote, string note,
+            bool skipIfNotFound = false, bool requireException = false)
         {
+            if (requireException && (!string.Equals(action, "Exception", StringComparison.OrdinalIgnoreCase)
+                || string.IsNullOrWhiteSpace(exceptionNote) || string.IsNullOrWhiteSpace(note)))
+                throw new ArgumentException("Rate Policy checklist items require an Exception, ExceptionNote and Note.");
             var itemVisibilityTimeoutMs = skipIfNotFound ? 12000 : 60000;
             var retryVisibilityTimeoutMs = skipIfNotFound ? 8000 : 30000;
 
@@ -193,6 +197,8 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             // 2. Handle action — Exception button may not exist for all item types (e.g. Attachment Not Required)
             if (string.Equals(action, "Exception", StringComparison.OrdinalIgnoreCase))
             {
+                if (requireException)
+                    await Assertions.Expect(ExceptionButton).ToBeVisibleAsync();
                 var exceptionBtnVisible = await ExceptionButton.IsVisibleAsync();
                 if (!exceptionBtnVisible)
                 {
@@ -228,7 +234,10 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 
             // 4. Verify Add Note is enabled, then force-click to bypass CSS transition stability check
             await Assertions.Expect(AddNoteButton).ToBeEnabledAsync(new() { Timeout = 10000 });
-            await AddNoteButton.ClickAsync(new() { Force = true });
+            if (requireException)
+                await AddNoteButton.ClickAsync();
+            else
+                await AddNoteButton.ClickAsync(new() { Force = true });
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 15000 });
 
             // 5. Reload to return to the summary table view so the next item's link is visible.
@@ -237,6 +246,13 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await WaitForSsoRedirectAsync(_page, timeoutMs: 60000);
             await ThrowIfChecklistApplicationErrorAsync(_page);
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
+            if (requireException)
+            {
+                await row.First.ClickAsync();
+                await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
+                await Assertions.Expect(_page.GetByText(note, new() { Exact = true })
+                    .Filter(new() { Visible = true }).First).ToBeVisibleAsync();
+            }
         }
 
         /// <summary>Closes the checklist popup tab — no Submit needed to enable Transmit.</summary>

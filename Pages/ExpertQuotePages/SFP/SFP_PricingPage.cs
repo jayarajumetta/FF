@@ -3,6 +3,7 @@ using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static Microsoft.Playwright.Assertions;
 
 namespace PnCTestAutomation.Pages
 {
@@ -24,6 +25,18 @@ namespace PnCTestAutomation.Pages
         // Other Elements
         public ILocator QuoteLink => _page.GetByTestId("fields.policyDocs.proposalPrint_1_2_4");
         public ILocator ViewFullDetails => _page.GetByLabel("View Full Details");
+
+        public async Task<decimal> GetRequiredAnnualPremiumAsync()
+        {
+            var total = _page.Locator("[id*='FullPremiumTotalPremiumSumm']").And(_page.Locator(":visible"));
+            await Expect(total).ToHaveCountAsync(1);
+            await Expect(total).ToHaveTextAsync(new Regex(@"^\s*\$[\d,]+(?:\.\d{2})?\s*$"));
+            var amount = decimal.Parse((await total.InnerTextAsync()).Trim(),
+                NumberStyles.Currency, CultureInfo.GetCultureInfo("en-US"));
+            if (amount <= 0)
+                throw new PlaywrightException($"Expected a positive annual premium, received {amount}.");
+            return amount;
+        }
 
         /// <summary>
         /// Attempts to read the annual premium amount from the pricing page.

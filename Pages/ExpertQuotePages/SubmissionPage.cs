@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using PnCTestAutomation.Helpers;
 using PnCTestAutomation.Pages;
+using System.Text.RegularExpressions;
+using static Microsoft.Playwright.Assertions;
 
 namespace PnCTestAutomation.Pages.ExpertQuotePages
 {
@@ -47,5 +49,21 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
         public ILocator TransmitButtonAlt =>
             _page.GetByRole(AriaRole.Button, new() { Name = "Transmit" });
         #endregion
+
+        public async Task AcknowledgeChecklistUpdateAsync()
+        {
+            var dialog = _page.GetByRole(AriaRole.Dialog).Filter(new() { HasText = "Checklist Opened" });
+            await Expect(dialog).ToHaveCountAsync(1);
+            await Expect(dialog).ToBeVisibleAsync();
+            var confirm = dialog.GetByRole(AriaRole.Button, new()
+            {
+                NameRegex = new Regex(@"^\s*(?:OK|Update)\s*$", RegexOptions.IgnoreCase)
+            });
+            await Expect(confirm).ToHaveCountAsync(1);
+            await confirm.ClickAsync();
+            await Expect(dialog).ToBeHiddenAsync();
+            await WaitForSpinnerAsync();
+            await Expect(NoReferralsText).ToBeVisibleAsync();
+        }
     }
 }

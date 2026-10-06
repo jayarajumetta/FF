@@ -1,10 +1,31 @@
 ﻿using Microsoft.Playwright;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using PnCTestAutomation.Helpers;
+using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 
 namespace PnCTestAutomation.Pages
 {
     public class SFP_EquipmentBreakdownPage : BasePage
     {
         public SFP_EquipmentBreakdownPage(IPage page) : base(page) { }
+
+        public async Task CompleteRequiredAnswersAsync(IReadOnlyDictionary<string, string> values)
+        {
+            var form = new SFP_NativeFormPage(_page);
+            foreach (var (question, field) in new[]
+            {
+                ("PowerGreaterThan250kw", "PowerGeneration"),
+                ("TwoOrMoreLosses", "TwoOrMoreLossIn24Month"),
+                ("GreaterThan25000", "LossGreaterThan24KEver"),
+                ("FarmImplements", "FarmImplement")
+            })
+            {
+                SfpRequiredTable.YesNo(values[question]);
+                await form.SelectChipAsync(form.Chips("CovEquipmentBreakdownInput." + field), values[question]);
+            }
+            await ClickNextAsync();
+        }
 
         // Power Generation Questions
         public ILocator PowerGenerationYesButton =>

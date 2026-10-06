@@ -1,5 +1,9 @@
 ﻿using Microsoft.Playwright;
 using System.Threading.Tasks;
+using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using PnCTestAutomation.Pages.ExpertQuotePages.SFP;
 using static Microsoft.Playwright.Assertions;
 
 namespace PnCTestAutomation.Pages.ExpertQuotePages
@@ -105,6 +109,22 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
         public async Task EnterPriorInsuranceCarrierAsync(string carrier)
         {
             await PriorInsuranceCarrierInput.FillAsync(carrier);
+            await PriorInsuranceCarrierInput.PressAsync("Tab");
+            await WaitForSpinnerAsync();
+            await Expect(PriorInsuranceCarrierInput).ToHaveValueAsync(carrier);
+        }
+
+        public async Task EnterPriorInsuranceExpirationAsync(string expiration)
+        {
+            var date = DateTime.ParseExact(expiration, new[] { "M/d/yyyy", "MM/dd/yyyy" },
+                CultureInfo.InvariantCulture, DateTimeStyles.None);
+            var input = new SFP_NativeFormPage(_page).Field("PolicyUnderwritingInput.PriorInsuranceLatestExpirationDate");
+            await Expect(input).ToHaveCountAsync(1);
+            await input.FillAsync(date.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture));
+            await input.PressAsync("Tab");
+            await WaitForSpinnerAsync();
+            await Expect(input).ToHaveValueAsync(new Regex(
+                $"^0?{date.Month}/0?{date.Day}/{date.Year}$"));
         }
 
         public async Task SetFullyCancelledAsync(bool yes)

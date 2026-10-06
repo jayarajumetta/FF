@@ -852,6 +852,16 @@ namespace PnCTestAutomation.Helpers
                     case "ActualCashValue":
                         _contextData.ResidenceActualCashValue = answer;
                         break;
+                    case "EstimatorType":
+                        SfpRequiredTable.RequireValue(question, answer, "RCT");
+                        _contextData.Farm.ResidenceEstimatorType = answer;
+                        break;
+                    case "DepreciationPercentage":
+                        if (!decimal.TryParse(answer, NumberStyles.Number, CultureInfo.InvariantCulture, out var depreciation)
+                            || depreciation < 0 || depreciation > 100)
+                            throw new ArgumentException("DepreciationPercentage must be between 0 and 100.");
+                        _contextData.Farm.ResidenceDepreciationPercentage = answer;
+                        break;
                     case "RCTOption":
                         _contextData.ResidenceRCTOption = answer;
                         break;

@@ -36,6 +36,9 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             _scenarioContext = null;
         }
 
+        private bool IsRatePolicy => SfpRatePolicyInputs.IsRatePolicy(
+            _scenarioContext?.ScenarioInfo?.CombinedTags, _scenarioContext?.ScenarioInfo?.Title);
+
         [When("user selects Policy Wide or Division Specific Coverages and continues")]
         public async Task UserselectsPolicyWideDivisionSpecificCoveragesAndContinues(Table table)
         {
@@ -83,6 +86,13 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         [When("user adds Equipment Breakdown information")]
         public async Task UserAddsEquipmentBreakdownInformation(Table table)
         {
+            if (IsRatePolicy)
+            {
+                var values = SfpRequiredTable.Read(table,
+                    "PowerGreaterThan250kw", "TwoOrMoreLosses", "GreaterThan25000", "FarmImplements");
+                await new SFP_EquipmentBreakdownPage(_context.Page).CompleteRequiredAnswersAsync(values);
+                return;
+            }
             var states = TableMappingHelpers.MapYesNoTableToBool(table);
             var equipmentPage = new SFP_EquipmentBreakdownPage(_context.Page);
 
@@ -224,10 +234,21 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
         private async Task AddLiabilityCoverageAsync(Table table, bool continueToMortgagee)
         {
+            if (IsRatePolicy)
+                SfpRequiredTable.Read(table, "LiabilityLimit", "LivestockHorses", "LivestockSmall",
+                    "LivestockLarge", "NumberOfEmployees", "UnlistedAcreage");
             TableMappingHelpers.LiabilityFields(table, _contextData);
 
             var liabilityPage = new SFP_LiabilityPage(_context.Page);
             await liabilityPage.WaitForSpinnerAsync();
+
+            if (IsRatePolicy)
+            {
+                await liabilityPage.FillRatePolicyBaseCoverageAsync(_contextData);
+                if (continueToMortgagee)
+                    await liabilityPage.NextMortgageeLossPayeeButton.ClickAsync();
+                return;
+            }
 
             // Select Yes to enable liability coverage and reveal remaining fields
             await liabilityPage.BaseLiabilityYesButton.ClickAsync();
@@ -277,6 +298,14 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         [When("user edits liability optional coverage and continues")]
         public async Task UserEditsLiabilityOptionalCoverageAndContinues(Table table)
         {
+            if (IsRatePolicy)
+            {
+                await new SFP_LiabilityOptionalCoveragePage(_context.Page).EditAsync(SfpRatePolicyInputs.Liability(table));
+                var page = new SFP_LiabilityPage(_context.Page);
+                await page.NextMortgageeLossPayeeButton.ClickAsync();
+                await page.WaitForSpinnerAsync();
+                return;
+            }
             TableMappingHelpers.LimitedFarmPollutionFields(table, _contextData);
 
             var liabilityPage = new SFP_LiabilityPage(_context.Page);

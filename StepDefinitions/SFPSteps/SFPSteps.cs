@@ -36,6 +36,12 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             var productSelection = GetProductSelection(table) ?? "SFP";
             _contextData.ProductSelection = productSelection;
             TableMappingHelpers.SFPQuoteDetailsFields(table, _contextData);
+            if (SfpRatePolicyInputs.IsRatePolicy(_scenarioContext.ScenarioInfo.CombinedTags, _scenarioContext.ScenarioInfo.Title))
+            {
+                SfpRequiredTable.RequireValue("WritingCompany", _contextData.WritingCompany,
+                    "American National Property And Casualty Co.");
+                SfpRequiredTable.RequireValue("LessorRisk", _contextData.LessorRisk, "No");
+            }
             var proposalDetailsPage = new QuoteDetailsPage(_context.Page);
             await proposalDetailsPage.WaitForProposalPageLoadAsync();
             await SelectInsuranceProductAsync(proposalDetailsPage, productSelection);
@@ -146,9 +152,15 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             if (!string.IsNullOrEmpty(_contextData.SecondaryFarmType))
             {
                 var toggled = await sfpPolicyDetailsPage.SetSecondaryFarmTypeAsync(true);
+                var strict = SfpRatePolicyInputs.IsRatePolicy(
+                    _scenarioContext.ScenarioInfo.CombinedTags, _scenarioContext.ScenarioInfo.Title);
+                if (strict && !toggled)
+                    throw new PlaywrightException("The supplied secondary farm type could not be enabled.");
                 if (toggled)
                 {
                     var categorySelected = await sfpPolicyDetailsPage.SelectSecondaryFarmCategoryAsync(_contextData.SecondaryFarmType);
+                    if (strict && !categorySelected)
+                        throw new PlaywrightException($"Secondary farm category '{_contextData.SecondaryFarmType}' was not selected.");
                     if (categorySelected && !string.IsNullOrEmpty(_contextData.SecondaryFarmSubType))
                         await sfpPolicyDetailsPage.SelectSecondaryFarmSubTypeAsync(_contextData.SecondaryFarmSubType);
                 }

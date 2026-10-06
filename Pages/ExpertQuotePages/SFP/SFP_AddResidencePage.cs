@@ -1,6 +1,7 @@
 using Microsoft.Playwright;
 using PnCTestAutomation.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Microsoft.Playwright.Assertions;
@@ -78,6 +79,41 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 
         #region Actions
         public ILocator SaveButton => _page.GetByTestId("fields.data.save");
+
+        public async Task AddRatePolicyContentsAndSaveAsync(
+            ScenarioContextData data, IReadOnlyDictionary<string, string> values)
+        {
+            SfpRequiredTable.RequireValue("CoverageType", values["CoverageType"], "Mobile Home Contents");
+            SfpRequiredTable.RequireValue("RateType", data.ResidenceRateType, "Mobile Home");
+            await SfpFieldAssertions.SelectionAsync(FrameSelect, "Mobile Home");
+            var form = new SFP_NativeFormPage(_page);
+            var previousLimits = await form.FieldIdsAsync("CoverageInput.Limit");
+            await form.CheckAsync("RiskInput.EQResidenceContentsCoverage");
+            // Use the newly returned coverage path, not an assumed contents collection or row index.
+            var section = await form.AdditionalSectionAsync("CoverageInput.Limit", previousLimits);
+            await form.SetSectionAsync(section, "CoverageInput.Limit", values["InsuranceAmount"], number: true);
+            await form.SetSectionAsync(section, "CoverageInput.PerilGroup", values["Perils"]);
+            await form.SetSectionAsync(section, "CoverageInput.ReplacementCost", values["ReplacementCost"]);
+            var coverage = new SFP_ResidenceCoveragePage(_page);
+            await coverage.VerifyPositiveAcvAsync();
+            await VerifyResidenceFormAsync(data);
+            await SfpFieldAssertions.NumberAsync(coverage.InsuranceAmountInput, data.ResidenceInsuranceAmount);
+            await SaveButton.ClickAsync();
+            await WaitForSpinnerAsync();
+            var locations = new SFP_LocationsResidencesBuildingsPage(_page);
+            await locations.WaitUntilReadyAsync();
+
+            await locations.OpenResidenceAsync();
+            await VerifyResidenceFormAsync(data);
+            await coverage.VerifyPositiveAcvAsync();
+            await SfpFieldAssertions.NumberAsync(coverage.InsuranceAmountInput, data.ResidenceInsuranceAmount);
+            await form.VerifyControlAsync(form.SectionField(section, "CoverageInput.Limit"), values["InsuranceAmount"], number: true);
+            await form.VerifyControlAsync(form.SectionField(section, "CoverageInput.PerilGroup"), values["Perils"]);
+            await form.VerifyControlAsync(form.SectionField(section, "CoverageInput.ReplacementCost"), values["ReplacementCost"]);
+            await locations.LocationsNavigation.ClickAsync();
+            await WaitForSpinnerAsync();
+            await locations.WaitUntilReadyAsync();
+        }
 
         /// <summary>
         /// Fill the residence form using context data
