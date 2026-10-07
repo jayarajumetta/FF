@@ -28,7 +28,7 @@ Feature: SFP Rate Policy
       | WhereClientResides | Yes            |
     And user selects Special Farm Package and inputs Quote Details
       | Question       | Answer                                     |
-      | EffectiveDate  | {{tomorrow}}                               |
+      | EffectiveDate  | {{laterOfTomorrow:03/21/2027}}             |
       | PolicyTerm     | 12 months                                  |
       | AgentCode      | D2102                                      |
       | RatingState    | <State>                                    |

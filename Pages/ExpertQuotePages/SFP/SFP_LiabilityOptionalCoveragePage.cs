@@ -30,23 +30,17 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                 _ => throw new ArgumentException($"Unsupported liability coverage '{name}'.")
             };
             var form = new SFP_NativeFormPage(_page);
-            var row = await form.SelectNamedCatalogCoverageAsync(Catalog, caption);
+            await form.SelectNamedCatalogCoverageAsync(Catalog, caption);
+            var actionName = CoverageActionName(name);
             var firstField = name switch
             {
                 "Lessors Risk" => form.CheckboxLabel("CovLessorsRiskInput.Dwelling"),
                 _ => form.Field(AcreageCoverageEntity(name) + ".OccurrenceAggregateLimit")
             };
-            var edit = row.GetByRole(AriaRole.Button, new()
-            {
-                NameRegex = new Regex(@"^\s*(?:Edit|Add)(?: Coverage)?\s*$", RegexOptions.IgnoreCase)
-            }).And(_page.Locator(":visible"));
+            var edit = form.Action(actionName);
             await firstField.Or(edit).First.WaitForAsync(new() { State = WaitForSelectorState.Visible });
             if (await firstField.CountAsync() == 0)
-            {
-                await Expect(edit).ToHaveCountAsync(1);
-                await edit.ClickAsync();
-                await WaitForSpinnerAsync();
-            }
+                await form.ClickActionAsync(actionName);
             switch (name)
             {
                 case "Lessors Risk":
@@ -59,9 +53,19 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             }
             await form.ClickActionAsync("Save");
             await form.RequireReadyAsync(Catalog);
-            await Expect(row).Not.ToContainTextAsync(
+            var summaryRow = edit.Locator("xpath=ancestor::*[self::tr or self::mat-row][1]");
+            await Expect(summaryRow).ToHaveCountAsync(1);
+            await Expect(summaryRow).Not.ToContainTextAsync(
                 new Regex("Required Info Missing|Incomplete", RegexOptions.IgnoreCase));
         }
+
+        private static string CoverageActionName(string name) => name switch
+        {
+            "Lessors Risk" => "AddEditLessorsRisk",
+            "Special Farm Pollution" => "AddEditSpecialFarmPollution",
+            "Chemical Drift and Transportation Increased Limits" => "AddEditFarmChemTransportationDrift",
+            _ => throw new ArgumentException($"Unsupported liability coverage '{name}'.")
+        };
 
         private static string AcreageCoverageEntity(string name) => name switch
         {

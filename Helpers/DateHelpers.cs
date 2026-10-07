@@ -13,6 +13,7 @@ namespace PnCTestAutomation.Helpers
     /// Supported tokens:
     /// - {{today}} - Today's date
     /// - {{tomorrow}} - Tomorrow's date
+    /// - {{laterOfTomorrow:M/d/yyyy}} - The supplied effective date or tomorrow, whichever is later
     /// - {{futureDate:+Xd}} - X days in the future (e.g., {{futureDate:+30d}})
     /// - {{pastDate:-Xd}} - X days in the past (e.g., {{pastDate:-30d}})
     /// - {{days+N}} - Legacy: N days from today (deprecated, use futureDate instead)
@@ -73,6 +74,7 @@ namespace PnCTestAutomation.Helpers
         /// Supported tokens:
         /// - {{today}} - Today's date
         /// - {{tomorrow}} - Tomorrow's date
+        /// - {{laterOfTomorrow:M/d/yyyy}} - The supplied effective date or tomorrow, whichever is later
         /// - {{futureDate:+Xd}} - X days in the future
         /// - {{pastDate:-Xd}} - X days in the past
         /// - {{days+N}} - Legacy: N days from today
@@ -84,6 +86,8 @@ namespace PnCTestAutomation.Helpers
 
             var trimmed = value.Trim();
             var lowerTrimmed = trimmed.ToLower();
+            if (trimmed.StartsWith("{{laterOfTomorrow:", StringComparison.OrdinalIgnoreCase))
+                return ResolveLaterOfTomorrowToken(trimmed);
 
             // Exact match tokens
             return lowerTrimmed switch
@@ -95,6 +99,28 @@ namespace PnCTestAutomation.Helpers
                 _ when TryParseDaysToken(lowerTrimmed, out int days) => GetFutureDate(days),
                 _ => value
             };
+        }
+
+        private static string ResolveLaterOfTomorrowToken(string token)
+        {
+            var match = Regex.Match(
+                token,
+                @"^\{\{laterOfTomorrow:(?<date>\d{1,2}/\d{1,2}/\d{4})\}\}$",
+                RegexOptions.IgnoreCase);
+            if (!match.Success
+                || !DateTime.TryParseExact(
+                    match.Groups["date"].Value,
+                    DefaultFormat,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out var minimumDate))
+                throw new ArgumentException(
+                    $"Expected {{{{laterOfTomorrow:M/d/yyyy}}}}, received '{token}'.",
+                    nameof(token));
+
+            var tomorrow = DateTime.Today.AddDays(1);
+            return (minimumDate.Date > tomorrow ? minimumDate.Date : tomorrow)
+                .ToString(DefaultFormat, CultureInfo.InvariantCulture);
         }
 
         /// <summary>

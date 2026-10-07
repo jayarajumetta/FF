@@ -199,6 +199,38 @@ namespace PnCTestAutomation.Pages
                 $"Messages={(visibleMessages.Count == 0 ? "<none>" : string.Join(" / ", visibleMessages.Select(Normalize)))}");
         }
 
+        public async Task ContinuePastReviewRequiredIfPresentAsync()
+        {
+            var dialog = _page
+                .Locator("[role='dialog'], mat-dialog-container")
+                .Filter(new() { HasText = "Review Required" })
+                .First;
+            if (await dialog.CountAsync() == 0 || !await dialog.IsVisibleAsync())
+                return;
+
+            var keepGoing = dialog
+                .GetByTestId("btnConfirmYes")
+                .Or(dialog.GetByRole(AriaRole.Button, new() { Name = "KEEP GOING", Exact = true }))
+                .Filter(new() { Visible = true })
+                .First;
+            if (await keepGoing.CountAsync() == 0)
+                throw new PlaywrightException(
+                    "Review Required dialog did not expose a visible KEEP GOING button.");
+
+            await keepGoing.FocusAsync();
+            if (!await keepGoing.EvaluateAsync<bool>("element => document.activeElement === element"))
+                throw new PlaywrightException(
+                    "Review Required KEEP GOING button could not receive keyboard focus.");
+            await keepGoing.PressAsync("Enter");
+            await dialog.WaitForAsync(new()
+            {
+                State = WaitForSelectorState.Hidden,
+                Timeout = 30000
+            });
+            await WaitForSpinnerAsync();
+            Console.WriteLine("[Navigation] Review Required modal detected - clicked KEEP GOING.");
+        }
+
         /// <summary>
         /// Click the standard Next button
         /// </summary>

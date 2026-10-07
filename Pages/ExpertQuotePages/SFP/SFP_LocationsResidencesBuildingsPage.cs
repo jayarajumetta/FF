@@ -15,6 +15,14 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             @"^fields\.data\.accountDetail\.locationDetail\.rows\[0\]\.building\.rows\[\d+\]\.editBuilding$"))
             .And(_page.Locator("button"));
 
+        public async Task OpenBuildingAsync(string testId)
+        {
+            var button = EditBuildingButtons.And(_page.GetByTestId(testId));
+            await Expect(button).ToHaveCountAsync(1);
+            await button.ClickAsync();
+            await WaitForSpinnerAsync();
+        }
+
         public Task WaitUntilReadyAsync() => new SFP_NativeFormPage(_page).RequireReadyAsync(AddBuildingButton());
 
         public ILocator EditResidenceButton(int locationRow = 0, int buildingRow = 0) =>

@@ -52,6 +52,8 @@ namespace PnCTestAutomation.Pages
         // SSN Pop-Up
         private ILocator SSNPopup => _page.GetByRole(AriaRole.Heading, new() { Name = "Enter the Client's Full SSN#" });
         private ILocator SSNInput => _page.GetByTestId("ssn");
+        private ILocator QuoteStartedWithoutSsn =>
+            _page.Locator("body:not(:has(#startQuote:visible))");
         // btnConfirmYes is wrapped in <ng-component> which intercepts pointer events.
         // Use DispatchEventAsync("click") instead of ClickAsync everywhere this is used.
         private ILocator DialogSubmitButton => _page.GetByTestId("btnConfirmYes");
@@ -306,26 +308,23 @@ namespace PnCTestAutomation.Pages
 
         public async Task HandleSSNPopupsAsync(ScenarioContextData contextData)
         {
-            var popupVisible = false;
             try
             {
-                await SSNPopup.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
-                popupVisible = true;
+                await SSNPopup
+                    .Or(QuoteStartedWithoutSsn)
+                    .First
+                    .WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 60000 });
             }
             catch (TimeoutException)
             {
-                await WaitForSpinnerAsync();
-                popupVisible = await SSNPopup.CountAsync() > 0 && await SSNPopup.IsVisibleAsync();
-
-                if (!popupVisible && await StartQuoteButton.IsHiddenAsync())
-                    return;
-
-                if (!popupVisible)
-                {
-                    throw new InvalidOperationException(
-                        $"Start Quote produced neither an SSN dialog nor a page transition. URL='{_page.Url}'.");
-                }
+                throw new InvalidOperationException(
+                    $"Start Quote produced neither an SSN dialog nor a page transition within 60 seconds. "
+                    + await BuildPageDiagnosticsAsync());
             }
+
+            var popupVisible = await SSNPopup.CountAsync() > 0 && await SSNPopup.IsVisibleAsync();
+            if (!popupVisible)
+                return;
 
             string ssnToUse = !string.IsNullOrWhiteSpace(contextData.SSN)
                 ? contextData.SSN

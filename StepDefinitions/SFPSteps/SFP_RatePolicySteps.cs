@@ -76,6 +76,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
             await Expect(locations.EditBuildingButtons).ToHaveCountAsync(2);
             await locations.NextButton.ClickAsync();
             await locations.WaitForSpinnerAsync();
+            await locations.ContinuePastReviewRequiredIfPresentAsync();
         }
 
         [When("user adds detailed Farm Personal Property and continues")]

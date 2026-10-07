@@ -26,7 +26,8 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await Expect(CoverageTable.Locator("th.mat-column-column1, mat-header-cell.mat-column-column1"))
                 .ToHaveTextAsync("Coverage Code");
             var row = await form.SelectCatalogCoverageAsync(CoverageTable, "column1", values["Code"]);
-            await Expect(row).ToContainTextAsync(new Regex(@"farm.*machinery|machinery.*farm", RegexOptions.IgnoreCase));
+            await Expect(row.Locator("td.mat-column-column2, mat-cell.mat-column-column2"))
+                .ToHaveTextAsync("Farm Machinery - Specific");
             await form.ClickActionAsync("AddFarmMachinerySpecific");
             await ApplyMachineryAsync(values, verifyOnly: false);
             await form.ClickActionAsync("Save");
@@ -50,8 +51,8 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             var form = new SFP_NativeFormPage(_page);
             foreach (var (question, logical, number) in new[]
             {
-                ("Limit", "CovEndorsementsInput.Limit", true),
-                ("Deductible", "CovEndorsementsInput.Deductible", false),
+                ("Limit", "CovSpecificFarmMachineryInput.Limit", true),
+                ("Deductible", "CovSpecificFarmMachineryInput.Deductible", false),
                 ("SpecialUse", "CovSpecificFarmMachineryInput.SpecialUse", false),
                 ("CabGlass", "CovSpecificFarmMachineryInput.TractorGlass", false),
                 ("Year", "CovSpecificFarmMachineryInput.Year", true),

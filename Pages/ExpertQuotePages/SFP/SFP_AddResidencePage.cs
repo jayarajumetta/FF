@@ -91,9 +91,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await form.CheckAsync("RiskInput.EQResidenceContentsCoverage");
             // Use the newly returned coverage path, not an assumed contents collection or row index.
             var section = await form.AdditionalSectionAsync("CoverageInput.Limit", previousLimits);
-            await form.SetSectionAsync(section, "CoverageInput.Limit", values["InsuranceAmount"], number: true);
-            await form.SetSectionAsync(section, "CoverageInput.PerilGroup", values["Perils"]);
-            await form.SetSectionAsync(section, "CoverageInput.ReplacementCost", values["ReplacementCost"]);
+            await FillRatePolicyContentsSectionAsync(section, values);
             var coverage = new SFP_ResidenceCoveragePage(_page);
             await coverage.VerifyPositiveAcvAsync();
             await VerifyResidenceFormAsync(data);
@@ -107,12 +105,25 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await VerifyResidenceFormAsync(data);
             await coverage.VerifyPositiveAcvAsync();
             await SfpFieldAssertions.NumberAsync(coverage.InsuranceAmountInput, data.ResidenceInsuranceAmount);
-            await form.VerifyControlAsync(form.SectionField(section, "CoverageInput.Limit"), values["InsuranceAmount"], number: true);
-            await form.VerifyControlAsync(form.SectionField(section, "CoverageInput.PerilGroup"), values["Perils"]);
-            await form.VerifyControlAsync(form.SectionField(section, "CoverageInput.ReplacementCost"), values["ReplacementCost"]);
+            await form.VerifySectionAsync(
+                section, "CoverageInput.Type", values["CoverageType"], readOnlyCaption: "Coverage Type");
+            await form.VerifySectionAsync(section, "CoverageInput.Limit", values["InsuranceAmount"], number: true);
+            await form.VerifySectionAsync(section, "CoverageInput.PerilGroup", values["Perils"]);
+            await form.VerifySectionAsync(section, "CoverageInput.ReplacementCost", values["ReplacementCost"]);
             await locations.LocationsNavigation.ClickAsync();
             await WaitForSpinnerAsync();
             await locations.WaitUntilReadyAsync();
+        }
+
+        internal async Task FillRatePolicyContentsSectionAsync(
+            string section, IReadOnlyDictionary<string, string> values)
+        {
+            var form = new SFP_NativeFormPage(_page);
+            await form.SetSectionAsync(
+                section, "CoverageInput.Type", values["CoverageType"], readOnlyCaption: "Coverage Type");
+            await form.SetSectionAsync(section, "CoverageInput.Limit", values["InsuranceAmount"], number: true);
+            await form.SetSectionAsync(section, "CoverageInput.PerilGroup", values["Perils"]);
+            await form.SetSectionAsync(section, "CoverageInput.ReplacementCost", values["ReplacementCost"]);
         }
 
         /// <summary>

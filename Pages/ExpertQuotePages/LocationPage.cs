@@ -77,32 +77,6 @@ namespace PnCTestAutomation.Pages
                 "[Location] Unverified address detected - selected the required Address Override.");
         }
 
-        public async Task ContinuePastReviewRequiredIfPresentAsync()
-        {
-            var reviewRequiredDialog = _page
-                .Locator("[role='dialog'], mat-dialog-container")
-                .Filter(new() { HasText = "Review Required" })
-                .First;
-            if (await reviewRequiredDialog.CountAsync() == 0 ||
-                !await reviewRequiredDialog.IsVisibleAsync())
-                return;
-
-            var keepGoing = reviewRequiredDialog.GetByTestId("btnConfirmYes").First;
-            if (await keepGoing.CountAsync() == 0 || !await keepGoing.IsVisibleAsync())
-                throw new PlaywrightException(
-                    "Location Review Required dialog did not expose KEEP GOING.");
-
-            await keepGoing.ClickAsync(new() { Force = true });
-            await reviewRequiredDialog.WaitForAsync(new()
-            {
-                State = WaitForSelectorState.Detached,
-                Timeout = 30000
-            });
-            await WaitForSpinnerAsync();
-            Console.WriteLine(
-                "[Location] Review Required modal detected - clicked KEEP GOING.");
-        }
-
         private ILocator LocationNicknameInput() => _page.Locator("input[data-testid*='locationInput$additionalDescription.value']");
 
         private async Task SetLocationNickname(string nickname)

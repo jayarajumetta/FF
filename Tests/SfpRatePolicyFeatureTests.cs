@@ -39,10 +39,17 @@ namespace PnCTestAutomation.Tests
             new Parser().Parse(FeaturePath()).Feature.Children.OfType<Scenario>().Single();
 
         [Test]
-        public void CanonicalFeature_PreservesInputsExceptApprovedAcreageCorrections()
+        public void CanonicalFeature_PreservesInputsExceptApprovedRatePolicyUpdates()
         {
             var lines = File.ReadAllLines(FeaturePath());
             var tables = ReadScenario().Steps.Select(step => step.Argument).OfType<DataTable>().ToArray();
+            var effectiveDate = tables
+                .SelectMany(table => table.Rows)
+                .Single(row => row.Cells.First().Value == "EffectiveDate");
+            Assert.That(
+                effectiveDate.Cells.ElementAt(1).Value,
+                Is.EqualTo("{{laterOfTomorrow:03/21/2027}}"));
+            lines[effectiveDate.Location.Line - 1] = "| EffectiveDate | {{tomorrow}} |";
             foreach (var (coverage, originalAcres) in new[]
             {
                 ("Special Farm Pollution", "100"),
@@ -63,7 +70,28 @@ namespace PnCTestAutomation.Tests
             var hash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(
                 string.Join("\n", semanticLines) + "\n")));
             Assert.That(hash, Is.EqualTo("253579EA9C1B718218307385F989A8FB40F9924649DED39BA4D46807A2A4DE38"),
-                "Only table alignment and the two user-approved 200-acre expectations may differ from the supplied scenario.");
+                "Only table alignment, the Rate Policy effective-date token, and the two user-approved 200-acre expectations may differ from the supplied scenario.");
+        }
+
+        [Test]
+        public void RateEffectiveDate_UsesMarch2027OrTomorrowWhicheverIsLater()
+        {
+            var releaseDate = new DateTime(2027, 3, 21);
+            var tomorrow = DateTime.Today.AddDays(1);
+            var expected = (releaseDate > tomorrow ? releaseDate : tomorrow)
+                .ToString("M/d/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(
+                    DateHelpers.ResolveDateToken("{{laterOfTomorrow:03/21/2027}}"),
+                    Is.EqualTo(expected));
+                Assert.That(
+                    DateHelpers.ResolveDateToken("{{laterOfTomorrow:01/01/2000}}"),
+                    Is.EqualTo(DateHelpers.GetTomorrowDate()));
+                Assert.Throws<ArgumentException>(() =>
+                    DateHelpers.ResolveDateToken("{{laterOfTomorrow:03/21/27}}"));
+            });
         }
 
         [Test]

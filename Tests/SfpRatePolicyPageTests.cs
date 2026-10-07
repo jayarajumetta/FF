@@ -69,6 +69,129 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
+        public async Task ResidenceContents_ValidatesReadOnlyCoverageTypeAndHandlesKeyboardOpenedPerils()
+        {
+            const string section = "fields.contents.rows[7]";
+            await _page.SetContentAsync(
+                "<fieldset><div class='readonly-field readonly readonly-chips'>"
+                + "<span class='readonly-label'>Coverage Type::</span>"
+                + "<span class='readonly-value'>Mobile Home Contents</span></div>"
+                + $"<input data-testid='{section}.coverageInput$limit.value' value='0'>"
+                + $"<mat-select id='contents-perils' role='combobox' tabindex='0' aria-expanded='false' aria-disabled='false' "
+                + "style='display:block;width:100px;height:30px' "
+                + $"data-testid='{section}.coverageInput$perilGroup.value'></mat-select>"
+                + Chips(section + ".coverageInput$replacementCost", "No")
+                + Chips(section + ".coverageInput$replacementCost", "Yes", selected: false)
+                + """
+                  <script>
+                    const peril = document.getElementById('contents-perils');
+                    peril.addEventListener('keydown', event => {
+                      if (event.code !== 'Space')
+                        return;
+                      event.preventDefault();
+                      peril.setAttribute('aria-expanded', 'true');
+                      document.body.insertAdjacentHTML('beforeend',
+                        '<div id="peril-options" role="listbox"><div role="option">3</div><div role="option">5</div></div>');
+                      document.querySelectorAll('#peril-options [role="option"]').forEach(option =>
+                        option.addEventListener('click', () => {
+                          peril.textContent = option.textContent;
+                          peril.setAttribute('aria-expanded', 'false');
+                          document.getElementById('peril-options').remove();
+                        }));
+                    });
+                  </script>
+                  </fieldset>
+                  """);
+            var values = ScenarioValues("CoverageType", "Mobile Home Contents");
+            var residence = new SFP_AddResidencePage(_page);
+
+            await residence.FillRatePolicyContentsSectionAsync(section, values);
+
+            var form = new SFP_NativeFormPage(_page);
+            await form.VerifySectionAsync(
+                section, "CoverageInput.Type", "Mobile Home Contents", readOnlyCaption: "Coverage Type");
+            await form.VerifySectionAsync(section, "CoverageInput.Limit", "100000", number: true);
+            await form.VerifySectionAsync(section, "CoverageInput.PerilGroup", "5");
+            await form.VerifySectionAsync(section, "CoverageInput.ReplacementCost", "Yes");
+        }
+
+        [Test]
+        public async Task NativeMaterialSelect_CentersBelowFoldControlBeforeOpeningItsOverlay()
+        {
+            await _page.SetContentAsync("""
+                <div style="height:1200px"></div>
+                <mat-select data-testid="fields.building.rows[0].covBuildingInput$coverageType.value"
+                            role="combobox" aria-expanded="false" tabindex="0"
+                            style="display:block;width:200px;height:30px"></mat-select>
+                <div style="height:1200px"></div>
+                <script>
+                  const select = document.querySelector('mat-select');
+                  select.addEventListener('click', () => {
+                    const rect = select.getBoundingClientRect();
+                    document.body.insertAdjacentHTML('beforeend',
+                      `<div id="coverage-options" role="listbox"
+                            style="position:fixed;left:${rect.left}px;top:${rect.bottom}px">
+                         <div role="option">Farm Building</div>
+                         <div role="option">Private Structure</div>
+                       </div>`);
+                    select.setAttribute('aria-expanded', 'true');
+                    document.querySelectorAll('#coverage-options [role="option"]').forEach(option =>
+                      option.addEventListener('click', () => {
+                        select.textContent = option.textContent;
+                        select.setAttribute('aria-expanded', 'false');
+                        document.getElementById('coverage-options').remove();
+                      }));
+                  });
+                </script>
+                """);
+            var form = new SFP_NativeFormPage(_page);
+
+            await form.SetAsync("CovBuildingInput.CoverageType", "Farm Building");
+
+            await form.VerifyAsync("CovBuildingInput.CoverageType", "Farm Building");
+        }
+
+        [Test]
+        public async Task NativeMaterialSelect_UsesExactActiveOptionWhenOverlayIsOutsideViewport()
+        {
+            await _page.SetContentAsync("""
+                <mat-select data-testid="fields.building.rows[0].covBuildingInput$coverageType.value"
+                            role="combobox" aria-expanded="false" tabindex="0"
+                            style="display:block;width:200px;height:30px"></mat-select>
+                <script>
+                  const select = document.querySelector('mat-select');
+                  let panelOpened = false;
+                  select.addEventListener('click', () => {
+                    if (panelOpened)
+                      return;
+                    panelOpened = true;
+                    document.body.insertAdjacentHTML('beforeend',
+                      `<div id="offscreen-options" role="listbox"
+                            style="position:fixed;left:0;top:2000px;width:200px;height:50px">
+                         <div id="farm-building-option" role="option">Farm Building</div>
+                       </div>`);
+                    select.setAttribute('aria-expanded', 'true');
+                    select.setAttribute('aria-controls', 'offscreen-options');
+                    select.setAttribute('aria-activedescendant', 'farm-building-option');
+                  });
+                  select.addEventListener('keydown', event => {
+                    if (event.key !== 'Enter'
+                        || select.getAttribute('aria-activedescendant') !== 'farm-building-option')
+                      return;
+                    select.textContent = 'Farm Building';
+                    select.setAttribute('aria-expanded', 'false');
+                    document.getElementById('offscreen-options').remove();
+                  });
+                </script>
+                """);
+            var form = new SFP_NativeFormPage(_page);
+
+            await form.SetAsync("CovBuildingInput.CoverageType", "Farm Building");
+
+            await form.VerifyAsync("CovBuildingInput.CoverageType", "Farm Building");
+        }
+
+        [Test]
         public async Task BuildingContents_ScopesDuplicateLabelsToTheReturnedCoverageSection()
         {
             await _page.SetContentAsync("""
@@ -83,6 +206,328 @@ namespace PnCTestAutomation.Tests
             await form.VerifyControlAsync(
                 form.SectionField(section, "CovBuildingContentsInput.ReplacementCost"), "Yes");
             Assert.That(await form.Field("CovBuildingInput.ReplacementCost").InputValueAsync(), Is.EqualTo("No"));
+        }
+
+        [Test]
+        public async Task BuildingContents_VerifiesReplacementCostChipAfterReopen()
+        {
+            const string section = "fields.contents.rows[3]";
+            await _page.SetContentAsync(
+                $"<input data-testid='{section}.covBuildingContentsInput$limit.value' value='750000'>"
+                + Chips(section + ".covBuildingContentsInput$replacementCost", "No", selected: false)
+                + Chips(section + ".covBuildingContentsInput$replacementCost", "Yes"));
+            var form = new SFP_NativeFormPage(_page);
+
+            await form.VerifySectionAsync(
+                section, "CovBuildingContentsInput.ReplacementCost", "Yes");
+        }
+
+        [Test]
+        public async Task BuildingCoverage_SelectsReplacementCostByLogicalFieldWithoutLabelAssociation()
+        {
+            const string section = "fields.building.rows[0]";
+            await _page.SetContentAsync(
+                Chips(section + ".covBuildingInput$replacementCost", "No")
+                + Chips(section + ".covBuildingInput$replacementCost", "Yes", selected: false));
+            var form = new SFP_NativeFormPage(_page);
+
+            await form.SetAsync("CovBuildingInput.ReplacementCost", "Yes");
+
+            await form.VerifyAsync("CovBuildingInput.ReplacementCost", "Yes");
+        }
+
+        [Test]
+        public async Task ChipSelection_IgnoresTooltipTextThatDuplicatesTheCaption()
+        {
+            const string field = "fields.building.rows[0].buildingValuatioinInput$valuationType";
+            await _page.SetContentAsync(
+                Chips(field, "Commercial Valuation")
+                + Chips(field, "Agricultural Valuation", selected: false, tooltipOnClick: true));
+            var form = new SFP_NativeFormPage(_page);
+
+            await form.SetAsync("BuildingValuatioinInput.ValuationType", "Agricultural Valuation");
+
+            await form.VerifyAsync("BuildingValuatioinInput.ValuationType", "Agricultural Valuation");
+        }
+
+        [Test]
+        public async Task ChipSelection_ClicksTheInteractiveChipInsteadOfItsOuterLayoutWrapper()
+        {
+            const string field = "fields.contents.rows[0].covBuildingContentsInput$coverageType";
+            await _page.SetContentAsync($"""
+                <div data-testid="{field}.value-chip-item-wrapper">
+                  <div data-testid="{field}.value-chip-wrapper" class="chip-wrapper"
+                       onclick="this.className='chip-wrapper-selected'">
+                    <span data-testid="{field}.value-chip-label" class="chip-label">Farm Contents</span>
+                  </div>
+                </div>
+                """);
+            var form = new SFP_NativeFormPage(_page);
+
+            await form.SetAsync("CovBuildingContentsInput.CoverageType", "Farm Contents");
+
+            await form.VerifyAsync("CovBuildingContentsInput.CoverageType", "Farm Contents");
+        }
+
+        [Test]
+        public async Task NativeTypeahead_SelectsAnExactOptionAndVerifiesThePersistedValue()
+        {
+            await _page.SetContentAsync("""
+                <input data-testid="_temp.fields.building.rows[0].buildingValuatioinInput$bVSOccupancyGroup.value"
+                       role="combobox" aria-autocomplete="list" aria-expanded="false">
+                <script>
+                  const input = document.querySelector('input');
+                  input.addEventListener('input', () => {
+                    document.getElementById('occupancy-options')?.remove();
+                    document.body.insertAdjacentHTML('beforeend',
+                      '<div id="occupancy-options" role="listbox"><div role="option">Cattle</div><div role="option">General</div></div>');
+                    document.querySelectorAll('#occupancy-options [role="option"]').forEach(option =>
+                      option.addEventListener('click', () => {
+                        input.value = option.textContent;
+                        input.setAttribute('aria-expanded', 'false');
+                        document.getElementById('occupancy-options').remove();
+                      }));
+                    input.setAttribute('aria-expanded', 'true');
+                  });
+                </script>
+                """);
+            var form = new SFP_NativeFormPage(_page);
+
+            await form.SetAsync("BuildingValuatioinInput.BVSOccupancyGroup", "Cattle");
+
+            await form.VerifyAsync("BuildingValuatioinInput.BVSOccupancyGroup", "Cattle");
+        }
+
+        [Test]
+        public async Task RefreshingTypeahead_WaitsForTheDeferredDuckCreekResponse()
+        {
+            await _context.RouteAsync(
+                "**/api/duckcreek/product",
+                route => route.FulfillAsync(new() { Status = 200, ContentType = "application/json", Body = "{}" }));
+            await _page.SetContentAsync("""
+                <input data-testid="_temp.fields.building.rows[0].buildingValuatioinInput$bVSOccupancyGroup.value"
+                       role="combobox" aria-autocomplete="list" aria-expanded="false">
+                <script>
+                  const input = document.querySelector('input');
+                  input.addEventListener('input', () => {
+                    document.body.insertAdjacentHTML('beforeend',
+                      '<div id="occupancy-options" role="listbox"><div role="option">General</div></div>');
+                    input.setAttribute('aria-controls', 'occupancy-options');
+                    input.setAttribute('aria-expanded', 'true');
+                    document.querySelector('[role="option"]').addEventListener('click', event => {
+                      input.value = event.target.textContent;
+                      input.setAttribute('aria-expanded', 'false');
+                      document.getElementById('occupancy-options').remove();
+                      setTimeout(async () => {
+                        await fetch('https://duckcreek.test/api/duckcreek/product', { method: 'POST' });
+                        window.refreshCompleted = true;
+                      }, 750);
+                    });
+                  });
+                </script>
+                """);
+            var form = new SFP_NativeFormPage(_page);
+
+            await form.SetRefreshingTypeaheadAsync(
+                "BuildingValuatioinInput.BVSOccupancyGroup", "General");
+
+            Assert.That(
+                await _page.EvaluateAsync<bool>("() => window.refreshCompleted === true"),
+                Is.True);
+        }
+
+        [Test]
+        public async Task CatalogSelection_WaitsForTheDeferredDuckCreekResponse()
+        {
+            await _context.RouteAsync(
+                "**/api/duckcreek/product",
+                route => route.FulfillAsync(new() { Status = 200, ContentType = "application/json", Body = "{}" }));
+            await _page.SetContentAsync("""
+                <table data-testid="coverageTableLiability">
+                  <tr>
+                    <td>Lessors Risk</td>
+                    <td>
+                      <input id="lessors" type="checkbox"
+                             data-testid="fields.coverages.rows[0].lessorsInput$selected.value">
+                      <label for="lessors"
+                             data-testid="fields.coverages.rows[0].lessorsInput$selected.value">Select</label>
+                    </td>
+                  </tr>
+                </table>
+                <script>
+                  document.querySelector('label').addEventListener('click', () => {
+                    setTimeout(async () => {
+                      await fetch('https://duckcreek.test/api/duckcreek/product', { method: 'POST' });
+                      window.refreshCompleted = true;
+                    }, 750);
+                  });
+                </script>
+                """);
+            var form = new SFP_NativeFormPage(_page);
+
+            await form.SelectNamedCatalogCoverageAsync(
+                _page.GetByTestId("coverageTableLiability"),
+                SFP_NativeFormPage.Caption("Lessors Risk"));
+
+            Assert.That(
+                await _page.EvaluateAsync<bool>("() => window.refreshCompleted === true"),
+                Is.True);
+        }
+
+        [Test]
+        public async Task NativeTypeahead_UsesItsAriaControlledPanelAndClosesItWhenAnotherListboxIsVisible()
+        {
+            await _page.SetContentAsync("""
+                <div id="stale-options" role="listbox"><div role="option">Cattle</div></div>
+                <input data-testid="_temp.fields.building.rows[0].buildingValuatioinInput$bVSSearchResult.value"
+                       role="combobox" aria-autocomplete="list" aria-expanded="false">
+                <script>
+                  const input = document.querySelector('input');
+                  input.addEventListener('input', () => {
+                    document.getElementById('search-options')?.remove();
+                    document.body.insertAdjacentHTML('beforeend',
+                      '<div id="search-options" role="listbox"><div role="option">120 - Hay Storage, Open One Side</div></div>');
+                    input.setAttribute('aria-controls', 'search-options');
+                    input.setAttribute('aria-expanded', 'true');
+                    document.querySelector('#search-options [role="option"]').addEventListener('click', event => {
+                      input.value = event.target.textContent;
+                    });
+                  });
+                  input.addEventListener('keydown', event => {
+                    if (event.key !== 'Escape')
+                      return;
+                    document.getElementById('search-options')?.remove();
+                    input.setAttribute('aria-expanded', 'false');
+                  });
+                </script>
+                """);
+            var form = new SFP_NativeFormPage(_page);
+
+            await form.SetAsync(
+                "BuildingValuatioinInput.BVSSearchResult", "120 - Hay Storage, Open One Side");
+
+            await form.VerifyAsync(
+                "BuildingValuatioinInput.BVSSearchResult", "120 - Hay Storage, Open One Side");
+            Assert.That(await _page.Locator("#stale-options").IsVisibleAsync(), Is.True);
+            Assert.That(await _page.Locator("#search-options").CountAsync(), Is.Zero);
+        }
+
+        [Test]
+        public async Task NativeTypeahead_UsesExactKeyboardOptionWhenControlledPanelIsOutsideViewport()
+        {
+            await _page.SetContentAsync("""
+                <input data-testid="_temp.fields.building.rows[0].buildingValuatioinInput$bVSSearchResult.value"
+                       role="combobox" aria-autocomplete="list" aria-expanded="false">
+                <script>
+                  const input = document.querySelector('input');
+                  input.addEventListener('input', () => {
+                    document.getElementById('search-options')?.remove();
+                    document.body.insertAdjacentHTML('beforeend',
+                      `<div id="search-options" role="listbox"
+                            style="position:fixed;left:0;top:2000px;width:250px;height:50px">
+                         <div id="implement-shed-option" role="option">601 - Farm Implement Shed</div>
+                       </div>`);
+                    input.setAttribute('aria-controls', 'search-options');
+                    input.setAttribute('aria-expanded', 'true');
+                  });
+                  input.addEventListener('keydown', event => {
+                    if (event.key === 'ArrowDown') {
+                      event.preventDefault();
+                      input.setAttribute('aria-activedescendant', 'implement-shed-option');
+                    }
+                    if (event.key === 'Enter'
+                        && input.getAttribute('aria-activedescendant') === 'implement-shed-option') {
+                      event.preventDefault();
+                      input.value = '601 - Farm Implement Shed';
+                      input.setAttribute('aria-expanded', 'false');
+                      document.getElementById('search-options').remove();
+                    }
+                  });
+                  input.addEventListener('blur', () => window.typeaheadCommitted = input.value);
+                </script>
+                """);
+            var form = new SFP_NativeFormPage(_page);
+
+            await form.SetAsync(
+                "BuildingValuatioinInput.BVSSearchResult", "601 - Farm Implement Shed");
+
+            await form.VerifyAsync(
+                "BuildingValuatioinInput.BVSSearchResult", "601 - Farm Implement Shed");
+            Assert.That(
+                await _page.EvaluateAsync<string>("() => window.typeaheadCommitted"),
+                Is.EqualTo("601 - Farm Implement Shed"));
+        }
+
+        [Test]
+        public async Task BuildingBvsSearchResult_UsesCurrentNativeSelectWithoutLegacySearchTable()
+        {
+            await _page.SetContentAsync("""
+                <select data-testid="fields.building.rows[0].buildingValuatioinInput$bVSSearchResult.value">
+                  <option value="">Select</option>
+                  <option value="120">120 - Hay Storage, Open One Side</option>
+                  <option value="601">601 - Farm Implement Shed</option>
+                </select>
+                """);
+            var building = new SFP_BuildingPage(_page);
+
+            await building.SelectBvsSearchResultAsync("120 - Hay Storage, Open One Side");
+
+            Assert.That(await _page.Locator("select").InputValueAsync(), Is.EqualTo("120"));
+        }
+
+        [Test]
+        public async Task BuildingBvsGetValuation_UsesCurrentDevAction()
+        {
+            await _page.SetContentAsync("""
+                <button data-testid="fields.risk.rows[0].covBuilding.rows[0].completeBVSProcess3">
+                  Get Valuation
+                </button>
+                <script>
+                  document.querySelector('button').addEventListener('click', () => window.valuationRequested = true);
+                </script>
+                """);
+            var building = new SFP_BuildingPage(_page);
+
+            await building.GetValuationAsync();
+
+            Assert.That(await _page.EvaluateAsync<bool>("window.valuationRequested"), Is.True);
+        }
+
+        [Test]
+        public async Task BuildingBvsCalculatedValues_RequirePositiveCurrentDevAcvAndRcOutputs()
+        {
+            await SetBvsCalculatedValuesAsync("35337", "35337");
+            var form = new SFP_NativeFormPage(_page);
+
+            await SFP_BuildingPage.RequireCalculatedValuesAsync(form);
+        }
+
+        [TestCase("0", "35337")]
+        [TestCase("35337", "0")]
+        public async Task BuildingBvsCalculatedValues_RejectZeroAcvOrRc(string acv, string rc)
+        {
+            await SetBvsCalculatedValuesAsync(acv, rc);
+            var form = new SFP_NativeFormPage(_page);
+
+            Assert.ThrowsAsync<PlaywrightException>(
+                () => SFP_BuildingPage.RequireCalculatedValuesAsync(form));
+        }
+
+        [Test]
+        public async Task SavedBuilding_ReopensTheButtonWhenItsNestedIconDuplicatesTheTestId()
+        {
+            const string testId =
+                "fields.data.accountDetail.locationDetail.rows[0].building.rows[1].editBuilding";
+            await _page.SetContentAsync($"""
+                <button data-testid="{testId}" onclick="window.buildingOpened = true">
+                  <div data-testid="{testId}">pen icon</div>
+                </button>
+                """);
+            var locations = new SFP_LocationsResidencesBuildingsPage(_page);
+
+            await locations.OpenBuildingAsync(testId);
+
+            Assert.That(await _page.EvaluateAsync<bool>("window.buildingOpened"), Is.True);
         }
 
         [TestCase("Farm Contents", "FarmContents")]
@@ -124,6 +569,21 @@ namespace PnCTestAutomation.Tests
             Assert.ThrowsAsync<PlaywrightException>(() => new SFP_BuildingPage(_page).VerifyContentsTypeAsync("Farm Contents"));
         }
 
+        [TestCase("Brick", "Brick/Stone/Masonry")]
+        [TestCase("Metal", "Aluminum/Steel/Engineered Steel/All Metal")]
+        public void BuildingConstruction_UsesCurrentDevCaption(string scenarioValue, string nativeCaption) =>
+            Assert.That(SFP_BuildingPage.NativeConstructionCaption(scenarioValue), Is.EqualTo(nativeCaption));
+
+        [TestCase("Concrete", "Concrete, Composition Wood Fiber/Cement")]
+        [TestCase("Metal", "Metal")]
+        public void BuildingRoof_UsesCurrentDevCaption(string scenarioValue, string nativeCaption) =>
+            Assert.That(SFP_BuildingPage.NativeRoofCaption(scenarioValue), Is.EqualTo(nativeCaption));
+
+        [TestCase("Storage Building", "712 - Storage Building")]
+        [TestCase("Equipment Shed", "160 - Equipment Shed")]
+        public void BuildingDescriptionCode_UsesCurrentDevCaption(string scenarioValue, string nativeCaption) =>
+            Assert.That(SFP_BuildingPage.NativeDescriptionCodeCaption(scenarioValue), Is.EqualTo(nativeCaption));
+
         [Test]
         public async Task RetailCoverage_SavesAndReopensDistinctOnOffRecordsWithoutOverwritingOnPremises()
         {
@@ -161,8 +621,8 @@ namespace PnCTestAutomation.Tests
         {
             const string path = "fields.machinery.rows[4].";
             await _page.SetContentAsync("""
-                <input data-testid="fields.machinery.rows[4].covEndorsementsInput$limit.value">
-                <select data-testid="fields.machinery.rows[4].covEndorsementsInput$deductible.value"><option value="1000">$1,000</option></select>
+                <input data-testid="fields.machinery.rows[4].covSpecificFarmMachineryInput$limit.value">
+                <select data-testid="fields.machinery.rows[4].covSpecificFarmMachineryInput$deductible.value"><option value="1000">$1,000</option></select>
                 <label>Year<input type="number" data-testid="fields.machinery.rows[4].covSpecificFarmMachineryInput$year.value"></label>
                 <label>Make<input data-testid="fields.machinery.rows[4].covSpecificFarmMachineryInput$make.value"></label>
                 <label>Model<input data-testid="fields.machinery.rows[4].covSpecificFarmMachineryInput$model.value"></label>
@@ -386,6 +846,25 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
+        public async Task ReviewRequired_UsesKeyboardWhenAngularLayerOccludesKeepGoing()
+        {
+            await _page.SetContentAsync("""
+                <div role="dialog" style="position:relative;width:500px;height:200px">
+                  <h2>Review Required</h2>
+                  <button data-testid="btnConfirmYes"
+                          style="position:absolute;left:300px;top:120px"
+                          onclick="this.closest('[role=dialog]').remove()">Keep Going</button>
+                  <ng-component style="position:absolute;inset:0;z-index:2"></ng-component>
+                </div>
+                """);
+
+            await new SFP_LocationsResidencesBuildingsPage(_page)
+                .ContinuePastReviewRequiredIfPresentAsync();
+
+            Assert.That(await _page.GetByRole(AriaRole.Dialog).CountAsync(), Is.Zero);
+        }
+
+        [Test]
         public async Task PriorInsurance_EntersTheSuppliedDateWithoutMovingItToTheEffectiveDate()
         {
             await _page.SetContentAsync("""
@@ -477,10 +956,63 @@ namespace PnCTestAutomation.Tests
             Assert.That(error!.Message, Does.Contain("SSO rejected the login").And.Contain("Invalid State value"));
         }
 
-        [TestCase(false)]
-        [TestCase(true)]
+        [Test]
+        public async Task StartQuote_WaitsForDelayedDevSsnDialogAndCompletesBothPrompts()
+        {
+            await _page.SetContentAsync("""
+                <button id="startQuote">Start Quote</button>
+                <script>
+                  window.events = [];
+                  setTimeout(() => {
+                    document.body.insertAdjacentHTML('beforeend', `
+                      <div role="dialog" id="ssn-dialog">
+                        <h2>Enter the Client's Full SSN#</h2>
+                        <input data-testid="ssn">
+                        <button data-testid="btnConfirmYes">Submit</button>
+                      </div>`);
+                    const dialog = document.getElementById('ssn-dialog');
+                    dialog.querySelector('[data-testid=btnConfirmYes]').addEventListener('click', () => {
+                      events.push('ssn:' + dialog.querySelector('[data-testid=ssn]').value);
+                      dialog.innerHTML = `
+                        <h2>Confirm Client</h2>
+                        <button data-testid="btnConfirmYes">Submit</button>`;
+                      dialog.querySelector('[data-testid=btnConfirmYes]').addEventListener('click', () => {
+                        events.push('confirm');
+                        dialog.remove();
+                        document.getElementById('startQuote').remove();
+                      });
+                    });
+                  }, 200);
+                </script>
+                """);
+            var data = new ScenarioContextData { SSN = "123-45-6789" };
+
+            await new QuoteDetailsPage(_page).HandleSSNPopupsAsync(data);
+
+            Assert.That(await _page.EvaluateAsync<string[]>("window.events"),
+                Is.EqualTo(new[] { "ssn:123456789", "confirm" }));
+        }
+
+        [Test]
+        public async Task StartQuote_ReturnsWhenQuoteTransitionsWithoutSsnDialog()
+        {
+            await _page.SetContentAsync("""
+                <button id="startQuote">Start Quote</button>
+                <script>
+                  setTimeout(() => document.getElementById('startQuote').remove(), 200);
+                </script>
+                """);
+
+            await new QuoteDetailsPage(_page).HandleSSNPopupsAsync(new ScenarioContextData());
+
+            Assert.That(await _page.Locator("#startQuote").CountAsync(), Is.Zero);
+        }
+
+        [TestCase(false, false)]
+        [TestCase(true, true)]
         public async Task MobileRct_UsesDefaultsAndAppliesDepreciationEvenWhenInitialAcvIsPositive(
-            bool readOnlySettlement)
+            bool readOnlySettlement,
+            bool usesCompletionPage)
         {
             const string prefix = "fields.risk.rows[0].residenceCoverage.rows[0].";
             await _page.SetContentAsync(
@@ -500,17 +1032,91 @@ namespace PnCTestAutomation.Tests
                 + $"<input id='acv' data-testid='{prefix}buildingValuationOutput$aCVValue.value' value='200000'>"
                 + $"<button data-testid='{prefix}completeRCTProcess1' onclick=\"window.events=['initial'];\">Get Valuation</button>"
                 + $"<button hidden data-testid='{prefix}completeRCTProcess3' onclick=\"events.push('recalculate'); document.getElementById('acv').value='225000'\">Recalculate</button>"
+                + $"<script>window.usesCompletionPage = {(usesCompletionPage ? "true" : "false")};</script>"
                 + """
                   <button data-testid="editRtcButton" onclick="editRct()">Edit RCT</button>
                   <script>
                     function editRct() {
                       events.push('edit');
                       const popup = window.open('about:blank');
-                      popup.document.write(`<label for="depreciation">Depreciation Percentage</label>
-                        <input id="depreciation" value="0">
-                        <button onclick="window.opener.events.push('depreciation:' + document.getElementById('depreciation').value);
-                          window.opener.document.querySelector('[data-testid$=completeRCTProcess3]').hidden = false;
-                          setTimeout(() => window.close(), 50)">Save and Close</button>`);
+                      popup.document.write(`
+                        <div id="rct-topToolBarMenu">
+                          <ul id="corelogic-menu" class="sf-menu">
+                            <li id="menu_options">
+                              <a href="#">Options(*)</a>
+                              <ul id="options-submenu" hidden>
+                                <li><a id="AddMarkupsAndAdjustmentsLink" href="#" onclick="openAdjustments()">Markups and Adjustments</a></li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <input class="recalc-valuation-totals" type="button" value="Calculate" hidden
+                          onclick="window.opener.events.push('calculate'); this.hidden = true">
+                        <input class="save-or-discard-valuation" type="button" value="Finish" onclick="finishValuation()">
+                        <div class="t-widget t-window" id="ConfirmationWindow" style="display: none">
+                          <div class="t-window-content t-content">
+                            <div id="ConfirmationDiv">
+                              <p>Click <span>Save</span> to save your changes.</p>
+                              <p>Click <span>Discard</span> to discard your changes and return to the dashboard.</p>
+                              <p>Click <span>Close</span> to return to the valuation and continue editing.</p>
+                            </div>
+                            <div class="button-container">
+                              <button id="SaveValuationButton" onclick="saveValuation()">Save</button>
+                              <button id="DiscardValuationButton">Discard</button>
+                              <button id="CloseConfirmationButton">Close</button>
+                            </div>
+                          </div>
+                        </div>
+                        <script>
+                          setTimeout(() => {
+                            document.getElementById('corelogic-menu').classList.add('sf-js-enabled');
+                            document.getElementById('menu_options').addEventListener('mouseenter', () => {
+                              document.getElementById('options-submenu').hidden = false;
+                            });
+                          }, 500);
+                          function openAdjustments() {
+                            document.body.insertAdjacentHTML('beforeend', \`
+                              <div class="t-widget t-window" id="AddMarkupsAndAdjustmentsWindow">
+                                <div class="t-window-content t-content">Please wait.</div>
+                              </div>\`);
+                            setTimeout(() => {
+                              document.querySelector('#AddMarkupsAndAdjustmentsWindow .t-window-content').innerHTML = \`
+                                <div id="CreateAdjustmentDiv">
+                                  <form onsubmit="event.preventDefault(); saveAdjustment()">
+                                    <input type="radio" name="depreciation"> None
+                                    <input id="UseDepreciationPercentage" type="radio" name="depreciation"
+                                      onclick="document.getElementById('ViewModel_DepreciationPercent').disabled = false">
+                                    Use Depreciation Percentage
+                                    <input id="ViewModel_DepreciationPercent" type="text" value="5" disabled>
+                                    <input type="submit" value="Save">
+                                  </form>
+                                </div>\`;
+                            }, 100);
+                          }
+                          function saveAdjustment() {
+                            window.opener.events.push('depreciation:' + document.getElementById('ViewModel_DepreciationPercent').value);
+                            document.getElementById('AddMarkupsAndAdjustmentsWindow').remove();
+                            document.querySelector('.recalc-valuation-totals').hidden = false;
+                          }
+                          function finishValuation() {
+                            window.opener.events.push('finish');
+                            document.getElementById('ConfirmationWindow').style.display = 'block';
+                          }
+                          function saveValuation() {
+                            const opener = window.opener;
+                            opener.events.push('save');
+                            opener.document.querySelector('[data-testid$=completeRCTProcess3]').hidden = false;
+                            if (opener.usesCompletionPage) {
+                              document.open();
+                              document.write(\`
+                                <span id="lblResult">Complete!</span>
+                                <span id="lblMessage">You may now close this window. This valuation is being processed.</span>\`);
+                              document.close();
+                              return;
+                            }
+                            setTimeout(() => window.close(), 50);
+                          }
+                        <\/script>`);
                       popup.document.close();
                     }
                   </script>
@@ -525,7 +1131,7 @@ namespace PnCTestAutomation.Tests
             data.Farm.ResidenceDepreciationPercentage = "10";
             await new SFP_ResidenceCoveragePage(_page).FillRatePolicyResidenceCoverageAsync(data);
             Assert.That(await _page.EvaluateAsync<string[]>("window.events"),
-                Is.EqualTo(new[] { "initial", "edit", "depreciation:10", "recalculate" }));
+                Is.EqualTo(new[] { "initial", "edit", "depreciation:10", "calculate", "finish", "save", "recalculate" }));
             Assert.That(await _page.GetByTestId(prefix + "coverageInput$limit.value").InputValueAsync(), Is.EqualTo("250000"));
         }
 
@@ -535,6 +1141,14 @@ namespace PnCTestAutomation.Tests
         [TestCase("High Value RCT - Use Defaults", false)]
         public void MobileDefaults_CannotMatchStandardOrNoDefaults(string caption, bool expected) =>
             Assert.That(SFP_ResidenceCoveragePage.MobileDefaultsCaption.IsMatch(caption), Is.EqualTo(expected));
+
+        private Task SetBvsCalculatedValuesAsync(string acv, string rc) =>
+            _page.SetContentAsync($"""
+                <input data-testid="fields.building.rows[0].buildingValuationOutput$aCVValue.value"
+                       value="{acv}" readonly>
+                <input data-testid="fields.building.rows[0].buildingValuationOutput$rCValue.value"
+                       value="{rc}" readonly>
+                """);
 
         private static Dictionary<string, string> ScenarioValues(string question, string answer) =>
             new Gherkin.Parser().Parse(SfpRatePolicyFeatureTests.FeaturePath())
@@ -620,10 +1234,17 @@ namespace PnCTestAutomation.Tests
                 """);
         }
 
-        private static string Chips(string path, string value, bool selected = true) =>
+        private static string Chips(
+            string path, string value, bool selected = true, bool tooltipOnClick = false) =>
             $"<div data-testid='{path}.value-chip-item-wrapper' onclick=\""
-            + "document.querySelectorAll('[data-testid]').forEach(item => { if(item.dataset.testid===this.dataset.testid) item.querySelector('span').className=''; });"
-            + "this.querySelector('span').className='chip-wrapper-selected'\">"
-            + $"<span class='{(selected ? "chip-wrapper-selected" : "")}'>{value}</span></div>";
+            + "document.querySelectorAll('[data-testid]').forEach(item => {"
+            + "if(item.dataset.testid===this.dataset.testid) item.querySelector('.chip-wrapper, .chip-wrapper-selected').className='chip-wrapper'; });"
+            + "this.querySelector('.chip-wrapper').className='chip-wrapper-selected';"
+            + (tooltipOnClick
+                ? $"this.insertAdjacentHTML('beforeend','<div class=&quot;custom-tooltip&quot;>{value}</div>');"
+                : "")
+            + "\">"
+            + $"<div data-testid='{path}.value-chip-wrapper' class='{(selected ? "chip-wrapper-selected" : "chip-wrapper")}'>"
+            + $"<span data-testid='{path}.value-chip-label' class='chip-label'>{value}</span></div></div>";
     }
 }

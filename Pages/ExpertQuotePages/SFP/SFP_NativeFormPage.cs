@@ -64,14 +64,80 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             return Field(logicalName).And(_page.Locator($"[data-testid^='{prefix}.'], [id^='{prefix}.']"));
         }
 
-        public async Task SetSectionAsync(string section, string logicalName, string value, bool number = false)
+        public async Task SetSectionAsync(
+            string section, string logicalName, string value, bool number = false, string readOnlyCaption = null)
         {
             var prefix = section.Replace("\\", "\\\\").Replace("'", "\\'");
             var chips = Chips(logicalName).And(_page.Locator($"[data-testid^='{prefix}.'], [id^='{prefix}.']"));
             if (await chips.CountAsync() != 0)
+            {
                 await SelectChipAsync(chips, value);
-            else
-                await SetControlAsync(SectionField(section, logicalName), value, number);
+                return;
+            }
+
+            var control = SectionField(section, logicalName);
+            if (await control.CountAsync() != 0)
+            {
+                await SetControlAsync(control, value, number);
+                return;
+            }
+
+            if (readOnlyCaption != null)
+            {
+                await VerifySectionReadOnlyAsync(section, readOnlyCaption, value);
+                return;
+            }
+
+            await SetControlAsync(control, value, number);
+        }
+
+        public async Task VerifySectionAsync(
+            string section, string logicalName, string value, bool number = false, string readOnlyCaption = null)
+        {
+            var prefix = section.Replace("\\", "\\\\").Replace("'", "\\'");
+            var chips = Chips(logicalName).And(_page.Locator($"[data-testid^='{prefix}.'], [id^='{prefix}.']"));
+            if (await chips.CountAsync() != 0)
+            {
+                var selected = (await ChoiceWithCaptionAsync(chips, Caption(value)))
+                    .Locator(".chip-wrapper-selected");
+                await Expect(selected).ToHaveCountAsync(1);
+                return;
+            }
+
+            var control = SectionField(section, logicalName);
+            if (await control.CountAsync() != 0)
+            {
+                await VerifyControlAsync(control, value, number);
+                return;
+            }
+
+            if (readOnlyCaption != null)
+            {
+                await VerifySectionReadOnlyAsync(section, readOnlyCaption, value);
+                return;
+            }
+
+            await VerifyControlAsync(control, value, number);
+        }
+
+        private async Task VerifySectionReadOnlyAsync(string section, string caption, string expected)
+        {
+            var prefix = section.Replace("\\", "\\\\").Replace("'", "\\'");
+            var anchor = _page.Locator($"[data-testid^='{prefix}.'], [id^='{prefix}.']").First;
+            var container = anchor.Locator("xpath=ancestor::fieldset[1]");
+            await Expect(container).ToHaveCountAsync(1);
+
+            var captionPattern = new Regex(
+                @"^\s*" + Regex.Escape(caption.Trim()).Replace(@"\ ", @"\s+") + @":*\s*$",
+                RegexOptions.IgnoreCase);
+            var readOnlyField = container.Locator(".readonly-field").Filter(new()
+            {
+                Has = _page.Locator(".readonly-label").Filter(new() { HasTextRegex = captionPattern })
+            });
+            await Expect(readOnlyField).ToHaveCountAsync(1);
+            var readOnlyValue = readOnlyField.Locator(".readonly-value");
+            await Expect(readOnlyValue).ToHaveCountAsync(1);
+            await Expect(readOnlyValue).ToHaveTextAsync(Caption(expected));
         }
 
         private ILocator Native(string logicalName, string suffix)
@@ -98,7 +164,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 
         public async Task SelectChoiceAsync(string logicalName, Regex caption)
         {
-            var choice = (await ChoiceOptionsAsync(logicalName)).Filter(new() { HasTextRegex = caption });
+            var choice = await ChoiceWithCaptionAsync(await ChoiceOptionsAsync(logicalName), caption);
             await Expect(choice).ToHaveCountAsync(1);
             await choice.ClickAsync();
             await WaitForSpinnerAsync();
@@ -107,7 +173,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 
         public async Task VerifyChoiceAsync(string logicalName, Regex caption)
         {
-            var choice = (await ChoiceOptionsAsync(logicalName)).Filter(new() { HasTextRegex = caption });
+            var choice = await ChoiceWithCaptionAsync(await ChoiceOptionsAsync(logicalName), caption);
             await Expect(choice).ToHaveCountAsync(1);
             var selected = choice.Locator(".chip-wrapper-selected, [aria-checked='true'], input:checked")
                 .Or(choice.And(_page.Locator(".chip-wrapper-selected, [aria-checked='true']")));
@@ -135,6 +201,14 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                 await SelectAsync(control, value, moneyOption);
                 return;
             }
+            if (string.Equals(await control.GetAttributeAsync("role"), "combobox",
+                    StringComparison.OrdinalIgnoreCase)
+                && string.Equals(await control.GetAttributeAsync("aria-autocomplete"), "list",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                await SelectTypeaheadAsync(control, value);
+                return;
+            }
             if (await control.GetAttributeAsync("type") == "checkbox")
             {
                 await control.SetCheckedAsync(SfpRequiredTable.YesNo(value));
@@ -158,6 +232,85 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await VerifyTextAsync(control, value, number);
         }
 
+        public async Task SetRefreshingTypeaheadAsync(string logicalName, string value)
+        {
+            var control = Field(logicalName);
+            await Expect(control).ToHaveCountAsync(1);
+            await Expect(control).ToBeVisibleAsync();
+            var tag = await control.EvaluateAsync<string>("element => element.tagName.toLowerCase()");
+            if (tag is "mat-select" or "select")
+            {
+                await SelectAsync(control, value);
+                return;
+            }
+            if (!string.Equals(await control.GetAttributeAsync("role"), "combobox",
+                    StringComparison.OrdinalIgnoreCase)
+                || !string.Equals(await control.GetAttributeAsync("aria-autocomplete"), "list",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new PlaywrightException(
+                    $"Expected '{logicalName}' to be a native typeahead requiring a Duck Creek refresh.");
+            }
+
+            await SelectTypeaheadAsync(control, value, waitForDuckCreekRefresh: true);
+        }
+
+        private async Task SelectTypeaheadAsync(
+            ILocator control,
+            string value,
+            bool waitForDuckCreekRefresh = false)
+        {
+            await control.FillAsync(value);
+            var controlledPanel = await control.GetAttributeAsync("aria-controls");
+            if (controlledPanel != null && !Regex.IsMatch(controlledPanel, @"^[A-Za-z_][A-Za-z0-9_.:-]*$"))
+                throw new PlaywrightException(
+                    $"Typeahead aria-controls contained an invalid panel id: '{controlledPanel}'.");
+            var listbox = controlledPanel == null
+                ? _page.GetByRole(AriaRole.Listbox).And(_page.Locator(":visible"))
+                : _page.Locator($"[role='listbox'][id='{controlledPanel}']:visible");
+            await Expect(listbox).ToHaveCountAsync(1);
+            var option = listbox.GetByRole(AriaRole.Option).Filter(new() { HasTextRegex = Caption(value) });
+            await Expect(option).ToHaveCountAsync(1);
+
+            Func<Task> activateOption;
+            if (await IsFullyInViewportAsync(option))
+                activateOption = () => option.ClickAsync();
+            else
+            {
+                var optionId = await option.GetAttributeAsync("id");
+                if (string.IsNullOrWhiteSpace(optionId))
+                    throw new PlaywrightException("An off-screen typeahead option had no id for keyboard selection.");
+                await control.PressAsync("ArrowDown");
+                await Expect(control).ToHaveAttributeAsync("aria-activedescendant", optionId);
+                activateOption = () => control.PressAsync("Enter");
+            }
+
+            if (waitForDuckCreekRefresh)
+            {
+                await RunAndWaitForDuckCreekRefreshAsync(
+                    activateOption, $"selecting '{value}'");
+            }
+            else
+                await activateOption();
+
+            await control.PressAsync("Tab");
+            await WaitForSpinnerAsync();
+            await Expect(control).ToHaveValueAsync(Caption(value));
+            var activePanel = await control.GetAttributeAsync("aria-controls");
+            if (activePanel != null && !Regex.IsMatch(activePanel, @"^[A-Za-z_][A-Za-z0-9_.:-]*$"))
+                throw new PlaywrightException(
+                    $"Typeahead aria-controls contained an invalid panel id: '{activePanel}'.");
+            if (activePanel != null)
+            {
+                var activeListbox = _page.Locator($"[role='listbox'][id='{activePanel}']:visible");
+                if (await activeListbox.CountAsync() == 1 && await activeListbox.IsVisibleAsync())
+                {
+                    await control.PressAsync("Escape");
+                    await Expect(activeListbox).Not.ToBeVisibleAsync();
+                }
+            }
+        }
+
         public async Task SetByLabelAsync(string caption, string value, bool number = false, string section = null)
         {
             var control = LabelledControl(caption, section);
@@ -178,7 +331,8 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             var chips = Chips(logicalName);
             if (await chips.CountAsync() != 0)
             {
-                var selected = chips.Filter(new() { HasTextRegex = Caption(value) }).Locator(".chip-wrapper-selected");
+                var selected = (await ChoiceWithCaptionAsync(chips, Caption(value)))
+                    .Locator(".chip-wrapper-selected");
                 await Expect(selected).ToHaveCountAsync(1);
                 return;
             }
@@ -205,13 +359,30 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
 
         public async Task SelectChipAsync(ILocator chips, string caption)
         {
-            var choice = chips.Filter(new() { HasTextRegex = Caption(caption) });
+            var choice = await ChoiceWithCaptionAsync(chips, Caption(caption));
             await Expect(choice).ToHaveCountAsync(1);
             await Expect(choice).ToBeVisibleAsync();
-            await choice.ClickAsync();
-            await WaitForSpinnerAsync();
-            await Expect(choice.Locator(".chip-wrapper-selected")).ToHaveCountAsync(1);
+            var selected = choice.Locator(".chip-wrapper-selected");
+            if (await selected.CountAsync() == 0)
+            {
+                var control = choice.Locator(".chip-wrapper");
+                await Expect(control).ToHaveCountAsync(1);
+                await control.ClickAsync();
+                await WaitForSpinnerAsync();
+            }
+            await Expect(selected).ToHaveCountAsync(1);
             await Expect(chips.Locator(".chip-wrapper-selected")).ToHaveCountAsync(1);
+        }
+
+        private async Task<ILocator> ChoiceWithCaptionAsync(ILocator choices, Regex caption)
+        {
+            var labelled = choices.Filter(new()
+            {
+                Has = _page.Locator(".chip-label").Filter(new() { HasTextRegex = caption })
+            });
+            return await labelled.CountAsync() != 0
+                ? labelled
+                : choices.Filter(new() { HasTextRegex = caption });
         }
 
         public async Task SelectAsync(ILocator select, string caption, bool moneyOption = false)
@@ -236,8 +407,14 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             }
             if (enabled)
             {
+                await select.EvaluateAsync(
+                    "element => element.scrollIntoView({ block: 'center', inline: 'nearest' })");
                 await select.ClickAsync();
                 var listbox = _page.GetByRole(AriaRole.Listbox).And(_page.Locator(":visible"));
+                if (await listbox.CountAsync() == 0
+                    && !string.Equals(await select.GetAttributeAsync("aria-expanded"), "true",
+                        StringComparison.OrdinalIgnoreCase))
+                    await select.PressAsync("Space");
                 await Expect(listbox).ToHaveCountAsync(1);
                 var option = listbox.GetByRole(AriaRole.Option).Filter(new() { HasTextRegex = pattern });
                 await Expect(option).ToHaveCountAsync(1);
@@ -248,7 +425,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                         .Filter(new() { HasNotTextRegex = pattern });
                     for (var remaining = await unwanted.CountAsync(); remaining > 0; remaining--)
                     {
-                        await unwanted.First.ClickAsync();
+                        await ActivateMaterialOptionAsync(select, unwanted.First);
                         await WaitForSpinnerAsync();
                         if (!await listbox.IsVisibleAsync())
                             await select.ClickAsync();
@@ -256,7 +433,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                     }
                 }
                 if (!multiple || await option.GetAttributeAsync("aria-selected") != "true")
-                    await option.ClickAsync();
+                    await ActivateMaterialOptionAsync(select, option);
                 await WaitForSpinnerAsync();
                 if (multiple && await listbox.IsVisibleAsync())
                     await select.PressAsync("Escape");
@@ -265,6 +442,36 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             var displayed = select.Locator(".mat-select-value-text, .mat-mdc-select-value-text");
             await Expect(await displayed.CountAsync() == 0 ? select : displayed).ToHaveTextAsync(pattern);
         }
+
+        private static async Task ActivateMaterialOptionAsync(ILocator select, ILocator option)
+        {
+            if (await IsFullyInViewportAsync(option))
+            {
+                await option.ClickAsync();
+                return;
+            }
+
+            var optionId = await option.GetAttributeAsync("id");
+            if (string.IsNullOrWhiteSpace(optionId))
+                throw new PlaywrightException("An off-screen material option had no id for keyboard selection.");
+            if (!string.Equals(await select.GetAttributeAsync("aria-activedescendant"), optionId,
+                    StringComparison.Ordinal))
+            {
+                await select.PressSequentiallyAsync(
+                    (await option.InnerTextAsync()).Trim(), new() { Delay = 20 });
+                await Expect(select).ToHaveAttributeAsync("aria-activedescendant", optionId);
+            }
+            await select.PressAsync("Enter");
+        }
+
+        private static Task<bool> IsFullyInViewportAsync(ILocator element) =>
+            element.EvaluateAsync<bool>("""
+                element => {
+                  const bounds = element.getBoundingClientRect();
+                  return bounds.top >= 0 && bounds.left >= 0
+                    && bounds.bottom <= window.innerHeight && bounds.right <= window.innerWidth;
+                }
+                """);
 
         public async Task CheckAsync(string logicalName)
         {
@@ -327,10 +534,28 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await Expect(input).ToHaveCountAsync(1);
             await Expect(label).ToHaveCountAsync(1);
             if (!await input.IsCheckedAsync())
-                await label.ClickAsync();
+            {
+                await RunAndWaitForDuckCreekRefreshAsync(
+                    () => label.ClickAsync(), "selecting catalog coverage");
+            }
             await WaitForSpinnerAsync();
             await Expect(input).ToBeCheckedAsync();
             return row;
+        }
+
+        private async Task RunAndWaitForDuckCreekRefreshAsync(Func<Task> action, string operation)
+        {
+            var response = await _page.RunAndWaitForResponseAsync(
+                action,
+                response =>
+                    response.Request.Method == "POST"
+                    && response.Url.Contains("/api/duckcreek/product",
+                        StringComparison.OrdinalIgnoreCase)
+                    && response.Status != 204,
+                new() { Timeout = 10000 });
+            if (response.Status >= 400)
+                throw new PlaywrightException(
+                    $"Duck Creek refresh failed with HTTP {response.Status} while {operation}.");
         }
 
         public static async Task VerifyTextAsync(ILocator input, string value, bool number = false)

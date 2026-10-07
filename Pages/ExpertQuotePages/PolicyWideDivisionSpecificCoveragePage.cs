@@ -253,19 +253,7 @@ namespace PnCTestAutomation.Pages
 
         public async Task HandleReviewRequiredModalIfPresentAsync()
         {
-            var modal = _page.GetByText("Review Required", new() { Exact = true }).First;
-
-            if (await modal.CountAsync() == 0 || !await modal.IsVisibleAsync())
-                return;
-
-            var keepGoing = _page.GetByRole(AriaRole.Button, new() { Name = "KEEP GOING" }).First;
-
-            if (await keepGoing.CountAsync() > 0 && await keepGoing.IsVisibleAsync())
-            {
-                await keepGoing.ClickAsync(new() { Force = true });
-                await WaitForSpinnerAsync();
-                Console.WriteLine("[Coverage] Review Required modal detected - clicked KEEP GOING.");
-            }
+            await ContinuePastReviewRequiredIfPresentAsync();
         }
 
         private static bool ParseYesNo(string value)
