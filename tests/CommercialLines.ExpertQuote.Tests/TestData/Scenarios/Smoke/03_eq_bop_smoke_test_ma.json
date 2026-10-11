@@ -1,0 +1,392 @@
+{
+  "_meta": {
+    "schemaVersion": "3.0-state-lineage",
+    "sourceFile": "03_eq_bop_smoke_test_ma.feature",
+    "sourceSha256": "fe6308320e9d5ad19faedc9d432d8dfc44abdb0897cdac5e08bd8dd16f1170d4",
+    "sourceRevision": "55580",
+    "application": "CL_EQ",
+    "feature": "Commercial Lines ExpertQuote - EQ BOP Smoke Test",
+    "representativeIteration": "MA",
+    "note": "Smoke-state expansion derived without invented business data: smoke workflow/template plus corresponding raw-Tosca Basic Policy state iteration.",
+    "sourceConcreteTestCase": "MA",
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA_DERIVED_SMOKE_STATE",
+    "manualArtifactsUsed": false,
+    "derivedSmokeTemplate": "03_eq_bop_smoke_test_mo.json",
+    "derivedStateDonor": "02_eq_bop_basic_policy_ma.json",
+    "derivationRule": "Smoke structure retained; state identity and canonical address data inherited from matching Basic Policy state record."
+  },
+  "dimensions": {
+    "state": "Massachusetts",
+    "stateCode": "MA",
+    "product": "Business Owners",
+    "productCode": "BOP",
+    "transaction": "Smoke Test",
+    "effectiveDateMode": "Current",
+    "stateVariant": "MA"
+  },
+  "values": {
+    "customer_dateofbirth": "08/13/2004",
+    "street_address_18": "66 Wendell Ave",
+    "city_20": "Pittsfield",
+    "state_21": "Massachusetts",
+    "zip_22": "01201",
+    "individual_31": "Individual",
+    "individual_dba": "Tester Automation",
+    "effective_date": "03-01-2025",
+    "new_account_address": "True",
+    "agentpc": "D2102",
+    "line_of_business": "BOP",
+    "wait_on_time": "5000",
+    "wait_on_time_2": "25000",
+    "required_target_screen": "PreQualification",
+    "prequalification_51": "PreQualification",
+    "prequalification_64": "PreQualification",
+    "state": "MA",
+    "statecode": "MA",
+    "statename": "Massachusetts",
+    "state_name": "Massachusetts",
+    "state_variant": "MA"
+  },
+  "random": {
+    "FirstName": {
+      "pattern": "BOP [a-z]{3}",
+      "sourceSentence": "I generate and retain a RANDOM first name matching \"BOP [a-z]{3}\" as \"FirstName\"",
+      "sourceStep": "0028-0031"
+    },
+    "LastName": {
+      "pattern": "Smoke[a-z]{4}",
+      "sourceSentence": "I generate and retain a RANDOM last name matching \"Smoke[a-z]{4}\" as \"LastName\"",
+      "sourceStep": "0028-0031"
+    },
+    "OwnerPhone": {
+      "pattern": "3[0-9]{9}",
+      "sourceSentence": "I enter a RANDOM 10-digit owner phone number matching \"3[0-9]{9}\"",
+      "sourceStep": "0032-0038"
+    },
+    "OwnerEmail": {
+      "pattern": "test@[a-z]{4}.com",
+      "sourceSentence": "I enter a RANDOM owner email address matching \"test@[a-z]{4}.com\"",
+      "sourceStep": "0032-0038"
+    },
+    "InsuredSSN": {
+      "pattern": "025[0-9]{6}",
+      "sourceSentence": "I enter a RANDOM 9-digit SSN consisting of fixed prefix \"025\" followed by \"6\" random digits",
+      "sourceStep": "0041-0044"
+    }
+  },
+  "application": {
+    "url": "https://expertquote-qa.americannational.com/expertquote/",
+    "username": "SYNTHETIC_REPLACE_ME",
+    "password": "SYNTHETIC_REPLACE_ME"
+  },
+  "external": {},
+  "_canonical": {
+    "mappedBaseValues": 22,
+    "sourceValues": {
+      "3a163d35-678f-914a-fdcf-024d12c40fb9": "15000",
+      "3a163df9-6660-c331-3322-43156a6875bb": "5000",
+      "3a163d35-678f-3295-120a-61366c44ff2b": "25000",
+      "3a163d35-678f-7119-67df-2a723283788a": "https://expertquote-qa.americannational.com/expertquote/",
+      "3a163d35-678f-2420-00d2-51ce1f65e4ab": "SYNTHETIC_REPLACE_ME",
+      "3a163d35-678f-5c11-0959-503a27922ebf": "SYNTHETIC_REPLACE_ME",
+      "3a163d35-678f-8eea-f731-a3723d794253": "{RANDOMREGEX[\"BOP [a-z]{3}\"]}",
+      "3a163d35-678f-57d5-40a5-5c31166ccd11": "{RANDOMREGEX[\"Smoke[a-z]{4}\"]}",
+      "3a163d35-678f-108f-d590-524a9e8cafaa": "{DATE[][-22y][MM/dd/yyyy]}",
+      "3a163d35-678f-b1d3-c998-47325dc13b6f": "317 Park Central East",
+      "3a163d35-678f-cc10-7f3d-5d4a5138e541": "65805",
+      "3a163d35-678f-ab26-926c-a76c16880b90": "Springfield",
+      "3a163d35-678f-b934-6b94-bb027b275577": "Missouri",
+      "3a163d35-678f-62b2-b78a-3336204e1328": "Greene",
+      "3a163d35-678f-2acf-e36d-8fc3f4073970": "03-01-2025",
+      "3a163d35-678f-c74b-75e2-08b338ce6193": "D2102",
+      "3a163d35-678f-1de2-3679-5cddac0c4fdc": "BOP",
+      "3a163d35-678f-35d5-cdb7-595d9d130d6f": "Individual",
+      "3a163d35-678f-2415-c0f1-60caf9b5e908": "PreQualification",
+      "3a163db2-ae9d-cc3b-5532-71998857d101": "PreQualification"
+    },
+    "fields": [
+      {
+        "order": 1,
+        "derivedFrom": "3a163d35-678f-914a-fdcf-024d12c40fb9",
+        "field": "WaitOnTime",
+        "businessName": "WaitOnTime",
+        "description": "Set the name of the XTestStepValue to the name of the buffer and the value to the value to buffer. ActionMode Input sets the buffer, Verify performs a verification.",
+        "module": "TBox Set Buffer",
+        "actionMode": "37",
+        "actionProperty": "",
+        "condition": "",
+        "value": "25000"
+      },
+      {
+        "order": 2,
+        "derivedFrom": "3a163df9-6660-c331-3322-43156a6875bb",
+        "field": "WaitOnTime",
+        "businessName": "WaitOnTime",
+        "description": "Set the name of the XTestStepValue to the name of the buffer and the value to the value to buffer. ActionMode Input sets the buffer, Verify performs a verification.",
+        "module": "TBox Set Buffer",
+        "actionMode": "37",
+        "actionProperty": "",
+        "condition": "",
+        "value": "25000"
+      },
+      {
+        "order": 3,
+        "derivedFrom": "3a163d35-678f-3295-120a-61366c44ff2b",
+        "field": "WaitOnTime",
+        "businessName": "WaitOnTime",
+        "description": "Set the name of the XTestStepValue to the name of the buffer and the value to the value to buffer. ActionMode Input sets the buffer, Verify performs a verification.",
+        "module": "TBox Set Buffer",
+        "actionMode": "37",
+        "actionProperty": "",
+        "condition": "",
+        "value": "25000"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a163d35-678f-7119-67df-2a723283788a",
+        "field": "Url",
+        "businessName": "Url",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "https://expertquote-qa.americannational.com/expertquote/"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a163d35-678f-2420-00d2-51ce1f65e4ab",
+        "field": "Username",
+        "businessName": "Username",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "SYNTHETIC_REPLACE_ME"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a163d35-678f-5c11-0959-503a27922ebf",
+        "field": "Password",
+        "businessName": "Password",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "SYNTHETIC_REPLACE_ME"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a163d35-678f-8eea-f731-a3723d794253",
+        "field": "First Name",
+        "businessName": "First Name",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "{RANDOMREGEX[\"BOP [a-z]{3}\"]}"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a163d35-678f-57d5-40a5-5c31166ccd11",
+        "field": "Last Name",
+        "businessName": "Last Name",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "{RANDOMREGEX[\"Smoke[a-z]{4}\"]}"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a163d35-678f-108f-d590-524a9e8cafaa",
+        "field": "DOB",
+        "businessName": "DOB",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "{DATE[][-22y][MM/dd/yyyy]}"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a163d35-678f-b1d3-c998-47325dc13b6f",
+        "field": "Address 1",
+        "businessName": "Address 1",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "66 Wendell Ave"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a163d35-678f-cc10-7f3d-5d4a5138e541",
+        "field": "Zip",
+        "businessName": "Zip",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "01201"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a163d35-678f-ab26-926c-a76c16880b90",
+        "field": "City",
+        "businessName": "City",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "Pittsfield"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a163d35-678f-b934-6b94-bb027b275577",
+        "field": "State Name",
+        "businessName": "State Name",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "Massachusetts"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a163d35-678f-62b2-b78a-3336204e1328",
+        "field": "County",
+        "businessName": "County",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "Berkshire"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a163d35-678f-2acf-e36d-8fc3f4073970",
+        "field": "EffDate",
+        "businessName": "EffDate",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "11-28-2026"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a163d35-678f-c74b-75e2-08b338ce6193",
+        "field": "Agent",
+        "businessName": "Agent",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "D2102"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a163d35-678f-1de2-3679-5cddac0c4fdc",
+        "field": "LOB",
+        "businessName": "LOB",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "BOP"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a163d35-678f-35d5-cdb7-595d9d130d6f",
+        "field": "BusinessType",
+        "businessName": "BusinessType",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "Individual"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a163d35-678f-2415-c0f1-60caf9b5e908",
+        "field": "Screen",
+        "businessName": "Screen",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "PreQualification"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a163db2-ae9d-cc3b-5532-71998857d101",
+        "field": "Screen",
+        "businessName": "Screen",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "PreQualification"
+      },
+      {
+        "order": 3.0119999999999996,
+        "derivedFrom": "DERIVED_FROM_BASIC_STATE_TOSCA",
+        "field": "Address 2",
+        "businessName": "Address 2",
+        "description": "State value inherited from corresponding raw-Tosca Basic Policy iteration for smoke coverage expansion.",
+        "module": "Derived state data",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": ""
+      },
+      {
+        "order": 3.0149999999999997,
+        "derivedFrom": "DERIVED_FROM_BASIC_STATE_TOSCA",
+        "field": "State",
+        "businessName": "State",
+        "description": "State value inherited from corresponding raw-Tosca Basic Policy iteration for smoke coverage expansion.",
+        "module": "Derived state data",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "MA"
+      }
+    ]
+  },
+  "_rawTosca": {
+    "application": "CLEQ",
+    "sourceFile": "CL_EQ_TestCases_Staging_Area_Pre_Production.tsu",
+    "testCaseName": "EQ | BOP | Smoke Test",
+    "testCaseGuid": "3a163d25-dcdf-7c4f-c0a2-79df52437a89",
+    "templateInstanceName": "TemplateInstance of EQ | BOP | Smoke Test",
+    "templateInstanceGuid": "3a163d2d-30aa-c91c-0285-8fbc328d080f",
+    "concreteTestCaseName": "MA",
+    "concreteTestCaseGuid": "3a163d2d-3e98-9796-24e0-2370a83b096e",
+    "derivedFrom": [
+      "3a163d2b-11d2-2f81-859a-420fc7908c90"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order",
+    "smokeTemplateSource": "03_eq_bop_smoke_test_mo.json",
+    "stateDataDonor": "02_eq_bop_basic_policy_ma.json",
+    "generatedStateExample": true
+  }
+}

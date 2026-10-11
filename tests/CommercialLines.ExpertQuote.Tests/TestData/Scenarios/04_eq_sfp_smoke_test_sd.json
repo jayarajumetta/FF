@@ -1,0 +1,381 @@
+{
+  "_meta": {
+    "schemaVersion": "3.0-state-lineage",
+    "sourceFile": "04_EQ_SFP_Smoke_Test_MN.feature",
+    "sourceSha256": "99e687ab08952fe343616cae4c1821437f68e355cd85bb1900fb3bbe8fbd90c5",
+    "sourceRevision": "55459",
+    "application": "CL_EQ",
+    "feature": "Commercial Lines ExpertQuote - EQ SFP Smoke Test",
+    "representativeIteration": "SD",
+    "note": "Only the attached representative flow is generated.",
+    "sourceConcreteTestCase": "SD",
+    "stateDataLineage": "TestCaseTemplate -> TestCaseTemplateInstance.Items -> concrete TestCase -> ParameterReference/XTestStepValue.DerivedFrom",
+    "sourceTruth": "RAW_TOSCA",
+    "manualArtifactsUsed": false
+  },
+  "dimensions": {
+    "state": "South Dakota",
+    "stateCode": "SD",
+    "product": "Special Farm Package",
+    "productCode": "SFP",
+    "transaction": "Smoke Test",
+    "effectiveDateMode": "Current",
+    "stateVariant": "SD"
+  },
+  "values": {
+    "customer_dateofbirth_7": "08/13/2004",
+    "statename": "South Dakota",
+    "true_34": "newAccountAddress",
+    "policyterm_36": "12 months",
+    "lob": "SFP",
+    "waitontime": "5000",
+    "waitontime_2": "25000",
+    "screen": "Pre Qualification",
+    "screen_2": "Pre-Qualification",
+    "expected_name_and_quote_innertext_78": "Quote_NameNum",
+    "state": "SD",
+    "statecode": "SD",
+    "state_name": "South Dakota",
+    "state_variant": "SD"
+  },
+  "random": {
+    "LastName": {
+      "pattern": "Smoke[a-z]{4}",
+      "sourceSentence": "I generate and retain a RANDOM value matching \"Smoke[a-z]{4}\" as runtime value \"LastName\"",
+      "sourceStep": "0029"
+    },
+    "FirstName": {
+      "pattern": "SFP [a-z]{3}",
+      "sourceSentence": "I generate and retain a RANDOM value matching \"SFP [a-z]{3}\" as runtime value \"FirstName\"",
+      "sourceStep": "0029"
+    },
+    "OwnerPhone": {
+      "pattern": "3[0-9]{9}",
+      "sourceSentence": "I enter a RANDOM value matching \"3[0-9]{9}\" in \"Owner Phone\"",
+      "sourceStep": "0033"
+    },
+    "OwnerEmail": {
+      "pattern": "test@[a-z]{4}\\.com",
+      "sourceSentence": "I enter a RANDOM value matching \"test@[a-z]{4}\\\\.com\" in \"Owner Email\"",
+      "sourceStep": "0033"
+    },
+    "InsuredSSN": {
+      "pattern": "025[0-9]{6}",
+      "sourceSentence": "I enter a RANDOM value consisting of fixed prefix \"025\", followed by 6 random digits in \"ssn\"",
+      "sourceStep": "0042"
+    }
+  },
+  "application": {
+    "url": "https://expertquote-qa.americannational.com/expertquote/",
+    "username": "SYNTHETIC_REPLACE_ME",
+    "password": "SYNTHETIC_REPLACE_ME"
+  },
+  "external": {},
+  "_canonical": {
+    "mappedBaseValues": 6,
+    "sourceValues": {
+      "3a1ca7a5-0357-4571-e32f-e0aaaf152b3e": "15000",
+      "3a1ca7a5-0366-b140-2e1c-ac6142d7b5c5": "5000",
+      "3a1ca7a5-0366-7ba6-d3fc-fa9f05e60926": "25000",
+      "3a1ca7a5-0357-3e17-a272-595e30ce1995": "https://expertquote-qa.americannational.com/expertquote/",
+      "3a1ca7a5-0357-87e5-551e-2702da4c3228": "SYNTHETIC_REPLACE_ME",
+      "3a1ca7a5-0357-8532-49e1-d1584695c8a4": "SYNTHETIC_REPLACE_ME",
+      "3a1ca7a5-0357-3fdf-1625-d17249b6312d": "{RANDOMREGEX[\"SFP [a-z]{3}\"]}",
+      "3a1ca7a5-0357-857d-1520-85761e96a205": "{RANDOMREGEX[\"Smoke[a-z]{4}\"]}",
+      "3a1ca7a5-0357-e8ac-6350-07e4164dcc23": "{DATE[][-22y][MM/dd/yyyy]}",
+      "3a1ca7a5-0357-fb5b-ea0e-c5df1c7f59a6": "700 Governors Dr",
+      "3a1ca7a5-0357-0a41-b39f-8dd2df5ae987": "57501",
+      "3a1ca7a5-0357-8e87-e37d-b5c1031558cf": "Pierre",
+      "3a1ca7a5-0357-6e02-f7f5-a77ceffa4388": "South Dakota",
+      "3a1ca7a5-0357-dc64-2ec2-0d63f2fbc66a": "Hughes",
+      "3a1d70d2-528a-6ecd-9c48-f42907513ef2": "111",
+      "3a1ca7a5-0357-e5e3-1661-23aa5f216f52": "12-01-2025",
+      "3a1ca7a5-0366-07cf-4fed-b88192618fda": "D2102",
+      "3a1ca7a5-0366-8164-a23f-ac5db5a51f3a": "SFP",
+      "3a1ca7a5-0366-a6dd-ccdd-1e79e6053962": "Pre Qualification",
+      "3a1d71b7-d6b5-21e6-b9e1-3a1c1ba469ff": "Pre-Qualification",
+      "3a1ca7a5-0366-7fd7-4af3-c5230e5ad794": "Pre Qualification",
+      "3a1d70db-18dd-c116-8d09-3aa75abf5feb": "Pre-Qualification"
+    },
+    "fields": [
+      {
+        "order": 1,
+        "derivedFrom": "3a1ca7a5-0357-4571-e32f-e0aaaf152b3e",
+        "field": "WaitOnTime",
+        "businessName": "WaitOnTime",
+        "description": "Set the name of the XTestStepValue to the name of the buffer and the value to the value to buffer. ActionMode Input sets the buffer, Verify performs a verification.",
+        "module": "TBox Set Buffer",
+        "actionMode": "37",
+        "actionProperty": "",
+        "condition": "",
+        "value": "15000"
+      },
+      {
+        "order": 2,
+        "derivedFrom": "3a1ca7a5-0366-b140-2e1c-ac6142d7b5c5",
+        "field": "WaitOnTime",
+        "businessName": "WaitOnTime",
+        "description": "Set the name of the XTestStepValue to the name of the buffer and the value to the value to buffer. ActionMode Input sets the buffer, Verify performs a verification.",
+        "module": "TBox Set Buffer",
+        "actionMode": "37",
+        "actionProperty": "",
+        "condition": "",
+        "value": "5000"
+      },
+      {
+        "order": 3,
+        "derivedFrom": "3a1ca7a5-0366-7ba6-d3fc-fa9f05e60926",
+        "field": "WaitOnTime",
+        "businessName": "WaitOnTime",
+        "description": "Set the name of the XTestStepValue to the name of the buffer and the value to the value to buffer. ActionMode Input sets the buffer, Verify performs a verification.",
+        "module": "TBox Set Buffer",
+        "actionMode": "37",
+        "actionProperty": "",
+        "condition": "",
+        "value": "25000"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1ca7a5-0357-3e17-a272-595e30ce1995",
+        "field": "Url",
+        "businessName": "Url",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "https://expertquote-qa.americannational.com/expertquote/"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1ca7a5-0357-87e5-551e-2702da4c3228",
+        "field": "Username",
+        "businessName": "Username",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "SYNTHETIC_REPLACE_ME"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1ca7a5-0357-8532-49e1-d1584695c8a4",
+        "field": "Password",
+        "businessName": "Password",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "SYNTHETIC_REPLACE_ME"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1ca7a5-0357-3fdf-1625-d17249b6312d",
+        "field": "First Name",
+        "businessName": "First Name",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "{RANDOMREGEX[\"SFP [a-z]{3}\"]}"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1ca7a5-0357-857d-1520-85761e96a205",
+        "field": "Last Name",
+        "businessName": "Last Name",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "{RANDOMREGEX[\"Smoke[a-z]{4}\"]}"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1ca7a5-0357-e8ac-6350-07e4164dcc23",
+        "field": "DOB",
+        "businessName": "DOB",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "{DATE[][-22y][MM/dd/yyyy]}"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1ca7a5-0357-fb5b-ea0e-c5df1c7f59a6",
+        "field": "Address 1",
+        "businessName": "Address 1",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "700 Governors Dr"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1ca7a5-0357-0a41-b39f-8dd2df5ae987",
+        "field": "Zip",
+        "businessName": "Zip",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "57501"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1ca7a5-0357-8e87-e37d-b5c1031558cf",
+        "field": "City",
+        "businessName": "City",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "Pierre"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1ca7a5-0357-6e02-f7f5-a77ceffa4388",
+        "field": "State Name",
+        "businessName": "State Name",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "South Dakota"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1ca7a5-0357-dc64-2ec2-0d63f2fbc66a",
+        "field": "County",
+        "businessName": "County",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "Hughes"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1d70d2-528a-6ecd-9c48-f42907513ef2",
+        "field": "Address 2",
+        "businessName": "Address 2",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "111"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1ca7a5-0357-e5e3-1661-23aa5f216f52",
+        "field": "EffDate",
+        "businessName": "EffDate",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "12-01-2025"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1ca7a5-0366-07cf-4fed-b88192618fda",
+        "field": "Agent",
+        "businessName": "Agent",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "D2102"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1ca7a5-0366-8164-a23f-ac5db5a51f3a",
+        "field": "LOB",
+        "businessName": "LOB",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "SFP"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1ca7a5-0366-a6dd-ccdd-1e79e6053962",
+        "field": "Screen",
+        "businessName": "Screen",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "Pre Qualification"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1d71b7-d6b5-21e6-b9e1-3a1c1ba469ff",
+        "field": "Screen2",
+        "businessName": "Screen2",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "Pre-Qualification"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1ca7a5-0366-7fd7-4af3-c5230e5ad794",
+        "field": "Screen",
+        "businessName": "Screen",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "Pre Qualification"
+      },
+      {
+        "order": 3.01,
+        "derivedFrom": "3a1d70db-18dd-c116-8d09-3aa75abf5feb",
+        "field": "Screen2",
+        "businessName": "Screen2",
+        "description": "Reusable block parameter",
+        "module": "Reusable parameter",
+        "actionMode": "",
+        "actionProperty": "",
+        "condition": "",
+        "value": "Pre-Qualification"
+      }
+    ]
+  },
+  "_rawTosca": {
+    "application": "CLEQ",
+    "sourceFile": "CL_EQ_TestCases_Staging_Area_Pre_Production.tsu",
+    "testCaseName": "EQ | SFP | Smoke Test",
+    "testCaseGuid": "3a1ca7a5-0348-bdaf-8bca-a654d2a838ca",
+    "templateInstanceName": "TemplateInstance of EQ | SFP | Smoke Test",
+    "templateInstanceGuid": "3a1ca8ae-f7bb-551a-299c-07a66d24d293",
+    "concreteTestCaseName": "SD",
+    "concreteTestCaseGuid": "3a1ca8af-0397-ed67-3bb5-a2444042dc5d",
+    "derivedFrom": [
+      "3a1ca7a6-18f7-c304-f739-aef0fb95128f"
+    ],
+    "orderAuthority": "XTestStep/XTestStepValue association order"
+  }
+}

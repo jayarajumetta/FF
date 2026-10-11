@@ -1,0 +1,742 @@
+using InsuranceAutomation.CLDC.Pages;
+using InsuranceAutomation.Core;
+using Microsoft.VisualBasic;
+using Reqnroll;
+using System.Runtime.InteropServices;
+
+namespace InsuranceAutomation.CLDC.StepDefinitions;
+
+[Binding, Scope(Feature = "WC Basic Policy")]
+public sealed class WCBasicPolicySteps
+{
+    private readonly ScenarioContext _scenario;
+    public WCBasicPolicySteps(ScenarioContext scenario) => _scenario = scenario;
+
+
+
+
+    [Given(@"^I start a new quote$")]
+    [When(@"^I start a new quote$")]
+    [Then(@"^I start a new quote$")]
+    public async Task StartANewQuoteAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickNewQuoteAsync();
+        await page.EnterEffectiveDateAsync(data.Resolve("{{data:effective_date_43}}"));
+        await page.EnterProductAsync(data.Resolve("{{data:product_45}}"));
+        await page.EnterProducerAsync(data.Resolve("{{data:producer_46}}"));
+        await page.WaitForStartAsync("Visible");
+        await page.ClickStartAsync();
+
+    }
+
+
+
+
+
+
+    [Given(@"^I enter business client information$")]
+    [When(@"^I enter business client information$")]
+    [Then(@"^I enter business client information$")]
+    public async Task EnterBusinessClientInformationAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("PrimaryPhone_0041", "[0-9]{10}");
+        data.GenerateRandom("FEIN_0044", "486[0-9]{6}");
+        data.GenerateRandom("AuditTelephone_0045", "[0-9]{10}");
+        data.GenerateRandom("InspectionTelephone_0045", "[0-9]{10}");
+
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+
+        await page.WaitForQuickQuoteAsync("Exists");
+        await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_2}}"));
+        await page.WaitForUnderwritingInfoAsync("Exists");
+        await page.EnterInsuredTypeAsync(data.Resolve("{{data:insured_type_4}}"));
+        await page.EnterEntityTypeAsync(data.Resolve("{{data:entity_type_8}}"));
+        await page.WaitForBusinessNameAsync("Visible");
+        await page.EnterBusinessNameAsync(data.Resolve("{{data:business_name_7}}"));
+        await page.EnterPrimaryPhoneAsync(data.Resolve("{{runtime:PrimaryPhone_0041}}"));
+        await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:zipcode_11}}"));
+        await page.EnterAddressAsync(data.Resolve("{{data:address1_12}}"));
+        await page.VerifyYearsInBusinessAsync("Exists", "");
+        await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_14}}"));
+        await page.EnterFEINAsync(data.Resolve("{{runtime:FEIN_0044}}"));
+        await page.EnterNameOfAuditContactAsync(data.Resolve("{{data:name_of_audit_contact_16}}"));
+        await page.EnterAuditTelephoneAsync(data.Resolve("{{runtime:AuditTelephone_0045}}"));
+        await page.EnterNameOfInspectionContactAsync(data.Resolve("{{data:name_of_inspection_contact_18}}"));
+        await page.EnterInspectionTelephoneAsync(data.Resolve("{{runtime:InspectionTelephone_0045}}"));
+        await page.EnterInsuredEMailAddressAsync(data.Resolve("{{data:insured_e_mail_address_20}}"));
+        await page.EnterWebsiteAddressAsync(data.Resolve("{{data:website_address_21}}"));
+        await page.VerifyNamedInsuredZipCodeAsync("[0-9]{5}-[0-9]{4}", "Regex:value");
+
+    }
+
+    [Given(@"^I add a new Associated Client \- Business Owner Type \- Click Add Client$")]
+    [When(@"^I add a new Associated Client \- Business Owner Type \- Click Add Client$")]
+    [Then(@"^I add a new Associated Client \- Business Owner Type \- Click Add Client$")]
+    public async Task AddANewAssociatedClientBusinessOwnerTypeClickAddClientAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.WaitForAddClientAsync("Exists");
+        await page.ClickAddClientAsync();
+        await page.VerifyIndividualTypeAsync("Absent", "");
+
+    }
+
+    [Given(@"^I complete aJAX Error Check$")]
+    [When(@"^I complete aJAX Error Check$")]
+    [Then(@"^I complete aJAX Error Check$")]
+    public async Task CompleteAJAXErrorCheckAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.VerifyAJAXErrorCheckAsync("Exists", "");
+
+    }
+
+    [Given(@"^I complete required billing information$")]
+    [When(@"^I complete required billing information$")]
+    [Then(@"^I complete required billing information$")]
+    public async Task CompleteRequiredBillingInformationAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        //await page.ClickNavigationBillingAsync();
+        //await page.WaitForBillingAsync("Exists");
+        //await page.EnterBillTypeAsync(data.Resolve("{{data:bill_type_37}}"));
+        //await page.WaitForBillTypeAsync("Equal");
+        //await page.EnterPayPlanAsync(data.Resolve("{{data:pay_plan_40}}"));
+        //await page.WaitForPayPlanAsync("Equal");
+        //await page.WaitForEasyPayAsync("Exists");
+        //await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_44}}"));
+        await page.PauseAsync(1000);
+
+    }
+
+    [Given(@"^I complete the Associated Client Info$")]
+    [When(@"^I complete the Associated Client Info$")]
+    [Then(@"^I complete the Associated Client Info$")]
+    public async Task CompleteTheAssociatedClientInfoAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("MiddleName_0057", "^[a-z]{1}$");
+        data.GenerateRandom("LastName_0057", "^[a-z]{7}$");
+        data.GenerateRandom("FirstName_0057", "^[a-z]{4}$");
+
+        var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.EnterIndividualTypeAsync("Business Owner");
+        await page.WaitForPleaseVerifySSNAsync("Exists");
+        await page.EnterFirstNameAsync("WCfirstname");
+        await page.EnterMiddleNameAsync(data.Resolve("{{runtime:MiddleName_0057}}"));
+        await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0057}}"));
+        await page.EnterAddAssociatedClientDateOfBirthAsync(data.Resolve("{{data:dateofbirth_52}}"));
+        await page.EnterAddressAsync(data.Resolve("{{data:addclientAddress_1}}"));
+        await page.EnterCityAsync(data.Resolve("{{data:city_54}}"));
+        await page.EnterStateAsync(data.Resolve("{{data:AddClientState_49}}"));
+        await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:AddClientZipcode_48}}"));
+        await page.EnterGenderAsync(data.Resolve("{{data:gender_57}}"));
+        await page.WaitForClientSearchAsync("Exists");
+        await page.ClickClientSearchAsync();
+        //await page.EnterFirstNameAsync(data.Resolve("{{runtime:FirstName_0057}}"));
+        //await page.VerifySearchResultsDuckCreekPolicyFirstCheckboxAsync("Absent", "");
+        await page.ClickOKAsync();
+        await page.ClickOrderSSNAsync();
+        await page.PressAddAssociatedClientEnterSSNAsync("Enter");
+        await page.EnterAddAssociatedClientEnterSSNAsync("657389591");
+        await page.ClickVerifyAsync();
+        await page.VerifyVerifyAsync("Absent", "");
+        await page.ClickCompleteAsync();
+        //await page.ClickAddAssociatedClientDetailAsync();
+        //await page.WaitForAddAssociatedClientEnterSSNAsync("Exists");
+        //await page.ClickVerifyAsync();
+        //await page.WaitForPleaseVerifySSNAsync("Absent");
+        //await page.ClickCompleteAsync();
+        //await page.WaitForAddAssociatedClientEnterSSNAsync("Exists");
+        //await page.ClickVerifyAsync();
+        //await page.WaitForPleaseVerifySSNAsync("Absent");
+        //await page.ClickCompleteAsync();
+        await page.WaitForClientSearchAsync("Exists");
+        await page.ClickClientSearchAsync();
+
+        await page.WaitForOKAsync("Exists");
+        await page.ClickOKAsync();
+        await page.WaitForClientSearchAsync("Absent");
+
+    }
+
+    [Given(@"^I navigate to Underwriting Info Screen$")]
+    [When(@"^I navigate to Underwriting Info Screen$")]
+    [Then(@"^I navigate to Underwriting Info Screen$")]
+    public async Task NavigateToUnderwritingInfoScreenAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickUnderwritingInfoAsync();
+        await page.PauseAsync(4000);
+        //await page.WaitForIsThereAPriorCarrierAsync("Exists");
+        await page.EnterIsThereAPriorCarrierAsync("Yes");
+        await page.WaitForCarrierAsync("Exists");
+        await page.EnterCarrierAsync("Insure Us, Inc");
+        await page.EnterGeneralLiabilityPolicyNumberAsync("P-0123456789");
+        await page.EnterPolicyTypeAsync("Commercial Package");
+        await page.EnterCommercialAutoEffectiveDateAsync(data.Resolve("{DATE[][-2y][MM'/'dd'/'yyyy]}"));
+        await page.EnterGeneralLiabilityExpirationDateAsync(data.Resolve("{DATE[][][MM'/'dd'/'yyyy]}"));
+        await page.EnterModificationFactorAsync("1.1");
+        await page.EnterTotalPremiumAsync("1,250");
+        await page.ClickOKAsync();
+        //await page.WaitForUnderwritingInfoOtherInsuranceHistoryDetailAsync("Exists");
+        await page.ClickLossExperienceAsync();
+        //await page.WaitForNoKnownLossesAsync("Exists");
+        await page.PauseAsync(3000);
+        //await page.SetNoKnownLossesAsync(data.Resolve("{{data:no_known_losses_98}}"));
+        await page.ClickReturnToQuoteAsync();
+        //await page.EnterTitleAsync(data.Resolve("{{data:title_100}}"));
+        //await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_101}}"));
+        //await page.VerifyResultAsync(data.Resolve("{{data:expected_result_value_102}}"), "value");
+
+    }
+
+
+
+
+
+    [Given(@"^I complete required policy information$")]
+    [When(@"^I complete required policy information$")]
+    [Then(@"^I complete required policy information$")]
+    public async Task CompleteRequiredPolicyInformationAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickPolicyInfoAsync();
+        //await page.WaitForPolicyInfoHeaderAsync("Exists");
+        await page.PauseAsync(1000);
+        await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateAsync(data.Resolve("{{data:effectivedate_106}}"));
+        await page.PauseAsync(1000);
+        await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_109}}"));
+        await page.PauseAsync(1000);
+
+
+        //await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysSequentiallyAsync("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_113}}"));
+        await page.VerifyPriorAmericanNationalPolicyAsync("Absent", "");
+        await page.VerifyWhatIsThePrimaryReasonThisNewPolicyIsBeingRewrittenWithFarmFamilyAmericanNationalAsync("Absent", "");
+        await page.VerifyIsThisPolicyBeingFullyCancelledAsync("Absent", "");
+        await page.PauseAsync(1000);
+        //await page.WaitForPolicyInfoHeaderAsync("Visible");
+        await page.WaitForDescriptionOfSpecifiedOperationAsync("Visible");
+        await page.EnterDescriptionOfSpecifiedOperationAsync(data.BuildQuoteDescription());
+        data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
+
+    }
+
+    [Given(@"^I complete WC Specific Fields$")]
+    [When(@"^I complete WC Specific Fields$")]
+    [Then(@"^I complete WC Specific Fields$")]
+    public async Task CompleteWCSpecificFieldsAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.EnterHasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverageAsync(data.Resolve("{{data:has_the_applicant_been_in_business_for_at_least_3_years_with_continuous_workers_compensation_coverage_123}}"));
+
+    }
+
+    [Given(@"^I complete Estimated premium$")]
+    [When(@"^I complete Estimated premium$")]
+    [Then(@"^I complete Estimated premium$")]
+    public async Task CompleteEstimatedPremiumAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        if (data.Condition("'Estimated Premium' == NULL"))
+        {
+            await page.VerifyEstimatedPremiumAsync("Absent", "");
+        }
+
+    }
+
+    [Given(@"^I complete coverage Information$")]
+    [When(@"^I complete coverage Information$")]
+    [Then(@"^I complete coverage Information$")]
+    public async Task CompleteCoverageInformationAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickPolicyCovgerageAsync();
+
+
+        if (await page.IsPrimaryLocationAvailableAsync())
+        {
+            await page.WaitForPrimaryLocationStateAsync("Exists");
+            await page.EnterPrimaryStateAsync(data.Resolve("{{data:PrimaryLocationstate_53}}"));
+
+        }
+
+
+        //await page.VerifyPrimaryLocationStateAsync("(?i)^Alabama$", "Regex:value");
+        //await page.EnterExperienceRatedAsync(data.Resolve("{{data:experience_rated_128}}"));
+
+    }
+
+    [Given(@"^I complete Address 1$")]
+    [When(@"^I complete Address 1$")]
+    [Then(@"^I complete Address 1$")]
+    public async Task CompleteAddress1Async()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickWCNavigationLinksLocationAsync();
+        //await page.WaitForLocationAddressAsync("Exists");
+        await page.VerifyLocationZipCodeAsync("[0-9]{5}-[0-9]{4}", "Regex:value");
+        await page.ClickOKAsync();
+
+    }
+
+    [Given(@"^I complete rating Information$")]
+    [When(@"^I complete rating Information$")]
+    [Then(@"^I complete rating Information$")]
+    public async Task CompleteRatingInformationAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickStateDetailsAsync();
+        await page.WaitForIntrastateRiskIDAsync("Exists");
+
+    }
+
+    [Given(@"^I add Class Codes$")]
+    [When(@"^I add Class Codes$")]
+    [Then(@"^I add Class Codes$")]
+    public async Task AddClassCodesAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickWCScheduleAsync();
+        await page.WaitForAddClassCodeAsync("Exists");
+        await page.ClickAddClassCodeAsync();
+        await page.VerifyOKClassCodeAsync("Absent", "");
+        await page.WaitForSearchValueAsync("Exists");
+        await page.EnterSearchValueAsync(data.Resolve("{{data:class_code_frame_class_code_window_searchvalue_141}}"));
+        await page.EnterSelectClassCodeAsync(data.Resolve("{{data:class_code_frame_class_code_window_select_class_code_143}}"));
+        await page.PauseAsync(1000);
+        await page.VerifySelectClassCodeAsync(data.Resolve("{{data:expected_class_code_frame_class_code_window_select_class_code_value_146}}"), "value");
+        await page.WaitForOKClassCodeAsync("Exists");
+        await page.ClickOKClassCodeAsync();
+        if (data.Condition("State != \"MD\""))
+        {
+            await page.EnterTotalPayrollEstimatedAsync(data.Resolve("{{data:class_code_frame_class_code_window_total_payroll_estimated_150}}"));
+        }
+
+        if (data.Condition("State == \"MD\""))
+        {
+            await page.EnterTotalPayrollEstimatedAsync(data.Resolve("{{data:class_code_frame_class_code_window_total_payroll_estimated_150}}"));
+        }
+        await page.EnterNumberOfPartTimeEmployeesAsync(data.Resolve("{{data:class_code_frame_class_code_window_number_of_part_time_employees_151}}"));
+        await page.EnterNumberOfFullTimeEmployeesAsync(data.Resolve("{{data:class_code_frame_class_code_window_number_of_full_time_employees_152}}"));
+        await page.ClickOKDetailsAsync();
+        await page.WaitForClassCodeFrameAsync("Absent");
+        await page.WaitForAddClassCodeAsync("Exists");
+        await page.ClickAddClassCodeAsync();
+        await page.VerifyOKClassCodeAsync("Absent", "");
+        await page.WaitForSearchValueAsync("Exists");
+        await page.EnterSearchValueAsync("");
+        await page.EnterSearchValueAsync(data.Resolve("{{data:class_code_frame_class_code_window_searchvalue_160}}"));
+        await page.EnterSelectClassCodeAsync(data.Resolve("{{data:class_code_frame_class_code_window_select_class_code_161}}"));
+        await page.PauseAsync(1000);
+        await page.VerifySelectClassCodeAsync(data.Resolve("{{data:expected_class_code_frame_class_code_window_select_class_code_value_164}}"), "value");
+        await page.WaitForOKClassCodeAsync("Exists");
+        await page.ClickOKClassCodeAsync();
+        await page.EnterTotalPayrollEstimatedAsync(data.Resolve("{{data:class_code_frame_class_code_window_total_payroll_estimated_168}}"));
+        await page.EnterNumberOfPartTimeEmployeesAsync(data.Resolve("{{data:class_code_frame_class_code_window_number_of_part_time_employees_169}}"));
+        await page.EnterNumberOfFullTimeEmployeesAsync(data.Resolve("{{data:class_code_frame_class_code_window_number_of_full_time_employees_170}}"));
+        await page.ClickOKDetailsAsync();
+        await page.WaitForClassCodeFrameAsync("Absent");
+
+    }
+
+    [Given(@"^I navigate to Entity Schedule$")]
+    [When(@"^I navigate to Entity Schedule$")]
+    [Then(@"^I navigate to Entity Schedule$")]
+    public async Task NavigateToEntityScheduleAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+        data.GenerateRandom("EntityInfoFrameEntityInfoWindowFax_0109", "[0-9]{10}");
+        data.GenerateRandom("EntityInfoFrameEntityInfoWindowBureauNumber_0109", "[0-9]{7}");
+        data.GenerateRandom("EntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefault_0109", "[0-9]{6}");
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickEntityScheduleAsync();
+        //await page.WaitForSignsHeadingAsync("Exists");
+        await page.ClickLocationDetailAsync();
+        await page.WaitForInsuredTypeAsync("Exists");
+        await page.EnterEntityInfoFrameEntityInfoWindowFaxAsync(data.Resolve("{{runtime:EntityInfoFrameEntityInfoWindowFax_0109}}"));
+        await page.EnterEntityInfoFrameEntityInfoWindowBureauNumberAsync(data.Resolve("{{runtime:EntityInfoFrameEntityInfoWindowBureauNumber_0109}}"));
+        await page.EnterEntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefaultAsync(data.Resolve("{{runtime:EntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefault_0109}}"));
+        await page.EnterEMailAsync("Test@test.com");
+        await page.ClickOKAsync();
+
+        await page.WaitForEntityInfoFrameAsync("Absent");
+        await page.WaitForAssignLocationsAsync("Exists");
+        await page.ClickAssignLocationsAsync();
+        await page.WaitForAssignLocationAsync("Exists");
+        await page.PauseAsync(4000);
+        await page.ClickAssignLocationAsync();
+        await page.WaitForLocationIDAsync("Exists");
+        await page.EnterLocationIDAsync("");
+        await page.EnterLocationIDAsync(data.Resolve("{{data:location_assignment_entity_location_locationid_188}}"));
+        //await page.VerifyLocationIDAsync(data.Resolve("{{data:location_assignment_entity_location_locationid_190}}"));
+        await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+        await page.ClickSelectNAICSCodeAsync();
+
+        await page.WaitForNAICSCodeSearchValueAsync("Exists");
+        await page.EnterNAICSCodeSearchValueAsync(data.Resolve("{{data:location_assignment_entity_location_naicscodesearchvalue_195}}"));
+        await page.EnterSelectAppropriateCodeAsync(data.Resolve("{{data:location_assignment_entity_location_select_appropriate_code_198}}"));
+        //await page.VerifySelectAppropriateCodeAsync(data.Resolve("{{data:expected_location_assignment_entity_location_select_appropriate_code_value_199}}"), "value");
+        //await page.WaitForLocationAssignmentAsync("Absent");
+        //await page.EnterSelectAppropriateCodeAsync(data.Resolve("{{data:location_assignment_entity_location_select_appropriate_code_201}}"));
+        //await page.VerifySelectAppropriateCodeAsync(data.Resolve("{{data:expected_location_assignment_entity_location_select_appropriate_code_value_202}}"), "value");
+        //await page.WaitForLocationAssignmentAsync("Absent");
+        //await page.VerifySelectAppropriateCodeAsync(data.Resolve("{{data:expected_location_assignment_entity_location_select_appropriate_code_value_204}}"), "value");
+        await page.ClickOKFirstAsync();
+        await page.WaitForOKSecondAsync("Absent");
+        await page.ClickOKAsync();
+        await page.WaitForLocationAssignmentAsync("Absent");
+
+    }
+
+    [Given(@"^I complete endorsements$")]
+    [When(@"^I complete endorsements$")]
+    [Then(@"^I complete endorsements$")]
+    public async Task CompleteEndorsementsAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickWCNavigationLinksEndorsementsAsync();
+        //await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
+
+
+        //await page.ClickAddEndorsementsAsync();
+
+        //await page.PauseAsync(4000);
+
+        //await page.EnterEndrosmentType("Sole Proprietors, Partners, Officers And Others Coverage");
+
+
+        //await page.ClickAddSoleProprietorInformationAsync();
+        //await page.PauseAsync(2000);
+        //await page.EnterSoleProprietorsAsync("TEst");
+
+        //await page.ClickAddPartnerInformationAsync();
+
+        //await page.PauseAsync(2000);
+
+        //await page.EnterPartnersAsync("Test");
+        //await page.ClickAddOthersInformationAsync();
+        //await page.PauseAsync(2000);
+        //await page.EnterOthersAsync("Test");
+
+        //await page.ClickOKAsync();
+
+
+
+
+
+
+
+
+    }
+
+    [Given(@"^I complete WC UW Questions$")]
+    [When(@"^I complete WC UW Questions$")]
+    [Then(@"^I complete WC UW Questions$")]
+    public async Task CompleteWCUWQuestionsAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickUWQuestionsWorkersCompAsync();
+        await page.WaitForUWQuestionsUmbrellaUpdateAnswersAsync("Exists");
+        await page.ClickUWQuestionsUmbrellaUpdateAnswersAsync();
+        await page.WaitForArePhysicalsRequiredAfterOffersOfEmploymentAreMadeAsync("NotEqual");
+        await page.EnterListAllPoliciesWithAmericanNationalAsync(data.Resolve("{{data:list_all_policies_with_american_national_217}}"));
+
+    }
+
+    [Given(@"^I navigate to Pricing Screen$")]
+    [When(@"^I navigate to Pricing Screen$")]
+    [Then(@"^I navigate to Pricing Screen$")]
+    public async Task NavigateToPricingScreenAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickPricingAsync();
+        //await page.WaitForPricingDetailAsync("Exists");
+        //await page.ClickPricingDetailAsync();
+        //await page.ClickPricingDetailOKAsync();
+        //await page.WaitForPricingDetailAsync("Exists");
+
+
+        if (data.Condition("State ==\"NH\" || State ==\"NJ\" || State ==\"NV\" || State ==\"NY\" || State ==\"OK\" || State ==\"PA\" || State ==\"SD\" || State ==\"TN\" || State ==\"UT\" || State == \"AZ\" || State == \"CT\" || State == \"DE\" || State == \"GA\" || State == \"IA\" || State == \"IN\" || State == \"MD\" || State == \"MN\" || State == \"MO\" || State == \"WV\""))
+        {
+            await page.ClickWorksheetAsync();
+            await page.EnterPremisesCredit("1.005");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterPremisesComments("Premises Comments");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterClassificationPecularities(".995");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterClassificationPecularitiesComments("Test Classification Pecularities Comments");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterMedicalFacilities("1.005");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterMedicalFacilitiesComments("Test Medical Facilities Comments");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterSafetyDevices(".995");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterSafetyDevicesComments("Test Safety Devices Comments");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterEmployeesSelection("1.005");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.EnterEmployeeselectionComments("Test Employees Selection Comments");
+            await page.PauseAsync(1000);
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.EnterManagementSafetyOrganizationStateInput(".995");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterManagementSafetyOrganizationStateInputComments("Test Management Safety Organization State Input Comments");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.EnterManagementCooperationWithInsuranceCarrierStateInput("1.005");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.EnterManagementCooperationWithInsuranceCarrierStateInputComments("Test Management Cooperation With Insurance Carrier State Input Comments");
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.ClickOKAsync();
+        }
+
+    }
+
+    [Given(@"^I verify Class Codes on Policy are Valid$")]
+    [When(@"^I verify Class Codes on Policy are Valid$")]
+    [Then(@"^I verify Class Codes on Policy are Valid$")]
+    public async Task VerifyClassCodesOnPolicyAreValidAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new BusinessClassificationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.VerifyInvalidClassCodeMessageAsync("Absent", "");
+
+    }
+
+    [Given(@"^I verify premium$")]
+    [When(@"^I verify premium$")]
+    [Then(@"^I verify premium$")]
+    public async Task VerifyPremiumAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.VerifyPremiumAsync(data.Resolve("{{data:expected_full_term_premium_value_288}}"), "value");
+
+
+    }
+
+    [Given(@"^I complete required billing information for billing$")]
+    [When(@"^I complete required billing information for billing$")]
+    [Then(@"^I complete required billing information for billing$")]
+    public async Task CompleteRequiredBillingInformationForBillingAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickNavigationBillingAsync();
+        await page.WaitForBillingAsync("Exists");
+        await page.EnterBillTypeAsync(data.Resolve("{{data:bill_type_227}}"));
+        await page.WaitForBillTypeAsync("Equal");
+        await page.EnterPayPlanAsync(data.Resolve("{{data:pay_plan_230}}"));
+        await page.WaitForPayPlanAsync("Equal");
+        await page.WaitForEasyPayAsync("Exists");
+        await page.EnterEasyPayAsync(data.Resolve("{{data:easy_pay_234}}"));
+        await page.PauseAsync(1000);
+
+    }
+
+    [Given(@"^I add notepad comment$")]
+    [When(@"^I add notepad comment$")]
+    [Then(@"^I add notepad comment$")]
+    public async Task AddNotepadCommentAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickNotepadAsync();
+        //await page.WaitForNotepadHeadingAsync("Exists");
+        await page.ClickAddNotesRemarksAsync();
+        await page.EnterTextBoxAsync("Test WC LOB");
+        await page.PauseAsync(4000);
+        await page.ClickOKAsync();
+
+    }
+
+    [Given(@"^I complete required submission information$")]
+    [When(@"^I complete required submission information$")]
+    [Then(@"^I complete required submission information$")]
+    public async Task CompleteRequiredSubmissionInformationAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.WaitForSubmissionAsync("Visible");
+        await page.ClickSubmissionAsync();
+        //await page.WaitForSubmissionHeadingAsync("Exists");
+        //await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_245}}"));
+        //await page.VerifyOrderAuditAsync("Exists", "");
+        //await page.EnterOrderAuditAsync(data.Resolve("{{data:order_audit_247}}"));
+        //await page.VerifySubmissionHeadingAsync("Absent", "");
+        //await page.ClickSubmissionAsync();
+        //await page.PauseAsync(1000);
+        //await page.WaitForSubmissionHeadingAsync("Exists");
+        //await page.PauseAsync(1000);
+
+    }
+
+    [Given(@"^I run Stoplight$")]
+    [When(@"^I run Stoplight$")]
+    [Then(@"^I run Stoplight$")]
+    public async Task RunStoplightAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        //await page.VerifyIsThisCoverageBoundAsync("Exists", "");
+        //await page.VerifyIsThisCoverageBoundAsync(data.Resolve("{{data:expected_is_this_coverage_bound_value_255}}"), "Value");
+        //await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_256}}"));
+        await page.ClickCompleteApplicationAsync();
+        //await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
+        await page.PauseAsync(10000);
+        //await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
+        await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
+        await page.PauseAsync(10000);
+        //await page.ClickCompleteApplicationAsync();
+        //await page.PauseAsync(10000);
+        //await page.ClickStoplightWaitingWindowCloseAsync();
+        //await page.WaitForStoplightWaitingWindowAsync("Absent");
+        //await page.PauseAsync(1000);
+        //await page.VerifyLoadingMessageAsync("Visible", "");
+        //await page.PauseAsync(1000);
+        //await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists", "");
+        //await page.ClickCompleteApplicationAsync();
+        //await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
+        //await page.PauseAsync(1000);
+        //await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
+        //await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
+        //await page.PauseAsync(1000);
+        //await page.ClickCompleteApplicationAsync();
+        //await page.PauseAsync(1000);
+        //await page.ClickStoplightWaitingWindowCloseAsync();
+        //await page.WaitForStoplightWaitingWindowAsync("Absent");
+        //await page.PauseAsync(1000);
+        //await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
+
+    }
+
+    [Given(@"^I verify values in premium fields$")]
+    [When(@"^I verify values in premium fields$")]
+    [Then(@"^I verify values in premium fields$")]
+    public async Task VerifyValuesInPremiumFieldsAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PricingPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.VerifyFullTermPremiumAsync(data.Resolve("{{data:expected_full_term_premium_value_288}}"), "value");
+        await page.VerifyPremiumWrittenAsync(data.Resolve("{{data:expected_premium_written_value_289}}"), "value");
+        await page.VerifyPriorPremiumAsync(data.Resolve("{{data:expected_prior_premium_value_290}}"), "value");
+        await page.VerifyPremiumChangeAsync(data.Resolve("{{data:expected_premium_change_value_291}}"), "value");
+        //await page.EnterTitleAsync(data.Resolve("{{data:title_293}}"));
+        //await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_294}}"));
+        //data.Set("SessionId", await page.CaptureResultAsync("value"));
+
+    }
+
+    [Given(@"^I complete forms verification$")]
+    [When(@"^I complete forms verification$")]
+    [Then(@"^I complete forms verification$")]
+    public async Task CompleteFormsVerificationAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new FormsPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.EnterSessionIDAsync(data.Resolve("{B[SessionId]}"));
+        await page.VerifyStatusCodeAsync(data.Resolve("{{data:expected_statuscode_value_298}}"), "value");
+        await page.PauseAsync(1000);
+        await page.PauseAsync(1000);
+
+    }
+
+    [Given(@"^I sign out of the application$")]
+    [When(@"^I sign out of the application$")]
+    [Then(@"^I sign out of the application$")]
+    public async Task SignOutOfTheApplicationAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+
+        var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+
+        await page.ClickLoggedInUserAsync();
+        await page.ClickLogoutAsync();
+        await page.PauseAsync(1000);
+        await page.VerifyBrowserCommunicationHTTPStatusZeroAsync("Exists", "");
+        await page.ClickOKAsync();
+        await page.WaitForOKAsync("Absent");
+        await page.ClickLoggedInUserAsync();
+        await page.ClickLogoutAsync();
+
+    }
+
+}

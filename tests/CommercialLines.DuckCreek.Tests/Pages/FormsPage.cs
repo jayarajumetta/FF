@@ -1,0 +1,152 @@
+using InsuranceAutomation.Core;
+using Microsoft.Playwright;
+using InsuranceAutomation.CLDC.Pages.Locators;
+
+namespace InsuranceAutomation.CLDC.Pages;
+
+public sealed class FormsPage
+{
+    private readonly BrowserSession _browser;
+    private readonly FormsLocators _locators;
+    private readonly UiActions _ui;
+
+    public FormsPage(BrowserSession browser, UiActions ui)
+    {
+        _browser = browser;
+        _locators = new FormsLocators(browser.Page);
+        _ui = ui;
+    }
+
+    public Task WaitForAdditionalInterestsAsync(string expected) =>
+        _ui.WaitAsync(_locators.AddlInterestsLink, expected, new ControlIntent("Forms", "AdditionalInterests"));
+
+    public Task ClickAdditionalInterestsAsync() =>
+        _ui.ClickAsync(_locators.AddlInterestsLink, new ControlIntent("Forms", "AdditionalInterests"));
+
+    public Task WaitForAddlInterestsAsync(string expected) =>
+        _ui.WaitAsync(_locators.AddlInterests, expected, new ControlIntent("Forms", "AddlInterests"));
+
+    public Task ClickBusinessownersAsync() =>
+        _ui.ClickAsync(_locators.Businessowners, new ControlIntent("Forms", "Businessowners"));
+
+    public Task WaitForBusinessownersHeadingAsync(string expected) =>
+        _ui.WaitAsync(_locators.BusinessOwnerHeading, expected, new ControlIntent("Forms", "BusinessownersHeading"));
+
+    public Task WaitForEffectiveDateAsync(string expected) =>
+        _ui.WaitAsync(_locators.EffectiveDate, expected, new ControlIntent("Forms", "EffectiveDate"));
+
+    public Task EnterEffectiveDateAsync(string value) =>
+        _ui.FillAsync(_locators.EffectiveDate, value, new ControlIntent("Forms", "EffectiveDate"));
+
+    public Task EnterLiquifiedGasAsync(string value) =>
+        _ui.FillAsync(_locators.LiquifiedGas, value, new ControlIntent("Navigation", "LiquifiedGas"));
+
+    public Task PressEffectiveDateAsync(string key) =>
+        _ui.PressAsync(_locators.EffectiveDate, key, new ControlIntent("Forms", "EffectiveDate"));
+
+    public Task VerifyEmployerSLiabilityCheckBoxAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.EmployerSLiabilityCheckBox, expected, property, new ControlIntent("Forms", "EmployerSLiabilityCheckBox"));
+
+
+    public Task VerifyYearBuilt1980Async(string expected, string property) =>
+        _ui.VerifyAsync(_locators.YearBuilt1980, expected, property, new ControlIntent("Navigation", "YearBuilt1980"));
+
+    public Task EnterExpirationDateAsync(string value) =>
+        _ui.FillAsync(_locators.ExpirationDate, value, new ControlIntent("Forms", "ExpirationDate"));
+
+    public Task PressExpirationDateAsync(string key) =>
+        _ui.PressAsync(_locators.ExpirationDate, key, new ControlIntent("Forms", "ExpirationDate"));
+
+    public Task WaitForHomeownerSLiabilityAsync(string expected) =>
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Forms", "HomeownerSLiability"));
+
+    public Task PressHomeownerSLiabilityAsync(string key) =>
+        _ui.PressAsync(_locators.PageTitle, key, new ControlIntent("Forms", "HomeownerSLiability"));
+
+    public Task ClickHomeownerSLiabilityAsync() =>
+        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Forms", "HomeownerSLiability"));
+
+    public Task ClickImportPolicyDataButtonAsync() =>
+        _ui.ClickAsync(_locators.ImportPolicyDataButton, new ControlIntent("Forms", "ImportPolicyDataButton"));
+
+    public Task EnterLiabilityLimitAsync(string value) =>
+        _ui.FillAsync(_locators.LiabilityLimit, value, new ControlIntent("Forms", "LiabilityLimit"));
+
+    public Task PressLiabilityLimitAsync(string key) =>
+        _ui.PressAsync(_locators.LiabilityLimit, key, new ControlIntent("Forms", "LiabilityLimit"));
+
+    public Task VerifyLoadingMessageAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.LoadingMessage, expected, property, new ControlIntent("Forms", "LoadingMessage"));
+
+    public Task EnterPDLimitAsync(string value) =>
+        _ui.FillAsync(_locators.PDLimit, value, new ControlIntent("Forms", "PDLimit"));
+
+    public Task PressPDLimitAsync(string key) =>
+        _ui.PressAsync(_locators.PDLimit, key, new ControlIntent("Forms", "PDLimit"));
+
+    public Task WaitForPersonalAutoAsync(string expected) =>
+        _ui.WaitAsync(_locators.PersonalAuto, expected, new ControlIntent("Forms", "PersonalAuto"));
+
+    public Task PressPersonalAutoAsync(string key) =>
+        _ui.PressAsync(_locators.PersonalAuto, key, new ControlIntent("Forms", "PersonalAuto"));
+
+    public Task ClickPersonalAutoAsync() =>
+        _ui.ClickAsync(_locators.PersonalAuto, new ControlIntent("Forms", "PersonalAuto"));
+
+    public Task EnterPolicyNumberAsync(string value) =>
+        _ui.FillAsync(_locators.PolicyNumber, value, new ControlIntent("Forms", "PolicyNumber"));
+
+    public Task<string> CapturePolicyNumberAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.PolicyNumber, property, new ControlIntent("Forms", "PolicyNumber"));
+
+    public Task PressPolicyNumberAsync(string key) =>
+        _ui.PressAsync(_locators.PolicyNumber, key, new ControlIntent("Forms", "PolicyNumber"));
+
+    public Task EnterSessionIDAsync(string value) =>
+        _ui.FillAsync(_locators.SessionID, value, new ControlIntent("Forms", "SessionID"));
+
+    public Task VerifyStatusCodeAsync(string expected, string property) =>
+        _ui.VerifyAsync(_locators.StatusCode, expected, property, new ControlIntent("Forms", "StatusCode"));
+
+    public Task EnterTotalSubjectPremiumAsync(string value) =>
+        _ui.FillAsync(_locators.TotalSubjectPremium, value, new ControlIntent("Forms", "TotalSubjectPremium"));
+
+    public Task PressTotalSubjectPremiumAsync(string key) =>
+        _ui.PressAsync(_locators.TotalSubjectPremium, key, new ControlIntent("Forms", "TotalSubjectPremium"));
+
+    public Task<string> CaptureValueAsync(string property = "") =>
+        _ui.CaptureAsync(_locators.Value, property, new ControlIntent("Forms", "Value"));
+
+    public Task WaitForWatercraftLiabilityAsync(string expected) =>
+        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Forms", "WatercraftLiability"));
+
+    public Task PressWatercraftLiabilityAsync(string key) =>
+        _ui.PressAsync(_locators.PageTitle, key, new ControlIntent("Forms", "WatercraftLiability"));
+
+    public Task ClickWatercraftLiabilityAsync() =>
+        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Forms", "WatercraftLiability"));
+
+    public Task PauseAsync(int milliseconds) =>
+        Task.Delay(milliseconds);
+
+    public Task EnterEffectiveDateSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.EffectiveDate, value, new ControlIntent("Forms", "EffectiveDate"), delayMs);
+
+    public Task EnterExpirationDateSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.ExpirationDate, value, new ControlIntent("Forms", "ExpirationDate"), delayMs);
+
+    public Task EnterLiabilityLimitSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.LiabilityLimit, value, new ControlIntent("Forms", "LiabilityLimit"), delayMs);
+
+    public Task EnterPDLimitSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.PDLimit, value, new ControlIntent("Forms", "PDLimit"), delayMs);
+
+    public Task EnterPolicyNumberSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.PolicyNumber, value, new ControlIntent("Forms", "PolicyNumber"), delayMs);
+
+    public Task EnterSessionIDSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.SessionID, value, new ControlIntent("Forms", "SessionID"), delayMs);
+
+    public Task EnterTotalSubjectPremiumSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.TotalSubjectPremium, value, new ControlIntent("Forms", "TotalSubjectPremium"), delayMs);
+}

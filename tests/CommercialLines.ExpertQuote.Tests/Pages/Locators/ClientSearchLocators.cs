@@ -1,0 +1,33 @@
+using Microsoft.Playwright;
+
+namespace InsuranceAutomation.CLEQ.Pages.Locators;
+
+public sealed class ClientSearchLocators
+{
+    private readonly IPage _page;
+    public ClientSearchLocators(IPage page) => _page = page;
+
+    // EQ|Common|Start New Quote
+    public ILocator NewQuote => _page.GetByRole(AriaRole.Button, new() { Name = "New Quote", Exact = true });
+
+    // EQ|Common|Client Info: H1 + source HTML IDs.
+    public ILocator ClientInfo => _page.GetByRole(AriaRole.Heading, new() { Name = "Client Info", Exact = true });
+    public ILocator CustomerNameFirst => _page.Locator("[id='customer.name.first']");
+    public ILocator CustomerNameLast => _page.Locator("[id='customer.name.last']");
+    public ILocator CustomerDateOfBirth => _page.Locator("[id='customer.dateOfBirth']");
+    public ILocator ClientInfoSearch => _page.Locator("button:has-text(\"Search\"), a:has-text(\"Search\")").First;
+
+    // EQ|Common|Create New Client
+    public ILocator ExistingClientMatch => _page.Locator("h1:has-text('Existing Client Match'), h2:has-text('Existing Client Match'), [data-testid='existing-client-match'], text=Existing Client Match").First;
+    public ILocator CreateNewClient => _page.GetByTestId("customer.selected-new-chip");
+
+    // Dynamic per-client suggestion chip: data-testid="temp.clientSuggestions-cif-client-{id}-chip"
+    public ILocator ExistingClientSuggestion => _page.Locator("[data-testid^='temp.clientSuggestions-cif-client-'][data-testid$='-chip']").First;
+    public ILocator AdditionalInterestsNext => _page.GetByRole(AriaRole.Button, new() { Name = "Next", Exact = true });
+
+    // Primary Insured Selection screen "Next" button (label data-testid: cl-bop-primary-insured-selection-next-btn-button-label)
+    public ILocator PrimaryInsuredSelectionNext => _page.Locator("button:has([data-testid='cl-bop-primary-insured-selection-next-btn-button-label'])");
+
+    // Kept only for legacy generated page APIs.
+    public ILocator NewExistingClientSearch => _page.GetByText("New/Existing Client Search", new() { Exact = true });
+}

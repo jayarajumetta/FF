@@ -1,0 +1,77 @@
+{
+  "browser": {
+    "channel": "msedge",
+    "fallbackBrowser": "chromium",
+    "headless": false,
+    "ignoreHttpsErrors": true,
+    "viewportWidth": 1440,
+    "viewportHeight": 900,
+    "actionTimeoutMs": 20000,
+    "navigationTimeoutMs": 30000,
+    "trace": true,
+    "video": true,
+    "har": true,
+    "screenshotOnFailure": true,
+    "screenshotEachStep": false,
+    "screenshotAtScenarioEnd": true,
+    "highlightInteractions": true,
+    "highlightDurationMs": 120,
+    "maximize": true
+  },
+  "reporting": {
+    "excludeVideos": true,
+    "excludePassedVideos": true,
+    "resultsRoot": "TestResults",
+    "artifactRoot": "Artifacts",
+    "htmlReport": true,
+    "includeResolvedData": true,
+    "includeConsoleErrors": true,
+    "includeNetworkErrors": true,
+    "createEvidenceBundle": true,
+    "attachEvidenceToTestResult": true,
+    "attachPassedEvidenceToTestResult": true,
+    "attachmentMode": "all",
+    "maxSingleAttachmentBytes": 536870912,
+    "maxAttachmentCount": 5000,
+    "collectConsole": true,
+    "collectNetwork": true,
+    "passed": {
+      "screenshot": true,
+      "executionLog": true,
+      "htmlReport": true,
+      "video": true,
+      "trace": true,
+      "har": false,
+      "console": true,
+      "network": true,
+      "bundle": false
+    },
+    "failed": {
+      "screenshot": true,
+      "executionLog": true,
+      "htmlReport": true,
+      "video": true,
+      "trace": true,
+      "har": true,
+      "console": true,
+      "network": true,
+      "bundle": true
+    }
+  },
+  "execution": {
+    "retryCount": 0,
+    "strictUnknownConditions": true,
+    "externalDataFile": "TestData/ExternalDataOverrides.json",
+    "deferVerificationFailures": true
+  },
+  "waits": {
+    "pageReadyTimeoutMs": 20000,
+    "elementReadyTimeoutMs": 20000,
+    "verifyTimeoutMs": 20000,
+    "pollIntervalMs": 250,
+    "waitForDomContentLoadedBeforeActions": true,
+    "frameProbeTimeoutMs": 600,
+    "dropdownOptionTimeoutMs": 3000,
+    "dropdownPollIntervalMs": 100
+  }
+}
