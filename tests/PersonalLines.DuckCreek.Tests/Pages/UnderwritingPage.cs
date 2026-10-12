@@ -60,7 +60,7 @@ public sealed class UnderwritingPage
         _ui.PressAsync(_locators.ChkBoxCheckBoxNoneOfTheAbove, key, new ControlIntent("Underwriting", "PreQualificationNext"));
 
     public Task ClickPreQualificationNextAsync() =>
-        _ui.ClickAsync(_locators.ChkBoxCheckBoxNoneOfTheAbove, new ControlIntent("Underwriting", "PreQualificationNext"));
+        _ui.ClickAsync(_locators.BtnNext, new ControlIntent("Underwriting", "PreQualificationNext"));
 
     public Task<bool> IsPreQualificationNextPresentAsync() =>
         _ui.ExistsAsync(_locators.ChkBoxCheckBoxNoneOfTheAbove);

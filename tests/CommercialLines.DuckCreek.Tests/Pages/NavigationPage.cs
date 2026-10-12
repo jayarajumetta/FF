@@ -101,6 +101,21 @@ public sealed class NavigationPage
     public Task ClickEndorsementMainAddEndorsementAsync() =>
         _ui.ClickAsync(_locators.AddEndorsement, new ControlIntent("Navigation", "EndorsementMainAddEndorsement"));
 
+    public Task ClickCU2118DeleteAsync() =>
+        _ui.ClickAsync(_locators.Cu2118Delete, new ControlIntent("Navigation", "CU2118Delete"));
+
+    public Task<bool> IsCU2118DeletePresentAsync() =>
+        _ui.ExistsAsync(_locators.Cu2118Delete);
+
+    public Task ClickBadilyJustingAsync() =>
+       _ui.ClickAsync(_locators.BodilyInjury, new ControlIntent("Navigation", "BodilyInjury"));
+
+    public Task ClickPropertDamageAsync() =>
+       _ui.ClickAsync(_locators.PropertyDamange, new ControlIntent("Navigation", "PropertyDamange"));
+
+    public Task ClickPersonalAdvertisingAsync() =>
+       _ui.ClickAsync(_locators.PersonalAdvertising, new ControlIntent("Navigation", "PersonalAdvertising"));
+
     public Task WaitForEndorsementMainAddEndorsementAsync(string expected) =>
         _ui.WaitAsync(_locators.AddEndorsement, expected, new ControlIntent("Navigation", "EndorsementMainAddEndorsement"));
 
@@ -219,7 +234,7 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.AddressStreetCityStateZip, key, new ControlIntent("Navigation", "AddressStreetCityStateZip"));
 
     public Task EnterAggregateLimitAsync(string value) =>
-        _ui.FillAsync(_locators.AggregateLimit, value, new ControlIntent("Navigation", "AggregateLimit"));
+        _ui.FillAsync(_locators.IFRAMEDuckCreekPolicyAggregateLimit, value, new ControlIntent("Navigation", "AggregateLimit"));
 
     public Task PressAggregateLimitAsync(string key) =>
         _ui.PressAsync(_locators.AggregateLimit, key, new ControlIntent("Navigation", "AggregateLimit"));
@@ -1658,6 +1673,9 @@ public sealed class NavigationPage
     public Task EnterIFRAMEDuckCreekPolicyDescriptionOfPremisesOrActivitiesAsync(string value) =>
         _ui.FillAsync(_locators.IFRAMEDuckCreekPolicyDescriptionOfPremisesOrActivities, value, new ControlIntent("Navigation", "IFRAMEDuckCreekPolicyDescriptionOfPremisesOrActivities"));
 
+    public Task EnterIFRAMEDuckCreekPolicyWADescriptionOfPremisesOrActivitiesAsync(string value) =>
+        _ui.FillAsync(_locators.DescriptionSOfDesignatedPremises, value, new ControlIntent("Navigation", "IFRAMEDuckCreekPolicyDescriptionOfPremisesOrActivities"));
+
     public Task PressIFRAMEDuckCreekPolicyDescriptionOfPremisesOrActivitiesAsync(string key) =>
         _ui.PressAsync(_locators.IFRAMEDuckCreekPolicyDescriptionOfPremisesOrActivities, key, new ControlIntent("Navigation", "IFRAMEDuckCreekPolicyDescriptionOfPremisesOrActivities"));
 
@@ -2010,7 +2028,7 @@ public sealed class NavigationPage
         _ui.PressAsync(_locators.PageTitle, key, new ControlIntent("Navigation", "MotorcycleLiability"));
 
     public Task ClickMotorcycleLiabilityAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "MotorcycleLiability"));
+        _locators.MotorCycleLiability.EvaluateAsync("el => el.click()");
 
     public Task EnterN10AreThePremisesEquippedWithARecognizedApprovedCentralStationFireAlarmFireExtinguishersOrSmokeAlarmsAsync(string value) =>
         _ui.FillAsync(_locators.N10AreThePremisesEquippedWithARecognizedApprovedCentralStationFireAlarmFireExtinguishersOrSmokeAlarms, value, new ControlIntent("Navigation", "N10AreThePremisesEquippedWithARecognizedApprovedCentralStationFireAlarmFireExtinguishersOrSmokeAlarms"));
@@ -3046,13 +3064,13 @@ public sealed class NavigationPage
         _ui.ClickAsync(_locators.RatingGroups, new ControlIntent("Navigation", "RatingGroups"));
 
     public Task WaitForRentalOwnersLiabilityAsync(string expected) =>
-        _ui.WaitAsync(_locators.PageTitle, expected, new ControlIntent("Navigation", "RentalOwnersLiability"));
+        _ui.WaitAsync(_locators.RentalOwnersLiability, expected, new ControlIntent("Navigation", "RentalOwnersLiability"));
 
     public Task PressRentalOwnersLiabilityAsync(string key) =>
         _ui.PressAsync(_locators.PageTitle, key, new ControlIntent("Navigation", "RentalOwnersLiability"));
 
     public Task ClickRentalOwnersLiabilityAsync() =>
-        _ui.ClickAsync(_locators.PageTitle, new ControlIntent("Navigation", "RentalOwnersLiability"));
+        _locators.RentalOwnersLiability.EvaluateAsync("el => el.click()");
 
     public Task WaitForRentalReimbursementAsync(string expected) =>
         _ui.WaitAsync(_locators.RentalReimbursement, expected, new ControlIntent("Navigation", "RentalReimbursement"));
@@ -4443,6 +4461,8 @@ public sealed class NavigationPage
 
     public Task EnterIFRAMEDuckCreekPolicyDescriptionOfPremisesOrActivitiesSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.IFRAMEDuckCreekPolicyDescriptionOfPremisesOrActivities, value, new ControlIntent("Navigation", "IFRAMEDuckCreekPolicyDescriptionOfPremisesOrActivities"), delayMs);
+    public Task EnterIFRAMEAggregateLimitSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.IFRAMEDuckCreekPolicyAggregateLimit, value, new ControlIntent("Navigation", "IFRAMEDuckCreekPolicyAggregateLimit"), delayMs);
 
     public Task EnterIFRAMEDuckCreekPolicyExcludedDriverSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.IFRAMEDuckCreekPolicyExcludedDriver, value, new ControlIntent("Navigation", "IFRAMEDuckCreekPolicyExcludedDriver"), delayMs);
@@ -4500,6 +4520,12 @@ public sealed class NavigationPage
 
     public Task EnterCommercialAutoLiabilityLimitSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.CommercialAutoLiabilityLimit, value, new ControlIntent("Navigation", "CommercialAutoLiabilityLimit"), delayMs);
+
+    public Task EnterCommercialUMLimitSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.CommercialUMLimit, value, new ControlIntent("Navigation", "CommercialUMLimit"), delayMs);
+
+    public Task PressCommercialUMLimitAsync(string key) =>
+       _ui.PressAsync(_locators.CommercialUMLimit, key, new ControlIntent("Forms", "CommercialUMLimit"));
 
     public Task EnterSFP10LiabilityFarmLiabilityLimitSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.SFP10LiabilityFarmLiabilityLimit, value, new ControlIntent("Navigation", "SFP10LiabilityFarmLiabilityLimit"), delayMs);
@@ -4762,6 +4788,8 @@ public sealed class NavigationPage
     public Task EnterUMBLimitAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.UMBILimit, value, new ControlIntent("Navigation", "UMB Limit"), delayMs);
 
+    
+
     public Task EnterBusinessownersPolicyNumberSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.BusinessownersPolicyNumber, value, new ControlIntent("Navigation", "BusinessownersPolicyNumber"), delayMs);
 
@@ -4881,6 +4909,9 @@ public sealed class NavigationPage
 
     public Task EnterSelectEndorsementSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.LineEndorsementType, value, new ControlIntent("Navigation", "SelectEndorsement"), delayMs);
+
+    public Task EnterSDescriptionLocationSequentiallyAsync(string value, int delayMs = 20) =>
+        _ui.PressSequentiallyAsync(_locators.DescriptionLocation, value, new ControlIntent("Navigation", "DescriptionLocation"), delayMs);
 
     public Task EnterSexSequentiallyAsync(string value, int delayMs = 20) =>
         _ui.PressSequentiallyAsync(_locators.Sex, value, new ControlIntent("Navigation", "Sex"), delayMs);
