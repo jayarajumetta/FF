@@ -1,0 +1,341 @@
+Given I open a browser session
+2026-10-11 20:13:13.779 [INFO] START STEP: I open a browser session
+2026-10-11 20:13:21.779 [INFO] Browser session opened. Channel=msedge; Headless=False; HAR=True; Console=True; Network=True
+-> done: ApplicationSteps.OpenBrowserSessionAsync() (8.1s)
+2026-10-11 20:13:22.000 [INFO] PASSED STEP: I open a browser session
+Given test data "TestData/Scenarios/011_wc_expanded_pa.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+2026-10-11 20:13:22.112 [INFO] START STEP: test data "TestData/Scenarios/011_wc_expanded_pa.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+2026-10-11 20:13:22.669 [INFO] Loaded scenario data: C:\Users\CT7859\Desktop\LatestBranch\PnC_DC_TestAutomation\bin\CommercialLines.DuckCreek.Tests\Debug\net8.0\TestData\Scenarios\011_wc_expanded_pa.json
+-> done: ApplicationSteps.LoadScenarioData("TestData/Scenario...", "TestData/External...") (0.6s)
+2026-10-11 20:13:22.671 [INFO] PASSED STEP: test data "TestData/Scenarios/011_wc_expanded_pa.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+And I open the configured Commercial Lines Duck Creek application
+2026-10-11 20:13:22.677 [INFO] START STEP: I open the configured Commercial Lines Duck Creek application
+2026-10-11 20:13:24.530 [ERROR] 2026-10-11T20:13:24.5274264+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+-> done: ApplicationSteps.OpenApplicationAsync() (2.1s)
+2026-10-11 20:13:24.813 [INFO] PASSED STEP: I open the configured Commercial Lines Duck Creek application
+And I sign in to Commercial Lines Duck Creek using configured credentials
+2026-10-11 20:13:24.939 [INFO] START STEP: I sign in to Commercial Lines Duck Creek using configured credentials
+2026-10-11 20:13:26.594 [INFO] RUNTIME LOCATOR: Login.UserName => id
+2026-10-11 20:13:29.194 [INFO] RUNTIME LOCATOR: Login.Password => id
+2026-10-11 20:13:31.462 [INFO] RUNTIME LOCATOR: Login.Login => name
+2026-10-11 20:13:42.644 [ERROR] 2026-10-11T20:13:42.6323430+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?type=js3&sn=v_4_srv_2_sn_5744D9C3CEAF9DD46749B0351512A15D_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&svrid=2&flavor=post&vi=ALFJNPSKLMLAFFGTBHTCESVATHHCCQUT-0&modifiedSince=1791305539567&bp=3&app=1286464dd003b906&crc=3931111884&en=c2dndj2n&end=1 :: net::ERR_ABORTED
+2026-10-11 20:13:42.781 [ERROR] 2026-10-11T20:13:42.7781007+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?sc=2&ty=js&pv=4&ai=1286464dd003b906&en=c2dndj2n&cr=1791305539567&av=1.347.4&cy=event&bc=724499617&co=snappy&si=v_4_srv_2_sn_5744D9C3CEAF9DD46749B0351512A15D_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&st=1791729822480&ss=1&qc=560751027&end=1 :: net::ERR_ABORTED
+2026-10-11 20:13:43.511 [ERROR] 2026-10-11T20:13:43.5110950+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+-> done: ApplicationSteps.SignInAsync() (18.9s)
+2026-10-11 20:13:43.825 [INFO] PASSED STEP: I sign in to Commercial Lines Duck Creek using configured credentials
+And I start a new quote
+2026-10-11 20:13:43.840 [INFO] START STEP: I start a new quote
+2026-10-11 20:13:44.632 [INFO] RUNTIME LOCATOR: Proposal.NewQuote => id
+2026-10-11 20:13:46.216 [INFO] RUNTIME LOCATOR: Proposal.EffectiveDate => tag+fieldref fieldref=PolicyInput.EffectiveDate
+2026-10-11 20:13:57.925 [INFO] RUNTIME LOCATOR: Proposal.Product => tag+fieldref fieldref=data.VersionIDPages
+2026-10-11 20:14:00.683 [INFO] RUNTIME LOCATOR: Proposal.Producer => tag+fieldref fieldref=data.Producer
+2026-10-11 20:14:03.362 [INFO] RUNTIME LOCATOR: Proposal.Start => link-text
+-> done: WCExpandedSteps.StartANewQuoteAsync() (20.7s)
+2026-10-11 20:14:04.550 [INFO] PASSED STEP: I start a new quote
+When I enter business client information
+2026-10-11 20:14:04.567 [INFO] START STEP: I enter business client information
+2026-10-11 20:14:05.809 [WARN] ELEMENT ATTACH WAIT CONTINUING: Error: strict mode violation: Locator("input[fieldref=\"PolicyOutputNonShredded.QuoteQuick\"]") resolved to 2 elements:
+    1) <input value="1" type="checkbox" hidefocus="true" checked="checked" name="boolean_40F" data-ref="inputEl" autocomplete="off" aria-hidden="false" aria-invalid="false" aria-disabled="false" class="x-form-cb-input" fieldref="PolicyOutputNonShredded.QuoteQuick" objectref="pE8B23B29AEDD43B79AB633C91D49901F" id="f_pE8B23B29AEDD43B79AB633C91D49901F40F_3_1-inputEl" data-componentid="f_pE8B23B29AEDD43B79AB633C91D49901F40F_3_1" aria-describedby="f_pE8B23B29AEDD43B79AB633C91D49901F40F_3_1-ariaStatusEl"/> aka GetByRole(AriaRole.Checkbox)
+    2) <input hidden="" value="1" role="checkbox" hidefocus="true" autocomplete="off" name="~boolean_40F" data-ref="hiddenCheckBoxEl" fieldref="PolicyOutputNonShredded.QuoteQuick" objectref="pE8B23B29AEDD43B79AB633C91D49901F" data-cmpid="f_pE8B23B29AEDD43B79AB633C91D49901F40F_3_1" id="f_pE8B23B29AEDD43B79AB633C91D49901F40F_3_1-hiddenCheckBoxEl"/> aka Locator("input[name=\"~boolean_40F\"]")
+
+Call log:
+  - waiting for Locator("input[fieldref=\"PolicyOutputNonShredded.QuoteQuick\"]")
+2026-10-11 20:14:06.053 [INFO] RUNTIME LOCATOR: ClientSearch.QuickQuote => id fieldref=PolicyOutputNonShredded.QuoteQuick
+2026-10-11 20:14:08.507 [INFO] RUNTIME LOCATOR: ClientSearch.UnderwritingInfo => link-text
+2026-10-11 20:14:09.830 [INFO] RUNTIME LOCATOR: ClientSearch.InsuredType => tag+fieldref fieldref=AccountInput.InsuredType
+2026-10-11 20:14:12.715 [INFO] RUNTIME LOCATOR: ClientSearch.BusinessName => tag+fieldref fieldref=AccountInput.BusinessName
+2026-10-11 20:14:15.981 [INFO] RUNTIME LOCATOR: ClientSearch.EntityType => tag+fieldref fieldref=AccountInput.EntityType
+2026-10-11 20:14:18.739 [INFO] RUNTIME LOCATOR: ClientSearch.PrimaryPhone => tag+fieldref fieldref=AccountInput.PrimaryPhone
+2026-10-11 20:14:22.076 [INFO] RUNTIME LOCATOR: ClientSearch.Address => tag+fieldref fieldref=AccountInput.Address1
+2026-10-11 20:14:25.198 [INFO] RUNTIME LOCATOR: ClientSearch.NamedInsuredZipCode => tag+fieldref fieldref=AccountInput.ZipCode
+2026-10-11 20:14:28.198 [INFO] RUNTIME LOCATOR: ClientSearch.FEIN => tag+fieldref fieldref=AccountInput.FEIN
+2026-10-11 20:14:30.647 [INFO] RUNTIME LOCATOR: ClientSearch.YearsInBusiness => tag+fieldref fieldref=AccountInput.YearsInBusiness
+2026-10-11 20:14:33.658 [INFO] RUNTIME LOCATOR: ClientSearch.NameOfAuditContact => tag+fieldref fieldref=AccountInput.AuditContact
+2026-10-11 20:14:36.082 [INFO] RUNTIME LOCATOR: ClientSearch.AuditTelephone => tag+fieldref fieldref=AccountInput.AuditContactPhone
+2026-10-11 20:14:38.451 [INFO] RUNTIME LOCATOR: ClientSearch.NameOfInspectionContact => tag+fieldref fieldref=AccountInput.InspectionContact
+2026-10-11 20:14:43.427 [INFO] RUNTIME LOCATOR: ClientSearch.InspectionTelephone => tag+fieldref fieldref=AccountInput.InspectionContactPhone
+2026-10-11 20:14:46.066 [INFO] RUNTIME LOCATOR: ClientSearch.InsuredEMailAddress => tag+fieldref fieldref=AccountInput.Email
+2026-10-11 20:14:49.095 [INFO] RUNTIME LOCATOR: ClientSearch.WebsiteAddress => tag+fieldref fieldref=AccountInput.WebsiteAddress
+-> done: WCExpandedSteps.EnterBusinessClientInformationAsync() (48.3s)
+2026-10-11 20:14:52.907 [INFO] PASSED STEP: I enter business client information
+And I add a new Associated Client - Business Owner Type - Click Add Client
+2026-10-11 20:14:52.908 [INFO] START STEP: I add a new Associated Client - Business Owner Type - Click Add Client
+2026-10-11 20:14:55.634 [INFO] RUNTIME LOCATOR: PolicyWorkflow.AddClient => link-text
+-> done: WCExpandedSteps.AddANewAssociatedClientBusinessOwnerTypeClickAddClientAsync() (3.8s)
+2026-10-11 20:14:56.801 [INFO] PASSED STEP: I add a new Associated Client - Business Owner Type - Click Add Client
+And I complete the Associated Client Info
+2026-10-11 20:14:56.803 [INFO] START STEP: I complete the Associated Client Info
+2026-10-11 20:14:58.210 [INFO] RUNTIME LOCATOR: ClientSearch.IndividualType => tag+fieldref fieldref=AssociatedClientInput.IndividualType
+2026-10-11 20:15:01.699 [INFO] RUNTIME LOCATOR: ClientSearch.PleaseVerifySSN => id
+2026-10-11 20:15:03.049 [INFO] RUNTIME LOCATOR: ClientSearch.MiddleName => tag+fieldref fieldref=AssociatedClientInput.MiddleName
+2026-10-11 20:15:06.031 [INFO] RUNTIME LOCATOR: ClientSearch.LastName => tag+fieldref fieldref=AssociatedClientInput.LastName
+2026-10-11 20:15:09.362 [INFO] RUNTIME LOCATOR: ClientSearch.AddAssociatedClientDateOfBirth => tag+fieldref fieldref=AssociatedClientInput.DateOfBirth
+2026-10-11 20:15:21.685 [INFO] RUNTIME LOCATOR: ClientSearch.Address => tag+fieldref fieldref=AssociatedClientInput.Address1
+2026-10-11 20:15:23.691 [WARN] FILL RETRY: ClientSearch.Address; value was empty after attempt 1/3.
+2026-10-11 20:15:26.060 [INFO] RUNTIME LOCATOR: ClientSearch.City => tag+fieldref fieldref=AssociatedClientInput.City
+2026-10-11 20:15:29.596 [INFO] RUNTIME LOCATOR: ClientSearch.FirstName => tag+fieldref fieldref=AssociatedClientInput.FirstName
+2026-10-11 20:15:32.345 [INFO] RUNTIME LOCATOR: ClientSearch.State => tag+fieldref fieldref=AssociatedClientInput.State
+2026-10-11 20:15:35.518 [INFO] RUNTIME LOCATOR: ClientSearch.NamedInsuredZipCode => tag+fieldref fieldref=AssociatedClientInput.ZipCode
+2026-10-11 20:15:38.890 [INFO] RUNTIME LOCATOR: ClientSearch.Gender => tag+fieldref fieldref=AssociatedClientInput.Gender
+2026-10-11 20:15:42.162 [INFO] RUNTIME LOCATOR: ClientSearch.ClientSearch => link-text
+2026-10-11 20:15:44.549 [ERROR] 2026-10-11T20:15:44.5472903+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+2026-10-11 20:15:45.743 [INFO] FRAME SCOPE: ClientSearch|OK resolved in hinted frame css:iframe
+2026-10-11 20:15:45.841 [INFO] RUNTIME LOCATOR: ClientSearch.OK => seed
+2026-10-11 20:15:46.983 [ERROR] 2026-10-11T20:15:46.9751074+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?type=js3&sn=v_4_srv_2_sn_5744D9C3CEAF9DD46749B0351512A15D_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&svrid=2&flavor=post&vi=ALFJNPSKLMLAFFGTBHTCESVATHHCCQUT-0&modifiedSince=1791305539567&bp=3&app=1286464dd003b906&crc=3972963281&en=c2dndj2n&end=1 :: net::ERR_ABORTED
+2026-10-11 20:15:47.004 [ERROR] 2026-10-11T20:15:46.9832427+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?sc=2&ty=js&pv=4&ai=1286464dd003b906&en=c2dndj2n&cr=1791305539567&av=1.347.4&cy=event&bc=1221723662&co=snappy&si=v_4_srv_2_sn_5744D9C3CEAF9DD46749B0351512A15D_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&st=1791729946925&ss=1&qc=521629764&end=1 :: net::ERR_ABORTED
+2026-10-11 20:15:47.955 [INFO] RUNTIME LOCATOR: ClientSearch.OrderSSN => link-text
+2026-10-11 20:15:50.984 [INFO] KEYBOARD STEERING SUPPRESSED: ClientSearch.AddAssociatedClientEnterSSN key=Enter; resolved control does not expose dropdown/autocomplete commit semantics.
+2026-10-11 20:15:52.278 [INFO] RUNTIME LOCATOR: ClientSearch.AddAssociatedClientEnterSSN => tag+fieldref fieldref=AssociatedClientSSNRetrievalInput.SSNInput
+2026-10-11 20:15:56.062 [INFO] RUNTIME LOCATOR: ClientSearch.Verify => link-text
+2026-10-11 20:15:58.307 [INFO] RUNTIME LOCATOR: ClientSearch.Complete => link-text
+2026-10-11 20:16:01.810 [ERROR] 2026-10-11T20:16:01.8011037+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+2026-10-11 20:16:03.404 [INFO] RUNTIME LOCATOR: ClientSearch.OK => seed
+2026-10-11 20:16:04.332 [INFO] RUNTIME LOCATOR: ClientSearch.OK => seed
+2026-10-11 20:16:05.610 [ERROR] 2026-10-11T20:16:05.5802365+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?type=js3&sn=v_4_srv_2_sn_5744D9C3CEAF9DD46749B0351512A15D_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&svrid=2&flavor=post&vi=ALFJNPSKLMLAFFGTBHTCESVATHHCCQUT-0&modifiedSince=1791305539567&bp=3&app=1286464dd003b906&crc=3331765199&en=c2dndj2n&end=1 :: net::ERR_ABORTED
+2026-10-11 20:16:05.628 [ERROR] 2026-10-11T20:16:05.6109926+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?sc=2&ty=js&pv=4&ai=1286464dd003b906&en=c2dndj2n&cr=1791305539567&av=1.347.4&cy=event&bc=3674001581&co=snappy&si=v_4_srv_2_sn_5744D9C3CEAF9DD46749B0351512A15D_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&st=1791729965503&ss=1&qc=2214949777&end=1 :: net::ERR_ABORTED
+-> done: WCExpandedSteps.CompleteTheAssociatedClientInfoAsync() (68.9s)
+2026-10-11 20:16:05.712 [INFO] PASSED STEP: I complete the Associated Client Info
+And I navigate to Underwriting Info Screen
+2026-10-11 20:16:05.713 [INFO] START STEP: I navigate to Underwriting Info Screen
+2026-10-11 20:16:06.384 [INFO] RUNTIME LOCATOR: Navigation.UnderwritingInfo => seed
+2026-10-11 20:16:07.643 [INFO] RUNTIME LOCATOR: Navigation.IsThereAPriorCarrier => tag+fieldref fieldref=PolicyUnderwritingInput.CommercialOtherNoPriorCarrier
+2026-10-11 20:16:10.779 [INFO] RUNTIME LOCATOR: Navigation.Carrier => tag+fieldref fieldref=OtherInsuranceHistoryInput.CarrierName
+2026-10-11 20:16:14.111 [INFO] RUNTIME LOCATOR: Navigation.GeneralLiabilityPolicyNumber => tag+fieldref fieldref=OtherInsuranceHistoryInput.PolicyNumber
+2026-10-11 20:16:16.439 [INFO] RUNTIME LOCATOR: Navigation.PolicyType => tag+fieldref fieldref=OtherInsuranceHistoryInput.PolicyType
+2026-10-11 20:16:19.860 [INFO] RUNTIME LOCATOR: Navigation.CommercialAutoEffectiveDate => tag+fieldref fieldref=OtherInsuranceHistoryInput.EffectiveDate
+2026-10-11 20:16:32.472 [INFO] RUNTIME LOCATOR: Navigation.GeneralLiabilityExpirationDate => tag+fieldref fieldref=OtherInsuranceHistoryInput.ExpirationDate
+2026-10-11 20:16:44.544 [INFO] RUNTIME LOCATOR: Navigation.ModificationFactor => tag+fieldref fieldref=OtherInsuranceHistoryInput.ModificationFactor
+2026-10-11 20:16:46.918 [INFO] RUNTIME LOCATOR: Navigation.TotalPremium => tag+fieldref fieldref=OtherInsuranceHistoryInput.TotalPremium
+2026-10-11 20:16:49.892 [INFO] RUNTIME LOCATOR: Navigation.OK => seed
+2026-10-11 20:16:51.009 [INFO] RUNTIME LOCATOR: Navigation.LossExperience => id
+2026-10-11 20:16:52.332 [INFO] RUNTIME LOCATOR: Navigation.ReturnToQuote => seed
+-> done: WCExpandedSteps.NavigateToUnderwritingInfoScreenAsync() (47.3s)
+2026-10-11 20:16:52.995 [INFO] PASSED STEP: I navigate to Underwriting Info Screen
+And I complete required policy information
+2026-10-11 20:16:52.998 [INFO] START STEP: I complete required policy information
+2026-10-11 20:16:54.304 [INFO] RUNTIME LOCATOR: Navigation.PolicyInfo => id
+2026-10-11 20:16:56.578 [INFO] RUNTIME LOCATOR: Navigation.PolicyInfoRequiredAndOptionalFieldsEffectiveDate => tag+fieldref fieldref=PolicyInput.EffectiveDate
+2026-10-11 20:17:09.509 [INFO] RUNTIME LOCATOR: Navigation.WereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90Days => tag+fieldref fieldref=PolicyInput.ExposuresInsuredAN90Days
+2026-10-11 20:17:26.728 [INFO] RUNTIME LOCATOR: Navigation.PolicyInfoHeader => id
+2026-10-11 20:17:27.444 [INFO] RUNTIME LOCATOR: Navigation.DescriptionOfSpecifiedOperation => tag+fieldref fieldref=PolicyOutput.DescriptionOfOperations
+2026-10-11 20:17:31.838 [INFO] RUNTIME LOCATOR: Navigation.WorkplaceSafetyRiskManagement => tag+fieldref fieldref=PolicyInput.WorkplaceSafetyRiskManagement
+-> done: WCExpandedSteps.CompleteRequiredPolicyInformationAsync() (41.1s)
+2026-10-11 20:17:34.092 [INFO] PASSED STEP: I complete required policy information
+And I complete WC Specific Fields
+2026-10-11 20:17:34.094 [INFO] START STEP: I complete WC Specific Fields
+2026-10-11 20:17:34.737 [INFO] RUNTIME LOCATOR: PolicyWorkflow.HasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverage => tag+fieldref fieldref=PolicyInput.ContinuousWCCoverageForAtLeast3Years
+-> done: WCExpandedSteps.CompleteWCSpecificFieldsAsync() (3.1s)
+2026-10-11 20:17:37.190 [INFO] PASSED STEP: I complete WC Specific Fields
+Then I complete Estimated premium
+2026-10-11 20:17:37.193 [INFO] START STEP: I complete Estimated premium
+-> done: WCExpandedSteps.CompleteEstimatedPremiumAsync() (0.0s)
+2026-10-11 20:17:37.235 [INFO] PASSED STEP: I complete Estimated premium
+And I complete coverage Information
+2026-10-11 20:17:37.237 [INFO] START STEP: I complete coverage Information
+2026-10-11 20:17:38.193 [INFO] RUNTIME LOCATOR: Navigation.PolicyCovgerage => link-text
+2026-10-11 20:17:39.359 [INFO] RUNTIME LOCATOR: Navigation.SignsHeading => id
+2026-10-11 20:17:41.742 [INFO] RUNTIME LOCATOR: Navigation.PrimaryLocationState => tag+fieldref fieldref=LineInput.PrimaryLocationState
+2026-10-11 20:17:42.592 [INFO] RUNTIME LOCATOR: Navigation.ExperienceRated => tag+fieldref fieldref=LineInput.ExperienceRatedIndicator
+2026-10-11 20:17:45.742 [INFO] RUNTIME LOCATOR: Navigation.DefaultExpModType => tag+fieldref fieldref=LineInput.ModType
+-> done: WCExpandedSteps.CompleteCoverageInformationAsync() (19.5s)
+2026-10-11 20:17:56.740 [INFO] PASSED STEP: I complete coverage Information
+And I complete Address 1
+2026-10-11 20:17:56.742 [INFO] START STEP: I complete Address 1
+2026-10-11 20:17:57.428 [INFO] RUNTIME LOCATOR: Navigation.WCNavigationLinksLocation => link-text
+2026-10-11 20:17:59.308 [INFO] RUNTIME LOCATOR: Navigation.LocationAddress => tag+fieldref fieldref=LocationInput.Address1
+2026-10-11 20:18:00.625 [INFO] RUNTIME LOCATOR: Navigation.LocationZipCode => tag+fieldref fieldref=LocationInput.ZipCode
+2026-10-11 20:18:01.404 [INFO] RUNTIME LOCATOR: Navigation.OK => seed
+-> done: WCExpandedSteps.CompleteAddress1Async() (5.1s)
+2026-10-11 20:18:01.845 [INFO] PASSED STEP: I complete Address 1
+And I complete rating Information
+2026-10-11 20:18:01.849 [INFO] START STEP: I complete rating Information
+2026-10-11 20:18:02.564 [INFO] RUNTIME LOCATOR: Navigation.StateDetails => link-text
+2026-10-11 20:18:03.717 [INFO] RUNTIME LOCATOR: Navigation.IntrastateRiskID => tag+fieldref fieldref=ExperienceModInput.RiskID
+2026-10-11 20:18:04.422 [INFO] RUNTIME LOCATOR: Navigation.WaiverOfSubrogation => tag+fieldref fieldref=LineStateTermInput.WaiverOfSubrogation
+2026-10-11 20:18:07.284 [INFO] RUNTIME LOCATOR: Navigation.LineStateTermInput => tag+fieldref fieldref=LineStateTermInput.DeductibleSelection
+2026-10-11 20:18:12.203 [INFO] RUNTIME LOCATOR: Navigation.SmallDeductibleCreditDeductible => tag+fieldref fieldref=LineStateTermInput.SmallDeductibleCreditDeductible
+2026-10-11 20:18:16.699 [INFO] RUNTIME LOCATOR: Navigation.CompanyName => tag+fieldref fieldref=WaiverCompanyName.CompanyName
+2026-10-11 20:18:22.368 [INFO] RUNTIME LOCATOR: Navigation.SmallDeductible => tag+fieldref fieldref=LineStateTermInput.SmallDeductibleCreditDeductible
+2026-10-11 20:18:35.541 [INFO] RUNTIME LOCATOR: Navigation.PendingRateChange => id
+-> done: WCExpandedSteps.CompleteRatingInformationAsync() (33.7s)
+2026-10-11 20:18:35.601 [INFO] PASSED STEP: I complete rating Information
+And I add Class Codes
+2026-10-11 20:18:35.603 [INFO] START STEP: I add Class Codes
+2026-10-11 20:18:36.306 [INFO] RUNTIME LOCATOR: Navigation.WCSchedule => link-text
+2026-10-11 20:18:37.646 [INFO] RUNTIME LOCATOR: Navigation.AddClassCode => link-text
+2026-10-11 20:18:39.724 [ERROR] 2026-10-11T20:18:39.7236055+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+2026-10-11 20:18:40.309 [INFO] FRAME SCOPE: Navigation|SearchValue resolved in hinted frame css:iframe
+2026-10-11 20:18:40.529 [INFO] RUNTIME LOCATOR: Navigation.SearchValue => seed fieldref=NCCISearchInputNonShredded.SearchValue
+2026-10-11 20:18:41.390 [INFO] RUNTIME LOCATOR: Navigation.SearchValue => seed fieldref=NCCISearchInputNonShredded.SearchValue
+2026-10-11 20:18:44.454 [INFO] FRAME SCOPE: Navigation|SelectClassCode resolved in hinted frame css:iframe
+2026-10-11 20:18:44.654 [INFO] RUNTIME LOCATOR: Navigation.SelectClassCode => seed fieldref=NCCISearchInputNonShredded.SearchResults
+2026-10-11 20:18:57.808 [INFO] RUNTIME LOCATOR: Navigation.SelectClassCode => seed fieldref=NCCISearchInputNonShredded.SearchResults
+2026-10-11 20:18:58.528 [INFO] FRAME SCOPE: Navigation|OKClassCode resolved in hinted frame css:iframe
+2026-10-11 20:18:58.596 [INFO] RUNTIME LOCATOR: Navigation.OKClassCode => seed
+2026-10-11 20:18:59.527 [INFO] RUNTIME LOCATOR: Navigation.OKClassCode => seed
+2026-10-11 20:19:02.753 [INFO] FRAME SCOPE: Navigation|TotalPayrollEstimated resolved in hinted frame css:iframe
+2026-10-11 20:19:02.900 [INFO] RUNTIME LOCATOR: Navigation.TotalPayrollEstimated => seed fieldref=CoverageInput.UnitsOfExposureEstimated
+2026-10-11 20:19:05.476 [INFO] FRAME SCOPE: Navigation|WaiverOfSubrogationExposure resolved in hinted frame css:iframe
+2026-10-11 20:19:05.599 [INFO] RUNTIME LOCATOR: Navigation.WaiverOfSubrogationExposure => seed fieldref=CoverageInput.WaiverOfSubrogationExposure
+2026-10-11 20:19:08.456 [INFO] FRAME SCOPE: Navigation|NumberOfPartTimeEmployees resolved in hinted frame css:iframe
+2026-10-11 20:19:08.615 [INFO] RUNTIME LOCATOR: Navigation.NumberOfPartTimeEmployees => seed fieldref=CoverageInput.NumberOfPartTimeEmployees
+2026-10-11 20:19:11.445 [INFO] FRAME SCOPE: Navigation|NumberOfFullTimeEmployees resolved in hinted frame css:iframe
+2026-10-11 20:19:11.656 [INFO] RUNTIME LOCATOR: Navigation.NumberOfFullTimeEmployees => seed fieldref=CoverageInput.NumberOfFullTimeEmployees
+2026-10-11 20:19:16.234 [INFO] FRAME SCOPE: Navigation|OKDetails resolved in hinted frame css:iframe
+2026-10-11 20:19:16.308 [INFO] RUNTIME LOCATOR: Navigation.OKDetails => seed
+2026-10-11 20:19:17.509 [ERROR] 2026-10-11T20:19:17.5081396+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?type=js3&sn=v_4_srv_2_sn_5744D9C3CEAF9DD46749B0351512A15D_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&svrid=2&flavor=post&vi=ALFJNPSKLMLAFFGTBHTCESVATHHCCQUT-0&modifiedSince=1791305539567&bp=3&app=1286464dd003b906&crc=1144681588&en=c2dndj2n&end=1 :: net::ERR_ABORTED
+2026-10-11 20:19:17.510 [ERROR] 2026-10-11T20:19:17.5093604+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?sc=2&ty=js&pv=4&ai=1286464dd003b906&en=c2dndj2n&cr=1791305539567&av=1.347.4&cy=event&bc=45012663&co=snappy&si=v_4_srv_2_sn_5744D9C3CEAF9DD46749B0351512A15D_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&st=1791730157419&ss=1&qc=1311164110&end=1 :: net::ERR_ABORTED
+2026-10-11 20:19:20.115 [ERROR] 2026-10-11T20:19:20.1149643+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+2026-10-11 20:19:21.267 [INFO] RUNTIME LOCATOR: Navigation.SearchValue => seed fieldref=NCCISearchInputNonShredded.SearchValue
+2026-10-11 20:19:22.141 [INFO] RUNTIME LOCATOR: Navigation.SearchValue => seed fieldref=NCCISearchInputNonShredded.SearchValue
+2026-10-11 20:19:25.071 [INFO] RUNTIME LOCATOR: Navigation.SelectClassCode => seed fieldref=NCCISearchInputNonShredded.SearchResults
+2026-10-11 20:19:39.756 [INFO] RUNTIME LOCATOR: Navigation.SelectClassCode => seed fieldref=NCCISearchInputNonShredded.SearchResults
+2026-10-11 20:19:40.630 [INFO] RUNTIME LOCATOR: Navigation.OKClassCode => seed
+2026-10-11 20:19:41.458 [INFO] RUNTIME LOCATOR: Navigation.OKClassCode => seed
+2026-10-11 20:19:42.821 [INFO] RUNTIME LOCATOR: Navigation.TotalPayrollEstimated => seed fieldref=CoverageInput.UnitsOfExposureEstimated
+2026-10-11 20:19:44.979 [WARN] FILL RETRY: Navigation.TotalPayrollEstimated; value was empty after attempt 1/3.
+2026-10-11 20:19:47.466 [INFO] RUNTIME LOCATOR: Navigation.WaiverOfSubrogationExposure => seed fieldref=CoverageInput.WaiverOfSubrogationExposure
+2026-10-11 20:19:50.196 [INFO] RUNTIME LOCATOR: Navigation.NumberOfPartTimeEmployees => seed fieldref=CoverageInput.NumberOfPartTimeEmployees
+2026-10-11 20:19:52.730 [INFO] RUNTIME LOCATOR: Navigation.NumberOfFullTimeEmployees => seed fieldref=CoverageInput.NumberOfFullTimeEmployees
+2026-10-11 20:19:55.382 [INFO] RUNTIME LOCATOR: Navigation.OKDetails => seed
+-> done: WCExpandedSteps.AddClassCodesAsync() (80.3s)
+2026-10-11 20:19:55.916 [INFO] PASSED STEP: I add Class Codes
+And I navigate to Entity Schedule
+2026-10-11 20:19:55.920 [INFO] START STEP: I navigate to Entity Schedule
+2026-10-11 20:19:56.758 [ERROR] 2026-10-11T20:19:56.7492318+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?sc=2&ty=js&pv=4&ai=1286464dd003b906&en=c2dndj2n&cr=1791305539567&av=1.347.4&cy=event&bc=3262556824&co=snappy&si=v_4_srv_2_sn_5744D9C3CEAF9DD46749B0351512A15D_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&st=1791730196688&ss=1&qc=4237284943&end=1 :: net::ERR_ABORTED
+2026-10-11 20:19:56.764 [ERROR] 2026-10-11T20:19:56.7634533+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?type=js3&sn=v_4_srv_2_sn_5744D9C3CEAF9DD46749B0351512A15D_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&svrid=2&flavor=post&vi=ALFJNPSKLMLAFFGTBHTCESVATHHCCQUT-0&modifiedSince=1791305539567&bp=3&app=1286464dd003b906&crc=2718332398&en=c2dndj2n&end=1 :: net::ERR_ABORTED
+2026-10-11 20:19:56.960 [INFO] RUNTIME LOCATOR: Navigation.EntitySchedule => link-text
+2026-10-11 20:19:59.738 [INFO] RUNTIME LOCATOR: Navigation.LocationDetail => link-text
+2026-10-11 20:20:01.439 [ERROR] 2026-10-11T20:20:01.4391783+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+2026-10-11 20:20:03.326 [INFO] RUNTIME LOCATOR: Navigation.InsuredType => seed fieldref=AdditionalOtherInterestInput.Type
+2026-10-11 20:20:04.775 [INFO] RUNTIME LOCATOR: Navigation.EntityInfoFrameEntityInfoWindowFax => seed fieldref=AdditionalOtherInterestInput.Fax
+2026-10-11 20:20:07.992 [INFO] RUNTIME LOCATOR: Navigation.EntityInfoFrameEntityInfoWindowBureauNumber => seed fieldref=AdditionalOtherInterestInput.BureauNumber
+2026-10-11 20:20:11.160 [INFO] RUNTIME LOCATOR: Navigation.EntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefault => seed fieldref=AdditionalOtherInterestInput.StateUnemploymentNumber
+2026-10-11 20:20:13.613 [INFO] RUNTIME LOCATOR: Navigation.EMail => seed fieldref=AdditionalOtherInterestInput.Email
+2026-10-11 20:20:16.105 [INFO] FRAME SCOPE: Navigation|OK resolved in hinted frame css:iframe
+2026-10-11 20:20:16.183 [INFO] RUNTIME LOCATOR: Navigation.OK => seed
+2026-10-11 20:20:17.842 [ERROR] 2026-10-11T20:20:17.8414564+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?sc=2&ty=js&pv=4&ai=1286464dd003b906&en=c2dndj2n&cr=1791305539567&av=1.347.4&cy=event&bc=2710228026&co=snappy&si=v_4_srv_2_sn_5744D9C3CEAF9DD46749B0351512A15D_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&st=1791730217784&ss=1&qc=4134486925&end=1 :: net::ERR_ABORTED
+2026-10-11 20:20:17.846 [ERROR] 2026-10-11T20:20:17.8425746+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?type=js3&sn=v_4_srv_2_sn_5744D9C3CEAF9DD46749B0351512A15D_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&svrid=2&flavor=post&vi=ALFJNPSKLMLAFFGTBHTCESVATHHCCQUT-0&modifiedSince=1791305539567&bp=3&app=1286464dd003b906&crc=1309868726&en=c2dndj2n&end=1 :: net::ERR_ABORTED
+2026-10-11 20:20:18.014 [INFO] RUNTIME LOCATOR: Navigation.AssignLocations => seed
+2026-10-11 20:20:18.827 [INFO] RUNTIME LOCATOR: Navigation.AssignLocations => seed
+2026-10-11 20:20:20.387 [ERROR] 2026-10-11T20:20:20.3864891+05:30 PAGE ERROR: SyntaxError: Unexpected token '}'
+2026-10-11 20:20:20.945 [INFO] FRAME SCOPE: Navigation|AssignLocation resolved in hinted frame css:iframe
+2026-10-11 20:20:21.079 [INFO] RUNTIME LOCATOR: Navigation.AssignLocation => seed
+2026-10-11 20:20:21.856 [INFO] RUNTIME LOCATOR: Navigation.AssignLocation => seed
+2026-10-11 20:20:23.537 [INFO] FRAME SCOPE: Navigation|LocationID resolved in hinted frame css:iframe
+2026-10-11 20:20:23.714 [INFO] RUNTIME LOCATOR: Navigation.LocationID => seed fieldref=AdditionalOtherInterestLocationsInput.LocationID
+2026-10-11 20:20:24.721 [INFO] RUNTIME LOCATOR: Navigation.LocationID => seed fieldref=AdditionalOtherInterestLocationsInput.LocationID
+2026-10-11 20:20:36.506 [INFO] RUNTIME LOCATOR: Navigation.LocationID => seed fieldref=AdditionalOtherInterestLocationsInput.LocationID
+2026-10-11 20:20:50.534 [INFO] FRAME SCOPE: Navigation|SelectNAICSCode resolved in hinted frame css:iframe
+2026-10-11 20:20:50.693 [INFO] RUNTIME LOCATOR: Navigation.SelectNAICSCode => seed
+2026-10-11 20:20:52.960 [INFO] FRAME SCOPE: Navigation|NAICSCodeSearchValue resolved in hinted frame css:iframe
+2026-10-11 20:20:53.065 [INFO] RUNTIME LOCATOR: Navigation.NAICSCodeSearchValue => seed fieldref=AdditionalOtherInterestLocationsOutputNonShredded.NAICSCodeSearchValue
+2026-10-11 20:20:53.908 [INFO] RUNTIME LOCATOR: Navigation.NAICSCodeSearchValue => seed fieldref=AdditionalOtherInterestLocationsOutputNonShredded.NAICSCodeSearchValue
+2026-10-11 20:20:56.360 [INFO] FRAME SCOPE: Navigation|SelectAppropriateCode resolved in hinted frame css:iframe
+2026-10-11 20:20:56.488 [INFO] RUNTIME LOCATOR: Navigation.SelectAppropriateCode => seed fieldref=AdditionalOtherInterestLocationsInput.NAICSCodeDesc
+2026-10-11 20:21:10.669 [INFO] FRAME SCOPE: Navigation|OKFirst resolved in hinted frame css:iframe
+2026-10-11 20:21:10.772 [INFO] RUNTIME LOCATOR: Navigation.OKFirst => seed
+2026-10-11 20:21:12.032 [INFO] RUNTIME LOCATOR: Navigation.OK => seed
+2026-10-11 20:21:13.210 [ERROR] 2026-10-11T20:21:13.2087196+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?type=js3&sn=v_4_srv_2_sn_5744D9C3CEAF9DD46749B0351512A15D_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&svrid=2&flavor=post&vi=ALFJNPSKLMLAFFGTBHTCESVATHHCCQUT-0&modifiedSince=1791305539567&bp=3&app=1286464dd003b906&crc=1614676738&en=c2dndj2n&end=1 :: net::ERR_ABORTED
+2026-10-11 20:21:13.211 [ERROR] 2026-10-11T20:21:13.2110729+05:30 REQUEST FAILED: POST https://clasq.anico.com/Express/rb_bf59929oma?sc=2&ty=js&pv=4&ai=1286464dd003b906&en=c2dndj2n&cr=1791305539567&av=1.347.4&cy=event&bc=1607795993&co=snappy&si=v_4_srv_2_sn_5744D9C3CEAF9DD46749B0351512A15D_perc_100000_ol_0_mul_1_app-3A1286464dd003b906_1_rcs-3Acss_0&st=1791730273131&ss=1&qc=167700997&end=1 :: net::ERR_ABORTED
+-> done: WCExpandedSteps.NavigateToEntityScheduleAsync() (77.4s)
+2026-10-11 20:21:13.307 [INFO] PASSED STEP: I navigate to Entity Schedule
+And I complete endorsements
+2026-10-11 20:21:13.332 [INFO] START STEP: I complete endorsements
+2026-10-11 20:21:14.018 [INFO] RUNTIME LOCATOR: Navigation.WCNavigationLinksEndorsements => link-text
+2026-10-11 20:21:16.000 [INFO] RUNTIME LOCATOR: Navigation.EndorsementMainAddEndorsement => seed
+-> done: WCExpandedSteps.CompleteEndorsementsAsync() (2.7s)
+2026-10-11 20:21:16.028 [INFO] PASSED STEP: I complete endorsements
+And I add Designated Workplaces Exclusion
+2026-10-11 20:21:16.029 [INFO] START STEP: I add Designated Workplaces Exclusion
+-> done: WCExpandedSteps.AddDesignatedWorkplacesExclusionAsync() (0.0s)
+2026-10-11 20:21:16.031 [INFO] PASSED STEP: I add Designated Workplaces Exclusion
+And I add Partners, Officers And Others Exclusion
+2026-10-11 20:21:16.031 [INFO] START STEP: I add Partners, Officers And Others Exclusion
+-> done: WCExpandedSteps.AddPartnersOfficersAndOthersExclusionAsync() (0.0s)
+2026-10-11 20:21:16.033 [INFO] PASSED STEP: I add Partners, Officers And Others Exclusion
+And I add Sole Proprietors, Partners, Officers And Others Coverage
+2026-10-11 20:21:16.035 [INFO] START STEP: I add Sole Proprietors, Partners, Officers And Others Coverage
+2026-10-11 20:21:16.633 [INFO] RUNTIME LOCATOR: Navigation.EndorsementMainAddEndorsement => seed
+2026-10-11 20:21:19.778 [INFO] RUNTIME LOCATOR: Navigation.CG2401NonBindingArbitrationEndorsementType => tag+fieldref fieldref=CovEndorsementsInput.Type
+2026-10-11 20:21:22.146 [INFO] RUNTIME LOCATOR: Navigation.AddSoleProprietorInformation => seed
+2026-10-11 20:21:23.271 [INFO] RUNTIME LOCATOR: Navigation.SoleProprietors => tag+fieldref fieldref=EndorsementSoleProprietors.SoleProprietors
+2026-10-11 20:21:25.103 [WARN] FILL RETRY: Navigation.SoleProprietors; value was empty after attempt 1/3.
+2026-10-11 20:21:26.464 [WARN] FILL RETRY: Navigation.SoleProprietors; value was empty after attempt 2/3.
+2026-10-11 20:21:29.291 [INFO] RUNTIME LOCATOR: Navigation.AddPartnerInformation => seed
+2026-10-11 20:21:30.427 [INFO] RUNTIME LOCATOR: Navigation.Partners => tag+fieldref fieldref=EndorsementPartners.Partners
+2026-10-11 20:21:32.641 [INFO] RUNTIME LOCATOR: Navigation.AddOthersInformation => seed
+2026-10-11 20:21:33.891 [INFO] RUNTIME LOCATOR: Navigation.Others => tag+fieldref fieldref=EndorsementOthers.Others
+2026-10-11 20:21:36.891 [INFO] RUNTIME LOCATOR: Navigation.OK => seed
+-> done: WCExpandedSteps.AddSoleProprietorsPartnersOfficersAndOthersCoverageAsync() (21.4s)
+2026-10-11 20:21:37.427 [INFO] PASSED STEP: I add Sole Proprietors, Partners, Officers And Others Coverage
+And I complete WC UW Questions
+2026-10-11 20:21:37.430 [INFO] START STEP: I complete WC UW Questions
+2026-10-11 20:21:38.080 [INFO] RUNTIME LOCATOR: Navigation.UWQuestionsWorkersComp => link-text
+2026-10-11 20:21:40.255 [INFO] RUNTIME LOCATOR: Navigation.UWQuestionsUmbrellaUpdateAnswers => link-text
+2026-10-11 20:21:42.329 [INFO] RUNTIME LOCATOR: Navigation.ArePhysicalsRequiredAfterOffersOfEmploymentAreMade => tag+fieldref fieldref=UnderwritingQuestionsWorkersCompInput.PhysicalsRequiredAfterEmploymentOffers
+2026-10-11 20:21:43.211 [INFO] RUNTIME LOCATOR: Navigation.ListAllPoliciesWithAmericanNational => tag+fieldref fieldref=UnderwritingQuestionsWorkersCompInput.ListAllPoliciesWithAmericanNational
+-> done: WCExpandedSteps.CompleteWCUWQuestionsAsync() (7.9s)
+2026-10-11 20:21:45.343 [INFO] PASSED STEP: I complete WC UW Questions
+And I navigate to Pricing Screen
+2026-10-11 20:21:45.344 [INFO] START STEP: I navigate to Pricing Screen
+2026-10-11 20:21:46.029 [INFO] RUNTIME LOCATOR: Navigation.Pricing => link-text
+2026-10-11 20:21:49.170 [INFO] RUNTIME LOCATOR: Navigation.Worksheet => seed
+2026-10-11 20:21:51.540 [INFO] RUNTIME LOCATOR: Navigation.PremisesCredit => tag+fieldref fieldref=PremisesConditionCareStateInput.Factor
+2026-10-11 20:21:55.191 [INFO] RUNTIME LOCATOR: Navigation.PremisesComments => tag+fieldref fieldref=PremisesConditionCareStateInput.Comment
+2026-10-11 20:21:57.555 [INFO] RUNTIME LOCATOR: Navigation.ClassificationPecularities => tag+fieldref fieldref=ClassificationPeculiaritiesStateInput.Factor
+2026-10-11 20:22:00.878 [INFO] RUNTIME LOCATOR: Navigation.ClassificationPecularitiesComments => tag+fieldref fieldref=ClassificationPeculiaritiesStateInput.Comment
+2026-10-11 20:22:04.534 [INFO] RUNTIME LOCATOR: Navigation.MedicalFacilities => tag+fieldref fieldref=MedicalFacilitiesStateInput.Factor
+2026-10-11 20:22:08.287 [INFO] RUNTIME LOCATOR: Navigation.MedicalFacilitiesComments => tag+fieldref fieldref=MedicalFacilitiesStateInput.Comment
+2026-10-11 20:22:10.952 [INFO] RUNTIME LOCATOR: Navigation.SafetyDevices => tag+fieldref fieldref=SafetyDevicesStateInput.Factor
+2026-10-11 20:22:14.395 [INFO] RUNTIME LOCATOR: Navigation.SafetyDevicesComments => tag+fieldref fieldref=SafetyDevicesStateInput.Comment
+2026-10-11 20:22:16.772 [INFO] RUNTIME LOCATOR: Navigation.OK => seed
+-> done: WCExpandedSteps.NavigateToPricingScreenAsync() (32.0s)
+2026-10-11 20:22:17.384 [INFO] PASSED STEP: I navigate to Pricing Screen
+Then I verify Class Codes on Policy are Valid
+2026-10-11 20:22:17.385 [INFO] START STEP: I verify Class Codes on Policy are Valid
+-> done: WCExpandedSteps.VerifyClassCodesOnPolicyAreValidAsync() (0.1s)
+2026-10-11 20:22:17.514 [INFO] PASSED STEP: I verify Class Codes on Policy are Valid
+And I complete required billing information for billing
+2026-10-11 20:22:17.517 [INFO] START STEP: I complete required billing information for billing
+2026-10-11 20:22:18.209 [INFO] RUNTIME LOCATOR: Navigation.NavigationBilling => link-text
+2026-10-11 20:22:19.583 [INFO] RUNTIME LOCATOR: Navigation.BillType => tag+fieldref fieldref=BillingDetailInput.BillType
+2026-10-11 20:22:23.096 [INFO] RUNTIME LOCATOR: Navigation.PayPlan => tag+fieldref fieldref=BillingDetailInput.PayPlan
+2026-10-11 20:22:26.333 [INFO] RUNTIME LOCATOR: Navigation.EasyPay => tag+fieldref fieldref=BillingDetailInput.EasyPay
+-> done: WCExpandedSteps.CompleteRequiredBillingInformationForBillingAsync() (12.3s)
+2026-10-11 20:22:29.810 [INFO] PASSED STEP: I complete required billing information for billing
+And I add notepad comment
+2026-10-11 20:22:29.812 [INFO] START STEP: I add notepad comment
+2026-10-11 20:22:31.119 [INFO] RUNTIME LOCATOR: Navigation.Notepad => link-text
+2026-10-11 20:22:32.671 [INFO] RUNTIME LOCATOR: Navigation.AddNotesRemarks => seed
+2026-10-11 20:22:33.788 [INFO] RUNTIME LOCATOR: Navigation.TextBox => tag+fieldref fieldref=NotesInput.Remarks
+2026-10-11 20:22:37.502 [INFO] RUNTIME LOCATOR: Navigation.OK => seed
+-> done: WCExpandedSteps.AddNotepadCommentAsync() (8.4s)
+2026-10-11 20:22:38.165 [INFO] PASSED STEP: I add notepad comment
+And I complete required submission information
+2026-10-11 20:22:38.168 [INFO] START STEP: I complete required submission information
+2026-10-11 20:22:38.963 [INFO] RUNTIME LOCATOR: Navigation.Submission => link-text
+-> done: WCExpandedSteps.CompleteRequiredSubmissionInformationAsync() (2.5s)
+2026-10-11 20:22:40.701 [INFO] PASSED STEP: I complete required submission information
+And I run Stoplight
+2026-10-11 20:22:40.704 [INFO] START STEP: I run Stoplight
+2026-10-11 20:22:41.438 [INFO] RUNTIME LOCATOR: Submission.CompleteApplication => seed
+2026-10-11 20:22:48.868 [INFO] RUNTIME LOCATOR: Submission.StoplightWaitingWindowFirstCloseButtonOnError => id
+-> done: WCExpandedSteps.RunStoplightAsync() (9.7s)
+2026-10-11 20:22:50.374 [INFO] PASSED STEP: I run Stoplight
+And I verify values in premium fields
+2026-10-11 20:22:50.374 [INFO] START STEP: I verify values in premium fields
+2026-10-11 20:22:51.776 [INFO] RUNTIME LOCATOR: Pricing.FullTermPremium => id fieldref=PolicyOutput.Premium
+2026-10-11 20:22:52.073 [ERROR] DEFERRED VERIFY FAILURE: Step=I verify values in premium fields; Control=Pricing.FullTermPremium; Expected=$14,958.00; Property=value; Expected '$14,958.00' but found '$15,619.00'.. Scenario continues; final outcome will fail after evidence publication.
+2026-10-11 20:22:52.787 [INFO] RUNTIME LOCATOR: Pricing.PremiumWritten => id fieldref=PolicyOutput.PremiumWritten
+2026-10-11 20:22:53.072 [ERROR] DEFERRED VERIFY FAILURE: Step=I verify values in premium fields; Control=Pricing.PremiumWritten; Expected=14,958.00; Property=value; Expected '14,958.00' but found '15,619.00'.. Scenario continues; final outcome will fail after evidence publication.
+2026-10-11 20:22:53.912 [INFO] RUNTIME LOCATOR: Pricing.PriorPremium => id fieldref=PolicyOutput.PremiumPrior
+2026-10-11 20:22:54.664 [INFO] RUNTIME LOCATOR: Pricing.PremiumChange => id fieldref=PolicyOutput.PremiumChange
+2026-10-11 20:22:54.982 [ERROR] DEFERRED VERIFY FAILURE: Step=I verify values in premium fields; Control=Pricing.PremiumChange; Expected=14,958.00; Property=value; Expected '14,958.00' but found '15,619.00'.. Scenario continues; final outcome will fail after evidence publication.
+-> done: WCExpandedSteps.VerifyValuesInPremiumFieldsAsync() (4.6s)
+2026-10-11 20:22:55.223 [WARN] STEP COMPLETED WITH DEFERRED VERIFICATION: I verify values in premium fields
+2026-10-11 20:23:11.974 [ERROR] DEFERRED VERIFICATION SUMMARY (3):
+1. I verify values in premium fields :: Pricing.FullTermPremium expected '$14,958.00' (value) :: Expected '$14,958.00' but found '$15,619.00'.
+2. I verify values in premium fields :: Pricing.PremiumWritten expected '14,958.00' (value) :: Expected '14,958.00' but found '15,619.00'.
+3. I verify values in premium fields :: Pricing.PremiumChange expected '14,958.00' (value) :: Expected '14,958.00' but found '15,619.00'.
+2026-10-11 20:23:12.039 [WARN] Unable to create evidence bundle: The process cannot access the file 'C:\Users\CT7859\Desktop\LatestBranch\PnC_DC_TestAutomation\TestResults\Artifacts\CommercialLines.DuckCreek.Tests\WC_Expanded\WC_Expanded____stateCode_20261011_201313_731_f7a82c9c\execution.log' because it is being used by another process.

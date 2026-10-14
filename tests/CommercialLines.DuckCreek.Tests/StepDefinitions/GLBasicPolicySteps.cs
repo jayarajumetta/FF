@@ -167,7 +167,7 @@ public sealed class GLBasicPolicySteps
 
         if (await page.IsEstimatedPremiumAvailableAsync())
         {
-            await page.EnterEstimatedPremiumAsync("Under 1,500");
+            await page.EnterEstimatedPremiumAsync(data.Resolve("{{data:estimated_premium_170}}"));
         }
 
 
@@ -634,7 +634,7 @@ public sealed class GLBasicPolicySteps
         await page.ClickNotepadAsync();
         //await page.WaitForNotepadHeadingAsync("Exists");
         await page.ClickAddNotesRemarksAsync();
-        await page.EnterTextBoxAsync(data.Resolve("Test {B[Product (LOB)]}"));
+        await page.EnterTextBoxAsync(data.Resolve("{{data:notepad_text_637}}"));
         await page.PauseAsync(2000);
         await page.ClickOKAsync();
 

@@ -1,0 +1,240 @@
+Given I open a browser session
+2026-10-13 18:53:05.610 [INFO] START STEP: I open a browser session
+2026-10-13 18:53:18.388 [INFO] Browser session opened. Channel=msedge; Headless=False; HAR=True; Console=True; Network=True
+-> done: ApplicationSteps.OpenBrowserSessionAsync() (12.8s)
+2026-10-13 18:53:18.422 [INFO] PASSED STEP: I open a browser session
+Given test data "TestData/Scenarios/186_cycle_rate_filings_policy_3_nb_prior_eff_date_wy.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+2026-10-13 18:53:18.448 [INFO] START STEP: test data "TestData/Scenarios/186_cycle_rate_filings_policy_3_nb_prior_eff_date_wy.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+2026-10-13 18:53:19.336 [INFO] Loaded scenario data: C:\Users\CT7859\Desktop\LatestBranch\PnC_DC_TestAutomation\bin\PersonalLines.DuckCreek.Tests\Debug\net8.0\TestData\Scenarios\186_cycle_rate_filings_policy_3_nb_prior_eff_date_wy.json
+-> done: ApplicationSteps.LoadScenarioData("TestData/Scenario...", "TestData/External...") (0.9s)
+2026-10-13 18:53:19.338 [INFO] PASSED STEP: test data "TestData/Scenarios/186_cycle_rate_filings_policy_3_nb_prior_eff_date_wy.json" and external data "TestData/ExternalDataOverrides.json" are loaded
+And I open the configured Personal Lines Duck Creek application
+2026-10-13 18:53:19.363 [INFO] START STEP: I open the configured Personal Lines Duck Creek application
+2026-10-13 18:53:20.626 [INFO] 2026-10-13T18:53:20.6022830+05:30 BROWSER verbose: [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://www.chromium.org/developers/design-documents/create-amazing-password-forms) %o
+-> done: ApplicationSteps.OpenApplicationAsync() (1.3s)
+2026-10-13 18:53:20.675 [INFO] PASSED STEP: I open the configured Personal Lines Duck Creek application
+And I sign in to Personal Lines Duck Creek using configured credentials
+2026-10-13 18:53:20.725 [INFO] START STEP: I sign in to Personal Lines Duck Creek using configured credentials
+2026-10-13 18:53:33.825 [INFO] 2026-10-13T18:53:33.8237970+05:30 BROWSER error: The source list for the Content Security Policy directive 'child-src' contains an invalid source: 'vmware-view://'. It will be ignored.
+-> done: ApplicationSteps.SignInAsync() (13.1s)
+2026-10-13 18:53:33.861 [INFO] PASSED STEP: I sign in to Personal Lines Duck Creek using configured credentials
+When I start New Quote
+2026-10-13 18:53:33.886 [INFO] START STEP: I start New Quote
+2026-10-13 18:53:33.906 [INFO] 2026-10-13T18:53:33.9048183+05:30 BROWSER error: Failed to load resource: the server responded with a status of 404 (Not Found)
+2026-10-13 18:53:34.457 [INFO] 2026-10-13T18:53:34.4539865+05:30 BROWSER warning: Google Maps JavaScript API has been loaded directly without loading=async. This can result in suboptimal performance. For best-practice loading patterns please see https://goo.gle/js-api-loading
+2026-10-13 18:53:34.734 [INFO] 2026-10-13T18:53:34.7331289+05:30 BROWSER warning: NG0912: Component ID generation collision detected. Components '_FormRendererComponent' and '_FormRendererComponent' with selector 'anico-form' generated the same component ID. To fix this, you can change the selector of one of those components or add an extra host attribute to force a different ID. Find more at https://v20.angular.dev/errors/NG0912
+2026-10-13 18:53:34.736 [INFO] 2026-10-13T18:53:34.7347971+05:30 BROWSER warning: NG0912: Component ID generation collision detected. Components '_FormDebuggerComponent' and '_FormDebuggerComponent' with selector 'anico-form-debugger' generated the same component ID. To fix this, you can change the selector of one of those components or add an extra host attribute to force a different ID. Find more at https://v20.angular.dev/errors/NG0912
+2026-10-13 18:53:34.738 [INFO] 2026-10-13T18:53:34.7368720+05:30 BROWSER warning: NG0912: Component ID generation collision detected. Components '_JsonEditorComponent' and '_JsonEditorComponent' with selector 'anico-json-editor' generated the same component ID. To fix this, you can change the selector of one of those components or add an extra host attribute to force a different ID. Find more at https://v20.angular.dev/errors/NG0912
+2026-10-13 18:53:34.749 [INFO] 2026-10-13T18:53:34.7395898+05:30 BROWSER log: Angular is running in development mode.
+2026-10-13 18:53:35.573 [INFO] 2026-10-13T18:53:35.5717345+05:30 BROWSER warning: NG0912: Component ID generation collision detected. Components '__MatBadgeStyleLoader' and '_ClientInfoFactoryComponent' with selector 'ng-component' generated the same component ID. To fix this, you can change the selector of one of those components or add an extra host attribute to force a different ID. Find more at https://v20.angular.dev/errors/NG0912
+2026-10-13 18:53:35.593 [INFO] 2026-10-13T18:53:35.5922476+05:30 BROWSER log: Initializing dynamic form item registries _FormItemRegistry
+2026-10-13 18:53:35.596 [INFO] 2026-10-13T18:53:35.5940709+05:30 BROWSER log: Adding form item handler: app
+2026-10-13 18:53:35.834 [INFO] 2026-10-13T18:53:35.6042791+05:30 BROWSER log: Adding form item handler: button
+2026-10-13 18:53:35.848 [INFO] 2026-10-13T18:53:35.8354938+05:30 BROWSER log: Adding form item handler: card
+2026-10-13 18:53:35.858 [INFO] 2026-10-13T18:53:35.8498452+05:30 BROWSER log: Adding form item handler: checkbox
+2026-10-13 18:53:35.862 [INFO] 2026-10-13T18:53:35.8585836+05:30 BROWSER log: Adding form item handler: columnLayout
+2026-10-13 18:53:35.863 [INFO] 2026-10-13T18:53:35.8626517+05:30 BROWSER log: Adding form item handler: custom
+2026-10-13 18:53:35.869 [INFO] 2026-10-13T18:53:35.8639453+05:30 BROWSER log: Adding form item handler: customInput
+2026-10-13 18:53:35.901 [INFO] 2026-10-13T18:53:35.9005709+05:30 BROWSER log: Adding form item handler: date
+2026-10-13 18:53:35.903 [INFO] 2026-10-13T18:53:35.9023373+05:30 BROWSER log: Adding form item handler: file
+2026-10-13 18:53:35.904 [INFO] 2026-10-13T18:53:35.9038102+05:30 BROWSER log: Adding form item handler: group
+2026-10-13 18:53:35.917 [INFO] 2026-10-13T18:53:35.9157734+05:30 BROWSER log: Adding form item handler: list
+2026-10-13 18:53:35.918 [INFO] 2026-10-13T18:53:35.9173494+05:30 BROWSER log: Adding form item handler: loop
+2026-10-13 18:53:35.920 [INFO] 2026-10-13T18:53:35.9190933+05:30 BROWSER log: Adding form item handler: modal
+2026-10-13 18:53:35.921 [INFO] 2026-10-13T18:53:35.9205776+05:30 BROWSER log: Adding form item handler: number
+2026-10-13 18:53:35.922 [INFO] 2026-10-13T18:53:35.9219758+05:30 BROWSER log: Adding form item handler: page
+2026-10-13 18:53:35.926 [INFO] 2026-10-13T18:53:35.9231641+05:30 BROWSER log: Adding form item handler: radioGroup
+2026-10-13 18:53:35.927 [INFO] 2026-10-13T18:53:35.9264639+05:30 BROWSER log: Adding form item handler: select
+2026-10-13 18:53:35.928 [INFO] 2026-10-13T18:53:35.9275323+05:30 BROWSER log: Adding form item handler: tab
+2026-10-13 18:53:35.930 [INFO] 2026-10-13T18:53:35.9291342+05:30 BROWSER log: Adding form item handler: tabs
+2026-10-13 18:53:35.931 [INFO] 2026-10-13T18:53:35.9305385+05:30 BROWSER log: Adding form item handler: tabList
+2026-10-13 18:53:35.932 [INFO] 2026-10-13T18:53:35.9315575+05:30 BROWSER log: Adding form item handler: tableLayout
+2026-10-13 18:53:35.933 [INFO] 2026-10-13T18:53:35.9326128+05:30 BROWSER log: Adding form item handler: text
+2026-10-13 18:53:35.934 [INFO] 2026-10-13T18:53:35.9337387+05:30 BROWSER log: Adding form item handler: textarea
+2026-10-13 18:53:35.935 [INFO] 2026-10-13T18:53:35.9347200+05:30 BROWSER log: Adding form item handler: textBlock
+2026-10-13 18:53:35.937 [INFO] 2026-10-13T18:53:35.9358299+05:30 BROWSER log: Adding form item handler: typeahead
+2026-10-13 18:53:35.939 [INFO] 2026-10-13T18:53:35.9373993+05:30 BROWSER log: Adding form item handler: gmaps-automcomplete
+2026-10-13 18:53:35.941 [INFO] 2026-10-13T18:53:35.9400826+05:30 BROWSER log: Adding form item handler: gmaps-directions
+2026-10-13 18:53:35.942 [INFO] 2026-10-13T18:53:35.9413468+05:30 BROWSER log: Adding form item handler: gmaps-mapview
+2026-10-13 18:53:35.945 [INFO] 2026-10-13T18:53:35.9425846+05:30 BROWSER log: Adding form item handler: regularChips
+2026-10-13 18:53:35.946 [INFO] 2026-10-13T18:53:35.9455570+05:30 BROWSER log: Adding form item handler: iconChips
+2026-10-13 18:53:35.947 [INFO] 2026-10-13T18:53:35.9469621+05:30 BROWSER log: Adding form item handler: largeChips
+2026-10-13 18:53:35.949 [INFO] 2026-10-13T18:53:35.9481718+05:30 BROWSER log: Adding form item handler: table
+2026-10-13 18:53:35.950 [INFO] 2026-10-13T18:53:35.9494405+05:30 BROWSER log: Adding component type: button
+2026-10-13 18:53:35.951 [INFO] 2026-10-13T18:53:35.9506569+05:30 BROWSER log: Adding component type: icon
+2026-10-13 18:53:35.952 [INFO] 2026-10-13T18:53:35.9520469+05:30 BROWSER log: Adding component type: card
+2026-10-13 18:53:35.956 [INFO] 2026-10-13T18:53:35.9534528+05:30 BROWSER log: Adding component type: checkbox
+2026-10-13 18:53:35.957 [INFO] 2026-10-13T18:53:35.9565806+05:30 BROWSER log: Adding component type: regularChips
+2026-10-13 18:53:35.959 [INFO] 2026-10-13T18:53:35.9581128+05:30 BROWSER log: Adding component type: largeChips
+2026-10-13 18:53:35.961 [INFO] 2026-10-13T18:53:35.9602977+05:30 BROWSER log: Adding component type: iconChips
+2026-10-13 18:53:35.963 [INFO] 2026-10-13T18:53:35.9619627+05:30 BROWSER log: Adding component type: columnLayout
+2026-10-13 18:53:35.964 [INFO] 2026-10-13T18:53:35.9633940+05:30 BROWSER log: Adding component type: date
+2026-10-13 18:53:35.965 [INFO] 2026-10-13T18:53:35.9646056+05:30 BROWSER log: Adding component type: file
+2026-10-13 18:53:35.966 [INFO] 2026-10-13T18:53:35.9653754+05:30 BROWSER log: Adding component type: group
+2026-10-13 18:53:35.968 [INFO] 2026-10-13T18:53:35.9666426+05:30 BROWSER log: Adding component type: list
+2026-10-13 18:53:35.971 [INFO] 2026-10-13T18:53:35.9684442+05:30 BROWSER log: Adding component type: modal
+2026-10-13 18:53:35.973 [INFO] 2026-10-13T18:53:35.9727960+05:30 BROWSER log: Adding component type: number
+2026-10-13 18:53:35.976 [INFO] 2026-10-13T18:53:35.9741905+05:30 BROWSER log: Adding component type: page
+2026-10-13 18:53:35.980 [INFO] 2026-10-13T18:53:35.9766631+05:30 BROWSER log: Adding component type: radioGroup
+2026-10-13 18:53:35.981 [INFO] 2026-10-13T18:53:35.9806065+05:30 BROWSER log: Adding component type: select
+2026-10-13 18:53:35.982 [INFO] 2026-10-13T18:53:35.9818365+05:30 BROWSER log: Adding component type: tableLayout
+2026-10-13 18:53:35.984 [INFO] 2026-10-13T18:53:35.9834284+05:30 BROWSER log: Adding component type: tabs
+2026-10-13 18:53:35.988 [INFO] 2026-10-13T18:53:35.9849223+05:30 BROWSER log: Adding component type: tabList
+2026-10-13 18:53:35.990 [INFO] 2026-10-13T18:53:35.9890529+05:30 BROWSER log: Adding component type: textarea
+2026-10-13 18:53:35.994 [INFO] 2026-10-13T18:53:35.9921545+05:30 BROWSER log: Adding component type: textBlock
+2026-10-13 18:53:35.999 [INFO] 2026-10-13T18:53:35.9950217+05:30 BROWSER log: Adding component type: text
+2026-10-13 18:53:36.000 [INFO] 2026-10-13T18:53:35.9994819+05:30 BROWSER log: Adding component type: typeahead
+2026-10-13 18:53:36.001 [INFO] 2026-10-13T18:53:36.0008815+05:30 BROWSER log: Adding component type: gmaps-automcomplete
+2026-10-13 18:53:36.007 [INFO] 2026-10-13T18:53:36.0016504+05:30 BROWSER log: Adding component type: gmaps-directions
+2026-10-13 18:53:36.010 [INFO] 2026-10-13T18:53:36.0085803+05:30 BROWSER log: Adding component type: gmaps-mapview
+2026-10-13 18:53:36.011 [INFO] 2026-10-13T18:53:36.0106268+05:30 BROWSER log: Adding component type: table
+2026-10-13 18:53:36.133 [INFO] 2026-10-13T18:53:36.1240998+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormGroupHandler2, type: manualUpdate, id: accountInfoPage} ; Updates:  [Array(25)]
+2026-10-13 18:53:36.205 [INFO] 2026-10-13T18:53:36.2042919+05:30 BROWSER log: Ran 3 update(s) for:  {source: FormGroupHandler2, type: manualUpdate, id: undefined} ; Updates:  [Array(16), Array(5)]
+2026-10-13 18:53:36.287 [INFO] 2026-10-13T18:53:36.2861697+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: proposal.riskAddressSelection, value: undefined} ; Updates:  []
+2026-10-13 18:53:36.290 [INFO] 2026-10-13T18:53:36.2881065+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormGroupHandler2, type: manualUpdate, id: reload-group-5} ; Updates:  [Array(41)]
+2026-10-13 18:53:36.350 [INFO] 2026-10-13T18:53:36.3493483+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: manualUpdate, id: proposal.writingCompany} ; Updates:  []
+2026-10-13 18:53:36.391 [INFO] 2026-10-13T18:53:36.3901231+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormGroupHandler2, type: manualUpdate, id: undefined} ; Updates:  []
+2026-10-13 18:53:36.830 [WARN] 2026-10-13T18:53:36.8251746+05:30 RESPONSE 404: POST https://expertquote-qa.americannational.com/expertquote/api/apmi/referrals
+2026-10-13 18:53:36.868 [INFO] 2026-10-13T18:53:36.8671709+05:30 BROWSER error: Failed to load resource: the server responded with a status of 404 (Not Found)
+2026-10-13 18:53:36.880 [INFO] 2026-10-13T18:53:36.8760515+05:30 BROWSER error: ERROR HttpErrorResponse
+2026-10-13 18:53:39.719 [INFO] 2026-10-13T18:53:39.7181691+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormItemHandler2, type: button, id: undefined} ; Updates:  []
+-> done: CycleRateFilingsPolicy3NBPriorEffDateSteps.StartNewQuoteAsync() (5.9s)
+2026-10-13 18:53:39.828 [INFO] PASSED STEP: I start New Quote
+And I select or create the policy client
+2026-10-13 18:53:39.830 [INFO] START STEP: I select or create the policy client
+2026-10-13 18:53:42.294 [INFO] 2026-10-13T18:53:42.2935912+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: valueChanged, id: customer.name.first, value: {TDS[WY_ClientData.F} ; Updates:  []
+2026-10-13 18:53:44.581 [INFO] 2026-10-13T18:53:44.5724192+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormInputHandler2, type: valueChanged, id: customer.name.last, value: {TDS[WY_ClientData.L} ; Updates:  [Array(1)]
+2026-10-13 18:53:47.606 [INFO] 2026-10-13T18:53:47.6046134+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormItemHandler2, type: button, id: clientSearch} ; Updates:  []
+2026-10-13 18:53:47.736 [INFO] 2026-10-13T18:53:47.7349781+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: proposal.term, value: undefined} ; Updates:  []
+2026-10-13 18:53:48.360 [INFO] 2026-10-13T18:53:48.3589956+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormGroupHandler2, type: manualUpdate, id: clientInfoPage} ; Updates:  [Array(2)]
+2026-10-13 18:53:48.362 [INFO] 2026-10-13T18:53:48.3606259+05:30 BROWSER debug: [DFLargeChipsComponent] Configuration (Simplified Options Pattern): {id: customer.selected, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(1), otherOptions: undefined}
+2026-10-13 18:53:48.400 [INFO] 2026-10-13T18:53:48.3990623+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: customer.selected, value: undefined} ; Updates:  []
+2026-10-13 18:53:49.742 [INFO] 2026-10-13T18:53:49.7413635+05:30 BROWSER debug: [DFLargeChipsComponent] Configuration (Simplified Options Pattern): {id: customer.selected, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(1), otherOptions: undefined}
+2026-10-13 18:53:49.746 [INFO] 2026-10-13T18:53:49.7430172+05:30 BROWSER warning: NG0956: The configured tracking expression (track by identity) caused re-creation of the entire collection of size 1. This is an expensive operation requiring destruction and subsequent creation of DOM nodes, directives, components etc. Please review the "track expression" and make sure that it uniquely identifies items in a collection. Find more at https://v20.angular.dev/errors/NG0956
+2026-10-13 18:53:49.903 [INFO] 2026-10-13T18:53:49.9020554+05:30 BROWSER log: Ran 2 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: customer.selected, value: new} ; Updates:  [Array(1)]
+2026-10-13 18:53:50.060 [INFO] 2026-10-13T18:53:50.0590576+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: owner.account.selected, value: new} ; Updates:  []
+2026-10-13 18:53:50.772 [INFO] 2026-10-13T18:53:50.7712790+05:30 BROWSER debug: [DFRegularChipsComponent] Configuration (Simplified Options Pattern): {id: owner.maritalStatus, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(5), otherOptions: undefined}
+2026-10-13 18:53:50.818 [INFO] 2026-10-13T18:53:50.8131198+05:30 BROWSER warning: As of March 1st, 2025, google.maps.places.Autocomplete is not available to new customers. Please use google.maps.places.PlaceAutocompleteElement instead. At this time, google.maps.places.Autocomplete is not scheduled to be discontinued, but google.maps.places.PlaceAutocompleteElement is recommended over google.maps.places.Autocomplete. While google.maps.places.Autocomplete will continue to receive bug fixes for any major regressions, existing bugs in google.maps.places.Autocomplete will not be addressed. At least 12 months notice will be given before support is discontinued. Please see https://developers.google.com/maps/legacy for additional details and https://developers.google.com/maps/documentation/javascript/places-migration-overview for the migration guide.
+2026-10-13 18:53:50.851 [INFO] 2026-10-13T18:53:50.8502610+05:30 BROWSER debug: [DFRegularChipsComponent] Configuration (Simplified Options Pattern): {id: owner.address.resided90days, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(2), otherOptions: undefined}
+2026-10-13 18:53:50.859 [INFO] 2026-10-13T18:53:50.8586149+05:30 BROWSER debug: [DFRegularChipsComponent] Configuration (Simplified Options Pattern): {id: owner.address.useAsResidence, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(2), otherOptions: undefined}
+2026-10-13 18:53:50.954 [INFO] 2026-10-13T18:53:50.9520340+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormItemHandler2, type: button, id: next} ; Updates:  []
+-> done: CycleRateFilingsPolicy3NBPriorEffDateSteps.SelectOrCreateThePolicyClientAsync() (11.3s)
+2026-10-13 18:53:51.091 [INFO] PASSED STEP: I select or create the policy client
+And I enter account details
+2026-10-13 18:53:51.094 [INFO] START STEP: I enter account details
+2026-10-13 18:54:12.733 [WARN] CONTROL READY WAIT CONTINUING: AccountInformation.FirstNameAccountOwner; Action=verify-visible; visible wait did not settle within 20000ms: Timeout 20000ms exceeded.
+Call log:
+  - waiting for Locator("[name=\"Txt_First Name_Account Owner\"], [id=\"Txt_First Name_Account Owner\"]").First to be visible
+2026-10-13 18:54:32.936 [ERROR] DEFERRED VERIFY FAILURE: Step=I enter account details; Control=AccountInformation.FirstNameAccountOwner; Expected=Exists; Property=; Timeout 20000ms exceeded.
+Call log:
+  - waiting for Locator("[name=\"Txt_First Name_Account Owner\"], [id=\"Txt_First Name_Account Owner\"]").First to be visible. Scenario continues; final outcome will fail after evidence publication.
+2026-10-13 18:54:34.018 [INFO] 2026-10-13T18:54:34.0165955+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: valueChanged, id: owner.dateOfBirth, value: null} ; Updates:  []
+2026-10-13 18:54:36.158 [INFO] 2026-10-13T18:54:36.1574444+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: valueChanged, id: owner.phone, value: 5555551234} ; Updates:  []
+2026-10-13 18:54:38.627 [INFO] 2026-10-13T18:54:38.6265207+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: valueChanged, id: owner.email, value: a@a.com} ; Updates:  []
+2026-10-13 18:54:41.503 [INFO] 2026-10-13T18:54:41.5009334+05:30 BROWSER debug: [DFRegularChipsComponent] Configuration (Simplified Options Pattern): {id: owner.maritalStatus, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(5), otherOptions: undefined}
+2026-10-13 18:54:41.507 [INFO] 2026-10-13T18:54:41.5068139+05:30 BROWSER warning: NG0956: The configured tracking expression (track by identity) caused re-creation of the entire collection of size 4. This is an expensive operation requiring destruction and subsequent creation of DOM nodes, directives, components etc. Please review the "track expression" and make sure that it uniquely identifies items in a collection. Find more at https://v20.angular.dev/errors/NG0956
+2026-10-13 18:54:41.687 [INFO] 2026-10-13T18:54:41.6857957+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: regularChips, id: owner.maritalStatus} ; Updates:  []
+2026-10-13 18:54:49.845 [INFO] 2026-10-13T18:54:49.8435913+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormInputHandler2, type: onValueChange, id: owner.address.state, value: AL} ; Updates:  []
+2026-10-13 18:54:51.283 [INFO] 2026-10-13T18:54:51.2821243+05:30 BROWSER debug: [DFIconChipsComponent] Configuration (Simplified Options Pattern): {id: proposal.product, pattern: Simplified Options Pattern, chipsConfig: undefined, options: Array(5), otherOptions: undefined}
+2026-10-13 18:54:51.748 [INFO] 2026-10-13T18:54:51.7470267+05:30 BROWSER log: Ran 1 update(s) for:  {source: FormItemHandler2, type: button, id: next} ; Updates:  []
+2026-10-13 18:55:00.340 [WARN] CONTROL READY WAIT CONTINUING: AccountInformation.OwnerAddressZip; Action=fill; visible wait did not settle within 20000ms: Target page, context or browser has been closed
+Call log:
+  - waiting for Locator("[id='owner.address.zip']") to be visible
+-> error: Target page, context or browser has been closed (69.4s)
+2026-10-13 18:55:00.491 [WARN] Unable to capture failure screenshot: Target page, context or browser has been closed
+2026-10-13 18:55:00.496 [ERROR] FAILED STEP: I enter account details :: Microsoft.Playwright.TargetClosedException: Target page, context or browser has been closed
+   at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls) in /_/src/Playwright/Transport/Connection.cs:line 222
+   at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title)
+   at Microsoft.Playwright.Core.Locator.<>c__DisplayClass80_0`1.<<WithElementAsync>b__0>d.MoveNext() in /_/src/Playwright/Core/Locator.cs:line 439
+--- End of stack trace from previous location ---
+   at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title)
+   at InsuranceAutomation.Core.ComponentAwareControlActions.ReadMetaAsync(ILocator control) in C:\Users\CT7859\Desktop\LatestBranch\PnC_DC_TestAutomation\src\InsuranceAutomation.Core\ComponentAwareControlActions.cs:line 326
+   at InsuranceAutomation.Core.ComponentAwareControlActions.SelectOrFillAsync(IPage page, ILocator control, String value, Int32 timeoutMs, Int32 optionTimeoutMs, Int32 optionPollIntervalMs) in C:\Users\CT7859\Desktop\LatestBranch\PnC_DC_TestAutomation\src\InsuranceAutomation.Core\ComponentAwareControlActions.cs:line 29
+   at InsuranceAutomation.Core.UiActions.<>c__DisplayClass34_0.<<FillCoreAsync>b__0>d.MoveNext() in C:\Users\CT7859\Desktop\LatestBranch\PnC_DC_TestAutomation\src\InsuranceAutomation.Core\UiActions.cs:line 115
+--- End of stack trace from previous location ---
+   at InsuranceAutomation.Core.UiActions.ExecuteWithHighlightAsync(ILocator locator, String action, Func`2 operation) in C:\Users\CT7859\Desktop\LatestBranch\PnC_DC_TestAutomation\src\InsuranceAutomation.Core\UiActions.cs:line 618
+   at InsuranceAutomation.Core.UiActions.ExecuteAsync(ILocator locator, ControlIntent intent, String action, Func`2 operation) in C:\Users\CT7859\Desktop\LatestBranch\PnC_DC_TestAutomation\src\InsuranceAutomation.Core\UiActions.cs:line 589
+   at InsuranceAutomation.Core.UiActions.FillCoreAsync(ILocator locator, String value, ControlIntent intent) in C:\Users\CT7859\Desktop\LatestBranch\PnC_DC_TestAutomation\src\InsuranceAutomation.Core\UiActions.cs:line 107
+   at InsuranceAutomation.Core.UiActions.<>c__DisplayClass29_0.<<TraceAsync>b__0>d.MoveNext() in C:\Users\CT7859\Desktop\LatestBranch\PnC_DC_TestAutomation\src\InsuranceAutomation.Core\UiActions.cs:line 93
+--- End of stack trace from previous location ---
+   at InsuranceAutomation.Core.ScenarioReport.TraceActionAsync[T](String method, String operation, String target, IReadOnlyDictionary`2 data, Func`1 action) in C:\Users\CT7859\Desktop\LatestBranch\PnC_DC_TestAutomation\src\InsuranceAutomation.Core\ScenarioReport.cs:line 40
+   at InsuranceAutomation.Core.UiActions.TraceAsync(String caller, String source, String operation, String target, IReadOnlyDictionary`2 data, Func`1 action) in C:\Users\CT7859\Desktop\LatestBranch\PnC_DC_TestAutomation\src\InsuranceAutomation.Core\UiActions.cs:line 93
+   at InsuranceAutomation.PLDC.StepDefinitions.CycleRateFilingsPolicy3NBPriorEffDateSteps.EnterAccountDetailsAsync() in C:\Users\CT7859\Desktop\LatestBranch\PnC_DC_TestAutomation\tests\PersonalLines.DuckCreek.Tests\StepDefinitions\CycleRateFilingsPolicy3NBPriorEffDateSteps.cs:line 86
+   at Reqnroll.Bindings.AsyncMethodHelper.ConvertTaskOfT(Task task, Boolean getValue)
+   at Reqnroll.Bindings.BindingDelegateInvoker.InvokeDelegateAsync(Delegate bindingDelegate, Object[] invokeArgs, ExecutionContextHolder executionContext)
+   at Reqnroll.Bindings.BindingInvoker.InvokeBindingAsync(IBinding binding, IContextManager contextManager, Object[] arguments, ITestTracer testTracer, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+   at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>b__7>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>g__HandleStepExecutionExceptions|0>d.MoveNext()
+And I start the policy proposal
+-> skipped because of previous errors
+And I complete prequalification
+-> skipped because of previous errors
+And I capture the proposal number
+-> skipped because of previous errors
+And I complete driver information
+-> skipped because of previous errors
+And I open the configured policy application
+-> skipped because of previous errors
+And I approve Level 9B
+-> skipped because of previous errors
+And I complete driver information for txt quote policy search
+-> skipped because of previous errors
+And I complete driver information for existing client 1
+-> skipped because of previous errors
+And I review the driver information summary
+-> skipped because of previous errors
+And I review household-driver prefill results
+-> skipped because of previous errors
+And I complete vehicle Summary Automobile Rate Filing
+-> skipped because of previous errors
+And I complete driver Assignment
+-> skipped because of previous errors
+And I complete multiple Driver Assignment
+-> skipped because of previous errors
+And I complete claims/Violations
+-> skipped because of previous errors
+And I complete editClaimsViolations
+-> skipped because of previous errors
+And I complete discount 1
+-> skipped because of previous errors
+And I complete coverages
+-> skipped because of previous errors
+And I complete auto AddlCov policy coveragess
+-> skipped because of previous errors
+And I complete auto AddlCov PIP
+-> skipped because of previous errors
+And I complete auto AddlCov Vehicle Coverages
+-> skipped because of previous errors
+And I complete auto AddlCov Next
+-> skipped because of previous errors
+And I complete pricing and verify the premium
+-> skipped because of previous errors
+And I complete underwriting Page Cycle
+-> skipped because of previous errors
+And I complete additional Interest Page
+-> skipped because of previous errors
+And I configure direct-pay billing
+-> skipped because of previous errors
+And I complete submission underwriting comments and review
+-> skipped because of previous errors
+And I open the configured policy application for openurl
+-> skipped because of previous errors
+And I complete the Express underwriting review
+-> skipped because of previous errors
+And I recall the quote in ExpertQuote
+-> skipped because of previous errors
+And I complete the submission checklist
+-> skipped because of previous errors
+And I transmit the policy
+-> skipped because of previous errors
+And I verify policy transmission confirmation
+-> skipped because of previous errors
+2026-10-13 18:55:00.621 [WARN] Unable to capture final scenario screenshot: Target page, context or browser has been closed
+2026-10-13 18:55:03.973 [ERROR] DEFERRED VERIFICATION SUMMARY (1):
+1. I enter account details :: AccountInformation.FirstNameAccountOwner expected 'Exists' () :: Timeout 20000ms exceeded.
+Call log:
+  - waiting for Locator("[name=\"Txt_First Name_Account Owner\"], [id=\"Txt_First Name_Account Owner\"]").First to be visible
+2026-10-13 18:55:04.059 [WARN] Unable to create evidence bundle: The process cannot access the file 'C:\Users\CT7859\Desktop\LatestBranch\PnC_DC_TestAutomation\TestResults\Artifacts\PersonalLines.DuckCreek.Tests\Cycle_Rate_Filings_Policy_3_NB_Prior_Eff_Date\Cycle_Rate_Filings_Policy_3_NB_Prior_Eff_Date____stateCode_20261013_185305_513_2598eaa4\execution.log' because it is being used by another process.

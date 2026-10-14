@@ -11,25 +11,25 @@ public sealed class NavigationLocators
 
     public ILocator StateDetailsDriveOtherCarFirstName => _page.Locator("input[fieldref=\"RiskDriveOtherCarIteratorInput.FirstName\"]");
     public ILocator StateDetailsDriveOtherCarLastName => _page.Locator("input[fieldref=\"RiskDriveOtherCarIteratorInput.LastName\"]");
-    public ILocator CommercialAutoEffectiveDate => _page.Locator("input[fieldref='CommercialPropertyHistoryInput.EffectiveDate'],input[fieldref='OtherInsuranceHistoryInput.EffectiveDate'], input[fieldref='UmbrellaGeneralLiabilityInput.EffectiveDate'], input[fieldref=\"UmbrellaSFP10LiabilityInput.EffectiveDate\"], input[fieldref=\"UmbrellaEmployersLiabilityInput.EffectiveDate\"], input[fieldref=\"UmbrellaCommercialAutoInput.EffectiveDate\"]");
+    public ILocator CommercialAutoEffectiveDate => _page.Locator("input[fieldref='CommercialGeneralLiabilityHistoryInput.EffectiveDate'],input[fieldref='CommercialPropertyHistoryInput.EffectiveDate']:visible,input[fieldref='OtherInsuranceHistoryInput.EffectiveDate'], input[fieldref='UmbrellaGeneralLiabilityInput.EffectiveDate'], input[fieldref=\"UmbrellaSFP10LiabilityInput.EffectiveDate\"], input[fieldref=\"UmbrellaEmployersLiabilityInput.EffectiveDate\"], input[fieldref=\"UmbrellaCommercialAutoInput.EffectiveDate\"]");
     public ILocator CommercialAutoExpiryDateDate => _page.Locator("input[fieldref=\"UmbrellaCommercialAutoInput.ExpirationDate\"]");
     public ILocator LiquifiedGas => _page.Locator("input[fieldref=\"UmbrellaBusinessOwnersInput.PetroleumGasExposure\"]");
-    public ILocator GeneralLiabilityExpirationDate => _page.Locator("input[fieldref='CommercialPropertyHistoryInput.ExpirationDate'],input[fieldref='OtherInsuranceHistoryInput.ExpirationDate'], input[fieldref='UmbrellaGeneralLiabilityInput.ExpirationDate'], input[fieldref=\"UmbrellaSFP10LiabilityInput.ExpirationDate\"], input[fieldref=\"UmbrellaEmployersLiabilityInput.ExpirationDate\"], input[fieldref=\"UmbrellaCommercialAutoInput.ExpirationDate\"]");
+    public ILocator GeneralLiabilityExpirationDate => _page.Locator("input[fieldref='CommercialGeneralLiabilityHistoryInput.ExpirationDate'],input[fieldref='CommercialPropertyHistoryInput.ExpirationDate']:visible,input[fieldref='OtherInsuranceHistoryInput.ExpirationDate'], input[fieldref='UmbrellaGeneralLiabilityInput.ExpirationDate'], input[fieldref=\"UmbrellaSFP10LiabilityInput.ExpirationDate\"], input[fieldref=\"UmbrellaEmployersLiabilityInput.ExpirationDate\"], input[fieldref=\"UmbrellaCommercialAutoInput.ExpirationDate\"]");
     public ILocator CommercialAutoPolicyNumber => _page.Locator("input[fieldref=\"UmbrellaCommercialAutoInput.PolicyNumber\"]");
-    public ILocator GeneralLiabilityPolicyNumber => _page.Locator("input[@fieldref='CommercialPropertyHistoryInput.PolicyNumber' or @fieldref='OtherInsuranceHistoryInput.PolicyNumber'],input[fieldref='OtherInsuranceHistoryInput.PolicyNumber'], input[fieldref='UmbrellaGeneralLiabilityInput.PolicyNumber'], input[fieldref=\"UmbrellaSFP10LiabilityInput.PolicyNumber\"]");
+    public ILocator GeneralLiabilityPolicyNumber => _page.Locator("input[fieldref=\"CommercialPropertyHistoryInput.PolicyNumber\"]:visible, input[fieldref=\"OtherInsuranceHistoryInput.PolicyNumber\"]:visible, input[fieldref=\"CommercialGeneralLiabilityHistoryInput.PolicyNumber\"]:visible, input[fieldref=\"UmbrellaGeneralLiabilityInput.PolicyNumber\"]:visible, input[fieldref=\"UmbrellaSFP10LiabilityInput.PolicyNumber\"]:visible").First;
     public ILocator CPPLiabilityPolicyNumber => _page.Locator("input[fieldref='UmbrellaCPPLiabilityInput.PolicyNumber']");
     public ILocator UMBLimit => _page.Locator("input[fieldref=\"UmbrellaCommercialAutoInput.UMLimit\"]");
     public ILocator OtherInsuranceHistoryLimit => _page.Locator("input[fieldref='OtherInsuranceHistoryInput.Limit']");
     public ILocator GeneralLiabilityTotalSubjectPremium => _page.Locator("input[fieldref=\"UmbrellaGeneralLiabilityInputPremiums.TotalSubjectPremium\"], input[fieldref=\"UmbrellaSFP10LiabilityInput.TotalSubjectPremium\"], input[fieldref=\"UmbrellaEmployersLiabilityInput.TotalSubjectPremium\"], input[fieldref=\"UmbrellaCommercialAutoInput.TotalSubjectPremium\"]");
-
     public ILocator SFP10LiabilityFarmLiabilityLimit => _page.Locator("input[fieldref=\"UmbrellaSFP10LiabilityInput.LiabilityLimit\"]");
     public ILocator DescriptionOfActivities => _page.Locator("[fieldref='CovEndorsementsInput.Description']");
     public ILocator CoverageFormDescription => _page.Locator("input[fieldref=\"CoverageFormsInput.Description\"]");
     public ILocator CoverageEndorsementType => _page.Locator("input[fieldref=\"CovEndorsementsInput.Type\"]");
-
-
     public ILocator EndrosmentType => _page.Locator("input[fieldref='CovEndorsementsInput.Type']");
     public ILocator LineEndorsementType => _page.Locator("input[fieldref=\"LineOutputNonShredded.EndorsementType\"]");
+
+
+    public ILocator OfficeThatShouldBeExcluded => _page.Locator("input[fieldref='LineInput.EntityOfficersExclusion']");
     public ILocator AdditionalOtherInterestType => _page.Locator("input[fieldref='AdditionalOtherInterestInput.Type']");
 
     public ILocator AVCostNew => _page.Locator("input[fieldref=\"CovAudioVisualInput.CostNew\"]");
@@ -69,7 +69,7 @@ public sealed class NavigationLocators
     public ILocator UMQuestionsUmbrella => _page.GetByRole(AriaRole.Link, new() { Name = "UW Questions - Umbrella", Exact = true });
 
     public ILocator AddInterests => _page.GetByRole(AriaRole.Link, new() { Name = "Addl Interests", Exact = true });
-    public ILocator ProductsOrCompletedOps => _page.GetByText("Products/Completed Ops");
+    public ILocator ProductsOrCompletedOps => _page.GetByText("Products/Completed Ops").First;
     public ILocator CGL => _page.GetByRole(AriaRole.Link, new() { Name = "CGL", Exact = true });
 
     public ILocator ProductsCompletedOpsButton => _page.GetByRole(AriaRole.Link, new() { Name = "Products/Completed Ops", Exact = true });
@@ -98,6 +98,8 @@ public sealed class NavigationLocators
     public ILocator CertificateOfInsurancefForLiquorLiability => _page.Locator("input[fieldref=\"UnderwritingWineryInput.CertificateOfInsurancefForLiquorLiability\"]");
     public ILocator EmplyesAlcoholBeverageInterventionTraining => _page.Locator("input[fieldref=\"UnderwritingWineryInput.EmplyesAlcoholBeverageInterventionTraining\"]");
     public ILocator NumberOfShipmentAnnual => _page.Locator("input[fieldref=\"UnderwritingWineryInput.NumberOfShipmentAnnual\"]");
+    public ILocator safetyCommodities => _page.Locator("input[fieldref='PATermInput.CertifiedSafetyCommitteeCreditProgamIndicator'][type=\"checkbox\"]");
+    public ILocator AlcoholOrDrugFreespce => _page.Locator("input[fieldref='LineStateTermInput.AlcoholOrDrugFreeWorkplacePremiumCreditIndicator']").Filter(new LocatorFilterOptions { Visible = true }).First;
     public ILocator AverageValueEachShipment => _page.Locator("input[fieldref=\"UnderwritingWineryInput.AverageValueEachShipment\"]");
     public ILocator AverageDistanceShipped => _page.Locator("input[fieldref=\"UnderwritingWineryInput.AverageDistanceShipped\"]");
     public ILocator TransportWineForOthers => _page.Locator("input[fieldref=\"UnderwritingWineryInput.TransportWineForOthers\"]");
@@ -131,9 +133,18 @@ public sealed class NavigationLocators
 
     public ILocator MedicalFacilitiesComments => _page.Locator("input[fieldref='MedicalFacilitiesStateInput.Comment']");
 
+    public ILocator ExtraordinarySafetyPrograms => _page.Locator("input[fieldref*='ExtraordinarySafetyProgram'][fieldref$='.Factor']").Filter(new LocatorFilterOptions { Visible = true }).First;
+
+    public ILocator ExtraordinarySafetyProgramsComments => _page.Locator("input[fieldref*='ExtraordinarySafetyProgram'][fieldref$='.Comment']").Filter(new LocatorFilterOptions { Visible = true }).First;
+
 
 
     public ILocator safetyDevices => _page.Locator("input[fieldref='SafetyDevicesStateInput.Factor']");
+
+
+    public ILocator EmployersafetyPolicy => _page.Locator("input[fieldref='EmployersSafetyPoliciesAndRecordStateInput.Factor']");
+
+    public ILocator EmployersafetyPolicyComments => _page.Locator("input[fieldref='EmployersSafetyPoliciesAndRecordStateInput.Comment']");
 
     public ILocator SafetyDevicesComments => _page.Locator("input[fieldref='SafetyDevicesStateInput.Comment']");
 
@@ -151,6 +162,14 @@ public sealed class NavigationLocators
     public ILocator ManagementCooperationWithInsuranceCarrierStateInput => _page.Locator("input[fieldref='ManagementCooperationWithInsuranceCarrierStateInput.Factor']");
 
     public ILocator ManagementCooperationWithInsuranceCarrierStateInputComments => _page.Locator("input[fieldref='ManagementCooperationWithInsuranceCarrierStateInput.Comment']");
+
+    public ILocator PolicyExpensesStateInput => _page.Locator("input[fieldref*='PolicyExpense'][fieldref$='.Factor']").Filter(new LocatorFilterOptions { Visible = true }).First;
+
+    public ILocator PolicyExpensesStateInputComments => _page.Locator("input[fieldref*='PolicyExpense'][fieldref$='.Comment']").Filter(new LocatorFilterOptions { Visible = true }).First;
+
+    public ILocator OtherFactorsStateInput => _page.Locator("input[fieldref*='OtherFactor'][fieldref$='.Factor']").Filter(new LocatorFilterOptions { Visible = true }).First;
+
+    public ILocator OtherFactorsStateInputComments => _page.Locator("input[fieldref*='OtherFactor'][fieldref$='.Comment']").Filter(new LocatorFilterOptions { Visible = true }).First;
 
     public ILocator Worksheet => _page.GetByText("Worksheet", new() { Exact = true }); 
     
@@ -200,6 +219,8 @@ public sealed class NavigationLocators
     public ILocator Territory => _page.Locator("input[fieldref=\"LocationGeneralLiabilityInput.Territory\"]");
 
     public ILocator OK => _page.Locator("span.g-btn-text").Filter(new LocatorFilterOptions { HasText = "OK" }).First;
+
+    public ILocator OKClassCode => _page.Locator("//div[.//input[@fieldref='NCCISearchInputNonShredded.SearchValue']]//a[contains(@onclick,'processInterviewButtonAnchor')][.//span[normalize-space()='OK']]").First;
 
 
     public ILocator OKFirst => _page.Locator("//div[contains(@id,'_action')]//a[contains(@onclick,'processInterviewButtonAnchor')][.//span[normalize-space()='OK']]");
@@ -279,7 +300,7 @@ public sealed class NavigationLocators
 
     public ILocator AreThereAnyCommercialVehiclesOwnedByTheApplicantNotInsuredOnThePolicy => _page.Locator("input[fieldref=\"UnderwritingQuestionsAutoInput.AnyCommercialVehiclesOwned\"]");
 
-    public ILocator AreThereAnyOfficersThatShouldBeExcluded => _page.Locator("input[fieldref=\"LineInput.EntityOfficersExclusion\"]");
+    public ILocator AreThereAnyOfficersThatShouldBeExcluded => _page.Locator("input[fieldref='LineInput.EntityTypeInclusion']");
 
     public ILocator AssignLocation => _page.Locator("[class='g-btn-text']").Filter(new() { HasText = "Assign Location" }).First;
 
@@ -362,7 +383,7 @@ public sealed class NavigationLocators
     public ILocator CallISO => _page.GetByRole(AriaRole.Link, new() { Name = "Call ISO", Exact = true });
 
 
-    public ILocator Carrier => _page.Locator("//input[@fieldref='CommercialPropertyHistoryInput.CarrierName',input[fieldref='OtherInsuranceHistoryInput.CarrierName'],input[fieldref='CommercialGeneralLiabilityHistoryInput.CarrierName']");
+    public ILocator Carrier => _page.Locator("input[fieldref=\"CommercialPropertyHistoryInput.CarrierName\"], input[fieldref=\"OtherInsuranceHistoryInput.CarrierName\"], input[fieldref=\"CommercialGeneralLiabilityHistoryInput.CarrierName\"]");
 
     public ILocator CauseOfLoss => _page.Locator("input[fieldref=\"RatingGroupInput.CauseOfLossType\"]");
 
@@ -511,7 +532,7 @@ public sealed class NavigationLocators
 
     public ILocator DescriptionOfOperations => _page.Locator("xpath=(//*[@id = //label[normalize-space(string(.))='Description of Operations']/@for] | //label[normalize-space(string(.))='Description of Operations']//*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1] | //label[normalize-space(string(.))='Description of Operations']/following-sibling::*[self::input or self::select or self::textarea or @role='checkbox' or @role='radio' or @role='combobox'][1])");
 
-    public ILocator DescriptionOfSpecifiedOperation => _page.Locator("input[fieldref=\"PolicyOutput.DescriptionOfOperations\"], textarea[fieldref=\"PolicyInput.DescriptionOfOperations\"]");
+    public ILocator DescriptionOfSpecifiedOperation => _page.Locator("textarea[fieldref=\"CovEndorsementsInput.Description\"],input[fieldref=\"PolicyOutput.DescriptionOfOperations\"], textarea[fieldref=\"PolicyInput.DescriptionOfOperations\"]");
 
     public ILocator EstimatedPremium => _page.Locator("input[fieldref=\"PolicyInput.EstimatedPremium\"]");
 
@@ -760,7 +781,9 @@ public sealed class NavigationLocators
 
     public ILocator Model => _page.Locator("input[fieldref=\"RiskVehicleInput.Model\"]");
 
-    public ILocator ModificationFactor => _page.Locator("input[fieldref='CommercialPropertyHistoryInput.ModificationFactor'],input[fieldref='CommercialGeneralLiabilityHistoryInput.ModificationFactor'],input[fieldref='OtherInsuranceHistoryInput.ModificationFactor']");
+    public ILocator MeritRatingSelection => _page.Locator("xpath=(//*[self::input or self::select or self::textarea or @role='combobox'][starts-with(@fieldref,'MeritRatingModInput.') and contains(@fieldref,'Selections')] | //*[(self::label or self::span or self::div or self::td) and normalize-space(string(.))='Merit Rating Selection']/following::*[self::input or self::select or self::textarea or @role='combobox'][1])").Filter(new LocatorFilterOptions { Visible = true }).First;
+
+    public ILocator ModificationFactor => _page.Locator("input[fieldref='CommercialGeneralLiabilityHistoryInput.ModificationFactor'],input[fieldref='CommercialPropertyHistoryInput.ModificationFactor']:visible,input[fieldref='CommercialGeneralLiabilityHistoryInput.ModificationFactor'],input[fieldref='OtherInsuranceHistoryInput.ModificationFactor']");
 
     public ILocator N10AreThePremisesEquippedWithARecognizedApprovedCentralStationFireAlarmFireExtinguishersOrSmokeAlarms => _page.Locator("xpath=(//*[self::input or self::textarea or self::select][@fieldref='BaileesCustomerUnderwritingQuestionsInput.Indicator'][@aria-label='10. Are the premises equipped with a recognized approved central station fire alarm, fire extinguishers or smoke alarms?' or @placeholder='10. Are the premises equipped with a recognized approved central station fire alarm, fire extinguishers or smoke alarms?'] | //*[(self::label or self::span or self::div or self::td) and normalize-space(string(.))='10. Are the premises equipped with a recognized approved central station fire alarm, fire extinguishers or smoke alarms?']/following::*[self::input or self::textarea or self::select][@fieldref='BaileesCustomerUnderwritingQuestionsInput.Indicator'][1])").Filter(new LocatorFilterOptions { Visible = true }).First;
 
@@ -1046,6 +1069,13 @@ public sealed class NavigationLocators
 
     public ILocator SmallDeductible => _page.Locator("input[fieldref=\"LineStateTermInput.SmallDeductibleCreditDeductible\"]");
 
+    public ILocator SmallDeductableSection => _page.Locator("input[fieldref$='SmallDeductibleSelection']");
+
+    public ILocator LineStateTermInput => _page.Locator("input[fieldref=\"LineStateTermInput.DeductibleSelection\"]");
+
+    public ILocator SmallDeductibleCredit => _page.Locator("input[fieldref='IATermInput.DeductibleSelectionIA']"); 
+
+    public ILocator SmallDeductibleCreditDeductible => _page.Locator("input[fieldref='LineStateTermInput.SmallDeductibleCreditDeductible']");
     public ILocator SoleProprietors => _page.Locator("input[fieldref=\"EndorsementSoleProprietors.SoleProprietors\"]");
 
     public ILocator SpecificUnderwritingQuestions => _page.GetByRole(AriaRole.Link, new() { Name = "Specific Underwriting Questions", Exact = true });
@@ -1090,7 +1120,7 @@ public sealed class NavigationLocators
 
     public ILocator TotalPayrollEstimated => _page.Locator("input[fieldref=\"CoverageInput.UnitsOfExposureEstimated\"]");
 
-    public ILocator TotalPremium => _page.Locator("input[fieldref='CommercialPropertyHistoryInput.TotalPremium'],input[fieldref='CommercialGeneralLiabilityHistoryInput.TotalPremium'],input[fieldref='OtherInsuranceHistoryInput.TotalPremium']");
+    public ILocator TotalPremium => _page.Locator("input[fieldref='CommercialGeneralLiabilityHistoryInput.TotalPremium'],input[fieldref='CommercialPropertyHistoryInput.TotalPremium']:visible,input[fieldref='CommercialGeneralLiabilityHistoryInput.TotalPremium'],input[fieldref='OtherInsuranceHistoryInput.TotalPremium']");
 
     public ILocator TotalSubjectivePremium => _page.Locator("input[fieldref=\"UmbrellaCommercialAutoInput.TotalSubjectPremiumCombined\"]");
 
@@ -1176,9 +1206,7 @@ public sealed class NavigationLocators
 
     public ILocator Hastheapplicantbeeninbusinessforatleast3yearswithcontinuousWorkersCompensationCoverage => _page.Locator("input[fieldref='PolicyInput.ContinuousWCCoverageForAtLeast3Years']");
 
-
-
-    
+    public ILocator WorkplaceSafetyRiskManagement => _page.Locator("input[fieldref=\"PolicyInput.WorkplaceSafetyRiskManagement\"]");        
 
     public ILocator WhatAreTheProceduresAndMethodsForKeepingTheEDPAreasSecured => _page.Locator("[name=\"string_2F_2\"]");
 
@@ -1223,4 +1251,6 @@ public sealed class NavigationLocators
     public ILocator EntityInfoFrameEntityInfoWindowBureauNumber => _page.FrameLocator("iframe[id^='dctPopup_dctPopupWindow']").Locator("input[fieldref='AdditionalOtherInterestInput.BureauNumber']");
 
     public ILocator EntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefault => _page.FrameLocator("iframe[id^='dctPopup_dctPopupWindow']").Locator("input[fieldref='AdditionalOtherInterestInput.StateUnemploymentNumber']");
+
+    public ILocator TaxpayerId => _page.FrameLocator("iframe[id^='dctPopup_dctPopupWindow']").Locator("input[fieldref='AdditionalOtherInterestInput.TaxPayerIDNumberNJ']");
 }

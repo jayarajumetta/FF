@@ -49,7 +49,7 @@ public sealed class CPBasicPolicySteps
         await page.WaitForQuickQuoteAsync("Exists");
         await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_2}}"));
         await page.WaitForUnderwritingInfoAsync("Exists");
-        await page.EnterInsuredTypeAsync("Business");
+        await page.EnterInsuredTypeAsync(data.Resolve("{{data:insured_type_4}}"));
         await page.EnterEntityTypeAsync(data.Resolve("{{data:entity_type_8}}"));
         await page.WaitForBusinessNameAsync("Visible");
         await page.EnterBusinessNameAsync(data.Resolve("{{data:business_name_7}}"));
@@ -137,7 +137,7 @@ public sealed class CPBasicPolicySteps
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.EnterIndividualTypeAsync("Business Owner");
+        await page.EnterIndividualTypeAsync(data.Resolve("{{data:individual_type_47}}"));
         //await page.WaitForPleaseVerifySSNAsync("Exists");
         await page.EnterFirstNameAsync(data.Resolve("{{runtime:FirstName_0057}}"));
         await page.EnterMiddleNameAsync(data.Resolve("{{runtime:MiddleName_0057}}"));
@@ -248,7 +248,7 @@ public sealed class CPBasicPolicySteps
 
         if (await page.IsEstimatedPremiumAvailableAsync())
         {
-            await page.EnterEstimatedPremiumAsync("Under 1,500");
+            await page.EnterEstimatedPremiumAsync(data.Resolve("{{data:estimated_premium_141}}"));
         }
 
     }
@@ -703,7 +703,7 @@ public sealed class CPBasicPolicySteps
         await page.ClickLocationDetailAsync();
         await page.EnterEstimatorTypeAsync(data.Resolve("{{data:estimator_type_239}}"));
         await page.PauseAsync(5000);
-        await page.EnterValuationTypeAsync("Standard RCT - Use Defaults");
+        await page.EnterValuationTypeAsync(data.Resolve("{{data:valuation_type_default_240}}"));
         await page.ClickCreateValuationAsync();
         await page.ClickGetCalculatedValueAsync();
         await page.ClickOKAsync();

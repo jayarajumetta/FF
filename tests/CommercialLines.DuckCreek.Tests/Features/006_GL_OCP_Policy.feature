@@ -19,8 +19,10 @@ Feature: GL OCP Policy
     And I complete OCP Risk Fields
     And I complete [CG0424] Coverage for Injury to Leased Workers
     And I complete [CG2401] Non-Binding Arbitration
+    And I complete [CG2402]  Binding Arbitration
     And I complete [CG2812] Pesticide or Herbicide Applicator Coverage
     And I complete [CG3132] Limited Fungi or Bacteria Coverage
+    And I complete [CG2976] Pennsylvania Changes Pesticide Applicator Coverage
     And I complete [CG 20 31] Add'l Insured-Engineers, Architects OCP
     And I complete [CG 29 35] Add'l Insured-State or Political (Permits)
     And I complete [FG0013] - Automatic Additional Insured - Specific
@@ -36,16 +38,16 @@ Feature: GL OCP Policy
     Examples:
       | dataFile | stateCode | stateVariant | stateName | externalDataFile |
       | TestData/Scenarios/006_gl_ocp_policy_az.json | AZ | AZ | Arizona | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/006_gl_ocp_policy_ct.json | CT | CT | Connecticut | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/006_gl_ocp_policy_de.json | DE | DE | Delaware | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/006_gl_ocp_policy_ma.json | MA | MA | Massachusetts | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/006_gl_ocp_policy_md.json | MD | MD | Maryland | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/006_gl_ocp_policy_me.json | ME | ME | Maine | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/006_gl_ocp_policy_nh.json | NH | NH | New Hampshire | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/006_gl_ocp_policy_nj.json | NJ | NJ | New Jersey | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/006_gl_ocp_policy_ny.json | NY | NY | New York | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/006_gl_ocp_policy_pa.json | PA | PA | Pennsylvania | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/006_gl_ocp_policy_ri.json | RI | RI | Rhode Island | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/006_gl_ocp_policy_va.json | VA | VA | Virginia | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/006_gl_ocp_policy_vt.json | VT | VT | Vermont | TestData/ExternalDataOverrides.json |
-      #| TestData/Scenarios/006_gl_ocp_policy_wv.json | WV | WV | West Virginia | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/006_gl_ocp_policy_ct.json | CT | CT | Connecticut | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/006_gl_ocp_policy_de.json | DE | DE | Delaware | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/006_gl_ocp_policy_ma.json | MA | MA | Massachusetts | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/006_gl_ocp_policy_md.json | MD | MD | Maryland | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/006_gl_ocp_policy_me.json | ME | ME | Maine | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/006_gl_ocp_policy_nh.json | NH | NH | New Hampshire | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/006_gl_ocp_policy_nj.json | NJ | NJ | New Jersey | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/006_gl_ocp_policy_ny.json | NY | NY | New York | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/006_gl_ocp_policy_pa.json | PA | PA | Pennsylvania | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/006_gl_ocp_policy_ri.json | RI | RI | Rhode Island | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/006_gl_ocp_policy_va.json | VA | VA | Virginia | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/006_gl_ocp_policy_vt.json | VT | VT | Vermont | TestData/ExternalDataOverrides.json |
+      | TestData/Scenarios/006_gl_ocp_policy_wv.json | WV | WV | West Virginia | TestData/ExternalDataOverrides.json |

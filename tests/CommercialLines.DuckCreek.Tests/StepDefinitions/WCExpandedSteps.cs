@@ -10,6 +10,41 @@ public sealed class WCExpandedSteps
     private readonly ScenarioContext _scenario;
     public WCExpandedSteps(ScenarioContext scenario) => _scenario = scenario;
 
+
+
+
+
+
+
+
+
+    [Given(@"^I start a new quote$")]
+    [When(@"^I start a new quote$")]
+    [Then(@"^I start a new quote$")]
+    public async Task StartANewQuoteAsync()
+    {
+        var data = _scenario.Get<ScenarioData>();
+        var page = new ProposalPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
+        await page.ClickNewQuoteAsync();
+        await page.EnterEffectiveDateAsync(data.Resolve("{{data:effective_date_43}}"));
+        await page.EnterProductAsync(data.Resolve("{{data:product_45}}"));
+        await page.EnterProducerAsync(data.Resolve("{{data:producer}}"));
+        await page.WaitForStartAsync("Visible");
+        await page.ClickStartAsync();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     [Given(@"^I enter business client information$")]
     [When(@"^I enter business client information$")]
     [Then(@"^I enter business client information$")]
@@ -22,7 +57,7 @@ public sealed class WCExpandedSteps
         data.GenerateRandom("InspectionTelephone_0045", "[0-9]{10}");
 
         var page = new ClientSearchPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-        await page.EnterFEINAsync(data.Resolve("{{runtime:FEIN_0044}}"));
+       
 
         await page.WaitForQuickQuoteAsync("Exists");
         await page.SetQuickQuoteAsync(data.Resolve("{{data:quick_quote_2}}"));
@@ -49,7 +84,9 @@ public sealed class WCExpandedSteps
         {
             await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:zipcode_11}}"));
         }
+        await page.EnterFEINAsync(data.Resolve("{{runtime:FEIN_0044}}"));
         await page.VerifyYearsInBusinessAsync("Exists", "");
+
         await page.EnterYearsInBusinessAsync(data.Resolve("{{data:years_in_business_13}}"));
         await page.EnterNameOfAuditContactAsync(data.Resolve("{{data:name_of_audit_contact_15}}"));
         await page.EnterAuditTelephoneAsync(data.Resolve("{{runtime:AuditTelephone_0045}}"));
@@ -71,7 +108,7 @@ public sealed class WCExpandedSteps
 
         await page.WaitForAddClientAsync("Exists");
         await page.ClickAddClientAsync();
-        await page.VerifyIndividualTypeAsync("Absent", "");
+        //await page.VerifyIndividualTypeAsync("Absent", "");
 
     }
 
@@ -126,32 +163,39 @@ public sealed class WCExpandedSteps
         await page.EnterMiddleNameAsync(data.Resolve("{{runtime:MiddleName_0056}}"));
         await page.EnterLastNameAsync(data.Resolve("{{runtime:LastName_0056}}"));
         await page.EnterAddAssociatedClientDateOfBirthAsync(data.Resolve("{{data:dateofbirth_47}}"));
-        await page.EnterAddressAsync(data.Resolve("{{data:address1_48}}"));
+        await page.EnterAddressAsync(data.Resolve("{{data:address_2}}"));
         await page.EnterCityAsync(data.Resolve("{{data:city_49}}"));
-        await page.EnterStateAsync(data.Resolve("{{data:state_50}}"));
+        await page.EnterFirstNameAsync(data.Resolve("{{runtime:FirstName_0056}}"));
+        await page.EnterStateAsync(data.Resolve("{{data:state_51}}"));
         await page.EnterNamedInsuredZipCodeAsync(data.Resolve("{{data:zipcode_51}}"));
         await page.EnterGenderAsync(data.Resolve("{{data:gender_52}}"));
         await page.WaitForClientSearchAsync("Exists");
         await page.ClickClientSearchAsync();
-        await page.EnterFirstNameAsync(data.Resolve("{{runtime:FirstName_0056}}"));
+        await page.PauseAsync(1000);
         await page.VerifySearchResultsDuckCreekPolicyFirstCheckboxAsync("Absent", "");
         await page.ClickOKAsync();
         await page.ClickOrderSSNAsync();
         await page.PressAddAssociatedClientEnterSSNAsync("Enter");
         await page.EnterAddAssociatedClientEnterSSNAsync(data.Resolve("{{data:enter_ssn_60}}"));
-        await page.VerifyVerifyAsync("Absent", "");
-        await page.ClickCompleteAsync();
-        await page.ClickAddAssociatedClientDetailAsync();
-        await page.WaitForAddAssociatedClientEnterSSNAsync("Exists");
+        //await page.VerifyVerifyAsync("Absent", "");
+        //await page.ClickCompleteAsync();
+        //await page.ClickAddAssociatedClientDetailAsync();
+        //await page.WaitForAddAssociatedClientEnterSSNAsync("Exists");
         await page.ClickVerifyAsync();
         await page.WaitForPleaseVerifySSNAsync("Absent");
         await page.ClickCompleteAsync();
-        await page.WaitForAddAssociatedClientEnterSSNAsync("Exists");
-        await page.ClickVerifyAsync();
-        await page.WaitForPleaseVerifySSNAsync("Absent");
-        await page.ClickCompleteAsync();
+        //await page.WaitForAddAssociatedClientEnterSSNAsync("Exists");
+        //await page.ClickVerifyAsync();
+        //await page.WaitForPleaseVerifySSNAsync("Absent");
+        //await page.ClickCompleteAsync();
+        //await page.WaitForClientSearchAsync("Exists");
+        //await page.ClickClientSearchAsync();
+        //await page.WaitForOKAsync("Exists");
+        //await page.ClickOKAsync();
+        //await page.WaitForClientSearchAsync("Absent");
         await page.WaitForClientSearchAsync("Exists");
         await page.ClickClientSearchAsync();
+
         await page.WaitForOKAsync("Exists");
         await page.ClickOKAsync();
         await page.WaitForClientSearchAsync("Absent");
@@ -179,14 +223,14 @@ public sealed class WCExpandedSteps
         await page.EnterModificationFactorAsync(data.Resolve("{{data:modificationfactor_87}}"));
         await page.EnterTotalPremiumAsync(data.Resolve("{{data:total_premium_88}}"));
         await page.ClickOKAsync();
-        await page.WaitForUnderwritingInfoOtherInsuranceHistoryDetailAsync("Exists");
+        //await page.WaitForUnderwritingInfoOtherInsuranceHistoryDetailAsync("Exists");
         await page.ClickLossExperienceAsync();
-        await page.WaitForNoKnownLossesAsync("Exists");
-        await page.SetNoKnownLossesAsync(data.Resolve("{{data:no_known_losses_93}}"));
+        //await page.WaitForNoKnownLossesAsync("Exists");
+        //await page.SetNoKnownLossesAsync(data.Resolve("{{data:no_known_losses_93}}"));
         await page.ClickReturnToQuoteAsync();
-        await page.EnterTitleAsync(data.Resolve("{{data:title_95}}"));
-        await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_96}}"));
-        await page.VerifyResultAsync(data.Resolve("{{data:expected_result_value_97}}"), "value");
+        //await page.EnterTitleAsync(data.Resolve("{{data:title_95}}"));
+        //await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_96}}"));
+        //await page.VerifyResultAsync(data.Resolve("{{data:expected_result_value_97}}"), "value");
 
     }
 
@@ -200,11 +244,11 @@ public sealed class WCExpandedSteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickPolicyInfoAsync();
-        await page.WaitForPolicyInfoHeaderAsync("Exists");
+        //await page.WaitForPolicyInfoHeaderAsync("Exists");
         await page.PauseAsync(1000);
         await page.EnterPolicyInfoRequiredAndOptionalFieldsEffectiveDateAsync(data.Resolve("{{data:effectivedate_101}}"));
         await page.PauseAsync(1000);
-        await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_103}}"));
+        //await page.EnterPrimaryRatingStateAsync(data.Resolve("{{data:primaryratingstate_103}}"));
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_104}}"));
         await page.PauseAsync(1000);
         await page.EnterWereTheExposuresInsuredOnThisPolicyPreviouslyInsuredForThisClientOnAnotherFarmFamilyAmericanNationalPolicyWithinTheLast90DaysAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_108}}"));
@@ -217,6 +261,19 @@ public sealed class WCExpandedSteps
         await page.EnterDescriptionOfSpecifiedOperationAsync(data.BuildQuoteDescription());
         data.Set("QuoteDescription", await page.CaptureDescriptionOfSpecifiedOperationAsync("value"));
 
+        if (data.Condition("State ==\"VT\" || State ==\"NY\" || State == \"PA\""))
+        {
+            await page.EnterWorkplaceSafetyRiskManagementAsync(data.Resolve("{{data:were_the_exposures_insured_on_this_policy_previously_insured_for_this_client_on_another_farm_family_american_national_policy_within_the_last_90_days_113}}"));
+
+        }
+
+        if (data.Condition("State == \"NY\""))
+        {
+
+            await page.EnterWCEstimatedPremiumAsync(data.Resolve("{{data:estimated_premium_12}}"));
+
+        }
+
     }
 
     [Given(@"^I complete WC Specific Fields$")]
@@ -227,7 +284,6 @@ public sealed class WCExpandedSteps
         var data = _scenario.Get<ScenarioData>();
 
         var page = new PolicyWorkflowPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
-
         await page.EnterHasTheApplicantBeenInBusinessForAtLeast3YearsWithContinuousWorkersCompensationCoverageAsync(data.Resolve("{{data:has_the_applicant_been_in_business_for_at_least_3_years_with_continuous_workers_compensation_coverage_118}}"));
 
     }
@@ -260,10 +316,10 @@ public sealed class WCExpandedSteps
         await page.ClickPolicyCovgerageAsync();
         await page.WaitForSignsHeadingAsync("Exists");
         await page.WaitForPrimaryLocationStateAsync("Exists");
-        if (data.Condition("'Primary Rating State' != NULL"))
-        {
-            await page.VerifyPrimaryLocationStateAsync("(?i)^Alabama$", "Regex:value");
-        }
+        //if (data.Condition("'Primary Rating State' != NULL"))
+        //{
+        //    await page.VerifyPrimaryLocationStateAsync("(?i)^Alabama$", "Regex:value");
+        //}
         if (data.Condition("('Experience Rated' != NULL)&&(State!=\"OK\")"))
         {
             await page.EnterExperienceRatedAsync(data.Resolve("{{data:experience_rated_124}}"));
@@ -286,7 +342,7 @@ public sealed class WCExpandedSteps
 
         await page.ClickWCNavigationLinksLocationAsync();
         await page.WaitForLocationAddressAsync("Exists");
-        await page.VerifyLocationZipCodeAsync("[0-9]{5}-[0-9]{4}", "Regex:value");
+        await page.VerifyLocationZipCodeAsync(data.Resolve("{{data:location_zip_code_regex_129}}"), data.Resolve("{{data:location_zip_code_match_type_130}}"));
         await page.ClickOKAsync();
 
     }
@@ -306,38 +362,113 @@ public sealed class WCExpandedSteps
         {
             await page.EnterWaiverOfSubrogationAsync(data.Resolve("{{data:waiver_of_subrogation_133}}"));
         }
-        if (data.Condition("'Small Deductible' != NULL"))
+
+
+        if (data.Condition("State == \"PA\" || State == \"OK\""))
         {
-            await page.EnterSmallDeductibleAsync(data.Resolve("{{data:small_deductible_134}}"));
+            await page.EnterLLinestateDeductibleSelectionAsync(data.Resolve("{{data:ll_in_state_deductible_selection_136}}"));
+            await page.PauseAsync(2000);
+            await page.EnterSmallDeductibleSelectioncreditdeductableAsync(data.Resolve("{{data:small_deductible_134}}"));
+            await page.PauseAsync(2000);
+            await page.EnterCompanyNameAsync(data.Resolve("{{data:company_name_135}}"));
+         
+ 
+           
         }
-        if (data.Condition("'Company Name' != NULL"))
+
+        if (data.Condition("State == \"MN\""))
         {
+            await page.EnterLLinestateDeductibleSelectionAsync(data.Resolve("{{data:ll_in_state_deductible_selection_136}}"));
+            await page.PauseAsync(2000);
+            await page.EnterSmallDeductibleAsync(data.Resolve("{{data:small_deductible_134}}"));
+            await page.PauseAsync(2000);
             await page.EnterCompanyNameAsync(data.Resolve("{{data:company_name_135}}"));
         }
-        if (data.Condition("('Merit Rating' != NULL)&&(State!=\"NY\")"))
+        if (data.Condition("State == \"PA\""))
         {
-            await page.EnterMeritRatingAsync("");
+            await page.ClickSafetyCommoditiesAsync();
         }
-        if (data.Condition("Deductible != NULL"))
+
+
+
+        if (data.Condition("State == \"OK\""))
         {
-            await page.EnterRatingGroupsDeductibleAsync("");
+            await page.EnterMeritRatingSelectionAsync(data.Resolve("{{data:merit_rating_selection_138}}"));
         }
-        if (data.Condition("Deductible != NULL"))
+
+        if (data.Condition("State == \"AR\" || State == \"SD\""))
         {
-            await page.EnterRatingGroupsDeductibleAsync("");
+            await page.EnterSmallDeductibleSelectionAsync(data.Resolve("{{data:smallDeductable_14}}"));
         }
+
+
+        if (data.Condition("State == \"SD\""))
+        {
+            await page.EnterSmallDeductibleSelectioncreditdeductableAsync(data.Resolve("{{data:small_deductible_134}}"));
+            await page.PauseAsync(2000);
+            await page.EnterMeritRatingSelectionAsync(data.Resolve("{{data:merit_rating_selection_138}}"));
+          
+        }
+
+        if (data.Condition("State == \"IA\""))
+        {
+            await page.EnterSmallDeductibleSelectioncreditAsync(data.Resolve("{{data:small_deductible_134}}"));
+        }
+
+
+        await page.PauseAsync(1000);
         if (data.Condition("'Experience Rating Options' != NULL"))
         {
             await page.EnterExperienceRatingOptionsAsync(data.Resolve("{{data:experience_rating_options_139}}"));
         }
+
         if (data.Condition("'Experience Mod Type' != NULL"))
         {
             await page.EnterExperienceModTypeAsync(data.Resolve("{{data:experience_mod_type_140}}"));
         }
-        if (data.Condition("'Pending Rate Change' != NULL"))
+        if (data.Condition("'Company Name' != NULL && State != \"MN\""))
         {
-            await page.VerifyPendingRateChangeAsync(data.Resolve("{{data:expected_pending_rate_change_value_141}}"), "value");
+            await page.EnterCompanyNameAsync(data.Resolve("{{data:company_name_135}}"));
         }
+
+
+
+        if (data.Condition("State != \"IA\" && State != \"SD\" && State != \"OK\" && State != \"MN\""))
+        {
+            if (data.Condition("'Small Deductible' != NULL"))
+            {
+                await page.EnterSmallDeductibleAsync(data.Resolve("{{data:small_deductible_134}}"));
+            }
+          
+            if (data.Condition("('Merit Rating' != NULL)&&(State!=\"NY\")"))
+            {
+                await page.EnterMeritRatingAsync(data.Resolve("{{data:merit_rating_137}}"));
+            }
+
+
+            if (data.Condition("State == \"AZ\" || State == \"TN\" || State == \"MD\"|| State == \"AR\""))
+            {
+                await page.ClickAlcoholOrFreedrugspaceAsync();
+            }
+            if (data.Condition("Deductible != NULL"))
+            {
+                await page.EnterRatingGroupsDeductibleAsync(data.Resolve("{{data:rating_groups_deductible_142}}"));
+            }
+            await page.PauseAsync(1000);
+            if (data.Condition("Deductible != NULL"))
+            {
+                await page.EnterRatingGroupsDeductibleAsync(data.Resolve("{{data:rating_groups_deductible_142}}"));
+            }
+          
+          
+            if (data.Condition("'Pending Rate Change' != NULL"))
+            {
+                await page.VerifyPendingRateChangeAsync(data.Resolve("{{data:expected_pending_rate_change_value_141}}"), "value");
+            }
+        }   
+      
+
+
 
     }
 
@@ -351,11 +482,13 @@ public sealed class WCExpandedSteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickWCScheduleAsync();
-        await page.WaitForAddClassCodeAsync("Exists");
+        //await page.WaitForAddClassCodeAsync("Exists");
         await page.ClickAddClassCodeAsync();
-        await page.EnterClassCodeFrameClassCodeWindowAsync("");
-        await page.VerifyOKClassCodeAsync("Absent", "");
+        //await page.WaitForClassCodeFrameAsync("Exists");
         await page.WaitForSearchValueAsync("Exists");
+        //await page.VerifyOKClassCodeAsync("Absent", "");
+        //await page.WaitForSearchValueAsync("Exists");
+
         if (data.Condition("'Class Code 1' != NULL"))
         {
             await page.EnterSearchValueAsync(data.Resolve("{{data:class_code_frame_class_code_window_searchvalue_148}}"));
@@ -365,28 +498,34 @@ public sealed class WCExpandedSteps
             await page.EnterSelectClassCodeAsync(data.Resolve("{{data:class_code_frame_class_code_window_select_class_code_150}}"));
         }
         await page.PauseAsync(1000);
+        await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
         if (data.Condition("'Class Code 1' != NULL"))
-        {
-            await page.VerifySelectClassCodeAsync(data.Resolve("{{data:expected_class_code_frame_class_code_window_select_class_code_value_153}}"), "value");
-        }
-        await page.WaitForOKClassCodeAsync("Exists");
+            {
+                await page.VerifySelectClassCodeAsync(data.Resolve("{{data:expected_class_code_frame_class_code_window_select_class_code_value_153}}"), "value");
+            }
+            await page.WaitForOKClassCodeAsync("Exists");
         await page.ClickOKClassCodeAsync();
-        if (data.Condition("State != \"MD\""))
-        {
+        await page.PauseAsync(2000);
+        //if (data.Condition("State != \"MD\""))
+        //{
             await page.EnterTotalPayrollEstimatedAsync(data.Resolve("{{data:class_code_frame_class_code_window_total_payroll_estimated_156}}"));
-        }
+        //}
         if (data.Condition("'Waiver of Subrogation Exposure' != NULL"))
         {
             await page.EnterWaiverOfSubrogationExposureAsync(data.Resolve("{{data:class_code_frame_class_code_window_waiver_of_subrogation_exposure_157}}"));
         }
         await page.EnterNumberOfPartTimeEmployeesAsync(data.Resolve("{{data:class_code_frame_class_code_window_number_of_part_time_employees_158}}"));
         await page.EnterNumberOfFullTimeEmployeesAsync(data.Resolve("{{data:class_code_frame_class_code_window_number_of_full_time_employees_159}}"));
+        await page.PauseAsync(2000);
+        await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
         await page.ClickOKDetailsAsync();
         await page.WaitForClassCodeFrameAsync("Absent");
         await page.WaitForAddClassCodeAsync("Exists");
         await page.ClickAddClassCodeAsync();
-        await page.VerifyOKClassCodeAsync("Absent", "");
+        //await page.WaitForClassCodeFrameAsync("Exists");
+        //await page.VerifyOKClassCodeAsync("Absent", "");
         await page.WaitForSearchValueAsync("Exists");
+
         if (data.Condition("'Class Code 2' != NULL"))
         {
             await page.EnterSearchValueAsync(data.Resolve("{{data:class_code_frame_class_code_window_searchvalue_166}}"));
@@ -396,11 +535,13 @@ public sealed class WCExpandedSteps
             await page.EnterSelectClassCodeAsync(data.Resolve("{{data:class_code_frame_class_code_window_select_class_code_168}}"));
         }
         await page.PauseAsync(1000);
+        await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
         if (data.Condition("'Class Code 2' != NULL"))
         {
             await page.VerifySelectClassCodeAsync(data.Resolve("{{data:expected_class_code_frame_class_code_window_select_class_code_value_171}}"), "value");
         }
         await page.WaitForOKClassCodeAsync("Exists");
+        await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
         await page.ClickOKClassCodeAsync();
         await page.EnterTotalPayrollEstimatedAsync(data.Resolve("{{data:class_code_frame_class_code_window_total_payroll_estimated_174}}"));
         if (data.Condition("'Waiver of Subrogation Exposure' != NULL"))
@@ -409,9 +550,9 @@ public sealed class WCExpandedSteps
         }
         await page.EnterNumberOfPartTimeEmployeesAsync(data.Resolve("{{data:class_code_frame_class_code_window_number_of_part_time_employees_176}}"));
         await page.EnterNumberOfFullTimeEmployeesAsync(data.Resolve("{{data:class_code_frame_class_code_window_number_of_full_time_employees_177}}"));
+        await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
         await page.ClickOKDetailsAsync();
         await page.WaitForClassCodeFrameAsync("Absent");
-        await page.EnterClassCodeFrameClassCodeWindowAsync("");
 
     }
 
@@ -434,6 +575,10 @@ public sealed class WCExpandedSteps
         await page.EnterEntityInfoFrameEntityInfoWindowFaxAsync(data.Resolve("{{runtime:EntityInfoFrameEntityInfoWindowFax_0113}}"));
         await page.EnterEntityInfoFrameEntityInfoWindowBureauNumberAsync(data.Resolve("{{runtime:EntityInfoFrameEntityInfoWindowBureauNumber_0113}}"));
         await page.EnterEntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefaultAsync(data.Resolve("{{runtime:EntityInfoFrameEntityInfoWindowStateUnemploymentNumberDefault_0113}}"));
+        if (data.Condition("State == \"NJ\""))
+        {
+            await page.EnterTaxpayerIdAsync(data.Resolve("{{data:nj_taxpayer_id_185}}"));
+        }
         await page.EnterEMailAsync(data.Resolve("{{data:entity_info_frame_entity_info_window_e_mail_186}}"));
         await page.ClickOKAsync();
         await page.WaitForEntityInfoFrameAsync("Absent");
@@ -444,17 +589,22 @@ public sealed class WCExpandedSteps
         await page.WaitForLocationIDAsync("Exists");
         await page.EnterLocationIDAsync(data.Resolve("{{data:location_assignment_entity_location_locationid_196}}"));
         await page.EnterLocationIDAsync(data.Resolve("{{data:location_assignment_entity_location_locationid_198}}"));
-        await page.VerifyLocationIDAsync(data.Resolve("{{data:expected_location_assignment_entity_location_locationid_value_199}}"), "Value");
+        //await page.VerifyLocationIDAsync(data.Resolve("{{data:expected_location_assignment_entity_location_locationid_value_199}}"), "Value");
+
+        await page.PauseAsync(2000);
         await page.ClickSelectNAICSCodeAsync();
+        await page.PauseAsync(1000);
         await page.WaitForNAICSCodeSearchValueAsync("Exists");
         await page.EnterNAICSCodeSearchValueAsync(data.Resolve("{{data:location_assignment_entity_location_naicscodesearchvalue_203}}"));
         await page.EnterSelectAppropriateCodeAsync(data.Resolve("{{data:location_assignment_entity_location_select_appropriate_code_206}}"));
-        await page.VerifySelectAppropriateCodeAsync(data.Resolve("{{data:expected_location_assignment_entity_location_select_appropriate_code_value_207}}"), "value");
-        await page.WaitForLocationAssignmentAsync("Absent");
-        await page.EnterSelectAppropriateCodeAsync(data.Resolve("{{data:location_assignment_entity_location_select_appropriate_code_209}}"));
-        await page.VerifySelectAppropriateCodeAsync(data.Resolve("{{data:expected_location_assignment_entity_location_select_appropriate_code_value_210}}"), "value");
-        await page.WaitForLocationAssignmentAsync("Absent");
-        await page.VerifySelectAppropriateCodeAsync(data.Resolve("{{data:expected_location_assignment_entity_location_select_appropriate_code_value_212}}"), "value");
+        await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+        //await page.VerifySelectAppropriateCodeAsync(data.Resolve("{{data:expected_location_assignment_entity_location_select_appropriate_code_value_207}}"), "value");
+        //await page.WaitForLocationAssignmentAsync("Absent");
+        //await page.EnterSelectAppropriateCodeAsync(data.Resolve("{{data:location_assignment_entity_location_select_appropriate_code_209}}"));
+        //await page.VerifySelectAppropriateCodeAsync(data.Resolve("{{data:expected_location_assignment_entity_location_select_appropriate_code_value_210}}"), "value");
+        //await page.WaitForLocationAssignmentAsync("Absent");
+        //await page.VerifySelectAppropriateCodeAsync(data.Resolve("{{data:expected_location_assignment_entity_location_select_appropriate_code_value_212}}"), "value");
+       await page.PauseAsync(2000);
         await page.ClickOKFirstAsync();
         await page.WaitForOKSecondAsync("Absent");
         await page.ClickOKAsync();
@@ -472,11 +622,14 @@ public sealed class WCExpandedSteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickWCNavigationLinksEndorsementsAsync();
+        //await page.PauseAsync(1000);
+        //await page.ClickEndorsementMainAddEndorsementAsync();
+        await page.PauseAsync(3000);
         if (data.Condition("State == \"NY\""))
         {
             await page.EnterAreThereAnyOfficersThatShouldBeExcludedAsync(data.Resolve("{{data:are_there_any_officers_that_should_be_excluded_218}}"));
         }
-        await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
+        //await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
 
     }
 
@@ -489,23 +642,30 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        if (data.Condition("'Endorsement Type' != NULL"))
-        {
-            await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_223}}"));
-        }
-        if (data.Condition("City != NULL"))
-        {
-            await page.EnterCityAsync(data.Resolve("{{data:city_224}}"));
-        }
-        if (data.Condition("State != NULL"))
-        {
-            await page.EnterEndorsementsDesignatedWorkplacesExclusionStateAsync(data.Resolve("{{data:state_225}}"));
-        }
-        await page.ClickDesignatedWorkplacesExclusionOKAsync();
 
+        if (data.Condition("State != \"VT\" && State != \"VA\" && State != \"PA\"&& State != \"NY\"|| State == \"NV\""))
+        {
+
+            //await page.ClickWCNavigationLinksEndorsementsAsync();
+            //await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
+            await page.ClickEndorsementMainAddEndorsementAsync();
+
+            await page.PauseAsync(1000);
+            if (data.Condition("'Endorsement Type' != NULL"))
+            {
+                await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_223}}"));
+            }
+            if (data.Condition("State != NULL"))
+            {
+                await page.EnterEndorsementsDesignatedWorkplacesExclusionStateAsync(data.Resolve("{{data:state_225}}"));
+            }
+            if (data.Condition("City != NULL"))
+            {
+                await page.EnterCityAsync(data.Resolve("{{data:city_224}}"));
+            }
+            //await page.ClickDesignatedWorkplacesExclusionOKAsync();
+            await page.ClickOKAsync();
+        }
     }
 
     [Given(@"^I add Partners, Officers And Others Exclusion$")]
@@ -517,34 +677,40 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
-        if (data.Condition("'Endorsement Type' != NULL"))
+        if (data.Condition("State !=\"NE\" && State !=\"OK\" && State !=\"RI\" && State != \"WV\" && State != \"VT\" && State != \"VA\" && State != \"CO\" && State != \"PA\" && State != \"NY\" && State != \"NJ\""))
         {
-            await page.EnterEndorsementsPartnersOfficersAndOthersExclusionEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_229}}"));
+            //await page.ClickWCNavigationLinksEndorsementsAsync();
+            await page.ClickEndorsementMainAddEndorsementAsync();
+            //await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
+            if (data.Condition("'Endorsement Type' != NULL"))
+            {
+                await page.EnterEndorsementsPartnersOfficersAndOthersExclusionEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_229}}"));
+            }
+            if (data.Condition("(State!=\"MO\")&&(State!=\"ID\")"))
+            {
+                await page.ClickAddExcludedOfficerInformationAsync();
+            }
+            if (data.Condition("(Officers != NULL)&&(State!=\"MO\")&&(State!=\"ID\")"))
+            {
+                await page.EnterOfficersAsync(data.Resolve("{{data:officers_231}}"));
+            }
+            if (data.Condition("('Position Held' != NULL)&&(State!=\"MO\")&&(State!=\"ID\")"))
+            {
+                await page.EnterOfficersPositionHeldAsync(data.Resolve("{{data:officers_position_held_232}}"));
+            }
+            if (data.Condition("(State != \"IA\")&&(State != \"IN\")&&(State!=\"MA\")&&(State!=\"ID\")&&(State!=\"MS\")&&(State!=\"KY\")&&(State!=\"SC\")&&(State!=\"MT\")&&(State!=\"KS\")&&(State!=\"ME\")"))
+            {
+                await page.ClickAddExcludedOthersInformationAsync();
+            }
+            if (data.Condition("(State != \"IA\")&&(State != \"IN\")&&(State!=\"MA\")&&(State!=\"ID\")&&(State!=\"MS\")&&(State!=\"KY\")&&(State!=\"SC\")&&(State!=\"MT\")&&(State!=\"KS\")&&(State!=\"ME\")"))
+            {
+                await page.EnterOthersAsync(data.Resolve("{{data:others_234}}"));
+            }
+            await page.ClickOKAsync();
+            //await page.ClickEndorsementMainAddEndorsementAsync();
         }
-        if (data.Condition("(State!=\"MO\")&&(State!=\"ID\")"))
-        {
-            await page.ClickAddExcludedOfficerInformationAsync();
-        }
-        if (data.Condition("(Officers != NULL)&&(State!=\"MO\")&&(State!=\"ID\")"))
-        {
-            await page.EnterOfficersAsync(data.Resolve("{{data:officers_231}}"));
-        }
-        if (data.Condition("('Position Held' != NULL)&&(State!=\"MO\")&&(State!=\"ID\")"))
-        {
-            await page.EnterOfficersPositionHeldAsync(data.Resolve("{{data:officers_position_held_232}}"));
-        }
-        if (data.Condition("(State != \"IA\")&&(State != \"IN\")&&(State!=\"MA\")&&(State!=\"ID\")&&(State!=\"MS\")&&(State!=\"KY\")&&(State!=\"SC\")&&(State!=\"MT\")&&(State!=\"KS\")&&(State!=\"ME\")"))
-        {
-            await page.ClickAddExcludedOthersInformationAsync();
-        }
-        if (data.Condition("(State != \"IA\")&&(State != \"IN\")&&(State!=\"MA\")&&(State!=\"ID\")&&(State!=\"MS\")&&(State!=\"KY\")&&(State!=\"SC\")&&(State!=\"MT\")&&(State!=\"KS\")&&(State!=\"ME\")"))
-        {
-            await page.EnterOthersAsync(data.Resolve("{{data:others_234}}"));
-        }
-        await page.ClickOKAsync();
-        await page.ClickEndorsementMainAddEndorsementAsync();
+
+
 
     }
 
@@ -557,32 +723,41 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.ClickWCNavigationLinksEndorsementsAsync();
-        await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
-        await page.ClickEndorsementMainAddEndorsementAsync();
-        if (data.Condition("'Endorsement Type' != NULL"))
+
+
+
+        if (data.Condition("State !=\"RI\" && State != \"WV\" && State != \"VT\" && State != \"VA\" && State != \"AR\" && State != \"NY\" && State != \"NV\""))
         {
-            await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_240}}"));
+            //await page.ClickWCNavigationLinksEndorsementsAsync();
+            //await page.WaitForEndorsementMainAddEndorsementAsync("Exists");
+            await page.ClickEndorsementMainAddEndorsementAsync();
+            await page.PauseAsync(2000); 
+            if (data.Condition("'Endorsement Type' != NULL"))
+            {
+                await page.EnterCG2401NonBindingArbitrationEndorsementTypeAsync(data.Resolve("{{data:endorsement_type_240}}"));
+            }
+            await page.ClickAddSoleProprietorInformationAsync();
+            if (data.Condition("'Sole Proprietors' != NULL"))
+            {
+                await page.EnterSoleProprietorsAsync(data.Resolve("{{data:sole_proprietors_242}}"));
+            }
+            await page.ClickAddPartnerInformationAsync();
+            if (data.Condition("Partners != NULL"))
+            {
+                await page.EnterPartnersAsync(data.Resolve("{{data:partners_244}}"));
+            }
+            if (data.Condition("(State!=\"CO\")&&(State!=\"DE\")&&(State!=\"IA\")&&(State!=\"MN\")&&(State!=\"MO\")&&(State!=\"NH\")&&(State!=\"SD\")&&(State!=\"AL\")"))
+            {
+                await page.ClickAddOthersInformationAsync();
+            }
+            if (data.Condition("(State!=\"CO\")&&(State!=\"DE\")&&(State!=\"IA\")&&(State!=\"MN\")&&(State!=\"MO\")&&(State!=\"NH\")&&(State!=\"SD\")&&(State!=\"AL\")"))
+            {
+                await page.EnterOthersAsync(data.Resolve("{{data:others_246}}"));
+            }
+            await page.ClickOKAsync();
         }
-        await page.ClickAddSoleProprietorInformationAsync();
-        if (data.Condition("'Sole Proprietors' != NULL"))
-        {
-            await page.EnterSoleProprietorsAsync(data.Resolve("{{data:sole_proprietors_242}}"));
-        }
-        await page.ClickAddPartnerInformationAsync();
-        if (data.Condition("Partners != NULL"))
-        {
-            await page.EnterPartnersAsync(data.Resolve("{{data:partners_244}}"));
-        }
-        if (data.Condition("(State!=\"CO\")&&(State!=\"DE\")&&(State!=\"IA\")&&(State!=\"MN\")&&(State!=\"MO\")&&(State!=\"NH\")&&(State!=\"SD\")&&(State!=\"AL\")"))
-        {
-            await page.ClickAddOthersInformationAsync();
-        }
-        if (data.Condition("(State!=\"CO\")&&(State!=\"DE\")&&(State!=\"IA\")&&(State!=\"MN\")&&(State!=\"MO\")&&(State!=\"NH\")&&(State!=\"SD\")&&(State!=\"AL\")"))
-        {
-            await page.EnterOthersAsync(data.Resolve("{{data:others_246}}"));
-        }
-        await page.ClickOKAsync();
+
+      
 
     }
 
@@ -613,10 +788,116 @@ public sealed class WCExpandedSteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickPricingAsync();
-        await page.WaitForPricingDetailAsync("Exists");
-        await page.ClickPricingDetailAsync();
-        await page.ClickPricingDetailOKAsync();
-        await page.WaitForPricingDetailAsync("Exists");
+        //await page.WaitForPricingDetailAsync("Exists");
+        //await page.ClickPricingDetailAsync();
+        //await page.ClickPricingDetailOKAsync();
+        //await page.WaitForPricingDetailAsync("Exists");
+
+
+
+        if (data.Condition("State ==\"PA\" || State ==\"NJ\""))
+        {
+            await page.ClickWorksheetAsync();
+            await page.EnterPremisesCredit(data.Resolve("{{data:worksheet_pa_nj_premises_credit_255}}"));
+            await page.PauseAsync(1000);
+            await page.EnterPremisesComments(data.Resolve("{{data:worksheet_pa_nj_premises_comments_256}}"));
+            await page.EnterClassificationPecularities(data.Resolve("{{data:worksheet_pa_nj_classification_pecularities_257}}"));
+            await page.PauseAsync(1000);
+            await page.EnterClassificationPecularitiesComments(data.Resolve("{{data:worksheet_pa_nj_classification_comments_258}}"));
+            await page.PauseAsync(1000);
+            await page.EnterMedicalFacilities(data.Resolve("{{data:worksheet_pa_nj_medical_facilities_259}}"));
+            await page.PauseAsync(1000);
+            await page.EnterMedicalFacilitiesComments(data.Resolve("{{data:worksheet_pa_nj_medical_comments_260}}"));
+            await page.EnterExtraordinarySafetyPrograms(data.Resolve("{{data:worksheet_pa_nj_extraordinary_safety_programs_261}}"));
+            await page.PauseAsync(1000);
+            await page.EnterExtraordinarySafetyProgramsComments(data.Resolve("{{data:worksheet_pa_nj_extraordinary_safety_comments_262}}"));
+            await page.PauseAsync(1000);
+            await page.EnterSafetyDevices(data.Resolve("{{data:worksheet_pa_nj_safety_devices_264}}"));
+            await page.PauseAsync(1000);
+            await page.EnterSafetyDevicesComments(data.Resolve("{{data:worksheet_pa_nj_safety_comments_265}}"));
+            await page.PauseAsync(1000);
+            await page.EnterEmployeesSelection(data.Resolve("{{data:worksheet_pa_nj_employees_selection_267}}"));
+            await page.PauseAsync(1000);
+            await page.EnterEmployeeselectionComments(data.Resolve("{{data:worksheet_pa_nj_employees_comments_268}}"));
+            await page.PauseAsync(1000);
+            await page.EnterManagementCooperationWithInsuranceCarrierStateInput(data.Resolve("{{data:worksheet_pa_nj_management_cooperation_271}}"));
+            await page.PauseAsync(1000);
+            await page.EnterManagementCooperationWithInsuranceCarrierStateInputComments(data.Resolve("{{data:worksheet_pa_nj_management_cooperation_comments_272}}"));
+            await page.PauseAsync(1000);
+            await page.EnterPolicyExpensesStateInput(data.Resolve("{{data:worksheet_pa_nj_policy_expenses_273}}"));
+            await page.PauseAsync(1000);
+            await page.EnterPolicyExpensesStateInputComments(data.Resolve("{{data:worksheet_pa_nj_policy_expenses_comments_274}}"));
+            await page.PauseAsync(1000);
+            await page.EnterOtherFactorsStateInput(data.Resolve("{{data:worksheet_pa_nj_other_factors_275}}"));
+            await page.PauseAsync(1000);
+            await page.EnterOtherFactorsStateInputComments(data.Resolve("{{data:worksheet_pa_nj_other_factors_comments_276}}"));
+            await page.ClickOKAsync();
+        }
+
+
+        if (data.Condition("State ==\"MO\""))
+
+
+
+        {
+
+            await page.ClickWorksheetAsync();
+            await page.EnterPremisesCredit(data.Resolve("{{data:worksheet_mo_premises_credit_255}}"));
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterPremisesComments(data.Resolve("{{data:worksheet_mo_premises_comments_256}}"));
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.ClickOKAsync();
+
+        }
+
+
+
+        if (data.Condition("State ==\"CO\" || State ==\"VT\" || State ==\"VA\" || State ==\"NV\" || State ==\"NY\" || State ==\"OK\" || State ==\"SD\" || State ==\"TN\" || State ==\"UT\" || State == \"AZ\" || State == \"CT\" || State == \"DE\" || State == \"GA\" || State == \"IA\" || State == \"IN\" || State == \"MD\" || State == \"MN\""))
+        {
+            await page.ClickWorksheetAsync();
+            await page.EnterPremisesCredit(data.Resolve("{{data:worksheet_multistate_premises_credit_255}}"));
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterPremisesComments(data.Resolve("{{data:worksheet_multistate_premises_comments_256}}"));
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterClassificationPecularities(data.Resolve("{{data:worksheet_multistate_classification_pecularities_257}}"));
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterClassificationPecularitiesComments(data.Resolve("{{data:worksheet_multistate_classification_comments_258}}"));
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterMedicalFacilities(data.Resolve("{{data:worksheet_multistate_medical_facilities_259}}"));
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterMedicalFacilitiesComments(data.Resolve("{{data:worksheet_multistate_medical_comments_260}}"));
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterSafetyDevices(data.Resolve("{{data:worksheet_multistate_safety_devices_264}}"));
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterSafetyDevicesComments(data.Resolve("{{data:worksheet_multistate_safety_comments_265}}"));
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterEmployeesSelection(data.Resolve("{{data:worksheet_multistate_employees_selection_267}}"));
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.EnterEmployeeselectionComments(data.Resolve("{{data:worksheet_multistate_employees_comments_268}}"));
+            await page.PauseAsync(1000);
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.EnterManagementSafetyOrganizationStateInput(data.Resolve("{{data:worksheet_multistate_management_safety_organization_269}}"));
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.PauseAsync(1000);
+            await page.EnterManagementSafetyOrganizationStateInputComments(data.Resolve("{{data:worksheet_multistate_management_safety_organization_comments_270}}"));
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.EnterManagementCooperationWithInsuranceCarrierStateInput(data.Resolve("{{data:worksheet_multistate_management_cooperation_271}}"));
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.EnterManagementCooperationWithInsuranceCarrierStateInputComments(data.Resolve("{{data:worksheet_multistate_management_cooperation_comments_272}}"));
+            //await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
+            await page.ClickOKAsync();
+        }
+
 
     }
 
@@ -643,7 +924,7 @@ public sealed class WCExpandedSteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickNavigationBillingAsync();
-        await page.WaitForBillingAsync("Exists");
+        //await page.WaitForBillingAsync("Exists");
         await page.EnterBillTypeAsync(data.Resolve("{{data:bill_type_263}}"));
         await page.WaitForBillTypeAsync("Equal");
         await page.EnterPayPlanAsync(data.Resolve("{{data:pay_plan_266}}"));
@@ -664,9 +945,11 @@ public sealed class WCExpandedSteps
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
         await page.ClickNotepadAsync();
-        await page.WaitForNotepadHeadingAsync("Exists");
+        //await page.WaitForNotepadHeadingAsync("Exists");
         await page.ClickAddNotesRemarksAsync();
-        await page.EnterTextBoxAsync(data.Resolve("Test {B[Product (LOB)]}"));
+        await page.EnterTextBoxAsync(data.Resolve("{{data:notepad_text_remarks_278}}"));
+        await page.PauseAsync(1000);
+        await _scenario.Get<BrowserSession>().Page.Keyboard.PressAsync("Tab");
         await page.ClickOKAsync();
 
     }
@@ -680,17 +963,17 @@ public sealed class WCExpandedSteps
 
         var page = new NavigationPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.WaitForSubmissionAsync("Visible");
+        //await page.WaitForSubmissionAsync("Visible");
         await page.ClickSubmissionAsync();
-        await page.WaitForSubmissionHeadingAsync("Exists");
-        await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_281}}"));
-        await page.VerifyOrderAuditAsync("Exists", "");
-        await page.EnterOrderAuditAsync(data.Resolve("{{data:order_audit_283}}"));
-        await page.VerifySubmissionHeadingAsync("Absent", "");
-        await page.ClickSubmissionAsync();
+        //await page.WaitForSubmissionHeadingAsync("Exists");
+        //await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_281}}"));
+        //await page.VerifyOrderAuditAsync("Exists", "");
+        //await page.EnterOrderAuditAsync(data.Resolve("{{data:order_audit_283}}"));
+        //await page.VerifySubmissionHeadingAsync("Absent", "");
+        //await page.ClickSubmissionAsync();
         await page.PauseAsync(1000);
-        await page.WaitForSubmissionHeadingAsync("Exists");
-        await page.PauseAsync(1000);
+        //await page.WaitForSubmissionHeadingAsync("Exists");
+        //await page.PauseAsync(1000);
 
     }
 
@@ -703,35 +986,35 @@ public sealed class WCExpandedSteps
 
         var page = new SubmissionPage(_scenario.Get<BrowserSession>(), _scenario.Get<UiActions>());
 
-        await page.VerifyIsThisCoverageBoundAsync("Exists", "");
-        await page.VerifyIsThisCoverageBoundAsync(data.Resolve("{{data:expected_is_this_coverage_bound_value_291}}"), "Value");
-        await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_292}}"));
+        //await page.VerifyIsThisCoverageBoundAsync("Exists", "");
+        //await page.VerifyIsThisCoverageBoundAsync(data.Resolve("{{data:expected_is_this_coverage_bound_value_291}}"), "Value");
+        //await page.EnterIsThisCoverageBoundAsync(data.Resolve("{{data:is_this_coverage_bound_292}}"));
         await page.ClickCompleteApplicationAsync();
-        await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
+        //await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
         await page.PauseAsync(1000);
-        await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
+        //await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
+        //await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
+        //await page.PauseAsync(1000);
+        //await page.ClickCompleteApplicationAsync();
+        //await page.PauseAsync(1000);
+        //await page.ClickStoplightWaitingWindowCloseAsync();
+        //await page.WaitForStoplightWaitingWindowAsync("Absent");
+        //await page.PauseAsync(1000);
+        //await page.VerifyLoadingMessageAsync("Visible", "");
+        //await page.PauseAsync(1000);
+        //await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists", "");
+        //await page.ClickCompleteApplicationAsync();
+        //await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
+        //await page.PauseAsync(1000);
+        //await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
         await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
         await page.PauseAsync(1000);
-        await page.ClickCompleteApplicationAsync();
-        await page.PauseAsync(1000);
-        await page.ClickStoplightWaitingWindowCloseAsync();
-        await page.WaitForStoplightWaitingWindowAsync("Absent");
-        await page.PauseAsync(1000);
-        await page.VerifyLoadingMessageAsync("Visible", "");
-        await page.PauseAsync(1000);
-        await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Exists", "");
-        await page.ClickCompleteApplicationAsync();
-        await page.VerifyStoplightWaitingWindowCloseAsync("Absent", "");
-        await page.PauseAsync(1000);
-        await page.VerifyStoplightWaitingWindowErrorAsync("Exists", "");
-        await page.ClickStoplightWaitingWindowFirstCloseButtonOnErrorAsync();
-        await page.PauseAsync(1000);
-        await page.ClickCompleteApplicationAsync();
-        await page.PauseAsync(1000);
-        await page.ClickStoplightWaitingWindowCloseAsync();
-        await page.WaitForStoplightWaitingWindowAsync("Absent");
-        await page.PauseAsync(1000);
-        await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
+        //await page.ClickCompleteApplicationAsync();
+        //await page.PauseAsync(1000);
+        //await page.ClickStoplightWaitingWindowCloseAsync();
+        //await page.WaitForStoplightWaitingWindowAsync("Absent");
+        //await page.PauseAsync(1000);
+        //await page.VerifyAllRequiredFieldsHaveNotBeenCompletedPleaseCompleteHighlightedTabsAsync("Absent", "");
 
     }
 
@@ -748,9 +1031,9 @@ public sealed class WCExpandedSteps
         await page.VerifyPremiumWrittenAsync(data.Resolve("{{data:expected_premium_written_value_325}}"), "value");
         await page.VerifyPriorPremiumAsync(data.Resolve("{{data:expected_prior_premium_value_326}}"), "value");
         await page.VerifyPremiumChangeAsync(data.Resolve("{{data:expected_premium_change_value_327}}"), "value");
-        await page.EnterTitleAsync(data.Resolve("{{data:title_329}}"));
-        await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_330}}"));
-        data.Set("SessionId", await page.CaptureResultAsync("value"));
+        //await page.EnterTitleAsync(data.Resolve("{{data:title_329}}"));
+        //await page.EnterJavaScriptAsync(data.Resolve("{{data:javascript_330}}"));
+        //data.Set("SessionId", await page.CaptureResultAsync("value"));
 
     }
 

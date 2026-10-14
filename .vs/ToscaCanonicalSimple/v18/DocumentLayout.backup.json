@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\CT7859\\Desktop\\LatestBranch\\PnC_DC_TestAutomation\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7859\\desktop\\latestbranch\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\stepdefinitions\\wcbasicpolicysteps.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\stepdefinitions\\wcbasicpolicysteps.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|c:\\users\\ct7859\\desktop\\latestbranch\\pnc_dc_testautomation\\tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\010_wc_basic_policy_in.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{644CBB59-625F-2013-29ED-E9559C867A1B}|tests\\CommercialLines.DuckCreek.Tests\\CommercialLines.DuckCreek.Tests.csproj|solutionrelative:tests\\commerciallines.duckcreek.tests\\testdata\\scenarios\\010_wc_basic_policy_in.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "WCBasicPolicySteps.cs",
+              "DocumentMoniker": "C:\\Users\\CT7859\\Desktop\\LatestBranch\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\StepDefinitions\\WCBasicPolicySteps.cs",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\StepDefinitions\\WCBasicPolicySteps.cs",
+              "ToolTip": "C:\\Users\\CT7859\\Desktop\\LatestBranch\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\StepDefinitions\\WCBasicPolicySteps.cs",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\StepDefinitions\\WCBasicPolicySteps.cs",
+              "ViewState": "AgIAACwCAABAy8zMzEwgwEcCAAB2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-14T02:54:22.916Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "010_wc_basic_policy_in.json",
+              "DocumentMoniker": "C:\\Users\\CT7859\\Desktop\\LatestBranch\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\010_wc_basic_policy_in.json",
+              "RelativeDocumentMoniker": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\010_wc_basic_policy_in.json",
+              "ToolTip": "C:\\Users\\CT7859\\Desktop\\LatestBranch\\PnC_DC_TestAutomation\\tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\010_wc_basic_policy_in.json",
+              "RelativeToolTip": "tests\\CommercialLines.DuckCreek.Tests\\TestData\\Scenarios\\010_wc_basic_policy_in.json",
+              "ViewState": "AgIAAIsAAAAAXmZmZiYgwKcAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-10-14T02:41:30.879Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
