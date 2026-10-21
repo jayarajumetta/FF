@@ -105,20 +105,49 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             foreach (var field in new[] { "DwellingSelected", "BuildingSelected", "LandSelected" })
                 SfpRequiredTable.RequireValue(field, values[field], "Select");
             await form.CheckAsync("CovLessorsRiskInput.Dwelling");
+            await SelectListedLocationAsync(
+                form, "CovLessorsRiskInput.LessorsDwellingLocation", values["DwellingLocation"]);
             await form.ClickActionAsync("AddListedLocationDwelling");
-            await form.SetAsync("LessorsDwellingInput.Location", values["DwellingLocation"]);
-            await form.SetAsync("LessorsDwellingInput.ResidenceID", values["Residence"]);
+            await VerifyListedItemAsync(form, "LessorsDwellingInput.Location", values["DwellingLocation"]);
+            await SelectListedItemAsync(form, "LessorsDwellingInput.ResidenceID", values["Residence"]);
             await form.SetAsync("LessorsDwellingInput.OnFarmPremises", values["OnFarm"]);
             await form.CheckAsync("CovLessorsRiskInput.Building");
+            await SelectListedLocationAsync(
+                form, "CovLessorsRiskInput.LessorsBuildingLocation", values["BuildingLocation"]);
             await form.ClickActionAsync("AddListedLocationBuilding");
-            await form.SetAsync("LessorsBuildingInput.Location", values["BuildingLocation"]);
-            await form.SetAsync("LessorsBuildingInput.Building", values["Building"]);
+            await VerifyListedItemAsync(form, "LessorsBuildingInput.Location", values["BuildingLocation"]);
+            await SelectListedItemAsync(form, "LessorsBuildingInput.Building", values["Building"]);
             await form.SetAsync("LessorsBuildingInput.SquareFeet", values["SquareFeet"], number: true);
             await form.CheckAsync("CovLessorsRiskInput.Land");
+            await SelectListedLocationAsync(
+                form, "CovLessorsRiskInput.LessorsLandLocation", values["LandLocation"]);
             await form.ClickActionAsync("AddListedLand");
-            await form.SetAsync("LessorsLandInput.Location", values["LandLocation"]);
+            await VerifyListedItemAsync(form, "LessorsLandInput.Location", values["LandLocation"]);
             await form.SetAsync("LessorsLandInput.Acres", values["Acres"], number: true);
         }
+
+        private static Task SelectListedLocationAsync(
+            SFP_NativeFormPage form, string logicalName, string location) =>
+            SelectListedItemAsync(form, logicalName, location);
+
+        private static Task SelectListedItemAsync(
+            SFP_NativeFormPage form, string logicalName, string value) =>
+            form.SelectAsync(form.Field(logicalName), ListedItemCaption(value));
+
+        private static async Task VerifyListedItemAsync(
+            SFP_NativeFormPage form, string logicalName, string value)
+        {
+            var control = form.Field(logicalName);
+            await Expect(control).ToHaveCountAsync(1);
+            await Expect(control).ToBeVisibleAsync();
+            var displayed = control.Locator(".mat-select-value-text, .mat-mdc-select-value-text");
+            await Expect(await displayed.CountAsync() == 0 ? control : displayed)
+                .ToHaveTextAsync(ListedItemCaption(value));
+        }
+
+        private static Regex ListedItemCaption(string value) =>
+            new(@"^\s*" + Regex.Escape(value.Trim()).Replace(@"\ ", @"\s+")
+                + @"(?:\s+-\s+.*)?\s*$", RegexOptions.IgnoreCase);
 
         private async Task EditRetailAsync(IReadOnlyDictionary<string, string> values)
         {

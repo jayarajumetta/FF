@@ -1,5 +1,6 @@
 using Microsoft.Playwright;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -55,14 +56,15 @@ namespace PnCTestAutomation.Helpers
         {
             var playwright = await SharedPlaywright.Value;
 
-            // Default to appsettings value unless overridden by PLAYWRIGHT_HEADLESS env var
-            bool headless = ParseTruthy(_configuration["Playwright:Headless"]);
+            // Normal runs use the configured mode; debugging always opens a visible browser.
+            var configuredHeadless = ParseTruthy(_configuration["Playwright:Headless"]);
             var env = Environment.GetEnvironmentVariable("PLAYWRIGHT_HEADLESS");
             if (!string.IsNullOrEmpty(env))
             {
                 // Accept "1", "true", "yes" as headless, everything else as headed
-                headless = ParseTruthy(env);
+                configuredHeadless = ParseTruthy(env);
             }
+            var headless = Debugger.IsAttached ? false : configuredHeadless;
 
             var isCi = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI"));
             var launchArgs = isCi ? CiArgs : FullscreenArgs;

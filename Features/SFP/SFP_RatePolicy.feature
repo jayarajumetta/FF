@@ -27,15 +27,15 @@ Feature: SFP Rate Policy
       | ReceivedMail       | Yes            |
       | WhereClientResides | Yes            |
     And user selects Special Farm Package and inputs Quote Details
-      | Question       | Answer                                     |
-      | EffectiveDate  | {{laterOfTomorrow:03/21/2027}}             |
-      | PolicyTerm     | 12 months                                  |
-      | AgentCode      | D2102                                      |
-      | RatingState    | <State>                                    |
-      | OwnershipType  | Individually Owned                         |
+      | Question       | Answer                                      |
+      | EffectiveDate  | {{laterOfTomorrow:03/21/2027}}              |
+      | PolicyTerm     | 12 months                                   |
+      | AgentCode      | D2102                                       |
+      | RatingState    | <State>                                     |
+      | OwnershipType  | Individually Owned                          |
       | WritingCompany | American National Property And Casualty Co. |
-      | RiskAddress    | <Address>, <City>, <StateAbbv> <Zip>         |
-      | LessorRisk     | No                                         |
+      | RiskAddress    | <Address>, <City>, <StateAbbv> <Zip>        |
+      | LessorRisk     | No                                          |
     When user handles SSN popup and enters SSN
       | Question | Answer        |
       | SSN      | {{randomSSN}} |
@@ -181,11 +181,11 @@ Feature: SFP Rate Policy
       | Model        | 420HD      |
       | SerialNumber | 123465AB   |
     When user adds Equipment Breakdown information
-      | Question             | Answer |
+      | Question              | Answer |
       | PowerGreaterThan250kw | No     |
       | TwoOrMoreLosses       | No     |
       | GreaterThan25000      | No     |
-      | FarmImplements       | No     |
+      | FarmImplements        | No     |
 
     When user adds Scheduled Personal Property item and stays
       | Question      | Answer  |
@@ -267,10 +267,10 @@ Feature: SFP Rate Policy
       | MaximumMiles        | 20                     |
       | Trips               | 50                     |
     When user edits liability optional coverage and continues
-      | Question            | Answer                                            |
+      | Question            | Answer                                             |
       | CoverageName        | Chemical Drift and Transportation Increased Limits |
-      | OccurrenceAggregate | 50000/100000                                      |
-      | Acres               | 200                                               |
+      | OccurrenceAggregate | 50000/100000                                       |
+      | Acres               |                                                200 |
 
     When user adds Additional Interest Mortgagee
       | Question              | Answer           |
@@ -308,11 +308,11 @@ Feature: SFP Rate Policy
       | ExceptionNote | Photo not available |
       | Note          | Photo not available |
     When user completes Checklist item
-      | Question      | Answer                                            |
+      | Question      | Answer                                             |
       | ItemName      | Loss Runs (Tiered - 5 Years; Not tiered - 3 years) |
-      | Action        | Exception                                         |
-      | ExceptionNote | Loss runs on file                                 |
-      | Note          | Loss runs on file                                 |
+      | Action        | Exception                                          |
+      | ExceptionNote | Loss runs on file                                  |
+      | Note          | Loss runs on file                                  |
     When user completes Checklist item
       | Question      | Answer      |
       | ItemName      | Easy Pay    |

@@ -1,6 +1,6 @@
 # PnC Test Automation Framework
 
-End-to-end UI and API test automation for American National P&C (Property & Casualty) insurance applications. Built on Playwright + Reqnroll (BDD/Gherkin) + NUnit, targeting the ExpertQuote, ExpertService, and Express platforms.
+End-to-end UI test automation and API/service test scaffolding for American National P&C (Property & Casualty) insurance applications. Built on Playwright + Reqnroll (BDD/Gherkin) + NUnit, targeting the ExpertQuote, ExpertService, and Express platforms.
 
 > **New to the framework?** Start with [Docs/Onboarding-Guide.md](Docs/Onboarding-Guide.md).
 > **Contractor?** Read [Docs/Contractor-Guide.md](Docs/Contractor-Guide.md) before writing any code.
@@ -17,6 +17,7 @@ End-to-end UI and API test automation for American National P&C (Property & Casu
 - [Quick Start](#quick-start)
 - [Running Tests](#running-tests)
 - [Tag Reference](#tag-reference)
+- [API Automation Status](#api-automation-status)
 - [Configuration](#configuration)
 - [Data Tokens](#data-tokens)
 - [Writing New Tests](#writing-new-tests)
@@ -68,7 +69,7 @@ PnC-TestAutomation/
 ├── Helpers/                     # Utility classes (random data, table mapping, wait helpers)
 ├── Hooks/                       # Reqnroll lifecycle hooks (browser setup, tracing, teardown)
 ├── Configuration/               # Strongly-typed config classes (CredentialsConfig, OAuthConfig)
-├── Context/                     # TestContext — holds IPage and HttpClient per scenario
+├── Context/                     # PlaywrightContext — holds IPage and HttpClient per scenario
 ├── Services/                    # NavigationService, ApiService, FormsValidationService
 ├── Clients/                     # HTTP clients (DuckCreekFormsClient)
 ├── Integrations/                # External integrations (PingSecretProvider)
@@ -80,9 +81,14 @@ PnC-TestAutomation/
 ├── Pipelines/                   # Azure DevOps pipeline YAML definitions
 ├── Resources/                   # Static test data (expected forms JSON)
 ├── Scripts/                     # PowerShell helper scripts
-├── appsettings.json             # Default (QA) configuration
+├── appsettings.json             # Default (QA) configuration; must not contain secrets
 └── appsettings.Dev.json         # Dev environment overrides
 ```
+
+> **Pipeline note:** The supported .NET Azure DevOps definitions are under `Pipelines/`.
+> The root `CLAS.DevST.Playwright.yml` is a legacy Node-based definition that runs
+> `npm`/`npx`; it is not compatible with the current .NET project and should not be
+> used as the framework's execution entry point.
 
 ---
 
@@ -106,6 +112,7 @@ PnC-TestAutomation/
 # 1. Clone
 git clone https://dev.azure.com/ANCollection/PnC%20Test%20Automation/_git/PnC-TestAutomation
 cd PnC-TestAutomation
+git switch Development
 
 # 2. Restore packages
 dotnet restore TestAutomation.csproj
@@ -115,15 +122,17 @@ dotnet build TestAutomation.csproj
 pwsh bin/Debug/net8.0/playwright.ps1 install
 
 # 4. Set credentials — ask QA lead for values, NEVER commit them
-$env:EQ_USERNAME  = "your-eq-username"
-$env:EQ_PASSWORD  = "your-eq-password"
+$env:Credentials__Username = "your-eq-username"
+$env:Credentials__Password = "your-eq-password"
 
 # 5. Run Smoke tests
 dotnet test TestAutomation.csproj --filter "Category=Smoke"
 ```
 
-> ⚠️ `appsettings.json` contains only `"PLACEHOLDER"` values for all credentials.
-> Tests will fail immediately with a login error until you set the env vars above.
+> **Security:** Do not assume the committed `appsettings*.json` files are safe to
+> share or display. They must contain placeholders only. If you find a non-placeholder
+> username, password, client secret, or other credential, stop using it, notify the
+> QA lead, remove it from source control, and rotate it through the owning system.
 
 ---
 
@@ -135,6 +144,9 @@ dotnet test TestAutomation.csproj --filter "Category=Smoke"
 2. Build (`Ctrl+Shift+B`)
 3. Open Test Explorer (`Ctrl+E, T` in VS, `Alt+8` in Rider)
 4. Filter by tag or run all
+
+> `Playwright_POC.sln` is the current file name. It is retained for compatibility
+> and should be renamed when the solution is aligned with the SGS naming convention.
 
 ### Command Line
 
@@ -204,7 +216,7 @@ See [Docs/Tagging-Convention.md](Docs/Tagging-Convention.md) for the full specif
 | `@Smoke` | Critical path, single happy path | Before every deployment |
 | `@Regression` | Full workflow + edge cases | Nightly, before releases |
 | `@Forms` | Forms-only validation (no UI nav) | Forms check runs |
-| `@API` | API-only scenarios | API integration checks |
+| `@API` | API-only scenarios (reserved; no tracked API feature currently uses it) | Future API integration checks |
 | `@Ignore` | Temporarily disabled | Never — skipped automatically |
 | `@Manual` | Not yet automated | Never — documentation only |
 | `@SFP` | Special Farm Package LOB | With SFP-specific runs |
@@ -216,39 +228,69 @@ See [Docs/Tagging-Convention.md](Docs/Tagging-Convention.md) for the full specif
 
 ---
 
+## API Automation Status
+
+The API layer is currently scaffolding rather than a complete test suite:
+
+- `Hooks/TestHooks.cs` detects the `@API` tag, creates an `HttpClient`, retrieves a
+  client secret through `PingSecretProvider`, and sets the bearer authorization header.
+- `StepDefinitions/ApiSteps.cs`, `Services/ApiService.cs`, `Helpers/ApiHelpers.cs`,
+  `Helpers/AuthHelper.cs`, and the API models provide an initial implementation.
+- No tracked feature file on `Development` currently uses `@API` or calls the steps
+  in `ApiSteps.cs`.
+- The existing API steps look for both `AccessToken` and `AuthToken` in
+  `ScenarioContext`, but the hook authorizes the `HttpClient` directly and does not
+  populate either key.
+
+Before expanding API coverage:
+
+1. Standardize on the authorized injected `HttpClient` or an SGS-approved typed-client pattern.
+2. Remove the duplicate `AccessToken`/`AuthToken` context contract.
+3. Never log bearer tokens, client secrets, or Authorization headers.
+4. Assert the HTTP status and content type before parsing a response body.
+5. Add one small `@API` vertical-slice scenario with typed request/response models.
+6. Add fast NUnit coverage for request construction and response mapping where practical.
+
+---
+
 ## Configuration
 
-> ⚠️ **`appsettings.json` contains placeholder values only.** Real credentials must be supplied via
-> environment variables. **Never replace a placeholder with a real password and commit it.**
+Committed configuration files must contain placeholders only. Supply credentials through
+environment variables, Azure DevOps secret variables, or the approved secret provider.
+Never replace a placeholder with a real credential and commit it.
 
 ### Environment Variables
 
-Set these before running tests. They override the corresponding `appsettings.json` values.
+Nested .NET configuration keys use a double underscore (`__`) in environment-variable
+names. A few convenience variables are also handled explicitly by the framework.
 
 | Variable | Overrides | Required for |
 |----------|-----------|--------------|
-| `EQ_USERNAME` | `Credentials:Username` | All UI tests |
-| `EQ_PASSWORD` | `Credentials:Password` | All UI tests |
-| `EXPRESS_USERNAME` | `QAExpressCreds:Username` | Express/CLAS tests |
-| `EXPRESS_PASSWORD` | `QAExpressCreds:Password` | Express/CLAS tests |
-| `OAUTH_CLIENT_SECRET` | `OAuthConfig:ClientSecret` | API tests |
+| `Credentials__Username` | `Credentials:Username` | ExpertQuote UI tests |
+| `Credentials__Password` | `Credentials:Password` | ExpertQuote UI tests |
+| `QAExpressCreds__Username` | `QAExpressCreds:Username` | Express/CLAS tests |
+| `QAExpressCreds__Password` | `QAExpressCreds:Password` | Express/CLAS tests |
+| `PING_BOOTSTRAP_CLIENT_ID` | Ping bootstrap client ID | API secret retrieval |
+| `PING_BOOTSTRAP_CLIENT_SECRET` | Ping bootstrap client secret | API secret retrieval |
 | `PING_SECRET_ID` | `OAuthConfig:PingSecretId` | API tests |
-| `DUCKCREEK_PASSWORD` | `DuckCreekForms:Password` | Forms validation |
-| `TEST_ENVIRONMENT` | `Environment` | Dev environment runs |
+| `DUCKCREEK_PASSWORD` | `DuckCreekForms:Password` through an explicit override | Forms validation |
+| `DuckCreekForms__CLASPassword` | `DuckCreekForms:CLASPassword` | CLAS forms access, when required |
+| `TEST_ENVIRONMENT` | Selects `appsettings.{value}.json` | Non-default environment runs |
 | `BROWSER_TYPE` | `Playwright:BrowserType` | Browser override |
 | `PLAYWRIGHT_HEADLESS` | `Playwright:Headless` | Headless mode |
 
 ```powershell
 # Minimum required for UI tests
-$env:EQ_USERNAME = "your-eq-username"
-$env:EQ_PASSWORD = "your-eq-password"
+$env:Credentials__Username = "your-eq-username"
+$env:Credentials__Password = "your-eq-password"
 
 # For Forms validation tests
 $env:DUCKCREEK_PASSWORD = "your-duckcreek-password"
 
-# For API tests
-$env:PING_SECRET_ID   = "your-ping-secret-id"
-$env:OAUTH_CLIENT_SECRET = "your-oauth-secret"
+# For API tests using Ping secret retrieval
+$env:PING_BOOTSTRAP_CLIENT_ID = "your-bootstrap-client-id"
+$env:PING_BOOTSTRAP_CLIENT_SECRET = "your-bootstrap-client-secret"
+$env:PING_SECRET_ID = "your-ping-secret-id"
 ```
 
 Ask your QA lead for the credential values. Do **not** commit them to any file.
@@ -735,12 +777,15 @@ TestResults/
 └── {yyyy-MM-dd_HHmmss}/              ← one folder per test run
     ├── pass-records.csv              ← telemetry for all passing scenarios
     └── {ScenarioName}/               ← one folder per FAILED scenario
-        ├── trace.zip                 ← Playwright trace (upload to trace.playwright.dev)
-        ├── Videos/                   ← screen recording
+        ├── trace.zip                 ← local Playwright trace
+        ├── video.webm                ← failed-scenario screen recording
         └── Step__{StepText}.png      ← screenshot at point of failure
 ```
 
 Folders older than 7 days are automatically deleted.
+
+Tracing is currently started only for local runs. CI failures can include screenshots
+and video, but do not produce `trace.zip` unless CI tracing is explicitly enabled.
 
 ### Viewing a Playwright Trace
 
@@ -1038,7 +1083,7 @@ See `Tools/FormsBaselineGenerator/` for source and `Resources/ExpectedForms/` fo
 | `ScenarioContextData` fields are null | Table key in Gherkin doesn't match a mapped case | Check `TableMappingHelpers` for the relevant mapper method |
 | Browser not found | Playwright browsers not installed | Run `pwsh bin/Debug/net8.0/playwright.ps1 install` |
 | Test passes locally but fails in CI | Headless rendering difference | Reproduce with `$env:PLAYWRIGHT_HEADLESS = "true"` locally |
-| "Failed to retrieve ClientSecret from Ping" | API test — Ping secret ID not configured | Set `OAuthConfig:PingSecretId` in config or contact QA lead |
+| "Failed to retrieve ClientSecret from Ping" | API test — Ping bootstrap credentials or secret ID are missing/invalid | Set `PING_BOOTSTRAP_CLIENT_ID`, `PING_BOOTSTRAP_CLIENT_SECRET`, and `PING_SECRET_ID`, or contact the QA lead |
 | Quote number not found | Nav element changed | Check `cl-sfp-nav` testId or the tab label XPath in `SharedEQSteps` |
 | Video/trace not saved | `AfterScenario` hook error swallowed | Check test output for `[Warning]` lines |
 

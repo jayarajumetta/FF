@@ -772,6 +772,24 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
+        public async Task NativeSelect_MatchesAnIndexedCaptionWithAServerAppendedDescription()
+        {
+            await _page.SetContentAsync("""
+                <select>
+                  <option value="location-10">Location #10 - Secondary Location</option>
+                  <option value="location-1">Location #1 - Primary Location</option>
+                </select>
+                """);
+            var caption = new System.Text.RegularExpressions.Regex(
+                @"^\s*Location\s+\#1(?:\s+-\s+.*)?\s*$",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+            await new SFP_NativeFormPage(_page).SelectAsync(_page.Locator("select"), caption);
+
+            Assert.That(await _page.Locator("select").InputValueAsync(), Is.EqualTo("location-1"));
+        }
+
+        [Test]
         public async Task AmbiguousFields_AreNotResolvedByTheirOrderOrMatchingBodyText()
         {
             await _page.SetContentAsync("""

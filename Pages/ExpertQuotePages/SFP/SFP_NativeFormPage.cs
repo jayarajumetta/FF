@@ -385,11 +385,13 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                 : choices.Filter(new() { HasTextRegex = caption });
         }
 
-        public async Task SelectAsync(ILocator select, string caption, bool moneyOption = false)
+        public Task SelectAsync(ILocator select, string caption, bool moneyOption = false) =>
+            SelectAsync(select, moneyOption ? MoneyCaption(caption) : Caption(caption));
+
+        public async Task SelectAsync(ILocator select, Regex pattern)
         {
             await Expect(select).ToHaveCountAsync(1);
             await Expect(select).ToBeVisibleAsync();
-            var pattern = moneyOption ? MoneyCaption(caption) : Caption(caption);
             var enabled = await select.IsEnabledAsync() &&
                 !string.Equals(await select.GetAttributeAsync("aria-disabled"), "true", StringComparison.OrdinalIgnoreCase);
             if (await select.EvaluateAsync<string>("element => element.tagName.toLowerCase()") == "select")
