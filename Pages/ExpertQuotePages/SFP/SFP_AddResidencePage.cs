@@ -99,7 +99,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await SaveButton.ClickAsync();
             await WaitForSpinnerAsync();
             var locations = new SFP_LocationsResidencesBuildingsPage(_page);
-            await locations.WaitUntilReadyAsync();
+            await locations.ContinueExpectedReviewUntilReadyAsync();
 
             await locations.OpenResidenceAsync();
             await VerifyResidenceFormAsync(data);

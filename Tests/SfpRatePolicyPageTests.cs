@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 using NUnit.Framework;
@@ -299,7 +300,7 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
-        public async Task RefreshingTypeahead_WaitsForTheDeferredDuckCreekResponse()
+        public async Task RefreshingTypeahead_BlursAfterOffscreenKeyboardSelectionBeforeWaitingForDuckCreek()
         {
             await _context.RouteAsync(
                 "**/api/duckcreek/product",
@@ -307,22 +308,37 @@ namespace PnCTestAutomation.Tests
             await _page.SetContentAsync("""
                 <input data-testid="_temp.fields.building.rows[0].buildingValuatioinInput$bVSOccupancyGroup.value"
                        role="combobox" aria-autocomplete="list" aria-expanded="false">
+                <button id="next-field">Next field</button>
                 <script>
                   const input = document.querySelector('input');
                   input.addEventListener('input', () => {
                     document.body.insertAdjacentHTML('beforeend',
-                      '<div id="occupancy-options" role="listbox"><div role="option">General</div></div>');
+                      `<div id="occupancy-options" role="listbox"
+                            style="position:fixed;left:343px;bottom:-120px;width:900px;height:50px">
+                         <div id="general-option" role="option">General</div>
+                       </div>`);
                     input.setAttribute('aria-controls', 'occupancy-options');
                     input.setAttribute('aria-expanded', 'true');
-                    document.querySelector('[role="option"]').addEventListener('click', event => {
-                      input.value = event.target.textContent;
+                  });
+                  input.addEventListener('keydown', event => {
+                    if (event.key === 'ArrowDown') {
+                      input.setAttribute('aria-activedescendant', 'general-option');
+                      window.usedArrowDown = true;
+                    }
+                    if (event.key === 'Enter'
+                        && input.getAttribute('aria-activedescendant') === 'general-option') {
+                      input.value = document.getElementById('general-option').textContent;
                       input.setAttribute('aria-expanded', 'false');
                       document.getElementById('occupancy-options').remove();
-                      setTimeout(async () => {
-                        await fetch('https://duckcreek.test/api/duckcreek/product', { method: 'POST' });
-                        window.refreshCompleted = true;
-                      }, 750);
-                    });
+                      window.usedEnter = true;
+                    }
+                  });
+                  input.addEventListener('blur', () => {
+                    window.blurCompleted = true;
+                    setTimeout(async () => {
+                      await fetch('https://duckcreek.test/api/duckcreek/product', { method: 'POST' });
+                      window.refreshCompleted = true;
+                    }, 750);
                   });
                 </script>
                 """);
@@ -334,10 +350,16 @@ namespace PnCTestAutomation.Tests
             Assert.That(
                 await _page.EvaluateAsync<bool>("() => window.refreshCompleted === true"),
                 Is.True);
+            Assert.That(await _page.EvaluateAsync<bool>("window.usedArrowDown === true"), Is.True);
+            Assert.That(await _page.EvaluateAsync<bool>("window.usedEnter === true"), Is.True);
+            Assert.That(await _page.EvaluateAsync<bool>("window.blurCompleted === true"), Is.True);
+            Assert.That(
+                await _page.EvaluateAsync<string>("() => document.activeElement.id"),
+                Is.EqualTo("next-field"));
         }
 
         [Test]
-        public async Task CatalogSelection_WaitsForTheDeferredDuckCreekResponse()
+        public async Task CatalogAndEditorSelection_RetryLostClicksAndWaitForDuckCreekResponses()
         {
             await _context.RouteAsync(
                 "**/api/duckcreek/product",
@@ -354,13 +376,32 @@ namespace PnCTestAutomation.Tests
                     </td>
                   </tr>
                 </table>
+                <button data-testid="fields.coverages.rows[0].AddEditSpecialFarmPollution"
+                        onclick="openEditor()">Add Coverage</button>
+                <div id="editor" hidden>
+                  Special Farm Pollution editor
+                  <button data-testid="fields.coverages.Save">Save</button>
+                </div>
                 <script>
-                  document.querySelector('label').addEventListener('click', () => {
+                  window.catalogClickCount = 0;
+                  window.editorClickCount = 0;
+                  document.querySelector('label').addEventListener('click', event => {
+                    window.catalogClickCount++;
+                    if (window.catalogClickCount === 1) {
+                      event.preventDefault();
+                      return;
+                    }
                     setTimeout(async () => {
                       await fetch('https://duckcreek.test/api/duckcreek/product', { method: 'POST' });
                       window.refreshCompleted = true;
                     }, 750);
                   });
+                  async function openEditor() {
+                    window.editorClickCount++;
+                    if (window.editorClickCount === 1) return;
+                    await fetch('https://duckcreek.test/api/duckcreek/product', { method: 'POST' });
+                    document.getElementById('editor').hidden = false;
+                  }
                 </script>
                 """);
             var form = new SFP_NativeFormPage(_page);
@@ -372,6 +413,58 @@ namespace PnCTestAutomation.Tests
             Assert.That(
                 await _page.EvaluateAsync<bool>("() => window.refreshCompleted === true"),
                 Is.True);
+            Assert.That(
+                await _page.EvaluateAsync<int>("() => window.catalogClickCount"),
+                Is.EqualTo(2));
+            await form.ClickActionAndRequireReadyAsync(
+                "AddEditSpecialFarmPollution",
+                _page.Locator("#editor").Or(form.Action("Save")));
+            Assert.That(
+                await _page.EvaluateAsync<int>("() => window.editorClickCount"),
+                Is.EqualTo(2));
+        }
+
+        [Test]
+        public async Task EditorSelection_DoesNotRetryWhenTheFirstDuckCreekRequestIsSlow()
+        {
+            await _context.RouteAsync(
+                "**/api/duckcreek/product",
+                async route =>
+                {
+                    await Task.Delay(5500);
+                    await route.FulfillAsync(new()
+                    {
+                        Status = 200,
+                        ContentType = "application/json",
+                        Body = "{}"
+                    });
+                });
+            await _page.SetContentAsync("""
+                <button data-testid="fields.coverages.rows[0].AddEditSpecialFarmPollution"
+                        onclick="openEditor()">Add Coverage</button>
+                <div id="editor" hidden>
+                  Special Farm Pollution editor
+                  <button data-testid="fields.coverages.Save">Save</button>
+                </div>
+                <script>
+                  window.editorClickCount = 0;
+                  async function openEditor() {
+                    window.editorClickCount++;
+                    await fetch('https://duckcreek.test/api/duckcreek/product', { method: 'POST' });
+                    document.getElementById('editor').hidden = false;
+                  }
+                </script>
+                """);
+            var form = new SFP_NativeFormPage(_page);
+
+            await form.ClickActionAndRequireReadyAsync(
+                "AddEditSpecialFarmPollution",
+                _page.Locator("#editor").Or(form.Action("Save")));
+
+            Assert.That(
+                await _page.EvaluateAsync<int>("() => window.editorClickCount"),
+                Is.EqualTo(1));
+            Assert.That(await _page.Locator("#editor").IsVisibleAsync(), Is.True);
         }
 
         [Test]
@@ -413,35 +506,30 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
-        public async Task NativeTypeahead_UsesExactKeyboardOptionWhenControlledPanelIsOutsideViewport()
+        public async Task NativeTypeahead_CentersControlBeforeClickingExactOption()
         {
             await _page.SetContentAsync("""
+                <div style="height: 2000px"></div>
                 <input data-testid="_temp.fields.building.rows[0].buildingValuatioinInput$bVSSearchResult.value"
                        role="combobox" aria-autocomplete="list" aria-expanded="false">
+                <div style="height: 1000px"></div>
                 <script>
                   const input = document.querySelector('input');
                   input.addEventListener('input', () => {
                     document.getElementById('search-options')?.remove();
+                    const bounds = input.getBoundingClientRect();
                     document.body.insertAdjacentHTML('beforeend',
                       `<div id="search-options" role="listbox"
-                            style="position:fixed;left:0;top:2000px;width:250px;height:50px">
+                            style="position:fixed;left:0;top:${bounds.bottom + 4}px;width:250px;height:50px">
                          <div id="implement-shed-option" role="option">601 - Farm Implement Shed</div>
                        </div>`);
                     input.setAttribute('aria-controls', 'search-options');
                     input.setAttribute('aria-expanded', 'true');
-                  });
-                  input.addEventListener('keydown', event => {
-                    if (event.key === 'ArrowDown') {
-                      event.preventDefault();
-                      input.setAttribute('aria-activedescendant', 'implement-shed-option');
-                    }
-                    if (event.key === 'Enter'
-                        && input.getAttribute('aria-activedescendant') === 'implement-shed-option') {
-                      event.preventDefault();
-                      input.value = '601 - Farm Implement Shed';
+                    document.getElementById('implement-shed-option').addEventListener('click', event => {
+                      input.value = event.target.textContent;
                       input.setAttribute('aria-expanded', 'false');
                       document.getElementById('search-options').remove();
-                    }
+                    });
                   });
                   input.addEventListener('blur', () => window.typeaheadCommitted = input.value);
                 </script>
@@ -456,6 +544,50 @@ namespace PnCTestAutomation.Tests
             Assert.That(
                 await _page.EvaluateAsync<string>("() => window.typeaheadCommitted"),
                 Is.EqualTo("601 - Farm Implement Shed"));
+        }
+
+        [Test]
+        public async Task NativeTypeahead_UsesKeyboardWhenExactOptionIsRenderedOutsideTheViewport()
+        {
+            await _page.SetContentAsync("""
+                <input data-testid="_temp.fields.building.rows[0].buildingValuatioinInput$bVSSearchResult.value"
+                       role="combobox" aria-autocomplete="list" aria-expanded="false">
+                <script>
+                  const input = document.querySelector('input');
+                  input.addEventListener('input', () => {
+                    document.getElementById('search-options')?.remove();
+                    document.body.insertAdjacentHTML('beforeend',
+                      `<div id="search-options" role="listbox"
+                            style="position:fixed;left:343px;bottom:-120px;width:900px;height:50px">
+                         <div id="hay-storage-option" role="option">120 - Hay Storage, Open One Side</div>
+                       </div>`);
+                    input.setAttribute('aria-controls', 'search-options');
+                    input.setAttribute('aria-expanded', 'true');
+                  });
+                  input.addEventListener('keydown', event => {
+                    if (event.key === 'ArrowDown') {
+                      input.setAttribute('aria-activedescendant', 'hay-storage-option');
+                      window.usedArrowDown = true;
+                    }
+                    if (event.key === 'Enter'
+                        && input.getAttribute('aria-activedescendant') === 'hay-storage-option') {
+                      input.value = document.getElementById('hay-storage-option').textContent;
+                      input.setAttribute('aria-expanded', 'false');
+                      document.getElementById('search-options').remove();
+                      window.usedEnter = true;
+                    }
+                  });
+                </script>
+                """);
+            var form = new SFP_NativeFormPage(_page);
+
+            await form.SetAsync(
+                "BuildingValuatioinInput.BVSSearchResult", "120 - Hay Storage, Open One Side");
+
+            await form.VerifyAsync(
+                "BuildingValuatioinInput.BVSSearchResult", "120 - Hay Storage, Open One Side");
+            Assert.That(await _page.EvaluateAsync<bool>("window.usedArrowDown === true"), Is.True);
+            Assert.That(await _page.EvaluateAsync<bool>("window.usedEnter === true"), Is.True);
         }
 
         [Test]
@@ -530,6 +662,45 @@ namespace PnCTestAutomation.Tests
             Assert.That(await _page.EvaluateAsync<bool>("window.buildingOpened"), Is.True);
         }
 
+        [Test]
+        public async Task BuildingSave_ContinuesMetalRoofReviewAndReopensTheNewBuilding()
+        {
+            const string existingTestId =
+                "fields.data.accountDetail.locationDetail.rows[0].building.rows[0].editBuilding";
+            const string addedTestId =
+                "fields.data.accountDetail.locationDetail.rows[0].building.rows[1].editBuilding";
+            await _page.SetContentAsync($"""
+                <div role="dialog">
+                  <h2>Review Required</h2>
+                  <p>11045: Building with Metal Roof requires underwriting review. Location 1 Building 2</p>
+                  <button disabled>Review Now</button>
+                  <button data-testid="btnConfirmYes" onclick="
+                    this.closest('[role=dialog]').remove();
+                    document.getElementById('add-building').style.display = 'block';
+                    document.body.insertAdjacentHTML('beforeend',
+                      '<button data-testid=&quot;{addedTestId}&quot; onclick=&quot;window.openedBuilding = this.dataset.testid&quot;>Edit Building 2</button>');
+                  ">Keep Going</button>
+                </div>
+                <button id="add-building"
+                        data-testid="fields.data.accountDetail.locationDetail.rows[0].addBuildingButton"
+                        style="display:none">Add Building</button>
+                <button data-testid="{existingTestId}">Edit Building 1</button>
+                """);
+            var locations = new SFP_LocationsResidencesBuildingsPage(_page);
+            await locations.ContinueExpectedReviewUntilReadyAsync();
+            var buildingCount = await locations.EditBuildingButtons.CountAsync();
+            await locations.OpenBuildingAsync(addedTestId);
+            var browserOpenedTestId = await _page.EvaluateAsync<string>("window.openedBuilding");
+            var dialogCount = await _page.GetByRole(AriaRole.Dialog).CountAsync();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(buildingCount, Is.EqualTo(2));
+                Assert.That(browserOpenedTestId, Is.EqualTo(addedTestId));
+                Assert.That(dialogCount, Is.Zero);
+            });
+        }
+
         [TestCase("Farm Contents", "FarmContents")]
         [TestCase("Poultry Contents", "PoultryContents")]
         [TestCase("Private Contents", "PrivateContents")]
@@ -596,12 +767,13 @@ namespace PnCTestAutomation.Tests
                  records.off.total, records.off.percent, records.off.others, records.off.description]
                 """), Is.EqualTo(new[] { "15000", "20", "1", "CLOTHING", "location-node-18", "5000", "10", "1", "CLOTHING" }));
             Assert.That(await _page.EvaluateAsync<int>("saveCount"), Is.EqualTo(4));
+            Assert.That(await _page.EvaluateAsync<int>("reviewCount"), Is.EqualTo(4));
             Assert.That(await _page.GetByTestId("coverageTableLiability").IsVisibleAsync(), Is.True);
         }
 
-        [TestCase("class", "ClassCode")]
+        [TestCase("class", "Off-Premises")]
         [TestCase("overwrite", "TotalSalesOnPremise")]
-        [TestCase("computed", "TotalSalesOthersGoods")]
+        [TestCase("computed", "499")]
         public async Task RetailCoverage_RejectsIncorrectPersistedCodesValuesOrComputedSales(string failure, string field)
         {
             await CreateRetailEditorAsync();
@@ -613,7 +785,8 @@ namespace PnCTestAutomation.Tests
             Assert.That(error!.Message, Does.Contain(field));
             if (failure == "class")
                 Assert.That(error.Message, Does.Contain("10010").And.Contain("10030"));
-            Assert.That(await _page.EvaluateAsync<int>("saveCount"), Is.EqualTo(3));
+            Assert.That(await _page.EvaluateAsync<int>("saveCount"),
+                Is.EqualTo(failure == "class" ? 2 : 3));
         }
 
         [Test]
@@ -693,25 +866,39 @@ namespace PnCTestAutomation.Tests
             await trailer.ApplyRatePolicyItemAsync(values, verifyOnly: true);
         }
 
-        [TestCase("Special Farm Pollution", "CovLivestockOperationsSpecialFarmPollutionInput", "100")]
-        [TestCase("Chemical Drift and Transportation Increased Limits", "CovFarmChemTransportationDriftInput", "75")]
+        [TestCase(
+            "Special Farm Pollution",
+            "Livestock Operations Special Farm Pollution Liability",
+            "CovLivestockOperationsSpecialFarmPollutionInput",
+            "100")]
+        [TestCase(
+            "Chemical Drift and Transportation Increased Limits",
+            "Farm Chemical Transportation/Farm Chemical Drift",
+            "CovFarmChemTransportationDriftInput",
+            "75")]
         public async Task LiabilityAcreage_VerifiesTheSharedComputedValueAndRejectsTheOriginalConflictingExpectation(
-            string coverage, string entity, string conflictingAcres)
+            string coverage, string catalogCaption, string entity, string conflictingAcres)
         {
+            Assert.That(
+                SFP_LiabilityOptionalCoveragePage.CatalogCaption(coverage).IsMatch(catalogCaption),
+                Is.True);
             var values = ScenarioValues("CoverageName", coverage);
-            var options = coverage == "Special Farm Pollution" ? "$50,000 / $600,000" : "$50,000 / $100,000";
+            const string options = "$50,000 / $100,000";
             await _page.SetContentAsync($"""
                 <label>Occurrence/Aggregate Limit<select data-testid="fields.optional.rows[5].{entity}$OccurrenceAggregateLimit.value">
                   <option value="native-limit">{options}</option></select></label>
-                <label>Number of acres used in operation (owned &amp; leased)
-                  <input readonly value="200" data-testid="fields.optional.rows[5].{entity}$NumberOfAcresUsed.value">
-                </label>
+                <div id="{entity}.NumberOfAcresUsed-0-layout" class="readonly-field">
+                  <span class="readonly-label">Number of acres used in operation (owned &amp; leased):</span>
+                  <span class="readonly-value">200.00</span>
+                </div>
                 <label>On site (liquid or solid) manure storage
-                  <select data-testid="fields.optional.rows[5].{entity}$OnSiteManureStorage.value">
+                  <select data-testid="fields.optional.rows[5].{entity}$OnSiteManureStorage.value"
+                    onchange="document.getElementById('manure-capacity').hidden=this.value!=='1'">
                     <option value="0">No</option><option value="1">Yes</option></select>
                 </label>
                 <label>Total capacity (# of gallons) of all on-site liquid manure storage
-                  <input type="number" data-testid="fields.optional.rows[5].{entity}$TotalCapacityOfManureStorage.value">
+                  <input id="manure-capacity" hidden type="number"
+                    data-testid="fields.optional.rows[5].{entity}$TotalCapacityOfManureStorage.value">
                 </label>
                 <label>Maximum Number of Miles between your facility and the furthest insured location
                   <input type="number" data-testid="fields.optional.rows[5].{entity}$MaximumNumberOfMiles.value">
@@ -719,14 +906,36 @@ namespace PnCTestAutomation.Tests
                 <label>Number of trips transporting waste per year
                   <input type="number" data-testid="fields.optional.rows[5].{entity}$NumberOfTrips.value">
                 </label>
+                <select data-testid="fields.questions.SpecialFarmPollutionQuestionsInput$PriorIncidencesOfPollutionClaims.value">
+                  <option value="1">Yes</option><option value="0">No</option>
+                </select>
+                <select data-testid="fields.questions.SpecialFarmPollutionQuestionsInput$ClientAppliesHumanWaste.value">
+                  <option value="1">Yes</option><option value="0">No</option>
+                </select>
+                <select data-testid="fields.questions.SpecialFarmPollutionQuestionsInput$RiskWithin1_2Mile.value">
+                  <option value="1">Yes</option><option value="0">No</option>
+                </select>
+                <select data-testid="fields.questions.SpecialFarmPollutionQuestionsInput$RiskWithin1_4Mile.value">
+                  <option value="1">Yes</option><option value="0">No</option>
+                </select>
+                <input id="chemical-none-above" type="checkbox"
+                  data-testid="fields.questions.FarmChemTransportationDriftQuestionsInput$EqNoneAbove.value">
+                <label for="chemical-none-above"
+                  data-testid="fields.questions.FarmChemTransportationDriftQuestionsInput$EqNoneAbove.value">
+                  None of the Above
+                </label>
                 """);
             var liability = new SFP_LiabilityOptionalCoveragePage(_page);
             await liability.ApplyAcreageCoverageAsync(values);
             values["Acres"] = conflictingAcres;
             var error = Assert.ThrowsAsync<PlaywrightException>(() => liability.ApplyAcreageCoverageAsync(values));
             Assert.That(error!.Message, Does.Contain("read-only").And.Contain(conflictingAcres));
-            Assert.That(await new SFP_NativeFormPage(_page).Field(entity + ".NumberOfAcresUsed").InputValueAsync(),
-                Is.EqualTo("200"));
+            Assert.That(
+                (await new SFP_NativeFormPage(_page)
+                    .ReadOnlyValue(entity + ".NumberOfAcresUsed").InnerTextAsync()).Trim(),
+                Is.EqualTo("200.00"));
+            if (coverage == "Chemical Drift and Transportation Increased Limits")
+                Assert.That(await _page.Locator("#chemical-none-above").IsCheckedAsync(), Is.True);
         }
 
         [Test]
@@ -833,20 +1042,233 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
-        public async Task Billing_SelectsTheReturnedCaptionRatherThanAnAssumedOptionIndex()
+        public async Task Billing_CompletesTheLiveRatePolicyControlContract()
         {
             await _page.SetContentAsync("""
-                <button data-testid="fields.payment.subsequentPaymentData$paymentMethod.value-0"
-                        onclick="this.setAttribute('aria-checked','true')">Direct Bill</button>
-                <button data-testid="fields.payment.subsequentPaymentData$paymentMethod.value-7"
-                        onclick="this.setAttribute('aria-checked','true')">Easy Pay</button>
+                <div data-testid="fields.payment._PolicyPaymentInputDoc$BillingCenterAccount.value">
+                  <div data-testid="fields.payment._PolicyPaymentInputDoc$BillingCenterAccount.value-new-account-chip-wrapper"
+                       onclick="this.querySelector('.chip-wrapper').className='chip-wrapper-selected'">
+                    <div class="chip-wrapper"><span class="chip-label">Create New Billing Account</span></div>
+                  </div>
+                </div>
+                <button data-testid="fields.payment.subsequentPaymentData$payerID.value-0"
+                        onclick="this.setAttribute('aria-checked','true')">PWJOSHUA RATE RATETAYLOR<br>1993-01-19</button>
+                <div data-testid="fields.payment.subsequentPaymentData$paymentMethod.value-chip-item-wrapper"
+                     onclick="this.firstElementChild.className='chip-wrapper-selected'">
+                  <div class="chip-wrapper"><span class="chip-label">Easy Pay</span></div>
+                </div>
+                <div data-testid="fields.payment.subsequentBankData$existingDraftAccount.value-chip-item-wrapper"
+                     onclick="this.firstElementChild.className='chip-wrapper-selected'">
+                  <div class="chip-wrapper"><span class="chip-label">New Account</span></div>
+                </div>
+                <div data-testid="fields.payment.subsequentBankData$accountUse.value-chip-item-wrapper"
+                     onclick="this.firstElementChild.className='chip-wrapper-selected'">
+                  <div class="chip-wrapper"><span class="chip-label">Personal</span></div>
+                </div>
+                <div data-testid="fields.payment.subsequentBankData$accountType.value-chip-item-wrapper"
+                     onclick="this.firstElementChild.className='chip-wrapper-selected'">
+                  <div class="chip-wrapper"><span class="chip-label">Checking</span></div>
+                </div>
+                <button data-testid="fields.payment.subsequentBankData$accountOwnerSelect.value-0"
+                        onclick="this.setAttribute('aria-checked','true')">PWJOSHUA RATE RATETAYLOR<br>1993-01-19</button>
+                <input data-testid="fields.payment.subsequentBankData$routingNumber.value">
+                <input data-testid="fields.payment.subsequentBankData$accountNumber.value">
+                <input data-testid="fields.payment.subsequentBankData$name.value">
+                <div data-testid="fields.payment.subsequentPaymentData$paymentPlan.value-chip-item-wrapper"
+                     onclick="this.firstElementChild.className='chip-wrapper-selected'">
+                  <div class="chip-wrapper"><span class="chip-label">12 Payments</span></div>
+                </div>
+                <input data-testid="fields.payment.subsequentPaymentData$dueDate.value">
+                <mat-radio-button data-testid="fields.payment.initialPaymentData$amountSelection.value-0"
+                                  onclick="this.querySelector('input').checked=true">
+                  <input type="radio" value="Min">
+                  <label>$1,731.03 (Minimum Payment)</label>
+                </mat-radio-button>
+                <div data-testid="fields.payment.initialPaymentData$paymentMethod.value-chip-item-wrapper"
+                     onclick="this.firstElementChild.className='chip-wrapper-selected'">
+                  <div class="chip-wrapper"><span class="chip-label">Check</span></div>
+                </div>
+                <input data-testid="fields._PolicyPaymentInputDoc.initialPaymentData$checkNumber.value">
+                <button data-testid="fields.data-Next.next"
+                        onclick="document.body.dataset.nextClicked='true'">Next: Submission</button>
                 """);
-            await new SFP_NativeFormPage(_page).SelectChoiceAsync(
-                "SubsequentPaymentData.PaymentMethod", SFP_NativeFormPage.Caption("Easy Pay"));
-            Assert.That(await _page.GetByTestId("fields.payment.subsequentPaymentData$paymentMethod.value-7")
+
+            var values = new Dictionary<string, string>
+            {
+                ["BillingAccount"] = "Create New",
+                ["PrimaryPayer"] = "Primary Insured",
+                ["PaymentType"] = "Easy Pay",
+                ["RoutingNumber"] = "021000021",
+                ["AccountNumber"] = "123456789",
+                ["BankName"] = "Test Bank",
+                ["PaymentPlan"] = "12 Payments",
+                ["PaymentDueDate"] = "01",
+                ["PaymentAmount"] = "Minimum",
+                ["PaymentMethod"] = "Check"
+            };
+            var data = new ScenarioContextData
+            {
+                ClientFirstName = "PW Joshua",
+                ClientMiddleName = "Rate",
+                ClientLastName = "Rate Taylor"
+            };
+
+            await new SFP_BillingInformationPage(_page).CompleteRatePolicyBillingAsync(data, values);
+
+            Assert.That(await _page.GetByTestId(
+                "fields.payment._PolicyPaymentInputDoc$BillingCenterAccount.value-new-account-chip-wrapper")
+                .Locator(".chip-wrapper-selected").CountAsync(), Is.EqualTo(1));
+            Assert.That(await _page.GetByTestId("fields.payment.subsequentPaymentData$payerID.value-0")
                 .GetAttributeAsync("aria-checked"), Is.EqualTo("true"));
-            Assert.That(await _page.GetByTestId("fields.payment.subsequentPaymentData$paymentMethod.value-0")
-                .GetAttributeAsync("aria-checked"), Is.Null);
+            Assert.That(await _page.GetByTestId("fields.payment.subsequentBankData$routingNumber.value")
+                .InputValueAsync(), Is.EqualTo("021000021"));
+            Assert.That(await _page.GetByTestId("fields.payment.subsequentBankData$accountNumber.value")
+                .InputValueAsync(), Is.EqualTo("123456789"));
+            Assert.That(await _page.GetByTestId("fields.payment.subsequentBankData$name.value")
+                .InputValueAsync(), Is.EqualTo("Test Bank"));
+            Assert.That(await _page.GetByTestId("fields.payment.initialPaymentData$amountSelection.value-0")
+                .Locator("input").IsCheckedAsync(), Is.True);
+            Assert.That(await _page.GetByTestId("fields._PolicyPaymentInputDoc.initialPaymentData$checkNumber.value")
+                .InputValueAsync(), Is.Not.Empty);
+            Assert.That(await _page.GetAttributeAsync("body", "data-next-clicked"), Is.EqualTo("true"));
+        }
+
+        [Test]
+        public async Task Submission_ChecklistAcknowledgement_PreservesExpectedReferralState()
+        {
+            await _page.SetContentAsync("""
+                <div role="dialog">
+                  <p>Checklist Opened</p>
+                  <button onclick="this.parentElement.remove()">Update</button>
+                </div>
+                <div>STATUS: REFERRAL NEEDED</div>
+                """);
+
+            await new SubmissionPage(_page).AcknowledgeChecklistUpdateAsync(expectReferralRequired: true);
+
+            Assert.That(await _page.GetByText("STATUS: REFERRAL NEEDED").CountAsync(), Is.EqualTo(1));
+            Assert.That(await _page.GetByRole(AriaRole.Dialog).CountAsync(), Is.Zero);
+        }
+
+        [Test]
+        public async Task ChecklistException_WaitsForApplyChangesAndDoesNotAddDuplicateGeneralNote()
+        {
+            const string html = """
+                <!doctype html>
+                <html>
+                <body>
+                  <a href="#" class="js-checklist-summary-item">Residence Photo #1</a>
+                  <ul>
+                    <li class="js-current-item">
+                      <span>Residence Photo #1</span>
+                      <span class="icons"></span>
+                    </li>
+                    <li class="js-current-item">
+                      <span>Loss Runs (Tiered - 5 Years; Not tiered - 3 years)</span>
+                    </li>
+                  </ul>
+                  <div id="checklist-details" style="display:none">
+                    <button class="js-exception">Exception</button>
+                    <textarea class="js-note"></textarea>
+                    <button class="js-add-note">Add Note</button>
+
+                    <div id="exception-note" class="modal fade" aria-hidden="true" style="display:none">
+                      <div class="js-exception-note-text">
+                        <textarea></textarea>
+                      </div>
+                      <button id="exception-note-confirm" disabled>OK</button>
+                    </div>
+                  </div>
+
+                  <div id="apply-changes-modal" class="modal fade" aria-hidden="true" style="display:none">
+                    Applying Changes...
+                  </div>
+
+                  <script>
+                    const row = document.querySelector('.js-checklist-summary-item');
+                    const details = document.getElementById('checklist-details');
+                    const exceptionButton = document.querySelector('.js-exception');
+                    const exceptionModal = document.getElementById('exception-note');
+                    const exceptionNote = document.querySelector('.js-exception-note-text textarea');
+                    const exceptionConfirm = document.getElementById('exception-note-confirm');
+                    const applyChanges = document.getElementById('apply-changes-modal');
+                    const addNote = document.querySelector('.js-add-note');
+                    const savedItem = document.querySelector('li.js-current-item');
+
+                    window.generalNoteClicks = 0;
+
+                    row.addEventListener('click', event => {
+                      event.preventDefault();
+                      details.style.display = 'block';
+                    });
+
+                    exceptionButton.addEventListener('click', () => {
+                      document.body.classList.add('modal-open');
+                      exceptionModal.className = 'modal fade in';
+                      exceptionModal.style.display = 'block';
+                      exceptionModal.setAttribute('aria-hidden', 'false');
+                    });
+
+                    const enableExceptionConfirm = () => {
+                      exceptionConfirm.disabled = exceptionNote.value.trim().length === 0;
+                    };
+                    exceptionNote.addEventListener('input', enableExceptionConfirm);
+                    exceptionNote.addEventListener('keyup', enableExceptionConfirm);
+
+                    exceptionConfirm.addEventListener('click', () => {
+                      row.dataset.exceptionNote = exceptionNote.value;
+                      exceptionModal.className = 'modal fade';
+                      exceptionModal.setAttribute('aria-hidden', 'true');
+                      applyChanges.className = 'modal fade in';
+                      applyChanges.style.display = 'block';
+                      applyChanges.setAttribute('aria-hidden', 'false');
+
+                      setTimeout(() => {
+                        exceptionModal.style.display = 'none';
+                      }, 25);
+
+                      setTimeout(() => {
+                        applyChanges.className = 'modal fade';
+                        applyChanges.style.display = 'none';
+                        applyChanges.setAttribute('aria-hidden', 'true');
+                        document.body.classList.remove('modal-open');
+                        savedItem.querySelector('.icons').innerHTML =
+                          '<i data-original-title="Document Attached" style="display:inline-block;width:10px;height:10px"></i>' +
+                          '<i data-original-title="Notes" style="display:inline-block;width:10px;height:10px"></i>';
+                        details.dataset.autoAdvanced = 'true';
+                        row.dataset.applyFinished = 'true';
+                      }, 200);
+                    });
+
+                    addNote.addEventListener('click', () => {
+                      window.generalNoteClicks += 1;
+                    });
+                  </script>
+                </body>
+                </html>
+                """;
+
+            await _page.RouteAsync("https://test.anpac.info/EChecklist/**", route =>
+                route.FulfillAsync(new() { Body = html, ContentType = "text/html" }));
+            await _page.GotoAsync("https://test.anpac.info/EChecklist/Viewing/offline-test");
+
+            await new SFP_ChecklistPage(_page).CompleteChecklistItemAsync(
+                "Residence Photo #1",
+                "Exception",
+                "Photo not available",
+                "Photo not available");
+
+            var row = _page.Locator("a.js-checklist-summary-item");
+            Assert.That(await row.GetAttributeAsync("data-exception-note"), Is.EqualTo("Photo not available"));
+            Assert.That(await row.GetAttributeAsync("data-apply-finished"), Is.EqualTo("true"));
+            Assert.That(await _page.EvaluateAsync<int>("window.generalNoteClicks"), Is.Zero);
+            Assert.That(await _page.Locator("#apply-changes-modal").IsVisibleAsync(), Is.False);
+            Assert.That(await _page.Locator("#checklist-details").IsVisibleAsync(), Is.True);
+            Assert.That(await _page.Locator("#checklist-details")
+                .GetAttributeAsync("data-auto-advanced"), Is.EqualTo("true"));
+            Assert.That(await _page.Locator("li.js-current-item")
+                .Filter(new() { HasText = "Residence Photo #1" })
+                .Locator("i[data-original-title='Notes']").CountAsync(), Is.EqualTo(1));
         }
 
         [Test]
@@ -864,22 +1286,86 @@ namespace PnCTestAutomation.Tests
         }
 
         [Test]
-        public async Task ReviewRequired_UsesKeyboardWhenAngularLayerOccludesKeepGoing()
+        public async Task ReviewRequired_ContinuesToExpectedDestinationWhenAngularLayerOccludesKeepGoing()
         {
             await _page.SetContentAsync("""
                 <div role="dialog" style="position:relative;width:500px;height:200px">
                   <h2>Review Required</h2>
                   <button data-testid="btnConfirmYes"
                           style="position:absolute;left:300px;top:120px"
-                          onclick="this.closest('[role=dialog]').remove()">Keep Going</button>
+                          onclick="
+                            this.closest('[role=dialog]').remove();
+                            document.getElementById('coverage-table').style.display = 'block';
+                          ">Keep Going</button>
                   <ng-component style="position:absolute;inset:0;z-index:2"></ng-component>
                 </div>
+                <div id="coverage-table" style="display:none">Liability coverages</div>
                 """);
 
-            await new SFP_LocationsResidencesBuildingsPage(_page)
-                .ContinuePastReviewRequiredIfPresentAsync();
+            var destination = _page.Locator("#coverage-table");
+            await new SFP_NativeFormPage(_page)
+                .ContinueReviewAndRequireReadyAsync(destination);
 
-            Assert.That(await _page.GetByRole(AriaRole.Dialog).CountAsync(), Is.Zero);
+            var dialogCount = await _page.GetByRole(AriaRole.Dialog).CountAsync();
+            var destinationVisible = await destination.IsVisibleAsync();
+            Assert.Multiple(() =>
+            {
+                Assert.That(dialogCount, Is.Zero);
+                Assert.That(destinationVisible, Is.True);
+            });
+        }
+
+        [Test]
+        public async Task ReviewRequired_DoesNotBypassAnEnabledReviewNowCorrection()
+        {
+            await _page.SetContentAsync("""
+                <div role="dialog">
+                  <h2>Review Required</h2>
+                  <p>10943: Calculated Value must be greater than zero.</p>
+                  <button>Review Now</button>
+                  <button data-testid="btnConfirmYes"
+                          onclick="window.bypassed=true">Keep Going</button>
+                </div>
+                <div id="coverage-table" style="display:none">Liability coverages</div>
+                """);
+
+            var error = Assert.ThrowsAsync<PlaywrightException>(() =>
+                new SFP_NativeFormPage(_page)
+                    .ContinueReviewAndRequireReadyAsync(_page.Locator("#coverage-table")));
+
+            Assert.That(error!.Message, Does.Contain("10943"));
+            Assert.That(await _page.EvaluateAsync<bool>("window.bypassed === true"), Is.False);
+            Assert.That(await _page.GetByRole(AriaRole.Dialog).IsVisibleAsync(), Is.True);
+        }
+
+        [Test]
+        public async Task ResidenceContentsSave_ContinuesExpectedReviewToLocations()
+        {
+            await _page.SetContentAsync("""
+                <div role="dialog" style="position:relative;width:500px;height:200px">
+                  <h2>Review Required</h2>
+                  <p>Some fields require your attention before you can transmit this quote.</p>
+                  <button disabled>Review Now</button>
+                  <button data-testid="btnConfirmYes"
+                          onclick="
+                            this.closest('[role=dialog]').remove();
+                            document.querySelector('button[data-testid]').style.display = 'block';
+                          ">Keep Going</button>
+                </div>
+                <button data-testid="fields.data.accountDetail.locationDetail.rows[0].addBuildingButton"
+                        style="display:none">Add Building</button>
+                """);
+
+            var locations = new SFP_LocationsResidencesBuildingsPage(_page);
+            await locations.ContinueExpectedReviewUntilReadyAsync();
+
+            var dialogCount = await _page.GetByRole(AriaRole.Dialog).CountAsync();
+            var addBuildingVisible = await locations.AddBuildingButton().IsVisibleAsync();
+            Assert.Multiple(() =>
+            {
+                Assert.That(dialogCount, Is.Zero);
+                Assert.That(addBuildingVisible, Is.True);
+            });
         }
 
         [Test]
@@ -1177,11 +1663,16 @@ namespace PnCTestAutomation.Tests
 
         private async Task CreateRetailEditorAsync()
         {
+            await _context.RouteAsync(
+                "**/api/duckcreek/product",
+                route => route.FulfillAsync(new() { Status = 200, ContentType = "application/json", Body = "{}" }));
             await _page.SetContentAsync("""
                 <script>
                   window.records = { on: null, off: null };
                   window.saveCount = 0;
+                  window.reviewCount = 0;
                   window.retailFailure = '';
+                  window.retailSelected = false;
                   const entity = side => side === 'on' ? 'CovRetailSalesOnPremises' : 'CovRetailSalesOffPremises';
                   const totalField = side => side === 'on' ? 'TotalSalesOnPremise' : 'TotalSalesOffPremise';
                   const toggleField = side => 'RetailSaleOfGoodsInput.' + (side === 'on' ? 'RetailSalesOnPremise' : 'RetailSalesOffPremise');
@@ -1199,26 +1690,26 @@ namespace PnCTestAutomation.Tests
                     const record = records[side], name = entity(side);
                     const total = Number(record?.total ?? 0), percent = Number(record?.percent ?? 0);
                     const others = record?.others === '1' ? total * percent / 100 : 0;
-                    const money = value => '$' + value.toLocaleString('en-US', { minimumFractionDigits: 2 });
-                    const classCode = side === 'on' ? '10020' : retailFailure === 'class' ? '10010' : '10030';
                     const selectorId = 'fields.retail.' + toggleField(side).replace('.', '$') + '.value';
-                    const caption = side === 'on' ? 'On-Premises (171-10020)' : 'Off-Premises (171-10030)';
+                    const caption = side === 'on'
+                      ? 'On-Premises (171-10020)'
+                      : `Off-Premises (171-${retailFailure === 'class' ? '10010' : '10030'})`;
                     return `<input id="${side}-toggle" type="checkbox" data-testid="${selectorId}" ${record ? 'checked' : ''}
                               onchange="document.getElementById('${side}-fields').hidden=!this.checked">
                             <label for="${side}-toggle" data-testid="${selectorId}">${caption}</label>
-                            <section id="${side}-fields" ${record ? '' : 'hidden'}>`
+                            <fieldset id="${side}-fields" ${record ? '' : 'hidden'}>`
                       + input(side, name + 'Input.' + totalField(side), record?.total)
                       + (side === 'on' ? select(side, 'SalesLocationInput.Location',
-                          [['location-node-18', 'Location #1'], ['location-node-91', 'Location #2']],
+                          [['location-node-18', 'Location #1 - 401 4TH ST SE # 111 MINNEAPOLIS, MN 55414-1769 (Primary Location)'],
+                           ['location-node-91', 'Location #2 - Secondary Location']],
                           record?.location ?? 'location-node-91', true) : '')
                       + select(side, name + 'Input.OthersGoods', [['0', 'No'], ['1', 'Yes']], record?.others ?? '0')
                       + input(side, name + 'Input.Description', record?.description)
                       + input(side, name + 'Input.PercentOfTotalSalesOthersGoods', record?.percent)
-                      + input(side, name + 'Output.Coverage', '171', true)
-                      + input(side, name + 'Output.ClassCode', classCode, true)
-                      + input(side, name + 'Output.TotalSalesOthersGoods',
-                          money(side === 'off' && retailFailure === 'computed' ? 499 : others), true)
-                      + input(side, name + 'Output.TotalSalesOwnGoods', money(total - others), true) + '</section>';
+                      + `<div class="readonly-field">
+                           <span class="readonly-label">Revenue Generated from Goods produced by Others:</span>
+                           <span class="readonly-value">${side === 'off' && retailFailure === 'computed' ? 499 : others}</span>
+                         </div></fieldset>`;
                   }
                   function edit() {
                     document.body.innerHTML = editorGroup('on') + editorGroup('off')
@@ -1240,15 +1731,42 @@ namespace PnCTestAutomation.Tests
                     if (document.querySelector('[data-testid="fields.unrelated.salesLocationInput$location.value"]').value !== 'unrelated')
                       throw new Error('An unrelated location was changed');
                     saveCount++;
-                    catalog();
+                    reviewCount++;
+                    document.body.innerHTML = `<div role="dialog">
+                        <h2>Review Required</h2>
+                        <button data-testid="btnConfirmYes" onclick="catalog()">Keep Going</button>
+                      </div>`;
                   }
                   function catalog() {
-                    document.body.innerHTML = '<table data-testid="coverageTableLiability"><tr><td>Retail Sale of Goods</td></tr></table>'
-                      + `<button data-testid="fields.liability.AddEditRetailSales" onclick="edit()">${records.on || records.off ? 'Edit Coverage' : 'Add Coverage'}</button>`;
+                    document.body.innerHTML = `<table data-testid="coverageTableLiability"><tr>
+                        <td>Retail Sales and Farm Stands, Product Sales</td>
+                        <td><input id="retail-selected" type="checkbox"
+                          data-testid="fields.liability.retailSalesInput$selected.value"
+                          ${retailSelected ? 'checked' : ''}>
+                        <label for="retail-selected"
+                          data-testid="fields.liability.retailSalesInput$selected.value"
+                          onclick="selectRetail()">Select</label></td>
+                      </tr></table>`
+                      + (retailSelected
+                        ? `<button data-testid="fields.liability.AddEditRetailSales" onclick="edit()">${records.on || records.off ? 'Edit Coverage' : 'Add Coverage'}</button>`
+                        : '');
+                  }
+                  async function selectRetail() {
+                    retailSelected = true;
+                    await fetch('https://duckcreek.test/api/duckcreek/product', { method: 'POST' });
+                    catalog();
                   }
                 </script>
-                <table data-testid="coverageTableLiability"><tr><td>Retail Sale of Goods</td></tr></table>
-                <button data-testid="fields.liability.AddEditRetailSales" onclick="edit()">Add Coverage</button>
+                <table data-testid="coverageTableLiability"><tr>
+                  <td>Retail Sales and Farm Stands, Product Sales</td>
+                  <td>
+                    <input id="retail-selected" type="checkbox"
+                           data-testid="fields.liability.retailSalesInput$selected.value">
+                    <label for="retail-selected"
+                           data-testid="fields.liability.retailSalesInput$selected.value"
+                           onclick="selectRetail()">Select</label>
+                  </td>
+                </tr></table>
                 """);
         }
 

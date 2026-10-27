@@ -269,6 +269,14 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             if (exactOrContaining >= 0)
                 return exactOrContaining;
 
+            var residenceOptions = availableResidences
+                .Select((option, index) => new { option, index })
+                .Where(candidate => candidate.option.StartsWith(
+                    "Residence #", StringComparison.OrdinalIgnoreCase))
+                .ToArray();
+            if (residenceOptions.Length == 1)
+                return residenceOptions[0].index;
+
             return availableResidences.Length == 1 ? 0 : -1;
         }
         #endregion

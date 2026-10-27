@@ -62,6 +62,48 @@ namespace PnCTestAutomation.Tests
                 Assert.That(acreage.Cells.ElementAt(1).Value, Is.EqualTo("200"), coverage);
                 lines[acreage.Location.Line - 1] = $"| Acres | {originalAcres} |";
             }
+            var pollutionTable = tables.Single(table => table.Rows.Any(row =>
+                row.Cells.First().Value == "CoverageName"
+                && row.Cells.ElementAt(1).Value == "Special Farm Pollution"));
+            var pollutionLimit = pollutionTable.Rows.Single(row =>
+                row.Cells.First().Value == "OccurrenceAggregate");
+            Assert.That(pollutionLimit.Cells.ElementAt(1).Value, Is.EqualTo("50000/100000"),
+                "The current Duck Creek coverage 145 model no longer offers a 50000/600000 option.");
+            lines[pollutionLimit.Location.Line - 1] = "| OccurrenceAggregate | 50000/600000 |";
+            foreach (var question in new[]
+            {
+                "PriorPollutionClaims", "ClientAppliesHumanWaste",
+                "RiskWithinHalfMile", "RiskWithinQuarterMile"
+            })
+            {
+                var answer = pollutionTable.Rows.Single(row => row.Cells.First().Value == question);
+                Assert.That(answer.Cells.ElementAt(1).Value, Is.EqualTo("No"), question);
+                lines[answer.Location.Line - 1] = "";
+            }
+            var chemicalTable = tables.Single(table => table.Rows.Any(row =>
+                row.Cells.First().Value == "CoverageName"
+                && row.Cells.ElementAt(1).Value
+                    == "Chemical Drift and Transportation Increased Limits"));
+            var eligibility = chemicalTable.Rows.Single(row =>
+                row.Cells.First().Value == "Eligibility");
+            Assert.That(eligibility.Cells.ElementAt(1).Value, Is.EqualTo("None of the Above"));
+            lines[eligibility.Location.Line - 1] = "";
+            var mortgageeTable = tables.Single(table => table.Rows.Any(row =>
+                row.Cells.First().Value == "SearchName"
+                && row.Cells.ElementAt(1).Value == "Connect One Bank"));
+            var escrowBilled = mortgageeTable.Rows.Single(row =>
+                row.Cells.First().Value == "EscrowBilled");
+            Assert.That(escrowBilled.Cells.ElementAt(1).Value, Is.EqualTo("No"),
+                "Primary Insured Easy Pay billing requires the full billing form, which an escrow-billed mortgagee suppresses.");
+            lines[escrowBilled.Location.Line - 1] = "| EscrowBilled | Yes |";
+            NormalizeApprovedStep(
+                lines,
+                "Then user verifies referral is required",
+                "Then user verifies no referrals are needed");
+            NormalizeApprovedStep(
+                lines,
+                "Then user verifies Transmit control is present for verification only",
+                "Then user verifies Transmit button is enabled on Submission page");
             var semanticLines = lines.Select(line => line.Trim())
                 .Where(line => line.Length != 0)
                 .Select(line => line.StartsWith('|')
@@ -70,7 +112,18 @@ namespace PnCTestAutomation.Tests
             var hash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(
                 string.Join("\n", semanticLines) + "\n")));
             Assert.That(hash, Is.EqualTo("253579EA9C1B718218307385F989A8FB40F9924649DED39BA4D46807A2A4DE38"),
-                "Only table alignment, the Rate Policy effective-date token, and the two user-approved 200-acre expectations may differ from the supplied scenario.");
+                "Only table alignment, the Rate Policy effective-date token, the two user-approved 200-acre expectations, the current pollution-coverage contracts, the billing-compatible escrow answer, and the verification-only referral/transmit expectations may differ from the supplied scenario.");
+        }
+
+        private static void NormalizeApprovedStep(string[] lines, string current, string original)
+        {
+            var indexes = lines
+                .Select((line, index) => (Line: line.Trim(), Index: index))
+                .Where(item => item.Line == current)
+                .Select(item => item.Index)
+                .ToArray();
+            Assert.That(indexes, Has.Length.EqualTo(1), current);
+            lines[indexes[0]] = original;
         }
 
         [Test]
@@ -270,6 +323,24 @@ namespace PnCTestAutomation.Tests
                 Assert.DoesNotThrow(steps.RequireNonProductionEnvironment);
             else
                 Assert.Throws<InvalidOperationException>(steps.RequireNonProductionEnvironment);
+        }
+
+        [Test]
+        public void QualityDuckCreekForms_UsesDedicatedClas23AutomationHost()
+        {
+            var file = Path.Combine(TestContext.CurrentContext.TestDirectory, "appsettings.json");
+            using var document = JsonDocument.Parse(File.ReadAllText(file));
+            var forms = document.RootElement.GetProperty("DuckCreekForms");
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(
+                    forms.GetProperty("ServerBaseUrl").GetString(),
+                    Is.EqualTo("http://svqw-clas23:8080"));
+                Assert.That(
+                    forms.GetProperty("CLASBaseUrl").GetString(),
+                    Is.EqualTo("http://svqw-clas23:8080/express/"));
+            });
         }
 
         [TestCase("MN")]

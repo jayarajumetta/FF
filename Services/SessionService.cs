@@ -74,7 +74,7 @@ namespace PnCTestAutomation.Services
                     || u.Contains("clasq")
                     || u.Contains("clasd")
                     || u.Contains("svdw-clas03")
-                    || u.Contains("svqw-clas21");
+                    || u.Contains("svqw-clas2");
             }
 
             async Task LogResponseAsync(IResponse response)

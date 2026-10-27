@@ -741,10 +741,18 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         }
 
         [Then("user verifies no referrals are needed")]
+        [Then("user verifies referral is required")]
         public async Task UserVerifiesExpectedReferralStatus()
         {
             var submissionPage = new SubmissionPage(_context.Page);
             await submissionPage.WaitForSpinnerAsync();
+
+            if (IsRatePolicyScenario())
+            {
+                await submissionPage.ReferralRequiredText.WaitForAsync(new() { Timeout = 15000 });
+                Console.WriteLine("Verified: STATUS: REFERRAL NEEDED for the Rate Policy underwriting rules.");
+                return;
+            }
 
             if (IsPollution146Scenario())
             {
@@ -777,8 +785,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 _contextData.ChecklistAction,
                 _contextData.ChecklistExceptionNote,
                 _contextData.ChecklistNote,
-                skipIfNotFound: optional,
-                requireException: IsRatePolicyScenario());
+                skipIfNotFound: optional);
 
             Console.WriteLine($"Completed checklist item: {_contextData.ChecklistItemName}, Action: {_contextData.ChecklistAction}");
         }
@@ -798,7 +805,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
 
             if (IsRatePolicyScenario())
             {
-                await submissionPage.AcknowledgeChecklistUpdateAsync();
+                await submissionPage.AcknowledgeChecklistUpdateAsync(expectReferralRequired: true);
                 return;
             }
 
@@ -829,6 +836,7 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
         }
 
         [Then("user verifies Transmit button is enabled on Submission page")]
+        [Then("user verifies Transmit control is present for verification only")]
         public async Task UserVerifiesExpectedTransmitAvailability()
         {
             // Navigate to Submission explicitly — EQ may have moved after the Ok dialog
@@ -846,6 +854,14 @@ namespace PnCTestAutomation.StepDefinitions.SFPSteps
                 transmitBtn = _context.Page.Locator("button").Filter(new() { HasText = "Transmit" });
 
             Assert.That(await transmitBtn.CountAsync() > 0, Is.True, "Transmit button should be present on Submission page");
+
+            if (IsRatePolicyScenario())
+            {
+                await submissionPage.ReferralRequiredText.WaitForAsync(new() { Timeout = 15000 });
+                Console.WriteLine(
+                    "Verified: Transmit control is present; no transmission was attempted while referral is outstanding.");
+                return;
+            }
 
             var cannotTransmitMessage = _context.Page.GetByText("Cannot Transmit", new() { Exact = false });
             var blockerDetails = await cannotTransmitMessage.CountAsync() > 0

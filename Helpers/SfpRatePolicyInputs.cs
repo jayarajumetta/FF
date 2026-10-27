@@ -91,11 +91,12 @@ namespace PnCTestAutomation.Helpers
                 "Special Farm Pollution" => new[]
                 {
                     "CoverageName", "OccurrenceAggregate", "Acres", "OnsiteManureStorage",
-                    "TotalOnsiteCapacity", "MaximumMiles", "Trips"
+                    "TotalOnsiteCapacity", "MaximumMiles", "Trips", "PriorPollutionClaims",
+                    "ClientAppliesHumanWaste", "RiskWithinHalfMile", "RiskWithinQuarterMile"
                 },
                 "Chemical Drift and Transportation Increased Limits" => new[]
                 {
-                    "CoverageName", "OccurrenceAggregate", "Acres"
+                    "CoverageName", "OccurrenceAggregate", "Acres", "Eligibility"
                 },
                 _ => throw new ArgumentException($"Unsupported Rate Policy liability coverage '{coverage}'.")
             };

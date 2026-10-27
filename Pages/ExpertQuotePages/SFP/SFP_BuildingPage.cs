@@ -74,7 +74,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await form.VerifyAsync("CovBuildingInput.Limit", values["InsuranceAmount"], number: true);
             await form.VerifyAsync("CovBuildingContentsInput.Limit", values["ContentsAmount"], number: true);
             await form.ClickActionAsync("Save");
-            await locations.WaitUntilReadyAsync();
+            await locations.ContinueExpectedReviewUntilReadyAsync();
             await Expect(locations.EditBuildingButtons).ToHaveCountAsync(previousBuildings.Length + 1);
             var currentBuildings = await locations.EditBuildingButtons.EvaluateAllAsync<string[]>(
                 "elements => elements.map(element => element.getAttribute('data-testid'))");

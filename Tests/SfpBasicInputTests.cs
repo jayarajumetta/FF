@@ -145,6 +145,7 @@ namespace PnCTestAutomation.Tests
 
         [TestCase("Main House", new string[] { "Main House" }, 0)]
         [TestCase("Main House", new string[] { "Residence #1" }, 0)]
+        [TestCase("Main House", new string[] { "Residence #1", "Building #1", "Building #2" }, 0)]
         [TestCase("Main House", new string[] { "Residence #1", "Residence #2" }, -1)]
         public void MortgageeResidence_UsesSoleGenericOptionButRejectsAmbiguousFallback(
             string requestedResidence,

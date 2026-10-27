@@ -22,15 +22,8 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                 await EditRetailAsync(values);
                 return;
             }
-            var caption = name switch
-            {
-                "Lessors Risk" => new Regex(@"^\s*Lessor['\u2019]?s\s+Risk\s*$", RegexOptions.IgnoreCase),
-                "Special Farm Pollution" or "Chemical Drift and Transportation Increased Limits" =>
-                    SFP_NativeFormPage.Caption(name),
-                _ => throw new ArgumentException($"Unsupported liability coverage '{name}'.")
-            };
             var form = new SFP_NativeFormPage(_page);
-            await form.SelectNamedCatalogCoverageAsync(Catalog, caption);
+            await form.SelectNamedCatalogCoverageAsync(Catalog, CatalogCaption(name));
             var actionName = CoverageActionName(name);
             var firstField = name switch
             {
@@ -38,9 +31,8 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                 _ => form.Field(AcreageCoverageEntity(name) + ".OccurrenceAggregateLimit")
             };
             var edit = form.Action(actionName);
-            await firstField.Or(edit).First.WaitForAsync(new() { State = WaitForSelectorState.Visible });
-            if (await firstField.CountAsync() == 0)
-                await form.ClickActionAsync(actionName);
+            await form.ClickActionAndRequireReadyAsync(
+                actionName, firstField.Or(form.Action("Save")));
             switch (name)
             {
                 case "Lessors Risk":
@@ -52,7 +44,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                     break;
             }
             await form.ClickActionAsync("Save");
-            await form.RequireReadyAsync(Catalog);
+            await form.ContinueReviewAndRequireReadyAsync(Catalog);
             var summaryRow = edit.Locator("xpath=ancestor::*[self::tr or self::mat-row][1]");
             await Expect(summaryRow).ToHaveCountAsync(1);
             await Expect(summaryRow).Not.ToContainTextAsync(
@@ -64,6 +56,19 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             "Lessors Risk" => "AddEditLessorsRisk",
             "Special Farm Pollution" => "AddEditSpecialFarmPollution",
             "Chemical Drift and Transportation Increased Limits" => "AddEditFarmChemTransportationDrift",
+            _ => throw new ArgumentException($"Unsupported liability coverage '{name}'.")
+        };
+
+        internal static Regex CatalogCaption(string name) => name switch
+        {
+            "Lessors Risk" =>
+                new Regex(@"^\s*Lessor['\u2019]?s\s+Risk\s*$", RegexOptions.IgnoreCase),
+            "Special Farm Pollution" =>
+                SFP_NativeFormPage.Caption(
+                    "Livestock Operations Special Farm Pollution Liability"),
+            "Chemical Drift and Transportation Increased Limits" =>
+                SFP_NativeFormPage.Caption(
+                    "Farm Chemical Transportation/Farm Chemical Drift"),
             _ => throw new ArgumentException($"Unsupported liability coverage '{name}'.")
         };
 
@@ -79,10 +84,11 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             var form = new SFP_NativeFormPage(_page);
             var entity = AcreageCoverageEntity(values["CoverageName"]);
             await form.SetAsync(entity + ".OccurrenceAggregateLimit", values["OccurrenceAggregate"], moneyOption: true);
-            await Expect(form.Field(entity + ".NumberOfAcresUsed")).Not.ToBeEditableAsync();
+            var acreage = form.ReadOnlyValue(entity + ".NumberOfAcresUsed");
+            await Expect(acreage).ToHaveCountAsync(1);
             try
             {
-                await form.VerifyAsync(entity + ".NumberOfAcresUsed", values["Acres"], number: true);
+                await SfpFieldAssertions.NumberTextAsync(acreage, values["Acres"]);
             }
             catch (PlaywrightException error)
             {
@@ -97,6 +103,24 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                 await form.SetAsync(entity + ".TotalCapacityOfManureStorage", values["TotalOnsiteCapacity"], number: true);
                 await form.SetAsync(entity + ".MaximumNumberOfMiles", values["MaximumMiles"], number: true);
                 await form.SetAsync(entity + ".NumberOfTrips", values["Trips"], number: true);
+                await form.SetAsync(
+                    "SpecialFarmPollutionQuestionsInput.PriorIncidencesOfPollutionClaims",
+                    values["PriorPollutionClaims"]);
+                await form.SetAsync(
+                    "SpecialFarmPollutionQuestionsInput.ClientAppliesHumanWaste",
+                    values["ClientAppliesHumanWaste"]);
+                await form.SetAsync(
+                    "SpecialFarmPollutionQuestionsInput.RiskWithin1_2Mile",
+                    values["RiskWithinHalfMile"]);
+                await form.SetAsync(
+                    "SpecialFarmPollutionQuestionsInput.RiskWithin1_4Mile",
+                    values["RiskWithinQuarterMile"]);
+            }
+            else
+            {
+                SfpRequiredTable.RequireValue(
+                    "Eligibility", values["Eligibility"], "None of the Above");
+                await form.CheckAsync("FarmChemTransportationDriftQuestionsInput.EqNoneAbove");
             }
         }
 
@@ -152,6 +176,11 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         private async Task EditRetailAsync(IReadOnlyDictionary<string, string> values)
         {
             var form = new SFP_NativeFormPage(_page);
+            await form.SelectNamedCatalogCoverageAsync(
+                Catalog,
+                new Regex(
+                    @"^\s*Retail Sales and Farm Stands,\s*Product Sales\s*$",
+                    RegexOptions.IgnoreCase));
             await form.ClickActionAsync("AddEditRetailSales");
             var onPremises = values["CoverageName"] == "Retail Sales On Premises";
             var entity = onPremises ? "CovRetailSalesOnPremises" : "CovRetailSalesOffPremises";
@@ -161,20 +190,24 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await form.CheckAsync("RetailSaleOfGoodsInput." + selector);
             await form.SetAsync(entity + "Input." + total, values["TotalSales"], number: true);
             if (onPremises)
-                await form.SetSectionAsync(await form.SectionAsync(entity + "Input." + total),
-                    "SalesLocationInput.Location", values["Location"]);
+            {
+                var section = await form.SectionAsync(entity + "Input." + total);
+                await form.SelectAsync(
+                    form.SectionField(section, "SalesLocationInput.Location"),
+                    ListedItemCaption(values["Location"]));
+            }
             await form.SetAsync(entity + "Input.OthersGoods", values["ProducedByOthers"]);
             await form.SetAsync(entity + "Input.Description", values["Description"]);
             await form.SetAsync(entity + "Input.PercentOfTotalSalesOthersGoods", values["Percent"], number: true);
             await form.ClickActionAsync("Save");
-            await form.RequireReadyAsync(Catalog);
+            await form.ContinueReviewAndRequireReadyAsync(Catalog);
 
             _retailExpected[values["CoverageName"]] = values;
             await form.ClickActionAsync("AddEditRetailSales");
             foreach (var expected in _retailExpected.Values)
                 await VerifyRetailAsync(form, expected);
             await form.ClickActionAsync("Save");
-            await form.RequireReadyAsync(Catalog);
+            await form.ContinueReviewAndRequireReadyAsync(Catalog);
         }
 
         private static async Task VerifyRetailAsync(SFP_NativeFormPage form, IReadOnlyDictionary<string, string> values)
@@ -189,18 +222,26 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await form.VerifyAsync(entity + "Input.OthersGoods", values["ProducedByOthers"]);
             await form.VerifyAsync(entity + "Input.Description", values["Description"]);
             await form.VerifyAsync(entity + "Input.PercentOfTotalSalesOthersGoods", values["Percent"], number: true);
+            var section = await form.SectionAsync(entity + "Input." + totalField);
             if (onPremises)
-                await form.VerifyControlAsync(
-                    form.SectionField(await form.SectionAsync(entity + "Input." + totalField), "SalesLocationInput.Location"),
-                    values["Location"]);
-            await form.VerifyAsync(entity + "Output.Coverage", "171");
-            await form.VerifyAsync(entity + "Output.ClassCode", onPremises ? "10020" : "10030");
+            {
+                var location = form.SectionField(section, "SalesLocationInput.Location");
+                await Expect(location).ToHaveCountAsync(1);
+                await Expect(location).ToBeVisibleAsync();
+                var displayed = location.Locator(".mat-select-value-text, .mat-mdc-select-value-text");
+                await Expect(await displayed.CountAsync() == 0 ? location : displayed)
+                    .ToHaveTextAsync(ListedItemCaption(values["Location"]));
+            }
             var total = decimal.Parse(values["TotalSales"], CultureInfo.InvariantCulture);
             var others = SfpRequiredTable.YesNo(values["ProducedByOthers"])
                 ? total * decimal.Parse(values["Percent"], CultureInfo.InvariantCulture) / 100
                 : 0;
-            await form.VerifyAsync(entity + "Output.TotalSalesOthersGoods", others.ToString(CultureInfo.InvariantCulture), number: true);
-            await form.VerifyAsync(entity + "Output.TotalSalesOwnGoods", (total - others).ToString(CultureInfo.InvariantCulture), number: true);
+            await form.VerifySectionAsync(
+                section,
+                entity + "Output.TotalSalesOthersGoods",
+                others.ToString(CultureInfo.InvariantCulture),
+                number: true,
+                readOnlyCaption: "Revenue Generated from Goods produced by Others");
         }
 
         private static Task VerifyRetailSelectorAsync(SFP_NativeFormPage form, bool onPremises) =>

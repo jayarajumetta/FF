@@ -16,16 +16,24 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         #region EChecklist popup locators
 
         /// <summary>
-        /// Summary table link for an item — always visible regardless of accordion state.
-        /// Clicking this loads the detail panel with Exception/Note controls.
+        /// Selectable item in either the summary grid or sidebar. EChecklist auto-advances
+        /// after saving, so subsequent items may need to be selected from the sidebar.
         /// </summary>
         public ILocator ItemRow(string itemName) =>
-            _page.Locator("a.js-checklist-summary-item").Filter(new() { HasText = itemName });
+            _page.Locator("a.js-checklist-summary-item, li.js-current-item")
+                .Filter(new() { HasText = itemName, Visible = true });
+
+        public ILocator SavedItemNote(string itemName) =>
+            _page.Locator("li.js-current-item")
+                .Filter(new() { HasText = itemName, Visible = true })
+                .Locator("i[data-original-title='Notes']");
 
         // Exception flow
         public ILocator ExceptionButton => _page.Locator("button.js-exception");
+        public ILocator ExceptionNoteModal => _page.Locator("#exception-note");
         public ILocator ExceptionNoteTextarea => _page.Locator(".js-exception-note-text textarea");
         public ILocator ExceptionNoteConfirm => _page.Locator("#exception-note-confirm");
+        public ILocator ApplyChangesModal => _page.Locator("#apply-changes-modal");
 
         // Main note + Add Note
         public ILocator MainNoteTextarea => _page.Locator("textarea.js-note");
@@ -146,17 +154,18 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
         /// <summary>
         /// Full interaction for a single checklist item:
         /// 1. Click the item row.
-        /// 2. If action == "Exception": click Exception → fill modal note → click OK.
-        /// 3. Fill the main note field.
-        /// 4. Click Add Note.
+        /// 2. If action == "Exception": click Exception → fill modal note → click OK
+        ///    and wait for the Checklist application to finish applying the change.
+        /// 3. For non-exception actions, fill the main note field and click Add Note.
         /// Includes SSO redirect handling for session timeout scenarios.
         /// </summary>
         public async Task CompleteChecklistItemAsync(string itemName, string action, string exceptionNote, string note,
-            bool skipIfNotFound = false, bool requireException = false)
+            bool skipIfNotFound = false)
         {
-            if (requireException && (!string.Equals(action, "Exception", StringComparison.OrdinalIgnoreCase)
-                || string.IsNullOrWhiteSpace(exceptionNote) || string.IsNullOrWhiteSpace(note)))
-                throw new ArgumentException("Rate Policy checklist items require an Exception, ExceptionNote and Note.");
+            var isException = string.Equals(action, "Exception", StringComparison.OrdinalIgnoreCase);
+            if (isException && string.IsNullOrWhiteSpace(exceptionNote) && string.IsNullOrWhiteSpace(note))
+                throw new ArgumentException("Checklist exception items require an ExceptionNote or Note.");
+
             var itemVisibilityTimeoutMs = skipIfNotFound ? 12000 : 60000;
             var retryVisibilityTimeoutMs = skipIfNotFound ? 8000 : 30000;
 
@@ -195,36 +204,63 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
 
             // 2. Handle action — Exception button may not exist for all item types (e.g. Attachment Not Required)
-            if (string.Equals(action, "Exception", StringComparison.OrdinalIgnoreCase))
+            if (isException)
             {
-                if (requireException)
-                    await Assertions.Expect(ExceptionButton).ToBeVisibleAsync();
                 var exceptionBtnVisible = await ExceptionButton.IsVisibleAsync();
                 if (!exceptionBtnVisible)
                 {
-                    try { await ExceptionButton.WaitForAsync(new() { Timeout = 5000 }); exceptionBtnVisible = true; }
-                    catch (TimeoutException) { Console.WriteLine($"[Checklist] No Exception button for '{itemName}' — skipping exception flow"); }
+                    try
+                    {
+                        await ExceptionButton.WaitForAsync(new() { Timeout = 5000 });
+                        exceptionBtnVisible = true;
+                    }
+                    catch (TimeoutException) when (skipIfNotFound)
+                    {
+                        Console.WriteLine($"[Checklist] No Exception button for optional item '{itemName}' — skipping.");
+                        return;
+                    }
                 }
 
-                if (exceptionBtnVisible)
+                if (!exceptionBtnVisible)
+                    throw new PlaywrightException(
+                        $"Checklist item '{itemName}' requires an Exception action, but the Exception button was not available.");
+
+                await ExceptionButton.ClickAsync();
+
+                // EChecklist enables OK from its keyup handler.
+                await ExceptionNoteTextarea.WaitForAsync(new() { Timeout = 10000 });
+                await ExceptionNoteTextarea.EvaluateAsync(@"(el, text) => {
+                    el.value = text;
+                    el.dispatchEvent(new Event('input', { bubbles: true }));
+                    el.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
+                }", string.IsNullOrWhiteSpace(exceptionNote) ? note : exceptionNote);
+
+                await Assertions.Expect(ExceptionNoteConfirm).ToBeEnabledAsync(new() { Timeout = 10000 });
+                await ExceptionNoteConfirm.ClickAsync();
+
+                // Saving an exception is the complete item action. EChecklist first fades
+                // the note modal, then displays a blocking "Applying Changes..." overlay
+                // while it saves and collapses the item detail panel.
+                await ExceptionNoteModal.WaitForAsync(
+                    new() { State = WaitForSelectorState.Hidden, Timeout = 15000 });
+                try
                 {
-                    await ExceptionButton.ClickAsync();
-
-                    // Fill the exception modal note via JS — single clean event, no multi-keyup noise
-                    await ExceptionNoteTextarea.WaitForAsync(new() { Timeout = 10000 });
-                    await ExceptionNoteTextarea.EvaluateAsync(@"(el, text) => {
-                        el.value = text;
-                        el.dispatchEvent(new Event('input', { bubbles: true }));
-                        el.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
-                    }", exceptionNote ?? note);
-
-                    // Confirm
-                    await ExceptionNoteConfirm.ClickAsync();
-                    await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 15000 });
+                    await ApplyChangesModal.WaitForAsync(
+                        new() { State = WaitForSelectorState.Visible, Timeout = 5000 });
                 }
+                catch (TimeoutException)
+                {
+                    // A fast response can display and remove the overlay between polls.
+                }
+
+                await ApplyChangesModal.WaitForAsync(
+                    new() { State = WaitForSelectorState.Hidden, Timeout = 60000 });
+                await SavedItemNote(itemName).First.WaitForAsync(
+                    new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+                return;
             }
 
-            // 3. Fill main note field via JS — fires a single keyup to enable Add Note
+            // 3. A standalone note is a separate action from requesting an exception.
             await MainNoteTextarea.WaitForAsync(new() { Timeout = 10000 });
             await MainNoteTextarea.EvaluateAsync(@"(el, text) => {
                 el.value = text;
@@ -232,13 +268,20 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                 el.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
             }", note);
 
-            // 4. Verify Add Note is enabled, then force-click to bypass CSS transition stability check
+            // 4. Verify Add Note is enabled and unobstructed before clicking.
             await Assertions.Expect(AddNoteButton).ToBeEnabledAsync(new() { Timeout = 10000 });
-            if (requireException)
-                await AddNoteButton.ClickAsync();
-            else
-                await AddNoteButton.ClickAsync(new() { Force = true });
-            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 15000 });
+            await AddNoteButton.ClickAsync();
+            try
+            {
+                await ApplyChangesModal.WaitForAsync(
+                    new() { State = WaitForSelectorState.Visible, Timeout = 5000 });
+            }
+            catch (TimeoutException)
+            {
+                // A fast response can display and remove the overlay between polls.
+            }
+            await ApplyChangesModal.WaitForAsync(
+                new() { State = WaitForSelectorState.Hidden, Timeout = 60000 });
 
             // 5. Reload to return to the summary table view so the next item's link is visible.
             // Use a generous timeout — the checklist server can be slow after saving a note.
@@ -246,13 +289,6 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await WaitForSsoRedirectAsync(_page, timeoutMs: 60000);
             await ThrowIfChecklistApplicationErrorAsync(_page);
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
-            if (requireException)
-            {
-                await row.First.ClickAsync();
-                await _page.WaitForLoadStateAsync(LoadState.NetworkIdle, new() { Timeout = 30000 });
-                await Assertions.Expect(_page.GetByText(note, new() { Exact = true })
-                    .Filter(new() { Visible = true }).First).ToBeVisibleAsync();
-            }
         }
 
         /// <summary>Closes the checklist popup tab — no Submit needed to enable Transmit.</summary>

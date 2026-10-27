@@ -50,7 +50,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
             _page.GetByRole(AriaRole.Button, new() { Name = "Transmit" });
         #endregion
 
-        public async Task AcknowledgeChecklistUpdateAsync()
+        public async Task AcknowledgeChecklistUpdateAsync(bool expectReferralRequired = false)
         {
             var dialog = _page.GetByRole(AriaRole.Dialog).Filter(new() { HasText = "Checklist Opened" });
             await Expect(dialog).ToHaveCountAsync(1);
@@ -63,7 +63,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages
             await confirm.ClickAsync();
             await Expect(dialog).ToBeHiddenAsync();
             await WaitForSpinnerAsync();
-            await Expect(NoReferralsText).ToBeVisibleAsync();
+            await Expect(expectReferralRequired ? ReferralRequiredText : NoReferralsText).ToBeVisibleAsync();
         }
     }
 }

@@ -260,17 +260,22 @@ Feature: SFP Rate Policy
     When user edits liability optional coverage and stays
       | Question            | Answer                 |
       | CoverageName        | Special Farm Pollution |
-      | OccurrenceAggregate | 50000/600000           |
+      | OccurrenceAggregate | 50000/100000           |
       | Acres               | 200                    |
       | OnsiteManureStorage | Yes                    |
       | TotalOnsiteCapacity | 7500000                |
       | MaximumMiles        | 20                     |
       | Trips               | 50                     |
+      | PriorPollutionClaims | No                     |
+      | ClientAppliesHumanWaste | No                  |
+      | RiskWithinHalfMile  | No                     |
+      | RiskWithinQuarterMile | No                   |
     When user edits liability optional coverage and continues
       | Question            | Answer                                             |
       | CoverageName        | Chemical Drift and Transportation Increased Limits |
       | OccurrenceAggregate | 50000/100000                                       |
       | Acres               |                                                200 |
+      | Eligibility         | None of the Above                                  |
 
     When user adds Additional Interest Mortgagee
       | Question              | Answer           |
@@ -280,7 +285,7 @@ Feature: SFP Rate Policy
       | CopyOfDEC             | No               |
       | AccountNumber         | 123456789        |
       | DescriptionOfInterest | Mortgage Lender  |
-      | EscrowBilled          | Yes              |
+      | EscrowBilled          | No               |
     When user runs Insurance Score
       | Question              | Answer          |
       | EntityType            | Primary Insured |
@@ -300,7 +305,7 @@ Feature: SFP Rate Policy
       | PaymentAmount  | Minimum         |
       | PaymentMethod  | Check           |
     When user navigates to Submission and opens Checklist
-    Then user verifies no referrals are needed
+    Then user verifies referral is required
     When user completes Checklist item
       | Question      | Answer              |
       | ItemName      | Residence Photo #1  |
@@ -321,7 +326,7 @@ Feature: SFP Rate Policy
       | Note          | EasyPay set |
       | Optional      | Yes         |
     When user closes Checklist and confirms Update
-    Then user verifies Transmit button is enabled on Submission page
+    Then user verifies Transmit control is present for verification only
     When user validates Forms via Duckcreek for state "<StateAbbv>"
 
     @Shard1

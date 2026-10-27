@@ -1,6 +1,7 @@
 ﻿using Microsoft.Playwright;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PnCTestAutomation.Helpers;
@@ -26,17 +27,18 @@ namespace PnCTestAutomation.Pages
             var form = new SFP_NativeFormPage(_page);
             await form.SelectChoiceAsync("_PolicyPaymentInputDoc.BillingCenterAccount",
                 SFP_NativeFormPage.Caption("Create New Billing Account"));
-            var first = Regex.Escape(data.ClientFirstName);
-            var middle = Regex.Escape(data.ClientMiddleName ?? "");
-            var last = Regex.Escape(data.ClientLastName);
+            var first = FlexibleNamePart(data.ClientFirstName);
+            var middle = FlexibleNamePart(data.ClientMiddleName ?? "");
+            var last = FlexibleNamePart(data.ClientLastName);
             var insured = new Regex(
-                $@"^\s*(?:Primary Insured|{first}\s+(?:{middle}\s+)?{last}(?:\s*\(Primary Insured\))?)\s*$",
+                $@"^\s*(?:Primary Insured|{first}\s+(?:{middle}\s+)?{last})(?:\s*\(Primary Insured\))?(?:\s*\d{{4}}-\d{{2}}-\d{{2}})?\s*$",
                 RegexOptions.IgnoreCase);
             await form.SelectChoiceAsync("SubsequentPaymentData.PayerID", insured);
             var easyPay = new Regex(@"^\s*Easy\s*Pay\s*$", RegexOptions.IgnoreCase);
             await form.SelectChoiceAsync("SubsequentPaymentData.PaymentMethod", easyPay);
             await form.SelectChoiceAsync("SubsequentBankData.ExistingDraftAccount",
-                new Regex(@"^\s*Create New(?: Bank)?(?: Account)?\s*$", RegexOptions.IgnoreCase));
+                new Regex(@"^\s*(?:Create\s+New(?:\s+Bank)?(?:\s+Account)?|New\s+Account)\s*$",
+                    RegexOptions.IgnoreCase));
             await form.SelectChoiceAsync("SubsequentBankData.AccountUse", SFP_NativeFormPage.Caption("Personal"));
             await form.SelectChoiceAsync("SubsequentBankData.AccountType", SFP_NativeFormPage.Caption("Checking"));
             await form.SelectChoiceAsync("SubsequentBankData.AccountOwnerSelect", insured);
@@ -46,8 +48,7 @@ namespace PnCTestAutomation.Pages
             await form.SelectChoiceAsync("SubsequentPaymentData.PaymentPlan",
                 SFP_NativeFormPage.Caption(values["PaymentPlan"]));
             await form.SetAsync("SubsequentPaymentData.DueDate", values["PaymentDueDate"]);
-            await form.SelectChoiceAsync("InitialPaymentData.AmountSelection",
-                new Regex(@"^\s*Minimum(?: Due)?\s*$", RegexOptions.IgnoreCase));
+            await form.SelectChoiceByValueAsync("InitialPaymentData.AmountSelection", "Min");
             await form.SelectChoiceAsync("InitialPaymentData.PaymentMethod", SFP_NativeFormPage.Caption("Check"));
             data.CheckNumber = Random.Shared.Next(1000, 99999).ToString(System.Globalization.CultureInfo.InvariantCulture);
             await form.SetControlAsync(InitialCheckNumberInput, data.CheckNumber);
@@ -60,6 +61,9 @@ namespace PnCTestAutomation.Pages
             await form.VerifyAsync("SubsequentPaymentData.DueDate", values["PaymentDueDate"]);
             await ClickNextAsync(spinnerTimeoutMs: 120000);
         }
+
+        private static string FlexibleNamePart(string value) =>
+            string.Join(@"\s*", Regex.Split(value.Trim(), @"\s+").Select(Regex.Escape));
 
         // ===== Billing Account Setup =====
         // Select from existing Billing Accounts or Create New

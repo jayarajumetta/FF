@@ -154,6 +154,13 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             var chips = Chips(logicalName);
             if (await chips.CountAsync() != 0)
                 return chips;
+
+            var largeChips = Native(logicalName, ".value")
+                .Locator(":scope > [data-testid$='-wrapper']")
+                .And(_page.Locator(":visible"));
+            if (await largeChips.CountAsync() != 0)
+                return largeChips;
+
             var parts = logicalName.Split('.');
             if (parts.Length != 2)
                 throw new ArgumentException($"Expected Entity.Field, received '{logicalName}'.");
@@ -171,13 +178,22 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await VerifyChoiceAsync(logicalName, caption);
         }
 
+        public async Task SelectChoiceByValueAsync(string logicalName, string value)
+        {
+            var choice = await ChoiceWithValueAsync(await ChoiceOptionsAsync(logicalName), value);
+            await Expect(choice).ToHaveCountAsync(1);
+            await choice.ClickAsync();
+            await WaitForSpinnerAsync();
+            choice = await ChoiceWithValueAsync(await ChoiceOptionsAsync(logicalName), value);
+            await Expect(choice).ToHaveCountAsync(1);
+            await Expect(SelectedChoiceState(choice)).Not.ToHaveCountAsync(0);
+        }
+
         public async Task VerifyChoiceAsync(string logicalName, Regex caption)
         {
             var choice = await ChoiceWithCaptionAsync(await ChoiceOptionsAsync(logicalName), caption);
             await Expect(choice).ToHaveCountAsync(1);
-            var selected = choice.Locator(".chip-wrapper-selected, [aria-checked='true'], input:checked")
-                .Or(choice.And(_page.Locator(".chip-wrapper-selected, [aria-checked='true']")));
-            await Expect(selected).Not.ToHaveCountAsync(0);
+            await Expect(SelectedChoiceState(choice)).Not.ToHaveCountAsync(0);
         }
 
         public async Task SetAsync(string logicalName, string value, bool number = false, bool moneyOption = false)
@@ -260,6 +276,8 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             string value,
             bool waitForDuckCreekRefresh = false)
         {
+            await control.EvaluateAsync(
+                "element => element.scrollIntoView({ block: 'center', inline: 'nearest' })");
             await control.FillAsync(value);
             var controlledPanel = await control.GetAttributeAsync("aria-controls");
             if (controlledPanel != null && !Regex.IsMatch(controlledPanel, @"^[A-Za-z_][A-Za-z0-9_.:-]*$"))
@@ -272,28 +290,20 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             var option = listbox.GetByRole(AriaRole.Option).Filter(new() { HasTextRegex = Caption(value) });
             await Expect(option).ToHaveCountAsync(1);
 
-            Func<Task> activateOption;
-            if (await IsFullyInViewportAsync(option))
-                activateOption = () => option.ClickAsync();
-            else
+            async Task ActivateOptionAndBlurAsync()
             {
-                var optionId = await option.GetAttributeAsync("id");
-                if (string.IsNullOrWhiteSpace(optionId))
-                    throw new PlaywrightException("An off-screen typeahead option had no id for keyboard selection.");
-                await control.PressAsync("ArrowDown");
-                await Expect(control).ToHaveAttributeAsync("aria-activedescendant", optionId);
-                activateOption = () => control.PressAsync("Enter");
+                await ActivateTypeaheadOptionAsync(control, option);
+                await control.PressAsync("Tab");
             }
 
             if (waitForDuckCreekRefresh)
             {
                 await RunAndWaitForDuckCreekRefreshAsync(
-                    activateOption, $"selecting '{value}'");
+                    ActivateOptionAndBlurAsync, $"selecting '{value}'");
             }
             else
-                await activateOption();
+                await ActivateOptionAndBlurAsync();
 
-            await control.PressAsync("Tab");
             await WaitForSpinnerAsync();
             await Expect(control).ToHaveValueAsync(Caption(value));
             var activePanel = await control.GetAttributeAsync("aria-controls");
@@ -309,6 +319,26 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                     await Expect(activeListbox).Not.ToBeVisibleAsync();
                 }
             }
+        }
+
+        private static async Task ActivateTypeaheadOptionAsync(ILocator control, ILocator option)
+        {
+            if (await IsFullyInViewportAsync(option))
+            {
+                await option.ClickAsync();
+                return;
+            }
+
+            var optionId = await option.GetAttributeAsync("id");
+            if (string.IsNullOrWhiteSpace(optionId))
+                throw new PlaywrightException("An off-screen typeahead option had no id for keyboard selection.");
+            if (!string.Equals(await control.GetAttributeAsync("aria-activedescendant"), optionId,
+                    StringComparison.Ordinal))
+            {
+                await control.PressAsync("ArrowDown");
+                await Expect(control).ToHaveAttributeAsync("aria-activedescendant", optionId);
+            }
+            await control.PressAsync("Enter");
         }
 
         public async Task SetByLabelAsync(string caption, string value, bool number = false, string section = null)
@@ -367,8 +397,25 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             {
                 var control = choice.Locator(".chip-wrapper");
                 await Expect(control).ToHaveCountAsync(1);
+                await Expect(control).ToBeVisibleAsync();
+                await Expect(control).ToBeEnabledAsync();
                 await control.ClickAsync();
                 await WaitForSpinnerAsync();
+                try
+                {
+                    await Expect(selected).ToHaveCountAsync(1, new() { Timeout = 2000 });
+                }
+                catch (PlaywrightException)
+                {
+                    choice = await ChoiceWithCaptionAsync(chips, Caption(caption));
+                    control = choice.Locator(".chip-wrapper");
+                    await Expect(control).ToHaveCountAsync(1);
+                    await Expect(control).ToBeVisibleAsync();
+                    await Expect(control).ToBeEnabledAsync();
+                    await control.ClickAsync();
+                    await WaitForSpinnerAsync();
+                    selected = choice.Locator(".chip-wrapper-selected");
+                }
             }
             await Expect(selected).ToHaveCountAsync(1);
             await Expect(chips.Locator(".chip-wrapper-selected")).ToHaveCountAsync(1);
@@ -384,6 +431,21 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                 ? labelled
                 : choices.Filter(new() { HasTextRegex = caption });
         }
+
+        private async Task<ILocator> ChoiceWithValueAsync(ILocator choices, string value)
+        {
+            if (!Regex.IsMatch(value, @"^[A-Za-z0-9:_-]+$"))
+                throw new ArgumentException($"Choice value '{value}' contains unsupported selector characters.");
+            var valuedControl = _page.Locator($"input[value='{value}'], [value='{value}']");
+            var nested = choices.Filter(new() { Has = valuedControl });
+            return await nested.CountAsync() != 0
+                ? nested
+                : choices.And(valuedControl);
+        }
+
+        private ILocator SelectedChoiceState(ILocator choice) =>
+            choice.Locator(".chip-wrapper-selected, [aria-checked='true'], input:checked")
+                .Or(choice.And(_page.Locator(".chip-wrapper-selected, [aria-checked='true'], input:checked")));
 
         public Task SelectAsync(ILocator select, string caption, bool moneyOption = false) =>
             SelectAsync(select, moneyOption ? MoneyCaption(caption) : Caption(caption));
@@ -498,12 +560,59 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await ThrowIfQuoteErrorAsync($"executing {name}");
         }
 
+        public async Task ClickActionAndRequireReadyAsync(string name, ILocator destination)
+        {
+            if (await destination.First.IsVisibleAsync())
+                return;
+
+            TimeoutException lostClick = null;
+            for (var attempt = 0; attempt < 2; attempt++)
+            {
+                var action = Action(name);
+                await Expect(action).ToHaveCountAsync(1);
+                await Expect(action).ToBeEnabledAsync();
+                var requestSent = false;
+                try
+                {
+                    await _page.RunAndWaitForRequestAsync(
+                        () => action.ClickAsync(),
+                        request =>
+                            request.Method == "POST"
+                            && request.Url.Contains("/api/duckcreek/product",
+                                StringComparison.OrdinalIgnoreCase),
+                        new() { Timeout = 5000 });
+                    requestSent = true;
+                }
+                catch (TimeoutException error) when (attempt == 0)
+                {
+                    lostClick = error;
+                    if (!await destination.First.IsVisibleAsync())
+                        continue;
+                }
+
+                await WaitForSpinnerAsync();
+                await ThrowIfQuoteErrorAsync($"opening {name}");
+                try
+                {
+                    await destination.First.WaitForAsync(
+                        new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+                }
+                catch (TimeoutException) when (requestSent)
+                {
+                    throw new PlaywrightException(
+                        $"Clicking {name} sent a Duck Creek request, but the editor did not become ready.");
+                }
+                return;
+            }
+
+            throw new PlaywrightException(
+                $"Clicking {name} neither sent a Duck Creek request nor opened the editor after one controlled retry. "
+                + lostClick?.Message);
+        }
+
         public async Task RequireReadyAsync(ILocator destination)
         {
-            var review = _page.GetByRole(AriaRole.Dialog).Filter(new()
-            {
-                HasTextRegex = new Regex("Review Required", RegexOptions.IgnoreCase)
-            });
+            var review = ReviewRequiredDialog();
             await destination.Or(review).And(_page.Locator(":visible")).First.WaitForAsync(
                 new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
             if (await review.IsVisibleAsync())
@@ -511,6 +620,34 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             await ThrowIfQuoteErrorAsync("waiting for the requested SFP page");
             await Expect(destination).ToBeVisibleAsync();
         }
+
+        public async Task ContinueReviewAndRequireReadyAsync(ILocator destination)
+        {
+            var review = ReviewRequiredDialog();
+            await destination.Or(review).And(_page.Locator(":visible")).First.WaitForAsync(
+                new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+            if (await review.IsVisibleAsync())
+            {
+                var reviewNow = review.GetByRole(AriaRole.Button, new()
+                {
+                    NameRegex = new Regex(@"^\s*Review Now\s*$", RegexOptions.IgnoreCase)
+                }).First;
+                if (await reviewNow.CountAsync() > 0 && await reviewNow.IsEnabledAsync())
+                    throw new PlaywrightException(
+                        $"SFP requires an actionable correction; REVIEW NOW was not bypassed: {await review.InnerTextAsync()}");
+                await ContinuePastReviewRequiredIfPresentAsync();
+            }
+            await destination.WaitForAsync(
+                new() { State = WaitForSelectorState.Visible, Timeout = 30000 });
+            await ThrowIfQuoteErrorAsync("continuing past the expected SFP review");
+            await Expect(destination).ToBeVisibleAsync();
+        }
+
+        private ILocator ReviewRequiredDialog() =>
+            _page.GetByRole(AriaRole.Dialog).Filter(new()
+            {
+                HasTextRegex = new Regex("Review Required", RegexOptions.IgnoreCase)
+            });
 
         public async Task<ILocator> SelectCatalogCoverageAsync(ILocator table, string column, string caption)
         {
@@ -538,14 +675,35 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
             if (!await input.IsCheckedAsync())
             {
                 await RunAndWaitForDuckCreekRefreshAsync(
-                    () => label.ClickAsync(), "selecting catalog coverage");
+                    async () =>
+                    {
+                        await label.ClickAsync();
+                        try
+                        {
+                            await Expect(input).ToBeCheckedAsync(new() { Timeout = 2000 });
+                        }
+                        catch (PlaywrightException)
+                        {
+                            await Expect(row).ToHaveCountAsync(1);
+                            input = row.Locator(
+                                "input[type='checkbox'][data-testid$='Input$selected.value' i]");
+                            label = row.Locator(
+                                "label[data-testid$='Input$selected.value' i]");
+                            await Expect(input).ToHaveCountAsync(1);
+                            await Expect(label).ToHaveCountAsync(1);
+                            await label.ClickAsync();
+                            await Expect(input).ToBeCheckedAsync(new() { Timeout = 2000 });
+                        }
+                    },
+                    "selecting catalog coverage");
             }
             await WaitForSpinnerAsync();
             await Expect(input).ToBeCheckedAsync();
             return row;
         }
 
-        private async Task RunAndWaitForDuckCreekRefreshAsync(Func<Task> action, string operation)
+        private async Task RunAndWaitForDuckCreekRefreshAsync(
+            Func<Task> action, string operation, float timeoutMs = 10000)
         {
             var response = await _page.RunAndWaitForResponseAsync(
                 action,
@@ -554,7 +712,7 @@ namespace PnCTestAutomation.Pages.ExpertQuotePages.SFP
                     && response.Url.Contains("/api/duckcreek/product",
                         StringComparison.OrdinalIgnoreCase)
                     && response.Status != 204,
-                new() { Timeout = 10000 });
+                new() { Timeout = timeoutMs });
             if (response.Status >= 400)
                 throw new PlaywrightException(
                     $"Duck Creek refresh failed with HTTP {response.Status} while {operation}.");
