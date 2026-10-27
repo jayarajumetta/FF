@@ -55,11 +55,11 @@ $settings = @"
 <RunSettings>
   <RunConfiguration>
 	<ResultsDirectory>$escapedResults\Runner</ResultsDirectory>
-	<MaxCpuCount>3</MaxCpuCount>
+	<MaxCpuCount>1</MaxCpuCount>
   </RunConfiguration>
   <NUnit>
 	<WorkDirectory>$escapedResults\NUnitWork</WorkDirectory>
-	<NumberOfTestWorkers>3</NumberOfTestWorkers>
+	<NumberOfTestWorkers>1</NumberOfTestWorkers>
 	<UseParentFQNForParametrizedTests>false</UseParentFQNForParametrizedTests>
 	<TestOutputXml>$escapedResults\NUnit</TestOutputXml>
   </NUnit>

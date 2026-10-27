@@ -69,7 +69,7 @@ jobs:
       runSettingsFile: '$(VSTEST_RUNSETTINGS)'
       resultsFolder: '$(TEST_RESULTS_ROOT)\Runner'
       vsTestVersion: toolsInstaller
-      runInParallel: true
+      runInParallel: false
       distributionBatchType: basedOnTestCases
       batchingBasedOnAgentsOption: autoBatchSize
       dontDistribute: false

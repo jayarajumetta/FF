@@ -2,11 +2,11 @@
 <RunSettings>
   <RunConfiguration>
     <ResultsDirectory>bin\TestResults</ResultsDirectory>
-    <MaxCpuCount>3</MaxCpuCount>
+    <MaxCpuCount>1</MaxCpuCount>
   </RunConfiguration>
   <NUnit>
     <WorkDirectory>bin\NUnitWork</WorkDirectory>
-    <NumberOfTestWorkers>3</NumberOfTestWorkers>
+    <NumberOfTestWorkers>1</NumberOfTestWorkers>
     <UseParentFQNForParametrizedTests>false</UseParentFQNForParametrizedTests>
   </NUnit>
 </RunSettings>
